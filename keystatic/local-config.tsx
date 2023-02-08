@@ -48,6 +48,7 @@ export default config({
           label: 'Slug',
           validation: { length: { min: 4 } },
         }),
+        publishDate: fields.date({ label: 'Publish Date' }),
         heroImage: fields.image({ label: 'Hero Image' }),
         content: fields.document({
           label: 'Content',

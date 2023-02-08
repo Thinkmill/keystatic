@@ -257,13 +257,17 @@ async function _toFiles(
   if (schema.kind === 'form') {
     if ('serializeToFile' in schema && schema.serializeToFile) {
       if (schema.serializeToFile.kind === 'asset') {
-        const { content, value: forYaml } = schema.serializeToFile.serialize(value);
+        const suggestedFilenamePrefix = propPath.join('/');
+
+        const { content, value: forYaml } = schema.serializeToFile.serialize(
+          value,
+          suggestedFilenamePrefix
+        );
         if (content) {
-          const extension = schema.serializeToFile.extension(forYaml);
-          extraFiles.push({
-            path: propPath.join('/') + extension,
-            contents: content,
-          });
+          const path = schema.serializeToFile.filename(forYaml, suggestedFilenamePrefix);
+          if (path) {
+            extraFiles.push({ path, contents: content });
+          }
         }
         return forYaml;
       }
