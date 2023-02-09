@@ -1,101 +1,13 @@
 import { Descendant } from 'slate';
-import { sha1 } from '../../app/utils';
 import { ComponentBlock, fields, ComponentSchema } from './api';
+import { transformProps } from './utils';
 
 export type CollectedFile = { data: Uint8Array; filename: string };
 
-export async function collectFiles(
+export function collectFiles(
   nodes: Descendant[],
   componentBlocks: Record<string, ComponentBlock>,
   collectedFiles: CollectedFile[]
-): Promise<Descendant[]> {
-  return Promise.all(
-    nodes.map(async (node): Promise<Descendant> => {
-      if (node.type === 'component-block') {
-        const componentBlock = componentBlocks[node.component];
-        if (!componentBlock) return node;
-        const schema = fields.object(componentBlock.schema);
-        return {
-          ...node,
-          props: (await transformProps(schema, node.props, collectedFiles)) as Record<string, any>,
-        };
-      }
-      if (typeof node.type === 'string') {
-        const children = await collectFiles(node.children, componentBlocks, collectedFiles);
-        return { ...node, children };
-      }
-      return node;
-    })
-  );
-}
-
-async function transformProps(
-  schema: ComponentSchema,
-  value: unknown,
-  collectedFiles: CollectedFile[]
-): Promise<unknown> {
-  if (schema.kind === 'child' || schema.kind === 'relationship') {
-    return value;
-  }
-  if (schema.kind === 'form') {
-    if ('serializeToFile' in schema && schema.serializeToFile) {
-      if (schema.serializeToFile.kind === 'asset') {
-        const {
-          content,
-          value: forYaml,
-          suggestedFilename,
-        } = schema.serializeToFile.serialize(value);
-        let filename;
-        if (content) {
-          const extension = schema.serializeToFile.extension(forYaml);
-          if (suggestedFilename) {
-            filename = suggestedFilename;
-          } else {
-            const sha = await sha1(content);
-            filename = sha + extension;
-          }
-          collectedFiles.push({
-            data: content,
-            filename,
-          });
-        }
-        return { filename, value: forYaml };
-      }
-      throw new Error('not implemented');
-    }
-    return value;
-  }
-  if (schema.kind === 'object') {
-    return Object.fromEntries(
-      await Promise.all(
-        Object.entries(schema.fields).map(async ([key, val]) => [
-          key,
-          await transformProps(val, (value as any)[key], collectedFiles),
-        ])
-      )
-    );
-  }
-  if (schema.kind === 'array') {
-    return Promise.all(
-      (value as unknown[]).map(val => transformProps(schema.element, val, collectedFiles))
-    );
-  }
-  if (schema.kind === 'conditional') {
-    return {
-      discriminant: (value as any).discriminant,
-      value: await transformProps(
-        schema.values[(value as any).discriminant],
-        (value as any).value,
-        collectedFiles
-      ),
-    };
-  }
-}
-
-export function deserializeFiles(
-  nodes: Descendant[],
-  componentBlocks: Record<string, ComponentBlock>,
-  files: Record<string, Uint8Array>
 ): Descendant[] {
   return nodes.map((node): Descendant => {
     if (node.type === 'component-block') {
@@ -104,11 +16,61 @@ export function deserializeFiles(
       const schema = fields.object(componentBlock.schema);
       return {
         ...node,
-        props: deserializeProps(schema, node.props, files) as Record<string, any>,
+        props: transformPropsToFiles(schema, node.props, collectedFiles) as Record<string, any>,
       };
     }
     if (typeof node.type === 'string') {
-      const children = deserializeFiles(node.children, componentBlocks, files);
+      const children = collectFiles(node.children, componentBlocks, collectedFiles);
+      return { ...node, children };
+    }
+    return node;
+  });
+}
+
+function transformPropsToFiles(
+  schema: ComponentSchema,
+  value: unknown,
+  collectedFiles: CollectedFile[]
+): unknown {
+  return transformProps(schema, value, {
+    form(schema, value) {
+      if ('serializeToFile' in schema && schema.serializeToFile) {
+        if (schema.serializeToFile.kind === 'asset') {
+          const { content, value: forYaml } = schema.serializeToFile.serialize(value, undefined);
+          const filename = schema.serializeToFile.filename(forYaml, undefined);
+          if (filename && content) {
+            collectedFiles.push({
+              data: content,
+              filename,
+            });
+          }
+          return forYaml;
+        }
+        throw new Error('not implemented');
+      }
+      return value;
+    },
+  });
+}
+
+export function deserializeFiles(
+  nodes: Descendant[],
+  componentBlocks: Record<string, ComponentBlock>,
+  files: Record<string, Uint8Array>,
+  mode: 'read' | 'edit'
+): Descendant[] {
+  return nodes.map((node): Descendant => {
+    if (node.type === 'component-block') {
+      const componentBlock = componentBlocks[node.component];
+      if (!componentBlock) return node;
+      const schema = fields.object(componentBlock.schema);
+      return {
+        ...node,
+        props: deserializeProps(schema, node.props, files, mode) as Record<string, any>,
+      };
+    }
+    if (typeof node.type === 'string') {
+      const children = deserializeFiles(node.children, componentBlocks, files, mode);
       return { ...node, children };
     }
     return node;
@@ -118,42 +80,33 @@ export function deserializeFiles(
 function deserializeProps(
   schema: ComponentSchema,
   value: unknown,
-  files: Record<string, Uint8Array>
-): unknown {
-  if (schema.kind === 'child' || schema.kind === 'relationship') {
-    return value;
-  }
-  if (schema.kind === 'form') {
-    if ('serializeToFile' in schema && schema.serializeToFile) {
-      if (schema.serializeToFile.kind === 'asset') {
-        return schema.serializeToFile.parse({
-          value: (value as any).value,
-          content: files[(value as any).filename],
-        });
+  files: Record<string, Uint8Array>,
+  mode: 'read' | 'edit'
+) {
+  return transformProps(schema, value, {
+    form: (schema, value) => {
+      if ('serializeToFile' in schema && schema.serializeToFile) {
+        if (schema.serializeToFile.kind === 'asset') {
+          if (!schema.serializeToFile.reader.requiresContentInReader && mode === 'read') {
+            return schema.serializeToFile.reader.parseToReader({
+              value: value,
+              suggestedFilenamePrefix: undefined,
+            });
+          }
+          const filename = schema.serializeToFile.filename(value, undefined);
+          return (
+            mode === 'read' && schema.serializeToFile.reader.requiresContentInReader
+              ? schema.serializeToFile.reader.parseToReader
+              : schema.serializeToFile.parse
+          )({
+            value: value,
+            content: filename ? files[filename] : undefined,
+            suggestedFilenamePrefix: undefined,
+          });
+        }
+        throw new Error('not implemented');
       }
-      throw new Error('not implemented');
-    }
-    return value;
-  }
-  if (schema.kind === 'object') {
-    return Object.fromEntries(
-      Object.entries(schema.fields).map(([key, val]) => [
-        key,
-        deserializeProps(val, (value as any)[key], files),
-      ])
-    );
-  }
-  if (schema.kind === 'array') {
-    return (value as unknown[]).map(val => deserializeProps(schema.element, val, files));
-  }
-  if (schema.kind === 'conditional') {
-    return {
-      discriminant: (value as any).discriminant,
-      value: deserializeProps(
-        schema.values[(value as any).discriminant],
-        (value as any).value,
-        files
-      ),
-    };
-  }
+      return value;
+    },
+  });
 }

@@ -8,6 +8,7 @@ import {
 import fs from 'fs/promises';
 import path from 'path';
 import {
+  FormatInfo,
   getCollectionFormat,
   getCollectionItemPath,
   getCollectionPath,
@@ -38,48 +39,9 @@ function collectionReader(
   const collectionPath = getCollectionPath(config, collection);
   const schema = fields.object(config.collections![collection].schema);
   return {
-    read: async (slug: string) => {
+    read: (slug: string) => {
       const itemDir = path.join(repoPath, getCollectionItemPath(config, collection, slug));
-      let dataFile: Uint8Array;
-      try {
-        dataFile = await fs.readFile(path.join(itemDir, `index${extension}`));
-      } catch (err) {
-        if ((err as any).code === 'ENOENT') {
-          return null;
-        }
-        throw err;
-      }
-      const { loaded, extraFakeFile } = loadDataFile(dataFile, formatInfo);
-      const validated = validateComponentBlockProps(schema, loaded, {}, []);
-      const requiredFiles = getRequiredFiles(validated, schema);
-      for (const file of requiredFiles) {
-        const parentValue = getValueAtPropPath(validated, file.path.slice(0, -1)) as any;
-        const keyOnParent = file.path[file.path.length - 1];
-        const originalValue = parentValue[keyOnParent];
-        parentValue[keyOnParent] = async () => {
-          const loadedBinaryFiles = new Map(
-            (
-              await Promise.all(
-                file.files.map(
-                  async x =>
-                    [
-                      x,
-                      x === extraFakeFile?.path
-                        ? extraFakeFile.contents
-                        : await fs.readFile(path.join(itemDir, x)).catch(x => {
-                            if ((x as any).code === 'ENOENT') return undefined;
-                            throw x;
-                          }),
-                    ] as const
-                )
-              )
-            ).filter((x): x is [string, Buffer] => x[1] !== undefined)
-          );
-          return parseSerializedFormField(originalValue, file, loadedBinaryFiles);
-        };
-      }
-
-      return validated;
+      return readItem(schema, formatInfo, extension, itemDir);
     },
     async list() {
       const entries = await fs.readdir(path.join(repoPath, collectionPath), {
@@ -106,6 +68,58 @@ function collectionReader(
   };
 }
 
+async function readItem(
+  schema: ComponentSchema,
+  formatInfo: FormatInfo,
+  extension: string,
+  itemDir: string
+) {
+  let dataFile: Uint8Array;
+  try {
+    dataFile = await fs.readFile(path.join(itemDir, `index${extension}`));
+  } catch (err) {
+    if ((err as any).code === 'ENOENT') {
+      return null;
+    }
+    throw err;
+  }
+  const { loaded, extraFakeFile } = loadDataFile(dataFile, formatInfo);
+  const validated = validateComponentBlockProps(schema, loaded, {}, []);
+  const requiredFiles = getRequiredFiles(validated, schema);
+  for (const file of requiredFiles) {
+    const parentValue = getValueAtPropPath(validated, file.path.slice(0, -1)) as any;
+    const keyOnParent = file.path[file.path.length - 1];
+    const originalValue = parentValue[keyOnParent];
+    if (file.schema.serializeToFile.reader.requiresContentInReader) {
+      parentValue[keyOnParent] = async () => {
+        const loadedBinaryFiles = new Map(
+          (
+            await Promise.all(
+              file.files.map(
+                async x =>
+                  [
+                    x,
+                    x === extraFakeFile?.path
+                      ? extraFakeFile.contents
+                      : await fs.readFile(path.join(itemDir, x)).catch(x => {
+                          if ((x as any).code === 'ENOENT') return undefined;
+                          throw x;
+                        }),
+                  ] as const
+              )
+            )
+          ).filter((x): x is [string, Buffer] => x[1] !== undefined)
+        );
+        return parseSerializedFormField(originalValue, file, loadedBinaryFiles, 'read');
+      };
+    } else {
+      parentValue[keyOnParent] = parseSerializedFormField(originalValue, file, new Map(), 'read');
+    }
+  }
+
+  return validated;
+}
+
 function singletonReader(
   repoPath: string,
   singleton: string,
@@ -116,49 +130,7 @@ function singletonReader(
   const schema = fields.object(config.singletons![singleton].schema);
   const extension = getDataFileExtension(formatInfo);
   return {
-    read: async () => {
-      const itemDir = path.join(repoPath, singletonPath);
-      let dataFile: Uint8Array;
-      try {
-        dataFile = await fs.readFile(path.join(itemDir, `index${extension}`));
-      } catch (err) {
-        if ((err as any).code === 'ENOENT') {
-          return null;
-        }
-        throw err;
-      }
-      const { loaded, extraFakeFile } = loadDataFile(dataFile, formatInfo);
-      const validated = validateComponentBlockProps(schema, loaded, {}, []);
-      const requiredFiles = getRequiredFiles(validated, schema);
-      for (const file of requiredFiles) {
-        const parentValue = getValueAtPropPath(validated, file.path.slice(0, -1)) as any;
-        const keyOnParent = file.path[file.path.length - 1];
-        const originalValue = parentValue[keyOnParent];
-        parentValue[keyOnParent] = async () => {
-          const loadedBinaryFiles = new Map(
-            (
-              await Promise.all(
-                file.files.map(
-                  async x =>
-                    [
-                      x,
-                      x === extraFakeFile?.path
-                        ? extraFakeFile.contents
-                        : await fs.readFile(path.join(itemDir, x)).catch(x => {
-                            if ((x as any).code === 'ENOENT') return undefined;
-                            throw x;
-                          }),
-                    ] as const
-                )
-              )
-            ).filter((x): x is [string, Buffer] => x[1] !== undefined)
-          );
-          return parseSerializedFormField(originalValue, file, loadedBinaryFiles);
-        };
-      }
-
-      return validated;
-    },
+    read: () => readItem(schema, formatInfo, extension, path.join(repoPath, singletonPath)),
   };
 }
 

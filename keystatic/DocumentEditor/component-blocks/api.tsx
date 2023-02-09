@@ -101,36 +101,98 @@ type BasicFormField<Value, Options> = {
 
 export type FormField<Value, Options> =
   | BasicFormField<Value, Options>
-  | FormFieldWithFile<Value, Options>;
+  | FormFieldWithFile<Value, Options, any>;
 
-export type FormFieldWithFile<Value, Options> = BasicFormField<Value, Options> & {
+export type FormFieldWithFile<Value, Options, DataInReader> =
+  | FormFieldWithFileRequiringContentsForReader<Value, Options, DataInReader>
+  | FormFieldWithFileNotRequiringContentsForReader<Value, Options, DataInReader>;
+
+type FormFieldWithFileRequiringContentsForReader<Value, Options, DataInReader> = BasicFormField<
+  Value,
+  Options
+> & {
   serializeToFile:
-    | {
-        kind: 'asset';
-        extension(value: unknown): string;
-        serialize(value: Value): {
-          content: Uint8Array | undefined;
-          value: unknown;
-          suggestedFilename?: string;
+    | (BaseSerializeToSingleFile<Value> & {
+        reader: {
+          requiresContentInReader: true;
+          parseToReader(data: {
+            content: Uint8Array | undefined;
+            value: unknown;
+            suggestedFilenamePrefix: string | undefined;
+          }): DataInReader;
         };
-        parse(data: { content: Uint8Array | undefined; value: unknown }): Value;
-      }
-    | {
-        kind: 'multi';
-        primaryExtension: string;
-        files(value: unknown): string[];
-        serialize(value: Value): Promise<{
-          value: unknown;
-          primary: Uint8Array | undefined;
-          other: { [key: string]: Uint8Array };
-        }>;
-        parse(data: {
-          value: unknown;
-          primary: Uint8Array | undefined;
-          other: { [key: string]: Uint8Array };
-        }): Value;
-      };
+      })
+    | (BaseSerializeToFiles<Value> & {
+        reader: {
+          requiresContentInReader: true;
+          parseToReader(data: {
+            value: unknown;
+            primary: Uint8Array | undefined;
+            other: { [key: string]: Uint8Array };
+          }): DataInReader;
+        };
+      });
 };
+type FormFieldWithFileNotRequiringContentsForReader<Value, Options, DataInReader> = BasicFormField<
+  Value,
+  Options
+> & {
+  serializeToFile:
+    | (BaseSerializeToSingleFile<Value> & {
+        reader: {
+          requiresContentInReader: false;
+          parseToReader(data: {
+            value: unknown;
+            suggestedFilenamePrefix: string | undefined;
+          }): DataInReader;
+        };
+      })
+    | (BaseSerializeToFiles<Value> & {
+        reader: {
+          requiresContentInReader: false;
+          parseToReader(data: { value: unknown }): DataInReader;
+        };
+      });
+};
+
+type BaseSerializeToSingleFile<Value> = {
+  kind: 'asset';
+  filename(value: unknown, suggestedFilenamePrefix: string | undefined): string | undefined;
+  serialize(
+    value: Value,
+    suggestedFilenamePrefix: string | undefined
+  ): {
+    value: unknown;
+  } & (
+    | { content: undefined }
+    | {
+        content: Uint8Array;
+        filename: string;
+      }
+  );
+  parse(data: {
+    content: Uint8Array | undefined;
+    value: unknown;
+    suggestedFilenamePrefix: string | undefined;
+  }): Value;
+};
+
+type BaseSerializeToFiles<Value> = {
+  kind: 'multi';
+  primaryExtension: string;
+  files(value: unknown): string[];
+  serialize(value: Value): Promise<{
+    value: unknown;
+    primary: Uint8Array | undefined;
+    other: { [key: string]: Uint8Array };
+  }>;
+  parse(data: {
+    value: unknown;
+    primary: Uint8Array | undefined;
+    other: { [key: string]: Uint8Array };
+  }): Value;
+};
+
 export type DocumentNode = DocumentElement | DocumentText;
 
 export type DocumentElement = {
@@ -458,7 +520,7 @@ export const fields = {
       },
     };
   },
-  image({ label }: { label: string }): FormFieldWithFile<
+  image({ label }: { label: string }): FormFieldWithFileNotRequiringContentsForReader<
     | {
         kind: 'uploaded';
         data: Uint8Array;
@@ -466,7 +528,8 @@ export const fields = {
         filename: string;
       }
     | { kind: 'none' },
-    undefined
+    undefined,
+    string | null
   > {
     function useObjectURL(data: Uint8Array | null) {
       const [url, setUrl] = useState<string | null>(null);
@@ -546,32 +609,69 @@ export const fields = {
       },
       serializeToFile: {
         kind: 'asset',
-        extension(value) {
-          if (!value) return '';
-          return '.' + (value as any).extension;
+        filename(value, suggestedFilenamePrefix) {
+          if (typeof value === 'string') return value;
+          if (
+            typeof value === 'object' &&
+            value !== null &&
+            'extension' in value &&
+            typeof value.extension === 'string'
+          ) {
+            return suggestedFilenamePrefix + '.' + value.extension;
+          }
         },
         parse({ content, value }) {
+          debugger;
           return content
             ? {
                 kind: 'uploaded',
                 data: content,
                 extension: (value as any).extension,
-                filename: (value as any).filename ?? '',
+                filename: typeof value === 'string' ? value : '',
               }
             : { kind: 'none' };
         },
-        serialize(value) {
-          return value.kind === 'uploaded'
-            ? {
-                value: {
-                  extension: value.extension,
-                  filename: value.filename ? value.filename : undefined,
-                },
-                content: value.data,
-                suggestedFilename: value.filename,
-              }
-            : { value: null, content: undefined };
+        serialize(value, suggestedFilenamePrefix) {
+          if (value.kind === 'none') {
+            return { value: null, content: undefined };
+          }
+          const filename = suggestedFilenamePrefix
+            ? suggestedFilenamePrefix + '.' + value.extension
+            : value.filename;
+          return { value: filename, content: value.data, filename };
         },
+        reader: {
+          requiresContentInReader: false,
+          parseToReader({ value, suggestedFilenamePrefix }) {
+            if (!value) return null;
+            return typeof value === 'string'
+              ? value
+              : suggestedFilenamePrefix + '.' + (value as any).extension;
+          },
+        },
+      },
+    };
+  },
+  date({ label }: { label: string }): FormField<string | null, undefined> {
+    return {
+      kind: 'form',
+      Input({ value, onChange, autoFocus }) {
+        return (
+          <TextField
+            label={label}
+            type="date"
+            onChange={val => {
+              onChange(val === '' ? null : val);
+            }}
+            autoFocus={autoFocus}
+            value={value === null ? '' : value}
+          />
+        );
+      },
+      options: undefined,
+      defaultValue: null,
+      validate(value) {
+        return value === null || (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value));
       },
     };
   },
@@ -677,7 +777,21 @@ export const fields = {
   }: {
     label: string;
     componentBlocks?: Record<string, ComponentBlock>;
-  }): FormFieldWithFile<DocumentElement[], undefined> {
+  }): FormFieldWithFileRequiringContentsForReader<DocumentElement[], undefined, DocumentElement[]> {
+    const parse =
+      (mode: 'read' | 'edit') =>
+      (value: {
+        value: unknown;
+        primary: Uint8Array | undefined;
+        other: { [key: string]: Uint8Array };
+      }): DocumentElement[] => {
+        const markdoc = textDecoder.decode(value.primary);
+        const document = fromMarkdoc(Markdoc.parse(markdoc), componentBlocks);
+        const editor = createDocumentEditor(documentFeatures, componentBlocks, {});
+        editor.children = document;
+        Editor.normalize(editor, { force: true });
+        return deserializeFiles(editor.children, componentBlocks, value.other, mode) as any;
+      };
     return {
       kind: 'form',
       defaultValue: [{ type: 'paragraph', children: [{ text: '' }] }],
@@ -707,17 +821,10 @@ export const fields = {
           }
           return (value as any).files ?? [];
         },
-        parse(value) {
-          const markdoc = textDecoder.decode(value.primary);
-          const document = fromMarkdoc(Markdoc.parse(markdoc), componentBlocks);
-          const editor = createDocumentEditor(documentFeatures, componentBlocks, {});
-          editor.children = document;
-          Editor.normalize(editor, { force: true });
-          return deserializeFiles(editor.children, componentBlocks, value.other) as any;
-        },
+        parse: parse('edit'),
         async serialize(value) {
           const collectedFiles: CollectedFile[] = [];
-          const transformed = await collectFiles(value as any, componentBlocks, collectedFiles);
+          const transformed = collectFiles(value as any, componentBlocks, collectedFiles);
 
           return {
             primary: textEncoder.encode(
@@ -732,6 +839,10 @@ export const fields = {
             other: Object.fromEntries(collectedFiles.map(({ filename, data }) => [filename, data])),
             value: { files: collectedFiles.map(({ filename }) => filename) },
           };
+        },
+        reader: {
+          requiresContentInReader: true,
+          parseToReader: parse('read'),
         },
       },
     };
@@ -984,43 +1095,19 @@ export function NotEditable({ children, ...props }: HTMLAttributes<HTMLDivElemen
 
 type Comp<Props> = (props: Props) => ReactElement | null;
 
-type ValueForRenderingFromComponentPropField<Schema extends ComponentSchema> =
-  Schema extends ChildField
-    ? ReactNode
-    : Schema extends FormField<infer Value, any>
-    ? Value
-    : Schema extends ObjectField<infer Value>
-    ? {
-        readonly [Key in keyof Value]: ValueForRenderingFromComponentPropField<Value[Key]>;
-      }
-    : Schema extends ConditionalField<infer DiscriminantField, infer Values>
-    ? {
-        readonly [Key in keyof Values]: {
-          readonly discriminant: DiscriminantStringToDiscriminantValue<DiscriminantField, Key>;
-          readonly value: ValueForRenderingFromComponentPropField<Values[Key]>;
-        };
-      }[keyof Values]
-    : Schema extends RelationshipField<infer Many>
-    ? Many extends true
-      ? readonly HydratedRelationshipData[]
-      : HydratedRelationshipData | null
-    : Schema extends ArrayField<infer ElementField>
-    ? readonly ValueForRenderingFromComponentPropField<ElementField>[]
-    : never;
-
 export type ValueForComponentSchema<Schema extends ComponentSchema> = Schema extends ChildField
   ? null
   : Schema extends FormField<infer Value, any>
   ? Value
   : Schema extends ObjectField<infer Value>
   ? {
-      readonly [Key in keyof Value]: ValueForRenderingFromComponentPropField<Value[Key]>;
+      readonly [Key in keyof Value]: ValueForComponentSchema<Value[Key]>;
     }
   : Schema extends ConditionalField<infer DiscriminantField, infer Values>
   ? {
       readonly [Key in keyof Values]: {
         readonly discriminant: DiscriminantStringToDiscriminantValue<DiscriminantField, Key>;
-        readonly value: ValueForRenderingFromComponentPropField<Values[Key]>;
+        readonly value: ValueForComponentSchema<Values[Key]>;
       };
     }[keyof Values]
   : Schema extends RelationshipField<infer Many>
@@ -1028,13 +1115,15 @@ export type ValueForComponentSchema<Schema extends ComponentSchema> = Schema ext
     ? readonly HydratedRelationshipData[]
     : HydratedRelationshipData | null
   : Schema extends ArrayField<infer ElementField>
-  ? readonly ValueForRenderingFromComponentPropField<ElementField>[]
+  ? readonly ValueForComponentSchema<ElementField>[]
   : never;
 
 export type ValueForReading<Schema extends ComponentSchema> = Schema extends ChildField
   ? null
-  : Schema extends FormFieldWithFile<infer Value, any>
+  : Schema extends FormFieldWithFileRequiringContentsForReader<any, any, infer Value>
   ? () => Promise<Value>
+  : Schema extends FormFieldWithFileNotRequiringContentsForReader<any, any, infer Value>
+  ? Value
   : Schema extends FormField<infer Value, any>
   ? Value
   : Schema extends ObjectField<infer Value>
@@ -1056,14 +1145,10 @@ export type ValueForReading<Schema extends ComponentSchema> = Schema extends Chi
   ? readonly ValueForReading<ElementField>[]
   : never;
 
-type ExtractPropsForPropsForRendering<Props extends Record<string, ComponentSchema>> = {
-  readonly [Key in keyof Props]: ValueForRenderingFromComponentPropField<Props[Key]>;
-};
-
 export type InferRenderersForComponentBlocks<
   ComponentBlocks extends Record<string, ComponentBlock<any>>
 > = {
   [Key in keyof ComponentBlocks]: Comp<
-    ExtractPropsForPropsForRendering<ComponentBlocks[Key]['schema']>
+    ValueForReading<ObjectField<ComponentBlocks[Key]['schema']>>
   >;
 };

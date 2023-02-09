@@ -5,7 +5,7 @@ import { FormatInfo } from './path-utils';
 
 export type RequiredFile = {
   path: (string | number)[];
-  schema: FormFieldWithFile<any, unknown>;
+  schema: FormFieldWithFile<any, unknown, unknown>;
   files: string[];
 };
 
@@ -27,9 +27,10 @@ function _getRequiredFiles(
   if (schema.kind === 'form') {
     if ('serializeToFile' in schema && schema.serializeToFile) {
       if (schema.serializeToFile.kind === 'asset') {
-        const extension = schema.serializeToFile.extension(value);
-        const filename = propPath.join('/') + extension;
-        requiredFiles.push({ path: propPath, schema, files: [filename] });
+        const filename = schema.serializeToFile.filename(value, propPath.join('/'));
+        if (filename) {
+          requiredFiles.push({ path: propPath, schema, files: [filename] });
+        }
       }
       if (schema.serializeToFile.kind === 'multi') {
         const files = schema.serializeToFile.files(value);
@@ -69,25 +70,32 @@ function _getRequiredFiles(
 export function parseSerializedFormField(
   value: unknown,
   file: RequiredFile,
-  loadedBinaryFiles: Map<string, Uint8Array>
+  loadedBinaryFiles: Map<string, Uint8Array>,
+  mode: 'read' | 'edit'
 ) {
   const serializationConfig = file.schema.serializeToFile!;
+
   if (serializationConfig.kind === 'asset') {
-    const extension = serializationConfig.extension(value);
-    const filepath = file.path.join('/') + extension;
-    const binaryContents = loadedBinaryFiles.get(filepath);
-    if (binaryContents) {
-      const parsed = serializationConfig.parse({
-        content: binaryContents,
-        value,
-      });
-      return parsed;
+    const suggestedFilenamePrefix = file.path.join('/');
+    const filepath = serializationConfig.filename(value, file.path.join('/'));
+    if (mode === 'read' && !serializationConfig.reader.requiresContentInReader) {
+      return serializationConfig.reader.parseToReader({ value, suggestedFilenamePrefix });
     }
-    return file.schema.defaultValue;
+    const content = filepath ? loadedBinaryFiles.get(filepath) : undefined;
+
+    const parsed = (
+      mode === 'read' && serializationConfig.reader.requiresContentInReader
+        ? serializationConfig.reader.parseToReader
+        : serializationConfig.parse
+    )({ content, value, suggestedFilenamePrefix });
+    return parsed;
   }
   if (serializationConfig.kind === 'multi') {
     const rootPath = file.path.join('/');
     const mainFilepath = rootPath + serializationConfig.primaryExtension;
+    if (mode === 'read' && !serializationConfig.reader.requiresContentInReader) {
+      return serializationConfig.reader.parseToReader({ value });
+    }
     const mainContents = loadedBinaryFiles.get(mainFilepath);
     const files = serializationConfig.files(value);
     const otherFiles = Object.fromEntries(
@@ -99,7 +107,11 @@ export function parseSerializedFormField(
         return [];
       })
     );
-    return serializationConfig.parse({
+    return (
+      mode === 'read' && serializationConfig.reader.requiresContentInReader
+        ? serializationConfig.reader.parseToReader
+        : serializationConfig.parse
+    )({
       value,
       primary: mainContents,
       other: otherFiles,

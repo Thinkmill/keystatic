@@ -60,7 +60,8 @@ function parseWithExtraFiles(
     parentValue[keyOnParent] = parseSerializedFormField(
       parentValue[keyOnParent],
       file,
-      loadedBinaryFiles
+      loadedBinaryFiles,
+      'edit'
     );
   }
   return validated as Record<string, unknown>;
