@@ -40,9 +40,6 @@ jobs:
       - name: ESLint
         run: pnpm check:lint .
 
-      - name: TypeScript
-        run: pnpm check:types
-
   typescript:
     name: TypeScript
     runs-on: ubuntu-latest
