@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/icon",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Icons are visual symbols used to represent ideas, objects, or actions. They communicate messages at a glance, afford interactivity, and draw attention to important information.",
   "license": "MIT",
   "main": "dist/voussoir-icon.cjs.js",
@@ -3503,11 +3503,11 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "@react-aria/i18n": "^3.6.2",
-    "@voussoir/layout": "^0.0.0",
-    "@voussoir/slots": "^0.0.0",
-    "@voussoir/style": "^0.0.0",
-    "@voussoir/types": "^0.0.0",
-    "@voussoir/utils": "^1.0.0"
+    "@voussoir/layout": "^0.1.0",
+    "@voussoir/slots": "^0.1.0",
+    "@voussoir/style": "^0.1.0",
+    "@voussoir/types": "^0.1.0",
+    "@voussoir/utils": "^2.0.0"
   },
   "devDependencies": {
     "@svgr/core": "^6.5.1",

@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/test-utils",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Utilities for testing Voussoir modules.",
   "license": "MIT",
   "main": "dist/voussoir-test-utils.cjs.js",
@@ -17,7 +17,7 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@voussoir/core": "^3.0.0"
+    "@voussoir/core": "^4.0.0"
   },
   "devDependencies": {
     "@testing-library/react": "^13.4.0",
