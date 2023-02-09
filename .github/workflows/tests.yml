@@ -42,3 +42,27 @@ jobs:
 
       - name: TypeScript
         run: pnpm check:types
+
+  typescript:
+    name: TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - uses: ./.github/actions/setup-deps
+
+      - name: TypeScript
+        run: pnpm check:types
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - uses: ./.github/actions/setup-deps
+
+      - name: Preconstruct
+        run: pnpm build:packages
