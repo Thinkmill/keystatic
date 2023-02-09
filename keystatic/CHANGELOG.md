@@ -1,12 +1,5 @@
 # keystatic
 
-## 0.0.22
-
-### Patch Changes
-
-- abb970a: Improve image field
-- abb970a: Add `fields.date`
-
 ## 0.0.21
 
 ### Patch Changes
