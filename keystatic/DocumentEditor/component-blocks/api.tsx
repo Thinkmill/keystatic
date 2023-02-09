@@ -621,7 +621,6 @@ export const fields = {
           }
         },
         parse({ content, value }) {
-          debugger;
           return content
             ? {
                 kind: 'uploaded',

@@ -28,9 +28,11 @@ function _getRequiredFiles(
     if ('serializeToFile' in schema && schema.serializeToFile) {
       if (schema.serializeToFile.kind === 'asset') {
         const filename = schema.serializeToFile.filename(value, propPath.join('/'));
+        const files: string[] = [];
         if (filename) {
-          requiredFiles.push({ path: propPath, schema, files: [filename] });
+          files.push(filename);
         }
+        requiredFiles.push({ path: propPath, schema, files });
       }
       if (schema.serializeToFile.kind === 'multi') {
         const files = schema.serializeToFile.files(value);
