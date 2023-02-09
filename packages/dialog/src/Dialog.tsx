@@ -1,7 +1,15 @@
 import { useDialog } from '@react-aria/dialog';
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { mergeProps, useObjectRef } from '@react-aria/utils';
-import { ForwardedRef, forwardRef, useContext, useMemo, useRef } from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  ForwardRefExoticComponent,
+  Ref,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react';
 
 import { Button } from '@voussoir/button';
 import { xIcon } from '@voussoir/icon/icons/xIcon';
@@ -35,7 +43,9 @@ const slotClassNames = {
  * that appear over the user interface. Depending on the kind of dialog, further
  * interactions may be blocked until the dialog is closed.
  */
-export const Dialog = forwardRef(function Dialog(
+export const Dialog: ForwardRefExoticComponent<
+  DialogProps & { ref?: Ref<HTMLDivElement> }
+> = forwardRef(function Dialog(
   props: DialogProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {

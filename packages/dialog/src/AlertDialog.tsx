@@ -1,5 +1,11 @@
 import { chain } from '@react-aria/utils';
-import { ForwardedRef, forwardRef, useContext } from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  ForwardRefExoticComponent,
+  Ref,
+  useContext,
+} from 'react';
 
 import { Button, ButtonGroup } from '@voussoir/button';
 import { Content } from '@voussoir/slots';
@@ -15,7 +21,9 @@ import { AlertDialogProps } from './types';
  * AlertDialogs are a specific type of Dialog. They display important
  * information that users need to acknowledge.
  */
-export const AlertDialog = forwardRef(function AlertDialog(
+export const AlertDialog: ForwardRefExoticComponent<
+  AlertDialogProps & { ref?: Ref<HTMLDivElement> }
+> = forwardRef(function AlertDialog(
   props: AlertDialogProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {

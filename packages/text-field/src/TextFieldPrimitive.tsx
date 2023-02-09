@@ -1,4 +1,10 @@
-import { ForwardedRef, forwardRef, HTMLAttributes } from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  ForwardRefExoticComponent,
+  HTMLAttributes,
+  Ref,
+} from 'react';
 import { useHover } from '@react-aria/interactions';
 import { mergeProps, useObjectRef } from '@react-aria/utils';
 
@@ -16,7 +22,9 @@ import { TextFieldPrimitiveProps } from './types';
 type InputOrTextArea = HTMLInputElement | HTMLTextAreaElement;
 
 /** Internal component for default appearance and behaviour. */
-export const TextFieldPrimitive = forwardRef(function TextFieldPrimitive(
+export const TextFieldPrimitive: ForwardRefExoticComponent<
+  TextFieldPrimitiveProps & { ref?: Ref<InputOrTextArea> }
+> = forwardRef(function TextFieldPrimitive(
   props: TextFieldPrimitiveProps,
   forwardedRef: ForwardedRef<InputOrTextArea>
 ) {

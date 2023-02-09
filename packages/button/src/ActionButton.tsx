@@ -1,4 +1,10 @@
-import { ForwardedRef, forwardRef, useMemo } from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  ForwardRefExoticComponent,
+  Ref,
+  useMemo,
+} from 'react';
 
 import { useButton } from '@react-aria/button';
 import { useHover } from '@react-aria/interactions';
@@ -21,7 +27,9 @@ import { ActionButtonProps, CommonProps } from './types';
  * task-based options within a workflow, and are ideal for interfaces where
  * buttons aren’t meant to draw a lot of attention.
  */
-export const ActionButton = forwardRef(function ActionButton(
+export const ActionButton: ForwardRefExoticComponent<
+  ActionButtonProps & { ref?: Ref<HTMLButtonElement> }
+> = forwardRef(function ActionButton(
   props: ActionButtonProps,
   forwardedRef: ForwardedRef<HTMLButtonElement>
 ) {

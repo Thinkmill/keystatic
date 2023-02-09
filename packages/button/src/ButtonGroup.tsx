@@ -4,7 +4,14 @@ import {
   useResizeObserver,
   useValueEffect,
 } from '@react-aria/utils';
-import { ForwardedRef, forwardRef, useCallback, useRef } from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  ForwardRefExoticComponent,
+  Ref,
+  useCallback,
+  useRef,
+} from 'react';
 
 import {
   VoussoirProvider,
@@ -21,7 +28,9 @@ import { ButtonGroupProps } from './types';
  * Handles overflow for a grouping of buttons whose actions are related to each
  * other.
  */
-export const ButtonGroup = forwardRef(function ButtonGroup(
+export const ButtonGroup: ForwardRefExoticComponent<
+  ButtonGroupProps & { ref?: Ref<HTMLDivElement> }
+> = forwardRef(function ButtonGroup(
   props: ButtonGroupProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {

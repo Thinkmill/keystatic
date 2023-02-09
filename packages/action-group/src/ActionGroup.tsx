@@ -368,9 +368,9 @@ function ActionGroup<T extends object>(
 // https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
 
 /** Group related action buttons together. */
-const _ActionGroup = forwardRef(ActionGroup) as <T>(
+const _ActionGroup: <T>(
   props: ActionGroupProps<T> & { ref?: RefObject<HTMLDivElement> }
-) => ReactElement;
+) => ReactElement = forwardRef(ActionGroup) as any;
 export { _ActionGroup as ActionGroup };
 
 interface ActionGroupItemProps<T> extends DOMProps, BaseStyleProps {

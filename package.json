@@ -10,7 +10,7 @@
     "check:format": "prettier --check",
     "check:lint": "eslint",
     "check:packages": "preconstruct validate",
-    "check:types": "tsc --noEmit",
+    "check:types": "tsc",
     "clean": "git clean -fXd",
     "dev:docs": "pnpm --filter=docs dev",
     "dev:playroom": "pnpm --filter=docs dev:playroom",

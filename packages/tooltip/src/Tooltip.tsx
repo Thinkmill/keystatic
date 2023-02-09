@@ -1,6 +1,14 @@
 import { useTooltip } from '@react-aria/tooltip';
 import { mergeProps, useObjectRef } from '@react-aria/utils';
-import { ForwardedRef, forwardRef, useContext, useMemo, useRef } from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  ForwardRefExoticComponent,
+  Ref,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react';
 
 import { Axis, DirectionIndicator } from '@voussoir/overlays';
 import { SlotProvider } from '@voussoir/slots';
@@ -25,7 +33,9 @@ import { useOverlayPosition } from '@react-aria/overlays';
  * Tooltips are invoked on hover and keyboard focus. They cannot include
  * interactive elements.
  */
-export const Tooltip = forwardRef(function Tooltip(
+export const Tooltip: ForwardRefExoticComponent<
+  TooltipProps & { ref?: Ref<HTMLDivElement> }
+> = forwardRef(function Tooltip(
   props: TooltipProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {

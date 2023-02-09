@@ -1,4 +1,10 @@
-import { forwardRef, ForwardedRef, HTMLAttributes } from 'react';
+import {
+  forwardRef,
+  ForwardedRef,
+  HTMLAttributes,
+  ForwardRefExoticComponent,
+  Ref,
+} from 'react';
 import { useModalOverlay } from '@react-aria/overlays';
 import { useObjectRef, useViewportSize } from '@react-aria/utils';
 
@@ -25,10 +31,9 @@ type TrayWrapperProps = {
  * menus and pickers. They should only ever be displayed on devices with small
  * screens, for interfaces where popovers wouldn't be appropriate.
  */
-export const Tray = forwardRef<HTMLDivElement, TrayProps>(function Tray(
-  props,
-  forwardedRef
-) {
+export const Tray: ForwardRefExoticComponent<
+  TrayProps & { ref?: Ref<HTMLDivElement> }
+> = forwardRef<HTMLDivElement, TrayProps>(function Tray(props, forwardedRef) {
   let { children, state, ...otherProps } = props;
 
   return (
