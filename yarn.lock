@@ -2643,19 +2643,6 @@
     "@react-types/button" "^3.7.0"
     "@react-types/shared" "^3.16.0"
 
-"@react-aria/button@^3.6.4":
-  version "3.6.4"
-  resolved "https://registry.yarnpkg.com/@react-aria/button/-/button-3.6.4.tgz#51927c9d968d0c1f741ee2081ca7f2e244abbc12"
-  integrity sha512-OEs5fNGiuZzyC5y0cNl96+6pRf/3ZhI1i2m6LlRYhJLsWXPhHt21UHEnlSchE/XGtgKojJEeTsXottoBFTBi5w==
-  dependencies:
-    "@react-aria/focus" "^3.10.1"
-    "@react-aria/interactions" "^3.13.1"
-    "@react-aria/utils" "^3.14.2"
-    "@react-stately/toggle" "^3.4.4"
-    "@react-types/button" "^3.7.0"
-    "@react-types/shared" "^3.16.0"
-    "@swc/helpers" "^0.4.14"
-
 "@react-aria/checkbox@^3.5.1":
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/@react-aria/checkbox/-/checkbox-3.7.0.tgz#74e58e66a06908c78109dbbcc359c5485c1c6463"
@@ -2691,19 +2678,6 @@
     "@react-types/combobox" "^3.5.5"
     "@react-types/shared" "^3.16.0"
     "@swc/helpers" "^0.4.14"
-
-"@react-aria/dialog@^3.4.1":
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/@react-aria/dialog/-/dialog-3.4.1.tgz#373c389e21b9b9fcc6947ec092074daedd46030c"
-  integrity sha512-1P6zCn78OP9nv7/1i4QsysOKQ6gxHy9JUyOj0ixrR1jwYI/psCM2MwT9cfPjuj7pGQys6lsu4glSmZ82zARURQ==
-  dependencies:
-    "@babel/runtime" "^7.6.2"
-    "@react-aria/focus" "^3.10.0"
-    "@react-aria/overlays" "^3.12.0"
-    "@react-aria/utils" "^3.14.1"
-    "@react-stately/overlays" "^3.4.3"
-    "@react-types/dialog" "^3.4.5"
-    "@react-types/shared" "^3.16.0"
 
 "@react-aria/dialog@^3.4.2":
   version "3.4.2"
@@ -3470,16 +3444,6 @@
     "@react-stately/utils" "^3.5.1"
     "@react-types/checkbox" "^3.4.1"
     "@react-types/shared" "^3.16.0"
-
-"@react-stately/toggle@^3.4.4":
-  version "3.4.4"
-  resolved "https://registry.yarnpkg.com/@react-stately/toggle/-/toggle-3.4.4.tgz#b7825bf900725dcee0444fe6132b06948be36b44"
-  integrity sha512-OwVJpd2M7P7fekTWpl3TUdD3Brq+Z/xElOCJYP5QuVytXCa5seKsk40YPld8JQnA5dRKojpbUxMDOJpb6hOOfw==
-  dependencies:
-    "@react-stately/utils" "^3.5.2"
-    "@react-types/checkbox" "^3.4.1"
-    "@react-types/shared" "^3.16.0"
-    "@swc/helpers" "^0.4.14"
 
 "@react-stately/tooltip@^3.2.3":
   version "3.2.3"
