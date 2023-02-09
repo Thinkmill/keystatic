@@ -1,6 +1,12 @@
 import { useModalOverlay } from '@react-aria/overlays';
 import { useObjectRef, useViewportSize } from '@react-aria/utils';
-import { ForwardedRef, forwardRef, HTMLAttributes } from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  ForwardRefExoticComponent,
+  HTMLAttributes,
+  Ref,
+} from 'react';
 
 import {
   classNames,
@@ -24,7 +30,9 @@ type ModalWrapperProps = {
  * A low-level utility component for implementing things like dialogs and
  * popovers, in a layer above the page.
  */
-export const Modal = forwardRef(function Modal(
+export const Modal: ForwardRefExoticComponent<
+  ModalProps & { ref?: Ref<HTMLDivElement> }
+> = forwardRef(function Modal(
   props: ModalProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {

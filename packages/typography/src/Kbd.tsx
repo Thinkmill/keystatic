@@ -2,8 +2,10 @@ import { isMac as getIsMac } from '@react-aria/utils';
 import {
   ForwardedRef,
   forwardRef,
+  ForwardRefExoticComponent,
   HTMLAttributes,
   ReactNode,
+  Ref,
   useMemo,
   useSyncExternalStore,
 } from 'react';
@@ -53,7 +55,9 @@ export type KbdProps = {
   BaseStyleProps;
 
 /** Represents text that specifies a keyboard command. */
-export const Kbd = forwardRef(function Kbd(
+export const Kbd: ForwardRefExoticComponent<
+  KbdProps & { ref?: Ref<HTMLElement> }
+> = forwardRef(function Kbd(
   props: KbdProps,
   forwardedRef: ForwardedRef<HTMLElement>
 ) {

@@ -1,4 +1,11 @@
-import { ReactNode, forwardRef, useMemo, ForwardedRef } from 'react';
+import {
+  ReactNode,
+  forwardRef,
+  useMemo,
+  ForwardedRef,
+  ForwardRefExoticComponent,
+  Ref,
+} from 'react';
 
 import { Flex } from '@voussoir/layout';
 import { SlotProvider } from '@voussoir/slots';
@@ -35,7 +42,9 @@ export type BadgeProps = {
  * Use badges to highlight an item's status for quick recognition. Badges should
  * contain short easy-to-scan text.
  */
-export const Badge = forwardRef(function Badge(
+export const Badge: ForwardRefExoticComponent<
+  BadgeProps & { ref?: Ref<HTMLDivElement> }
+> = forwardRef(function Badge(
   props: BadgeProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {

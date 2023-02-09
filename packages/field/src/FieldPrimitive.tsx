@@ -1,7 +1,14 @@
 import { Flex } from '@voussoir/layout';
 import { BaseStyleProps, useStyleProps } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
-import { forwardRef, HTMLAttributes, ReactElement, ReactNode } from 'react';
+import {
+  forwardRef,
+  ForwardRefExoticComponent,
+  HTMLAttributes,
+  ReactElement,
+  ReactNode,
+  Ref,
+} from 'react';
 
 import { FieldLabel } from './FieldLabel';
 import { FieldMessage } from './FieldMessage';
@@ -28,51 +35,54 @@ type FieldPrimitiveProps = {
  * user input, gain context from their label, and may display a description or
  * error message.
  */
-export const FieldPrimitive = forwardRef<HTMLDivElement, FieldPrimitiveProps>(
-  function FieldPrimitive(props, forwardedRef) {
-    const {
-      children,
-      isRequired,
-      label,
-      labelProps,
-      description,
-      descriptionProps,
-      errorMessage,
-      errorMessageProps,
-      supplementRequiredState,
-    } = props;
-    const styleProps = useStyleProps(props);
+export const FieldPrimitive: ForwardRefExoticComponent<
+  FieldPrimitiveProps & { ref?: Ref<HTMLDivElement> }
+> = forwardRef<HTMLDivElement, FieldPrimitiveProps>(function FieldPrimitive(
+  props,
+  forwardedRef
+) {
+  const {
+    children,
+    isRequired,
+    label,
+    labelProps,
+    description,
+    descriptionProps,
+    errorMessage,
+    errorMessageProps,
+    supplementRequiredState,
+  } = props;
+  const styleProps = useStyleProps(props);
 
-    return (
-      <Flex
-        ref={forwardedRef}
-        direction="column"
-        gap="medium"
-        UNSAFE_className={styleProps.className}
-        UNSAFE_style={styleProps.style}
-      >
-        {label && (
-          <FieldLabel
-            isRequired={isRequired}
-            supplementRequiredState={supplementRequiredState}
-            {...labelProps}
-          >
-            {label}
-          </FieldLabel>
-        )}
+  return (
+    <Flex
+      ref={forwardedRef}
+      direction="column"
+      gap="medium"
+      UNSAFE_className={styleProps.className}
+      UNSAFE_style={styleProps.style}
+    >
+      {label && (
+        <FieldLabel
+          isRequired={isRequired}
+          supplementRequiredState={supplementRequiredState}
+          {...labelProps}
+        >
+          {label}
+        </FieldLabel>
+      )}
 
-        {description && (
-          <Text {...descriptionProps} size="small" color="neutralSecondary">
-            {description}
-          </Text>
-        )}
+      {description && (
+        <Text {...descriptionProps} size="small" color="neutralSecondary">
+          {description}
+        </Text>
+      )}
 
-        {children}
+      {children}
 
-        {errorMessage && (
-          <FieldMessage {...errorMessageProps}>{errorMessage}</FieldMessage>
-        )}
-      </Flex>
-    );
-  }
-);
+      {errorMessage && (
+        <FieldMessage {...errorMessageProps}>{errorMessage}</FieldMessage>
+      )}
+    </Flex>
+  );
+});

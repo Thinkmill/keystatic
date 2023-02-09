@@ -1,8 +1,13 @@
-import { useVisuallyHidden } from '@react-aria/visually-hidden';
+import {
+  useVisuallyHidden,
+  VisuallyHiddenProps,
+} from '@react-aria/visually-hidden';
 
 import { BreakpointRange, useResponsiveRange } from '@voussoir/style';
 
-export function useVisuallyHiddenRange(range?: BreakpointRange) {
+export function useVisuallyHiddenRange(
+  range?: BreakpointRange
+): VisuallyHiddenProps | undefined {
   let matchedBreakpoints = useResponsiveRange();
   let { visuallyHiddenProps } = useVisuallyHidden();
 
