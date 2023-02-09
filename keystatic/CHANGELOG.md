@@ -1,5 +1,12 @@
 # keystatic
 
+## 0.0.22
+
+### Patch Changes
+
+- 0deff67: Improve image field
+- 0deff67: Add `fields.date`
+
 ## 0.0.21
 
 ### Patch Changes
