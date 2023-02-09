@@ -14,7 +14,7 @@ export const categories = [
   'Media',
 ] as const;
 
-export type Category = typeof categories[number];
+export type Category = (typeof categories)[number];
 
 const categoriesSet = new Set<string>(categories);
 

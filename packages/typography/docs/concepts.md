@@ -190,8 +190,8 @@ the title attribute.
     truncate
     title="This example contains complex children, and manually sets the title."
   >
-    This example contains <TextLink href="#truncate">complex children</TextLink>,
-    and manually sets the title.
+    This example contains <TextLink href="#truncate">complex children</TextLink>
+    , and manually sets the title.
   </Text>
 </Flex>
 ```

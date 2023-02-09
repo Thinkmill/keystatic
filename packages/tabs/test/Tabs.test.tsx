@@ -20,7 +20,7 @@ let defaultItems = [
 
 // FIXME: The `items` prop of `Tabs` should infer the type of the items for both
 // the TabList and TabPanels components. Not sure how to do this.
-type TabItem = typeof defaultItems[0];
+type TabItem = (typeof defaultItems)[0];
 
 function renderComponent<T>(
   props: Partial<TabsProps<T>> = {},

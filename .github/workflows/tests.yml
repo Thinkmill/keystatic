@@ -35,10 +35,10 @@ jobs:
       - uses: ./.github/actions/setup-deps
 
       - name: Prettier
-        run: pnpm check:format
+        run: pnpm check:format .
 
       - name: ESLint
-        run: pnpm check:lint
+        run: pnpm check:lint .
 
       - name: TypeScript
         run: pnpm check:types
