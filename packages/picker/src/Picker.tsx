@@ -15,7 +15,7 @@ import {
 import { FieldButton } from '@voussoir/button';
 import { useProvider, useProviderProps } from '@voussoir/core';
 import { FieldPrimitive } from '@voussoir/field';
-import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
+import { chevronsUpDownIcon } from '@voussoir/icon/icons/chevronsUpDownIcon';
 import { Icon } from '@voussoir/icon';
 import { ListBoxBase, listStyles, useListBoxLayout } from '@voussoir/listbox';
 import { Popover, Tray } from '@voussoir/overlays';
@@ -207,7 +207,7 @@ function Picker<T extends object>(
             />
           )}
           <Icon
-            src={chevronDownIcon}
+            src={chevronsUpDownIcon}
             UNSAFE_className={css({
               marginInlineStart: tokenSchema.size.space.small,
             })}
