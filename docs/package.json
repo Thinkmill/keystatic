@@ -5,10 +5,10 @@
   "license": "MIT",
   "scripts": {
     "build": "npm-run-all --sequential build:*",
-    "build:docs": "yarn pre-site && next build",
-    "build:playroom": "yarn pre-site && playroom build",
+    "build:docs": "pnpm pre-site && next build",
+    "build:playroom": "pnpm pre-site && playroom build",
     "build:storybook": "build-storybook -o ./public/storybook",
-    "dev": "yarn pre-site && next dev",
+    "dev": "pnpm pre-site && next dev",
     "dev:playroom": "playroom start",
     "dev:storybook": "start-storybook -p 6006",
     "lint": "next lint",
@@ -16,6 +16,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@babel/core": "^7.18.5",
     "@markdoc/markdoc": "^0.2.2",
     "@react-aria/i18n": "^3.6.2",
     "@types/js-yaml": "^4.0.5",
