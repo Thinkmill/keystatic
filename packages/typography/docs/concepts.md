@@ -176,6 +176,8 @@ The `title` attribute is populated automatically when `children` is a string. If
 `children` contains elements or components use the `title` prop to manually set
 the title attribute.
 
+<!-- prettier is fighting itself -->
+<!-- prettier-ignore -->
 ```jsx {% live=true %}
 <Flex direction="column" gap="large" width={240}>
   <Text truncate>
@@ -190,8 +192,8 @@ the title attribute.
     truncate
     title="This example contains complex children, and manually sets the title."
   >
-    This example contains <TextLink href="#truncate">complex children</TextLink>,
-    and manually sets the title.
+    This example contains <TextLink href="#truncate">complex children</TextLink>
+    , and manually sets the title.
   </Text>
 </Flex>
 ```
