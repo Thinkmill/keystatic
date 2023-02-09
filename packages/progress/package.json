@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/progress",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Progress indicators show the progression of a system operation such as downloading, uploading, processing, etc. in a visual way. They can represent determinate or indeterminate progress.",
   "license": "MIT",
   "main": "dist/voussoir-progress.cjs.js",
@@ -20,10 +20,10 @@
     "@react-aria/meter": "^3.3.3",
     "@react-aria/progress": "^3.3.3",
     "@react-aria/utils": "^3.14.2",
-    "@voussoir/style": "^0.0.0",
-    "@voussoir/types": "^0.0.0",
-    "@voussoir/typography": "^0.0.0",
-    "@voussoir/utils": "^1.0.0",
+    "@voussoir/style": "^0.1.0",
+    "@voussoir/types": "^0.1.0",
+    "@voussoir/typography": "^0.1.0",
+    "@voussoir/utils": "^2.0.0",
     "emery": "^1.4.1"
   },
   "devDependencies": {
