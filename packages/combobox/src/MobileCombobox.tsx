@@ -6,15 +6,16 @@ import { useFilter, useLocalizedStringFormatter } from '@react-aria/i18n';
 import { setInteractionModality, useHover } from '@react-aria/interactions';
 import { useField } from '@react-aria/label';
 import { DismissButton, useOverlayTrigger } from '@react-aria/overlays';
-import { mergeProps, useId } from '@react-aria/utils';
+import { mergeProps, useId, useObjectRef } from '@react-aria/utils';
 import { ComboBoxState, useComboBoxState } from '@react-stately/combobox';
 import { AriaButtonProps } from '@react-types/button';
-import { FocusableRefValue, ValidationState } from '@react-types/shared';
+import { ValidationState } from '@react-types/shared';
 import React, {
+  ForwardedRef,
   HTMLAttributes,
+  KeyboardEvent,
   ReactElement,
   ReactNode,
-  RefObject,
   useCallback,
   useEffect,
   useRef,
@@ -26,15 +27,16 @@ import { FieldPrimitive } from '@voussoir/field';
 import { Icon } from '@voussoir/icon';
 import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
 import { ListBoxBase, useListBoxLayout } from '@voussoir/listbox';
+import { Tray } from '@voussoir/overlays';
 import { ProgressCircle } from '@voussoir/progress';
 import { classNames } from '@voussoir/style';
 import { TextFieldPrimitive } from '@voussoir/text-field';
-import { Tray } from '@voussoir/overlays';
 
 import { useProviderProps } from '@voussoir/core';
 
 import { messages } from '../intl';
 import { ComboboxProps } from './types';
+import { Flex } from '@voussoir/layout';
 
 const buttonStyles = {}; // remove
 const comboboxStyles = {}; // remove
@@ -45,7 +47,7 @@ const textfieldStyles = {}; // remove
 
 export const MobileCombobox = React.forwardRef(function MobileCombobox<
   T extends object
->(props: ComboboxProps<T>, ref: RefObject<HTMLElement>) {
+>(props: ComboboxProps<T>, forwardedRef: ForwardedRef<HTMLDivElement>) {
   props = useProviderProps(props);
 
   let { isDisabled, validationState, isReadOnly } = props;
@@ -55,14 +57,16 @@ export const MobileCombobox = React.forwardRef(function MobileCombobox<
     ...props,
     defaultFilter: contains,
     allowsEmptyCollection: true,
-    // Needs to be false here otherwise we double up on commitSelection/commitCustomValue calls when
-    // user taps on underlay (i.e. initial tap will call setFocused(false) -> commitSelection/commitCustomValue via onBlur,
-    // then the closing of the tray will call setFocused(false) again due to cleanup effect)
+    // Needs to be false here otherwise we double up on
+    // commitSelection/commitCustomValue calls when user taps on underlay (i.e.
+    // initial tap will call setFocused(false) ->
+    // commitSelection/commitCustomValue via onBlur, then the closing of the
+    // tray will call setFocused(false) again due to cleanup effect)
     shouldCloseOnBlur: false,
   });
 
-  let buttonRef = useRef<HTMLElement>(null);
-  let domRef = useFocusableRef(ref, buttonRef);
+  let buttonRef = useRef<HTMLDivElement>(null);
+  let domRef = useObjectRef(forwardedRef);
   let { triggerProps, overlayProps } = useOverlayTrigger(
     { type: 'listbox' },
     state,
@@ -76,8 +80,9 @@ export const MobileCombobox = React.forwardRef(function MobileCombobox<
 
   // Focus the button and show focus ring when clicking on the label
   labelProps.onClick = () => {
-    if (!props.isDisabled) {
-      buttonRef.current.focus();
+    let button = buttonRef.current;
+    if (button && !props.isDisabled) {
+      button.focus();
       setInteractionModality('keyboard');
     }
   };
@@ -87,11 +92,11 @@ export const MobileCombobox = React.forwardRef(function MobileCombobox<
       <FieldPrimitive
         {...props}
         labelProps={labelProps}
-        elementType="span"
+        // elementType="span"
         ref={domRef}
-        includeNecessityIndicatorInAccessibilityName
+        supplementRequiredState
       >
-        <ComboBoxButton
+        <ComboboxButton
           {...mergeProps(triggerProps, fieldProps, {
             autoFocus: props.autoFocus,
           })}
@@ -102,10 +107,10 @@ export const MobileCombobox = React.forwardRef(function MobileCombobox<
           onPress={() => !isReadOnly && state.open(null, 'manual')}
         >
           {state.inputValue || props.placeholder || ''}
-        </ComboBoxButton>
+        </ComboboxButton>
       </FieldPrimitive>
       <Tray state={state} isFixedHeight {...overlayProps}>
-        <ComboBoxTray
+        <ComboboxTray
           {...props}
           onClose={state.close}
           overlayProps={overlayProps}
@@ -116,18 +121,18 @@ export const MobileCombobox = React.forwardRef(function MobileCombobox<
   );
 });
 
-interface ComboBoxButtonProps extends AriaButtonProps {
+interface ComboboxButtonProps extends AriaButtonProps {
+  children?: ReactNode;
+  className?: string;
   isDisabled?: boolean;
   isPlaceholder?: boolean;
-  validationState?: ValidationState;
-  children?: ReactNode;
   style?: React.CSSProperties;
-  className?: string;
+  validationState?: ValidationState;
 }
 
-const ComboBoxButton = React.forwardRef(function ComboBoxButton(
-  props: ComboBoxButtonProps,
-  ref: RefObject<HTMLElement>
+const ComboboxButton = React.forwardRef(function ComboboxButton(
+  props: ComboboxButtonProps,
+  forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
   let {
     isDisabled,
@@ -137,10 +142,10 @@ const ComboBoxButton = React.forwardRef(function ComboBoxButton(
     style,
     className,
   } = props;
-  let stringFormatter = useLocalizedStringFormatter(messages);
   let valueId = useId();
   let invalidId = useId();
 
+  let domRef = useObjectRef(forwardedRef);
   let { hoverProps, isHovered } = useHover({});
   let { buttonProps, isPressed } = useButton(
     {
@@ -155,7 +160,7 @@ const ComboBoxButton = React.forwardRef(function ComboBoxButton(
         .join(' '),
       elementType: 'div',
     },
-    ref
+    domRef
   );
 
   return (
@@ -166,7 +171,7 @@ const ComboBoxButton = React.forwardRef(function ComboBoxButton(
       <div
         {...mergeProps(hoverProps, buttonProps)}
         aria-haspopup="dialog"
-        ref={ref as RefObject<HTMLDivElement>}
+        ref={domRef}
         style={{ ...style, outline: 'none' }}
         className={classNames(
           styles,
@@ -243,16 +248,15 @@ const ComboBoxButton = React.forwardRef(function ComboBoxButton(
   );
 });
 
-interface ComboBoxTrayProps extends ComboboxProps<unknown> {
-  state: ComboBoxState<unknown>;
+interface ComboBoxTrayProps<T extends object> extends ComboboxProps<T> {
+  state: ComboBoxState<T>;
   overlayProps: HTMLAttributes<HTMLElement>;
   loadingIndicator?: ReactElement;
   onClose: () => void;
 }
 
-function ComboBoxTray(props: ComboBoxTrayProps) {
+function ComboboxTray<T extends object>(props: ComboBoxTrayProps<T>) {
   let {
-    // completionMode = 'suggest',
     state,
     isDisabled,
     validationState,
@@ -263,22 +267,21 @@ function ComboBoxTray(props: ComboBoxTrayProps) {
     onClose,
   } = props;
 
-  let timeout = useRef(null);
+  let timeoutRef = useRef<NodeJS.Timeout>();
   let [showLoading, setShowLoading] = useState(false);
-  let inputRef = useRef<HTMLInputElement>();
-  let buttonRef = useRef<FocusableRefValue<HTMLElement>>();
-  let popoverRef = useRef<HTMLDivElement>();
-  let listBoxRef = useRef<HTMLDivElement>();
+  let inputRef = useRef<HTMLInputElement>(null);
+  let buttonRef = useRef<HTMLDivElement>(null);
+  let popoverRef = useRef<HTMLDivElement>(null);
+  let listBoxRef = useRef<HTMLDivElement>(null);
   let layout = useListBoxLayout(state);
   let stringFormatter = useLocalizedStringFormatter(messages);
 
   let { inputProps, listBoxProps, labelProps } = useComboBox(
     {
       ...props,
-      // completionMode,
       keyboardDelegate: layout,
-      buttonRef: unwrapDOMRef(buttonRef),
-      popoverRef: popoverRef,
+      buttonRef,
+      popoverRef,
       listBoxRef,
       inputRef,
     },
@@ -286,7 +289,10 @@ function ComboBoxTray(props: ComboBoxTrayProps) {
   );
 
   React.useEffect(() => {
-    focusSafely(inputRef.current);
+    let input = inputRef.current;
+    if (input) {
+      focusSafely(input);
+    }
 
     // When the tray unmounts, set state.isFocused (i.e. the tray input's focus tracker) to false.
     // This is to prevent state.isFocused from being set to true when the tray closes via tapping on the underlay
@@ -321,7 +327,10 @@ function ComboBoxTray(props: ComboBoxTrayProps) {
       excludeFromTabOrder
       onPress={() => {
         state.setInputValue('');
-        inputRef.current.focus();
+        let input = inputRef.current;
+        if (input) {
+          input.focus();
+        }
       }}
       UNSAFE_className={classNames(searchStyles, 'spectrum-ClearButton')}
       isDisabled={isDisabled}
@@ -331,7 +340,7 @@ function ComboBoxTray(props: ComboBoxTrayProps) {
   let loadingCircle = (
     <ProgressCircle
       aria-label={stringFormatter.format('loading')}
-      size="S"
+      size="small"
       isIndeterminate
       UNSAFE_className={classNames(
         searchStyles,
@@ -354,50 +363,55 @@ function ComboBoxTray(props: ComboBoxTrayProps) {
   };
 
   let onScroll = useCallback(() => {
-    if (
-      !inputRef.current ||
-      document.activeElement !== inputRef.current ||
-      !isTouchDown.current
-    ) {
+    let input = inputRef.current;
+    let popover = popoverRef.current;
+    if (!input || document.activeElement !== input || !isTouchDown.current) {
       return;
     }
 
-    popoverRef.current.focus();
+    if (popover) {
+      popover.focus();
+    }
   }, [inputRef, popoverRef, isTouchDown]);
 
   let inputValue = inputProps.value;
   let lastInputValue = useRef(inputValue);
   useEffect(() => {
     if (loadingState === 'filtering' && !showLoading) {
-      if (timeout.current === null) {
-        timeout.current = setTimeout(() => {
+      if (timeoutRef.current === null) {
+        timeoutRef.current = setTimeout(() => {
           setShowLoading(true);
         }, 500);
       }
 
       // If user is typing, clear the timer and restart since it is a new request
       if (inputValue !== lastInputValue.current) {
-        clearTimeout(timeout.current);
-        timeout.current = setTimeout(() => {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => {
           setShowLoading(true);
         }, 500);
       }
     } else if (loadingState !== 'filtering') {
       // If loading is no longer happening, clear any timers and hide the loading circle
       setShowLoading(false);
-      clearTimeout(timeout.current);
-      timeout.current = null;
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = undefined;
     }
 
     lastInputValue.current = inputValue;
   }, [loadingState, inputValue, showLoading]);
 
-  let onKeyDown = e => {
+  let onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    let popover = popoverRef.current;
     // Close virtual keyboard if user hits Enter w/o any focused options
-    if (e.key === 'Enter' && state.selectionManager.focusedKey == null) {
-      popoverRef.current.focus();
+    if (
+      popover &&
+      e.key === 'Enter' &&
+      state.selectionManager.focusedKey == null
+    ) {
+      popover.focus();
     } else {
-      inputProps.onKeyDown(e);
+      inputProps.onKeyDown?.(e);
     }
   };
 
@@ -413,19 +427,17 @@ function ComboBoxTray(props: ComboBoxTrayProps) {
           label={label}
           labelProps={labelProps}
           inputProps={{ ...inputProps, onKeyDown }}
-          inputRef={inputRef}
+          ref={inputRef}
           isDisabled={isDisabled}
-          isLoading={showLoading && loadingState === 'filtering'}
-          loadingIndicator={loadingState != null && loadingCircle}
-          validationState={validationState}
-          labelAlign="start"
-          labelPosition="top"
-          wrapperChildren={
-            (state.inputValue !== '' ||
-              loadingState === 'filtering' ||
-              validationState != null) &&
-            !props.isReadOnly &&
-            clearButton
+          endElement={
+            <Flex>
+              {showLoading && loadingState === 'filtering' && loadingCircle}
+              {(state.inputValue !== '' ||
+                loadingState === 'filtering' ||
+                validationState != null) &&
+                !props.isReadOnly &&
+                clearButton}
+            </Flex>
           }
           UNSAFE_className={classNames(
             searchStyles,
@@ -441,15 +453,6 @@ function ComboBoxTray(props: ComboBoxTrayProps) {
             classNames(comboboxStyles, 'tray-textfield', {
               'has-label': !!props.label,
             })
-          )}
-          inputClassName={classNames(
-            comboboxStyles,
-            'tray-textfield-input',
-            classNames(searchStyles, 'spectrum-Search-input')
-          )}
-          validationIconClassName={classNames(
-            searchStyles,
-            'spectrum-Search-validationIcon'
           )}
         />
         <ListBoxBase
