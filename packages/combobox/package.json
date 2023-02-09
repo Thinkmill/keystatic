@@ -1,0 +1,49 @@
+{
+  "name": "@voussoir/combobox",
+  "version": "0.1.0",
+  "description": "A combobox is a decorative indicator used to either call attention to an item or for communicating non-actionable, supplemental information.",
+  "license": "MIT",
+  "main": "dist/voussoir-combobox.cjs.js",
+  "module": "dist/voussoir-combobox.esm.js",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@babel/runtime": "^7.18.3",
+    "@react-aria/button": "^3.6.4",
+    "@react-aria/combobox": "^3.4.4",
+    "@react-aria/dialog": "^3.4.2",
+    "@react-aria/focus": "^3.10.1",
+    "@react-aria/i18n": "^3.6.2",
+    "@react-aria/interactions": "^3.13.0",
+    "@react-aria/label": "^3.4.4",
+    "@react-aria/overlays": "^3.12.0",
+    "@react-stately/collections": "^3.5.0",
+    "@react-stately/combobox": "^3.3.1",
+    "@react-types/combobox": "^3.5.5",
+    "@voussoir/button": "^0.1.0",
+    "@voussoir/core": "^0.1.0",
+    "@voussoir/field": "^0.1.0",
+    "@voussoir/icon": "^0.1.0",
+    "@voussoir/layout": "^0.1.0",
+    "@voussoir/listbox": "^0.1.0",
+    "@voussoir/overlays": "^0.1.0",
+    "@voussoir/progress": "^0.1.0",
+    "@voussoir/slots": "^0.1.0",
+    "@voussoir/style": "^0.1.0",
+    "@voussoir/text-field": "^0.1.0",
+    "@voussoir/types": "^0.1.0",
+    "@voussoir/typography": "^0.1.0",
+    "@voussoir/utils": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.25",
+    "react": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "engines": {
+    "node": ">= 14.13"
+  }
+}

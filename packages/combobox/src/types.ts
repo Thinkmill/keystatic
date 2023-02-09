@@ -1,0 +1,37 @@
+import { AriaComboBoxProps } from '@react-types/combobox';
+import {
+  AsyncLoadable,
+  LoadingState,
+  TextInputBase,
+} from '@react-types/shared';
+
+import { FieldProps } from '@voussoir/field';
+import { BaseStyleProps } from '@voussoir/style';
+
+export type MenuTriggerAction = 'focus' | 'input' | 'manual';
+
+export type ComboBoxProps<T> = TextInputBase &
+  Omit<AriaComboBoxProps<T>, 'menuTrigger'> &
+  FieldProps &
+  BaseStyleProps &
+  Omit<AsyncLoadable, 'isLoading'> & {
+    /**
+     * The interaction required to display the ComboBox menu. Note that this prop
+     * has no effect on the mobile experience.
+     * @default 'input'
+     */
+    menuTrigger?: MenuTriggerAction;
+    /**
+     * Direction the menu will render relative to the ComboBox.
+     * @default 'bottom'
+     */
+    direction?: 'bottom' | 'top';
+    /** The current loading state of the ComboBox. Determines whether or not the
+     * progress circle should be shown. */
+    loadingState?: LoadingState;
+    /**
+     * Whether the menu should automatically flip direction when space is limited.
+     * @default true
+     */
+    shouldFlip?: boolean;
+  };
