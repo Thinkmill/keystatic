@@ -23,7 +23,7 @@ jobs:
       - uses: ./.github/actions/setup-deps
 
       - name: Unit tests
-        run: yarn test:unit --ci --runInBand
+        run: pnpm test:unit --ci --runInBand
 
   linting:
     name: Linting

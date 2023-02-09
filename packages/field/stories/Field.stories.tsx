@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentStoryObj } from '@storybook/react';
+import { ComponentMeta, ComponentStoryObj } from '@voussoir/storybook';
 
 import { Field } from '../src';
 

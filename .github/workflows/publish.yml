@@ -16,7 +16,7 @@ jobs:
 
       - uses: ./.github/actions/setup-deps
 
-      - run: yarn build:packages
+      - run: pnpm build:packages
 
       - name: git config
         run: |
@@ -24,7 +24,7 @@ jobs:
           git config --global user.email 'automation+github@thinkmill.com.au'
 
       - name: npm publish, git tag
-        run: yarn changeset publish
+        run: pnpm changeset publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

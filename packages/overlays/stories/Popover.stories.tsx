@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useOverlayTrigger } from '@react-aria/overlays';
 import { useOverlayTriggerState } from '@react-stately/overlays';
-import { ArgTypes, storiesOf } from '@storybook/react';
+import { ArgTypes, storiesOf } from '@voussoir/storybook';
 
 import { Button } from '@voussoir/button';
 import { Box, Flex } from '@voussoir/layout';

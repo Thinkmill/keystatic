@@ -1,4 +1,4 @@
-import { storiesOf } from '@storybook/react';
+import { storiesOf } from '@voussoir/storybook';
 import { Icon } from '@voussoir/icon';
 import { homeIcon } from '@voussoir/icon/icons/homeIcon';
 import { mailsIcon } from '@voussoir/icon/icons/mailsIcon';

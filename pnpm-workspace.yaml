@@ -1,4 +1,5 @@
 packages:
-  - "packages/*"
-  - "docs"
-  - "keystatic"
+  - 'packages/*'
+  - 'docs'
+  - 'docs/storybook'
+  - 'keystatic'

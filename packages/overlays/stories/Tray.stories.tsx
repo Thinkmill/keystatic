@@ -1,7 +1,6 @@
 import { chain } from '@react-aria/utils';
 import { useOverlayTriggerState } from '@react-stately/overlays';
-import { action } from '@storybook/addon-actions';
-import { storiesOf } from '@storybook/react';
+import { action, storiesOf } from '@voussoir/storybook';
 import { useRef, useState } from 'react';
 
 import { Box, Divider, Flex, Grid } from '@voussoir/layout';

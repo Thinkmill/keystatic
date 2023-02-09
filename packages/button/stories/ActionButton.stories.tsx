@@ -1,5 +1,4 @@
-import { action } from '@storybook/addon-actions';
-import { storiesOf } from '@storybook/react';
+import { action, storiesOf } from '@voussoir/storybook';
 
 import { plusCircleIcon } from '@voussoir/icon/icons/plusCircleIcon';
 import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';

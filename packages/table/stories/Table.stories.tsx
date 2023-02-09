@@ -1,5 +1,4 @@
-import { action } from '@storybook/addon-actions';
-import { ArgTypes, storiesOf } from '@storybook/react';
+import { action, ArgTypes, storiesOf } from '@voussoir/storybook';
 import { Key, useMemo, useState } from 'react';
 
 import {
@@ -169,7 +168,7 @@ storiesOf('Components/TableView', module)
     });
 
     const items = useMemo(() => {
-      const key = sortDescriptor.column as keyof typeof pokemonItems[0];
+      const key = sortDescriptor.column as keyof (typeof pokemonItems)[0];
       if (!key) {
         return pokemonItems;
       }

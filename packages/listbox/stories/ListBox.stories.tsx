@@ -1,6 +1,5 @@
 import { useAsyncList } from '@react-stately/data';
-import { action } from '@storybook/addon-actions';
-import { storiesOf } from '@storybook/react';
+import { action, storiesOf } from '@voussoir/storybook';
 import { alignCenterVerticalIcon } from '@voussoir/icon/icons/alignCenterVerticalIcon';
 import { alignStartVerticalIcon } from '@voussoir/icon/icons/alignStartVerticalIcon';
 import { alignEndVerticalIcon } from '@voussoir/icon/icons/alignEndVerticalIcon';

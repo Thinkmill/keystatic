@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
-import { action } from '@storybook/addon-actions';
-import { storiesOf, Parameters } from '@storybook/react';
+import { action, storiesOf, Parameters } from '@voussoir/storybook';
 
 import { TextField } from '../src';
 

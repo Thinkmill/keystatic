@@ -1,5 +1,4 @@
-import { action } from '@storybook/addon-actions';
-import { storiesOf } from '@storybook/react';
+import { action, storiesOf } from '@voussoir/storybook';
 import { useAsyncList, useListData } from '@react-stately/data';
 import { ItemDropTarget } from '@react-types/shared';
 import React from 'react';

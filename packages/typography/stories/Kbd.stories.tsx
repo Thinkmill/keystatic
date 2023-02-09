@@ -1,4 +1,4 @@
-import { storiesOf } from '@storybook/react';
+import { storiesOf } from '@voussoir/storybook';
 
 import { Flex } from '@voussoir/layout';
 import { SlotProvider } from '@voussoir/slots';
