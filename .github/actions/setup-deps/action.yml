@@ -6,6 +6,7 @@ runs:
       uses: actions/setup-node@v3
       with:
         node-version: lts/*
+        registry-url: 'https://registry.npmjs.org'
 
     - name: Get yarn cache directory path
       id: yarn-cache-dir-path
