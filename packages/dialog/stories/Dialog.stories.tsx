@@ -1,4 +1,4 @@
-import { storiesOf } from '@storybook/react';
+import { storiesOf } from '@voussoir/storybook';
 
 import { Button, ButtonGroup } from '@voussoir/button';
 import { Flex } from '@voussoir/layout';

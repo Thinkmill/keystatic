@@ -133,7 +133,7 @@ export const AppList = () => {
   });
 
   const items = useMemo(() => {
-    const key = sortDescriptor.column as keyof typeof pokemonItems[0];
+    const key = sortDescriptor.column as keyof (typeof pokemonItems)[0];
     if (!key) {
       return pokemonItems;
     }

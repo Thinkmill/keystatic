@@ -1,4 +1,4 @@
-import { ArgTypes, storiesOf } from '@storybook/react';
+import { ArgTypes, storiesOf } from '@voussoir/storybook';
 
 import { Box, Flex } from '@voussoir/layout';
 import { Text } from '@voussoir/typography';

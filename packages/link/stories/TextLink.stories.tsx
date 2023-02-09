@@ -1,5 +1,4 @@
-import { action } from '@storybook/addon-actions';
-import { storiesOf } from '@storybook/react';
+import { action, storiesOf } from '@voussoir/storybook';
 
 import { Grid } from '@voussoir/layout';
 import { Heading, Text } from '@voussoir/typography';

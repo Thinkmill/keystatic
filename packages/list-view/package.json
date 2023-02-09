@@ -30,6 +30,7 @@
     "@react-stately/dnd": "^3.0.1",
     "@react-stately/layout": "^3.10.0",
     "@react-stately/list": "^3.6.0",
+    "@react-types/grid": "^3.1.5",
     "@react-types/shared": "^3.14.1",
     "@voussoir/checkbox": "^0.1.0",
     "@voussoir/core": "^4.0.0",
@@ -45,11 +46,20 @@
     "emery": "^1.4.1"
   },
   "devDependencies": {
+    "@react-stately/data": "^3.7.0",
     "@types/react": "^18.0.25",
-    "react": "^18.2.0"
+    "@voussoir/action-group": "^0.1.0",
+    "@voussoir/button": "^0.1.0",
+    "@voussoir/image": "^0.1.0",
+    "@voussoir/link": "^0.1.0",
+    "@voussoir/storybook": "^0.0.0",
+    "@voussoir/test-utils": "^2.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "engines": {
     "node": ">= 14.13"
