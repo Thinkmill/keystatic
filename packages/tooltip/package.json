@@ -1,0 +1,44 @@
+{
+  "name": "@voussoir/tooltip",
+  "version": "0.0.0",
+  "description": "Tooltips are floating text labels used to concisely describe the function of their associated element.",
+  "license": "MIT",
+  "main": "dist/voussoir-tooltip.cjs.js",
+  "module": "dist/voussoir-tooltip.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/voussoir-tooltip.esm.js",
+      "default": "./dist/voussoir-tooltip.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@babel/runtime": "^7.18.3",
+    "@react-aria/focus": "^3.10.0",
+    "@react-aria/overlays": "^3.12.0",
+    "@react-aria/tooltip": "^3.3.3",
+    "@react-aria/utils": "^3.14.2",
+    "@react-stately/tooltip": "^3.2.3",
+    "@react-types/overlays": "^3.6.5",
+    "@voussoir/layout": "^0.0.0",
+    "@voussoir/overlays": "^0.0.0",
+    "@voussoir/slots": "^0.0.0",
+    "@voussoir/style": "^0.0.0",
+    "@voussoir/types": "^0.0.0",
+    "@voussoir/typography": "^0.0.0",
+    "@voussoir/utils": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.25",
+    "react": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "engines": {
+    "node": ">= 14.13"
+  }
+}

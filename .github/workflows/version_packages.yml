@@ -1,0 +1,24 @@
+name: Version Packages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  versioning:
+    name: Pull Request
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-deps
+
+      - uses: changesets/action@v1
+        env:
+          # use a different GitHub account to have the CI run on push
+          GITHUB_TOKEN: ${{ secrets.RELEASE_BOT_GITHUB_TOKEN }}

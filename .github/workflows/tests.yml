@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - uses: ./.github/actions/setup-deps
+
+      - name: Unit tests
+        run: yarn test:unit --ci --runInBand
+
+  linting:
+    name: Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - uses: ./.github/actions/setup-deps
+
+      - name: Prettier
+        run: yarn check:format
+
+      - name: ESLint
+        run: yarn check:lint
+
+      - name: TypeScript
+        run: yarn check:types

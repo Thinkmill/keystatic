@@ -1,0 +1,7 @@
+{
+  "main": "dist/voussoir-utils-ts.cjs.js",
+  "module": "dist/voussoir-utils-ts.esm.js",
+  "files": [
+    "dist"
+  ]
+}

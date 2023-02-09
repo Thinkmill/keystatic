@@ -1,0 +1,37 @@
+{
+  "name": "@voussoir/layout",
+  "version": "0.0.0",
+  "description": "Components are likely to appear in different contexts and the requirement for spacing will differ. Layout primitives offer common structural patterns in the form of components to create relationships between adjacent elements.",
+  "license": "MIT",
+  "main": "dist/voussoir-layout.cjs.js",
+  "module": "dist/voussoir-layout.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/voussoir-layout.esm.js",
+      "default": "./dist/voussoir-layout.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@babel/runtime": "^7.18.3",
+    "@react-aria/separator": "^3.2.5",
+    "@voussoir/slots": "^0.0.0",
+    "@voussoir/style": "^0.0.0",
+    "@voussoir/types": "^0.0.0",
+    "@voussoir/utils": "^1.0.0",
+    "emery": "^1.4.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.25",
+    "react": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "engines": {
+    "node": ">= 14.13"
+  }
+}

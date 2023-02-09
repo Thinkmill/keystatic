@@ -1,0 +1,44 @@
+{
+  "name": "@voussoir/core",
+  "version": "3.0.0",
+  "description": "",
+  "license": "MIT",
+  "main": "dist/voussoir-core.cjs.js",
+  "module": "dist/voussoir-core.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/voussoir-core.esm.js",
+      "default": "./dist/voussoir-core.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@babel/runtime": "^7.18.3",
+    "@emotion/react": "^11.9.3",
+    "@emotion/server": "^11.4.0",
+    "@react-aria/i18n": "^3.6.2",
+    "@react-aria/overlays": "^3.12.0",
+    "@voussoir/link": "^0.0.0",
+    "@voussoir/ssr": "^0.0.0",
+    "@voussoir/style": "^0.0.0",
+    "@voussoir/types": "^0.0.0",
+    "@voussoir/utils": "^1.0.0",
+    "assert": "^2.0.0",
+    "dedent": "^0.7.0",
+    "emery": "^1.4.1"
+  },
+  "devDependencies": {
+    "@types/assert": "^1.5.6",
+    "@types/react": "^18.0.25",
+    "react": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "engines": {
+    "node": ">= 14.13"
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "main": "dist/voussoir-icon-icons-gitlabIcon.cjs.js",
+  "module": "dist/voussoir-icon-icons-gitlabIcon.esm.js"
+}

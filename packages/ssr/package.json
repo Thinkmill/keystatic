@@ -1,0 +1,45 @@
+{
+  "name": "@voussoir/ssr",
+  "version": "0.0.0",
+  "description": "SSR approaches for Voussoir.",
+  "license": "MIT",
+  "main": "dist/voussoir-ssr.cjs.js",
+  "module": "dist/voussoir-ssr.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/voussoir-ssr.esm.js",
+      "default": "./dist/voussoir-ssr.cjs.js"
+    },
+    "./renderStatic": {
+      "module": "./renderStatic/dist/voussoir-ssr-renderStatic.esm.js",
+      "default": "./renderStatic/dist/voussoir-ssr-renderStatic.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "renderStatic"
+  ],
+  "dependencies": {
+    "@babel/runtime": "^7.18.3",
+    "@emotion/css": "^11.9.0",
+    "@emotion/server": "^11.4.0",
+    "@react-aria/ssr": "^3.4.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.25",
+    "react": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "engines": {
+    "node": ">= 14.13"
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "renderStatic.ts"
+    ]
+  }
+}

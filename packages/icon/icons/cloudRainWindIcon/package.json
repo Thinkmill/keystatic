@@ -1,0 +1,4 @@
+{
+  "main": "dist/voussoir-icon-icons-cloudRainWindIcon.cjs.js",
+  "module": "dist/voussoir-icon-icons-cloudRainWindIcon.esm.js"
+}

@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystatic-renderer.cjs.js",
+  "module": "dist/keystatic-renderer.esm.js"
+}

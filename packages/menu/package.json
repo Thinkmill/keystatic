@@ -1,0 +1,58 @@
+{
+  "name": "@voussoir/menu",
+  "version": "0.0.0",
+  "description": "A menu displays a list of actions or options for the user to choose from.",
+  "license": "MIT",
+  "main": "dist/voussoir-menu.cjs.js",
+  "module": "dist/voussoir-menu.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/voussoir-menu.esm.js",
+      "default": "./dist/voussoir-menu.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@babel/runtime": "^7.18.3",
+    "@react-aria/focus": "^3.10.0",
+    "@react-aria/i18n": "^3.6.2",
+    "@react-aria/interactions": "^3.13.0",
+    "@react-aria/menu": "^3.7.0",
+    "@react-aria/overlays": "^3.12.0",
+    "@react-aria/selection": "^3.12.0",
+    "@react-aria/separator": "^3.2.5",
+    "@react-aria/utils": "^3.14.2",
+    "@react-aria/virtualizer": "^3.6.0",
+    "@react-stately/collections": "^3.5.0",
+    "@react-stately/menu": "^3.4.3",
+    "@react-stately/tree": "^3.4.0",
+    "@react-stately/utils": "^3.5.1",
+    "@react-types/menu": "^3.7.3",
+    "@react-types/overlays": "^3.6.5",
+    "@react-types/shared": "^3.14.1",
+    "@voussoir/button": "^0.0.0",
+    "@voussoir/icon": "^0.0.0",
+    "@voussoir/layout": "^0.0.0",
+    "@voussoir/listbox": "^0.0.0",
+    "@voussoir/overlays": "^0.0.0",
+    "@voussoir/slots": "^0.0.0",
+    "@voussoir/style": "^0.0.0",
+    "@voussoir/types": "^0.0.0",
+    "@voussoir/typography": "^0.0.0",
+    "@voussoir/utils": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.25",
+    "@voussoir/test-utils": "^1.0.0",
+    "react": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "engines": {
+    "node": ">= 14.13"
+  }
+}

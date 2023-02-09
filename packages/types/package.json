@@ -1,0 +1,32 @@
+{
+  "name": "@voussoir/types",
+  "version": "0.0.0",
+  "description": "",
+  "license": "MIT",
+  "main": "dist/voussoir-types.cjs.js",
+  "module": "dist/voussoir-types.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/voussoir-types.esm.js",
+      "default": "./dist/voussoir-types.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@babel/runtime": "^7.18.3",
+    "@voussoir/style": "^0.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.25",
+    "react": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "engines": {
+    "node": ">= 14.13"
+  }
+}

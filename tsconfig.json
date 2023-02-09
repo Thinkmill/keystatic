@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "downlevelIteration": true,
+    "strict": true,
+    "target": "esnext",
+    "types": ["node", "jest"]
+  },
+  "include": ["**/*"],
+  "exclude": ["**/dist/**/*", "docs", "**/node_modules/**/*"]
+}

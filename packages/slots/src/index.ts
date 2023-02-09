@@ -1,0 +1,7 @@
+export { useSlotProps, SlotProvider, ClearSlots } from './context';
+
+export { Content } from './Content';
+export { Footer } from './Footer';
+export { Header } from './Header';
+
+export type { SlotProviderProps } from './types';

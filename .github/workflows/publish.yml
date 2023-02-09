@@ -1,0 +1,31 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+          persist-credentials: true # needed for git push
+
+      - uses: ./.github/actions/setup-deps
+
+      - run: yarn build:packages
+
+      - name: git config
+        run: |
+          git config --global user.name 'Thinkmill Release Bot'
+          git config --global user.email 'automation+github@thinkmill.com.au'
+
+      - name: npm publish, git tag
+        run: yarn changeset publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - run: git push origin --follow-tags

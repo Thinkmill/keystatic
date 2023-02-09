@@ -1,0 +1,4 @@
+{
+  "main": "dist/voussoir-icon-icons-coinsIcon.cjs.js",
+  "module": "dist/voussoir-icon-icons-coinsIcon.esm.js"
+}

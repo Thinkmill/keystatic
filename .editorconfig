@@ -1,0 +1,10 @@
+# VSCode plugin: https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig
+# More info: https://editorconfig.org/
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*.{ts,tsx,js,jsx,json}]
+end_of_line = lf
+charset = utf-8
+indent_style = space
+indent_size = 2

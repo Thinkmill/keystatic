@@ -1,0 +1,4 @@
+{
+  "schema": "keystatic/github.graphql",
+  "documents": "keystatic/app/**/*.{ts,tsx}"
+}

@@ -1,0 +1,4 @@
+{
+  "main": "dist/voussoir-icon-icons-gitForkIcon.cjs.js",
+  "module": "dist/voussoir-icon-icons-gitForkIcon.esm.js"
+}

@@ -1,0 +1,4 @@
+{
+  "main": "dist/voussoir-icon-icons-timerResetIcon.cjs.js",
+  "module": "dist/voussoir-icon-icons-timerResetIcon.esm.js"
+}

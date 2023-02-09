@@ -1,0 +1,53 @@
+{
+  "name": "@voussoir/number-field",
+  "version": "0.0.0",
+  "description": "Number fields allow users to enter a number, and increment or decrement the value using step buttons.",
+  "license": "MIT",
+  "main": "dist/voussoir-number-field.cjs.js",
+  "module": "dist/voussoir-number-field.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/voussoir-number-field.esm.js",
+      "default": "./dist/voussoir-number-field.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@babel/runtime": "^7.18.3",
+    "@react-aria/button": "^3.6.3",
+    "@react-aria/focus": "^3.10.0",
+    "@react-aria/i18n": "^3.6.2",
+    "@react-aria/interactions": "^3.13.0",
+    "@react-aria/numberfield": "^3.3.3",
+    "@react-aria/utils": "^3.14.2",
+    "@react-stately/numberfield": "^3.3.0",
+    "@react-types/button": "^3.7.0",
+    "@react-types/numberfield": "^3.3.5",
+    "@react-types/shared": "^3.14.1",
+    "@voussoir/button": "^0.0.0",
+    "@voussoir/core": "^3.0.0",
+    "@voussoir/field": "^0.0.0",
+    "@voussoir/icon": "^0.0.0",
+    "@voussoir/layout": "^0.0.0",
+    "@voussoir/style": "^0.0.0",
+    "@voussoir/test-utils": "^1.0.0",
+    "@voussoir/text-field": "^0.0.0",
+    "@voussoir/types": "^0.0.0",
+    "@voussoir/typography": "^0.0.0",
+    "@voussoir/utils": "^1.0.0",
+    "emery": "^1.4.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.25",
+    "react": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "engines": {
+    "node": ">= 14.13"
+  }
+}

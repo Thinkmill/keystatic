@@ -1,0 +1,142 @@
+import { GridNode } from '@react-types/grid';
+
+import { Flex, Grid } from '@voussoir/layout';
+import { SlotProvider } from '@voussoir/slots';
+import { classNames, css, tokenSchema } from '@voussoir/style';
+import { Text } from '@voussoir/typography';
+import { isReactText, toDataAttributes } from '@voussoir/utils';
+
+import type { ListViewProps } from './types';
+
+interface DragPreviewProps<T> {
+  item: GridNode<any>;
+  itemCount: number;
+  itemHeight: number;
+  density: ListViewProps<T>['density'];
+}
+
+export function DragPreview(props: DragPreviewProps<unknown>) {
+  let { item, itemCount, itemHeight, density } = props;
+
+  let isDraggingMultiple = itemCount > 1;
+
+  return (
+    <div
+      {...toDataAttributes({ density, multi: isDraggingMultiple })}
+      style={{ height: itemHeight }}
+      className={classNames(
+        css({
+          display: 'grid',
+          backgroundColor: tokenSchema.color.background.canvas,
+          border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderSelected}`,
+          borderRadius: tokenSchema.size.radius.small,
+          paddingInline: tokenSchema.size.space.medium,
+          position: 'relative',
+          outline: 0,
+          width: tokenSchema.size.alias.singleLineWidth,
+
+          // Density
+          minHeight: tokenSchema.size.element.medium,
+          paddingBlock: tokenSchema.size.space.medium,
+          '&[data-density="compact"]': {
+            minHeight: tokenSchema.size.element.regular,
+            paddingBlock: tokenSchema.size.space.regular,
+          },
+          '&[data-density="spacious"]': {
+            minHeight: tokenSchema.size.element.large,
+            paddingBlock: tokenSchema.size.space.large,
+          },
+
+          // indicate that multiple items are being dragged by implying a stack
+          '&[data-multi=true]::after': {
+            backgroundColor: 'inherit',
+            border: 'inherit',
+            borderRadius: 'inherit',
+            content: '" "',
+            display: 'block',
+            height: '100%',
+            insetInlineStart: 4,
+            position: 'absolute',
+            top: 4,
+            width: '100%',
+            zIndex: -1,
+          },
+        })
+      )}
+    >
+      <Grid
+        UNSAFE_className={'ksv-list-view-item-grid'}
+        columns="auto auto 1fr auto"
+        rows="1fr auto"
+        areas={[
+          'thumbnail content     . badge',
+          'thumbnail description . badge',
+        ]}
+        alignItems="center"
+      >
+        <SlotProvider
+          slots={{
+            text: {
+              gridArea: 'content',
+              flexGrow: 1,
+              truncate: true,
+              weight: 'medium',
+              UNSAFE_className: 'ksv-list-view-item-content',
+            },
+            description: {
+              color: 'neutralSecondary',
+              size: 'small',
+              gridArea: 'description',
+              flexGrow: 1,
+              marginTop: 'small',
+              truncate: true,
+              UNSAFE_className: 'ksv-list-view-item-description',
+            },
+            image: {
+              borderRadius: 'xsmall',
+              gridArea: 'thumbnail',
+              marginEnd: 'regular',
+              overflow: 'hidden',
+              height: density === 'compact' ? 'small' : 'regular',
+              UNSAFE_className: 'ksv-list-view-item-thumbnail',
+            },
+            button: {
+              isHidden: true,
+              UNSAFE_className: 'ksv-list-view-item-actions',
+            },
+            actionGroup: {
+              isHidden: true,
+              UNSAFE_className: 'ksv-list-view-item-actions',
+            },
+            actionMenu: {
+              isHidden: true,
+              UNSAFE_className: 'ksv-list-view-item-actionmenu',
+            },
+          }}
+        >
+          {isReactText(item.rendered) ? (
+            <Text>{item.rendered}</Text>
+          ) : (
+            item.rendered
+          )}
+
+          {isDraggingMultiple && (
+            <Flex
+              alignItems="center"
+              backgroundColor="accentEmphasis"
+              borderRadius="small"
+              gridArea="badge"
+              minWidth="small"
+              padding="small"
+              UNSAFE_className="ksv-list-view-item-badge"
+            >
+              <Text align="center" color="inverse" size="small" weight="medium">
+                {itemCount}
+              </Text>
+            </Flex>
+          )}
+        </SlotProvider>
+      </Grid>
+    </div>
+  );
+}

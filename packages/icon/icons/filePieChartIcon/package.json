@@ -1,0 +1,4 @@
+{
+  "main": "dist/voussoir-icon-icons-filePieChartIcon.cjs.js",
+  "module": "dist/voussoir-icon-icons-filePieChartIcon.esm.js"
+}
