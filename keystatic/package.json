@@ -32,7 +32,6 @@
   "scripts": {
     "build": "ts-gql build && next build",
     "dev": "next dev",
-    "prepublishOnly": "ts-gql build && tsup",
     "start": "next start"
   },
   "dependencies": {
