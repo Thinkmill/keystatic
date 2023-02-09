@@ -10,23 +10,23 @@ import { BaseStyleProps } from '@voussoir/style';
 
 export type MenuTriggerAction = 'focus' | 'input' | 'manual';
 
-export type ComboBoxProps<T> = TextInputBase &
+export type ComboboxProps<T> = TextInputBase &
   Omit<AriaComboBoxProps<T>, 'menuTrigger'> &
   FieldProps &
   BaseStyleProps &
   Omit<AsyncLoadable, 'isLoading'> & {
     /**
-     * The interaction required to display the ComboBox menu. Note that this prop
+     * The interaction required to display the Combobox menu. Note that this prop
      * has no effect on the mobile experience.
      * @default 'input'
      */
     menuTrigger?: MenuTriggerAction;
     /**
-     * Direction the menu will render relative to the ComboBox.
+     * Direction the menu will render relative to the Combobox.
      * @default 'bottom'
      */
     direction?: 'bottom' | 'top';
-    /** The current loading state of the ComboBox. Determines whether or not the
+    /** The current loading state of the Combobox. Determines whether or not the
      * progress circle should be shown. */
     loadingState?: LoadingState;
     /**

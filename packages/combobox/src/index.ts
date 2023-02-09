@@ -1,5 +1,5 @@
 export { Item, Section } from '@react-stately/collections';
 
-export { ComboBox } from './ComboBox';
+export { Combobox } from './Combobox';
 
-export type { ComboBoxProps } from './types';
+export type { ComboboxProps } from './types';

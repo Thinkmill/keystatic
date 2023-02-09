@@ -6,6 +6,7 @@ import { useFilter, useLocalizedStringFormatter } from '@react-aria/i18n';
 import { setInteractionModality, useHover } from '@react-aria/interactions';
 import { useField } from '@react-aria/label';
 import { DismissButton, useOverlayTrigger } from '@react-aria/overlays';
+import { mergeProps, useId } from '@react-aria/utils';
 import { ComboBoxState, useComboBoxState } from '@react-stately/combobox';
 import { AriaButtonProps } from '@react-types/button';
 import { FocusableRefValue, ValidationState } from '@react-types/shared';
@@ -31,10 +32,9 @@ import { TextFieldPrimitive } from '@voussoir/text-field';
 import { Tray } from '@voussoir/overlays';
 
 import { useProviderProps } from '@voussoir/core';
-import { mergeProps, useId } from '@voussoir/utils';
 
 import { messages } from '../intl';
-import { ComboBoxProps } from './types';
+import { ComboboxProps } from './types';
 
 const buttonStyles = {}; // remove
 const comboboxStyles = {}; // remove
@@ -43,9 +43,9 @@ const searchStyles = {}; // remove
 const styles = {}; // remove
 const textfieldStyles = {}; // remove
 
-export const MobileComboBox = React.forwardRef(function MobileComboBox<
+export const MobileCombobox = React.forwardRef(function MobileCombobox<
   T extends object
->(props: ComboBoxProps<T>, ref: RefObject<HTMLElement>) {
+>(props: ComboboxProps<T>, ref: RefObject<HTMLElement>) {
   props = useProviderProps(props);
 
   let { isDisabled, validationState, isReadOnly } = props;
@@ -243,7 +243,7 @@ const ComboBoxButton = React.forwardRef(function ComboBoxButton(
   );
 });
 
-interface ComboBoxTrayProps extends ComboBoxProps<unknown> {
+interface ComboBoxTrayProps extends ComboboxProps<unknown> {
   state: ComboBoxState<unknown>;
   overlayProps: HTMLAttributes<HTMLElement>;
   loadingIndicator?: ReactElement;

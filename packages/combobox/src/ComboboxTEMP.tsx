@@ -1,6 +1,11 @@
 import { useComboBox } from '@react-aria/combobox';
 import { useFilter, useLocalizedStringFormatter } from '@react-aria/i18n';
 import { PressResponder, useHover } from '@react-aria/interactions';
+import {
+  useLayoutEffect,
+  useObjectRef,
+  useResizeObserver,
+} from '@react-aria/utils';
 import { useComboBoxState } from '@react-stately/combobox';
 import { AriaButtonProps } from '@react-types/button';
 import { FocusableRef, FocusableRefValue } from '@react-types/shared';
@@ -22,48 +27,42 @@ import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
 import { ListBoxBase, useListBoxLayout } from '@voussoir/listbox';
 import { Popover } from '@voussoir/overlays';
 import { ProgressCircle } from '@voussoir/progress';
-import { classNames, useIsMobileDevice } from '@voussoir/style';
+import { FocusRing, classNames, useIsMobileDevice } from '@voussoir/style';
 import { TextFieldPrimitive } from '@voussoir/text-field';
-import {
-  FocusRing,
-  useLayoutEffect,
-  useObjectRef,
-  useResizeObserver,
-} from '@voussoir/utils';
 
 import { messages } from '../intl';
 
-import { MobileComboBox } from './MobileComboBox';
-import { ComboBoxProps } from './types';
+import { MobileCombobox } from './MobileCombobox';
+import { ComboboxProps } from './types';
 import { Flex } from '@voussoir/layout';
 
 const comboboxStyles = {}; // remove
 const styles = {}; // remove
 const textfieldStyles = {}; // remove
 
-function ComboBox<T extends object>(
-  props: ComboBoxProps<T>,
+function Combobox<T extends object>(
+  props: ComboboxProps<T>,
   ref: RefObject<HTMLElement>
 ) {
   props = useProviderProps(props);
 
   if (props.placeholder) {
     console.warn(
-      'Placeholders are deprecated due to accessibility issues. Please use help text instead. See the docs for details: https://react-spectrum.adobe.com/react-spectrum/ComboBox.html#help-text'
+      'Placeholders are deprecated due to accessibility issues. Please use help text instead. See the docs for details: https://react-spectrum.adobe.com/react-spectrum/Combobox.html#help-text'
     );
   }
 
   let isMobile = useIsMobileDevice();
   if (isMobile) {
     // menuTrigger=focus/manual don't apply to mobile combobox
-    return <MobileComboBox {...props} menuTrigger="input" ref={ref} />;
+    return <MobileCombobox {...props} menuTrigger="input" ref={ref} />;
   } else {
     return <ComboBoxBase {...props} ref={ref} />;
   }
 }
 
 const ComboBoxBase = React.forwardRef(function ComboBoxBase<T extends object>(
-  props: ComboBoxProps<T>,
+  props: ComboboxProps<T>,
   ref: FocusableRef<HTMLElement>
 ) {
   let {
@@ -192,7 +191,7 @@ const ComboBoxBase = React.forwardRef(function ComboBoxBase<T extends object>(
   );
 });
 
-interface ComboBoxInputProps extends ComboBoxProps<unknown> {
+interface ComboBoxInputProps extends ComboboxProps<unknown> {
   inputProps: InputHTMLAttributes<HTMLInputElement>;
   inputRef: RefObject<HTMLInputElement | HTMLTextAreaElement>;
   triggerProps: AriaButtonProps;
@@ -334,7 +333,7 @@ const ComboBoxInput = React.forwardRef(function ComboBoxInput(
  * ComboBoxes combine a text entry with a picker menu, allowing users to filter
  * longer lists to only the selections matching a query.
  */
-const _ComboBox = React.forwardRef(ComboBox as any) as <T>(
-  props: ComboBoxProps<T> & { ref?: RefObject<HTMLElement> }
+const _ComboBox = React.forwardRef(Combobox as any) as <T>(
+  props: ComboboxProps<T> & { ref?: RefObject<HTMLElement> }
 ) => ReactElement;
-export { _ComboBox as ComboBox };
+export { _ComboBox as Combobox };
