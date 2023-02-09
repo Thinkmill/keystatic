@@ -11,7 +11,7 @@ export function validateTextFieldProps<T extends TextFieldProps>(props: T): T {
 
   // add `validationState` when `errorMessage` is provided. used by
   // "@react-aria/*" hooks to determine aria attributes.
-  if ('errorMessage' in props) {
+  if (props.errorMessage) {
     return Object.assign({}, { validationState: 'invalid' as const }, props);
   }
 

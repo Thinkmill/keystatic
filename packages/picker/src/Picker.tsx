@@ -50,6 +50,7 @@ function Picker<T extends object>(
     menuWidth,
     name,
     placeholder = stringFormatter.format('placeholder'),
+    prominence,
     shouldFlip = true,
   } = props;
 
@@ -159,6 +160,7 @@ function Picker<T extends object>(
       <PressResponder {...triggerProps}>
         <FieldButton
           aria-required
+          prominence={prominence}
           ref={triggerRef}
           isActive={state.isOpen}
           isDisabled={isDisabled}
