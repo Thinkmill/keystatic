@@ -1,5 +1,11 @@
 # keystatic
 
+## 0.0.23
+
+### Patch Changes
+
+- 957eb6b: Onboarding improvements
+
 ## 0.0.22
 
 ### Patch Changes
