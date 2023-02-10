@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/number-field",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Number fields allow users to enter a number, and increment or decrement the value using step buttons.",
   "license": "MIT",
   "main": "dist/voussoir-number-field.cjs.js",
