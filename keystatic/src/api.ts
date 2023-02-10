@@ -74,8 +74,8 @@ export default function createKeystaticAPIRoute(_config: APIRouteConfig) {
       await githubOauthCallback(req, res, config);
       return;
     }
-    if (joined === 'from-template-install') {
-      res.redirect(`${config.url}/keystatic/from-template-install`);
+    if (joined === 'from-template-deploy') {
+      res.redirect(`${config.url}/keystatic/from-template-deploy`);
       return;
     }
     if (joined === 'github/login') {
