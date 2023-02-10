@@ -5,8 +5,9 @@ import { Box, Flex } from '@voussoir/layout';
 import { css } from '@voussoir/style';
 import { TextField } from '@voussoir/text-field';
 import { Heading, Text } from '@voussoir/typography';
+import { Config } from '../src';
 
-export function KeystaticSetup() {
+export function KeystaticSetup(props: { config: Config }) {
   const [deployedURL, setDeployedURL] = useState('');
   const [organization, setOrganization] = useState('');
   return (
@@ -67,6 +68,7 @@ export function KeystaticSetup() {
           name="manifest"
           className={css({ display: 'none' })}
           value={JSON.stringify({
+            name: `${props.config.repo.owner} Keystatic`,
             url: deployedURL ? `${deployedURL}/keystatic` : 'http://localhost:3000/keystatic',
             public: false,
             redirect_url: 'http://localhost:3000/api/keystatic/github/created-app',

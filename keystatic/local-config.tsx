@@ -37,7 +37,7 @@ const toneToIcon = {
 };
 
 export default config({
-  repo: { owner: 'keystonejs', name: 'keystatic-test-repo' },
+  repo: { owner: 'Thinkmill', name: 'keystatic-test-repo' },
   collections: {
     posts: collection({
       label: 'Posts',
