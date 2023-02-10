@@ -163,11 +163,11 @@ async function githubOauthCallback(
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `bearer ${tokenDataParseResult.data.access_token}`,
+          Authorization: `Bearer ${tokenDataParseResult.data.access_token}`,
         },
         body: JSON.stringify({
           query: print(operation),
-          variables,
+          variables: variables[0],
         }),
       });
       if (!res.ok) {
@@ -177,7 +177,7 @@ async function githubOauthCallback(
       return res.json();
     };
     if (owner && repo) {
-      const { data, errors } = await fetchGraphQL(
+      const gqlRes = await fetchGraphQL(
         gql`
           query RepoForUpdating($owner: String!, $name: String!) {
             repository(owner: $owner, name: $name) {
@@ -212,14 +212,16 @@ async function githubOauthCallback(
         ` as import('../__generated__/ts-gql/RepoForUpdating').type,
         { name: repo, owner }
       );
+      const { data, errors } = gqlRes;
       if (
         (errors && 'type' in errors[0] && errors[0].type === 'NOT_FOUND') ||
-        data.repository === null
+        data?.repository === null
       ) {
         res.status(404).send('Not Found');
         return;
       }
       if (errors?.length) {
+        console.log(gqlRes);
         res.status(500).send('An error occurred while fetching the repository');
         return;
       }
@@ -252,7 +254,14 @@ async function githubOauthCallback(
                 branch: { id: data.repository.defaultBranchRef.id },
                 expectedHeadOid: defaultBranchSha,
                 message: { headline: 'Update Keystatic repo config' },
-                fileChanges: { additions: [{ contents: configFileText, path: configFile.name }] },
+                fileChanges: {
+                  additions: [
+                    {
+                      contents: Buffer.from(configFileText, 'utf-8').toString('base64'),
+                      path: configFile.name,
+                    },
+                  ],
+                },
               },
             }
           );
