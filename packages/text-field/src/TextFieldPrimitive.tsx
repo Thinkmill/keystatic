@@ -80,7 +80,11 @@ export const TextFieldPrimitive = forwardRef(function TextFieldPrimitive(
           <InputElement
             {...mergeProps(hoverProps, inputProps)}
             // FIXME: replace class variants with data attributes, for consistency.
-            className={classNames({ isHovered, isMultiline }, inputClassName)}
+            className={classNames(
+              { isHovered, isMultiline },
+              inputClassName,
+              inputProps?.className
+            )}
             data-adornment={getAdornmentType(props)}
             // @ts-ignore FIXME: not sure how to properly resolve this type
             ref={inputRef}
@@ -133,10 +137,12 @@ const InputStateIndicator = ({
         // },
 
         [s(':invalid', '[aria-invalid]')]: {
-          borderColor: tokenSchema.color.foreground.critical, // FIXME: use border alias
+          borderColor: tokenSchema.color.alias.borderInvalid,
         },
-        [s(':focus', '.isFocused')]: {
+        [s(':focus')]: {
           borderColor: tokenSchema.color.alias.borderFocused,
+        },
+        [s(':focus:not([readonly])')]: {
           boxShadow: `0 0 0 1px ${tokenSchema.color.alias.borderFocused}`,
         },
         [s(':disabled', '[aria-disabled]')]: {

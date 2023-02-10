@@ -39,7 +39,6 @@ export function useActionButtonStyles(
     style: styleProps.style,
     className: classNames(
       actionButtonClassList.root(),
-      styleProps.className,
       css({
         alignItems: 'center',
         borderColor: 'transparent',
@@ -62,11 +61,7 @@ export function useActionButtonStyles(
         transitionTimingFunction: 'ease-out',
         userSelect: 'none',
 
-        '&:disabled, &[aria-disabled]': {
-          cursor: 'default',
-        },
-
-        // contents
+        // CONTENTS
         // NOTE: the `:has` selector isn't fully supported yet. since this is
         // cosmetic CSS we can avoid runtime checks in JS to improve perf
         [`&:has(${icon}):not(:has(${text}:not([hidden])))`]: {
@@ -76,7 +71,7 @@ export function useActionButtonStyles(
           fontWeight: 'inherit',
         },
 
-        // focus ring
+        // FOCUS RING
         '&::after': {
           borderRadius: `inherit`,
           content: '""',
@@ -92,7 +87,9 @@ export function useActionButtonStyles(
           boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
         },
 
-        // PROMINENCE: default
+        // PROMINENCE
+
+        // prominence: default
         '&:not([data-prominence])': {
           backgroundColor: tokenSchema.color.background.surface,
           borderColor: tokenSchema.color.alias.borderIdle,
@@ -122,15 +119,9 @@ export function useActionButtonStyles(
                 tokenSchema.color.alias.backgroundSelectedHovered,
             },
           },
-          '&:disabled, &[aria-disabled]': {
-            backgroundColor: tokenSchema.color.background.surface,
-            borderColor: 'transparent',
-            boxShadow: 'none',
-            color: tokenSchema.color.alias.foregroundDisabled,
-          },
         },
 
-        // PROMINENCE: low
+        // prominence: low
         '&[data-prominence=low]': {
           color: tokenSchema.color.foreground.neutral,
 
@@ -154,12 +145,17 @@ export function useActionButtonStyles(
               borderColor: tokenSchema.color.alias.borderHovered,
             },
           },
-
-          '&:disabled, &[aria-disabled]': {
-            color: tokenSchema.color.alias.foregroundDisabled,
-          },
         },
-      })
+
+        // STATES
+        '&:disabled, &[aria-disabled]': {
+          backgroundColor: tokenSchema.color.alias.backgroundDisabled,
+          borderColor: 'transparent',
+          boxShadow: 'none',
+          color: tokenSchema.color.alias.foregroundDisabled,
+        },
+      }),
+      styleProps.className
     ),
   };
 }

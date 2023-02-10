@@ -3,12 +3,13 @@ import { useHover } from '@react-aria/interactions';
 import { mergeProps, useObjectRef } from '@react-aria/utils';
 import { ForwardedRef, forwardRef, useMemo } from 'react';
 
-import { SlotProvider, useSlotProps } from '@voussoir/slots';
+import { useSlotProps } from '@voussoir/slots';
 import { BaseStyleProps, FocusRing, classNames, css } from '@voussoir/style';
 import { DOMProps } from '@voussoir/types';
 
 import { ActionButtonProps } from './types';
 import { useActionButtonStyles } from './useActionButtonStyles';
+import { useActionButtonChildren } from './ActionButton';
 
 interface FieldButtonProps extends ActionButtonProps, DOMProps, BaseStyleProps {
   isActive?: boolean;
@@ -20,7 +21,7 @@ export const FieldButton = forwardRef(function FieldButton(
   forwardedRef: ForwardedRef<HTMLButtonElement>
 ) {
   props = useSlotProps(props, 'button');
-  let { isDisabled, children, autoFocus, isActive, ...otherProps } = props;
+  let { isDisabled, autoFocus, isActive, ...otherProps } = props;
   let domRef = useObjectRef(forwardedRef);
   let { buttonProps, isPressed } = useButton(props, domRef);
   let { hoverProps, isHovered } = useHover({ isDisabled });
@@ -29,6 +30,7 @@ export const FieldButton = forwardRef(function FieldButton(
     isPressed: isActive ?? isPressed,
   });
   let slots = useMemo(() => ({ text: { flex: true, truncate: true } }), []);
+  let children = useActionButtonChildren(props, slots);
 
   return (
     <FocusRing autoFocus={autoFocus}>
@@ -39,13 +41,12 @@ export const FieldButton = forwardRef(function FieldButton(
         className={classNames(
           styleProps.className,
           css({
-            cursor: 'default',
             justifyContent: 'space-between',
             textAlign: 'start',
           })
         )}
       >
-        <SlotProvider slots={slots}>{children}</SlotProvider>
+        {children}
       </button>
     </FocusRing>
   );

@@ -1,6 +1,6 @@
 import { useComboBox } from '@react-aria/combobox';
 import { useFilter, useLocalizedStringFormatter } from '@react-aria/i18n';
-import { PressResponder, useHover } from '@react-aria/interactions';
+import { PressResponder } from '@react-aria/interactions';
 import {
   useLayoutEffect,
   useObjectRef,
@@ -24,10 +24,16 @@ import { useProvider, useProviderProps } from '@voussoir/core';
 import { FieldPrimitive } from '@voussoir/field';
 import { Icon } from '@voussoir/icon';
 import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { ListBoxBase, useListBoxLayout } from '@voussoir/listbox';
+import { ListBoxBase, listStyles, useListBoxLayout } from '@voussoir/listbox';
 import { Popover } from '@voussoir/overlays';
 import { ProgressCircle } from '@voussoir/progress';
-import { FocusRing, classNames, useIsMobileDevice } from '@voussoir/style';
+import {
+  FocusRing,
+  useIsMobileDevice,
+  css,
+  ClassList,
+  tokenSchema,
+} from '@voussoir/style';
 import {
   TextFieldPrimitive,
   validateTextFieldProps,
@@ -38,10 +44,9 @@ import { messages } from '../intl';
 import { MobileCombobox } from './MobileCombobox';
 import { ComboboxProps } from './types';
 import { Flex } from '@voussoir/layout';
+import { Text } from '@voussoir/typography';
 
-const comboboxStyles = {}; // remove
-const styles = {}; // remove
-const textfieldStyles = {}; // remove
+const comboboxClassList = new ClassList('Combobox');
 
 function Combobox<T extends object>(
   props: ComboboxProps<T>,
@@ -142,7 +147,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
         labelProps={labelProps}
         ref={domRef}
       >
-        <ComboBoxInput
+        <ComboboxInput
           {...props}
           isOpen={state.isOpen}
           loadingState={loadingState}
@@ -155,7 +160,6 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
       <Popover
         state={state}
         UNSAFE_style={style}
-        UNSAFE_className={classNames(styles, 'spectrum-InputGroup-popover')}
         ref={popoverRef}
         triggerRef={buttonRef}
         scrollRef={listBoxRef}
@@ -176,13 +180,16 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
           shouldUseVirtualFocus
           isLoading={loadingState === 'loadingMore'}
           onLoadMore={onLoadMore}
+          UNSAFE_className={listStyles}
           renderEmptyState={() =>
             isAsync && (
-              <span className={classNames(comboboxStyles, 'no-results')}>
-                {loadingState === 'loading'
-                  ? stringFormatter.format('loading')
-                  : stringFormatter.format('noResults')}
-              </span>
+              <Flex height="regular" alignItems="center" paddingX="medium">
+                <Text color="neutralSecondary">
+                  {loadingState === 'loading'
+                    ? stringFormatter.format('loading')
+                    : stringFormatter.format('noResults')}
+                </Text>
+              </Flex>
             )
           }
         />
@@ -191,35 +198,31 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
   );
 });
 
-interface ComboBoxInputProps extends ComboboxProps<unknown> {
+interface ComboboxInputProps extends ComboboxProps<unknown> {
   inputProps: InputHTMLAttributes<HTMLInputElement>;
   inputRef: RefObject<HTMLInputElement | HTMLTextAreaElement>;
   triggerProps: AriaButtonProps;
   triggerRef: RefObject<HTMLButtonElement>;
   style?: React.CSSProperties;
-  className?: string;
   isOpen?: boolean;
 }
 
-const ComboBoxInput = React.forwardRef(function ComboBoxInput(
-  props: ComboBoxInputProps,
+const ComboboxInput = React.forwardRef(function ComboboxInput(
+  props: ComboboxInputProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
   let {
     isDisabled,
-    validationState,
     inputProps,
     inputRef,
     triggerProps,
     triggerRef,
     autoFocus,
     style,
-    className,
     loadingState,
     isOpen,
     menuTrigger,
   } = props;
-  let { hoverProps, isHovered } = useHover({});
   let stringFormatter = useLocalizedStringFormatter(messages);
   let timeout = useRef<NodeJS.Timeout>();
   let [showLoading, setShowLoading] = useState(false);
@@ -236,11 +239,6 @@ const ComboBoxInput = React.forwardRef(function ComboBoxInput(
         aria-label={stringFormatter.format('loading')}
         size="small"
         isIndeterminate
-        UNSAFE_className={classNames(
-          textfieldStyles,
-          'spectrum-Textfield-circleLoader',
-          classNames(styles, 'spectrum-InputGroup-input-circleLoader')
-        )}
       />
     </Flex>
   );
@@ -250,7 +248,7 @@ const ComboBoxInput = React.forwardRef(function ComboBoxInput(
   let lastInputValue = useRef(inputValue);
   useEffect(() => {
     if (isLoading && !showLoading) {
-      if (timeout.current === null) {
+      if (!timeout.current) {
         timeout.current = setTimeout(() => {
           setShowLoading(true);
         }, 500);
@@ -275,57 +273,56 @@ const ComboBoxInput = React.forwardRef(function ComboBoxInput(
 
   return (
     <FocusRing autoFocus={autoFocus} isTextInput within>
-      <div
-        {...hoverProps}
-        ref={forwardedRef}
-        style={style}
-        className={classNames(
-          styles,
-          'spectrum-InputGroup',
-          {
-            'is-disabled': isDisabled,
-            'spectrum-InputGroup--invalid':
-              validationState === 'invalid' && !isDisabled,
-            'is-hovered': isHovered,
-          },
-          className
-        )}
-      >
+      <div ref={forwardedRef} style={style}>
         <TextFieldPrimitive
-          inputProps={inputProps}
+          inputProps={{
+            ...inputProps,
+            className: comboboxClassList.declare('input'),
+          }}
           ref={inputRef}
-          UNSAFE_className={classNames(styles, 'spectrum-InputGroup-field')}
-          // UNUSED_START
-          // disableFocusRing
-          // inputClassName={classNames(styles, 'spectrum-InputGroup-input')}
-          // validationState={validationState}
-          // UNUSED_END
           isDisabled={isDisabled}
           // loading circle should only be displayed if menu is open, if
           // menuTrigger is "manual", or first time load (to stop circle from
           // showing up when user selects an option)
-          startElement={
-            showLoading &&
-            (isOpen || menuTrigger === 'manual' || loadingState === 'loading')
-              ? loadingCircle
-              : null
-          }
+          // startElement={
+          //   showLoading &&
+          //   (isOpen || menuTrigger === 'manual' || loadingState === 'loading')
+          //     ? loadingState != null && loadingCircle
+          //     : null
+          // }
           endElement={
-            <PressResponder preventFocusOnPress isPressed={isOpen}>
-              <FieldButton
-                {...triggerProps}
-                ref={triggerRef}
-                UNSAFE_className={classNames(styles, 'spectrum-FieldButton')}
-              >
-                <Icon
-                  src={chevronDownIcon}
-                  UNSAFE_className={classNames(
-                    styles,
-                    'spectrum-Dropdown-chevron'
-                  )}
-                />
-              </FieldButton>
-            </PressResponder>
+            <>
+              {showLoading &&
+              (isOpen || menuTrigger === 'manual' || loadingState === 'loading')
+                ? loadingCircle
+                : null}
+              <PressResponder preventFocusOnPress isPressed={isOpen}>
+                <FieldButton
+                  {...triggerProps}
+                  ref={triggerRef}
+                  UNSAFE_className={css({
+                    borderEndStartRadius: 0,
+                    borderStartStartRadius: 0,
+
+                    [`${comboboxClassList.selector(
+                      'input'
+                    )}[aria-invalid] ~ &`]: {
+                      borderColor: tokenSchema.color.alias.borderInvalid,
+                    },
+
+                    [`${comboboxClassList.selector('input')}[readonly] ~ &`]: {
+                      borderColor: tokenSchema.color.alias.borderIdle,
+                    },
+
+                    [`${comboboxClassList.selector('input')}:focus ~ &`]: {
+                      borderColor: tokenSchema.color.alias.borderFocused,
+                    },
+                  })}
+                >
+                  <Icon src={chevronDownIcon} />
+                </FieldButton>
+              </PressResponder>
+            </>
           }
         />
       </div>
