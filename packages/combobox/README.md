@@ -1,4 +1,4 @@
-# @voussoir/badge
+# @voussoir/combobox
 
-A badge is a decorative indicator used to either call attention to an item or
-for communicating non-actionable, supplemental information.
+A combobox combines a text input with a listbox, and allows users to filter a
+list of options.
