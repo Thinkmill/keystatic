@@ -1,5 +1,11 @@
 # keystatic
 
+## 0.0.25
+
+### Patch Changes
+
+- a4c9128: Fix onboarding issue
+
 ## 0.0.24
 
 ### Patch Changes
