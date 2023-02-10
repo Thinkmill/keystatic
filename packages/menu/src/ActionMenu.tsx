@@ -48,7 +48,7 @@ function ActionMenu<T extends object>(
 /**
  * ActionMenu combines an ActionButton with a Menu for simple "more actions" use cases.
  */
-const _ActionMenu = forwardRef(ActionMenu) as <T>(
+const _ActionMenu: <T>(
   props: ActionMenuProps<T> & { ref?: Ref<HTMLButtonElement> }
-) => ReactElement;
+) => ReactElement = forwardRef(ActionMenu) as any;
 export { _ActionMenu as ActionMenu };

@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/ssr",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "SSR approaches for Voussoir.",
   "license": "MIT",
   "main": "dist/voussoir-ssr.cjs.js",
@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
+    "@voussoir/storybook": "^0.0.0",
     "react": "^18.2.0"
   },
   "peerDependencies": {

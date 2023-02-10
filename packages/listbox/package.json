@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/listbox",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A list of options that can allow selection of one or more.",
   "license": "MIT",
   "main": "dist/voussoir-listbox.cjs.js",
@@ -30,23 +30,26 @@
     "@react-stately/list": "^3.6.0",
     "@react-stately/virtualizer": "^3.4.0",
     "@react-types/shared": "^3.14.1",
-    "@voussoir/core": "^3.0.0",
-    "@voussoir/icon": "^0.0.0",
-    "@voussoir/layout": "^0.0.0",
-    "@voussoir/progress": "^0.0.0",
-    "@voussoir/slots": "^0.0.0",
-    "@voussoir/style": "^0.0.0",
-    "@voussoir/types": "^0.0.0",
-    "@voussoir/typography": "^0.0.0",
-    "@voussoir/utils": "^1.0.0",
+    "@voussoir/core": "^4.0.0",
+    "@voussoir/icon": "^0.1.0",
+    "@voussoir/layout": "^0.1.0",
+    "@voussoir/progress": "^0.1.0",
+    "@voussoir/slots": "^0.1.0",
+    "@voussoir/style": "^0.1.0",
+    "@voussoir/types": "^0.1.0",
+    "@voussoir/typography": "^0.1.0",
+    "@voussoir/utils": "^2.0.0",
     "emery": "^1.4.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
-    "react": "^18.2.0"
+    "@voussoir/storybook": "^0.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "engines": {
     "node": ">= 14.13"

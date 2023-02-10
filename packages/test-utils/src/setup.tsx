@@ -1,13 +1,19 @@
-import { render, RenderOptions } from '@testing-library/react';
+import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import { ReactElement, StrictMode } from 'react';
 
 import { TestProvider } from '@voussoir/core';
 
-export function renderWithProvider(ui: ReactElement, options?: RenderOptions) {
+export function renderWithProvider(
+  ui: ReactElement,
+  options?: RenderOptions
+): RenderResult {
   return render(ui, { wrapper: StrictModeProvider, ...options });
 }
 
-export function customRender(ui: ReactElement, options?: RenderOptions) {
+export function customRender(
+  ui: ReactElement,
+  options?: RenderOptions
+): RenderResult {
   return render(ui, { wrapper: StrictModeWrapper, ...options });
 }
 

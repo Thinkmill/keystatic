@@ -25,7 +25,7 @@ test('read', async () => {
         },
       ],
       "content": [Function],
-      "heroImage": [Function],
+      "heroImage": "heroImage.png",
       "slug": "2023-is-finally-here",
       "title": "oh my there is dark mode, thank god Joss",
     }
@@ -37,6 +37,32 @@ test('read', async () => {
         "children": [
           {
             "text": "Cool, and things are direct to GitHub?",
+          },
+        ],
+        "type": "paragraph",
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "text": "",
+              },
+            ],
+            "type": "component-inline-prop",
+          },
+        ],
+        "component": "image",
+        "props": {
+          "alt": "",
+          "image": "blank.png",
+        },
+        "type": "component-block",
+      },
+      {
+        "children": [
+          {
+            "text": "",
           },
         ],
         "type": "paragraph",

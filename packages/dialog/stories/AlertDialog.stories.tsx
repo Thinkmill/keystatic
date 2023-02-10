@@ -1,5 +1,4 @@
-import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
+import { storiesOf, action } from '@voussoir/storybook';
 
 import { Button } from '@voussoir/button';
 // import { Text } from '@voussoir/typography';

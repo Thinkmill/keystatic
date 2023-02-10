@@ -37,7 +37,7 @@ const toneToIcon = {
 };
 
 export default config({
-  repo: { owner: 'keystonejs', name: 'keystatic-test-repo' },
+  repo: { owner: 'Thinkmill', name: 'keystatic-test-repo' },
   collections: {
     posts: collection({
       label: 'Posts',
@@ -48,6 +48,7 @@ export default config({
           label: 'Slug',
           validation: { length: { min: 4 } },
         }),
+        publishDate: fields.date({ label: 'Publish Date' }),
         heroImage: fields.image({ label: 'Hero Image' }),
         content: fields.document({
           label: 'Content',

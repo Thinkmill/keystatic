@@ -11,7 +11,7 @@ import {
   parseSerializedFormField,
   RequiredFile,
 } from './required-files';
-import { useTree } from './shell';
+import { useTree } from './shell/data';
 import { TreeNode, getTreeNodeAtPath } from './trees';
 import { LOADING, useData } from './useData';
 import { blobSha, FormatInfo, getDataFileExtension, MaybePromise } from './utils';
@@ -60,7 +60,8 @@ function parseWithExtraFiles(
     parentValue[keyOnParent] = parseSerializedFormField(
       parentValue[keyOnParent],
       file,
-      loadedBinaryFiles
+      loadedBinaryFiles,
+      'edit'
     );
   }
   return validated as Record<string, unknown>;

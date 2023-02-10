@@ -1,4 +1,9 @@
-import { ForwardedRef, forwardRef } from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  ForwardRefExoticComponent,
+  Ref,
+} from 'react';
 
 import { BaseStyleProps, useStyleProps } from '@voussoir/style';
 import { DOMProps } from '@voussoir/types';
@@ -17,7 +22,9 @@ export type EmojiProps = {
  * add playfulness to your interface, but require formatting to ensure that they
  * are accessible for all users.
  */
-export const Emoji = forwardRef(function Emoji(
+export const Emoji: ForwardRefExoticComponent<
+  EmojiProps & { ref?: Ref<HTMLSpanElement> }
+> = forwardRef(function Emoji(
   props: EmojiProps,
   forwardedRef: ForwardedRef<HTMLSpanElement>
 ) {

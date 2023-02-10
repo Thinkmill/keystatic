@@ -1,4 +1,9 @@
-import { ForwardedRef, forwardRef } from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  ForwardRefExoticComponent,
+  Ref,
+} from 'react';
 import { useLocale } from '@react-aria/i18n';
 import { useNumberField } from '@react-aria/numberfield';
 import { useObjectRef } from '@react-aria/utils';
@@ -20,7 +25,9 @@ const omittedProps = new Set(['onChange', 'value', 'defaultValue']);
  * Number fields let users enter a numeric value and incrementally increase or
  * decrease the value with a step-button control.
  */
-export const NumberField = forwardRef(function NumberField(
+export const NumberField: ForwardRefExoticComponent<
+  NumberFieldProps & { ref?: Ref<HTMLInputElement> }
+> = forwardRef(function NumberField(
   props: NumberFieldProps,
   forwardedRef: ForwardedRef<HTMLInputElement>
 ) {

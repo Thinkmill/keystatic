@@ -2,7 +2,7 @@ import { Button } from '@voussoir/button';
 import { Flex } from '@voussoir/layout';
 import { Heading, Text } from '@voussoir/typography';
 
-import { Config } from '../src';
+import { Config } from '../../src';
 
 export function RepoNotFound(props: { config: Config }) {
   const repo = `${props.config.repo.owner}/${props.config.repo.name}`;

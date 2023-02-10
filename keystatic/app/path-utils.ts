@@ -63,5 +63,5 @@ export type FormatInfo =
   | {
       frontmatter: DataFormat;
       contentFieldKey: string;
-      contentFieldConfig: FormFieldWithFile<any, any> & { serializeToFile: { kind: 'multi' } };
+      contentFieldConfig: FormFieldWithFile<any, any, any> & { serializeToFile: { kind: 'multi' } };
     };

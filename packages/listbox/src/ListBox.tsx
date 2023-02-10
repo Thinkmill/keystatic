@@ -23,7 +23,7 @@ function ListBox<T extends object>(
 /**
  * A list of options that can allow selection of one or more.
  */
-const _ListBox = forwardRef(ListBox as any) as <T>(
+const _ListBox: <T>(
   props: ListBoxProps<T> & { ref?: RefObject<HTMLDivElement> }
-) => ReactElement;
+) => ReactElement = forwardRef(ListBox as any) as any;
 export { _ListBox as ListBox };

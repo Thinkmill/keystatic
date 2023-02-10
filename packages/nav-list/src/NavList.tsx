@@ -7,6 +7,8 @@ import {
   useEffect,
   useMemo,
   useState,
+  ForwardRefExoticComponent,
+  Ref,
 } from 'react';
 
 import { Flex } from '@voussoir/layout';
@@ -28,7 +30,9 @@ export type NavListProps = {
   AriaLabellingProps;
 
 /** Navigation lists let users navigate the application. */
-export const NavList = forwardRef(function NavList(
+export const NavList: ForwardRefExoticComponent<
+  NavListProps & { ref?: Ref<HTMLDivElement> }
+> = forwardRef(function NavList(
   props: NavListProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {

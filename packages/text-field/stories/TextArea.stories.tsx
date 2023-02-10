@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { action } from '@storybook/addon-actions';
-import { storiesOf, Parameters } from '@storybook/react';
+import { action, storiesOf, Parameters } from '@voussoir/storybook';
 import { Grid } from '@voussoir/layout';
 
 import { TextArea } from '../src';

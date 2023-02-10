@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/types",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "license": "MIT",
   "main": "dist/voussoir-types.cjs.js",
@@ -17,7 +17,7 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@voussoir/style": "^0.0.0"
+    "@voussoir/style": "^0.1.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",

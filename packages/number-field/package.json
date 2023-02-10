@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/number-field",
-  "version": "0.0.0",
+  "version": "0.1.1",
   "description": "Number fields allow users to enter a number, and increment or decrement the value using step buttons.",
   "license": "MIT",
   "main": "dist/voussoir-number-field.cjs.js",
@@ -27,25 +27,28 @@
     "@react-types/button": "^3.7.0",
     "@react-types/numberfield": "^3.3.5",
     "@react-types/shared": "^3.14.1",
-    "@voussoir/button": "^0.0.0",
-    "@voussoir/core": "^3.0.0",
-    "@voussoir/field": "^0.0.0",
-    "@voussoir/icon": "^0.0.0",
-    "@voussoir/layout": "^0.0.0",
-    "@voussoir/style": "^0.0.0",
-    "@voussoir/test-utils": "^1.0.0",
-    "@voussoir/text-field": "^0.0.0",
-    "@voussoir/types": "^0.0.0",
-    "@voussoir/typography": "^0.0.0",
-    "@voussoir/utils": "^1.0.0",
+    "@voussoir/button": "^0.1.0",
+    "@voussoir/core": "^4.0.0",
+    "@voussoir/field": "^0.1.0",
+    "@voussoir/icon": "^0.1.0",
+    "@voussoir/layout": "^0.1.0",
+    "@voussoir/style": "^0.1.0",
+    "@voussoir/text-field": "^0.1.0",
+    "@voussoir/types": "^0.1.0",
+    "@voussoir/typography": "^0.1.0",
+    "@voussoir/utils": "^2.0.0",
     "emery": "^1.4.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
-    "react": "^18.2.0"
+    "@voussoir/storybook": "^0.0.0",
+    "@voussoir/test-utils": "^2.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "engines": {
     "node": ">= 14.13"

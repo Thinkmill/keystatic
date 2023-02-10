@@ -11,7 +11,9 @@ import { getInitialPropsValue } from '../DocumentEditor/component-blocks/initial
 import { fields } from '../DocumentEditor/component-blocks/api';
 import { useUpsertItem } from '../utils';
 import { clientSideValidateProp } from '../DocumentEditor/component-blocks/utils';
-import { AppShellBody, AppShellHeader, AppShellRoot, useBaseCommit, useTree } from './shell';
+import { AppShellBody, AppShellRoot } from './shell';
+import { AppShellHeader } from './shell/header';
+import { useBaseCommit, useTree } from './shell/data';
 import { Notice } from '@voussoir/notice';
 import { getCollectionFormat, getCollectionItemPath } from './utils';
 import { TextLink } from '@voussoir/link';

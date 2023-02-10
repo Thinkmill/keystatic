@@ -241,7 +241,7 @@ function Picker<T extends object>(
 /**
  * Pickers allow users to choose a single option from a collapsible list of options when space is limited.
  */
-const _Picker = forwardRef(Picker as any) as <T>(
+const _Picker: <T>(
   props: PickerProps<T> & { ref?: RefObject<HTMLDivElement> }
-) => ReactElement;
+) => ReactElement = forwardRef(Picker as any) as any;
 export { _Picker as Picker };

@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/drag-and-drop",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Drag and drop is a common UI interaction that allows users to transfer data between two locations by directly moving a visual representation on screen.",
   "license": "MIT",
   "main": "dist/voussoir-drag-and-drop.cjs.js",
@@ -23,10 +23,12 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "engines": {
     "node": ">= 14.13"

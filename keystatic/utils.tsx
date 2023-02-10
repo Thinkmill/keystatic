@@ -4,7 +4,7 @@ import { useMutation } from 'urql';
 import { ComponentSchema, fields } from './DocumentEditor/component-blocks/api';
 import { fromByteArray } from 'base64-js';
 import { assertNever } from './DocumentEditor/component-blocks/utils';
-import { fetchTreeData, hydrateTreeCacheWithEntries } from './app/shell';
+import { fetchTreeData, hydrateTreeCacheWithEntries } from './app/shell/data';
 import { hydrateBlobCache } from './app/useItemData';
 import { useState } from 'react';
 import { githubRequest } from './github-api';
@@ -108,11 +108,10 @@ export function useUpsertItem(args: {
       });
 
       const deletions: { path: string }[] = [...filesToDelete].map(path => ({ path }));
-      const updatedTree = await updateTreeWithChanges(
-        args.currentTree,
-        { additions, deletions: [...filesToDelete] },
-        args.repo
-      );
+      const updatedTree = await updateTreeWithChanges(args.currentTree, {
+        additions,
+        deletions: [...filesToDelete],
+      });
       hydrateTreeCacheWithEntries(updatedTree.sha, updatedTree.entries);
       const runMutation = (expectedHeadOid: string) =>
         mutate({
@@ -214,11 +213,10 @@ export function useDeleteItem(args: {
   return [
     result,
     async () => {
-      const updatedTree = await updateTreeWithChanges(
-        args.currentTree,
-        { additions: [], deletions: args.initialFiles },
-        args.repo
-      );
+      const updatedTree = await updateTreeWithChanges(args.currentTree, {
+        additions: [],
+        deletions: args.initialFiles,
+      });
       hydrateTreeCacheWithEntries(updatedTree.sha, updatedTree.entries);
       return mutate({
         input: {
@@ -257,13 +255,17 @@ async function _toFiles(
   if (schema.kind === 'form') {
     if ('serializeToFile' in schema && schema.serializeToFile) {
       if (schema.serializeToFile.kind === 'asset') {
-        const { content, value: forYaml } = schema.serializeToFile.serialize(value);
+        const suggestedFilenamePrefix = propPath.join('/');
+
+        const { content, value: forYaml } = schema.serializeToFile.serialize(
+          value,
+          suggestedFilenamePrefix
+        );
         if (content) {
-          const extension = schema.serializeToFile.extension(forYaml);
-          extraFiles.push({
-            path: propPath.join('/') + extension,
-            contents: content,
-          });
+          const path = schema.serializeToFile.filename(forYaml, suggestedFilenamePrefix);
+          if (path) {
+            extraFiles.push({ path, contents: content });
+          }
         }
         return forYaml;
       }

@@ -2,7 +2,12 @@ import { useLocale } from '@react-aria/i18n';
 import { DismissButton, usePopover } from '@react-aria/overlays';
 import { useObjectRef } from '@react-aria/utils';
 import { Placement, Axis } from '@react-types/overlays';
-import { forwardRef, ForwardedRef } from 'react';
+import {
+  forwardRef,
+  ForwardedRef,
+  ForwardRefExoticComponent,
+  Ref,
+} from 'react';
 
 import {
   classNames,
@@ -27,7 +32,9 @@ type PopoverWrapperProps = {
  * A low-level utility component for implementing things like info dialogs,
  * menus and pickers.
  */
-export const Popover = forwardRef(function Popover(
+export const Popover: ForwardRefExoticComponent<
+  PopoverProps & { ref?: Ref<HTMLDivElement> }
+> = forwardRef(function Popover(
   props: PopoverProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {

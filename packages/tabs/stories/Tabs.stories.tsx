@@ -1,5 +1,4 @@
-import { action } from '@storybook/addon-actions';
-import { storiesOf } from '@storybook/react';
+import { action, storiesOf } from '@voussoir/storybook';
 
 import { Icon } from '@voussoir/icon';
 import { bookmarkIcon } from '@voussoir/icon/icons/bookmarkIcon';

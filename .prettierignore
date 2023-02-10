@@ -52,3 +52,5 @@ coverage
 
 # Contentlayer
 .contentlayer
+
+pnpm-lock.yaml

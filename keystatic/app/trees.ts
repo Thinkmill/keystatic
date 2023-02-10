@@ -1,5 +1,4 @@
 import { assert } from 'emery';
-import { Config } from '../config';
 import { blobSha, sha1 } from './utils';
 
 type Changes = {
@@ -29,7 +28,6 @@ export type TreeEntry = {
   type: string;
   sha: string;
   size?: number;
-  url: string;
 };
 
 type TreeChanges = Map<string, NodeChanges>;
@@ -126,8 +124,7 @@ function hexToBytes(str: string) {
 
 async function createTreeNodeEntry(
   path: string,
-  children: Map<string, TreeNode>,
-  repo: Config['repo']
+  children: Map<string, TreeNode>
 ): Promise<TreeEntry> {
   const sha = await treeSha(children);
   return {
@@ -135,32 +132,25 @@ async function createTreeNodeEntry(
     mode: '040000',
     type: 'tree',
     sha,
-    url: `https://api.github.com/repos/${repo.owner}/${repo.name}/git/trees/${sha}`,
   };
 }
 
-async function createBlobNodeEntry(
-  path: string,
-  contents: Uint8Array,
-  repo: Config['repo']
-): Promise<TreeEntry> {
+async function createBlobNodeEntry(path: string, contents: Uint8Array): Promise<TreeEntry> {
   const sha = await blobSha(contents);
   return {
     path,
     mode: '100644',
     type: 'blob',
     sha,
-    url: `https://api.github.com/repos/${repo.owner}/${repo.name}/git/blobs/${sha}`,
     size: contents.byteLength,
   };
 }
 
 export async function updateTreeWithChanges(
   tree: Map<string, TreeNode>,
-  changes: Changes,
-  repo: Config['repo']
+  changes: Changes
 ): Promise<{ entries: TreeEntry[]; sha: string }> {
-  const newTree = (await updateTree(tree, toTreeChanges(changes), repo, [])) ?? new Map();
+  const newTree = (await updateTree(tree, toTreeChanges(changes), [])) ?? new Map();
   return { entries: treeToEntries(newTree), sha: await treeSha(newTree ?? new Map()) };
 }
 
@@ -173,7 +163,6 @@ function treeToEntries(tree: Map<string, TreeNode>): TreeEntry[] {
 async function updateTree(
   tree: Map<string, TreeNode>,
   changedTree: TreeChanges,
-  repo: Config['repo'],
   path: string[]
 ): Promise<Map<string, TreeNode> | undefined> {
   const newTree = new Map(tree);
@@ -183,16 +172,16 @@ async function updateTree(
     }
     if (value instanceof Map) {
       const existingChildren = newTree.get(key)?.children ?? new Map();
-      const children = await updateTree(existingChildren, value, repo, path.concat(key));
+      const children = await updateTree(existingChildren, value, path.concat(key));
       if (children === undefined) {
         newTree.delete(key);
         continue;
       }
-      const entry = await createTreeNodeEntry(path.concat(key).join('/'), children, repo);
+      const entry = await createTreeNodeEntry(path.concat(key).join('/'), children);
       newTree.set(key, { entry, children });
     }
     if (value instanceof Uint8Array) {
-      const entry = await createBlobNodeEntry(path.concat(key).join('/'), value, repo);
+      const entry = await createBlobNodeEntry(path.concat(key).join('/'), value);
       newTree.set(key, { entry });
     }
   }

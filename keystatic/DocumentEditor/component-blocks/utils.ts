@@ -1,7 +1,7 @@
 import { DocumentFeatures } from '../document-features';
 import { DocumentFeaturesForNormalization } from '../document-features-normalization';
 import { assert, Mark } from '../utils';
-import { ComponentSchema, ChildField } from './api';
+import { ComponentSchema, ChildField, ValueForComponentSchema } from './api';
 import { getKeysForArrayValue, setKeysForArrayValue } from './preview-props';
 
 type PathToChildFieldWithOption = { path: ReadonlyPropPath; options: ChildField['options'] };
@@ -307,6 +307,141 @@ export function traverseProps(
     );
     visitor(schema, value, path);
     return;
+  }
+  assertNever(schema);
+}
+
+export function transformProps(
+  schema: ComponentSchema,
+  value: unknown,
+  visitors: {
+    [Kind in ComponentSchema['kind']]?: (
+      schema: Extract<ComponentSchema, { kind: Kind }>,
+      value: ValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>,
+      path: ReadonlyPropPath
+    ) => ValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>;
+  },
+  path: ReadonlyPropPath = []
+): unknown {
+  if (schema.kind === 'form' || schema.kind === 'relationship' || schema.kind === 'child') {
+    if (visitors[schema.kind]) {
+      return (visitors[schema.kind] as any)(schema, value, path);
+    }
+    return value;
+  }
+  if (schema.kind === 'object') {
+    const val = Object.fromEntries(
+      Object.entries(schema.fields).map(([key, val]) => {
+        return [key, transformProps(val, (value as any)[key], visitors, [...path, key])];
+      })
+    );
+    if (visitors.object) {
+      return (visitors[schema.kind] as any)(schema, val, path);
+    }
+    return val;
+  }
+  if (schema.kind === 'array') {
+    const val = (value as unknown[]).map((val, idx) =>
+      transformProps(schema.element, val, visitors, path.concat(idx))
+    );
+    if (visitors.array) {
+      return (visitors[schema.kind] as any)(schema, val, path);
+    }
+    return val;
+  }
+  if (schema.kind === 'conditional') {
+    const discriminant = transformProps(
+      schema.discriminant,
+      (value as any).discriminant,
+      visitors,
+      path.concat('discriminant')
+    ) as string | boolean;
+    const conditionalVal = transformProps(
+      schema.values[discriminant.toString()],
+      (value as any).value,
+      visitors,
+      path.concat('value')
+    );
+
+    const val = {
+      discriminant,
+      value: conditionalVal,
+    };
+    if (visitors.conditional) {
+      return (visitors[schema.kind] as any)(schema, val, path);
+    }
+    return val;
+  }
+  assertNever(schema);
+}
+
+export async function asyncTransformProps(
+  schema: ComponentSchema,
+  value: unknown,
+  visitors: {
+    [Kind in ComponentSchema['kind']]?: (
+      schema: Extract<ComponentSchema, { kind: Kind }>,
+      value: ValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>,
+      path: ReadonlyPropPath
+    ) => Promise<ValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>>;
+  },
+  path: ReadonlyPropPath = []
+): Promise<unknown> {
+  if (schema.kind === 'form' || schema.kind === 'relationship' || schema.kind === 'child') {
+    if (visitors[schema.kind]) {
+      return (visitors[schema.kind] as any)(schema, value, path);
+    }
+    return value;
+  }
+  if (schema.kind === 'object') {
+    const val = Object.fromEntries(
+      await Promise.all(
+        Object.entries(schema.fields).map(async ([key, val]) => {
+          return [
+            key,
+            await asyncTransformProps(val, (value as any)[key], visitors, [...path, key]),
+          ];
+        })
+      )
+    );
+    if (visitors.object) {
+      return (visitors[schema.kind] as any)(schema, val, path);
+    }
+    return val;
+  }
+  if (schema.kind === 'array') {
+    const val = await Promise.all(
+      (value as unknown[]).map((val, idx) =>
+        asyncTransformProps(schema.element, val, visitors, path.concat(idx))
+      )
+    );
+    if (visitors.array) {
+      return (visitors[schema.kind] as any)(schema, val, path);
+    }
+    return val;
+  }
+  if (schema.kind === 'conditional') {
+    const discriminant = (await asyncTransformProps(
+      schema.discriminant,
+      (value as any).discriminant,
+      visitors,
+      path.concat('discriminant')
+    )) as string | boolean;
+    const conditionalVal = await asyncTransformProps(
+      schema.values[discriminant.toString()],
+      (value as any).value,
+      visitors,
+      path.concat('value')
+    );
+
+    const val = {
+      discriminant,
+      value: conditionalVal,
+    };
+    if (visitors.conditional) {
+      return (visitors[schema.kind] as any)(schema, val, path);
+    }
+    return val;
   }
   assertNever(schema);
 }

@@ -1,6 +1,5 @@
 import { Alignment } from '@react-types/shared';
-import { action } from '@storybook/addon-actions';
-import { Meta, Story } from '@storybook/react';
+import { action, Meta, Story } from '@voussoir/storybook';
 import React, { Key, useState } from 'react';
 
 import { Checkbox } from '@voussoir/checkbox';

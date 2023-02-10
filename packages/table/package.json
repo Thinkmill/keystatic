@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/table",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Tables are containers for displaying information. They allow users to quickly scan, sort, compare, and take action on large amounts of data.",
   "license": "MIT",
   "main": "dist/voussoir-table.cjs.js",
@@ -23,21 +23,24 @@
     "@react-aria/utils": "^3.14.2",
     "@react-stately/table": "^3.5.0",
     "@react-types/shared": "^3.14.1",
-    "@voussoir/checkbox": "^0.0.0",
-    "@voussoir/icon": "^0.0.0",
-    "@voussoir/layout": "^0.0.0",
-    "@voussoir/slots": "^0.0.0",
-    "@voussoir/style": "^0.0.0",
-    "@voussoir/types": "^0.0.0",
-    "@voussoir/typography": "^0.0.0",
-    "@voussoir/utils": "^1.0.0"
+    "@voussoir/checkbox": "^0.1.0",
+    "@voussoir/icon": "^0.1.0",
+    "@voussoir/layout": "^0.1.0",
+    "@voussoir/slots": "^0.1.0",
+    "@voussoir/style": "^0.1.0",
+    "@voussoir/types": "^0.1.0",
+    "@voussoir/typography": "^0.1.0",
+    "@voussoir/utils": "^2.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
-    "react": "^18.2.0"
+    "@voussoir/storybook": "^0.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "engines": {
     "node": ">= 14.13"
