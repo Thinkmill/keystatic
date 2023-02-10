@@ -624,6 +624,69 @@ importers:
       '@voussoir/storybook': link:../../docs/storybook
       react: 18.2.0
 
+  packages/combobox:
+    specifiers:
+      '@babel/runtime': ^7.18.3
+      '@react-aria/button': ^3.6.3
+      '@react-aria/combobox': ^3.4.4
+      '@react-aria/dialog': ^3.4.2
+      '@react-aria/focus': ^3.10.0
+      '@react-aria/i18n': ^3.6.2
+      '@react-aria/interactions': ^3.13.0
+      '@react-aria/label': ^3.4.4
+      '@react-aria/overlays': ^3.12.0
+      '@react-aria/utils': ^3.14.2
+      '@react-stately/collections': ^3.5.0
+      '@react-stately/combobox': ^3.3.1
+      '@react-types/combobox': ^3.5.5
+      '@types/react': ^18.0.25
+      '@voussoir/button': ^0.1.0
+      '@voussoir/core': ^4.0.0
+      '@voussoir/field': ^0.1.0
+      '@voussoir/icon': ^0.1.0
+      '@voussoir/layout': ^0.1.0
+      '@voussoir/listbox': ^0.1.0
+      '@voussoir/overlays': ^0.1.0
+      '@voussoir/progress': ^0.1.0
+      '@voussoir/slots': ^0.1.0
+      '@voussoir/style': ^0.1.0
+      '@voussoir/text-field': ^0.1.0
+      '@voussoir/types': ^0.1.0
+      '@voussoir/typography': ^0.1.0
+      '@voussoir/utils': ^2.0.0
+      react: ^18.2.0
+    dependencies:
+      '@babel/runtime': 7.20.13
+      '@react-aria/button': 3.6.4_react@18.2.0
+      '@react-aria/combobox': 3.4.4_react@18.2.0
+      '@react-aria/dialog': 3.4.2_react@18.2.0
+      '@react-aria/focus': 3.10.1_react@18.2.0
+      '@react-aria/i18n': 3.6.3_react@18.2.0
+      '@react-aria/interactions': 3.13.1_react@18.2.0
+      '@react-aria/label': 3.4.4_react@18.2.0
+      '@react-aria/overlays': 3.12.1_react@18.2.0
+      '@react-aria/utils': 3.14.2_react@18.2.0
+      '@react-stately/collections': 3.5.1_react@18.2.0
+      '@react-stately/combobox': 3.3.1_react@18.2.0
+      '@react-types/combobox': 3.5.5_react@18.2.0
+      '@voussoir/button': link:../button
+      '@voussoir/core': link:../core
+      '@voussoir/field': link:../field
+      '@voussoir/icon': link:../icon
+      '@voussoir/layout': link:../layout
+      '@voussoir/listbox': link:../listbox
+      '@voussoir/overlays': link:../overlays
+      '@voussoir/progress': link:../progress
+      '@voussoir/slots': link:../slots
+      '@voussoir/style': link:../style
+      '@voussoir/text-field': link:../text-field
+      '@voussoir/types': link:../types
+      '@voussoir/typography': link:../typography
+      '@voussoir/utils': link:../utils
+    devDependencies:
+      '@types/react': 18.0.27
+      react: 18.2.0
+
   packages/core:
     specifiers:
       '@babel/runtime': ^7.18.3
@@ -662,7 +725,7 @@ importers:
   packages/dialog:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@react-aria/dialog': ^3.4.1
+      '@react-aria/dialog': ^3.4.2
       '@react-aria/focus': ^3.10.0
       '@react-aria/i18n': ^3.6.2
       '@react-aria/interactions': ^3.13.0
@@ -731,7 +794,7 @@ importers:
     specifiers:
       '@babel/runtime': ^7.18.3
       '@react-aria/i18n': ^3.6.2
-      '@react-aria/label': ^3.4.3
+      '@react-aria/label': ^3.4.4
       '@types/react': ^18.0.25
       '@voussoir/icon': ^0.1.0
       '@voussoir/layout': ^0.1.0
@@ -4701,6 +4764,31 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@react-aria/combobox/3.4.4_react@18.2.0:
+    resolution: {integrity: sha512-aviSDt4JkYZC1Ww83gvrNB4cHetXu73n5NuEfMNBC3B6fiL0MP5Av5+lMgf8FzpQks39QkZNxBtQ/h4I3D7SBA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-aria/i18n': 3.6.3_react@18.2.0
+      '@react-aria/interactions': 3.13.1_react@18.2.0
+      '@react-aria/listbox': 3.7.2_react@18.2.0
+      '@react-aria/live-announcer': 3.1.2
+      '@react-aria/menu': 3.7.1_react@18.2.0
+      '@react-aria/overlays': 3.12.1_react@18.2.0
+      '@react-aria/selection': 3.12.1_react@18.2.0
+      '@react-aria/textfield': 3.8.1_react@18.2.0
+      '@react-aria/utils': 3.14.2_react@18.2.0
+      '@react-stately/collections': 3.5.1_react@18.2.0
+      '@react-stately/combobox': 3.3.1_react@18.2.0
+      '@react-stately/layout': 3.10.0_react@18.2.0
+      '@react-types/button': 3.7.0_react@18.2.0
+      '@react-types/combobox': 3.5.5_react@18.2.0
+      '@react-types/shared': 3.16.0_react@18.2.0
+      '@swc/helpers': 0.4.14
+      react: 18.2.0
+    dev: false
+
   /@react-aria/dialog/3.4.2_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-Z6YZYXtwwmC5ZHjJldF3zuTjHnli7fXe/sM1ts3bw6jvU2L0kzhV/DRbPXYg8h695Oj9t+OIi4qxjEyKVH7SEA==}
     peerDependencies:
@@ -4708,6 +4796,23 @@ packages:
     dependencies:
       '@react-aria/focus': 3.10.1_react@18.2.0
       '@react-aria/overlays': 3.12.1_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/utils': 3.14.2_react@18.2.0
+      '@react-stately/overlays': 3.4.4_react@18.2.0
+      '@react-types/dialog': 3.4.5_react@18.2.0
+      '@react-types/shared': 3.16.0_react@18.2.0
+      '@swc/helpers': 0.4.14
+      react: 18.2.0
+    transitivePeerDependencies:
+      - react-dom
+    dev: false
+
+  /@react-aria/dialog/3.4.2_react@18.2.0:
+    resolution: {integrity: sha512-Z6YZYXtwwmC5ZHjJldF3zuTjHnli7fXe/sM1ts3bw6jvU2L0kzhV/DRbPXYg8h695Oj9t+OIi4qxjEyKVH7SEA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-aria/focus': 3.10.1_react@18.2.0
+      '@react-aria/overlays': 3.12.1_react@18.2.0
       '@react-aria/utils': 3.14.2_react@18.2.0
       '@react-stately/overlays': 3.4.4_react@18.2.0
       '@react-types/dialog': 3.4.5_react@18.2.0
@@ -4894,6 +4999,27 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
+  /@react-aria/menu/3.7.1_react@18.2.0:
+    resolution: {integrity: sha512-5KIUTs3xYSmERB8qzofFghznMVLcG3RWDnJcQjpRtrrYjm6Oc39TJeodDH874fiEr6o3i5WwMrEYVp7NSxz/TQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-aria/i18n': 3.6.3_react@18.2.0
+      '@react-aria/interactions': 3.13.1_react@18.2.0
+      '@react-aria/overlays': 3.12.1_react@18.2.0
+      '@react-aria/selection': 3.12.1_react@18.2.0
+      '@react-aria/utils': 3.14.2_react@18.2.0
+      '@react-stately/collections': 3.5.1_react@18.2.0
+      '@react-stately/menu': 3.4.4_react@18.2.0
+      '@react-stately/tree': 3.4.1_react@18.2.0
+      '@react-types/button': 3.7.0_react@18.2.0
+      '@react-types/menu': 3.7.3_react@18.2.0
+      '@react-types/shared': 3.16.0_react@18.2.0
+      '@swc/helpers': 0.4.14
+      react: 18.2.0
+    dev: false
+
   /@react-aria/meter/3.3.4_react@18.2.0:
     resolution: {integrity: sha512-RdVd5vlb6//HI8G1hhH4G+E0Y387GYFKjmewSUKK0Lzp9PFLili26s+xLvgigUX9ald7HiPmfPdAlXzotvo54Q==}
     peerDependencies:
@@ -4947,6 +5073,26 @@ packages:
       '@swc/helpers': 0.4.14
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@react-aria/overlays/3.12.1_react@18.2.0:
+    resolution: {integrity: sha512-OSgSopk2uQI5unvC3+fUyngbRFFe4GnF0iopCmrsI7qSQEusJUd4M2SuPVXUBBwWFt5TsiH7TnxmIPWeh5LSoA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-aria/focus': 3.10.1_react@18.2.0
+      '@react-aria/i18n': 3.6.3_react@18.2.0
+      '@react-aria/interactions': 3.13.1_react@18.2.0
+      '@react-aria/ssr': 3.4.1_react@18.2.0
+      '@react-aria/utils': 3.14.2_react@18.2.0
+      '@react-aria/visually-hidden': 3.6.1_react@18.2.0
+      '@react-stately/overlays': 3.4.4_react@18.2.0
+      '@react-types/button': 3.7.0_react@18.2.0
+      '@react-types/overlays': 3.6.5_react@18.2.0
+      '@react-types/shared': 3.16.0_react@18.2.0
+      '@swc/helpers': 0.4.14
+      react: 18.2.0
     dev: false
 
   /@react-aria/progress/3.3.4_react@18.2.0:
@@ -5208,6 +5354,21 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@react-stately/combobox/3.3.1_react@18.2.0:
+    resolution: {integrity: sha512-DgYn0MyfbDySf54o7ofXRd29TWznqtRRRbMG8TWgi/RaB0piDckT/TYWWSYOH3iMgnOEhReJhUUdMiQG4QLpIg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-stately/list': 3.6.1_react@18.2.0
+      '@react-stately/menu': 3.4.4_react@18.2.0
+      '@react-stately/select': 3.3.4_react@18.2.0
+      '@react-stately/utils': 3.5.2_react@18.2.0
+      '@react-types/combobox': 3.5.5_react@18.2.0
+      '@react-types/shared': 3.16.0_react@18.2.0
+      '@swc/helpers': 0.4.14
+      react: 18.2.0
+    dev: false
+
   /@react-stately/data/3.8.1_react@18.2.0:
     resolution: {integrity: sha512-YSc45qfmt8uhg9KTGGDQ/xbAPPP6ty5itzWoWORYLEsorBNUj7mLF+q126nYcYX4B5Xf84w8EexqP8Y8nh2Gdg==}
     peerDependencies:
@@ -5449,6 +5610,15 @@ packages:
 
   /@react-types/checkbox/3.4.1_react@18.2.0:
     resolution: {integrity: sha512-kDMpy9SntjGQ7x00m5zmW8GENPouOtyiDgiEDKsPXUr2iYqHsNtricqVyG9S9+6hqpzuu8BzTcvZamc/xYjzlg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-types/shared': 3.16.0_react@18.2.0
+      react: 18.2.0
+    dev: false
+
+  /@react-types/combobox/3.5.5_react@18.2.0:
+    resolution: {integrity: sha512-gpDo/NTQFd5IfCZoNnG16N4/JfvwXpZBNc15Kn7bF+NcpSDhDpI26BZN4mvK4lljKCheD4VrEl9/3PtImCg7cA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
