@@ -19,6 +19,8 @@ jobs:
       - uses: ./.github/actions/setup-deps
 
       - uses: changesets/action@v1
+        with:
+          version: pnpm run version-packages
         env:
           # use a different GitHub account to have the CI run on push
           GITHUB_TOKEN: ${{ secrets.RELEASE_BOT_GITHUB_TOKEN }}

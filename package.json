@@ -29,7 +29,8 @@
     "test-strict": "cross-env STRICT_MODE=1 pnpm run test",
     "test:coverage": "jest ---coverage",
     "test:unit": "jest packages/*",
-    "validate": "npm-run-all --parallel check:*"
+    "validate": "npm-run-all --parallel check:*",
+    "version-packages": "changeset version && pnpm i --frozen-lockfile=false"
   },
   "dependencies": {
     "@babel/core": "^7.18.5",
