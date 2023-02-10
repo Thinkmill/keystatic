@@ -7,24 +7,12 @@ import { Flex } from '@voussoir/layout';
 import { ActionMenu } from '@voussoir/menu';
 import { Text } from '@voussoir/typography';
 import router from 'next/router';
-import { createContext, ReactElement, useContext, useMemo, useReducer } from 'react';
+import { ReactElement, useContext, useMemo, useReducer } from 'react';
 import { BranchPicker, CreateBranchDialog } from '../branch-selection';
-import { useBaseCommit, useRepositoryId } from './data';
-
-export const SidebarHeaderInfoContext = createContext<{
-  currentBranch: string;
-  allBranches: string[];
-  defaultBranch: string;
-  hasPullRequests: boolean;
-}>({
-  currentBranch: '',
-  allBranches: [],
-  defaultBranch: '',
-  hasPullRequests: false,
-});
+import { BranchInfoContext, useBaseCommit, useRepositoryId } from './data';
 
 export function SidebarHeader(props: { repo: { owner: string; name: string } }) {
-  const data = useContext(SidebarHeaderInfoContext);
+  const data = useContext(BranchInfoContext);
   const baseCommit = useBaseCommit();
   const repositoryId = useRepositoryId();
   const [newBranchDialogVisible, toggleNewBranchDialog] = useReducer(v => !v, false);

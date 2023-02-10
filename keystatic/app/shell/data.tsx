@@ -15,7 +15,6 @@ import { getTreeNodeAtPath, treeEntriesToTreeNodes, TreeEntry, TreeNode } from '
 import { DataState, LOADING, mergeDataStates, useData } from '../useData';
 import { getTreeNodeForItem, MaybePromise } from '../utils';
 import LRU from 'lru-cache';
-import { SidebarHeaderInfoContext } from './sidebar-header';
 import { isDefined } from 'emery';
 
 export function useAppShellData(props: { currentBranch: string; config: Config }) {
@@ -130,7 +129,7 @@ export function useAppShellData(props: { currentBranch: string; config: Config }
     () => ({ baseCommit: baseCommit || '', repositoryId: data?.repository?.id ?? '' }),
     [baseCommit, data?.repository?.id]
   );
-  const sidebarHeaderInfo = useMemo(
+  const branchInfo = useMemo(
     () => ({
       defaultBranch: data?.repository?.defaultBranchRef?.name ?? '',
       currentBranch: props.currentBranch,
@@ -151,7 +150,7 @@ export function useAppShellData(props: { currentBranch: string; config: Config }
   return {
     error,
     providers: (children: ReactNode) => (
-      <SidebarHeaderInfoContext.Provider value={sidebarHeaderInfo}>
+      <BranchInfoContext.Provider value={branchInfo}>
         <BaseInfoContext.Provider value={baseInfo}>
           <ChangedContext.Provider value={changedData}>
             <TreeContext.Provider value={allTreeData}>
@@ -161,7 +160,7 @@ export function useAppShellData(props: { currentBranch: string; config: Config }
             </TreeContext.Provider>
           </ChangedContext.Provider>
         </BaseInfoContext.Provider>
-      </SidebarHeaderInfoContext.Provider>
+      </BranchInfoContext.Provider>
     ),
   };
 }
@@ -302,3 +301,15 @@ export function fetchTreeData(sha: string, repo: { owner: string; name: string }
 function useTreeData(sha: string | null, repo: { owner: string; name: string }) {
   return useData(useCallback(() => (sha ? fetchTreeData(sha, repo) : LOADING), [sha, repo]));
 }
+
+export const BranchInfoContext = createContext<{
+  currentBranch: string;
+  allBranches: string[];
+  defaultBranch: string;
+  hasPullRequests: boolean;
+}>({
+  currentBranch: '',
+  allBranches: [],
+  defaultBranch: '',
+  hasPullRequests: false,
+});
