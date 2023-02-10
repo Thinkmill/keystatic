@@ -1,6 +1,5 @@
 import { OperationData, OperationVariables } from '@ts-gql/tag';
 import { gql } from '@ts-gql/tag/no-transform';
-import { isDefined } from 'emery';
 import { useRouter } from 'next/router';
 import { Config } from '../../config';
 import { useMemo, useEffect, createContext, useContext, useCallback, ReactNode } from 'react';
@@ -16,6 +15,8 @@ import { getTreeNodeAtPath, treeEntriesToTreeNodes, TreeEntry, TreeNode } from '
 import { DataState, LOADING, mergeDataStates, useData } from '../useData';
 import { getTreeNodeForItem, MaybePromise } from '../utils';
 import LRU from 'lru-cache';
+import { SidebarHeaderInfoContext } from './sidebar-header';
+import { isDefined } from 'emery';
 
 export function useAppShellData(props: { currentBranch: string; config: Config }) {
   const router = useRouter();
@@ -125,30 +126,47 @@ export function useAppShellData(props: { currentBranch: string; config: Config }
       router.push('/keystatic/repo-not-found');
     }
   }, [error, data, router]);
+  const baseInfo = useMemo(
+    () => ({ baseCommit: baseCommit || '', repositoryId: data?.repository?.id ?? '' }),
+    [baseCommit, data?.repository?.id]
+  );
+  const sidebarHeaderInfo = useMemo(
+    () => ({
+      defaultBranch: data?.repository?.defaultBranchRef?.name ?? '',
+      currentBranch: props.currentBranch,
+      baseCommit: baseCommit || '',
+      repositoryId: data?.repository?.id ?? '',
+      allBranches: data?.repository?.refs?.nodes?.map(x => x?.name).filter(isDefined) ?? [],
+      hasPullRequests: !!currentBranchRef?.associatedPullRequests.totalCount,
+    }),
+    [
+      data?.repository?.defaultBranchRef?.name,
+      data?.repository?.id,
+      data?.repository?.refs?.nodes,
+      props.currentBranch,
+      baseCommit,
+      currentBranchRef?.associatedPullRequests.totalCount,
+    ]
+  );
   return {
-    changedData,
-    baseCommit,
-    currentBranchRef,
-    defaultBranchRef,
-    viewer: data?.viewer,
     error,
-    allBranches: data?.repository?.refs?.nodes?.map(x => x?.name).filter(isDefined) ?? [],
-    repositoryId: data?.repository?.id,
     providers: (children: ReactNode) => (
-      <BaseCommitContext.Provider value={baseCommit ?? ''}>
-        <ChangedContext.Provider value={changedData}>
-          <TreeContext.Provider value={allTreeData}>
-            <AppShellQueryContext.Provider value={queryData}>
-              {children}
-            </AppShellQueryContext.Provider>
-          </TreeContext.Provider>
-        </ChangedContext.Provider>
-      </BaseCommitContext.Provider>
+      <SidebarHeaderInfoContext.Provider value={sidebarHeaderInfo}>
+        <BaseInfoContext.Provider value={baseInfo}>
+          <ChangedContext.Provider value={changedData}>
+            <TreeContext.Provider value={allTreeData}>
+              <AppShellQueryContext.Provider value={queryData}>
+                {children}
+              </AppShellQueryContext.Provider>
+            </TreeContext.Provider>
+          </ChangedContext.Provider>
+        </BaseInfoContext.Provider>
+      </SidebarHeaderInfoContext.Provider>
     ),
   };
 }
 
-const BaseCommitContext = createContext('');
+const BaseInfoContext = createContext({ baseCommit: '', repositoryId: '' });
 
 const ChangedContext = createContext<{
   collections: Map<
@@ -193,7 +211,11 @@ export function useChanged() {
 }
 
 export function useBaseCommit() {
-  return useContext(BaseCommitContext);
+  return useContext(BaseInfoContext).baseCommit;
+}
+
+export function useRepositoryId() {
+  return useContext(BaseInfoContext).repositoryId;
 }
 
 const AppShellQueryContext = createContext<null | UseQueryResponse<
@@ -211,12 +233,6 @@ export function useAppShellQuery() {
 
 const AppShellQuery = gql`
   query AppShell($name: String!, $owner: String!) {
-    viewer {
-      id
-      name
-      login
-      avatarUrl
-    }
     repository(owner: $owner, name: $name) {
       id
       defaultBranchRef {
@@ -238,11 +254,8 @@ const AppShellQuery = gql`
               }
             }
           }
-          associatedPullRequests(first: 1, states: [OPEN]) {
-            nodes {
-              id
-              number
-            }
+          associatedPullRequests(states: [OPEN]) {
+            totalCount
           }
         }
       }

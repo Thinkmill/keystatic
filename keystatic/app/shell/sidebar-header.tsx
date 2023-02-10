@@ -7,23 +7,31 @@ import { Flex } from '@voussoir/layout';
 import { ActionMenu } from '@voussoir/menu';
 import { Text } from '@voussoir/typography';
 import router from 'next/router';
-import { ReactElement, useMemo, useReducer } from 'react';
+import { createContext, ReactElement, useContext, useMemo, useReducer } from 'react';
 import { BranchPicker, CreateBranchDialog } from '../branch-selection';
+import { useBaseCommit, useRepositoryId } from './data';
 
-export function SidebarHeader(props: {
+export const SidebarHeaderInfoContext = createContext<{
   currentBranch: string;
-  defaultBranch: string;
-  baseCommit: string;
-  repositoryId: string;
-  hasPullRequests: boolean;
   allBranches: string[];
-  repo: { owner: string; name: string };
-}) {
+  defaultBranch: string;
+  hasPullRequests: boolean;
+}>({
+  currentBranch: '',
+  allBranches: [],
+  defaultBranch: '',
+  hasPullRequests: false,
+});
+
+export function SidebarHeader(props: { repo: { owner: string; name: string } }) {
+  const data = useContext(SidebarHeaderInfoContext);
+  const baseCommit = useBaseCommit();
+  const repositoryId = useRepositoryId();
   const [newBranchDialogVisible, toggleNewBranchDialog] = useReducer(v => !v, false);
   type GitItem = { icon: ReactElement; label: string; description: string; key: string };
   type GitSection = { key: string; label: string; children: GitItem[] };
   const gitMenuItems = useMemo(() => {
-    let isDefaultBranch = props.currentBranch === props.defaultBranch;
+    let isDefaultBranch = data.currentBranch === data.defaultBranch;
     let items: GitSection[] = [
       {
         key: 'branch-section',
@@ -33,7 +41,7 @@ export function SidebarHeader(props: {
             key: 'new-branch',
             icon: gitBranchPlusIcon,
             label: 'New branch',
-            description: `Create a new branch based on "${props.currentBranch}"`,
+            description: `Create a new branch based on "${data.currentBranch}"`,
           },
         ],
       },
@@ -48,7 +56,7 @@ export function SidebarHeader(props: {
       });
     }
 
-    if (props.hasPullRequests) {
+    if (data.hasPullRequests) {
       prSection.push({
         key: 'related-pull-requests',
         icon: externalLinkIcon,
@@ -66,13 +74,13 @@ export function SidebarHeader(props: {
     }
 
     return items;
-  }, [props.currentBranch, props.defaultBranch, props.hasPullRequests]);
+  }, [data.currentBranch, data.defaultBranch, data.hasPullRequests]);
   return (
     <Flex gap="regular" paddingX="xlarge" borderBottom="muted" height="xlarge" alignItems="center">
       <BranchPicker
-        currentBranch={props.currentBranch}
-        defaultBranch={props.defaultBranch}
-        allBranches={props.allBranches}
+        currentBranch={data.currentBranch}
+        defaultBranch={data.defaultBranch}
+        allBranches={data.allBranches}
       />
       <ActionMenu
         aria-label="git actions"
@@ -88,7 +96,7 @@ export function SidebarHeader(props: {
               let query = [
                 ['is', 'pr'],
                 ['is', 'open'],
-                ['head', props.currentBranch],
+                ['head', data.currentBranch],
               ]
                 .map(([key, value]) => encodeURIComponent(`${key}:${value}`))
                 .join('+');
@@ -96,7 +104,7 @@ export function SidebarHeader(props: {
               window.open(`${repoURL}/pulls?q=${query}`);
               break;
             case 'create-pull-request':
-              window.open(`${repoURL}/pull/new/${props.currentBranch}`);
+              window.open(`${repoURL}/pull/new/${data.currentBranch}`);
               break;
           }
         }}
@@ -122,8 +130,8 @@ export function SidebarHeader(props: {
               close();
               router.push(router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + branchName));
             }}
-            branchOid={props.baseCommit}
-            repositoryId={props.repositoryId}
+            branchOid={baseCommit}
+            repositoryId={repositoryId}
           />
         )}
       </DialogContainer>

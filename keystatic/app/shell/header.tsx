@@ -3,7 +3,8 @@ import { Icon } from '@voussoir/icon';
 import { menuIcon } from '@voussoir/icon/icons/menuIcon';
 import { Box, Flex } from '@voussoir/layout';
 import { PropsWithChildren, useContext, useRef, useEffect } from 'react';
-import { AppShellContainer, SidebarContext } from '.';
+import { AppShellContainer } from '.';
+import { SidebarContext } from './sidebar';
 
 function documentSelector(selector: string): HTMLElement | null {
   return document.querySelector(selector);
