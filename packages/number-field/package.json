@@ -33,7 +33,6 @@
     "@voussoir/icon": "^0.1.0",
     "@voussoir/layout": "^0.1.0",
     "@voussoir/style": "^0.1.0",
-    "@voussoir/test-utils": "^2.0.0",
     "@voussoir/text-field": "^0.1.0",
     "@voussoir/types": "^0.1.0",
     "@voussoir/typography": "^0.1.0",
@@ -43,6 +42,7 @@
   "devDependencies": {
     "@types/react": "^18.0.25",
     "@voussoir/storybook": "^0.0.0",
+    "@voussoir/test-utils": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
