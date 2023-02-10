@@ -1,9 +1,9 @@
-import { OperationData, OperationVariables } from '@ts-gql/tag';
+import { OperationData } from '@ts-gql/tag';
 import { gql } from '@ts-gql/tag/no-transform';
 import { useRouter } from 'next/router';
 import { Config } from '../../config';
 import { useMemo, useEffect, createContext, useContext, useCallback, ReactNode } from 'react';
-import { useQuery, UseQueryResponse } from 'urql';
+import { useQuery } from 'urql';
 import { githubRequest } from '../../github-api';
 import {
   getCollectionPath,
@@ -19,7 +19,7 @@ import { isDefined } from 'emery';
 
 export function useAppShellData(props: { currentBranch: string; config: Config }) {
   const router = useRouter();
-  const queryData = useQuery({
+  const [{ data, error }] = useQuery({
     query: AppShellQuery,
     variables: {
       branch: props.currentBranch,
@@ -27,7 +27,6 @@ export function useAppShellData(props: { currentBranch: string; config: Config }
       owner: props.config.repo.owner,
     },
   });
-  const [{ data, error }] = queryData;
   const defaultBranchRef = data?.repository?.refs?.nodes?.find(
     (x): x is typeof x & { target: { __typename: 'Commit' } } =>
       x?.name === data?.repository?.defaultBranchRef?.name
@@ -153,11 +152,7 @@ export function useAppShellData(props: { currentBranch: string; config: Config }
       <BranchInfoContext.Provider value={branchInfo}>
         <BaseInfoContext.Provider value={baseInfo}>
           <ChangedContext.Provider value={changedData}>
-            <TreeContext.Provider value={allTreeData}>
-              <AppShellQueryContext.Provider value={queryData}>
-                {children}
-              </AppShellQueryContext.Provider>
-            </TreeContext.Provider>
+            <TreeContext.Provider value={allTreeData}>{children}</TreeContext.Provider>
           </ChangedContext.Provider>
         </BaseInfoContext.Provider>
       </BranchInfoContext.Provider>
@@ -215,19 +210,6 @@ export function useBaseCommit() {
 
 export function useRepositoryId() {
   return useContext(BaseInfoContext).repositoryId;
-}
-
-const AppShellQueryContext = createContext<null | UseQueryResponse<
-  OperationData<typeof AppShellQuery>,
-  OperationVariables<typeof AppShellQuery>
->>(null);
-
-export function useAppShellQuery() {
-  const value = useContext(AppShellQueryContext);
-  if (!value) {
-    throw new Error('AppShellQueryContext not set');
-  }
-  return value;
 }
 
 const AppShellQuery = gql`
