@@ -39,28 +39,24 @@ const input = [
     type: 'blob',
     sha: 'fe5b6f6dcf3759216691fe3049d4260800c14fa6',
     size: 13,
-    url: 'https://api.github.com/repos/keystonejs/test-repo-3/git/blobs/fe5b6f6dcf3759216691fe3049d4260800c14fa6',
   },
   {
     path: 'something',
     mode: '040000',
     type: 'tree',
     sha: 'fabec7091400d7ca23e3ec49f082954520144661',
-    url: 'https://api.github.com/repos/keystonejs/test-repo-3/git/trees/fabec7091400d7ca23e3ec49f082954520144661',
   },
   {
     path: 'something/a',
     mode: '040000',
     type: 'tree',
     sha: '4ad6218f6fe74ae926ecfb79a3c94f61f3a6d884',
-    url: 'https://api.github.com/repos/keystonejs/test-repo-3/git/trees/4ad6218f6fe74ae926ecfb79a3c94f61f3a6d884',
   },
   {
     path: 'something/a/b',
     mode: '040000',
     type: 'tree',
     sha: '6c0e9fee68c398788e2579029f837a3149b04657',
-    url: 'https://api.github.com/repos/keystonejs/test-repo-3/git/trees/6c0e9fee68c398788e2579029f837a3149b04657',
   },
   {
     path: 'something/a/b/c.md',
@@ -68,7 +64,6 @@ const input = [
     type: 'blob',
     sha: '2ef267e25bd6c6a300bb473e604b092b6a48523b',
     size: 13,
-    url: 'https://api.github.com/repos/keystonejs/test-repo-3/git/blobs/2ef267e25bd6c6a300bb473e604b092b6a48523b',
   },
 ];
 
@@ -79,28 +74,24 @@ const expectedOutput = [
     type: 'blob',
     sha: 'fe5b6f6dcf3759216691fe3049d4260800c14fa6',
     size: 13,
-    url: 'https://api.github.com/repos/keystonejs/test-repo-3/git/blobs/fe5b6f6dcf3759216691fe3049d4260800c14fa6',
   },
   {
     path: 'something',
     mode: '040000',
     type: 'tree',
     sha: '8ff4c9791de595354d3f5aaf65578694ac7378a0',
-    url: 'https://api.github.com/repos/keystonejs/test-repo-3/git/trees/8ff4c9791de595354d3f5aaf65578694ac7378a0',
   },
   {
     path: 'something/a',
     mode: '040000',
     type: 'tree',
     sha: 'ddd9e16c2bc1da4fb33704702871a470580fad4e',
-    url: 'https://api.github.com/repos/keystonejs/test-repo-3/git/trees/ddd9e16c2bc1da4fb33704702871a470580fad4e',
   },
   {
     path: 'something/a/b',
     mode: '040000',
     type: 'tree',
     sha: 'e5e053855c47d1735d8ecb5a71b9dde3e179d193',
-    url: 'https://api.github.com/repos/keystonejs/test-repo-3/git/trees/e5e053855c47d1735d8ecb5a71b9dde3e179d193',
   },
   {
     path: 'something/a/b/c.md',
@@ -108,7 +99,6 @@ const expectedOutput = [
     type: 'blob',
     sha: '2ef267e25bd6c6a300bb473e604b092b6a48523b',
     size: 13,
-    url: 'https://api.github.com/repos/keystonejs/test-repo-3/git/blobs/2ef267e25bd6c6a300bb473e604b092b6a48523b',
   },
   {
     path: 'something/a/b/d.md',
@@ -116,17 +106,15 @@ const expectedOutput = [
     type: 'blob',
     sha: '2e65efe2a145dda7ee51d1741299f848e5bf752e',
     size: 1,
-    url: 'https://api.github.com/repos/keystonejs/test-repo-3/git/blobs/2e65efe2a145dda7ee51d1741299f848e5bf752e',
   },
 ];
 const textEncoder = new TextEncoder();
 
 test('updateTreeWithChanges', async () => {
-  const repo = { owner: 'keystonejs', name: 'test-repo-3' };
   const changes = {
     additions: [{ path: 'something/a/b/d.md', contents: textEncoder.encode('a') }],
     deletions: [],
   };
-  const output = await updateTreeWithChanges(treeEntriesToTreeNodes(input), changes, repo);
+  const output = await updateTreeWithChanges(treeEntriesToTreeNodes(input), changes);
   expect(output).toEqual(expectedOutput);
 });

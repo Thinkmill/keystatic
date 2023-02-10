@@ -14,18 +14,7 @@ import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../../config';
 
-import {
-  AppShellBody,
-  AppShellData,
-  AppShellHeader,
-  AppShellRoot,
-  EmptyState,
-  TreeData,
-  useAppShellQuery,
-  useBaseCommit,
-  useChanged,
-  useTree,
-} from '../shell';
+import { AppShellBody, AppShellRoot, EmptyState } from '../shell';
 import { CreateBranchDialog } from '../branch-selection';
 import { DataState } from '../useData';
 import { arrayOf, getCollectionPath, keyedEntries, pluralize } from '../utils';
@@ -33,6 +22,15 @@ import { arrayOf, getCollectionPath, keyedEntries, pluralize } from '../utils';
 import { CONTENT } from './content';
 import { SummaryBlock } from './components';
 import { getTreeNodeAtPath } from '../trees';
+import {
+  useAppShellQuery,
+  AppShellData,
+  useBaseCommit,
+  useChanged,
+  useTree,
+  TreeData,
+} from '../shell/data';
+import { AppShellHeader } from '../shell/header';
 
 export function DashboardPage(props: { config: Config; currentBranch: string }) {
   const [{ data, error, fetching }] = useAppShellQuery();

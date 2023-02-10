@@ -23,7 +23,7 @@ import { Heading } from '@voussoir/typography';
 
 import { Config } from '../config';
 import { sortByDescriptor } from './collection-sort';
-import { AppShellBody, AppShellHeader, AppShellRoot, EmptyState, TreeData, useTree } from './shell';
+import { AppShellBody, AppShellRoot, EmptyState } from './shell';
 import { getTreeNodeAtPath, TreeNode } from './trees';
 import {
   getCollectionFormat,
@@ -31,6 +31,8 @@ import {
   getDataFileExtension,
   getTreeNodeForItem,
 } from './utils';
+import { useTree, TreeData } from './shell/data';
+import { AppShellHeader } from './shell/header';
 
 type CollectionPageProps = { collection: string; config: Config; branch: string };
 

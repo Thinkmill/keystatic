@@ -16,14 +16,9 @@ import { TextField } from '@voussoir/text-field';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../config';
-import {
-  AppShellBody,
-  AppShellHeader,
-  AppShellRoot,
-  useAppShellQuery,
-  useBaseCommit,
-  useTree,
-} from './shell';
+import { AppShellBody, AppShellRoot } from './shell';
+import { useBaseCommit, useAppShellQuery, useTree } from './shell/data';
+import { AppShellHeader } from './shell/header';
 import { FormValueContentFromPreviewProps } from '../DocumentEditor/component-blocks/form-from-preview';
 import { createGetPreviewProps } from '../DocumentEditor/component-blocks/preview-props';
 import { fields } from '../DocumentEditor/component-blocks/api';
