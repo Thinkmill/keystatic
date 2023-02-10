@@ -302,7 +302,7 @@ importers:
       '@voussoir/menu': ^0.1.0
       '@voussoir/nav-list': ^0.1.0
       '@voussoir/notice': ^0.1.0
-      '@voussoir/number-field': ^0.1.0
+      '@voussoir/number-field': ^0.1.1
       '@voussoir/overlays': ^0.1.0
       '@voussoir/picker': ^0.1.0
       '@voussoir/progress': ^0.1.0

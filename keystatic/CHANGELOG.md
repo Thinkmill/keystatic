@@ -1,5 +1,13 @@
 # keystatic
 
+## 0.0.24
+
+### Patch Changes
+
+- 07c731f: Move `@voussoir/test-utils` to `devDependencies`
+- Updated dependencies [07c731f]
+  - @voussoir/number-field@0.1.1
+
 ## 0.0.23
 
 ### Patch Changes
