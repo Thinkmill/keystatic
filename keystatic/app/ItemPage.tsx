@@ -16,14 +16,9 @@ import { TextField } from '@voussoir/text-field';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../config';
-import {
-  AppShellBody,
-  AppShellHeader,
-  AppShellRoot,
-  useAppShellQuery,
-  useBaseCommit,
-  useTree,
-} from './shell';
+import { AppShellBody, AppShellRoot } from './shell';
+import { useBaseCommit, useTree, useRepositoryId } from './shell/data';
+import { AppShellHeader } from './shell/header';
 import { FormValueContentFromPreviewProps } from '../DocumentEditor/component-blocks/form-from-preview';
 import { createGetPreviewProps } from '../DocumentEditor/component-blocks/preview-props';
 import { fields } from '../DocumentEditor/component-blocks/api';
@@ -244,7 +239,7 @@ export function CreateBranchDuringUpdateDialog(props: {
   onDismiss: () => void;
   reason: string;
 }) {
-  const [appShellQuery] = useAppShellQuery();
+  const repositoryId = useRepositoryId();
   const [branchName, setBranchName] = useState('');
   const [{ error, fetching, data }, createBranch] = useCreateBranchMutation();
   const isLoading = fetching || !!data?.createRef?.__typename;
@@ -256,7 +251,7 @@ export function CreateBranchDuringUpdateDialog(props: {
           event.preventDefault();
           const name = `refs/heads/${branchName}`;
           const result = await createBranch({
-            input: { name, oid: props.branchOid, repositoryId: appShellQuery.data!.repository!.id },
+            input: { name, oid: props.branchOid, repositoryId },
           });
           if (result.data?.createRef?.__typename) {
             props.onCreate(branchName);

@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router';
-import { ReactNode, useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 
 import { ActionButton } from '@voussoir/button';
 import { DialogTrigger } from '@voussoir/dialog';
 import { Icon } from '@voussoir/icon';
-import { alertCircleIcon } from '@voussoir/icon/icons/alertCircleIcon';
 import { plusIcon } from '@voussoir/icon/icons/plusIcon';
 import { Flex, Grid } from '@voussoir/layout';
 import { Item, ListView } from '@voussoir/list-view';
@@ -14,59 +13,35 @@ import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../../config';
 
-import {
-  AppShellBody,
-  AppShellData,
-  AppShellHeader,
-  AppShellRoot,
-  EmptyState,
-  TreeData,
-  useAppShellQuery,
-  useBaseCommit,
-  useChanged,
-  useTree,
-} from '../shell';
+import { AppShellBody, AppShellRoot } from '../shell';
 import { CreateBranchDialog } from '../branch-selection';
 import { DataState } from '../useData';
-import { arrayOf, getCollectionPath, keyedEntries, pluralize } from '../utils';
+import { getCollectionPath, keyedEntries, pluralize } from '../utils';
 
 import { CONTENT } from './content';
 import { SummaryBlock } from './components';
 import { getTreeNodeAtPath } from '../trees';
+import {
+  useBaseCommit,
+  useChanged,
+  useTree,
+  TreeData,
+  BranchInfoContext,
+  useRepositoryId,
+} from '../shell/data';
+import { AppShellHeader } from '../shell/header';
 
 export function DashboardPage(props: { config: Config; currentBranch: string }) {
-  const [{ data, error, fetching }] = useAppShellQuery();
+  const { config } = props;
 
-  if (error) {
-    return (
-      <DashboardShell>
-        <EmptyState icon={alertCircleIcon} title="Unable to load content" message={error.message} />
-      </DashboardShell>
-    );
-  }
+  const changes = useChanged();
+  const router = useRouter();
+  const allTreeData = useTree();
 
-  if (fetching || !data) {
-    return (
-      <DashboardShell>
-        <EmptyState>
-          <ProgressCircle aria-label="Loading content" isIndeterminate size="large" />
-        </EmptyState>
-      </DashboardShell>
-    );
-  }
+  let link = (path: string) => `/keystatic/branch/${props.currentBranch}` + path;
+  let collections = keyedEntries(config.collections ?? {});
+  let singletons = keyedEntries(config.singletons ?? {});
 
-  return (
-    <DashboardShell>
-      <AppShellBody>
-        <Flex direction="column" gap="xlarge">
-          <DashboardContent {...props} data={data} />
-        </Flex>
-      </AppShellBody>
-    </DashboardShell>
-  );
-}
-
-export function DashboardShell({ children }: { children: ReactNode }) {
   return (
     <AppShellRoot containerWidth="large">
       <AppShellHeader>
@@ -74,141 +49,135 @@ export function DashboardShell({ children }: { children: ReactNode }) {
           Dashboard
         </Heading>
       </AppShellHeader>
-      {children}
+      <AppShellBody>
+        <Flex direction="column" gap="xlarge">
+          <Grid columns={{ tablet: ['5fr', '3fr'], desktop: ['3fr', '1fr'] }} gap="xxlarge">
+            <Flex direction="column" gap="xxlarge" minWidth={0}>
+              <Grid gap="large">
+                <Heading size="medium" id="collections-heading">
+                  Collections
+                </Heading>
+                <SummaryBlock>{CONTENT.collections}</SummaryBlock>
+                <ListView
+                  aria-labelledby="collections-heading"
+                  items={collections}
+                  onAction={key => {
+                    router.push(link(`/collection/${key}`));
+                  }}
+                >
+                  {ref => {
+                    const counts = getCountsForCollection({
+                      config,
+                      collection: ref.key,
+                      changes,
+                      tree: allTreeData.current,
+                    });
+                    const allChangesCount = counts.changed + counts.added + counts.removed;
+                    return (
+                      <Item>
+                        <Text>{ref.label}</Text>
+                        <Text slot="description">
+                          {pluralize(counts.total, { singular: 'item' })}
+                          {allChangesCount ? (
+                            <> &middot; {pluralize(allChangesCount, { singular: 'change' })}</>
+                          ) : null}
+                          {counts.added || counts.removed ? <> &middot; </> : null}
+                          {!!counts.added && (
+                            <Text color="positive" slot="none">
+                              +{counts.added}
+                            </Text>
+                          )}{' '}
+                          {!!counts.removed && (
+                            <Text color="critical" slot="none">
+                              -{counts.removed}
+                            </Text>
+                          )}
+                        </Text>
+                        <TooltipTrigger placement="start">
+                          <ActionButton
+                            onPress={() => {
+                              router.push(link(`/collection/${ref.key}/create`));
+                            }}
+                          >
+                            <Icon src={plusIcon} />
+                          </ActionButton>
+                          <Tooltip>New item</Tooltip>
+                        </TooltipTrigger>
+                      </Item>
+                    );
+                  }}
+                </ListView>
+              </Grid>
+
+              {!!singletons.length && (
+                <Grid gap="large">
+                  <Heading size="medium" id="singletons-heading">
+                    Singletons
+                  </Heading>
+                  <SummaryBlock>{CONTENT.singletons}</SummaryBlock>
+
+                  <ListView
+                    aria-labelledby="singletons-heading"
+                    items={singletons}
+                    onAction={key => {
+                      router.push(link(`/singleton/${key}`));
+                    }}
+                  >
+                    {ref => {
+                      return (
+                        <Item>
+                          <Text>{ref.label}</Text>
+                          <Text slot="description">
+                            {changes.singletons.has(ref.key) ? 'Changed' : 'Unchanged'}
+                          </Text>
+                        </Item>
+                      );
+                    }}
+                  </ListView>
+                </Grid>
+              )}
+            </Flex>
+            <Branches />
+          </Grid>
+        </Flex>
+      </AppShellBody>
     </AppShellRoot>
   );
 }
-export function DashboardContent(props: {
-  config: Config;
-  currentBranch: string;
-  data: AppShellData;
-}) {
-  const { config, data } = props;
-  const baseCommit = useBaseCommit();
-  const changes = useChanged();
+
+function Branches() {
   const router = useRouter();
-  const allTreeData = useTree();
-
-  let link = (path: string) => `/keystatic/branch/${props.currentBranch}` + path;
-  let collections = arrayOf(keyedEntries(config.collections ?? {}));
-  let singletons = arrayOf(keyedEntries(config.singletons ?? {}));
+  const branchInfo = useContext(BranchInfoContext);
   let branches = useMemo(() => {
-    if (data?.repository?.refs?.nodes) {
-      let defaultBranch = data?.repository?.defaultBranchRef?.name;
-      return arrayOf(data?.repository?.refs?.nodes)
-        .sort(node => {
-          if (node.name === defaultBranch) {
-            return -1;
-          }
-          return 1;
-        })
-        .map(node => {
-          return {
-            ...node,
-            description: node.name === defaultBranch ? 'Default branch' : undefined,
-          };
-        });
-    }
-
-    return [];
-  }, [data]);
-
+    return branchInfo.allBranches
+      .map(name => {
+        return {
+          name,
+          description: name === branchInfo.defaultBranch ? 'Default branch' : undefined,
+        };
+      })
+      .sort(branch => {
+        if (branch.name === branchInfo.defaultBranch) {
+          return -1;
+        }
+        return 1;
+      });
+  }, [branchInfo.allBranches, branchInfo.defaultBranch]);
+  const baseCommit = useBaseCommit();
+  const repositoryId = useRepositoryId();
   return (
-    <Grid columns={{ tablet: ['5fr', '3fr'], desktop: ['3fr', '1fr'] }} gap="xxlarge">
-      <Flex direction="column" gap="xxlarge" minWidth={0}>
-        <Grid gap="large">
-          <Heading size="medium" id="collections-heading">
-            Collections
-          </Heading>
-          <SummaryBlock>{CONTENT.collections}</SummaryBlock>
-          <ListView
-            aria-labelledby="collections-heading"
-            items={collections}
-            onAction={key => {
-              router.push(link(`/collection/${key}`));
-            }}
-          >
-            {ref => {
-              const counts = getCountsForCollection({
-                config,
-                collection: ref.key,
-                changes,
-                tree: allTreeData.current,
-              });
-              const allChangesCount = counts.changed + counts.added + counts.removed;
-              return (
-                <Item>
-                  <Text>{ref.label}</Text>
-                  <Text slot="description">
-                    {pluralize(counts.total, { singular: 'item' })}
-                    {allChangesCount ? (
-                      <> &middot; {pluralize(allChangesCount, { singular: 'change' })}</>
-                    ) : null}
-                    {counts.added || counts.removed ? <> &middot; </> : null}
-                    {!!counts.added && (
-                      <Text color="positive" slot="none">
-                        +{counts.added}
-                      </Text>
-                    )}{' '}
-                    {!!counts.removed && (
-                      <Text color="critical" slot="none">
-                        -{counts.removed}
-                      </Text>
-                    )}
-                  </Text>
-                  <TooltipTrigger placement="start">
-                    <ActionButton
-                      onPress={() => {
-                        router.push(link(`/collection/${ref.key}/create`));
-                      }}
-                    >
-                      <Icon src={plusIcon} />
-                    </ActionButton>
-                    <Tooltip>New item</Tooltip>
-                  </TooltipTrigger>
-                </Item>
-              );
-            }}
-          </ListView>
-        </Grid>
-
-        {!!singletons.length && (
-          <Grid gap="large">
-            <Heading size="medium" id="singletons-heading">
-              Singletons
-            </Heading>
-            <SummaryBlock>{CONTENT.singletons}</SummaryBlock>
-
-            <ListView
-              aria-labelledby="singletons-heading"
-              items={singletons}
-              onAction={key => {
-                router.push(link(`/singleton/${key}`));
-              }}
-            >
-              {ref => {
-                return (
-                  <Item>
-                    <Text>{ref.label}</Text>
-                    <Text slot="description">
-                      {changes.singletons.has(ref.key) ? 'Changed' : 'Unchanged'}
-                    </Text>
-                  </Item>
-                );
-              }}
-            </ListView>
-          </Grid>
-        )}
-      </Flex>
-
-      <Flex direction="column" gap="xlarge" order={{ mobile: -1, tablet: 1 }} minWidth={0}>
-        <Grid gap="xlarge">
-          <Heading size="medium" id="branches-heading">
-            Branches
-          </Heading>
-          <SummaryBlock>{CONTENT.branches}</SummaryBlock>
-        </Grid>
-
+    <Flex direction="column" gap="xlarge" order={{ mobile: -1, tablet: 1 }} minWidth={0}>
+      <Grid gap="xlarge">
+        <Heading size="medium" id="branches-heading">
+          Branches
+        </Heading>
+        <SummaryBlock>{CONTENT.branches}</SummaryBlock>
+      </Grid>
+      {branchInfo.allBranches.length === 0 ? (
+        <Flex justifyContent="center">
+          <ProgressCircle isIndeterminate size="medium" />
+        </Flex>
+      ) : (
         <Flex direction="column" gap="regular">
           <ListView
             aria-labelledby="branches-heading"
@@ -216,7 +185,7 @@ export function DashboardContent(props: {
             maxHeight="size.scale.3000"
             selectionMode="single"
             selectionStyle="highlight"
-            selectedKeys={[props.currentBranch]}
+            selectedKeys={[branchInfo.currentBranch]}
             onSelectionChange={([key]) => {
               if (typeof key === 'string') {
                 router.push(router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + key));
@@ -242,13 +211,13 @@ export function DashboardContent(props: {
                   router.push(router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + branchName));
                 }}
                 branchOid={baseCommit}
-                repositoryId={data?.repository?.id ?? ''}
+                repositoryId={repositoryId}
               />
             )}
           </DialogTrigger>
         </Flex>
-      </Flex>
-    </Grid>
+      )}
+    </Flex>
   );
 }
 

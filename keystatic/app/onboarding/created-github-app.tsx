@@ -4,7 +4,7 @@ import { Notice } from '@voussoir/notice';
 import { TextField } from '@voussoir/text-field';
 import { Heading, Text } from '@voussoir/typography';
 import { useRouter } from 'next/router';
-import { Config } from '../src';
+import { Config } from '../../src';
 
 export function CreatedGitHubApp(props: { config: Config }) {
   const router = useRouter();

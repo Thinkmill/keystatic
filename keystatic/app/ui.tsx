@@ -5,8 +5,6 @@ import { useQuery } from 'urql';
 
 import { injectVoussoirStyles } from '@voussoir/core';
 import { Notice } from '@voussoir/notice';
-import { KeystaticSetup } from './setup';
-import { RepoNotFound } from './repo-not-found';
 
 import { Config } from '../config';
 import { CollectionPage } from './CollectionPage';
@@ -16,8 +14,10 @@ import { ItemPage } from './ItemPage';
 import Provider from './provider';
 import { AppShell, AppShellBody, AppShellRoot } from './shell';
 import { SingletonPage } from './SingletonPage';
-import { FromTemplateDeploy } from './from-template-deploy';
-import { CreatedGitHubApp } from './created-github-app';
+import { FromTemplateDeploy } from './onboarding/from-template-deploy';
+import { CreatedGitHubApp } from './onboarding/created-github-app';
+import { KeystaticSetup } from './onboarding/setup';
+import { RepoNotFound } from './onboarding/repo-not-found';
 
 injectVoussoirStyles('surface');
 

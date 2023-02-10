@@ -4,7 +4,7 @@ import { useMutation } from 'urql';
 import { ComponentSchema, fields } from './DocumentEditor/component-blocks/api';
 import { fromByteArray } from 'base64-js';
 import { assertNever } from './DocumentEditor/component-blocks/utils';
-import { fetchTreeData, hydrateTreeCacheWithEntries } from './app/shell';
+import { fetchTreeData, hydrateTreeCacheWithEntries } from './app/shell/data';
 import { hydrateBlobCache } from './app/useItemData';
 import { useState } from 'react';
 import { githubRequest } from './github-api';
@@ -108,11 +108,10 @@ export function useUpsertItem(args: {
       });
 
       const deletions: { path: string }[] = [...filesToDelete].map(path => ({ path }));
-      const updatedTree = await updateTreeWithChanges(
-        args.currentTree,
-        { additions, deletions: [...filesToDelete] },
-        args.repo
-      );
+      const updatedTree = await updateTreeWithChanges(args.currentTree, {
+        additions,
+        deletions: [...filesToDelete],
+      });
       hydrateTreeCacheWithEntries(updatedTree.sha, updatedTree.entries);
       const runMutation = (expectedHeadOid: string) =>
         mutate({
@@ -214,11 +213,10 @@ export function useDeleteItem(args: {
   return [
     result,
     async () => {
-      const updatedTree = await updateTreeWithChanges(
-        args.currentTree,
-        { additions: [], deletions: args.initialFiles },
-        args.repo
-      );
+      const updatedTree = await updateTreeWithChanges(args.currentTree, {
+        additions: [],
+        deletions: args.initialFiles,
+      });
       hydrateTreeCacheWithEntries(updatedTree.sha, updatedTree.entries);
       return mutate({
         input: {

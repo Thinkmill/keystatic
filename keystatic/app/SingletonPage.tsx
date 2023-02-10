@@ -19,7 +19,9 @@ import { useEventCallback } from '../DocumentEditor/utils';
 import { useUpsertItem } from '../utils';
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
-import { AppShellBody, AppShellHeader, AppShellRoot, useBaseCommit, useTree } from './shell';
+import { AppShellBody, AppShellRoot } from './shell';
+import { useBaseCommit, useTree } from './shell/data';
+import { AppShellHeader } from './shell/header';
 import { TreeNode } from './trees';
 import { mergeDataStates } from './useData';
 import { useHasChanged } from './useHasChanged';
