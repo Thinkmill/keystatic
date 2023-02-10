@@ -4,7 +4,7 @@ import { Notice } from '@voussoir/notice';
 import { TextField } from '@voussoir/text-field';
 import { Heading, Text } from '@voussoir/typography';
 import { useEffect } from 'react';
-import { Config } from '../src';
+import { Config } from '../../src';
 import cookie from 'cookie';
 
 export function FromTemplateDeploy(props: { config: Config }) {

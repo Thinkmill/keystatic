@@ -5,7 +5,7 @@ import { Box, Flex } from '@voussoir/layout';
 import { css } from '@voussoir/style';
 import { TextField } from '@voussoir/text-field';
 import { Heading, Text } from '@voussoir/typography';
-import { Config } from '../src';
+import { Config } from '../../src';
 
 export function KeystaticSetup(props: { config: Config }) {
   const [deployedURL, setDeployedURL] = useState('');
