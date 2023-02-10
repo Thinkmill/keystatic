@@ -4,6 +4,15 @@ import Iron from '@hapi/iron';
 import z from 'zod';
 import fs from 'fs/promises';
 import { randomBytes } from 'node:crypto';
+import { GraphQLFormattedError } from 'graphql';
+import { print } from 'graphql/language/printer';
+import {
+  BaseOperations,
+  gql,
+  OperationData,
+  OperationVariables,
+  TypedDocumentNode,
+} from '@ts-gql/tag/no-transform';
 
 type APIRouteConfig = {
   /** @default process.env.KEYSTATIC_GITHUB_CLIENT_ID */
@@ -63,6 +72,10 @@ export default function createKeystaticAPIRoute(_config: APIRouteConfig) {
     const joined = params.join('/');
     if (joined === 'github/oauth/callback') {
       await githubOauthCallback(req, res, config);
+      return;
+    }
+    if (joined === 'from-template-install') {
+      res.redirect(`${config.url}/keystatic/from-template-install`);
       return;
     }
     if (joined === 'github/login') {
@@ -137,6 +150,117 @@ async function githubOauthCallback(
     return;
   }
 
+  if (req.cookies['ks-template']) {
+    const [owner, repo] = req.cookies['ks-template'].split('/');
+
+    const fetchGraphQL = async <TTypedDocumentNode extends TypedDocumentNode<BaseOperations>>(
+      operation: TTypedDocumentNode,
+      ...variables:
+        | [OperationVariables<TTypedDocumentNode>]
+        | ({} extends OperationVariables<TTypedDocumentNode> ? [] : never)
+    ): Promise<{ data: OperationData<TTypedDocumentNode>; errors?: GraphQLFormattedError[] }> => {
+      const res = await fetch('https://api.github.com/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `bearer ${tokenDataParseResult.data.access_token}`,
+        },
+        body: JSON.stringify({
+          query: print(operation),
+          variables,
+        }),
+      });
+      if (!res.ok) {
+        console.error(res);
+        throw new Error('Bad response from GitHub');
+      }
+      return res.json();
+    };
+    if (owner && repo) {
+      const { data, errors } = await fetchGraphQL(
+        gql`
+          query RepoForUpdating($owner: String!, $name: String!) {
+            repository(owner: $owner, name: $name) {
+              id
+              defaultBranchRef {
+                id
+                name
+                target {
+                  id
+                  oid
+                  __typename
+                  ... on Commit {
+                    id
+                    tree {
+                      id
+                      entries {
+                        name
+                        object {
+                          id
+                          __typename
+                          ... on Blob {
+                            text
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ` as import('../__generated__/ts-gql/RepoForUpdating').type,
+        { name: repo, owner }
+      );
+      if (
+        (errors && 'type' in errors[0] && errors[0].type === 'NOT_FOUND') ||
+        data.repository === null
+      ) {
+        res.status(404).send('Not Found');
+        return;
+      }
+      if (errors?.length) {
+        res.status(500).send('An error occurred while fetching the repository');
+        return;
+      }
+      const defaultBranchName = data.repository.defaultBranchRef?.name;
+      const defaultBranchSha = data.repository.defaultBranchRef?.target?.oid;
+      const configFile =
+        data.repository.defaultBranchRef?.target?.__typename === 'Commit'
+          ? data.repository.defaultBranchRef.target.tree?.entries?.find(
+              (x): x is typeof x & { object: { typename: 'Blob'; text: string } } =>
+                (x.name === 'keystatic.ts' || x.name === 'keystatic.tsx') &&
+                x.object?.__typename === 'Blob' &&
+                x.object.text !== null
+            )
+          : undefined;
+      if (defaultBranchName && defaultBranchSha && configFile) {
+        const configFileText = configFile.object.text
+          .replace('process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_OWNER!', `"${owner}"`)
+          .replace('process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_SLUG!', `"${repo}"`);
+        if (configFileText !== configFile.object.text) {
+          await fetchGraphQL(
+            gql`
+              mutation CreateCommitToUpdateRepo($input: CreateCommitOnBranchInput!) {
+                createCommitOnBranch(input: $input) {
+                  __typename
+                }
+              }
+            ` as import('../__generated__/ts-gql/CreateCommitToUpdateRepo').type,
+            {
+              input: {
+                branch: { id: data.repository.defaultBranchRef.id },
+                expectedHeadOid: defaultBranchSha,
+                message: { headline: 'Update Keystatic repo config' },
+                fileChanges: { additions: [{ contents: configFileText, path: configFile.name }] },
+              },
+            }
+          );
+        }
+      }
+    }
+  }
+
   await setTokenCookies(res, tokenDataParseResult.data, config);
 
   res.redirect(`/keystatic${from ? `/${from}` : ''}`);
@@ -170,6 +294,13 @@ async function setTokenCookies(
         path: '/',
       }
     ),
+    cookie.serialize('ks-template', '', {
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 0,
+      expires: new Date(),
+      path: '/',
+    }),
   ]);
 }
 
@@ -268,5 +399,8 @@ NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=${ghAppDataResult.data.slug}
   }
   const newEnv = prevEnv ? `${prevEnv}\n\n${toAddToEnv}` : toAddToEnv;
   await fs.writeFile('.env', newEnv);
-  res.redirect('/keystatic');
+  await wait(200);
+  res.redirect('/keystatic/created-github-app?slug=' + ghAppDataResult.data.slug);
 }
+
+const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

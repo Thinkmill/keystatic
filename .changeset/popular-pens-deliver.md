@@ -1,0 +1,5 @@
+---
+'keystatic': patch
+---
+
+Onboarding improvements

@@ -16,6 +16,8 @@ import { ItemPage } from './ItemPage';
 import Provider from './provider';
 import { AppShell, AppShellBody, AppShellRoot } from './shell';
 import { SingletonPage } from './SingletonPage';
+import { FromTemplateDeploy } from './from-template-deploy';
+import { CreatedGitHubApp } from './created-github-app';
 
 injectVoussoirStyles('surface');
 
@@ -81,10 +83,17 @@ export function makePage<Collections extends { [key: string]: any }>(config: Con
     const router = useRouter();
     if (!router.isReady) return null;
     const params = (router.query.rest ?? []) as string[];
-    if (params.length === 1 && params[0] === 'setup') return <KeystaticSetup />;
+    if (params.length === 1 && params[0] === 'setup') return <KeystaticSetup config={config} />;
     if (params.length === 1 && params[0] === 'repo-not-found') {
       return <RepoNotFound config={config} />;
     }
+    if (params.length === 1 && params[0] === 'from-template-deploy') {
+      return <FromTemplateDeploy config={config} />;
+    }
+    if (params.length === 1 && params[0] === 'created-github-app') {
+      return <CreatedGitHubApp config={config} />;
+    }
+
     if (params.length === 0) {
       return <RedirectToBranch config={config} />;
     }
