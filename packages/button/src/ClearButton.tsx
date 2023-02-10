@@ -5,7 +5,13 @@ import { ForwardedRef, forwardRef } from 'react';
 
 import { xIcon } from '@voussoir/icon/icons/xIcon';
 import { Icon } from '@voussoir/icon';
-import { FocusRing, useStyleProps } from '@voussoir/style';
+import {
+  classNames,
+  css,
+  FocusRing,
+  tokenSchema,
+  useStyleProps,
+} from '@voussoir/style';
 import { toDataAttributes } from '@voussoir/utils';
 import { PropsWithElementType } from '@voussoir/utils/ts';
 
@@ -40,7 +46,7 @@ export const ClearButton = forwardRef(function ClearButton(
   let domRef = useObjectRef(forwardedRef);
   let { buttonProps, isPressed } = useButton({ ...props, elementType }, domRef);
   let { hoverProps, isHovered } = useHover({ isDisabled });
-  let styleProps = useStyleProps(otherProps);
+  let styleProps = useClearButtonStyles(otherProps);
 
   // For cases like the clear button in a search field, remove the tabIndex so
   // iOS 14 with VoiceOver doesn't focus the button and hide the keyboard when
@@ -65,3 +71,29 @@ export const ClearButton = forwardRef(function ClearButton(
     </FocusRing>
   );
 });
+
+function useClearButtonStyles(props: ClearButtonProps) {
+  let styleProps = useStyleProps(props);
+
+  const clearButtonStyles = css({
+    color: tokenSchema.color.foreground.neutralSecondary,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: tokenSchema.size.element.regular,
+
+    '&[data-interaction=hover]': {
+      color: tokenSchema.color.foreground.neutral,
+    },
+    '&[data-interaction=press]': {
+      color: tokenSchema.color.foreground.neutralEmphasis,
+    },
+    '&:disabled, &[aria-disabled]': {
+      color: tokenSchema.color.alias.foregroundDisabled,
+    },
+  });
+  return {
+    ...styleProps,
+    className: classNames(clearButtonStyles, styleProps.className),
+  };
+}

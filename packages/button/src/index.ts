@@ -2,7 +2,7 @@ export { ButtonGroup } from './ButtonGroup';
 export { Button } from './Button';
 export { ActionButton } from './ActionButton';
 export { ClearButton } from './ClearButton';
-export { FieldButton } from './FieldButton';
+export { FieldButton, useFieldButton } from './FieldButton';
 export { actionButtonClassList } from './useActionButtonStyles';
 
-export type { ActionButtonProps, ButtonProps } from './types';
+export type { ActionButtonProps, ButtonProps, FieldButtonProps } from './types';

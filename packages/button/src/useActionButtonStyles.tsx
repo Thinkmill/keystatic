@@ -31,8 +31,7 @@ export function useActionButtonStyles(
 
   return {
     ...toDataAttributes({
-      hovered: isHovered || undefined,
-      pressed: isPressed || undefined,
+      interaction: isPressed ? 'press' : isHovered ? 'hover' : undefined,
       prominence: prominence === 'default' ? undefined : prominence,
       selected: ('isSelected' in props && props.isSelected) || undefined,
     }),
@@ -97,13 +96,13 @@ export function useActionButtonStyles(
           color: tokenSchema.color.alias.foregroundIdle,
 
           // interactions
-          '&[data-hovered]': {
+          '&[data-interaction=hover]': {
             backgroundColor: tokenSchema.color.alias.backgroundHovered,
             borderColor: tokenSchema.color.alias.borderHovered,
             boxShadow: `${tokenSchema.size.shadow.small} ${tokenSchema.color.shadow.regular}`,
             color: tokenSchema.color.alias.foregroundHovered,
           },
-          '&[data-pressed]': {
+          '&[data-interaction=press]': {
             backgroundColor: tokenSchema.color.alias.backgroundPressed,
             borderColor: tokenSchema.color.alias.borderPressed,
             boxShadow: 'none',
@@ -114,7 +113,8 @@ export function useActionButtonStyles(
           '&[data-selected]': {
             backgroundColor: tokenSchema.color.alias.backgroundSelected,
             color: tokenSchema.color.foreground.neutralEmphasis,
-            '&[data-hovered]': {
+
+            '&[data-interaction=hover]': {
               backgroundColor:
                 tokenSchema.color.alias.backgroundSelectedHovered,
             },
@@ -126,11 +126,11 @@ export function useActionButtonStyles(
           color: tokenSchema.color.foreground.neutral,
 
           // interactions
-          '&[data-hovered]': {
+          '&[data-interaction=hover]': {
             backgroundColor: tokenSchema.color.alias.backgroundHovered,
             color: tokenSchema.color.foreground.neutralEmphasis,
           },
-          '&[data-pressed]': {
+          '&[data-interaction=press]': {
             backgroundColor: tokenSchema.color.alias.backgroundPressed,
           },
 
@@ -139,7 +139,8 @@ export function useActionButtonStyles(
             backgroundColor: tokenSchema.color.alias.backgroundSelected,
             borderColor: tokenSchema.color.alias.borderIdle,
             color: tokenSchema.color.foreground.neutralEmphasis,
-            '&[data-hovered]': {
+
+            '&[data-interaction=hover]': {
               backgroundColor:
                 tokenSchema.color.alias.backgroundSelectedHovered,
               borderColor: tokenSchema.color.alias.borderHovered,
@@ -148,7 +149,7 @@ export function useActionButtonStyles(
         },
 
         // STATES
-        '&:disabled, &[aria-disabled]': {
+        '&:disabled, &[aria-disabled=true], &[data-disabled=true]': {
           backgroundColor: tokenSchema.color.alias.backgroundDisabled,
           borderColor: 'transparent',
           boxShadow: 'none',

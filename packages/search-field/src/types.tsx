@@ -5,4 +5,9 @@ export type SearchFieldProps = {
   onSubmit?: (value: string) => void;
   /** Handler that is called when the clear button is pressed. */
   onClear?: () => void;
+  /**
+   * Whether to show the magnifying glass icon.
+   * @default: true
+   * */
+  showIcon?: boolean;
 } & Omit<TextFieldProps, 'pattern' | 'type'>;

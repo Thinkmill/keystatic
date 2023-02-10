@@ -7,7 +7,7 @@ import { ClearButton } from '@voussoir/button';
 import { searchIcon } from '@voussoir/icon/icons/searchIcon';
 import { Icon } from '@voussoir/icon';
 import { Flex } from '@voussoir/layout';
-import { css, tokenSchema } from '@voussoir/style';
+import { css } from '@voussoir/style';
 import { TextFieldPrimitive } from '@voussoir/text-field';
 
 import { SearchFieldProps } from './types';
@@ -24,6 +24,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
       isReadOnly,
       isRequired,
       label,
+      showIcon = true,
       ...styleProps
     } = props;
 
@@ -39,12 +40,18 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
 
     let clearButtonVisible = state.value !== '' && !props.isReadOnly;
     let clearButton = (
-      <ClearButton
-        {...clearButtonProps}
-        preventFocus
-        isDisabled={isDisabled}
-        UNSAFE_className={clearButtonStyles}
-      />
+      <ClearButton {...clearButtonProps} preventFocus isDisabled={isDisabled} />
+    );
+    let startElement = (
+      <Flex
+        alignItems="center"
+        flexShrink={0}
+        justifyContent="center"
+        pointerEvents="none"
+        width="regular"
+      >
+        <Icon src={searchIcon} color="neutralSecondary" />
+      </Flex>
     );
 
     return (
@@ -60,8 +67,9 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
         inputWrapperProps={{
           className: css({
             input: {
-              paddingInlineStart: 0,
-
+              '&[data-adornment="start"]': {
+                paddingInlineStart: 0,
+              },
               '&[data-adornment="both"]': {
                 paddingInlineEnd: 0,
               },
@@ -72,37 +80,9 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
         descriptionProps={descriptionProps}
         errorMessage={errorMessage}
         errorMessageProps={errorMessageProps}
-        startElement={
-          <Flex
-            alignItems="center"
-            flexShrink={0}
-            justifyContent="center"
-            pointerEvents="none"
-            width="regular"
-          >
-            <Icon src={searchIcon} color="neutralSecondary" />
-          </Flex>
-        }
+        startElement={showIcon && startElement}
         endElement={clearButtonVisible && clearButton}
       />
     );
   }
 );
-
-const clearButtonStyles = css({
-  color: tokenSchema.color.foreground.neutralSecondary,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minWidth: tokenSchema.size.element.regular,
-
-  '&[data-interaction=hover]': {
-    color: tokenSchema.color.foreground.neutral,
-  },
-  '&[data-interaction=press]': {
-    color: tokenSchema.color.foreground.neutralEmphasis,
-  },
-  '&:disabled, &[aria-disabled]': {
-    color: tokenSchema.color.alias.foregroundDisabled,
-  },
-});

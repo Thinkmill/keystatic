@@ -39,7 +39,7 @@ export const ListItem = forwardRefWithAs<ListItemProps, 'div'>(
     let gridGutter = tokenSchema.size.space.regular;
     let contentGutter = tokenSchema.size.space.medium;
 
-    // let focusIndicatorWidth = tokenSchema.size.space.xsmall;
+    let focusIndicatorWidth = tokenSchema.size.space.xsmall;
     let gridClassname = css({
       display: 'grid',
       // listboxes (options) have selection indicators at the end, whilst menus have them at the start
@@ -111,15 +111,15 @@ export const ListItem = forwardRefWithAs<ListItemProps, 'div'>(
         // [`& .${gridClassname}`]: {
         //   backgroundColor: tokenSchema.color.alias.backgroundSelected,
         // },
-        // '&::before': {
-        //   backgroundColor: tokenSchema.color.background.accentEmphasis,
-        //   borderRadius: focusIndicatorWidth,
-        //   content: '""',
-        //   insetBlock: tokenSchema.size.space.xsmall,
-        //   insetInlineStart: 0,
-        //   position: 'absolute',
-        //   width: focusIndicatorWidth,
-        // },
+        '&::before': {
+          backgroundColor: tokenSchema.color.background.accentEmphasis,
+          borderRadius: focusIndicatorWidth,
+          content: '""',
+          insetBlock: tokenSchema.size.space.xsmall,
+          insetInlineStart: 0,
+          position: 'absolute',
+          width: focusIndicatorWidth,
+        },
       },
 
       // disabled

@@ -24,6 +24,7 @@ import { useProvider, useProviderProps } from '@voussoir/core';
 import { FieldPrimitive } from '@voussoir/field';
 import { Icon } from '@voussoir/icon';
 import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
+import { Flex } from '@voussoir/layout';
 import { ListBoxBase, listStyles, useListBoxLayout } from '@voussoir/listbox';
 import { Popover } from '@voussoir/overlays';
 import { ProgressCircle } from '@voussoir/progress';
@@ -38,13 +39,12 @@ import {
   TextFieldPrimitive,
   validateTextFieldProps,
 } from '@voussoir/text-field';
+import { Text } from '@voussoir/typography';
 
 import { messages } from '../intl';
 
 import { MobileCombobox } from './MobileCombobox';
 import { ComboboxProps } from './types';
-import { Flex } from '@voussoir/layout';
-import { Text } from '@voussoir/typography';
 
 const comboboxClassList = new ClassList('Combobox');
 
@@ -147,6 +147,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
         labelProps={labelProps}
         ref={domRef}
       >
+        {/* @ts-expect-error FIXME: not sure how to resolve this type error */}
         <ComboboxInput
           {...props}
           isOpen={state.isOpen}
@@ -224,7 +225,7 @@ const ComboboxInput = React.forwardRef(function ComboboxInput(
     menuTrigger,
   } = props;
   let stringFormatter = useLocalizedStringFormatter(messages);
-  let timeout = useRef<NodeJS.Timeout>();
+  let timeoutRef = useRef<NodeJS.Timeout>();
   let [showLoading, setShowLoading] = useState(false);
 
   let loadingCircle = (
@@ -248,24 +249,24 @@ const ComboboxInput = React.forwardRef(function ComboboxInput(
   let lastInputValue = useRef(inputValue);
   useEffect(() => {
     if (isLoading && !showLoading) {
-      if (!timeout.current) {
-        timeout.current = setTimeout(() => {
+      if (!timeoutRef.current) {
+        timeoutRef.current = setTimeout(() => {
           setShowLoading(true);
         }, 500);
       }
 
       // If user is typing, clear the timer and restart since it is a new request
       if (inputValue !== lastInputValue.current) {
-        clearTimeout(timeout.current);
-        timeout.current = setTimeout(() => {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => {
           setShowLoading(true);
         }, 500);
       }
     } else if (!isLoading) {
       // If loading is no longer happening, clear any timers and hide the loading circle
       setShowLoading(false);
-      clearTimeout(timeout.current);
-      timeout.current = undefined;
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = undefined;
     }
 
     lastInputValue.current = inputValue;

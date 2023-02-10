@@ -4,10 +4,6 @@ import { storiesOf } from '@storybook/react';
 import { useState } from 'react';
 
 import { Button } from '@voussoir/button';
-import { Box, Flex } from '@voussoir/layout';
-import { Text } from '@voussoir/typography';
-
-import { Item, Picker, Section } from '../src';
 import { alignCenterVerticalIcon } from '@voussoir/icon/icons/alignCenterVerticalIcon';
 import { alignStartVerticalIcon } from '@voussoir/icon/icons/alignStartVerticalIcon';
 import { alignEndVerticalIcon } from '@voussoir/icon/icons/alignEndVerticalIcon';
@@ -15,6 +11,10 @@ import { globeIcon } from '@voussoir/icon/icons/globeIcon';
 import { boldIcon } from '@voussoir/icon/icons/boldIcon';
 import { italicIcon } from '@voussoir/icon/icons/italicIcon';
 import { Icon } from '@voussoir/icon';
+import { Box, Flex } from '@voussoir/layout';
+import { Text } from '@voussoir/typography';
+
+import { Item, Picker, Section } from '../src';
 
 let flatItems = [
   { id: 1, name: 'Echidna' },

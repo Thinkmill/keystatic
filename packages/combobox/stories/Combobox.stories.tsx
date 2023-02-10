@@ -1,6 +1,14 @@
 import { action } from '@storybook/addon-actions';
 import { ArgTypes, storiesOf } from '@storybook/react';
+
+import { alignCenterVerticalIcon } from '@voussoir/icon/icons/alignCenterVerticalIcon';
+import { alignStartVerticalIcon } from '@voussoir/icon/icons/alignStartVerticalIcon';
+import { alignEndVerticalIcon } from '@voussoir/icon/icons/alignEndVerticalIcon';
+import { boldIcon } from '@voussoir/icon/icons/boldIcon';
+import { italicIcon } from '@voussoir/icon/icons/italicIcon';
+import { Icon } from '@voussoir/icon';
 import { Flex } from '@voussoir/layout';
+import { Text } from '@voussoir/typography';
 
 import { Combobox, ComboboxProps, Item, Section } from '../src';
 
@@ -59,7 +67,12 @@ storiesOf('Components/Combobox', module)
   .add(
     'default (with controls)',
     (args: ArgTypes) => (
-      <Combobox label="Combobox" {...defaultActions} {...args}>
+      <Combobox
+        label="Combobox"
+        placeholder="Placeholder"
+        {...defaultActions}
+        {...args}
+      >
         <Item key="One">One</Item>
         <Item key="Two">Two</Item>
         <Item key="Three">Three has a long label that will wrap</Item>
@@ -122,7 +135,7 @@ storiesOf('Components/Combobox', module)
     </Combobox>
   ))
   .add('dynamic with sections', () => (
-    <Combobox label="Combobox" defaultItems={nestedItems}>
+    <Combobox label="Combobox" defaultItems={nestedItems} {...defaultActions}>
       {section => (
         <Section
           items={section.children}
@@ -145,6 +158,35 @@ storiesOf('Components/Combobox', module)
           {item => <Item key={item.name}>{item.name}</Item>}
         </Section>
       )}
+    </Combobox>
+  ))
+  .add('complex items', () => (
+    <Combobox label="Combobox" {...defaultActions}>
+      <Section title="Section 1">
+        <Item textValue="Bold">
+          <Icon src={boldIcon} />
+          <Text>Bold</Text>
+        </Item>
+        <Item textValue="Italic">
+          <Icon src={italicIcon} />
+          <Text>Italic</Text>
+        </Item>
+      </Section>
+      <Section title="Section 3">
+        <Item textValue="Left">
+          <Icon src={alignStartVerticalIcon} />
+          <Text>Left</Text>
+          <Text slot="description">The description text for left is long</Text>
+        </Item>
+        <Item textValue="Center has a long label that wraps">
+          <Icon src={alignCenterVerticalIcon} />
+          <Text>Center has a long label that wraps</Text>
+        </Item>
+        <Item textValue="Right">
+          <Icon src={alignEndVerticalIcon} />
+          <Text>Right</Text>
+        </Item>
+      </Section>
     </Combobox>
   ))
   .add('disabledKeys', () => (
