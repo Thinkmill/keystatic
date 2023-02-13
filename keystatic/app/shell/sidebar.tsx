@@ -12,8 +12,8 @@ import { css, breakpointQueries, tokenSchema } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
 import router, { useRouter } from 'next/router';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { Config } from '../../config';
-import { pluralize } from '../utils';
+import { Config, GitHubConfig } from '../../config';
+import { isGitHubConfig, pluralize } from '../utils';
 import { SidebarHeader } from './sidebar-header';
 import { Image } from '@voussoir/image';
 import { useQuery } from 'urql';
@@ -57,18 +57,6 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
   const collectionsArray = Object.entries(props.config.collections || {});
   const singletonsArray = Object.entries(props.config.singletons || {});
 
-  const [{ data: { viewer = undefined } = {} }] = useQuery({
-    query: gql`
-      query Viewer {
-        viewer {
-          id
-          name
-          login
-          avatarUrl
-        }
-      }
-    ` as import('../../__generated__/ts-gql/Viewer').type,
-  });
   const changedData = useChanged();
 
   return (
@@ -114,7 +102,7 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
         'keystatic-sidebar',
       ]}
     >
-      <SidebarHeader repo={props.config.repo} />
+      {isGitHubConfig(props.config) && <SidebarHeader repo={props.config.storage.repo} />}
 
       {/*
   ======================================================================
@@ -184,66 +172,78 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
         </NavList>
       </Flex>
 
-      {/*
-  ======================================================================
-  FOOTER
-  ======================================================================
-  */}
-
-      <Flex
-        elementType="header"
-        borderTop="muted"
-        paddingX="xlarge"
-        height="xlarge"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <Flex gap="regular" alignItems="center" height="regular">
-          <Icon src={folderOpenIcon} />
-          <Text color="neutralEmphasis" weight="semibold" size="medium" id="nav-title-id" truncate>
-            {props.config.repo.name}
-          </Text>
-        </Flex>
-        <MenuTrigger direction="top">
-          <ActionButton prominence="low" aria-label="app actions">
-            <Image
-              alt={`${viewer?.name ?? viewer?.login} avatar`}
-              borderRadius="full"
-              overflow="hidden"
-              aspectRatio="1"
-              height="xsmall"
-              src={viewer?.avatarUrl ?? ''}
-            />
-            <Icon src={chevronDownIcon} />
-          </ActionButton>
-          <Menu
-            onAction={key => {
-              if (key === 'logout') {
-                alert('TODO: logout');
-              }
-              if (key === 'profile') {
-                window.open(`https://github.com/${viewer?.login ?? ''}`, '_blank');
-              }
-              if (key === 'repository') {
-                window.open(
-                  `https://github.com/${props.config.repo.owner}/${props.config.repo.name}`,
-                  '_blank'
-                );
-              }
-            }}
-          >
-            <Item key="logout">Log out</Item>
-            <Section title="Github">
-              <Item key="profile">Profile</Item>
-              <Item key="repository">Repository</Item>
-            </Section>
-          </Menu>
-        </MenuTrigger>
-      </Flex>
+      {isGitHubConfig(props.config) && <SidebarFooter config={props.config} />}
 
       <VisuallyHidden elementType="button" onClick={() => setSidebarOpen(false)}>
         close sidebar
       </VisuallyHidden>
+    </Flex>
+  );
+}
+
+function SidebarFooter(props: { config: GitHubConfig }) {
+  const [{ data: { viewer = undefined } = {} }] = useQuery({
+    query: gql`
+      query Viewer {
+        viewer {
+          id
+          name
+          login
+          avatarUrl
+        }
+      }
+    ` as import('../../__generated__/ts-gql/Viewer').type,
+  });
+  return (
+    <Flex
+      elementType="header"
+      borderTop="muted"
+      paddingX="xlarge"
+      height="xlarge"
+      alignItems="center"
+      justifyContent="space-between"
+    >
+      <Flex gap="regular" alignItems="center" height="regular">
+        <Icon src={folderOpenIcon} />
+        <Text color="neutralEmphasis" weight="semibold" size="medium" id="nav-title-id" truncate>
+          {props.config.storage.repo.name}
+        </Text>
+      </Flex>
+      <MenuTrigger direction="top">
+        <ActionButton prominence="low" aria-label="app actions">
+          <Image
+            alt={`${viewer?.name ?? viewer?.login} avatar`}
+            borderRadius="full"
+            overflow="hidden"
+            aspectRatio="1"
+            height="xsmall"
+            src={viewer?.avatarUrl ?? ''}
+          />
+          <Icon src={chevronDownIcon} />
+        </ActionButton>
+        <Menu
+          onAction={key => {
+            if (key === 'logout') {
+              alert('TODO: logout');
+            }
+            if (key === 'profile') {
+              window.open(`https://github.com/${viewer?.login ?? ''}`, '_blank');
+            }
+            if (key === 'repository') {
+              window.open(
+                `https://github.com/${props.config.storage.repo.owner}/${props.config.storage.repo.name}`,
+                '_blank'
+              );
+            }
+          }}
+        >
+          <Item key="logout">Log out</Item>
+          <Section title="Github">
+            <Item key="profile">Profile</Item>
+            <Item key="repository">Repository</Item>
+          </Section>
+        </Menu>
+      </MenuTrigger>
     </Flex>
   );
 }

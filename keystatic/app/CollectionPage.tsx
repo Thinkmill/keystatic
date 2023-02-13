@@ -34,7 +34,7 @@ import {
 import { useTree, TreeData } from './shell/data';
 import { AppShellHeader } from './shell/header';
 
-type CollectionPageProps = { collection: string; config: Config; branch: string };
+type CollectionPageProps = { collection: string; config: Config; basePath: string };
 
 export function CollectionPage(props: CollectionPageProps) {
   const containerWidth = 'large'; // TODO: use a "large" when we have more columns
@@ -63,7 +63,7 @@ export function CollectionPage(props: CollectionPageProps) {
         <Button
           marginStart="auto"
           prominence="high"
-          href={`/keystatic/branch/${props.branch}/collection/${props.collection}/create`}
+          href={`${props.basePath}/collection/${props.collection}/create`}
         >
           New item
         </Button>
@@ -105,9 +105,7 @@ function CollectionPageContent(props: CollectionPageProps) {
         message={
           <>
             There aren't any items yet.{' '}
-            <TextLink
-              href={`/keystatic/branch/${props.branch}/collection/${props.collection}/create`}
-            >
+            <TextLink href={`${props.basePath}/collection/${props.collection}/create`}>
               Create the first item
             </TextLink>{' '}
             to see it here.
@@ -202,9 +200,7 @@ function CollectionTable(
           sortDescriptor={sortDescriptor}
           overflowMode="truncate"
           onRowAction={key => {
-            router.push(
-              `/keystatic/branch/${props.branch}/collection/${props.collection}/item/${key}`
-            );
+            router.push(`${props.basePath}/collection/${props.collection}/item/${key}`);
           }}
           // UNSAFE_className={css({
           //   '[role=row]> :first-child': { paddingInlineStart: tokenSchema.size.space.xlarge },
