@@ -2,6 +2,7 @@ import { ActionButton, Button } from '@voussoir/button';
 import { Flex } from '@voussoir/layout';
 import { Notice } from '@voussoir/notice';
 import { TextField } from '@voussoir/text-field';
+import { Text } from '@voussoir/typography';
 import { useRouter } from 'next/router';
 import { GitHubConfig } from '../../config';
 
@@ -31,9 +32,11 @@ export function InstallGitHubApp(props: { config: GitHubConfig }) {
         </Button>
       ) : (
         <Notice tone="caution">
-          The <code>NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG</code> environment variable wasn't
-          provided so we can't link to the GitHub app installation page. You should find the App on
-          GitHub and add the repo yourself.
+          <Text>
+            The <code>NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG</code> environment variable wasn't
+            provided so we can't link to the GitHub app installation page. You should find the App
+            on GitHub and add the repo yourself.
+          </Text>
         </Notice>
       )}
     </Flex>
