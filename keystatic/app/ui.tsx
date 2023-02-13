@@ -160,7 +160,7 @@ export function makePage<Collections extends { [key: string]: any }>(config: Con
   }
   return function Page() {
     return (
-      <Provider>
+      <Provider repo={config.storage.kind === 'github' ? config.storage.repo : undefined}>
         <PageInner />
       </Provider>
     );

@@ -74,7 +74,11 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
                     });
                     const allChangesCount = counts.changed + counts.added + counts.removed;
                     return (
-                      <Item>
+                      <Item
+                        textValue={
+                          ref.label + allChangesCount ? ` (${allChangesCount} changed)` : undefined
+                        }
+                      >
                         <Text>{ref.label}</Text>
                         <Text slot="description">
                           {pluralize(counts.total, { singular: 'item' })}
@@ -124,12 +128,11 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
                     }}
                   >
                     {ref => {
+                      const description = changes.singletons.has(ref.key) ? 'Changed' : 'Unchanged';
                       return (
-                        <Item>
+                        <Item textValue={`${ref.label} (${description})`}>
                           <Text>{ref.label}</Text>
-                          <Text slot="description">
-                            {changes.singletons.has(ref.key) ? 'Changed' : 'Unchanged'}
-                          </Text>
+                          <Text slot="description">{description}</Text>
                         </Item>
                       );
                     }}
@@ -175,7 +178,7 @@ function Branches() {
       </Grid>
       {branchInfo.allBranches.length === 0 ? (
         <Flex justifyContent="center">
-          <ProgressCircle isIndeterminate size="medium" />
+          <ProgressCircle isIndeterminate size="medium" aria-label="Loading Branches" />
         </Flex>
       ) : (
         <Flex direction="column" gap="regular">

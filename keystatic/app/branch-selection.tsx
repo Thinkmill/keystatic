@@ -11,6 +11,7 @@ import { Item, Picker, Section } from '@voussoir/picker';
 import { Content } from '@voussoir/slots';
 import { TextField } from '@voussoir/text-field';
 import { Text } from '@voussoir/typography';
+import { ProgressCircle } from '@voussoir/progress';
 
 type BranchPickerProps = { allBranches: string[]; currentBranch: string; defaultBranch?: string };
 
@@ -82,7 +83,7 @@ export function CreateBranchDialog(props: {
 }) {
   const [branchName, setBranchName] = useState('');
   const textFieldRef = useRef<HTMLInputElement>(null);
-  const [{ error }, createBranch] = useCreateBranchMutation();
+  const [{ error, fetching }, createBranch] = useCreateBranchMutation();
 
   return (
     <Dialog>
@@ -114,8 +115,11 @@ export function CreateBranchDialog(props: {
           />
         </Content>
         <ButtonGroup>
-          <Button onPress={props.onDismiss}>Cancel</Button>
-          <Button prominence="high" type="submit">
+          {fetching && <ProgressCircle isIndeterminate aria-label="Creating Branch" />}
+          <Button onPress={props.onDismiss} isDisabled={fetching}>
+            Cancel
+          </Button>
+          <Button isDisabled={fetching} prominence="high" type="submit">
             Create
           </Button>
         </ButtonGroup>
@@ -136,6 +140,21 @@ export function useCreateBranchMutation() {
           ref {
             __typename
             id
+            name
+            target {
+              __typename
+              id
+              oid
+              ... on Commit {
+                tree {
+                  id
+                  oid
+                }
+              }
+            }
+            associatedPullRequests(states: [OPEN]) {
+              totalCount
+            }
           }
         }
       }
