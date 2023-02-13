@@ -261,7 +261,9 @@ export function CreateBranchDuringUpdateDialog(props: {
           </Flex>
         </Content>
         <ButtonGroup>
-          {isLoading && <ProgressCircle isIndeterminate size="small" />}
+          {isLoading && (
+            <ProgressCircle isIndeterminate size="small" aria-label="Creating Branch" />
+          )}
           <Button isDisabled={isLoading} onPress={props.onDismiss}>
             Cancel
           </Button>

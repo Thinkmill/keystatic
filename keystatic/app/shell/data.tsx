@@ -229,7 +229,7 @@ export function useRepositoryId() {
   return useContext(BaseInfoContext).repositoryId;
 }
 
-const AppShellQuery = gql`
+export const AppShellQuery = gql`
   query AppShell($name: String!, $owner: String!) {
     repository(owner: $owner, name: $name) {
       id

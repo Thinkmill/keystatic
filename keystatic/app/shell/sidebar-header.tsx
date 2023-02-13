@@ -113,9 +113,9 @@ export function SidebarHeader(props: { repo: { owner: string; name: string } }) 
       <DialogContainer onDismiss={toggleNewBranchDialog}>
         {newBranchDialogVisible && (
           <CreateBranchDialog
-            onDismiss={close}
+            onDismiss={toggleNewBranchDialog}
             onCreate={branchName => {
-              close();
+              toggleNewBranchDialog();
               router.push(router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + branchName));
             }}
             branchOid={baseCommit}
