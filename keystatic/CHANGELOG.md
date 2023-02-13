@@ -1,5 +1,11 @@
 # keystatic
 
+## 0.0.26
+
+### Patch Changes
+
+- dba81d3: Add local mode
+
 ## 0.0.25
 
 ### Patch Changes
