@@ -17,6 +17,7 @@ import { Config } from '.';
 import { readToDirEntries } from './api/read-local';
 import { getCollectionPath, getSingletonPath } from '../app/path-utils';
 import { blobSha } from './api/trees-server-side';
+import path from 'path';
 
 type APIRouteConfig = {
   /** @default process.env.KEYSTATIC_GITHUB_CLIENT_ID */
@@ -27,7 +28,7 @@ type APIRouteConfig = {
   url?: string;
   /** @default process.env.KEYSTATIC_SECRET */
   secret?: string;
-  config?: Config;
+  config?: Config<any, any>;
 };
 
 type InnerAPIRouteConfig = {
@@ -63,6 +64,20 @@ export default function createKeystaticAPIRoute(_config: APIRouteConfig) {
         res.redirect('/keystatic/setup');
         return;
       }
+      if (_config2.config?.storage.kind === 'local') {
+        if (req.method === 'GET' && joined === 'tree') {
+          await tree(req, res, _config2.config);
+          return;
+        }
+        if (req.method === 'GET' && params[0] === 'blob') {
+          await blob(req, res, _config2.config);
+          return;
+        }
+        if (req.method === 'POST' && params[0] === 'update') {
+          await update(req, res, _config2.config);
+          return;
+        }
+      }
       res.status(404).send('Not Found');
     };
   }
@@ -85,17 +100,19 @@ export default function createKeystaticAPIRoute(_config: APIRouteConfig) {
       res.redirect(`${config.url}/keystatic/from-template-deploy`);
       return;
     }
-    if (req.method === 'GET' && joined === 'tree' && config.config) {
-      await tree(req, res, config.config);
-      return;
-    }
-    if (req.method === 'GET' && params[0] === 'blob' && config.config) {
-      await blob(req, res, config.config);
-      return;
-    }
-    if (req.method === 'POST' && joined === 'update' && config.config) {
-      await update(req, res, config.config);
-      return;
+    if (config.config?.storage.kind === 'local') {
+      if (req.method === 'GET' && joined === 'tree') {
+        await tree(req, res, config.config);
+        return;
+      }
+      if (req.method === 'GET' && params[0] === 'blob') {
+        await blob(req, res, config.config);
+        return;
+      }
+      if (req.method === 'POST' && params[0] === 'update') {
+        await update(req, res, config.config);
+        return;
+      }
     }
 
     if (joined === 'github/login') {
@@ -506,21 +523,22 @@ async function update(req: NextApiRequest, res: NextApiResponse, config: Config)
       additions: z.array(
         z.object({
           path: z.string().refine(isFilepathValid),
-          content: z.string().transform(x => Buffer.from(x, 'base64')),
+          contents: z.string().transform(x => Buffer.from(x, 'base64')),
         })
       ),
       deletions: z.array(z.object({ path: z.string().refine(isFilepathValid) })),
     })
     .safeParse(req.body);
   if (!updates.success) {
-    res.status(400).send('Bad Request');
+    res.status(400).send('Bad data');
     return;
   }
   for (const addition of updates.data.additions) {
-    await fs.writeFile(addition.path, addition.content);
+    await fs.mkdir(path.dirname(addition.path), { recursive: true });
+    await fs.writeFile(addition.path, addition.contents);
   }
   for (const deletion of updates.data.deletions) {
-    await fs.rm(deletion.path);
+    await fs.rm(deletion.path, { force: true });
   }
   return res.json(await readToDirEntries(process.cwd(), config));
 }

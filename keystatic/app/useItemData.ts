@@ -107,11 +107,7 @@ export function useItemData(args: UseItemDataArgs) {
         format: args.format,
         schema: args.schema,
       };
-      const dataResult = fetchBlob(
-        args.config,
-        dataFilepathSha,
-        `${args.dirpath}/${dataFilepathSha}`
-      );
+      const dataResult = fetchBlob(args.config, dataFilepathSha, `${args.dirpath}/${dataFilepath}`);
       if (dataResult instanceof Uint8Array) {
         const { validated, initialFiles, requiredFiles, maybeLoadedBinaryFiles } =
           parseFromValueFile(_args, dataResult, localTree);
@@ -159,7 +155,7 @@ function fetchBlob(config: Config, oid: string, filepath: string): MaybePromise<
   const promise = (
     isGitHubConfig(config)
       ? fetchGitHubBlob(config, oid)
-      : fetch(`/api/blob/${oid}/${filepath}`, { headers: { 'no-cors': '1' } })
+      : fetch(`/api/keystatic/blob/${oid}/${filepath}`, { headers: { 'no-cors': '1' } })
   )
 
     .then(x => x.arrayBuffer())

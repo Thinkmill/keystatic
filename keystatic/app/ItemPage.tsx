@@ -35,26 +35,18 @@ import { mergeDataStates } from './useData';
 
 type ItemPageProps = {
   collection: string;
-  currentBranch: string;
   config: Config;
   initialFiles: string[];
   initialState: Record<string, unknown>;
   itemSlug: string;
   localTreeSha: string;
   currentTree: Map<string, TreeNode>;
+  basePath: string;
 };
 
 function ItemPage(props: ItemPageProps) {
-  const {
-    currentBranch,
-    collection,
-    config,
-    itemSlug,
-    initialFiles,
-    initialState,
-    localTreeSha,
-    currentTree,
-  } = props;
+  const { collection, config, itemSlug, initialFiles, initialState, localTreeSha, currentTree } =
+    props;
   const router = useRouter();
   const [forceValidation, setForceValidation] = useState(false);
   const collectionConfig = config.collections![collection]!;
@@ -87,8 +79,6 @@ function ItemPage(props: ItemPageProps) {
 
   const baseCommit = useBaseCommit();
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
-    baseCommit,
-    branch: currentBranch,
     state,
     initialFiles,
     storage: config.storage,
@@ -100,8 +90,6 @@ function ItemPage(props: ItemPageProps) {
   });
   const update = useEventCallback(_update);
   const [deleteResult, deleteItem] = useDeleteItem({
-    baseCommit,
-    branch: currentBranch,
     initialFiles,
     storage: config.storage,
     basePath: getCollectionItemPath(config, collection, itemSlug),
@@ -115,7 +103,7 @@ function ItemPage(props: ItemPageProps) {
     const slug = collectionConfig.getItemSlug(state);
     const hasUpdated = await update();
     if (hasUpdated && slug !== itemSlug) {
-      router.replace(`/keystatic/branch/${currentBranch}/collection/${collection}/item/${slug}`);
+      router.replace(`${props.basePath}/collection/${collection}/item/${slug}`);
     }
   };
   const formID = 'item-edit-form';
@@ -161,7 +149,7 @@ function ItemPage(props: ItemPageProps) {
                   autoFocusButton="cancel"
                   onPrimaryAction={async () => {
                     await deleteItem();
-                    router.push(`/keystatic/branch/${currentBranch}/collection/${collection}`);
+                    router.push(`${props.basePath}/collection/${collection}`);
                   }}
                 >
                   Are you sure? This action cannot be undone.
@@ -219,9 +207,7 @@ function ItemPage(props: ItemPageProps) {
                   const slug = collectionConfig.getItemSlug(state);
                   const hasUpdated = await update();
                   if (hasUpdated && slug !== itemSlug) {
-                    router.replace(
-                      `/keystatic/branch/${currentBranch}/collection/${collection}/item/${slug}`
-                    );
+                    router.replace(`${props.basePath}/collection/${collection}/item/${slug}`);
                   }
                 }}
                 reason={updateResult.reason}
@@ -290,9 +276,9 @@ export function CreateBranchDuringUpdateDialog(props: {
 
 function ItemPageWrapper(props: {
   collection: string;
-  currentBranch: string;
   itemSlug: string;
   config: Config;
+  basePath: string;
 }) {
   const format = useMemo(
     () => getCollectionFormat(props.config, props.collection),
@@ -339,7 +325,7 @@ function ItemPageWrapper(props: {
   return (
     <ItemPage
       collection={props.collection}
-      currentBranch={props.currentBranch}
+      basePath={props.basePath}
       config={props.config}
       itemSlug={props.itemSlug}
       initialState={combined.data.item.initialState}
@@ -352,7 +338,7 @@ function ItemPageWrapper(props: {
 
 const ItemPageShell = (
   props: PropsWithChildren<
-    Pick<ItemPageProps, 'collection' | 'config' | 'currentBranch'> & { headerActions?: ReactNode }
+    Pick<ItemPageProps, 'collection' | 'config' | 'basePath'> & { headerActions?: ReactNode }
   >
 ) => {
   const collectionConfig = props.config.collections![props.collection]!;
@@ -361,9 +347,7 @@ const ItemPageShell = (
     <AppShellRoot>
       <AppShellHeader>
         <Heading size="small" visuallyHidden={{ below: 'tablet' }} truncate>
-          <TextLink
-            href={`/keystatic/branch/${props.currentBranch}/collection/${props.collection}`}
-          >
+          <TextLink href={`${props.basePath}/collection/${props.collection}`}>
             {collectionConfig.label}
           </TextLink>
         </Heading>

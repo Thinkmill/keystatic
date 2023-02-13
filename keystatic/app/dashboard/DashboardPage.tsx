@@ -31,14 +31,14 @@ import {
 } from '../shell/data';
 import { AppShellHeader } from '../shell/header';
 
-export function DashboardPage(props: { config: Config; currentBranch: string }) {
+export function DashboardPage(props: { config: Config; basePath: string }) {
   const { config } = props;
 
   const changes = useChanged();
   const router = useRouter();
   const allTreeData = useTree();
 
-  let link = (path: string) => `/keystatic/branch/${props.currentBranch}` + path;
+  let link = (path: string) => props.basePath + path;
   let collections = keyedEntries(config.collections ?? {});
   let singletons = keyedEntries(config.singletons ?? {});
 
@@ -137,7 +137,7 @@ export function DashboardPage(props: { config: Config; currentBranch: string }) 
                 </Grid>
               )}
             </Flex>
-            <Branches />
+            {props.config.storage.kind === 'github' && <Branches />}
           </Grid>
         </Flex>
       </AppShellBody>

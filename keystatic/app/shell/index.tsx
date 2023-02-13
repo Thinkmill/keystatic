@@ -7,15 +7,20 @@ import { VoussoirTheme, css, transition } from '@voussoir/style';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../../config';
-import { GitHubAppShellProvider, AppShellErrorContext } from './data';
+import { GitHubAppShellProvider, AppShellErrorContext, LocalAppShellProvider } from './data';
 import { SidebarProvider, Sidebar, SIDEBAR_WIDTH } from './sidebar';
 import { isGitHubConfig } from '../utils';
 
-export const AppShell = (props: { config: Config; children: ReactNode; currentBranch: string }) => {
+export const AppShell = (props: {
+  config: Config;
+  children: ReactNode;
+  currentBranch: string;
+  basePath: string;
+}) => {
   const inner = (
     <SidebarProvider>
       <Flex direction={{ mobile: 'column', tablet: 'row' }} width="100vw" minHeight="100vh">
-        <Sidebar hrefBase={`/keystatic/branch/${props.currentBranch}`} config={props.config} />
+        <Sidebar hrefBase={props.basePath} config={props.config} />
         <AppShellErrorContext.Consumer>
           {error =>
             error ? (
@@ -39,7 +44,7 @@ export const AppShell = (props: { config: Config; children: ReactNode; currentBr
       </GitHubAppShellProvider>
     );
   }
-  throw new Error('unimplemented');
+  return <LocalAppShellProvider config={props.config}>{inner}</LocalAppShellProvider>;
 };
 
 // Styled components

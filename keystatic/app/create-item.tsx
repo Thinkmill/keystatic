@@ -27,7 +27,7 @@ import { TreeNode } from './trees';
 
 const emptyMap = new Map<string, TreeNode>();
 
-export function CreateItem(props: { collection: string; config: Config; currentBranch: string }) {
+export function CreateItem(props: { collection: string; config: Config; basePath: string }) {
   const router = useRouter();
   const collectionConfig = props.config.collections![props.collection]!;
   const [forceValidation, setForceValidation] = useState(false);
@@ -43,8 +43,6 @@ export function CreateItem(props: { collection: string; config: Config; currentB
   const tree = useTree();
 
   const [createResult, _createItem, resetCreateItemState] = useUpsertItem({
-    baseCommit,
-    branch: props.currentBranch,
     state,
     basePath: getCollectionItemPath(
       props.config,
@@ -60,7 +58,7 @@ export function CreateItem(props: { collection: string; config: Config; currentB
   });
   const createItem = useEventCallback(_createItem);
 
-  let collectionPath = `/keystatic/branch/${props.currentBranch}/collection/${props.collection}`;
+  let collectionPath = `${props.basePath}/collection/${props.collection}`;
 
   const onCreate = async () => {
     if (!clientSideValidateProp(schema, state)) {

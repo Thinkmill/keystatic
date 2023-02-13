@@ -19,29 +19,28 @@ import { CreatedGitHubApp } from './onboarding/created-github-app';
 import { KeystaticSetup } from './onboarding/setup';
 import { RepoNotFound } from './onboarding/repo-not-found';
 import { isGitHubConfig } from './utils';
+import { Text } from '@voussoir/typography';
 
 injectVoussoirStyles('surface');
 
-function parseParams(params: string[]) {
-  if (params.length < 2 || params[0] !== 'branch') return null;
-  const branch = params[1];
+function parseParamsWithoutBranch(params: string[]) {
+  if (params.length === 0) {
+    return {};
+  }
+  if (params.length === 2 && params[0] === 'singleton') {
+    return { singleton: params[1] };
+  }
+  if (params.length < 2 || params[0] !== 'collection') return null;
+  const collection = params[1];
   if (params.length === 2) {
-    return { branch };
+    return { collection };
   }
-  if (params.length === 4 && params[2] === 'singleton') {
-    return { branch, singleton: params[3] };
+  if (params.length === 3 && params[2] === 'create') {
+    return { collection, kind: 'create' as const };
   }
-  if (params.length < 4 || params[2] !== 'collection') return null;
-  const collection = params[3];
-  if (params.length === 4) {
-    return { branch, collection };
-  }
-  if (params.length === 5 && params[4] === 'create') {
-    return { branch, collection, kind: 'create' as const };
-  }
-  if (params.length === 6 && params[4] === 'item') {
-    const slug = params[5];
-    return { branch, collection, kind: 'edit' as const, slug };
+  if (params.length === 4 && params[2] === 'item') {
+    const slug = params[3];
+    return { collection, kind: 'edit' as const, slug };
   }
   return null;
 }
@@ -84,6 +83,10 @@ export function makePage<Collections extends { [key: string]: any }>(config: Con
     const router = useRouter();
     if (!router.isReady) return null;
     const params = (router.query.rest ?? []) as string[];
+    let branch = null,
+      parsedParams,
+      basePath: string;
+
     if (isGitHubConfig(config)) {
       if (params.length === 0) {
         return <RedirectToBranch config={config} />;
@@ -94,29 +97,37 @@ export function makePage<Collections extends { [key: string]: any }>(config: Con
         if (params[0] === 'from-template-deploy') return <FromTemplateDeploy config={config} />;
         if (params[0] === 'created-github-app') return <CreatedGitHubApp config={config} />;
       }
+      if (params[0] !== 'branch' || params.length < 2) {
+        return null;
+      }
+      branch = params[1];
+      basePath = `/keystatic/branch/${branch}`;
+      parsedParams = parseParamsWithoutBranch(params.slice(2));
+    } else {
+      parsedParams = parseParamsWithoutBranch(params);
+      basePath = '/keystatic';
     }
-    const parsedParams = parseParams(params);
-    if (!parsedParams) return null;
+    if (!parsedParams) return <Text>Not found</Text>;
     return (
-      <AppShell config={config} currentBranch={parsedParams.branch}>
+      <AppShell config={config} currentBranch={branch || ''} basePath={basePath}>
         {parsedParams?.collection ? (
           parsedParams.collection in (config.collections || {}) ? (
             parsedParams.kind === 'create' ? (
               <CreateItem
                 collection={parsedParams.collection}
                 config={config}
-                currentBranch={parsedParams.branch}
+                basePath={basePath}
               />
             ) : parsedParams.kind === 'edit' ? (
               <ItemPage
                 collection={parsedParams.collection}
-                currentBranch={parsedParams.branch}
+                basePath={basePath}
                 config={config}
                 itemSlug={parsedParams.slug}
               />
             ) : (
               <CollectionPage
-                branch={parsedParams.branch}
+                basePath={basePath}
                 collection={parsedParams.collection}
                 config={config as unknown as Config}
               />
@@ -132,7 +143,6 @@ export function makePage<Collections extends { [key: string]: any }>(config: Con
           parsedParams.singleton in (config.singletons || {}) ? (
             <SingletonPage
               config={config as unknown as Config}
-              currentBranch={parsedParams.branch}
               singleton={parsedParams.singleton}
             />
           ) : (
@@ -143,7 +153,7 @@ export function makePage<Collections extends { [key: string]: any }>(config: Con
             </AppShellRoot>
           )
         ) : (
-          <DashboardPage config={config as unknown as Config} currentBranch={parsedParams.branch} />
+          <DashboardPage config={config as unknown as Config} basePath={basePath} />
         )}
       </AppShell>
     );

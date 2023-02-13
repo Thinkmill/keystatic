@@ -29,7 +29,7 @@ export function fetchLocalTree(sha: string) {
   if (treeCache.has(sha)) {
     return treeCache.get(sha)!;
   }
-  const promise = fetch('/api/tree', { headers: { 'no-cors': '1' } })
+  const promise = fetch('/api/keystatic/tree', { headers: { 'no-cors': '1' } })
     .then(x => x.json())
     .then(async (entries: TreeEntry[]) => hydrateTreeCacheWithEntries(entries));
   treeCache.set(sha, promise);

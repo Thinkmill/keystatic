@@ -4,9 +4,15 @@ import { useMutation } from 'urql';
 import { ComponentSchema, fields } from './DocumentEditor/component-blocks/api';
 import { fromByteArray } from 'base64-js';
 import { assertNever } from './DocumentEditor/component-blocks/utils';
-import { fetchGitHubTreeData, hydrateTreeCacheWithEntries, useSetTreeSha } from './app/shell/data';
+import {
+  BranchInfoContext,
+  fetchGitHubTreeData,
+  hydrateTreeCacheWithEntries,
+  useBaseCommit,
+  useSetTreeSha,
+} from './app/shell/data';
 import { hydrateBlobCache } from './app/useItemData';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { githubRequest } from './github-api';
 import { assert } from 'emery';
 import { FormatInfo } from './app/path-utils';
@@ -35,8 +41,6 @@ function combineFrontmatterAndContents(frontmatter: Uint8Array, contents: Uint8A
 }
 
 export function useUpsertItem(args: {
-  branch: string;
-  baseCommit: string;
   state: unknown;
   initialFiles: string[] | undefined;
   schema: Record<string, ComponentSchema>;
@@ -55,6 +59,8 @@ export function useUpsertItem(args: {
   >({
     kind: 'idle',
   });
+  const baseCommit = useBaseCommit();
+  const branchInfo = useContext(BranchInfoContext);
   const setTreeSha = useSetTreeSha();
   const [, mutate] = useMutation(createCommitMutation);
   return [
@@ -123,7 +129,7 @@ export function useUpsertItem(args: {
       await hydrateTreeCacheWithEntries(updatedTree.entries);
       if (args.storage.kind === 'github') {
         const branch = {
-          branchName: args.branch,
+          branchName: branchInfo.currentBranch,
           repositoryNameWithOwner: `${args.storage.repo.owner}/${args.storage.repo.name}`,
         };
         const runMutation = (expectedHeadOid: string) =>
@@ -141,7 +147,7 @@ export function useUpsertItem(args: {
               },
             },
           });
-        let result = await runMutation(args.baseCommit);
+        let result = await runMutation(baseCommit);
         const gqlError = result.error?.graphQLErrors[0]?.originalError;
         if (gqlError && 'type' in gqlError) {
           if (gqlError.type === 'BRANCH_PROTECTION_RULE_VIOLATION') {
@@ -154,7 +160,7 @@ export function useUpsertItem(args: {
           }
           if (gqlError.type === 'STALE_DATA') {
             const branch = await githubRequest('GET /repos/{owner}/{repo}/branches/{branch}', {
-              branch: args.branch,
+              branch: branchInfo.currentBranch,
               owner: args.storage.repo.owner,
               repo: args.storage.repo.name,
             });
@@ -191,7 +197,13 @@ export function useUpsertItem(args: {
             'Content-Type': 'application/json',
             'no-cors': '1',
           },
-          body: JSON.stringify({}),
+          body: JSON.stringify({
+            additions: additions.map(addition => ({
+              ...addition,
+              contents: fromByteArray(addition.contents),
+            })),
+            deletions,
+          }),
         }).then(res => res.json());
         const { tree } = await hydrateTreeCacheWithEntries(newTree);
         setTreeSha(await treeSha(tree));
@@ -226,8 +238,6 @@ const createCommitMutation = gql`
 ` as import('./__generated__/ts-gql/CreateCommit').type;
 
 export function useDeleteItem(args: {
-  branch: string;
-  baseCommit: string;
   basePath: string;
   initialFiles: string[];
   currentTree: Map<string, TreeNode>;
@@ -238,6 +248,9 @@ export function useDeleteItem(args: {
   >({
     kind: 'idle',
   });
+  const baseCommit = useBaseCommit();
+  const branchInfo = useContext(BranchInfoContext);
+
   const [, mutate] = useMutation(createCommitMutation);
   const setTreeSha = useSetTreeSha();
   return [
@@ -254,10 +267,10 @@ export function useDeleteItem(args: {
           input: {
             branch: {
               repositoryNameWithOwner: `${args.storage.repo.owner}/${args.storage.repo.name}`,
-              branchName: args.branch,
+              branchName: branchInfo.currentBranch,
             },
             message: { headline: `Delete ${args.basePath}` },
-            expectedHeadOid: args.baseCommit,
+            expectedHeadOid: baseCommit,
             fileChanges: {
               deletions: args.initialFiles.map(path => ({ path })),
             },
