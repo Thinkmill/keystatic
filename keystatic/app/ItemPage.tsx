@@ -91,7 +91,7 @@ function ItemPage(props: ItemPageProps) {
     branch: currentBranch,
     state,
     initialFiles,
-    repo: config.repo,
+    storage: config.storage,
     schema: collectionConfig.schema,
     basePath: getCollectionItemPath(config, collection, collectionConfig.getItemSlug(state)),
     format: getCollectionFormat(config, collection),
@@ -103,7 +103,7 @@ function ItemPage(props: ItemPageProps) {
     baseCommit,
     branch: currentBranch,
     initialFiles,
-    repo: config.repo,
+    storage: config.storage,
     basePath: getCollectionItemPath(config, collection, itemSlug),
     currentTree,
   });
@@ -113,8 +113,8 @@ function ItemPage(props: ItemPageProps) {
       return;
     }
     const slug = collectionConfig.getItemSlug(state);
-    const data = await update();
-    if (data.data?.createCommitOnBranch?.ref?.target && slug !== itemSlug) {
+    const hasUpdated = await update();
+    if (hasUpdated && slug !== itemSlug) {
       router.replace(`/keystatic/branch/${currentBranch}/collection/${collection}/item/${slug}`);
     }
   };
@@ -148,7 +148,7 @@ function ItemPage(props: ItemPageProps) {
                 <Button
                   // tone="critical"
                   aria-label="Delete"
-                  isDisabled={deleteResult.fetching || updateResult.kind === 'loading'}
+                  isDisabled={deleteResult.kind === 'loading' || updateResult.kind === 'loading'}
                 >
                   <Icon isHidden={{ above: 'mobile' }} src={trash2Icon} />
                   <Text isHidden={{ below: 'tablet' }}>Delete</Text>
@@ -194,7 +194,9 @@ function ItemPage(props: ItemPageProps) {
           {updateResult.kind === 'error' && (
             <Notice tone="critical">{updateResult.error.message}</Notice>
           )}
-          {deleteResult.error && <Notice tone="critical">{deleteResult.error.message}</Notice>}
+          {deleteResult.kind === 'error' && (
+            <Notice tone="critical">{deleteResult.error.message}</Notice>
+          )}
           <AppShellBody>
             <FormValueContentFromPreviewProps
               key={localTreeSha}
@@ -215,8 +217,8 @@ function ItemPage(props: ItemPageProps) {
                     `/keystatic/branch/${newBranch}/collection/${collection}/item/${itemSlug}`
                   );
                   const slug = collectionConfig.getItemSlug(state);
-                  const data = await update();
-                  if (data.data?.createCommitOnBranch?.ref?.target && slug !== itemSlug) {
+                  const hasUpdated = await update();
+                  if (hasUpdated && slug !== itemSlug) {
                     router.replace(
                       `/keystatic/branch/${currentBranch}/collection/${collection}/item/${slug}`
                     );

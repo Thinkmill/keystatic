@@ -2,7 +2,7 @@ import LRUCache from 'lru-cache';
 import { useCallback, useMemo } from 'react';
 import { Config } from '../config';
 import { getValueAtPropPath } from '../DocumentEditor/component-blocks/utils';
-import { ComponentSchema, fields } from '../src';
+import { ComponentSchema, fields, GitHubConfig } from '../src';
 import { validateComponentBlockProps } from '../validate-component-block-props';
 import { getAuth } from './auth';
 import {
@@ -14,7 +14,7 @@ import {
 import { useTree } from './shell/data';
 import { TreeNode, getTreeNodeAtPath } from './trees';
 import { LOADING, useData } from './useData';
-import { blobSha, FormatInfo, getDataFileExtension, MaybePromise } from './utils';
+import { blobSha, FormatInfo, getDataFileExtension, isGitHubConfig, MaybePromise } from './utils';
 
 function parseFromValueFile(
   args: UseItemDataArgs,
@@ -32,7 +32,7 @@ function parseFromValueFile(
     })
   );
   const maybeLoadedBinaryFiles = binaryFiles.map(file => {
-    const result = fetchGithubBlob(args.config, file.oid);
+    const result = fetchBlob(args.config, file.oid, `${args.dirpath}/${file.filename}`);
     if (result instanceof Uint8Array) {
       return [file.filename, result] as const;
     }
@@ -96,7 +96,8 @@ export function useItemData(args: UseItemDataArgs) {
       if (!hasLoaded) return LOADING;
       if (localTreeNode === undefined) return 'not-found' as const;
       const localTree = localTreeNode.children;
-      const dataFilepathSha = localTree.get(`index${getDataFileExtension(args.format)}`)?.entry.sha;
+      const dataFilepath = `index${getDataFileExtension(args.format)}`;
+      const dataFilepathSha = localTree.get(dataFilepath)?.entry.sha;
       if (dataFilepathSha === undefined) {
         return 'not-found' as const;
       }
@@ -106,7 +107,11 @@ export function useItemData(args: UseItemDataArgs) {
         format: args.format,
         schema: args.schema,
       };
-      const dataResult = fetchGithubBlob(args.config, dataFilepathSha);
+      const dataResult = fetchBlob(
+        args.config,
+        dataFilepathSha,
+        `${args.dirpath}/${dataFilepathSha}`
+      );
       if (dataResult instanceof Uint8Array) {
         const { validated, initialFiles, requiredFiles, maybeLoadedBinaryFiles } =
           parseFromValueFile(_args, dataResult, localTree);
@@ -135,26 +140,35 @@ export async function hydrateBlobCache(contents: Uint8Array) {
   return sha;
 }
 
-function fetchGithubBlob(config: Config, oid: string): MaybePromise<Uint8Array> {
-  if (blobCache.has(oid)) return blobCache.get(oid)!;
-  const promise = getAuth()
-    .then(auth =>
-      fetch(
-        `https://api.github.com/repos/${config.repo.owner}/${config.repo.name}/git/blobs/${oid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${auth!.accessToken}`,
-            Accept: 'application/vnd.github.raw',
-          },
-        }
-      )
-        .then(x => x.arrayBuffer())
-        .then(x => {
-          const array = new Uint8Array(x);
-          blobCache.set(oid, array);
-          return array;
-        })
+function fetchGitHubBlob(config: GitHubConfig, oid: string): Promise<Response> {
+  return getAuth().then(auth =>
+    fetch(
+      `https://api.github.com/repos/${config.storage.repo.owner}/${config.storage.repo.name}/git/blobs/${oid}`,
+      {
+        headers: {
+          Authorization: `Bearer ${auth!.accessToken}`,
+          Accept: 'application/vnd.github.raw',
+        },
+      }
     )
+  );
+}
+
+function fetchBlob(config: Config, oid: string, filepath: string): MaybePromise<Uint8Array> {
+  if (blobCache.has(oid)) return blobCache.get(oid)!;
+  const promise = (
+    isGitHubConfig(config)
+      ? fetchGitHubBlob(config, oid)
+      : fetch(`/api/blob/${oid}/${filepath}`, { headers: { 'no-cors': '1' } })
+  )
+
+    .then(x => x.arrayBuffer())
+    .then(x => {
+      const array = new Uint8Array(x);
+      blobCache.set(oid, array);
+      return array;
+    })
+
     .catch(err => {
       blobCache.delete(oid);
       throw err;

@@ -91,7 +91,7 @@ function SingletonPage({
     branch: currentBranch,
     state,
     initialFiles,
-    repo: config.repo,
+    storage: config.storage,
     schema: singletonConfig.schema,
     basePath: singletonPath,
     format: getSingletonFormat(config, singleton),

@@ -6,7 +6,7 @@ import { useQuery } from 'urql';
 import { injectVoussoirStyles } from '@voussoir/core';
 import { Notice } from '@voussoir/notice';
 
-import { Config } from '../config';
+import { Config, GitHubConfig } from '../config';
 import { CollectionPage } from './CollectionPage';
 import { CreateItem } from './create-item';
 import { DashboardPage } from './dashboard';
@@ -18,6 +18,7 @@ import { FromTemplateDeploy } from './onboarding/from-template-deploy';
 import { CreatedGitHubApp } from './onboarding/created-github-app';
 import { KeystaticSetup } from './onboarding/setup';
 import { RepoNotFound } from './onboarding/repo-not-found';
+import { isGitHubConfig } from './utils';
 
 injectVoussoirStyles('surface');
 
@@ -45,7 +46,7 @@ function parseParams(params: string[]) {
   return null;
 }
 
-function RedirectToBranch(props: { config: Config }) {
+function RedirectToBranch(props: { config: GitHubConfig }) {
   const { push } = useRouter();
   const [{ data, error }] = useQuery({
     query: gql`
@@ -59,7 +60,7 @@ function RedirectToBranch(props: { config: Config }) {
         }
       }
     ` as import('../__generated__/ts-gql/DefaultBranch').type,
-    variables: { name: props.config.repo.name, owner: props.config.repo.owner },
+    variables: { name: props.config.storage.repo.name, owner: props.config.storage.repo.owner },
   });
   useEffect(() => {
     if (error?.response.status === 401) {
@@ -83,19 +84,16 @@ export function makePage<Collections extends { [key: string]: any }>(config: Con
     const router = useRouter();
     if (!router.isReady) return null;
     const params = (router.query.rest ?? []) as string[];
-    if (params.length === 1 && params[0] === 'setup') return <KeystaticSetup config={config} />;
-    if (params.length === 1 && params[0] === 'repo-not-found') {
-      return <RepoNotFound config={config} />;
-    }
-    if (params.length === 1 && params[0] === 'from-template-deploy') {
-      return <FromTemplateDeploy config={config} />;
-    }
-    if (params.length === 1 && params[0] === 'created-github-app') {
-      return <CreatedGitHubApp config={config} />;
-    }
-
-    if (params.length === 0) {
-      return <RedirectToBranch config={config} />;
+    if (isGitHubConfig(config)) {
+      if (params.length === 0) {
+        return <RedirectToBranch config={config} />;
+      }
+      if (params.length === 1) {
+        if (params[0] === 'setup') return <KeystaticSetup config={config} />;
+        if (params[0] === 'repo-not-found') return <RepoNotFound config={config} />;
+        if (params[0] === 'from-template-deploy') return <FromTemplateDeploy config={config} />;
+        if (params[0] === 'created-github-app') return <CreatedGitHubApp config={config} />;
+      }
     }
     const parsedParams = parseParams(params);
     if (!parsedParams) return null;

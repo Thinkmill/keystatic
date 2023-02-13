@@ -13,6 +13,10 @@ import {
   OperationVariables,
   TypedDocumentNode,
 } from '@ts-gql/tag/no-transform';
+import { Config } from '.';
+import { readToDirEntries } from './api/read-local';
+import { getCollectionPath, getSingletonPath } from '../app/path-utils';
+import { blobSha } from './api/trees-server-side';
 
 type APIRouteConfig = {
   /** @default process.env.KEYSTATIC_GITHUB_CLIENT_ID */
@@ -23,6 +27,7 @@ type APIRouteConfig = {
   url?: string;
   /** @default process.env.KEYSTATIC_SECRET */
   secret?: string;
+  config?: Config;
 };
 
 type InnerAPIRouteConfig = {
@@ -30,11 +35,11 @@ type InnerAPIRouteConfig = {
   clientSecret: string;
   url: string;
   secret: string;
+  config?: Config;
 };
 
 const keystaticRouteRegex =
   /^branch\/[^]+(\/collection\/[^/]+(|\/(create|item\/[^/]+))|\/singleton\/[^/]+)?$/;
-
 export default function createKeystaticAPIRoute(_config: APIRouteConfig) {
   const _config2: APIRouteConfig = {
     clientId: _config.clientId ?? process.env.KEYSTATIC_GITHUB_CLIENT_ID,
@@ -44,6 +49,7 @@ export default function createKeystaticAPIRoute(_config: APIRouteConfig) {
       process.env.KEYSTATIC_URL ??
       (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : undefined),
     secret: _config.secret ?? process.env.KEYSTATIC_SECRET,
+    config: _config.config,
   };
   if (!_config2.clientId || !_config2.clientSecret || !_config2.url || !_config2.secret) {
     return async function keystaticAPIRoute(req: NextApiRequest, res: NextApiResponse) {
@@ -65,6 +71,7 @@ export default function createKeystaticAPIRoute(_config: APIRouteConfig) {
     clientSecret: _config2.clientSecret,
     url: _config2.url,
     secret: _config2.secret,
+    config: _config2.config,
   };
 
   return async function keystaticAPIRoute(req: NextApiRequest, res: NextApiResponse) {
@@ -78,6 +85,19 @@ export default function createKeystaticAPIRoute(_config: APIRouteConfig) {
       res.redirect(`${config.url}/keystatic/from-template-deploy`);
       return;
     }
+    if (req.method === 'GET' && joined === 'tree' && config.config) {
+      await tree(req, res, config.config);
+      return;
+    }
+    if (req.method === 'GET' && params[0] === 'blob' && config.config) {
+      await blob(req, res, config.config);
+      return;
+    }
+    if (req.method === 'POST' && joined === 'update' && config.config) {
+      await update(req, res, config.config);
+      return;
+    }
+
     if (joined === 'github/login') {
       const from =
         typeof req.query.from === 'string' && keystaticRouteRegex.test(req.query.from)
@@ -413,3 +433,94 @@ NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=${ghAppDataResult.data.slug}
 }
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function tree(req: NextApiRequest, res: NextApiResponse, config: Config) {
+  if (req.headers['no-cors'] !== '1') {
+    res.status(400).send('Bad Request');
+    return;
+  }
+  return res.json(await readToDirEntries(process.cwd(), config));
+}
+
+function getAllowedDirectories(config: Config) {
+  const allowedDirectories: string[] = [];
+  for (const collection of Object.keys(config.collections ?? {})) {
+    allowedDirectories.push(getCollectionPath(config, collection));
+  }
+  for (const singleton of Object.keys(config.singletons ?? {})) {
+    allowedDirectories.push(getSingletonPath(config, singleton));
+  }
+  return allowedDirectories;
+}
+
+function getIsPathValid(config: Config) {
+  const allowedDirectories = getAllowedDirectories(config);
+  return (filepath: string) =>
+    !filepath.includes('\\') &&
+    filepath.split('/').every(x => x !== '.' && x !== '..') &&
+    allowedDirectories.some(x => filepath.startsWith(x));
+}
+
+async function blob(req: NextApiRequest, res: NextApiResponse, config: Config) {
+  if (req.headers['no-cors'] !== '1') {
+    res.status(400).send('Bad Request');
+    return;
+  }
+  const { params = [] } = req.query as { params?: string[] };
+  const expectedSha = params[1];
+  const filepath = params.slice(2).join('/');
+  const isFilepathValid = getIsPathValid(config);
+  if (!isFilepathValid(filepath)) {
+    res.status(400).send('Bad Request');
+    return;
+  }
+
+  let contents;
+  try {
+    contents = await fs.readFile(filepath);
+  } catch (err) {
+    if ((err as any).code === 'ENOENT') {
+      res.status(404).send('Not Found');
+      return;
+    }
+    throw err;
+  }
+  const sha = await blobSha(contents);
+
+  if (sha !== expectedSha) {
+    res.status(404).send('Not Found');
+    return;
+  }
+  return res.status(200).send(contents);
+}
+
+async function update(req: NextApiRequest, res: NextApiResponse, config: Config) {
+  if (req.headers['no-cors'] !== '1' || req.headers['content-type'] !== 'application/json') {
+    res.status(400).send('Bad Request');
+    return;
+  }
+  const isFilepathValid = getIsPathValid(config);
+
+  const updates = z
+    .object({
+      additions: z.array(
+        z.object({
+          path: z.string().refine(isFilepathValid),
+          content: z.string().transform(x => Buffer.from(x, 'base64')),
+        })
+      ),
+      deletions: z.array(z.object({ path: z.string().refine(isFilepathValid) })),
+    })
+    .safeParse(req.body);
+  if (!updates.success) {
+    res.status(400).send('Bad Request');
+    return;
+  }
+  for (const addition of updates.data.additions) {
+    await fs.writeFile(addition.path, addition.content);
+  }
+  for (const deletion of updates.data.deletions) {
+    await fs.rm(deletion.path);
+  }
+  return res.json(await readToDirEntries(process.cwd(), config));
+}

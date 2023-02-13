@@ -52,7 +52,7 @@ export function CreateItem(props: { collection: string; config: Config; currentB
       collectionConfig.getItemSlug(state)
     ),
     initialFiles: undefined,
-    repo: props.config.repo,
+    storage: props.config.storage,
     schema: collectionConfig.schema,
     format: getCollectionFormat(props.config, props.collection),
     currentLocalTreeSha: undefined,
@@ -67,7 +67,7 @@ export function CreateItem(props: { collection: string; config: Config; currentB
       setForceValidation(true);
       return;
     }
-    if ((await createItem()).data?.createCommitOnBranch?.ref) {
+    if (await createItem()) {
       const slug = collectionConfig.getItemSlug(state);
       router.push(`${collectionPath}/item/${slug}`);
     }
@@ -137,7 +137,7 @@ export function CreateItem(props: { collection: string; config: Config; currentB
               await router.push(
                 `/keystatic/branch/${newBranch}/collection/${props.collection}/create`
               );
-              if ((await createItem()).data?.createCommitOnBranch?.ref) {
+              if (await createItem()) {
                 const slug = collectionConfig.getItemSlug(state);
                 router.push(
                   `/keystatic/branch/${newBranch}/collection/${props.collection}/item/${slug}`
