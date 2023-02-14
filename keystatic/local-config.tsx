@@ -37,7 +37,10 @@ const toneToIcon = {
 };
 
 export default config({
-  repo: { owner: 'Thinkmill', name: 'keystatic-test-repo' },
+  storage: {
+    kind: 'github',
+    repo: { owner: 'Thinkmill', name: 'keystatic-test-repo' },
+  },
   collections: {
     posts: collection({
       label: 'Posts',

@@ -16,5 +16,5 @@
     "types": ["node", "jest"]
   },
   "include": ["**/*"],
-  "exclude": ["**/dist/**/*", "docs", "**/node_modules/**/*"]
+  "exclude": ["**/dist/**/*", "**/node_modules/**/*"]
 }

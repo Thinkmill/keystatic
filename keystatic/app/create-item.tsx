@@ -27,7 +27,7 @@ import { TreeNode } from './trees';
 
 const emptyMap = new Map<string, TreeNode>();
 
-export function CreateItem(props: { collection: string; config: Config; currentBranch: string }) {
+export function CreateItem(props: { collection: string; config: Config; basePath: string }) {
   const router = useRouter();
   const collectionConfig = props.config.collections![props.collection]!;
   const [forceValidation, setForceValidation] = useState(false);
@@ -43,8 +43,6 @@ export function CreateItem(props: { collection: string; config: Config; currentB
   const tree = useTree();
 
   const [createResult, _createItem, resetCreateItemState] = useUpsertItem({
-    baseCommit,
-    branch: props.currentBranch,
     state,
     basePath: getCollectionItemPath(
       props.config,
@@ -52,7 +50,7 @@ export function CreateItem(props: { collection: string; config: Config; currentB
       collectionConfig.getItemSlug(state)
     ),
     initialFiles: undefined,
-    repo: props.config.repo,
+    storage: props.config.storage,
     schema: collectionConfig.schema,
     format: getCollectionFormat(props.config, props.collection),
     currentLocalTreeSha: undefined,
@@ -60,14 +58,14 @@ export function CreateItem(props: { collection: string; config: Config; currentB
   });
   const createItem = useEventCallback(_createItem);
 
-  let collectionPath = `/keystatic/branch/${props.currentBranch}/collection/${props.collection}`;
+  let collectionPath = `${props.basePath}/collection/${props.collection}`;
 
   const onCreate = async () => {
     if (!clientSideValidateProp(schema, state)) {
       setForceValidation(true);
       return;
     }
-    if ((await createItem()).data?.createCommitOnBranch?.ref) {
+    if (await createItem()) {
       const slug = collectionConfig.getItemSlug(state);
       router.push(`${collectionPath}/item/${slug}`);
     }
@@ -88,9 +86,9 @@ export function CreateItem(props: { collection: string; config: Config; currentB
           </Heading>
           <Icon src={chevronRightIcon} color="neutralSecondary" isHidden={{ below: 'tablet' }} />
           <Text color="neutralEmphasis" size="medium" weight="bold" marginEnd="regular">
-            New item
+            New entry
           </Text>
-          {isLoading && <ProgressCircle aria-label="Creating Item" isIndeterminate size="small" />}
+          {isLoading && <ProgressCircle aria-label="Creating entry" isIndeterminate size="small" />}
           <Button
             isDisabled={isLoading}
             prominence="high"
@@ -137,7 +135,7 @@ export function CreateItem(props: { collection: string; config: Config; currentB
               await router.push(
                 `/keystatic/branch/${newBranch}/collection/${props.collection}/create`
               );
-              if ((await createItem()).data?.createCommitOnBranch?.ref) {
+              if (await createItem()) {
                 const slug = collectionConfig.getItemSlug(state);
                 router.push(
                   `/keystatic/branch/${newBranch}/collection/${props.collection}/item/${slug}`

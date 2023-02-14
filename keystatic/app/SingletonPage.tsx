@@ -32,7 +32,6 @@ import { refreshCwIcon } from '@voussoir/icon/icons/refreshCwIcon';
 
 type SingletonPageProps = {
   singleton: string;
-  currentBranch: string;
   config: Config;
   initialState: Record<string, unknown> | null;
   initialFiles: string[];
@@ -41,7 +40,6 @@ type SingletonPageProps = {
 };
 
 function SingletonPage({
-  currentBranch,
   singleton,
   initialFiles,
   initialState,
@@ -87,11 +85,9 @@ function SingletonPage({
 
   const baseCommit = useBaseCommit();
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
-    baseCommit,
-    branch: currentBranch,
     state,
     initialFiles,
-    repo: config.repo,
+    storage: config.storage,
     schema: singletonConfig.schema,
     basePath: singletonPath,
     format: getSingletonFormat(config, singleton),
@@ -189,7 +185,7 @@ function SingletonPage({
   );
 }
 
-function SingletonPageWrapper(props: { singleton: string; currentBranch: string; config: Config }) {
+function SingletonPageWrapper(props: { singleton: string; config: Config }) {
   const singletonConfig = props.config.singletons![props.singleton]!;
   const header = (
     <AppShellHeader>
@@ -243,7 +239,6 @@ function SingletonPageWrapper(props: { singleton: string; currentBranch: string;
   return (
     <SingletonPage
       singleton={props.singleton}
-      currentBranch={props.currentBranch}
       config={props.config}
       initialState={combined.data.item === 'not-found' ? null : combined.data.item.initialState}
       initialFiles={combined.data.item === 'not-found' ? [] : combined.data.item.initialFiles}

@@ -13,6 +13,7 @@ import {
 import { cacheExchange } from '@urql/exchange-graphcache';
 import { authExchange } from '@urql/exchange-auth';
 import { getAuth } from './auth';
+import { AppShellQuery } from './shell/data';
 
 /**
  * Resolves internal links using the
@@ -51,7 +52,13 @@ export const UniversalNextLink = makeLinkComponent(
   }
 );
 
-export default function Provider({ children }: { children: JSX.Element }) {
+export default function Provider({
+  children,
+  repo,
+}: {
+  children: JSX.Element;
+  repo: { owner: string; name: string } | undefined;
+}) {
   return (
     <SSRProvider>
       <VoussoirProvider linkComponent={UniversalNextLink}>
@@ -63,7 +70,75 @@ export default function Provider({ children }: { children: JSX.Element }) {
                 requestPolicy: 'cache-and-network',
                 exchanges: [
                   dedupExchange,
-                  cacheExchange(),
+                  cacheExchange({
+                    updates: {
+                      Mutation: {
+                        createRef(result, args, cache, _info) {
+                          cache.updateQuery(
+                            {
+                              query: AppShellQuery,
+                              variables: { owner: repo!.owner, name: repo!.name },
+                            },
+                            data => {
+                              if (
+                                data?.repository?.refs?.nodes &&
+                                result.createRef &&
+                                typeof result.createRef === 'object' &&
+                                'ref' in result.createRef
+                              ) {
+                                return {
+                                  ...data,
+                                  repository: {
+                                    ...data.repository,
+                                    refs: {
+                                      ...data.repository.refs,
+                                      nodes: [...data.repository.refs.nodes, result.createRef.ref],
+                                    },
+                                  },
+                                };
+                              }
+                              return data;
+                            }
+                          );
+                        },
+                        deleteRef(result, args, cache, _info) {
+                          cache.updateQuery(
+                            {
+                              query: AppShellQuery,
+                              variables: { owner: repo!.owner, name: repo!.name },
+                            },
+                            data => {
+                              if (
+                                data?.repository?.refs?.nodes &&
+                                result.deleteRef &&
+                                typeof result.deleteRef === 'object' &&
+                                '__typename' in result.deleteRef &&
+                                typeof args.input === 'object' &&
+                                args.input !== null &&
+                                'refId' in args.input &&
+                                typeof args.input.refId === 'string'
+                              ) {
+                                const refId = args.input.refId;
+                                return {
+                                  ...data,
+                                  repository: {
+                                    ...data.repository,
+                                    refs: {
+                                      ...data.repository.refs,
+                                      nodes: data.repository.refs.nodes.filter(
+                                        x => x?.id !== refId
+                                      ),
+                                    },
+                                  },
+                                };
+                              }
+                              return data;
+                            }
+                          );
+                        },
+                      },
+                    },
+                  }),
                   authExchange<{ accessToken: string }>({
                     addAuthToOperation({ operation, authState }) {
                       if (!authState) {
@@ -91,7 +166,7 @@ export default function Provider({ children }: { children: JSX.Element }) {
                   fetchExchange,
                 ],
               }),
-            []
+            [repo]
           )}
         >
           {children}

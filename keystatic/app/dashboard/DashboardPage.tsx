@@ -31,14 +31,14 @@ import {
 } from '../shell/data';
 import { AppShellHeader } from '../shell/header';
 
-export function DashboardPage(props: { config: Config; currentBranch: string }) {
+export function DashboardPage(props: { config: Config; basePath: string }) {
   const { config } = props;
 
   const changes = useChanged();
   const router = useRouter();
   const allTreeData = useTree();
 
-  let link = (path: string) => `/keystatic/branch/${props.currentBranch}` + path;
+  let link = (path: string) => props.basePath + path;
   let collections = keyedEntries(config.collections ?? {});
   let singletons = keyedEntries(config.singletons ?? {});
 
@@ -74,10 +74,14 @@ export function DashboardPage(props: { config: Config; currentBranch: string }) 
                     });
                     const allChangesCount = counts.changed + counts.added + counts.removed;
                     return (
-                      <Item>
+                      <Item
+                        textValue={
+                          ref.label + allChangesCount ? ` (${allChangesCount} changed)` : undefined
+                        }
+                      >
                         <Text>{ref.label}</Text>
                         <Text slot="description">
-                          {pluralize(counts.total, { singular: 'item' })}
+                          {pluralize(counts.total, { singular: 'entry', plural: 'entries' })}
                           {allChangesCount ? (
                             <> &middot; {pluralize(allChangesCount, { singular: 'change' })}</>
                           ) : null}
@@ -101,7 +105,7 @@ export function DashboardPage(props: { config: Config; currentBranch: string }) 
                           >
                             <Icon src={plusIcon} />
                           </ActionButton>
-                          <Tooltip>New item</Tooltip>
+                          <Tooltip>New entry</Tooltip>
                         </TooltipTrigger>
                       </Item>
                     );
@@ -124,12 +128,11 @@ export function DashboardPage(props: { config: Config; currentBranch: string }) 
                     }}
                   >
                     {ref => {
+                      const description = changes.singletons.has(ref.key) ? 'Changed' : 'Unchanged';
                       return (
-                        <Item>
+                        <Item textValue={`${ref.label} (${description})`}>
                           <Text>{ref.label}</Text>
-                          <Text slot="description">
-                            {changes.singletons.has(ref.key) ? 'Changed' : 'Unchanged'}
-                          </Text>
+                          <Text slot="description">{description}</Text>
                         </Item>
                       );
                     }}
@@ -137,7 +140,7 @@ export function DashboardPage(props: { config: Config; currentBranch: string }) 
                 </Grid>
               )}
             </Flex>
-            <Branches />
+            {props.config.storage.kind === 'github' && <Branches />}
           </Grid>
         </Flex>
       </AppShellBody>
@@ -175,7 +178,7 @@ function Branches() {
       </Grid>
       {branchInfo.allBranches.length === 0 ? (
         <Flex justifyContent="center">
-          <ProgressCircle isIndeterminate size="medium" />
+          <ProgressCircle isIndeterminate size="medium" aria-label="Loading Branches" />
         </Flex>
       ) : (
         <Flex direction="column" gap="regular">

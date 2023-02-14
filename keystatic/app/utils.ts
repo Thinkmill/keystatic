@@ -1,6 +1,6 @@
 import { isDefined } from 'emery';
 
-import { Config } from '../config';
+import { Config, GitHubConfig } from '../config';
 import { getCollectionItemSlugSuffix } from './path-utils';
 import { getTreeNodeAtPath, TreeNode } from './trees';
 
@@ -50,4 +50,8 @@ export function blobSha(contents: Uint8Array) {
   array.set(blobPrefix, 0);
   array.set(contents, blobPrefix.byteLength);
   return sha1(array);
+}
+
+export function isGitHubConfig(config: Config): config is GitHubConfig {
+  return config.storage.kind === 'github';
 }

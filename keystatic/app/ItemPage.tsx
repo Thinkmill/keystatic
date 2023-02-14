@@ -35,26 +35,18 @@ import { mergeDataStates } from './useData';
 
 type ItemPageProps = {
   collection: string;
-  currentBranch: string;
   config: Config;
   initialFiles: string[];
   initialState: Record<string, unknown>;
   itemSlug: string;
   localTreeSha: string;
   currentTree: Map<string, TreeNode>;
+  basePath: string;
 };
 
 function ItemPage(props: ItemPageProps) {
-  const {
-    currentBranch,
-    collection,
-    config,
-    itemSlug,
-    initialFiles,
-    initialState,
-    localTreeSha,
-    currentTree,
-  } = props;
+  const { collection, config, itemSlug, initialFiles, initialState, localTreeSha, currentTree } =
+    props;
   const router = useRouter();
   const [forceValidation, setForceValidation] = useState(false);
   const collectionConfig = config.collections![collection]!;
@@ -87,11 +79,9 @@ function ItemPage(props: ItemPageProps) {
 
   const baseCommit = useBaseCommit();
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
-    baseCommit,
-    branch: currentBranch,
     state,
     initialFiles,
-    repo: config.repo,
+    storage: config.storage,
     schema: collectionConfig.schema,
     basePath: getCollectionItemPath(config, collection, collectionConfig.getItemSlug(state)),
     format: getCollectionFormat(config, collection),
@@ -100,10 +90,8 @@ function ItemPage(props: ItemPageProps) {
   });
   const update = useEventCallback(_update);
   const [deleteResult, deleteItem] = useDeleteItem({
-    baseCommit,
-    branch: currentBranch,
     initialFiles,
-    repo: config.repo,
+    storage: config.storage,
     basePath: getCollectionItemPath(config, collection, itemSlug),
     currentTree,
   });
@@ -113,9 +101,9 @@ function ItemPage(props: ItemPageProps) {
       return;
     }
     const slug = collectionConfig.getItemSlug(state);
-    const data = await update();
-    if (data.data?.createCommitOnBranch?.ref?.target && slug !== itemSlug) {
-      router.replace(`/keystatic/branch/${currentBranch}/collection/${collection}/item/${slug}`);
+    const hasUpdated = await update();
+    if (hasUpdated && slug !== itemSlug) {
+      router.replace(`${props.basePath}/collection/${collection}/item/${slug}`);
     }
   };
   const formID = 'item-edit-form';
@@ -127,7 +115,7 @@ function ItemPage(props: ItemPageProps) {
           <>
             {updateResult.kind === 'loading' ? (
               <ProgressCircle
-                aria-label="Updating item"
+                aria-label="Updating entry"
                 isIndeterminate
                 size="small"
                 alignSelf="center"
@@ -148,20 +136,20 @@ function ItemPage(props: ItemPageProps) {
                 <Button
                   // tone="critical"
                   aria-label="Delete"
-                  isDisabled={deleteResult.fetching || updateResult.kind === 'loading'}
+                  isDisabled={deleteResult.kind === 'loading' || updateResult.kind === 'loading'}
                 >
                   <Icon isHidden={{ above: 'mobile' }} src={trash2Icon} />
                   <Text isHidden={{ below: 'tablet' }}>Delete</Text>
                 </Button>
                 <AlertDialog
-                  title="Delete item"
+                  title="Delete entry"
                   tone="critical"
                   cancelLabel="Cancel"
                   primaryActionLabel="Yes, delete"
                   autoFocusButton="cancel"
                   onPrimaryAction={async () => {
                     await deleteItem();
-                    router.push(`/keystatic/branch/${currentBranch}/collection/${collection}`);
+                    router.push(`${props.basePath}/collection/${collection}`);
                   }}
                 >
                   Are you sure? This action cannot be undone.
@@ -194,7 +182,9 @@ function ItemPage(props: ItemPageProps) {
           {updateResult.kind === 'error' && (
             <Notice tone="critical">{updateResult.error.message}</Notice>
           )}
-          {deleteResult.error && <Notice tone="critical">{deleteResult.error.message}</Notice>}
+          {deleteResult.kind === 'error' && (
+            <Notice tone="critical">{deleteResult.error.message}</Notice>
+          )}
           <AppShellBody>
             <FormValueContentFromPreviewProps
               key={localTreeSha}
@@ -215,11 +205,9 @@ function ItemPage(props: ItemPageProps) {
                     `/keystatic/branch/${newBranch}/collection/${collection}/item/${itemSlug}`
                   );
                   const slug = collectionConfig.getItemSlug(state);
-                  const data = await update();
-                  if (data.data?.createCommitOnBranch?.ref?.target && slug !== itemSlug) {
-                    router.replace(
-                      `/keystatic/branch/${currentBranch}/collection/${collection}/item/${slug}`
-                    );
+                  const hasUpdated = await update();
+                  if (hasUpdated && slug !== itemSlug) {
+                    router.replace(`${props.basePath}/collection/${collection}/item/${slug}`);
                   }
                 }}
                 reason={updateResult.reason}
@@ -273,7 +261,9 @@ export function CreateBranchDuringUpdateDialog(props: {
           </Flex>
         </Content>
         <ButtonGroup>
-          {isLoading && <ProgressCircle isIndeterminate size="small" />}
+          {isLoading && (
+            <ProgressCircle isIndeterminate size="small" aria-label="Creating Branch" />
+          )}
           <Button isDisabled={isLoading} onPress={props.onDismiss}>
             Cancel
           </Button>
@@ -288,9 +278,9 @@ export function CreateBranchDuringUpdateDialog(props: {
 
 function ItemPageWrapper(props: {
   collection: string;
-  currentBranch: string;
   itemSlug: string;
   config: Config;
+  basePath: string;
 }) {
   const format = useMemo(
     () => getCollectionFormat(props.config, props.collection),
@@ -329,7 +319,7 @@ function ItemPageWrapper(props: {
     return (
       <ItemPageShell {...props}>
         <AppShellBody>
-          <Notice tone="caution">Item not found.</Notice>
+          <Notice tone="caution">Entry not found.</Notice>
         </AppShellBody>
       </ItemPageShell>
     );
@@ -337,7 +327,7 @@ function ItemPageWrapper(props: {
   return (
     <ItemPage
       collection={props.collection}
-      currentBranch={props.currentBranch}
+      basePath={props.basePath}
       config={props.config}
       itemSlug={props.itemSlug}
       initialState={combined.data.item.initialState}
@@ -350,7 +340,7 @@ function ItemPageWrapper(props: {
 
 const ItemPageShell = (
   props: PropsWithChildren<
-    Pick<ItemPageProps, 'collection' | 'config' | 'currentBranch'> & { headerActions?: ReactNode }
+    Pick<ItemPageProps, 'collection' | 'config' | 'basePath'> & { headerActions?: ReactNode }
   >
 ) => {
   const collectionConfig = props.config.collections![props.collection]!;
@@ -359,9 +349,7 @@ const ItemPageShell = (
     <AppShellRoot>
       <AppShellHeader>
         <Heading size="small" visuallyHidden={{ below: 'tablet' }} truncate>
-          <TextLink
-            href={`/keystatic/branch/${props.currentBranch}/collection/${props.collection}`}
-          >
+          <TextLink href={`${props.basePath}/collection/${props.collection}`}>
             {collectionConfig.label}
           </TextLink>
         </Heading>

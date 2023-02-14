@@ -34,7 +34,7 @@ import {
 import { useTree, TreeData } from './shell/data';
 import { AppShellHeader } from './shell/header';
 
-type CollectionPageProps = { collection: string; config: Config; branch: string };
+type CollectionPageProps = { collection: string; config: Config; basePath: string };
 
 export function CollectionPage(props: CollectionPageProps) {
   const containerWidth = 'large'; // TODO: use a "large" when we have more columns
@@ -63,9 +63,9 @@ export function CollectionPage(props: CollectionPageProps) {
         <Button
           marginStart="auto"
           prominence="high"
-          href={`/keystatic/branch/${props.branch}/collection/${props.collection}/create`}
+          href={`${props.basePath}/collection/${props.collection}/create`}
         >
-          New item
+          New entry
         </Button>
       </AppShellHeader>
 
@@ -89,7 +89,7 @@ function CollectionPageContent(props: CollectionPageProps) {
   if (trees.merged.kind === 'loading') {
     return (
       <EmptyState>
-        <ProgressCircle aria-label="Loading Items" isIndeterminate size="large" />
+        <ProgressCircle aria-label="Loading Entries" isIndeterminate size="large" />
       </EmptyState>
     );
   }
@@ -104,11 +104,9 @@ function CollectionPageContent(props: CollectionPageProps) {
         title="Empty collection"
         message={
           <>
-            There aren't any items yet.{' '}
-            <TextLink
-              href={`/keystatic/branch/${props.branch}/collection/${props.collection}/create`}
-            >
-              Create the first item
+            There aren't any entries yet.{' '}
+            <TextLink href={`${props.basePath}/collection/${props.collection}/create`}>
+              Create the first entry
             </TextLink>{' '}
             to see it here.
           </>
@@ -187,7 +185,7 @@ function CollectionTable(
       <Flex direction="column" gap="large">
         <Flex gap="large" alignItems="start" justifyContent="space-between">
           <SearchField
-            aria-label="Filter items"
+            aria-label="Filter entries"
             onChange={setSearchTerm}
             onClear={() => setSearchTerm('')}
             placeholder="Filter..."
@@ -202,9 +200,7 @@ function CollectionTable(
           sortDescriptor={sortDescriptor}
           overflowMode="truncate"
           onRowAction={key => {
-            router.push(
-              `/keystatic/branch/${props.branch}/collection/${props.collection}/item/${key}`
-            );
+            router.push(`${props.basePath}/collection/${props.collection}/item/${key}`);
           }}
           // UNSAFE_className={css({
           //   '[role=row]> :first-child': { paddingInlineStart: tokenSchema.size.space.xlarge },

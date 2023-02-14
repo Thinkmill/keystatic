@@ -1,5 +1,36 @@
 # keystatic
 
+## 0.0.30
+
+### Patch Changes
+
+- f8bb47c: Update syntax target
+
+## 0.0.29
+
+### Patch Changes
+
+- 871e04a: Fix local setup
+
+## 0.0.28
+
+### Patch Changes
+
+- 902b310: Fix image field outside of document fields and fix inferred types in reader API for basic
+  form fields
+
+## 0.0.27
+
+### Patch Changes
+
+- dfebac9: Misc UI fixes
+
+## 0.0.26
+
+### Patch Changes
+
+- dba81d3: Add local mode
+
 ## 0.0.25
 
 ### Patch Changes

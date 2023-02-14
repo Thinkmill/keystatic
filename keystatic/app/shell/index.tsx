@@ -7,24 +7,44 @@ import { VoussoirTheme, css, transition } from '@voussoir/style';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../../config';
-import { useAppShellData } from './data';
+import { GitHubAppShellProvider, AppShellErrorContext, LocalAppShellProvider } from './data';
 import { SidebarProvider, Sidebar, SIDEBAR_WIDTH } from './sidebar';
+import { isGitHubConfig } from '../utils';
 
-export const AppShell = (props: { config: Config; children: ReactNode; currentBranch: string }) => {
-  const { error, providers } = useAppShellData(props);
-
-  return providers(
+export const AppShell = (props: {
+  config: Config;
+  children: ReactNode;
+  currentBranch: string;
+  basePath: string;
+}) => {
+  const inner = (
     <SidebarProvider>
       <Flex direction={{ mobile: 'column', tablet: 'row' }} width="100vw" minHeight="100vh">
-        <Sidebar hrefBase={`/keystatic/branch/${props.currentBranch}`} config={props.config} />
-        {error ? (
-          <EmptyState icon={alertCircleIcon} title="Failed to load shell" message={error.message} />
-        ) : (
-          props.children
-        )}
+        <Sidebar hrefBase={props.basePath} config={props.config} />
+        <AppShellErrorContext.Consumer>
+          {error =>
+            error ? (
+              <EmptyState
+                icon={alertCircleIcon}
+                title="Failed to load shell"
+                message={error.message}
+              />
+            ) : (
+              props.children
+            )
+          }
+        </AppShellErrorContext.Consumer>
       </Flex>
     </SidebarProvider>
   );
+  if (isGitHubConfig(props.config)) {
+    return (
+      <GitHubAppShellProvider currentBranch={props.currentBranch} config={props.config}>
+        {inner}
+      </GitHubAppShellProvider>
+    );
+  }
+  return <LocalAppShellProvider config={props.config}>{inner}</LocalAppShellProvider>;
 };
 
 // Styled components

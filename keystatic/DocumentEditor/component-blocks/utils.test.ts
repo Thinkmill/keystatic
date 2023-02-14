@@ -1,3 +1,4 @@
+import '../tests/utils';
 import { fields } from './api';
 import { getAncestorSchemas, getSchemaAtPropPath } from './utils';
 

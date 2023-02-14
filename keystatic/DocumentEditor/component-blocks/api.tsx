@@ -332,7 +332,7 @@ export const fields = {
       };
     };
     multiline?: boolean;
-  }): FormField<string, undefined> {
+  }): BasicFormField<string, undefined> {
     const TextFieldComponent = multiline ? TextArea : TextField;
     return {
       kind: 'form',
@@ -365,7 +365,7 @@ export const fields = {
   }: {
     label: string;
     defaultValue?: number;
-  }): FormField<number, undefined> {
+  }): BasicFormField<number, undefined> {
     const validate = (value: unknown) => {
       return typeof value === 'number' && Number.isFinite(value);
     };
@@ -405,7 +405,7 @@ export const fields = {
   }: {
     label: string;
     defaultValue?: string;
-  }): FormField<string, undefined> {
+  }): BasicFormField<string, undefined> {
     const validate = (value: unknown) => {
       return typeof value === 'string' && (value === '' || isValidURL(value));
     };
@@ -442,7 +442,7 @@ export const fields = {
     label: string;
     options: readonly Option[];
     defaultValue: Option['value'];
-  }): FormField<Option['value'], readonly Option[]> {
+  }): BasicFormField<Option['value'], readonly Option[]> {
     const optionValuesSet = new Set(options.map(x => x.value));
     if (!optionValuesSet.has(defaultValue)) {
       throw new Error(
@@ -480,7 +480,7 @@ export const fields = {
     label: string;
     options: readonly Option[];
     defaultValue: readonly Option['value'][];
-  }): FormField<readonly Option['value'][], readonly Option[]> {
+  }): BasicFormField<readonly Option['value'][], readonly Option[]> {
     const valuesToOption = new Map(options.map(x => [x.value, x]));
     return {
       kind: 'form',
@@ -503,7 +503,7 @@ export const fields = {
   }: {
     label: string;
     defaultValue?: boolean;
-  }): FormField<boolean, undefined> {
+  }): BasicFormField<boolean, undefined> {
     return {
       kind: 'form',
       Input({ value, onChange, autoFocus }) {
@@ -625,7 +625,12 @@ export const fields = {
             ? {
                 kind: 'uploaded',
                 data: content,
-                extension: (value as any).extension,
+                extension:
+                  value && typeof value === 'object' && 'extension' in value
+                    ? (value as any).extension
+                    : typeof value === 'string'
+                    ? value.match(/\.([^.]+$)/)?.[1]
+                    : '',
                 filename: typeof value === 'string' ? value : '',
               }
             : { kind: 'none' };
@@ -651,7 +656,7 @@ export const fields = {
       },
     };
   },
-  date({ label }: { label: string }): FormField<string | null, undefined> {
+  date({ label }: { label: string }): BasicFormField<string | null, undefined> {
     return {
       kind: 'form',
       Input({ value, onChange, autoFocus }) {
@@ -674,7 +679,7 @@ export const fields = {
       },
     };
   },
-  empty(): FormField<null, undefined> {
+  empty(): BasicFormField<null, undefined> {
     return {
       kind: 'form',
       Input() {
@@ -1123,7 +1128,7 @@ export type ValueForReading<Schema extends ComponentSchema> = Schema extends Chi
   ? () => Promise<Value>
   : Schema extends FormFieldWithFileNotRequiringContentsForReader<any, any, infer Value>
   ? Value
-  : Schema extends FormField<infer Value, any>
+  : Schema extends BasicFormField<infer Value, any>
   ? Value
   : Schema extends ObjectField<infer Value>
   ? {

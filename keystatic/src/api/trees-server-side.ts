@@ -1,13 +1,25 @@
 import { assert } from 'emery';
-import { blobSha, sha1 } from './utils';
+import { createHash } from 'crypto';
 
 type Changes = {
   additions: {
     path: string;
-    contents: Uint8Array | { byteLength: number; sha: string };
+    contents: { byteLength: number; sha: string };
   }[];
   deletions: string[];
 };
+
+async function sha1(content: Uint8Array) {
+  return createHash('sha1').update(content).digest('hex');
+}
+
+export function blobSha(contents: Uint8Array) {
+  const blobPrefix = textEncoder.encode('blob ' + contents.length + '\0');
+  const array = new Uint8Array(blobPrefix.byteLength + contents.byteLength);
+  array.set(blobPrefix, 0);
+  array.set(contents, blobPrefix.byteLength);
+  return sha1(array);
+}
 
 export type TreeNode = { entry: TreeEntry; children?: Map<string, TreeNode> };
 
@@ -31,7 +43,7 @@ export type TreeEntry = {
 };
 
 type TreeChanges = Map<string, NodeChanges>;
-type NodeChanges = Uint8Array | { byteLength: number; sha: string } | 'delete' | TreeChanges;
+type NodeChanges = { byteLength: number; sha: string } | 'delete' | TreeChanges;
 
 function getNodeAtPath(tree: TreeChanges, path: string): TreeChanges {
   let node = tree;
@@ -137,7 +149,7 @@ async function createTreeNodeEntry(
 
 export async function createBlobNodeEntry(
   path: string,
-  contents: Uint8Array | { byteLength: number; sha: string }
+  contents: { byteLength: number; sha: string }
 ): Promise<TreeEntry> {
   const sha = 'sha' in contents ? contents.sha : await blobSha(contents);
   return {
@@ -183,7 +195,7 @@ async function updateTree(
       const entry = await createTreeNodeEntry(path.concat(key).join('/'), children);
       newTree.set(key, { entry, children });
     }
-    if (value instanceof Uint8Array || (typeof value === 'object' && 'sha' in value)) {
+    if (typeof value === 'object' && 'sha' in value) {
       const entry = await createBlobNodeEntry(path.concat(key).join('/'), value);
       newTree.set(key, { entry });
     }
