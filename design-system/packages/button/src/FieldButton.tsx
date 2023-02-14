@@ -11,8 +11,7 @@ import { FieldButtonProps } from './types';
 import { useActionButtonStyles } from './useActionButtonStyles';
 import { useActionButtonChildren } from './ActionButton';
 
-/** @private Internal component for fields that don't accept text input. */
-export const FieldButton = forwardRef(function FieldButton(
+function FieldButton(
   props: PropsWithElementType<FieldButtonProps>,
   forwardedRef: ForwardedRef<HTMLButtonElement>
 ) {
@@ -50,7 +49,11 @@ export const FieldButton = forwardRef(function FieldButton(
       </ElementType>
     </FocusRing>
   );
-});
+}
+
+/** @private Internal component for composing complex field interactions. */
+const _FieldButton = forwardRef(FieldButton);
+export { _FieldButton as FieldButton };
 
 // Utils
 // -----------------------------------------------------------------------------
