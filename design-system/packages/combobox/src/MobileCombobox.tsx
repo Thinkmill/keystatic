@@ -44,9 +44,10 @@ import { Flex } from '@voussoir/layout';
 import { Text } from '@voussoir/typography';
 import { toDataAttributes } from '@voussoir/utils';
 
-export const MobileCombobox = React.forwardRef(function MobileCombobox<
-  T extends object
->(props: ComboboxProps<T>, forwardedRef: ForwardedRef<HTMLDivElement>) {
+function MobileCombobox<T extends object>(
+  props: ComboboxProps<T>,
+  forwardedRef: ForwardedRef<HTMLDivElement>
+) {
   props = useProviderProps(props);
 
   let { isDisabled, validationState, isReadOnly } = props;
@@ -119,7 +120,7 @@ export const MobileCombobox = React.forwardRef(function MobileCombobox<
       </Tray>
     </>
   );
-});
+}
 
 interface ComboboxButtonProps extends AriaButtonProps {
   children?: ReactNode;
@@ -410,6 +411,7 @@ function ComboboxTray<T extends object>(props: ComboboxTrayProps<T>) {
     } else if (loadingState !== 'filtering') {
       // If loading is no longer happening, clear any timers and hide the loading circle
       setShowLoading(false);
+      // @ts-expect-error FIXME: NodeJS.Timeout is not assignable to number
       clearTimeout(timeoutRef.current);
       timeoutRef.current = undefined;
     }
@@ -489,3 +491,8 @@ function ComboboxTray<T extends object>(props: ComboboxTrayProps<T>) {
     </FocusScope>
   );
 }
+const _MobileCombobox: <T>(
+  props: ComboboxProps<T> & { ref?: ForwardedRef<HTMLDivElement> }
+) => ReactElement = React.forwardRef(MobileCombobox as any) as any;
+
+export { _MobileCombobox as MobileCombobox };

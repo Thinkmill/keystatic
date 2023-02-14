@@ -59,7 +59,6 @@ function Combobox<T extends object>(
   let isMobile = useIsMobileDevice();
   if (isMobile) {
     // menuTrigger=focus/manual don't apply to mobile combobox
-    // @ts-expect-error FIXME: 'T' could be instantiated with an arbitrary type which could be unrelated to 'unknown'.
     return <MobileCombobox {...props} menuTrigger="input" ref={forwardedRef} />;
   } else {
     // @ts-expect-error FIXME: 'T' could be instantiated with an arbitrary type which could be unrelated to 'unknown'.
