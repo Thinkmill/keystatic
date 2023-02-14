@@ -1,7 +1,13 @@
 import { useButton } from '@react-aria/button';
 import { useHover } from '@react-aria/interactions';
 import { mergeProps, useObjectRef } from '@react-aria/utils';
-import { ForwardedRef, forwardRef, useMemo } from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  ForwardRefExoticComponent,
+  Ref,
+  useMemo,
+} from 'react';
 
 import { useSlotProps } from '@voussoir/slots';
 import { FocusRing, classNames, css } from '@voussoir/style';
@@ -11,7 +17,10 @@ import { FieldButtonProps } from './types';
 import { useActionButtonStyles } from './useActionButtonStyles';
 import { useActionButtonChildren } from './ActionButton';
 
-function FieldButton(
+/** @private Internal component for composing complex field interactions. */
+export const FieldButton: ForwardRefExoticComponent<
+  FieldButtonProps & { ref?: Ref<HTMLButtonElement> }
+> = forwardRef(function FieldButton(
   props: PropsWithElementType<FieldButtonProps>,
   forwardedRef: ForwardedRef<HTMLButtonElement>
 ) {
@@ -49,11 +58,7 @@ function FieldButton(
       </ElementType>
     </FocusRing>
   );
-}
-
-/** @private Internal component for composing complex field interactions. */
-const _FieldButton = forwardRef(FieldButton);
-export { _FieldButton as FieldButton };
+});
 
 // Utils
 // -----------------------------------------------------------------------------
