@@ -15,7 +15,7 @@ export const InlineCode = ({ children }: { children: string }) => {
       paddingY={2}
       borderRadius="small"
       UNSAFE_className={css({
-        color: tokenSchema.color.foreground.emphasis,
+        color: tokenSchema.color.foreground.neutralEmphasis,
         fontSize: '0.85em',
         fontFamily: tokenSchema.typography.fontFamily.code,
       })}

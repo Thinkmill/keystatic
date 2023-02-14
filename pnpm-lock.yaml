@@ -83,6 +83,7 @@ importers:
   design-system/docs:
     specifiers:
       '@babel/core': ^7.18.5
+      '@babel/runtime': ^7.18.3
       '@markdoc/markdoc': ^0.2.2
       '@preconstruct/next': ^4.0.0
       '@react-aria/i18n': ^3.6.2
@@ -153,6 +154,7 @@ importers:
       webpack: ^5.73.0
     dependencies:
       '@babel/core': 7.20.12
+      '@babel/runtime': 7.20.13
       '@markdoc/markdoc': 0.2.2_3stiutgnnbnfnf3uowm5cip22i
       '@react-aria/i18n': 3.6.3_react@18.2.0
       '@types/js-yaml': 4.0.5

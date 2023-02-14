@@ -23,7 +23,7 @@ export function CodeBlock({
       overflow="auto"
       padding="medium"
       UNSAFE_className={css({
-        color: tokenSchema.color.foreground.emphasis,
+        color: tokenSchema.color.foreground.neutralEmphasis,
         fontFamily: tokenSchema.typography.fontFamily.code,
         fontSize: '0.85em',
         lineHeight: tokenSchema.typography.lineheight.medium,
