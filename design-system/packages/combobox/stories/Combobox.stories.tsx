@@ -1,5 +1,4 @@
-import { action } from '@storybook/addon-actions';
-import { ArgTypes, storiesOf } from '@storybook/react';
+import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
 
 import { alignCenterVerticalIcon } from '@voussoir/icon/icons/alignCenterVerticalIcon';
 import { alignStartVerticalIcon } from '@voussoir/icon/icons/alignStartVerticalIcon';
