@@ -1,15 +1,12 @@
-/** @type {import('@jest/types').Config.InitialOptions} */
+/** @type {import('jest').Config} */
 const config = {
-  displayName: 'voussoir',
-  testEnvironment: 'jsdom',
-  clearMocks: true,
-  verbose: true,
+  projects: ['<rootDir>/design-system', '<rootDir>/keystatic'],
   collectCoverageFrom: [
     '**/packages/**/*.{ts,tsx}',
     '!**/dist/**',
     '!**/{*.stories.tsx,index.ts,types.ts}',
   ],
-  setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
+  verbose: true,
 };
 
 module.exports = config;

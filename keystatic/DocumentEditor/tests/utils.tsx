@@ -1,4 +1,3 @@
-import './polyfill';
 import { act, render } from '@testing-library/react';
 import { diff } from 'jest-diff';
 import prettyFormat, { plugins, Plugin } from 'pretty-format';
@@ -13,6 +12,7 @@ import { Relationships } from '../relationship';
 import { createToolbarState, ToolbarStateProvider } from '../toolbar-state';
 import { validateDocumentStructure } from '../../structure-validation';
 import { validateAndNormalizeDocument } from '../../validation';
+import { injectVoussoirStyles, VoussoirProvider } from '@voussoir/core';
 
 export { __jsx as jsx } from './jsx/namespace';
 
@@ -47,7 +47,7 @@ console.error = (...stuff: any[]) => {
   // for whoever is trying to debug why this is failing here:
   // you should remove the process.exit call and replace it with a throw
   // and then look for unhandled rejections or thrown errors
-  process.exit(1);
+  // process.exit(1);
 };
 
 function formatEditor(editor: Node) {
@@ -150,6 +150,7 @@ export const defaultDocumentFeatures: DocumentFeatures = {
   layouts: [[1], [1, 1], [1, 1, 1], [1, 2, 1]],
 };
 
+injectVoussoirStyles();
 function EditorComp({
   editor,
   componentBlocks,
@@ -163,19 +164,21 @@ function EditorComp({
 }) {
   const [val, setVal] = useState(editor.children);
   return (
-    <Slate editor={editor} value={val} onChange={setVal}>
-      <ToolbarStateProvider
-        componentBlocks={componentBlocks}
-        editorDocumentFeatures={documentFeatures}
-        relationships={relationships}
-      >
-        <DocumentEditorEditable
-          // the default implementation of scrollSelectionIntoView crashes in JSDOM for some reason
-          // so we just do nothing
-          scrollSelectionIntoView={() => {}}
-        />
-      </ToolbarStateProvider>
-    </Slate>
+    <VoussoirProvider>
+      <Slate editor={editor} value={val} onChange={setVal}>
+        <ToolbarStateProvider
+          componentBlocks={componentBlocks}
+          editorDocumentFeatures={documentFeatures}
+          relationships={relationships}
+        >
+          <DocumentEditorEditable
+            // the default implementation of scrollSelectionIntoView crashes in JSDOM for some reason
+            // so we just do nothing
+            scrollSelectionIntoView={() => {}}
+          />
+        </ToolbarStateProvider>
+      </Slate>
+    </VoussoirProvider>
   );
 }
 

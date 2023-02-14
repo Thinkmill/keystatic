@@ -116,5 +116,5 @@ test('updateTreeWithChanges', async () => {
     deletions: [],
   };
   const output = await updateTreeWithChanges(treeEntriesToTreeNodes(input), changes);
-  expect(output).toEqual(expectedOutput);
+  expect(output.entries).toEqual(expectedOutput);
 });

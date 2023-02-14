@@ -1,9 +1,10 @@
-import {
+import type {
   RenderableTreeNode,
   RenderableTreeNodes,
   Scalar,
 } from '@markdoc/markdoc';
 import React, { ElementType, ReactNode } from 'react';
+import { isTag } from '../../utils/utils';
 import { mdxComponents } from './mdx-components';
 
 // inlined from markdoc because
@@ -31,6 +32,7 @@ function renderMarkdoc(node: RenderableTreeNodes) {
     }
 
     if (node === null || typeof node !== 'object') return node;
+    if (!isTag(node)) throw new Error('expected a node');
 
     const {
       name,
