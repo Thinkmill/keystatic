@@ -172,7 +172,7 @@ export function useUpsertItem(args: {
               setState({
                 kind: 'needs-new-branch',
                 reason:
-                  'This item has been updated since it was opened. Create a new branch to save changes.',
+                  'This entry has been updated since it was opened. Create a new branch to save changes.',
               });
               return false;
             }

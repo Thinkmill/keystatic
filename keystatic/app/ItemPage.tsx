@@ -115,7 +115,7 @@ function ItemPage(props: ItemPageProps) {
           <>
             {updateResult.kind === 'loading' ? (
               <ProgressCircle
-                aria-label="Updating item"
+                aria-label="Updating entry"
                 isIndeterminate
                 size="small"
                 alignSelf="center"
@@ -142,7 +142,7 @@ function ItemPage(props: ItemPageProps) {
                   <Text isHidden={{ below: 'tablet' }}>Delete</Text>
                 </Button>
                 <AlertDialog
-                  title="Delete item"
+                  title="Delete entry"
                   tone="critical"
                   cancelLabel="Cancel"
                   primaryActionLabel="Yes, delete"
@@ -319,7 +319,7 @@ function ItemPageWrapper(props: {
     return (
       <ItemPageShell {...props}>
         <AppShellBody>
-          <Notice tone="caution">Item not found.</Notice>
+          <Notice tone="caution">Entry not found.</Notice>
         </AppShellBody>
       </ItemPageShell>
     );

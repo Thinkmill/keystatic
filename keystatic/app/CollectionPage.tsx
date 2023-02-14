@@ -65,7 +65,7 @@ export function CollectionPage(props: CollectionPageProps) {
           prominence="high"
           href={`${props.basePath}/collection/${props.collection}/create`}
         >
-          New item
+          New entry
         </Button>
       </AppShellHeader>
 
@@ -89,7 +89,7 @@ function CollectionPageContent(props: CollectionPageProps) {
   if (trees.merged.kind === 'loading') {
     return (
       <EmptyState>
-        <ProgressCircle aria-label="Loading Items" isIndeterminate size="large" />
+        <ProgressCircle aria-label="Loading Entries" isIndeterminate size="large" />
       </EmptyState>
     );
   }
@@ -104,9 +104,9 @@ function CollectionPageContent(props: CollectionPageProps) {
         title="Empty collection"
         message={
           <>
-            There aren't any items yet.{' '}
+            There aren't any entries yet.{' '}
             <TextLink href={`${props.basePath}/collection/${props.collection}/create`}>
-              Create the first item
+              Create the first entry
             </TextLink>{' '}
             to see it here.
           </>
@@ -185,7 +185,7 @@ function CollectionTable(
       <Flex direction="column" gap="large">
         <Flex gap="large" alignItems="start" justifyContent="space-between">
           <SearchField
-            aria-label="Filter items"
+            aria-label="Filter entries"
             onChange={setSearchTerm}
             onClear={() => setSearchTerm('')}
             placeholder="Filter..."
