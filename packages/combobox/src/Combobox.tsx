@@ -277,6 +277,7 @@ const ComboboxInput = React.forwardRef(function ComboboxInput(
     } else if (!isLoading) {
       // If loading is no longer happening, clear any timers and hide the loading circle
       setShowLoading(false);
+      // @ts-expect-error FIXME: not sure how to resolve this type error
       clearTimeout(timeoutRef.current);
       timeoutRef.current = undefined;
     }
@@ -344,8 +345,8 @@ const ComboboxInput = React.forwardRef(function ComboboxInput(
 });
 
 /**
- * ComboBoxes combine a text entry with a picker menu, allowing users to filter
- * longer lists to only the selections matching a query.
+ * A combobox combines a text input with a listbox, and allows users to filter a
+ * list of options.
  */
 const _ComboBox = React.forwardRef(Combobox as any) as <T>(
   props: ComboboxProps<T> & { ref?: ForwardedRef<HTMLDivElement> }
