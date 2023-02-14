@@ -142,6 +142,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
   return (
     <>
       <FieldPrimitive
+        width="size.alias.singleLineWidth"
         {...props}
         descriptionProps={descriptionProps}
         errorMessageProps={errorMessageProps}
