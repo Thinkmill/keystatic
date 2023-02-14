@@ -15,6 +15,7 @@ import React, {
   RefObject,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -78,13 +79,13 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
     onLoadMore,
   } = props;
 
-  let stringFormatter = useLocalizedStringFormatter(messages);
   let isAsync = loadingState != null;
+  let stringFormatter = useLocalizedStringFormatter(messages);
   let buttonRef = useRef<HTMLButtonElement>(null);
   let inputRef = useRef<HTMLInputElement>(null);
   let listBoxRef = useRef<HTMLDivElement>(null);
-  let popoverRef = useRef<HTMLDivElement>(null);
-  let domRef = useObjectRef(forwardedRef);
+  let [popoverRefLikeValue, popoverRef] = useStatefulRef<HTMLDivElement>();
+  let fieldRef = useObjectRef(forwardedRef);
 
   let { contains } = useFilter({ sensitivity: 'base' });
   let state = useComboBoxState({
@@ -106,7 +107,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
       ...props,
       keyboardDelegate: layout,
       buttonRef,
-      popoverRef,
+      popoverRef: popoverRefLikeValue,
       listBoxRef,
       inputRef,
       menuTrigger,
@@ -127,7 +128,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
   }, [buttonRef, inputRef, setMenuWidth]);
 
   useResizeObserver({
-    ref: domRef,
+    ref: fieldRef,
     onResize: onResize,
   });
 
@@ -145,7 +146,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
         descriptionProps={descriptionProps}
         errorMessageProps={errorMessageProps}
         labelProps={labelProps}
-        ref={domRef}
+        ref={fieldRef}
       >
         {/* @ts-expect-error FIXME: not sure how to resolve this type error */}
         <ComboboxInput
@@ -198,6 +199,16 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
     </>
   );
 });
+
+// FIXME: this is a hack to work around a requirement of react-aria. object refs
+// never have the value early enough, so we need to use a stateful ref to force
+// a re-render.
+function useStatefulRef<T extends HTMLElement>() {
+  let [current, statefulRef] = useState<T | null>(null);
+  return useMemo(() => {
+    return [{ current }, statefulRef] as const;
+  }, [current, statefulRef]);
+}
 
 interface ComboboxInputProps extends ComboboxProps<unknown> {
   inputProps: InputHTMLAttributes<HTMLInputElement>;
