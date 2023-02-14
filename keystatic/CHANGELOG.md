@@ -1,5 +1,11 @@
 # keystatic
 
+## 0.0.30
+
+### Patch Changes
+
+- f8bb47c: Update syntax target
+
 ## 0.0.29
 
 ### Patch Changes
