@@ -81,7 +81,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
                       >
                         <Text>{ref.label}</Text>
                         <Text slot="description">
-                          {pluralize(counts.total, { singular: 'item' })}
+                          {pluralize(counts.total, { singular: 'entry', plural: 'entries' })}
                           {allChangesCount ? (
                             <> &middot; {pluralize(allChangesCount, { singular: 'change' })}</>
                           ) : null}
@@ -105,7 +105,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
                           >
                             <Icon src={plusIcon} />
                           </ActionButton>
-                          <Tooltip>New item</Tooltip>
+                          <Tooltip>New entry</Tooltip>
                         </TooltipTrigger>
                       </Item>
                     );

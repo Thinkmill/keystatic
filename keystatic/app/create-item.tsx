@@ -86,9 +86,9 @@ export function CreateItem(props: { collection: string; config: Config; basePath
           </Heading>
           <Icon src={chevronRightIcon} color="neutralSecondary" isHidden={{ below: 'tablet' }} />
           <Text color="neutralEmphasis" size="medium" weight="bold" marginEnd="regular">
-            New item
+            New entry
           </Text>
-          {isLoading && <ProgressCircle aria-label="Creating Item" isIndeterminate size="small" />}
+          {isLoading && <ProgressCircle aria-label="Creating entry" isIndeterminate size="small" />}
           <Button
             isDisabled={isLoading}
             prominence="high"
