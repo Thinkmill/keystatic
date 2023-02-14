@@ -348,7 +348,8 @@ const ComboboxInput = React.forwardRef(function ComboboxInput(
  * A combobox combines a text input with a listbox, and allows users to filter a
  * list of options.
  */
-const _ComboBox = React.forwardRef(Combobox as any) as <T>(
+const _Combobox: <T>(
   props: ComboboxProps<T> & { ref?: ForwardedRef<HTMLDivElement> }
-) => ReactElement;
-export { _ComboBox as Combobox };
+) => ReactElement = React.forwardRef(Combobox as any) as any;
+
+export { _Combobox as Combobox };
