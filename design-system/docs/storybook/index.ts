@@ -1,2 +1,2 @@
-export * from '@storybook/react';
-export * from '@storybook/addon-actions';
+export * from '../node_modules/@storybook/react';
+export * from '../node_modules/@storybook/addon-actions';

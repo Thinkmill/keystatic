@@ -1,6 +1,14 @@
+const fs = require('fs');
+const path = require('path');
+
 module.exports = {
   stories: [
-    '../../packages/*/stories/**/*.stories.@(js|jsx|ts|tsx)',
+    ...fs
+      .readdirSync(path.join(__dirname, '../../packages'))
+      .filter(dir =>
+        fs.existsSync(path.join(__dirname, `../../packages/${dir}/stories`))
+      )
+      .map(f => `../../packages/${f}/stories/**/*.stories.tsx`),
     '../stories/*.stories.@(js|jsx|ts|tsx)',
   ],
   addons: [
