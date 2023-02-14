@@ -1,5 +1,11 @@
 # keystatic
 
+## 0.0.29
+
+### Patch Changes
+
+- 871e04a: Fix local setup
+
 ## 0.0.28
 
 ### Patch Changes
