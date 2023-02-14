@@ -165,7 +165,8 @@ export function SidebarHeader(props: { repo: { owner: string; name: string } }) 
               );
             }}
           >
-            Are you sure you want to delete the "{data.currentBranch}" branch?
+            Are you sure you want to delete the "{data.currentBranch}" branch? This cannot be
+            undone.
           </AlertDialog>
         )}
       </DialogContainer>
