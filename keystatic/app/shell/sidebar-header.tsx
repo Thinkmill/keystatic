@@ -1,13 +1,16 @@
 import { Section, Item } from '@react-stately/collections';
-import { DialogContainer } from '@voussoir/dialog';
+import { gql } from '@ts-gql/tag/no-transform';
+import { AlertDialog, DialogContainer } from '@voussoir/dialog';
 import { Icon } from '@voussoir/icon';
 import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
 import { gitBranchPlusIcon } from '@voussoir/icon/icons/gitBranchPlusIcon';
+import { trashIcon } from '@voussoir/icon/icons/trashIcon';
 import { Flex } from '@voussoir/layout';
 import { ActionMenu } from '@voussoir/menu';
 import { Text } from '@voussoir/typography';
 import router from 'next/router';
 import { ReactElement, useContext, useMemo, useReducer } from 'react';
+import { useMutation } from 'urql';
 import { BranchPicker, CreateBranchDialog } from '../branch-selection';
 import { BranchInfoContext, useBaseCommit, useRepositoryId } from './data';
 
@@ -16,6 +19,16 @@ export function SidebarHeader(props: { repo: { owner: string; name: string } }) 
   const baseCommit = useBaseCommit();
   const repositoryId = useRepositoryId();
   const [newBranchDialogVisible, toggleNewBranchDialog] = useReducer(v => !v, false);
+  const [deleteBranchDialogVisible, toggleDeleteBranchDialog] = useReducer(v => !v, false);
+  const [, deleteBranch] = useMutation(
+    gql`
+      mutation DeleteBranch($refId: ID!) {
+        deleteRef(input: { refId: $refId }) {
+          __typename
+        }
+      }
+    ` as import('../../__generated__/ts-gql/DeleteBranch').type
+  );
   type GitItem = { icon: ReactElement; label: string; description: string; key: string };
   type GitSection = { key: string; label: string; children: GitItem[] };
   const gitMenuItems = useMemo(() => {
@@ -42,6 +55,14 @@ export function SidebarHeader(props: { repo: { owner: string; name: string } }) 
         label: 'Create pull request',
         description: 'Open a PR against this branch',
       });
+      if (!data.hasPullRequests) {
+        prSection.push({
+          key: 'delete-branch',
+          icon: trashIcon,
+          label: 'Delete branch',
+          description: 'Delete this branch',
+        });
+      }
     }
 
     if (data.hasPullRequests) {
@@ -70,6 +91,7 @@ export function SidebarHeader(props: { repo: { owner: string; name: string } }) 
         defaultBranch={data.defaultBranch}
         allBranches={data.allBranches}
       />
+
       <ActionMenu
         aria-label="git actions"
         prominence="low"
@@ -80,6 +102,10 @@ export function SidebarHeader(props: { repo: { owner: string; name: string } }) 
             case 'new-branch':
               toggleNewBranchDialog();
               break;
+            case 'delete-branch': {
+              toggleDeleteBranchDialog();
+              break;
+            }
             case 'related-pull-requests':
               let query = [
                 ['is', 'pr'],
@@ -121,6 +147,26 @@ export function SidebarHeader(props: { repo: { owner: string; name: string } }) 
             branchOid={baseCommit}
             repositoryId={repositoryId}
           />
+        )}
+      </DialogContainer>
+
+      <DialogContainer onDismiss={toggleDeleteBranchDialog}>
+        {deleteBranchDialogVisible && (
+          <AlertDialog
+            title="Delete item"
+            tone="critical"
+            cancelLabel="Cancel"
+            primaryActionLabel="Yes, delete"
+            autoFocusButton="cancel"
+            onPrimaryAction={async () => {
+              await deleteBranch({ refId: data.branchNameToId.get(data.currentBranch)! });
+              router.push(
+                router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + data.defaultBranch)
+              );
+            }}
+          >
+            Are you sure you want to delete the "{data.currentBranch}" branch?
+          </AlertDialog>
         )}
       </DialogContainer>
     </Flex>

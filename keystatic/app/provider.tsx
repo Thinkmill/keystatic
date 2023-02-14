@@ -101,6 +101,41 @@ export default function Provider({
                             }
                           );
                         },
+                        deleteRef(result, args, cache, _info) {
+                          cache.updateQuery(
+                            {
+                              query: AppShellQuery,
+                              variables: { owner: repo!.owner, name: repo!.name },
+                            },
+                            data => {
+                              if (
+                                data?.repository?.refs?.nodes &&
+                                result.deleteRef &&
+                                typeof result.deleteRef === 'object' &&
+                                '__typename' in result.deleteRef &&
+                                typeof args.input === 'object' &&
+                                args.input !== null &&
+                                'refId' in args.input &&
+                                typeof args.input.refId === 'string'
+                              ) {
+                                const refId = args.input.refId;
+                                return {
+                                  ...data,
+                                  repository: {
+                                    ...data.repository,
+                                    refs: {
+                                      ...data.repository.refs,
+                                      nodes: data.repository.refs.nodes.filter(
+                                        x => x?.id !== refId
+                                      ),
+                                    },
+                                  },
+                                };
+                              }
+                              return data;
+                            }
+                          );
+                        },
                       },
                     },
                   }),
