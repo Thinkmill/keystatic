@@ -9,7 +9,7 @@ import {
   renderWithProvider,
 } from '@voussoir/test-utils';
 
-import { Combobox, Item, Section } from '../src';
+import { Combobox, Item } from '../src';
 
 let onSelectionChange = jest.fn();
 let onOpenChange = jest.fn();
@@ -111,7 +111,7 @@ describe('combobox/Combobox', () => {
     let user = userEvent.setup();
     let { getByRole, queryByRole } = renderCombobox({
       isReadOnly: true,
-      defaultInputValue: 'Blargh',
+      defaultInputValue: 'default input value',
     });
 
     let combobox = getByRole('combobox') as HTMLInputElement;
@@ -121,7 +121,7 @@ describe('combobox/Combobox', () => {
     user.type(combobox, 'One');
 
     expect(queryByRole('listbox')).toBeNull();
-    expect(combobox.value).toBe('Blargh');
+    expect(combobox.value).toBe('default input value');
     expect(onOpenChange).not.toHaveBeenCalled();
     expect(onFocus).toHaveBeenCalled();
 
