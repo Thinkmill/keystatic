@@ -1,5 +1,5 @@
 import localConfig from '../../../local-config';
-import createKeystaticAPIRoute from '../../../src/api';
+import createKeystaticAPIRoute from 'keystatic/api';
 
 function requiredEnv(name: string, val: string | undefined): string {
   if (!val) {

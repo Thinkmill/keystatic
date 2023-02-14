@@ -12,8 +12,7 @@ import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { Text } from '@voussoir/typography';
 import { Flex } from '@voussoir/layout';
 
-import { config, collection, singleton } from './config';
-import { fields, component, NotEditable } from './DocumentEditor/component-blocks/api';
+import { config, collection, singleton, fields, component, NotEditable } from 'keystatic';
 
 function useObjectURL(data: Uint8Array | null) {
   const [url, setUrl] = useState<string | null>(null);

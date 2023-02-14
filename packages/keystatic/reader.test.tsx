@@ -1,7 +1,52 @@
 /** @jest-environment node */
 import path from 'path';
-import localConfig from './local-config';
+import { component, fields, collection, config } from './src';
 import { createReader } from './src/reader';
+
+const localConfig = config({
+  storage: {
+    kind: 'github',
+    repo: { owner: 'Thinkmill', name: 'keystatic-test-repo' },
+  },
+  collections: {
+    posts: collection({
+      label: 'Posts',
+      getItemSlug: data => data.slug,
+      schema: {
+        title: fields.text({ label: 'Title' }),
+        slug: fields.text({
+          label: 'Slug',
+          validation: { length: { min: 4 } },
+        }),
+        publishDate: fields.date({ label: 'Publish Date' }),
+        heroImage: fields.image({ label: 'Hero Image' }),
+        content: fields.document({
+          label: 'Content',
+          componentBlocks: {
+            image: component({
+              label: 'Image',
+              preview: function Preview() {
+                return null;
+              },
+              schema: {
+                image: fields.image({ label: 'Image' }),
+                alt: fields.text({ label: 'Alt text', multiline: true }),
+              },
+            }),
+          },
+        }),
+
+        authors: fields.array(
+          fields.object({
+            name: fields.text({ label: 'Name' }),
+            bio: fields.document({ label: 'Bio' }),
+          }),
+          { label: 'Authors', itemLabel: props => props.fields.name.value }
+        ),
+      },
+    }),
+  },
+});
 
 test('list', async () => {
   const reader = createReader(path.join(__dirname, 'test-data'), localConfig);
