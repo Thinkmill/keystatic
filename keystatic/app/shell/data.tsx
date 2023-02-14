@@ -152,6 +152,9 @@ export function GitHubAppShellProvider(props: {
       repositoryId: data?.repository?.id ?? '',
       allBranches: data?.repository?.refs?.nodes?.map(x => x?.name).filter(isDefined) ?? [],
       hasPullRequests: !!currentBranchRef?.associatedPullRequests.totalCount,
+      branchNameToId: new Map(
+        data?.repository?.refs?.nodes?.filter(isDefined).map(x => [x.name, x.id])
+      ),
     }),
     [
       data?.repository?.defaultBranchRef?.name,
@@ -302,6 +305,7 @@ function useGitHubTreeData(sha: string | null, repo: { owner: string; name: stri
 export const BranchInfoContext = createContext<{
   currentBranch: string;
   allBranches: string[];
+  branchNameToId: Map<string, string>;
   defaultBranch: string;
   hasPullRequests: boolean;
 }>({
@@ -309,6 +313,7 @@ export const BranchInfoContext = createContext<{
   allBranches: [],
   defaultBranch: '',
   hasPullRequests: false,
+  branchNameToId: new Map(),
 });
 
 function getChangedData(config: Config, trees: { current: TreeData; default: TreeData }) {
