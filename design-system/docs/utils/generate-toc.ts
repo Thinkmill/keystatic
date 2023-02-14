@@ -1,5 +1,5 @@
 import { RenderableTreeNodes, Tag } from '@markdoc/markdoc';
-import { stringifyDocContent } from './stringify-content';
+import { isTag, stringifyDocContent } from './utils';
 
 export type HeadingEntry = {
   items: HeadingEntry[];
@@ -13,11 +13,7 @@ export function generateToc(content: Tag): HeadingEntry[] {
   const nestedHeadings: HeadingEntry[] = [];
 
   for (const child of content.children) {
-    if (
-      typeof child !== 'string' &&
-      child !== null &&
-      child.name === 'Heading'
-    ) {
+    if (isTag(child) && child.name === 'Heading') {
       const id: string = child.attributes.id;
       const level: number = child.attributes.level;
       const entry: HeadingEntry = {

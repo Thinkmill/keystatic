@@ -75,7 +75,7 @@ export function createGenericApiRouteHandler(_config: APIRouteConfig) {
   };
   if (!_config2.clientId || !_config2.clientSecret || !_config2.url || !_config2.secret) {
     return async function keystaticAPIRoute(req: KeystaticRequest): Promise<KeystaticResponse> {
-      const { params = [] } = req.query as { params?: string[] };
+      const { params } = req;
       const joined = params.join('/');
       if (joined === 'github/created-app') {
         return createdGithubApp(req);

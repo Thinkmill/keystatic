@@ -28,7 +28,7 @@
     "test": "pnpm run test:unit",
     "test-strict": "cross-env STRICT_MODE=1 pnpm run test",
     "test:coverage": "jest ---coverage",
-    "test:unit": "jest packages/*",
+    "test:unit": "jest",
     "validate": "npm-run-all --parallel check:*",
     "version-packages": "changeset version && pnpm i --frozen-lockfile=false && pnpm run format ."
   },
@@ -73,7 +73,7 @@
   },
   "preconstruct": {
     "packages": [
-      "packages/*",
+      "design-system/packages/*",
       "keystatic"
     ],
     "exports": true

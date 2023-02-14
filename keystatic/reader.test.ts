@@ -26,6 +26,7 @@ test('read', async () => {
       ],
       "content": [Function],
       "heroImage": "heroImage.png",
+      "publishDate": null,
       "slug": "2023-is-finally-here",
       "title": "oh my there is dark mode, thank god Joss",
     }

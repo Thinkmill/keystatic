@@ -6,6 +6,7 @@ import { Fragment } from 'react';
 import { injectVoussoirStyles } from '@voussoir/core';
 import { SSRProvider } from '@voussoir/ssr';
 
+// @ts-ignore
 import navigation from '../generated/navigation.json';
 import { Layout } from '../components/layout';
 import { SidebarItem } from '../components/sidebar';

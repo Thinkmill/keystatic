@@ -1,5 +1,5 @@
 packages:
-  - 'packages/*'
-  - 'docs'
-  - 'docs/storybook'
+  - 'design-system/packages/*'
+  - 'design-system/docs'
+  - 'design-system/docs/storybook'
   - 'keystatic'

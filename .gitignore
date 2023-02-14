@@ -42,9 +42,9 @@ node_modules/
 dist
 
 # Docs
-docs/generated
-docs/public/playroom
-docs/public/storybook
+design-system/docs/generated
+design-system/docs/public/playroom
+design-system/docs/public/storybook
 
 # Test coverage
 coverage
