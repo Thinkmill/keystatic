@@ -153,7 +153,7 @@ export function SidebarHeader(props: { repo: { owner: string; name: string } }) 
       <DialogContainer onDismiss={toggleDeleteBranchDialog}>
         {deleteBranchDialogVisible && (
           <AlertDialog
-            title="Delete item"
+            title="Delete branch"
             tone="critical"
             cancelLabel="Cancel"
             primaryActionLabel="Yes, delete"
