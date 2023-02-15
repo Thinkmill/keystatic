@@ -33,15 +33,13 @@ export function useActionButtonStyles(
 
   return {
     ...toDataAttributes({
-      hovered: isHovered || undefined,
-      pressed: isPressed || undefined,
+      interaction: isPressed ? 'press' : isHovered ? 'hover' : undefined,
       prominence: prominence === 'default' ? undefined : prominence,
       selected: ('isSelected' in props && props.isSelected) || undefined,
     }),
     style: styleProps.style,
     className: classNames(
       actionButtonClassList.root(),
-      styleProps.className,
       css({
         alignItems: 'center',
         borderColor: 'transparent',
@@ -64,11 +62,7 @@ export function useActionButtonStyles(
         transitionTimingFunction: 'ease-out',
         userSelect: 'none',
 
-        '&:disabled, &[aria-disabled]': {
-          cursor: 'default',
-        },
-
-        // contents
+        // CONTENTS
         // NOTE: the `:has` selector isn't fully supported yet. since this is
         // cosmetic CSS we can avoid runtime checks in JS to improve perf
         [`&:has(${icon}):not(:has(${text}:not([hidden])))`]: {
@@ -78,7 +72,7 @@ export function useActionButtonStyles(
           fontWeight: 'inherit',
         },
 
-        // focus ring
+        // FOCUS RING
         '&::after': {
           borderRadius: `inherit`,
           content: '""',
@@ -94,7 +88,9 @@ export function useActionButtonStyles(
           boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
         },
 
-        // PROMINENCE: default
+        // PROMINENCE
+
+        // prominence: default
         '&:not([data-prominence])': {
           backgroundColor: tokenSchema.color.background.surface,
           borderColor: tokenSchema.color.alias.borderIdle,
@@ -102,13 +98,13 @@ export function useActionButtonStyles(
           color: tokenSchema.color.alias.foregroundIdle,
 
           // interactions
-          '&[data-hovered]': {
+          '&[data-interaction=hover]': {
             backgroundColor: tokenSchema.color.alias.backgroundHovered,
             borderColor: tokenSchema.color.alias.borderHovered,
             boxShadow: `${tokenSchema.size.shadow.small} ${tokenSchema.color.shadow.regular}`,
             color: tokenSchema.color.alias.foregroundHovered,
           },
-          '&[data-pressed]': {
+          '&[data-interaction=press]': {
             backgroundColor: tokenSchema.color.alias.backgroundPressed,
             borderColor: tokenSchema.color.alias.borderPressed,
             boxShadow: 'none',
@@ -119,29 +115,24 @@ export function useActionButtonStyles(
           '&[data-selected]': {
             backgroundColor: tokenSchema.color.alias.backgroundSelected,
             color: tokenSchema.color.foreground.neutralEmphasis,
-            '&[data-hovered]': {
+
+            '&[data-interaction=hover]': {
               backgroundColor:
                 tokenSchema.color.alias.backgroundSelectedHovered,
             },
           },
-          '&:disabled, &[aria-disabled]': {
-            backgroundColor: tokenSchema.color.background.surface,
-            borderColor: 'transparent',
-            boxShadow: 'none',
-            color: tokenSchema.color.alias.foregroundDisabled,
-          },
         },
 
-        // PROMINENCE: low
+        // prominence: low
         '&[data-prominence=low]': {
           color: tokenSchema.color.foreground.neutral,
 
           // interactions
-          '&[data-hovered]': {
+          '&[data-interaction=hover]': {
             backgroundColor: tokenSchema.color.alias.backgroundHovered,
             color: tokenSchema.color.foreground.neutralEmphasis,
           },
-          '&[data-pressed]': {
+          '&[data-interaction=press]': {
             backgroundColor: tokenSchema.color.alias.backgroundPressed,
           },
 
@@ -150,18 +141,24 @@ export function useActionButtonStyles(
             backgroundColor: tokenSchema.color.alias.backgroundSelected,
             borderColor: tokenSchema.color.alias.borderIdle,
             color: tokenSchema.color.foreground.neutralEmphasis,
-            '&[data-hovered]': {
+
+            '&[data-interaction=hover]': {
               backgroundColor:
                 tokenSchema.color.alias.backgroundSelectedHovered,
               borderColor: tokenSchema.color.alias.borderHovered,
             },
           },
-
-          '&:disabled, &[aria-disabled]': {
-            color: tokenSchema.color.alias.foregroundDisabled,
-          },
         },
-      })
+
+        // STATES
+        '&:disabled, &[aria-disabled=true], &[data-disabled=true]': {
+          backgroundColor: tokenSchema.color.alias.backgroundDisabled,
+          borderColor: 'transparent',
+          boxShadow: 'none',
+          color: tokenSchema.color.alias.foregroundDisabled,
+        },
+      }),
+      styleProps.className
     ),
   };
 }

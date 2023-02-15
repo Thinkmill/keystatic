@@ -19,6 +19,7 @@ storiesOf('Components/SearchField', module)
     'no visible label',
     render({ label: null, 'aria-label': 'Hidden label' })
   )
+  .add('no icon', render({ showIcon: false }))
   .add(
     'with description',
     render({

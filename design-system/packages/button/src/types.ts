@@ -2,6 +2,7 @@ import {
   FocusableDOMProps,
   FocusableProps,
   PressEvents,
+  ValidationState,
 } from '@react-types/shared';
 import { ReactNode } from 'react';
 
@@ -68,6 +69,19 @@ export type ActionButtonProps = {
   AriaProps &
   BaseStyleProps;
 
+// FieldButton
+// -----------------------------------------------------------------------------
+
+// The `FieldButton` is a special variant of the `ActionButton` that is used in
+// fields. Where it would be preferable to respond to e.g. `aria-invalid` or
+// `aria-expanded` on the field itself, this is not practical in all cases.
+// Thus, props are provided for styling this component while the appropriate
+// accessibility attributes could be applied to the parent or ancestor etc.
+export type FieldButtonProps = ActionButtonProps & {
+  isActive?: boolean;
+  validationState?: ValidationState;
+};
+
 // Button
 // -----------------------------------------------------------------------------
 
@@ -100,19 +114,6 @@ export type LinkElementProps = CommonProps &
   PartialRequired<Omit<AnchorDOMProps, 'type'>, 'href'>;
 
 export type ButtonProps = ButtonElementProps | LinkElementProps;
-
-// ToggleButton
-// -----------------------------------------------------------------------------
-
-export type ToggleButtonProps = {
-  /** Whether the element should be selected (controlled). */
-  isSelected?: boolean;
-  /** Whether the element should be selected (uncontrolled). */
-  defaultSelected?: boolean;
-  /** Handler that is called when the element's selection state changes. */
-  onChange?: (isSelected: boolean) => void;
-} & CommonProps &
-  AriaProps;
 
 // ButtonGroup
 // -----------------------------------------------------------------------------

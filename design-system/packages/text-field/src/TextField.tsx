@@ -4,7 +4,7 @@ import { forwardRef, ForwardRefExoticComponent, Ref } from 'react';
 
 import { TextFieldPrimitive } from './TextFieldPrimitive';
 import { TextFieldProps } from './types';
-import { validateProps } from './validateProps';
+import { validateTextFieldProps } from './validateTextFieldProps';
 
 /** Text fields allow users to input text with a keyboard. */
 export const TextField: ForwardRefExoticComponent<
@@ -13,7 +13,7 @@ export const TextField: ForwardRefExoticComponent<
   props,
   forwardedRef
 ) {
-  validateProps(props);
+  props = validateTextFieldProps(props);
   let domRef = useObjectRef(forwardedRef);
   let { labelProps, inputProps, descriptionProps, errorMessageProps } =
     useTextField(props, domRef);

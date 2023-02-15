@@ -1,7 +1,7 @@
 export const cssCustomProperties = `
 /**
  * Do not edit directly
- * Generated on Tue, 20 Dec 2022 03:02:55 GMT
+ * Generated on Thu, 09 Feb 2023 22:36:45 GMT
  */
 
 .ksv-theme {
@@ -46,7 +46,7 @@ export const cssCustomProperties = `
 }
 /**
  * Do not edit directly
- * Generated on Tue, 20 Dec 2022 03:02:55 GMT
+ * Generated on Thu, 09 Feb 2023 22:36:45 GMT
  */
 
 .ksv-theme--medium, .ksv-theme--large {
@@ -75,7 +75,7 @@ export const cssCustomProperties = `
 }
 /**
  * Do not edit directly
- * Generated on Tue, 20 Dec 2022 03:02:55 GMT
+ * Generated on Thu, 09 Feb 2023 22:36:45 GMT
  */
 
 .ksv-theme--light, .ksv-theme--dark {
@@ -124,17 +124,19 @@ export const cssCustomProperties = `
   --ksv-color-alias-foreground-pressed: var(--ksv-color-scale-slate11);
   --ksv-color-alias-foreground-hovered: var(--ksv-color-scale-slate11);
   --ksv-color-alias-foreground-idle: var(--ksv-color-scale-slate10);
+  --ksv-color-alias-border-invalid: var(--ksv-color-scale-red9);
   --ksv-color-alias-border-selected: var(--ksv-color-scale-indigo9);
   --ksv-color-alias-border-disabled: var(--ksv-color-scale-slate4);
   --ksv-color-alias-border-focused: var(--ksv-color-scale-indigo9);
   --ksv-color-alias-border-pressed: var(--ksv-color-scale-slate8);
   --ksv-color-alias-border-hovered: var(--ksv-color-scale-slate7);
   --ksv-color-alias-border-idle: var(--ksv-color-scale-slate6);
+  --ksv-color-alias-background-disabled: var(--ksv-color-scale-slate3);
   --ksv-color-alias-focus-ring: var(--ksv-color-scale-indigo9);
 }
 /**
  * Do not edit directly
- * Generated on Tue, 20 Dec 2022 03:02:55 GMT
+ * Generated on Thu, 09 Feb 2023 22:36:45 GMT
  */
 
 .ksv-theme--large {
@@ -238,7 +240,7 @@ export const cssCustomProperties = `
 }
 /**
  * Do not edit directly
- * Generated on Tue, 20 Dec 2022 03:02:55 GMT
+ * Generated on Thu, 09 Feb 2023 22:36:45 GMT
  */
 
 .ksv-theme--medium {
@@ -342,7 +344,7 @@ export const cssCustomProperties = `
 }
 /**
  * Do not edit directly
- * Generated on Tue, 20 Dec 2022 03:02:55 GMT
+ * Generated on Thu, 09 Feb 2023 22:36:45 GMT
  */
 
 .ksv-theme--dark {
@@ -442,7 +444,7 @@ export const cssCustomProperties = `
 }
 /**
  * Do not edit directly
- * Generated on Tue, 20 Dec 2022 03:02:55 GMT
+ * Generated on Thu, 09 Feb 2023 22:36:45 GMT
  */
 
 .ksv-theme--light {

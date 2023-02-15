@@ -1,4 +1,5 @@
 import { AriaSelectProps } from '@react-types/select';
+import { ActionButtonProps } from '@voussoir/button';
 
 import { FieldProps } from '@voussoir/field';
 import { BaseStyleProps } from '@voussoir/style';
@@ -25,4 +26,5 @@ export type PickerProps<T> = {
   shouldFlip?: boolean;
 } & AriaSelectProps<T> &
   FieldProps &
+  Pick<ActionButtonProps, 'prominence'> &
   BaseStyleProps;

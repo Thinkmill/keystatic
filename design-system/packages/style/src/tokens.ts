@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Tue, 20 Dec 2022 03:02:55 GMT
+ * Generated on Thu, 09 Feb 2023 22:36:45 GMT
  */
 
 export const tokenSchema = {
@@ -212,12 +212,14 @@ export const tokenSchema = {
       backgroundSelectedHovered:
         'var(--ksv-color-alias-background-selected-hovered)',
       focusRing: 'var(--ksv-color-alias-focus-ring)',
+      backgroundDisabled: 'var(--ksv-color-alias-background-disabled)',
       borderIdle: 'var(--ksv-color-alias-border-idle)',
       borderHovered: 'var(--ksv-color-alias-border-hovered)',
       borderPressed: 'var(--ksv-color-alias-border-pressed)',
       borderFocused: 'var(--ksv-color-alias-border-focused)',
       borderDisabled: 'var(--ksv-color-alias-border-disabled)',
       borderSelected: 'var(--ksv-color-alias-border-selected)',
+      borderInvalid: 'var(--ksv-color-alias-border-invalid)',
       foregroundIdle: 'var(--ksv-color-alias-foreground-idle)',
       foregroundHovered: 'var(--ksv-color-alias-foreground-hovered)',
       foregroundPressed: 'var(--ksv-color-alias-foreground-pressed)',

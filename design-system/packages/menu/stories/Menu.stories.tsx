@@ -9,7 +9,7 @@ import { boldIcon } from '@voussoir/icon/icons/boldIcon';
 import { italicIcon } from '@voussoir/icon/icons/italicIcon';
 import { Icon } from '@voussoir/icon';
 import { Kbd, Text } from '@voussoir/typography';
-import { Button } from '@voussoir/button';
+import { ActionButton } from '@voussoir/button';
 import { cloneElement } from 'react';
 
 let iconMap = {
@@ -412,13 +412,13 @@ storiesOf('Components/Menu', module)
         <div style={{ height: 200 }}>
           <div>Shouldn't be able to scroll here while Menu is open.</div>
           <MenuTrigger onOpenChange={action('onOpenChange')} defaultOpen>
-            <Button
+            <ActionButton
               onPress={action('press')}
               onPressStart={action('pressstart')}
               onPressEnd={action('pressend')}
             >
               Trigger
-            </Button>
+            </ActionButton>
             <Menu items={withSection} onAction={action('action')}>
               {item => (
                 <Section
@@ -454,13 +454,13 @@ storiesOf('Components/Menu', module)
         <label htmlFor="focus-before">Focus before</label>
         <input id="focus-before" />
         <MenuTrigger onOpenChange={action('onOpenChange')}>
-          <Button
+          <ActionButton
             onPress={action('press')}
             onPressStart={action('pressstart')}
             onPressEnd={action('pressend')}
           >
             Trigger
-          </Button>
+          </ActionButton>
           <Menu
             items={withSection}
             onAction={action('action')}
@@ -511,14 +511,14 @@ function render(
   let menuRender = cloneElement(menu, menuProps);
   return (
     <MenuTrigger onOpenChange={action('onOpenChange')} {...triggerProps}>
-      <Button
+      <ActionButton
         isDisabled={isDisabled}
         onPress={action('press')}
         onPressStart={action('pressstart')}
         onPressEnd={action('pressend')}
       >
         Trigger
-      </Button>
+      </ActionButton>
       {menuRender}
     </MenuTrigger>
   );

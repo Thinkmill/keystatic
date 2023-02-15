@@ -11,7 +11,7 @@ import { useHover } from '@react-aria/interactions';
 import { mergeProps, useObjectRef } from '@react-aria/utils';
 
 import { useProviderProps } from '@voussoir/core';
-import { SlotProvider, useSlotProps } from '@voussoir/slots';
+import { SlotProvider, SlotContextType, useSlotProps } from '@voussoir/slots';
 import { FocusRing } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
 import { filterDOMProps, isReactText } from '@voussoir/utils';
@@ -37,7 +37,7 @@ export const ActionButton: ForwardRefExoticComponent<
   props = useProviderProps(props);
   props = useSlotProps(props, 'button');
 
-  const children = useButtonChildren(props);
+  const children = useActionButtonChildren(props);
   const domRef = useObjectRef(forwardedRef);
   const { buttonProps, isPressed } = useButton(props, domRef);
   const { hoverProps, isHovered } = useHover({ isDisabled });
@@ -60,7 +60,10 @@ export const ActionButton: ForwardRefExoticComponent<
 // Utils
 // -----------------------------------------------------------------------------
 
-export const useButtonChildren = (props: CommonProps) => {
+export const useActionButtonChildren = (
+  props: CommonProps,
+  alternateSlots?: SlotContextType
+) => {
   const { children } = props;
 
   // avoid unnecessary re-renders
@@ -68,15 +71,17 @@ export const useButtonChildren = (props: CommonProps) => {
     return {
       icon: {
         UNSAFE_className: actionButtonClassList.declare('icon'),
+        ...alternateSlots?.icon,
       },
       text: {
         color: 'inherit',
         overflow: 'unset',
         trim: false,
         UNSAFE_className: actionButtonClassList.declare('text'),
+        ...alternateSlots?.text,
       },
     } as const;
-  }, []);
+  }, [alternateSlots]);
 
   return (
     <SlotProvider slots={slots}>

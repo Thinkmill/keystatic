@@ -3,10 +3,6 @@ import { action, storiesOf } from '@voussoir/storybook';
 import { useState } from 'react';
 
 import { Button } from '@voussoir/button';
-import { Box, Flex } from '@voussoir/layout';
-import { Text } from '@voussoir/typography';
-
-import { Item, Picker, Section } from '../src';
 import { alignCenterVerticalIcon } from '@voussoir/icon/icons/alignCenterVerticalIcon';
 import { alignStartVerticalIcon } from '@voussoir/icon/icons/alignStartVerticalIcon';
 import { alignEndVerticalIcon } from '@voussoir/icon/icons/alignEndVerticalIcon';
@@ -14,8 +10,12 @@ import { globeIcon } from '@voussoir/icon/icons/globeIcon';
 import { boldIcon } from '@voussoir/icon/icons/boldIcon';
 import { italicIcon } from '@voussoir/icon/icons/italicIcon';
 import { Icon } from '@voussoir/icon';
+import { Box, Flex } from '@voussoir/layout';
+import { Text } from '@voussoir/typography';
 
-let flatOptions = [
+import { Item, Picker, Section } from '../src';
+
+let flatItems = [
   { id: 1, name: 'Echidna' },
   { id: 2, name: 'Dingo' },
   { id: 3, name: 'Kangaroo' },
@@ -27,7 +27,7 @@ let flatOptions = [
   { id: 9, name: 'Bilby' },
 ];
 
-let withSection = [
+let nestedItems = [
   {
     name: 'Marsupials',
     children: [{ name: 'Bilby' }, { name: 'Kangaroo' }, { name: 'Quokka' }],
@@ -65,7 +65,7 @@ storiesOf('Components/Picker', module)
   .add('dynamic', () => (
     <Picker
       label="Test"
-      items={flatOptions}
+      items={flatItems}
       onSelectionChange={action('selectionChange')}
     >
       {item => <Item>{item.name}</Item>}
@@ -74,7 +74,7 @@ storiesOf('Components/Picker', module)
   .add('dynamic with sections', () => (
     <Picker
       label="Test"
-      items={withSection}
+      items={nestedItems}
       onSelectionChange={action('selectionChange')}
     >
       {item => (
@@ -325,7 +325,7 @@ storiesOf('Components/Picker', module)
     </Picker>
   ))
   .add('loading more', () => (
-    <Picker label="Test" isLoading items={flatOptions}>
+    <Picker label="Test" isLoading items={flatItems}>
       {item => <Item>{item.name}</Item>}
     </Picker>
   ))
@@ -336,7 +336,7 @@ storiesOf('Components/Picker', module)
       <input id="focus-before" />
       <Picker
         label="Focus test"
-        items={flatOptions}
+        items={flatItems}
         autoFocus
         onFocus={action('focus')}
         onBlur={action('blur')}

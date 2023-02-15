@@ -4,13 +4,13 @@ import { forwardRef, useCallback } from 'react';
 
 import { TextFieldPrimitive } from './TextFieldPrimitive';
 import { TextAreaProps } from './types';
-import { validateProps } from './validateProps';
+import { validateTextFieldProps } from './validateTextFieldProps';
 import { useTextField } from '@react-aria/textfield';
 
 /** Text areas allow users to input multiple lines of text with a keyboard. */
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   function TextArea({ onChange, ...props }, forwardedRef) {
-    validateProps(props);
+    props = validateTextFieldProps(props);
     let domRef = useObjectRef(forwardedRef);
     let [inputValue, setInputValue] = useControlledState(
       props.value,

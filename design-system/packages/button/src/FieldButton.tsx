@@ -1,52 +1,81 @@
 import { useButton } from '@react-aria/button';
 import { useHover } from '@react-aria/interactions';
 import { mergeProps, useObjectRef } from '@react-aria/utils';
-import { ForwardedRef, forwardRef, useMemo } from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  ForwardRefExoticComponent,
+  Ref,
+  useMemo,
+} from 'react';
 
-import { SlotProvider, useSlotProps } from '@voussoir/slots';
-import { BaseStyleProps, FocusRing, classNames, css } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
+import { useSlotProps } from '@voussoir/slots';
+import { FocusRing, classNames, css } from '@voussoir/style';
+import { PropsWithElementType } from '@voussoir/utils/ts';
 
-import { ActionButtonProps } from './types';
+import { FieldButtonProps } from './types';
 import { useActionButtonStyles } from './useActionButtonStyles';
+import { useActionButtonChildren } from './ActionButton';
 
-interface FieldButtonProps extends ActionButtonProps, DOMProps, BaseStyleProps {
-  isActive?: boolean;
-}
-
-/** @private Internal component for fields that don't accept text input. */
-export const FieldButton = forwardRef(function FieldButton(
-  props: FieldButtonProps,
+/** @private Internal component for composing complex field interactions. */
+export const FieldButton: ForwardRefExoticComponent<
+  FieldButtonProps & { ref?: Ref<HTMLButtonElement> }
+> = forwardRef(function FieldButton(
+  props: PropsWithElementType<FieldButtonProps>,
   forwardedRef: ForwardedRef<HTMLButtonElement>
 ) {
   props = useSlotProps(props, 'button');
-  let { isDisabled, children, autoFocus, isActive, ...otherProps } = props;
+  let {
+    elementType: ElementType = 'button',
+    isDisabled,
+    autoFocus,
+    isActive,
+  } = props;
   let domRef = useObjectRef(forwardedRef);
   let { buttonProps, isPressed } = useButton(props, domRef);
   let { hoverProps, isHovered } = useHover({ isDisabled });
-  const styleProps = useActionButtonStyles(otherProps, {
+  let { children, styleProps } = useFieldButton(props, {
     isHovered,
     isPressed: isActive ?? isPressed,
   });
-  let slots = useMemo(() => ({ text: { flex: true, truncate: true } }), []);
 
   return (
     <FocusRing autoFocus={autoFocus}>
-      <button
+      <ElementType
         {...styleProps}
         {...mergeProps(buttonProps, hoverProps)}
         ref={domRef}
         className={classNames(
           styleProps.className,
           css({
-            cursor: 'default',
             justifyContent: 'space-between',
             textAlign: 'start',
           })
         )}
+        style={{ ...styleProps.style, boxShadow: 'none' }}
       >
-        <SlotProvider slots={slots}>{children}</SlotProvider>
-      </button>
+        {children}
+      </ElementType>
     </FocusRing>
   );
 });
+
+// Utils
+// -----------------------------------------------------------------------------
+
+type FieldButtonState = {
+  isHovered: boolean;
+  isPressed: boolean;
+};
+
+export function useFieldButton(
+  props: FieldButtonProps,
+  state: FieldButtonState
+) {
+  let { isHovered, isPressed } = state;
+  const styleProps = useActionButtonStyles(props, { isHovered, isPressed });
+  let slots = useMemo(() => ({ text: { flex: true, truncate: true } }), []);
+  let children = useActionButtonChildren(props, slots);
+
+  return { children, styleProps };
+}
