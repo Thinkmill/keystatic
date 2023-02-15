@@ -1,7 +1,7 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { ForwardedRef, forwardRef, ReactElement, Ref } from 'react';
 
-import { messages } from '../intl';
+import localizedMessages from '../l10n.json';
 import { Menu } from './Menu';
 import { MenuTrigger } from './MenuTrigger';
 import { ActionMenuProps } from './types';
@@ -17,7 +17,7 @@ function ActionMenu<T extends object>(
   ref: ForwardedRef<HTMLButtonElement>
 ) {
   props = useSlotProps(props, 'actionMenu');
-  let stringFormatter = useLocalizedStringFormatter(messages);
+  let stringFormatter = useLocalizedStringFormatter(localizedMessages);
   let buttonProps = filterDOMProps(props, { labellable: true });
   if (buttonProps['aria-label'] === undefined) {
     buttonProps['aria-label'] = stringFormatter.format('moreActions');

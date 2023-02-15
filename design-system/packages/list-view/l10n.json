@@ -1,0 +1,138 @@
+{
+  "ar-AE": {
+    "loading": "جارٍ التحميل...",
+    "loadingMore": "جارٍ تحميل المزيد..."
+  },
+  "bg-BG": {
+    "loading": "Зареждане...",
+    "loadingMore": "Зареждане на още..."
+  },
+  "cs-CZ": {
+    "loading": "Načítání...",
+    "loadingMore": "Načítání dalších..."
+  },
+  "da-DK": {
+    "loading": "Indlæser...",
+    "loadingMore": "Indlæser flere..."
+  },
+  "de-DE": {
+    "loading": "Laden...",
+    "loadingMore": "Mehr laden ..."
+  },
+  "el-GR": {
+    "loading": "Φόρτωση...",
+    "loadingMore": "Φόρτωση περισσότερων..."
+  },
+  "en-US": {
+    "loading": "Loading…",
+    "loadingMore": "Loading more…"
+  },
+  "es-ES": {
+    "loading": "Cargando…",
+    "loadingMore": "Cargando más…"
+  },
+  "et-EE": {
+    "loading": "Laadimine...",
+    "loadingMore": "Laadi rohkem..."
+  },
+  "fi-FI": {
+    "loading": "Ladataan…",
+    "loadingMore": "Ladataan lisää…"
+  },
+  "fr-FR": {
+    "loading": "Chargement...",
+    "loadingMore": "Chargement supplémentaire..."
+  },
+  "he-IL": {
+    "loading": "טוען...",
+    "loadingMore": "טוען עוד..."
+  },
+  "hr-HR": {
+    "loading": "Učitavam...",
+    "loadingMore": "Učitavam još..."
+  },
+  "hu-HU": {
+    "loading": "Betöltés folyamatban…",
+    "loadingMore": "Továbbiak betöltése folyamatban…"
+  },
+  "it-IT": {
+    "loading": "Caricamento...",
+    "loadingMore": "Caricamento altri..."
+  },
+  "ja-JP": {
+    "loading": "読み込み中...",
+    "loadingMore": "さらに読み込み中..."
+  },
+  "ko-KR": {
+    "loading": "로드 중…",
+    "loadingMore": "추가 로드 중…"
+  },
+  "lt-LT": {
+    "loading": "Įkeliama...",
+    "loadingMore": "Įkeliama daugiau..."
+  },
+  "lv-LV": {
+    "loading": "Notiek ielāde...",
+    "loadingMore": "Tiek ielādēts vēl..."
+  },
+  "nb-NO": {
+    "loading": "Laster inn ...",
+    "loadingMore": "Laster inn flere ..."
+  },
+  "nl-NL": {
+    "loading": "Laden...",
+    "loadingMore": "Meer laden..."
+  },
+  "pl-PL": {
+    "loading": "Ładowanie...",
+    "loadingMore": "Wczytywanie większej liczby..."
+  },
+  "pt-BR": {
+    "loading": "Carregando...",
+    "loadingMore": "Carregando mais..."
+  },
+  "pt-PT": {
+    "loading": "A carregar...",
+    "loadingMore": "A carregar mais..."
+  },
+  "ro-RO": {
+    "loading": "Se încarcă...",
+    "loadingMore": "Se încarcă mai multe..."
+  },
+  "ru-RU": {
+    "loading": "Загрузка...",
+    "loadingMore": "Дополнительная загрузка..."
+  },
+  "sk-SK": {
+    "loading": "Načítava sa...",
+    "loadingMore": "Načítava sa viac..."
+  },
+  "sl-SI": {
+    "loading": "Nalaganje ...",
+    "loadingMore": "Nalaganje več vsebine ..."
+  },
+  "sr-SP": {
+    "loading": "Učitavam...",
+    "loadingMore": "Učitavam još..."
+  },
+  "sv-SE": {
+    "loading": "Läser in...",
+    "loadingMore": "Läser in mer..."
+  },
+  "tr-TR": {
+    "loading": "Yükleniyor...",
+    "loadingMore": "Daha fazla yükleniyor..."
+  },
+  "uk-UA": {
+    "loading": "Завантаження…",
+    "loadingMore": "Завантаження інших об’єктів..."
+  },
+  "zh-CN": {
+    "loading": "正在加载...",
+    "loadingMore": "正在加载更多..."
+  },
+  "zh-T": {
+    "loading": "載入中…",
+    "loadingMore": "正在載入更多…"
+  }
+}

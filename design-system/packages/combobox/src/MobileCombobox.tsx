@@ -38,7 +38,7 @@ import { TextFieldPrimitive } from '@voussoir/text-field';
 
 import { useProviderProps } from '@voussoir/core';
 
-import { messages } from '../intl';
+import localizedMessages from '../l10n.json';
 import { ComboboxProps } from './types';
 import { Flex } from '@voussoir/layout';
 import { Text } from '@voussoir/typography';
@@ -289,7 +289,7 @@ function ComboboxTray<T extends object>(props: ComboboxTrayProps<T>) {
   let popoverRef = useRef<HTMLDivElement>(null);
   let listBoxRef = useRef<HTMLDivElement>(null);
   let layout = useListBoxLayout(state);
-  let stringFormatter = useLocalizedStringFormatter(messages);
+  let stringFormatter = useLocalizedStringFormatter(localizedMessages);
 
   let { inputProps, listBoxProps, labelProps } = useComboBox(
     {

@@ -1,0 +1,138 @@
+{
+  "ar-AE": {
+    "(optional)": "(اختياري)",
+    "(required)": "(مطلوب)"
+  },
+  "bg-BG": {
+    "(optional)": "(незадължително)",
+    "(required)": "(задължително)"
+  },
+  "cs-CZ": {
+    "(optional)": "(volitelně)",
+    "(required)": "(požadováno)"
+  },
+  "da-DK": {
+    "(optional)": "(valgfrit)",
+    "(required)": "(obligatorisk)"
+  },
+  "de-DE": {
+    "(optional)": "(optional)",
+    "(required)": "(erforderlich)"
+  },
+  "el-GR": {
+    "(optional)": "(προαιρετικό)",
+    "(required)": "(απαιτείται)"
+  },
+  "en-US": {
+    "(optional)": "(optional)",
+    "(required)": "(required)"
+  },
+  "es-ES": {
+    "(optional)": "(opcional)",
+    "(required)": "(necesario)"
+  },
+  "et-EE": {
+    "(optional)": "(valikuline)",
+    "(required)": "(nõutav)"
+  },
+  "fi-FI": {
+    "(optional)": "(valinnainen)",
+    "(required)": "(pakollinen)"
+  },
+  "fr-FR": {
+    "(optional)": "(facultatif)",
+    "(required)": "(requis)"
+  },
+  "he-IL": {
+    "(optional)": "(אופציונלי)",
+    "(required)": "(נדרש)"
+  },
+  "hr-HR": {
+    "(optional)": "(opcionalno)",
+    "(required)": "(obvezno)"
+  },
+  "hu-HU": {
+    "(optional)": "(opcionális)",
+    "(required)": "(kötelező)"
+  },
+  "it-IT": {
+    "(optional)": "(facoltativo)",
+    "(required)": "(obbligatorio)"
+  },
+  "ja-JP": {
+    "(optional)": "（オプション）",
+    "(required)": "（必須）"
+  },
+  "ko-KR": {
+    "(optional)": "(선택 사항)",
+    "(required)": "(필수 사항)"
+  },
+  "lt-LT": {
+    "(optional)": "(pasirenkama)",
+    "(required)": "(privaloma)"
+  },
+  "lv-LV": {
+    "(optional)": "(neobligāti)",
+    "(required)": "(obligāti)"
+  },
+  "nb-NO": {
+    "(optional)": "(valgfritt)",
+    "(required)": "(obligatorisk)"
+  },
+  "nl-NL": {
+    "(optional)": "(optioneel)",
+    "(required)": "(vereist)"
+  },
+  "pl-PL": {
+    "(optional)": "(opcjonalne)",
+    "(required)": "(wymagane)"
+  },
+  "pt-BR": {
+    "(optional)": "(opcional)",
+    "(required)": "(obrigatório)"
+  },
+  "pt-PT": {
+    "(optional)": "(opcional)",
+    "(required)": "(obrigatório)"
+  },
+  "ro-RO": {
+    "(optional)": "(opţional)",
+    "(required)": "(obligatoriu)"
+  },
+  "ru-RU": {
+    "(optional)": "(дополнительно)",
+    "(required)": "(обязательно)"
+  },
+  "sk-SK": {
+    "(optional)": "(nepovinné)",
+    "(required)": "(povinné)"
+  },
+  "sl-SI": {
+    "(optional)": "(opcijsko)",
+    "(required)": "(obvezno)"
+  },
+  "sr-SP": {
+    "(optional)": "(opciono)",
+    "(required)": "(obavezno)"
+  },
+  "sv-SE": {
+    "(optional)": "(valfritt)",
+    "(required)": "(krävs)"
+  },
+  "tr-TR": {
+    "(optional)": "(isteğe bağlı)",
+    "(required)": "(gerekli)"
+  },
+  "uk-UA": {
+    "(optional)": "(необов’язково)",
+    "(required)": "(обов’язково)"
+  },
+  "zh-CN": {
+    "(optional)": "（可选）",
+    "(required)": "（必填）"
+  },
+  "zh-TW": {
+    "(optional)": "(選填)",
+    "(required)": "(必填)"
+  }
+}

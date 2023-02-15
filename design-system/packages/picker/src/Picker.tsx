@@ -30,7 +30,7 @@ import {
 import { Text } from '@voussoir/typography';
 import { isReactText } from '@voussoir/utils';
 
-import intlMessages from '../intl';
+import localizedMessages from '../l10n.json';
 import { PickerProps } from './types';
 
 function Picker<T extends object>(
@@ -39,7 +39,7 @@ function Picker<T extends object>(
 ) {
   props = useSlotProps(props, 'picker');
   props = useProviderProps(props);
-  let stringFormatter = useLocalizedStringFormatter(intlMessages);
+  let stringFormatter = useLocalizedStringFormatter(localizedMessages);
   let {
     align = 'start',
     autoComplete,

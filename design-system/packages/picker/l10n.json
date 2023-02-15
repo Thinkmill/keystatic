@@ -1,0 +1,138 @@
+{
+  "ar-AE": {
+    "loading": "جارٍ التحميل...",
+    "placeholder": "حدد خيارًا..."
+  },
+  "bg-BG": {
+    "loading": "Зареждане...",
+    "placeholder": "Изберете опция"
+  },
+  "cs-CZ": {
+    "loading": "Načítání...",
+    "placeholder": "Vyberte vhodnou možnost..."
+  },
+  "da-DK": {
+    "loading": "Indlæser ...",
+    "placeholder": "Vælg en mulighed ..."
+  },
+  "de-DE": {
+    "loading": "Laden...",
+    "placeholder": "Option auswählen..."
+  },
+  "el-GR": {
+    "loading": "Φόρτωση...",
+    "placeholder": "Επιλέξτε…"
+  },
+  "en-US": {
+    "placeholder": "Select an option…",
+    "loading": "Loading…"
+  },
+  "es-ES": {
+    "loading": "Cargando…",
+    "placeholder": "Selecciona una de estas opciones..."
+  },
+  "et-EE": {
+    "loading": "Laadimine...",
+    "placeholder": "Valige valikuline..."
+  },
+  "fi-FI": {
+    "loading": "Ladataan…",
+    "placeholder": "Valitse vaihtoehto..."
+  },
+  "fr-FR": {
+    "loading": "Chargement...",
+    "placeholder": "Sélectionnez une option..."
+  },
+  "he-IL": {
+    "loading": "טוען...",
+    "placeholder": "בחר אפשרות..."
+  },
+  "hr-HR": {
+    "loading": "Učitavam...",
+    "placeholder": "Odaberite opciju"
+  },
+  "hu-HU": {
+    "loading": "Betöltés folyamatban…",
+    "placeholder": "Válasszon egy opciót…"
+  },
+  "it-IT": {
+    "loading": "Caricamento...",
+    "placeholder": "Seleziona un’opzione..."
+  },
+  "ja-JP": {
+    "loading": "読み込み中...",
+    "placeholder": "オプションを選択..."
+  },
+  "ko-KR": {
+    "loading": "로드 중",
+    "placeholder": "선택 사항 선택"
+  },
+  "lt-LT": {
+    "loading": "Įkeliama...",
+    "placeholder": "Pasirinkite parinktį..."
+  },
+  "lv-LV": {
+    "loading": "Notiek ielāde...",
+    "placeholder": "Atlasiet opciju..."
+  },
+  "nb-NO": {
+    "loading": "Laster inn ...",
+    "placeholder": "Velg et alternativ..."
+  },
+  "nl-NL": {
+    "loading": "Laden...",
+    "placeholder": "Optie selecteren..."
+  },
+  "pl-PL": {
+    "loading": "Ładowanie...",
+    "placeholder": "Wybierz opcję..."
+  },
+  "pt-BR": {
+    "loading": "Carregando...",
+    "placeholder": "Selecione uma opção..."
+  },
+  "pt-PT": {
+    "loading": "A carregar...",
+    "placeholder": "Selecionar uma opção..."
+  },
+  "ro-RO": {
+    "loading": "Se încarcă...",
+    "placeholder": "Selectați o opțiune"
+  },
+  "ru-RU": {
+    "loading": "Загрузка...",
+    "placeholder": "Выбрать параметр..."
+  },
+  "sk-SK": {
+    "loading": "Načítava sa...",
+    "placeholder": "Vyberte možnosť..."
+  },
+  "sl-SI": {
+    "loading": "Nalaganje...",
+    "placeholder": "Izberite možnost"
+  },
+  "sr-SP": {
+    "loading": "Učitavam...",
+    "placeholder": "Izaberite opciju"
+  },
+  "sv-SE": {
+    "loading": "Läser in...",
+    "placeholder": "Välj ett alternativ..."
+  },
+  "tr-TR": {
+    "loading": "Yükleniyor...",
+    "placeholder": "Bir seçim yapın…"
+  },
+  "uk-UA": {
+    "loading": "Завантаження…",
+    "placeholder": "Виберіть опцію..."
+  },
+  "zh-CN": {
+    "loading": "正在加载...",
+    "placeholder": "选择一个选项..."
+  },
+  "zh-T": {
+    "loading": "正在載入",
+    "placeholder": "選取一個選項"
+  }
+}

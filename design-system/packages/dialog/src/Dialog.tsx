@@ -25,7 +25,7 @@ import {
 } from '@voussoir/style';
 import { toDataAttributes, useHasChild } from '@voussoir/utils';
 
-import intlMessages from '../intl';
+import localizedMessages from '../l10n.json';
 import { DialogContext, DialogContextValue } from './context';
 import { DialogProps, DialogSize, DialogType } from './types';
 
@@ -57,7 +57,7 @@ export const Dialog: ForwardRefExoticComponent<
     onDismiss = contextProps.onClose,
     size,
   } = props;
-  let stringFormatter = useLocalizedStringFormatter(intlMessages);
+  let stringFormatter = useLocalizedStringFormatter(localizedMessages);
 
   let domRef = useObjectRef(forwardedRef);
   let gridRef = useRef<HTMLDivElement>(null);
