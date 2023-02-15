@@ -1,7 +1,6 @@
 import { storiesOf, action } from '@voussoir/storybook';
 
-import { Button } from '@voussoir/button';
-// import { Text } from '@voussoir/typography';
+import { ActionButton } from '@voussoir/button';
 
 import { AlertDialog, AlertDialogProps, DialogTrigger } from '../src';
 import { getParagraph } from './common';
@@ -65,7 +64,7 @@ storiesOf('Components/Dialog/AlertDialog', module)
 function renderAlert({ ...props }: AlertDialogProps) {
   return (
     <DialogTrigger defaultOpen>
-      <Button>Trigger</Button>
+      <ActionButton>Open dialog</ActionButton>
       <AlertDialog
         {...props}
         onPrimaryAction={action('primary')}

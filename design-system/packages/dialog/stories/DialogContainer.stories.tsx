@@ -1,67 +1,82 @@
 import { chain } from '@react-aria/utils';
-import { action, ArgTypes, storiesOf } from '@voussoir/storybook';
-import { useState } from 'react';
+import { action, storiesOf } from '@voussoir/storybook';
+import { useReducer } from 'react';
 
-import { Button, ButtonGroup } from '@voussoir/button';
+import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
 import { Content, Header } from '@voussoir/slots';
 import { Heading, Text } from '@voussoir/typography';
 
-import { Dialog, DialogContainer } from '../src';
-import { useDialogContainer } from '../src/useDialogContainer';
+import {
+  Dialog,
+  DialogContainer,
+  DialogProps,
+  useDialogContainer,
+} from '../src';
 import { getParagraph } from './common';
 
-storiesOf('Components/DialogContainer', module).add(
-  'default',
-  (args: ArgTypes) => {
-    let [isOpen, setOpen] = useState(false);
+storiesOf('Components/Dialog/DialogContainer', module)
+  .add('default', () => {
+    let [isOpen, toggleOpen] = useReducer(b => !b, false);
 
     return (
       <>
-        <Button onPress={() => setOpen(true)}>Open dialog</Button>
-        <DialogContainer onDismiss={() => setOpen(false)} {...args}>
-          {isOpen && <ExampleDialog {...args} />}
+        <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
+        <DialogContainer onDismiss={toggleOpen}>
+          {isOpen && <ExampleDialog />}
         </DialogContainer>
       </>
     );
-  },
-  {
-    argTypes: {
-      isDismissable: {
-        defaultValue: true,
-        control: {
-          type: 'boolean',
-        },
-      },
-      type: {
-        control: {
-          type: 'select',
-          options: ['modal', 'fullscreen'],
-        },
-      },
-      size: {
-        control: {
-          type: 'select',
-          options: ['small', 'medium', 'large'],
-        },
-      },
-    },
-  }
-);
+  })
+  .add('isDismissable', () => {
+    let [isOpen, toggleOpen] = useReducer(b => !b, false);
 
-export function DialogContainerExample(props: any) {
-  let [isOpen, setOpen] = useState(false);
+    return (
+      <>
+        <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
+        <DialogContainer isDismissable onDismiss={toggleOpen}>
+          {isOpen && <ExampleDialog />}
+        </DialogContainer>
+      </>
+    );
+  })
+  .add('type=fullscreen', () => {
+    let [isOpen, toggleOpen] = useReducer(b => !b, false);
 
-  return (
-    <>
-      <Button onPress={() => setOpen(true)}>Open dialog</Button>
-      <DialogContainer onDismiss={() => setOpen(false)} {...props}>
-        {isOpen && <ExampleDialog {...props} />}
-      </DialogContainer>
-    </>
-  );
-}
+    return (
+      <>
+        <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
+        <DialogContainer type="fullscreen" onDismiss={toggleOpen}>
+          {isOpen && <ExampleDialog />}
+        </DialogContainer>
+      </>
+    );
+  })
+  .add('size=small', () => {
+    let [isOpen, toggleOpen] = useReducer(b => !b, false);
 
-function ExampleDialog(props: any) {
+    return (
+      <>
+        <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
+        <DialogContainer onDismiss={toggleOpen}>
+          {isOpen && <ExampleDialog size="small" />}
+        </DialogContainer>
+      </>
+    );
+  })
+  .add('size=large', () => {
+    let [isOpen, toggleOpen] = useReducer(b => !b, false);
+
+    return (
+      <>
+        <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
+        <DialogContainer onDismiss={toggleOpen}>
+          {isOpen && <ExampleDialog size="large" />}
+        </DialogContainer>
+      </>
+    );
+  });
+
+function ExampleDialog(props: Partial<DialogProps>) {
   let container = useDialogContainer();
 
   return (

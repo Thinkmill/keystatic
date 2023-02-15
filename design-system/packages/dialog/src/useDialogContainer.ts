@@ -8,6 +8,7 @@ export interface DialogContainerValue {
   dismiss(): void;
 }
 
+/** A dialog may be abstracted from its trigger; this hook provides access to context. */
 export function useDialogContainer(): DialogContainerValue {
   const context = useContext(DialogContext);
 
