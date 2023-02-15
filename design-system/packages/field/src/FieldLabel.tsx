@@ -5,7 +5,7 @@ import { css, tokenSchema } from '@voussoir/style';
 import { useTextStyles } from '@voussoir/typography';
 import { forwardRefWithAs } from '@voussoir/utils/ts';
 
-import intlMessages from '../intl';
+import localizedMessages from '../l10n.json';
 
 export type A11yLabelProps = {
   /**
@@ -63,7 +63,7 @@ export const FieldLabel = forwardRefWithAs<FieldLabelProps, 'label'>(
 // It could go on the listbox, but the current implementation doesn't render the
 // listbox until the dialog is open...
 function Asterisk({ supplementRequiredState }: A11yLabelProps) {
-  let stringFormatter = useLocalizedStringFormatter(intlMessages);
+  let stringFormatter = useLocalizedStringFormatter(localizedMessages);
   return (
     <span
       aria-label={

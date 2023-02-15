@@ -20,7 +20,7 @@ import { useProvider } from '@voussoir/core';
 import { ProgressCircle } from '@voussoir/progress';
 import { useStyleProps } from '@voussoir/style';
 
-import intlMessages from '../intl';
+import localizedMessages from '../l10n.json';
 import { ListBoxContext } from './context';
 import { ListBoxOption } from './ListBoxOption';
 import { ListBoxSection } from './ListBoxSection';
@@ -91,7 +91,7 @@ function ListBoxBase<T>(
     forwardedRef
   );
   let styleProps = useStyleProps(props);
-  let stringFormatter = useLocalizedStringFormatter(intlMessages);
+  let stringFormatter = useLocalizedStringFormatter(localizedMessages);
 
   // Sync loading state into the layout.
   layout.isLoading = !!props.isLoading;

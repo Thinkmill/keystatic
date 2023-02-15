@@ -26,10 +26,10 @@ import {
 } from '@voussoir/style';
 import { toDataAttributes } from '@voussoir/utils';
 
+import localizedMessages from '../l10n.json';
 import { ListViewProvider, useListViewContext } from './context';
 import { DragPreview as DragPreviewElement } from './DragPreview';
 import InsertionIndicator from './InsertionIndicator';
-import intlMessages from '../intl';
 import { ListViewItem } from './ListViewItem';
 import RootDropIndicator from './RootDropIndicator';
 import { ListViewProps } from './types';
@@ -110,7 +110,7 @@ function ListView<T extends object>(
       props.selectionStyle === 'highlight' ? 'replace' : 'toggle',
   });
   let { collection, selectionManager } = state;
-  let stringFormatter = useLocalizedStringFormatter(intlMessages);
+  let stringFormatter = useLocalizedStringFormatter(localizedMessages);
   let isLoading = loadingState === 'loading' || loadingState === 'loadingMore';
 
   let styleProps = useStyleProps(props);

@@ -1,16 +1,17 @@
 {
   "compilerOptions": {
+    "declaration": true,
+    "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "declaration": true,
     "jsx": "preserve",
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
     "noUnusedLocals": false,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
-    "downlevelIteration": true,
     "strict": true,
     "target": "esnext",
     "types": ["node", "jest"]

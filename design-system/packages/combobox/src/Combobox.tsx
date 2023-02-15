@@ -42,7 +42,7 @@ import {
 } from '@voussoir/text-field';
 import { Text } from '@voussoir/typography';
 
-import { messages } from '../intl';
+import localizedMessages from '../l10n.json';
 
 import { MobileCombobox } from './MobileCombobox';
 import { ComboboxProps } from './types';
@@ -79,7 +79,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
   } = props;
 
   let isAsync = loadingState != null;
-  let stringFormatter = useLocalizedStringFormatter(messages);
+  let stringFormatter = useLocalizedStringFormatter(localizedMessages);
   let buttonRef = useRef<HTMLButtonElement>(null);
   let inputRef = useRef<HTMLInputElement>(null);
   let listBoxRef = useRef<HTMLDivElement>(null);
@@ -235,7 +235,7 @@ const ComboboxInput = React.forwardRef(function ComboboxInput(
     isOpen,
     menuTrigger,
   } = props;
-  let stringFormatter = useLocalizedStringFormatter(messages);
+  let stringFormatter = useLocalizedStringFormatter(localizedMessages);
   let timeoutRef = useRef<NodeJS.Timeout>();
   let [showLoading, setShowLoading] = useState(false);
 
