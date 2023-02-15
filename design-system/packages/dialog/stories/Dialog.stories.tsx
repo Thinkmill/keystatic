@@ -1,6 +1,6 @@
 import { storiesOf } from '@voussoir/storybook';
 
-import { Button, ButtonGroup } from '@voussoir/button';
+import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
 import { Flex } from '@voussoir/layout';
 import { Content, Footer, Header } from '@voussoir/slots';
 import { Heading, Text } from '@voussoir/typography';
@@ -36,7 +36,7 @@ storiesOf('Components/Dialog', module)
   .add('without heading', () => {
     return (
       <DialogTrigger defaultOpen>
-        <Button>Trigger</Button>
+        <ActionButton>Open dialog</ActionButton>
         {close => (
           <Dialog aria-label="Inclusive label">
             <Content>{singleParagraph()}</Content>
@@ -52,7 +52,7 @@ storiesOf('Components/Dialog', module)
     let paragraphs = Array(8).fill(singleParagraph());
     return (
       <DialogTrigger defaultOpen>
-        <Button>Trigger</Button>
+        <ActionButton>Open dialog</ActionButton>
         {close => (
           <Dialog>
             <Heading>Long content</Heading>
@@ -84,7 +84,7 @@ function render({
 } = {}) {
   return (
     <DialogTrigger isDismissable={isDismissable} defaultOpen>
-      <Button>Trigger</Button>
+      <ActionButton>Open dialog</ActionButton>
       {close => (
         <Dialog {...props}>
           <Heading>Dialog heading</Heading>

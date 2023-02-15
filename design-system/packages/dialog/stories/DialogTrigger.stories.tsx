@@ -2,7 +2,7 @@ import { chain } from '@react-aria/utils';
 import { action, storiesOf } from '@voussoir/storybook';
 import { useRef } from 'react';
 
-import { Button, ButtonGroup } from '@voussoir/button';
+import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
 import { Flex } from '@voussoir/layout';
 import { Content, Header } from '@voussoir/slots';
 import { Heading, Text } from '@voussoir/typography';
@@ -10,7 +10,7 @@ import { Heading, Text } from '@voussoir/typography';
 import { AlertDialog, Dialog, DialogTrigger, DialogTriggerProps } from '../src';
 import { getParagraph } from './common';
 
-storiesOf('Components/DialogTrigger', module)
+storiesOf('Components/Dialog/DialogTrigger', module)
   .add('default', () => render({}))
   .add('type: popover', () => renderPopover({ type: 'popover' }))
   .add('type: modal', () => render({ type: 'modal' }))
@@ -32,13 +32,13 @@ storiesOf('Components/DialogTrigger', module)
     <div style={{ paddingTop: 100 }}>
       <input />
       <DialogTrigger isDismissable>
-        <Button>Trigger</Button>
+        <ActionButton>Open dialog</ActionButton>
         <Dialog>
           <Content>
             <input />
             <input />
             <DialogTrigger isDismissable>
-              <Button>Trigger</Button>
+              <ActionButton>Open dialog</ActionButton>
               <Dialog>
                 <Content>
                   <input />
@@ -54,13 +54,13 @@ storiesOf('Components/DialogTrigger', module)
   .add('nested popovers', () => (
     <div style={{ paddingTop: 100 }}>
       <DialogTrigger type="popover">
-        <Button>Trigger</Button>
+        <ActionButton>Open dialog</ActionButton>
         <Dialog>
           <Content>
             <input />
             <input />
             <DialogTrigger type="popover">
-              <Button>Trigger</Button>
+              <ActionButton>Open dialog</ActionButton>
               <Dialog>
                 <Content>Hi!</Content>
               </Dialog>
@@ -75,7 +75,7 @@ storiesOf('Components/DialogTrigger', module)
       <div style={{ paddingTop: 100, height: 100, overflow: 'auto' }}>
         <div style={{ height: 200 }}>
           <DialogTrigger type="popover">
-            <Button>Trigger</Button>
+            <ActionButton>Open dialog</ActionButton>
             <Dialog>
               <Content>
                 <input />
@@ -133,10 +133,10 @@ storiesOf('Components/DialogTrigger', module)
       containerPadding: 200,
     })
   )
-  .add('Close function with button: popover', () => (
+  .add('close function with button: popover', () => (
     <div style={{ display: 'flex', margin: '100px 0' }}>
       <DialogTrigger type="popover" onOpenChange={action('open change')}>
-        <Button>Trigger</Button>
+        <ActionButton>Open dialog</ActionButton>
         {close => (
           <Dialog>
             <Heading>Dialog title</Heading>
@@ -159,8 +159,8 @@ storiesOf('Components/DialogTrigger', module)
   .add('targetRef', () => <TriggerWithRef type="popover" />)
   .add('alert dialog', () => renderAlert({}))
   .add('crossoffset examples', () => (
-    <Flex gap="size-200" alignSelf="center">
-      <Flex gap="size-200" direction="column" alignItems="start">
+    <Flex gap="regular" alignSelf="center">
+      <Flex gap="regular" direction="column" alignItems="start">
         <span>Left Top</span>
         <div>
           <span>-50</span>
@@ -175,7 +175,7 @@ storiesOf('Components/DialogTrigger', module)
           {renderPopover({ placement: 'left top', crossOffset: 50 }, false)}
         </div>
       </Flex>
-      <Flex gap="size-200" direction="column" alignItems="start">
+      <Flex gap="regular" direction="column" alignItems="start">
         <span>Left</span>
         <div>
           <span>-50</span>
@@ -190,7 +190,7 @@ storiesOf('Components/DialogTrigger', module)
           {renderPopover({ placement: 'left', crossOffset: 50 }, false)}
         </div>
       </Flex>
-      <Flex gap="size-200" direction="column" alignItems="start">
+      <Flex gap="regular" direction="column" alignItems="start">
         <span>Left Bottom</span>
         <div>
           <span>-50</span>
@@ -209,9 +209,9 @@ storiesOf('Components/DialogTrigger', module)
   ))
   .add('trigger visible through underlay', () => renderTriggerNotCentered({}))
   .add('2 popovers', () => (
-    <Flex gap="size-200">
+    <Flex gap="regular">
       <DialogTrigger type="popover">
-        <Button>Trigger</Button>
+        <ActionButton>Open dialog</ActionButton>
         <Dialog>
           <Content>
             <input />
@@ -220,7 +220,7 @@ storiesOf('Components/DialogTrigger', module)
         </Dialog>
       </DialogTrigger>
       <DialogTrigger type="popover">
-        <Button>Trigger</Button>
+        <ActionButton>Open dialog</ActionButton>
         <Dialog>
           <Content>Hi!</Content>
         </Dialog>
@@ -232,7 +232,7 @@ function render({ width = 'auto', ...props }) {
   return (
     <div style={{ display: 'flex', width, margin: '100px 0' }}>
       <DialogTrigger {...props} onOpenChange={action('open change')}>
-        <Button>Trigger</Button>
+        <ActionButton>Open dialog</ActionButton>
         {close => (
           <Dialog>
             <Heading>Dialog title</Heading>
@@ -274,13 +274,13 @@ function renderTriggerNotCentered(props: Partial<DialogTriggerProps>) {
         isDismissable
         onOpenChange={action('open change')}
       >
-        <Button
+        <ActionButton
           onPressStart={action('onPressStart')}
           onPress={action('onPress')}
           onPressEnd={action('onPressEnd')}
         >
-          Trigger
-        </Button>
+          Open dialog
+        </ActionButton>
         <Dialog>
           <Heading>Dialog title</Heading>
           <Header>
@@ -311,7 +311,7 @@ function renderPopover({ width = 'auto', ...props }, withMargin = true) {
         {...props}
         onOpenChange={action('open change')}
       >
-        <Button>Trigger</Button>
+        <ActionButton>Open dialog</ActionButton>
         <Dialog>
           <Heading>Dialog title</Heading>
           <Header>
@@ -337,7 +337,7 @@ let TriggerWithRef = (props: Partial<DialogTriggerProps>) => {
         targetRef={ref}
         onOpenChange={action('open change')}
       >
-        <Button>Trigger</Button>
+        <ActionButton>Open dialog</ActionButton>
         <Dialog>
           <Heading>Dialog title</Heading>
           <Header>
@@ -361,7 +361,7 @@ function renderAlert({ width = 'auto', ...props }) {
   return (
     <div style={{ display: 'flex', width, margin: '100px 0' }}>
       <DialogTrigger {...props} onOpenChange={action('open change')}>
-        <Button>Trigger</Button>
+        <ActionButton>Open dialog</ActionButton>
         {close => (
           <AlertDialog
             title="Alert! Danger!"

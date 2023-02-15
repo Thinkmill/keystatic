@@ -11,7 +11,7 @@ import {
   useRef,
 } from 'react';
 
-import { Button } from '@voussoir/button';
+import { ActionButton } from '@voussoir/button';
 import { xIcon } from '@voussoir/icon/icons/xIcon';
 import { Icon } from '@voussoir/icon';
 import { Grid } from '@voussoir/layout';
@@ -124,7 +124,7 @@ export const Dialog: ForwardRefExoticComponent<
       <Grid ref={gridRef} {...gridStyleProps}>
         <SlotProvider slots={slots}>{children}</SlotProvider>
         {isDismissable && (
-          <Button
+          <ActionButton
             prominence="low"
             aria-label={stringFormatter.format('dismiss')}
             onPress={onDismiss}
@@ -138,7 +138,7 @@ export const Dialog: ForwardRefExoticComponent<
             })}
           >
             <Icon src={xIcon} size="medium" />
-          </Button>
+          </ActionButton>
         )}
       </Grid>
     </section>

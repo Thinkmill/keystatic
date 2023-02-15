@@ -17,8 +17,6 @@ type ButtonState = {
 };
 
 export const actionButtonClassList = new ClassList('ActionButton');
-actionButtonClassList.declare('icon');
-actionButtonClassList.declare('text');
 
 export function useActionButtonStyles(
   props: ActionButtonProps,
@@ -27,9 +25,6 @@ export function useActionButtonStyles(
   const { prominence = 'default' } = props;
   const { isHovered, isPressed } = state;
   const styleProps = useStyleProps(props);
-
-  let icon = actionButtonClassList.selector('icon');
-  let text = actionButtonClassList.selector('text');
 
   return {
     ...toDataAttributes({
@@ -54,8 +49,7 @@ export function useActionButtonStyles(
         justifyContent: 'center',
         minWidth: tokenSchema.size.element.regular,
         outline: 0,
-        gap: tokenSchema.size.space.small,
-        paddingInline: tokenSchema.size.space.medium,
+        paddingInline: tokenSchema.size.space.regular,
         position: 'relative',
         transitionDuration: '130ms',
         transitionProperty: 'background, border-color, box-shadow, color, ',
@@ -63,13 +57,9 @@ export function useActionButtonStyles(
         userSelect: 'none',
 
         // CONTENTS
-        // NOTE: the `:has` selector isn't fully supported yet. since this is
-        // cosmetic CSS we can avoid runtime checks in JS to improve perf
-        [`&:has(${icon}):not(:has(${text}:not([hidden])))`]: {
-          paddingInline: tokenSchema.size.space.regular,
-        },
         [actionButtonClassList.childSelector('text')]: {
           fontWeight: 'inherit',
+          marginInline: tokenSchema.size.space.small,
         },
 
         // FOCUS RING
