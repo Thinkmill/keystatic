@@ -4,16 +4,17 @@ import { ReactEditor, RenderElementProps, useSelected, useSlateStatic } from 'sl
 import { useOverlayTrigger } from '@react-aria/overlays';
 import { Item } from '@react-stately/collections';
 import { useOverlayTriggerState } from '@react-stately/overlays';
+import { matchSorter } from 'match-sorter';
 
 import { ActionButton } from '@voussoir/button';
 import { codeIcon } from '@voussoir/icon/icons/codeIcon';
 import { Icon } from '@voussoir/icon';
 import { Flex } from '@voussoir/layout';
 import { Popover } from '@voussoir/overlays';
-import { Picker } from '@voussoir/picker';
 import { css, tokenSchema } from '@voussoir/style';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { Kbd, Text } from '@voussoir/typography';
+import { Combobox } from '@voussoir/combobox';
 
 import Prism from './prism';
 import { useToolbarState } from './toolbar-state';
@@ -122,8 +123,6 @@ export function CodeElement({
   const triggerRef = useRef(null);
   const selected = useSelected();
 
-  const [isOpen, setIsOpen] = useState(false);
-
   const state = useOverlayTriggerState({
     isOpen: selected,
   });
@@ -132,7 +131,9 @@ export function CodeElement({
     triggerProps: { onPress: _onPress, ...triggerProps },
     overlayProps,
   } = useOverlayTrigger({ type: 'dialog' }, state, triggerRef);
-
+  const [inputValue, setInputValue] = useState(
+    element.language ? aliasesToLabel.get(element.language) ?? element.language : ''
+  );
   return (
     <>
       <Flex
@@ -160,27 +161,64 @@ export function CodeElement({
       </Flex>
       <Popover isNonModal {...overlayProps} triggerRef={triggerRef} state={state}>
         <Flex padding="medium" gap="regular">
-          <Picker
+          <Combobox
             aria-label="Language"
-            onOpenChange={open => {
-              setIsOpen(open);
+            allowsCustomValue
+            inputValue={inputValue}
+            onInputChange={setInputValue}
+            onBlur={() => {
+              const path = ReactEditor.findPath(editor, element);
+              const canonicalName = aliasesToCanonicalName.get(inputValue);
+              if (canonicalName !== undefined) {
+                setInputValue(canonicalNameToLabel.get(canonicalName)!);
+                Transforms.setNodes(editor, { language: canonicalName }, { at: path });
+                return;
+              }
+              const nameFromLabel = labelToCanonicalName.get(inputValue);
+              if (nameFromLabel !== undefined) {
+                Transforms.setNodes(editor, { language: nameFromLabel }, { at: path });
+                return;
+              }
+              if (inputValue === '') {
+                Transforms.unsetNodes(editor, 'language', { at: path });
+                return;
+              }
+              if (inputValue !== element.language) {
+                Transforms.setNodes(editor, { language: inputValue }, { at: path });
+              }
             }}
-            isOpen={isOpen}
             onSelectionChange={selection => {
               const path = ReactEditor.findPath(editor, element);
-              if (selection === 'none') {
-                Transforms.unsetNodes(editor, 'language', { at: path });
+              if (aliasesToCanonicalName.has(inputValue)) {
+                selection = aliasesToCanonicalName.get(inputValue)!;
+              }
+              if (selection === null) {
+                if (inputValue === '') {
+                  Transforms.unsetNodes(editor, 'language', { at: path });
+                } else {
+                  Transforms.setNodes(editor, { language: inputValue }, { at: path });
+                }
               } else {
                 Transforms.setNodes(editor, { language: selection as string }, { at: path });
+                const label = languages.find(lang => lang.value === selection)?.label;
+                if (label) {
+                  setInputValue(label);
+                }
               }
             }}
             selectedKey={
-              element.language === undefined ? 'none' : aliasesToCanonicalName.get(element.language)
+              element.language ? aliasesToCanonicalName.get(element.language) : undefined
             }
-            items={languages}
+            items={useMemo(
+              () =>
+                matchSorter(languagesWithAliases, inputValue, {
+                  keys: ['label', 'value', 'aliases'],
+                }),
+              [inputValue]
+            )}
           >
             {item => <Item key={item.value}>{item.label}</Item>}
-          </Picker>
+          </Combobox>
         </Flex>
       </Popover>
     </>
@@ -188,7 +226,6 @@ export function CodeElement({
 }
 
 const languages = [
-  { label: 'None', value: 'none' },
   { label: 'C', value: 'c' },
   { label: 'C++', value: 'cpp' },
   { label: 'Arduino', value: 'arduino' },
@@ -224,6 +261,9 @@ const languages = [
   { label: 'YAML', value: 'yaml' },
 ];
 
+const canonicalNameToLabel = new Map(languages.map(x => [x.value, x.label]));
+const labelToCanonicalName = new Map(languages.map(x => [x.label, x.value]));
+
 const languageToCanonicalName = new Map(
   languages.map(lang => [Prism.languages[lang.value], lang.value])
 );
@@ -236,4 +276,22 @@ const aliasesToCanonicalName = new Map(
     }
     return [[lang, canonicalName]];
   })
+);
+
+const languagesToAliases = new Map(languages.map(lang => [lang.value, [] as string[]]));
+
+for (const [alias, canonicalName] of aliasesToCanonicalName) {
+  languagesToAliases.get(canonicalName)!.push(alias);
+}
+const languagesWithAliases = [...languagesToAliases].map(([canonicalName, aliases]) => ({
+  label: canonicalNameToLabel.get(canonicalName)!,
+  value: canonicalName,
+  aliases,
+}));
+
+const aliasesToLabel = new Map(
+  [...aliasesToCanonicalName].map(([alias, canonicalName]) => [
+    alias,
+    canonicalNameToLabel.get(canonicalName)!,
+  ])
 );
