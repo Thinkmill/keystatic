@@ -12,8 +12,14 @@ import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { Text } from '@voussoir/typography';
 import { Flex } from '@voussoir/layout';
 
-import { config, collection, singleton } from './config';
-import { fields, component, NotEditable } from './DocumentEditor/component-blocks/api';
+import {
+  config,
+  collection,
+  singleton,
+  fields,
+  component,
+  NotEditable,
+} from 'keystatic';
 
 function useObjectURL(data: Uint8Array | null) {
   const [url, setUrl] = useState<string | null>(null);
@@ -60,22 +66,36 @@ export default config({
               label: 'Block Child',
               preview: props => <div>{props.fields.child.element}</div>,
               schema: {
-                child: fields.child({ kind: 'block', placeholder: 'Content...' }),
+                child: fields.child({
+                  kind: 'block',
+                  placeholder: 'Content...',
+                }),
               },
             }),
             inlineChild: component({
               label: 'Inline Child',
               preview: props => (
                 <div>
-                  <div>{props.fields.child.element}</div> <div>{props.fields.child2.element}</div>
+                  <div>{props.fields.child.element}</div>{' '}
+                  <div>{props.fields.child2.element}</div>
                 </div>
               ),
               schema: {
-                child: fields.child({ kind: 'inline', placeholder: 'Content...' }),
-                child2: fields.child({ kind: 'inline', placeholder: 'Content...' }),
+                child: fields.child({
+                  kind: 'inline',
+                  placeholder: 'Content...',
+                }),
+                child2: fields.child({
+                  kind: 'inline',
+                  placeholder: 'Content...',
+                }),
               },
             }),
-            something: component({ label: 'Some Component', preview: () => null, schema: {} }),
+            something: component({
+              label: 'Some Component',
+              preview: () => null,
+              schema: {},
+            }),
             image: component({
               label: 'Image',
               preview: function Preview(props) {
@@ -89,7 +109,11 @@ export default config({
                     <img
                       src={url}
                       alt={props.fields.alt.value}
-                      style={{ display: 'block', height: 140, maxWidth: '100%' }}
+                      style={{
+                        display: 'block',
+                        height: 140,
+                        maxWidth: '100%',
+                      }}
                     />
                   </NotEditable>
                 ) : null;
@@ -102,7 +126,9 @@ export default config({
             notice: component({
               preview: function (props) {
                 return (
-                  <Notice tone={props.fields.tone.value}>{props.fields.content.element}</Notice>
+                  <Notice tone={props.fields.tone.value}>
+                    {props.fields.content.element}
+                  </Notice>
                 );
               },
               label: 'Notice',
@@ -185,7 +211,10 @@ export default config({
                 links: fields.array(
                   fields.object({
                     heading: fields.text({ label: 'Heading' }),
-                    content: fields.child({ kind: 'inline', placeholder: 'Content...' }),
+                    content: fields.child({
+                      kind: 'inline',
+                      placeholder: 'Content...',
+                    }),
                     href: fields.text({ label: 'Link' }),
                   }),
                   {
@@ -211,7 +240,10 @@ export default config({
       getItemSlug: data => data.username,
       schema: {
         name: fields.text({ label: 'Name' }),
-        username: fields.text({ label: 'Username', validation: { length: { min: 4 } } }),
+        username: fields.text({
+          label: 'Username',
+          validation: { length: { min: 4 } },
+        }),
       },
     }),
     packages: collection({
