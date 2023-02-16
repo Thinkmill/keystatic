@@ -27,7 +27,7 @@ const locales = fields.object({
   'pt-PT': fields.text({ label: 'Portuguese (Portugal) 🇵🇹' }),
   'ro-RO': fields.text({ label: 'Romanian (Romania) 🇷🇴' }),
   'ru-RU': fields.text({ label: 'Russian (Russia) 🇷🇺' }),
-  'sk-SK': fields.text({ label: 'Slovakian (Slovakia) 🇸🇰' }),
+  'sk-SK': fields.text({ label: 'Slovak (Slovakia) 🇸🇰' }),
   'sl-SI': fields.text({ label: 'Slovenian (Slovenia) 🇸🇮' }),
   'sr-SP': fields.text({ label: 'Serbian (Serbia) 🇷🇸' }),
   'sv-SE': fields.text({ label: 'Swedish (Sweden) 🇸🇪' }),
