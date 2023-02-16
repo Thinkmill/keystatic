@@ -26,7 +26,7 @@ import {
 } from '..';
 import { DocumentFeatures } from '../document-features';
 import { isValidURL } from '../isValidURL';
-import { ActionButton } from '@voussoir/button';
+import { ActionButton, ButtonGroup } from '@voussoir/button';
 import { Flex } from '@voussoir/layout';
 import {
   CollectedFile,
@@ -628,14 +628,27 @@ export const fields = {
         return (
           <Flex direction="column" gap="medium">
             <FieldLabel>{label}</FieldLabel>
-            <ActionButton
-              alignSelf="start"
-              onPress={() => {
-                inputRef.current?.click();
-              }}
-            >
-              Upload
-            </ActionButton>
+
+            <ButtonGroup>
+              <ActionButton
+                alignSelf="start"
+                onPress={() => {
+                  inputRef.current?.click();
+                }}
+              >
+                Upload
+              </ActionButton>
+              {value.kind === 'uploaded' && (
+                <ActionButton
+                  onPress={() => {
+                    onChange({ kind: 'none' });
+                  }}
+                >
+                  Remove
+                </ActionButton>
+              )}
+            </ButtonGroup>
+
             {objectUrl && (
               <img
                 src={objectUrl}
