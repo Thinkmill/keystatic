@@ -179,7 +179,9 @@ function SingletonPage({
                   branchOid={baseCommit}
                   onCreate={async newBranch => {
                     await router.push(
-                      `/keystatic/branch/${newBranch}/singleton/${singleton}`
+                      `/keystatic/branch/${encodeURIComponent(
+                        newBranch
+                      )}/singleton/${encodeURIComponent(singleton)}`
                     );
                     update();
                   }}

@@ -142,7 +142,9 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
           {collectionsArray.length !== 0 && (
             <NavGroup title="Collections">
               {collectionsArray.map(([key, collection]) => {
-                const href = `${props.hrefBase}/collection/${key}`;
+                const href = `${props.hrefBase}/collection/${encodeURIComponent(
+                  key
+                )}`;
                 const changes = changedData.collections.get(key);
                 const allChangesCount = changes
                   ? changes.changed.size +

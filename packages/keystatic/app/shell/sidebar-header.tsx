@@ -164,7 +164,7 @@ export function SidebarHeader(props: {
               router.push(
                 router.asPath.replace(
                   /\/branch\/[^/]+/,
-                  '/branch/' + branchName
+                  '/branch/' + encodeURIComponent(branchName)
                 )
               );
             }}
@@ -189,7 +189,7 @@ export function SidebarHeader(props: {
               router.push(
                 router.asPath.replace(
                   /\/branch\/[^/]+/,
-                  '/branch/' + data.defaultBranch
+                  '/branch/' + encodeURIComponent(data.defaultBranch)
                 )
               );
             }}
