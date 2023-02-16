@@ -53,5 +53,15 @@ export default config({
         locales,
       },
     }),
+    git: collection({
+      directory: 'keystatic/l10n/git',
+      format: 'json',
+      label: 'Git related',
+      getItemSlug: data => data.key,
+      schema: {
+        key: fields.text({ label: 'Key' }),
+        locales,
+      },
+    }),
   },
 });
