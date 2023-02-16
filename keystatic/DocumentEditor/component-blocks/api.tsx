@@ -3,6 +3,7 @@ import {
   ReactElement,
   ReactNode,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -474,18 +475,40 @@ export const fields = {
     };
   },
   multiselect<Option extends { label: string; value: string }>({
+    label,
     options,
-    defaultValue,
+    defaultValue = [],
   }: {
     label: string;
     options: readonly Option[];
-    defaultValue: readonly Option['value'][];
+    defaultValue?: readonly Option['value'][];
   }): BasicFormField<readonly Option['value'][], readonly Option[]> {
     const valuesToOption = new Map(options.map(x => [x.value, x]));
     return {
       kind: 'form',
-      Input({}) {
-        return <span>TODO</span>;
+      Input({ value, onChange }) {
+        const labelId = useId();
+        return (
+          <Flex role="group" aria-labelledby={labelId} direction="column" gap="medium">
+            <FieldLabel elementType="span" id={labelId}>
+              {label}
+            </FieldLabel>
+            {options.map(option => (
+              <Checkbox
+                isSelected={value.includes(option.value)}
+                onChange={() => {
+                  if (value.includes(option.value)) {
+                    onChange(value.filter(x => x !== option.value));
+                  } else {
+                    onChange([...value, option.value]);
+                  }
+                }}
+              >
+                {option.label}
+              </Checkbox>
+            ))}
+          </Flex>
+        );
       },
       options,
       defaultValue,
