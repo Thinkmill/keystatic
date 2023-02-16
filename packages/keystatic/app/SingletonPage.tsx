@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useRouter } from './router';
 import { FormEvent, useMemo, useState } from 'react';
 
 import { Badge } from '@voussoir/badge';

@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useRouter } from '../router';
 import { useContext, useMemo } from 'react';
 
 import { ActionButton } from '@voussoir/button';
@@ -228,7 +228,7 @@ function Branches() {
             onSelectionChange={([key]) => {
               if (typeof key === 'string') {
                 router.push(
-                  router.asPath.replace(
+                  router.href.replace(
                     /\/branch\/[^/]+/,
                     '/branch/' + encodeURIComponent(key)
                   )
@@ -259,7 +259,7 @@ function Branches() {
                 onCreate={branchName => {
                   close();
                   router.push(
-                    router.asPath.replace(
+                    router.href.replace(
                       /\/branch\/[^/]+/,
                       '/branch/' + encodeURIComponent(branchName)
                     )
