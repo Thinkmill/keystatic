@@ -1,5 +1,27 @@
 # @voussoir/docs
 
+## 0.0.2
+
+### Patch Changes
+
+- 19eae03: implement combobox
+- Updated dependencies [19eae03]
+- Updated dependencies [d8b7c51]
+- Updated dependencies [92927f2]
+  - @voussoir/search-field@0.1.1
+  - @voussoir/text-field@0.1.1
+  - @voussoir/combobox@0.1.1
+  - @voussoir/listbox@0.1.1
+  - @voussoir/button@0.1.1
+  - @voussoir/dialog@0.2.0
+  - @voussoir/picker@0.1.1
+  - @voussoir/field@0.1.1
+  - @voussoir/slots@0.1.1
+  - @voussoir/style@0.1.1
+  - @voussoir/core@4.0.1
+  - @voussoir/menu@0.1.1
+  - @voussoir/list-view@0.1.1
+
 ## 0.0.1
 
 ### Patch Changes

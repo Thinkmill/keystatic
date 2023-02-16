@@ -1,5 +1,11 @@
 # @voussoir/style
 
+## 0.1.1
+
+### Patch Changes
+
+- 19eae03: implement combobox
+
 ## 0.1.0
 
 ### Minor Changes
