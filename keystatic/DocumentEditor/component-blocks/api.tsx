@@ -39,7 +39,7 @@ export type FormFieldValue =
 
 const emptyObject = {};
 
-const documentFeatures: DocumentFeatures = {
+const DEFAULT_DOCUMENT_FEATURES: DocumentFeatures = {
   dividers: true,
   formatting: {
     inlineMarks: {
@@ -778,8 +778,10 @@ export const fields = {
   document({
     label,
     componentBlocks = {},
+    documentFeatures = DEFAULT_DOCUMENT_FEATURES,
   }: {
     label: string;
+    documentFeatures?: DocumentFeatures;
     componentBlocks?: Record<string, ComponentBlock>;
   }): FormFieldWithFileRequiringContentsForReader<DocumentElement[], undefined, DocumentElement[]> {
     const parse =

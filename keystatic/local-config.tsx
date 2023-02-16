@@ -199,7 +199,31 @@ export default config({
         authors: fields.array(
           fields.object({
             name: fields.text({ label: 'Name' }),
-            bio: fields.document({ label: 'Bio' }),
+            bio: fields.document({
+              label: 'Bio',
+              documentFeatures: {
+                dividers: false,
+                formatting: {
+                  inlineMarks: {
+                    bold: true,
+                    code: false,
+                    italic: true,
+                    keyboard: false,
+                    strikethrough: false,
+                    subscript: false,
+                    superscript: false,
+                    underline: false,
+                  },
+                  alignment: { center: false, end: false },
+                  blockTypes: { blockquote: true, code: false },
+                  headingLevels: [2, 3, 4],
+                  listTypes: { ordered: true, unordered: true },
+                  softBreaks: true,
+                },
+                layouts: [],
+                links: true,
+              },
+            }),
           }),
           { label: 'Authors', itemLabel: props => props.fields.name.value }
         ),
