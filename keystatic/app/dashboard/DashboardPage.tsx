@@ -168,6 +168,7 @@ function Branches() {
   }, [branchInfo.allBranches, branchInfo.defaultBranch]);
   const baseCommit = useBaseCommit();
   const repositoryId = useRepositoryId();
+
   return (
     <Flex direction="column" gap="xlarge" order={{ mobile: -1, tablet: 1 }} minWidth={0}>
       <Grid gap="xlarge">
@@ -191,7 +192,9 @@ function Branches() {
             selectedKeys={[branchInfo.currentBranch]}
             onSelectionChange={([key]) => {
               if (typeof key === 'string') {
-                router.push(router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + key));
+                router.push(
+                  router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + encodeURIComponent(key))
+                );
               }
             }}
           >
@@ -211,7 +214,12 @@ function Branches() {
                 onDismiss={close}
                 onCreate={branchName => {
                   close();
-                  router.push(router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + branchName));
+                  router.push(
+                    router.asPath.replace(
+                      /\/branch\/[^/]+/,
+                      '/branch/' + encodeURIComponent(branchName)
+                    )
+                  );
                 }}
                 branchOid={baseCommit}
                 repositoryId={repositoryId}

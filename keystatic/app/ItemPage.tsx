@@ -202,7 +202,9 @@ function ItemPage(props: ItemPageProps) {
                 branchOid={baseCommit}
                 onCreate={async newBranch => {
                   await router.push(
-                    `/keystatic/branch/${newBranch}/collection/${collection}/item/${itemSlug}`
+                    `/keystatic/branch/${encodeURIComponent(
+                      newBranch
+                    )}/collection/${collection}/item/${itemSlug}`
                   );
                   const slug = collectionConfig.getItemSlug(state);
                   const hasUpdated = await update();

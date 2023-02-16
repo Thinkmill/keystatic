@@ -132,14 +132,13 @@ export function CreateItem(props: { collection: string; config: Config; basePath
           <CreateBranchDuringUpdateDialog
             branchOid={baseCommit}
             onCreate={async newBranch => {
-              await router.push(
-                `/keystatic/branch/${newBranch}/collection/${props.collection}/create`
-              );
+              let collectionPath = `/keystatic/branch/${encodeURIComponent(newBranch)}/collection/${
+                props.collection
+              }`;
+              await router.push(`${collectionPath}/create`);
               if (await createItem()) {
                 const slug = collectionConfig.getItemSlug(state);
-                router.push(
-                  `/keystatic/branch/${newBranch}/collection/${props.collection}/item/${slug}`
-                );
+                router.push(`${collectionPath}/item/${slug}`);
               }
             }}
             reason={createResult.reason}

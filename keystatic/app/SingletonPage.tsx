@@ -170,7 +170,9 @@ function SingletonPage({
                 <CreateBranchDuringUpdateDialog
                   branchOid={baseCommit}
                   onCreate={async newBranch => {
-                    await router.push(`/keystatic/branch/${newBranch}/singleton/${singleton}`);
+                    await router.push(
+                      `/keystatic/branch/${encodeURIComponent(newBranch)}/singleton/${singleton}`
+                    );
                     update();
                   }}
                   reason={updateResult.reason}
