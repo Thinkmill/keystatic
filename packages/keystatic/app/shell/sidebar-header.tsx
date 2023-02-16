@@ -8,7 +8,7 @@ import { trashIcon } from '@voussoir/icon/icons/trashIcon';
 import { Flex } from '@voussoir/layout';
 import { ActionMenu } from '@voussoir/menu';
 import { Text } from '@voussoir/typography';
-import router from 'next/router';
+import { useRouter } from '../router';
 import { ReactElement, useContext, useMemo, useReducer } from 'react';
 import { useMutation } from 'urql';
 import { BranchPicker, CreateBranchDialog } from '../branch-selection';
@@ -97,6 +97,7 @@ export function SidebarHeader(props: {
 
     return items;
   }, [data.currentBranch, data.defaultBranch, data.hasPullRequests]);
+  const router = useRouter();
   return (
     <Flex
       gap="regular"
@@ -162,7 +163,7 @@ export function SidebarHeader(props: {
             onCreate={branchName => {
               toggleNewBranchDialog();
               router.push(
-                router.asPath.replace(
+                router.href.replace(
                   /\/branch\/[^/]+/,
                   '/branch/' + encodeURIComponent(branchName)
                 )
@@ -187,7 +188,7 @@ export function SidebarHeader(props: {
                 refId: data.branchNameToId.get(data.currentBranch)!,
               });
               router.push(
-                router.asPath.replace(
+                router.href.replace(
                   /\/branch\/[^/]+/,
                   '/branch/' + encodeURIComponent(data.defaultBranch)
                 )

@@ -1,6 +1,6 @@
 import { OperationData } from '@ts-gql/tag';
 import { gql } from '@ts-gql/tag/no-transform';
-import { useRouter } from 'next/router';
+import { useRouter } from '../router';
 import { Config, GitHubConfig, LocalConfig } from '../../config';
 import {
   useMemo,
@@ -162,9 +162,9 @@ export function GitHubAppShellProvider(props: {
 
   useEffect(() => {
     if (error?.response.status === 401) {
-      window.location.href = `/api/keystatic/github/login?from=${(
-        router.query.rest as string[]
-      ).join('/')}`;
+      window.location.href = `/api/keystatic/github/login?from=${router.params.join(
+        '/'
+      )}`;
     }
     if (
       !data?.repository?.id &&

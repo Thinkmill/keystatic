@@ -10,7 +10,7 @@ import { MenuTrigger, Menu } from '@voussoir/menu';
 import { NavList, NavItem, NavGroup } from '@voussoir/nav-list';
 import { css, breakpointQueries, tokenSchema } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
-import router, { useRouter } from 'next/router';
+import { useRouter } from '../router';
 import {
   createContext,
   ReactNode,
@@ -42,7 +42,7 @@ export function SidebarProvider(props: { children: ReactNode }) {
 
   useEffect(() => {
     setSidebarOpen(false);
-  }, [router.asPath]);
+  }, [router.href]);
 
   const sidebarContext = { sidebarIsOpen, setSidebarOpen };
 
@@ -57,11 +57,12 @@ export const SIDEBAR_WIDTH = 320;
 
 export function Sidebar(props: { config: Config; hrefBase: string }) {
   const { sidebarIsOpen, setSidebarOpen } = useContext(SidebarContext);
+  const router = useRouter();
   const isCurrent = (href: string, { exact = false } = {}) => {
     if (exact) {
-      return href === router.asPath ? 'page' : undefined;
+      return href === router.href ? 'page' : undefined;
     }
-    return router.asPath.startsWith(href) ? 'page' : undefined;
+    return router.href.startsWith(href) ? 'page' : undefined;
   };
 
   const collectionsArray = Object.entries(props.config.collections || {});

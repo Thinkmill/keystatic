@@ -1,6 +1,11 @@
 import { gql } from '@ts-gql/tag/no-transform';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useRouter, Router, RouterProvider } from './router';
+import {
+  AnchorHTMLAttributes,
+  ReactElement,
+  RefAttributes,
+  useEffect,
+} from 'react';
 import { useQuery } from 'urql';
 
 import { injectVoussoirStyles } from '@voussoir/core';
@@ -85,114 +90,117 @@ function RedirectToBranch(props: { config: GitHubConfig }) {
   return null;
 }
 
-export function makePage<Collections extends { [key: string]: any }>(
-  config: Config<Collections>
-) {
-  function PageInner() {
-    const router = useRouter();
-    if (!router.isReady) return null;
-    const params = (router.query.rest ?? []) as string[];
-    let branch = null,
-      parsedParams,
-      basePath: string;
+function PageInner({ config }: { config: Config }) {
+  const { params } = useRouter();
+  let branch = null,
+    parsedParams,
+    basePath: string;
 
-    if (isGitHubConfig(config)) {
-      if (params.length === 0) {
-        return <RedirectToBranch config={config} />;
-      }
-      if (params.length === 1) {
-        if (params[0] === 'setup') return <KeystaticSetup config={config} />;
-        if (params[0] === 'repo-not-found') {
-          return <RepoNotFound config={config} />;
-        }
-        if (params[0] === 'from-template-deploy') {
-          return <FromTemplateDeploy config={config} />;
-        }
-        if (params[0] === 'created-github-app') {
-          return <CreatedGitHubApp config={config} />;
-        }
-      }
-      if (params[0] !== 'branch' || params.length < 2) {
-        return null;
-      }
-      branch = params[1];
-      basePath = `/keystatic/branch/${encodeURIComponent(branch)}`;
-      parsedParams = parseParamsWithoutBranch(params.slice(2));
-    } else {
-      parsedParams = parseParamsWithoutBranch(params);
-      basePath = '/keystatic';
+  if (isGitHubConfig(config)) {
+    if (params.length === 0) {
+      return <RedirectToBranch config={config} />;
     }
-    if (!parsedParams) return <Text>Not found</Text>;
-    return (
-      <AppShell
-        config={config}
-        currentBranch={branch || ''}
-        basePath={basePath}
-      >
-        {parsedParams?.collection ? (
-          parsedParams.collection in (config.collections || {}) ? (
-            parsedParams.kind === 'create' ? (
-              <CreateItem
-                collection={parsedParams.collection}
-                config={config}
-                basePath={basePath}
-              />
-            ) : parsedParams.kind === 'edit' ? (
-              <ItemPage
-                collection={parsedParams.collection}
-                basePath={basePath}
-                config={config}
-                itemSlug={parsedParams.slug}
-              />
-            ) : (
-              <CollectionPage
-                basePath={basePath}
-                collection={parsedParams.collection}
-                config={config as unknown as Config}
-              />
-            )
-          ) : (
-            <AppShellRoot>
-              <AppShellBody>
-                <Notice tone="critical">
-                  Collection "{parsedParams.collection}" not found.
-                </Notice>
-              </AppShellBody>
-            </AppShellRoot>
-          )
-        ) : parsedParams.singleton ? (
-          parsedParams.singleton in (config.singletons || {}) ? (
-            <SingletonPage
-              config={config as unknown as Config}
-              singleton={parsedParams.singleton}
+    if (params.length === 1) {
+      if (params[0] === 'setup') return <KeystaticSetup config={config} />;
+      if (params[0] === 'repo-not-found') {
+        return <RepoNotFound config={config} />;
+      }
+      if (params[0] === 'from-template-deploy') {
+        return <FromTemplateDeploy config={config} />;
+      }
+      if (params[0] === 'created-github-app') {
+        return <CreatedGitHubApp config={config} />;
+      }
+    }
+    if (params[0] !== 'branch' || params.length < 2) {
+      return null;
+    }
+    branch = params[1];
+    basePath = `/keystatic/branch/${encodeURIComponent(branch)}`;
+    parsedParams = parseParamsWithoutBranch(params.slice(2));
+  } else {
+    parsedParams = parseParamsWithoutBranch(params);
+    basePath = '/keystatic';
+  }
+  if (!parsedParams) return <Text>Not found</Text>;
+  return (
+    <AppShell config={config} currentBranch={branch || ''} basePath={basePath}>
+      {parsedParams?.collection ? (
+        parsedParams.collection in (config.collections || {}) ? (
+          parsedParams.kind === 'create' ? (
+            <CreateItem
+              collection={parsedParams.collection}
+              config={config}
+              basePath={basePath}
+            />
+          ) : parsedParams.kind === 'edit' ? (
+            <ItemPage
+              collection={parsedParams.collection}
+              basePath={basePath}
+              config={config}
+              itemSlug={parsedParams.slug}
             />
           ) : (
-            <AppShellRoot>
-              <AppShellBody>
-                <Notice tone="critical">
-                  Singleton "{parsedParams.singleton}" not found
-                </Notice>
-              </AppShellBody>
-            </AppShellRoot>
+            <CollectionPage
+              basePath={basePath}
+              collection={parsedParams.collection}
+              config={config as unknown as Config}
+            />
           )
         ) : (
-          <DashboardPage
+          <AppShellRoot>
+            <AppShellBody>
+              <Notice tone="critical">
+                Collection "{parsedParams.collection}" not found.
+              </Notice>
+            </AppShellBody>
+          </AppShellRoot>
+        )
+      ) : parsedParams.singleton ? (
+        parsedParams.singleton in (config.singletons || {}) ? (
+          <SingletonPage
             config={config as unknown as Config}
-            basePath={basePath}
+            singleton={parsedParams.singleton}
           />
-        )}
-      </AppShell>
-    );
-  }
-  return function Page() {
-    return (
+        ) : (
+          <AppShellRoot>
+            <AppShellBody>
+              <Notice tone="critical">
+                Singleton "{parsedParams.singleton}" not found
+              </Notice>
+            </AppShellBody>
+          </AppShellRoot>
+        )
+      ) : (
+        <DashboardPage
+          config={config as unknown as Config}
+          basePath={basePath}
+        />
+      )}
+    </AppShell>
+  );
+}
+
+export function Keystatic(props: {
+  config: Config;
+  router: Router;
+  link: (
+    props: { href: string } & AnchorHTMLAttributes<HTMLAnchorElement> &
+      RefAttributes<HTMLAnchorElement>
+  ) => ReactElement | null;
+}) {
+  return (
+    <RouterProvider router={props.router}>
       <Provider
         repo={
-          config.storage.kind === 'github' ? config.storage.repo : undefined
+          props.config.storage.kind === 'github'
+            ? props.config.storage.repo
+            : undefined
         }
+        Link={props.link}
       >
-        <PageInner />
+        <PageInner config={props.config} />
       </Provider>
-    );
-  };
+    </RouterProvider>
+  );
 }
