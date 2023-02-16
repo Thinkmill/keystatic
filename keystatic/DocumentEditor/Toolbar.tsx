@@ -36,6 +36,7 @@ import { ListButtons } from './lists';
 import { ToolbarSeparator } from './primitives';
 import { useToolbarState } from './toolbar-state';
 import { clearFormatting, useStaticEditor } from './utils';
+import { Picker } from '@voussoir/picker';
 
 export function Toolbar({
   documentFeatures,
@@ -164,58 +165,47 @@ const ToolbarScrollArea = (props: { children: ReactNode }) => {
   );
 };
 
+type HeadingItem = { name: string; id: string | number };
 const HeadingMenu = ({
   headingLevels,
 }: {
   headingLevels: DocumentFeatures['formatting']['headingLevels'];
 }) => {
   const { editor, textStyles } = useToolbarState();
-  const buttonLabel =
-    textStyles.selected === 'normal' ? 'Paragraph' : 'Heading ' + textStyles.selected;
   const isDisabled = textStyles.allowedHeadingLevels.length === 0;
+  const items = useMemo(() => {
+    let resolvedItems: HeadingItem[] = [{ name: 'Paragraph', id: 'normal' }];
+    headingLevels.forEach(level => {
+      resolvedItems.push({ name: `Heading ${level}`, id: level });
+    });
+    return resolvedItems;
+  }, [headingLevels]);
 
   return (
-    <MenuTrigger>
-      <ActionButton
-        prominence="low"
-        isDisabled={isDisabled}
-        width="size.alias.singleLineWidth"
-        UNSAFE_className={css({ justifyContent: 'space-between' })}
-      >
-        <Text>{buttonLabel}</Text>
-        <Icon src={chevronDownIcon} marginStart="auto" />
-      </ActionButton>
-      <Menu
-        width="size.alias.singleLineWidth"
-        selectionMode="single"
-        selectedKeys={
-          typeof textStyles.selected === 'number' ? [textStyles.selected.toString()] : []
-        }
-        onAction={key => {
-          const hNum = Number(key) as 1 | 2 | 3 | 4 | 5 | 6;
-          const isSelected = textStyles.selected === hNum;
-          if (isSelected) {
-            Transforms.unwrapNodes(editor, { match: n => n.type === 'heading' });
-          } else {
-            Transforms.setNodes(
-              editor,
-              { type: 'heading', level: hNum },
-              { match: node => node.type === 'paragraph' || node.type === 'heading' }
-            );
-          }
-          ReactEditor.focus(editor);
-        }}
-      >
-        {headingLevels.map(hNum => {
-          return (
-            <Item key={hNum.toString()} textValue={`Heading ${hNum}`}>
-              <Text>Heading {hNum}</Text>
-              <Kbd>{'#'.repeat(hNum)}⎵</Kbd>
-            </Item>
+    <Picker
+      flexShrink={0}
+      width="size.scale.1700"
+      prominence="low"
+      aria-label="Text block"
+      items={items}
+      isDisabled={isDisabled}
+      selectedKey={textStyles.selected}
+      onSelectionChange={selected => {
+        let key = selected as typeof textStyles.selected;
+        if (key === 'normal') {
+          Transforms.unwrapNodes(editor, { match: n => n.type === 'heading' });
+        } else {
+          Transforms.setNodes(
+            editor,
+            { type: 'heading', level: key },
+            { match: node => node.type === 'paragraph' || node.type === 'heading' }
           );
-        })}
-      </Menu>
-    </MenuTrigger>
+        }
+        ReactEditor.focus(editor);
+      }}
+    >
+      {item => <Item>{item.name}</Item>}
+    </Picker>
   );
 };
 
