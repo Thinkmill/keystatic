@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/test-next-app",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -18,7 +18,7 @@
     "@voussoir/notice": "^0.1.0",
     "@voussoir/tooltip": "^0.1.0",
     "@voussoir/typography": "^0.1.0",
-    "keystatic": "^0.0.31",
+    "keystatic": "^0.0.32",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

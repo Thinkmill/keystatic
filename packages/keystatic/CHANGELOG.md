@@ -1,5 +1,12 @@
 # keystatic
 
+## 0.0.32
+
+### Patch Changes
+
+- 152aca4: Add remove button to image fields
+- e067b3d: Fix viewing branches with slashes in them
+
 ## 0.0.31
 
 ### Patch Changes
