@@ -3,13 +3,14 @@ import { Flex } from '@voussoir/layout';
 import { Notice } from '@voussoir/notice';
 import { TextField } from '@voussoir/text-field';
 import { Text } from '@voussoir/typography';
-import { useRouter } from 'next/router';
+import { useRouter } from '../router';
 import { GitHubConfig } from '../../config';
 
 export function InstallGitHubApp(props: { config: GitHubConfig }) {
   const router = useRouter();
   const appSlug =
-    process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG ?? router.query.slug;
+    process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG ??
+    new URL(router.href, 'https://example.com').searchParams.get('slug');
   return (
     <Flex direction="column" gap="regular">
       <Flex alignItems="end" gap="regular">

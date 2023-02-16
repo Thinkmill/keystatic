@@ -2,7 +2,7 @@ import { Flex } from '@voussoir/layout';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../config';
-import { useRouter } from 'next/router';
+import { useRouter } from './router';
 import { Button } from '@voussoir/button';
 import { FormValueContentFromPreviewProps } from '../DocumentEditor/component-blocks/form-from-preview';
 import { createGetPreviewProps } from '../DocumentEditor/component-blocks/preview-props';

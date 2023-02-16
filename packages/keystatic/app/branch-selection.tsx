@@ -1,6 +1,6 @@
 import { gql } from '@ts-gql/tag/no-transform';
 import { ReactNode, useMemo, useRef, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from './router';
 import { useMutation } from 'urql';
 
 import { Button, ButtonGroup } from '@voussoir/button';
@@ -61,7 +61,7 @@ export function BranchPicker(props: BranchPickerProps) {
       onSelectionChange={key => {
         if (typeof key === 'string') {
           router.push(
-            router.asPath.replace(
+            router.href.replace(
               /\/branch\/[^/]+/,
               '/branch/' + encodeURIComponent(key)
             )

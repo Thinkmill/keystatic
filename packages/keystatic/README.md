@@ -12,7 +12,7 @@ export default createKeystaticAPIRoute({});
 ```
 
 ```ts
-// pages/keystatic/[[...rest]].tsx
+// pages/keystatic/[[...params]].tsx
 import { collection, component, config, fields, makePage } from 'keystatic';
 
 export default makePage(
