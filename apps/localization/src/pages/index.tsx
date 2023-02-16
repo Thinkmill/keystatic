@@ -15,7 +15,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <h1 className={styles.title}>Keystatic Localization</h1>
+        <h1>Keystatic Localization</h1>
         <p>
           This app offers an interface to manage the l10n data for{' '}
           <a href="https://github.com/Thinkmill/keystatic">Keystatic</a>.
