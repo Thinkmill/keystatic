@@ -65,16 +65,26 @@ const keystaticRouteRegex =
 export function createGenericApiRouteHandler(_config: APIRouteConfig) {
   const _config2: APIRouteConfig = {
     clientId: _config.clientId ?? process.env.KEYSTATIC_GITHUB_CLIENT_ID,
-    clientSecret: _config.clientSecret ?? process.env.KEYSTATIC_GITHUB_CLIENT_SECRET,
+    clientSecret:
+      _config.clientSecret ?? process.env.KEYSTATIC_GITHUB_CLIENT_SECRET,
     url:
       _config.url ??
       process.env.KEYSTATIC_URL ??
-      (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : undefined),
+      (process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : undefined),
     secret: _config.secret ?? process.env.KEYSTATIC_SECRET,
     config: _config.config,
   };
-  if (!_config2.clientId || !_config2.clientSecret || !_config2.url || !_config2.secret) {
-    return async function keystaticAPIRoute(req: KeystaticRequest): Promise<KeystaticResponse> {
+  if (
+    !_config2.clientId ||
+    !_config2.clientSecret ||
+    !_config2.url ||
+    !_config2.secret
+  ) {
+    return async function keystaticAPIRoute(
+      req: KeystaticRequest
+    ): Promise<KeystaticResponse> {
       const { params } = req;
       const joined = params.join('/');
       if (joined === 'github/created-app') {
@@ -105,14 +115,19 @@ export function createGenericApiRouteHandler(_config: APIRouteConfig) {
     config: _config2.config,
   };
 
-  return async function keystaticAPIRoute(req: KeystaticRequest): Promise<KeystaticResponse> {
+  return async function keystaticAPIRoute(
+    req: KeystaticRequest
+  ): Promise<KeystaticResponse> {
     const { params } = req;
     const joined = params.join('/');
     if (joined === 'github/oauth/callback') {
       return githubOauthCallback(req, config);
     }
     if (joined === 'from-template-deploy') {
-      return { kind: 'redirect', to: `${config.url}/keystatic/from-template-deploy` };
+      return {
+        kind: 'redirect',
+        to: `${config.url}/keystatic/from-template-deploy`,
+      };
     }
     if (config.config?.storage.kind === 'local') {
       if (req.method === 'GET' && joined === 'tree') {
@@ -128,14 +143,18 @@ export function createGenericApiRouteHandler(_config: APIRouteConfig) {
 
     if (joined === 'github/login') {
       const from =
-        typeof req.query.from === 'string' && keystaticRouteRegex.test(req.query.from)
+        typeof req.query.from === 'string' &&
+        keystaticRouteRegex.test(req.query.from)
           ? req.query.from
           : '/';
 
       const state = randomBytes(10).toString('hex');
       const url = new URL('https://github.com/login/oauth/authorize');
       url.searchParams.set('client_id', config.clientId);
-      url.searchParams.set('redirect_uri', `${config.url}/api/keystatic/github/oauth/callback`);
+      url.searchParams.set(
+        'redirect_uri',
+        `${config.url}/api/keystatic/github/oauth/callback`
+      );
       url.searchParams.set('state', state);
       return {
         kind: 'redirect',
@@ -180,13 +199,18 @@ async function githubOauthCallback(
   }
   const fromCookie = req.cookies['ks-' + req.query.state];
   const from =
-    typeof fromCookie === 'string' && keystaticRouteRegex.test(fromCookie) ? fromCookie : undefined;
+    typeof fromCookie === 'string' && keystaticRouteRegex.test(fromCookie)
+      ? fromCookie
+      : undefined;
   const url = new URL('https://github.com/login/oauth/access_token');
   url.searchParams.set('client_id', config.clientId);
   url.searchParams.set('client_secret', config.clientSecret);
   url.searchParams.set('code', req.query.code as string);
 
-  const tokenRes = await fetch(url, { method: 'POST', headers: { Accept: 'application/json' } });
+  const tokenRes = await fetch(url, {
+    method: 'POST',
+    headers: { Accept: 'application/json' },
+  });
   if (!tokenRes.ok) {
     return { kind: 'response', status: 401, body: 'Authorization failed' };
   }
@@ -199,12 +223,17 @@ async function githubOauthCallback(
   if (req.cookies['ks-template']) {
     const [owner, repo] = req.cookies['ks-template'].split('/');
 
-    const fetchGraphQL = async <TTypedDocumentNode extends TypedDocumentNode<BaseOperations>>(
+    const fetchGraphQL = async <
+      TTypedDocumentNode extends TypedDocumentNode<BaseOperations>
+    >(
       operation: TTypedDocumentNode,
       ...variables:
         | [OperationVariables<TTypedDocumentNode>]
         | ({} extends OperationVariables<TTypedDocumentNode> ? [] : never)
-    ): Promise<{ data: OperationData<TTypedDocumentNode>; errors?: GraphQLFormattedError[] }> => {
+    ): Promise<{
+      data: OperationData<TTypedDocumentNode>;
+      errors?: GraphQLFormattedError[];
+    }> => {
       const res = await fetch('https://api.github.com/graphql', {
         method: 'POST',
         headers: {
@@ -278,7 +307,11 @@ async function githubOauthCallback(
       const configFile =
         data.repository.defaultBranchRef?.target?.__typename === 'Commit'
           ? data.repository.defaultBranchRef.target.tree?.entries?.find(
-              (x): x is typeof x & { object: { __typename: 'Blob'; text: string } } =>
+              (
+                x
+              ): x is typeof x & {
+                object: { __typename: 'Blob'; text: string };
+              } =>
                 (x.name === 'keystatic.ts' || x.name === 'keystatic.tsx') &&
                 x.object?.__typename === 'Blob' &&
                 x.object.text !== null
@@ -286,12 +319,20 @@ async function githubOauthCallback(
           : undefined;
       if (defaultBranchName && defaultBranchSha && configFile) {
         const configFileText = configFile.object.text
-          .replace('process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_OWNER!', `"${owner}"`)
-          .replace('process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_SLUG!', `"${repo}"`);
+          .replace(
+            'process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_OWNER!',
+            `"${owner}"`
+          )
+          .replace(
+            'process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_SLUG!',
+            `"${repo}"`
+          );
         if (configFileText !== configFile.object.text) {
           await fetchGraphQL(
             gql`
-              mutation CreateCommitToUpdateRepo($input: CreateCommitOnBranchInput!) {
+              mutation CreateCommitToUpdateRepo(
+                $input: CreateCommitOnBranchInput!
+              ) {
                 createCommitOnBranch(input: $input) {
                   __typename
                 }
@@ -305,7 +346,9 @@ async function githubOauthCallback(
                 fileChanges: {
                   additions: [
                     {
-                      contents: Buffer.from(configFileText, 'utf-8').toString('base64'),
+                      contents: Buffer.from(configFileText, 'utf-8').toString(
+                        'base64'
+                      ),
                       path: configFile.name,
                     },
                   ],
@@ -350,7 +393,9 @@ async function getTokenCookies(
           secure: process.env.NODE_ENV === 'production',
           httpOnly: true,
           maxAge: tokenData.refresh_token_expires_in,
-          expires: new Date(Date.now() + tokenData.refresh_token_expires_in * 100),
+          expires: new Date(
+            Date.now() + tokenData.refresh_token_expires_in * 100
+          ),
           path: '/',
         }
       ),
@@ -365,12 +410,19 @@ async function getTokenCookies(
   };
 }
 
-async function getRefreshToken(req: KeystaticRequest, config: InnerAPIRouteConfig) {
+async function getRefreshToken(
+  req: KeystaticRequest,
+  config: InnerAPIRouteConfig
+) {
   const refreshTokenCookie = req.cookies['keystatic-gh-refresh-token'];
   if (!refreshTokenCookie) return;
   let refreshToken;
   try {
-    refreshToken = await Iron.unseal(refreshTokenCookie, config.secret, Iron.defaults);
+    refreshToken = await Iron.unseal(
+      refreshTokenCookie,
+      config.secret,
+      Iron.defaults
+    );
   } catch {
     return;
   }
@@ -391,7 +443,10 @@ async function githubRefreshToken(
   url.searchParams.set('client_secret', config.clientSecret);
   url.searchParams.set('grant_type', 'refresh_token');
   url.searchParams.set('refresh_token', refreshToken);
-  const tokenRes = await fetch(url, { method: 'POST', headers: { Accept: 'application/json' } });
+  const tokenRes = await fetch(url, {
+    method: 'POST',
+    headers: { Accept: 'application/json' },
+  });
 
   if (!tokenRes.ok) {
     return { kind: 'response', status: 401, body: 'Authorization failed' };
@@ -416,11 +471,20 @@ const ghAppSchema = z.object({
   client_secret: z.string(),
 });
 
-async function createdGithubApp(req: KeystaticRequest): Promise<KeystaticResponse> {
+async function createdGithubApp(
+  req: KeystaticRequest
+): Promise<KeystaticResponse> {
   if (process.env.NODE_ENV !== 'development') {
-    return { kind: 'response', status: 400, body: 'App setup only allowed in development' };
+    return {
+      kind: 'response',
+      status: 400,
+      body: 'App setup only allowed in development',
+    };
   }
-  if (typeof req.query.code !== 'string' || !/^[a-zA-Z0-9]+$/.test(req.query.code)) {
+  if (
+    typeof req.query.code !== 'string' ||
+    !/^[a-zA-Z0-9]+$/.test(req.query.code)
+  ) {
     return { kind: 'response', status: 400, body: 'Bad Request' };
   }
   const ghAppRes = await fetch(
@@ -474,7 +538,10 @@ NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=${ghAppDataResult.data.slug}
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-async function tree(req: KeystaticRequest, config: Config): Promise<KeystaticResponse> {
+async function tree(
+  req: KeystaticRequest,
+  config: Config
+): Promise<KeystaticResponse> {
   if (req.headers['no-cors'] !== '1') {
     return { kind: 'response', status: 400, body: 'Bad Request' };
   }
@@ -505,7 +572,10 @@ function getIsPathValid(config: Config) {
     allowedDirectories.some(x => filepath.startsWith(x));
 }
 
-async function blob(req: KeystaticRequest, config: Config): Promise<KeystaticResponse> {
+async function blob(
+  req: KeystaticRequest,
+  config: Config
+): Promise<KeystaticResponse> {
   if (req.headers['no-cors'] !== '1') {
     return {
       kind: 'response',
@@ -538,8 +608,14 @@ async function blob(req: KeystaticRequest, config: Config): Promise<KeystaticRes
   return { kind: 'response', status: 200, body: contents };
 }
 
-async function update(req: KeystaticRequest, config: Config): Promise<KeystaticResponse> {
-  if (req.headers['no-cors'] !== '1' || req.headers['content-type'] !== 'application/json') {
+async function update(
+  req: KeystaticRequest,
+  config: Config
+): Promise<KeystaticResponse> {
+  if (
+    req.headers['no-cors'] !== '1' ||
+    req.headers['content-type'] !== 'application/json'
+  ) {
     return { kind: 'response', status: 400, body: 'Bad Request' };
   }
   const isFilepathValid = getIsPathValid(config);
@@ -552,7 +628,9 @@ async function update(req: KeystaticRequest, config: Config): Promise<KeystaticR
           contents: z.string().transform(x => Buffer.from(x, 'base64')),
         })
       ),
-      deletions: z.array(z.object({ path: z.string().refine(isFilepathValid) })),
+      deletions: z.array(
+        z.object({ path: z.string().refine(isFilepathValid) })
+      ),
     })
     .safeParse(await req.jsonBody());
   if (!updates.success) {

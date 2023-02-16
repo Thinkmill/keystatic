@@ -9,7 +9,10 @@ import { assertNever } from './utils';
 
 const previewPropsToValueConverter: {
   [Kind in ComponentSchema['kind']]: (
-    props: GenericPreviewProps<Extract<ComponentSchema, { kind: Kind }>, unknown>
+    props: GenericPreviewProps<
+      Extract<ComponentSchema, { kind: Kind }>,
+      unknown
+    >
   ) => ValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>;
 } = {
   child() {
@@ -34,7 +37,10 @@ const previewPropsToValueConverter: {
   },
   object(props) {
     return Object.fromEntries(
-      Object.entries(props.fields).map(([key, val]) => [key, previewPropsToValue(val)])
+      Object.entries(props.fields).map(([key, val]) => [
+        key,
+        previewPropsToValue(val),
+      ])
     );
   },
   relationship(props) {
@@ -52,7 +58,9 @@ const valueToUpdaters: {
   [Kind in ComponentSchema['kind']]: (
     value: ValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>,
     schema: Extract<ComponentSchema, { kind: Kind }>
-  ) => InitialOrUpdateValueFromComponentPropField<Extract<ComponentSchema, { kind: Kind }>>;
+  ) => InitialOrUpdateValueFromComponentPropField<
+    Extract<ComponentSchema, { kind: Kind }>
+  >;
 } = {
   child() {
     return undefined;
@@ -70,7 +78,10 @@ const valueToUpdaters: {
   conditional(value, schema) {
     return {
       discriminant: value.discriminant,
-      value: valueToUpdater(value.value, schema.values[value.discriminant.toString()]),
+      value: valueToUpdater(
+        value.value,
+        schema.values[value.discriminant.toString()]
+      ),
     };
   },
   object(value, schema) {
@@ -122,6 +133,9 @@ export function setValueToPreviewProps<Schema extends ComponentSchema>(
 function isKind<Kind extends ComponentSchema['kind']>(
   props: GenericPreviewProps<ComponentSchema, unknown>,
   kind: Kind
-): props is GenericPreviewProps<Extract<ComponentSchema, { kind: Kind }>, unknown> {
+): props is GenericPreviewProps<
+  Extract<ComponentSchema, { kind: Kind }>,
+  unknown
+> {
   return props.schema.kind === kind;
 }

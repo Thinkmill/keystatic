@@ -5,7 +5,9 @@ import { ComponentBlock } from './api';
 import { createGetPreviewProps, getKeysForArrayValue } from './preview-props';
 import { ReadonlyPropPath } from './utils';
 
-export const ChildrenByPathContext = React.createContext<Record<string, ReactElement>>({});
+export const ChildrenByPathContext = React.createContext<
+  Record<string, ReactElement>
+>({});
 
 export function ChildFieldEditable({ path }: { path: readonly string[] }) {
   const childrenByPath = useContext(ChildrenByPathContext);
@@ -23,7 +25,9 @@ export function ComponentBlockRender({
   children,
 }: {
   element: Element & { type: 'component-block' };
-  onChange: (cb: (props: Record<string, unknown>) => Record<string, unknown>) => void;
+  onChange: (
+    cb: (props: Record<string, unknown>) => Record<string, unknown>
+  ) => void;
   componentBlock: ComponentBlock;
   children: any;
 }) {
@@ -44,7 +48,9 @@ export function ComponentBlockRender({
     if (propPath === undefined) {
       maybeChild = child;
     } else {
-      childrenByPath[JSON.stringify(propPathWithIndiciesToKeys(propPath, element.props))] = child;
+      childrenByPath[
+        JSON.stringify(propPathWithIndiciesToKeys(propPath, element.props))
+      ] = child;
     }
   });
 
@@ -76,7 +82,10 @@ export function ComponentBlockRender({
 // (this is primarily to not mess up things like cursors in inputs)
 // this means that sometimes the child elements will be inconsistent with the values
 // so to deal with this, we return a prop path this is "wrong" but won't break anything
-function propPathWithIndiciesToKeys(propPath: ReadonlyPropPath, val: any): readonly string[] {
+function propPathWithIndiciesToKeys(
+  propPath: ReadonlyPropPath,
+  val: any
+): readonly string[] {
   return propPath.map(key => {
     if (typeof key === 'string') {
       val = val?.[key];

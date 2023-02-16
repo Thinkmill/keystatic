@@ -14,7 +14,13 @@ import {
 import { useTree } from './shell/data';
 import { TreeNode, getTreeNodeAtPath } from './trees';
 import { LOADING, useData } from './useData';
-import { blobSha, FormatInfo, getDataFileExtension, isGitHubConfig, MaybePromise } from './utils';
+import {
+  blobSha,
+  FormatInfo,
+  getDataFileExtension,
+  isGitHubConfig,
+  MaybePromise,
+} from './utils';
 
 function parseFromValueFile(
   args: UseItemDataArgs,
@@ -32,7 +38,11 @@ function parseFromValueFile(
     })
   );
   const maybeLoadedBinaryFiles = binaryFiles.map(file => {
-    const result = fetchBlob(args.config, file.oid, `${args.dirpath}/${file.filename}`);
+    const result = fetchBlob(
+      args.config,
+      file.oid,
+      `${args.dirpath}/${file.filename}`
+    );
     if (result instanceof Uint8Array) {
       return [file.filename, result] as const;
     }
@@ -55,7 +65,10 @@ function parseWithExtraFiles(
   loadedBinaryFiles: Map<string, Uint8Array>
 ) {
   for (const file of requiredFiles) {
-    const parentValue = getValueAtPropPath(validated, file.path.slice(0, -1)) as any;
+    const parentValue = getValueAtPropPath(
+      validated,
+      file.path.slice(0, -1)
+    ) as any;
     const keyOnParent = file.path[file.path.length - 1];
     parentValue[keyOnParent] = parseSerializedFormField(
       parentValue[keyOnParent],
@@ -77,7 +90,8 @@ type UseItemDataArgs = {
 export function useItemData(args: UseItemDataArgs) {
   const { current: currentBranch } = useTree();
 
-  const rootTree = currentBranch.kind === 'loaded' ? currentBranch.data.tree : undefined;
+  const rootTree =
+    currentBranch.kind === 'loaded' ? currentBranch.data.tree : undefined;
   const _localTree = useMemo(() => {
     return rootTree ? getTreeNodeAtPath(rootTree, args.dirpath) : undefined;
   }, [rootTree, args.dirpath]);
@@ -107,24 +121,65 @@ export function useItemData(args: UseItemDataArgs) {
         format: args.format,
         schema: args.schema,
       };
-      const dataResult = fetchBlob(args.config, dataFilepathSha, `${args.dirpath}/${dataFilepath}`);
+      const dataResult = fetchBlob(
+        args.config,
+        dataFilepathSha,
+        `${args.dirpath}/${dataFilepath}`
+      );
       if (dataResult instanceof Uint8Array) {
-        const { validated, initialFiles, requiredFiles, maybeLoadedBinaryFiles } =
-          parseFromValueFile(_args, dataResult, localTree);
-        if (maybeLoadedBinaryFiles.every((x): x is [string, Uint8Array] => Array.isArray(x))) {
+        const {
+          validated,
+          initialFiles,
+          requiredFiles,
+          maybeLoadedBinaryFiles,
+        } = parseFromValueFile(_args, dataResult, localTree);
+        if (
+          maybeLoadedBinaryFiles.every((x): x is [string, Uint8Array] =>
+            Array.isArray(x)
+          )
+        ) {
           const loadedBinaryFiles = new Map(maybeLoadedBinaryFiles);
-          const initialState = parseWithExtraFiles(requiredFiles, validated, loadedBinaryFiles);
-          return { initialState, initialFiles, localTreeSha: localTreeNode.entry.sha };
+          const initialState = parseWithExtraFiles(
+            requiredFiles,
+            validated,
+            loadedBinaryFiles
+          );
+          return {
+            initialState,
+            initialFiles,
+            localTreeSha: localTreeNode.entry.sha,
+          };
         }
       }
       return Promise.resolve(dataResult).then(async data => {
-        const { validated, initialFiles, requiredFiles, maybeLoadedBinaryFiles } =
-          parseFromValueFile(_args, data, localTree);
-        const loadedBinaryFiles = new Map(await Promise.all(maybeLoadedBinaryFiles));
-        const initialState = parseWithExtraFiles(requiredFiles, validated, loadedBinaryFiles);
-        return { initialState, initialFiles, localTreeSha: localTreeNode.entry.sha };
+        const {
+          validated,
+          initialFiles,
+          requiredFiles,
+          maybeLoadedBinaryFiles,
+        } = parseFromValueFile(_args, data, localTree);
+        const loadedBinaryFiles = new Map(
+          await Promise.all(maybeLoadedBinaryFiles)
+        );
+        const initialState = parseWithExtraFiles(
+          requiredFiles,
+          validated,
+          loadedBinaryFiles
+        );
+        return {
+          initialState,
+          initialFiles,
+          localTreeSha: localTreeNode.entry.sha,
+        };
       });
-    }, [args.config, args.dirpath, args.format, args.schema, localTreeNode, hasLoaded])
+    }, [
+      args.config,
+      args.dirpath,
+      args.format,
+      args.schema,
+      localTreeNode,
+      hasLoaded,
+    ])
   );
 }
 
@@ -150,12 +205,18 @@ function fetchGitHubBlob(config: GitHubConfig, oid: string): Promise<Response> {
   );
 }
 
-function fetchBlob(config: Config, oid: string, filepath: string): MaybePromise<Uint8Array> {
+function fetchBlob(
+  config: Config,
+  oid: string,
+  filepath: string
+): MaybePromise<Uint8Array> {
   if (blobCache.has(oid)) return blobCache.get(oid)!;
   const promise = (
     isGitHubConfig(config)
       ? fetchGitHubBlob(config, oid)
-      : fetch(`/api/keystatic/blob/${oid}/${filepath}`, { headers: { 'no-cors': '1' } })
+      : fetch(`/api/keystatic/blob/${oid}/${filepath}`, {
+          headers: { 'no-cors': '1' },
+        })
   )
 
     .then(x => x.arrayBuffer())

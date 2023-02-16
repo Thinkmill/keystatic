@@ -206,7 +206,11 @@ test('when the wrong children exist, the children are normalized based on the pr
         <text />
       </paragraph>
     </editor>,
-    { componentBlocks: { qAndA }, skipRenderingDOM: true, normalization: 'normalize' }
+    {
+      componentBlocks: { qAndA },
+      skipRenderingDOM: true,
+      normalization: 'normalize',
+    }
   );
   expect(editor).toMatchInlineSnapshot(`
     <editor>

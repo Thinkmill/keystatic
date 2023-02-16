@@ -1,4 +1,10 @@
-import { ArrayField, ConditionalField, fields, FormField, ObjectField } from './api';
+import {
+  ArrayField,
+  ConditionalField,
+  fields,
+  FormField,
+  ObjectField,
+} from './api';
 import { assertValidComponentSchema } from './field-assertions';
 
 type EasilyCircularObject = ObjectField<{
@@ -156,7 +162,9 @@ test('exceeds the call stack size for an infinitely recursive field where all fi
 test('relationship field where no list exists with that name', () => {
   expect(() => {
     assertValidComponentSchema(
-      fields.object({ a: fields.relationship({ listKey: 'Blah', label: 'Something' }) }),
+      fields.object({
+        a: fields.relationship({ listKey: 'Blah', label: 'Something' }),
+      }),
       new Set()
     );
   }).toThrowErrorMatchingInlineSnapshot(
@@ -166,7 +174,9 @@ test('relationship field where no list exists with that name', () => {
 
 test('relationship field where a list exists with that name', () => {
   assertValidComponentSchema(
-    fields.object({ a: fields.relationship({ listKey: 'Blah', label: 'Something' }) }),
+    fields.object({
+      a: fields.relationship({ listKey: 'Blah', label: 'Something' }),
+    }),
     new Set(['Blah'])
   );
 });

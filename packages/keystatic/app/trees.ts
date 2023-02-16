@@ -31,7 +31,11 @@ export type TreeEntry = {
 };
 
 type TreeChanges = Map<string, NodeChanges>;
-type NodeChanges = Uint8Array | { byteLength: number; sha: string } | 'delete' | TreeChanges;
+type NodeChanges =
+  | Uint8Array
+  | { byteLength: number; sha: string }
+  | 'delete'
+  | TreeChanges;
 
 function getNodeAtPath(tree: TreeChanges, path: string): TreeChanges {
   let node = tree;
@@ -95,7 +99,9 @@ export function treeSha(children: Map<string, TreeNode>) {
   return sha1(
     concatBytes([
       tree,
-      textEncoder.encode(treeObject.reduce((sum, val) => sum + val.byteLength, 0).toString()),
+      textEncoder.encode(
+        treeObject.reduce((sum, val) => sum + val.byteLength, 0).toString()
+      ),
       nullchar,
       ...treeObject,
     ])
@@ -153,8 +159,12 @@ export async function updateTreeWithChanges(
   tree: Map<string, TreeNode>,
   changes: Changes
 ): Promise<{ entries: TreeEntry[]; sha: string }> {
-  const newTree = (await updateTree(tree, toTreeChanges(changes), [])) ?? new Map();
-  return { entries: treeToEntries(newTree), sha: await treeSha(newTree ?? new Map()) };
+  const newTree =
+    (await updateTree(tree, toTreeChanges(changes), [])) ?? new Map();
+  return {
+    entries: treeToEntries(newTree),
+    sha: await treeSha(newTree ?? new Map()),
+  };
 }
 
 function treeToEntries(tree: Map<string, TreeNode>): TreeEntry[] {
@@ -175,16 +185,29 @@ async function updateTree(
     }
     if (value instanceof Map) {
       const existingChildren = newTree.get(key)?.children ?? new Map();
-      const children = await updateTree(existingChildren, value, path.concat(key));
+      const children = await updateTree(
+        existingChildren,
+        value,
+        path.concat(key)
+      );
       if (children === undefined) {
         newTree.delete(key);
         continue;
       }
-      const entry = await createTreeNodeEntry(path.concat(key).join('/'), children);
+      const entry = await createTreeNodeEntry(
+        path.concat(key).join('/'),
+        children
+      );
       newTree.set(key, { entry, children });
     }
-    if (value instanceof Uint8Array || (typeof value === 'object' && 'sha' in value)) {
-      const entry = await createBlobNodeEntry(path.concat(key).join('/'), value);
+    if (
+      value instanceof Uint8Array ||
+      (typeof value === 'object' && 'sha' in value)
+    ) {
+      const entry = await createBlobNodeEntry(
+        path.concat(key).join('/'),
+        value
+      );
       newTree.set(key, { entry });
     }
   }
@@ -194,7 +217,9 @@ async function updateTree(
   return newTree;
 }
 
-export function treeEntriesToTreeNodes(entries: TreeEntry[]): Map<string, TreeNode> {
+export function treeEntriesToTreeNodes(
+  entries: TreeEntry[]
+): Map<string, TreeNode> {
   const root = new Map<string, TreeNode>();
   const getChildrenAtPath = (parts: string[]) => {
     if (parts.length === 0) {

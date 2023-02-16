@@ -49,7 +49,10 @@ export function validateComponentBlockProps(
 
   if (schema.kind === 'conditional') {
     if (typeof value !== 'object' || value === null) {
-      throw new PropValidationError('Conditional value must be an object', path);
+      throw new PropValidationError(
+        'Conditional value must be an object',
+        path
+      );
     }
     for (const key of Object.keys(value)) {
       if (key !== 'discriminant' && key !== 'value') {
@@ -92,7 +95,10 @@ export function validateComponentBlockProps(
     const allowedKeysSet = new Set(Object.keys(schema.fields));
     for (const key of Object.keys(value)) {
       if (!allowedKeysSet.has(key)) {
-        throw new PropValidationError(`Key on object value "${key}" is not allowed`, path);
+        throw new PropValidationError(
+          `Key on object value "${key}" is not allowed`,
+          path
+        );
       }
     }
     let val: Record<string, any> = {};
@@ -121,7 +127,12 @@ export function validateComponentBlockProps(
       throw new PropValidationError('Array field value must be an array', path);
     }
     return value.map((innerVal, i) => {
-      return validateComponentBlockProps(schema.element, innerVal, relationships, path.concat(i));
+      return validateComponentBlockProps(
+        schema.element,
+        innerVal,
+        relationships,
+        path.concat(i)
+      );
     });
   }
   assertNever(schema);

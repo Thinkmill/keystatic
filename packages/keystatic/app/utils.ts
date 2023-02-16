@@ -6,8 +6,15 @@ import { getTreeNodeAtPath, TreeNode } from './trees';
 
 export * from './path-utils';
 
-export function getTreeNodeForItem(config: Config, collection: string, node: TreeNode) {
-  const collectionItemSlugSuffix = getCollectionItemSlugSuffix(config, collection);
+export function getTreeNodeForItem(
+  config: Config,
+  collection: string,
+  node: TreeNode
+) {
+  const collectionItemSlugSuffix = getCollectionItemSlugSuffix(
+    config,
+    collection
+  );
   if (!collectionItemSlugSuffix) return node;
   if (!node.children) return;
   return getTreeNodeAtPath(node.children, collectionItemSlugSuffix.slice(1));

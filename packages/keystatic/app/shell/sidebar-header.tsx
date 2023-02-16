@@ -14,12 +14,20 @@ import { useMutation } from 'urql';
 import { BranchPicker, CreateBranchDialog } from '../branch-selection';
 import { BranchInfoContext, useBaseCommit, useRepositoryId } from './data';
 
-export function SidebarHeader(props: { repo: { owner: string; name: string } }) {
+export function SidebarHeader(props: {
+  repo: { owner: string; name: string };
+}) {
   const data = useContext(BranchInfoContext);
   const baseCommit = useBaseCommit();
   const repositoryId = useRepositoryId();
-  const [newBranchDialogVisible, toggleNewBranchDialog] = useReducer(v => !v, false);
-  const [deleteBranchDialogVisible, toggleDeleteBranchDialog] = useReducer(v => !v, false);
+  const [newBranchDialogVisible, toggleNewBranchDialog] = useReducer(
+    v => !v,
+    false
+  );
+  const [deleteBranchDialogVisible, toggleDeleteBranchDialog] = useReducer(
+    v => !v,
+    false
+  );
   const [, deleteBranch] = useMutation(
     gql`
       mutation DeleteBranch($refId: ID!) {
@@ -29,7 +37,12 @@ export function SidebarHeader(props: { repo: { owner: string; name: string } }) 
       }
     ` as import('../../__generated__/ts-gql/DeleteBranch').type
   );
-  type GitItem = { icon: ReactElement; label: string; description: string; key: string };
+  type GitItem = {
+    icon: ReactElement;
+    label: string;
+    description: string;
+    key: string;
+  };
   type GitSection = { key: string; label: string; children: GitItem[] };
   const gitMenuItems = useMemo(() => {
     let isDefaultBranch = data.currentBranch === data.defaultBranch;
@@ -85,7 +98,13 @@ export function SidebarHeader(props: { repo: { owner: string; name: string } }) 
     return items;
   }, [data.currentBranch, data.defaultBranch, data.hasPullRequests]);
   return (
-    <Flex gap="regular" paddingX="xlarge" borderBottom="muted" height="xlarge" alignItems="center">
+    <Flex
+      gap="regular"
+      paddingX="xlarge"
+      borderBottom="muted"
+      height="xlarge"
+      alignItems="center"
+    >
       <BranchPicker
         currentBranch={data.currentBranch}
         defaultBranch={data.defaultBranch}
@@ -142,7 +161,12 @@ export function SidebarHeader(props: { repo: { owner: string; name: string } }) 
             onDismiss={toggleNewBranchDialog}
             onCreate={branchName => {
               toggleNewBranchDialog();
-              router.push(router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + branchName));
+              router.push(
+                router.asPath.replace(
+                  /\/branch\/[^/]+/,
+                  '/branch/' + branchName
+                )
+              );
             }}
             branchOid={baseCommit}
             repositoryId={repositoryId}
@@ -159,14 +183,19 @@ export function SidebarHeader(props: { repo: { owner: string; name: string } }) 
             primaryActionLabel="Yes, delete"
             autoFocusButton="cancel"
             onPrimaryAction={async () => {
-              await deleteBranch({ refId: data.branchNameToId.get(data.currentBranch)! });
+              await deleteBranch({
+                refId: data.branchNameToId.get(data.currentBranch)!,
+              });
               router.push(
-                router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + data.defaultBranch)
+                router.asPath.replace(
+                  /\/branch\/[^/]+/,
+                  '/branch/' + data.defaultBranch
+                )
               );
             }}
           >
-            Are you sure you want to delete the "{data.currentBranch}" branch? This cannot be
-            undone.
+            Are you sure you want to delete the "{data.currentBranch}" branch?
+            This cannot be undone.
           </AlertDialog>
         )}
       </DialogContainer>

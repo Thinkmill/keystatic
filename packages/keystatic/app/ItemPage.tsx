@@ -1,9 +1,20 @@
 import { useRouter } from 'next/router';
-import { FormEvent, PropsWithChildren, ReactNode, useMemo, useState } from 'react';
+import {
+  FormEvent,
+  PropsWithChildren,
+  ReactNode,
+  useMemo,
+  useState,
+} from 'react';
 
 import { Badge } from '@voussoir/badge';
 import { Button, ButtonGroup } from '@voussoir/button';
-import { AlertDialog, Dialog, DialogContainer, DialogTrigger } from '@voussoir/dialog';
+import {
+  AlertDialog,
+  Dialog,
+  DialogContainer,
+  DialogTrigger,
+} from '@voussoir/dialog';
 import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
 // import { refreshCwIcon } from '@voussoir/icon/icons/refreshCwIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
@@ -45,12 +56,22 @@ type ItemPageProps = {
 };
 
 function ItemPage(props: ItemPageProps) {
-  const { collection, config, itemSlug, initialFiles, initialState, localTreeSha, currentTree } =
-    props;
+  const {
+    collection,
+    config,
+    itemSlug,
+    initialFiles,
+    initialState,
+    localTreeSha,
+    currentTree,
+  } = props;
   const router = useRouter();
   const [forceValidation, setForceValidation] = useState(false);
   const collectionConfig = config.collections![collection]!;
-  const schema = useMemo(() => fields.object(collectionConfig.schema), [collectionConfig.schema]);
+  const schema = useMemo(
+    () => fields.object(collectionConfig.schema),
+    [collectionConfig.schema]
+  );
 
   const [{ state, localTreeSha: localTreeShaInState }, setState] = useState({
     state: initialState,
@@ -83,7 +104,11 @@ function ItemPage(props: ItemPageProps) {
     initialFiles,
     storage: config.storage,
     schema: collectionConfig.schema,
-    basePath: getCollectionItemPath(config, collection, collectionConfig.getItemSlug(state)),
+    basePath: getCollectionItemPath(
+      config,
+      collection,
+      collectionConfig.getItemSlug(state)
+    ),
     format: getCollectionFormat(config, collection),
     currentLocalTreeSha: localTreeSha,
     currentTree,
@@ -136,7 +161,10 @@ function ItemPage(props: ItemPageProps) {
                 <Button
                   // tone="critical"
                   aria-label="Delete"
-                  isDisabled={deleteResult.kind === 'loading' || updateResult.kind === 'loading'}
+                  isDisabled={
+                    deleteResult.kind === 'loading' ||
+                    updateResult.kind === 'loading'
+                  }
                 >
                   <Icon isHidden={{ above: 'mobile' }} src={trash2Icon} />
                   <Text isHidden={{ below: 'tablet' }}>Delete</Text>
@@ -207,7 +235,9 @@ function ItemPage(props: ItemPageProps) {
                   const slug = collectionConfig.getItemSlug(state);
                   const hasUpdated = await update();
                   if (hasUpdated && slug !== itemSlug) {
-                    router.replace(`${props.basePath}/collection/${collection}/item/${slug}`);
+                    router.replace(
+                      `${props.basePath}/collection/${collection}/item/${slug}`
+                    );
                   }
                 }}
                 reason={updateResult.reason}
@@ -262,7 +292,11 @@ export function CreateBranchDuringUpdateDialog(props: {
         </Content>
         <ButtonGroup>
           {isLoading && (
-            <ProgressCircle isIndeterminate size="small" aria-label="Creating Branch" />
+            <ProgressCircle
+              isIndeterminate
+              size="small"
+              aria-label="Creating Branch"
+            />
           )}
           <Button isDisabled={isLoading} onPress={props.onDismiss}>
             Cancel
@@ -289,12 +323,19 @@ function ItemPageWrapper(props: {
 
   const itemData = useItemData({
     config: props.config,
-    dirpath: getCollectionItemPath(props.config, props.collection, props.itemSlug),
+    dirpath: getCollectionItemPath(
+      props.config,
+      props.collection,
+      props.itemSlug
+    ),
     schema: props.config.collections![props.collection]!.schema,
     format,
   });
   const { current: tree } = useTree();
-  const combined = useMemo(() => mergeDataStates({ item: itemData, tree }), [itemData, tree]);
+  const combined = useMemo(
+    () => mergeDataStates({ item: itemData, tree }),
+    [itemData, tree]
+  );
 
   if (combined.kind === 'error') {
     return (
@@ -308,8 +349,16 @@ function ItemPageWrapper(props: {
   if (combined.kind === 'loading') {
     return (
       <ItemPageShell {...props}>
-        <Flex alignItems="center" justifyContent="center" minHeight="size.scale.3000">
-          <ProgressCircle aria-label="Loading Item" isIndeterminate size="large" />
+        <Flex
+          alignItems="center"
+          justifyContent="center"
+          minHeight="size.scale.3000"
+        >
+          <ProgressCircle
+            aria-label="Loading Item"
+            isIndeterminate
+            size="large"
+          />
         </Flex>
       </ItemPageShell>
     );
@@ -340,7 +389,9 @@ function ItemPageWrapper(props: {
 
 const ItemPageShell = (
   props: PropsWithChildren<
-    Pick<ItemPageProps, 'collection' | 'config' | 'basePath'> & { headerActions?: ReactNode }
+    Pick<ItemPageProps, 'collection' | 'config' | 'basePath'> & {
+      headerActions?: ReactNode;
+    }
   >
 ) => {
   const collectionConfig = props.config.collections![props.collection]!;
@@ -353,8 +404,17 @@ const ItemPageShell = (
             {collectionConfig.label}
           </TextLink>
         </Heading>
-        <Icon src={chevronRightIcon} color="neutralSecondary" isHidden={{ below: 'tablet' }} />
-        <Text color="neutralEmphasis" size="medium" weight="bold" marginEnd="regular">
+        <Icon
+          src={chevronRightIcon}
+          color="neutralSecondary"
+          isHidden={{ below: 'tablet' }}
+        />
+        <Text
+          color="neutralEmphasis"
+          size="medium"
+          weight="bold"
+          marginEnd="regular"
+        >
           Edit
         </Text>
         {props.headerActions}

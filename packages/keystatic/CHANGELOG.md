@@ -40,8 +40,8 @@
 
 ### Patch Changes
 
-- 902b310: Fix image field outside of document fields and fix inferred types in reader API for basic
-  form fields
+- 902b310: Fix image field outside of document fields and fix inferred types in
+  reader API for basic form fields
 
 ## 0.0.27
 

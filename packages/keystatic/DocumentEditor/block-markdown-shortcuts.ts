@@ -24,10 +24,11 @@ export function withBlockMarkdownShortcuts(
       }
     >
   > = Object.create(null);
-  const editorDocumentFeaturesForNormalizationToCheck: DocumentFeaturesForNormalization = {
-    ...documentFeatures,
-    relationships: true,
-  };
+  const editorDocumentFeaturesForNormalizationToCheck: DocumentFeaturesForNormalization =
+    {
+      ...documentFeatures,
+      relationships: true,
+    };
   let addShortcut = (
     text: string,
     insert: () => void,
@@ -36,7 +37,13 @@ export function withBlockMarkdownShortcuts(
     ) => boolean,
     type: 'paragraph' | 'heading-or-paragraph' = 'paragraph'
   ) => {
-    if (!shouldBeEnabledInComponentBlock(editorDocumentFeaturesForNormalizationToCheck)) return;
+    if (
+      !shouldBeEnabledInComponentBlock(
+        editorDocumentFeaturesForNormalizationToCheck
+      )
+    ) {
+      return;
+    }
     const trigger = text[text.length - 1];
     if (!shortcuts[trigger]) {
       shortcuts[trigger] = Object.create(null);
@@ -89,7 +96,9 @@ export function withBlockMarkdownShortcuts(
         Transforms.setNodes(
           editor,
           { type: 'heading', level },
-          { match: node => node.type === 'paragraph' || node.type === 'heading' }
+          {
+            match: node => node.type === 'paragraph' || node.type === 'heading',
+          }
         );
       },
       features => features.formatting.headingLevels.includes(level),
@@ -132,30 +141,45 @@ export function withBlockMarkdownShortcuts(
   editor.insertText = text => {
     insertText(text);
     const shortcutsForTrigger = shortcuts[text];
-    if (shortcutsForTrigger && editor.selection && Range.isCollapsed(editor.selection)) {
+    if (
+      shortcutsForTrigger &&
+      editor.selection &&
+      Range.isCollapsed(editor.selection)
+    ) {
       const { anchor } = editor.selection;
       const block = Editor.above(editor, {
         match: node => Editor.isBlock(editor, node),
       });
-      if (!block || (block[0].type !== 'paragraph' && block[0].type !== 'heading')) return;
+      if (
+        !block ||
+        (block[0].type !== 'paragraph' && block[0].type !== 'heading')
+      ) {
+        return;
+      }
 
       const start = Editor.start(editor, block[1]);
       const range = { anchor, focus: start };
       const shortcutText = Editor.string(editor, range);
       const shortcut = shortcutsForTrigger[shortcutText];
 
-      if (!shortcut || (shortcut.type === 'paragraph' && block[0].type !== 'paragraph')) {
+      if (
+        !shortcut ||
+        (shortcut.type === 'paragraph' && block[0].type !== 'paragraph')
+      ) {
         return;
       }
-      const locationDocumentFeatures = getAncestorComponentChildFieldDocumentFeatures(
-        editor,
-        documentFeatures,
-        componentBlocks
-      );
+      const locationDocumentFeatures =
+        getAncestorComponentChildFieldDocumentFeatures(
+          editor,
+          documentFeatures,
+          componentBlocks
+        );
       if (
         locationDocumentFeatures &&
         (locationDocumentFeatures.kind === 'inline' ||
-          !shortcut.shouldBeEnabledInComponentBlock(locationDocumentFeatures.documentFeatures))
+          !shortcut.shouldBeEnabledInComponentBlock(
+            locationDocumentFeatures.documentFeatures
+          ))
       ) {
         return;
       }

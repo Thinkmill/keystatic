@@ -4,10 +4,18 @@ import { ReactNode, useState } from 'react';
 import { RenderLeafProps } from 'slate-react';
 import { InsertMenu } from './insert-menu';
 
-function Placeholder({ placeholder, children }: { placeholder: string; children: ReactNode }) {
+function Placeholder({
+  placeholder,
+  children,
+}: {
+  placeholder: string;
+  children: ReactNode;
+}) {
   const [width, setWidth] = useState(0);
   return (
-    <span className={css({ position: 'relative', display: 'inline-block', width })}>
+    <span
+      className={css({ position: 'relative', display: 'inline-block', width })}
+    >
       <span
         contentEditable={false}
         className={css({

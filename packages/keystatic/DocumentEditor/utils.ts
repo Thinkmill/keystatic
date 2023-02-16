@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState, useContext } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+} from 'react';
 import {
   Editor,
   Node,
@@ -49,7 +55,10 @@ export const isElementActive = (
 
 export function clearFormatting(editor: Editor) {
   Transforms.unwrapNodes(editor, {
-    match: node => node.type === 'heading' || node.type === 'blockquote' || node.type === 'code',
+    match: node =>
+      node.type === 'heading' ||
+      node.type === 'blockquote' ||
+      node.type === 'code',
   });
   Transforms.unsetNodes(editor, allMarks, { match: Text.isText });
 }
@@ -61,7 +70,9 @@ export function moveChildren(
   shouldMoveNode: (node: Node) => boolean = () => true
 ) {
   const parentPath = Path.isPath(parent) ? parent : parent[1];
-  const parentNode = Path.isPath(parent) ? Node.get(editor, parentPath) : parent[0];
+  const parentNode = Path.isPath(parent)
+    ? Node.get(editor, parentPath)
+    : parent[0];
   if (!Editor.isBlock(editor, parentNode)) return;
 
   for (let i = parentNode.children.length - 1; i >= 0; i--) {
@@ -91,13 +102,19 @@ export function useElementWithSetNodes<TElement extends Element>(
   });
 
   const setNodes = useCallback(
-    (changesOrCallback: Partial<TElement> | ((current: TElement) => Partial<TElement>)) => {
+    (
+      changesOrCallback:
+        | Partial<TElement>
+        | ((current: TElement) => Partial<TElement>)
+    ) => {
       const currentElement = elementRef.current;
       const changes =
         typeof changesOrCallback === 'function'
           ? changesOrCallback(currentElement)
           : changesOrCallback;
-      Transforms.setNodes(editor, changes, { at: ReactEditor.findPath(editor, currentElement) });
+      Transforms.setNodes(editor, changes, {
+        at: ReactEditor.findPath(editor, currentElement),
+      });
       setState({
         element: currentElement,
         elementWithChanges: { ...currentElement, ...changes },
@@ -108,7 +125,9 @@ export function useElementWithSetNodes<TElement extends Element>(
   return [state.elementWithChanges, setNodes] as const;
 }
 
-export function useEventCallback<Func extends (...args: any) => any>(callback: Func): Func {
+export function useEventCallback<Func extends (...args: any) => any>(
+  callback: Func
+): Func {
   const callbackRef = useRef(callback);
   const cb = useCallback((...args: any[]) => {
     return callbackRef.current(...args);
@@ -199,7 +218,8 @@ export function nodeTypeMatcher<Type extends Element['type'][]>(
     return ((node: Node) => node.type === type) as any;
   }
   const set = new Set(args);
-  return ((node: Node) => typeof node.type === 'string' && set.has(node.type)) as any;
+  return ((node: Node) =>
+    typeof node.type === 'string' && set.has(node.type)) as any;
 }
 
 export function assert(condition: boolean): asserts condition {

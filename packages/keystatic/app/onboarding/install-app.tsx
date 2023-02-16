@@ -8,7 +8,8 @@ import { GitHubConfig } from '../../config';
 
 export function InstallGitHubApp(props: { config: GitHubConfig }) {
   const router = useRouter();
-  const appSlug = process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG ?? router.query.slug;
+  const appSlug =
+    process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG ?? router.query.slug;
   return (
     <Flex direction="column" gap="regular">
       <Flex alignItems="end" gap="regular">
@@ -27,15 +28,19 @@ export function InstallGitHubApp(props: { config: GitHubConfig }) {
         </ActionButton>
       </Flex>
       {appSlug ? (
-        <Button prominence="high" href={`https://github.com/apps/${appSlug}/installations/new`}>
+        <Button
+          prominence="high"
+          href={`https://github.com/apps/${appSlug}/installations/new`}
+        >
           Install GitHub App
         </Button>
       ) : (
         <Notice tone="caution">
           <Text>
-            The <code>NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG</code> environment variable wasn't
-            provided so we can't link to the GitHub app installation page. You should find the App
-            on GitHub and add the repo yourself.
+            The <code>NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG</code> environment
+            variable wasn't provided so we can't link to the GitHub app
+            installation page. You should find the App on GitHub and add the
+            repo yourself.
           </Text>
         </Notice>
       )}

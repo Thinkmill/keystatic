@@ -19,7 +19,13 @@ import {
   getDataFileExtension,
   getSingletonPath,
 } from '../path-utils';
-import { getTreeNodeAtPath, treeEntriesToTreeNodes, TreeEntry, TreeNode, treeSha } from '../trees';
+import {
+  getTreeNodeAtPath,
+  treeEntriesToTreeNodes,
+  TreeEntry,
+  TreeNode,
+  treeSha,
+} from '../trees';
 import { DataState, LOADING, mergeDataStates, useData } from '../useData';
 import { getTreeNodeForItem, MaybePromise } from '../utils';
 import LRU from 'lru-cache';
@@ -44,10 +50,15 @@ export const SetTreeShaContext = createContext<(sha: string) => void>(() => {
   throw new Error('SetTreeShaContext not set');
 });
 
-export function LocalAppShellProvider(props: { config: LocalConfig; children: ReactNode }) {
+export function LocalAppShellProvider(props: {
+  config: LocalConfig;
+  children: ReactNode;
+}) {
   const [currentTreeSha, setCurrentTreeSha] = useState<string>('initial');
 
-  const tree = useData(useCallback(() => fetchLocalTree(currentTreeSha), [currentTreeSha]));
+  const tree = useData(
+    useCallback(() => fetchLocalTree(currentTreeSha), [currentTreeSha])
+  );
 
   const allTreeData = useMemo(
     () => ({
@@ -62,7 +73,12 @@ export function LocalAppShellProvider(props: { config: LocalConfig; children: Re
       return {
         collections: new Map<
           string,
-          { removed: Set<string>; added: Set<string>; changed: Set<string>; totalCount: number }
+          {
+            removed: Set<string>;
+            added: Set<string>;
+            changed: Set<string>;
+            totalCount: number;
+          }
         >(),
         singletons: new Set<string>(),
       };
@@ -73,7 +89,9 @@ export function LocalAppShellProvider(props: { config: LocalConfig; children: Re
   return (
     <SetTreeShaContext.Provider value={setCurrentTreeSha}>
       <ChangedContext.Provider value={changedData}>
-        <TreeContext.Provider value={allTreeData}>{props.children}</TreeContext.Provider>
+        <TreeContext.Provider value={allTreeData}>
+          {props.children}
+        </TreeContext.Provider>
       </ChangedContext.Provider>
     </SetTreeShaContext.Provider>
   );
@@ -97,20 +115,30 @@ export function GitHubAppShellProvider(props: {
       x?.name === data?.repository?.defaultBranchRef?.name
   );
   const currentBranchRef = data?.repository?.refs?.nodes?.find(
-    (x): x is typeof x & { target: { __typename: 'Commit' } } => x?.name === props.currentBranch
+    (x): x is typeof x & { target: { __typename: 'Commit' } } =>
+      x?.name === props.currentBranch
   );
   const defaultBranchTreeSha = defaultBranchRef?.target.tree.oid ?? null;
   const currentBranchTreeSha = currentBranchRef?.target.tree.oid ?? null;
   const baseCommit = currentBranchRef?.target?.oid ?? null;
 
-  const defaultBranchTree = useGitHubTreeData(defaultBranchTreeSha, props.config.storage.repo);
-  const currentBranchTree = useGitHubTreeData(currentBranchTreeSha, props.config.storage.repo);
+  const defaultBranchTree = useGitHubTreeData(
+    defaultBranchTreeSha,
+    props.config.storage.repo
+  );
+  const currentBranchTree = useGitHubTreeData(
+    currentBranchTreeSha,
+    props.config.storage.repo
+  );
 
   const allTreeData = useMemo(
     () => ({
       default: defaultBranchTree,
       current: currentBranchTree,
-      merged: mergeDataStates({ default: defaultBranchTree, current: currentBranchTree }),
+      merged: mergeDataStates({
+        default: defaultBranchTree,
+        current: currentBranchTree,
+      }),
     }),
     [currentBranchTree, defaultBranchTree]
   );
@@ -119,7 +147,12 @@ export function GitHubAppShellProvider(props: {
       return {
         collections: new Map<
           string,
-          { removed: Set<string>; added: Set<string>; changed: Set<string>; totalCount: number }
+          {
+            removed: Set<string>;
+            added: Set<string>;
+            changed: Set<string>;
+            totalCount: number;
+          }
         >(),
         singletons: new Set<string>(),
       };
@@ -135,13 +168,18 @@ export function GitHubAppShellProvider(props: {
     }
     if (
       !data?.repository?.id &&
-      error?.graphQLErrors.some(err => (err?.originalError as any)?.type === 'NOT_FOUND')
+      error?.graphQLErrors.some(
+        err => (err?.originalError as any)?.type === 'NOT_FOUND'
+      )
     ) {
       router.push('/keystatic/repo-not-found');
     }
   }, [error, data, router]);
   const baseInfo = useMemo(
-    () => ({ baseCommit: baseCommit || '', repositoryId: data?.repository?.id ?? '' }),
+    () => ({
+      baseCommit: baseCommit || '',
+      repositoryId: data?.repository?.id ?? '',
+    }),
     [baseCommit, data?.repository?.id]
   );
   const branchInfo = useMemo(
@@ -150,10 +188,14 @@ export function GitHubAppShellProvider(props: {
       currentBranch: props.currentBranch,
       baseCommit: baseCommit || '',
       repositoryId: data?.repository?.id ?? '',
-      allBranches: data?.repository?.refs?.nodes?.map(x => x?.name).filter(isDefined) ?? [],
+      allBranches:
+        data?.repository?.refs?.nodes?.map(x => x?.name).filter(isDefined) ??
+        [],
       hasPullRequests: !!currentBranchRef?.associatedPullRequests.totalCount,
       branchNameToId: new Map(
-        data?.repository?.refs?.nodes?.filter(isDefined).map(x => [x.name, x.id])
+        data?.repository?.refs?.nodes
+          ?.filter(isDefined)
+          .map(x => [x.name, x.id])
       ),
     }),
     [
@@ -170,7 +212,9 @@ export function GitHubAppShellProvider(props: {
       <BranchInfoContext.Provider value={branchInfo}>
         <BaseInfoContext.Provider value={baseInfo}>
           <ChangedContext.Provider value={changedData}>
-            <TreeContext.Provider value={allTreeData}>{props.children}</TreeContext.Provider>
+            <TreeContext.Provider value={allTreeData}>
+              {props.children}
+            </TreeContext.Provider>
           </ChangedContext.Provider>
         </BaseInfoContext.Provider>
       </BranchInfoContext.Provider>
@@ -268,7 +312,10 @@ export type AppShellData = OperationData<typeof AppShellQuery>;
 
 const treeCache = new LRU<
   string,
-  MaybePromise<{ entries: Map<Filepath, TreeEntry>; tree: Map<string, TreeNode> }>
+  MaybePromise<{
+    entries: Map<Filepath, TreeEntry>;
+    tree: Map<string, TreeNode>;
+  }>
 >({
   max: 40,
 });
@@ -283,23 +330,39 @@ export async function hydrateTreeCacheWithEntries(entries: TreeEntry[]) {
   return data;
 }
 
-export function fetchGitHubTreeData(sha: string, repo: { owner: string; name: string }) {
+export function fetchGitHubTreeData(
+  sha: string,
+  repo: { owner: string; name: string }
+) {
   const cached = treeCache.get(sha);
   if (cached) return cached;
-  const promise = githubRequest('GET /repos/{owner}/{repo}/git/trees/{tree_sha}', {
-    owner: repo.owner,
-    repo: repo.name,
-    tree_sha: sha,
-    recursive: '1',
-  }).then(res =>
-    hydrateTreeCacheWithEntries(res.data.tree.map(({ url, ...rest }) => rest as TreeEntry))
+  const promise = githubRequest(
+    'GET /repos/{owner}/{repo}/git/trees/{tree_sha}',
+    {
+      owner: repo.owner,
+      repo: repo.name,
+      tree_sha: sha,
+      recursive: '1',
+    }
+  ).then(res =>
+    hydrateTreeCacheWithEntries(
+      res.data.tree.map(({ url, ...rest }) => rest as TreeEntry)
+    )
   );
   treeCache.set(sha, promise);
   return promise;
 }
 
-function useGitHubTreeData(sha: string | null, repo: { owner: string; name: string }) {
-  return useData(useCallback(() => (sha ? fetchGitHubTreeData(sha, repo) : LOADING), [sha, repo]));
+function useGitHubTreeData(
+  sha: string | null,
+  repo: { owner: string; name: string }
+) {
+  return useData(
+    useCallback(
+      () => (sha ? fetchGitHubTreeData(sha, repo) : LOADING),
+      [sha, repo]
+    )
+  );
 }
 
 export const BranchInfoContext = createContext<{
@@ -316,12 +379,17 @@ export const BranchInfoContext = createContext<{
   branchNameToId: new Map(),
 });
 
-function getChangedData(config: Config, trees: { current: TreeData; default: TreeData }) {
+function getChangedData(
+  config: Config,
+  trees: { current: TreeData; default: TreeData }
+) {
   return {
     collections: new Map(
       Object.keys(config.collections ?? {}).map(collection => {
         const collectionPath = getCollectionPath(config, collection);
-        const current = new Map(getTreeNodeAtPath(trees.current.tree, collectionPath)?.children);
+        const current = new Map(
+          getTreeNodeAtPath(trees.current.tree, collectionPath)?.children
+        );
         const defaultBranch = new Map(
           getTreeNodeAtPath(trees.default.tree, collectionPath)?.children
         );
@@ -351,8 +419,13 @@ function getChangedData(config: Config, trees: { current: TreeData; default: Tre
             changed.add(key);
           }
         }
-        const removed = new Set([...defaultBranch.keys()].filter(key => !current.has(key)));
-        return [collection, { removed, added, changed, totalCount: current.size }];
+        const removed = new Set(
+          [...defaultBranch.keys()].filter(key => !current.has(key))
+        );
+        return [
+          collection,
+          { removed, added, changed, totalCount: current.size },
+        ];
       })
     ),
     singletons: new Set(

@@ -11,7 +11,13 @@ import { NavList, NavItem, NavGroup } from '@voussoir/nav-list';
 import { css, breakpointQueries, tokenSchema } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
 import router, { useRouter } from 'next/router';
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { Config, GitHubConfig } from '../../config';
 import { isGitHubConfig, pluralize } from '../utils';
 import { SidebarHeader } from './sidebar-header';
@@ -40,7 +46,11 @@ export function SidebarProvider(props: { children: ReactNode }) {
 
   const sidebarContext = { sidebarIsOpen, setSidebarOpen };
 
-  return <SidebarContext.Provider value={sidebarContext}>{props.children}</SidebarContext.Provider>;
+  return (
+    <SidebarContext.Provider value={sidebarContext}>
+      {props.children}
+    </SidebarContext.Provider>
+  );
 }
 
 export const SIDEBAR_WIDTH = 320;
@@ -102,7 +112,9 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
         'keystatic-sidebar',
       ]}
     >
-      {isGitHubConfig(props.config) && <SidebarHeader repo={props.config.storage.repo} />}
+      {isGitHubConfig(props.config) && (
+        <SidebarHeader repo={props.config.storage.repo} />
+      )}
 
       {/*
   ======================================================================
@@ -120,7 +132,10 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
         flex
       >
         <NavList flex>
-          <NavItem href={props.hrefBase} aria-current={isCurrent(props.hrefBase, { exact: true })}>
+          <NavItem
+            href={props.hrefBase}
+            aria-current={isCurrent(props.hrefBase, { exact: true })}
+          >
             Dashboard
           </NavItem>
 
@@ -130,7 +145,9 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
                 const href = `${props.hrefBase}/collection/${key}`;
                 const changes = changedData.collections.get(key);
                 const allChangesCount = changes
-                  ? changes.changed.size + changes.added.size + changes.removed.size
+                  ? changes.changed.size +
+                    changes.added.size +
+                    changes.removed.size
                   : 0;
                 return (
                   <NavItem key={key} href={href} aria-current={isCurrent(href)}>
@@ -174,7 +191,10 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
 
       {isGitHubConfig(props.config) && <SidebarFooter config={props.config} />}
 
-      <VisuallyHidden elementType="button" onClick={() => setSidebarOpen(false)}>
+      <VisuallyHidden
+        elementType="button"
+        onClick={() => setSidebarOpen(false)}
+      >
         close sidebar
       </VisuallyHidden>
     </Flex>
@@ -205,7 +225,13 @@ function SidebarFooter(props: { config: GitHubConfig }) {
     >
       <Flex gap="regular" alignItems="center" height="regular">
         <Icon src={folderOpenIcon} />
-        <Text color="neutralEmphasis" weight="semibold" size="medium" id="nav-title-id" truncate>
+        <Text
+          color="neutralEmphasis"
+          weight="semibold"
+          size="medium"
+          id="nav-title-id"
+          truncate
+        >
           {props.config.storage.repo.name}
         </Text>
       </Flex>
@@ -227,7 +253,10 @@ function SidebarFooter(props: { config: GitHubConfig }) {
               alert('TODO: logout');
             }
             if (key === 'profile') {
-              window.open(`https://github.com/${viewer?.login ?? ''}`, '_blank');
+              window.open(
+                `https://github.com/${viewer?.login ?? ''}`,
+                '_blank'
+              );
             }
             if (key === 'repository') {
               window.open(

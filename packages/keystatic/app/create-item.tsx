@@ -27,11 +27,18 @@ import { TreeNode } from './trees';
 
 const emptyMap = new Map<string, TreeNode>();
 
-export function CreateItem(props: { collection: string; config: Config; basePath: string }) {
+export function CreateItem(props: {
+  collection: string;
+  config: Config;
+  basePath: string;
+}) {
   const router = useRouter();
   const collectionConfig = props.config.collections![props.collection]!;
   const [forceValidation, setForceValidation] = useState(false);
-  const schema = useMemo(() => fields.object(collectionConfig.schema), [collectionConfig.schema]);
+  const schema = useMemo(
+    () => fields.object(collectionConfig.schema),
+    [collectionConfig.schema]
+  );
   const [state, setState] = useState(() => getInitialPropsValue(schema));
   const previewProps = useMemo(
     () => createGetPreviewProps(schema, setState, () => undefined),
@@ -54,7 +61,8 @@ export function CreateItem(props: { collection: string; config: Config; basePath
     schema: collectionConfig.schema,
     format: getCollectionFormat(props.config, props.collection),
     currentLocalTreeSha: undefined,
-    currentTree: tree.current.kind === 'loaded' ? tree.current.data.tree : emptyMap,
+    currentTree:
+      tree.current.kind === 'loaded' ? tree.current.data.tree : emptyMap,
   });
   const createItem = useEventCallback(_createItem);
 
@@ -73,7 +81,8 @@ export function CreateItem(props: { collection: string; config: Config; basePath
 
   // note we're still "loading" when it's already been created
   // since we're waiting to go to the item page
-  const isLoading = createResult.kind === 'loading' || createResult.kind === 'updated';
+  const isLoading =
+    createResult.kind === 'loading' || createResult.kind === 'updated';
 
   const formID = 'item-create-form';
 
@@ -84,11 +93,26 @@ export function CreateItem(props: { collection: string; config: Config; basePath
           <Heading size="small" visuallyHidden={{ below: 'tablet' }} truncate>
             <TextLink href={collectionPath}>{collectionConfig.label}</TextLink>
           </Heading>
-          <Icon src={chevronRightIcon} color="neutralSecondary" isHidden={{ below: 'tablet' }} />
-          <Text color="neutralEmphasis" size="medium" weight="bold" marginEnd="regular">
+          <Icon
+            src={chevronRightIcon}
+            color="neutralSecondary"
+            isHidden={{ below: 'tablet' }}
+          />
+          <Text
+            color="neutralEmphasis"
+            size="medium"
+            weight="bold"
+            marginEnd="regular"
+          >
             New entry
           </Text>
-          {isLoading && <ProgressCircle aria-label="Creating entry" isIndeterminate size="small" />}
+          {isLoading && (
+            <ProgressCircle
+              aria-label="Creating entry"
+              isIndeterminate
+              size="small"
+            />
+          )}
           <Button
             isDisabled={isLoading}
             prominence="high"
@@ -116,7 +140,10 @@ export function CreateItem(props: { collection: string; config: Config; basePath
               <Notice tone="critical">{createResult.error.message}</Notice>
             )}
 
-            <FormValueContentFromPreviewProps forceValidation={forceValidation} {...previewProps} />
+            <FormValueContentFromPreviewProps
+              forceValidation={forceValidation}
+              {...previewProps}
+            />
           </Flex>
         </AppShellBody>
       </AppShellRoot>

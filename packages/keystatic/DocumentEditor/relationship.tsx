@@ -12,13 +12,16 @@ export type Relationships = Record<
   }
 >;
 
-export const DocumentFieldRelationshipsContext = createContext<Relationships>({});
+export const DocumentFieldRelationshipsContext = createContext<Relationships>(
+  {}
+);
 
 export function useDocumentFieldRelationships() {
   return useContext(DocumentFieldRelationshipsContext);
 }
 
-export const DocumentFieldRelationshipsProvider = DocumentFieldRelationshipsContext.Provider;
+export const DocumentFieldRelationshipsProvider =
+  DocumentFieldRelationshipsContext.Provider;
 
 export function withRelationship(editor: Editor): Editor {
   const { isVoid, isInline } = editor;

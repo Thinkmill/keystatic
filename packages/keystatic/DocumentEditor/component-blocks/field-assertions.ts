@@ -1,7 +1,10 @@
 import { ComponentSchema } from './api';
 import { assertNever } from './utils';
 
-export function assertValidComponentSchema(schema: ComponentSchema, lists: ReadonlySet<string>) {
+export function assertValidComponentSchema(
+  schema: ComponentSchema,
+  lists: ReadonlySet<string>
+) {
   assertValidComponentSchemaInner(schema, [], [], new Set(), lists);
 }
 
@@ -45,7 +48,13 @@ function assertValidComponentSchemaInner(
   try {
     seenProps.add(schema);
     if (schema.kind === 'array') {
-      assertValidComponentSchemaInner(schema.element, [], propPath, seenProps, lists);
+      assertValidComponentSchemaInner(
+        schema.element,
+        [],
+        propPath,
+        seenProps,
+        lists
+      );
       return;
     }
     if (schema.kind === 'object') {
@@ -59,7 +68,13 @@ function assertValidComponentSchemaInner(
             )}" changes between accesses`
           );
         }
-        assertValidComponentSchemaInner(innerProp, schemaAncestors, propPath, seenProps, lists);
+        assertValidComponentSchemaInner(
+          innerProp,
+          schemaAncestors,
+          propPath,
+          seenProps,
+          lists
+        );
         propPath.pop();
       }
       schemaAncestors.pop();
@@ -67,7 +82,8 @@ function assertValidComponentSchemaInner(
     }
     if (schema.kind === 'conditional') {
       schemaAncestors.push(schema);
-      const stringifiedDefaultDiscriminant = schema.discriminant.defaultValue.toString();
+      const stringifiedDefaultDiscriminant =
+        schema.discriminant.defaultValue.toString();
       for (const [key, innerProp] of Object.entries(schema.values)) {
         propPath.push(key);
         if (schema.values[key] !== innerProp) {

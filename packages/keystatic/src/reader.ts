@@ -17,7 +17,11 @@ import {
   getSingletonPath,
 } from '../app/path-utils';
 import { validateComponentBlockProps } from '../validate-component-block-props';
-import { getRequiredFiles, loadDataFile, parseSerializedFormField } from '../app/required-files';
+import {
+  getRequiredFiles,
+  loadDataFile,
+  parseSerializedFormField,
+} from '../app/required-files';
 import { getValueAtPropPath } from '../DocumentEditor/component-blocks/utils';
 
 type CollectionReader<Schema extends Record<string, ComponentSchema>> = {
@@ -40,7 +44,10 @@ function collectionReader(
   const schema = fields.object(config.collections![collection].schema);
   return {
     read: (slug: string) => {
-      const itemDir = path.join(repoPath, getCollectionItemPath(config, collection, slug));
+      const itemDir = path.join(
+        repoPath,
+        getCollectionItemPath(config, collection, slug)
+      );
       return readItem(schema, formatInfo, extension, itemDir);
     },
     async list() {
@@ -53,7 +60,9 @@ function collectionReader(
           entries.map(async x => {
             if (!x.isDirectory()) return [];
             try {
-              await fs.stat(path.join(repoPath, collectionPath, x.name, `index${extension}`));
+              await fs.stat(
+                path.join(repoPath, collectionPath, x.name, `index${extension}`)
+              );
               return [x.name];
             } catch (err) {
               if ((err as any).code === 'ENOENT') {
@@ -87,7 +96,10 @@ async function readItem(
   const validated = validateComponentBlockProps(schema, loaded, {}, []);
   const requiredFiles = getRequiredFiles(validated, schema);
   for (const file of requiredFiles) {
-    const parentValue = getValueAtPropPath(validated, file.path.slice(0, -1)) as any;
+    const parentValue = getValueAtPropPath(
+      validated,
+      file.path.slice(0, -1)
+    ) as any;
     const keyOnParent = file.path[file.path.length - 1];
     const originalValue = parentValue[keyOnParent];
     if (file.schema.serializeToFile.reader.requiresContentInReader) {
@@ -110,10 +122,20 @@ async function readItem(
             )
           ).filter((x): x is [string, Buffer] => x[1] !== undefined)
         );
-        return parseSerializedFormField(originalValue, file, loadedBinaryFiles, 'read');
+        return parseSerializedFormField(
+          originalValue,
+          file,
+          loadedBinaryFiles,
+          'read'
+        );
       };
     } else {
-      parentValue[keyOnParent] = parseSerializedFormField(originalValue, file, new Map(), 'read');
+      parentValue[keyOnParent] = parseSerializedFormField(
+        originalValue,
+        file,
+        new Map(),
+        'read'
+      );
     }
   }
 
@@ -130,7 +152,13 @@ function singletonReader(
   const schema = fields.object(config.singletons![singleton].schema);
   const extension = getDataFileExtension(formatInfo);
   return {
-    read: () => readItem(schema, formatInfo, extension, path.join(repoPath, singletonPath)),
+    read: () =>
+      readItem(
+        schema,
+        formatInfo,
+        extension,
+        path.join(repoPath, singletonPath)
+      ),
   };
 }
 
@@ -160,7 +188,10 @@ export function createReader<
       ])
     ) as any,
     singletons: Object.fromEntries(
-      Object.keys(config.singletons || {}).map(key => [key, singletonReader(repoPath, key, config)])
+      Object.keys(config.singletons || {}).map(key => [
+        key,
+        singletonReader(repoPath, key, config),
+      ])
     ) as any,
   };
 }

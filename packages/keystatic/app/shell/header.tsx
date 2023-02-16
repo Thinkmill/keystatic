@@ -44,7 +44,11 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
       setSidebarOpen(false);
 
       if (nav && main) {
-        if (hamburgerButton && nav.contains(document.activeElement) && !isNotResponsive) {
+        if (
+          hamburgerButton &&
+          nav.contains(document.activeElement) &&
+          !isNotResponsive
+        ) {
           hamburgerButton.focus();
         }
 
@@ -98,7 +102,8 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
       nav.addEventListener('keydown', onKeydownTab);
     }
 
-    let useEventListener = typeof mediaQueryList.addEventListener === 'function';
+    let useEventListener =
+      typeof mediaQueryList.addEventListener === 'function';
     if (useEventListener) {
       mediaQueryList.addEventListener('change', mediaQueryTest);
     } else {

@@ -22,9 +22,11 @@ export function RepoNotFound(props: { config: GitHubConfig }) {
           <Heading>Repo not found</Heading>
         </Flex>
         <Text>
-          Keystatic is configured for the <a href={`https://github.com/${repo}`}>{repo}</a> GitHub
-          repo but Keystatic isn't able to access this repo. This is either because you don't have
-          access to this repo or you haven't added the GitHub app to it.
+          Keystatic is configured for the{' '}
+          <a href={`https://github.com/${repo}`}>{repo}</a> GitHub repo but
+          Keystatic isn't able to access this repo. This is either because you
+          don't have access to this repo or you haven't added the GitHub app to
+          it.
         </Text>
         <InstallGitHubApp config={props.config} />
       </Flex>

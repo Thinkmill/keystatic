@@ -16,11 +16,19 @@ export function collectFiles(
       const schema = fields.object(componentBlock.schema);
       return {
         ...node,
-        props: transformPropsToFiles(schema, node.props, collectedFiles) as Record<string, any>,
+        props: transformPropsToFiles(
+          schema,
+          node.props,
+          collectedFiles
+        ) as Record<string, any>,
       };
     }
     if (typeof node.type === 'string') {
-      const children = collectFiles(node.children, componentBlocks, collectedFiles);
+      const children = collectFiles(
+        node.children,
+        componentBlocks,
+        collectedFiles
+      );
       return { ...node, children };
     }
     return node;
@@ -36,7 +44,10 @@ function transformPropsToFiles(
     form(schema, value) {
       if ('serializeToFile' in schema && schema.serializeToFile) {
         if (schema.serializeToFile.kind === 'asset') {
-          const { content, value: forYaml } = schema.serializeToFile.serialize(value, undefined);
+          const { content, value: forYaml } = schema.serializeToFile.serialize(
+            value,
+            undefined
+          );
           const filename = schema.serializeToFile.filename(forYaml, undefined);
           if (filename && content) {
             collectedFiles.push({
@@ -66,11 +77,19 @@ export function deserializeFiles(
       const schema = fields.object(componentBlock.schema);
       return {
         ...node,
-        props: deserializeProps(schema, node.props, files, mode) as Record<string, any>,
+        props: deserializeProps(schema, node.props, files, mode) as Record<
+          string,
+          any
+        >,
       };
     }
     if (typeof node.type === 'string') {
-      const children = deserializeFiles(node.children, componentBlocks, files, mode);
+      const children = deserializeFiles(
+        node.children,
+        componentBlocks,
+        files,
+        mode
+      );
       return { ...node, children };
     }
     return node;
@@ -87,7 +106,10 @@ function deserializeProps(
     form: (schema, value) => {
       if ('serializeToFile' in schema && schema.serializeToFile) {
         if (schema.serializeToFile.kind === 'asset') {
-          if (!schema.serializeToFile.reader.requiresContentInReader && mode === 'read') {
+          if (
+            !schema.serializeToFile.reader.requiresContentInReader &&
+            mode === 'read'
+          ) {
             return schema.serializeToFile.reader.parseToReader({
               value: value,
               suggestedFilenamePrefix: undefined,
@@ -95,7 +117,8 @@ function deserializeProps(
           }
           const filename = schema.serializeToFile.filename(value, undefined);
           return (
-            mode === 'read' && schema.serializeToFile.reader.requiresContentInReader
+            mode === 'read' &&
+              schema.serializeToFile.reader.requiresContentInReader
               ? schema.serializeToFile.reader.parseToReader
               : schema.serializeToFile.parse
           )({

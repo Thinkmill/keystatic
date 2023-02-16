@@ -1,9 +1,16 @@
 import { ComponentSchema, ComponentBlock } from './api';
-import { getKeysForArrayValue, getNewArrayElementKey, setKeysForArrayValue } from './preview-props';
+import {
+  getKeysForArrayValue,
+  getNewArrayElementKey,
+  setKeysForArrayValue,
+} from './preview-props';
 import { assertNever, findChildPropPaths } from './utils';
 
 export function getInitialValue(type: string, componentBlock: ComponentBlock) {
-  const props = getInitialPropsValue({ kind: 'object', fields: componentBlock.schema });
+  const props = getInitialPropsValue({
+    kind: 'object',
+    fields: componentBlock.schema,
+  });
   return {
     type: 'component-block' as const,
     component: type,
@@ -59,10 +66,16 @@ export function getInitialPropsValueFromInitializer(
     case 'child':
       return null;
     case 'relationship':
-      return initializer === undefined ? (schema.many ? [] : null) : initializer;
+      return initializer === undefined
+        ? schema.many
+          ? []
+          : null
+        : initializer;
     case 'conditional': {
       const defaultValue =
-        initializer === undefined ? schema.discriminant.defaultValue : initializer.discriminant;
+        initializer === undefined
+          ? schema.discriminant.defaultValue
+          : initializer.discriminant;
       return {
         discriminant: defaultValue,
         value: getInitialPropsValueFromInitializer(
@@ -90,7 +103,11 @@ export function getInitialPropsValueFromInitializer(
   assertNever(schema);
 }
 
-export function updateValue(schema: ComponentSchema, currentValue: any, updater: any): any {
+export function updateValue(
+  schema: ComponentSchema,
+  currentValue: any,
+  updater: any
+): any {
   if (updater === undefined) return currentValue;
 
   switch (schema.kind) {
@@ -119,7 +136,11 @@ export function updateValue(schema: ComponentSchema, currentValue: any, updater:
     case 'object': {
       const obj: Record<string, any> = {};
       for (const key of Object.keys(schema.fields)) {
-        obj[key] = updateValue(schema.fields[key], currentValue[key], updater[key]);
+        obj[key] = updateValue(
+          schema.fields[key],
+          currentValue[key],
+          updater[key]
+        );
       }
       return obj;
     }

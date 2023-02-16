@@ -32,8 +32,8 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
         </Flex>
         <Text>Keystatic doesn't have the required config.</Text>
         <Text>
-          If you've already created your GitHub app, make sure to add the following environment
-          variables:
+          If you've already created your GitHub app, make sure to add the
+          following environment variables:
         </Text>
         <Box elementType="ul">
           <li>
@@ -46,7 +46,10 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
             <code>KEYSTATIC_SECRET</code>
           </li>
         </Box>
-        <Text>If you haven't created your GitHub app for Keystatic, you can create one below.</Text>
+        <Text>
+          If you haven't created your GitHub app for Keystatic, you can create
+          one below.
+        </Text>
         <TextField
           label="Deployed App URL"
           description="This should the root of your domain. If you're not sure where Keystatic will be deployed, leave this blank and you can update the GitHub app later."
@@ -60,8 +63,9 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
           onChange={setOrganization}
         />
         <Text>
-          After visiting GitHub to create the GitHub app, you'll be redirected back here and secrets
-          generated from GitHub will be written to your <code>.env</code> file.
+          After visiting GitHub to create the GitHub app, you'll be redirected
+          back here and secrets generated from GitHub will be written to your{' '}
+          <code>.env</code> file.
         </Text>
         <input
           type="text"
@@ -69,12 +73,17 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
           className={css({ display: 'none' })}
           value={JSON.stringify({
             name: `${props.config.storage.repo.owner} Keystatic`,
-            url: deployedURL ? `${deployedURL}/keystatic` : 'http://localhost:3000/keystatic',
+            url: deployedURL
+              ? `${deployedURL}/keystatic`
+              : 'http://localhost:3000/keystatic',
             public: false,
-            redirect_url: 'http://localhost:3000/api/keystatic/github/created-app',
+            redirect_url:
+              'http://localhost:3000/api/keystatic/github/created-app',
             callback_urls: [
               'http://localhost:3000/api/keystatic/github/oauth/callback',
-              ...(deployedURL ? [`${deployedURL}/api/keystatic/github/oauth/callback`] : []),
+              ...(deployedURL
+                ? [`${deployedURL}/api/keystatic/github/oauth/callback`]
+                : []),
             ],
             request_oauth_on_install: true,
             default_permissions: {

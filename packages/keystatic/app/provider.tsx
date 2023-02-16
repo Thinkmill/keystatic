@@ -77,7 +77,10 @@ export default function Provider({
                           cache.updateQuery(
                             {
                               query: AppShellQuery,
-                              variables: { owner: repo!.owner, name: repo!.name },
+                              variables: {
+                                owner: repo!.owner,
+                                name: repo!.name,
+                              },
                             },
                             data => {
                               if (
@@ -92,7 +95,10 @@ export default function Provider({
                                     ...data.repository,
                                     refs: {
                                       ...data.repository.refs,
-                                      nodes: [...data.repository.refs.nodes, result.createRef.ref],
+                                      nodes: [
+                                        ...data.repository.refs.nodes,
+                                        result.createRef.ref,
+                                      ],
                                     },
                                   },
                                 };
@@ -105,7 +111,10 @@ export default function Provider({
                           cache.updateQuery(
                             {
                               query: AppShellQuery,
-                              variables: { owner: repo!.owner, name: repo!.name },
+                              variables: {
+                                owner: repo!.owner,
+                                name: repo!.name,
+                              },
                             },
                             data => {
                               if (

@@ -25,7 +25,9 @@ export function normalizeTextBasedOnInlineMarksAndSoftBreaks(
       const [parentNode] = Editor.parent(editor, path);
       if (parentNode.type !== 'code') {
         for (const position of Editor.positions(editor, { at: path })) {
-          const character = (Node.get(editor, position.path) as Text).text[position.offset];
+          const character = (Node.get(editor, position.path) as Text).text[
+            position.offset
+          ];
           if (character === '\n') {
             Transforms.delete(editor, { at: position });
             return true;
@@ -38,8 +40,14 @@ export function normalizeTextBasedOnInlineMarksAndSoftBreaks(
   return false;
 }
 
-export type DocumentFeaturesForNormalization = Omit<DocumentFeatures, 'formatting'> & {
-  formatting: Omit<DocumentFeatures['formatting'], 'inlineMarks' | 'softBreaks'>;
+export type DocumentFeaturesForNormalization = Omit<
+  DocumentFeatures,
+  'formatting'
+> & {
+  formatting: Omit<
+    DocumentFeatures['formatting'],
+    'inlineMarks' | 'softBreaks'
+  >;
   relationships: boolean;
 };
 
@@ -51,7 +59,9 @@ export function normalizeInlineBasedOnLinksAndRelationships(
   relationships: Relationships
 ) {
   if (node.type === 'link' && !links) {
-    Transforms.insertText(editor, ` (${node.href})`, { at: Editor.end(editor, path) });
+    Transforms.insertText(editor, ` (${node.href})`, {
+      at: Editor.end(editor, path),
+    });
     Transforms.unwrapNodes(editor, { at: path });
     return true;
   }
@@ -64,9 +74,9 @@ export function normalizeInlineBasedOnLinksAndRelationships(
       const relationship = relationships[node.relationship];
       Transforms.insertText(
         editor,
-        `${data.label || data.id || ''} (${relationship?.label || node.relationship}:${
-          data.id || ''
-        })`,
+        `${data.label || data.id || ''} (${
+          relationship?.label || node.relationship
+        }:${data.id || ''})`,
         { at: Editor.before(editor, path) }
       );
     }
@@ -90,13 +100,15 @@ export function normalizeElementBasedOnDocumentFeatures(
 ): boolean {
   if (
     (node.type === 'heading' &&
-      (!formatting.headingLevels.length || !formatting.headingLevels.includes(node.level))) ||
+      (!formatting.headingLevels.length ||
+        !formatting.headingLevels.includes(node.level))) ||
     (node.type === 'ordered-list' && !formatting.listTypes.ordered) ||
     (node.type === 'unordered-list' && !formatting.listTypes.unordered) ||
     (node.type === 'code' && !formatting.blockTypes.code) ||
     (node.type === 'blockquote' && !formatting.blockTypes.blockquote) ||
     (node.type === 'layout' &&
-      (layouts.length === 0 || !layouts.some(layout => areArraysEqual(layout, node.layout))))
+      (layouts.length === 0 ||
+        !layouts.some(layout => areArraysEqual(layout, node.layout))))
   ) {
     Transforms.unwrapNodes(editor, { at: path });
     return true;
@@ -105,7 +117,9 @@ export function normalizeElementBasedOnDocumentFeatures(
     (node.type === 'paragraph' || node.type === 'heading') &&
     ((!formatting.alignment.center && node.textAlign === 'center') ||
       (!formatting.alignment.end && node.textAlign === 'end') ||
-      ('textAlign' in node && node.textAlign !== 'center' && node.textAlign !== 'end'))
+      ('textAlign' in node &&
+        node.textAlign !== 'center' &&
+        node.textAlign !== 'end'))
   ) {
     Transforms.unsetNodes(editor, 'textAlign', { at: path });
     return true;
@@ -130,7 +144,10 @@ export function withDocumentFeaturesNormalization(
   editor: Editor
 ): Editor {
   const { normalizeNode } = editor;
-  const documentFeaturesForNormalization = { ...documentFeatures, relationships: true };
+  const documentFeaturesForNormalization = {
+    ...documentFeatures,
+    relationships: true,
+  };
   editor.normalizeNode = ([node, path]) => {
     if (Text.isText(node)) {
       normalizeTextBasedOnInlineMarksAndSoftBreaks(

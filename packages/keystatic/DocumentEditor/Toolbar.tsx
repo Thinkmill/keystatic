@@ -27,7 +27,10 @@ import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { TextAlignMenu } from './alignment';
 import { blockquoteButton } from './blockquote';
 import { codeButton } from './code-block';
-import { ComponentBlockContext, insertComponentBlock } from './component-blocks';
+import {
+  ComponentBlockContext,
+  insertComponentBlock,
+} from './component-blocks';
 import { dividerButton } from './divider';
 import { DocumentFeatures } from './document-features';
 import { linkButton } from './link';
@@ -47,10 +50,13 @@ export function Toolbar({
 }) {
   const blockComponent = useContext(ComponentBlockContext);
   const hasBlockItems = Object.keys(blockComponent).length;
-  const hasMarks = Object.values(documentFeatures.formatting.inlineMarks).some(x => x);
+  const hasMarks = Object.values(documentFeatures.formatting.inlineMarks).some(
+    x => x
+  );
 
   const hasAlignment =
-    documentFeatures.formatting.alignment.center || documentFeatures.formatting.alignment.end;
+    documentFeatures.formatting.alignment.center ||
+    documentFeatures.formatting.alignment.end;
   const hasLists =
     documentFeatures.formatting.listTypes.unordered ||
     documentFeatures.formatting.listTypes.ordered;
@@ -59,14 +65,24 @@ export function Toolbar({
     <ToolbarContainer>
       <ToolbarScrollArea>
         {!!documentFeatures.formatting.headingLevels.length && (
-          <HeadingMenu headingLevels={documentFeatures.formatting.headingLevels} />
+          <HeadingMenu
+            headingLevels={documentFeatures.formatting.headingLevels}
+          />
         )}
-        {hasMarks && <InlineMarks marks={documentFeatures.formatting.inlineMarks} />}
+        {hasMarks && (
+          <InlineMarks marks={documentFeatures.formatting.inlineMarks} />
+        )}
 
         {(hasAlignment || hasLists) && (
           <ToolbarGroup>
-            {hasAlignment && <TextAlignMenu alignment={documentFeatures.formatting.alignment} />}
-            {hasLists && <ListButtons lists={documentFeatures.formatting.listTypes} />}
+            {hasAlignment && (
+              <TextAlignMenu
+                alignment={documentFeatures.formatting.alignment}
+              />
+            )}
+            {hasLists && (
+              <ListButtons lists={documentFeatures.formatting.listTypes} />
+            )}
           </ToolbarGroup>
         )}
 
@@ -78,7 +94,8 @@ export function Toolbar({
           <ToolbarGroup>
             {documentFeatures.dividers && dividerButton}
             {documentFeatures.links && linkButton}
-            {documentFeatures.formatting.blockTypes.blockquote && blockquoteButton}
+            {documentFeatures.formatting.blockTypes.blockquote &&
+              blockquoteButton}
             {!!documentFeatures.layouts.length && (
               <LayoutsButton layouts={documentFeatures.layouts} />
             )}
@@ -98,7 +115,9 @@ export function Toolbar({
                     viewState.toggle();
                   }}
                 >
-                  <Icon src={viewState.expanded ? minimizeIcon : maximizeIcon} />
+                  <Icon
+                    src={viewState.expanded ? minimizeIcon : maximizeIcon}
+                  />
                 </Button>
                 <Tooltip>{viewState.expanded ? 'Collapse' : 'Expand'}</Tooltip>
               </TooltipTrigger>
@@ -198,7 +217,10 @@ const HeadingMenu = ({
           Transforms.setNodes(
             editor,
             { type: 'heading', level: key },
-            { match: node => node.type === 'paragraph' || node.type === 'heading' }
+            {
+              match: node =>
+                node.type === 'paragraph' || node.type === 'heading',
+            }
           );
         }
         ReactEditor.focus(editor);
@@ -293,7 +315,9 @@ function InlineMarks({
     clearFormatting: { isDisabled },
     marks,
   } = useToolbarState();
-  const items = inlineMarks.filter(item => item.key === 'clearFormatting' || marksShown[item.key]);
+  const items = inlineMarks.filter(
+    item => item.key === 'clearFormatting' || marksShown[item.key]
+  );
 
   return (
     <ActionGroup
@@ -305,7 +329,9 @@ function InlineMarks({
       summaryIcon={<Icon src={typeIcon} />}
       items={items}
       selectionMode="multiple"
-      selectedKeys={Object.keys(marks).filter(key => marks[key as keyof typeof marks].isSelected)}
+      selectedKeys={Object.keys(marks).filter(
+        key => marks[key as keyof typeof marks].isSelected
+      )}
       disabledKeys={Object.keys(marks)
         .filter(key => marks[key as keyof typeof marks].isDisabled)
         .concat(isDisabled ? 'clearFormatting' : [])}

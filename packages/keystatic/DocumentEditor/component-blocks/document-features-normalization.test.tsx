@@ -29,7 +29,11 @@ const cases: Record<
     ),
   },
   'mark where it is is allowed in inline': {
-    schema: fields.child({ kind: 'inline', placeholder: '', formatting: 'inherit' }),
+    schema: fields.child({
+      kind: 'inline',
+      placeholder: '',
+      formatting: 'inherit',
+    }),
     children: <text bold>this should be bold</text>,
   },
   'code block where it is not allowed in a block': {
@@ -46,7 +50,11 @@ const cases: Record<
     ),
   },
   'code block where it is allowed in a block': {
-    schema: fields.child({ kind: 'block', placeholder: '', formatting: 'inherit' }),
+    schema: fields.child({
+      kind: 'block',
+      placeholder: '',
+      formatting: 'inherit',
+    }),
     children: (
       <code>
         <text>this should not be in a code block</text>
@@ -101,10 +109,16 @@ const cases: Record<
       </link>,
       <text> stuff</text>,
     ],
-    expectedNormalized: <text>some text not in a link (https://example.com) stuff</text>,
+    expectedNormalized: (
+      <text>some text not in a link (https://example.com) stuff</text>
+    ),
   },
   'relationship allowed': {
-    schema: fields.child({ kind: 'block', placeholder: '', relationships: 'inherit' }),
+    schema: fields.child({
+      kind: 'block',
+      placeholder: '',
+      relationships: 'inherit',
+    }),
     children: (
       <paragraph>
         <text>some text </text>
@@ -147,7 +161,11 @@ const cases: Record<
     ),
   },
   'alignment allowed': {
-    schema: fields.child({ kind: 'block', placeholder: '', formatting: { alignment: 'inherit' } }),
+    schema: fields.child({
+      kind: 'block',
+      placeholder: '',
+      formatting: { alignment: 'inherit' },
+    }),
     children: (
       <paragraph textAlign="end">
         <text>some text </text>
@@ -168,7 +186,11 @@ const cases: Record<
     ),
   },
   'divider allowed': {
-    schema: fields.child({ kind: 'block', placeholder: '', dividers: 'inherit' }),
+    schema: fields.child({
+      kind: 'block',
+      placeholder: '',
+      dividers: 'inherit',
+    }),
     children: [
       <paragraph>
         <text>some text </text>
@@ -195,7 +217,11 @@ const cases: Record<
     ),
   },
   'soft breaks allowed': {
-    schema: fields.child({ kind: 'block', placeholder: '', formatting: { softBreaks: 'inherit' } }),
+    schema: fields.child({
+      kind: 'block',
+      placeholder: '',
+      formatting: { softBreaks: 'inherit' },
+    }),
     children: (
       <paragraph>
         <text>some{'\n'} text </text>
@@ -223,7 +249,10 @@ const cases: Record<
 function makeEditorWithChildField(
   childField: ChildField,
   children: Children,
-  normalization: 'disallow-non-normalized' | 'normalize' | 'skip' = 'disallow-non-normalized'
+  normalization:
+    | 'disallow-non-normalized'
+    | 'normalize'
+    | 'skip' = 'disallow-non-normalized'
 ) {
   const Prop = `component-${childField.options.kind}-prop` as const;
   return makeEditor(
@@ -238,7 +267,11 @@ function makeEditorWithChildField(
     {
       normalization,
       componentBlocks: {
-        comp: component({ preview: () => null, label: '', schema: { child: childField } }),
+        comp: component({
+          preview: () => null,
+          label: '',
+          schema: { child: childField },
+        }),
       },
       relationships: {
         mention: {
@@ -258,7 +291,9 @@ Object.keys(cases).forEach(key => {
     let editor = makeEditorWithChildField(
       testCase.schema,
       testCase.children,
-      testCase.expectedNormalized === undefined ? 'disallow-non-normalized' : 'normalize'
+      testCase.expectedNormalized === undefined
+        ? 'disallow-non-normalized'
+        : 'normalize'
     );
     if (testCase.expectedNormalized !== undefined) {
       expect(editor).toEqualEditor(
@@ -318,7 +353,11 @@ test('mark disabled in inline prop', () => {
 
 test('mark enabled in inline prop', () => {
   const editor = makeEditorWithChildField(
-    fields.child({ kind: 'inline', placeholder: '', formatting: { inlineMarks: 'inherit' } }),
+    fields.child({
+      kind: 'inline',
+      placeholder: '',
+      formatting: { inlineMarks: 'inherit' },
+    }),
     <text>
       **thing*
       <cursor />
@@ -402,7 +441,11 @@ test('mark disabled in block prop', () => {
 
 test('mark enabled in block prop', () => {
   const editor = makeEditorWithChildField(
-    fields.child({ kind: 'block', placeholder: '', formatting: { inlineMarks: 'inherit' } }),
+    fields.child({
+      kind: 'block',
+      placeholder: '',
+      formatting: { inlineMarks: 'inherit' },
+    }),
     <paragraph>
       <text>
         **thing*
@@ -490,7 +533,11 @@ test('heading disabled in block prop', () => {
 
 test('heading enabled in block prop', () => {
   const editor = makeEditorWithChildField(
-    fields.child({ kind: 'block', placeholder: '', formatting: { headingLevels: 'inherit' } }),
+    fields.child({
+      kind: 'block',
+      placeholder: '',
+      formatting: { headingLevels: 'inherit' },
+    }),
     <paragraph>
       <text>
         ##

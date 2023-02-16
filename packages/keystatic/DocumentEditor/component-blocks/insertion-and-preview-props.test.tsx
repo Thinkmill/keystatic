@@ -13,7 +13,11 @@ const objectProp = fields.object({
   prop: fields.text({ label: 'Prop' }),
   block: fields.child({ kind: 'block', placeholder: '' }),
   inline: fields.child({ kind: 'inline', placeholder: '' }),
-  many: fields.relationship({ label: 'Relationship', listKey: 'many', many: true }),
+  many: fields.relationship({
+    label: 'Relationship',
+    listKey: 'many',
+    many: true,
+  }),
   select: fields.select({
     label: 'Select',
     defaultValue: 'a',
@@ -173,7 +177,11 @@ const getPreviewProps = (editor: Editor) =>
   createGetPreviewProps(
     { kind: 'object', fields: componentBlocks.complex.schema },
     props => {
-      Transforms.setNodes(editor, { props: props((editor.children[0] as any).props) }, { at: [0] });
+      Transforms.setNodes(
+        editor,
+        { props: props((editor.children[0] as any).props) },
+        { at: [0] }
+      );
     },
     (path): ReactElement => React.createElement(ChildFieldEditable, { path })
   )((editor.children[0] as any).props);
@@ -233,7 +241,9 @@ test('preview props api', () => {
         schema: componentBlocks.complex.schema.object,
         fields: {
           block: {
-            element: React.createElement(ChildFieldEditable, { path: ['object', 'block'] }),
+            element: React.createElement(ChildFieldEditable, {
+              path: ['object', 'block'],
+            }),
             schema: componentBlocks.complex.schema.object.fields.block,
           },
           conditional: {
@@ -242,28 +252,35 @@ test('preview props api', () => {
             onChange: expect.any(Function) as any,
             options: undefined,
             value: {
-              schema: componentBlocks.complex.schema.object.fields.conditional.values.false,
+              schema:
+                componentBlocks.complex.schema.object.fields.conditional.values
+                  .false,
               onChange: expect.any(Function) as any,
               value: null,
             },
           },
           conditionalSelect: {
             discriminant: 'a',
-            schema: componentBlocks.complex.schema.object.fields.conditionalSelect,
+            schema:
+              componentBlocks.complex.schema.object.fields.conditionalSelect,
             onChange: expect.any(Function) as any,
             options: [
               { label: 'A', value: 'a' },
               { label: 'B', value: 'b' },
             ],
             value: {
-              schema: componentBlocks.complex.schema.object.fields.conditionalSelect.values.a,
+              schema:
+                componentBlocks.complex.schema.object.fields.conditionalSelect
+                  .values.a,
               onChange: expect.any(Function) as any,
               options: undefined,
               value: '',
             },
           },
           inline: {
-            element: React.createElement(ChildFieldEditable, { path: ['object', 'inline'] }),
+            element: React.createElement(ChildFieldEditable, {
+              path: ['object', 'inline'],
+            }),
             schema: componentBlocks.complex.schema.object.fields.inline,
           },
           many: {
@@ -367,7 +384,8 @@ test('preview props conditional change', () => {
       </paragraph>
     </editor>
   `);
-  const conditionalPreviewProps = getPreviewProps(editor).fields.object.fields.conditional;
+  const conditionalPreviewProps =
+    getPreviewProps(editor).fields.object.fields.conditional;
   const expectedConditionalPreviewProps: typeof conditionalPreviewProps = {
     schema: componentBlocks.complex.schema.object.fields.conditional,
     discriminant: true,
@@ -377,7 +395,8 @@ test('preview props conditional change', () => {
       element: React.createElement(ChildFieldEditable, {
         path: ['object', 'conditional', 'value'],
       }),
-      schema: componentBlocks.complex.schema.object.fields.conditional.values.true,
+      schema:
+        componentBlocks.complex.schema.object.fields.conditional.values.true,
     },
   };
   expect(getPreviewProps(editor).fields.object.fields.conditional).toEqual(
@@ -417,10 +436,13 @@ test('relationship single change', () => {
   assert(previewProps.fields.object.fields.conditional.discriminant === false);
   const val = { data: {}, id: 'some-id', label: 'some-id' };
   previewProps.fields.object.fields.conditional.value.onChange(val);
-  expect((editor.children[0] as any).props.object.conditional.value).toEqual(val);
-  expect((getPreviewProps(editor).fields.object.fields.conditional.value as any).value).toEqual(
+  expect((editor.children[0] as any).props.object.conditional.value).toEqual(
     val
   );
+  expect(
+    (getPreviewProps(editor).fields.object.fields.conditional.value as any)
+      .value
+  ).toEqual(val);
 });
 
 test('changing conditional with form inside', () => {
@@ -430,7 +452,8 @@ test('changing conditional with form inside', () => {
   assert(previewProps.fields.object.fields.conditional.discriminant === false);
   previewProps.fields.object.fields.conditionalSelect.onChange('b');
 
-  expect((editor.children[0] as any).props.object.conditionalSelect).toMatchInlineSnapshot(`
+  expect((editor.children[0] as any).props.object.conditionalSelect)
+    .toMatchInlineSnapshot(`
     {
       "discriminant": "b",
       "value": "B",
@@ -438,33 +461,39 @@ test('changing conditional with form inside', () => {
   `);
   const conditionalSelectPreviewProps =
     getPreviewProps(editor).fields.object.fields.conditionalSelect;
-  const expectedConditionalSelectPreviewProps: typeof conditionalSelectPreviewProps = {
-    discriminant: 'b',
-    schema: componentBlocks.complex.schema.object.fields.conditionalSelect,
-    onChange: expect.any(Function) as any,
-    options: [
-      { label: 'A', value: 'a' },
-      { label: 'B', value: 'b' },
-    ],
-    value: {
-      schema: componentBlocks.complex.schema.object.fields.conditionalSelect.values.b,
+  const expectedConditionalSelectPreviewProps: typeof conditionalSelectPreviewProps =
+    {
+      discriminant: 'b',
+      schema: componentBlocks.complex.schema.object.fields.conditionalSelect,
       onChange: expect.any(Function) as any,
-      options: undefined,
-      value: 'B',
-    },
-  };
-  expect(getPreviewProps(editor).fields.object.fields.conditionalSelect).toEqual(
-    expectedConditionalSelectPreviewProps
-  );
+      options: [
+        { label: 'A', value: 'a' },
+        { label: 'B', value: 'b' },
+      ],
+      value: {
+        schema:
+          componentBlocks.complex.schema.object.fields.conditionalSelect.values
+            .b,
+        onChange: expect.any(Function) as any,
+        options: undefined,
+        value: 'B',
+      },
+    };
+  expect(
+    getPreviewProps(editor).fields.object.fields.conditionalSelect
+  ).toEqual(expectedConditionalSelectPreviewProps);
 });
 
 test('changing form inside conditional', () => {
   let editor = makeEditorWithComplexComponentBlock();
 
   let previewProps = getPreviewProps(editor);
-  previewProps.fields.object.fields.conditionalSelect.value.onChange('Some content');
+  previewProps.fields.object.fields.conditionalSelect.value.onChange(
+    'Some content'
+  );
 
-  expect((editor.children[0] as any).props.object.conditionalSelect).toMatchInlineSnapshot(`
+  expect((editor.children[0] as any).props.object.conditionalSelect)
+    .toMatchInlineSnapshot(`
     {
       "discriminant": "a",
       "value": "Some content",
@@ -472,20 +501,25 @@ test('changing form inside conditional', () => {
   `);
   const conditionalSelectPreviewProps =
     getPreviewProps(editor).fields.object.fields.conditionalSelect;
-  const expectedConditionalSelectPreviewProps: typeof conditionalSelectPreviewProps = {
-    discriminant: 'a',
-    schema: componentBlocks.complex.schema.object.fields.conditionalSelect,
-    onChange: expect.any(Function) as any,
-    options: [
-      { label: 'A', value: 'a' },
-      { label: 'B', value: 'b' },
-    ],
-    value: {
-      schema: componentBlocks.complex.schema.object.fields.conditionalSelect.values.a,
+  const expectedConditionalSelectPreviewProps: typeof conditionalSelectPreviewProps =
+    {
+      discriminant: 'a',
+      schema: componentBlocks.complex.schema.object.fields.conditionalSelect,
       onChange: expect.any(Function) as any,
-      options: undefined,
-      value: 'Some content',
-    },
-  };
-  expect(conditionalSelectPreviewProps).toEqual(expectedConditionalSelectPreviewProps);
+      options: [
+        { label: 'A', value: 'a' },
+        { label: 'B', value: 'b' },
+      ],
+      value: {
+        schema:
+          componentBlocks.complex.schema.object.fields.conditionalSelect.values
+            .a,
+        onChange: expect.any(Function) as any,
+        options: undefined,
+        value: 'Some content',
+      },
+    };
+  expect(conditionalSelectPreviewProps).toEqual(
+    expectedConditionalSelectPreviewProps
+  );
 });

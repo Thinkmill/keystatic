@@ -1,7 +1,10 @@
 import { RenderElementProps } from 'slate-react';
 
 import { BlockquoteElement } from './blockquote';
-import { ComponentBlocksElement, ComponentInlineProp } from './component-blocks';
+import {
+  ComponentBlocksElement,
+  ComponentInlineProp,
+} from './component-blocks';
 import { HeadingElement } from './heading';
 import { LayoutArea, LayoutContainer } from './layouts';
 import { LinkElement } from './link';

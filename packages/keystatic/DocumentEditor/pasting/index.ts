@@ -43,7 +43,9 @@ export function withPasting(editor: Editor): Editor {
       insertData(data);
       return;
     }
-    const blockAbove = Editor.above(editor, { match: node => Editor.isBlock(editor, node) });
+    const blockAbove = Editor.above(editor, {
+      match: node => Editor.isBlock(editor, node),
+    });
     if (blockAbove?.[0].type === 'code') {
       const plain = data.getData('text/plain');
       editor.insertText(plain);
@@ -77,7 +79,9 @@ export function withPasting(editor: Editor): Editor {
       !Range.isCollapsed(editor.selection) &&
       // we only want to turn the selected text into a link if the selection is within the same block
       Editor.above(editor, {
-        match: node => Editor.isBlock(editor, node) && !Editor.isBlock(editor, node.children[0]),
+        match: node =>
+          Editor.isBlock(editor, node) &&
+          !Editor.isBlock(editor, node.children[0]),
       }) &&
       // and there is only text(potentially with marks) in the selection
       // no other links or inline relationships
@@ -85,7 +89,11 @@ export function withPasting(editor: Editor): Editor {
         match: node => Editor.isInline(editor, node),
       }).next().done
     ) {
-      Transforms.wrapNodes(editor, { type: 'link', href: plain, children: [] }, { split: true });
+      Transforms.wrapNodes(
+        editor,
+        { type: 'link', href: plain, children: [] },
+        { split: true }
+      );
       return;
     }
 

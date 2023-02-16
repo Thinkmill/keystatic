@@ -34,9 +34,13 @@ export function FromTemplateDeploy(props: { config: GitHubConfig }) {
         maxWidth={400}
       >
         <Heading>You've deployed Keystatic! 🎉</Heading>
-        <Text>To start using Keystatic, you need to install the GitHub app you've created.</Text>
         <Text>
-          Make sure to add the App to the <code>{props.config.storage.repo.name}</code> repository.
+          To start using Keystatic, you need to install the GitHub app you've
+          created.
+        </Text>
+        <Text>
+          Make sure to add the App to the{' '}
+          <code>{props.config.storage.repo.name}</code> repository.
         </Text>
         <InstallGitHubApp config={props.config} />
       </Flex>

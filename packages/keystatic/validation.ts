@@ -55,7 +55,11 @@ export function getValidatedNodeWithNormalizedComponentFormProps(
   return {
     ...node,
     children: node.children.map(x =>
-      getValidatedNodeWithNormalizedComponentFormProps(x, componentBlocks, relationships)
+      getValidatedNodeWithNormalizedComponentFormProps(
+        x,
+        componentBlocks,
+        relationships
+      )
     ),
   };
 }
@@ -68,9 +72,17 @@ export function validateAndNormalizeDocument(
 ) {
   validateDocumentStructure(value);
   const children = value.map(x =>
-    getValidatedNodeWithNormalizedComponentFormProps(x, componentBlocks, relationships)
+    getValidatedNodeWithNormalizedComponentFormProps(
+      x,
+      componentBlocks,
+      relationships
+    )
   );
-  const editor = createDocumentEditor(documentFeatures, componentBlocks, relationships);
+  const editor = createDocumentEditor(
+    documentFeatures,
+    componentBlocks,
+    relationships
+  );
   editor.children = children;
   Editor.normalize(editor, { force: true });
   return editor.children;

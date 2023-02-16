@@ -3,7 +3,8 @@
 import { htmlToEditor } from './test-utils';
 
 test('whitespace between blocks is removed', () => {
-  expect(htmlToEditor('<p>blah</p>\n<span>   \n </span>    <p>other</p>')).toMatchInlineSnapshot(`
+  expect(htmlToEditor('<p>blah</p>\n<span>   \n </span>    <p>other</p>'))
+    .toMatchInlineSnapshot(`
     <editor>
       <paragraph>
         <text>
@@ -163,7 +164,9 @@ test('marks around blocks turn into marks around text', () => {
 
 test('list items', () => {
   expect(
-    htmlToEditor('<ul><li>blah<strong> this is bold</strong><ul><li>inner</li></ul></li></ul>')
+    htmlToEditor(
+      '<ul><li>blah<strong> this is bold</strong><ul><li>inner</li></ul></li></ul>'
+    )
   ).toMatchInlineSnapshot(`
     <editor>
       <unordered-list>
@@ -198,8 +201,11 @@ test('list items', () => {
 });
 
 test('link, block and text as siblings', () => {
-  expect(htmlToEditor('<a href="https://keystonejs.com">Something</a><h1>a</h1>other'))
-    .toMatchInlineSnapshot(`
+  expect(
+    htmlToEditor(
+      '<a href="https://keystonejs.com">Something</a><h1>a</h1>other'
+    )
+  ).toMatchInlineSnapshot(`
     <editor>
       <paragraph>
         <text />

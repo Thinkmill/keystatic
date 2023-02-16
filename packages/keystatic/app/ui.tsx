@@ -59,7 +59,10 @@ function RedirectToBranch(props: { config: GitHubConfig }) {
         }
       }
     ` as import('../__generated__/ts-gql/DefaultBranch').type,
-    variables: { name: props.config.storage.repo.name, owner: props.config.storage.repo.owner },
+    variables: {
+      name: props.config.storage.repo.name,
+      owner: props.config.storage.repo.owner,
+    },
   });
   useEffect(() => {
     if (error?.response.status === 401) {
@@ -78,7 +81,9 @@ function RedirectToBranch(props: { config: GitHubConfig }) {
   return null;
 }
 
-export function makePage<Collections extends { [key: string]: any }>(config: Config<Collections>) {
+export function makePage<Collections extends { [key: string]: any }>(
+  config: Config<Collections>
+) {
   function PageInner() {
     const router = useRouter();
     if (!router.isReady) return null;
@@ -93,9 +98,15 @@ export function makePage<Collections extends { [key: string]: any }>(config: Con
       }
       if (params.length === 1) {
         if (params[0] === 'setup') return <KeystaticSetup config={config} />;
-        if (params[0] === 'repo-not-found') return <RepoNotFound config={config} />;
-        if (params[0] === 'from-template-deploy') return <FromTemplateDeploy config={config} />;
-        if (params[0] === 'created-github-app') return <CreatedGitHubApp config={config} />;
+        if (params[0] === 'repo-not-found') {
+          return <RepoNotFound config={config} />;
+        }
+        if (params[0] === 'from-template-deploy') {
+          return <FromTemplateDeploy config={config} />;
+        }
+        if (params[0] === 'created-github-app') {
+          return <CreatedGitHubApp config={config} />;
+        }
       }
       if (params[0] !== 'branch' || params.length < 2) {
         return null;
@@ -109,7 +120,11 @@ export function makePage<Collections extends { [key: string]: any }>(config: Con
     }
     if (!parsedParams) return <Text>Not found</Text>;
     return (
-      <AppShell config={config} currentBranch={branch || ''} basePath={basePath}>
+      <AppShell
+        config={config}
+        currentBranch={branch || ''}
+        basePath={basePath}
+      >
         {parsedParams?.collection ? (
           parsedParams.collection in (config.collections || {}) ? (
             parsedParams.kind === 'create' ? (
@@ -135,7 +150,9 @@ export function makePage<Collections extends { [key: string]: any }>(config: Con
           ) : (
             <AppShellRoot>
               <AppShellBody>
-                <Notice tone="critical">Collection "{parsedParams.collection}" not found.</Notice>
+                <Notice tone="critical">
+                  Collection "{parsedParams.collection}" not found.
+                </Notice>
               </AppShellBody>
             </AppShellRoot>
           )
@@ -148,19 +165,28 @@ export function makePage<Collections extends { [key: string]: any }>(config: Con
           ) : (
             <AppShellRoot>
               <AppShellBody>
-                <Notice tone="critical">Singleton "{parsedParams.singleton}" not found</Notice>
+                <Notice tone="critical">
+                  Singleton "{parsedParams.singleton}" not found
+                </Notice>
               </AppShellBody>
             </AppShellRoot>
           )
         ) : (
-          <DashboardPage config={config as unknown as Config} basePath={basePath} />
+          <DashboardPage
+            config={config as unknown as Config}
+            basePath={basePath}
+          />
         )}
       </AppShell>
     );
   }
   return function Page() {
     return (
-      <Provider repo={config.storage.kind === 'github' ? config.storage.repo : undefined}>
+      <Provider
+        repo={
+          config.storage.kind === 'github' ? config.storage.repo : undefined
+        }
+      >
         <PageInner />
       </Provider>
     );

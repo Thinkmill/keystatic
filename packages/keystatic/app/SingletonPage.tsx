@@ -49,24 +49,32 @@ function SingletonPage({
 }: SingletonPageProps) {
   const [forceValidation, setForceValidation] = useState(false);
   const singletonConfig = config.singletons![singleton]!;
-  const schema = useMemo(() => fields.object(singletonConfig.schema), [singletonConfig.schema]);
+  const schema = useMemo(
+    () => fields.object(singletonConfig.schema),
+    [singletonConfig.schema]
+  );
   const singletonPath = getSingletonPath(config, singleton);
 
   const router = useRouter();
 
-  const [{ state, localTreeSha: localTreeShaInState }, setState] = useState(() => ({
-    localTreeSha,
-    state: initialState === null ? getInitialPropsValue(schema) : initialState,
-  }));
+  const [{ state, localTreeSha: localTreeShaInState }, setState] = useState(
+    () => ({
+      localTreeSha,
+      state:
+        initialState === null ? getInitialPropsValue(schema) : initialState,
+    })
+  );
   if (localTreeShaInState !== localTreeSha) {
     setState({
       localTreeSha,
-      state: initialState === null ? getInitialPropsValue(schema) : initialState,
+      state:
+        initialState === null ? getInitialPropsValue(schema) : initialState,
     });
   }
 
   const isCreating = initialState === null;
-  const hasChanged = useHasChanged({ initialState, state, schema }) || isCreating;
+  const hasChanged =
+    useHasChanged({ initialState, state, schema }) || isCreating;
 
   const previewProps = useMemo(
     () =>
@@ -170,7 +178,9 @@ function SingletonPage({
                 <CreateBranchDuringUpdateDialog
                   branchOid={baseCommit}
                   onCreate={async newBranch => {
-                    await router.push(`/keystatic/branch/${newBranch}/singleton/${singleton}`);
+                    await router.push(
+                      `/keystatic/branch/${newBranch}/singleton/${singleton}`
+                    );
                     update();
                   }}
                   reason={updateResult.reason}
@@ -205,7 +215,10 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     format,
   });
   const { current: tree } = useTree();
-  const combined = useMemo(() => mergeDataStates({ tree, item: itemData }), [itemData, tree]);
+  const combined = useMemo(
+    () => mergeDataStates({ tree, item: itemData }),
+    [itemData, tree]
+  );
   if (combined.kind === 'error') {
     return (
       <AppShellRoot>
@@ -224,7 +237,11 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
       <AppShellRoot>
         {header}
         <AppShellBody>
-          <Flex alignItems="center" justifyContent="center" minHeight="size.scale.3000">
+          <Flex
+            alignItems="center"
+            justifyContent="center"
+            minHeight="size.scale.3000"
+          >
             <ProgressCircle
               aria-label={`Loading ${singletonConfig.label}`}
               isIndeterminate
@@ -240,10 +257,20 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     <SingletonPage
       singleton={props.singleton}
       config={props.config}
-      initialState={combined.data.item === 'not-found' ? null : combined.data.item.initialState}
-      initialFiles={combined.data.item === 'not-found' ? [] : combined.data.item.initialFiles}
+      initialState={
+        combined.data.item === 'not-found'
+          ? null
+          : combined.data.item.initialState
+      }
+      initialFiles={
+        combined.data.item === 'not-found'
+          ? []
+          : combined.data.item.initialFiles
+      }
       localTreeSha={
-        combined.data.item === 'not-found' ? undefined : combined.data.item.localTreeSha
+        combined.data.item === 'not-found'
+          ? undefined
+          : combined.data.item.localTreeSha
       }
       currentTree={combined.data.tree.tree}
     />

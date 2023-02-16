@@ -1,5 +1,9 @@
 /** @jest-environment node */
-import { treeEntriesToTreeNodes, treeSha, updateTreeWithChanges } from './trees';
+import {
+  treeEntriesToTreeNodes,
+  treeSha,
+  updateTreeWithChanges,
+} from './trees';
 import { webcrypto } from 'node:crypto';
 
 // even though Node already does this, Jest seems to be weird so we need to do this
@@ -112,9 +116,14 @@ const textEncoder = new TextEncoder();
 
 test('updateTreeWithChanges', async () => {
   const changes = {
-    additions: [{ path: 'something/a/b/d.md', contents: textEncoder.encode('a') }],
+    additions: [
+      { path: 'something/a/b/d.md', contents: textEncoder.encode('a') },
+    ],
     deletions: [],
   };
-  const output = await updateTreeWithChanges(treeEntriesToTreeNodes(input), changes);
+  const output = await updateTreeWithChanges(
+    treeEntriesToTreeNodes(input),
+    changes
+  );
   expect(output.entries).toEqual(expectedOutput);
 });

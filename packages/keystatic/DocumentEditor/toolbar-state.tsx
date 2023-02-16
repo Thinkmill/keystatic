@@ -11,7 +11,10 @@ import {
 } from './component-blocks/utils';
 import { LayoutOptionsProvider } from './layouts';
 import { isListNode } from './lists';
-import { DocumentFieldRelationshipsProvider, Relationships } from './relationship';
+import {
+  DocumentFieldRelationshipsProvider,
+  Relationships,
+} from './relationship';
 import { allMarks, isElementActive, Mark, nodeTypeMatcher } from './utils';
 
 type BasicToolbarItem = { isSelected: boolean; isDisabled: boolean };
@@ -82,7 +85,10 @@ export function getAncestorComponentChildFieldDocumentFeatures(
           componentBlock.schema
         );
         if (childField?.kind === 'child') {
-          return getDocumentFeaturesForChildField(editorDocumentFeatures, childField.options);
+          return getDocumentFeaturesForChildField(
+            editorDocumentFeatures,
+            childField.options
+          );
         }
       }
     }
@@ -197,7 +203,9 @@ export const createToolbarState = (
           ? locationDocumentFeatures.documentFeatures.formatting.headingLevels
           : [],
     },
-    relationships: { isDisabled: !locationDocumentFeatures.documentFeatures.relationships },
+    relationships: {
+      isDisabled: !locationDocumentFeatures.documentFeatures.relationships,
+    },
     code: {
       isSelected: isElementActive(editor, 'code'),
       isDisabled: !(
@@ -212,7 +220,8 @@ export const createToolbarState = (
           (listTypeAbove === 'none' || listTypeAbove === 'ordered-list'),
         isDisabled: !(
           locationDocumentFeatures.kind === 'block' &&
-          locationDocumentFeatures.documentFeatures.formatting.listTypes.ordered &&
+          locationDocumentFeatures.documentFeatures.formatting.listTypes
+            .ordered &&
           !headingEntry
         ),
       },
@@ -222,7 +231,8 @@ export const createToolbarState = (
           (listTypeAbove === 'none' || listTypeAbove === 'unordered-list'),
         isDisabled: !(
           locationDocumentFeatures.kind === 'block' &&
-          locationDocumentFeatures.documentFeatures.formatting.listTypes.unordered &&
+          locationDocumentFeatures.documentFeatures.formatting.listTypes
+            .unordered &&
           !headingEntry
         ),
       },
@@ -239,7 +249,8 @@ export const createToolbarState = (
     blockquote: {
       isDisabled: !(
         locationDocumentFeatures.kind === 'block' &&
-        locationDocumentFeatures.documentFeatures.formatting.blockTypes.blockquote
+        locationDocumentFeatures.documentFeatures.formatting.blockTypes
+          .blockquote
       ),
       isSelected: isElementActive(editor, 'blockquote'),
     },
@@ -269,12 +280,17 @@ export const createToolbarState = (
 
 function hasBlockThatClearsOnClearFormatting(editor: Editor) {
   const [node] = Editor.nodes(editor, {
-    match: node => node.type === 'heading' || node.type === 'code' || node.type === 'blockquote',
+    match: node =>
+      node.type === 'heading' ||
+      node.type === 'code' ||
+      node.type === 'blockquote',
   });
   return !!node;
 }
 
-export function getListTypeAbove(editor: Editor): 'none' | 'ordered-list' | 'unordered-list' {
+export function getListTypeAbove(
+  editor: Editor
+): 'none' | 'ordered-list' | 'unordered-list' {
   const listAbove = Editor.above(editor, { match: isListNode });
   if (!listAbove) {
     return 'none';
@@ -300,7 +316,11 @@ export const ToolbarStateProvider = ({
       <LayoutOptionsProvider value={editorDocumentFeatures.layouts}>
         <ComponentBlockContext.Provider value={componentBlocks}>
           <ToolbarStateContext.Provider
-            value={createToolbarState(editor, componentBlocks, editorDocumentFeatures)}
+            value={createToolbarState(
+              editor,
+              componentBlocks,
+              editorDocumentFeatures
+            )}
           >
             {children}
           </ToolbarStateContext.Provider>

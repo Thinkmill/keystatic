@@ -10,7 +10,9 @@ import {
   InlineFromExternalPaste,
 } from './utils';
 
-function getAlignmentFromElement(element: globalThis.Element): 'center' | 'end' | undefined {
+function getAlignmentFromElement(
+  element: globalThis.Element
+): 'center' | 'end' | undefined {
   const parent = element.parentElement;
   // confluence
   const attribute = parent?.getAttribute('data-align');
@@ -33,7 +35,10 @@ function getAlignmentFromElement(element: globalThis.Element): 'center' | 'end' 
   }
 }
 
-const headings: Record<string, (Node & { type: 'heading' })['level'] | undefined> = {
+const headings: Record<
+  string,
+  (Node & { type: 'heading' })['level'] | undefined
+> = {
   H1: 1,
   H2: 2,
   H3: 3,
@@ -135,7 +140,10 @@ export function deserializeHTMLNode(el: globalThis.Node): DeserializedNode[] {
   if (el.classList.contains('listtype-quote')) {
     marks.delete('italic');
     return addMarksToChildren(marks, () => [
-      { type: 'blockquote', children: fixNodesForBlockChildren(deserializeNodes(el.childNodes)) },
+      {
+        type: 'blockquote',
+        children: fixNodesForBlockChildren(deserializeNodes(el.childNodes)),
+      },
     ]);
   }
 
@@ -146,7 +154,9 @@ export function deserializeHTMLNode(el: globalThis.Node): DeserializedNode[] {
       const href = el.getAttribute('href');
       if (href) {
         return setLinkForChildren(href, () =>
-          forceDisableMarkForChildren('underline', () => deserializeNodes(el.childNodes))
+          forceDisableMarkForChildren('underline', () =>
+            deserializeNodes(el.childNodes)
+          )
         );
       }
     }
@@ -174,19 +184,28 @@ export function deserializeHTMLNode(el: globalThis.Node): DeserializedNode[] {
           return true;
         }),
       };
-      const listItemChildren = nestedList ? [listItemContent, nestedList] : [listItemContent];
+      const listItemChildren = nestedList
+        ? [listItemContent, nestedList]
+        : [listItemContent];
       return [{ type: 'list-item', children: listItemChildren }];
     }
 
     if (nodeName === 'P') {
-      return [{ type: 'paragraph', textAlign: getAlignmentFromElement(el), children }];
+      return [
+        { type: 'paragraph', textAlign: getAlignmentFromElement(el), children },
+      ];
     }
 
     const headingLevel = headings[nodeName];
 
     if (typeof headingLevel === 'number') {
       return [
-        { type: 'heading', level: headingLevel, textAlign: getAlignmentFromElement(el), children },
+        {
+          type: 'heading',
+          level: headingLevel,
+          textAlign: getAlignmentFromElement(el),
+          children,
+        },
       ];
     }
 
@@ -206,7 +225,9 @@ export function deserializeHTMLNode(el: globalThis.Node): DeserializedNode[] {
   });
 }
 
-function deserializeNodes(nodes: Iterable<globalThis.Node>): DeserializedNode[] {
+function deserializeNodes(
+  nodes: Iterable<globalThis.Node>
+): DeserializedNode[] {
   const outputNodes: (InlineFromExternalPaste | Block)[] = [];
   for (const node of nodes) {
     outputNodes.push(...deserializeHTMLNode(node));
@@ -214,7 +235,9 @@ function deserializeNodes(nodes: Iterable<globalThis.Node>): DeserializedNode[] 
   return outputNodes;
 }
 
-function fixNodesForBlockChildren(deserializedNodes: DeserializedNode[]): DeserializedNodes {
+function fixNodesForBlockChildren(
+  deserializedNodes: DeserializedNode[]
+): DeserializedNodes {
   if (!deserializedNodes.length) {
     // Slate also gets unhappy if an element has no children
     // the empty text nodes will get normalized away if they're not needed

@@ -41,7 +41,9 @@ export const TextAlignMenu = ({
   const toolbarState = useToolbarState();
   const items = [
     values.start,
-    ...(Object.keys(alignment) as Array<keyof typeof alignment>).map(x => values[x]),
+    ...(Object.keys(alignment) as Array<keyof typeof alignment>).map(
+      x => values[x]
+    ),
   ];
   return (
     <MenuTrigger>
@@ -61,14 +63,16 @@ export const TextAlignMenu = ({
         onAction={key => {
           if (key === 'start') {
             Transforms.unsetNodes(toolbarState.editor, 'textAlign', {
-              match: node => node.type === 'paragraph' || node.type === 'heading',
+              match: node =>
+                node.type === 'paragraph' || node.type === 'heading',
             });
           } else {
             Transforms.setNodes(
               toolbarState.editor,
               { textAlign: key as 'center' | 'end' },
               {
-                match: node => node.type === 'paragraph' || node.type === 'heading',
+                match: node =>
+                  node.type === 'paragraph' || node.type === 'heading',
               }
             );
           }

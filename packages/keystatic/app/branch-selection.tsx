@@ -13,7 +13,11 @@ import { TextField } from '@voussoir/text-field';
 import { Text } from '@voussoir/typography';
 import { ProgressCircle } from '@voussoir/progress';
 
-type BranchPickerProps = { allBranches: string[]; currentBranch: string; defaultBranch?: string };
+type BranchPickerProps = {
+  allBranches: string[];
+  currentBranch: string;
+  defaultBranch?: string;
+};
 
 export function BranchPicker(props: BranchPickerProps) {
   const { allBranches, currentBranch, defaultBranch } = props;
@@ -56,12 +60,18 @@ export function BranchPicker(props: BranchPickerProps) {
       selectedKey={currentBranch}
       onSelectionChange={key => {
         if (typeof key === 'string') {
-          router.push(router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + key));
+          router.push(
+            router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + key)
+          );
         }
       }}
     >
       {section => (
-        <Section key={section.id} title={section.label} items={section.children}>
+        <Section
+          key={section.id}
+          title={section.label}
+          items={section.children}
+        >
           {item => (
             <Item key={item.id} textValue={item.name}>
               <Icon src={gitBranchIcon} />
@@ -93,7 +103,11 @@ export function CreateBranchDialog(props: {
           event.preventDefault();
           const name = `refs/heads/${branchName}`;
           const result = await createBranch({
-            input: { name, oid: props.branchOid, repositoryId: props.repositoryId },
+            input: {
+              name,
+              oid: props.branchOid,
+              repositoryId: props.repositoryId,
+            },
           });
 
           if (result.data?.createRef?.__typename) {
@@ -115,7 +129,9 @@ export function CreateBranchDialog(props: {
           />
         </Content>
         <ButtonGroup>
-          {fetching && <ProgressCircle isIndeterminate aria-label="Creating Branch" />}
+          {fetching && (
+            <ProgressCircle isIndeterminate aria-label="Creating Branch" />
+          )}
           <Button onPress={props.onDismiss} isDisabled={fetching}>
             Cancel
           </Button>

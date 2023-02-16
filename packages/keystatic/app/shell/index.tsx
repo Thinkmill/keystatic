@@ -1,4 +1,10 @@
-import { createContext, PropsWithChildren, ReactElement, ReactNode, useContext } from 'react';
+import {
+  createContext,
+  PropsWithChildren,
+  ReactElement,
+  ReactNode,
+  useContext,
+} from 'react';
 
 import { alertCircleIcon } from '@voussoir/icon/icons/alertCircleIcon';
 import { Icon } from '@voussoir/icon';
@@ -7,7 +13,11 @@ import { VoussoirTheme, css, transition } from '@voussoir/style';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../../config';
-import { GitHubAppShellProvider, AppShellErrorContext, LocalAppShellProvider } from './data';
+import {
+  GitHubAppShellProvider,
+  AppShellErrorContext,
+  LocalAppShellProvider,
+} from './data';
 import { SidebarProvider, Sidebar, SIDEBAR_WIDTH } from './sidebar';
 import { isGitHubConfig } from '../utils';
 
@@ -19,7 +29,11 @@ export const AppShell = (props: {
 }) => {
   const inner = (
     <SidebarProvider>
-      <Flex direction={{ mobile: 'column', tablet: 'row' }} width="100vw" minHeight="100vh">
+      <Flex
+        direction={{ mobile: 'column', tablet: 'row' }}
+        width="100vw"
+        minHeight="100vh"
+      >
         <Sidebar hrefBase={props.basePath} config={props.config} />
         <AppShellErrorContext.Consumer>
           {error =>
@@ -39,12 +53,17 @@ export const AppShell = (props: {
   );
   if (isGitHubConfig(props.config)) {
     return (
-      <GitHubAppShellProvider currentBranch={props.currentBranch} config={props.config}>
+      <GitHubAppShellProvider
+        currentBranch={props.currentBranch}
+        config={props.config}
+      >
         {inner}
       </GitHubAppShellProvider>
     );
   }
-  return <LocalAppShellProvider config={props.config}>{inner}</LocalAppShellProvider>;
+  return (
+    <LocalAppShellProvider config={props.config}>{inner}</LocalAppShellProvider>
+  );
 };
 
 // Styled components
@@ -52,7 +71,12 @@ export const AppShell = (props: {
 
 type EmptyStateProps =
   | { children: ReactNode }
-  | { title?: ReactNode; icon?: ReactElement; message?: ReactNode; actions?: ReactNode };
+  | {
+      title?: ReactNode;
+      icon?: ReactElement;
+      message?: ReactNode;
+      actions?: ReactNode;
+    };
 export function EmptyState(props: EmptyStateProps) {
   return (
     <Flex
@@ -66,7 +90,9 @@ export function EmptyState(props: EmptyStateProps) {
         props.children
       ) : (
         <>
-          {props.icon && <Icon src={props.icon} size="large" color="neutralEmphasis" />}
+          {props.icon && (
+            <Icon src={props.icon} size="large" color="neutralEmphasis" />
+          )}
           {props.title && <Heading size="medium">{props.title}</Heading>}
           {props.message && <Text align="center">{props.message}</Text>}
           {props.actions}
@@ -87,7 +113,9 @@ export const AppShellBody = ({ children }: PropsWithChildren) => {
   );
 };
 
-type AppShellContextValue = { containerWidth: keyof VoussoirTheme['size']['container'] };
+type AppShellContextValue = {
+  containerWidth: keyof VoussoirTheme['size']['container'];
+};
 const AppShellContext = createContext<AppShellContextValue>({
   containerWidth: 'medium',
 });

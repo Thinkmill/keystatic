@@ -33,7 +33,10 @@ function getDirectBlockquoteParentFromSelection(editor: Editor) {
   if (!parentPath.length) {
     return { isInside: false } as const;
   }
-  const [maybeBlockquoteParent, maybeBlockquoteParentPath] = Editor.parent(editor, parentPath);
+  const [maybeBlockquoteParent, maybeBlockquoteParentPath] = Editor.parent(
+    editor,
+    parentPath
+  );
   const isBlockquote = maybeBlockquoteParent.type === 'blockquote';
   return isBlockquote
     ? ({ isInside: true, path: maybeBlockquoteParentPath } as const)
@@ -51,7 +54,9 @@ export function withBlockquote(editor: Editor): Editor {
         // the selection is at the start of the paragraph
         editor.selection.anchor.offset === 0 &&
         // it's the first paragraph in the panel
-        editor.selection.anchor.path[editor.selection.anchor.path.length - 2] === 0
+        editor.selection.anchor.path[
+          editor.selection.anchor.path.length - 2
+        ] === 0
       ) {
         Transforms.unwrapNodes(editor, {
           match: node => node.type === 'blockquote',
@@ -80,7 +85,10 @@ export function withBlockquote(editor: Editor): Editor {
   return editor;
 }
 
-export const BlockquoteElement = ({ attributes, children }: RenderElementProps) => {
+export const BlockquoteElement = ({
+  attributes,
+  children,
+}: RenderElementProps) => {
   return (
     <Box
       paddingStart="xlarge"

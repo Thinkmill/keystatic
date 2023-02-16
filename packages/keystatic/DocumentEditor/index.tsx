@@ -1,5 +1,12 @@
 import Prism from './prism';
-import { KeyboardEvent, ReactNode, useContext, useCallback, useMemo, createContext } from 'react';
+import {
+  KeyboardEvent,
+  ReactNode,
+  useContext,
+  useCallback,
+  useMemo,
+  createContext,
+} from 'react';
 import isHotkey from 'is-hotkey';
 import {
   Editor,
@@ -107,7 +114,10 @@ const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
       const layoutAreaToEnter = event.shiftKey
         ? Editor.before(editor, layoutArea[1], { unit: 'block' })
         : Editor.after(editor, layoutArea[1], { unit: 'block' });
-      Transforms.setSelection(editor, { anchor: layoutAreaToEnter, focus: layoutAreaToEnter });
+      Transforms.setSelection(editor, {
+        anchor: layoutAreaToEnter,
+        focus: layoutAreaToEnter,
+      });
       event.preventDefault();
     }
   }
@@ -183,7 +193,8 @@ export function DocumentEditor({
   documentFeatures: DocumentFeatures;
 } & Omit<EditableProps, 'value' | 'onChange'>) {
   const editor = useMemo(
-    () => createDocumentEditor(documentFeatures, componentBlocks, relationships),
+    () =>
+      createDocumentEditor(documentFeatures, componentBlocks, relationships),
     [documentFeatures, componentBlocks, relationships]
   );
 
@@ -217,7 +228,10 @@ export function DocumentEditor({
         }}
       >
         {useMemo(
-          () => onChange !== undefined && <Toolbar documentFeatures={documentFeatures} />,
+          () =>
+            onChange !== undefined && (
+              <Toolbar documentFeatures={documentFeatures} />
+            ),
           [documentFeatures, onChange]
         )}
 
@@ -330,7 +344,8 @@ export function DocumentEditorEditable(props: EditableProps) {
               if (
                 Node.string(child) === '' &&
                 Element.isElement(child) &&
-                (child.type === 'component-block-prop' || child.type === 'component-inline-prop') &&
+                (child.type === 'component-block-prop' ||
+                  child.type === 'component-inline-prop') &&
                 child.propPath !== undefined
               ) {
                 const start = Editor.start(editor, [...path, index]);
@@ -357,8 +372,14 @@ export function DocumentEditorEditable(props: EditableProps) {
             node.language in Prism.languages
           ) {
             const textPath = [...path, 0];
-            const tokens = Prism.tokenize(node.children[0].text, Prism.languages[node.language]);
-            function consumeTokens(start: number, tokens: (string | Prism.Token)[]) {
+            const tokens = Prism.tokenize(
+              node.children[0].text,
+              Prism.languages[node.language]
+            );
+            function consumeTokens(
+              start: number,
+              tokens: (string | Prism.Token)[]
+            ) {
               for (const token of tokens) {
                 const length = getPrismTokenLength(token);
                 const end = start + length;
@@ -371,7 +392,9 @@ export function DocumentEditorEditable(props: EditableProps) {
                   });
                   consumeTokens(
                     start,
-                    Array.isArray(token.content) ? token.content : [token.content]
+                    Array.isArray(token.content)
+                      ? token.content
+                      : [token.content]
                   );
                 }
 
@@ -449,10 +472,16 @@ type BlockContainerSchema = {
   invalidPositionHandleMode: 'unwrap' | 'move';
 };
 
-type InlineContainerSchema = { kind: 'inlines'; invalidPositionHandleMode: 'unwrap' | 'move' };
+type InlineContainerSchema = {
+  kind: 'inlines';
+  invalidPositionHandleMode: 'unwrap' | 'move';
+};
 
 type TypesWhichHaveNoExtraRequiredProps = {
-  [Type in Block['type']]: { type: Type; children: Descendant[] } extends Block & { type: Type }
+  [Type in Block['type']]: {
+    type: Type;
+    children: Descendant[];
+  } extends Block & { type: Type }
     ? Type
     : never;
 }[Block['type']];
@@ -471,7 +500,10 @@ const paragraphLike = [...blockquoteChildren, 'blockquote'] as const;
 const insideOfLayouts = [...paragraphLike, 'component-block'] as const;
 
 function blockContainer(args: {
-  allowedChildren: readonly [TypesWhichHaveNoExtraRequiredProps, ...Block['type'][]];
+  allowedChildren: readonly [
+    TypesWhichHaveNoExtraRequiredProps,
+    ...Block['type'][]
+  ];
   invalidPositionHandleMode: 'unwrap' | 'move';
 }): BlockContainerSchema {
   return {
@@ -507,7 +539,10 @@ export const editorSchema = satisfies<
     allowedChildren: [...insideOfLayouts, 'layout'],
     invalidPositionHandleMode: 'move',
   }),
-  layout: blockContainer({ allowedChildren: ['layout-area'], invalidPositionHandleMode: 'move' }),
+  layout: blockContainer({
+    allowedChildren: ['layout-area'],
+    invalidPositionHandleMode: 'move',
+  }),
   'layout-area': blockContainer({
     allowedChildren: insideOfLayouts,
     invalidPositionHandleMode: 'unwrap',
@@ -524,7 +559,9 @@ export const editorSchema = satisfies<
     allowedChildren: ['component-block-prop', 'component-inline-prop'],
     invalidPositionHandleMode: 'move',
   }),
-  'component-inline-prop': inlineContainer({ invalidPositionHandleMode: 'unwrap' }),
+  'component-inline-prop': inlineContainer({
+    invalidPositionHandleMode: 'unwrap',
+  }),
   'component-block-prop': blockContainer({
     allowedChildren: paragraphLike,
     invalidPositionHandleMode: 'unwrap',
@@ -545,7 +582,10 @@ export const editorSchema = satisfies<
 });
 
 type InlineContainingType = {
-  [Key in keyof EditorSchema]: { inlines: Key; blocks: never }[EditorSchema[Key]['kind']];
+  [Key in keyof EditorSchema]: {
+    inlines: Key;
+    blocks: never;
+  }[EditorSchema[Key]['kind']];
 }[keyof EditorSchema];
 
 const inlineContainerTypes = new Set(
@@ -554,7 +594,9 @@ const inlineContainerTypes = new Set(
     .map(([type]) => type)
 );
 
-export function isInlineContainer(node: Node): node is Block & { type: InlineContainingType } {
+export function isInlineContainer(
+  node: Node
+): node is Block & { type: InlineContainingType } {
   return node.type !== undefined && inlineContainerTypes.has(node.type);
 }
 
@@ -569,9 +611,16 @@ export function isBlock(node: Descendant): node is Block {
 function withBlocksSchema(editor: Editor): Editor {
   const { normalizeNode } = editor;
   editor.normalizeNode = ([node, path]) => {
-    if (!Text.isText(node) && node.type !== 'link' && node.type !== 'relationship') {
+    if (
+      !Text.isText(node) &&
+      node.type !== 'link' &&
+      node.type !== 'relationship'
+    ) {
       const nodeType = Editor.isEditor(node) ? 'editor' : node.type;
-      if (typeof nodeType !== 'string' || editorSchema[nodeType] === undefined) {
+      if (
+        typeof nodeType !== 'string' ||
+        editorSchema[nodeType] === undefined
+      ) {
         Transforms.unwrapNodes(editor, { at: path });
         return;
       }
@@ -634,12 +683,17 @@ function handleNodeInInvalidPosition(
   // the parent of a block will never be an inline so this casting is okay
   const parentNode = Node.get(editor, parentPath) as Block | Editor;
 
-  const parentNodeType = Editor.isEditor(parentNode) ? 'editor' : parentNode.type;
+  const parentNodeType = Editor.isEditor(parentNode)
+    ? 'editor'
+    : parentNode.type;
 
   const parentNodeInfo = editorSchema[parentNodeType];
 
   if (!childNodeInfo || childNodeInfo.invalidPositionHandleMode === 'unwrap') {
-    if (parentNodeInfo.kind === 'blocks' && parentNodeInfo.blockToWrapInlinesIn) {
+    if (
+      parentNodeInfo.kind === 'blocks' &&
+      parentNodeInfo.blockToWrapInlinesIn
+    ) {
       Transforms.setNodes(
         editor,
         {

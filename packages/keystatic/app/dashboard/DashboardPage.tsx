@@ -51,7 +51,10 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
       </AppShellHeader>
       <AppShellBody>
         <Flex direction="column" gap="xlarge">
-          <Grid columns={{ tablet: ['5fr', '3fr'], desktop: ['3fr', '1fr'] }} gap="xxlarge">
+          <Grid
+            columns={{ tablet: ['5fr', '3fr'], desktop: ['3fr', '1fr'] }}
+            gap="xxlarge"
+          >
             <Flex direction="column" gap="xxlarge" minWidth={0}>
               <Grid gap="large">
                 <Heading size="medium" id="collections-heading">
@@ -72,20 +75,34 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
                       changes,
                       tree: allTreeData.current,
                     });
-                    const allChangesCount = counts.changed + counts.added + counts.removed;
+                    const allChangesCount =
+                      counts.changed + counts.added + counts.removed;
                     return (
                       <Item
                         textValue={
-                          ref.label + allChangesCount ? ` (${allChangesCount} changed)` : undefined
+                          ref.label + allChangesCount
+                            ? ` (${allChangesCount} changed)`
+                            : undefined
                         }
                       >
                         <Text>{ref.label}</Text>
                         <Text slot="description">
-                          {pluralize(counts.total, { singular: 'entry', plural: 'entries' })}
+                          {pluralize(counts.total, {
+                            singular: 'entry',
+                            plural: 'entries',
+                          })}
                           {allChangesCount ? (
-                            <> &middot; {pluralize(allChangesCount, { singular: 'change' })}</>
+                            <>
+                              {' '}
+                              &middot;{' '}
+                              {pluralize(allChangesCount, {
+                                singular: 'change',
+                              })}
+                            </>
                           ) : null}
-                          {counts.added || counts.removed ? <> &middot; </> : null}
+                          {counts.added || counts.removed ? (
+                            <> &middot; </>
+                          ) : null}
                           {!!counts.added && (
                             <Text color="positive" slot="none">
                               +{counts.added}
@@ -100,7 +117,9 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
                         <TooltipTrigger placement="start">
                           <ActionButton
                             onPress={() => {
-                              router.push(link(`/collection/${ref.key}/create`));
+                              router.push(
+                                link(`/collection/${ref.key}/create`)
+                              );
                             }}
                           >
                             <Icon src={plusIcon} />
@@ -128,7 +147,9 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
                     }}
                   >
                     {ref => {
-                      const description = changes.singletons.has(ref.key) ? 'Changed' : 'Unchanged';
+                      const description = changes.singletons.has(ref.key)
+                        ? 'Changed'
+                        : 'Unchanged';
                       return (
                         <Item textValue={`${ref.label} (${description})`}>
                           <Text>{ref.label}</Text>
@@ -156,7 +177,8 @@ function Branches() {
       .map(name => {
         return {
           name,
-          description: name === branchInfo.defaultBranch ? 'Default branch' : undefined,
+          description:
+            name === branchInfo.defaultBranch ? 'Default branch' : undefined,
         };
       })
       .sort(branch => {
@@ -169,7 +191,12 @@ function Branches() {
   const baseCommit = useBaseCommit();
   const repositoryId = useRepositoryId();
   return (
-    <Flex direction="column" gap="xlarge" order={{ mobile: -1, tablet: 1 }} minWidth={0}>
+    <Flex
+      direction="column"
+      gap="xlarge"
+      order={{ mobile: -1, tablet: 1 }}
+      minWidth={0}
+    >
       <Grid gap="xlarge">
         <Heading size="medium" id="branches-heading">
           Branches
@@ -178,7 +205,11 @@ function Branches() {
       </Grid>
       {branchInfo.allBranches.length === 0 ? (
         <Flex justifyContent="center">
-          <ProgressCircle isIndeterminate size="medium" aria-label="Loading Branches" />
+          <ProgressCircle
+            isIndeterminate
+            size="medium"
+            aria-label="Loading Branches"
+          />
         </Flex>
       ) : (
         <Flex direction="column" gap="regular">
@@ -191,18 +222,26 @@ function Branches() {
             selectedKeys={[branchInfo.currentBranch]}
             onSelectionChange={([key]) => {
               if (typeof key === 'string') {
-                router.push(router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + key));
+                router.push(
+                  router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + key)
+                );
               }
             }}
           >
             {ref => (
               <Item key={ref.name} textValue={ref.name}>
                 <Text>{ref.name}</Text>
-                {ref.description && <Text slot="description">{ref.description}</Text>}
+                {ref.description && (
+                  <Text slot="description">{ref.description}</Text>
+                )}
               </Item>
             )}
           </ListView>
-          <DialogTrigger type="popover" mobileType="tray" placement="bottom start">
+          <DialogTrigger
+            type="popover"
+            mobileType="tray"
+            placement="bottom start"
+          >
             <div>
               <ActionButton>New branch</ActionButton>
             </div>
@@ -211,7 +250,12 @@ function Branches() {
                 onDismiss={close}
                 onCreate={branchName => {
                   close();
-                  router.push(router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + branchName));
+                  router.push(
+                    router.asPath.replace(
+                      /\/branch\/[^/]+/,
+                      '/branch/' + branchName
+                    )
+                  );
                 }}
                 branchOid={baseCommit}
                 repositoryId={repositoryId}

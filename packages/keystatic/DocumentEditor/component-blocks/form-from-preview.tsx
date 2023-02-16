@@ -49,7 +49,8 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
     const targetIndex = props.elements.findIndex(x => x.key === target.key);
     if (targetIndex === -1) return;
     const allKeys = props.elements.map(x => ({ key: x.key }));
-    const indexToMoveTo = target.dropPosition === 'before' ? targetIndex : targetIndex + 1;
+    const indexToMoveTo =
+      target.dropPosition === 'before' ? targetIndex : targetIndex + 1;
     const indices = keys.map(key => allKeys.findIndex(x => x.key === key));
     props.onChange(move(allKeys, indices, indexToMoveTo));
   };
@@ -100,7 +101,8 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
     },
   });
   const [modalState, setModalState] = useState<
-    { state: 'open'; value: unknown; forceValidation: boolean; index: number } | { state: 'closed' }
+    | { state: 'open'; value: unknown; forceValidation: boolean; index: number }
+    | { state: 'closed' }
   >({ state: 'closed' });
   const onModalChange = useCallback(
     (cb: (value: unknown) => unknown) => {
@@ -121,10 +123,15 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
   const formId = useId();
 
   const onRemoveKey = useEventCallback((key: string) => {
-    props.onChange(props.elements.map(x => ({ key: x.key })).filter(val => val.key !== key));
+    props.onChange(
+      props.elements.map(x => ({ key: x.key })).filter(val => val.key !== key)
+    );
   });
   const addItem = () => {
-    props.onChange([...props.elements.map(x => ({ key: x.key })), { key: undefined }]);
+    props.onChange([
+      ...props.elements.map(x => ({ key: x.key })),
+      { key: undefined },
+    ]);
   };
 
   return (
@@ -138,7 +145,11 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
       <FieldLabel elementType="h3" id={labelId}>
         {props.schema.label}
       </FieldLabel>
-      <ActionButton autoFocus={props.autoFocus} onPress={addItem} alignSelf="start">
+      <ActionButton
+        autoFocus={props.autoFocus}
+        onPress={addItem}
+        alignSelf="start"
+      >
         Add
       </ActionButton>
       <ListView
@@ -182,7 +193,8 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
       >
         {item => {
           const label =
-            props.schema.itemLabel?.(item) || `Item ${props.elements.indexOf(item) + 1}`;
+            props.schema.itemLabel?.(item) ||
+            `Item ${props.elements.indexOf(item) + 1}`;
           return (
             <Item key={item.key} textValue={label}>
               <Text>{label}</Text>
@@ -220,7 +232,12 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
                   onSubmit={event => {
                     event.preventDefault();
                     if (modalState.state !== 'open') return;
-                    if (!clientSideValidateProp(elementProps.schema, modalState.value)) {
+                    if (
+                      !clientSideValidateProp(
+                        elementProps.schema,
+                        modalState.value
+                      )
+                    ) {
                       setModalState(state => ({
                         ...state,
                         forceValidation: true,
@@ -261,7 +278,11 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
 }
 
 // https://github.com/adobe/react-spectrum/blob/97ff9f95d91befaf87251e52ea484f81daae8f3a/packages/%40react-stately/data/src/useListData.ts#L263
-function move<T>(items: ReadonlyArray<T>, indices: number[], toIndex: number): Array<T> {
+function move<T>(
+  items: ReadonlyArray<T>,
+  indices: number[],
+  toIndex: number
+): Array<T> {
   // Shift the target down by the number of items being moved from before the target
   toIndex -= indices.filter(index => index < toIndex).length;
 
@@ -332,7 +353,9 @@ function ObjectFieldPreview({
   fields,
   forceValidation,
 }: DefaultFieldProps<'object'>) {
-  const firstFocusable = autoFocus ? findFocusableObjectFieldKey(schema) : undefined;
+  const firstFocusable = autoFocus
+    ? findFocusableObjectFieldKey(schema)
+    : undefined;
   return (
     <Flex gap="xlarge" direction="column">
       {Object.entries(fields).map(
@@ -358,7 +381,10 @@ function ConditionalFieldPreview({
   value,
   forceValidation,
 }: DefaultFieldProps<'conditional'>) {
-  const schemaDiscriminant = schema.discriminant as FormField<string | boolean, unknown>;
+  const schemaDiscriminant = schema.discriminant as FormField<
+    string | boolean,
+    unknown
+  >;
   return (
     <Flex gap="xlarge">
       {useMemo(
@@ -373,7 +399,10 @@ function ConditionalFieldPreview({
         [autoFocus, schemaDiscriminant, discriminant, onChange, forceValidation]
       )}
       {isNonChildFieldPreviewProps(value) && (
-        <FormValueContentFromPreviewProps forceValidation={forceValidation} {...value} />
+        <FormValueContentFromPreviewProps
+          forceValidation={forceValidation}
+          {...value}
+        />
       )}
     </Flex>
   );

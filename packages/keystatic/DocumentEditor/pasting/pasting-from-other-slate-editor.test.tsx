@@ -67,7 +67,9 @@ test('pasting from another slate editor works', () => {
   const data = new MyDataTransfer();
   otherEditor.setFragmentData(data);
   const newIntermediateEditor = createEditor();
-  newIntermediateEditor.children = [{ type: 'paragraph', children: [{ text: '' }] }];
+  newIntermediateEditor.children = [
+    { type: 'paragraph', children: [{ text: '' }] },
+  ];
   newIntermediateEditor.selection = {
     anchor: { offset: 0, path: [0, 0] },
     focus: { offset: 0, path: [0, 0] },

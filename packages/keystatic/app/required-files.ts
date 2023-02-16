@@ -1,6 +1,9 @@
 import { assert, assertNever } from 'emery';
 import { load } from 'js-yaml';
-import { ComponentSchema, FormFieldWithFile } from '../DocumentEditor/component-blocks/api';
+import {
+  ComponentSchema,
+  FormFieldWithFile,
+} from '../DocumentEditor/component-blocks/api';
 import { FormatInfo } from './path-utils';
 
 export type RequiredFile = {
@@ -27,7 +30,10 @@ function _getRequiredFiles(
   if (schema.kind === 'form') {
     if ('serializeToFile' in schema && schema.serializeToFile) {
       if (schema.serializeToFile.kind === 'asset') {
-        const filename = schema.serializeToFile.filename(value, propPath.join('/'));
+        const filename = schema.serializeToFile.filename(
+          value,
+          propPath.join('/')
+        );
         const files: string[] = [];
         if (filename) {
           files.push(filename);
@@ -48,13 +54,23 @@ function _getRequiredFiles(
   }
   if (schema.kind === 'object') {
     for (const [key, val] of Object.entries(schema.fields)) {
-      _getRequiredFiles((value as any)[key], val, [...propPath, key], requiredFiles);
+      _getRequiredFiles(
+        (value as any)[key],
+        val,
+        [...propPath, key],
+        requiredFiles
+      );
     }
     return;
   }
   if (schema.kind === 'array') {
     for (const [index, val] of (value as unknown[]).entries()) {
-      _getRequiredFiles(val, schema.element, [...propPath, index], requiredFiles);
+      _getRequiredFiles(
+        val,
+        schema.element,
+        [...propPath, index],
+        requiredFiles
+      );
     }
     return;
   }
@@ -80,8 +96,14 @@ export function parseSerializedFormField(
   if (serializationConfig.kind === 'asset') {
     const suggestedFilenamePrefix = file.path.join('/');
     const filepath = serializationConfig.filename(value, file.path.join('/'));
-    if (mode === 'read' && !serializationConfig.reader.requiresContentInReader) {
-      return serializationConfig.reader.parseToReader({ value, suggestedFilenamePrefix });
+    if (
+      mode === 'read' &&
+      !serializationConfig.reader.requiresContentInReader
+    ) {
+      return serializationConfig.reader.parseToReader({
+        value,
+        suggestedFilenamePrefix,
+      });
     }
     const content = filepath ? loadedBinaryFiles.get(filepath) : undefined;
 
@@ -95,7 +117,10 @@ export function parseSerializedFormField(
   if (serializationConfig.kind === 'multi') {
     const rootPath = file.path.join('/');
     const mainFilepath = rootPath + serializationConfig.primaryExtension;
-    if (mode === 'read' && !serializationConfig.reader.requiresContentInReader) {
+    if (
+      mode === 'read' &&
+      !serializationConfig.reader.requiresContentInReader
+    ) {
       return serializationConfig.reader.parseToReader({ value });
     }
     const mainContents = loadedBinaryFiles.get(mainFilepath);
@@ -141,12 +166,17 @@ function splitFrontmatter(data: Uint8Array) {
 export function loadDataFile(data: Uint8Array, formatInfo: FormatInfo) {
   if (typeof formatInfo === 'string') {
     const dataFile = textDecoder.decode(data);
-    return { loaded: formatInfo === 'json' ? JSON.parse(dataFile) : load(dataFile) };
+    return {
+      loaded: formatInfo === 'json' ? JSON.parse(dataFile) : load(dataFile),
+    };
   }
   const res = splitFrontmatter(data);
   assert(res !== null, 'frontmatter not found');
   return {
-    loaded: formatInfo.frontmatter === 'json' ? JSON.parse(res.frontmatter) : load(res.frontmatter),
+    loaded:
+      formatInfo.frontmatter === 'json'
+        ? JSON.parse(res.frontmatter)
+        : load(res.frontmatter),
     extraFakeFile: {
       path: `${formatInfo.contentFieldKey}${formatInfo.contentFieldConfig.serializeToFile.primaryExtension}`,
       contents: res.content,

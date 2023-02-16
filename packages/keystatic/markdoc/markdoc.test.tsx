@@ -46,13 +46,17 @@ function toMarkdoc(node: Node) {
   const { children } = makeEditor(node);
   return Markdoc.format(
     Markdoc.parse(
-      Markdoc.format(toMarkdocDocument(children as ElementFromValidation[], componentBlocks))
+      Markdoc.format(
+        toMarkdocDocument(children as ElementFromValidation[], componentBlocks)
+      )
     )
   );
 }
 
 function fromMarkdoc(markdoc: string) {
-  return makeEditor(<editor>{_fromMarkdoc(Markdoc.parse(markdoc), componentBlocks)}</editor>);
+  return makeEditor(
+    <editor>{_fromMarkdoc(Markdoc.parse(markdoc), componentBlocks)}</editor>
+  );
 }
 
 test('basic', () => {

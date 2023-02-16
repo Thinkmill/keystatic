@@ -28,7 +28,9 @@ export function ChromefulComponentBlockElement(props: {
   children: ReactNode;
   renderedBlock: ReactNode;
   componentBlock: ComponentBlock & { chromeless?: false };
-  previewProps: PreviewPropsForToolbar<ObjectField<Record<string, ComponentSchema>>>;
+  previewProps: PreviewPropsForToolbar<
+    ObjectField<Record<string, ComponentSchema>>
+  >;
   elementProps: Record<string, unknown>;
   onRemove: () => void;
   attributes: RenderElementProps['attributes'];
@@ -53,7 +55,8 @@ export function ChromefulComponentBlockElement(props: {
     setEditMode(true);
   }, []);
 
-  const ChromefulToolbar = props.componentBlock.toolbar ?? DefaultToolbarWithChrome;
+  const ChromefulToolbar =
+    props.componentBlock.toolbar ?? DefaultToolbarWithChrome;
   return (
     <Flex
       {...props.attributes}
@@ -82,13 +85,22 @@ export function ChromefulComponentBlockElement(props: {
       })}
     >
       <NotEditable>
-        <Text casing="uppercase" color="neutralSecondary" weight="medium" size="small">
+        <Text
+          casing="uppercase"
+          color="neutralSecondary"
+          weight="medium"
+          size="small"
+        >
           {props.componentBlock.label}
         </Text>
       </NotEditable>
       {editMode ? (
         <Fragment>
-          <FormValue isValid={isValid} props={props.previewProps} onClose={onCloseEditMode} />
+          <FormValue
+            isValid={isValid}
+            props={props.previewProps}
+            onClose={onCloseEditMode}
+          />
           <div className={css({ display: 'none' })}>{props.children}</div>
         </Fragment>
       ) : (
@@ -128,7 +140,9 @@ function DefaultToolbarWithChrome({
             <Tooltip tone="critical">Delete</Tooltip>
           </TooltipTrigger>
         </Flex>
-        {!isValid && <FieldMessage>Contains invalid fields. Please edit.</FieldMessage>}
+        {!isValid && (
+          <FieldMessage>Contains invalid fields. Please edit.</FieldMessage>
+        )}
       </Flex>
     </NotEditable>
   );
@@ -152,7 +166,10 @@ function FormValue({
       contentEditable={false}
       UNSAFE_className={css({ whiteSpace: 'initial' })}
     >
-      <FormValueContentFromPreviewProps {...props} forceValidation={forceValidation} />
+      <FormValueContentFromPreviewProps
+        {...props}
+        forceValidation={forceValidation}
+      />
       <Button
         alignSelf="start"
         tone="accent"

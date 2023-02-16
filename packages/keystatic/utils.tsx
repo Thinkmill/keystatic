@@ -29,13 +29,21 @@ const textEncoder = new TextEncoder();
 
 const frontmatterSplit = textEncoder.encode('---\n');
 
-function combineFrontmatterAndContents(frontmatter: Uint8Array, contents: Uint8Array) {
+function combineFrontmatterAndContents(
+  frontmatter: Uint8Array,
+  contents: Uint8Array
+) {
   const array = new Uint8Array(
-    frontmatter.byteLength + contents.byteLength + frontmatterSplit.byteLength * 2
+    frontmatter.byteLength +
+      contents.byteLength +
+      frontmatterSplit.byteLength * 2
   );
   array.set(frontmatterSplit);
   array.set(frontmatter, frontmatterSplit.byteLength);
-  array.set(frontmatterSplit, frontmatterSplit.byteLength + frontmatter.byteLength);
+  array.set(
+    frontmatterSplit,
+    frontmatterSplit.byteLength + frontmatter.byteLength
+  );
   array.set(contents, frontmatterSplit.byteLength * 2 + frontmatter.byteLength);
   return array;
 }
@@ -71,7 +79,8 @@ export function useUpsertItem(args: {
         args.state,
         fields.object(args.schema)
       );
-      const dataFormat = typeof args.format === 'string' ? args.format : args.format.frontmatter;
+      const dataFormat =
+        typeof args.format === 'string' ? args.format : args.format.frontmatter;
       let dataExtension = '.' + dataFormat;
       let dataContent = textEncoder.encode(
         dataFormat === 'json'
@@ -88,7 +97,8 @@ export function useUpsertItem(args: {
           return false;
         });
         assert(contents !== undefined, 'Expected content field to be present');
-        dataExtension = args.format.contentFieldConfig.serializeToFile.primaryExtension;
+        dataExtension =
+          args.format.contentFieldConfig.serializeToFile.primaryExtension;
         dataContent = combineFrontmatterAndContents(dataContent, contents);
       }
 
@@ -105,7 +115,11 @@ export function useUpsertItem(args: {
       const additionPathToSha = new Map(
         await Promise.all(
           additions.map(
-            async addition => [addition.path, await hydrateBlobCache(addition.contents)] as const
+            async addition =>
+              [
+                addition.path,
+                await hydrateBlobCache(addition.contents),
+              ] as const
           )
         )
       );
@@ -121,7 +135,9 @@ export function useUpsertItem(args: {
         return existing?.entry.sha !== sha;
       });
 
-      const deletions: { path: string }[] = [...filesToDelete].map(path => ({ path }));
+      const deletions: { path: string }[] = [...filesToDelete].map(path => ({
+        path,
+      }));
       const updatedTree = await updateTreeWithChanges(args.currentTree, {
         additions,
         deletions: [...filesToDelete],
@@ -159,12 +175,18 @@ export function useUpsertItem(args: {
             return false;
           }
           if (gqlError.type === 'STALE_DATA') {
-            const branch = await githubRequest('GET /repos/{owner}/{repo}/branches/{branch}', {
-              branch: branchInfo.currentBranch,
-              owner: args.storage.repo.owner,
-              repo: args.storage.repo.name,
-            });
-            const tree = await fetchGitHubTreeData(branch.data.commit.sha, args.storage.repo);
+            const branch = await githubRequest(
+              'GET /repos/{owner}/{repo}/branches/{branch}',
+              {
+                branch: branchInfo.currentBranch,
+                owner: args.storage.repo.owner,
+                repo: args.storage.repo.name,
+              }
+            );
+            const tree = await fetchGitHubTreeData(
+              branch.data.commit.sha,
+              args.storage.repo
+            );
             const entry = tree.entries.get(args.basePath);
             if (entry?.sha === args.currentLocalTreeSha) {
               result = await runMutation(branch.data.commit.sha);
@@ -244,7 +266,10 @@ export function useDeleteItem(args: {
   storage: Config['storage'];
 }) {
   const [state, setState] = useState<
-    { kind: 'idle' } | { kind: 'updated' } | { kind: 'loading' } | { kind: 'error'; error: Error }
+    | { kind: 'idle' }
+    | { kind: 'updated' }
+    | { kind: 'loading' }
+    | { kind: 'error'; error: Error }
   >({
     kind: 'idle',
   });
@@ -327,7 +352,10 @@ async function _toFiles(
           suggestedFilenamePrefix
         );
         if (content) {
-          const path = schema.serializeToFile.filename(forYaml, suggestedFilenamePrefix);
+          const path = schema.serializeToFile.filename(
+            forYaml,
+            suggestedFilenamePrefix
+          );
           if (path) {
             extraFiles.push({ path, contents: content });
           }
@@ -335,7 +363,11 @@ async function _toFiles(
         return forYaml;
       }
       if (schema.serializeToFile.kind === 'multi') {
-        const { other, primary, value: forYaml } = await schema.serializeToFile.serialize(value);
+        const {
+          other,
+          primary,
+          value: forYaml,
+        } = await schema.serializeToFile.serialize(value);
         if (primary) {
           extraFiles.push({
             path: propPath.join('/') + schema.serializeToFile.primaryExtension,
@@ -356,7 +388,12 @@ async function _toFiles(
       await Promise.all(
         Object.entries(schema.fields).map(async ([key, val]) => [
           key,
-          await _toFiles((value as any)[key], val, [...propPath, key], extraFiles),
+          await _toFiles(
+            (value as any)[key],
+            val,
+            [...propPath, key],
+            extraFiles
+          ),
         ])
       )
     );

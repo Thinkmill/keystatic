@@ -3,7 +3,14 @@
 /** @jsx jsx */
 import React, { ReactElement } from 'react';
 import { jsx, makeEditor } from '../tests/utils';
-import { ArrayField, ChildField, ObjectField, PreviewProps, component, fields } from './api';
+import {
+  ArrayField,
+  ChildField,
+  ObjectField,
+  PreviewProps,
+  component,
+  fields,
+} from './api';
 
 type ListItems = ArrayField<
   ObjectField<{
@@ -37,7 +44,10 @@ function List(props: PreviewProps<ListItems>): ReactElement {
       'button',
       {
         onClick: () =>
-          props.onChange([...props.elements.map(x => ({ key: x.key })), { key: undefined }]),
+          props.onChange([
+            ...props.elements.map(x => ({ key: x.key })),
+            { key: undefined },
+          ]),
       },
       'Insert'
     )
@@ -89,25 +99,37 @@ test('recursive arrays of child fields existing does not crash and are not norma
         <component-inline-prop propPath={['children', 1, 'content']}>
           <text>second</text>
         </component-inline-prop>
-        <component-inline-prop propPath={['children', 1, 'children', 0, 'content']}>
+        <component-inline-prop
+          propPath={['children', 1, 'children', 0, 'content']}
+        >
           <text>first in second</text>
         </component-inline-prop>
-        <component-inline-prop propPath={['children', 1, 'children', 0, 'children', 0, 'content']}>
+        <component-inline-prop
+          propPath={['children', 1, 'children', 0, 'children', 0, 'content']}
+        >
           <text>first in first in second</text>
         </component-inline-prop>
-        <component-inline-prop propPath={['children', 1, 'children', 0, 'children', 1, 'content']}>
+        <component-inline-prop
+          propPath={['children', 1, 'children', 0, 'children', 1, 'content']}
+        >
           <text>second in first in second</text>
         </component-inline-prop>
-        <component-inline-prop propPath={['children', 1, 'children', 0, 'children', 2, 'content']}>
+        <component-inline-prop
+          propPath={['children', 1, 'children', 0, 'children', 2, 'content']}
+        >
           <text>third in first in second</text>
         </component-inline-prop>
         <component-inline-prop propPath={['children', 2, 'content']}>
           <text>third</text>
         </component-inline-prop>
-        <component-inline-prop propPath={['children', 2, 'children', 0, 'content']}>
+        <component-inline-prop
+          propPath={['children', 2, 'children', 0, 'content']}
+        >
           <text>first in third</text>
         </component-inline-prop>
-        <component-inline-prop propPath={['children', 2, 'children', 1, 'content']}>
+        <component-inline-prop
+          propPath={['children', 2, 'children', 1, 'content']}
+        >
           <text>second in third</text>
         </component-inline-prop>
       </component-block>

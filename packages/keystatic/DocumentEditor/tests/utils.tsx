@@ -61,7 +61,9 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface Matchers<R, T> {
       toEqualEditor(
-        expected: [T] extends [Editor] ? Editor : 'toEqualEditor only accepts an Editor'
+        expected: [T] extends [Editor]
+          ? Editor
+          : 'toEqualEditor only accepts an Editor'
       ): CustomMatcherResult;
     }
   }
@@ -101,7 +103,12 @@ expect.extend({
           const formattedExpected = formatEditor(expected);
 
           return (
-            this.utils.matcherHint('toEqualEditor', undefined, undefined, options) +
+            this.utils.matcherHint(
+              'toEqualEditor',
+              undefined,
+              undefined,
+              options
+            ) +
             '\n\n' +
             `Expected: not ${this.utils.printExpected(formattedExpected)}\n` +
             `Received: ${this.utils.printReceived(formattedReceived)}`
@@ -115,7 +122,12 @@ expect.extend({
             expand: this.expand,
           });
           return (
-            this.utils.matcherHint('toEqualEditor', undefined, undefined, options) +
+            this.utils.matcherHint(
+              'toEqualEditor',
+              undefined,
+              undefined,
+              options
+            ) +
             '\n\n' +
             (diffString && diffString.includes('- Expect')
               ? `Difference:\n\n${diffString}`
@@ -202,7 +214,11 @@ export const makeEditor = (
   if (!Editor.isEditor(node)) {
     throw new Error('Unexpected non-editor passed to makeEditor');
   }
-  let editor = createDocumentEditor(documentFeatures, componentBlocks, relationships) as Editor & {
+  let editor = createDocumentEditor(
+    documentFeatures,
+    componentBlocks,
+    relationships
+  ) as Editor & {
     container?: HTMLElement;
   };
   // for validation
@@ -285,8 +301,10 @@ function nodeToReactElement(
     const { text, ...marks } = node;
     if (selection) {
       const stringifiedPath = JSON.stringify(path);
-      const isAnchorInCurrentText = JSON.stringify(selection.anchor.path) === stringifiedPath;
-      const isFocusInCurrentText = JSON.stringify(selection.focus.path) === stringifiedPath;
+      const isAnchorInCurrentText =
+        JSON.stringify(selection.anchor.path) === stringifiedPath;
+      const isFocusInCurrentText =
+        JSON.stringify(selection.focus.path) === stringifiedPath;
 
       if (isAnchorInCurrentText && isFocusInCurrentText) {
         if (selection.anchor.offset === selection.focus.offset) {
@@ -313,7 +331,9 @@ function nodeToReactElement(
         });
       }
       if (isAnchorInCurrentText || isFocusInCurrentText) {
-        const point = isAnchorInCurrentText ? selection.anchor : selection.focus;
+        const point = isAnchorInCurrentText
+          ? selection.anchor
+          : selection.focus;
         return createElement('text', {
           children: [
             text.slice(0, point.offset),

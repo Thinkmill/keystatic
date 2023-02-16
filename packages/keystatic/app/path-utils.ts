@@ -1,6 +1,9 @@
 import { assert } from 'emery';
 import { Config, DataFormat, Format } from '../config';
-import { ComponentSchema, FormFieldWithFile } from '../DocumentEditor/component-blocks/api';
+import {
+  ComponentSchema,
+  FormFieldWithFile,
+} from '../DocumentEditor/component-blocks/api';
 
 function fixPath(path: string) {
   return path.replace(/^\.?\//, '').replace(/\/$/, '');
@@ -12,21 +15,34 @@ export function getCollectionPath(config: Config, collection: string) {
 
 export function getCollectionFormat(config: Config, collection: string) {
   const collectionConfig = config.collections![collection];
-  return getFormatInfo(collectionConfig.format ?? 'yaml', collectionConfig.schema);
+  return getFormatInfo(
+    collectionConfig.format ?? 'yaml',
+    collectionConfig.schema
+  );
 }
 
 export function getSingletonFormat(config: Config, singleton: string) {
   const singletonConfig = config.singletons![singleton];
-  return getFormatInfo(singletonConfig.format ?? 'yaml', singletonConfig.schema);
+  return getFormatInfo(
+    singletonConfig.format ?? 'yaml',
+    singletonConfig.schema
+  );
 }
 
-export function getCollectionItemPath(config: Config, collection: string, slug: string) {
+export function getCollectionItemPath(
+  config: Config,
+  collection: string,
+  slug: string
+) {
   const basePath = getCollectionPath(config, collection);
   const suffix = getCollectionItemSlugSuffix(config, collection);
   return `${basePath}/${slug}${suffix}`;
 }
 
-export function getCollectionItemSlugSuffix(config: Config, collection: string) {
+export function getCollectionItemSlugSuffix(
+  config: Config,
+  collection: string
+) {
   const path = fixPath(config.collections![collection].directorySuffix ?? '');
   return path ? `/${path}` : '';
 }
@@ -41,7 +57,10 @@ export function getDataFileExtension(formatInfo: FormatInfo) {
     : formatInfo.contentFieldConfig.serializeToFile.primaryExtension;
 }
 
-function getFormatInfo(format: Format, schema: Record<string, ComponentSchema>): FormatInfo {
+function getFormatInfo(
+  format: Format,
+  schema: Record<string, ComponentSchema>
+): FormatInfo {
   if (typeof format === 'string') {
     return format;
   }
@@ -54,7 +73,9 @@ function getFormatInfo(format: Format, schema: Record<string, ComponentSchema>):
   return {
     frontmatter: format.frontmatter,
     contentFieldKey: format.contentField,
-    contentFieldConfig: field as typeof field & { serializeToFile: { kind: 'multi' } },
+    contentFieldConfig: field as typeof field & {
+      serializeToFile: { kind: 'multi' };
+    },
   };
 }
 
@@ -63,5 +84,7 @@ export type FormatInfo =
   | {
       frontmatter: DataFormat;
       contentFieldKey: string;
-      contentFieldConfig: FormFieldWithFile<any, any, any> & { serializeToFile: { kind: 'multi' } };
+      contentFieldConfig: FormFieldWithFile<any, any, any> & {
+        serializeToFile: { kind: 'multi' };
+      };
     };

@@ -2,7 +2,11 @@ import { ReadonlyPropPath } from '../DocumentEditor/component-blocks/utils';
 import { ArrayField, ChildField, ComponentSchema } from '../src';
 
 export type PathToChildFieldWithOption =
-  | { relativePath: ReadonlyPropPath; options: ChildField['options']; kind: 'child' }
+  | {
+      relativePath: ReadonlyPropPath;
+      options: ChildField['options'];
+      kind: 'child';
+    }
   | {
       kind: 'array';
       field: ArrayField<any>;
@@ -77,7 +81,9 @@ function _findConstantChildFields(
     case 'object': {
       const paths: PathToChildFieldWithOption[] = [];
       for (const [key, value] of Object.entries(schema.fields)) {
-        paths.push(..._findConstantChildFields(value, path.concat(key), seenSchemas));
+        paths.push(
+          ..._findConstantChildFields(value, path.concat(key), seenSchemas)
+        );
       }
       return paths;
     }
@@ -99,7 +105,9 @@ function couldContainChildField(
     case 'child':
       return true;
     case 'conditional':
-      return Object.values(schema.values).some(value => couldContainChildField(value, seen));
+      return Object.values(schema.values).some(value =>
+        couldContainChildField(value, seen)
+      );
     case 'object':
       return Object.keys(schema.fields).some(key =>
         couldContainChildField(schema.fields[key], seen)

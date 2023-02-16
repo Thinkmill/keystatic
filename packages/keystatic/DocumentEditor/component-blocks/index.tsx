@@ -1,5 +1,17 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
-import { ReactEditor, RenderElementProps, useFocused, useSelected } from 'slate-react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
+import {
+  ReactEditor,
+  RenderElementProps,
+  useFocused,
+  useSelected,
+} from 'slate-react';
 import { Editor, Transforms } from 'slate';
 
 import {
@@ -18,7 +30,9 @@ import { ChromelessComponentBlockElement } from './chromeless-element';
 
 export { withComponentBlocks } from './with-component-blocks';
 
-export const ComponentBlockContext = createContext<Record<string, ComponentBlock>>({});
+export const ComponentBlockContext = createContext<
+  Record<string, ComponentBlock>
+>({});
 
 export function ComponentInlineProp(props: RenderElementProps) {
   return <span {...props.attributes}>{props.children}</span>;
@@ -50,9 +64,14 @@ export const ComponentBlocksElement = ({
   const editor = useStaticEditor();
   const focused = useFocused();
   const selected = useSelected();
-  const [currentElement, setElement] = useElementWithSetNodes(editor, __elementToGetPath);
+  const [currentElement, setElement] = useElementWithSetNodes(
+    editor,
+    __elementToGetPath
+  );
   const blockComponents = useContext(ComponentBlockContext)!;
-  const componentBlock = blockComponents[currentElement.component] as ComponentBlock | undefined;
+  const componentBlock = blockComponents[currentElement.component] as
+    | ComponentBlock
+    | undefined;
 
   const elementToGetPathRef = useRef({ __elementToGetPath, currentElement });
 
@@ -73,7 +92,10 @@ export const ComponentBlocksElement = ({
         componentBlock!,
         prevProps,
         cb(prevProps),
-        ReactEditor.findPath(editor, elementToGetPathRef.current.__elementToGetPath),
+        ReactEditor.findPath(
+          editor,
+          elementToGetPathRef.current.__elementToGetPath
+        ),
         setElement
       );
     },

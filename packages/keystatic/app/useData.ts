@@ -12,7 +12,9 @@ function isThenable(value: any): value is Promise<any> {
   return value && typeof value.then === 'function';
 }
 
-export function useData<T>(func: () => MaybePromise<T | typeof LOADING>): DataState<T> {
+export function useData<T>(
+  func: () => MaybePromise<T | typeof LOADING>
+): DataState<T> {
   const [state, setState] = useState<DataState<T>>({ kind: 'loading' });
   let stateToReturn = state;
   const result = useMemo(() => {
@@ -24,7 +26,10 @@ export function useData<T>(func: () => MaybePromise<T | typeof LOADING>): DataSt
     }
   }, [func]);
   const resultState = useMemo((): DataState<T> | undefined => {
-    if (result.kind === 'error' && (state.kind !== 'error' || state.error !== result.error)) {
+    if (
+      result.kind === 'error' &&
+      (state.kind !== 'error' || state.error !== result.error)
+    ) {
       return { kind: 'error', error: result.error };
     }
     if (

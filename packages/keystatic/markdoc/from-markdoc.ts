@@ -1,6 +1,9 @@
 import { Node } from '@markdoc/markdoc';
 import { Descendant } from 'slate';
-import { getValueAtPropPath, ReadonlyPropPath } from '../DocumentEditor/component-blocks/utils';
+import {
+  getValueAtPropPath,
+  ReadonlyPropPath,
+} from '../DocumentEditor/component-blocks/utils';
 import {
   getInlineNodes,
   addMarkToChildren,
@@ -8,42 +11,63 @@ import {
 } from '../DocumentEditor/pasting/utils';
 import { ComponentBlock } from '../src';
 import { TextWithMarks } from '../structure-validation';
-import { findSingleChildField, PathToChildFieldWithOption } from './find-children';
+import {
+  findSingleChildField,
+  PathToChildFieldWithOption,
+} from './find-children';
 
 function inlineNodeFromMarkdoc(node: Node): Descendant | Descendant[] {
   if (node.type === 'inline') {
     return inlineChildrenFromMarkdoc(node.children);
   }
   if (node.type === 'link') {
-    return setLinkForChildren(node.attributes.href, () => inlineChildrenFromMarkdoc(node.children));
+    return setLinkForChildren(node.attributes.href, () =>
+      inlineChildrenFromMarkdoc(node.children)
+    );
   }
   if (node.type === 'text') {
     return getInlineNodes(node.attributes.content);
   }
   if (node.type === 'strong') {
-    return addMarkToChildren('bold', () => inlineChildrenFromMarkdoc(node.children));
+    return addMarkToChildren('bold', () =>
+      inlineChildrenFromMarkdoc(node.children)
+    );
   }
   if (node.type === 'code') {
-    return addMarkToChildren('code', () => [{ text: node.attributes.content, code: true }]);
+    return addMarkToChildren('code', () => [
+      { text: node.attributes.content, code: true },
+    ]);
   }
   if (node.type === 'em') {
-    return addMarkToChildren('italic', () => inlineChildrenFromMarkdoc(node.children));
+    return addMarkToChildren('italic', () =>
+      inlineChildrenFromMarkdoc(node.children)
+    );
   }
   if (node.type === 'tag') {
     if (node.tag === 'u') {
-      return addMarkToChildren('underline', () => inlineChildrenFromMarkdoc(node.children));
+      return addMarkToChildren('underline', () =>
+        inlineChildrenFromMarkdoc(node.children)
+      );
     }
     if (node.tag === 'kbd') {
-      return addMarkToChildren('keyboard', () => inlineChildrenFromMarkdoc(node.children));
+      return addMarkToChildren('keyboard', () =>
+        inlineChildrenFromMarkdoc(node.children)
+      );
     }
     if (node.tag === 's') {
-      return addMarkToChildren('strikethrough', () => inlineChildrenFromMarkdoc(node.children));
+      return addMarkToChildren('strikethrough', () =>
+        inlineChildrenFromMarkdoc(node.children)
+      );
     }
     if (node.tag === 'sub') {
-      return addMarkToChildren('subscript', () => inlineChildrenFromMarkdoc(node.children));
+      return addMarkToChildren('subscript', () =>
+        inlineChildrenFromMarkdoc(node.children)
+      );
     }
     if (node.tag === 'sup') {
-      return addMarkToChildren('superscript', () => inlineChildrenFromMarkdoc(node.children));
+      return addMarkToChildren('superscript', () =>
+        inlineChildrenFromMarkdoc(node.children)
+      );
     }
   }
   if (node.type === 'softbreak') {
@@ -55,7 +79,9 @@ function inlineNodeFromMarkdoc(node: Node): Descendant | Descendant[] {
   if (
     node.tag === 'component-inline-prop' &&
     Array.isArray(node.attributes.propPath) &&
-    node.attributes.propPath.every(x => typeof x === 'string' || typeof x === 'number')
+    node.attributes.propPath.every(
+      x => typeof x === 'string' || typeof x === 'number'
+    )
   ) {
     return {
       type: 'component-inline-prop',
@@ -120,7 +146,9 @@ function fromMarkdocNode(
   if (node.type === 'fence') {
     return {
       type: 'code',
-      children: [{ text: node.attributes.content.replace(/\n$/, '') } as TextWithMarks],
+      children: [
+        { text: node.attributes.content.replace(/\n$/, '') } as TextWithMarks,
+      ],
       ...(typeof node.attributes.language === 'string'
         ? { language: node.attributes.language }
         : {}),
@@ -141,7 +169,10 @@ function fromMarkdocNode(
   }
   if (node.type === 'item') {
     const children = [
-      { type: 'list-item-content' as const, children: inlineFromMarkdoc([node.children[0]]) },
+      {
+        type: 'list-item-content' as const,
+        children: inlineFromMarkdoc([node.children[0]]),
+      },
     ];
     return { type: 'list-item', children };
   }
@@ -160,13 +191,17 @@ function fromMarkdocNode(
       return {
         type: 'layout',
         layout: node.attributes.layout,
-        children: node.children.flatMap(x => fromMarkdocNode(x, componentBlocks)),
+        children: node.children.flatMap(x =>
+          fromMarkdocNode(x, componentBlocks)
+        ),
       };
     }
     if (node.tag === 'layout-area') {
       return {
         type: 'layout-area',
-        children: node.children.flatMap(x => fromMarkdocNode(x, componentBlocks)),
+        children: node.children.flatMap(x =>
+          fromMarkdocNode(x, componentBlocks)
+        ),
       };
     }
     if (node.tag === 'component-block') {
@@ -183,11 +218,15 @@ function fromMarkdocNode(
     if (
       node.tag === 'component-block-prop' &&
       Array.isArray(node.attributes.propPath) &&
-      node.attributes.propPath.every(x => typeof x === 'string' || typeof x === 'number')
+      node.attributes.propPath.every(
+        x => typeof x === 'string' || typeof x === 'number'
+      )
     ) {
       return {
         type: 'component-block-prop',
-        children: node.children.flatMap(x => fromMarkdocNode(x, componentBlocks)),
+        children: node.children.flatMap(x =>
+          fromMarkdocNode(x, componentBlocks)
+        ),
         propPath: node.attributes.propPath,
       };
     }
@@ -248,7 +287,9 @@ function toChildrenAndProps(
   componentBlocks: Record<string, ComponentBlock>
 ) {
   if (singleChildField.kind === 'child') {
-    const children = fromMarkdoc.flatMap(x => fromMarkdocNode(x, componentBlocks));
+    const children = fromMarkdoc.flatMap(x =>
+      fromMarkdocNode(x, componentBlocks)
+    );
     resultingChildren.push({
       type: `component-${singleChildField.options.kind}-prop`,
       propPath: [...parentPropPath, ...singleChildField.relativePath],
@@ -262,10 +303,14 @@ function toChildrenAndProps(
         child = child.children[0].children[0];
       }
       if (child.type !== 'tag') {
-        throw new Error(`expected tag ${singleChildField.asChildTag}, found type: ${child.type}`);
+        throw new Error(
+          `expected tag ${singleChildField.asChildTag}, found type: ${child.type}`
+        );
       }
       if (child.tag !== singleChildField.asChildTag) {
-        throw new Error(`expected tag ${singleChildField.asChildTag}, found tag: ${child.tag}`);
+        throw new Error(
+          `expected tag ${singleChildField.asChildTag}, found tag: ${child.tag}`
+        );
       }
 
       const attributes = JSON.parse(JSON.stringify(child.attributes));
@@ -281,8 +326,12 @@ function toChildrenAndProps(
       }
       arr.push(attributes);
     }
-    const key = singleChildField.relativePath[singleChildField.relativePath.length - 1];
-    const parent = getValueAtPropPath(value, singleChildField.relativePath.slice(0, -1));
+    const key =
+      singleChildField.relativePath[singleChildField.relativePath.length - 1];
+    const parent = getValueAtPropPath(
+      value,
+      singleChildField.relativePath.slice(0, -1)
+    );
     (parent as any)[key] = arr;
   }
 }

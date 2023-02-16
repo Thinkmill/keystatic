@@ -34,10 +34,16 @@ const componentBlocks = {
     schema: {
       object: fields.object({
         prop: fields.text({ label: 'Prop' }),
-        conditional: fields.conditional(fields.checkbox({ label: 'Conditional' }), {
-          true: fields.child({ kind: 'block', placeholder: '' }),
-          false: fields.relationship({ label: 'Relationship', listKey: 'Something' }),
-        }),
+        conditional: fields.conditional(
+          fields.checkbox({ label: 'Conditional' }),
+          {
+            true: fields.child({ kind: 'block', placeholder: '' }),
+            false: fields.relationship({
+              label: 'Relationship',
+              listKey: 'Something',
+            }),
+          }
+        ),
       }),
     },
   }),

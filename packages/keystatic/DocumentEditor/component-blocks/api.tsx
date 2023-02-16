@@ -19,12 +19,20 @@ import { Editor } from 'slate';
 
 import { fromMarkdoc } from '../../markdoc/from-markdoc';
 import { toMarkdocDocument } from '../../markdoc/to-markdoc';
-import { createDocumentEditor, DocumentEditor, useIsInDocumentEditor } from '..';
+import {
+  createDocumentEditor,
+  DocumentEditor,
+  useIsInDocumentEditor,
+} from '..';
 import { DocumentFeatures } from '../document-features';
 import { isValidURL } from '../isValidURL';
 import { ActionButton } from '@voussoir/button';
 import { Flex } from '@voussoir/layout';
-import { CollectedFile, collectFiles, deserializeFiles } from './document-field';
+import {
+  CollectedFile,
+  collectFiles,
+  deserializeFiles,
+} from './document-field';
 import { ElementFromValidation } from '../../structure-validation';
 
 const textEncoder = new TextEncoder();
@@ -106,38 +114,41 @@ export type FormField<Value, Options> =
 
 export type FormFieldWithFile<Value, Options, DataInReader> =
   | FormFieldWithFileRequiringContentsForReader<Value, Options, DataInReader>
-  | FormFieldWithFileNotRequiringContentsForReader<Value, Options, DataInReader>;
+  | FormFieldWithFileNotRequiringContentsForReader<
+      Value,
+      Options,
+      DataInReader
+    >;
 
-type FormFieldWithFileRequiringContentsForReader<Value, Options, DataInReader> = BasicFormField<
+type FormFieldWithFileRequiringContentsForReader<Value, Options, DataInReader> =
+  BasicFormField<Value, Options> & {
+    serializeToFile:
+      | (BaseSerializeToSingleFile<Value> & {
+          reader: {
+            requiresContentInReader: true;
+            parseToReader(data: {
+              content: Uint8Array | undefined;
+              value: unknown;
+              suggestedFilenamePrefix: string | undefined;
+            }): DataInReader;
+          };
+        })
+      | (BaseSerializeToFiles<Value> & {
+          reader: {
+            requiresContentInReader: true;
+            parseToReader(data: {
+              value: unknown;
+              primary: Uint8Array | undefined;
+              other: { [key: string]: Uint8Array };
+            }): DataInReader;
+          };
+        });
+  };
+type FormFieldWithFileNotRequiringContentsForReader<
   Value,
-  Options
-> & {
-  serializeToFile:
-    | (BaseSerializeToSingleFile<Value> & {
-        reader: {
-          requiresContentInReader: true;
-          parseToReader(data: {
-            content: Uint8Array | undefined;
-            value: unknown;
-            suggestedFilenamePrefix: string | undefined;
-          }): DataInReader;
-        };
-      })
-    | (BaseSerializeToFiles<Value> & {
-        reader: {
-          requiresContentInReader: true;
-          parseToReader(data: {
-            value: unknown;
-            primary: Uint8Array | undefined;
-            other: { [key: string]: Uint8Array };
-          }): DataInReader;
-        };
-      });
-};
-type FormFieldWithFileNotRequiringContentsForReader<Value, Options, DataInReader> = BasicFormField<
-  Value,
-  Options
-> & {
+  Options,
+  DataInReader
+> = BasicFormField<Value, Options> & {
   serializeToFile:
     | (BaseSerializeToSingleFile<Value> & {
         reader: {
@@ -158,7 +169,10 @@ type FormFieldWithFileNotRequiringContentsForReader<Value, Options, DataInReader
 
 type BaseSerializeToSingleFile<Value> = {
   kind: 'asset';
-  filename(value: unknown, suggestedFilenamePrefix: string | undefined): string | undefined;
+  filename(
+    value: unknown,
+    suggestedFilenamePrefix: string | undefined
+  ): string | undefined;
   serialize(
     value: Value,
     suggestedFilenamePrefix: string | undefined
@@ -269,7 +283,10 @@ export type RelationshipField<Many extends boolean> = {
 };
 
 export interface ObjectField<
-  Fields extends Record<string, ComponentSchema> = Record<string, ComponentSchema>
+  Fields extends Record<string, ComponentSchema> = Record<
+    string,
+    ComponentSchema
+  >
 > {
   kind: 'object';
   fields: Fields;
@@ -304,7 +321,12 @@ export type ComponentSchema =
   | RelationshipField<boolean>
   | ArrayFieldInComponentSchema;
 
-function validateText(val: string, min: number, max: number, fieldLabel: string) {
+function validateText(
+  val: string,
+  min: number,
+  max: number,
+  fieldLabel: string
+) {
   if (val.length < min) {
     if (min === 1) {
       return `${fieldLabel} must not be empty`;
@@ -348,7 +370,9 @@ export const fields = {
             onChange={onChange}
             onBlur={() => setBlurred(true)}
             errorMessage={
-              forceValidation || blurred ? validateText(value, min, max, label) : undefined
+              forceValidation || blurred
+                ? validateText(value, min, max, label)
+                : undefined
             }
           />
         );
@@ -356,7 +380,11 @@ export const fields = {
       options: undefined,
       defaultValue,
       validate(value) {
-        return typeof value === 'string' && value.length >= min && value.length <= max;
+        return (
+          typeof value === 'string' &&
+          value.length >= min &&
+          value.length <= max
+        );
       },
     };
   },
@@ -380,7 +408,9 @@ export const fields = {
         return (
           <TextField
             label={label}
-            errorMessage={showValidation ? 'Please specify an integer' : undefined}
+            errorMessage={
+              showValidation ? 'Please specify an integer' : undefined
+            }
             onBlur={() => setBlurred(true)}
             autoFocus={autoFocus}
             value={inputValue}
@@ -426,7 +456,9 @@ export const fields = {
             onBlur={() => {
               setBlurred(true);
             }}
-            errorMessage={showValidation ? 'Please provide a valid URL' : undefined}
+            errorMessage={
+              showValidation ? 'Please provide a valid URL' : undefined
+            }
           />
         );
       },
@@ -489,7 +521,12 @@ export const fields = {
       Input({ value, onChange }) {
         const labelId = useId();
         return (
-          <Flex role="group" aria-labelledby={labelId} direction="column" gap="medium">
+          <Flex
+            role="group"
+            aria-labelledby={labelId}
+            direction="column"
+            gap="medium"
+          >
             <FieldLabel elementType="span" id={labelId}>
               {label}
             </FieldLabel>
@@ -515,7 +552,9 @@ export const fields = {
       validate(value) {
         return (
           Array.isArray(value) &&
-          value.every(value => typeof value === 'string' && valuesToOption.has(value))
+          value.every(
+            value => typeof value === 'string' && valuesToOption.has(value)
+          )
         );
       },
     };
@@ -531,7 +570,11 @@ export const fields = {
       kind: 'form',
       Input({ value, onChange, autoFocus }) {
         return (
-          <Checkbox isSelected={value} onChange={onChange} autoFocus={autoFocus}>
+          <Checkbox
+            isSelected={value}
+            onChange={onChange}
+            autoFocus={autoFocus}
+          >
             {label}
           </Checkbox>
         );
@@ -543,7 +586,11 @@ export const fields = {
       },
     };
   },
-  image({ label }: { label: string }): FormFieldWithFileNotRequiringContentsForReader<
+  image({
+    label,
+  }: {
+    label: string;
+  }): FormFieldWithFileNotRequiringContentsForReader<
     | {
         kind: 'uploaded';
         data: Uint8Array;
@@ -572,7 +619,9 @@ export const fields = {
       Input({ onChange, value }) {
         const inputRef = useRef<HTMLInputElement | null>(null);
         const isInEditor = useIsInDocumentEditor();
-        const objectUrl = useObjectURL(value.kind === 'uploaded' ? value.data : null);
+        const objectUrl = useObjectURL(
+          value.kind === 'uploaded' ? value.data : null
+        );
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
         const inputKey = useMemo(() => Math.random(), [value]);
@@ -591,7 +640,12 @@ export const fields = {
               <img
                 src={objectUrl}
                 alt=""
-                style={{ display: 'block', height: 140, maxWidth: '100%', alignSelf: 'start' }}
+                style={{
+                  display: 'block',
+                  height: 140,
+                  maxWidth: '100%',
+                  alignSelf: 'start',
+                }}
               />
             )}
             <input
@@ -698,7 +752,10 @@ export const fields = {
       options: undefined,
       defaultValue: null,
       validate(value) {
-        return value === null || (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value));
+        return (
+          value === null ||
+          (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value))
+        );
       },
     };
   },
@@ -772,7 +829,9 @@ export const fields = {
             },
     };
   },
-  object<Fields extends Record<string, ComponentSchema>>(fields: Fields): ObjectField<Fields> {
+  object<Fields extends Record<string, ComponentSchema>>(
+    fields: Fields
+  ): ObjectField<Fields> {
     return { kind: 'object', fields };
   },
   conditional<
@@ -804,7 +863,11 @@ export const fields = {
   }: {
     label: string;
     componentBlocks?: Record<string, ComponentBlock>;
-  }): FormFieldWithFileRequiringContentsForReader<DocumentElement[], undefined, DocumentElement[]> {
+  }): FormFieldWithFileRequiringContentsForReader<
+    DocumentElement[],
+    undefined,
+    DocumentElement[]
+  > {
     const parse =
       (mode: 'read' | 'edit') =>
       (value: {
@@ -814,10 +877,19 @@ export const fields = {
       }): DocumentElement[] => {
         const markdoc = textDecoder.decode(value.primary);
         const document = fromMarkdoc(Markdoc.parse(markdoc), componentBlocks);
-        const editor = createDocumentEditor(documentFeatures, componentBlocks, {});
+        const editor = createDocumentEditor(
+          documentFeatures,
+          componentBlocks,
+          {}
+        );
         editor.children = document;
         Editor.normalize(editor, { force: true });
-        return deserializeFiles(editor.children, componentBlocks, value.other, mode) as any;
+        return deserializeFiles(
+          editor.children,
+          componentBlocks,
+          value.other,
+          mode
+        ) as any;
       };
     return {
       kind: 'form',
@@ -851,19 +923,28 @@ export const fields = {
         parse: parse('edit'),
         async serialize(value) {
           const collectedFiles: CollectedFile[] = [];
-          const transformed = collectFiles(value as any, componentBlocks, collectedFiles);
+          const transformed = collectFiles(
+            value as any,
+            componentBlocks,
+            collectedFiles
+          );
 
           return {
             primary: textEncoder.encode(
               Markdoc.format(
                 Markdoc.parse(
                   Markdoc.format(
-                    toMarkdocDocument(transformed as ElementFromValidation[], componentBlocks)
+                    toMarkdocDocument(
+                      transformed as ElementFromValidation[],
+                      componentBlocks
+                    )
                   )
                 )
               )
             ),
-            other: Object.fromEntries(collectedFiles.map(({ filename, data }) => [filename, data])),
+            other: Object.fromEntries(
+              collectedFiles.map(({ filename, data }) => [filename, data])
+            ),
             value: { files: collectedFiles.map(({ filename }) => filename) },
           };
         },
@@ -883,9 +964,9 @@ export const fields = {
     listKey: string;
     label: string;
     selection?: string;
-  } & (Many extends undefined | false ? { many?: Many } : { many: Many })): RelationshipField<
-    Many extends true ? true : false
-  > {
+  } & (Many extends undefined | false
+    ? { many?: Many }
+    : { many: Many })): RelationshipField<Many extends true ? true : false> {
     return {
       kind: 'relationship',
       listKey,
@@ -913,7 +994,10 @@ export const fields = {
 };
 
 export type ComponentBlock<
-  Fields extends Record<string, ComponentSchema> = Record<string, ComponentSchema>
+  Fields extends Record<string, ComponentSchema> = Record<
+    string,
+    ComponentSchema
+  >
 > = {
   preview: (props: any) => ReactElement | null;
   schema: Fields;
@@ -921,7 +1005,10 @@ export type ComponentBlock<
 } & (
   | {
       chromeless: true;
-      toolbar?: (props: { props: Record<string, any>; onRemove(): void }) => ReactElement;
+      toolbar?: (props: {
+        props: Record<string, any>;
+        onRemove(): void;
+      }) => ReactElement;
     }
   | {
       chromeless?: false;
@@ -946,7 +1033,10 @@ type FormFieldPreviewProps<Schema extends FormField<any, any>> = {
   readonly schema: Schema;
 };
 
-type ObjectFieldPreviewProps<Schema extends ObjectField<any>, ChildFieldElement> = {
+type ObjectFieldPreviewProps<
+  Schema extends ObjectField<any>,
+  ChildFieldElement
+> = {
   readonly fields: {
     readonly [Key in keyof Schema['fields']]: GenericPreviewProps<
       Schema['fields'][Key],
@@ -966,13 +1056,21 @@ type ConditionalFieldPreviewProps<
   ChildFieldElement
 > = {
   readonly [Key in keyof Schema['values']]: {
-    readonly discriminant: DiscriminantStringToDiscriminantValue<Schema['discriminant'], Key>;
+    readonly discriminant: DiscriminantStringToDiscriminantValue<
+      Schema['discriminant'],
+      Key
+    >;
     onChange<Discriminant extends Schema['discriminant']['defaultValue']>(
       discriminant: Discriminant,
-      value?: InitialOrUpdateValueFromComponentPropField<Schema['values'][`${Discriminant}`]>
+      value?: InitialOrUpdateValueFromComponentPropField<
+        Schema['values'][`${Discriminant}`]
+      >
     ): void;
     readonly options: Schema['discriminant']['options'];
-    readonly value: GenericPreviewProps<Schema['values'][Key], ChildFieldElement>;
+    readonly value: GenericPreviewProps<
+      Schema['values'][Key],
+      ChildFieldElement
+    >;
     readonly schema: Schema;
   };
 }[keyof Schema['values']];
@@ -982,14 +1080,21 @@ type RelationshipDataType<Many extends boolean> = Many extends true
   ? readonly HydratedRelationshipData[]
   : HydratedRelationshipData | null;
 
-type RelationshipFieldPreviewProps<Schema extends RelationshipField<boolean>> = {
-  readonly value: RelationshipDataType<Schema['many']>;
-  onChange(relationshipData: RelationshipDataType<Schema['many']>): void;
-  readonly schema: Schema;
-};
+type RelationshipFieldPreviewProps<Schema extends RelationshipField<boolean>> =
+  {
+    readonly value: RelationshipDataType<Schema['many']>;
+    onChange(relationshipData: RelationshipDataType<Schema['many']>): void;
+    readonly schema: Schema;
+  };
 
-type ArrayFieldPreviewProps<Schema extends ArrayField<ComponentSchema>, ChildFieldElement> = {
-  readonly elements: readonly (GenericPreviewProps<Schema['element'], ChildFieldElement> & {
+type ArrayFieldPreviewProps<
+  Schema extends ArrayField<ComponentSchema>,
+  ChildFieldElement
+> = {
+  readonly elements: readonly (GenericPreviewProps<
+    Schema['element'],
+    ChildFieldElement
+  > & {
     readonly key: string;
   })[];
   readonly onChange: (
@@ -1018,34 +1123,45 @@ export type GenericPreviewProps<
   ? ArrayFieldPreviewProps<Schema, ChildFieldElement>
   : never;
 
-export type PreviewProps<Schema extends ComponentSchema> = GenericPreviewProps<Schema, ReactNode>;
+export type PreviewProps<Schema extends ComponentSchema> = GenericPreviewProps<
+  Schema,
+  ReactNode
+>;
 
-export type InitialOrUpdateValueFromComponentPropField<Schema extends ComponentSchema> =
-  Schema extends ChildField
-    ? undefined
-    : Schema extends FormField<infer Value, any>
-    ? Value | undefined
-    : Schema extends ObjectField<infer Value>
-    ? {
-        readonly [Key in keyof Value]?: InitialOrUpdateValueFromComponentPropField<Value[Key]>;
-      }
-    : Schema extends ConditionalField<infer DiscriminantField, infer Values>
-    ? {
-        readonly [Key in keyof Values]: {
-          readonly discriminant: DiscriminantStringToDiscriminantValue<DiscriminantField, Key>;
-          readonly value?: InitialOrUpdateValueFromComponentPropField<Values[Key]>;
-        };
-      }[keyof Values]
-    : Schema extends RelationshipField<infer Many>
-    ? Many extends true
-      ? readonly HydratedRelationshipData[]
-      : HydratedRelationshipData | null
-    : Schema extends ArrayField<infer ElementField>
-    ? readonly {
-        key: string | undefined;
-        value?: InitialOrUpdateValueFromComponentPropField<ElementField>;
-      }[]
-    : never;
+export type InitialOrUpdateValueFromComponentPropField<
+  Schema extends ComponentSchema
+> = Schema extends ChildField
+  ? undefined
+  : Schema extends FormField<infer Value, any>
+  ? Value | undefined
+  : Schema extends ObjectField<infer Value>
+  ? {
+      readonly [Key in keyof Value]?: InitialOrUpdateValueFromComponentPropField<
+        Value[Key]
+      >;
+    }
+  : Schema extends ConditionalField<infer DiscriminantField, infer Values>
+  ? {
+      readonly [Key in keyof Values]: {
+        readonly discriminant: DiscriminantStringToDiscriminantValue<
+          DiscriminantField,
+          Key
+        >;
+        readonly value?: InitialOrUpdateValueFromComponentPropField<
+          Values[Key]
+        >;
+      };
+    }[keyof Values]
+  : Schema extends RelationshipField<infer Many>
+  ? Many extends true
+    ? readonly HydratedRelationshipData[]
+    : HydratedRelationshipData | null
+  : Schema extends ArrayField<infer ElementField>
+  ? readonly {
+      key: string | undefined;
+      value?: InitialOrUpdateValueFromComponentPropField<ElementField>;
+    }[]
+  : never;
 
 type DiscriminantStringToDiscriminantValue<
   DiscriminantField extends FormField<any, any>,
@@ -1058,10 +1174,8 @@ type DiscriminantStringToDiscriminantValue<
     : never
   : DiscriminantString;
 
-export type PreviewPropsForToolbar<Schema extends ComponentSchema> = GenericPreviewProps<
-  Schema,
-  undefined
->;
+export type PreviewPropsForToolbar<Schema extends ComponentSchema> =
+  GenericPreviewProps<Schema, undefined>;
 
 export type HydratedRelationshipData = {
   id: string;
@@ -1108,7 +1222,10 @@ export function component<
   return options as any;
 }
 
-export function NotEditable({ children, ...props }: HTMLAttributes<HTMLDivElement>) {
+export function NotEditable({
+  children,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
   return (
     <span
       className={css({ userSelect: 'none', whiteSpace: 'initial' })}
@@ -1122,55 +1239,71 @@ export function NotEditable({ children, ...props }: HTMLAttributes<HTMLDivElemen
 
 type Comp<Props> = (props: Props) => ReactElement | null;
 
-export type ValueForComponentSchema<Schema extends ComponentSchema> = Schema extends ChildField
-  ? null
-  : Schema extends FormField<infer Value, any>
-  ? Value
-  : Schema extends ObjectField<infer Value>
-  ? {
-      readonly [Key in keyof Value]: ValueForComponentSchema<Value[Key]>;
-    }
-  : Schema extends ConditionalField<infer DiscriminantField, infer Values>
-  ? {
-      readonly [Key in keyof Values]: {
-        readonly discriminant: DiscriminantStringToDiscriminantValue<DiscriminantField, Key>;
-        readonly value: ValueForComponentSchema<Values[Key]>;
-      };
-    }[keyof Values]
-  : Schema extends RelationshipField<infer Many>
-  ? Many extends true
-    ? readonly HydratedRelationshipData[]
-    : HydratedRelationshipData | null
-  : Schema extends ArrayField<infer ElementField>
-  ? readonly ValueForComponentSchema<ElementField>[]
-  : never;
+export type ValueForComponentSchema<Schema extends ComponentSchema> =
+  Schema extends ChildField
+    ? null
+    : Schema extends FormField<infer Value, any>
+    ? Value
+    : Schema extends ObjectField<infer Value>
+    ? {
+        readonly [Key in keyof Value]: ValueForComponentSchema<Value[Key]>;
+      }
+    : Schema extends ConditionalField<infer DiscriminantField, infer Values>
+    ? {
+        readonly [Key in keyof Values]: {
+          readonly discriminant: DiscriminantStringToDiscriminantValue<
+            DiscriminantField,
+            Key
+          >;
+          readonly value: ValueForComponentSchema<Values[Key]>;
+        };
+      }[keyof Values]
+    : Schema extends RelationshipField<infer Many>
+    ? Many extends true
+      ? readonly HydratedRelationshipData[]
+      : HydratedRelationshipData | null
+    : Schema extends ArrayField<infer ElementField>
+    ? readonly ValueForComponentSchema<ElementField>[]
+    : never;
 
-export type ValueForReading<Schema extends ComponentSchema> = Schema extends ChildField
-  ? null
-  : Schema extends FormFieldWithFileRequiringContentsForReader<any, any, infer Value>
-  ? () => Promise<Value>
-  : Schema extends FormFieldWithFileNotRequiringContentsForReader<any, any, infer Value>
-  ? Value
-  : Schema extends BasicFormField<infer Value, any>
-  ? Value
-  : Schema extends ObjectField<infer Value>
-  ? {
-      readonly [Key in keyof Value]: ValueForReading<Value[Key]>;
-    }
-  : Schema extends ConditionalField<infer DiscriminantField, infer Values>
-  ? {
-      readonly [Key in keyof Values]: {
-        readonly discriminant: DiscriminantStringToDiscriminantValue<DiscriminantField, Key>;
-        readonly value: ValueForReading<Values[Key]>;
-      };
-    }[keyof Values]
-  : Schema extends RelationshipField<infer Many>
-  ? Many extends true
-    ? readonly HydratedRelationshipData[]
-    : HydratedRelationshipData | null
-  : Schema extends ArrayField<infer ElementField>
-  ? readonly ValueForReading<ElementField>[]
-  : never;
+export type ValueForReading<Schema extends ComponentSchema> =
+  Schema extends ChildField
+    ? null
+    : Schema extends FormFieldWithFileRequiringContentsForReader<
+        any,
+        any,
+        infer Value
+      >
+    ? () => Promise<Value>
+    : Schema extends FormFieldWithFileNotRequiringContentsForReader<
+        any,
+        any,
+        infer Value
+      >
+    ? Value
+    : Schema extends BasicFormField<infer Value, any>
+    ? Value
+    : Schema extends ObjectField<infer Value>
+    ? {
+        readonly [Key in keyof Value]: ValueForReading<Value[Key]>;
+      }
+    : Schema extends ConditionalField<infer DiscriminantField, infer Values>
+    ? {
+        readonly [Key in keyof Values]: {
+          readonly discriminant: DiscriminantStringToDiscriminantValue<
+            DiscriminantField,
+            Key
+          >;
+          readonly value: ValueForReading<Values[Key]>;
+        };
+      }[keyof Values]
+    : Schema extends RelationshipField<infer Many>
+    ? Many extends true
+      ? readonly HydratedRelationshipData[]
+      : HydratedRelationshipData | null
+    : Schema extends ArrayField<infer ElementField>
+    ? readonly ValueForReading<ElementField>[]
+    : never;
 
 export type InferRenderersForComponentBlocks<
   ComponentBlocks extends Record<string, ComponentBlock<any>>

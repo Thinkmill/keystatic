@@ -1,6 +1,10 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { getCollectionItemPath, getCollectionPath, getSingletonPath } from '../../app/path-utils';
+import {
+  getCollectionItemPath,
+  getCollectionPath,
+  getSingletonPath,
+} from '../../app/path-utils';
 import { updateTreeWithChanges, blobSha } from './trees-server-side';
 import { Config } from '../../config';
 
@@ -42,7 +46,10 @@ async function collectEntriesInDir(
             const contents = await fs.readFile(path.join(baseDir, innerPath));
             return {
               path: innerPath,
-              contents: { byteLength: contents.byteLength, sha: await blobSha(contents) },
+              contents: {
+                byteLength: contents.byteLength,
+                sha: await blobSha(contents),
+              },
             };
           }
         })
@@ -61,11 +68,17 @@ export async function readToDirEntries(baseDir: string, config: Config) {
   await Promise.all([
     ...Object.keys(config.collections ?? {}).map(async collection => {
       const collectionPath = getCollectionPath(config, collection);
-      const dirEntries = await readDirEntries(path.join(baseDir, collectionPath));
+      const dirEntries = await readDirEntries(
+        path.join(baseDir, collectionPath)
+      );
       await Promise.all(
         dirEntries.map(async entry => {
           if (entry.isDirectory()) {
-            const innerPath = getCollectionItemPath(config, collection, entry.name);
+            const innerPath = getCollectionItemPath(
+              config,
+              collection,
+              entry.name
+            );
             additions.push(...(await collectEntriesInDir(baseDir, innerPath)));
           }
         })

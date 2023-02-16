@@ -294,7 +294,8 @@ test('a mark stays in the same block', () => {
 });
 
 test('a link stays in the same block', () => {
-  expect(deserializeMarkdown(`[link](https://keystonejs.com)`)).toMatchInlineSnapshot(`
+  expect(deserializeMarkdown(`[link](https://keystonejs.com)`))
+    .toMatchInlineSnapshot(`
     <editor>
       <paragraph>
         <text />
@@ -315,8 +316,9 @@ test('a link stays in the same block', () => {
 });
 
 test('a link nested inside bold', () => {
-  expect(deserializeMarkdown(`__content [link](https://keystonejs.com) content__`))
-    .toMatchInlineSnapshot(`
+  expect(
+    deserializeMarkdown(`__content [link](https://keystonejs.com) content__`)
+  ).toMatchInlineSnapshot(`
     <editor
       marks={
         {
@@ -361,8 +363,11 @@ test('html in inline content is just written', () => {
 });
 
 test('html in complex inline content', () => {
-  expect(deserializeMarkdown(`__content [link<code>blah</code>](https://keystonejs.com) content__`))
-    .toMatchInlineSnapshot(`
+  expect(
+    deserializeMarkdown(
+      `__content [link<code>blah</code>](https://keystonejs.com) content__`
+    )
+  ).toMatchInlineSnapshot(`
     <editor
       marks={
         {

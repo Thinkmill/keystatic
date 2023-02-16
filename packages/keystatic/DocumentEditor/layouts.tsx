@@ -1,6 +1,11 @@
 import { createContext, useContext, useMemo, useRef } from 'react';
 import { Editor, Element, Node, Transforms, Range, Point } from 'slate';
-import { ReactEditor, RenderElementProps, useFocused, useSelected } from 'slate-react';
+import {
+  ReactEditor,
+  RenderElementProps,
+  useFocused,
+  useSelected,
+} from 'slate-react';
 
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { columnsIcon } from '@voussoir/icon/icons/columnsIcon';
@@ -41,7 +46,9 @@ export const LayoutContainer = ({
 
   const layout = element.layout;
   const layoutOptions = useContext(LayoutOptionsContext);
-  const currentLayoutIndex = layoutOptions.findIndex(x => x.toString() === layout.toString());
+  const currentLayoutIndex = layoutOptions.findIndex(
+    x => x.toString() === layout.toString()
+  );
   const triggerRef = useRef(null);
   const state = useOverlayTriggerState({
     isOpen: focused && selected,
@@ -65,7 +72,12 @@ export const LayoutContainer = ({
       >
         {children}
       </div>
-      <Popover isNonModal {...overlayProps} triggerRef={triggerRef} state={state}>
+      <Popover
+        isNonModal
+        {...overlayProps}
+        triggerRef={triggerRef}
+        state={state}
+      >
         <Flex padding="medium" gap="regular">
           <ActionGroup
             selectionMode="single"
@@ -74,10 +86,16 @@ export const LayoutContainer = ({
             onAction={key => {
               const path = ReactEditor.findPath(editor, element);
               const layoutOption = layoutOptions[key as number];
-              Transforms.setNodes(editor, { type: 'layout', layout: layoutOption }, { at: path });
+              Transforms.setNodes(
+                editor,
+                { type: 'layout', layout: layoutOption },
+                { at: path }
+              );
               ReactEditor.focus(editor);
             }}
-            selectedKeys={currentLayoutIndex !== -1 ? [currentLayoutIndex.toString()] : []}
+            selectedKeys={
+              currentLayoutIndex !== -1 ? [currentLayoutIndex.toString()] : []
+            }
           >
             {layoutOptions.map((layoutOption, i) => (
               <Item key={i}>{makeLayoutIcon(layoutOption)}</Item>
@@ -123,7 +141,10 @@ export const insertLayout = (editor: Editor, layout: [number, ...number[]]) => {
       type: 'layout',
       layout,
       children: [
-        { type: 'layout-area', children: [{ type: 'paragraph', children: [{ text: '' }] }] },
+        {
+          type: 'layout-area',
+          children: [{ type: 'paragraph', children: [{ text: '' }] }],
+        },
       ],
     },
   ]);
@@ -196,7 +217,8 @@ export function withLayouts(editor: Editor): Editor {
               [
                 ...path,
                 node.layout.length - 1,
-                (node.children[node.layout.length - 1] as Element).children.length,
+                (node.children[node.layout.length - 1] as Element).children
+                  .length,
               ],
               node => node.type !== 'paragraph' || Node.string(child) !== ''
             );
@@ -232,7 +254,13 @@ function makeLayoutIcon(ratios: number[]) {
     >
       {ratios.map((_, i) => {
         return (
-          <div key={i} className={css({ backgroundColor: 'currentcolor', borderRadius: 1 })} />
+          <div
+            key={i}
+            className={css({
+              backgroundColor: 'currentcolor',
+              borderRadius: 1,
+            })}
+          />
         );
       })}
     </div>
@@ -243,7 +271,11 @@ function makeLayoutIcon(ratios: number[]) {
 
 const layoutsIcon = <Icon src={columnsIcon} />;
 
-export const LayoutsButton = ({ layouts }: { layouts: DocumentFeatures['layouts'] }) => {
+export const LayoutsButton = ({
+  layouts,
+}: {
+  layouts: DocumentFeatures['layouts'];
+}) => {
   const {
     editor,
     layouts: { isSelected },

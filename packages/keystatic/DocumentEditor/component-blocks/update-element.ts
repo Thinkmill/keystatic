@@ -39,7 +39,11 @@ export function updateComponentBlockElementProps(
       }
       Transforms.insertNodes(
         editor,
-        { type: 'component-inline-prop', propPath: undefined, children: [{ text: '' }] },
+        {
+          type: 'component-inline-prop',
+          propPath: undefined,
+          children: [{ text: '' }],
+        },
         { at: [...basePath, 0] }
       );
       return;
@@ -47,7 +51,10 @@ export function updateComponentBlockElementProps(
 
     const initialPropPathsToEditorPath = new Map<undefined | string, number>();
     for (const [idx, node] of elementForChildren.children.entries()) {
-      assert(node.type === 'component-block-prop' || node.type === 'component-inline-prop');
+      assert(
+        node.type === 'component-block-prop' ||
+          node.type === 'component-inline-prop'
+      );
       initialPropPathsToEditorPath.set(
         node.propPath === undefined ? undefined : JSON.stringify(node.propPath),
         idx
@@ -63,8 +70,12 @@ export function updateComponentBlockElementProps(
       const stringifiedPath = JSON.stringify(childProp.prevPath);
       const idxInChildren = initialPropPathsToEditorPath.get(stringifiedPath);
       if (idxInChildren !== undefined) {
-        type ChildProp = Element & { type: 'component-inline-prop' | 'component-block-prop' };
-        const prevNode = elementForChildren.children[idxInChildren] as ChildProp;
+        type ChildProp = Element & {
+          type: 'component-inline-prop' | 'component-block-prop';
+        };
+        const prevNode = elementForChildren.children[
+          idxInChildren
+        ] as ChildProp;
         assert(prevNode.propPath !== undefined);
         if (!areArraysEqual(childProp.path, prevNode.propPath)) {
           Transforms.setNodes(
@@ -114,9 +125,12 @@ export function updateComponentBlockElementProps(
     outer: while (true) {
       for (const [idx, childNode] of getNode().children.entries()) {
         assert(
-          childNode.type === 'component-block-prop' || childNode.type === 'component-inline-prop'
+          childNode.type === 'component-block-prop' ||
+            childNode.type === 'component-inline-prop'
         );
-        const expectedIndex = propPathsToExpectedIndexes.get(JSON.stringify(childNode.propPath));
+        const expectedIndex = propPathsToExpectedIndexes.get(
+          JSON.stringify(childNode.propPath)
+        );
         assert(expectedIndex !== undefined);
         if (idx === expectedIndex) continue;
 
@@ -156,7 +170,8 @@ function findChildPropPathsWithPrevious(
     case 'child':
       return [{ path: newPath, prevPath, options: schema.options }];
     case 'conditional':
-      const hasChangedDiscriminant = value.discriminant === prevValue.discriminant;
+      const hasChangedDiscriminant =
+        value.discriminant === prevValue.discriminant;
       return findChildPropPathsWithPrevious(
         value.value,
         hasChangedDiscriminant

@@ -169,7 +169,9 @@ test('prop path for old fake void prop is removed', () => {
         }}
       >
         <component-inline-prop
-          propPath={['________VOID_BUT_NOT_REALLY_COMPONENT_INLINE_PROP________']}
+          propPath={[
+            '________VOID_BUT_NOT_REALLY_COMPONENT_INLINE_PROP________',
+          ]}
         >
           <text />
         </component-inline-prop>
@@ -325,7 +327,10 @@ test('extra component props are removed', () => {
 test('missing component props are added', () => {
   let editor = makeEditor(
     <editor>
-      <component-block component="withChildElements" props={{ prop: '', block: null }}>
+      <component-block
+        component="withChildElements"
+        props={{ prop: '', block: null }}
+      >
         <component-block-prop propPath={['block']}>
           <paragraph>
             <text>
@@ -605,7 +610,10 @@ test('toggling to heading when in an inline prop', () => {
 test('child field in array field insertBreak', () => {
   const editor = makeEditor(
     <editor>
-      <component-block component="myList" props={{ children: [{ content: null, done: false }] }}>
+      <component-block
+        component="myList"
+        props={{ children: [{ content: null, done: false }] }}
+      >
         <component-inline-prop propPath={['children', 0, 'content']}>
           <text>
             something
@@ -891,7 +899,10 @@ test('normalization adds missing fields on object fields', () => {
         basic: component({
           preview: () => null,
           label: 'Basic',
-          schema: { a: fields.text({ label: 'A' }), b: fields.checkbox({ label: 'B' }) },
+          schema: {
+            a: fields.text({ label: 'A' }),
+            b: fields.checkbox({ label: 'B' }),
+          },
         }),
       },
     }

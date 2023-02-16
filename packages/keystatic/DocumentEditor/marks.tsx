@@ -11,7 +11,12 @@ export const allMarkdownShortcuts = {
   code: ['`'],
 };
 
-function applyMark(editor: Editor, mark: string, shortcutText: string, startOfStartPoint: Point) {
+function applyMark(
+  editor: Editor,
+  mark: string,
+  shortcutText: string,
+  startOfStartPoint: Point
+) {
   // so that this starts a new undo group
   editor.history.undos.push([]);
   const startPointRef = Editor.pointRef(editor, startOfStartPoint);
@@ -21,7 +26,10 @@ function applyMark(editor: Editor, mark: string, shortcutText: string, startOfSt
     distance: shortcutText.length,
     reverse: true,
   });
-  Transforms.delete(editor, { at: startOfStartPoint, distance: shortcutText.length });
+  Transforms.delete(editor, {
+    at: startOfStartPoint,
+    distance: shortcutText.length,
+  });
 
   Transforms.setNodes(
     editor,
@@ -48,9 +56,14 @@ export function withMarks(
     insertBreak();
     const marksAfterInsertBreak = Editor.marks(editor);
     if (!marksAfterInsertBreak || !editor.selection) return;
-    const parentBlock = Editor.above(editor, { match: node => Editor.isBlock(editor, node) });
+    const parentBlock = Editor.above(editor, {
+      match: node => Editor.isBlock(editor, node),
+    });
     if (!parentBlock) return;
-    const point = EditorAfterButIgnoringingPointsWithNoContent(editor, editor.selection.anchor);
+    const point = EditorAfterButIgnoringingPointsWithNoContent(
+      editor,
+      editor.selection.anchor
+    );
     const marksAfterInsertBreakArr = Object.keys(
       marksAfterInsertBreak
     ) as (keyof typeof marksAfterInsertBreak)[];
@@ -72,7 +85,9 @@ export function withMarks(
 
   const selectedMarkdownShortcuts: Partial<typeof allMarkdownShortcuts> = {};
   const enabledMarks = editorDocumentFeatures.formatting.inlineMarks;
-  (Object.keys(allMarkdownShortcuts) as (keyof typeof allMarkdownShortcuts)[]).forEach(mark => {
+  (
+    Object.keys(allMarkdownShortcuts) as (keyof typeof allMarkdownShortcuts)[]
+  ).forEach(mark => {
     if (enabledMarks[mark]) {
       selectedMarkdownShortcuts[mark] = allMarkdownShortcuts[mark];
     }
@@ -83,7 +98,9 @@ export function withMarks(
   editor.insertText = text => {
     insertText(text);
     if (editor.selection && Range.isCollapsed(editor.selection)) {
-      for (const [mark, shortcuts] of Object.entries(selectedMarkdownShortcuts)) {
+      for (const [mark, shortcuts] of Object.entries(
+        selectedMarkdownShortcuts
+      )) {
         for (const shortcutText of shortcuts!) {
           if (text === shortcutText[shortcutText.length - 1]) {
             // this function is not inlined because
@@ -102,9 +119,13 @@ export function withMarks(
             );
 
             const endOfShortcutContainsExpectedContent =
-              shortcutText === startOfBlockToEndOfShortcutString.slice(-shortcutText.length);
+              shortcutText ===
+              startOfBlockToEndOfShortcutString.slice(-shortcutText.length);
 
-            if (hasWhitespaceBeforeEndOfShortcut || !endOfShortcutContainsExpectedContent) {
+            if (
+              hasWhitespaceBeforeEndOfShortcut ||
+              !endOfShortcutContainsExpectedContent
+            ) {
               continue;
             }
 
@@ -113,7 +134,9 @@ export function withMarks(
               -shortcutText.length - 1
             );
             // TODO: use regex probs
-            for (const [offsetFromStartOfBlock] of [...strToMatchOn].reverse().entries()) {
+            for (const [offsetFromStartOfBlock] of [...strToMatchOn]
+              .reverse()
+              .entries()) {
               const expectedShortcutText = strToMatchOn.slice(
                 offsetFromStartOfBlock,
                 offsetFromStartOfBlock + shortcutText.length
@@ -125,19 +148,29 @@ export function withMarks(
               const startOfStartOfShortcut =
                 offsetFromStartOfBlock === 0
                   ? startOfBlock
-                  : EditorAfterButIgnoringingPointsWithNoContent(editor, startOfBlock, {
-                      distance: offsetFromStartOfBlock,
-                    })!;
+                  : EditorAfterButIgnoringingPointsWithNoContent(
+                      editor,
+                      startOfBlock,
+                      {
+                        distance: offsetFromStartOfBlock,
+                      }
+                    )!;
 
-              const endOfStartOfShortcut = Editor.after(editor, startOfStartOfShortcut, {
-                distance: shortcutText.length,
-              })!;
+              const endOfStartOfShortcut = Editor.after(
+                editor,
+                startOfStartOfShortcut,
+                {
+                  distance: shortcutText.length,
+                }
+              )!;
 
               if (
                 offsetFromStartOfBlock !== 0 &&
                 !/\s/.test(
                   Editor.string(editor, {
-                    anchor: Editor.before(editor, startOfStartOfShortcut, { unit: 'character' })!,
+                    anchor: Editor.before(editor, startOfStartOfShortcut, {
+                      unit: 'character',
+                    })!,
                     focus: startOfStartOfShortcut,
                   })
                 )
@@ -150,7 +183,10 @@ export function withMarks(
                 focus: editor.selection.anchor,
               }).slice(0, -shortcutText.length);
 
-              if (contentBetweenShortcuts === '' || /\s/.test(contentBetweenShortcuts[0])) {
+              if (
+                contentBetweenShortcuts === '' ||
+                /\s/.test(contentBetweenShortcuts[0])
+              ) {
                 continue;
               }
 
@@ -161,7 +197,8 @@ export function withMarks(
               // there's probably a better way to do this but meh, this works
               if (
                 mark === 'italic' &&
-                (contentBetweenShortcuts[0] === '_' || contentBetweenShortcuts[0] === '*')
+                (contentBetweenShortcuts[0] === '_' ||
+                  contentBetweenShortcuts[0] === '*')
               ) {
                 continue;
               }
@@ -173,8 +210,11 @@ export function withMarks(
                 );
               if (
                 ancestorComponentChildFieldDocumentFeatures &&
-                ancestorComponentChildFieldDocumentFeatures.inlineMarks !== 'inherit' &&
-                ancestorComponentChildFieldDocumentFeatures.inlineMarks[mark as Mark] === false
+                ancestorComponentChildFieldDocumentFeatures.inlineMarks !==
+                  'inherit' &&
+                ancestorComponentChildFieldDocumentFeatures.inlineMarks[
+                  mark as Mark
+                ] === false
               ) {
                 continue;
               }

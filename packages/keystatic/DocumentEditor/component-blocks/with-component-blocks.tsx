@@ -1,4 +1,13 @@
-import { Editor, Element, Transforms, Range, NodeEntry, Path, Node, Text } from 'slate';
+import {
+  Editor,
+  Element,
+  Transforms,
+  Range,
+  NodeEntry,
+  Path,
+  Node,
+  Text,
+} from 'slate';
 
 import weakMemoize from '@emotion/weak-memoize';
 import { assert, moveChildren } from '../utils';
@@ -23,7 +32,11 @@ import {
   traverseProps,
 } from './utils';
 import { getInitialPropsValue } from './initial-values';
-import { getKeysForArrayValue, getNewArrayElementKey, setKeysForArrayValue } from './preview-props';
+import {
+  getKeysForArrayValue,
+  getNewArrayElementKey,
+  setKeysForArrayValue,
+} from './preview-props';
 
 function getAncestorComponentBlock(editor: Editor) {
   if (editor.selection) {
@@ -80,7 +93,12 @@ function normalizeNodeWithinComponentProp(
   if (Element.isElement(node)) {
     let childrenHasChanged = node.children
       .map((node, i) =>
-        normalizeNodeWithinComponentProp([node, [...path, i]], editor, fieldOptions, relationships)
+        normalizeNodeWithinComponentProp(
+          [node, [...path, i]],
+          editor,
+          fieldOptions,
+          relationships
+        )
       )
       // .map then .some because we don't want to exit early
       .some(x => x);
@@ -132,7 +150,9 @@ function canSchemaContainChildField(rootSchema: ComponentSchema) {
   return false;
 }
 
-function doesSchemaOnlyEverContainASingleChildField(rootSchema: ComponentSchema): boolean {
+function doesSchemaOnlyEverContainASingleChildField(
+  rootSchema: ComponentSchema
+): boolean {
   const queue = new Set<ComponentSchema>([rootSchema]);
   let hasFoundChildField = false;
   for (const schema of queue) {
@@ -161,10 +181,16 @@ function doesSchemaOnlyEverContainASingleChildField(rootSchema: ComponentSchema)
   return hasFoundChildField;
 }
 
-function findArrayFieldsWithSingleChildField(schema: ComponentSchema, value: unknown) {
+function findArrayFieldsWithSingleChildField(
+  schema: ComponentSchema,
+  value: unknown
+) {
   const propPaths: [ReadonlyPropPath, ArrayField<ComponentSchema>][] = [];
   traverseProps(schema, value, (schema, value, path) => {
-    if (schema.kind === 'array' && doesSchemaOnlyEverContainASingleChildField(schema.element)) {
+    if (
+      schema.kind === 'array' &&
+      doesSchemaOnlyEverContainASingleChildField(schema.element)
+    ) {
       propPaths.push([path, schema]);
     }
   });
@@ -172,7 +198,8 @@ function findArrayFieldsWithSingleChildField(schema: ComponentSchema, value: unk
 }
 
 function isEmptyChildFieldNode(
-  element: Element & ({ type: 'component-block-prop' } | { type: 'component-inline-prop' })
+  element: Element &
+    ({ type: 'component-block-prop' } | { type: 'component-inline-prop' })
 ) {
   const firstChild = element.children[0];
   return (
@@ -208,10 +235,18 @@ export function withComponentBlocks(
       if (
         ancestorComponentBlock.isInside &&
         Range.isCollapsed(editor.selection) &&
-        Editor.isStart(editor, editor.selection.anchor, ancestorComponentBlock.prop[1]) &&
-        ancestorComponentBlock.prop[1][ancestorComponentBlock.prop[1].length - 1] === 0
+        Editor.isStart(
+          editor,
+          editor.selection.anchor,
+          ancestorComponentBlock.prop[1]
+        ) &&
+        ancestorComponentBlock.prop[1][
+          ancestorComponentBlock.prop[1].length - 1
+        ] === 0
       ) {
-        Transforms.unwrapNodes(editor, { at: ancestorComponentBlock.componentBlock[1] });
+        Transforms.unwrapNodes(editor, {
+          at: ancestorComponentBlock.componentBlock[1],
+        });
         return;
       }
     }
@@ -225,14 +260,16 @@ export function withComponentBlocks(
         componentBlock: [componentBlockNode, componentBlockPath],
       } = ancestorComponentBlock;
       const isLastProp =
-        componentPropPath[componentPropPath.length - 1] === componentBlockNode.children.length - 1;
+        componentPropPath[componentPropPath.length - 1] ===
+        componentBlockNode.children.length - 1;
 
       if (componentPropNode.type === 'component-block-prop') {
         const [[paragraphNode, paragraphPath]] = Editor.nodes(editor, {
           match: node => node.type === 'paragraph',
         });
         const isLastParagraph =
-          paragraphPath[paragraphPath.length - 1] === componentPropNode.children.length - 1;
+          paragraphPath[paragraphPath.length - 1] ===
+          componentPropNode.children.length - 1;
         if (Node.string(paragraphNode) === '' && isLastParagraph) {
           if (isLastProp) {
             Transforms.moveNodes(editor, {
@@ -249,14 +286,22 @@ export function withComponentBlocks(
       if (componentPropNode.type === 'component-inline-prop') {
         Editor.withoutNormalizing(editor, () => {
           const componentBlock = blockComponents[componentBlockNode.component];
-          if (componentPropNode.propPath !== undefined && componentBlock !== undefined) {
-            const rootSchema = { kind: 'object' as const, fields: componentBlock.schema };
+          if (
+            componentPropNode.propPath !== undefined &&
+            componentBlock !== undefined
+          ) {
+            const rootSchema = {
+              kind: 'object' as const,
+              fields: componentBlock.schema,
+            };
             const ancestorFields = getAncestorSchemas(
               rootSchema,
               componentPropNode.propPath,
               componentBlockNode.props
             );
-            const idx = [...ancestorFields].reverse().findIndex(item => item.kind === 'array');
+            const idx = [...ancestorFields]
+              .reverse()
+              .findIndex(item => item.kind === 'array');
             if (idx !== -1) {
               const arrayFieldIdx = ancestorFields.length - 1 - idx;
               const arrayField = ancestorFields[arrayFieldIdx];
@@ -265,7 +310,9 @@ export function withComponentBlocks(
                 componentBlockNode.props,
                 componentPropNode.propPath.slice(0, arrayFieldIdx)
               ) as unknown[];
-              if (doesSchemaOnlyEverContainASingleChildField(arrayField.element)) {
+              if (
+                doesSchemaOnlyEverContainASingleChildField(arrayField.element)
+              ) {
                 if (
                   Node.string(componentPropNode) === '' &&
                   val.length - 1 === componentPropNode.propPath[arrayFieldIdx]
@@ -298,7 +345,10 @@ export function withComponentBlocks(
               to: Path.next(componentBlockPath),
             });
           } else {
-            moveChildren(editor, splitNodePath, [...Path.next(splitNodePath), 0]);
+            moveChildren(editor, splitNodePath, [
+              ...Path.next(splitNodePath),
+              0,
+            ]);
             Transforms.removeNodes(editor, { at: splitNodePath });
           }
         });
@@ -313,7 +363,9 @@ export function withComponentBlocks(
     if (
       node.type === 'component-inline-prop' &&
       !node.propPath &&
-      (node.children.length !== 1 || !Text.isText(node.children[0]) || node.children[0].text !== '')
+      (node.children.length !== 1 ||
+        !Text.isText(node.children[0]) ||
+        node.children[0].text !== '')
     ) {
       Transforms.removeNodes(editor, {
         at: path,
@@ -324,18 +376,24 @@ export function withComponentBlocks(
     if (node.type === 'component-block') {
       const componentBlock = blockComponents[node.component];
       if (componentBlock) {
-        const rootSchema = { kind: 'object' as const, fields: componentBlock.schema };
+        const rootSchema = {
+          kind: 'object' as const,
+          fields: componentBlock.schema,
+        };
 
-        const updatedProps = addMissingFields(node.props, rootSchema) as Record<string, unknown>;
+        const updatedProps = addMissingFields(node.props, rootSchema) as Record<
+          string,
+          unknown
+        >;
         if (updatedProps !== node.props) {
           Transforms.setNodes(editor, { props: updatedProps }, { at: path });
           return;
         }
 
-        for (const [propPath, arrayField] of findArrayFieldsWithSingleChildField(
-          rootSchema,
-          node.props
-        )) {
+        for (const [
+          propPath,
+          arrayField,
+        ] of findArrayFieldsWithSingleChildField(rootSchema, node.props)) {
           if (
             node.children.length === 1 &&
             node.children[0].type === 'component-inline-prop' &&
@@ -381,7 +439,8 @@ export function withComponentBlocks(
             assert(typeof idxFromValue === 'number');
             if (
               arrVal.length <= idxFromValue ||
-              (alreadyUsedIndicies.has(idxFromValue) && isEmptyChildFieldNode(node))
+              (alreadyUsedIndicies.has(idxFromValue) &&
+                isEmptyChildFieldNode(node))
             ) {
               newVal.push(getInitialPropsValue(arrayField.element));
               newKeys.push(getNewKey());
@@ -389,7 +448,9 @@ export function withComponentBlocks(
               alreadyUsedIndicies.add(idxFromValue);
               newVal.push(arrVal[idxFromValue]);
               newKeys.push(
-                alreadyUsedIndicies.has(idxFromValue) ? getNewKey() : prevKeys[idxFromValue]
+                alreadyUsedIndicies.has(idxFromValue)
+                  ? getNewKey()
+                  : prevKeys[idxFromValue]
               );
             }
           }
@@ -406,7 +467,10 @@ export function withComponentBlocks(
               { props: transformedProps as Record<string, unknown> },
               { at: path }
             );
-            for (const [idx, [idxInChildrenOfBlock, nodeWithin]] of nodesWithin.entries()) {
+            for (const [
+              idx,
+              [idxInChildrenOfBlock, nodeWithin],
+            ] of nodesWithin.entries()) {
               const newPropPath = [...nodeWithin.propPath!];
               newPropPath[propPath.length] = idx;
               Transforms.setNodes(
@@ -427,7 +491,10 @@ export function withComponentBlocks(
         );
 
         node.children.forEach(node => {
-          assert(node.type === 'component-block-prop' || node.type === 'component-inline-prop');
+          assert(
+            node.type === 'component-block-prop' ||
+              node.type === 'component-inline-prop'
+          );
           missingKeys.delete(JSON.stringify(node.propPath));
         });
         if (missingKeys.size) {
@@ -449,11 +516,15 @@ export function withComponentBlocks(
           string,
           { options: ChildField['options']; index: number } | undefined
         > = {};
-        findChildPropPaths(node.props, blockComponents[node.component]!.schema).forEach(
-          (x, index) => {
-            stringifiedInlinePropPaths[JSON.stringify(x.path)] = { options: x.options, index };
-          }
-        );
+        findChildPropPaths(
+          node.props,
+          blockComponents[node.component]!.schema
+        ).forEach((x, index) => {
+          stringifiedInlinePropPaths[JSON.stringify(x.path)] = {
+            options: x.options,
+            index,
+          };
+        });
 
         for (const [index, childNode] of node.children.entries()) {
           if (
@@ -481,17 +552,27 @@ export function withComponentBlocks(
           const propInfo = stringifiedInlinePropPaths[stringifiedPropPath]!;
           const expectedIndex = propInfo.index;
           if (index !== expectedIndex) {
-            Transforms.moveNodes(editor, { at: childPath, to: [...path, expectedIndex] });
+            Transforms.moveNodes(editor, {
+              at: childPath,
+              to: [...path, expectedIndex],
+            });
             return;
           }
 
-          const expectedChildNodeType = `component-${propInfo.options.kind}-prop` as const;
+          const expectedChildNodeType =
+            `component-${propInfo.options.kind}-prop` as const;
           if (childNode.type !== expectedChildNodeType) {
-            Transforms.setNodes(editor, { type: expectedChildNodeType }, { at: childPath });
+            Transforms.setNodes(
+              editor,
+              { type: expectedChildNodeType },
+              { at: childPath }
+            );
             return;
           }
 
-          const documentFeatures = memoizedGetDocumentFeaturesForChildField(propInfo.options);
+          const documentFeatures = memoizedGetDocumentFeaturesForChildField(
+            propInfo.options
+          );
           if (
             normalizeNodeWithinComponentProp(
               [childNode, childPath],
@@ -514,11 +595,18 @@ export function withComponentBlocks(
 
 // the only thing that this will fix is a new field being added to an object field, nothing else.
 function addMissingFields(value: unknown, schema: ComponentSchema): unknown {
-  if (schema.kind === 'child' || schema.kind === 'form' || schema.kind === 'relationship') {
+  if (
+    schema.kind === 'child' ||
+    schema.kind === 'form' ||
+    schema.kind === 'relationship'
+  ) {
     return value;
   }
   if (schema.kind === 'conditional') {
-    const conditionalValue = value as { discriminant: string | boolean; value: unknown };
+    const conditionalValue = value as {
+      discriminant: string | boolean;
+      value: unknown;
+    };
     const updatedInnerValue = addMissingFields(
       conditionalValue.value,
       schema.values[conditionalValue.discriminant.toString()]
@@ -526,7 +614,10 @@ function addMissingFields(value: unknown, schema: ComponentSchema): unknown {
     if (updatedInnerValue === conditionalValue.value) {
       return value;
     }
-    return { discriminant: conditionalValue.discriminant, value: updatedInnerValue };
+    return {
+      discriminant: conditionalValue.discriminant,
+      value: updatedInnerValue,
+    };
   }
   if (schema.kind === 'array') {
     const arrValue = value as unknown[];
@@ -547,7 +638,10 @@ function addMissingFields(value: unknown, schema: ComponentSchema): unknown {
         newObjectValue[key] = getInitialPropsValue(innerSchema);
         continue;
       }
-      const newInnerValue = addMissingFields(innerValue as Record<string, unknown>, innerSchema);
+      const newInnerValue = addMissingFields(
+        innerValue as Record<string, unknown>,
+        innerSchema
+      );
       if (newInnerValue !== innerValue) {
         hasChanged = true;
       }

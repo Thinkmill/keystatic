@@ -11,7 +11,10 @@ import { Item, ListBoxBase, useListBoxLayout } from '@voussoir/listbox';
 import { Popover } from '@voussoir/overlays';
 import { css, tokenSchema } from '@voussoir/style';
 
-import { ComponentBlockContext, insertComponentBlock } from './component-blocks';
+import {
+  ComponentBlockContext,
+  insertComponentBlock,
+} from './component-blocks';
 import { ComponentBlock } from './component-blocks/api';
 import { insertLayout } from './layouts';
 import { Relationships, useDocumentFieldRelationships } from './relationship';
@@ -48,7 +51,9 @@ function getOptions(
       },
     })),
     ...toolbarState.textStyles.allowedHeadingLevels
-      .filter(a => toolbarState.editorDocumentFeatures.formatting.headingLevels.includes(a))
+      .filter(a =>
+        toolbarState.editorDocumentFeatures.formatting.headingLevels.includes(a)
+      )
       .map(level => ({
         label: `Heading ${level}`,
         insert(editor: Editor) {
@@ -118,7 +123,9 @@ function getOptions(
         },
       },
   ];
-  return options.filter((x): x is Exclude<typeof x, boolean> => typeof x !== 'boolean');
+  return options.filter(
+    (x): x is Exclude<typeof x, boolean> => typeof x !== 'boolean'
+  );
 }
 
 function insertOption(editor: Editor, text: Text, option: Option) {
@@ -132,7 +139,13 @@ function insertOption(editor: Editor, text: Text, option: Option) {
   option.insert(editor);
 }
 
-export function InsertMenu({ children, text }: { children: ReactNode; text: Text }) {
+export function InsertMenu({
+  children,
+  text,
+}: {
+  children: ReactNode;
+  text: Text;
+}) {
   const toolbarState = useToolbarState();
   const {
     editor,
@@ -141,7 +154,11 @@ export function InsertMenu({ children, text }: { children: ReactNode; text: Text
   const componentBlocks = useContext(ComponentBlockContext);
   const relationships = useDocumentFieldRelationships();
   const options = matchSorter(
-    getOptions(toolbarState, componentBlocks, relationshipsDisabled ? {} : relationships),
+    getOptions(
+      toolbarState,
+      componentBlocks,
+      relationshipsDisabled ? {} : relationships
+    ),
     text.text.slice(1),
     {
       keys: ['label', 'keywords'],
@@ -164,7 +181,8 @@ export function InsertMenu({ children, text }: { children: ReactNode; text: Text
             event.preventDefault();
             state.selectionManager.setFocused(true);
             state.selectionManager.setFocusedKey(
-              (Number(state.selectionManager.focusedKey) === stateRef.current.options.length - 1
+              (Number(state.selectionManager.focusedKey) ===
+              stateRef.current.options.length - 1
                 ? 0
                 : Number(state.selectionManager.focusedKey) + 1
               ).toString()
@@ -186,7 +204,8 @@ export function InsertMenu({ children, text }: { children: ReactNode; text: Text
           return;
         }
         case 'Enter': {
-          const option = stateRef.current.options[Number(state.selectionManager.focusedKey)];
+          const option =
+            stateRef.current.options[Number(state.selectionManager.focusedKey)];
           if (option) {
             insertOption(editor, stateRef.current.text, option);
             event.preventDefault();
@@ -231,8 +250,9 @@ export function InsertMenu({ children, text }: { children: ReactNode; text: Text
   const scrollableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const element = scrollableRef.current?.querySelector('[role="listbox"] [role="presentation"]')
-      ?.children[state.selectionManager.focusedKey as number];
+    const element = scrollableRef.current?.querySelector(
+      '[role="listbox"] [role="presentation"]'
+    )?.children[state.selectionManager.focusedKey as number];
     if (element) {
       scrollIntoView(element, {
         scrollMode: 'if-needed',
@@ -265,7 +285,10 @@ export function InsertMenu({ children, text }: { children: ReactNode; text: Text
         state={overlayState}
         triggerRef={triggerRef}
       >
-        <div className={css({ overflow: 'scroll', maxHeight: 300 })} ref={scrollableRef}>
+        <div
+          className={css({ overflow: 'scroll', maxHeight: 300 })}
+          ref={scrollableRef}
+        >
           <ListBoxBase
             aria-label="Insert block"
             state={state}
@@ -340,7 +363,10 @@ export function withInsertMenu(editor: Editor): Editor {
         return;
       }
     }
-    if (Editor.isEditor(editor) && removeInsertMenuMarkWhenOutsideOfSelection(editor)) {
+    if (
+      Editor.isEditor(editor) &&
+      removeInsertMenuMarkWhenOutsideOfSelection(editor)
+    ) {
       return;
     }
     normalizeNode([node, path]);
@@ -363,14 +389,20 @@ export function withInsertMenu(editor: Editor): Editor {
     if (editor.selection && text === '/') {
       const startOfBlock = Editor.start(
         editor,
-        Editor.above(editor, { match: node => Editor.isBlock(editor, node) })![1]
+        Editor.above(editor, {
+          match: node => Editor.isBlock(editor, node),
+        })![1]
       );
-      const before = Editor.before(editor, editor.selection.anchor, { unit: 'character' });
+      const before = Editor.before(editor, editor.selection.anchor, {
+        unit: 'character',
+      });
       if (
         before &&
         (Point.equals(startOfBlock, before) ||
           (before.offset !== 0 &&
-            /\s/.test((Node.get(editor, before.path) as Text).text[before.offset - 1])))
+            /\s/.test(
+              (Node.get(editor, before.path) as Text).text[before.offset - 1]
+            )))
       ) {
         Transforms.setNodes(
           editor,

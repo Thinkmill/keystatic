@@ -5,7 +5,9 @@ import {
 } from './DocumentEditor/component-blocks/api';
 
 export type DataFormat = 'json' | 'yaml';
-export type Format = DataFormat | { frontmatter: DataFormat; contentField: string };
+export type Format =
+  | DataFormat
+  | { frontmatter: DataFormat; contentField: string };
 
 export type Collection<Schema extends Record<string, ComponentSchema>> = {
   label: string;
@@ -73,7 +75,9 @@ export type Config<
   } = {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
   }
-> = GitHubConfig<Collections, Singletons> | LocalConfig<Collections, Singletons>;
+> =
+  | GitHubConfig<Collections, Singletons>
+  | LocalConfig<Collections, Singletons>;
 
 export function config<
   Collections extends {

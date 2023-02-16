@@ -1,6 +1,18 @@
 import { useMemo, useRef, useState } from 'react';
-import { Editor, Transforms, Element, Text as SlateText, Range, Point } from 'slate';
-import { ReactEditor, RenderElementProps, useSelected, useSlateStatic } from 'slate-react';
+import {
+  Editor,
+  Transforms,
+  Element,
+  Text as SlateText,
+  Range,
+  Point,
+} from 'slate';
+import {
+  ReactEditor,
+  RenderElementProps,
+  useSelected,
+  useSlateStatic,
+} from 'slate-react';
 import { useOverlayTrigger } from '@react-aria/overlays';
 import { Item } from '@react-stately/collections';
 import { useOverlayTriggerState } from '@react-stately/overlays';
@@ -132,7 +144,9 @@ export function CodeElement({
     overlayProps,
   } = useOverlayTrigger({ type: 'dialog' }, state, triggerRef);
   const [inputValue, setInputValue] = useState(
-    element.language ? aliasesToLabel.get(element.language) ?? element.language : ''
+    element.language
+      ? aliasesToLabel.get(element.language) ?? element.language
+      : ''
   );
   return (
     <>
@@ -159,7 +173,12 @@ export function CodeElement({
       >
         <code {...attributes}>{children}</code>
       </Flex>
-      <Popover isNonModal {...overlayProps} triggerRef={triggerRef} state={state}>
+      <Popover
+        isNonModal
+        {...overlayProps}
+        triggerRef={triggerRef}
+        state={state}
+      >
         <Flex padding="medium" gap="regular">
           <Combobox
             aria-label="Language"
@@ -171,12 +190,20 @@ export function CodeElement({
               const canonicalName = aliasesToCanonicalName.get(inputValue);
               if (canonicalName !== undefined) {
                 setInputValue(canonicalNameToLabel.get(canonicalName)!);
-                Transforms.setNodes(editor, { language: canonicalName }, { at: path });
+                Transforms.setNodes(
+                  editor,
+                  { language: canonicalName },
+                  { at: path }
+                );
                 return;
               }
               const nameFromLabel = labelToCanonicalName.get(inputValue);
               if (nameFromLabel !== undefined) {
-                Transforms.setNodes(editor, { language: nameFromLabel }, { at: path });
+                Transforms.setNodes(
+                  editor,
+                  { language: nameFromLabel },
+                  { at: path }
+                );
                 return;
               }
               if (inputValue === '') {
@@ -184,7 +211,11 @@ export function CodeElement({
                 return;
               }
               if (inputValue !== element.language) {
-                Transforms.setNodes(editor, { language: inputValue }, { at: path });
+                Transforms.setNodes(
+                  editor,
+                  { language: inputValue },
+                  { at: path }
+                );
               }
             }}
             onSelectionChange={selection => {
@@ -196,18 +227,30 @@ export function CodeElement({
                 if (inputValue === '') {
                   Transforms.unsetNodes(editor, 'language', { at: path });
                 } else {
-                  Transforms.setNodes(editor, { language: inputValue }, { at: path });
+                  Transforms.setNodes(
+                    editor,
+                    { language: inputValue },
+                    { at: path }
+                  );
                 }
               } else {
-                Transforms.setNodes(editor, { language: selection as string }, { at: path });
-                const label = languages.find(lang => lang.value === selection)?.label;
+                Transforms.setNodes(
+                  editor,
+                  { language: selection as string },
+                  { at: path }
+                );
+                const label = languages.find(
+                  lang => lang.value === selection
+                )?.label;
                 if (label) {
                   setInputValue(label);
                 }
               }
             }}
             selectedKey={
-              element.language ? aliasesToCanonicalName.get(element.language) : undefined
+              element.language
+                ? aliasesToCanonicalName.get(element.language)
+                : undefined
             }
             items={useMemo(
               () =>
@@ -278,16 +321,20 @@ const aliasesToCanonicalName = new Map(
   })
 );
 
-const languagesToAliases = new Map(languages.map(lang => [lang.value, [] as string[]]));
+const languagesToAliases = new Map(
+  languages.map(lang => [lang.value, [] as string[]])
+);
 
 for (const [alias, canonicalName] of aliasesToCanonicalName) {
   languagesToAliases.get(canonicalName)!.push(alias);
 }
-const languagesWithAliases = [...languagesToAliases].map(([canonicalName, aliases]) => ({
-  label: canonicalNameToLabel.get(canonicalName)!,
-  value: canonicalName,
-  aliases,
-}));
+const languagesWithAliases = [...languagesToAliases].map(
+  ([canonicalName, aliases]) => ({
+    label: canonicalNameToLabel.get(canonicalName)!,
+    value: canonicalName,
+    aliases,
+  })
+);
 
 const aliasesToLabel = new Map(
   [...aliasesToCanonicalName].map(([alias, canonicalName]) => [

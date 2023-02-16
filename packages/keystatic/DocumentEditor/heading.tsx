@@ -1,5 +1,14 @@
 import { RenderElementProps } from 'slate-react';
-import { Editor, Transforms, Range, Point, Path, Node, Element, Text } from 'slate';
+import {
+  Editor,
+  Transforms,
+  Range,
+  Point,
+  Path,
+  Node,
+  Element,
+  Text,
+} from 'slate';
 import { tokenSchema } from '@voussoir/style';
 
 export const HeadingElement = ({
@@ -11,7 +20,10 @@ export const HeadingElement = ({
   return (
     <ElementType
       {...attributes}
-      style={{ color: tokenSchema.color.foreground.neutralEmphasis, textAlign: element.textAlign }}
+      style={{
+        color: tokenSchema.color.foreground.neutralEmphasis,
+        textAlign: element.textAlign,
+      }}
     >
       {children}
     </ElementType>

@@ -7,7 +7,14 @@ import { Kbd, Text } from '@voussoir/typography';
 import { listIcon } from '@voussoir/icon/icons/listIcon';
 import { listOrderedIcon } from '@voussoir/icon/icons/listOrderedIcon';
 import { ReactEditor, RenderElementProps } from 'slate-react';
-import { createContext, forwardRef, HTMLAttributes, ReactNode, Ref, useContext } from 'react';
+import {
+  createContext,
+  forwardRef,
+  HTMLAttributes,
+  ReactNode,
+  Ref,
+  useContext,
+} from 'react';
 import { Flex } from '@voussoir/layout';
 import { css, tokenSchema } from '@voussoir/style';
 import { Icon } from '@voussoir/icon';
@@ -17,12 +24,17 @@ export const isListType = (type: string | undefined) =>
 
 export const isListNode = (
   node: Node
-): node is Element & { type: 'ordered-list' | 'unordered-list' } => isListType(node.type);
+): node is Element & { type: 'ordered-list' | 'unordered-list' } =>
+  isListType(node.type);
 
-export const toggleList = (editor: Editor, format: 'ordered-list' | 'unordered-list') => {
+export const toggleList = (
+  editor: Editor,
+  format: 'ordered-list' | 'unordered-list'
+) => {
   const listAbove = getListTypeAbove(editor);
   const isActive =
-    isElementActive(editor, format) && (listAbove === 'none' || listAbove === format);
+    isElementActive(editor, format) &&
+    (listAbove === 'none' || listAbove === format);
   Editor.withoutNormalizing(editor, () => {
     Transforms.unwrapNodes(editor, {
       match: isListNode,
@@ -33,7 +45,10 @@ export const toggleList = (editor: Editor, format: 'ordered-list' | 'unordered-l
       Transforms.wrapNodes(
         editor,
         { type: format, children: [] },
-        { match: x => x.type !== 'list-item-content' && Editor.isBlock(editor, x) }
+        {
+          match: x =>
+            x.type !== 'list-item-content' && Editor.isBlock(editor, x),
+        }
       );
     }
   });
@@ -101,9 +116,15 @@ export function withList(editor: Editor): Editor {
         const index = childPath[childPath.length - 1];
         // merge sibling lists
         if (isListNode(childNode)) {
-          if (node.children[childPath[childPath.length - 1] + 1]?.type === childNode.type) {
+          if (
+            node.children[childPath[childPath.length - 1] + 1]?.type ===
+            childNode.type
+          ) {
             const siblingNodePath = Path.next(childPath);
-            moveChildren(editor, siblingNodePath, [...childPath, childNode.children.length]);
+            moveChildren(editor, siblingNodePath, [
+              ...childPath,
+              childNode.children.length,
+            ]);
             Transforms.removeNodes(editor, { at: siblingNodePath });
             return;
           }
@@ -112,7 +133,10 @@ export function withList(editor: Editor): Editor {
             if (Element.isElement(previousChild)) {
               Transforms.moveNodes(editor, {
                 at: childPath,
-                to: [...Path.previous(childPath), previousChild.children.length - 1],
+                to: [
+                  ...Path.previous(childPath),
+                  previousChild.children.length - 1,
+                ],
               });
             } else {
               Transforms.unwrapNodes(editor, { at: childPath });
@@ -140,7 +164,11 @@ export function withList(editor: Editor): Editor {
           Transforms.unwrapNodes(editor, { at: childPath });
           return;
         }
-        if (node.type === 'list-item' && childNode.type === 'list-item-content' && index !== 0) {
+        if (
+          node.type === 'list-item' &&
+          childNode.type === 'list-item-content' &&
+          index !== 0
+        ) {
           Transforms.splitNodes(editor, { at: childPath });
           return;
         }
@@ -152,7 +180,9 @@ export function withList(editor: Editor): Editor {
   return editor;
 }
 
-export function ListButtons(props: { lists: { ordered: boolean; unordered: boolean } }) {
+export function ListButtons(props: {
+  lists: { ordered: boolean; unordered: boolean };
+}) {
   const { editor, lists } = useToolbarState();
   return (
     <ActionGroup
@@ -164,8 +194,12 @@ export function ListButtons(props: { lists: { ordered: boolean; unordered: boole
       // overflowMode="collapse"
       prominence="low"
       summaryIcon={<Icon src={listIcon} />}
-      selectedKeys={Object.keys(lists).filter(key => lists[key as keyof typeof lists].isSelected)}
-      disabledKeys={Object.keys(lists).filter(key => lists[key as keyof typeof lists].isDisabled)}
+      selectedKeys={Object.keys(lists).filter(
+        key => lists[key as keyof typeof lists].isSelected
+      )}
+      disabledKeys={Object.keys(lists).filter(
+        key => lists[key as keyof typeof lists].isDisabled
+      )}
       onAction={key => {
         const format = `${key as 'ordered' | 'unordered'}-list` as const;
         toggleList(editor, format);
@@ -206,7 +240,10 @@ export function nestList(editor: Editor) {
     return false;
   }
   const previousListItemPath = Path.previous(listItemPath);
-  const previousListItemNode = Node.get(editor, previousListItemPath) as Element;
+  const previousListItemNode = Node.get(
+    editor,
+    previousListItemPath
+  ) as Element;
   if (previousListItemNode.children.length !== 1) {
     // there's a list nested inside our previous sibling list item so move there
     Transforms.moveNodes(editor, {
@@ -214,8 +251,11 @@ export function nestList(editor: Editor) {
       to: [
         ...previousListItemPath,
         previousListItemNode.children.length - 1,
-        (previousListItemNode.children[previousListItemNode.children.length - 1] as any).children
-          .length,
+        (
+          previousListItemNode.children[
+            previousListItemNode.children.length - 1
+          ] as any
+        ).children.length,
       ],
     });
     return true;
@@ -252,7 +292,10 @@ export const listCounter = 'ksv-ol-counter';
 type ListType = 'ul' | 'ol';
 const ListContext = createContext<ListType>('ul');
 export const ListElement = forwardRef(function ListElement(
-  { elementType, ...props }: HTMLAttributes<HTMLElement> & { elementType: ListType },
+  {
+    elementType,
+    ...props
+  }: HTMLAttributes<HTMLElement> & { elementType: ListType },
   ref: Ref<HTMLElement>
 ) {
   return (

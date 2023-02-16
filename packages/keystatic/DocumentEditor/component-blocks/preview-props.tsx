@@ -12,7 +12,10 @@ import {
 } from './api';
 import { updateValue } from './initial-values';
 
-const arrayValuesToElementKeys = new WeakMap<readonly unknown[], readonly string[]>();
+const arrayValuesToElementKeys = new WeakMap<
+  readonly unknown[],
+  readonly string[]
+>();
 
 let counter = 0;
 
@@ -26,7 +29,10 @@ export function getKeysForArrayValue(value: readonly unknown[]) {
   return arrayValuesToElementKeys.get(value)!;
 }
 
-export function setKeysForArrayValue(value: readonly unknown[], elementIds: readonly string[]) {
+export function setKeysForArrayValue(
+  value: readonly unknown[],
+  elementIds: readonly string[]
+) {
   arrayValuesToElementKeys.set(value, elementIds);
 }
 
@@ -40,7 +46,9 @@ function castToMemoizedInfoForSchema<
       schema: Extract<ComponentSchema, { kind: Kind }>,
       onChange: (
         cb: (
-          prevVal: ValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>
+          prevVal: ValueForComponentSchema<
+            Extract<ComponentSchema, { kind: Kind }>
+          >
         ) => ValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>
       ) => void
     ) => unknown;
@@ -55,20 +63,31 @@ type GeneralMap<K, V> = {
   set(key: K, value: V): void;
 };
 
-function getOrInsert<K, V>(map: GeneralMap<K, V>, key: K, val: (key: K) => V): V {
+function getOrInsert<K, V>(
+  map: GeneralMap<K, V>,
+  key: K,
+  val: (key: K) => V
+): V {
   if (!map.has(key)) {
     map.set(key, val(key));
   }
   return map.get(key)!;
 }
 
-export function createGetPreviewProps<Schema extends ComponentSchema, ChildFieldElement>(
+export function createGetPreviewProps<
+  Schema extends ComponentSchema,
+  ChildFieldElement
+>(
   rootSchema: Schema,
   rootOnChange: (
-    cb: (val: ValueForComponentSchema<Schema>) => ValueForComponentSchema<Schema>
+    cb: (
+      val: ValueForComponentSchema<Schema>
+    ) => ValueForComponentSchema<Schema>
   ) => void,
   getChildFieldElement: (path: readonly string[]) => ChildFieldElement
-): (value: ValueForComponentSchema<Schema>) => GenericPreviewProps<Schema, ChildFieldElement> {
+): (
+  value: ValueForComponentSchema<Schema>
+) => GenericPreviewProps<Schema, ChildFieldElement> {
   const memoizedInfoForSchema = castToMemoizedInfoForSchema({
     form(schema, onChange) {
       return (newVal: unknown) => onChange(() => newVal);
@@ -87,7 +106,9 @@ export function createGetPreviewProps<Schema extends ComponentSchema, ChildField
             element: GenericPreviewProps<ComponentSchema, ChildFieldElement>;
           }
         >(),
-        onChange(updater: readonly { key: string | undefined; value?: unknown }[]) {
+        onChange(
+          updater: readonly { key: string | undefined; value?: unknown }[]
+        ) {
           onChange(value => updateValue(schema, value, updater));
         },
       };
@@ -98,7 +119,10 @@ export function createGetPreviewProps<Schema extends ComponentSchema, ChildField
         onChange: (discriminant: string | boolean, value?: unknown) =>
           onChange(val => updateValue(schema, val, { discriminant, value })),
         onChangeForValue: (cb: (prevVal: unknown) => unknown) =>
-          onChange(val => ({ discriminant: val.discriminant, value: cb(val.value) })),
+          onChange(val => ({
+            discriminant: val.discriminant,
+            value: cb(val.value),
+          })),
       };
     },
     object(schema, onChange) {
@@ -119,8 +143,12 @@ export function createGetPreviewProps<Schema extends ComponentSchema, ChildField
       };
     },
     relationship(schema, onChange) {
-      return (newVal: HydratedRelationshipData | readonly HydratedRelationshipData[] | null) =>
-        onChange(() => newVal);
+      return (
+        newVal:
+          | HydratedRelationshipData
+          | readonly HydratedRelationshipData[]
+          | null
+      ) => onChange(() => newVal);
     },
   });
 
@@ -134,11 +162,16 @@ export function createGetPreviewProps<Schema extends ComponentSchema, ChildField
         schema: Field,
         value: ValueForComponentSchema<Field>,
         onChange: (
-          cb: (prevVal: ValueForComponentSchema<Field>) => ValueForComponentSchema<Field>
+          cb: (
+            prevVal: ValueForComponentSchema<Field>
+          ) => ValueForComponentSchema<Field>
         ) => void,
         key: string
       ) => GenericPreviewProps<Field, ChildFieldElement>
-    ) => GenericPreviewProps<Extract<ComponentSchema, { kind: Kind }>, ChildFieldElement>;
+    ) => GenericPreviewProps<
+      Extract<ComponentSchema, { kind: Kind }>,
+      ChildFieldElement
+    >;
   } = {
     form(schema, value, onChange) {
       return {
@@ -152,7 +185,10 @@ export function createGetPreviewProps<Schema extends ComponentSchema, ChildField
       return { element: getChildFieldElement(path), schema: schema };
     },
     object(schema, value, memoized, path, getInnerProp) {
-      const fields: Record<string, GenericPreviewProps<ComponentSchema, ChildFieldElement>> = {};
+      const fields: Record<
+        string,
+        GenericPreviewProps<ComponentSchema, ChildFieldElement>
+      > = {};
 
       for (const key of Object.keys(schema.fields)) {
         fields[key] = getInnerProp(
@@ -179,7 +215,10 @@ export function createGetPreviewProps<Schema extends ComponentSchema, ChildField
 
       const unusedKeys = new Set(getKeysForArrayValue(value));
 
-      const props: GenericPreviewProps<ArrayField<ComponentSchema>, ChildFieldElement> = {
+      const props: GenericPreviewProps<
+        ArrayField<ComponentSchema>,
+        ChildFieldElement
+      > = {
         elements: arrayValue.map((val, i) => {
           const key = keys[i];
           unusedKeys.delete(key);
@@ -204,7 +243,12 @@ export function createGetPreviewProps<Schema extends ComponentSchema, ChildField
               onChange,
             };
           });
-          const currentInnerProp = getInnerProp(schema.element, val, element.onChange, key);
+          const currentInnerProp = getInnerProp(
+            schema.element,
+            val,
+            element.onChange,
+            key
+          );
           if (element.element !== currentInnerProp) {
             element.element = currentInnerProp;
             element.elementWithKey = {
@@ -223,7 +267,10 @@ export function createGetPreviewProps<Schema extends ComponentSchema, ChildField
       return props;
     },
     relationship(schema, value, onChange) {
-      const props: GenericPreviewProps<RelationshipField<boolean>, ChildFieldElement> = {
+      const props: GenericPreviewProps<
+        RelationshipField<boolean>,
+        ChildFieldElement
+      > = {
         value: value,
         onChange,
         schema: schema,
@@ -232,7 +279,10 @@ export function createGetPreviewProps<Schema extends ComponentSchema, ChildField
     },
     conditional(schema, value, memoized, path, getInnerProp) {
       const props: GenericPreviewProps<
-        ConditionalField<FormField<string | boolean, unknown>, { [key: string]: ComponentSchema }>,
+        ConditionalField<
+          FormField<string | boolean, unknown>,
+          { [key: string]: ComponentSchema }
+        >,
         ChildFieldElement
       > = {
         discriminant: value.discriminant as any,
@@ -259,7 +309,9 @@ export function createGetPreviewProps<Schema extends ComponentSchema, ChildField
       schema: Field,
       value: ValueForComponentSchema<Field>,
       onChange: (
-        cb: (prevVal: ValueForComponentSchema<Field>) => ValueForComponentSchema<Field>
+        cb: (
+          prevVal: ValueForComponentSchema<Field>
+        ) => ValueForComponentSchema<Field>
       ) => void,
       key: string
     ) => GenericPreviewProps<Field, ChildFieldElement>
@@ -277,7 +329,9 @@ export function createGetPreviewProps<Schema extends ComponentSchema, ChildField
     schema: Schema,
     value: ValueForComponentSchema<Schema>,
     onChange: (
-      cb: (val: ValueForComponentSchema<Schema>) => ValueForComponentSchema<Schema>
+      cb: (
+        val: ValueForComponentSchema<Schema>
+      ) => ValueForComponentSchema<Schema>
     ) => void,
     path: readonly string[]
   ): MemoState<Schema> {
@@ -286,7 +340,9 @@ export function createGetPreviewProps<Schema extends ComponentSchema, ChildField
       memoizedInfoForSchema[schema.kind] as (
         schema: ComponentSchema,
         onChange: (
-          cb: (val: ValueForComponentSchema<Schema>) => ValueForComponentSchema<Schema>
+          cb: (
+            val: ValueForComponentSchema<Schema>
+          ) => ValueForComponentSchema<Schema>
         ) => void
       ) => any
     )(schema, onChange);
@@ -299,7 +355,12 @@ export function createGetPreviewProps<Schema extends ComponentSchema, ChildField
         memoizedInfo,
         path,
         (schema, value, onChange, key) => {
-          const state = getInitialMemoState(schema, value, onChange, path.concat(key));
+          const state = getInitialMemoState(
+            schema,
+            value,
+            onChange,
+            path.concat(key)
+          );
           innerState.set(key, state);
           return state.props;
         }
@@ -313,13 +374,18 @@ export function createGetPreviewProps<Schema extends ComponentSchema, ChildField
     schema: Schema,
     value: ValueForComponentSchema<Schema>,
     onChange: (
-      cb: (val: ValueForComponentSchema<Schema>) => ValueForComponentSchema<Schema>
+      cb: (
+        val: ValueForComponentSchema<Schema>
+      ) => ValueForComponentSchema<Schema>
     ) => void,
     memoState: MemoState<Schema>,
     path: readonly string[]
   ): GenericPreviewProps<Schema, ChildFieldElement> {
     if (memoState.schema !== schema) {
-      Object.assign(memoState, getInitialMemoState(schema, value, onChange, path));
+      Object.assign(
+        memoState,
+        getInitialMemoState(schema, value, onChange, path)
+      );
       return memoState.props;
     }
     if (memoState.value === value) {

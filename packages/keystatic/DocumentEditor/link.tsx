@@ -1,6 +1,11 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Editor, Node, Range, Transforms, Text as SlateText } from 'slate';
-import { ReactEditor, RenderElementProps, useFocused, useSelected } from 'slate-react';
+import {
+  ReactEditor,
+  RenderElementProps,
+  useFocused,
+  useSelected,
+} from 'slate-react';
 import { useOverlayTrigger } from '@react-aria/overlays';
 import { useOverlayTriggerState } from '@react-stately/overlays';
 
@@ -19,7 +24,10 @@ import { Text } from '@voussoir/typography';
 import { isInlineContainer } from '.';
 import { DocumentFeatures } from './document-features';
 import { ComponentBlock } from './component-blocks/api';
-import { getAncestorComponentChildFieldDocumentFeatures, useToolbarState } from './toolbar-state';
+import {
+  getAncestorComponentChildFieldDocumentFeatures,
+  useToolbarState,
+} from './toolbar-state';
 import { isValidURL } from './isValidURL';
 import {
   EditorAfterButIgnoringingPointsWithNoContent,
@@ -68,7 +76,10 @@ export const LinkElement = ({
   element: __elementForGettingPath,
 }: RenderElementProps & { element: { type: 'link' } }) => {
   const editor = useStaticEditor();
-  const [currentElement, setNode] = useElementWithSetNodes(editor, __elementForGettingPath);
+  const [currentElement, setNode] = useElementWithSetNodes(
+    editor,
+    __elementForGettingPath
+  );
   const href = currentElement.href;
 
   const selected = useSelected();
@@ -99,14 +110,23 @@ export const LinkElement = ({
     ReactEditor.focus(editor);
   });
   const forceValidation = useForceValidation();
-  const showInvalidState = isValidURL(href) ? false : forceValidation || localForceValidation;
+  const showInvalidState = isValidURL(href)
+    ? false
+    : forceValidation || localForceValidation;
   const triggerRef = useRef(null);
   const state = useOverlayTriggerState({
     isOpen: (selected && delayedFocused) || focusedInInlineDialog,
   });
-  const { triggerProps, overlayProps } = useOverlayTrigger({ type: 'dialog' }, state, triggerRef);
+  const { triggerProps, overlayProps } = useOverlayTrigger(
+    { type: 'dialog' },
+    state,
+    triggerRef
+  );
   return (
-    <span {...attributes} style={{ position: 'relative', display: 'inline-block' }}>
+    <span
+      {...attributes}
+      style={{ position: 'relative', display: 'inline-block' }}
+    >
       <Text trim={false}>
         <TextLink
           {...triggerProps}
@@ -120,7 +140,12 @@ export const LinkElement = ({
           {children}
         </TextLink>
       </Text>
-      <Popover isNonModal {...overlayProps} triggerRef={triggerRef} state={state}>
+      <Popover
+        isNonModal
+        {...overlayProps}
+        triggerRef={triggerRef}
+        state={state}
+      >
         <Flex
           onFocus={() => {
             setFocusedInInlineDialog(true);
@@ -138,13 +163,17 @@ export const LinkElement = ({
             onChange={href => {
               setNode({ href });
             }}
-            errorMessage={showInvalidState && <Text>Please enter a valid URL</Text>}
+            errorMessage={
+              showInvalidState && <Text>Please enter a valid URL</Text>
+            }
           />
           <Flex>
             <TooltipTrigger>
               <ActionButton
                 prominence="low"
-                onPress={() => window.open(href, '_blank', 'noopener,noreferrer')}
+                onPress={() =>
+                  window.open(href, '_blank', 'noopener,noreferrer')
+                }
               >
                 <Icon src={externalLinkIcon} />
               </ActionButton>
@@ -158,7 +187,11 @@ export const LinkElement = ({
   );
 };
 
-const UnlinkButton = memo(function UnlinkButton({ onUnlink }: { onUnlink: () => void }) {
+const UnlinkButton = memo(function UnlinkButton({
+  onUnlink,
+}: {
+  onUnlink: () => void;
+}) {
   return (
     <TooltipTrigger>
       <ActionButton
@@ -229,7 +262,9 @@ export function withLink(
       if (text !== ')' || !editor.selection) return;
       const startOfBlock = Editor.start(
         editor,
-        Editor.above(editor, { match: node => Editor.isBlock(editor, node) })![1]
+        Editor.above(editor, {
+          match: node => Editor.isBlock(editor, node),
+        })![1]
       );
 
       const startOfBlockToEndOfShortcutString = Editor.string(editor, {
@@ -244,7 +279,10 @@ export function withLink(
           editorDocumentFeatures,
           componentBlocks
         );
-      if (ancestorComponentChildFieldDocumentFeatures?.documentFeatures.links === false) {
+      if (
+        ancestorComponentChildFieldDocumentFeatures?.documentFeatures.links ===
+        false
+      ) {
         return;
       }
       const [, maybeWhitespace, linkText, href] = match;
@@ -265,9 +303,13 @@ export function withLink(
           distance: maybeWhitespace === '' ? 1 : 2,
         }
       )!;
-      const endOfLinkText = EditorAfterButIgnoringingPointsWithNoContent(editor, startOfLinkText, {
-        distance: linkText.length,
-      })!;
+      const endOfLinkText = EditorAfterButIgnoringingPointsWithNoContent(
+        editor,
+        startOfLinkText,
+        {
+          distance: linkText.length,
+        }
+      )!;
 
       Transforms.delete(editor, {
         at: { anchor: endOfLinkText, focus: editor.selection.anchor },
@@ -279,7 +321,10 @@ export function withLink(
       Transforms.wrapNodes(
         editor,
         { type: 'link', href, children: [] },
-        { at: { anchor: editor.selection.anchor, focus: startOfShortcut }, split: true }
+        {
+          at: { anchor: editor.selection.anchor, focus: startOfShortcut },
+          split: true,
+        }
       );
       const nextNode = Editor.next(editor);
       if (nextNode) {
@@ -303,9 +348,15 @@ export function withLink(
       }
     }
     if (isInlineContainer(node)) {
-      let lastMergableLink: { index: number; node: Node & { type: 'link' } } | null = null;
+      let lastMergableLink: {
+        index: number;
+        node: Node & { type: 'link' };
+      } | null = null;
       for (const [idx, child] of node.children.entries()) {
-        if (child.type === 'link' && child.href === lastMergableLink?.node.href) {
+        if (
+          child.type === 'link' &&
+          child.href === lastMergableLink?.node.href
+        ) {
           const firstLinkPath = [...path, lastMergableLink.index];
           const secondLinkPath = [...path, idx];
           const to = [...firstLinkPath, lastMergableLink.node.children.length];

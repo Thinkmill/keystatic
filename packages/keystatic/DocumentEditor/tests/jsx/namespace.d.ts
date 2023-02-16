@@ -12,7 +12,10 @@ type ComponentProp = { children: Children; propPath?: ReadonlyPropPath };
 declare namespace __jsx {
   namespace JSX {
     interface IntrinsicElements {
-      editor: { children: Children; marks?: { [Key in Mark | 'insertMenu']?: true } };
+      editor: {
+        children: Children;
+        marks?: { [Key in Mark | 'insertMenu']?: true };
+      };
       text: { children?: Children } & { [Key in Mark | 'insertMenu']?: true };
       element: { [key: string]: any };
       cursor: { [key: string]: never };
