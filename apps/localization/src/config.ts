@@ -37,6 +37,10 @@ const locales = fields.object({
   'zh-TW': fields.text({ label: 'Chinese (Traditional) 🇨🇳' }),
 });
 
+function dir(str: string) {
+  return `packages/keystatic/app/l10n/${str}`;
+}
+
 export default config({
   storage: {
     kind: 'github',
@@ -44,7 +48,7 @@ export default config({
   },
   collections: {
     actions: collection({
-      directory: 'keystatic/l10n/actions',
+      directory: dir('actions'),
       format: 'json',
       label: 'Actions',
       getItemSlug: data => data.key,
@@ -54,7 +58,7 @@ export default config({
       },
     }),
     git: collection({
-      directory: 'keystatic/l10n/git',
+      directory: dir('git'),
       format: 'json',
       label: 'Git related',
       getItemSlug: data => data.key,
