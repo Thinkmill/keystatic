@@ -65,7 +65,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
                   aria-labelledby="collections-heading"
                   items={collections}
                   onAction={key => {
-                    router.push(link(`/collection/${key}`));
+                    router.push(link(`/collection/${encodeURIComponent(key)}`));
                   }}
                 >
                   {ref => {
@@ -118,7 +118,11 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
                           <ActionButton
                             onPress={() => {
                               router.push(
-                                link(`/collection/${ref.key}/create`)
+                                link(
+                                  `/collection/${encodeURIComponent(
+                                    ref.key
+                                  )}/create`
+                                )
                               );
                             }}
                           >
@@ -223,7 +227,10 @@ function Branches() {
             onSelectionChange={([key]) => {
               if (typeof key === 'string') {
                 router.push(
-                  router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + key)
+                  router.asPath.replace(
+                    /\/branch\/[^/]+/,
+                    '/branch/' + encodeURIComponent(key)
+                  )
                 );
               }
             }}
@@ -253,7 +260,7 @@ function Branches() {
                   router.push(
                     router.asPath.replace(
                       /\/branch\/[^/]+/,
-                      '/branch/' + branchName
+                      '/branch/' + encodeURIComponent(branchName)
                     )
                   );
                 }}

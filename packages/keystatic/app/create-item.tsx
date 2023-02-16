@@ -66,7 +66,9 @@ export function CreateItem(props: {
   });
   const createItem = useEventCallback(_createItem);
 
-  let collectionPath = `${props.basePath}/collection/${props.collection}`;
+  let collectionPath = `${encodeURIComponent(
+    props.basePath
+  )}/collection/${encodeURIComponent(props.collection)}`;
 
   const onCreate = async () => {
     if (!clientSideValidateProp(schema, state)) {
@@ -160,12 +162,18 @@ export function CreateItem(props: {
             branchOid={baseCommit}
             onCreate={async newBranch => {
               await router.push(
-                `/keystatic/branch/${newBranch}/collection/${props.collection}/create`
+                `/keystatic/branch/${encodeURIComponent(
+                  newBranch
+                )}/collection/${encodeURIComponent(props.collection)}/create`
               );
               if (await createItem()) {
                 const slug = collectionConfig.getItemSlug(state);
                 router.push(
-                  `/keystatic/branch/${newBranch}/collection/${props.collection}/item/${slug}`
+                  `/keystatic/branch/${encodeURIComponent(
+                    newBranch
+                  )}/collection/${encodeURIComponent(
+                    props.collection
+                  )}/item/${encodeURIComponent(slug)}`
                 );
               }
             }}

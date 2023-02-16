@@ -61,7 +61,10 @@ export function BranchPicker(props: BranchPickerProps) {
       onSelectionChange={key => {
         if (typeof key === 'string') {
           router.push(
-            router.asPath.replace(/\/branch\/[^/]+/, '/branch/' + key)
+            router.asPath.replace(
+              /\/branch\/[^/]+/,
+              '/branch/' + encodeURIComponent(key)
+            )
           );
         }
       }}

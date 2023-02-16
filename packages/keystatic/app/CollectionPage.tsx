@@ -67,7 +67,9 @@ export function CollectionPage(props: CollectionPageProps) {
         <Button
           marginStart="auto"
           prominence="high"
-          href={`${props.basePath}/collection/${props.collection}/create`}
+          href={`${props.basePath}/collection/${encodeURIComponent(
+            props.collection
+          )}/create`}
         >
           New entry
         </Button>
@@ -114,7 +116,9 @@ function CollectionPageContent(props: CollectionPageProps) {
           <>
             There aren't any entries yet.{' '}
             <TextLink
-              href={`${props.basePath}/collection/${props.collection}/create`}
+              href={`${props.basePath}/collection/${encodeURIComponent(
+                props.collection
+              )}/create`}
             >
               Create the first entry
             </TextLink>{' '}
@@ -221,7 +225,9 @@ function CollectionTable(
           overflowMode="truncate"
           onRowAction={key => {
             router.push(
-              `${props.basePath}/collection/${props.collection}/item/${key}`
+              `${props.basePath}/collection/${encodeURIComponent(
+                props.collection
+              )}/item/${encodeURIComponent(key)}`
             );
           }}
           // UNSAFE_className={css({

@@ -128,7 +128,11 @@ function ItemPage(props: ItemPageProps) {
     const slug = collectionConfig.getItemSlug(state);
     const hasUpdated = await update();
     if (hasUpdated && slug !== itemSlug) {
-      router.replace(`${props.basePath}/collection/${collection}/item/${slug}`);
+      router.replace(
+        `${props.basePath}/collection/${encodeURIComponent(
+          collection
+        )}/item/${encodeURIComponent(slug)}`
+      );
     }
   };
   const formID = 'item-edit-form';
@@ -177,7 +181,11 @@ function ItemPage(props: ItemPageProps) {
                   autoFocusButton="cancel"
                   onPrimaryAction={async () => {
                     await deleteItem();
-                    router.push(`${props.basePath}/collection/${collection}`);
+                    router.push(
+                      `${props.basePath}/collection/${encodeURIComponent(
+                        collection
+                      )}`
+                    );
                   }}
                 >
                   Are you sure? This action cannot be undone.
@@ -230,13 +238,19 @@ function ItemPage(props: ItemPageProps) {
                 branchOid={baseCommit}
                 onCreate={async newBranch => {
                   await router.push(
-                    `/keystatic/branch/${newBranch}/collection/${collection}/item/${itemSlug}`
+                    `/keystatic/branch/${encodeURIComponent(
+                      newBranch
+                    )}/collection/${encodeURIComponent(
+                      collection
+                    )}/item/${encodeURIComponent(itemSlug)}`
                   );
                   const slug = collectionConfig.getItemSlug(state);
                   const hasUpdated = await update();
                   if (hasUpdated && slug !== itemSlug) {
                     router.replace(
-                      `${props.basePath}/collection/${collection}/item/${slug}`
+                      `${props.basePath}/collection/${encodeURIComponent(
+                        collection
+                      )}/item/${encodeURIComponent(slug)}`
                     );
                   }
                 }}
@@ -400,7 +414,11 @@ const ItemPageShell = (
     <AppShellRoot>
       <AppShellHeader>
         <Heading size="small" visuallyHidden={{ below: 'tablet' }} truncate>
-          <TextLink href={`${props.basePath}/collection/${props.collection}`}>
+          <TextLink
+            href={`${props.basePath}/collection/${encodeURIComponent(
+              props.collection
+            )}`}
+          >
             {collectionConfig.label}
           </TextLink>
         </Heading>

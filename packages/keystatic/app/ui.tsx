@@ -69,7 +69,11 @@ function RedirectToBranch(props: { config: GitHubConfig }) {
       window.location.href = '/api/keystatic/github/login';
     }
     if (data?.repository?.defaultBranchRef) {
-      push(`/keystatic/branch/${data.repository.defaultBranchRef.name}`);
+      push(
+        `/keystatic/branch/${encodeURIComponent(
+          data.repository.defaultBranchRef.name
+        )}`
+      );
     }
     if (
       !data?.repository?.id &&
@@ -112,7 +116,7 @@ export function makePage<Collections extends { [key: string]: any }>(
         return null;
       }
       branch = params[1];
-      basePath = `/keystatic/branch/${branch}`;
+      basePath = `/keystatic/branch/${encodeURIComponent(branch)}`;
       parsedParams = parseParamsWithoutBranch(params.slice(2));
     } else {
       parsedParams = parseParamsWithoutBranch(params);
