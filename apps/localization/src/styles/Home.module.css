@@ -1,0 +1,12 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+  padding: 6rem;
+  gap: 2rem;
+  min-height: 100vh;
+  max-width: 640px;
+  max-width: 80ch;
+  margin-inline: auto;
+}

@@ -70,8 +70,11 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
               '&[data-adornment="start"]': {
                 paddingInlineStart: 0,
               },
-              '&[data-adornment="both"]': {
+              '&[data-adornment="end"]': {
                 paddingInlineEnd: 0,
+              },
+              '&[data-adornment="both"]': {
+                paddingInline: 0,
               },
             },
           }),

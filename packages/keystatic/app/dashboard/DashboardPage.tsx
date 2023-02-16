@@ -194,6 +194,7 @@ function Branches() {
   }, [branchInfo.allBranches, branchInfo.defaultBranch]);
   const baseCommit = useBaseCommit();
   const repositoryId = useRepositoryId();
+
   return (
     <Flex
       direction="column"
