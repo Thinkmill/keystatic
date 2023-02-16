@@ -16,13 +16,4 @@ module.exports = {
   // ],
   // importOrderSeparation: true,
   // importOrderSortSpecifiers: true,
-  overrides: [
-    {
-      files: 'keystatic/**',
-      options: {
-        // to align with the keystone repo
-        printWidth: 100,
-      },
-    },
-  ],
 };

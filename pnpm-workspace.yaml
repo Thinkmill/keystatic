@@ -3,3 +3,4 @@ packages:
   - 'design-system/docs'
   - 'design-system/docs/storybook'
   - 'keystatic'
+  - 'packages/*'

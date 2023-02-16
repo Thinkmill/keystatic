@@ -31,8 +31,6 @@ importers:
       eslint-plugin-jest: ^26.5.3
       eslint-plugin-react: ^7.30.0
       eslint-plugin-react-hooks: ^4.6.0
-      eslint-plugin-simple-import-sort: ^7.0.0
-      eslint-plugin-storybook: ^0.5.12
       jest: ^29.0.1
       jest-environment-jsdom: ^29.0.1
       npm-run-all: ^4.1.5
@@ -69,8 +67,6 @@ importers:
       eslint-plugin-jest: 26.9.0_hpmcs7bvltwvfjnrzyku5zqkvy
       eslint-plugin-react: 7.32.2_eslint@8.33.0
       eslint-plugin-react-hooks: 4.6.0_eslint@8.33.0
-      eslint-plugin-simple-import-sort: 7.0.0_eslint@8.33.0
-      eslint-plugin-storybook: 0.5.13_4vsywjlpuriuw3tl5oq6zy5a64
       jest: 29.4.2_@types+node@16.11.13
       jest-environment-jsdom: 29.4.2
       npm-run-all: 4.1.5
@@ -1597,6 +1593,45 @@ importers:
   keystatic:
     specifiers:
       '@babel/runtime': ^7.18.3
+      '@ts-gql/compiler': ^0.16.1
+      '@ts-gql/next': ^17.0.0
+      '@types/react': ^18.0.25
+      '@voussoir/action-group': ^0.1.0
+      '@voussoir/button': ^0.1.1
+      '@voussoir/icon': ^0.1.0
+      '@voussoir/layout': ^0.1.0
+      '@voussoir/notice': ^0.1.0
+      '@voussoir/tooltip': ^0.1.0
+      '@voussoir/typography': ^0.1.0
+      keystatic: ^0.0.32
+      next: ^13.1.6
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      tsx: ^3.8.0
+      typescript: ^4.7.4
+    dependencies:
+      '@babel/runtime': 7.20.13
+      '@types/react': 18.0.27
+      '@voussoir/action-group': link:../design-system/packages/action-group
+      '@voussoir/button': link:../design-system/packages/button
+      '@voussoir/icon': link:../design-system/packages/icon
+      '@voussoir/layout': link:../design-system/packages/layout
+      '@voussoir/notice': link:../design-system/packages/notice
+      '@voussoir/tooltip': link:../design-system/packages/tooltip
+      '@voussoir/typography': link:../design-system/packages/typography
+      keystatic: link:../packages/keystatic
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    devDependencies:
+      '@ts-gql/compiler': 0.16.3
+      '@ts-gql/next': 17.0.0_@ts-gql+compiler@0.16.3
+      next: 13.1.6_biqbaboplfbrettd7655fr4n2y
+      tsx: 3.12.3
+      typescript: 4.9.5
+
+  packages/keystatic:
+    specifiers:
+      '@babel/runtime': ^7.18.3
       '@braintree/sanitize-url': ^6.0.2
       '@emotion/css': ^11.9.0
       '@emotion/weak-memoize': ^0.3.0
@@ -1626,34 +1661,34 @@ importers:
       '@urql/exchange-graphcache': ^5.0.8
       '@voussoir/action-group': ^0.1.0
       '@voussoir/badge': ^0.1.0
-      '@voussoir/button': ^0.1.1
+      '@voussoir/button': ^0.1.0
       '@voussoir/checkbox': ^0.1.0
       '@voussoir/combobox': ^0.1.1
-      '@voussoir/core': ^4.0.1
+      '@voussoir/core': ^4.0.0
       '@voussoir/dialog': ^0.2.0
       '@voussoir/drag-and-drop': ^0.1.0
-      '@voussoir/field': ^0.1.1
+      '@voussoir/field': ^0.1.0
       '@voussoir/icon': ^0.1.0
       '@voussoir/image': ^0.1.0
       '@voussoir/layout': ^0.1.0
       '@voussoir/link': ^0.1.0
-      '@voussoir/list-view': ^0.1.1
-      '@voussoir/listbox': ^0.1.1
-      '@voussoir/menu': ^0.1.1
+      '@voussoir/list-view': ^0.1.0
+      '@voussoir/listbox': ^0.1.0
+      '@voussoir/menu': ^0.1.0
       '@voussoir/nav-list': ^0.1.0
       '@voussoir/notice': ^0.1.0
       '@voussoir/number-field': ^0.1.1
       '@voussoir/overlays': ^0.1.0
-      '@voussoir/picker': ^0.1.1
+      '@voussoir/picker': ^0.1.0
       '@voussoir/progress': ^0.1.0
-      '@voussoir/search-field': ^0.1.1
-      '@voussoir/slots': ^0.1.1
+      '@voussoir/search-field': ^0.1.0
+      '@voussoir/slots': ^0.1.0
       '@voussoir/ssr': ^0.1.0
-      '@voussoir/style': ^0.1.1
+      '@voussoir/style': ^0.1.0
       '@voussoir/table': ^0.1.0
       '@voussoir/tabs': ^0.1.0
       '@voussoir/test-utils': ^2.0.0
-      '@voussoir/text-field': ^0.1.1
+      '@voussoir/text-field': ^0.1.0
       '@voussoir/tooltip': ^0.1.0
       '@voussoir/types': ^0.1.0
       '@voussoir/typography': ^0.1.0
@@ -1722,39 +1757,39 @@ importers:
       '@types/react': 18.0.27
       '@urql/exchange-auth': 1.0.0_graphql@16.6.0
       '@urql/exchange-graphcache': 5.0.8_graphql@16.6.0
-      '@voussoir/action-group': link:../design-system/packages/action-group
-      '@voussoir/badge': link:../design-system/packages/badge
-      '@voussoir/button': link:../design-system/packages/button
-      '@voussoir/checkbox': link:../design-system/packages/checkbox
-      '@voussoir/combobox': link:../design-system/packages/combobox
-      '@voussoir/core': link:../design-system/packages/core
-      '@voussoir/dialog': link:../design-system/packages/dialog
-      '@voussoir/drag-and-drop': link:../design-system/packages/drag-and-drop
-      '@voussoir/field': link:../design-system/packages/field
-      '@voussoir/icon': link:../design-system/packages/icon
-      '@voussoir/image': link:../design-system/packages/image
-      '@voussoir/layout': link:../design-system/packages/layout
-      '@voussoir/link': link:../design-system/packages/link
-      '@voussoir/list-view': link:../design-system/packages/list-view
-      '@voussoir/listbox': link:../design-system/packages/listbox
-      '@voussoir/menu': link:../design-system/packages/menu
-      '@voussoir/nav-list': link:../design-system/packages/nav-list
-      '@voussoir/notice': link:../design-system/packages/notice
-      '@voussoir/number-field': link:../design-system/packages/number-field
-      '@voussoir/overlays': link:../design-system/packages/overlays
-      '@voussoir/picker': link:../design-system/packages/picker
-      '@voussoir/progress': link:../design-system/packages/progress
-      '@voussoir/search-field': link:../design-system/packages/search-field
-      '@voussoir/slots': link:../design-system/packages/slots
-      '@voussoir/ssr': link:../design-system/packages/ssr
-      '@voussoir/style': link:../design-system/packages/style
-      '@voussoir/table': link:../design-system/packages/table
-      '@voussoir/tabs': link:../design-system/packages/tabs
-      '@voussoir/text-field': link:../design-system/packages/text-field
-      '@voussoir/tooltip': link:../design-system/packages/tooltip
-      '@voussoir/types': link:../design-system/packages/types
-      '@voussoir/typography': link:../design-system/packages/typography
-      '@voussoir/utils': link:../design-system/packages/utils
+      '@voussoir/action-group': link:../../design-system/packages/action-group
+      '@voussoir/badge': link:../../design-system/packages/badge
+      '@voussoir/button': link:../../design-system/packages/button
+      '@voussoir/checkbox': link:../../design-system/packages/checkbox
+      '@voussoir/combobox': link:../../design-system/packages/combobox
+      '@voussoir/core': link:../../design-system/packages/core
+      '@voussoir/dialog': link:../../design-system/packages/dialog
+      '@voussoir/drag-and-drop': link:../../design-system/packages/drag-and-drop
+      '@voussoir/field': link:../../design-system/packages/field
+      '@voussoir/icon': link:../../design-system/packages/icon
+      '@voussoir/image': link:../../design-system/packages/image
+      '@voussoir/layout': link:../../design-system/packages/layout
+      '@voussoir/link': link:../../design-system/packages/link
+      '@voussoir/list-view': link:../../design-system/packages/list-view
+      '@voussoir/listbox': link:../../design-system/packages/listbox
+      '@voussoir/menu': link:../../design-system/packages/menu
+      '@voussoir/nav-list': link:../../design-system/packages/nav-list
+      '@voussoir/notice': link:../../design-system/packages/notice
+      '@voussoir/number-field': link:../../design-system/packages/number-field
+      '@voussoir/overlays': link:../../design-system/packages/overlays
+      '@voussoir/picker': link:../../design-system/packages/picker
+      '@voussoir/progress': link:../../design-system/packages/progress
+      '@voussoir/search-field': link:../../design-system/packages/search-field
+      '@voussoir/slots': link:../../design-system/packages/slots
+      '@voussoir/ssr': link:../../design-system/packages/ssr
+      '@voussoir/style': link:../../design-system/packages/style
+      '@voussoir/table': link:../../design-system/packages/table
+      '@voussoir/tabs': link:../../design-system/packages/tabs
+      '@voussoir/text-field': link:../../design-system/packages/text-field
+      '@voussoir/tooltip': link:../../design-system/packages/tooltip
+      '@voussoir/types': link:../../design-system/packages/types
+      '@voussoir/typography': link:../../design-system/packages/typography
+      '@voussoir/utils': link:../../design-system/packages/utils
       apply-ref: 1.0.0
       base64-js: 1.5.1
       clsx: 1.2.1
@@ -1799,7 +1834,7 @@ importers:
       '@types/is-hotkey': 0.1.7
       '@types/js-yaml': 4.0.5
       '@types/prismjs': 1.26.0
-      '@voussoir/test-utils': link:../design-system/packages/test-utils
+      '@voussoir/test-utils': link:../../design-system/packages/test-utils
       jest-diff: 29.4.2
       next: 13.1.6_biqbaboplfbrettd7655fr4n2y
       tsx: 3.12.3
@@ -1817,6 +1852,34 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.1.1
       '@jridgewell/trace-mapping': 0.3.17
+
+  /@ardatan/relay-compiler/12.0.0:
+    resolution: {integrity: sha512-9anThAaj1dQr6IGmzBMcfzOQKTa5artjuPmw8NYK/fiGEMjADbSguBY2FMDykt+QhilR3wc9VA/3yVju7JHg7Q==}
+    hasBin: true
+    peerDependencies:
+      graphql: '*'
+    dependencies:
+      '@babel/core': 7.20.12
+      '@babel/generator': 7.20.14
+      '@babel/parser': 7.20.15
+      '@babel/runtime': 7.20.13
+      '@babel/traverse': 7.20.13
+      '@babel/types': 7.20.7
+      babel-preset-fbjs: 3.4.0_@babel+core@7.20.12
+      chalk: 4.1.2
+      fb-watchman: 2.0.2
+      fbjs: 3.0.4
+      glob: 7.2.3
+      immutable: 3.7.6
+      invariant: 2.2.4
+      nullthrows: 1.1.1
+      relay-runtime: 12.0.0
+      signedsource: 1.0.0
+      yargs: 15.4.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: true
 
   /@ardatan/relay-compiler/12.0.0_graphql@16.6.0:
     resolution: {integrity: sha512-9anThAaj1dQr6IGmzBMcfzOQKTa5artjuPmw8NYK/fiGEMjADbSguBY2FMDykt+QhilR3wc9VA/3yVju7JHg7Q==}
@@ -3811,6 +3874,19 @@ packages:
     resolution: {integrity: sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==}
     dev: true
 
+  /@graphql-codegen/plugin-helpers/2.7.2:
+    resolution: {integrity: sha512-kln2AZ12uii6U59OQXdjLk5nOlh1pHis1R98cDZGFnfaiAbX9V3fxcZ1MMJkB7qFUymTALzyjZoXXdyVmPMfRg==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@graphql-tools/utils': 8.13.1
+      change-case-all: 1.0.14
+      common-tags: 1.8.2
+      import-from: 4.0.0
+      lodash: 4.17.21
+      tslib: 2.4.1
+    dev: true
+
   /@graphql-codegen/plugin-helpers/2.7.2_graphql@16.6.0:
     resolution: {integrity: sha512-kln2AZ12uii6U59OQXdjLk5nOlh1pHis1R98cDZGFnfaiAbX9V3fxcZ1MMJkB7qFUymTALzyjZoXXdyVmPMfRg==}
     peerDependencies:
@@ -3820,6 +3896,19 @@ packages:
       change-case-all: 1.0.14
       common-tags: 1.8.2
       graphql: 16.6.0
+      import-from: 4.0.0
+      lodash: 4.17.21
+      tslib: 2.4.1
+    dev: true
+
+  /@graphql-codegen/plugin-helpers/3.1.2:
+    resolution: {integrity: sha512-emOQiHyIliVOIjKVKdsI5MXj312zmRDwmHpyUTZMjfpvxq/UVAHUJIVdVf+lnjjrI+LXBTgMlTWTgHQfmICxjg==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@graphql-tools/utils': 9.2.1
+      change-case-all: 1.0.15
+      common-tags: 1.8.2
       import-from: 4.0.0
       lodash: 4.17.21
       tslib: 2.4.1
@@ -3839,6 +3928,16 @@ packages:
       tslib: 2.4.1
     dev: true
 
+  /@graphql-codegen/schema-ast/2.6.1:
+    resolution: {integrity: sha512-5TNW3b1IHJjCh07D2yQNGDQzUpUl2AD+GVe1Dzjqyx/d2Fn0TPMxLsHsKPS4Plg4saO8FK/QO70wLsP7fdbQ1w==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 3.1.2
+      '@graphql-tools/utils': 9.2.1
+      tslib: 2.4.1
+    dev: true
+
   /@graphql-codegen/schema-ast/2.6.1_graphql@16.6.0:
     resolution: {integrity: sha512-5TNW3b1IHJjCh07D2yQNGDQzUpUl2AD+GVe1Dzjqyx/d2Fn0TPMxLsHsKPS4Plg4saO8FK/QO70wLsP7fdbQ1w==}
     peerDependencies:
@@ -3848,6 +3947,21 @@ packages:
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       graphql: 16.6.0
       tslib: 2.4.1
+    dev: true
+
+  /@graphql-codegen/typescript-operations/2.5.13:
+    resolution: {integrity: sha512-3vfR6Rx6iZU0JRt29GBkFlrSNTM6t+MSLF86ChvL4d/Jfo/JYAGuB3zNzPhirHYzJPCvLOAx2gy9ID1ltrpYiw==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 3.1.2
+      '@graphql-codegen/typescript': 2.8.8
+      '@graphql-codegen/visitor-plugin-common': 2.13.8
+      auto-bind: 4.0.0
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
     dev: true
 
   /@graphql-codegen/typescript-operations/2.5.13_graphql@16.6.0:
@@ -3866,6 +3980,21 @@ packages:
       - supports-color
     dev: true
 
+  /@graphql-codegen/typescript/2.8.8:
+    resolution: {integrity: sha512-A0oUi3Oy6+DormOlrTC4orxT9OBZkIglhbJBcDmk34jAKKUgesukXRd4yOhmTrnbchpXz2T8IAOFB3FWIaK4Rw==}
+    peerDependencies:
+      graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 3.1.2
+      '@graphql-codegen/schema-ast': 2.6.1
+      '@graphql-codegen/visitor-plugin-common': 2.13.8
+      auto-bind: 4.0.0
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: true
+
   /@graphql-codegen/typescript/2.8.8_graphql@16.6.0:
     resolution: {integrity: sha512-A0oUi3Oy6+DormOlrTC4orxT9OBZkIglhbJBcDmk34jAKKUgesukXRd4yOhmTrnbchpXz2T8IAOFB3FWIaK4Rw==}
     peerDependencies:
@@ -3876,6 +4005,26 @@ packages:
       '@graphql-codegen/visitor-plugin-common': 2.13.8_graphql@16.6.0
       auto-bind: 4.0.0
       graphql: 16.6.0
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: true
+
+  /@graphql-codegen/visitor-plugin-common/2.13.8:
+    resolution: {integrity: sha512-IQWu99YV4wt8hGxIbBQPtqRuaWZhkQRG2IZKbMoSvh0vGeWb3dB0n0hSgKaOOxDY+tljtOf9MTcUYvJslQucMQ==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 3.1.2
+      '@graphql-tools/optimize': 1.3.1
+      '@graphql-tools/relay-operation-optimizer': 6.5.17
+      '@graphql-tools/utils': 9.2.1
+      auto-bind: 4.0.0
+      change-case-all: 1.0.15
+      dependency-graph: 0.11.0
+      graphql-tag: 2.12.6
+      parse-filepath: 1.0.2
       tslib: 2.4.1
     transitivePeerDependencies:
       - encoding
@@ -3903,6 +4052,14 @@ packages:
       - supports-color
     dev: true
 
+  /@graphql-tools/optimize/1.3.1:
+    resolution: {integrity: sha512-5j5CZSRGWVobt4bgRRg7zhjPiSimk+/zIuColih8E8DxuFOaJ+t0qu7eZS5KXWBkjcd4BPNuhUPpNlEmHPqVRQ==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      tslib: 2.5.0
+    dev: true
+
   /@graphql-tools/optimize/1.3.1_graphql@16.6.0:
     resolution: {integrity: sha512-5j5CZSRGWVobt4bgRRg7zhjPiSimk+/zIuColih8E8DxuFOaJ+t0qu7eZS5KXWBkjcd4BPNuhUPpNlEmHPqVRQ==}
     peerDependencies:
@@ -3910,6 +4067,19 @@ packages:
     dependencies:
       graphql: 16.6.0
       tslib: 2.5.0
+    dev: true
+
+  /@graphql-tools/relay-operation-optimizer/6.5.17:
+    resolution: {integrity: sha512-hHPEX6ccRF3+9kfVz0A3In//Dej7QrHOLGZEokBmPDMDqn9CS7qUjpjyGzclbOX0tRBtLfuFUZ68ABSac3P1nA==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@ardatan/relay-compiler': 12.0.0
+      '@graphql-tools/utils': 9.2.1
+      tslib: 2.5.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
     dev: true
 
   /@graphql-tools/relay-operation-optimizer/6.5.17_graphql@16.6.0:
@@ -3926,12 +4096,29 @@ packages:
       - supports-color
     dev: true
 
+  /@graphql-tools/utils/8.13.1:
+    resolution: {integrity: sha512-qIh9yYpdUFmctVqovwMdheVNJqFh+DQNWIhX87FJStfXYnmweBUDATok9fWPleKeFwxnW8IapKmY8m8toJEkAw==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      tslib: 2.5.0
+    dev: true
+
   /@graphql-tools/utils/8.13.1_graphql@16.6.0:
     resolution: {integrity: sha512-qIh9yYpdUFmctVqovwMdheVNJqFh+DQNWIhX87FJStfXYnmweBUDATok9fWPleKeFwxnW8IapKmY8m8toJEkAw==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.6.0
+      tslib: 2.5.0
+    dev: true
+
+  /@graphql-tools/utils/9.2.1:
+    resolution: {integrity: sha512-WUw506Ql6xzmOORlriNrD6Ugx+HjVgYxt9KCXD9mHAak+eaXSwuGGPyE60hy9xaDEoXKBsG7SkG69ybitaVl6A==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-typed-document-node/core': 3.1.1
       tslib: 2.5.0
     dev: true
 
@@ -3943,6 +4130,12 @@ packages:
       '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
       graphql: 16.6.0
       tslib: 2.5.0
+    dev: true
+
+  /@graphql-typed-document-node/core/3.1.1:
+    resolution: {integrity: sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dev: true
 
   /@graphql-typed-document-node/core/3.1.1_graphql@16.6.0:
@@ -6488,12 +6681,6 @@ packages:
       - supports-color
     dev: true
 
-  /@storybook/csf/0.0.1:
-    resolution: {integrity: sha512-USTLkZze5gkel8MYCujSRBVIrUQ3YPBrLOx7GNk/0wttvVtlzWXAq9eLbQ4p/NicGxP+3T7KPEMVV//g+yubpw==}
-    dependencies:
-      lodash: 4.17.21
-    dev: false
-
   /@storybook/csf/0.0.2--canary.4566f4d.1:
     resolution: {integrity: sha512-9OVvMVh3t9znYZwb0Svf/YQoxX2gVOeQTGe2bses2yj+a3+OJnCrUF3/hGv6Em7KujtOdL2LL+JnG49oMVGFgQ==}
     dependencies:
@@ -7070,6 +7257,35 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
+  /@ts-gql/compiler/0.16.3:
+    resolution: {integrity: sha512-xnYPwHzLNUKLg4ySBZC95P7gWH4Bw9/SAgmYDbNqDS3z6FR69ZpHfj0uQLkRc2+276cIlpuAZLYYun3LuVK/9w==}
+    hasBin: true
+    peerDependencies:
+      graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || 14 || 15 || 16
+    dependencies:
+      '@babel/code-frame': 7.18.6
+      '@babel/parser': 7.20.15
+      '@babel/runtime': 7.20.13
+      '@babel/types': 7.20.7
+      '@graphql-codegen/plugin-helpers': 2.7.2
+      '@graphql-codegen/typescript-operations': 2.5.13
+      '@nodelib/fs.walk': 1.2.8
+      '@ts-gql/config': 0.9.1
+      '@types/babel__code-frame': 7.0.3
+      '@types/graceful-fs': 4.1.6
+      '@types/invariant': 2.2.35
+      chokidar: 3.5.3
+      fast-glob: 3.2.12
+      find-pkg-json-field-up: 1.0.1
+      graceful-fs: 4.2.10
+      invariant: 2.2.4
+      slash: 3.0.0
+      strip-ansi: 6.0.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: true
+
   /@ts-gql/compiler/0.16.3_graphql@16.6.0:
     resolution: {integrity: sha512-xnYPwHzLNUKLg4ySBZC95P7gWH4Bw9/SAgmYDbNqDS3z6FR69ZpHfj0uQLkRc2+276cIlpuAZLYYun3LuVK/9w==}
     hasBin: true
@@ -7097,6 +7313,19 @@ packages:
       strip-ansi: 6.0.1
     transitivePeerDependencies:
       - encoding
+      - supports-color
+    dev: true
+
+  /@ts-gql/config/0.9.1:
+    resolution: {integrity: sha512-u0Sj+nmwRHpj208b4gWwa1avBizHy8yxE8CZOH1iYlGQPNRE0Onx5ZRzjwZMvNV7Ki5A7J9INaQc6wQa3avbeg==}
+    peerDependencies:
+      graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || 14 || 15 || 16
+    dependencies:
+      '@babel/runtime': 7.20.13
+      find-pkg-json-field-up: 1.0.1
+      lazy-require.macro: 0.1.0
+      superstruct: 0.10.13
+    transitivePeerDependencies:
       - supports-color
     dev: true
 
@@ -7129,6 +7358,16 @@ packages:
       - eslint
       - supports-color
       - typescript
+    dev: true
+
+  /@ts-gql/next/17.0.0_@ts-gql+compiler@0.16.3:
+    resolution: {integrity: sha512-QXsldrWzzo8EtXrOBZfse+okQPCWDdd7l11s/S5OkkMXdWJR7fUnYXnYQxhuOOEs2WQScvO+vBIUT0l5E4d3YA==}
+    peerDependencies:
+      '@ts-gql/compiler': '*'
+      graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || 14 || 15 || 16
+    dependencies:
+      '@babel/runtime': 7.20.13
+      '@ts-gql/compiler': 0.16.3
     dev: true
 
   /@ts-gql/next/17.0.0_geby35jtnxiaox3zmodjvon224:
@@ -7667,19 +7906,6 @@ packages:
       - supports-color
       - typescript
     dev: true
-
-  /@typescript-eslint/experimental-utils/5.51.0_4vsywjlpuriuw3tl5oq6zy5a64:
-    resolution: {integrity: sha512-8/3+ZyBENl2aog1/QB3S39ptkZ2oRhDB+sJt15UWXBE3skgwL1C8BN9RjpOyhTejwR2hVrvqEjcYcNY6qtZ7nw==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    peerDependencies:
-      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
-    dependencies:
-      '@typescript-eslint/utils': 5.51.0_4vsywjlpuriuw3tl5oq6zy5a64
-      eslint: 8.33.0
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
-    dev: false
 
   /@typescript-eslint/parser/5.51.0_4vsywjlpuriuw3tl5oq6zy5a64:
     resolution: {integrity: sha512-fEV0R9gGmfpDeRzJXn+fGQKcl0inIeYobmmUWijZh9zA7bxJ8clPhV9up2ZQzATxAiFAECqPQyMDB4o4B81AaA==}
@@ -11334,29 +11560,6 @@ packages:
       string.prototype.matchall: 4.0.8
     dev: false
 
-  /eslint-plugin-simple-import-sort/7.0.0_eslint@8.33.0:
-    resolution: {integrity: sha512-U3vEDB5zhYPNfxT5TYR7u01dboFZp+HNpnGhkDB2g/2E4wZ/g1Q9Ton8UwCLfRV9yAKyYqDh62oHOamvkFxsvw==}
-    peerDependencies:
-      eslint: '>=5.0.0'
-    dependencies:
-      eslint: 8.33.0
-    dev: false
-
-  /eslint-plugin-storybook/0.5.13_4vsywjlpuriuw3tl5oq6zy5a64:
-    resolution: {integrity: sha512-82x3FH1VAi68Awu1VEjn/hLkzFZsOP8ItcC5/uGF9WszIrj6n7Q3MZD57oE26k3aKwuPfFtAPnSjFnaBkBab+g==}
-    engines: {node: 12.x || 14.x || >= 16}
-    peerDependencies:
-      eslint: '>=6'
-    dependencies:
-      '@storybook/csf': 0.0.1
-      '@typescript-eslint/experimental-utils': 5.51.0_4vsywjlpuriuw3tl5oq6zy5a64
-      eslint: 8.33.0
-      requireindex: 1.2.0
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
-    dev: false
-
   /eslint-scope/4.0.3:
     resolution: {integrity: sha512-p7VutNr1O/QrxysMo3E45FjYDTeXBy0iTltPFNSqKAIfjDSXC+4dj+qfyuD8bfAXrW/y6lW3O76VaYNPKfpKrg==}
     engines: {node: '>=4.0.0'}
@@ -12433,6 +12636,15 @@ packages:
 
   /grapheme-splitter/1.0.4:
     resolution: {integrity: sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==}
+
+  /graphql-tag/2.12.6:
+    resolution: {integrity: sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      tslib: 2.5.0
+    dev: true
 
   /graphql-tag/2.12.6_graphql@16.6.0:
     resolution: {integrity: sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==}
@@ -16995,11 +17207,6 @@ packages:
 
   /require-main-filename/2.0.0:
     resolution: {integrity: sha512-NKN5kMDylKuldxYLSUfrbo5Tuzh4hd+2E8NPPX02mZtn1VuREQToYe/ZdlJy+J3uCpfaiGF05e7B8W0iXbQHmg==}
-
-  /requireindex/1.2.0:
-    resolution: {integrity: sha512-L9jEkOi3ASd9PYit2cwRfyppc9NoABujTP8/5gFcbERmo5jUoAKovIC3fsF17pkTnGsrByysqX+Kxd2OTNI1ww==}
-    engines: {node: '>=0.10.5'}
-    dev: false
 
   /requires-port/1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
