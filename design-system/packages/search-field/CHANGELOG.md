@@ -1,5 +1,16 @@
 # @voussoir/search-field
 
+## 0.1.1
+
+### Patch Changes
+
+- 19eae03: implement combobox
+- Updated dependencies [19eae03]
+- Updated dependencies [92927f2]
+  - @voussoir/text-field@0.1.1
+  - @voussoir/button@0.1.1
+  - @voussoir/style@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

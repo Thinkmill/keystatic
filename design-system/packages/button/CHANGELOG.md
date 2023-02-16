@@ -1,5 +1,16 @@
 # @voussoir/button
 
+## 0.1.1
+
+### Patch Changes
+
+- 19eae03: implement combobox
+- 92927f2: Export `useDialogContainer` from "@voussoir/dialog".
+- Updated dependencies [19eae03]
+  - @voussoir/slots@0.1.1
+  - @voussoir/style@0.1.1
+  - @voussoir/core@4.0.1
+
 ## 0.1.0
 
 ### Minor Changes

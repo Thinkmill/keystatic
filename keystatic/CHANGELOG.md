@@ -1,5 +1,29 @@
 # keystatic
 
+## 0.0.31
+
+### Patch Changes
+
+- 5a3b28a: Implement `fields.multiselect` UI
+- 935b73f: Document editor toolbar; use `Picker` from heading menu.
+- 12cf894: Use combobox in code block language selection
+- Updated dependencies [19eae03]
+- Updated dependencies [d8b7c51]
+- Updated dependencies [92927f2]
+  - @voussoir/search-field@0.1.1
+  - @voussoir/text-field@0.1.1
+  - @voussoir/combobox@0.1.1
+  - @voussoir/listbox@0.1.1
+  - @voussoir/button@0.1.1
+  - @voussoir/dialog@0.2.0
+  - @voussoir/picker@0.1.1
+  - @voussoir/field@0.1.1
+  - @voussoir/slots@0.1.1
+  - @voussoir/style@0.1.1
+  - @voussoir/core@4.0.1
+  - @voussoir/menu@0.1.1
+  - @voussoir/list-view@0.1.1
+
 ## 0.0.30
 
 ### Patch Changes

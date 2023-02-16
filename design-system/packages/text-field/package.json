@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/text-field",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Text fields allow users to input text with a keyboard.",
   "license": "MIT",
   "main": "dist/voussoir-text-field.cjs.js",
@@ -23,9 +23,9 @@
     "@react-aria/utils": "^3.14.2",
     "@react-stately/utils": "^3.5.1",
     "@react-types/shared": "^3.14.1",
-    "@voussoir/field": "^0.1.0",
+    "@voussoir/field": "^0.1.1",
     "@voussoir/layout": "^0.1.0",
-    "@voussoir/style": "^0.1.0",
+    "@voussoir/style": "^0.1.1",
     "@voussoir/types": "^0.1.0",
     "@voussoir/typography": "^0.1.0",
     "@voussoir/utils": "^2.0.0",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
-    "@voussoir/core": "^4.0.0",
+    "@voussoir/core": "^4.0.1",
     "@voussoir/storybook": "^0.0.0",
     "react": "^18.2.0"
   },

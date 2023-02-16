@@ -1,5 +1,13 @@
 # @voussoir/slots
 
+## 0.1.1
+
+### Patch Changes
+
+- 19eae03: implement combobox
+- Updated dependencies [19eae03]
+  - @voussoir/style@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes
