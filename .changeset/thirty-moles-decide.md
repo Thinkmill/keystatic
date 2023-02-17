@@ -1,0 +1,5 @@
+---
+'keystatic': patch
+---
+
+Remove octokit

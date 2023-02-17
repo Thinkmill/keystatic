@@ -1619,6 +1619,7 @@ importers:
   keystatic:
     specifiers:
       '@babel/runtime': ^7.18.3
+      '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
       '@ts-gql/next': ^17.0.0
       '@types/react': ^18.0.25
@@ -1638,6 +1639,7 @@ importers:
       typescript: ^4.7.4
     dependencies:
       '@babel/runtime': 7.20.13
+      '@preconstruct/next': 4.0.0
       '@types/react': 18.0.28
       '@voussoir/action-group': link:../design-system/packages/action-group
       '@voussoir/button': link:../design-system/packages/button
@@ -1666,9 +1668,6 @@ importers:
       '@hapi/iron': ^7.0.0
       '@keystone-6/document-renderer': ^1.1.2
       '@markdoc/markdoc': ^0.2.2
-      '@octokit/request': ^6.2.2
-      '@octokit/types': ^8.2.0
-      '@preconstruct/next': ^4.0.0
       '@react-aria/focus': ^3.10.0
       '@react-aria/overlays': ^3.12.0
       '@react-aria/visually-hidden': ^3.6.1
@@ -1723,12 +1722,9 @@ importers:
       '@voussoir/utils': ^2.0.0
       apply-ref: ^1.0.0
       base64-js: ^1.5.1
-      clsx: ^1.2.1
       cookie: ^0.5.0
-      dedent: ^0.7.0
       emery: ^1.4.1
       eslint: ^8.18.0
-      facepaint: ^1.2.1
       fast-deep-equal: ^3.1.3
       fp-ts: ^2.11.5
       graphql: ^16.6.0
@@ -1737,7 +1733,6 @@ importers:
       is-hotkey: ^0.2.0
       jest-diff: ^29.0.1
       js-yaml: ^4.1.0
-      lodash: ^4.17.21
       lru-cache: ^7.14.1
       match-sorter: ^6.3.1
       mdast-util-from-markdown: ^0.8.5
@@ -1751,8 +1746,6 @@ importers:
       prismjs: ^1.29.0
       react: ^18.2.0
       react-dom: ^18.2.0
-      react-keyed-flatten-children: ^1.3.0
-      react-transition-group: ^4.4.5
       scroll-into-view-if-needed: ^3.0.3
       slate: ^0.81.1
       slate-history: ^0.66.0
@@ -1770,9 +1763,6 @@ importers:
       '@hapi/iron': 7.0.1
       '@keystone-6/document-renderer': 1.1.2_react@18.2.0
       '@markdoc/markdoc': 0.2.2_pmekkgnqduwlme35zpnqhenc34
-      '@octokit/request': 6.2.3
-      '@octokit/types': 8.2.1
-      '@preconstruct/next': 4.0.0
       '@react-aria/focus': 3.10.1_react@18.2.0
       '@react-aria/overlays': 3.12.1_biqbaboplfbrettd7655fr4n2y
       '@react-aria/visually-hidden': 3.6.1_react@18.2.0
@@ -1780,7 +1770,6 @@ importers:
       '@react-stately/list': 3.6.1_react@18.2.0
       '@react-stately/overlays': 3.4.4_react@18.2.0
       '@ts-gql/tag': 0.7.0_graphql@16.6.0
-      '@types/cookie': 0.5.1
       '@types/node': 16.11.13
       '@types/react': 18.0.28
       '@urql/exchange-auth': 1.0.0_graphql@16.6.0
@@ -1820,12 +1809,8 @@ importers:
       '@voussoir/utils': link:../../design-system/packages/utils
       apply-ref: 1.0.0
       base64-js: 1.5.1
-      clsx: 1.2.1
       cookie: 0.5.0
-      dedent: 0.7.0
       emery: 1.4.1
-      eslint: 8.34.0
-      facepaint: 1.2.1
       fast-deep-equal: 3.1.3
       fp-ts: 2.13.1
       graphql: 16.6.0
@@ -1833,7 +1818,6 @@ importers:
       io-ts-excess: 1.0.1_fp-ts@2.13.1
       is-hotkey: 0.2.0
       js-yaml: 4.1.0
-      lodash: 4.17.21
       lru-cache: 7.16.0
       match-sorter: 6.3.1
       mdast-util-from-markdown: 0.8.5
@@ -1846,8 +1830,6 @@ importers:
       prismjs: 1.29.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      react-keyed-flatten-children: 1.3.0_react@18.2.0
-      react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
       scroll-into-view-if-needed: 3.0.6
       slate: 0.81.3
       slate-history: 0.66.0_slate@0.81.3
@@ -1859,10 +1841,12 @@ importers:
       '@ts-gql/compiler': 0.16.3_graphql@16.6.0
       '@ts-gql/eslint-plugin': 0.8.5_tdnhuzsp2g4thesu7qh7wd3bva
       '@ts-gql/next': 17.0.0_geby35jtnxiaox3zmodjvon224
+      '@types/cookie': 0.5.1
       '@types/is-hotkey': 0.1.7
       '@types/js-yaml': 4.0.5
       '@types/prismjs': 1.26.0
       '@voussoir/test-utils': link:../../design-system/packages/test-utils
+      eslint: 8.34.0
       jest-diff: 29.4.3
       next: 13.1.6_biqbaboplfbrettd7655fr4n2y
       tsx: 3.12.3
@@ -4612,58 +4596,6 @@ packages:
       rimraf: 3.0.2
     dev: true
 
-  /@octokit/endpoint/7.0.5:
-    resolution: {integrity: sha512-LG4o4HMY1Xoaec87IqQ41TQ+glvIeTKqfjkCEmt5AIwDZJwQeVZFIEYXrYY6yLwK+pAScb9Gj4q+Nz2qSw1roA==}
-    engines: {node: '>= 14'}
-    dependencies:
-      '@octokit/types': 9.0.0
-      is-plain-object: 5.0.0
-      universal-user-agent: 6.0.0
-    dev: false
-
-  /@octokit/openapi-types/14.0.0:
-    resolution: {integrity: sha512-HNWisMYlR8VCnNurDU6os2ikx0s0VyEjDYHNS/h4cgb8DeOxQ0n72HyinUtdDVxJhFy3FWLGl0DJhfEWk3P5Iw==}
-    dev: false
-
-  /@octokit/openapi-types/16.0.0:
-    resolution: {integrity: sha512-JbFWOqTJVLHZSUUoF4FzAZKYtqdxWu9Z5m2QQnOyEa04fOFljvyh7D3GYKbfuaSWisqehImiVIMG4eyJeP5VEA==}
-    dev: false
-
-  /@octokit/request-error/3.0.3:
-    resolution: {integrity: sha512-crqw3V5Iy2uOU5Np+8M/YexTlT8zxCfI+qu+LxUB7SZpje4Qmx3mub5DfEKSO8Ylyk0aogi6TYdf6kxzh2BguQ==}
-    engines: {node: '>= 14'}
-    dependencies:
-      '@octokit/types': 9.0.0
-      deprecation: 2.3.1
-      once: 1.4.0
-    dev: false
-
-  /@octokit/request/6.2.3:
-    resolution: {integrity: sha512-TNAodj5yNzrrZ/VxP+H5HiYaZep0H3GU0O7PaF+fhDrt8FPrnkei9Aal/txsN/1P7V3CPiThG0tIvpPDYUsyAA==}
-    engines: {node: '>= 14'}
-    dependencies:
-      '@octokit/endpoint': 7.0.5
-      '@octokit/request-error': 3.0.3
-      '@octokit/types': 9.0.0
-      is-plain-object: 5.0.0
-      node-fetch: 2.6.9
-      universal-user-agent: 6.0.0
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /@octokit/types/8.2.1:
-    resolution: {integrity: sha512-8oWMUji8be66q2B9PmEIUyQm00VPDPun07umUWSaCwxmeaquFBro4Hcc3ruVoDo3zkQyZBlRvhIMEYS3pBhanw==}
-    dependencies:
-      '@octokit/openapi-types': 14.0.0
-    dev: false
-
-  /@octokit/types/9.0.0:
-    resolution: {integrity: sha512-LUewfj94xCMH2rbD5YJ+6AQ4AVjFYTgpp6rboWM5T7N3IsIF65SBEOVcYMGAEzO/kKNiNaW4LoWtoThOhH06gw==}
-    dependencies:
-      '@octokit/openapi-types': 16.0.0
-    dev: false
-
   /@pkgr/utils/2.3.1:
     resolution: {integrity: sha512-wfzX8kc1PMyUILA+1Z/EqoE4UCXGy0iRGMhPwdfae1+f0OXlLqCk+By+aMzgJBzR9AzS4CDizioG6Ss1gvAFJw==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
@@ -7274,7 +7206,7 @@ packages:
 
   /@types/cookie/0.5.1:
     resolution: {integrity: sha512-COUnqfB2+ckwXXSFInsFdOAWQzCCx+a5hq2ruyj+Vjund94RJQd4LG2u9hnvJrTgunKAaax7ancBYlDrNYxA0g==}
-    dev: false
+    dev: true
 
   /@types/dedent/0.7.0:
     resolution: {integrity: sha512-EGlKlgMhnLt/cM4DbUSafFdrkeJoC9Mvnj0PUCU7tFmTjMjNRT957kXCx0wYm3JuEq4o4ZsS5vG+NlkM2DMd2A==}
@@ -10400,10 +10332,6 @@ packages:
     resolution: {integrity: sha512-JeMq7fEshyepOWDfcfHK06N3MhyPhz++vtqWhMT5O9A3K42rdsEDpfdVqjaqaAhsw6a+ZqeDvQVtD0hFHQWrzg==}
     engines: {node: '>= 0.6.0'}
     dev: true
-
-  /deprecation/2.3.1:
-    resolution: {integrity: sha512-xmHIy4F3scKVwMsQ4WnVaS8bHOx0DmVwRywosKhaILI0ywMDWPtBSku2HNxRvF7jtwDRsoEwYQSfbxj8b7RlJQ==}
-    dev: false
 
   /des.js/1.0.1:
     resolution: {integrity: sha512-Q0I4pfFrv2VPd34/vfLrFOoRmlYj3OV50i7fskps1jZWK1kApMWWT9G6RRUeYedLcBDIhnSDaUvJMb3AhUlaEA==}
@@ -18682,10 +18610,6 @@ packages:
       unist-util-is: 4.1.0
       unist-util-visit-parents: 3.1.1
     dev: true
-
-  /universal-user-agent/6.0.0:
-    resolution: {integrity: sha512-isyNax3wXoKaulPDZWHQqbmIx1k2tb9fb3GGDBRxCscfYV2Ch7WxPArBsFEG8s/safwXTT7H4QGhaIkTp9447w==}
-    dev: false
 
   /universalify/0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}

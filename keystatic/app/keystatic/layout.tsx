@@ -1,12 +1,12 @@
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import KeystaticApp from './keystatic';
+
+export default function RootLayout() {
   return (
     <html>
       <head />
-      <body>{children}</body>
+      <body>
+        <KeystaticApp />
+      </body>
     </html>
   );
 }
