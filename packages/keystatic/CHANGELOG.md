@@ -1,5 +1,11 @@
 # keystatic
 
+## 0.0.34
+
+### Patch Changes
+
+- 03250dd: Remove octokit
+
 ## 0.0.33
 
 ### Patch Changes

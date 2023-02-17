@@ -1,5 +1,12 @@
 # localization
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [03250dd]
+  - keystatic@0.0.34
+
 ## 0.1.1
 
 ### Patch Changes
