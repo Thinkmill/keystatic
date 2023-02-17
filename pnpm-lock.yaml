@@ -1669,6 +1669,7 @@ importers:
       '@keystone-6/document-renderer': ^1.1.2
       '@markdoc/markdoc': ^0.2.2
       '@react-aria/focus': ^3.10.0
+      '@react-aria/i18n': ^3.6.2
       '@react-aria/overlays': ^3.12.0
       '@react-aria/visually-hidden': ^3.6.1
       '@react-stately/collections': ^3.5.0
@@ -1764,6 +1765,7 @@ importers:
       '@keystone-6/document-renderer': 1.1.2_react@18.2.0
       '@markdoc/markdoc': 0.2.2_pmekkgnqduwlme35zpnqhenc34
       '@react-aria/focus': 3.10.1_react@18.2.0
+      '@react-aria/i18n': 3.6.3_react@18.2.0
       '@react-aria/overlays': 3.12.1_biqbaboplfbrettd7655fr4n2y
       '@react-aria/visually-hidden': 3.6.1_react@18.2.0
       '@react-stately/collections': 3.5.1_react@18.2.0

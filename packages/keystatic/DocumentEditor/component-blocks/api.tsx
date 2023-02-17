@@ -344,10 +344,12 @@ export const fields = {
     label,
     defaultValue = '',
     validation: { length: { max = Infinity, min = 0 } = {} } = {},
+    description,
     multiline = false,
   }: {
     label: string;
     defaultValue?: string;
+    description?: string;
     validation?: {
       length?: {
         min?: number;
@@ -365,6 +367,7 @@ export const fields = {
         return (
           <TextFieldComponent
             label={label}
+            description={description}
             autoFocus={autoFocus}
             value={value}
             onChange={onChange}

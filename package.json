@@ -6,7 +6,7 @@
   "packageManager": "pnpm@7.27.0",
   "scripts": {
     "build:docs": "pnpm --filter=docs build",
-    "build:packages": "cd packages/keystatic && pnpm ts-gql build && cd ../.. && preconstruct build",
+    "build:packages": "cd packages/keystatic && pnpm run setup && cd ../.. && preconstruct build",
     "check:format": "prettier --check",
     "check:lint": "eslint",
     "check:packages": "preconstruct validate",
@@ -19,7 +19,7 @@
     "eslint": "eslint .",
     "format": "prettier --write",
     "fresh": "npm run clean && pnpm install",
-    "postinstall": "preconstruct dev && manypkg check && cd packages/keystatic && pnpm ts-gql build",
+    "postinstall": "preconstruct dev && manypkg check && cd packages/keystatic && pnpm run setup",
     "lint": "eslint --fix",
     "prettier": "prettier **/*.{ts,tsx}",
     "release": "pnpm build:packages && changeset publish",
