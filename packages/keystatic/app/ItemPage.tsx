@@ -1,4 +1,4 @@
-import { useRouter } from './router';
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import {
   FormEvent,
   PropsWithChildren,
@@ -16,32 +16,34 @@ import {
   DialogTrigger,
 } from '@voussoir/dialog';
 import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
-// import { refreshCwIcon } from '@voussoir/icon/icons/refreshCwIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Icon } from '@voussoir/icon';
 import { Box, Flex } from '@voussoir/layout';
 import { TextLink } from '@voussoir/link';
 import { Notice } from '@voussoir/notice';
+import { ProgressCircle } from '@voussoir/progress';
 import { Content } from '@voussoir/slots';
 import { TextField } from '@voussoir/text-field';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../config';
-import { AppShellBody, AppShellRoot } from './shell';
-import { useBaseCommit, useTree, useRepositoryId } from './shell/data';
-import { AppShellHeader } from './shell/header';
 import { FormValueContentFromPreviewProps } from '../DocumentEditor/component-blocks/form-from-preview';
 import { createGetPreviewProps } from '../DocumentEditor/component-blocks/preview-props';
 import { fields } from '../DocumentEditor/component-blocks/api';
 import { clientSideValidateProp } from '../DocumentEditor/component-blocks/utils';
+import { useEventCallback } from '../DocumentEditor/utils';
 import { useDeleteItem, useUpsertItem } from '../utils';
+
+import { useCreateBranchMutation } from './branch-selection';
+import l10nMessages from './l10n/index.json';
+import { useRouter } from './router';
+import { AppShellBody, AppShellRoot } from './shell';
+import { useBaseCommit, useTree, useRepositoryId } from './shell/data';
+import { AppShellHeader } from './shell/header';
+import { TreeNode } from './trees';
 import { getCollectionFormat, getCollectionItemPath } from './utils';
 import { useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
-import { ProgressCircle } from '@voussoir/progress';
-import { useEventCallback } from '../DocumentEditor/utils';
-import { useCreateBranchMutation } from './branch-selection';
-import { TreeNode } from './trees';
 import { mergeDataStates } from './useData';
 
 type ItemPageProps = {
@@ -65,6 +67,7 @@ function ItemPage(props: ItemPageProps) {
     localTreeSha,
     currentTree,
   } = props;
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
   const [forceValidation, setForceValidation] = useState(false);
   const collectionConfig = config.collections![collection]!;
@@ -164,14 +167,16 @@ function ItemPage(props: ItemPageProps) {
               <DialogTrigger>
                 <Button
                   // tone="critical"
-                  aria-label="Delete"
+                  aria-label={stringFormatter.format('delete')}
                   isDisabled={
                     deleteResult.kind === 'loading' ||
                     updateResult.kind === 'loading'
                   }
                 >
                   <Icon isHidden={{ above: 'mobile' }} src={trash2Icon} />
-                  <Text isHidden={{ below: 'tablet' }}>Delete</Text>
+                  <Text isHidden={{ below: 'tablet' }}>
+                    {stringFormatter.format('delete')}
+                  </Text>
                 </Button>
                 <AlertDialog
                   title="Delete entry"
@@ -197,8 +202,7 @@ function ItemPage(props: ItemPageProps) {
                 prominence="high"
                 type="submit"
               >
-                {/* <Icon src={saveIcon} /> */}
-                <Text>Save</Text>
+                {stringFormatter.format('save')}
               </Button>
             </ButtonGroup>
           </>
