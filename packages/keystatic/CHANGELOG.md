@@ -1,5 +1,11 @@
 # keystatic
 
+## 0.0.35
+
+### Patch Changes
+
+- 1a50854: Fix redirect on item create
+
 ## 0.0.34
 
 ### Patch Changes
