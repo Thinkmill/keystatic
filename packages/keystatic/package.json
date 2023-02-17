@@ -15,6 +15,10 @@
       "module": "./reader/dist/keystatic-reader.esm.js",
       "default": "./reader/dist/keystatic-reader.cjs.js"
     },
+    "./next-app": {
+      "module": "./next-app/dist/keystatic-next-app.esm.js",
+      "default": "./next-app/dist/keystatic-next-app.cjs.js"
+    },
     "./renderer": {
       "module": "./renderer/dist/keystatic-renderer.esm.js",
       "default": "./renderer/dist/keystatic-renderer.cjs.js"
@@ -27,7 +31,8 @@
     "dist",
     "api",
     "reader",
-    "renderer"
+    "renderer",
+    "next-app"
   ],
   "scripts": {
     "build": "ts-gql build && next build",
@@ -149,7 +154,8 @@
       "index.ts",
       "api.ts",
       "reader.ts",
-      "renderer.ts"
+      "renderer.ts",
+      "next-app.ts"
     ]
   },
   "ts-gql": {

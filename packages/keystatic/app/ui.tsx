@@ -113,7 +113,7 @@ function PageInner({ config }: { config: Config }) {
       }
     }
     if (params[0] !== 'branch' || params.length < 2) {
-      return null;
+      return <Text>Not found</Text>;
     }
     branch = params[1];
     basePath = `/keystatic/branch/${encodeURIComponent(branch)}`;
