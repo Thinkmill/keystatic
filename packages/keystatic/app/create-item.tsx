@@ -66,9 +66,9 @@ export function CreateItem(props: {
   });
   const createItem = useEventCallback(_createItem);
 
-  let collectionPath = `${encodeURIComponent(
-    props.basePath
-  )}/collection/${encodeURIComponent(props.collection)}`;
+  let collectionPath = `${props.basePath}/collection/${encodeURIComponent(
+    props.collection
+  )}`;
 
   const onCreate = async () => {
     if (!clientSideValidateProp(schema, state)) {
