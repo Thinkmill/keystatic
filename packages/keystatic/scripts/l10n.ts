@@ -40,6 +40,6 @@ const localesDir = path.join(__dirname, '../app/l10n');
   );
   await fs.writeFile(
     path.join(__dirname, '../app/l10n/index.json'),
-    JSON.stringify(locales, null, 2)
+    JSON.stringify(locales, null, 2) + '\n' // carriage return to make prettier happy
   );
 })();
