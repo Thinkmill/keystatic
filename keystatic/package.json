@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
+    "@preconstruct/next": "^4.0.0",
     "@types/react": "^18.0.25",
     "@voussoir/action-group": "^0.1.0",
     "@voussoir/button": "^0.1.1",

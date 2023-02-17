@@ -24,7 +24,8 @@ export function makePage(config: Config<any, any>) {
     }
     const keystaticRouter = useMemo((): Router => {
       const replaced = href.replace(/^\/keystatic\/?/, '');
-      const params = replaced === '' ? [] : replaced.split('/');
+      const params =
+        replaced === '' ? [] : replaced.split('/').map(decodeURIComponent);
       return {
         href,
         params,

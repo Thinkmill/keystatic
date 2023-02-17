@@ -13,7 +13,6 @@ import {
 } from './app/shell/data';
 import { hydrateBlobCache } from './app/useItemData';
 import { useContext, useState } from 'react';
-import { githubRequest } from './github-api';
 import { assert } from 'emery';
 import { FormatInfo } from './app/path-utils';
 import {
@@ -24,6 +23,7 @@ import {
   updateTreeWithChanges,
 } from './app/trees';
 import { Config } from './src';
+import { getAuth } from './app/auth';
 
 const textEncoder = new TextEncoder();
 
@@ -175,16 +175,18 @@ export function useUpsertItem(args: {
             return false;
           }
           if (gqlError.type === 'STALE_DATA') {
-            const branch = await githubRequest(
-              'GET /repos/{owner}/{repo}/branches/{branch}',
+            const branch = await fetch(
+              `https://api.github.com/repos/${args.storage.repo.owner}/${
+                args.storage.repo.name
+              }/branches/${encodeURIComponent(branchInfo.currentBranch)}`,
               {
-                branch: branchInfo.currentBranch,
-                owner: args.storage.repo.owner,
-                repo: args.storage.repo.name,
+                headers: {
+                  Authorization: `Bearer ${(await getAuth())?.accessToken}`,
+                },
               }
-            );
+            ).then(x => x.json());
             const tree = await fetchGitHubTreeData(
-              branch.data.commit.sha,
+              branch.commit.sha,
               args.storage.repo
             );
             const entry = tree.entries.get(args.basePath);
