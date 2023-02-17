@@ -1,5 +1,11 @@
 # @voussoir/search-field
 
+## 0.1.2
+
+### Patch Changes
+
+- ebe4a32: introduce "apps/\*" and begin dog-fooding with l10n strings
+
 ## 0.1.1
 
 ### Patch Changes
