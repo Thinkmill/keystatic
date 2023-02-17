@@ -12,7 +12,6 @@ import {
   useState,
 } from 'react';
 import { useQuery } from 'urql';
-import { githubRequest } from '../../github-api';
 import {
   getCollectionPath,
   getCollectionFormat,
@@ -30,6 +29,7 @@ import { DataState, LOADING, mergeDataStates, useData } from '../useData';
 import { getTreeNodeForItem, MaybePromise } from '../utils';
 import LRU from 'lru-cache';
 import { isDefined } from 'emery';
+import { getAuth } from '../auth';
 
 export function fetchLocalTree(sha: string) {
   if (treeCache.has(sha)) {
@@ -336,19 +336,23 @@ export function fetchGitHubTreeData(
 ) {
   const cached = treeCache.get(sha);
   if (cached) return cached;
-  const promise = githubRequest(
-    'GET /repos/{owner}/{repo}/git/trees/{tree_sha}',
-    {
-      owner: repo.owner,
-      repo: repo.name,
-      tree_sha: sha,
-      recursive: '1',
-    }
-  ).then(res =>
-    hydrateTreeCacheWithEntries(
-      res.data.tree.map(({ url, ...rest }) => rest as TreeEntry)
-    )
-  );
+  const promise = getAuth()
+    .then(auth => {
+      if (!auth) throw new Error('Not authorized');
+      return fetch(
+        `https://api.github.com/repos/${repo.owner}/${repo.name}/git/trees/${sha}?recursive=1`,
+        {
+          headers: {
+            Authorization: `Bearer ${auth.accessToken}`,
+          },
+        }
+      ).then(x => x.json());
+    })
+    .then((res: { tree: (TreeEntry & { url: string })[] }) =>
+      hydrateTreeCacheWithEntries(
+        res.tree.map(({ url, ...rest }) => rest as TreeEntry)
+      )
+    );
   treeCache.set(sha, promise);
   return promise;
 }
