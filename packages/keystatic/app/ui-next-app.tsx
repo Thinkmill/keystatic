@@ -5,9 +5,11 @@ import { Config } from '../config';
 import { Keystatic } from './ui';
 import { Router } from './router';
 
+let _isClient = false;
 function useIsClient() {
-  const [isClient, setIsClient] = useState(false);
+  const [isClient, setIsClient] = useState(_isClient);
   useEffect(() => {
+    _isClient = true;
     setIsClient(true);
   }, []);
   return isClient;
@@ -30,10 +32,10 @@ export function makePage(config: Config<any, any>) {
         href,
         params,
         push: async path => {
-          router.push(path);
+          router.push(path, { forceOptimisticNavigation: true });
         },
         replace: async path => {
-          router.replace(path);
+          router.replace(path, { forceOptimisticNavigation: true });
         },
       };
     }, [href, router]);
