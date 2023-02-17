@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/search-field",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Search fields are text fields, specifically designed for search behaviour.",
   "license": "MIT",
   "main": "dist/voussoir-search-field.cjs.js",

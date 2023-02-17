@@ -1,5 +1,15 @@
 # keystatic
 
+## 0.0.33
+
+### Patch Changes
+
+- 5a66740: Add `keystatic/next-app` entrypoint to allow running in Next's `app`
+  directory.
+- ebe4a32: introduce "apps/\*" and begin dog-fooding with l10n strings
+- Updated dependencies [ebe4a32]
+  - @voussoir/search-field@0.1.2
+
 ## 0.0.32
 
 ### Patch Changes
