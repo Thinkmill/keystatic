@@ -14,7 +14,6 @@ import {
   getResponsiveRange,
 } from './responsive';
 import { Breakpoint, BreakpointRange, ResponsiveProp } from './types';
-import { omit } from 'lodash';
 
 type BreakpointContext = Breakpoint[];
 
@@ -48,7 +47,8 @@ export function useResponsiveValue() {
 // Utils
 // ----------------------------------------------------------------------------
 
-const breakpointEntries = typedEntries(omit(breakpoints, 'mobile')).sort(
+const { mobile: _mobile, ...breakpointsWithoutMobile } = breakpoints;
+const breakpointEntries = typedEntries(breakpointsWithoutMobile).sort(
   ([, valueA], [, valueB]) => valueB - valueA
 );
 const breakpointQueries = breakpointEntries.map(

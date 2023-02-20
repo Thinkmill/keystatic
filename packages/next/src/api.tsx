@@ -10,35 +10,36 @@ export function makeAPIRouteHandler(_config: APIRouteConfig) {
     req: NextApiRequest,
     res: NextApiResponse
   ) {
-    const keystaticRes = await handler({
-      cookies: Object.fromEntries(
-        Object.entries(req.cookies).filter(
-          (x): x is [string, string] => typeof x[1] === 'string'
-        )
-      ),
-      headers: Object.fromEntries(
-        Object.entries(req.headers).filter(
-          (x): x is [string, string] => typeof x[1] === 'string'
-        )
-      ),
-      jsonBody: async () => req.body,
+    const { body, headers, status } = await handler({
+      headers: {
+        get(name: string) {
+          const val = req.headers[name];
+          if (Array.isArray(val)) {
+            return val[0];
+          }
+          return val ?? null;
+        },
+      },
+      json: async () => req.body,
       method: req.method!,
-      params: Array.isArray(req.query.params) ? req.query.params : [],
-      query: Object.fromEntries(
-        Object.entries(req.query).filter(
-          (x): x is [string, string] => typeof x[1] === 'string'
-        )
-      ),
+      url: req.url!,
     });
-    if (keystaticRes.headers) {
-      for (const [key, value] of Object.entries(keystaticRes.headers)) {
-        res.setHeader(key, value);
+
+    if (headers) {
+      if (Array.isArray(headers)) {
+        for (const [key, value] of headers) {
+          res.setHeader(key, value);
+        }
+      } else if (typeof headers.entries === 'function') {
+        for (const [key, value] of headers.entries()) {
+          res.setHeader(key, value);
+        }
+      } else {
+        for (const [key, value] of Object.entries(headers)) {
+          res.setHeader(key, value);
+        }
       }
     }
-    if (keystaticRes.kind === 'redirect') {
-      res.redirect(keystaticRes.to);
-      return;
-    }
-    res.status(keystaticRes.status).send(keystaticRes.body);
+    res.status(status ?? 200).send(body);
   };
 }

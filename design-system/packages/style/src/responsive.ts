@@ -1,6 +1,5 @@
 import { typedKeys } from 'emery';
 import facepaint from 'facepaint';
-import { isObject, omit } from 'lodash';
 
 import {
   Breakpoint,
@@ -38,7 +37,8 @@ export const breakpointQueries = {
 
 // internal stuff, mostly for `useStyleProps` hook
 const breakpointNames = typedKeys(breakpoints);
-const mediaQueries = Object.values(omit(breakpoints, 'mobile')).map(above);
+const { mobile: _mobile, ...breakpointsWithoutMobile } = breakpoints;
+const mediaQueries = Object.values(breakpointsWithoutMobile).map(above);
 export const mapToMediaQueries = facepaint(mediaQueries);
 
 // CSS Utils
@@ -81,9 +81,9 @@ export function getResponsiveProp<T>(
   prop: Responsive<T>,
   matchedBreakpoints: Breakpoint[]
 ): T {
-  if (isObject(prop)) {
+  if (typeof prop === 'object' && prop !== null) {
     for (let i = 0; i < matchedBreakpoints.length; i++) {
-      let value = prop[matchedBreakpoints[i]];
+      let value = (prop as any)[matchedBreakpoints[i]];
       if (value != null) {
         return value;
       }
