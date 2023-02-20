@@ -190,7 +190,19 @@ function toMarkdoc(
   componentBlocks: Record<string, ComponentBlock>
 ): Node {
   if (node.type === 'paragraph') {
-    return new Ast.Node('paragraph', {}, [toInline(node.children)]);
+    const markdocNode = new Ast.Node(
+      'paragraph',
+      node.textAlign ? { textAlign: node.textAlign } : {},
+      [toInline(node.children)]
+    );
+    if (node.textAlign) {
+      markdocNode.annotations.push({
+        name: 'textAlign',
+        value: node.textAlign,
+        type: 'attribute',
+      });
+    }
+    return markdocNode;
   }
   if (node.type === 'code') {
     let content = (node.children[0] as { text: string }).text + '\n';
@@ -207,9 +219,22 @@ function toMarkdoc(
     return new Ast.Node('hr');
   }
   if (node.type === 'heading') {
-    return new Ast.Node('heading', { level: node.level }, [
-      toInline(node.children),
-    ]);
+    const markdocNode = new Ast.Node(
+      'heading',
+      {
+        level: node.level,
+        ...(node.textAlign ? { textAlign: node.textAlign } : {}),
+      },
+      [toInline(node.children)]
+    );
+    if (node.textAlign) {
+      markdocNode.annotations.push({
+        name: 'textAlign',
+        value: node.textAlign,
+        type: 'attribute',
+      });
+    }
+    return markdocNode;
   }
   if (node.type === 'ordered-list') {
     return new Ast.Node(
