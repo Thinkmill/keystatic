@@ -61,6 +61,7 @@ const localeCollections = Object.fromEntries(
           label: 'Type',
           options: [
             { value: 'global', label: 'Global' },
+            { value: 'git-related', label: 'Git related' },
             { value: 'dashboard', label: 'Dashboard' },
             { value: 'collection-list', label: 'Collection list' },
             { value: 'collection-item', label: 'Collection item' },
