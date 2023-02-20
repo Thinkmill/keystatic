@@ -1,18 +1,4 @@
-:root {
-  --localization-app-background: #fff;
-  --localization-app-foreground: #0d1117;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --localization-app-background: #202124;
-    --localization-app-foreground: #e8eaed;
-  }
-}
-
 :where(.localization-app body) {
-  color: var(--localization-app-foreground);
-  background: var(--localization-app-background);
   line-height: 1.6;
 }
 

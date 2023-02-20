@@ -2,9 +2,9 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-inline: 2rem;
-  min-height: 100vh;
+  margin-inline: auto;
   max-width: 640px;
   max-width: 80ch;
-  margin-inline: auto;
+  min-height: 100vh;
+  padding-inline: 2rem;
 }
