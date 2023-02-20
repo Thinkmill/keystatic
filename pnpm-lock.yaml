@@ -78,6 +78,8 @@ importers:
 
   apps/localization:
     specifiers:
+      '@keystatic/core': ^0.0.36
+      '@keystatic/next': ^0.0.0
       '@next/font': 13.1.6
       '@preconstruct/next': ^4.0.0
       '@types/node': 16.11.13
@@ -85,12 +87,13 @@ importers:
       '@types/react-dom': 18.0.11
       eslint: ^8.18.0
       eslint-config-next: ^12.1.6
-      keystatic: ^0.0.36
       next: ^13.1.6
       react: ^18.2.0
       react-dom: ^18.2.0
       typescript: ^4.7.4
     dependencies:
+      '@keystatic/core': link:../../packages/keystatic
+      '@keystatic/next': link:../../packages/next
       '@next/font': 13.1.6
       '@preconstruct/next': 4.0.0
       '@types/node': 16.11.13
@@ -98,7 +101,6 @@ importers:
       '@types/react-dom': 18.0.11
       eslint: 8.34.0
       eslint-config-next: 12.3.4_7kw3g6rralp5ps6mg3uyzz6azm
-      keystatic: link:../../packages/keystatic
       next: 13.1.6_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -107,6 +109,8 @@ importers:
   apps/next-pages-dir:
     specifiers:
       '@babel/runtime': ^7.18.3
+      '@keystatic/core': ^0.0.36
+      '@keystatic/next': ^0.0.0
       '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
       '@ts-gql/next': ^17.0.0
@@ -119,7 +123,6 @@ importers:
       '@voussoir/tooltip': ^0.1.0
       '@voussoir/typography': ^0.1.0
       graphql: ^16.6.0
-      keystatic: ^0.0.36
       next: ^13.1.6
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -127,6 +130,8 @@ importers:
       typescript: ^4.7.4
     dependencies:
       '@babel/runtime': 7.20.13
+      '@keystatic/core': link:../../packages/keystatic
+      '@keystatic/next': link:../../packages/next
       '@preconstruct/next': 4.0.0
       '@types/react': 18.0.28
       '@voussoir/action-group': link:../../design-system/packages/action-group
@@ -137,7 +142,6 @@ importers:
       '@voussoir/tooltip': link:../../design-system/packages/tooltip
       '@voussoir/typography': link:../../design-system/packages/typography
       graphql: 16.6.0
-      keystatic: link:../../packages/keystatic
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
@@ -1662,6 +1666,8 @@ importers:
   keystatic:
     specifiers:
       '@babel/runtime': ^7.18.3
+      '@keystatic/core': ^0.0.36
+      '@keystatic/next': ^0.0.0
       '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
       '@ts-gql/next': ^17.0.0
@@ -1674,7 +1680,6 @@ importers:
       '@voussoir/tooltip': ^0.1.0
       '@voussoir/typography': ^0.1.0
       graphql: ^16.6.0
-      keystatic: ^0.0.36
       next: ^13.1.6
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -1682,6 +1687,8 @@ importers:
       typescript: ^4.7.4
     dependencies:
       '@babel/runtime': 7.20.13
+      '@keystatic/core': link:../packages/keystatic
+      '@keystatic/next': link:../packages/next
       '@preconstruct/next': 4.0.0
       '@types/react': 18.0.28
       '@voussoir/action-group': link:../design-system/packages/action-group
@@ -1692,7 +1699,6 @@ importers:
       '@voussoir/tooltip': link:../design-system/packages/tooltip
       '@voussoir/typography': link:../design-system/packages/typography
       graphql: 16.6.0
-      keystatic: link:../packages/keystatic
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
@@ -1873,8 +1879,6 @@ importers:
       mime: 3.0.0
       pretty-format: 29.4.3
       prismjs: 1.29.0
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
       scroll-into-view-if-needed: 3.0.6
       slate: 0.81.3
       slate-history: 0.66.0_slate@0.81.3
@@ -1894,8 +1898,27 @@ importers:
       eslint: 8.34.0
       jest-diff: 29.4.3
       next: 13.1.6_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
       tsx: 3.12.3
       typescript: 4.9.5
+
+  packages/next:
+    specifiers:
+      '@babel/runtime': ^7.18.3
+      '@keystatic/core': ^0.0.36
+      '@types/react': ^18.0.25
+      next: ^13.1.6
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      '@babel/runtime': 7.20.13
+      '@types/react': 18.0.28
+    devDependencies:
+      '@keystatic/core': link:../keystatic
+      next: 13.1.6_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
 
 packages:
 

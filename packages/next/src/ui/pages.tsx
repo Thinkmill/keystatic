@@ -1,9 +1,8 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useMemo } from 'react';
-import { Config } from '../config';
-import { Keystatic } from './ui';
-import { Router } from './router';
+import { Config } from '@keystatic/core';
+import { Keystatic, Router } from '@keystatic/core/ui';
 
 export function makePage(config: Config<any, any>) {
   return function Page() {

@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystatic-next-ui-pages.cjs.js",
+  "module": "dist/keystatic-next-ui-pages.esm.js"
+}
