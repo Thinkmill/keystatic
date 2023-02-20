@@ -78,8 +78,8 @@ importers:
 
   apps/localization:
     specifiers:
-      '@keystatic/core': ^0.0.36
-      '@keystatic/next': ^0.0.0
+      '@keystatic/core': ^0.0.37
+      '@keystatic/next': ^0.0.1
       '@next/font': 13.1.6
       '@preconstruct/next': ^4.0.0
       '@types/node': 16.11.13
@@ -109,8 +109,8 @@ importers:
   apps/next-pages-dir:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.36
-      '@keystatic/next': ^0.0.0
+      '@keystatic/core': ^0.0.37
+      '@keystatic/next': ^0.0.1
       '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
       '@ts-gql/next': ^17.0.0
@@ -1662,8 +1662,8 @@ importers:
   keystatic:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.36
-      '@keystatic/next': ^0.0.0
+      '@keystatic/core': ^0.0.37
+      '@keystatic/next': ^0.0.1
       '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
       '@ts-gql/next': ^17.0.0
@@ -1902,7 +1902,7 @@ importers:
   packages/next:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.36
+      '@keystatic/core': ^0.0.37
       '@types/react': ^18.0.25
       next: ^13.1.6
       react: ^18.2.0

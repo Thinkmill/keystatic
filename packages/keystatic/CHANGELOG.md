@@ -1,5 +1,16 @@
 # keystatic
 
+## 0.0.37
+
+### Patch Changes
+
+- 052010c: Fix text alignment not serialising/deserialising to Markdoc
+- 6600100: replace "edit" with localized string
+- 783aa15: - Use localized string for "search".
+  - Use localized string for "add".
+  - Use localized string for "create".
+- 1272c28: Initial release
+
 ## 0.0.36
 
 ### Patch Changes
