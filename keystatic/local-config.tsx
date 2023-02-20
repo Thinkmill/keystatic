@@ -61,6 +61,9 @@ export default config({
         heroImage: fields.image({ label: 'Hero Image' }),
         content: fields.document({
           label: 'Content',
+          formatting: true,
+          dividers: true,
+          links: true,
           componentBlocks: {
             blockChild: component({
               label: 'Block Child',
@@ -228,7 +231,12 @@ export default config({
         authors: fields.array(
           fields.object({
             name: fields.text({ label: 'Name' }),
-            bio: fields.document({ label: 'Bio' }),
+            bio: fields.document({
+              label: 'Bio',
+              formatting: true,
+              dividers: true,
+              links: true,
+            }),
           }),
           { label: 'Authors', itemLabel: props => props.fields.name.value }
         ),
@@ -265,6 +273,9 @@ export default config({
         slug: fields.text({ label: 'Slug' }),
         content: fields.document({
           label: 'Content',
+          formatting: true,
+          dividers: true,
+          links: true,
         }),
       },
     }),
