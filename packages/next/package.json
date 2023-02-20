@@ -1,0 +1,56 @@
+{
+  "name": "@keystatic/next",
+  "version": "0.0.0",
+  "license": "MIT",
+  "exports": {
+    "./api": {
+      "module": "./api/dist/keystatic-next-api.esm.js",
+      "default": "./api/dist/keystatic-next-api.cjs.js"
+    },
+    "./ui/app": {
+      "module": "./ui/app/dist/keystatic-next-ui-app.esm.js",
+      "default": "./ui/app/dist/keystatic-next-ui-app.cjs.js"
+    },
+    "./ui/pages": {
+      "module": "./ui/pages/dist/keystatic-next-ui-pages.esm.js",
+      "default": "./ui/pages/dist/keystatic-next-ui-pages.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "dist/keystatic.cjs.js",
+  "module": "dist/keystatic.esm.js",
+  "files": [
+    "dist",
+    "api",
+    "ui"
+  ],
+  "scripts": {
+    "setup": "ts-gql build && tsx scripts/l10n.ts",
+    "build": "pnpm run setup && next build",
+    "dev": "next dev",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.18.3",
+    "@types/react": "^18.0.25"
+  },
+  "devDependencies": {
+    "@keystatic/core": "^0.0.36",
+    "next": "^13.1.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "peerDependencies": {
+    "@keystatic/core": "*",
+    "next": "13",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "ui/pages.tsx",
+      "ui/app.tsx",
+      "api.tsx"
+    ]
+  }
+}

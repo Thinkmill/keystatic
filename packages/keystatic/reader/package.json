@@ -1,4 +1,4 @@
 {
-  "main": "dist/keystatic-reader.cjs.js",
-  "module": "dist/keystatic-reader.esm.js"
+  "main": "dist/keystatic-core-reader.cjs.js",
+  "module": "dist/keystatic-core-reader.esm.js"
 }

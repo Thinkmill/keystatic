@@ -1,8 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { APIRouteConfig, createGenericApiRouteHandler } from './api/generic';
+import {
+  APIRouteConfig,
+  makeGenericAPIRouteHandler,
+} from '@keystatic/core/api/generic';
 
-export default function createKeystaticAPIRoute(_config: APIRouteConfig) {
-  const handler = createGenericApiRouteHandler(_config);
+export function makeAPIRouteHandler(_config: APIRouteConfig) {
+  const handler = makeGenericAPIRouteHandler(_config);
   return async function keystaticAPIRoute(
     req: NextApiRequest,
     res: NextApiResponse

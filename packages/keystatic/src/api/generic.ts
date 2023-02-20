@@ -35,7 +35,7 @@ type InnerAPIRouteConfig = {
   clientSecret: string;
   url: string;
   secret: string;
-  config?: Config;
+  config: Config;
 };
 
 type KeystaticRequest = {
@@ -62,7 +62,7 @@ type KeystaticResponse =
 
 const keystaticRouteRegex =
   /^branch\/[^]+(\/collection\/[^/]+(|\/(create|item\/[^/]+))|\/singleton\/[^/]+)?$/;
-export function createGenericApiRouteHandler(_config: APIRouteConfig) {
+export function makeGenericAPIRouteHandler(_config: APIRouteConfig) {
   const _config2: APIRouteConfig = {
     clientId: _config.clientId ?? process.env.KEYSTATIC_GITHUB_CLIENT_ID,
     clientSecret:

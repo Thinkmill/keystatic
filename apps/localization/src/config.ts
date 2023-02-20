@@ -1,4 +1,4 @@
-import { collection, config, fields } from 'keystatic';
+import { collection, config, fields } from '@keystatic/core';
 
 const locales = {
   'ar-AE': 'Arabic (United Arab Emirates) 🇦🇪',

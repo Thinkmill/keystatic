@@ -6,14 +6,15 @@ Create a Next.js app with the following pages
 
 ```ts
 // pages/api/keystatic/[[...params]].tsx
-import createKeystaticAPIRoute from 'keystatic/api';
+import { makeAPIRouteHandler } from '@keystatic/next/api';
 
-export default createKeystaticAPIRoute({});
+export default makeAPIRouteHandler({});
 ```
 
 ```ts
 // pages/keystatic/[[...params]].tsx
-import { collection, component, config, fields, makePage } from 'keystatic';
+import { collection, component, config, fields } from '@keystatic/core';
+import { makePage } from '@keystatic/next/ui/pages';
 
 export default makePage(
   config({
