@@ -1,8 +1,8 @@
 import { createContext, ReactNode, useContext } from 'react';
 
 export type Router = {
-  push: (path: string) => Promise<void>;
-  replace: (path: string) => Promise<void>;
+  push: (path: string) => void;
+  replace: (path: string) => void;
   href: string;
   params: string[];
 };

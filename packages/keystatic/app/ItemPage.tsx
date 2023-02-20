@@ -241,7 +241,7 @@ function ItemPage(props: ItemPageProps) {
               <CreateBranchDuringUpdateDialog
                 branchOid={baseCommit}
                 onCreate={async newBranch => {
-                  await router.push(
+                  router.push(
                     `/keystatic/branch/${encodeURIComponent(
                       newBranch
                     )}/collection/${encodeURIComponent(
@@ -249,7 +249,10 @@ function ItemPage(props: ItemPageProps) {
                     )}/item/${encodeURIComponent(itemSlug)}`
                   );
                   const slug = collectionConfig.getItemSlug(state);
-                  const hasUpdated = await update();
+                  const hasUpdated = await update({
+                    branch: newBranch,
+                    sha: baseCommit,
+                  });
                   if (hasUpdated && slug !== itemSlug) {
                     router.replace(
                       `${props.basePath}/collection/${encodeURIComponent(

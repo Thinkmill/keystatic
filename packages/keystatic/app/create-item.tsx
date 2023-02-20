@@ -161,12 +161,12 @@ export function CreateItem(props: {
           <CreateBranchDuringUpdateDialog
             branchOid={baseCommit}
             onCreate={async newBranch => {
-              await router.push(
+              router.push(
                 `/keystatic/branch/${encodeURIComponent(
                   newBranch
                 )}/collection/${encodeURIComponent(props.collection)}/create`
               );
-              if (await createItem()) {
+              if (await createItem({ branch: newBranch, sha: baseCommit })) {
                 const slug = collectionConfig.getItemSlug(state);
                 router.push(
                   `/keystatic/branch/${encodeURIComponent(

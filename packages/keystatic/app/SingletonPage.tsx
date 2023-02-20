@@ -178,12 +178,12 @@ function SingletonPage({
                 <CreateBranchDuringUpdateDialog
                   branchOid={baseCommit}
                   onCreate={async newBranch => {
-                    await router.push(
+                    router.push(
                       `/keystatic/branch/${encodeURIComponent(
                         newBranch
                       )}/singleton/${encodeURIComponent(singleton)}`
                     );
-                    update();
+                    update({ branch: newBranch, sha: baseCommit });
                   }}
                   reason={updateResult.reason}
                   onDismiss={resetUpdateItem}

@@ -73,7 +73,7 @@ export function useUpsertItem(args: {
   const [, mutate] = useMutation(createCommitMutation);
   return [
     state,
-    async (): Promise<boolean> => {
+    async (override?: { sha: string; branch: string }): Promise<boolean> => {
       setState({ kind: 'loading' });
       let { value: stateWithExtraFilesRemoved, extraFiles } = await toFiles(
         args.state,
@@ -145,7 +145,7 @@ export function useUpsertItem(args: {
       await hydrateTreeCacheWithEntries(updatedTree.entries);
       if (args.storage.kind === 'github') {
         const branch = {
-          branchName: branchInfo.currentBranch,
+          branchName: override?.branch ?? branchInfo.currentBranch,
           repositoryNameWithOwner: `${args.storage.repo.owner}/${args.storage.repo.name}`,
         };
         const runMutation = (expectedHeadOid: string) =>
@@ -163,7 +163,7 @@ export function useUpsertItem(args: {
               },
             },
           });
-        let result = await runMutation(baseCommit);
+        let result = await runMutation(override?.sha ?? baseCommit);
         const gqlError = result.error?.graphQLErrors[0]?.originalError;
         if (gqlError && 'type' in gqlError) {
           if (gqlError.type === 'BRANCH_PROTECTION_RULE_VIOLATION') {
