@@ -1,4 +1,4 @@
 {
-  "main": "dist/keystatic-renderer.cjs.js",
-  "module": "dist/keystatic-renderer.esm.js"
+  "main": "dist/keystatic-core-renderer.cjs.js",
+  "module": "dist/keystatic-core-renderer.esm.js"
 }

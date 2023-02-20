@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@keystatic/core": "^0.0.36",
+    "@keystatic/next": "^0.0.0",
     "@next/font": "13.1.6",
     "@preconstruct/next": "^4.0.0",
     "@types/node": "16.11.13",
@@ -16,7 +18,6 @@
     "@types/react-dom": "18.0.11",
     "eslint": "^8.18.0",
     "eslint-config-next": "^12.1.6",
-    "keystatic": "^0.0.36",
     "next": "^13.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -1,9 +1,8 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { Config } from '../config';
-import { Keystatic } from './ui';
-import { Router } from './router';
+import { Config } from '@keystatic/core';
+import { Keystatic, Router } from '@keystatic/core/ui';
 
 let _isClient = false;
 function useIsClient() {

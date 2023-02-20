@@ -1,4 +1,4 @@
-import { makePage } from 'keystatic';
+import { makePage } from '@keystatic/next/ui/pages';
 
 import config from '../../config';
 

@@ -19,7 +19,7 @@ import {
   fields,
   component,
   NotEditable,
-} from 'keystatic';
+} from '@keystatic/core';
 
 function useObjectURL(data: Uint8Array | null) {
   const [url, setUrl] = useState<string | null>(null);

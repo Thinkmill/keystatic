@@ -1,38 +1,38 @@
 {
-  "name": "keystatic",
+  "name": "@keystatic/core",
   "version": "0.0.36",
   "license": "MIT",
   "exports": {
-    "./api": {
-      "module": "./api/dist/keystatic-api.esm.js",
-      "default": "./api/dist/keystatic-api.cjs.js"
+    "./ui": {
+      "module": "./ui/dist/keystatic-core-ui.esm.js",
+      "default": "./ui/dist/keystatic-core-ui.cjs.js"
     },
     ".": {
-      "module": "./dist/keystatic.esm.js",
-      "default": "./dist/keystatic.cjs.js"
+      "module": "./dist/keystatic-core.esm.js",
+      "default": "./dist/keystatic-core.cjs.js"
     },
     "./reader": {
-      "module": "./reader/dist/keystatic-reader.esm.js",
-      "default": "./reader/dist/keystatic-reader.cjs.js"
-    },
-    "./next-app": {
-      "module": "./next-app/dist/keystatic-next-app.esm.js",
-      "default": "./next-app/dist/keystatic-next-app.cjs.js"
+      "module": "./reader/dist/keystatic-core-reader.esm.js",
+      "default": "./reader/dist/keystatic-core-reader.cjs.js"
     },
     "./renderer": {
-      "module": "./renderer/dist/keystatic-renderer.esm.js",
-      "default": "./renderer/dist/keystatic-renderer.cjs.js"
+      "module": "./renderer/dist/keystatic-core-renderer.esm.js",
+      "default": "./renderer/dist/keystatic-core-renderer.cjs.js"
+    },
+    "./api/generic": {
+      "module": "./api/generic/dist/keystatic-core-api-generic.esm.js",
+      "default": "./api/generic/dist/keystatic-core-api-generic.cjs.js"
     },
     "./package.json": "./package.json"
   },
-  "main": "dist/keystatic.cjs.js",
-  "module": "dist/keystatic.esm.js",
+  "main": "dist/keystatic-core.cjs.js",
+  "module": "dist/keystatic-core.esm.js",
   "files": [
     "dist",
     "api",
     "reader",
     "renderer",
-    "next-app"
+    "ui"
   ],
   "scripts": {
     "setup": "ts-gql build && tsx scripts/l10n.ts",
@@ -114,8 +114,6 @@
     "mime": "^3.0.0",
     "pretty-format": "^29.0.1",
     "prismjs": "^1.29.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "scroll-into-view-if-needed": "^3.0.3",
     "slate": "^0.81.1",
     "slate-history": "^0.66.0",
@@ -136,19 +134,23 @@
     "eslint": "^8.18.0",
     "jest-diff": "^29.0.1",
     "next": "^13.1.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "tsx": "^3.8.0",
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
-    "next": "13"
+    "next": "13",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "preconstruct": {
     "entrypoints": [
       "index.ts",
-      "api.ts",
+      "api/generic.ts",
       "reader.ts",
       "renderer.ts",
-      "next-app.ts"
+      "ui.tsx"
     ]
   },
   "ts-gql": {

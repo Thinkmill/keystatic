@@ -1,5 +1,5 @@
 import localConfig from '../../../local-config';
-import createKeystaticAPIRoute from 'keystatic/api';
+import { makeAPIRouteHandler } from '@keystatic/next/api';
 
 function requiredEnv(name: string, val: string | undefined): string {
   if (!val) {
@@ -8,7 +8,7 @@ function requiredEnv(name: string, val: string | undefined): string {
   return val;
 }
 
-export default createKeystaticAPIRoute({
+export default makeAPIRouteHandler({
   secret: requiredEnv('NEXTAUTH_SECRET', process.env.NEXTAUTH_SECRET),
   clientId: requiredEnv('GITHUB_CLIENT_ID', process.env.GITHUB_CLIENT_ID),
   clientSecret: requiredEnv(
