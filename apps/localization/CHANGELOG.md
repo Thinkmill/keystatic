@@ -1,5 +1,17 @@
 # localization
 
+## 0.1.5
+
+### Patch Changes
+
+- 6d65965: replace next.js css
+- Updated dependencies [052010c]
+- Updated dependencies [6600100]
+- Updated dependencies [783aa15]
+- Updated dependencies [1272c28]
+  - @keystatic/core@0.0.37
+  - @keystatic/next@0.0.1
+
 ## 0.1.4
 
 ### Patch Changes
