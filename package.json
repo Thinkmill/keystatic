@@ -12,6 +12,7 @@
     "check:packages": "preconstruct validate",
     "check:types": "tsc",
     "clean": "git clean -fXd",
+    "dev:localization": "pnpm --filter=localization dev",
     "dev:docs": "pnpm --filter=docs dev",
     "dev:playroom": "pnpm --filter=docs dev:playroom",
     "dev:storybook": "pnpm --filter=docs dev:storybook",

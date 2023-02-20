@@ -1,29 +1,33 @@
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useMemo, useState } from 'react';
+
+import { Button } from '@voussoir/button';
+import { DialogContainer } from '@voussoir/dialog';
+import { Icon } from '@voussoir/icon';
+import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
 import { Flex } from '@voussoir/layout';
+import { TextLink } from '@voussoir/link';
+import { Notice } from '@voussoir/notice';
+import { ProgressCircle } from '@voussoir/progress';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../config';
-import { useRouter } from './router';
-import { Button } from '@voussoir/button';
-import { FormValueContentFromPreviewProps } from '../DocumentEditor/component-blocks/form-from-preview';
-import { createGetPreviewProps } from '../DocumentEditor/component-blocks/preview-props';
-import { useMemo, useState } from 'react';
-import { getInitialPropsValue } from '../DocumentEditor/component-blocks/initial-values';
 import { fields } from '../DocumentEditor/component-blocks/api';
-import { useUpsertItem } from '../utils';
+import { FormValueContentFromPreviewProps } from '../DocumentEditor/component-blocks/form-from-preview';
+import { getInitialPropsValue } from '../DocumentEditor/component-blocks/initial-values';
+import { createGetPreviewProps } from '../DocumentEditor/component-blocks/preview-props';
 import { clientSideValidateProp } from '../DocumentEditor/component-blocks/utils';
+import { useEventCallback } from '../DocumentEditor/utils';
+import { useUpsertItem } from '../utils';
+
+import { CreateBranchDuringUpdateDialog } from './ItemPage';
+import l10nMessages from './l10n/index.json';
+import { useRouter } from './router';
 import { AppShellBody, AppShellRoot } from './shell';
 import { AppShellHeader } from './shell/header';
 import { useBaseCommit, useTree } from './shell/data';
-import { Notice } from '@voussoir/notice';
-import { getCollectionFormat, getCollectionItemPath } from './utils';
-import { TextLink } from '@voussoir/link';
-import { Icon } from '@voussoir/icon';
-import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
-import { ProgressCircle } from '@voussoir/progress';
-import { DialogContainer } from '@voussoir/dialog';
-import { CreateBranchDuringUpdateDialog } from './ItemPage';
-import { useEventCallback } from '../DocumentEditor/utils';
 import { TreeNode } from './trees';
+import { getCollectionFormat, getCollectionItemPath } from './utils';
 
 const emptyMap = new Map<string, TreeNode>();
 
@@ -32,6 +36,7 @@ export function CreateItem(props: {
   config: Config;
   basePath: string;
 }) {
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
   const collectionConfig = props.config.collections![props.collection]!;
   const [forceValidation, setForceValidation] = useState(false);
@@ -106,7 +111,7 @@ export function CreateItem(props: {
             weight="bold"
             marginEnd="regular"
           >
-            New entry
+            {stringFormatter.format('add')}
           </Text>
           {isLoading && (
             <ProgressCircle
@@ -122,7 +127,7 @@ export function CreateItem(props: {
             form={formID}
             marginStart="auto"
           >
-            Create
+            {stringFormatter.format('create')}
           </Button>
         </AppShellHeader>
         <AppShellBody>
