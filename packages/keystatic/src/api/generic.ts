@@ -39,29 +39,29 @@ type InnerAPIRouteConfig = {
 };
 
 type KeystaticRequest = {
+  headers: { get(name: string): string | null };
   method: string;
-  jsonBody: () => Promise<unknown>;
-  headers: Record<string, string>;
-  cookies: Record<string, string>;
-  query: Record<string, string>;
-  params: string[];
+  url: string;
+  json: () => Promise<any>;
 };
 
-type KeystaticResponse =
-  | {
-      kind: 'redirect';
-      headers?: Record<string, string[] | string>;
-      to: string;
-    }
-  | {
-      kind: 'response';
-      status: number;
-      headers?: Record<string, string[] | string>;
-      body: Uint8Array | string;
-    };
+type KeystaticResponse = ResponseInit & {
+  body: Uint8Array | string | null;
+};
 
 const keystaticRouteRegex =
   /^branch\/[^]+(\/collection\/[^/]+(|\/(create|item\/[^/]+))|\/singleton\/[^/]+)?$/;
+
+function redirect(
+  to: string,
+  initialHeaders?: [string, string][]
+): KeystaticResponse {
+  return {
+    body: null,
+    status: 307,
+    headers: [...(initialHeaders ?? []), ['Location', to]],
+  };
+}
 export function makeGenericAPIRouteHandler(_config: APIRouteConfig) {
   const _config2: APIRouteConfig = {
     clientId: _config.clientId ?? process.env.KEYSTATIC_GITHUB_CLIENT_ID,
@@ -85,26 +85,29 @@ export function makeGenericAPIRouteHandler(_config: APIRouteConfig) {
     return async function keystaticAPIRoute(
       req: KeystaticRequest
     ): Promise<KeystaticResponse> {
-      const { params } = req;
+      const params = new URL(req.url, 'http://localhost').pathname
+        .replace(/^\/api\/keystatic\/?/, '')
+        .split('/')
+        .filter(Boolean);
       const joined = params.join('/');
       if (joined === 'github/created-app') {
         return createdGithubApp(req);
       }
       if (joined === 'github/login') {
-        return { kind: 'redirect', to: '/keystatic/setup' };
+        return redirect('/keystatic/setup');
       }
       if (_config2.config?.storage.kind === 'local') {
         if (req.method === 'GET' && joined === 'tree') {
           return tree(req, _config2.config);
         }
         if (req.method === 'GET' && params[0] === 'blob') {
-          return blob(req, _config2.config);
+          return blob(req, _config2.config, params);
         }
-        if (req.method === 'POST' && params[0] === 'update') {
+        if (req.method === 'POST' && joined === 'update') {
           return update(req, _config2.config);
         }
       }
-      return { kind: 'response', status: 404, body: 'Not Found' };
+      return { status: 404, body: 'Not Found' };
     };
   }
   const config: InnerAPIRouteConfig = {
@@ -118,23 +121,23 @@ export function makeGenericAPIRouteHandler(_config: APIRouteConfig) {
   return async function keystaticAPIRoute(
     req: KeystaticRequest
   ): Promise<KeystaticResponse> {
-    const { params } = req;
+    const params = new URL(req.url, 'http://localhost').pathname
+      .replace(/^\/api\/keystatic\/?/, '')
+      .split('/')
+      .filter(Boolean);
     const joined = params.join('/');
     if (joined === 'github/oauth/callback') {
       return githubOauthCallback(req, config);
     }
     if (joined === 'from-template-deploy') {
-      return {
-        kind: 'redirect',
-        to: `${config.url}/keystatic/from-template-deploy`,
-      };
+      return redirect(`${config.url}/keystatic/from-template-deploy`);
     }
     if (config.config?.storage.kind === 'local') {
       if (req.method === 'GET' && joined === 'tree') {
         return tree(req, config.config);
       }
       if (req.method === 'GET' && params[0] === 'blob') {
-        return blob(req, config.config);
+        return blob(req, config.config, params);
       }
       if (req.method === 'POST' && params[0] === 'update') {
         return update(req, config.config);
@@ -142,10 +145,12 @@ export function makeGenericAPIRouteHandler(_config: APIRouteConfig) {
     }
 
     if (joined === 'github/login') {
+      const rawFrom = new URL(req.url, 'http://localhost').searchParams.get(
+        'from'
+      );
       const from =
-        typeof req.query.from === 'string' &&
-        keystaticRouteRegex.test(req.query.from)
-          ? req.query.from
+        typeof rawFrom === 'string' && keystaticRouteRegex.test(rawFrom)
+          ? rawFrom
           : '/';
 
       const state = randomBytes(10).toString('hex');
@@ -155,29 +160,29 @@ export function makeGenericAPIRouteHandler(_config: APIRouteConfig) {
         'redirect_uri',
         `${config.url}/api/keystatic/github/oauth/callback`
       );
+      if (from === '/') {
+        return redirect(url.toString());
+      }
       url.searchParams.set('state', state);
-      return {
-        kind: 'redirect',
-        headers: {
-          'Set-Cookie': [
-            cookie.serialize('ks-' + state, from, {
-              sameSite: 'lax',
-              secure: process.env.NODE_ENV === 'production',
-              // 1 day
-              maxAge: 60 * 60 * 24,
-              expires: new Date(Date.now() + 60 * 60 * 24 * 1000),
-              path: '/',
-              httpOnly: true,
-            }),
-          ],
-        },
-        to: url.toString(),
-      };
+      return redirect(url.toString(), [
+        [
+          'Set-Cookie',
+          cookie.serialize('ks-' + state, from, {
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+            // 1 day
+            maxAge: 60 * 60 * 24,
+            expires: new Date(Date.now() + 60 * 60 * 24 * 1000),
+            path: '/',
+            httpOnly: true,
+          }),
+        ],
+      ]);
     }
     if (joined === 'github/refresh-token') {
       return githubRefreshToken(req, config);
     }
-    return { kind: 'response', status: 404, body: 'Not Found' };
+    return { status: 404, body: 'Not Found' };
   };
 }
 
@@ -194,10 +199,14 @@ async function githubOauthCallback(
   req: KeystaticRequest,
   config: InnerAPIRouteConfig
 ): Promise<KeystaticResponse> {
-  if (typeof req.query.code !== 'string') {
-    return { kind: 'response', status: 400, body: 'Bad Request' };
+  const searchParams = new URL(req.url, 'http://localhost').searchParams;
+  const code = searchParams.get('code');
+  const state = searchParams.get('state');
+  if (typeof code !== 'string') {
+    return { status: 400, body: 'Bad Request' };
   }
-  const fromCookie = req.cookies['ks-' + req.query.state];
+  const cookies = cookie.parse(req.headers.get('cookie') ?? '');
+  const fromCookie = state ? cookies['ks-' + state] : undefined;
   const from =
     typeof fromCookie === 'string' && keystaticRouteRegex.test(fromCookie)
       ? fromCookie
@@ -205,23 +214,23 @@ async function githubOauthCallback(
   const url = new URL('https://github.com/login/oauth/access_token');
   url.searchParams.set('client_id', config.clientId);
   url.searchParams.set('client_secret', config.clientSecret);
-  url.searchParams.set('code', req.query.code as string);
+  url.searchParams.set('code', code);
 
   const tokenRes = await fetch(url, {
     method: 'POST',
     headers: { Accept: 'application/json' },
   });
   if (!tokenRes.ok) {
-    return { kind: 'response', status: 401, body: 'Authorization failed' };
+    return { status: 401, body: 'Authorization failed' };
   }
   const _tokenData = await tokenRes.json();
   const tokenDataParseResult = tokenDataResultType.safeParse(_tokenData);
   if (!tokenDataParseResult.success) {
-    return { kind: 'response', status: 401, body: 'Authorization failed' };
+    return { status: 401, body: 'Authorization failed' };
   }
 
-  if (req.cookies['ks-template']) {
-    const [owner, repo] = req.cookies['ks-template'].split('/');
+  if (cookies['ks-template']) {
+    const [owner, repo] = cookies['ks-template'].split('/');
 
     const fetchGraphQL = async <
       TTypedDocumentNode extends TypedDocumentNode<BaseOperations>
@@ -292,12 +301,11 @@ async function githubOauthCallback(
         (errors && 'type' in errors[0] && errors[0].type === 'NOT_FOUND') ||
         data?.repository === null
       ) {
-        return { kind: 'response', status: 404, body: 'Not Found' };
+        return { status: 404, body: 'Not Found' };
       }
       if (errors?.length) {
         console.log(gqlRes);
         return {
-          kind: 'response',
           status: 500,
           body: 'An error occurred while fetching the repository',
         };
@@ -362,19 +370,16 @@ async function githubOauthCallback(
   }
 
   const headers = await getTokenCookies(tokenDataParseResult.data, config);
-  return {
-    kind: 'redirect',
-    headers,
-    to: `/keystatic${from ? `/${from}` : ''}`,
-  };
+  return redirect(`/keystatic${from ? `/${from}` : ''}`, headers);
 }
 
 async function getTokenCookies(
   tokenData: z.infer<typeof tokenDataResultType>,
   config: InnerAPIRouteConfig
 ) {
-  return {
-    'Set-Cookie': [
+  const headers: [string, string][] = [
+    [
+      'Set-Cookie',
       cookie.serialize('keystatic-gh-access-token', tokenData.access_token, {
         sameSite: 'lax',
         secure: process.env.NODE_ENV === 'production',
@@ -382,6 +387,9 @@ async function getTokenCookies(
         expires: new Date(Date.now() + tokenData.expires_in * 1000),
         path: '/',
       }),
+    ],
+    [
+      'Set-Cookie',
       cookie.serialize(
         'keystatic-gh-refresh-token',
         await Iron.seal(tokenData.refresh_token, config.secret, {
@@ -399,6 +407,9 @@ async function getTokenCookies(
           path: '/',
         }
       ),
+    ],
+    [
+      'Set-Cookie',
       cookie.serialize('ks-template', '', {
         sameSite: 'lax',
         secure: process.env.NODE_ENV === 'production',
@@ -407,14 +418,16 @@ async function getTokenCookies(
         path: '/',
       }),
     ],
-  };
+  ];
+  return headers;
 }
 
 async function getRefreshToken(
   req: KeystaticRequest,
   config: InnerAPIRouteConfig
 ) {
-  const refreshTokenCookie = req.cookies['keystatic-gh-refresh-token'];
+  const cookies = cookie.parse(req.headers.get('cookie') || '');
+  const refreshTokenCookie = cookies['keystatic-gh-refresh-token'];
   if (!refreshTokenCookie) return;
   let refreshToken;
   try {
@@ -436,7 +449,7 @@ async function githubRefreshToken(
 ): Promise<KeystaticResponse> {
   const refreshToken = await getRefreshToken(req, config);
   if (!refreshToken) {
-    return { kind: 'response', status: 401, body: 'Authorization failed' };
+    return { status: 401, body: 'Authorization failed' };
   }
   const url = new URL('https://github.com/login/oauth/access_token');
   url.searchParams.set('client_id', config.clientId);
@@ -449,20 +462,15 @@ async function githubRefreshToken(
   });
 
   if (!tokenRes.ok) {
-    return { kind: 'response', status: 401, body: 'Authorization failed' };
+    return { status: 401, body: 'Authorization failed' };
   }
   const _tokenData = await tokenRes.json();
   const tokenDataParseResult = tokenDataResultType.safeParse(_tokenData);
   if (!tokenDataParseResult.success) {
-    return { kind: 'response', status: 401, body: 'Authorization failed' };
+    return { status: 401, body: 'Authorization failed' };
   }
   const headers = await getTokenCookies(tokenDataParseResult.data, config);
-  return {
-    kind: 'response',
-    status: 200,
-    headers,
-    body: '',
-  };
+  return { status: 200, headers, body: '' };
 }
 
 const ghAppSchema = z.object({
@@ -475,20 +483,15 @@ async function createdGithubApp(
   req: KeystaticRequest
 ): Promise<KeystaticResponse> {
   if (process.env.NODE_ENV !== 'development') {
-    return {
-      kind: 'response',
-      status: 400,
-      body: 'App setup only allowed in development',
-    };
+    return { status: 400, body: 'App setup only allowed in development' };
   }
-  if (
-    typeof req.query.code !== 'string' ||
-    !/^[a-zA-Z0-9]+$/.test(req.query.code)
-  ) {
-    return { kind: 'response', status: 400, body: 'Bad Request' };
+  const searchParams = new URL(req.url, 'https://localhost').searchParams;
+  const code = searchParams.get('code');
+  if (typeof code !== 'string' || !/^[a-zA-Z0-9]+$/.test(code)) {
+    return { status: 400, body: 'Bad Request' };
   }
   const ghAppRes = await fetch(
-    `https://api.github.com/app-manifests/${req.query.code}/conversions`,
+    `https://api.github.com/app-manifests/${code}/conversions`,
     {
       method: 'POST',
       headers: { Accept: 'application/json' },
@@ -497,7 +500,6 @@ async function createdGithubApp(
   if (!ghAppRes.ok) {
     console.log(ghAppRes);
     return {
-      kind: 'response',
       status: 500,
       body: 'An error occurred while creating the GitHub App',
     };
@@ -509,7 +511,6 @@ async function createdGithubApp(
   if (!ghAppDataResult.success) {
     console.log(ghAppDataRaw);
     return {
-      kind: 'response',
       status: 500,
       body: 'An unexpected response was received from GitHub',
     };
@@ -530,10 +531,9 @@ NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=${ghAppDataResult.data.slug}
   const newEnv = prevEnv ? `${prevEnv}\n\n${toAddToEnv}` : toAddToEnv;
   await fs.writeFile('.env', newEnv);
   await wait(200);
-  return {
-    kind: 'redirect',
-    to: '/keystatic/created-github-app?slug=' + ghAppDataResult.data.slug,
-  };
+  return redirect(
+    '/keystatic/created-github-app?slug=' + ghAppDataResult.data.slug
+  );
 }
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -542,11 +542,10 @@ async function tree(
   req: KeystaticRequest,
   config: Config
 ): Promise<KeystaticResponse> {
-  if (req.headers['no-cors'] !== '1') {
-    return { kind: 'response', status: 400, body: 'Bad Request' };
+  if (req.headers.get('no-cors') !== '1') {
+    return { status: 400, body: 'Bad Request' };
   }
   return {
-    kind: 'response',
     status: 200,
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(await readToDirEntries(process.cwd(), config)),
@@ -574,21 +573,18 @@ function getIsPathValid(config: Config) {
 
 async function blob(
   req: KeystaticRequest,
-  config: Config
+  config: Config,
+  params: string[]
 ): Promise<KeystaticResponse> {
-  if (req.headers['no-cors'] !== '1') {
-    return {
-      kind: 'response',
-      status: 400,
-      body: 'Bad Request',
-    };
+  if (req.headers.get('no-cors') !== '1') {
+    return { status: 400, body: 'Bad Request' };
   }
-  const { params } = req;
+
   const expectedSha = params[1];
   const filepath = params.slice(2).join('/');
   const isFilepathValid = getIsPathValid(config);
   if (!isFilepathValid(filepath)) {
-    return { kind: 'response', status: 400, body: 'Bad Request' };
+    return { status: 400, body: 'Bad Request' };
   }
 
   let contents;
@@ -596,16 +592,16 @@ async function blob(
     contents = await fs.readFile(filepath);
   } catch (err) {
     if ((err as any).code === 'ENOENT') {
-      return { kind: 'response', status: 404, body: 'Not Found' };
+      return { status: 404, body: 'Not Found' };
     }
     throw err;
   }
   const sha = await blobSha(contents);
 
   if (sha !== expectedSha) {
-    return { kind: 'response', status: 404, body: 'Not Found' };
+    return { status: 404, body: 'Not Found' };
   }
-  return { kind: 'response', status: 200, body: contents };
+  return { status: 200, body: contents };
 }
 
 async function update(
@@ -613,10 +609,10 @@ async function update(
   config: Config
 ): Promise<KeystaticResponse> {
   if (
-    req.headers['no-cors'] !== '1' ||
-    req.headers['content-type'] !== 'application/json'
+    req.headers.get('no-cors') !== '1' ||
+    req.headers.get('content-type') !== 'application/json'
   ) {
-    return { kind: 'response', status: 400, body: 'Bad Request' };
+    return { status: 400, body: 'Bad Request' };
   }
   const isFilepathValid = getIsPathValid(config);
 
@@ -632,9 +628,9 @@ async function update(
         z.object({ path: z.string().refine(isFilepathValid) })
       ),
     })
-    .safeParse(await req.jsonBody());
+    .safeParse(await req.json());
   if (!updates.success) {
-    return { kind: 'response', status: 400, body: 'Bad data' };
+    return { status: 400, body: 'Bad data' };
   }
   for (const addition of updates.data.additions) {
     await fs.mkdir(path.dirname(addition.path), { recursive: true });
@@ -644,7 +640,6 @@ async function update(
     await fs.rm(deletion.path, { force: true });
   }
   return {
-    kind: 'response',
     status: 200,
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(await readToDirEntries(process.cwd(), config)),
