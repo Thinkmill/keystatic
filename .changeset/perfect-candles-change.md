@@ -2,4 +2,6 @@
 'keystatic': patch
 ---
 
-use localized string for collection "search"
+- Use localized string for "search".
+- Use localized string for "add".
+- Use localized string for "create".

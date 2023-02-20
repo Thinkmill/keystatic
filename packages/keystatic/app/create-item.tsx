@@ -127,7 +127,7 @@ export function CreateItem(props: {
             form={formID}
             marginStart="auto"
           >
-            Create
+            {stringFormatter.format('create')}
           </Button>
         </AppShellHeader>
         <AppShellBody>
