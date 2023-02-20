@@ -1,5 +1,14 @@
 # localization
 
+## 0.1.4
+
+### Patch Changes
+
+- dfc19e6: Implement the first localized strings.
+- Updated dependencies [4b9b56a]
+- Updated dependencies [dfc19e6]
+  - keystatic@0.0.36
+
 ## 0.1.3
 
 ### Patch Changes
