@@ -17,11 +17,11 @@ export function makePage(config: Config<any, any>) {
       return {
         href: router.asPath,
         params,
-        push: async path => {
-          await router.push(path);
+        push: path => {
+          router.push(path);
         },
-        replace: async path => {
-          await router.replace(path);
+        replace: path => {
+          router.replace(path);
         },
       };
     }, [router]);
