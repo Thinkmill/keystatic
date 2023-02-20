@@ -27,7 +27,14 @@ export function makeAPIRouteHandler(_config: APIRouteConfig) {
 
     if (headers) {
       if (Array.isArray(headers)) {
+        const headersInADifferentStructure = new Map<string, string[]>();
         for (const [key, value] of headers) {
+          if (!headersInADifferentStructure.has(key)) {
+            headersInADifferentStructure.set(key, []);
+          }
+          headersInADifferentStructure.get(key)!.push(value);
+        }
+        for (const [key, value] of headersInADifferentStructure) {
           res.setHeader(key, value);
         }
       } else if (typeof headers.entries === 'function') {

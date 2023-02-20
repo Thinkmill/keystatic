@@ -52,13 +52,14 @@ type KeystaticResponse = ResponseInit & {
 const keystaticRouteRegex =
   /^branch\/[^]+(\/collection\/[^/]+(|\/(create|item\/[^/]+))|\/singleton\/[^/]+)?$/;
 
-function redirect(to: string, headersInit?: HeadersInit): KeystaticResponse {
-  const headers = new Headers(headersInit);
-  headers.set('Location', to);
+function redirect(
+  to: string,
+  initialHeaders?: [string, string][]
+): KeystaticResponse {
   return {
     body: null,
     status: 307,
-    headers,
+    headers: [...(initialHeaders ?? []), ['Location', to]],
   };
 }
 export function makeGenericAPIRouteHandler(_config: APIRouteConfig) {
@@ -159,18 +160,24 @@ export function makeGenericAPIRouteHandler(_config: APIRouteConfig) {
         'redirect_uri',
         `${config.url}/api/keystatic/github/oauth/callback`
       );
+      if (from === '/') {
+        return redirect(url.toString());
+      }
       url.searchParams.set('state', state);
-      return redirect(url.toString(), {
-        'Set-Cookie': cookie.serialize('ks-' + state, from, {
-          sameSite: 'lax',
-          secure: process.env.NODE_ENV === 'production',
-          // 1 day
-          maxAge: 60 * 60 * 24,
-          expires: new Date(Date.now() + 60 * 60 * 24 * 1000),
-          path: '/',
-          httpOnly: true,
-        }),
-      });
+      return redirect(url.toString(), [
+        [
+          'Set-Cookie',
+          cookie.serialize('ks-' + state, from, {
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+            // 1 day
+            maxAge: 60 * 60 * 24,
+            expires: new Date(Date.now() + 60 * 60 * 24 * 1000),
+            path: '/',
+            httpOnly: true,
+          }),
+        ],
+      ]);
     }
     if (joined === 'github/refresh-token') {
       return githubRefreshToken(req, config);
@@ -370,47 +377,48 @@ async function getTokenCookies(
   tokenData: z.infer<typeof tokenDataResultType>,
   config: InnerAPIRouteConfig
 ) {
-  const headers = new Headers();
-  headers.append(
-    'Set-Cookie',
-    cookie.serialize('keystatic-gh-access-token', tokenData.access_token, {
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: tokenData.expires_in,
-      expires: new Date(Date.now() + tokenData.expires_in * 1000),
-      path: '/',
-    })
-  );
-  headers.append(
-    'Set-Cookie',
-    cookie.serialize(
-      'keystatic-gh-refresh-token',
-      await Iron.seal(tokenData.refresh_token, config.secret, {
-        ...Iron.defaults,
-        ttl: tokenData.refresh_token_expires_in * 1000,
-      }),
-      {
+  const headers: [string, string][] = [
+    [
+      'Set-Cookie',
+      cookie.serialize('keystatic-gh-access-token', tokenData.access_token, {
         sameSite: 'lax',
         secure: process.env.NODE_ENV === 'production',
-        httpOnly: true,
-        maxAge: tokenData.refresh_token_expires_in,
-        expires: new Date(
-          Date.now() + tokenData.refresh_token_expires_in * 100
-        ),
+        maxAge: tokenData.expires_in,
+        expires: new Date(Date.now() + tokenData.expires_in * 1000),
         path: '/',
-      }
-    )
-  );
-  headers.append(
-    'Set-Cookie',
-    cookie.serialize('ks-template', '', {
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 0,
-      expires: new Date(),
-      path: '/',
-    })
-  );
+      }),
+    ],
+    [
+      'Set-Cookie',
+      cookie.serialize(
+        'keystatic-gh-refresh-token',
+        await Iron.seal(tokenData.refresh_token, config.secret, {
+          ...Iron.defaults,
+          ttl: tokenData.refresh_token_expires_in * 1000,
+        }),
+        {
+          sameSite: 'lax',
+          secure: process.env.NODE_ENV === 'production',
+          httpOnly: true,
+          maxAge: tokenData.refresh_token_expires_in,
+          expires: new Date(
+            Date.now() + tokenData.refresh_token_expires_in * 100
+          ),
+          path: '/',
+        }
+      ),
+    ],
+    [
+      'Set-Cookie',
+      cookie.serialize('ks-template', '', {
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 0,
+        expires: new Date(),
+        path: '/',
+      }),
+    ],
+  ];
   return headers;
 }
 
