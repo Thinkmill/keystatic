@@ -416,6 +416,7 @@ const ItemPageShell = (
   >
 ) => {
   const collectionConfig = props.config.collections![props.collection]!;
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   return (
     <AppShellRoot>
@@ -440,7 +441,7 @@ const ItemPageShell = (
           weight="bold"
           marginEnd="regular"
         >
-          Edit
+          {stringFormatter.format('edit')}
         </Text>
         {props.headerActions}
       </AppShellHeader>
