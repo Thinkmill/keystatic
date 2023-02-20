@@ -1,5 +1,12 @@
 # keystatic
 
+## 0.0.36
+
+### Patch Changes
+
+- 4b9b56a: Fix creating new branch on save when using Next app dir
+- dfc19e6: Implement the first localized strings.
+
 ## 0.0.35
 
 ### Patch Changes
