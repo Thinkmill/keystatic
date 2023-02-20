@@ -45,6 +45,7 @@ type CollectionPageProps = {
 export function CollectionPage(props: CollectionPageProps) {
   const containerWidth = 'medium'; // TODO: use a "large" when we have more columns
   const collectionConfig = props.config.collections?.[props.collection];
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   if (!collectionConfig) {
     return (
@@ -73,7 +74,7 @@ export function CollectionPage(props: CollectionPageProps) {
             props.collection
           )}/create`}
         >
-          New entry
+          {stringFormatter.format('add')}
         </Button>
       </AppShellHeader>
 
