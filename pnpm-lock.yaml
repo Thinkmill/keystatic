@@ -85,7 +85,7 @@ importers:
       '@types/react-dom': 18.0.11
       eslint: ^8.18.0
       eslint-config-next: ^12.1.6
-      keystatic: ^0.0.35
+      keystatic: ^0.0.36
       next: ^13.1.6
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -119,7 +119,7 @@ importers:
       '@voussoir/tooltip': ^0.1.0
       '@voussoir/typography': ^0.1.0
       graphql: ^16.6.0
-      keystatic: ^0.0.35
+      keystatic: ^0.0.36
       next: ^13.1.6
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -1674,7 +1674,7 @@ importers:
       '@voussoir/tooltip': ^0.1.0
       '@voussoir/typography': ^0.1.0
       graphql: ^16.6.0
-      keystatic: ^0.0.35
+      keystatic: ^0.0.36
       next: ^13.1.6
       react: ^18.2.0
       react-dom: ^18.2.0
