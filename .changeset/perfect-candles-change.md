@@ -1,5 +1,5 @@
 ---
-'keystatic': patch
+'@keystatic/core': patch
 ---
 
 - Use localized string for "search".

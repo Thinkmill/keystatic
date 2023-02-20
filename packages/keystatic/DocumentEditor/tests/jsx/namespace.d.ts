@@ -33,6 +33,7 @@ declare namespace __jsx {
       heading: {
         level: 1 | 2 | 3 | 4 | 5 | 6;
         children: Children;
+        textAlign?: 'center' | 'end';
       };
       'component-block': {
         component: string;
