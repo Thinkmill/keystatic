@@ -1,4 +1,4 @@
-import { useRouter } from './router';
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useMemo, useState } from 'react';
 
 import { Badge } from '@voussoir/badge';
@@ -23,7 +23,11 @@ import { Heading } from '@voussoir/typography';
 
 import { Config } from '../config';
 import { sortByDescriptor } from './collection-sort';
+import l10nMessages from './l10n/index.json';
+import { useRouter } from './router';
 import { AppShellBody, AppShellRoot, EmptyState } from './shell';
+import { useTree, TreeData } from './shell/data';
+import { AppShellHeader } from './shell/header';
 import { getTreeNodeAtPath, TreeNode } from './trees';
 import {
   getCollectionFormat,
@@ -31,8 +35,6 @@ import {
   getDataFileExtension,
   getTreeNodeForItem,
 } from './utils';
-import { useTree, TreeData } from './shell/data';
-import { AppShellHeader } from './shell/header';
 
 type CollectionPageProps = {
   collection: string;
@@ -41,7 +43,7 @@ type CollectionPageProps = {
 };
 
 export function CollectionPage(props: CollectionPageProps) {
-  const containerWidth = 'large'; // TODO: use a "large" when we have more columns
+  const containerWidth = 'medium'; // TODO: use a "large" when we have more columns
   const collectionConfig = props.config.collections?.[props.collection];
 
   if (!collectionConfig) {
@@ -150,6 +152,7 @@ function CollectionTable(
     };
   }
 ) {
+  let stringFormatter = useLocalizedStringFormatter(l10nMessages);
   let router = useRouter();
   let [searchTerm, setSearchTerm] = useState('');
   let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
@@ -209,10 +212,10 @@ function CollectionTable(
       <Flex direction="column" gap="large">
         <Flex gap="large" alignItems="start" justifyContent="space-between">
           <SearchField
-            aria-label="Filter entries"
+            aria-label={stringFormatter.format('search')}
             onChange={setSearchTerm}
             onClear={() => setSearchTerm('')}
-            placeholder="Filter..."
+            placeholder={stringFormatter.format('search')}
             value={searchTerm}
           />
         </Flex>
