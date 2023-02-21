@@ -18,13 +18,14 @@ export function makePage(config: Config<any, any>) {
   return function Page() {
     const isClient = useIsClient();
     const router = useRouter();
-    let href = usePathname()!;
+    const pathname = usePathname()!;
+    let href = pathname;
     const searchParams = useSearchParams().toString();
     if (searchParams) {
       href += `?${searchParams}`;
     }
     const keystaticRouter = useMemo((): Router => {
-      const replaced = href.replace(/^\/keystatic\/?/, '');
+      const replaced = pathname.replace(/^\/keystatic\/?/, '');
       const params =
         replaced === '' ? [] : replaced.split('/').map(decodeURIComponent);
       return {
@@ -37,7 +38,7 @@ export function makePage(config: Config<any, any>) {
           router.replace(path, { forceOptimisticNavigation: true });
         },
       };
-    }, [href, router]);
+    }, [href, router, pathname]);
     if (!isClient) return null;
     return <Keystatic router={keystaticRouter} config={config} link={Link} />;
   };
