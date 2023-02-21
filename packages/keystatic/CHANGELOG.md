@@ -1,5 +1,13 @@
 # keystatic
 
+## 0.0.38
+
+### Patch Changes
+
+- 2fe951a: Fix markdoc serialisation/deserialisation for strikethrough
+- 2f324c4: The specific features of the document editor that are enabled are now
+  explicitly specified in the config.
+
 ## 0.0.37
 
 ### Patch Changes
