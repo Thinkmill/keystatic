@@ -1,7 +1,7 @@
 import { collection, config, fields } from '@keystatic/core';
 
 const locales = {
-  'ar-AE': 'Arabic (United Arab Emirates) 🇦🇪',
+  'ar-AE': 'Arabic (UAE) 🇦🇪',
   'bg-BG': 'Bulgarian (Bulgaria) 🇧🇬',
   'cs-CZ': 'Czech (Czech Republic) 🇨🇿',
   'da-DK': 'Danish (Denmark) 🇩🇰',
