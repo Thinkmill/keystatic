@@ -1,4 +1,4 @@
-# keystatic
+# @keystatic/core
 
 ## 0.0.38
 
