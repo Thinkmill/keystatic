@@ -1,0 +1,57 @@
+{
+  "name": "@keystatic/astro",
+  "version": "0.0.1",
+  "license": "MIT",
+  "exports": {
+    "./ui": {
+      "module": "./ui/dist/keystatic-astro-ui.esm.js",
+      "default": "./ui/dist/keystatic-astro-ui.cjs.js"
+    },
+    "./api": {
+      "module": "./api/dist/keystatic-astro-api.esm.js",
+      "default": "./api/dist/keystatic-astro-api.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "dist/keystatic.cjs.js",
+  "module": "dist/keystatic.esm.js",
+  "files": [
+    "dist",
+    "api",
+    "ui"
+  ],
+  "scripts": {
+    "setup": "ts-gql build && tsx scripts/l10n.ts",
+    "build": "pnpm run setup && next build",
+    "dev": "next dev",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.18.3",
+    "@types/react": "^18.0.25",
+    "cookie": "^0.5.0",
+    "react-router-dom": "^6.8.1",
+    "set-cookie-parser": "^2.5.1"
+  },
+  "devDependencies": {
+    "@keystatic/core": "^0.0.40",
+    "@types/cookie": "^0.5.1",
+    "@types/set-cookie-parser": "^2.4.2",
+    "astro": "^2.0.14",
+    "next": "^13.1.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "peerDependencies": {
+    "@keystatic/core": "*",
+    "astro": "2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "ui.tsx",
+      "api.tsx"
+    ]
+  }
+}

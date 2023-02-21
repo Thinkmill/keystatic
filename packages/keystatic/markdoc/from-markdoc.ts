@@ -43,6 +43,12 @@ function inlineNodeFromMarkdoc(node: Node): Descendant | Descendant[] {
       inlineChildrenFromMarkdoc(node.children)
     );
   }
+  if (node.type === 's') {
+    return addMarkToChildren('strikethrough', () =>
+      inlineChildrenFromMarkdoc(node.children)
+    );
+  }
+
   if (node.type === 'tag') {
     if (node.tag === 'u') {
       return addMarkToChildren('underline', () =>
@@ -51,11 +57,6 @@ function inlineNodeFromMarkdoc(node: Node): Descendant | Descendant[] {
     }
     if (node.tag === 'kbd') {
       return addMarkToChildren('keyboard', () =>
-        inlineChildrenFromMarkdoc(node.children)
-      );
-    }
-    if (node.tag === 's') {
-      return addMarkToChildren('strikethrough', () =>
         inlineChildrenFromMarkdoc(node.children)
       );
     }
@@ -159,6 +160,7 @@ function fromMarkdocNode(
       type: 'heading',
       level: node.attributes.level,
       children: inlineFromMarkdoc(node.children),
+      textAlign: node.attributes.textAlign,
     };
   }
   if (node.type === 'list') {
@@ -181,7 +183,11 @@ function fromMarkdocNode(
     if (children.length === 1 && children[0].type === 'component-inline-prop') {
       return children[0];
     }
-    return { type: 'paragraph', children };
+    return {
+      type: 'paragraph',
+      children,
+      textAlign: node.attributes.textAlign,
+    };
   }
   if (node.type === 'hr') {
     return { type: 'divider', children: [{ text: '' }] };

@@ -1,0 +1,38 @@
+{
+  "name": "@keystatic/test-astro",
+  "type": "module",
+  "version": "0.0.2",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/node": "^5.0.3",
+    "@astrojs/react": "^2.0.2",
+    "@braintree/sanitize-url": "^6.0.2",
+    "@hapi/iron": "^7.0.0",
+    "@keystatic/astro": "^0.0.1",
+    "@keystatic/core": "^0.0.40",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.11",
+    "astro": "^2.0.14",
+    "cookie": "^0.5.0",
+    "direction": "^2.0.1",
+    "is-hotkey": "^0.2.0",
+    "lodash": "^4.17.21",
+    "mdast-util-from-markdown": "^0.8.5",
+    "mdast-util-gfm-autolink-literal": "^0.1.3",
+    "mdast-util-gfm-strikethrough": "^0.2.3",
+    "micromark-extension-gfm-autolink-literal": "0.5.7",
+    "micromark-extension-gfm-strikethrough": "0.6.5",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-keyed-flatten-children": "^1.3.0",
+    "remove-accents": "^0.4.4",
+    "set-cookie-parser": "^2.5.1"
+  }
+}

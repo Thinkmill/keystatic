@@ -35,6 +35,9 @@ export default makePage(
           }),
           content: fields.document({
             label: 'Content',
+            formatting: true,
+            dividers: true,
+            links: true,
             componentBlocks: {
               something: component({
                 label: 'Some Component',

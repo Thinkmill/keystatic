@@ -9,8 +9,12 @@ import { GitHubConfig } from '../../config';
 export function InstallGitHubApp(props: { config: GitHubConfig }) {
   const router = useRouter();
   const appSlug =
-    process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG ??
-    new URL(router.href, 'https://example.com').searchParams.get('slug');
+    new URL(router.href, 'https://example.com').searchParams.get('slug') ??
+    (() => {
+      try {
+        return process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG;
+      } catch {}
+    })();
   return (
     <Flex direction="column" gap="regular">
       <Flex alignItems="end" gap="regular">

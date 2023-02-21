@@ -82,6 +82,50 @@ test('basic', () => {
   `);
 });
 
+test('textAlign', () => {
+  const markdoc = toMarkdoc(
+    <editor>
+      <paragraph textAlign="center">
+        <text>Something</text>
+      </paragraph>
+      <heading level={1} textAlign="end">
+        <text>Heading</text>
+      </heading>
+      <paragraph>
+        <text />
+      </paragraph>
+    </editor>
+  );
+  expect(markdoc).toMatchInlineSnapshot(`
+    "Something{% textAlign="center" %}
+
+    # Heading{% textAlign="end" %}
+    "
+  `);
+  expect(fromMarkdoc(markdoc)).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph
+        textAlign="center"
+      >
+        <text>
+          Something
+        </text>
+      </paragraph>
+      <heading
+        level={1}
+        textAlign="end"
+      >
+        <text>
+          Heading
+        </text>
+      </heading>
+      <paragraph>
+        <text />
+      </paragraph>
+    </editor>
+  `);
+});
+
 test('inline code', () => {
   const markdoc = toMarkdoc(
     <editor>

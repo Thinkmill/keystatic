@@ -1,4 +1,38 @@
-# keystatic
+# @keystatic/core
+
+## 0.0.40
+
+### Patch Changes
+
+- 9bcf3d4: Astro support
+
+## 0.0.39
+
+### Patch Changes
+
+- ccacef0: Prioritise getting the GitHub App's slug from the URL over an
+  environment variable.
+- Updated dependencies [ccacef0]
+  - @voussoir/overlays@0.1.1
+
+## 0.0.38
+
+### Patch Changes
+
+- 2fe951a: Fix markdoc serialisation/deserialisation for strikethrough
+- 2f324c4: The specific features of the document editor that are enabled are now
+  explicitly specified in the config.
+
+## 0.0.37
+
+### Patch Changes
+
+- 052010c: Fix text alignment not serialising/deserialising to Markdoc
+- 6600100: replace "edit" with localized string
+- 783aa15: - Use localized string for "search".
+  - Use localized string for "add".
+  - Use localized string for "create".
+- 1272c28: Initial release
 
 ## 0.0.36
 

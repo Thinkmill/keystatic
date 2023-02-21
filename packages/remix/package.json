@@ -1,0 +1,49 @@
+{
+  "name": "@keystatic/remix",
+  "version": "0.0.1",
+  "license": "MIT",
+  "exports": {
+    "./ui": {
+      "module": "./ui/dist/keystatic-remix-ui.esm.js",
+      "default": "./ui/dist/keystatic-remix-ui.cjs.js"
+    },
+    "./api": {
+      "module": "./api/dist/keystatic-remix-api.esm.js",
+      "default": "./api/dist/keystatic-remix-api.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "dist/keystatic.cjs.js",
+  "module": "dist/keystatic.esm.js",
+  "files": [
+    "dist",
+    "api",
+    "ui"
+  ],
+  "scripts": {
+    "setup": "ts-gql build && tsx scripts/l10n.ts",
+    "build": "pnpm run setup && next build"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.18.3",
+    "@types/react": "^18.0.25"
+  },
+  "devDependencies": {
+    "@keystatic/core": "^0.0.40",
+    "@remix-run/react": "^1.13.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "peerDependencies": {
+    "@keystatic/core": "*",
+    "@remix-run/react": "1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "ui.tsx",
+      "api.tsx"
+    ]
+  }
+}
