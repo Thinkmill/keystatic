@@ -1,22 +1,27 @@
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { Section, Item } from '@react-stately/collections';
 import { gql } from '@ts-gql/tag/no-transform';
+import { ReactElement, useContext, useMemo, useReducer } from 'react';
+import { useMutation } from 'urql';
+
 import { AlertDialog, DialogContainer } from '@voussoir/dialog';
 import { Icon } from '@voussoir/icon';
 import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
 import { gitBranchPlusIcon } from '@voussoir/icon/icons/gitBranchPlusIcon';
-import { trashIcon } from '@voussoir/icon/icons/trashIcon';
+import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Flex } from '@voussoir/layout';
 import { ActionMenu } from '@voussoir/menu';
 import { Text } from '@voussoir/typography';
+
 import { useRouter } from '../router';
-import { ReactElement, useContext, useMemo, useReducer } from 'react';
-import { useMutation } from 'urql';
 import { BranchPicker, CreateBranchDialog } from '../branch-selection';
+import l10nMessages from '../l10n/index.json';
 import { BranchInfoContext, useBaseCommit, useRepositoryId } from './data';
 
 export function SidebarHeader(props: {
   repo: { owner: string; name: string };
 }) {
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const data = useContext(BranchInfoContext);
   const baseCommit = useBaseCommit();
   const repositoryId = useRepositoryId();
@@ -37,43 +42,37 @@ export function SidebarHeader(props: {
       }
     ` as import('../../__generated__/ts-gql/DeleteBranch').type
   );
+
   type GitItem = {
     icon: ReactElement;
     label: string;
-    description: string;
+    description?: string;
     key: string;
   };
   type GitSection = { key: string; label: string; children: GitItem[] };
   const gitMenuItems = useMemo(() => {
     let isDefaultBranch = data.currentBranch === data.defaultBranch;
-    let items: GitSection[] = [
+    let items: GitSection[] = [];
+    let branchSection: GitItem[] = [
       {
-        key: 'branch-section',
-        label: 'Branches',
-        children: [
-          {
-            key: 'new-branch',
-            icon: gitBranchPlusIcon,
-            label: 'New branch',
-            description: `Create a new branch based on "${data.currentBranch}"`,
-          },
-        ],
+        key: 'new-branch',
+        icon: gitBranchPlusIcon,
+        label: stringFormatter.format('newBranch'),
       },
     ];
     let prSection: GitItem[] = [];
+
     if (!isDefaultBranch) {
       prSection.push({
         key: 'create-pull-request',
         icon: externalLinkIcon,
-        label: 'Create pull request',
-        description: 'Open a PR against this branch',
+        label: stringFormatter.format('createPullRequest'),
       });
       if (!data.hasPullRequests) {
-        prSection.push({
+        branchSection.push({
           key: 'delete-branch',
-          icon: trashIcon,
-          label: 'Delete branch',
-          description: 'Delete this branch',
+          icon: trash2Icon,
+          label: stringFormatter.format('deleteBranch'),
         });
       }
     }
@@ -82,11 +81,17 @@ export function SidebarHeader(props: {
       prSection.push({
         key: 'related-pull-requests',
         icon: externalLinkIcon,
-        label: 'View pull requests',
-        description: 'See the PRs for this branch',
+        label: stringFormatter.format('viewPullRequests'),
       });
     }
 
+    if (branchSection.length) {
+      items.push({
+        key: 'branch-section',
+        label: 'Branches',
+        children: branchSection,
+      });
+    }
     if (prSection.length) {
       items.push({
         key: 'pr-section',
@@ -96,7 +101,12 @@ export function SidebarHeader(props: {
     }
 
     return items;
-  }, [data.currentBranch, data.defaultBranch, data.hasPullRequests]);
+  }, [
+    data.currentBranch,
+    data.defaultBranch,
+    data.hasPullRequests,
+    stringFormatter,
+  ]);
   const router = useRouter();
   return (
     <Flex
@@ -149,7 +159,6 @@ export function SidebarHeader(props: {
               <Item key={item.key}>
                 <Icon src={item.icon} />
                 <Text>{item.label}</Text>
-                <Text slot="description">{item.description}</Text>
               </Item>
             )}
           </Section>
