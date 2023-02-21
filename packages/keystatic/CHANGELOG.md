@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.40
+
+### Patch Changes
+
+- 9bcf3d4: Astro support
+
 ## 0.0.39
 
 ### Patch Changes
