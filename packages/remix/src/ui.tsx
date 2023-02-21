@@ -37,7 +37,7 @@ export function makePage(config: Config<any, any>) {
     const href = useHref(location);
     const navigate = useNavigate();
     const keystaticRouter = useMemo((): Router => {
-      const replaced = href.replace(/^\/keystatic\/?/, '');
+      const replaced = location.pathname.replace(/^\/keystatic\/?/, '');
       const params =
         replaced === '' ? [] : replaced.split('/').map(decodeURIComponent);
       return {
@@ -50,7 +50,7 @@ export function makePage(config: Config<any, any>) {
           navigate(path, { replace: true });
         },
       };
-    }, [href, navigate]);
+    }, [href, navigate, location.pathname]);
     if (!isClient) return null;
     return (
       <Keystatic

@@ -32,7 +32,7 @@ function ReactRouterKeystatic() {
   const location = useLocation();
   const href = useHref(location);
   const keystaticRouter = useMemo((): Router => {
-    const replaced = href.replace(/^\/keystatic\/?/, '');
+    const replaced = location.pathname.replace(/^\/keystatic\/?/, '');
     const params =
       replaced === '' ? [] : replaced.split('/').map(decodeURIComponent);
 
@@ -46,7 +46,7 @@ function ReactRouterKeystatic() {
       href,
       params,
     };
-  }, [navigate, href]);
+  }, [navigate, href, location.pathname]);
   return (
     <GenericKeystatic
       router={keystaticRouter}
