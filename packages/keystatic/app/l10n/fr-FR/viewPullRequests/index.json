@@ -1,0 +1,6 @@
+{
+  "key": "viewPullRequests",
+  "value": "Afficher les demandes d'extraction",
+  "notes": "",
+  "type": "git-related"
+}
