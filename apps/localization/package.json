@@ -1,6 +1,6 @@
 {
   "name": "localization",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@keystatic/core": "^0.0.41",
-    "@keystatic/next": "^0.0.1",
+    "@keystatic/next": "^0.0.2",
     "@next/font": "13.1.6",
     "@preconstruct/next": "^4.0.0",
     "@types/node": "16.11.13",
