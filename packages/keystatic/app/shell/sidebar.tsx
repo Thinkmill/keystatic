@@ -1,16 +1,7 @@
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
 import { Item, Section } from '@react-stately/collections';
-import { Badge } from '@voussoir/badge';
-import { ActionButton } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { folderOpenIcon } from '@voussoir/icon/icons/folderOpenIcon';
-import { Flex } from '@voussoir/layout';
-import { MenuTrigger, Menu } from '@voussoir/menu';
-import { NavList, NavItem, NavGroup } from '@voussoir/nav-list';
-import { css, breakpointQueries, tokenSchema } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
-import { useRouter } from '../router';
+import { gql } from '@ts-gql/tag/no-transform';
 import {
   createContext,
   ReactNode,
@@ -18,13 +9,28 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { Config, GitHubConfig } from '../../config';
-import { isGitHubConfig, pluralize } from '../utils';
-import { SidebarHeader } from './sidebar-header';
-import { Image } from '@voussoir/image';
 import { useQuery } from 'urql';
-import { gql } from '@ts-gql/tag/no-transform';
+
+import { Badge } from '@voussoir/badge';
+import { ActionButton } from '@voussoir/button';
+import { Icon } from '@voussoir/icon';
+import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
+import { folderOpenIcon } from '@voussoir/icon/icons/folderOpenIcon';
+import { Image } from '@voussoir/image';
+import { Flex } from '@voussoir/layout';
+import { MenuTrigger, Menu } from '@voussoir/menu';
+import { NavList, NavItem, NavGroup } from '@voussoir/nav-list';
+import { css, breakpointQueries, tokenSchema } from '@voussoir/style';
+import { Text } from '@voussoir/typography';
+
+import { Config, GitHubConfig } from '../../config';
+
+import l10nMessages from '../l10n/index.json';
+import { useRouter } from '../router';
+import { isGitHubConfig, pluralize } from '../utils';
+
 import { useChanged } from './data';
+import { SidebarHeader } from './sidebar-header';
 
 export const SidebarContext = createContext<{
   sidebarIsOpen: boolean;
@@ -56,6 +62,7 @@ export function SidebarProvider(props: { children: ReactNode }) {
 export const SIDEBAR_WIDTH = 320;
 
 export function Sidebar(props: { config: Config; hrefBase: string }) {
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const { sidebarIsOpen, setSidebarOpen } = useContext(SidebarContext);
   const router = useRouter();
   const isCurrent = (href: string, { exact = false } = {}) => {
@@ -137,11 +144,11 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
             href={props.hrefBase}
             aria-current={isCurrent(props.hrefBase, { exact: true })}
           >
-            Dashboard
+            {stringFormatter.format('dashboard')}
           </NavItem>
 
           {collectionsArray.length !== 0 && (
-            <NavGroup title="Collections">
+            <NavGroup title={stringFormatter.format('collections')}>
               {collectionsArray.map(([key, collection]) => {
                 const href = `${props.hrefBase}/collection/${encodeURIComponent(
                   key
@@ -173,7 +180,7 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
             </NavGroup>
           )}
           {singletonsArray.length !== 0 && (
-            <NavGroup title="Singletons">
+            <NavGroup title={stringFormatter.format('singletons')}>
               {singletonsArray.map(([key, collection]) => {
                 const href = `${props.hrefBase}/singleton/${key}`;
                 return (

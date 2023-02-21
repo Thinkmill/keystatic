@@ -34,6 +34,7 @@ import { AppShellHeader } from '../shell/header';
 export function DashboardPage(props: { config: Config; basePath: string }) {
   const { config } = props;
 
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const changes = useChanged();
   const router = useRouter();
   const allTreeData = useTree();
@@ -46,7 +47,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
     <AppShellRoot containerWidth="large">
       <AppShellHeader>
         <Heading elementType="h1" id="page-title" size="small">
-          Dashboard
+          {stringFormatter.format('dashboard')}
         </Heading>
       </AppShellHeader>
       <AppShellBody>
@@ -58,7 +59,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
             <Flex direction="column" gap="xxlarge" minWidth={0}>
               <Grid gap="xlarge">
                 <Heading size="medium" id="collections-heading">
-                  Collections
+                  {stringFormatter.format('collections')}
                 </Heading>
                 <ListView
                   aria-labelledby="collections-heading"
@@ -127,7 +128,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
                           >
                             <Icon src={plusIcon} />
                           </ActionButton>
-                          <Tooltip>New entry</Tooltip>
+                          <Tooltip>{stringFormatter.format('add')}</Tooltip>
                         </TooltipTrigger>
                       </Item>
                     );
@@ -138,7 +139,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
               {!!singletons.length && (
                 <Grid gap="large">
                   <Heading size="medium" id="singletons-heading">
-                    Singletons
+                    {stringFormatter.format('singletons')}
                   </Heading>
 
                   <ListView
