@@ -60,7 +60,7 @@ export function BranchPicker(props: BranchPickerProps) {
 
   return (
     <Picker
-      aria-label="Branch selection"
+      aria-label={stringFormatter.format('currentBranch')}
       flex
       width="100%"
       items={items}
