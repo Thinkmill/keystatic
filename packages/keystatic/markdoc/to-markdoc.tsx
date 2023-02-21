@@ -22,7 +22,7 @@ const markToMarkdoc: Record<Mark, { type: NodeType; tag?: string }> = {
   italic: { type: 'em' },
   underline: { type: 'tag', tag: 'u' },
   keyboard: { type: 'tag', tag: 'kbd' },
-  strikethrough: { type: 'tag', tag: 's' },
+  strikethrough: { type: 's' },
   subscript: { type: 'tag', tag: 'sub' },
   superscript: { type: 'tag', tag: 'sup' },
 };

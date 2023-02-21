@@ -43,6 +43,12 @@ function inlineNodeFromMarkdoc(node: Node): Descendant | Descendant[] {
       inlineChildrenFromMarkdoc(node.children)
     );
   }
+  if (node.type === 's') {
+    return addMarkToChildren('strikethrough', () =>
+      inlineChildrenFromMarkdoc(node.children)
+    );
+  }
+
   if (node.type === 'tag') {
     if (node.tag === 'u') {
       return addMarkToChildren('underline', () =>
@@ -51,11 +57,6 @@ function inlineNodeFromMarkdoc(node: Node): Descendant | Descendant[] {
     }
     if (node.tag === 'kbd') {
       return addMarkToChildren('keyboard', () =>
-        inlineChildrenFromMarkdoc(node.children)
-      );
-    }
-    if (node.tag === 's') {
-      return addMarkToChildren('strikethrough', () =>
         inlineChildrenFromMarkdoc(node.children)
       );
     }
