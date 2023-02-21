@@ -78,7 +78,7 @@ importers:
 
   apps/localization:
     specifiers:
-      '@keystatic/core': ^0.0.38
+      '@keystatic/core': ^0.0.39
       '@keystatic/next': ^0.0.1
       '@next/font': 13.1.6
       '@preconstruct/next': ^4.0.0
@@ -109,7 +109,7 @@ importers:
   apps/next-pages-dir:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.38
+      '@keystatic/core': ^0.0.39
       '@keystatic/next': ^0.0.1
       '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
@@ -153,8 +153,8 @@ importers:
 
   apps/remix:
     specifiers:
-      '@keystatic/core': ^0.0.38
-      '@keystatic/remix': ^0.0.0
+      '@keystatic/core': ^0.0.39
+      '@keystatic/remix': ^0.0.1
       '@remix-run/dev': ^1.13.0
       '@remix-run/eslint-config': ^1.13.0
       '@remix-run/node': ^1.13.0
@@ -1695,7 +1695,7 @@ importers:
   keystatic:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.38
+      '@keystatic/core': ^0.0.39
       '@keystatic/next': ^0.0.1
       '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
@@ -1784,7 +1784,7 @@ importers:
       '@voussoir/nav-list': ^0.1.0
       '@voussoir/notice': ^0.1.0
       '@voussoir/number-field': ^0.1.1
-      '@voussoir/overlays': ^0.1.0
+      '@voussoir/overlays': ^0.1.1
       '@voussoir/picker': ^0.1.0
       '@voussoir/progress': ^0.1.0
       '@voussoir/search-field': ^0.1.2
@@ -1935,7 +1935,7 @@ importers:
   packages/next:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.38
+      '@keystatic/core': ^0.0.39
       '@types/react': ^18.0.25
       next: ^13.1.6
       react: ^18.2.0
@@ -1952,7 +1952,7 @@ importers:
   packages/remix:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.38
+      '@keystatic/core': ^0.0.39
       '@remix-run/react': ^1.13.0
       '@types/react': ^18.0.25
       react: ^18.2.0
