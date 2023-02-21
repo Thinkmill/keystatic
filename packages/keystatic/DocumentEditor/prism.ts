@@ -39,4 +39,4 @@ import 'prismjs/components/prism-tsx';
 import 'prismjs/components/prism-basic';
 import 'prismjs/components/prism-vbnet';
 
-export { default } from 'prismjs';
+export default globalThis.Prism;
