@@ -1,5 +1,14 @@
 # localization
 
+## 0.1.9
+
+### Patch Changes
+
+- 5bd8a9c: localization progress
+- Updated dependencies [5bd8a9c]
+- Updated dependencies [a322dcb]
+  - @keystatic/core@0.0.41
+
 ## 0.1.8
 
 ### Patch Changes

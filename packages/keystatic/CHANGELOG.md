@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.41
+
+### Patch Changes
+
+- 5bd8a9c: localization progress
+- a322dcb: Remove `next` peer dependency
+
 ## 0.0.40
 
 ### Patch Changes
