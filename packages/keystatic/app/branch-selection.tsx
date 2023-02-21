@@ -1,6 +1,6 @@
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { gql } from '@ts-gql/tag/no-transform';
 import { ReactNode, useMemo, useRef, useState } from 'react';
-import { useRouter } from './router';
 import { useMutation } from 'urql';
 
 import { Button, ButtonGroup } from '@voussoir/button';
@@ -8,10 +8,13 @@ import { Dialog } from '@voussoir/dialog';
 import { gitBranchIcon } from '@voussoir/icon/icons/gitBranchIcon';
 import { Icon } from '@voussoir/icon';
 import { Item, Picker, Section } from '@voussoir/picker';
-import { Content } from '@voussoir/slots';
+import { Content, Footer } from '@voussoir/slots';
 import { TextField } from '@voussoir/text-field';
-import { Text } from '@voussoir/typography';
+import { Heading, Text } from '@voussoir/typography';
 import { ProgressCircle } from '@voussoir/progress';
+
+import l10nMessages from './l10n/index.json';
+import { useRouter } from './router';
 
 type BranchPickerProps = {
   allBranches: string[];
@@ -21,6 +24,7 @@ type BranchPickerProps = {
 
 export function BranchPicker(props: BranchPickerProps) {
   const { allBranches, currentBranch, defaultBranch } = props;
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
   const items = useMemo(() => {
     let defaultItems = allBranches.map(name => ({
@@ -30,26 +34,29 @@ export function BranchPicker(props: BranchPickerProps) {
     if (defaultBranch) {
       return [
         {
-          label: 'Default branch',
+          label: stringFormatter.format('defaultBranch'),
           id: 'default-branch',
           children: [{ id: defaultBranch, name: defaultBranch }],
         },
         {
-          label: 'Other branches',
+          label: stringFormatter.format('otherBranches'),
           id: 'other-branches',
           children: defaultItems.filter(i => i.name !== defaultBranch),
         },
       ];
     }
 
+    // in the rare case that there's no default branch, just show all branches.
+    // ideally this wouldn't be wrapped in a section, but it messes with the
+    // types + render functions.
     return [
       {
-        label: 'Other branches',
-        id: 'other-branches',
+        label: stringFormatter.format('branches'),
+        id: 'branches',
         children: defaultItems,
       },
     ];
-  }, [allBranches, defaultBranch]);
+  }, [allBranches, defaultBranch, stringFormatter]);
 
   return (
     <Picker
@@ -94,12 +101,14 @@ export function CreateBranchDialog(props: {
   onCreate: (branchName: string) => void;
   children?: ReactNode;
 }) {
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const [branchName, setBranchName] = useState('');
   const textFieldRef = useRef<HTMLInputElement>(null);
   const [{ error, fetching }, createBranch] = useCreateBranchMutation();
+  const createBranchSubmitButtonId = 'create-branch-submit-button';
 
   return (
-    <Dialog>
+    <Dialog size="small">
       <form
         style={{ display: 'contents' }}
         onSubmit={async event => {
@@ -118,28 +127,39 @@ export function CreateBranchDialog(props: {
           }
         }}
       >
+        <Heading>{stringFormatter.format('newBranch')}</Heading>
         <Content>
           {props.children}
           <TextField
             ref={textFieldRef}
             value={branchName}
             onChange={setBranchName}
-            // description="Press ESC to cancel"
             label="Branch name"
-            placeholder="branch-name"
             autoFocus
             errorMessage={error?.message}
           />
         </Content>
-        <ButtonGroup>
+
+        <Footer UNSAFE_style={{ justifyContent: 'flex-end' }}>
           {fetching && (
-            <ProgressCircle isIndeterminate aria-label="Creating Branch" />
+            <ProgressCircle
+              aria-labelledby={createBranchSubmitButtonId}
+              isIndeterminate
+              size="small"
+            />
           )}
+        </Footer>
+        <ButtonGroup>
           <Button onPress={props.onDismiss} isDisabled={fetching}>
-            Cancel
+            {stringFormatter.format('cancel')}
           </Button>
-          <Button isDisabled={fetching} prominence="high" type="submit">
-            Create
+          <Button
+            isDisabled={fetching}
+            prominence="high"
+            type="submit"
+            id={createBranchSubmitButtonId}
+          >
+            {stringFormatter.format('create')}
           </Button>
         </ButtonGroup>
       </form>
