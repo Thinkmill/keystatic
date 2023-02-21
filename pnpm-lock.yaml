@@ -1901,7 +1901,6 @@ importers:
       micromark-extension-gfm-autolink-literal: 0.5.7
       micromark-extension-gfm-strikethrough: 0.6.5
       mime: ^3.0.0
-      next: ^13.1.6
       pretty-format: ^29.0.1
       prismjs: ^1.29.0
       react: ^18.2.0
@@ -2007,7 +2006,6 @@ importers:
       '@voussoir/test-utils': link:../../design-system/packages/test-utils
       eslint: 8.34.0
       jest-diff: 29.4.3
-      next: 13.1.6_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       tsx: 3.12.3

@@ -133,14 +133,12 @@
     "@voussoir/test-utils": "^2.0.0",
     "eslint": "^8.18.0",
     "jest-diff": "^29.0.1",
-    "next": "^13.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tsx": "^3.8.0",
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
-    "next": "13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
