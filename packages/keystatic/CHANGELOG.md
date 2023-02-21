@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.0.39
+
+### Patch Changes
+
+- ccacef0: Prioritise getting the GitHub App's slug from the URL over an
+  environment variable.
+- Updated dependencies [ccacef0]
+  - @voussoir/overlays@0.1.1
+
 ## 0.0.38
 
 ### Patch Changes

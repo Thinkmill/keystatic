@@ -1,5 +1,11 @@
 # @voussoir/overlays
 
+## 0.1.1
+
+### Patch Changes
+
+- ccacef0: Add `try {} catch {}` around accessing an environment variable
+
 ## 0.1.0
 
 ### Minor Changes
