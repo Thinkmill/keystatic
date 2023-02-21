@@ -35,7 +35,7 @@
     "ui"
   ],
   "scripts": {
-    "setup": "ts-gql build && tsx scripts/l10n.ts",
+    "setup": "ts-gql build && tsx scripts/l10n.ts && tsx scripts/build-prism.ts",
     "build": "pnpm run setup && next build",
     "dev": "next dev",
     "start": "next start"
