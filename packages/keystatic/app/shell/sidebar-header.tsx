@@ -88,14 +88,14 @@ export function SidebarHeader(props: {
     if (branchSection.length) {
       items.push({
         key: 'branch-section',
-        label: 'Branches',
+        label: stringFormatter.format('branches'),
         children: branchSection,
       });
     }
     if (prSection.length) {
       items.push({
         key: 'pr-section',
-        label: 'Pull requests',
+        label: stringFormatter.format('pullRequests'),
         children: prSection,
       });
     }
