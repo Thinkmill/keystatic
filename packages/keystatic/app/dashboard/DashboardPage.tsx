@@ -1,4 +1,4 @@
-import { useRouter } from '../router';
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useContext, useMemo } from 'react';
 
 import { ActionButton } from '@voussoir/button';
@@ -13,13 +13,13 @@ import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../../config';
 
-import { AppShellBody, AppShellRoot } from '../shell';
 import { CreateBranchDialog } from '../branch-selection';
+import l10nMessages from '../l10n/index.json';
+import { useRouter } from '../router';
+import { AppShellBody, AppShellRoot } from '../shell';
 import { DataState } from '../useData';
 import { getCollectionPath, keyedEntries, pluralize } from '../utils';
 
-import { CONTENT } from './content';
-import { SummaryBlock } from './components';
 import { getTreeNodeAtPath } from '../trees';
 import {
   useBaseCommit,
@@ -34,6 +34,7 @@ import { AppShellHeader } from '../shell/header';
 export function DashboardPage(props: { config: Config; basePath: string }) {
   const { config } = props;
 
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const changes = useChanged();
   const router = useRouter();
   const allTreeData = useTree();
@@ -46,7 +47,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
     <AppShellRoot containerWidth="large">
       <AppShellHeader>
         <Heading elementType="h1" id="page-title" size="small">
-          Dashboard
+          {stringFormatter.format('dashboard')}
         </Heading>
       </AppShellHeader>
       <AppShellBody>
@@ -56,11 +57,10 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
             gap="xxlarge"
           >
             <Flex direction="column" gap="xxlarge" minWidth={0}>
-              <Grid gap="large">
+              <Grid gap="xlarge">
                 <Heading size="medium" id="collections-heading">
-                  Collections
+                  {stringFormatter.format('collections')}
                 </Heading>
-                <SummaryBlock>{CONTENT.collections}</SummaryBlock>
                 <ListView
                   aria-labelledby="collections-heading"
                   items={collections}
@@ -128,7 +128,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
                           >
                             <Icon src={plusIcon} />
                           </ActionButton>
-                          <Tooltip>New entry</Tooltip>
+                          <Tooltip>{stringFormatter.format('add')}</Tooltip>
                         </TooltipTrigger>
                       </Item>
                     );
@@ -139,9 +139,8 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
               {!!singletons.length && (
                 <Grid gap="large">
                   <Heading size="medium" id="singletons-heading">
-                    Singletons
+                    {stringFormatter.format('singletons')}
                   </Heading>
-                  <SummaryBlock>{CONTENT.singletons}</SummaryBlock>
 
                   <ListView
                     aria-labelledby="singletons-heading"
@@ -174,6 +173,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
 }
 
 function Branches() {
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
   const branchInfo = useContext(BranchInfoContext);
   let branches = useMemo(() => {
@@ -182,7 +182,9 @@ function Branches() {
         return {
           name,
           description:
-            name === branchInfo.defaultBranch ? 'Default branch' : undefined,
+            name === branchInfo.defaultBranch
+              ? stringFormatter.format('defaultBranch')
+              : undefined,
         };
       })
       .sort(branch => {
@@ -191,29 +193,28 @@ function Branches() {
         }
         return 1;
       });
-  }, [branchInfo.allBranches, branchInfo.defaultBranch]);
+  }, [branchInfo.allBranches, branchInfo.defaultBranch, stringFormatter]);
   const baseCommit = useBaseCommit();
   const repositoryId = useRepositoryId();
 
   return (
     <Flex
+      elementType="section"
       direction="column"
       gap="xlarge"
       order={{ mobile: -1, tablet: 1 }}
       minWidth={0}
     >
-      <Grid gap="xlarge">
-        <Heading size="medium" id="branches-heading">
-          Branches
-        </Heading>
-        <SummaryBlock>{CONTENT.branches}</SummaryBlock>
-      </Grid>
+      <Heading size="medium" id="branches-heading">
+        {stringFormatter.format('branches')}
+      </Heading>
+
       {branchInfo.allBranches.length === 0 ? (
         <Flex justifyContent="center">
           <ProgressCircle
             isIndeterminate
             size="medium"
-            aria-label="Loading Branches"
+            aria-label={stringFormatter.format('loading')}
           />
         </Flex>
       ) : (
@@ -245,13 +246,9 @@ function Branches() {
               </Item>
             )}
           </ListView>
-          <DialogTrigger
-            type="popover"
-            mobileType="tray"
-            placement="bottom start"
-          >
+          <DialogTrigger>
             <div>
-              <ActionButton>New branch</ActionButton>
+              <ActionButton>{stringFormatter.format('newBranch')}</ActionButton>
             </div>
             {close => (
               <CreateBranchDialog

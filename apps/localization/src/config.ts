@@ -1,7 +1,7 @@
 import { collection, config, fields } from '@keystatic/core';
 
 const locales = {
-  'ar-AE': 'Arabic (United Arab Emirates) 🇦🇪',
+  'ar-AE': 'Arabic (UAE) 🇦🇪',
   'bg-BG': 'Bulgarian (Bulgaria) 🇧🇬',
   'cs-CZ': 'Czech (Czech Republic) 🇨🇿',
   'da-DK': 'Danish (Denmark) 🇩🇰',
@@ -61,6 +61,7 @@ const localeCollections = Object.fromEntries(
           label: 'Type',
           options: [
             { value: 'global', label: 'Global' },
+            { value: 'git-related', label: 'Git related' },
             { value: 'dashboard', label: 'Dashboard' },
             { value: 'collection-list', label: 'Collection list' },
             { value: 'collection-item', label: 'Collection item' },

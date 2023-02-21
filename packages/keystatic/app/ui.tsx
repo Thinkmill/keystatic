@@ -166,7 +166,7 @@ function PageInner({ config }: { config: Config }) {
           <AppShellRoot>
             <AppShellBody>
               <Notice tone="critical">
-                Singleton "{parsedParams.singleton}" not found
+                Singleton "{parsedParams.singleton}" not found.
               </Notice>
             </AppShellBody>
           </AppShellRoot>

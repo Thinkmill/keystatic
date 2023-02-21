@@ -278,6 +278,7 @@ export function CreateBranchDuringUpdateDialog(props: {
   onDismiss: () => void;
   reason: string;
 }) {
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const repositoryId = useRepositoryId();
   const [branchName, setBranchName] = useState('');
   const [{ error, fetching, data }, createBranch] = useCreateBranchMutation();
@@ -297,7 +298,7 @@ export function CreateBranchDuringUpdateDialog(props: {
           }
         }}
       >
-        <Heading>Create branch</Heading>
+        <Heading>{stringFormatter.format('newBranch')}</Heading>
         <Content>
           <Flex gap="large" direction="column">
             <TextField
@@ -305,7 +306,6 @@ export function CreateBranchDuringUpdateDialog(props: {
               onChange={setBranchName}
               label="Branch name"
               description={props.reason}
-              placeholder="branch-name"
               autoFocus
               errorMessage={error?.message}
             />
@@ -320,7 +320,7 @@ export function CreateBranchDuringUpdateDialog(props: {
             />
           )}
           <Button isDisabled={isLoading} onPress={props.onDismiss}>
-            Cancel
+            {stringFormatter.format('cancel')}
           </Button>
           <Button isDisabled={isLoading} prominence="high" type="submit">
             Create branch and save
