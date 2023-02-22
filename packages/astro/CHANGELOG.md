@@ -1,5 +1,11 @@
 # @keystatic/astro
 
+## 0.0.4
+
+### Patch Changes
+
+- c38e0fb: Fix `internal` directory not being published
+
 ## 0.0.3
 
 ### Patch Changes
