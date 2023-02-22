@@ -24,7 +24,8 @@
   "files": [
     "dist",
     "api",
-    "ui"
+    "ui",
+    "internal"
   ],
   "scripts": {
     "setup": "ts-gql build && tsx scripts/l10n.ts",
