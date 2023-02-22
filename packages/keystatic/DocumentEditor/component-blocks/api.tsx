@@ -16,7 +16,7 @@ import { Picker, Item } from '@voussoir/picker';
 import { css, tokenSchema } from '@voussoir/style';
 import { TextArea, TextField } from '@voussoir/text-field';
 import { Editor } from 'slate';
-import { matcher } from 'micromatch';
+import { matcher, capture } from 'micromatch';
 
 import { fromMarkdoc } from '../../markdoc/from-markdoc';
 import { toMarkdocDocument } from '../../markdoc/to-markdoc';
@@ -37,6 +37,12 @@ import {
 import { ElementFromValidation } from '../../structure-validation';
 import { Combobox } from '@voussoir/combobox';
 import { useTree } from '../../app/shell/data';
+import { useConfig } from '../../app/shell';
+import {
+  getCollectionFormat,
+  getCollectionItemPath,
+  getDataFileExtension,
+} from '../../app/path-utils';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -601,6 +607,57 @@ export const fields = {
       validate: val => typeof val === 'string',
     };
   },
+  relationship({
+    label,
+    collection,
+  }: {
+    label: string;
+    collection: string;
+  }): BasicFormField<string | null, undefined> {
+    return {
+      kind: 'form',
+      Input({ value, onChange, autoFocus }) {
+        const config = useConfig();
+        const tree = useTree().current;
+
+        const options = useMemo(() => {
+          const files =
+            tree.kind === 'loaded' ? [...tree.data.entries.values()] : [];
+          const formatInfo = getCollectionFormat(config, collection);
+          const pattern =
+            getCollectionItemPath(config, collection, '*') +
+            `/index${getDataFileExtension(formatInfo)}`;
+
+          return files.flatMap(val => {
+            const captured = capture(pattern, val.path);
+            if (!captured) {
+              return [];
+            }
+            return [{ slug: captured[0] }];
+          });
+        }, [config, tree]);
+        return (
+          <Combobox
+            label={label}
+            selectedKey={value}
+            onSelectionChange={key => {
+              if (typeof key === 'string' || key === null) {
+                onChange(key);
+              }
+            }}
+            autoFocus={autoFocus}
+            defaultItems={options}
+            width="auto"
+          >
+            {item => <Item key={item.slug}>{item.slug}</Item>}
+          </Combobox>
+        );
+      },
+      options: undefined,
+      defaultValue: null,
+      validate: val => typeof val === 'string',
+    };
+  },
   select<Option extends { label: string; value: string }>({
     label,
     options,
@@ -1102,26 +1159,6 @@ export const fields = {
           parseToReader: parse('read'),
         },
       },
-    };
-  },
-  relationship<Many extends boolean | undefined = false>({
-    listKey,
-    selection,
-    label,
-    many,
-  }: {
-    listKey: string;
-    label: string;
-    selection?: string;
-  } & (Many extends undefined | false
-    ? { many?: Many }
-    : { many: Many })): RelationshipField<Many extends true ? true : false> {
-    return {
-      kind: 'relationship',
-      listKey,
-      selection,
-      label,
-      many: (many ? true : false) as any,
     };
   },
   array<ElementField extends ComponentSchema>(

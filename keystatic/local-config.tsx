@@ -252,6 +252,10 @@ export default config({
           label: 'Username',
           validation: { length: { min: 4 } },
         }),
+        favouritePost: fields.relationship({
+          label: 'Favourite Post',
+          collection: 'posts',
+        }),
       },
     }),
     packages: collection({
