@@ -11,10 +11,16 @@
       "module": "./api/dist/keystatic-astro-api.esm.js",
       "default": "./api/dist/keystatic-astro-api.cjs.js"
     },
-    "./package.json": "./package.json"
+    ".": {
+      "module": "./dist/keystatic-astro.esm.js",
+      "default": "./dist/keystatic-astro.cjs.js"
+    },
+    "./package.json": "./package.json",
+    "./internal/keystatic-api.js": "./internal/keystatic-api.js",
+    "./internal/keystatic-astro-page.astro": "./internal/keystatic-astro-page.astro"
   },
-  "main": "dist/keystatic.cjs.js",
-  "module": "dist/keystatic.esm.js",
+  "main": "dist/keystatic-astro.cjs.js",
+  "module": "dist/keystatic-astro.esm.js",
   "files": [
     "dist",
     "api",
@@ -51,7 +57,14 @@
   "preconstruct": {
     "entrypoints": [
       "ui.tsx",
-      "api.tsx"
-    ]
+      "api.tsx",
+      "index.ts"
+    ],
+    "exports": {
+      "extra": {
+        "./internal/keystatic-api.js": "./internal/keystatic-api.js",
+        "./internal/keystatic-astro-page.astro": "./internal/keystatic-astro-page.astro"
+      }
+    }
   }
 }

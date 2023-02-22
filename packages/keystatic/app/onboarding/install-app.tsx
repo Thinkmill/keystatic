@@ -5,16 +5,20 @@ import { TextField } from '@voussoir/text-field';
 import { Text } from '@voussoir/typography';
 import { useRouter } from '../router';
 import { GitHubConfig } from '../../config';
+import { createContext, useContext } from 'react';
+
+const AppSlugContext = createContext<
+  { envName: string; value: string | undefined } | undefined
+>(undefined);
+
+export const AppSlugProvider = AppSlugContext.Provider;
 
 export function InstallGitHubApp(props: { config: GitHubConfig }) {
   const router = useRouter();
+  const appSlugFromContext = useContext(AppSlugContext);
   const appSlug =
     new URL(router.href, 'https://example.com').searchParams.get('slug') ??
-    (() => {
-      try {
-        return process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG;
-      } catch {}
-    })();
+    appSlugFromContext?.value;
   return (
     <Flex direction="column" gap="regular">
       <Flex alignItems="end" gap="regular">
@@ -41,12 +45,15 @@ export function InstallGitHubApp(props: { config: GitHubConfig }) {
         </Button>
       ) : (
         <Notice tone="caution">
-          <Text>
-            The <code>NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG</code> environment
-            variable wasn't provided so we can't link to the GitHub app
-            installation page. You should find the App on GitHub and add the
-            repo yourself.
-          </Text>
+          {appSlugFromContext ? (
+            <Text>
+              The <code>{appSlugFromContext.envName}</code> environment variable
+              wasn't provided so we can't link to the GitHub app installation
+              page. You should find the App on GitHub and add the repo yourself.
+            </Text>
+          ) : (
+            <Text>Find the App on GitHub and add the repo.</Text>
+          )}
         </Notice>
       )}
     </Flex>

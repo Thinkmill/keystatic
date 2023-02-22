@@ -52,9 +52,15 @@ function ReactRouterKeystatic() {
       router={keystaticRouter}
       config={config}
       link={KeystaticLink}
+      appSlug={appSlug}
     />
   );
 }
+
+const appSlug = {
+  envName: 'PUBLIC_KEYSTATIC_GITHUB_APP_SLUG',
+  value: import.meta.env.PUBLIC_KEYSTATIC_GITHUB_APP_SLUG,
+};
 
 const ConfigContext = React.createContext<Config<any, any> | null>(null);
 

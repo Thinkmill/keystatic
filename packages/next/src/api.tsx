@@ -5,7 +5,9 @@ import {
 } from '@keystatic/core/api/generic';
 
 export function makeAPIRouteHandler(_config: APIRouteConfig) {
-  const handler = makeGenericAPIRouteHandler(_config);
+  const handler = makeGenericAPIRouteHandler(_config, {
+    slugEnvName: 'NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG',
+  });
   return async function keystaticAPIRoute(
     req: NextApiRequest,
     res: NextApiResponse
