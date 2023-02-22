@@ -261,6 +261,7 @@ export default config({
       format: 'json',
       schema: {
         name: fields.text({ label: 'Name' }),
+        someFilepath: fields.pathReference({ label: 'Some Filepath' }),
       },
     }),
     singlefileposts: collection({

@@ -16,6 +16,7 @@ import { Picker, Item } from '@voussoir/picker';
 import { css, tokenSchema } from '@voussoir/style';
 import { TextArea, TextField } from '@voussoir/text-field';
 import { Editor } from 'slate';
+import { matcher } from 'micromatch';
 
 import { fromMarkdoc } from '../../markdoc/from-markdoc';
 import { toMarkdocDocument } from '../../markdoc/to-markdoc';
@@ -34,6 +35,8 @@ import {
   deserializeFiles,
 } from './document-field';
 import { ElementFromValidation } from '../../structure-validation';
+import { Combobox } from '@voussoir/combobox';
+import { useTree } from '../../app/shell/data';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -557,6 +560,45 @@ export const fields = {
       options: undefined,
       defaultValue,
       validate,
+    };
+  },
+  pathReference({
+    label,
+    pattern,
+  }: {
+    label: string;
+    pattern?: string;
+  }): BasicFormField<string | null, undefined> {
+    const match = pattern ? matcher(pattern) : () => true;
+    return {
+      kind: 'form',
+      Input({ value, onChange, autoFocus }) {
+        const tree = useTree().current;
+        const options = useMemo(() => {
+          const files =
+            tree.kind === 'loaded' ? [...tree.data.entries.values()] : [];
+          return files.filter(val => match(val.path));
+        }, [tree]);
+        return (
+          <Combobox
+            label={label}
+            selectedKey={value}
+            onSelectionChange={key => {
+              if (typeof key === 'string' || key === null) {
+                onChange(key);
+              }
+            }}
+            autoFocus={autoFocus}
+            defaultItems={options}
+            width="auto"
+          >
+            {item => <Item key={item.path}>{item.path}</Item>}
+          </Combobox>
+        );
+      },
+      options: undefined,
+      defaultValue: null,
+      validate: val => typeof val === 'string',
     };
   },
   select<Option extends { label: string; value: string }>({
