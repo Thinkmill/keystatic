@@ -62,7 +62,10 @@ function redirect(
     headers: [...(initialHeaders ?? []), ['Location', to]],
   };
 }
-export function makeGenericAPIRouteHandler(_config: APIRouteConfig) {
+export function makeGenericAPIRouteHandler(
+  _config: APIRouteConfig,
+  options?: { slugEnvName?: string }
+) {
   const _config2: APIRouteConfig = {
     clientId: _config.clientId ?? process.env.KEYSTATIC_GITHUB_CLIENT_ID,
     clientSecret:
@@ -91,7 +94,7 @@ export function makeGenericAPIRouteHandler(_config: APIRouteConfig) {
         .filter(Boolean);
       const joined = params.join('/');
       if (joined === 'github/created-app') {
-        return createdGithubApp(req);
+        return createdGithubApp(req, options?.slugEnvName);
       }
       if (joined === 'github/login') {
         return redirect('/keystatic/setup');
@@ -480,7 +483,8 @@ const ghAppSchema = z.object({
 });
 
 async function createdGithubApp(
-  req: KeystaticRequest
+  req: KeystaticRequest,
+  slugEnvVarName: string | undefined
 ): Promise<KeystaticResponse> {
   if (process.env.NODE_ENV !== 'development') {
     return { status: 400, body: 'App setup only allowed in development' };
@@ -519,8 +523,7 @@ async function createdGithubApp(
 KEYSTATIC_GITHUB_CLIENT_ID=${ghAppDataResult.data.client_id}
 KEYSTATIC_GITHUB_CLIENT_SECRET=${ghAppDataResult.data.client_secret}
 KEYSTATIC_SECRET=${randomBytes(40).toString('hex')}
-NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=${ghAppDataResult.data.slug}
-`;
+${slugEnvVarName ? `${slugEnvVarName}=${ghAppDataResult.data.slug}\n` : ''}`;
 
   let prevEnv: string | undefined;
   try {

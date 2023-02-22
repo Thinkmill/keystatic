@@ -1,5 +1,6 @@
-import { makeHandler } from '@keystatic/astro/api';
-import config from '../../../../keystatic-config';
+import { makeHandler } from '../api';
+// eslint-disable-next-line import/no-unresolved
+import config from 'virtual:keystatic-config';
 
 export const all = makeHandler({
   config,

@@ -25,6 +25,7 @@ import { KeystaticSetup } from './onboarding/setup';
 import { RepoNotFound } from './onboarding/repo-not-found';
 import { isGitHubConfig } from './utils';
 import { Text } from '@voussoir/typography';
+import { AppSlugProvider } from './onboarding/install-app';
 
 injectVoussoirStyles('surface');
 
@@ -188,19 +189,22 @@ export function Keystatic(props: {
     props: { href: string } & AnchorHTMLAttributes<HTMLAnchorElement> &
       RefAttributes<HTMLAnchorElement>
   ) => ReactElement | null;
+  appSlug?: { envName: string; value: string | undefined };
 }) {
   return (
-    <RouterProvider router={props.router}>
-      <Provider
-        repo={
-          props.config.storage.kind === 'github'
-            ? props.config.storage.repo
-            : undefined
-        }
-        Link={props.link}
-      >
-        <PageInner config={props.config} />
-      </Provider>
-    </RouterProvider>
+    <AppSlugProvider value={props.appSlug}>
+      <RouterProvider router={props.router}>
+        <Provider
+          repo={
+            props.config.storage.kind === 'github'
+              ? props.config.storage.repo
+              : undefined
+          }
+          Link={props.link}
+        >
+          <PageInner config={props.config} />
+        </Provider>
+      </RouterProvider>
+    </AppSlugProvider>
   );
 }
