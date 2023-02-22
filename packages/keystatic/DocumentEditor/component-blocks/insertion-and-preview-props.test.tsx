@@ -15,8 +15,7 @@ const objectProp = fields.object({
   inline: fields.child({ kind: 'inline', placeholder: '' }),
   many: fields.relationship({
     label: 'Relationship',
-    listKey: 'many',
-    many: true,
+    collection: 'many',
   }),
   select: fields.select({
     label: 'Select',
@@ -28,7 +27,7 @@ const objectProp = fields.object({
   }),
   conditional: fields.conditional(fields.checkbox({ label: 'Conditional' }), {
     true: fields.child({ kind: 'block', placeholder: '' }),
-    false: fields.relationship({ label: 'Relationship', listKey: 'one' }),
+    false: fields.relationship({ label: 'Relationship', collection: 'one' }),
   }),
   conditionalSelect: fields.conditional(
     fields.select({
@@ -134,7 +133,7 @@ test('inserting a complex component block', () => {
                 "value": "",
               },
               "inline": null,
-              "many": [],
+              "many": null,
               "prop": "",
               "select": "a",
             },
@@ -205,7 +204,7 @@ const makeEditorWithComplexComponentBlock = () =>
               value: '',
             },
             inline: null,
-            many: [],
+            many: '',
           },
         }}
       >
@@ -257,6 +256,7 @@ test('preview props api', () => {
                   .false,
               onChange: expect.any(Function) as any,
               value: null,
+              options: undefined,
             },
           },
           conditionalSelect: {
@@ -285,8 +285,9 @@ test('preview props api', () => {
           },
           many: {
             schema: componentBlocks.complex.schema.object.fields.many,
-            value: [],
+            value: '',
             onChange: expect.any(Function) as any,
+            options: undefined,
           },
           prop: {
             schema: componentBlocks.complex.schema.object.fields.prop,
@@ -334,7 +335,7 @@ test('preview props conditional change', () => {
                 "value": "",
               },
               "inline": null,
-              "many": [],
+              "many": "",
               "prop": "",
               "select": "a",
             },
@@ -413,37 +414,11 @@ test('preview props form change', () => {
   expect(getPreviewProps(editor).fields.object.fields.select.value).toBe('b');
 });
 
-test('relationship many change', () => {
-  let editor = makeEditorWithComplexComponentBlock();
-
-  let previewProps = getPreviewProps(editor);
-  const val = [{ data: {}, id: 'some-id', label: 'some-id' }];
-  previewProps.fields.object.fields.many.onChange(val);
-  expect((editor.children[0] as any).props.object.many).toEqual(val);
-  expect(getPreviewProps(editor).fields.object.fields.many.value).toEqual(val);
-});
-
 function assert(condition: boolean): asserts condition {
   if (!condition) {
     throw new Error('condition is false');
   }
 }
-
-test('relationship single change', () => {
-  let editor = makeEditorWithComplexComponentBlock();
-
-  let previewProps = getPreviewProps(editor);
-  assert(previewProps.fields.object.fields.conditional.discriminant === false);
-  const val = { data: {}, id: 'some-id', label: 'some-id' };
-  previewProps.fields.object.fields.conditional.value.onChange(val);
-  expect((editor.children[0] as any).props.object.conditional.value).toEqual(
-    val
-  );
-  expect(
-    (getPreviewProps(editor).fields.object.fields.conditional.value as any)
-      .value
-  ).toEqual(val);
-});
 
 test('changing conditional with form inside', () => {
   let editor = makeEditorWithComplexComponentBlock();

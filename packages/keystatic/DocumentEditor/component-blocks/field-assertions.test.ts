@@ -158,25 +158,3 @@ test('exceeds the call stack size for an infinitely recursive field where all fi
     assertValidComponentSchema(blah(), new Set());
   }).toThrowErrorMatchingInlineSnapshot(`"Maximum call stack size exceeded"`);
 });
-
-test('relationship field where no list exists with that name', () => {
-  expect(() => {
-    assertValidComponentSchema(
-      fields.object({
-        a: fields.relationship({ listKey: 'Blah', label: 'Something' }),
-      }),
-      new Set()
-    );
-  }).toThrowErrorMatchingInlineSnapshot(
-    `"The relationship field at "object.a" has the listKey "Blah" but no list named "Blah" exists."`
-  );
-});
-
-test('relationship field where a list exists with that name', () => {
-  assertValidComponentSchema(
-    fields.object({
-      a: fields.relationship({ listKey: 'Blah', label: 'Something' }),
-    }),
-    new Set(['Blah'])
-  );
-});

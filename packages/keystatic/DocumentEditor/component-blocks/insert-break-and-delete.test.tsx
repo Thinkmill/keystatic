@@ -40,7 +40,7 @@ const componentBlocks = {
             true: fields.child({ kind: 'block', placeholder: '' }),
             false: fields.relationship({
               label: 'Relationship',
-              listKey: 'Something',
+              collection: 'Something',
             }),
           }
         ),

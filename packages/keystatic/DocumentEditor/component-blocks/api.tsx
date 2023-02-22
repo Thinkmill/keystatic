@@ -604,7 +604,7 @@ export const fields = {
       },
       options: undefined,
       defaultValue: null,
-      validate: val => typeof val === 'string',
+      validate: val => typeof val === 'string' || val === null,
     };
   },
   relationship({
@@ -655,7 +655,7 @@ export const fields = {
       },
       options: undefined,
       defaultValue: null,
-      validate: val => typeof val === 'string',
+      validate: val => typeof val === 'string' || val === null,
     };
   },
   select<Option extends { label: string; value: string }>({
