@@ -21,6 +21,15 @@ import {
 import { SidebarProvider, Sidebar, SIDEBAR_WIDTH } from './sidebar';
 import { isGitHubConfig } from '../utils';
 
+const ConfigContext = createContext<Config | null>(null);
+export function useConfig(): Config {
+  const config = useContext(ConfigContext);
+  if (!config) {
+    throw new Error('ConfigContext.Provider not found');
+  }
+  return config;
+}
+
 export const AppShell = (props: {
   config: Config;
   children: ReactNode;
@@ -28,28 +37,30 @@ export const AppShell = (props: {
   basePath: string;
 }) => {
   const inner = (
-    <SidebarProvider>
-      <Flex
-        direction={{ mobile: 'column', tablet: 'row' }}
-        width="100vw"
-        minHeight="100vh"
-      >
-        <Sidebar hrefBase={props.basePath} config={props.config} />
-        <AppShellErrorContext.Consumer>
-          {error =>
-            error ? (
-              <EmptyState
-                icon={alertCircleIcon}
-                title="Failed to load shell"
-                message={error.message}
-              />
-            ) : (
-              props.children
-            )
-          }
-        </AppShellErrorContext.Consumer>
-      </Flex>
-    </SidebarProvider>
+    <ConfigContext.Provider value={props.config}>
+      <SidebarProvider>
+        <Flex
+          direction={{ mobile: 'column', tablet: 'row' }}
+          width="100vw"
+          minHeight="100vh"
+        >
+          <Sidebar hrefBase={props.basePath} config={props.config} />
+          <AppShellErrorContext.Consumer>
+            {error =>
+              error ? (
+                <EmptyState
+                  icon={alertCircleIcon}
+                  title="Failed to load shell"
+                  message={error.message}
+                />
+              ) : (
+                props.children
+              )
+            }
+          </AppShellErrorContext.Consumer>
+        </Flex>
+      </SidebarProvider>
+    </ConfigContext.Provider>
   );
   if (isGitHubConfig(props.config)) {
     return (

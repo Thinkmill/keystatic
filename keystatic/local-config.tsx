@@ -252,6 +252,10 @@ export default config({
           label: 'Username',
           validation: { length: { min: 4 } },
         }),
+        favouritePost: fields.relationship({
+          label: 'Favourite Post',
+          collection: 'posts',
+        }),
       },
     }),
     packages: collection({
@@ -261,6 +265,7 @@ export default config({
       format: 'json',
       schema: {
         name: fields.text({ label: 'Name' }),
+        someFilepath: fields.pathReference({ label: 'Some Filepath' }),
       },
     }),
     singlefileposts: collection({
