@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.42
+
+### Patch Changes
+
+- a569bdb: Avoid mentioning `NEXT_PUBLIC` environment variables when not using
+  Next
+
 ## 0.0.41
 
 ### Patch Changes
