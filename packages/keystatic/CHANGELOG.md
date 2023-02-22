@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.43
+
+### Patch Changes
+
+- 8582c91: Add `fields.relationship` and `fields.fileReference`
+
 ## 0.0.42
 
 ### Patch Changes
