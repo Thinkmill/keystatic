@@ -1,5 +1,13 @@
 # @keystatic/astro
 
+## 0.0.3
+
+### Patch Changes
+
+- a569bdb: Add Astro integration
+- Updated dependencies [a569bdb]
+  - @keystatic/core@0.0.42
+
 ## 0.0.2
 
 ### Patch Changes

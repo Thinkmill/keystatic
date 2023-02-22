@@ -1,5 +1,13 @@
 # localization
 
+## 0.1.11
+
+### Patch Changes
+
+- Updated dependencies [a569bdb]
+  - @keystatic/core@0.0.42
+  - @keystatic/next@0.0.3
+
 ## 0.1.10
 
 ### Patch Changes
