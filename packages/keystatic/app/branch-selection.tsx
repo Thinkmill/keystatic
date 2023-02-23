@@ -1,20 +1,23 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { gql } from '@ts-gql/tag/no-transform';
-import { ReactNode, useMemo, useRef, useState } from 'react';
+import { useMemo, useState, useContext } from 'react';
 import { useMutation } from 'urql';
 
 import { Button, ButtonGroup } from '@voussoir/button';
 import { Dialog } from '@voussoir/dialog';
 import { gitBranchIcon } from '@voussoir/icon/icons/gitBranchIcon';
 import { Icon } from '@voussoir/icon';
-import { Item, Picker, Section } from '@voussoir/picker';
+import { Item, Picker } from '@voussoir/picker';
+import { ProgressCircle } from '@voussoir/progress';
+import { Radio, RadioGroup } from '@voussoir/radio';
 import { Content, Footer } from '@voussoir/slots';
 import { TextField } from '@voussoir/text-field';
 import { Heading, Text } from '@voussoir/typography';
-import { ProgressCircle } from '@voussoir/progress';
 
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
+import { Grid } from '@voussoir/layout';
+import { BranchInfoContext, useRepositoryId } from './shell/data';
 
 type BranchPickerProps = {
   allBranches: string[];
@@ -31,31 +34,19 @@ export function BranchPicker(props: BranchPickerProps) {
       id: name,
       name,
     }));
+
     if (defaultBranch) {
       return [
         {
-          label: stringFormatter.format('defaultBranch'),
-          id: 'default-branch',
-          children: [{ id: defaultBranch, name: defaultBranch }],
+          id: defaultBranch,
+          name: defaultBranch,
+          description: stringFormatter.format('defaultBranch'),
         },
-        {
-          label: stringFormatter.format('otherBranches'),
-          id: 'other-branches',
-          children: defaultItems.filter(i => i.name !== defaultBranch),
-        },
+        ...defaultItems.filter(i => i.name !== defaultBranch),
       ];
     }
 
-    // in the rare case that there's no default branch, just show all branches.
-    // ideally this wouldn't be wrapped in a section, but it messes with the
-    // types + render functions.
-    return [
-      {
-        label: stringFormatter.format('branches'),
-        id: 'branches',
-        children: defaultItems,
-      },
-    ];
+    return defaultItems;
   }, [allBranches, defaultBranch, stringFormatter]);
 
   return (
@@ -76,36 +67,32 @@ export function BranchPicker(props: BranchPickerProps) {
         }
       }}
     >
-      {section => (
-        <Section
-          key={section.id}
-          title={section.label}
-          items={section.children}
-        >
-          {item => (
-            <Item key={item.id} textValue={item.name}>
-              <Icon src={gitBranchIcon} />
-              <Text>{item.name}</Text>
-            </Item>
+      {item => (
+        <Item key={item.id} textValue={item.name}>
+          <Icon src={gitBranchIcon} />
+          <Text>{item.name}</Text>
+          {'description' in item && (
+            <Text slot="description">{item.description}</Text>
           )}
-        </Section>
+        </Item>
       )}
     </Picker>
   );
 }
 
 export function CreateBranchDialog(props: {
-  branchOid: string;
-  repositoryId: string;
   onDismiss: () => void;
   onCreate: (branchName: string) => void;
-  children?: ReactNode;
 }) {
+  const branchInfo = useContext(BranchInfoContext);
+  const isDefaultBranch = branchInfo.defaultBranch === branchInfo.currentBranch;
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
-  const [branchName, setBranchName] = useState('');
-  const textFieldRef = useRef<HTMLInputElement>(null);
   const [{ error, fetching }, createBranch] = useCreateBranchMutation();
+  const repositoryId = useRepositoryId();
   const createBranchSubmitButtonId = 'create-branch-submit-button';
+
+  const [branchName, setBranchName] = useState('');
+  const [baseBranch, setBaseBranch] = useState(branchInfo.defaultBranch);
 
   return (
     <Dialog size="small">
@@ -117,8 +104,8 @@ export function CreateBranchDialog(props: {
           const result = await createBranch({
             input: {
               name,
-              oid: props.branchOid,
-              repositoryId: props.repositoryId,
+              oid: branchInfo.branchNameToBaseCommit.get(baseBranch)!,
+              repositoryId,
             },
           });
 
@@ -129,15 +116,50 @@ export function CreateBranchDialog(props: {
       >
         <Heading>{stringFormatter.format('newBranch')}</Heading>
         <Content>
-          {props.children}
-          <TextField
-            ref={textFieldRef}
-            value={branchName}
-            onChange={setBranchName}
-            label="Branch name"
-            autoFocus
-            errorMessage={error?.message}
-          />
+          {isDefaultBranch ? (
+            <TextField
+              value={branchName}
+              onChange={setBranchName}
+              label={stringFormatter.format('branchName')}
+              // description="Your new branch will be based on the currently checked out branch, which is the default branch for this repository."
+              autoFocus
+              errorMessage={error?.message}
+            />
+          ) : (
+            <Grid gap="xlarge">
+              <TextField
+                label={stringFormatter.format('branchName')}
+                value={branchName}
+                onChange={setBranchName}
+                autoFocus
+                errorMessage={error?.message}
+              />
+              <RadioGroup
+                label={stringFormatter.format('basedOn')}
+                value={baseBranch}
+                onChange={setBaseBranch}
+              >
+                <Radio value={branchInfo.defaultBranch}>
+                  <Text>
+                    {branchInfo.defaultBranch}
+                    <Text visuallyHidden>.</Text>
+                  </Text>
+                  <Text slot="description">
+                    {stringFormatter.format('theDefaultBranchInYourRepository')}
+                  </Text>
+                </Radio>
+                <Radio value={branchInfo.currentBranch}>
+                  <Text>
+                    {branchInfo.currentBranch}
+                    <Text visuallyHidden>.</Text>
+                  </Text>
+                  <Text slot="description">
+                    {stringFormatter.format('theCurrentlyCheckedOutBranch')}
+                  </Text>
+                </Radio>
+              </RadioGroup>
+            </Grid>
+          )}
         </Content>
 
         <Footer UNSAFE_style={{ justifyContent: 'flex-end' }}>

@@ -1,0 +1,6 @@
+{
+  "key": "theCurrentlyCheckedOutBranch",
+  "value": "当前签出的分支。 如果您需要在当前分支的现有工作的基础上构建，请选择此项。",
+  "notes": "",
+  "type": "git-related"
+}

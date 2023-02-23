@@ -16,15 +16,13 @@ import { Text } from '@voussoir/typography';
 import { useRouter } from '../router';
 import { BranchPicker, CreateBranchDialog } from '../branch-selection';
 import l10nMessages from '../l10n/index.json';
-import { BranchInfoContext, useBaseCommit, useRepositoryId } from './data';
+import { BranchInfoContext } from './data';
 
 export function SidebarHeader(props: {
   repo: { owner: string; name: string };
 }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const data = useContext(BranchInfoContext);
-  const baseCommit = useBaseCommit();
-  const repositoryId = useRepositoryId();
   const [newBranchDialogVisible, toggleNewBranchDialog] = useReducer(
     v => !v,
     false
@@ -178,8 +176,6 @@ export function SidebarHeader(props: {
                 )
               );
             }}
-            branchOid={baseCommit}
-            repositoryId={repositoryId}
           />
         )}
       </DialogContainer>

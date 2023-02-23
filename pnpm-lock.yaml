@@ -1920,6 +1920,7 @@ importers:
       '@voussoir/overlays': ^0.1.1
       '@voussoir/picker': ^0.1.0
       '@voussoir/progress': ^0.1.0
+      '@voussoir/radio': ^0.1.0
       '@voussoir/search-field': ^0.1.2
       '@voussoir/slots': ^0.1.0
       '@voussoir/ssr': ^0.1.0
@@ -2009,6 +2010,7 @@ importers:
       '@voussoir/overlays': link:../../design-system/packages/overlays
       '@voussoir/picker': link:../../design-system/packages/picker
       '@voussoir/progress': link:../../design-system/packages/progress
+      '@voussoir/radio': link:../../design-system/packages/radio
       '@voussoir/search-field': link:../../design-system/packages/search-field
       '@voussoir/slots': link:../../design-system/packages/slots
       '@voussoir/ssr': link:../../design-system/packages/ssr

@@ -1,0 +1,6 @@
+{
+  "key": "theCurrentlyCheckedOutBranch",
+  "value": "A jelenleg kivett fiók. Válassza ezt, ha az aktuális ág meglévő munkájára kell építenie.",
+  "notes": "",
+  "type": "git-related"
+}

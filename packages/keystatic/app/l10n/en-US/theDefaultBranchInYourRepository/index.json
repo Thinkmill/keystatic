@@ -1,0 +1,6 @@
+{
+  "key": "theDefaultBranchInYourRepository",
+  "value": "The default branch in your repository. Choose this to start something new that's not dependent on your current branch.",
+  "notes": "",
+  "type": "git-related"
+}

@@ -1,0 +1,6 @@
+{
+  "key": "theCurrentlyCheckedOutBranch",
+  "value": "The currently checked out branch. Choose this if you need to build on existing work from the current branch.",
+  "notes": "",
+  "type": "git-related"
+}
