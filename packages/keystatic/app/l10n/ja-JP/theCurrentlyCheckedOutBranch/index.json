@@ -1,0 +1,6 @@
+{
+  "key": "theCurrentlyCheckedOutBranch",
+  "value": "現在チェックアウトされているブランチ。 現在のブランチの既存の作業に基づいて構築する必要がある場合は、これを選択してください。",
+  "notes": "",
+  "type": "git-related"
+}
