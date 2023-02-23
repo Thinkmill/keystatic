@@ -1,6 +1,6 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { gql } from '@ts-gql/tag/no-transform';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useContext } from 'react';
 import { useMutation } from 'urql';
 
 import { Button, ButtonGroup } from '@voussoir/button';
@@ -17,6 +17,7 @@ import { Heading, Text } from '@voussoir/typography';
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
 import { Grid } from '@voussoir/layout';
+import { BranchInfoContext, useRepositoryId } from './shell/data';
 
 type BranchPickerProps = {
   allBranches: string[];
@@ -80,21 +81,18 @@ export function BranchPicker(props: BranchPickerProps) {
 }
 
 export function CreateBranchDialog(props: {
-  branchOid: string;
-  repositoryId: string;
   onDismiss: () => void;
   onCreate: (branchName: string) => void;
-  currentBranch: string;
-  defaultBranch?: string;
 }) {
-  const { currentBranch, defaultBranch } = props;
-  const isDefaultBranch = defaultBranch && defaultBranch === currentBranch;
+  const branchInfo = useContext(BranchInfoContext);
+  const isDefaultBranch = branchInfo.defaultBranch === branchInfo.currentBranch;
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const [{ error, fetching }, createBranch] = useCreateBranchMutation();
+  const repositoryId = useRepositoryId();
   const createBranchSubmitButtonId = 'create-branch-submit-button';
 
   const [branchName, setBranchName] = useState('');
-  const [baseBranch, setBaseBranch] = useState(defaultBranch ?? currentBranch);
+  const [baseBranch, setBaseBranch] = useState(branchInfo.defaultBranch);
 
   return (
     <Dialog size="small">
@@ -106,8 +104,8 @@ export function CreateBranchDialog(props: {
           const result = await createBranch({
             input: {
               name,
-              oid: props.branchOid,
-              repositoryId: props.repositoryId,
+              oid: branchInfo.branchNameToBaseCommit.get(baseBranch)!,
+              repositoryId,
             },
           });
 
@@ -118,7 +116,7 @@ export function CreateBranchDialog(props: {
       >
         <Heading>{stringFormatter.format('newBranch')}</Heading>
         <Content>
-          {!defaultBranch || isDefaultBranch ? (
+          {isDefaultBranch ? (
             <TextField
               value={branchName}
               onChange={setBranchName}
@@ -141,18 +139,18 @@ export function CreateBranchDialog(props: {
                 value={baseBranch}
                 onChange={setBaseBranch}
               >
-                <Radio value={defaultBranch}>
+                <Radio value={branchInfo.defaultBranch}>
                   <Text>
-                    {defaultBranch}
+                    {branchInfo.defaultBranch}
                     <Text visuallyHidden>.</Text>
                   </Text>
                   <Text slot="description">
                     {stringFormatter.format('theDefaultBranchInYourRepository')}
                   </Text>
                 </Radio>
-                <Radio value={currentBranch}>
+                <Radio value={branchInfo.currentBranch}>
                   <Text>
-                    {currentBranch}
+                    {branchInfo.currentBranch}
                     <Text visuallyHidden>.</Text>
                   </Text>
                   <Text slot="description">

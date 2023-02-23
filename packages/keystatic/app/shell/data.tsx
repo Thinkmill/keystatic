@@ -199,6 +199,11 @@ export function GitHubAppShellProvider(props: {
           ?.filter(isDefined)
           .map(x => [x.name, x.id])
       ),
+      branchNameToBaseCommit: new Map(
+        data?.repository?.refs?.nodes?.flatMap(x =>
+          x?.target ? [[x.name, x.target.oid]] : []
+        )
+      ),
     }),
     [
       data?.repository?.defaultBranchRef?.name,
@@ -379,12 +384,14 @@ export const BranchInfoContext = createContext<{
   branchNameToId: Map<string, string>;
   defaultBranch: string;
   hasPullRequests: boolean;
+  branchNameToBaseCommit: Map<string, string>;
 }>({
   currentBranch: '',
   allBranches: [],
   defaultBranch: '',
   hasPullRequests: false,
   branchNameToId: new Map(),
+  branchNameToBaseCommit: new Map(),
 });
 
 function getChangedData(

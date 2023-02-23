@@ -22,12 +22,10 @@ import { getCollectionPath, keyedEntries, pluralize } from '../utils';
 
 import { getTreeNodeAtPath } from '../trees';
 import {
-  useBaseCommit,
   useChanged,
   useTree,
   TreeData,
   BranchInfoContext,
-  useRepositoryId,
 } from '../shell/data';
 import { AppShellHeader } from '../shell/header';
 
@@ -194,8 +192,6 @@ function Branches() {
         return 1;
       });
   }, [branchInfo.allBranches, branchInfo.defaultBranch, stringFormatter]);
-  const baseCommit = useBaseCommit();
-  const repositoryId = useRepositoryId();
 
   return (
     <Flex
@@ -252,8 +248,6 @@ function Branches() {
             </div>
             {close => (
               <CreateBranchDialog
-                currentBranch={branchInfo.currentBranch}
-                defaultBranch={branchInfo.defaultBranch}
                 onDismiss={close}
                 onCreate={branchName => {
                   close();
@@ -264,8 +258,6 @@ function Branches() {
                     )
                   );
                 }}
-                branchOid={baseCommit}
-                repositoryId={repositoryId}
               />
             )}
           </DialogTrigger>
