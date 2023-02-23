@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/list-view",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Displays a list of interactive items, and allows a user to navigate, select, or perform an action.",
   "license": "MIT",
   "main": "dist/voussoir-list-view.cjs.js",
@@ -32,7 +32,7 @@
     "@react-stately/list": "^3.6.0",
     "@react-types/grid": "^3.1.5",
     "@react-types/shared": "^3.14.1",
-    "@voussoir/checkbox": "^0.1.0",
+    "@voussoir/checkbox": "^0.2.0",
     "@voussoir/core": "^4.0.1",
     "@voussoir/drag-and-drop": "^0.1.0",
     "@voussoir/icon": "^0.1.0",

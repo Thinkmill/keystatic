@@ -1,5 +1,16 @@
 # @keystatic/core
 
+## 0.0.46
+
+### Patch Changes
+
+- Updated dependencies [fbcfca4]
+  - @voussoir/checkbox@0.2.0
+  - @voussoir/text-field@0.1.2
+  - @voussoir/field@0.1.2
+  - @voussoir/list-view@0.1.2
+  - @voussoir/table@0.1.1
+
 ## 0.0.45
 
 ### Patch Changes
