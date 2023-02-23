@@ -1,0 +1,6 @@
+{
+  "key": "theCurrentlyCheckedOutBranch",
+  "value": "Den aktuelt tjekkede filial. Vælg dette, hvis du skal bygge videre på eksisterende arbejde fra den nuværende filial.",
+  "notes": "",
+  "type": "git-related"
+}
