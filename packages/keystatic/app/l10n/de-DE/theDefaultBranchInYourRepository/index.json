@@ -1,0 +1,6 @@
+{
+  "key": "theDefaultBranchInYourRepository",
+  "value": "Der Standard-Branch in Ihrem Repository. Wählen Sie dies, um mit etwas Neuem zu beginnen, das nicht von Ihrem aktuellen Zweig abhängt.",
+  "notes": "",
+  "type": "git-related"
+}
