@@ -2,9 +2,9 @@ import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
 
 import { Text } from '@voussoir/typography';
 
-import { Radio, RadioGroup, RadioGroupProps } from '../src';
+import { Checkbox, CheckboxGroup, CheckboxGroupProps } from '../src';
 
-storiesOf('Components/RadioGroup', module)
+storiesOf('Components/Checkbox/CheckboxGroup', module)
   .addParameters({
     providerSwitcher: { status: 'positive' },
     args: {
@@ -17,7 +17,7 @@ storiesOf('Components/RadioGroup', module)
     argTypes: {
       orientation: {
         control: {
-          type: 'radio',
+          type: 'checkbox',
           options: ['horizontal', 'vertical'],
         },
       },
@@ -25,12 +25,12 @@ storiesOf('Components/RadioGroup', module)
   })
   .add('default', (args: ArgTypes) => render(args))
   .add('defaultValue: quokka', (args: ArgTypes) =>
-    render({ ...args, defaultValue: 'quokka' })
+    render({ ...args, defaultValue: ['quokka'] })
   )
   .add('controlled: quokka', (args: ArgTypes) =>
-    render({ ...args, value: 'quokka' })
+    render({ ...args, value: ['quokka'] })
   )
-  .add('isDisabled on one radio', (args: ArgTypes) =>
+  .add('isDisabled on one checkbox', (args: ArgTypes) =>
     render(args, [{}, { isDisabled: true }, {}])
   )
   .add('with description', (args: ArgTypes) =>
@@ -47,50 +47,59 @@ storiesOf('Components/RadioGroup', module)
     render({ ...args, label: null, 'aria-label': 'Favourite marsupial' })
   )
   .add('custom label', (args: ArgTypes) => renderLongLabel(args))
-  .add('autoFocus on one radio', (args: ArgTypes) =>
+  .add('autoFocus on one checkbox', (args: ArgTypes) =>
     render(args, [{}, { autoFocus: true }, {}])
   );
 
-function render(props: Partial<RadioGroupProps>, radioProps = [{}, {}, {}]) {
+function render(
+  props: Partial<CheckboxGroupProps>,
+  checkboxProps = [{}, {}, {}]
+) {
   return (
-    <RadioGroup
+    <CheckboxGroup
       label="Favourite marsupial"
       {...props}
       onChange={action('onChange')}
     >
-      <Radio value="bilby" {...radioProps[0]}>
+      <Checkbox value="bilby" {...checkboxProps[0]}>
         Bilby
-      </Radio>
-      <Radio value="kangaroo" {...radioProps[1]}>
+      </Checkbox>
+      <Checkbox value="kangaroo" {...checkboxProps[1]}>
         Kangaroo
-      </Radio>
-      <Radio value="quokka" {...radioProps[2]}>
+      </Checkbox>
+      <Checkbox value="quokka" {...checkboxProps[2]}>
         Quokka
-      </Radio>
-    </RadioGroup>
+      </Checkbox>
+    </CheckboxGroup>
   );
 }
 
 function renderLongLabel(
-  props: Partial<RadioGroupProps>,
-  radioProps = [{}, {}, {}]
+  props: Partial<CheckboxGroupProps>,
+  checkboxProps = [{}, {}, {}]
 ) {
   return (
-    <RadioGroup width={320} {...props} onChange={action('onChange')}>
-      <Radio value="bilby" {...radioProps[0]}>
+    <CheckboxGroup
+      width={320}
+      {...props}
+      onChange={action('onChange')}
+      description="Please select one."
+      errorMessage="You must select a value."
+    >
+      <Checkbox value="bilby" {...checkboxProps[0]}>
         <Text>Bilby label text, with multiple paragraphs.</Text>
         <Text slot="description">
           Including <em>emphasis</em> and <strong>strong emphasis</strong>{' '}
           brownie danish marshmallow tootsie roll caramels tiramisu cake candy
           canes.
         </Text>
-      </Radio>
-      <Radio value="kangaroo" {...radioProps[1]}>
+      </Checkbox>
+      <Checkbox value="kangaroo" {...checkboxProps[1]}>
         Kangaroo
-      </Radio>
-      <Radio value="quokka" {...radioProps[2]}>
+      </Checkbox>
+      <Checkbox value="quokka" {...checkboxProps[2]}>
         Quokka
-      </Radio>
-    </RadioGroup>
+      </Checkbox>
+    </CheckboxGroup>
   );
 }

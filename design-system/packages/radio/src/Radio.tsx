@@ -13,8 +13,8 @@ import {
 import { Text } from '@voussoir/typography';
 import { isReactText } from '@voussoir/utils';
 
-import { RadioProps } from './types';
 import { useRadioProvider } from './context';
+import { RadioProps } from './types';
 
 export function Radio(props: RadioProps) {
   let { children, autoFocus, ...otherProps } = props;

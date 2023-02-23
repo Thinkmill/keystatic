@@ -1,17 +1,16 @@
 import { RadioGroupState } from '@react-stately/radio';
 import { ValidationState } from '@react-types/shared';
-import React, { useContext } from 'react';
+import React from 'react';
 
-interface RadioGroupContext {
-  name?: string;
+type RadioGroupContext = {
   validationState?: ValidationState;
   state: RadioGroupState;
-}
+};
 
 export const RadioContext = React.createContext<RadioGroupContext | null>(null);
 
 export function useRadioProvider(): RadioGroupContext {
-  const context = useContext(RadioContext);
+  const context = React.useContext(RadioContext);
   if (!context) {
     throw new Error(
       'useRadioProvider must be used within a RadioGroupProvider'

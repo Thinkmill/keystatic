@@ -514,11 +514,15 @@ importers:
       '@babel/runtime': ^7.18.3
       '@react-aria/checkbox': ^3.5.1
       '@react-aria/focus': ^3.10.0
+      '@react-stately/checkbox': ^3.3.2
       '@react-stately/toggle': ^3.4.3
       '@react-types/shared': ^3.14.1
       '@types/react': ^18.0.25
+      '@voussoir/core': ^4.0.0
+      '@voussoir/field': ^0.1.1
       '@voussoir/icon': ^0.1.0
       '@voussoir/layout': ^0.1.0
+      '@voussoir/slots': ^0.1.0
       '@voussoir/storybook': ^0.0.0
       '@voussoir/style': ^0.1.0
       '@voussoir/types': ^0.1.0
@@ -529,10 +533,14 @@ importers:
       '@babel/runtime': 7.21.0
       '@react-aria/checkbox': 3.7.1_react@18.2.0
       '@react-aria/focus': 3.10.1_react@18.2.0
+      '@react-stately/checkbox': 3.3.2_react@18.2.0
       '@react-stately/toggle': 3.4.4_react@18.2.0
       '@react-types/shared': 3.16.0_react@18.2.0
+      '@voussoir/core': link:../core
+      '@voussoir/field': link:../field
       '@voussoir/icon': link:../icon
       '@voussoir/layout': link:../layout
+      '@voussoir/slots': link:../slots
       '@voussoir/style': link:../style
       '@voussoir/types': link:../types
       '@voussoir/typography': link:../typography
@@ -1378,6 +1386,7 @@ importers:
       '@react-aria/radio': 3.4.2_react@18.2.0
       '@react-stately/radio': 3.6.2_react@18.2.0
       '@react-types/radio': 3.3.1_react@18.2.0
+      '@voussoir/core': link:../core
       '@voussoir/field': link:../field
       '@voussoir/layout': link:../layout
       '@voussoir/slots': link:../slots
@@ -1387,7 +1396,6 @@ importers:
       '@voussoir/utils': link:../utils
     devDependencies:
       '@types/react': 18.0.28
-      '@voussoir/core': link:../core
       '@voussoir/icon': link:../icon
       '@voussoir/storybook': link:../../docs/storybook
       '@voussoir/test-utils': link:../test-utils
@@ -10472,7 +10480,7 @@ packages:
       mississippi: 3.0.0
       mkdirp: 0.5.6
       move-concurrently: 1.0.1
-      promise-inflight: 1.0.1
+      promise-inflight: 1.0.1_bluebird@3.7.2
       rimraf: 2.7.1
       ssri: 6.0.2
       unique-filename: 1.1.1
@@ -10496,7 +10504,7 @@ packages:
       minipass-pipeline: 1.2.4
       mkdirp: 1.0.4
       p-map: 4.0.0
-      promise-inflight: 1.0.1
+      promise-inflight: 1.0.1_bluebird@3.7.2
       rimraf: 3.0.2
       ssri: 8.0.1
       tar: 6.1.13
@@ -19077,13 +19085,15 @@ packages:
     engines: {node: '>= 0.6.0'}
     dev: true
 
-  /promise-inflight/1.0.1:
+  /promise-inflight/1.0.1_bluebird@3.7.2:
     resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
     peerDependencies:
       bluebird: '*'
     peerDependenciesMeta:
       bluebird:
         optional: true
+    dependencies:
+      bluebird: 3.7.2
     dev: true
 
   /promise.allsettled/1.0.6:

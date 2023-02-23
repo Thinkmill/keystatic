@@ -1,11 +1,11 @@
-import { HTMLAttributes, useRef } from 'react';
-
-import { useCheckbox } from '@react-aria/checkbox';
+import { useCheckbox, useCheckboxGroupItem } from '@react-aria/checkbox';
 import { useToggleState } from '@react-stately/toggle';
+import { HTMLAttributes, useContext, useMemo, useRef } from 'react';
 
 import { Icon } from '@voussoir/icon';
 import { checkIcon } from '@voussoir/icon/icons/checkIcon';
 import { minusIcon } from '@voussoir/icon/icons/minusIcon';
+import { SlotProvider } from '@voussoir/slots';
 import {
   FocusRing,
   classNames,
@@ -18,6 +18,7 @@ import { Text } from '@voussoir/typography';
 import { isReactText } from '@voussoir/utils';
 
 import { CheckboxProps } from './types';
+import { CheckboxGroupContext } from './context';
 
 export function Checkbox(props: CheckboxProps) {
   let {
@@ -28,9 +29,28 @@ export function Checkbox(props: CheckboxProps) {
     ...otherProps
   } = props;
   let styleProps = useStyleProps(otherProps);
-  let ref = useRef<HTMLInputElement>(null);
-  let state = useToggleState(props);
-  let { inputProps } = useCheckbox(props, state, ref);
+  let inputRef = useRef<HTMLInputElement>(null);
+
+  // Swap hooks depending on whether this checkbox is inside a CheckboxGroup.
+  // This is a bit unorthodox. Typically, hooks cannot be called in a conditional,
+  // but since the checkbox won't move in and out of a group, it should be safe.
+  let groupState = useContext(CheckboxGroupContext);
+  let { inputProps } = groupState
+    ? // eslint-disable-next-line react-hooks/rules-of-hooks
+      useCheckboxGroupItem(
+        {
+          ...props,
+          // Value is optional for standalone checkboxes, but required for
+          // CheckboxGroup items; it's passed explicitly here to avoid
+          // typescript error (requires ignore).
+          // @ts-ignore
+          value: props.value,
+        },
+        groupState.state,
+        inputRef
+      )
+    : // eslint-disable-next-line react-hooks/rules-of-hooks
+      useCheckbox(props, useToggleState(props), inputRef);
 
   const labelClassName = css({
     alignItems: 'flex-start',
@@ -39,6 +59,14 @@ export function Checkbox(props: CheckboxProps) {
     position: 'relative',
     userSelect: 'none',
   });
+  const slots = useMemo(
+    () =>
+      ({
+        text: { color: 'inherit' },
+        description: { color: 'neutralTertiary' },
+      } as const),
+    []
+  );
 
   return (
     <label
@@ -49,7 +77,7 @@ export function Checkbox(props: CheckboxProps) {
       <FocusRing autoFocus={autoFocus}>
         <input
           {...inputProps}
-          ref={ref}
+          ref={inputRef}
           className={classNames(
             css({
               position: 'absolute',
@@ -61,15 +89,13 @@ export function Checkbox(props: CheckboxProps) {
         />
       </FocusRing>
       <Indicator isIndeterminate={isIndeterminate} />
-      {children && (
-        <Content>
-          {isReactText(children) ? (
-            <Text color="inherit">{children}</Text>
-          ) : (
-            children
-          )}
-        </Content>
-      )}
+      <SlotProvider slots={slots}>
+        {children && (
+          <Content>
+            {isReactText(children) ? <Text>{children}</Text> : children}
+          </Content>
+        )}
+      </SlotProvider>
     </label>
   );
 }
@@ -191,7 +217,9 @@ const Content = (props: HTMLAttributes<HTMLDivElement>) => {
       className={classNames(
         css({
           color: tokenSchema.color.alias.foregroundIdle,
+          display: 'grid',
           paddingTop: `calc((${sizeToken} - ${tokenSchema.fontsize.text.regular.capheight}) / 2)`,
+          gap: tokenSchema.size.space.large,
 
           'input[type="checkbox"]:hover ~ &': {
             color: tokenSchema.color.alias.foregroundHovered,

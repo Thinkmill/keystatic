@@ -1,35 +1,34 @@
-import { useRadioGroup } from '@react-aria/radio';
-import { useRadioGroupState } from '@react-stately/radio';
+import { useCheckboxGroup } from '@react-aria/checkbox';
+import { useCheckboxGroupState } from '@react-stately/checkbox';
 import React, {
-  ForwardRefExoticComponent,
   ForwardedRef,
+  ForwardRefExoticComponent,
   forwardRef,
 } from 'react';
 
 import { useProviderProps } from '@voussoir/core';
 import { FieldPrimitive, validateFieldProps } from '@voussoir/field';
 import { classNames, css, tokenSchema } from '@voussoir/style';
+
+import { CheckboxGroupContext } from './context';
+import { CheckboxGroupProps } from './types';
 import { toDataAttributes } from '@voussoir/utils';
 
-import { RadioContext } from './context';
-import { RadioGroupProps } from './types';
-
 /**
- * Radio groups allow users to select a single option from a list of mutually
- * exclusive options.
+ * A checkbox group allows users to select one or more items from a list of
+ * choices.
  */
-export const RadioGroup: ForwardRefExoticComponent<RadioGroupProps> =
-  forwardRef(function RadioGroup(
-    props: RadioGroupProps,
+export const CheckboxGroup: ForwardRefExoticComponent<CheckboxGroupProps> =
+  forwardRef(function CheckboxGroup(
+    props: CheckboxGroupProps,
     forwardedRef: ForwardedRef<HTMLDivElement>
   ) {
     props = useProviderProps(props);
     props = validateFieldProps(props);
-    let { validationState, children, orientation = 'vertical' } = props;
-
-    let state = useRadioGroupState(props);
-    let { radioGroupProps, labelProps, descriptionProps, errorMessageProps } =
-      useRadioGroup(props, state);
+    let { children, orientation = 'vertical', validationState } = props;
+    let state = useCheckboxGroupState(props);
+    let { labelProps, groupProps, descriptionProps, errorMessageProps } =
+      useCheckboxGroup(props, state);
 
     return (
       <FieldPrimitive
@@ -38,9 +37,10 @@ export const RadioGroup: ForwardRefExoticComponent<RadioGroupProps> =
         labelProps={labelProps}
         descriptionProps={descriptionProps}
         errorMessageProps={errorMessageProps}
+        supplementRequiredState
       >
         <div
-          {...radioGroupProps}
+          {...groupProps}
           {...toDataAttributes({ orientation })}
           className={classNames(
             css({
@@ -53,9 +53,9 @@ export const RadioGroup: ForwardRefExoticComponent<RadioGroupProps> =
             })
           )}
         >
-          <RadioContext.Provider value={{ validationState, state }}>
+          <CheckboxGroupContext.Provider value={{ validationState, state }}>
             {children}
-          </RadioContext.Provider>
+          </CheckboxGroupContext.Provider>
         </div>
       </FieldPrimitive>
     );
