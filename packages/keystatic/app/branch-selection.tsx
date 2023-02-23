@@ -8,13 +8,15 @@ import { Dialog } from '@voussoir/dialog';
 import { gitBranchIcon } from '@voussoir/icon/icons/gitBranchIcon';
 import { Icon } from '@voussoir/icon';
 import { Item, Picker } from '@voussoir/picker';
+import { ProgressCircle } from '@voussoir/progress';
+import { Radio, RadioGroup } from '@voussoir/radio';
 import { Content, Footer } from '@voussoir/slots';
 import { TextField } from '@voussoir/text-field';
 import { Heading, Text } from '@voussoir/typography';
-import { ProgressCircle } from '@voussoir/progress';
 
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
+import { Grid } from '@voussoir/layout';
 
 type BranchPickerProps = {
   allBranches: string[];
@@ -84,13 +86,15 @@ export function CreateBranchDialog(props: {
   onCreate: (branchName: string) => void;
   currentBranch: string;
   defaultBranch?: string;
-  children?: ReactNode;
 }) {
+  const { currentBranch, defaultBranch } = props;
+  const isDefaultBranch = defaultBranch === currentBranch;
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
-  const [branchName, setBranchName] = useState('');
-  const textFieldRef = useRef<HTMLInputElement>(null);
   const [{ error, fetching }, createBranch] = useCreateBranchMutation();
   const createBranchSubmitButtonId = 'create-branch-submit-button';
+
+  const [branchName, setBranchName] = useState('');
+  const [baseBranch, setBaseBranch] = useState(defaultBranch ?? currentBranch);
 
   return (
     <Dialog size="small">
@@ -114,15 +118,50 @@ export function CreateBranchDialog(props: {
       >
         <Heading>{stringFormatter.format('newBranch')}</Heading>
         <Content>
-          {props.children}
-          <TextField
-            ref={textFieldRef}
-            value={branchName}
-            onChange={setBranchName}
-            label="Branch name"
-            autoFocus
-            errorMessage={error?.message}
-          />
+          {isDefaultBranch ? (
+            <TextField
+              value={branchName}
+              onChange={setBranchName}
+              label={stringFormatter.format('branchName')}
+              // description="Your new branch will be based on the currently checked out branch, which is the default branch for this repository."
+              autoFocus
+              errorMessage={error?.message}
+            />
+          ) : (
+            <Grid gap="xlarge">
+              <TextField
+                label={stringFormatter.format('branchName')}
+                value={branchName}
+                onChange={setBranchName}
+                autoFocus
+                errorMessage={error?.message}
+              />
+              <RadioGroup
+                label={stringFormatter.format('basedOn')}
+                value={baseBranch}
+                onChange={setBaseBranch}
+              >
+                <Radio value={defaultBranch}>
+                  <Text>
+                    {defaultBranch}
+                    <Text visuallyHidden>.</Text>
+                  </Text>
+                  <Text slot="description">
+                    {stringFormatter.format('theDefaultBranchInYourRepository')}
+                  </Text>
+                </Radio>
+                <Radio value={currentBranch}>
+                  <Text>
+                    {currentBranch}
+                    <Text visuallyHidden>.</Text>
+                  </Text>
+                  <Text slot="description">
+                    {stringFormatter.format('theCurrentlyCheckedOutBranch')}
+                  </Text>
+                </Radio>
+              </RadioGroup>
+            </Grid>
+          )}
         </Content>
 
         <Footer UNSAFE_style={{ justifyContent: 'flex-end' }}>

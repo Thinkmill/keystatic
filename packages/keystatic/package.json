@@ -82,6 +82,7 @@
     "@voussoir/overlays": "^0.1.1",
     "@voussoir/picker": "^0.1.0",
     "@voussoir/progress": "^0.1.0",
+    "@voussoir/radio": "^0.1.0",
     "@voussoir/search-field": "^0.1.2",
     "@voussoir/slots": "^0.1.0",
     "@voussoir/ssr": "^0.1.0",
