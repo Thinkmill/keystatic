@@ -1,0 +1,6 @@
+{
+  "key": "theCurrentlyCheckedOutBranch",
+  "value": "La branche actuellement extraite. Choisissez cette option si vous devez vous appuyer sur le travail existant de la branche actuelle.",
+  "notes": "",
+  "type": "git-related"
+}
