@@ -33,7 +33,7 @@ export const FieldLabel = forwardRefWithAs<FieldLabelProps, 'label'>(
     forwardedRef
   ) {
     const styleProps = useTextStyles({
-      color: 'neutralEmphasis',
+      color: 'neutral',
       size: 'regular',
       trim: true,
       weight: 'semibold',

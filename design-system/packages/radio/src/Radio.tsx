@@ -1,10 +1,6 @@
-import { useCheckbox, useCheckboxGroupItem } from '@react-aria/checkbox';
-import { useToggleState } from '@react-stately/toggle';
-import { HTMLAttributes, useContext, useMemo, useRef } from 'react';
+import { useRadio } from '@react-aria/radio';
+import { HTMLAttributes, useMemo, useRef } from 'react';
 
-import { Icon } from '@voussoir/icon';
-import { checkIcon } from '@voussoir/icon/icons/checkIcon';
-import { minusIcon } from '@voussoir/icon/icons/minusIcon';
 import { SlotProvider } from '@voussoir/slots';
 import {
   FocusRing,
@@ -17,41 +13,30 @@ import {
 import { Text } from '@voussoir/typography';
 import { isReactText } from '@voussoir/utils';
 
-import { CheckboxProps } from './types';
-import { CheckboxGroupContext } from './context';
+import { useRadioProvider } from './context';
+import { RadioProps } from './types';
 
-export function Checkbox(props: CheckboxProps) {
-  let {
-    isIndeterminate = false,
-    isDisabled = false,
-    autoFocus,
-    children,
-    ...otherProps
-  } = props;
+export function Radio(props: RadioProps) {
+  let { children, autoFocus, ...otherProps } = props;
   let styleProps = useStyleProps(otherProps);
+
   let inputRef = useRef<HTMLInputElement>(null);
 
-  // Swap hooks depending on whether this checkbox is inside a CheckboxGroup.
-  // This is a bit unorthodox. Typically, hooks cannot be called in a conditional,
-  // but since the checkbox won't move in and out of a group, it should be safe.
-  let groupState = useContext(CheckboxGroupContext);
-  let { inputProps } = groupState
-    ? // eslint-disable-next-line react-hooks/rules-of-hooks
-      useCheckboxGroupItem(
-        {
-          ...props,
-          // Value is optional for standalone checkboxes, but required for
-          // CheckboxGroup items; it's passed explicitly here to avoid
-          // typescript error (requires ignore).
-          // @ts-ignore
-          value: props.value,
-        },
-        groupState.state,
-        inputRef
-      )
-    : // eslint-disable-next-line react-hooks/rules-of-hooks
-      useCheckbox(props, useToggleState(props), inputRef);
+  let radioGroupProps = useRadioProvider();
+  let { state } = radioGroupProps;
 
+  let { inputProps } = useRadio(
+    { ...props, ...radioGroupProps },
+    state,
+    inputRef
+  );
+
+  const inputClassName = css({
+    position: 'absolute',
+    zIndex: 1,
+    inset: `calc(${tokenSchema.size.space.regular} * -1)`, // expand hit area
+    opacity: 0.0001,
+  });
   const labelClassName = css({
     alignItems: 'flex-start',
     display: 'inline-flex',
@@ -70,7 +55,6 @@ export function Checkbox(props: CheckboxProps) {
 
   return (
     <label
-      data-disabled={isDisabled}
       className={classNames(styleProps.className, labelClassName)}
       style={styleProps.style}
     >
@@ -78,17 +62,10 @@ export function Checkbox(props: CheckboxProps) {
         <input
           {...inputProps}
           ref={inputRef}
-          className={classNames(
-            css({
-              position: 'absolute',
-              zIndex: 1,
-              inset: `calc(${tokenSchema.size.space.regular} * -1)`, // expand hit area
-              opacity: 0.0001,
-            })
-          )}
+          className={classNames(inputClassName)}
         />
       </FocusRing>
-      <Indicator isIndeterminate={isIndeterminate} />
+      <Indicator inputClassName={inputClassName} />
       <SlotProvider slots={slots}>
         {children && (
           <Content>
@@ -104,17 +81,17 @@ export function Checkbox(props: CheckboxProps) {
 // -----------------------------------------------------------------------------
 
 let sizeToken = tokenSchema.size.element.xsmall;
-type IndicatorProps = { isIndeterminate: boolean };
+type IndicatorProps = { inputClassName: string };
 
 const Indicator = (props: IndicatorProps) => {
-  let { isIndeterminate } = props;
+  let { inputClassName } = props;
 
   return (
     <span
       className={classNames(
         css({
           backgroundColor: tokenSchema.color.background.canvas,
-          borderRadius: tokenSchema.size.radius.small,
+          borderRadius: tokenSchema.size.radius.full,
           color: tokenSchema.color.foreground.onEmphasis,
           display: 'flex',
           flexShrink: 0,
@@ -125,7 +102,7 @@ const Indicator = (props: IndicatorProps) => {
           width: sizeToken,
 
           // indicator icons
-          '.ksv-checkbox-indicator': {
+          '.ksv-radio-indicator': {
             opacity: 0,
             transform: `scale(0) translate3d(0, 0, 0)`,
             transition: transition(['opacity', 'transform']),
@@ -134,7 +111,7 @@ const Indicator = (props: IndicatorProps) => {
 
           // focus ring
           '::after': {
-            borderRadius: `calc(${tokenSchema.size.alias.focusRingGap} + ${tokenSchema.size.radius.small})`,
+            borderRadius: tokenSchema.size.radius.full,
             content: '""',
             inset: 0,
             margin: 0,
@@ -143,7 +120,7 @@ const Indicator = (props: IndicatorProps) => {
               easing: 'easeOut',
             }),
           },
-          'input[type="checkbox"][data-focus=visible] + &::after': {
+          [`.${inputClassName}[data-focus=visible] + &::after`]: {
             boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
             margin: `calc(${tokenSchema.size.alias.focusRingGap} * -1)`,
           },
@@ -156,56 +133,58 @@ const Indicator = (props: IndicatorProps) => {
             inset: 0,
             margin: 0,
             position: 'absolute',
-            transition: transition(['border-color', 'border-width']),
+            transition: transition(['border-color', 'border-width'], {
+              duration: 'regular',
+            }),
           },
 
-          'input[type="checkbox"]:disabled + &': {
+          [`.${inputClassName}:disabled + &`]: {
             color: tokenSchema.color.alias.foregroundDisabled,
             '&::before': {
               borderColor: tokenSchema.color.alias.borderDisabled,
             },
           },
-          'input[type="checkbox"]:enabled:hover + &::before': {
+          [`.${inputClassName}:enabled:hover + &::before`]: {
             borderColor: tokenSchema.color.alias.borderHovered,
           },
-          'input[type="checkbox"]:enabled:active + &::before': {
+          [`.${inputClassName}:enabled:active + &::before`]: {
             borderColor: tokenSchema.color.alias.borderPressed,
           },
 
           // checked states
-          'input[type="checkbox"]:checked + &, input[type="checkbox"]:indeterminate + &':
-            {
-              '&::before': {
-                borderWidth: `calc(${sizeToken} / 2)`,
-              },
+          [`.${inputClassName}:checked + &`]: {
+            '&::before': {
+              borderWidth: `calc(${sizeToken} / 2)`,
+            },
 
-              '.ksv-checkbox-indicator': {
-                opacity: 1,
-                transform: `scale(1)`,
-              },
+            '.ksv-radio-indicator': {
+              opacity: 1,
+              transform: `scale(1)`,
             },
-          'input[type="checkbox"]:enabled:checked + &::before, input[type="checkbox"]:enabled:indeterminate + &::before':
-            {
-              borderColor: tokenSchema.color.scale.indigo9,
-            },
-          'input[type="checkbox"]:enabled:checked:hover + &::before, input[type="checkbox"]:enabled:indeterminate:hover + &::before':
-            {
-              borderColor: tokenSchema.color.scale.indigo10,
-            },
-          'input[type="checkbox"]:enabled:checked:active + &::before, input[type="checkbox"]:enabled:indeterminate:active + &::before':
-            {
-              borderColor: tokenSchema.color.scale.indigo11,
-            },
+          },
+          [`.${inputClassName}:enabled:checked + &::before`]: {
+            borderColor: tokenSchema.color.scale.indigo9,
+          },
+          [`.${inputClassName}:enabled:checked:hover + &::before`]: {
+            borderColor: tokenSchema.color.scale.indigo10,
+          },
+          [`.${inputClassName}:enabled:checked:active + &::before`]: {
+            borderColor: tokenSchema.color.scale.indigo11,
+          },
         })
       )}
     >
       {/* firefox has issues when transform combined with transition on SVG; circumvent with this wrapper */}
-      <span className="ksv-checkbox-indicator">
-        <Icon
-          size="small"
-          src={isIndeterminate ? minusIcon : checkIcon}
-          strokeScaling={false}
-        />
+      <span className="ksv-radio-indicator">
+        <svg
+          className="ksv:reset"
+          fill="currentColor"
+          height={12}
+          viewBox="0 0 24 24"
+          width={12}
+        >
+          <circle cx="12" cy="12" r="6" />
+        </svg>
       </span>
     </span>
   );
@@ -221,11 +200,11 @@ const Content = (props: HTMLAttributes<HTMLDivElement>) => {
           paddingTop: `calc((${sizeToken} - ${tokenSchema.fontsize.text.regular.capheight}) / 2)`,
           gap: tokenSchema.size.space.large,
 
-          'input[type="checkbox"]:hover ~ &': {
+          'input[type="radio"]:hover ~ &': {
             color: tokenSchema.color.alias.foregroundHovered,
           },
 
-          'input[type="checkbox"]:disabled ~ &': {
+          'input[type="radio"]:disabled ~ &': {
             color: tokenSchema.color.alias.foregroundDisabled,
           },
         })

@@ -85,7 +85,7 @@ function RedirectToBranch(props: { config: GitHubConfig }) {
       !data?.repository?.id &&
       (error?.graphQLErrors?.[0]?.originalError as any)?.type === 'NOT_FOUND'
     ) {
-      push('/keystatic/repo-not-found');
+      window.location.href = '/api/keystatic/github/repo-not-found';
     }
   }, [data, error, push]);
   return null;

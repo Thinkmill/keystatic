@@ -1,6 +1,8 @@
-import { FocusableProps } from '@react-types/shared';
+import { AriaCheckboxGroupProps } from '@react-aria/checkbox';
+import { FocusableProps, Orientation } from '@react-types/shared';
 import { ReactNode } from 'react';
 
+import { FieldProps } from '@voussoir/field';
 import { BaseStyleProps } from '@voussoir/style';
 import { DOMProps, InputBaseProps } from '@voussoir/types';
 
@@ -41,3 +43,15 @@ export type CheckboxProps = {
 } & ToggleProps &
   BaseStyleProps &
   DOMProps;
+
+export type CheckboxGroupProps = AriaCheckboxGroupProps &
+  FieldProps &
+  BaseStyleProps & {
+    /** The checkboxes contained within the group. */
+    children: ReactNode;
+    /**
+     * The axis the checkboxes should align with.
+     * @default 'vertical'
+     */
+    orientation?: Orientation;
+  };
