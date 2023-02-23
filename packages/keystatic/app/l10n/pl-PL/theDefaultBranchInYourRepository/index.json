@@ -1,0 +1,6 @@
+{
+  "key": "theDefaultBranchInYourRepository",
+  "value": "Domyślna gałąź w twoim repozytorium. Wybierz tę opcję, aby rozpocząć coś nowego, co nie jest zależne od bieżącej gałęzi.",
+  "notes": "",
+  "type": "git-related"
+}
