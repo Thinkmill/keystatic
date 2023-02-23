@@ -1,0 +1,6 @@
+{
+  "key": "theDefaultBranchInYourRepository",
+  "value": "Az alapértelmezett ág az adattárban. Válassza ezt, ha valami újat szeretne indítani, amely nem függ az aktuális ágtól.",
+  "notes": "",
+  "type": "git-related"
+}
