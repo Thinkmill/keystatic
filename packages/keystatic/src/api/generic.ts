@@ -294,7 +294,10 @@ async function githubOauthCallback(
               ): x is typeof x & {
                 object: { __typename: 'Blob'; text: string };
               } =>
-                (x.name === 'keystatic.ts' || x.name === 'keystatic.tsx') &&
+                (x.name === 'keystatic.ts' ||
+                  x.name === 'keystatic.tsx' ||
+                  x.name === 'keystatic.config.ts' ||
+                  x.name === 'keystatic.config.tsx') &&
                 x.object?.__typename === 'Blob' &&
                 x.object.text !== null
             )
