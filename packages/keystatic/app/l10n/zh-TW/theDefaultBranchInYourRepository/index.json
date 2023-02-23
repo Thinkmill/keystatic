@@ -1,0 +1,6 @@
+{
+  "key": "theDefaultBranchInYourRepository",
+  "value": "存儲庫中的默認分支。 選擇此選項可開始一些不依賴於當前分支的新操作。",
+  "notes": "",
+  "type": "git-related"
+}
