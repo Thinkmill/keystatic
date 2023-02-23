@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
-    "@voussoir/checkbox": "^0.1.0",
+    "@voussoir/checkbox": "^0.2.0",
     "@voussoir/picker": "^0.1.1",
     "@voussoir/storybook": "^0.0.0",
     "@voussoir/test-utils": "^2.0.0",
