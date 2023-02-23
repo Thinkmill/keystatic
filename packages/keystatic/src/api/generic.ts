@@ -148,42 +148,13 @@ export function makeGenericAPIRouteHandler(
     }
 
     if (joined === 'github/login') {
-      const rawFrom = new URL(req.url, 'http://localhost').searchParams.get(
-        'from'
-      );
-      const from =
-        typeof rawFrom === 'string' && keystaticRouteRegex.test(rawFrom)
-          ? rawFrom
-          : '/';
-
-      const state = randomBytes(10).toString('hex');
-      const url = new URL('https://github.com/login/oauth/authorize');
-      url.searchParams.set('client_id', config.clientId);
-      url.searchParams.set(
-        'redirect_uri',
-        `${config.url}/api/keystatic/github/oauth/callback`
-      );
-      if (from === '/') {
-        return redirect(url.toString());
-      }
-      url.searchParams.set('state', state);
-      return redirect(url.toString(), [
-        [
-          'Set-Cookie',
-          cookie.serialize('ks-' + state, from, {
-            sameSite: 'lax',
-            secure: process.env.NODE_ENV === 'production',
-            // 1 day
-            maxAge: 60 * 60 * 24,
-            expires: new Date(Date.now() + 60 * 60 * 24 * 1000),
-            path: '/',
-            httpOnly: true,
-          }),
-        ],
-      ]);
+      return githubLogin(req, config);
     }
     if (joined === 'github/refresh-token') {
       return githubRefreshToken(req, config);
+    }
+    if (joined === 'github/repo-not-found') {
+      return githubRepoNotFound(req, config);
     }
     return { status: 404, body: 'Not Found' };
   };
@@ -323,7 +294,10 @@ async function githubOauthCallback(
               ): x is typeof x & {
                 object: { __typename: 'Blob'; text: string };
               } =>
-                (x.name === 'keystatic.ts' || x.name === 'keystatic.tsx') &&
+                (x.name === 'keystatic.ts' ||
+                  x.name === 'keystatic.tsx' ||
+                  x.name === 'keystatic.config.ts' ||
+                  x.name === 'keystatic.config.tsx') &&
                 x.object?.__typename === 'Blob' &&
                 x.object.text !== null
             )
@@ -450,9 +424,20 @@ async function githubRefreshToken(
   req: KeystaticRequest,
   config: InnerAPIRouteConfig
 ): Promise<KeystaticResponse> {
+  const headers = await refreshGitHubAuth(req, config);
+  if (!headers) {
+    return { status: 401, body: 'Authorization failed' };
+  }
+  return { status: 200, headers, body: '' };
+}
+
+async function refreshGitHubAuth(
+  req: KeystaticRequest,
+  config: InnerAPIRouteConfig
+) {
   const refreshToken = await getRefreshToken(req, config);
   if (!refreshToken) {
-    return { status: 401, body: 'Authorization failed' };
+    return;
   }
   const url = new URL('https://github.com/login/oauth/access_token');
   url.searchParams.set('client_id', config.clientId);
@@ -465,15 +450,61 @@ async function githubRefreshToken(
   });
 
   if (!tokenRes.ok) {
-    return { status: 401, body: 'Authorization failed' };
+    return;
   }
   const _tokenData = await tokenRes.json();
   const tokenDataParseResult = tokenDataResultType.safeParse(_tokenData);
   if (!tokenDataParseResult.success) {
-    return { status: 401, body: 'Authorization failed' };
+    return;
   }
-  const headers = await getTokenCookies(tokenDataParseResult.data, config);
-  return { status: 200, headers, body: '' };
+  return getTokenCookies(tokenDataParseResult.data, config);
+}
+
+async function githubRepoNotFound(
+  req: KeystaticRequest,
+  config: InnerAPIRouteConfig
+): Promise<KeystaticResponse> {
+  const headers = await refreshGitHubAuth(req, config);
+  if (headers) {
+    return redirect('/keystatic/repo-not-found', headers);
+  }
+  return githubLogin(req, config);
+}
+async function githubLogin(
+  req: KeystaticRequest,
+  config: InnerAPIRouteConfig
+): Promise<KeystaticResponse> {
+  const rawFrom = new URL(req.url, 'http://localhost').searchParams.get('from');
+  const from =
+    typeof rawFrom === 'string' && keystaticRouteRegex.test(rawFrom)
+      ? rawFrom
+      : '/';
+
+  const state = randomBytes(10).toString('hex');
+  const url = new URL('https://github.com/login/oauth/authorize');
+  url.searchParams.set('client_id', config.clientId);
+  url.searchParams.set(
+    'redirect_uri',
+    `${config.url}/api/keystatic/github/oauth/callback`
+  );
+  if (from === '/') {
+    return redirect(url.toString());
+  }
+  url.searchParams.set('state', state);
+  return redirect(url.toString(), [
+    [
+      'Set-Cookie',
+      cookie.serialize('ks-' + state, from, {
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        // 1 day
+        maxAge: 60 * 60 * 24,
+        expires: new Date(Date.now() + 60 * 60 * 24 * 1000),
+        path: '/',
+        httpOnly: true,
+      }),
+    ],
+  ]);
 }
 
 const ghAppSchema = z.object({
