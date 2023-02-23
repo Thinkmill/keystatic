@@ -1,5 +1,22 @@
 # @voussoir/checkbox
 
+## 0.2.0
+
+### Minor Changes
+
+- fbcfca4: New package "@voussoir/radio" exports `Radio` and `RadioGroup`
+  components.
+
+  **Updates**
+
+  - Export `CheckboxGroup` from "@voussoir/checkbox" package.
+  - Export `validateFieldProps` from "@voussoir/field" package.
+
+### Patch Changes
+
+- Updated dependencies [fbcfca4]
+  - @voussoir/field@0.1.2
+
 ## 0.1.0
 
 ### Minor Changes

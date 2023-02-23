@@ -25,6 +25,18 @@ export function makePage(config: Config<any, any>) {
       };
     }, [router]);
     if (!keystaticRouter) return null;
-    return <Keystatic router={keystaticRouter} config={config} link={Link} />;
+    return (
+      <Keystatic
+        router={keystaticRouter}
+        config={config}
+        link={Link}
+        appSlug={appSlug}
+      />
+    );
   };
 }
+
+const appSlug = {
+  envName: 'NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG',
+  value: process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG,
+};

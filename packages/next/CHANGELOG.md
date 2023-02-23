@@ -1,5 +1,13 @@
 # @keystatic/next
 
+## 0.0.4
+
+### Patch Changes
+
+- 1ae5685: Fix the "Install GitHub App" link not working when using
+  `@keystatic/next/ui/pages`
+  - @keystatic/core@0.0.46
+
 ## 0.0.3
 
 ### Patch Changes
