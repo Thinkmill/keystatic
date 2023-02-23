@@ -1,6 +1,6 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { gql } from '@ts-gql/tag/no-transform';
-import { ReactNode, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useMutation } from 'urql';
 
 import { Button, ButtonGroup } from '@voussoir/button';
@@ -88,7 +88,7 @@ export function CreateBranchDialog(props: {
   defaultBranch?: string;
 }) {
   const { currentBranch, defaultBranch } = props;
-  const isDefaultBranch = defaultBranch === currentBranch;
+  const isDefaultBranch = defaultBranch && defaultBranch === currentBranch;
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const [{ error, fetching }, createBranch] = useCreateBranchMutation();
   const createBranchSubmitButtonId = 'create-branch-submit-button';
@@ -118,7 +118,7 @@ export function CreateBranchDialog(props: {
       >
         <Heading>{stringFormatter.format('newBranch')}</Heading>
         <Content>
-          {isDefaultBranch ? (
+          {!defaultBranch || isDefaultBranch ? (
             <TextField
               value={branchName}
               onChange={setBranchName}
