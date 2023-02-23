@@ -1,0 +1,6 @@
+{
+  "key": "theCurrentlyCheckedOutBranch",
+  "value": "Den utcheckade filialen. Välj detta om du behöver bygga på befintligt arbete från den aktuella grenen.",
+  "notes": "",
+  "type": "git-related"
+}
