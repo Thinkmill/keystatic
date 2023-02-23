@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.44
+
+### Patch Changes
+
+- 9a5d260: Fix showing "repo not found error" when changing between different
+  Keystatic apps that use different repos.
+
 ## 0.0.43
 
 ### Patch Changes
