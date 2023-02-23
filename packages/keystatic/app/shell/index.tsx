@@ -47,7 +47,10 @@ export const AppShell = (props: {
           <Sidebar hrefBase={props.basePath} config={props.config} />
           <AppShellErrorContext.Consumer>
             {error =>
-              error ? (
+              error &&
+              !error?.graphQLErrors.some(
+                err => (err?.originalError as any)?.type === 'NOT_FOUND'
+              ) ? (
                 <EmptyState
                   icon={alertCircleIcon}
                   title="Failed to load shell"

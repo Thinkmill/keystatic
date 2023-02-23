@@ -11,7 +11,7 @@ import {
   ReactNode,
   useState,
 } from 'react';
-import { useQuery } from 'urql';
+import { CombinedError, useQuery } from 'urql';
 import {
   getCollectionPath,
   getCollectionFormat,
@@ -172,7 +172,9 @@ export function GitHubAppShellProvider(props: {
         err => (err?.originalError as any)?.type === 'NOT_FOUND'
       )
     ) {
-      router.push('/keystatic/repo-not-found');
+      window.location.href = `/api/keystatic/github/repo-not-found?from=${router.params.join(
+        '/'
+      )}`;
     }
   }, [error, data, router]);
   const baseInfo = useMemo(
@@ -222,7 +224,9 @@ export function GitHubAppShellProvider(props: {
   );
 }
 
-export const AppShellErrorContext = createContext<Error | undefined>(undefined);
+export const AppShellErrorContext = createContext<CombinedError | undefined>(
+  undefined
+);
 
 const BaseInfoContext = createContext({ baseCommit: '', repositoryId: '' });
 
