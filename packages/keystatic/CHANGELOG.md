@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.45
+
+### Patch Changes
+
+- d196cb0: Change suggested config file name
+
 ## 0.0.44
 
 ### Patch Changes
