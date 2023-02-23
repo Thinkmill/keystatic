@@ -1,14 +1,14 @@
 {
-  "name": "@voussoir/checkbox",
+  "name": "@voussoir/radio",
   "version": "0.1.0",
-  "description": "Checkboxes allow users to select multiple values from a list of items, or toggle the selection of an individual item on and off.",
+  "description": "Radio buttons allow users to select a single option from a list of mutually exclusive options.",
   "license": "MIT",
-  "main": "dist/voussoir-checkbox.cjs.js",
-  "module": "dist/voussoir-checkbox.esm.js",
+  "main": "dist/voussoir-radio.cjs.js",
+  "module": "dist/voussoir-radio.esm.js",
   "exports": {
     ".": {
-      "module": "./dist/voussoir-checkbox.esm.js",
-      "default": "./dist/voussoir-checkbox.cjs.js"
+      "module": "./dist/voussoir-radio.esm.js",
+      "default": "./dist/voussoir-radio.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -17,14 +17,12 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@react-aria/checkbox": "^3.5.1",
-    "@react-aria/focus": "^3.10.0",
-    "@react-stately/checkbox": "^3.3.2",
-    "@react-stately/toggle": "^3.4.3",
+    "@react-aria/radio": "^3.4.2",
+    "@react-stately/radio": "^3.6.2",
+    "@react-types/radio": "^3.3.1",
     "@react-types/shared": "^3.14.1",
     "@voussoir/core": "^4.0.0",
     "@voussoir/field": "^0.1.1",
-    "@voussoir/icon": "^0.1.0",
     "@voussoir/layout": "^0.1.0",
     "@voussoir/slots": "^0.1.0",
     "@voussoir/style": "^0.1.0",
@@ -34,7 +32,9 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
+    "@voussoir/icon": "^0.1.0",
     "@voussoir/storybook": "^0.0.0",
+    "@voussoir/test-utils": "^2.0.0",
     "react": "^18.2.0"
   },
   "peerDependencies": {
