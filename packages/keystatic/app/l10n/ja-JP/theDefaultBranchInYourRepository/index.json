@@ -1,0 +1,6 @@
+{
+  "key": "theDefaultBranchInYourRepository",
+  "value": "リポジトリのデフォルト ブランチ。 これを選択して、現在のブランチに依存しない新しい何かを開始します。",
+  "notes": "",
+  "type": "git-related"
+}
