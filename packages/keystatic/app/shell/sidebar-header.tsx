@@ -168,6 +168,8 @@ export function SidebarHeader(props: {
       <DialogContainer onDismiss={toggleNewBranchDialog}>
         {newBranchDialogVisible && (
           <CreateBranchDialog
+            currentBranch={data.currentBranch}
+            defaultBranch={data.defaultBranch}
             onDismiss={toggleNewBranchDialog}
             onCreate={branchName => {
               toggleNewBranchDialog();

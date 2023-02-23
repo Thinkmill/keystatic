@@ -252,6 +252,8 @@ function Branches() {
             </div>
             {close => (
               <CreateBranchDialog
+                currentBranch={branchInfo.currentBranch}
+                defaultBranch={branchInfo.defaultBranch}
                 onDismiss={close}
                 onCreate={branchName => {
                   close();

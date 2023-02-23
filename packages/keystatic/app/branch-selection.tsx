@@ -7,7 +7,7 @@ import { Button, ButtonGroup } from '@voussoir/button';
 import { Dialog } from '@voussoir/dialog';
 import { gitBranchIcon } from '@voussoir/icon/icons/gitBranchIcon';
 import { Icon } from '@voussoir/icon';
-import { Item, Picker, Section } from '@voussoir/picker';
+import { Item, Picker } from '@voussoir/picker';
 import { Content, Footer } from '@voussoir/slots';
 import { TextField } from '@voussoir/text-field';
 import { Heading, Text } from '@voussoir/typography';
@@ -31,31 +31,19 @@ export function BranchPicker(props: BranchPickerProps) {
       id: name,
       name,
     }));
+
     if (defaultBranch) {
       return [
         {
-          label: stringFormatter.format('defaultBranch'),
-          id: 'default-branch',
-          children: [{ id: defaultBranch, name: defaultBranch }],
+          id: defaultBranch,
+          name: defaultBranch,
+          description: stringFormatter.format('defaultBranch'),
         },
-        {
-          label: stringFormatter.format('otherBranches'),
-          id: 'other-branches',
-          children: defaultItems.filter(i => i.name !== defaultBranch),
-        },
+        ...defaultItems.filter(i => i.name !== defaultBranch),
       ];
     }
 
-    // in the rare case that there's no default branch, just show all branches.
-    // ideally this wouldn't be wrapped in a section, but it messes with the
-    // types + render functions.
-    return [
-      {
-        label: stringFormatter.format('branches'),
-        id: 'branches',
-        children: defaultItems,
-      },
-    ];
+    return defaultItems;
   }, [allBranches, defaultBranch, stringFormatter]);
 
   return (
@@ -76,19 +64,14 @@ export function BranchPicker(props: BranchPickerProps) {
         }
       }}
     >
-      {section => (
-        <Section
-          key={section.id}
-          title={section.label}
-          items={section.children}
-        >
-          {item => (
-            <Item key={item.id} textValue={item.name}>
-              <Icon src={gitBranchIcon} />
-              <Text>{item.name}</Text>
-            </Item>
+      {item => (
+        <Item key={item.id} textValue={item.name}>
+          <Icon src={gitBranchIcon} />
+          <Text>{item.name}</Text>
+          {'description' in item && (
+            <Text slot="description">{item.description}</Text>
           )}
-        </Section>
+        </Item>
       )}
     </Picker>
   );
@@ -99,6 +82,8 @@ export function CreateBranchDialog(props: {
   repositoryId: string;
   onDismiss: () => void;
   onCreate: (branchName: string) => void;
+  currentBranch: string;
+  defaultBranch?: string;
   children?: ReactNode;
 }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
