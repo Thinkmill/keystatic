@@ -17,7 +17,6 @@ import {
 } from './component-blocks';
 import { ComponentBlock } from './component-blocks/api';
 import { insertLayout } from './layouts';
-import { Relationships, useDocumentFieldRelationships } from './relationship';
 import { ToolbarState, useToolbarState } from './toolbar-state';
 import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from './utils';
 
@@ -29,21 +28,9 @@ type Option = {
 
 function getOptions(
   toolbarState: ToolbarState,
-  componentBlocks: Record<string, ComponentBlock>,
-  relationships: Relationships
+  componentBlocks: Record<string, ComponentBlock>
 ): Option[] {
   const options: (Option | boolean)[] = [
-    ...Object.entries(relationships).map(([relationship, { label }]) => ({
-      label,
-      insert: (editor: Editor) => {
-        Transforms.insertNodes(editor, {
-          type: 'relationship',
-          relationship,
-          data: null,
-          children: [{ text: '' }],
-        });
-      },
-    })),
     ...Object.keys(componentBlocks).map(key => ({
       label: componentBlocks[key].label,
       insert: (editor: Editor) => {
@@ -147,18 +134,10 @@ export function InsertMenu({
   text: Text;
 }) {
   const toolbarState = useToolbarState();
-  const {
-    editor,
-    relationships: { isDisabled: relationshipsDisabled },
-  } = toolbarState;
+  const { editor } = toolbarState;
   const componentBlocks = useContext(ComponentBlockContext);
-  const relationships = useDocumentFieldRelationships();
   const options = matchSorter(
-    getOptions(
-      toolbarState,
-      componentBlocks,
-      relationshipsDisabled ? {} : relationships
-    ),
+    getOptions(toolbarState, componentBlocks),
     text.text.slice(1),
     {
       keys: ['label', 'keywords'],

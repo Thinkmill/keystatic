@@ -82,7 +82,6 @@ export type DocumentFeaturesForChildField =
       inlineMarks: 'inherit' | DocumentFeatures['formatting']['inlineMarks'];
       documentFeatures: {
         links: boolean;
-        relationships: boolean;
       };
       softBreaks: boolean;
     }
@@ -124,7 +123,6 @@ export function getDocumentFeaturesForChildField(
       inlineMarks,
       documentFeatures: {
         links: options.links === 'inherit',
-        relationships: options.relationships === 'inherit',
       },
       softBreaks: options.formatting?.softBreaks === 'inherit',
     };
@@ -167,7 +165,6 @@ export function getDocumentFeaturesForChildField(
               },
       },
       links: options.links === 'inherit',
-      relationships: options.relationships === 'inherit',
     },
   };
 }
@@ -580,7 +577,7 @@ export function replaceValueAtPropPath(
     return newVal;
   }
 
-  // we should never reach here since form, relationship or child fields don't contain other fields
+  // we should never reach here since form or child fields don't contain other fields
   // so the only thing that can happen to them is to be replaced which happens at the start of this function when path.length === 0
   assert(schema.kind !== 'form' && schema.kind !== 'child');
 

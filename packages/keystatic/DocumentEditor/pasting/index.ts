@@ -84,7 +84,7 @@ export function withPasting(editor: Editor): Editor {
           !Editor.isBlock(editor, node.children[0]),
       }) &&
       // and there is only text(potentially with marks) in the selection
-      // no other links or inline relationships
+      // no other links
       Editor.nodes(editor, {
         match: node => Editor.isInline(editor, node),
       }).next().done

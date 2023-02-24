@@ -53,8 +53,6 @@ export type FormFieldValue =
   | readonly FormFieldValue[]
   | { [key: string]: FormFieldValue | undefined };
 
-const emptyObject = {};
-
 type FormattingConfig = {
   inlineMarks?:
     | true
@@ -364,7 +362,6 @@ export type ChildField = {
         formatting?: BlockFormattingConfig;
         dividers?: 'inherit';
         links?: 'inherit';
-        relationships?: 'inherit';
       }
     | {
         kind: 'inline';
@@ -374,7 +371,6 @@ export type ChildField = {
           softBreaks?: 'inherit';
         };
         links?: 'inherit';
-        relationships?: 'inherit';
       };
 };
 
@@ -1293,7 +1289,6 @@ export const fields = {
           formatting?: BlockFormattingConfig | 'inherit';
           dividers?: 'inherit';
           links?: 'inherit';
-          relationships?: 'inherit';
         }
       | {
           kind: 'inline';
@@ -1305,7 +1300,6 @@ export const fields = {
                 softBreaks?: 'inherit';
               };
           links?: 'inherit';
-          relationships?: 'inherit';
         }
   ): ChildField {
     return {
@@ -1328,7 +1322,6 @@ export const fields = {
                     }
                   : options.formatting,
               links: options.links,
-              relationships: options.relationships,
             }
           : {
               kind: 'inline',
@@ -1338,7 +1331,6 @@ export const fields = {
                   ? { inlineMarks: 'inherit', softBreaks: 'inherit' }
                   : options.formatting,
               links: options.links,
-              relationships: options.relationships,
             },
     };
   },
@@ -1392,11 +1384,7 @@ export const fields = {
       }): DocumentElement[] => {
         const markdoc = textDecoder.decode(value.primary);
         const document = fromMarkdoc(Markdoc.parse(markdoc), componentBlocks);
-        const editor = createDocumentEditor(
-          documentFeatures,
-          componentBlocks,
-          {}
-        );
+        const editor = createDocumentEditor(documentFeatures, componentBlocks);
         editor.children = document;
         Editor.normalize(editor, { force: true });
         return deserializeFiles(
@@ -1416,7 +1404,6 @@ export const fields = {
               componentBlocks={componentBlocks}
               documentFeatures={documentFeatures}
               onChange={props.onChange as any}
-              relationships={emptyObject}
               value={props.value as any}
             />
           </FieldPrimitive>
@@ -1653,18 +1640,6 @@ type DiscriminantStringToDiscriminantValue<
 
 export type PreviewPropsForToolbar<Schema extends ComponentSchema> =
   GenericPreviewProps<Schema, undefined>;
-
-export type HydratedRelationshipData = {
-  id: string;
-  label: string;
-  data: Record<string, any>;
-};
-
-export type RelationshipData = {
-  id: string;
-  label: string | undefined;
-  data: Record<string, any> | undefined;
-};
 
 export function component<
   Schema extends {

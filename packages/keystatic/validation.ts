@@ -1,7 +1,6 @@
 import { Text, Editor } from 'slate';
 import { createDocumentEditor } from './DocumentEditor';
 import { ComponentBlock } from './DocumentEditor/component-blocks/api';
-import { Relationships } from './DocumentEditor/relationship';
 import {
   ElementFromValidation,
   TextWithMarks,
@@ -20,8 +19,7 @@ function isText(node: ElementFromValidation): node is TextWithMarks {
 // malicious content being inserted, not valid content
 export function getValidatedNodeWithNormalizedComponentFormProps(
   node: ElementFromValidation,
-  componentBlocks: Record<string, ComponentBlock>,
-  relationships: Relationships
+  componentBlocks: Record<string, ComponentBlock>
 ): ElementFromValidation {
   if (isText(node)) {
     return node;
@@ -34,33 +32,16 @@ export function getValidatedNodeWithNormalizedComponentFormProps(
         props: validateComponentBlockProps(
           { kind: 'object', fields: componentBlock.schema },
           node.props,
-          relationships,
           [],
           undefined
         ),
       };
     }
   }
-
-  if (node.type === 'relationship') {
-    node = {
-      type: 'relationship',
-      data:
-        node.data?.id !== undefined
-          ? { id: node.data.id, data: undefined, label: undefined }
-          : null,
-      relationship: node.relationship,
-      children: node.children,
-    };
-  }
   return {
     ...node,
     children: node.children.map(x =>
-      getValidatedNodeWithNormalizedComponentFormProps(
-        x,
-        componentBlocks,
-        relationships
-      )
+      getValidatedNodeWithNormalizedComponentFormProps(x, componentBlocks)
     ),
   };
 }
@@ -68,22 +49,13 @@ export function getValidatedNodeWithNormalizedComponentFormProps(
 export function validateAndNormalizeDocument(
   value: unknown,
   documentFeatures: DocumentFeatures,
-  componentBlocks: Record<string, ComponentBlock>,
-  relationships: Relationships
+  componentBlocks: Record<string, ComponentBlock>
 ) {
   validateDocumentStructure(value);
   const children = value.map(x =>
-    getValidatedNodeWithNormalizedComponentFormProps(
-      x,
-      componentBlocks,
-      relationships
-    )
+    getValidatedNodeWithNormalizedComponentFormProps(x, componentBlocks)
   );
-  const editor = createDocumentEditor(
-    documentFeatures,
-    componentBlocks,
-    relationships
-  );
+  const editor = createDocumentEditor(documentFeatures, componentBlocks);
   editor.children = children;
   Editor.normalize(editor, { force: true });
   return editor.children;

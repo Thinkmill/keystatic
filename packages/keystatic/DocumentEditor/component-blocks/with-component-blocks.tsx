@@ -15,10 +15,9 @@ import { DocumentFeatures } from '../document-features';
 import {
   areArraysEqual,
   normalizeElementBasedOnDocumentFeatures,
-  normalizeInlineBasedOnLinksAndRelationships,
+  normalizeInlineBasedOnLinks as normalizeInlineBasedOnLinks,
   normalizeTextBasedOnInlineMarksAndSoftBreaks,
 } from '../document-features-normalization';
-import { Relationships } from '../relationship';
 import { ChildField, ComponentBlock, ComponentSchema, ArrayField } from './api';
 import {
   assertNever,
@@ -70,8 +69,7 @@ const alreadyNormalizedThings: WeakMap<
 function normalizeNodeWithinComponentProp(
   [node, path]: NodeEntry,
   editor: Editor,
-  fieldOptions: DocumentFeaturesForChildField,
-  relationships: Relationships
+  fieldOptions: DocumentFeaturesForChildField
 ): boolean {
   let alreadyNormalizedNodes = alreadyNormalizedThings.get(fieldOptions);
   if (!alreadyNormalizedNodes) {
@@ -96,8 +94,7 @@ function normalizeNodeWithinComponentProp(
         normalizeNodeWithinComponentProp(
           [node, [...path, i]],
           editor,
-          fieldOptions,
-          relationships
+          fieldOptions
         )
       )
       // .map then .some because we don't want to exit early
@@ -107,16 +104,13 @@ function normalizeNodeWithinComponentProp(
         normalizeElementBasedOnDocumentFeatures(
           [node, path],
           editor,
-          fieldOptions.documentFeatures,
-          relationships
+          fieldOptions.documentFeatures
         ) || childrenHasChanged;
     } else {
-      didNormalization = normalizeInlineBasedOnLinksAndRelationships(
+      didNormalization = normalizeInlineBasedOnLinks(
         [node, path],
         editor,
-        fieldOptions.documentFeatures.links,
-        fieldOptions.documentFeatures.relationships,
-        relationships
+        fieldOptions.documentFeatures.links
       );
     }
   }
@@ -218,7 +212,6 @@ function isEmptyChildFieldNode(
 export function withComponentBlocks(
   blockComponents: Record<string, ComponentBlock | undefined>,
   editorDocumentFeatures: DocumentFeatures,
-  relationships: Relationships,
   editor: Editor
 ): Editor {
   // note that conflicts between the editor document features
@@ -577,8 +570,7 @@ export function withComponentBlocks(
             normalizeNodeWithinComponentProp(
               [childNode, childPath],
               editor,
-              documentFeatures,
-              relationships
+              documentFeatures
             )
           ) {
             return;
