@@ -29,7 +29,20 @@ function parseFromValueFile(
 ) {
   const { loaded, extraFakeFile } = loadDataFile(data, args.format);
   const schema = fields.object(args.schema);
-  const validated = validateComponentBlockProps(schema, loaded, {}, []);
+  const validated = validateComponentBlockProps(
+    schema,
+    loaded,
+    {},
+    [],
+    args.slug
+      ? {
+          slug: args.slug.slug,
+          field: args.slug.slugField,
+          mode: 'parse',
+          slugs: args.slug.slugs,
+        }
+      : undefined
+  );
   const requiredFiles = getRequiredFiles(validated, schema);
   const binaryFiles = requiredFiles.flatMap(requiredFile =>
     requiredFile.files.flatMap(filename => {
@@ -85,6 +98,7 @@ type UseItemDataArgs = {
   schema: Record<string, ComponentSchema>;
   dirpath: string;
   format: FormatInfo;
+  slug: { slugs: Set<string>; slugField: string; slug: string } | undefined;
 };
 
 export function useItemData(args: UseItemDataArgs) {
@@ -120,6 +134,7 @@ export function useItemData(args: UseItemDataArgs) {
         dirpath: args.dirpath,
         format: args.format,
         schema: args.schema,
+        slug: args.slug,
       };
       const dataResult = fetchBlob(
         args.config,
@@ -173,12 +188,13 @@ export function useItemData(args: UseItemDataArgs) {
         };
       });
     }, [
+      hasLoaded,
+      localTreeNode,
+      args.format,
       args.config,
       args.dirpath,
-      args.format,
       args.schema,
-      localTreeNode,
-      hasLoaded,
+      args.slug,
     ])
   );
 }

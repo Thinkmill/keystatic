@@ -1,7 +1,9 @@
 import {
+  createContext,
   HTMLAttributes,
   ReactElement,
   ReactNode,
+  useContext,
   useEffect,
   useId,
   useMemo,
@@ -28,7 +30,7 @@ import {
 import { DocumentFeatures } from '../document-features';
 import { isValidURL } from '../isValidURL';
 import { ActionButton, ButtonGroup } from '@voussoir/button';
-import { Flex } from '@voussoir/layout';
+import { Box, Flex } from '@voussoir/layout';
 import {
   CollectedFile,
   collectFiles,
@@ -37,14 +39,9 @@ import {
 import { ElementFromValidation } from '../../structure-validation';
 import { Combobox } from '@voussoir/combobox';
 import { useTree } from '../../app/shell/data';
-import { useConfig } from '../../app/shell';
-import {
-  getCollectionFormat,
-  getCollectionPath,
-  getDataFileExtension,
-} from '../../app/path-utils';
-import { getTreeNodeAtPath } from '../../app/trees';
-import { getTreeNodeForItem } from '../../app/utils';
+import { ReadonlyPropPath } from './utils';
+import { useSlugsInCollection } from '../../app/useSlugsInCollection';
+import slugify from '@sindresorhus/slugify';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -210,7 +207,24 @@ export type BasicFormField<Value, Options> = {
 
 export type FormField<Value, Options> =
   | BasicFormField<Value, Options>
-  | FormFieldWithFile<Value, Options, any>;
+  | FormFieldWithFile<Value, Options, any>
+  | SlugFormField<Value, Options, any>;
+
+export type SlugFormField<Value, Options, SerializedValue> = Omit<
+  BasicFormField<Value, Options>,
+  'validate'
+> & {
+  slug: {
+    serialize(value: Value): { slug: string; value: SerializedValue };
+    parse(data: { slug: string; value: unknown }): Value;
+  };
+  validate(
+    value: unknown,
+    slugFieldInfo:
+      | { slugs: Set<string>; currentSlug: string | undefined }
+      | undefined
+  ): boolean;
+};
 
 export type FormFieldWithFile<Value, Options, DataInReader> =
   | FormFieldWithFileRequiringContentsForReader<Value, Options, DataInReader>
@@ -393,7 +407,7 @@ export interface ObjectField<
 }
 
 export type ConditionalField<
-  DiscriminantField extends FormField<string | boolean, any>,
+  DiscriminantField extends BasicFormField<string | boolean, any>,
   ConditionalValues extends {
     [Key in `${DiscriminantField['defaultValue']}`]: ComponentSchema;
   }
@@ -417,7 +431,10 @@ export type ComponentSchema =
   | ChildField
   | FormField<any, any>
   | ObjectField
-  | ConditionalField<FormField<any, any>, { [key: string]: ComponentSchema }>
+  | ConditionalField<
+      BasicFormField<any, any>,
+      { [key: string]: ComponentSchema }
+    >
   | RelationshipField<boolean>
   | ArrayFieldInComponentSchema;
 
@@ -425,7 +442,8 @@ function validateText(
   val: string,
   min: number,
   max: number,
-  fieldLabel: string
+  fieldLabel: string,
+  slugs?: Set<string>
 ) {
   if (val.length < min) {
     if (min === 1) {
@@ -437,6 +455,49 @@ function validateText(
   if (val.length > max) {
     return `${fieldLabel} must be no longer than ${max} characters`;
   }
+  if (slugs) {
+    if (val === '..') {
+      return `${fieldLabel} must not be ..`;
+    }
+    if (val === '.') {
+      return `${fieldLabel} must not be .`;
+    }
+    if (/[\\/]/.test(val)) {
+      return `${fieldLabel} must not contain slashes`;
+    }
+    if (slugs.has(val)) {
+      return `${fieldLabel} must be unique`;
+    }
+  }
+}
+
+function isValidSlug(val: string, slugs: Set<string>) {
+  return val !== '..' && val !== '.' && !/[\\/]/.test(val) && !slugs.has(val);
+}
+
+const SlugFieldContext = createContext<
+  | { slugField: string; collection: string; currentSlug: string | undefined }
+  | undefined
+>(undefined);
+
+export const SlugFieldProvider = SlugFieldContext.Provider;
+
+const PathContext = createContext<ReadonlyPropPath>([]);
+
+export const PathContextProvider = PathContext.Provider;
+
+export function AddToPathProvider(props: {
+  part: string | number;
+  children: ReactNode;
+}) {
+  const path = useContext(PathContext);
+  return (
+    <PathContext.Provider
+      value={useMemo(() => path.concat(props.part), [path, props.part])}
+    >
+      {props.children}
+    </PathContext.Provider>
+  );
 }
 
 export const fields = {
@@ -457,24 +518,69 @@ export const fields = {
       };
     };
     multiline?: boolean;
-  }): BasicFormField<string, undefined> {
+  }): SlugFormField<string, undefined, undefined> {
     const TextFieldComponent = multiline ? TextArea : TextField;
+    function SlugTextField(props: {
+      value: string;
+      onChange: (value: string) => void;
+      autoFocus?: boolean;
+      forceValidation?: boolean;
+      collection: string;
+      currentSlug: string | undefined;
+    }) {
+      const [blurred, setBlurred] = useState(false);
+
+      const items = useSlugsInCollection(props.collection);
+      const slugs = useMemo(() => {
+        const otherSlugs = new Set(items);
+        if (props.currentSlug !== undefined) {
+          otherSlugs.delete(props.currentSlug);
+        }
+        return otherSlugs;
+      }, [items, props.currentSlug]);
+
+      return (
+        <TextFieldComponent
+          label={label}
+          description={description}
+          autoFocus={props.autoFocus}
+          value={props.value}
+          onChange={props.onChange}
+          onBlur={() => setBlurred(true)}
+          errorMessage={
+            props.forceValidation || blurred
+              ? validateText(props.value, Math.max(min, 1), max, label, slugs)
+              : undefined
+          }
+        />
+      );
+    }
     return {
       kind: 'form',
-      Input({ value, onChange, autoFocus, forceValidation }) {
+      Input(props) {
         const [blurred, setBlurred] = useState(false);
-
+        const slugContext = useContext(SlugFieldContext);
+        const path = useContext(PathContext);
+        if (path.length === 1 && slugContext?.slugField === path[0]) {
+          return (
+            <SlugTextField
+              collection={slugContext.collection}
+              currentSlug={slugContext.currentSlug}
+              {...props}
+            />
+          );
+        }
         return (
           <TextFieldComponent
             label={label}
             description={description}
-            autoFocus={autoFocus}
-            value={value}
-            onChange={onChange}
+            autoFocus={props.autoFocus}
+            value={props.value}
+            onChange={props.onChange}
             onBlur={() => setBlurred(true)}
             errorMessage={
-              forceValidation || blurred
-                ? validateText(value, min, max, label)
+              props.forceValidation || blurred
+                ? validateText(props.value, min, max, label)
                 : undefined
             }
           />
@@ -482,12 +588,231 @@ export const fields = {
       },
       options: undefined,
       defaultValue,
-      validate(value) {
+      validate(value, slugInfo) {
+        if (
+          !(
+            typeof value === 'string' &&
+            value.length >= Math.max(min, slugInfo ? 1 : 0) &&
+            value.length <= max
+          )
+        ) {
+          return false;
+        }
+        if (slugInfo) {
+          const slugs = new Set(slugInfo.slugs);
+          if (slugInfo.currentSlug !== undefined) {
+            slugs.delete(slugInfo.currentSlug);
+          }
+          return isValidSlug(value, slugs);
+        }
+        return true;
+      },
+      slug: {
+        parse(data) {
+          return data.slug;
+        },
+        serialize(value) {
+          return { slug: value, value: undefined };
+        },
+      },
+    };
+  },
+  slug(args: {
+    name: {
+      label: string;
+      defaultValue?: string;
+      description?: string;
+      validation?: {
+        length?: {
+          min?: number;
+          max?: number;
+        };
+      };
+    };
+    slug?: {
+      label?: string;
+      generate?: (name: string) => string;
+      description?: string;
+      validation?: {
+        length?: {
+          min?: number;
+          max?: number;
+        };
+      };
+    };
+  }): SlugFormField<{ name: string; slug: string }, undefined, string> {
+    const naiveGenerateSlug: (name: string) => string =
+      args.slug?.generate || slugify;
+    const defaultValue = {
+      name: args.name.defaultValue ?? '',
+      slug: naiveGenerateSlug(args.name.defaultValue ?? ''),
+    };
+    function SlugFieldInner(props: {
+      value: { name: string; slug: string };
+      onChange(value: { name: string; slug: string }): void;
+      autoFocus: boolean;
+      forceValidation: boolean;
+      slugs: Set<string>;
+    }) {
+      const [blurredName, setBlurredName] = useState(false);
+      const [blurredSlug, setBlurredSlug] = useState(false);
+
+      const [shouldGenerateSlug, setShouldGenerateSlug] = useState(
+        props.value === defaultValue
+      );
+      const generateSlug = (name: string) => {
+        const generated = naiveGenerateSlug(name);
+        if (props.slugs.has(generated)) {
+          let i = 1;
+          while (props.slugs.has(`${generated}-${i}`)) {
+            i++;
+          }
+          return `${generated}-${i}`;
+        }
+        return generated;
+      };
+
+      const slugErrorMessage =
+        props.forceValidation || blurredSlug
+          ? validateText(
+              props.value.slug,
+              args.slug?.validation?.length?.min ?? 1,
+              args.slug?.validation?.length?.max ?? Infinity,
+              args.slug?.label ?? 'Slug',
+              props.slugs
+            )
+          : undefined;
+
+      return (
+        <Flex gap="xlarge" direction="column">
+          <TextField
+            label={args.name.label}
+            description={args.name.description}
+            autoFocus={props.autoFocus}
+            value={props.value.name}
+            onChange={name => {
+              props.onChange({
+                name,
+                slug: shouldGenerateSlug
+                  ? generateSlug(name)
+                  : props.value.slug,
+              });
+            }}
+            onBlur={() => setBlurredName(true)}
+            errorMessage={
+              props.forceValidation || blurredName
+                ? validateText(
+                    props.value.name,
+                    args.name.validation?.length?.min ?? 0,
+                    args.name.validation?.length?.max ?? Infinity,
+                    args.name.label
+                  )
+                : undefined
+            }
+          />
+          <Flex gap="small" alignItems="end">
+            <TextField
+              flex={1}
+              label={args.slug?.label ?? 'Slug'}
+              description={args.slug?.description}
+              value={props.value.slug}
+              onChange={slug => {
+                setShouldGenerateSlug(false);
+                props.onChange({ name: props.value.name, slug });
+              }}
+              onBlur={() => setBlurredSlug(true)}
+              errorMessage={slugErrorMessage}
+            />
+            <Flex gap="regular" direction="column">
+              <ActionButton
+                onPress={() => {
+                  props.onChange({
+                    name: props.value.name,
+                    slug: generateSlug(props.value.name),
+                  });
+                }}
+              >
+                Regenerate
+              </ActionButton>
+              {/* display shim to offset the error message */}
+              {slugErrorMessage !== undefined && <Box height="xsmall" />}
+            </Flex>
+          </Flex>
+        </Flex>
+      );
+    }
+    function SlugFieldAsSlugField(props: {
+      value: { name: string; slug: string };
+      onChange(value: { name: string; slug: string }): void;
+      autoFocus: boolean;
+      forceValidation: boolean;
+      collection: string;
+      currentSlug: string | undefined;
+    }) {
+      const items = useSlugsInCollection(props.collection);
+      const slugs = useMemo(() => {
+        const otherSlugs = new Set(items);
+        if (props.currentSlug !== undefined) {
+          otherSlugs.delete(props.currentSlug);
+        }
+        return otherSlugs;
+      }, [items, props.currentSlug]);
+      return <SlugFieldInner {...props} slugs={slugs} />;
+    }
+    const emptySet = new Set<string>();
+    return {
+      kind: 'form',
+      Input(props) {
+        const slugContext = useContext(SlugFieldContext);
+        const path = useContext(PathContext);
+        if (path.length === 1 && path[0] === slugContext?.slugField) {
+          return (
+            <SlugFieldAsSlugField
+              {...props}
+              collection={slugContext.collection}
+              currentSlug={slugContext.currentSlug}
+            />
+          );
+        }
+        return <SlugFieldInner {...props} slugs={emptySet} />;
+      },
+      options: undefined,
+      defaultValue,
+      validate(value, slugInfo) {
+        const slugs = new Set(slugInfo?.slugs);
+        if (slugInfo?.currentSlug !== undefined) {
+          slugs.delete(slugInfo.currentSlug);
+        }
         return (
-          typeof value === 'string' &&
-          value.length >= min &&
-          value.length <= max
+          typeof value === 'object' &&
+          value !== null &&
+          'name' in value &&
+          'slug' in value &&
+          Object.keys(value).length === 2 &&
+          typeof value.name === 'string' &&
+          value.name.length >= (args.name.validation?.length?.min ?? 0) &&
+          value.name.length <=
+            (args.name.validation?.length?.max ?? Infinity) &&
+          typeof value.slug === 'string' &&
+          value.slug.length >= (args.slug?.validation?.length?.min ?? 1) &&
+          value.slug.length <=
+            (args.slug?.validation?.length?.max ?? Infinity) &&
+          isValidSlug(value.slug, slugs)
         );
+      },
+      slug: {
+        parse(data) {
+          if (typeof data.value !== 'string') {
+            throw new Error('Invalid data');
+          }
+          return {
+            name: data.value,
+            slug: data.slug,
+          };
+        },
+        serialize(value) {
+          return { slug: value.slug, value: value.name };
+        },
       },
     };
   },
@@ -619,28 +944,10 @@ export const fields = {
     return {
       kind: 'form',
       Input({ value, onChange, autoFocus }) {
-        const config = useConfig();
-        const tree = useTree().current;
-
+        const slugs = useSlugsInCollection(collection);
         const options = useMemo(() => {
-          const loadedTree =
-            tree.kind === 'loaded' ? tree.data.tree : new Map();
-          const treeNode = getTreeNodeAtPath(
-            loadedTree,
-            getCollectionPath(config, collection)
-          );
-          if (!treeNode?.children) return [];
-          const extension = getDataFileExtension(
-            getCollectionFormat(config, collection)
-          );
-          return [...treeNode.children].flatMap(([, entry]) =>
-            getTreeNodeForItem(config, collection, entry)?.children?.has(
-              `index${extension}`
-            )
-              ? [{ slug: entry.entry.path.replace(/^.+\/([^/]+)$/, '$1') }]
-              : []
-          );
-        }, [config, tree]);
+          return slugs.map(slug => ({ slug }));
+        }, [slugs]);
         return (
           <Combobox
             label={label}
@@ -1044,7 +1351,7 @@ export const fields = {
     return { kind: 'object', fields };
   },
   conditional<
-    DiscriminantField extends FormField<string | boolean, any>,
+    DiscriminantField extends BasicFormField<string | boolean, any>,
     ConditionalValues extends {
       [Key in `${DiscriminantField['defaultValue']}`]: ComponentSchema;
     }
@@ -1243,7 +1550,7 @@ type ObjectFieldPreviewProps<
 };
 
 type ConditionalFieldPreviewProps<
-  Schema extends ConditionalField<FormField<string | boolean, any>, any>,
+  Schema extends ConditionalField<BasicFormField<string | boolean, any>, any>,
   ChildFieldElement
 > = {
   readonly [Key in keyof Schema['values']]: {
@@ -1503,3 +1810,8 @@ export type InferRenderersForComponentBlocks<
     ValueForReading<ObjectField<ComponentBlocks[Key]['schema']>>
   >;
 };
+
+<Flex gap="small" alignItems="end">
+  <TextField flex={1} />
+  <ActionButton />
+</Flex>;

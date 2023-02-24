@@ -27,7 +27,12 @@ import { AppShellBody, AppShellRoot } from './shell';
 import { AppShellHeader } from './shell/header';
 import { useBaseCommit, useTree } from './shell/data';
 import { TreeNode } from './trees';
-import { getCollectionFormat, getCollectionItemPath } from './utils';
+import {
+  getCollectionFormat,
+  getCollectionItemPath,
+  getSlugFromState,
+} from './utils';
+import { useSlugsInCollection } from './useSlugsInCollection';
 
 const emptyMap = new Map<string, TreeNode>();
 
@@ -54,13 +59,11 @@ export function CreateItem(props: {
 
   const tree = useTree();
 
+  const slug = getSlugFromState(collectionConfig, state);
+
   const [createResult, _createItem, resetCreateItemState] = useUpsertItem({
     state,
-    basePath: getCollectionItemPath(
-      props.config,
-      props.collection,
-      state[collectionConfig.slugField]
-    ),
+    basePath: getCollectionItemPath(props.config, props.collection, slug),
     initialFiles: undefined,
     storage: props.config.storage,
     schema: collectionConfig.schema,
@@ -68,6 +71,7 @@ export function CreateItem(props: {
     currentLocalTreeSha: undefined,
     currentTree:
       tree.current.kind === 'loaded' ? tree.current.data.tree : emptyMap,
+    slugField: collectionConfig.slugField,
   });
   const createItem = useEventCallback(_createItem);
 
@@ -75,13 +79,26 @@ export function CreateItem(props: {
     props.collection
   )}`;
 
+  const slugsArr = useSlugsInCollection(props.collection);
+  const currentSlug =
+    createResult.kind === 'updated' || createResult.kind === 'loading'
+      ? slug
+      : undefined;
+  const slugInfo = useMemo(() => {
+    return {
+      currentSlug,
+      field: collectionConfig.slugField,
+      slugs: new Set(slugsArr),
+    };
+  }, [collectionConfig.slugField, currentSlug, slugsArr]);
+
   const onCreate = async () => {
-    if (!clientSideValidateProp(schema, state)) {
+    if (!clientSideValidateProp(schema, state, slugInfo)) {
       setForceValidation(true);
       return;
     }
     if (await createItem()) {
-      const slug = state[collectionConfig.slugField] as string;
+      const slug = getSlugFromState(collectionConfig, state);
       router.push(`${collectionPath}/item/${slug}`);
     }
   };
@@ -92,6 +109,15 @@ export function CreateItem(props: {
     createResult.kind === 'loading' || createResult.kind === 'updated';
 
   const formID = 'item-create-form';
+
+  const slugFieldInfo = useMemo(
+    () => ({
+      collection: props.collection,
+      currentSlug,
+      slugField: collectionConfig.slugField,
+    }),
+    [collectionConfig.slugField, currentSlug, props.collection]
+  );
 
   return (
     <>
@@ -149,6 +175,7 @@ export function CreateItem(props: {
 
             <FormValueContentFromPreviewProps
               forceValidation={forceValidation}
+              slugField={slugFieldInfo}
               {...previewProps}
             />
           </Flex>
@@ -172,7 +199,8 @@ export function CreateItem(props: {
                 )}/collection/${encodeURIComponent(props.collection)}/create`
               );
               if (await createItem({ branch: newBranch, sha: baseCommit })) {
-                const slug = state[collectionConfig.slugField] as string;
+                const slug = getSlugFromState(collectionConfig, state);
+
                 router.push(
                   `/keystatic/branch/${encodeURIComponent(
                     newBranch

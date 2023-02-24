@@ -1,6 +1,6 @@
 import {
-  BasicFormField,
   ComponentSchema,
+  SlugFormField,
 } from './DocumentEditor/component-blocks/api';
 
 export type DataFormat = 'json' | 'yaml';
@@ -8,16 +8,15 @@ export type Format =
   | DataFormat
   | { frontmatter: DataFormat; contentField: string };
 
-export type Collection<Schema extends Record<string, ComponentSchema>> = {
+export type Collection<
+  Schema extends Record<string, ComponentSchema>,
+  SlugField extends string
+> = {
   label: string;
   directory?: string;
   directorySuffix?: string;
   format?: Format;
-  slugField: {
-    [K in keyof Schema]: Schema[K] extends BasicFormField<string, any>
-      ? K
-      : never;
-  }[keyof Schema];
+  slugField: SlugField;
   schema: Schema;
 };
 
@@ -30,9 +29,9 @@ export type Singleton<Schema extends Record<string, ComponentSchema>> = {
 
 export type GitHubConfig<
   Collections extends {
-    [key: string]: Collection<Record<string, ComponentSchema>>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string>;
   } = {
-    [key: string]: Collection<Record<string, ComponentSchema>>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string>;
   },
   Singletons extends {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
@@ -50,9 +49,9 @@ export type GitHubConfig<
 
 export type LocalConfig<
   Collections extends {
-    [key: string]: Collection<Record<string, ComponentSchema>>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string>;
   } = {
-    [key: string]: Collection<Record<string, ComponentSchema>>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string>;
   },
   Singletons extends {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
@@ -69,9 +68,9 @@ export type LocalConfig<
 
 export type Config<
   Collections extends {
-    [key: string]: Collection<Record<string, ComponentSchema>>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string>;
   } = {
-    [key: string]: Collection<Record<string, ComponentSchema>>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string>;
   },
   Singletons extends {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
@@ -84,7 +83,7 @@ export type Config<
 
 export function config<
   Collections extends {
-    [key: string]: Collection<any>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string>;
   },
   Singletons extends {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
@@ -93,9 +92,16 @@ export function config<
   return config;
 }
 
-export function collection<Schema extends Record<string, ComponentSchema>>(
-  collection: Collection<Schema>
-): Collection<Schema> {
+export function collection<
+  Schema extends Record<string, ComponentSchema>,
+  SlugField extends {
+    [K in keyof Schema]: Schema[K] extends SlugFormField<any, any, any>
+      ? K
+      : never;
+  }[keyof Schema]
+>(
+  collection: Collection<Schema, SlugField & string>
+): Collection<Schema, SlugField & string> {
   return collection;
 }
 

@@ -74,7 +74,8 @@ function SingletonPage({
 
   const isCreating = initialState === null;
   const hasChanged =
-    useHasChanged({ initialState, state, schema }) || isCreating;
+    useHasChanged({ initialState, state, schema, slugField: undefined }) ||
+    isCreating;
 
   const previewProps = useMemo(
     () =>
@@ -101,10 +102,11 @@ function SingletonPage({
     format: getSingletonFormat(config, singleton),
     currentLocalTreeSha: localTreeSha,
     currentTree,
+    slugField: undefined,
   });
   const update = useEventCallback(_update);
   const onCreate = async () => {
-    if (!clientSideValidateProp(schema, state)) {
+    if (!clientSideValidateProp(schema, state, undefined)) {
       setForceValidation(true);
       return;
     }
@@ -215,6 +217,7 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     dirpath: getSingletonPath(props.config, props.singleton),
     schema: props.config.singletons![props.singleton]!.schema,
     format,
+    slug: undefined,
   });
   const { current: tree } = useTree();
   const combined = useMemo(

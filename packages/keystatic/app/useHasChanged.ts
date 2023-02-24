@@ -8,17 +8,18 @@ export function useHasChanged(args: {
   initialState: unknown;
   state: unknown;
   schema: ComponentSchema;
+  slugField: string | undefined;
 }) {
   const initialFilesForUpdate = useData(
     useCallback(
-      () => toFiles(args.initialState, args.schema),
-      [args.initialState, args.schema]
+      () => toFiles(args.initialState, args.schema, args.slugField),
+      [args.initialState, args.schema, args.slugField]
     )
   );
   const filesForUpdate = useData(
     useCallback(
-      () => toFiles(args.state, args.schema),
-      [args.state, args.schema]
+      () => toFiles(args.state, args.schema, args.slugField),
+      [args.state, args.schema, args.slugField]
     )
   );
 

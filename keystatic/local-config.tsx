@@ -275,11 +275,10 @@ export default config({
     singlefileposts: collection({
       label: 'Single File Posts',
       directory: 'single-file-posts',
-      slugField: 'slug',
+      slugField: 'title',
       format: { contentField: 'content', frontmatter: 'yaml' },
       schema: {
-        title: fields.text({ label: 'Title' }),
-        slug: fields.text({ label: 'Slug' }),
+        title: fields.slug({ name: { label: 'Title' } }),
         content: fields.document({
           label: 'Content',
           formatting: true,

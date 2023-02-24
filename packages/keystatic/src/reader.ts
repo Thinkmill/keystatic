@@ -41,14 +41,18 @@ function collectionReader(
   const formatInfo = getCollectionFormat(config, collection);
   const extension = getDataFileExtension(formatInfo);
   const collectionPath = getCollectionPath(config, collection);
-  const schema = fields.object(config.collections![collection].schema);
+  const collectionConfig = config.collections![collection];
+  const schema = fields.object(collectionConfig.schema);
   return {
     read: (slug: string) => {
       const itemDir = path.join(
         repoPath,
         getCollectionItemPath(config, collection, slug)
       );
-      return readItem(schema, formatInfo, extension, itemDir);
+      return readItem(schema, formatInfo, extension, itemDir, {
+        field: collectionConfig.slugField,
+        slug,
+      });
     },
     async list() {
       const entries = await fs.readdir(path.join(repoPath, collectionPath), {
@@ -81,7 +85,13 @@ async function readItem(
   schema: ComponentSchema,
   formatInfo: FormatInfo,
   extension: string,
-  itemDir: string
+  itemDir: string,
+  slugField:
+    | {
+        slug: string;
+        field: string;
+      }
+    | undefined
 ) {
   let dataFile: Uint8Array;
   try {
@@ -93,7 +103,20 @@ async function readItem(
     throw err;
   }
   const { loaded, extraFakeFile } = loadDataFile(dataFile, formatInfo);
-  const validated = validateComponentBlockProps(schema, loaded, {}, []);
+  const validated = validateComponentBlockProps(
+    schema,
+    loaded,
+    {},
+    [],
+    slugField === undefined
+      ? undefined
+      : {
+          field: slugField.field,
+          slug: slugField.slug,
+          mode: 'read',
+          slugs: new Set(),
+        }
+  );
   const requiredFiles = getRequiredFiles(validated, schema);
   for (const file of requiredFiles) {
     const parentValue = getValueAtPropPath(
@@ -157,17 +180,18 @@ function singletonReader(
         schema,
         formatInfo,
         extension,
-        path.join(repoPath, singletonPath)
+        path.join(repoPath, singletonPath),
+        undefined
       ),
   };
 }
 
 export function createReader<
   Collections extends {
-    [key: string]: Collection<any>;
+    [key: string]: Collection<Record<string, ComponentSchema>, string>;
   },
   Singletons extends {
-    [key: string]: Singleton<any>;
+    [key: string]: Singleton<Record<string, ComponentSchema>>;
   }
 >(
   repoPath: string,

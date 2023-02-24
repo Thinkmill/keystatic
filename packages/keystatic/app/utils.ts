@@ -1,6 +1,7 @@
 import { isDefined } from 'emery';
 
-import { Config, GitHubConfig } from '../config';
+import { Collection, Config, GitHubConfig } from '../config';
+import { ComponentSchema, SlugFormField } from '../src';
 import { getCollectionItemSlugSuffix } from './path-utils';
 import { getTreeNodeAtPath, TreeNode } from './trees';
 
@@ -61,4 +62,26 @@ export function blobSha(contents: Uint8Array) {
 
 export function isGitHubConfig(config: Config): config is GitHubConfig {
   return config.storage.kind === 'github';
+}
+
+export function isSlugFormField(
+  schema: ComponentSchema
+): schema is SlugFormField<unknown, unknown, unknown> {
+  return (
+    schema.kind === 'form' &&
+    'slug' in schema &&
+    typeof schema.slug === 'object'
+  );
+}
+
+export function getSlugFromState(
+  collectionConfig: Collection<any, any>,
+  state: Record<string, unknown>
+) {
+  const value = state[collectionConfig.slugField];
+  const field = collectionConfig.schema[collectionConfig.slugField];
+  if (!isSlugFormField(field)) {
+    throw new Error(`slugField is not a slug field`);
+  }
+  return field.slug.serialize(value).slug;
 }

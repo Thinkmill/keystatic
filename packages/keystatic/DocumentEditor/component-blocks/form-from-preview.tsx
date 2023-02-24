@@ -22,17 +22,21 @@ import {
 import { useEventCallback } from '../utils';
 
 import {
+  AddToPathProvider,
   ArrayField,
+  BasicFormField,
   ComponentSchema,
   ConditionalField,
   FormField,
   GenericPreviewProps,
   ObjectField,
+  PathContextProvider,
   RelationshipField,
+  SlugFieldProvider,
 } from './api';
 import { previewPropsToValue, setValueToPreviewProps } from './get-value';
 import { createGetPreviewProps } from './preview-props';
-import { assertNever, clientSideValidateProp } from './utils';
+import { assertNever, clientSideValidateProp, ReadonlyPropPath } from './utils';
 
 type DefaultFieldProps<Key> = GenericPreviewProps<
   Extract<ComponentSchema, { kind: Key }>,
@@ -235,7 +239,8 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
                     if (
                       !clientSideValidateProp(
                         elementProps.schema,
-                        modalState.value
+                        modalState.value,
+                        undefined
                       )
                     ) {
                       setModalState(state => ({
@@ -250,11 +255,13 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
                   direction="column"
                   gap="xxlarge"
                 >
-                  <ArrayFieldItemModalContent
-                    onChange={onModalChange}
-                    schema={elementProps.schema}
-                    value={modalState.value}
-                  />
+                  <AddToPathProvider part={modalState.index}>
+                    <ArrayFieldItemModalContent
+                      onChange={onModalChange}
+                      schema={elementProps.schema}
+                      value={modalState.value}
+                    />
+                  </AddToPathProvider>
                 </Flex>
               </Content>
               <ButtonGroup>
@@ -361,12 +368,14 @@ function ObjectFieldPreview({
       {Object.entries(fields).map(
         ([key, propVal]) =>
           isNonChildFieldPreviewProps(propVal) && (
-            <FormValueContentFromPreviewProps
-              forceValidation={forceValidation}
-              autoFocus={key === firstFocusable}
-              key={key}
-              {...propVal}
-            />
+            <AddToPathProvider part={key}>
+              <InnerFormValueContentFromPreviewProps
+                forceValidation={forceValidation}
+                autoFocus={key === firstFocusable}
+                key={key}
+                {...propVal}
+              />
+            </AddToPathProvider>
           )
       )}
     </Flex>
@@ -389,20 +398,24 @@ function ConditionalFieldPreview({
     <Flex gap="xlarge">
       {useMemo(
         () => (
-          <schemaDiscriminant.Input
-            autoFocus={!!autoFocus}
-            value={discriminant}
-            onChange={onChange}
-            forceValidation={!!forceValidation}
-          />
+          <AddToPathProvider part="discriminant">
+            <schemaDiscriminant.Input
+              autoFocus={!!autoFocus}
+              value={discriminant}
+              onChange={onChange}
+              forceValidation={!!forceValidation}
+            />
+          </AddToPathProvider>
         ),
         [autoFocus, schemaDiscriminant, discriminant, onChange, forceValidation]
       )}
       {isNonChildFieldPreviewProps(value) && (
-        <FormValueContentFromPreviewProps
-          forceValidation={forceValidation}
-          {...value}
-        />
+        <AddToPathProvider part="value">
+          <InnerFormValueContentFromPreviewProps
+            forceValidation={forceValidation}
+            {...value}
+          />
+        </AddToPathProvider>
       )}
     </Flex>
   );
@@ -411,7 +424,10 @@ function ConditionalFieldPreview({
 export type NonChildFieldComponentSchema =
   | FormField<any, any>
   | ObjectField
-  | ConditionalField<FormField<any, any>, { [key: string]: ComponentSchema }>
+  | ConditionalField<
+      BasicFormField<any, any>,
+      { [key: string]: ComponentSchema }
+    >
   | RelationshipField<boolean>
   | ArrayField<ComponentSchema>;
 
@@ -430,18 +446,41 @@ const fieldRenderers = {
   conditional: ConditionalFieldPreview,
 };
 
-export const FormValueContentFromPreviewProps: MemoExoticComponent<
+const InnerFormValueContentFromPreviewProps: MemoExoticComponent<
   (
     props: GenericPreviewProps<NonChildFieldComponentSchema, unknown> & {
       autoFocus?: boolean;
       forceValidation?: boolean;
     }
   ) => ReactElement
-> = memo(function FormValueContentFromPreview(props) {
+> = memo(function InnerFormValueContentFromPreview(props) {
   const Comp = fieldRenderers[props.schema.kind];
   return <Comp {...(props as any)} />;
 });
 
+const emptyArray: ReadonlyPropPath = [];
+export const FormValueContentFromPreviewProps: MemoExoticComponent<
+  (
+    props: GenericPreviewProps<NonChildFieldComponentSchema, unknown> & {
+      autoFocus?: boolean;
+      forceValidation?: boolean;
+      slugField?: {
+        collection: string;
+        slugField: string;
+        currentSlug: string | undefined;
+      };
+    }
+  ) => ReactElement
+> = memo(function FormValueContentFromPreview({ slugField, ...props }) {
+  const Comp = fieldRenderers[props.schema.kind];
+  return (
+    <PathContextProvider value={emptyArray}>
+      <SlugFieldProvider value={slugField}>
+        <Comp {...(props as any)} />
+      </SlugFieldProvider>
+    </PathContextProvider>
+  );
+});
 function ArrayFieldItemModalContent(props: {
   schema: NonChildFieldComponentSchema;
   value: unknown;
@@ -451,7 +490,7 @@ function ArrayFieldItemModalContent(props: {
     () => createGetPreviewProps(props.schema, props.onChange, () => undefined),
     [props.schema, props.onChange]
   )(props.value);
-  return <FormValueContentFromPreviewProps autoFocus {...previewProps} />;
+  return <InnerFormValueContentFromPreviewProps autoFocus {...previewProps} />;
 }
 
 function findFocusableObjectFieldKey(schema: ObjectField): string | undefined {

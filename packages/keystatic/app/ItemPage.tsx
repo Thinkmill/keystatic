@@ -41,10 +41,15 @@ import { AppShellBody, AppShellRoot } from './shell';
 import { useBaseCommit, useTree, useRepositoryId } from './shell/data';
 import { AppShellHeader } from './shell/header';
 import { TreeNode } from './trees';
-import { getCollectionFormat, getCollectionItemPath } from './utils';
+import {
+  getCollectionFormat,
+  getCollectionItemPath,
+  getSlugFromState,
+} from './utils';
 import { useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
 import { mergeDataStates } from './useData';
+import { useSlugsInCollection } from './useSlugsInCollection';
 
 type ItemPageProps = {
   collection: string;
@@ -55,6 +60,7 @@ type ItemPageProps = {
   localTreeSha: string;
   currentTree: Map<string, TreeNode>;
   basePath: string;
+  slugs: Set<string>;
 };
 
 function ItemPage(props: ItemPageProps) {
@@ -99,7 +105,12 @@ function ItemPage(props: ItemPageProps) {
     [schema]
   )(state as Record<string, unknown>);
 
-  const hasChanged = useHasChanged({ initialState, schema, state });
+  const hasChanged = useHasChanged({
+    initialState,
+    schema,
+    state,
+    slugField: collectionConfig.slugField,
+  });
 
   const baseCommit = useBaseCommit();
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
@@ -110,11 +121,12 @@ function ItemPage(props: ItemPageProps) {
     basePath: getCollectionItemPath(
       config,
       collection,
-      state[collectionConfig.slugField] as string
+      getSlugFromState(collectionConfig, state)
     ),
     format: getCollectionFormat(config, collection),
     currentLocalTreeSha: localTreeSha,
     currentTree,
+    slugField: collectionConfig.slugField,
   });
   const update = useEventCallback(_update);
   const [deleteResult, deleteItem] = useDeleteItem({
@@ -124,11 +136,17 @@ function ItemPage(props: ItemPageProps) {
     currentTree,
   });
   const onUpdate = async () => {
-    if (!clientSideValidateProp(schema, state)) {
+    if (
+      !clientSideValidateProp(schema, state, {
+        currentSlug: props.itemSlug,
+        field: collectionConfig.slugField,
+        slugs: props.slugs,
+      })
+    ) {
       setForceValidation(true);
       return;
     }
-    const slug = state[collectionConfig.slugField] as string;
+    const slug = getSlugFromState(collectionConfig, state);
     const hasUpdated = await update();
     if (hasUpdated && slug !== itemSlug) {
       router.replace(
@@ -139,6 +157,15 @@ function ItemPage(props: ItemPageProps) {
     }
   };
   const formID = 'item-edit-form';
+
+  const slugFieldInfo = useMemo(
+    () => ({
+      collection: props.collection,
+      currentSlug: props.itemSlug,
+      slugField: collectionConfig.slugField,
+    }),
+    [collectionConfig.slugField, props.collection, props.itemSlug]
+  );
 
   return (
     <>
@@ -229,6 +256,7 @@ function ItemPage(props: ItemPageProps) {
             <FormValueContentFromPreviewProps
               key={localTreeSha}
               forceValidation={forceValidation}
+              slugField={slugFieldInfo}
               {...previewProps}
             />
           </AppShellBody>
@@ -248,7 +276,8 @@ function ItemPage(props: ItemPageProps) {
                       collection
                     )}/item/${encodeURIComponent(itemSlug)}`
                   );
-                  const slug = state[collectionConfig.slugField] as string;
+                  const slug = getSlugFromState(collectionConfig, state);
+
                   const hasUpdated = await update({
                     branch: newBranch,
                     sha: baseCommit,
@@ -342,6 +371,17 @@ function ItemPageWrapper(props: {
     [props.config, props.collection]
   );
 
+  const allSlugs = useSlugsInCollection(props.collection);
+
+  const collectionConfig = props.config.collections![props.collection]!;
+  const slugInfo = useMemo(
+    () => ({
+      slug: props.itemSlug,
+      slugField: collectionConfig.slugField,
+      slugs: new Set(allSlugs),
+    }),
+    [allSlugs, collectionConfig.slugField, props.itemSlug]
+  );
   const itemData = useItemData({
     config: props.config,
     dirpath: getCollectionItemPath(
@@ -349,8 +389,9 @@ function ItemPageWrapper(props: {
       props.collection,
       props.itemSlug
     ),
-    schema: props.config.collections![props.collection]!.schema,
+    schema: collectionConfig.schema,
     format,
+    slug: slugInfo,
   });
   const { current: tree } = useTree();
   const combined = useMemo(
@@ -404,6 +445,7 @@ function ItemPageWrapper(props: {
       initialFiles={combined.data.item.initialFiles}
       localTreeSha={combined.data.item.localTreeSha}
       currentTree={combined.data.tree.tree}
+      slugs={slugInfo.slugs}
     />
   );
 }
