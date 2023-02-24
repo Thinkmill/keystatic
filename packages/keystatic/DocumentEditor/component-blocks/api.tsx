@@ -783,7 +783,6 @@ export const fields = {
         if (slugInfo?.currentSlug !== undefined) {
           slugs.delete(slugInfo.currentSlug);
         }
-        console.log(slugs);
         return (
           typeof value === 'object' &&
           value !== null &&
