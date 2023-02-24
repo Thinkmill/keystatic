@@ -30,7 +30,7 @@ import {
 import { DocumentFeatures } from '../document-features';
 import { isValidURL } from '../isValidURL';
 import { ActionButton, ButtonGroup } from '@voussoir/button';
-import { Flex } from '@voussoir/layout';
+import { Box, Flex } from '@voussoir/layout';
 import {
   CollectedFile,
   collectFiles,
@@ -672,6 +672,17 @@ export const fields = {
         return generated;
       };
 
+      const slugErrorMessage =
+        props.forceValidation || blurredSlug
+          ? validateText(
+              props.value.slug,
+              args.slug?.validation?.length?.min ?? 1,
+              args.slug?.validation?.length?.max ?? Infinity,
+              args.slug?.label ?? 'Slug',
+              props.slugs
+            )
+          : undefined;
+
       return (
         <Flex gap="xlarge" direction="column">
           <TextField
@@ -699,28 +710,20 @@ export const fields = {
                 : undefined
             }
           />
-          <TextField
-            flex={1}
-            label={args.slug?.label ?? 'Slug'}
-            description={args.slug?.description}
-            value={props.value.slug}
-            onChange={slug => {
-              setShouldGenerateSlug(false);
-              props.onChange({ name: props.value.name, slug });
-            }}
-            onBlur={() => setBlurredSlug(true)}
-            errorMessage={
-              props.forceValidation || blurredSlug
-                ? validateText(
-                    props.value.slug,
-                    args.slug?.validation?.length?.min ?? 1,
-                    args.slug?.validation?.length?.max ?? Infinity,
-                    args.slug?.label ?? 'Slug',
-                    props.slugs
-                  )
-                : undefined
-            }
-            endElement={
+          <Flex gap="small" alignItems="end">
+            <TextField
+              flex={1}
+              label={args.slug?.label ?? 'Slug'}
+              description={args.slug?.description}
+              value={props.value.slug}
+              onChange={slug => {
+                setShouldGenerateSlug(false);
+                props.onChange({ name: props.value.name, slug });
+              }}
+              onBlur={() => setBlurredSlug(true)}
+              errorMessage={slugErrorMessage}
+            />
+            <Flex gap="regular" direction="column">
               <ActionButton
                 onPress={() => {
                   props.onChange({
@@ -731,8 +734,10 @@ export const fields = {
               >
                 Regenerate
               </ActionButton>
-            }
-          />
+              {/* display shim to offset the error message */}
+              {slugErrorMessage !== undefined && <Box height="xsmall" />}
+            </Flex>
+          </Flex>
         </Flex>
       );
     }
