@@ -1779,6 +1779,8 @@ export type ValueForReading<Schema extends ComponentSchema> =
         infer Value
       >
     ? Value
+    : Schema extends SlugFormField<infer Value, any, any>
+    ? Value
     : Schema extends BasicFormField<infer Value, any>
     ? Value
     : Schema extends ObjectField<infer Value>

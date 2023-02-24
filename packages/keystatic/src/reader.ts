@@ -3,6 +3,7 @@ import {
   ComponentSchema,
   fields,
   ObjectField,
+  SlugFormField,
   ValueForReading,
 } from '../DocumentEditor/component-blocks/api';
 import fs from 'fs/promises';
@@ -24,8 +25,20 @@ import {
 } from '../app/required-files';
 import { getValueAtPropPath } from '../DocumentEditor/component-blocks/utils';
 
-type CollectionReader<Schema extends Record<string, ComponentSchema>> = {
-  read: (id: string) => Promise<ValueForReading<ObjectField<Schema>> | null>;
+type CollectionReader<
+  Schema extends Record<string, ComponentSchema>,
+  SlugField extends string
+> = {
+  read: (id: string) => Promise<
+    | {
+        [Key in keyof Schema]: SlugField extends Key
+          ? Schema[Key] extends SlugFormField<any, any, infer Value>
+            ? Value
+            : ValueForReading<Schema[Key]>
+          : ValueForReading<Schema[Key]>;
+      }
+    | null
+  >;
   list: () => Promise<string[]>;
 };
 
@@ -37,7 +50,7 @@ function collectionReader(
   repoPath: string,
   collection: string,
   config: Config
-): CollectionReader<any> {
+): CollectionReader<any, any> {
   const formatInfo = getCollectionFormat(config, collection);
   const extension = getDataFileExtension(formatInfo);
   const collectionPath = getCollectionPath(config, collection);
@@ -198,7 +211,10 @@ export function createReader<
   config: Config<Collections, Singletons>
 ): {
   collections: {
-    [Key in keyof Collections]: CollectionReader<Collections[Key]['schema']>;
+    [Key in keyof Collections]: CollectionReader<
+      Collections[Key]['schema'],
+      Collections[Key]['slugField']
+    >;
   };
   singletons: {
     [Key in keyof Singletons]: SingletonReader<Singletons[Key]['schema']>;

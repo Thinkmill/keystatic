@@ -11,13 +11,9 @@ const localConfig = config({
   collections: {
     posts: collection({
       label: 'Posts',
-      slugField: 'slug',
+      slugField: 'title',
       schema: {
-        title: fields.text({ label: 'Title' }),
-        slug: fields.text({
-          label: 'Slug',
-          validation: { length: { min: 4 } },
-        }),
+        title: fields.slug({ name: { label: 'Title' } }),
         publishDate: fields.date({ label: 'Publish Date' }),
         heroImage: fields.image({ label: 'Hero Image' }),
         content: fields.document({
