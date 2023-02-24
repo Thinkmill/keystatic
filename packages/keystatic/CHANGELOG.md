@@ -1,5 +1,16 @@
 # @keystatic/core
 
+## 0.0.47
+
+### Patch Changes
+
+- 363136d: Replaced `micromatch` with `minimatch` to remove Node dependencies
+- f9f53d8: Slugs are now configured by specifying the `slugField` option with a
+  field key instead of a function.
+- a903ed9: When a non-default branch is checked out, and the user opens the "new
+  branch" dialog, present them with the option to base the new branch on default
+  or the currently checked out branch.
+
 ## 0.0.46
 
 ### Patch Changes
