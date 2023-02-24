@@ -43,9 +43,6 @@ const previewPropsToValueConverter: {
       ])
     );
   },
-  relationship(props) {
-    return props.value;
-  },
 };
 
 export function previewPropsToValue<Schema extends ComponentSchema>(
@@ -92,9 +89,6 @@ const valueToUpdaters: {
       ])
     );
   },
-  relationship(value) {
-    return value;
-  },
 };
 
 function valueToUpdater<Schema extends ComponentSchema>(
@@ -114,7 +108,6 @@ export function setValueToPreviewProps<Schema extends ComponentSchema>(
   }
   if (
     isKind(props, 'form') ||
-    isKind(props, 'relationship') ||
     isKind(props, 'object') ||
     isKind(props, 'array')
   ) {

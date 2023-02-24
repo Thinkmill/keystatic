@@ -1,11 +1,8 @@
 import { ComponentSchema } from './api';
 import { assertNever } from './utils';
 
-export function assertValidComponentSchema(
-  schema: ComponentSchema,
-  lists: ReadonlySet<string>
-) {
-  assertValidComponentSchemaInner(schema, [], [], new Set(), lists);
+export function assertValidComponentSchema(schema: ComponentSchema) {
+  assertValidComponentSchemaInner(schema, [], [], new Set());
 }
 
 // recursive things can exist but they have to either be:
@@ -17,21 +14,10 @@ function assertValidComponentSchemaInner(
   schema: ComponentSchema,
   schemaAncestors: ComponentSchema[],
   propPath: string[],
-  seenProps: Set<ComponentSchema>,
-  lists: ReadonlySet<string>
+  seenProps: Set<ComponentSchema>
 ) {
   if (schema.kind === 'form' || schema.kind === 'child') {
     return;
-  }
-  if (schema.kind === 'relationship') {
-    if (lists.has(schema.listKey)) {
-      return;
-    }
-    throw new Error(
-      `The relationship field at "${propPath.join('.')}" has the listKey "${
-        schema.listKey
-      }" but no list named "${schema.listKey}" exists.`
-    );
   }
   const ancestor = schemaAncestors.indexOf(schema);
   if (ancestor !== -1) {
@@ -48,13 +34,7 @@ function assertValidComponentSchemaInner(
   try {
     seenProps.add(schema);
     if (schema.kind === 'array') {
-      assertValidComponentSchemaInner(
-        schema.element,
-        [],
-        propPath,
-        seenProps,
-        lists
-      );
+      assertValidComponentSchemaInner(schema.element, [], propPath, seenProps);
       return;
     }
     if (schema.kind === 'object') {
@@ -72,8 +52,7 @@ function assertValidComponentSchemaInner(
           innerProp,
           schemaAncestors,
           propPath,
-          seenProps,
-          lists
+          seenProps
         );
         propPath.pop();
       }
@@ -97,8 +76,7 @@ function assertValidComponentSchemaInner(
           innerProp,
           key === stringifiedDefaultDiscriminant ? schemaAncestors : [],
           propPath,
-          seenProps,
-          lists
+          seenProps
         );
         propPath.pop();
       }

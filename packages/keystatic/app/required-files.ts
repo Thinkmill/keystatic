@@ -24,7 +24,7 @@ function _getRequiredFiles(
   propPath: (string | number)[],
   requiredFiles: RequiredFile[]
 ) {
-  if (schema.kind === 'child' || schema.kind === 'relationship') {
+  if (schema.kind === 'child') {
     return;
   }
   if (schema.kind === 'form') {

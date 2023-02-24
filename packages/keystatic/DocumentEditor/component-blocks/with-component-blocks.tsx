@@ -130,7 +130,7 @@ function normalizeNodeWithinComponentProp(
 function canSchemaContainChildField(rootSchema: ComponentSchema) {
   const queue = new Set<ComponentSchema>([rootSchema]);
   for (const schema of queue) {
-    if (schema.kind === 'form' || schema.kind === 'relationship') {
+    if (schema.kind === 'form') {
     } else if (schema.kind === 'child') {
       return true;
     } else if (schema.kind === 'array') {
@@ -156,7 +156,7 @@ function doesSchemaOnlyEverContainASingleChildField(
   const queue = new Set<ComponentSchema>([rootSchema]);
   let hasFoundChildField = false;
   for (const schema of queue) {
-    if (schema.kind === 'form' || schema.kind === 'relationship') {
+    if (schema.kind === 'form') {
     } else if (schema.kind === 'child') {
       if (hasFoundChildField) {
         return false;
@@ -595,11 +595,7 @@ export function withComponentBlocks(
 
 // the only thing that this will fix is a new field being added to an object field, nothing else.
 function addMissingFields(value: unknown, schema: ComponentSchema): unknown {
-  if (
-    schema.kind === 'child' ||
-    schema.kind === 'form' ||
-    schema.kind === 'relationship'
-  ) {
+  if (schema.kind === 'child' || schema.kind === 'form') {
     return value;
   }
   if (schema.kind === 'conditional') {

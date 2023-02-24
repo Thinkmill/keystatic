@@ -66,22 +66,6 @@ export function validateComponentBlockProps(
   if (schema.kind === 'child') {
     return null;
   }
-  if (schema.kind === 'relationship') {
-    if (schema.many) {
-      if (Array.isArray(value) && value.every(isRelationshipData)) {
-        // yes, ts understands this completely correctly, i'm as suprised as you are
-        return value.map(x => ({ id: x.id }));
-      } else {
-        throw new PropValidationError(`Invalid relationship value`, path);
-      }
-    }
-    if (value === null || isRelationshipData(value)) {
-      return value === null ? null : { id: value.id };
-    } else {
-      throw new PropValidationError(`Invalid relationship value`, path);
-    }
-  }
-
   if (schema.kind === 'conditional') {
     if (typeof value !== 'object' || value === null) {
       throw new PropValidationError(

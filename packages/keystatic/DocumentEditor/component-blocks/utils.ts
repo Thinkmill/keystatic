@@ -16,7 +16,6 @@ export function findChildPropPathsForProp(
 ): PathToChildFieldWithOption[] {
   switch (schema.kind) {
     case 'form':
-    case 'relationship':
       return [];
     case 'child':
       return [{ path: path, options: schema.options }];
@@ -183,11 +182,7 @@ function getSchemaAtPropPathInner(
   if (path.length === 0) {
     return schema;
   }
-  if (
-    schema.kind === 'child' ||
-    schema.kind === 'form' ||
-    schema.kind === 'relationship'
-  ) {
+  if (schema.kind === 'child' || schema.kind === 'form') {
     return;
   }
   if (schema.kind === 'conditional') {
@@ -244,8 +239,7 @@ export function clientSideValidateProp(
   path: ReadonlyPropPath = []
 ): boolean {
   switch (schema.kind) {
-    case 'child':
-    case 'relationship': {
+    case 'child': {
       return true;
     }
     case 'form': {
@@ -322,11 +316,7 @@ export function getAncestorSchemas(
     } else if (currentProp.kind === 'object') {
       currentValue = (currentValue as any)[key];
       currentProp = currentProp.fields[key];
-    } else if (
-      currentProp.kind === 'child' ||
-      currentProp.kind === 'form' ||
-      currentProp.kind === 'relationship'
-    ) {
+    } else if (currentProp.kind === 'child' || currentProp.kind === 'form') {
       throw new Error(`unexpected prop "${key}"`);
     } else {
       assertNever(currentProp);
@@ -359,11 +349,7 @@ export function traverseProps(
   ) => void,
   path: ReadonlyPropPath = []
 ) {
-  if (
-    schema.kind === 'form' ||
-    schema.kind === 'relationship' ||
-    schema.kind === 'child'
-  ) {
+  if (schema.kind === 'form' || schema.kind === 'child') {
     visitor(schema, value, path);
     return;
   }
@@ -407,11 +393,7 @@ export function transformProps(
   },
   path: ReadonlyPropPath = []
 ): unknown {
-  if (
-    schema.kind === 'form' ||
-    schema.kind === 'relationship' ||
-    schema.kind === 'child'
-  ) {
+  if (schema.kind === 'form' || schema.kind === 'child') {
     if (visitors[schema.kind]) {
       return (visitors[schema.kind] as any)(schema, value, path);
     }
@@ -480,11 +462,7 @@ export async function asyncTransformProps(
   },
   path: ReadonlyPropPath = []
 ): Promise<unknown> {
-  if (
-    schema.kind === 'form' ||
-    schema.kind === 'relationship' ||
-    schema.kind === 'child'
-  ) {
+  if (schema.kind === 'form' || schema.kind === 'child') {
     if (visitors[schema.kind]) {
       return (visitors[schema.kind] as any)(schema, value, path);
     }
@@ -604,11 +582,7 @@ export function replaceValueAtPropPath(
 
   // we should never reach here since form, relationship or child fields don't contain other fields
   // so the only thing that can happen to them is to be replaced which happens at the start of this function when path.length === 0
-  assert(
-    schema.kind !== 'form' &&
-      schema.kind !== 'relationship' &&
-      schema.kind !== 'child'
-  );
+  assert(schema.kind !== 'form' && schema.kind !== 'child');
 
   assertNever(schema);
 }

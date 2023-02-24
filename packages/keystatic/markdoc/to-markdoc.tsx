@@ -77,7 +77,7 @@ function removeUnnecessaryChildFieldValues(
   parent: ComponentSchema | undefined,
   value: unknown
 ): unknown {
-  if (schema.kind === 'relationship' || schema.kind === 'form') {
+  if (schema.kind === 'form') {
     return value;
   }
   if (schema.kind === 'child') {

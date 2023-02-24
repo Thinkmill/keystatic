@@ -165,8 +165,6 @@ function findChildPropPathsWithPrevious(
   switch (schema.kind) {
     case 'form':
       return [];
-    case 'relationship':
-      return [];
     case 'child':
       return [{ path: newPath, prevPath, options: schema.options }];
     case 'conditional':

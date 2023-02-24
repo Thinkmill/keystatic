@@ -35,7 +35,6 @@ import {
   GenericPreviewProps,
   ObjectField,
   PathContextProvider,
-  RelationshipField,
   SlugFieldProvider,
 } from './api';
 import { previewPropsToValue, setValueToPreviewProps } from './get-value';
@@ -340,10 +339,6 @@ function move<T>(
   return copy;
 }
 
-function RelationshipFieldPreview({}: DefaultFieldProps<'relationship'>) {
-  return null;
-}
-
 function FormFieldPreview({
   schema,
   autoFocus,
@@ -435,7 +430,6 @@ export type NonChildFieldComponentSchema =
       BasicFormField<any, any>,
       { [key: string]: ComponentSchema }
     >
-  | RelationshipField<boolean>
   | ArrayField<ComponentSchema>;
 
 function isNonChildFieldPreviewProps(
@@ -446,7 +440,6 @@ function isNonChildFieldPreviewProps(
 
 const fieldRenderers = {
   array: ArrayFieldPreview,
-  relationship: RelationshipFieldPreview,
   child: () => null,
   form: FormFieldPreview,
   object: ObjectFieldPreview,
@@ -514,8 +507,7 @@ export function canFieldBeFocused(schema: ComponentSchema): boolean {
   if (
     schema.kind === 'array' ||
     schema.kind === 'conditional' ||
-    schema.kind === 'form' ||
-    schema.kind === 'relationship'
+    schema.kind === 'form'
   ) {
     return true;
   }

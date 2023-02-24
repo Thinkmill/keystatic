@@ -387,14 +387,6 @@ export type ArrayField<ElementField extends ComponentSchema> = {
   asChildTag?: string;
 };
 
-export type RelationshipField<Many extends boolean> = {
-  kind: 'relationship';
-  listKey: string;
-  selection: string | undefined;
-  label: string;
-  many: Many;
-};
-
 export interface ObjectField<
   Fields extends Record<string, ComponentSchema> = Record<
     string,
@@ -434,7 +426,6 @@ export type ComponentSchema =
       BasicFormField<any, any>,
       { [key: string]: ComponentSchema }
     >
-  | RelationshipField<boolean>
   | ArrayFieldInComponentSchema;
 
 function validateText(
@@ -1579,18 +1570,6 @@ type ConditionalFieldPreviewProps<
   };
 }[keyof Schema['values']];
 
-// this is a separate type so that this is distributive
-type RelationshipDataType<Many extends boolean> = Many extends true
-  ? readonly HydratedRelationshipData[]
-  : HydratedRelationshipData | null;
-
-type RelationshipFieldPreviewProps<Schema extends RelationshipField<boolean>> =
-  {
-    readonly value: RelationshipDataType<Schema['many']>;
-    onChange(relationshipData: RelationshipDataType<Schema['many']>): void;
-    readonly schema: Schema;
-  };
-
 type ArrayFieldPreviewProps<
   Schema extends ArrayField<ComponentSchema>,
   ChildFieldElement
@@ -1621,8 +1600,6 @@ export type GenericPreviewProps<
   ? ObjectFieldPreviewProps<Schema, ChildFieldElement>
   : Schema extends ConditionalField<any, any>
   ? ConditionalFieldPreviewProps<Schema, ChildFieldElement>
-  : Schema extends RelationshipField<any>
-  ? RelationshipFieldPreviewProps<Schema>
   : Schema extends ArrayField<any>
   ? ArrayFieldPreviewProps<Schema, ChildFieldElement>
   : never;
@@ -1656,10 +1633,6 @@ export type InitialOrUpdateValueFromComponentPropField<
         >;
       };
     }[keyof Values]
-  : Schema extends RelationshipField<infer Many>
-  ? Many extends true
-    ? readonly HydratedRelationshipData[]
-    : HydratedRelationshipData | null
   : Schema extends ArrayField<infer ElementField>
   ? readonly {
       key: string | undefined;
@@ -1760,10 +1733,6 @@ export type ValueForComponentSchema<Schema extends ComponentSchema> =
           readonly value: ValueForComponentSchema<Values[Key]>;
         };
       }[keyof Values]
-    : Schema extends RelationshipField<infer Many>
-    ? Many extends true
-      ? readonly HydratedRelationshipData[]
-      : HydratedRelationshipData | null
     : Schema extends ArrayField<infer ElementField>
     ? readonly ValueForComponentSchema<ElementField>[]
     : never;
@@ -1801,10 +1770,6 @@ export type ValueForReading<Schema extends ComponentSchema> =
           readonly value: ValueForReading<Values[Key]>;
         };
       }[keyof Values]
-    : Schema extends RelationshipField<infer Many>
-    ? Many extends true
-      ? readonly HydratedRelationshipData[]
-      : HydratedRelationshipData | null
     : Schema extends ArrayField<infer ElementField>
     ? readonly ValueForReading<ElementField>[]
     : never;
