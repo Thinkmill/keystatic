@@ -59,13 +59,11 @@ export function CreateItem(props: {
 
   const tree = useTree();
 
+  const slug = getSlugFromState(collectionConfig, state);
+
   const [createResult, _createItem, resetCreateItemState] = useUpsertItem({
     state,
-    basePath: getCollectionItemPath(
-      props.config,
-      props.collection,
-      getSlugFromState(collectionConfig, state)
-    ),
+    basePath: getCollectionItemPath(props.config, props.collection, slug),
     initialFiles: undefined,
     storage: props.config.storage,
     schema: collectionConfig.schema,
@@ -82,14 +80,18 @@ export function CreateItem(props: {
   )}`;
 
   const slugsArr = useSlugsInCollection(props.collection);
-  const slugInfo = useMemo(
-    () => ({
-      currentSlug: undefined,
+  const currentSlug =
+    createResult.kind === 'updated' || createResult.kind === 'loading'
+      ? slug
+      : undefined;
+  const slugInfo = useMemo(() => {
+    return {
+      currentSlug,
       field: collectionConfig.slugField,
       slugs: new Set(slugsArr),
-    }),
-    [collectionConfig.slugField, slugsArr]
-  );
+    };
+  }, [collectionConfig.slugField, currentSlug, slugsArr]);
+
   const onCreate = async () => {
     if (!clientSideValidateProp(schema, state, slugInfo)) {
       setForceValidation(true);
@@ -111,10 +113,10 @@ export function CreateItem(props: {
   const slugFieldInfo = useMemo(
     () => ({
       collection: props.collection,
-      currentSlug: undefined,
+      currentSlug,
       slugField: collectionConfig.slugField,
     }),
-    [collectionConfig.slugField, props.collection]
+    [collectionConfig.slugField, currentSlug, props.collection]
   );
 
   return (
