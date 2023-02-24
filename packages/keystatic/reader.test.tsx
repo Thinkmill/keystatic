@@ -11,7 +11,7 @@ const localConfig = config({
   collections: {
     posts: collection({
       label: 'Posts',
-      getItemSlug: data => data.slug,
+      slugField: 'slug',
       schema: {
         title: fields.text({ label: 'Title' }),
         slug: fields.text({

@@ -176,7 +176,7 @@ function normaliseDocumentFeatures(config: DocumentFeaturesConfig) {
   return documentFeatures;
 }
 
-type BasicFormField<Value, Options> = {
+export type BasicFormField<Value, Options> = {
   kind: 'form';
   Input(props: {
     value: Value;

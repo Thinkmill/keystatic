@@ -59,7 +59,7 @@ export function CreateItem(props: {
     basePath: getCollectionItemPath(
       props.config,
       props.collection,
-      collectionConfig.getItemSlug(state)
+      state[collectionConfig.slugField]
     ),
     initialFiles: undefined,
     storage: props.config.storage,
@@ -81,7 +81,7 @@ export function CreateItem(props: {
       return;
     }
     if (await createItem()) {
-      const slug = collectionConfig.getItemSlug(state);
+      const slug = state[collectionConfig.slugField] as string;
       router.push(`${collectionPath}/item/${slug}`);
     }
   };
@@ -172,7 +172,7 @@ export function CreateItem(props: {
                 )}/collection/${encodeURIComponent(props.collection)}/create`
               );
               if (await createItem({ branch: newBranch, sha: baseCommit })) {
-                const slug = collectionConfig.getItemSlug(state);
+                const slug = state[collectionConfig.slugField] as string;
                 router.push(
                   `/keystatic/branch/${encodeURIComponent(
                     newBranch
