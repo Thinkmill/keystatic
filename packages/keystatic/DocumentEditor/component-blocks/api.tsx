@@ -40,7 +40,6 @@ import { useTree } from '../../app/shell/data';
 import { useConfig } from '../../app/shell';
 import {
   getCollectionFormat,
-  getCollectionItemPath,
   getCollectionPath,
   getDataFileExtension,
 } from '../../app/path-utils';
