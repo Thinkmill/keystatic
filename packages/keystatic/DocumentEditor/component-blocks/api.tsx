@@ -16,7 +16,7 @@ import { Picker, Item } from '@voussoir/picker';
 import { css, tokenSchema } from '@voussoir/style';
 import { TextArea, TextField } from '@voussoir/text-field';
 import { Editor } from 'slate';
-import { matcher, capture } from 'micromatch';
+import { filter } from 'minimatch';
 
 import { fromMarkdoc } from '../../markdoc/from-markdoc';
 import { toMarkdocDocument } from '../../markdoc/to-markdoc';
@@ -41,8 +41,11 @@ import { useConfig } from '../../app/shell';
 import {
   getCollectionFormat,
   getCollectionItemPath,
+  getCollectionPath,
   getDataFileExtension,
 } from '../../app/path-utils';
+import { getTreeNodeAtPath } from '../../app/trees';
+import { getTreeNodeForItem } from '../../app/utils';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -575,7 +578,7 @@ export const fields = {
     label: string;
     pattern?: string;
   }): BasicFormField<string | null, undefined> {
-    const match = pattern ? matcher(pattern) : () => true;
+    const match = pattern ? filter(pattern) : () => true;
     return {
       kind: 'form',
       Input({ value, onChange, autoFocus }) {
@@ -621,20 +624,23 @@ export const fields = {
         const tree = useTree().current;
 
         const options = useMemo(() => {
-          const files =
-            tree.kind === 'loaded' ? [...tree.data.entries.values()] : [];
-          const formatInfo = getCollectionFormat(config, collection);
-          const pattern =
-            getCollectionItemPath(config, collection, '*') +
-            `/index${getDataFileExtension(formatInfo)}`;
-
-          return files.flatMap(val => {
-            const captured = capture(pattern, val.path);
-            if (!captured) {
-              return [];
-            }
-            return [{ slug: captured[0] }];
-          });
+          const loadedTree =
+            tree.kind === 'loaded' ? tree.data.tree : new Map();
+          const treeNode = getTreeNodeAtPath(
+            loadedTree,
+            getCollectionPath(config, collection)
+          );
+          if (!treeNode?.children) return [];
+          const extension = getDataFileExtension(
+            getCollectionFormat(config, collection)
+          );
+          return [...treeNode.children].flatMap(([, entry]) =>
+            getTreeNodeForItem(config, collection, entry)?.children?.has(
+              `index${extension}`
+            )
+              ? [{ slug: entry.entry.path.replace(/^.+\/([^/]+)$/, '$1') }]
+              : []
+          );
         }, [config, tree]);
         return (
           <Combobox
