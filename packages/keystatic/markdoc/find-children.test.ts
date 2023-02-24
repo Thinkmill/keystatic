@@ -137,6 +137,10 @@ test('array', () => {
               "defaultValue": "",
               "kind": "form",
               "options": undefined,
+              "slug": {
+                "parse": [Function],
+                "serialize": [Function],
+              },
               "validate": [Function],
             },
             "href": {
