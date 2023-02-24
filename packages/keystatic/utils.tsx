@@ -311,6 +311,7 @@ export function useDeleteItem(args: {
           return;
         }
         setState({ kind: 'updated' });
+        return;
       }
       const newTree: TreeEntry[] = await fetch('/api/keystatic/update', {
         method: 'POST',
