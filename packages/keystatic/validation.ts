@@ -35,7 +35,8 @@ export function getValidatedNodeWithNormalizedComponentFormProps(
           { kind: 'object', fields: componentBlock.schema },
           node.props,
           relationships,
-          []
+          [],
+          undefined
         ),
       };
     }

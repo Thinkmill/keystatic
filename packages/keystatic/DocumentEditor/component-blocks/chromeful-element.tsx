@@ -41,7 +41,8 @@ export function ChromefulComponentBlockElement(props: {
     () =>
       clientSideValidateProp(
         { kind: 'object', fields: props.componentBlock.schema },
-        props.elementProps
+        props.elementProps,
+        undefined
       ),
 
     [props.componentBlock, props.elementProps]

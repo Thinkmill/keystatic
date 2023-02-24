@@ -3,12 +3,12 @@ import {
   ComponentSchema,
   ConditionalField,
   ValueForComponentSchema,
-  FormField,
   FormFieldValue,
   HydratedRelationshipData,
   ObjectField,
   RelationshipField,
   GenericPreviewProps,
+  BasicFormField,
 } from './api';
 import { updateValue } from './initial-values';
 
@@ -178,7 +178,7 @@ export function createGetPreviewProps<
         value: value as FormFieldValue,
         onChange,
         options: schema.options,
-        schema: schema,
+        schema: schema as any,
       };
     },
     child(schema, value, onChange, path) {
@@ -280,7 +280,7 @@ export function createGetPreviewProps<
     conditional(schema, value, memoized, path, getInnerProp) {
       const props: GenericPreviewProps<
         ConditionalField<
-          FormField<string | boolean, unknown>,
+          BasicFormField<string | boolean, unknown>,
           { [key: string]: ComponentSchema }
         >,
         ChildFieldElement

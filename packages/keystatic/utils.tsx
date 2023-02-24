@@ -24,6 +24,7 @@ import {
 } from './app/trees';
 import { Config } from './src';
 import { getAuth } from './app/auth';
+import { isSlugFormField } from './app/utils';
 
 const textEncoder = new TextEncoder();
 
@@ -57,6 +58,7 @@ export function useUpsertItem(args: {
   currentTree: Map<string, TreeNode>;
   currentLocalTreeSha: string | undefined;
   basePath: string;
+  slugField: string | undefined;
 }) {
   const [state, setState] = useState<
     | { kind: 'idle' }
@@ -77,7 +79,8 @@ export function useUpsertItem(args: {
       setState({ kind: 'loading' });
       let { value: stateWithExtraFilesRemoved, extraFiles } = await toFiles(
         args.state,
-        fields.object(args.schema)
+        fields.object(args.schema),
+        args.slugField
       );
       const dataFormat =
         typeof args.format === 'string' ? args.format : args.format.frontmatter;
@@ -327,9 +330,16 @@ export function useDeleteItem(args: {
   ] as const;
 }
 
-export async function toFiles(value: unknown, schema: ComponentSchema) {
+export async function toFiles(
+  value: unknown,
+  schema: ComponentSchema,
+  slugField: string | undefined
+) {
   const extraFiles: { path: string; contents: Uint8Array }[] = [];
-  return { value: await _toFiles(value, schema, [], extraFiles), extraFiles };
+  return {
+    value: await _toFiles(value, schema, [], extraFiles, slugField),
+    extraFiles,
+  };
 }
 
 async function _toFiles(
@@ -339,12 +349,19 @@ async function _toFiles(
   extraFiles: {
     path: string;
     contents: Uint8Array;
-  }[]
+  }[],
+  slugField: string | undefined
 ): Promise<unknown> {
   if (schema.kind === 'child' || schema.kind === 'relationship') {
     return value;
   }
   if (schema.kind === 'form') {
+    if (propPath.length === 1 && slugField === propPath[0]) {
+      if (!isSlugFormField(schema)) {
+        throw new Error('slugField is a not a slug field');
+      }
+      return schema.slug.serialize(value).value;
+    }
     if ('serializeToFile' in schema && schema.serializeToFile) {
       if (schema.serializeToFile.kind === 'asset') {
         const suggestedFilenamePrefix = propPath.join('/');
@@ -394,7 +411,8 @@ async function _toFiles(
             (value as any)[key],
             val,
             [...propPath, key],
-            extraFiles
+            extraFiles,
+            slugField
           ),
         ])
       )
@@ -403,7 +421,13 @@ async function _toFiles(
   if (schema.kind === 'array') {
     return Promise.all(
       (value as unknown[]).map((val, index) =>
-        _toFiles(val, schema.element, [...propPath, index], extraFiles)
+        _toFiles(
+          val,
+          schema.element,
+          [...propPath, index],
+          extraFiles,
+          slugField
+        )
       )
     );
   }
@@ -414,7 +438,8 @@ async function _toFiles(
         (value as any).value,
         schema.values[(value as any).discriminant],
         [...propPath, 'value'],
-        extraFiles
+        extraFiles,
+        slugField
       ),
     };
   }

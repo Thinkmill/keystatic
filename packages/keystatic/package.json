@@ -55,6 +55,7 @@
     "@react-stately/collections": "^3.5.0",
     "@react-stately/list": "^3.6.0",
     "@react-stately/overlays": "^3.4.3",
+    "@sindresorhus/slugify": "^1.1.2",
     "@ts-gql/tag": "^0.7.0",
     "@types/node": "16.11.13",
     "@types/react": "^18.0.25",

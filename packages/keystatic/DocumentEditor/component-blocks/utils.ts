@@ -237,7 +237,11 @@ export function getSchemaAtPropPath(
 
 export function clientSideValidateProp(
   schema: ComponentSchema,
-  value: any
+  value: any,
+  slugField:
+    | { field: string; slugs: Set<string>; currentSlug: string | undefined }
+    | undefined,
+  path: ReadonlyPropPath = []
 ): boolean {
   switch (schema.kind) {
     case 'child':
@@ -245,7 +249,13 @@ export function clientSideValidateProp(
       return true;
     }
     case 'form': {
-      return schema.validate(value);
+      if (path.length === 1 && path[0] === slugField?.field) {
+        return schema.validate(value, {
+          currentSlug: slugField.currentSlug,
+          slugs: slugField.slugs,
+        });
+      }
+      return schema.validate(value, undefined);
     }
     case 'conditional': {
       if (!schema.discriminant.validate(value.discriminant)) {
@@ -253,20 +263,36 @@ export function clientSideValidateProp(
       }
       return clientSideValidateProp(
         schema.values[value.discriminant],
-        value.value
+        value.value,
+        slugField,
+        path.concat('value')
       );
     }
     case 'object': {
       for (const [key, childProp] of Object.entries(schema.fields)) {
-        if (!clientSideValidateProp(childProp, value[key])) {
+        if (
+          !clientSideValidateProp(
+            childProp,
+            value[key],
+            slugField,
+            path.concat(key)
+          )
+        ) {
           return false;
         }
       }
       return true;
     }
     case 'array': {
-      for (const innerVal of value) {
-        if (!clientSideValidateProp(schema.element, innerVal)) {
+      for (const [idx, innerVal] of (value as unknown[]).entries()) {
+        if (
+          !clientSideValidateProp(
+            schema.element,
+            innerVal,
+            slugField,
+            path.concat(idx)
+          )
+        ) {
           return false;
         }
       }

@@ -1,4 +1,5 @@
 import { assertNever } from 'emery';
+import { isSlugFormField } from './app/utils';
 import { ComponentSchema } from './DocumentEditor/component-blocks/api';
 import { getInitialPropsValue } from './DocumentEditor/component-blocks/initial-values';
 import { ReadonlyPropPath } from './DocumentEditor/component-blocks/utils';
@@ -17,13 +18,47 @@ export function validateComponentBlockProps(
   schema: ComponentSchema,
   value: unknown,
   relationships: Relationships,
-  path: ReadonlyPropPath
+  path: ReadonlyPropPath,
+  slugField:
+    | {
+        mode: 'state' | 'parse' | 'read';
+        slug: string;
+        field: string;
+        slugs: Set<string>;
+      }
+    | undefined
 ): any {
   if (schema.kind === 'form') {
+    if (path.length === 1 && slugField?.field === path[0]) {
+      if (!isSlugFormField(schema)) {
+        throw new Error('slugField is not a slug field');
+      }
+      const slugInfo = {
+        currentSlug: slugField.slug,
+        slugs: slugField.slugs,
+      };
+      if (slugField.mode === 'state') {
+        if (!schema.validate(value, slugInfo)) {
+          throw new PropValidationError('Invalid form prop value', path);
+        }
+        return value;
+      }
+      const parsed = schema.slug.parse({
+        slug: slugField.slug,
+        value,
+      });
+      if (!schema.validate(parsed, slugInfo)) {
+        throw new PropValidationError('Invalid form prop value', path);
+      }
+      if (slugField.mode === 'read') {
+        return schema.slug.serialize(parsed).value;
+      }
+      return parsed;
+    }
     if ('serializeToFile' in schema && schema.serializeToFile) {
       return value;
     }
-    if (schema.validate(value)) {
+    if (schema.validate(value, undefined)) {
       return value;
     }
     throw new PropValidationError('Invalid form prop value', path);
@@ -71,7 +106,8 @@ export function validateComponentBlockProps(
       schema.discriminant,
       discriminant,
       relationships,
-      path.concat('discriminant')
+      path.concat('discriminant'),
+      slugField
     );
     if (discriminantVal !== undefined) {
       obj.discriminant = discriminantVal;
@@ -80,7 +116,8 @@ export function validateComponentBlockProps(
       schema.values[discriminant],
       val,
       relationships,
-      path.concat('value')
+      path.concat('value'),
+      slugField
     );
     if (conditionalFieldValue !== undefined) {
       obj.value = conditionalFieldValue;
@@ -111,7 +148,8 @@ export function validateComponentBlockProps(
         schema.fields[key],
         individualVal,
         relationships,
-        path.concat(key)
+        path.concat(key),
+        slugField
       );
 
       // for some reason mongo or mongoose or something is saving undefined as null
@@ -131,7 +169,8 @@ export function validateComponentBlockProps(
         schema.element,
         innerVal,
         relationships,
-        path.concat(i)
+        path.concat(i),
+        slugField
       );
     });
   }

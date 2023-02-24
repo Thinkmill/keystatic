@@ -243,7 +243,7 @@ importers:
       '@markdoc/markdoc': ^0.2.2
       '@preconstruct/next': ^4.0.0
       '@react-aria/i18n': ^3.6.2
-      '@sindresorhus/slugify': ^2.1.0
+      '@sindresorhus/slugify': ^1.1.2
       '@storybook/addon-a11y': ^6.5.12
       '@storybook/addon-actions': ^6.5.12
       '@storybook/addon-controls': ^6.5.12
@@ -361,7 +361,7 @@ importers:
       tsx: 3.12.3
     devDependencies:
       '@preconstruct/next': 4.0.0
-      '@sindresorhus/slugify': 2.2.0
+      '@sindresorhus/slugify': 1.1.2
       '@storybook/addon-a11y': 6.5.16_biqbaboplfbrettd7655fr4n2y
       '@storybook/addon-actions': 6.5.16_biqbaboplfbrettd7655fr4n2y
       '@storybook/addon-controls': 6.5.16_ygqkwb4gg3aean7xjfdauovyqq
@@ -1885,6 +1885,7 @@ importers:
       '@react-stately/collections': ^3.5.0
       '@react-stately/list': ^3.6.0
       '@react-stately/overlays': ^3.4.3
+      '@sindresorhus/slugify': ^1.1.2
       '@ts-gql/compiler': ^0.16.1
       '@ts-gql/eslint-plugin': ^0.8.5
       '@ts-gql/next': ^17.0.0
@@ -1982,6 +1983,7 @@ importers:
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-stately/list': 3.6.1_react@18.2.0
       '@react-stately/overlays': 3.4.4_react@18.2.0
+      '@sindresorhus/slugify': 1.1.2
       '@ts-gql/tag': 0.7.0_graphql@16.6.0
       '@types/node': 16.11.13
       '@types/react': 18.0.28
@@ -6844,20 +6846,19 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /@sindresorhus/slugify/2.2.0:
-    resolution: {integrity: sha512-9Vybc/qX8Kj6pxJaapjkFbiUJPk7MAkCh/GFCxIBnnsuYCFPIXKvnLidG8xlepht3i24L5XemUmGtrJ3UWrl6w==}
-    engines: {node: '>=12'}
+  /@sindresorhus/slugify/1.1.2:
+    resolution: {integrity: sha512-V9nR/W0Xd9TSGXpZ4iFUcFGhuOJtZX82Fzxj1YISlbSgKvIiNa7eLEZrT0vAraPOt++KHauIVNYgGRgjc13dXA==}
+    engines: {node: '>=10'}
     dependencies:
-      '@sindresorhus/transliterate': 1.6.0
-      escape-string-regexp: 5.0.0
-    dev: true
+      '@sindresorhus/transliterate': 0.1.2
+      escape-string-regexp: 4.0.0
 
-  /@sindresorhus/transliterate/1.6.0:
-    resolution: {integrity: sha512-doH1gimEu3A46VX6aVxpHTeHrytJAG6HgdxntYnCFiIFHEM/ZGpG8KiZGBChchjQmG0XFIBL552kBTjVcMZXwQ==}
-    engines: {node: '>=12'}
+  /@sindresorhus/transliterate/0.1.2:
+    resolution: {integrity: sha512-5/kmIOY9FF32nicXH+5yLNTX4NJ4atl7jRgqAJuIn/iyDFXBktOKDxCvyGE/EzmF4ngSUvjXxQUQlQiZ5lfw+w==}
+    engines: {node: '>=10'}
     dependencies:
-      escape-string-regexp: 5.0.0
-    dev: true
+      escape-string-regexp: 2.0.0
+      lodash.deburr: 4.1.0
 
   /@sinonjs/commons/2.0.0:
     resolution: {integrity: sha512-uLa0j859mMrg2slwQYdO/AkrOfmH+X6LTVmNTS9CqexuE2IvVORIkSpJLqePAbEnKJ77aMmCwr1NUZ57120Xcg==}
@@ -12478,7 +12479,6 @@ packages:
   /escape-string-regexp/2.0.0:
     resolution: {integrity: sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==}
     engines: {node: '>=8'}
-    dev: false
 
   /escape-string-regexp/4.0.0:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
@@ -16394,6 +16394,9 @@ packages:
 
   /lodash.debounce/4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
+
+  /lodash.deburr/4.1.0:
+    resolution: {integrity: sha512-m/M1U1f3ddMCs6Hq2tAsYThTBDaAKFDX3dwDo97GEYzamXi9SqUpjWi/Rrj/gf3X2n8ktwgZrlP1z6E3v/IExQ==}
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
