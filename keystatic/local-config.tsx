@@ -50,7 +50,7 @@ export default config({
   collections: {
     posts: collection({
       label: 'Posts',
-      getItemSlug: data => data.slug,
+      slugField: 'slug',
       schema: {
         title: fields.text({ label: 'Title' }),
         slug: fields.text({
@@ -245,7 +245,7 @@ export default config({
     people: collection({
       label: 'People',
       directory: 'some/directory/people',
-      getItemSlug: data => data.username,
+      slugField: 'username',
       schema: {
         name: fields.text({ label: 'Name' }),
         username: fields.text({
@@ -261,7 +261,7 @@ export default config({
     packages: collection({
       label: 'Packages',
       directorySuffix: 'somewhere/else',
-      getItemSlug: data => data.name,
+      slugField: 'name',
       format: 'json',
       schema: {
         name: fields.text({ label: 'Name' }),
@@ -275,7 +275,7 @@ export default config({
     singlefileposts: collection({
       label: 'Single File Posts',
       directory: 'single-file-posts',
-      getItemSlug: data => data.slug,
+      slugField: 'slug',
       format: { contentField: 'content', frontmatter: 'yaml' },
       schema: {
         title: fields.text({ label: 'Title' }),

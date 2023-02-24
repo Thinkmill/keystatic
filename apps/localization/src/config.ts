@@ -44,7 +44,7 @@ const localeCollections = Object.fromEntries(
       directory: `packages/keystatic/app/l10n/${key}`,
       format: 'json',
       label,
-      getItemSlug: data => data.key,
+      slugField: 'key',
       schema: {
         key: fields.text({
           label: 'Key',

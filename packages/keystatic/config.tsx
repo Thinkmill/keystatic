@@ -1,6 +1,5 @@
 import {
-  ObjectField,
-  ValueForComponentSchema,
+  BasicFormField,
   ComponentSchema,
 } from './DocumentEditor/component-blocks/api';
 
@@ -14,7 +13,11 @@ export type Collection<Schema extends Record<string, ComponentSchema>> = {
   directory?: string;
   directorySuffix?: string;
   format?: Format;
-  getItemSlug: (value: ValueForComponentSchema<ObjectField<Schema>>) => string;
+  slugField: {
+    [K in keyof Schema]: Schema[K] extends BasicFormField<string, any>
+      ? K
+      : never;
+  }[keyof Schema];
   schema: Schema;
 };
 

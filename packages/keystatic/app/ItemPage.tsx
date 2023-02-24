@@ -110,7 +110,7 @@ function ItemPage(props: ItemPageProps) {
     basePath: getCollectionItemPath(
       config,
       collection,
-      collectionConfig.getItemSlug(state)
+      state[collectionConfig.slugField] as string
     ),
     format: getCollectionFormat(config, collection),
     currentLocalTreeSha: localTreeSha,
@@ -128,7 +128,7 @@ function ItemPage(props: ItemPageProps) {
       setForceValidation(true);
       return;
     }
-    const slug = collectionConfig.getItemSlug(state);
+    const slug = state[collectionConfig.slugField] as string;
     const hasUpdated = await update();
     if (hasUpdated && slug !== itemSlug) {
       router.replace(
@@ -248,7 +248,7 @@ function ItemPage(props: ItemPageProps) {
                       collection
                     )}/item/${encodeURIComponent(itemSlug)}`
                   );
-                  const slug = collectionConfig.getItemSlug(state);
+                  const slug = state[collectionConfig.slugField] as string;
                   const hasUpdated = await update({
                     branch: newBranch,
                     sha: baseCommit,
