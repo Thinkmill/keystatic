@@ -1892,7 +1892,6 @@ importers:
       '@types/cookie': ^0.5.1
       '@types/is-hotkey': ^0.1.7
       '@types/js-yaml': ^4.0.5
-      '@types/micromatch': ^4.0.2
       '@types/node': 16.11.13
       '@types/prismjs': ^1.26.0
       '@types/react': ^18.0.25
@@ -1953,8 +1952,8 @@ importers:
       mdast-util-gfm-strikethrough: ^0.2.3
       micromark-extension-gfm-autolink-literal: 0.5.7
       micromark-extension-gfm-strikethrough: 0.6.5
-      micromatch: ^4.0.5
       mime: ^3.0.0
+      minimatch: ^7.1.0
       pretty-format: ^29.0.1
       prismjs: ^1.29.0
       react: ^18.2.0
@@ -2040,8 +2039,8 @@ importers:
       mdast-util-gfm-strikethrough: 0.2.3
       micromark-extension-gfm-autolink-literal: 0.5.7
       micromark-extension-gfm-strikethrough: 0.6.5
-      micromatch: 4.0.5
       mime: 3.0.0
+      minimatch: 7.1.0
       pretty-format: 29.4.3
       prismjs: 1.29.0
       scroll-into-view-if-needed: 3.0.6
@@ -2058,7 +2057,6 @@ importers:
       '@types/cookie': 0.5.1
       '@types/is-hotkey': 0.1.7
       '@types/js-yaml': 4.0.5
-      '@types/micromatch': 4.0.2
       '@types/prismjs': 1.26.0
       '@voussoir/test-utils': link:../../design-system/packages/test-utils
       eslint: 8.34.0
@@ -8233,10 +8231,6 @@ packages:
       '@types/node': 16.11.13
     dev: true
 
-  /@types/braces/3.0.1:
-    resolution: {integrity: sha512-+euflG6ygo4bn0JHtn4pYqcXwRtLvElQ7/nnjDu7iYG56H0+OhCd7d6Ug0IE3WcFpZozBKW2+80FUbv5QGk5AQ==}
-    dev: true
-
   /@types/cacheable-request/6.0.3:
     resolution: {integrity: sha512-IQ3EbTzGxIigb1I3qPZc1rWJnH0BmSKv5QYTalEwweFvyBDLSAe24zP0le/hyi7ecGfZVlIVAg4BZqb8WBwKqw==}
     dependencies:
@@ -8476,12 +8470,6 @@ packages:
 
   /@types/mdurl/1.0.2:
     resolution: {integrity: sha512-eC4U9MlIcu2q0KQmXszyn5Akca/0jrQmwDRgpAMJai7qBWq4amIQhZyNau4VYGtCeALvW1/NtjzJJ567aZxfKA==}
-
-  /@types/micromatch/4.0.2:
-    resolution: {integrity: sha512-oqXqVb0ci19GtH0vOA/U2TmHTcRY9kuZl4mqUxe0QmJAlIW13kzhuK5pi1i9+ngav8FjpSb9FVS/GE00GLX1VA==}
-    dependencies:
-      '@types/braces': 3.0.1
-    dev: true
 
   /@types/mime/3.0.1:
     resolution: {integrity: sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==}
@@ -10282,6 +10270,12 @@ packages:
     dependencies:
       balanced-match: 1.0.2
       concat-map: 0.0.1
+
+  /brace-expansion/2.0.1:
+    resolution: {integrity: sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==}
+    dependencies:
+      balanced-match: 1.0.2
+    dev: false
 
   /braces/2.3.2:
     resolution: {integrity: sha512-aNdbnj9P8PjdXU4ybaWLK2IF3jc/EoDYbC7AazW6to3TRsfXxscC9UXOB5iDiEQrkyIbWp2SLQda4+QAa7nc3w==}
@@ -17416,6 +17410,13 @@ packages:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
     dependencies:
       brace-expansion: 1.1.11
+
+  /minimatch/7.1.0:
+    resolution: {integrity: sha512-ZRvZsrVXiuB/QDlJx7WPymFyOHQUntQOEH3vFIwCzs/fDnH/siHZQAmI6Zamx1J9u9S66ucgKXU0CnqHfi8Z4g==}
+    engines: {node: '>=10'}
+    dependencies:
+      brace-expansion: 2.0.1
+    dev: false
 
   /minimist-options/4.1.0:
     resolution: {integrity: sha512-Q4r8ghd80yhO/0j1O3B2BjweX3fiHg9cdOwjJd2J76Q135c+NDxGCqdYKQ1SKBuFfgWbAUzBfvYjPUEeNgqN1A==}

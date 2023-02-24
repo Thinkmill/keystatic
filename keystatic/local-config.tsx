@@ -266,6 +266,10 @@ export default config({
       schema: {
         name: fields.text({ label: 'Name' }),
         someFilepath: fields.pathReference({ label: 'Some Filepath' }),
+        someFilepathInPosts: fields.pathReference({
+          label: 'Some Filepath in posts',
+          pattern: 'posts/**',
+        }),
       },
     }),
     singlefileposts: collection({
