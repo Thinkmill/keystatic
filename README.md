@@ -23,6 +23,12 @@ Feedback on how we're going, what you're looking for, and what you'd like to see
 next is super helpful as we progress!
 [Join the discussion on GitHub](https://github.com/Thinkmill/keystatic/discussions)
 
+## WIP Documentation
+
+We're building the [first draft of the Keystatic documentation](maintain a ) in a 
+public Notion space. Things will evolve and likely change, but this give you a 
+"real-time" visibility on what's available in terms of docs!
+
 ---
 
 Copyright (c) 2023 Thinkmill Labs Pty Ltd.
