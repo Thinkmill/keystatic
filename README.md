@@ -25,8 +25,10 @@ next is super helpful as we progress!
 
 ## WIP Documentation
 
-We're building the [first draft of the Keystatic documentation](maintain a ) in a 
-public Notion space. Things will evolve and likely change, but this give you a 
+We're building the [first draft of the Keystatic documentation](https://www.notion.so/thinkmill/Keystatic-9f141cb1ac3c44b5ad02f1ae9b5543d8) in a 
+public Notion space. 
+
+Things will evolve and likely change, but this give you a 
 "real-time" visibility on what's available in terms of docs!
 
 ---
