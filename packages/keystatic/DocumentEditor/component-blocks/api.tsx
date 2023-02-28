@@ -1,6 +1,5 @@
 import {
   createContext,
-  HTMLAttributes,
   ReactElement,
   ReactNode,
   useContext,
@@ -30,7 +29,7 @@ import {
 import { DocumentFeatures } from '../document-features';
 import { isValidURL } from '../isValidURL';
 import { ActionButton, ButtonGroup } from '@voussoir/button';
-import { Box, Flex } from '@voussoir/layout';
+import { Box, BoxProps, Flex } from '@voussoir/layout';
 import {
   CollectedFile,
   collectFiles,
@@ -1134,15 +1133,15 @@ export const fields = {
 
             <ButtonGroup>
               <ActionButton
-                alignSelf="start"
                 onPress={() => {
                   inputRef.current?.click();
                 }}
               >
-                Upload
+                Choose file
               </ActionButton>
               {value.kind === 'uploaded' && (
                 <ActionButton
+                  prominence="low"
                   onPress={() => {
                     onChange({ kind: 'none' });
                   }}
@@ -1153,16 +1152,23 @@ export const fields = {
             </ButtonGroup>
 
             {objectUrl && (
-              <img
-                src={objectUrl}
-                alt=""
-                style={{
-                  display: 'block',
-                  height: 140,
-                  maxWidth: '100%',
-                  alignSelf: 'start',
-                }}
-              />
+              <Box
+                alignSelf="start"
+                backgroundColor="canvas"
+                borderRadius="regular"
+                border="neutral"
+                padding="regular"
+              >
+                <img
+                  src={objectUrl}
+                  alt=""
+                  style={{
+                    display: 'block',
+                    maxHeight: tokenSchema.size.alias.singleLineWidth,
+                    maxWidth: '100%',
+                  }}
+                />
+              </Box>
             )}
             <input
               style={{ display: 'none' }}
@@ -1185,7 +1191,7 @@ export const fields = {
             />
             {isInEditor && value.kind === 'uploaded' && (
               <TextField
-                label={`${label} filename`}
+                label="Filename"
                 onChange={filename => {
                   onChange({ ...value, filename });
                 }}
@@ -1720,18 +1726,16 @@ export function component<
   return options as any;
 }
 
-export function NotEditable({
-  children,
-  ...props
-}: HTMLAttributes<HTMLDivElement>) {
+export function NotEditable({ children, ...props }: BoxProps) {
   return (
-    <span
-      className={css({ userSelect: 'none', whiteSpace: 'initial' })}
+    <Box
+      elementType="span"
+      UNSAFE_className={css({ userSelect: 'none', whiteSpace: 'initial' })}
       contentEditable={false}
       {...props}
     >
       {children}
-    </span>
+    </Box>
   );
 }
 

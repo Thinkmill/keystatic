@@ -7,10 +7,11 @@ import { checkCircle2Icon } from '@voussoir/icon/icons/checkCircle2Icon';
 import { infoIcon } from '@voussoir/icon/icons/infoIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Icon } from '@voussoir/icon';
+import { Flex } from '@voussoir/layout';
 import { Notice } from '@voussoir/notice';
+import { tokenSchema } from '@voussoir/style';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { Text } from '@voussoir/typography';
-import { Flex } from '@voussoir/layout';
 
 import {
   config,
@@ -108,13 +109,19 @@ export default config({
                     : null
                 );
                 return url ? (
-                  <NotEditable>
+                  <NotEditable
+                    alignSelf="start"
+                    backgroundColor="canvas"
+                    borderRadius="regular"
+                    border="neutral"
+                    padding="regular"
+                  >
                     <img
                       src={url}
                       alt={props.fields.alt.value}
                       style={{
                         display: 'block',
-                        height: 140,
+                        maxHeight: tokenSchema.size.alias.singleLineWidth,
                         maxWidth: '100%',
                       }}
                     />

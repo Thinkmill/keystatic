@@ -19,6 +19,7 @@
     "@voussoir/icon": "^0.1.0",
     "@voussoir/layout": "^0.1.0",
     "@voussoir/notice": "^0.1.0",
+    "@voussoir/style": "^0.1.1",
     "@voussoir/tooltip": "^0.1.0",
     "@voussoir/typography": "^0.1.0",
     "graphql": "^16.6.0",

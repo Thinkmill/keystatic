@@ -1809,6 +1809,7 @@ importers:
       '@voussoir/icon': ^0.1.0
       '@voussoir/layout': ^0.1.0
       '@voussoir/notice': ^0.1.0
+      '@voussoir/style': ^0.1.1
       '@voussoir/tooltip': ^0.1.0
       '@voussoir/typography': ^0.1.0
       graphql: ^16.6.0
@@ -1828,6 +1829,7 @@ importers:
       '@voussoir/icon': link:../design-system/packages/icon
       '@voussoir/layout': link:../design-system/packages/layout
       '@voussoir/notice': link:../design-system/packages/notice
+      '@voussoir/style': link:../design-system/packages/style
       '@voussoir/tooltip': link:../design-system/packages/tooltip
       '@voussoir/typography': link:../design-system/packages/typography
       graphql: 16.6.0
