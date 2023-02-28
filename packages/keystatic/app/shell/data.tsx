@@ -1,4 +1,4 @@
-import { OperationData } from '@ts-gql/tag';
+import { OperationData, OperationVariables } from '@ts-gql/tag';
 import { gql } from '@ts-gql/tag/no-transform';
 import { useRouter } from '../router';
 import { Config, GitHubConfig, LocalConfig } from '../../config';
@@ -11,7 +11,7 @@ import {
   ReactNode,
   useState,
 } from 'react';
-import { CombinedError, useQuery } from 'urql';
+import { CombinedError, useQuery, UseQueryState } from 'urql';
 import {
   getCollectionPath,
   getCollectionFormat,
@@ -97,19 +97,36 @@ export function LocalAppShellProvider(props: {
   );
 }
 
-export function GitHubAppShellProvider(props: {
-  currentBranch: string;
+export const GitHubAppShellDataContext = createContext<null | UseQueryState<
+  OperationData<typeof AppShellQuery>,
+  OperationVariables<typeof AppShellQuery>
+>>(null);
+
+export function GitHubAppShellDataProvider(props: {
   config: GitHubConfig;
   children: ReactNode;
 }) {
-  const router = useRouter();
-  const [{ data, error }] = useQuery({
+  const [state] = useQuery({
     query: AppShellQuery,
     variables: {
       name: props.config.storage.repo.name,
       owner: props.config.storage.repo.owner,
     },
   });
+  return (
+    <GitHubAppShellDataContext.Provider value={state}>
+      {props.children}
+    </GitHubAppShellDataContext.Provider>
+  );
+}
+
+export function GitHubAppShellProvider(props: {
+  currentBranch: string;
+  config: GitHubConfig;
+  children: ReactNode;
+}) {
+  const router = useRouter();
+  const { data, error } = useContext(GitHubAppShellDataContext)!;
   const defaultBranchRef = data?.repository?.refs?.nodes?.find(
     (x): x is typeof x & { target: { __typename: 'Commit' } } =>
       x?.name === data?.repository?.defaultBranchRef?.name

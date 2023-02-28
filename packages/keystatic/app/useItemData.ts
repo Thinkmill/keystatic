@@ -1,18 +1,13 @@
 import LRUCache from 'lru-cache';
 import { useCallback, useMemo } from 'react';
 import { Config } from '../config';
-import { getValueAtPropPath } from '../DocumentEditor/component-blocks/utils';
+import { transformProps } from '../DocumentEditor/component-blocks/utils';
 import { ComponentSchema, fields, GitHubConfig } from '../src';
 import { validateComponentBlockProps } from '../validate-component-block-props';
 import { getAuth } from './auth';
-import {
-  getRequiredFiles,
-  loadDataFile,
-  parseSerializedFormField,
-  RequiredFile,
-} from './required-files';
+import { loadDataFile, parseSerializedFormField } from './required-files';
 import { useTree } from './shell/data';
-import { TreeNode, getTreeNodeAtPath } from './trees';
+import { TreeNode, getTreeNodeAtPath, TreeEntry } from './trees';
 import { LOADING, useData } from './useData';
 import {
   blobSha,
@@ -22,11 +17,14 @@ import {
   MaybePromise,
 } from './utils';
 
-function parseFromValueFile(
-  args: UseItemDataArgs,
-  data: Uint8Array,
-  localTree: Map<string, TreeNode>
-) {
+function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
+  const dataFilepath = `${args.dirpath}/index${getDataFileExtension(
+    args.format
+  )}`;
+  const data = files.get(dataFilepath);
+  if (!data) {
+    throw new Error(`Could not find data file at ${dataFilepath}`);
+  }
   const { loaded, extraFakeFile } = loadDataFile(data, args.format);
   const schema = fields.object(args.schema);
   const validated = validateComponentBlockProps(
@@ -42,54 +40,29 @@ function parseFromValueFile(
         }
       : undefined
   );
-  const requiredFiles = getRequiredFiles(validated, schema);
-  const binaryFiles = requiredFiles.flatMap(requiredFile =>
-    requiredFile.files.flatMap(filename => {
-      const file = getTreeNodeAtPath(localTree, filename)?.entry;
-      return file ? [{ filename, oid: file.sha }] : [];
-    })
+  const filesWithFakeFile = new Map(
+    [...files].map(x => [x[0].replace(args.dirpath + '/', ''), x[1]])
   );
-  const maybeLoadedBinaryFiles = binaryFiles.map(file => {
-    const result = fetchBlob(
-      args.config,
-      file.oid,
-      `${args.dirpath}/${file.filename}`
-    );
-    if (result instanceof Uint8Array) {
-      return [file.filename, result] as const;
-    }
-    return result.then(array => [file.filename, array] as const);
-  });
   if (extraFakeFile) {
-    maybeLoadedBinaryFiles.push([extraFakeFile.path, extraFakeFile.contents]);
+    filesWithFakeFile.set(extraFakeFile.path, extraFakeFile.contents);
   }
-  const initialFiles = [
-    `${args.dirpath}/index${getDataFileExtension(args.format)}`,
-    ...binaryFiles.map(x => `${args.dirpath}/${x.filename}`),
-  ];
 
-  return { validated, initialFiles, requiredFiles, maybeLoadedBinaryFiles };
-}
+  const initialState = transformProps(schema, validated, {
+    form(schema, val, path) {
+      if ('serializeToFile' in schema) {
+        return parseSerializedFormField(
+          val,
+          { path, schema },
+          filesWithFakeFile,
+          'edit'
+        );
+      }
+      return val;
+    },
+  }) as Record<string, unknown>;
+  const initialFiles = [...files.keys()];
 
-function parseWithExtraFiles(
-  requiredFiles: RequiredFile[],
-  validated: unknown,
-  loadedBinaryFiles: Map<string, Uint8Array>
-) {
-  for (const file of requiredFiles) {
-    const parentValue = getValueAtPropPath(
-      validated,
-      file.path.slice(0, -1)
-    ) as any;
-    const keyOnParent = file.path[file.path.length - 1];
-    parentValue[keyOnParent] = parseSerializedFormField(
-      parentValue[keyOnParent],
-      file,
-      loadedBinaryFiles,
-      'edit'
-    );
-  }
-  return validated as Record<string, unknown>;
+  return { initialState, initialFiles };
 }
 
 type UseItemDataArgs = {
@@ -99,6 +72,12 @@ type UseItemDataArgs = {
   format: FormatInfo;
   slug: { slugs: Set<string>; slugField: string; slug: string } | undefined;
 };
+
+function getAllFilesInTree(tree: Map<string, TreeNode>): TreeEntry[] {
+  return [...tree.values()].flatMap(val =>
+    val.children ? getAllFilesInTree(val.children) : [val.entry]
+  );
+}
 
 export function useItemData(args: UseItemDataArgs) {
   const { current: currentBranch } = useTree();
@@ -135,51 +114,34 @@ export function useItemData(args: UseItemDataArgs) {
         schema: args.schema,
         slug: args.slug,
       };
-      const dataResult = fetchBlob(
-        args.config,
-        dataFilepathSha,
-        `${args.dirpath}/${dataFilepath}`
-      );
-      if (dataResult instanceof Uint8Array) {
-        const {
-          validated,
-          initialFiles,
-          requiredFiles,
-          maybeLoadedBinaryFiles,
-        } = parseFromValueFile(_args, dataResult, localTree);
-        if (
-          maybeLoadedBinaryFiles.every((x): x is [string, Uint8Array] =>
-            Array.isArray(x)
-          )
-        ) {
-          const loadedBinaryFiles = new Map(maybeLoadedBinaryFiles);
-          const initialState = parseWithExtraFiles(
-            requiredFiles,
-            validated,
-            loadedBinaryFiles
-          );
-          return {
-            initialState,
-            initialFiles,
-            localTreeSha: localTreeNode.entry.sha,
-          };
+
+      const allBlobs = getAllFilesInTree(localTreeNode.children).map(entry => {
+        const blob = fetchBlob(args.config, entry.sha, entry.path);
+        if (blob instanceof Uint8Array) {
+          return [entry.path, blob] as const;
         }
-      }
-      return Promise.resolve(dataResult).then(async data => {
-        const {
-          validated,
+        return blob.then(blob => [entry.path, blob] as const);
+      });
+
+      if (
+        allBlobs.every((x): x is readonly [string, Uint8Array] =>
+          Array.isArray(x)
+        )
+      ) {
+        const { initialFiles, initialState } = parseEntry(
+          _args,
+          new Map(allBlobs)
+        );
+
+        return {
+          initialState,
           initialFiles,
-          requiredFiles,
-          maybeLoadedBinaryFiles,
-        } = parseFromValueFile(_args, data, localTree);
-        const loadedBinaryFiles = new Map(
-          await Promise.all(maybeLoadedBinaryFiles)
-        );
-        const initialState = parseWithExtraFiles(
-          requiredFiles,
-          validated,
-          loadedBinaryFiles
-        );
+          localTreeSha: localTreeNode.entry.sha,
+        };
+      }
+
+      return Promise.all(allBlobs).then(async data => {
+        const { initialState, initialFiles } = parseEntry(_args, new Map(data));
         return {
           initialState,
           initialFiles,
@@ -206,17 +168,19 @@ export async function hydrateBlobCache(contents: Uint8Array) {
   return sha;
 }
 
-function fetchGitHubBlob(config: GitHubConfig, oid: string): Promise<Response> {
-  return getAuth().then(auth =>
-    fetch(
-      `https://api.github.com/repos/${config.storage.repo.owner}/${config.storage.repo.name}/git/blobs/${oid}`,
-      {
-        headers: {
-          Authorization: `Bearer ${auth!.accessToken}`,
-          Accept: 'application/vnd.github.raw',
-        },
-      }
-    )
+async function fetchGitHubBlob(
+  config: GitHubConfig,
+  oid: string
+): Promise<Response> {
+  const auth = await getAuth();
+  return fetch(
+    `https://api.github.com/repos/${config.storage.repo.owner}/${config.storage.repo.name}/git/blobs/${oid}`,
+    {
+      headers: {
+        Authorization: `Bearer ${auth!.accessToken}`,
+        Accept: 'application/vnd.github.raw',
+      },
+    }
   );
 }
 
