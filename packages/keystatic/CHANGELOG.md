@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.0.48
+
+### Patch Changes
+
+- 1b6eb39: Slugs are no longer duplicated into the YAML/JSON data
+- 1b6eb39: Added `fields.slug`
+- 1b6eb39: Slugs are now validated for uniqueness
+- e9432e1: Add `localBaseDirectory` option to API route config
+
 ## 0.0.47
 
 ### Patch Changes
