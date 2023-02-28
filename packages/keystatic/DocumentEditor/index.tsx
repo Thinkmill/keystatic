@@ -49,7 +49,7 @@ import { withInsertMenu } from './insert-menu';
 import { withBlockMarkdownShortcuts } from './block-markdown-shortcuts';
 import { withPasting } from './pasting';
 import { classNames, css, tokenSchema } from '@voussoir/style';
-import { Grid } from '@voussoir/layout';
+import { Box } from '@voussoir/layout';
 // the docs site needs access to Editor and importing slate would use the version from the content field
 // so we're exporting it from here (note that this is not at all visible in the published version)
 export { Editor } from 'slate';
@@ -190,13 +190,12 @@ export function DocumentEditor({
   );
 
   return (
-    <Grid
+    <Box
       backgroundColor="canvas"
       border="neutral"
       borderRadius="medium"
       minHeight="size.scale.3000"
       minWidth={0}
-      rows={['auto', '1fr']}
     >
       <DocumentEditorProvider
         componentBlocks={componentBlocks}
@@ -229,6 +228,7 @@ export function DocumentEditor({
           className={css({
             paddingInline: tokenSchema.size.space.medium,
             height: 'auto',
+            minWidth: 0,
           })}
           {...props}
           readOnly={onChange === undefined}
@@ -238,7 +238,7 @@ export function DocumentEditor({
           false && <Debugger />
         }
       </DocumentEditorProvider>
-    </Grid>
+    </Box>
   );
 }
 

@@ -175,6 +175,7 @@ const ComboboxButton = React.forwardRef(function ComboboxButton(
           <Text
             id={valueId}
             color={isPlaceholder ? 'neutralSecondary' : undefined}
+            trim={false}
           >
             {children}
           </Text>

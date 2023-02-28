@@ -128,55 +128,63 @@ export const renderLeaf = (props: RenderLeafProps) => {
   return <Leaf {...props} />;
 };
 
-// styles from https://github.com/FormidableLabs/prism-react-renderer/blob/d307f34360ecc4f0b4aadde4f72d09fd6dbf0132/src/themes/github.js
 const styles = new Map(
   [
     {
       types: ['comment', 'prolog', 'doctype', 'cdata'],
-      style: { color: '#999988', fontStyle: 'italic' },
+      style: {
+        color: tokenSchema.color.foreground.neutralTertiary,
+        fontStyle: 'italic',
+      },
     },
     {
-      types: ['namespace'],
-      style: { opacity: 0.7 },
-    },
-    {
-      types: ['string', 'attr-value'],
-      style: { color: '#e3116c' },
-    },
-    {
-      types: ['punctuation', 'operator'],
-      style: { color: '#393A34' },
+      types: ['atrule', 'attr-name', 'class-name', 'selector'],
+      style: { color: tokenSchema.color.scale.amber11 },
     },
     {
       types: [
-        'entity',
-        'url',
-        'symbol',
-        'number',
         'boolean',
-        'variable',
         'constant',
-        'property',
-        'regex',
+        'inserted-sign',
+        'entity',
         'inserted',
+        'number',
+        'regex',
+        'symbol',
+        'variable',
       ],
-      style: { color: '#36acaa' },
+      style: { color: tokenSchema.color.scale.green11 },
     },
     {
-      types: ['atrule', 'keyword', 'attr-name', 'selector'],
-      style: { color: '#00a4db' },
+      types: ['attr-value', 'builtin', 'char', 'constant', 'generics', 'url'],
+      style: { color: tokenSchema.color.scale.pink11 },
     },
     {
-      types: ['function', 'deleted', 'tag'],
-      style: { color: '#d73a49' },
+      types: ['string'],
+      style: { color: tokenSchema.color.scale.indigo9 },
     },
     {
-      types: ['function-variable'],
-      style: { color: '#6f42c1' },
+      types: [
+        'annotation',
+        'deleted',
+        'deleted-sign',
+        'decorator',
+        'important',
+        'tag',
+      ],
+      style: { color: tokenSchema.color.scale.red11 },
+    },
+    {
+      types: ['function', 'function-variable', 'operator'],
+      style: { color: tokenSchema.color.scale.purple11 },
     },
     {
       types: ['tag', 'selector', 'keyword'],
-      style: { color: '#00009f' },
+      style: { color: tokenSchema.color.scale.indigo11 },
+    },
+    {
+      types: ['punctuation'],
+      style: { color: tokenSchema.color.foreground.neutralSecondary },
     },
   ].flatMap(style => {
     const className = css(style.style);
