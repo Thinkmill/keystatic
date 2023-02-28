@@ -1,3 +1,15 @@
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import {
+  Key,
+  MemoExoticComponent,
+  ReactElement,
+  memo,
+  useCallback,
+  useId,
+  useMemo,
+  useState,
+} from 'react';
+
 import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
 import { Dialog, DialogContainer } from '@voussoir/dialog';
 import { ItemDropTarget, useDragAndDrop } from '@voussoir/drag-and-drop';
@@ -9,16 +21,8 @@ import { Item, ListView } from '@voussoir/list-view';
 import { Content } from '@voussoir/slots';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { Heading, Text } from '@voussoir/typography';
-import {
-  Key,
-  MemoExoticComponent,
-  ReactElement,
-  memo,
-  useCallback,
-  useId,
-  useMemo,
-  useState,
-} from 'react';
+
+import l10nMessages from '../../app/l10n/index.json';
 import { useEventCallback } from '../utils';
 
 import {
@@ -48,6 +52,7 @@ type DefaultFieldProps<Key> = GenericPreviewProps<
 
 function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
   const labelId = useId();
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   let onMove = (keys: Key[], target: ItemDropTarget) => {
     const targetIndex = props.elements.findIndex(x => x.key === target.key);
@@ -154,7 +159,7 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
         onPress={addItem}
         alignSelf="start"
       >
-        Add
+        {stringFormatter.format('add')}
       </ActionButton>
       <ListView
         aria-labelledby={labelId}
@@ -210,7 +215,9 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
                 >
                   <Icon src={trash2Icon} />
                 </ActionButton>
-                <Tooltip tone="critical">Delete</Tooltip>
+                <Tooltip tone="critical">
+                  {stringFormatter.format('delete')}
+                </Tooltip>
               </TooltipTrigger>
             </Item>
           );

@@ -1,3 +1,4 @@
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { ReactNode, useMemo, useState, useCallback, Fragment } from 'react';
 import { RenderElementProps, useSelected } from 'slate-react';
 
@@ -10,6 +11,7 @@ import { css, tokenSchema } from '@voussoir/style';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { Text } from '@voussoir/typography';
 
+import l10nMessages from '../../app/l10n/index.json';
 import {
   PreviewPropsForToolbar,
   ObjectField,
@@ -129,16 +131,21 @@ function DefaultToolbarWithChrome({
   props: any;
   isValid: boolean;
 }) {
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   return (
     <NotEditable>
       <Flex direction="column" gap="medium">
         <Flex alignItems="center" gap="regular">
-          <ActionButton onPress={() => onShowEditMode()}>Edit</ActionButton>
+          <ActionButton onPress={() => onShowEditMode()}>
+            {stringFormatter.format('edit')}
+          </ActionButton>
           <TooltipTrigger>
             <ActionButton prominence="low" onPress={onRemove}>
               <Icon src={trash2Icon} />
             </ActionButton>
-            <Tooltip tone="critical">Delete</Tooltip>
+            <Tooltip tone="critical">
+              {stringFormatter.format('delete')}
+            </Tooltip>
           </TooltipTrigger>
         </Flex>
         {!isValid && (
