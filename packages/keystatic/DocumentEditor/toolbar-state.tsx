@@ -11,10 +11,7 @@ import {
 } from './component-blocks/utils';
 import { LayoutOptionsProvider } from './layouts';
 import { isListNode } from './lists';
-import {
-  DocumentFieldRelationshipsProvider,
-  Relationships,
-} from './relationship';
+
 import { allMarks, isElementActive, Mark, nodeTypeMatcher } from './utils';
 
 type BasicToolbarItem = { isSelected: boolean; isDisabled: boolean };
@@ -48,7 +45,6 @@ export type ToolbarState = {
   layouts: { isSelected: boolean };
   dividers: { isDisabled: boolean };
   code: BasicToolbarItem;
-  relationships: { isDisabled: boolean };
   editor: Editor;
   editorDocumentFeatures: DocumentFeatures;
 };
@@ -118,7 +114,6 @@ export const createToolbarState = (
         },
         layouts: editorDocumentFeatures.layouts,
         links: true,
-        relationships: true,
       },
       softBreaks: true,
     };
@@ -202,9 +197,6 @@ export const createToolbarState = (
         locationDocumentFeatures.kind === 'block' && !listEntry
           ? locationDocumentFeatures.documentFeatures.formatting.headingLevels
           : [],
-    },
-    relationships: {
-      isDisabled: !locationDocumentFeatures.documentFeatures.relationships,
     },
     code: {
       isSelected: isElementActive(editor, 'code'),
@@ -302,30 +294,26 @@ export const ToolbarStateProvider = ({
   children,
   componentBlocks,
   editorDocumentFeatures,
-  relationships,
 }: {
   children: ReactNode;
   componentBlocks: Record<string, ComponentBlock>;
   editorDocumentFeatures: DocumentFeatures;
-  relationships: Relationships;
 }) => {
   const editor = useSlate();
 
   return (
-    <DocumentFieldRelationshipsProvider value={relationships}>
-      <LayoutOptionsProvider value={editorDocumentFeatures.layouts}>
-        <ComponentBlockContext.Provider value={componentBlocks}>
-          <ToolbarStateContext.Provider
-            value={createToolbarState(
-              editor,
-              componentBlocks,
-              editorDocumentFeatures
-            )}
-          >
-            {children}
-          </ToolbarStateContext.Provider>
-        </ComponentBlockContext.Provider>
-      </LayoutOptionsProvider>
-    </DocumentFieldRelationshipsProvider>
+    <LayoutOptionsProvider value={editorDocumentFeatures.layouts}>
+      <ComponentBlockContext.Provider value={componentBlocks}>
+        <ToolbarStateContext.Provider
+          value={createToolbarState(
+            editor,
+            componentBlocks,
+            editorDocumentFeatures
+          )}
+        >
+          {children}
+        </ToolbarStateContext.Provider>
+      </ComponentBlockContext.Provider>
+    </LayoutOptionsProvider>
   );
 };

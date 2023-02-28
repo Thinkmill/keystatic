@@ -10,19 +10,12 @@
 import { BaseEditor, BaseElement, BaseRange } from 'slate';
 import { HistoryEditor } from 'slate-history';
 import { ReactEditor } from 'slate-react';
-import { RelationshipData } from './component-blocks/api';
 import { ReadonlyPropPath } from './component-blocks/utils';
 import { Mark } from './utils';
 
 type Link = {
   type: 'link';
   href: string;
-};
-
-type Relationship = {
-  type: 'relationship';
-  relationship: string;
-  data: RelationshipData | null;
 };
 
 type Layout = {
@@ -76,7 +69,6 @@ type Element = (
   | ComponentProp
   | Paragraph
   | Link
-  | Relationship
   | CodeBlock
 ) &
   BaseElement;

@@ -74,8 +74,6 @@ export const renderElement = (props: RenderElementProps) => {
       return <BlockquoteElement {...props} />;
     case 'divider':
       return <DividerElement {...props} />;
-    case 'relationship':
-      return <span {...props.attributes}>{props.children}</span>;
     default:
       let { textAlign } = props.element;
       return (

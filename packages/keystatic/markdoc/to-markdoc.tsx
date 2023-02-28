@@ -35,14 +35,6 @@ function toMarkdocInline(node: ElementFromValidation): Node | Node[] {
       node.children.flatMap(toMarkdocInline)
     );
   }
-  if (node.type === 'relationship') {
-    return new Ast.Node(
-      'tag',
-      { relationship: node.relationship },
-      [],
-      'relationship'
-    );
-  }
   if (node.type !== undefined) {
     throw new Error(`unexpected inline node type: ${node.type}`);
   }
@@ -77,7 +69,7 @@ function removeUnnecessaryChildFieldValues(
   parent: ComponentSchema | undefined,
   value: unknown
 ): unknown {
-  if (schema.kind === 'relationship' || schema.kind === 'form') {
+  if (schema.kind === 'form') {
     return value;
   }
   if (schema.kind === 'child') {

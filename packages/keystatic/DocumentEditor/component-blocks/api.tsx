@@ -53,8 +53,6 @@ export type FormFieldValue =
   | readonly FormFieldValue[]
   | { [key: string]: FormFieldValue | undefined };
 
-const emptyObject = {};
-
 type FormattingConfig = {
   inlineMarks?:
     | true
@@ -364,7 +362,6 @@ export type ChildField = {
         formatting?: BlockFormattingConfig;
         dividers?: 'inherit';
         links?: 'inherit';
-        relationships?: 'inherit';
       }
     | {
         kind: 'inline';
@@ -374,7 +371,6 @@ export type ChildField = {
           softBreaks?: 'inherit';
         };
         links?: 'inherit';
-        relationships?: 'inherit';
       };
 };
 
@@ -385,14 +381,6 @@ export type ArrayField<ElementField extends ComponentSchema> = {
   // this is written with unknown to avoid typescript being annoying about circularity or variance things
   itemLabel?(props: unknown): string;
   asChildTag?: string;
-};
-
-export type RelationshipField<Many extends boolean> = {
-  kind: 'relationship';
-  listKey: string;
-  selection: string | undefined;
-  label: string;
-  many: Many;
 };
 
 export interface ObjectField<
@@ -434,7 +422,6 @@ export type ComponentSchema =
       BasicFormField<any, any>,
       { [key: string]: ComponentSchema }
     >
-  | RelationshipField<boolean>
   | ArrayFieldInComponentSchema;
 
 function validateText(
@@ -1302,7 +1289,6 @@ export const fields = {
           formatting?: BlockFormattingConfig | 'inherit';
           dividers?: 'inherit';
           links?: 'inherit';
-          relationships?: 'inherit';
         }
       | {
           kind: 'inline';
@@ -1314,7 +1300,6 @@ export const fields = {
                 softBreaks?: 'inherit';
               };
           links?: 'inherit';
-          relationships?: 'inherit';
         }
   ): ChildField {
     return {
@@ -1337,7 +1322,6 @@ export const fields = {
                     }
                   : options.formatting,
               links: options.links,
-              relationships: options.relationships,
             }
           : {
               kind: 'inline',
@@ -1347,7 +1331,6 @@ export const fields = {
                   ? { inlineMarks: 'inherit', softBreaks: 'inherit' }
                   : options.formatting,
               links: options.links,
-              relationships: options.relationships,
             },
     };
   },
@@ -1401,11 +1384,7 @@ export const fields = {
       }): DocumentElement[] => {
         const markdoc = textDecoder.decode(value.primary);
         const document = fromMarkdoc(Markdoc.parse(markdoc), componentBlocks);
-        const editor = createDocumentEditor(
-          documentFeatures,
-          componentBlocks,
-          {}
-        );
+        const editor = createDocumentEditor(documentFeatures, componentBlocks);
         editor.children = document;
         Editor.normalize(editor, { force: true });
         return deserializeFiles(
@@ -1425,7 +1404,6 @@ export const fields = {
               componentBlocks={componentBlocks}
               documentFeatures={documentFeatures}
               onChange={props.onChange as any}
-              relationships={emptyObject}
               value={props.value as any}
             />
           </FieldPrimitive>
@@ -1579,18 +1557,6 @@ type ConditionalFieldPreviewProps<
   };
 }[keyof Schema['values']];
 
-// this is a separate type so that this is distributive
-type RelationshipDataType<Many extends boolean> = Many extends true
-  ? readonly HydratedRelationshipData[]
-  : HydratedRelationshipData | null;
-
-type RelationshipFieldPreviewProps<Schema extends RelationshipField<boolean>> =
-  {
-    readonly value: RelationshipDataType<Schema['many']>;
-    onChange(relationshipData: RelationshipDataType<Schema['many']>): void;
-    readonly schema: Schema;
-  };
-
 type ArrayFieldPreviewProps<
   Schema extends ArrayField<ComponentSchema>,
   ChildFieldElement
@@ -1621,8 +1587,6 @@ export type GenericPreviewProps<
   ? ObjectFieldPreviewProps<Schema, ChildFieldElement>
   : Schema extends ConditionalField<any, any>
   ? ConditionalFieldPreviewProps<Schema, ChildFieldElement>
-  : Schema extends RelationshipField<any>
-  ? RelationshipFieldPreviewProps<Schema>
   : Schema extends ArrayField<any>
   ? ArrayFieldPreviewProps<Schema, ChildFieldElement>
   : never;
@@ -1656,10 +1620,6 @@ export type InitialOrUpdateValueFromComponentPropField<
         >;
       };
     }[keyof Values]
-  : Schema extends RelationshipField<infer Many>
-  ? Many extends true
-    ? readonly HydratedRelationshipData[]
-    : HydratedRelationshipData | null
   : Schema extends ArrayField<infer ElementField>
   ? readonly {
       key: string | undefined;
@@ -1680,18 +1640,6 @@ type DiscriminantStringToDiscriminantValue<
 
 export type PreviewPropsForToolbar<Schema extends ComponentSchema> =
   GenericPreviewProps<Schema, undefined>;
-
-export type HydratedRelationshipData = {
-  id: string;
-  label: string;
-  data: Record<string, any>;
-};
-
-export type RelationshipData = {
-  id: string;
-  label: string | undefined;
-  data: Record<string, any> | undefined;
-};
 
 export function component<
   Schema extends {
@@ -1760,10 +1708,6 @@ export type ValueForComponentSchema<Schema extends ComponentSchema> =
           readonly value: ValueForComponentSchema<Values[Key]>;
         };
       }[keyof Values]
-    : Schema extends RelationshipField<infer Many>
-    ? Many extends true
-      ? readonly HydratedRelationshipData[]
-      : HydratedRelationshipData | null
     : Schema extends ArrayField<infer ElementField>
     ? readonly ValueForComponentSchema<ElementField>[]
     : never;
@@ -1801,10 +1745,6 @@ export type ValueForReading<Schema extends ComponentSchema> =
           readonly value: ValueForReading<Values[Key]>;
         };
       }[keyof Values]
-    : Schema extends RelationshipField<infer Many>
-    ? Many extends true
-      ? readonly HydratedRelationshipData[]
-      : HydratedRelationshipData | null
     : Schema extends ArrayField<infer ElementField>
     ? readonly ValueForReading<ElementField>[]
     : never;

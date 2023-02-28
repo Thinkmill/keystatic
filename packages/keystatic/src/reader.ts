@@ -119,7 +119,6 @@ async function readItem(
   const validated = validateComponentBlockProps(
     schema,
     loaded,
-    {},
     [],
     slugField === undefined
       ? undefined

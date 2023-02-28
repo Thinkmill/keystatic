@@ -16,7 +16,6 @@ test('one child field', () => {
         "kind": "block",
         "links": undefined,
         "placeholder": "a",
-        "relationships": undefined,
       },
       "relativePath": [
         "a",
@@ -40,7 +39,6 @@ test('nested one child field', () => {
         "kind": "block",
         "links": undefined,
         "placeholder": "a",
-        "relationships": undefined,
       },
       "relativePath": [
         "a",
@@ -112,7 +110,6 @@ test('array', () => {
           "kind": "inline",
           "links": undefined,
           "placeholder": "Content",
-          "relationships": undefined,
         },
         "relativePath": [
           "content",
@@ -129,7 +126,6 @@ test('array', () => {
                 "kind": "inline",
                 "links": undefined,
                 "placeholder": "Content",
-                "relationships": undefined,
               },
             },
             "heading": {

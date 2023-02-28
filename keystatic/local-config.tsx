@@ -160,7 +160,6 @@ export default config({
                   formatting: 'inherit',
                   dividers: 'inherit',
                   links: 'inherit',
-                  relationships: 'inherit',
                 }),
               },
               toolbar({ props, onRemove }) {

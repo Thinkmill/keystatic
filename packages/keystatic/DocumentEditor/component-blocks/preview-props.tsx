@@ -4,9 +4,7 @@ import {
   ConditionalField,
   ValueForComponentSchema,
   FormFieldValue,
-  HydratedRelationshipData,
   ObjectField,
-  RelationshipField,
   GenericPreviewProps,
   BasicFormField,
 } from './api';
@@ -142,14 +140,6 @@ export function createGetPreviewProps<
         ),
       };
     },
-    relationship(schema, onChange) {
-      return (
-        newVal:
-          | HydratedRelationshipData
-          | readonly HydratedRelationshipData[]
-          | null
-      ) => onChange(() => newVal);
-    },
   });
 
   const previewPropsFactories: {
@@ -264,17 +254,6 @@ export function createGetPreviewProps<
       for (const key of unusedKeys) {
         memoized.inner.delete(key);
       }
-      return props;
-    },
-    relationship(schema, value, onChange) {
-      const props: GenericPreviewProps<
-        RelationshipField<boolean>,
-        ChildFieldElement
-      > = {
-        value: value,
-        onChange,
-        schema: schema,
-      };
       return props;
     },
     conditional(schema, value, memoized, path, getInnerProp) {

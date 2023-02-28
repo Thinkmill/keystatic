@@ -68,7 +68,7 @@ export function forceDisableMarkForChildren<T>(mark: Mark, cb: () => T): T {
 /**
  * This type is more strict than `Element & { type: 'link'; }` because `children`
  * is constrained to only contain Text nodes. This can't be assumed generally around the editor
- * (because of inline relationships or nested links(which are normalized away but the editor needs to not break if it happens))
+ * (because of potentially future inline components or nested links(which are normalized away but the editor needs to not break if it happens))
  * but where this type is used, we're only going to allow links to contain Text and that's important
  * so that we know a block will never be inside an inline because Slate gets unhappy when that happens
  * (really the link inline should probably be a mark rather than an inline,
@@ -76,7 +76,6 @@ export function forceDisableMarkForChildren<T>(mark: Mark, cb: () => T): T {
  * structure which would be such unnecessary breakage)
  */
 type StrictLink = { type: 'link'; href: string; children: Text[] };
-// inline relationships are not here because we never create them from handling a paste from html or markdown
 export type InlineFromExternalPaste = Text | StrictLink;
 
 export function getInlineNodes(

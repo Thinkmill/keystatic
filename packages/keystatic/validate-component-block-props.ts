@@ -3,8 +3,6 @@ import { isSlugFormField } from './app/utils';
 import { ComponentSchema } from './DocumentEditor/component-blocks/api';
 import { getInitialPropsValue } from './DocumentEditor/component-blocks/initial-values';
 import { ReadonlyPropPath } from './DocumentEditor/component-blocks/utils';
-import { Relationships } from './DocumentEditor/relationship';
-import { isRelationshipData } from './structure-validation';
 
 export class PropValidationError extends Error {
   path: ReadonlyPropPath;
@@ -17,7 +15,6 @@ export class PropValidationError extends Error {
 export function validateComponentBlockProps(
   schema: ComponentSchema,
   value: unknown,
-  relationships: Relationships,
   path: ReadonlyPropPath,
   slugField:
     | {
@@ -66,22 +63,6 @@ export function validateComponentBlockProps(
   if (schema.kind === 'child') {
     return null;
   }
-  if (schema.kind === 'relationship') {
-    if (schema.many) {
-      if (Array.isArray(value) && value.every(isRelationshipData)) {
-        // yes, ts understands this completely correctly, i'm as suprised as you are
-        return value.map(x => ({ id: x.id }));
-      } else {
-        throw new PropValidationError(`Invalid relationship value`, path);
-      }
-    }
-    if (value === null || isRelationshipData(value)) {
-      return value === null ? null : { id: value.id };
-    } else {
-      throw new PropValidationError(`Invalid relationship value`, path);
-    }
-  }
-
   if (schema.kind === 'conditional') {
     if (typeof value !== 'object' || value === null) {
       throw new PropValidationError(
@@ -105,7 +86,6 @@ export function validateComponentBlockProps(
     const discriminantVal = validateComponentBlockProps(
       schema.discriminant,
       discriminant,
-      relationships,
       path.concat('discriminant'),
       slugField
     );
@@ -115,7 +95,6 @@ export function validateComponentBlockProps(
     const conditionalFieldValue = validateComponentBlockProps(
       schema.values[discriminant],
       val,
-      relationships,
       path.concat('value'),
       slugField
     );
@@ -147,7 +126,6 @@ export function validateComponentBlockProps(
       const propVal = validateComponentBlockProps(
         schema.fields[key],
         individualVal,
-        relationships,
         path.concat(key),
         slugField
       );
@@ -168,7 +146,6 @@ export function validateComponentBlockProps(
       return validateComponentBlockProps(
         schema.element,
         innerVal,
-        relationships,
         path.concat(i),
         slugField
       );

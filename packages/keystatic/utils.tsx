@@ -353,7 +353,7 @@ async function _toFiles(
   }[],
   slugField: string | undefined
 ): Promise<unknown> {
-  if (schema.kind === 'child' || schema.kind === 'relationship') {
+  if (schema.kind === 'child') {
     return value;
   }
   if (schema.kind === 'form') {

@@ -32,7 +32,6 @@ function parseFromValueFile(
   const validated = validateComponentBlockProps(
     schema,
     loaded,
-    {},
     [],
     args.slug
       ? {

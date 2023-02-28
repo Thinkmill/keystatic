@@ -37,7 +37,6 @@ import { nestList, unnestList, withList } from './lists';
 import { ComponentBlockContext, withComponentBlocks } from './component-blocks';
 import { getPlaceholderTextForPropPath } from './component-blocks/utils';
 import { withBlockquote } from './blockquote';
-import { Relationships, withRelationship } from './relationship';
 import { withDivider } from './divider';
 import { withCodeBlock } from './code-block';
 import { withMarks } from './marks';
@@ -125,8 +124,7 @@ const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
 
 export function createDocumentEditor(
   documentFeatures: DocumentFeatures,
-  componentBlocks: Record<string, ComponentBlock>,
-  relationships: Relationships
+  componentBlocks: Record<string, ComponentBlock>
 ) {
   return withPasting(
     withSoftBreaks(
@@ -136,29 +134,25 @@ export function createDocumentEditor(
           componentBlocks,
           withList(
             withHeading(
-              withRelationship(
-                withInsertMenu(
-                  withComponentBlocks(
-                    componentBlocks,
-                    documentFeatures,
-                    relationships,
-                    withParagraphs(
-                      withShortcuts(
-                        withDivider(
-                          withLayouts(
-                            withMarks(
-                              documentFeatures,
-                              componentBlocks,
-                              withCodeBlock(
-                                withBlockMarkdownShortcuts(
-                                  documentFeatures,
-                                  componentBlocks,
-                                  withBlockquote(
-                                    withDocumentFeaturesNormalization(
-                                      documentFeatures,
-                                      relationships,
-                                      withHistory(withReact(createEditor()))
-                                    )
+              withInsertMenu(
+                withComponentBlocks(
+                  componentBlocks,
+                  documentFeatures,
+                  withParagraphs(
+                    withShortcuts(
+                      withDivider(
+                        withLayouts(
+                          withMarks(
+                            documentFeatures,
+                            componentBlocks,
+                            withCodeBlock(
+                              withBlockMarkdownShortcuts(
+                                documentFeatures,
+                                componentBlocks,
+                                withBlockquote(
+                                  withDocumentFeaturesNormalization(
+                                    documentFeatures,
+                                    withHistory(withReact(createEditor()))
                                   )
                                 )
                               )
@@ -182,20 +176,17 @@ export function DocumentEditor({
   onChange,
   value,
   componentBlocks,
-  relationships,
   documentFeatures,
   ...props
 }: {
   onChange: undefined | ((value: Descendant[]) => void);
   value: Descendant[];
   componentBlocks: Record<string, ComponentBlock>;
-  relationships: Relationships;
   documentFeatures: DocumentFeatures;
 } & Omit<EditableProps, 'value' | 'onChange'>) {
   const editor = useMemo(
-    () =>
-      createDocumentEditor(documentFeatures, componentBlocks, relationships),
-    [documentFeatures, componentBlocks, relationships]
+    () => createDocumentEditor(documentFeatures, componentBlocks),
+    [documentFeatures, componentBlocks]
   );
 
   return (
@@ -210,7 +201,6 @@ export function DocumentEditor({
       <DocumentEditorProvider
         componentBlocks={componentBlocks}
         documentFeatures={documentFeatures}
-        relationships={relationships}
         editor={editor}
         value={value}
         onChange={value => {
@@ -265,14 +255,12 @@ export function DocumentEditorProvider({
   value,
   componentBlocks,
   documentFeatures,
-  relationships,
 }: {
   children: ReactNode;
   value: Descendant[];
   onChange: (value: Descendant[]) => void;
   editor: Editor;
   componentBlocks: Record<string, ComponentBlock>;
-  relationships: Relationships;
   documentFeatures: DocumentFeatures;
 }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -301,7 +289,6 @@ export function DocumentEditorProvider({
         <ToolbarStateProvider
           componentBlocks={componentBlocks}
           editorDocumentFeatures={documentFeatures}
-          relationships={relationships}
         >
           {children}
         </ToolbarStateProvider>
@@ -463,7 +450,7 @@ while (listDepth--) {
 
 const editableStyles = css(styles);
 
-export type Block = Exclude<Element, { type: 'relationship' | 'link' }>;
+export type Block = Exclude<Element, { type: 'link' }>;
 
 type BlockContainerSchema = {
   kind: 'blocks';
@@ -611,11 +598,7 @@ export function isBlock(node: Descendant): node is Block {
 function withBlocksSchema(editor: Editor): Editor {
   const { normalizeNode } = editor;
   editor.normalizeNode = ([node, path]) => {
-    if (
-      !Text.isText(node) &&
-      node.type !== 'link' &&
-      node.type !== 'relationship'
-    ) {
+    if (!Text.isText(node) && node.type !== 'link') {
       const nodeType = Editor.isEditor(node) ? 'editor' : node.type;
       if (
         typeof nodeType !== 'string' ||
@@ -651,8 +634,7 @@ function withBlocksSchema(editor: Editor): Editor {
             !Editor.isBlock(editor, childNode) ||
             // these checks are implicit in Editor.isBlock
             // but that isn't encoded in types so these will make TS happy
-            childNode.type === 'link' ||
-            childNode.type === 'relationship'
+            childNode.type === 'link'
           ) {
             Transforms.wrapNodes(
               editor,

@@ -27,7 +27,6 @@ export function withBlockMarkdownShortcuts(
   const editorDocumentFeaturesForNormalizationToCheck: DocumentFeaturesForNormalization =
     {
       ...documentFeatures,
-      relationships: true,
     };
   let addShortcut = (
     text: string,
