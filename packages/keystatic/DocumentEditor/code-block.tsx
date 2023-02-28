@@ -13,20 +13,17 @@ import {
   useSelected,
   useSlateStatic,
 } from 'slate-react';
-import { useOverlayTrigger } from '@react-aria/overlays';
 import { Item } from '@react-stately/collections';
-import { useOverlayTriggerState } from '@react-stately/overlays';
 import { matchSorter } from 'match-sorter';
 
 import { ActionButton } from '@voussoir/button';
+import { Combobox } from '@voussoir/combobox';
 import { codeIcon } from '@voussoir/icon/icons/codeIcon';
 import { Icon } from '@voussoir/icon';
-import { Flex } from '@voussoir/layout';
-import { Popover } from '@voussoir/overlays';
+import { Box } from '@voussoir/layout';
 import { css, tokenSchema } from '@voussoir/style';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { Kbd, Text } from '@voussoir/typography';
-import { Combobox } from '@voussoir/combobox';
 
 import Prism from './prism';
 import { useToolbarState } from './toolbar-state';
@@ -134,23 +131,14 @@ export function CodeElement({
   const editor = useSlateStatic();
   const triggerRef = useRef(null);
   const selected = useSelected();
-
-  const state = useOverlayTriggerState({
-    isOpen: selected,
-  });
-
-  const {
-    triggerProps: { onPress: _onPress, ...triggerProps },
-    overlayProps,
-  } = useOverlayTrigger({ type: 'dialog' }, state, triggerRef);
   const [inputValue, setInputValue] = useState(
     element.language
       ? aliasesToLabel.get(element.language) ?? element.language
       : ''
   );
   return (
-    <>
-      <Flex
+    <Box position="relative">
+      <Box
         elementType="pre"
         backgroundColor="surface"
         borderRadius="medium"
@@ -169,102 +157,101 @@ export function CodeElement({
           },
         })}
         ref={triggerRef}
-        {...(triggerProps as any)}
       >
         <code {...attributes}>{children}</code>
-      </Flex>
-      <Popover
-        isNonModal
-        {...overlayProps}
-        triggerRef={triggerRef}
-        state={state}
+      </Box>
+      <Box
+        contentEditable={false}
+        isHidden={!selected}
+        position="absolute"
+        insetTop="small"
+        insetEnd="small"
       >
-        <Flex padding="medium" gap="regular">
-          <Combobox
-            aria-label="Language"
-            allowsCustomValue
-            inputValue={inputValue}
-            onInputChange={setInputValue}
-            onBlur={() => {
-              const path = ReactEditor.findPath(editor, element);
-              const canonicalName = aliasesToCanonicalName.get(inputValue);
-              if (canonicalName !== undefined) {
-                setInputValue(canonicalNameToLabel.get(canonicalName)!);
-                Transforms.setNodes(
-                  editor,
-                  { language: canonicalName },
-                  { at: path }
-                );
-                return;
-              }
-              const nameFromLabel = labelToCanonicalName.get(inputValue);
-              if (nameFromLabel !== undefined) {
-                Transforms.setNodes(
-                  editor,
-                  { language: nameFromLabel },
-                  { at: path }
-                );
-                return;
-              }
+        <Combobox
+          aria-label="Language"
+          width="size.scale.2000"
+          allowsCustomValue // allow consumers to support other languages
+          inputValue={inputValue}
+          onInputChange={setInputValue}
+          onBlur={() => {
+            const path = ReactEditor.findPath(editor, element);
+            const canonicalName = aliasesToCanonicalName.get(inputValue);
+            if (canonicalName !== undefined) {
+              setInputValue(canonicalNameToLabel.get(canonicalName)!);
+              Transforms.setNodes(
+                editor,
+                { language: canonicalName },
+                { at: path }
+              );
+              return;
+            }
+            const nameFromLabel = labelToCanonicalName.get(inputValue);
+            if (nameFromLabel !== undefined) {
+              Transforms.setNodes(
+                editor,
+                { language: nameFromLabel },
+                { at: path }
+              );
+              return;
+            }
+            if (inputValue === '') {
+              Transforms.unsetNodes(editor, 'language', { at: path });
+              return;
+            }
+            if (inputValue !== element.language) {
+              Transforms.setNodes(
+                editor,
+                { language: inputValue },
+                { at: path }
+              );
+            }
+          }}
+          onSelectionChange={selection => {
+            const path = ReactEditor.findPath(editor, element);
+            if (aliasesToCanonicalName.has(inputValue)) {
+              selection = aliasesToCanonicalName.get(inputValue)!;
+            }
+            if (selection === null) {
               if (inputValue === '') {
                 Transforms.unsetNodes(editor, 'language', { at: path });
-                return;
-              }
-              if (inputValue !== element.language) {
+              } else {
                 Transforms.setNodes(
                   editor,
                   { language: inputValue },
                   { at: path }
                 );
               }
-            }}
-            onSelectionChange={selection => {
-              const path = ReactEditor.findPath(editor, element);
-              if (aliasesToCanonicalName.has(inputValue)) {
-                selection = aliasesToCanonicalName.get(inputValue)!;
+            } else {
+              Transforms.setNodes(
+                editor,
+                { language: selection as string },
+                { at: path }
+              );
+              const label = languages.find(
+                lang => lang.value === selection
+              )?.label;
+              if (label) {
+                setInputValue(label);
               }
-              if (selection === null) {
-                if (inputValue === '') {
-                  Transforms.unsetNodes(editor, 'language', { at: path });
-                } else {
-                  Transforms.setNodes(
-                    editor,
-                    { language: inputValue },
-                    { at: path }
-                  );
-                }
-              } else {
-                Transforms.setNodes(
-                  editor,
-                  { language: selection as string },
-                  { at: path }
-                );
-                const label = languages.find(
-                  lang => lang.value === selection
-                )?.label;
-                if (label) {
-                  setInputValue(label);
-                }
-              }
-            }}
-            selectedKey={
-              element.language
-                ? aliasesToCanonicalName.get(element.language)
-                : undefined
             }
-            items={useMemo(
-              () =>
-                matchSorter(languagesWithAliases, inputValue, {
-                  keys: ['label', 'value', 'aliases'],
-                }),
-              [inputValue]
-            )}
-          >
-            {item => <Item key={item.value}>{item.label}</Item>}
-          </Combobox>
-        </Flex>
-      </Popover>
-    </>
+          }}
+          selectedKey={
+            element.language
+              ? aliasesToCanonicalName.get(element.language)
+              : undefined
+          }
+          items={useMemo(
+            () =>
+              matchSorter(languagesWithAliases, inputValue, {
+                keys: ['label', 'value', 'aliases'],
+              }),
+            [inputValue]
+          )}
+        >
+          {item => <Item key={item.value}>{item.label}</Item>}
+        </Combobox>
+      </Box>
+    </Box>
   );
 }
 
@@ -288,6 +275,7 @@ const languages = [
   { label: 'Makefile', value: 'makefile' },
   { label: 'Markdown', value: 'markdown' },
   { label: 'Objective-C', value: 'objectivec' },
+  // { label: 'Plain text', value: 'plaintext' },
   { label: 'Perl', value: 'perl' },
   { label: 'PHP', value: 'php' },
   { label: 'Python', value: 'python' },
