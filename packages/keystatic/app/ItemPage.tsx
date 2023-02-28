@@ -57,7 +57,7 @@ type ItemPageProps = {
   initialFiles: string[];
   initialState: Record<string, unknown>;
   itemSlug: string;
-  localTreeSha: string;
+  localTreeKey: string;
   currentTree: Map<string, TreeNode>;
   basePath: string;
   slugs: Set<string>;
@@ -70,7 +70,7 @@ function ItemPage(props: ItemPageProps) {
     itemSlug,
     initialFiles,
     initialState,
-    localTreeSha,
+    localTreeKey,
     currentTree,
   } = props;
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
@@ -82,12 +82,12 @@ function ItemPage(props: ItemPageProps) {
     [collectionConfig.schema]
   );
 
-  const [{ state, localTreeSha: localTreeShaInState }, setState] = useState({
+  const [{ state, localTreeKey: localTreeKeyInState }, setState] = useState({
     state: initialState,
-    localTreeSha,
+    localTreeKey,
   });
-  if (localTreeShaInState !== localTreeSha) {
-    setState({ state: initialState, localTreeSha });
+  if (localTreeKeyInState !== localTreeKey) {
+    setState({ state: initialState, localTreeKey });
   }
 
   const previewProps = useMemo(
@@ -96,7 +96,7 @@ function ItemPage(props: ItemPageProps) {
         schema,
         stateUpdater => {
           setState(state => ({
-            localTreeSha: state.localTreeSha,
+            localTreeKey: state.localTreeKey,
             state: stateUpdater(state.state),
           }));
         },
@@ -124,7 +124,7 @@ function ItemPage(props: ItemPageProps) {
       getSlugFromState(collectionConfig, state)
     ),
     format: getCollectionFormat(config, collection),
-    currentLocalTreeSha: localTreeSha,
+    currentLocalTreeKey: localTreeKey,
     currentTree,
     slugField: collectionConfig.slugField,
   });
@@ -254,7 +254,7 @@ function ItemPage(props: ItemPageProps) {
           )}
           <AppShellBody>
             <FormValueContentFromPreviewProps
-              key={localTreeSha}
+              key={localTreeKey}
               forceValidation={forceValidation}
               slugField={slugFieldInfo}
               {...previewProps}
@@ -443,7 +443,7 @@ function ItemPageWrapper(props: {
       itemSlug={props.itemSlug}
       initialState={combined.data.item.initialState}
       initialFiles={combined.data.item.initialFiles}
-      localTreeSha={combined.data.item.localTreeSha}
+      localTreeKey={combined.data.item.localTreeKey}
       currentTree={combined.data.tree.tree}
       slugs={slugInfo.slugs}
     />

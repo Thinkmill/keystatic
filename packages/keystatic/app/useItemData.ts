@@ -7,6 +7,7 @@ import { validateComponentBlockProps } from '../validate-component-block-props';
 import { getAuth } from './auth';
 import { loadDataFile, parseSerializedFormField } from './required-files';
 import { useTree } from './shell/data';
+import { getDirectoriesForTreeKey, getTreeKey } from './tree-key';
 import { TreeNode, getTreeNodeAtPath, TreeEntry } from './trees';
 import { LOADING, useData } from './useData';
 import {
@@ -84,23 +85,36 @@ export function useItemData(args: UseItemDataArgs) {
 
   const rootTree =
     currentBranch.kind === 'loaded' ? currentBranch.data.tree : undefined;
-  const _localTree = useMemo(() => {
-    return rootTree ? getTreeNodeAtPath(rootTree, args.dirpath) : undefined;
-  }, [rootTree, args.dirpath]);
-
-  const localTreeNode = useMemo(() => {
-    return _localTree?.children
-      ? { entry: _localTree.entry, children: _localTree.children }
-      : undefined;
+  const directoriesForTreeKey = useMemo(
+    () => getDirectoriesForTreeKey(fields.object(args.schema), args.dirpath),
+    [args.dirpath, args.schema]
+  );
+  const localTreeKey = useMemo(
+    () => getTreeKey(directoriesForTreeKey, rootTree ?? new Map()),
+    [directoriesForTreeKey, rootTree]
+  );
+  const tree = useMemo(() => {
+    return rootTree ?? new Map();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [_localTree?.entry.sha]);
+  }, [localTreeKey, directoriesForTreeKey]);
 
   const hasLoaded = currentBranch.kind === 'loaded';
 
   return useData(
-    useCallback(() => {
+    useCallback((): MaybePromise<
+      | 'not-found'
+      | typeof LOADING
+      | {
+          initialState: Record<string, unknown>;
+          initialFiles: string[];
+          localTreeKey: string;
+        }
+    > => {
       if (!hasLoaded) return LOADING;
-      if (localTreeNode === undefined) return 'not-found' as const;
+      const localTreeNode = getTreeNodeAtPath(tree, args.dirpath);
+      if (localTreeNode === undefined || !localTreeNode.children) {
+        return 'not-found' as const;
+      }
       const localTree = localTreeNode.children;
       const dataFilepath = `index${getDataFileExtension(args.format)}`;
       const dataFilepathSha = localTree.get(dataFilepath)?.entry.sha;
@@ -136,7 +150,7 @@ export function useItemData(args: UseItemDataArgs) {
         return {
           initialState,
           initialFiles,
-          localTreeSha: localTreeNode.entry.sha,
+          localTreeKey,
         };
       }
 
@@ -145,17 +159,18 @@ export function useItemData(args: UseItemDataArgs) {
         return {
           initialState,
           initialFiles,
-          localTreeSha: localTreeNode.entry.sha,
+          localTreeKey,
         };
       });
     }, [
       hasLoaded,
-      localTreeNode,
+      tree,
+      args.dirpath,
       args.format,
       args.config,
-      args.dirpath,
       args.schema,
       args.slug,
+      localTreeKey,
     ])
   );
 }

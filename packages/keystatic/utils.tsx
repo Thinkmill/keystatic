@@ -25,6 +25,7 @@ import {
 import { Config } from './src';
 import { getAuth } from './app/auth';
 import { isSlugFormField } from './app/utils';
+import { getDirectoriesForTreeKey, getTreeKey } from './app/tree-key';
 
 const textEncoder = new TextEncoder();
 
@@ -56,7 +57,7 @@ export function useUpsertItem(args: {
   storage: Config['storage'];
   format: FormatInfo;
   currentTree: Map<string, TreeNode>;
-  currentLocalTreeSha: string | undefined;
+  currentLocalTreeKey: string | undefined;
   basePath: string;
   slugField: string | undefined;
 }) {
@@ -192,8 +193,14 @@ export function useUpsertItem(args: {
               branch.commit.sha,
               args.storage.repo
             );
-            const entry = tree.entries.get(args.basePath);
-            if (entry?.sha === args.currentLocalTreeSha) {
+            const treeKey = getTreeKey(
+              getDirectoriesForTreeKey(
+                fields.object(args.schema),
+                args.basePath
+              ),
+              tree.entries
+            );
+            if (treeKey === args.currentLocalTreeKey) {
               result = await runMutation(branch.data.commit.sha);
             } else {
               setState({

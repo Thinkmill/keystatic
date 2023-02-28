@@ -68,7 +68,7 @@ export function CreateItem(props: {
     storage: props.config.storage,
     schema: collectionConfig.schema,
     format: getCollectionFormat(props.config, props.collection),
-    currentLocalTreeSha: undefined,
+    currentLocalTreeKey: undefined,
     currentTree:
       tree.current.kind === 'loaded' ? tree.current.data.tree : emptyMap,
     slugField: collectionConfig.slugField,
