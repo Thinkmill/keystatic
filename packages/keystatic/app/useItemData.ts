@@ -59,7 +59,7 @@ function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
       }
       return val;
     },
-  });
+  }) as Record<string, unknown>;
   const initialFiles = [...files.keys()];
 
   return { initialState, initialFiles };
