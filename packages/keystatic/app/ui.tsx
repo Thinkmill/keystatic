@@ -26,6 +26,7 @@ import { RepoNotFound } from './onboarding/repo-not-found';
 import { isGitHubConfig } from './utils';
 import { Text } from '@voussoir/typography';
 import { AppSlugProvider } from './onboarding/install-app';
+import { GitHubAppShellDataProvider } from './shell/data';
 
 injectVoussoirStyles('surface');
 
@@ -96,10 +97,15 @@ function PageInner({ config }: { config: Config }) {
   let branch = null,
     parsedParams,
     basePath: string;
-
+  let wrapper: (element: ReactElement) => ReactElement = x => x;
   if (isGitHubConfig(config)) {
+    wrapper = element => (
+      <GitHubAppShellDataProvider config={config}>
+        {element}
+      </GitHubAppShellDataProvider>
+    );
     if (params.length === 0) {
-      return <RedirectToBranch config={config} />;
+      return wrapper(<RedirectToBranch config={config} />);
     }
     if (params.length === 1) {
       if (params[0] === 'setup') return <KeystaticSetup config={config} />;
@@ -124,7 +130,7 @@ function PageInner({ config }: { config: Config }) {
     basePath = '/keystatic';
   }
   if (!parsedParams) return <Text>Not found</Text>;
-  return (
+  return wrapper(
     <AppShell config={config} currentBranch={branch || ''} basePath={basePath}>
       {parsedParams?.collection ? (
         parsedParams.collection in (config.collections || {}) ? (
