@@ -4,90 +4,53 @@ import {
   ComponentSchema,
   FormFieldWithFile,
 } from '../DocumentEditor/component-blocks/api';
+import {
+  ReadonlyPropPath,
+  traverseProps,
+} from '../DocumentEditor/component-blocks/utils';
 import { FormatInfo } from './path-utils';
 
 export type RequiredFile = {
-  path: (string | number)[];
+  path: ReadonlyPropPath;
   schema: FormFieldWithFile<any, unknown, unknown>;
   files: string[];
 };
 
 export function getRequiredFiles(value: unknown, schema: ComponentSchema) {
   const requiredFiles: RequiredFile[] = [];
-  _getRequiredFiles(value, schema, [], requiredFiles);
-  return requiredFiles;
-}
-
-function _getRequiredFiles(
-  value: unknown,
-  schema: ComponentSchema,
-  propPath: (string | number)[],
-  requiredFiles: RequiredFile[]
-) {
-  if (schema.kind === 'child') {
-    return;
-  }
-  if (schema.kind === 'form') {
-    if ('serializeToFile' in schema && schema.serializeToFile) {
-      if (schema.serializeToFile.kind === 'asset') {
-        const filename = schema.serializeToFile.filename(
-          value,
-          propPath.join('/')
-        );
-        const files: string[] = [];
-        if (filename) {
-          files.push(filename);
+  traverseProps(schema, value, (schema, val, propPath) => {
+    if (schema.kind === 'form') {
+      if ('serializeToFile' in schema && schema.serializeToFile) {
+        if (schema.serializeToFile.kind === 'asset') {
+          const filename = schema.serializeToFile.filename(
+            value,
+            propPath.join('/')
+          );
+          const files: string[] = [];
+          if (filename) {
+            files.push(filename);
+          }
+          requiredFiles.push({ path: propPath, schema, files });
         }
-        requiredFiles.push({ path: propPath, schema, files });
-      }
-      if (schema.serializeToFile.kind === 'multi') {
-        const files = schema.serializeToFile.files(value);
-        const basePath = propPath.join('/');
-        const filenames = [
-          basePath + schema.serializeToFile.primaryExtension,
-          ...files.map(x => basePath + '/' + x),
-        ];
-        requiredFiles.push({ path: propPath, schema, files: filenames });
+        if (schema.serializeToFile.kind === 'multi') {
+          const basePath = propPath.join('/');
+          const filenames = [
+            basePath + schema.serializeToFile.primaryExtension,
+          ];
+          requiredFiles.push({ path: propPath, schema, files: filenames });
+        }
       }
     }
-    return;
-  }
-  if (schema.kind === 'object') {
-    for (const [key, val] of Object.entries(schema.fields)) {
-      _getRequiredFiles(
-        (value as any)[key],
-        val,
-        [...propPath, key],
-        requiredFiles
-      );
-    }
-    return;
-  }
-  if (schema.kind === 'array') {
-    for (const [index, val] of (value as unknown[]).entries()) {
-      _getRequiredFiles(
-        val,
-        schema.element,
-        [...propPath, index],
-        requiredFiles
-      );
-    }
-    return;
-  }
-  if (schema.kind === 'conditional') {
-    _getRequiredFiles(
-      (value as any).value,
-      schema.values[(value as any).discriminant],
-      [...propPath, 'value'],
-      requiredFiles
-    );
-    return;
-  }
+  });
+  return requiredFiles;
 }
 
 export function parseSerializedFormField(
   value: unknown,
-  file: RequiredFile,
+  file: {
+    path: ReadonlyPropPath;
+    schema: FormFieldWithFile<any, unknown, unknown>;
+  },
   loadedBinaryFiles: Map<string, Uint8Array>,
   mode: 'read' | 'edit'
 ) {
@@ -117,28 +80,28 @@ export function parseSerializedFormField(
   if (serializationConfig.kind === 'multi') {
     const rootPath = file.path.join('/');
     const mainFilepath = rootPath + serializationConfig.primaryExtension;
-    if (
-      mode === 'read' &&
-      !serializationConfig.reader.requiresContentInReader
-    ) {
+    if (mode === 'read') {
+      if (serializationConfig.reader.requiresContentInReader) {
+        const mainContents = loadedBinaryFiles.get(mainFilepath);
+        return serializationConfig.reader.parseToReader({
+          value,
+          primary: mainContents,
+        });
+      }
       return serializationConfig.reader.parseToReader({ value });
     }
     const mainContents = loadedBinaryFiles.get(mainFilepath);
-    const files = serializationConfig.files(value);
-    const otherFiles = Object.fromEntries(
-      files.flatMap(filename => {
-        const contents = loadedBinaryFiles.get(rootPath + '/' + filename);
-        if (contents) {
-          return [[filename, contents]];
-        }
-        return [];
-      })
-    );
-    return (
-      mode === 'read' && serializationConfig.reader.requiresContentInReader
-        ? serializationConfig.reader.parseToReader
-        : serializationConfig.parse
-    )({
+
+    const otherFiles: Record<string, Uint8Array> = {};
+
+    for (const [filename] of loadedBinaryFiles) {
+      if (filename.startsWith(rootPath + '/')) {
+        const relativePath = filename.slice(rootPath.length + 1);
+        otherFiles[relativePath] = loadedBinaryFiles.get(filename)!;
+      }
+    }
+
+    return serializationConfig.parse({
       value,
       primary: mainContents,
       other: otherFiles,
@@ -171,6 +134,7 @@ export function loadDataFile(data: Uint8Array, formatInfo: FormatInfo) {
     };
   }
   const res = splitFrontmatter(data);
+  console.log(res);
   assert(res !== null, 'frontmatter not found');
   return {
     loaded:

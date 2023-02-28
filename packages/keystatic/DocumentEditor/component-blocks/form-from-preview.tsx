@@ -370,11 +370,10 @@ function ObjectFieldPreview({
       {Object.entries(fields).map(
         ([key, propVal]) =>
           isNonChildFieldPreviewProps(propVal) && (
-            <AddToPathProvider part={key}>
+            <AddToPathProvider key={key} part={key}>
               <InnerFormValueContentFromPreviewProps
                 forceValidation={forceValidation}
                 autoFocus={key === firstFocusable}
-                key={key}
                 {...propVal}
               />
             </AddToPathProvider>

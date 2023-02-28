@@ -250,7 +250,6 @@ type FormFieldWithFileRequiringContentsForReader<Value, Options, DataInReader> =
             parseToReader(data: {
               value: unknown;
               primary: Uint8Array | undefined;
-              other: { [key: string]: Uint8Array };
             }): DataInReader;
           };
         });
@@ -306,7 +305,6 @@ type BaseSerializeToSingleFile<Value> = {
 type BaseSerializeToFiles<Value> = {
   kind: 'multi';
   primaryExtension: string;
-  files(value: unknown): string[];
   serialize(value: Value): Promise<{
     value: unknown;
     primary: Uint8Array | undefined;
@@ -1416,12 +1414,6 @@ export const fields = {
       serializeToFile: {
         kind: 'multi',
         primaryExtension: '.mdoc',
-        files(value) {
-          if (!value) {
-            return [];
-          }
-          return (value as any).files ?? [];
-        },
         parse: parse('edit'),
         async serialize(value) {
           const collectedFiles: CollectedFile[] = [];
@@ -1447,7 +1439,7 @@ export const fields = {
             other: Object.fromEntries(
               collectedFiles.map(({ filename, data }) => [filename, data])
             ),
-            value: { files: collectedFiles.map(({ filename }) => filename) },
+            value: undefined,
           };
         },
         reader: {
