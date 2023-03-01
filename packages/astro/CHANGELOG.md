@@ -1,5 +1,13 @@
 # @keystatic/astro
 
+## 0.0.5
+
+### Patch Changes
+
+- 5b7dbce: Use `import.meta.env` in API route handler.
+- Updated dependencies [e2230c0]
+  - @keystatic/core@0.0.49
+
 ## 0.0.4
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/astro",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "exports": {
     "./ui": {
@@ -41,7 +41,7 @@
     "set-cookie-parser": "^2.5.1"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.0.48",
+    "@keystatic/core": "^0.0.49",
     "@types/cookie": "^0.5.1",
     "@types/set-cookie-parser": "^2.4.2",
     "astro": "^2.0.14",

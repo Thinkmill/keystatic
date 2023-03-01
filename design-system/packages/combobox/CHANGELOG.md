@@ -1,5 +1,11 @@
 # @voussoir/combobox
 
+## 0.1.2
+
+### Patch Changes
+
+- 0fc5ac0: MobileComboBox: fix placeholder text behaviour
+
 ## 0.1.1
 
 ### Patch Changes
