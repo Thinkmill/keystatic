@@ -11,6 +11,7 @@ import {
   BranchInfoContext,
   fetchGitHubTreeData,
   hydrateTreeCacheWithEntries,
+  RepoWithWriteAccessContext,
   useBaseCommit,
   useSetTreeSha,
 } from './app/shell/data';
@@ -68,6 +69,7 @@ export function useUpsertItem(args: {
     | { kind: 'idle' }
     | { kind: 'updated' }
     | { kind: 'loading' }
+    | { kind: 'needs-fork' }
     | { kind: 'error'; error: Error }
     | { kind: 'needs-new-branch'; reason: string }
   >({
@@ -77,9 +79,14 @@ export function useUpsertItem(args: {
   const branchInfo = useContext(BranchInfoContext);
   const setTreeSha = useSetTreeSha();
   const [, mutate] = useMutation(createCommitMutation);
+  const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
   return [
     state,
     async (override?: { sha: string; branch: string }): Promise<boolean> => {
+      if (repoWithWriteAccess === null && args.storage.kind === 'github') {
+        setState({ kind: 'needs-fork' });
+        return false;
+      }
       setState({ kind: 'loading' });
       let { value: stateWithExtraFilesRemoved, extraFiles } = await toFiles(
         args.state,
@@ -159,7 +166,9 @@ export function useUpsertItem(args: {
       if (args.storage.kind === 'github') {
         const branch = {
           branchName: override?.branch ?? branchInfo.currentBranch,
-          repositoryNameWithOwner: `${args.storage.repo.owner}/${args.storage.repo.name}`,
+          repositoryNameWithOwner: `${repoWithWriteAccess!.owner}/${
+            repoWithWriteAccess!.name
+          }`,
         };
         const runMutation = (expectedHeadOid: string) =>
           mutate({
@@ -291,6 +300,7 @@ export function useDeleteItem(args: {
     | { kind: 'idle' }
     | { kind: 'updated' }
     | { kind: 'loading' }
+    | { kind: 'needs-fork' }
     | { kind: 'error'; error: Error }
   >({
     kind: 'idle',
@@ -300,9 +310,15 @@ export function useDeleteItem(args: {
 
   const [, mutate] = useMutation(createCommitMutation);
   const setTreeSha = useSetTreeSha();
+  const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
+
   return [
     state,
     async () => {
+      if (repoWithWriteAccess === null && args.storage.kind === 'github') {
+        setState({ kind: 'needs-fork' });
+        return false;
+      }
       setState({ kind: 'loading' });
       const updatedTree = await updateTreeWithChanges(args.currentTree, {
         additions: [],
@@ -344,6 +360,9 @@ export function useDeleteItem(args: {
       const { tree } = await hydrateTreeCacheWithEntries(newTree);
       setTreeSha(await treeSha(tree));
       setState({ kind: 'updated' });
+    },
+    () => {
+      setState({ kind: 'idle' });
     },
   ] as const;
 }

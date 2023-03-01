@@ -1,7 +1,7 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
 import { Item, Section } from '@react-stately/collections';
-import { gql } from '@ts-gql/tag/no-transform';
+import { FragmentData, gql } from '@ts-gql/tag/no-transform';
 import {
   createContext,
   ReactNode,
@@ -9,7 +9,6 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useQuery } from 'urql';
 
 import { Badge } from '@voussoir/badge';
 import { ActionButton } from '@voussoir/button';
@@ -29,7 +28,7 @@ import l10nMessages from '../l10n/index.json';
 import { useRouter } from '../router';
 import { isGitHubConfig, pluralize } from '../utils';
 
-import { useChanged } from './data';
+import { GitHubAppShellDataContext, useChanged } from './data';
 import { SidebarHeader } from './sidebar-header';
 
 export const SidebarContext = createContext<{
@@ -211,19 +210,24 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
   );
 }
 
+export const SidebarFooter_viewer = gql`
+  fragment SidebarFooter_viewer on User {
+    id
+    name
+    login
+    avatarUrl
+    databaseId
+  }
+` as import('../../__generated__/ts-gql/SidebarFooter_viewer').type;
+
+export const ViewerContext = createContext<
+  FragmentData<typeof SidebarFooter_viewer> | undefined
+>(undefined);
+
 function SidebarFooter(props: { config: GitHubConfig }) {
-  const [{ data: { viewer = undefined } = {} }] = useQuery({
-    query: gql`
-      query Viewer {
-        viewer {
-          id
-          name
-          login
-          avatarUrl
-        }
-      }
-    ` as import('../../__generated__/ts-gql/Viewer').type,
-  });
+  const viewer = useContext(ViewerContext);
+  const appShellData = useContext(GitHubAppShellDataContext);
+  const fork = appShellData?.data?.repository?.forks.nodes?.[0];
   return (
     <Flex
       elementType="header"
@@ -274,12 +278,21 @@ function SidebarFooter(props: { config: GitHubConfig }) {
                 '_blank'
               );
             }
+            if (key === 'fork') {
+              window.open(
+                `https://github.com/${fork?.owner.login}/${fork?.name}`,
+                '_blank'
+              );
+            }
           }}
         >
           <Item key="logout">Log out</Item>
           <Section title="Github">
-            <Item key="profile">Profile</Item>
-            <Item key="repository">Repository</Item>
+            {[
+              <Item key="profile">Profile</Item>,
+              <Item key="repository">Repository</Item>,
+              ...(fork ? [<Item key="fork">Fork</Item>] : []),
+            ]}
           </Section>
         </Menu>
       </MenuTrigger>

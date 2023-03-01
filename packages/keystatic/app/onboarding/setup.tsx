@@ -76,7 +76,7 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
             url: deployedURL
               ? `${deployedURL}/keystatic`
               : 'http://localhost:3000/keystatic',
-            public: false,
+            public: true,
             redirect_url:
               'http://localhost:3000/api/keystatic/github/created-app',
             callback_urls: [
@@ -90,6 +90,7 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
               contents: 'write',
               metadata: 'read',
               pull_requests: 'read',
+              administration: 'write',
             },
           })}
         />

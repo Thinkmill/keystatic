@@ -31,8 +31,10 @@ import {
   getCollectionFormat,
   getCollectionItemPath,
   getSlugFromState,
+  isGitHubConfig,
 } from './utils';
 import { useSlugsInCollection } from './useSlugsInCollection';
+import { ForkRepoDialog } from './fork-repo';
 
 const emptyMap = new Map<string, TreeNode>();
 
@@ -212,6 +214,28 @@ export function CreateItem(props: {
             }}
             reason={createResult.reason}
             onDismiss={resetCreateItemState}
+          />
+        )}
+      </DialogContainer>
+      <DialogContainer
+        // ideally this would be a popover on desktop but using a DialogTrigger
+        // wouldn't work since this doesn't open on click but after doing a
+        // network request and it failing and manually wiring about a popover
+        // and modal would be a pain
+        onDismiss={resetCreateItemState}
+      >
+        {createResult.kind === 'needs-fork' && isGitHubConfig(props.config) && (
+          <ForkRepoDialog
+            onCreate={async () => {
+              if (await createItem()) {
+                const slug = getSlugFromState(collectionConfig, state);
+                router.push(
+                  `${collectionPath}/item/${encodeURIComponent(slug)}`
+                );
+              }
+            }}
+            onDismiss={resetCreateItemState}
+            config={props.config}
           />
         )}
       </DialogContainer>

@@ -26,9 +26,10 @@ import { TreeNode } from './trees';
 import { mergeDataStates } from './useData';
 import { useHasChanged } from './useHasChanged';
 import { useItemData } from './useItemData';
-import { getSingletonFormat, getSingletonPath } from './utils';
+import { getSingletonFormat, getSingletonPath, isGitHubConfig } from './utils';
 import { Icon } from '@voussoir/icon';
 import { refreshCwIcon } from '@voussoir/icon/icons/refreshCwIcon';
+import { ForkRepoDialog } from './fork-repo';
 
 type SingletonPageProps = {
   singleton: string;
@@ -189,6 +190,23 @@ function SingletonPage({
                   }}
                   reason={updateResult.reason}
                   onDismiss={resetUpdateItem}
+                />
+              )}
+            </DialogContainer>
+            <DialogContainer
+              // ideally this would be a popover on desktop but using a DialogTrigger
+              // wouldn't work since this doesn't open on click but after doing a
+              // network request and it failing and manually wiring about a popover
+              // and modal would be a pain
+              onDismiss={resetUpdateItem}
+            >
+              {updateResult.kind === 'needs-fork' && isGitHubConfig(config) && (
+                <ForkRepoDialog
+                  onCreate={async () => {
+                    update();
+                  }}
+                  onDismiss={resetUpdateItem}
+                  config={config}
                 />
               )}
             </DialogContainer>
