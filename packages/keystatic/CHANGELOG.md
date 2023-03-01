@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.0.49
+
+### Patch Changes
+
+- e2230c0: `fields.document` no longer stores anything in YAML/JSON data files.
+- Updated dependencies [0fc5ac0]
+  - @voussoir/combobox@0.1.2
+
 ## 0.0.48
 
 ### Patch Changes
