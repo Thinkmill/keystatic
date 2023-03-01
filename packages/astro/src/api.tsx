@@ -6,9 +6,19 @@ import type { APIContext } from 'astro';
 import { parseString } from 'set-cookie-parser';
 
 export function makeHandler(_config: APIRouteConfig) {
-  const handler = makeGenericAPIRouteHandler(_config, {
-    slugEnvName: 'PUBLIC_KEYSTATIC_GITHUB_APP_SLUG',
-  });
+  const handler = makeGenericAPIRouteHandler(
+    {
+      ..._config,
+      clientId: _config.clientId ?? import.meta.env.KEYSTATIC_GITHUB_CLIENT_ID,
+      clientSecret:
+        _config.clientSecret ?? import.meta.env.KEYSTATIC_GITHUB_CLIENT_SECRET,
+      secret: _config.secret ?? import.meta.env.KEYSTATIC_SECRET,
+      url: _config.url ?? import.meta.env.KEYSTATIC_URL,
+    },
+    {
+      slugEnvName: 'PUBLIC_KEYSTATIC_GITHUB_APP_SLUG',
+    }
+  );
   return async function keystaticAPIRoute(context: APIContext) {
     const { body, headers, status } = await handler(context.request);
     // all this stuff should be able to go away when astro is using a version of undici with getSetCookie
