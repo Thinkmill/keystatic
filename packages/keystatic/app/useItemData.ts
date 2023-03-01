@@ -41,13 +41,13 @@ function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
         }
       : undefined
   );
-  const filesWithFakeFile = new Map(
-    [...files].map(x => [x[0].replace(args.dirpath + '/', ''), x[1]])
-  );
+  const filesWithFakeFile = new Map(files);
   if (extraFakeFile) {
-    filesWithFakeFile.set(extraFakeFile.path, extraFakeFile.contents);
+    filesWithFakeFile.set(
+      `${args.dirpath}/${extraFakeFile.path}`,
+      extraFakeFile.contents
+    );
   }
-
   const initialState = transformProps(schema, validated, {
     form(schema, val, path) {
       if ('serializeToFile' in schema) {
@@ -55,7 +55,9 @@ function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
           val,
           { path, schema },
           filesWithFakeFile,
-          'edit'
+          'edit',
+          args.dirpath,
+          args.slug?.slug
         );
       }
       return val;
@@ -86,8 +88,13 @@ export function useItemData(args: UseItemDataArgs) {
   const rootTree =
     currentBranch.kind === 'loaded' ? currentBranch.data.tree : undefined;
   const directoriesForTreeKey = useMemo(
-    () => getDirectoriesForTreeKey(fields.object(args.schema), args.dirpath),
-    [args.dirpath, args.schema]
+    () =>
+      getDirectoriesForTreeKey(
+        fields.object(args.schema),
+        args.dirpath,
+        args.slug?.slug
+      ),
+    [args.dirpath, args.schema, args.slug?.slug]
   );
   const localTreeKey = useMemo(
     () => getTreeKey(directoriesForTreeKey, rootTree ?? new Map()),
@@ -128,14 +135,18 @@ export function useItemData(args: UseItemDataArgs) {
         schema: args.schema,
         slug: args.slug,
       };
-
-      const allBlobs = getAllFilesInTree(localTreeNode.children).map(entry => {
-        const blob = fetchBlob(args.config, entry.sha, entry.path);
-        if (blob instanceof Uint8Array) {
-          return [entry.path, blob] as const;
-        }
-        return blob.then(blob => [entry.path, blob] as const);
-      });
+      const allBlobs = directoriesForTreeKey
+        .flatMap(dir => {
+          const entries = getTreeNodeAtPath(tree, dir)?.children;
+          return entries ? getAllFilesInTree(entries) : [];
+        })
+        .map(entry => {
+          const blob = fetchBlob(args.config, entry.sha, entry.path);
+          if (blob instanceof Uint8Array) {
+            return [entry.path, blob] as const;
+          }
+          return blob.then(blob => [entry.path, blob] as const);
+        });
 
       if (
         allBlobs.every((x): x is readonly [string, Uint8Array] =>
@@ -170,6 +181,7 @@ export function useItemData(args: UseItemDataArgs) {
       args.config,
       args.schema,
       args.slug,
+      directoriesForTreeKey,
       localTreeKey,
     ])
   );

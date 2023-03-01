@@ -113,20 +113,17 @@ function ItemPage(props: ItemPageProps) {
   });
 
   const baseCommit = useBaseCommit();
+  const slug = getSlugFromState(collectionConfig, state);
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
     state,
     initialFiles,
     storage: config.storage,
     schema: collectionConfig.schema,
-    basePath: getCollectionItemPath(
-      config,
-      collection,
-      getSlugFromState(collectionConfig, state)
-    ),
+    basePath: getCollectionItemPath(config, collection, slug),
     format: getCollectionFormat(config, collection),
     currentLocalTreeKey: localTreeKey,
     currentTree,
-    slugField: collectionConfig.slugField,
+    slug: { field: collectionConfig.slugField, value: slug },
   });
   const update = useEventCallback(_update);
   const [deleteResult, deleteItem] = useDeleteItem({

@@ -5,7 +5,7 @@ import {
   FormFieldWithFile,
 } from '../DocumentEditor/component-blocks/api';
 
-function fixPath(path: string) {
+export function fixPath(path: string) {
   return path.replace(/^\.?\//, '').replace(/\/$/, '');
 }
 

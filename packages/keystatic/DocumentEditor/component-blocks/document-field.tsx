@@ -2,7 +2,11 @@ import { Descendant } from 'slate';
 import { ComponentBlock, fields, ComponentSchema } from './api';
 import { transformProps } from './utils';
 
-export type CollectedFile = { data: Uint8Array; filename: string };
+export type CollectedFile = {
+  data: Uint8Array;
+  filename: string;
+  parent: string | undefined;
+};
 
 export function collectFiles(
   nodes: Descendant[],
@@ -53,6 +57,7 @@ function transformPropsToFiles(
             collectedFiles.push({
               data: content,
               filename,
+              parent: schema.serializeToFile.directory,
             });
           }
           return forYaml;
@@ -67,7 +72,8 @@ function transformPropsToFiles(
 export function deserializeFiles(
   nodes: Descendant[],
   componentBlocks: Record<string, ComponentBlock>,
-  files: Record<string, Uint8Array>,
+  files: ReadonlyMap<string, Uint8Array>,
+  otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>,
   mode: 'read' | 'edit'
 ): Descendant[] {
   return nodes.map((node): Descendant => {
@@ -77,10 +83,13 @@ export function deserializeFiles(
       const schema = fields.object(componentBlock.schema);
       return {
         ...node,
-        props: deserializeProps(schema, node.props, files, mode) as Record<
-          string,
-          any
-        >,
+        props: deserializeProps(
+          schema,
+          node.props,
+          files,
+          otherFiles,
+          mode
+        ) as Record<string, any>,
       };
     }
     if (typeof node.type === 'string') {
@@ -88,6 +97,7 @@ export function deserializeFiles(
         node.children,
         componentBlocks,
         files,
+        otherFiles,
         mode
       );
       return { ...node, children };
@@ -99,7 +109,8 @@ export function deserializeFiles(
 function deserializeProps(
   schema: ComponentSchema,
   value: unknown,
-  files: Record<string, Uint8Array>,
+  files: ReadonlyMap<string, Uint8Array>,
+  otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>,
   mode: 'read' | 'edit'
 ) {
   return transformProps(schema, value, {
@@ -123,7 +134,13 @@ function deserializeProps(
               : schema.serializeToFile.parse
           )({
             value: value,
-            content: filename ? files[filename] : undefined,
+            content: filename
+              ? schema.serializeToFile.directory
+                ? otherFiles
+                    .get(schema.serializeToFile.directory)
+                    ?.get(filename)
+                : files.get(filename)
+              : undefined,
             suggestedFilenamePrefix: undefined,
           });
         }

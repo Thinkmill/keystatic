@@ -102,7 +102,7 @@ function SingletonPage({
     format: getSingletonFormat(config, singleton),
     currentLocalTreeKey: localTreeKey,
     currentTree,
-    slugField: undefined,
+    slug: undefined,
   });
   const update = useEventCallback(_update);
   const onCreate = async () => {

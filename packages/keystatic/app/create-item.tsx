@@ -71,7 +71,7 @@ export function CreateItem(props: {
     currentLocalTreeKey: undefined,
     currentTree:
       tree.current.kind === 'loaded' ? tree.current.data.tree : emptyMap,
-    slugField: collectionConfig.slugField,
+    slug: { field: collectionConfig.slugField, value: slug },
   });
   const createItem = useEventCallback(_createItem);
 

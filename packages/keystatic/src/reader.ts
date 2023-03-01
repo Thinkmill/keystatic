@@ -58,14 +58,17 @@ function collectionReader(
   const schema = fields.object(collectionConfig.schema);
   return {
     read: (slug: string) => {
-      const itemDir = path.join(
-        repoPath,
-        getCollectionItemPath(config, collection, slug)
+      return readItem(
+        schema,
+        formatInfo,
+        extension,
+        getCollectionItemPath(config, collection, slug),
+        {
+          field: collectionConfig.slugField,
+          slug,
+        },
+        repoPath
       );
-      return readItem(schema, formatInfo, extension, itemDir, {
-        field: collectionConfig.slugField,
-        slug,
-      });
     },
     async list() {
       const entries = await fs.readdir(path.join(repoPath, collectionPath), {
@@ -104,11 +107,14 @@ async function readItem(
         slug: string;
         field: string;
       }
-    | undefined
+    | undefined,
+  repoPath: string
 ) {
   let dataFile: Uint8Array;
   try {
-    dataFile = await fs.readFile(path.join(itemDir, `index${extension}`));
+    dataFile = await fs.readFile(
+      path.join(path.resolve(repoPath, itemDir), `index${extension}`)
+    );
   } catch (err) {
     if ((err as any).code === 'ENOENT') {
       return null;
@@ -139,29 +145,34 @@ async function readItem(
     const originalValue = parentValue[keyOnParent];
     if (file.schema.serializeToFile.reader.requiresContentInReader) {
       parentValue[keyOnParent] = async () => {
-        const loadedBinaryFiles = new Map(
-          (
-            await Promise.all(
-              file.files.map(
-                async x =>
-                  [
-                    x,
-                    x === extraFakeFile?.path
-                      ? extraFakeFile.contents
-                      : await fs.readFile(path.join(itemDir, x)).catch(x => {
-                          if ((x as any).code === 'ENOENT') return undefined;
-                          throw x;
-                        }),
-                  ] as const
-              )
-            )
-          ).filter((x): x is [string, Buffer] => x[1] !== undefined)
-        );
+        const loadedFiles = new Map<string, Uint8Array>();
+        if (file.file) {
+          const filepath = `${
+            file.file.parent
+              ? `${file.file.parent}${slugField ? slugField.slug : ''}`
+              : itemDir
+          }/${file.file.filename}`;
+          if (file.file.filename === extraFakeFile?.path) {
+            loadedFiles.set(filepath, extraFakeFile.contents);
+          } else {
+            const contents = await fs
+              .readFile(path.resolve(repoPath, filepath))
+              .catch(x => {
+                if ((x as any).code === 'ENOENT') return undefined;
+                throw x;
+              });
+            if (contents) {
+              loadedFiles.set(filepath, contents);
+            }
+          }
+        }
         return parseSerializedFormField(
           originalValue,
           file,
-          loadedBinaryFiles,
-          'read'
+          loadedFiles,
+          'read',
+          itemDir,
+          slugField?.slug
         );
       };
     } else {
@@ -169,7 +180,9 @@ async function readItem(
         originalValue,
         file,
         new Map(),
-        'read'
+        'read',
+        itemDir,
+        slugField?.slug
       );
     }
   }
@@ -192,8 +205,9 @@ function singletonReader(
         schema,
         formatInfo,
         extension,
-        path.join(repoPath, singletonPath),
-        undefined
+        singletonPath,
+        undefined,
+        repoPath
       ),
   };
 }
