@@ -45,11 +45,13 @@ import {
   getCollectionFormat,
   getCollectionItemPath,
   getSlugFromState,
+  isGitHubConfig,
 } from './utils';
 import { useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
 import { mergeDataStates } from './useData';
 import { useSlugsInCollection } from './useSlugsInCollection';
+import { ForkRepoDialog } from './fork-repo';
 
 type ItemPageProps = {
   collection: string;
@@ -126,7 +128,7 @@ function ItemPage(props: ItemPageProps) {
     slug: { field: collectionConfig.slugField, value: slug },
   });
   const update = useEventCallback(_update);
-  const [deleteResult, deleteItem] = useDeleteItem({
+  const [deleteResult, deleteItem, resetDeleteItem] = useDeleteItem({
     initialFiles,
     storage: config.storage,
     basePath: getCollectionItemPath(config, collection, itemSlug),
@@ -291,6 +293,55 @@ function ItemPage(props: ItemPageProps) {
                 onDismiss={resetUpdateItem}
               />
             )}
+          </DialogContainer>
+          <DialogContainer
+            // ideally this would be a popover on desktop but using a DialogTrigger
+            // wouldn't work since this doesn't open on click but after doing a
+            // network request and it failing and manually wiring about a popover
+            // and modal would be a pain
+            onDismiss={resetUpdateItem}
+          >
+            {updateResult.kind === 'needs-fork' &&
+              isGitHubConfig(props.config) && (
+                <ForkRepoDialog
+                  onCreate={async () => {
+                    const slug = getSlugFromState(collectionConfig, state);
+                    const hasUpdated = await update();
+                    if (hasUpdated && slug !== itemSlug) {
+                      router.replace(
+                        `${props.basePath}/collection/${encodeURIComponent(
+                          collection
+                        )}/item/${encodeURIComponent(slug)}`
+                      );
+                    }
+                  }}
+                  onDismiss={resetUpdateItem}
+                  config={props.config}
+                />
+              )}
+          </DialogContainer>
+          <DialogContainer
+            // ideally this would be a popover on desktop but using a DialogTrigger
+            // wouldn't work since this doesn't open on click but after doing a
+            // network request and it failing and manually wiring about a popover
+            // and modal would be a pain
+            onDismiss={resetDeleteItem}
+          >
+            {deleteResult.kind === 'needs-fork' &&
+              isGitHubConfig(props.config) && (
+                <ForkRepoDialog
+                  onCreate={async () => {
+                    await deleteItem();
+                    router.push(
+                      `${props.basePath}/collection/${encodeURIComponent(
+                        collection
+                      )}`
+                    );
+                  }}
+                  onDismiss={resetDeleteItem}
+                  config={props.config}
+                />
+              )}
           </DialogContainer>
         </Box>
       </ItemPageShell>

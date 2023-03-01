@@ -351,6 +351,13 @@ async function githubOauthCallback(
   }
 
   const headers = await getTokenCookies(tokenDataParseResult.data, config);
+  if (state === 'close') {
+    return {
+      headers: [...headers, ['Content-Type', 'text/html']],
+      body: "<script>localStorage.setItem('ks-refetch-installations', 'true');window.close();</script>",
+      status: 200,
+    };
+  }
   return redirect(`/keystatic${from ? `/${from}` : ''}`, headers);
 }
 

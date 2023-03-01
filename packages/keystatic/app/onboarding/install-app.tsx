@@ -7,7 +7,7 @@ import { useRouter } from '../router';
 import { GitHubConfig } from '../../config';
 import { createContext, useContext } from 'react';
 
-const AppSlugContext = createContext<
+export const AppSlugContext = createContext<
   { envName: string; value: string | undefined } | undefined
 >(undefined);
 

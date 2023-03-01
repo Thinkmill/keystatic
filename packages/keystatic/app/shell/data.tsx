@@ -1,4 +1,4 @@
-import { OperationData, OperationVariables } from '@ts-gql/tag';
+import { OperationData, OperationVariables, FragmentData } from '@ts-gql/tag';
 import { gql } from '@ts-gql/tag/no-transform';
 import { useRouter } from '../router';
 import { Config, GitHubConfig, LocalConfig } from '../../config';
@@ -30,6 +30,7 @@ import { getTreeNodeForItem, MaybePromise } from '../utils';
 import LRU from 'lru-cache';
 import { isDefined } from 'emery';
 import { getAuth } from '../auth';
+import { SidebarFooter_viewer, ViewerContext } from './sidebar';
 
 export function fetchLocalTree(sha: string) {
   if (treeCache.has(sha)) {
@@ -115,10 +116,14 @@ export function GitHubAppShellDataProvider(props: {
   });
   return (
     <GitHubAppShellDataContext.Provider value={state}>
-      {props.children}
+      <ViewerContext.Provider value={state.data?.viewer}>
+        {props.children}
+      </ViewerContext.Provider>
     </GitHubAppShellDataContext.Provider>
   );
 }
+
+const writePermissions = new Set(['WRITE', 'ADMIN', 'MAINTAIN']);
 
 export function GitHubAppShellProvider(props: {
   currentBranch: string;
@@ -127,14 +132,22 @@ export function GitHubAppShellProvider(props: {
 }) {
   const router = useRouter();
   const { data, error } = useContext(GitHubAppShellDataContext)!;
-  const defaultBranchRef = data?.repository?.refs?.nodes?.find(
+  let repo: FragmentData<typeof BaseRepo> | undefined | null = data?.repository;
+
+  if (repo?.viewerPermission && !writePermissions.has(repo?.viewerPermission)) {
+    repo = data?.repository?.forks.nodes?.[0] ?? repo;
+  }
+
+  const defaultBranchRef = repo?.refs?.nodes?.find(
     (x): x is typeof x & { target: { __typename: 'Commit' } } =>
-      x?.name === data?.repository?.defaultBranchRef?.name
+      x?.name === repo?.defaultBranchRef?.name
   );
-  const currentBranchRef = data?.repository?.refs?.nodes?.find(
+
+  const currentBranchRef = repo?.refs?.nodes?.find(
     (x): x is typeof x & { target: { __typename: 'Commit' } } =>
       x?.name === props.currentBranch
   );
+
   const defaultBranchTreeSha = defaultBranchRef?.target.tree.oid ?? null;
   const currentBranchTreeSha = currentBranchRef?.target.tree.oid ?? null;
   const baseCommit = currentBranchRef?.target?.oid ?? null;
@@ -184,7 +197,7 @@ export function GitHubAppShellProvider(props: {
       )}`;
     }
     if (
-      !data?.repository?.id &&
+      !repo?.id &&
       error?.graphQLErrors.some(
         err => (err?.originalError as any)?.type === 'NOT_FOUND'
       )
@@ -193,56 +206,60 @@ export function GitHubAppShellProvider(props: {
         '/'
       )}`;
     }
-  }, [error, data, router]);
+  }, [error, router, repo?.id]);
   const baseInfo = useMemo(
     () => ({
       baseCommit: baseCommit || '',
-      repositoryId: data?.repository?.id ?? '',
+      repositoryId: repo?.id ?? '',
     }),
-    [baseCommit, data?.repository?.id]
+    [baseCommit, repo?.id]
   );
   const branchInfo = useMemo(
     () => ({
-      defaultBranch: data?.repository?.defaultBranchRef?.name ?? '',
+      defaultBranch: repo?.defaultBranchRef?.name ?? '',
       currentBranch: props.currentBranch,
       baseCommit: baseCommit || '',
-      repositoryId: data?.repository?.id ?? '',
-      allBranches:
-        data?.repository?.refs?.nodes?.map(x => x?.name).filter(isDefined) ??
-        [],
+      repositoryId: repo?.id ?? '',
+      allBranches: repo?.refs?.nodes?.map(x => x?.name).filter(isDefined) ?? [],
       hasPullRequests: !!currentBranchRef?.associatedPullRequests.totalCount,
       branchNameToId: new Map(
-        data?.repository?.refs?.nodes
-          ?.filter(isDefined)
-          .map(x => [x.name, x.id])
+        repo?.refs?.nodes?.filter(isDefined).map(x => [x.name, x.id])
       ),
       branchNameToBaseCommit: new Map(
-        data?.repository?.refs?.nodes?.flatMap(x =>
+        repo?.refs?.nodes?.flatMap(x =>
           x?.target ? [[x.name, x.target.oid]] : []
         )
       ),
     }),
     [
-      data?.repository?.defaultBranchRef?.name,
-      data?.repository?.id,
-      data?.repository?.refs?.nodes,
+      repo?.defaultBranchRef?.name,
+      repo?.id,
+      repo?.refs?.nodes,
       props.currentBranch,
       baseCommit,
       currentBranchRef?.associatedPullRequests.totalCount,
     ]
   );
   return (
-    <AppShellErrorContext.Provider value={error}>
-      <BranchInfoContext.Provider value={branchInfo}>
-        <BaseInfoContext.Provider value={baseInfo}>
-          <ChangedContext.Provider value={changedData}>
-            <TreeContext.Provider value={allTreeData}>
-              {props.children}
-            </TreeContext.Provider>
-          </ChangedContext.Provider>
-        </BaseInfoContext.Provider>
-      </BranchInfoContext.Provider>
-    </AppShellErrorContext.Provider>
+    <RepoWithWriteAccessContext.Provider
+      value={
+        repo?.viewerPermission && writePermissions.has(repo.viewerPermission)
+          ? { name: repo.name, owner: repo.owner.login }
+          : null
+      }
+    >
+      <AppShellErrorContext.Provider value={error}>
+        <BranchInfoContext.Provider value={branchInfo}>
+          <BaseInfoContext.Provider value={baseInfo}>
+            <ChangedContext.Provider value={changedData}>
+              <TreeContext.Provider value={allTreeData}>
+                {props.children}
+              </TreeContext.Provider>
+            </ChangedContext.Provider>
+          </BaseInfoContext.Provider>
+        </BranchInfoContext.Provider>
+      </AppShellErrorContext.Provider>
+    </RepoWithWriteAccessContext.Provider>
   );
 }
 
@@ -302,36 +319,59 @@ export function useRepositoryId() {
   return useContext(BaseInfoContext).repositoryId;
 }
 
-export const AppShellQuery = gql`
-  query AppShell($name: String!, $owner: String!) {
-    repository(owner: $owner, name: $name) {
+const BaseRepo = gql`
+  fragment Repo_base on Repository {
+    id
+    owner {
       id
-      defaultBranchRef {
+      login
+    }
+    name
+    defaultBranchRef {
+      id
+      name
+    }
+    viewerPermission
+    refs(refPrefix: "refs/heads/", first: 100) {
+      nodes {
         id
         name
-      }
-      refs(refPrefix: "refs/heads/", first: 100) {
-        nodes {
+        target {
+          __typename
           id
-          name
-          target {
-            __typename
-            id
-            oid
-            ... on Commit {
-              tree {
-                id
-                oid
-              }
+          oid
+          ... on Commit {
+            tree {
+              id
+              oid
             }
           }
-          associatedPullRequests(states: [OPEN]) {
-            totalCount
-          }
+        }
+        associatedPullRequests(states: [OPEN]) {
+          totalCount
         }
       }
     }
   }
+` as import('../../__generated__/ts-gql/Repo_base').type;
+
+export const AppShellQuery = gql`
+  query AppShell($name: String!, $owner: String!) {
+    repository(owner: $owner, name: $name) {
+      id
+      ...Repo_base
+      forks(affiliations: [OWNER], first: 1) {
+        nodes {
+          ...Repo_base
+        }
+      }
+    }
+    viewer {
+      ...SidebarFooter_viewer
+    }
+  }
+  ${BaseRepo}
+  ${SidebarFooter_viewer}
 ` as import('../../__generated__/ts-gql/AppShell').type;
 
 export type AppShellData = OperationData<typeof AppShellQuery>;
@@ -367,11 +407,7 @@ export function fetchGitHubTreeData(
       if (!auth) throw new Error('Not authorized');
       return fetch(
         `https://api.github.com/repos/${repo.owner}/${repo.name}/git/trees/${sha}?recursive=1`,
-        {
-          headers: {
-            Authorization: `Bearer ${auth.accessToken}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${auth.accessToken}` } }
       ).then(x => x.json());
     })
     .then((res: { tree: (TreeEntry & { url: string })[] }) =>
@@ -394,6 +430,11 @@ function useGitHubTreeData(
     )
   );
 }
+
+export const RepoWithWriteAccessContext = createContext<{
+  owner: string;
+  name: string;
+} | null>(null);
 
 export const BranchInfoContext = createContext<{
   currentBranch: string;
