@@ -126,6 +126,14 @@ export function createDocumentEditorWithoutReact(
   documentFeatures: DocumentFeatures,
   componentBlocks: Record<string, ComponentBlock>
 ) {
+  return _createDocumentEditor(documentFeatures, componentBlocks, false);
+}
+
+function _createDocumentEditor(
+  documentFeatures: DocumentFeatures,
+  componentBlocks: Record<string, ComponentBlock>,
+  includeReact: boolean
+) {
   return withPasting(
     withSoftBreaks(
       withBlocksSchema(
@@ -152,7 +160,11 @@ export function createDocumentEditorWithoutReact(
                                 withBlockquote(
                                   withDocumentFeaturesNormalization(
                                     documentFeatures,
-                                    withHistory(createEditor())
+                                    withHistory(
+                                      includeReact
+                                        ? withReact(createEditor())
+                                        : createEditor()
+                                    )
                                   )
                                 )
                               )
@@ -176,9 +188,7 @@ export function createDocumentEditor(
   documentFeatures: DocumentFeatures,
   componentBlocks: Record<string, ComponentBlock>
 ) {
-  return withReact(
-    createDocumentEditorWithoutReact(documentFeatures, componentBlocks)
-  );
+  return _createDocumentEditor(documentFeatures, componentBlocks, true);
 }
 
 export function DocumentEditor({
