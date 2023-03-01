@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.53
+
+### Patch Changes
+
+- b26b23c: Add error handling for saving/deleting items when using
+  `storage: { kind: 'local' }`.
+
 ## 0.0.52
 
 ### Patch Changes
