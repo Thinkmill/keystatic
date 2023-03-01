@@ -13,8 +13,7 @@ import {
   TypedDocumentNode,
 } from '@ts-gql/tag/no-transform';
 import { Config } from '..';
-import { readToDirEntries } from './read-local';
-import { getCollectionPath, getSingletonPath } from '../../app/path-utils';
+import { getAllowedDirectories, readToDirEntries } from './read-local';
 import { blobSha } from './trees-server-side';
 import path from 'path';
 
@@ -590,17 +589,6 @@ async function tree(
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(await readToDirEntries(baseDirectory, config)),
   };
-}
-
-function getAllowedDirectories(config: Config) {
-  const allowedDirectories: string[] = [];
-  for (const collection of Object.keys(config.collections ?? {})) {
-    allowedDirectories.push(getCollectionPath(config, collection));
-  }
-  for (const singleton of Object.keys(config.singletons ?? {})) {
-    allowedDirectories.push(getSingletonPath(config, singleton));
-  }
-  return allowedDirectories;
 }
 
 function getIsPathValid(config: Config) {
