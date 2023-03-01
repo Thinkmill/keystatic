@@ -122,9 +122,17 @@ const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
   }
 };
 
-export function createDocumentEditor(
+export function createDocumentEditorWithoutReact(
   documentFeatures: DocumentFeatures,
   componentBlocks: Record<string, ComponentBlock>
+) {
+  return _createDocumentEditor(documentFeatures, componentBlocks, false);
+}
+
+function _createDocumentEditor(
+  documentFeatures: DocumentFeatures,
+  componentBlocks: Record<string, ComponentBlock>,
+  includeReact: boolean
 ) {
   return withPasting(
     withSoftBreaks(
@@ -152,7 +160,11 @@ export function createDocumentEditor(
                                 withBlockquote(
                                   withDocumentFeaturesNormalization(
                                     documentFeatures,
-                                    withHistory(withReact(createEditor()))
+                                    withHistory(
+                                      includeReact
+                                        ? withReact(createEditor())
+                                        : createEditor()
+                                    )
                                   )
                                 )
                               )
@@ -170,6 +182,13 @@ export function createDocumentEditor(
       )
     )
   );
+}
+
+export function createDocumentEditor(
+  documentFeatures: DocumentFeatures,
+  componentBlocks: Record<string, ComponentBlock>
+) {
+  return _createDocumentEditor(documentFeatures, componentBlocks, true);
 }
 
 export function DocumentEditor({

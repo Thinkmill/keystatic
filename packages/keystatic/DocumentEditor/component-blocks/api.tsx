@@ -22,7 +22,7 @@ import { filter } from 'minimatch';
 import { fromMarkdoc } from '../../markdoc/from-markdoc';
 import { toMarkdocDocument } from '../../markdoc/to-markdoc';
 import {
-  createDocumentEditor,
+  createDocumentEditorWithoutReact,
   DocumentEditor,
   useIsInDocumentEditor,
 } from '..';
@@ -1392,7 +1392,10 @@ export const fields = {
       }): DocumentElement[] => {
         const markdoc = textDecoder.decode(value.primary);
         const document = fromMarkdoc(Markdoc.parse(markdoc), componentBlocks);
-        const editor = createDocumentEditor(documentFeatures, componentBlocks);
+        const editor = createDocumentEditorWithoutReact(
+          documentFeatures,
+          componentBlocks
+        );
         editor.children = document;
         Editor.normalize(editor, { force: true });
         return deserializeFiles(
