@@ -134,7 +134,7 @@ export function CodeElement({
   const [inputValue, setInputValue] = useState(
     element.language
       ? aliasesToLabel.get(element.language) ?? element.language
-      : ''
+      : 'Plain text'
   );
   return (
     <Box position="relative">
@@ -177,6 +177,10 @@ export function CodeElement({
             const path = ReactEditor.findPath(editor, element);
             const canonicalName = aliasesToCanonicalName.get(inputValue);
             if (canonicalName !== undefined) {
+              if (canonicalName === 'plain') {
+                Transforms.unsetNodes(editor, 'language', { at: path });
+                return;
+              }
               setInputValue(canonicalNameToLabel.get(canonicalName)!);
               Transforms.setNodes(
                 editor,
@@ -187,6 +191,10 @@ export function CodeElement({
             }
             const nameFromLabel = labelToCanonicalName.get(inputValue);
             if (nameFromLabel !== undefined) {
+              if (nameFromLabel === 'plain') {
+                Transforms.unsetNodes(editor, 'language', { at: path });
+                return;
+              }
               Transforms.setNodes(
                 editor,
                 { language: nameFromLabel },
@@ -196,6 +204,7 @@ export function CodeElement({
             }
             if (inputValue === '') {
               Transforms.unsetNodes(editor, 'language', { at: path });
+              setInputValue('Plain text');
               return;
             }
             if (inputValue !== element.language) {
@@ -222,6 +231,11 @@ export function CodeElement({
                 );
               }
             } else {
+              if (selection === 'plain') {
+                Transforms.unsetNodes(editor, 'language', { at: path });
+                setInputValue('Plain text');
+                return;
+              }
               Transforms.setNodes(
                 editor,
                 { language: selection as string },
@@ -238,13 +252,16 @@ export function CodeElement({
           selectedKey={
             element.language
               ? aliasesToCanonicalName.get(element.language)
-              : undefined
+              : 'plain'
           }
           items={useMemo(
             () =>
-              matchSorter(languagesWithAliases, inputValue, {
-                keys: ['label', 'value', 'aliases'],
-              }),
+              inputValue === 'Plain text' ||
+              labelToCanonicalName.has(inputValue)
+                ? languagesWithAliases
+                : matchSorter(languagesWithAliases, inputValue, {
+                    keys: ['label', 'value', 'aliases'],
+                  }),
             [inputValue]
           )}
         >
@@ -275,7 +292,6 @@ const languages = [
   { label: 'Makefile', value: 'makefile' },
   { label: 'Markdown', value: 'markdown' },
   { label: 'Objective-C', value: 'objectivec' },
-  // { label: 'Plain text', value: 'plaintext' },
   { label: 'Perl', value: 'perl' },
   { label: 'PHP', value: 'php' },
   { label: 'Python', value: 'python' },
@@ -316,14 +332,14 @@ const languagesToAliases = new Map(
 for (const [alias, canonicalName] of aliasesToCanonicalName) {
   languagesToAliases.get(canonicalName)!.push(alias);
 }
-const languagesWithAliases = [...languagesToAliases].map(
-  ([canonicalName, aliases]) => ({
+const languagesWithAliases = [
+  { label: 'Plain text', value: 'plain', aliases: [] },
+  ...[...languagesToAliases].map(([canonicalName, aliases]) => ({
     label: canonicalNameToLabel.get(canonicalName)!,
     value: canonicalName,
     aliases,
-  })
-);
-
+  })),
+];
 const aliasesToLabel = new Map(
   [...aliasesToCanonicalName].map(([alias, canonicalName]) => [
     alias,
