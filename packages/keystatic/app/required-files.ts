@@ -81,7 +81,15 @@ export function parseSerializedFormField(
       });
     }
     const content = filepath
-      ? loadedBinaryFiles.get(`${basePath}/${filepath}`)
+      ? loadedBinaryFiles.get(
+          `${
+            serializationConfig.directory
+              ? `${serializationConfig.directory}${
+                  slug === undefined ? '' : `/${slug}`
+                }`
+              : basePath
+          }/${filepath}`
+        )
       : undefined;
 
     const parsed = (

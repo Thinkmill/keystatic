@@ -211,12 +211,13 @@ function ItemPage(props: ItemPageProps) {
                   primaryActionLabel="Yes, delete"
                   autoFocusButton="cancel"
                   onPrimaryAction={async () => {
-                    await deleteItem();
-                    router.push(
-                      `${props.basePath}/collection/${encodeURIComponent(
-                        collection
-                      )}`
-                    );
+                    if (await deleteItem()) {
+                      router.push(
+                        `${props.basePath}/collection/${encodeURIComponent(
+                          collection
+                        )}`
+                      );
+                    }
                   }}
                 >
                   Are you sure? This action cannot be undone.
