@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.50
+
+### Patch Changes
+
+- 8c768a1: Allow changing where image fields store images
+
 ## 0.0.49
 
 ### Patch Changes
