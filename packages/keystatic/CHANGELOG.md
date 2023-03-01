@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.52
+
+### Patch Changes
+
+- 0189c09: Allow users who don't have write permissions to the repo to fork it
+  from inside Keystatic.
+
 ## 0.0.51
 
 ### Patch Changes
