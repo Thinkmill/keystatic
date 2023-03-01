@@ -29,7 +29,7 @@
     "@types/react": "^18.0.25"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.0.50",
+    "@keystatic/core": "^0.0.51",
     "next": "^13.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

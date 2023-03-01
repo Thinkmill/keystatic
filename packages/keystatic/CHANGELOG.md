@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.51
+
+### Patch Changes
+
+- 8f03a96: Fix `fields.image({ directory: ... })` in local mode
+- 05a4490: Document editor code block enhancements
+
 ## 0.0.50
 
 ### Patch Changes

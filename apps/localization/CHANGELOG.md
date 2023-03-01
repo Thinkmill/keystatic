@@ -1,5 +1,13 @@
 # localization
 
+## 0.1.20
+
+### Patch Changes
+
+- Updated dependencies [8f03a96]
+- Updated dependencies [05a4490]
+  - @keystatic/core@0.0.51
+
 ## 0.1.19
 
 ### Patch Changes
