@@ -129,7 +129,10 @@ export default config({
                 ) : null;
               },
               schema: {
-                image: fields.image({ label: 'Image' }),
+                image: fields.image({
+                  label: 'Image',
+                  directory: 'public/images/posts',
+                }),
                 alt: fields.text({ label: 'Alt text', multiline: true }),
               },
             }),

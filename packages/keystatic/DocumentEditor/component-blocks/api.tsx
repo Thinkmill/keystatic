@@ -41,6 +41,8 @@ import { useTree } from '../../app/shell/data';
 import { ReadonlyPropPath } from './utils';
 import { useSlugsInCollection } from '../../app/useSlugsInCollection';
 import slugify from '@sindresorhus/slugify';
+import { collectDirectoriesUsedInSchema } from '../../app/tree-key';
+import { fixPath } from '../../app/path-utils';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -279,6 +281,7 @@ type FormFieldWithFileNotRequiringContentsForReader<
 
 type BaseSerializeToSingleFile<Value> = {
   kind: 'asset';
+  directory?: string;
   filename(
     value: unknown,
     suggestedFilenamePrefix: string | undefined
@@ -305,15 +308,18 @@ type BaseSerializeToSingleFile<Value> = {
 type BaseSerializeToFiles<Value> = {
   kind: 'multi';
   primaryExtension: string;
+  directories?: string[];
   serialize(value: Value): Promise<{
     value: unknown;
     primary: Uint8Array | undefined;
-    other: { [key: string]: Uint8Array };
+    other: ReadonlyMap<string, Uint8Array>;
+    external: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
   }>;
   parse(data: {
     value: unknown;
     primary: Uint8Array | undefined;
-    other: { [key: string]: Uint8Array };
+    other: ReadonlyMap<string, Uint8Array>;
+    external?: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
   }): Value;
 };
 
@@ -1075,8 +1081,10 @@ export const fields = {
   },
   image({
     label,
+    directory,
   }: {
     label: string;
+    directory?: string;
   }): FormFieldWithFileNotRequiringContentsForReader<
     | {
         kind: 'uploaded';
@@ -1193,6 +1201,7 @@ export const fields = {
       },
       serializeToFile: {
         kind: 'asset',
+        directory: directory ? fixPath(directory) : undefined,
         filename(value, suggestedFilenamePrefix) {
           if (typeof value === 'string') return value;
           if (
@@ -1378,7 +1387,8 @@ export const fields = {
       (value: {
         value: unknown;
         primary: Uint8Array | undefined;
-        other: { [key: string]: Uint8Array };
+        other: ReadonlyMap<string, Uint8Array>;
+        external: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
       }): DocumentElement[] => {
         const markdoc = textDecoder.decode(value.primary);
         const document = fromMarkdoc(Markdoc.parse(markdoc), componentBlocks);
@@ -1389,6 +1399,7 @@ export const fields = {
           editor.children,
           componentBlocks,
           value.other,
+          value.external,
           mode
         ) as any;
       };
@@ -1414,6 +1425,18 @@ export const fields = {
       serializeToFile: {
         kind: 'multi',
         primaryExtension: '.mdoc',
+        directories: [
+          ...collectDirectoriesUsedInSchema(
+            fields.object(
+              Object.fromEntries(
+                Object.entries(componentBlocks).map(([name, block]) => [
+                  name,
+                  fields.object(block.schema),
+                ])
+              )
+            )
+          ),
+        ],
         parse: parse('edit'),
         async serialize(value) {
           const collectedFiles: CollectedFile[] = [];
@@ -1423,6 +1446,18 @@ export const fields = {
             collectedFiles
           );
 
+          const other = new Map<string, Uint8Array>();
+          const external = new Map<string, Map<string, Uint8Array>>();
+          for (const file of collectedFiles) {
+            if (file.parent === undefined) {
+              other.set(file.filename, file.data);
+              continue;
+            }
+            if (!external.has(file.parent)) {
+              external.set(file.parent, new Map());
+            }
+            external.get(file.parent)!.set(file.filename, file.data);
+          }
           return {
             primary: textEncoder.encode(
               Markdoc.format(
@@ -1436,9 +1471,8 @@ export const fields = {
                 )
               )
             ),
-            other: Object.fromEntries(
-              collectedFiles.map(({ filename, data }) => [filename, data])
-            ),
+            other,
+            external,
             value: undefined,
           };
         },

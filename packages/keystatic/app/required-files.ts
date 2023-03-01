@@ -13,7 +13,7 @@ import { FormatInfo } from './path-utils';
 export type RequiredFile = {
   path: ReadonlyPropPath;
   schema: FormFieldWithFile<any, unknown, unknown>;
-  files: string[];
+  file: { filename: string; parent: string | undefined } | undefined;
 };
 
 export function getRequiredFiles(value: unknown, schema: ComponentSchema) {
@@ -30,14 +30,24 @@ export function getRequiredFiles(value: unknown, schema: ComponentSchema) {
           if (filename) {
             files.push(filename);
           }
-          requiredFiles.push({ path: propPath, schema, files });
+          requiredFiles.push({
+            path: propPath,
+            schema,
+            file: filename
+              ? { filename, parent: schema.serializeToFile.directory }
+              : undefined,
+          });
         }
         if (schema.serializeToFile.kind === 'multi') {
           const basePath = propPath.join('/');
-          const filenames = [
-            basePath + schema.serializeToFile.primaryExtension,
-          ];
-          requiredFiles.push({ path: propPath, schema, files: filenames });
+          requiredFiles.push({
+            path: propPath,
+            schema,
+            file: {
+              filename: basePath + schema.serializeToFile.primaryExtension,
+              parent: undefined,
+            },
+          });
         }
       }
     }
@@ -52,7 +62,9 @@ export function parseSerializedFormField(
     schema: FormFieldWithFile<any, unknown, unknown>;
   },
   loadedBinaryFiles: Map<string, Uint8Array>,
-  mode: 'read' | 'edit'
+  mode: 'read' | 'edit',
+  basePath: string,
+  slug: string | undefined
 ) {
   const serializationConfig = file.schema.serializeToFile!;
 
@@ -68,7 +80,9 @@ export function parseSerializedFormField(
         suggestedFilenamePrefix,
       });
     }
-    const content = filepath ? loadedBinaryFiles.get(filepath) : undefined;
+    const content = filepath
+      ? loadedBinaryFiles.get(`${basePath}/${filepath}`)
+      : undefined;
 
     const parsed = (
       mode === 'read' && serializationConfig.reader.requiresContentInReader
@@ -78,7 +92,7 @@ export function parseSerializedFormField(
     return parsed;
   }
   if (serializationConfig.kind === 'multi') {
-    const rootPath = file.path.join('/');
+    const rootPath = `${basePath}/${file.path.join('/')}`;
     const mainFilepath = rootPath + serializationConfig.primaryExtension;
     if (mode === 'read') {
       if (serializationConfig.reader.requiresContentInReader) {
@@ -92,12 +106,26 @@ export function parseSerializedFormField(
     }
     const mainContents = loadedBinaryFiles.get(mainFilepath);
 
-    const otherFiles: Record<string, Uint8Array> = {};
+    const otherFiles = new Map<string, Uint8Array>();
+    const otherDirectories = new Map<string, Map<string, Uint8Array>>();
 
     for (const [filename] of loadedBinaryFiles) {
       if (filename.startsWith(rootPath + '/')) {
         const relativePath = filename.slice(rootPath.length + 1);
-        otherFiles[relativePath] = loadedBinaryFiles.get(filename)!;
+        otherFiles.set(relativePath, loadedBinaryFiles.get(filename)!);
+      }
+    }
+    for (const dir of serializationConfig.directories ?? []) {
+      const dirFiles = new Map<string, Uint8Array>();
+      const start = `${dir}${slug === undefined ? '' : `/${slug}`}/`;
+      for (const [filename, val] of loadedBinaryFiles) {
+        if (filename.startsWith(start)) {
+          const relativePath = filename.slice(start.length);
+          dirFiles.set(relativePath, val);
+        }
+      }
+      if (dirFiles.size) {
+        otherDirectories.set(dir, dirFiles);
       }
     }
 
@@ -105,6 +133,7 @@ export function parseSerializedFormField(
       value,
       primary: mainContents,
       other: otherFiles,
+      external: otherDirectories,
     });
   }
   assertNever(serializationConfig);
@@ -134,7 +163,6 @@ export function loadDataFile(data: Uint8Array, formatInfo: FormatInfo) {
     };
   }
   const res = splitFrontmatter(data);
-  console.log(res);
   assert(res !== null, 'frontmatter not found');
   return {
     loaded:
