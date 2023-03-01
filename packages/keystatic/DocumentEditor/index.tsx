@@ -122,7 +122,7 @@ const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
   }
 };
 
-export function createDocumentEditor(
+export function createDocumentEditorWithoutReact(
   documentFeatures: DocumentFeatures,
   componentBlocks: Record<string, ComponentBlock>
 ) {
@@ -152,7 +152,7 @@ export function createDocumentEditor(
                                 withBlockquote(
                                   withDocumentFeaturesNormalization(
                                     documentFeatures,
-                                    withHistory(withReact(createEditor()))
+                                    withHistory(createEditor())
                                   )
                                 )
                               )
@@ -169,6 +169,15 @@ export function createDocumentEditor(
         )
       )
     )
+  );
+}
+
+export function createDocumentEditor(
+  documentFeatures: DocumentFeatures,
+  componentBlocks: Record<string, ComponentBlock>
+) {
+  return withReact(
+    createDocumentEditorWithoutReact(documentFeatures, componentBlocks)
   );
 }
 
