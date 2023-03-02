@@ -8,7 +8,7 @@ const labellable = {
   'aria-details': 'qux',
 };
 
-describe('style/filterDOMProps', function () {
+describe('utils/filterDOMProps', function () {
   it('should omit junk', function () {
     let result = filterDOMProps(junk);
     expect(result).toMatchObject({});
