@@ -14,7 +14,6 @@ import { Badge } from '@voussoir/badge';
 import { ActionButton } from '@voussoir/button';
 import { Icon } from '@voussoir/icon';
 import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { folderOpenIcon } from '@voussoir/icon/icons/folderOpenIcon';
 import { Image } from '@voussoir/image';
 import { Flex } from '@voussoir/layout';
 import { MenuTrigger, Menu } from '@voussoir/menu';
@@ -237,18 +236,15 @@ function SidebarFooter(props: { config: GitHubConfig }) {
       alignItems="center"
       justifyContent="space-between"
     >
-      <Flex gap="regular" alignItems="center" height="regular">
-        <Icon src={folderOpenIcon} />
-        <Text
-          color="neutralEmphasis"
-          weight="semibold"
-          size="medium"
-          id="nav-title-id"
-          truncate
-        >
-          {props.config.storage.repo.name}
-        </Text>
-      </Flex>
+      <Text
+        color="neutralEmphasis"
+        weight="semibold"
+        size="medium"
+        id="nav-title-id"
+        truncate
+      >
+        {props.config.storage.repo.name}
+      </Text>
       <MenuTrigger direction="top">
         <ActionButton prominence="low" aria-label="app actions">
           <Image
@@ -269,19 +265,22 @@ function SidebarFooter(props: { config: GitHubConfig }) {
             if (key === 'profile') {
               window.open(
                 `https://github.com/${viewer?.login ?? ''}`,
-                '_blank'
+                '_blank',
+                'noopener,noreferrer'
               );
             }
             if (key === 'repository') {
               window.open(
                 `https://github.com/${props.config.storage.repo.owner}/${props.config.storage.repo.name}`,
-                '_blank'
+                '_blank',
+                'noopener,noreferrer'
               );
             }
             if (key === 'fork') {
               window.open(
                 `https://github.com/${fork?.owner.login}/${fork?.name}`,
-                '_blank'
+                '_blank',
+                'noopener,noreferrer'
               );
             }
           }}

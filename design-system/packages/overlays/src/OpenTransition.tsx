@@ -8,20 +8,7 @@ export type OpenTransitionProps = Omit<TransitionProps, 'children'> & {
 };
 
 export function OpenTransition(props: OpenTransitionProps) {
-  const { children, in: isOpen } = props;
-  try {
-    // Do not apply any transition in Chromatic.
-    if (process.env.CHROMATIC) {
-      return (
-        <>
-          {Children.map(children, child =>
-            cloneValidElement(child, { isOpen })
-          )}
-        </>
-      );
-    }
-  } catch {}
-
+  const { children } = props;
   return (
     <Transition timeout={{ enter: 0, exit: 320 }} {...props}>
       {state =>

@@ -2,14 +2,11 @@ import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useMemo, useState } from 'react';
 
 import { Button } from '@voussoir/button';
+import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
 import { DialogContainer } from '@voussoir/dialog';
-import { Icon } from '@voussoir/icon';
-import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
 import { Flex } from '@voussoir/layout';
-import { TextLink } from '@voussoir/link';
 import { Notice } from '@voussoir/notice';
 import { ProgressCircle } from '@voussoir/progress';
-import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../config';
 import { fields } from '../DocumentEditor/component-blocks/api';
@@ -125,22 +122,19 @@ export function CreateItem(props: {
     <>
       <AppShellRoot>
         <AppShellHeader>
-          <Heading size="small" visuallyHidden={{ below: 'tablet' }} truncate>
-            <TextLink href={collectionPath}>{collectionConfig.label}</TextLink>
-          </Heading>
-          <Icon
-            src={chevronRightIcon}
-            color="neutralSecondary"
-            isHidden={{ below: 'tablet' }}
-          />
-          <Text
-            color="neutralEmphasis"
+          <Breadcrumbs
+            flex
+            minWidth={0}
             size="medium"
-            weight="bold"
-            marginEnd="regular"
+            onAction={key => {
+              if (key === 'collection') {
+                router.push(collectionPath);
+              }
+            }}
           >
-            {stringFormatter.format('add')}
-          </Text>
+            <Item key="collection">{collectionConfig.label}</Item>
+            <Item key="current">{stringFormatter.format('add')}</Item>
+          </Breadcrumbs>
           {isLoading && (
             <ProgressCircle
               aria-label="Creating entry"

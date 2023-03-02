@@ -1,8 +1,6 @@
 import { ReactElement, ReactNode } from 'react';
 import { css } from '@voussoir/style';
-import { TextField } from '@voussoir/text-field';
-import { ActionButton } from '@voussoir/button';
-import { Box, BoxProps, Flex } from '@voussoir/layout';
+import { Box, BoxProps } from '@voussoir/layout';
 import { ChildField } from './fields/child';
 
 export type FormFieldValue =
@@ -514,8 +512,3 @@ export type InferRenderersForComponentBlocks<
     ValueForReading<ObjectField<ComponentBlocks[Key]['schema']>>
   >;
 };
-
-<Flex gap="small" alignItems="end">
-  <TextField flex={1} />
-  <ActionButton />
-</Flex>;

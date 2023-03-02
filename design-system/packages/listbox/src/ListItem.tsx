@@ -76,7 +76,7 @@ export const ListItem = forwardRefWithAs<ListItemProps, 'div'>(
       ].join(', ')]: {
         gridTemplateAreas:
           '". checkmark icon text . kbd ." ". checkmark icon description . kbd ."',
-        gridTemplateColumns: `${tokenSchema.size.space.small} ${tokenSchema.size.icon.regular} auto 1fr ${contentGutter} auto ${gridGutter}`,
+        gridTemplateColumns: `${tokenSchema.size.space.small} ${tokenSchema.size.icon.medium} auto 1fr ${contentGutter} auto ${gridGutter}`,
       },
 
       // hover
