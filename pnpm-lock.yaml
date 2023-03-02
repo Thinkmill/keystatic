@@ -257,6 +257,7 @@ importers:
       '@types/react': ^18.0.25
       '@voussoir/action-group': ^0.1.0
       '@voussoir/badge': ^0.1.0
+      '@voussoir/breadcrumbs': ^0.1.0
       '@voussoir/button': ^0.1.1
       '@voussoir/checkbox': ^0.2.0
       '@voussoir/combobox': ^0.1.1
@@ -315,6 +316,7 @@ importers:
       '@types/js-yaml': 4.0.5
       '@voussoir/action-group': link:../packages/action-group
       '@voussoir/badge': link:../packages/badge
+      '@voussoir/breadcrumbs': link:../packages/breadcrumbs
       '@voussoir/button': link:../packages/button
       '@voussoir/checkbox': link:../packages/checkbox
       '@voussoir/combobox': link:../packages/combobox
