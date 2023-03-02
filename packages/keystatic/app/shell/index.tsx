@@ -8,7 +8,7 @@ import {
 
 import { alertCircleIcon } from '@voussoir/icon/icons/alertCircleIcon';
 import { Icon } from '@voussoir/icon';
-import { Box, BoxProps, Flex, Grid } from '@voussoir/layout';
+import { Box, BoxProps, Flex } from '@voussoir/layout';
 import { VoussoirTheme, css, transition } from '@voussoir/style';
 import { Heading, Text } from '@voussoir/typography';
 
