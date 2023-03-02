@@ -26,7 +26,6 @@ import l10nMessages from '../../app/l10n/index.json';
 import { useEventCallback } from '../utils';
 
 import {
-  AddToPathProvider,
   ArrayField,
   BasicFormField,
   ComponentSchema,
@@ -34,12 +33,15 @@ import {
   FormField,
   GenericPreviewProps,
   ObjectField,
-  PathContextProvider,
-  SlugFieldProvider,
 } from './api';
 import { previewPropsToValue, setValueToPreviewProps } from './get-value';
 import { createGetPreviewProps } from './preview-props';
 import { assertNever, clientSideValidateProp, ReadonlyPropPath } from './utils';
+import {
+  AddToPathProvider,
+  PathContextProvider,
+  SlugFieldProvider,
+} from './fields/text';
 
 type DefaultFieldProps<Key> = GenericPreviewProps<
   Extract<ComponentSchema, { kind: Key }>,
