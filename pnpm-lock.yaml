@@ -503,6 +503,8 @@ importers:
       '@react-types/breadcrumbs': 3.5.0_react@18.2.0
       '@react-types/shared': 3.17.0_react@18.2.0
       '@voussoir/button': link:../button
+      '@voussoir/core': link:../core
+      '@voussoir/icon': link:../icon
       '@voussoir/layout': link:../layout
       '@voussoir/menu': link:../menu
       '@voussoir/slots': link:../slots
@@ -513,8 +515,6 @@ importers:
       emery: 1.4.1
     devDependencies:
       '@types/react': 18.0.28
-      '@voussoir/core': link:../core
-      '@voussoir/icon': link:../icon
       '@voussoir/storybook': link:../../docs/storybook
       '@voussoir/test-utils': link:../test-utils
       react: 18.2.0
