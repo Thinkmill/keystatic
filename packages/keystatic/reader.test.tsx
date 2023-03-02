@@ -14,7 +14,9 @@ const localConfig = config({
       slugField: 'title',
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
-        publishDate: fields.date({ label: 'Publish Date' }),
+        publishDate: fields.date({
+          label: 'Publish Date',
+        }),
         heroImage: fields.image({ label: 'Hero Image' }),
         content: fields.document({
           label: 'Content',

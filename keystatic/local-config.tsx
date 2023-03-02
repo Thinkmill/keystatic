@@ -215,6 +215,7 @@ export default config({
         favouritePost: fields.relationship({
           label: 'Favourite Post',
           collection: 'posts',
+          validation: { isRequired: true },
         }),
       },
     }),
@@ -229,6 +230,7 @@ export default config({
         someFilepathInPosts: fields.pathReference({
           label: 'Some Filepath in posts',
           pattern: 'posts/**',
+          validation: { isRequired: true },
         }),
       },
     }),

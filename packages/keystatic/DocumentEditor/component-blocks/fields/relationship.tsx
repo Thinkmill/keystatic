@@ -1,19 +1,26 @@
 import { Item } from '@react-stately/collections';
 import { Combobox } from '@voussoir/combobox';
-import { useMemo } from 'react';
+import { useMemo, useReducer } from 'react';
 import { useSlugsInCollection } from '../../../app/useSlugsInCollection';
 import { BasicFormField } from '../api';
+import { RequiredValidation } from './utils';
 
-export function relationship({
+export function relationship<IsRequired extends boolean | undefined>({
   label,
   collection,
+  validation,
 }: {
   label: string;
   collection: string;
-}): BasicFormField<string | null, undefined> {
+  validation?: { isRequired?: IsRequired };
+} & RequiredValidation<IsRequired>): BasicFormField<
+  string | (IsRequired extends true ? never : null),
+  undefined
+> {
   return {
     kind: 'form',
-    Input({ value, onChange, autoFocus }) {
+    Input({ value, onChange, autoFocus, forceValidation }) {
+      const [blurred, onBlur] = useReducer(() => true, false);
       const slugs = useSlugsInCollection(collection);
       const options = useMemo(() => {
         return slugs.map(slug => ({ slug }));
@@ -27,8 +34,16 @@ export function relationship({
               onChange(key);
             }
           }}
+          onBlur={onBlur}
           autoFocus={autoFocus}
           defaultItems={options}
+          errorMessage={
+            (forceValidation || blurred) &&
+            validation?.isRequired &&
+            value === null
+              ? `${label} is required`
+              : undefined
+          }
           width="auto"
         >
           {item => <Item key={item.slug}>{item.slug}</Item>}
@@ -36,7 +51,9 @@ export function relationship({
       );
     },
     options: undefined,
-    defaultValue: null,
-    validate: val => typeof val === 'string' || val === null,
+    defaultValue: null as any,
+    validate: val =>
+      typeof val === 'string' ||
+      (validation?.isRequired ? false : val === null),
   };
 }

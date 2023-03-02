@@ -1,12 +1,13 @@
 import { ButtonGroup, ActionButton } from '@voussoir/button';
-import { FieldLabel } from '@voussoir/field';
+import { FieldLabel, FieldMessage } from '@voussoir/field';
 import { Flex, Box } from '@voussoir/layout';
 import { tokenSchema } from '@voussoir/style';
 import { TextField } from '@voussoir/text-field';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import { useIsInDocumentEditor } from '../..';
 import { fixPath } from '../../../app/path-utils';
 import { FormFieldWithFileNotRequiringContentsForReader } from '../api';
+import { RequiredValidation } from './utils';
 
 export function useObjectURL(data: Uint8Array | null) {
   const [url, setUrl] = useState<string | null>(null);
@@ -62,13 +63,15 @@ export function getUploadedImage(): Promise<
   });
 }
 
-export function image({
+export function image<IsRequired extends boolean | undefined>({
   label,
   directory,
+  validation,
 }: {
   label: string;
   directory?: string;
-}): FormFieldWithFileNotRequiringContentsForReader<
+  validation?: { isRequired?: IsRequired };
+} & RequiredValidation<IsRequired>): FormFieldWithFileNotRequiringContentsForReader<
   | {
       kind: 'uploaded';
       data: Uint8Array;
@@ -77,11 +80,12 @@ export function image({
     }
   | { kind: 'none' },
   undefined,
-  string | null
+  string | (IsRequired extends true ? never : null)
 > {
   return {
     kind: 'form',
-    Input({ onChange, value }) {
+    Input({ onChange, value, forceValidation }) {
+      const [blurred, onBlur] = useReducer(() => true, false);
       const isInEditor = useIsInDocumentEditor();
       const objectUrl = useObjectURL(
         value.kind === 'uploaded' ? value.data : null
@@ -114,6 +118,7 @@ export function image({
                 prominence="low"
                 onPress={() => {
                   onChange({ kind: 'none' });
+                  onBlur();
                 }}
               >
                 Remove
@@ -149,12 +154,26 @@ export function image({
               value={value.filename}
             />
           )}
+          {(forceValidation || blurred) &&
+            validation?.isRequired &&
+            value.kind === 'none' && (
+              <FieldMessage>{label} is required</FieldMessage>
+            )}
         </Flex>
       );
     },
     options: undefined,
     defaultValue: { kind: 'none' },
-    validate() {
+    validate(value) {
+      if (
+        typeof value === 'object' &&
+        value !== null &&
+        'kind' in value &&
+        value.kind === 'none' &&
+        validation?.isRequired
+      ) {
+        return false;
+      }
       return true;
     },
     serializeToFile: {
@@ -198,7 +217,7 @@ export function image({
       reader: {
         requiresContentInReader: false,
         parseToReader({ value, suggestedFilenamePrefix }) {
-          if (!value) return null;
+          if (!value) return null as any;
           return typeof value === 'string'
             ? value
             : suggestedFilenamePrefix + '.' + (value as any).extension;
