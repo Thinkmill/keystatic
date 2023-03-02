@@ -2,6 +2,7 @@ import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useMemo, useState } from 'react';
 
 import { Badge } from '@voussoir/badge';
+import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
 import { Button } from '@voussoir/button';
 import { folderTreeIcon } from '@voussoir/icon/icons/folderTreeIcon';
 import { listStartIcon } from '@voussoir/icon/icons/listStartIcon';
@@ -19,7 +20,6 @@ import {
   Row,
   SortDescriptor,
 } from '@voussoir/table';
-import { Heading } from '@voussoir/typography';
 
 import { Config } from '../config';
 import { sortByDescriptor } from './collection-sort';
@@ -63,9 +63,9 @@ export function CollectionPage(props: CollectionPageProps) {
   return (
     <AppShellRoot containerWidth={containerWidth}>
       <AppShellHeader>
-        <Heading elementType="h1" id="page-title" size="small" truncate>
-          {collectionConfig.label}
-        </Heading>
+        <Breadcrumbs size="medium" flex minWidth={0}>
+          <Item key="collection">{collectionConfig.label}</Item>
+        </Breadcrumbs>
 
         <Button
           marginStart="auto"

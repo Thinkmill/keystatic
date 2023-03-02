@@ -139,13 +139,12 @@ export const AppShellRoot = ({
 }: PropsWithChildren<Partial<AppShellContextValue>>) => {
   return (
     <AppShellContext.Provider value={{ containerWidth }}>
-      <Grid
+      <Box
         elementType="main"
         flex
         minHeight="100vh"
         minWidth={0}
         paddingStart={{ tablet: SIDEBAR_WIDTH }}
-        rows={['auto', '1fr', 'auto']}
         UNSAFE_className={css({
           '&::before': {
             backgroundColor: '#0006',
@@ -163,7 +162,7 @@ export const AppShellRoot = ({
         })}
       >
         {children}
-      </Grid>
+      </Box>
     </AppShellContext.Provider>
   );
 };

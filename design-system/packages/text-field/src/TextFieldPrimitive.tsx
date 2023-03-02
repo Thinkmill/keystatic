@@ -180,6 +180,8 @@ function useTextFieldStyles() {
     textOverflow: 'ellipsis',
     verticalAlign: 'top',
     width: '100%',
+    WebkitFontSmoothing: 'antialiased',
+    MozOsxFontSmoothing: 'grayscale',
 
     '&:disabled, &[aria-disabled]': {
       color: tokenSchema.color.alias.foregroundDisabled,

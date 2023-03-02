@@ -12,17 +12,19 @@ import React, {
   ReactElement,
   useCallback,
   useRef,
+  useState,
 } from 'react';
 
 import { ActionButton } from '@voussoir/button';
-import { moreHorizontalIcon } from '@voussoir/icon/icons/moreHorizontalIcon';
 import { useProviderProps } from '@voussoir/core';
+import { Icon } from '@voussoir/icon';
+import { folderClosedIcon } from '@voussoir/icon/icons/folderClosedIcon';
+import { folderOpenIcon } from '@voussoir/icon/icons/folderOpenIcon';
 import { Menu, MenuTrigger } from '@voussoir/menu';
 import { classNames, css, tokenSchema, useStyleProps } from '@voussoir/style';
 
 import { BreadcrumbItem, breadcrumbsClassList } from './BreadcrumbItem';
 import { BreadcrumbsProps } from './types';
-import { Icon } from '@voussoir/icon';
 
 const MIN_VISIBLE_ITEMS = 1;
 const MAX_VISIBLE_ITEMS = 4;
@@ -51,6 +53,7 @@ function Breadcrumbs<T>(
 
   let domRef = useObjectRef(ref);
   let listRef = useRef<HTMLUListElement>(null);
+  let [menuIsOpen, setMenuOpen] = useState(false);
 
   let [visibleItems, setVisibleItems] = useValueEffect(childArray.length);
 
@@ -157,9 +160,9 @@ function Breadcrumbs<T>(
 
     let menuItem = (
       <BreadcrumbItem key="menu">
-        <MenuTrigger>
+        <MenuTrigger onOpenChange={setMenuOpen}>
           <ActionButton aria-label="…" prominence="low" isDisabled={isDisabled}>
-            <Icon src={moreHorizontalIcon} />
+            <Icon src={menuIsOpen ? folderOpenIcon : folderClosedIcon} />
           </ActionButton>
           <Menu
             selectionMode="single"
@@ -224,10 +227,10 @@ function Breadcrumbs<T>(
 
   return (
     <nav
-      {...styleProps}
       {...navProps}
+      {...styleProps}
       ref={domRef}
-      className={breadcrumbsClassList.root()}
+      className={classNames(breadcrumbsClassList.root(), styleProps.className)}
     >
       <ul
         ref={listRef}
@@ -237,8 +240,7 @@ function Breadcrumbs<T>(
             display: 'flex',
             height: tokenSchema.size.element.regular,
             justifyContent: 'flex-start',
-          }),
-          styleProps.className
+          })
         )}
       >
         {breadcrumbItems}

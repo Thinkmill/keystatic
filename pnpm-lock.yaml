@@ -1955,6 +1955,7 @@ importers:
       '@urql/exchange-graphcache': ^5.0.8
       '@voussoir/action-group': ^0.1.0
       '@voussoir/badge': ^0.1.0
+      '@voussoir/breadcrumbs': ^0.1.0
       '@voussoir/button': ^0.1.0
       '@voussoir/checkbox': ^0.2.0
       '@voussoir/combobox': ^0.1.2
@@ -2046,6 +2047,7 @@ importers:
       '@urql/exchange-graphcache': 5.0.9_graphql@16.6.0
       '@voussoir/action-group': link:../../design-system/packages/action-group
       '@voussoir/badge': link:../../design-system/packages/badge
+      '@voussoir/breadcrumbs': link:../../design-system/packages/breadcrumbs
       '@voussoir/button': link:../../design-system/packages/button
       '@voussoir/checkbox': link:../../design-system/packages/checkbox
       '@voussoir/combobox': link:../../design-system/packages/combobox

@@ -1,12 +1,13 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useContext, useMemo } from 'react';
 
+import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
 import { ActionButton } from '@voussoir/button';
 import { DialogTrigger } from '@voussoir/dialog';
 import { Icon } from '@voussoir/icon';
 import { plusIcon } from '@voussoir/icon/icons/plusIcon';
 import { Flex, Grid } from '@voussoir/layout';
-import { Item, ListView } from '@voussoir/list-view';
+import { ListView } from '@voussoir/list-view';
 import { ProgressCircle } from '@voussoir/progress';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { Heading, Text } from '@voussoir/typography';
@@ -44,9 +45,9 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
   return (
     <AppShellRoot containerWidth="large">
       <AppShellHeader>
-        <Heading elementType="h1" id="page-title" size="small">
-          {stringFormatter.format('dashboard')}
-        </Heading>
+        <Breadcrumbs flex size="medium" minWidth={0}>
+          <Item key="dashboard">{stringFormatter.format('dashboard')}</Item>
+        </Breadcrumbs>
       </AppShellHeader>
       <AppShellBody>
         <Flex direction="column" gap="xlarge">

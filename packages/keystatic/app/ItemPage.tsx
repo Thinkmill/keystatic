@@ -8,6 +8,7 @@ import {
 } from 'react';
 
 import { Badge } from '@voussoir/badge';
+import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
 import { Button, ButtonGroup } from '@voussoir/button';
 import {
   AlertDialog,
@@ -15,11 +16,9 @@ import {
   DialogContainer,
   DialogTrigger,
 } from '@voussoir/dialog';
-import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Icon } from '@voussoir/icon';
 import { Box, Flex } from '@voussoir/layout';
-import { TextLink } from '@voussoir/link';
 import { Notice } from '@voussoir/notice';
 import { ProgressCircle } from '@voussoir/progress';
 import { Content } from '@voussoir/slots';
@@ -181,7 +180,7 @@ function ItemPage(props: ItemPageProps) {
             ) : (
               hasChanged && <Badge tone="pending">Unsaved</Badge>
             )}
-            <ButtonGroup marginStart="auto">
+            <ButtonGroup>
               {/* <Button
                 aria-label="Reset"
                 isDisabled={updateResult.kind === 'loading' || !hasChanged}
@@ -501,39 +500,37 @@ function ItemPageWrapper(props: {
 
 const ItemPageShell = (
   props: PropsWithChildren<
-    Pick<ItemPageProps, 'collection' | 'config' | 'basePath'> & {
+    Omit<
+      ItemPageProps,
+      'initialFiles' | 'initialState' | 'localTreeKey' | 'currentTree' | 'slugs'
+    > & {
       headerActions?: ReactNode;
     }
   >
 ) => {
+  const router = useRouter();
   const collectionConfig = props.config.collections![props.collection]!;
-  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   return (
     <AppShellRoot>
       <AppShellHeader>
-        <Heading size="small" visuallyHidden={{ below: 'tablet' }} truncate>
-          <TextLink
-            href={`${props.basePath}/collection/${encodeURIComponent(
-              props.collection
-            )}`}
-          >
-            {collectionConfig.label}
-          </TextLink>
-        </Heading>
-        <Icon
-          src={chevronRightIcon}
-          color="neutralSecondary"
-          isHidden={{ below: 'tablet' }}
-        />
-        <Text
-          color="neutralEmphasis"
+        <Breadcrumbs
+          flex
+          minWidth={0}
           size="medium"
-          weight="bold"
-          marginEnd="regular"
+          onAction={key => {
+            if (key === 'collection') {
+              router.push(
+                `${props.basePath}/collection/${encodeURIComponent(
+                  props.collection
+                )}`
+              );
+            }
+          }}
         >
-          {stringFormatter.format('edit')}
-        </Text>
+          <Item key="collection">{collectionConfig.label}</Item>
+          <Item key="item">{props.itemSlug}</Item>
+        </Breadcrumbs>
         {props.headerActions}
       </AppShellHeader>
 
