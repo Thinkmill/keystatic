@@ -1,10 +1,8 @@
 import '@testing-library/jest-dom';
-import { render, RenderOptions } from '@testing-library/react';
-import { TestProvider } from '@voussoir/core';
 
 import { globeIcon } from '@voussoir/icon/icons/globeIcon';
 import { Icon } from '@voussoir/icon';
-import { ReactElement } from 'react';
+import { renderWithProvider } from '@voussoir/test-utils';
 
 import { Badge } from '../src';
 
@@ -35,8 +33,3 @@ describe('badge/Badge', () => {
     expect(getByTestId('foo')).toHaveAttribute('id', 'bar');
   });
 });
-
-// TODO: move somewhere common
-function renderWithProvider(ui: ReactElement, options?: RenderOptions) {
-  return render(ui, { wrapper: TestProvider, ...options });
-}
