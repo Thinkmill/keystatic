@@ -6,10 +6,13 @@ import {
   useValueEffect,
 } from '@react-aria/utils';
 import { isNumber } from 'emery';
-import React, {
+import {
+  Children,
   ForwardedRef,
   Key,
   ReactElement,
+  forwardRef,
+  isValidElement,
   useCallback,
   useRef,
   useState,
@@ -29,7 +32,10 @@ import { BreadcrumbsProps } from './types';
 const MIN_VISIBLE_ITEMS = 1;
 const MAX_VISIBLE_ITEMS = 4;
 
-function Breadcrumbs<T>(
+/**
+ * Breadcrumbs show hierarchy and navigational context for a user’s location within an application.
+ */
+export const Breadcrumbs = forwardRef(function Breadcrumbs<T>(
   props: BreadcrumbsProps<T>,
   ref: ForwardedRef<HTMLDivElement>
 ) {
@@ -45,8 +51,8 @@ function Breadcrumbs<T>(
 
   // Not using React.Children.toArray because it mutates the key prop.
   let childArray: ReactElement[] = [];
-  React.Children.forEach(children, child => {
-    if (React.isValidElement(child)) {
+  Children.forEach(children, child => {
+    if (isValidElement(child)) {
       childArray.push(child);
     }
   });
@@ -247,10 +253,4 @@ function Breadcrumbs<T>(
       </ul>
     </nav>
   );
-}
-
-/**
- * Breadcrumbs show hierarchy and navigational context for a user’s location within an application.
- */
-let _Breadcrumbs = React.forwardRef(Breadcrumbs);
-export { _Breadcrumbs as Breadcrumbs };
+});
