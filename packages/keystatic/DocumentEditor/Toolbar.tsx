@@ -40,6 +40,7 @@ import { ToolbarSeparator } from './primitives';
 import { useToolbarState } from './toolbar-state';
 import { clearFormatting, useStaticEditor } from './utils';
 import { Picker } from '@voussoir/picker';
+import { imageButton } from './image';
 
 export function Toolbar({
   documentFeatures,
@@ -88,12 +89,14 @@ export function Toolbar({
 
         {(documentFeatures.dividers ||
           documentFeatures.links ||
+          !!documentFeatures.images ||
           documentFeatures.formatting.blockTypes.blockquote ||
           !!documentFeatures.layouts.length ||
           documentFeatures.formatting.blockTypes.code) && (
           <ToolbarGroup>
             {documentFeatures.dividers && dividerButton}
             {documentFeatures.links && linkButton}
+            {documentFeatures.images && imageButton}
             {documentFeatures.formatting.blockTypes.blockquote &&
               blockquoteButton}
             {!!documentFeatures.layouts.length && (

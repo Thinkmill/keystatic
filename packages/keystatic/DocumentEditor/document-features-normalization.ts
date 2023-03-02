@@ -67,7 +67,13 @@ export function normalizeInlineBasedOnLinks(
 export function normalizeElementBasedOnDocumentFeatures(
   [node, path]: NodeEntry<Element>,
   editor: Editor,
-  { formatting, dividers, layouts, links }: DocumentFeaturesForNormalization
+  {
+    formatting,
+    dividers,
+    layouts,
+    links,
+    images,
+  }: DocumentFeaturesForNormalization
 ): boolean {
   if (
     (node.type === 'heading' &&
@@ -77,6 +83,7 @@ export function normalizeElementBasedOnDocumentFeatures(
     (node.type === 'unordered-list' && !formatting.listTypes.unordered) ||
     (node.type === 'code' && !formatting.blockTypes.code) ||
     (node.type === 'blockquote' && !formatting.blockTypes.blockquote) ||
+    (node.type === 'image' && !images) ||
     (node.type === 'layout' &&
       (layouts.length === 0 ||
         !layouts.some(layout => areArraysEqual(layout, node.layout))))

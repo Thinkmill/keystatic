@@ -1,4 +1,4 @@
-import { Text, Editor } from 'slate';
+import { Text, Editor, Descendant } from 'slate';
 import { createDocumentEditorWithoutReact } from './DocumentEditor';
 import { ComponentBlock } from './DocumentEditor/component-blocks/api';
 import {
@@ -38,6 +38,9 @@ export function getValidatedNodeWithNormalizedComponentFormProps(
       };
     }
   }
+  if (node.type === 'image') {
+    return node;
+  }
   return {
     ...node,
     children: node.children.map(x =>
@@ -59,7 +62,7 @@ export function validateAndNormalizeDocument(
     documentFeatures,
     componentBlocks
   );
-  editor.children = children;
+  editor.children = children as Descendant[];
   Editor.normalize(editor, { force: true });
   return editor.children;
 }

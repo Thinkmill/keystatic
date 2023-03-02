@@ -151,7 +151,10 @@ type BaseSerializeToFiles<Value> = {
   kind: 'multi';
   primaryExtension: string;
   directories?: string[];
-  serialize(value: Value): Promise<{
+  serialize(
+    value: Value,
+    slug: string | undefined
+  ): Promise<{
     value: unknown;
     primary: Uint8Array | undefined;
     other: ReadonlyMap<string, Uint8Array>;
@@ -162,6 +165,7 @@ type BaseSerializeToFiles<Value> = {
     primary: Uint8Array | undefined;
     other: ReadonlyMap<string, Uint8Array>;
     external?: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
+    slug: string | undefined;
   }): Value;
 };
 

@@ -1,4 +1,6 @@
 import { Descendant } from 'slate';
+import { fixPath } from '../../app/path-utils';
+import { DocumentFeatures } from '../document-features';
 import { ComponentBlock, fields, ComponentSchema } from './api';
 import { transformProps } from './utils';
 
@@ -11,7 +13,9 @@ export type CollectedFile = {
 export function collectFiles(
   nodes: Descendant[],
   componentBlocks: Record<string, ComponentBlock>,
-  collectedFiles: CollectedFile[]
+  collectedFiles: CollectedFile[],
+  documentFeatures: DocumentFeatures,
+  slug: string | undefined
 ): Descendant[] {
   return nodes.map((node): Descendant => {
     if (node.type === 'component-block') {
@@ -27,11 +31,33 @@ export function collectFiles(
         ) as Record<string, any>,
       };
     }
+    if (node.type === 'image') {
+      collectedFiles.push({
+        data: node.src.content,
+        filename: node.src.filename,
+        parent:
+          typeof documentFeatures.images === 'object' &&
+          typeof documentFeatures.images.directory === 'string'
+            ? fixPath(documentFeatures.images.directory)
+            : undefined,
+      });
+      return {
+        type: 'image',
+        src: `${getSrcPrefix(documentFeatures, slug)}${
+          node.src.filename
+        }` as any,
+        alt: node.alt,
+        title: node.title,
+        children: [],
+      };
+    }
     if (typeof node.type === 'string') {
       const children = collectFiles(
         node.children,
         componentBlocks,
-        collectedFiles
+        collectedFiles,
+        documentFeatures,
+        slug
       );
       return { ...node, children };
     }
@@ -69,12 +95,26 @@ function transformPropsToFiles(
   });
 }
 
+function getSrcPrefix(
+  documentFeatures: DocumentFeatures,
+  slug: string | undefined
+) {
+  return typeof documentFeatures.images === 'object' &&
+    typeof documentFeatures.images.publicPath === 'string'
+    ? `/${fixPath(documentFeatures.images.publicPath)}/${
+        slug === undefined ? '' : slug + '/'
+      }`
+    : '';
+}
+
 export function deserializeFiles(
   nodes: Descendant[],
   componentBlocks: Record<string, ComponentBlock>,
   files: ReadonlyMap<string, Uint8Array>,
   otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>,
-  mode: 'read' | 'edit'
+  mode: 'read' | 'edit',
+  documentFeatures: DocumentFeatures,
+  slug: string | undefined
 ): Descendant[] {
   return nodes.map((node): Descendant => {
     if (node.type === 'component-block') {
@@ -92,13 +132,38 @@ export function deserializeFiles(
         ) as Record<string, any>,
       };
     }
+    if (node.type === 'image' && typeof node.src === 'string') {
+      const prefix = getSrcPrefix(documentFeatures, slug);
+      const filename = (node.src as string).slice(prefix.length);
+      const content = (
+        typeof documentFeatures.images === 'object' &&
+        typeof documentFeatures.images.directory === 'string'
+          ? otherFiles.get(fixPath(documentFeatures.images.directory))
+          : files
+      )?.get(filename);
+      if (!content) {
+        return {
+          type: 'paragraph',
+          children: [{ text: `Missing image ${filename}` }],
+        };
+      }
+      return {
+        type: 'image',
+        src: { filename, content },
+        alt: node.alt,
+        title: node.title,
+        children: [{ text: '' }],
+      };
+    }
     if (typeof node.type === 'string') {
       const children = deserializeFiles(
         node.children,
         componentBlocks,
         files,
         otherFiles,
-        mode
+        mode,
+        documentFeatures,
+        slug
       );
       return { ...node, children };
     }

@@ -29,6 +29,7 @@ export type ChildField = {
         formatting?: BlockFormattingConfig;
         dividers?: 'inherit';
         links?: 'inherit';
+        images?: 'inherit';
       }
     | {
         kind: 'inline';

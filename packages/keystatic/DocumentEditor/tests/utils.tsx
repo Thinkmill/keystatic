@@ -157,6 +157,7 @@ export const defaultDocumentFeatures: DocumentFeatures = {
   dividers: true,
   links: true,
   layouts: [[1], [1, 1], [1, 1, 1], [1, 2, 1]],
+  images: true,
 };
 
 injectVoussoirStyles();

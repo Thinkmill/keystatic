@@ -92,7 +92,7 @@ export function useUpsertItem(args: {
         let { value: stateWithExtraFilesRemoved, extraFiles } = await toFiles(
           args.state,
           fields.object(args.schema),
-          args.slug?.field
+          args.slug
         );
         const dataFormat =
           typeof args.format === 'string'
@@ -391,7 +391,7 @@ export function useDeleteItem(args: {
 export async function toFiles(
   value: unknown,
   schema: ComponentSchema,
-  slugField: string | undefined
+  slug: { field: string; value: string } | undefined
 ) {
   const extraFiles: {
     path: string;
@@ -401,7 +401,7 @@ export async function toFiles(
   return {
     value: await asyncTransformProps(schema, value, {
       async form(schema, value, propPath) {
-        if (propPath.length === 1 && slugField === propPath[0]) {
+        if (propPath.length === 1 && slug?.field === propPath[0]) {
           if (!isSlugFormField(schema)) {
             throw new Error('slugField is a not a slug field');
           }
@@ -434,7 +434,7 @@ export async function toFiles(
               external,
               primary,
               value: forYaml,
-            } = await schema.serializeToFile.serialize(value);
+            } = await schema.serializeToFile.serialize(value, slug?.value);
             if (primary) {
               extraFiles.push({
                 path:
@@ -443,7 +443,7 @@ export async function toFiles(
                 parent: undefined,
               });
             }
-            for (const [key, contents] of Object.entries(other)) {
+            for (const [key, contents] of other) {
               extraFiles.push({
                 path: propPath.join('/') + '/' + key,
                 contents,

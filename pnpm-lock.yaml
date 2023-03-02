@@ -1933,7 +1933,6 @@ importers:
       '@emotion/css': ^11.9.0
       '@emotion/weak-memoize': ^0.3.0
       '@hapi/iron': ^7.0.0
-      '@keystone-6/document-renderer': ^1.1.2
       '@markdoc/markdoc': ^0.2.2
       '@react-aria/focus': ^3.10.0
       '@react-aria/i18n': ^3.6.2
@@ -2032,7 +2031,6 @@ importers:
       '@emotion/css': 11.10.6
       '@emotion/weak-memoize': 0.3.0
       '@hapi/iron': 7.0.1
-      '@keystone-6/document-renderer': 1.1.2_react@18.2.0
       '@markdoc/markdoc': 0.2.2_pmekkgnqduwlme35zpnqhenc34
       '@react-aria/focus': 3.10.1_react@18.2.0
       '@react-aria/i18n': 3.6.3_react@18.2.0
@@ -5174,14 +5172,6 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
-
-  /@keystone-6/document-renderer/1.1.2_react@18.2.0:
-    resolution: {integrity: sha512-fxnQL6xYTK/2xSrZ0dzBTC1Qpa4VVeXmZ+7mMvaZOWquttgvDQzBRY57q9zScRa0dAALNWU1xzq14OL8Kc+eBw==}
-    peerDependencies:
-      react: ^16.14.0 || 17 || 18
-    dependencies:
-      react: 18.2.0
-    dev: false
 
   /@leichtgewicht/ip-codec/2.0.4:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}

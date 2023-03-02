@@ -179,6 +179,21 @@ function fromMarkdocNode(
     return { type: 'list-item', children };
   }
   if (node.type === 'paragraph') {
+    if (
+      node.children.length === 1 &&
+      node.children[0].type === 'inline' &&
+      node.children[0].children.length === 1 &&
+      node.children[0].children[0].type === 'image'
+    ) {
+      const image = node.children[0].children[0];
+      return {
+        type: 'image',
+        src: decodeURI(image.attributes.src) as any,
+        alt: image.attributes.alt,
+        title: image.attributes.title,
+        children: [{ text: '' }],
+      };
+    }
     const children = inlineFromMarkdoc(node.children);
     if (children.length === 1 && children[0].type === 'component-inline-prop') {
       return children[0];

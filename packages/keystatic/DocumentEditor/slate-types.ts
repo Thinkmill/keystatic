@@ -61,6 +61,13 @@ type ComponentProp = {
   propPath?: ReadonlyPropPath | undefined;
 };
 
+type Image = {
+  type: 'image';
+  src: { filename: string; content: Uint8Array };
+  alt: string;
+  title: string;
+};
+
 type Element = (
   | Layout
   | OnlyChildrenElements
@@ -70,6 +77,7 @@ type Element = (
   | Paragraph
   | Link
   | CodeBlock
+  | Image
 ) &
   BaseElement;
 declare module 'slate' {
