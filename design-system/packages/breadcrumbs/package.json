@@ -23,6 +23,7 @@
     "@react-aria/utils": "^3.14.2",
     "@react-stately/collections": "^3.5.0",
     "@react-types/breadcrumbs": "^3.5.0",
+    "@react-types/shared": "^3.14.1",
     "@voussoir/button": "0.1.1",
     "@voussoir/layout": "^0.1.0",
     "@voussoir/menu": "0.1.1",
