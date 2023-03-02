@@ -33,7 +33,8 @@ const MIN_VISIBLE_ITEMS = 1;
 const MAX_VISIBLE_ITEMS = 4;
 
 /**
- * Breadcrumbs show hierarchy and navigational context for a user’s location within an application.
+ * Breadcrumbs show hierarchy and navigational context for a user’s location
+ * within an application.
  */
 export const Breadcrumbs = forwardRef(function Breadcrumbs<T>(
   props: BreadcrumbsProps<T>,
