@@ -16,6 +16,7 @@ import {
   useCallback,
   useRef,
   useState,
+  Ref,
 } from 'react';
 
 import { ActionButton } from '@voussoir/button';
@@ -32,11 +33,7 @@ import { BreadcrumbsProps } from './types';
 const MIN_VISIBLE_ITEMS = 1;
 const MAX_VISIBLE_ITEMS = 4;
 
-/**
- * Breadcrumbs show hierarchy and navigational context for a user’s location
- * within an application.
- */
-export const Breadcrumbs = forwardRef(function Breadcrumbs<T>(
+function Breadcrumbs<T>(
   props: BreadcrumbsProps<T>,
   ref: ForwardedRef<HTMLDivElement>
 ) {
@@ -254,4 +251,16 @@ export const Breadcrumbs = forwardRef(function Breadcrumbs<T>(
       </ul>
     </nav>
   );
-});
+}
+
+// forwardRef doesn't support generic parameters, so cast the result to the correct type
+// https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
+
+/**
+ * Breadcrumbs show hierarchy and navigational context for a user's location
+ * within an application.
+ */
+const _Breadcrumbs: <T>(
+  props: BreadcrumbsProps<T> & { ref?: Ref<HTMLDivElement> }
+) => ReactElement = forwardRef(Breadcrumbs) as any;
+export { _Breadcrumbs as Breadcrumbs };
