@@ -103,7 +103,7 @@ export function slug(args: {
               : undefined
           }
         />
-        <Flex gap="small" alignItems="end">
+        <Flex gap="regular" alignItems="end">
           <TextField
             flex={1}
             label={args.slug?.label ?? 'Slug'}
