@@ -62,7 +62,7 @@ export default config({
       label: 'Single File Posts',
       directory: 'single-file-posts',
       slugField: 'slug',
-      format: { contentField: 'content', frontmatter: 'yaml' },
+      format: { contentField: 'content' },
       schema: {
         title: fields.text({ label: 'Title' }),
         slug: fields.text({ label: 'Slug' }),

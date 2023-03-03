@@ -238,7 +238,7 @@ export default config({
       label: 'Single File Posts',
       directory: 'single-file-posts',
       slugField: 'title',
-      format: { contentField: 'content', frontmatter: 'yaml' },
+      format: { contentField: 'content', location: 'outside' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         content: fields.document({

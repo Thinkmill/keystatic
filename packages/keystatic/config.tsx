@@ -6,7 +6,11 @@ import {
 export type DataFormat = 'json' | 'yaml';
 export type Format =
   | DataFormat
-  | { frontmatter: DataFormat; contentField: string };
+  | {
+      data?: DataFormat;
+      contentField?: string;
+      location?: 'index' | 'outside';
+    };
 
 export type Collection<
   Schema extends Record<string, ComponentSchema>,

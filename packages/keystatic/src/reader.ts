@@ -13,7 +13,7 @@ import {
   getCollectionFormat,
   getCollectionItemPath,
   getCollectionPath,
-  getDataFileExtension,
+  getEntryDataFilepath,
   getSingletonFormat,
   getSingletonPath,
 } from '../app/path-utils';
@@ -52,7 +52,6 @@ function collectionReader(
   config: Config
 ): CollectionReader<any, any> {
   const formatInfo = getCollectionFormat(config, collection);
-  const extension = getDataFileExtension(formatInfo);
   const collectionPath = getCollectionPath(config, collection);
   const collectionConfig = config.collections![collection];
   const schema = fields.object(collectionConfig.schema);
@@ -61,7 +60,6 @@ function collectionReader(
       return readItem(
         schema,
         formatInfo,
-        extension,
         getCollectionItemPath(config, collection, slug),
         {
           field: collectionConfig.slugField,
@@ -81,7 +79,13 @@ function collectionReader(
             if (!x.isDirectory()) return [];
             try {
               await fs.stat(
-                path.join(repoPath, collectionPath, x.name, `index${extension}`)
+                path.join(
+                  repoPath,
+                  getEntryDataFilepath(
+                    `${collectionPath}/${x.name}`,
+                    formatInfo
+                  )
+                )
               );
               return [x.name];
             } catch (err) {
@@ -100,7 +104,6 @@ function collectionReader(
 async function readItem(
   schema: ComponentSchema,
   formatInfo: FormatInfo,
-  extension: string,
   itemDir: string,
   slugField:
     | {
@@ -113,7 +116,7 @@ async function readItem(
   let dataFile: Uint8Array;
   try {
     dataFile = await fs.readFile(
-      path.join(path.resolve(repoPath, itemDir), `index${extension}`)
+      path.resolve(repoPath, getEntryDataFilepath(itemDir, formatInfo))
     );
   } catch (err) {
     if ((err as any).code === 'ENOENT') {
@@ -202,17 +205,9 @@ function singletonReader(
   const formatInfo = getSingletonFormat(config, singleton);
   const singletonPath = getSingletonPath(config, singleton);
   const schema = fields.object(config.singletons![singleton].schema);
-  const extension = getDataFileExtension(formatInfo);
   return {
     read: () =>
-      readItem(
-        schema,
-        formatInfo,
-        extension,
-        singletonPath,
-        undefined,
-        repoPath
-      ),
+      readItem(schema, formatInfo, singletonPath, undefined, repoPath),
   };
 }
 

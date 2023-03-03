@@ -39,10 +39,13 @@ export function getCollectionItemPath(
   return `${basePath}/${slug}${suffix}`;
 }
 
-export function getCollectionItemSlugSuffix(
-  config: Config,
-  collection: string
-) {
+export function getEntryDataFilepath(dir: string, formatInfo: FormatInfo) {
+  return `${dir}${
+    formatInfo.dataLocation === 'index' ? '/index' : ''
+  }${getDataFileExtension(formatInfo)}`;
+}
+
+function getCollectionItemSlugSuffix(config: Config, collection: string) {
   const path = fixPath(config.collections![collection].directorySuffix ?? '');
   return path ? `/${path}` : '';
 }
@@ -52,9 +55,9 @@ export function getSingletonPath(config: Config, singleton: string) {
 }
 
 export function getDataFileExtension(formatInfo: FormatInfo) {
-  return typeof formatInfo === 'string'
-    ? '.' + formatInfo
-    : formatInfo.contentFieldConfig.serializeToFile.primaryExtension;
+  return formatInfo.contentField
+    ? formatInfo.contentField.config.serializeToFile.primaryExtension
+    : '.' + formatInfo.data;
 }
 
 function getFormatInfo(
@@ -62,29 +65,46 @@ function getFormatInfo(
   schema: Record<string, ComponentSchema>
 ): FormatInfo {
   if (typeof format === 'string') {
-    return format;
+    return {
+      dataLocation: 'index',
+      contentField: undefined,
+      data: format,
+    };
   }
-  const field = schema[format.contentField];
-  assert(field?.kind === 'form', `${format.contentField} is not a form field`);
-  assert(
-    'serializeToFile' in field && field.serializeToFile?.kind === 'multi',
-    `${format.contentField} does not have a multi serializeToFile config`
-  );
+  let contentField;
+  if (format.contentField) {
+    const field = schema[format.contentField];
+    assert(
+      field?.kind === 'form',
+      `${format.contentField} is not a form field`
+    );
+    assert(
+      'serializeToFile' in field && field.serializeToFile?.kind === 'multi',
+      `${format.contentField} does not have a multi serializeToFile config`
+    );
+    contentField = {
+      key: format.contentField,
+      config: field as typeof field & {
+        serializeToFile: { kind: 'multi' };
+      },
+    };
+  }
   return {
-    frontmatter: format.frontmatter,
-    contentFieldKey: format.contentField,
-    contentFieldConfig: field as typeof field & {
-      serializeToFile: { kind: 'multi' };
-    },
+    data: format.data ?? 'yaml',
+    contentField,
+    dataLocation: format.location === 'outside' ? 'outer' : 'index',
   };
 }
 
-export type FormatInfo =
-  | DataFormat
-  | {
-      frontmatter: DataFormat;
-      contentFieldKey: string;
-      contentFieldConfig: FormFieldWithFile<any, any, any> & {
-        serializeToFile: { kind: 'multi' };
-      };
-    };
+export type FormatInfo = {
+  data: DataFormat;
+  contentField:
+    | {
+        key: string;
+        config: FormFieldWithFile<any, any, any> & {
+          serializeToFile: { kind: 'multi' };
+        };
+      }
+    | undefined;
+  dataLocation: 'index' | 'outer';
+};

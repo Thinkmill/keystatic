@@ -18,7 +18,7 @@ import {
 import { hydrateBlobCache } from './app/useItemData';
 import { useContext, useState } from 'react';
 import { assert } from 'emery';
-import { FormatInfo } from './app/path-utils';
+import { FormatInfo, getEntryDataFilepath } from './app/path-utils';
 import {
   getTreeNodeAtPath,
   TreeEntry,
@@ -95,19 +95,15 @@ export function useUpsertItem(args: {
           fields.object(args.schema),
           args.slug
         );
-        const dataFormat =
-          typeof args.format === 'string'
-            ? args.format
-            : args.format.frontmatter;
-        let dataExtension = '.' + dataFormat;
+        const dataFormat = args.format.data;
         let dataContent = textEncoder.encode(
           dataFormat === 'json'
             ? JSON.stringify(stateWithExtraFilesRemoved, null, 2) + '\n'
             : dump(stateWithExtraFilesRemoved)
         );
 
-        if (typeof args.format === 'object') {
-          const filename = `${args.format.contentFieldKey}${args.format.contentFieldConfig.serializeToFile.primaryExtension}`;
+        if (args.format.contentField) {
+          const filename = `${args.format.contentField.key}${args.format.contentField.config.serializeToFile.primaryExtension}`;
           let contents: undefined | Uint8Array;
           extraFiles = extraFiles.filter(x => {
             if (x.path !== filename) return true;
@@ -118,14 +114,12 @@ export function useUpsertItem(args: {
             contents !== undefined,
             'Expected content field to be present'
           );
-          dataExtension =
-            args.format.contentFieldConfig.serializeToFile.primaryExtension;
           dataContent = combineFrontmatterAndContents(dataContent, contents);
         }
 
         let additions = [
           {
-            path: `${args.basePath}/index${dataExtension}`,
+            path: getEntryDataFilepath(args.basePath, args.format),
             contents: dataContent,
           },
           ...extraFiles.map(file => ({
@@ -222,7 +216,8 @@ export function useUpsertItem(args: {
                 getDirectoriesForTreeKey(
                   fields.object(args.schema),
                   args.basePath,
-                  args.slug?.value
+                  args.slug?.value,
+                  args.format
                 ),
                 tree.tree
               );

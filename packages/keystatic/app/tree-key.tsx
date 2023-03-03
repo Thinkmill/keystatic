@@ -1,6 +1,6 @@
 import { assertNever } from '../DocumentEditor/component-blocks/utils';
 import { ComponentSchema } from '../src';
-import { fixPath } from './path-utils';
+import { fixPath, FormatInfo, getDataFileExtension } from './path-utils';
 import { getTreeNodeAtPath, TreeNode } from './trees';
 
 function collectDirectoriesUsedInSchemaInner(
@@ -71,9 +71,13 @@ export function collectDirectoriesUsedInSchema(
 export function getDirectoriesForTreeKey(
   schema: ComponentSchema,
   directory: string,
-  slug: string | undefined
+  slug: string | undefined,
+  format: FormatInfo
 ) {
   const directories = [fixPath(directory)];
+  if (format.dataLocation === 'outer') {
+    directories.push(fixPath(directory) + getDataFileExtension(format));
+  }
   const toAdd = slug === undefined ? '' : `/${slug}`;
   for (const directory of collectDirectoriesUsedInSchema(schema)) {
     directories.push(directory + toAdd);

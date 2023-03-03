@@ -12,12 +12,7 @@ import {
   useState,
 } from 'react';
 import { CombinedError, useQuery, UseQueryState } from 'urql';
-import {
-  getCollectionPath,
-  getCollectionFormat,
-  getDataFileExtension,
-  getSingletonPath,
-} from '../path-utils';
+import { getSingletonPath } from '../path-utils';
 import {
   getTreeNodeAtPath,
   treeEntriesToTreeNodes,
@@ -26,7 +21,7 @@ import {
   treeSha,
 } from '../trees';
 import { DataState, LOADING, mergeDataStates, useData } from '../useData';
-import { getTreeNodeForItem, MaybePromise } from '../utils';
+import { getEntriesInCollectionWithTreeKey, MaybePromise } from '../utils';
 import LRU from 'lru-cache';
 import { isDefined } from 'emery';
 import { getAuth } from '../auth';
@@ -459,45 +454,39 @@ function getChangedData(
   return {
     collections: new Map(
       Object.keys(config.collections ?? {}).map(collection => {
-        const collectionPath = getCollectionPath(config, collection);
-        const current = new Map(
-          getTreeNodeAtPath(trees.current.tree, collectionPath)?.children
+        const currentBranch = new Map(
+          getEntriesInCollectionWithTreeKey(
+            config,
+            collection,
+            trees.current.tree
+          ).map(x => [x.slug, x.key])
         );
         const defaultBranch = new Map(
-          getTreeNodeAtPath(trees.default.tree, collectionPath)?.children
+          getEntriesInCollectionWithTreeKey(
+            config,
+            collection,
+            trees.current.tree
+          ).map(x => [x.slug, x.key])
         );
-
-        const formatInfo = getCollectionFormat(config, collection);
-        const extension = getDataFileExtension(formatInfo);
-        for (const map of [current, defaultBranch]) {
-          for (const [key, entry] of map) {
-            const node = getTreeNodeForItem(config, collection, entry);
-            if (!node || !node.children?.has(`index${extension}`)) {
-              map.delete(key);
-            } else {
-              map.set(key, node);
-            }
-          }
-        }
 
         const changed = new Set<string>();
         const added = new Set<string>();
-        for (const [key, entry] of current) {
+        for (const [key, entry] of currentBranch) {
           const defaultBranchEntry = defaultBranch.get(key);
           if (defaultBranchEntry === undefined) {
             added.add(key);
             continue;
           }
-          if (entry.entry.sha !== defaultBranchEntry.entry.sha) {
+          if (entry !== defaultBranchEntry) {
             changed.add(key);
           }
         }
         const removed = new Set(
-          [...defaultBranch.keys()].filter(key => !current.has(key))
+          [...defaultBranch.keys()].filter(key => !currentBranch.has(key))
         );
         return [
           collection,
-          { removed, added, changed, totalCount: current.size },
+          { removed, added, changed, totalCount: currentBranch.size },
         ];
       })
     ),
