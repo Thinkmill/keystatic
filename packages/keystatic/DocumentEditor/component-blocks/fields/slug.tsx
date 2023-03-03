@@ -3,8 +3,7 @@ import slugify from '@sindresorhus/slugify';
 import { ActionButton } from '@voussoir/button';
 import { Flex, Box } from '@voussoir/layout';
 import { TextField } from '@voussoir/text-field';
-import { useState, useMemo, useContext } from 'react';
-import { useSlugsInCollection } from '../../../app/useSlugsInCollection';
+import { useState, useContext } from 'react';
 import {
   validateText,
   isValidSlug,
@@ -42,140 +41,108 @@ export function slug(args: {
     name: args.name.defaultValue ?? '',
     slug: naiveGenerateSlug(args.name.defaultValue ?? ''),
   };
-  function SlugFieldInner(props: {
-    value: { name: string; slug: string };
-    onChange(value: { name: string; slug: string }): void;
-    autoFocus: boolean;
-    forceValidation: boolean;
-    slugs: Set<string>;
-  }) {
-    const [blurredName, setBlurredName] = useState(false);
-    const [blurredSlug, setBlurredSlug] = useState(false);
 
-    const [shouldGenerateSlug, setShouldGenerateSlug] = useState(
-      props.value === defaultValue
-    );
-    const generateSlug = (name: string) => {
-      const generated = naiveGenerateSlug(name);
-      if (props.slugs.has(generated)) {
-        let i = 1;
-        while (props.slugs.has(`${generated}-${i}`)) {
-          i++;
-        }
-        return `${generated}-${i}`;
-      }
-      return generated;
-    };
-
-    const slugErrorMessage =
-      props.forceValidation || blurredSlug
-        ? validateText(
-            props.value.slug,
-            args.slug?.validation?.length?.min ?? 1,
-            args.slug?.validation?.length?.max ?? Infinity,
-            args.slug?.label ?? 'Slug',
-            props.slugs
-          )
-        : undefined;
-
-    return (
-      <Flex gap="xlarge" direction="column">
-        <TextField
-          label={args.name.label}
-          description={args.name.description}
-          autoFocus={props.autoFocus}
-          value={props.value.name}
-          onChange={name => {
-            props.onChange({
-              name,
-              slug: shouldGenerateSlug ? generateSlug(name) : props.value.slug,
-            });
-          }}
-          onBlur={() => setBlurredName(true)}
-          errorMessage={
-            props.forceValidation || blurredName
-              ? validateText(
-                  props.value.name,
-                  args.name.validation?.length?.min ?? 0,
-                  args.name.validation?.length?.max ?? Infinity,
-                  args.name.label
-                )
-              : undefined
-          }
-        />
-        <Flex gap="regular" alignItems="end">
-          <TextField
-            flex={1}
-            label={args.slug?.label ?? 'Slug'}
-            description={args.slug?.description}
-            value={props.value.slug}
-            onChange={slug => {
-              setShouldGenerateSlug(false);
-              props.onChange({ name: props.value.name, slug });
-            }}
-            onBlur={() => setBlurredSlug(true)}
-            errorMessage={slugErrorMessage}
-          />
-          <Flex gap="regular" direction="column">
-            <ActionButton
-              onPress={() => {
-                props.onChange({
-                  name: props.value.name,
-                  slug: generateSlug(props.value.name),
-                });
-              }}
-            >
-              Regenerate
-            </ActionButton>
-            {/* display shim to offset the error message */}
-            {slugErrorMessage !== undefined && <Box height="xsmall" />}
-          </Flex>
-        </Flex>
-      </Flex>
-    );
-  }
-  function SlugFieldAsSlugField(props: {
-    value: { name: string; slug: string };
-    onChange(value: { name: string; slug: string }): void;
-    autoFocus: boolean;
-    forceValidation: boolean;
-    collection: string;
-    currentSlug: string | undefined;
-  }) {
-    const items = useSlugsInCollection(props.collection);
-    const slugs = useMemo(() => {
-      const otherSlugs = new Set(items);
-      if (props.currentSlug !== undefined) {
-        otherSlugs.delete(props.currentSlug);
-      }
-      return otherSlugs;
-    }, [items, props.currentSlug]);
-    return <SlugFieldInner {...props} slugs={slugs} />;
-  }
   const emptySet = new Set<string>();
   return {
     kind: 'form',
     Input(props) {
       const slugContext = useContext(SlugFieldContext);
       const path = useContext(PathContext);
-      if (path.length === 1 && path[0] === slugContext?.slugField) {
-        return (
-          <SlugFieldAsSlugField
-            {...props}
-            collection={slugContext.collection}
-            currentSlug={slugContext.currentSlug}
+      const slugs =
+        path.length === 1 && path[0] === slugContext?.field
+          ? slugContext.slugs
+          : emptySet;
+
+      const [blurredName, setBlurredName] = useState(false);
+      const [blurredSlug, setBlurredSlug] = useState(false);
+
+      const [shouldGenerateSlug, setShouldGenerateSlug] = useState(
+        props.value === defaultValue
+      );
+      const generateSlug = (name: string) => {
+        const generated = naiveGenerateSlug(name);
+        if (slugs.has(generated)) {
+          let i = 1;
+          while (slugs.has(`${generated}-${i}`)) {
+            i++;
+          }
+          return `${generated}-${i}`;
+        }
+        return generated;
+      };
+
+      const slugErrorMessage =
+        props.forceValidation || blurredSlug
+          ? validateText(
+              props.value.slug,
+              args.slug?.validation?.length?.min ?? 1,
+              args.slug?.validation?.length?.max ?? Infinity,
+              args.slug?.label ?? 'Slug',
+              slugs
+            )
+          : undefined;
+
+      return (
+        <Flex gap="xlarge" direction="column">
+          <TextField
+            label={args.name.label}
+            description={args.name.description}
+            autoFocus={props.autoFocus}
+            value={props.value.name}
+            onChange={name => {
+              props.onChange({
+                name,
+                slug: shouldGenerateSlug
+                  ? generateSlug(name)
+                  : props.value.slug,
+              });
+            }}
+            onBlur={() => setBlurredName(true)}
+            errorMessage={
+              props.forceValidation || blurredName
+                ? validateText(
+                    props.value.name,
+                    args.name.validation?.length?.min ?? 0,
+                    args.name.validation?.length?.max ?? Infinity,
+                    args.name.label
+                  )
+                : undefined
+            }
           />
-        );
-      }
-      return <SlugFieldInner {...props} slugs={emptySet} />;
+          <Flex gap="regular" alignItems="end">
+            <TextField
+              flex={1}
+              label={args.slug?.label ?? 'Slug'}
+              description={args.slug?.description}
+              value={props.value.slug}
+              onChange={slug => {
+                setShouldGenerateSlug(false);
+                props.onChange({ name: props.value.name, slug });
+              }}
+              onBlur={() => setBlurredSlug(true)}
+              errorMessage={slugErrorMessage}
+            />
+            <Flex gap="regular" direction="column">
+              <ActionButton
+                onPress={() => {
+                  props.onChange({
+                    name: props.value.name,
+                    slug: generateSlug(props.value.name),
+                  });
+                }}
+              >
+                Regenerate
+              </ActionButton>
+              {/* display shim to offset the error message */}
+              {slugErrorMessage !== undefined && <Box height="xsmall" />}
+            </Flex>
+          </Flex>
+        </Flex>
+      );
     },
     options: undefined,
     defaultValue,
     validate(value, slugInfo) {
-      const slugs = new Set(slugInfo?.slugs);
-      if (slugInfo?.currentSlug !== undefined) {
-        slugs.delete(slugInfo.currentSlug);
-      }
       return (
         typeof value === 'object' &&
         value !== null &&
@@ -188,7 +155,7 @@ export function slug(args: {
         typeof value.slug === 'string' &&
         value.slug.length >= (args.slug?.validation?.length?.min ?? 1) &&
         value.slug.length <= (args.slug?.validation?.length?.max ?? Infinity) &&
-        isValidSlug(value.slug, slugs)
+        isValidSlug(value.slug, slugInfo?.slugs ?? emptySet)
       );
     },
     slug: {

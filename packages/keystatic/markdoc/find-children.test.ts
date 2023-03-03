@@ -152,6 +152,7 @@ test('array', () => {
         "itemLabel": undefined,
         "kind": "array",
         "label": "Items",
+        "slugField": undefined,
       },
       "kind": "array",
       "relativePath": [],

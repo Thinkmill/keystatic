@@ -1,12 +1,10 @@
 import { TextArea, TextField } from '@voussoir/text-field';
 import { useState, useMemo, useContext, createContext, ReactNode } from 'react';
-import { useSlugsInCollection } from '../../../app/useSlugsInCollection';
 import { SlugFormField } from '../api';
 import { ReadonlyPropPath } from '../utils';
 
 export const SlugFieldContext = createContext<
-  | { slugField: string; collection: string; currentSlug: string | undefined }
-  | undefined
+  { field: string; slugs: Set<string> } | undefined
 >(undefined);
 
 export const SlugFieldProvider = SlugFieldContext.Provider;
@@ -90,20 +88,9 @@ export function text({
     onChange: (value: string) => void;
     autoFocus?: boolean;
     forceValidation?: boolean;
-    collection: string;
-    currentSlug: string | undefined;
+    slugs: Set<string>;
   }) {
     const [blurred, setBlurred] = useState(false);
-
-    const items = useSlugsInCollection(props.collection);
-    const slugs = useMemo(() => {
-      const otherSlugs = new Set(items);
-      if (props.currentSlug !== undefined) {
-        otherSlugs.delete(props.currentSlug);
-      }
-      return otherSlugs;
-    }, [items, props.currentSlug]);
-
     return (
       <TextFieldComponent
         label={label}
@@ -114,7 +101,13 @@ export function text({
         onBlur={() => setBlurred(true)}
         errorMessage={
           props.forceValidation || blurred
-            ? validateText(props.value, Math.max(min, 1), max, label, slugs)
+            ? validateText(
+                props.value,
+                Math.max(min, 1),
+                max,
+                label,
+                props.slugs
+              )
             : undefined
         }
       />
@@ -126,14 +119,8 @@ export function text({
       const [blurred, setBlurred] = useState(false);
       const slugContext = useContext(SlugFieldContext);
       const path = useContext(PathContext);
-      if (path.length === 1 && slugContext?.slugField === path[0]) {
-        return (
-          <SlugTextField
-            collection={slugContext.collection}
-            currentSlug={slugContext.currentSlug}
-            {...props}
-          />
-        );
+      if (path.length === 1 && slugContext?.field === path[0]) {
+        return <SlugTextField slugs={slugContext.slugs} {...props} />;
       }
       return (
         <TextFieldComponent
@@ -164,11 +151,7 @@ export function text({
         return false;
       }
       if (slugInfo) {
-        const slugs = new Set(slugInfo.slugs);
-        if (slugInfo.currentSlug !== undefined) {
-          slugs.delete(slugInfo.currentSlug);
-        }
-        return isValidSlug(value, slugs);
+        return isValidSlug(value, slugInfo.slugs);
       }
       return true;
     },

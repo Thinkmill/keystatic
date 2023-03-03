@@ -58,9 +58,7 @@ export type SlugFormField<Value, Options, SerializedValue> = Omit<
   };
   validate(
     value: unknown,
-    slugFieldInfo:
-      | { slugs: Set<string>; currentSlug: string | undefined }
-      | undefined
+    slugFieldInfo: { slugs: Set<string> } | undefined
   ): boolean;
 };
 

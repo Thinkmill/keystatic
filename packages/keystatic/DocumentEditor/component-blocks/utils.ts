@@ -1,3 +1,4 @@
+import { getSlugFromState } from '../../app/utils';
 import { DocumentFeatures } from '../document-features';
 import { DocumentFeaturesForNormalization } from '../document-features-normalization';
 import { assert, Mark } from '../utils';
@@ -231,9 +232,7 @@ export function getSchemaAtPropPath(
 export function clientSideValidateProp(
   schema: ComponentSchema,
   value: any,
-  slugField:
-    | { field: string; slugs: Set<string>; currentSlug: string | undefined }
-    | undefined,
+  slugField: { field: string; slugs: Set<string> } | undefined,
   path: ReadonlyPropPath = []
 ): boolean {
   switch (schema.kind) {
@@ -241,9 +240,8 @@ export function clientSideValidateProp(
       return true;
     }
     case 'form': {
-      if (path.length === 1 && path[0] === slugField?.field) {
+      if (path[path.length - 1] === slugField?.field) {
         return schema.validate(value, {
-          currentSlug: slugField.currentSlug,
           slugs: slugField.slugs,
         });
       }
@@ -256,7 +254,7 @@ export function clientSideValidateProp(
       return clientSideValidateProp(
         schema.values[value.discriminant],
         value.value,
-        slugField,
+        undefined,
         path.concat('value')
       );
     }
@@ -266,7 +264,7 @@ export function clientSideValidateProp(
           !clientSideValidateProp(
             childProp,
             value[key],
-            slugField,
+            key === slugField?.field ? slugField : undefined,
             path.concat(key)
           )
         ) {
@@ -276,12 +274,31 @@ export function clientSideValidateProp(
       return true;
     }
     case 'array': {
+      let slugInfo: undefined | { slugField: string; slugs: string[] };
+      if (schema.slugField !== undefined && schema.element.kind === 'object') {
+        const innerSchema = schema.element.fields;
+        const { slugField } = schema;
+        slugInfo = {
+          slugField,
+          slugs: (value as unknown[]).map(val =>
+            getSlugFromState(
+              { schema: innerSchema, slugField },
+              val as Record<string, unknown>
+            )
+          ),
+        };
+      }
       for (const [idx, innerVal] of (value as unknown[]).entries()) {
         if (
           !clientSideValidateProp(
             schema.element,
             innerVal,
-            slugField,
+            slugInfo === undefined
+              ? undefined
+              : {
+                  field: slugInfo.slugField,
+                  slugs: new Set(slugInfo.slugs.filter((_, i) => idx !== i)),
+                },
             path.concat(idx)
           )
         ) {

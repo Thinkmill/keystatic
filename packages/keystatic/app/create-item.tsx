@@ -84,12 +84,15 @@ export function CreateItem(props: {
       ? slug
       : undefined;
   const slugInfo = useMemo(() => {
+    const slugs = new Set(slugsArr);
+    if (currentSlug) {
+      slugs.delete(currentSlug);
+    }
     return {
-      currentSlug,
       field: collectionConfig.slugField,
-      slugs: new Set(slugsArr),
+      slugs,
     };
-  }, [collectionConfig.slugField, currentSlug, slugsArr]);
+  }, [collectionConfig.slugField, slugsArr, currentSlug]);
 
   const onCreate = async () => {
     if (!clientSideValidateProp(schema, state, slugInfo)) {
@@ -108,15 +111,6 @@ export function CreateItem(props: {
     createResult.kind === 'loading' || createResult.kind === 'updated';
 
   const formID = 'item-create-form';
-
-  const slugFieldInfo = useMemo(
-    () => ({
-      collection: props.collection,
-      currentSlug,
-      slugField: collectionConfig.slugField,
-    }),
-    [collectionConfig.slugField, currentSlug, props.collection]
-  );
 
   return (
     <>
@@ -171,7 +165,7 @@ export function CreateItem(props: {
 
             <FormValueContentFromPreviewProps
               forceValidation={forceValidation}
-              slugField={slugFieldInfo}
+              slugField={slugInfo}
               {...previewProps}
             />
           </Flex>
