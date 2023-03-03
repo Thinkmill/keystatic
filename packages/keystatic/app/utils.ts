@@ -1,6 +1,6 @@
 import { isDefined } from 'emery';
 
-import { Collection, Config, GitHubConfig } from '../config';
+import { Config, GitHubConfig } from '../config';
 import { ComponentSchema, SlugFormField } from '../src';
 import { getCollectionItemSlugSuffix } from './path-utils';
 import { getTreeNodeAtPath, TreeNode } from './trees';
@@ -75,7 +75,10 @@ export function isSlugFormField(
 }
 
 export function getSlugFromState(
-  collectionConfig: Collection<any, any>,
+  collectionConfig: {
+    slugField: string;
+    schema: Record<string, ComponentSchema>;
+  },
   state: Record<string, unknown>
 ) {
   const value = state[collectionConfig.slugField];

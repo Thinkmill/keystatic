@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-
 import { ActionGroup, Item } from '@voussoir/action-group';
 import { ActionButton } from '@voussoir/button';
 import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
@@ -9,7 +7,6 @@ import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Icon } from '@voussoir/icon';
 import { Flex } from '@voussoir/layout';
 import { Notice } from '@voussoir/notice';
-import { tokenSchema } from '@voussoir/style';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { Text } from '@voussoir/typography';
 
@@ -21,20 +18,6 @@ import {
   component,
   NotEditable,
 } from '@keystatic/core';
-
-function useObjectURL(data: Uint8Array | null) {
-  const [url, setUrl] = useState<string | null>(null);
-  useEffect(() => {
-    if (data) {
-      const url = URL.createObjectURL(new Blob([data]));
-      setUrl(url);
-      return () => URL.revokeObjectURL(url);
-    } else {
-      setUrl(null);
-    }
-  }, [data]);
-  return url;
-}
 
 const toneToIcon = {
   caution: alertTriangleIcon,
@@ -65,6 +48,10 @@ export default config({
           formatting: true,
           dividers: true,
           links: true,
+          images: {
+            directory: 'public/images/posts',
+            publicPath: '/images/posts/',
+          },
           componentBlocks: {
             blockChild: component({
               label: 'Block Child',
@@ -99,42 +86,6 @@ export default config({
               label: 'Some Component',
               preview: () => null,
               schema: {},
-            }),
-            image: component({
-              label: 'Image',
-              preview: function Preview(props) {
-                const url = useObjectURL(
-                  props.fields.image.value.kind === 'uploaded'
-                    ? props.fields.image.value.data
-                    : null
-                );
-                return url ? (
-                  <NotEditable
-                    alignSelf="start"
-                    backgroundColor="canvas"
-                    borderRadius="regular"
-                    border="neutral"
-                    padding="regular"
-                  >
-                    <img
-                      src={url}
-                      alt={props.fields.alt.value}
-                      style={{
-                        display: 'block',
-                        maxHeight: tokenSchema.size.alias.singleLineWidth,
-                        maxWidth: '100%',
-                      }}
-                    />
-                  </NotEditable>
-                ) : null;
-              },
-              schema: {
-                image: fields.image({
-                  label: 'Image',
-                  directory: 'public/images/posts',
-                }),
-                alt: fields.text({ label: 'Alt text', multiline: true }),
-              },
             }),
             notice: component({
               preview: function (props) {

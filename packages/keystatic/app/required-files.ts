@@ -142,6 +142,7 @@ export function parseSerializedFormField(
       primary: mainContents,
       other: otherFiles,
       external: otherDirectories,
+      slug,
     });
   }
   assertNever(serializationConfig);

@@ -23,8 +23,14 @@ export class MyDataTransfer implements DataTransfer {
   setDragImage(): never {
     throw new Error('DataTransfer#setDragImage is currently unimplemented');
   }
-  get files(): never {
-    throw new Error('DataTransfer#files is currently unimplemented');
+  get files(): FileList {
+    return {
+      [Symbol.iterator]: [][Symbol.iterator],
+      length: 0,
+      item() {
+        return null;
+      },
+    };
   }
   get items(): never {
     throw new Error('DataTransfer#items is currently unimplemented');

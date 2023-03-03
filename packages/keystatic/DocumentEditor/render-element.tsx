@@ -10,6 +10,7 @@ import { LayoutArea, LayoutContainer } from './layouts';
 import { LinkElement } from './link';
 import { CodeElement } from './code-block';
 import { DividerElement } from './divider';
+import { ImageElement } from './image';
 
 // some of the renderers read properties of the element
 // and TS doesn't understand the type narrowing when doing a spread for some reason
@@ -74,6 +75,14 @@ export const renderElement = (props: RenderElementProps) => {
       return <BlockquoteElement {...props} />;
     case 'divider':
       return <DividerElement {...props} />;
+    case 'image':
+      return (
+        <ImageElement
+          attributes={props.attributes}
+          children={props.children}
+          element={props.element}
+        />
+      );
     default:
       let { textAlign } = props.element;
       return (
