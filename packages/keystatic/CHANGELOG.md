@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.56
+
+### Patch Changes
+
+- 5627932: Fix collection page with `directorySuffix`
+
 ## 0.0.55
 
 ### Patch Changes
