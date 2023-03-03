@@ -29,7 +29,7 @@
     "@types/react": "^18.0.25"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.0.54",
+    "@keystatic/core": "^0.0.55",
     "@remix-run/react": "^1.13.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
