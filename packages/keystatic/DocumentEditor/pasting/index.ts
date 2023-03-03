@@ -137,7 +137,6 @@ function setFragmentData(e: Editor, data: DataTransfer) {
     }
     return val;
   });
-  console.log(Array.from(data.files));
   const encoded = window.btoa(encodeURIComponent(string));
   attach.setAttribute('data-keystatic-fragment', encoded);
   data.setData(`application/${clipboardFormatKey}`, encoded);

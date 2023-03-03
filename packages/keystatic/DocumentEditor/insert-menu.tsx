@@ -19,6 +19,7 @@ import { ComponentBlock } from './component-blocks/api';
 import { insertLayout } from './layouts';
 import { ToolbarState, useToolbarState } from './toolbar-state';
 import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from './utils';
+import { getUploadedImage } from './component-blocks/fields/image';
 
 type Option = {
   label: string;
@@ -71,6 +72,21 @@ function getOptions(
           });
         },
       },
+    !!toolbarState.editorDocumentFeatures.images && {
+      label: 'Image',
+      async insert(editor) {
+        const image = await getUploadedImage();
+        if (image) {
+          insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading(editor, {
+            type: 'image',
+            src: image,
+            alt: '',
+            title: '',
+            children: [{ text: '' }],
+          });
+        }
+      },
+    },
     !toolbarState.dividers.isDisabled &&
       toolbarState.editorDocumentFeatures.dividers && {
         label: 'Divider',

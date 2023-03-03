@@ -202,6 +202,43 @@ const componentProp: t.Type<ComponentProp> = t.recursion('ComponentProp', () =>
   )
 );
 
+type Image = {
+  type: 'image';
+  src:
+    | { kind: 'uploaded'; filename: string; data: Uint8Array }
+    | { kind: 'none' };
+  alt: string;
+  title: string | undefined;
+  children: [{ text: '' }];
+};
+
+const image: t.Type<Image> = t.recursion('Image', () =>
+  excess(
+    t.type({
+      type: t.literal('image'),
+      src: t.union([
+        excess(t.type({ kind: t.literal('none') })),
+        excess(
+          t.type({
+            kind: t.literal('uploaded'),
+            filename: t.string,
+            data: t.any,
+          })
+        ),
+      ]),
+      alt: t.string,
+      title: t.union([t.undefined, t.string]),
+      children: t.tuple([
+        excess(
+          t.type({
+            text: t.literal(''),
+          })
+        ),
+      ]),
+    })
+  )
+);
+
 export type BlockFromValidation =
   | Layout
   | OnlyChildrenElements
@@ -209,7 +246,8 @@ export type BlockFromValidation =
   | ComponentBlock
   | ComponentProp
   | Paragraph
-  | CodeBlock;
+  | CodeBlock
+  | Image;
 
 const block: t.Type<BlockFromValidation> = t.recursion('Element', () =>
   t.union([
@@ -220,6 +258,7 @@ const block: t.Type<BlockFromValidation> = t.recursion('Element', () =>
     componentProp,
     paragraph,
     codeBlock,
+    image,
   ])
 );
 

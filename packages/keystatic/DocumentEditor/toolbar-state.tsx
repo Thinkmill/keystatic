@@ -114,6 +114,7 @@ export const createToolbarState = (
         },
         layouts: editorDocumentFeatures.layouts,
         links: true,
+        images: true,
       },
       softBreaks: true,
     };

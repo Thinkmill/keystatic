@@ -3,10 +3,64 @@ import { FieldLabel } from '@voussoir/field';
 import { Flex, Box } from '@voussoir/layout';
 import { tokenSchema } from '@voussoir/style';
 import { TextField } from '@voussoir/text-field';
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useIsInDocumentEditor } from '../..';
 import { fixPath } from '../../../app/path-utils';
 import { FormFieldWithFileNotRequiringContentsForReader } from '../api';
+
+export function useObjectURL(data: Uint8Array | null) {
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (data) {
+      const url = URL.createObjectURL(new Blob([data]));
+      setUrl(url);
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setUrl(null);
+    }
+  }, [data]);
+  return url;
+}
+
+export function getUploadedImage(): Promise<
+  { content: Uint8Array; filename: string } | undefined
+> {
+  return new Promise(resolve => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    let didChange = false;
+    input.onchange = () => {
+      didChange = true;
+      const file = input.files?.[0];
+      const extension = file?.name.match(/\.([^.]+$)/)?.[1];
+      if (file && extension) {
+        file.arrayBuffer().then(buffer => {
+          resolve({
+            content: new Uint8Array(buffer),
+            filename: file.name,
+          });
+        });
+      }
+    };
+    const cancelDetector = () => {
+      window.removeEventListener('focus', cancelDetector);
+      setTimeout(() => {
+        if (input.files?.length === 0 && !didChange) {
+          resolve(undefined);
+        }
+      }, 500);
+      if ([...document.body.childNodes].includes(input)) {
+        document.body.removeChild(input);
+      }
+    };
+    input.addEventListener('click', () => {
+      window.addEventListener('focus', cancelDetector, true);
+    });
+    document.body.appendChild(input);
+    input.click();
+  });
+}
 
 export function image({
   label,
@@ -25,38 +79,32 @@ export function image({
   undefined,
   string | null
 > {
-  function useObjectURL(data: Uint8Array | null) {
-    const [url, setUrl] = useState<string | null>(null);
-    useEffect(() => {
-      if (data) {
-        const url = URL.createObjectURL(new Blob([data]));
-        setUrl(url);
-        return () => URL.revokeObjectURL(url);
-      } else {
-        setUrl(null);
-      }
-    }, [data]);
-    return url;
-  }
   return {
     kind: 'form',
     Input({ onChange, value }) {
-      const inputRef = useRef<HTMLInputElement | null>(null);
       const isInEditor = useIsInDocumentEditor();
       const objectUrl = useObjectURL(
         value.kind === 'uploaded' ? value.data : null
       );
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      const inputKey = useMemo(() => Math.random(), [value]);
       return (
         <Flex direction="column" gap="medium">
           <FieldLabel>{label}</FieldLabel>
 
           <ButtonGroup>
             <ActionButton
-              onPress={() => {
-                inputRef.current?.click();
+              onPress={async () => {
+                const image = await getUploadedImage();
+                if (image) {
+                  const extension = image.filename.match(/\.([^.]+$)/)?.[1];
+                  if (extension) {
+                    onChange({
+                      kind: 'uploaded',
+                      data: image.content,
+                      extension,
+                      filename: image.filename,
+                    });
+                  }
+                }
               }}
             >
               Choose file
@@ -92,25 +140,6 @@ export function image({
               />
             </Box>
           )}
-          <input
-            style={{ display: 'none' }}
-            type="file"
-            accept="image/*"
-            key={inputKey}
-            ref={inputRef}
-            onChange={async event => {
-              const file = event.target.files?.[0];
-              const extension = file?.name.match(/\.([^.]+$)/)?.[1];
-              if (file && extension) {
-                onChange({
-                  kind: 'uploaded',
-                  data: new Uint8Array(await file.arrayBuffer()),
-                  extension,
-                  filename: file.name,
-                });
-              }
-            }}
-          />
           {isInEditor && value.kind === 'uploaded' && (
             <TextField
               label="Filename"

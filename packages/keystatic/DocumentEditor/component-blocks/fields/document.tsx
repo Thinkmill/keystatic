@@ -63,6 +63,7 @@ type DocumentFeaturesConfig = {
   formatting?: true | FormattingConfig;
   links?: true;
   dividers?: true;
+  images?: true | { directory?: string; publicPath?: string };
   layouts?: readonly (readonly [number, ...number[]])[];
 };
 
@@ -137,6 +138,7 @@ function normaliseDocumentFeatures(config: DocumentFeaturesConfig) {
       ...new Set((config.layouts || []).map(x => JSON.stringify(x))),
     ].map(x => JSON.parse(x)),
     dividers: !!config.dividers,
+    images: config.images === undefined ? false : config.images,
   };
   return documentFeatures;
 }
@@ -156,13 +158,14 @@ export function document({
   const documentFeatures = normaliseDocumentFeatures(documentFeaturesConfig);
   const parse =
     (mode: 'read' | 'edit') =>
-    (value: {
+    (data: {
       value: unknown;
       primary: Uint8Array | undefined;
       other: ReadonlyMap<string, Uint8Array>;
-      external: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
+      external?: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
+      slug?: string;
     }): DocumentElement[] => {
-      const markdoc = textDecoder.decode(value.primary);
+      const markdoc = textDecoder.decode(data.primary);
       const document = fromMarkdoc(Markdoc.parse(markdoc), componentBlocks);
       const editor = createDocumentEditorWithoutReact(
         documentFeatures,
@@ -173,9 +176,11 @@ export function document({
       return deserializeFiles(
         editor.children,
         componentBlocks,
-        value.other,
-        value.external,
-        mode
+        data.other,
+        data.external || new Map(),
+        mode,
+        documentFeatures,
+        data.slug
       ) as any;
     };
   return {
@@ -211,14 +216,20 @@ export function document({
             )
           )
         ),
+        ...(typeof documentFeatures.images === 'object' &&
+        typeof documentFeatures.images.directory === 'string'
+          ? [documentFeatures.images.directory]
+          : []),
       ],
       parse: parse('edit'),
-      async serialize(value) {
+      async serialize(value, slug) {
         const collectedFiles: CollectedFile[] = [];
         const transformed = collectFiles(
           value as any,
           componentBlocks,
-          collectedFiles
+          collectedFiles,
+          documentFeatures,
+          slug
         );
 
         const other = new Map<string, Uint8Array>();
@@ -233,23 +244,28 @@ export function document({
           }
           external.get(file.parent)!.set(file.filename, file.data);
         }
-        return {
-          primary: textEncoder.encode(
-            Markdoc.format(
-              Markdoc.parse(
-                Markdoc.format(
-                  toMarkdocDocument(
-                    transformed as ElementFromValidation[],
-                    componentBlocks
+        try {
+          return {
+            primary: textEncoder.encode(
+              Markdoc.format(
+                Markdoc.parse(
+                  Markdoc.format(
+                    toMarkdocDocument(
+                      transformed as ElementFromValidation[],
+                      componentBlocks
+                    )
                   )
                 )
               )
-            )
-          ),
-          other,
-          external,
-          value: undefined,
-        };
+            ),
+            other,
+            external,
+            value: undefined,
+          };
+        } catch (err) {
+          debugger;
+          throw err;
+        }
       },
       reader: {
         requiresContentInReader: true,

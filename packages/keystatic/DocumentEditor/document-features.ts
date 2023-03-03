@@ -26,6 +26,7 @@ export type DocumentFeatures = {
     softBreaks: boolean;
   };
   links: boolean;
+  images: boolean | { directory?: string; publicPath?: string };
   dividers: boolean;
   layouts: [number, ...number[]][];
 };

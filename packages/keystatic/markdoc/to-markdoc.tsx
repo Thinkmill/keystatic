@@ -48,7 +48,9 @@ function toMarkdocInline(node: ElementFromValidation): Node | Node[] {
   let markdocNode = new Ast.Node('text', { content: node.text });
   for (const mark of marks) {
     const config = markToMarkdoc[mark];
-    markdocNode = new Ast.Node(config.type, {}, [markdocNode], config.tag);
+    if (config) {
+      markdocNode = new Ast.Node(config.type, {}, [markdocNode], config.tag);
+    }
   }
   return markdocNode;
 }
@@ -195,6 +197,17 @@ function toMarkdoc(
       });
     }
     return markdocNode;
+  }
+  if (node.type === 'image') {
+    return new Ast.Node('paragraph', {}, [
+      new Ast.Node('inline', {}, [
+        new Ast.Node('image', {
+          src: encodeURI(node.src as unknown as string),
+          alt: node.alt,
+          title: node.title,
+        }),
+      ]),
+    ]);
   }
   if (node.type === 'code') {
     let content = (node.children[0] as { text: string }).text + '\n';

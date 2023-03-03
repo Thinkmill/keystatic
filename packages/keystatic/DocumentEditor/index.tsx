@@ -50,6 +50,7 @@ import { withBlockMarkdownShortcuts } from './block-markdown-shortcuts';
 import { withPasting } from './pasting';
 import { classNames, css, tokenSchema } from '@voussoir/style';
 import { Box } from '@voussoir/layout';
+import { withImages } from './image';
 // the docs site needs access to Editor and importing slate would use the version from the content field
 // so we're exporting it from here (note that this is not at all visible in the published version)
 export { Editor } from 'slate';
@@ -135,35 +136,37 @@ function _createDocumentEditor(
   includeReact: boolean
 ) {
   return withPasting(
-    withSoftBreaks(
-      withBlocksSchema(
-        withLink(
-          documentFeatures,
-          componentBlocks,
-          withList(
-            withHeading(
-              withInsertMenu(
-                withComponentBlocks(
-                  componentBlocks,
-                  documentFeatures,
-                  withParagraphs(
-                    withShortcuts(
-                      withDivider(
-                        withLayouts(
-                          withMarks(
-                            documentFeatures,
-                            componentBlocks,
-                            withCodeBlock(
-                              withBlockMarkdownShortcuts(
-                                documentFeatures,
-                                componentBlocks,
-                                withBlockquote(
-                                  withDocumentFeaturesNormalization(
-                                    documentFeatures,
-                                    withHistory(
-                                      includeReact
-                                        ? withReact(createEditor())
-                                        : createEditor()
+    withImages(
+      withSoftBreaks(
+        withBlocksSchema(
+          withLink(
+            documentFeatures,
+            componentBlocks,
+            withList(
+              withHeading(
+                withInsertMenu(
+                  withComponentBlocks(
+                    componentBlocks,
+                    documentFeatures,
+                    withParagraphs(
+                      withShortcuts(
+                        withDivider(
+                          withLayouts(
+                            withMarks(
+                              documentFeatures,
+                              componentBlocks,
+                              withCodeBlock(
+                                withBlockMarkdownShortcuts(
+                                  documentFeatures,
+                                  componentBlocks,
+                                  withBlockquote(
+                                    withDocumentFeaturesNormalization(
+                                      documentFeatures,
+                                      withHistory(
+                                        includeReact
+                                          ? withReact(createEditor())
+                                          : createEditor()
+                                      )
                                     )
                                   )
                                 )
@@ -213,7 +216,6 @@ export function DocumentEditor({
       backgroundColor="canvas"
       border="neutral"
       borderRadius="medium"
-      minHeight="size.scale.3000"
       minWidth={0}
     >
       <DocumentEditorProvider
@@ -451,6 +453,7 @@ let styles: any = {
   flex: 1,
   fontFamily: tokenSchema.typography.fontFamily.base,
   fontSize: tokenSchema.fontsize.text.regular.size,
+  minHeight: tokenSchema.size.scale[2000],
 };
 
 let listDepth = 10;
@@ -499,6 +502,7 @@ const blockquoteChildren = [
   'ordered-list',
   'unordered-list',
   'divider',
+  'image',
 ] as const;
 
 const paragraphLike = [...blockquoteChildren, 'blockquote'] as const;
@@ -585,6 +589,7 @@ export const editorSchema = satisfies<
     invalidPositionHandleMode: 'unwrap',
   }),
   'list-item-content': inlineContainer({ invalidPositionHandleMode: 'unwrap' }),
+  image: inlineContainer({ invalidPositionHandleMode: 'move' }),
 });
 
 type InlineContainingType = {

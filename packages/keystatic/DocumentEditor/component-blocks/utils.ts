@@ -165,6 +165,7 @@ export function getDocumentFeaturesForChildField(
               },
       },
       links: options.links === 'inherit',
+      images: options.images === 'inherit',
     },
   };
 }
