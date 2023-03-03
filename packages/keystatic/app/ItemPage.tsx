@@ -61,7 +61,7 @@ type ItemPageProps = {
   localTreeKey: string;
   currentTree: Map<string, TreeNode>;
   basePath: string;
-  slugs: Set<string>;
+  slugInfo: { slugs: Set<string>; field: string };
 };
 
 function ItemPage(props: ItemPageProps) {
@@ -133,17 +133,9 @@ function ItemPage(props: ItemPageProps) {
     basePath: getCollectionItemPath(config, collection, itemSlug),
     currentTree,
   });
-  const slugFieldInfo = useMemo(() => {
-    const slugs = new Set(props.slugs);
-    slugs.delete(props.itemSlug);
-    return {
-      slugs,
-      field: collectionConfig.slugField,
-    };
-  }, [props.slugs, props.itemSlug, collectionConfig.slugField]);
 
   const onUpdate = async () => {
-    if (!clientSideValidateProp(schema, state, slugFieldInfo)) {
+    if (!clientSideValidateProp(schema, state, props.slugInfo)) {
       setForceValidation(true);
       return;
     }
@@ -249,7 +241,7 @@ function ItemPage(props: ItemPageProps) {
             <FormValueContentFromPreviewProps
               key={localTreeKey}
               forceValidation={forceValidation}
-              slugField={slugFieldInfo}
+              slugField={props.slugInfo}
               {...previewProps}
             />
           </AppShellBody>
@@ -416,14 +408,11 @@ function ItemPageWrapper(props: {
   const allSlugs = useSlugsInCollection(props.collection);
 
   const collectionConfig = props.config.collections![props.collection]!;
-  const slugInfo = useMemo(
-    () => ({
-      slug: props.itemSlug,
-      slugField: collectionConfig.slugField,
-      slugs: new Set(allSlugs),
-    }),
-    [allSlugs, collectionConfig.slugField, props.itemSlug]
-  );
+  const slugInfo = useMemo(() => {
+    const slugs = new Set(allSlugs);
+    slugs.delete(props.itemSlug);
+    return { slug: props.itemSlug, field: collectionConfig.slugField, slugs };
+  }, [allSlugs, collectionConfig.slugField, props.itemSlug]);
   const itemData = useItemData({
     config: props.config,
     dirpath: getCollectionItemPath(
@@ -487,7 +476,7 @@ function ItemPageWrapper(props: {
       initialFiles={combined.data.item.initialFiles}
       localTreeKey={combined.data.item.localTreeKey}
       currentTree={combined.data.tree.tree}
-      slugs={slugInfo.slugs}
+      slugInfo={slugInfo}
     />
   );
 }
@@ -496,7 +485,11 @@ const ItemPageShell = (
   props: PropsWithChildren<
     Omit<
       ItemPageProps,
-      'initialFiles' | 'initialState' | 'localTreeKey' | 'currentTree' | 'slugs'
+      | 'initialFiles'
+      | 'initialState'
+      | 'localTreeKey'
+      | 'currentTree'
+      | 'slugInfo'
     > & {
       headerActions?: ReactNode;
     }

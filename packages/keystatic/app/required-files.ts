@@ -223,21 +223,19 @@ function splitFrontmatter(data: Uint8Array) {
 }
 
 export function loadDataFile(data: Uint8Array, formatInfo: FormatInfo) {
-  if (typeof formatInfo === 'string') {
+  const parse = formatInfo.data === 'json' ? JSON.parse : load;
+  if (!formatInfo.contentField) {
     const dataFile = textDecoder.decode(data);
     return {
-      loaded: formatInfo === 'json' ? JSON.parse(dataFile) : load(dataFile),
+      loaded: parse(dataFile),
     };
   }
   const res = splitFrontmatter(data);
   assert(res !== null, 'frontmatter not found');
   return {
-    loaded:
-      formatInfo.frontmatter === 'json'
-        ? JSON.parse(res.frontmatter)
-        : load(res.frontmatter),
+    loaded: parse(res.frontmatter),
     extraFakeFile: {
-      path: `${formatInfo.contentFieldKey}${formatInfo.contentFieldConfig.serializeToFile.primaryExtension}`,
+      path: `${formatInfo.contentField.key}${formatInfo.contentField.config.serializeToFile.primaryExtension}`,
       contents: res.content,
     },
   };

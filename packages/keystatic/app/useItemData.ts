@@ -13,15 +13,13 @@ import { LOADING, useData } from './useData';
 import {
   blobSha,
   FormatInfo,
-  getDataFileExtension,
+  getEntryDataFilepath,
   isGitHubConfig,
   MaybePromise,
 } from './utils';
 
 function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
-  const dataFilepath = `${args.dirpath}/index${getDataFileExtension(
-    args.format
-  )}`;
+  const dataFilepath = getEntryDataFilepath(args.dirpath, args.format);
   const data = files.get(dataFilepath);
   if (!data) {
     throw new Error(`Could not find data file at ${dataFilepath}`);
@@ -34,10 +32,10 @@ function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
     [],
     args.slug
       ? {
-          slug: args.slug.slug,
-          field: args.slug.slugField,
+          field: args.slug.field,
           mode: 'parse',
           slugs: args.slug.slugs,
+          slug: args.slug.slug,
         }
       : undefined
   );
@@ -76,7 +74,7 @@ type UseItemDataArgs = {
   schema: Record<string, ComponentSchema>;
   dirpath: string;
   format: FormatInfo;
-  slug: { slugs: Set<string>; slugField: string; slug: string } | undefined;
+  slug: { slugs: Set<string>; field: string; slug: string } | undefined;
 };
 
 function getAllFilesInTree(tree: Map<string, TreeNode>): TreeEntry[] {
@@ -90,23 +88,24 @@ export function useItemData(args: UseItemDataArgs) {
 
   const rootTree =
     currentBranch.kind === 'loaded' ? currentBranch.data.tree : undefined;
-  const directoriesForTreeKey = useMemo(
+  const locationsForTreeKey = useMemo(
     () =>
       getDirectoriesForTreeKey(
         fields.object(args.schema),
         args.dirpath,
-        args.slug?.slug
+        args.slug?.slug,
+        args.format
       ),
-    [args.dirpath, args.schema, args.slug?.slug]
+    [args.dirpath, args.format, args.schema, args.slug?.slug]
   );
   const localTreeKey = useMemo(
-    () => getTreeKey(directoriesForTreeKey, rootTree ?? new Map()),
-    [directoriesForTreeKey, rootTree]
+    () => getTreeKey(locationsForTreeKey, rootTree ?? new Map()),
+    [locationsForTreeKey, rootTree]
   );
   const tree = useMemo(() => {
     return rootTree ?? new Map();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [localTreeKey, directoriesForTreeKey]);
+  }, [localTreeKey, locationsForTreeKey]);
 
   const hasLoaded = currentBranch.kind === 'loaded';
 
@@ -121,13 +120,10 @@ export function useItemData(args: UseItemDataArgs) {
         }
     > => {
       if (!hasLoaded) return LOADING;
-      const localTreeNode = getTreeNodeAtPath(tree, args.dirpath);
-      if (localTreeNode === undefined || !localTreeNode.children) {
-        return 'not-found' as const;
-      }
-      const localTree = localTreeNode.children;
-      const dataFilepath = `index${getDataFileExtension(args.format)}`;
-      const dataFilepathSha = localTree.get(dataFilepath)?.entry.sha;
+      const dataFilepathSha = getTreeNodeAtPath(
+        tree,
+        getEntryDataFilepath(args.dirpath, args.format)
+      )?.entry.sha;
       if (dataFilepathSha === undefined) {
         return 'not-found' as const;
       }
@@ -138,10 +134,13 @@ export function useItemData(args: UseItemDataArgs) {
         schema: args.schema,
         slug: args.slug,
       };
-      const allBlobs = directoriesForTreeKey
+      const allBlobs = locationsForTreeKey
         .flatMap(dir => {
-          const entries = getTreeNodeAtPath(tree, dir)?.children;
-          return entries ? getAllFilesInTree(entries) : [];
+          const node = getTreeNodeAtPath(tree, dir);
+          if (!node) return [];
+          return node.children
+            ? getAllFilesInTree(node.children)
+            : [node.entry];
         })
         .map(entry => {
           const blob = fetchBlob(args.config, entry.sha, entry.path);
@@ -184,7 +183,7 @@ export function useItemData(args: UseItemDataArgs) {
       args.config,
       args.schema,
       args.slug,
-      directoriesForTreeKey,
+      locationsForTreeKey,
       localTreeKey,
     ])
   );

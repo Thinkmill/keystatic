@@ -1,25 +1,16 @@
 import { isDefined } from 'emery';
 
 import { Config, GitHubConfig } from '../config';
-import { ComponentSchema, SlugFormField } from '../src';
-import { getCollectionItemSlugSuffix } from './path-utils';
+import { ComponentSchema, fields, SlugFormField } from '../src';
+import {
+  getCollectionFormat,
+  getCollectionPath,
+  getDataFileExtension,
+} from './path-utils';
+import { collectDirectoriesUsedInSchema, getTreeKey } from './tree-key';
 import { getTreeNodeAtPath, TreeNode } from './trees';
 
 export * from './path-utils';
-
-export function getTreeNodeForItem(
-  config: Config,
-  collection: string,
-  node: TreeNode
-) {
-  const collectionItemSlugSuffix = getCollectionItemSlugSuffix(
-    config,
-    collection
-  );
-  if (!collectionItemSlugSuffix) return node;
-  if (!node.children) return;
-  return getTreeNodeAtPath(node.children, collectionItemSlugSuffix.slice(1));
-}
 
 export function pluralize(
   count: number,
@@ -87,4 +78,53 @@ export function getSlugFromState(
     throw new Error(`slugField is not a slug field`);
   }
   return field.slug.serialize(value).slug;
+}
+
+export function getEntriesInCollectionWithTreeKey(
+  config: Config,
+  collection: string,
+  rootTree: Map<string, TreeNode>
+): { key: string; slug: string }[] {
+  const collectionConfig = config.collections![collection];
+  const schema = fields.object(collectionConfig.schema);
+  const formatInfo = getCollectionFormat(config, collection);
+  const extension = getDataFileExtension(formatInfo);
+  const collectionPath = getCollectionPath(config, collection);
+  const directory: Map<string, TreeNode> =
+    getTreeNodeAtPath(rootTree, collectionPath)?.children ?? new Map();
+  const entries: { key: string; slug: string }[] = [];
+  const directoriesUsedInSchema = [...collectDirectoriesUsedInSchema(schema)];
+  for (const [key, entry] of directory) {
+    if (formatInfo.dataLocation === 'index') {
+      console.log(entry.children, 'index' + extension);
+      if (entry.children?.has('index' + extension)) {
+        entries.push({
+          key: getTreeKey(
+            [
+              entry.entry.path,
+              ...directoriesUsedInSchema.map(x => `${x}/${key}`),
+            ],
+            rootTree
+          ),
+          slug: key,
+        });
+      }
+    } else {
+      if (!entry.children && key.endsWith(extension)) {
+        const slug = key.slice(0, -extension.length);
+        entries.push({
+          key: getTreeKey(
+            [
+              entry.entry.path,
+              `${collectionPath}/${slug}`,
+              ...directoriesUsedInSchema.map(x => `${x}/${slug}`),
+            ],
+            rootTree
+          ),
+          slug,
+        });
+      }
+    }
+  }
+  return entries;
 }

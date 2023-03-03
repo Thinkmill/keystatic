@@ -28,13 +28,7 @@ import { useRouter } from './router';
 import { AppShellBody, AppShellRoot, EmptyState } from './shell';
 import { useTree, TreeData } from './shell/data';
 import { AppShellHeader } from './shell/header';
-import { getTreeNodeAtPath, TreeNode } from './trees';
-import {
-  getCollectionFormat,
-  getCollectionPath,
-  getDataFileExtension,
-  getTreeNodeForItem,
-} from './utils';
+import { getCollectionPath, getEntriesInCollectionWithTreeKey } from './utils';
 
 type CollectionPageProps = {
   collection: string;
@@ -161,43 +155,29 @@ function CollectionTable(
     direction: 'ascending',
   });
 
-  const entries = useMemo(() => {
-    const collectionPath = getCollectionPath(props.config, props.collection);
-    const fallback = new Map<string, TreeNode>();
-    return {
-      current:
-        getTreeNodeAtPath(props.trees.current.tree, collectionPath)?.children ??
-        fallback,
-      default:
-        getTreeNodeAtPath(props.trees.default.tree, collectionPath)?.children ??
-        fallback,
-    };
-  }, [props.collection, props.config, props.trees]);
-
   const entriesWithStatus = useMemo(() => {
-    return [...entries.current]
-      .filter(([, entry]) =>
-        getTreeNodeForItem(
-          props.config,
-          props.collection,
-          entry
-        )?.children?.has(
-          `index${getDataFileExtension(
-            getCollectionFormat(props.config, props.collection)
-          )}`
-        )
-      )
-      .map(([name, entry]) => {
-        return {
-          name,
-          status: entries.default.has(name)
-            ? entries.default.get(name)?.entry.sha === entry.entry.sha
-              ? 'Unchanged'
-              : 'Changed'
-            : 'Added',
-        } as const;
-      });
-  }, [entries, props.collection, props.config]);
+    const defaultEntries = new Map(
+      getEntriesInCollectionWithTreeKey(
+        props.config,
+        props.collection,
+        props.trees.default.tree
+      ).map(x => [x.slug, x.key])
+    );
+    return getEntriesInCollectionWithTreeKey(
+      props.config,
+      props.collection,
+      props.trees.current.tree
+    ).map(entry => {
+      return {
+        name: entry.slug,
+        status: defaultEntries.has(entry.slug)
+          ? defaultEntries.get(entry.slug) === entry.key
+            ? 'Unchanged'
+            : 'Changed'
+          : 'Added',
+      } as const;
+    });
+  }, [props.collection, props.config, props.trees]);
 
   const filteredItems = useMemo(() => {
     return entriesWithStatus.filter(item =>

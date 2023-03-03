@@ -1,6 +1,10 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { getCollectionPath, getSingletonPath } from '../../app/path-utils';
+import {
+  getCollectionPath,
+  getSingletonFormat,
+  getSingletonPath,
+} from '../../app/path-utils';
 import { updateTreeWithChanges, blobSha } from './trees-server-side';
 import { Config } from '../../config';
 import { getDirectoriesForTreeKey } from '../../app/tree-key';
@@ -85,7 +89,8 @@ export function getAllowedDirectories(config: Config) {
       ...getDirectoriesForTreeKey(
         fields.object(collectionConfig.schema),
         getCollectionPath(config, collection),
-        undefined
+        undefined,
+        { data: 'yaml', contentField: undefined, dataLocation: 'index' }
       )
     );
   }
@@ -96,7 +101,8 @@ export function getAllowedDirectories(config: Config) {
       ...getDirectoriesForTreeKey(
         fields.object(singletonConfig.schema),
         getSingletonPath(config, singleton),
-        undefined
+        undefined,
+        getSingletonFormat(config, singleton)
       )
     );
   }
