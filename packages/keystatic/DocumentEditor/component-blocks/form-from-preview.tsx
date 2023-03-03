@@ -42,6 +42,7 @@ import {
   PathContextProvider,
   SlugFieldProvider,
 } from './fields/text';
+import { getSlugFromState } from '../../app/utils';
 
 type DefaultFieldProps<Key> = GenericPreviewProps<
   Extract<ComponentSchema, { kind: Key }>,
@@ -143,6 +144,28 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
       { key: undefined },
     ]);
   };
+  const modalStateIndex =
+    modalState.state === 'open' ? modalState.index : undefined;
+  const slugInfo = useMemo(() => {
+    if (
+      props.schema.slugField === undefined ||
+      modalStateIndex === undefined ||
+      props.schema.element.kind !== 'object'
+    ) {
+      return;
+    }
+    const val: unknown[] = previewPropsToValue(props);
+    const schema = props.schema.element.fields;
+    const slugField = props.schema.slugField;
+    const slugs = new Set(
+      val
+        .filter((x, i) => i !== modalStateIndex)
+        .map(x =>
+          getSlugFromState({ schema, slugField }, x as Record<string, unknown>)
+        )
+    );
+    return { slugs, field: slugField };
+  }, [modalStateIndex, props]);
 
   return (
     <Flex
@@ -268,6 +291,7 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
                       onChange={onModalChange}
                       schema={elementProps.schema}
                       value={modalState.value}
+                      slugField={slugInfo}
                     />
                   </AddToPathProvider>
                 </Flex>
@@ -466,9 +490,8 @@ export const FormValueContentFromPreviewProps: MemoExoticComponent<
       autoFocus?: boolean;
       forceValidation?: boolean;
       slugField?: {
-        collection: string;
-        slugField: string;
-        currentSlug: string | undefined;
+        slugs: Set<string>;
+        field: string;
       };
     }
   ) => ReactElement
@@ -486,12 +509,24 @@ function ArrayFieldItemModalContent(props: {
   schema: NonChildFieldComponentSchema;
   value: unknown;
   onChange: (cb: (value: unknown) => unknown) => void;
+  slugField:
+    | {
+        slugs: Set<string>;
+        field: string;
+      }
+    | undefined;
 }) {
   const previewProps = useMemo(
     () => createGetPreviewProps(props.schema, props.onChange, () => undefined),
     [props.schema, props.onChange]
   )(props.value);
-  return <InnerFormValueContentFromPreviewProps autoFocus {...previewProps} />;
+  return (
+    <FormValueContentFromPreviewProps
+      slugField={props.slugField}
+      autoFocus
+      {...previewProps}
+    />
+  );
 }
 
 function findFocusableObjectFieldKey(schema: ObjectField): string | undefined {

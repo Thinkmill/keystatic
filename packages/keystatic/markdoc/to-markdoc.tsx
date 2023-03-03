@@ -276,14 +276,9 @@ function toMarkdoc(
       node.children.length === 1 &&
       node.children[0].type === 'component-inline-prop' &&
       node.children[0].propPath === undefined;
-    const componentBlock = componentBlocks[node.component];
-    let singleChildField;
-    if (componentBlock) {
-      singleChildField = findSingleChildField({
-        kind: 'object',
-        fields: componentBlock.schema,
-      });
-    }
+    const componentBlock = componentBlocks[node.component] as
+      | ComponentBlock
+      | undefined;
 
     const childrenAsMarkdoc: {
       type: 'component-block-prop' | 'component-inline-prop';
@@ -308,25 +303,29 @@ function toMarkdoc(
       }
     }
 
-    const schema = { kind: 'object' as const, fields: componentBlock.schema };
-
     const attributes = componentBlock
       ? (removeUnnecessaryChildFieldValues(
-          schema,
+          { kind: 'object' as const, fields: componentBlock.schema },
           undefined,
           node.props
         ) as Record<string, unknown>)
       : node.props;
 
-    if (singleChildField) {
-      const children: Node[] = [];
-      toChildrenAndProps(
-        childrenAsMarkdoc,
-        children,
-        attributes,
-        singleChildField
-      );
-      return new Ast.Node('tag', attributes, children, node.component);
+    if (componentBlock) {
+      const singleChildField = findSingleChildField({
+        kind: 'object',
+        fields: componentBlock.schema,
+      });
+      if (singleChildField) {
+        const children: Node[] = [];
+        toChildrenAndProps(
+          childrenAsMarkdoc,
+          children,
+          attributes,
+          singleChildField
+        );
+        return new Ast.Node('tag', attributes, children, node.component);
+      }
     }
     const children = isVoid
       ? []

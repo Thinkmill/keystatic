@@ -58,9 +58,7 @@ export type SlugFormField<Value, Options, SerializedValue> = Omit<
   };
   validate(
     value: unknown,
-    slugFieldInfo:
-      | { slugs: Set<string>; currentSlug: string | undefined }
-      | undefined
+    slugFieldInfo: { slugs: Set<string> } | undefined
   ): boolean;
 };
 
@@ -190,6 +188,7 @@ export type ArrayField<ElementField extends ComponentSchema> = {
   // this is written with unknown to avoid typescript being annoying about circularity or variance things
   itemLabel?(props: unknown): string;
   asChildTag?: string;
+  slugField?: string;
 };
 
 export interface ObjectField<
@@ -221,6 +220,7 @@ type ArrayFieldInComponentSchema = {
   // this is written with unknown to avoid typescript being annoying about circularity or variance things
   itemLabel?(props: unknown): string;
   asChildTag?: string;
+  slugField?: string;
 };
 
 export type ComponentSchema =

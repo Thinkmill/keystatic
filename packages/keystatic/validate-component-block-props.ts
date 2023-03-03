@@ -1,5 +1,5 @@
 import { assertNever } from 'emery';
-import { isSlugFormField } from './app/utils';
+import { getSlugFromState, isSlugFormField } from './app/utils';
 import { ComponentSchema } from './DocumentEditor/component-blocks/api';
 import { getInitialPropsValue } from './DocumentEditor/component-blocks/initial-values';
 import { ReadonlyPropPath } from './DocumentEditor/component-blocks/utils';
@@ -18,7 +18,12 @@ export function validateComponentBlockProps(
   path: ReadonlyPropPath,
   slugField:
     | {
-        mode: 'state' | 'parse' | 'read';
+        mode: 'state';
+        field: string;
+        slugs: Set<string>;
+      }
+    | {
+        mode: 'parse' | 'read';
         slug: string;
         field: string;
         slugs: Set<string>;
@@ -26,12 +31,11 @@ export function validateComponentBlockProps(
     | undefined
 ): any {
   if (schema.kind === 'form') {
-    if (path.length === 1 && slugField?.field === path[0]) {
+    if (slugField?.field === path[path.length - 1]) {
       if (!isSlugFormField(schema)) {
         throw new Error('slugField is not a slug field');
       }
       const slugInfo = {
-        currentSlug: slugField.slug,
         slugs: slugField.slugs,
       };
       if (slugField.mode === 'state') {
@@ -87,7 +91,7 @@ export function validateComponentBlockProps(
       schema.discriminant,
       discriminant,
       path.concat('discriminant'),
-      slugField
+      undefined
     );
     if (discriminantVal !== undefined) {
       obj.discriminant = discriminantVal;
@@ -96,7 +100,7 @@ export function validateComponentBlockProps(
       schema.values[discriminant],
       val,
       path.concat('value'),
-      slugField
+      undefined
     );
     if (conditionalFieldValue !== undefined) {
       obj.value = conditionalFieldValue;
@@ -127,7 +131,7 @@ export function validateComponentBlockProps(
         schema.fields[key],
         individualVal,
         path.concat(key),
-        slugField
+        slugField?.field === key ? slugField : undefined
       );
 
       // for some reason mongo or mongoose or something is saving undefined as null
@@ -142,12 +146,29 @@ export function validateComponentBlockProps(
     if (!Array.isArray(value)) {
       throw new PropValidationError('Array field value must be an array', path);
     }
+    let slugInfo: undefined | { slugField: string; slugs: string[] };
+    if (schema.slugField !== undefined && schema.element.kind === 'object') {
+      const innerSchema = schema.element.fields;
+      const { slugField } = schema;
+      slugInfo = {
+        slugField,
+        slugs: value.map(val =>
+          getSlugFromState({ schema: innerSchema, slugField }, val)
+        ),
+      };
+    }
     return value.map((innerVal, i) => {
       return validateComponentBlockProps(
         schema.element,
         innerVal,
         path.concat(i),
-        slugField
+        slugInfo === undefined
+          ? undefined
+          : {
+              field: slugInfo.slugField,
+              slugs: new Set(slugInfo.slugs.filter((_, idx) => i !== idx)),
+              mode: 'state',
+            }
       );
     });
   }

@@ -133,14 +133,17 @@ function ItemPage(props: ItemPageProps) {
     basePath: getCollectionItemPath(config, collection, itemSlug),
     currentTree,
   });
+  const slugFieldInfo = useMemo(() => {
+    const slugs = new Set(props.slugs);
+    slugs.delete(props.itemSlug);
+    return {
+      slugs,
+      field: collectionConfig.slugField,
+    };
+  }, [props.slugs, props.itemSlug, collectionConfig.slugField]);
+
   const onUpdate = async () => {
-    if (
-      !clientSideValidateProp(schema, state, {
-        currentSlug: props.itemSlug,
-        field: collectionConfig.slugField,
-        slugs: props.slugs,
-      })
-    ) {
+    if (!clientSideValidateProp(schema, state, slugFieldInfo)) {
       setForceValidation(true);
       return;
     }
@@ -155,15 +158,6 @@ function ItemPage(props: ItemPageProps) {
     }
   };
   const formID = 'item-edit-form';
-
-  const slugFieldInfo = useMemo(
-    () => ({
-      collection: props.collection,
-      currentSlug: props.itemSlug,
-      slugField: collectionConfig.slugField,
-    }),
-    [collectionConfig.slugField, props.collection, props.itemSlug]
-  );
 
   return (
     <>

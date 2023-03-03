@@ -1,4 +1,9 @@
-import { ComponentSchema, GenericPreviewProps, ArrayField } from '../api';
+import {
+  ComponentSchema,
+  GenericPreviewProps,
+  ArrayField,
+  SlugFormField,
+} from '../api';
 
 export function array<ElementField extends ComponentSchema>(
   element: ElementField,
@@ -6,6 +11,17 @@ export function array<ElementField extends ComponentSchema>(
     label?: string;
     itemLabel?: (props: GenericPreviewProps<ElementField, unknown>) => string;
     asChildTag?: string;
+    slugField?: ElementField extends { kind: 'object' }
+      ? {
+          [K in keyof ElementField['fields']]: ElementField['fields'][K] extends SlugFormField<
+            any,
+            any,
+            any
+          >
+            ? K
+            : never;
+        }[keyof ElementField['fields']]
+      : never;
   }
 ): ArrayField<ElementField> {
   return {
@@ -14,5 +30,6 @@ export function array<ElementField extends ComponentSchema>(
     label: opts?.label ?? 'Items',
     itemLabel: opts?.itemLabel,
     asChildTag: opts?.asChildTag,
+    slugField: opts?.slugField as string,
   };
 }

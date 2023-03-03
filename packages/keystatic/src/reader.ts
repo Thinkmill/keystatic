@@ -172,7 +172,9 @@ async function readItem(
           loadedFiles,
           'read',
           itemDir,
-          slugField?.slug
+          slugField?.slug,
+          validated,
+          schema
         );
       };
     } else {
@@ -182,7 +184,9 @@ async function readItem(
         new Map(),
         'read',
         itemDir,
-        slugField?.slug
+        slugField?.slug,
+        validated,
+        schema
       );
     }
   }

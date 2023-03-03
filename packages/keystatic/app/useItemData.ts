@@ -48,6 +48,7 @@ function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
       extraFakeFile.contents
     );
   }
+  const rootSchema = schema;
   const initialState = transformProps(schema, validated, {
     form(schema, val, path) {
       if ('serializeToFile' in schema) {
@@ -57,7 +58,9 @@ function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
           filesWithFakeFile,
           'edit',
           args.dirpath,
-          args.slug?.slug
+          args.slug?.slug,
+          validated,
+          rootSchema
         );
       }
       return val;
