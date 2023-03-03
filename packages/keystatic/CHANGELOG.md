@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.55
+
+### Patch Changes
+
+- 86e0b27: Rename `format.frontmatter` to `format.data` and make it optional
+- 86e0b27: Add `format.location` option
+
 ## 0.0.54
 
 ### Patch Changes
