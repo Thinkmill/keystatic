@@ -1,43 +1,63 @@
 import { tokenSchema } from '@voussoir/style';
 import { TextField } from '@voussoir/text-field';
-import { useState } from 'react';
+import { useReducer } from 'react';
 import { isValidURL } from '../../isValidURL';
 import { BasicFormField } from '../api';
+import { RequiredValidation } from './utils';
 
-export function url({
+function validateUrl(
+  validation: { isRequired?: boolean } | undefined,
+  value: unknown,
+  label: string
+) {
+  if (value !== null && (typeof value !== 'string' || !isValidURL(value))) {
+    return `${label} is not a valid URL`;
+  }
+
+  if (validation?.isRequired && value === null) {
+    return `${label} is required`;
+  }
+}
+
+export function url<IsRequired extends boolean | undefined>({
   label,
   defaultValue = '',
+  validation,
 }: {
   label: string;
   defaultValue?: string;
-}): BasicFormField<string, undefined> {
-  const validate = (value: unknown) => {
-    return typeof value === 'string' && (value === '' || isValidURL(value));
-  };
+  validation?: { isRequired?: IsRequired };
+} & RequiredValidation<IsRequired>): BasicFormField<
+  string | (IsRequired extends true ? never : null),
+  undefined
+> {
   return {
     kind: 'form',
     Input({ value, onChange, autoFocus, forceValidation }) {
-      const [blurred, setBlurred] = useState(false);
-      const showValidation = forceValidation || (blurred && !validate(value));
+      const [blurred, onBlur] = useReducer(() => true, false);
       return (
         <TextField
           width="initial"
           maxWidth={`calc(${tokenSchema.size.alias.singleLineWidth} * 3)`}
           label={label}
           autoFocus={autoFocus}
-          value={value}
-          onChange={onChange}
-          onBlur={() => {
-            setBlurred(true);
+          value={value === null ? '' : value}
+          onChange={val => {
+            onChange((val === '' ? null : val) as any);
           }}
+          onBlur={onBlur}
           errorMessage={
-            showValidation ? 'Please provide a valid URL' : undefined
+            forceValidation || blurred
+              ? validateUrl(validation, value, label)
+              : undefined
           }
         />
       );
     },
     options: undefined,
     defaultValue,
-    validate,
+    validate(val) {
+      return validateUrl(validation, val, label) === undefined;
+    },
   };
 }
