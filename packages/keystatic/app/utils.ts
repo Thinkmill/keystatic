@@ -4,6 +4,7 @@ import { Config, GitHubConfig } from '../config';
 import { ComponentSchema, fields, SlugFormField } from '../src';
 import {
   getCollectionFormat,
+  getCollectionItemPath,
   getCollectionPath,
   getDataFileExtension,
 } from './path-utils';
@@ -96,12 +97,15 @@ export function getEntriesInCollectionWithTreeKey(
   const directoriesUsedInSchema = [...collectDirectoriesUsedInSchema(schema)];
   for (const [key, entry] of directory) {
     if (formatInfo.dataLocation === 'index') {
-      console.log(entry.children, 'index' + extension);
-      if (entry.children?.has('index' + extension)) {
+      const actualEntry = getTreeNodeAtPath(
+        rootTree,
+        getCollectionItemPath(config, collection, key)
+      );
+      if (actualEntry?.children?.has('index' + extension)) {
         entries.push({
           key: getTreeKey(
             [
-              entry.entry.path,
+              actualEntry.entry.path,
               ...directoriesUsedInSchema.map(x => `${x}/${key}`),
             ],
             rootTree
