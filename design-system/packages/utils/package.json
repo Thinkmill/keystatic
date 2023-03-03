@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/utils",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Utility hooks, types, and components for Voussoir.",
   "license": "MIT",
   "main": "dist/voussoir-utils.cjs.js",

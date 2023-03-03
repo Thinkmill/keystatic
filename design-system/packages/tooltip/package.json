@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/tooltip",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tooltips are floating text labels used to concisely describe the function of their associated element.",
   "license": "MIT",
   "main": "dist/voussoir-tooltip.cjs.js",
@@ -24,12 +24,12 @@
     "@react-stately/tooltip": "^3.2.3",
     "@react-types/overlays": "^3.6.5",
     "@voussoir/layout": "^0.1.0",
-    "@voussoir/overlays": "^0.1.0",
+    "@voussoir/overlays": "^0.1.2",
     "@voussoir/slots": "^0.1.0",
     "@voussoir/style": "^0.1.0",
     "@voussoir/types": "^0.1.0",
     "@voussoir/typography": "^0.1.0",
-    "@voussoir/utils": "^2.0.0"
+    "@voussoir/utils": "^2.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",

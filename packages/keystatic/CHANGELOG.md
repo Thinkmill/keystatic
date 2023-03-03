@@ -1,5 +1,43 @@
 # @keystatic/core
 
+## 0.0.54
+
+### Patch Changes
+
+- 51ffbae: Add built-in image block to document field
+- 6d18465: New package "@voussoir/breadcrumbs" exports `Breadcrumbs` component.
+
+  @voussoir/badge
+
+  Use common test-utils package.
+
+  @voussoir/field
+
+  Reduce field label weight: ~semibold~ --> "medium".
+
+  @voussoir/listbox
+
+  Fix checkmark spacing for lists containing selectable items.
+
+  @voussoir/text-field
+
+  Add font smoothing to input text.
+
+  @voussoir/utils
+
+  Add tests for `isReactText()` guard.
+
+- d161cea: Add `slugField` option to array fields
+- Updated dependencies [6d18465]
+- Updated dependencies [d87141d]
+  - @voussoir/badge@0.1.1
+  - @voussoir/field@0.1.3
+  - @voussoir/listbox@0.1.2
+  - @voussoir/overlays@0.1.2
+  - @voussoir/text-field@0.1.3
+  - @voussoir/utils@2.0.1
+  - @voussoir/tooltip@0.1.1
+
 ## 0.0.53
 
 ### Patch Changes
