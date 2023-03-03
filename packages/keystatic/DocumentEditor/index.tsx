@@ -216,7 +216,6 @@ export function DocumentEditor({
       backgroundColor="canvas"
       border="neutral"
       borderRadius="medium"
-      minHeight="size.scale.3000"
       minWidth={0}
     >
       <DocumentEditorProvider
@@ -454,6 +453,7 @@ let styles: any = {
   flex: 1,
   fontFamily: tokenSchema.typography.fontFamily.base,
   fontSize: tokenSchema.fontsize.text.regular.size,
+  minHeight: tokenSchema.size.scale[2000],
 };
 
 let listDepth = 10;
