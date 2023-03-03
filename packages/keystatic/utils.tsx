@@ -30,6 +30,7 @@ import { Config } from './src';
 import { getAuth } from './app/auth';
 import { isSlugFormField } from './app/utils';
 import { getDirectoriesForTreeKey, getTreeKey } from './app/tree-key';
+import { getPropPathPortion } from './app/required-files';
 
 const textEncoder = new TextEncoder();
 
@@ -389,8 +390,8 @@ export function useDeleteItem(args: {
 }
 
 export async function toFiles(
-  value: unknown,
-  schema: ComponentSchema,
+  rootValue: unknown,
+  rootSchema: ComponentSchema,
   slug: { field: string; value: string } | undefined
 ) {
   const extraFiles: {
@@ -399,7 +400,7 @@ export async function toFiles(
     contents: Uint8Array;
   }[] = [];
   return {
-    value: await asyncTransformProps(schema, value, {
+    value: await asyncTransformProps(rootSchema, rootValue, {
       async form(schema, value, propPath) {
         if (propPath.length === 1 && slug?.field === propPath[0]) {
           if (!isSlugFormField(schema)) {
@@ -409,7 +410,11 @@ export async function toFiles(
         }
         if ('serializeToFile' in schema && schema.serializeToFile) {
           if (schema.serializeToFile.kind === 'asset') {
-            const suggestedFilenamePrefix = propPath.join('/');
+            const suggestedFilenamePrefix = getPropPathPortion(
+              propPath,
+              rootSchema,
+              rootValue
+            );
 
             const { content, value: forYaml } =
               schema.serializeToFile.serialize(value, suggestedFilenamePrefix);
@@ -438,14 +443,18 @@ export async function toFiles(
             if (primary) {
               extraFiles.push({
                 path:
-                  propPath.join('/') + schema.serializeToFile.primaryExtension,
+                  getPropPathPortion(propPath, rootSchema, rootValue) +
+                  schema.serializeToFile.primaryExtension,
                 contents: primary,
                 parent: undefined,
               });
             }
             for (const [key, contents] of other) {
               extraFiles.push({
-                path: propPath.join('/') + '/' + key,
+                path:
+                  getPropPathPortion(propPath, rootSchema, rootValue) +
+                  '/' +
+                  key,
                 contents,
                 parent: undefined,
               });

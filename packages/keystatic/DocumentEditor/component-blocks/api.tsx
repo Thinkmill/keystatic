@@ -190,6 +190,7 @@ export type ArrayField<ElementField extends ComponentSchema> = {
   // this is written with unknown to avoid typescript being annoying about circularity or variance things
   itemLabel?(props: unknown): string;
   asChildTag?: string;
+  slugField?: string;
 };
 
 export interface ObjectField<
@@ -221,6 +222,7 @@ type ArrayFieldInComponentSchema = {
   // this is written with unknown to avoid typescript being annoying about circularity or variance things
   itemLabel?(props: unknown): string;
   asChildTag?: string;
+  slugField?: string;
 };
 
 export type ComponentSchema =
