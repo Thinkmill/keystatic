@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/field",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Provides the accessibility implementation for fields, connecting the label, description, and message to an input element.",
   "license": "MIT",
   "main": "dist/voussoir-field.cjs.js",
@@ -26,7 +26,7 @@
     "@voussoir/style": "^0.1.1",
     "@voussoir/types": "^0.1.0",
     "@voussoir/typography": "^0.1.0",
-    "@voussoir/utils": "^2.0.0",
+    "@voussoir/utils": "^2.0.1",
     "emery": "^1.4.1"
   },
   "devDependencies": {
