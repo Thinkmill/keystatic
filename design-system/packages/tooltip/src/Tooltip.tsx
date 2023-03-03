@@ -1,5 +1,5 @@
 import { useTooltip } from '@react-aria/tooltip';
-import { mergeProps, useObjectRef } from '@react-aria/utils';
+import { mergeProps, mergeRefs, useObjectRef } from '@react-aria/utils';
 import {
   ForwardedRef,
   forwardRef,
@@ -42,6 +42,7 @@ export const Tooltip: ForwardRefExoticComponent<
   let {
     state,
     targetRef: triggerRef,
+    overlayRef: tooltipRef,
     crossOffset,
     offset,
     ...contextualProps
@@ -55,7 +56,9 @@ export const Tooltip: ForwardRefExoticComponent<
   let styleProps = useStyleProps(otherProps);
 
   let ref = useRef<HTMLDivElement>(null);
-  let overlayRef = useObjectRef(forwardedRef); // for testing etc. tooltips may be rendered w/o a trigger
+  let overlayRef = useObjectRef(
+    tooltipRef ? mergeRefs(tooltipRef, forwardedRef) : forwardedRef
+  ); // for testing etc. tooltips may be rendered w/o a trigger
   let targetRef = triggerRef ?? ref; // for testing etc. tooltips may be rendered w/o a trigger
 
   let slots = useMemo(

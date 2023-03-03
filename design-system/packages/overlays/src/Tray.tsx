@@ -4,6 +4,7 @@ import {
   HTMLAttributes,
   ForwardRefExoticComponent,
   Ref,
+  useRef,
 } from 'react';
 import { useModalOverlay } from '@react-aria/overlays';
 import { useObjectRef, useViewportSize } from '@react-aria/utils';
@@ -21,10 +22,11 @@ import { Blanket } from './Blanket';
 import { Overlay } from './Overlay';
 import { TrayProps } from './types';
 
-type TrayWrapperProps = {
-  isOpen?: boolean;
-} & TrayProps &
-  HTMLAttributes<HTMLElement>;
+type TrayWrapperProps = TrayProps &
+  HTMLAttributes<HTMLElement> & {
+    isOpen?: boolean;
+    wrapperRef: Ref<HTMLDivElement>;
+  };
 
 /**
  * A low-level utility component for implementing things like info dialogs,
@@ -35,10 +37,12 @@ export const Tray: ForwardRefExoticComponent<
   TrayProps & { ref?: Ref<HTMLDivElement> }
 > = forwardRef<HTMLDivElement, TrayProps>(function Tray(props, forwardedRef) {
   let { children, state, ...otherProps } = props;
+  let wrapperRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Overlay {...otherProps} isOpen={state.isOpen}>
-      <TrayWrapper ref={forwardedRef} {...props}>
+    /* @ts-expect-error FIXME: resolve ref inconsistencies */
+    <Overlay {...otherProps} isOpen={state.isOpen} nodeRef={wrapperRef}>
+      <TrayWrapper ref={forwardedRef} {...props} wrapperRef={wrapperRef}>
         {children}
       </TrayWrapper>
     </Overlay>
@@ -49,7 +53,7 @@ let TrayWrapper = forwardRef(function TrayWrapper(
   props: TrayWrapperProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
-  let { children, state, isFixedHeight, isOpen } = props;
+  let { children, state, isFixedHeight, isOpen, wrapperRef } = props;
 
   let domRef = useObjectRef(forwardedRef);
   let { modalProps, underlayProps } = useModalOverlay(
@@ -69,8 +73,10 @@ let TrayWrapper = forwardRef(function TrayWrapper(
   let viewport = useViewportSize();
   let maxWidth = 440;
 
+  // Attach Transition's nodeRef to outer most wrapper for node.reflow:
+  // https://github.com/reactjs/react-transition-group/blob/c89f807067b32eea6f68fd6c622190d88ced82e2/src/Transition.js#L231
   return (
-    <>
+    <div ref={wrapperRef}>
       <Blanket {...underlayProps} isOpen={isOpen} />
       <div
         className={css({
@@ -151,6 +157,6 @@ let TrayWrapper = forwardRef(function TrayWrapper(
           {children}
         </div>
       </div>
-    </>
+    </div>
   );
 });

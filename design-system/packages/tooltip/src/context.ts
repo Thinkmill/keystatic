@@ -6,6 +6,7 @@ import { RootStyleProps } from '@voussoir/style';
 
 type TooltipContextProps = {
   state?: TooltipTriggerState;
+  overlayRef?: RefObject<HTMLDivElement>;
   targetRef?: RefObject<HTMLElement>;
   arrowProps?: HTMLAttributes<HTMLElement>;
 } & PositionProps &

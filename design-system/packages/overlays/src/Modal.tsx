@@ -6,6 +6,7 @@ import {
   ForwardRefExoticComponent,
   HTMLAttributes,
   Ref,
+  useRef,
 } from 'react';
 
 import {
@@ -21,10 +22,11 @@ import { Blanket } from './Blanket';
 import { Overlay } from './Overlay';
 import { ModalProps } from './types';
 
-type ModalWrapperProps = {
-  isOpen?: boolean;
-} & ModalProps &
-  HTMLAttributes<HTMLElement>;
+type ModalWrapperProps = ModalProps &
+  HTMLAttributes<HTMLElement> & {
+    isOpen?: boolean;
+    wrapperRef: Ref<HTMLDivElement>;
+  };
 
 /**
  * A low-level utility component for implementing things like dialogs and
@@ -37,10 +39,12 @@ export const Modal: ForwardRefExoticComponent<
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
   let { children, state, ...otherProps } = props;
+  let wrapperRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Overlay {...otherProps} isOpen={state.isOpen}>
-      <ModalWrapper ref={forwardedRef} {...props}>
+    /* @ts-expect-error FIXME: resolve ref inconsistencies */
+    <Overlay {...otherProps} isOpen={state.isOpen} nodeRef={wrapperRef}>
+      <ModalWrapper ref={forwardedRef} {...props} wrapperRef={wrapperRef}>
         {children}
       </ModalWrapper>
     </Overlay>
@@ -51,7 +55,7 @@ const ModalWrapper = forwardRef(function ModalWrapper(
   props: ModalWrapperProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
-  let { type, children, state, isOpen } = props;
+  let { type, children, state, isOpen, wrapperRef } = props;
 
   let domRef = useObjectRef(forwardedRef);
   let { modalProps, underlayProps } = useModalOverlay(props, state, domRef);
@@ -66,8 +70,10 @@ const ModalWrapper = forwardRef(function ModalWrapper(
   // keyboard is displayed.
   let viewport = useViewportSize();
 
+  // Attach Transition's nodeRef to outer most wrapper for node.reflow:
+  // https://github.com/reactjs/react-transition-group/blob/c89f807067b32eea6f68fd6c622190d88ced82e2/src/Transition.js#L231
   return (
-    <>
+    <div ref={wrapperRef}>
       <Blanket {...underlayProps} isOpen={isOpen} />
       <div
         className={css({
@@ -139,6 +145,6 @@ const ModalWrapper = forwardRef(function ModalWrapper(
           {children}
         </div>
       </div>
-    </>
+    </div>
   );
 });

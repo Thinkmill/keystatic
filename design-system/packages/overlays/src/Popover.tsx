@@ -7,6 +7,7 @@ import {
   ForwardedRef,
   ForwardRefExoticComponent,
   Ref,
+  useRef,
 } from 'react';
 
 import {
@@ -24,9 +25,10 @@ import { Overlay } from './Overlay';
 import { PopoverProps } from './types';
 import { DirectionIndicator } from './DirectionIndicator';
 
-type PopoverWrapperProps = {
+type PopoverWrapperProps = PopoverProps & {
   isOpen?: boolean;
-} & PopoverProps;
+  wrapperRef: Ref<HTMLDivElement>;
+};
 
 /**
  * A low-level utility component for implementing things like info dialogs,
@@ -39,10 +41,12 @@ export const Popover: ForwardRefExoticComponent<
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
   let { children, state, ...otherProps } = props;
+  let wrapperRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Overlay {...otherProps} isOpen={state.isOpen}>
-      <PopoverWrapper ref={forwardedRef} {...props}>
+    /* @ts-expect-error FIXME: resolve ref inconsistencies */
+    <Overlay {...otherProps} isOpen={state.isOpen} nodeRef={wrapperRef}>
+      <PopoverWrapper ref={forwardedRef} {...props} wrapperRef={wrapperRef}>
         {children}
       </PopoverWrapper>
     </Overlay>
@@ -53,7 +57,7 @@ const PopoverWrapper = forwardRef(function PopoverWrapper(
   props: PopoverWrapperProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
-  let { children, isOpen, hideArrow, isNonModal, state } = props;
+  let { children, isOpen, hideArrow, isNonModal, state, wrapperRef } = props;
 
   let popoverRef = useObjectRef(forwardedRef);
   let { popoverProps, arrowProps, underlayProps, placement } = usePopover(
@@ -72,8 +76,10 @@ const PopoverWrapper = forwardRef(function PopoverWrapper(
     placement: usePreferredPlacement(props.placement, placement as Axis),
   });
 
+  // Attach Transition's nodeRef to outer most wrapper for node.reflow:
+  // https://github.com/reactjs/react-transition-group/blob/c89f807067b32eea6f68fd6c622190d88ced82e2/src/Transition.js#L231
   return (
-    <>
+    <div ref={wrapperRef}>
       {!isNonModal && (
         <Blanket isTransparent {...underlayProps} isOpen={isOpen} />
       )}
@@ -97,7 +103,7 @@ const PopoverWrapper = forwardRef(function PopoverWrapper(
         {children}
         <DismissButton onDismiss={state.close} />
       </div>
-    </>
+    </div>
   );
 });
 
