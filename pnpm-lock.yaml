@@ -1298,6 +1298,7 @@ importers:
       '@voussoir/slots': ^0.1.0
       '@voussoir/storybook': ^0.0.0
       '@voussoir/style': ^0.1.0
+      '@voussoir/test-utils': ^2.0.0
       '@voussoir/types': ^0.1.0
       '@voussoir/typography': ^0.1.0
       '@voussoir/utils': ^2.0.0
@@ -1324,6 +1325,7 @@ importers:
       '@types/react-transition-group': 4.4.5
       '@voussoir/button': link:../button
       '@voussoir/storybook': link:../../docs/storybook
+      '@voussoir/test-utils': link:../test-utils
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
 
