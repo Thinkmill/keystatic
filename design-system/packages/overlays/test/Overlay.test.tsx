@@ -1,40 +1,26 @@
 import '@testing-library/jest-dom';
-import { render } from '@testing-library/react';
-import { TestProvider } from '@voussoir/core';
-import { createRef } from 'react';
+import { createRef, ForwardedRef, forwardRef, useRef } from 'react';
 
-import { Overlay } from '../src';
+import { renderWithProvider } from '@voussoir/test-utils';
+
+import { Overlay, OverlayProps } from '../src';
 
 describe('overlays/Overlay', () => {
   it('should render nothing if isOpen is not set', () => {
-    const { queryByTestId } = render(
-      <Overlay>
-        <ExampleOverlay />
-      </Overlay>,
-      { wrapper: TestProvider }
-    );
+    const { queryByTestId } = renderWithProvider(<ExampleOverlay />);
 
     expect(queryByTestId(testID)).toBe(null);
   });
 
   it('should render children when isOpen is set', () => {
-    const { getByTestId } = render(
-      <Overlay isOpen>
-        <ExampleOverlay />
-      </Overlay>,
-      { wrapper: TestProvider }
-    );
+    const { getByTestId } = renderWithProvider(<ExampleOverlay isOpen />);
 
     expect(getByTestId(testID)).toBeTruthy();
   });
 
   it('should render into a portal in the body', async () => {
     const overlayRef = createRef<HTMLDivElement>();
-    render(
-      <Overlay isOpen ref={overlayRef}>
-        <ExampleOverlay />
-      </Overlay>
-    );
+    renderWithProvider(<ExampleOverlay isOpen ref={overlayRef} />);
 
     const overlayNode = overlayRef.current;
     expect(overlayNode?.parentNode).toBe(document.body);
@@ -43,6 +29,17 @@ describe('overlays/Overlay', () => {
 
 const testID = 'overlay-content';
 
-function ExampleOverlay() {
-  return <span data-testid={testID}>Overlay content</span>;
-}
+const ExampleOverlay = forwardRef(function ExampleOverlay(
+  props: Partial<OverlayProps>,
+  ref: ForwardedRef<HTMLDivElement>
+) {
+  let nodeRef = useRef<HTMLDivElement>(null);
+  return (
+    /* @ts-expect-error FIXME: resolve ref inconsistencies */
+    <Overlay {...props} ref={ref} nodeRef={nodeRef}>
+      <span data-testid={testID} ref={nodeRef}>
+        Overlay content
+      </span>
+    </Overlay>
+  );
+});

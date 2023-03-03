@@ -3,7 +3,7 @@ import { useOverlayTrigger } from '@react-aria/overlays';
 import { useOverlayTriggerState } from '@react-stately/overlays';
 import { ArgTypes, storiesOf } from '@voussoir/storybook';
 
-import { Button } from '@voussoir/button';
+import { ActionButton } from '@voussoir/button';
 import { Box, Flex } from '@voussoir/layout';
 import { Text } from '@voussoir/typography';
 
@@ -21,9 +21,9 @@ storiesOf('Components/Popover', module)
 
     return (
       <>
-        <Button {...triggerProps} ref={triggerRef}>
+        <ActionButton {...triggerProps} ref={triggerRef}>
           Always open
-        </Button>
+        </ActionButton>
         <Popover {...overlayProps} triggerRef={triggerRef} state={state}>
           <Box padding="xlarge" width={320} maxWidth="100%">
             <Text>
@@ -51,9 +51,9 @@ storiesOf('Components/Popover', module)
 
       return (
         <Flex direction="column" gap="regular">
-          <Button {...triggerProps} ref={targetRef}>
+          <ActionButton {...triggerProps} ref={targetRef}>
             Toggle
-          </Button>
+          </ActionButton>
           <Popover
             triggerRef={targetRef}
             state={state}

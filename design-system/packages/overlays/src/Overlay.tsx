@@ -18,6 +18,7 @@ export const Overlay = forwardRef(function Overlay(
     children,
     isOpen,
     container,
+    nodeRef,
     onEnter,
     onEntering,
     onEntered,
@@ -56,14 +57,15 @@ export const Overlay = forwardRef(function Overlay(
         isDisabled={false}
       >
         <OpenTransition
-          in={isOpen}
           appear
-          onExit={onExit}
-          onExiting={onExiting}
-          onExited={handleExited}
+          in={isOpen}
+          nodeRef={nodeRef}
           onEnter={onEnter}
-          onEntering={onEntering}
           onEntered={handleEntered}
+          onEntering={onEntering}
+          onExit={onExit}
+          onExited={handleExited}
+          onExiting={onExiting}
         >
           {children}
         </OpenTransition>
