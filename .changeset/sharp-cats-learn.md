@@ -3,4 +3,5 @@
 '@voussoir/tooltip': patch
 ---
 
-Provide `nodeRef` to overlays. Fixes `findDOMNode` errors in StrictMode.
+Provide `nodeRef` to overlays (react-transition-group). Fixes `findDOMNode`
+errors in StrictMode.
