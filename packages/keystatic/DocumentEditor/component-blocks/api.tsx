@@ -437,7 +437,6 @@ export function component<
 export function NotEditable({ children, ...props }: BoxProps) {
   return (
     <Box
-      elementType="span"
       UNSAFE_className={css({ userSelect: 'none', whiteSpace: 'initial' })}
       contentEditable={false}
       {...props}
