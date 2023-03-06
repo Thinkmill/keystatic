@@ -73,6 +73,7 @@ export function normalizeElementBasedOnDocumentFeatures(
     layouts,
     links,
     images,
+    tables,
   }: DocumentFeaturesForNormalization
 ): boolean {
   if (
@@ -84,6 +85,7 @@ export function normalizeElementBasedOnDocumentFeatures(
     (node.type === 'code' && !formatting.blockTypes.code) ||
     (node.type === 'blockquote' && !formatting.blockTypes.blockquote) ||
     (node.type === 'image' && !images) ||
+    (node.type === 'table' && !tables) ||
     (node.type === 'layout' &&
       (layouts.length === 0 ||
         !layouts.some(layout => areArraysEqual(layout, node.layout))))

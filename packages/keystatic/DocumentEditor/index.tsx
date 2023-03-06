@@ -51,6 +51,7 @@ import { withPasting } from './pasting';
 import { classNames, css, tokenSchema } from '@voussoir/style';
 import { Box } from '@voussoir/layout';
 import { withImages } from './image';
+import { TableSelectionProvider, withTable } from './table';
 // the docs site needs access to Editor and importing slate would use the version from the content field
 // so we're exporting it from here (note that this is not at all visible in the published version)
 export { Editor } from 'slate';
@@ -143,29 +144,31 @@ function _createDocumentEditor(
             documentFeatures,
             componentBlocks,
             withList(
-              withHeading(
-                withInsertMenu(
-                  withComponentBlocks(
-                    componentBlocks,
-                    documentFeatures,
-                    withParagraphs(
-                      withShortcuts(
-                        withDivider(
-                          withLayouts(
-                            withMarks(
-                              documentFeatures,
-                              componentBlocks,
-                              withCodeBlock(
-                                withBlockMarkdownShortcuts(
-                                  documentFeatures,
-                                  componentBlocks,
-                                  withBlockquote(
-                                    withDocumentFeaturesNormalization(
-                                      documentFeatures,
-                                      withHistory(
-                                        includeReact
-                                          ? withReact(createEditor())
-                                          : createEditor()
+              withTable(
+                withHeading(
+                  withInsertMenu(
+                    withComponentBlocks(
+                      componentBlocks,
+                      documentFeatures,
+                      withParagraphs(
+                        withShortcuts(
+                          withDivider(
+                            withLayouts(
+                              withMarks(
+                                documentFeatures,
+                                componentBlocks,
+                                withCodeBlock(
+                                  withBlockMarkdownShortcuts(
+                                    documentFeatures,
+                                    componentBlocks,
+                                    withBlockquote(
+                                      withDocumentFeaturesNormalization(
+                                        documentFeatures,
+                                        withHistory(
+                                          includeReact
+                                            ? withReact(createEditor())
+                                            : createEditor()
+                                        )
                                       )
                                     )
                                   )
@@ -307,12 +310,14 @@ export function DocumentEditorProvider({
           }
         }}
       >
-        <ToolbarStateProvider
-          componentBlocks={componentBlocks}
-          editorDocumentFeatures={documentFeatures}
-        >
-          {children}
-        </ToolbarStateProvider>
+        <TableSelectionProvider>
+          <ToolbarStateProvider
+            componentBlocks={componentBlocks}
+            editorDocumentFeatures={documentFeatures}
+          >
+            {children}
+          </ToolbarStateProvider>
+        </TableSelectionProvider>
       </Slate>
     </IsInEditorContext.Provider>
   );
@@ -501,7 +506,7 @@ type TypesWhichHaveNoExtraRequiredProps = {
     : never;
 }[Block['type']];
 
-const blockquoteChildren = [
+const tableCellChildren = [
   'paragraph',
   'code',
   'heading',
@@ -510,6 +515,8 @@ const blockquoteChildren = [
   'divider',
   'image',
 ] as const;
+
+const blockquoteChildren = [...tableCellChildren, 'table'] as const;
 
 const paragraphLike = [...blockquoteChildren, 'blockquote'] as const;
 
@@ -596,6 +603,22 @@ export const editorSchema = satisfies<
   }),
   'list-item-content': inlineContainer({ invalidPositionHandleMode: 'unwrap' }),
   image: inlineContainer({ invalidPositionHandleMode: 'move' }),
+  table: blockContainer({
+    invalidPositionHandleMode: 'move',
+    allowedChildren: ['table-body'],
+  }),
+  'table-body': blockContainer({
+    invalidPositionHandleMode: 'move',
+    allowedChildren: ['table-row'],
+  }),
+  'table-row': blockContainer({
+    invalidPositionHandleMode: 'move',
+    allowedChildren: ['table-cell'],
+  }),
+  'table-cell': blockContainer({
+    invalidPositionHandleMode: 'move',
+    allowedChildren: tableCellChildren,
+  }),
 });
 
 type InlineContainingType = {

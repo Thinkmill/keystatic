@@ -169,6 +169,9 @@ function fromMarkdocNode(
       children: node.children.flatMap(x => fromMarkdocNode(x, componentBlocks)),
     };
   }
+  if (node.type === 'thead') {
+    return [];
+  }
   if (node.type === 'item') {
     const children = [
       {
@@ -207,7 +210,34 @@ function fromMarkdocNode(
   if (node.type === 'hr') {
     return { type: 'divider', children: [{ text: '' }] };
   }
+  if (node.type === 'table') {
+    return {
+      type: 'table',
+      children: node.children.flatMap(x => fromMarkdocNode(x, componentBlocks)),
+    };
+  }
+  if (node.type === 'tbody') {
+    return {
+      type: 'table-body',
+      children: node.children.flatMap(x => fromMarkdocNode(x, componentBlocks)),
+    };
+  }
+  if (node.type === 'tr') {
+    return {
+      type: 'table-row',
+      children: node.children.flatMap(x => fromMarkdocNode(x, componentBlocks)),
+    };
+  }
+  if (node.type === 'td') {
+    return {
+      type: 'table-cell',
+      children: node.children.flatMap(x => fromMarkdocNode(x, componentBlocks)),
+    };
+  }
   if (node.type === 'tag') {
+    if (node.tag === 'table') {
+      return fromMarkdocNode(node.children[0], componentBlocks);
+    }
     if (node.tag === 'layout') {
       return {
         type: 'layout',

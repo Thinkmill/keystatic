@@ -21,6 +21,7 @@ import { ToolbarState, useToolbarState } from './toolbar-state';
 import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from './utils';
 import { getUploadedImage } from './component-blocks/fields/image';
 import { isBlock } from '.';
+import { insertTable } from './table';
 
 type Option = {
   label: string;
@@ -87,6 +88,10 @@ function getOptions(
           });
         }
       },
+    },
+    !!toolbarState.editorDocumentFeatures.tables && {
+      label: 'Table',
+      insert: insertTable,
     },
     !toolbarState.dividers.isDisabled &&
       toolbarState.editorDocumentFeatures.dividers && {

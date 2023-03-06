@@ -223,6 +223,28 @@ function toMarkdoc(
   if (node.type === 'divider') {
     return new Ast.Node('hr');
   }
+  if (node.type === 'table') {
+    return new Ast.Node(
+      'tag',
+      {},
+      [
+        new Ast.Node('table', {}, [
+          new Ast.Node('thead'),
+          ...node.children.map(_toMarkdoc),
+        ]),
+      ],
+      'table'
+    );
+  }
+  if (node.type === 'table-body') {
+    return new Ast.Node('tbody', {}, node.children.map(_toMarkdoc));
+  }
+  if (node.type === 'table-row') {
+    return new Ast.Node('tr', {}, node.children.map(_toMarkdoc));
+  }
+  if (node.type === 'table-cell') {
+    return new Ast.Node('td', {}, node.children.map(_toMarkdoc));
+  }
   if (node.type === 'heading') {
     const markdocNode = new Ast.Node(
       'heading',

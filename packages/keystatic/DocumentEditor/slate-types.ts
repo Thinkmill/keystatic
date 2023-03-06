@@ -31,7 +31,11 @@ type OnlyChildrenElements = {
     | 'list-item'
     | 'list-item-content'
     | 'ordered-list'
-    | 'unordered-list';
+    | 'unordered-list'
+    | 'table'
+    | 'table-body'
+    | 'table-row'
+    | 'table-cell';
 };
 
 type CodeBlock = {

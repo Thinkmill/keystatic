@@ -65,6 +65,7 @@ type DocumentFeaturesConfig = {
   dividers?: true;
   images?: true | { directory?: string; publicPath?: string };
   layouts?: readonly (readonly [number, ...number[]])[];
+  tables?: true;
 };
 
 function normaliseDocumentFeatures(config: DocumentFeaturesConfig) {
@@ -139,6 +140,7 @@ function normaliseDocumentFeatures(config: DocumentFeaturesConfig) {
     ].map(x => JSON.parse(x)),
     dividers: !!config.dividers,
     images: config.images === undefined ? false : config.images,
+    tables: !!config.tables,
   };
   return documentFeatures;
 }
