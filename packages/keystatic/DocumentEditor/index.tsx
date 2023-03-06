@@ -471,7 +471,12 @@ while (listDepth--) {
   }
 }
 
-const editableStyles = css(styles);
+const editableStyles = css({
+  ...styles,
+  a: {
+    color: tokenSchema.color.foreground.accent,
+  },
+});
 
 export type Block = Exclude<Element, { type: 'link' }>;
 

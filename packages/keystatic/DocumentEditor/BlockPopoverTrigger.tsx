@@ -3,15 +3,17 @@ import { useOverlayTriggerState } from '@react-stately/overlays';
 import { cloneElement, ReactElement, useRef } from 'react';
 import { useFocused, useSelected } from 'slate-react';
 
-import { OverlayTriggerProps, Popover } from '@voussoir/overlays';
+import { Placement, OverlayTriggerProps, Popover } from '@voussoir/overlays';
 
 type RenderFn = (close: () => void) => ReactElement;
 type BlockPopoverTriggerProps = OverlayTriggerProps & {
   children: [ReactElement, ReactElement | RenderFn];
+  placement?: Placement;
 };
 
 export const BlockPopoverTrigger = ({
   children,
+  placement = 'bottom',
   ...consumerTriggerProps
 }: BlockPopoverTriggerProps) => {
   const [trigger, content] = children;
@@ -35,6 +37,7 @@ export const BlockPopoverTrigger = ({
       <Popover
         isNonModal
         {...overlayProps}
+        placement={placement}
         triggerRef={triggerRef}
         state={state}
       >

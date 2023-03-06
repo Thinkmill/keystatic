@@ -1,10 +1,23 @@
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useState } from 'react';
 import { ReactEditor, RenderElementProps, useSelected } from 'slate-react';
 import { Editor, Transforms } from 'slate';
-import { ActionButton, ButtonGroup } from '@voussoir/button';
-import { FieldLabel } from '@voussoir/field';
-import { Flex, Box } from '@voussoir/layout';
+
+import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
+import { Dialog, DialogContainer, useDialogContainer } from '@voussoir/dialog';
+import { Icon } from '@voussoir/icon';
+import { uploadIcon } from '@voussoir/icon/icons/uploadIcon';
+import { imageIcon } from '@voussoir/icon/icons/imageIcon';
+import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
+import { Flex } from '@voussoir/layout';
+import { Content } from '@voussoir/slots';
 import { css, tokenSchema } from '@voussoir/style';
 import { TextField } from '@voussoir/text-field';
+import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
+import { Heading, Text } from '@voussoir/typography';
+
+import l10nMessages from '../app/l10n/index.json';
+// import { NotEditable } from '../src';
 import {
   getUploadedImage,
   useObjectURL,
@@ -14,16 +27,15 @@ import {
   useElementWithSetNodes,
   useStaticEditor,
 } from './utils';
-import { Icon } from '@voussoir/icon';
-import { imageIcon } from '@voussoir/icon/icons/imageIcon';
-import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
-import { Text } from '@voussoir/typography';
+import { BlockPopoverTrigger } from './BlockPopoverTrigger';
 
 export const ImageElement = ({
   attributes,
   children,
   element: __elementForGettingPath,
 }: RenderElementProps & { element: { type: 'image' } }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const editor = useStaticEditor();
   const [currentElement, setNode] = useElementWithSetNodes(
     editor,
@@ -31,77 +43,52 @@ export const ImageElement = ({
   );
   const objectUrl = useObjectURL(currentElement.src.content)!;
   const selected = useSelected();
+
   return (
-    <div {...attributes} draggable="true">
-      <div contentEditable={false} className={css({ position: 'relative' })}>
-        <Flex
-          direction="column"
-          gap="small"
-          paddingStart="xlarge"
-          UNSAFE_className={css({
-            '::before': {
-              display: 'block',
-              content: '" "',
-              backgroundColor: selected
-                ? tokenSchema.color.alias.borderSelected
-                : tokenSchema.color.alias.borderIdle,
-              borderRadius: 4,
-              width: 4,
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              bottom: 0,
-              zIndex: 1,
-            },
-          })}
+    <>
+      <BlockPopoverTrigger isOpen={!dialogOpen && selected}>
+        <div
+          draggable="true"
+          {...attributes}
+          style={{ display: 'inline-block', lineHeight: 1 }}
         >
-          <FieldLabel>Image</FieldLabel>
-          <Box
-            alignSelf="start"
-            backgroundColor="canvas"
-            borderRadius="regular"
-            border="neutral"
-            padding="regular"
-          >
-            <img
-              src={objectUrl}
-              alt={currentElement.alt}
-              title={currentElement.title}
-              style={{
-                display: 'block',
-                maxHeight: tokenSchema.size.alias.singleLineWidth,
-                maxWidth: '100%',
-              }}
-            />
-          </Box>
-          <TextField
-            label="Filename"
-            onChange={filename => {
-              setNode({
-                src: {
-                  content: currentElement.src.content,
-                  filename,
-                },
-              });
-            }}
-            value={currentElement.src.filename}
+          <img
+            src={objectUrl}
+            alt={currentElement.alt}
+            // title={currentElement.title}
+            data-selected={selected}
+            className={css({
+              boxSizing: 'border-box',
+              borderColor: tokenSchema.color.alias.borderIdle,
+              borderRadius: tokenSchema.size.radius.regular,
+              borderStyle: 'solid',
+              borderWidth: tokenSchema.size.border.regular,
+              display: 'inline-block',
+              maxHeight: tokenSchema.size.alias.singleLineWidth,
+              maxWidth: '100%',
+              padding: tokenSchema.size.space.regular,
+
+              '&[data-selected=true]': {
+                borderColor: tokenSchema.color.alias.borderSelected,
+              },
+            })}
           />
-          <TextField
-            label="Alt Text"
-            value={currentElement.alt}
-            onChange={alt => {
-              setNode({ alt });
-            }}
-          />
-          <TextField
-            label="Title"
-            value={currentElement.title ?? ''}
-            onChange={title => {
-              setNode({ title });
-            }}
-          />
-          <ButtonGroup>
+          {children}
+        </div>
+
+        <Flex
+          gap="regular"
+          padding="regular"
+          maxWidth="size.dialog.small"
+          alignItems="center"
+          contentEditable={false}
+        >
+          <ActionButton onPress={() => setDialogOpen(true)}>
+            {stringFormatter.format('edit')}
+          </ActionButton>
+          <TooltipTrigger>
             <ActionButton
+              prominence="low"
               onPress={async () => {
                 const src = await getUploadedImage();
                 if (src) {
@@ -111,24 +98,123 @@ export const ImageElement = ({
                 }
               }}
             >
-              Replace
+              <Icon src={uploadIcon} />
             </ActionButton>
+            <Tooltip>Choose file</Tooltip>
+          </TooltipTrigger>
+          <TooltipTrigger>
             <ActionButton
+              prominence="low"
               onPress={() => {
                 Transforms.removeNodes(editor, {
                   at: ReactEditor.findPath(editor, __elementForGettingPath),
                 });
               }}
             >
-              Remove
+              <Icon src={trash2Icon} />
             </ActionButton>
-          </ButtonGroup>
+            <Tooltip>Remove</Tooltip>
+          </TooltipTrigger>
         </Flex>
-      </div>
-      {children}
-    </div>
+      </BlockPopoverTrigger>
+
+      <DialogContainer onDismiss={() => setDialogOpen(false)}>
+        {dialogOpen && (
+          <ImageDialog
+            alt={currentElement.alt}
+            filename={currentElement.src.filename}
+            onSubmit={({ alt, filename }) => {
+              setNode({
+                alt,
+                src: {
+                  content: currentElement.src.content,
+                  filename,
+                },
+              });
+            }}
+          />
+        )}
+      </DialogContainer>
+    </>
   );
 };
+
+function ImageDialog({
+  onSubmit,
+  ...props
+}: {
+  alt?: string;
+  filename: string;
+  onSubmit: (value: { alt: string; filename: string }) => void;
+}) {
+  const [filenameWithoutExtension, filenameExtension] = splitFilename(
+    props.filename
+  );
+  let [altText, setAltText] = useState(props.alt || '');
+  let [fileName, setFileName] = useState(filenameWithoutExtension || '');
+
+  let { dismiss } = useDialogContainer();
+  let stringFormatter = useLocalizedStringFormatter(l10nMessages);
+
+  return (
+    <Dialog size="small">
+      <form
+        style={{ display: 'contents' }}
+        onSubmit={event => {
+          event.preventDefault();
+          dismiss();
+          onSubmit({
+            alt: altText,
+            filename: [fileName, filenameExtension].join('.'),
+          });
+        }}
+      >
+        <Heading>Image details</Heading>
+        <Content>
+          <Flex gap="large" direction="column">
+            <TextField
+              label="Filename"
+              onChange={setFileName}
+              value={fileName}
+              endElement={
+                filenameExtension ? (
+                  <Flex
+                    alignItems="center"
+                    justifyContent="center"
+                    paddingEnd="regular"
+                  >
+                    <Text color="neutralTertiary">.{filenameExtension}</Text>
+                  </Flex>
+                ) : null
+              }
+            />
+            <TextField
+              autoFocus
+              label="Alt text"
+              description="This text will be used by screen readers and search engines."
+              onChange={setAltText}
+              value={altText}
+            />
+          </Flex>
+        </Content>
+        <ButtonGroup>
+          <Button onPress={dismiss}>{stringFormatter.format('cancel')}</Button>
+          <Button prominence="high" type="submit">
+            {stringFormatter.format('save')}
+          </Button>
+        </ButtonGroup>
+      </form>
+    </Dialog>
+  );
+}
+
+function splitFilename(filename: string): [string, string] {
+  const dotIndex = filename.lastIndexOf('.');
+  if (dotIndex === -1) {
+    return [filename, ''];
+  }
+  return [filename.substring(0, dotIndex), filename.substring(dotIndex + 1)];
+}
 
 let _imageIcon = <Icon src={imageIcon} />;
 

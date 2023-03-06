@@ -10,8 +10,10 @@ import {
 
 import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
 import { Dialog, DialogContainer, useDialogContainer } from '@voussoir/dialog';
-import { linkIcon } from '@voussoir/icon/icons/linkIcon';
 import { Icon } from '@voussoir/icon';
+// import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
+import { linkIcon } from '@voussoir/icon/icons/linkIcon';
+import { unlinkIcon } from '@voussoir/icon/icons/unlinkIcon';
 import { Flex } from '@voussoir/layout';
 import { TextLink } from '@voussoir/link';
 import { Content } from '@voussoir/slots';
@@ -120,16 +122,20 @@ export const LinkElement = ({
 
   return (
     <>
-      <BlockPopoverTrigger isOpen={!dialogOpen && selected && delayedFocused}>
+      <BlockPopoverTrigger
+        isOpen={!dialogOpen && selected && delayedFocused}
+        placement="bottom start"
+      >
         <a href={href} {...attributes}>
           {children}
         </a>
 
         <Flex
-          gap="large"
-          padding="large"
-          maxWidth="size.dialog.small"
           alignItems="center"
+          // direction="column"
+          gap="large"
+          maxWidth="size.dialog.small"
+          padding="large"
           wrap
         >
           {/* <Heading size="regular">{text}</Heading> */}
@@ -150,47 +156,15 @@ export const LinkElement = ({
             >
               {stringFormatter.format('edit')}
             </ActionButton>
-            <ActionButton prominence="low" onPress={unlink}>
-              Remove
+            <TooltipTrigger>
+              <ActionButton prominence="low" onPress={unlink}>
+                <Icon src={unlinkIcon} />
+              </ActionButton>
               {/* TODO: needs localization */}
-            </ActionButton>
+              <Tooltip>Remove</Tooltip>
+            </TooltipTrigger>
           </ButtonGroup>
         </Flex>
-
-        {/* <Flex
-            onFocus={() => {
-              setFocusedInInlineDialog(true);
-            }}
-            onBlur={() => {
-              setFocusedInInlineDialog(false);
-              setLocalForceValidation(true);
-            }}
-            padding="regular"
-            gap="small"
-          >
-            <TextField
-              aria-label="Link URL"
-              value={href}
-              onChange={href => {
-                setNode({ href });
-              }}
-              errorMessage={
-                showInvalidState && <Text>Please enter a valid URL</Text>
-              }
-            />
-            <TooltipTrigger>
-              <ActionButton
-                prominence="low"
-                onPress={() =>
-                  window.open(href, '_blank', 'noopener,noreferrer')
-                }
-              >
-                <Icon src={externalLinkIcon} />
-              </ActionButton>
-              <Tooltip tone="accent">Open link in new tab</Tooltip>
-            </TooltipTrigger>
-            <UnlinkButton onUnlink={unlink} />
-          </Flex> */}
       </BlockPopoverTrigger>
       <DialogContainer onDismiss={() => setDialogOpen(false)}>
         {dialogOpen && (
