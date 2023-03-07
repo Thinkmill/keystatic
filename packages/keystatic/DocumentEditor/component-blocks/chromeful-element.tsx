@@ -1,5 +1,14 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { ReactNode, useMemo, useState, useCallback, Fragment } from 'react';
+import {
+  ReactNode,
+  useMemo,
+  useState,
+  useCallback,
+  Fragment,
+  PropsWithChildren,
+  forwardRef,
+  Ref,
+} from 'react';
 import { RenderElementProps, useSelected } from 'slate-react';
 
 import { ActionButton, Button } from '@voussoir/button';
@@ -61,21 +70,71 @@ export function ChromefulComponentBlockElement(props: {
   const ChromefulToolbar =
     props.componentBlock.toolbar ?? DefaultToolbarWithChrome;
   return (
-    <Flex
-      {...props.attributes}
-      marginY="xlarge"
-      paddingStart="xlarge"
-      gap="medium"
-      direction="column"
-      position="relative"
-      UNSAFE_className={css({
+    <BlockPrimitive selected={selected} {...props.attributes}>
+      <Flex gap="medium" direction="column">
+        <NotEditable>
+          <Text
+            casing="uppercase"
+            color="neutralSecondary"
+            weight="medium"
+            size="small"
+          >
+            {props.componentBlock.label}
+          </Text>
+        </NotEditable>
+        {editMode ? (
+          <Fragment>
+            <FormValue
+              isValid={isValid}
+              props={props.previewProps}
+              onClose={onCloseEditMode}
+            />
+            <div className={css({ display: 'none' })}>{props.children}</div>
+          </Fragment>
+        ) : (
+          <Fragment>
+            {props.renderedBlock}
+            <ChromefulToolbar
+              isValid={isValid}
+              onRemove={props.onRemove}
+              onShowEditMode={onShowEditMode}
+              props={props.previewProps}
+            />
+          </Fragment>
+        )}
+      </Flex>
+    </BlockPrimitive>
+  );
+}
+
+/**
+ * Wrap block content, delimiting it from surrounding content, and provide a
+ * focus indicator because the cursor may not be present.
+ */
+const BlockPrimitive = forwardRef(function BlockPrimitive(
+  {
+    children,
+    selected,
+    ...attributes
+  }: PropsWithChildren<
+    RenderElementProps['attributes'] & { selected: boolean }
+  >,
+  ref: Ref<any>
+) {
+  return (
+    <div
+      {...attributes}
+      ref={ref}
+      className={css({
+        marginY: '1em', // treat like a paragraph
+        position: 'relative',
+        paddingInlineStart: tokenSchema.size.space.xlarge,
+
         '::before': {
           display: 'block',
           content: '" "',
           backgroundColor: selected
             ? tokenSchema.color.alias.borderSelected
-            : editMode
-            ? tokenSchema.color.alias.borderFocused
             : tokenSchema.color.alias.borderIdle,
           borderRadius: 4,
           width: 4,
@@ -87,39 +146,10 @@ export function ChromefulComponentBlockElement(props: {
         },
       })}
     >
-      <NotEditable>
-        <Text
-          casing="uppercase"
-          color="neutralSecondary"
-          weight="medium"
-          size="small"
-        >
-          {props.componentBlock.label}
-        </Text>
-      </NotEditable>
-      {editMode ? (
-        <Fragment>
-          <FormValue
-            isValid={isValid}
-            props={props.previewProps}
-            onClose={onCloseEditMode}
-          />
-          <div className={css({ display: 'none' })}>{props.children}</div>
-        </Fragment>
-      ) : (
-        <Fragment>
-          {props.renderedBlock}
-          <ChromefulToolbar
-            isValid={isValid}
-            onRemove={props.onRemove}
-            onShowEditMode={onShowEditMode}
-            props={props.previewProps}
-          />
-        </Fragment>
-      )}
-    </Flex>
+      {children}
+    </div>
   );
-}
+});
 
 function DefaultToolbarWithChrome({
   onShowEditMode,

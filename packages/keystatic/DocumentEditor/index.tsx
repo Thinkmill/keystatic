@@ -453,6 +453,7 @@ let styles: any = {
   flex: 1,
   fontFamily: tokenSchema.typography.fontFamily.base,
   fontSize: tokenSchema.fontsize.text.regular.size,
+  lineHeight: 1.4,
   minHeight: tokenSchema.size.scale[2000],
 };
 
@@ -470,7 +471,12 @@ while (listDepth--) {
   }
 }
 
-const editableStyles = css(styles);
+const editableStyles = css({
+  ...styles,
+  a: {
+    color: tokenSchema.color.foreground.accent,
+  },
+});
 
 export type Block = Exclude<Element, { type: 'link' }>;
 
