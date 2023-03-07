@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.59
+
+### Patch Changes
+
+- 21a687a: document editor: image and link dialogs
+
 ## 0.0.58
 
 ### Patch Changes
