@@ -6,7 +6,7 @@ import { Editor, Transforms } from 'slate';
 import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
 import { Dialog, DialogContainer, useDialogContainer } from '@voussoir/dialog';
 import { Icon } from '@voussoir/icon';
-import { uploadIcon } from '@voussoir/icon/icons/uploadIcon';
+import { fileUpIcon } from '@voussoir/icon/icons/fileUpIcon';
 import { imageIcon } from '@voussoir/icon/icons/imageIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Flex } from '@voussoir/layout';
@@ -82,13 +82,7 @@ export const ImageElement = ({
           {children}
         </div>
 
-        <Flex
-          gap="regular"
-          padding="regular"
-          maxWidth="size.dialog.small"
-          alignItems="center"
-          contentEditable={false}
-        >
+        <Flex alignItems="center" gap="small" padding="regular">
           <ActionButton onPress={() => setDialogOpen(true)}>
             {stringFormatter.format('edit')}
           </ActionButton>
@@ -102,7 +96,7 @@ export const ImageElement = ({
                 }
               }}
             >
-              <Icon src={uploadIcon} />
+              <Icon src={fileUpIcon} />
             </ActionButton>
             <Tooltip>Choose file</Tooltip>
           </TooltipTrigger>
@@ -177,7 +171,7 @@ function ImageDialog({
         <Content>
           <Flex gap="large" direction="column">
             <TextField
-              label="Filename"
+              label="File name"
               onChange={setFileName}
               value={fileName}
               endElement={

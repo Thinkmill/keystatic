@@ -11,11 +11,10 @@ import {
 import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
 import { Dialog, DialogContainer, useDialogContainer } from '@voussoir/dialog';
 import { Icon } from '@voussoir/icon';
-// import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
+import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
 import { linkIcon } from '@voussoir/icon/icons/linkIcon';
 import { unlinkIcon } from '@voussoir/icon/icons/unlinkIcon';
 import { Flex } from '@voussoir/layout';
-import { TextLink } from '@voussoir/link';
 import { Content } from '@voussoir/slots';
 import { TextField } from '@voussoir/text-field';
 import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
@@ -124,46 +123,36 @@ export const LinkElement = ({
     <>
       <BlockPopoverTrigger
         isOpen={!dialogOpen && selected && delayedFocused}
-        placement="bottom start"
+        // placement="bottom start"
       >
         <a href={href} {...attributes}>
           {children}
         </a>
 
-        <Flex
-          alignItems="center"
-          // direction="column"
-          gap="large"
-          maxWidth="size.dialog.small"
-          padding="large"
-          wrap
-        >
-          {/* <Heading size="regular">{text}</Heading> */}
-          <Text truncate={3}>
-            <TextLink
-              prominence="high"
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {href}
-            </TextLink>
-          </Text>
-          <ButtonGroup>
+        <Flex alignItems="center" gap="small" padding="regular">
+          <ActionButton onPress={() => setDialogOpen(true)}>
+            {stringFormatter.format('edit')}
+          </ActionButton>
+          <TooltipTrigger>
             <ActionButton
-              // prominence="low"
-              onPress={() => setDialogOpen(true)}
+              prominence="low"
+              onPress={() => {
+                window.open(href, '_blank', 'noopener,noreferrer');
+              }}
             >
-              {stringFormatter.format('edit')}
+              <Icon src={externalLinkIcon} />
             </ActionButton>
-            <TooltipTrigger>
-              <ActionButton prominence="low" onPress={unlink}>
-                <Icon src={unlinkIcon} />
-              </ActionButton>
-              {/* TODO: needs localization */}
-              <Tooltip>Remove</Tooltip>
-            </TooltipTrigger>
-          </ButtonGroup>
+            <Tooltip>
+              <Text truncate={3}>{href}</Text>
+            </Tooltip>
+          </TooltipTrigger>
+          <TooltipTrigger>
+            <ActionButton prominence="low" onPress={unlink}>
+              <Icon src={unlinkIcon} />
+            </ActionButton>
+            {/* TODO: needs localization */}
+            <Tooltip>Remove</Tooltip>
+          </TooltipTrigger>
         </Flex>
       </BlockPopoverTrigger>
       <DialogContainer onDismiss={() => setDialogOpen(false)}>
