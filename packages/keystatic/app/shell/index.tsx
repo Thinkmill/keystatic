@@ -19,7 +19,7 @@ import {
   LocalAppShellProvider,
 } from './data';
 import { SidebarProvider, Sidebar, SIDEBAR_WIDTH } from './sidebar';
-import { isGitHubConfig } from '../utils';
+import { isGitHubConfig, isLocalConfig } from '../utils';
 
 const ConfigContext = createContext<Config | null>(null);
 export function useConfig(): Config {
@@ -75,9 +75,14 @@ export const AppShell = (props: {
       </GitHubAppShellProvider>
     );
   }
-  return (
-    <LocalAppShellProvider config={props.config}>{inner}</LocalAppShellProvider>
-  );
+  if (isLocalConfig(props.config)) {
+    return (
+      <LocalAppShellProvider config={props.config}>
+        {inner}
+      </LocalAppShellProvider>
+    );
+  }
+  return null;
 };
 
 // Styled components

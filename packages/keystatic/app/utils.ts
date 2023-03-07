@@ -1,6 +1,6 @@
 import { isDefined } from 'emery';
 
-import { Config, GitHubConfig } from '../config';
+import { Config, GitHubConfig, LocalConfig } from '../config';
 import { ComponentSchema, fields, SlugFormField } from '../src';
 import {
   getCollectionFormat,
@@ -55,6 +55,10 @@ export function blobSha(contents: Uint8Array) {
 
 export function isGitHubConfig(config: Config): config is GitHubConfig {
   return config.storage.kind === 'github';
+}
+
+export function isLocalConfig(config: Config): config is LocalConfig {
+  return config.storage.kind === 'local';
 }
 
 export function isSlugFormField(
