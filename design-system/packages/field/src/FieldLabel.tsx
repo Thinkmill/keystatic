@@ -36,7 +36,7 @@ export const FieldLabel = forwardRefWithAs<FieldLabelProps, 'label'>(
       color: 'neutral',
       size: 'regular',
       trim: true,
-      weight: 'semibold',
+      weight: 'medium',
     });
 
     return (

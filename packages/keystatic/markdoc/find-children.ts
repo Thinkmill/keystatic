@@ -47,7 +47,6 @@ function _findConstantChildFields(
   seenSchemas.add(schema);
   switch (schema.kind) {
     case 'form':
-    case 'relationship':
       return [];
     case 'child':
       return [{ relativePath: path, options: schema.options, kind: 'child' }];
@@ -100,7 +99,6 @@ function couldContainChildField(
   seen.add(schema);
   switch (schema.kind) {
     case 'form':
-    case 'relationship':
       return false;
     case 'child':
       return true;

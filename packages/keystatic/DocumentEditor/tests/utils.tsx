@@ -8,7 +8,6 @@ import { Slate } from 'slate-react';
 import { createDocumentEditor, DocumentEditorEditable } from '..';
 import { ComponentBlock } from '../component-blocks/api';
 import { DocumentFeatures } from '../document-features';
-import { Relationships } from '../relationship';
 import { createToolbarState, ToolbarStateProvider } from '../toolbar-state';
 import { validateDocumentStructure } from '../../structure-validation';
 import { validateAndNormalizeDocument } from '../../validation';
@@ -80,16 +79,14 @@ expect.extend({
     validateAndNormalizeDocument(
       received.children,
       receivedConfig.documentFeatures,
-      receivedConfig.componentBlocks,
-      receivedConfig.relationships
+      receivedConfig.componentBlocks
     );
 
     const expectedConfig = (expected as any).__config;
     validateAndNormalizeDocument(
       expected.children,
       expectedConfig.documentFeatures,
-      expectedConfig.componentBlocks,
-      expectedConfig.relationships
+      expectedConfig.componentBlocks
     );
 
     const pass =
@@ -160,6 +157,7 @@ export const defaultDocumentFeatures: DocumentFeatures = {
   dividers: true,
   links: true,
   layouts: [[1], [1, 1], [1, 1, 1], [1, 2, 1]],
+  images: true,
 };
 
 injectVoussoirStyles();
@@ -167,12 +165,10 @@ function EditorComp({
   editor,
   componentBlocks,
   documentFeatures,
-  relationships,
 }: {
   editor: Editor;
   componentBlocks: Record<string, ComponentBlock>;
   documentFeatures: DocumentFeatures;
-  relationships: Relationships;
 }) {
   const [val, setVal] = useState(editor.children);
   return (
@@ -181,7 +177,6 @@ function EditorComp({
         <ToolbarStateProvider
           componentBlocks={componentBlocks}
           editorDocumentFeatures={documentFeatures}
-          relationships={relationships}
         >
           <DocumentEditorEditable
             // the default implementation of scrollSelectionIntoView crashes in JSDOM for some reason
@@ -200,13 +195,11 @@ export const makeEditor = (
     documentFeatures = defaultDocumentFeatures,
     componentBlocks = {},
     normalization = 'disallow-non-normalized',
-    relationships = {},
     skipRenderingDOM,
   }: {
     documentFeatures?: DocumentFeatures;
     componentBlocks?: Record<string, ComponentBlock>;
     normalization?: 'disallow-non-normalized' | 'normalize' | 'skip';
-    relationships?: Relationships;
     isShiftPressedRef?: MutableRefObject<boolean>;
     skipRenderingDOM?: boolean;
   } = {}
@@ -216,8 +209,7 @@ export const makeEditor = (
   }
   let editor = createDocumentEditor(
     documentFeatures,
-    componentBlocks,
-    relationships
+    componentBlocks
   ) as Editor & {
     container?: HTMLElement;
   };
@@ -225,7 +217,6 @@ export const makeEditor = (
   (editor as any).__config = {
     documentFeatures,
     componentBlocks,
-    relationships,
   };
 
   validateDocumentStructure(editor.children);
@@ -260,7 +251,6 @@ export const makeEditor = (
       documentFeatures,
       isShiftPressedRef: { current: false },
       normalization: 'skip',
-      relationships,
       skipRenderingDOM: true,
     });
   if (normalization === 'normalize') {
@@ -281,7 +271,6 @@ export const makeEditor = (
         editor={editor}
         componentBlocks={componentBlocks}
         documentFeatures={documentFeatures}
-        relationships={relationships}
       />
     );
     editor.container = container;
@@ -358,8 +347,7 @@ function nodeToReactElement(
     validateAndNormalizeDocument(
       node.children,
       config.documentFeatures,
-      config.componentBlocks,
-      config.relationships
+      config.componentBlocks
     );
     const marks = Editor.marks(node);
 

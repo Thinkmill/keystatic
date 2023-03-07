@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/test-next-pages-dir",
-  "version": "0.0.16",
+  "version": "0.0.28",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@keystatic/core": "^0.0.47",
+    "@keystatic/core": "^0.0.59",
     "@keystatic/next": "^0.0.4",
     "@preconstruct/next": "^4.0.0",
     "@types/react": "^18.0.25",
@@ -19,7 +19,7 @@
     "@voussoir/icon": "^0.1.0",
     "@voussoir/layout": "^0.1.0",
     "@voussoir/notice": "^0.1.0",
-    "@voussoir/tooltip": "^0.1.0",
+    "@voussoir/tooltip": "^0.1.1",
     "@voussoir/typography": "^0.1.0",
     "graphql": "^16.6.0",
     "react": "^18.2.0",

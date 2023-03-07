@@ -14,6 +14,8 @@ function TooltipTrigger(props: TooltipTriggerProps) {
   let { children, isDisabled, trigger: triggerMode, ...otherProps } = props;
 
   let targetRef = useRef<HTMLElement>(null);
+  let overlayRef = useRef<HTMLDivElement>(null);
+
   let state = useTooltipTriggerState({
     isDisabled,
     delay: MOUSE_REST_TIMEOUT,
@@ -33,13 +35,17 @@ function TooltipTrigger(props: TooltipTriggerProps) {
       {triggerElement}
       <TooltipContext.Provider
         value={{
+          overlayRef,
           targetRef,
           state,
           ...otherProps,
           ...tooltipProps,
         }}
       >
-        <Overlay isOpen={state.isOpen}>{tooltipElement}</Overlay>
+        {/* @ts-expect-error FIXME: resolve ref inconsistencies */}
+        <Overlay isOpen={state.isOpen} nodeRef={overlayRef}>
+          {tooltipElement}
+        </Overlay>
       </TooltipContext.Provider>
     </FocusableProvider>
   );

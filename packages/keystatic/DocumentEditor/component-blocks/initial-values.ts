@@ -33,8 +33,6 @@ export function getInitialPropsValue(schema: ComponentSchema): any {
       return schema.defaultValue;
     case 'child':
       return null;
-    case 'relationship':
-      return schema.many ? [] : null;
     case 'conditional': {
       const defaultValue = schema.discriminant.defaultValue;
       return {
@@ -65,12 +63,6 @@ export function getInitialPropsValueFromInitializer(
       return initializer === undefined ? schema.defaultValue : initializer;
     case 'child':
       return null;
-    case 'relationship':
-      return initializer === undefined
-        ? schema.many
-          ? []
-          : null
-        : initializer;
     case 'conditional': {
       const defaultValue =
         initializer === undefined
@@ -111,8 +103,6 @@ export function updateValue(
   if (updater === undefined) return currentValue;
 
   switch (schema.kind) {
-    case 'relationship':
-      return updater;
     case 'form':
       return updater;
     case 'child':

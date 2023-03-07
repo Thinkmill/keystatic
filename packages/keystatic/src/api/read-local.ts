@@ -1,12 +1,14 @@
 import fs from 'fs/promises';
 import path from 'path';
 import {
-  getCollectionItemPath,
   getCollectionPath,
+  getSingletonFormat,
   getSingletonPath,
 } from '../../app/path-utils';
 import { updateTreeWithChanges, blobSha } from './trees-server-side';
 import { Config } from '../../config';
+import { getDirectoriesForTreeKey } from '../../app/tree-key';
+import { fields } from '../../DocumentEditor/component-blocks/api';
 
 async function readDirEntries(dir: string) {
   let entries;
@@ -65,33 +67,44 @@ export async function readToDirEntries(baseDir: string, config: Config) {
       sha: string;
     };
   }[] = [];
-  await Promise.all([
-    ...Object.keys(config.collections ?? {}).map(async collection => {
-      const collectionPath = getCollectionPath(config, collection);
-      const dirEntries = await readDirEntries(
-        path.join(baseDir, collectionPath)
-      );
-      await Promise.all(
-        dirEntries.map(async entry => {
-          if (entry.isDirectory()) {
-            const innerPath = getCollectionItemPath(
-              config,
-              collection,
-              entry.name
-            );
-            additions.push(...(await collectEntriesInDir(baseDir, innerPath)));
-          }
-        })
-      );
-    }),
-    ...Object.keys(config.singletons ?? {}).map(async singleton => {
-      const singletonPath = getSingletonPath(config, singleton);
-      additions.push(...(await collectEntriesInDir(baseDir, singletonPath)));
-    }),
-  ]);
+  const rootDirs = getAllowedDirectories(config);
+  await Promise.all(
+    rootDirs.map(async dir => {
+      additions.push(...(await collectEntriesInDir(baseDir, dir)));
+    })
+  );
   const { entries } = await updateTreeWithChanges(new Map(), {
     additions: additions,
     deletions: [],
   });
   return entries;
+}
+
+export function getAllowedDirectories(config: Config) {
+  const allowedDirectories: string[] = [];
+  for (const [collection, collectionConfig] of Object.entries(
+    config.collections ?? {}
+  )) {
+    allowedDirectories.push(
+      ...getDirectoriesForTreeKey(
+        fields.object(collectionConfig.schema),
+        getCollectionPath(config, collection),
+        undefined,
+        { data: 'yaml', contentField: undefined, dataLocation: 'index' }
+      )
+    );
+  }
+  for (const [singleton, singletonConfig] of Object.entries(
+    config.singletons ?? {}
+  )) {
+    allowedDirectories.push(
+      ...getDirectoriesForTreeKey(
+        fields.object(singletonConfig.schema),
+        getSingletonPath(config, singleton),
+        undefined,
+        getSingletonFormat(config, singleton)
+      )
+    );
+  }
+  return allowedDirectories;
 }

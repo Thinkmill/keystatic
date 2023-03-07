@@ -37,7 +37,6 @@ import { nestList, unnestList, withList } from './lists';
 import { ComponentBlockContext, withComponentBlocks } from './component-blocks';
 import { getPlaceholderTextForPropPath } from './component-blocks/utils';
 import { withBlockquote } from './blockquote';
-import { Relationships, withRelationship } from './relationship';
 import { withDivider } from './divider';
 import { withCodeBlock } from './code-block';
 import { withMarks } from './marks';
@@ -50,7 +49,8 @@ import { withInsertMenu } from './insert-menu';
 import { withBlockMarkdownShortcuts } from './block-markdown-shortcuts';
 import { withPasting } from './pasting';
 import { classNames, css, tokenSchema } from '@voussoir/style';
-import { Grid } from '@voussoir/layout';
+import { Box } from '@voussoir/layout';
+import { withImages } from './image';
 // the docs site needs access to Editor and importing slate would use the version from the content field
 // so we're exporting it from here (note that this is not at all visible in the published version)
 export { Editor } from 'slate';
@@ -123,25 +123,31 @@ const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
   }
 };
 
-export function createDocumentEditor(
+export function createDocumentEditorWithoutReact(
+  documentFeatures: DocumentFeatures,
+  componentBlocks: Record<string, ComponentBlock>
+) {
+  return _createDocumentEditor(documentFeatures, componentBlocks, false);
+}
+
+function _createDocumentEditor(
   documentFeatures: DocumentFeatures,
   componentBlocks: Record<string, ComponentBlock>,
-  relationships: Relationships
+  includeReact: boolean
 ) {
   return withPasting(
-    withSoftBreaks(
-      withBlocksSchema(
-        withLink(
-          documentFeatures,
-          componentBlocks,
-          withList(
-            withHeading(
-              withRelationship(
+    withImages(
+      withSoftBreaks(
+        withBlocksSchema(
+          withLink(
+            documentFeatures,
+            componentBlocks,
+            withList(
+              withHeading(
                 withInsertMenu(
                   withComponentBlocks(
                     componentBlocks,
                     documentFeatures,
-                    relationships,
                     withParagraphs(
                       withShortcuts(
                         withDivider(
@@ -156,8 +162,11 @@ export function createDocumentEditor(
                                   withBlockquote(
                                     withDocumentFeaturesNormalization(
                                       documentFeatures,
-                                      relationships,
-                                      withHistory(withReact(createEditor()))
+                                      withHistory(
+                                        includeReact
+                                          ? withReact(createEditor())
+                                          : createEditor()
+                                      )
                                     )
                                   )
                                 )
@@ -178,39 +187,40 @@ export function createDocumentEditor(
   );
 }
 
+export function createDocumentEditor(
+  documentFeatures: DocumentFeatures,
+  componentBlocks: Record<string, ComponentBlock>
+) {
+  return _createDocumentEditor(documentFeatures, componentBlocks, true);
+}
+
 export function DocumentEditor({
   onChange,
   value,
   componentBlocks,
-  relationships,
   documentFeatures,
   ...props
 }: {
   onChange: undefined | ((value: Descendant[]) => void);
   value: Descendant[];
   componentBlocks: Record<string, ComponentBlock>;
-  relationships: Relationships;
   documentFeatures: DocumentFeatures;
 } & Omit<EditableProps, 'value' | 'onChange'>) {
   const editor = useMemo(
-    () =>
-      createDocumentEditor(documentFeatures, componentBlocks, relationships),
-    [documentFeatures, componentBlocks, relationships]
+    () => createDocumentEditor(documentFeatures, componentBlocks),
+    [documentFeatures, componentBlocks]
   );
 
   return (
-    <Grid
+    <Box
       backgroundColor="canvas"
       border="neutral"
       borderRadius="medium"
-      minHeight="size.scale.3000"
       minWidth={0}
-      rows={['auto', '1fr']}
     >
       <DocumentEditorProvider
         componentBlocks={componentBlocks}
         documentFeatures={documentFeatures}
-        relationships={relationships}
         editor={editor}
         value={value}
         onChange={value => {
@@ -239,6 +249,7 @@ export function DocumentEditor({
           className={css({
             paddingInline: tokenSchema.size.space.medium,
             height: 'auto',
+            minWidth: 0,
           })}
           {...props}
           readOnly={onChange === undefined}
@@ -248,7 +259,7 @@ export function DocumentEditor({
           false && <Debugger />
         }
       </DocumentEditorProvider>
-    </Grid>
+    </Box>
   );
 }
 
@@ -265,14 +276,12 @@ export function DocumentEditorProvider({
   value,
   componentBlocks,
   documentFeatures,
-  relationships,
 }: {
   children: ReactNode;
   value: Descendant[];
   onChange: (value: Descendant[]) => void;
   editor: Editor;
   componentBlocks: Record<string, ComponentBlock>;
-  relationships: Relationships;
   documentFeatures: DocumentFeatures;
 }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -301,7 +310,6 @@ export function DocumentEditorProvider({
         <ToolbarStateProvider
           componentBlocks={componentBlocks}
           editorDocumentFeatures={documentFeatures}
-          relationships={relationships}
         >
           {children}
         </ToolbarStateProvider>
@@ -445,6 +453,8 @@ let styles: any = {
   flex: 1,
   fontFamily: tokenSchema.typography.fontFamily.base,
   fontSize: tokenSchema.fontsize.text.regular.size,
+  lineHeight: 1.4,
+  minHeight: tokenSchema.size.scale[2000],
 };
 
 let listDepth = 10;
@@ -461,9 +471,14 @@ while (listDepth--) {
   }
 }
 
-const editableStyles = css(styles);
+const editableStyles = css({
+  ...styles,
+  a: {
+    color: tokenSchema.color.foreground.accent,
+  },
+});
 
-export type Block = Exclude<Element, { type: 'relationship' | 'link' }>;
+export type Block = Exclude<Element, { type: 'link' }>;
 
 type BlockContainerSchema = {
   kind: 'blocks';
@@ -493,6 +508,7 @@ const blockquoteChildren = [
   'ordered-list',
   'unordered-list',
   'divider',
+  'image',
 ] as const;
 
 const paragraphLike = [...blockquoteChildren, 'blockquote'] as const;
@@ -579,6 +595,7 @@ export const editorSchema = satisfies<
     invalidPositionHandleMode: 'unwrap',
   }),
   'list-item-content': inlineContainer({ invalidPositionHandleMode: 'unwrap' }),
+  image: inlineContainer({ invalidPositionHandleMode: 'move' }),
 });
 
 type InlineContainingType = {
@@ -611,11 +628,7 @@ export function isBlock(node: Descendant): node is Block {
 function withBlocksSchema(editor: Editor): Editor {
   const { normalizeNode } = editor;
   editor.normalizeNode = ([node, path]) => {
-    if (
-      !Text.isText(node) &&
-      node.type !== 'link' &&
-      node.type !== 'relationship'
-    ) {
+    if (!Text.isText(node) && node.type !== 'link') {
       const nodeType = Editor.isEditor(node) ? 'editor' : node.type;
       if (
         typeof nodeType !== 'string' ||
@@ -651,8 +664,7 @@ function withBlocksSchema(editor: Editor): Editor {
             !Editor.isBlock(editor, childNode) ||
             // these checks are implicit in Editor.isBlock
             // but that isn't encoded in types so these will make TS happy
-            childNode.type === 'link' ||
-            childNode.type === 'relationship'
+            childNode.type === 'link'
           ) {
             Transforms.wrapNodes(
               editor,

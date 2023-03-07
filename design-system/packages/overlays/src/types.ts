@@ -31,7 +31,7 @@ export type ModalProps = {
   type?: 'modal' | 'fullscreen';
 } & AriaModalOverlayProps &
   BaseStyleProps &
-  OverlayProps;
+  Omit<OverlayProps, 'nodeRef'>;
 
 // Tray
 // -----------------------------------------------------------------------------
@@ -42,4 +42,4 @@ export type TrayProps = {
   isFixedHeight?: boolean;
 } & AriaModalOverlayProps &
   BaseStyleProps &
-  OverlayProps;
+  Omit<OverlayProps, 'nodeRef'>;

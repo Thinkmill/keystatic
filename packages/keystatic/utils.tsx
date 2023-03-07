@@ -3,18 +3,22 @@ import { dump } from 'js-yaml';
 import { useMutation } from 'urql';
 import { ComponentSchema, fields } from './DocumentEditor/component-blocks/api';
 import { fromByteArray } from 'base64-js';
-import { assertNever } from './DocumentEditor/component-blocks/utils';
+import {
+  assertNever,
+  asyncTransformProps,
+} from './DocumentEditor/component-blocks/utils';
 import {
   BranchInfoContext,
   fetchGitHubTreeData,
   hydrateTreeCacheWithEntries,
+  RepoWithWriteAccessContext,
   useBaseCommit,
   useSetTreeSha,
 } from './app/shell/data';
 import { hydrateBlobCache } from './app/useItemData';
 import { useContext, useState } from 'react';
 import { assert } from 'emery';
-import { FormatInfo } from './app/path-utils';
+import { FormatInfo, getEntryDataFilepath } from './app/path-utils';
 import {
   getTreeNodeAtPath,
   TreeEntry,
@@ -25,6 +29,8 @@ import {
 import { Config } from './src';
 import { getAuth } from './app/auth';
 import { isSlugFormField } from './app/utils';
+import { getDirectoriesForTreeKey, getTreeKey } from './app/tree-key';
+import { getPropPathPortion } from './app/required-files';
 
 const textEncoder = new TextEncoder();
 
@@ -56,14 +62,15 @@ export function useUpsertItem(args: {
   storage: Config['storage'];
   format: FormatInfo;
   currentTree: Map<string, TreeNode>;
-  currentLocalTreeSha: string | undefined;
+  currentLocalTreeKey: string | undefined;
   basePath: string;
-  slugField: string | undefined;
+  slug: { value: string; field: string } | undefined;
 }) {
   const [state, setState] = useState<
     | { kind: 'idle' }
     | { kind: 'updated' }
     | { kind: 'loading' }
+    | { kind: 'needs-fork' }
     | { kind: 'error'; error: Error }
     | { kind: 'needs-new-branch'; reason: string }
   >({
@@ -73,169 +80,196 @@ export function useUpsertItem(args: {
   const branchInfo = useContext(BranchInfoContext);
   const setTreeSha = useSetTreeSha();
   const [, mutate] = useMutation(createCommitMutation);
+  const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
   return [
     state,
     async (override?: { sha: string; branch: string }): Promise<boolean> => {
-      setState({ kind: 'loading' });
-      let { value: stateWithExtraFilesRemoved, extraFiles } = await toFiles(
-        args.state,
-        fields.object(args.schema),
-        args.slugField
-      );
-      const dataFormat =
-        typeof args.format === 'string' ? args.format : args.format.frontmatter;
-      let dataExtension = '.' + dataFormat;
-      let dataContent = textEncoder.encode(
-        dataFormat === 'json'
-          ? JSON.stringify(stateWithExtraFilesRemoved, null, 2) + '\n'
-          : dump(stateWithExtraFilesRemoved)
-      );
-
-      if (typeof args.format === 'object') {
-        const filename = `${args.format.contentFieldKey}${args.format.contentFieldConfig.serializeToFile.primaryExtension}`;
-        let contents: undefined | Uint8Array;
-        extraFiles = extraFiles.filter(x => {
-          if (x.path !== filename) return true;
-          contents = x.contents;
+      try {
+        if (repoWithWriteAccess === null && args.storage.kind === 'github') {
+          setState({ kind: 'needs-fork' });
           return false;
-        });
-        assert(contents !== undefined, 'Expected content field to be present');
-        dataExtension =
-          args.format.contentFieldConfig.serializeToFile.primaryExtension;
-        dataContent = combineFrontmatterAndContents(dataContent, contents);
-      }
+        }
+        setState({ kind: 'loading' });
+        let { value: stateWithExtraFilesRemoved, extraFiles } = await toFiles(
+          args.state,
+          fields.object(args.schema),
+          args.slug
+        );
+        const dataFormat = args.format.data;
+        let dataContent = textEncoder.encode(
+          dataFormat === 'json'
+            ? JSON.stringify(stateWithExtraFilesRemoved, null, 2) + '\n'
+            : dump(stateWithExtraFilesRemoved)
+        );
 
-      let additions = [
-        {
-          path: `${args.basePath}/index${dataExtension}`,
-          contents: dataContent,
-        },
-        ...extraFiles.map(file => ({
-          path: `${args.basePath}/${file.path}`,
-          contents: file.contents,
-        })),
-      ];
-      const additionPathToSha = new Map(
-        await Promise.all(
-          additions.map(
-            async addition =>
-              [
-                addition.path,
-                await hydrateBlobCache(addition.contents),
-              ] as const
-          )
-        )
-      );
-
-      const filesToDelete = new Set(args.initialFiles);
-      for (const file of additions) {
-        filesToDelete.delete(file.path);
-      }
-
-      additions = additions.filter(addition => {
-        const sha = additionPathToSha.get(addition.path)!;
-        const existing = getTreeNodeAtPath(args.currentTree, addition.path);
-        return existing?.entry.sha !== sha;
-      });
-
-      const deletions: { path: string }[] = [...filesToDelete].map(path => ({
-        path,
-      }));
-      const updatedTree = await updateTreeWithChanges(args.currentTree, {
-        additions,
-        deletions: [...filesToDelete],
-      });
-      await hydrateTreeCacheWithEntries(updatedTree.entries);
-      if (args.storage.kind === 'github') {
-        const branch = {
-          branchName: override?.branch ?? branchInfo.currentBranch,
-          repositoryNameWithOwner: `${args.storage.repo.owner}/${args.storage.repo.name}`,
-        };
-        const runMutation = (expectedHeadOid: string) =>
-          mutate({
-            input: {
-              branch,
-              expectedHeadOid,
-              message: { headline: `Update ${args.basePath}` },
-              fileChanges: {
-                additions: additions.map(addition => ({
-                  ...addition,
-                  contents: fromByteArray(addition.contents),
-                })),
-                deletions,
-              },
-            },
-          });
-        let result = await runMutation(override?.sha ?? baseCommit);
-        const gqlError = result.error?.graphQLErrors[0]?.originalError;
-        if (gqlError && 'type' in gqlError) {
-          if (gqlError.type === 'BRANCH_PROTECTION_RULE_VIOLATION') {
-            setState({
-              kind: 'needs-new-branch',
-              reason:
-                'Changes must be made via pull request to this branch. Create a new branch to save changes.',
-            });
+        if (args.format.contentField) {
+          const filename = `${args.format.contentField.key}${args.format.contentField.config.serializeToFile.primaryExtension}`;
+          let contents: undefined | Uint8Array;
+          extraFiles = extraFiles.filter(x => {
+            if (x.path !== filename) return true;
+            contents = x.contents;
             return false;
-          }
-          if (gqlError.type === 'STALE_DATA') {
-            const branch = await fetch(
-              `https://api.github.com/repos/${args.storage.repo.owner}/${
-                args.storage.repo.name
-              }/branches/${encodeURIComponent(branchInfo.currentBranch)}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${(await getAuth())?.accessToken}`,
+          });
+          assert(
+            contents !== undefined,
+            'Expected content field to be present'
+          );
+          dataContent = combineFrontmatterAndContents(dataContent, contents);
+        }
+
+        let additions = [
+          {
+            path: getEntryDataFilepath(args.basePath, args.format),
+            contents: dataContent,
+          },
+          ...extraFiles.map(file => ({
+            path: `${
+              file.parent
+                ? args.slug
+                  ? `${file.parent}/${args.slug.value}`
+                  : file.parent
+                : args.basePath
+            }/${file.path}`,
+            contents: file.contents,
+          })),
+        ];
+        const additionPathToSha = new Map(
+          await Promise.all(
+            additions.map(
+              async addition =>
+                [
+                  addition.path,
+                  await hydrateBlobCache(addition.contents),
+                ] as const
+            )
+          )
+        );
+
+        const filesToDelete = new Set(args.initialFiles);
+        for (const file of additions) {
+          filesToDelete.delete(file.path);
+        }
+
+        additions = additions.filter(addition => {
+          const sha = additionPathToSha.get(addition.path)!;
+          const existing = getTreeNodeAtPath(args.currentTree, addition.path);
+          return existing?.entry.sha !== sha;
+        });
+
+        const deletions: { path: string }[] = [...filesToDelete].map(path => ({
+          path,
+        }));
+        const updatedTree = await updateTreeWithChanges(args.currentTree, {
+          additions,
+          deletions: [...filesToDelete],
+        });
+        await hydrateTreeCacheWithEntries(updatedTree.entries);
+        if (args.storage.kind === 'github') {
+          const branch = {
+            branchName: override?.branch ?? branchInfo.currentBranch,
+            repositoryNameWithOwner: `${repoWithWriteAccess!.owner}/${
+              repoWithWriteAccess!.name
+            }`,
+          };
+          const runMutation = (expectedHeadOid: string) =>
+            mutate({
+              input: {
+                branch,
+                expectedHeadOid,
+                message: { headline: `Update ${args.basePath}` },
+                fileChanges: {
+                  additions: additions.map(addition => ({
+                    ...addition,
+                    contents: fromByteArray(addition.contents),
+                  })),
+                  deletions,
                 },
-              }
-            ).then(x => x.json());
-            const tree = await fetchGitHubTreeData(
-              branch.commit.sha,
-              args.storage.repo
-            );
-            const entry = tree.entries.get(args.basePath);
-            if (entry?.sha === args.currentLocalTreeSha) {
-              result = await runMutation(branch.data.commit.sha);
-            } else {
+              },
+            });
+          let result = await runMutation(override?.sha ?? baseCommit);
+          const gqlError = result.error?.graphQLErrors[0]?.originalError;
+          if (gqlError && 'type' in gqlError) {
+            if (gqlError.type === 'BRANCH_PROTECTION_RULE_VIOLATION') {
               setState({
                 kind: 'needs-new-branch',
                 reason:
-                  'This entry has been updated since it was opened. Create a new branch to save changes.',
+                  'Changes must be made via pull request to this branch. Create a new branch to save changes.',
               });
               return false;
             }
+            if (gqlError.type === 'STALE_DATA') {
+              const branch = await fetch(
+                `https://api.github.com/repos/${args.storage.repo.owner}/${
+                  args.storage.repo.name
+                }/branches/${encodeURIComponent(branchInfo.currentBranch)}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${(await getAuth())?.accessToken}`,
+                  },
+                }
+              ).then(x => x.json());
+              const tree = await fetchGitHubTreeData(
+                branch.commit.sha,
+                args.storage.repo
+              );
+              const treeKey = getTreeKey(
+                getDirectoriesForTreeKey(
+                  fields.object(args.schema),
+                  args.basePath,
+                  args.slug?.value,
+                  args.format
+                ),
+                tree.tree
+              );
+              if (treeKey === args.currentLocalTreeKey) {
+                result = await runMutation(branch.data.commit.sha);
+              } else {
+                setState({
+                  kind: 'needs-new-branch',
+                  reason:
+                    'This entry has been updated since it was opened. Create a new branch to save changes.',
+                });
+                return false;
+              }
+            }
           }
-        }
 
-        if (result.error) {
-          setState({ kind: 'error', error: result.error });
-          return false;
-        }
-        const target = result.data?.createCommitOnBranch?.ref?.target;
-        if (target) {
+          if (result.error) {
+            throw result.error;
+          }
+          const target = result.data?.createCommitOnBranch?.ref?.target;
+          if (target) {
+            setState({ kind: 'updated' });
+            return true;
+          }
+          throw new Error('Failed to update');
+        } else {
+          const res = await fetch('/api/keystatic/update', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'no-cors': '1',
+            },
+            body: JSON.stringify({
+              additions: additions.map(addition => ({
+                ...addition,
+                contents: fromByteArray(addition.contents),
+              })),
+              deletions,
+            }),
+          });
+          if (!res.ok) {
+            throw new Error(await res.text());
+          }
+          const newTree: TreeEntry[] = await res.json();
+          const { tree } = await hydrateTreeCacheWithEntries(newTree);
+          setTreeSha(await treeSha(tree));
           setState({ kind: 'updated' });
           return true;
         }
-        setState({ kind: 'error', error: new Error('Failed to update') });
+      } catch (err) {
+        setState({ kind: 'error', error: err as Error });
         return false;
-      } else {
-        const newTree: TreeEntry[] = await fetch('/api/keystatic/update', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'no-cors': '1',
-          },
-          body: JSON.stringify({
-            additions: additions.map(addition => ({
-              ...addition,
-              contents: fromByteArray(addition.contents),
-            })),
-            deletions,
-          }),
-        }).then(res => res.json());
-        const { tree } = await hydrateTreeCacheWithEntries(newTree);
-        setTreeSha(await treeSha(tree));
-        setState({ kind: 'updated' });
-        return true;
       }
     },
     () => {
@@ -274,6 +308,7 @@ export function useDeleteItem(args: {
     | { kind: 'idle' }
     | { kind: 'updated' }
     | { kind: 'loading' }
+    | { kind: 'needs-fork' }
     | { kind: 'error'; error: Error }
   >({
     kind: 'idle',
@@ -283,165 +318,166 @@ export function useDeleteItem(args: {
 
   const [, mutate] = useMutation(createCommitMutation);
   const setTreeSha = useSetTreeSha();
+  const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
+
   return [
     state,
     async () => {
-      setState({ kind: 'loading' });
-      const updatedTree = await updateTreeWithChanges(args.currentTree, {
-        additions: [],
-        deletions: args.initialFiles,
-      });
-      await hydrateTreeCacheWithEntries(updatedTree.entries);
-      if (args.storage.kind === 'github') {
-        const { error } = await mutate({
-          input: {
-            branch: {
-              repositoryNameWithOwner: `${args.storage.repo.owner}/${args.storage.repo.name}`,
-              branchName: branchInfo.currentBranch,
-            },
-            message: { headline: `Delete ${args.basePath}` },
-            expectedHeadOid: baseCommit,
-            fileChanges: {
-              deletions: args.initialFiles.map(path => ({ path })),
-            },
-          },
-        });
-        if (error) {
-          setState({ kind: 'error', error });
-          return;
+      try {
+        if (repoWithWriteAccess === null && args.storage.kind === 'github') {
+          setState({ kind: 'needs-fork' });
+          return false;
         }
-        setState({ kind: 'updated' });
-        return;
-      }
-      const newTree: TreeEntry[] = await fetch('/api/keystatic/update', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'no-cors': '1',
-        },
-        body: JSON.stringify({
+        setState({ kind: 'loading' });
+        const updatedTree = await updateTreeWithChanges(args.currentTree, {
           additions: [],
-          deletions: args.initialFiles.map(path => ({ path })),
-        }),
-      }).then(res => res.json());
-      const { tree } = await hydrateTreeCacheWithEntries(newTree);
-      setTreeSha(await treeSha(tree));
-      setState({ kind: 'updated' });
+          deletions: args.initialFiles,
+        });
+        await hydrateTreeCacheWithEntries(updatedTree.entries);
+        if (args.storage.kind === 'github') {
+          const { error } = await mutate({
+            input: {
+              branch: {
+                repositoryNameWithOwner: `${args.storage.repo.owner}/${args.storage.repo.name}`,
+                branchName: branchInfo.currentBranch,
+              },
+              message: { headline: `Delete ${args.basePath}` },
+              expectedHeadOid: baseCommit,
+              fileChanges: {
+                deletions: args.initialFiles.map(path => ({ path })),
+              },
+            },
+          });
+          if (error) {
+            throw error;
+          }
+          setState({ kind: 'updated' });
+          return true;
+        } else {
+          const res = await fetch('/api/keystatic/update', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'no-cors': '1',
+            },
+            body: JSON.stringify({
+              additions: [],
+              deletions: args.initialFiles.map(path => ({ path })),
+            }),
+          });
+          if (!res.ok) {
+            throw new Error(await res.text());
+          }
+          const newTree: TreeEntry[] = await res.json();
+          const { tree } = await hydrateTreeCacheWithEntries(newTree);
+          setTreeSha(await treeSha(tree));
+          setState({ kind: 'updated' });
+          return true;
+        }
+      } catch (err) {
+        setState({ kind: 'error', error: err as Error });
+      }
+    },
+    () => {
+      setState({ kind: 'idle' });
     },
   ] as const;
 }
 
 export async function toFiles(
-  value: unknown,
-  schema: ComponentSchema,
-  slugField: string | undefined
+  rootValue: unknown,
+  rootSchema: ComponentSchema,
+  slug: { field: string; value: string } | undefined
 ) {
-  const extraFiles: { path: string; contents: Uint8Array }[] = [];
+  const extraFiles: {
+    path: string;
+    parent: string | undefined;
+    contents: Uint8Array;
+  }[] = [];
   return {
-    value: await _toFiles(value, schema, [], extraFiles, slugField),
+    value: await asyncTransformProps(rootSchema, rootValue, {
+      async form(schema, value, propPath) {
+        if (propPath.length === 1 && slug?.field === propPath[0]) {
+          if (!isSlugFormField(schema)) {
+            throw new Error('slugField is a not a slug field');
+          }
+          return schema.slug.serialize(value).value;
+        }
+        if ('serializeToFile' in schema && schema.serializeToFile) {
+          if (schema.serializeToFile.kind === 'asset') {
+            const suggestedFilenamePrefix = getPropPathPortion(
+              propPath,
+              rootSchema,
+              rootValue
+            );
+
+            const { content, value: forYaml } =
+              schema.serializeToFile.serialize(value, suggestedFilenamePrefix);
+            if (content) {
+              const path = schema.serializeToFile.filename(
+                forYaml,
+                suggestedFilenamePrefix
+              );
+              if (path) {
+                extraFiles.push({
+                  path,
+                  contents: content,
+                  parent: schema.serializeToFile.directory,
+                });
+              }
+            }
+            return forYaml;
+          }
+          if (schema.serializeToFile.kind === 'multi') {
+            const {
+              other,
+              external,
+              primary,
+              value: forYaml,
+            } = await schema.serializeToFile.serialize(value, slug?.value);
+            if (primary) {
+              extraFiles.push({
+                path:
+                  getPropPathPortion(propPath, rootSchema, rootValue) +
+                  schema.serializeToFile.primaryExtension,
+                contents: primary,
+                parent: undefined,
+              });
+            }
+            for (const [key, contents] of other) {
+              extraFiles.push({
+                path:
+                  getPropPathPortion(propPath, rootSchema, rootValue) +
+                  '/' +
+                  key,
+                contents,
+                parent: undefined,
+              });
+            }
+            const allowedDirectories = new Set(
+              schema.serializeToFile.directories
+            );
+            for (const [directory, contents] of external) {
+              if (!allowedDirectories.has(directory)) {
+                throw new Error(
+                  `Invalid directory ${directory} in multi-file serialization`
+                );
+              }
+              for (const [filename, fileContents] of contents) {
+                extraFiles.push({
+                  path: filename,
+                  contents: fileContents,
+                  parent: directory,
+                });
+              }
+            }
+            return forYaml;
+          }
+          assertNever(schema.serializeToFile);
+        }
+        return value;
+      },
+    }),
     extraFiles,
   };
-}
-
-async function _toFiles(
-  value: unknown,
-  schema: ComponentSchema,
-  propPath: (string | number)[],
-  extraFiles: {
-    path: string;
-    contents: Uint8Array;
-  }[],
-  slugField: string | undefined
-): Promise<unknown> {
-  if (schema.kind === 'child' || schema.kind === 'relationship') {
-    return value;
-  }
-  if (schema.kind === 'form') {
-    if (propPath.length === 1 && slugField === propPath[0]) {
-      if (!isSlugFormField(schema)) {
-        throw new Error('slugField is a not a slug field');
-      }
-      return schema.slug.serialize(value).value;
-    }
-    if ('serializeToFile' in schema && schema.serializeToFile) {
-      if (schema.serializeToFile.kind === 'asset') {
-        const suggestedFilenamePrefix = propPath.join('/');
-
-        const { content, value: forYaml } = schema.serializeToFile.serialize(
-          value,
-          suggestedFilenamePrefix
-        );
-        if (content) {
-          const path = schema.serializeToFile.filename(
-            forYaml,
-            suggestedFilenamePrefix
-          );
-          if (path) {
-            extraFiles.push({ path, contents: content });
-          }
-        }
-        return forYaml;
-      }
-      if (schema.serializeToFile.kind === 'multi') {
-        const {
-          other,
-          primary,
-          value: forYaml,
-        } = await schema.serializeToFile.serialize(value);
-        if (primary) {
-          extraFiles.push({
-            path: propPath.join('/') + schema.serializeToFile.primaryExtension,
-            contents: primary,
-          });
-        }
-        for (const [key, contents] of Object.entries(other)) {
-          extraFiles.push({ path: propPath.join('/') + '/' + key, contents });
-        }
-        return forYaml;
-      }
-      assertNever(schema.serializeToFile);
-    }
-    return value;
-  }
-  if (schema.kind === 'object') {
-    return Object.fromEntries(
-      await Promise.all(
-        Object.entries(schema.fields).map(async ([key, val]) => [
-          key,
-          await _toFiles(
-            (value as any)[key],
-            val,
-            [...propPath, key],
-            extraFiles,
-            slugField
-          ),
-        ])
-      )
-    );
-  }
-  if (schema.kind === 'array') {
-    return Promise.all(
-      (value as unknown[]).map((val, index) =>
-        _toFiles(
-          val,
-          schema.element,
-          [...propPath, index],
-          extraFiles,
-          slugField
-        )
-      )
-    );
-  }
-  if (schema.kind === 'conditional') {
-    return {
-      discriminant: (value as any).discriminant,
-      value: await _toFiles(
-        (value as any).value,
-        schema.values[(value as any).discriminant],
-        [...propPath, 'value'],
-        extraFiles,
-        slugField
-      ),
-    };
-  }
 }

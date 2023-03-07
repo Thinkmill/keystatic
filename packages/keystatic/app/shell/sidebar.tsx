@@ -1,7 +1,7 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
 import { Item, Section } from '@react-stately/collections';
-import { gql } from '@ts-gql/tag/no-transform';
+import { FragmentData, gql } from '@ts-gql/tag/no-transform';
 import {
   createContext,
   ReactNode,
@@ -9,13 +9,11 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useQuery } from 'urql';
 
 import { Badge } from '@voussoir/badge';
 import { ActionButton } from '@voussoir/button';
 import { Icon } from '@voussoir/icon';
 import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { folderOpenIcon } from '@voussoir/icon/icons/folderOpenIcon';
 import { Image } from '@voussoir/image';
 import { Flex } from '@voussoir/layout';
 import { MenuTrigger, Menu } from '@voussoir/menu';
@@ -29,7 +27,7 @@ import l10nMessages from '../l10n/index.json';
 import { useRouter } from '../router';
 import { isGitHubConfig, pluralize } from '../utils';
 
-import { useChanged } from './data';
+import { GitHubAppShellDataContext, useChanged } from './data';
 import { SidebarHeader } from './sidebar-header';
 
 export const SidebarContext = createContext<{
@@ -211,19 +209,24 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
   );
 }
 
+export const SidebarFooter_viewer = gql`
+  fragment SidebarFooter_viewer on User {
+    id
+    name
+    login
+    avatarUrl
+    databaseId
+  }
+` as import('../../__generated__/ts-gql/SidebarFooter_viewer').type;
+
+export const ViewerContext = createContext<
+  FragmentData<typeof SidebarFooter_viewer> | undefined
+>(undefined);
+
 function SidebarFooter(props: { config: GitHubConfig }) {
-  const [{ data: { viewer = undefined } = {} }] = useQuery({
-    query: gql`
-      query Viewer {
-        viewer {
-          id
-          name
-          login
-          avatarUrl
-        }
-      }
-    ` as import('../../__generated__/ts-gql/Viewer').type,
-  });
+  const viewer = useContext(ViewerContext);
+  const appShellData = useContext(GitHubAppShellDataContext);
+  const fork = appShellData?.data?.repository?.forks.nodes?.[0];
   return (
     <Flex
       elementType="header"
@@ -233,18 +236,15 @@ function SidebarFooter(props: { config: GitHubConfig }) {
       alignItems="center"
       justifyContent="space-between"
     >
-      <Flex gap="regular" alignItems="center" height="regular">
-        <Icon src={folderOpenIcon} />
-        <Text
-          color="neutralEmphasis"
-          weight="semibold"
-          size="medium"
-          id="nav-title-id"
-          truncate
-        >
-          {props.config.storage.repo.name}
-        </Text>
-      </Flex>
+      <Text
+        color="neutralEmphasis"
+        weight="semibold"
+        size="medium"
+        id="nav-title-id"
+        truncate
+      >
+        {props.config.storage.repo.name}
+      </Text>
       <MenuTrigger direction="top">
         <ActionButton prominence="low" aria-label="app actions">
           <Image
@@ -265,21 +265,33 @@ function SidebarFooter(props: { config: GitHubConfig }) {
             if (key === 'profile') {
               window.open(
                 `https://github.com/${viewer?.login ?? ''}`,
-                '_blank'
+                '_blank',
+                'noopener,noreferrer'
               );
             }
             if (key === 'repository') {
               window.open(
                 `https://github.com/${props.config.storage.repo.owner}/${props.config.storage.repo.name}`,
-                '_blank'
+                '_blank',
+                'noopener,noreferrer'
+              );
+            }
+            if (key === 'fork') {
+              window.open(
+                `https://github.com/${fork?.owner.login}/${fork?.name}`,
+                '_blank',
+                'noopener,noreferrer'
               );
             }
           }}
         >
           <Item key="logout">Log out</Item>
           <Section title="Github">
-            <Item key="profile">Profile</Item>
-            <Item key="repository">Repository</Item>
+            {[
+              <Item key="profile">Profile</Item>,
+              <Item key="repository">Repository</Item>,
+              ...(fork ? [<Item key="fork">Fork</Item>] : []),
+            ]}
           </Section>
         </Menu>
       </MenuTrigger>

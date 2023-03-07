@@ -26,16 +26,17 @@ import { TreeNode } from './trees';
 import { mergeDataStates } from './useData';
 import { useHasChanged } from './useHasChanged';
 import { useItemData } from './useItemData';
-import { getSingletonFormat, getSingletonPath } from './utils';
+import { getSingletonFormat, getSingletonPath, isGitHubConfig } from './utils';
 import { Icon } from '@voussoir/icon';
 import { refreshCwIcon } from '@voussoir/icon/icons/refreshCwIcon';
+import { ForkRepoDialog } from './fork-repo';
 
 type SingletonPageProps = {
   singleton: string;
   config: Config;
   initialState: Record<string, unknown> | null;
   initialFiles: string[];
-  localTreeSha: string | undefined;
+  localTreeKey: string | undefined;
   currentTree: Map<string, TreeNode>;
 };
 
@@ -43,7 +44,7 @@ function SingletonPage({
   singleton,
   initialFiles,
   initialState,
-  localTreeSha,
+  localTreeKey,
   config,
   currentTree,
 }: SingletonPageProps) {
@@ -57,16 +58,16 @@ function SingletonPage({
 
   const router = useRouter();
 
-  const [{ state, localTreeSha: localTreeShaInState }, setState] = useState(
+  const [{ state, localTreeKey: localTreeKeyInState }, setState] = useState(
     () => ({
-      localTreeSha,
+      localTreeKey: localTreeKey,
       state:
         initialState === null ? getInitialPropsValue(schema) : initialState,
     })
   );
-  if (localTreeShaInState !== localTreeSha) {
+  if (localTreeKeyInState !== localTreeKey) {
     setState({
-      localTreeSha,
+      localTreeKey: localTreeKey,
       state:
         initialState === null ? getInitialPropsValue(schema) : initialState,
     });
@@ -83,7 +84,7 @@ function SingletonPage({
         schema,
         stateUpdater => {
           setState(state => ({
-            localTreeSha: state.localTreeSha,
+            localTreeKey: state.localTreeKey,
             state: stateUpdater(state.state),
           }));
         },
@@ -100,9 +101,9 @@ function SingletonPage({
     schema: singletonConfig.schema,
     basePath: singletonPath,
     format: getSingletonFormat(config, singleton),
-    currentLocalTreeSha: localTreeSha,
+    currentLocalTreeKey: localTreeKey,
     currentTree,
-    slugField: undefined,
+    slug: undefined,
   });
   const update = useEventCallback(_update);
   const onCreate = async () => {
@@ -167,7 +168,7 @@ function SingletonPage({
               <Notice tone="critical">{updateResult.error.message}</Notice>
             )}
             <FormValueContentFromPreviewProps
-              key={localTreeSha}
+              key={localTreeKey}
               forceValidation={forceValidation}
               {...previewProps}
             />
@@ -189,6 +190,23 @@ function SingletonPage({
                   }}
                   reason={updateResult.reason}
                   onDismiss={resetUpdateItem}
+                />
+              )}
+            </DialogContainer>
+            <DialogContainer
+              // ideally this would be a popover on desktop but using a DialogTrigger
+              // wouldn't work since this doesn't open on click but after doing a
+              // network request and it failing and manually wiring about a popover
+              // and modal would be a pain
+              onDismiss={resetUpdateItem}
+            >
+              {updateResult.kind === 'needs-fork' && isGitHubConfig(config) && (
+                <ForkRepoDialog
+                  onCreate={async () => {
+                    update();
+                  }}
+                  onDismiss={resetUpdateItem}
+                  config={config}
                 />
               )}
             </DialogContainer>
@@ -272,10 +290,10 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
           ? []
           : combined.data.item.initialFiles
       }
-      localTreeSha={
+      localTreeKey={
         combined.data.item === 'not-found'
           ? undefined
-          : combined.data.item.localTreeSha
+          : combined.data.item.localTreeKey
       }
       currentTree={combined.data.tree.tree}
     />

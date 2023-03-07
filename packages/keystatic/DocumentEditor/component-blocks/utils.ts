@@ -1,3 +1,4 @@
+import { getSlugFromState } from '../../app/utils';
 import { DocumentFeatures } from '../document-features';
 import { DocumentFeaturesForNormalization } from '../document-features-normalization';
 import { assert, Mark } from '../utils';
@@ -16,7 +17,6 @@ export function findChildPropPathsForProp(
 ): PathToChildFieldWithOption[] {
   switch (schema.kind) {
     case 'form':
-    case 'relationship':
       return [];
     case 'child':
       return [{ path: path, options: schema.options }];
@@ -83,7 +83,6 @@ export type DocumentFeaturesForChildField =
       inlineMarks: 'inherit' | DocumentFeatures['formatting']['inlineMarks'];
       documentFeatures: {
         links: boolean;
-        relationships: boolean;
       };
       softBreaks: boolean;
     }
@@ -125,7 +124,6 @@ export function getDocumentFeaturesForChildField(
       inlineMarks,
       documentFeatures: {
         links: options.links === 'inherit',
-        relationships: options.relationships === 'inherit',
       },
       softBreaks: options.formatting?.softBreaks === 'inherit',
     };
@@ -168,7 +166,7 @@ export function getDocumentFeaturesForChildField(
               },
       },
       links: options.links === 'inherit',
-      relationships: options.relationships === 'inherit',
+      images: options.images === 'inherit',
     },
   };
 }
@@ -183,11 +181,7 @@ function getSchemaAtPropPathInner(
   if (path.length === 0) {
     return schema;
   }
-  if (
-    schema.kind === 'child' ||
-    schema.kind === 'form' ||
-    schema.kind === 'relationship'
-  ) {
+  if (schema.kind === 'child' || schema.kind === 'form') {
     return;
   }
   if (schema.kind === 'conditional') {
@@ -238,20 +232,16 @@ export function getSchemaAtPropPath(
 export function clientSideValidateProp(
   schema: ComponentSchema,
   value: any,
-  slugField:
-    | { field: string; slugs: Set<string>; currentSlug: string | undefined }
-    | undefined,
+  slugField: { field: string; slugs: Set<string> } | undefined,
   path: ReadonlyPropPath = []
 ): boolean {
   switch (schema.kind) {
-    case 'child':
-    case 'relationship': {
+    case 'child': {
       return true;
     }
     case 'form': {
-      if (path.length === 1 && path[0] === slugField?.field) {
+      if (path[path.length - 1] === slugField?.field) {
         return schema.validate(value, {
-          currentSlug: slugField.currentSlug,
           slugs: slugField.slugs,
         });
       }
@@ -264,7 +254,7 @@ export function clientSideValidateProp(
       return clientSideValidateProp(
         schema.values[value.discriminant],
         value.value,
-        slugField,
+        undefined,
         path.concat('value')
       );
     }
@@ -274,7 +264,7 @@ export function clientSideValidateProp(
           !clientSideValidateProp(
             childProp,
             value[key],
-            slugField,
+            key === slugField?.field ? slugField : undefined,
             path.concat(key)
           )
         ) {
@@ -284,12 +274,31 @@ export function clientSideValidateProp(
       return true;
     }
     case 'array': {
+      let slugInfo: undefined | { slugField: string; slugs: string[] };
+      if (schema.slugField !== undefined && schema.element.kind === 'object') {
+        const innerSchema = schema.element.fields;
+        const { slugField } = schema;
+        slugInfo = {
+          slugField,
+          slugs: (value as unknown[]).map(val =>
+            getSlugFromState(
+              { schema: innerSchema, slugField },
+              val as Record<string, unknown>
+            )
+          ),
+        };
+      }
       for (const [idx, innerVal] of (value as unknown[]).entries()) {
         if (
           !clientSideValidateProp(
             schema.element,
             innerVal,
-            slugField,
+            slugInfo === undefined
+              ? undefined
+              : {
+                  field: slugInfo.slugField,
+                  slugs: new Set(slugInfo.slugs.filter((_, i) => idx !== i)),
+                },
             path.concat(idx)
           )
         ) {
@@ -322,11 +331,7 @@ export function getAncestorSchemas(
     } else if (currentProp.kind === 'object') {
       currentValue = (currentValue as any)[key];
       currentProp = currentProp.fields[key];
-    } else if (
-      currentProp.kind === 'child' ||
-      currentProp.kind === 'form' ||
-      currentProp.kind === 'relationship'
-    ) {
+    } else if (currentProp.kind === 'child' || currentProp.kind === 'form') {
       throw new Error(`unexpected prop "${key}"`);
     } else {
       assertNever(currentProp);
@@ -359,11 +364,7 @@ export function traverseProps(
   ) => void,
   path: ReadonlyPropPath = []
 ) {
-  if (
-    schema.kind === 'form' ||
-    schema.kind === 'relationship' ||
-    schema.kind === 'child'
-  ) {
+  if (schema.kind === 'form' || schema.kind === 'child') {
     visitor(schema, value, path);
     return;
   }
@@ -407,11 +408,7 @@ export function transformProps(
   },
   path: ReadonlyPropPath = []
 ): unknown {
-  if (
-    schema.kind === 'form' ||
-    schema.kind === 'relationship' ||
-    schema.kind === 'child'
-  ) {
+  if (schema.kind === 'form' || schema.kind === 'child') {
     if (visitors[schema.kind]) {
       return (visitors[schema.kind] as any)(schema, value, path);
     }
@@ -480,11 +477,7 @@ export async function asyncTransformProps(
   },
   path: ReadonlyPropPath = []
 ): Promise<unknown> {
-  if (
-    schema.kind === 'form' ||
-    schema.kind === 'relationship' ||
-    schema.kind === 'child'
-  ) {
+  if (schema.kind === 'form' || schema.kind === 'child') {
     if (visitors[schema.kind]) {
       return (visitors[schema.kind] as any)(schema, value, path);
     }
@@ -602,13 +595,9 @@ export function replaceValueAtPropPath(
     return newVal;
   }
 
-  // we should never reach here since form, relationship or child fields don't contain other fields
+  // we should never reach here since form or child fields don't contain other fields
   // so the only thing that can happen to them is to be replaced which happens at the start of this function when path.length === 0
-  assert(
-    schema.kind !== 'form' &&
-      schema.kind !== 'relationship' &&
-      schema.kind !== 'child'
-  );
+  assert(schema.kind !== 'form' && schema.kind !== 'child');
 
   assertNever(schema);
 }

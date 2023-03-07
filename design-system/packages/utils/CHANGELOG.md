@@ -1,5 +1,31 @@
 # @voussoir/utils
 
+## 2.0.1
+
+### Patch Changes
+
+- 6d18465: New package "@voussoir/breadcrumbs" exports `Breadcrumbs` component.
+
+  @voussoir/badge
+
+  Use common test-utils package.
+
+  @voussoir/field
+
+  Reduce field label weight: ~semibold~ --> "medium".
+
+  @voussoir/listbox
+
+  Fix checkmark spacing for lists containing selectable items.
+
+  @voussoir/text-field
+
+  Add font smoothing to input text.
+
+  @voussoir/utils
+
+  Add tests for `isReactText()` guard.
+
 ## 2.0.0
 
 ### Major Changes

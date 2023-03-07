@@ -10,19 +10,12 @@
 import { BaseEditor, BaseElement, BaseRange } from 'slate';
 import { HistoryEditor } from 'slate-history';
 import { ReactEditor } from 'slate-react';
-import { RelationshipData } from './component-blocks/api';
 import { ReadonlyPropPath } from './component-blocks/utils';
 import { Mark } from './utils';
 
 type Link = {
   type: 'link';
   href: string;
-};
-
-type Relationship = {
-  type: 'relationship';
-  relationship: string;
-  data: RelationshipData | null;
 };
 
 type Layout = {
@@ -68,6 +61,13 @@ type ComponentProp = {
   propPath?: ReadonlyPropPath | undefined;
 };
 
+type Image = {
+  type: 'image';
+  src: { filename: string; content: Uint8Array };
+  alt: string;
+  title: string;
+};
+
 type Element = (
   | Layout
   | OnlyChildrenElements
@@ -76,8 +76,8 @@ type Element = (
   | ComponentProp
   | Paragraph
   | Link
-  | Relationship
   | CodeBlock
+  | Image
 ) &
   BaseElement;
 declare module 'slate' {

@@ -35,14 +35,6 @@ function toMarkdocInline(node: ElementFromValidation): Node | Node[] {
       node.children.flatMap(toMarkdocInline)
     );
   }
-  if (node.type === 'relationship') {
-    return new Ast.Node(
-      'tag',
-      { relationship: node.relationship },
-      [],
-      'relationship'
-    );
-  }
   if (node.type !== undefined) {
     throw new Error(`unexpected inline node type: ${node.type}`);
   }
@@ -56,7 +48,9 @@ function toMarkdocInline(node: ElementFromValidation): Node | Node[] {
   let markdocNode = new Ast.Node('text', { content: node.text });
   for (const mark of marks) {
     const config = markToMarkdoc[mark];
-    markdocNode = new Ast.Node(config.type, {}, [markdocNode], config.tag);
+    if (config) {
+      markdocNode = new Ast.Node(config.type, {}, [markdocNode], config.tag);
+    }
   }
   return markdocNode;
 }
@@ -77,7 +71,7 @@ function removeUnnecessaryChildFieldValues(
   parent: ComponentSchema | undefined,
   value: unknown
 ): unknown {
-  if (schema.kind === 'relationship' || schema.kind === 'form') {
+  if (schema.kind === 'form') {
     return value;
   }
   if (schema.kind === 'child') {
@@ -204,6 +198,17 @@ function toMarkdoc(
     }
     return markdocNode;
   }
+  if (node.type === 'image') {
+    return new Ast.Node('paragraph', {}, [
+      new Ast.Node('inline', {}, [
+        new Ast.Node('image', {
+          src: encodeURI(node.src as unknown as string),
+          alt: node.alt,
+          title: node.title,
+        }),
+      ]),
+    ]);
+  }
   if (node.type === 'code') {
     let content = (node.children[0] as { text: string }).text + '\n';
     return new Ast.Node('fence', { content, language: node.language }, [
@@ -271,14 +276,9 @@ function toMarkdoc(
       node.children.length === 1 &&
       node.children[0].type === 'component-inline-prop' &&
       node.children[0].propPath === undefined;
-    const componentBlock = componentBlocks[node.component];
-    let singleChildField;
-    if (componentBlock) {
-      singleChildField = findSingleChildField({
-        kind: 'object',
-        fields: componentBlock.schema,
-      });
-    }
+    const componentBlock = componentBlocks[node.component] as
+      | ComponentBlock
+      | undefined;
 
     const childrenAsMarkdoc: {
       type: 'component-block-prop' | 'component-inline-prop';
@@ -303,25 +303,29 @@ function toMarkdoc(
       }
     }
 
-    const schema = { kind: 'object' as const, fields: componentBlock.schema };
-
     const attributes = componentBlock
       ? (removeUnnecessaryChildFieldValues(
-          schema,
+          { kind: 'object' as const, fields: componentBlock.schema },
           undefined,
           node.props
         ) as Record<string, unknown>)
       : node.props;
 
-    if (singleChildField) {
-      const children: Node[] = [];
-      toChildrenAndProps(
-        childrenAsMarkdoc,
-        children,
-        attributes,
-        singleChildField
-      );
-      return new Ast.Node('tag', attributes, children, node.component);
+    if (componentBlock) {
+      const singleChildField = findSingleChildField({
+        kind: 'object',
+        fields: componentBlock.schema,
+      });
+      if (singleChildField) {
+        const children: Node[] = [];
+        toChildrenAndProps(
+          childrenAsMarkdoc,
+          children,
+          attributes,
+          singleChildField
+        );
+        return new Ast.Node('tag', attributes, children, node.component);
+      }
     }
     const children = isVoid
       ? []

@@ -1,3 +1,15 @@
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import {
+  Key,
+  MemoExoticComponent,
+  ReactElement,
+  memo,
+  useCallback,
+  useId,
+  useMemo,
+  useState,
+} from 'react';
+
 import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
 import { Dialog, DialogContainer } from '@voussoir/dialog';
 import { ItemDropTarget, useDragAndDrop } from '@voussoir/drag-and-drop';
@@ -9,20 +21,11 @@ import { Item, ListView } from '@voussoir/list-view';
 import { Content } from '@voussoir/slots';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { Heading, Text } from '@voussoir/typography';
-import {
-  Key,
-  MemoExoticComponent,
-  ReactElement,
-  memo,
-  useCallback,
-  useId,
-  useMemo,
-  useState,
-} from 'react';
+
+import l10nMessages from '../../app/l10n/index.json';
 import { useEventCallback } from '../utils';
 
 import {
-  AddToPathProvider,
   ArrayField,
   BasicFormField,
   ComponentSchema,
@@ -30,13 +33,16 @@ import {
   FormField,
   GenericPreviewProps,
   ObjectField,
-  PathContextProvider,
-  RelationshipField,
-  SlugFieldProvider,
 } from './api';
 import { previewPropsToValue, setValueToPreviewProps } from './get-value';
 import { createGetPreviewProps } from './preview-props';
 import { assertNever, clientSideValidateProp, ReadonlyPropPath } from './utils';
+import {
+  AddToPathProvider,
+  PathContextProvider,
+  SlugFieldProvider,
+} from './fields/text';
+import { getSlugFromState } from '../../app/utils';
 
 type DefaultFieldProps<Key> = GenericPreviewProps<
   Extract<ComponentSchema, { kind: Key }>,
@@ -48,6 +54,7 @@ type DefaultFieldProps<Key> = GenericPreviewProps<
 
 function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
   const labelId = useId();
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   let onMove = (keys: Key[], target: ItemDropTarget) => {
     const targetIndex = props.elements.findIndex(x => x.key === target.key);
@@ -137,6 +144,28 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
       { key: undefined },
     ]);
   };
+  const modalStateIndex =
+    modalState.state === 'open' ? modalState.index : undefined;
+  const slugInfo = useMemo(() => {
+    if (
+      props.schema.slugField === undefined ||
+      modalStateIndex === undefined ||
+      props.schema.element.kind !== 'object'
+    ) {
+      return;
+    }
+    const val: unknown[] = previewPropsToValue(props);
+    const schema = props.schema.element.fields;
+    const slugField = props.schema.slugField;
+    const slugs = new Set(
+      val
+        .filter((x, i) => i !== modalStateIndex)
+        .map(x =>
+          getSlugFromState({ schema, slugField }, x as Record<string, unknown>)
+        )
+    );
+    return { slugs, field: slugField };
+  }, [modalStateIndex, props]);
 
   return (
     <Flex
@@ -154,7 +183,7 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
         onPress={addItem}
         alignSelf="start"
       >
-        Add
+        {stringFormatter.format('add')}
       </ActionButton>
       <ListView
         aria-labelledby={labelId}
@@ -210,7 +239,9 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
                 >
                   <Icon src={trash2Icon} />
                 </ActionButton>
-                <Tooltip tone="critical">Delete</Tooltip>
+                <Tooltip tone="critical">
+                  {stringFormatter.format('delete')}
+                </Tooltip>
               </TooltipTrigger>
             </Item>
           );
@@ -260,6 +291,7 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
                       onChange={onModalChange}
                       schema={elementProps.schema}
                       value={modalState.value}
+                      slugField={slugInfo}
                     />
                   </AddToPathProvider>
                 </Flex>
@@ -333,10 +365,6 @@ function move<T>(
   return copy;
 }
 
-function RelationshipFieldPreview({}: DefaultFieldProps<'relationship'>) {
-  return null;
-}
-
 function FormFieldPreview({
   schema,
   autoFocus,
@@ -368,11 +396,10 @@ function ObjectFieldPreview({
       {Object.entries(fields).map(
         ([key, propVal]) =>
           isNonChildFieldPreviewProps(propVal) && (
-            <AddToPathProvider part={key}>
+            <AddToPathProvider key={key} part={key}>
               <InnerFormValueContentFromPreviewProps
                 forceValidation={forceValidation}
                 autoFocus={key === firstFocusable}
-                key={key}
                 {...propVal}
               />
             </AddToPathProvider>
@@ -428,7 +455,6 @@ export type NonChildFieldComponentSchema =
       BasicFormField<any, any>,
       { [key: string]: ComponentSchema }
     >
-  | RelationshipField<boolean>
   | ArrayField<ComponentSchema>;
 
 function isNonChildFieldPreviewProps(
@@ -439,7 +465,6 @@ function isNonChildFieldPreviewProps(
 
 const fieldRenderers = {
   array: ArrayFieldPreview,
-  relationship: RelationshipFieldPreview,
   child: () => null,
   form: FormFieldPreview,
   object: ObjectFieldPreview,
@@ -465,9 +490,8 @@ export const FormValueContentFromPreviewProps: MemoExoticComponent<
       autoFocus?: boolean;
       forceValidation?: boolean;
       slugField?: {
-        collection: string;
-        slugField: string;
-        currentSlug: string | undefined;
+        slugs: Set<string>;
+        field: string;
       };
     }
   ) => ReactElement
@@ -485,12 +509,24 @@ function ArrayFieldItemModalContent(props: {
   schema: NonChildFieldComponentSchema;
   value: unknown;
   onChange: (cb: (value: unknown) => unknown) => void;
+  slugField:
+    | {
+        slugs: Set<string>;
+        field: string;
+      }
+    | undefined;
 }) {
   const previewProps = useMemo(
     () => createGetPreviewProps(props.schema, props.onChange, () => undefined),
     [props.schema, props.onChange]
   )(props.value);
-  return <InnerFormValueContentFromPreviewProps autoFocus {...previewProps} />;
+  return (
+    <FormValueContentFromPreviewProps
+      slugField={props.slugField}
+      autoFocus
+      {...previewProps}
+    />
+  );
 }
 
 function findFocusableObjectFieldKey(schema: ObjectField): string | undefined {
@@ -507,8 +543,7 @@ export function canFieldBeFocused(schema: ComponentSchema): boolean {
   if (
     schema.kind === 'array' ||
     schema.kind === 'conditional' ||
-    schema.kind === 'form' ||
-    schema.kind === 'relationship'
+    schema.kind === 'form'
   ) {
     return true;
   }

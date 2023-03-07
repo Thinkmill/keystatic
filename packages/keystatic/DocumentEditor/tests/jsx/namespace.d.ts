@@ -50,16 +50,6 @@ declare namespace __jsx {
         href: string;
         children: Children;
       };
-      relationship: {
-        relationship: string;
-        data: {
-          id: string;
-          label: string;
-          data: {};
-        };
-
-        children: Children;
-      };
     }
     type Element = Node;
     interface ElementAttributesProperty {

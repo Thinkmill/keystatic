@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/overlays",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "An overlay provides contextual information and/or options in the form of an additional layer on top of the interface.",
   "license": "MIT",
   "main": "dist/voussoir-overlays.cjs.js",
@@ -28,7 +28,7 @@
     "@voussoir/style": "^0.1.0",
     "@voussoir/types": "^0.1.0",
     "@voussoir/typography": "^0.1.0",
-    "@voussoir/utils": "^2.0.0",
+    "@voussoir/utils": "^2.0.1",
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
@@ -36,6 +36,7 @@
     "@types/react-transition-group": "^4.4.5",
     "@voussoir/button": "^0.1.0",
     "@voussoir/storybook": "^0.0.0",
+    "@voussoir/test-utils": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

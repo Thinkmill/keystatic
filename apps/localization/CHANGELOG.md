@@ -1,5 +1,96 @@
 # localization
 
+## 0.1.28
+
+### Patch Changes
+
+- Updated dependencies [21a687a]
+  - @keystatic/core@0.0.59
+
+## 0.1.27
+
+### Patch Changes
+
+- Updated dependencies [9f27bde]
+  - @keystatic/core@0.0.58
+
+## 0.1.26
+
+### Patch Changes
+
+- Updated dependencies [e259a19]
+  - @keystatic/core@0.0.57
+
+## 0.1.25
+
+### Patch Changes
+
+- Updated dependencies [5627932]
+  - @keystatic/core@0.0.56
+
+## 0.1.24
+
+### Patch Changes
+
+- Updated dependencies [86e0b27]
+- Updated dependencies [86e0b27]
+  - @keystatic/core@0.0.55
+
+## 0.1.23
+
+### Patch Changes
+
+- Updated dependencies [51ffbae]
+- Updated dependencies [6d18465]
+- Updated dependencies [d161cea]
+  - @keystatic/core@0.0.54
+
+## 0.1.22
+
+### Patch Changes
+
+- Updated dependencies [b26b23c]
+  - @keystatic/core@0.0.53
+
+## 0.1.21
+
+### Patch Changes
+
+- Updated dependencies [0189c09]
+  - @keystatic/core@0.0.52
+
+## 0.1.20
+
+### Patch Changes
+
+- Updated dependencies [8f03a96]
+- Updated dependencies [05a4490]
+  - @keystatic/core@0.0.51
+
+## 0.1.19
+
+### Patch Changes
+
+- Updated dependencies [8c768a1]
+  - @keystatic/core@0.0.50
+
+## 0.1.18
+
+### Patch Changes
+
+- Updated dependencies [e2230c0]
+  - @keystatic/core@0.0.49
+
+## 0.1.17
+
+### Patch Changes
+
+- Updated dependencies [1b6eb39]
+- Updated dependencies [1b6eb39]
+- Updated dependencies [1b6eb39]
+- Updated dependencies [e9432e1]
+  - @keystatic/core@0.0.48
+
 ## 0.1.16
 
 ### Patch Changes

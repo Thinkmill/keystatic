@@ -15,10 +15,9 @@ import { DocumentFeatures } from '../document-features';
 import {
   areArraysEqual,
   normalizeElementBasedOnDocumentFeatures,
-  normalizeInlineBasedOnLinksAndRelationships,
+  normalizeInlineBasedOnLinks as normalizeInlineBasedOnLinks,
   normalizeTextBasedOnInlineMarksAndSoftBreaks,
 } from '../document-features-normalization';
-import { Relationships } from '../relationship';
 import { ChildField, ComponentBlock, ComponentSchema, ArrayField } from './api';
 import {
   assertNever,
@@ -70,8 +69,7 @@ const alreadyNormalizedThings: WeakMap<
 function normalizeNodeWithinComponentProp(
   [node, path]: NodeEntry,
   editor: Editor,
-  fieldOptions: DocumentFeaturesForChildField,
-  relationships: Relationships
+  fieldOptions: DocumentFeaturesForChildField
 ): boolean {
   let alreadyNormalizedNodes = alreadyNormalizedThings.get(fieldOptions);
   if (!alreadyNormalizedNodes) {
@@ -96,8 +94,7 @@ function normalizeNodeWithinComponentProp(
         normalizeNodeWithinComponentProp(
           [node, [...path, i]],
           editor,
-          fieldOptions,
-          relationships
+          fieldOptions
         )
       )
       // .map then .some because we don't want to exit early
@@ -107,16 +104,13 @@ function normalizeNodeWithinComponentProp(
         normalizeElementBasedOnDocumentFeatures(
           [node, path],
           editor,
-          fieldOptions.documentFeatures,
-          relationships
+          fieldOptions.documentFeatures
         ) || childrenHasChanged;
     } else {
-      didNormalization = normalizeInlineBasedOnLinksAndRelationships(
+      didNormalization = normalizeInlineBasedOnLinks(
         [node, path],
         editor,
-        fieldOptions.documentFeatures.links,
-        fieldOptions.documentFeatures.relationships,
-        relationships
+        fieldOptions.documentFeatures.links
       );
     }
   }
@@ -130,7 +124,7 @@ function normalizeNodeWithinComponentProp(
 function canSchemaContainChildField(rootSchema: ComponentSchema) {
   const queue = new Set<ComponentSchema>([rootSchema]);
   for (const schema of queue) {
-    if (schema.kind === 'form' || schema.kind === 'relationship') {
+    if (schema.kind === 'form') {
     } else if (schema.kind === 'child') {
       return true;
     } else if (schema.kind === 'array') {
@@ -156,7 +150,7 @@ function doesSchemaOnlyEverContainASingleChildField(
   const queue = new Set<ComponentSchema>([rootSchema]);
   let hasFoundChildField = false;
   for (const schema of queue) {
-    if (schema.kind === 'form' || schema.kind === 'relationship') {
+    if (schema.kind === 'form') {
     } else if (schema.kind === 'child') {
       if (hasFoundChildField) {
         return false;
@@ -218,7 +212,6 @@ function isEmptyChildFieldNode(
 export function withComponentBlocks(
   blockComponents: Record<string, ComponentBlock | undefined>,
   editorDocumentFeatures: DocumentFeatures,
-  relationships: Relationships,
   editor: Editor
 ): Editor {
   // note that conflicts between the editor document features
@@ -577,8 +570,7 @@ export function withComponentBlocks(
             normalizeNodeWithinComponentProp(
               [childNode, childPath],
               editor,
-              documentFeatures,
-              relationships
+              documentFeatures
             )
           ) {
             return;
@@ -595,11 +587,7 @@ export function withComponentBlocks(
 
 // the only thing that this will fix is a new field being added to an object field, nothing else.
 function addMissingFields(value: unknown, schema: ComponentSchema): unknown {
-  if (
-    schema.kind === 'child' ||
-    schema.kind === 'form' ||
-    schema.kind === 'relationship'
-  ) {
+  if (schema.kind === 'child' || schema.kind === 'form') {
     return value;
   }
   if (schema.kind === 'conditional') {

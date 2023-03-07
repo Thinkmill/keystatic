@@ -1,10 +1,8 @@
 import { assertNever } from 'emery';
-import { isSlugFormField } from './app/utils';
+import { getSlugFromState, isSlugFormField } from './app/utils';
 import { ComponentSchema } from './DocumentEditor/component-blocks/api';
 import { getInitialPropsValue } from './DocumentEditor/component-blocks/initial-values';
 import { ReadonlyPropPath } from './DocumentEditor/component-blocks/utils';
-import { Relationships } from './DocumentEditor/relationship';
-import { isRelationshipData } from './structure-validation';
 
 export class PropValidationError extends Error {
   path: ReadonlyPropPath;
@@ -17,11 +15,15 @@ export class PropValidationError extends Error {
 export function validateComponentBlockProps(
   schema: ComponentSchema,
   value: unknown,
-  relationships: Relationships,
   path: ReadonlyPropPath,
   slugField:
     | {
-        mode: 'state' | 'parse' | 'read';
+        mode: 'state';
+        field: string;
+        slugs: Set<string>;
+      }
+    | {
+        mode: 'parse' | 'read';
         slug: string;
         field: string;
         slugs: Set<string>;
@@ -29,12 +31,11 @@ export function validateComponentBlockProps(
     | undefined
 ): any {
   if (schema.kind === 'form') {
-    if (path.length === 1 && slugField?.field === path[0]) {
+    if (slugField?.field === path[path.length - 1]) {
       if (!isSlugFormField(schema)) {
         throw new Error('slugField is not a slug field');
       }
       const slugInfo = {
-        currentSlug: slugField.slug,
         slugs: slugField.slugs,
       };
       if (slugField.mode === 'state') {
@@ -66,22 +67,6 @@ export function validateComponentBlockProps(
   if (schema.kind === 'child') {
     return null;
   }
-  if (schema.kind === 'relationship') {
-    if (schema.many) {
-      if (Array.isArray(value) && value.every(isRelationshipData)) {
-        // yes, ts understands this completely correctly, i'm as suprised as you are
-        return value.map(x => ({ id: x.id }));
-      } else {
-        throw new PropValidationError(`Invalid relationship value`, path);
-      }
-    }
-    if (value === null || isRelationshipData(value)) {
-      return value === null ? null : { id: value.id };
-    } else {
-      throw new PropValidationError(`Invalid relationship value`, path);
-    }
-  }
-
   if (schema.kind === 'conditional') {
     if (typeof value !== 'object' || value === null) {
       throw new PropValidationError(
@@ -105,9 +90,8 @@ export function validateComponentBlockProps(
     const discriminantVal = validateComponentBlockProps(
       schema.discriminant,
       discriminant,
-      relationships,
       path.concat('discriminant'),
-      slugField
+      undefined
     );
     if (discriminantVal !== undefined) {
       obj.discriminant = discriminantVal;
@@ -115,9 +99,8 @@ export function validateComponentBlockProps(
     const conditionalFieldValue = validateComponentBlockProps(
       schema.values[discriminant],
       val,
-      relationships,
       path.concat('value'),
-      slugField
+      undefined
     );
     if (conditionalFieldValue !== undefined) {
       obj.value = conditionalFieldValue;
@@ -147,9 +130,8 @@ export function validateComponentBlockProps(
       const propVal = validateComponentBlockProps(
         schema.fields[key],
         individualVal,
-        relationships,
         path.concat(key),
-        slugField
+        slugField?.field === key ? slugField : undefined
       );
 
       // for some reason mongo or mongoose or something is saving undefined as null
@@ -164,13 +146,29 @@ export function validateComponentBlockProps(
     if (!Array.isArray(value)) {
       throw new PropValidationError('Array field value must be an array', path);
     }
+    let slugInfo: undefined | { slugField: string; slugs: string[] };
+    if (schema.slugField !== undefined && schema.element.kind === 'object') {
+      const innerSchema = schema.element.fields;
+      const { slugField } = schema;
+      slugInfo = {
+        slugField,
+        slugs: value.map(val =>
+          getSlugFromState({ schema: innerSchema, slugField }, val)
+        ),
+      };
+    }
     return value.map((innerVal, i) => {
       return validateComponentBlockProps(
         schema.element,
         innerVal,
-        relationships,
         path.concat(i),
-        slugField
+        slugInfo === undefined
+          ? undefined
+          : {
+              field: slugInfo.slugField,
+              slugs: new Set(slugInfo.slugs.filter((_, idx) => i !== idx)),
+              mode: 'state',
+            }
       );
     });
   }

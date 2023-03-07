@@ -1,6 +1,6 @@
 import { action, ArgTypes, storiesOf } from '@voussoir/storybook';
 
-import { Button } from '@voussoir/button';
+import { Button, ActionButton } from '@voussoir/button';
 import { Flex } from '@voussoir/layout';
 import { TextLink } from '@voussoir/link';
 import { Text } from '@voussoir/typography';
@@ -89,7 +89,7 @@ storiesOf('Components/TooltipTrigger', module)
   })
   .add('trigger disabled', () => (
     <TooltipTrigger>
-      <Button isDisabled>Trigger</Button>
+      <ActionButton isDisabled>Trigger</ActionButton>
       <Tooltip>Tooltip content</Tooltip>
     </TooltipTrigger>
   ))
@@ -114,7 +114,7 @@ storiesOf('Components/TooltipTrigger', module)
     <Flex gap="regular">
       {['one', 'two', 'three'].map(n => (
         <TooltipTrigger key={n}>
-          <Button>{n}</Button>
+          <ActionButton>{n}</ActionButton>
           <Tooltip>Tooltip content</Tooltip>
         </TooltipTrigger>
       ))}
@@ -123,11 +123,11 @@ storiesOf('Components/TooltipTrigger', module)
   .add('collisions', () => (
     <Flex direction="column" gap="large" alignSelf="start">
       <TooltipTrigger placement="start">
-        <Button>Flip</Button>
+        <ActionButton>Flip</ActionButton>
         <Tooltip>Tooltip content</Tooltip>
       </TooltipTrigger>
       <TooltipTrigger>
-        <Button>Offset</Button>
+        <ActionButton>Offset</ActionButton>
         <Tooltip>Tooltip content</Tooltip>
       </TooltipTrigger>
     </Flex>
@@ -141,7 +141,7 @@ function renderTooltip(props: Partial<TooltipTriggerProps> = {}) {
         {...props}
         {...args}
       >
-        <Button>Trigger</Button>
+        <ActionButton>Trigger</ActionButton>
         <Tooltip>Tooltip content</Tooltip>
       </TooltipTrigger>
     );

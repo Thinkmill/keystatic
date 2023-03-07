@@ -1,5 +1,120 @@
 # @keystatic/core
 
+## 0.0.59
+
+### Patch Changes
+
+- 21a687a: document editor: image and link dialogs
+
+## 0.0.58
+
+### Patch Changes
+
+- 9f27bde: Fix conditionally changing the `storage` field in a config creating a
+  TypeScript error
+
+## 0.0.57
+
+### Patch Changes
+
+- e259a19: Replace `directory`, `directorySuffix` and `format.location` options
+  with `path` option
+
+## 0.0.56
+
+### Patch Changes
+
+- 5627932: Fix collection page with `directorySuffix`
+
+## 0.0.55
+
+### Patch Changes
+
+- 86e0b27: Rename `format.frontmatter` to `format.data` and make it optional
+- 86e0b27: Add `format.location` option
+
+## 0.0.54
+
+### Patch Changes
+
+- 51ffbae: Add built-in image block to document field
+- 6d18465: New package "@voussoir/breadcrumbs" exports `Breadcrumbs` component.
+
+  @voussoir/badge
+
+  Use common test-utils package.
+
+  @voussoir/field
+
+  Reduce field label weight: ~semibold~ --> "medium".
+
+  @voussoir/listbox
+
+  Fix checkmark spacing for lists containing selectable items.
+
+  @voussoir/text-field
+
+  Add font smoothing to input text.
+
+  @voussoir/utils
+
+  Add tests for `isReactText()` guard.
+
+- d161cea: Add `slugField` option to array fields
+- Updated dependencies [6d18465]
+- Updated dependencies [d87141d]
+  - @voussoir/badge@0.1.1
+  - @voussoir/field@0.1.3
+  - @voussoir/listbox@0.1.2
+  - @voussoir/overlays@0.1.2
+  - @voussoir/text-field@0.1.3
+  - @voussoir/utils@2.0.1
+  - @voussoir/tooltip@0.1.1
+
+## 0.0.53
+
+### Patch Changes
+
+- b26b23c: Add error handling for saving/deleting items when using
+  `storage: { kind: 'local' }`.
+
+## 0.0.52
+
+### Patch Changes
+
+- 0189c09: Allow users who don't have write permissions to the repo to fork it
+  from inside Keystatic.
+
+## 0.0.51
+
+### Patch Changes
+
+- 8f03a96: Fix `fields.image({ directory: ... })` in local mode
+- 05a4490: Document editor code block enhancements
+
+## 0.0.50
+
+### Patch Changes
+
+- 8c768a1: Allow changing where image fields store images
+
+## 0.0.49
+
+### Patch Changes
+
+- e2230c0: `fields.document` no longer stores anything in YAML/JSON data files.
+- Updated dependencies [0fc5ac0]
+  - @voussoir/combobox@0.1.2
+
+## 0.0.48
+
+### Patch Changes
+
+- 1b6eb39: Slugs are no longer duplicated into the YAML/JSON data
+- 1b6eb39: Added `fields.slug`
+- 1b6eb39: Slugs are now validated for uniqueness
+- e9432e1: Add `localBaseDirectory` option to API route config
+
 ## 0.0.47
 
 ### Patch Changes

@@ -1,27 +1,23 @@
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useEffect, useMemo, useState } from 'react';
 import { Editor, Node, Range, Transforms, Text as SlateText } from 'slate';
-import {
-  ReactEditor,
-  RenderElementProps,
-  useFocused,
-  useSelected,
-} from 'slate-react';
-import { useOverlayTrigger } from '@react-aria/overlays';
-import { useOverlayTriggerState } from '@react-stately/overlays';
+import { ReactEditor, RenderElementProps } from 'slate-react';
 
-import { ActionButton } from '@voussoir/button';
+import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
+import { Dialog, DialogContainer, useDialogContainer } from '@voussoir/dialog';
+import { Icon } from '@voussoir/icon';
+import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
 import { linkIcon } from '@voussoir/icon/icons/linkIcon';
 import { unlinkIcon } from '@voussoir/icon/icons/unlinkIcon';
-import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
-import { Icon } from '@voussoir/icon';
 import { Flex } from '@voussoir/layout';
-import { TextLink } from '@voussoir/link';
-import { Popover } from '@voussoir/overlays';
+import { Content } from '@voussoir/slots';
 import { TextField } from '@voussoir/text-field';
 import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
-import { Text } from '@voussoir/typography';
+import { Heading, Text } from '@voussoir/typography';
 
+import l10nMessages from '../app/l10n/index.json';
 import { isInlineContainer } from '.';
+import { BlockPopoverTrigger } from './BlockPopoverTrigger';
 import { DocumentFeatures } from './document-features';
 import { ComponentBlock } from './component-blocks/api';
 import {
@@ -33,9 +29,10 @@ import {
   EditorAfterButIgnoringingPointsWithNoContent,
   isElementActive,
   useElementWithSetNodes,
-  useForceValidation,
   useStaticEditor,
   useEventCallback,
+  useSelectedOrFocusWithin,
+  focusWithPreviousSelection,
 } from './utils';
 
 const isLinkActive = (editor: Editor) => {
@@ -75,33 +72,23 @@ export const LinkElement = ({
   children,
   element: __elementForGettingPath,
 }: RenderElementProps & { element: { type: 'link' } }) => {
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const editor = useStaticEditor();
   const [currentElement, setNode] = useElementWithSetNodes(
     editor,
     __elementForGettingPath
   );
   const href = currentElement.href;
+  const text = Node.string(currentElement);
 
-  const selected = useSelected();
-  const focused = useFocused();
-  const [focusedInInlineDialog, setFocusedInInlineDialog] = useState(false);
-  // we want to show the link dialog when the editor is focused and the link element is selected
-  // or when the input inside the dialog is focused so you would think that would look like this:
-  // (selected && focused) || focusedInInlineDialog
-  // this doesn't work though because the blur will happen before the focus is inside the inline dialog
-  // so this component would be rendered and focused would be false so the input would be removed so it couldn't be focused
-  // to fix this, we delay our reading of the updated `focused` value so that we'll still render the dialog
-  // immediately after the editor is blurred but before the input has been focused
-  const [delayedFocused, setDelayedFocused] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selected, targetProps] = useSelectedOrFocusWithin();
+
   useEffect(() => {
-    const id = setTimeout(() => {
-      setDelayedFocused(focused);
-    }, 0);
-    return () => {
-      clearTimeout(id);
-    };
-  }, [focused]);
-  const [localForceValidation, setLocalForceValidation] = useState(false);
+    if (selected && !href) {
+      setDialogOpen(true);
+    }
+  }, [href, selected]);
 
   const unlink = useEventCallback(() => {
     Transforms.unwrapNodes(editor, {
@@ -109,105 +96,120 @@ export const LinkElement = ({
     });
     ReactEditor.focus(editor);
   });
-  const forceValidation = useForceValidation();
-  const showInvalidState = isValidURL(href)
-    ? false
-    : forceValidation || localForceValidation;
-  const triggerRef = useRef(null);
-  const state = useOverlayTriggerState({
-    isOpen: (selected && delayedFocused) || focusedInInlineDialog,
-  });
-  const { triggerProps, overlayProps } = useOverlayTrigger(
-    { type: 'dialog' },
-    state,
-    triggerRef
-  );
+
   return (
-    <span
-      {...attributes}
-      style={{ position: 'relative', display: 'inline-block' }}
-    >
-      <Text trim={false}>
-        <TextLink
-          {...triggerProps}
-          // @ts-expect-error
-          style={{
-            color: showInvalidState ? 'red' : undefined,
-          }}
-          ref={triggerRef}
-          href={href}
-        >
-          {children}
-        </TextLink>
-      </Text>
-      <Popover
-        isNonModal
-        {...overlayProps}
-        triggerRef={triggerRef}
-        state={state}
+    <>
+      <BlockPopoverTrigger
+        isOpen={!dialogOpen && selected}
+        // placement="bottom start"
       >
+        <a href={href} {...attributes}>
+          {children}
+        </a>
+
         <Flex
-          onFocus={() => {
-            setFocusedInInlineDialog(true);
-          }}
-          onBlur={() => {
-            setFocusedInInlineDialog(false);
-            setLocalForceValidation(true);
-          }}
-          padding="medium"
-          gap="regular"
+          alignItems="center"
+          gap="small"
+          padding="regular"
+          {...targetProps}
         >
-          <TextField
-            aria-label="Link URL"
-            value={href}
-            onChange={href => {
+          <ActionButton onPress={() => setDialogOpen(true)}>
+            {stringFormatter.format('edit')}
+          </ActionButton>
+          <TooltipTrigger>
+            <ActionButton
+              prominence="low"
+              onPress={() => {
+                window.open(href, '_blank', 'noopener,noreferrer');
+              }}
+            >
+              <Icon src={externalLinkIcon} />
+            </ActionButton>
+            <Tooltip>
+              <Text truncate={3}>{href}</Text>
+            </Tooltip>
+          </TooltipTrigger>
+          <TooltipTrigger>
+            <ActionButton prominence="low" onPress={unlink}>
+              <Icon src={unlinkIcon} />
+            </ActionButton>
+            {/* TODO: needs localization */}
+            <Tooltip>Remove</Tooltip>
+          </TooltipTrigger>
+        </Flex>
+      </BlockPopoverTrigger>
+      <DialogContainer
+        onDismiss={() => {
+          setDialogOpen(false);
+          focusWithPreviousSelection(editor);
+        }}
+      >
+        {dialogOpen && (
+          <LinkDialog
+            text={text}
+            href={href}
+            onSubmit={({ href }) => {
               setNode({ href });
             }}
-            errorMessage={
-              showInvalidState && <Text>Please enter a valid URL</Text>
-            }
           />
-          <Flex>
-            <TooltipTrigger>
-              <ActionButton
-                prominence="low"
-                onPress={() =>
-                  window.open(href, '_blank', 'noopener,noreferrer')
-                }
-              >
-                <Icon src={externalLinkIcon} />
-              </ActionButton>
-              <Tooltip tone="accent">Open link in new tab</Tooltip>
-            </TooltipTrigger>
-            <UnlinkButton onUnlink={unlink} />
-          </Flex>
-        </Flex>
-      </Popover>
-    </span>
+        )}
+      </DialogContainer>
+    </>
   );
 };
 
-const UnlinkButton = memo(function UnlinkButton({
-  onUnlink,
+function LinkDialog({
+  onSubmit,
+  ...props
 }: {
-  onUnlink: () => void;
+  href?: string;
+  text?: string;
+  onSubmit: (value: { href: string }) => void;
 }) {
+  let [href, setHref] = useState(props.href || '');
+  let [touched, setTouched] = useState(false);
+
+  let { dismiss } = useDialogContainer();
+  let stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  const showInvalidState = touched && !isValidURL(href);
+
   return (
-    <TooltipTrigger>
-      <ActionButton
-        prominence="low"
-        onPress={() => {
-          onUnlink();
+    <Dialog size="small">
+      <form
+        style={{ display: 'contents' }}
+        onSubmit={event => {
+          event.preventDefault();
+          if (!showInvalidState) {
+            dismiss();
+            onSubmit({ href });
+          }
         }}
       >
-        <Icon src={unlinkIcon} />
-      </ActionButton>
-      <Tooltip tone="critical">
-        <Text>Unlink</Text>
-      </Tooltip>
-    </TooltipTrigger>
+        <Heading>{props.href ? 'Edit' : 'Add'} link</Heading>
+        <Content>
+          <Flex gap="large" direction="column">
+            <TextField label="Text" value={props.text} isReadOnly />
+            <TextField
+              autoFocus
+              isRequired
+              onBlur={() => setTouched(true)}
+              label="Link"
+              onChange={setHref}
+              value={href}
+              errorMessage={showInvalidState && 'Please provide a valid URL.'}
+            />
+          </Flex>
+        </Content>
+        <ButtonGroup>
+          <Button onPress={dismiss}>{stringFormatter.format('cancel')}</Button>
+          <Button prominence="high" type="submit">
+            {stringFormatter.format('save')}
+          </Button>
+        </ButtonGroup>
+      </form>
+    </Dialog>
   );
-});
+}
 
 let _linkIcon = <Icon src={linkIcon} />;
 

@@ -1,17 +1,16 @@
-import { gql } from '@ts-gql/tag/no-transform';
 import { useRouter, Router, RouterProvider } from './router';
 import {
   AnchorHTMLAttributes,
   ReactElement,
   RefAttributes,
+  useContext,
   useEffect,
 } from 'react';
-import { useQuery } from 'urql';
 
 import { injectVoussoirStyles } from '@voussoir/core';
 import { Notice } from '@voussoir/notice';
 
-import { Config, GitHubConfig } from '../config';
+import { Config } from '../config';
 import { CollectionPage } from './CollectionPage';
 import { CreateItem } from './create-item';
 import { DashboardPage } from './dashboard';
@@ -26,6 +25,10 @@ import { RepoNotFound } from './onboarding/repo-not-found';
 import { isGitHubConfig } from './utils';
 import { Text } from '@voussoir/typography';
 import { AppSlugProvider } from './onboarding/install-app';
+import {
+  GitHubAppShellDataContext,
+  GitHubAppShellDataProvider,
+} from './shell/data';
 
 injectVoussoirStyles('surface');
 
@@ -51,25 +54,9 @@ function parseParamsWithoutBranch(params: string[]) {
   return null;
 }
 
-function RedirectToBranch(props: { config: GitHubConfig }) {
+function RedirectToBranch() {
   const { push } = useRouter();
-  const [{ data, error }] = useQuery({
-    query: gql`
-      query DefaultBranch($owner: String!, $name: String!) {
-        repository(owner: $owner, name: $name) {
-          id
-          defaultBranchRef {
-            id
-            name
-          }
-        }
-      }
-    ` as import('../__generated__/ts-gql/DefaultBranch').type,
-    variables: {
-      name: props.config.storage.repo.name,
-      owner: props.config.storage.repo.owner,
-    },
-  });
+  const { data, error } = useContext(GitHubAppShellDataContext)!;
   useEffect(() => {
     if (error?.response.status === 401) {
       window.location.href = '/api/keystatic/github/login';
@@ -96,10 +83,15 @@ function PageInner({ config }: { config: Config }) {
   let branch = null,
     parsedParams,
     basePath: string;
-
+  let wrapper: (element: ReactElement) => ReactElement = x => x;
   if (isGitHubConfig(config)) {
+    wrapper = element => (
+      <GitHubAppShellDataProvider config={config}>
+        {element}
+      </GitHubAppShellDataProvider>
+    );
     if (params.length === 0) {
-      return <RedirectToBranch config={config} />;
+      return wrapper(<RedirectToBranch />);
     }
     if (params.length === 1) {
       if (params[0] === 'setup') return <KeystaticSetup config={config} />;
@@ -124,7 +116,7 @@ function PageInner({ config }: { config: Config }) {
     basePath = '/keystatic';
   }
   if (!parsedParams) return <Text>Not found</Text>;
-  return (
+  return wrapper(
     <AppShell config={config} currentBranch={branch || ''} basePath={basePath}>
       {parsedParams?.collection ? (
         parsedParams.collection in (config.collections || {}) ? (

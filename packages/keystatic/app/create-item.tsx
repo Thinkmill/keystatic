@@ -2,14 +2,11 @@ import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useMemo, useState } from 'react';
 
 import { Button } from '@voussoir/button';
+import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
 import { DialogContainer } from '@voussoir/dialog';
-import { Icon } from '@voussoir/icon';
-import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
 import { Flex } from '@voussoir/layout';
-import { TextLink } from '@voussoir/link';
 import { Notice } from '@voussoir/notice';
 import { ProgressCircle } from '@voussoir/progress';
-import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../config';
 import { fields } from '../DocumentEditor/component-blocks/api';
@@ -31,8 +28,10 @@ import {
   getCollectionFormat,
   getCollectionItemPath,
   getSlugFromState,
+  isGitHubConfig,
 } from './utils';
 import { useSlugsInCollection } from './useSlugsInCollection';
+import { ForkRepoDialog } from './fork-repo';
 
 const emptyMap = new Map<string, TreeNode>();
 
@@ -68,10 +67,10 @@ export function CreateItem(props: {
     storage: props.config.storage,
     schema: collectionConfig.schema,
     format: getCollectionFormat(props.config, props.collection),
-    currentLocalTreeSha: undefined,
+    currentLocalTreeKey: undefined,
     currentTree:
       tree.current.kind === 'loaded' ? tree.current.data.tree : emptyMap,
-    slugField: collectionConfig.slugField,
+    slug: { field: collectionConfig.slugField, value: slug },
   });
   const createItem = useEventCallback(_createItem);
 
@@ -85,12 +84,15 @@ export function CreateItem(props: {
       ? slug
       : undefined;
   const slugInfo = useMemo(() => {
+    const slugs = new Set(slugsArr);
+    if (currentSlug) {
+      slugs.delete(currentSlug);
+    }
     return {
-      currentSlug,
       field: collectionConfig.slugField,
-      slugs: new Set(slugsArr),
+      slugs,
     };
-  }, [collectionConfig.slugField, currentSlug, slugsArr]);
+  }, [collectionConfig.slugField, slugsArr, currentSlug]);
 
   const onCreate = async () => {
     if (!clientSideValidateProp(schema, state, slugInfo)) {
@@ -110,35 +112,23 @@ export function CreateItem(props: {
 
   const formID = 'item-create-form';
 
-  const slugFieldInfo = useMemo(
-    () => ({
-      collection: props.collection,
-      currentSlug,
-      slugField: collectionConfig.slugField,
-    }),
-    [collectionConfig.slugField, currentSlug, props.collection]
-  );
-
   return (
     <>
       <AppShellRoot>
         <AppShellHeader>
-          <Heading size="small" visuallyHidden={{ below: 'tablet' }} truncate>
-            <TextLink href={collectionPath}>{collectionConfig.label}</TextLink>
-          </Heading>
-          <Icon
-            src={chevronRightIcon}
-            color="neutralSecondary"
-            isHidden={{ below: 'tablet' }}
-          />
-          <Text
-            color="neutralEmphasis"
+          <Breadcrumbs
+            flex
+            minWidth={0}
             size="medium"
-            weight="bold"
-            marginEnd="regular"
+            onAction={key => {
+              if (key === 'collection') {
+                router.push(collectionPath);
+              }
+            }}
           >
-            {stringFormatter.format('add')}
-          </Text>
+            <Item key="collection">{collectionConfig.label}</Item>
+            <Item key="current">{stringFormatter.format('add')}</Item>
+          </Breadcrumbs>
           {isLoading && (
             <ProgressCircle
               aria-label="Creating entry"
@@ -175,7 +165,7 @@ export function CreateItem(props: {
 
             <FormValueContentFromPreviewProps
               forceValidation={forceValidation}
-              slugField={slugFieldInfo}
+              slugField={slugInfo}
               {...previewProps}
             />
           </Flex>
@@ -212,6 +202,28 @@ export function CreateItem(props: {
             }}
             reason={createResult.reason}
             onDismiss={resetCreateItemState}
+          />
+        )}
+      </DialogContainer>
+      <DialogContainer
+        // ideally this would be a popover on desktop but using a DialogTrigger
+        // wouldn't work since this doesn't open on click but after doing a
+        // network request and it failing and manually wiring about a popover
+        // and modal would be a pain
+        onDismiss={resetCreateItemState}
+      >
+        {createResult.kind === 'needs-fork' && isGitHubConfig(props.config) && (
+          <ForkRepoDialog
+            onCreate={async () => {
+              if (await createItem()) {
+                const slug = getSlugFromState(collectionConfig, state);
+                router.push(
+                  `${collectionPath}/item/${encodeURIComponent(slug)}`
+                );
+              }
+            }}
+            onDismiss={resetCreateItemState}
+            config={props.config}
           />
         )}
       </DialogContainer>

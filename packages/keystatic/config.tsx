@@ -4,17 +4,14 @@ import {
 } from './DocumentEditor/component-blocks/api';
 
 export type DataFormat = 'json' | 'yaml';
-export type Format =
-  | DataFormat
-  | { frontmatter: DataFormat; contentField: string };
+export type Format = DataFormat | { data?: DataFormat; contentField?: string };
 
 export type Collection<
   Schema extends Record<string, ComponentSchema>,
   SlugField extends string
 > = {
   label: string;
-  directory?: string;
-  directorySuffix?: string;
+  path?: `${string}/*` | `${string}/*/${string}`;
   format?: Format;
   slugField: SlugField;
   schema: Schema;
@@ -22,7 +19,7 @@ export type Collection<
 
 export type Singleton<Schema extends Record<string, ComponentSchema>> = {
   label: string;
-  directory?: string;
+  path?: string;
   format?: Format;
   schema: Schema;
 };
@@ -77,9 +74,18 @@ export type Config<
   } = {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
   }
-> =
-  | GitHubConfig<Collections, Singletons>
-  | LocalConfig<Collections, Singletons>;
+> = {
+  storage:
+    | {
+        kind: 'local';
+      }
+    | {
+        kind: 'github';
+        repo: { owner: string; name: string };
+      };
+  collections?: Collections;
+  singletons?: Singletons;
+};
 
 export function config<
   Collections extends {

@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-
 import { ActionGroup, Item } from '@voussoir/action-group';
 import { ActionButton } from '@voussoir/button';
 import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
@@ -7,10 +5,10 @@ import { checkCircle2Icon } from '@voussoir/icon/icons/checkCircle2Icon';
 import { infoIcon } from '@voussoir/icon/icons/infoIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Icon } from '@voussoir/icon';
+import { Flex } from '@voussoir/layout';
 import { Notice } from '@voussoir/notice';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { Text } from '@voussoir/typography';
-import { Flex } from '@voussoir/layout';
 
 import {
   config,
@@ -20,20 +18,6 @@ import {
   component,
   NotEditable,
 } from '@keystatic/core';
-
-function useObjectURL(data: Uint8Array | null) {
-  const [url, setUrl] = useState<string | null>(null);
-  useEffect(() => {
-    if (data) {
-      const url = URL.createObjectURL(new Blob([data]));
-      setUrl(url);
-      return () => URL.revokeObjectURL(url);
-    } else {
-      setUrl(null);
-    }
-  }, [data]);
-  return url;
-}
 
 const toneToIcon = {
   caution: alertTriangleIcon,
@@ -64,6 +48,10 @@ export default config({
           formatting: true,
           dividers: true,
           links: true,
+          images: {
+            directory: 'public/images/posts',
+            publicPath: '/images/posts/',
+          },
           componentBlocks: {
             blockChild: component({
               label: 'Block Child',
@@ -99,33 +87,6 @@ export default config({
               preview: () => null,
               schema: {},
             }),
-            image: component({
-              label: 'Image',
-              preview: function Preview(props) {
-                const url = useObjectURL(
-                  props.fields.image.value.kind === 'uploaded'
-                    ? props.fields.image.value.data
-                    : null
-                );
-                return url ? (
-                  <NotEditable>
-                    <img
-                      src={url}
-                      alt={props.fields.alt.value}
-                      style={{
-                        display: 'block',
-                        height: 140,
-                        maxWidth: '100%',
-                      }}
-                    />
-                  </NotEditable>
-                ) : null;
-              },
-              schema: {
-                image: fields.image({ label: 'Image' }),
-                alt: fields.text({ label: 'Alt text', multiline: true }),
-              },
-            }),
             notice: component({
               preview: function (props) {
                 return (
@@ -153,7 +114,6 @@ export default config({
                   formatting: 'inherit',
                   dividers: 'inherit',
                   links: 'inherit',
-                  relationships: 'inherit',
                 }),
               },
               toolbar({ props, onRemove }) {
@@ -244,7 +204,7 @@ export default config({
     }),
     people: collection({
       label: 'People',
-      directory: 'some/directory/people',
+      path: 'some/directory/people/*/',
       slugField: 'username',
       schema: {
         name: fields.text({ label: 'Name' }),
@@ -255,12 +215,13 @@ export default config({
         favouritePost: fields.relationship({
           label: 'Favourite Post',
           collection: 'posts',
+          validation: { isRequired: true },
         }),
       },
     }),
     packages: collection({
       label: 'Packages',
-      directorySuffix: 'somewhere/else',
+      path: 'packages/*/somewhere/else/',
       slugField: 'name',
       format: 'json',
       schema: {
@@ -269,14 +230,15 @@ export default config({
         someFilepathInPosts: fields.pathReference({
           label: 'Some Filepath in posts',
           pattern: 'posts/**',
+          validation: { isRequired: true },
         }),
       },
     }),
     singlefileposts: collection({
       label: 'Single File Posts',
-      directory: 'single-file-posts',
+      path: 'single-file-posts/*/something',
       slugField: 'title',
-      format: { contentField: 'content', frontmatter: 'yaml' },
+      format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         content: fields.document({

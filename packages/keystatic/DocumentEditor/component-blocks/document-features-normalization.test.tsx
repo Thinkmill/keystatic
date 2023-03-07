@@ -113,53 +113,6 @@ const cases: Record<
       <text>some text not in a link (https://example.com) stuff</text>
     ),
   },
-  'relationship allowed': {
-    schema: fields.child({
-      kind: 'block',
-      placeholder: '',
-      relationships: 'inherit',
-    }),
-    children: (
-      <paragraph>
-        <text>some text </text>
-        <relationship
-          relationship="mention"
-          data={{
-            id: '5f6a9d7ec229fe1621532769',
-            label: 'Someone',
-            data: {},
-          }}
-        >
-          <text />
-        </relationship>
-        <text> stuff</text>
-      </paragraph>
-    ),
-  },
-  'relationship not allowed': {
-    schema: fields.child({ kind: 'block', placeholder: '' }),
-    children: (
-      <paragraph>
-        <text>some text </text>
-        <relationship
-          relationship="mention"
-          data={{
-            id: '5f6a9d7ec229fe1621532769',
-            label: 'Someone',
-            data: {},
-          }}
-        >
-          <text />
-        </relationship>
-        <text> stuff</text>
-      </paragraph>
-    ),
-    expectedNormalized: (
-      <paragraph>
-        <text>some text Someone (Mention:5f6a9d7ec229fe1621532769) stuff</text>
-      </paragraph>
-    ),
-  },
   'alignment allowed': {
     schema: fields.child({
       kind: 'block',
@@ -272,13 +225,6 @@ function makeEditorWithChildField(
           label: '',
           schema: { child: childField },
         }),
-      },
-      relationships: {
-        mention: {
-          label: 'Mention',
-          listKey: 'User',
-          selection: null,
-        },
       },
     }
   );

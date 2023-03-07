@@ -8,6 +8,7 @@ import {
 } from 'react';
 
 import { Badge } from '@voussoir/badge';
+import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
 import { Button, ButtonGroup } from '@voussoir/button';
 import {
   AlertDialog,
@@ -15,11 +16,9 @@ import {
   DialogContainer,
   DialogTrigger,
 } from '@voussoir/dialog';
-import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Icon } from '@voussoir/icon';
 import { Box, Flex } from '@voussoir/layout';
-import { TextLink } from '@voussoir/link';
 import { Notice } from '@voussoir/notice';
 import { ProgressCircle } from '@voussoir/progress';
 import { Content } from '@voussoir/slots';
@@ -45,11 +44,13 @@ import {
   getCollectionFormat,
   getCollectionItemPath,
   getSlugFromState,
+  isGitHubConfig,
 } from './utils';
 import { useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
 import { mergeDataStates } from './useData';
 import { useSlugsInCollection } from './useSlugsInCollection';
+import { ForkRepoDialog } from './fork-repo';
 
 type ItemPageProps = {
   collection: string;
@@ -57,10 +58,10 @@ type ItemPageProps = {
   initialFiles: string[];
   initialState: Record<string, unknown>;
   itemSlug: string;
-  localTreeSha: string;
+  localTreeKey: string;
   currentTree: Map<string, TreeNode>;
   basePath: string;
-  slugs: Set<string>;
+  slugInfo: { slugs: Set<string>; field: string };
 };
 
 function ItemPage(props: ItemPageProps) {
@@ -70,7 +71,7 @@ function ItemPage(props: ItemPageProps) {
     itemSlug,
     initialFiles,
     initialState,
-    localTreeSha,
+    localTreeKey,
     currentTree,
   } = props;
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
@@ -82,12 +83,12 @@ function ItemPage(props: ItemPageProps) {
     [collectionConfig.schema]
   );
 
-  const [{ state, localTreeSha: localTreeShaInState }, setState] = useState({
+  const [{ state, localTreeKey: localTreeKeyInState }, setState] = useState({
     state: initialState,
-    localTreeSha,
+    localTreeKey,
   });
-  if (localTreeShaInState !== localTreeSha) {
-    setState({ state: initialState, localTreeSha });
+  if (localTreeKeyInState !== localTreeKey) {
+    setState({ state: initialState, localTreeKey });
   }
 
   const previewProps = useMemo(
@@ -96,7 +97,7 @@ function ItemPage(props: ItemPageProps) {
         schema,
         stateUpdater => {
           setState(state => ({
-            localTreeSha: state.localTreeSha,
+            localTreeKey: state.localTreeKey,
             state: stateUpdater(state.state),
           }));
         },
@@ -113,36 +114,28 @@ function ItemPage(props: ItemPageProps) {
   });
 
   const baseCommit = useBaseCommit();
+  const slug = getSlugFromState(collectionConfig, state);
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
     state,
     initialFiles,
     storage: config.storage,
     schema: collectionConfig.schema,
-    basePath: getCollectionItemPath(
-      config,
-      collection,
-      getSlugFromState(collectionConfig, state)
-    ),
+    basePath: getCollectionItemPath(config, collection, slug),
     format: getCollectionFormat(config, collection),
-    currentLocalTreeSha: localTreeSha,
+    currentLocalTreeKey: localTreeKey,
     currentTree,
-    slugField: collectionConfig.slugField,
+    slug: { field: collectionConfig.slugField, value: slug },
   });
   const update = useEventCallback(_update);
-  const [deleteResult, deleteItem] = useDeleteItem({
+  const [deleteResult, deleteItem, resetDeleteItem] = useDeleteItem({
     initialFiles,
     storage: config.storage,
     basePath: getCollectionItemPath(config, collection, itemSlug),
     currentTree,
   });
+
   const onUpdate = async () => {
-    if (
-      !clientSideValidateProp(schema, state, {
-        currentSlug: props.itemSlug,
-        field: collectionConfig.slugField,
-        slugs: props.slugs,
-      })
-    ) {
+    if (!clientSideValidateProp(schema, state, props.slugInfo)) {
       setForceValidation(true);
       return;
     }
@@ -157,15 +150,6 @@ function ItemPage(props: ItemPageProps) {
     }
   };
   const formID = 'item-edit-form';
-
-  const slugFieldInfo = useMemo(
-    () => ({
-      collection: props.collection,
-      currentSlug: props.itemSlug,
-      slugField: collectionConfig.slugField,
-    }),
-    [collectionConfig.slugField, props.collection, props.itemSlug]
-  );
 
   return (
     <>
@@ -182,7 +166,7 @@ function ItemPage(props: ItemPageProps) {
             ) : (
               hasChanged && <Badge tone="pending">Unsaved</Badge>
             )}
-            <ButtonGroup marginStart="auto">
+            <ButtonGroup>
               {/* <Button
                 aria-label="Reset"
                 isDisabled={updateResult.kind === 'loading' || !hasChanged}
@@ -212,12 +196,13 @@ function ItemPage(props: ItemPageProps) {
                   primaryActionLabel="Yes, delete"
                   autoFocusButton="cancel"
                   onPrimaryAction={async () => {
-                    await deleteItem();
-                    router.push(
-                      `${props.basePath}/collection/${encodeURIComponent(
-                        collection
-                      )}`
-                    );
+                    if (await deleteItem()) {
+                      router.push(
+                        `${props.basePath}/collection/${encodeURIComponent(
+                          collection
+                        )}`
+                      );
+                    }
                   }}
                 >
                   Are you sure? This action cannot be undone.
@@ -254,9 +239,9 @@ function ItemPage(props: ItemPageProps) {
           )}
           <AppShellBody>
             <FormValueContentFromPreviewProps
-              key={localTreeSha}
+              key={localTreeKey}
               forceValidation={forceValidation}
-              slugField={slugFieldInfo}
+              slugField={props.slugInfo}
               {...previewProps}
             />
           </AppShellBody>
@@ -294,6 +279,55 @@ function ItemPage(props: ItemPageProps) {
                 onDismiss={resetUpdateItem}
               />
             )}
+          </DialogContainer>
+          <DialogContainer
+            // ideally this would be a popover on desktop but using a DialogTrigger
+            // wouldn't work since this doesn't open on click but after doing a
+            // network request and it failing and manually wiring about a popover
+            // and modal would be a pain
+            onDismiss={resetUpdateItem}
+          >
+            {updateResult.kind === 'needs-fork' &&
+              isGitHubConfig(props.config) && (
+                <ForkRepoDialog
+                  onCreate={async () => {
+                    const slug = getSlugFromState(collectionConfig, state);
+                    const hasUpdated = await update();
+                    if (hasUpdated && slug !== itemSlug) {
+                      router.replace(
+                        `${props.basePath}/collection/${encodeURIComponent(
+                          collection
+                        )}/item/${encodeURIComponent(slug)}`
+                      );
+                    }
+                  }}
+                  onDismiss={resetUpdateItem}
+                  config={props.config}
+                />
+              )}
+          </DialogContainer>
+          <DialogContainer
+            // ideally this would be a popover on desktop but using a DialogTrigger
+            // wouldn't work since this doesn't open on click but after doing a
+            // network request and it failing and manually wiring about a popover
+            // and modal would be a pain
+            onDismiss={resetDeleteItem}
+          >
+            {deleteResult.kind === 'needs-fork' &&
+              isGitHubConfig(props.config) && (
+                <ForkRepoDialog
+                  onCreate={async () => {
+                    await deleteItem();
+                    router.push(
+                      `${props.basePath}/collection/${encodeURIComponent(
+                        collection
+                      )}`
+                    );
+                  }}
+                  onDismiss={resetDeleteItem}
+                  config={props.config}
+                />
+              )}
           </DialogContainer>
         </Box>
       </ItemPageShell>
@@ -374,14 +408,11 @@ function ItemPageWrapper(props: {
   const allSlugs = useSlugsInCollection(props.collection);
 
   const collectionConfig = props.config.collections![props.collection]!;
-  const slugInfo = useMemo(
-    () => ({
-      slug: props.itemSlug,
-      slugField: collectionConfig.slugField,
-      slugs: new Set(allSlugs),
-    }),
-    [allSlugs, collectionConfig.slugField, props.itemSlug]
-  );
+  const slugInfo = useMemo(() => {
+    const slugs = new Set(allSlugs);
+    slugs.delete(props.itemSlug);
+    return { slug: props.itemSlug, field: collectionConfig.slugField, slugs };
+  }, [allSlugs, collectionConfig.slugField, props.itemSlug]);
   const itemData = useItemData({
     config: props.config,
     dirpath: getCollectionItemPath(
@@ -443,48 +474,50 @@ function ItemPageWrapper(props: {
       itemSlug={props.itemSlug}
       initialState={combined.data.item.initialState}
       initialFiles={combined.data.item.initialFiles}
-      localTreeSha={combined.data.item.localTreeSha}
+      localTreeKey={combined.data.item.localTreeKey}
       currentTree={combined.data.tree.tree}
-      slugs={slugInfo.slugs}
+      slugInfo={slugInfo}
     />
   );
 }
 
 const ItemPageShell = (
   props: PropsWithChildren<
-    Pick<ItemPageProps, 'collection' | 'config' | 'basePath'> & {
+    Omit<
+      ItemPageProps,
+      | 'initialFiles'
+      | 'initialState'
+      | 'localTreeKey'
+      | 'currentTree'
+      | 'slugInfo'
+    > & {
       headerActions?: ReactNode;
     }
   >
 ) => {
+  const router = useRouter();
   const collectionConfig = props.config.collections![props.collection]!;
-  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   return (
     <AppShellRoot>
       <AppShellHeader>
-        <Heading size="small" visuallyHidden={{ below: 'tablet' }} truncate>
-          <TextLink
-            href={`${props.basePath}/collection/${encodeURIComponent(
-              props.collection
-            )}`}
-          >
-            {collectionConfig.label}
-          </TextLink>
-        </Heading>
-        <Icon
-          src={chevronRightIcon}
-          color="neutralSecondary"
-          isHidden={{ below: 'tablet' }}
-        />
-        <Text
-          color="neutralEmphasis"
+        <Breadcrumbs
+          flex
+          minWidth={0}
           size="medium"
-          weight="bold"
-          marginEnd="regular"
+          onAction={key => {
+            if (key === 'collection') {
+              router.push(
+                `${props.basePath}/collection/${encodeURIComponent(
+                  props.collection
+                )}`
+              );
+            }
+          }}
         >
-          {stringFormatter.format('edit')}
-        </Text>
+          <Item key="collection">{collectionConfig.label}</Item>
+          <Item key="item">{props.itemSlug}</Item>
+        </Breadcrumbs>
         {props.headerActions}
       </AppShellHeader>
 

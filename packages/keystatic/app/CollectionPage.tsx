@@ -2,6 +2,7 @@ import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useMemo, useState } from 'react';
 
 import { Badge } from '@voussoir/badge';
+import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
 import { Button } from '@voussoir/button';
 import { folderTreeIcon } from '@voussoir/icon/icons/folderTreeIcon';
 import { listStartIcon } from '@voussoir/icon/icons/listStartIcon';
@@ -19,7 +20,6 @@ import {
   Row,
   SortDescriptor,
 } from '@voussoir/table';
-import { Heading } from '@voussoir/typography';
 
 import { Config } from '../config';
 import { sortByDescriptor } from './collection-sort';
@@ -28,13 +28,7 @@ import { useRouter } from './router';
 import { AppShellBody, AppShellRoot, EmptyState } from './shell';
 import { useTree, TreeData } from './shell/data';
 import { AppShellHeader } from './shell/header';
-import { getTreeNodeAtPath, TreeNode } from './trees';
-import {
-  getCollectionFormat,
-  getCollectionPath,
-  getDataFileExtension,
-  getTreeNodeForItem,
-} from './utils';
+import { getCollectionPath, getEntriesInCollectionWithTreeKey } from './utils';
 
 type CollectionPageProps = {
   collection: string;
@@ -63,9 +57,9 @@ export function CollectionPage(props: CollectionPageProps) {
   return (
     <AppShellRoot containerWidth={containerWidth}>
       <AppShellHeader>
-        <Heading elementType="h1" id="page-title" size="small" truncate>
-          {collectionConfig.label}
-        </Heading>
+        <Breadcrumbs size="medium" flex minWidth={0}>
+          <Item key="collection">{collectionConfig.label}</Item>
+        </Breadcrumbs>
 
         <Button
           marginStart="auto"
@@ -161,43 +155,29 @@ function CollectionTable(
     direction: 'ascending',
   });
 
-  const entries = useMemo(() => {
-    const collectionPath = getCollectionPath(props.config, props.collection);
-    const fallback = new Map<string, TreeNode>();
-    return {
-      current:
-        getTreeNodeAtPath(props.trees.current.tree, collectionPath)?.children ??
-        fallback,
-      default:
-        getTreeNodeAtPath(props.trees.default.tree, collectionPath)?.children ??
-        fallback,
-    };
-  }, [props.collection, props.config, props.trees]);
-
   const entriesWithStatus = useMemo(() => {
-    return [...entries.current]
-      .filter(([, entry]) =>
-        getTreeNodeForItem(
-          props.config,
-          props.collection,
-          entry
-        )?.children?.has(
-          `index${getDataFileExtension(
-            getCollectionFormat(props.config, props.collection)
-          )}`
-        )
-      )
-      .map(([name, entry]) => {
-        return {
-          name,
-          status: entries.default.has(name)
-            ? entries.default.get(name)?.entry.sha === entry.entry.sha
-              ? 'Unchanged'
-              : 'Changed'
-            : 'Added',
-        } as const;
-      });
-  }, [entries, props.collection, props.config]);
+    const defaultEntries = new Map(
+      getEntriesInCollectionWithTreeKey(
+        props.config,
+        props.collection,
+        props.trees.default.tree
+      ).map(x => [x.slug, x.key])
+    );
+    return getEntriesInCollectionWithTreeKey(
+      props.config,
+      props.collection,
+      props.trees.current.tree
+    ).map(entry => {
+      return {
+        name: entry.slug,
+        status: defaultEntries.has(entry.slug)
+          ? defaultEntries.get(entry.slug) === entry.key
+            ? 'Unchanged'
+            : 'Changed'
+          : 'Added',
+      } as const;
+    });
+  }, [props.collection, props.config, props.trees]);
 
   const filteredItems = useMemo(() => {
     return entriesWithStatus.filter(item =>

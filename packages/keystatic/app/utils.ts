@@ -1,25 +1,18 @@
 import { isDefined } from 'emery';
 
-import { Collection, Config, GitHubConfig } from '../config';
-import { ComponentSchema, SlugFormField } from '../src';
-import { getCollectionItemSlugSuffix } from './path-utils';
+import { Config, GitHubConfig, LocalConfig } from '../config';
+import { ComponentSchema, fields, SlugFormField } from '../src';
+import {
+  getCollectionFormat,
+  getCollectionItemPath,
+  getCollectionItemSlugSuffix,
+  getCollectionPath,
+  getDataFileExtension,
+} from './path-utils';
+import { collectDirectoriesUsedInSchema, getTreeKey } from './tree-key';
 import { getTreeNodeAtPath, TreeNode } from './trees';
 
 export * from './path-utils';
-
-export function getTreeNodeForItem(
-  config: Config,
-  collection: string,
-  node: TreeNode
-) {
-  const collectionItemSlugSuffix = getCollectionItemSlugSuffix(
-    config,
-    collection
-  );
-  if (!collectionItemSlugSuffix) return node;
-  if (!node.children) return;
-  return getTreeNodeAtPath(node.children, collectionItemSlugSuffix.slice(1));
-}
 
 export function pluralize(
   count: number,
@@ -64,6 +57,10 @@ export function isGitHubConfig(config: Config): config is GitHubConfig {
   return config.storage.kind === 'github';
 }
 
+export function isLocalConfig(config: Config): config is LocalConfig {
+  return config.storage.kind === 'local';
+}
+
 export function isSlugFormField(
   schema: ComponentSchema
 ): schema is SlugFormField<unknown, unknown, unknown> {
@@ -75,7 +72,10 @@ export function isSlugFormField(
 }
 
 export function getSlugFromState(
-  collectionConfig: Collection<any, any>,
+  collectionConfig: {
+    slugField: string;
+    schema: Record<string, ComponentSchema>;
+  },
   state: Record<string, unknown>
 ) {
   const value = state[collectionConfig.slugField];
@@ -84,4 +84,73 @@ export function getSlugFromState(
     throw new Error(`slugField is not a slug field`);
   }
   return field.slug.serialize(value).slug;
+}
+
+export function getEntriesInCollectionWithTreeKey(
+  config: Config,
+  collection: string,
+  rootTree: Map<string, TreeNode>
+): { key: string; slug: string }[] {
+  const collectionConfig = config.collections![collection];
+  const schema = fields.object(collectionConfig.schema);
+  const formatInfo = getCollectionFormat(config, collection);
+  const extension = getDataFileExtension(formatInfo);
+  const collectionPath = getCollectionPath(config, collection);
+  const directory: Map<string, TreeNode> =
+    getTreeNodeAtPath(rootTree, collectionPath)?.children ?? new Map();
+  const entries: { key: string; slug: string }[] = [];
+  const directoriesUsedInSchema = [...collectDirectoriesUsedInSchema(schema)];
+  const suffix = getCollectionItemSlugSuffix(config, collection);
+  for (const [key, entry] of directory) {
+    if (formatInfo.dataLocation === 'index') {
+      const actualEntry = getTreeNodeAtPath(
+        rootTree,
+        getCollectionItemPath(config, collection, key)
+      );
+      if (!actualEntry?.children?.has('index' + extension)) continue;
+      entries.push({
+        key: getTreeKey(
+          [
+            actualEntry.entry.path,
+            ...directoriesUsedInSchema.map(x => `${x}/${key}`),
+          ],
+          rootTree
+        ),
+        slug: key,
+      });
+    } else {
+      if (suffix) {
+        const newEntry = getTreeNodeAtPath(
+          rootTree,
+          getCollectionItemPath(config, collection, key) + extension
+        );
+        if (!newEntry || newEntry.children) continue;
+        entries.push({
+          key: getTreeKey(
+            [
+              entry.entry.path,
+              getCollectionItemPath(config, collection, key),
+              ...directoriesUsedInSchema.map(x => `${x}/${key}`),
+            ],
+            rootTree
+          ),
+          slug: key,
+        });
+      }
+      if (entry.children || !key.endsWith(extension)) continue;
+      const slug = key.slice(0, -extension.length);
+      entries.push({
+        key: getTreeKey(
+          [
+            entry.entry.path,
+            getCollectionItemPath(config, collection, slug),
+            ...directoriesUsedInSchema.map(x => `${x}/${slug}`),
+          ],
+          rootTree
+        ),
+        slug,
+      });
+    }
+  }
+  return entries;
 }

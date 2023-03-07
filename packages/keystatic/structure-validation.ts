@@ -1,6 +1,5 @@
 import * as t from 'io-ts';
 import excess from 'io-ts-excess';
-import { RelationshipData } from './DocumentEditor/component-blocks/api';
 import { Mark } from './DocumentEditor/utils';
 import { isValidURL } from './DocumentEditor/isValidURL';
 // note that this validation isn't about ensuring that a document has nodes in the right positions and things
@@ -26,7 +25,7 @@ export type TextWithMarks = { type?: never; text: string } & {
   [Key in Mark | 'insertMenu']: true | undefined;
 };
 
-export type InlineFromValidation = TextWithMarks | Link | Relationship;
+export type InlineFromValidation = TextWithMarks | Link;
 
 type Link = { type: 'link'; href: string; children: Children };
 
@@ -54,25 +53,7 @@ const link: t.Type<Link> = t.recursion('Link', () =>
   )
 );
 
-type Relationship = {
-  type: 'relationship';
-  relationship: string;
-  data: RelationshipData | null;
-  children: Children;
-};
-
-const relationship: t.Type<Relationship> = t.recursion('Relationship', () =>
-  excess(
-    t.type({
-      type: t.literal('relationship'),
-      relationship: t.string,
-      data: t.union([t.null, relationshipData]),
-      children,
-    })
-  )
-);
-
-const inline = t.union([text, link, relationship]);
+const inline = t.union([text, link]);
 
 type Children = (BlockFromValidation | InlineFromValidation)[];
 
@@ -182,14 +163,6 @@ const paragraph: t.Type<Paragraph> = t.recursion('Paragraph', () =>
   )
 );
 
-const relationshipData: t.Type<RelationshipData> = excess(
-  t.type({
-    id: t.string,
-    label: t.union([t.undefined, t.string]),
-    data: t.union([t.undefined, t.record(t.string, t.any)]),
-  })
-);
-
 type ComponentBlock = {
   type: 'component-block';
   component: string;
@@ -229,6 +202,43 @@ const componentProp: t.Type<ComponentProp> = t.recursion('ComponentProp', () =>
   )
 );
 
+type Image = {
+  type: 'image';
+  src:
+    | { kind: 'uploaded'; filename: string; data: Uint8Array }
+    | { kind: 'none' };
+  alt: string;
+  title: string | undefined;
+  children: [{ text: '' }];
+};
+
+const image: t.Type<Image> = t.recursion('Image', () =>
+  excess(
+    t.type({
+      type: t.literal('image'),
+      src: t.union([
+        excess(t.type({ kind: t.literal('none') })),
+        excess(
+          t.type({
+            kind: t.literal('uploaded'),
+            filename: t.string,
+            data: t.any,
+          })
+        ),
+      ]),
+      alt: t.string,
+      title: t.union([t.undefined, t.string]),
+      children: t.tuple([
+        excess(
+          t.type({
+            text: t.literal(''),
+          })
+        ),
+      ]),
+    })
+  )
+);
+
 export type BlockFromValidation =
   | Layout
   | OnlyChildrenElements
@@ -236,7 +246,8 @@ export type BlockFromValidation =
   | ComponentBlock
   | ComponentProp
   | Paragraph
-  | CodeBlock;
+  | CodeBlock
+  | Image;
 
 const block: t.Type<BlockFromValidation> = t.recursion('Element', () =>
   t.union([
@@ -247,6 +258,7 @@ const block: t.Type<BlockFromValidation> = t.recursion('Element', () =>
     componentProp,
     paragraph,
     codeBlock,
+    image,
   ])
 );
 
@@ -257,10 +269,6 @@ const children: t.Type<Children> = t.recursion('Children', () =>
 );
 
 export const editorCodec = t.array(block);
-
-export function isRelationshipData(val: unknown): val is RelationshipData {
-  return relationshipData.validate(val, [])._tag === 'Right';
-}
 
 export function validateDocumentStructure(
   val: unknown

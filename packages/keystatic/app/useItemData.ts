@@ -1,96 +1,72 @@
 import LRUCache from 'lru-cache';
 import { useCallback, useMemo } from 'react';
 import { Config } from '../config';
-import { getValueAtPropPath } from '../DocumentEditor/component-blocks/utils';
+import { transformProps } from '../DocumentEditor/component-blocks/utils';
 import { ComponentSchema, fields, GitHubConfig } from '../src';
 import { validateComponentBlockProps } from '../validate-component-block-props';
 import { getAuth } from './auth';
-import {
-  getRequiredFiles,
-  loadDataFile,
-  parseSerializedFormField,
-  RequiredFile,
-} from './required-files';
+import { loadDataFile, parseSerializedFormField } from './required-files';
 import { useTree } from './shell/data';
-import { TreeNode, getTreeNodeAtPath } from './trees';
+import { getDirectoriesForTreeKey, getTreeKey } from './tree-key';
+import { TreeNode, getTreeNodeAtPath, TreeEntry } from './trees';
 import { LOADING, useData } from './useData';
 import {
   blobSha,
   FormatInfo,
-  getDataFileExtension,
+  getEntryDataFilepath,
   isGitHubConfig,
   MaybePromise,
 } from './utils';
 
-function parseFromValueFile(
-  args: UseItemDataArgs,
-  data: Uint8Array,
-  localTree: Map<string, TreeNode>
-) {
+function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
+  const dataFilepath = getEntryDataFilepath(args.dirpath, args.format);
+  const data = files.get(dataFilepath);
+  if (!data) {
+    throw new Error(`Could not find data file at ${dataFilepath}`);
+  }
   const { loaded, extraFakeFile } = loadDataFile(data, args.format);
   const schema = fields.object(args.schema);
   const validated = validateComponentBlockProps(
     schema,
     loaded,
-    {},
     [],
     args.slug
       ? {
-          slug: args.slug.slug,
-          field: args.slug.slugField,
+          field: args.slug.field,
           mode: 'parse',
           slugs: args.slug.slugs,
+          slug: args.slug.slug,
         }
       : undefined
   );
-  const requiredFiles = getRequiredFiles(validated, schema);
-  const binaryFiles = requiredFiles.flatMap(requiredFile =>
-    requiredFile.files.flatMap(filename => {
-      const file = getTreeNodeAtPath(localTree, filename)?.entry;
-      return file ? [{ filename, oid: file.sha }] : [];
-    })
-  );
-  const maybeLoadedBinaryFiles = binaryFiles.map(file => {
-    const result = fetchBlob(
-      args.config,
-      file.oid,
-      `${args.dirpath}/${file.filename}`
-    );
-    if (result instanceof Uint8Array) {
-      return [file.filename, result] as const;
-    }
-    return result.then(array => [file.filename, array] as const);
-  });
+  const filesWithFakeFile = new Map(files);
   if (extraFakeFile) {
-    maybeLoadedBinaryFiles.push([extraFakeFile.path, extraFakeFile.contents]);
-  }
-  const initialFiles = [
-    `${args.dirpath}/index${getDataFileExtension(args.format)}`,
-    ...binaryFiles.map(x => `${args.dirpath}/${x.filename}`),
-  ];
-
-  return { validated, initialFiles, requiredFiles, maybeLoadedBinaryFiles };
-}
-
-function parseWithExtraFiles(
-  requiredFiles: RequiredFile[],
-  validated: unknown,
-  loadedBinaryFiles: Map<string, Uint8Array>
-) {
-  for (const file of requiredFiles) {
-    const parentValue = getValueAtPropPath(
-      validated,
-      file.path.slice(0, -1)
-    ) as any;
-    const keyOnParent = file.path[file.path.length - 1];
-    parentValue[keyOnParent] = parseSerializedFormField(
-      parentValue[keyOnParent],
-      file,
-      loadedBinaryFiles,
-      'edit'
+    filesWithFakeFile.set(
+      `${args.dirpath}/${extraFakeFile.path}`,
+      extraFakeFile.contents
     );
   }
-  return validated as Record<string, unknown>;
+  const rootSchema = schema;
+  const initialState = transformProps(schema, validated, {
+    form(schema, val, path) {
+      if ('serializeToFile' in schema) {
+        return parseSerializedFormField(
+          val,
+          { path, schema },
+          filesWithFakeFile,
+          'edit',
+          args.dirpath,
+          args.slug?.slug,
+          validated,
+          rootSchema
+        );
+      }
+      return val;
+    },
+  }) as Record<string, unknown>;
+  const initialFiles = [...files.keys()];
+
+  return { initialState, initialFiles };
 }
 
 type UseItemDataArgs = {
@@ -98,34 +74,56 @@ type UseItemDataArgs = {
   schema: Record<string, ComponentSchema>;
   dirpath: string;
   format: FormatInfo;
-  slug: { slugs: Set<string>; slugField: string; slug: string } | undefined;
+  slug: { slugs: Set<string>; field: string; slug: string } | undefined;
 };
+
+function getAllFilesInTree(tree: Map<string, TreeNode>): TreeEntry[] {
+  return [...tree.values()].flatMap(val =>
+    val.children ? getAllFilesInTree(val.children) : [val.entry]
+  );
+}
 
 export function useItemData(args: UseItemDataArgs) {
   const { current: currentBranch } = useTree();
 
   const rootTree =
     currentBranch.kind === 'loaded' ? currentBranch.data.tree : undefined;
-  const _localTree = useMemo(() => {
-    return rootTree ? getTreeNodeAtPath(rootTree, args.dirpath) : undefined;
-  }, [rootTree, args.dirpath]);
-
-  const localTreeNode = useMemo(() => {
-    return _localTree?.children
-      ? { entry: _localTree.entry, children: _localTree.children }
-      : undefined;
+  const locationsForTreeKey = useMemo(
+    () =>
+      getDirectoriesForTreeKey(
+        fields.object(args.schema),
+        args.dirpath,
+        args.slug?.slug,
+        args.format
+      ),
+    [args.dirpath, args.format, args.schema, args.slug?.slug]
+  );
+  const localTreeKey = useMemo(
+    () => getTreeKey(locationsForTreeKey, rootTree ?? new Map()),
+    [locationsForTreeKey, rootTree]
+  );
+  const tree = useMemo(() => {
+    return rootTree ?? new Map();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [_localTree?.entry.sha]);
+  }, [localTreeKey, locationsForTreeKey]);
 
   const hasLoaded = currentBranch.kind === 'loaded';
 
   return useData(
-    useCallback(() => {
+    useCallback((): MaybePromise<
+      | 'not-found'
+      | typeof LOADING
+      | {
+          initialState: Record<string, unknown>;
+          initialFiles: string[];
+          localTreeKey: string;
+        }
+    > => {
       if (!hasLoaded) return LOADING;
-      if (localTreeNode === undefined) return 'not-found' as const;
-      const localTree = localTreeNode.children;
-      const dataFilepath = `index${getDataFileExtension(args.format)}`;
-      const dataFilepathSha = localTree.get(dataFilepath)?.entry.sha;
+      const dataFilepathSha = getTreeNodeAtPath(
+        tree,
+        getEntryDataFilepath(args.dirpath, args.format)
+      )?.entry.sha;
       if (dataFilepathSha === undefined) {
         return 'not-found' as const;
       }
@@ -136,65 +134,57 @@ export function useItemData(args: UseItemDataArgs) {
         schema: args.schema,
         slug: args.slug,
       };
-      const dataResult = fetchBlob(
-        args.config,
-        dataFilepathSha,
-        `${args.dirpath}/${dataFilepath}`
-      );
-      if (dataResult instanceof Uint8Array) {
-        const {
-          validated,
-          initialFiles,
-          requiredFiles,
-          maybeLoadedBinaryFiles,
-        } = parseFromValueFile(_args, dataResult, localTree);
-        if (
-          maybeLoadedBinaryFiles.every((x): x is [string, Uint8Array] =>
-            Array.isArray(x)
-          )
-        ) {
-          const loadedBinaryFiles = new Map(maybeLoadedBinaryFiles);
-          const initialState = parseWithExtraFiles(
-            requiredFiles,
-            validated,
-            loadedBinaryFiles
-          );
-          return {
-            initialState,
-            initialFiles,
-            localTreeSha: localTreeNode.entry.sha,
-          };
-        }
-      }
-      return Promise.resolve(dataResult).then(async data => {
-        const {
-          validated,
-          initialFiles,
-          requiredFiles,
-          maybeLoadedBinaryFiles,
-        } = parseFromValueFile(_args, data, localTree);
-        const loadedBinaryFiles = new Map(
-          await Promise.all(maybeLoadedBinaryFiles)
+      const allBlobs = locationsForTreeKey
+        .flatMap(dir => {
+          const node = getTreeNodeAtPath(tree, dir);
+          if (!node) return [];
+          return node.children
+            ? getAllFilesInTree(node.children)
+            : [node.entry];
+        })
+        .map(entry => {
+          const blob = fetchBlob(args.config, entry.sha, entry.path);
+          if (blob instanceof Uint8Array) {
+            return [entry.path, blob] as const;
+          }
+          return blob.then(blob => [entry.path, blob] as const);
+        });
+
+      if (
+        allBlobs.every((x): x is readonly [string, Uint8Array] =>
+          Array.isArray(x)
+        )
+      ) {
+        const { initialFiles, initialState } = parseEntry(
+          _args,
+          new Map(allBlobs)
         );
-        const initialState = parseWithExtraFiles(
-          requiredFiles,
-          validated,
-          loadedBinaryFiles
-        );
+
         return {
           initialState,
           initialFiles,
-          localTreeSha: localTreeNode.entry.sha,
+          localTreeKey,
+        };
+      }
+
+      return Promise.all(allBlobs).then(async data => {
+        const { initialState, initialFiles } = parseEntry(_args, new Map(data));
+        return {
+          initialState,
+          initialFiles,
+          localTreeKey,
         };
       });
     }, [
       hasLoaded,
-      localTreeNode,
+      tree,
+      args.dirpath,
       args.format,
       args.config,
-      args.dirpath,
       args.schema,
       args.slug,
+      locationsForTreeKey,
+      localTreeKey,
     ])
   );
 }
@@ -207,17 +197,19 @@ export async function hydrateBlobCache(contents: Uint8Array) {
   return sha;
 }
 
-function fetchGitHubBlob(config: GitHubConfig, oid: string): Promise<Response> {
-  return getAuth().then(auth =>
-    fetch(
-      `https://api.github.com/repos/${config.storage.repo.owner}/${config.storage.repo.name}/git/blobs/${oid}`,
-      {
-        headers: {
-          Authorization: `Bearer ${auth!.accessToken}`,
-          Accept: 'application/vnd.github.raw',
-        },
-      }
-    )
+async function fetchGitHubBlob(
+  config: GitHubConfig,
+  oid: string
+): Promise<Response> {
+  const auth = await getAuth();
+  return fetch(
+    `https://api.github.com/repos/${config.storage.repo.owner}/${config.storage.repo.name}/git/blobs/${oid}`,
+    {
+      headers: {
+        Authorization: `Bearer ${auth!.accessToken}`,
+        Accept: 'application/vnd.github.raw',
+      },
+    }
   );
 }
 

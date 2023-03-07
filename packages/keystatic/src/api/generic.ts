@@ -13,8 +13,7 @@ import {
   TypedDocumentNode,
 } from '@ts-gql/tag/no-transform';
 import { Config } from '..';
-import { readToDirEntries } from './read-local';
-import { getCollectionPath, getSingletonPath } from '../../app/path-utils';
+import { getAllowedDirectories, readToDirEntries } from './read-local';
 import { blobSha } from './trees-server-side';
 import path from 'path';
 
@@ -27,6 +26,7 @@ export type APIRouteConfig = {
   url?: string;
   /** @default process.env.KEYSTATIC_SECRET */
   secret?: string;
+  localBaseDirectory?: string;
   config: Config<any, any>;
 };
 
@@ -79,6 +79,10 @@ export function makeGenericAPIRouteHandler(
     secret: _config.secret ?? process.env.KEYSTATIC_SECRET,
     config: _config.config,
   };
+  const baseDirectory = path.resolve(
+    _config.localBaseDirectory ?? process.cwd()
+  );
+
   if (
     !_config2.clientId ||
     !_config2.clientSecret ||
@@ -101,13 +105,13 @@ export function makeGenericAPIRouteHandler(
       }
       if (_config2.config?.storage.kind === 'local') {
         if (req.method === 'GET' && joined === 'tree') {
-          return tree(req, _config2.config);
+          return tree(req, _config2.config, baseDirectory);
         }
         if (req.method === 'GET' && params[0] === 'blob') {
-          return blob(req, _config2.config, params);
+          return blob(req, _config2.config, params, baseDirectory);
         }
         if (req.method === 'POST' && joined === 'update') {
-          return update(req, _config2.config);
+          return update(req, _config2.config, baseDirectory);
         }
       }
       return { status: 404, body: 'Not Found' };
@@ -137,13 +141,13 @@ export function makeGenericAPIRouteHandler(
     }
     if (config.config?.storage.kind === 'local') {
       if (req.method === 'GET' && joined === 'tree') {
-        return tree(req, config.config);
+        return tree(req, config.config, baseDirectory);
       }
       if (req.method === 'GET' && params[0] === 'blob') {
-        return blob(req, config.config, params);
+        return blob(req, config.config, params, baseDirectory);
       }
       if (req.method === 'POST' && params[0] === 'update') {
-        return update(req, config.config);
+        return update(req, config.config, baseDirectory);
       }
     }
 
@@ -347,6 +351,13 @@ async function githubOauthCallback(
   }
 
   const headers = await getTokenCookies(tokenDataParseResult.data, config);
+  if (state === 'close') {
+    return {
+      headers: [...headers, ['Content-Type', 'text/html']],
+      body: "<script>localStorage.setItem('ks-refetch-installations', 'true');window.close();</script>",
+      status: 200,
+    };
+  }
   return redirect(`/keystatic${from ? `/${from}` : ''}`, headers);
 }
 
@@ -574,7 +585,8 @@ const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 async function tree(
   req: KeystaticRequest,
-  config: Config
+  config: Config,
+  baseDirectory: string
 ): Promise<KeystaticResponse> {
   if (req.headers.get('no-cors') !== '1') {
     return { status: 400, body: 'Bad Request' };
@@ -582,19 +594,8 @@ async function tree(
   return {
     status: 200,
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(await readToDirEntries(process.cwd(), config)),
+    body: JSON.stringify(await readToDirEntries(baseDirectory, config)),
   };
-}
-
-function getAllowedDirectories(config: Config) {
-  const allowedDirectories: string[] = [];
-  for (const collection of Object.keys(config.collections ?? {})) {
-    allowedDirectories.push(getCollectionPath(config, collection));
-  }
-  for (const singleton of Object.keys(config.singletons ?? {})) {
-    allowedDirectories.push(getSingletonPath(config, singleton));
-  }
-  return allowedDirectories;
 }
 
 function getIsPathValid(config: Config) {
@@ -608,7 +609,8 @@ function getIsPathValid(config: Config) {
 async function blob(
   req: KeystaticRequest,
   config: Config,
-  params: string[]
+  params: string[],
+  baseDirectory: string
 ): Promise<KeystaticResponse> {
   if (req.headers.get('no-cors') !== '1') {
     return { status: 400, body: 'Bad Request' };
@@ -623,7 +625,7 @@ async function blob(
 
   let contents;
   try {
-    contents = await fs.readFile(filepath);
+    contents = await fs.readFile(path.join(baseDirectory, filepath));
   } catch (err) {
     if ((err as any).code === 'ENOENT') {
       return { status: 404, body: 'Not Found' };
@@ -640,7 +642,8 @@ async function blob(
 
 async function update(
   req: KeystaticRequest,
-  config: Config
+  config: Config,
+  baseDirectory: string
 ): Promise<KeystaticResponse> {
   if (
     req.headers.get('no-cors') !== '1' ||
@@ -667,15 +670,20 @@ async function update(
     return { status: 400, body: 'Bad data' };
   }
   for (const addition of updates.data.additions) {
-    await fs.mkdir(path.dirname(addition.path), { recursive: true });
-    await fs.writeFile(addition.path, addition.contents);
+    await fs.mkdir(path.dirname(path.join(baseDirectory, addition.path)), {
+      recursive: true,
+    });
+    await fs.writeFile(
+      path.join(baseDirectory, addition.path),
+      addition.contents
+    );
   }
   for (const deletion of updates.data.deletions) {
-    await fs.rm(deletion.path, { force: true });
+    await fs.rm(path.join(baseDirectory, deletion.path), { force: true });
   }
   return {
     status: 200,
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(await readToDirEntries(process.cwd(), config)),
+    body: JSON.stringify(await readToDirEntries(baseDirectory, config)),
   };
 }
