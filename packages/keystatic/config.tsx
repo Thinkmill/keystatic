@@ -74,9 +74,18 @@ export type Config<
   } = {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
   }
-> =
-  | GitHubConfig<Collections, Singletons>
-  | LocalConfig<Collections, Singletons>;
+> = {
+  storage:
+    | {
+        kind: 'local';
+      }
+    | {
+        kind: 'github';
+        repo: { owner: string; name: string };
+      };
+  collections?: Collections;
+  singletons?: Singletons;
+};
 
 export function config<
   Collections extends {
