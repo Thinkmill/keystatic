@@ -243,7 +243,7 @@ export default config({
     }),
     people: collection({
       label: 'People',
-      directory: 'some/directory/people',
+      path: 'some/directory/people/*/',
       slugField: 'username',
       schema: {
         name: fields.text({ label: 'Name' }),
@@ -255,7 +255,7 @@ export default config({
     }),
     packages: collection({
       label: 'Packages',
-      directorySuffix: 'somewhere/else',
+      path: 'packages/*/somewhere/else/',
       slugField: 'name',
       format: 'json',
       schema: {
@@ -264,7 +264,7 @@ export default config({
     }),
     singlefileposts: collection({
       label: 'Single File Posts',
-      directory: 'single-file-posts',
+      path: 'single-file-posts/*/',
       slugField: 'slug',
       format: { contentField: 'content' },
       schema: {

@@ -4,21 +4,14 @@ import {
 } from './DocumentEditor/component-blocks/api';
 
 export type DataFormat = 'json' | 'yaml';
-export type Format =
-  | DataFormat
-  | {
-      data?: DataFormat;
-      contentField?: string;
-      location?: 'index' | 'outside';
-    };
+export type Format = DataFormat | { data?: DataFormat; contentField?: string };
 
 export type Collection<
   Schema extends Record<string, ComponentSchema>,
   SlugField extends string
 > = {
   label: string;
-  directory?: string;
-  directorySuffix?: string;
+  path?: `${string}/*` | `${string}/*/${string}`;
   format?: Format;
   slugField: SlugField;
   schema: Schema;
@@ -26,7 +19,7 @@ export type Collection<
 
 export type Singleton<Schema extends Record<string, ComponentSchema>> = {
   label: string;
-  directory?: string;
+  path?: string;
   format?: Format;
   schema: Schema;
 };
