@@ -28,6 +28,7 @@ import {
   useStaticEditor,
 } from './utils';
 import { BlockPopoverTrigger } from './BlockPopoverTrigger';
+import { NotEditable } from '../src';
 
 export const ImageElement = ({
   attributes,
@@ -47,80 +48,81 @@ export const ImageElement = ({
 
   return (
     <>
-      <BlockPopoverTrigger
-        isOpen={!dialogOpen && selected}
-        key={aspectRatio} // Force the popover to re-render when the aspect ratio changes.
-      >
-        <div
-          {...attributes}
-          draggable="true"
-          style={{ display: 'inline-block', lineHeight: 1 }}
+      <div draggable="true" {...attributes}>
+        <BlockPopoverTrigger
+          isOpen={!dialogOpen && selected}
+          key={aspectRatio} // Force the popover to re-render when the aspect ratio changes.
         >
-          <img
-            src={objectUrl}
-            alt={currentElement.alt}
-            data-selected={selected}
-            onLoad={e => {
-              const target = e.target as HTMLImageElement;
-              setAspectRatio(target.width / target.height);
-            }}
-            className={css({
-              boxSizing: 'border-box',
-              borderColor: tokenSchema.color.alias.borderIdle,
-              borderRadius: tokenSchema.size.radius.regular,
-              borderStyle: 'solid',
-              borderWidth: tokenSchema.size.border.regular,
-              display: 'inline-block',
-              maxHeight: tokenSchema.size.alias.singleLineWidth,
-              maxWidth: '100%',
-              padding: tokenSchema.size.space.regular,
-
-              '&[data-selected=true]': {
-                borderColor: tokenSchema.color.alias.borderSelected,
-              },
-            })}
-          />
-          {children}
-        </div>
-
-        <Flex
-          alignItems="center"
-          gap="small"
-          padding="regular"
-          {...targetProps}
-        >
-          <ActionButton onPress={() => setDialogOpen(true)}>
-            {stringFormatter.format('edit')}
-          </ActionButton>
-          <TooltipTrigger>
-            <ActionButton
-              prominence="low"
-              onPress={async () => {
-                const src = await getUploadedImage();
-                if (src) {
-                  setNode({ src });
-                }
+          <NotEditable
+            UNSAFE_style={{ display: 'inline-block', lineHeight: 1 }}
+          >
+            <img
+              src={objectUrl}
+              alt={currentElement.alt}
+              data-selected={selected}
+              onLoad={e => {
+                const target = e.target as HTMLImageElement;
+                setAspectRatio(target.width / target.height);
               }}
-            >
-              <Icon src={fileUpIcon} />
+              className={css({
+                boxSizing: 'border-box',
+                borderColor: tokenSchema.color.alias.borderIdle,
+                borderRadius: tokenSchema.size.radius.regular,
+                borderStyle: 'solid',
+                borderWidth: tokenSchema.size.border.regular,
+                display: 'inline-block',
+                maxHeight: tokenSchema.size.alias.singleLineWidth,
+                maxWidth: '100%',
+                padding: tokenSchema.size.space.regular,
+
+                '&[data-selected=true]': {
+                  borderColor: tokenSchema.color.alias.borderSelected,
+                },
+              })}
+            />
+          </NotEditable>
+
+          <Flex
+            alignItems="center"
+            gap="small"
+            padding="regular"
+            {...targetProps}
+          >
+            <ActionButton onPress={() => setDialogOpen(true)}>
+              {stringFormatter.format('edit')}
             </ActionButton>
-            <Tooltip>Choose file</Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <ActionButton
-              prominence="low"
-              onPress={() => {
-                Transforms.removeNodes(editor, {
-                  at: ReactEditor.findPath(editor, __elementForGettingPath),
-                });
-              }}
-            >
-              <Icon src={trash2Icon} />
-            </ActionButton>
-            <Tooltip>Remove</Tooltip>
-          </TooltipTrigger>
-        </Flex>
-      </BlockPopoverTrigger>
+            <TooltipTrigger>
+              <ActionButton
+                prominence="low"
+                onPress={async () => {
+                  const src = await getUploadedImage();
+                  if (src) {
+                    setNode({ src });
+                  }
+                }}
+              >
+                <Icon src={fileUpIcon} />
+              </ActionButton>
+              <Tooltip>Choose file</Tooltip>
+            </TooltipTrigger>
+            <TooltipTrigger>
+              <ActionButton
+                prominence="low"
+                onPress={() => {
+                  Transforms.removeNodes(editor, {
+                    at: ReactEditor.findPath(editor, __elementForGettingPath),
+                  });
+                }}
+              >
+                <Icon src={trash2Icon} />
+              </ActionButton>
+              <Tooltip>Remove</Tooltip>
+            </TooltipTrigger>
+          </Flex>
+        </BlockPopoverTrigger>
+
+        {children}
+      </div>
 
       <DialogContainer onDismiss={() => setDialogOpen(false)}>
         {dialogOpen && (

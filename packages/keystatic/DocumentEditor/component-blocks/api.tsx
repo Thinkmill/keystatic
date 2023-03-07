@@ -1,5 +1,11 @@
-import { ReactElement, ReactNode } from 'react';
-import { css } from '@voussoir/style';
+import {
+  ForwardRefExoticComponent,
+  ReactElement,
+  ReactNode,
+  Ref,
+  forwardRef,
+} from 'react';
+import { classNames, css } from '@voussoir/style';
 import { Box, BoxProps } from '@voussoir/layout';
 import { ChildField } from './fields/child';
 
@@ -434,17 +440,23 @@ export function component<
   return options as any;
 }
 
-export function NotEditable({ children, ...props }: BoxProps) {
-  return (
-    <Box
-      UNSAFE_className={css({ userSelect: 'none', whiteSpace: 'initial' })}
-      contentEditable={false}
-      {...props}
-    >
-      {children}
-    </Box>
-  );
-}
+export const NotEditable: ForwardRefExoticComponent<BoxProps> = forwardRef(
+  function NotEditable({ children, ...props }: BoxProps, ref: Ref<any>) {
+    return (
+      <Box
+        {...props}
+        ref={ref}
+        UNSAFE_className={classNames(
+          css({ userSelect: 'none', whiteSpace: 'initial' }),
+          props.UNSAFE_className
+        )}
+        contentEditable={false}
+      >
+        {children}
+      </Box>
+    );
+  }
+);
 
 type Comp<Props> = (props: Props) => ReactElement | null;
 
