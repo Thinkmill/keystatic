@@ -29,7 +29,6 @@ import {
   EditorAfterButIgnoringingPointsWithNoContent,
   isElementActive,
   useElementWithSetNodes,
-  useForceValidation,
   useStaticEditor,
   useEventCallback,
   useSelectedOrFocusWithin,
@@ -138,7 +137,12 @@ export const LinkElement = ({
           </TooltipTrigger>
         </Flex>
       </BlockPopoverTrigger>
-      <DialogContainer onDismiss={() => setDialogOpen(false)}>
+      <DialogContainer
+        onDismiss={() => {
+          // TODO: move selection back to the link
+          setDialogOpen(false);
+        }}
+      >
         {dialogOpen && (
           <LinkDialog
             text={text}
@@ -159,15 +163,14 @@ function LinkDialog({
 }: {
   href?: string;
   text?: string;
-  onSubmit: (value: { href: string; text: string }) => void;
+  onSubmit: (value: { href: string }) => void;
 }) {
   let [href, setHref] = useState(props.href || '');
-  let [text, setText] = useState(props.text || '');
+  let [touched, setTouched] = useState(false);
 
   let { dismiss } = useDialogContainer();
   let stringFormatter = useLocalizedStringFormatter(l10nMessages);
-  const forceValidation = useForceValidation();
-  const showInvalidState = isValidURL(href) ? false : forceValidation;
+  const showInvalidState = touched && !isValidURL(href);
 
   return (
     <Dialog size="small">
@@ -175,27 +178,24 @@ function LinkDialog({
         style={{ display: 'contents' }}
         onSubmit={event => {
           event.preventDefault();
-          if (isValidURL(href)) {
+          if (!showInvalidState) {
             dismiss();
-            onSubmit({ href, text });
+            onSubmit({ href });
           }
         }}
       >
         <Heading>{props.href ? 'Edit' : 'Add'} link</Heading>
         <Content>
           <Flex gap="large" direction="column">
-            <TextField
-              label="Text"
-              onChange={setText}
-              value={text}
-              isReadOnly
-            />
+            <TextField label="Text" value={props.text} isReadOnly />
             <TextField
               autoFocus
+              isRequired
+              onBlur={() => setTouched(true)}
               label="Link"
               onChange={setHref}
               value={href}
-              errorMessage={showInvalidState && 'Please enter a valid URL.'}
+              errorMessage={showInvalidState && 'Please provide a valid URL.'}
             />
           </Flex>
         </Content>

@@ -1,5 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ReactEditor, RenderElementProps } from 'slate-react';
 import { Editor, Transforms } from 'slate';
 
@@ -45,15 +45,6 @@ export const ImageElement = ({
   );
   const objectUrl = useObjectURL(currentElement.src.content)!;
   const [selected, targetProps] = useSelectedOrFocusWithin();
-
-  useEffect(() => {
-    if (!dialogOpen) {
-      let nodeEntry = Editor.next(editor);
-      if (nodeEntry) {
-        Transforms.select(editor, nodeEntry[1]);
-      }
-    }
-  }, [dialogOpen, editor]);
 
   return (
     <>
@@ -137,7 +128,12 @@ export const ImageElement = ({
         {children}
       </div>
 
-      <DialogContainer onDismiss={() => setDialogOpen(false)}>
+      <DialogContainer
+        onDismiss={() => {
+          // TODO: move selection back to the image
+          setDialogOpen(false);
+        }}
+      >
         {dialogOpen && (
           <ImageDialog
             alt={currentElement.alt}
@@ -171,6 +167,7 @@ function ImageDialog({
   );
   let [altText, setAltText] = useState(props.alt || '');
   let [fileName, setFileName] = useState(filenameWithoutExtension || '');
+  let [fileNameTouched, setFileNameTouched] = useState(false);
 
   let { dismiss } = useDialogContainer();
   let stringFormatter = useLocalizedStringFormatter(l10nMessages);
@@ -181,11 +178,13 @@ function ImageDialog({
         style={{ display: 'contents' }}
         onSubmit={event => {
           event.preventDefault();
-          dismiss();
-          onSubmit({
-            alt: altText,
-            filename: [fileName, filenameExtension].join('.'),
-          });
+          if (fileName) {
+            dismiss();
+            onSubmit({
+              alt: altText,
+              filename: [fileName, filenameExtension].join('.'),
+            });
+          }
         }}
       >
         <Heading>Image details</Heading>
@@ -194,7 +193,14 @@ function ImageDialog({
             <TextField
               label="File name"
               onChange={setFileName}
+              onBlur={() => setFileNameTouched(true)}
               value={fileName}
+              isRequired
+              errorMessage={
+                fileNameTouched && !fileName
+                  ? 'Please provide a file name.'
+                  : undefined
+              }
               endElement={
                 filenameExtension ? (
                   <Flex
