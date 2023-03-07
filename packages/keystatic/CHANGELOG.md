@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.58
+
+### Patch Changes
+
+- 9f27bde: Fix conditionally changing the `storage` field in a config creating a
+  TypeScript error
+
 ## 0.0.57
 
 ### Patch Changes
