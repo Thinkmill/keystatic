@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.57
+
+### Patch Changes
+
+- e259a19: Replace `directory`, `directorySuffix` and `format.location` options
+  with `path` option
+
 ## 0.0.56
 
 ### Patch Changes
