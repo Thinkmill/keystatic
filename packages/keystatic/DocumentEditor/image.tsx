@@ -17,7 +17,6 @@ import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
 import { Heading, Text } from '@voussoir/typography';
 
 import l10nMessages from '../app/l10n/index.json';
-// import { NotEditable } from '../src';
 import {
   getUploadedImage,
   useObjectURL,
@@ -35,6 +34,7 @@ export const ImageElement = ({
   element: __elementForGettingPath,
 }: RenderElementProps & { element: { type: 'image' } }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState<number>();
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const editor = useStaticEditor();
   const [currentElement, setNode] = useElementWithSetNodes(
@@ -46,17 +46,23 @@ export const ImageElement = ({
 
   return (
     <>
-      <BlockPopoverTrigger isOpen={!dialogOpen && selected}>
+      <BlockPopoverTrigger
+        isOpen={!dialogOpen && selected}
+        key={aspectRatio} // Force the popover to re-render when the aspect ratio changes.
+      >
         <div
-          draggable="true"
           {...attributes}
+          draggable="true"
           style={{ display: 'inline-block', lineHeight: 1 }}
         >
           <img
             src={objectUrl}
             alt={currentElement.alt}
-            // title={currentElement.title}
             data-selected={selected}
+            onLoad={e => {
+              const target = e.target as HTMLImageElement;
+              setAspectRatio(target.width / target.height);
+            }}
             className={css({
               boxSizing: 'border-box',
               borderColor: tokenSchema.color.alias.borderIdle,
@@ -92,9 +98,7 @@ export const ImageElement = ({
               onPress={async () => {
                 const src = await getUploadedImage();
                 if (src) {
-                  setNode({
-                    src,
-                  });
+                  setNode({ src });
                 }
               }}
             >
