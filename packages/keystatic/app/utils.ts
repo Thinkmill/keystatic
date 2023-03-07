@@ -5,6 +5,7 @@ import { ComponentSchema, fields, SlugFormField } from '../src';
 import {
   getCollectionFormat,
   getCollectionItemPath,
+  getCollectionItemSlugSuffix,
   getCollectionPath,
   getDataFileExtension,
 } from './path-utils';
@@ -95,17 +96,36 @@ export function getEntriesInCollectionWithTreeKey(
     getTreeNodeAtPath(rootTree, collectionPath)?.children ?? new Map();
   const entries: { key: string; slug: string }[] = [];
   const directoriesUsedInSchema = [...collectDirectoriesUsedInSchema(schema)];
+  const suffix = getCollectionItemSlugSuffix(config, collection);
   for (const [key, entry] of directory) {
     if (formatInfo.dataLocation === 'index') {
       const actualEntry = getTreeNodeAtPath(
         rootTree,
         getCollectionItemPath(config, collection, key)
       );
-      if (actualEntry?.children?.has('index' + extension)) {
+      if (!actualEntry?.children?.has('index' + extension)) continue;
+      entries.push({
+        key: getTreeKey(
+          [
+            actualEntry.entry.path,
+            ...directoriesUsedInSchema.map(x => `${x}/${key}`),
+          ],
+          rootTree
+        ),
+        slug: key,
+      });
+    } else {
+      if (suffix) {
+        const newEntry = getTreeNodeAtPath(
+          rootTree,
+          getCollectionItemPath(config, collection, key) + extension
+        );
+        if (!newEntry || newEntry.children) continue;
         entries.push({
           key: getTreeKey(
             [
-              actualEntry.entry.path,
+              entry.entry.path,
+              getCollectionItemPath(config, collection, key),
               ...directoriesUsedInSchema.map(x => `${x}/${key}`),
             ],
             rootTree
@@ -113,21 +133,19 @@ export function getEntriesInCollectionWithTreeKey(
           slug: key,
         });
       }
-    } else {
-      if (!entry.children && key.endsWith(extension)) {
-        const slug = key.slice(0, -extension.length);
-        entries.push({
-          key: getTreeKey(
-            [
-              entry.entry.path,
-              `${collectionPath}/${slug}`,
-              ...directoriesUsedInSchema.map(x => `${x}/${slug}`),
-            ],
-            rootTree
-          ),
-          slug,
-        });
-      }
+      if (entry.children || !key.endsWith(extension)) continue;
+      const slug = key.slice(0, -extension.length);
+      entries.push({
+        key: getTreeKey(
+          [
+            entry.entry.path,
+            getCollectionItemPath(config, collection, slug),
+            ...directoriesUsedInSchema.map(x => `${x}/${slug}`),
+          ],
+          rootTree
+        ),
+        slug,
+      });
     }
   }
   return entries;

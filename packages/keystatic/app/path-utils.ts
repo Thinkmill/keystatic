@@ -6,18 +6,32 @@ import {
 } from '../DocumentEditor/component-blocks/api';
 
 export function fixPath(path: string) {
-  return path.replace(/^\.?\//, '').replace(/\/$/, '');
+  return path.replace(/^\.?\/+/, '').replace(/\/*$/, '');
+}
+
+function getConfiguredCollectionPath(config: Config, collection: string) {
+  const collectionConfig = config.collections![collection];
+  const path = collectionConfig.path ?? `${collection}/*/`;
+  if (!path.endsWith('/*') && !path.includes('/*/')) {
+    throw new Error(
+      `Collection path must end with /* or include /*/ but ${collection} has ${path}`
+    );
+  }
+  return path;
 }
 
 export function getCollectionPath(config: Config, collection: string) {
-  return fixPath(config.collections![collection].directory ?? collection);
+  const configuredPath = getConfiguredCollectionPath(config, collection);
+  const path = fixPath(configuredPath.replace(/\*.*$/, ''));
+  return path;
 }
 
 export function getCollectionFormat(config: Config, collection: string) {
   const collectionConfig = config.collections![collection];
   return getFormatInfo(
     collectionConfig.format ?? 'yaml',
-    collectionConfig.schema
+    collectionConfig.schema,
+    getConfiguredCollectionPath(config, collection)
   );
 }
 
@@ -25,7 +39,8 @@ export function getSingletonFormat(config: Config, singleton: string) {
   const singletonConfig = config.singletons![singleton];
   return getFormatInfo(
     singletonConfig.format ?? 'yaml',
-    singletonConfig.schema
+    singletonConfig.schema,
+    singletonConfig.path ?? `${singleton}/`
   );
 }
 
@@ -45,13 +60,24 @@ export function getEntryDataFilepath(dir: string, formatInfo: FormatInfo) {
   }${getDataFileExtension(formatInfo)}`;
 }
 
-function getCollectionItemSlugSuffix(config: Config, collection: string) {
-  const path = fixPath(config.collections![collection].directorySuffix ?? '');
+export function getCollectionItemSlugSuffix(
+  config: Config,
+  collection: string
+) {
+  const configuredPath = getConfiguredCollectionPath(config, collection);
+  const path = fixPath(configuredPath.replace(/^[^*]+\*/, ''));
   return path ? `/${path}` : '';
 }
 
 export function getSingletonPath(config: Config, singleton: string) {
-  return fixPath(config.singletons![singleton].directory ?? singleton);
+  if (config.singletons![singleton].path?.includes('*')) {
+    throw new Error(
+      `Singleton paths cannot include * but ${singleton} has ${
+        config.singletons![singleton].path
+      }`
+    );
+  }
+  return fixPath(config.singletons![singleton].path ?? singleton);
 }
 
 export function getDataFileExtension(formatInfo: FormatInfo) {
@@ -62,11 +88,13 @@ export function getDataFileExtension(formatInfo: FormatInfo) {
 
 function getFormatInfo(
   format: Format,
-  schema: Record<string, ComponentSchema>
+  schema: Record<string, ComponentSchema>,
+  path: string
 ): FormatInfo {
+  const dataLocation = path.endsWith('/') ? 'index' : 'outer';
   if (typeof format === 'string') {
     return {
-      dataLocation: 'index',
+      dataLocation,
       contentField: undefined,
       data: format,
     };
@@ -92,7 +120,7 @@ function getFormatInfo(
   return {
     data: format.data ?? 'yaml',
     contentField,
-    dataLocation: format.location === 'outside' ? 'outer' : 'index',
+    dataLocation,
   };
 }
 
