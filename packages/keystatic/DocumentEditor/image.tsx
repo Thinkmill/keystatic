@@ -22,6 +22,7 @@ import {
   useObjectURL,
 } from './component-blocks/fields/image';
 import {
+  focusWithPreviousSelection,
   insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading,
   useElementWithSetNodes,
   useSelectedOrFocusWithin,
@@ -130,8 +131,8 @@ export const ImageElement = ({
 
       <DialogContainer
         onDismiss={() => {
-          // TODO: move selection back to the image
           setDialogOpen(false);
+          focusWithPreviousSelection(editor);
         }}
       >
         {dialogOpen && (

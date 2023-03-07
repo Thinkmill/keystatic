@@ -257,3 +257,12 @@ export function useSelectedOrFocusWithin() {
   );
   return [(focused && selected) || focusWithin, targetProps] as const;
 }
+
+export function focusWithPreviousSelection(editor: Editor) {
+  const selection = window.getSelection();
+  if (selection) {
+    selection.removeAllRanges();
+    selection.addRange(ReactEditor.toDOMRange(editor, editor.selection!));
+  }
+  ReactEditor.focus(editor);
+}

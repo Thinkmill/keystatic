@@ -32,6 +32,7 @@ import {
   useStaticEditor,
   useEventCallback,
   useSelectedOrFocusWithin,
+  focusWithPreviousSelection,
 } from './utils';
 
 const isLinkActive = (editor: Editor) => {
@@ -139,8 +140,8 @@ export const LinkElement = ({
       </BlockPopoverTrigger>
       <DialogContainer
         onDismiss={() => {
-          // TODO: move selection back to the link
           setDialogOpen(false);
+          focusWithPreviousSelection(editor);
         }}
       >
         {dialogOpen && (
