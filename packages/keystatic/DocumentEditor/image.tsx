@@ -1,6 +1,6 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useState } from 'react';
-import { ReactEditor, RenderElementProps, useSelected } from 'slate-react';
+import { ReactEditor, RenderElementProps } from 'slate-react';
 import { Editor, Transforms } from 'slate';
 
 import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
@@ -24,6 +24,7 @@ import {
 import {
   insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading,
   useElementWithSetNodes,
+  useSelectedOrFocusWithin,
   useStaticEditor,
 } from './utils';
 import { BlockPopoverTrigger } from './BlockPopoverTrigger';
@@ -42,7 +43,7 @@ export const ImageElement = ({
     __elementForGettingPath
   );
   const objectUrl = useObjectURL(currentElement.src.content)!;
-  const selected = useSelected();
+  const [selected, targetProps] = useSelectedOrFocusWithin();
 
   return (
     <>
@@ -82,7 +83,12 @@ export const ImageElement = ({
           {children}
         </div>
 
-        <Flex alignItems="center" gap="small" padding="regular">
+        <Flex
+          alignItems="center"
+          gap="small"
+          padding="regular"
+          {...targetProps}
+        >
           <ActionButton onPress={() => setDialogOpen(true)}>
             {stringFormatter.format('edit')}
           </ActionButton>

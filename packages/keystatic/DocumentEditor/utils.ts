@@ -4,6 +4,7 @@ import React, {
   useRef,
   useState,
   useContext,
+  useMemo,
 } from 'react';
 import {
   Editor,
@@ -17,7 +18,7 @@ import {
   Location,
   Point,
 } from 'slate';
-import { ReactEditor } from 'slate-react';
+import { ReactEditor, useFocused, useSelected } from 'slate-react';
 
 export { useSlateStatic as useStaticEditor } from 'slate-react';
 
@@ -226,4 +227,33 @@ export function assert(condition: boolean): asserts condition {
   if (!condition) {
     throw new Error('failed assert');
   }
+}
+
+// delay our reading of the updated `focused` value so that we'll still render
+// the dialog immediately after the editor is blurred but before the input has
+// been focused
+export function useDelayedFocused() {
+  const focused = useFocused();
+  const [delayedFocused, setDelayedFocused] = useState(false);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDelayedFocused(focused);
+    }, 0);
+    return () => clearTimeout(timeout);
+  }, [focused]);
+  return delayedFocused;
+}
+
+export function useSelectedOrFocusWithin() {
+  const [focusWithin, setFocusWithin] = useState(false);
+  const focused = useFocused();
+  const selected = useSelected();
+  const targetProps = useMemo(
+    () => ({
+      onFocus: () => setFocusWithin(true),
+      onBlur: () => setFocusWithin(false),
+    }),
+    []
+  );
+  return [(focused && selected) || focusWithin, targetProps] as const;
 }

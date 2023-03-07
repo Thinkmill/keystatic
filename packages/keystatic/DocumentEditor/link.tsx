@@ -1,12 +1,7 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useEffect, useMemo, useState } from 'react';
 import { Editor, Node, Range, Transforms, Text as SlateText } from 'slate';
-import {
-  ReactEditor,
-  RenderElementProps,
-  useFocused,
-  useSelected,
-} from 'slate-react';
+import { ReactEditor, RenderElementProps } from 'slate-react';
 
 import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
 import { Dialog, DialogContainer, useDialogContainer } from '@voussoir/dialog';
@@ -37,6 +32,7 @@ import {
   useForceValidation,
   useStaticEditor,
   useEventCallback,
+  useSelectedOrFocusWithin,
 } from './utils';
 
 const isLinkActive = (editor: Editor) => {
@@ -85,26 +81,8 @@ export const LinkElement = ({
   const href = currentElement.href;
   const text = Node.string(currentElement);
 
-  const selected = useSelected();
-  const focused = useFocused();
   const [dialogOpen, setDialogOpen] = useState(false);
-  // we want to show the link dialog when the editor is focused and the link element is selected
-  // or when the input inside the dialog is focused so you would think that would look like this:
-  // (selected && focused) || focusedInInlineDialog
-  // this doesn't work though because the blur will happen before the focus is inside the inline dialog
-  // so this component would be rendered and focused would be false so the input would be removed so it couldn't be focused
-  // to fix this, we delay our reading of the updated `focused` value so that we'll still render the dialog
-  // immediately after the editor is blurred but before the input has been focused
-  const [delayedFocused, setDelayedFocused] = useState(false);
-
-  useEffect(() => {
-    const id = setTimeout(() => {
-      setDelayedFocused(focused);
-    }, 0);
-    return () => {
-      clearTimeout(id);
-    };
-  }, [focused]);
+  const [selected, targetProps] = useSelectedOrFocusWithin();
 
   useEffect(() => {
     if (selected && !href) {
@@ -122,14 +100,19 @@ export const LinkElement = ({
   return (
     <>
       <BlockPopoverTrigger
-        isOpen={!dialogOpen && selected && delayedFocused}
+        isOpen={!dialogOpen && selected}
         // placement="bottom start"
       >
         <a href={href} {...attributes}>
           {children}
         </a>
 
-        <Flex alignItems="center" gap="small" padding="regular">
+        <Flex
+          alignItems="center"
+          gap="small"
+          padding="regular"
+          {...targetProps}
+        >
           <ActionButton onPress={() => setDialogOpen(true)}>
             {stringFormatter.format('edit')}
           </ActionButton>
