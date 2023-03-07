@@ -1,5 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ReactEditor, RenderElementProps } from 'slate-react';
 import { Editor, Transforms } from 'slate';
 
@@ -46,9 +46,22 @@ export const ImageElement = ({
   const objectUrl = useObjectURL(currentElement.src.content)!;
   const [selected, targetProps] = useSelectedOrFocusWithin();
 
+  useEffect(() => {
+    if (!dialogOpen) {
+      let nodeEntry = Editor.next(editor);
+      if (nodeEntry) {
+        Transforms.select(editor, nodeEntry[1]);
+      }
+    }
+  }, [dialogOpen, editor]);
+
   return (
     <>
-      <div draggable="true" {...attributes}>
+      <div
+        draggable="true"
+        className={css({ marginBlock: '1em' })} // treat as a block element, like a paragraph
+        {...attributes}
+      >
         <BlockPopoverTrigger
           isOpen={!dialogOpen && selected}
           key={aspectRatio} // Force the popover to re-render when the aspect ratio changes.
