@@ -6,6 +6,8 @@ import {
   useCallback,
   Fragment,
   PropsWithChildren,
+  forwardRef,
+  Ref,
 } from 'react';
 import { RenderElementProps, useSelected } from 'slate-react';
 
@@ -109,16 +111,20 @@ export function ChromefulComponentBlockElement(props: {
  * Wrap block content, delimiting it from surrounding content, and provide a
  * focus indicator because the cursor may not be present.
  */
-function BlockPrimitive({
-  children,
-  selected,
-  ...attributes
-}: PropsWithChildren<
-  RenderElementProps['attributes'] & { selected: boolean }
->) {
+const BlockPrimitive = forwardRef(function BlockPrimitive(
+  {
+    children,
+    selected,
+    ...attributes
+  }: PropsWithChildren<
+    RenderElementProps['attributes'] & { selected: boolean }
+  >,
+  ref: Ref<any>
+) {
   return (
     <div
       {...attributes}
+      ref={ref}
       className={css({
         marginY: '1em', // treat like a paragraph
         position: 'relative',
@@ -143,7 +149,7 @@ function BlockPrimitive({
       {children}
     </div>
   );
-}
+});
 
 function DefaultToolbarWithChrome({
   onShowEditMode,
