@@ -3,18 +3,21 @@ import { useOverlayTriggerState } from '@react-stately/overlays';
 import { cloneElement, ReactElement, useRef } from 'react';
 import { useFocused, useSelected } from 'slate-react';
 
-import { Placement, OverlayTriggerProps, Popover } from '@voussoir/overlays';
+import { OverlayTriggerProps, Popover, PopoverProps } from '@voussoir/overlays';
 
 type RenderFn = (close: () => void) => ReactElement;
-type BlockPopoverTriggerProps = OverlayTriggerProps & {
-  children: [ReactElement, ReactElement | RenderFn];
-  placement?: Placement;
-};
+type BlockPopoverTriggerProps = OverlayTriggerProps &
+  Pick<PopoverProps, 'hideArrow' | 'placement'> & {
+    children: [ReactElement, ReactElement | RenderFn];
+  };
 
 export const BlockPopoverTrigger = ({
   children,
   placement = 'bottom',
-  ...consumerTriggerProps
+  isOpen: _consumerIsOpen,
+  defaultOpen,
+  onOpenChange,
+  hideArrow,
 }: BlockPopoverTriggerProps) => {
   const [trigger, content] = children;
   const focused = useFocused();
@@ -22,8 +25,10 @@ export const BlockPopoverTrigger = ({
 
   const triggerRef = useRef(null);
   const state = useOverlayTriggerState({
-    isOpen: focused && selected,
-    ...consumerTriggerProps,
+    isOpen:
+      _consumerIsOpen === undefined ? focused && selected : _consumerIsOpen,
+    defaultOpen,
+    onOpenChange,
   });
 
   const {
@@ -37,6 +42,7 @@ export const BlockPopoverTrigger = ({
       <Popover
         isNonModal
         {...overlayProps}
+        hideArrow={hideArrow}
         placement={placement}
         triggerRef={triggerRef}
         state={state}
