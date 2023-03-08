@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.60
+
+### Patch Changes
+
+- d49af4b: Fix `reader.collection.*.list` with collections with `path` options
+  without a trailing slash
+
 ## 0.0.59
 
 ### Patch Changes
