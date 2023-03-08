@@ -8,8 +8,9 @@ import { Dialog, DialogContainer, useDialogContainer } from '@voussoir/dialog';
 import { Icon } from '@voussoir/icon';
 import { fileUpIcon } from '@voussoir/icon/icons/fileUpIcon';
 import { imageIcon } from '@voussoir/icon/icons/imageIcon';
+import { editIcon } from '@voussoir/icon/icons/editIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Flex } from '@voussoir/layout';
+import { Divider, Flex } from '@voussoir/layout';
 import { Content } from '@voussoir/slots';
 import { css, tokenSchema } from '@voussoir/style';
 import { TextField } from '@voussoir/text-field';
@@ -55,6 +56,7 @@ export const ImageElement = ({
         {...attributes}
       >
         <BlockPopoverTrigger
+          hideArrow
           isOpen={!dialogOpen && selected}
           key={aspectRatio} // Force the popover to re-render when the aspect ratio changes.
         >
@@ -87,29 +89,33 @@ export const ImageElement = ({
             />
           </NotEditable>
 
-          <Flex
-            alignItems="center"
-            gap="small"
-            padding="regular"
-            {...targetProps}
-          >
-            <ActionButton onPress={() => setDialogOpen(true)}>
-              {stringFormatter.format('edit')}
-            </ActionButton>
-            <TooltipTrigger>
-              <ActionButton
-                prominence="low"
-                onPress={async () => {
-                  const src = await getUploadedImage();
-                  if (src) {
-                    setNode({ src });
-                  }
-                }}
-              >
-                <Icon src={fileUpIcon} />
-              </ActionButton>
-              <Tooltip>Choose file</Tooltip>
-            </TooltipTrigger>
+          <Flex gap="regular" padding="regular" {...targetProps}>
+            <Flex gap="small">
+              <TooltipTrigger>
+                <ActionButton
+                  prominence="low"
+                  onPress={() => setDialogOpen(true)}
+                >
+                  <Icon src={editIcon} />
+                </ActionButton>
+                <Tooltip>{stringFormatter.format('edit')}</Tooltip>
+              </TooltipTrigger>
+              <TooltipTrigger>
+                <ActionButton
+                  prominence="low"
+                  onPress={async () => {
+                    const src = await getUploadedImage();
+                    if (src) {
+                      setNode({ src });
+                    }
+                  }}
+                >
+                  <Icon src={fileUpIcon} />
+                </ActionButton>
+                <Tooltip>Choose file</Tooltip>
+              </TooltipTrigger>
+            </Flex>
+            <Divider orientation="vertical" />
             <TooltipTrigger>
               <ActionButton
                 prominence="low"
@@ -121,7 +127,7 @@ export const ImageElement = ({
               >
                 <Icon src={trash2Icon} />
               </ActionButton>
-              <Tooltip>Remove</Tooltip>
+              <Tooltip tone="critical">Remove</Tooltip>
             </TooltipTrigger>
           </Flex>
         </BlockPopoverTrigger>

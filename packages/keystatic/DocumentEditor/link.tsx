@@ -6,6 +6,7 @@ import { ReactEditor, RenderElementProps } from 'slate-react';
 import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
 import { Dialog, DialogContainer, useDialogContainer } from '@voussoir/dialog';
 import { Icon } from '@voussoir/icon';
+import { editIcon } from '@voussoir/icon/icons/editIcon';
 import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
 import { linkIcon } from '@voussoir/icon/icons/linkIcon';
 import { unlinkIcon } from '@voussoir/icon/icons/unlinkIcon';
@@ -107,15 +108,13 @@ export const LinkElement = ({
           {children}
         </a>
 
-        <Flex
-          alignItems="center"
-          gap="small"
-          padding="regular"
-          {...targetProps}
-        >
-          <ActionButton onPress={() => setDialogOpen(true)}>
-            {stringFormatter.format('edit')}
-          </ActionButton>
+        <Flex gap="small" padding="regular" {...targetProps}>
+          <TooltipTrigger>
+            <ActionButton prominence="low" onPress={() => setDialogOpen(true)}>
+              <Icon src={editIcon} />
+            </ActionButton>
+            <Tooltip>{stringFormatter.format('edit')}</Tooltip>
+          </TooltipTrigger>
           <TooltipTrigger>
             <ActionButton
               prominence="low"
@@ -134,7 +133,7 @@ export const LinkElement = ({
               <Icon src={unlinkIcon} />
             </ActionButton>
             {/* TODO: needs localization */}
-            <Tooltip>Remove</Tooltip>
+            <Tooltip>Unlink</Tooltip>
           </TooltipTrigger>
         </Flex>
       </BlockPopoverTrigger>
