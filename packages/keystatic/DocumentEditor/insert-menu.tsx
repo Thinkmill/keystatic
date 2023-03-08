@@ -20,6 +20,7 @@ import { insertLayout } from './layouts';
 import { ToolbarState, useToolbarState } from './toolbar-state';
 import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from './utils';
 import { getUploadedImage } from './component-blocks/fields/image';
+import { isBlock } from '.';
 
 type Option = {
   label: string;
@@ -385,7 +386,7 @@ export function withInsertMenu(editor: Editor): Editor {
       const startOfBlock = Editor.start(
         editor,
         Editor.above(editor, {
-          match: node => Editor.isBlock(editor, node),
+          match: isBlock,
         })![1]
       );
       const before = Editor.before(editor, editor.selection.anchor, {

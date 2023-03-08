@@ -18,6 +18,7 @@ import {
 import { Flex } from '@voussoir/layout';
 import { css, tokenSchema } from '@voussoir/style';
 import { Icon } from '@voussoir/icon';
+import { isBlock } from '.';
 
 export const isListType = (type: string | undefined) =>
   type === 'ordered-list' || type === 'unordered-list';
@@ -46,8 +47,7 @@ export const toggleList = (
         editor,
         { type: format, children: [] },
         {
-          match: x =>
-            x.type !== 'list-item-content' && Editor.isBlock(editor, x),
+          match: x => x.type !== 'list-item-content' && isBlock(x),
         }
       );
     }
@@ -148,7 +148,7 @@ export function withList(editor: Editor): Editor {
           node.type === 'list-item' &&
           childNode.type !== 'list-item-content' &&
           index === 0 &&
-          Editor.isBlock(editor, childNode)
+          isBlock(childNode)
         ) {
           if (path[path.length - 1] !== 0) {
             const previousChild = Node.get(editor, Path.previous(path));
@@ -227,9 +227,7 @@ export function ListButtons(props: {
 }
 
 export function nestList(editor: Editor) {
-  const block = Editor.above(editor, {
-    match: n => Editor.isBlock(editor, n),
-  });
+  const block = Editor.above(editor, { match: isBlock });
 
   if (!block || block[0].type !== 'list-item-content') {
     return false;
@@ -275,7 +273,7 @@ export function nestList(editor: Editor) {
 
 export function unnestList(editor: Editor) {
   const block = Editor.above(editor, {
-    match: n => Editor.isBlock(editor, n),
+    match: isBlock,
   });
 
   if (block && block[0].type === 'list-item-content') {

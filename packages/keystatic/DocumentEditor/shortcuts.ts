@@ -1,4 +1,5 @@
 import { Range, Editor, Transforms, Path } from 'slate';
+import { isBlock } from '.';
 
 export const shortcuts: Record<string, string> = {
   '...': '…',
@@ -20,7 +21,7 @@ export function withShortcuts(editor: Editor): Editor {
     ) {
       const selectionPoint = editor.selection.anchor;
       const ancestorBlock = Editor.above(editor, {
-        match: node => Editor.isBlock(editor, node),
+        match: isBlock,
       });
       if (ancestorBlock) {
         Object.keys(shortcuts).forEach(shortcut => {
@@ -35,7 +36,10 @@ export function withShortcuts(editor: Editor): Editor {
             const range = { anchor: selectionPoint, focus: pointBefore };
             const str = Editor.string(editor, range);
             if (str.slice(0, shortcut.length) === shortcut) {
-              editor.history.undos.push([]);
+              editor.history.undos.push({
+                operations: [],
+                selectionBefore: editor.selection,
+              });
               Transforms.select(editor, range);
               editor.insertText(shortcuts[shortcut] + ' ');
             }

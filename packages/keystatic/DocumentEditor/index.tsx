@@ -621,7 +621,7 @@ const blockTypes: Set<string | undefined> = new Set(
   Object.keys(editorSchema).filter(x => x !== 'editor')
 );
 
-export function isBlock(node: Descendant): node is Block {
+export function isBlock(node: Node): node is Block {
   return blockTypes.has(node.type);
 }
 
@@ -642,12 +642,12 @@ function withBlocksSchema(editor: Editor): Editor {
       if (
         info.kind === 'blocks' &&
         node.children.length !== 0 &&
-        node.children.every(child => !Editor.isBlock(editor, child))
+        node.children.every(child => !isBlock(child))
       ) {
         Transforms.wrapNodes(
           editor,
           { type: info.blockToWrapInlinesIn, children: [] },
-          { at: path, match: node => !Editor.isBlock(editor, node) }
+          { at: path, match: node => !isBlock(node) }
         );
         return;
       }
@@ -655,17 +655,12 @@ function withBlocksSchema(editor: Editor): Editor {
       for (const [index, childNode] of node.children.entries()) {
         const childPath = [...path, index];
         if (info.kind === 'inlines') {
-          if (!Text.isText(childNode) && !Editor.isInline(editor, childNode)) {
+          if (!Text.isText(childNode) && isBlock(childNode)) {
             handleNodeInInvalidPosition(editor, [childNode, childPath], path);
             return;
           }
         } else {
-          if (
-            !Editor.isBlock(editor, childNode) ||
-            // these checks are implicit in Editor.isBlock
-            // but that isn't encoded in types so these will make TS happy
-            childNode.type === 'link'
-          ) {
+          if (!isBlock(childNode)) {
             Transforms.wrapNodes(
               editor,
               { type: info.blockToWrapInlinesIn, children: [] },
