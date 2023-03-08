@@ -9,11 +9,12 @@ import {
   ComponentSchema,
 } from './api';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
-import { Button } from '@voussoir/button';
+import { ActionButton } from '@voussoir/button';
 import { useOverlayTrigger } from '@react-aria/overlays';
 import { useOverlayTriggerState } from '@react-stately/overlays';
 import { Popover } from '@voussoir/overlays';
 import { Box } from '@voussoir/layout';
+import { useSelectedOrFocusWithin } from '../utils';
 
 export function ChromelessComponentBlockElement(props: {
   renderedBlock: ReactNode;
@@ -21,21 +22,20 @@ export function ChromelessComponentBlockElement(props: {
   previewProps: PreviewPropsForToolbar<
     ObjectField<Record<string, ComponentSchema>>
   >;
-  isOpen: boolean;
   onRemove: () => void;
   attributes: RenderElementProps['attributes'];
 }) {
   const ChromelessToolbar =
     props.componentBlock.toolbar ?? DefaultToolbarWithoutChrome;
   const triggerRef = useRef<HTMLDivElement>(null);
+  const [selectedOrFocused, popoverElementProps] = useSelectedOrFocusWithin();
   const state = useOverlayTriggerState({
-    isOpen: props.isOpen,
+    isOpen: selectedOrFocused,
   });
-  const { triggerProps, overlayProps } = useOverlayTrigger(
-    { type: 'dialog' },
-    state,
-    triggerRef
-  );
+  const {
+    triggerProps: { onPress, ...triggerProps },
+    overlayProps,
+  } = useOverlayTrigger({ type: 'dialog' }, state, triggerRef);
 
   return (
     <Box {...props.attributes} marginY="xlarge">
@@ -47,11 +47,14 @@ export function ChromelessComponentBlockElement(props: {
         isNonModal
         state={state}
         triggerRef={triggerRef}
+        hideArrow
       >
-        <ChromelessToolbar
-          onRemove={props.onRemove}
-          props={props.previewProps}
-        />
+        <div {...popoverElementProps}>
+          <ChromelessToolbar
+            onRemove={props.onRemove}
+            props={props.previewProps}
+          />
+        </div>
       </Popover>
     </Box>
   );
@@ -65,10 +68,10 @@ function DefaultToolbarWithoutChrome({
 }) {
   return (
     <TooltipTrigger>
-      <Button tone="critical" onPress={onRemove}>
+      <ActionButton onPress={onRemove} margin="regular">
         <Icon src={trashIcon} />
-      </Button>
-      <Tooltip>Remove</Tooltip>
+      </ActionButton>
+      <Tooltip tone="critical">Remove</Tooltip>
     </TooltipTrigger>
   );
 }

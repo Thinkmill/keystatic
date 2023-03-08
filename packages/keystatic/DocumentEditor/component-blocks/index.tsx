@@ -6,12 +6,7 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import {
-  ReactEditor,
-  RenderElementProps,
-  useFocused,
-  useSelected,
-} from 'slate-react';
+import { ReactEditor, RenderElementProps } from 'slate-react';
 import { Editor, Transforms } from 'slate';
 
 import {
@@ -62,8 +57,6 @@ export const ComponentBlocksElement = ({
   element: __elementToGetPath,
 }: RenderElementProps & { element: { type: 'component-block' } }) => {
   const editor = useStaticEditor();
-  const focused = useFocused();
-  const selected = useSelected();
   const [currentElement, setElement] = useElementWithSetNodes(
     editor,
     __elementToGetPath
@@ -148,7 +141,6 @@ Content:`}
       attributes={attributes}
       renderedBlock={renderedBlock}
       componentBlock={componentBlock}
-      isOpen={focused && selected}
       onRemove={onRemove}
       previewProps={toolbarPreviewProps}
     />
