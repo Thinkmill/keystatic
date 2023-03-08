@@ -111,6 +111,12 @@ export function useActionButtonStyles(
                 tokenSchema.color.alias.backgroundSelectedHovered,
             },
           },
+          '&:disabled, &[aria-disabled=true], &[data-disabled=true]': {
+            backgroundColor: tokenSchema.color.alias.backgroundDisabled,
+            borderColor: 'transparent',
+            boxShadow: 'none',
+            color: tokenSchema.color.alias.foregroundDisabled,
+          },
         },
 
         // prominence: low
@@ -129,23 +135,18 @@ export function useActionButtonStyles(
           // states
           '&[data-selected]': {
             backgroundColor: tokenSchema.color.alias.backgroundSelected,
-            borderColor: tokenSchema.color.alias.borderIdle,
-            color: tokenSchema.color.foreground.neutralEmphasis,
+            color: tokenSchema.color.alias.foregroundSelected,
 
             '&[data-interaction=hover]': {
               backgroundColor:
                 tokenSchema.color.alias.backgroundSelectedHovered,
-              borderColor: tokenSchema.color.alias.borderHovered,
             },
           },
-        },
-
-        // STATES
-        '&:disabled, &[aria-disabled=true], &[data-disabled=true]': {
-          backgroundColor: tokenSchema.color.alias.backgroundDisabled,
-          borderColor: 'transparent',
-          boxShadow: 'none',
-          color: tokenSchema.color.alias.foregroundDisabled,
+          '&:disabled, &[aria-disabled=true], &[data-disabled=true]': {
+            borderColor: 'transparent',
+            boxShadow: 'none',
+            color: tokenSchema.color.alias.foregroundDisabled,
+          },
         },
       }),
       styleProps.className
