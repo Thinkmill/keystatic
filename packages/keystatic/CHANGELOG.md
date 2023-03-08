@@ -4,7 +4,10 @@
 
 ### Patch Changes
 
-- 21a687a: document editor: image and link dialogs
+- 21a687a: Document editor:
+  - Move `image` block details (filename and alt text) into a modal dialog,
+    which can be invoked from an actions popover.
+  - Give the `link` block a similar treatment.
 
 ## 0.0.58
 
