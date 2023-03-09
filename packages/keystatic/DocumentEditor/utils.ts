@@ -69,7 +69,7 @@ export function moveChildren(
   editor: Editor,
   parent: NodeEntry | Path,
   to: Path,
-  shouldMoveNode: (node: Node) => boolean = () => true
+  shouldMoveNode: (node: Node, index: number) => boolean = () => true
 ) {
   const parentPath = Path.isPath(parent) ? parent : parent[1];
   const parentNode = Path.isPath(parent)
@@ -78,7 +78,7 @@ export function moveChildren(
   if (!isBlock(parentNode)) return;
 
   for (let i = parentNode.children.length - 1; i >= 0; i--) {
-    if (shouldMoveNode(parentNode.children[i])) {
+    if (shouldMoveNode(parentNode.children[i], i)) {
       const childPath = [...parentPath, i];
       Transforms.moveNodes(editor, { at: childPath, to });
     }

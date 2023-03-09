@@ -15,6 +15,7 @@ import {
   TableBodyElement,
   TableCellElement,
   TableElement,
+  TableHeadElement,
   TableRowElement,
 } from './table';
 
@@ -92,6 +93,14 @@ export const renderElement = (props: RenderElementProps) => {
     case 'table':
       return (
         <TableElement
+          attributes={props.attributes}
+          children={props.children}
+          element={props.element}
+        />
+      );
+    case 'table-head':
+      return (
+        <TableHeadElement
           attributes={props.attributes}
           children={props.children}
           element={props.element}

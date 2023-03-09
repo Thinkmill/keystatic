@@ -20,12 +20,13 @@ import { Text } from '@voussoir/typography';
 
 import { useToolbarState } from './toolbar-state';
 import { css, tokenSchema } from '@voussoir/style';
-import { nodeTypeMatcher, useStaticEditor } from './utils';
+import { moveChildren, nodeTypeMatcher, useStaticEditor } from './utils';
 import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
 import { Item, Menu, MenuTrigger } from '@voussoir/menu';
 
-const cell = () => ({
+const cell = (header: boolean) => ({
   type: 'table-cell' as const,
+  ...(header ? { header: true as const } : {}),
   children: [{ type: 'paragraph' as const, children: [{ text: '' }] }],
 });
 
@@ -34,11 +35,22 @@ export const insertTable = (editor: Editor) => {
     type: 'table',
     children: [
       {
+        type: 'table-head',
+        children: [
+          { type: 'table-row', children: [cell(true), cell(true), cell(true)] },
+        ],
+      },
+      {
         type: 'table-body',
         children: [
-          { type: 'table-row', children: [cell(), cell(), cell()] },
-          { type: 'table-row', children: [cell(), cell(), cell()] },
-          { type: 'table-row', children: [cell(), cell(), cell()] },
+          {
+            type: 'table-row',
+            children: [cell(false), cell(false), cell(false)],
+          },
+          {
+            type: 'table-row',
+            children: [cell(false), cell(false), cell(false)],
+          },
         ],
       },
     ],
@@ -53,6 +65,14 @@ function cloneDescendant(node: Descendant): Descendant {
   };
 }
 
+function getRelativeRowPath(hasHead: boolean, rowIndex: number): Path {
+  return hasHead
+    ? rowIndex === 0
+      ? [0, 0]
+      : [1, rowIndex - 1]
+    : [0, rowIndex];
+}
+
 export function withTable(editor: Editor): Editor {
   const { deleteFragment, normalizeNode, getFragment, insertFragment } = editor;
   editor.insertFragment = fragment => {
@@ -60,29 +80,41 @@ export function withTable(editor: Editor): Editor {
     if (
       !selectedTableArea ||
       fragment.length !== 1 ||
-      fragment[0].type !== 'table' ||
-      fragment[0].children[0].type !== 'table-body' ||
-      selectedTableArea.table.children[0].type !== 'table-body'
+      fragment[0].type !== 'table'
     ) {
       insertFragment(fragment);
       return;
     }
-    const newRows = fragment[0].children[0].children;
-    let { row, column, tablePath } = selectedTableArea;
-    const existingBody = selectedTableArea.table.children[0];
+    const newRows = fragment[0].children.flatMap(child =>
+      child.type === 'table-head' || child.type === 'table-body'
+        ? child.children
+        : []
+    );
+    if (!newRows.every(nodeTypeMatcher('table-row'))) {
+      insertFragment(fragment);
+      return;
+    }
+
+    let { row, column, tablePath, table } = selectedTableArea;
+    const existingBody =
+      selectedTableArea.table.children[
+        selectedTableArea.table.children.length === 1 ? 0 : 1
+      ];
     if (
       newRows[0].type !== 'table-row' ||
+      existingBody.type !== 'table-body' ||
       existingBody.children[0].type !== 'table-row'
     ) {
       insertFragment(fragment);
       return;
     }
+    const hasHead = table.children[0].type === 'table-head';
     if (selectedTableArea.singleCell !== 'many') {
       row = {
         start: row.start,
         end: Math.min(
           row.start + newRows.length - 1,
-          existingBody.children.length - 1
+          existingBody.children.length - 1 + (hasHead ? 1 : 0)
         ),
       };
       column = {
@@ -95,25 +127,25 @@ export function withTable(editor: Editor): Editor {
     }
     Editor.withoutNormalizing(editor, () => {
       for (let rowIndex = row.start; rowIndex <= row.end; rowIndex++) {
-        const existingRow = existingBody.children[rowIndex];
         const newRow = newRows[(rowIndex - row.start) % newRows.length];
-        if (!Element.isElement(existingRow) || !Element.isElement(newRow)) {
-          continue;
-        }
         for (
           let cellIndex = column.start;
           cellIndex <= column.end;
           cellIndex++
         ) {
-          const cell = existingRow.children[cellIndex];
+          const relativeCellPath = [
+            ...getRelativeRowPath(hasHead, rowIndex),
+            cellIndex,
+          ];
+          const cell = Node.get(table, relativeCellPath);
           const newCell =
             newRow.children[
               (cellIndex - column.start) % newRow.children.length
             ];
-          if (!Element.isElement(cell) || !Element.isAncestor(newCell)) {
+          if (cell.type !== 'table-cell' || newCell.type !== 'table-cell') {
             continue;
           }
-          const cellPath = [...tablePath, 0, rowIndex, cellIndex];
+          const cellPath = [...tablePath, ...relativeCellPath];
           for (const childIdx of [...cell.children.keys()].reverse()) {
             Transforms.removeNodes(editor, {
               at: [...cellPath, childIdx],
@@ -129,43 +161,74 @@ export function withTable(editor: Editor): Editor {
       Transforms.setSelection(editor, {
         anchor: Editor.start(editor, [
           ...tablePath,
-          0,
-          row.start,
+          ...getRelativeRowPath(hasHead, row.start),
           column.start,
         ]),
-        focus: Editor.end(editor, [...tablePath, 0, row.end, column.end]),
+        focus: Editor.end(editor, [
+          ...tablePath,
+          ...getRelativeRowPath(hasHead, row.end),
+          column.end,
+        ]),
       });
     });
   };
   editor.getFragment = () => {
     const selectedTableArea = getSelectedTableArea(editor);
-    if (
-      selectedTableArea &&
-      selectedTableArea.singleCell !== 'not-selected' &&
-      selectedTableArea.table.children[0].type === 'table-body'
-    ) {
-      const tableBody = selectedTableArea.table.children[0];
+    if (selectedTableArea && selectedTableArea.singleCell !== 'not-selected') {
+      const { table } = selectedTableArea;
+      const first =
+        table.children[0].type === 'table-head' ||
+        table.children[0].type === 'table-body'
+          ? table.children[0]
+          : undefined;
+      if (!first) return getFragment();
+      const second =
+        table.children[1]?.type === 'table-body'
+          ? table.children[1]
+          : undefined;
+      const body = second || first;
+      const hasHead = first.type === 'table-head';
+      const isSelectionInHead = selectedTableArea.row.start === 0 && !!second;
+      const columnLength =
+        selectedTableArea.column.end - selectedTableArea.column.start + 1;
       return [
         {
           type: 'table',
           children: [
+            ...(isSelectionInHead
+              ? [
+                  {
+                    type: 'table-head' as const,
+                    children: [
+                      {
+                        type: 'table-row' as const,
+                        children: Array.from({ length: columnLength }).map(
+                          (_, columnIndex) =>
+                            (first.children[0] as Element).children[
+                              columnIndex + selectedTableArea.column.start
+                            ]
+                        ),
+                      },
+                    ],
+                  },
+                ]
+              : []),
             {
               type: 'table-body',
               children: Array.from({
                 length:
-                  selectedTableArea.row.end - selectedTableArea.row.start + 1,
+                  selectedTableArea.row.end -
+                  selectedTableArea.row.start +
+                  (isSelectionInHead ? 0 : 1),
               }).map((_, rowIndex) => ({
                 type: 'table-row',
-                children: Array.from({
-                  length:
-                    selectedTableArea.column.end -
-                    selectedTableArea.column.start +
-                    1,
-                }).map(
+                children: Array.from({ length: columnLength }).map(
                   (_, columnIndex) =>
                     (
-                      tableBody.children[
-                        rowIndex + selectedTableArea.row.start
+                      body.children[
+                        rowIndex +
+                          selectedTableArea.row.start -
+                          (hasHead && !isSelectionInHead ? 1 : 0)
                       ] as Element
                     ).children[columnIndex + selectedTableArea.column.start]
                 ),
@@ -187,18 +250,29 @@ export function withTable(editor: Editor): Editor {
       deleteFragment(direction);
       return;
     }
-    const body = selectedTableArea.table.children[0];
-    if (!Element.isElement(body) || !Element.isElement(body.children[0])) {
+    const headOrBody = selectedTableArea.table.children[0];
+    if (
+      !Element.isElement(headOrBody) ||
+      !Element.isElement(headOrBody.children[0])
+    ) {
       deleteFragment(direction);
       return;
     }
+    const maxRowIdx = selectedTableArea.table.children.reduce(
+      (sum, headOrBody) =>
+        sum +
+        (headOrBody.type === 'table-head' || headOrBody.type === 'table-body'
+          ? headOrBody.children.length - 1
+          : 0),
+      0
+    );
     const { row, column, tablePath } = selectedTableArea;
     // note the fact that hasWholeColumnSelected uses row and hasWholeRowSelected uses column
     // is not a mistake. if a whole column has been selected, then the starting row is 0 and the end is the last row
-    const hasWholeColumnSelected =
-      row.start === 0 && row.end === body.children.length - 1;
+    const hasWholeColumnSelected = row.start === 0 && row.end === maxRowIdx;
     const hasWholeRowSelected =
-      column.start === 0 && column.end === body.children[0].children.length - 1;
+      column.start === 0 &&
+      column.end === headOrBody.children[0].children.length - 1;
     if (hasWholeColumnSelected && hasWholeRowSelected) {
       Transforms.removeNodes(editor, { at: tablePath });
       return;
@@ -214,13 +288,14 @@ export function withTable(editor: Editor): Editor {
       });
       return;
     }
+    const hasHead = headOrBody.type === 'table-head';
 
     if (hasWholeColumnSelected) {
       Editor.withoutNormalizing(editor, () => {
         for (let i = column.end; i >= column.start; i--) {
-          for (const rowIdx of [...body.children.keys()].reverse()) {
+          for (let rowIdx = 0; rowIdx <= maxRowIdx; rowIdx++) {
             Transforms.removeNodes(editor, {
-              at: [...tablePath, 0, rowIdx, i],
+              at: [...tablePath, ...getRelativeRowPath(hasHead, rowIdx), i],
             });
           }
         }
@@ -236,30 +311,28 @@ export function withTable(editor: Editor): Editor {
     const selectionStart = Editor.start(editor, editor.selection).path;
     Editor.withoutNormalizing(editor, () => {
       for (let rowIndex = row.start; rowIndex <= row.end; rowIndex++) {
-        const row = body.children[rowIndex];
-        if (!Element.isElement(row)) continue;
         for (
           let cellIndex = column.start;
           cellIndex <= column.end;
           cellIndex++
         ) {
-          const cell = row.children[cellIndex];
+          const relativeCellPath = [
+            ...getRelativeRowPath(hasHead, rowIndex),
+            cellIndex,
+          ];
+          const cell = Node.get(selectedTableArea.table, relativeCellPath);
           if (!Element.isElement(cell)) continue;
+
+          const cellPath = [...tablePath, ...relativeCellPath];
 
           Transforms.insertNodes(
             editor,
             { type: 'paragraph', children: [{ text: '' }] },
-            { at: [...selectedTableArea.tablePath, 0, rowIndex, cellIndex, 0] }
+            { at: [...cellPath, 0] }
           );
           for (const childIdx of [...cell.children.keys()].reverse()) {
             Transforms.removeNodes(editor, {
-              at: [
-                ...selectedTableArea.tablePath,
-                0,
-                rowIndex,
-                cellIndex,
-                childIdx + 1,
-              ],
+              at: [...cellPath, childIdx + 1],
             });
           }
         }
@@ -269,16 +342,52 @@ export function withTable(editor: Editor): Editor {
   };
   editor.normalizeNode = entry => {
     const [node, path] = entry;
+    if (node.type === 'table-head' && node.children.length > 1) {
+      moveChildren(editor, path, Path.next(path), (_, i) => i !== 0);
+      return;
+    }
+    let didUpdateThings = false;
+    for (const parent of ['table-body', 'table-head'] as const) {
+      if (node.type === parent) {
+        for (const [rowIdx, row] of node.children.entries()) {
+          if (row.type === 'table-row') {
+            for (const [cellIdx, cell] of row.children.entries()) {
+              if (cell.type === 'table-cell') {
+                const at = [...path, rowIdx, cellIdx];
+                if (cell.header && parent === 'table-body') {
+                  Transforms.unsetNodes(editor, 'header', { at });
+                  didUpdateThings = true;
+                }
+                if (!cell.header && parent === 'table-head') {
+                  Transforms.setNodes(editor, { header: true }, { at });
+                  didUpdateThings = true;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    if (didUpdateThings) {
+      return;
+    }
     if (node.type === 'table') {
+      const maxRowCount = node.children.reduce(
+        (max, node) =>
+          node.type === 'table-head' || node.type === 'table-body'
+            ? node.children.reduce(
+                (max, node) =>
+                  node.type === 'table-row'
+                    ? Math.max(max, node.children.length)
+                    : max,
+                max
+              )
+            : max,
+        0
+      );
+      let didInsert = false;
       for (const [idx, child] of node.children.entries()) {
-        if (child.type === 'table-body') {
-          const maxRowCount = child.children.reduce(
-            (max, node) =>
-              node.type === 'table-row'
-                ? Math.max(max, node.children.length)
-                : max,
-            0
-          );
+        if (child.type === 'table-body' || child.type === 'table-head') {
           for (const [rowIdx, row] of child.children.entries()) {
             if (
               row.type === 'table-row' &&
@@ -286,14 +395,54 @@ export function withTable(editor: Editor): Editor {
             ) {
               Transforms.insertNodes(
                 editor,
-                Array.from({ length: maxRowCount - row.children.length }).map(
-                  cell
+                Array.from({ length: maxRowCount - row.children.length }, () =>
+                  cell(child.type === 'table-head')
                 ),
                 { at: [...path, idx, rowIdx, row.children.length] }
               );
+              didInsert = true;
             }
           }
         }
+      }
+      if (didInsert) {
+        return;
+      }
+      if (
+        node.children.length === 1 &&
+        node.children[0].type === 'table-head'
+      ) {
+        Transforms.insertNodes(
+          editor,
+          {
+            type: 'table-body',
+            children: Array.from(
+              { length: node.children[0].children.length },
+              () => cell(false)
+            ),
+          },
+          { at: [...path, 1] }
+        );
+        return;
+      }
+      if (
+        node.children.length === 2 &&
+        node.children[1].type === 'table-head'
+      ) {
+        Transforms.moveNodes(editor, {
+          at: [...path, 1],
+          to: [...path, 0],
+        });
+        return;
+      }
+      if (node.children.length > 2) {
+        moveChildren(
+          editor,
+          path,
+          Path.next(path),
+          (_, i) => i !== 0 && i !== 1
+        );
+        return;
       }
     }
     normalizeNode(entry);
@@ -315,13 +464,25 @@ function order(a: number, b: number) {
 }
 
 function getSelectedCells(
-  tableBody: Element,
+  table: Element & { type: 'table' },
   row: { start: number; end: number },
   column: { start: number; end: number }
 ) {
   const selectedCells = new Set<Descendant>();
+  const first =
+    table.children[0].type === 'table-head' ||
+    table.children[0].type === 'table-body'
+      ? table.children[0]
+      : undefined;
+  if (!first) return selectedCells;
+  const second =
+    table.children[1]?.type === 'table-body' ? table.children[1] : undefined;
   for (let rowIndex = row.start; rowIndex <= row.end; rowIndex++) {
-    const row = tableBody.children[rowIndex];
+    const row = second
+      ? rowIndex === 0
+        ? first.children[0]
+        : second.children[rowIndex - 1]
+      : first.children[rowIndex];
     if (!Element.isElement(row)) continue;
     for (let cellIndex = column.start; cellIndex <= column.end; cellIndex++) {
       selectedCells.add(row.children[cellIndex]);
@@ -361,7 +522,10 @@ function getSelectedTableArea(editor: Editor) {
           ? ('selected' as const)
           : ('not-selected' as const)
         : ('many' as const),
-      row: order(anchor[anchor.length - 2], focus[focus.length - 2]),
+      row: order(
+        anchor[anchor.length - 2] + anchor[anchor.length - 3],
+        focus[focus.length - 2] + focus[anchor.length - 3]
+      ),
       column: order(anchor[anchor.length - 1], focus[focus.length - 1]),
     };
   }
@@ -370,10 +534,7 @@ function getSelectedTableArea(editor: Editor) {
 export function TableSelectionProvider(props: { children: React.ReactNode }) {
   const editor = useSlate();
   const selectedTableArea = getSelectedTableArea(editor);
-  if (
-    selectedTableArea &&
-    selectedTableArea.table.children[0].type === 'table-body'
-  ) {
+  if (selectedTableArea) {
     return (
       <SelectedCellsContext.Provider
         value={{
@@ -381,7 +542,7 @@ export function TableSelectionProvider(props: { children: React.ReactNode }) {
             selectedTableArea.singleCell === 'not-selected'
               ? new Set()
               : getSelectedCells(
-                  selectedTableArea.table.children[0],
+                  selectedTableArea.table,
                   selectedTableArea.row,
                   selectedTableArea.column
                 ),
@@ -420,31 +581,46 @@ export const TableElement = ({
   const startElements = useMemo((): ContextType<
     typeof StartElementsContext
   > => {
-    const body = element.children[0];
-    if (!Element.isElement(body) || !Element.isElement(body.children[0])) {
+    const firstTableChild = element.children[0];
+    if (
+      !Element.isElement(firstTableChild) ||
+      !Element.isElement(firstTableChild.children[0])
+    ) {
       return { top: new Map(), left: new Map() };
     }
     const top = new Map<Element, boolean>();
     const left = new Map<Element, boolean>();
-    for (const [idx, cell] of body.children[0].children.entries()) {
+    for (const [idx, cell] of firstTableChild.children[0].children.entries()) {
       if (cell.type !== 'table-cell') continue;
       top.set(
         cell,
-        body.children.every(
-          element =>
-            Element.isElement(element) &&
-            selectedCells?.cells.has(element.children[idx])
+        element.children.every(headOrBody =>
+          Element.isElement(headOrBody)
+            ? headOrBody.children.every(
+                row =>
+                  Element.isElement(row) &&
+                  selectedCells?.cells.has(row.children[idx])
+              )
+            : false
         )
       );
     }
-    for (const row of body.children) {
-      if (row.type !== 'table-row' || row.children[0].type !== 'table-cell') {
+    for (const headOrBody of element.children) {
+      if (
+        headOrBody.type !== 'table-head' &&
+        headOrBody.type !== 'table-body'
+      ) {
         continue;
       }
-      left.set(
-        row.children[0],
-        row.children.every(element => selectedCells?.cells.has(element))
-      );
+      for (const row of headOrBody.children) {
+        if (row.type !== 'table-row' || row.children[0].type !== 'table-cell') {
+          continue;
+        }
+        left.set(
+          row.children[0],
+          row.children.every(element => selectedCells?.cells.has(element))
+        );
+      }
     }
     return { top, left };
   }, [element, selectedCells]);
@@ -458,6 +634,8 @@ export const TableElement = ({
             position: 'relative',
             borderSpacing: 0,
             borderCollapse: 'collapse',
+            marginTop: 10,
+            marginLeft: 10,
           })}
           {...attributes}
         >
@@ -473,6 +651,13 @@ export const TableBodyElement = ({
   children,
 }: RenderElementProps) => {
   return <tbody {...attributes}>{children}</tbody>;
+};
+
+export const TableHeadElement = ({
+  attributes,
+  children,
+}: RenderElementProps) => {
+  return <thead {...attributes}>{children}</thead>;
 };
 
 export const TableRowElement = ({
@@ -494,18 +679,21 @@ export function TableCellElement({
   attributes,
   children,
   element,
-}: RenderElementProps) {
+}: RenderElementProps & { element: { type: 'table-cell' } }) {
   const editor = useStaticEditor();
   const selectedCellsContext = useContext(SelectedCellsContext);
   const startElements = useContext(StartElementsContext);
   const isSelected = selectedCellsContext?.cells.has(element);
   const size = `calc(100% + 2px)`;
+  const ElementType = element.header ? 'th' : 'td';
   return (
-    <td
+    <ElementType
       className={css({
         border: `1px solid ${tokenSchema.color.alias.borderIdle}`,
         backgroundColor: selectedCellsContext?.cells.has(element)
           ? tokenSchema.color.alias.backgroundSelected
+          : element.header
+          ? tokenSchema.color.scale.slate4
           : undefined,
         '& *::selection': selectedCellsContext?.cells.size
           ? { backgroundColor: 'transparent' }
@@ -575,12 +763,15 @@ export function TableCellElement({
               match: nodeTypeMatcher('table'),
               at: path,
             });
-            if (!table || !Element.isElement(table[0].children[0])) return;
+            if (!table) return;
+            const lastTableIndex = table[0].children.length - 1;
+            const tableBody = table[0].children[lastTableIndex];
+            if (tableBody.type !== 'table-body') return;
             const cellIndex = path[path.length - 1];
             const endPath = [
               ...table[1],
-              0,
-              table[0].children[0].children.length - 1,
+              table[0].children.length - 1,
+              tableBody.children.length - 1,
               cellIndex,
             ];
             Transforms.select(editor, {
@@ -627,9 +818,11 @@ export function TableCellElement({
           }}
         />
       )}
-      {selectedCellsContext?.focus === element && <CellMenu cell={element} />}
+      {selectedCellsContext?.focus === element && (
+        <CellMenu cell={element} table={selectedCellsContext.table} />
+      )}
       {children}
-    </td>
+    </ElementType>
   );
 }
 
@@ -750,24 +943,29 @@ export const cellActions = {
         return;
       }
       const newRowPath = [...path.slice(0, -2), path[path.length - 2] + 1];
-      Transforms.insertNodes(
-        editor,
-        { type: 'table-row', children: tableRow.children.map(() => cell()) },
-        { at: newRowPath }
-      );
-      Transforms.select(editor, [...newRowPath, path[path.length - 1]]);
+      Editor.withoutNormalizing(editor, () => {
+        Transforms.insertNodes(
+          editor,
+          {
+            type: 'table-row',
+            children: tableRow.children.map(() => cell(false)),
+          },
+          { at: newRowPath }
+        );
+        Transforms.select(editor, [...newRowPath, path[path.length - 1]]);
+      });
     },
   },
   insertColumnRight: {
     label: 'Insert column right',
     action: (editor, path) => {
       const newCellIndex = path[path.length - 1] + 1;
-      const tableBodyPath = path.slice(0, -2);
+      const tableBodyPath = path.slice(0, -3);
       const tableBody = Node.get(editor, tableBodyPath);
       if (tableBody.type !== 'table-body') return;
       Editor.withoutNormalizing(editor, () => {
         for (const idx of tableBody.children.keys()) {
-          Transforms.insertNodes(editor, cell(), {
+          Transforms.insertNodes(editor, cell(false), {
             at: [...tableBodyPath, idx, newCellIndex],
           });
         }
@@ -776,6 +974,33 @@ export const cellActions = {
           path[path.length - 2],
           newCellIndex,
         ]);
+      });
+    },
+  },
+  headerRow: {
+    label: 'Header row',
+    action: (editor, path) => {
+      const tablePath = path.slice(0, -3);
+      const table = Node.get(editor, tablePath);
+      if (table.type !== 'table') return;
+      Editor.withoutNormalizing(editor, () => {
+        if (table.children[0].type === 'table-head') {
+          Transforms.moveNodes(editor, {
+            at: [...tablePath, 0, 0],
+            to: [...tablePath, 1, 0],
+          });
+          Transforms.removeNodes(editor, { at: [...tablePath, 0] });
+          return;
+        }
+        Transforms.insertNodes(
+          editor,
+          { type: 'table-head', children: [] },
+          { at: [...tablePath, 0] }
+        );
+        Transforms.moveNodes(editor, {
+          at: [...tablePath, 1, 0],
+          to: [...tablePath, 0, 0],
+        });
       });
     },
   },
@@ -789,7 +1014,10 @@ const _cellActions: Record<
   { label: string; action: (editor: Editor, cellPath: Path) => void }
 > = cellActions;
 
-function CellMenu(props: { cell: Element }) {
+function CellMenu(props: {
+  cell: Element;
+  table: Element & { type: 'table' };
+}) {
   const editor = useStaticEditor();
   return (
     <div contentEditable={false}>
@@ -818,6 +1046,10 @@ function CellMenu(props: { cell: Element }) {
               ...item,
               key,
             }))}
+            selectionMode="single"
+            selectedKeys={
+              props.table.children[0].type === 'table-head' ? ['headerRow'] : []
+            }
           >
             {item => <Item key={item.key}>{item.label}</Item>}
           </Menu>

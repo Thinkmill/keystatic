@@ -605,7 +605,7 @@ export const editorSchema = satisfies<
   image: inlineContainer({ invalidPositionHandleMode: 'move' }),
   table: blockContainer({
     invalidPositionHandleMode: 'move',
-    allowedChildren: ['table-body'],
+    allowedChildren: ['table-head', 'table-body'],
   }),
   'table-body': blockContainer({
     invalidPositionHandleMode: 'move',
@@ -618,6 +618,10 @@ export const editorSchema = satisfies<
   'table-cell': blockContainer({
     invalidPositionHandleMode: 'move',
     allowedChildren: tableCellChildren,
+  }),
+  'table-head': blockContainer({
+    invalidPositionHandleMode: 'move',
+    allowedChildren: ['table-row'],
   }),
 });
 
