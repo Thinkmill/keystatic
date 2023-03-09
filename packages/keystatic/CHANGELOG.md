@@ -1,5 +1,15 @@
 # @keystatic/core
 
+## 0.0.61
+
+### Patch Changes
+
+- 0f71625: Add `description` to
+  `fields.{array,checkbox,date,document,image,integer,multiselect,select,pathReference,relationship}`.
+  (previously it was only on `fields.{text,slug}`)
+- 0f71625: Fix incorrectly attempting to get a GitHub token when using local
+  mode
+
 ## 0.0.60
 
 ### Patch Changes
