@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.63
+
+### Patch Changes
+
+- c8c4c49: Fix integer field validation
+
 ## 0.0.62
 
 ### Patch Changes
