@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.62
+
+### Patch Changes
+
+- 145460a: Fix decoding url encoded strings in the API route
+
 ## 0.0.61
 
 ### Patch Changes
