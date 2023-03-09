@@ -22,8 +22,11 @@ import {
 } from 'slate';
 import { Editable, ReactEditor, Slate, useSlate, withReact } from 'slate-react';
 import { withHistory } from 'slate-history';
-
 import { EditableProps } from 'slate-react/dist/components/editable';
+
+import { Box } from '@voussoir/layout';
+import { classNames, css, tokenSchema } from '@voussoir/style';
+
 import { DocumentFeatures } from './document-features';
 import { ComponentBlock } from './component-blocks/api';
 import { withParagraphs } from './paragraphs';
@@ -48,8 +51,6 @@ import { ToolbarStateProvider } from './toolbar-state';
 import { withInsertMenu } from './insert-menu';
 import { withBlockMarkdownShortcuts } from './block-markdown-shortcuts';
 import { withPasting } from './pasting';
-import { classNames, css, tokenSchema } from '@voussoir/style';
-import { Box } from '@voussoir/layout';
 import { withImages } from './image';
 // the docs site needs access to Editor and importing slate would use the version from the content field
 // so we're exporting it from here (note that this is not at all visible in the published version)
@@ -247,7 +248,7 @@ export function DocumentEditor({
 
         <DocumentEditorEditable
           className={css({
-            paddingInline: tokenSchema.size.space.medium,
+            padding: tokenSchema.size.space.medium,
             height: 'auto',
             minWidth: 0,
           })}
@@ -473,6 +474,16 @@ while (listDepth--) {
 
 const editableStyles = css({
   ...styles,
+  'h1,h2,h3,h4,h5,h6,p,ol,ul': {
+    marginBlock: '1em',
+
+    '&:first-child': {
+      marginTop: 0,
+    },
+    '&:last-child': {
+      marginBottom: 0,
+    },
+  },
   a: {
     color: tokenSchema.color.foreground.accent,
   },

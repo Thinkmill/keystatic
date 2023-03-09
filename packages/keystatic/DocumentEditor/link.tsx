@@ -18,7 +18,7 @@ import { Heading, Text } from '@voussoir/typography';
 
 import l10nMessages from '../app/l10n/index.json';
 import { isInlineContainer } from '.';
-import { BlockPopoverTrigger } from './BlockPopoverTrigger';
+import { BlockPopover, BlockPopoverTrigger } from './primitives';
 import { DocumentFeatures } from './document-features';
 import { ComponentBlock } from './component-blocks/api';
 import {
@@ -100,42 +100,44 @@ export const LinkElement = ({
 
   return (
     <>
-      <BlockPopoverTrigger
-        isOpen={!dialogOpen && selected}
-        // placement="bottom start"
-      >
+      <BlockPopoverTrigger>
         <a href={href} {...attributes}>
           {children}
         </a>
 
-        <Flex gap="small" padding="regular" {...targetProps}>
-          <TooltipTrigger>
-            <ActionButton prominence="low" onPress={() => setDialogOpen(true)}>
-              <Icon src={editIcon} />
-            </ActionButton>
-            <Tooltip>{stringFormatter.format('edit')}</Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <ActionButton
-              prominence="low"
-              onPress={() => {
-                window.open(href, '_blank', 'noopener,noreferrer');
-              }}
-            >
-              <Icon src={externalLinkIcon} />
-            </ActionButton>
-            <Tooltip>
-              <Text truncate={3}>{href}</Text>
-            </Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <ActionButton prominence="low" onPress={unlink}>
-              <Icon src={unlinkIcon} />
-            </ActionButton>
-            {/* TODO: needs localization */}
-            <Tooltip>Unlink</Tooltip>
-          </TooltipTrigger>
-        </Flex>
+        <BlockPopover placement="bottom start">
+          <Flex gap="small" padding="regular" {...targetProps}>
+            <TooltipTrigger>
+              <ActionButton
+                prominence="low"
+                onPress={() => setDialogOpen(true)}
+              >
+                <Icon src={editIcon} />
+              </ActionButton>
+              <Tooltip>{stringFormatter.format('edit')}</Tooltip>
+            </TooltipTrigger>
+            <TooltipTrigger>
+              <ActionButton
+                prominence="low"
+                onPress={() => {
+                  window.open(href, '_blank', 'noopener,noreferrer');
+                }}
+              >
+                <Icon src={externalLinkIcon} />
+              </ActionButton>
+              <Tooltip>
+                <Text truncate={3}>{href}</Text>
+              </Tooltip>
+            </TooltipTrigger>
+            <TooltipTrigger>
+              <ActionButton prominence="low" onPress={unlink}>
+                <Icon src={unlinkIcon} />
+              </ActionButton>
+              {/* TODO: needs localization */}
+              <Tooltip>Unlink</Tooltip>
+            </TooltipTrigger>
+          </Flex>
+        </BlockPopover>
       </BlockPopoverTrigger>
       <DialogContainer
         onDismiss={() => {

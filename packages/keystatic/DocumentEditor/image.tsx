@@ -29,8 +29,12 @@ import {
   useSelectedOrFocusWithin,
   useStaticEditor,
 } from './utils';
-import { BlockPopoverTrigger } from './BlockPopoverTrigger';
-import { NotEditable } from '../src';
+import {
+  BlockPopover,
+  BlockPopoverTrigger,
+  BlockWrapper,
+  NotEditable,
+} from './primitives';
 
 export const ImageElement = ({
   attributes,
@@ -50,19 +54,12 @@ export const ImageElement = ({
 
   return (
     <>
-      <div
-        draggable="true"
-        className={css({ marginBlock: '1em' })} // treat as a block element, like a paragraph
-        {...attributes}
-      >
+      <BlockWrapper draggable attributes={attributes}>
         <BlockPopoverTrigger
-          hideArrow
-          isOpen={!dialogOpen && selected}
+          // isOpen={selected}
           key={aspectRatio} // Force the popover to re-render when the aspect ratio changes.
         >
-          <NotEditable
-            UNSAFE_style={{ display: 'inline-block', lineHeight: 1 }}
-          >
+          <NotEditable style={{ display: 'inline-block', lineHeight: 1 }}>
             <img
               src={objectUrl}
               alt={currentElement.alt}
@@ -73,67 +70,65 @@ export const ImageElement = ({
               }}
               className={css({
                 boxSizing: 'border-box',
-                borderColor: tokenSchema.color.alias.borderIdle,
                 borderRadius: tokenSchema.size.radius.regular,
-                borderStyle: 'solid',
-                borderWidth: tokenSchema.size.border.regular,
                 display: 'inline-block',
                 maxHeight: tokenSchema.size.alias.singleLineWidth,
                 maxWidth: '100%',
-                padding: tokenSchema.size.space.regular,
 
                 '&[data-selected=true]': {
-                  borderColor: tokenSchema.color.alias.borderSelected,
+                  boxShadow: `0 0 0 ${tokenSchema.size.border.regular} ${tokenSchema.color.alias.borderSelected}`,
                 },
               })}
             />
           </NotEditable>
 
-          <Flex gap="regular" padding="regular" {...targetProps}>
-            <Flex gap="small">
+          <BlockPopover hideArrow>
+            <Flex gap="regular" padding="regular" {...targetProps}>
+              <Flex gap="small">
+                <TooltipTrigger>
+                  <ActionButton
+                    prominence="low"
+                    onPress={() => setDialogOpen(true)}
+                  >
+                    <Icon src={editIcon} />
+                  </ActionButton>
+                  <Tooltip>{stringFormatter.format('edit')}</Tooltip>
+                </TooltipTrigger>
+                <TooltipTrigger>
+                  <ActionButton
+                    prominence="low"
+                    onPress={async () => {
+                      const src = await getUploadedImage();
+                      if (src) {
+                        setNode({ src });
+                      }
+                    }}
+                  >
+                    <Icon src={fileUpIcon} />
+                  </ActionButton>
+                  <Tooltip>Choose file</Tooltip>
+                </TooltipTrigger>
+              </Flex>
+              <Divider orientation="vertical" />
               <TooltipTrigger>
                 <ActionButton
                   prominence="low"
-                  onPress={() => setDialogOpen(true)}
-                >
-                  <Icon src={editIcon} />
-                </ActionButton>
-                <Tooltip>{stringFormatter.format('edit')}</Tooltip>
-              </TooltipTrigger>
-              <TooltipTrigger>
-                <ActionButton
-                  prominence="low"
-                  onPress={async () => {
-                    const src = await getUploadedImage();
-                    if (src) {
-                      setNode({ src });
-                    }
+                  onPress={() => {
+                    Transforms.removeNodes(editor, {
+                      at: ReactEditor.findPath(editor, __elementForGettingPath),
+                    });
                   }}
                 >
-                  <Icon src={fileUpIcon} />
+                  <Icon src={trash2Icon} />
                 </ActionButton>
-                <Tooltip>Choose file</Tooltip>
+                <Tooltip tone="critical">Remove</Tooltip>
               </TooltipTrigger>
             </Flex>
-            <Divider orientation="vertical" />
-            <TooltipTrigger>
-              <ActionButton
-                prominence="low"
-                onPress={() => {
-                  Transforms.removeNodes(editor, {
-                    at: ReactEditor.findPath(editor, __elementForGettingPath),
-                  });
-                }}
-              >
-                <Icon src={trash2Icon} />
-              </ActionButton>
-              <Tooltip tone="critical">Remove</Tooltip>
-            </TooltipTrigger>
-          </Flex>
+          </BlockPopover>
         </BlockPopoverTrigger>
 
         {children}
-      </div>
+      </BlockWrapper>
 
       <DialogContainer
         onDismiss={() => {
@@ -320,11 +315,3 @@ export function withImages(editor: Editor): Editor {
 
   return editor;
 }
-
-// schema: GraphQLSchema;
-// source: string | Source;
-// rootValue?: unknown;
-// contextValue?: unknown;
-// variableValues?: Maybe<{
-//   readonly [variable: string]: unknown;
-// }>;

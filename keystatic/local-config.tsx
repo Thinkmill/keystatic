@@ -41,6 +41,11 @@ export default config({
         content: fields.document({
           label: 'Content',
           formatting: true,
+          layouts: [
+            [1, 1],
+            [1, 2],
+            [1, 1, 1],
+          ], // TEMP
           dividers: true,
           links: true,
           images: {
@@ -295,6 +300,7 @@ function Note({
         padding: '1em',
 
         svg: {
+          flexShrink: 0,
           fill: 'none',
           stroke: 'currentColor',
           height: 20,
