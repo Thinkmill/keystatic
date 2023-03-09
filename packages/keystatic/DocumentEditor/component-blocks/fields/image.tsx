@@ -3,6 +3,7 @@ import { FieldLabel, FieldMessage } from '@voussoir/field';
 import { Flex, Box } from '@voussoir/layout';
 import { tokenSchema } from '@voussoir/style';
 import { TextField } from '@voussoir/text-field';
+import { Text } from '@voussoir/typography';
 import { useState, useEffect, useReducer } from 'react';
 import { useIsInDocumentEditor } from '../..';
 import { fixPath } from '../../../app/path-utils';
@@ -67,10 +68,12 @@ export function image<IsRequired extends boolean | undefined>({
   label,
   directory,
   validation,
+  description,
 }: {
   label: string;
   directory?: string;
   validation?: { isRequired?: IsRequired };
+  description?: string;
 } & RequiredValidation<IsRequired>): FormFieldWithFileNotRequiringContentsForReader<
   | {
       kind: 'uploaded';
@@ -93,7 +96,11 @@ export function image<IsRequired extends boolean | undefined>({
       return (
         <Flex direction="column" gap="medium">
           <FieldLabel>{label}</FieldLabel>
-
+          {description && (
+            <Text size="small" color="neutralSecondary">
+              {description}
+            </Text>
+          )}
           <ButtonGroup>
             <ActionButton
               onPress={async () => {
@@ -125,7 +132,6 @@ export function image<IsRequired extends boolean | undefined>({
               </ActionButton>
             )}
           </ButtonGroup>
-
           {objectUrl && (
             <Box
               alignSelf="start"

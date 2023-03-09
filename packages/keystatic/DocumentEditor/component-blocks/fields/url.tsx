@@ -23,10 +23,12 @@ export function url<IsRequired extends boolean | undefined>({
   label,
   defaultValue = '',
   validation,
+  description,
 }: {
   label: string;
   defaultValue?: string;
   validation?: { isRequired?: IsRequired };
+  description?: string;
 } & RequiredValidation<IsRequired>): BasicFormField<
   string | (IsRequired extends true ? never : null),
   undefined
@@ -40,6 +42,7 @@ export function url<IsRequired extends boolean | undefined>({
           width="initial"
           maxWidth={`calc(${tokenSchema.size.alias.singleLineWidth} * 3)`}
           label={label}
+          description={description}
           autoFocus={autoFocus}
           value={value === null ? '' : value}
           onChange={val => {
