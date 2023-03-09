@@ -1,8 +1,8 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { Node } from 'slate';
-import { cellActions } from './table';
+import { Node, Transforms } from 'slate';
+import { cellActions, insertTable } from './table';
 import { jsx, makeEditor } from './tests/utils';
 
 const table = (
@@ -286,6 +286,155 @@ test('clear cells with multiple children in cell', () => {
       [cell('1a'), cell('1b'), cell('1c')],
       [cell('2a'), cellWithCursor(''), cell('')],
       [cell('3a'), cell(''), cell('')]
+    )
+  );
+});
+
+test('insert table', () => {
+  const editor = makeEditor(
+    <editor>
+      <paragraph>
+        <text>
+          <cursor />
+        </text>
+      </paragraph>
+    </editor>
+  );
+  insertTable(editor);
+  expect(editor).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text />
+      </paragraph>
+      <table>
+        <table-head>
+          <table-row>
+            <table-cell
+              header={true}
+            >
+              <paragraph>
+                <text />
+              </paragraph>
+            </table-cell>
+            <table-cell
+              header={true}
+            >
+              <paragraph>
+                <text />
+              </paragraph>
+            </table-cell>
+            <table-cell
+              header={true}
+            >
+              <paragraph>
+                <text />
+              </paragraph>
+            </table-cell>
+          </table-row>
+        </table-head>
+        <table-body>
+          <table-row>
+            <table-cell>
+              <paragraph>
+                <text />
+              </paragraph>
+            </table-cell>
+            <table-cell>
+              <paragraph>
+                <text />
+              </paragraph>
+            </table-cell>
+            <table-cell>
+              <paragraph>
+                <text />
+              </paragraph>
+            </table-cell>
+          </table-row>
+          <table-row>
+            <table-cell>
+              <paragraph>
+                <text />
+              </paragraph>
+            </table-cell>
+            <table-cell>
+              <paragraph>
+                <text />
+              </paragraph>
+            </table-cell>
+            <table-cell>
+              <paragraph>
+                <text>
+                  <cursor />
+                </text>
+              </paragraph>
+            </table-cell>
+          </table-row>
+        </table-body>
+      </table>
+      <paragraph>
+        <text />
+      </paragraph>
+    </editor>
+  `);
+});
+
+test('copy paste with expanded selection', () => {
+  const editor = table(
+    [cell(''), cell(''), cell('1a'), cell('1b'), cell('1c')],
+    [cell(''), cell(''), cell('2a'), cellWithAnchor('2b'), cell('2c')],
+    [cell(''), cell(''), cell('3a'), cell('3b'), cellWithFocus('3c')]
+  );
+  const fragment = editor.getFragment();
+  Transforms.setSelection(editor, {
+    anchor: { path: [0, 0, 0, 0, 0, 0], offset: 0 },
+    focus: { path: [0, 0, 1, 1, 0, 0], offset: 0 },
+  });
+  editor.insertFragment(fragment);
+  expect(editor).toEqualEditor(
+    table(
+      [cellWithAnchor('2b'), cell('2c'), cell('1a'), cell('1b'), cell('1c')],
+      [
+        cell('3b'),
+        cell(
+          <text>
+            3c
+            <focus />
+          </text>
+        ),
+        cell('2a'),
+        cell('2b'),
+        cell('2c'),
+      ],
+      [cell(''), cell(''), cell('3a'), cell('3b'), cell('3c')]
+    )
+  );
+});
+
+test('copy paste with collapsed selection', () => {
+  const editor = table(
+    [cell(''), cell(''), cell('1a'), cell('1b'), cell('1c')],
+    [cell(''), cell(''), cell('2a'), cellWithAnchor('2b'), cell('2c')],
+    [cell(''), cell(''), cell('3a'), cell('3b'), cellWithFocus('3c')]
+  );
+  const fragment = editor.getFragment();
+  Transforms.select(editor, [0, 0, 0, 0, 0, 0]);
+  editor.insertFragment(fragment);
+  expect(editor).toEqualEditor(
+    table(
+      [cellWithAnchor('2b'), cell('2c'), cell('1a'), cell('1b'), cell('1c')],
+      [
+        cell('3b'),
+        cell(
+          <text>
+            3c
+            <focus />
+          </text>
+        ),
+        cell('2a'),
+        cell('2b'),
+        cell('2c'),
+      ],
+      [cell(''), cell(''), cell('3a'), cell('3b'), cell('3c')]
     )
   );
 });

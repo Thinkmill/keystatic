@@ -701,6 +701,8 @@ export function TableCellElement({
         position: 'relative',
         margin: 0,
         padding: 0,
+        fontWeight: 'inherit',
+        textAlign: 'start',
       })}
       {...attributes}
     >
@@ -960,20 +962,28 @@ export const cellActions = {
     label: 'Insert column right',
     action: (editor, path) => {
       const newCellIndex = path[path.length - 1] + 1;
-      const tableBodyPath = path.slice(0, -3);
-      const tableBody = Node.get(editor, tableBodyPath);
-      if (tableBody.type !== 'table-body') return;
+      const tablePath = path.slice(0, -3);
+      const table = Node.get(editor, tablePath);
+      if (table.type !== 'table') return;
       Editor.withoutNormalizing(editor, () => {
-        for (const idx of tableBody.children.keys()) {
-          Transforms.insertNodes(editor, cell(false), {
-            at: [...tableBodyPath, idx, newCellIndex],
-          });
+        for (const [headOrBodyIdx, headOrBody] of table.children.entries()) {
+          if (
+            headOrBody.type !== 'table-head' &&
+            headOrBody.type !== 'table-body'
+          ) {
+            continue;
+          }
+          for (const rowIdx of headOrBody.children.keys()) {
+            Transforms.insertNodes(
+              editor,
+              cell(headOrBody.type === 'table-head'),
+              {
+                at: [...tablePath, headOrBodyIdx, rowIdx, newCellIndex],
+              }
+            );
+          }
         }
-        Transforms.select(editor, [
-          ...tableBodyPath,
-          path[path.length - 2],
-          newCellIndex,
-        ]);
+        Transforms.select(editor, Editor.start(editor, Path.next(path)));
       });
     },
   },
