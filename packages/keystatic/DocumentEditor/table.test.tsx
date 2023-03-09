@@ -1,32 +1,52 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { Node, Transforms } from 'slate';
+import { Editor, Node, Transforms } from 'slate';
 import { cellActions, insertTable } from './table';
 import { jsx, makeEditor } from './tests/utils';
+import { nodeTypeMatcher } from './utils';
 
 const table = (
   options: Parameters<typeof makeEditor>[1] | Node[],
-  ...rows: Node[][]
-) =>
-  makeEditor(
+  ..._rows: Node[][]
+) => {
+  const rows = [...(Array.isArray(options) ? [options] : []), ..._rows];
+  let head: undefined | Node;
+  if (rows[0][0].type === 'table-cell' && rows[0][0].header) {
+    const row = rows.shift()!;
+    head = (
+      <table-head>
+        <table-row>{row}</table-row>
+      </table-head>
+    );
+  }
+  let body = (
+    <table-body>
+      {rows.map(row => (
+        <table-row>{row}</table-row>
+      ))}
+    </table-body>
+  );
+  return makeEditor(
     <editor>
-      <table>
-        <table-body>
-          {[...(Array.isArray(options) ? [options] : []), ...rows].map(row => (
-            <table-row>{row}</table-row>
-          ))}
-        </table-body>
-      </table>
+      {head ? (
+        <table>
+          {head}
+          {body}
+        </table>
+      ) : (
+        <table>{body}</table>
+      )}
       <paragraph>
         <text />
       </paragraph>
     </editor>,
     Array.isArray(options) ? undefined : options
   );
+};
 
-const cell = (content: string | Node) => (
-  <table-cell>
+const cell = (content: string | Node, header?: true) => (
+  <table-cell header={header}>
     <paragraph>
       {typeof content === 'string' ? <text>{content}</text> : content}
     </paragraph>
@@ -57,6 +77,32 @@ const cellWithFocus = (content: string) =>
     </text>
   );
 
+const header = (content: string | Node) => cell(content, true);
+
+const headerWithCursor = (content: string) =>
+  header(
+    <text>
+      <cursor />
+      {content}
+    </text>
+  );
+
+const headerWithAnchor = (content: string) =>
+  header(
+    <text>
+      <anchor />
+      {content}
+    </text>
+  );
+
+const headerWithFocus = (content: string) =>
+  header(
+    <text>
+      <focus />
+      {content}
+    </text>
+  );
+
 test('delete at start does nothing', () => {
   let editor = table([cellWithCursor('some content')]);
   const initialEditor = makeEditor(editor);
@@ -64,8 +110,12 @@ test('delete at start does nothing', () => {
   expect(editor).toEqualEditor(initialEditor);
 });
 
-// eslint-disable-next-line jest/no-disabled-tests
-test.skip('delete in second cell does nothing', () => {
+const cellPathAtCursor = (editor: Editor) =>
+  Editor.above(editor, {
+    match: nodeTypeMatcher('table-cell'),
+  })![1];
+
+test('delete in second cell does nothing', () => {
   let editor = table([cell('1a'), cellWithCursor('1b')]);
   const initialEditor = makeEditor(editor);
   editor.deleteBackward('character');
@@ -74,27 +124,56 @@ test.skip('delete in second cell does nothing', () => {
 
 test('insert row below', () => {
   let editor = table([cell('1a'), cellWithCursor('1b')]);
-  cellActions.insertRowBelow.action(editor, [0, 0, 0, 0]);
+  cellActions.insertRowBelow.action(editor, cellPathAtCursor(editor));
   expect(editor).toEqualEditor(
-    table([cell('1a'), cell('1b')], [cellWithCursor(''), cell('')])
+    table([cell('1a'), cell('1b')], [cell(''), cellWithCursor('')])
+  );
+});
+
+test('insert row below header', () => {
+  let editor = table(
+    [header('1a'), headerWithCursor('1b')],
+    [cell('2a'), cell('2b')]
+  );
+  cellActions.insertRowBelow.action(editor, cellPathAtCursor(editor));
+  expect(editor).toEqualEditor(
+    table(
+      [header('1a'), header('1b')],
+      [cell(''), cellWithCursor('')],
+      [cell('2a'), cell('2b')]
+    )
+  );
+});
+
+test('insert column with header', () => {
+  let editor = table(
+    [header('1a'), headerWithCursor('1b')],
+    [cell('2a'), cell('2b')]
+  );
+  cellActions.insertColumnRight.action(editor, cellPathAtCursor(editor));
+  expect(editor).toEqualEditor(
+    table(
+      [header('1a'), header('1b'), headerWithCursor('')],
+      [cell('2a'), cell('2b'), cell('')]
+    )
   );
 });
 
 test('insert column right', () => {
   let editor = table([cell('1a'), cellWithCursor('1b')]);
-  cellActions.insertColumnRight.action(editor, [0, 0, 0, 0]);
+  cellActions.insertColumnRight.action(editor, cellPathAtCursor(editor));
   expect(editor).toEqualEditor(
-    table([cell('1a'), cellWithCursor(''), cell('1b')])
+    table([cell('1a'), cell('1b'), cellWithCursor('')])
   );
 });
 test('insert column and row', () => {
   let editor = table([cell('1a'), cellWithCursor('1b')]);
-  cellActions.insertRowBelow.action(editor, [0, 0, 0, 0]);
-  cellActions.insertColumnRight.action(editor, [0, 0, 0, 0]);
+  cellActions.insertRowBelow.action(editor, cellPathAtCursor(editor));
+  cellActions.insertColumnRight.action(editor, cellPathAtCursor(editor));
   expect(editor).toEqualEditor(
     table(
-      [cell('1a'), cellWithCursor(''), cell('1b')],
-      [cell(''), cell(''), cell('')]
+      [cell('1a'), cell('1b'), cell('')],
+      [cell(''), cell(''), cellWithCursor('')]
     )
   );
 });
@@ -105,11 +184,11 @@ test('delete row', () => {
     [cell('2a'), cell('2b'), cell('2c')],
     [cell('3a'), cell('3b'), cell('3c')]
   );
-  cellActions.deleteRow.action(editor, [0, 0, 2, 1]);
+  cellActions.deleteRow.action(editor, cellPathAtCursor(editor));
   expect(editor).toEqualEditor(
     table(
-      [cell('1a'), cellWithCursor('1b'), cell('1c')],
-      [cell('2a'), cell('2b'), cell('2c')]
+      [cellWithCursor('2a'), cell('2b'), cell('2c')],
+      [cell('3a'), cell('3b'), cell('3c')]
     )
   );
 });
@@ -120,10 +199,56 @@ test('delete column', () => {
     [cell('2a'), cell('2b'), cell('2c')],
     [cell('3a'), cell('3b'), cell('3c')]
   );
-  cellActions.deleteColumn.action(editor, [0, 0, 2, 1]);
+  cellActions.deleteColumn.action(editor, cellPathAtCursor(editor));
   expect(editor).toEqualEditor(
     table(
       [cell('1a'), cellWithCursor('1c')],
+      [cell('2a'), cell('2c')],
+      [cell('3a'), cell('3c')]
+    )
+  );
+});
+
+test('delete header row', () => {
+  const editor = table(
+    [header('1a'), headerWithCursor('1b'), header('1c')],
+    [cell('2a'), cell('2b'), cell('2c')],
+    [cell('3a'), cell('3b'), cell('3c')]
+  );
+  cellActions.deleteRow.action(editor, cellPathAtCursor(editor));
+  expect(editor).toEqualEditor(
+    table(
+      [cellWithCursor('2a'), cell('2b'), cell('2c')],
+      [cell('3a'), cell('3b'), cell('3c')]
+    )
+  );
+});
+
+test('delete non-header row in table with header row', () => {
+  const editor = table(
+    [header('1a'), header('1b'), header('1c')],
+    [cell('2a'), cellWithCursor('2b'), cell('2c')],
+    [cell('3a'), cell('3b'), cell('3c')]
+  );
+  cellActions.deleteRow.action(editor, cellPathAtCursor(editor));
+  expect(editor).toEqualEditor(
+    table(
+      [header('1a'), header('1b'), header('1c')],
+      [cellWithCursor('3a'), cell('3b'), cell('3c')]
+    )
+  );
+});
+
+test('delete column with header row', () => {
+  const editor = table(
+    [header('1a'), headerWithCursor('1b'), header('1c')],
+    [cell('2a'), cell('2b'), cell('2c')],
+    [cell('3a'), cell('3b'), cell('3c')]
+  );
+  cellActions.deleteColumn.action(editor, cellPathAtCursor(editor));
+  expect(editor).toEqualEditor(
+    table(
+      [header('1a'), headerWithCursor('1c')],
       [cell('2a'), cell('2c')],
       [cell('3a'), cell('3c')]
     )
@@ -187,6 +312,33 @@ test('delete rows', () => {
   );
 });
 
+test('delete header row with deleteFragment', () => {
+  const editor = table(
+    [headerWithAnchor('1a'), header('1b'), headerWithFocus('1c')],
+    [cell('2a'), cell('2b'), cell('2c')],
+    [cell('3a'), cell('3b'), cell('3c')]
+  );
+  editor.deleteFragment();
+  expect(editor).toEqualEditor(
+    table(
+      [cellWithCursor('2a'), cell('2b'), cell('2c')],
+      [cell('3a'), cell('3b'), cell('3c')]
+    )
+  );
+});
+
+test('delete rows including header row', () => {
+  const editor = table(
+    [cellWithAnchor('1a'), cell('1b'), cell('1c')],
+    [cell('2a'), cell('2b'), cellWithFocus('2c')],
+    [cell('3a'), cell('3b'), cell('3c')]
+  );
+  editor.deleteFragment();
+  expect(editor).toEqualEditor(
+    table([cellWithCursor('3a'), cell('3b'), cell('3c')])
+  );
+});
+
 test('delete middle column', () => {
   const editor = table(
     [cell('1a'), cellWithAnchor('1b'), cell('1c')],
@@ -244,6 +396,66 @@ test('delete two columns', () => {
   editor.deleteFragment();
   expect(editor).toEqualEditor(
     table([cellWithCursor('1a')], [cell('2a')], [cell('3a')])
+  );
+});
+
+test('delete middle column with head', () => {
+  const editor = table(
+    [header('1a'), headerWithAnchor('1b'), header('1c')],
+    [cell('2a'), cell('2b'), cell('2c')],
+    [cell('3a'), cellWithFocus('3b'), cell('3c')]
+  );
+  editor.deleteFragment();
+  expect(editor).toEqualEditor(
+    table(
+      [headerWithCursor('1a'), header('1c')],
+      [cell('2a'), cell('2c')],
+      [cell('3a'), cell('3c')]
+    )
+  );
+});
+
+test('delete first column with head', () => {
+  const editor = table(
+    [headerWithAnchor('1a'), header('1b'), header('1c')],
+    [cell('2a'), cell('2b'), cell('2c')],
+    [cellWithFocus('3a'), cell('3b'), cell('3c')]
+  );
+  editor.deleteFragment();
+  expect(editor).toEqualEditor(
+    table(
+      [headerWithCursor('1b'), header('1c')],
+      [cell('2b'), cell('2c')],
+      [cell('3b'), cell('3c')]
+    )
+  );
+});
+
+test('delete last column with head', () => {
+  const editor = table(
+    [header('1a'), header('1b'), headerWithAnchor('1c')],
+    [cell('2a'), cell('2b'), cell('2c')],
+    [cell('3a'), cell('3b'), cellWithFocus('3c')]
+  );
+  editor.deleteFragment();
+  expect(editor).toEqualEditor(
+    table(
+      [header('1a'), headerWithCursor('1b')],
+      [cell('2a'), cell('2b')],
+      [cell('3a'), cell('3b')]
+    )
+  );
+});
+
+test('delete two columns with head', () => {
+  const editor = table(
+    [header('1a'), headerWithAnchor('1b'), header('1c')],
+    [cell('2a'), cell('2b'), cell('2c')],
+    [cell('3a'), cell('3b'), cellWithFocus('3c')]
+  );
+  editor.deleteFragment();
+  expect(editor).toEqualEditor(
+    table([headerWithCursor('1a')], [cell('2a')], [cell('3a')])
   );
 });
 

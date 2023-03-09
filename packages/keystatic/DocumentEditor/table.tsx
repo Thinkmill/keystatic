@@ -74,7 +74,13 @@ function getRelativeRowPath(hasHead: boolean, rowIndex: number): Path {
 }
 
 export function withTable(editor: Editor): Editor {
-  const { deleteFragment, normalizeNode, getFragment, insertFragment } = editor;
+  const {
+    deleteFragment,
+    normalizeNode,
+    getFragment,
+    insertFragment,
+    deleteBackward,
+  } = editor;
   editor.insertFragment = fragment => {
     const selectedTableArea = getSelectedTableArea(editor);
     if (
@@ -172,6 +178,26 @@ export function withTable(editor: Editor): Editor {
       });
     });
   };
+  editor.deleteBackward = unit => {
+    if (
+      editor.selection &&
+      Range.isCollapsed(editor.selection) &&
+      editor.selection.anchor.offset === 0
+    ) {
+      const tableCell = Editor.above(editor, {
+        match: nodeTypeMatcher('table-cell'),
+      });
+      if (
+        tableCell &&
+        tableCell[0].children[0].type === 'paragraph' &&
+        tableCell[0].children[0].children[0].type === undefined &&
+        Path.equals(editor.selection.anchor.path, [...tableCell[1], 0, 0])
+      ) {
+        return;
+      }
+    }
+    deleteBackward(unit);
+  };
   editor.getFragment = () => {
     const selectedTableArea = getSelectedTableArea(editor);
     if (selectedTableArea && selectedTableArea.singleCell !== 'not-selected') {
@@ -258,14 +284,15 @@ export function withTable(editor: Editor): Editor {
       deleteFragment(direction);
       return;
     }
-    const maxRowIdx = selectedTableArea.table.children.reduce(
-      (sum, headOrBody) =>
-        sum +
-        (headOrBody.type === 'table-head' || headOrBody.type === 'table-body'
-          ? headOrBody.children.length - 1
-          : 0),
-      0
-    );
+    const maxRowIdx =
+      selectedTableArea.table.children.reduce(
+        (sum, headOrBody) =>
+          sum +
+          (headOrBody.type === 'table-head' || headOrBody.type === 'table-body'
+            ? headOrBody.children.length
+            : 0),
+        0
+      ) - 1;
     const { row, column, tablePath } = selectedTableArea;
     // note the fact that hasWholeColumnSelected uses row and hasWholeRowSelected uses column
     // is not a mistake. if a whole column has been selected, then the starting row is 0 and the end is the last row
@@ -277,10 +304,23 @@ export function withTable(editor: Editor): Editor {
       Transforms.removeNodes(editor, { at: tablePath });
       return;
     }
+    const hasHead = headOrBody.type === 'table-head';
 
     if (hasWholeRowSelected) {
       Editor.withoutNormalizing(editor, () => {
         for (let i = row.end; i >= row.start; i--) {
+          if (hasHead) {
+            if (i === 0) {
+              Transforms.removeNodes(editor, {
+                at: [...tablePath, 0],
+              });
+              continue;
+            }
+            Transforms.removeNodes(editor, {
+              at: [...tablePath, 1, i],
+            });
+            continue;
+          }
           Transforms.removeNodes(editor, {
             at: [...tablePath, 0, i],
           });
@@ -288,7 +328,6 @@ export function withTable(editor: Editor): Editor {
       });
       return;
     }
-    const hasHead = headOrBody.type === 'table-head';
 
     if (hasWholeColumnSelected) {
       Editor.withoutNormalizing(editor, () => {
@@ -918,21 +957,39 @@ export const cellActions = {
   deleteRow: {
     label: 'Delete row',
     action: (editor, cellPath) => {
-      Transforms.removeNodes(editor, { at: Path.parent(cellPath) });
+      const tablePath = cellPath.slice(0, -3);
+      const table = Node.get(editor, tablePath);
+      if (table.type !== 'table') return;
+      const hasHead = table.children[0].type === 'table-head';
+      const rowPath = Path.parent(cellPath);
+      Transforms.removeNodes(editor, {
+        at:
+          hasHead && rowPath[cellPath.length - 3] === 0
+            ? Path.parent(rowPath)
+            : rowPath,
+      });
     },
   },
   deleteColumn: {
     label: 'Delete column',
     action: (editor, path) => {
       const cellIndex = path[path.length - 1];
-      const tableBodyPath = path.slice(0, -2);
-      const tableBody = Node.get(editor, tableBodyPath);
-      if (tableBody.type !== 'table-body') return;
+      const tablePath = path.slice(0, -3);
+      const table = Node.get(editor, tablePath);
+      if (table.type !== 'table') return;
       Editor.withoutNormalizing(editor, () => {
-        for (const idx of tableBody.children.keys()) {
-          Transforms.removeNodes(editor, {
-            at: [...tableBodyPath, idx, cellIndex],
-          });
+        for (const [headOrBodyIdx, headOrBody] of table.children.entries()) {
+          if (
+            headOrBody.type !== 'table-head' &&
+            headOrBody.type !== 'table-body'
+          ) {
+            continue;
+          }
+          for (const idx of headOrBody.children.keys()) {
+            Transforms.removeNodes(editor, {
+              at: [...tablePath, headOrBodyIdx, idx, cellIndex],
+            });
+          }
         }
       });
     },
@@ -941,10 +998,17 @@ export const cellActions = {
     label: 'Insert row below',
     action: (editor, path) => {
       const tableRow = Node.get(editor, Path.parent(path));
-      if (tableRow.type !== 'table-row') {
+      const tablePath = path.slice(0, -3);
+      const table = Node.get(editor, tablePath);
+      if (tableRow.type !== 'table-row' || table.type !== 'table') {
         return;
       }
-      const newRowPath = [...path.slice(0, -2), path[path.length - 2] + 1];
+      const hasHead = table.children[0].type === 'table-head';
+      const newRowPath = [
+        ...tablePath,
+        hasHead ? 1 : 0,
+        hasHead && path[path.length - 3] === 0 ? 0 : path[path.length - 2] + 1,
+      ];
       Editor.withoutNormalizing(editor, () => {
         Transforms.insertNodes(
           editor,
