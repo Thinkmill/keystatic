@@ -2,6 +2,11 @@
   "name": "@keystatic/remix",
   "version": "0.0.2",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Thinkmill/keystatic/",
+    "directory": "packages/remix"
+  },
   "exports": {
     "./ui": {
       "module": "./ui/dist/keystatic-remix-ui.esm.js",
