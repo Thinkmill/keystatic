@@ -43,7 +43,7 @@ export function integer<IsRequired extends boolean | undefined>({
   undefined
 > {
   const validate = (value: unknown) => {
-    return typeof value === 'number' && Number.isFinite(value);
+    return validateInteger(validation, value, label) === undefined;
   };
   return {
     kind: 'form',
