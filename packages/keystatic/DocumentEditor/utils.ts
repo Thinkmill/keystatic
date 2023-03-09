@@ -1,10 +1,11 @@
+import { useFocusWithin } from '@react-aria/interactions';
 import React, {
   useCallback,
   useEffect,
   useRef,
   useState,
   useContext,
-  useMemo,
+  HTMLAttributes,
 } from 'react';
 import {
   Editor,
@@ -244,18 +245,18 @@ export function useDelayedFocused() {
   return delayedFocused;
 }
 
-export function useSelectedOrFocusWithin() {
+export function useSelectedOrFocusWithin(): [
+  boolean,
+  HTMLAttributes<HTMLElement>
+] {
   const [focusWithin, setFocusWithin] = useState(false);
+  const { focusWithinProps } = useFocusWithin({
+    onFocusWithinChange: setFocusWithin,
+  });
   const focused = useFocused();
   const selected = useSelected();
-  const targetProps = useMemo(
-    () => ({
-      onFocus: () => setFocusWithin(true),
-      onBlur: () => setFocusWithin(false),
-    }),
-    []
-  );
-  return [(focused && selected) || focusWithin, targetProps] as const;
+
+  return [(focused && selected) || focusWithin, focusWithinProps];
 }
 
 export function focusWithPreviousSelection(editor: Editor) {

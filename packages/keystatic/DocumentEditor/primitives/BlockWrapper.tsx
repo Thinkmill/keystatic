@@ -4,7 +4,7 @@ import { RenderElementProps } from 'slate-react';
 import { css } from '@voussoir/style';
 
 type BlockWrapperProps = {
-  attributes: RenderElementProps['attributes'];
+  attributes?: RenderElementProps['attributes'];
   children: ReactNode;
   draggable?: boolean;
 };

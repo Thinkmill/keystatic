@@ -12,7 +12,7 @@ import { editIcon } from '@voussoir/icon/icons/editIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Divider, Flex } from '@voussoir/layout';
 import { Content } from '@voussoir/slots';
-import { css, tokenSchema } from '@voussoir/style';
+import { css, tokenSchema, transition } from '@voussoir/style';
 import { TextField } from '@voussoir/text-field';
 import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
 import { Heading, Text } from '@voussoir/typography';
@@ -54,33 +54,43 @@ export const ImageElement = ({
 
   return (
     <>
-      <BlockWrapper draggable attributes={attributes}>
+      <BlockWrapper attributes={attributes}>
+        {children}
         <BlockPopoverTrigger
-          // isOpen={selected}
           key={aspectRatio} // Force the popover to re-render when the aspect ratio changes.
         >
-          <NotEditable style={{ display: 'inline-block', lineHeight: 1 }}>
-            <img
-              src={objectUrl}
-              alt={currentElement.alt}
-              data-selected={selected}
-              onLoad={e => {
-                const target = e.target as HTMLImageElement;
-                setAspectRatio(target.width / target.height);
-              }}
-              className={css({
-                boxSizing: 'border-box',
-                borderRadius: tokenSchema.size.radius.regular,
-                display: 'inline-block',
-                maxHeight: tokenSchema.size.alias.singleLineWidth,
-                maxWidth: '100%',
+          <div
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <NotEditable>
+              <img
+                {...attributes}
+                src={objectUrl}
+                alt={currentElement.alt}
+                data-selected={selected}
+                onLoad={e => {
+                  const target = e.target as HTMLImageElement;
+                  setAspectRatio(target.width / target.height);
+                }}
+                className={css({
+                  boxSizing: 'border-box',
+                  borderRadius: tokenSchema.size.radius.regular,
+                  display: 'block',
+                  maxHeight: tokenSchema.size.scale[3600],
+                  maxWidth: '100%',
+                  transition: transition('box-shadow'),
 
-                '&[data-selected=true]': {
-                  boxShadow: `0 0 0 ${tokenSchema.size.border.regular} ${tokenSchema.color.alias.borderSelected}`,
-                },
-              })}
-            />
-          </NotEditable>
+                  '&[data-selected=true]': {
+                    boxShadow: `0 0 0 ${tokenSchema.size.border.regular} ${tokenSchema.color.alias.borderSelected}`,
+                  },
+                })}
+              />
+            </NotEditable>
+          </div>
 
           <BlockPopover hideArrow>
             <Flex gap="regular" padding="regular" {...targetProps}>
@@ -126,8 +136,6 @@ export const ImageElement = ({
             </Flex>
           </BlockPopover>
         </BlockPopoverTrigger>
-
-        {children}
       </BlockWrapper>
 
       <DialogContainer
