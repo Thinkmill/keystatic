@@ -117,6 +117,7 @@ test('array', () => {
       },
       "field": {
         "asChildTag": "related-link",
+        "description": undefined,
         "element": {
           "fields": {
             "content": {

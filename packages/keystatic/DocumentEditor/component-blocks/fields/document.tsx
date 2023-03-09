@@ -146,10 +146,12 @@ function normaliseDocumentFeatures(config: DocumentFeaturesConfig) {
 export function document({
   label,
   componentBlocks = {},
+  description,
   ...documentFeaturesConfig
 }: {
   label: string;
   componentBlocks?: Record<string, ComponentBlock>;
+  description?: string;
 } & DocumentFeaturesConfig): FormFieldWithFileRequiringContentsForReader<
   DocumentElement[],
   undefined,
@@ -188,7 +190,7 @@ export function document({
     defaultValue: [{ type: 'paragraph', children: [{ text: '' }] }],
     Input(props) {
       return (
-        <FieldPrimitive label={label}>
+        <FieldPrimitive label={label} description={description}>
           <DocumentEditor
             componentBlocks={componentBlocks}
             documentFeatures={documentFeatures}

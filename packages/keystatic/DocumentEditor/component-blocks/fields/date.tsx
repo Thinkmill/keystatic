@@ -39,10 +39,12 @@ export function date<IsRequired extends boolean | undefined>({
   label,
   defaultValue,
   validation,
+  description,
 }: {
   label: string;
   defaultValue?: string | { kind: 'today' };
   validation?: { isRequired?: IsRequired; min?: string; max?: string };
+  description?: string;
 } & RequiredValidation<IsRequired>): BasicFormField<
   string | (IsRequired extends true ? never : null),
   undefined
@@ -55,6 +57,7 @@ export function date<IsRequired extends boolean | undefined>({
       return (
         <TextField
           label={label}
+          description={description}
           type="date"
           onChange={val => {
             onChange(val === '' ? null : val);
