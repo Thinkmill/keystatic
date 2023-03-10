@@ -730,9 +730,12 @@ export function TableCellElement({
   return (
     <ElementType
       className={css({
-        borderLeft: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+        borderRight: `1px solid ${tokenSchema.color.alias.borderIdle}`,
         borderBottom: `1px solid ${tokenSchema.color.alias.borderIdle}`,
         borderTop: startElements.top.has(element)
+          ? `1px solid ${tokenSchema.color.alias.borderIdle}`
+          : undefined,
+        borderLeft: startElements.left.has(element)
           ? `1px solid ${tokenSchema.color.alias.borderIdle}`
           : undefined,
         backgroundColor: selectedCellsContext?.cells.has(element)
