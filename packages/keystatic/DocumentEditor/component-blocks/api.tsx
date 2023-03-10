@@ -1,12 +1,5 @@
-import {
-  ForwardRefExoticComponent,
-  ReactElement,
-  ReactNode,
-  Ref,
-  forwardRef,
-} from 'react';
-import { classNames, css } from '@voussoir/style';
-import { Box, BoxProps } from '@voussoir/layout';
+import { ReactElement, ReactNode } from 'react';
+
 import { ChildField } from './fields/child';
 
 export type FormFieldValue =
@@ -441,24 +434,6 @@ export function component<
 ): ComponentBlock<Schema> {
   return options as any;
 }
-
-export const NotEditable: ForwardRefExoticComponent<BoxProps> = forwardRef(
-  function NotEditable({ children, ...props }: BoxProps, ref: Ref<any>) {
-    return (
-      <Box
-        {...props}
-        ref={ref}
-        UNSAFE_className={classNames(
-          css({ userSelect: 'none', whiteSpace: 'initial' }),
-          props.UNSAFE_className
-        )}
-        contentEditable={false}
-      >
-        {children}
-      </Box>
-    );
-  }
-);
 
 type Comp<Props> = (props: Props) => ReactElement | null;
 

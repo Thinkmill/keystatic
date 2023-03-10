@@ -337,7 +337,7 @@ function ActionGroup<T extends object>(
                 },
               },
               '&[data-compact][data-prominence=low]': {
-                '--action-item-gap': tokenSchema.size.space.xsmall,
+                '--action-item-gap': tokenSchema.size.space.small,
               },
             }),
             otherProps.UNSAFE_className

@@ -8,10 +8,11 @@ import { Dialog, DialogContainer, useDialogContainer } from '@voussoir/dialog';
 import { Icon } from '@voussoir/icon';
 import { fileUpIcon } from '@voussoir/icon/icons/fileUpIcon';
 import { imageIcon } from '@voussoir/icon/icons/imageIcon';
+import { editIcon } from '@voussoir/icon/icons/editIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Flex } from '@voussoir/layout';
+import { Divider, Flex } from '@voussoir/layout';
 import { Content } from '@voussoir/slots';
-import { css, tokenSchema } from '@voussoir/style';
+import { css, tokenSchema, transition } from '@voussoir/style';
 import { TextField } from '@voussoir/text-field';
 import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
 import { Heading, Text } from '@voussoir/typography';
@@ -25,11 +26,15 @@ import {
   focusWithPreviousSelection,
   insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading,
   useElementWithSetNodes,
-  useSelectedOrFocusWithin,
   useStaticEditor,
 } from './utils';
-import { BlockPopoverTrigger } from './BlockPopoverTrigger';
-import { NotEditable } from '../src';
+import {
+  BlockPopover,
+  BlockPopoverTrigger,
+  BlockWrapper,
+  NotEditable,
+  useActiveBlockPopover,
+} from './primitives';
 
 export const ImageElement = ({
   attributes,
@@ -45,89 +50,95 @@ export const ImageElement = ({
     __elementForGettingPath
   );
   const objectUrl = useObjectURL(currentElement.src.content)!;
-  const [selected, targetProps] = useSelectedOrFocusWithin();
+  const activePopoverElement = useActiveBlockPopover();
+  const selected = activePopoverElement === __elementForGettingPath;
 
   return (
     <>
-      <div
-        draggable="true"
-        className={css({ marginBlock: '1em' })} // treat as a block element, like a paragraph
-        {...attributes}
-      >
+      <BlockWrapper attributes={attributes}>
+        {children}
         <BlockPopoverTrigger
-          isOpen={!dialogOpen && selected}
+          element={__elementForGettingPath}
           key={aspectRatio} // Force the popover to re-render when the aspect ratio changes.
         >
-          <NotEditable
-            UNSAFE_style={{ display: 'inline-block', lineHeight: 1 }}
+          <div
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
           >
-            <img
-              src={objectUrl}
-              alt={currentElement.alt}
-              data-selected={selected}
-              onLoad={e => {
-                const target = e.target as HTMLImageElement;
-                setAspectRatio(target.width / target.height);
-              }}
-              className={css({
-                boxSizing: 'border-box',
-                borderColor: tokenSchema.color.alias.borderIdle,
-                borderRadius: tokenSchema.size.radius.regular,
-                borderStyle: 'solid',
-                borderWidth: tokenSchema.size.border.regular,
-                display: 'inline-block',
-                maxHeight: tokenSchema.size.alias.singleLineWidth,
-                maxWidth: '100%',
-                padding: tokenSchema.size.space.regular,
-
-                '&[data-selected=true]': {
-                  borderColor: tokenSchema.color.alias.borderSelected,
-                },
-              })}
-            />
-          </NotEditable>
-
-          <Flex
-            alignItems="center"
-            gap="small"
-            padding="regular"
-            {...targetProps}
-          >
-            <ActionButton onPress={() => setDialogOpen(true)}>
-              {stringFormatter.format('edit')}
-            </ActionButton>
-            <TooltipTrigger>
-              <ActionButton
-                prominence="low"
-                onPress={async () => {
-                  const src = await getUploadedImage();
-                  if (src) {
-                    setNode({ src });
-                  }
+            <NotEditable>
+              <img
+                {...attributes}
+                src={objectUrl}
+                alt={currentElement.alt}
+                data-selected={selected}
+                onLoad={e => {
+                  const target = e.target as HTMLImageElement;
+                  setAspectRatio(target.width / target.height);
                 }}
-              >
-                <Icon src={fileUpIcon} />
-              </ActionButton>
-              <Tooltip>Choose file</Tooltip>
-            </TooltipTrigger>
-            <TooltipTrigger>
-              <ActionButton
-                prominence="low"
-                onPress={() => {
-                  Transforms.removeNodes(editor, {
-                    at: ReactEditor.findPath(editor, __elementForGettingPath),
-                  });
-                }}
-              >
-                <Icon src={trash2Icon} />
-              </ActionButton>
-              <Tooltip>Remove</Tooltip>
-            </TooltipTrigger>
-          </Flex>
+                className={css({
+                  boxSizing: 'border-box',
+                  borderRadius: tokenSchema.size.radius.regular,
+                  display: 'block',
+                  maxHeight: tokenSchema.size.scale[3600],
+                  maxWidth: '100%',
+                  transition: transition('box-shadow'),
+
+                  '&[data-selected=true]': {
+                    boxShadow: `0 0 0 ${tokenSchema.size.border.regular} ${tokenSchema.color.alias.borderSelected}`,
+                  },
+                })}
+              />
+            </NotEditable>
+          </div>
+
+          <BlockPopover hideArrow>
+            <Flex gap="regular" padding="regular">
+              <Flex gap="small">
+                <TooltipTrigger>
+                  <ActionButton
+                    prominence="low"
+                    onPress={() => setDialogOpen(true)}
+                  >
+                    <Icon src={editIcon} />
+                  </ActionButton>
+                  <Tooltip>{stringFormatter.format('edit')}</Tooltip>
+                </TooltipTrigger>
+                <TooltipTrigger>
+                  <ActionButton
+                    prominence="low"
+                    onPress={async () => {
+                      const src = await getUploadedImage();
+                      if (src) {
+                        setNode({ src });
+                      }
+                    }}
+                  >
+                    <Icon src={fileUpIcon} />
+                  </ActionButton>
+                  <Tooltip>Choose file</Tooltip>
+                </TooltipTrigger>
+              </Flex>
+              <Divider orientation="vertical" />
+              <TooltipTrigger>
+                <ActionButton
+                  prominence="low"
+                  onPress={() => {
+                    Transforms.removeNodes(editor, {
+                      at: ReactEditor.findPath(editor, __elementForGettingPath),
+                    });
+                  }}
+                >
+                  <Icon src={trash2Icon} />
+                </ActionButton>
+                <Tooltip tone="critical">Remove</Tooltip>
+              </TooltipTrigger>
+            </Flex>
+          </BlockPopover>
         </BlockPopoverTrigger>
-
-        {children}
-      </div>
+      </BlockWrapper>
 
       <DialogContainer
         onDismiss={() => {
@@ -314,11 +325,3 @@ export function withImages(editor: Editor): Editor {
 
   return editor;
 }
-
-// schema: GraphQLSchema;
-// source: string | Source;
-// rootValue?: unknown;
-// contextValue?: unknown;
-// variableValues?: Maybe<{
-//   readonly [variable: string]: unknown;
-// }>;

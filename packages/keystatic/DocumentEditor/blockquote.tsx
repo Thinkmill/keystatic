@@ -5,8 +5,7 @@ import { ReactEditor, RenderElementProps } from 'slate-react';
 import { ActionButton } from '@voussoir/button';
 import { quoteIcon } from '@voussoir/icon/icons/quoteIcon';
 import { Icon } from '@voussoir/icon';
-import { Box } from '@voussoir/layout';
-import { css, tokenSchema } from '@voussoir/style';
+import { css } from '@voussoir/style';
 import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
 import { Kbd, Text } from '@voussoir/typography';
 
@@ -90,31 +89,16 @@ export const BlockquoteElement = ({
   children,
 }: RenderElementProps) => {
   return (
-    <Box
-      paddingStart="xlarge"
-      elementType="blockquote"
-      position="relative"
-      UNSAFE_className={css({
-        // fontSize: tokenSchema.fontsize.text.regular.size,
-        p: { color: 'inherit', fontSize: 'inherit' },
-        '&::before': {
-          color: tokenSchema.color.background.accent,
-          pointerEvents: 'none',
-          userSelect: 'none',
-          content: '"\\201C"',
-          fontSize: '7em',
-          insetBlockStart: 0,
-          insetInlineStart: 0,
-          lineHeight: 1,
-          position: 'absolute',
-          transform: 'translate(-55%, -20%)',
-          zIndex: -1,
-        },
+    <blockquote
+      className={css({
+        fontFamily: 'serif',
+        fontSize: '1.25em',
+        marginInline: '2em',
       })}
       {...attributes}
     >
       {children}
-    </Box>
+    </blockquote>
   );
 };
 

@@ -1938,7 +1938,9 @@ importers:
       '@markdoc/markdoc': ^0.2.2
       '@react-aria/focus': ^3.10.0
       '@react-aria/i18n': ^3.6.2
+      '@react-aria/interactions': ^3.13.0
       '@react-aria/overlays': ^3.12.0
+      '@react-aria/utils': ^3.14.2
       '@react-aria/visually-hidden': ^3.6.1
       '@react-stately/collections': ^3.5.0
       '@react-stately/list': ^3.6.0
@@ -2036,7 +2038,9 @@ importers:
       '@markdoc/markdoc': 0.2.2_pmekkgnqduwlme35zpnqhenc34
       '@react-aria/focus': 3.10.1_react@18.2.0
       '@react-aria/i18n': 3.6.3_react@18.2.0
+      '@react-aria/interactions': 3.14.0_react@18.2.0
       '@react-aria/overlays': 3.12.1_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/utils': 3.15.0_react@18.2.0
       '@react-aria/visually-hidden': 3.6.1_react@18.2.0
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-stately/list': 3.6.1_react@18.2.0
@@ -5728,10 +5732,10 @@ packages:
     dependencies:
       '@react-aria/focus': 3.10.1_react@18.2.0
       '@react-aria/i18n': 3.6.3_react@18.2.0
-      '@react-aria/interactions': 3.13.1_react@18.2.0
+      '@react-aria/interactions': 3.14.0_react@18.2.0
       '@react-aria/live-announcer': 3.1.2
       '@react-aria/selection': 3.12.1_react@18.2.0
-      '@react-aria/utils': 3.14.2_react@18.2.0
+      '@react-aria/utils': 3.15.0_react@18.2.0
       '@react-stately/grid': 3.4.2_react@18.2.0
       '@react-stately/selection': 3.11.2_react@18.2.0
       '@react-stately/virtualizer': 3.4.1_react@18.2.0
@@ -6085,7 +6089,7 @@ packages:
     dependencies:
       '@react-aria/i18n': 3.6.3_react@18.2.0
       '@react-aria/live-announcer': 3.1.2
-      '@react-aria/utils': 3.14.2_react@18.2.0
+      '@react-aria/utils': 3.15.0_react@18.2.0
       '@react-types/button': 3.7.0_react@18.2.0
       '@react-types/shared': 3.17.0_react@18.2.0
       '@swc/helpers': 0.4.14
@@ -6173,8 +6177,8 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-aria/focus': 3.10.1_react@18.2.0
-      '@react-aria/interactions': 3.13.1_react@18.2.0
-      '@react-aria/utils': 3.14.2_react@18.2.0
+      '@react-aria/interactions': 3.14.0_react@18.2.0
+      '@react-aria/utils': 3.15.0_react@18.2.0
       '@react-stately/toggle': 3.4.4_react@18.2.0
       '@react-types/checkbox': 3.4.1_react@18.2.0
       '@react-types/shared': 3.17.0_react@18.2.0
@@ -6646,7 +6650,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-aria/interactions': 3.13.1_react@18.2.0
+      '@react-aria/interactions': 3.14.0_react@18.2.0
       '@react-types/shared': 3.17.0_react@18.2.0
       react: 18.2.0
     dev: false
