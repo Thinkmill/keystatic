@@ -3,6 +3,7 @@ import { DocumentFeatures } from './document-features';
 import { ComponentBlock } from './component-blocks/api';
 import { getAncestorComponentChildFieldDocumentFeatures } from './toolbar-state';
 import { EditorAfterButIgnoringingPointsWithNoContent, Mark } from './utils';
+import { isBlock } from '.';
 
 export const allMarkdownShortcuts = {
   bold: ['**', '__'],
@@ -18,7 +19,10 @@ function applyMark(
   startOfStartPoint: Point
 ) {
   // so that this starts a new undo group
-  editor.history.undos.push([]);
+  editor.history.undos.push({
+    operations: [],
+    selectionBefore: editor.selection,
+  });
   const startPointRef = Editor.pointRef(editor, startOfStartPoint);
 
   Transforms.delete(editor, {
@@ -57,7 +61,7 @@ export function withMarks(
     const marksAfterInsertBreak = Editor.marks(editor);
     if (!marksAfterInsertBreak || !editor.selection) return;
     const parentBlock = Editor.above(editor, {
-      match: node => Editor.isBlock(editor, node),
+      match: isBlock,
     });
     if (!parentBlock) return;
     const point = EditorAfterButIgnoringingPointsWithNoContent(
@@ -231,8 +235,5 @@ export function withMarks(
 }
 
 function getStartOfBlock(editor: Editor) {
-  return Editor.start(
-    editor,
-    Editor.above(editor, { match: node => Editor.isBlock(editor, node) })![1]
-  );
+  return Editor.start(editor, Editor.above(editor, { match: isBlock })![1]);
 }

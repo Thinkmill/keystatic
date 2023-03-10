@@ -11,6 +11,13 @@ import { LinkElement } from './link';
 import { CodeElement } from './code-block';
 import { DividerElement } from './divider';
 import { ImageElement } from './image';
+import {
+  TableBodyElement,
+  TableCellElement,
+  TableElement,
+  TableHeadElement,
+  TableRowElement,
+} from './table';
 
 // some of the renderers read properties of the element
 // and TS doesn't understand the type narrowing when doing a spread for some reason
@@ -83,6 +90,47 @@ export const renderElement = (props: RenderElementProps) => {
           element={props.element}
         />
       );
+    case 'table':
+      return (
+        <TableElement
+          attributes={props.attributes}
+          children={props.children}
+          element={props.element}
+        />
+      );
+    case 'table-head':
+      return (
+        <TableHeadElement
+          attributes={props.attributes}
+          children={props.children}
+          element={props.element}
+        />
+      );
+    case 'table-body':
+      return (
+        <TableBodyElement
+          attributes={props.attributes}
+          children={props.children}
+          element={props.element}
+        />
+      );
+    case 'table-row':
+      return (
+        <TableRowElement
+          attributes={props.attributes}
+          children={props.children}
+          element={props.element}
+        />
+      );
+    case 'table-cell':
+      return (
+        <TableCellElement
+          attributes={props.attributes}
+          children={props.children}
+          element={props.element}
+        />
+      );
+
     default:
       let { textAlign } = props.element;
       return (

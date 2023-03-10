@@ -19,6 +19,7 @@ import {
   Point,
 } from 'slate';
 import { ReactEditor, useFocused, useSelected } from 'slate-react';
+import { isBlock } from '.';
 
 export { useSlateStatic as useStaticEditor } from 'slate-react';
 
@@ -68,16 +69,16 @@ export function moveChildren(
   editor: Editor,
   parent: NodeEntry | Path,
   to: Path,
-  shouldMoveNode: (node: Node) => boolean = () => true
+  shouldMoveNode: (node: Node, index: number) => boolean = () => true
 ) {
   const parentPath = Path.isPath(parent) ? parent : parent[1];
   const parentNode = Path.isPath(parent)
     ? Node.get(editor, parentPath)
     : parent[0];
-  if (!Editor.isBlock(editor, parentNode)) return;
+  if (!isBlock(parentNode)) return;
 
   for (let i = parentNode.children.length - 1; i >= 0; i--) {
-    if (shouldMoveNode(parentNode.children[i])) {
+    if (shouldMoveNode(parentNode.children[i], i)) {
       const childPath = [...parentPath, i];
       Transforms.moveNodes(editor, { at: childPath, to });
     }

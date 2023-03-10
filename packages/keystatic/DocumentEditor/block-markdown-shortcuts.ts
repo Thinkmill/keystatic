@@ -4,6 +4,7 @@ import { ComponentBlock } from './component-blocks/api';
 import { insertDivider } from './divider';
 import { DocumentFeaturesForNormalization } from './document-features-normalization';
 import { getAncestorComponentChildFieldDocumentFeatures } from './toolbar-state';
+import { isBlock } from '.';
 
 export function withBlockMarkdownShortcuts(
   documentFeatures: DocumentFeatures,
@@ -59,7 +60,7 @@ export function withBlockMarkdownShortcuts(
       Transforms.wrapNodes(
         editor,
         { type: 'ordered-list', children: [] },
-        { match: n => Editor.isBlock(editor, n) }
+        { match: isBlock }
       );
     },
     features => features.formatting.listTypes.ordered
@@ -71,7 +72,7 @@ export function withBlockMarkdownShortcuts(
       Transforms.wrapNodes(
         editor,
         { type: 'unordered-list', children: [] },
-        { match: n => Editor.isBlock(editor, n) }
+        { match: isBlock }
       );
     },
     features => features.formatting.listTypes.unordered
@@ -82,7 +83,7 @@ export function withBlockMarkdownShortcuts(
       Transforms.wrapNodes(
         editor,
         { type: 'unordered-list', children: [] },
-        { match: n => Editor.isBlock(editor, n) }
+        { match: isBlock }
       );
     },
     features => features.formatting.listTypes.unordered
@@ -147,7 +148,7 @@ export function withBlockMarkdownShortcuts(
     ) {
       const { anchor } = editor.selection;
       const block = Editor.above(editor, {
-        match: node => Editor.isBlock(editor, node),
+        match: isBlock,
       });
       if (
         !block ||
@@ -182,8 +183,12 @@ export function withBlockMarkdownShortcuts(
       ) {
         return;
       }
+
       // so that this starts a new undo group
-      editor.history.undos.push([]);
+      editor.history.undos.push({
+        operations: [],
+        selectionBefore: editor.selection,
+      });
       Transforms.select(editor, range);
       Transforms.delete(editor);
       shortcut.insert();

@@ -5,11 +5,12 @@ import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from '../
 import { deserializeHTML } from './html';
 import { deserializeMarkdown } from './markdown';
 import { fromByteArray, toByteArray } from 'base64-js';
+import { isBlock } from '..';
 
 const urlPattern = /https?:\/\//;
 
 function insertFragmentButDifferent(editor: Editor, nodes: Descendant[]) {
-  if (Editor.isBlock(editor, nodes[0])) {
+  if (isBlock(nodes[0])) {
     insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading(editor, nodes);
   } else {
     Transforms.insertFragment(editor, nodes);
@@ -193,7 +194,7 @@ export function withPasting(editor: Editor): Editor {
   };
   editor.insertTextData = data => {
     const blockAbove = Editor.above(editor, {
-      match: node => Editor.isBlock(editor, node),
+      match: isBlock,
     });
     if (blockAbove?.[0].type === 'code') {
       const plain = data.getData('text/plain');
@@ -228,14 +229,12 @@ export function withPasting(editor: Editor): Editor {
       !Range.isCollapsed(editor.selection) &&
       // we only want to turn the selected text into a link if the selection is within the same block
       Editor.above(editor, {
-        match: node =>
-          Editor.isBlock(editor, node) &&
-          !Editor.isBlock(editor, node.children[0]),
+        match: node => isBlock(node) && !isBlock(node.children[0]),
       }) &&
       // and there is only text(potentially with marks) in the selection
       // no other links
       Editor.nodes(editor, {
-        match: node => Editor.isInline(editor, node),
+        match: node => node.type === 'link',
       }).next().done
     ) {
       Transforms.wrapNodes(

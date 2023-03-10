@@ -31,7 +31,18 @@ type OnlyChildrenElements = {
     | 'list-item'
     | 'list-item-content'
     | 'ordered-list'
-    | 'unordered-list';
+    | 'unordered-list'
+    | 'table'
+    | 'table-body'
+    | 'table-head'
+    | 'table-row';
+};
+
+type TableCell = {
+  type: 'table-cell';
+  header?: true;
+  rowSpan?: number;
+  colSpan?: number;
 };
 
 type CodeBlock = {
@@ -78,6 +89,7 @@ type Element = (
   | Link
   | CodeBlock
   | Image
+  | TableCell
 ) &
   BaseElement;
 declare module 'slate' {

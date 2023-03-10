@@ -27,13 +27,14 @@ import { Kbd, Text } from '@voussoir/typography';
 
 import Prism from './prism';
 import { useToolbarState } from './toolbar-state';
+import { isBlock } from '.';
 
 export function withCodeBlock(editor: Editor): Editor {
   const { insertBreak, normalizeNode } = editor;
 
   editor.insertBreak = () => {
     const [node, path] = Editor.above(editor, {
-      match: n => Editor.isBlock(editor, n),
+      match: isBlock,
     }) || [editor, []];
     if (node.type === 'code' && SlateText.isText(node.children[0])) {
       const text = node.children[0].text;
