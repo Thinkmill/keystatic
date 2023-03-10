@@ -672,9 +672,11 @@ export const TableElement = ({
             tableLayout: 'fixed',
             position: 'relative',
             borderSpacing: 0,
-            borderCollapse: 'collapse',
             marginTop: 10,
             marginLeft: 10,
+            '& *::selection': selectedCells?.cells.size
+              ? { backgroundColor: 'transparent' }
+              : undefined,
           })}
           {...attributes}
         >
@@ -728,14 +730,15 @@ export function TableCellElement({
   return (
     <ElementType
       className={css({
-        border: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+        borderLeft: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+        borderBottom: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+        borderTop: startElements.top.has(element)
+          ? `1px solid ${tokenSchema.color.alias.borderIdle}`
+          : undefined,
         backgroundColor: selectedCellsContext?.cells.has(element)
           ? tokenSchema.color.alias.backgroundSelected
           : element.header
           ? tokenSchema.color.scale.slate4
-          : undefined,
-        '& *::selection': selectedCellsContext?.cells.size
-          ? { backgroundColor: 'transparent' }
           : undefined,
         position: 'relative',
         margin: 0,
