@@ -530,7 +530,7 @@ function getSelectedCells(
   return selectedCells;
 }
 
-function getSelectedTableArea(editor: Editor) {
+export function getSelectedTableArea(editor: Editor) {
   const anchor = Editor.above(editor, {
     match: nodeTypeMatcher('table-cell'),
     at: editor.selection?.anchor.path,
@@ -898,6 +898,7 @@ function CellSelection(props: {
   return (
     <div contentEditable={false}>
       <button
+        tabIndex={-1}
         type="button"
         className={css(
           {
@@ -1164,3 +1165,37 @@ export const tableButton = (
     </Tooltip>
   </TooltipTrigger>
 );
+
+export function getCellPathInDirection(
+  editor: Editor,
+  path: Path,
+  direction: 'up' | 'down' | 'left' | 'right'
+): Path | undefined {
+  if (direction === 'left' || direction === 'right') {
+    const row = Editor.above(editor, {
+      match: nodeTypeMatcher('table-row'),
+      at: path,
+    });
+    if (!row) return;
+    const currentCellIdx = path[path.length - 1];
+    const diff = direction === 'left' ? -1 : 1;
+    const nextCellIdx = currentCellIdx + diff;
+    const nextCell = row[0].children[nextCellIdx];
+    if (!nextCell) return;
+    return [...row[1], nextCellIdx];
+  }
+  const table = Editor.above(editor, {
+    match: nodeTypeMatcher('table'),
+    at: path,
+  });
+  if (!table) return;
+  const diff = direction === 'up' ? -1 : 1;
+  const rowIndex = path[path.length - 3] + path[path.length - 2];
+  const nextRowIndex = rowIndex + diff;
+  const relativeRowPath = getRelativeRowPath(
+    table[0].children[0].type === 'table-head',
+    nextRowIndex
+  );
+  if (!Node.has(table[0], relativeRowPath)) return;
+  return [...table[1], ...relativeRowPath, path[path.length - 1]];
+}

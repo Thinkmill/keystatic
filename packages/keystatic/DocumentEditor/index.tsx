@@ -29,7 +29,7 @@ import { ComponentBlock } from './component-blocks/api';
 import { withParagraphs } from './paragraphs';
 import { withLink, wrapLink } from './link';
 import { withLayouts } from './layouts';
-import { clearFormatting, Mark } from './utils';
+import { clearFormatting, Mark, nodeTypeMatcher } from './utils';
 import { Toolbar } from './Toolbar';
 import { renderElement } from './render-element';
 import { withHeading } from './heading';
@@ -51,7 +51,12 @@ import { withPasting } from './pasting';
 import { classNames, css, tokenSchema } from '@voussoir/style';
 import { Box } from '@voussoir/layout';
 import { withImages } from './image';
-import { TableSelectionProvider, withTable } from './table';
+import {
+  getCellPathInDirection,
+  getSelectedTableArea,
+  TableSelectionProvider,
+  withTable,
+} from './table';
 // the docs site needs access to Editor and importing slate would use the version from the content field
 // so we're exporting it from here (note that this is not at all visible in the published version)
 export { Editor } from 'slate';
@@ -75,6 +80,13 @@ function isMarkActive(editor: Editor, mark: Mark) {
   }
   return false;
 }
+
+const arrowKeyToDirection = new Map([
+  ['ArrowUp', 'up' as const],
+  ['ArrowDown', 'down' as const],
+  ['ArrowLeft', 'left' as const],
+  ['ArrowRight', 'right' as const],
+]);
 
 const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
   if (event.defaultPrevented) return;
@@ -107,9 +119,10 @@ const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
       return;
     }
   }
+
   if (event.key === 'Tab' && editor.selection) {
     const layoutArea = Editor.above(editor, {
-      match: node => node.type === 'layout-area',
+      match: node => node.type === 'layout-area' || node.type === 'table-cell',
     });
     if (layoutArea) {
       const layoutAreaToEnter = event.shiftKey
@@ -120,6 +133,138 @@ const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
         focus: layoutAreaToEnter,
       });
       event.preventDefault();
+    }
+  }
+  if (isHotkey('mod+a', event)) {
+    const parentTable = Editor.above(editor, {
+      match: nodeTypeMatcher('table'),
+    });
+    if (parentTable) {
+      Transforms.select(editor, parentTable[1]);
+      event.preventDefault();
+      return;
+    }
+  }
+  const direction = arrowKeyToDirection.get(event.key);
+  const { selection } = editor;
+  if (direction && selection) {
+    const selectedTableArea = getSelectedTableArea(editor);
+    if (selectedTableArea) {
+      if (selectedTableArea.singleCell === 'not-selected') {
+        if (direction === 'up' || direction === 'down') {
+          const handler = () => {
+            document.removeEventListener('selectionchange', handler);
+            const domSelection = window.getSelection();
+            if (!domSelection) return;
+            const { anchorNode, focusNode } = domSelection;
+
+            const anchorNodeSelectable =
+              ReactEditor.hasEditableTarget(editor, anchorNode) ||
+              ReactEditor.isTargetInsideNonReadonlyVoid(editor, anchorNode);
+
+            const focusNodeSelectable =
+              ReactEditor.hasEditableTarget(editor, focusNode) ||
+              ReactEditor.isTargetInsideNonReadonlyVoid(editor, focusNode);
+
+            if (anchorNodeSelectable && focusNodeSelectable) {
+              const newSelection = ReactEditor.toSlateRange(
+                editor,
+                domSelection,
+                {
+                  exactMatch: false,
+                  suppressThrow: true,
+                }
+              );
+              if (newSelection) {
+                const prevFocus = selection.focus;
+                const newFocus = newSelection.focus;
+                const cellAboveSelection = Editor.above(editor, {
+                  at: selection,
+                  match: nodeTypeMatcher('table-cell'),
+                });
+                if (!cellAboveSelection) return;
+                const parentCellOfPrevFocus = Editor.above(editor, {
+                  at: prevFocus.path,
+                  match: nodeTypeMatcher('table-cell'),
+                });
+                if (!parentCellOfPrevFocus) return;
+                const prevFocusTablePath = parentCellOfPrevFocus[1].slice(
+                  0,
+                  -3
+                );
+                if (!Path.isDescendant(newFocus.path, prevFocusTablePath)) {
+                  return;
+                }
+                const commonPath = Path.common(prevFocus.path, newFocus.path);
+                const diff = commonPath.length - prevFocusTablePath.length;
+                if (diff > 2) return;
+                const newCellPath = getCellPathInDirection(
+                  editor,
+                  parentCellOfPrevFocus[1],
+                  direction
+                );
+                if (!newCellPath) {
+                  if (!event.shiftKey) {
+                    const point = Editor[
+                      direction === 'up' ? 'before' : 'after'
+                    ](editor, prevFocusTablePath);
+                    if (point) {
+                      ReactEditor.toDOMPoint(editor, point);
+                      domSelection.removeAllRanges();
+                      domSelection.addRange(
+                        ReactEditor.toDOMRange(editor, {
+                          anchor: point,
+                          focus: point,
+                        })
+                      );
+                    }
+                  }
+                  return;
+                }
+
+                const newSlateFocus = Editor.start(editor, newCellPath);
+                const newSlateRange = {
+                  focus: newSlateFocus,
+                  anchor: event.shiftKey ? selection.anchor : newSlateFocus,
+                };
+                domSelection.removeAllRanges();
+                domSelection.addRange(
+                  ReactEditor.toDOMRange(editor, newSlateRange)
+                );
+              }
+            }
+          };
+          document.addEventListener('selectionchange', handler);
+        }
+        return;
+      }
+      if (!event.shiftKey) return;
+      const focusCellPath = Editor.above(editor, {
+        match: nodeTypeMatcher('table-cell'),
+        at: selection.focus.path,
+      })?.[1];
+      const anchorCellPath = Editor.above(editor, {
+        match: nodeTypeMatcher('table-cell'),
+        at: selection.anchor.path,
+      })?.[1];
+
+      if (!focusCellPath || !anchorCellPath) return;
+      const newCellPath = getCellPathInDirection(
+        editor,
+        focusCellPath,
+        direction
+      );
+      if (newCellPath) {
+        if (Path.equals(newCellPath, anchorCellPath)) {
+          Transforms.select(editor, newCellPath);
+        } else {
+          Transforms.select(editor, {
+            anchor: selection.anchor,
+            focus: Editor.start(editor, newCellPath),
+          });
+        }
+        event.preventDefault();
+      }
     }
   }
 };
