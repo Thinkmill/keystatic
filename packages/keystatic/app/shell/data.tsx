@@ -271,6 +271,7 @@ const ChangedContext = createContext<{
       added: Set<string>;
       removed: Set<string>;
       changed: Set<string>;
+      totalCount: number;
     }
   >;
   singletons: Set<string>;
@@ -465,7 +466,7 @@ function getChangedData(
           getEntriesInCollectionWithTreeKey(
             config,
             collection,
-            trees.current.tree
+            trees.default.tree
           ).map(x => [x.slug, x.key])
         );
 
