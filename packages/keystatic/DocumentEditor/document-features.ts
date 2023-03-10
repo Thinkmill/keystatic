@@ -29,4 +29,5 @@ export type DocumentFeatures = {
   images: boolean | { directory?: string; publicPath?: string };
   dividers: boolean;
   layouts: [number, ...number[]][];
+  tables: boolean;
 };

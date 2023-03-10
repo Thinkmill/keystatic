@@ -63,6 +63,10 @@ interface Renderers {
           title?: string;
         }>
       | 'img';
+    table: Component<{
+      head?: { children: ReactNode; colSpan?: number; rowSpan?: number }[];
+      body: { children: ReactNode; colSpan?: number; rowSpan?: number }[][];
+    }>;
   };
 }
 
@@ -113,6 +117,34 @@ export const defaultRenderers: Renderers = {
             <div key={i}>{element}</div>
           ))}
         </div>
+      );
+    },
+    table: ({ head, body }) => {
+      return (
+        <table>
+          {head && (
+            <thead>
+              <tr>
+                {head.map((x, i) => (
+                  <th key={i} colSpan={x.colSpan} rowSpan={x.rowSpan}>
+                    {x.children}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+          )}
+          <tbody>
+            {body.map((row, i) => (
+              <tr key={i}>
+                {row.map((x, j) => (
+                  <td key={j} colSpan={x.colSpan} rowSpan={x.rowSpan}>
+                    {x.children}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       );
     },
   },
@@ -228,6 +260,42 @@ function DocumentNode({
           src={node.src as string}
           alt={node.alt as string}
           title={node.title as string}
+        />
+      );
+    }
+    case 'table': {
+      const first = node.children[0];
+      const second = node.children[1];
+      const body = second || first;
+      const head = second ? first : undefined;
+      return (
+        <renderers.block.table
+          head={
+            head
+              ? (head.children as Element[])[0].children.map(cell => ({
+                  children: (cell as Element).children.map((x, i) => (
+                    <DocumentNode
+                      node={x}
+                      componentBlocks={componentBlocks}
+                      renderers={renderers}
+                      key={i}
+                    />
+                  )),
+                }))
+              : undefined
+          }
+          body={(body.children as Element[]).map(row =>
+            (row.children as Element[]).map(cell => ({
+              children: (cell as Element).children.map((x, i) => (
+                <DocumentNode
+                  node={x}
+                  componentBlocks={componentBlocks}
+                  renderers={renderers}
+                  key={i}
+                />
+              )),
+            }))
+          )}
         />
       );
     }

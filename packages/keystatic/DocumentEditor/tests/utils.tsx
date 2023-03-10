@@ -158,6 +158,7 @@ export const defaultDocumentFeatures: DocumentFeatures = {
   links: true,
   layouts: [[1], [1, 1], [1, 1, 1], [1, 2, 1]],
   images: true,
+  tables: true,
 };
 
 injectVoussoirStyles();

@@ -54,6 +54,7 @@ type DefaultFieldProps<Key> = GenericPreviewProps<
 
 function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
   const labelId = useId();
+  const descriptionId = useId();
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   let onMove = (keys: Key[], target: ItemDropTarget) => {
@@ -173,11 +174,17 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
       gap="medium"
       role="group"
       aria-labelledby={labelId}
+      aria-describedby={props.schema.description ? descriptionId : undefined}
       direction="column"
     >
       <FieldLabel elementType="h3" id={labelId}>
         {props.schema.label}
       </FieldLabel>
+      {props.schema.description && (
+        <Text id={descriptionId} size="small" color="neutralSecondary">
+          {props.schema.description}
+        </Text>
+      )}
       <ActionButton
         autoFocus={props.autoFocus}
         onPress={addItem}

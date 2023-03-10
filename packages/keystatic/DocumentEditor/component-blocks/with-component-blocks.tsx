@@ -36,11 +36,12 @@ import {
   getNewArrayElementKey,
   setKeysForArrayValue,
 } from './preview-props';
+import { isBlock } from '..';
 
 function getAncestorComponentBlock(editor: Editor) {
   if (editor.selection) {
     const ancestorEntry = Editor.above(editor, {
-      match: node => Editor.isBlock(editor, node) && node.type !== 'paragraph',
+      match: node => isBlock(node) && node.type !== 'paragraph',
     });
     if (
       ancestorEntry &&

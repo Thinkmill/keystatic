@@ -41,6 +41,7 @@ import { useToolbarState } from './toolbar-state';
 import { clearFormatting, useStaticEditor } from './utils';
 import { Picker } from '@voussoir/picker';
 import { imageButton } from './image';
+import { tableButton } from './table';
 
 export function Toolbar({
   documentFeatures,
@@ -91,6 +92,7 @@ export function Toolbar({
           documentFeatures.links ||
           !!documentFeatures.images ||
           documentFeatures.formatting.blockTypes.blockquote ||
+          documentFeatures.tables ||
           !!documentFeatures.layouts.length ||
           documentFeatures.formatting.blockTypes.code) && (
           <ToolbarGroup>
@@ -103,6 +105,7 @@ export function Toolbar({
               <LayoutsButton layouts={documentFeatures.layouts} />
             )}
             {documentFeatures.formatting.blockTypes.code && codeButton}
+            {documentFeatures.tables && tableButton}
           </ToolbarGroup>
         )}
       </ToolbarScrollArea>
@@ -202,35 +205,41 @@ const HeadingMenu = ({
     });
     return resolvedItems;
   }, [headingLevels]);
+  const selected = textStyles.selected;
 
-  return (
-    <Picker
-      flexShrink={0}
-      width="size.scale.1700"
-      prominence="low"
-      aria-label="Text block"
-      items={items}
-      isDisabled={isDisabled}
-      selectedKey={textStyles.selected}
-      onSelectionChange={selected => {
-        let key = selected as typeof textStyles.selected;
-        if (key === 'normal') {
-          Transforms.unwrapNodes(editor, { match: n => n.type === 'heading' });
-        } else {
-          Transforms.setNodes(
-            editor,
-            { type: 'heading', level: key },
-            {
-              match: node =>
-                node.type === 'paragraph' || node.type === 'heading',
-            }
-          );
-        }
-        ReactEditor.focus(editor);
-      }}
-    >
-      {item => <Item>{item.name}</Item>}
-    </Picker>
+  return useMemo(
+    () => (
+      <Picker
+        flexShrink={0}
+        width="size.scale.1700"
+        prominence="low"
+        aria-label="Text block"
+        items={items}
+        isDisabled={isDisabled}
+        selectedKey={selected}
+        onSelectionChange={selected => {
+          let key = selected as typeof selected;
+          if (key === 'normal') {
+            Transforms.unwrapNodes(editor, {
+              match: n => n.type === 'heading',
+            });
+          } else {
+            Transforms.setNodes(
+              editor,
+              { type: 'heading', level: key as 1 | 2 | 3 | 4 | 5 | 6 },
+              {
+                match: node =>
+                  node.type === 'paragraph' || node.type === 'heading',
+              }
+            );
+          }
+          ReactEditor.focus(editor);
+        }}
+      >
+        {item => <Item key={item.id}>{item.name}</Item>}
+      </Picker>
+    ),
+    [editor, isDisabled, items, selected]
   );
 };
 
@@ -309,7 +318,7 @@ const inlineMarks = [
 ] as const;
 
 function InlineMarks({
-  marks: marksShown,
+  marks: _marksShown,
 }: {
   marks: DocumentFeatures['formatting']['inlineMarks'];
 }) {
@@ -318,49 +327,64 @@ function InlineMarks({
     clearFormatting: { isDisabled },
     marks,
   } = useToolbarState();
-  const items = inlineMarks.filter(
-    item => item.key === 'clearFormatting' || marksShown[item.key]
+  const marksShown = useMemoStringified(_marksShown);
+
+  const selectedKeys = useMemoStringified(
+    Object.keys(marks).filter(
+      key => marks[key as keyof typeof marks].isSelected
+    )
+  );
+  const disabledKeys = useMemoStringified(
+    Object.keys(marks)
+      .filter(key => marks[key as keyof typeof marks].isDisabled)
+      .concat(isDisabled ? 'clearFormatting' : [])
   );
 
-  return (
-    <ActionGroup
-      minWidth={`calc(${tokenSchema.size.element.medium} * 4)`}
-      prominence="low"
-      density="compact"
-      buttonLabelBehavior="hide"
-      overflowMode="collapse"
-      summaryIcon={<Icon src={typeIcon} />}
-      items={items}
-      selectionMode="multiple"
-      selectedKeys={Object.keys(marks).filter(
-        key => marks[key as keyof typeof marks].isSelected
-      )}
-      disabledKeys={Object.keys(marks)
-        .filter(key => marks[key as keyof typeof marks].isDisabled)
-        .concat(isDisabled ? 'clearFormatting' : [])}
-      onAction={key => {
-        if (key === 'clearFormatting') {
-          clearFormatting(editor);
-        } else {
-          const mark = key as keyof typeof marks;
-          if (marks[mark].isSelected) {
-            Editor.removeMark(editor, mark);
+  return useMemo(() => {
+    const items = inlineMarks.filter(
+      item => item.key === 'clearFormatting' || marksShown[item.key]
+    );
+    return (
+      <ActionGroup
+        minWidth={`calc(${tokenSchema.size.element.medium} * 4)`}
+        prominence="low"
+        density="compact"
+        buttonLabelBehavior="hide"
+        overflowMode="collapse"
+        summaryIcon={<Icon src={typeIcon} />}
+        items={items}
+        selectionMode="multiple"
+        selectedKeys={selectedKeys}
+        disabledKeys={disabledKeys}
+        onAction={key => {
+          if (key === 'clearFormatting') {
+            clearFormatting(editor);
           } else {
-            Editor.addMark(editor, mark, true);
+            const mark = key as keyof typeof marks;
+            if (Editor.marks(editor)?.[mark]) {
+              Editor.removeMark(editor, mark);
+            } else {
+              Editor.addMark(editor, mark, true);
+            }
           }
-        }
-        ReactEditor.focus(editor);
-      }}
-    >
-      {item => {
-        return (
-          <Item key={item.key} textValue={item.label}>
-            <Text>{item.label}</Text>
-            {'shortcut' in item && <Kbd meta>{item.shortcut}</Kbd>}
-            <Icon src={item.icon} />
-          </Item>
-        );
-      }}
-    </ActionGroup>
-  );
+          ReactEditor.focus(editor);
+        }}
+      >
+        {item => {
+          return (
+            <Item key={item.key} textValue={item.label}>
+              <Text>{item.label}</Text>
+              {'shortcut' in item && <Kbd meta>{item.shortcut}</Kbd>}
+              <Icon src={item.icon} />
+            </Item>
+          );
+        }}
+      </ActionGroup>
+    );
+  }, [disabledKeys, editor, marksShown, selectedKeys]);
+}
+
+function useMemoStringified<T>(value: T): T {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  return useMemo(() => value, [JSON.stringify(value)]);
 }

@@ -1,5 +1,34 @@
 # @keystatic/core
 
+## 0.0.63
+
+### Patch Changes
+
+- c8c4c49: Fix integer field validation
+
+## 0.0.62
+
+### Patch Changes
+
+- 145460a: Fix decoding url encoded strings in the API route
+
+## 0.0.61
+
+### Patch Changes
+
+- 0f71625: Add `description` to
+  `fields.{array,checkbox,date,document,image,integer,multiselect,select,pathReference,relationship}`.
+  (previously it was only on `fields.{text,slug}`)
+- 0f71625: Fix incorrectly attempting to get a GitHub token when using local
+  mode
+
+## 0.0.60
+
+### Patch Changes
+
+- d49af4b: Fix `reader.collection.*.list` with collections with `path` options
+  without a trailing slash
+
 ## 0.0.59
 
 ### Patch Changes

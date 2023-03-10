@@ -13,6 +13,7 @@ import {
   getCollectionFormat,
   getCollectionItemPath,
   getCollectionPath,
+  getDataFileExtension,
   getEntryDataFilepath,
   getSingletonFormat,
   getSingletonPath,
@@ -55,6 +56,7 @@ function collectionReader(
   const collectionPath = getCollectionPath(config, collection);
   const collectionConfig = config.collections![collection];
   const schema = fields.object(collectionConfig.schema);
+  const extension = getDataFileExtension(formatInfo);
   return {
     read: (slug: string) => {
       return readItem(
@@ -76,23 +78,28 @@ function collectionReader(
       return (
         await Promise.all(
           entries.map(async x => {
-            if (!x.isDirectory()) return [];
-            try {
-              await fs.stat(
-                path.join(
-                  repoPath,
-                  getEntryDataFilepath(
-                    `${collectionPath}/${x.name}`,
-                    formatInfo
+            if (formatInfo.dataLocation === 'index') {
+              if (!x.isDirectory()) return [];
+              try {
+                await fs.stat(
+                  path.join(
+                    repoPath,
+                    getEntryDataFilepath(
+                      `${collectionPath}/${x.name}`,
+                      formatInfo
+                    )
                   )
-                )
-              );
-              return [x.name];
-            } catch (err) {
-              if ((err as any).code === 'ENOENT') {
-                return [];
+                );
+                return [x.name];
+              } catch (err) {
+                if ((err as any).code === 'ENOENT') {
+                  return [];
+                }
+                throw err;
               }
-              throw err;
+            } else {
+              if (!x.isFile() || !x.name.endsWith(extension)) return [];
+              return [x.name.slice(0, -extension.length)];
             }
           })
         )

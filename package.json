@@ -31,7 +31,7 @@
     "test:coverage": "jest ---coverage",
     "test:unit": "jest",
     "validate": "npm-run-all --parallel check:*",
-    "version-packages": "changeset version && pnpm i --frozen-lockfile=false && pnpm run format ."
+    "version-packages": "changeset version && pnpm i --frozen-lockfile=false && pnpm run format \"**/CHANGELOG.md\""
   },
   "dependencies": {
     "@babel/core": "^7.18.5",

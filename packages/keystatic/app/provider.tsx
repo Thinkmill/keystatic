@@ -175,7 +175,10 @@ export default function Provider({
                         },
                       });
                     },
-                    getAuth,
+                    getAuth: async () => {
+                      if (repo) return getAuth();
+                      return null;
+                    },
                   }),
                   fetchExchange,
                 ],

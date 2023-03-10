@@ -14,6 +14,7 @@ import { matchSorter } from 'match-sorter';
 import { ActionButton } from '@voussoir/button';
 import { Combobox } from '@voussoir/combobox';
 import { codeIcon } from '@voussoir/icon/icons/codeIcon';
+import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Icon } from '@voussoir/icon';
 import { Flex } from '@voussoir/layout';
 import { css, tokenSchema } from '@voussoir/style';
@@ -28,14 +29,14 @@ import {
   BlockWrapper,
   ToolbarSeparator,
 } from './primitives';
-import { trash2Icon } from '@voussoir/icon/all';
+import { isBlock } from '.';
 
 export function withCodeBlock(editor: Editor): Editor {
   const { insertBreak, normalizeNode } = editor;
 
   editor.insertBreak = () => {
     const [node, path] = Editor.above(editor, {
-      match: n => Editor.isBlock(editor, n),
+      match: isBlock,
     }) || [editor, []];
     if (node.type === 'code' && SlateText.isText(node.children[0])) {
       const text = node.children[0].text;

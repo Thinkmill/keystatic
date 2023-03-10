@@ -9,10 +9,12 @@ export function relationship<IsRequired extends boolean | undefined>({
   label,
   collection,
   validation,
+  description,
 }: {
   label: string;
   collection: string;
   validation?: { isRequired?: IsRequired };
+  description?: string;
 } & RequiredValidation<IsRequired>): BasicFormField<
   string | (IsRequired extends true ? never : null),
   undefined
@@ -42,6 +44,7 @@ export function relationship<IsRequired extends boolean | undefined>({
       return (
         <Combobox
           label={label}
+          description={description}
           selectedKey={value}
           onSelectionChange={key => {
             if (typeof key === 'string' || key === null) {

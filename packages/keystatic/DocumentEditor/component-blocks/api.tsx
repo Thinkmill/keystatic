@@ -184,6 +184,7 @@ export type ArrayField<ElementField extends ComponentSchema> = {
   kind: 'array';
   element: ElementField;
   label: string;
+  description?: string;
   // this is written with unknown to avoid typescript being annoying about circularity or variance things
   itemLabel?(props: unknown): string;
   asChildTag?: string;
@@ -216,6 +217,7 @@ type ArrayFieldInComponentSchema = {
   kind: 'array';
   element: ComponentSchema;
   label: string;
+  description?: string;
   // this is written with unknown to avoid typescript being annoying about circularity or variance things
   itemLabel?(props: unknown): string;
   asChildTag?: string;

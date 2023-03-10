@@ -1,17 +1,19 @@
-import { Node } from 'slate';
+import { Element, Node } from 'slate';
 import { Mark } from '../../utils';
-import { ReadonlyPropPath } from '../../component-blocks/utils';
 
 export const __jsx: any;
 
 type Children = Node | string | (Node | string)[];
 
-type OnlyChildren = { children: Children };
-
-type ComponentProp = { children: Children; propPath?: ReadonlyPropPath };
+type Elements = {
+  [Key in Element['type']]: Omit<
+    Element & { type: Key },
+    'type' | 'children'
+  > & { children: Children };
+};
 declare namespace __jsx {
   namespace JSX {
-    interface IntrinsicElements {
+    type IntrinsicElements = Elements & {
       editor: {
         children: Children;
         marks?: { [Key in Mark | 'insertMenu']?: true };
@@ -21,36 +23,7 @@ declare namespace __jsx {
       cursor: { [key: string]: never };
       anchor: { [key: string]: never };
       focus: { [key: string]: never };
-      layout: { layout: [number, ...number[]]; children: Children };
-      'layout-area': OnlyChildren;
-      blockquote: OnlyChildren;
-      paragraph: {
-        textAlign?: 'center' | 'end';
-        children: Children;
-      };
-      code: OnlyChildren;
-      divider: OnlyChildren;
-      heading: {
-        level: 1 | 2 | 3 | 4 | 5 | 6;
-        children: Children;
-        textAlign?: 'center' | 'end';
-      };
-      'component-block': {
-        component: string;
-        props: Record<string, any>;
-        children: Children;
-      };
-      'component-inline-prop': ComponentProp;
-      'component-block-prop': ComponentProp;
-      'ordered-list': OnlyChildren;
-      'unordered-list': OnlyChildren;
-      'list-item': OnlyChildren;
-      'list-item-content': OnlyChildren;
-      link: {
-        href: string;
-        children: Children;
-      };
-    }
+    };
     type Element = Node;
     interface ElementAttributesProperty {
       props: {};

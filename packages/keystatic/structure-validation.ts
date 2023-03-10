@@ -86,6 +86,10 @@ const onlyChildrenElements: t.Type<OnlyChildrenElements> = t.recursion(
           t.literal('list-item-content'),
           t.literal('ordered-list'),
           t.literal('unordered-list'),
+          t.literal('table'),
+          t.literal('table-head'),
+          t.literal('table-body'),
+          t.literal('table-row'),
         ]),
         children,
       })
@@ -100,7 +104,27 @@ type OnlyChildrenElements = {
     | 'list-item'
     | 'list-item-content'
     | 'ordered-list'
-    | 'unordered-list';
+    | 'unordered-list'
+    | 'table'
+    | 'table-head'
+    | 'table-body'
+    | 'table-row';
+  children: Children;
+};
+
+const tableCell: t.Type<TableCell> = t.recursion('TableCell', () =>
+  excess(
+    t.type({
+      type: t.literal('table-cell'),
+      header: t.union([t.undefined, t.literal(true)]),
+      children,
+    })
+  )
+);
+
+type TableCell = {
+  type: 'table-cell';
+  header: true | undefined;
   children: Children;
 };
 
@@ -247,7 +271,8 @@ export type BlockFromValidation =
   | ComponentProp
   | Paragraph
   | CodeBlock
-  | Image;
+  | Image
+  | TableCell;
 
 const block: t.Type<BlockFromValidation> = t.recursion('Element', () =>
   t.union([
@@ -259,6 +284,7 @@ const block: t.Type<BlockFromValidation> = t.recursion('Element', () =>
     paragraph,
     codeBlock,
     image,
+    tableCell,
   ])
 );
 

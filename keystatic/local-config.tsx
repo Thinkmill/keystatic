@@ -21,6 +21,8 @@ import { css, tokenSchema } from '@voussoir/style';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { Text } from '@voussoir/typography';
 
+const description = 'Some description';
+
 export default config({
   storage: {
     kind: 'github',
@@ -48,6 +50,7 @@ export default config({
           ], // TEMP
           dividers: true,
           links: true,
+          tables: true,
           images: {
             directory: 'public/images/posts',
             publicPath: '/images/posts/',
@@ -257,6 +260,60 @@ export default config({
       schema: {
         something: fields.checkbox({ label: 'Something' }),
         logo: fields.image({ label: 'Logo' }),
+      },
+    }),
+    fields: singleton({
+      label: 'All Fields',
+      schema: {
+        text: fields.text({ label: 'Text', description }),
+        title: fields.slug({
+          name: { label: 'Title', description },
+          slug: { description },
+        }),
+        integer: fields.integer({ label: 'Number', description }),
+        checkbox: fields.checkbox({ label: 'Checkbox', description }),
+        select: fields.select({
+          label: 'Select',
+          description,
+          options: [
+            { value: 'one', label: 'One' },
+            { value: 'two', label: 'Two' },
+            { value: 'three', label: 'Three' },
+          ],
+          defaultValue: 'one',
+        }),
+        multiselect: fields.multiselect({
+          label: 'Multiselect',
+          description,
+          options: [
+            { value: 'one', label: 'One' },
+            { value: 'two', label: 'Two' },
+            { value: 'three', label: 'Three' },
+          ],
+          defaultValue: ['one'],
+        }),
+        array: fields.array(fields.text({ label: 'Text', description }), {
+          label: 'Array',
+          description,
+        }),
+        date: fields.date({ label: 'Date', description }),
+        document: fields.document({
+          label: 'Document',
+          description,
+          formatting: true,
+          dividers: true,
+          links: true,
+        }),
+        image: fields.image({ label: 'Image', description }),
+        pathReference: fields.pathReference({
+          label: 'Path Reference',
+          description,
+        }),
+        relationship: fields.relationship({
+          label: 'Relationship',
+          description,
+          collection: 'posts',
+        }),
       },
     }),
   },

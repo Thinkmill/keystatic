@@ -17,7 +17,7 @@ import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
 import { Heading, Text } from '@voussoir/typography';
 
 import l10nMessages from '../app/l10n/index.json';
-import { isInlineContainer } from '.';
+import { isBlock, isInlineContainer } from '.';
 import {
   BlockPopover,
   BlockPopoverTrigger,
@@ -270,7 +270,7 @@ export function withLink(
       const startOfBlock = Editor.start(
         editor,
         Editor.above(editor, {
-          match: node => Editor.isBlock(editor, node),
+          match: isBlock,
         })![1]
       );
 
@@ -296,7 +296,10 @@ export function withLink(
       // by doing this, the insertText(')') above will happen in a different undo than the link replacement
       // so that means that when someone does an undo after this
       // it will undo to the state of "[content](link)" rather than "[content](link" (note the missing closing bracket)
-      editor.history.undos.push([]);
+      editor.history.undos.push({
+        operations: [],
+        selectionBefore: editor.selection,
+      });
       const startOfShortcut =
         match.index === 0
           ? startOfBlock
@@ -313,9 +316,7 @@ export function withLink(
       const endOfLinkText = EditorAfterButIgnoringingPointsWithNoContent(
         editor,
         startOfLinkText,
-        {
-          distance: linkText.length,
-        }
+        { distance: linkText.length }
       )!;
 
       Transforms.delete(editor, {
