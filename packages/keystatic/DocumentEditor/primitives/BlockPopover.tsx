@@ -231,7 +231,6 @@ function useBlockPopover(
       checkForStickiness();
       window.addEventListener('scroll', checkForStickiness);
       return () => {
-        console.log('unsubscribe');
         checkForStickiness();
         window.removeEventListener('scroll', checkForStickiness);
       };
