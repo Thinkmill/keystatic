@@ -13,29 +13,31 @@ import {
   cloneElement,
   createContext,
   ReactElement,
+  ReactNode,
   Ref,
   useContext,
   useEffect,
+  useMemo,
   useRef,
+  useState,
 } from 'react';
+import { Element, Editor } from 'slate';
 
 import { Overlay, PopoverProps } from '@voussoir/overlays';
 import { css, tokenSchema, transition } from '@voussoir/style';
 
-import { useSelectedOrFocusWithin } from '../utils';
+import { nodeTypeMatcher } from '../utils';
 
 type RenderFn = (close: () => void) => ReactElement;
 type BlockPopoverTriggerProps = {
+  element: Element;
   children: [ReactElement, ReactElement<BlockPopoverProps>];
-  // isOpen: boolean;
 };
 type BlockPopoverProps = Pick<PopoverProps, 'hideArrow' | 'placement'> & {
   children: ReactElement | RenderFn;
 };
 
 const BlockPopoverContext = createContext<{
-  // isOpen: boolean;
-  dialogFocusProps: ReturnType<typeof useOverlay>['overlayProps'];
   state: OverlayTriggerState;
   triggerRef: React.MutableRefObject<HTMLElement | null>;
 } | null>(null);
@@ -50,12 +52,46 @@ function useBlockPopoverContext() {
   return context;
 }
 
-export const BlockPopoverTrigger = ({ children }: BlockPopoverTriggerProps) => {
+const typeMatcher = nodeTypeMatcher(
+  'image',
+  'layout',
+  'link',
+  'code',
+  'component-block'
+);
+
+const ActiveBlockPopoverContext = createContext<undefined | Element>(undefined);
+export function useActiveBlockPopover() {
+  return useContext(ActiveBlockPopoverContext);
+}
+
+export function ActiveBlockPopoverProvider(props: {
+  children: ReactNode;
+  editor: Editor;
+}) {
+  const nodeWithPopover = Editor.above(props.editor, {
+    match: typeMatcher,
+  });
+  return (
+    <ActiveBlockPopoverContext.Provider value={nodeWithPopover?.[0]}>
+      {props.children}
+    </ActiveBlockPopoverContext.Provider>
+  );
+}
+
+export const BlockPopoverTrigger = ({
+  children,
+  element,
+}: BlockPopoverTriggerProps) => {
   const [trigger, popover] = children;
+  const activePopoverElement = useActiveBlockPopover();
   const triggerRef = useRef(null);
-  const [selectedOrFocused, dialogFocusProps] = useSelectedOrFocusWithin();
-  const state = useOverlayTriggerState({ isOpen: selectedOrFocused });
-  const context = { dialogFocusProps, state, triggerRef };
+
+  const state = useOverlayTriggerState({
+    isOpen: activePopoverElement === element,
+  });
+
+  const context = useMemo(() => ({ state, triggerRef }), [state, triggerRef]);
 
   return (
     <BlockPopoverContext.Provider value={context}>
@@ -82,14 +118,8 @@ const BlockPopoverWrapper = ({
   placement: preferredPlacement = 'bottom',
 }: BlockPopoverProps & { wrapperRef: Ref<HTMLDivElement> }) => {
   let popoverRef = useRef(null);
-  const { dialogFocusProps, state, triggerRef } = useBlockPopoverContext();
-  let {
-    // arrowProps,
-    placement,
-    popoverProps,
-    // underlayProps,
-    updatePosition,
-  } = useBlockPopover(
+  let { state, triggerRef } = useBlockPopoverContext();
+  let { placement, popoverProps } = useBlockPopover(
     {
       isNonModal: true,
       isKeyboardDismissDisabled: false,
@@ -100,30 +130,10 @@ const BlockPopoverWrapper = ({
     state
   );
 
-  let previousBoundingRect = usePrevious(
-    triggerRef.current?.getBoundingClientRect()
-  );
-  useLayoutEffect(() => {
-    if (previousBoundingRect) {
-      const currentBoundingRect = triggerRef.current?.getBoundingClientRect();
-      if (currentBoundingRect) {
-        const hasChanged =
-          previousBoundingRect.height !== currentBoundingRect.height ||
-          previousBoundingRect.width !== currentBoundingRect.width;
-        // previousBoundingRect.x !== currentBoundingRect.x ||
-        // previousBoundingRect.y !== currentBoundingRect.y;
-        if (hasChanged) {
-          console.log('has changed');
-          updatePosition();
-        }
-      }
-    }
-  }, [previousBoundingRect, triggerRef, updatePosition]);
-
   return (
     <div
       ref={popoverRef}
-      {...mergeProps(dialogFocusProps, popoverProps)}
+      {...popoverProps}
       data-open={state.isOpen}
       data-placement={placement}
       contentEditable={false}
@@ -187,6 +197,8 @@ function useBlockPopover(
     ...otherProps
   } = props;
 
+  let [isSticky, setSticky] = useState(false);
+
   let { overlayProps, underlayProps } = useOverlay(
     {
       isOpen: state.isOpen,
@@ -198,6 +210,34 @@ function useBlockPopover(
     popoverRef
   );
 
+  // stick the popover to the bottom of the viewport instead of flipping
+  const containerPadding = 8;
+  useEffect(() => {
+    if (state.isOpen) {
+      const checkForStickiness = () => {
+        const vh = Math.max(
+          document.documentElement.clientHeight || 0,
+          window.innerHeight || 0
+        );
+        let popoverRect = popoverRef.current?.getBoundingClientRect();
+        let triggerRect = triggerRef.current?.getBoundingClientRect();
+        if (popoverRect && triggerRect) {
+          setSticky(
+            triggerRect.bottom + popoverRect.height + containerPadding * 2 >
+              vh && triggerRect.top < vh
+          );
+        }
+      };
+      checkForStickiness();
+      window.addEventListener('scroll', checkForStickiness);
+      return () => {
+        console.log('unsubscribe');
+        checkForStickiness();
+        window.removeEventListener('scroll', checkForStickiness);
+      };
+    }
+  }, [popoverRef, triggerRef, state.isOpen]);
+
   let {
     overlayProps: positionProps,
     arrowProps,
@@ -205,11 +245,51 @@ function useBlockPopover(
     updatePosition,
   } = useOverlayPosition({
     ...otherProps,
+    containerPadding,
+    shouldFlip: false,
     targetRef: triggerRef,
     overlayRef: popoverRef,
     isOpen: state.isOpen,
     onClose: undefined,
   });
+
+  // force update position when the trigger changes
+  let previousBoundingRect = usePrevious(
+    triggerRef.current?.getBoundingClientRect()
+  );
+  useLayoutEffect(() => {
+    if (previousBoundingRect) {
+      const currentBoundingRect = triggerRef.current?.getBoundingClientRect();
+      if (currentBoundingRect) {
+        const hasChanged =
+          previousBoundingRect.height !== currentBoundingRect.height ||
+          previousBoundingRect.width !== currentBoundingRect.width ||
+          previousBoundingRect.x !== currentBoundingRect.x ||
+          previousBoundingRect.y !== currentBoundingRect.y;
+        if (hasChanged) {
+          updatePosition();
+        }
+      }
+    }
+  }, [previousBoundingRect, triggerRef, updatePosition]);
+
+  // make sure popovers are below modal dialogs and their blanket
+  if (positionProps.style) {
+    positionProps.style.zIndex = 1;
+  }
+
+  // switching to position: fixed will undoubtedly bite me later, but this hack works for now
+  if (isSticky) {
+    positionProps.style = {
+      ...positionProps.style,
+      // @ts-expect-error
+      maxHeight: null,
+      position: 'fixed',
+      // @ts-expect-error
+      top: null,
+      bottom: containerPadding,
+    };
+  }
 
   return {
     arrowProps,

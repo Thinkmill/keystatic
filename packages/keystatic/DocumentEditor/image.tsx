@@ -26,7 +26,6 @@ import {
   focusWithPreviousSelection,
   insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading,
   useElementWithSetNodes,
-  useSelectedOrFocusWithin,
   useStaticEditor,
 } from './utils';
 import {
@@ -34,6 +33,7 @@ import {
   BlockPopoverTrigger,
   BlockWrapper,
   NotEditable,
+  useActiveBlockPopover,
 } from './primitives';
 
 export const ImageElement = ({
@@ -50,13 +50,15 @@ export const ImageElement = ({
     __elementForGettingPath
   );
   const objectUrl = useObjectURL(currentElement.src.content)!;
-  const [selected, targetProps] = useSelectedOrFocusWithin();
+  const activePopoverElement = useActiveBlockPopover();
+  const selected = activePopoverElement === __elementForGettingPath;
 
   return (
     <>
       <BlockWrapper attributes={attributes}>
         {children}
         <BlockPopoverTrigger
+          element={__elementForGettingPath}
           key={aspectRatio} // Force the popover to re-render when the aspect ratio changes.
         >
           <div
@@ -93,7 +95,7 @@ export const ImageElement = ({
           </div>
 
           <BlockPopover hideArrow>
-            <Flex gap="regular" padding="regular" {...targetProps}>
+            <Flex gap="regular" padding="regular">
               <Flex gap="small">
                 <TooltipTrigger>
                   <ActionButton

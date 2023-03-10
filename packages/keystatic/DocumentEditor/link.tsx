@@ -18,7 +18,11 @@ import { Heading, Text } from '@voussoir/typography';
 
 import l10nMessages from '../app/l10n/index.json';
 import { isInlineContainer } from '.';
-import { BlockPopover, BlockPopoverTrigger } from './primitives';
+import {
+  BlockPopover,
+  BlockPopoverTrigger,
+  useActiveBlockPopover,
+} from './primitives';
 import { DocumentFeatures } from './document-features';
 import { ComponentBlock } from './component-blocks/api';
 import {
@@ -32,7 +36,6 @@ import {
   useElementWithSetNodes,
   useStaticEditor,
   useEventCallback,
-  useSelectedOrFocusWithin,
   focusWithPreviousSelection,
 } from './utils';
 
@@ -83,7 +86,8 @@ export const LinkElement = ({
   const text = Node.string(currentElement);
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selected, targetProps] = useSelectedOrFocusWithin();
+  const activePopoverElement = useActiveBlockPopover();
+  const selected = activePopoverElement === __elementForGettingPath;
 
   useEffect(() => {
     if (selected && !href) {
@@ -100,13 +104,13 @@ export const LinkElement = ({
 
   return (
     <>
-      <BlockPopoverTrigger>
+      <BlockPopoverTrigger element={__elementForGettingPath}>
         <a href={href} {...attributes}>
           {children}
         </a>
 
         <BlockPopover placement="bottom start">
-          <Flex gap="small" padding="regular" {...targetProps}>
+          <Flex gap="small" padding="regular">
             <TooltipTrigger>
               <ActionButton
                 prominence="low"

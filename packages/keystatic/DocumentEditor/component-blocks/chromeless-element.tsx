@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Element } from 'slate';
 import { RenderElementProps } from 'slate-react';
 
 import { ActionButton } from '@voussoir/button';
@@ -24,13 +25,14 @@ export function ChromelessComponentBlockElement(props: {
   >;
   onRemove: () => void;
   attributes: RenderElementProps['attributes'];
+  element: Element;
 }) {
   const ChromelessToolbar =
     props.componentBlock.toolbar ?? DefaultToolbarWithoutChrome;
 
   return (
     <Box {...props.attributes} marginY="xlarge">
-      <BlockPopoverTrigger>
+      <BlockPopoverTrigger element={props.element}>
         <div>{props.renderedBlock}</div>
         <BlockPopover>
           <ChromelessToolbar

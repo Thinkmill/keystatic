@@ -49,7 +49,7 @@ export const LayoutContainer = ({
       className={css({ marginBlock: '1em' })} // treat as a block element, like a paragraph
       {...attributes}
     >
-      <BlockPopoverTrigger>
+      <BlockPopoverTrigger element={element}>
         <div
           className={css({
             columnGap: tokenSchema.size.space.regular,

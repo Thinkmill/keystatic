@@ -139,7 +139,7 @@ export function CodeElement({
   );
   return (
     <BlockWrapper>
-      <BlockPopoverTrigger>
+      <BlockPopoverTrigger element={element}>
         <pre
           spellCheck="false"
           className={css({

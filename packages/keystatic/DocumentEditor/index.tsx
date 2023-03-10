@@ -52,6 +52,7 @@ import { withInsertMenu } from './insert-menu';
 import { withBlockMarkdownShortcuts } from './block-markdown-shortcuts';
 import { withPasting } from './pasting';
 import { withImages } from './image';
+import { ActiveBlockPopoverProvider } from './primitives';
 // the docs site needs access to Editor and importing slate would use the version from the content field
 // so we're exporting it from here (note that this is not at all visible in the published version)
 export { Editor } from 'slate';
@@ -247,6 +248,7 @@ export function DocumentEditor({
         )}
 
         <DocumentEditorEditable
+          id="document-editor-boundary"
           className={css({
             padding: tokenSchema.size.space.medium,
             height: 'auto',
@@ -336,92 +338,94 @@ export function DocumentEditorEditable(props: EditableProps) {
   const onKeyDown = useMemo(() => getKeyDownHandler(editor), [editor]);
 
   return (
-    <Editable
-      decorate={useCallback(
-        ([node, path]: NodeEntry<Node>) => {
-          let decorations: Range[] = [];
-          if (node.type === 'component-block') {
-            if (
-              node.children.length === 1 &&
-              Element.isElement(node.children[0]) &&
-              node.children[0].type === 'component-inline-prop' &&
-              node.children[0].propPath === undefined
-            ) {
-              return decorations;
-            }
-            node.children.forEach((child, index) => {
+    <ActiveBlockPopoverProvider editor={editor}>
+      <Editable
+        decorate={useCallback(
+          ([node, path]: NodeEntry<Node>) => {
+            let decorations: Range[] = [];
+            if (node.type === 'component-block') {
               if (
-                Node.string(child) === '' &&
-                Element.isElement(child) &&
-                (child.type === 'component-block-prop' ||
-                  child.type === 'component-inline-prop') &&
-                child.propPath !== undefined
+                node.children.length === 1 &&
+                Element.isElement(node.children[0]) &&
+                node.children[0].type === 'component-inline-prop' &&
+                node.children[0].propPath === undefined
               ) {
-                const start = Editor.start(editor, [...path, index]);
-                const placeholder = getPlaceholderTextForPropPath(
-                  child.propPath,
-                  componentBlocks[node.component].schema,
-                  node.props
-                );
-                if (placeholder) {
-                  decorations.push({
-                    placeholder,
-                    anchor: start,
-                    focus: start,
-                  });
-                }
+                return decorations;
               }
-            });
-          }
-          if (
-            node.type === 'code' &&
-            node.children.length === 1 &&
-            node.children[0].type === undefined &&
-            node.language &&
-            node.language in Prism.languages
-          ) {
-            const textPath = [...path, 0];
-            const tokens = Prism.tokenize(
-              node.children[0].text,
-              Prism.languages[node.language]
-            );
-            function consumeTokens(
-              start: number,
-              tokens: (string | Prism.Token)[]
-            ) {
-              for (const token of tokens) {
-                const length = getPrismTokenLength(token);
-                const end = start + length;
-
-                if (typeof token !== 'string') {
-                  decorations.push({
-                    ['prism_' + token.type]: true,
-                    anchor: { path: textPath, offset: start },
-                    focus: { path: textPath, offset: end },
-                  });
-                  consumeTokens(
-                    start,
-                    Array.isArray(token.content)
-                      ? token.content
-                      : [token.content]
+              node.children.forEach((child, index) => {
+                if (
+                  Node.string(child) === '' &&
+                  Element.isElement(child) &&
+                  (child.type === 'component-block-prop' ||
+                    child.type === 'component-inline-prop') &&
+                  child.propPath !== undefined
+                ) {
+                  const start = Editor.start(editor, [...path, index]);
+                  const placeholder = getPlaceholderTextForPropPath(
+                    child.propPath,
+                    componentBlocks[node.component].schema,
+                    node.props
                   );
+                  if (placeholder) {
+                    decorations.push({
+                      placeholder,
+                      anchor: start,
+                      focus: start,
+                    });
+                  }
                 }
-
-                start = end;
-              }
+              });
             }
-            consumeTokens(0, tokens);
-          }
-          return decorations;
-        },
-        [editor, componentBlocks]
-      )}
-      onKeyDown={onKeyDown}
-      renderElement={renderElement}
-      renderLeaf={renderLeaf}
-      {...props}
-      className={classNames(editableStyles, props.className)}
-    />
+            if (
+              node.type === 'code' &&
+              node.children.length === 1 &&
+              node.children[0].type === undefined &&
+              node.language &&
+              node.language in Prism.languages
+            ) {
+              const textPath = [...path, 0];
+              const tokens = Prism.tokenize(
+                node.children[0].text,
+                Prism.languages[node.language]
+              );
+              function consumeTokens(
+                start: number,
+                tokens: (string | Prism.Token)[]
+              ) {
+                for (const token of tokens) {
+                  const length = getPrismTokenLength(token);
+                  const end = start + length;
+
+                  if (typeof token !== 'string') {
+                    decorations.push({
+                      ['prism_' + token.type]: true,
+                      anchor: { path: textPath, offset: start },
+                      focus: { path: textPath, offset: end },
+                    });
+                    consumeTokens(
+                      start,
+                      Array.isArray(token.content)
+                        ? token.content
+                        : [token.content]
+                    );
+                  }
+
+                  start = end;
+                }
+              }
+              consumeTokens(0, tokens);
+            }
+            return decorations;
+          },
+          [editor, componentBlocks]
+        )}
+        onKeyDown={onKeyDown}
+        renderElement={renderElement}
+        renderLeaf={renderLeaf}
+        {...props}
+        className={classNames(editableStyles, props.className)}
+      />
+    </ActiveBlockPopoverProvider>
   );
 }
 

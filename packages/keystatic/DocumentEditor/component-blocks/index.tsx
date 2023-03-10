@@ -138,6 +138,7 @@ Content:`}
 
   return componentBlock.chromeless ? (
     <ChromelessComponentBlockElement
+      element={__elementToGetPath}
       attributes={attributes}
       renderedBlock={renderedBlock}
       componentBlock={componentBlock}

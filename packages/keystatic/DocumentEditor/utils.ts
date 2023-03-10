@@ -1,11 +1,9 @@
-import { useFocusWithin } from '@react-aria/interactions';
 import React, {
   useCallback,
   useEffect,
   useRef,
   useState,
   useContext,
-  HTMLAttributes,
 } from 'react';
 import {
   Editor,
@@ -19,7 +17,7 @@ import {
   Location,
   Point,
 } from 'slate';
-import { ReactEditor, useFocused, useSelected } from 'slate-react';
+import { ReactEditor } from 'slate-react';
 
 export { useSlateStatic as useStaticEditor } from 'slate-react';
 
@@ -228,35 +226,6 @@ export function assert(condition: boolean): asserts condition {
   if (!condition) {
     throw new Error('failed assert');
   }
-}
-
-// delay our reading of the updated `focused` value so that we'll still render
-// the dialog immediately after the editor is blurred but before the input has
-// been focused
-export function useDelayedFocused() {
-  const focused = useFocused();
-  const [delayedFocused, setDelayedFocused] = useState(false);
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setDelayedFocused(focused);
-    }, 0);
-    return () => clearTimeout(timeout);
-  }, [focused]);
-  return delayedFocused;
-}
-
-export function useSelectedOrFocusWithin(): [
-  boolean,
-  HTMLAttributes<HTMLElement>
-] {
-  const [focusWithin, setFocusWithin] = useState(false);
-  const { focusWithinProps } = useFocusWithin({
-    onFocusWithinChange: setFocusWithin,
-  });
-  const focused = useFocused();
-  const selected = useSelected();
-
-  return [(focused && selected) || focusWithin, focusWithinProps];
 }
 
 export function focusWithPreviousSelection(editor: Editor) {
