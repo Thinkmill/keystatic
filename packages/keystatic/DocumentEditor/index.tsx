@@ -150,95 +150,6 @@ const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
   if (direction && selection) {
     const selectedTableArea = getSelectedTableArea(editor);
     if (selectedTableArea) {
-      if (selectedTableArea.singleCell === 'not-selected') {
-        if (direction === 'up' || direction === 'down') {
-          const handler = () => {
-            document.removeEventListener('selectionchange', handler);
-            const domSelection = window.getSelection();
-            if (!domSelection) return;
-            const { anchorNode, focusNode } = domSelection;
-
-            const anchorNodeSelectable =
-              ReactEditor.hasEditableTarget(editor, anchorNode) ||
-              ReactEditor.isTargetInsideNonReadonlyVoid(editor, anchorNode);
-
-            const focusNodeSelectable =
-              ReactEditor.hasEditableTarget(editor, focusNode) ||
-              ReactEditor.isTargetInsideNonReadonlyVoid(editor, focusNode);
-
-            if (anchorNodeSelectable && focusNodeSelectable) {
-              const newSelection = ReactEditor.toSlateRange(
-                editor,
-                domSelection,
-                {
-                  exactMatch: false,
-                  suppressThrow: true,
-                }
-              );
-              if (newSelection) {
-                const prevFocus = selection.focus;
-                const newFocus = newSelection.focus;
-                const cellAboveSelection = Editor.above(editor, {
-                  at: selection,
-                  match: nodeTypeMatcher('table-cell'),
-                });
-                if (!cellAboveSelection) return;
-                const parentCellOfPrevFocus = Editor.above(editor, {
-                  at: prevFocus.path,
-                  match: nodeTypeMatcher('table-cell'),
-                });
-                if (!parentCellOfPrevFocus) return;
-                const prevFocusTablePath = parentCellOfPrevFocus[1].slice(
-                  0,
-                  -3
-                );
-                if (!Path.isDescendant(newFocus.path, prevFocusTablePath)) {
-                  return;
-                }
-                const commonPath = Path.common(prevFocus.path, newFocus.path);
-                const diff = commonPath.length - prevFocusTablePath.length;
-                if (diff > 2) return;
-                const newCellPath = getCellPathInDirection(
-                  editor,
-                  parentCellOfPrevFocus[1],
-                  direction
-                );
-                if (!newCellPath) {
-                  if (!event.shiftKey) {
-                    const point = Editor[
-                      direction === 'up' ? 'before' : 'after'
-                    ](editor, prevFocusTablePath);
-                    if (point) {
-                      ReactEditor.toDOMPoint(editor, point);
-                      domSelection.removeAllRanges();
-                      domSelection.addRange(
-                        ReactEditor.toDOMRange(editor, {
-                          anchor: point,
-                          focus: point,
-                        })
-                      );
-                    }
-                  }
-                  return;
-                }
-
-                const newSlateFocus = Editor.start(editor, newCellPath);
-                const newSlateRange = {
-                  focus: newSlateFocus,
-                  anchor: event.shiftKey ? selection.anchor : newSlateFocus,
-                };
-                domSelection.removeAllRanges();
-                domSelection.addRange(
-                  ReactEditor.toDOMRange(editor, newSlateRange)
-                );
-              }
-            }
-          };
-          document.addEventListener('selectionchange', handler);
-        }
-        return;
-      }
-      if (!event.shiftKey) return;
       const focusCellPath = Editor.above(editor, {
         match: nodeTypeMatcher('table-cell'),
         at: selection.focus.path,
@@ -255,6 +166,49 @@ const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
         direction
       );
       if (newCellPath) {
+        if (selectedTableArea.singleCell === 'not-selected') {
+          if (direction !== 'up' && direction !== 'down') return;
+          const [node, offset] = ReactEditor.toDOMPoint(
+            editor,
+            selection.focus
+          );
+          const blockElement = Editor.above(editor, {
+            match: isBlock,
+            at: selection.focus.path,
+          })?.[0];
+          if (!blockElement) return;
+          const domNodeForBlockElement = ReactEditor.toDOMNode(
+            editor,
+            blockElement
+          );
+          const rangeOfWholeBlock = document.createRange();
+          rangeOfWholeBlock.selectNodeContents(domNodeForBlockElement);
+          const rectsOfRangeOfWholeBlock = Array.from(
+            rangeOfWholeBlock.getClientRects()
+          );
+          const newRange = document.createRange();
+          newRange.setStart(node, offset);
+          newRange.setEnd(node, offset);
+          const rangeRects = Array.from(newRange.getClientRects());
+          const lastRangeRect = rangeRects[rangeRects.length - 1];
+          const key = direction === 'up' ? 'top' : 'bottom';
+          const expected =
+            key === 'top'
+              ? Math.min(...rectsOfRangeOfWholeBlock.map(x => x.top))
+              : Math.max(...rectsOfRangeOfWholeBlock.map(x => x.bottom));
+          if (lastRangeRect[key] === expected) {
+            const focus = Editor.start(editor, newCellPath);
+            Transforms.select(editor, {
+              focus,
+              anchor: event.shiftKey ? selection.anchor : focus,
+            });
+            event.preventDefault();
+          }
+
+          return;
+        }
+        if (!event.shiftKey) return;
+
         if (Path.equals(newCellPath, anchorCellPath)) {
           Transforms.select(editor, newCellPath);
         } else {
