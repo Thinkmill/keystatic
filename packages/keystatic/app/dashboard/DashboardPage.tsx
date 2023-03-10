@@ -18,16 +18,9 @@ import { CreateBranchDialog } from '../branch-selection';
 import l10nMessages from '../l10n/index.json';
 import { useRouter } from '../router';
 import { AppShellBody, AppShellRoot } from '../shell';
-import { DataState } from '../useData';
-import { getCollectionPath, keyedEntries, pluralize } from '../utils';
+import { keyedEntries, pluralize } from '../utils';
 
-import { getTreeNodeAtPath } from '../trees';
-import {
-  useChanged,
-  useTree,
-  TreeData,
-  BranchInfoContext,
-} from '../shell/data';
+import { useChanged, BranchInfoContext } from '../shell/data';
 import { AppShellHeader } from '../shell/header';
 
 export function DashboardPage(props: { config: Config; basePath: string }) {
@@ -36,7 +29,6 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const changes = useChanged();
   const router = useRouter();
-  const allTreeData = useTree();
 
   let link = (path: string) => props.basePath + path;
   let collections = keyedEntries(config.collections ?? {});
@@ -69,13 +61,12 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
                 >
                   {ref => {
                     const counts = getCountsForCollection({
-                      config,
                       collection: ref.key,
                       changes,
-                      tree: allTreeData.current,
                     });
                     const allChangesCount =
                       counts.changed + counts.added + counts.removed;
+                    console.log(counts);
                     return (
                       <Item
                         textValue={
@@ -274,14 +265,10 @@ function Branches() {
 type Changes = ReturnType<typeof useChanged>;
 
 function getCountsForCollection(options: {
-  config: Config;
   collection: string;
   changes: Changes;
-  tree: DataState<TreeData>;
 }) {
-  let { changes, collection, config, tree } = options;
-  const collectionPath = getCollectionPath(config, collection);
-
+  let { changes, collection } = options;
   let added = 0;
   let removed = 0;
   let changed = 0;
@@ -293,10 +280,7 @@ function getCountsForCollection(options: {
     added = collectionChanged.added.size;
     removed = collectionChanged.removed.size;
     changed = collectionChanged.changed.size;
-  }
-  if (tree.kind === 'loaded') {
-    let node = getTreeNodeAtPath(tree.data.tree, collectionPath);
-    total = node && node.children ? node.children.size : 0;
+    total = collectionChanged.totalCount;
   }
 
   return { added, removed, changed, total };
