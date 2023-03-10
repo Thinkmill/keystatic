@@ -41,6 +41,7 @@ import { useToolbarState } from './toolbar-state';
 import { clearFormatting, useStaticEditor } from './utils';
 import { Picker } from '@voussoir/picker';
 import { imageButton } from './image';
+import { tableButton } from './table';
 
 export function Toolbar({
   documentFeatures,
@@ -91,6 +92,7 @@ export function Toolbar({
           documentFeatures.links ||
           !!documentFeatures.images ||
           documentFeatures.formatting.blockTypes.blockquote ||
+          documentFeatures.tables ||
           !!documentFeatures.layouts.length ||
           documentFeatures.formatting.blockTypes.code) && (
           <ToolbarGroup>
@@ -103,6 +105,7 @@ export function Toolbar({
               <LayoutsButton layouts={documentFeatures.layouts} />
             )}
             {documentFeatures.formatting.blockTypes.code && codeButton}
+            {documentFeatures.tables && tableButton}
           </ToolbarGroup>
         )}
       </ToolbarScrollArea>
