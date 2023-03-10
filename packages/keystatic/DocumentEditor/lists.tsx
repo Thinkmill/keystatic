@@ -14,6 +14,7 @@ import {
   ReactNode,
   Ref,
   useContext,
+  useMemo,
 } from 'react';
 import { Flex } from '@voussoir/layout';
 import { css, tokenSchema } from '@voussoir/style';
@@ -184,46 +185,59 @@ export function ListButtons(props: {
   lists: { ordered: boolean; unordered: boolean };
 }) {
   const { editor, lists } = useToolbarState();
-  return (
-    <ActionGroup
-      flexShrink={0}
-      aria-label="Lists"
-      selectionMode="single"
-      buttonLabelBehavior="hide"
-      density="compact"
-      // overflowMode="collapse"
-      prominence="low"
-      summaryIcon={<Icon src={listIcon} />}
-      selectedKeys={Object.keys(lists).filter(
-        key => lists[key as keyof typeof lists].isSelected
-      )}
-      disabledKeys={Object.keys(lists).filter(
-        key => lists[key as keyof typeof lists].isDisabled
-      )}
-      onAction={key => {
-        const format = `${key as 'ordered' | 'unordered'}-list` as const;
-        toggleList(editor, format);
-        ReactEditor.focus(editor);
-      }}
-    >
-      {[
-        props.lists.unordered && (
-          <Item key="unordered" textValue="Bullet List (- )">
-            <Icon src={listIcon} />
-            <Text>Bullet List</Text>
-            <Kbd>-⎵</Kbd>
-          </Item>
-        ),
-        props.lists.ordered && (
-          <Item key="ordered" textValue="Numbered List (1.)">
-            <Icon src={listOrderedIcon} />
-            <Text>Numbered List</Text>
-            <Kbd>1.⎵</Kbd>
-          </Item>
-        ),
-      ].filter((x): x is Exclude<typeof x, false> => x !== false)}
-    </ActionGroup>
-  );
+  return useMemo(() => {
+    const disabledKeys: string[] = [];
+    if (lists.ordered.isDisabled) disabledKeys.push('ordered');
+    if (lists.unordered.isDisabled) disabledKeys.push('unordered');
+    const selectedKeys: string[] = [];
+    if (lists.ordered.isSelected) selectedKeys.push('ordered');
+    if (lists.unordered.isSelected) selectedKeys.push('unordered');
+
+    return (
+      <ActionGroup
+        flexShrink={0}
+        aria-label="Lists"
+        selectionMode="single"
+        buttonLabelBehavior="hide"
+        density="compact"
+        // overflowMode="collapse"
+        prominence="low"
+        summaryIcon={<Icon src={listIcon} />}
+        selectedKeys={selectedKeys}
+        disabledKeys={disabledKeys}
+        onAction={key => {
+          const format = `${key as 'ordered' | 'unordered'}-list` as const;
+          toggleList(editor, format);
+          ReactEditor.focus(editor);
+        }}
+      >
+        {[
+          props.lists.unordered && (
+            <Item key="unordered" textValue="Bullet List (- )">
+              <Icon src={listIcon} />
+              <Text>Bullet List</Text>
+              <Kbd>-⎵</Kbd>
+            </Item>
+          ),
+          props.lists.ordered && (
+            <Item key="ordered" textValue="Numbered List (1.)">
+              <Icon src={listOrderedIcon} />
+              <Text>Numbered List</Text>
+              <Kbd>1.⎵</Kbd>
+            </Item>
+          ),
+        ].filter((x): x is Exclude<typeof x, false> => x !== false)}
+      </ActionGroup>
+    );
+  }, [
+    editor,
+    lists.ordered.isDisabled,
+    lists.ordered.isSelected,
+    lists.unordered.isDisabled,
+    lists.unordered.isSelected,
+    props.lists.ordered,
+    props.lists.unordered,
+  ]);
 }
 
 export function nestList(editor: Editor) {

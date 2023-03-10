@@ -14,6 +14,7 @@ import { Text } from '@voussoir/typography';
 
 import { DocumentFeatures } from './document-features';
 import { useToolbarState } from './toolbar-state';
+import { useMemo } from 'react';
 
 const values = {
   start: {
@@ -39,55 +40,61 @@ export const TextAlignMenu = ({
   alignment: DocumentFeatures['formatting']['alignment'];
 }) => {
   const toolbarState = useToolbarState();
-  const items = [
-    values.start,
-    ...(Object.keys(alignment) as Array<keyof typeof alignment>).map(
-      x => values[x]
-    ),
-  ];
-  return (
-    <MenuTrigger>
-      <TooltipTrigger>
-        <ActionButton prominence="low">
-          {values[toolbarState.alignment.selected].icon}
-          <Icon src={chevronDownIcon} />
-        </ActionButton>
-        <Tooltip>
-          <Text>Text Alignment</Text>
-        </Tooltip>
-      </TooltipTrigger>
-      <Menu
-        selectionMode="single"
-        selectedKeys={[toolbarState.alignment.selected]}
-        items={items}
-        onAction={key => {
-          if (key === 'start') {
-            Transforms.unsetNodes(toolbarState.editor, 'textAlign', {
-              match: node =>
-                node.type === 'paragraph' || node.type === 'heading',
-            });
-          } else {
-            Transforms.setNodes(
-              toolbarState.editor,
-              { textAlign: key as 'center' | 'end' },
-              {
+  const items = useMemo(
+    () => [
+      values.start,
+      ...(Object.keys(alignment) as Array<keyof typeof alignment>).map(
+        x => values[x]
+      ),
+    ],
+    [alignment]
+  );
+  return useMemo(
+    () => (
+      <MenuTrigger>
+        <TooltipTrigger>
+          <ActionButton prominence="low">
+            {values[toolbarState.alignment.selected].icon}
+            <Icon src={chevronDownIcon} />
+          </ActionButton>
+          <Tooltip>
+            <Text>Text Alignment</Text>
+          </Tooltip>
+        </TooltipTrigger>
+        <Menu
+          selectionMode="single"
+          selectedKeys={[toolbarState.alignment.selected]}
+          items={items}
+          onAction={key => {
+            if (key === 'start') {
+              Transforms.unsetNodes(toolbarState.editor, 'textAlign', {
                 match: node =>
                   node.type === 'paragraph' || node.type === 'heading',
-              }
+              });
+            } else {
+              Transforms.setNodes(
+                toolbarState.editor,
+                { textAlign: key as 'center' | 'end' },
+                {
+                  match: node =>
+                    node.type === 'paragraph' || node.type === 'heading',
+                }
+              );
+            }
+            ReactEditor.focus(toolbarState.editor);
+          }}
+        >
+          {item => {
+            return (
+              <Item key={item.key} textValue={item.label}>
+                <Text>{item.label}</Text>
+                {item.icon}
+              </Item>
             );
-          }
-          ReactEditor.focus(toolbarState.editor);
-        }}
-      >
-        {item => {
-          return (
-            <Item key={item.key} textValue={item.label}>
-              <Text>{item.label}</Text>
-              {item.icon}
-            </Item>
-          );
-        }}
-      </Menu>
-    </MenuTrigger>
+          }}
+        </Menu>
+      </MenuTrigger>
+    ),
+    [items, toolbarState.alignment.selected, toolbarState.editor]
   );
 };
