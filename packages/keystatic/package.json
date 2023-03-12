@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/core",
-  "version": "0.0.63",
+  "version": "0.0.64",
   "license": "MIT",
   "exports": {
     "./ui": {
@@ -62,10 +62,10 @@
     "@types/react": "^18.0.25",
     "@urql/exchange-auth": "^1.0.0",
     "@urql/exchange-graphcache": "^5.0.8",
-    "@voussoir/action-group": "^0.1.0",
+    "@voussoir/action-group": "^0.1.1",
     "@voussoir/badge": "^0.1.1",
-    "@voussoir/breadcrumbs": "^0.1.0",
-    "@voussoir/button": "^0.1.0",
+    "@voussoir/breadcrumbs": "^0.1.1",
+    "@voussoir/button": "^0.1.2",
     "@voussoir/checkbox": "^0.2.0",
     "@voussoir/combobox": "^0.1.2",
     "@voussoir/core": "^4.0.0",

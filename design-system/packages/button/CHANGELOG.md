@@ -1,5 +1,12 @@
 # @voussoir/button
 
+## 0.1.2
+
+### Patch Changes
+
+- 50c48da: Adjust action button selected styles. Implement a bespoke popover
+  pattern for document editor blocks.
+
 ## 0.1.1
 
 ### Patch Changes
