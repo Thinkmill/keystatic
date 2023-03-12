@@ -727,16 +727,19 @@ export function TableCellElement({
   const isSelected = selectedCellsContext?.cells.has(element);
   const size = `calc(100% + 2px)`;
   const ElementType = element.header ? 'th' : 'td';
+  const borderColor = isSelected
+    ? tokenSchema.color.alias.borderSelected
+    : tokenSchema.color.alias.borderIdle;
   return (
     <ElementType
       className={css({
-        borderRight: `1px solid ${tokenSchema.color.alias.borderIdle}`,
-        borderBottom: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+        borderRight: `1px solid ${borderColor}`,
+        borderBottom: `1px solid ${borderColor}`,
         borderTop: startElements.top.has(element)
-          ? `1px solid ${tokenSchema.color.alias.borderIdle}`
+          ? `1px solid ${borderColor}`
           : undefined,
         borderLeft: startElements.left.has(element)
-          ? `1px solid ${tokenSchema.color.alias.borderIdle}`
+          ? `1px solid ${borderColor}`
           : undefined,
         backgroundColor: selectedCellsContext?.cells.has(element)
           ? tokenSchema.color.alias.backgroundSelected
@@ -770,28 +773,6 @@ export function TableCellElement({
             className={css({
               position: 'absolute',
               top: -1,
-              right: -1,
-              background: tokenSchema.color.alias.borderSelected,
-              height: size,
-              width: 1,
-            })}
-          />
-          <div
-            contentEditable={false}
-            className={css({
-              position: 'absolute',
-              top: -1,
-              left: -1,
-              background: tokenSchema.color.alias.borderSelected,
-              height: 1,
-              width: size,
-            })}
-          />
-          <div
-            contentEditable={false}
-            className={css({
-              position: 'absolute',
-              bottom: -1,
               left: -1,
               background: tokenSchema.color.alias.borderSelected,
               height: 1,
