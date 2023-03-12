@@ -748,6 +748,7 @@ export function TableCellElement({
         padding: 0,
         fontWeight: 'inherit',
         textAlign: 'start',
+        height: 42,
       })}
       {...attributes}
     >
@@ -865,10 +866,10 @@ export function TableCellElement({
           }}
         />
       )}
+      <div>{children}</div>
       {selectedCellsContext?.focus === element && (
         <CellMenu cell={element} table={selectedCellsContext.table} />
       )}
-      {children}
     </ElementType>
   );
 }
@@ -1101,17 +1102,17 @@ function CellMenu(props: {
 }) {
   const editor = useStaticEditor();
   return (
-    <div contentEditable={false}>
+    <div
+      contentEditable={false}
+      className={css({
+        top: 4,
+        right: 4,
+        position: 'absolute',
+      })}
+    >
       <TooltipTrigger>
         <MenuTrigger>
-          <ActionButton
-            prominence="low"
-            UNSAFE_className={css({
-              top: 4,
-              right: 4,
-              position: 'absolute !important' as any,
-            })}
-          >
+          <ActionButton prominence="low">
             <Icon src={chevronDownIcon} />
           </ActionButton>
           <Menu
