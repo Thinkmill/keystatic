@@ -2,6 +2,11 @@
   "name": "@keystatic/next",
   "version": "0.0.4",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Thinkmill/keystatic/",
+    "directory": "packages/next"
+  },
   "exports": {
     "./api": {
       "module": "./api/dist/keystatic-next-api.esm.js",
