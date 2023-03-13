@@ -1,5 +1,12 @@
 # localization
 
+## 0.1.34
+
+### Patch Changes
+
+- Updated dependencies [cea2700]
+  - @keystatic/core@0.0.65
+
 ## 0.1.33
 
 ### Patch Changes

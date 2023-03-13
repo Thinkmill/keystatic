@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.65
+
+### Patch Changes
+
+- cea2700: Fix validation when a single form field is directly inside an array
+  field
+
 ## 0.0.64
 
 ### Patch Changes
