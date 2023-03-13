@@ -97,7 +97,7 @@ export function CreateItem(props: {
   const provider = useMemo(
     () =>
       new WebsocketProvider(
-        'ws://localhost:8787/',
+        'ws://keystatic-multiplayer.thinkmill.workers.dev/',
         props.collection + '2',
         doc,
         {
