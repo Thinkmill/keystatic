@@ -1,5 +1,12 @@
 # @keystatic/test-next-pages-dir
 
+## 0.0.34
+
+### Patch Changes
+
+- Updated dependencies [cea2700]
+  - @keystatic/core@0.0.65
+
 ## 0.0.33
 
 ### Patch Changes
