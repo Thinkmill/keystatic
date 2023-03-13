@@ -6,6 +6,7 @@ import { ReactEditor, RenderElementProps } from 'slate-react';
 import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
 import { Dialog, DialogContainer, useDialogContainer } from '@voussoir/dialog';
 import { Icon } from '@voussoir/icon';
+import { editIcon } from '@voussoir/icon/icons/editIcon';
 import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
 import { linkIcon } from '@voussoir/icon/icons/linkIcon';
 import { unlinkIcon } from '@voussoir/icon/icons/unlinkIcon';
@@ -16,8 +17,12 @@ import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
 import { Heading, Text } from '@voussoir/typography';
 
 import l10nMessages from '../app/l10n/index.json';
-import { isInlineContainer } from '.';
-import { BlockPopoverTrigger } from './BlockPopoverTrigger';
+import { isBlock, isInlineContainer } from '.';
+import {
+  BlockPopover,
+  BlockPopoverTrigger,
+  useActiveBlockPopover,
+} from './primitives';
 import { DocumentFeatures } from './document-features';
 import { ComponentBlock } from './component-blocks/api';
 import {
@@ -31,7 +36,6 @@ import {
   useElementWithSetNodes,
   useStaticEditor,
   useEventCallback,
-  useSelectedOrFocusWithin,
   focusWithPreviousSelection,
 } from './utils';
 
@@ -82,7 +86,8 @@ export const LinkElement = ({
   const text = Node.string(currentElement);
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selected, targetProps] = useSelectedOrFocusWithin();
+  const activePopoverElement = useActiveBlockPopover();
+  const selected = activePopoverElement === __elementForGettingPath;
 
   useEffect(() => {
     if (selected && !href) {
@@ -99,44 +104,44 @@ export const LinkElement = ({
 
   return (
     <>
-      <BlockPopoverTrigger
-        isOpen={!dialogOpen && selected}
-        // placement="bottom start"
-      >
+      <BlockPopoverTrigger element={__elementForGettingPath}>
         <a href={href} {...attributes}>
           {children}
         </a>
 
-        <Flex
-          alignItems="center"
-          gap="small"
-          padding="regular"
-          {...targetProps}
-        >
-          <ActionButton onPress={() => setDialogOpen(true)}>
-            {stringFormatter.format('edit')}
-          </ActionButton>
-          <TooltipTrigger>
-            <ActionButton
-              prominence="low"
-              onPress={() => {
-                window.open(href, '_blank', 'noopener,noreferrer');
-              }}
-            >
-              <Icon src={externalLinkIcon} />
-            </ActionButton>
-            <Tooltip>
-              <Text truncate={3}>{href}</Text>
-            </Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <ActionButton prominence="low" onPress={unlink}>
-              <Icon src={unlinkIcon} />
-            </ActionButton>
-            {/* TODO: needs localization */}
-            <Tooltip>Remove</Tooltip>
-          </TooltipTrigger>
-        </Flex>
+        <BlockPopover placement="bottom start">
+          <Flex gap="small" padding="regular">
+            <TooltipTrigger>
+              <ActionButton
+                prominence="low"
+                onPress={() => setDialogOpen(true)}
+              >
+                <Icon src={editIcon} />
+              </ActionButton>
+              <Tooltip>{stringFormatter.format('edit')}</Tooltip>
+            </TooltipTrigger>
+            <TooltipTrigger>
+              <ActionButton
+                prominence="low"
+                onPress={() => {
+                  window.open(href, '_blank', 'noopener,noreferrer');
+                }}
+              >
+                <Icon src={externalLinkIcon} />
+              </ActionButton>
+              <Tooltip>
+                <Text truncate={3}>{href}</Text>
+              </Tooltip>
+            </TooltipTrigger>
+            <TooltipTrigger>
+              <ActionButton prominence="low" onPress={unlink}>
+                <Icon src={unlinkIcon} />
+              </ActionButton>
+              {/* TODO: needs localization */}
+              <Tooltip>Unlink</Tooltip>
+            </TooltipTrigger>
+          </Flex>
+        </BlockPopover>
       </BlockPopoverTrigger>
       <DialogContainer
         onDismiss={() => {
@@ -265,7 +270,7 @@ export function withLink(
       const startOfBlock = Editor.start(
         editor,
         Editor.above(editor, {
-          match: node => Editor.isBlock(editor, node),
+          match: isBlock,
         })![1]
       );
 
@@ -291,7 +296,10 @@ export function withLink(
       // by doing this, the insertText(')') above will happen in a different undo than the link replacement
       // so that means that when someone does an undo after this
       // it will undo to the state of "[content](link)" rather than "[content](link" (note the missing closing bracket)
-      editor.history.undos.push([]);
+      editor.history.undos.push({
+        operations: [],
+        selectionBefore: editor.selection,
+      });
       const startOfShortcut =
         match.index === 0
           ? startOfBlock
@@ -308,9 +316,7 @@ export function withLink(
       const endOfLinkText = EditorAfterButIgnoringingPointsWithNoContent(
         editor,
         startOfLinkText,
-        {
-          distance: linkText.length,
-        }
+        { distance: linkText.length }
       )!;
 
       Transforms.delete(editor, {

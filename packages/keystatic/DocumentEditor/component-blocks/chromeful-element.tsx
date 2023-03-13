@@ -26,7 +26,6 @@ import {
   ObjectField,
   ComponentSchema,
   ComponentBlock,
-  NotEditable,
   GenericPreviewProps,
 } from './api';
 import { clientSideValidateProp } from './utils';
@@ -34,6 +33,7 @@ import {
   FormValueContentFromPreviewProps,
   NonChildFieldComponentSchema,
 } from './form-from-preview';
+import { NotEditable } from '../primitives';
 
 export function ChromefulComponentBlockElement(props: {
   children: ReactNode;

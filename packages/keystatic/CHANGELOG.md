@@ -1,5 +1,46 @@
 # @keystatic/core
 
+## 0.0.65
+
+### Patch Changes
+
+- cea2700: Fix validation when a single form field is directly inside an array
+  field
+
+## 0.0.64
+
+### Patch Changes
+
+- 50c48da: Adjust action button selected styles. Implement a bespoke popover
+  pattern for document editor blocks.
+- 641c962: Add `table` block
+- Updated dependencies [50c48da]
+  - @voussoir/action-group@0.1.1
+  - @voussoir/button@0.1.2
+  - @voussoir/breadcrumbs@0.1.1
+
+## 0.0.63
+
+### Patch Changes
+
+- c8c4c49: Fix integer field validation
+
+## 0.0.62
+
+### Patch Changes
+
+- 145460a: Fix decoding url encoded strings in the API route
+
+## 0.0.61
+
+### Patch Changes
+
+- 0f71625: Add `description` to
+  `fields.{array,checkbox,date,document,image,integer,multiselect,select,pathReference,relationship}`.
+  (previously it was only on `fields.{text,slug}`)
+- 0f71625: Fix incorrectly attempting to get a GitHub token when using local
+  mode
+
 ## 0.0.60
 
 ### Patch Changes
@@ -11,7 +52,10 @@
 
 ### Patch Changes
 
-- 21a687a: document editor: image and link dialogs
+- 21a687a: Document editor:
+  - Move `image` block details (filename and alt text) into a modal dialog,
+    which can be invoked from an actions popover.
+  - Give the `link` block a similar treatment.
 
 ## 0.0.58
 

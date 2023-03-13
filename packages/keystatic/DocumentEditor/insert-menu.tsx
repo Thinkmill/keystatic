@@ -20,6 +20,8 @@ import { insertLayout } from './layouts';
 import { ToolbarState, useToolbarState } from './toolbar-state';
 import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from './utils';
 import { getUploadedImage } from './component-blocks/fields/image';
+import { isBlock } from '.';
+import { insertTable } from './table';
 
 type Option = {
   label: string;
@@ -86,6 +88,10 @@ function getOptions(
           });
         }
       },
+    },
+    !!toolbarState.editorDocumentFeatures.tables && {
+      label: 'Table',
+      insert: insertTable,
     },
     !toolbarState.dividers.isDisabled &&
       toolbarState.editorDocumentFeatures.dividers && {
@@ -385,7 +391,7 @@ export function withInsertMenu(editor: Editor): Editor {
       const startOfBlock = Editor.start(
         editor,
         Editor.above(editor, {
-          match: node => Editor.isBlock(editor, node),
+          match: isBlock,
         })![1]
       );
       const before = Editor.before(editor, editor.selection.anchor, {

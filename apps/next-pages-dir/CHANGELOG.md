@@ -1,5 +1,44 @@
 # @keystatic/test-next-pages-dir
 
+## 0.0.34
+
+### Patch Changes
+
+- Updated dependencies [cea2700]
+  - @keystatic/core@0.0.65
+
+## 0.0.33
+
+### Patch Changes
+
+- Updated dependencies [50c48da]
+- Updated dependencies [641c962]
+  - @voussoir/action-group@0.1.1
+  - @voussoir/button@0.1.2
+  - @keystatic/core@0.0.64
+
+## 0.0.32
+
+### Patch Changes
+
+- Updated dependencies [c8c4c49]
+  - @keystatic/core@0.0.63
+
+## 0.0.31
+
+### Patch Changes
+
+- Updated dependencies [145460a]
+  - @keystatic/core@0.0.62
+
+## 0.0.30
+
+### Patch Changes
+
+- Updated dependencies [0f71625]
+- Updated dependencies [0f71625]
+  - @keystatic/core@0.0.61
+
 ## 0.0.29
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @voussoir/action-group
 
+## 0.1.1
+
+### Patch Changes
+
+- 50c48da: Adjust action button selected styles. Implement a bespoke popover
+  pattern for document editor blocks.
+- Updated dependencies [50c48da]
+  - @voussoir/button@0.1.2
+
 ## 0.1.0
 
 ### Minor Changes

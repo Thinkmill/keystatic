@@ -1,19 +1,22 @@
-import { createContext, useContext, useMemo, useRef } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import { Editor, Element, Node, Transforms, Range, Point } from 'slate';
-import {
-  ReactEditor,
-  RenderElementProps,
-  useFocused,
-  useSelected,
-} from 'slate-react';
+import { ReactEditor, RenderElementProps } from 'slate-react';
 
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
+import { ActionGroup, Item } from '@voussoir/action-group';
+import { ActionButton } from '@voussoir/button';
+import { Icon } from '@voussoir/icon';
 import { columnsIcon } from '@voussoir/icon/icons/columnsIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Icon } from '@voussoir/icon';
+import { Flex } from '@voussoir/layout';
+import { css, tokenSchema } from '@voussoir/style';
+import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 
 import { DocumentFeatures } from './document-features';
-import { ToolbarSeparator } from './primitives';
+import {
+  BlockPopover,
+  BlockPopoverTrigger,
+  ToolbarSeparator,
+} from './primitives';
 import { paragraphElement } from './paragraphs';
 import {
   insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading,
@@ -22,13 +25,6 @@ import {
   useStaticEditor,
 } from './utils';
 import { useToolbarState } from './toolbar-state';
-import { ActionButton } from '@voussoir/button';
-import { ActionGroup, Item } from '@voussoir/action-group';
-import { Popover } from '@voussoir/overlays';
-import { useOverlayTrigger } from '@react-aria/overlays';
-import { useOverlayTriggerState } from '@react-stately/overlays';
-import { Box, Flex } from '@voussoir/layout';
-import { css, tokenSchema } from '@voussoir/style';
 
 const LayoutOptionsContext = createContext<[number, ...number[]][]>([]);
 
@@ -40,8 +36,6 @@ export const LayoutContainer = ({
   children,
   element,
 }: RenderElementProps & { element: { type: 'layout' } }) => {
-  const focused = useFocused();
-  const selected = useSelected();
   const editor = useStaticEditor();
 
   const layout = element.layout;
@@ -49,89 +43,80 @@ export const LayoutContainer = ({
   const currentLayoutIndex = layoutOptions.findIndex(
     x => x.toString() === layout.toString()
   );
-  const triggerRef = useRef(null);
-  const state = useOverlayTriggerState({
-    isOpen: focused && selected,
-  });
-
-  const {
-    triggerProps: { onPress: _onPress, ...triggerProps },
-    overlayProps,
-  } = useOverlayTrigger({ type: 'dialog' }, state, triggerRef);
 
   return (
-    <Box marginY="medium" {...attributes}>
-      <div
-        {...triggerProps}
-        ref={triggerRef}
-        className={css({
-          columnGap: tokenSchema.size.space.small,
-          display: 'grid',
-          gridTemplateColumns: layout.map(x => `${x}fr`).join(' '),
-        })}
-      >
-        {children}
-      </div>
-      <Popover
-        isNonModal
-        {...overlayProps}
-        triggerRef={triggerRef}
-        state={state}
-      >
-        <Flex padding="medium" gap="regular">
-          <ActionGroup
-            selectionMode="single"
-            prominence="low"
-            density="compact"
-            onAction={key => {
-              const path = ReactEditor.findPath(editor, element);
-              const layoutOption = layoutOptions[key as number];
-              Transforms.setNodes(
-                editor,
-                { type: 'layout', layout: layoutOption },
-                { at: path }
-              );
-              ReactEditor.focus(editor);
-            }}
-            selectedKeys={
-              currentLayoutIndex !== -1 ? [currentLayoutIndex.toString()] : []
-            }
-          >
-            {layoutOptions.map((layoutOption, i) => (
-              <Item key={i}>{makeLayoutIcon(layoutOption)}</Item>
-            ))}
-          </ActionGroup>
-          <ToolbarSeparator />
-          <TooltipTrigger>
-            <ActionButton
+    <div
+      className={css({ marginBlock: '1em' })} // treat as a block element, like a paragraph
+      {...attributes}
+    >
+      <BlockPopoverTrigger element={element}>
+        <div
+          className={css({
+            columnGap: tokenSchema.size.space.regular,
+            display: 'grid',
+          })}
+          style={{ gridTemplateColumns: layout.map(x => `${x}fr`).join(' ') }}
+        >
+          {children}
+        </div>
+        <BlockPopover>
+          <Flex padding="regular" gap="regular">
+            <ActionGroup
+              selectionMode="single"
               prominence="low"
-              onPress={() => {
+              density="compact"
+              onAction={key => {
                 const path = ReactEditor.findPath(editor, element);
-                Transforms.removeNodes(editor, { at: path });
+                const layoutOption = layoutOptions[key as number];
+                Transforms.setNodes(
+                  editor,
+                  { type: 'layout', layout: layoutOption },
+                  { at: path }
+                );
+                ReactEditor.focus(editor);
               }}
+              selectedKeys={
+                currentLayoutIndex !== -1 ? [currentLayoutIndex.toString()] : []
+              }
             >
-              <Icon src={trash2Icon} />
-            </ActionButton>
-            <Tooltip>Remove</Tooltip>
-          </TooltipTrigger>
-        </Flex>
-      </Popover>
-    </Box>
+              {layoutOptions.map((layoutOption, i) => (
+                <Item key={i}>{makeLayoutIcon(layoutOption)}</Item>
+              ))}
+            </ActionGroup>
+            <ToolbarSeparator />
+            <TooltipTrigger>
+              <ActionButton
+                prominence="low"
+                onPress={() => {
+                  const path = ReactEditor.findPath(editor, element);
+                  Transforms.removeNodes(editor, { at: path });
+                }}
+              >
+                <Icon src={trash2Icon} />
+              </ActionButton>
+              <Tooltip tone="critical">Remove</Tooltip>
+            </TooltipTrigger>
+          </Flex>
+        </BlockPopover>
+      </BlockPopoverTrigger>
+    </div>
   );
 };
 
 export const LayoutArea = ({ attributes, children }: RenderElementProps) => {
   return (
-    <Box
-      borderWidth="large"
-      borderColor="neutral"
-      borderRadius="small"
-      borderStyle="dashed"
-      paddingX="medium"
+    <div
+      className={css({
+        borderColor: tokenSchema.color.border.neutral,
+        borderRadius: tokenSchema.size.radius.regular,
+        borderStyle: 'dashed',
+        borderWidth: tokenSchema.size.border.regular,
+        padding: tokenSchema.size.space.medium,
+      })}
       {...attributes}
     >
       {children}
-    </Box>
+    </div>
   );
 };
 

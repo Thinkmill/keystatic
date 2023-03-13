@@ -30,6 +30,7 @@ export type ChildField = {
         dividers?: 'inherit';
         links?: 'inherit';
         images?: 'inherit';
+        tables?: 'inherit';
       }
     | {
         kind: 'inline';
@@ -50,6 +51,8 @@ export function child(
         formatting?: BlockFormattingConfig | 'inherit';
         dividers?: 'inherit';
         links?: 'inherit';
+        images?: 'inherit';
+        tables?: 'inherit';
       }
     | {
         kind: 'inline';
@@ -83,6 +86,8 @@ export function child(
                   }
                 : options.formatting,
             links: options.links,
+            images: options.images,
+            tables: options.tables,
           }
         : {
             kind: 'inline',

@@ -13,9 +13,11 @@ test('one child field', () => {
       "options": {
         "dividers": undefined,
         "formatting": undefined,
+        "images": undefined,
         "kind": "block",
         "links": undefined,
         "placeholder": "a",
+        "tables": undefined,
       },
       "relativePath": [
         "a",
@@ -36,9 +38,11 @@ test('nested one child field', () => {
       "options": {
         "dividers": undefined,
         "formatting": undefined,
+        "images": undefined,
         "kind": "block",
         "links": undefined,
         "placeholder": "a",
+        "tables": undefined,
       },
       "relativePath": [
         "a",
@@ -117,6 +121,7 @@ test('array', () => {
       },
       "field": {
         "asChildTag": "related-link",
+        "description": undefined,
         "element": {
           "fields": {
             "content": {

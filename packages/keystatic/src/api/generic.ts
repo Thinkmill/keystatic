@@ -83,6 +83,13 @@ export function makeGenericAPIRouteHandler(
     _config.localBaseDirectory ?? process.cwd()
   );
 
+  const getParams = (req: KeystaticRequest) =>
+    new URL(req.url, 'http://localhost').pathname
+      .replace(/^\/api\/keystatic\/?/, '')
+      .split('/')
+      .map(x => decodeURIComponent(x))
+      .filter(Boolean);
+
   if (
     !_config2.clientId ||
     !_config2.clientSecret ||
@@ -92,10 +99,7 @@ export function makeGenericAPIRouteHandler(
     return async function keystaticAPIRoute(
       req: KeystaticRequest
     ): Promise<KeystaticResponse> {
-      const params = new URL(req.url, 'http://localhost').pathname
-        .replace(/^\/api\/keystatic\/?/, '')
-        .split('/')
-        .filter(Boolean);
+      const params = getParams(req);
       const joined = params.join('/');
       if (joined === 'github/created-app') {
         return createdGithubApp(req, options?.slugEnvName);
@@ -128,10 +132,7 @@ export function makeGenericAPIRouteHandler(
   return async function keystaticAPIRoute(
     req: KeystaticRequest
   ): Promise<KeystaticResponse> {
-    const params = new URL(req.url, 'http://localhost').pathname
-      .replace(/^\/api\/keystatic\/?/, '')
-      .split('/')
-      .filter(Boolean);
+    const params = getParams(req);
     const joined = params.join('/');
     if (joined === 'github/oauth/callback') {
       return githubOauthCallback(req, config);

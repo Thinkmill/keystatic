@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/test-next-app",
-  "version": "0.0.30",
+  "version": "0.0.35",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -10,12 +10,12 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@keystatic/core": "^0.0.60",
+    "@keystatic/core": "^0.0.65",
     "@keystatic/next": "^0.0.4",
     "@preconstruct/next": "^4.0.0",
     "@types/react": "^18.0.25",
-    "@voussoir/action-group": "^0.1.0",
-    "@voussoir/button": "^0.1.1",
+    "@voussoir/action-group": "^0.1.1",
+    "@voussoir/button": "^0.1.2",
     "@voussoir/icon": "^0.1.0",
     "@voussoir/layout": "^0.1.0",
     "@voussoir/notice": "^0.1.0",

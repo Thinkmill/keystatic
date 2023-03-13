@@ -13,6 +13,7 @@ import { LayoutOptionsProvider } from './layouts';
 import { isListNode } from './lists';
 
 import { allMarks, isElementActive, Mark, nodeTypeMatcher } from './utils';
+import { isBlock } from '.';
 
 type BasicToolbarItem = { isSelected: boolean; isDisabled: boolean };
 
@@ -115,12 +116,13 @@ export const createToolbarState = (
         layouts: editorDocumentFeatures.layouts,
         links: true,
         images: true,
+        tables: true,
       },
       softBreaks: true,
     };
 
   let [maybeCodeBlockEntry] = Editor.nodes(editor, {
-    match: node => node.type !== 'code' && Editor.isBlock(editor, node),
+    match: node => node.type !== 'code' && isBlock(node),
   });
   const editorMarks = Editor.marks(editor) || {};
   const marks = Object.fromEntries(

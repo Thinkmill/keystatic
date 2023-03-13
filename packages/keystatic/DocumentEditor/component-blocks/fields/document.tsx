@@ -65,6 +65,7 @@ type DocumentFeaturesConfig = {
   dividers?: true;
   images?: true | { directory?: string; publicPath?: string };
   layouts?: readonly (readonly [number, ...number[]])[];
+  tables?: true;
 };
 
 function normaliseDocumentFeatures(config: DocumentFeaturesConfig) {
@@ -139,6 +140,7 @@ function normaliseDocumentFeatures(config: DocumentFeaturesConfig) {
     ].map(x => JSON.parse(x)),
     dividers: !!config.dividers,
     images: config.images === undefined ? false : config.images,
+    tables: !!config.tables,
   };
   return documentFeatures;
 }
@@ -146,10 +148,12 @@ function normaliseDocumentFeatures(config: DocumentFeaturesConfig) {
 export function document({
   label,
   componentBlocks = {},
+  description,
   ...documentFeaturesConfig
 }: {
   label: string;
   componentBlocks?: Record<string, ComponentBlock>;
+  description?: string;
 } & DocumentFeaturesConfig): FormFieldWithFileRequiringContentsForReader<
   DocumentElement[],
   undefined,
@@ -188,7 +192,7 @@ export function document({
     defaultValue: [{ type: 'paragraph', children: [{ text: '' }] }],
     Input(props) {
       return (
-        <FieldPrimitive label={label}>
+        <FieldPrimitive label={label} description={description}>
           <DocumentEditor
             componentBlocks={componentBlocks}
             documentFeatures={documentFeatures}

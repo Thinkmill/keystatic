@@ -4,7 +4,6 @@ import React, {
   useRef,
   useState,
   useContext,
-  useMemo,
 } from 'react';
 import {
   Editor,
@@ -18,7 +17,8 @@ import {
   Location,
   Point,
 } from 'slate';
-import { ReactEditor, useFocused, useSelected } from 'slate-react';
+import { ReactEditor } from 'slate-react';
+import { isBlock } from '.';
 
 export { useSlateStatic as useStaticEditor } from 'slate-react';
 
@@ -68,16 +68,16 @@ export function moveChildren(
   editor: Editor,
   parent: NodeEntry | Path,
   to: Path,
-  shouldMoveNode: (node: Node) => boolean = () => true
+  shouldMoveNode: (node: Node, index: number) => boolean = () => true
 ) {
   const parentPath = Path.isPath(parent) ? parent : parent[1];
   const parentNode = Path.isPath(parent)
     ? Node.get(editor, parentPath)
     : parent[0];
-  if (!Editor.isBlock(editor, parentNode)) return;
+  if (!isBlock(parentNode)) return;
 
   for (let i = parentNode.children.length - 1; i >= 0; i--) {
-    if (shouldMoveNode(parentNode.children[i])) {
+    if (shouldMoveNode(parentNode.children[i], i)) {
       const childPath = [...parentPath, i];
       Transforms.moveNodes(editor, { at: childPath, to });
     }
@@ -227,35 +227,6 @@ export function assert(condition: boolean): asserts condition {
   if (!condition) {
     throw new Error('failed assert');
   }
-}
-
-// delay our reading of the updated `focused` value so that we'll still render
-// the dialog immediately after the editor is blurred but before the input has
-// been focused
-export function useDelayedFocused() {
-  const focused = useFocused();
-  const [delayedFocused, setDelayedFocused] = useState(false);
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setDelayedFocused(focused);
-    }, 0);
-    return () => clearTimeout(timeout);
-  }, [focused]);
-  return delayedFocused;
-}
-
-export function useSelectedOrFocusWithin() {
-  const [focusWithin, setFocusWithin] = useState(false);
-  const focused = useFocused();
-  const selected = useSelected();
-  const targetProps = useMemo(
-    () => ({
-      onFocus: () => setFocusWithin(true),
-      onBlur: () => setFocusWithin(false),
-    }),
-    []
-  );
-  return [(focused && selected) || focusWithin, targetProps] as const;
 }
 
 export function focusWithPreviousSelection(editor: Editor) {

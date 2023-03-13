@@ -1,15 +1,3 @@
-import { ActionGroup, Item } from '@voussoir/action-group';
-import { ActionButton } from '@voussoir/button';
-import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
-import { checkCircle2Icon } from '@voussoir/icon/icons/checkCircle2Icon';
-import { infoIcon } from '@voussoir/icon/icons/infoIcon';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Icon } from '@voussoir/icon';
-import { Flex } from '@voussoir/layout';
-import { Notice } from '@voussoir/notice';
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
-import { Text } from '@voussoir/typography';
-
 import {
   config,
   collection,
@@ -18,13 +6,22 @@ import {
   component,
   NotEditable,
 } from '@keystatic/core';
+import { PropsWithChildren } from 'react';
 
-const toneToIcon = {
-  caution: alertTriangleIcon,
-  critical: alertTriangleIcon,
-  neutral: infoIcon,
-  positive: checkCircle2Icon,
-};
+import { ActionGroup, Item } from '@voussoir/action-group';
+import { ActionButton } from '@voussoir/button';
+import { alertOctagonIcon } from '@voussoir/icon/icons/alertOctagonIcon';
+import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
+import { checkCircle2Icon } from '@voussoir/icon/icons/checkCircle2Icon';
+import { infoIcon } from '@voussoir/icon/icons/infoIcon';
+import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
+import { Icon } from '@voussoir/icon';
+import { Divider, Flex } from '@voussoir/layout';
+import { css, tokenSchema } from '@voussoir/style';
+import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
+import { Text } from '@voussoir/typography';
+
+const description = 'Some description';
 
 export default config({
   storage: {
@@ -46,8 +43,14 @@ export default config({
         content: fields.document({
           label: 'Content',
           formatting: true,
+          layouts: [
+            [1, 1],
+            [1, 2],
+            [1, 1, 1],
+          ], // TEMP
           dividers: true,
           links: true,
+          tables: true,
           images: {
             directory: 'public/images/posts',
             publicPath: '/images/posts/',
@@ -90,23 +93,23 @@ export default config({
             notice: component({
               preview: function (props) {
                 return (
-                  <Notice tone={props.fields.tone.value}>
+                  <Note tone={props.fields.tone.value}>
                     {props.fields.content.element}
-                  </Notice>
+                  </Note>
                 );
               },
-              label: 'Notice',
+              label: 'Note',
               chromeless: true,
               schema: {
                 tone: fields.select({
                   label: 'Tone',
                   options: [
-                    { value: 'neutral', label: 'Neutral' },
+                    { value: 'info', label: 'Info' },
                     { value: 'caution', label: 'Caution' },
-                    { value: 'critical', label: 'Critical' },
                     { value: 'positive', label: 'Positive' },
+                    { value: 'critical', label: 'Critical' },
                   ] as const,
-                  defaultValue: 'neutral',
+                  defaultValue: 'info',
                 }),
                 content: fields.child({
                   kind: 'block',
@@ -118,7 +121,7 @@ export default config({
               },
               toolbar({ props, onRemove }) {
                 return (
-                  <Flex margin="medium">
+                  <Flex gap="regular" padding="regular">
                     <ActionGroup
                       selectionMode="single"
                       prominence="low"
@@ -137,6 +140,7 @@ export default config({
                         </Item>
                       )}
                     </ActionGroup>
+                    <Divider orientation="vertical" />
                     <TooltipTrigger>
                       <ActionButton
                         prominence="low"
@@ -258,5 +262,125 @@ export default config({
         logo: fields.image({ label: 'Logo' }),
       },
     }),
+    fields: singleton({
+      label: 'All Fields',
+      schema: {
+        text: fields.text({ label: 'Text', description }),
+        title: fields.slug({
+          name: { label: 'Title', description },
+          slug: { description },
+        }),
+        integer: fields.integer({ label: 'Number', description }),
+        checkbox: fields.checkbox({ label: 'Checkbox', description }),
+        select: fields.select({
+          label: 'Select',
+          description,
+          options: [
+            { value: 'one', label: 'One' },
+            { value: 'two', label: 'Two' },
+            { value: 'three', label: 'Three' },
+          ],
+          defaultValue: 'one',
+        }),
+        multiselect: fields.multiselect({
+          label: 'Multiselect',
+          description,
+          options: [
+            { value: 'one', label: 'One' },
+            { value: 'two', label: 'Two' },
+            { value: 'three', label: 'Three' },
+          ],
+          defaultValue: ['one'],
+        }),
+        array: fields.array(fields.text({ label: 'Text', description }), {
+          label: 'Array',
+          description,
+        }),
+        date: fields.date({ label: 'Date', description }),
+        document: fields.document({
+          label: 'Document',
+          description,
+          formatting: true,
+          dividers: true,
+          links: true,
+        }),
+        image: fields.image({ label: 'Image', description }),
+        pathReference: fields.pathReference({
+          label: 'Path Reference',
+          description,
+        }),
+        relationship: fields.relationship({
+          label: 'Relationship',
+          description,
+          collection: 'posts',
+        }),
+      },
+    }),
   },
 });
+
+// Styled components
+// ------------------------------
+
+const toneToIcon = {
+  caution: alertTriangleIcon,
+  critical: alertOctagonIcon,
+  info: infoIcon,
+  positive: checkCircle2Icon,
+};
+
+const toneToColor = {
+  caution: 'caution',
+  critical: 'critical',
+  info: 'accent',
+  positive: 'positive',
+} as const;
+
+function Note({
+  children,
+  tone = 'info',
+  ...props
+}: PropsWithChildren<{
+  tone?: 'info' | 'caution' | 'critical' | 'positive';
+}>) {
+  let icon = toneToIcon[tone];
+  let color = toneToColor[tone];
+  return (
+    <div
+      {...props}
+      className={css({
+        borderRadius: tokenSchema.size.radius.regular,
+        background: 'var(--bg)',
+        color: 'var(--fg)',
+        display: 'flex',
+        gap: '1em',
+        padding: '1em',
+
+        svg: {
+          flexShrink: 0,
+          fill: 'none',
+          stroke: 'currentColor',
+          height: 20,
+          width: 20,
+        },
+
+        '& [data-slate-node="element"]': {
+          '&:first-child': {
+            marginTop: 0,
+          },
+          '&:last-child': {
+            marginBottom: 0,
+          },
+        },
+      })}
+      style={{
+        // @ts-ignore
+        '--bg': tokenSchema.color.background[color],
+        '--fg': tokenSchema.color.foreground[color],
+      }}
+    >
+      {icon}
+      <div>{children}</div>
+    </div>
+  );
+}

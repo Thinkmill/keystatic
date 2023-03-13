@@ -6,10 +6,12 @@ export function select<Option extends { label: string; value: string }>({
   label,
   options,
   defaultValue,
+  description,
 }: {
   label: string;
   options: readonly Option[];
   defaultValue: Option['value'];
+  description?: string;
 }): BasicFormField<Option['value'], readonly Option[]> {
   const optionValuesSet = new Set(options.map(x => x.value));
   if (!optionValuesSet.has(defaultValue)) {
@@ -23,6 +25,7 @@ export function select<Option extends { label: string; value: string }>({
       return (
         <Picker
           label={label}
+          description={description}
           items={options}
           selectedKey={value}
           onSelectionChange={key => {

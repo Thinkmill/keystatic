@@ -167,6 +167,7 @@ export function getDocumentFeaturesForChildField(
       },
       links: options.links === 'inherit',
       images: options.images === 'inherit',
+      tables: options.tables === 'inherit',
     },
   };
 }
@@ -240,7 +241,7 @@ export function clientSideValidateProp(
       return true;
     }
     case 'form': {
-      if (path[path.length - 1] === slugField?.field) {
+      if (slugField && path[path.length - 1] === slugField?.field) {
         return schema.validate(value, {
           slugs: slugField.slugs,
         });

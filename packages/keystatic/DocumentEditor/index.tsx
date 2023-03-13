@@ -22,14 +22,17 @@ import {
 } from 'slate';
 import { Editable, ReactEditor, Slate, useSlate, withReact } from 'slate-react';
 import { withHistory } from 'slate-history';
-
 import { EditableProps } from 'slate-react/dist/components/editable';
+
+import { Box } from '@voussoir/layout';
+import { classNames, css, tokenSchema } from '@voussoir/style';
+
 import { DocumentFeatures } from './document-features';
 import { ComponentBlock } from './component-blocks/api';
 import { withParagraphs } from './paragraphs';
 import { withLink, wrapLink } from './link';
 import { withLayouts } from './layouts';
-import { clearFormatting, Mark } from './utils';
+import { clearFormatting, Mark, nodeTypeMatcher } from './utils';
 import { Toolbar } from './Toolbar';
 import { renderElement } from './render-element';
 import { withHeading } from './heading';
@@ -48,9 +51,14 @@ import { ToolbarStateProvider } from './toolbar-state';
 import { withInsertMenu } from './insert-menu';
 import { withBlockMarkdownShortcuts } from './block-markdown-shortcuts';
 import { withPasting } from './pasting';
-import { classNames, css, tokenSchema } from '@voussoir/style';
-import { Box } from '@voussoir/layout';
 import { withImages } from './image';
+import { ActiveBlockPopoverProvider } from './primitives';
+import {
+  getCellPathInDirection,
+  getSelectedTableArea,
+  TableSelectionProvider,
+  withTable,
+} from './table';
 // the docs site needs access to Editor and importing slate would use the version from the content field
 // so we're exporting it from here (note that this is not at all visible in the published version)
 export { Editor } from 'slate';
@@ -74,6 +82,13 @@ function isMarkActive(editor: Editor, mark: Mark) {
   }
   return false;
 }
+
+const arrowKeyToDirection = new Map([
+  ['ArrowUp', 'up' as const],
+  ['ArrowDown', 'down' as const],
+  ['ArrowLeft', 'left' as const],
+  ['ArrowRight', 'right' as const],
+]);
 
 const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
   if (event.defaultPrevented) return;
@@ -106,9 +121,10 @@ const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
       return;
     }
   }
+
   if (event.key === 'Tab' && editor.selection) {
     const layoutArea = Editor.above(editor, {
-      match: node => node.type === 'layout-area',
+      match: node => node.type === 'layout-area' || node.type === 'table-cell',
     });
     if (layoutArea) {
       const layoutAreaToEnter = event.shiftKey
@@ -119,6 +135,121 @@ const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
         focus: layoutAreaToEnter,
       });
       event.preventDefault();
+    }
+  }
+  if (isHotkey('mod+a', event)) {
+    const parentTable = Editor.above(editor, {
+      match: nodeTypeMatcher('table'),
+    });
+    if (parentTable) {
+      Transforms.select(editor, parentTable[1]);
+      event.preventDefault();
+      return;
+    }
+  }
+  const direction = arrowKeyToDirection.get(event.key);
+  const { selection } = editor;
+  if (direction && selection) {
+    const selectedTableArea = getSelectedTableArea(editor);
+    if (selectedTableArea) {
+      const focusCellPath = Editor.above(editor, {
+        match: nodeTypeMatcher('table-cell'),
+        at: selection.focus.path,
+      })?.[1];
+      const anchorCellPath = Editor.above(editor, {
+        match: nodeTypeMatcher('table-cell'),
+        at: selection.anchor.path,
+      })?.[1];
+
+      if (!focusCellPath || !anchorCellPath) return;
+      const newCellPath = getCellPathInDirection(
+        editor,
+        focusCellPath,
+        direction
+      );
+      if (newCellPath) {
+        if (selectedTableArea.singleCell === 'not-selected') {
+          if (direction !== 'up' && direction !== 'down') return;
+          const [node, offset] = ReactEditor.toDOMPoint(
+            editor,
+            selection.focus
+          );
+          const blockElement = Editor.above(editor, {
+            match: isBlock,
+            at: selection.focus.path,
+          });
+
+          if (!blockElement) return;
+          if (
+            direction === 'up' &&
+            blockElement[1].slice(focusCellPath.length).some(idx => idx !== 0)
+          ) {
+            return;
+          }
+          if (direction === 'down') {
+            const [parentNode] = Editor.parent(editor, blockElement[1]);
+            if (
+              parentNode.children.length - 1 !==
+              blockElement[1][blockElement[1].length - 1]
+            ) {
+              return;
+            }
+            for (const [node, path] of Node.ancestors(editor, blockElement[1], {
+              reverse: true,
+            })) {
+              if (node.type === 'table-cell') break;
+              const [parentNode] = Editor.parent(editor, path);
+              if (parentNode.children.length - 1 === path[path.length - 1]) {
+                continue;
+              }
+              return;
+            }
+          }
+          const domNodeForBlockElement = ReactEditor.toDOMNode(
+            editor,
+            blockElement[0]
+          );
+          const rangeOfWholeBlock = document.createRange();
+          rangeOfWholeBlock.selectNodeContents(domNodeForBlockElement);
+          const rectsOfRangeOfWholeBlock = Array.from(
+            rangeOfWholeBlock.getClientRects()
+          );
+          const newRange = document.createRange();
+          newRange.setStart(node, offset);
+          newRange.setEnd(node, offset);
+          const rangeRects = Array.from(newRange.getClientRects());
+          const lastRangeRect = rangeRects[rangeRects.length - 1];
+          const key = direction === 'up' ? 'top' : 'bottom';
+          const expected =
+            key === 'top'
+              ? Math.min(...rectsOfRangeOfWholeBlock.map(x => x.top))
+              : Math.max(...rectsOfRangeOfWholeBlock.map(x => x.bottom));
+          if (lastRangeRect[key] === expected) {
+            const focus = Editor[direction === 'up' ? 'end' : 'start'](
+              editor,
+              newCellPath
+            );
+            Transforms.select(editor, {
+              focus,
+              anchor: event.shiftKey ? selection.anchor : focus,
+            });
+            event.preventDefault();
+          }
+
+          return;
+        }
+        if (!event.shiftKey) return;
+
+        if (Path.equals(newCellPath, anchorCellPath)) {
+          Transforms.select(editor, newCellPath);
+        } else {
+          Transforms.select(editor, {
+            anchor: selection.anchor,
+            focus: Editor.start(editor, newCellPath),
+          });
+        }
+        event.preventDefault();
+      }
     }
   }
 };
@@ -143,29 +274,31 @@ function _createDocumentEditor(
             documentFeatures,
             componentBlocks,
             withList(
-              withHeading(
-                withInsertMenu(
-                  withComponentBlocks(
-                    componentBlocks,
-                    documentFeatures,
-                    withParagraphs(
-                      withShortcuts(
-                        withDivider(
-                          withLayouts(
-                            withMarks(
-                              documentFeatures,
-                              componentBlocks,
-                              withCodeBlock(
-                                withBlockMarkdownShortcuts(
-                                  documentFeatures,
-                                  componentBlocks,
-                                  withBlockquote(
-                                    withDocumentFeaturesNormalization(
-                                      documentFeatures,
-                                      withHistory(
-                                        includeReact
-                                          ? withReact(createEditor())
-                                          : createEditor()
+              withTable(
+                withHeading(
+                  withInsertMenu(
+                    withComponentBlocks(
+                      componentBlocks,
+                      documentFeatures,
+                      withParagraphs(
+                        withShortcuts(
+                          withDivider(
+                            withLayouts(
+                              withMarks(
+                                documentFeatures,
+                                componentBlocks,
+                                withCodeBlock(
+                                  withBlockMarkdownShortcuts(
+                                    documentFeatures,
+                                    componentBlocks,
+                                    withBlockquote(
+                                      withDocumentFeaturesNormalization(
+                                        documentFeatures,
+                                        withHistory(
+                                          includeReact
+                                            ? withReact(createEditor())
+                                            : createEditor()
+                                        )
                                       )
                                     )
                                   )
@@ -246,8 +379,9 @@ export function DocumentEditor({
         )}
 
         <DocumentEditorEditable
+          id="document-editor-boundary"
           className={css({
-            paddingInline: tokenSchema.size.space.medium,
+            padding: tokenSchema.size.space.medium,
             height: 'auto',
             minWidth: 0,
           })}
@@ -307,12 +441,14 @@ export function DocumentEditorProvider({
           }
         }}
       >
-        <ToolbarStateProvider
-          componentBlocks={componentBlocks}
-          editorDocumentFeatures={documentFeatures}
-        >
-          {children}
-        </ToolbarStateProvider>
+        <TableSelectionProvider>
+          <ToolbarStateProvider
+            componentBlocks={componentBlocks}
+            editorDocumentFeatures={documentFeatures}
+          >
+            {children}
+          </ToolbarStateProvider>
+        </TableSelectionProvider>
       </Slate>
     </IsInEditorContext.Provider>
   );
@@ -335,92 +471,94 @@ export function DocumentEditorEditable(props: EditableProps) {
   const onKeyDown = useMemo(() => getKeyDownHandler(editor), [editor]);
 
   return (
-    <Editable
-      decorate={useCallback(
-        ([node, path]: NodeEntry<Node>) => {
-          let decorations: Range[] = [];
-          if (node.type === 'component-block') {
-            if (
-              node.children.length === 1 &&
-              Element.isElement(node.children[0]) &&
-              node.children[0].type === 'component-inline-prop' &&
-              node.children[0].propPath === undefined
-            ) {
-              return decorations;
-            }
-            node.children.forEach((child, index) => {
+    <ActiveBlockPopoverProvider editor={editor}>
+      <Editable
+        decorate={useCallback(
+          ([node, path]: NodeEntry<Node>) => {
+            let decorations: Range[] = [];
+            if (node.type === 'component-block') {
               if (
-                Node.string(child) === '' &&
-                Element.isElement(child) &&
-                (child.type === 'component-block-prop' ||
-                  child.type === 'component-inline-prop') &&
-                child.propPath !== undefined
+                node.children.length === 1 &&
+                Element.isElement(node.children[0]) &&
+                node.children[0].type === 'component-inline-prop' &&
+                node.children[0].propPath === undefined
               ) {
-                const start = Editor.start(editor, [...path, index]);
-                const placeholder = getPlaceholderTextForPropPath(
-                  child.propPath,
-                  componentBlocks[node.component].schema,
-                  node.props
-                );
-                if (placeholder) {
-                  decorations.push({
-                    placeholder,
-                    anchor: start,
-                    focus: start,
-                  });
-                }
+                return decorations;
               }
-            });
-          }
-          if (
-            node.type === 'code' &&
-            node.children.length === 1 &&
-            node.children[0].type === undefined &&
-            node.language &&
-            node.language in Prism.languages
-          ) {
-            const textPath = [...path, 0];
-            const tokens = Prism.tokenize(
-              node.children[0].text,
-              Prism.languages[node.language]
-            );
-            function consumeTokens(
-              start: number,
-              tokens: (string | Prism.Token)[]
-            ) {
-              for (const token of tokens) {
-                const length = getPrismTokenLength(token);
-                const end = start + length;
-
-                if (typeof token !== 'string') {
-                  decorations.push({
-                    ['prism_' + token.type]: true,
-                    anchor: { path: textPath, offset: start },
-                    focus: { path: textPath, offset: end },
-                  });
-                  consumeTokens(
-                    start,
-                    Array.isArray(token.content)
-                      ? token.content
-                      : [token.content]
+              node.children.forEach((child, index) => {
+                if (
+                  Node.string(child) === '' &&
+                  Element.isElement(child) &&
+                  (child.type === 'component-block-prop' ||
+                    child.type === 'component-inline-prop') &&
+                  child.propPath !== undefined
+                ) {
+                  const start = Editor.start(editor, [...path, index]);
+                  const placeholder = getPlaceholderTextForPropPath(
+                    child.propPath,
+                    componentBlocks[node.component].schema,
+                    node.props
                   );
+                  if (placeholder) {
+                    decorations.push({
+                      placeholder,
+                      anchor: start,
+                      focus: start,
+                    });
+                  }
                 }
-
-                start = end;
-              }
+              });
             }
-            consumeTokens(0, tokens);
-          }
-          return decorations;
-        },
-        [editor, componentBlocks]
-      )}
-      onKeyDown={onKeyDown}
-      renderElement={renderElement}
-      renderLeaf={renderLeaf}
-      {...props}
-      className={classNames(editableStyles, props.className)}
-    />
+            if (
+              node.type === 'code' &&
+              node.children.length === 1 &&
+              node.children[0].type === undefined &&
+              node.language &&
+              node.language in Prism.languages
+            ) {
+              const textPath = [...path, 0];
+              const tokens = Prism.tokenize(
+                node.children[0].text,
+                Prism.languages[node.language]
+              );
+              function consumeTokens(
+                start: number,
+                tokens: (string | Prism.Token)[]
+              ) {
+                for (const token of tokens) {
+                  const length = getPrismTokenLength(token);
+                  const end = start + length;
+
+                  if (typeof token !== 'string') {
+                    decorations.push({
+                      ['prism_' + token.type]: true,
+                      anchor: { path: textPath, offset: start },
+                      focus: { path: textPath, offset: end },
+                    });
+                    consumeTokens(
+                      start,
+                      Array.isArray(token.content)
+                        ? token.content
+                        : [token.content]
+                    );
+                  }
+
+                  start = end;
+                }
+              }
+              consumeTokens(0, tokens);
+            }
+            return decorations;
+          },
+          [editor, componentBlocks]
+        )}
+        onKeyDown={onKeyDown}
+        renderElement={renderElement}
+        renderLeaf={renderLeaf}
+        {...props}
+        className={classNames(editableStyles, props.className)}
+      />
+    </ActiveBlockPopoverProvider>
   );
 }
 
@@ -473,6 +611,16 @@ while (listDepth--) {
 
 const editableStyles = css({
   ...styles,
+  'h1,h2,h3,h4,h5,h6,p,ol,ul': {
+    marginBlock: '1em',
+
+    '&:first-child': {
+      marginTop: 0,
+    },
+    '&:last-child': {
+      marginBottom: 0,
+    },
+  },
   a: {
     color: tokenSchema.color.foreground.accent,
   },
@@ -501,7 +649,7 @@ type TypesWhichHaveNoExtraRequiredProps = {
     : never;
 }[Block['type']];
 
-const blockquoteChildren = [
+const tableCellChildren = [
   'paragraph',
   'code',
   'heading',
@@ -510,6 +658,8 @@ const blockquoteChildren = [
   'divider',
   'image',
 ] as const;
+
+const blockquoteChildren = [...tableCellChildren, 'table'] as const;
 
 const paragraphLike = [...blockquoteChildren, 'blockquote'] as const;
 
@@ -596,6 +746,26 @@ export const editorSchema = satisfies<
   }),
   'list-item-content': inlineContainer({ invalidPositionHandleMode: 'unwrap' }),
   image: inlineContainer({ invalidPositionHandleMode: 'move' }),
+  table: blockContainer({
+    invalidPositionHandleMode: 'move',
+    allowedChildren: ['table-head', 'table-body'],
+  }),
+  'table-body': blockContainer({
+    invalidPositionHandleMode: 'move',
+    allowedChildren: ['table-row'],
+  }),
+  'table-row': blockContainer({
+    invalidPositionHandleMode: 'move',
+    allowedChildren: ['table-cell'],
+  }),
+  'table-cell': blockContainer({
+    invalidPositionHandleMode: 'move',
+    allowedChildren: tableCellChildren,
+  }),
+  'table-head': blockContainer({
+    invalidPositionHandleMode: 'move',
+    allowedChildren: ['table-row'],
+  }),
 });
 
 type InlineContainingType = {
@@ -621,7 +791,7 @@ const blockTypes: Set<string | undefined> = new Set(
   Object.keys(editorSchema).filter(x => x !== 'editor')
 );
 
-export function isBlock(node: Descendant): node is Block {
+export function isBlock(node: Node): node is Block {
   return blockTypes.has(node.type);
 }
 
@@ -642,12 +812,12 @@ function withBlocksSchema(editor: Editor): Editor {
       if (
         info.kind === 'blocks' &&
         node.children.length !== 0 &&
-        node.children.every(child => !Editor.isBlock(editor, child))
+        node.children.every(child => !isBlock(child))
       ) {
         Transforms.wrapNodes(
           editor,
           { type: info.blockToWrapInlinesIn, children: [] },
-          { at: path, match: node => !Editor.isBlock(editor, node) }
+          { at: path, match: node => !isBlock(node) }
         );
         return;
       }
@@ -655,17 +825,12 @@ function withBlocksSchema(editor: Editor): Editor {
       for (const [index, childNode] of node.children.entries()) {
         const childPath = [...path, index];
         if (info.kind === 'inlines') {
-          if (!Text.isText(childNode) && !Editor.isInline(editor, childNode)) {
+          if (!Text.isText(childNode) && isBlock(childNode)) {
             handleNodeInInvalidPosition(editor, [childNode, childPath], path);
             return;
           }
         } else {
-          if (
-            !Editor.isBlock(editor, childNode) ||
-            // these checks are implicit in Editor.isBlock
-            // but that isn't encoded in types so these will make TS happy
-            childNode.type === 'link'
-          ) {
+          if (!isBlock(childNode)) {
             Transforms.wrapNodes(
               editor,
               { type: info.blockToWrapInlinesIn, children: [] },
