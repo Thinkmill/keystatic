@@ -666,22 +666,29 @@ export const TableElement = ({
   return (
     <StartElementsContext.Provider value={startElements}>
       <SelectedCellsContext.Provider value={selectedCells}>
-        <table
+        <div
           className={css({
-            width: '100%',
-            tableLayout: 'fixed',
             position: 'relative',
-            borderSpacing: 0,
-            marginTop: 10,
-            marginLeft: 10,
-            '& *::selection': selectedCells?.cells.size
-              ? { backgroundColor: 'transparent' }
-              : undefined,
+            paddingRight: 10,
           })}
-          {...attributes}
         >
-          {children}
-        </table>
+          <table
+            className={css({
+              width: '100%',
+              tableLayout: 'fixed',
+              position: 'relative',
+              borderSpacing: 0,
+              marginTop: 10,
+              marginLeft: 10,
+              '& *::selection': selectedCells?.cells.size
+                ? { backgroundColor: 'transparent' }
+                : undefined,
+            })}
+            {...attributes}
+          >
+            {children}
+          </table>
+        </div>
       </SelectedCellsContext.Provider>
     </StartElementsContext.Provider>
   );
@@ -748,10 +755,12 @@ export function TableCellElement({
           : undefined,
         position: 'relative',
         margin: 0,
-        padding: 0,
+        padding: 10,
         fontWeight: 'inherit',
+        boxSizing: 'border-box',
         textAlign: 'start',
-        height: 42,
+        height: 42, // ensures room for the context menu button in the focused cell
+        verticalAlign: 'top',
       })}
       {...attributes}
     >
