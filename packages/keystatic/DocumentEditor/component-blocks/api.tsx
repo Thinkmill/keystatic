@@ -40,6 +40,10 @@ export type BasicFormField<Value, Options> = {
    * a potentially malicious client
    */
   validate(value: unknown): boolean;
+  collaboration?: {
+    defaultValue: () => unknown;
+    fromYjs: (yjsValue: unknown) => Value;
+  };
 };
 
 export type FormField<Value, Options> =

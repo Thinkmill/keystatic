@@ -6,6 +6,7 @@ import {
   useCallback,
   useMemo,
   createContext,
+  useEffect,
 } from 'react';
 import isHotkey from 'is-hotkey';
 import {
@@ -23,6 +24,8 @@ import {
 import { Editable, ReactEditor, Slate, useSlate, withReact } from 'slate-react';
 import { withHistory } from 'slate-history';
 import { EditableProps } from 'slate-react/dist/components/editable';
+import { withYjs, YjsEditor } from '@slate-yjs/core';
+import * as Y from 'yjs';
 
 import { Box } from '@voussoir/layout';
 import { classNames, css, tokenSchema } from '@voussoir/style';
@@ -325,6 +328,79 @@ export function createDocumentEditor(
   componentBlocks: Record<string, ComponentBlock>
 ) {
   return _createDocumentEditor(documentFeatures, componentBlocks, true);
+}
+
+export function DocumentEditorYjs({
+  componentBlocks,
+  documentFeatures,
+  value,
+  yRoot,
+  ...props
+}: {
+  value: Descendant[];
+  yRoot: Y.XmlText;
+  componentBlocks: Record<string, ComponentBlock>;
+  documentFeatures: DocumentFeatures;
+} & Omit<EditableProps, 'value' | 'onChange'>) {
+  const editor = useMemo(
+    () =>
+      withYjs(createDocumentEditor(documentFeatures, componentBlocks), yRoot),
+    [documentFeatures, componentBlocks, yRoot]
+  );
+
+  useEffect(() => {
+    YjsEditor.connect(editor);
+    return () => YjsEditor.disconnect(editor);
+  }, [editor]);
+
+  return (
+    <Box
+      backgroundColor="canvas"
+      border="neutral"
+      borderRadius="medium"
+      minWidth={0}
+    >
+      <DocumentEditorProvider
+        componentBlocks={componentBlocks}
+        documentFeatures={documentFeatures}
+        editor={editor}
+        value={value}
+        onChange={() => {
+          // this fixes a strange issue in Safari where the selection stays inside of the editor
+          // after a blur event happens but the selection is still in the editor
+          // so the cursor is visually in the wrong place and it inserts text backwards
+          const selection = window.getSelection();
+          if (selection && !ReactEditor.isFocused(editor)) {
+            const editorNode = ReactEditor.toDOMNode(editor, editor);
+            if (selection.anchorNode === editorNode) {
+              ReactEditor.focus(editor);
+            }
+          }
+        }}
+      >
+        {useMemo(
+          () => (
+            <Toolbar documentFeatures={documentFeatures} />
+          ),
+          [documentFeatures]
+        )}
+
+        <DocumentEditorEditable
+          id="document-editor-boundary"
+          className={css({
+            padding: tokenSchema.size.space.medium,
+            height: 'auto',
+            minWidth: 0,
+          })}
+          {...props}
+        />
+        {
+          // for debugging
+          false && <Debugger />
+        }
+      </DocumentEditorProvider>
+    </Box>
+  );
 }
 
 export function DocumentEditor({

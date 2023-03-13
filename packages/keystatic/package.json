@@ -62,6 +62,8 @@
     "@react-stately/list": "^3.6.0",
     "@react-stately/overlays": "^3.4.3",
     "@sindresorhus/slugify": "^1.1.2",
+    "@slate-yjs/core": "^0.3.1",
+    "@slate-yjs/react": "^0.3.0",
     "@ts-gql/tag": "^0.7.0",
     "@types/node": "16.11.13",
     "@types/react": "^18.0.25",
@@ -130,6 +132,8 @@
     "slate-hyperscript": "^0.77.0",
     "slate-react": "^0.91.9",
     "urql": "^3.0.3",
+    "y-websocket": "^1.5.0",
+    "yjs": "^13.5.50",
     "zod": "^3.20.2"
   },
   "devDependencies": {

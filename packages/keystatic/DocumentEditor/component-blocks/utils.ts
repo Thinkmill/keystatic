@@ -4,6 +4,7 @@ import { DocumentFeaturesForNormalization } from '../document-features-normaliza
 import { assert, Mark } from '../utils';
 import { ComponentSchema, ChildField, ValueForComponentSchema } from './api';
 import { getKeysForArrayValue, setKeysForArrayValue } from './preview-props';
+import * as Y from 'yjs';
 
 type PathToChildFieldWithOption = {
   path: ReadonlyPropPath;
@@ -613,4 +614,70 @@ export function getPlaceholderTextForPropPath(
     return field.options.placeholder;
   }
   return '';
+}
+
+export function getInitialYJsValForComponentSchema(
+  schema: ComponentSchema
+): unknown {
+  if (schema.kind === 'form') {
+    if (schema.collaboration) {
+      return schema.collaboration.defaultValue();
+    }
+    return schema.defaultValue;
+  }
+  if (schema.kind === 'child') {
+    return null;
+  }
+  if (schema.kind === 'object') {
+    return new Y.Map(
+      Object.entries(schema.fields).map(
+        ([key, val]) => [key, getInitialYJsValForComponentSchema(val)] as const
+      )
+    );
+  }
+  if (schema.kind === 'array') {
+    return new Y.Array();
+  }
+  if (schema.kind === 'conditional') {
+    return new Y.Map([
+      ['discriminant', schema.discriminant.defaultValue],
+      ['value', getInitialYJsValForComponentSchema(schema.values.true)],
+    ]);
+  }
+  assertNever(schema);
+}
+
+export function yjsToVal(schema: ComponentSchema, yjsValue: unknown): unknown {
+  if (schema.kind === 'form') {
+    if (schema.collaboration) {
+      return schema.collaboration.fromYjs(yjsValue);
+    }
+    return yjsValue;
+  }
+  if (schema.kind === 'child') {
+    return null;
+  }
+  if (schema.kind === 'object') {
+    return Object.fromEntries(
+      Object.entries(schema.fields).map(([key, val]) => [
+        key,
+        yjsToVal(val, (yjsValue as Y.Map<unknown>).get(key)),
+      ])
+    );
+  }
+  if (schema.kind === 'array') {
+    return (yjsValue as Y.Array<unknown>).map(val =>
+      yjsToVal(schema.element, val)
+    );
+  }
+  if (schema.kind === 'conditional') {
+    const yjsMap = yjsValue as Y.Map<unknown>;
+    return {
+      discriminant: yjsToVal(schema.discriminant, yjsMap.get('discriminant')),
+      value: yjsToVal(
+        schema.values[yjsMap.get('discriminant') + ''],
+        yjsMap.get('value')
+      ),
+    };
+  }
 }

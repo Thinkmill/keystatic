@@ -1,5 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 
 import { Button } from '@voussoir/button';
 import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
@@ -9,11 +9,16 @@ import { Notice } from '@voussoir/notice';
 import { ProgressCircle } from '@voussoir/progress';
 
 import { Config } from '../config';
-import { fields } from '../DocumentEditor/component-blocks/api';
+import {
+  ComponentSchema,
+  fields,
+} from '../DocumentEditor/component-blocks/api';
 import { FormValueContentFromPreviewProps } from '../DocumentEditor/component-blocks/form-from-preview';
-import { getInitialPropsValue } from '../DocumentEditor/component-blocks/initial-values';
-import { createGetPreviewProps } from '../DocumentEditor/component-blocks/preview-props';
-import { clientSideValidateProp } from '../DocumentEditor/component-blocks/utils';
+import {
+  clientSideValidateProp,
+  getInitialYJsValForComponentSchema,
+  yjsToVal,
+} from '../DocumentEditor/component-blocks/utils';
 import { useEventCallback } from '../DocumentEditor/utils';
 import { useUpsertItem } from '../utils';
 
@@ -32,8 +37,38 @@ import {
 } from './utils';
 import { useSlugsInCollection } from './useSlugsInCollection';
 import { ForkRepoDialog } from './fork-repo';
+import * as Y from 'yjs';
+import { createGetPreviewPropsFromY } from '../DocumentEditor/component-blocks/preview-props-yjs';
+import { WebsocketProvider } from 'y-websocket';
 
 const emptyMap = new Map<string, TreeNode>();
+
+function useYJsValue<T>(
+  schema: ComponentSchema,
+  type: Y.AbstractType<any> & { toJSON: () => T }
+): T {
+  const thing = useMemo(() => {
+    let lastVal = type.toJSON();
+    return {
+      getSnapshot: () => lastVal,
+      subscribe: (cb: () => void) => {
+        const handler = () => {
+          lastVal = yjsToVal(schema, type);
+          cb();
+        };
+        type.observeDeep(handler);
+        return () => {
+          type.unobserveDeep(handler);
+        };
+      },
+    };
+  }, [schema, type]);
+  return useSyncExternalStore(
+    thing.subscribe,
+    thing.getSnapshot,
+    thing.getSnapshot
+  );
+}
 
 export function CreateItem(props: {
   collection: string;
@@ -48,11 +83,53 @@ export function CreateItem(props: {
     () => fields.object(collectionConfig.schema),
     [collectionConfig.schema]
   );
-  const [state, setState] = useState(() => getInitialPropsValue(schema));
-  const previewProps = useMemo(
-    () => createGetPreviewProps(schema, setState, () => undefined),
-    [schema]
-  )(state);
+  const doc = useMemo(() => new Y.Doc(), []);
+  const map = useMemo(() => doc.getMap('data'), [doc]);
+  const state = useYJsValue(schema, map);
+  const getPreviewProps = useMemo(
+    () => createGetPreviewPropsFromY(schema, map, () => undefined),
+    [map, schema]
+  );
+  const previewProps = Object.keys(state).length
+    ? getPreviewProps(state)
+    : undefined;
+
+  const provider = useMemo(
+    () =>
+      new WebsocketProvider(
+        'ws://localhost:8787/',
+        props.collection + '2',
+        doc,
+        {
+          connect: true,
+        }
+      ),
+    [doc, props.collection]
+  );
+
+  useEffect(() => {
+    let hasSynced = false;
+    const onSynced = () => {
+      if (!hasSynced) {
+        hasSynced = true;
+        if (map.size === 0) {
+          doc.transact(() => {
+            for (const [key, value] of Object.entries(schema.fields)) {
+              const val = getInitialYJsValForComponentSchema(value);
+
+              map.set(key, val);
+            }
+          });
+        }
+      }
+      provider.off('synced', onSynced);
+    };
+
+    provider.on('synced', onSynced);
+    return () => {
+      provider.off('synced', onSynced);
+    };
+  }, [doc, map, provider, schema.fields]);
 
   const baseCommit = useBaseCommit();
 
@@ -112,7 +189,7 @@ export function CreateItem(props: {
 
   const formID = 'item-create-form';
 
-  return (
+  return previewProps ? (
     <>
       <AppShellRoot>
         <AppShellHeader>
@@ -228,5 +305,5 @@ export function CreateItem(props: {
         )}
       </DialogContainer>
     </>
-  );
+  ) : null;
 }

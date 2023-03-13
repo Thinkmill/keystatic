@@ -5,7 +5,11 @@ import { Editor } from 'slate';
 
 import { fromMarkdoc } from '../../../markdoc/from-markdoc';
 import { toMarkdocDocument } from '../../../markdoc/to-markdoc';
-import { createDocumentEditorWithoutReact, DocumentEditor } from '../..';
+import {
+  createDocumentEditorWithoutReact,
+  DocumentEditor,
+  DocumentEditorYjs,
+} from '../..';
 import { DocumentFeatures } from '../../document-features';
 import {
   CollectedFile,
@@ -20,6 +24,8 @@ import {
   fields,
   FormFieldWithFileRequiringContentsForReader,
 } from '../api';
+import { XmlText } from 'yjs';
+import { slateNodesToInsertDelta, yTextToSlateElement } from '@slate-yjs/core';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -191,14 +197,24 @@ export function document({
     kind: 'form',
     defaultValue: [{ type: 'paragraph', children: [{ text: '' }] }],
     Input(props) {
+      const yjs = (props.onChange as any).yjs as XmlText | undefined;
       return (
         <FieldPrimitive label={label} description={description}>
-          <DocumentEditor
-            componentBlocks={componentBlocks}
-            documentFeatures={documentFeatures}
-            onChange={props.onChange as any}
-            value={props.value as any}
-          />
+          {yjs ? (
+            <DocumentEditorYjs
+              componentBlocks={componentBlocks}
+              documentFeatures={documentFeatures}
+              value={props.value as any}
+              yRoot={yjs}
+            />
+          ) : (
+            <DocumentEditor
+              componentBlocks={componentBlocks}
+              documentFeatures={documentFeatures}
+              onChange={props.onChange as any}
+              value={props.value as any}
+            />
+          )}
         </FieldPrimitive>
       );
     },
@@ -274,6 +290,25 @@ export function document({
       reader: {
         requiresContentInReader: true,
         parseToReader: parse('read'),
+      },
+    },
+    collaboration: {
+      defaultValue() {
+        const xmlText = new XmlText();
+        const insertDelta = slateNodesToInsertDelta([
+          { type: 'paragraph', children: [{ text: ' ' }] },
+        ]);
+        console.log(insertDelta);
+        xmlText.applyDelta(insertDelta);
+        console.log(xmlText);
+        return xmlText;
+      },
+      fromYjs(yjsValue) {
+        if (yjsValue instanceof XmlText) {
+          return yTextToSlateElement(yjsValue as XmlText)
+            .children as any as DocumentElement[];
+        }
+        throw new Error('bad');
       },
     },
   };
