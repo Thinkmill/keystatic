@@ -177,11 +177,37 @@ const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
           const blockElement = Editor.above(editor, {
             match: isBlock,
             at: selection.focus.path,
-          })?.[0];
+          });
+
           if (!blockElement) return;
+          if (
+            direction === 'up' &&
+            blockElement[1].slice(focusCellPath.length).some(idx => idx !== 0)
+          ) {
+            return;
+          }
+          if (direction === 'down') {
+            const [parentNode] = Editor.parent(editor, blockElement[1]);
+            if (
+              parentNode.children.length - 1 !==
+              blockElement[1][blockElement[1].length - 1]
+            ) {
+              return;
+            }
+            for (const [node, path] of Node.ancestors(editor, blockElement[1], {
+              reverse: true,
+            })) {
+              if (node.type === 'table-cell') break;
+              const [parentNode] = Editor.parent(editor, path);
+              if (parentNode.children.length - 1 === path[path.length - 1]) {
+                continue;
+              }
+              return;
+            }
+          }
           const domNodeForBlockElement = ReactEditor.toDOMNode(
             editor,
-            blockElement
+            blockElement[0]
           );
           const rangeOfWholeBlock = document.createRange();
           rangeOfWholeBlock.selectNodeContents(domNodeForBlockElement);
@@ -199,7 +225,10 @@ const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
               ? Math.min(...rectsOfRangeOfWholeBlock.map(x => x.top))
               : Math.max(...rectsOfRangeOfWholeBlock.map(x => x.bottom));
           if (lastRangeRect[key] === expected) {
-            const focus = Editor.start(editor, newCellPath);
+            const focus = Editor[direction === 'up' ? 'end' : 'start'](
+              editor,
+              newCellPath
+            );
             Transforms.select(editor, {
               focus,
               anchor: event.shiftKey ? selection.anchor : focus,
