@@ -221,7 +221,10 @@ export function GitHubAppShellProvider(props: {
     const provider = new WebsocketProvider({
       doc,
       awareness,
-      url: `ws://localhost:8787/${repoInfo}`, //'wss://keystatic-multiplayer.thinkmill.workers.dev/',
+      url:
+        process.env.NODE_ENV === 'production'
+          ? `wss://keystatic-multiplayer.thinkmill.workers.dev/${repoInfo}`
+          : `ws://localhost:8787/${repoInfo}`,
       authToken: async () => getAuth().then(auth => auth?.accessToken ?? ''),
     });
     return { doc, awareness, provider, data };
