@@ -1,5 +1,15 @@
 # @keystatic/core
 
+## 0.0.66
+
+### Patch Changes
+
+- 02a0fd1: Fixed keyboard navigation bugs in table cells in the document field
+  editor
+- 02a0fd1: Fixed table styles in the document field editor
+- 6890696: Fix clicking done in a nested array field closing both modals
+- 1ea62fe: Add `repository` key to keystatic/core package.json
+
 ## 0.0.65
 
 ### Patch Changes

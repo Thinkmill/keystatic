@@ -1,5 +1,16 @@
 # @keystatic/next
 
+## 0.0.5
+
+### Patch Changes
+
+- 1ea62fe: Add `repository` key to keystatic/core package.json
+- Updated dependencies [02a0fd1]
+- Updated dependencies [02a0fd1]
+- Updated dependencies [6890696]
+- Updated dependencies [1ea62fe]
+  - @keystatic/core@0.0.66
+
 ## 0.0.4
 
 ### Patch Changes
