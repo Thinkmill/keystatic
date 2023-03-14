@@ -189,6 +189,7 @@ function ImageDialog({
       <form
         style={{ display: 'contents' }}
         onSubmit={event => {
+          if (event.target !== event.currentTarget) return;
           event.preventDefault();
           if (fileName) {
             dismiss();

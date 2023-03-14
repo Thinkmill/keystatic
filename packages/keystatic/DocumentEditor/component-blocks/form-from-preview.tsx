@@ -272,6 +272,7 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
                   id={formId}
                   elementType="form"
                   onSubmit={event => {
+                    if (event.target !== event.currentTarget) return;
                     event.preventDefault();
                     if (modalState.state !== 'open') return;
                     if (

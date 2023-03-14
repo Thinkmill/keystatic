@@ -351,6 +351,7 @@ export function CreateBranchDuringUpdateDialog(props: {
       <form
         style={{ display: 'contents' }}
         onSubmit={async event => {
+          if (event.target !== event.currentTarget) return;
           event.preventDefault();
           const name = `refs/heads/${branchName}`;
           const result = await createBranch({

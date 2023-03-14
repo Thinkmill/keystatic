@@ -160,6 +160,7 @@ function CreateFork(props: {
     <form
       style={{ display: 'contents' }}
       onSubmit={async event => {
+        if (event.target !== event.currentTarget) return;
         event.preventDefault();
         setState({ kind: 'loading' });
         try {
