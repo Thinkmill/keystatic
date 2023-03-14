@@ -1,5 +1,16 @@
 # @keystatic/test-astro
 
+## 0.0.30
+
+### Patch Changes
+
+- Updated dependencies [02a0fd1]
+- Updated dependencies [02a0fd1]
+- Updated dependencies [6890696]
+- Updated dependencies [1ea62fe]
+  - @keystatic/core@0.0.66
+  - @keystatic/astro@0.0.6
+
 ## 0.0.29
 
 ### Patch Changes
