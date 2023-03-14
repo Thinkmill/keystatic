@@ -2009,6 +2009,7 @@ importers:
       is-hotkey: ^0.2.0
       jest-diff: ^29.0.1
       js-yaml: ^4.1.0
+      lib0: ^0.2.66
       lru-cache: ^7.14.1
       match-sorter: ^6.3.1
       mdast-util-from-markdown: ^0.8.5
@@ -2030,6 +2031,7 @@ importers:
       tsx: ^3.8.0
       typescript: ^4.7.4
       urql: ^3.0.3
+      y-protocols: ^1.0.5
       y-websocket: ^1.5.0
       yjs: ^13.5.50
       zod: ^3.20.2
@@ -2103,6 +2105,7 @@ importers:
       io-ts-excess: 1.0.1_fp-ts@2.13.1
       is-hotkey: 0.2.0
       js-yaml: 4.1.0
+      lib0: 0.2.66
       lru-cache: 7.16.1
       match-sorter: 6.3.1
       mdast-util-from-markdown: 0.8.5
@@ -2120,6 +2123,7 @@ importers:
       slate-hyperscript: 0.77.0_slate@0.91.4
       slate-react: 0.91.9_6tgy34rvmll7duwkm4ydcekf3u
       urql: 3.0.3_onqnqwb3ubg5opvemcqf7c2qhy
+      y-protocols: 1.0.5
       y-websocket: 1.5.0_yjs@13.5.50
       yjs: 13.5.50
       zod: 3.20.6

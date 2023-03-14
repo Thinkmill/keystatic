@@ -298,9 +298,7 @@ export function document({
         const insertDelta = slateNodesToInsertDelta([
           { type: 'paragraph', children: [{ text: ' ' }] },
         ]);
-        console.log(insertDelta);
         xmlText.applyDelta(insertDelta);
-        console.log(xmlText);
         return xmlText;
       },
       fromYjs(yjsValue) {

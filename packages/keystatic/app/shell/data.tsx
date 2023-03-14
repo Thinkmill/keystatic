@@ -26,6 +26,9 @@ import LRU from 'lru-cache';
 import { isDefined } from 'emery';
 import { getAuth } from '../auth';
 import { SidebarFooter_viewer, ViewerContext } from './sidebar';
+import * as Y from 'yjs';
+import { Awareness } from 'y-protocols/awareness';
+import { WebsocketProvider } from './provider';
 
 export function fetchLocalTree(sha: string) {
   if (treeCache.has(sha)) {
@@ -118,6 +121,13 @@ export function GitHubAppShellDataProvider(props: {
   );
 }
 
+export const YjsContext = createContext<{
+  doc: Y.Doc;
+  data: Y.Map<Y.Doc>;
+  awareness: Awareness;
+  provider: WebsocketProvider;
+} | null>(null);
+
 const writePermissions = new Set(['WRITE', 'ADMIN', 'MAINTAIN']);
 
 export function GitHubAppShellProvider(props: {
@@ -202,6 +212,38 @@ export function GitHubAppShellProvider(props: {
       )}`;
     }
   }, [error, router, repo?.id]);
+  const repoInfo = `${props.config.storage.repo.owner}/${props.config.storage.repo.name}`;
+
+  const yJsInfo = useMemo(() => {
+    const doc = new Y.Doc();
+    const data = doc.getMap<Y.Doc>('data');
+    const awareness = new Awareness(doc);
+    const provider = new WebsocketProvider({
+      doc,
+      awareness,
+      url: `ws://localhost:8787/${repoInfo}`, //'wss://keystatic-multiplayer.thinkmill.workers.dev/',
+      authToken: async () => getAuth().then(auth => auth?.accessToken ?? ''),
+    });
+    return { doc, awareness, provider, data };
+  }, [repoInfo]);
+
+  useEffect(() => {
+    yJsInfo.awareness.setLocalStateField('branch', props.currentBranch);
+    yJsInfo.awareness.setLocalStateField(
+      'location',
+      router.params.slice(2).join('/')
+    );
+  }, [props.currentBranch, yJsInfo.awareness, router.params]);
+
+  const hasRepo = !!data?.repository;
+  useEffect(() => {
+    if (hasRepo) {
+      yJsInfo.provider.connect();
+      return () => {
+        yJsInfo.provider.disconnect();
+      };
+    }
+  }, [yJsInfo.provider, hasRepo]);
   const baseInfo = useMemo(
     () => ({
       baseCommit: baseCommit || '',
@@ -236,25 +278,30 @@ export function GitHubAppShellProvider(props: {
     ]
   );
   return (
-    <RepoWithWriteAccessContext.Provider
-      value={
-        repo?.viewerPermission && writePermissions.has(repo.viewerPermission)
-          ? { name: repo.name, owner: repo.owner.login }
-          : null
-      }
-    >
-      <AppShellErrorContext.Provider value={error}>
-        <BranchInfoContext.Provider value={branchInfo}>
-          <BaseInfoContext.Provider value={baseInfo}>
-            <ChangedContext.Provider value={changedData}>
-              <TreeContext.Provider value={allTreeData}>
-                {props.children}
-              </TreeContext.Provider>
-            </ChangedContext.Provider>
-          </BaseInfoContext.Provider>
-        </BranchInfoContext.Provider>
-      </AppShellErrorContext.Provider>
-    </RepoWithWriteAccessContext.Provider>
+    <YjsContext.Provider value={yJsInfo}>
+      <RepoWithWriteAccessContext.Provider
+        value={useMemo(
+          () =>
+            repo?.viewerPermission &&
+            writePermissions.has(repo.viewerPermission)
+              ? { name: repo.name, owner: repo.owner.login }
+              : null,
+          [repo?.name, repo?.owner.login, repo?.viewerPermission]
+        )}
+      >
+        <AppShellErrorContext.Provider value={error}>
+          <BranchInfoContext.Provider value={branchInfo}>
+            <BaseInfoContext.Provider value={baseInfo}>
+              <ChangedContext.Provider value={changedData}>
+                <TreeContext.Provider value={allTreeData}>
+                  {props.children}
+                </TreeContext.Provider>
+              </ChangedContext.Provider>
+            </BaseInfoContext.Provider>
+          </BranchInfoContext.Provider>
+        </AppShellErrorContext.Provider>
+      </RepoWithWriteAccessContext.Provider>
+    </YjsContext.Provider>
   );
 }
 

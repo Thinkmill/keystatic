@@ -115,6 +115,7 @@
     "io-ts-excess": "^1.0.1",
     "is-hotkey": "^0.2.0",
     "js-yaml": "^4.1.0",
+    "lib0": "^0.2.66",
     "lru-cache": "^7.14.1",
     "match-sorter": "^6.3.1",
     "mdast-util-from-markdown": "^0.8.5",
@@ -132,6 +133,7 @@
     "slate-hyperscript": "^0.77.0",
     "slate-react": "^0.91.9",
     "urql": "^3.0.3",
+    "y-protocols": "^1.0.5",
     "y-websocket": "^1.5.0",
     "yjs": "^13.5.50",
     "zod": "^3.20.2"
