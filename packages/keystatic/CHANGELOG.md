@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.68
+
+### Patch Changes
+
+- 59a6bcf: Use port that Keystatic is running on when doing setup for callback
+  URLs
+
 ## 0.0.67
 
 ### Patch Changes
