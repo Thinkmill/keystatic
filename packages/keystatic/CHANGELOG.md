@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.67
+
+### Patch Changes
+
+- 5f9a6c8: Remove usage of `administration` permissions in forking flow
+
 ## 0.0.66
 
 ### Patch Changes
