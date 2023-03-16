@@ -90,7 +90,6 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
               contents: 'write',
               metadata: 'read',
               pull_requests: 'read',
-              administration: 'write',
             },
           })}
         />
