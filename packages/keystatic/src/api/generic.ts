@@ -566,6 +566,7 @@ async function createdGithubApp(
 KEYSTATIC_GITHUB_CLIENT_ID=${ghAppDataResult.data.client_id}
 KEYSTATIC_GITHUB_CLIENT_SECRET=${ghAppDataResult.data.client_secret}
 KEYSTATIC_SECRET=${randomBytes(40).toString('hex')}
+KEYSTATIC_URL=http://${req.headers.get('host')}
 ${slugEnvVarName ? `${slugEnvVarName}=${ghAppDataResult.data.slug}\n` : ''}`;
 
   let prevEnv: string | undefined;
