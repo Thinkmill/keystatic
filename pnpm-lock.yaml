@@ -1743,6 +1743,7 @@ importers:
       '@react-aria/utils': ^3.14.2
       '@react-stately/toast': 3.0.0-alpha.1
       '@types/react': ^18.0.25
+      '@types/react-dom': ^18.0.11
       '@types/use-sync-external-store': ^0.0.3
       '@voussoir/button': 0.1.2
       '@voussoir/core': ^4.0.0
@@ -1780,6 +1781,7 @@ importers:
     devDependencies:
       '@react-aria/landmark': 3.0.0-alpha.7_react@18.2.0
       '@types/react': 18.0.28
+      '@types/react-dom': 18.0.11
       '@types/use-sync-external-store': 0.0.3
       '@voussoir/dialog': link:../dialog
       '@voussoir/storybook': link:../../docs/storybook
