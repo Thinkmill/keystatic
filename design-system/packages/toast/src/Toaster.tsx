@@ -138,7 +138,7 @@ function addToast(
   return () => queue.close(key);
 }
 
-export const toaster = {
+export const toastQueue = {
   /** Queues a neutral toast. */
   neutral(children: ReactNode, options: ToastOptions = {}): CloseFunction {
     return addToast(children, 'neutral', options);

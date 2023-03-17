@@ -10,7 +10,7 @@ import {
   within,
 } from '@voussoir/test-utils';
 
-import { Toaster, ToastOptions, toaster } from '../src';
+import { Toaster, ToastOptions, toastQueue } from '../src';
 import { clearToastQueue } from '../src/Toaster';
 import { ToastValue } from '../src/types';
 
@@ -20,7 +20,7 @@ function RenderToastButton(
   return (
     <Button
       onPress={() =>
-        toaster[props.tone || 'neutral']('Toast is default', props)
+        toastQueue[props.tone || 'neutral']('Toast is default', props)
       }
     >
       Show Default Toast
@@ -230,8 +230,8 @@ describe('toast/Toast', () => {
     function ToastPriorites(props = {}) {
       return (
         <div>
-          <Button onPress={() => toaster.info('Info', props)}>Info</Button>
-          <Button onPress={() => toaster.critical('Error', props)}>
+          <Button onPress={() => toastQueue.info('Info', props)}>Info</Button>
+          <Button onPress={() => toastQueue.critical('Error', props)}>
             Error
           </Button>
         </div>
@@ -355,7 +355,7 @@ describe('toast/Toast', () => {
             close
               ? // @ts-ignore
                 setClose(close())
-              : setClose(() => toaster.positive('Toast is done!'))
+              : setClose(() => toastQueue.positive('Toast is done!'))
           }
         >
           {close ? 'Hide' : 'Show'} toast

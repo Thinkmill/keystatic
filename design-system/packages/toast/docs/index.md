@@ -18,7 +18,7 @@ You can then queue a toast from anywhere.
 ```jsx {% live=true %}
 <ActionButton
   onPress={() => {
-    toaster.positive('Toast is ready!');
+    toastQueue.positive('Toast is ready!');
   }}
 >
   Show toast
@@ -41,8 +41,8 @@ restored.
 ### Programmatic dismissal
 
 Toasts may be programmatically dismissed if they become irrelevant before the
-user manually closes them. Each method of `toaster` returns a function which can
-be used to close that toast.
+user manually closes them. Each method of `toastQueue` returns a function which
+can be used to close that toast.
 
 ```jsx {% live=true %}
 let [close, setClose] = React.useState(null);
@@ -51,7 +51,7 @@ return (
   <ActionButton
     onPress={() => {
       if (!close) {
-        let close = toaster.critical('Unable to delete entry', {
+        let close = toastQueue.critical('Unable to delete entry', {
           onClose: () => setClose(null),
         });
         setClose(() => close);
@@ -77,7 +77,7 @@ automatically closes the toast when an action is performed.
 ```jsx {% live=true %}
 <ActionButton
   onPress={() =>
-    toaster.info('A new version is available', {
+    toastQueue.info('A new version is available', {
       actionLabel: 'Update',
       onAction: () => alert('Updating!'),
       shouldCloseOnAction: true,
@@ -102,7 +102,7 @@ read a toast message, and screen zoom users may miss toasts entirely.
 ```jsx {% live=true %}
 <ActionButton
   onPress={() =>
-    toaster.positive('Toast is done, in 5 seconds!', { timeout: 5000 })
+    toastQueue.positive('Toast is done, in 5 seconds!', { timeout: 5000 })
   }
 >
   Show toast
@@ -118,18 +118,18 @@ displayed at a time.
 
 ```jsx {% live=true %}
 <Flex gap="regular">
-  <ActionButton onPress={() => toaster.neutral('3 items archived')}>
+  <ActionButton onPress={() => toastQueue.neutral('3 items archived')}>
     <Text>Neutral</Text>
   </ActionButton>
-  <ActionButton onPress={() => toaster.info('A new version is available')}>
+  <ActionButton onPress={() => toastQueue.info('A new version is available')}>
     <Icon src={infoIcon} color="accent" />
     <Text>Info</Text>
   </ActionButton>
-  <ActionButton onPress={() => toaster.positive('File uploaded')}>
+  <ActionButton onPress={() => toastQueue.positive('File uploaded')}>
     <Icon src={checkCircle2Icon} color="positive" />
     <Text>Positive</Text>
   </ActionButton>
-  <ActionButton onPress={() => toaster.critical('Unable to delete entry')}>
+  <ActionButton onPress={() => toastQueue.critical('Unable to delete entry')}>
     <Icon src={alertTriangleIcon} color="critical" />
     <Text>Critical</Text>
   </ActionButton>

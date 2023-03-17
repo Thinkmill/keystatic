@@ -12,7 +12,7 @@ import { Content } from '@voussoir/slots';
 import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
 import { Heading, Text } from '@voussoir/typography';
 
-import { Toaster, ToastOptions, toaster } from '../';
+import { Toaster, ToastOptions, toastQueue } from '../';
 
 storiesOf('Components/Toast', module)
   .addParameters({
@@ -57,7 +57,7 @@ function Example(options: ToastOptions) {
     <Flex gap="regular">
       <ActionButton
         onPress={() =>
-          toaster.neutral('3 items archived', {
+          toastQueue.neutral('3 items archived', {
             ...options,
             onClose: action('onClose'),
           })
@@ -67,7 +67,7 @@ function Example(options: ToastOptions) {
       </ActionButton>
       <ActionButton
         onPress={() =>
-          toaster.info('A new version is available', {
+          toastQueue.info('A new version is available', {
             ...options,
             onClose: action('onClose'),
           })
@@ -78,7 +78,7 @@ function Example(options: ToastOptions) {
       </ActionButton>
       <ActionButton
         onPress={() =>
-          toaster.positive('File uploaded', {
+          toastQueue.positive('File uploaded', {
             ...options,
             onClose: action('onClose'),
           })
@@ -89,7 +89,7 @@ function Example(options: ToastOptions) {
       </ActionButton>
       <ActionButton
         onPress={() =>
-          toaster.critical('Unable to delete entry', {
+          toastQueue.critical('Unable to delete entry', {
             ...options,
             onClose: action('onClose'),
           })
@@ -109,7 +109,7 @@ function ToastToggle(options: ToastOptions) {
     <ActionButton
       onPress={() => {
         if (!close) {
-          let close = toaster.critical('Unable to delete entry', {
+          let close = toastQueue.critical('Unable to delete entry', {
             ...options,
             onClose: () => setClose(null),
           });
