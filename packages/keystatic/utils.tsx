@@ -31,6 +31,7 @@ import { getAuth } from './app/auth';
 import { isSlugFormField } from './app/utils';
 import { getDirectoriesForTreeKey, getTreeKey } from './app/tree-key';
 import { getPropPathPortion } from './app/required-files';
+import { AppSlugContext } from './app/onboarding/install-app';
 
 const textEncoder = new TextEncoder();
 
@@ -81,11 +82,17 @@ export function useUpsertItem(args: {
   const setTreeSha = useSetTreeSha();
   const [, mutate] = useMutation(createCommitMutation);
   const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
+  const appSlug = useContext(AppSlugContext);
+
   return [
     state,
     async (override?: { sha: string; branch: string }): Promise<boolean> => {
       try {
-        if (repoWithWriteAccess === null && args.storage.kind === 'github') {
+        if (
+          repoWithWriteAccess === null &&
+          args.storage.kind === 'github' &&
+          appSlug?.value
+        ) {
           setState({ kind: 'needs-fork' });
           return false;
         }
@@ -319,12 +326,17 @@ export function useDeleteItem(args: {
   const [, mutate] = useMutation(createCommitMutation);
   const setTreeSha = useSetTreeSha();
   const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
+  const appSlug = useContext(AppSlugContext);
 
   return [
     state,
     async () => {
       try {
-        if (repoWithWriteAccess === null && args.storage.kind === 'github') {
+        if (
+          repoWithWriteAccess === null &&
+          args.storage.kind === 'github' &&
+          appSlug?.value
+        ) {
           setState({ kind: 'needs-fork' });
           return false;
         }
