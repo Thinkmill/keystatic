@@ -194,7 +194,9 @@ export function GitHubAppShellProvider(props: {
     if (
       !repo?.id &&
       error?.graphQLErrors.some(
-        err => (err?.originalError as any)?.type === 'NOT_FOUND'
+        err =>
+          (err?.originalError as any)?.type === 'NOT_FOUND' ||
+          (err?.originalError as any)?.type === 'FORBIDDEN'
       )
     ) {
       window.location.href = `/api/keystatic/github/repo-not-found?from=${router.params.join(

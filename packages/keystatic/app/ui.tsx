@@ -69,8 +69,10 @@ function RedirectToBranch() {
       );
     }
     if (
-      !data?.repository?.id &&
-      (error?.graphQLErrors?.[0]?.originalError as any)?.type === 'NOT_FOUND'
+      (!data?.repository?.id &&
+        (error?.graphQLErrors?.[0]?.originalError as any)?.type ===
+          'NOT_FOUND') ||
+      (error?.graphQLErrors?.[0]?.originalError as any)?.type === 'FORBIDDEN'
     ) {
       window.location.href = '/api/keystatic/github/repo-not-found';
     }
@@ -183,6 +185,12 @@ export function Keystatic(props: {
   ) => ReactElement | null;
   appSlug?: { envName: string; value: string | undefined };
 }) {
+  if (
+    props.config.storage.kind === 'github' &&
+    (!props.config.storage.repo.owner || !props.config.storage.repo.name)
+  ) {
+    throw new Error('Missing storage.repo.owner or storage.repo.name');
+  }
   return (
     <AppSlugProvider value={props.appSlug}>
       <RouterProvider router={props.router}>

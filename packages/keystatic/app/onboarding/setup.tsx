@@ -75,12 +75,11 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
             name: `${props.config.storage.repo.owner} Keystatic`,
             url: deployedURL
               ? `${deployedURL}/keystatic`
-              : 'http://localhost:3000/keystatic',
+              : `http://${window.location.host}/keystatic`,
             public: true,
-            redirect_url:
-              'http://localhost:3000/api/keystatic/github/created-app',
+            redirect_url: `http://${window.location.host}/api/keystatic/github/created-app`,
             callback_urls: [
-              'http://localhost:3000/api/keystatic/github/oauth/callback',
+              `http://${window.location.host}/api/keystatic/github/oauth/callback`,
               ...(deployedURL
                 ? [`${deployedURL}/api/keystatic/github/oauth/callback`]
                 : []),
@@ -90,7 +89,6 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
               contents: 'write',
               metadata: 'read',
               pull_requests: 'read',
-              administration: 'write',
             },
           })}
         />
