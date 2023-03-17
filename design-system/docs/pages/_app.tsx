@@ -33,9 +33,9 @@ function App({ Component, pageProps }: AppProps): JSX.Element {
           <Layout navigation={navigation as SidebarItem[]}>
             <Component {...pageProps} />
           </Layout>
+          <Toaster />
         </ThemeProvider>
       </SSRProvider>
-      <Toaster />
     </Fragment>
   );
 }
