@@ -53,6 +53,7 @@
     "@voussoir/tabs": "^0.1.0",
     "@voussoir/test-utils": "^2.0.0",
     "@voussoir/text-field": "^0.1.3",
+    "@voussoir/toast": "^0.1.0",
     "@voussoir/tooltip": "^0.1.1",
     "@voussoir/types": "^0.1.0",
     "@voussoir/typography": "^0.1.0",

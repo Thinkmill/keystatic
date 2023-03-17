@@ -43,11 +43,12 @@ export const Icon = (props: IconProps) => {
     },
   });
   const styleProps = useStyleProps(otherProps) as SVGProps<SVGSVGElement>;
+  const hasAriaLabel = 'aria-label' in props && !!props['aria-label'];
 
   return React.cloneElement(props.src as React.ReactSVGElement, {
     ...toDataAttributes({ strokeScaling, size }),
-    ...filterDOMProps(otherProps),
-    'aria-hidden': 'true',
+    ...filterDOMProps(otherProps, { labellable: true }),
+    'aria-hidden': !hasAriaLabel,
     focusable: 'false',
     role: 'img',
     className: classNames(iconClassName, styleProps.className),

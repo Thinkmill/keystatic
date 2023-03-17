@@ -58,6 +58,11 @@ export type ActionButtonProps = {
   /** Whether the button is selected. */
   isSelected?: boolean;
   /**
+   * The static style to apply. Useful when the button appears over a
+   * background.
+   */
+  static?: 'light' | 'dark';
+  /**
    * The visual prominence of the button.
    * @default 'default'
    */
@@ -90,6 +95,11 @@ export type CommonProps = {
   children?: ReactNode;
   /** Whether the button is disabled. */
   isDisabled?: boolean;
+  /**
+   * The static style to apply. Useful when the button appears over a
+   * background. Ignores tone.
+   */
+  static?: 'light' | 'dark';
   /**
    * The visual prominence of the button.
    * @default 'default'

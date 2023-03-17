@@ -287,6 +287,7 @@ importers:
       '@voussoir/tabs': ^0.1.0
       '@voussoir/test-utils': ^2.0.0
       '@voussoir/text-field': ^0.1.3
+      '@voussoir/toast': ^0.1.0
       '@voussoir/tooltip': ^0.1.1
       '@voussoir/types': ^0.1.0
       '@voussoir/typography': ^0.1.0
@@ -346,6 +347,7 @@ importers:
       '@voussoir/tabs': link:../packages/tabs
       '@voussoir/test-utils': link:../packages/test-utils
       '@voussoir/text-field': link:../packages/text-field
+      '@voussoir/toast': link:../packages/toast
       '@voussoir/tooltip': link:../packages/tooltip
       '@voussoir/types': link:../packages/types
       '@voussoir/typography': link:../packages/typography
@@ -1731,6 +1733,61 @@ importers:
       '@voussoir/core': link:../core
       '@voussoir/storybook': link:../../docs/storybook
       react: 18.2.0
+
+  design-system/packages/toast:
+    specifiers:
+      '@babel/runtime': ^7.18.3
+      '@react-aria/i18n': ^3.6.2
+      '@react-aria/landmark': ^3.0.0-alpha.7
+      '@react-aria/toast': 3.0.0-alpha.1
+      '@react-aria/utils': ^3.14.2
+      '@react-stately/toast': 3.0.0-alpha.1
+      '@types/react': ^18.0.25
+      '@types/react-dom': ^18.0.11
+      '@types/use-sync-external-store': ^0.0.3
+      '@voussoir/button': 0.1.2
+      '@voussoir/core': ^4.0.0
+      '@voussoir/dialog': ^0.2.0
+      '@voussoir/icon': ^0.1.0
+      '@voussoir/layout': ^0.1.0
+      '@voussoir/slots': ^0.1.0
+      '@voussoir/storybook': ^0.0.0
+      '@voussoir/style': ^0.1.0
+      '@voussoir/test-utils': ^2.0.0
+      '@voussoir/types': ^0.1.0
+      '@voussoir/typography': ^0.1.0
+      '@voussoir/utils': ^2.0.1
+      emery: ^1.4.1
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      use-sync-external-store: ^1.2.0
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@react-aria/i18n': 3.7.0_react@18.2.0
+      '@react-aria/toast': 3.0.0-alpha.1_react@18.2.0
+      '@react-aria/utils': 3.15.0_react@18.2.0
+      '@react-stately/toast': 3.0.0-alpha.1_react@18.2.0
+      '@voussoir/button': link:../button
+      '@voussoir/core': link:../core
+      '@voussoir/icon': link:../icon
+      '@voussoir/layout': link:../layout
+      '@voussoir/slots': link:../slots
+      '@voussoir/style': link:../style
+      '@voussoir/types': link:../types
+      '@voussoir/typography': link:../typography
+      '@voussoir/utils': link:../utils
+      emery: 1.4.1
+      use-sync-external-store: 1.2.0_react@18.2.0
+    devDependencies:
+      '@react-aria/landmark': 3.0.0-alpha.7_react@18.2.0
+      '@types/react': 18.0.28
+      '@types/react-dom': 18.0.11
+      '@types/use-sync-external-store': 0.0.3
+      '@voussoir/dialog': link:../dialog
+      '@voussoir/storybook': link:../../docs/storybook
+      '@voussoir/test-utils': link:../test-utils
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
 
   design-system/packages/tooltip:
     specifiers:
@@ -5722,7 +5779,6 @@ packages:
       '@swc/helpers': 0.4.14
       clsx: 1.2.1
       react: 18.2.0
-    dev: false
 
   /@react-aria/grid/3.5.2_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-+cDtTvTT0YF4jgy1pv0omcweub6z1N+GdkpHC6L6/jtH2gFRVns3IC6pf5ihLDIpLloylthaMMR8C3lus7035g==}
@@ -5819,7 +5875,6 @@ packages:
       '@react-types/shared': 3.17.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
-    dev: false
 
   /@react-aria/label/3.4.4_react@18.2.0:
     resolution: {integrity: sha512-1fuYf2UctNhBy31uYN7OhdcrwzlB5GS0+C49gDkwWzccB7yr+CoOJ5UQUoVB7WBmzrc+CuzwWxSDd4OupSYIZQ==}
@@ -5832,6 +5887,18 @@ packages:
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
+
+  /@react-aria/landmark/3.0.0-alpha.7_react@18.2.0:
+    resolution: {integrity: sha512-yJ2UlwMMPVou1PH/dDeNambLgRHARR3ZgTo2bTa0KhAtN1TFkCpDg1prrPuRMIJBewBxDBOFLY7nXOcJ+leIvA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-aria/focus': 3.11.0_react@18.2.0
+      '@react-aria/utils': 3.15.0_react@18.2.0
+      '@react-types/shared': 3.17.0_react@18.2.0
+      '@swc/helpers': 0.4.14
+      react: 18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
 
   /@react-aria/link/3.3.6_react@18.2.0:
     resolution: {integrity: sha512-UjbdBJ8EB+jCC3mPZD6cYykHqZKTy6/VvI5RGJoKtF8cg9639tRy6g102pd4ncFTdD4DfU5PPWtthC24nQRCyQ==}
@@ -6113,7 +6180,6 @@ packages:
     dependencies:
       '@swc/helpers': 0.4.14
       react: 18.2.0
-    dev: false
 
   /@react-aria/table/3.7.0_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-1YqOeb8r8pxIYyfa5qNdCoM3fNQELM4d+9DanoNJhgnehoq9QDI9A1pGC2pvK2PN2y9IuTJM+U/ITjSpPBoGjQ==}
@@ -6167,6 +6233,22 @@ packages:
       '@react-aria/utils': 3.14.2_react@18.2.0
       '@react-types/shared': 3.17.0_react@18.2.0
       '@react-types/textfield': 3.6.2_react@18.2.0
+      '@swc/helpers': 0.4.14
+      react: 18.2.0
+    dev: false
+
+  /@react-aria/toast/3.0.0-alpha.1_react@18.2.0:
+    resolution: {integrity: sha512-gTFUa+M5w1a2XoaRjuEVXzfiqbFndxQcs9xTSK6IJbqOFZE8vS7fXsthb0h9TGNWHITZxWEQkX+hGDgpg22x4A==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-aria/i18n': 3.7.0_react@18.2.0
+      '@react-aria/interactions': 3.14.0_react@18.2.0
+      '@react-aria/landmark': 3.0.0-alpha.7_react@18.2.0
+      '@react-aria/utils': 3.15.0_react@18.2.0
+      '@react-stately/toast': 3.0.0-alpha.1_react@18.2.0
+      '@react-types/button': 3.7.1_react@18.2.0
+      '@react-types/shared': 3.17.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6226,7 +6308,6 @@ packages:
       '@swc/helpers': 0.4.14
       clsx: 1.2.1
       react: 18.2.0
-    dev: false
 
   /@react-aria/virtualizer/3.6.1_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-cJ35AEUYUtm2E4+lMoFQN9MhcGJBqLPue6VlTLY44Ya+7KoWRkH+bz3/nhqbgprMFgrTwj04sv6FgOmwMmJm/A==}
@@ -6495,6 +6576,16 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@react-stately/toast/3.0.0-alpha.1_react@18.2.0:
+    resolution: {integrity: sha512-xBjNxqouAnjQDWqNrPsIOYMLG9+lIAMpUmqPNlMkQ0PstmC5tw5P8cYFKXnyk4l0jvSliKH/E328np3B+Dwa2g==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@swc/helpers': 0.4.14
+      react: 18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
+    dev: false
+
   /@react-stately/toggle/3.4.4_react@18.2.0:
     resolution: {integrity: sha512-OwVJpd2M7P7fekTWpl3TUdD3Brq+Z/xElOCJYP5QuVytXCa5seKsk40YPld8JQnA5dRKojpbUxMDOJpb6hOOfw==}
     peerDependencies:
@@ -6548,7 +6639,6 @@ packages:
     dependencies:
       '@swc/helpers': 0.4.14
       react: 18.2.0
-    dev: false
 
   /@react-stately/virtualizer/3.4.1_react@18.2.0:
     resolution: {integrity: sha512-2S7GARkZl41X7fN0Xa94TkN8ELAUbA89zn1xH59d02NOvAKLAFXHkCe69AivvVvbhXo8/nONzO8NXqqgBS/XQw==}
@@ -8928,6 +9018,10 @@ packages:
   /@types/unist/2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
 
+  /@types/use-sync-external-store/0.0.3:
+    resolution: {integrity: sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==}
+    dev: true
+
   /@types/webpack-env/1.18.0:
     resolution: {integrity: sha512-56/MAlX5WMsPVbOg7tAxnYvNYMMWr/QJiIp6BxVSW3JJXUVzzOn64qW8TzQyMSqSUFM2+PVI4aUHcHOzIz/1tg==}
     dev: true
@@ -11211,7 +11305,6 @@ packages:
   /clsx/1.2.1:
     resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
     engines: {node: '>=6'}
-    dev: false
 
   /co/4.6.0:
     resolution: {integrity: sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==}

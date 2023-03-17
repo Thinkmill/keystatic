@@ -5,6 +5,7 @@ import { Fragment } from 'react';
 
 import { injectVoussoirStyles } from '@voussoir/core';
 import { SSRProvider } from '@voussoir/ssr';
+import { Toaster } from '@voussoir/toast';
 
 // @ts-ignore
 import navigation from '../generated/navigation.json';
@@ -34,6 +35,7 @@ function App({ Component, pageProps }: AppProps): JSX.Element {
           </Layout>
         </ThemeProvider>
       </SSRProvider>
+      <Toaster />
     </Fragment>
   );
 }

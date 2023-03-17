@@ -18,6 +18,38 @@ storiesOf('Components/Button/ActionButton', module)
       {renderWithIcon('Neutral icon', { prominence: 'low' })}
       {renderWithIconOnly('Neutral icon only', { prominence: 'low' })}
     </Flex>
+  ))
+  .add('static: light', () => (
+    <Flex
+      direction="column"
+      gap="regular"
+      backgroundColor="accentEmphasis"
+      padding="large"
+    >
+      {render('Default', { prominence: 'default', static: 'light' })}
+      {render('Low', { prominence: 'low', static: 'light' })}
+      {renderWithIcon('Default icon', {
+        prominence: 'default',
+        static: 'light',
+      })}
+      {renderWithIcon('Low icon', { prominence: 'low', static: 'light' })}
+    </Flex>
+  ))
+  .add('static: dark', () => (
+    <Flex
+      direction="column"
+      gap="regular"
+      backgroundColor="accent"
+      padding="large"
+    >
+      {render('Default', { prominence: 'default', static: 'dark' })}
+      {render('Low', { prominence: 'low', static: 'dark' })}
+      {renderWithIcon('Default icon', {
+        prominence: 'default',
+        static: 'dark',
+      })}
+      {renderWithIcon('Low icon', { prominence: 'low', static: 'dark' })}
+    </Flex>
   ));
 
 function render(label = 'Default', props: ActionButtonProps = {}) {
