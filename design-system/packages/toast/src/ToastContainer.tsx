@@ -1,183 +1,86 @@
-import { ToastQueue, useToastQueue } from '@react-stately/toast';
-import React, { ReactNode, useEffect, useRef } from 'react';
-import { warning } from 'emery';
-import { useSyncExternalStore } from 'use-sync-external-store/shim/index.js';
+import { useToastRegion } from '@react-aria/toast';
+import React, { ReactElement, useRef } from 'react';
+import ReactDOM from 'react-dom';
 
-import { Toast } from './Toast';
-import { Toaster } from './Toaster';
-import { ToastContainerProps, ToastOptions, ToastValue } from './types';
+import { VoussoirProvider } from '@voussoir/core';
+import {
+  FocusRing,
+  useIsMobileDevice,
+  css,
+  tokenSchema,
+} from '@voussoir/style';
 
-type CloseFunction = () => void;
+import { ToastContainerProps } from './types';
 
-// There is a single global toast queue instance for the whole app, initialized lazily.
-let globalToastQueue: ToastQueue<ToastValue> | null = null;
-function getGlobalToastQueue() {
-  if (!globalToastQueue) {
-    globalToastQueue = new ToastQueue({
-      maxVisibleToasts: 1,
-      hasExitAnimation: true,
-    });
-  }
+/** @private Positioning and provider for toast children. */
+export function ToastContainer(props: ToastContainerProps): ReactElement {
+  let { children, state } = props;
+  let containerPlacement = useIsMobileDevice() ? 'center' : 'right';
 
-  return globalToastQueue;
-}
+  let ref = useRef<HTMLDivElement>(null);
+  let { regionProps } = useToastRegion(props, state, ref);
 
-// For testing. Not exported from the package index.
-export function clearToastQueue() {
-  globalToastQueue = null;
-}
+  let contents = (
+    <VoussoirProvider UNSAFE_style={{ background: 'transparent' }}>
+      <FocusRing>
+        <div
+          {...regionProps}
+          ref={ref}
+          data-position="bottom"
+          data-placement={containerPlacement}
+          className={css({
+            display: 'flex',
+            insetInline: 0,
+            outline: 'none',
+            pointerEvents: 'none',
+            position: 'fixed',
+            zIndex: 100050 /* above modals */,
 
-let toastProviders = new Set();
-let subscriptions = new Set<() => void>();
-function subscribe(fn: () => void) {
-  subscriptions.add(fn);
-  return () => subscriptions.delete(fn);
-}
+            '&[data-focus=visible] > :first-child': {
+              boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
+            },
 
-function getActiveToastContainer() {
-  return toastProviders.values().next().value;
-}
+            '&[data-position=top]': {
+              top: 0,
+              flexDirection: 'column',
+              '--slide-from': 'translateY(-100%)',
+              '--slide-to': 'translateY(0)',
+            },
+            '&[data-position=bottom]': {
+              bottom: 0,
+              flexDirection: 'column-reverse',
+              '--slide-from': 'translateY(100%)',
+              '--slide-to': 'translateY(0)',
+            },
 
-function useActiveToastContainer() {
-  return useSyncExternalStore(
-    subscribe,
-    getActiveToastContainer,
-    getActiveToastContainer
+            '&[data-placement=left]': {
+              alignItems: 'flex-start',
+              '--slide-from': 'translateX(-100%)',
+              '--slide-to': 'translateX(0)',
+
+              '&:dir(rtl)': {
+                '--slide-from': 'translateX(100%)',
+              },
+            },
+            '&[data-placement=center]': {
+              alignItems: 'center',
+            },
+            '&[data-placement=right]': {
+              alignItems: 'flex-end',
+              '--slide-from': 'translateX(100%)',
+              '--slide-to': 'translateX(0)',
+
+              '&:dir(rtl)': {
+                '--slide-from': 'translateX(-100%)',
+              },
+            },
+          })}
+        >
+          {children}
+        </div>
+      </FocusRing>
+    </VoussoirProvider>
   );
-}
 
-/**
- * A ToastContainer renders the queued toasts in an application. It should be
- * placed at the root of the app.
- */
-export function ToastContainer(props: ToastContainerProps) {
-  // Track all toast provider instances in a set.
-  // Only the first one will actually render.
-  // We use a ref to do this, since it will have a stable identity
-  // over the lifetime of the component.
-  let ref = useRef();
-  toastProviders.add(ref);
-
-  // eslint-disable-next-line arrow-body-style
-  useEffect(() => {
-    return () => {
-      // When this toast provider unmounts, reset all animations so that
-      // when the new toast provider renders, it is seamless.
-      for (let toast of getGlobalToastQueue().visibleToasts) {
-        toast.animation = undefined;
-      }
-
-      // Remove this toast provider, and call subscriptions.
-      // This will cause all other instances to re-render,
-      // and the first one to become the new active toast provider.
-      toastProviders.delete(ref);
-      for (let fn of subscriptions) {
-        fn();
-      }
-    };
-  }, []);
-
-  // Only render if this is the active toast provider instance, and there are visible toasts.
-  let activeToastContainer = useActiveToastContainer();
-  let state = useToastQueue(getGlobalToastQueue());
-  if (ref === activeToastContainer && state.visibleToasts.length > 0) {
-    return (
-      <Toaster state={state} {...props}>
-        {state.visibleToasts.map(toast => (
-          <Toast key={toast.key} toast={toast} state={state} />
-        ))}
-      </Toaster>
-    );
-  }
-
-  return null;
-}
-
-function addToast(
-  children: ReactNode,
-  tone: ToastValue['tone'],
-  options: ToastOptions = {}
-): CloseFunction {
-  // Dispatch a custom event so that toasts can be intercepted and re-targeted, e.g. when inside an iframe.
-  if (typeof CustomEvent !== 'undefined' && typeof window !== 'undefined') {
-    let event = new CustomEvent('voussoir-toast', {
-      cancelable: true,
-      bubbles: true,
-      detail: {
-        children,
-        tone,
-        options,
-      },
-    });
-
-    let shouldContinue = window.dispatchEvent(event);
-    if (!shouldContinue) {
-      return () => {};
-    }
-  }
-
-  let value = {
-    children,
-    tone,
-    actionLabel: options.actionLabel,
-    onAction: options.onAction,
-    shouldCloseOnAction: options.shouldCloseOnAction,
-  };
-
-  // Actionable toasts cannot be auto dismissed.
-  warning(
-    !(options.timeout && options.onAction),
-    'Timeouts are not supported on actionable toasts.'
-  );
-  let timeout =
-    options.timeout && !options.onAction
-      ? Math.max(options.timeout, 5000)
-      : undefined;
-  let queue = getGlobalToastQueue();
-  let key = queue.add(value, {
-    priority: getPriority(tone, options),
-    timeout,
-    onClose: options.onClose,
-  });
-  return () => queue.close(key);
-}
-
-const queue = {
-  /** Queues a neutral toast. */
-  neutral(children: ReactNode, options: ToastOptions = {}): CloseFunction {
-    return addToast(children, 'neutral', options);
-  },
-  /** Queues a positive toast. */
-  positive(children: ReactNode, options: ToastOptions = {}): CloseFunction {
-    return addToast(children, 'positive', options);
-  },
-  /** Queues a critical toast. */
-  critical(children: ReactNode, options: ToastOptions = {}): CloseFunction {
-    return addToast(children, 'critical', options);
-  },
-  /** Queues an informational toast. */
-  info(children: ReactNode, options: ToastOptions = {}): CloseFunction {
-    return addToast(children, 'info', options);
-  },
-};
-
-export { queue as ToastQueue };
-
-// TODO: if a lower priority toast comes in, no way to know until you dismiss
-// the higher priority one.
-const PRIORITY = {
-  // actionable toasts gain 4 priority points. make sure critical toasts are
-  // always at the top.
-  critical: 10,
-  positive: 3,
-  info: 2,
-  neutral: 1,
-};
-
-function getPriority(tone: ToastValue['tone'], options: ToastOptions) {
-  let priority = PRIORITY[tone] || 1;
-  if (options.onAction) {
-    priority += 4;
-  }
-  return priority;
+  return ReactDOM.createPortal(contents, document.body);
 }

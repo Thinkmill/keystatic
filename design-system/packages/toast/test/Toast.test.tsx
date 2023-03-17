@@ -10,8 +10,8 @@ import {
   within,
 } from '@voussoir/test-utils';
 
-import { ToastContainer, ToastOptions, ToastQueue } from '../src';
-import { clearToastQueue } from '../src/ToastContainer';
+import { Toaster, ToastOptions, toaster } from '../src';
+import { clearToastQueue } from '../src/Toaster';
 import { ToastValue } from '../src/types';
 
 function RenderToastButton(
@@ -20,7 +20,7 @@ function RenderToastButton(
   return (
     <Button
       onPress={() =>
-        ToastQueue[props.tone || 'neutral']('Toast is default', props)
+        toaster[props.tone || 'neutral']('Toast is default', props)
       }
     >
       Show Default Toast
@@ -31,7 +31,7 @@ function RenderToastButton(
 function renderComponent(contents: ReactNode) {
   return renderWithProvider(
     <>
-      <ToastContainer />
+      <Toaster />
       {contents}
     </>
   );
@@ -230,8 +230,8 @@ describe('toast/Toast', () => {
     function ToastPriorites(props = {}) {
       return (
         <div>
-          <Button onPress={() => ToastQueue.info('Info', props)}>Info</Button>
-          <Button onPress={() => ToastQueue.critical('Error', props)}>
+          <Button onPress={() => toaster.info('Info', props)}>Info</Button>
+          <Button onPress={() => toaster.critical('Error', props)}>
             Error
           </Button>
         </div>
@@ -355,7 +355,7 @@ describe('toast/Toast', () => {
             close
               ? // @ts-ignore
                 setClose(close())
-              : setClose(() => ToastQueue.positive('Toast is done!'))
+              : setClose(() => toaster.positive('Toast is done!'))
           }
         >
           {close ? 'Hide' : 'Show'} toast
@@ -376,11 +376,11 @@ describe('toast/Toast', () => {
     expect(queryByRole('alert')).toBeNull();
   });
 
-  it('should only render one ToastContainer', () => {
+  it('should only render one Toaster', () => {
     let { getByRole, getAllByRole, rerender } = renderWithProvider(
       <>
-        <ToastContainer key="first" />
-        <ToastContainer key="second" />
+        <Toaster key="first" />
+        <Toaster key="second" />
         <RenderToastButton />
       </>
     );
@@ -393,7 +393,7 @@ describe('toast/Toast', () => {
 
     rerender(
       <>
-        <ToastContainer key="second" />
+        <Toaster key="second" />
         <RenderToastButton />
       </>
     );
@@ -403,7 +403,7 @@ describe('toast/Toast', () => {
 
     rerender(
       <>
-        <ToastContainer key="first" />
+        <Toaster key="first" />
         <RenderToastButton />
       </>
     );
@@ -413,8 +413,8 @@ describe('toast/Toast', () => {
 
     rerender(
       <>
-        <ToastContainer key="first" />
-        <ToastContainer key="second" />
+        <Toaster key="first" />
+        <Toaster key="second" />
         <RenderToastButton />
       </>
     );
@@ -426,7 +426,7 @@ describe('toast/Toast', () => {
   it('should support custom aria-label', () => {
     let { getByRole } = renderWithProvider(
       <>
-        <ToastContainer aria-label="Toasts" />
+        <Toaster aria-label="Toasts" />
         <RenderToastButton />
       </>
     );

@@ -6,7 +6,7 @@ import {
 } from '@react-stately/toast';
 import { ReactNode } from 'react';
 
-export type ToastContainerProps = AriaToastRegionProps & {};
+export type ToasterProps = AriaToastRegionProps & {};
 
 export type ToastOptions = Omit<SpectrumToastOptions, 'priority'> & {
   /** A label for the action button within the toast. */
@@ -30,7 +30,7 @@ export type ToastProps = {
   state: ToastState<ToastValue>;
 };
 
-export interface ToasterProps extends AriaToastRegionProps {
+export type ToastContainerProps = AriaToastRegionProps & {
   children: ReactNode;
   state: ToastState<unknown>;
-}
+};

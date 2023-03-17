@@ -12,7 +12,7 @@ import { Content } from '@voussoir/slots';
 import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
 import { Heading, Text } from '@voussoir/typography';
 
-import { ToastContainer, ToastOptions, ToastQueue } from '../';
+import { Toaster, ToastOptions, toaster } from '../';
 
 storiesOf('Components/Toast', module)
   .addParameters({
@@ -31,7 +31,7 @@ storiesOf('Components/Toast', module)
   })
   .addDecorator(story => (
     <>
-      <ToastContainer />
+      <Toaster />
       <MainLandmark>{story()}</MainLandmark>
     </>
   ))
@@ -57,7 +57,7 @@ function Example(options: ToastOptions) {
     <Flex gap="regular">
       <ActionButton
         onPress={() =>
-          ToastQueue.neutral('3 items archived', {
+          toaster.neutral('3 items archived', {
             ...options,
             onClose: action('onClose'),
           })
@@ -67,7 +67,7 @@ function Example(options: ToastOptions) {
       </ActionButton>
       <ActionButton
         onPress={() =>
-          ToastQueue.positive('File uploaded', {
+          toaster.positive('File uploaded', {
             ...options,
             onClose: action('onClose'),
           })
@@ -78,7 +78,7 @@ function Example(options: ToastOptions) {
       </ActionButton>
       <ActionButton
         onPress={() =>
-          ToastQueue.critical('Unable to delete entry', {
+          toaster.critical('Unable to delete entry', {
             ...options,
             onClose: action('onClose'),
           })
@@ -89,7 +89,7 @@ function Example(options: ToastOptions) {
       </ActionButton>
       <ActionButton
         onPress={() =>
-          ToastQueue.info('A new version is available', {
+          toaster.info('A new version is available', {
             ...options,
             onClose: action('onClose'),
           })
@@ -109,7 +109,7 @@ function ToastToggle(options: ToastOptions) {
     <ActionButton
       onPress={() => {
         if (!close) {
-          let close = ToastQueue.critical('Unable to delete entry', {
+          let close = toaster.critical('Unable to delete entry', {
             ...options,
             onClose: () => setClose(null),
           });

@@ -9,7 +9,6 @@ import { checkCircle2Icon } from '@voussoir/icon/icons/checkCircle2Icon';
 import { infoIcon } from '@voussoir/icon/icons/infoIcon';
 import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
 import {
-  ClassList,
   classNames,
   css,
   keyframes,
@@ -22,8 +21,6 @@ import { isReactText } from '@voussoir/utils';
 import intlMessages from '../l10n.json';
 import { ToastProps } from './types';
 import { SlotProvider } from '@voussoir/slots';
-
-export const toastClassList = new ClassList('Toast');
 
 const ICONS = {
   info: infoIcon,
@@ -79,14 +76,16 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
       ref={domRef}
       data-tone={tone}
       className={classNames(
-        toastClassList.declare('element'),
         css({
           borderRadius: tokenSchema.size.radius.regular,
           display: 'flex',
+          margin: tokenSchema.size.space.large,
+          maxWidth: tokenSchema.size.container.xsmall,
           minHeight: tokenSchema.size.element.large,
           padding: tokenSchema.size.space.regular,
           paddingInlineStart: tokenSchema.size.space.large,
-          maxWidth: tokenSchema.size.container.xsmall,
+          pointerEvents: 'auto',
+          position: 'absolute',
 
           // tones
           color: tokenSchema.color.foreground.onEmphasis,
