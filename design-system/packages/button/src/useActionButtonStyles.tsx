@@ -31,6 +31,7 @@ export function useActionButtonStyles(
       interaction: isPressed ? 'press' : isHovered ? 'hover' : undefined,
       prominence: prominence === 'default' ? undefined : prominence,
       selected: ('isSelected' in props && props.isSelected) || undefined,
+      static: props.static,
     }),
     style: styleProps.style,
     className: classNames(
@@ -63,6 +64,10 @@ export function useActionButtonStyles(
         },
 
         // FOCUS RING
+        '--focus-ring-color': tokenSchema.color.alias.focusRing,
+        '&[data-static]': {
+          '--focus-ring-color': 'currentColor',
+        },
         '&::after': {
           borderRadius: `inherit`,
           content: '""',
@@ -75,7 +80,7 @@ export function useActionButtonStyles(
           }),
         },
         '&[data-focus=visible]::after': {
-          boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
+          boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} var(--focus-ring-color)`,
         },
 
         // PROMINENCE
@@ -117,6 +122,46 @@ export function useActionButtonStyles(
             boxShadow: 'none',
             color: tokenSchema.color.alias.foregroundDisabled,
           },
+
+          // static
+          '&[data-static]': {
+            backgroundColor: 'transparent',
+            boxShadow: 'none',
+          },
+          '&[data-static=light]': {
+            borderColor: '#fff6',
+            color: '#fff',
+
+            '&[data-interaction=hover], &[data-focus="visible"]': {
+              backgroundColor: '#ffffff1a',
+              borderColor: '#ffffff8c',
+            },
+            '&[data-interaction=press]': {
+              backgroundColor: '#ffffff26',
+              borderColor: '#ffffffb3',
+            },
+            '&:disabled, &[aria-disabled]': {
+              borderColor: '#ffffff40',
+              color: '#ffffff8c',
+            },
+          },
+          '&[data-static=dark]': {
+            borderColor: '#0006',
+            color: '#000',
+
+            '&[data-interaction=hover], &[data-focus="visible"]': {
+              backgroundColor: '#0000001a',
+              borderColor: '#0000008c',
+            },
+            '&[data-interaction=press]': {
+              backgroundColor: '#00000026',
+              borderColor: '#000000b3',
+            },
+            '&:disabled, &[aria-disabled]': {
+              borderColor: '#00000040',
+              color: '#0000008c',
+            },
+          },
         },
 
         // prominence: low
@@ -146,6 +191,34 @@ export function useActionButtonStyles(
             borderColor: 'transparent',
             boxShadow: 'none',
             color: tokenSchema.color.alias.foregroundDisabled,
+          },
+
+          // static
+          '&[data-static=light]': {
+            color: '#fff',
+
+            '&[data-interaction=hover], &[data-focus="visible"]': {
+              backgroundColor: '#ffffff1a',
+            },
+            '&[data-interaction=press]': {
+              backgroundColor: '#ffffff26',
+            },
+            '&:disabled, &[aria-disabled]': {
+              color: '#ffffff8c',
+            },
+          },
+          '&[data-static=dark]': {
+            color: '#000',
+
+            '&[data-interaction=hover], &[data-focus="visible"]': {
+              backgroundColor: '#0000001a',
+            },
+            '&[data-interaction=press]': {
+              backgroundColor: '#00000026',
+            },
+            '&:disabled, &[aria-disabled]': {
+              color: '#0000008c',
+            },
           },
         },
       }),
