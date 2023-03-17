@@ -91,6 +91,11 @@ export type CommonProps = {
   /** Whether the button is disabled. */
   isDisabled?: boolean;
   /**
+   * The static style to apply. Useful when the button appears over a
+   * background. Ignores tone.
+   */
+  static?: 'light' | 'dark';
+  /**
    * The visual prominence of the button.
    * @default 'default'
    */

@@ -32,6 +32,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
       pressed: isPressed || undefined,
       prominence: prominence === 'default' ? undefined : prominence,
       tone: tone === 'neutral' ? undefined : tone,
+      static: props.static,
     }),
     style: styleProps.style,
     className: classNames(
@@ -40,7 +41,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
       css({
         alignItems: 'center',
         borderRadius: tokenSchema.size.radius.regular,
-        cursor: 'pointer',
+        cursor: 'default',
         display: 'inline-flex',
         flexShrink: 0,
         fontSize: tokenSchema.fontsize.text.regular.size,
@@ -57,6 +58,8 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
         transitionTimingFunction: 'ease-out',
         userSelect: 'none',
 
+        'a&': { cursor: 'pointer' },
+
         '&:disabled, &[aria-disabled]': {
           cursor: 'default',
         },
@@ -70,23 +73,18 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           fontWeight: 'inherit',
         },
 
-        // lighting
-        // '&:not(:disabled, [aria-disabled], [data-prominence=low])::before': {
-        //   background: `linear-gradient(rgba(255,255,255, 0.12), transparent 4%, transparent 96%, rgba(0,0,0, 0.12))`,
-        //   backgroundBlendMode: 'hard-light',
-        //   borderRadius: 'inherit',
-        //   content: '""',
-        //   inset: 0,
-        //   pointerEvents: 'none',
-        //   position: 'absolute' as const,
-        // },
-
         // focus ring
+        '--focus-ring-color': tokenSchema.color.alias.focusRing,
+        '&[data-static=light]': {
+          '--focus-ring-color': '#fff',
+        },
+        '&[data-static=dark]': {
+          '--focus-ring-color': '#000',
+        },
         '&::after': {
           borderRadius: `calc(${tokenSchema.size.radius.regular} + ${tokenSchema.size.alias.focusRingGap})`,
           content: '""',
           inset: 0,
-          margin: `calc(-1 * ${tokenSchema.size.alias.focusRingGap})`,
           pointerEvents: 'none',
           position: 'absolute' as const,
           transition: transition(['box-shadow', 'margin'], {
@@ -94,7 +92,8 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           }),
         },
         '&[data-focus=visible]::after': {
-          boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
+          boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} var(--focus-ring-color)`,
+          margin: `calc(-1 * ${tokenSchema.size.alias.focusRingGap})`,
         },
 
         // PROMINENCE: default
@@ -121,6 +120,38 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           '&:disabled, &[aria-disabled]': {
             backgroundColor: tokenSchema.color.alias.backgroundHovered,
             color: tokenSchema.color.alias.foregroundDisabled,
+          },
+
+          // static
+          '&[data-static=light]': {
+            backgroundColor: '#ffffff12',
+            color: '#fff',
+
+            '&[data-hovered], &[data-focus="visible"]': {
+              backgroundColor: '#ffffff1a',
+            },
+            '&[data-pressed]': {
+              backgroundColor: '#ffffff26',
+            },
+            '&:disabled, &[aria-disabled]': {
+              backgroundColor: '#ffffff1a',
+              color: '#ffffff8c',
+            },
+          },
+          '&[data-static=dark]': {
+            backgroundColor: '#00000012',
+            color: '#000',
+
+            '&[data-hovered], &[data-focus="visible"]': {
+              backgroundColor: '#0000001a',
+            },
+            '&[data-pressed]': {
+              backgroundColor: '#00000026',
+            },
+            '&:disabled, &[aria-disabled]': {
+              backgroundColor: '#0000001a',
+              color: '#0000008c',
+            },
           },
         },
 
@@ -164,6 +195,38 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
             backgroundColor: tokenSchema.color.background.surfaceTertiary,
             color: tokenSchema.color.alias.foregroundDisabled,
           },
+
+          // static
+          '&[data-static=light]': {
+            backgroundColor: '#ffffffe6',
+            color: '#000',
+
+            '&[data-hovered], &[data-focus="visible"]': {
+              backgroundColor: '#fff',
+            },
+            '&[data-pressed]': {
+              backgroundColor: '#fff',
+            },
+            '&:disabled, &[aria-disabled]': {
+              backgroundColor: '#ffffff1a',
+              color: '#ffffff8c',
+            },
+          },
+          '&[data-static=dark]': {
+            backgroundColor: '#000000e6',
+            color: '#fff',
+
+            '&[data-hovered], &[data-focus="visible"]': {
+              backgroundColor: '#000',
+            },
+            '&[data-pressed]': {
+              backgroundColor: '#000',
+            },
+            '&:disabled, &[aria-disabled]': {
+              backgroundColor: '#0000001a',
+              color: '#0000008c',
+            },
+          },
         },
 
         // PROMINENCE: low
@@ -201,6 +264,34 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
 
           '&:disabled, &[aria-disabled]': {
             color: tokenSchema.color.alias.foregroundDisabled,
+          },
+
+          // static
+          '&[data-static=light]': {
+            color: '#fff',
+
+            '&[data-hovered], &[data-focus="visible"]': {
+              backgroundColor: '#ffffff1a',
+            },
+            '&[data-pressed]': {
+              backgroundColor: '#ffffff26',
+            },
+            '&:disabled, &[aria-disabled]': {
+              color: '#ffffff8c',
+            },
+          },
+          '&[data-static=dark]': {
+            color: '#000',
+
+            '&[data-hovered], &[data-focus="visible"]': {
+              backgroundColor: '#0000001a',
+            },
+            '&[data-pressed]': {
+              backgroundColor: '#00000026',
+            },
+            '&:disabled, &[aria-disabled]': {
+              color: '#0000008c',
+            },
           },
         },
       })

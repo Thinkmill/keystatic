@@ -21,7 +21,7 @@ storiesOf('Components/Button', module)
       {renderWithIcon('Critical icon', { tone: 'critical' })}
     </Flex>
   ))
-  .add('low prominence', () => (
+  .add('prominence: low', () => (
     <Flex direction="column" gap="regular">
       {render('Accent', { prominence: 'low', tone: 'accent' })}
       {render('Neutral', { prominence: 'low', tone: 'neutral' })}
@@ -31,7 +31,7 @@ storiesOf('Components/Button', module)
       {renderWithIcon('Critical icon', { prominence: 'low', tone: 'critical' })}
     </Flex>
   ))
-  .add('high prominence', () => (
+  .add('prominence: high', () => (
     <Flex direction="column" gap="regular">
       {render('Neutral', { prominence: 'high', tone: 'neutral' })}
       {render('Accent', { prominence: 'high', tone: 'accent' })}
@@ -42,6 +42,42 @@ storiesOf('Components/Button', module)
         prominence: 'high',
         tone: 'critical',
       })}
+    </Flex>
+  ))
+  .add('static: light', () => (
+    <Flex
+      direction="column"
+      gap="regular"
+      backgroundColor="accentEmphasis"
+      padding="large"
+    >
+      {render('High', { prominence: 'high', static: 'light' })}
+      {render('Default', { prominence: 'default', static: 'light' })}
+      {render('Low', { prominence: 'low', static: 'light' })}
+      {renderWithIcon('High icon', { prominence: 'high', static: 'light' })}
+      {renderWithIcon('Default icon', {
+        prominence: 'default',
+        static: 'light',
+      })}
+      {renderWithIcon('Low icon', { prominence: 'low', static: 'light' })}
+    </Flex>
+  ))
+  .add('static: dark', () => (
+    <Flex
+      direction="column"
+      gap="regular"
+      backgroundColor="accent"
+      padding="large"
+    >
+      {render('High', { prominence: 'high', static: 'dark' })}
+      {render('Default', { prominence: 'default', static: 'dark' })}
+      {render('Low', { prominence: 'low', static: 'dark' })}
+      {renderWithIcon('High icon', { prominence: 'high', static: 'dark' })}
+      {renderWithIcon('Default icon', {
+        prominence: 'default',
+        static: 'dark',
+      })}
+      {renderWithIcon('Low icon', { prominence: 'low', static: 'dark' })}
     </Flex>
   ))
   .add('anchor', () => (
