@@ -10,6 +10,7 @@ import {
   css,
   FocusRing,
   tokenSchema,
+  transition,
   useStyleProps,
 } from '@voussoir/style';
 import { toDataAttributes } from '@voussoir/utils';
@@ -23,6 +24,7 @@ type ClearButtonProps = Omit<
 > & {
   excludeFromTabOrder?: boolean;
   preventFocus?: boolean;
+  static?: 'dark' | 'light';
 };
 
 /**
@@ -46,7 +48,7 @@ export const ClearButton = forwardRef(function ClearButton(
   let domRef = useObjectRef(forwardedRef);
   let { buttonProps, isPressed } = useButton({ ...props, elementType }, domRef);
   let { hoverProps, isHovered } = useHover({ isDisabled });
-  let styleProps = useClearButtonStyles(otherProps);
+  let styleProps = useClearButtonStyles(otherProps, { isHovered, isPressed });
 
   // For cases like the clear button in a search field, remove the tabIndex so
   // iOS 14 with VoiceOver doesn't focus the button and hide the keyboard when
@@ -61,9 +63,6 @@ export const ClearButton = forwardRef(function ClearButton(
       <ElementType
         {...styleProps}
         {...mergeProps(buttonProps, hoverProps)}
-        {...toDataAttributes({
-          interaction: isPressed ? 'press' : isHovered ? 'hover' : undefined,
-        })}
         ref={domRef}
       >
         <Icon src={xIcon} />
@@ -72,15 +71,44 @@ export const ClearButton = forwardRef(function ClearButton(
   );
 });
 
-function useClearButtonStyles(props: ClearButtonProps) {
+function useClearButtonStyles(
+  props: ClearButtonProps,
+  state: { isHovered: boolean; isPressed: boolean }
+) {
+  let { isPressed, isHovered } = state;
   let styleProps = useStyleProps(props);
 
   const clearButtonStyles = css({
+    alignItems: 'center',
+    borderRadius: '100%',
     color: tokenSchema.color.foreground.neutralSecondary,
     display: 'flex',
-    alignItems: 'center',
+    height: tokenSchema.size.element.regular,
     justifyContent: 'center',
-    minWidth: tokenSchema.size.element.regular,
+    outline: 0,
+    position: 'relative',
+    transition: transition(['box-shadow', 'margin'], { easing: 'easeOut' }),
+    width: tokenSchema.size.element.regular,
+
+    '--focus-ring-color': tokenSchema.color.alias.focusRing,
+    '&[data-static]': {
+      '--focus-ring-color': 'currentColor',
+    },
+    '&::after': {
+      borderRadius: `inherit`,
+      content: '""',
+      inset: 0,
+
+      pointerEvents: 'none',
+      position: 'absolute',
+      transition: transition(['box-shadow', 'margin'], {
+        easing: 'easeOut',
+      }),
+    },
+    '&[data-focus=visible]::after': {
+      boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} var(--focus-ring-color)`,
+      margin: `calc(-1 * ${tokenSchema.size.alias.focusRingGap})`,
+    },
 
     '&[data-interaction=hover]': {
       color: tokenSchema.color.foreground.neutral,
@@ -91,9 +119,43 @@ function useClearButtonStyles(props: ClearButtonProps) {
     '&:disabled, &[aria-disabled]': {
       color: tokenSchema.color.alias.foregroundDisabled,
     },
+
+    // static
+    '&[data-static=light]': {
+      color: '#fff',
+
+      '&[data-interaction=hover], &[data-focus="visible"]': {
+        backgroundColor: '#ffffff1a',
+      },
+      '&[data-interaction=press]': {
+        backgroundColor: '#ffffff26',
+      },
+      '&:disabled, &[aria-disabled]': {
+        backgroundColor: '#ffffff1a',
+        color: '#ffffff8c',
+      },
+    },
+    '&[data-static=dark]': {
+      color: '#000',
+
+      '&[data-interaction=hover], &[data-focus="visible"]': {
+        backgroundColor: '#0000001a',
+      },
+      '&[data-interaction=press]': {
+        backgroundColor: '#00000026',
+      },
+      '&:disabled, &[aria-disabled]': {
+        backgroundColor: '#0000001a',
+        color: '#0000008c',
+      },
+    },
   });
   return {
     ...styleProps,
+    ...toDataAttributes({
+      static: props.static,
+      interaction: isPressed ? 'press' : isHovered ? 'hover' : undefined,
+    }),
     className: classNames(clearButtonStyles, styleProps.className),
   };
 }
