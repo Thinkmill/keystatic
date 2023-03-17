@@ -20,7 +20,7 @@ export default class Document extends NextDocument {
   render(): JSX.Element {
     return (
       <Html
-        lang="en-AU"
+        lang="en-US"
         className="ksv-theme ksv-theme--light ksv-theme--medium"
       >
         <Head />

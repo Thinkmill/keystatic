@@ -67,6 +67,17 @@ function Example(options: ToastOptions) {
       </ActionButton>
       <ActionButton
         onPress={() =>
+          toaster.info('A new version is available', {
+            ...options,
+            onClose: action('onClose'),
+          })
+        }
+      >
+        <Icon src={infoIcon} color="accent" />
+        <Text>Info</Text>
+      </ActionButton>
+      <ActionButton
+        onPress={() =>
           toaster.positive('File uploaded', {
             ...options,
             onClose: action('onClose'),
@@ -86,17 +97,6 @@ function Example(options: ToastOptions) {
       >
         <Icon src={alertTriangleIcon} color="critical" />
         <Text>Critical</Text>
-      </ActionButton>
-      <ActionButton
-        onPress={() =>
-          toaster.info('A new version is available', {
-            ...options,
-            onClose: action('onClose'),
-          })
-        }
-      >
-        <Icon src={infoIcon} color="accent" />
-        <Text>Info</Text>
       </ActionButton>
     </Flex>
   );

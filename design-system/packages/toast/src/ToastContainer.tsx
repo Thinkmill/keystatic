@@ -36,8 +36,14 @@ export function ToastContainer(props: ToastContainerProps): ReactElement {
             position: 'fixed',
             zIndex: 100050 /* above modals */,
 
-            '&[data-focus=visible] > :first-child': {
+            '&[data-focus=visible] > :first-child:after': {
+              borderRadius: `calc(${tokenSchema.size.radius.regular} + ${tokenSchema.size.alias.focusRingGap})`,
               boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
+              content: '""',
+              inset: 0,
+              margin: `calc(-1 * ${tokenSchema.size.alias.focusRingGap})`,
+              pointerEvents: 'none',
+              position: 'absolute' as const,
             },
 
             '&[data-position=top]': {
