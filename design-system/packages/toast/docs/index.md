@@ -1,7 +1,8 @@
 ---
 title: Toasts
 description:
-  Toasts display brief, temporary notifications of events in an application.
+  Toasts display brief, temporary notifications of actions, errors, or other
+  events in an application.
 category: Feedback
 ---
 
