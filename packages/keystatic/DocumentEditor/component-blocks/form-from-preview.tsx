@@ -430,7 +430,7 @@ function ConditionalFieldPreview({
     unknown
   >;
   return (
-    <Flex gap="xlarge">
+    <Flex gap="xlarge" direction="column">
       {useMemo(
         () => (
           <AddToPathProvider part="discriminant">
