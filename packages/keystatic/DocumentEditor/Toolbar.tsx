@@ -190,6 +190,19 @@ const ToolbarScrollArea = (props: { children: ReactNode }) => {
   );
 };
 
+const headingMenuVals = new Map<
+  string | number,
+  'normal' | 1 | 2 | 3 | 4 | 5 | 6
+>([
+  ['normal', 'normal'],
+  ['1', 1],
+  ['2', 2],
+  ['3', 3],
+  ['4', 4],
+  ['5', 5],
+  ['6', 6],
+]);
+
 type HeadingItem = { name: string; id: string | number };
 const HeadingMenu = ({
   headingLevels,
@@ -201,7 +214,7 @@ const HeadingMenu = ({
   const items = useMemo(() => {
     let resolvedItems: HeadingItem[] = [{ name: 'Paragraph', id: 'normal' }];
     headingLevels.forEach(level => {
-      resolvedItems.push({ name: `Heading ${level}`, id: level });
+      resolvedItems.push({ name: `Heading ${level}`, id: level.toString() });
     });
     return resolvedItems;
   }, [headingLevels]);
@@ -218,15 +231,15 @@ const HeadingMenu = ({
         isDisabled={isDisabled}
         selectedKey={selected}
         onSelectionChange={selected => {
-          let key = selected as typeof selected;
+          let key = headingMenuVals.get(selected);
           if (key === 'normal') {
             Transforms.unwrapNodes(editor, {
               match: n => n.type === 'heading',
             });
-          } else {
+          } else if (key) {
             Transforms.setNodes(
               editor,
-              { type: 'heading', level: key as 1 | 2 | 3 | 4 | 5 | 6 },
+              { type: 'heading', level: key },
               {
                 match: node =>
                   node.type === 'paragraph' || node.type === 'heading',
