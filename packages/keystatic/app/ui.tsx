@@ -191,6 +191,17 @@ export function Keystatic(props: {
   ) {
     throw new Error('Missing storage.repo.owner or storage.repo.name');
   }
+  useEffect(() => {
+    if (window.location.hostname === 'localhost') {
+      window.location.href = window.location.href.replace(
+        'localhost',
+        '127.0.0.1'
+      );
+    }
+  }, []);
+  if (window.location.hostname === 'localhost') {
+    return null;
+  }
   return (
     <AppSlugProvider value={props.appSlug}>
       <RouterProvider router={props.router}>
