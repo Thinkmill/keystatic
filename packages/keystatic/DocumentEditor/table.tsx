@@ -666,20 +666,13 @@ export const TableElement = ({
   return (
     <StartElementsContext.Provider value={startElements}>
       <SelectedCellsContext.Provider value={selectedCells}>
-        <div
-          className={css({
-            position: 'relative',
-            paddingInlineEnd: 10,
-          })}
-        >
+        <div className={css({ position: 'relative' })}>
           <table
             className={css({
               width: '100%',
               tableLayout: 'fixed',
               position: 'relative',
               borderSpacing: 0,
-              marginTop: 10,
-              marginInlineStart: 10,
               '& *::selection': selectedCells?.cells.size
                 ? { backgroundColor: 'transparent' }
                 : undefined,
@@ -751,7 +744,7 @@ export function TableCellElement({
         backgroundColor: selectedCellsContext?.cells.has(element)
           ? tokenSchema.color.alias.backgroundSelected
           : element.header
-          ? tokenSchema.color.scale.slate4
+          ? tokenSchema.color.scale.slate3
           : undefined,
         position: 'relative',
         margin: 0,
@@ -864,39 +857,21 @@ export function TableCellElement({
   );
 }
 
-const styles = {
-  top: {
-    top: -9,
-    insetInlineStart: -1,
-    width: 'calc(100% + 2px)',
-    height: 8,
-  },
-  left: {
-    top: -1,
-    insetInlineStart: -9,
-    width: 8,
-    height: 'calc(100% + 2px)',
-  },
-  'top-left': {
-    top: -9,
-    insetInlineStart: -9,
-    width: 8,
-    height: 8,
-  },
-};
-
 function CellSelection(props: {
   location: 'top' | 'left' | 'top-left';
   selected: boolean;
   onClick: () => void;
   label: string;
 }) {
+  const selectedCellsContext = useContext(SelectedCellsContext);
   const editor = useStaticEditor();
+
   return (
     <div contentEditable={false}>
       <button
         tabIndex={-1}
         type="button"
+        data-location={props.location}
         className={css({
           position: 'absolute',
           margin: 0,
@@ -911,8 +886,27 @@ function CellSelection(props: {
           }`,
           borderBottom: props.location === 'left' ? undefined : 'none',
           borderInlineEnd: props.location === 'top' ? undefined : 'none',
+          visibility: selectedCellsContext?.focus ? 'visible' : 'hidden',
+
+          '&[data-location=top]': {
+            top: -9,
+            insetInlineStart: -1,
+            width: 'calc(100% + 2px)',
+            height: 8,
+          },
+          '&[data-location=left]': {
+            top: -1,
+            insetInlineStart: -9,
+            width: 8,
+            height: 'calc(100% + 2px)',
+          },
+          '&[data-location=top-left]': {
+            top: -9,
+            insetInlineStart: -9,
+            width: 8,
+            height: 8,
+          },
         })}
-        style={styles[props.location]}
         aria-label={props.label}
         onClick={() => {
           ReactEditor.focus(editor);
