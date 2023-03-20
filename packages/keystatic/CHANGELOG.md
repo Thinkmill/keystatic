@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.71
+
+### Patch Changes
+
+- a171117: Fix previous release
+
 ## 0.0.70
 
 ### Patch Changes
