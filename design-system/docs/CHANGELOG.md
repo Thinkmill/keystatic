@@ -1,5 +1,19 @@
 # @voussoir/docs
 
+## 0.0.5
+
+### Patch Changes
+
+- 27d6e06: docs: move toaster root
+- e6ae29c: Support "static" prop on `ActionButton`, `Button` and `ClearButton`,
+  for when they appear over a background. Support `aria-label` on the `Icon`
+  component.
+- Updated dependencies [e6ae29c]
+  - @voussoir/button@0.1.3
+  - @voussoir/icon@0.1.1
+  - @voussoir/breadcrumbs@0.1.2
+  - @voussoir/toast@0.1.2
+
 ## 0.0.4
 
 ### Patch Changes
