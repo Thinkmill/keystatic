@@ -218,7 +218,7 @@ const HeadingMenu = ({
     });
     return resolvedItems;
   }, [headingLevels]);
-  const selected = textStyles.selected;
+  const selected = textStyles.selected.toString();
 
   return useMemo(
     () => (
@@ -233,8 +233,15 @@ const HeadingMenu = ({
         onSelectionChange={selected => {
           let key = headingMenuVals.get(selected);
           if (key === 'normal') {
-            Transforms.unwrapNodes(editor, {
-              match: n => n.type === 'heading',
+            Editor.withoutNormalizing(editor, () => {
+              Transforms.unsetNodes(editor, 'level', {
+                match: n => n.type === 'heading',
+              });
+              Transforms.setNodes(
+                editor,
+                { type: 'paragraph' },
+                { match: n => n.type === 'heading' }
+              );
             });
           } else if (key) {
             Transforms.setNodes(
