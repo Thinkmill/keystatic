@@ -7,6 +7,7 @@ import { DialogContainer } from '@voussoir/dialog';
 import { Flex } from '@voussoir/layout';
 import { Notice } from '@voussoir/notice';
 import { ProgressCircle } from '@voussoir/progress';
+import { toastQueue } from '@voussoir/toast';
 
 import { Config } from '../config';
 import { fields } from '../DocumentEditor/component-blocks/api';
@@ -102,6 +103,7 @@ export function CreateItem(props: {
     if (await createItem()) {
       const slug = getSlugFromState(collectionConfig, state);
       router.push(`${collectionPath}/item/${slug}`);
+      toastQueue.positive('Entry created', { timeout: 5000 }); // TODO: l10n
     }
   };
 

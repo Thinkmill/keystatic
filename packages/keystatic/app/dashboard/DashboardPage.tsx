@@ -66,7 +66,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
                     });
                     const allChangesCount =
                       counts.changed + counts.added + counts.removed;
-                    console.log(counts);
+
                     return (
                       <Item
                         textValue={
