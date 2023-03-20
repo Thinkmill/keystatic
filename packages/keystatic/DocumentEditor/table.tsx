@@ -748,11 +748,10 @@ export function TableCellElement({
           : undefined,
         position: 'relative',
         margin: 0,
-        padding: 10,
+        padding: tokenSchema.size.space.regular,
         fontWeight: 'inherit',
         boxSizing: 'border-box',
         textAlign: 'start',
-        height: 42, // ensures room for the context menu button in the focused cell
         verticalAlign: 'top',
       })}
       {...attributes}
@@ -1083,18 +1082,34 @@ function CellMenu(props: {
   table: Element & { type: 'table' };
 }) {
   const editor = useStaticEditor();
+  const gutter = tokenSchema.size.space.small;
   return (
     <div
       contentEditable={false}
       className={css({
-        top: 4,
-        insetInlineEnd: 4,
+        top: gutter,
+        insetInlineEnd: gutter,
         position: 'absolute',
       })}
     >
       <TooltipTrigger>
         <MenuTrigger>
-          <ActionButton prominence="low">
+          <ActionButton
+            prominence="low"
+            UNSAFE_className={css({
+              borderRadius: tokenSchema.size.radius.small,
+              height: 'auto',
+              minWidth: 0,
+              padding: 0,
+
+              // tiny buttons; increase the hit area
+              '&::before': {
+                content: '""',
+                inset: `calc(${gutter} * -1)`,
+                position: 'absolute',
+              },
+            })}
+          >
             <Icon src={chevronDownIcon} />
           </ActionButton>
           <Menu
