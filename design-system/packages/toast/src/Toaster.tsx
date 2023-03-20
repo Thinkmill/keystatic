@@ -125,6 +125,10 @@ function addToast(
     !(options.timeout && options.onAction),
     'Timeouts are not supported on actionable toasts.'
   );
+  warning(
+    !!(options.timeout && options.timeout >= 5000),
+    'Timeouts must be at least 5000ms, for accessibility.'
+  );
   let timeout =
     options.timeout && !options.onAction
       ? Math.max(options.timeout, 5000)
