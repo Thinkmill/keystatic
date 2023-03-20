@@ -22,7 +22,7 @@ export type APIRouteConfig = {
   clientId?: string;
   /** @default process.env.KEYSTATIC_GITHUB_CLIENT_SECRET */
   clientSecret?: string;
-  /** @default process.env.KEYSTATIC_URL ?? process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : error */
+  /** @default process.env.KEYSTATIC_URL */
   url?: string;
   /** @default process.env.KEYSTATIC_SECRET */
   secret?: string;
@@ -33,7 +33,7 @@ export type APIRouteConfig = {
 type InnerAPIRouteConfig = {
   clientId: string;
   clientSecret: string;
-  url: string;
+  url: string | undefined;
   secret: string;
   config: Config;
 };
@@ -70,12 +70,7 @@ export function makeGenericAPIRouteHandler(
     clientId: _config.clientId ?? process.env.KEYSTATIC_GITHUB_CLIENT_ID,
     clientSecret:
       _config.clientSecret ?? process.env.KEYSTATIC_GITHUB_CLIENT_SECRET,
-    url:
-      _config.url ??
-      process.env.KEYSTATIC_URL ??
-      (process.env.NODE_ENV === 'development'
-        ? 'http://localhost:3000'
-        : undefined),
+    url: _config.url ?? process.env.KEYSTATIC_URL ?? undefined,
     secret: _config.secret ?? process.env.KEYSTATIC_SECRET,
     config: _config.config,
   };
@@ -93,7 +88,7 @@ export function makeGenericAPIRouteHandler(
   if (
     !_config2.clientId ||
     !_config2.clientSecret ||
-    !_config2.url ||
+    (!_config2.url && process.env.NODE_ENV !== 'development') ||
     !_config2.secret
   ) {
     return async function keystaticAPIRoute(
@@ -179,6 +174,18 @@ async function githubOauthCallback(
   config: InnerAPIRouteConfig
 ): Promise<KeystaticResponse> {
   const searchParams = new URL(req.url, 'http://localhost').searchParams;
+  const error = searchParams.get('error');
+  const errorDescription = searchParams.get('error_description');
+  if (typeof errorDescription === 'string') {
+    return {
+      status: 400,
+      body: `An error occurred when trying to authenticate with GitHub:\n${errorDescription}${
+        error === 'redirect_uri_mismatch'
+          ? `\n\nIf you were trying to sign in locally and recently upgraded Keystatic from @keystatic/core@0.0.69 or below, you need to add \`http://127.0.0.1/api/keystatic/github/oauth/callback\` as a callback URL in your GitHub app.`
+          : ''
+      }`,
+    };
+  }
   const code = searchParams.get('code');
   const state = searchParams.get('state');
   if (typeof code !== 'string') {
@@ -491,13 +498,16 @@ async function githubLogin(
     typeof rawFrom === 'string' && keystaticRouteRegex.test(rawFrom)
       ? rawFrom
       : '/';
-
+  const host = req.headers.get('host');
+  const port = (host ? new URL(`http://${host}`).port : undefined) || '80';
   const state = randomBytes(10).toString('hex');
   const url = new URL('https://github.com/login/oauth/authorize');
   url.searchParams.set('client_id', config.clientId);
   url.searchParams.set(
     'redirect_uri',
-    `${config.url}/api/keystatic/github/oauth/callback`
+    `${
+      config.url === undefined ? `http://127.0.0.1:${port}` : config.url
+    }/api/keystatic/github/oauth/callback`
   );
   if (from === '/') {
     return redirect(url.toString());
@@ -566,7 +576,6 @@ async function createdGithubApp(
 KEYSTATIC_GITHUB_CLIENT_ID=${ghAppDataResult.data.client_id}
 KEYSTATIC_GITHUB_CLIENT_SECRET=${ghAppDataResult.data.client_secret}
 KEYSTATIC_SECRET=${randomBytes(40).toString('hex')}
-KEYSTATIC_URL=http://${req.headers.get('host')}
 ${slugEnvVarName ? `${slugEnvVarName}=${ghAppDataResult.data.slug}\n` : ''}`;
 
   let prevEnv: string | undefined;
