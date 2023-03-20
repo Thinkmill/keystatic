@@ -13,16 +13,17 @@ import {
 import { ReactEditor, RenderElementProps, useSlate } from 'slate-react';
 
 import { ActionButton } from '@voussoir/button';
-import { tableIcon } from '@voussoir/icon/icons/tableIcon';
 import { Icon } from '@voussoir/icon';
+import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
+import { tableIcon } from '@voussoir/icon/icons/tableIcon';
+import { Item, Menu, MenuTrigger } from '@voussoir/menu';
+import { css, tokenSchema } from '@voussoir/style';
 import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
 import { Text } from '@voussoir/typography';
+import { toDataAttributes } from '@voussoir/utils';
 
 import { useToolbarState } from './toolbar-state';
-import { css, tokenSchema } from '@voussoir/style';
 import { moveChildren, nodeTypeMatcher, useStaticEditor } from './utils';
-import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { Item, Menu, MenuTrigger } from '@voussoir/menu';
 
 const cell = (header: boolean) => ({
   type: 'table-cell' as const,
@@ -666,20 +667,13 @@ export const TableElement = ({
   return (
     <StartElementsContext.Provider value={startElements}>
       <SelectedCellsContext.Provider value={selectedCells}>
-        <div
-          className={css({
-            position: 'relative',
-            paddingRight: 10,
-          })}
-        >
+        <div className={css({ position: 'relative' })}>
           <table
             className={css({
               width: '100%',
               tableLayout: 'fixed',
               position: 'relative',
               borderSpacing: 0,
-              marginTop: 10,
-              marginLeft: 10,
               '& *::selection': selectedCells?.cells.size
                 ? { backgroundColor: 'transparent' }
                 : undefined,
@@ -740,26 +734,25 @@ export function TableCellElement({
   return (
     <ElementType
       className={css({
-        borderRight: `1px solid ${borderColor}`,
+        borderInlineEnd: `1px solid ${borderColor}`,
         borderBottom: `1px solid ${borderColor}`,
         borderTop: startElements.top.has(element)
           ? `1px solid ${borderColor}`
           : undefined,
-        borderLeft: startElements.left.has(element)
+        borderInlineStart: startElements.left.has(element)
           ? `1px solid ${borderColor}`
           : undefined,
         backgroundColor: selectedCellsContext?.cells.has(element)
           ? tokenSchema.color.alias.backgroundSelected
           : element.header
-          ? tokenSchema.color.scale.slate4
+          ? tokenSchema.color.scale.slate3
           : undefined,
         position: 'relative',
         margin: 0,
-        padding: 10,
+        padding: tokenSchema.size.space.regular,
         fontWeight: 'inherit',
         boxSizing: 'border-box',
         textAlign: 'start',
-        height: 42, // ensures room for the context menu button in the focused cell
         verticalAlign: 'top',
       })}
       {...attributes}
@@ -771,7 +764,7 @@ export function TableCellElement({
             className={css({
               position: 'absolute',
               top: -1,
-              left: -1,
+              insetInlineStart: -1,
               background: tokenSchema.color.alias.borderSelected,
               height: size,
               width: 1,
@@ -782,7 +775,7 @@ export function TableCellElement({
             className={css({
               position: 'absolute',
               top: -1,
-              left: -1,
+              insetInlineStart: -1,
               background: tokenSchema.color.alias.borderSelected,
               height: 1,
               width: size,
@@ -864,57 +857,70 @@ export function TableCellElement({
   );
 }
 
-const styles = {
-  top: {
-    top: -9,
-    left: -1,
-    width: 'calc(100% + 2px)',
-    height: 8,
-  },
-  left: {
-    top: -1,
-    left: -9,
-    width: 8,
-    height: 'calc(100% + 2px)',
-  },
-  'top-left': {
-    top: -9,
-    left: -9,
-    width: 8,
-    height: 8,
-  },
-};
-
 function CellSelection(props: {
   location: 'top' | 'left' | 'top-left';
   selected: boolean;
   onClick: () => void;
   label: string;
 }) {
+  const selectedCellsContext = useContext(SelectedCellsContext);
   const editor = useStaticEditor();
+
   return (
     <div contentEditable={false}>
       <button
         tabIndex={-1}
         type="button"
-        className={css(
-          {
-            position: 'absolute',
-            margin: 0,
-            padding: 0,
-            background: props.selected
-              ? tokenSchema.color.scale.indigo8
-              : tokenSchema.color.scale.slate3,
-            border: `1px solid ${
-              props.selected
-                ? tokenSchema.color.alias.borderSelected
-                : tokenSchema.color.alias.borderIdle
-            }`,
-            borderBottom: props.location === 'left' ? undefined : 'none',
-            borderRight: props.location === 'top' ? undefined : 'none',
+        {...toDataAttributes(props, new Set(['location', 'selected']))}
+        className={css({
+          background: tokenSchema.color.scale.slate3,
+          border: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+          margin: 0,
+          padding: 0,
+          position: 'absolute',
+
+          ':hover': {
+            background: tokenSchema.color.scale.slate4,
           },
-          styles[props.location]
-        )}
+
+          // ever so slightly larger hit area
+          '::before': {
+            content: '""',
+            inset: -1,
+            position: 'absolute',
+          },
+
+          // location
+          '&[data-location=top]': {
+            top: -9,
+            insetInlineStart: -1,
+            width: 'calc(100% + 2px)',
+            height: 8,
+          },
+          '&[data-location=left]': {
+            top: -1,
+            insetInlineStart: -9,
+            width: 8,
+            height: 'calc(100% + 2px)',
+          },
+          '&[data-location=top-left]': {
+            top: -9,
+            insetInlineStart: -9,
+            width: 8,
+            height: 8,
+          },
+          '&:not([data-location=top])': { borderInlineEnd: 'none' },
+          '&:not([data-location=left])': { borderBottom: 'none' },
+
+          // state
+          '&[data-selected=true]': {
+            background: tokenSchema.color.scale.indigo8,
+            borderColor: tokenSchema.color.alias.borderSelected,
+          },
+        })}
+        style={{
+          visibility: selectedCellsContext?.focus ? 'visible' : 'hidden',
+        }}
         aria-label={props.label}
         onClick={() => {
           ReactEditor.focus(editor);
@@ -927,7 +933,7 @@ function CellSelection(props: {
             className={css({
               position: 'absolute',
               top: -9,
-              right: -1,
+              insetInlineEnd: -1,
               background: tokenSchema.color.alias.borderSelected,
               height: 8,
               width: 1,
@@ -939,7 +945,7 @@ function CellSelection(props: {
             className={css({
               position: 'absolute',
               bottom: -1,
-              left: -9,
+              insetInlineStart: -9,
               background: tokenSchema.color.alias.borderSelected,
               height: 1,
               width: 8,
@@ -1091,18 +1097,34 @@ function CellMenu(props: {
   table: Element & { type: 'table' };
 }) {
   const editor = useStaticEditor();
+  const gutter = tokenSchema.size.space.small;
   return (
     <div
       contentEditable={false}
       className={css({
-        top: 4,
-        right: 4,
+        top: gutter,
+        insetInlineEnd: gutter,
         position: 'absolute',
       })}
     >
       <TooltipTrigger>
         <MenuTrigger>
-          <ActionButton prominence="low">
+          <ActionButton
+            prominence="low"
+            UNSAFE_className={css({
+              borderRadius: tokenSchema.size.radius.small,
+              height: 'auto',
+              minWidth: 0,
+              padding: 0,
+
+              // tiny buttons; increase the hit area
+              '&::before': {
+                content: '""',
+                inset: `calc(${gutter} * -1)`,
+                position: 'absolute',
+              },
+            })}
+          >
             <Icon src={chevronDownIcon} />
           </ActionButton>
           <Menu
