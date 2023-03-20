@@ -2047,6 +2047,7 @@ importers:
       '@voussoir/tabs': ^0.1.0
       '@voussoir/test-utils': ^2.0.0
       '@voussoir/text-field': ^0.1.3
+      '@voussoir/toast': ^0.1.0
       '@voussoir/tooltip': ^0.1.1
       '@voussoir/types': ^0.1.0
       '@voussoir/typography': ^0.1.0
@@ -2139,6 +2140,7 @@ importers:
       '@voussoir/table': link:../../design-system/packages/table
       '@voussoir/tabs': link:../../design-system/packages/tabs
       '@voussoir/text-field': link:../../design-system/packages/text-field
+      '@voussoir/toast': link:../../design-system/packages/toast
       '@voussoir/tooltip': link:../../design-system/packages/tooltip
       '@voussoir/types': link:../../design-system/packages/types
       '@voussoir/typography': link:../../design-system/packages/typography

@@ -1,5 +1,7 @@
 import { VoussoirProvider } from '@voussoir/core';
 import { makeLinkComponent } from '@voussoir/link';
+import { SSRProvider } from '@voussoir/ssr';
+import { Toaster } from '@voussoir/toast';
 import {
   AnchorHTMLAttributes,
   ForwardedRef,
@@ -18,7 +20,6 @@ import { cacheExchange } from '@urql/exchange-graphcache';
 import { authExchange } from '@urql/exchange-auth';
 import { getAuth } from './auth';
 import { AppShellQuery } from './shell/data';
-import { SSRProvider } from '@voussoir/ssr';
 
 export default function Provider({
   children,
@@ -188,6 +189,7 @@ export default function Provider({
         >
           {children}
         </UrqlProvider>
+        <Toaster />
       </VoussoirProvider>
     </SSRProvider>
   );
