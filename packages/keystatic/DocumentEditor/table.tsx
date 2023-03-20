@@ -13,16 +13,17 @@ import {
 import { ReactEditor, RenderElementProps, useSlate } from 'slate-react';
 
 import { ActionButton } from '@voussoir/button';
-import { tableIcon } from '@voussoir/icon/icons/tableIcon';
 import { Icon } from '@voussoir/icon';
+import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
+import { tableIcon } from '@voussoir/icon/icons/tableIcon';
+import { Item, Menu, MenuTrigger } from '@voussoir/menu';
+import { css, tokenSchema } from '@voussoir/style';
 import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
 import { Text } from '@voussoir/typography';
+import { toDataAttributes } from '@voussoir/utils';
 
 import { useToolbarState } from './toolbar-state';
-import { css, tokenSchema } from '@voussoir/style';
 import { moveChildren, nodeTypeMatcher, useStaticEditor } from './utils';
-import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { Item, Menu, MenuTrigger } from '@voussoir/menu';
 
 const cell = (header: boolean) => ({
   type: 'table-cell' as const,
@@ -870,23 +871,26 @@ function CellSelection(props: {
       <button
         tabIndex={-1}
         type="button"
-        data-location={props.location}
+        {...toDataAttributes(props, new Set(['location', 'selected']))}
         className={css({
-          position: 'absolute',
+          background: tokenSchema.color.scale.slate3,
+          border: `1px solid ${tokenSchema.color.alias.borderIdle}`,
           margin: 0,
           padding: 0,
-          background: props.selected
-            ? tokenSchema.color.scale.indigo8
-            : tokenSchema.color.scale.slate3,
-          border: `1px solid ${
-            props.selected
-              ? tokenSchema.color.alias.borderSelected
-              : tokenSchema.color.alias.borderIdle
-          }`,
-          borderBottom: props.location === 'left' ? undefined : 'none',
-          borderInlineEnd: props.location === 'top' ? undefined : 'none',
-          visibility: selectedCellsContext?.focus ? 'visible' : 'hidden',
+          position: 'absolute',
 
+          ':hover': {
+            background: tokenSchema.color.scale.slate4,
+          },
+
+          // ever so slightly larger hit area
+          '::before': {
+            content: '""',
+            inset: -1,
+            position: 'absolute',
+          },
+
+          // location
           '&[data-location=top]': {
             top: -9,
             insetInlineStart: -1,
@@ -905,7 +909,18 @@ function CellSelection(props: {
             width: 8,
             height: 8,
           },
+          '&:not([data-location=top])': { borderInlineEnd: 'none' },
+          '&:not([data-location=left])': { borderBottom: 'none' },
+
+          // state
+          '&[data-selected=true]': {
+            background: tokenSchema.color.scale.indigo8,
+            borderColor: tokenSchema.color.alias.borderSelected,
+          },
         })}
+        style={{
+          visibility: selectedCellsContext?.focus ? 'visible' : 'hidden',
+        }}
         aria-label={props.label}
         onClick={() => {
           ReactEditor.focus(editor);
