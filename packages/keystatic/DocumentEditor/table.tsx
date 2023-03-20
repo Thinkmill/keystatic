@@ -669,7 +669,7 @@ export const TableElement = ({
         <div
           className={css({
             position: 'relative',
-            paddingRight: 10,
+            paddingInlineEnd: 10,
           })}
         >
           <table
@@ -679,7 +679,7 @@ export const TableElement = ({
               position: 'relative',
               borderSpacing: 0,
               marginTop: 10,
-              marginLeft: 10,
+              marginInlineStart: 10,
               '& *::selection': selectedCells?.cells.size
                 ? { backgroundColor: 'transparent' }
                 : undefined,
@@ -740,12 +740,12 @@ export function TableCellElement({
   return (
     <ElementType
       className={css({
-        borderRight: `1px solid ${borderColor}`,
+        borderInlineEnd: `1px solid ${borderColor}`,
         borderBottom: `1px solid ${borderColor}`,
         borderTop: startElements.top.has(element)
           ? `1px solid ${borderColor}`
           : undefined,
-        borderLeft: startElements.left.has(element)
+        borderInlineStart: startElements.left.has(element)
           ? `1px solid ${borderColor}`
           : undefined,
         backgroundColor: selectedCellsContext?.cells.has(element)
@@ -771,7 +771,7 @@ export function TableCellElement({
             className={css({
               position: 'absolute',
               top: -1,
-              left: -1,
+              insetInlineStart: -1,
               background: tokenSchema.color.alias.borderSelected,
               height: size,
               width: 1,
@@ -782,7 +782,7 @@ export function TableCellElement({
             className={css({
               position: 'absolute',
               top: -1,
-              left: -1,
+              insetInlineStart: -1,
               background: tokenSchema.color.alias.borderSelected,
               height: 1,
               width: size,
@@ -867,19 +867,19 @@ export function TableCellElement({
 const styles = {
   top: {
     top: -9,
-    left: -1,
+    insetInlineStart: -1,
     width: 'calc(100% + 2px)',
     height: 8,
   },
   left: {
     top: -1,
-    left: -9,
+    insetInlineStart: -9,
     width: 8,
     height: 'calc(100% + 2px)',
   },
   'top-left': {
     top: -9,
-    left: -9,
+    insetInlineStart: -9,
     width: 8,
     height: 8,
   },
@@ -897,24 +897,22 @@ function CellSelection(props: {
       <button
         tabIndex={-1}
         type="button"
-        className={css(
-          {
-            position: 'absolute',
-            margin: 0,
-            padding: 0,
-            background: props.selected
-              ? tokenSchema.color.scale.indigo8
-              : tokenSchema.color.scale.slate3,
-            border: `1px solid ${
-              props.selected
-                ? tokenSchema.color.alias.borderSelected
-                : tokenSchema.color.alias.borderIdle
-            }`,
-            borderBottom: props.location === 'left' ? undefined : 'none',
-            borderRight: props.location === 'top' ? undefined : 'none',
-          },
-          styles[props.location]
-        )}
+        className={css({
+          position: 'absolute',
+          margin: 0,
+          padding: 0,
+          background: props.selected
+            ? tokenSchema.color.scale.indigo8
+            : tokenSchema.color.scale.slate3,
+          border: `1px solid ${
+            props.selected
+              ? tokenSchema.color.alias.borderSelected
+              : tokenSchema.color.alias.borderIdle
+          }`,
+          borderBottom: props.location === 'left' ? undefined : 'none',
+          borderInlineEnd: props.location === 'top' ? undefined : 'none',
+        })}
+        style={styles[props.location]}
         aria-label={props.label}
         onClick={() => {
           ReactEditor.focus(editor);
@@ -927,7 +925,7 @@ function CellSelection(props: {
             className={css({
               position: 'absolute',
               top: -9,
-              right: -1,
+              insetInlineEnd: -1,
               background: tokenSchema.color.alias.borderSelected,
               height: 8,
               width: 1,
@@ -939,7 +937,7 @@ function CellSelection(props: {
             className={css({
               position: 'absolute',
               bottom: -1,
-              left: -9,
+              insetInlineStart: -9,
               background: tokenSchema.color.alias.borderSelected,
               height: 1,
               width: 8,
@@ -1096,7 +1094,7 @@ function CellMenu(props: {
       contentEditable={false}
       className={css({
         top: 4,
-        right: 4,
+        insetInlineEnd: 4,
         position: 'absolute',
       })}
     >
