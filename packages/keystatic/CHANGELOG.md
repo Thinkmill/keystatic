@@ -1,5 +1,16 @@
 # @keystatic/core
 
+## 0.0.72
+
+### Patch Changes
+
+- c26cbba: Cosmetic fixes for the editor table when RTL.
+- bcadd92: Move the editor table's "header row" toggle to a block popover.
+- 1d1d702: Introduce toasts to the app. Show a "positive" toast when an entry is
+  created.
+- e750768: Fix deleting rows in tables with a header row
+- 4890253: Fix image block in `DocumentRenderer`
+
 ## 0.0.71
 
 ### Patch Changes
