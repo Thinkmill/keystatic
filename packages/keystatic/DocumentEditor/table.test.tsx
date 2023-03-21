@@ -329,13 +329,28 @@ test('delete header row with deleteFragment', () => {
 
 test('delete rows including header row', () => {
   const editor = table(
-    [cellWithAnchor('1a'), cell('1b'), cell('1c')],
+    [headerWithAnchor('1a'), header('1b'), header('1c')],
     [cell('2a'), cell('2b'), cellWithFocus('2c')],
     [cell('3a'), cell('3b'), cell('3c')]
   );
   editor.deleteFragment();
   expect(editor).toEqualEditor(
     table([cellWithCursor('3a'), cell('3b'), cell('3c')])
+  );
+});
+
+test('delete row when the table has a header row', () => {
+  const editor = table(
+    [header('1a'), header('1b'), header('1c')],
+    [cellWithAnchor('2a'), cell('2b'), cellWithFocus('2c')],
+    [cell('3a'), cell('3b'), cell('3c')]
+  );
+  editor.deleteFragment();
+  expect(editor).toEqualEditor(
+    table(
+      [header('1a'), header('1b'), header('1c')],
+      [cellWithCursor('3a'), cell('3b'), cell('3c')]
+    )
   );
 });
 
