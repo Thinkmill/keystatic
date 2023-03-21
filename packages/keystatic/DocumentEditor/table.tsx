@@ -332,7 +332,7 @@ export function withTable(editor: Editor): Editor {
               continue;
             }
             Transforms.removeNodes(editor, {
-              at: [...tablePath, 1, i],
+              at: [...tablePath, 1, i - 1],
             });
             continue;
           }
