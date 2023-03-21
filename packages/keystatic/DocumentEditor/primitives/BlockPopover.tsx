@@ -53,11 +53,12 @@ function useBlockPopoverContext() {
 }
 
 const typeMatcher = nodeTypeMatcher(
+  'code',
+  'component-block',
   'image',
   'layout',
   'link',
-  'code',
-  'component-block'
+  'table'
 );
 
 const ActiveBlockPopoverContext = createContext<undefined | Element>(undefined);
