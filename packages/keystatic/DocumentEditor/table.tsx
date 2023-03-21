@@ -23,21 +23,21 @@ import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
 import { sheetIcon } from '@voussoir/icon/icons/sheetIcon';
 import { tableIcon } from '@voussoir/icon/icons/tableIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
+import { Flex } from '@voussoir/layout';
 import { Item, Menu, MenuTrigger } from '@voussoir/menu';
 import { css, tokenSchema } from '@voussoir/style';
 import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
 import { Text } from '@voussoir/typography';
 import { toDataAttributes } from '@voussoir/utils';
 
-import { useToolbarState } from './toolbar-state';
-import { moveChildren, nodeTypeMatcher, useStaticEditor } from './utils';
 import {
   BlockPopover,
   BlockPopoverTrigger,
   BlockWrapper,
   ToolbarSeparator,
 } from './primitives';
-import { Flex } from '@voussoir/layout';
+import { useToolbarState } from './toolbar-state';
+import { moveChildren, nodeTypeMatcher, useStaticEditor } from './utils';
 
 const cell = (header: boolean) => ({
   type: 'table-cell' as const,
