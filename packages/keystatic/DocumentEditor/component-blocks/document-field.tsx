@@ -132,7 +132,11 @@ export function deserializeFiles(
         ) as Record<string, any>,
       };
     }
-    if (node.type === 'image' && typeof node.src === 'string') {
+    if (
+      node.type === 'image' &&
+      typeof node.src === 'string' &&
+      mode === 'edit'
+    ) {
       const prefix = getSrcPrefix(documentFeatures, slug);
       const filename = (node.src as string).slice(prefix.length);
       const content = (
