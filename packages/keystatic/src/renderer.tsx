@@ -56,13 +56,11 @@ interface Renderers {
       type: 'ordered' | 'unordered';
       children: ReactElement[];
     }>;
-    image:
-      | Component<{
-          src: string;
-          alt: string;
-          title?: string;
-        }>
-      | 'img';
+    image: Component<{
+      src: string;
+      alt: string;
+      title?: string;
+    }>;
     table: Component<{
       head?: { children: ReactNode; colSpan?: number; rowSpan?: number }[];
       body: { children: ReactNode; colSpan?: number; rowSpan?: number }[][];
@@ -83,7 +81,9 @@ export const defaultRenderers: Renderers = {
     underline: 'u',
   },
   block: {
-    image: 'img',
+    image({ src, alt, title }) {
+      return <img src={src} alt={alt} title={title} />;
+    },
     block: 'div',
     blockquote: 'blockquote',
     paragraph: ({ children, textAlign }) => {
