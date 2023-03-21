@@ -707,10 +707,8 @@ export const TableElement = ({
                     isSelected={element.children[0]?.type === 'table-head'}
                     onPress={() => {
                       const tablePath = ReactEditor.findPath(editor, element);
-                      const table = Node.get(editor, tablePath);
-                      if (table.type !== 'table') return;
                       Editor.withoutNormalizing(editor, () => {
-                        if (table.children[0].type === 'table-head') {
+                        if (element.children[0].type === 'table-head') {
                           Transforms.moveNodes(editor, {
                             at: [...tablePath, 0, 0],
                             to: [...tablePath, 1, 0],
