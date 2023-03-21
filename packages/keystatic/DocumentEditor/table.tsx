@@ -10,18 +10,32 @@ import {
   Text as SlateText,
   Point,
 } from 'slate';
-import { ReactEditor, RenderElementProps, useSlate } from 'slate-react';
+import {
+  ReactEditor,
+  RenderElementProps,
+  useSlate,
+  useSlateStatic,
+} from 'slate-react';
 
 import { ActionButton } from '@voussoir/button';
 import { Icon } from '@voussoir/icon';
 import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
+import { sheetIcon } from '@voussoir/icon/icons/sheetIcon';
 import { tableIcon } from '@voussoir/icon/icons/tableIcon';
+import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
+import { Flex } from '@voussoir/layout';
 import { Item, Menu, MenuTrigger } from '@voussoir/menu';
 import { css, tokenSchema } from '@voussoir/style';
 import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
 import { Text } from '@voussoir/typography';
 import { toDataAttributes } from '@voussoir/utils';
 
+import {
+  BlockPopover,
+  BlockPopoverTrigger,
+  BlockWrapper,
+  ToolbarSeparator,
+} from './primitives';
 import { useToolbarState } from './toolbar-state';
 import { moveChildren, nodeTypeMatcher, useStaticEditor } from './utils';
 
@@ -615,6 +629,7 @@ export const TableElement = ({
   children,
   element,
 }: RenderElementProps) => {
+  const editor = useSlateStatic();
   const selectedCellsContext = useContext(SelectedCellsContext);
   const selectedCells =
     selectedCellsContext?.table === element ? selectedCellsContext : undefined;
@@ -664,25 +679,79 @@ export const TableElement = ({
     }
     return { top, left };
   }, [element, selectedCells]);
+
   return (
     <StartElementsContext.Provider value={startElements}>
       <SelectedCellsContext.Provider value={selectedCells}>
-        <div className={css({ position: 'relative' })}>
-          <table
-            className={css({
-              width: '100%',
-              tableLayout: 'fixed',
-              position: 'relative',
-              borderSpacing: 0,
-              '& *::selection': selectedCells?.cells.size
-                ? { backgroundColor: 'transparent' }
-                : undefined,
-            })}
-            {...attributes}
-          >
-            {children}
-          </table>
-        </div>
+        <BlockWrapper>
+          <BlockPopoverTrigger element={element}>
+            <table
+              className={css({
+                width: '100%',
+                tableLayout: 'fixed',
+                position: 'relative',
+                borderSpacing: 0,
+                '& *::selection': selectedCells?.cells.size
+                  ? { backgroundColor: 'transparent' }
+                  : undefined,
+              })}
+              {...attributes}
+            >
+              {children}
+            </table>
+            <BlockPopover>
+              <Flex gap="regular" padding="regular">
+                <TooltipTrigger>
+                  <ActionButton
+                    prominence="low"
+                    isSelected={element.children[0]?.type === 'table-head'}
+                    onPress={() => {
+                      const tablePath = ReactEditor.findPath(editor, element);
+                      Editor.withoutNormalizing(editor, () => {
+                        if (element.children[0].type === 'table-head') {
+                          Transforms.moveNodes(editor, {
+                            at: [...tablePath, 0, 0],
+                            to: [...tablePath, 1, 0],
+                          });
+                          Transforms.removeNodes(editor, {
+                            at: [...tablePath, 0],
+                          });
+                          return;
+                        }
+                        Transforms.insertNodes(
+                          editor,
+                          { type: 'table-head', children: [] },
+                          { at: [...tablePath, 0] }
+                        );
+                        Transforms.moveNodes(editor, {
+                          at: [...tablePath, 1, 0],
+                          to: [...tablePath, 0, 0],
+                        });
+                      });
+                    }}
+                  >
+                    <Icon src={sheetIcon} />
+                  </ActionButton>
+                  <Tooltip>Header row</Tooltip>
+                </TooltipTrigger>
+                <ToolbarSeparator />
+                <TooltipTrigger>
+                  <ActionButton
+                    prominence="low"
+                    onPress={() => {
+                      Transforms.removeNodes(editor, {
+                        at: ReactEditor.findPath(editor, element),
+                      });
+                    }}
+                  >
+                    <Icon src={trash2Icon} />
+                  </ActionButton>
+                  <Tooltip tone="critical">Remove</Tooltip>
+                </TooltipTrigger>
+              </Flex>
+            </BlockPopover>
+          </BlockPopoverTrigger>
+        </BlockWrapper>
       </SelectedCellsContext.Provider>
     </StartElementsContext.Provider>
   );
@@ -1055,33 +1124,6 @@ export const cellActions = {
       });
     },
   },
-  headerRow: {
-    label: 'Header row',
-    action: (editor, path) => {
-      const tablePath = path.slice(0, -3);
-      const table = Node.get(editor, tablePath);
-      if (table.type !== 'table') return;
-      Editor.withoutNormalizing(editor, () => {
-        if (table.children[0].type === 'table-head') {
-          Transforms.moveNodes(editor, {
-            at: [...tablePath, 0, 0],
-            to: [...tablePath, 1, 0],
-          });
-          Transforms.removeNodes(editor, { at: [...tablePath, 0] });
-          return;
-        }
-        Transforms.insertNodes(
-          editor,
-          { type: 'table-head', children: [] },
-          { at: [...tablePath, 0] }
-        );
-        Transforms.moveNodes(editor, {
-          at: [...tablePath, 1, 0],
-          to: [...tablePath, 0, 0],
-        });
-      });
-    },
-  },
 } satisfies Record<
   string,
   { label: string; action: (editor: Editor, cellPath: Path) => void }
@@ -1108,7 +1150,7 @@ function CellMenu(props: {
       })}
     >
       <TooltipTrigger>
-        <MenuTrigger>
+        <MenuTrigger align="end">
           <ActionButton
             prominence="low"
             UNSAFE_className={css({
@@ -1140,10 +1182,6 @@ function CellMenu(props: {
               ...item,
               key,
             }))}
-            selectionMode="single"
-            selectedKeys={
-              props.table.children[0].type === 'table-head' ? ['headerRow'] : []
-            }
           >
             {item => <Item key={item.key}>{item.label}</Item>}
           </Menu>
