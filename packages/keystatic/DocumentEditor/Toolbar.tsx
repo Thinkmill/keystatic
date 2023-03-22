@@ -10,7 +10,7 @@ import { codeIcon } from '@voussoir/icon/icons/codeIcon';
 import { maximizeIcon } from '@voussoir/icon/icons/maximizeIcon';
 import { minimizeIcon } from '@voussoir/icon/icons/minimizeIcon';
 import { boldIcon } from '@voussoir/icon/icons/boldIcon';
-import { eraserIcon } from '@voussoir/icon/icons/eraserIcon';
+import { removeFormattingIcon } from '@voussoir/icon/icons/removeFormattingIcon';
 import { typeIcon } from '@voussoir/icon/icons/typeIcon';
 import { italicIcon } from '@voussoir/icon/icons/italicIcon';
 import { strikethroughIcon } from '@voussoir/icon/icons/strikethroughIcon';
@@ -333,7 +333,7 @@ const inlineMarks = [
   {
     key: 'clearFormatting',
     label: 'Clear formatting',
-    icon: eraserIcon,
+    icon: removeFormattingIcon,
   },
 ] as const;
 
