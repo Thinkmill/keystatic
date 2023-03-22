@@ -110,6 +110,10 @@
       "module": "./icons/micIcon/dist/voussoir-icon-icons-micIcon.esm.js",
       "default": "./icons/micIcon/dist/voussoir-icon-icons-micIcon.cjs.js"
     },
+    "./icons/nfcIcon": {
+      "module": "./icons/nfcIcon/dist/voussoir-icon-icons-nfcIcon.esm.js",
+      "default": "./icons/nfcIcon/dist/voussoir-icon-icons-nfcIcon.cjs.js"
+    },
     "./icons/nutIcon": {
       "module": "./icons/nutIcon/dist/voussoir-icon-icons-nutIcon.esm.js",
       "default": "./icons/nutIcon/dist/voussoir-icon-icons-nutIcon.cjs.js"
@@ -154,6 +158,10 @@
       "module": "./icons/beanIcon/dist/voussoir-icon-icons-beanIcon.esm.js",
       "default": "./icons/beanIcon/dist/voussoir-icon-icons-beanIcon.cjs.js"
     },
+    "./icons/beefIcon": {
+      "module": "./icons/beefIcon/dist/voussoir-icon-icons-beefIcon.esm.js",
+      "default": "./icons/beefIcon/dist/voussoir-icon-icons-beefIcon.cjs.js"
+    },
     "./icons/beerIcon": {
       "module": "./icons/beerIcon/dist/voussoir-icon-icons-beerIcon.esm.js",
       "default": "./icons/beerIcon/dist/voussoir-icon-icons-beerIcon.cjs.js"
@@ -165,6 +173,10 @@
     "./icons/bikeIcon": {
       "module": "./icons/bikeIcon/dist/voussoir-icon-icons-bikeIcon.esm.js",
       "default": "./icons/bikeIcon/dist/voussoir-icon-icons-bikeIcon.cjs.js"
+    },
+    "./icons/birdIcon": {
+      "module": "./icons/birdIcon/dist/voussoir-icon-icons-birdIcon.esm.js",
+      "default": "./icons/birdIcon/dist/voussoir-icon-icons-birdIcon.cjs.js"
     },
     "./icons/boldIcon": {
       "module": "./icons/boldIcon/dist/voussoir-icon-icons-boldIcon.esm.js",
@@ -226,6 +238,10 @@
       "module": "./icons/filmIcon/dist/voussoir-icon-icons-filmIcon.esm.js",
       "default": "./icons/filmIcon/dist/voussoir-icon-icons-filmIcon.cjs.js"
     },
+    "./icons/fishIcon": {
+      "module": "./icons/fishIcon/dist/voussoir-icon-icons-fishIcon.esm.js",
+      "default": "./icons/fishIcon/dist/voussoir-icon-icons-fishIcon.cjs.js"
+    },
     "./icons/flagIcon": {
       "module": "./icons/flagIcon/dist/voussoir-icon-icons-flagIcon.esm.js",
       "default": "./icons/flagIcon/dist/voussoir-icon-icons-flagIcon.cjs.js"
@@ -245,6 +261,10 @@
     "./icons/gridIcon": {
       "module": "./icons/gridIcon/dist/voussoir-icon-icons-gridIcon.esm.js",
       "default": "./icons/gridIcon/dist/voussoir-icon-icons-gridIcon.cjs.js"
+    },
+    "./icons/gripIcon": {
+      "module": "./icons/gripIcon/dist/voussoir-icon-icons-gripIcon.esm.js",
+      "default": "./icons/gripIcon/dist/voussoir-icon-icons-gripIcon.cjs.js"
     },
     "./icons/handIcon": {
       "module": "./icons/handIcon/dist/voussoir-icon-icons-handIcon.esm.js",
@@ -310,6 +330,10 @@
       "module": "./icons/moveIcon/dist/voussoir-icon-icons-moveIcon.esm.js",
       "default": "./icons/moveIcon/dist/voussoir-icon-icons-moveIcon.cjs.js"
     },
+    "./icons/pillIcon": {
+      "module": "./icons/pillIcon/dist/voussoir-icon-icons-pillIcon.esm.js",
+      "default": "./icons/pillIcon/dist/voussoir-icon-icons-pillIcon.cjs.js"
+    },
     "./icons/playIcon": {
       "module": "./icons/playIcon/dist/voussoir-icon-icons-playIcon.esm.js",
       "default": "./icons/playIcon/dist/voussoir-icon-icons-playIcon.cjs.js"
@@ -338,9 +362,17 @@
       "module": "./icons/sendIcon/dist/voussoir-icon-icons-sendIcon.esm.js",
       "default": "./icons/sendIcon/dist/voussoir-icon-icons-sendIcon.cjs.js"
     },
+    "./icons/shipIcon": {
+      "module": "./icons/shipIcon/dist/voussoir-icon-icons-shipIcon.esm.js",
+      "default": "./icons/shipIcon/dist/voussoir-icon-icons-shipIcon.cjs.js"
+    },
     "./icons/sofaIcon": {
       "module": "./icons/sofaIcon/dist/voussoir-icon-icons-sofaIcon.esm.js",
       "default": "./icons/sofaIcon/dist/voussoir-icon-icons-sofaIcon.cjs.js"
+    },
+    "./icons/soupIcon": {
+      "module": "./icons/soupIcon/dist/voussoir-icon-icons-soupIcon.esm.js",
+      "default": "./icons/soupIcon/dist/voussoir-icon-icons-soupIcon.cjs.js"
     },
     "./icons/starIcon": {
       "module": "./icons/starIcon/dist/voussoir-icon-icons-starIcon.esm.js",
@@ -369,6 +401,10 @@
     "./icons/viewIcon": {
       "module": "./icons/viewIcon/dist/voussoir-icon-icons-viewIcon.esm.js",
       "default": "./icons/viewIcon/dist/voussoir-icon-icons-viewIcon.cjs.js"
+    },
+    "./icons/voteIcon": {
+      "module": "./icons/voteIcon/dist/voussoir-icon-icons-voteIcon.esm.js",
+      "default": "./icons/voteIcon/dist/voussoir-icon-icons-voteIcon.cjs.js"
     },
     "./icons/wandIcon": {
       "module": "./icons/wandIcon/dist/voussoir-icon-icons-wandIcon.esm.js",
@@ -405,6 +441,10 @@
     "./icons/boxesIcon": {
       "module": "./icons/boxesIcon/dist/voussoir-icon-icons-boxesIcon.esm.js",
       "default": "./icons/boxesIcon/dist/voussoir-icon-icons-boxesIcon.cjs.js"
+    },
+    "./icons/brainIcon": {
+      "module": "./icons/brainIcon/dist/voussoir-icon-icons-brainIcon.esm.js",
+      "default": "./icons/brainIcon/dist/voussoir-icon-icons-brainIcon.cjs.js"
     },
     "./icons/brushIcon": {
       "module": "./icons/brushIcon/dist/voussoir-icon-icons-brushIcon.esm.js",
@@ -634,6 +674,10 @@
       "module": "./icons/rulerIcon/dist/voussoir-icon-icons-rulerIcon.esm.js",
       "default": "./icons/rulerIcon/dist/voussoir-icon-icons-rulerIcon.cjs.js"
     },
+    "./icons/saladIcon": {
+      "module": "./icons/saladIcon/dist/voussoir-icon-icons-saladIcon.esm.js",
+      "default": "./icons/saladIcon/dist/voussoir-icon-icons-saladIcon.cjs.js"
+    },
     "./icons/scaleIcon": {
       "module": "./icons/scaleIcon/dist/voussoir-icon-icons-scaleIcon.esm.js",
       "default": "./icons/scaleIcon/dist/voussoir-icon-icons-scaleIcon.cjs.js"
@@ -681,6 +725,10 @@
     "./icons/smileIcon": {
       "module": "./icons/smileIcon/dist/voussoir-icon-icons-smileIcon.esm.js",
       "default": "./icons/smileIcon/dist/voussoir-icon-icons-smileIcon.cjs.js"
+    },
+    "./icons/stampIcon": {
+      "module": "./icons/stampIcon/dist/voussoir-icon-icons-stampIcon.esm.js",
+      "default": "./icons/stampIcon/dist/voussoir-icon-icons-stampIcon.cjs.js"
     },
     "./icons/swordIcon": {
       "module": "./icons/swordIcon/dist/voussoir-icon-icons-swordIcon.esm.js",
@@ -769,6 +817,10 @@
     "./icons/binaryIcon": {
       "module": "./icons/binaryIcon/dist/voussoir-icon-icons-binaryIcon.esm.js",
       "default": "./icons/binaryIcon/dist/voussoir-icon-icons-binaryIcon.cjs.js"
+    },
+    "./icons/blindsIcon": {
+      "module": "./icons/blindsIcon/dist/voussoir-icon-icons-blindsIcon.esm.js",
+      "default": "./icons/blindsIcon/dist/voussoir-icon-icons-blindsIcon.cjs.js"
     },
     "./icons/cameraIcon": {
       "module": "./icons/cameraIcon/dist/voussoir-icon-icons-cameraIcon.esm.js",
@@ -1026,6 +1078,10 @@
       "module": "./icons/rocketIcon/dist/voussoir-icon-icons-rocketIcon.esm.js",
       "default": "./icons/rocketIcon/dist/voussoir-icon-icons-rocketIcon.cjs.js"
     },
+    "./icons/routerIcon": {
+      "module": "./icons/routerIcon/dist/voussoir-icon-icons-routerIcon.esm.js",
+      "default": "./icons/routerIcon/dist/voussoir-icon-icons-routerIcon.cjs.js"
+    },
     "./icons/scrollIcon": {
       "module": "./icons/scrollIcon/dist/voussoir-icon-icons-scrollIcon.esm.js",
       "default": "./icons/scrollIcon/dist/voussoir-icon-icons-scrollIcon.cjs.js"
@@ -1254,6 +1310,14 @@
       "module": "./icons/fileKeyIcon/dist/voussoir-icon-icons-fileKeyIcon.esm.js",
       "default": "./icons/fileKeyIcon/dist/voussoir-icon-icons-fileKeyIcon.cjs.js"
     },
+    "./icons/filterXIcon": {
+      "module": "./icons/filterXIcon/dist/voussoir-icon-icons-filterXIcon.esm.js",
+      "default": "./icons/filterXIcon/dist/voussoir-icon-icons-filterXIcon.cjs.js"
+    },
+    "./icons/fishOffIcon": {
+      "module": "./icons/fishOffIcon/dist/voussoir-icon-icons-fishOffIcon.esm.js",
+      "default": "./icons/fishOffIcon/dist/voussoir-icon-icons-fishOffIcon.cjs.js"
+    },
     "./icons/flagOffIcon": {
       "module": "./icons/flagOffIcon/dist/voussoir-icon-icons-flagOffIcon.esm.js",
       "default": "./icons/flagOffIcon/dist/voussoir-icon-icons-flagOffIcon.cjs.js"
@@ -1450,6 +1514,10 @@
       "module": "./icons/syringeIcon/dist/voussoir-icon-icons-syringeIcon.esm.js",
       "default": "./icons/syringeIcon/dist/voussoir-icon-icons-syringeIcon.cjs.js"
     },
+    "./icons/tabletsIcon": {
+      "module": "./icons/tabletsIcon/dist/voussoir-icon-icons-tabletsIcon.esm.js",
+      "default": "./icons/tabletsIcon/dist/voussoir-icon-icons-tabletsIcon.cjs.js"
+    },
     "./icons/tornadoIcon": {
       "module": "./icons/tornadoIcon/dist/voussoir-icon-icons-tornadoIcon.esm.js",
       "default": "./icons/tornadoIcon/dist/voussoir-icon-icons-tornadoIcon.cjs.js"
@@ -1557,6 +1625,10 @@
     "./icons/bookmarkIcon": {
       "module": "./icons/bookmarkIcon/dist/voussoir-icon-icons-bookmarkIcon.esm.js",
       "default": "./icons/bookmarkIcon/dist/voussoir-icon-icons-bookmarkIcon.cjs.js"
+    },
+    "./icons/brainCogIcon": {
+      "module": "./icons/brainCogIcon/dist/voussoir-icon-icons-brainCogIcon.esm.js",
+      "default": "./icons/brainCogIcon/dist/voussoir-icon-icons-brainCogIcon.cjs.js"
     },
     "./icons/buildingIcon": {
       "module": "./icons/buildingIcon/dist/voussoir-icon-icons-buildingIcon.esm.js",
@@ -1681,6 +1753,10 @@
     "./icons/folderUpIcon": {
       "module": "./icons/folderUpIcon/dist/voussoir-icon-icons-folderUpIcon.esm.js",
       "default": "./icons/folderUpIcon/dist/voussoir-icon-icons-folderUpIcon.cjs.js"
+    },
+    "./icons/forkliftIcon": {
+      "module": "./icons/forkliftIcon/dist/voussoir-icon-icons-forkliftIcon.esm.js",
+      "default": "./icons/forkliftIcon/dist/voussoir-icon-icons-forkliftIcon.cjs.js"
     },
     "./icons/gamepad2Icon": {
       "module": "./icons/gamepad2Icon/dist/voussoir-icon-icons-gamepad2Icon.esm.js",
@@ -1821,6 +1897,10 @@
     "./icons/sailboatIcon": {
       "module": "./icons/sailboatIcon/dist/voussoir-icon-icons-sailboatIcon.esm.js",
       "default": "./icons/sailboatIcon/dist/voussoir-icon-icons-sailboatIcon.cjs.js"
+    },
+    "./icons/sandwichIcon": {
+      "module": "./icons/sandwichIcon/dist/voussoir-icon-icons-sandwichIcon.esm.js",
+      "default": "./icons/sandwichIcon/dist/voussoir-icon-icons-sandwichIcon.cjs.js"
     },
     "./icons/scanFaceIcon": {
       "module": "./icons/scanFaceIcon/dist/voussoir-icon-icons-scanFaceIcon.esm.js",
@@ -2110,6 +2190,10 @@
       "module": "./icons/hourglassIcon/dist/voussoir-icon-icons-hourglassIcon.esm.js",
       "default": "./icons/hourglassIcon/dist/voussoir-icon-icons-hourglassIcon.cjs.js"
     },
+    "./icons/iceCream2Icon": {
+      "module": "./icons/iceCream2Icon/dist/voussoir-icon-icons-iceCream2Icon.esm.js",
+      "default": "./icons/iceCream2Icon/dist/voussoir-icon-icons-iceCream2Icon.cjs.js"
+    },
     "./icons/imagePlusIcon": {
       "module": "./icons/imagePlusIcon/dist/voussoir-icon-icons-imagePlusIcon.esm.js",
       "default": "./icons/imagePlusIcon/dist/voussoir-icon-icons-imagePlusIcon.cjs.js"
@@ -2394,6 +2478,10 @@
       "module": "./icons/folderTreeIcon/dist/voussoir-icon-icons-folderTreeIcon.esm.js",
       "default": "./icons/folderTreeIcon/dist/voussoir-icon-icons-folderTreeIcon.cjs.js"
     },
+    "./icons/footprintsIcon": {
+      "module": "./icons/footprintsIcon/dist/voussoir-icon-icons-footprintsIcon.esm.js",
+      "default": "./icons/footprintsIcon/dist/voussoir-icon-icons-footprintsIcon.cjs.js"
+    },
     "./icons/gitCompareIcon": {
       "module": "./icons/gitCompareIcon/dist/voussoir-icon-icons-gitCompareIcon.esm.js",
       "default": "./icons/gitCompareIcon/dist/voussoir-icon-icons-gitCompareIcon.cjs.js"
@@ -2626,6 +2714,10 @@
       "module": "./icons/folderMinusIcon/dist/voussoir-icon-icons-folderMinusIcon.esm.js",
       "default": "./icons/folderMinusIcon/dist/voussoir-icon-icons-folderMinusIcon.cjs.js"
     },
+    "./icons/helpingHandIcon": {
+      "module": "./icons/helpingHandIcon/dist/voussoir-icon-icons-helpingHandIcon.esm.js",
+      "default": "./icons/helpingHandIcon/dist/voussoir-icon-icons-helpingHandIcon.cjs.js"
+    },
     "./icons/highlighterIcon": {
       "module": "./icons/highlighterIcon/dist/voussoir-icon-icons-highlighterIcon.esm.js",
       "default": "./icons/highlighterIcon/dist/voussoir-icon-icons-highlighterIcon.cjs.js"
@@ -2750,6 +2842,10 @@
       "module": "./icons/uploadCloudIcon/dist/voussoir-icon-icons-uploadCloudIcon.esm.js",
       "default": "./icons/uploadCloudIcon/dist/voussoir-icon-icons-uploadCloudIcon.cjs.js"
     },
+    "./icons/utilityPoleIcon": {
+      "module": "./icons/utilityPoleIcon/dist/voussoir-icon-icons-utilityPoleIcon.esm.js",
+      "default": "./icons/utilityPoleIcon/dist/voussoir-icon-icons-utilityPoleIcon.cjs.js"
+    },
     "./icons/alertOctagonIcon": {
       "module": "./icons/alertOctagonIcon/dist/voussoir-icon-icons-alertOctagonIcon.esm.js",
       "default": "./icons/alertOctagonIcon/dist/voussoir-icon-icons-alertOctagonIcon.cjs.js"
@@ -2781,6 +2877,10 @@
     "./icons/bookmarkPlusIcon": {
       "module": "./icons/bookmarkPlusIcon/dist/voussoir-icon-icons-bookmarkPlusIcon.esm.js",
       "default": "./icons/bookmarkPlusIcon/dist/voussoir-icon-icons-bookmarkPlusIcon.cjs.js"
+    },
+    "./icons/brainCircuitIcon": {
+      "module": "./icons/brainCircuitIcon/dist/voussoir-icon-icons-brainCircuitIcon.esm.js",
+      "default": "./icons/brainCircuitIcon/dist/voussoir-icon-icons-brainCircuitIcon.cjs.js"
     },
     "./icons/calendarDaysIcon": {
       "module": "./icons/calendarDaysIcon/dist/voussoir-icon-icons-calendarDaysIcon.esm.js",
@@ -2825,6 +2925,10 @@
     "./icons/cloudSunRainIcon": {
       "module": "./icons/cloudSunRainIcon/dist/voussoir-icon-icons-cloudSunRainIcon.esm.js",
       "default": "./icons/cloudSunRainIcon/dist/voussoir-icon-icons-cloudSunRainIcon.cjs.js"
+    },
+    "./icons/constructionIcon": {
+      "module": "./icons/constructionIcon/dist/voussoir-icon-icons-constructionIcon.esm.js",
+      "default": "./icons/constructionIcon/dist/voussoir-icon-icons-constructionIcon.cjs.js"
     },
     "./icons/cornerLeftUpIcon": {
       "module": "./icons/cornerLeftUpIcon/dist/voussoir-icon-icons-cornerLeftUpIcon.esm.js",
@@ -2961,6 +3065,10 @@
     "./icons/switchCameraIcon": {
       "module": "./icons/switchCameraIcon/dist/voussoir-icon-icons-switchCameraIcon.esm.js",
       "default": "./icons/switchCameraIcon/dist/voussoir-icon-icons-switchCameraIcon.cjs.js"
+    },
+    "./icons/towerControlIcon": {
+      "module": "./icons/towerControlIcon/dist/voussoir-icon-icons-towerControlIcon.esm.js",
+      "default": "./icons/towerControlIcon/dist/voussoir-icon-icons-towerControlIcon.cjs.js"
     },
     "./icons/trendingDownIcon": {
       "module": "./icons/trendingDownIcon/dist/voussoir-icon-icons-trendingDownIcon.esm.js",
@@ -3138,6 +3246,14 @@
       "module": "./icons/packageSearchIcon/dist/voussoir-icon-icons-packageSearchIcon.esm.js",
       "default": "./icons/packageSearchIcon/dist/voussoir-icon-icons-packageSearchIcon.cjs.js"
     },
+    "./icons/parkingCircleIcon": {
+      "module": "./icons/parkingCircleIcon/dist/voussoir-icon-icons-parkingCircleIcon.esm.js",
+      "default": "./icons/parkingCircleIcon/dist/voussoir-icon-icons-parkingCircleIcon.cjs.js"
+    },
+    "./icons/parkingSquareIcon": {
+      "module": "./icons/parkingSquareIcon/dist/voussoir-icon-icons-parkingSquareIcon.esm.js",
+      "default": "./icons/parkingSquareIcon/dist/voussoir-icon-icons-parkingSquareIcon.cjs.js"
+    },
     "./icons/phoneIncomingIcon": {
       "module": "./icons/phoneIncomingIcon/dist/voussoir-icon-icons-phoneIncomingIcon.esm.js",
       "default": "./icons/phoneIncomingIcon/dist/voussoir-icon-icons-phoneIncomingIcon.cjs.js"
@@ -3153,6 +3269,10 @@
     "./icons/radioReceiverIcon": {
       "module": "./icons/radioReceiverIcon/dist/voussoir-icon-icons-radioReceiverIcon.esm.js",
       "default": "./icons/radioReceiverIcon/dist/voussoir-icon-icons-radioReceiverIcon.cjs.js"
+    },
+    "./icons/smartphoneNfcIcon": {
+      "module": "./icons/smartphoneNfcIcon/dist/voussoir-icon-icons-smartphoneNfcIcon.esm.js",
+      "default": "./icons/smartphoneNfcIcon/dist/voussoir-icon-icons-smartphoneNfcIcon.cjs.js"
     },
     "./icons/strikethroughIcon": {
       "module": "./icons/strikethroughIcon/dist/voussoir-icon-icons-strikethroughIcon.esm.js",
@@ -3173,6 +3293,10 @@
     "./icons/arrowLeftRightIcon": {
       "module": "./icons/arrowLeftRightIcon/dist/voussoir-icon-icons-arrowLeftRightIcon.esm.js",
       "default": "./icons/arrowLeftRightIcon/dist/voussoir-icon-icons-arrowLeftRightIcon.cjs.js"
+    },
+    "./icons/batteryWarningIcon": {
+      "module": "./icons/batteryWarningIcon/dist/voussoir-icon-icons-batteryWarningIcon.esm.js",
+      "default": "./icons/batteryWarningIcon/dist/voussoir-icon-icons-batteryWarningIcon.cjs.js"
     },
     "./icons/calendarCheck2Icon": {
       "module": "./icons/calendarCheck2Icon/dist/voussoir-icon-icons-calendarCheck2Icon.esm.js",
@@ -3209,6 +3333,10 @@
     "./icons/cornerLeftDownIcon": {
       "module": "./icons/cornerLeftDownIcon/dist/voussoir-icon-icons-cornerLeftDownIcon.esm.js",
       "default": "./icons/cornerLeftDownIcon/dist/voussoir-icon-icons-cornerLeftDownIcon.cjs.js"
+    },
+    "./icons/databaseBackupIcon": {
+      "module": "./icons/databaseBackupIcon/dist/voussoir-icon-icons-databaseBackupIcon.esm.js",
+      "default": "./icons/databaseBackupIcon/dist/voussoir-icon-icons-databaseBackupIcon.cjs.js"
     },
     "./icons/flipHorizontalIcon": {
       "module": "./icons/flipHorizontalIcon/dist/voussoir-icon-icons-flipHorizontalIcon.esm.js",
@@ -3290,6 +3418,10 @@
       "module": "./icons/cornerRightDownIcon/dist/voussoir-icon-icons-cornerRightDownIcon.esm.js",
       "default": "./icons/cornerRightDownIcon/dist/voussoir-icon-icons-cornerRightDownIcon.cjs.js"
     },
+    "./icons/creativeCommonsIcon": {
+      "module": "./icons/creativeCommonsIcon/dist/voussoir-icon-icons-creativeCommonsIcon.esm.js",
+      "default": "./icons/creativeCommonsIcon/dist/voussoir-icon-icons-creativeCommonsIcon.cjs.js"
+    },
     "./icons/fileSpreadsheetIcon": {
       "module": "./icons/fileSpreadsheetIcon/dist/voussoir-icon-icons-fileSpreadsheetIcon.esm.js",
       "default": "./icons/fileSpreadsheetIcon/dist/voussoir-icon-icons-fileSpreadsheetIcon.cjs.js"
@@ -3330,6 +3462,22 @@
       "module": "./icons/flagTriangleLeftIcon/dist/voussoir-icon-icons-flagTriangleLeftIcon.esm.js",
       "default": "./icons/flagTriangleLeftIcon/dist/voussoir-icon-icons-flagTriangleLeftIcon.cjs.js"
     },
+    "./icons/parkingCircleOffIcon": {
+      "module": "./icons/parkingCircleOffIcon/dist/voussoir-icon-icons-parkingCircleOffIcon.esm.js",
+      "default": "./icons/parkingCircleOffIcon/dist/voussoir-icon-icons-parkingCircleOffIcon.cjs.js"
+    },
+    "./icons/parkingSquareOffIcon": {
+      "module": "./icons/parkingSquareOffIcon/dist/voussoir-icon-icons-parkingSquareOffIcon.esm.js",
+      "default": "./icons/parkingSquareOffIcon/dist/voussoir-icon-icons-parkingSquareOffIcon.cjs.js"
+    },
+    "./icons/pictureInPictureIcon": {
+      "module": "./icons/pictureInPictureIcon/dist/voussoir-icon-icons-pictureInPictureIcon.esm.js",
+      "default": "./icons/pictureInPictureIcon/dist/voussoir-icon-icons-pictureInPictureIcon.cjs.js"
+    },
+    "./icons/removeFormattingIcon": {
+      "module": "./icons/removeFormattingIcon/dist/voussoir-icon-icons-removeFormattingIcon.esm.js",
+      "default": "./icons/removeFormattingIcon/dist/voussoir-icon-icons-removeFormattingIcon.cjs.js"
+    },
     "./icons/chevronsLeftRightIcon": {
       "module": "./icons/chevronsLeftRightIcon/dist/voussoir-icon-icons-chevronsLeftRightIcon.esm.js",
       "default": "./icons/chevronsLeftRightIcon/dist/voussoir-icon-icons-chevronsLeftRightIcon.cjs.js"
@@ -3349,6 +3497,10 @@
     "./icons/mousePointerClickIcon": {
       "module": "./icons/mousePointerClickIcon/dist/voussoir-icon-icons-mousePointerClickIcon.esm.js",
       "default": "./icons/mousePointerClickIcon/dist/voussoir-icon-icons-mousePointerClickIcon.cjs.js"
+    },
+    "./icons/pictureInPicture2Icon": {
+      "module": "./icons/pictureInPicture2Icon/dist/voussoir-icon-icons-pictureInPicture2Icon.esm.js",
+      "default": "./icons/pictureInPicture2Icon/dist/voussoir-icon-icons-pictureInPicture2Icon.cjs.js"
     },
     "./icons/rectangleVerticalIcon": {
       "module": "./icons/rectangleVerticalIcon/dist/voussoir-icon-icons-rectangleVerticalIcon.esm.js",
@@ -3410,6 +3562,10 @@
       "module": "./icons/separatorHorizontalIcon/dist/voussoir-icon-icons-separatorHorizontalIcon.esm.js",
       "default": "./icons/separatorHorizontalIcon/dist/voussoir-icon-icons-separatorHorizontalIcon.cjs.js"
     },
+    "./icons/splitSquareVerticalIcon": {
+      "module": "./icons/splitSquareVerticalIcon/dist/voussoir-icon-icons-splitSquareVerticalIcon.esm.js",
+      "default": "./icons/splitSquareVerticalIcon/dist/voussoir-icon-icons-splitSquareVerticalIcon.cjs.js"
+    },
     "./icons/alignStartHorizontalIcon": {
       "module": "./icons/alignStartHorizontalIcon/dist/voussoir-icon-icons-alignStartHorizontalIcon.esm.js",
       "default": "./icons/alignStartHorizontalIcon/dist/voussoir-icon-icons-alignStartHorizontalIcon.cjs.js"
@@ -3425,6 +3581,10 @@
     "./icons/alignCenterHorizontalIcon": {
       "module": "./icons/alignCenterHorizontalIcon/dist/voussoir-icon-icons-alignCenterHorizontalIcon.esm.js",
       "default": "./icons/alignCenterHorizontalIcon/dist/voussoir-icon-icons-alignCenterHorizontalIcon.cjs.js"
+    },
+    "./icons/splitSquareHorizontalIcon": {
+      "module": "./icons/splitSquareHorizontalIcon/dist/voussoir-icon-icons-splitSquareHorizontalIcon.esm.js",
+      "default": "./icons/splitSquareHorizontalIcon/dist/voussoir-icon-icons-splitSquareHorizontalIcon.cjs.js"
     },
     "./icons/alignVerticalJustifyEndIcon": {
       "module": "./icons/alignVerticalJustifyEndIcon/dist/voussoir-icon-icons-alignVerticalJustifyEndIcon.esm.js",
@@ -3515,7 +3675,7 @@
     "@svgr/plugin-prettier": "^6.5.1",
     "@svgr/plugin-svgo": "^6.5.1",
     "@types/react": "^18.0.25",
-    "lucide-static": "^0.104.0",
+    "lucide-static": "^0.127.0",
     "react": "^18.2.0",
     "tsx": "^3.8.0"
   },
