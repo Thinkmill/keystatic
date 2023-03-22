@@ -1,7 +1,9 @@
+import { assert, assertNever } from 'emery';
+
 import { getSlugFromState } from '../../app/utils';
 import { DocumentFeatures } from '../document-features';
 import { DocumentFeaturesForNormalization } from '../document-features-normalization';
-import { assert, Mark } from '../utils';
+import { Mark } from '../utils';
 import { ComponentSchema, ChildField, ValueForComponentSchema } from './api';
 import { getKeysForArrayValue, setKeysForArrayValue } from './preview-props';
 
@@ -69,12 +71,6 @@ export function findChildPropPaths(
     ];
   }
   return propPaths;
-}
-
-export function assertNever(arg: never): never {
-  throw new Error(
-    'expected to never be called but received: ' + JSON.stringify(arg)
-  );
 }
 
 export type DocumentFeaturesForChildField =

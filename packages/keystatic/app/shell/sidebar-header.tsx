@@ -13,14 +13,14 @@ import { Flex } from '@voussoir/layout';
 import { ActionMenu } from '@voussoir/menu';
 import { Text } from '@voussoir/typography';
 
+import { GitHubConfig } from '../../config';
 import { useRouter } from '../router';
 import { BranchPicker, CreateBranchDialog } from '../branch-selection';
 import l10nMessages from '../l10n/index.json';
 import { BranchInfoContext } from './data';
+import { getRepoUrl } from '../utils';
 
-export function SidebarHeader(props: {
-  repo: { owner: string; name: string };
-}) {
+export function SidebarHeader({ config }: { config: GitHubConfig }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const data = useContext(BranchInfoContext);
   const [newBranchDialogVisible, toggleNewBranchDialog] = useReducer(
@@ -125,7 +125,7 @@ export function SidebarHeader(props: {
         prominence="low"
         items={gitMenuItems}
         onAction={key => {
-          let repoURL = `https://github.com/${props.repo.owner}/${props.repo.name}`;
+          let repoURL = getRepoUrl(config);
           switch (key) {
             case 'new-branch':
               toggleNewBranchDialog();
@@ -154,7 +154,7 @@ export function SidebarHeader(props: {
         {item => (
           <Section key={item.key} items={item.children} aria-label={item.label}>
             {item => (
-              <Item key={item.key}>
+              <Item key={item.key} textValue={item.label}>
                 <Icon src={item.icon} />
                 <Text>{item.label}</Text>
               </Item>

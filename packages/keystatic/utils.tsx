@@ -1,12 +1,12 @@
 import { gql } from '@ts-gql/tag/no-transform';
-import { dump } from 'js-yaml';
-import { useMutation } from 'urql';
-import { ComponentSchema, fields } from './DocumentEditor/component-blocks/api';
 import { fromByteArray } from 'base64-js';
-import {
-  assertNever,
-  asyncTransformProps,
-} from './DocumentEditor/component-blocks/utils';
+import { assert, assertNever } from 'emery';
+import { dump } from 'js-yaml';
+import { useContext, useState } from 'react';
+import { useMutation } from 'urql';
+
+import { ComponentSchema, fields } from './DocumentEditor/component-blocks/api';
+import { asyncTransformProps } from './DocumentEditor/component-blocks/utils';
 import {
   BranchInfoContext,
   fetchGitHubTreeData,
@@ -16,8 +16,6 @@ import {
   useSetTreeSha,
 } from './app/shell/data';
 import { hydrateBlobCache } from './app/useItemData';
-import { useContext, useState } from 'react';
-import { assert } from 'emery';
 import { FormatInfo, getEntryDataFilepath } from './app/path-utils';
 import {
   getTreeNodeAtPath,

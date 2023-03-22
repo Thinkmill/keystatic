@@ -1,7 +1,10 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { assert } from 'emery';
 import {
   FormEvent,
+  Key,
   PropsWithChildren,
+  ReactElement,
   ReactNode,
   useMemo,
   useState,
@@ -10,15 +13,13 @@ import {
 import { Badge } from '@voussoir/badge';
 import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
 import { Button, ButtonGroup } from '@voussoir/button';
-import {
-  AlertDialog,
-  Dialog,
-  DialogContainer,
-  DialogTrigger,
-} from '@voussoir/dialog';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
+import { AlertDialog, Dialog, DialogContainer } from '@voussoir/dialog';
 import { Icon } from '@voussoir/icon';
+import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
+import { historyIcon } from '@voussoir/icon/icons/historyIcon';
+import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Box, Flex } from '@voussoir/layout';
+import { ActionMenu, Section } from '@voussoir/menu';
 import { Notice } from '@voussoir/notice';
 import { ProgressCircle } from '@voussoir/progress';
 import { Content } from '@voussoir/slots';
@@ -35,14 +36,22 @@ import { useDeleteItem, useUpsertItem } from '../utils';
 
 import { useCreateBranchMutation } from './branch-selection';
 import l10nMessages from './l10n/index.json';
+import { ForkRepoDialog } from './fork-repo';
+import { getDataFileExtension } from './path-utils';
 import { useRouter } from './router';
 import { AppShellBody, AppShellRoot } from './shell';
-import { useBaseCommit, useTree, useRepositoryId } from './shell/data';
+import {
+  useBaseCommit,
+  useTree,
+  useRepositoryId,
+  useBranchInfo,
+} from './shell/data';
 import { AppShellHeader } from './shell/header';
 import { TreeNode } from './trees';
 import {
   getCollectionFormat,
   getCollectionItemPath,
+  getRepoUrl,
   getSlugFromState,
   isGitHubConfig,
 } from './utils';
@@ -50,7 +59,6 @@ import { useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
 import { mergeDataStates } from './useData';
 import { useSlugsInCollection } from './useSlugsInCollection';
-import { ForkRepoDialog } from './fork-repo';
 
 type ItemPageProps = {
   collection: string;
@@ -76,6 +84,7 @@ function ItemPage(props: ItemPageProps) {
   } = props;
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
+  const [deleteAlertIsOpen, setDeleteAlertOpen] = useState(false);
   const [forceValidation, setForceValidation] = useState(false);
   const collectionConfig = config.collections![collection]!;
   const schema = useMemo(
@@ -115,13 +124,16 @@ function ItemPage(props: ItemPageProps) {
 
   const baseCommit = useBaseCommit();
   const slug = getSlugFromState(collectionConfig, state);
+  const formatInfo = getCollectionFormat(config, collection);
+  const basePath = getCollectionItemPath(config, collection, itemSlug);
+  const branchInfo = useBranchInfo();
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
     state,
     initialFiles,
     storage: config.storage,
     schema: collectionConfig.schema,
-    basePath: getCollectionItemPath(config, collection, slug),
-    format: getCollectionFormat(config, collection),
+    basePath,
+    format: formatInfo,
     currentLocalTreeKey: localTreeKey,
     currentTree,
     slug: { field: collectionConfig.slugField, value: slug },
@@ -151,6 +163,45 @@ function ItemPage(props: ItemPageProps) {
   };
   const formID = 'item-edit-form';
 
+  const menuActions = useMemo(() => {
+    type SectionType = { label: string; children: ActionType[] };
+    type ActionType = {
+      icon: ReactElement;
+      isDisabled?: boolean;
+      key: Key;
+      label: string;
+    };
+    let items: SectionType[] = [];
+    let keystaticSection: ActionType[] = [
+      {
+        key: 'reset',
+        label: 'Reset changes', // TODO: l10n
+        isDisabled: hasChanged,
+        icon: historyIcon,
+      },
+      {
+        key: 'delete',
+        label: 'Delete entry', // TODO: l10n
+        icon: trash2Icon,
+      },
+    ];
+    let githubSection: ActionType[] = [];
+    items.push({ label: 'Entry actions', children: keystaticSection });
+
+    if (isGitHubConfig(props.config)) {
+      githubSection.push({
+        key: 'view',
+        label: 'View on GitHub',
+        icon: externalLinkIcon,
+      });
+    }
+    if (githubSection.length > 0) {
+      items.push({ label: 'GitHub actions', children: githubSection });
+    }
+
+    return items;
+  }, [hasChanged, props.config]);
+
   return (
     <>
       <ItemPageShell
@@ -166,29 +217,64 @@ function ItemPage(props: ItemPageProps) {
             ) : (
               hasChanged && <Badge tone="pending">Unsaved</Badge>
             )}
-            <ButtonGroup>
-              {/* <Button
-                aria-label="Reset"
-                isDisabled={updateResult.kind === 'loading' || !hasChanged}
-                onPress={() => window.location.reload()}
-              >
-                <Icon isHidden={{ above: 'mobile' }} src={refreshCwIcon} />
-                <Text isHidden={{ below: 'tablet' }}>Reset</Text>
-              </Button> */}
-              <DialogTrigger>
-                <Button
-                  // tone="critical"
-                  aria-label={stringFormatter.format('delete')}
-                  isDisabled={
-                    deleteResult.kind === 'loading' ||
-                    updateResult.kind === 'loading'
-                  }
+            <ActionMenu
+              items={menuActions}
+              prominence="low"
+              disabledKeys={!hasChanged ? ['reset'] : []}
+              isDisabled={
+                deleteResult.kind === 'loading' ||
+                updateResult.kind === 'loading'
+              }
+              onAction={key => {
+                switch (key) {
+                  case 'reset':
+                    window.location.reload(); // TODO: can we do this w/o a full reload?
+                    break;
+                  case 'delete':
+                    setDeleteAlertOpen(true);
+                    break;
+                  case 'view':
+                    assert(isGitHubConfig(config));
+                    let filePath =
+                      formatInfo.dataLocation === 'index'
+                        ? `/tree/${branchInfo.currentBranch}/${basePath}`
+                        : `/blob/${
+                            branchInfo.currentBranch
+                          }/${basePath}${getDataFileExtension(formatInfo)}`;
+                    window.open(
+                      `${getRepoUrl(config)}${filePath}`,
+                      '_blank',
+                      'noopener,noreferrer'
+                    );
+                    break;
+                }
+              }}
+            >
+              {section => (
+                <Section
+                  key={section.label}
+                  items={section.children}
+                  aria-label={section.label}
                 >
-                  <Icon isHidden={{ above: 'mobile' }} src={trash2Icon} />
-                  <Text isHidden={{ below: 'tablet' }}>
-                    {stringFormatter.format('delete')}
-                  </Text>
-                </Button>
+                  {item => (
+                    <Item key={item.key} textValue={item.label}>
+                      <Icon src={item.icon} />
+                      <Text>{item.label}</Text>
+                    </Item>
+                  )}
+                </Section>
+              )}
+            </ActionMenu>
+            <Button
+              form={formID}
+              isDisabled={updateResult.kind === 'loading'}
+              prominence="high"
+              type="submit"
+            >
+              {stringFormatter.format('save')}
+            </Button>
+            <DialogContainer onDismiss={() => setDeleteAlertOpen(false)}>
+              {deleteAlertIsOpen && (
                 <AlertDialog
                   title="Delete entry"
                   tone="critical"
@@ -207,16 +293,8 @@ function ItemPage(props: ItemPageProps) {
                 >
                   Are you sure? This action cannot be undone.
                 </AlertDialog>
-              </DialogTrigger>
-              <Button
-                form={formID}
-                isDisabled={updateResult.kind === 'loading'}
-                prominence="high"
-                type="submit"
-              >
-                {stringFormatter.format('save')}
-              </Button>
-            </ButtonGroup>
+              )}
+            </DialogContainer>
           </>
         }
         {...props}

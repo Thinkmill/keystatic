@@ -1,3 +1,5 @@
+import { assertNever } from 'emery';
+
 import {
   ComponentSchema,
   GenericPreviewProps,
@@ -5,7 +7,6 @@ import {
   ValueForComponentSchema,
 } from './api';
 import { getKeysForArrayValue, setKeysForArrayValue } from './preview-props';
-import { assertNever } from './utils';
 
 const previewPropsToValueConverter: {
   [Kind in ComponentSchema['kind']]: (

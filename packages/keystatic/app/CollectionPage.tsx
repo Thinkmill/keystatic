@@ -4,11 +4,14 @@ import { useMemo, useState } from 'react';
 import { Badge } from '@voussoir/badge';
 import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
 import { Button } from '@voussoir/button';
+import { Icon } from '@voussoir/icon';
+import { alertCircleIcon } from '@voussoir/icon/icons/alertCircleIcon';
+import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
 import { folderTreeIcon } from '@voussoir/icon/icons/folderTreeIcon';
 import { listStartIcon } from '@voussoir/icon/icons/listStartIcon';
-import { alertCircleIcon } from '@voussoir/icon/icons/alertCircleIcon';
 import { Flex } from '@voussoir/layout';
 import { TextLink } from '@voussoir/link';
+import { ActionMenu } from '@voussoir/menu';
 import { ProgressCircle } from '@voussoir/progress';
 import { SearchField } from '@voussoir/search-field';
 import {
@@ -20,15 +23,21 @@ import {
   Row,
   SortDescriptor,
 } from '@voussoir/table';
+import { Text } from '@voussoir/typography';
 
 import { Config } from '../config';
 import { sortByDescriptor } from './collection-sort';
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
 import { AppShellBody, AppShellRoot, EmptyState } from './shell';
-import { useTree, TreeData } from './shell/data';
+import { useTree, TreeData, useBranchInfo } from './shell/data';
 import { AppShellHeader } from './shell/header';
-import { getCollectionPath, getEntriesInCollectionWithTreeKey } from './utils';
+import {
+  getCollectionPath,
+  getEntriesInCollectionWithTreeKey,
+  getRepoUrl,
+  isGitHubConfig,
+} from './utils';
 
 type CollectionPageProps = {
   collection: string;
@@ -37,9 +46,11 @@ type CollectionPageProps = {
 };
 
 export function CollectionPage(props: CollectionPageProps) {
+  const { collection, config } = props;
   const containerWidth = 'medium'; // TODO: use a "large" when we have more columns
-  const collectionConfig = props.config.collections?.[props.collection];
+  const collectionConfig = config.collections?.[collection];
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  const branchInfo = useBranchInfo();
 
   if (!collectionConfig) {
     return (
@@ -48,7 +59,7 @@ export function CollectionPage(props: CollectionPageProps) {
         <EmptyState
           icon={alertCircleIcon}
           title="Not found"
-          message={`Collection "${props.collection}" not found in config.`}
+          message={`Collection "${collection}" not found in config.`}
         />
       </AppShellRoot>
     );
@@ -61,6 +72,28 @@ export function CollectionPage(props: CollectionPageProps) {
           <Item key="collection">{collectionConfig.label}</Item>
         </Breadcrumbs>
 
+        {isGitHubConfig(config) && (
+          <ActionMenu
+            prominence="low"
+            onAction={key => {
+              switch (key) {
+                case 'view':
+                  let collectionPath = `/tree/${branchInfo.currentBranch}/${collection}`;
+                  window.open(
+                    `${getRepoUrl(config)}${collectionPath}`,
+                    '_blank',
+                    'noopener,noreferrer'
+                  );
+                  break;
+              }
+            }}
+          >
+            <Item key="view" textValue="View on GitHub">
+              <Icon src={externalLinkIcon} />
+              <Text>View on GitHub</Text>
+            </Item>
+          </ActionMenu>
+        )}
         <Button
           marginStart="auto"
           prominence="high"

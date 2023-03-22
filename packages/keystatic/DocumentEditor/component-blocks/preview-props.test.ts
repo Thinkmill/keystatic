@@ -1,4 +1,5 @@
-import { assert } from '../utils';
+import { assert } from 'emery';
+
 import { fields } from './api';
 import { getInitialPropsValue } from './initial-values';
 import { createGetPreviewProps } from './preview-props';

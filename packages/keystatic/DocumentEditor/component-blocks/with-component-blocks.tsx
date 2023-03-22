@@ -1,3 +1,4 @@
+import { assert, assertNever } from 'emery';
 import {
   Editor,
   Element,
@@ -10,7 +11,7 @@ import {
 } from 'slate';
 
 import weakMemoize from '@emotion/weak-memoize';
-import { assert, moveChildren } from '../utils';
+import { moveChildren } from '../utils';
 import { DocumentFeatures } from '../document-features';
 import {
   areArraysEqual,
@@ -20,7 +21,6 @@ import {
 } from '../document-features-normalization';
 import { ChildField, ComponentBlock, ComponentSchema, ArrayField } from './api';
 import {
-  assertNever,
   DocumentFeaturesForChildField,
   findChildPropPaths,
   getAncestorSchemas,

@@ -1,4 +1,5 @@
-import { assertNever } from '../DocumentEditor/component-blocks/utils';
+import { assertNever } from 'emery';
+
 import { ComponentSchema } from '../src';
 import { fixPath, FormatInfo, getDataFileExtension } from './path-utils';
 import { getTreeNodeAtPath, TreeNode } from './trees';
