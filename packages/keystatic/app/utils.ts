@@ -61,6 +61,13 @@ export function isLocalConfig(config: Config): config is LocalConfig {
   return config.storage.kind === 'local';
 }
 
+export function getRepoPath(config: GitHubConfig) {
+  return `${config.storage.repo.owner}/${config.storage.repo.name}`;
+}
+export function getRepoUrl(config: GitHubConfig) {
+  return `https://github.com/${getRepoPath(config)}`;
+}
+
 export function isSlugFormField(
   schema: ComponentSchema
 ): schema is SlugFormField<unknown, unknown, unknown> {

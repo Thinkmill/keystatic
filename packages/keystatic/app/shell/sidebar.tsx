@@ -118,9 +118,7 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
         'keystatic-sidebar',
       ]}
     >
-      {isGitHubConfig(props.config) && (
-        <SidebarHeader repo={props.config.storage.repo} />
-      )}
+      {isGitHubConfig(props.config) && <SidebarHeader config={props.config} />}
 
       {/*
   ======================================================================

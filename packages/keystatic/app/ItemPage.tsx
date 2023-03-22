@@ -14,7 +14,7 @@ import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
 import { Button, ButtonGroup } from '@voussoir/button';
 import { AlertDialog, Dialog, DialogContainer } from '@voussoir/dialog';
 import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
-import { eraserIcon } from '@voussoir/icon/icons/eraserIcon';
+import { historyIcon } from '@voussoir/icon/icons/historyIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Icon } from '@voussoir/icon';
 import { Box, Flex } from '@voussoir/layout';
@@ -48,6 +48,7 @@ import { TreeNode } from './trees';
 import {
   getCollectionFormat,
   getCollectionItemPath,
+  getRepoUrl,
   getSlugFromState,
   isGitHubConfig,
 } from './utils';
@@ -173,10 +174,10 @@ function ItemPage(props: ItemPageProps) {
     let items: SectionType[] = [];
     let keystaticSection: ActionType[] = [
       {
-        key: 'discard-changes',
-        label: 'Discard changes', // TODO: l10n
+        key: 'reset',
+        label: 'Reset changes', // TODO: l10n
         isDisabled: hasChanged,
-        icon: eraserIcon,
+        icon: historyIcon,
       },
       {
         key: 'delete',
@@ -219,14 +220,14 @@ function ItemPage(props: ItemPageProps) {
             <ActionMenu
               items={menuActions}
               prominence="low"
-              disabledKeys={!hasChanged ? ['discard-changes'] : []}
+              disabledKeys={!hasChanged ? ['reset'] : []}
               isDisabled={
                 deleteResult.kind === 'loading' ||
                 updateResult.kind === 'loading'
               }
-              onAction={(key: Key) => {
+              onAction={key => {
                 switch (key) {
-                  case 'discard-changes':
+                  case 'reset':
                     window.location.reload(); // TODO: can we do this w/o a full reload?
                     break;
                   case 'delete':
@@ -234,8 +235,6 @@ function ItemPage(props: ItemPageProps) {
                     break;
                   case 'view':
                     assert(isGitHubConfig(config));
-
-                    let repoURL = `https://github.com/${config.storage.repo.owner}/${config.storage.repo.name}`;
                     let filePath =
                       formatInfo.dataLocation === 'index'
                         ? `/tree/${branchInfo.currentBranch}/${basePath}`
@@ -243,7 +242,7 @@ function ItemPage(props: ItemPageProps) {
                             branchInfo.currentBranch
                           }/${basePath}${getDataFileExtension(formatInfo)}`;
                     window.open(
-                      `${repoURL}${filePath}`,
+                      `${getRepoUrl(config)}${filePath}`,
                       '_blank',
                       'noopener,noreferrer'
                     );
