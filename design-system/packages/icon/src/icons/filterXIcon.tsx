@@ -1,4 +1,4 @@
-export const toggleRightIcon = (
+export const filterXIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -8,7 +8,6 @@ export const toggleRightIcon = (
     width="1em"
     height="1em"
   >
-    <rect x={2} y={6} width={20} height={12} rx={6} ry={6} />
-    <circle cx={16} cy={12} r={2} />
+    <path d="M13.013 3H2l8 9.46V19l4 2v-8.54l.9-1.055M22 3l-5 5M17 3l5 5" />
   </svg>
 );

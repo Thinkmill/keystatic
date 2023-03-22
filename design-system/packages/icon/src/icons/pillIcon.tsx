@@ -1,4 +1,4 @@
-export const toggleRightIcon = (
+export const pillIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -8,7 +8,6 @@ export const toggleRightIcon = (
     width="1em"
     height="1em"
   >
-    <rect x={2} y={6} width={20} height={12} rx={6} ry={6} />
-    <circle cx={16} cy={12} r={2} />
+    <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7ZM8.5 8.5l7 7" />
   </svg>
 );

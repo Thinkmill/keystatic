@@ -1,4 +1,4 @@
-export const toggleRightIcon = (
+export const birdIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -8,7 +8,7 @@ export const toggleRightIcon = (
     width="1em"
     height="1em"
   >
-    <rect x={2} y={6} width={20} height={12} rx={6} ry={6} />
-    <circle cx={16} cy={12} r={2} />
+    <path d="M16 7h.01M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20" />
+    <path d="m20 7 2 .5-2 .5M10 18v3M14 17.75V21M7 18a6 6 0 0 0 3.84-10.61" />
   </svg>
 );
