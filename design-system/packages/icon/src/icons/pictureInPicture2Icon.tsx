@@ -1,4 +1,4 @@
-export const toggleRightIcon = (
+export const pictureInPicture2Icon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -8,7 +8,7 @@ export const toggleRightIcon = (
     width="1em"
     height="1em"
   >
-    <rect x={2} y={6} width={20} height={12} rx={6} ry={6} />
-    <circle cx={16} cy={12} r={2} />
+    <path d="M21 9V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h4" />
+    <rect x={12} y={13} width={10} height={7} rx={2} />
   </svg>
 );

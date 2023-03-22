@@ -1,4 +1,4 @@
-export const toggleRightIcon = (
+export const removeFormattingIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -8,7 +8,6 @@ export const toggleRightIcon = (
     width="1em"
     height="1em"
   >
-    <rect x={2} y={6} width={20} height={12} rx={6} ry={6} />
-    <circle cx={16} cy={12} r={2} />
+    <path d="M4 7V4h16v3M5 20h6M13 4 8 20M15 15l5 5M20 15l-5 5" />
   </svg>
 );

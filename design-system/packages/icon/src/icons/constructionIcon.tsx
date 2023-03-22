@@ -1,4 +1,4 @@
-export const toggleRightIcon = (
+export const constructionIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -8,7 +8,6 @@ export const toggleRightIcon = (
     width="1em"
     height="1em"
   >
-    <rect x={2} y={6} width={20} height={12} rx={6} ry={6} />
-    <circle cx={16} cy={12} r={2} />
+    <path d="M21 6H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1ZM17 14v7M7 14v7M17 3v3M7 3v3M2.5 6.5 10 14M8 6l8 8M14 6l7.5 7.5" />
   </svg>
 );
