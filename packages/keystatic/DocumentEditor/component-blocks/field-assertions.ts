@@ -1,5 +1,6 @@
+import { assertNever } from 'emery';
+
 import { ComponentSchema } from './api';
-import { assertNever } from './utils';
 
 export function assertValidComponentSchema(schema: ComponentSchema) {
   assertValidComponentSchemaInner(schema, [], [], new Set());

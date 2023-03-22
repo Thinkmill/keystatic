@@ -223,12 +223,6 @@ export function nodeTypeMatcher<Type extends Element['type'][]>(
     typeof node.type === 'string' && set.has(node.type)) as any;
 }
 
-export function assert(condition: boolean): asserts condition {
-  if (!condition) {
-    throw new Error('failed assert');
-  }
-}
-
 export function focusWithPreviousSelection(editor: Editor) {
   const selection = window.getSelection();
   if (selection) {

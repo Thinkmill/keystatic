@@ -1,4 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { assertNever } from 'emery';
 import {
   Key,
   MemoExoticComponent,
@@ -36,7 +37,7 @@ import {
 } from './api';
 import { previewPropsToValue, setValueToPreviewProps } from './get-value';
 import { createGetPreviewProps } from './preview-props';
-import { assertNever, clientSideValidateProp, ReadonlyPropPath } from './utils';
+import { clientSideValidateProp, ReadonlyPropPath } from './utils';
 import {
   AddToPathProvider,
   PathContextProvider,

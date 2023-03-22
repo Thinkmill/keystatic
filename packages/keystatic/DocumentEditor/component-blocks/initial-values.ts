@@ -1,10 +1,12 @@
+import { assertNever } from 'emery';
+
 import { ComponentSchema, ComponentBlock } from './api';
 import {
   getKeysForArrayValue,
   getNewArrayElementKey,
   setKeysForArrayValue,
 } from './preview-props';
-import { assertNever, findChildPropPaths } from './utils';
+import { findChildPropPaths } from './utils';
 
 export function getInitialValue(type: string, componentBlock: ComponentBlock) {
   const props = getInitialPropsValue({
