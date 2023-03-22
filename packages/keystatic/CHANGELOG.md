@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.0.73
+
+### Patch Changes
+
+- 7088dd0: Fix local setup
+- Updated dependencies [e1bbb04]
+  - @voussoir/icon@0.1.2
+
 ## 0.0.72
 
 ### Patch Changes
