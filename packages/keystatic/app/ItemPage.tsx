@@ -1,4 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { assert } from 'emery';
 import {
   FormEvent,
   Key,
@@ -13,10 +14,10 @@ import { Badge } from '@voussoir/badge';
 import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
 import { Button, ButtonGroup } from '@voussoir/button';
 import { AlertDialog, Dialog, DialogContainer } from '@voussoir/dialog';
+import { Icon } from '@voussoir/icon';
 import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
 import { historyIcon } from '@voussoir/icon/icons/historyIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Icon } from '@voussoir/icon';
 import { Box, Flex } from '@voussoir/layout';
 import { ActionMenu, Section } from '@voussoir/menu';
 import { Notice } from '@voussoir/notice';
@@ -35,6 +36,8 @@ import { useDeleteItem, useUpsertItem } from '../utils';
 
 import { useCreateBranchMutation } from './branch-selection';
 import l10nMessages from './l10n/index.json';
+import { ForkRepoDialog } from './fork-repo';
+import { getDataFileExtension } from './path-utils';
 import { useRouter } from './router';
 import { AppShellBody, AppShellRoot } from './shell';
 import {
@@ -56,9 +59,6 @@ import { useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
 import { mergeDataStates } from './useData';
 import { useSlugsInCollection } from './useSlugsInCollection';
-import { ForkRepoDialog } from './fork-repo';
-import { getDataFileExtension } from './path-utils';
-import { assert } from 'emery';
 
 type ItemPageProps = {
   collection: string;
