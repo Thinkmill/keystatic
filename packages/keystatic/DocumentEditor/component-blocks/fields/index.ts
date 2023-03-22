@@ -4,6 +4,7 @@ export { child } from './child';
 export { conditional } from './conditional';
 export { date } from './date';
 export { document } from './document';
+export { emptyDocument } from './emptyDocument';
 export { empty } from './empty';
 export { image } from './image';
 export { integer } from './integer';
