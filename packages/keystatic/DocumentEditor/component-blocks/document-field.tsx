@@ -2,6 +2,7 @@ import { Descendant } from 'slate';
 import { fixPath } from '../../app/path-utils';
 import { DocumentFeatures } from '../document-features';
 import { ComponentBlock, fields, ComponentSchema } from './api';
+import { getSrcPrefix } from './fields/image';
 import { transformProps } from './utils';
 
 export type CollectedFile = {
@@ -27,7 +28,8 @@ export function collectFiles(
         props: transformPropsToFiles(
           schema,
           node.props,
-          collectedFiles
+          collectedFiles,
+          slug
         ) as Record<string, any>,
       };
     }
@@ -43,7 +45,7 @@ export function collectFiles(
       });
       return {
         type: 'image',
-        src: `${getSrcPrefix(documentFeatures, slug)}${
+        src: `${getSrcPrefixForImageBlock(documentFeatures, slug)}${
           node.src.filename
         }` as any,
         alt: node.alt,
@@ -68,7 +70,8 @@ export function collectFiles(
 function transformPropsToFiles(
   schema: ComponentSchema,
   value: unknown,
-  collectedFiles: CollectedFile[]
+  collectedFiles: CollectedFile[],
+  slug: string | undefined
 ): unknown {
   return transformProps(schema, value, {
     form(schema, value) {
@@ -76,9 +79,14 @@ function transformPropsToFiles(
         if (schema.serializeToFile.kind === 'asset') {
           const { content, value: forYaml } = schema.serializeToFile.serialize(
             value,
-            undefined
+            undefined,
+            slug
           );
-          const filename = schema.serializeToFile.filename(forYaml, undefined);
+          const filename = schema.serializeToFile.filename(
+            forYaml,
+            undefined,
+            slug
+          );
           if (filename && content) {
             collectedFiles.push({
               data: content,
@@ -95,16 +103,16 @@ function transformPropsToFiles(
   });
 }
 
-function getSrcPrefix(
+function getSrcPrefixForImageBlock(
   documentFeatures: DocumentFeatures,
   slug: string | undefined
 ) {
-  return typeof documentFeatures.images === 'object' &&
-    typeof documentFeatures.images.publicPath === 'string'
-    ? `/${fixPath(documentFeatures.images.publicPath)}/${
-        slug === undefined ? '' : slug + '/'
-      }`
-    : '';
+  return getSrcPrefix(
+    typeof documentFeatures.images === 'object'
+      ? documentFeatures.images.publicPath
+      : undefined,
+    slug
+  );
 }
 
 export function deserializeFiles(
@@ -128,7 +136,8 @@ export function deserializeFiles(
           node.props,
           files,
           otherFiles,
-          mode
+          mode,
+          slug
         ) as Record<string, any>,
       };
     }
@@ -137,7 +146,7 @@ export function deserializeFiles(
       typeof node.src === 'string' &&
       mode === 'edit'
     ) {
-      const prefix = getSrcPrefix(documentFeatures, slug);
+      const prefix = getSrcPrefixForImageBlock(documentFeatures, slug);
       const filename = (node.src as string).slice(prefix.length);
       const content = (
         typeof documentFeatures.images === 'object' &&
@@ -180,7 +189,8 @@ function deserializeProps(
   value: unknown,
   files: ReadonlyMap<string, Uint8Array>,
   otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>,
-  mode: 'read' | 'edit'
+  mode: 'read' | 'edit',
+  slug: string | undefined
 ) {
   return transformProps(schema, value, {
     form: (schema, value) => {
@@ -195,7 +205,11 @@ function deserializeProps(
               suggestedFilenamePrefix: undefined,
             });
           }
-          const filename = schema.serializeToFile.filename(value, undefined);
+          const filename = schema.serializeToFile.filename(
+            value,
+            undefined,
+            slug
+          );
           return (
             mode === 'read' &&
               schema.serializeToFile.reader.requiresContentInReader
@@ -211,6 +225,7 @@ function deserializeProps(
                 : files.get(filename)
               : undefined,
             suggestedFilenamePrefix: undefined,
+            slug,
           });
         }
         throw new Error('not implemented');

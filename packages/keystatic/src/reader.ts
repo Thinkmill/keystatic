@@ -145,7 +145,7 @@ async function readItem(
           slugs: new Set(),
         }
   );
-  const requiredFiles = getRequiredFiles(validated, schema);
+  const requiredFiles = getRequiredFiles(validated, schema, slugField?.slug);
   for (const file of requiredFiles) {
     const parentValue = getValueAtPropPath(
       validated,

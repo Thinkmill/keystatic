@@ -123,11 +123,13 @@ type BaseSerializeToSingleFile<Value> = {
   directory?: string;
   filename(
     value: unknown,
-    suggestedFilenamePrefix: string | undefined
+    suggestedFilenamePrefix: string | undefined,
+    slug: string | undefined
   ): string | undefined;
   serialize(
     value: Value,
-    suggestedFilenamePrefix: string | undefined
+    suggestedFilenamePrefix: string | undefined,
+    slug: string | undefined
   ): {
     value: unknown;
   } & (
@@ -141,6 +143,7 @@ type BaseSerializeToSingleFile<Value> = {
     content: Uint8Array | undefined;
     value: unknown;
     suggestedFilenamePrefix: string | undefined;
+    slug: string | undefined;
   }): Value;
 };
 

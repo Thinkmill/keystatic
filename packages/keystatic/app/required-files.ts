@@ -60,7 +60,8 @@ export function getPropPathPortion(
 
 export function getRequiredFiles(
   rootValue: unknown,
-  rootSchema: ComponentSchema
+  rootSchema: ComponentSchema,
+  slug: string | undefined
 ) {
   const requiredFiles: RequiredFile[] = [];
   traverseProps(rootSchema, rootValue, (schema, val, propPath) => {
@@ -69,7 +70,8 @@ export function getRequiredFiles(
         if (schema.serializeToFile.kind === 'asset') {
           const filename = schema.serializeToFile.filename(
             val,
-            getPropPathPortion(propPath, rootSchema, rootValue)
+            getPropPathPortion(propPath, rootSchema, rootValue),
+            slug
           );
           const files: string[] = [];
           if (filename) {
@@ -123,7 +125,8 @@ export function parseSerializedFormField(
     );
     const filepath = serializationConfig.filename(
       value,
-      suggestedFilenamePrefix
+      suggestedFilenamePrefix,
+      slug
     );
     if (
       mode === 'read' &&
@@ -146,11 +149,19 @@ export function parseSerializedFormField(
         )
       : undefined;
 
-    const parsed = (
+    const parsed =
       mode === 'read' && serializationConfig.reader.requiresContentInReader
-        ? serializationConfig.reader.parseToReader
-        : serializationConfig.parse
-    )({ content, value, suggestedFilenamePrefix });
+        ? serializationConfig.reader.parseToReader({
+            content,
+            value,
+            suggestedFilenamePrefix,
+          })
+        : serializationConfig.parse({
+            content,
+            value,
+            suggestedFilenamePrefix,
+            slug,
+          });
     return parsed;
   }
   if (serializationConfig.kind === 'multi') {

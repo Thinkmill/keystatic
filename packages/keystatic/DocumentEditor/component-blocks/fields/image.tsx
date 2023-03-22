@@ -69,11 +69,13 @@ export function image<IsRequired extends boolean | undefined>({
   directory,
   validation,
   description,
+  publicPath,
 }: {
   label: string;
   directory?: string;
   validation?: { isRequired?: IsRequired };
   description?: string;
+  publicPath?: string;
 } & RequiredValidation<IsRequired>): FormFieldWithFileNotRequiringContentsForReader<
   | {
       kind: 'uploaded';
@@ -185,8 +187,10 @@ export function image<IsRequired extends boolean | undefined>({
     serializeToFile: {
       kind: 'asset',
       directory: directory ? fixPath(directory) : undefined,
-      filename(value, suggestedFilenamePrefix) {
-        if (typeof value === 'string') return value;
+      filename(value, suggestedFilenamePrefix, slug) {
+        if (typeof value === 'string') {
+          return value.slice(getSrcPrefix(publicPath, slug).length);
+        }
         if (
           typeof value === 'object' &&
           value !== null &&
@@ -196,29 +200,37 @@ export function image<IsRequired extends boolean | undefined>({
           return suggestedFilenamePrefix + '.' + value.extension;
         }
       },
-      parse({ content, value }) {
-        return content
-          ? {
-              kind: 'uploaded',
-              data: content,
-              extension:
-                value && typeof value === 'object' && 'extension' in value
-                  ? (value as any).extension
-                  : typeof value === 'string'
-                  ? value.match(/\.([^.]+$)/)?.[1]
-                  : '',
-              filename: typeof value === 'string' ? value : '',
-            }
-          : { kind: 'none' };
+      parse({ content, value, slug }) {
+        if (!content) {
+          return { kind: 'none' };
+        }
+        return {
+          kind: 'uploaded',
+          data: content,
+          extension:
+            value && typeof value === 'object' && 'extension' in value
+              ? (value as any).extension
+              : typeof value === 'string'
+              ? value.match(/\.([^.]+$)/)?.[1]
+              : '',
+          filename:
+            typeof value === 'string'
+              ? value.slice(getSrcPrefix(publicPath, slug).length)
+              : '',
+        };
       },
-      serialize(value, suggestedFilenamePrefix) {
+      serialize(value, suggestedFilenamePrefix, slug) {
         if (value.kind === 'none') {
           return { value: null, content: undefined };
         }
         const filename = suggestedFilenamePrefix
           ? suggestedFilenamePrefix + '.' + value.extension
           : value.filename;
-        return { value: filename, content: value.data, filename };
+        return {
+          value: `${getSrcPrefix(publicPath, slug)}${filename}`,
+          content: value.data,
+          filename,
+        };
       },
       reader: {
         requiresContentInReader: false,
@@ -231,4 +243,13 @@ export function image<IsRequired extends boolean | undefined>({
       },
     },
   };
+}
+
+export function getSrcPrefix(
+  publicPath: string | undefined,
+  slug: string | undefined
+) {
+  return typeof publicPath === 'string'
+    ? `/${fixPath(publicPath)}/${slug === undefined ? '' : slug + '/'}`
+    : '';
 }

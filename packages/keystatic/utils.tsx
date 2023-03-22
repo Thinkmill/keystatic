@@ -422,11 +422,16 @@ export async function toFiles(
             );
 
             const { content, value: forYaml } =
-              schema.serializeToFile.serialize(value, suggestedFilenamePrefix);
+              schema.serializeToFile.serialize(
+                value,
+                suggestedFilenamePrefix,
+                slug?.value
+              );
             if (content) {
               const path = schema.serializeToFile.filename(
                 forYaml,
-                suggestedFilenamePrefix
+                suggestedFilenamePrefix,
+                slug?.value
               );
               if (path) {
                 extraFiles.push({
