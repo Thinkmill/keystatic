@@ -449,6 +449,9 @@ export const BranchInfoContext = createContext<{
   branchNameToId: new Map(),
   branchNameToBaseCommit: new Map(),
 });
+export function useBranchInfo() {
+  return useContext(BranchInfoContext);
+}
 
 function getChangedData(
   config: Config,
