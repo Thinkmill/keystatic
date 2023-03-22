@@ -154,7 +154,7 @@ export function SidebarHeader(props: {
         {item => (
           <Section key={item.key} items={item.children} aria-label={item.label}>
             {item => (
-              <Item key={item.key}>
+              <Item key={item.key} textValue={item.label}>
                 <Icon src={item.icon} />
                 <Text>{item.label}</Text>
               </Item>
