@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.0.74
+
+### Patch Changes
+
+- f8796d7: Add "view on github" action to collection and entry pages.
+- 3d75342: Add `fields.emptyDocument`
+- d69dd72: Add `publicPath` option to `fields.image`
+
 ## 0.0.73
 
 ### Patch Changes
