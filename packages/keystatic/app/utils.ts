@@ -1,3 +1,4 @@
+import { fromUint8Array } from 'js-base64';
 import { isDefined } from 'emery';
 
 import { Config, GitHubConfig, LocalConfig } from '../config';
@@ -12,6 +13,7 @@ import {
 } from './path-utils';
 import { collectDirectoriesUsedInSchema, getTreeKey } from './tree-key';
 import { getTreeNodeAtPath, TreeNode } from './trees';
+import pkgJson from '../package.json';
 
 export * from './path-utils';
 
@@ -62,10 +64,10 @@ export function isLocalConfig(config: Config): config is LocalConfig {
   return config.storage.kind === 'local';
 }
 
-export function getRepoPath(config: GitHubConfig) {
-  return `${config.storage.repo.owner}/${config.storage.repo.name}`;
+export function getRepoPath(config: { mainOwner: string; mainRepo: string }) {
+  return `${config.mainOwner}/${config.mainRepo}`;
 }
-export function getRepoUrl(config: GitHubConfig) {
+export function getRepoUrl(config: { mainOwner: string; mainRepo: string }) {
   return `https://github.com/${getRepoPath(config)}`;
 }
 
@@ -176,4 +178,47 @@ export function getEntriesInCollectionWithTreeKey(
     }
   }
   return entries;
+}
+
+export const KEYSTATIC_CLOUD_API_URL = 'https://api.keystatic.cloud';
+
+export const KEYSTATIC_CLOUD_HEADERS = {
+  'x-keystatic-version': pkgJson.version,
+};
+
+export async function redirectToCloudAuth(from: string, config: Config) {
+  if (config.storage.kind !== 'cloud') {
+    throw new Error('Not a cloud config');
+  }
+  const code_verifier = fromUint8Array(
+    crypto.getRandomValues(new Uint8Array(32)),
+    true
+  );
+  const code_challenge = fromUint8Array(
+    new Uint8Array(
+      await crypto.subtle.digest('SHA-256', textEncoder.encode(code_verifier))
+    ),
+    true
+  );
+  const state = fromUint8Array(
+    crypto.getRandomValues(new Uint8Array(32)),
+    true
+  );
+  localStorage.setItem(
+    'keystatic-cloud-state',
+    JSON.stringify({ state, from, code_verifier })
+  );
+  const url = new URL(`${KEYSTATIC_CLOUD_API_URL}/oauth/authorize`);
+  url.searchParams.set('state', state);
+  url.searchParams.set('client_id', config.storage.project);
+  url.searchParams.set(
+    'redirect_uri',
+    `${window.location.origin}/keystatic/cloud/oauth/callback`
+  );
+  url.searchParams.set('response_type', 'code');
+  url.searchParams.set('code_challenge_method', 'S256');
+  url.searchParams.set('code_challenge', code_challenge);
+  url.searchParams.set('keystatic_version', pkgJson.version);
+
+  window.location.href = url.toString();
 }

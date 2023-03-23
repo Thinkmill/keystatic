@@ -97,7 +97,7 @@ function SingletonPage({
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
     state,
     initialFiles,
-    storage: config.storage,
+    config,
     schema: singletonConfig.schema,
     basePath: singletonPath,
     format: getSingletonFormat(config, singleton),

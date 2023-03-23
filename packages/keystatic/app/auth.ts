@@ -1,12 +1,46 @@
 import { parse } from 'cookie';
+import { z } from 'zod';
+import { Config } from '../config';
 
-export async function getAuth() {
+const storedTokenSchema = z.object({
+  token: z.string(),
+  validUntil: z.number().transform(val => new Date(val)),
+});
+
+export function getSyncAuth(config: Config) {
   if (typeof document === 'undefined') {
     return null;
   }
-  const cookies = parse(document.cookie);
-  const accessToken = cookies['keystatic-gh-access-token'];
-  if (!accessToken) {
+  if (config.storage.kind === 'github') {
+    const cookies = parse(document.cookie);
+    const accessToken = cookies['keystatic-gh-access-token'];
+    if (!accessToken) {
+      return null;
+    }
+    return { accessToken };
+  }
+  if (config.storage.kind === 'cloud') {
+    const unparsedTokenData = localStorage.getItem(
+      'keystatic-cloud-access-token'
+    );
+    let tokenData;
+    try {
+      tokenData = storedTokenSchema.parse(JSON.parse(unparsedTokenData!));
+    } catch (err) {
+      return null;
+    }
+    if (!tokenData || tokenData.validUntil < new Date()) {
+      return null;
+    }
+    return { accessToken: tokenData.token };
+  }
+  return null;
+}
+
+export async function getAuth(config: Config) {
+  const token = getSyncAuth(config);
+
+  if (config.storage.kind === 'github' && !token) {
     try {
       const res = await fetch('/api/keystatic/github/refresh-token', {
         method: 'POST',
@@ -21,5 +55,5 @@ export async function getAuth() {
     } catch {}
     return null;
   }
-  return { accessToken };
+  return token;
 }

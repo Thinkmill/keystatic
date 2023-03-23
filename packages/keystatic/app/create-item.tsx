@@ -67,7 +67,7 @@ export function CreateItem(props: {
     state,
     basePath: getCollectionItemPath(props.config, props.collection, slug),
     initialFiles: undefined,
-    storage: props.config.storage,
+    config: props.config,
     schema: collectionConfig.schema,
     format: formatInfo,
     currentLocalTreeKey: undefined,

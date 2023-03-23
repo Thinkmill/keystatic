@@ -8,7 +8,7 @@ import l10nMessages from './l10n/index.json';
 import { GitHubConfig } from '../config';
 import { getAuth } from './auth';
 import { useClient } from 'urql';
-import { AppShellQuery } from './shell/data';
+import { GitHubAppShellQuery } from './shell/data';
 import { Notice } from '@voussoir/notice';
 import { AppSlugContext } from './onboarding/install-app';
 import { Flex } from '@voussoir/layout';
@@ -34,10 +34,10 @@ export function ForkRepoDialog(props: {
       ) {
         localStorage.removeItem('ks-refetch-installations');
         try {
-          const auth = await getAuth();
+          const auth = await getAuth(props.config);
           if (!auth) throw new Error('Unauthorized');
           const res = await client
-            .query(AppShellQuery, props.config.storage.repo)
+            .query(GitHubAppShellQuery, props.config.storage.repo)
             .toPromise();
           if (
             res.data?.repository?.forks.nodes?.some(

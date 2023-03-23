@@ -2053,47 +2053,47 @@ importers:
       '@types/node': 16.11.13
       '@types/prismjs': ^1.26.0
       '@types/react': ^18.0.25
-      '@urql/exchange-auth': ^1.0.0
-      '@urql/exchange-graphcache': ^5.0.8
-      '@voussoir/action-group': ^0.1.3
-      '@voussoir/badge': ^0.1.2
-      '@voussoir/breadcrumbs': ^0.1.4
-      '@voussoir/button': ^0.1.5
-      '@voussoir/checkbox': ^0.2.2
-      '@voussoir/combobox': ^0.1.4
+      '@urql/exchange-auth': ^2.0.0
+      '@urql/exchange-graphcache': ^5.2.0
+      '@urql/exchange-persisted-fetch': ^2.1.0
+      '@voussoir/action-group': ^0.1.1
+      '@voussoir/badge': ^0.1.1
+      '@voussoir/breadcrumbs': ^0.1.2
+      '@voussoir/button': ^0.1.3
+      '@voussoir/checkbox': ^0.2.0
+      '@voussoir/combobox': ^0.1.2
       '@voussoir/core': ^5.0.1
-      '@voussoir/dialog': ^0.2.1
-      '@voussoir/drag-and-drop': ^0.1.1
-      '@voussoir/field': ^0.1.5
+      '@voussoir/dialog': ^0.2.0
+      '@voussoir/drag-and-drop': ^0.1.0
+      '@voussoir/field': ^0.1.3
       '@voussoir/icon': ^0.2.0
-      '@voussoir/image': ^0.1.1
-      '@voussoir/layout': ^0.1.2
-      '@voussoir/link': ^0.1.2
-      '@voussoir/list-view': ^0.1.4
-      '@voussoir/listbox': ^0.1.4
-      '@voussoir/menu': ^0.1.2
-      '@voussoir/nav-list': ^0.1.1
-      '@voussoir/notice': ^0.1.2
-      '@voussoir/number-field': ^0.1.3
-      '@voussoir/overlays': ^0.1.4
-      '@voussoir/picker': ^0.1.3
-      '@voussoir/progress': ^0.1.1
-      '@voussoir/radio': ^0.1.3
-      '@voussoir/search-field': ^0.1.3
-      '@voussoir/slots': ^0.1.2
+      '@voussoir/image': ^0.1.0
+      '@voussoir/layout': ^0.1.0
+      '@voussoir/link': ^0.1.0
+      '@voussoir/list-view': ^0.1.2
+      '@voussoir/listbox': ^0.1.2
+      '@voussoir/menu': ^0.1.0
+      '@voussoir/nav-list': ^0.1.0
+      '@voussoir/notice': ^0.1.0
+      '@voussoir/number-field': ^0.1.1
+      '@voussoir/overlays': ^0.1.2
+      '@voussoir/picker': ^0.1.0
+      '@voussoir/progress': ^0.1.0
+      '@voussoir/radio': ^0.1.0
+      '@voussoir/search-field': ^0.1.2
+      '@voussoir/slots': ^0.1.0
       '@voussoir/ssr': ^0.2.1
-      '@voussoir/style': ^0.1.3
-      '@voussoir/table': ^0.1.2
-      '@voussoir/tabs': ^0.1.2
+      '@voussoir/style': ^0.1.0
+      '@voussoir/table': ^0.1.1
+      '@voussoir/tabs': ^0.1.0
       '@voussoir/test-utils': ^2.0.2
-      '@voussoir/text-field': ^0.1.4
-      '@voussoir/toast': ^0.1.4
-      '@voussoir/tooltip': ^0.1.2
-      '@voussoir/types': ^0.1.1
-      '@voussoir/typography': ^0.1.2
-      '@voussoir/utils': ^2.0.2
+      '@voussoir/text-field': ^0.1.3
+      '@voussoir/toast': ^0.1.0
+      '@voussoir/tooltip': ^0.1.1
+      '@voussoir/types': ^0.1.0
+      '@voussoir/typography': ^0.1.0
+      '@voussoir/utils': ^2.0.1
       apply-ref: ^1.0.0
-      base64-js: ^1.5.1
       cookie: ^0.5.0
       emery: ^1.4.1
       eslint: ^8.18.0
@@ -2104,6 +2104,7 @@ importers:
       io-ts-excess: ^1.0.1
       is-hotkey: ^0.2.0
       jest-diff: ^29.0.1
+      js-base64: ^3.7.5
       js-yaml: ^4.1.0
       lru-cache: ^7.14.1
       match-sorter: ^6.3.1
@@ -2125,7 +2126,7 @@ importers:
       slate-react: ^0.91.9
       tsx: ^3.8.0
       typescript: ^5.0.2
-      urql: ^3.0.3
+      urql: ^3.0.4
       zod: ^3.20.2
     dependencies:
       '@babel/runtime': 7.21.0
@@ -2147,8 +2148,9 @@ importers:
       '@ts-gql/tag': 0.7.0_graphql@16.6.0
       '@types/node': 16.11.13
       '@types/react': 18.0.28
-      '@urql/exchange-auth': 1.0.0_graphql@16.6.0
-      '@urql/exchange-graphcache': 5.0.9_graphql@16.6.0
+      '@urql/exchange-auth': 2.0.0_graphql@16.6.0
+      '@urql/exchange-graphcache': 5.2.0_graphql@16.6.0
+      '@urql/exchange-persisted-fetch': 2.1.0_graphql@16.6.0
       '@voussoir/action-group': link:../../design-system/packages/action-group
       '@voussoir/badge': link:../../design-system/packages/badge
       '@voussoir/breadcrumbs': link:../../design-system/packages/breadcrumbs
@@ -2186,7 +2188,6 @@ importers:
       '@voussoir/typography': link:../../design-system/packages/typography
       '@voussoir/utils': link:../../design-system/packages/utils
       apply-ref: 1.0.0
-      base64-js: 1.5.1
       cookie: 0.5.0
       emery: 1.4.1
       fast-deep-equal: 3.1.3
@@ -2195,6 +2196,7 @@ importers:
       io-ts: 2.2.20_fp-ts@2.13.1
       io-ts-excess: 1.0.1_fp-ts@2.13.1
       is-hotkey: 0.2.0
+      js-base64: 3.7.5
       js-yaml: 4.1.0
       lru-cache: 7.16.1
       match-sorter: 6.3.1
@@ -2212,7 +2214,7 @@ importers:
       slate-history: 0.86.0_slate@0.91.4
       slate-hyperscript: 0.77.0_slate@0.91.4
       slate-react: 0.91.9_6tgy34rvmll7duwkm4ydcekf3u
-      urql: 3.0.3_onqnqwb3ubg5opvemcqf7c2qhy
+      urql: 3.0.4_onqnqwb3ubg5opvemcqf7c2qhy
       zod: 3.20.6
     devDependencies:
       '@ts-gql/compiler': 0.16.3_graphql@16.6.0
@@ -9242,8 +9244,8 @@ packages:
       '@typescript-eslint/types': 5.53.0
       eslint-visitor-keys: 3.3.0
 
-  /@urql/core/3.1.1_graphql@16.6.0:
-    resolution: {integrity: sha512-Mnxtq4I4QeFJsgs7Iytw+HyhiGxISR6qtyk66c9tipozLZ6QVxrCiUPF2HY4BxNIabaxcp+rivadvm8NAnXj4Q==}
+  /@urql/core/3.2.2_graphql@16.6.0:
+    resolution: {integrity: sha512-i046Cz8cZ4xIzGMTyHZrbdgzcFMcKD7+yhCAH5FwWBRjcKrc+RjEOuR9X5AMuBvr8c6IAaE92xAqa4wmlGfWTQ==}
     peerDependencies:
       graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
@@ -9251,22 +9253,32 @@ packages:
       wonka: 6.2.3
     dev: false
 
-  /@urql/exchange-auth/1.0.0_graphql@16.6.0:
-    resolution: {integrity: sha512-79hqPQab+ifeINOxvQykvqub4ixWHBEIagN4U67ijcHGMfp3c4yEWRk4IJMPwF+OMT7LrRFuv+jRIZTQn/9VwQ==}
+  /@urql/exchange-auth/2.0.0_graphql@16.6.0:
+    resolution: {integrity: sha512-IDwpdozfzx2hAlvBVM9ITe0lzTxVflodEXqiC/4jllpLVsvAPYpG0AU3nMMNoX75278IDHpVCfmnaU0dIHWwOQ==}
     peerDependencies:
       graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
-      '@urql/core': 3.1.1_graphql@16.6.0
+      '@urql/core': 3.2.2_graphql@16.6.0
       graphql: 16.6.0
       wonka: 6.2.3
     dev: false
 
-  /@urql/exchange-graphcache/5.0.9_graphql@16.6.0:
-    resolution: {integrity: sha512-GYhN4YDL+/alF6ci1OFOaL0Ze0GinmuYWrjQjpjl8kP/9ZbXY2LLN/3ZlRG9cCks1nxyea/9h4IS0mk5LS57lA==}
+  /@urql/exchange-graphcache/5.2.0_graphql@16.6.0:
+    resolution: {integrity: sha512-wHSTkp6TAhioauK/85DyiiQP5vz4EAJx7JQ+39OaHZ9TSdDqWkg4zs9VAhV3OzSopA9DNbihZVZ32w7q8BSUEA==}
     peerDependencies:
       graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
-      '@urql/core': 3.1.1_graphql@16.6.0
+      '@urql/core': 3.2.2_graphql@16.6.0
+      graphql: 16.6.0
+      wonka: 6.2.3
+    dev: false
+
+  /@urql/exchange-persisted-fetch/2.1.0_graphql@16.6.0:
+    resolution: {integrity: sha512-rWNpbCskNiRjrvN5q5nnbMXI7UMrgIYv2eHSW+zFAfU8V5jf0KiQ11h1gOXyAfpNaG1mq4m0DRIPqeXg0AzQQw==}
+    peerDependencies:
+      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@urql/core': 3.2.2_graphql@16.6.0
       graphql: 16.6.0
       wonka: 6.2.3
     dev: false
@@ -16416,6 +16428,10 @@ packages:
       - ts-node
     dev: false
 
+  /js-base64/3.7.5:
+    resolution: {integrity: sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==}
+    dev: false
+
   /js-cookie/2.2.1:
     resolution: {integrity: sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==}
     dev: true
@@ -22470,13 +22486,13 @@ packages:
       querystring: 0.2.0
     dev: true
 
-  /urql/3.0.3_onqnqwb3ubg5opvemcqf7c2qhy:
-    resolution: {integrity: sha512-aVUAMRLdc5AOk239DxgXt6ZxTl/fEmjr7oyU5OGo8uvpqu42FkeJErzd2qBzhAQ3DyusoZIbqbBLPlnKo/yy2A==}
+  /urql/3.0.4_onqnqwb3ubg5opvemcqf7c2qhy:
+    resolution: {integrity: sha512-okmQKQ9pF4t8O8iCC5gH9acqfFji5lkhW3nLBjx8WKDd2zZG7PXoUpUK19VQEMK87L6VFBOO/XZ52MMKFEI0AA==}
     peerDependencies:
       graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
       react: '>= 16.8.0'
     dependencies:
-      '@urql/core': 3.1.1_graphql@16.6.0
+      '@urql/core': 3.2.2_graphql@16.6.0
       graphql: 16.6.0
       react: 18.2.0
       wonka: 6.2.3
