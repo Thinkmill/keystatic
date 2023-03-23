@@ -170,7 +170,7 @@ export function CreateItem(props: {
             <FormForEntry
               forceValidation={forceValidation}
               slugField={slugInfo}
-              contentField={formatInfo.contentField?.key}
+              formatInfo={formatInfo}
               {...previewProps}
             />
           </Flex>

@@ -145,6 +145,8 @@ function normaliseDocumentFeatures(config: DocumentFeaturesConfig) {
   return documentFeatures;
 }
 
+export const DOCUMENT_FIELD_SYMBOL = Symbol('document field');
+
 export function document({
   label,
   componentBlocks = {},
@@ -276,5 +278,6 @@ export function document({
         parseToReader: parse('read'),
       },
     },
+    ...{ [DOCUMENT_FIELD_SYMBOL]: true },
   };
 }

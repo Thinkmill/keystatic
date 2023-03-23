@@ -1,4 +1,5 @@
 import { Flex, Grid } from '@voussoir/layout';
+import { DOCUMENT_FIELD_SYMBOL } from '../DocumentEditor/component-blocks/fields/document';
 import {
   AddToPathProvider,
   PathContextProvider,
@@ -11,11 +12,22 @@ import {
 } from '../DocumentEditor/component-blocks/form-from-preview';
 import { ReadonlyPropPath } from '../DocumentEditor/component-blocks/utils';
 import { ComponentSchema, GenericPreviewProps, ObjectField } from '../src';
+import { FormatInfo } from './path-utils';
 
 const emptyArray: ReadonlyPropPath = [];
 
+function hasSplitView(
+  formatInfo: FormatInfo,
+  schema: ObjectField<Record<string, ComponentSchema>>
+): formatInfo is FormatInfo & { contentField: {} } {
+  return (
+    formatInfo.contentField !== undefined &&
+    DOCUMENT_FIELD_SYMBOL in schema.fields[formatInfo.contentField.key]
+  );
+}
+
 export function FormForEntry({
-  contentField,
+  formatInfo,
   forceValidation,
   slugField,
   ..._props
@@ -23,7 +35,7 @@ export function FormForEntry({
   ObjectField<Record<string, ComponentSchema>>,
   unknown
 > & {
-  contentField: string | undefined;
+  formatInfo: FormatInfo;
   forceValidation: boolean | undefined;
   slugField: { slugs: Set<string>; field: string } | undefined;
 }) {
@@ -31,20 +43,20 @@ export function FormForEntry({
     ObjectField<Record<string, NonChildFieldComponentSchema>>,
     unknown
   >;
-  if (contentField !== undefined) {
+  if (hasSplitView(formatInfo, props.schema)) {
     return (
       <PathContextProvider value={emptyArray}>
         <SlugFieldProvider value={slugField}>
           <Grid columns={['2fr', '1fr']} gap="large">
-            <AddToPathProvider part={contentField}>
+            <AddToPathProvider part={formatInfo.contentField.key}>
               <InnerFormValueContentFromPreviewProps
                 forceValidation={forceValidation}
-                {...props.fields[contentField]}
+                {...props.fields[formatInfo.contentField.key]}
               />
             </AddToPathProvider>
             <Flex gap="xlarge" direction="column">
               {Object.entries(props.fields).map(([key, propVal]) =>
-                key === contentField ? null : (
+                key === formatInfo.contentField.key ? null : (
                   <AddToPathProvider key={key} part={key}>
                     <InnerFormValueContentFromPreviewProps
                       forceValidation={forceValidation}
