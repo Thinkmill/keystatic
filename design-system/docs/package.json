@@ -18,6 +18,8 @@
   "dependencies": {
     "@babel/core": "^7.18.5",
     "@babel/runtime": "^7.18.3",
+    "@keystatic/core": "^0.0.74",
+    "@keystatic/next": "^0.0.5",
     "@markdoc/markdoc": "^0.2.2",
     "@react-aria/i18n": "^3.6.2",
     "@types/js-yaml": "^4.0.5",
