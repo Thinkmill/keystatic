@@ -1,4 +1,6 @@
-import { Flex, Grid } from '@voussoir/layout';
+import { Box, Grid } from '@voussoir/layout';
+import { useEffect } from 'react';
+
 import { DOCUMENT_FIELD_SYMBOL } from '../DocumentEditor/component-blocks/fields/document';
 import {
   AddToPathProvider,
@@ -13,6 +15,7 @@ import {
 import { ReadonlyPropPath } from '../DocumentEditor/component-blocks/utils';
 import { ComponentSchema, GenericPreviewProps, ObjectField } from '../src';
 import { FormatInfo } from './path-utils';
+import { useAppShellContext } from './shell';
 
 const emptyArray: ReadonlyPropPath = [];
 
@@ -43,18 +46,19 @@ export function FormForEntry({
     ObjectField<Record<string, NonChildFieldComponentSchema>>,
     unknown
   >;
-  if (hasSplitView(formatInfo, props.schema)) {
+  const { setContainerWidth } = useAppShellContext();
+  const splitView = hasSplitView(formatInfo, props.schema);
+
+  useEffect(() => {
+    setContainerWidth(splitView ? 'large' : 'medium');
+  }, [setContainerWidth, splitView]);
+
+  if (splitView) {
     return (
       <PathContextProvider value={emptyArray}>
         <SlugFieldProvider value={slugField}>
-          <Grid columns={['2fr', '1fr']} gap="large">
-            <AddToPathProvider part={formatInfo.contentField.key}>
-              <InnerFormValueContentFromPreviewProps
-                forceValidation={forceValidation}
-                {...props.fields[formatInfo.contentField.key]}
-              />
-            </AddToPathProvider>
-            <Flex gap="xlarge" direction="column">
+          <Grid columns={{ desktop: ['2fr', '1fr'] }} gap="xlarge">
+            <Grid gap="xlarge" order={{ desktop: 2 }}>
               {Object.entries(props.fields).map(([key, propVal]) =>
                 key === formatInfo.contentField.key ? null : (
                   <AddToPathProvider key={key} part={key}>
@@ -65,7 +69,15 @@ export function FormForEntry({
                   </AddToPathProvider>
                 )
               )}
-            </Flex>
+            </Grid>
+            <Box minWidth={0}>
+              <AddToPathProvider part={formatInfo.contentField.key}>
+                <InnerFormValueContentFromPreviewProps
+                  forceValidation={forceValidation}
+                  {...props.fields[formatInfo.contentField.key]}
+                />
+              </AddToPathProvider>
+            </Box>
           </Grid>
         </SlugFieldProvider>
       </PathContextProvider>

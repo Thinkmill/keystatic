@@ -4,6 +4,7 @@ import {
   ReactElement,
   ReactNode,
   useContext,
+  useState,
 } from 'react';
 
 import { alertCircleIcon } from '@voussoir/icon/icons/alertCircleIcon';
@@ -132,18 +133,29 @@ export const AppShellBody = ({ children }: PropsWithChildren) => {
   );
 };
 
+type ContainerWidth = keyof VoussoirTheme['size']['container'];
 type AppShellContextValue = {
-  containerWidth: keyof VoussoirTheme['size']['container'];
+  containerWidth: ContainerWidth;
+  setContainerWidth: (containerWidth: ContainerWidth) => void;
 };
 const AppShellContext = createContext<AppShellContextValue>({
   containerWidth: 'medium',
+  setContainerWidth: () => {
+    throw new Error('`AppShellContext.Provider` not found.');
+  },
 });
+export function useAppShellContext() {
+  return useContext(AppShellContext);
+}
+
 export const AppShellRoot = ({
   children,
-  containerWidth = 'medium',
+  containerWidth: initialContainerWidth = 'medium',
 }: PropsWithChildren<Partial<AppShellContextValue>>) => {
+  // TODO: check perf; potentially separate context for set/get.
+  const [containerWidth, setContainerWidth] = useState(initialContainerWidth);
   return (
-    <AppShellContext.Provider value={{ containerWidth }}>
+    <AppShellContext.Provider value={{ containerWidth, setContainerWidth }}>
       <Box
         elementType="main"
         flex
