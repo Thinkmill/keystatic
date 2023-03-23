@@ -38,8 +38,9 @@ export default config({
         }),
         content: fields.document({
           label: 'Content',
+          links: true,
           formatting: {
-            headingLevels: [1, 2, 3, 4],
+            headingLevels: [2, 3, 4],
             blockTypes: { code: true },
             listTypes: true,
             inlineMarks: {
