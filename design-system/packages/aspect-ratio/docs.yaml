@@ -1,5 +1,0 @@
-name: Aspect Ratio
-description: >-
-  Present responsive media, such as images and videos or anything embedded
-  within an iframe, at a specific aspect ratio.
-category: Layout

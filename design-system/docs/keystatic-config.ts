@@ -7,8 +7,8 @@ export default config({
   },
   collections: {
     package: collection({
-      path: `design-system/packages/*/docs`,
-      format: 'yaml',
+      path: `design-system/packages/*/docs/`,
+      format: { contentField: 'content' },
       label: 'Package',
       slugField: 'name',
       schema: {
