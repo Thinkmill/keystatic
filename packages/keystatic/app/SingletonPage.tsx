@@ -10,7 +10,6 @@ import { ProgressCircle } from '@voussoir/progress';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../config';
-import { FormValueContentFromPreviewProps } from '../DocumentEditor/component-blocks/form-from-preview';
 import { createGetPreviewProps } from '../DocumentEditor/component-blocks/preview-props';
 import { fields } from '../DocumentEditor/component-blocks/api';
 import { clientSideValidateProp } from '../DocumentEditor/component-blocks/utils';
@@ -30,6 +29,7 @@ import { getSingletonFormat, getSingletonPath, isGitHubConfig } from './utils';
 import { Icon } from '@voussoir/icon';
 import { refreshCwIcon } from '@voussoir/icon/icons/refreshCwIcon';
 import { ForkRepoDialog } from './fork-repo';
+import { FormForEntry } from './form-for-entry';
 
 type SingletonPageProps = {
   singleton: string;
@@ -94,13 +94,15 @@ function SingletonPage({
   )(state as Record<string, unknown>);
 
   const baseCommit = useBaseCommit();
+
+  const format = getSingletonFormat(config, singleton);
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
     state,
     initialFiles,
     storage: config.storage,
     schema: singletonConfig.schema,
     basePath: singletonPath,
-    format: getSingletonFormat(config, singleton),
+    format,
     currentLocalTreeKey: localTreeKey,
     currentTree,
     slug: undefined,
@@ -167,9 +169,11 @@ function SingletonPage({
             {updateResult.kind === 'error' && (
               <Notice tone="critical">{updateResult.error.message}</Notice>
             )}
-            <FormValueContentFromPreviewProps
+            <FormForEntry
               key={localTreeKey}
               forceValidation={forceValidation}
+              contentField={format.contentField?.key}
+              slugField={undefined}
               {...previewProps}
             />
             <DialogContainer

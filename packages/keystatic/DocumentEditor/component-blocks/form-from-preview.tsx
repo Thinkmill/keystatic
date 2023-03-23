@@ -480,7 +480,7 @@ const fieldRenderers = {
   conditional: ConditionalFieldPreview,
 };
 
-const InnerFormValueContentFromPreviewProps: MemoExoticComponent<
+export const InnerFormValueContentFromPreviewProps: MemoExoticComponent<
   (
     props: GenericPreviewProps<NonChildFieldComponentSchema, unknown> & {
       autoFocus?: boolean;

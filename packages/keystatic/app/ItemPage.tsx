@@ -27,7 +27,6 @@ import { TextField } from '@voussoir/text-field';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../config';
-import { FormValueContentFromPreviewProps } from '../DocumentEditor/component-blocks/form-from-preview';
 import { createGetPreviewProps } from '../DocumentEditor/component-blocks/preview-props';
 import { fields } from '../DocumentEditor/component-blocks/api';
 import { clientSideValidateProp } from '../DocumentEditor/component-blocks/utils';
@@ -59,6 +58,7 @@ import { useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
 import { mergeDataStates } from './useData';
 import { useSlugsInCollection } from './useSlugsInCollection';
+import { FormForEntry } from './form-for-entry';
 
 type ItemPageProps = {
   collection: string;
@@ -316,10 +316,11 @@ function ItemPage(props: ItemPageProps) {
             <Notice tone="critical">{deleteResult.error.message}</Notice>
           )}
           <AppShellBody>
-            <FormValueContentFromPreviewProps
+            <FormForEntry
               key={localTreeKey}
               forceValidation={forceValidation}
               slugField={props.slugInfo}
+              contentField={formatInfo.contentField?.key}
               {...previewProps}
             />
           </AppShellBody>

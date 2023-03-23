@@ -11,7 +11,6 @@ import { toastQueue } from '@voussoir/toast';
 
 import { Config } from '../config';
 import { fields } from '../DocumentEditor/component-blocks/api';
-import { FormValueContentFromPreviewProps } from '../DocumentEditor/component-blocks/form-from-preview';
 import { getInitialPropsValue } from '../DocumentEditor/component-blocks/initial-values';
 import { createGetPreviewProps } from '../DocumentEditor/component-blocks/preview-props';
 import { clientSideValidateProp } from '../DocumentEditor/component-blocks/utils';
@@ -33,6 +32,7 @@ import {
 } from './utils';
 import { useSlugsInCollection } from './useSlugsInCollection';
 import { ForkRepoDialog } from './fork-repo';
+import { FormForEntry } from './form-for-entry';
 
 const emptyMap = new Map<string, TreeNode>();
 
@@ -61,13 +61,15 @@ export function CreateItem(props: {
 
   const slug = getSlugFromState(collectionConfig, state);
 
+  const formatInfo = getCollectionFormat(props.config, props.collection);
+
   const [createResult, _createItem, resetCreateItemState] = useUpsertItem({
     state,
     basePath: getCollectionItemPath(props.config, props.collection, slug),
     initialFiles: undefined,
     storage: props.config.storage,
     schema: collectionConfig.schema,
-    format: getCollectionFormat(props.config, props.collection),
+    format: formatInfo,
     currentLocalTreeKey: undefined,
     currentTree:
       tree.current.kind === 'loaded' ? tree.current.data.tree : emptyMap,
@@ -165,9 +167,10 @@ export function CreateItem(props: {
               <Notice tone="critical">{createResult.error.message}</Notice>
             )}
 
-            <FormValueContentFromPreviewProps
+            <FormForEntry
               forceValidation={forceValidation}
               slugField={slugInfo}
+              contentField={formatInfo.contentField?.key}
               {...previewProps}
             />
           </Flex>
