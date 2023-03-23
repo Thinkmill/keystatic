@@ -172,7 +172,7 @@ function SingletonPage({
             <FormForEntry
               key={localTreeKey}
               forceValidation={forceValidation}
-              contentField={format.contentField?.key}
+              formatInfo={format}
               slugField={undefined}
               {...previewProps}
             />

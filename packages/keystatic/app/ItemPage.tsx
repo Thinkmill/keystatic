@@ -320,7 +320,7 @@ function ItemPage(props: ItemPageProps) {
               key={localTreeKey}
               forceValidation={forceValidation}
               slugField={props.slugInfo}
-              contentField={formatInfo.contentField?.key}
+              formatInfo={formatInfo}
               {...previewProps}
             />
           </AppShellBody>
