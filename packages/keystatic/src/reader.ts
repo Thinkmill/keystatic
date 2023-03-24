@@ -1,4 +1,4 @@
-import { Collection, Config, Singleton } from '../config';
+import { Collection, Config, Glob, Singleton } from '../config';
 import {
   ComponentSchema,
   fields,
@@ -17,6 +17,7 @@ import {
   getEntryDataFilepath,
   getSingletonFormat,
   getSingletonPath,
+  getSlugGlobForCollection,
 } from '../app/path-utils';
 import { validateComponentBlockProps } from '../validate-component-block-props';
 import {
@@ -25,6 +26,7 @@ import {
   parseSerializedFormField,
 } from '../app/required-files';
 import { getValueAtPropPath } from '../DocumentEditor/component-blocks/utils';
+import { Dirent } from 'fs';
 
 type CollectionReader<
   Schema extends Record<string, ComponentSchema>,
@@ -47,6 +49,36 @@ type SingletonReader<Schema extends Record<string, ComponentSchema>> = {
   read: () => Promise<ValueForReading<ObjectField<Schema>> | null>;
 };
 
+async function getAllEntries(
+  root: string,
+  prefix: string
+): Promise<{ entry: Dirent; name: string }[]> {
+  return (
+    await Promise.all(
+      (
+        await fs
+          .readdir(path.join(root, prefix), { withFileTypes: true })
+          .catch(err => {
+            if ((err as any).code === 'ENOENT') {
+              return [];
+            }
+            throw err;
+          })
+      ).map(async dirent => {
+        const name = `${prefix}${dirent.name}`;
+        const entry = { entry: dirent, name };
+        if (dirent.isDirectory()) {
+          return [entry, ...(await getAllEntries(root, `${name}/`))];
+        }
+        if (dirent.isFile()) {
+          return entry;
+        }
+        return [];
+      })
+    )
+  ).flat();
+}
+
 function collectionReader(
   repoPath: string,
   collection: string,
@@ -56,6 +88,7 @@ function collectionReader(
   const collectionPath = getCollectionPath(config, collection);
   const collectionConfig = config.collections![collection];
   const schema = fields.object(collectionConfig.schema);
+  const glob = getSlugGlobForCollection(config, collection);
   const extension = getDataFileExtension(formatInfo);
   return {
     read: (slug: string) => {
@@ -66,20 +99,33 @@ function collectionReader(
         {
           field: collectionConfig.slugField,
           slug,
+          glob,
         },
         repoPath
       );
     },
     async list() {
-      const entries = await fs.readdir(path.join(repoPath, collectionPath), {
-        withFileTypes: true,
-      });
+      const entries: { entry: Dirent; name: string }[] =
+        glob === '*'
+          ? (
+              await fs
+                .readdir(path.join(repoPath, collectionPath), {
+                  withFileTypes: true,
+                })
+                .catch(err => {
+                  if ((err as any).code === 'ENOENT') {
+                    return [];
+                  }
+                  throw err;
+                })
+            ).map(x => ({ entry: x, name: x.name }))
+          : await getAllEntries(path.join(repoPath, collectionPath), '');
 
       return (
         await Promise.all(
           entries.map(async x => {
             if (formatInfo.dataLocation === 'index') {
-              if (!x.isDirectory()) return [];
+              if (!x.entry.isDirectory()) return [];
               try {
                 await fs.stat(
                   path.join(
@@ -98,7 +144,7 @@ function collectionReader(
                 throw err;
               }
             } else {
-              if (!x.isFile() || !x.name.endsWith(extension)) return [];
+              if (!x.entry.isFile() || !x.name.endsWith(extension)) return [];
               return [x.name.slice(0, -extension.length)];
             }
           })
@@ -116,6 +162,7 @@ async function readItem(
     | {
         slug: string;
         field: string;
+        glob: Glob;
       }
     | undefined,
   repoPath: string
@@ -143,6 +190,7 @@ async function readItem(
           slug: slugField.slug,
           mode: 'read',
           slugs: new Set(),
+          glob: slugField.glob,
         }
   );
   const requiredFiles = getRequiredFiles(validated, schema, slugField?.slug);

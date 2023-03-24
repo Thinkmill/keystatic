@@ -6,12 +6,13 @@ import {
 export type DataFormat = 'json' | 'yaml';
 export type Format = DataFormat | { data?: DataFormat; contentField?: string };
 
+export type Glob = '*' | '**';
 export type Collection<
   Schema extends Record<string, ComponentSchema>,
   SlugField extends string
 > = {
   label: string;
-  path?: `${string}/*` | `${string}/*/${string}`;
+  path?: `${string}/${Glob}` | `${string}/${Glob}/${string}`;
   format?: Format;
   slugField: SlugField;
   schema: Schema;

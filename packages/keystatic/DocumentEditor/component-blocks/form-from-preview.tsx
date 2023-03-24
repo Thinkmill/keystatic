@@ -41,6 +41,7 @@ import { clientSideValidateProp, ReadonlyPropPath } from './utils';
 import {
   AddToPathProvider,
   PathContextProvider,
+  SlugFieldInfo,
   SlugFieldProvider,
 } from './fields/text';
 import { getSlugFromState } from '../../app/utils';
@@ -166,7 +167,7 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
           getSlugFromState({ schema, slugField }, x as Record<string, unknown>)
         )
     );
-    return { slugs, field: slugField };
+    return { slugs, field: slugField, glob: '*' as const };
   }, [modalStateIndex, props]);
 
   return (
@@ -498,10 +499,7 @@ export const FormValueContentFromPreviewProps: MemoExoticComponent<
     props: GenericPreviewProps<NonChildFieldComponentSchema, unknown> & {
       autoFocus?: boolean;
       forceValidation?: boolean;
-      slugField?: {
-        slugs: Set<string>;
-        field: string;
-      };
+      slugField?: SlugFieldInfo;
     }
   ) => ReactElement
 > = memo(function FormValueContentFromPreview({ slugField, ...props }) {
@@ -518,12 +516,7 @@ function ArrayFieldItemModalContent(props: {
   schema: NonChildFieldComponentSchema;
   value: unknown;
   onChange: (cb: (value: unknown) => unknown) => void;
-  slugField:
-    | {
-        slugs: Set<string>;
-        field: string;
-      }
-    | undefined;
+  slugField: SlugFieldInfo | undefined;
 }) {
   const previewProps = useMemo(
     () => createGetPreviewProps(props.schema, props.onChange, () => undefined),

@@ -1,11 +1,18 @@
 import { TextArea, TextField } from '@voussoir/text-field';
 import { useState, useMemo, useContext, createContext, ReactNode } from 'react';
+import { Glob } from '../../../config';
 import { SlugFormField } from '../api';
 import { ReadonlyPropPath } from '../utils';
 
-export const SlugFieldContext = createContext<
-  { field: string; slugs: Set<string> } | undefined
->(undefined);
+export type SlugFieldInfo = {
+  field: string;
+  slugs: Set<string>;
+  glob: Glob;
+};
+
+export const SlugFieldContext = createContext<SlugFieldInfo | undefined>(
+  undefined
+);
 
 export const SlugFieldProvider = SlugFieldContext.Provider;
 
@@ -32,7 +39,7 @@ export function validateText(
   min: number,
   max: number,
   fieldLabel: string,
-  slugs?: Set<string>
+  slugInfo: { slugs: Set<string>; glob: Glob } | undefined
 ) {
   if (val.length < min) {
     if (min === 1) {
@@ -44,24 +51,35 @@ export function validateText(
   if (val.length > max) {
     return `${fieldLabel} must be no longer than ${max} characters`;
   }
-  if (slugs) {
+  if (slugInfo) {
     if (val === '..') {
       return `${fieldLabel} must not be ..`;
     }
     if (val === '.') {
       return `${fieldLabel} must not be .`;
     }
-    if (/[\\/]/.test(val)) {
+    if (badSlashForGlobPattern(slugInfo.glob).test(val)) {
       return `${fieldLabel} must not contain slashes`;
     }
-    if (slugs.has(val)) {
+    if (slugInfo.slugs.has(val)) {
       return `${fieldLabel} must be unique`;
     }
   }
 }
 
-export function isValidSlug(val: string, slugs: Set<string>) {
-  return val !== '..' && val !== '.' && !/[\\/]/.test(val) && !slugs.has(val);
+const badSlashForGlobPattern = (glob: Glob) =>
+  glob === '*' ? /[\\/]/ : /[\\]/;
+
+export function isValidSlug(
+  val: string,
+  slugInfo: { slugs: Set<string>; glob: Glob }
+) {
+  return (
+    val !== '..' &&
+    val !== '.' &&
+    !badSlashForGlobPattern(slugInfo.glob).test(val) &&
+    !slugInfo.slugs.has(val)
+  );
 }
 
 export function text({
@@ -83,45 +101,12 @@ export function text({
   multiline?: boolean;
 }): SlugFormField<string, undefined, undefined> {
   const TextFieldComponent = multiline ? TextArea : TextField;
-  function SlugTextField(props: {
-    value: string;
-    onChange: (value: string) => void;
-    autoFocus?: boolean;
-    forceValidation?: boolean;
-    slugs: Set<string>;
-  }) {
-    const [blurred, setBlurred] = useState(false);
-    return (
-      <TextFieldComponent
-        label={label}
-        description={description}
-        autoFocus={props.autoFocus}
-        value={props.value}
-        onChange={props.onChange}
-        onBlur={() => setBlurred(true)}
-        errorMessage={
-          props.forceValidation || blurred
-            ? validateText(
-                props.value,
-                Math.max(min, 1),
-                max,
-                label,
-                props.slugs
-              )
-            : undefined
-        }
-      />
-    );
-  }
   return {
     kind: 'form',
     Input(props) {
       const [blurred, setBlurred] = useState(false);
       const slugContext = useContext(SlugFieldContext);
       const path = useContext(PathContext);
-      if (path.length === 1 && slugContext?.field === path[0]) {
-        return <SlugTextField slugs={slugContext.slugs} {...props} />;
-      }
       return (
         <TextFieldComponent
           label={label}
@@ -132,7 +117,15 @@ export function text({
           onBlur={() => setBlurred(true)}
           errorMessage={
             props.forceValidation || blurred
-              ? validateText(props.value, min, max, label)
+              ? validateText(
+                  props.value,
+                  min,
+                  max,
+                  label,
+                  path.length === 1 && slugContext?.field === path[0]
+                    ? slugContext
+                    : undefined
+                )
               : undefined
           }
         />
@@ -151,7 +144,7 @@ export function text({
         return false;
       }
       if (slugInfo) {
-        return isValidSlug(value, slugInfo.slugs);
+        return isValidSlug(value, slugInfo);
       }
       return true;
     },

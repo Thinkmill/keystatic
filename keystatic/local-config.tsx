@@ -240,7 +240,7 @@ export default config({
     }),
     singlefileposts: collection({
       label: 'Single File Posts',
-      path: 'single-file-posts/*/something',
+      path: 'single-file-posts/**',
       slugField: 'title',
       format: { contentField: 'content' },
       schema: {

@@ -48,10 +48,10 @@ export function slug(args: {
     Input(props) {
       const slugContext = useContext(SlugFieldContext);
       const path = useContext(PathContext);
-      const slugs =
+      const slugInfo =
         path.length === 1 && path[0] === slugContext?.field
-          ? slugContext.slugs
-          : emptySet;
+          ? slugContext
+          : { slugs: emptySet, glob: '*' as const };
 
       const [blurredName, setBlurredName] = useState(false);
       const [blurredSlug, setBlurredSlug] = useState(false);
@@ -61,9 +61,9 @@ export function slug(args: {
       );
       const generateSlug = (name: string) => {
         const generated = naiveGenerateSlug(name);
-        if (slugs.has(generated)) {
+        if (slugInfo.slugs.has(generated)) {
           let i = 1;
-          while (slugs.has(`${generated}-${i}`)) {
+          while (slugInfo.slugs.has(`${generated}-${i}`)) {
             i++;
           }
           return `${generated}-${i}`;
@@ -78,7 +78,7 @@ export function slug(args: {
               args.slug?.validation?.length?.min ?? 1,
               args.slug?.validation?.length?.max ?? Infinity,
               args.slug?.label ?? 'Slug',
-              slugs
+              slugInfo
             )
           : undefined;
 
@@ -104,7 +104,8 @@ export function slug(args: {
                     props.value.name,
                     args.name.validation?.length?.min ?? 0,
                     args.name.validation?.length?.max ?? Infinity,
-                    args.name.label
+                    args.name.label,
+                    undefined
                   )
                 : undefined
             }
@@ -155,7 +156,10 @@ export function slug(args: {
         typeof value.slug === 'string' &&
         value.slug.length >= (args.slug?.validation?.length?.min ?? 1) &&
         value.slug.length <= (args.slug?.validation?.length?.max ?? Infinity) &&
-        isValidSlug(value.slug, slugInfo?.slugs ?? emptySet)
+        isValidSlug(
+          value.slug,
+          slugInfo ? slugInfo : { slugs: emptySet, glob: '*' }
+        )
       );
     },
     slug: {
