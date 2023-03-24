@@ -1,0 +1,38 @@
+{
+  "name": "@voussoir/avatar",
+  "version": "0.1.1",
+  "description": "An avatar is a thumbnail representation of an entity, such as a user or an organization.",
+  "license": "MIT",
+  "main": "dist/voussoir-avatar.cjs.js",
+  "module": "dist/voussoir-avatar.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/voussoir-avatar.esm.js",
+      "default": "./dist/voussoir-avatar.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@babel/runtime": "^7.18.3",
+    "@voussoir/layout": "^0.1.0",
+    "@voussoir/style": "^0.1.0",
+    "@voussoir/types": "^0.1.0",
+    "@voussoir/typography": "^0.1.0",
+    "@voussoir/utils": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.25",
+    "@voussoir/storybook": "^0.0.0",
+    "@voussoir/test-utils": "^2.0.0",
+    "react": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "engines": {
+    "node": ">= 14.13"
+  }
+}

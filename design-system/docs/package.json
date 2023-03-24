@@ -22,6 +22,7 @@
     "@react-aria/i18n": "^3.6.2",
     "@types/js-yaml": "^4.0.5",
     "@voussoir/action-group": "^0.1.0",
+    "@voussoir/avatar": "^0.1.0",
     "@voussoir/badge": "^0.1.1",
     "@voussoir/breadcrumbs": "^0.1.2",
     "@voussoir/button": "^0.1.3",
