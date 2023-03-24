@@ -1,4 +1,5 @@
 import { ReactElement, ReactNode } from 'react';
+import { Glob } from '../../config';
 
 import { ChildField } from './fields/child';
 
@@ -57,7 +58,7 @@ export type SlugFormField<Value, Options, SerializedValue> = Omit<
   };
   validate(
     value: unknown,
-    slugFieldInfo: { slugs: Set<string> } | undefined
+    slugFieldInfo: { slugs: Set<string>; glob: Glob } | undefined
   ): boolean;
 };
 

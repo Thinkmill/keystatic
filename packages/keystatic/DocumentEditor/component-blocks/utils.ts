@@ -5,6 +5,7 @@ import { DocumentFeatures } from '../document-features';
 import { DocumentFeaturesForNormalization } from '../document-features-normalization';
 import { Mark } from '../utils';
 import { ComponentSchema, ChildField, ValueForComponentSchema } from './api';
+import { SlugFieldInfo } from './fields/text';
 import { getKeysForArrayValue, setKeysForArrayValue } from './preview-props';
 
 type PathToChildFieldWithOption = {
@@ -229,7 +230,7 @@ export function getSchemaAtPropPath(
 export function clientSideValidateProp(
   schema: ComponentSchema,
   value: any,
-  slugField: { field: string; slugs: Set<string> } | undefined,
+  slugField: SlugFieldInfo | undefined,
   path: ReadonlyPropPath = []
 ): boolean {
   switch (schema.kind) {
@@ -240,6 +241,7 @@ export function clientSideValidateProp(
       if (slugField && path[path.length - 1] === slugField?.field) {
         return schema.validate(value, {
           slugs: slugField.slugs,
+          glob: slugField.glob,
         });
       }
       return schema.validate(value, undefined);
@@ -295,6 +297,7 @@ export function clientSideValidateProp(
               : {
                   field: slugInfo.slugField,
                   slugs: new Set(slugInfo.slugs.filter((_, i) => idx !== i)),
+                  glob: '*',
                 },
             path.concat(idx)
           )

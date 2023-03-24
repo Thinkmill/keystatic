@@ -1,5 +1,5 @@
 import { assert } from 'emery';
-import { Config, DataFormat, Format } from '../config';
+import { Config, DataFormat, Format, Glob } from '../config';
 import {
   ComponentSchema,
   FormFieldWithFile,
@@ -9,12 +9,14 @@ export function fixPath(path: string) {
   return path.replace(/^\.?\/+/, '').replace(/\/*$/, '');
 }
 
+const collectionPath = /\/\*\*?(?:$|\/)/;
+
 function getConfiguredCollectionPath(config: Config, collection: string) {
   const collectionConfig = config.collections![collection];
   const path = collectionConfig.path ?? `${collection}/*/`;
-  if (!path.endsWith('/*') && !path.includes('/*/')) {
+  if (!collectionPath.test(path)) {
     throw new Error(
-      `Collection path must end with /* or include /*/ but ${collection} has ${path}`
+      `Collection path must end with /* or /** or include /*/ or /**/ but ${collection} has ${path}`
     );
   }
   return path;
@@ -22,7 +24,7 @@ function getConfiguredCollectionPath(config: Config, collection: string) {
 
 export function getCollectionPath(config: Config, collection: string) {
   const configuredPath = getConfiguredCollectionPath(config, collection);
-  const path = fixPath(configuredPath.replace(/\*.*$/, ''));
+  const path = fixPath(configuredPath.replace(/\*\*?.*$/, ''));
   return path;
 }
 
@@ -60,12 +62,20 @@ export function getEntryDataFilepath(dir: string, formatInfo: FormatInfo) {
   }${getDataFileExtension(formatInfo)}`;
 }
 
+export function getSlugGlobForCollection(
+  config: Config,
+  collection: string
+): Glob {
+  const collectionPath = getConfiguredCollectionPath(config, collection);
+  return collectionPath.includes('**') ? '**' : '*';
+}
+
 export function getCollectionItemSlugSuffix(
   config: Config,
   collection: string
 ) {
   const configuredPath = getConfiguredCollectionPath(config, collection);
-  const path = fixPath(configuredPath.replace(/^[^*]+\*/, ''));
+  const path = fixPath(configuredPath.replace(/^[^*]+\*\*?/, ''));
   return path ? `/${path}` : '';
 }
 

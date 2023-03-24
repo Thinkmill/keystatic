@@ -8,6 +8,7 @@ import {
   getCollectionItemSlugSuffix,
   getCollectionPath,
   getDataFileExtension,
+  getSlugGlobForCollection,
 } from './path-utils';
 import { collectDirectoriesUsedInSchema, getTreeKey } from './tree-key';
 import { getTreeNodeAtPath, TreeNode } from './trees';
@@ -102,13 +103,28 @@ export function getEntriesInCollectionWithTreeKey(
   const schema = fields.object(collectionConfig.schema);
   const formatInfo = getCollectionFormat(config, collection);
   const extension = getDataFileExtension(formatInfo);
+  const glob = getSlugGlobForCollection(config, collection);
   const collectionPath = getCollectionPath(config, collection);
   const directory: Map<string, TreeNode> =
     getTreeNodeAtPath(rootTree, collectionPath)?.children ?? new Map();
   const entries: { key: string; slug: string }[] = [];
   const directoriesUsedInSchema = [...collectDirectoriesUsedInSchema(schema)];
   const suffix = getCollectionItemSlugSuffix(config, collection);
-  for (const [key, entry] of directory) {
+  const possibleEntries = new Map(directory);
+  if (glob === '**') {
+    const handleDirectory = (dir: Map<string, TreeNode>, prefix: string) => {
+      for (const [key, entry] of dir) {
+        if (entry.children) {
+          possibleEntries.set(`${prefix}${key}`, entry);
+          handleDirectory(entry.children, `${prefix}${key}/`);
+        } else {
+          possibleEntries.set(`${prefix}${key}`, entry);
+        }
+      }
+    };
+    handleDirectory(directory, '');
+  }
+  for (const [key, entry] of possibleEntries) {
     if (formatInfo.dataLocation === 'index') {
       const actualEntry = getTreeNodeAtPath(
         rootTree,

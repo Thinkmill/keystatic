@@ -29,6 +29,7 @@ import {
   getCollectionFormat,
   getCollectionItemPath,
   getSlugFromState,
+  getSlugGlobForCollection,
   isGitHubConfig,
 } from './utils';
 import { useSlugsInCollection } from './useSlugsInCollection';
@@ -61,13 +62,14 @@ export function CreateItem(props: {
 
   const slug = getSlugFromState(collectionConfig, state);
 
+  const formatInfo = getCollectionFormat(props.config, props.collection);
   const [createResult, _createItem, resetCreateItemState] = useUpsertItem({
     state,
     basePath: getCollectionItemPath(props.config, props.collection, slug),
     initialFiles: undefined,
     storage: props.config.storage,
     schema: collectionConfig.schema,
-    format: getCollectionFormat(props.config, props.collection),
+    format: formatInfo,
     currentLocalTreeKey: undefined,
     currentTree:
       tree.current.kind === 'loaded' ? tree.current.data.tree : emptyMap,
@@ -92,8 +94,15 @@ export function CreateItem(props: {
     return {
       field: collectionConfig.slugField,
       slugs,
+      glob: getSlugGlobForCollection(props.config, props.collection),
     };
-  }, [collectionConfig.slugField, slugsArr, currentSlug]);
+  }, [
+    slugsArr,
+    currentSlug,
+    collectionConfig.slugField,
+    props.config,
+    props.collection,
+  ]);
 
   const onCreate = async () => {
     if (!clientSideValidateProp(schema, state, slugInfo)) {
@@ -102,7 +111,7 @@ export function CreateItem(props: {
     }
     if (await createItem()) {
       const slug = getSlugFromState(collectionConfig, state);
-      router.push(`${collectionPath}/item/${slug}`);
+      router.push(`${collectionPath}/item/${encodeURIComponent(slug)}`);
       toastQueue.positive('Entry created', { timeout: 5000 }); // TODO: l10n
     }
   };

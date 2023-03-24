@@ -37,7 +37,7 @@ import { useDeleteItem, useUpsertItem } from '../utils';
 import { useCreateBranchMutation } from './branch-selection';
 import l10nMessages from './l10n/index.json';
 import { ForkRepoDialog } from './fork-repo';
-import { getDataFileExtension } from './path-utils';
+import { getDataFileExtension, getSlugGlobForCollection } from './path-utils';
 import { useRouter } from './router';
 import { AppShellBody, AppShellRoot } from './shell';
 import {
@@ -59,6 +59,7 @@ import { useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
 import { mergeDataStates } from './useData';
 import { useSlugsInCollection } from './useSlugsInCollection';
+import { SlugFieldInfo } from '../DocumentEditor/component-blocks/fields/text';
 
 type ItemPageProps = {
   collection: string;
@@ -69,7 +70,7 @@ type ItemPageProps = {
   localTreeKey: string;
   currentTree: Map<string, TreeNode>;
   basePath: string;
-  slugInfo: { slugs: Set<string>; field: string };
+  slugInfo: SlugFieldInfo;
 };
 
 function ItemPage(props: ItemPageProps) {
@@ -490,8 +491,19 @@ function ItemPageWrapper(props: {
   const slugInfo = useMemo(() => {
     const slugs = new Set(allSlugs);
     slugs.delete(props.itemSlug);
-    return { slug: props.itemSlug, field: collectionConfig.slugField, slugs };
-  }, [allSlugs, collectionConfig.slugField, props.itemSlug]);
+    return {
+      slug: props.itemSlug,
+      field: collectionConfig.slugField,
+      slugs,
+      glob: getSlugGlobForCollection(props.config, props.collection),
+    };
+  }, [
+    allSlugs,
+    collectionConfig.slugField,
+    props.collection,
+    props.config,
+    props.itemSlug,
+  ]);
   const itemData = useItemData({
     config: props.config,
     dirpath: getCollectionItemPath(

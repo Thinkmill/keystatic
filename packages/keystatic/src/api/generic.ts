@@ -99,7 +99,7 @@ export function makeGenericAPIRouteHandler(
       if (joined === 'github/created-app') {
         return createdGithubApp(req, options?.slugEnvName);
       }
-      if (joined === 'github/login') {
+      if (joined === 'github/login' || joined === 'github/repo-not-found') {
         return redirect('/keystatic/setup');
       }
       if (_config2.config?.storage.kind === 'local') {

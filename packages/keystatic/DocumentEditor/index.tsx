@@ -47,7 +47,7 @@ import { renderLeaf } from './leaf';
 import { withSoftBreaks } from './soft-breaks';
 import { withShortcuts } from './shortcuts';
 import { withDocumentFeaturesNormalization } from './document-features-normalization';
-import { ToolbarStateProvider } from './toolbar-state';
+import { ToolbarStateProvider, useToolbarState } from './toolbar-state';
 import { withInsertMenu } from './insert-menu';
 import { withBlockMarkdownShortcuts } from './block-markdown-shortcuts';
 import { withPasting } from './pasting';
@@ -90,169 +90,179 @@ const arrowKeyToDirection = new Map([
   ['ArrowRight', 'right' as const],
 ]);
 
-const getKeyDownHandler = (editor: Editor) => (event: KeyboardEvent) => {
-  if (event.defaultPrevented) return;
-  for (const hotkey in HOTKEYS) {
-    if (isHotkey(hotkey, event.nativeEvent)) {
-      event.preventDefault();
-      const mark = HOTKEYS[hotkey];
-      const isActive = isMarkActive(editor, mark);
-      if (isActive) {
-        Editor.removeMark(editor, mark);
-      } else {
-        Editor.addMark(editor, mark, true);
-      }
-      return;
-    }
-  }
-  if (isHotkey('mod+\\', event.nativeEvent)) {
-    clearFormatting(editor);
-    return;
-  }
-  if (isHotkey('mod+k', event.nativeEvent)) {
-    event.preventDefault();
-    wrapLink(editor, '');
-    return;
-  }
-  if (event.key === 'Tab') {
-    const didAction = event.shiftKey ? unnestList(editor) : nestList(editor);
-    if (didAction) {
-      event.preventDefault();
-      return;
-    }
-  }
-
-  if (event.key === 'Tab' && editor.selection) {
-    const layoutArea = Editor.above(editor, {
-      match: node => node.type === 'layout-area' || node.type === 'table-cell',
-    });
-    if (layoutArea) {
-      const layoutAreaToEnter = event.shiftKey
-        ? Editor.before(editor, layoutArea[1], { unit: 'block' })
-        : Editor.after(editor, layoutArea[1], { unit: 'block' });
-      Transforms.setSelection(editor, {
-        anchor: layoutAreaToEnter,
-        focus: layoutAreaToEnter,
-      });
-      event.preventDefault();
-    }
-  }
-  if (isHotkey('mod+a', event)) {
-    const parentTable = Editor.above(editor, {
-      match: nodeTypeMatcher('table'),
-    });
-    if (parentTable) {
-      Transforms.select(editor, parentTable[1]);
-      event.preventDefault();
-      return;
-    }
-  }
-  const direction = arrowKeyToDirection.get(event.key);
-  const { selection } = editor;
-  if (direction && selection) {
-    const selectedTableArea = getSelectedTableArea(editor);
-    if (selectedTableArea) {
-      const focusCellPath = Editor.above(editor, {
-        match: nodeTypeMatcher('table-cell'),
-        at: selection.focus.path,
-      })?.[1];
-      const anchorCellPath = Editor.above(editor, {
-        match: nodeTypeMatcher('table-cell'),
-        at: selection.anchor.path,
-      })?.[1];
-
-      if (!focusCellPath || !anchorCellPath) return;
-      const newCellPath = getCellPathInDirection(
-        editor,
-        focusCellPath,
-        direction
-      );
-      if (newCellPath) {
-        if (selectedTableArea.singleCell === 'not-selected') {
-          if (direction !== 'up' && direction !== 'down') return;
-          const [node, offset] = ReactEditor.toDOMPoint(
-            editor,
-            selection.focus
-          );
-          const blockElement = Editor.above(editor, {
-            match: isBlock,
-            at: selection.focus.path,
-          });
-
-          if (!blockElement) return;
-          if (
-            direction === 'up' &&
-            blockElement[1].slice(focusCellPath.length).some(idx => idx !== 0)
-          ) {
-            return;
-          }
-          if (direction === 'down') {
-            const [parentNode] = Editor.parent(editor, blockElement[1]);
-            if (
-              parentNode.children.length - 1 !==
-              blockElement[1][blockElement[1].length - 1]
-            ) {
-              return;
-            }
-            for (const [node, path] of Node.ancestors(editor, blockElement[1], {
-              reverse: true,
-            })) {
-              if (node.type === 'table-cell') break;
-              const [parentNode] = Editor.parent(editor, path);
-              if (parentNode.children.length - 1 === path[path.length - 1]) {
-                continue;
-              }
-              return;
-            }
-          }
-          const domNodeForBlockElement = ReactEditor.toDOMNode(
-            editor,
-            blockElement[0]
-          );
-          const rangeOfWholeBlock = document.createRange();
-          rangeOfWholeBlock.selectNodeContents(domNodeForBlockElement);
-          const rectsOfRangeOfWholeBlock = Array.from(
-            rangeOfWholeBlock.getClientRects()
-          );
-          const newRange = document.createRange();
-          newRange.setStart(node, offset);
-          newRange.setEnd(node, offset);
-          const rangeRects = Array.from(newRange.getClientRects());
-          const lastRangeRect = rangeRects[rangeRects.length - 1];
-          const key = direction === 'up' ? 'top' : 'bottom';
-          const expected =
-            key === 'top'
-              ? Math.min(...rectsOfRangeOfWholeBlock.map(x => x.top))
-              : Math.max(...rectsOfRangeOfWholeBlock.map(x => x.bottom));
-          if (lastRangeRect[key] === expected) {
-            const focus = Editor[direction === 'up' ? 'end' : 'start'](
-              editor,
-              newCellPath
-            );
-            Transforms.select(editor, {
-              focus,
-              anchor: event.shiftKey ? selection.anchor : focus,
-            });
-            event.preventDefault();
-          }
-
-          return;
-        }
-        if (!event.shiftKey) return;
-
-        if (Path.equals(newCellPath, anchorCellPath)) {
-          Transforms.select(editor, newCellPath);
+const getKeyDownHandler =
+  (editor: Editor, documentFeatures: DocumentFeatures) =>
+  (event: KeyboardEvent) => {
+    if (event.defaultPrevented) return;
+    for (const hotkey in HOTKEYS) {
+      if (
+        documentFeatures.formatting.inlineMarks[HOTKEYS[hotkey]] &&
+        isHotkey(hotkey, event.nativeEvent)
+      ) {
+        event.preventDefault();
+        const mark = HOTKEYS[hotkey];
+        const isActive = isMarkActive(editor, mark);
+        if (isActive) {
+          Editor.removeMark(editor, mark);
         } else {
-          Transforms.select(editor, {
-            anchor: selection.anchor,
-            focus: Editor.start(editor, newCellPath),
-          });
+          Editor.addMark(editor, mark, true);
         }
+        return;
+      }
+    }
+    if (isHotkey('mod+\\', event.nativeEvent)) {
+      clearFormatting(editor);
+      return;
+    }
+    if (documentFeatures.links && isHotkey('mod+k', event.nativeEvent)) {
+      event.preventDefault();
+      wrapLink(editor, '');
+      return;
+    }
+    if (event.key === 'Tab') {
+      const didAction = event.shiftKey ? unnestList(editor) : nestList(editor);
+      if (didAction) {
+        event.preventDefault();
+        return;
+      }
+    }
+
+    if (event.key === 'Tab' && editor.selection) {
+      const layoutArea = Editor.above(editor, {
+        match: node =>
+          node.type === 'layout-area' || node.type === 'table-cell',
+      });
+      if (layoutArea) {
+        const layoutAreaToEnter = event.shiftKey
+          ? Editor.before(editor, layoutArea[1], { unit: 'block' })
+          : Editor.after(editor, layoutArea[1], { unit: 'block' });
+        Transforms.setSelection(editor, {
+          anchor: layoutAreaToEnter,
+          focus: layoutAreaToEnter,
+        });
         event.preventDefault();
       }
     }
-  }
-};
+    if (isHotkey('mod+a', event)) {
+      const parentTable = Editor.above(editor, {
+        match: nodeTypeMatcher('table'),
+      });
+      if (parentTable) {
+        Transforms.select(editor, parentTable[1]);
+        event.preventDefault();
+        return;
+      }
+    }
+    const direction = arrowKeyToDirection.get(event.key);
+    const { selection } = editor;
+    if (direction && selection) {
+      const selectedTableArea = getSelectedTableArea(editor);
+      if (selectedTableArea) {
+        const focusCellPath = Editor.above(editor, {
+          match: nodeTypeMatcher('table-cell'),
+          at: selection.focus.path,
+        })?.[1];
+        const anchorCellPath = Editor.above(editor, {
+          match: nodeTypeMatcher('table-cell'),
+          at: selection.anchor.path,
+        })?.[1];
+
+        if (!focusCellPath || !anchorCellPath) return;
+        const newCellPath = getCellPathInDirection(
+          editor,
+          focusCellPath,
+          direction
+        );
+        if (newCellPath) {
+          if (selectedTableArea.singleCell === 'not-selected') {
+            if (direction !== 'up' && direction !== 'down') return;
+            const [node, offset] = ReactEditor.toDOMPoint(
+              editor,
+              selection.focus
+            );
+            const blockElement = Editor.above(editor, {
+              match: isBlock,
+              at: selection.focus.path,
+            });
+
+            if (!blockElement) return;
+            if (
+              direction === 'up' &&
+              blockElement[1].slice(focusCellPath.length).some(idx => idx !== 0)
+            ) {
+              return;
+            }
+            if (direction === 'down') {
+              const [parentNode] = Editor.parent(editor, blockElement[1]);
+              if (
+                parentNode.children.length - 1 !==
+                blockElement[1][blockElement[1].length - 1]
+              ) {
+                return;
+              }
+              for (const [node, path] of Node.ancestors(
+                editor,
+                blockElement[1],
+                {
+                  reverse: true,
+                }
+              )) {
+                if (node.type === 'table-cell') break;
+                const [parentNode] = Editor.parent(editor, path);
+                if (parentNode.children.length - 1 === path[path.length - 1]) {
+                  continue;
+                }
+                return;
+              }
+            }
+            const domNodeForBlockElement = ReactEditor.toDOMNode(
+              editor,
+              blockElement[0]
+            );
+            const rangeOfWholeBlock = document.createRange();
+            rangeOfWholeBlock.selectNodeContents(domNodeForBlockElement);
+            const rectsOfRangeOfWholeBlock = Array.from(
+              rangeOfWholeBlock.getClientRects()
+            );
+            const newRange = document.createRange();
+            newRange.setStart(node, offset);
+            newRange.setEnd(node, offset);
+            const rangeRects = Array.from(newRange.getClientRects());
+            const lastRangeRect = rangeRects[rangeRects.length - 1];
+            const key = direction === 'up' ? 'top' : 'bottom';
+            const expected =
+              key === 'top'
+                ? Math.min(...rectsOfRangeOfWholeBlock.map(x => x.top))
+                : Math.max(...rectsOfRangeOfWholeBlock.map(x => x.bottom));
+            if (lastRangeRect[key] === expected) {
+              const focus = Editor[direction === 'up' ? 'end' : 'start'](
+                editor,
+                newCellPath
+              );
+              Transforms.select(editor, {
+                focus,
+                anchor: event.shiftKey ? selection.anchor : focus,
+              });
+              event.preventDefault();
+            }
+
+            return;
+          }
+          if (!event.shiftKey) return;
+
+          if (Path.equals(newCellPath, anchorCellPath)) {
+            Transforms.select(editor, newCellPath);
+          } else {
+            Transforms.select(editor, {
+              anchor: selection.anchor,
+              focus: Editor.start(editor, newCellPath),
+            });
+          }
+          event.preventDefault();
+        }
+      }
+    }
+  };
 
 export function createDocumentEditorWithoutReact(
   documentFeatures: DocumentFeatures,
@@ -467,8 +477,12 @@ function getPrismTokenLength(token: Prism.Token | string): number {
 export function DocumentEditorEditable(props: EditableProps) {
   const editor = useSlate();
   const componentBlocks = useContext(ComponentBlockContext);
+  const toolbarState = useToolbarState();
 
-  const onKeyDown = useMemo(() => getKeyDownHandler(editor), [editor]);
+  const onKeyDown = useMemo(
+    () => getKeyDownHandler(editor, toolbarState.editorDocumentFeatures),
+    [editor, toolbarState.editorDocumentFeatures]
+  );
 
   return (
     <ActiveBlockPopoverProvider editor={editor}>

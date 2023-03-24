@@ -1,6 +1,7 @@
 import { assertNever } from 'emery';
 import { getSlugFromState, isSlugFormField } from './app/utils';
 import { ComponentSchema } from './DocumentEditor/component-blocks/api';
+import { SlugFieldInfo } from './DocumentEditor/component-blocks/fields/text';
 import { getInitialPropsValue } from './DocumentEditor/component-blocks/initial-values';
 import { ReadonlyPropPath } from './DocumentEditor/component-blocks/utils';
 
@@ -17,17 +18,8 @@ export function validateComponentBlockProps(
   value: unknown,
   path: ReadonlyPropPath,
   slugField:
-    | {
-        mode: 'state';
-        field: string;
-        slugs: Set<string>;
-      }
-    | {
-        mode: 'parse' | 'read';
-        slug: string;
-        field: string;
-        slugs: Set<string>;
-      }
+    | (SlugFieldInfo &
+        ({ mode: 'state' } | { mode: 'parse' | 'read'; slug: string }))
     | undefined
 ): any {
   if (schema.kind === 'form') {
@@ -37,6 +29,7 @@ export function validateComponentBlockProps(
       }
       const slugInfo = {
         slugs: slugField.slugs,
+        glob: slugField.glob,
       };
       if (slugField.mode === 'state') {
         if (!schema.validate(value, slugInfo)) {
@@ -167,6 +160,7 @@ export function validateComponentBlockProps(
           : {
               field: slugInfo.slugField,
               slugs: new Set(slugInfo.slugs.filter((_, idx) => i !== idx)),
+              glob: '*',
               mode: 'state',
             }
       );

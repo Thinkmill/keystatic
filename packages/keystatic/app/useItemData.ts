@@ -1,6 +1,7 @@
 import LRUCache from 'lru-cache';
 import { useCallback, useMemo } from 'react';
 import { Config } from '../config';
+import { SlugFieldInfo } from '../DocumentEditor/component-blocks/fields/text';
 import { transformProps } from '../DocumentEditor/component-blocks/utils';
 import { ComponentSchema, fields, GitHubConfig } from '../src';
 import { validateComponentBlockProps } from '../validate-component-block-props';
@@ -32,9 +33,8 @@ function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
     [],
     args.slug
       ? {
-          field: args.slug.field,
+          ...args.slug,
           mode: 'parse',
-          slugs: args.slug.slugs,
           slug: args.slug.slug,
         }
       : undefined
@@ -74,7 +74,7 @@ type UseItemDataArgs = {
   schema: Record<string, ComponentSchema>;
   dirpath: string;
   format: FormatInfo;
-  slug: { slugs: Set<string>; field: string; slug: string } | undefined;
+  slug: ({ slug: string } & SlugFieldInfo) | undefined;
 };
 
 function getAllFilesInTree(tree: Map<string, TreeNode>): TreeEntry[] {
