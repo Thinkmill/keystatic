@@ -11,9 +11,24 @@ describe('avatar/Avatar', () => {
     );
     expect(getByRole('img')).toBeInTheDocument();
   });
-  it('renders initials', () => {
-    const { getByRole } = render(<Avatar name="John Smith" />);
-    expect(getByRole('img')).toHaveTextContent('JS');
+
+  describe('initials', () => {
+    it('typical', () => {
+      const { getByRole } = render(<Avatar name="John Smith" />);
+      expect(getByRole('img')).toHaveTextContent('JS');
+    });
+    it('multi', () => {
+      const { getByRole } = render(<Avatar name="John Anders Brendan Smith" />);
+      expect(getByRole('img')).toHaveTextContent('JS');
+    });
+    it('single', () => {
+      const { getByRole } = render(<Avatar name="John" />);
+      expect(getByRole('img')).toHaveTextContent('J');
+    });
+    it('size=xsmall', () => {
+      const { getByRole } = render(<Avatar name="John Smith" size="xsmall" />);
+      expect(getByRole('img')).toHaveTextContent('J');
+    });
   });
 
   it('supports alt text as aria-label', () => {
