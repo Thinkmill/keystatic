@@ -20,14 +20,14 @@ By default, avatars are decorative. Standalone avatars with no surrounding
 context must provide `alt` text for accessibility.
 
 ```jsx {% live=true %}
-<Avatar src="https://i.pravatar.cc/128?u=avatar" name="John Smith" />
+<Avatar src="https://i.pravatar.cc/128?u=avatar" alt="John Smith" />
 ```
 
 ## Props
 
 ### Name
 
-The `name` prop is used to derive initials when source image isn't available.
+The `name` prop is used to derive initials when a source image isn't available.
 
 ```jsx {% live=true %}
 <Avatar name="John Smith" />
