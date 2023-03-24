@@ -1,5 +1,6 @@
 /** @jest-environment jsdom */
 
+import { toMarkdoc } from '../../markdoc/test-utils';
 import { htmlToEditor } from './test-utils';
 
 test('whitespace between blocks is removed', () => {
@@ -233,5 +234,38 @@ test('link, block and text as siblings', () => {
         </text>
       </paragraph>
     </editor>
+  `);
+});
+
+// TODO: there should be spaces before and after the inline code
+test('inline code bit', () => {
+  const editor =
+    htmlToEditor(`<span>before<span> </span><code>Code</code><span> </span>end</span><div></div>
+`);
+  expect(editor).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text>
+          before
+        </text>
+        <text
+          code={true}
+        >
+          Code
+        </text>
+        <text>
+          end
+        </text>
+      </paragraph>
+      <paragraph>
+        <text>
+          <cursor />
+        </text>
+      </paragraph>
+    </editor>
+  `);
+  expect(toMarkdoc(editor, {})).toMatchInlineSnapshot(`
+    "before\`Code\`end
+    "
   `);
 });

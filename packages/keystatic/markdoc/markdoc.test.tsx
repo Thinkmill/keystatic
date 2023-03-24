@@ -3,11 +3,10 @@
 /** @jsx jsx */
 import { jsx, makeEditor } from '../DocumentEditor/tests/utils';
 import { component, fields } from '../DocumentEditor/component-blocks/api';
-import { toMarkdocDocument } from './to-markdoc';
 import { fromMarkdoc as _fromMarkdoc } from './from-markdoc';
-import { Node } from 'slate';
-import { ElementFromValidation } from '../structure-validation';
+import { toMarkdoc as _toMarkdoc } from './test-utils';
 import Markdoc from '@markdoc/markdoc';
+import { Node } from 'slate';
 
 const componentBlocks = {
   'block-child': component({
@@ -43,14 +42,7 @@ const componentBlocks = {
 };
 
 function toMarkdoc(node: Node) {
-  const { children } = makeEditor(node);
-  return Markdoc.format(
-    Markdoc.parse(
-      Markdoc.format(
-        toMarkdocDocument(children as ElementFromValidation[], componentBlocks)
-      )
-    )
-  );
+  return _toMarkdoc(node, componentBlocks);
 }
 
 function fromMarkdoc(markdoc: string) {
