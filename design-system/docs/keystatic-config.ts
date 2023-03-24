@@ -7,14 +7,14 @@ export default config({
   },
   collections: {
     package: collection({
-      path: `design-system/packages/*/docs/`,
+      path: `design-system/packages/**`,
       format: { contentField: 'content' },
       label: 'Package',
-      slugField: 'name',
+      slugField: 'title',
       schema: {
-        name: fields.slug({
+        title: fields.slug({
           name: {
-            label: 'Name',
+            label: 'Title',
             validation: { length: { min: 1 } },
           },
         }),
@@ -23,8 +23,8 @@ export default config({
           label: 'Category',
           defaultValue: 'Miscellaneous',
           options: [
-            // { label: 'Introduction', value: 'Introduction' },
-            // { label: 'Concepts', value: 'Concepts' },
+            { label: 'Introduction', value: 'Introduction' },
+            { label: 'Concepts', value: 'Concepts' },
             { label: 'Miscellaneous', value: 'Miscellaneous' },
             // ------------------------------
             { label: 'Feedback', value: 'Feedback' },

@@ -26,8 +26,8 @@ export async function getDocEntries(
           .then(entries => getDocEntries(entries, dirFilePath, urlPortions));
         docEntries.push(...innerEntries);
       }
-      if (!entry.isFile() || !entry.name.endsWith('.md')) return;
-      const name = entry.name.slice(0, -3);
+      if (!entry.isFile() || !entry.name.endsWith('.mdoc')) return;
+      const name = entry.name.slice(0, -'.mdoc'.length);
       docEntries.push(parentUrlPortions.concat(name));
     })
   );
@@ -94,8 +94,8 @@ export async function readDocFile(
   const isRootSlug = slug.length === 0;
   const basePath = `${baseSearchPathRelativeToProject}/${slug.join('/')}`;
   const searchLocations = isRootSlug
-    ? [`${basePath}index.md`]
-    : [`${basePath}.md`, `${basePath}/index.md`];
+    ? [`${basePath}index.mdoc`]
+    : [`${basePath}.mdoc`, `${basePath}/index.mdoc`];
   for (const location of searchLocations) {
     try {
       const content = await fs.readFile(
@@ -138,7 +138,7 @@ export async function getNavigation(
     for (const slug of docSlugs) {
       const promise = (async (): Promise<Info> => {
         const href = `/package/${packageName}${joinSlug(slug)}`;
-        const filename = `packages/${packageName}/docs/${slug.join('/')}.md`;
+        const filename = `packages/${packageName}/docs/${slug.join('/')}.mdoc`;
         const content = await readFileE(`../${filename}`);
         const { title, category } = extractFrontmatter(filename, content);
         return { category, title, href };
@@ -149,7 +149,7 @@ export async function getNavigation(
   for (const slug of docsDirEntries) {
     const promise = (async (): Promise<Info> => {
       const href = joinSlug(slug);
-      const filename = `content/${slug.join('/')}.md`;
+      const filename = `content/${slug.join('/')}.mdoc`;
       const content = await readFileE(filename);
       const { title, category } = extractFrontmatter(
         `docs/${filename}`,
