@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.76
+
+### Patch Changes
+
+- 1aed6d0: Add `componentBlocks: 'inherit'` option to block child fields
+
 ## 0.0.75
 
 ### Patch Changes

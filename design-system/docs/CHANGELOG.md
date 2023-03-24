@@ -1,5 +1,11 @@
 # @voussoir/docs
 
+## 0.0.6
+
+### Patch Changes
+
+- ff07e99: Documentation for new avatar package.
+
 ## 0.0.5
 
 ### Patch Changes
