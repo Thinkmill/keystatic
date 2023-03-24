@@ -1,12 +1,13 @@
+'use client';
 import { infoIcon } from '@voussoir/icon/icons/infoIcon';
 import { Icon } from '@voussoir/icon';
 import { Box, BoxProps, Grid, Flex, repeat } from '@voussoir/layout';
 import { ColorForeground, tokenSchema } from '@voussoir/style';
 import { Heading, Text } from '@voussoir/typography';
 
-import { DocsContent } from '../components/content';
+import { DocsContent } from '../../components/content';
 
-export default function Packages(): JSX.Element {
+export function Colours(): JSX.Element {
   const colors = [
     {
       id: 'backgroundColor',
@@ -35,7 +36,7 @@ export default function Packages(): JSX.Element {
   ];
 
   return (
-    <DocsContent pageTitle="Colours">
+    <DocsContent>
       {colors.map(({ colors, id, title }) => (
         <Flex direction="column" key={id} gap="xlarge">
           <Heading id={id} size="medium">

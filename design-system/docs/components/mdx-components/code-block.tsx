@@ -1,3 +1,4 @@
+'use client';
 import { Flex } from '@voussoir/layout';
 import { css, tokenSchema } from '@voussoir/style';
 

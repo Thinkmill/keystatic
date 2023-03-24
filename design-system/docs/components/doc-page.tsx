@@ -1,7 +1,6 @@
 import { Tag } from '@markdoc/markdoc';
 import { Flex } from '@voussoir/layout';
 import { Heading, Text } from '@voussoir/typography';
-import { useRouter } from 'next/router';
 import { generateToc } from '../utils/generate-toc';
 import { DocsContent } from './content';
 import { DocContent } from './mdx-components/mdx-content';
@@ -17,9 +16,8 @@ export function DocPage({
   description,
   title,
 }: DocPageProps): JSX.Element {
-  const { asPath } = useRouter();
   return (
-    <DocsContent pageTitle={title} toc={generateToc(content)}>
+    <DocsContent toc={generateToc(content)}>
       <Flex gap="xxlarge" direction="column">
         <Heading size="large" elementType="h1">
           {title}
@@ -28,7 +26,7 @@ export function DocPage({
           {description}
         </Text>
       </Flex>
-      <DocContent key={asPath} content={content} />
+      <DocContent content={content} />
     </DocsContent>
   );
 }

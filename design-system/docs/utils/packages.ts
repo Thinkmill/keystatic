@@ -5,6 +5,7 @@ import { isDefined } from 'emery/guards';
 import { categories, Category, extractFrontmatter } from './frontmatter';
 import { SidebarItem } from '../components/sidebar';
 import { SidebarLink } from '../components/sidebar/types';
+import { cache } from './cache';
 
 export const projectDir = path.resolve(process.cwd(), '..');
 
@@ -38,30 +39,33 @@ type PackageName = string;
 
 type PackageDocSlugs = Map<PackageName, string[][]>;
 
-export async function getAllPackageDocSlugs(
-  dirEntries: Dirent[]
-): Promise<PackageDocSlugs> {
-  const entries = await Promise.all(
-    dirEntries.map(async (entry): Promise<undefined | [string, string[][]]> => {
-      if (!entry.isDirectory()) {
-        return;
-      }
-      const docsDir = path.join(packagesDir, entry.name, 'docs');
-      let entries;
-      try {
-        entries = await fs.readdir(docsDir, { withFileTypes: true });
-      } catch (err) {
-        if ((err as any).code === 'ENOENT') {
-          return;
+export const getAllPackageDocSlugs = cache(
+  async function getAllPackageDocSlugs(): Promise<PackageDocSlugs> {
+    const dirEntries = await readdirE('../packages');
+    const entries = await Promise.all(
+      dirEntries.map(
+        async (entry): Promise<undefined | [string, string[][]]> => {
+          if (!entry.isDirectory()) {
+            return;
+          }
+          const docsDir = path.join(packagesDir, entry.name, 'docs');
+          let entries;
+          try {
+            entries = await fs.readdir(docsDir, { withFileTypes: true });
+          } catch (err) {
+            if ((err as any).code === 'ENOENT') {
+              return;
+            }
+            throw err;
+          }
+          const allDocEntries = await getDocEntries(entries, docsDir, []);
+          return [entry.name, allDocEntries];
         }
-        throw err;
-      }
-      const allDocEntries = await getDocEntries(entries, docsDir, []);
-      return [entry.name, allDocEntries];
-    })
-  );
-  return new Map(entries.filter(isDefined));
-}
+      )
+    );
+    return new Map(entries.filter(isDefined));
+  }
+);
 
 // these functions exists purely because fs functions don't throw errors with stack traces
 // (and ofc it's helpful that fs functions don't throw errors with stack traces
@@ -87,12 +91,12 @@ async function readFileE(filePath: string): Promise<string> {
   }
 }
 
-export async function readDocFile(
+export const readDocFile = cache(async function readDocFile(
   baseSearchPathRelativeToProject: string,
-  slug: string[]
+  slug: string
 ): Promise<{ content: string; path: string }> {
-  const isRootSlug = slug.length === 0;
-  const basePath = `${baseSearchPathRelativeToProject}/${slug.join('/')}`;
+  const isRootSlug = slug === '';
+  const basePath = `${baseSearchPathRelativeToProject}/${slug}`;
   const searchLocations = isRootSlug
     ? [`${basePath}index.md`]
     : [`${basePath}.md`, `${basePath}/index.md`];
@@ -115,7 +119,7 @@ export async function readDocFile(
       '\n'
     )}`
   );
-}
+});
 
 const joinSlug = (slug: string[]): string => {
   if (slug.length === 0) {
@@ -128,10 +132,11 @@ const joinSlug = (slug: string[]): string => {
   return '/' + slug.join('/');
 };
 
-export async function getNavigation(
-  packageDocSlugs: PackageDocSlugs,
-  docsDirEntries: string[][]
-): Promise<SidebarItem[]> {
+export async function getNavigation(): Promise<SidebarItem[]> {
+  const [packageDocSlugs, docsDirEntries] = await Promise.all([
+    getAllPackageDocSlugs(),
+    getContentDocEntries(),
+  ]);
   type Info = { category: Category | null; title: string; href: string };
   const promises: Promise<Info>[] = [];
   for (const [packageName, docSlugs] of packageDocSlugs) {
@@ -221,27 +226,9 @@ export async function getContentDocEntries() {
 
 export const GENERATED_DIR = 'generated';
 
-export function getWriteGeneratedDir(
-  contentDocEntries = getContentDocEntries(),
-  packagesDirDirents: Promise<Dirent[]> = readdirE('../packages'),
-  packageDocSlugs = packagesDirDirents.then(getAllPackageDocSlugs)
-) {
-  const componentReexportPromise = packagesDirDirents.then(entries =>
+export async function writeComponentReexports() {
+  const components = await readdirE('../packages').then(entries =>
     getComponentReexports(entries)
   );
-
-  const navigationPromise = Promise.all([packageDocSlugs, contentDocEntries])
-    .then(args => getNavigation(...args))
-    .then(nav => JSON.stringify(nav, null, 2));
-  return (async () => {
-    const [components, navigation] = await Promise.all([
-      componentReexportPromise,
-      navigationPromise,
-    ]);
-    return () =>
-      Promise.all([
-        fs.writeFile(`${GENERATED_DIR}/components.ts`, components),
-        fs.writeFile(`${GENERATED_DIR}/navigation.json`, navigation),
-      ]);
-  })();
+  await fs.writeFile(`${GENERATED_DIR}/components.ts`, components);
 }

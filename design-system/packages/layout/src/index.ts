@@ -1,3 +1,4 @@
+'use client';
 export { AspectRatio } from './AspectRatio';
 export { Box } from './Box';
 export { Divider } from './Divider';

@@ -1,4 +1,4 @@
-import { DefaultSeo } from 'next-seo';
+'use client';
 import { HTMLAttributes, ReactNode, Fragment, useCallback } from 'react';
 
 import { ChevronEndIcon } from '@voussoir/icon';
@@ -15,19 +15,15 @@ const MAIN_ID = 'docs-main';
 
 export function DocsContent({
   children,
-  pageTitle,
   toc,
 }: {
   children: ReactNode;
   toc?: HeadingEntry[];
-  pageTitle?: string;
 }): JSX.Element {
   const includeNavigation = toc !== undefined;
   // TODO: find a better solution for inline styles related to heading offsets
   return (
     <TocContextProvider value={toc || []}>
-      <DefaultSeo title={pageTitle} />
-
       <Flex
         elementType="main"
         flex

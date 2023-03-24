@@ -1,3 +1,4 @@
+'use client';
 import { ReactNode } from 'react';
 
 import { Box, Flex } from '@voussoir/layout';

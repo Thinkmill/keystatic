@@ -1,5 +1,3 @@
-import { NextRouter, useRouter } from 'next/router';
-
 import { bookIcon } from '@voussoir/icon/icons/bookIcon';
 import { githubIcon } from '@voussoir/icon/icons/githubIcon';
 import { Icon } from '@voussoir/icon';
@@ -8,13 +6,17 @@ import { NavGroup, NavItem, NavList } from '@voussoir/nav-list';
 import { Text } from '@voussoir/typography';
 
 import { SidebarItem } from './types';
+import { usePathname } from 'next/navigation';
 
 /** Render nav items and groups of nav items. */
 export const NavItems = ({ items }: { items: SidebarItem[] }) => {
-  const nextRouter = useRouter();
+  const pathname = usePathname();
+  if (!pathname) {
+    throw new Error('Missing pathname');
+  }
   return (
     <NavList>
-      {recursiveItems(items, nextRouter.asPath)}
+      {recursiveItems(items, pathname)}
 
       <Divider />
       <NavGroup title="Resources">
@@ -31,10 +33,7 @@ export const NavItems = ({ items }: { items: SidebarItem[] }) => {
   );
 };
 
-export const recursiveItems = (
-  items: SidebarItem[],
-  currentPath: NextRouter['asPath']
-) => {
+export const recursiveItems = (items: SidebarItem[], currentPath: string) => {
   return items.map(linkOrGroup => {
     let key = '';
     if ('children' in linkOrGroup) {
