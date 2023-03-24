@@ -1,85 +1,105 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+'use client';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@voussoir/button';
-import { VoussoirProvider, VoussoirProviderProps } from '@voussoir/core';
+import { VoussoirProviderProps } from '@voussoir/core';
+import { RootVoussoirProvider } from '@voussoir/next';
 import { moonIcon } from '@voussoir/icon/icons/moonIcon';
 import { sunIcon } from '@voussoir/icon/icons/sunIcon';
 import { Icon } from '@voussoir/icon';
-import { useIsSSR } from '@voussoir/ssr';
+import { css, useMediaQuery } from '@voussoir/style';
+import { UniversalNextLink } from './UniversalNextLink';
 
 export function ThemeProvider({
   children,
-  colorScheme: colorSchemeProp,
   ...otherProps
-}: VoussoirProviderProps) {
-  let colorScheme = useCurrentColorScheme();
-
+}: Omit<VoussoirProviderProps, 'colorScheme' | 'linkComponent'> & {
+  fontClassName: string;
+}) {
+  const colorScheme = useCurrentColorScheme();
   return (
-    <VoussoirProvider
-      colorScheme={colorSchemeProp || colorScheme}
+    <RootVoussoirProvider
       {...otherProps}
+      colorScheme={colorScheme}
+      linkComponent={UniversalNextLink}
     >
       {children}
-    </VoussoirProvider>
+    </RootVoussoirProvider>
   );
 }
 
 // Theme switcher
 // ----------------------------------------------------------------------------
 
-export function ThemeSwitcher() {
-  let colorScheme = useCurrentColorScheme();
+function InnerThemeSwitcher(props: {
+  colorScheme: 'dark' | 'light';
+  className: string;
+}) {
   let onPress = () => {
-    localStorage.theme = colorScheme === 'dark' ? 'light' : 'dark';
+    localStorage.theme = props.colorScheme === 'dark' ? 'light' : 'dark';
     window.dispatchEvent(new Event('storage'));
   };
 
-  const nextScheme = colorScheme === 'light' ? 'dark' : 'light';
+  const nextScheme = props.colorScheme === 'light' ? 'dark' : 'light';
   const label = `Switch to ${nextScheme} theme`;
-  const icon = colorScheme === 'dark' ? sunIcon : moonIcon;
+  const icon = props.colorScheme === 'dark' ? sunIcon : moonIcon;
 
   return (
-    <div title={label} role="presentation">
+    <div title={label} className={props.className} role="presentation">
       <Button aria-label={label} onPress={onPress} prominence="low">
         <Icon src={icon} />
       </Button>
     </div>
   );
 }
-export function ClientOnly({ children }: { children: React.ReactElement }) {
-  const isSSR = useIsSSR();
-  return isSSR ? null : <Fragment>{children}</Fragment>;
-}
 
-function ssrSafeHook<T>(hook: T) {
-  if (typeof window === 'undefined') {
-    return () => {};
-  }
-
-  return hook;
-}
-export const useCurrentColorScheme = ssrSafeHook(useColorSchemeInternal);
-
-function useColorSchemeInternal() {
-  let mq = useMemo(() => window.matchMedia('(prefers-color-scheme: dark)'), []);
-  let getCurrentColorScheme = useCallback(
-    () => localStorage.theme || (mq.matches ? 'dark' : 'light'),
-    [mq]
+export function ThemeSwitcher() {
+  return (
+    <>
+      <InnerThemeSwitcher
+        className={css({
+          '.ksv-theme--light &': {
+            display: 'none',
+          },
+        })}
+        colorScheme="dark"
+      />
+      <InnerThemeSwitcher
+        className={css({
+          '.ksv-theme--dark &': {
+            display: 'none',
+          },
+        })}
+        colorScheme="light"
+      />
+    </>
   );
-  let [colorScheme, setColorScheme] = useState(() => getCurrentColorScheme());
-
-  useEffect(() => {
-    let onChange = () => {
-      setColorScheme(getCurrentColorScheme());
-    };
-
-    mq.addListener(onChange);
-    window.addEventListener('storage', onChange);
-    return () => {
-      mq.removeListener(onChange);
-      window.removeEventListener('storage', onChange);
-    };
-  }, [getCurrentColorScheme, mq]);
-
-  return colorScheme;
 }
+
+function useLocalStorageValue(key: string) {
+  let [value, setValue] = useState(() => localStorage[key]);
+  useEffect(() => {
+    const handler = () => {
+      setValue(localStorage[key]);
+    };
+    window.addEventListener('storage', handler);
+    return () => {
+      window.removeEventListener('storage', handler);
+    };
+  }, [key]);
+  return value;
+}
+
+export const useCurrentColorScheme =
+  typeof window === 'undefined'
+    ? function useCurrentColorScheme() {
+        return 'light';
+      }
+    : function useCurrentColorScheme() {
+        const autoPrefersDark = useMediaQuery('(prefers-color-scheme: dark)');
+        const defaultTheme = autoPrefersDark ? 'dark' : 'light';
+        const localStorageValue = useLocalStorageValue('theme');
+        return localStorageValue === 'light' || localStorageValue === 'dark'
+          ? localStorageValue
+          : defaultTheme;
+      };

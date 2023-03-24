@@ -1,8 +1,10 @@
+'use client';
 import { ReactNode } from 'react';
 
 import { Flex } from '@voussoir/layout';
 
 import { SidebarItem, Sidebar, SidebarProvider } from './sidebar';
+import { Toaster } from '@voussoir/toast';
 
 export function Layout({
   children,
@@ -17,6 +19,7 @@ export function Layout({
         <Sidebar items={navigation} />
         {children}
       </Flex>
+      <Toaster />
     </SidebarProvider>
   );
 }
