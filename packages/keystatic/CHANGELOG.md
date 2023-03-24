@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.0.75
+
+### Patch Changes
+
+- 06340d6: Allow using `**` in the collection `path` option instead of `*` to
+  allow for slugs with slashes in them
+- 8c6a5b0: Fix brackets being added after text when the link keyboard shortcut
+  is pressed but links aren't enabled
+
 ## 0.0.74
 
 ### Patch Changes
