@@ -256,6 +256,7 @@ importers:
       '@types/node': 16.11.13
       '@types/react': ^18.0.25
       '@voussoir/action-group': ^0.1.0
+      '@voussoir/avatar': ^0.1.0
       '@voussoir/badge': ^0.1.1
       '@voussoir/breadcrumbs': ^0.1.2
       '@voussoir/button': ^0.1.3
@@ -316,6 +317,7 @@ importers:
       '@react-aria/i18n': 3.6.3_react@18.2.0
       '@types/js-yaml': 4.0.5
       '@voussoir/action-group': link:../packages/action-group
+      '@voussoir/avatar': link:../packages/avatar
       '@voussoir/badge': link:../packages/badge
       '@voussoir/breadcrumbs': link:../packages/breadcrumbs
       '@voussoir/button': link:../packages/button
@@ -430,6 +432,31 @@ importers:
       '@voussoir/slots': link:../slots
       '@voussoir/style': link:../style
       '@voussoir/tooltip': link:../tooltip
+      '@voussoir/types': link:../types
+      '@voussoir/typography': link:../typography
+      '@voussoir/utils': link:../utils
+    devDependencies:
+      '@types/react': 18.0.28
+      '@voussoir/storybook': link:../../docs/storybook
+      '@voussoir/test-utils': link:../test-utils
+      react: 18.2.0
+
+  design-system/packages/avatar:
+    specifiers:
+      '@babel/runtime': ^7.18.3
+      '@types/react': ^18.0.25
+      '@voussoir/layout': ^0.1.0
+      '@voussoir/storybook': ^0.0.0
+      '@voussoir/style': ^0.1.0
+      '@voussoir/test-utils': ^2.0.0
+      '@voussoir/types': ^0.1.0
+      '@voussoir/typography': ^0.1.0
+      '@voussoir/utils': ^2.0.1
+      react: ^18.2.0
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@voussoir/layout': link:../layout
+      '@voussoir/style': link:../style
       '@voussoir/types': link:../types
       '@voussoir/typography': link:../typography
       '@voussoir/utils': link:../utils
