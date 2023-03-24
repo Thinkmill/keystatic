@@ -117,6 +117,8 @@ export default config({
                   formatting: 'inherit',
                   dividers: 'inherit',
                   links: 'inherit',
+                  componentBlocks: 'inherit',
+                  images: 'inherit',
                 }),
               },
               toolbar({ props, onRemove }) {

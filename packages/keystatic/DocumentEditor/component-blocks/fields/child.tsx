@@ -18,6 +18,7 @@ type BlockFormattingConfig = {
   inlineMarks?: InlineMarksConfig;
   listTypes?: 'inherit';
   softBreaks?: 'inherit';
+  componentBlocks?: 'inherit';
 };
 
 export type ChildField = {
@@ -31,6 +32,7 @@ export type ChildField = {
         links?: 'inherit';
         images?: 'inherit';
         tables?: 'inherit';
+        componentBlocks?: 'inherit';
       }
     | {
         kind: 'inline';
@@ -53,6 +55,7 @@ export function child(
         links?: 'inherit';
         images?: 'inherit';
         tables?: 'inherit';
+        componentBlocks?: 'inherit';
       }
     | {
         kind: 'inline';
@@ -88,6 +91,7 @@ export function child(
             links: options.links,
             images: options.images,
             tables: options.tables,
+            componentBlocks: options.componentBlocks,
           }
         : {
             kind: 'inline',

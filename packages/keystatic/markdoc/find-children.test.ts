@@ -11,6 +11,7 @@ test('one child field', () => {
     {
       "kind": "child",
       "options": {
+        "componentBlocks": undefined,
         "dividers": undefined,
         "formatting": undefined,
         "images": undefined,
@@ -36,6 +37,7 @@ test('nested one child field', () => {
     {
       "kind": "child",
       "options": {
+        "componentBlocks": undefined,
         "dividers": undefined,
         "formatting": undefined,
         "images": undefined,

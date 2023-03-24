@@ -743,7 +743,7 @@ export const editorSchema = satisfies<
     invalidPositionHandleMode: 'unwrap',
   }),
   'component-block-prop': blockContainer({
-    allowedChildren: paragraphLike,
+    allowedChildren: [...paragraphLike, 'component-block'],
     invalidPositionHandleMode: 'unwrap',
   }),
   'ordered-list': blockContainer({

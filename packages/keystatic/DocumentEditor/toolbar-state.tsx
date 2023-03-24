@@ -119,6 +119,7 @@ export const createToolbarState = (
         tables: true,
       },
       softBreaks: true,
+      componentBlocks: true,
     };
 
   let [maybeCodeBlockEntry] = Editor.nodes(editor, {

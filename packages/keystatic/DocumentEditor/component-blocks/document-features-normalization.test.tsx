@@ -8,7 +8,11 @@ import { component, fields, ChildField } from './api';
 
 const cases: Record<
   string,
-  { schema: ChildField; children: Node | Node[]; expectedNormalized?: Node }
+  {
+    schema: ChildField;
+    children: Node | Node[];
+    expectedNormalized?: Node | Node[];
+  }
 > = {
   'mark where it should not exist in inline': {
     schema: fields.child({ kind: 'inline', placeholder: '' }),
@@ -197,6 +201,47 @@ const cases: Record<
       </paragraph>
     ),
   },
+  'component blocks allowed': {
+    schema: fields.child({
+      kind: 'block',
+      placeholder: '',
+      componentBlocks: 'inherit',
+    }),
+    children: [
+      <component-block component="basic" props={{}}>
+        <component-inline-prop>
+          <text />
+        </component-inline-prop>
+      </component-block>,
+      <paragraph>
+        <text>some text</text>
+      </paragraph>,
+    ],
+  },
+  'component blocks not allowed': {
+    schema: fields.child({
+      kind: 'block',
+      placeholder: '',
+    }),
+    children: [
+      <component-block component="basic" props={{}}>
+        <component-inline-prop>
+          <text />
+        </component-inline-prop>
+      </component-block>,
+      <paragraph>
+        <text>some text</text>
+      </paragraph>,
+    ],
+    expectedNormalized: [
+      <paragraph>
+        <text />
+      </paragraph>,
+      <paragraph>
+        <text>some text</text>
+      </paragraph>,
+    ],
+  },
 };
 
 function makeEditorWithChildField(
@@ -224,6 +269,11 @@ function makeEditorWithChildField(
           preview: () => null,
           label: '',
           schema: { child: childField },
+        }),
+        basic: component({
+          preview: () => null,
+          label: 'Basic',
+          schema: {},
         }),
       },
     }
