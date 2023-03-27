@@ -272,6 +272,7 @@ importers:
       '@voussoir/listbox': ^0.1.2
       '@voussoir/menu': ^0.1.1
       '@voussoir/nav-list': ^0.1.0
+      '@voussoir/next': ^0.0.0
       '@voussoir/notice': ^0.1.0
       '@voussoir/number-field': ^0.1.0
       '@voussoir/overlays': ^0.1.2
@@ -333,6 +334,7 @@ importers:
       '@voussoir/listbox': link:../packages/listbox
       '@voussoir/menu': link:../packages/menu
       '@voussoir/nav-list': link:../packages/nav-list
+      '@voussoir/next': link:../packages/next
       '@voussoir/notice': link:../packages/notice
       '@voussoir/number-field': link:../packages/number-field
       '@voussoir/overlays': link:../packages/overlays
@@ -1218,6 +1220,23 @@ importers:
       '@voussoir/icon': link:../icon
       '@voussoir/storybook': link:../../docs/storybook
       react: 18.2.0
+
+  design-system/packages/next:
+    specifiers:
+      '@types/react': ^18.0.25
+      '@voussoir/core': ^4.0.1
+      '@voussoir/style': ^0.1.1
+      next: ^13.2.4
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      '@voussoir/core': link:../core
+      '@voussoir/style': link:../style
+    devDependencies:
+      '@types/react': 18.0.28
+      next: 13.2.4_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
 
   design-system/packages/notice:
     specifiers:

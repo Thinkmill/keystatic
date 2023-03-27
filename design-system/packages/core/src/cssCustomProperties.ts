@@ -27,7 +27,7 @@ export const cssCustomProperties = `
   --ksv-size-alias-focus-ring-gap: 2px;
   --ksv-color-global-black: #000000;
   --ksv-color-global-white: #ffffff;
-  --ksv-typography-font-family-base: Inter;
+  --ksv-typography-font-family-base: var(--font-inter, Inter);
   --ksv-typography-font-family-code: Menlo;
   --ksv-typography-font-weight-regular: 400;
   --ksv-typography-font-weight-medium: 500;

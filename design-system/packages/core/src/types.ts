@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 import { LinkComponent } from '@voussoir/link';
-import { RootStyleProps } from '@voussoir/style';
+import { RootStyleProps, VoussoirTheme } from '@voussoir/style';
 import { ColorScheme, Emphasis, ScaleScheme } from '@voussoir/types';
 
 type VoussoirContextProps = {
@@ -49,6 +49,11 @@ export type VoussoirProviderProps = {
    * analytics, etc.
    */
   linkComponent?: LinkComponent;
+
+  /**
+   * The background color of the body element. This will only have an effect if the `VoussoirProvider` is rendered as the `html` element.
+   */
+  bodyBackground?: keyof VoussoirTheme['color']['background'];
 } & VoussoirContextProps &
   RootStyleProps;
 

@@ -1,5 +1,4 @@
-'use client';
-export { css, keyframes, injectGlobal } from '@emotion/css'; // simplify dependencies + ensure the same version of emotion is used
+export { css, keyframes, injectGlobal, cache } from '@emotion/css'; // simplify dependencies + ensure the same version of emotion is used
 
 export { transition } from './animation';
 export { resetClassName, classNames, ClassList } from './classNames';
