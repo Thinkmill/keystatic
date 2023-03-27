@@ -15,7 +15,7 @@ import { Text } from '@voussoir/typography';
 
 import { Highlight } from '../highlight';
 import { placeholderCounter } from '../../example-helpers';
-import * as scope from '../../scope';
+import { scope } from '../../scope';
 import { RenderLiveCode } from './eval';
 import { LiveCodeInfo } from '../../../markdoc/nodes/fence.markdoc';
 
