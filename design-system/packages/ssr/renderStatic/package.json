@@ -1,4 +1,0 @@
-{
-  "main": "dist/voussoir-ssr-renderStatic.cjs.js",
-  "module": "dist/voussoir-ssr-renderStatic.esm.js"
-}

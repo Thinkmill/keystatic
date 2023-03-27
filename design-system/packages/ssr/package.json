@@ -10,20 +10,13 @@
       "module": "./dist/voussoir-ssr.esm.js",
       "default": "./dist/voussoir-ssr.cjs.js"
     },
-    "./renderStatic": {
-      "module": "./renderStatic/dist/voussoir-ssr-renderStatic.esm.js",
-      "default": "./renderStatic/dist/voussoir-ssr-renderStatic.cjs.js"
-    },
     "./package.json": "./package.json"
   },
   "files": [
-    "dist",
-    "renderStatic"
+    "dist"
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@emotion/css": "^11.9.0",
-    "@emotion/server": "^11.4.0",
     "@react-aria/ssr": "^3.4.1"
   },
   "devDependencies": {
@@ -36,11 +29,5 @@
   },
   "engines": {
     "node": ">= 14.13"
-  },
-  "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "renderStatic.ts"
-    ]
   }
 }
