@@ -1,5 +1,17 @@
 # @voussoir/field
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [c4611a1]
+- Updated dependencies [ee3a58d]
+  - @voussoir/ssr@0.2.0
+  - @voussoir/typography@0.1.1
+  - @voussoir/layout@0.1.1
+  - @voussoir/icon@0.1.3
+  - @voussoir/style@0.1.2
+
 ## 0.1.3
 
 ### Patch Changes

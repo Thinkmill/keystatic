@@ -1,5 +1,11 @@
 # localization
 
+## 0.1.46
+
+### Patch Changes
+
+- @keystatic/core@0.0.77
+
 ## 0.1.45
 
 ### Patch Changes

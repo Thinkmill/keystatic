@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/checkbox",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Checkboxes allow users to select multiple values from a list of items, or toggle the selection of an individual item on and off.",
   "license": "MIT",
   "main": "dist/voussoir-checkbox.cjs.js",
@@ -22,14 +22,14 @@
     "@react-stately/checkbox": "^3.3.2",
     "@react-stately/toggle": "^3.4.3",
     "@react-types/shared": "^3.14.1",
-    "@voussoir/core": "^4.0.0",
-    "@voussoir/field": "^0.1.2",
-    "@voussoir/icon": "^0.1.0",
-    "@voussoir/layout": "^0.1.0",
+    "@voussoir/core": "^5.0.0",
+    "@voussoir/field": "^0.1.4",
+    "@voussoir/icon": "^0.1.3",
+    "@voussoir/layout": "^0.1.1",
     "@voussoir/slots": "^0.1.0",
-    "@voussoir/style": "^0.1.0",
+    "@voussoir/style": "^0.1.2",
     "@voussoir/types": "^0.1.0",
-    "@voussoir/typography": "^0.1.0",
+    "@voussoir/typography": "^0.1.1",
     "@voussoir/utils": "^2.0.0"
   },
   "devDependencies": {

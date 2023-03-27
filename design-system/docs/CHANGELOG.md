@@ -1,5 +1,42 @@
 # @voussoir/docs
 
+## 0.0.7
+
+### Patch Changes
+
+- ee3a58d: Add `'use client'` to entrypoints
+- Updated dependencies [c4611a1]
+- Updated dependencies [ee3a58d]
+- Updated dependencies [44e9f2b]
+- Updated dependencies [44e9f2b]
+- Updated dependencies [44e9f2b]
+- Updated dependencies [44e9f2b]
+- Updated dependencies [44e9f2b]
+  - @voussoir/ssr@0.2.0
+  - @voussoir/typography@0.1.1
+  - @voussoir/layout@0.1.1
+  - @voussoir/icon@0.1.3
+  - @voussoir/link@0.1.1
+  - @voussoir/core@5.0.0
+  - @voussoir/next@0.1.0
+  - @voussoir/field@0.1.4
+  - @voussoir/notice@0.1.1
+  - @voussoir/style@0.1.2
+  - @voussoir/action-group@0.1.2
+  - @voussoir/breadcrumbs@0.1.3
+  - @voussoir/button@0.1.4
+  - @voussoir/checkbox@0.2.1
+  - @voussoir/combobox@0.1.3
+  - @voussoir/list-view@0.1.3
+  - @voussoir/listbox@0.1.3
+  - @voussoir/number-field@0.1.2
+  - @voussoir/overlays@0.1.3
+  - @voussoir/picker@0.1.2
+  - @voussoir/radio@0.1.2
+  - @voussoir/tabs@0.1.1
+  - @voussoir/test-utils@2.0.1
+  - @voussoir/toast@0.1.3
+
 ## 0.0.6
 
 ### Patch Changes
