@@ -11,7 +11,7 @@ import {
   getResponsiveProp,
   getResponsiveRange,
 } from './responsive';
-import { Breakpoint, BreakpointRange, ResponsiveProp } from './types';
+import { Breakpoint, BreakpointRange, Responsive } from './types';
 
 type BreakpointContext = Breakpoint[];
 
@@ -37,7 +37,7 @@ export function useBreakpoint(): BreakpointContext {
 export function useResponsiveValue() {
   const bp = useBreakpoint();
 
-  return function responsiveValue<T>(value: ResponsiveProp<T>): T {
+  return function responsiveValue<T>(value: Responsive<T>): T {
     return getResponsiveProp(value, bp);
   };
 }
