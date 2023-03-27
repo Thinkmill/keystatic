@@ -20,7 +20,7 @@ export function makePage(config: Config<any, any>) {
     const router = useRouter();
     const pathname = usePathname()!;
     let href = pathname;
-    const searchParams = useSearchParams().toString();
+    const searchParams = useSearchParams()!.toString();
     if (searchParams) {
       href += `?${searchParams}`;
     }

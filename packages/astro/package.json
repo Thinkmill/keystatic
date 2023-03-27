@@ -50,7 +50,6 @@
     "@types/cookie": "^0.5.1",
     "@types/set-cookie-parser": "^2.4.2",
     "astro": "^2.0.14",
-    "next": "^13.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
