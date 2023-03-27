@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useState,
 } from 'react';
 import { typedEntries } from 'emery';
@@ -55,58 +56,54 @@ const breakpointQueries = breakpointEntries.map(
   ([, value]) => `(min-width: ${value}px)`
 );
 
+const useLayoutEffectIgnoreOnServer: typeof useLayoutEffect =
+  typeof window === 'undefined' ? () => {} : useLayoutEffect;
+
+const supportsMatchMedia =
+  typeof window !== 'undefined' && typeof window.matchMedia === 'function';
+
 export function useMatchedBreakpoints(): BreakpointContext {
-  const supportsMatchMedia =
-    typeof window !== 'undefined' && typeof window.matchMedia === 'function';
+  const [breakpoint, setBreakpoint] = useState<BreakpointContext>(() => [
+    'mobile',
+  ]);
 
-  const getBreakpointHandler = useCallback(() => {
-    let matched: Breakpoint[] = [];
-    for (let i in breakpointQueries) {
-      let query = breakpointQueries[i];
-      if (window.matchMedia(query).matches) {
-        matched.push(breakpointEntries[i][0]);
-      }
-    }
-    matched.push('mobile');
-    return matched;
-  }, []);
-
-  const [breakpoint, setBreakpoint] = useState<BreakpointContext>(() =>
-    supportsMatchMedia ? getBreakpointHandler() : ['mobile']
-  );
-
-  useEffect(() => {
+  useLayoutEffectIgnoreOnServer(() => {
     if (!supportsMatchMedia) {
       return;
     }
 
     const onResize = () => {
-      const breakpointHandler = getBreakpointHandler();
+      setBreakpoint(prevMatchedBreakpoints => {
+        const matched: Breakpoint[] = [];
+        for (let i in breakpointQueries) {
+          let query = breakpointQueries[i];
+          if (window.matchMedia(query).matches) {
+            matched.push(breakpointEntries[i][0]);
+          }
+        }
+        matched.push('mobile');
 
-      setBreakpoint(previousBreakpointHandler => {
         if (
-          previousBreakpointHandler.length !== breakpointHandler.length ||
-          previousBreakpointHandler.some(
-            (breakpoint, idx) => breakpoint !== breakpointHandler[idx]
+          prevMatchedBreakpoints.length !== matched.length ||
+          prevMatchedBreakpoints.some(
+            (breakpoint, idx) => breakpoint !== matched[idx]
           )
         ) {
-          return [...breakpointHandler]; // Return a new array to force state change
+          return matched;
         }
 
-        return previousBreakpointHandler;
+        return prevMatchedBreakpoints;
       });
     };
+    onResize();
 
     window.addEventListener('resize', onResize);
     return () => {
       window.removeEventListener('resize', onResize);
     };
-  }, [getBreakpointHandler, supportsMatchMedia]);
+  }, []);
 
-  // If in SSR, the media query should never match. Once the page hydrates,
-  // this will update and the real value will be returned.
-  const isSSR = useIsSSR();
-  return isSSR ? ['mobile'] : breakpoint;
+  return breakpoint;
 }
 
 export function useResponsiveRange() {
