@@ -1,5 +1,14 @@
 # @voussoir/link
 
+## 0.1.1
+
+### Patch Changes
+
+- ee3a58d: Add `'use client'` to entrypoints
+- Updated dependencies [ee3a58d]
+  - @voussoir/typography@0.1.1
+  - @voussoir/style@0.1.2
+
 ## 0.1.0
 
 ### Minor Changes

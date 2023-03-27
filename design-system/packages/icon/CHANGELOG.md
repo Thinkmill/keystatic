@@ -1,5 +1,14 @@
 # @voussoir/icon
 
+## 0.1.3
+
+### Patch Changes
+
+- ee3a58d: Add `'use client'` to entrypoints
+- Updated dependencies [ee3a58d]
+  - @voussoir/layout@0.1.1
+  - @voussoir/style@0.1.2
+
 ## 0.1.2
 
 ### Patch Changes

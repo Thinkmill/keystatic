@@ -1,5 +1,18 @@
 # @keystatic/test-next-pages-dir
 
+## 0.0.46
+
+### Patch Changes
+
+- Updated dependencies [ee3a58d]
+  - @voussoir/typography@0.1.1
+  - @voussoir/layout@0.1.1
+  - @voussoir/icon@0.1.3
+  - @voussoir/notice@0.1.1
+  - @keystatic/core@0.0.77
+  - @voussoir/action-group@0.1.2
+  - @voussoir/button@0.1.4
+
 ## 0.0.45
 
 ### Patch Changes

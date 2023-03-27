@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/ssr",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SSR approaches for Voussoir.",
   "license": "MIT",
   "main": "dist/voussoir-ssr.cjs.js",

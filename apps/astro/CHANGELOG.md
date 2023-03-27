@@ -1,5 +1,11 @@
 # @keystatic/test-astro
 
+## 0.0.41
+
+### Patch Changes
+
+- @keystatic/core@0.0.77
+
 ## 0.0.40
 
 ### Patch Changes
