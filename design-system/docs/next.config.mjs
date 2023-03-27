@@ -4,6 +4,7 @@ import withPreconstruct from '@preconstruct/next';
 const nextConfig = {
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
+  experimental: { appDir: true, serverComponentsExternalPackages: ['esbuild'] },
   // reactStrictMode: true,
   // webpack: config => ({
   //   ...config,

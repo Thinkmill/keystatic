@@ -1,3 +1,4 @@
+'use client';
 import { Box, BoxProps } from '@voussoir/layout';
 import { css } from '@voussoir/style';
 import { Text } from '@voussoir/typography';

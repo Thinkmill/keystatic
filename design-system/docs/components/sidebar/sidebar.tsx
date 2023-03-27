@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { Fragment, useEffect } from 'react';
 
 import { Button } from '@voussoir/button';
@@ -18,17 +17,14 @@ import { ClientOnly, ThemeSwitcher } from '../theme-switcher';
 /** Responsively render sidebar navigation items. */
 export const Sidebar = ({ items }: { items: SidebarItem[] }) => {
   // const [headerHeight, setHeaderHeight] = useState(NaN);
-  const { events } = useRouter();
   const { sidebarIsOpen, closeSidebar, toggleSidebar } = useSidebarContext();
 
   useEffect(() => {
-    // subscribe to next/router event
-    events.on('routeChangeStart', closeSidebar);
+    addEventListener('popstate', closeSidebar);
     return () => {
-      // unsubscribe to event on unmount to prevent memory leak
-      events.off('routeChangeStart', closeSidebar);
+      removeEventListener('popstate', closeSidebar);
     };
-  }, [closeSidebar, events]);
+  }, [closeSidebar]);
 
   return (
     <Fragment>

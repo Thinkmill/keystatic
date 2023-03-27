@@ -1,3 +1,4 @@
+'use client';
 import copy from 'clipboard-copy';
 import { createUrl } from 'playroom/utils';
 import { ReactNode, useEffect, useId, useState } from 'react';

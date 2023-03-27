@@ -62,7 +62,7 @@ export function Highlight({
                 }}
               >
                 {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
+                  <span {...getTokenProps({ token, key })} key={key} />
                 ))}
               </div>
             );
