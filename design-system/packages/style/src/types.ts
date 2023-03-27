@@ -74,8 +74,8 @@ export type Responsive<T> = T | ResponsiveProp<T>;
 
 type BorderStyle = 'none' | 'dashed' | 'dotted' | 'solid';
 type OverflowValue = 'visible' | 'hidden' | 'scroll' | 'clip' | 'auto';
-type BreakpointAbove = Exclude<Breakpoint, 'large'>;
-type BreakpointBelow = Exclude<Breakpoint, 'base'>;
+type BreakpointAbove = Exclude<Breakpoint, 'wide'>;
+type BreakpointBelow = Exclude<Breakpoint, 'mobile'>;
 export type BreakpointRange =
   | { above: BreakpointAbove }
   | { below: BreakpointBelow }
