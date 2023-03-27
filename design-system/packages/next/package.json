@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/next",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "license": "MIT",
   "main": "dist/voussoir-next.cjs.js",
@@ -16,8 +16,8 @@
     "dist"
   ],
   "dependencies": {
-    "@voussoir/core": "^5.0.0",
-    "@voussoir/style": "^0.1.2"
+    "@voussoir/core": "^5.0.1",
+    "@voussoir/style": "^0.1.3"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",

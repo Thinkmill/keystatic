@@ -1,5 +1,13 @@
 # @voussoir/types
 
+## 0.1.1
+
+### Patch Changes
+
+- aeac610: Updated generated TypeScript declaration
+- Updated dependencies [aeac610]
+  - @voussoir/style@0.1.3
+
 ## 0.1.0
 
 ### Minor Changes

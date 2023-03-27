@@ -1,5 +1,52 @@
 # @voussoir/docs
 
+## 0.0.8
+
+### Patch Changes
+
+- aeac610: Updated generated TypeScript declaration
+- Updated dependencies [aeac610]
+- Updated dependencies [aa67b0b]
+  - @voussoir/style@0.1.3
+  - @voussoir/table@0.1.2
+  - @voussoir/toast@0.1.4
+  - @voussoir/utils@2.0.2
+  - @voussoir/action-group@0.1.3
+  - @voussoir/avatar@0.1.2
+  - @voussoir/badge@0.1.2
+  - @voussoir/breadcrumbs@0.1.4
+  - @voussoir/button@0.1.5
+  - @voussoir/checkbox@0.2.2
+  - @voussoir/combobox@0.1.4
+  - @voussoir/core@5.0.1
+  - @voussoir/dialog@0.2.1
+  - @voussoir/drag-and-drop@0.1.1
+  - @voussoir/field@0.1.5
+  - @voussoir/icon@0.2.0
+  - @voussoir/image@0.1.1
+  - @voussoir/layout@0.1.2
+  - @voussoir/link@0.1.2
+  - @voussoir/list-view@0.1.4
+  - @voussoir/listbox@0.1.4
+  - @voussoir/menu@0.1.2
+  - @voussoir/nav-list@0.1.1
+  - @voussoir/next@0.1.1
+  - @voussoir/notice@0.1.2
+  - @voussoir/number-field@0.1.3
+  - @voussoir/overlays@0.1.4
+  - @voussoir/picker@0.1.3
+  - @voussoir/progress@0.1.1
+  - @voussoir/radio@0.1.3
+  - @voussoir/search-field@0.1.3
+  - @voussoir/slots@0.1.2
+  - @voussoir/ssr@0.2.1
+  - @voussoir/tabs@0.1.2
+  - @voussoir/test-utils@2.0.2
+  - @voussoir/text-field@0.1.4
+  - @voussoir/tooltip@0.1.2
+  - @voussoir/types@0.1.1
+  - @voussoir/typography@0.1.2
+
 ## 0.0.7
 
 ### Patch Changes
