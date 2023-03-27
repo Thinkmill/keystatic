@@ -1,4 +1,4 @@
-import { classNames, resetClassName } from '../';
+import { classNames, resetClassName } from '@voussoir/style';
 
 describe('style/classNames', function () {
   it('includes the reset className, once', function () {

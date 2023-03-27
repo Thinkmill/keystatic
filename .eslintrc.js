@@ -28,7 +28,6 @@ module.exports = {
     'import/first': ERROR,
     'import/newline-after-import': ERROR,
     'import/no-duplicates': ERROR,
-    'import/no-unresolved': ERROR,
     'jest/valid-describe': OFF,
     'jest/valid-expect': OFF,
     'jest/no-conditional-expect': OFF,
@@ -68,7 +67,6 @@ module.exports = {
         vars: 'all',
       },
     ],
-    'import/no-extraneous-dependencies': ERROR,
     quotes: [
       ERROR,
       'single',
