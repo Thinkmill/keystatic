@@ -1,16 +1,15 @@
 import { CSSProperties, HTMLAttributes } from 'react';
 import { warning } from 'emery';
-import { css } from '@emotion/css';
+import { css, CSSInterpolation, CSSObject } from '@emotion/css';
 
 import { defaultStyleProps } from './resolvers';
 import {
   mapToMediaQueries,
   mapResponsiveValue,
-  getResponsiveRange,
+  breakpointQueries,
 } from './responsive';
 import { BaseStyleProps, BoxStyleProps, StyleResolverMap } from './types';
 import { classNames } from './classNames';
-import { useBreakpoint } from './context';
 
 // Convert
 // ----------------------------------------------------------------------------
@@ -50,14 +49,13 @@ export function convertStyleProps<T extends BaseStyleProps>(
 export function useStyleProps<T extends BoxStyleProps>(
   props: T,
   customResolvers: StyleResolverMap = {}
-): Pick<HTMLAttributes<HTMLElement>, 'className' | 'hidden' | 'style'> {
+): Pick<HTMLAttributes<HTMLElement>, 'className' | 'style'> {
   let propResolvers = { ...defaultStyleProps, ...customResolvers };
   let { isHidden, UNSAFE_className, UNSAFE_style, ...otherProps } = props;
 
-  let matchedBreakpoints = useBreakpoint();
   // @ts-ignore FIXME: One or more of the propResolvers' signature breaks the type contract.
   let convertedProps = convertStyleProps(props, propResolvers);
-  let resolvedStyles = mapToMediaQueries(convertedProps);
+  let resolvedStyles: CSSInterpolation = mapToMediaQueries(convertedProps);
 
   warning(
     // @ts-ignore
@@ -75,16 +73,36 @@ export function useStyleProps<T extends BoxStyleProps>(
       'Note that this may break in future versions due to DOM structure changes.'
   );
 
-  let hidden;
-  const style = UNSAFE_style ?? {};
-  if (isHidden && getResponsiveRange(isHidden, matchedBreakpoints)) {
-    hidden = true;
-    style.display = 'none';
+  if (isHidden) {
+    resolvedStyles = [resolvedStyles];
+    if (isHidden === true) {
+      resolvedStyles.push({ display: 'none' });
+    } else {
+      if (!('above' in isHidden) && !('below' in isHidden)) {
+        resolvedStyles.push(
+          mapToMediaQueries({
+            display: mapResponsiveValue(
+              // TODO: setting it to initial is definitely wrong
+              val => (val ? 'none' : 'initial'),
+              isHidden
+            ),
+          })
+        );
+      } else {
+        const styles: Record<string, CSSObject> = {};
+        if ('above' in isHidden) {
+          styles[breakpointQueries.above[isHidden.above]] = { display: 'none' };
+        }
+        if ('below' in isHidden) {
+          styles[breakpointQueries.below[isHidden.below]] = { display: 'none' };
+        }
+        resolvedStyles.push(styles);
+      }
+    }
   }
 
   return {
-    hidden,
     className: classNames(css(resolvedStyles), UNSAFE_className),
-    style,
+    style: UNSAFE_style,
   };
 }
