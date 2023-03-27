@@ -1,13 +1,10 @@
 import React, {
   ProviderProps,
-  useCallback,
   useContext,
-  useEffect,
   useLayoutEffect,
   useState,
 } from 'react';
 import { typedEntries } from 'emery';
-import { useIsSSR } from '@voussoir/ssr';
 
 import {
   breakpoints,
