@@ -40,7 +40,7 @@ const inter = Inter({
 
 export default function Layout(props: { children: ReactNode }) {
   return (
-    <RootVoussoirProvider fontClassName={inter.className}>
+    <RootVoussoirProvider fontClassName={inter.variable}>
       <head>{mediaQueryOnlyColorSchemeScaleScript}</head>
       <body>{props.children}</body>
     </RootVoussoirProvider>
