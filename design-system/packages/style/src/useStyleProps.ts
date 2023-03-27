@@ -73,36 +73,28 @@ export function useStyleProps<T extends BoxStyleProps>(
       'Note that this may break in future versions due to DOM structure changes.'
   );
 
+  let hiddenStyles: CSSInterpolation = [];
   if (isHidden) {
-    resolvedStyles = [resolvedStyles];
     if (isHidden === true) {
-      resolvedStyles.push({ display: 'none' });
+      hiddenStyles.push({ display: 'none' });
     } else {
-      if (!('above' in isHidden) && !('below' in isHidden)) {
-        resolvedStyles.push(
-          mapToMediaQueries({
-            display: mapResponsiveValue(
-              // TODO: setting it to initial is definitely wrong
-              val => (val ? 'none' : 'initial'),
-              isHidden
-            ),
-          })
-        );
-      } else {
-        const styles: Record<string, CSSObject> = {};
-        if ('above' in isHidden) {
-          styles[breakpointQueries.above[isHidden.above]] = { display: 'none' };
-        }
-        if ('below' in isHidden) {
-          styles[breakpointQueries.below[isHidden.below]] = { display: 'none' };
-        }
-        resolvedStyles.push(styles);
+      const styles: Record<string, CSSObject> = {};
+      if ('above' in isHidden) {
+        styles[breakpointQueries.above[isHidden.above]] = { display: 'none' };
       }
+      if ('below' in isHidden) {
+        styles[breakpointQueries.below[isHidden.below]] = { display: 'none' };
+      }
+      hiddenStyles.push(styles);
     }
   }
 
   return {
-    className: classNames(css(resolvedStyles), UNSAFE_className),
+    className: classNames(
+      css(resolvedStyles),
+      UNSAFE_className,
+      css(hiddenStyles) // must be last
+    ),
     style: UNSAFE_style,
   };
 }
