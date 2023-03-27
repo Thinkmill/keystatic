@@ -1,5 +1,14 @@
 # @keystatic/test-astro
 
+## 0.0.42
+
+### Patch Changes
+
+- aeac610: Updated generated TypeScript declaration
+- Updated dependencies [aeac610]
+  - @keystatic/core@0.0.78
+  - @keystatic/astro@0.0.7
+
 ## 0.0.41
 
 ### Patch Changes
