@@ -1,5 +1,19 @@
 # localization
 
+## 0.1.47
+
+### Patch Changes
+
+- Updated dependencies [aeac610]
+  - @keystatic/core@0.0.78
+  - @keystatic/next@0.0.6
+
+## 0.1.46
+
+### Patch Changes
+
+- @keystatic/core@0.0.77
+
 ## 0.1.45
 
 ### Patch Changes

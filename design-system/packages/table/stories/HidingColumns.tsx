@@ -3,7 +3,14 @@ import React from 'react';
 import { Checkbox } from '@voussoir/checkbox';
 import { Flex } from '@voussoir/layout';
 
-import { Cell, Column, Row, TableBody, TableHeader, TableView } from '../';
+import {
+  Cell,
+  Column,
+  Row,
+  TableBody,
+  TableHeader,
+  TableView,
+} from '@voussoir/table';
 import { Text } from '@voussoir/typography';
 
 export function HidingColumns() {

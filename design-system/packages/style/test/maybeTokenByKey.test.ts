@@ -1,4 +1,4 @@
-import { maybeTokenByKey } from '../';
+import { maybeTokenByKey } from '@voussoir/style';
 
 describe('style/maybeTokenByKey', function () {
   describe('number', function () {

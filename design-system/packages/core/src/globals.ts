@@ -1,5 +1,5 @@
-import { warning } from 'emery';
 import {
+  css,
   injectGlobal,
   resetClassName,
   tokenSchema,
@@ -7,45 +7,42 @@ import {
 } from '@voussoir/style';
 
 import { cssCustomProperties } from './cssCustomProperties';
+import { ColorScheme, ScaleScheme } from '@voussoir/types';
 
 type StrictBackground = keyof VoussoirTheme['color']['background'];
 
-// TODO: need an SSR-friendly variant, something like:
-// https://github.com/chakra-ui/chakra-ui/blob/main/packages/components/color-mode/src/color-mode-script.tsx
-export function injectVoussoirStyles(background?: StrictBackground) {
-  warning(
-    !globalsInjected,
-    'Voussoir global styles already injected. Try calling `injectVoussoirStyles()` closer to the React root.'
-  );
-  injectGlobal(cssCustomProperties);
-  injectGlobal(documentReset(background));
-  injectGlobal(elementReset);
-
-  markGlobalsImported();
-}
+export const documentElementClasses = (args: {
+  bodyBackground?: StrictBackground;
+  colorScheme?: ColorScheme;
+  scale?: ScaleScheme;
+}) => {
+  return `${documentReset(args.bodyBackground)} ksv-theme ksv-theme--${
+    args.colorScheme
+  } ksv-theme--${args.scale}`;
+};
 
 /**
  * Deactivate auto-enlargement of small text in Safari. Remove the default touch
  * highlight in Safari. Reset the body element to sane defaults.
  */
 const documentReset = (background: StrictBackground = 'canvas') =>
-  flatString(`
-  html {
-    scroll-behavior: smooth;
-    text-size-adjust: none;
-    -webkit-tap-highlight-color: #0000;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
+  css`
+    html& {
+      scroll-behavior: smooth;
+      text-size-adjust: none;
+      -webkit-tap-highlight-color: #0000;
     }
-  }
+    @media (prefers-reduced-motion: reduce) {
+      html& {
+        scroll-behavior: auto;
+      }
+    }
 
-  body {
-    background-color: ${tokenSchema.color.background[background]};
-    margin: 0;
-  }
-`);
+    html& body {
+      background-color: ${tokenSchema.color.background[background]};
+      margin: 0;
+    }
+  `;
 
 function flatString(str: string) {
   return str.replace(/\n|\s{2,}/g, '');
@@ -72,20 +69,6 @@ const elementReset = flatString(`
   :where(table.${reset}) = { border-collapse: collapse; border-spacing: 0; }
 `);
 
-// Tracker
-// ----------------------------------------------------------------------------
+injectGlobal(cssCustomProperties);
 
-let globalsInjected = false;
-
-/** @private exported for testing */
-export function markGlobalsImported() {
-  globalsInjected = true;
-}
-
-/** @private */
-export function ensureGlobalsImported() {
-  warning(
-    globalsInjected,
-    'Voussoir components used before global styles injected.'
-  );
-}
+injectGlobal(elementReset);

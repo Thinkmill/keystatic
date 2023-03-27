@@ -11,7 +11,7 @@ import { DocumentFeatures } from '../document-features';
 import { createToolbarState, ToolbarStateProvider } from '../toolbar-state';
 import { validateDocumentStructure } from '../../structure-validation';
 import { validateAndNormalizeDocument } from '../../validation';
-import { injectVoussoirStyles, VoussoirProvider } from '@voussoir/core';
+import { VoussoirProvider } from '@voussoir/core';
 
 export { __jsx as jsx } from './jsx/namespace';
 
@@ -161,7 +161,6 @@ export const defaultDocumentFeatures: DocumentFeatures = {
   tables: true,
 };
 
-injectVoussoirStyles();
 function EditorComp({
   editor,
   componentBlocks,

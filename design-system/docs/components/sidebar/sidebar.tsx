@@ -12,7 +12,7 @@ import { HEADER_HEIGHT, SIDEBAR_WIDTH } from '../constants';
 import { useSidebarContext } from './context';
 import { NavItems } from './nav-items';
 import { SidebarItem } from './types';
-import { ClientOnly, ThemeSwitcher } from '../theme-switcher';
+import { ThemeSwitcher } from '../theme-switcher';
 
 /** Responsively render sidebar navigation items. */
 export const Sidebar = ({ items }: { items: SidebarItem[] }) => {
@@ -111,9 +111,7 @@ function SidebarHeader({
           </Link>
         </Box>
 
-        <ClientOnly>
-          <ThemeSwitcher />
-        </ClientOnly>
+        <ThemeSwitcher />
         <Box
           title={menuLabel}
           role="presentation"

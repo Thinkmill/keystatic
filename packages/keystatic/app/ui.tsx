@@ -7,7 +7,6 @@ import {
   useEffect,
 } from 'react';
 
-import { injectVoussoirStyles } from '@voussoir/core';
 import { Notice } from '@voussoir/notice';
 
 import { Config } from '../config';
@@ -29,8 +28,6 @@ import {
   GitHubAppShellDataContext,
   GitHubAppShellDataProvider,
 } from './shell/data';
-
-injectVoussoirStyles('surface');
 
 function parseParamsWithoutBranch(params: string[]) {
   if (params.length === 0) {

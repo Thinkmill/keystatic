@@ -1,6 +1,6 @@
 {
   "name": "localization",
-  "version": "0.1.45",
+  "version": "0.1.47",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@keystatic/core": "^0.0.76",
-    "@keystatic/next": "^0.0.5",
+    "@keystatic/core": "^0.0.78",
+    "@keystatic/next": "^0.0.6",
     "@preconstruct/next": "^4.0.0",
     "@types/node": "16.11.13",
     "@types/react": "^18.0.25",
@@ -20,6 +20,6 @@
     "next": "^13.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^4.7.4"
+    "typescript": "^5.0.2"
   }
 }

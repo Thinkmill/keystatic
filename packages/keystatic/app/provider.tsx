@@ -1,6 +1,8 @@
-import { VoussoirProvider } from '@voussoir/core';
+import {
+  ClientSideOnlyDocumentElement,
+  VoussoirProvider,
+} from '@voussoir/core';
 import { makeLinkComponent } from '@voussoir/link';
-import { SSRProvider } from '@voussoir/ssr';
 import { Toaster } from '@voussoir/toast';
 import {
   AnchorHTMLAttributes,
@@ -66,131 +68,134 @@ export default function Provider({
     [Link]
   );
   return (
-    <SSRProvider>
-      <VoussoirProvider linkComponent={UniversalLink}>
-        <UrqlProvider
-          value={useMemo(
-            () =>
-              createClient({
-                url: 'https://api.github.com/graphql',
-                requestPolicy: 'cache-and-network',
-                exchanges: [
-                  dedupExchange,
-                  cacheExchange({
-                    updates: {
-                      Mutation: {
-                        createRef(result, args, cache, _info) {
-                          cache.updateQuery(
-                            {
-                              query: AppShellQuery,
-                              variables: {
-                                owner: repo!.owner,
-                                name: repo!.name,
-                              },
+    <VoussoirProvider linkComponent={UniversalLink}>
+      <ClientSideOnlyDocumentElement bodyBackground="surface" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+      <UrqlProvider
+        value={useMemo(
+          () =>
+            createClient({
+              url: 'https://api.github.com/graphql',
+              requestPolicy: 'cache-and-network',
+              exchanges: [
+                dedupExchange,
+                cacheExchange({
+                  updates: {
+                    Mutation: {
+                      createRef(result, args, cache, _info) {
+                        cache.updateQuery(
+                          {
+                            query: AppShellQuery,
+                            variables: {
+                              owner: repo!.owner,
+                              name: repo!.name,
                             },
-                            data => {
-                              if (
-                                data?.repository?.refs?.nodes &&
-                                result.createRef &&
-                                typeof result.createRef === 'object' &&
-                                'ref' in result.createRef
-                              ) {
-                                return {
-                                  ...data,
-                                  repository: {
-                                    ...data.repository,
-                                    refs: {
-                                      ...data.repository.refs,
-                                      nodes: [
-                                        ...data.repository.refs.nodes,
-                                        result.createRef.ref,
-                                      ],
-                                    },
+                          },
+                          data => {
+                            if (
+                              data?.repository?.refs?.nodes &&
+                              result.createRef &&
+                              typeof result.createRef === 'object' &&
+                              'ref' in result.createRef
+                            ) {
+                              return {
+                                ...data,
+                                repository: {
+                                  ...data.repository,
+                                  refs: {
+                                    ...data.repository.refs,
+                                    nodes: [
+                                      ...data.repository.refs.nodes,
+                                      result.createRef.ref,
+                                    ],
                                   },
-                                };
-                              }
-                              return data;
+                                },
+                              };
                             }
-                          );
-                        },
-                        deleteRef(result, args, cache, _info) {
-                          cache.updateQuery(
-                            {
-                              query: AppShellQuery,
-                              variables: {
-                                owner: repo!.owner,
-                                name: repo!.name,
-                              },
+                            return data;
+                          }
+                        );
+                      },
+                      deleteRef(result, args, cache, _info) {
+                        cache.updateQuery(
+                          {
+                            query: AppShellQuery,
+                            variables: {
+                              owner: repo!.owner,
+                              name: repo!.name,
                             },
-                            data => {
-                              if (
-                                data?.repository?.refs?.nodes &&
-                                result.deleteRef &&
-                                typeof result.deleteRef === 'object' &&
-                                '__typename' in result.deleteRef &&
-                                typeof args.input === 'object' &&
-                                args.input !== null &&
-                                'refId' in args.input &&
-                                typeof args.input.refId === 'string'
-                              ) {
-                                const refId = args.input.refId;
-                                return {
-                                  ...data,
-                                  repository: {
-                                    ...data.repository,
-                                    refs: {
-                                      ...data.repository.refs,
-                                      nodes: data.repository.refs.nodes.filter(
-                                        x => x?.id !== refId
-                                      ),
-                                    },
+                          },
+                          data => {
+                            if (
+                              data?.repository?.refs?.nodes &&
+                              result.deleteRef &&
+                              typeof result.deleteRef === 'object' &&
+                              '__typename' in result.deleteRef &&
+                              typeof args.input === 'object' &&
+                              args.input !== null &&
+                              'refId' in args.input &&
+                              typeof args.input.refId === 'string'
+                            ) {
+                              const refId = args.input.refId;
+                              return {
+                                ...data,
+                                repository: {
+                                  ...data.repository,
+                                  refs: {
+                                    ...data.repository.refs,
+                                    nodes: data.repository.refs.nodes.filter(
+                                      x => x?.id !== refId
+                                    ),
                                   },
-                                };
-                              }
-                              return data;
+                                },
+                              };
                             }
-                          );
-                        },
+                            return data;
+                          }
+                        );
                       },
                     },
-                  }),
-                  authExchange<{ accessToken: string }>({
-                    addAuthToOperation({ operation, authState }) {
-                      if (!authState) {
-                        return operation;
-                      }
+                  },
+                }),
+                authExchange<{ accessToken: string }>({
+                  addAuthToOperation({ operation, authState }) {
+                    if (!authState) {
+                      return operation;
+                    }
 
-                      const fetchOptions =
-                        typeof operation.context.fetchOptions === 'function'
-                          ? operation.context.fetchOptions()
-                          : operation.context.fetchOptions || {};
+                    const fetchOptions =
+                      typeof operation.context.fetchOptions === 'function'
+                        ? operation.context.fetchOptions()
+                        : operation.context.fetchOptions || {};
 
-                      return makeOperation(operation.kind, operation, {
-                        ...operation.context,
-                        fetchOptions: {
-                          ...fetchOptions,
-                          headers: {
-                            ...fetchOptions.headers,
-                            Authorization: `Bearer ${authState.accessToken}`,
-                          },
+                    return makeOperation(operation.kind, operation, {
+                      ...operation.context,
+                      fetchOptions: {
+                        ...fetchOptions,
+                        headers: {
+                          ...fetchOptions.headers,
+                          Authorization: `Bearer ${authState.accessToken}`,
                         },
-                      });
-                    },
-                    getAuth: async () => {
-                      if (repo) return getAuth();
-                      return null;
-                    },
-                  }),
-                  fetchExchange,
-                ],
-              }),
-            [repo]
-          )}
-        >
-          {children}
-        </UrqlProvider>
-        <Toaster />
-      </VoussoirProvider>
-    </SSRProvider>
+                      },
+                    });
+                  },
+                  getAuth: async () => {
+                    if (repo) return getAuth();
+                    return null;
+                  },
+                }),
+                fetchExchange,
+              ],
+            }),
+          [repo]
+        )}
+      >
+        {children}
+      </UrqlProvider>
+      <Toaster />
+    </VoussoirProvider>
   );
 }

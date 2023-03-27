@@ -4,10 +4,11 @@ import addons, { makeDecorator } from '@storybook/addons';
 import { getQueryParams } from '@storybook/client-api';
 import LinkTo from '@storybook/addon-links/react';
 
-import { VoussoirProvider, injectVoussoirStyles } from '@voussoir/core';
+import {
+  ClientSideOnlyDocumentElement,
+  VoussoirProvider,
+} from '@voussoir/core';
 import { makeLinkComponent } from '@voussoir/link';
-
-injectVoussoirStyles();
 
 const providerValuesFromUrl = Object.entries(getQueryParams()).reduce(
   (acc, [k, v]) => {
@@ -57,6 +58,11 @@ function ProviderUpdater(props) {
       scale={scaleValue}
       locale={localeValue}
     >
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+      <ClientSideOnlyDocumentElement />
       <Wrapper>{storyReady && props.children}</Wrapper>
     </VoussoirProvider>
   );

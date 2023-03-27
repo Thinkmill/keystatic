@@ -1,4 +1,4 @@
-import { filterStyleProps } from '../';
+import { filterStyleProps } from '@voussoir/style';
 
 describe('style/filterStyleProps', function () {
   it('should omit style props', function () {

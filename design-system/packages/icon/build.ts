@@ -57,7 +57,7 @@ async function writeAllFile() {
     icons
       .map(icon => `export { ${icon.name} } from './icons/${icon.name}';`)
       .join('\n') + `\n`;
-  await fs.writeFile('src/all.ts', index);
+  await fs.writeFile('src/all-inner.ts', index);
   console.info('✅ Index file written successfully');
 }
 

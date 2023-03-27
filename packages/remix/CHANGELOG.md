@@ -1,5 +1,13 @@
 # @keystatic/remix
 
+## 0.0.4
+
+### Patch Changes
+
+- aeac610: Updated generated TypeScript declaration
+- Updated dependencies [aeac610]
+  - @keystatic/core@0.0.78
+
 ## 0.0.3
 
 ### Patch Changes

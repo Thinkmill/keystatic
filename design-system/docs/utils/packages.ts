@@ -207,15 +207,10 @@ async function getComponentReexports(packagesDirEnts: Dirent[]) {
     )
   ).filter(isDefined);
 
-  return [
-    '../components/example-helpers',
-    '@voussoir/icon/all',
-    ...packages
-      .sort()
-      .filter(x => x !== 'types' && x !== 'test-utils')
-      .map(pkg => `@voussoir/${pkg}`),
-  ]
-    .map(name => `export * from '${name}';`)
+  return packages
+    .sort()
+    .filter(x => x !== 'types' && x !== 'test-utils')
+    .map(pkg => `export * from '@voussoir/${pkg}';`)
     .join('\n');
 }
 

@@ -1,5 +1,20 @@
 # @keystatic/remix-test-app
 
+## 0.0.41
+
+### Patch Changes
+
+- aeac610: Updated generated TypeScript declaration
+- Updated dependencies [aeac610]
+  - @keystatic/core@0.0.78
+  - @keystatic/remix@0.0.4
+
+## 0.0.40
+
+### Patch Changes
+
+- @keystatic/core@0.0.77
+
 ## 0.0.39
 
 ### Patch Changes
