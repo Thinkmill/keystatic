@@ -1,5 +1,11 @@
 # @voussoir/image
 
+## 0.1.2
+
+### Patch Changes
+
+- 5f269d8: Add `'use client'` to entrypoints
+
 ## 0.1.1
 
 ### Patch Changes

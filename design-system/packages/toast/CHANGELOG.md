@@ -1,5 +1,12 @@
 # @voussoir/toast
 
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [5f269d8]
+  - @voussoir/button@0.1.6
+
 ## 0.1.4
 
 ### Patch Changes

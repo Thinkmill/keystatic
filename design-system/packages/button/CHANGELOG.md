@@ -1,5 +1,11 @@
 # @voussoir/button
 
+## 0.1.6
+
+### Patch Changes
+
+- 5f269d8: Add `'use client'` to entrypoints
+
 ## 0.1.5
 
 ### Patch Changes

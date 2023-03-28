@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/image",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A wrapper around the native image tag with support for common behaviour.",
   "license": "MIT",
   "main": "dist/voussoir-image.cjs.js",

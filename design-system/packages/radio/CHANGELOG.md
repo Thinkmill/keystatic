@@ -1,5 +1,11 @@
 # @voussoir/radio
 
+## 0.1.4
+
+### Patch Changes
+
+- 5f269d8: Add `'use client'` to entrypoints
+
 ## 0.1.3
 
 ### Patch Changes
