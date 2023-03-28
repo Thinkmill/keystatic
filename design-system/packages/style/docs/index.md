@@ -98,23 +98,6 @@ most cases.
 </Grid>
 ```
 
-For more complex requirements, like targeting specific ranges, `isHidden` also
-accepts the typical responsive prop shape.
-
-```jsx {% live=true %}
-<Grid gap="regular">
-  <Placeholder
-    isHidden={{ mobile: true, desktop: false, wide: true }}
-    height="large"
-  >
-    1. Only visible for desktop
-  </Placeholder>
-  <Placeholder isHidden={{ desktop: true, wide: false }} height="large">
-    2. Only hidden for desktop
-  </Placeholder>
-</Grid>
-```
-
 ### Logical properties
 
 [CSS Logical Properties and Values](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Logical_Properties)

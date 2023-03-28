@@ -79,7 +79,7 @@ type BreakpointBelow = Exclude<Breakpoint, 'mobile'>;
 export type BreakpointRange =
   | { above: BreakpointAbove }
   | { below: BreakpointBelow }
-  | Responsive<boolean>;
+  | boolean;
 
 export type RootStyleProps = {
   /** Responsively hide the element, visually **and** from assistive tech. */

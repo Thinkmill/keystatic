@@ -5,7 +5,7 @@ import { menuIcon } from '@voussoir/icon/icons/menuIcon';
 import { Icon } from '@voussoir/icon';
 import { Box, Divider, Flex } from '@voussoir/layout';
 import { useLinkComponent } from '@voussoir/link';
-import { css, tokenSchema } from '@voussoir/style';
+import { breakpointQueries, css, tokenSchema } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
 
 import { HEADER_HEIGHT, SIDEBAR_WIDTH } from '../constants';
@@ -44,7 +44,6 @@ export const Sidebar = ({ items }: { items: SidebarItem[] }) => {
         />
 
         <Box
-          isHidden={{ mobile: !sidebarIsOpen, tablet: false }}
           flex
           backgroundColor="surface"
           borderTopEndRadius={{ tablet: 'medium' }}
@@ -52,6 +51,14 @@ export const Sidebar = ({ items }: { items: SidebarItem[] }) => {
           paddingBottom="xlarge"
           paddingTop={{ mobile: 'large', tablet: 'xlarge' }}
           paddingEnd={{ mobile: 'large', tablet: 'xlarge' }}
+          data-open={sidebarIsOpen}
+          UNSAFE_className={css({
+            [breakpointQueries.below.tablet]: {
+              '&[data-open=false]': {
+                display: 'none',
+              },
+            },
+          })}
         >
           <NavItems items={items} />
         </Box>
