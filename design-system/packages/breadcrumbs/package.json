@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/breadcrumbs",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Breadcrumbs show hierarchy and navigational context for a user's location within an application.",
   "license": "MIT",
   "main": "dist/voussoir-breadcrumbs.cjs.js",
@@ -24,7 +24,7 @@
     "@react-stately/collections": "^3.5.0",
     "@react-types/breadcrumbs": "^3.5.0",
     "@react-types/shared": "^3.14.1",
-    "@voussoir/button": "0.1.5",
+    "@voussoir/button": "0.1.6",
     "@voussoir/core": "5.0.1",
     "@voussoir/icon": "^0.2.0",
     "@voussoir/layout": "^0.1.2",

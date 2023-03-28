@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/text-field",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Text fields allow users to input text with a keyboard.",
   "license": "MIT",
   "main": "dist/voussoir-text-field.cjs.js",

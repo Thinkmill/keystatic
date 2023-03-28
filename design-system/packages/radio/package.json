@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/radio",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Radio buttons allow users to select a single option from a list of mutually exclusive options.",
   "license": "MIT",
   "main": "dist/voussoir-radio.cjs.js",

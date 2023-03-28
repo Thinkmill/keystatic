@@ -1,5 +1,11 @@
 # @voussoir/text-field
 
+## 0.1.5
+
+### Patch Changes
+
+- 5f269d8: Add `'use client'` to entrypoints
+
 ## 0.1.4
 
 ### Patch Changes

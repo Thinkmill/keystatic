@@ -1,5 +1,14 @@
 # @voussoir/search-field
 
+## 0.1.4
+
+### Patch Changes
+
+- 5f269d8: Add `'use client'` to entrypoints
+- Updated dependencies [5f269d8]
+  - @voussoir/text-field@0.1.5
+  - @voussoir/button@0.1.6
+
 ## 0.1.3
 
 ### Patch Changes

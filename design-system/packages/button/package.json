@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/button",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Buttons are clickable elements that are used to trigger actions. They communicate calls to action to the user and allow users to interact with pages in a variety of ways. Button labels express what action will occur when the user interacts with it.",
   "license": "MIT",
   "main": "dist/voussoir-button.cjs.js",

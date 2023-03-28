@@ -1,5 +1,11 @@
 # @voussoir/next
 
+## 0.1.2
+
+### Patch Changes
+
+- 38c4a08: Include `linkComponent` implementation
+
 ## 0.1.1
 
 ### Patch Changes

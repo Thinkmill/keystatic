@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/badge",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A badge is a decorative indicator used to either call attention to an item or for communicating non-actionable, supplemental information.",
   "license": "MIT",
   "main": "dist/voussoir-badge.cjs.js",

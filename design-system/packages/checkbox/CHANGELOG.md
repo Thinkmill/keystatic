@@ -1,5 +1,11 @@
 # @voussoir/checkbox
 
+## 0.2.3
+
+### Patch Changes
+
+- 5f269d8: Add `'use client'` to entrypoints
+
 ## 0.2.2
 
 ### Patch Changes
