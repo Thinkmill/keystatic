@@ -1,3 +1,4 @@
+'use client';
 export { Radio } from './Radio';
 export { RadioGroup } from './RadioGroup';
 
