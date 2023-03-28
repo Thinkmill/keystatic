@@ -1225,12 +1225,14 @@ importers:
     specifiers:
       '@types/react': ^18.0.25
       '@voussoir/core': ^5.0.1
+      '@voussoir/link': ^0.1.2
       '@voussoir/style': ^0.1.3
       next: ^13.2.4
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
       '@voussoir/core': link:../core
+      '@voussoir/link': link:../link
       '@voussoir/style': link:../style
     devDependencies:
       '@types/react': 18.0.28
