@@ -8,7 +8,6 @@ import { moonIcon } from '@voussoir/icon/icons/moonIcon';
 import { sunIcon } from '@voussoir/icon/icons/sunIcon';
 import { Icon } from '@voussoir/icon';
 import { css, useMediaQuery } from '@voussoir/style';
-import { UniversalNextLink } from './UniversalNextLink';
 
 export function ThemeProvider({
   children,
@@ -18,11 +17,7 @@ export function ThemeProvider({
 }) {
   const colorScheme = useCurrentColorScheme();
   return (
-    <RootVoussoirProvider
-      {...otherProps}
-      colorScheme={colorScheme}
-      linkComponent={UniversalNextLink}
-    >
+    <RootVoussoirProvider {...otherProps} colorScheme={colorScheme}>
       {children}
     </RootVoussoirProvider>
   );

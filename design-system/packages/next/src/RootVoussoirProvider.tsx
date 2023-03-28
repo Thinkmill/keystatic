@@ -4,6 +4,7 @@ import { cache } from '@voussoir/style';
 import { VoussoirProvider, VoussoirProviderProps } from '@voussoir/core';
 import { useServerInsertedHTML } from 'next/navigation';
 import { forwardRef, ForwardRefExoticComponent, Ref, useRef } from 'react';
+import { UniversalNextLink } from './UniversalNextLink';
 
 cache.compat = true;
 
@@ -49,6 +50,7 @@ export const RootVoussoirProvider: ForwardRefExoticComponent<
       }`}
       ref={ref}
       elementType="html"
+      linkComponent={UniversalNextLink}
     />
   );
 });
