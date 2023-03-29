@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/toast",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Toasts display brief, temporary notifications of actions, errors, or other events in an application.",
   "license": "MIT",
   "main": "dist/voussoir-toast.cjs.js",

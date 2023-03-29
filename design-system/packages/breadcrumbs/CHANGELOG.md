@@ -1,5 +1,12 @@
 # @voussoir/breadcrumbs
 
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [cbe7270]
+  - @voussoir/menu@0.1.3
+
 ## 0.1.5
 
 ### Patch Changes
