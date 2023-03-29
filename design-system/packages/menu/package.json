@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/menu",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A menu displays a list of actions or options for the user to choose from.",
   "license": "MIT",
   "main": "dist/voussoir-menu.cjs.js",

@@ -512,7 +512,7 @@ importers:
       '@voussoir/core': 5.0.1
       '@voussoir/icon': ^0.2.0
       '@voussoir/layout': ^0.1.2
-      '@voussoir/menu': 0.1.2
+      '@voussoir/menu': 0.1.3
       '@voussoir/slots': ^0.1.2
       '@voussoir/storybook': ^0.0.1
       '@voussoir/style': ^0.1.3

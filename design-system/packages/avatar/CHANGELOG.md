@@ -1,5 +1,15 @@
 # @voussoir/avatar
 
+## 0.1.4
+
+### Patch Changes
+
+- cbe7270: Miscellaneous fixes:
+
+  - "@voussoir/avatar": stop `Avatar` shrinking within flex container
+  - "@voussoir/menu": support selection on `ActionMenu` component
+  - "@voussoir/toast": fix imports in stories
+
 ## 0.1.3
 
 ### Patch Changes
