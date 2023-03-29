@@ -12,7 +12,7 @@ import { Content } from '@voussoir/slots';
 import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
 import { Heading, Text } from '@voussoir/typography';
 
-import { Toaster, ToastOptions, toastQueue } from '@voussoir/toast';
+import { Toaster, ToastOptions, toastQueue } from '../src';
 
 storiesOf('Components/Toast', module)
   .addParameters({
