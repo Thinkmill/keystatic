@@ -7,7 +7,7 @@ import { Flex } from '@voussoir/layout';
 import { Picker } from '@voussoir/picker';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 
-import { ActionMenuProps, ActionMenu, Item } from '../src';
+import { ActionMenuProps, ActionMenu, Item, Section } from '../src';
 
 const meta: Meta<ActionMenuProps<object>> = {
   title: 'Components/ActionMenu',
@@ -178,6 +178,28 @@ export const WithTooltip = () => (
     </ActionMenu>
     <Tooltip>Actions</Tooltip>
   </TooltipTrigger>
+);
+
+export const Selection = () => (
+  <ActionMenu
+    selectionMode="single"
+    disabledKeys={['actionable-four', 'actionable-five', 'actionable-six']}
+    defaultSelectedKeys={['selectable-one']}
+    disabledBehavior="selection"
+    disallowEmptySelection
+    onAction={action('onAction')}
+  >
+    <Section title="Selectable">
+      <Item key="selectable-one">One</Item>
+      <Item key="selectable-two">Two</Item>
+      <Item key="selectable-three">Three</Item>
+    </Section>
+    <Section title="Actionable">
+      <Item key="actionable-four">Four</Item>
+      <Item key="actionable-five">Five</Item>
+      <Item key="actionable-six">Six</Item>
+    </Section>
+  </ActionMenu>
 );
 
 export const Dynamic = () => {
