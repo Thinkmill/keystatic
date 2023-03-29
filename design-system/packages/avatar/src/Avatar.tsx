@@ -70,6 +70,7 @@ export const Avatar: ForwardRefExoticComponent<
           backgroundColor: tokenSchema.color.background.surfaceTertiary,
           borderRadius: '50%',
           display: 'inline-flex',
+          flexShrink: 0,
           fontSize: 'var(--avatar-text-size)',
           height: 'var(--avatar-size)',
           justifyContent: 'center',
