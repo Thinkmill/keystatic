@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.79
+
+### Patch Changes
+
+- fc71faa: Update frontmatter parsing to be more permissive
+
 ## 0.0.78
 
 ### Patch Changes
