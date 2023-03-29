@@ -222,11 +222,11 @@ const textEncoder = new TextEncoder();
 
 function splitFrontmatter(data: Uint8Array) {
   const str = textDecoder.decode(data);
-  const match = str.match(/^(---\r?\n([^]*?)\r?\n---\r?\n)/);
+  const match = str.match(/^---(?:\r?\n([^]*?))?\r?\n---\r?\n?/);
   if (match) {
-    const encoded = textEncoder.encode(match[1]);
+    const encoded = textEncoder.encode(match[0]);
     return {
-      frontmatter: match[2],
+      frontmatter: match[1] ?? '',
       content: data.slice(encoded.byteLength),
     };
   }
