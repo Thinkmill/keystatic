@@ -1,4 +1,4 @@
-import { Fragment, ReactNode, useContext, useEffect, useRef } from 'react';
+import { Fragment, ReactNode, useEffect, useRef } from 'react';
 import { Transforms, Text, Editor, Path, Point, Node } from 'slate';
 import { ReactEditor } from 'slate-react';
 import { matchSorter } from 'match-sorter';
@@ -11,13 +11,14 @@ import { Item, ListBoxBase, useListBoxLayout } from '@voussoir/listbox';
 import { Popover } from '@voussoir/overlays';
 import { css, tokenSchema } from '@voussoir/style';
 
-import {
-  ComponentBlockContext,
-  insertComponentBlock,
-} from './component-blocks';
+import { insertComponentBlock } from './component-blocks';
 import { ComponentBlock } from './component-blocks/api';
 import { insertLayout } from './layouts';
-import { ToolbarState, useToolbarState } from './toolbar-state';
+import {
+  ToolbarState,
+  useDocumentEditorConfig,
+  useToolbarState,
+} from './toolbar-state';
 import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from './utils';
 import { getUploadedImage } from './component-blocks/fields/image';
 import { isBlock } from '.';
@@ -157,7 +158,7 @@ export function InsertMenu({
 }) {
   const toolbarState = useToolbarState();
   const { editor } = toolbarState;
-  const componentBlocks = useContext(ComponentBlockContext);
+  const { componentBlocks } = useDocumentEditorConfig();
   const options = matchSorter(
     getOptions(toolbarState, componentBlocks),
     text.text.slice(1),

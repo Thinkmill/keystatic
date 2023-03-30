@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useContext } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { Editor, Transforms } from 'slate';
 import { ReactEditor } from 'slate-react';
 
@@ -27,17 +27,14 @@ import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { TextAlignMenu } from './alignment';
 import { blockquoteButton } from './blockquote';
 import { codeButton } from './code-block';
-import {
-  ComponentBlockContext,
-  insertComponentBlock,
-} from './component-blocks';
+import { insertComponentBlock } from './component-blocks';
 import { dividerButton } from './divider';
 import { DocumentFeatures } from './document-features';
 import { linkButton } from './link';
 import { LayoutsButton } from './layouts';
 import { ListButtons } from './lists';
 import { ToolbarSeparator } from './primitives';
-import { useToolbarState } from './toolbar-state';
+import { useDocumentEditorConfig, useToolbarState } from './toolbar-state';
 import { clearFormatting, useStaticEditor } from './utils';
 import { Picker } from '@voussoir/picker';
 import { imageButton } from './image';
@@ -50,7 +47,7 @@ export function Toolbar({
   documentFeatures: DocumentFeatures;
   viewState?: { expanded: boolean; toggle: () => void };
 }) {
-  const blockComponent = useContext(ComponentBlockContext);
+  const blockComponent = useDocumentEditorConfig().componentBlocks;
   const hasBlockItems = Object.keys(blockComponent).length;
   const hasMarks = Object.values(documentFeatures.formatting.inlineMarks).some(
     x => x
@@ -265,7 +262,7 @@ const HeadingMenu = ({
 
 function InsertBlockMenu() {
   const editor = useStaticEditor();
-  const componentBlocks = useContext(ComponentBlockContext)!;
+  const componentBlocks = useDocumentEditorConfig().componentBlocks;
 
   return (
     <MenuTrigger align="end">

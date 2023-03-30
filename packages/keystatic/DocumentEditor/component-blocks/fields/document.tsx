@@ -15,11 +15,14 @@ import {
 import { ElementFromValidation } from '../../../structure-validation';
 import { collectDirectoriesUsedInSchema } from '../../../app/tree-key';
 import {
+  BasicFormField,
   ComponentBlock,
   DocumentElement,
   fields,
   FormFieldWithFileRequiringContentsForReader,
+  SlugFormField,
 } from '../api';
+import { text } from './text';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -59,16 +62,48 @@ type FormattingConfig = {
   softBreaks?: true;
 };
 
+export type BasicStringFormField =
+  | BasicFormField<string, unknown>
+  | SlugFormField<string, undefined, undefined>;
+
 type DocumentFeaturesConfig = {
   formatting?: true | FormattingConfig;
   links?: true;
   dividers?: true;
-  images?: true | { directory?: string; publicPath?: string };
+  images?:
+    | true
+    | {
+        directory?: string;
+        publicPath?: string;
+        schema?: {
+          alt?: BasicStringFormField;
+          title?: BasicStringFormField;
+        };
+      };
   layouts?: readonly (readonly [number, ...number[]])[];
   tables?: true;
 };
 
-function normaliseDocumentFeatures(config: DocumentFeaturesConfig) {
+const defaultAltField: SlugFormField<string, undefined, undefined> = text({
+  label: 'Alt text',
+  description: 'This text will be used by screen readers and search engines.',
+});
+
+const emptyTitleField: BasicFormField<string, undefined> = {
+  kind: 'form',
+  Input() {
+    return null;
+  },
+  defaultValue: '',
+  options: undefined,
+  validate(value) {
+    return typeof value === 'string';
+  },
+};
+
+export function normaliseDocumentFeatures(
+  config: DocumentFeaturesConfig
+): DocumentFeatures {
   const formatting: FormattingConfig =
     config.formatting === true
       ? {
@@ -80,7 +115,8 @@ function normaliseDocumentFeatures(config: DocumentFeaturesConfig) {
           softBreaks: true,
         }
       : config.formatting ?? {};
-  const documentFeatures: DocumentFeatures = {
+  const imagesConfig = config.images === true ? {} : config.images;
+  return {
     formatting: {
       alignment:
         formatting.alignment === true
@@ -139,10 +175,18 @@ function normaliseDocumentFeatures(config: DocumentFeaturesConfig) {
       ...new Set((config.layouts || []).map(x => JSON.stringify(x))),
     ].map(x => JSON.parse(x)),
     dividers: !!config.dividers,
-    images: config.images === undefined ? false : config.images,
+    images:
+      imagesConfig === undefined
+        ? false
+        : {
+            ...imagesConfig,
+            schema: {
+              alt: imagesConfig.schema?.alt ?? defaultAltField,
+              title: imagesConfig.schema?.title ?? emptyTitleField,
+            },
+          },
     tables: !!config.tables,
   };
-  return documentFeatures;
 }
 
 export function document({

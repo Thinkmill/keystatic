@@ -1,3 +1,5 @@
+import { BasicStringFormField } from './component-blocks/fields/document';
+
 export type DocumentFeatures = {
   formatting: {
     inlineMarks: {
@@ -26,7 +28,16 @@ export type DocumentFeatures = {
     softBreaks: boolean;
   };
   links: boolean;
-  images: boolean | { directory?: string; publicPath?: string };
+  images:
+    | false
+    | {
+        directory?: string;
+        publicPath?: string;
+        schema: {
+          alt: BasicStringFormField;
+          title: BasicStringFormField;
+        };
+      };
   dividers: boolean;
   layouts: [number, ...number[]][];
   tables: boolean;
