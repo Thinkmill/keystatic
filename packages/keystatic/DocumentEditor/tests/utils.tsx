@@ -12,6 +12,7 @@ import { createToolbarState, ToolbarStateProvider } from '../toolbar-state';
 import { validateDocumentStructure } from '../../structure-validation';
 import { validateAndNormalizeDocument } from '../../validation';
 import { VoussoirProvider } from '@voussoir/core';
+import { normaliseDocumentFeatures } from '../component-blocks/fields/document';
 
 export { __jsx as jsx } from './jsx/namespace';
 
@@ -136,30 +137,15 @@ expect.extend({
     return { actual: received, message, pass };
   },
 });
-export const defaultDocumentFeatures: DocumentFeatures = {
-  formatting: {
-    alignment: { center: true, end: true },
-    blockTypes: { blockquote: true, code: true },
-    headingLevels: [1, 2, 3, 4, 5, 6],
-    inlineMarks: {
-      bold: true,
-      code: true,
-      italic: true,
-      keyboard: true,
-      strikethrough: true,
-      subscript: true,
-      superscript: true,
-      underline: true,
-    },
-    listTypes: { ordered: true, unordered: true },
-    softBreaks: true,
-  },
+
+export const defaultDocumentFeatures = normaliseDocumentFeatures({
   dividers: true,
-  links: true,
-  layouts: [[1], [1, 1], [1, 1, 1], [1, 2, 1]],
+  formatting: true,
   images: true,
+  layouts: [[1], [1, 1], [1, 1, 1], [1, 2, 1]],
+  links: true,
   tables: true,
-};
+});
 
 function EditorComp({
   editor,

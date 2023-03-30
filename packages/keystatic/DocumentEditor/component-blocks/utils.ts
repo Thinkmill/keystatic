@@ -164,7 +164,8 @@ export function getDocumentFeaturesForChildField(
               },
       },
       links: options.links === 'inherit',
-      images: options.images === 'inherit',
+      images:
+        options.images === 'inherit' ? editorDocumentFeatures.images : false,
       tables: options.tables === 'inherit',
     },
     componentBlocks: options.componentBlocks === 'inherit',

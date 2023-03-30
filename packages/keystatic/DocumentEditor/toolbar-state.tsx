@@ -1,15 +1,13 @@
-import React, { ReactNode, useContext } from 'react';
+import React, { createContext, ReactNode, useContext, useMemo } from 'react';
 import { Editor, Range, Text } from 'slate';
 import { useSlate } from 'slate-react';
 import { DocumentFeatures } from './document-features';
-import { ComponentBlockContext } from './component-blocks';
 import { ComponentBlock } from './component-blocks/api';
 import {
   DocumentFeaturesForChildField,
   getSchemaAtPropPath,
   getDocumentFeaturesForChildField,
 } from './component-blocks/utils';
-import { LayoutOptionsProvider } from './layouts';
 import { isListNode } from './lists';
 
 import { allMarks, isElementActive, Mark, nodeTypeMatcher } from './utils';
@@ -115,7 +113,7 @@ export const createToolbarState = (
         },
         layouts: editorDocumentFeatures.layouts,
         links: true,
-        images: true,
+        images: editorDocumentFeatures.images,
         tables: true,
       },
       softBreaks: true,
@@ -294,6 +292,21 @@ export function getListTypeAbove(
   return listAbove[0].type;
 }
 
+export const DocumentEditorConfigContext = createContext<null | {
+  documentFeatures: DocumentFeatures;
+  componentBlocks: Record<string, ComponentBlock>;
+}>(null);
+
+export function useDocumentEditorConfig() {
+  const context = useContext(DocumentEditorConfigContext);
+  if (!context) {
+    throw new Error(
+      'useDocumentEditorConfig must be used within a DocumentEditorConfigContext.Provider'
+    );
+  }
+  return context;
+}
+
 export const ToolbarStateProvider = ({
   children,
   componentBlocks,
@@ -306,18 +319,21 @@ export const ToolbarStateProvider = ({
   const editor = useSlate();
 
   return (
-    <LayoutOptionsProvider value={editorDocumentFeatures.layouts}>
-      <ComponentBlockContext.Provider value={componentBlocks}>
-        <ToolbarStateContext.Provider
-          value={createToolbarState(
-            editor,
-            componentBlocks,
-            editorDocumentFeatures
-          )}
-        >
-          {children}
-        </ToolbarStateContext.Provider>
-      </ComponentBlockContext.Provider>
-    </LayoutOptionsProvider>
+    <DocumentEditorConfigContext.Provider
+      value={useMemo(
+        () => ({ componentBlocks, documentFeatures: editorDocumentFeatures }),
+        [componentBlocks, editorDocumentFeatures]
+      )}
+    >
+      <ToolbarStateContext.Provider
+        value={createToolbarState(
+          editor,
+          componentBlocks,
+          editorDocumentFeatures
+        )}
+      >
+        {children}
+      </ToolbarStateContext.Provider>
+    </DocumentEditorConfigContext.Provider>
   );
 };

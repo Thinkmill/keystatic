@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Editor, Element, Node, Transforms, Range, Point } from 'slate';
 import { ReactEditor, RenderElementProps } from 'slate-react';
 
@@ -24,11 +24,7 @@ import {
   moveChildren,
   useStaticEditor,
 } from './utils';
-import { useToolbarState } from './toolbar-state';
-
-const LayoutOptionsContext = createContext<[number, ...number[]][]>([]);
-
-export const LayoutOptionsProvider = LayoutOptionsContext.Provider;
+import { useDocumentEditorConfig, useToolbarState } from './toolbar-state';
 
 // UI Components
 export const LayoutContainer = ({
@@ -39,7 +35,7 @@ export const LayoutContainer = ({
   const editor = useStaticEditor();
 
   const layout = element.layout;
-  const layoutOptions = useContext(LayoutOptionsContext);
+  const layoutOptions = useDocumentEditorConfig().documentFeatures.layouts;
   const currentLayoutIndex = layoutOptions.findIndex(
     x => x.toString() === layout.toString()
   );

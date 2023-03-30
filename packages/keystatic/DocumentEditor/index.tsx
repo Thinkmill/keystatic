@@ -37,7 +37,7 @@ import { Toolbar } from './Toolbar';
 import { renderElement } from './render-element';
 import { withHeading } from './heading';
 import { nestList, unnestList, withList } from './lists';
-import { ComponentBlockContext, withComponentBlocks } from './component-blocks';
+import { withComponentBlocks } from './component-blocks';
 import { getPlaceholderTextForPropPath } from './component-blocks/utils';
 import { withBlockquote } from './blockquote';
 import { withDivider } from './divider';
@@ -47,7 +47,7 @@ import { renderLeaf } from './leaf';
 import { withSoftBreaks } from './soft-breaks';
 import { withShortcuts } from './shortcuts';
 import { withDocumentFeaturesNormalization } from './document-features-normalization';
-import { ToolbarStateProvider, useToolbarState } from './toolbar-state';
+import { ToolbarStateProvider, useDocumentEditorConfig } from './toolbar-state';
 import { withInsertMenu } from './insert-menu';
 import { withBlockMarkdownShortcuts } from './block-markdown-shortcuts';
 import { withPasting } from './pasting';
@@ -476,12 +476,11 @@ function getPrismTokenLength(token: Prism.Token | string): number {
 
 export function DocumentEditorEditable(props: EditableProps) {
   const editor = useSlate();
-  const componentBlocks = useContext(ComponentBlockContext);
-  const toolbarState = useToolbarState();
+  const { componentBlocks, documentFeatures } = useDocumentEditorConfig();
 
   const onKeyDown = useMemo(
-    () => getKeyDownHandler(editor, toolbarState.editorDocumentFeatures),
-    [editor, toolbarState.editorDocumentFeatures]
+    () => getKeyDownHandler(editor, documentFeatures),
+    [editor, documentFeatures]
   );
 
   return (

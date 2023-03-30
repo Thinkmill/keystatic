@@ -402,7 +402,7 @@ function ObjectFieldPreview({
     ? findFocusableObjectFieldKey(schema)
     : undefined;
   return (
-    <Flex gap="xlarge" direction="column">
+    <Flex gap="large" direction="column">
       {Object.entries(fields).map(
         ([key, propVal]) =>
           isNonChildFieldPreviewProps(propVal) && (
@@ -432,7 +432,7 @@ function ConditionalFieldPreview({
     unknown
   >;
   return (
-    <Flex gap="xlarge" direction="column">
+    <Flex gap="large" direction="column">
       {useMemo(
         () => (
           <AddToPathProvider part="discriminant">

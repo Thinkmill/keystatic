@@ -1,5 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ReactEditor, RenderElementProps } from 'slate-react';
 import { Editor, Transforms } from 'slate';
 
@@ -35,6 +35,11 @@ import {
   NotEditable,
   useActiveBlockPopover,
 } from './primitives';
+import { createGetPreviewProps } from './component-blocks/preview-props';
+import { fields } from '../src';
+import { useDocumentEditorConfig } from './toolbar-state';
+import { FormValueContentFromPreviewProps } from './component-blocks/form-from-preview';
+import { clientSideValidateProp } from './component-blocks/utils';
 
 export const ImageElement = ({
   attributes,
@@ -149,10 +154,12 @@ export const ImageElement = ({
         {dialogOpen && (
           <ImageDialog
             alt={currentElement.alt}
+            title={currentElement.title}
             filename={currentElement.src.filename}
-            onSubmit={({ alt, filename }) => {
+            onSubmit={({ alt, filename, title }) => {
               setNode({
                 alt,
+                title,
                 src: {
                   content: currentElement.src.content,
                   filename,
@@ -166,19 +173,28 @@ export const ImageElement = ({
   );
 };
 
-function ImageDialog({
-  onSubmit,
-  ...props
-}: {
-  alt?: string;
+function ImageDialog(props: {
+  alt: string;
+  title: string;
   filename: string;
-  onSubmit: (value: { alt: string; filename: string }) => void;
+  onSubmit: (value: { alt: string; filename: string; title: string }) => void;
 }) {
+  const { images } = useDocumentEditorConfig().documentFeatures;
+  if (!images) {
+    throw new Error('unexpected image rendered when images are disabled');
+  }
+  const schema = useMemo(() => fields.object(images.schema), [images]);
+  const [state, setState] = useState({ alt: props.alt, title: props.title });
+  const previewProps = useMemo(
+    () => createGetPreviewProps(schema, setState, () => undefined),
+    [schema]
+  )(state);
+
   const [filenameWithoutExtension, filenameExtension] = splitFilename(
     props.filename
   );
-  let [altText, setAltText] = useState(props.alt || '');
-  let [fileName, setFileName] = useState(filenameWithoutExtension || '');
+  const [forceValidation, setForceValidation] = useState(false);
+  let [fileName, setFileName] = useState(filenameWithoutExtension);
   let [fileNameTouched, setFileNameTouched] = useState(false);
 
   let { dismiss } = useDialogContainer();
@@ -191,10 +207,12 @@ function ImageDialog({
         onSubmit={event => {
           if (event.target !== event.currentTarget) return;
           event.preventDefault();
-          if (fileName) {
+          setForceValidation(true);
+          if (fileName && clientSideValidateProp(schema, state, undefined)) {
             dismiss();
-            onSubmit({
-              alt: altText,
+            props.onSubmit({
+              alt: state.alt,
+              title: state.title,
               filename: [fileName, filenameExtension].join('.'),
             });
           }
@@ -210,7 +228,7 @@ function ImageDialog({
               value={fileName}
               isRequired
               errorMessage={
-                fileNameTouched && !fileName
+                (fileNameTouched || forceValidation) && !fileName
                   ? 'Please provide a file name.'
                   : undefined
               }
@@ -226,12 +244,10 @@ function ImageDialog({
                 ) : null
               }
             />
-            <TextField
+            <FormValueContentFromPreviewProps
+              forceValidation={forceValidation}
               autoFocus
-              label="Alt text"
-              description="This text will be used by screen readers and search engines."
-              onChange={setAltText}
-              value={altText}
+              {...previewProps}
             />
           </Flex>
         </Content>

@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { ReactEditor, RenderElementProps } from 'slate-react';
 import { Editor, Transforms } from 'slate';
 
@@ -22,12 +15,9 @@ import { updateComponentBlockElementProps } from './update-element';
 import { ComponentBlockRender } from './component-block-render';
 import { ChromefulComponentBlockElement } from './chromeful-element';
 import { ChromelessComponentBlockElement } from './chromeless-element';
+import { useDocumentEditorConfig } from '../toolbar-state';
 
 export { withComponentBlocks } from './with-component-blocks';
-
-export const ComponentBlockContext = createContext<
-  Record<string, ComponentBlock>
->({});
 
 export function ComponentInlineProp(props: RenderElementProps) {
   return <span {...props.attributes}>{props.children}</span>;
@@ -61,7 +51,7 @@ export const ComponentBlocksElement = ({
     editor,
     __elementToGetPath
   );
-  const blockComponents = useContext(ComponentBlockContext)!;
+  const blockComponents = useDocumentEditorConfig().componentBlocks;
   const componentBlock = blockComponents[currentElement.component] as
     | ComponentBlock
     | undefined;
