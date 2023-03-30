@@ -167,7 +167,7 @@ export default config({
                         props.fields.tone.onChange(key as any);
                       }}
                       selectedKeys={[props.fields.tone.value]}
-                      items={props.fields.tone.options}
+                      items={props.fields.tone.schema.options}
                     >
                       {item => (
                         <Item key={item.value} textValue={item.label}>
