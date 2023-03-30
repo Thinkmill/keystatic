@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.0.80
+
+### Patch Changes
+
+- dd8c580: Remove `options` property on `FormField`
+- 51199ba: Add `images.schema` option to `fields.document` to allow changing the
+  schema for
+
 ## 0.0.79
 
 ### Patch Changes
