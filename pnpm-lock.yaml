@@ -12,7 +12,7 @@ importers:
       '@changesets/changelog-github': ^0.4.5
       '@changesets/cli': ^2.23.0
       '@manypkg/cli': ^0.19.1
-      '@preconstruct/cli': ^2.4.2
+      '@preconstruct/cli': ^2.4.3
       '@testing-library/dom': ^8.20.0
       '@testing-library/jest-dom': ^5.16.5
       '@testing-library/react': ^13.4.0
@@ -48,7 +48,7 @@ importers:
       '@changesets/changelog-github': 0.4.8
       '@changesets/cli': 2.26.0
       '@manypkg/cli': 0.19.2
-      '@preconstruct/cli': 2.4.2
+      '@preconstruct/cli': 2.4.3
       '@testing-library/dom': 8.20.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
@@ -5591,8 +5591,8 @@ packages:
       webpack: 5.75.0_esbuild@0.14.54
     dev: true
 
-  /@preconstruct/cli/2.4.2:
-    resolution: {integrity: sha512-fhdzbDF58Gu+t+CqQedx2J21jhVL7xE9f+RLuOLtS1lJhD8jyDJ+O7ny+6nVSB87NK5FaBM+dDErCcZcWjbJQA==}
+  /@preconstruct/cli/2.4.3:
+    resolution: {integrity: sha512-f9Yrf9T7sbqN8spoa45rWmWIZsK+BKG34iWjWpSDuJ2Lm8mY9Y+dx7RCYqrFQFUA67IC37unCjhdRbYQq+g8Yg==}
     hasBin: true
     dependencies:
       '@babel/code-frame': 7.18.6
