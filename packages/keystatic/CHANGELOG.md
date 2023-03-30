@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.0.81
+
+### Patch Changes
+
+- 91307f5: Include callback url with port in addition to the portless one when
+  creating the GitHub app so that installing the app redirects to the right
+  place
+
 ## 0.0.80
 
 ### Patch Changes
