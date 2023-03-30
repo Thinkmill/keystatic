@@ -139,7 +139,6 @@ test('array', () => {
               "Input": [Function],
               "defaultValue": "",
               "kind": "form",
-              "options": undefined,
               "slug": {
                 "parse": [Function],
                 "serialize": [Function],
@@ -150,7 +149,6 @@ test('array', () => {
               "Input": [Function],
               "defaultValue": "",
               "kind": "form",
-              "options": undefined,
               "validate": [Function],
             },
           },
