@@ -1,7 +1,7 @@
 import { BasicFormField, ComponentSchema, ConditionalField } from '../api';
 
 export function conditional<
-  DiscriminantField extends BasicFormField<string | boolean, any>,
+  DiscriminantField extends BasicFormField<string | boolean>,
   ConditionalValues extends {
     [Key in `${DiscriminantField['defaultValue']}`]: ComponentSchema;
   }

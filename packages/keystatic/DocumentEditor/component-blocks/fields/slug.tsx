@@ -34,7 +34,7 @@ export function slug(args: {
       };
     };
   };
-}): SlugFormField<{ name: string; slug: string }, undefined, string> {
+}): SlugFormField<{ name: string; slug: string }, string> {
   const naiveGenerateSlug: (name: string) => string =
     args.slug?.generate || slugify;
   const defaultValue = {
@@ -141,7 +141,6 @@ export function slug(args: {
         </Flex>
       );
     },
-    options: undefined,
     defaultValue,
     validate(value, slugInfo) {
       return (

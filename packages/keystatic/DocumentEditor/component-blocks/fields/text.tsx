@@ -99,7 +99,7 @@ export function text({
     };
   };
   multiline?: boolean;
-}): SlugFormField<string, undefined, undefined> {
+}): SlugFormField<string, undefined> {
   const TextFieldComponent = multiline ? TextArea : TextField;
   return {
     kind: 'form',
@@ -131,7 +131,6 @@ export function text({
         />
       );
     },
-    options: undefined,
     defaultValue,
     validate(value, slugInfo) {
       if (

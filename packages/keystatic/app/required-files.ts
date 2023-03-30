@@ -13,7 +13,7 @@ import { getSlugFromState } from './utils';
 
 export type RequiredFile = {
   path: ReadonlyPropPath;
-  schema: FormFieldWithFile<any, unknown, unknown>;
+  schema: FormFieldWithFile<any, unknown>;
   file: { filename: string; parent: string | undefined } | undefined;
 };
 
@@ -106,7 +106,7 @@ export function parseSerializedFormField(
   value: unknown,
   file: {
     path: ReadonlyPropPath;
-    schema: FormFieldWithFile<any, unknown, unknown>;
+    schema: FormFieldWithFile<any, unknown>;
   },
   loadedBinaryFiles: Map<string, Uint8Array>,
   mode: 'read' | 'edit',

@@ -15,7 +15,9 @@ export function multiselect<Option extends { label: string; value: string }>({
   options: readonly Option[];
   defaultValue?: readonly Option['value'][];
   description?: string;
-}): BasicFormField<readonly Option['value'][], readonly Option[]> {
+}): BasicFormField<readonly Option['value'][]> & {
+  options: readonly Option[];
+} {
   const valuesToOption = new Map(options.map(x => [x.value, x]));
   return {
     kind: 'form',

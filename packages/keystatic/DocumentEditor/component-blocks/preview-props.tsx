@@ -167,7 +167,6 @@ export function createGetPreviewProps<
       return {
         value: value as FormFieldValue,
         onChange,
-        options: schema.options,
         schema: schema as any,
       };
     },
@@ -259,14 +258,13 @@ export function createGetPreviewProps<
     conditional(schema, value, memoized, path, getInnerProp) {
       const props: GenericPreviewProps<
         ConditionalField<
-          BasicFormField<string | boolean, unknown>,
+          BasicFormField<string | boolean>,
           { [key: string]: ComponentSchema }
         >,
         ChildFieldElement
       > = {
         discriminant: value.discriminant as any,
         onChange: memoized.onChange,
-        options: schema.discriminant.options,
         value: getInnerProp(
           schema.values[value.discriminant.toString()],
           value.value,

@@ -39,8 +39,7 @@ export function integer<IsRequired extends boolean | undefined>({
   validation?: { isRequired?: IsRequired; min: number; max: number };
   description?: string;
 } & RequiredValidation<IsRequired>): BasicFormField<
-  number | (IsRequired extends true ? never : null),
-  undefined
+  number | (IsRequired extends true ? never : null)
 > {
   const validate = (value: unknown) => {
     return validateInteger(validation, value, label) === undefined;
@@ -68,7 +67,6 @@ export function integer<IsRequired extends boolean | undefined>({
         />
       );
     },
-    options: undefined,
     defaultValue: (defaultValue ?? null) as number,
     validate,
   };

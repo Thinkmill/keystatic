@@ -12,7 +12,7 @@ export function select<Option extends { label: string; value: string }>({
   options: readonly Option[];
   defaultValue: Option['value'];
   description?: string;
-}): BasicFormField<Option['value'], readonly Option[]> {
+}): BasicFormField<Option['value']> & { options: readonly Option[] } {
   const optionValuesSet = new Set(options.map(x => x.value));
   if (!optionValuesSet.has(defaultValue)) {
     throw new Error(

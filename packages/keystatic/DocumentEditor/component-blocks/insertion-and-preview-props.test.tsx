@@ -249,14 +249,12 @@ test('preview props api', () => {
             discriminant: false,
             schema: componentBlocks.complex.schema.object.fields.conditional,
             onChange: expect.any(Function) as any,
-            options: undefined,
             value: {
               schema:
                 componentBlocks.complex.schema.object.fields.conditional.values
                   .false,
               onChange: expect.any(Function) as any,
               value: null,
-              options: undefined,
             },
           },
           conditionalSelect: {
@@ -264,16 +262,11 @@ test('preview props api', () => {
             schema:
               componentBlocks.complex.schema.object.fields.conditionalSelect,
             onChange: expect.any(Function) as any,
-            options: [
-              { label: 'A', value: 'a' },
-              { label: 'B', value: 'b' },
-            ],
             value: {
               schema:
                 componentBlocks.complex.schema.object.fields.conditionalSelect
                   .values.a,
               onChange: expect.any(Function) as any,
-              options: undefined,
               value: '',
             },
           },
@@ -287,21 +280,15 @@ test('preview props api', () => {
             schema: componentBlocks.complex.schema.object.fields.many,
             value: '',
             onChange: expect.any(Function) as any,
-            options: undefined,
           },
           prop: {
             schema: componentBlocks.complex.schema.object.fields.prop,
             onChange: expect.any(Function) as any,
-            options: undefined,
             value: '',
           },
           select: {
             schema: componentBlocks.complex.schema.object.fields.select,
             onChange: expect.any(Function) as any,
-            options: [
-              { label: 'A', value: 'a' },
-              { label: 'B', value: 'b' },
-            ],
             value: 'a',
           },
         },
@@ -391,7 +378,6 @@ test('preview props conditional change', () => {
     schema: componentBlocks.complex.schema.object.fields.conditional,
     discriminant: true,
     onChange: expect.any(Function) as any,
-    options: undefined,
     value: {
       element: React.createElement(ChildFieldEditable, {
         path: ['object', 'conditional', 'value'],
@@ -441,16 +427,11 @@ test('changing conditional with form inside', () => {
       discriminant: 'b',
       schema: componentBlocks.complex.schema.object.fields.conditionalSelect,
       onChange: expect.any(Function) as any,
-      options: [
-        { label: 'A', value: 'a' },
-        { label: 'B', value: 'b' },
-      ],
       value: {
         schema:
           componentBlocks.complex.schema.object.fields.conditionalSelect.values
             .b,
         onChange: expect.any(Function) as any,
-        options: undefined,
         value: 'B',
       },
     };
@@ -481,16 +462,11 @@ test('changing form inside conditional', () => {
       discriminant: 'a',
       schema: componentBlocks.complex.schema.object.fields.conditionalSelect,
       onChange: expect.any(Function) as any,
-      options: [
-        { label: 'A', value: 'a' },
-        { label: 'B', value: 'b' },
-      ],
       value: {
         schema:
           componentBlocks.complex.schema.object.fields.conditionalSelect.values
             .a,
         onChange: expect.any(Function) as any,
-        options: undefined,
         value: 'Some content',
       },
     };

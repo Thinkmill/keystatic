@@ -46,10 +46,9 @@ export function date<IsRequired extends boolean | undefined>({
   validation?: { isRequired?: IsRequired; min?: string; max?: string };
   description?: string;
 } & RequiredValidation<IsRequired>): BasicFormField<
-  string | (IsRequired extends true ? never : null),
-  undefined
+  string | (IsRequired extends true ? never : null)
 > {
-  const field: BasicFormField<string | null, undefined> = {
+  const field: BasicFormField<string | null> = {
     kind: 'form',
     Input({ value, onChange, autoFocus, forceValidation }) {
       const [blurred, onBlur] = useReducer(() => true, false);
@@ -73,7 +72,6 @@ export function date<IsRequired extends boolean | undefined>({
         />
       );
     },
-    options: undefined,
     get defaultValue() {
       if (defaultValue === undefined) {
         return null;

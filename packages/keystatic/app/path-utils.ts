@@ -139,7 +139,7 @@ export type FormatInfo = {
   contentField:
     | {
         key: string;
-        config: FormFieldWithFile<any, any, any> & {
+        config: FormFieldWithFile<any, any> & {
           serializeToFile: { kind: 'multi' };
         };
       }

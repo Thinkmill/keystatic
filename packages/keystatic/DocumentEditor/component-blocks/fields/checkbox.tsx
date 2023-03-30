@@ -1,6 +1,6 @@
 import { Checkbox } from '@voussoir/checkbox';
 import { Text } from '@voussoir/typography';
-import { BasicFormField } from '../../../dist/keystatic-core.cjs';
+import { BasicFormField } from '../api';
 
 export function checkbox({
   label,
@@ -10,7 +10,7 @@ export function checkbox({
   label: string;
   defaultValue?: boolean;
   description?: string;
-}): BasicFormField<boolean, undefined> {
+}): BasicFormField<boolean> {
   return {
     kind: 'form',
     Input({ value, onChange, autoFocus }) {
@@ -21,7 +21,6 @@ export function checkbox({
         </Checkbox>
       );
     },
-    options: undefined,
     defaultValue,
     validate(value) {
       return typeof value === 'boolean';

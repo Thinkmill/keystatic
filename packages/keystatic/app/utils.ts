@@ -71,7 +71,7 @@ export function getRepoUrl(config: GitHubConfig) {
 
 export function isSlugFormField(
   schema: ComponentSchema
-): schema is SlugFormField<unknown, unknown, unknown> {
+): schema is SlugFormField<unknown, unknown> {
   return (
     schema.kind === 'form' &&
     'slug' in schema &&

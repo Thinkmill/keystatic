@@ -84,7 +84,6 @@ export function image<IsRequired extends boolean | undefined>({
       filename: string;
     }
   | { kind: 'none' },
-  undefined,
   string | (IsRequired extends true ? never : null)
 > {
   return {
@@ -170,7 +169,6 @@ export function image<IsRequired extends boolean | undefined>({
         </Flex>
       );
     },
-    options: undefined,
     defaultValue: { kind: 'none' },
     validate(value) {
       if (

@@ -17,8 +17,7 @@ export function pathReference<IsRequired extends boolean | undefined>({
   validation?: { isRequired?: IsRequired };
   description?: string;
 } & RequiredValidation<IsRequired>): BasicFormField<
-  string | (IsRequired extends true ? never : null),
-  undefined
+  string | (IsRequired extends true ? never : null)
 > {
   const match = pattern ? filter(pattern) : () => true;
   return {
@@ -66,7 +65,6 @@ export function pathReference<IsRequired extends boolean | undefined>({
         </Combobox>
       );
     },
-    options: undefined,
     defaultValue: null as any,
     validate: val =>
       typeof val === 'string' ||

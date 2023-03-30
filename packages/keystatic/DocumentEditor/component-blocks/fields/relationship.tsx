@@ -16,8 +16,7 @@ export function relationship<IsRequired extends boolean | undefined>({
   validation?: { isRequired?: IsRequired };
   description?: string;
 } & RequiredValidation<IsRequired>): BasicFormField<
-  string | (IsRequired extends true ? never : null),
-  undefined
+  string | (IsRequired extends true ? never : null)
 > {
   return {
     kind: 'form',
@@ -61,7 +60,6 @@ export function relationship<IsRequired extends boolean | undefined>({
         </Combobox>
       );
     },
-    options: undefined,
     defaultValue: null as any,
     validate: val =>
       typeof val === 'string' ||

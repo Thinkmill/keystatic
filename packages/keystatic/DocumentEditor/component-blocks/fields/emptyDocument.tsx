@@ -2,7 +2,6 @@ import { FormFieldWithFileRequiringContentsForReader } from '../api';
 
 export function emptyDocument(): FormFieldWithFileRequiringContentsForReader<
   null,
-  undefined,
   null
 > {
   return {
@@ -10,7 +9,6 @@ export function emptyDocument(): FormFieldWithFileRequiringContentsForReader<
     Input() {
       return null;
     },
-    options: undefined,
     defaultValue: null,
     validate(value) {
       return value === null || value === undefined;

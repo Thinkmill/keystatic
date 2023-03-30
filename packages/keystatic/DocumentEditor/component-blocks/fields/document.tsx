@@ -63,8 +63,8 @@ type FormattingConfig = {
 };
 
 export type BasicStringFormField =
-  | BasicFormField<string, unknown>
-  | SlugFormField<string, undefined, undefined>;
+  | BasicFormField<string>
+  | SlugFormField<string, undefined>;
 
 type DocumentFeaturesConfig = {
   formatting?: true | FormattingConfig;
@@ -84,18 +84,17 @@ type DocumentFeaturesConfig = {
   tables?: true;
 };
 
-const defaultAltField: SlugFormField<string, undefined, undefined> = text({
+const defaultAltField: SlugFormField<string, undefined> = text({
   label: 'Alt text',
   description: 'This text will be used by screen readers and search engines.',
 });
 
-const emptyTitleField: BasicFormField<string, undefined> = {
+const emptyTitleField: BasicFormField<string> = {
   kind: 'form',
   Input() {
     return null;
   },
   defaultValue: '',
-  options: undefined,
   validate(value) {
     return typeof value === 'string';
   },
@@ -200,7 +199,6 @@ export function document({
   description?: string;
 } & DocumentFeaturesConfig): FormFieldWithFileRequiringContentsForReader<
   DocumentElement[],
-  undefined,
   DocumentElement[]
 > {
   const documentFeatures = normaliseDocumentFeatures(documentFeaturesConfig);
@@ -246,7 +244,6 @@ export function document({
         </FieldPrimitive>
       );
     },
-    options: undefined,
     validate() {
       return true;
     },

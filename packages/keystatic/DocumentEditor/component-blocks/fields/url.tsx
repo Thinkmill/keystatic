@@ -30,8 +30,7 @@ export function url<IsRequired extends boolean | undefined>({
   validation?: { isRequired?: IsRequired };
   description?: string;
 } & RequiredValidation<IsRequired>): BasicFormField<
-  string | (IsRequired extends true ? never : null),
-  undefined
+  string | (IsRequired extends true ? never : null)
 > {
   return {
     kind: 'form',
@@ -57,7 +56,6 @@ export function url<IsRequired extends boolean | undefined>({
         />
       );
     },
-    options: undefined,
     defaultValue,
     validate(val) {
       return validateUrl(validation, val, label) === undefined;

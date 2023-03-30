@@ -35,7 +35,7 @@ type CollectionReader<
   read: (id: string) => Promise<
     | {
         [Key in keyof Schema]: SlugField extends Key
-          ? Schema[Key] extends SlugFormField<any, any, infer Value>
+          ? Schema[Key] extends SlugFormField<any, infer Value>
             ? Value
             : ValueForReading<Schema[Key]>
           : ValueForReading<Schema[Key]>;

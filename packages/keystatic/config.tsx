@@ -102,9 +102,7 @@ export function config<
 export function collection<
   Schema extends Record<string, ComponentSchema>,
   SlugField extends {
-    [K in keyof Schema]: Schema[K] extends SlugFormField<any, any, any>
-      ? K
-      : never;
+    [K in keyof Schema]: Schema[K] extends SlugFormField<any, any> ? K : never;
   }[keyof Schema]
 >(
   collection: Collection<Schema, SlugField & string>

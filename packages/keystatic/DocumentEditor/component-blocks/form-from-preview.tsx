@@ -427,10 +427,7 @@ function ConditionalFieldPreview({
   value,
   forceValidation,
 }: DefaultFieldProps<'conditional'>) {
-  const schemaDiscriminant = schema.discriminant as FormField<
-    string | boolean,
-    unknown
-  >;
+  const schemaDiscriminant = schema.discriminant as FormField<string | boolean>;
   return (
     <Flex gap="large" direction="column">
       {useMemo(
@@ -459,12 +456,9 @@ function ConditionalFieldPreview({
 }
 
 export type NonChildFieldComponentSchema =
-  | FormField<any, any>
+  | FormField<any>
   | ObjectField
-  | ConditionalField<
-      BasicFormField<any, any>,
-      { [key: string]: ComponentSchema }
-    >
+  | ConditionalField<BasicFormField<any>, { [key: string]: ComponentSchema }>
   | ArrayField<ComponentSchema>;
 
 function isNonChildFieldPreviewProps(

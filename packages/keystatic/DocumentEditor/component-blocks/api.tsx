@@ -11,7 +11,7 @@ export type FormFieldValue =
   | readonly FormFieldValue[]
   | { [key: string]: FormFieldValue | undefined };
 
-export type BasicFormField<Value, Options> = {
+export type BasicFormField<Value> = {
   kind: 'form';
   Input(props: {
     value: Value;
@@ -23,11 +23,6 @@ export type BasicFormField<Value, Options> = {
      */
     forceValidation: boolean;
   }): ReactElement | null;
-  /**
-   * The options are config about the field that are available on the
-   * preview props when rendering the toolbar and preview component
-   */
-  options: Options;
   defaultValue: Value;
   /**
    * validate will be called in two cases:
@@ -43,13 +38,13 @@ export type BasicFormField<Value, Options> = {
   validate(value: unknown): boolean;
 };
 
-export type FormField<Value, Options> =
-  | BasicFormField<Value, Options>
-  | FormFieldWithFile<Value, Options, any>
-  | SlugFormField<Value, Options, any>;
+export type FormField<Value> =
+  | BasicFormField<Value>
+  | FormFieldWithFile<Value, any>
+  | SlugFormField<Value, any>;
 
-export type SlugFormField<Value, Options, SerializedValue> = Omit<
-  BasicFormField<Value, Options>,
+export type SlugFormField<Value, SerializedValue> = Omit<
+  BasicFormField<Value>,
   'validate'
 > & {
   slug: {
@@ -62,45 +57,37 @@ export type SlugFormField<Value, Options, SerializedValue> = Omit<
   ): boolean;
 };
 
-export type FormFieldWithFile<Value, Options, DataInReader> =
-  | FormFieldWithFileRequiringContentsForReader<Value, Options, DataInReader>
-  | FormFieldWithFileNotRequiringContentsForReader<
-      Value,
-      Options,
-      DataInReader
-    >;
+export type FormFieldWithFile<Value, DataInReader> =
+  | FormFieldWithFileRequiringContentsForReader<Value, DataInReader>
+  | FormFieldWithFileNotRequiringContentsForReader<Value, DataInReader>;
 
-export type FormFieldWithFileRequiringContentsForReader<
-  Value,
-  Options,
-  DataInReader
-> = BasicFormField<Value, Options> & {
-  serializeToFile:
-    | (BaseSerializeToSingleFile<Value> & {
-        reader: {
-          requiresContentInReader: true;
-          parseToReader(data: {
-            content: Uint8Array | undefined;
-            value: unknown;
-            suggestedFilenamePrefix: string | undefined;
-          }): DataInReader;
-        };
-      })
-    | (BaseSerializeToFiles<Value> & {
-        reader: {
-          requiresContentInReader: true;
-          parseToReader(data: {
-            value: unknown;
-            primary: Uint8Array | undefined;
-          }): DataInReader;
-        };
-      });
-};
+export type FormFieldWithFileRequiringContentsForReader<Value, DataInReader> =
+  BasicFormField<Value> & {
+    serializeToFile:
+      | (BaseSerializeToSingleFile<Value> & {
+          reader: {
+            requiresContentInReader: true;
+            parseToReader(data: {
+              content: Uint8Array | undefined;
+              value: unknown;
+              suggestedFilenamePrefix: string | undefined;
+            }): DataInReader;
+          };
+        })
+      | (BaseSerializeToFiles<Value> & {
+          reader: {
+            requiresContentInReader: true;
+            parseToReader(data: {
+              value: unknown;
+              primary: Uint8Array | undefined;
+            }): DataInReader;
+          };
+        });
+  };
 export type FormFieldWithFileNotRequiringContentsForReader<
   Value,
-  Options,
   DataInReader
-> = BasicFormField<Value, Options> & {
+> = BasicFormField<Value> & {
   serializeToFile:
     | (BaseSerializeToSingleFile<Value> & {
         reader: {
@@ -206,7 +193,7 @@ export interface ObjectField<
 }
 
 export type ConditionalField<
-  DiscriminantField extends BasicFormField<string | boolean, any>,
+  DiscriminantField extends BasicFormField<string | boolean>,
   ConditionalValues extends {
     [Key in `${DiscriminantField['defaultValue']}`]: ComponentSchema;
   }
@@ -230,12 +217,9 @@ type ArrayFieldInComponentSchema = {
 
 export type ComponentSchema =
   | ChildField
-  | FormField<any, any>
+  | FormField<any>
   | ObjectField
-  | ConditionalField<
-      BasicFormField<any, any>,
-      { [key: string]: ComponentSchema }
-    >
+  | ConditionalField<BasicFormField<any>, { [key: string]: ComponentSchema }>
   | ArrayFieldInComponentSchema;
 
 export * as fields from './fields';
@@ -273,10 +257,9 @@ type ChildFieldPreviewProps<Schema extends ChildField, ChildFieldElement> = {
   readonly schema: Schema;
 };
 
-type FormFieldPreviewProps<Schema extends FormField<any, any>> = {
+type FormFieldPreviewProps<Schema extends FormField<any>> = {
   readonly value: Schema['defaultValue'];
   onChange(value: Schema['defaultValue']): void;
-  readonly options: Schema['options'];
   readonly schema: Schema;
 };
 
@@ -299,7 +282,7 @@ type ObjectFieldPreviewProps<
 };
 
 type ConditionalFieldPreviewProps<
-  Schema extends ConditionalField<BasicFormField<string | boolean, any>, any>,
+  Schema extends ConditionalField<BasicFormField<string | boolean>, any>,
   ChildFieldElement
 > = {
   readonly [Key in keyof Schema['values']]: {
@@ -313,7 +296,6 @@ type ConditionalFieldPreviewProps<
         Schema['values'][`${Discriminant}`]
       >
     ): void;
-    readonly options: Schema['discriminant']['options'];
     readonly value: GenericPreviewProps<
       Schema['values'][Key],
       ChildFieldElement
@@ -346,7 +328,7 @@ export type GenericPreviewProps<
   ChildFieldElement
 > = Schema extends ChildField
   ? ChildFieldPreviewProps<Schema, ChildFieldElement>
-  : Schema extends FormField<any, any>
+  : Schema extends FormField<any>
   ? FormFieldPreviewProps<Schema>
   : Schema extends ObjectField<any>
   ? ObjectFieldPreviewProps<Schema, ChildFieldElement>
@@ -365,7 +347,7 @@ export type InitialOrUpdateValueFromComponentPropField<
   Schema extends ComponentSchema
 > = Schema extends ChildField
   ? undefined
-  : Schema extends FormField<infer Value, any>
+  : Schema extends FormField<infer Value>
   ? Value | undefined
   : Schema extends ObjectField<infer Value>
   ? {
@@ -393,7 +375,7 @@ export type InitialOrUpdateValueFromComponentPropField<
   : never;
 
 type DiscriminantStringToDiscriminantValue<
-  DiscriminantField extends FormField<any, any>,
+  DiscriminantField extends FormField<any>,
   DiscriminantString extends PropertyKey
 > = DiscriminantField['defaultValue'] extends boolean
   ? 'true' extends DiscriminantString
@@ -444,7 +426,7 @@ type Comp<Props> = (props: Props) => ReactElement | null;
 export type ValueForComponentSchema<Schema extends ComponentSchema> =
   Schema extends ChildField
     ? null
-    : Schema extends FormField<infer Value, any>
+    : Schema extends FormField<infer Value>
     ? Value
     : Schema extends ObjectField<infer Value>
     ? {
@@ -469,19 +451,17 @@ export type ValueForReading<Schema extends ComponentSchema> =
     ? null
     : Schema extends FormFieldWithFileRequiringContentsForReader<
         any,
-        any,
         infer Value
       >
     ? () => Promise<Value>
     : Schema extends FormFieldWithFileNotRequiringContentsForReader<
         any,
-        any,
         infer Value
       >
     ? Value
-    : Schema extends SlugFormField<infer Value, any, any>
+    : Schema extends SlugFormField<infer Value, any>
     ? Value
-    : Schema extends BasicFormField<infer Value, any>
+    : Schema extends BasicFormField<infer Value>
     ? Value
     : Schema extends ObjectField<infer Value>
     ? {
