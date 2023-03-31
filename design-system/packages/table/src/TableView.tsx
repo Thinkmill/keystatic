@@ -79,7 +79,12 @@ export function TableView<T extends object>(props: TableProps<T>) {
               cell.props.isSelectionCell ? (
                 <TableCheckboxCell key={cell.key} cell={cell} state={state} />
               ) : (
-                <TableCell key={cell.key} cell={cell} state={state} />
+                <TableCell
+                  key={cell.key}
+                  cell={cell}
+                  state={state}
+                  overflowMode={props.overflowMode}
+                />
               )
             )}
           </TableRow>
@@ -215,7 +220,15 @@ function TableRow<T>({
   );
 }
 
-function TableCell<T>({ cell, state }: { cell: any; state: TableState<T> }) {
+function TableCell<T>({
+  cell,
+  overflowMode,
+  state,
+}: {
+  cell: any;
+  overflowMode: TableProps<T>['overflowMode'];
+  state: TableState<T>;
+}) {
   let ref = useRef<HTMLDivElement>(null);
   let { gridCellProps } = useTableCell({ node: cell }, state, ref);
   let { isFocusVisible, focusProps } = useFocusRing();
@@ -224,7 +237,7 @@ function TableCell<T>({ cell, state }: { cell: any; state: TableState<T> }) {
   return (
     <div {...mergeProps(gridCellProps, focusProps)} {...styleProps} ref={ref}>
       {isReactText(cell.rendered) ? (
-        <Text truncate>{cell.rendered}</Text>
+        <Text truncate={overflowMode === 'truncate'}>{cell.rendered}</Text>
       ) : (
         cell.rendered
       )}
