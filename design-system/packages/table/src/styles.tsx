@@ -167,8 +167,9 @@ export function useCellStyleProps(
       },
 
       // wrapping text shouldn't be centered
-      '.ksv-table-view[data-overflow-mode="truncate"] &': {
-        alignItems: 'center',
+      alignItems: 'center',
+      '.ksv-table-view[data-overflow-mode="wrap"] &': {
+        alignItems: 'initial',
       },
 
       // Density
