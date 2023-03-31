@@ -1,3 +1,5 @@
+'use client';
+
 import { Column } from '@react-stately/table';
 import { ColumnProps } from './types';
 
