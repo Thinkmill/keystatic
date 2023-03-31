@@ -35,7 +35,11 @@ import {
   GenericPreviewProps,
   ObjectField,
 } from './api';
-import { previewPropsToValue, setValueToPreviewProps } from './get-value';
+import {
+  previewPropsToValue,
+  valueToUpdater,
+  setValueToPreviewProps,
+} from './get-value';
 import { createGetPreviewProps } from './preview-props';
 import { clientSideValidateProp, ReadonlyPropPath } from './utils';
 import {
@@ -45,6 +49,7 @@ import {
   SlugFieldProvider,
 } from './fields/text';
 import { getSlugFromState } from '../../app/utils';
+import { getInitialPropsValue } from './initial-values';
 
 type DefaultFieldProps<Key> = GenericPreviewProps<
   Extract<ComponentSchema, { kind: Key }>,
@@ -115,7 +120,12 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
     },
   });
   const [modalState, setModalState] = useState<
-    | { state: 'open'; value: unknown; forceValidation: boolean; index: number }
+    | {
+        state: 'open';
+        value: unknown;
+        forceValidation: boolean;
+        index: number | undefined;
+      }
     | { state: 'closed' }
   >({ state: 'closed' });
   const onModalChange = useCallback(
@@ -141,18 +151,12 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
       props.elements.map(x => ({ key: x.key })).filter(val => val.key !== key)
     );
   });
-  const addItem = () => {
-    props.onChange([
-      ...props.elements.map(x => ({ key: x.key })),
-      { key: undefined },
-    ]);
-  };
   const modalStateIndex =
     modalState.state === 'open' ? modalState.index : undefined;
   const slugInfo = useMemo(() => {
     if (
       props.schema.slugField === undefined ||
-      modalStateIndex === undefined ||
+      modalState.state !== 'open' ||
       props.schema.element.kind !== 'object'
     ) {
       return;
@@ -168,7 +172,7 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
         )
     );
     return { slugs, field: slugField, glob: '*' as const };
-  }, [modalStateIndex, props]);
+  }, [modalStateIndex, props, modalState.state]);
 
   return (
     <Flex
@@ -189,7 +193,14 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
       )}
       <ActionButton
         autoFocus={props.autoFocus}
-        onPress={addItem}
+        onPress={() => {
+          setModalState({
+            state: 'open',
+            value: getInitialPropsValue(props.schema.element),
+            forceValidation: false,
+            index: undefined,
+          });
+        }}
         alignSelf="start"
       >
         {stringFormatter.format('add')}
@@ -263,9 +274,12 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
         }}
       >
         {(() => {
-          if (modalState.state !== 'open') return;
-          const elementProps = props.elements[modalState.index];
-          if (!isNonChildFieldPreviewProps(elementProps)) return;
+          if (
+            modalState.state !== 'open' ||
+            props.schema.element.kind === 'child'
+          ) {
+            return;
+          }
           return (
             <Dialog>
               <Heading>Edit item</Heading>
@@ -279,7 +293,7 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
                     if (modalState.state !== 'open') return;
                     if (
                       !clientSideValidateProp(
-                        elementProps.schema,
+                        props.schema.element,
                         modalState.value,
                         undefined
                       )
@@ -290,20 +304,36 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
                       }));
                       return;
                     }
-                    setValueToPreviewProps(modalState.value, elementProps);
+                    if (modalState.index === undefined) {
+                      props.onChange([
+                        ...props.elements.map(x => ({
+                          key: x.key,
+                        })),
+                        {
+                          key: undefined,
+                          value: valueToUpdater(
+                            modalState.value,
+                            props.schema.element
+                          ),
+                        },
+                      ]);
+                    } else {
+                      setValueToPreviewProps(
+                        modalState.value,
+                        props.elements[modalState.index]
+                      );
+                    }
                     setModalState({ state: 'closed' });
                   }}
                   direction="column"
                   gap="xxlarge"
                 >
-                  <AddToPathProvider part={modalState.index}>
-                    <ArrayFieldItemModalContent
-                      onChange={onModalChange}
-                      schema={elementProps.schema}
-                      value={modalState.value}
-                      slugField={slugInfo}
-                    />
-                  </AddToPathProvider>
+                  <ArrayFieldItemModalContent
+                    onChange={onModalChange}
+                    schema={props.schema.element}
+                    value={modalState.value}
+                    slugField={slugInfo}
+                  />
                 </Flex>
               </Content>
               <ButtonGroup>
@@ -312,10 +342,12 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
                     setModalState({ state: 'closed' });
                   }}
                 >
-                  Cancel
+                  {stringFormatter.format('cancel')}
                 </Button>
                 <Button form={formId} prominence="high" type="submit">
-                  Done
+                  {modalState.index === undefined
+                    ? stringFormatter.format('add')
+                    : 'Done'}
                 </Button>
               </ButtonGroup>
             </Dialog>

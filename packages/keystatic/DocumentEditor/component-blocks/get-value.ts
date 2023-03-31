@@ -92,7 +92,7 @@ const valueToUpdaters: {
   },
 };
 
-function valueToUpdater<Schema extends ComponentSchema>(
+export function valueToUpdater<Schema extends ComponentSchema>(
   value: ValueForComponentSchema<Schema>,
   schema: ComponentSchema
 ): InitialOrUpdateValueFromComponentPropField<Schema> {
