@@ -1,5 +1,11 @@
 # @voussoir/table
 
+## 0.1.3
+
+### Patch Changes
+
+- 6f04f14: Fix `TableView` overflow mode behaviour.
+
 ## 0.1.2
 
 ### Patch Changes
