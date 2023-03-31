@@ -1,5 +1,11 @@
 # @voussoir/dialog
 
+## 0.2.2
+
+### Patch Changes
+
+- 6f04f14: Fix `TableView` overflow mode behaviour.
+
 ## 0.2.1
 
 ### Patch Changes

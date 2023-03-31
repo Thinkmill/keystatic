@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/table",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Tables are containers for displaying information. They allow users to quickly scan, sort, compare, and take action on large amounts of data.",
   "license": "MIT",
   "main": "dist/voussoir-table.cjs.js",
