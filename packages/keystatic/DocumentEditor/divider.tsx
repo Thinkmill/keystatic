@@ -9,7 +9,7 @@ import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { Text, Kbd } from '@voussoir/typography';
 
 import { useToolbarState } from './toolbar-state';
-import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from './utils';
+import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from './ui-utils';
 import { Icon } from '@voussoir/icon';
 import { minusIcon } from '@voussoir/icon/icons/minusIcon';
 
@@ -51,14 +51,6 @@ export const dividerButton = (
     </Tooltip>
   </TooltipTrigger>
 );
-
-export function withDivider(editor: Editor): Editor {
-  const { isVoid } = editor;
-  editor.isVoid = node => {
-    return node.type === 'divider' || isVoid(node);
-  };
-  return editor;
-}
 
 export function DividerElement({ attributes, children }: RenderElementProps) {
   const selected = useSelected();

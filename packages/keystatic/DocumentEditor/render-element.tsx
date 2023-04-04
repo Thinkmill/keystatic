@@ -1,14 +1,14 @@
 import { RenderElementProps } from 'slate-react';
 
-import { BlockquoteElement } from './blockquote';
+import { BlockquoteElement } from './blockquote/blockquote-ui';
 import {
   ComponentBlocksElement,
   ComponentInlineProp,
 } from './component-blocks';
-import { HeadingElement } from './heading';
-import { LayoutArea, LayoutContainer } from './layouts';
-import { LinkElement } from './link';
-import { CodeElement } from './code-block';
+import { HeadingElement } from './heading/heading';
+import { LayoutArea, LayoutContainer } from './layouts/layouts-ui';
+import { LinkElement } from './link/link';
+import { CodeElement } from './code-block/code-block-ui';
 import { DividerElement } from './divider';
 import { ImageElement } from './image';
 import {
@@ -17,7 +17,7 @@ import {
   TableElement,
   TableHeadElement,
   TableRowElement,
-} from './table';
+} from './table/table-ui';
 
 // some of the renderers read properties of the element
 // and TS doesn't understand the type narrowing when doing a spread for some reason

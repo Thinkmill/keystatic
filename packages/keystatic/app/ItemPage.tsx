@@ -31,7 +31,7 @@ import { FormValueContentFromPreviewProps } from '../DocumentEditor/component-bl
 import { createGetPreviewProps } from '../DocumentEditor/component-blocks/preview-props';
 import { fields } from '../DocumentEditor/component-blocks/api';
 import { clientSideValidateProp } from '../DocumentEditor/component-blocks/utils';
-import { useEventCallback } from '../DocumentEditor/utils';
+import { useEventCallback } from '../DocumentEditor/ui-utils';
 import { useDeleteItem, useUpsertItem } from '../utils';
 
 import { useCreateBranchMutation } from './branch-selection';
@@ -59,7 +59,7 @@ import { useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
 import { mergeDataStates } from './useData';
 import { useSlugsInCollection } from './useSlugsInCollection';
-import { SlugFieldInfo } from '../DocumentEditor/component-blocks/fields/text';
+import { SlugFieldInfo } from '../DocumentEditor/component-blocks/fields/text/ui';
 
 type ItemPageProps = {
   collection: string;

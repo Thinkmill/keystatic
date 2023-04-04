@@ -15,7 +15,7 @@ import { FormValueContentFromPreviewProps } from '../DocumentEditor/component-bl
 import { getInitialPropsValue } from '../DocumentEditor/component-blocks/initial-values';
 import { createGetPreviewProps } from '../DocumentEditor/component-blocks/preview-props';
 import { clientSideValidateProp } from '../DocumentEditor/component-blocks/utils';
-import { useEventCallback } from '../DocumentEditor/utils';
+import { useEventCallback } from '../DocumentEditor/ui-utils';
 import { useUpsertItem } from '../utils';
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';

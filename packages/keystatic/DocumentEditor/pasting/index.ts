@@ -1,11 +1,11 @@
 import { Descendant, Editor, Transforms, Range, Node } from 'slate';
 import { ReactEditor } from 'slate-react';
 import { isValidURL } from '../isValidURL';
-import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from '../utils';
+import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from '../ui-utils';
 import { deserializeHTML } from './html';
 import { deserializeMarkdown } from './markdown';
 import { fromByteArray, toByteArray } from 'base64-js';
-import { isBlock } from '..';
+import { isBlock } from '../editor';
 
 const urlPattern = /https?:\/\//;
 

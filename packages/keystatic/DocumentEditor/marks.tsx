@@ -1,9 +1,12 @@
 import { Editor, Transforms, Range, Text, Point, Node, Path } from 'slate';
 import { DocumentFeatures } from './document-features';
 import { ComponentBlock } from './component-blocks/api';
-import { getAncestorComponentChildFieldDocumentFeatures } from './toolbar-state';
-import { EditorAfterButIgnoringingPointsWithNoContent, Mark } from './utils';
-import { isBlock } from '.';
+import {
+  EditorAfterButIgnoringingPointsWithNoContent,
+  Mark,
+  getAncestorComponentChildFieldDocumentFeatures,
+} from './utils';
+import { isBlock } from './editor';
 
 export const allMarkdownShortcuts = {
   bold: ['**', '__'],

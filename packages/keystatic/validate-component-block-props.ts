@@ -1,7 +1,7 @@
 import { assertNever } from 'emery';
 import { getSlugFromState, isSlugFormField } from './app/utils';
 import { ComponentSchema } from './DocumentEditor/component-blocks/api';
-import { SlugFieldInfo } from './DocumentEditor/component-blocks/fields/text';
+import { SlugFieldInfo } from './DocumentEditor/component-blocks/fields/text/ui';
 import { getInitialPropsValue } from './DocumentEditor/component-blocks/initial-values';
 import { ReadonlyPropPath } from './DocumentEditor/component-blocks/utils';
 

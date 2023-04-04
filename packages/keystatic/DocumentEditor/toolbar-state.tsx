@@ -3,15 +3,17 @@ import { Editor, Range, Text } from 'slate';
 import { useSlate } from 'slate-react';
 import { DocumentFeatures } from './document-features';
 import { ComponentBlock } from './component-blocks/api';
-import {
-  DocumentFeaturesForChildField,
-  getSchemaAtPropPath,
-  getDocumentFeaturesForChildField,
-} from './component-blocks/utils';
-import { isListNode } from './lists';
+import { DocumentFeaturesForChildField } from './component-blocks/utils';
+import { isListNode } from './lists/with-list';
 
-import { allMarks, isElementActive, Mark, nodeTypeMatcher } from './utils';
-import { isBlock } from '.';
+import {
+  allMarks,
+  getAncestorComponentChildFieldDocumentFeatures,
+  isElementActive,
+  Mark,
+  nodeTypeMatcher,
+} from './utils';
+import { isBlock } from './editor';
 
 type BasicToolbarItem = { isSelected: boolean; isDisabled: boolean };
 
@@ -56,38 +58,6 @@ export function useToolbarState() {
     throw new Error('ToolbarStateProvider must be used to use useToolbarState');
   }
   return toolbarState;
-}
-
-export function getAncestorComponentChildFieldDocumentFeatures(
-  editor: Editor,
-  editorDocumentFeatures: DocumentFeatures,
-  componentBlocks: Record<string, ComponentBlock>
-): DocumentFeaturesForChildField | undefined {
-  const ancestorComponentProp = Editor.above(editor, {
-    match: nodeTypeMatcher('component-block-prop', 'component-inline-prop'),
-  });
-
-  if (ancestorComponentProp) {
-    const propPath = ancestorComponentProp[0].propPath;
-    const ancestorComponent = Editor.parent(editor, ancestorComponentProp[1]);
-    if (ancestorComponent[0].type === 'component-block') {
-      const component = ancestorComponent[0].component;
-      const componentBlock = componentBlocks[component];
-      if (componentBlock && propPath) {
-        const childField = getSchemaAtPropPath(
-          propPath,
-          ancestorComponent[0].props,
-          componentBlock.schema
-        );
-        if (childField?.kind === 'child') {
-          return getDocumentFeaturesForChildField(
-            editorDocumentFeatures,
-            childField.options
-          );
-        }
-      }
-    }
-  }
 }
 
 export const createToolbarState = (

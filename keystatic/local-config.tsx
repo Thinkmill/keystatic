@@ -6,20 +6,7 @@ import {
   component,
   NotEditable,
 } from '@keystatic/core';
-import { PropsWithChildren } from 'react';
-
-import { ActionGroup, Item } from '@voussoir/action-group';
-import { ActionButton } from '@voussoir/button';
-import { alertOctagonIcon } from '@voussoir/icon/icons/alertOctagonIcon';
-import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
-import { checkCircle2Icon } from '@voussoir/icon/icons/checkCircle2Icon';
-import { infoIcon } from '@voussoir/icon/icons/infoIcon';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Icon } from '@voussoir/icon';
-import { Divider, Flex } from '@voussoir/layout';
-import { css, tokenSchema } from '@voussoir/style';
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
-import { Text } from '@voussoir/typography';
+import { NoteToolbar, Note } from './note';
 
 const description = 'Some description';
 
@@ -126,40 +113,14 @@ export default config({
               },
               toolbar({ props, onRemove }) {
                 return (
-                  <Flex gap="regular" padding="regular">
-                    <ActionGroup
-                      selectionMode="single"
-                      prominence="low"
-                      density="compact"
-                      buttonLabelBehavior="hide"
-                      onAction={key => {
-                        props.fields.tone.onChange(key as any);
-                      }}
-                      selectedKeys={[props.fields.tone.value]}
-                      items={props.fields.tone.schema.options}
-                    >
-                      {item => (
-                        <Item key={item.value} textValue={item.label}>
-                          <Icon src={toneToIcon[item.value]} />
-                          <Text>{item.label}</Text>
-                        </Item>
-                      )}
-                    </ActionGroup>
-                    <Divider orientation="vertical" />
-                    <TooltipTrigger>
-                      <ActionButton
-                        prominence="low"
-                        onPress={() => {
-                          onRemove();
-                        }}
-                      >
-                        <Icon src={trash2Icon} />
-                      </ActionButton>
-                      <Tooltip tone="critical">
-                        <Text>Remove</Text>
-                      </Tooltip>
-                    </TooltipTrigger>
-                  </Flex>
+                  <NoteToolbar
+                    onChange={tone => {
+                      props.fields.tone.onChange(tone);
+                    }}
+                    onRemove={onRemove}
+                    tone={props.fields.tone.value}
+                    tones={props.fields.tone.schema.options}
+                  />
                 );
               },
             }),
@@ -323,69 +284,3 @@ export default config({
     }),
   },
 });
-
-// Styled components
-// ------------------------------
-
-const toneToIcon = {
-  caution: alertTriangleIcon,
-  critical: alertOctagonIcon,
-  info: infoIcon,
-  positive: checkCircle2Icon,
-};
-
-const toneToColor = {
-  caution: 'caution',
-  critical: 'critical',
-  info: 'accent',
-  positive: 'positive',
-} as const;
-
-function Note({
-  children,
-  tone = 'info',
-  ...props
-}: PropsWithChildren<{
-  tone?: 'info' | 'caution' | 'critical' | 'positive';
-}>) {
-  let icon = toneToIcon[tone];
-  let color = toneToColor[tone];
-  return (
-    <div
-      {...props}
-      className={css({
-        borderRadius: tokenSchema.size.radius.regular,
-        background: 'var(--bg)',
-        color: 'var(--fg)',
-        display: 'flex',
-        gap: '1em',
-        padding: '1em',
-
-        svg: {
-          flexShrink: 0,
-          fill: 'none',
-          stroke: 'currentColor',
-          height: 20,
-          width: 20,
-        },
-
-        '& [data-slate-node="element"]': {
-          '&:first-child': {
-            marginTop: 0,
-          },
-          '&:last-child': {
-            marginBottom: 0,
-          },
-        },
-      })}
-      style={{
-        // @ts-ignore
-        '--bg': tokenSchema.color.background[color],
-        '--fg': tokenSchema.color.foreground[color],
-      }}
-    >
-      {icon}
-      <div>{children}</div>
-    </div>
-  );
-}

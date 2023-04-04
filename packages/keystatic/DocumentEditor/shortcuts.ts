@@ -1,5 +1,5 @@
 import { Range, Editor, Transforms, Path } from 'slate';
-import { isBlock } from '.';
+import { isBlock } from './editor';
 
 export const shortcuts: Record<string, string> = {
   '...': '…',

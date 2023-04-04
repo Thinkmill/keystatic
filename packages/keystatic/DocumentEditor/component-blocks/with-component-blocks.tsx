@@ -36,7 +36,7 @@ import {
   getNewArrayElementKey,
   setKeysForArrayValue,
 } from './preview-props';
-import { isBlock } from '..';
+import { isBlock } from '../editor';
 
 function getAncestorComponentBlock(editor: Editor) {
   if (editor.selection) {

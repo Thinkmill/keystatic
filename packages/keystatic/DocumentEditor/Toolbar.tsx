@@ -1,6 +1,6 @@
 import { ReactNode, useMemo } from 'react';
 import { Editor, Transforms } from 'slate';
-import { ReactEditor } from 'slate-react';
+import { ReactEditor, useSlateStatic } from 'slate-react';
 
 import { ActionGroup, Item } from '@voussoir/action-group';
 import { ActionButton, Button } from '@voussoir/button';
@@ -25,20 +25,20 @@ import { Text, Kbd } from '@voussoir/typography';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 
 import { TextAlignMenu } from './alignment';
-import { blockquoteButton } from './blockquote';
-import { codeButton } from './code-block';
+import { blockquoteButton } from './blockquote/blockquote-ui';
+import { codeButton } from './code-block/code-block-ui';
 import { insertComponentBlock } from './component-blocks';
 import { dividerButton } from './divider';
 import { DocumentFeatures } from './document-features';
-import { linkButton } from './link';
-import { LayoutsButton } from './layouts';
-import { ListButtons } from './lists';
+import { linkButton } from './link/link';
+import { LayoutsButton } from './layouts/layouts-ui';
+import { ListButtons } from './lists/lists';
 import { ToolbarSeparator } from './primitives';
 import { useDocumentEditorConfig, useToolbarState } from './toolbar-state';
-import { clearFormatting, useStaticEditor } from './utils';
+import { clearFormatting } from './utils';
 import { Picker } from '@voussoir/picker';
 import { imageButton } from './image';
-import { tableButton } from './table';
+import { tableButton } from './table/table-ui';
 
 export function Toolbar({
   documentFeatures,
@@ -261,7 +261,7 @@ const HeadingMenu = ({
 };
 
 function InsertBlockMenu() {
-  const editor = useStaticEditor();
+  const editor = useSlateStatic();
   const componentBlocks = useDocumentEditorConfig().componentBlocks;
 
   return (
