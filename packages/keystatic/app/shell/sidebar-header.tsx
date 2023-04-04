@@ -13,14 +13,13 @@ import { Flex } from '@voussoir/layout';
 import { ActionMenu } from '@voussoir/menu';
 import { Text } from '@voussoir/typography';
 
-import { GitHubConfig } from '../../config';
 import { useRouter } from '../router';
 import { BranchPicker, CreateBranchDialog } from '../branch-selection';
 import l10nMessages from '../l10n/index.json';
 import { BranchInfoContext } from './data';
 import { getRepoUrl } from '../utils';
 
-export function SidebarHeader({ config }: { config: GitHubConfig }) {
+export function SidebarHeader() {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const data = useContext(BranchInfoContext);
   const [newBranchDialogVisible, toggleNewBranchDialog] = useReducer(
@@ -125,7 +124,7 @@ export function SidebarHeader({ config }: { config: GitHubConfig }) {
         prominence="low"
         items={gitMenuItems}
         onAction={key => {
-          let repoURL = getRepoUrl(config);
+          let repoURL = getRepoUrl(data);
           switch (key) {
             case 'new-branch':
               toggleNewBranchDialog();

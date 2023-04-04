@@ -132,7 +132,7 @@ function ItemPage(props: ItemPageProps) {
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
     state,
     initialFiles,
-    storage: config.storage,
+    config,
     schema: collectionConfig.schema,
     basePath: futureBasePath,
     format: formatInfo,
@@ -246,7 +246,7 @@ function ItemPage(props: ItemPageProps) {
                             formatInfo
                           )}`;
                     window.open(
-                      `${getRepoUrl(config)}${filePath}`,
+                      `${getRepoUrl(branchInfo)}${filePath}`,
                       '_blank',
                       'noopener,noreferrer'
                     );

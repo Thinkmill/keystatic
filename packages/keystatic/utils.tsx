@@ -1,12 +1,12 @@
 import { gql } from '@ts-gql/tag/no-transform';
-import { fromByteArray } from 'base64-js';
 import { assert, assertNever } from 'emery';
-import { dump } from 'js-yaml';
 import { useContext, useState } from 'react';
-import { useMutation } from 'urql';
 
 import { ComponentSchema, fields } from './DocumentEditor/component-blocks/api';
 import { asyncTransformProps } from './DocumentEditor/component-blocks/utils';
+import { dump } from 'js-yaml';
+import { useMutation } from 'urql';
+import { fromUint8Array } from 'js-base64';
 import {
   BranchInfoContext,
   fetchGitHubTreeData,
@@ -25,11 +25,11 @@ import {
   updateTreeWithChanges,
 } from './app/trees';
 import { Config } from './src';
-import { getAuth } from './app/auth';
 import { isSlugFormField } from './app/utils';
 import { getDirectoriesForTreeKey, getTreeKey } from './app/tree-key';
 import { getPropPathPortion } from './app/required-files';
 import { AppSlugContext } from './app/onboarding/install-app';
+import { createUrqlClient } from './app/provider';
 
 const textEncoder = new TextEncoder();
 
@@ -58,7 +58,7 @@ export function useUpsertItem(args: {
   state: unknown;
   initialFiles: string[] | undefined;
   schema: Record<string, ComponentSchema>;
-  storage: Config['storage'];
+  config: Config;
   format: FormatInfo;
   currentTree: Map<string, TreeNode>;
   currentLocalTreeKey: string | undefined;
@@ -88,7 +88,7 @@ export function useUpsertItem(args: {
       try {
         if (
           repoWithWriteAccess === null &&
-          args.storage.kind === 'github' &&
+          args.config.storage.kind === 'github' &&
           appSlug?.value
         ) {
           setState({ kind: 'needs-fork' });
@@ -169,7 +169,10 @@ export function useUpsertItem(args: {
           deletions: [...filesToDelete],
         });
         await hydrateTreeCacheWithEntries(updatedTree.entries);
-        if (args.storage.kind === 'github') {
+        if (
+          args.config.storage.kind === 'github' ||
+          args.config.storage.kind === 'cloud'
+        ) {
           const branch = {
             branchName: override?.branch ?? branchInfo.currentBranch,
             repositoryNameWithOwner: `${repoWithWriteAccess!.owner}/${
@@ -185,7 +188,7 @@ export function useUpsertItem(args: {
                 fileChanges: {
                   additions: additions.map(addition => ({
                     ...addition,
-                    contents: fromByteArray(addition.contents),
+                    contents: fromUint8Array(addition.contents),
                   })),
                   deletions,
                 },
@@ -203,19 +206,28 @@ export function useUpsertItem(args: {
               return false;
             }
             if (gqlError.type === 'STALE_DATA') {
-              const branch = await fetch(
-                `https://api.github.com/repos/${args.storage.repo.owner}/${
-                  args.storage.repo.name
-                }/branches/${encodeURIComponent(branchInfo.currentBranch)}`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${(await getAuth())?.accessToken}`,
-                  },
+              let refData;
+              try {
+                // we don't want this to go into the cache yet
+                // so we create a new client just for this
+                refData = await createUrqlClient(args.config)
+                  .query(FetchRef, {
+                    owner: repoWithWriteAccess!.owner,
+                    name: repoWithWriteAccess!.name,
+                    ref: `refs/heads/${branchInfo.currentBranch}`,
+                  })
+                  .toPromise();
+                if (!refData.data?.repository?.ref?.target) {
+                  throw new Error('Branch not found');
                 }
-              ).then(x => x.json());
+              } catch (error: any) {
+                setState({ kind: 'error', error });
+                return false;
+              }
+
               const tree = await fetchGitHubTreeData(
-                branch.commit.sha,
-                args.storage.repo
+                refData.data.repository.ref.target.oid,
+                args.config
               );
               const treeKey = getTreeKey(
                 getDirectoriesForTreeKey(
@@ -227,7 +239,9 @@ export function useUpsertItem(args: {
                 tree.tree
               );
               if (treeKey === args.currentLocalTreeKey) {
-                result = await runMutation(branch.data.commit.sha);
+                result = await runMutation(
+                  refData.data.repository.ref.target.oid
+                );
               } else {
                 setState({
                   kind: 'needs-new-branch',
@@ -258,7 +272,7 @@ export function useUpsertItem(args: {
             body: JSON.stringify({
               additions: additions.map(addition => ({
                 ...addition,
-                contents: fromByteArray(addition.contents),
+                contents: fromUint8Array(addition.contents),
               })),
               deletions,
             }),
@@ -344,11 +358,13 @@ export function useDeleteItem(args: {
           deletions: args.initialFiles,
         });
         await hydrateTreeCacheWithEntries(updatedTree.entries);
-        if (args.storage.kind === 'github') {
+        if (args.storage.kind === 'github' || args.storage.kind === 'cloud') {
           const { error } = await mutate({
             input: {
               branch: {
-                repositoryNameWithOwner: `${args.storage.repo.owner}/${args.storage.repo.name}`,
+                repositoryNameWithOwner: `${repoWithWriteAccess!.owner}/${
+                  repoWithWriteAccess!.name
+                }`,
                 branchName: branchInfo.currentBranch,
               },
               message: { headline: `Delete ${args.basePath}` },
@@ -496,3 +512,18 @@ export async function toFiles(
     extraFiles,
   };
 }
+
+const FetchRef = gql`
+  query FetchRef($owner: String!, $name: String!, $ref: String!) {
+    repository(owner: $owner, name: $name) {
+      id
+      ref(qualifiedName: $ref) {
+        id
+        target {
+          id
+          oid
+        }
+      }
+    }
+  }
+` as import('./__generated__/ts-gql/FetchRef').type;

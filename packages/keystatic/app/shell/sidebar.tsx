@@ -25,9 +25,9 @@ import { Config, GitHubConfig } from '../../config';
 
 import l10nMessages from '../l10n/index.json';
 import { useRouter } from '../router';
-import { isGitHubConfig, pluralize } from '../utils';
+import { getRepoUrl, isGitHubConfig, pluralize } from '../utils';
 
-import { GitHubAppShellDataContext, useChanged } from './data';
+import { GitHubAppShellDataContext, useBranchInfo, useChanged } from './data';
 import { SidebarHeader } from './sidebar-header';
 
 export const SidebarContext = createContext<{
@@ -118,7 +118,8 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
         'keystatic-sidebar',
       ]}
     >
-      {isGitHubConfig(props.config) && <SidebarHeader config={props.config} />}
+      {(props.config.storage.kind === 'github' ||
+        props.config.storage.kind === 'cloud') && <SidebarHeader />}
 
       {/*
   ======================================================================
@@ -224,7 +225,11 @@ export const ViewerContext = createContext<
 function SidebarFooter(props: { config: GitHubConfig }) {
   const viewer = useContext(ViewerContext);
   const appShellData = useContext(GitHubAppShellDataContext);
-  const fork = appShellData?.data?.repository?.forks.nodes?.[0];
+  const fork =
+    appShellData?.data?.repository &&
+    'forks' in appShellData.data.repository &&
+    appShellData.data.repository.forks.nodes?.[0];
+  const branchInfo = useBranchInfo();
   return (
     <Flex
       elementType="header"
@@ -269,14 +274,14 @@ function SidebarFooter(props: { config: GitHubConfig }) {
             }
             if (key === 'repository') {
               window.open(
-                `https://github.com/${props.config.storage.repo.owner}/${props.config.storage.repo.name}`,
+                getRepoUrl(branchInfo),
                 '_blank',
                 'noopener,noreferrer'
               );
             }
-            if (key === 'fork') {
+            if (key === 'fork' && fork) {
               window.open(
-                `https://github.com/${fork?.owner.login}/${fork?.name}`,
+                `https://github.com/${fork.owner.login}/${fork.name}`,
                 '_blank',
                 'noopener,noreferrer'
               );

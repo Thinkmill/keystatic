@@ -77,13 +77,12 @@ export type Config<
   }
 > = {
   storage:
-    | {
-        kind: 'local';
-      }
+    | { kind: 'local' }
     | {
         kind: 'github';
         repo: { owner: string; name: string };
-      };
+      }
+    | { kind: 'cloud'; project: string };
   collections?: Collections;
   singletons?: Singletons;
 };

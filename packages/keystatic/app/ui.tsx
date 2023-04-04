@@ -21,13 +21,14 @@ import { FromTemplateDeploy } from './onboarding/from-template-deploy';
 import { CreatedGitHubApp } from './onboarding/created-github-app';
 import { KeystaticSetup } from './onboarding/setup';
 import { RepoNotFound } from './onboarding/repo-not-found';
-import { isGitHubConfig } from './utils';
+import { isGitHubConfig, redirectToCloudAuth } from './utils';
 import { Text } from '@voussoir/typography';
 import { AppSlugProvider } from './onboarding/install-app';
 import {
   GitHubAppShellDataContext,
   GitHubAppShellDataProvider,
 } from './shell/data';
+import { KeystaticCloudAuthCallback } from './cloud-auth-callback';
 
 function parseParamsWithoutBranch(params: string[]) {
   if (params.length === 0) {
@@ -51,12 +52,16 @@ function parseParamsWithoutBranch(params: string[]) {
   return null;
 }
 
-function RedirectToBranch() {
+function RedirectToBranch(props: { config: Config }) {
   const { push } = useRouter();
   const { data, error } = useContext(GitHubAppShellDataContext)!;
   useEffect(() => {
-    if (error?.response.status === 401) {
-      window.location.href = '/api/keystatic/github/login';
+    if (error?.response?.status === 401) {
+      if (props.config.storage.kind === 'github') {
+        window.location.href = '/api/keystatic/github/login';
+      } else {
+        redirectToCloudAuth('', props.config);
+      }
     }
     if (data?.repository?.defaultBranchRef) {
       push(
@@ -66,14 +71,15 @@ function RedirectToBranch() {
       );
     }
     if (
-      (!data?.repository?.id &&
+      (props.config.storage.kind === 'github' &&
+        !data?.repository?.id &&
         (error?.graphQLErrors?.[0]?.originalError as any)?.type ===
           'NOT_FOUND') ||
       (error?.graphQLErrors?.[0]?.originalError as any)?.type === 'FORBIDDEN'
     ) {
       window.location.href = '/api/keystatic/github/repo-not-found';
     }
-  }, [data, error, push]);
+  }, [data, error, push, props.config]);
   return null;
 }
 
@@ -83,16 +89,22 @@ function PageInner({ config }: { config: Config }) {
     parsedParams,
     basePath: string;
   let wrapper: (element: ReactElement) => ReactElement = x => x;
-  if (isGitHubConfig(config)) {
+  if (
+    config.storage.kind === 'cloud' &&
+    params.join('/') === 'cloud/oauth/callback'
+  ) {
+    return <KeystaticCloudAuthCallback config={config} />;
+  }
+  if (config.storage.kind === 'github' || config.storage.kind === 'cloud') {
     wrapper = element => (
       <GitHubAppShellDataProvider config={config}>
         {element}
       </GitHubAppShellDataProvider>
     );
     if (params.length === 0) {
-      return wrapper(<RedirectToBranch />);
+      return wrapper(<RedirectToBranch config={config} />);
     }
-    if (params.length === 1) {
+    if (params.length === 1 && isGitHubConfig(config)) {
       if (params[0] === 'setup') return <KeystaticSetup config={config} />;
       if (params[0] === 'repo-not-found') {
         return <RepoNotFound config={config} />;
@@ -202,14 +214,7 @@ export function Keystatic(props: {
   return (
     <AppSlugProvider value={props.appSlug}>
       <RouterProvider router={props.router}>
-        <Provider
-          repo={
-            props.config.storage.kind === 'github'
-              ? props.config.storage.repo
-              : undefined
-          }
-          Link={props.link}
-        >
+        <Provider config={props.config} Link={props.link}>
           <PageInner config={props.config} />
         </Provider>
       </RouterProvider>
