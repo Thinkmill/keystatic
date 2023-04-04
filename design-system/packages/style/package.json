@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/style",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Styling approaches in Voussoir.",
   "license": "MIT",
   "main": "dist/voussoir-style.cjs.js",

@@ -1,5 +1,11 @@
 # @voussoir/style
 
+## 0.1.4
+
+### Patch Changes
+
+- 5100e0e: Make the `isHidden` style prop work via media queries
+
 ## 0.1.3
 
 ### Patch Changes
