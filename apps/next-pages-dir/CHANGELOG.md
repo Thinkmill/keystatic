@@ -1,5 +1,17 @@
 # @keystatic/test-next-pages-dir
 
+## 0.0.52
+
+### Patch Changes
+
+- Updated dependencies [c7da5cd]
+- Updated dependencies [323d8cb]
+- Updated dependencies [6b9c653]
+- Updated dependencies [c0a4d82]
+- Updated dependencies [70116b6]
+  - @keystatic/core@0.0.83
+  - @voussoir/typography@0.1.3
+
 ## 0.0.51
 
 ### Patch Changes
