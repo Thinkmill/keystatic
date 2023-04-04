@@ -7,6 +7,7 @@ import { textOptimizationStyles } from '../text/useTextStyles';
 export const headingClasses = new ClassList('Heading');
 
 export function useHeadingStyles({
+  align,
   size,
   UNSAFE_className,
   ...otherProps
@@ -19,6 +20,7 @@ export function useHeadingStyles({
       fontSize: fontDefinition.size,
       fontFamily: tokenSchema.typography.fontFamily.base,
       fontWeight: sizeToWeight[size],
+      textAlign: align,
     },
     textOptimizationStyles,
     trimStyles,

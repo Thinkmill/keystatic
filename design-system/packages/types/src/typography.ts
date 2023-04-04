@@ -17,6 +17,12 @@ import { DOMProps } from './dom';
 
 export type HeadingProps = {
   /**
+   * The horizontal alignment of content inside the heading element.
+   *
+   * @default 'start'
+   */
+  align?: 'start' | 'center' | 'end';
+  /**
    * The content of the heading element.
    */
   children: ReactNode;
