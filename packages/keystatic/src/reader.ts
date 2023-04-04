@@ -5,6 +5,7 @@ import {
   ObjectField,
   SlugFormField,
   ValueForReading,
+  ValueForReadingDeep,
 } from '../DocumentEditor/component-blocks/api';
 import fs from 'fs/promises';
 import path from 'path';
@@ -28,25 +29,71 @@ import {
 import { getValueAtPropPath } from '../DocumentEditor/component-blocks/utils';
 import { Dirent } from 'fs';
 
+type EntryReaderOpts = { resolveLinkedFiles?: boolean };
+
+type ValueForReadingWithMode<
+  Schema extends ComponentSchema,
+  Opts extends boolean | undefined
+> = Opts extends true ? ValueForReadingDeep<Schema> : ValueForReading<Schema>;
+
+type OptionalChain<
+  T extends {} | undefined,
+  Key extends keyof (T & {})
+> = T extends {} ? T[Key] : undefined;
+
 type CollectionReader<
   Schema extends Record<string, ComponentSchema>,
   SlugField extends string
 > = {
-  read: (id: string) => Promise<
+  read: <Opts extends [opts?: EntryReaderOpts]>(
+    slug: string,
+    ...opts: Opts & [opts?: EntryReaderOpts]
+  ) => Promise<
     | {
         [Key in keyof Schema]: SlugField extends Key
-          ? Schema[Key] extends SlugFormField<any, infer Value>
-            ? Value
-            : ValueForReading<Schema[Key]>
-          : ValueForReading<Schema[Key]>;
+          ? Schema[Key] extends SlugFormField<any, infer SlugSerializedValue>
+            ? SlugSerializedValue
+            : ValueForReadingWithMode<
+                Schema[Key],
+                OptionalChain<Opts[0], 'resolveLinkedFiles'>
+              >
+          : ValueForReadingWithMode<
+              Schema[Key],
+              OptionalChain<Opts[0], 'resolveLinkedFiles'>
+            >;
       }
     | null
+  >;
+  all: <Opts extends [opts?: EntryReaderOpts]>(
+    ...opts: Opts & [opts?: EntryReaderOpts]
+  ) => Promise<
+    {
+      slug: string;
+      entry: {
+        [Key in keyof Schema]: SlugField extends Key
+          ? Schema[Key] extends SlugFormField<any, infer SlugSerializedValue>
+            ? SlugSerializedValue
+            : ValueForReadingWithMode<
+                Schema[Key],
+                OptionalChain<Opts[0], 'resolveLinkedFiles'>
+              >
+          : ValueForReadingWithMode<
+              Schema[Key],
+              OptionalChain<Opts[0], 'resolveLinkedFiles'>
+            >;
+      };
+    }[]
   >;
   list: () => Promise<string[]>;
 };
 
 type SingletonReader<Schema extends Record<string, ComponentSchema>> = {
-  read: () => Promise<ValueForReading<ObjectField<Schema>> | null>;
+  read: <Opts extends [opts?: EntryReaderOpts]>(
+    ...opts: Opts & [opts?: EntryReaderOpts]
+  ) => Promise<ValueForReadingWithMode<
+    ObjectField<Schema>,
+    OptionalChain<Opts[0], 'resolveLinkedFiles'>
+  > | null>;
 };
 
 async function getAllEntries(
@@ -90,67 +137,84 @@ function collectionReader(
   const schema = fields.object(collectionConfig.schema);
   const glob = getSlugGlobForCollection(config, collection);
   const extension = getDataFileExtension(formatInfo);
-  return {
-    read: (slug: string) => {
-      return readItem(
-        schema,
-        formatInfo,
-        getCollectionItemPath(config, collection, slug),
-        {
-          field: collectionConfig.slugField,
-          slug,
-          glob,
-        },
-        repoPath
-      );
-    },
-    async list() {
-      const entries: { entry: Dirent; name: string }[] =
-        glob === '*'
-          ? (
-              await fs
-                .readdir(path.join(repoPath, collectionPath), {
-                  withFileTypes: true,
-                })
-                .catch(err => {
-                  if ((err as any).code === 'ENOENT') {
-                    return [];
-                  }
-                  throw err;
-                })
-            ).map(x => ({ entry: x, name: x.name }))
-          : await getAllEntries(path.join(repoPath, collectionPath), '');
-
-      return (
-        await Promise.all(
-          entries.map(async x => {
-            if (formatInfo.dataLocation === 'index') {
-              if (!x.entry.isDirectory()) return [];
-              try {
-                await fs.stat(
-                  path.join(
-                    repoPath,
-                    getEntryDataFilepath(
-                      `${collectionPath}/${x.name}`,
-                      formatInfo
-                    )
-                  )
-                );
-                return [x.name];
-              } catch (err) {
+  async function list() {
+    const entries: { entry: Dirent; name: string }[] =
+      glob === '*'
+        ? (
+            await fs
+              .readdir(path.join(repoPath, collectionPath), {
+                withFileTypes: true,
+              })
+              .catch(err => {
                 if ((err as any).code === 'ENOENT') {
                   return [];
                 }
                 throw err;
+              })
+          ).map(x => ({ entry: x, name: x.name }))
+        : await getAllEntries(path.join(repoPath, collectionPath), '');
+
+    return (
+      await Promise.all(
+        entries.map(async x => {
+          if (formatInfo.dataLocation === 'index') {
+            if (!x.entry.isDirectory()) return [];
+            try {
+              await fs.stat(
+                path.join(
+                  repoPath,
+                  getEntryDataFilepath(
+                    `${collectionPath}/${x.name}`,
+                    formatInfo
+                  )
+                )
+              );
+              return [x.name];
+            } catch (err) {
+              if ((err as any).code === 'ENOENT') {
+                return [];
               }
-            } else {
-              if (!x.entry.isFile() || !x.name.endsWith(extension)) return [];
-              return [x.name.slice(0, -extension.length)];
+              throw err;
             }
+          } else {
+            if (!x.entry.isFile() || !x.name.endsWith(extension)) return [];
+            return [x.name.slice(0, -extension.length)];
+          }
+        })
+      )
+    ).flat();
+  }
+  const read: CollectionReader<any, any>['read'] = (slug, ...args) =>
+    readItem(
+      schema,
+      formatInfo,
+      getCollectionItemPath(config, collection, slug),
+      {
+        field: collectionConfig.slugField,
+        slug,
+        glob,
+      },
+      repoPath,
+      args[0]
+    );
+
+  return {
+    read,
+    // TODO: this could drop the fs.stat call that list does for each item
+    // since we just immediately read it
+    all: async (...args) => {
+      const slugs = await list();
+      return (
+        await Promise.all(
+          slugs.map(async slug => {
+            const entry = await read(slug, args[0]);
+            if (entry === null) return [];
+            return [{ slug, entry }];
           })
         )
       ).flat();
     },
+    list,
   };
 }
 
@@ -165,7 +229,8 @@ async function readItem(
         glob: Glob;
       }
     | undefined,
-  repoPath: string
+  repoPath: string,
+  opts: EntryReaderOpts | undefined
 ) {
   let dataFile: Uint8Array;
   try {
@@ -194,60 +259,67 @@ async function readItem(
         }
   );
   const requiredFiles = getRequiredFiles(validated, schema, slugField?.slug);
-  for (const file of requiredFiles) {
-    const parentValue = getValueAtPropPath(
-      validated,
-      file.path.slice(0, -1)
-    ) as any;
-    const keyOnParent = file.path[file.path.length - 1];
-    const originalValue = parentValue[keyOnParent];
-    if (file.schema.serializeToFile.reader.requiresContentInReader) {
-      parentValue[keyOnParent] = async () => {
-        const loadedFiles = new Map<string, Uint8Array>();
-        if (file.file) {
-          const filepath = `${
-            file.file.parent
-              ? `${file.file.parent}${slugField ? slugField.slug : ''}`
-              : itemDir
-          }/${file.file.filename}`;
-          if (file.file.filename === extraFakeFile?.path) {
-            loadedFiles.set(filepath, extraFakeFile.contents);
-          } else {
-            const contents = await fs
-              .readFile(path.resolve(repoPath, filepath))
-              .catch(x => {
-                if ((x as any).code === 'ENOENT') return undefined;
-                throw x;
-              });
-            if (contents) {
-              loadedFiles.set(filepath, contents);
+  await Promise.all(
+    requiredFiles.map(async file => {
+      const parentValue = getValueAtPropPath(
+        validated,
+        file.path.slice(0, -1)
+      ) as any;
+      const keyOnParent = file.path[file.path.length - 1];
+      const originalValue = parentValue[keyOnParent];
+      if (file.schema.serializeToFile.reader.requiresContentInReader) {
+        const loadData = async () => {
+          const loadedFiles = new Map<string, Uint8Array>();
+          if (file.file) {
+            const filepath = `${
+              file.file.parent
+                ? `${file.file.parent}${slugField ? slugField.slug : ''}`
+                : itemDir
+            }/${file.file.filename}`;
+            if (file.file.filename === extraFakeFile?.path) {
+              loadedFiles.set(filepath, extraFakeFile.contents);
+            } else {
+              const contents = await fs
+                .readFile(path.resolve(repoPath, filepath))
+                .catch(x => {
+                  if ((x as any).code === 'ENOENT') return undefined;
+                  throw x;
+                });
+              if (contents) {
+                loadedFiles.set(filepath, contents);
+              }
             }
           }
+          return parseSerializedFormField(
+            originalValue,
+            file,
+            loadedFiles,
+            'read',
+            itemDir,
+            slugField?.slug,
+            validated,
+            schema
+          );
+        };
+        if (opts?.resolveLinkedFiles) {
+          parentValue[keyOnParent] = await loadData();
+        } else {
+          parentValue[keyOnParent] = loadData;
         }
-        return parseSerializedFormField(
+      } else {
+        parentValue[keyOnParent] = parseSerializedFormField(
           originalValue,
           file,
-          loadedFiles,
+          new Map(),
           'read',
           itemDir,
           slugField?.slug,
           validated,
           schema
         );
-      };
-    } else {
-      parentValue[keyOnParent] = parseSerializedFormField(
-        originalValue,
-        file,
-        new Map(),
-        'read',
-        itemDir,
-        slugField?.slug,
-        validated,
-        schema
-      );
-    }
-  }
+      }
+    })
+  );
 
   return validated;
 }
@@ -261,8 +333,8 @@ function singletonReader(
   const singletonPath = getSingletonPath(config, singleton);
   const schema = fields.object(config.singletons![singleton].schema);
   return {
-    read: () =>
-      readItem(schema, formatInfo, singletonPath, undefined, repoPath),
+    read: (...args) =>
+      readItem(schema, formatInfo, singletonPath, undefined, repoPath, args[0]),
   };
 }
 
