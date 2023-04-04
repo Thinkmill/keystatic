@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/typography",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Typographic primitives ensure that we provide a consistent experience, via visual hierarchy, to users throughout the application.",
   "license": "MIT",
   "main": "dist/voussoir-typography.cjs.js",
@@ -24,7 +24,7 @@
     "@voussoir/link": "^0.1.2",
     "@voussoir/slots": "^0.1.2",
     "@voussoir/style": "^0.1.3",
-    "@voussoir/types": "^0.1.1",
+    "@voussoir/types": "^0.1.2",
     "@voussoir/utils": "^2.0.2",
     "emery": "^1.4.1"
   },

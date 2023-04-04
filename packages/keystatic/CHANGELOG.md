@@ -1,5 +1,20 @@
 # @keystatic/core
 
+## 0.0.83
+
+### Patch Changes
+
+- c7da5cd: Add experimental `cloud` storage kind
+- 323d8cb: Fix updating slugs not working
+- 6b9c653: Fix `@keystatic/core/reader` in server component environments
+- 70116b6: Add an `all` method to the collection reader API to load all entries
+  in a collection and add `resolveLinkedFiles` option to the methods that read
+  entries to eagerly load document fields (and potentially other kinds of fields
+  in the future).
+- Updated dependencies [c0a4d82]
+  - @voussoir/typography@0.1.3
+  - @voussoir/types@0.1.2
+
 ## 0.0.82
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @voussoir/types
 
+## 0.1.2
+
+### Patch Changes
+
+- c0a4d82: Support "align" prop on `Heading` component.
+
 ## 0.1.1
 
 ### Patch Changes
