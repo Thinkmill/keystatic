@@ -126,14 +126,15 @@ function ItemPage(props: ItemPageProps) {
   const baseCommit = useBaseCommit();
   const slug = getSlugFromState(collectionConfig, state);
   const formatInfo = getCollectionFormat(config, collection);
-  const basePath = getCollectionItemPath(config, collection, itemSlug);
+  const currentBasePath = getCollectionItemPath(config, collection, itemSlug);
+  const futureBasePath = getCollectionItemPath(config, collection, slug);
   const branchInfo = useBranchInfo();
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
     state,
     initialFiles,
     storage: config.storage,
     schema: collectionConfig.schema,
-    basePath,
+    basePath: futureBasePath,
     format: formatInfo,
     currentLocalTreeKey: localTreeKey,
     currentTree,
@@ -143,7 +144,7 @@ function ItemPage(props: ItemPageProps) {
   const [deleteResult, deleteItem, resetDeleteItem] = useDeleteItem({
     initialFiles,
     storage: config.storage,
-    basePath: getCollectionItemPath(config, collection, itemSlug),
+    basePath: currentBasePath,
     currentTree,
   });
 
@@ -238,10 +239,12 @@ function ItemPage(props: ItemPageProps) {
                     assert(isGitHubConfig(config));
                     let filePath =
                       formatInfo.dataLocation === 'index'
-                        ? `/tree/${branchInfo.currentBranch}/${basePath}`
+                        ? `/tree/${branchInfo.currentBranch}/${currentBasePath}`
                         : `/blob/${
                             branchInfo.currentBranch
-                          }/${basePath}${getDataFileExtension(formatInfo)}`;
+                          }/${currentBasePath}${getDataFileExtension(
+                            formatInfo
+                          )}`;
                     window.open(
                       `${getRepoUrl(config)}${filePath}`,
                       '_blank',
@@ -333,13 +336,10 @@ function ItemPage(props: ItemPageProps) {
               <CreateBranchDuringUpdateDialog
                 branchOid={baseCommit}
                 onCreate={async newBranch => {
-                  router.push(
-                    `/keystatic/branch/${encodeURIComponent(
-                      newBranch
-                    )}/collection/${encodeURIComponent(
-                      collection
-                    )}/item/${encodeURIComponent(itemSlug)}`
-                  );
+                  const itemBasePath = `/keystatic/branch/${encodeURIComponent(
+                    newBranch
+                  )}/collection/${encodeURIComponent(collection)}/item/`;
+                  router.push(itemBasePath + encodeURIComponent(itemSlug));
                   const slug = getSlugFromState(collectionConfig, state);
 
                   const hasUpdated = await update({
@@ -347,11 +347,7 @@ function ItemPage(props: ItemPageProps) {
                     sha: baseCommit,
                   });
                   if (hasUpdated && slug !== itemSlug) {
-                    router.replace(
-                      `${props.basePath}/collection/${encodeURIComponent(
-                        collection
-                      )}/item/${encodeURIComponent(slug)}`
-                    );
+                    router.replace(itemBasePath + encodeURIComponent(slug));
                   }
                 }}
                 reason={updateResult.reason}
