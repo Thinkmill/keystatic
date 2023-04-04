@@ -7,6 +7,13 @@ storiesOf('Components/Typography/Heading', module)
   .add('default', () => (
     <Heading>The quick brown fox jumps over the lazy dog.</Heading>
   ))
+  .add('align', () => (
+    <Grid gap="xlarge" width={320}>
+      <Heading align="start">Start</Heading>
+      <Heading align="center">Center</Heading>
+      <Heading align="end">End</Heading>
+    </Grid>
+  ))
   .add('size', () => (
     <Grid gap="xlarge">
       <Heading size="small">
