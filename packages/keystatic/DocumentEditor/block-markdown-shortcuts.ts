@@ -3,8 +3,8 @@ import { DocumentFeatures } from './document-features';
 import { ComponentBlock } from './component-blocks/api';
 import { insertDivider } from './divider';
 import { DocumentFeaturesForNormalization } from './document-features-normalization';
-import { getAncestorComponentChildFieldDocumentFeatures } from './toolbar-state';
-import { isBlock } from '.';
+import { getAncestorComponentChildFieldDocumentFeatures } from './utils';
+import { isBlock } from './editor';
 
 export function withBlockMarkdownShortcuts(
   documentFeatures: DocumentFeatures,

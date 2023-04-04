@@ -1,10 +1,3 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useContext,
-} from 'react';
 import {
   Editor,
   Node,
@@ -12,15 +5,18 @@ import {
   Path,
   Transforms,
   Element,
-  PathRef,
   Text,
   Location,
   Point,
 } from 'slate';
-import { ReactEditor } from 'slate-react';
-import { isBlock } from '.';
-
-export { useSlateStatic as useStaticEditor } from 'slate-react';
+import { isBlock } from './editor';
+import { ComponentBlock } from '../src';
+import {
+  DocumentFeaturesForChildField,
+  getSchemaAtPropPath,
+  getDocumentFeaturesForChildField,
+} from './component-blocks/utils';
+import { DocumentFeatures } from './document-features';
 
 export type Mark =
   | 'bold'
@@ -84,90 +80,6 @@ export function moveChildren(
   }
 }
 
-// this ensures that when changes happen, they are immediately shown
-// this stops the problem of a cursor resetting to the end when a change is made
-// because the changes are applied asynchronously
-export function useElementWithSetNodes<TElement extends Element>(
-  editor: Editor,
-  element: TElement
-) {
-  const [state, setState] = useState({ element, elementWithChanges: element });
-  if (state.element !== element) {
-    setState({ element, elementWithChanges: element });
-  }
-
-  const elementRef = useRef(element);
-
-  useEffect(() => {
-    elementRef.current = element;
-  });
-
-  const setNodes = useCallback(
-    (
-      changesOrCallback:
-        | Partial<TElement>
-        | ((current: TElement) => Partial<TElement>)
-    ) => {
-      const currentElement = elementRef.current;
-      const changes =
-        typeof changesOrCallback === 'function'
-          ? changesOrCallback(currentElement)
-          : changesOrCallback;
-      Transforms.setNodes(editor, changes, {
-        at: ReactEditor.findPath(editor, currentElement),
-      });
-      setState({
-        element: currentElement,
-        elementWithChanges: { ...currentElement, ...changes },
-      });
-    },
-    [editor]
-  );
-  return [state.elementWithChanges, setNodes] as const;
-}
-
-export function useEventCallback<Func extends (...args: any) => any>(
-  callback: Func
-): Func {
-  const callbackRef = useRef(callback);
-  const cb = useCallback((...args: any[]) => {
-    return callbackRef.current(...args);
-  }, []);
-  useEffect(() => {
-    callbackRef.current = callback;
-  });
-  return cb as any;
-}
-
-const ForceValidationContext = React.createContext(false);
-
-export const ForceValidationProvider = ForceValidationContext.Provider;
-
-export function useForceValidation() {
-  return useContext(ForceValidationContext);
-}
-
-export function insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading(
-  editor: Editor,
-  nodes: Node | Node[]
-) {
-  let pathRefForEmptyNodeAtCursor: PathRef | undefined;
-  const entry = Editor.above(editor, {
-    match: node => node.type === 'heading' || node.type === 'paragraph',
-  });
-  if (entry && Node.string(entry[0]) === '') {
-    pathRefForEmptyNodeAtCursor = Editor.pathRef(editor, entry[1]);
-  }
-  Transforms.insertNodes(editor, nodes);
-  let path = pathRefForEmptyNodeAtCursor?.unref();
-  if (path) {
-    Transforms.removeNodes(editor, { at: path });
-    // even though the selection is in the right place after the removeNodes
-    // for some reason the editor blurs so we need to focus it again
-    ReactEditor.focus(editor);
-  }
-}
-
 /**
  * This is equivalent to Editor.after except that it ignores points that have no content
  * like the point in a void text node, an empty text node and the last point in a text node
@@ -223,11 +135,34 @@ export function nodeTypeMatcher<Type extends Element['type'][]>(
     typeof node.type === 'string' && set.has(node.type)) as any;
 }
 
-export function focusWithPreviousSelection(editor: Editor) {
-  const selection = window.getSelection();
-  if (selection) {
-    selection.removeAllRanges();
-    selection.addRange(ReactEditor.toDOMRange(editor, editor.selection!));
+export function getAncestorComponentChildFieldDocumentFeatures(
+  editor: Editor,
+  editorDocumentFeatures: DocumentFeatures,
+  componentBlocks: Record<string, ComponentBlock>
+): DocumentFeaturesForChildField | undefined {
+  const ancestorComponentProp = Editor.above(editor, {
+    match: nodeTypeMatcher('component-block-prop', 'component-inline-prop'),
+  });
+
+  if (ancestorComponentProp) {
+    const propPath = ancestorComponentProp[0].propPath;
+    const ancestorComponent = Editor.parent(editor, ancestorComponentProp[1]);
+    if (ancestorComponent[0].type === 'component-block') {
+      const component = ancestorComponent[0].component;
+      const componentBlock = componentBlocks[component];
+      if (componentBlock && propPath) {
+        const childField = getSchemaAtPropPath(
+          propPath,
+          ancestorComponent[0].props,
+          componentBlock.schema
+        );
+        if (childField?.kind === 'child') {
+          return getDocumentFeaturesForChildField(
+            editorDocumentFeatures,
+            childField.options
+          );
+        }
+      }
+    }
   }
-  ReactEditor.focus(editor);
 }

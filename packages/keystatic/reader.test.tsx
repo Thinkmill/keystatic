@@ -93,22 +93,15 @@ test('read', async () => {
         "type": "paragraph",
       },
       {
+        "alt": "",
         "children": [
           {
-            "children": [
-              {
-                "text": "",
-              },
-            ],
-            "type": "component-inline-prop",
+            "text": "",
           },
         ],
-        "component": "image",
-        "props": {
-          "alt": "",
-          "image": "blank.png",
-        },
-        "type": "component-block",
+        "src": "blank.png",
+        "title": undefined,
+        "type": "image",
       },
       {
         "children": [

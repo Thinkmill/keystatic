@@ -1,6 +1,6 @@
 // very loosely based on https://github.com/ianstormtaylor/slate/blob/d22c76ae1313fe82111317417912a2670e73f5c9/site/examples/paste-html.tsx
 import { Node } from 'slate';
-import { Block, isBlock } from '..';
+import { Block, isBlock } from '../editor';
 import { Mark } from '../utils';
 import {
   addMarksToChildren,

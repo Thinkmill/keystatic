@@ -1,6 +1,6 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useMemo, useState } from 'react';
-import { ReactEditor, RenderElementProps } from 'slate-react';
+import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 import { Editor, Transforms } from 'slate';
 
 import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
@@ -21,13 +21,12 @@ import l10nMessages from '../app/l10n/index.json';
 import {
   getUploadedImage,
   useObjectURL,
-} from './component-blocks/fields/image';
+} from './component-blocks/fields/image/ui';
 import {
   focusWithPreviousSelection,
   insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading,
   useElementWithSetNodes,
-  useStaticEditor,
-} from './utils';
+} from './ui-utils';
 import {
   BlockPopover,
   BlockPopoverTrigger,
@@ -49,7 +48,7 @@ export const ImageElement = ({
   const [dialogOpen, setDialogOpen] = useState(false);
   const [aspectRatio, setAspectRatio] = useState<number>();
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
-  const editor = useStaticEditor();
+  const editor = useSlateStatic();
   const [currentElement, setNode] = useElementWithSetNodes(
     editor,
     __elementForGettingPath
@@ -273,7 +272,7 @@ function splitFilename(filename: string): [string, string] {
 let _imageIcon = <Icon src={imageIcon} />;
 
 function ImageButton() {
-  const editor = useStaticEditor();
+  const editor = useSlateStatic();
 
   return (
     <>
@@ -308,9 +307,7 @@ export const imageButton = (
 );
 
 export function withImages(editor: Editor): Editor {
-  const { insertData, isVoid } = editor;
-
-  editor.isVoid = element => isVoid(element) || element.type === 'image';
+  const { insertData } = editor;
 
   editor.insertData = data => {
     const images = Array.from(data.files).filter(x =>

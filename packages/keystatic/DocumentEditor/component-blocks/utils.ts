@@ -5,7 +5,7 @@ import { DocumentFeatures } from '../document-features';
 import { DocumentFeaturesForNormalization } from '../document-features-normalization';
 import { Mark } from '../utils';
 import { ComponentSchema, ChildField, ValueForComponentSchema } from './api';
-import { SlugFieldInfo } from './fields/text';
+import { SlugFieldInfo } from './fields/text/ui';
 import { getKeysForArrayValue, setKeysForArrayValue } from './preview-props';
 
 type PathToChildFieldWithOption = {

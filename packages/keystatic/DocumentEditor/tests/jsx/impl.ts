@@ -1,7 +1,7 @@
 // slate-hyperscript depends on Array.prototype.flat
 import { createHyperscript } from 'slate-hyperscript';
 
-import { editorSchema } from '../../index';
+import { editorSchema } from '../../editor';
 
 const blockTypes: Record<string, { type: string }> = {};
 Object.keys(editorSchema).forEach(key => {

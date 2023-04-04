@@ -11,18 +11,20 @@ export type FormFieldValue =
   | readonly FormFieldValue[]
   | { [key: string]: FormFieldValue | undefined };
 
+export type FormFieldInputProps<Value> = {
+  value: Value;
+  onChange(value: Value): void;
+  autoFocus: boolean;
+  /**
+   * This will be true when validate has returned false and the user has attempted to close the form
+   * or when the form is open and they attempt to save the item
+   */
+  forceValidation: boolean;
+};
+
 export type BasicFormField<Value> = {
   kind: 'form';
-  Input(props: {
-    value: Value;
-    onChange(value: Value): void;
-    autoFocus: boolean;
-    /**
-     * This will be true when validate has returned false and the user has attempted to close the form
-     * or when the form is open and they attempt to save the item
-     */
-    forceValidation: boolean;
-  }): ReactElement | null;
+  Input(props: FormFieldInputProps<Value>): ReactElement | null;
   defaultValue: Value;
   /**
    * validate will be called in two cases:

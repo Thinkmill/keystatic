@@ -1,7 +1,7 @@
 import LRUCache from 'lru-cache';
 import { useCallback, useMemo } from 'react';
 import { Config } from '../config';
-import { SlugFieldInfo } from '../DocumentEditor/component-blocks/fields/text';
+import { SlugFieldInfo } from '../DocumentEditor/component-blocks/fields/text/ui';
 import { transformProps } from '../DocumentEditor/component-blocks/utils';
 import { ComponentSchema, fields, GitHubConfig } from '../src';
 import { validateComponentBlockProps } from '../validate-component-block-props';

@@ -1,5 +1,5 @@
 import { Text, Editor, Descendant } from 'slate';
-import { createDocumentEditorWithoutReact } from './DocumentEditor';
+import { createDocumentEditorForNormalization } from './DocumentEditor/editor';
 import { ComponentBlock } from './DocumentEditor/component-blocks/api';
 import {
   ElementFromValidation,
@@ -58,7 +58,7 @@ export function validateAndNormalizeDocument(
   const children = value.map(x =>
     getValidatedNodeWithNormalizedComponentFormProps(x, componentBlocks)
   );
-  const editor = createDocumentEditorWithoutReact(
+  const editor = createDocumentEditorForNormalization(
     documentFeatures,
     componentBlocks
   );

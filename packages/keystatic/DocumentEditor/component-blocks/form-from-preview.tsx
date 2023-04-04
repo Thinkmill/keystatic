@@ -24,7 +24,6 @@ import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 import { Heading, Text } from '@voussoir/typography';
 
 import l10nMessages from '../../app/l10n/index.json';
-import { useEventCallback } from '../utils';
 
 import {
   ArrayField,
@@ -47,9 +46,10 @@ import {
   PathContextProvider,
   SlugFieldInfo,
   SlugFieldProvider,
-} from './fields/text';
+} from './fields/text/ui';
 import { getSlugFromState } from '../../app/utils';
 import { getInitialPropsValue } from './initial-values';
+import { useEventCallback } from '../ui-utils';
 
 type DefaultFieldProps<Key> = GenericPreviewProps<
   Extract<ComponentSchema, { kind: Key }>,

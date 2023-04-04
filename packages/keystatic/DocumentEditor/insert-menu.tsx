@@ -13,16 +13,16 @@ import { css, tokenSchema } from '@voussoir/style';
 
 import { insertComponentBlock } from './component-blocks';
 import { ComponentBlock } from './component-blocks/api';
-import { insertLayout } from './layouts';
+import { insertLayout } from './layouts/layouts-ui';
 import {
   ToolbarState,
   useDocumentEditorConfig,
   useToolbarState,
 } from './toolbar-state';
-import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from './utils';
-import { getUploadedImage } from './component-blocks/fields/image';
-import { isBlock } from '.';
-import { insertTable } from './table';
+import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from './ui-utils';
+import { getUploadedImage } from './component-blocks/fields/image/ui';
+import { isBlock } from './editor';
+import { insertTable } from './table/table-ui';
 
 type Option = {
   label: string;

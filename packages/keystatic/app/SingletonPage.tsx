@@ -15,7 +15,7 @@ import { createGetPreviewProps } from '../DocumentEditor/component-blocks/previe
 import { fields } from '../DocumentEditor/component-blocks/api';
 import { clientSideValidateProp } from '../DocumentEditor/component-blocks/utils';
 import { getInitialPropsValue } from '../DocumentEditor/component-blocks/initial-values';
-import { useEventCallback } from '../DocumentEditor/utils';
+import { useEventCallback } from '../DocumentEditor/ui-utils';
 import { useUpsertItem } from '../utils';
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';

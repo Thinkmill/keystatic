@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { ReactEditor, RenderElementProps } from 'slate-react';
+import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 import { Editor, Transforms } from 'slate';
 
 import {
   insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading,
   useElementWithSetNodes,
   useEventCallback,
-  useStaticEditor,
-} from '../utils';
+} from '../ui-utils';
 import { ComponentBlock } from './api';
 import { getInitialValue } from './initial-values';
 import { createGetPreviewProps } from './preview-props';
@@ -46,7 +45,7 @@ export const ComponentBlocksElement = ({
   children,
   element: __elementToGetPath,
 }: RenderElementProps & { element: { type: 'component-block' } }) => {
-  const editor = useStaticEditor();
+  const editor = useSlateStatic();
   const [currentElement, setElement] = useElementWithSetNodes(
     editor,
     __elementToGetPath
