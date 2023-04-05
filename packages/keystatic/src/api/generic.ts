@@ -605,7 +605,7 @@ async function tree(
   return {
     status: 200,
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(await readToDirEntries(baseDirectory, config)),
+    body: JSON.stringify(await readToDirEntries(baseDirectory)),
   };
 }
 
@@ -695,6 +695,6 @@ async function update(
   return {
     status: 200,
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(await readToDirEntries(baseDirectory, config)),
+    body: JSON.stringify(await readToDirEntries(baseDirectory)),
   };
 }
