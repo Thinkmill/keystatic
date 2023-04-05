@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.0.84
+
+### Patch Changes
+
+- a45bad6: Updated the tree used in local mode to include all non-gitignored
+  files from cwd or `localBaseDirectory` so that `fields.pathReference` works
+  correctly.
+
 ## 0.0.83
 
 ### Patch Changes
