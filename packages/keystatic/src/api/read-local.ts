@@ -9,6 +9,7 @@ import { updateTreeWithChanges, blobSha } from './trees-server-side';
 import { Config } from '../../config';
 import { getDirectoriesForTreeKey } from '../../app/tree-key';
 import { fields } from '../../DocumentEditor/component-blocks/api';
+import ignore from 'ignore';
 
 async function readDirEntries(dir: string) {
   let entries;
@@ -25,26 +26,62 @@ async function readDirEntries(dir: string) {
 
 async function collectEntriesInDir(
   baseDir: string,
-  currentRelativeDir: string
-): Promise<
-  {
-    path: string;
-    contents: {
-      byteLength: number;
-      sha: string;
-    };
+  ancestors: {
+    gitignoreFilterForDescendents: (relativePath: string) => boolean;
+    segment: string;
   }[]
-> {
+): Promise<{ path: string; contents: { byteLength: number; sha: string } }[]> {
+  const currentRelativeDir = ancestors.map(p => p.segment).join('/');
   const entries = await readDirEntries(path.join(baseDir, currentRelativeDir));
+  const gitignore = entries.find(
+    entry => entry.isFile() && entry.name === '.gitignore'
+  );
+
+  const gitignoreFilterForDescendents = gitignore
+    ? ignore()
+        .add(
+          await fs.readFile(
+            path.join(baseDir, currentRelativeDir, gitignore.name),
+            'utf8'
+          )
+        )
+        .createFilter()
+    : () => true;
+  const pathSegments = ancestors.map(x => x.segment);
   return (
     await Promise.all(
       entries
-        .filter(entry => entry.isDirectory() || entry.isFile())
+        .filter(entry => {
+          if (
+            (!entry.isDirectory() && !entry.isFile()) ||
+            entry.name === '.git'
+          ) {
+            return false;
+          }
+          const innerPath = `${pathSegments.concat(entry.name).join('/')}${
+            entry.isDirectory() ? '/' : ''
+          }`;
+          if (!gitignoreFilterForDescendents(innerPath)) {
+            return false;
+          }
+          let currentPath = entry.name;
+          for (let i = ancestors.length - 1; i >= 0; i--) {
+            const ancestor = ancestors[i];
+            currentPath = `${ancestor.segment}/${currentPath}`;
+            if (!ancestor.gitignoreFilterForDescendents(currentPath)) {
+              return false;
+            }
+          }
+          return true;
+        })
         .map(async entry => {
-          const innerPath = `${currentRelativeDir}/${entry.name}`;
           if (entry.isDirectory()) {
-            return collectEntriesInDir(baseDir, innerPath);
+            return collectEntriesInDir(baseDir, [
+              ...ancestors,
+              { gitignoreFilterForDescendents, segment: entry.name },
+            ]);
           } else {
+            const innerPath = pathSegments.concat(entry.name).join('/');
             const contents = await fs.readFile(path.join(baseDir, innerPath));
             return {
               path: innerPath,
@@ -59,20 +96,8 @@ async function collectEntriesInDir(
   ).flat();
 }
 
-export async function readToDirEntries(baseDir: string, config: Config) {
-  const additions: {
-    path: string;
-    contents: {
-      byteLength: number;
-      sha: string;
-    };
-  }[] = [];
-  const rootDirs = getAllowedDirectories(config);
-  await Promise.all(
-    rootDirs.map(async dir => {
-      additions.push(...(await collectEntriesInDir(baseDir, dir)));
-    })
-  );
+export async function readToDirEntries(baseDir: string) {
+  const additions = await collectEntriesInDir(baseDir, []);
   const { entries } = await updateTreeWithChanges(new Map(), {
     additions: additions,
     deletions: [],
