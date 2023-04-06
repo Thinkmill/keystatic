@@ -4,34 +4,95 @@
 import { Editor } from 'slate';
 import { jsx, makeEditor } from '../tests/utils';
 
-test('inserting a code block with a shortcut works', () => {
-  let editor = makeEditor(
-    <editor>
-      <paragraph>
-        <text>
-          {'``'}
-          <cursor />
-        </text>
-      </paragraph>
-    </editor>
-  );
+function insertCharsOneAtATime(editor: Editor, chars: string) {
+  for (const char of chars) {
+    editor.insertText(char);
+  }
+}
 
-  editor.insertText('`');
-  editor.insertText('some content');
-  expect(editor).toMatchInlineSnapshot(`
-    <editor>
-      <code>
-        <text>
-          some content
-          <cursor />
-        </text>
-      </code>
-      <paragraph>
-        <text />
-      </paragraph>
-    </editor>
-  `);
-});
+for (const type of ['space', 'enter'] as const) {
+  const insert = (editor: Editor) => {
+    if (type === 'space') {
+      editor.insertText(' ');
+    }
+    if (type === 'enter') {
+      editor.insertBreak();
+    }
+  };
+  const makeInputEditor = () =>
+    makeEditor(
+      <editor>
+        <paragraph>
+          <text>
+            <cursor />
+          </text>
+        </paragraph>
+      </editor>
+    );
+  test(`inserting a code block with a shortcut ending with a ${type}`, () => {
+    const editor = makeInputEditor();
+    insertCharsOneAtATime(editor, '```');
+    insert(editor);
+    editor.insertText('some content');
+    expect(editor).toEqualEditor(
+      makeEditor(
+        <editor>
+          <code>
+            <text>
+              some content
+              <cursor />
+            </text>
+          </code>
+          <paragraph>
+            <text />
+          </paragraph>
+        </editor>
+      )
+    );
+  });
+  test(`inserting a code block with a language a shortcut ending with a ${type}`, () => {
+    const editor = makeInputEditor();
+    insertCharsOneAtATime(editor, '```js');
+    insert(editor);
+    editor.insertText('some content');
+    expect(editor).toEqualEditor(
+      makeEditor(
+        <editor>
+          <code language="javascript">
+            <text>
+              some content
+              <cursor />
+            </text>
+          </code>
+          <paragraph>
+            <text />
+          </paragraph>
+        </editor>
+      )
+    );
+  });
+  test(`inserting a code block with an unknown language a shortcut ending with a ${type}`, () => {
+    const editor = makeInputEditor();
+    insertCharsOneAtATime(editor, '```asdasdasdasdasdfasdfasdf');
+    insert(editor);
+    editor.insertText('some content');
+    expect(editor).toEqualEditor(
+      makeEditor(
+        <editor>
+          <code language="asdasdasdasdasdfasdfasdf">
+            <text>
+              some content
+              <cursor />
+            </text>
+          </code>
+          <paragraph>
+            <text />
+          </paragraph>
+        </editor>
+      )
+    );
+  });
+}
 
 test('insertBreak inserts a soft break', () => {
   let editor = makeEditor(

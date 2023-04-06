@@ -209,6 +209,10 @@ export function withMarks(
               ) {
                 continue;
               }
+              // this is the start of a code block shortcut
+              if (mark === 'code' && contentBetweenShortcuts === '`') {
+                continue;
+              }
               const ancestorComponentChildFieldDocumentFeatures =
                 getAncestorComponentChildFieldDocumentFeatures(
                   editor,

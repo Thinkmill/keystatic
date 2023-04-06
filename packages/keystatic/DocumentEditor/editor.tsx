@@ -50,6 +50,8 @@ export function _createDocumentEditor(
               withVoidElements(
                 withLayouts(
                   withCodeBlock(
+                    documentFeatures,
+                    componentBlocks,
                     withDocumentFeaturesNormalization(
                       documentFeatures,
                       baseEditor
