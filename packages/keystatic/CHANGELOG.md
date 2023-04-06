@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.85
+
+### Patch Changes
+
+- d978f9b: Fix pasting in some cases reversing the order of the pasted elements
+
 ## 0.0.84
 
 ### Patch Changes
