@@ -5,12 +5,13 @@ import { ReactEditor, RenderElementProps } from 'slate-react';
 import { ActionButton } from '@voussoir/button';
 import { quoteIcon } from '@voussoir/icon/icons/quoteIcon';
 import { Icon } from '@voussoir/icon';
-import { css, tokenSchema } from '@voussoir/style';
 import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
 import { Kbd, Text } from '@voussoir/typography';
 
 import { useToolbarState } from '../toolbar-state';
 import { isElementActive } from '../utils';
+import { Box } from '@voussoir/layout';
+import { blockElementSpacing } from '../ui-utils';
 
 export const insertBlockquote = (editor: Editor) => {
   const isActive = isElementActive(editor, 'blockquote');
@@ -31,19 +32,17 @@ export const BlockquoteElement = ({
   children,
 }: RenderElementProps) => {
   return (
-    <blockquote
-      className={css({
-        borderInlineStart: `0.25em solid ${tokenSchema.color.border.neutral}`,
-        paddingInline: '1em',
-        margin: '2em',
-        marginLeft: 0,
-        marginRight: 0,
-        position: 'relative',
-      })}
+    <Box
+      UNSAFE_className={blockElementSpacing}
+      borderColor="neutral"
+      marginX={0}
+      paddingX="large"
+      borderStartStyle="solid"
+      borderStartWidth="large"
       {...attributes}
     >
       {children}
-    </blockquote>
+    </Box>
   );
 };
 

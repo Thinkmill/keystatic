@@ -56,15 +56,6 @@ export function Note({
           height: 20,
           width: 20,
         },
-
-        '& [data-slate-node="element"]': {
-          '&:first-child': {
-            marginTop: 0,
-          },
-          '&:last-child': {
-            marginBottom: 0,
-          },
-        },
       })}
       style={{
         // @ts-ignore
