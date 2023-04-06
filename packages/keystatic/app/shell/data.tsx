@@ -220,7 +220,7 @@ export function GitHubAppShellProvider(props: {
   }, [allTreeData, props.config]);
 
   useEffect(() => {
-    if (error?.response.status === 401) {
+    if (error?.response?.status === 401) {
       if (isGitHubConfig(props.config)) {
         window.location.href = `/api/keystatic/github/login?from=${router.params.join(
           '/'

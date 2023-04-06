@@ -5,7 +5,7 @@ import { ReactEditor, RenderElementProps } from 'slate-react';
 import { ActionButton } from '@voussoir/button';
 import { quoteIcon } from '@voussoir/icon/icons/quoteIcon';
 import { Icon } from '@voussoir/icon';
-import { css } from '@voussoir/style';
+import { css, tokenSchema } from '@voussoir/style';
 import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
 import { Kbd, Text } from '@voussoir/typography';
 
@@ -33,9 +33,12 @@ export const BlockquoteElement = ({
   return (
     <blockquote
       className={css({
-        fontFamily: 'serif',
-        fontSize: '1.25em',
-        marginInline: '2em',
+        borderInlineStart: `0.25em solid ${tokenSchema.color.border.neutral}`,
+        paddingInline: '1em',
+        margin: '2em',
+        marginLeft: 0,
+        marginRight: 0,
+        position: 'relative',
       })}
       {...attributes}
     >

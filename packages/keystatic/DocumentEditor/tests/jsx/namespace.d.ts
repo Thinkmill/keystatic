@@ -3,7 +3,7 @@ import { Mark } from '../../utils';
 
 export const __jsx: any;
 
-type Children = Node | string | (Node | string)[];
+type Children = Node | string | Children[];
 
 type Elements = {
   [Key in Element['type']]: Omit<
