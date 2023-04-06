@@ -5,6 +5,7 @@ import {
   RefAttributes,
   useContext,
   useEffect,
+  useState,
 } from 'react';
 
 import { Notice } from '@voussoir/notice';
@@ -29,6 +30,11 @@ import {
   GitHubAppShellDataProvider,
 } from './shell/data';
 import { KeystaticCloudAuthCallback } from './cloud-auth-callback';
+import { getAuth } from './auth';
+import { Button } from '@voussoir/button';
+import { Icon } from '@voussoir/icon';
+import { githubIcon } from '@voussoir/icon/icons/githubIcon';
+import { Flex } from '@voussoir/layout';
 
 function parseParamsWithoutBranch(params: string[]) {
   if (params.length === 0) {
@@ -185,6 +191,57 @@ function PageInner({ config }: { config: Config }) {
   );
 }
 
+function AuthWrapper(props: { config: Config; children: ReactElement }) {
+  const [state, setState] = useState<'unknown' | 'valid' | 'explicit-auth'>(
+    props.config.storage.kind === 'local' ? 'valid' : 'unknown'
+  );
+  const router = useRouter();
+  useEffect(() => {
+    getAuth(props.config).then(auth => {
+      if (auth || props.config.storage.kind === 'local') {
+        setState('valid');
+        return;
+      }
+      setState('explicit-auth');
+    });
+  }, [props.config]);
+  if (state === 'valid') {
+    return props.children;
+  }
+  if (state === 'explicit-auth') {
+    if (props.config.storage.kind === 'github') {
+      return (
+        <Flex justifyContent="center" alignItems="center" height="100vh">
+          <Button
+            href={`/api/keystatic/github/login${
+              router.params.length
+                ? `?${new URLSearchParams({ from: router.params.join('/') })}`
+                : ''
+            }`}
+          >
+            <Icon src={githubIcon} />
+            <Text>Log in with GitHub</Text>
+          </Button>
+        </Flex>
+      );
+    }
+    if (props.config.storage.kind === 'cloud') {
+      return (
+        <Flex justifyContent="center" alignItems="center" height="100vh">
+          <Button
+            onPress={() => {
+              redirectToCloudAuth(router.params.join('/'), props.config);
+            }}
+          >
+            <Text>Log in with Keystatic Cloud</Text>
+          </Button>
+        </Flex>
+      );
+    }
+  }
+  return null;
+}
+
 export function Keystatic(props: {
   config: Config;
   router: Router;
@@ -215,7 +272,9 @@ export function Keystatic(props: {
     <AppSlugProvider value={props.appSlug}>
       <RouterProvider router={props.router}>
         <Provider config={props.config} Link={props.link}>
-          <PageInner config={props.config} />
+          <AuthWrapper config={props.config}>
+            <PageInner config={props.config} />
+          </AuthWrapper>
         </Provider>
       </RouterProvider>
     </AppSlugProvider>

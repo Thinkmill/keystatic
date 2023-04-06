@@ -64,6 +64,23 @@ export type LocalConfig<
   singletons?: Singletons;
 };
 
+export type CloudConfig<
+  Collections extends {
+    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+  } = {
+    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+  },
+  Singletons extends {
+    [key: string]: Singleton<Record<string, ComponentSchema>>;
+  } = {
+    [key: string]: Singleton<Record<string, ComponentSchema>>;
+  }
+> = {
+  storage: { kind: 'cloud'; project: string };
+  collections?: Collections;
+  singletons?: Singletons;
+};
+
 export type Config<
   Collections extends {
     [key: string]: Collection<Record<string, ComponentSchema>, string>;

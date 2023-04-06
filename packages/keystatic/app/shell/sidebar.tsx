@@ -21,7 +21,7 @@ import { NavList, NavItem, NavGroup } from '@voussoir/nav-list';
 import { css, breakpointQueries, tokenSchema } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
 
-import { Config, GitHubConfig } from '../../config';
+import { CloudConfig, Config, GitHubConfig } from '../../config';
 
 import l10nMessages from '../l10n/index.json';
 import { useRouter } from '../router';
@@ -222,7 +222,7 @@ export const ViewerContext = createContext<
   FragmentData<typeof SidebarFooter_viewer> | undefined
 >(undefined);
 
-function SidebarFooter(props: { config: GitHubConfig }) {
+function SidebarFooter(props: { config: GitHubConfig | CloudConfig }) {
   const viewer = useContext(ViewerContext);
   const appShellData = useContext(GitHubAppShellDataContext);
   const fork =
@@ -246,24 +246,34 @@ function SidebarFooter(props: { config: GitHubConfig }) {
         id="nav-title-id"
         truncate
       >
-        {props.config.storage.repo.name}
+        {props.config.storage.kind === 'github'
+          ? props.config.storage.repo.name
+          : props.config.storage.project}
       </Text>
       <MenuTrigger direction="top">
         <ActionButton prominence="low" aria-label="app actions">
-          <Image
-            alt={`${viewer?.name ?? viewer?.login} avatar`}
-            borderRadius="full"
-            overflow="hidden"
-            aspectRatio="1"
-            height="xsmall"
-            src={viewer?.avatarUrl ?? ''}
-          />
+          {props.config.storage.kind === 'github' && (
+            <Image
+              alt={`${viewer?.name ?? viewer?.login} avatar`}
+              borderRadius="full"
+              overflow="hidden"
+              aspectRatio="1"
+              height="xsmall"
+              src={viewer?.avatarUrl ?? ''}
+            />
+          )}
           <Icon src={chevronDownIcon} />
         </ActionButton>
         <Menu
           onAction={key => {
             if (key === 'logout') {
-              alert('TODO: logout');
+              if (props.config.storage.kind === 'github') {
+                window.location.href = '/api/keystatic/github/logout';
+              }
+              if (props.config.storage.kind === 'cloud') {
+                localStorage.removeItem('keystatic-cloud-access-token');
+                window.location.reload();
+              }
             }
             if (key === 'profile') {
               window.open(
@@ -291,7 +301,9 @@ function SidebarFooter(props: { config: GitHubConfig }) {
           <Item key="logout">Log out</Item>
           <Section title="Github">
             {[
-              <Item key="profile">Profile</Item>,
+              ...(props.config.storage.kind === 'github'
+                ? [<Item key="profile">Profile</Item>]
+                : []),
               <Item key="repository">Repository</Item>,
               ...(fork ? [<Item key="fork">Fork</Item>] : []),
             ]}
