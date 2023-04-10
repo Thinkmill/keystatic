@@ -1,5 +1,17 @@
 # @keystatic/core
 
+## 0.0.86
+
+### Patch Changes
+
+- 6fbbf89: Allow writing a language in the code block markdown shortcut in the
+  document editor
+- 2df0cb7: Add log in page rather than redirecting to GitHub directly and make
+  the log out button work.
+- 2fb7327: Fix spacing between blocks in the document editor
+- 97ea182: Properly fix using the reader API in React server component
+  environments
+
 ## 0.0.85
 
 ### Patch Changes
