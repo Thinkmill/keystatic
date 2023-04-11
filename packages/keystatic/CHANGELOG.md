@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.88
+
+### Patch Changes
+
+- f1c2585: Add `@keystatic/core/api/utils`
+
 ## 0.0.87
 
 ### Patch Changes

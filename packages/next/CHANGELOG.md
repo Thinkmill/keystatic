@@ -1,5 +1,13 @@
 # @keystatic/next
 
+## 0.0.7
+
+### Patch Changes
+
+- f1c2585: Add `ReaderRefresh`
+- Updated dependencies [f1c2585]
+  - @keystatic/core@0.0.88
+
 ## 0.0.6
 
 ### Patch Changes
