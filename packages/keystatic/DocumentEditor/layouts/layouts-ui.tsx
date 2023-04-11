@@ -19,7 +19,10 @@ import {
 } from '../primitives';
 import { isElementActive } from '../utils';
 import { useDocumentEditorConfig, useToolbarState } from '../toolbar-state';
-import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from '../ui-utils';
+import {
+  blockElementSpacing,
+  insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading,
+} from '../ui-utils';
 
 // UI Components
 export const LayoutContainer = ({
@@ -36,10 +39,7 @@ export const LayoutContainer = ({
   );
 
   return (
-    <div
-      className={css({ marginBlock: '1em' })} // treat as a block element, like a paragraph
-      {...attributes}
-    >
+    <div className={blockElementSpacing} {...attributes}>
       <BlockPopoverTrigger element={element}>
         <div
           className={css({

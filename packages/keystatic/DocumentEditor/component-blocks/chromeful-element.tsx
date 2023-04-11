@@ -34,6 +34,7 @@ import {
   NonChildFieldComponentSchema,
 } from './form-from-preview';
 import { NotEditable } from '../primitives';
+import { blockElementSpacing } from '../ui-utils';
 
 export function ChromefulComponentBlockElement(props: {
   children: ReactNode;
@@ -125,8 +126,7 @@ const BlockPrimitive = forwardRef(function BlockPrimitive(
     <div
       {...attributes}
       ref={ref}
-      className={css({
-        marginY: '1em', // treat like a paragraph
+      className={css(blockElementSpacing, {
         position: 'relative',
         paddingInlineStart: tokenSchema.size.space.xlarge,
 

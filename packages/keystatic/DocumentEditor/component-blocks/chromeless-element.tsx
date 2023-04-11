@@ -5,7 +5,6 @@ import { RenderElementProps } from 'slate-react';
 import { ActionButton } from '@voussoir/button';
 import { Icon } from '@voussoir/icon';
 import { trashIcon } from '@voussoir/icon/icons/trashIcon';
-import { Box } from '@voussoir/layout';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 
 import { BlockPopover, BlockPopoverTrigger } from '../primitives';
@@ -16,6 +15,7 @@ import {
   ObjectField,
   ComponentSchema,
 } from './api';
+import { blockElementSpacing } from '../ui-utils';
 
 export function ChromelessComponentBlockElement(props: {
   renderedBlock: ReactNode;
@@ -31,7 +31,7 @@ export function ChromelessComponentBlockElement(props: {
     props.componentBlock.toolbar ?? DefaultToolbarWithoutChrome;
 
   return (
-    <Box {...props.attributes} marginY="xlarge">
+    <div {...props.attributes} className={blockElementSpacing}>
       <BlockPopoverTrigger element={props.element}>
         <div>{props.renderedBlock}</div>
         <BlockPopover>
@@ -41,7 +41,7 @@ export function ChromelessComponentBlockElement(props: {
           />
         </BlockPopover>
       </BlockPopoverTrigger>
-    </Box>
+    </div>
   );
 }
 

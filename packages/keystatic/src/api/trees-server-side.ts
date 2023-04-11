@@ -46,6 +46,7 @@ type TreeChanges = Map<string, NodeChanges>;
 type NodeChanges = { byteLength: number; sha: string } | 'delete' | TreeChanges;
 
 function getNodeAtPath(tree: TreeChanges, path: string): TreeChanges {
+  if (path === '') return tree;
   let node = tree;
   for (const part of path.split('/')) {
     if (!node.has(part)) {
@@ -63,6 +64,7 @@ function getFilename(path: string) {
 }
 
 function getDirname(path: string) {
+  if (!path.includes('/')) return '';
   return path.replace(/\/[^/]+$/, '');
 }
 

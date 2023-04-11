@@ -119,18 +119,6 @@ export function withBlockMarkdownShortcuts(
   );
 
   addShortcut(
-    '```',
-    () => {
-      Transforms.wrapNodes(
-        editor,
-        { type: 'code', children: [] },
-        { match: node => node.type === 'paragraph' }
-      );
-    },
-    features => features.formatting.blockTypes.code
-  );
-
-  addShortcut(
     '---',
     () => {
       insertDivider(editor);

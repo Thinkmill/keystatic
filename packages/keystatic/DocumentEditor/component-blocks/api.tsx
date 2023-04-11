@@ -456,14 +456,10 @@ export type ValueForReading<Schema extends ComponentSchema> =
         infer Value
       >
     ? () => Promise<Value>
-    : Schema extends FormFieldWithFileNotRequiringContentsForReader<
-        any,
-        infer Value
-      >
-    ? Value
-    : Schema extends SlugFormField<infer Value, any>
-    ? Value
-    : Schema extends BasicFormField<infer Value>
+    : Schema extends
+        | FormFieldWithFileNotRequiringContentsForReader<any, infer Value>
+        | SlugFormField<infer Value, any>
+        | BasicFormField<infer Value>
     ? Value
     : Schema extends ObjectField<infer Value>
     ? {
@@ -481,6 +477,33 @@ export type ValueForReading<Schema extends ComponentSchema> =
       }[keyof Values]
     : Schema extends ArrayField<infer ElementField>
     ? readonly ValueForReading<ElementField>[]
+    : never;
+
+export type ValueForReadingDeep<Schema extends ComponentSchema> =
+  Schema extends ChildField
+    ? null
+    : Schema extends
+        | FormFieldWithFileRequiringContentsForReader<any, infer Value>
+        | FormFieldWithFileNotRequiringContentsForReader<any, infer Value>
+        | SlugFormField<infer Value, any>
+        | BasicFormField<infer Value>
+    ? Value
+    : Schema extends ObjectField<infer Value>
+    ? {
+        readonly [Key in keyof Value]: ValueForReadingDeep<Value[Key]>;
+      }
+    : Schema extends ConditionalField<infer DiscriminantField, infer Values>
+    ? {
+        readonly [Key in keyof Values]: {
+          readonly discriminant: DiscriminantStringToDiscriminantValue<
+            DiscriminantField,
+            Key
+          >;
+          readonly value: ValueForReadingDeep<Values[Key]>;
+        };
+      }[keyof Values]
+    : Schema extends ArrayField<infer ElementField>
+    ? readonly ValueForReadingDeep<ElementField>[]
     : never;
 
 export type InferRenderersForComponentBlocks<

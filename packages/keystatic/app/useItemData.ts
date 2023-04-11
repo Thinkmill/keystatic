@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react';
 import { Config } from '../config';
 import { SlugFieldInfo } from '../DocumentEditor/component-blocks/fields/text/ui';
 import { transformProps } from '../DocumentEditor/component-blocks/utils';
-import { ComponentSchema, fields, GitHubConfig } from '../src';
+import { ComponentSchema, fields } from '../src';
 import { validateComponentBlockProps } from '../validate-component-block-props';
 import { getAuth } from './auth';
 import { loadDataFile, parseSerializedFormField } from './required-files';
@@ -16,6 +16,8 @@ import {
   FormatInfo,
   getEntryDataFilepath,
   isGitHubConfig,
+  KEYSTATIC_CLOUD_API_URL,
+  KEYSTATIC_CLOUD_HEADERS,
   MaybePromise,
 } from './utils';
 
@@ -197,17 +199,17 @@ export async function hydrateBlobCache(contents: Uint8Array) {
   return sha;
 }
 
-async function fetchGitHubBlob(
-  config: GitHubConfig,
-  oid: string
-): Promise<Response> {
-  const auth = await getAuth();
+async function fetchGitHubBlob(config: Config, oid: string): Promise<Response> {
+  const auth = await getAuth(config);
   return fetch(
-    `https://api.github.com/repos/${config.storage.repo.owner}/${config.storage.repo.name}/git/blobs/${oid}`,
+    config.storage.kind === 'github'
+      ? `https://api.github.com/repos/${config.storage.repo.owner}/${config.storage.repo.name}/git/blobs/${oid}`
+      : `${KEYSTATIC_CLOUD_API_URL}/v1/github/blob/${oid}`,
     {
       headers: {
         Authorization: `Bearer ${auth!.accessToken}`,
         Accept: 'application/vnd.github.raw',
+        ...(config.storage.kind === 'cloud' ? KEYSTATIC_CLOUD_HEADERS : {}),
       },
     }
   );
@@ -220,7 +222,7 @@ function fetchBlob(
 ): MaybePromise<Uint8Array> {
   if (blobCache.has(oid)) return blobCache.get(oid)!;
   const promise = (
-    isGitHubConfig(config)
+    isGitHubConfig(config) || config.storage.kind === 'cloud'
       ? fetchGitHubBlob(config, oid)
       : fetch(`/api/keystatic/blob/${oid}/${filepath}`, {
           headers: { 'no-cors': '1' },

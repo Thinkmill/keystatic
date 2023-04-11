@@ -18,6 +18,7 @@ import {
   TableHeadElement,
   TableRowElement,
 } from './table/table-ui';
+import { blockElementSpacing } from './ui-utils';
 
 // some of the renderers read properties of the element
 // and TS doesn't understand the type narrowing when doing a spread for some reason
@@ -71,9 +72,17 @@ export const renderElement = (props: RenderElementProps) => {
         />
       );
     case 'ordered-list':
-      return <ol {...props.attributes}>{props.children}</ol>;
+      return (
+        <ol className={blockElementSpacing} {...props.attributes}>
+          {props.children}
+        </ol>
+      );
     case 'unordered-list':
-      return <ul {...props.attributes}>{props.children}</ul>;
+      return (
+        <ul className={blockElementSpacing} {...props.attributes}>
+          {props.children}
+        </ul>
+      );
     case 'list-item':
       return <li {...props.attributes}>{props.children}</li>;
     case 'list-item-content':
@@ -134,7 +143,11 @@ export const renderElement = (props: RenderElementProps) => {
     default:
       let { textAlign } = props.element;
       return (
-        <p style={{ textAlign }} {...props.attributes}>
+        <p
+          className={blockElementSpacing}
+          style={{ textAlign }}
+          {...props.attributes}
+        >
           {props.children}
         </p>
       );

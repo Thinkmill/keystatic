@@ -1,3 +1,4 @@
+import { css } from '@voussoir/style';
 import React, {
   useContext,
   useState,
@@ -16,6 +17,16 @@ export function focusWithPreviousSelection(editor: Editor) {
   }
   ReactEditor.focus(editor);
 }
+
+export const blockElementSpacing = css({
+  marginBlock: '1em',
+  '&:first-child': {
+    marginBlockStart: 0,
+  },
+  '&:last-child': {
+    marginBlockEnd: 0,
+  },
+});
 
 const ForceValidationContext = React.createContext(false);
 

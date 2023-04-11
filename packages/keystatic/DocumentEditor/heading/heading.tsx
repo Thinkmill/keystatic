@@ -1,5 +1,6 @@
 import { RenderElementProps } from 'slate-react';
 import { tokenSchema } from '@voussoir/style';
+import { blockElementSpacing } from '../ui-utils';
 
 export const HeadingElement = ({
   attributes,
@@ -10,6 +11,7 @@ export const HeadingElement = ({
   return (
     <ElementType
       {...attributes}
+      className={blockElementSpacing}
       style={{
         color: tokenSchema.color.foreground.neutralEmphasis,
         textAlign: element.textAlign,

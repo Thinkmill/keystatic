@@ -578,16 +578,6 @@ while (listDepth--) {
 
 const editableStyles = css({
   ...styles,
-  'h1,h2,h3,h4,h5,h6,p,ol,ul': {
-    marginBlock: '1em',
-
-    '&:first-child': {
-      marginTop: 0,
-    },
-    '&:last-child': {
-      marginBottom: 0,
-    },
-  },
   a: {
     color: tokenSchema.color.foreground.accent,
   },

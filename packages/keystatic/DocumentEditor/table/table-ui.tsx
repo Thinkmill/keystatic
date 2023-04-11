@@ -192,7 +192,7 @@ export const TableElement = ({
   return (
     <StartElementsContext.Provider value={startElements}>
       <SelectedCellsContext.Provider value={selectedCells}>
-        <BlockWrapper>
+        <BlockWrapper attributes={attributes}>
           <BlockPopoverTrigger element={element}>
             <table
               className={css({
@@ -204,7 +204,6 @@ export const TableElement = ({
                   ? { backgroundColor: 'transparent' }
                   : undefined,
               })}
-              {...attributes}
             >
               {children}
             </table>

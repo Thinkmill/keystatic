@@ -99,7 +99,11 @@ export function makeGenericAPIRouteHandler(
       if (joined === 'github/created-app') {
         return createdGithubApp(req, options?.slugEnvName);
       }
-      if (joined === 'github/login' || joined === 'github/repo-not-found') {
+      if (
+        joined === 'github/login' ||
+        joined === 'github/repo-not-found' ||
+        joined === 'github/logout'
+      ) {
         return redirect('/keystatic/setup');
       }
       if (_config2.config?.storage.kind === 'local') {
@@ -155,6 +159,12 @@ export function makeGenericAPIRouteHandler(
     }
     if (joined === 'github/repo-not-found') {
       return githubRepoNotFound(req, config);
+    }
+    if (joined === 'github/logout') {
+      return redirect('/keystatic', [
+        ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-access-token')],
+        ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')],
+      ]);
     }
     return { status: 404, body: 'Not Found' };
   };
@@ -605,7 +615,7 @@ async function tree(
   return {
     status: 200,
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(await readToDirEntries(baseDirectory, config)),
+    body: JSON.stringify(await readToDirEntries(baseDirectory)),
   };
 }
 
@@ -695,6 +705,16 @@ async function update(
   return {
     status: 200,
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(await readToDirEntries(baseDirectory, config)),
+    body: JSON.stringify(await readToDirEntries(baseDirectory)),
   };
+}
+
+function immediatelyExpiringCookie(name: string) {
+  return cookie.serialize(name, '', {
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 0,
+    expires: new Date(),
+  });
 }

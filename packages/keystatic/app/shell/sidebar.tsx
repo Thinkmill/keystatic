@@ -21,13 +21,13 @@ import { NavList, NavItem, NavGroup } from '@voussoir/nav-list';
 import { css, breakpointQueries, tokenSchema } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
 
-import { Config, GitHubConfig } from '../../config';
+import { CloudConfig, Config, GitHubConfig } from '../../config';
 
 import l10nMessages from '../l10n/index.json';
 import { useRouter } from '../router';
-import { isGitHubConfig, pluralize } from '../utils';
+import { getRepoUrl, isGitHubConfig, pluralize } from '../utils';
 
-import { GitHubAppShellDataContext, useChanged } from './data';
+import { GitHubAppShellDataContext, useBranchInfo, useChanged } from './data';
 import { SidebarHeader } from './sidebar-header';
 
 export const SidebarContext = createContext<{
@@ -118,7 +118,8 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
         'keystatic-sidebar',
       ]}
     >
-      {isGitHubConfig(props.config) && <SidebarHeader config={props.config} />}
+      {(props.config.storage.kind === 'github' ||
+        props.config.storage.kind === 'cloud') && <SidebarHeader />}
 
       {/*
   ======================================================================
@@ -221,10 +222,14 @@ export const ViewerContext = createContext<
   FragmentData<typeof SidebarFooter_viewer> | undefined
 >(undefined);
 
-function SidebarFooter(props: { config: GitHubConfig }) {
+function SidebarFooter(props: { config: GitHubConfig | CloudConfig }) {
   const viewer = useContext(ViewerContext);
   const appShellData = useContext(GitHubAppShellDataContext);
-  const fork = appShellData?.data?.repository?.forks.nodes?.[0];
+  const fork =
+    appShellData?.data?.repository &&
+    'forks' in appShellData.data.repository &&
+    appShellData.data.repository.forks.nodes?.[0];
+  const branchInfo = useBranchInfo();
   return (
     <Flex
       elementType="header"
@@ -241,24 +246,34 @@ function SidebarFooter(props: { config: GitHubConfig }) {
         id="nav-title-id"
         truncate
       >
-        {props.config.storage.repo.name}
+        {props.config.storage.kind === 'github'
+          ? props.config.storage.repo.name
+          : props.config.storage.project}
       </Text>
       <MenuTrigger direction="top">
         <ActionButton prominence="low" aria-label="app actions">
-          <Image
-            alt={`${viewer?.name ?? viewer?.login} avatar`}
-            borderRadius="full"
-            overflow="hidden"
-            aspectRatio="1"
-            height="xsmall"
-            src={viewer?.avatarUrl ?? ''}
-          />
+          {props.config.storage.kind === 'github' && (
+            <Image
+              alt={`${viewer?.name ?? viewer?.login} avatar`}
+              borderRadius="full"
+              overflow="hidden"
+              aspectRatio="1"
+              height="xsmall"
+              src={viewer?.avatarUrl ?? ''}
+            />
+          )}
           <Icon src={chevronDownIcon} />
         </ActionButton>
         <Menu
           onAction={key => {
             if (key === 'logout') {
-              alert('TODO: logout');
+              if (props.config.storage.kind === 'github') {
+                window.location.href = '/api/keystatic/github/logout';
+              }
+              if (props.config.storage.kind === 'cloud') {
+                localStorage.removeItem('keystatic-cloud-access-token');
+                window.location.reload();
+              }
             }
             if (key === 'profile') {
               window.open(
@@ -269,14 +284,14 @@ function SidebarFooter(props: { config: GitHubConfig }) {
             }
             if (key === 'repository') {
               window.open(
-                `https://github.com/${props.config.storage.repo.owner}/${props.config.storage.repo.name}`,
+                getRepoUrl(branchInfo),
                 '_blank',
                 'noopener,noreferrer'
               );
             }
-            if (key === 'fork') {
+            if (key === 'fork' && fork) {
               window.open(
-                `https://github.com/${fork?.owner.login}/${fork?.name}`,
+                `https://github.com/${fork.owner.login}/${fork.name}`,
                 '_blank',
                 'noopener,noreferrer'
               );
@@ -286,7 +301,9 @@ function SidebarFooter(props: { config: GitHubConfig }) {
           <Item key="logout">Log out</Item>
           <Section title="Github">
             {[
-              <Item key="profile">Profile</Item>,
+              ...(props.config.storage.kind === 'github'
+                ? [<Item key="profile">Profile</Item>]
+                : []),
               <Item key="repository">Repository</Item>,
               ...(fork ? [<Item key="fork">Fork</Item>] : []),
             ]}

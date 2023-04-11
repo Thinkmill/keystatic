@@ -17,7 +17,7 @@ import { Heading, Text } from '@voussoir/typography';
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
 import { Grid } from '@voussoir/layout';
-import { BranchInfoContext, useRepositoryId } from './shell/data';
+import { BranchInfoContext, Ref_base, useRepositoryId } from './shell/data';
 
 type BranchPickerProps = {
   allBranches: string[];
@@ -200,26 +200,11 @@ export function useCreateBranchMutation() {
         createRef(input: $input) {
           __typename
           ref {
-            __typename
-            id
-            name
-            target {
-              __typename
-              id
-              oid
-              ... on Commit {
-                tree {
-                  id
-                  oid
-                }
-              }
-            }
-            associatedPullRequests(states: [OPEN]) {
-              totalCount
-            }
+            ...Ref_base
           }
         }
       }
+      ${Ref_base}
     ` as import('../__generated__/ts-gql/CreateBranch').type
   );
 }

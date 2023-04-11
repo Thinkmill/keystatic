@@ -36,7 +36,6 @@ import {
   getCollectionPath,
   getEntriesInCollectionWithTreeKey,
   getRepoUrl,
-  isGitHubConfig,
 } from './utils';
 
 type CollectionPageProps = {
@@ -72,7 +71,8 @@ export function CollectionPage(props: CollectionPageProps) {
           <Item key="collection">{collectionConfig.label}</Item>
         </Breadcrumbs>
 
-        {isGitHubConfig(config) && (
+        {(config.storage.kind === 'github' ||
+          config.storage.kind === 'cloud') && (
           <ActionMenu
             prominence="low"
             onAction={key => {
@@ -80,7 +80,7 @@ export function CollectionPage(props: CollectionPageProps) {
                 case 'view':
                   let collectionPath = `/tree/${branchInfo.currentBranch}/${collection}`;
                   window.open(
-                    `${getRepoUrl(config)}${collectionPath}`,
+                    `${getRepoUrl(branchInfo)}${collectionPath}`,
                     '_blank',
                     'noopener,noreferrer'
                   );

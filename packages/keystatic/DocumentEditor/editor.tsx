@@ -50,6 +50,8 @@ export function _createDocumentEditor(
               withVoidElements(
                 withLayouts(
                   withCodeBlock(
+                    documentFeatures,
+                    componentBlocks,
                     withDocumentFeaturesNormalization(
                       documentFeatures,
                       baseEditor
@@ -268,13 +270,14 @@ function withBlocksSchema(editor: Editor): Editor {
         );
         return;
       }
-
-      for (const [index, childNode] of node.children.entries()) {
+      let didUpdate = false;
+      for (const [index, childNode] of [...node.children.entries()].reverse()) {
         const childPath = [...path, index];
         if (info.kind === 'inlines') {
           if (!Text.isText(childNode) && isBlock(childNode)) {
             handleNodeInInvalidPosition(editor, [childNode, childPath], path);
-            return;
+            didUpdate = true;
+            continue;
           }
         } else {
           if (!isBlock(childNode)) {
@@ -283,13 +286,18 @@ function withBlocksSchema(editor: Editor): Editor {
               { type: info.blockToWrapInlinesIn, children: [] },
               { at: childPath }
             );
-            return;
+            didUpdate = true;
+            continue;
           }
           if (!info.allowedChildren.has(childNode.type)) {
             handleNodeInInvalidPosition(editor, [childNode, childPath], path);
-            return;
+            didUpdate = true;
+            continue;
           }
         }
+      }
+      if (didUpdate) {
+        return;
       }
     }
     normalizeNode([node, path]);
@@ -300,16 +308,16 @@ function withBlocksSchema(editor: Editor): Editor {
 function handleNodeInInvalidPosition(
   editor: Editor,
   [node, path]: NodeEntry<Block>,
-  parentPath: Path
+  ancestorPath: Path
 ) {
   const nodeType = node.type;
   const childNodeInfo = editorSchema[nodeType];
   // the parent of a block will never be an inline so this casting is okay
-  const parentNode = Node.get(editor, parentPath) as Block | Editor;
+  const ancestorNode = Node.get(editor, ancestorPath) as Block | Editor;
 
-  const parentNodeType = Editor.isEditor(parentNode)
+  const parentNodeType = Editor.isEditor(ancestorNode)
     ? 'editor'
-    : parentNode.type;
+    : ancestorNode.type;
 
   const parentNodeInfo = editorSchema[parentNodeType];
 
@@ -336,21 +344,21 @@ function handleNodeInInvalidPosition(
     return;
   }
 
-  const info = editorSchema[parentNode.type || 'editor'];
+  const info = editorSchema[ancestorNode.type || 'editor'];
   if (info?.kind === 'blocks' && info.allowedChildren.has(nodeType)) {
-    if (parentPath.length === 0) {
+    if (ancestorPath.length === 0) {
       Transforms.moveNodes(editor, { at: path, to: [path[0] + 1] });
     } else {
-      Transforms.moveNodes(editor, { at: path, to: Path.next(parentPath) });
+      Transforms.moveNodes(editor, { at: path, to: Path.next(ancestorPath) });
     }
     return;
   }
-  if (Editor.isEditor(parentNode)) {
+  if (Editor.isEditor(ancestorNode)) {
     Transforms.moveNodes(editor, { at: path, to: [path[0] + 1] });
     Transforms.unwrapNodes(editor, { at: [path[0] + 1] });
     return;
   }
-  handleNodeInInvalidPosition(editor, [node, path], parentPath.slice(0, -1));
+  handleNodeInInvalidPosition(editor, [node, path], ancestorPath.slice(0, -1));
 }
 
 // to print the editor schema in Graphviz if you want to visualize it
