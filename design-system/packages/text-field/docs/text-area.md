@@ -112,7 +112,7 @@ as the user types.
   label="Dynamic height"
   description="Add or remove text to see the height change."
   defaultValue="A voussoir (/vuˈswɑːr/) is a wedge-shaped element, typically a stone, which is used in building an arch or vault."
-  width="size.container.xsmall"
+  width="container.xsmall"
   maxWidth="100%"
 />
 ```
@@ -125,8 +125,8 @@ value, and allow the user to scroll the content.
   label="Fixed height"
   description="Scroll to see the rest of the content."
   defaultValue="Although each unit in an arch or vault is a voussoir, two units are of distinct functional importance: the keystone and the springer. The keystone is the centre stone or masonry unit at the apex of an arch. The springer is the lowest voussoir on each side, located where the curve of the arch springs from the vertical support or abutment of the wall or pier."
-  height={120}
-  width="size.container.xsmall"
+  height="scale.1250"
+  width="container.xsmall"
   maxWidth="100%"
 />
 ```

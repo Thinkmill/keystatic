@@ -78,7 +78,7 @@ created in the _explicit grid_. These rows will be auto sized by default, or can
 have a size specified with the [`autoRows` prop](#auto-rows).
 
 ```jsx {% live=true %}
-<Grid rows={['medium', '2fr', '1fr']} gap="medium" height={240}>
+<Grid rows={['element.medium', '2fr', '1fr']} gap="medium" height="scale.3000">
   <Placeholder />
   <Placeholder />
   <Placeholder />
@@ -96,7 +96,7 @@ default, or can have a size specified with the
 [`autoColumns` prop](#auto-columns).
 
 ```jsx {% live=true %}
-<Grid columns={['medium', '2fr', '1fr']} gap="medium">
+<Grid columns={['element.medium', '2fr', '1fr']} gap="medium">
   <Placeholder />
   <Placeholder />
   <Placeholder />
@@ -111,7 +111,7 @@ explicitly positioning into a row that is out of range, or by the auto-placement
 algorithm creating additional rows.
 
 ```jsx {% live=true %}
-<Grid columns={['1fr', '1fr']} autoRows="large" gap="medium">
+<Grid columns={['1fr', '1fr']} autoRows="element.large" gap="medium">
   <Placeholder />
   <Placeholder />
   <Placeholder />
@@ -128,7 +128,7 @@ by explicitly positioning into a column that is out of range, or by the
 auto-placement algorithm creating additional columns.
 
 ```jsx {% live=true %}
-<Grid autoColumns={100} autoRows="large" gap="medium">
+<Grid autoColumns="scale.1200" autoRows="element.large" gap="medium">
   <Placeholder gridColumn="1/4" />
   <Placeholder gridColumn="2" />
   <Placeholder />
@@ -150,8 +150,8 @@ gridArea prop to declare which area it should be placed in.
 <Grid
   areas={['header  header', 'sidebar content', 'footer  footer']}
   columns={['1fr', '3fr']}
-  rows={['large', 'auto', 'large']}
-  height={240}
+  rows={['element.large', 'auto', 'element.large']}
+  height="scale.3000"
   gap="medium"
 >
   <Placeholder gridArea="header">Header</Placeholder>
@@ -171,8 +171,8 @@ using a dimension variable. Resize your browser to see how items reflow.
 
 ```jsx {% live=true %}
 <Grid
-  columns={repeat('auto-fit', 'large')}
-  autoRows="large"
+  columns={repeat('auto-fit', 'element.large')}
+  autoRows="element.large"
   justifyContent="center"
   gap="medium"
 >

@@ -6,6 +6,8 @@ import {
   useStyleProps,
   GridStyleProps,
   filterStyleProps,
+  LooseSizeDimension,
+  sizeResolver,
 } from '@voussoir/style';
 
 // Resolvers
@@ -77,6 +79,23 @@ function flexWrapValue(value: unknown) {
 // Grid
 // ----------------------------------------------------------------------------
 
+type FractionUnit = `${number}fr`;
+type GridDimension = LooseSizeDimension | FractionUnit;
+
+function isFractionUnit(value: string): value is FractionUnit {
+  return value.endsWith('fr');
+}
+function gridSizeResolver(value: GridDimension) {
+  if (typeof value === 'number') {
+    return value;
+  }
+  if (isFractionUnit(value)) {
+    return value;
+  }
+
+  return sizeResolver(value);
+}
+
 export function useGridStyleProps(props: GridStyleProps) {
   return useStyleProps({ inline: false, ...props }, gridStyleProps);
 }
@@ -91,18 +110,64 @@ export const gridStyleProps = {
   ...sharedStyleProps,
   inline: resolveProp('display', displayInline('grid')),
   autoFlow: resolveProp('gridAutoFlow'),
-  autoColumns: resolvePropWithPath('gridAutoColumns', 'size.element'),
-  autoRows: resolvePropWithPath('gridAutoRows', 'size.element'),
+  // @ts-ignore FIXME: The `StyleResolver` type is not generic enough to support this.
+  autoColumns: resolveProp('gridAutoColumns', sizeResolver),
+  // @ts-ignore FIXME: The `StyleResolver` type is not generic enough to support this.
+  autoRows: resolveProp('gridAutoRows', sizeResolver),
   // @ts-ignore FIXME: The `StyleResolver` type is not generic enough to support this.
   areas: resolveProp('gridTemplateAreas', gridTemplateAreasValue),
-  columns: resolveProp('gridTemplateColumns'),
-  rows: resolveProp('gridTemplateRows'),
+  // @ts-ignore FIXME: The `StyleResolver` type is not generic enough to support this.
+  columns: resolveProp('gridTemplateColumns', gridTemplateValue),
+  // @ts-ignore FIXME: The `StyleResolver` type is not generic enough to support this.
+  rows: resolveProp('gridTemplateRows', gridTemplateValue),
   justifyItems: resolveProp('justifyItems'),
   justifyContent: resolveProp('justifyContent'),
   alignItems: resolveProp('alignItems'),
   alignContent: resolveProp('alignContent'),
 };
 
-function gridTemplateAreasValue<T>(value: T[]) {
-  return value.map(v => `"${v}"`).join('\n');
+function gridTemplateAreasValue<T>(values: T[]) {
+  return values.map(value => `"${value}"`).join('\n');
+}
+function gridTemplateValue<T extends GridDimension>(value: T | T[]) {
+  if (Array.isArray(value)) {
+    return value.map(gridSizeResolver).join(' ');
+  }
+
+  return value;
+}
+
+// Utils
+// ============================================================================
+
+/**
+ * Can be used to make a repeating fragment of the columns or rows list.
+ * See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/repeat).
+ * @param count - The number of times to repeat the fragment.
+ * @param repeat - The fragment to repeat.
+ */
+export function repeat(
+  count: number | 'auto-fill' | 'auto-fit',
+  repeat: GridDimension
+): string {
+  return `repeat(${count}, ${gridSizeResolver(repeat)})`;
+}
+
+/**
+ * Defines a size range greater than or equal to min and less than or equal to max.
+ * See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/minmax).
+ * @param min - The minimum size.
+ * @param max - The maximum size.
+ */
+export function minmax(min: GridDimension, max: GridDimension): string {
+  return `minmax(${gridSizeResolver(min)}, ${gridSizeResolver(max)})`;
+}
+
+/**
+ * Clamps a given size to an available size.
+ * See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/fit-content).
+ * @param dimension - The size to clamp.
+ */
+export function fitContent(dimension: GridDimension): string {
+  return `fit-content(${gridSizeResolver(dimension)})`;
 }

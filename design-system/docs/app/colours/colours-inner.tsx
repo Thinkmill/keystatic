@@ -1,7 +1,7 @@
 'use client';
 import { infoIcon } from '@voussoir/icon/icons/infoIcon';
 import { Icon } from '@voussoir/icon';
-import { Box, BoxProps, Grid, Flex } from '@voussoir/layout';
+import { Box, BoxProps, Grid, Flex, repeat } from '@voussoir/layout';
 import { ColorForeground, tokenSchema } from '@voussoir/style';
 import { Heading, Text } from '@voussoir/typography';
 
@@ -44,9 +44,9 @@ export function Colours(): JSX.Element {
           </Heading>
           <Grid
             columns={{
-              mobile: 'repeat(2, 1fr)',
-              tablet: 'repeat(3, 1fr)',
-              desktop: 'repeat(4, 1fr)',
+              mobile: repeat(2, '1fr'),
+              tablet: repeat(3, '1fr'),
+              desktop: repeat(4, '1fr'),
             }}
             rowGap="large"
             columnGap="regular"

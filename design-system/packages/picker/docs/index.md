@@ -305,7 +305,7 @@ met, prompting the user to adjust what they had originally selected.
 The menu will assume the `width` of the invoking trigger, by default.
 
 ```jsx {% live=true %}
-<Picker label="Density" width={320}>
+<Picker label="Density" width="scale.3600">
   <Item key="compact">Compact</Item>
   <Item key="regular">Regular</Item>
   <Item key="spacious">Spacious</Item>

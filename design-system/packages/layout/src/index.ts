@@ -5,7 +5,13 @@ export { Divider } from './Divider';
 export { Flex } from './Flex';
 export { Grid } from './Grid';
 export { Surface, useSurface } from './Surface';
-export { useFlexStyleProps, useGridStyleProps } from './resolvers';
+export {
+  fitContent,
+  minmax,
+  repeat,
+  useFlexStyleProps,
+  useGridStyleProps,
+} from './resolvers';
 
 export type { AspectRatioProps } from './AspectRatio';
 export type { BoxProps } from './Box';

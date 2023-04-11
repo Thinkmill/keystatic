@@ -5,7 +5,7 @@ import { checkCircle2Icon } from '@voussoir/icon/icons/checkCircle2Icon';
 import { infoIcon } from '@voussoir/icon/icons/infoIcon';
 import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
 import { Icon } from '@voussoir/icon';
-import { Grid } from '@voussoir/layout';
+import { Grid, minmax } from '@voussoir/layout';
 import { Content, SlotProvider } from '@voussoir/slots';
 import { filterDOMProps, isReactText, useHasChild } from '@voussoir/utils';
 import { DOMProps } from '@voussoir/types';
@@ -107,8 +107,8 @@ export function Notice(props: NoticeProps) {
       alignItems="center"
       areas={['icon heading', 'icon content']}
       columnGap="medium"
-      columns={`${tokenSchema.size.icon.medium} auto`}
-      rows={`minmax(${tokenSchema.size.icon.medium}, auto) auto`}
+      columns={['icon.medium', 'auto']}
+      rows={`${minmax('icon.medium', 'auto')} auto`}
     >
       <Icon
         src={icon}

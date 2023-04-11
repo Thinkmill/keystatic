@@ -449,7 +449,8 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
                 gridArea: 'thumbnail',
                 marginEnd: 'regular',
                 overflow: 'hidden',
-                height: density === 'compact' ? 'small' : 'regular',
+                height:
+                  density === 'compact' ? 'element.small' : 'element.regular',
                 UNSAFE_className: 'ksv-list-view-item-thumbnail',
               },
               button: {

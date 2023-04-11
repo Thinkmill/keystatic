@@ -1,3 +1,4 @@
+import { assertNever } from 'emery';
 import { get } from 'lodash';
 
 import { tokenSchema } from './tokens';
@@ -57,21 +58,33 @@ function isDimensionKey(value: string): value is DimensionKey {
   // @ts-expect-error
   return !!tokenSchema.size[prop][key];
 }
-function size(cssProp: MaybeArray<CSSProp>) {
-  const resolver = (value: LooseSizeDimension) => {
-    if (typeof value === 'number') {
+export function sizeResolver(value: LooseSizeDimension) {
+  if (typeof value === 'number') {
+    if (value === 0) {
       return `${value}px`;
     }
+    assertNever(value);
+  }
 
-    if (isDimensionKey(value)) {
-      let [prop, key] = value.split('.');
-      // @ts-expect-error
-      return tokenSchema.size[prop][key];
-    }
+  if (isDimensionKey(value)) {
+    let [prop, key] = value.split('.');
+    // @ts-expect-error
+    return tokenSchema.size[prop][key];
+  }
 
+  if (
+    value === 'auto' ||
+    value === 'inherit' ||
+    value === '100%' ||
+    value === '100vh' ||
+    value === '100vw'
+  ) {
     return value;
-  };
-  return [cssProp, resolver];
+  }
+  assertNever(value);
+}
+function size(cssProp: MaybeArray<CSSProp>) {
+  return [cssProp, sizeResolver];
 }
 function space(prop: MaybeArray<CSSProp>) {
   return resolvePropWithPath(prop, 'size.space');

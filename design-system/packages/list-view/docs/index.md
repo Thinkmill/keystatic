@@ -45,7 +45,7 @@ return (
     aria-label="list view collection example"
     items={items}
     selectionMode="multiple"
-    height={220}
+    height="scale.3000"
   >
     {item => <Item>{item.name}</Item>}
   </ListView>
@@ -255,7 +255,7 @@ let items = [
 ];
 
 return (
-  <Grid autoFlow={{ tablet: 'column' }} gap="large" maxWidth={400}>
+  <Grid autoFlow={{ tablet: 'column' }} gap="large" maxWidth="scale.5000">
     <ListView
       overflowMode="truncate"
       aria-label="list view truncate example"

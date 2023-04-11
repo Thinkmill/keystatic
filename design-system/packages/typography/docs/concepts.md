@@ -92,7 +92,7 @@ props are recommended where possible to reduce the amount of custom CSS in your
 application.
 
 ```jsx {% live=true %}
-<Flex height={100}>
+<Flex direction="column">
   <Text alignSelf="end">Text content</Text>
 </Flex>
 ```
@@ -179,7 +179,7 @@ the title attribute.
 <!-- prettier is fighting itself -->
 <!-- prettier-ignore -->
 ```jsx {% live=true %}
-<Flex direction="column" gap="large" width={240}>
+<Flex direction="column" gap="large" width="scale.3000">
   <Text truncate>
     The title attribute is automatically added to this example because children
     is a string.
