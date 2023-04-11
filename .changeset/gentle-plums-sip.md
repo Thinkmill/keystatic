@@ -1,26 +1,27 @@
 ---
-'@voussoir/number-field': patch
-'@voussoir/search-field': patch
-'@voussoir/text-field': patch
-'@voussoir/typography': patch
-'@voussoir/list-view': patch
+'@voussoir/action-group': patch
+'@voussoir/badge': patch
+'@voussoir/button': patch
 '@voussoir/checkbox': patch
 '@voussoir/combobox': patch
-'@voussoir/nav-list': patch
-'@voussoir/overlays': patch
-'@voussoir/progress': patch
-'@voussoir/button': patch
-'@voussoir/layout': patch
-'@voussoir/notice': patch
-'@voussoir/picker': patch
-'@voussoir/badge': patch
+'@voussoir/docs': patch
 '@voussoir/image': patch
+'@voussoir/layout': patch
+'@voussoir/link': patch
+'@voussoir/list-view': patch
+'@voussoir/nav-list': patch
+'@voussoir/notice': patch
+'@voussoir/number-field': patch
+'@voussoir/overlays': patch
+'@voussoir/picker': patch
+'@voussoir/progress': patch
 '@voussoir/radio': patch
+'@voussoir/search-field': patch
 '@voussoir/style': patch
 '@voussoir/table': patch
-'@voussoir/link': patch
 '@voussoir/tabs': patch
-'@voussoir/docs': patch
+'@voussoir/text-field': patch
+'@voussoir/typography': patch
 '@keystatic/core': patch
 ---
 
