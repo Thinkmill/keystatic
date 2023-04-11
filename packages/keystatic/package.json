@@ -20,6 +20,10 @@
       "module": "./reader/dist/keystatic-core-reader.esm.js",
       "default": "./reader/dist/keystatic-core-reader.cjs.js"
     },
+    "./api/utils": {
+      "module": "./api/utils/dist/keystatic-core-api-utils.esm.js",
+      "default": "./api/utils/dist/keystatic-core-api-utils.cjs.js"
+    },
     "./renderer": {
       "module": "./renderer/dist/keystatic-core-renderer.esm.js",
       "default": "./renderer/dist/keystatic-core-renderer.cjs.js"
@@ -163,6 +167,7 @@
     "entrypoints": [
       "index.ts",
       "api/generic.ts",
+      "api/utils.ts",
       "reader.ts",
       "renderer.tsx",
       "ui.tsx"

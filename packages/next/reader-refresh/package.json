@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystatic-next-reader-refresh.cjs.js",
+  "module": "dist/keystatic-next-reader-refresh.esm.js"
+}

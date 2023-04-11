@@ -3,6 +3,8 @@ import {
   APIRouteConfig,
   makeGenericAPIRouteHandler,
 } from '@keystatic/core/api/generic';
+import { createWatcher } from './watch';
+import { getReaderKey, getResolvedDirectories } from './utils';
 
 export function makeAPIRouteHandler(_config: APIRouteConfig) {
   const handler = makeGenericAPIRouteHandler(_config, {
@@ -12,6 +14,47 @@ export function makeAPIRouteHandler(_config: APIRouteConfig) {
     req: NextApiRequest,
     res: NextApiResponse
   ) {
+    const parsedUrl = new URL(req.url || '', 'http://localhost');
+    if (
+      parsedUrl.pathname.startsWith('/api/keystatic/reader-refresh/') &&
+      process.env.NODE_ENV === 'development'
+    ) {
+      const key = parsedUrl.pathname.slice(
+        '/api/keystatic/reader-refresh/'.length
+      );
+      if (process.env.NODE_ENV !== 'development') {
+        return new Response(null, { status: 404 });
+      }
+      const directories = getResolvedDirectories(
+        _config.config,
+        _config.localBaseDirectory || ''
+      );
+      const readerKey = await getReaderKey(directories);
+      if (key !== readerKey) {
+        res.status(200).send(readerKey);
+        return;
+      }
+
+      const { watch } = require('chokidar');
+
+      const watcher = watch(directories, { ignored: [/node_modules/] });
+      const waitForNextEvent = createWatcher(watcher);
+      try {
+        while (true) {
+          await waitForNextEvent();
+          const readerKey = await getReaderKey(directories);
+          if (key !== readerKey) {
+            res.status(200).send(readerKey);
+            return;
+          }
+        }
+      } catch {
+        res.status(500).send(null);
+        return;
+      } finally {
+        watcher.close();
+      }
+    }
     const { body, headers, status } = await handler({
       headers: {
         get(name: string) {
