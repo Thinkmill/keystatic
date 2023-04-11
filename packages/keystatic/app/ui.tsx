@@ -10,7 +10,7 @@ import {
 
 import { Notice } from '@voussoir/notice';
 
-import { Config } from '../config';
+import { CloudConfig, Config, GitHubConfig } from '../config';
 import { CollectionPage } from './CollectionPage';
 import { CreateItem } from './create-item';
 import { DashboardPage } from './dashboard';
@@ -22,7 +22,7 @@ import { FromTemplateDeploy } from './onboarding/from-template-deploy';
 import { CreatedGitHubApp } from './onboarding/created-github-app';
 import { KeystaticSetup } from './onboarding/setup';
 import { RepoNotFound } from './onboarding/repo-not-found';
-import { isGitHubConfig, redirectToCloudAuth } from './utils';
+import { isCloudConfig, isGitHubConfig, redirectToCloudAuth } from './utils';
 import { Text } from '@voussoir/typography';
 import { AppSlugProvider } from './onboarding/install-app';
 import {
@@ -94,18 +94,20 @@ function PageInner({ config }: { config: Config }) {
   let branch = null,
     parsedParams,
     basePath: string;
-  let wrapper: (element: ReactElement) => ReactElement = x => x;
   if (
     config.storage.kind === 'cloud' &&
     params.join('/') === 'cloud/oauth/callback'
   ) {
     return <KeystaticCloudAuthCallback config={config} />;
   }
-  if (config.storage.kind === 'github' || config.storage.kind === 'cloud') {
+  let wrapper: (element: ReactElement) => ReactElement = x => x;
+  if (isGitHubConfig(config) || isCloudConfig(config)) {
     wrapper = element => (
-      <GitHubAppShellDataProvider config={config}>
-        {element}
-      </GitHubAppShellDataProvider>
+      <AuthWrapper config={config}>
+        <GitHubAppShellDataProvider config={config}>
+          {element}
+        </GitHubAppShellDataProvider>
+      </AuthWrapper>
     );
     if (params.length === 0) {
       return wrapper(<RedirectToBranch config={config} />);
@@ -191,14 +193,17 @@ function PageInner({ config }: { config: Config }) {
   );
 }
 
-function AuthWrapper(props: { config: Config; children: ReactElement }) {
+function AuthWrapper(props: {
+  config: GitHubConfig | CloudConfig;
+  children: ReactElement;
+}) {
   const [state, setState] = useState<'unknown' | 'valid' | 'explicit-auth'>(
-    props.config.storage.kind === 'local' ? 'valid' : 'unknown'
+    'unknown'
   );
   const router = useRouter();
   useEffect(() => {
     getAuth(props.config).then(auth => {
-      if (auth || props.config.storage.kind === 'local') {
+      if (auth) {
         setState('valid');
         return;
       }
@@ -272,9 +277,7 @@ export function Keystatic(props: {
     <AppSlugProvider value={props.appSlug}>
       <RouterProvider router={props.router}>
         <Provider config={props.config} Link={props.link}>
-          <AuthWrapper config={props.config}>
-            <PageInner config={props.config} />
-          </AuthWrapper>
+          <PageInner config={props.config} />
         </Provider>
       </RouterProvider>
     </AppSlugProvider>
