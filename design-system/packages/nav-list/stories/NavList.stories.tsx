@@ -10,12 +10,12 @@ import { NavList, NavGroup, NavItem } from '../src';
 
 storiesOf('Components/NavList', module)
   .add('default', () => (
-    <NavList UNSAFE_style={{ width: 240 }}>
+    <NavList width="alias.singleLineWidth">
       <NavItem href="#">Item</NavItem>
     </NavList>
   ))
   .add('current', () => (
-    <NavList UNSAFE_style={{ width: 240 }}>
+    <NavList width="alias.singleLineWidth">
       <NavItem href="#" aria-current="page">
         Current item
       </NavItem>
@@ -23,7 +23,7 @@ storiesOf('Components/NavList', module)
     </NavList>
   ))
   .add('long labels', () => (
-    <NavList UNSAFE_style={{ width: 240 }}>
+    <NavList width="alias.singleLineWidth">
       <NavItem href="#" aria-current="page">
         <Text>Labels should be concise, but may wrap when necessary</Text>
       </NavItem>
@@ -33,7 +33,7 @@ storiesOf('Components/NavList', module)
     </NavList>
   ))
   .add('icons', () => (
-    <NavList UNSAFE_style={{ width: 240 }}>
+    <NavList width="alias.singleLineWidth">
       <NavItem href="#" aria-current="page">
         <Icon src={homeIcon} />
         <Text>Home</Text>
@@ -49,7 +49,7 @@ storiesOf('Components/NavList', module)
     </NavList>
   ))
   .add('dividers', () => (
-    <NavList UNSAFE_style={{ width: 240 }}>
+    <NavList width="alias.singleLineWidth">
       <NavItem href="#">Top</NavItem>
       <Divider />
       <NavItem href="#" aria-current="page">
@@ -64,7 +64,7 @@ storiesOf('Components/NavList', module)
     </NavList>
   ))
   .add('groups', () => (
-    <NavList UNSAFE_style={{ width: 240 }}>
+    <NavList width="alias.singleLineWidth">
       <NavItem href="#">Item outside above</NavItem>
       <NavGroup title="Text only group">
         <NavItem href="#" aria-current="page">
