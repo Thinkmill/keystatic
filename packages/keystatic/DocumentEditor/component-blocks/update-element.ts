@@ -3,8 +3,7 @@ import { Editor, Element, Path, Transforms, Node, PathRef } from 'slate';
 
 import { areArraysEqual } from '../document-features-normalization';
 import { ChildField, ComponentBlock, ComponentSchema } from './api';
-import { getInitialPropsValue } from './initial-values';
-import { getKeysForArrayValue } from './preview-props';
+import { getInitialPropsValue, getKeysForArrayValue } from './initial-values';
 import { ReadonlyPropPath } from './utils';
 
 export function updateComponentBlockElementProps(

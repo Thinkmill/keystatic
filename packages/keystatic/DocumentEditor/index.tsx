@@ -41,7 +41,8 @@ import {
   getCellPathInDirection,
   TableSelectionProvider,
 } from './table/table-ui';
-import { _createDocumentEditor, isBlock } from './editor';
+import { isBlock } from './editor';
+import { _createDocumentEditor } from './create-editor';
 import { withHistory } from 'slate-history';
 import { withBlockMarkdownShortcuts } from './block-markdown-shortcuts';
 import { withBlockquote } from './blockquote/with-blockquote';

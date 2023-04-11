@@ -1,5 +1,4 @@
 import { assert } from 'emery';
-import { blobSha, sha1 } from './utils';
 
 type Changes = {
   additions: {
@@ -8,6 +7,25 @@ type Changes = {
   }[];
   deletions: string[];
 };
+
+export async function sha1(content: Uint8Array) {
+  const hashBuffer = await crypto.subtle.digest('SHA-1', content);
+  let str = '';
+  for (const byte of new Uint8Array(hashBuffer)) {
+    str += byte.toString(16).padStart(2, '0');
+  }
+  return str;
+}
+
+const textEncoder = new TextEncoder();
+
+export function blobSha(contents: Uint8Array) {
+  const blobPrefix = textEncoder.encode('blob ' + contents.length + '\0');
+  const array = new Uint8Array(blobPrefix.byteLength + contents.byteLength);
+  array.set(blobPrefix, 0);
+  array.set(contents, blobPrefix.byteLength);
+  return sha1(array);
+}
 
 export type TreeNode = { entry: TreeEntry; children?: Map<string, TreeNode> };
 
@@ -70,8 +88,6 @@ export function toTreeChanges(changes: Changes) {
   }
   return changesRoot;
 }
-
-const textEncoder = new TextEncoder();
 
 const SPACE_CHAR_CODE = 32;
 const space = new Uint8Array([SPACE_CHAR_CODE]);

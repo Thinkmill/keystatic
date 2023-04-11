@@ -6,7 +6,7 @@ import {
   InitialOrUpdateValueFromComponentPropField,
   ValueForComponentSchema,
 } from './api';
-import { getKeysForArrayValue, setKeysForArrayValue } from './preview-props';
+import { getKeysForArrayValue, setKeysForArrayValue } from './initial-values';
 
 const previewPropsToValueConverter: {
   [Kind in ComponentSchema['kind']]: (

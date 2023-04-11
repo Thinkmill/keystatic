@@ -22,20 +22,22 @@ import {
 import { ChildField, ComponentBlock, ComponentSchema, ArrayField } from './api';
 import {
   DocumentFeaturesForChildField,
-  findChildPropPaths,
   getAncestorSchemas,
   getDocumentFeaturesForChildField,
-  getValueAtPropPath,
   ReadonlyPropPath,
+} from './utils';
+import {
+  getValueAtPropPath,
   replaceValueAtPropPath,
   traverseProps,
-} from './utils';
-import { getInitialPropsValue } from './initial-values';
+} from './props-value';
+import { findChildPropPaths } from './child-prop-paths';
 import {
+  getInitialPropsValue,
   getKeysForArrayValue,
   getNewArrayElementKey,
   setKeysForArrayValue,
-} from './preview-props';
+} from './initial-values';
 import { isBlock } from '../editor';
 
 function getAncestorComponentBlock(editor: Editor) {

@@ -2,8 +2,9 @@ import { css } from '@voussoir/style';
 import React, { useContext, useMemo, ReactElement } from 'react';
 import { Element } from 'slate';
 import { ComponentBlock } from './api';
-import { createGetPreviewProps, getKeysForArrayValue } from './preview-props';
+import { createGetPreviewProps } from './preview-props';
 import { ReadonlyPropPath } from './utils';
+import { getKeysForArrayValue } from './initial-values';
 
 export const ChildrenByPathContext = React.createContext<
   Record<string, ReactElement>

@@ -1,12 +1,36 @@
 import { assertNever } from 'emery';
 
 import { ComponentSchema, ComponentBlock } from './api';
-import {
-  getKeysForArrayValue,
-  getNewArrayElementKey,
-  setKeysForArrayValue,
-} from './preview-props';
-import { findChildPropPaths } from './utils';
+
+import { findChildPropPaths } from './child-prop-paths';
+
+const arrayValuesToElementKeys = new WeakMap<
+  readonly unknown[],
+  readonly string[]
+>();
+
+let counter = 0;
+
+export function getKeysForArrayValue(value: readonly unknown[]) {
+  if (!arrayValuesToElementKeys.has(value)) {
+    arrayValuesToElementKeys.set(
+      value,
+      Array.from({ length: value.length }, getNewArrayElementKey)
+    );
+  }
+  return arrayValuesToElementKeys.get(value)!;
+}
+
+export function setKeysForArrayValue(
+  value: readonly unknown[],
+  elementIds: readonly string[]
+) {
+  arrayValuesToElementKeys.set(value, elementIds);
+}
+
+export function getNewArrayElementKey() {
+  return (counter++).toString();
+}
 
 export function getInitialValue(type: string, componentBlock: ComponentBlock) {
   const props = getInitialPropsValue({

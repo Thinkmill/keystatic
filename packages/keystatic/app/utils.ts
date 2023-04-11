@@ -2,7 +2,7 @@ import { fromUint8Array } from 'js-base64';
 import { isDefined } from 'emery';
 
 import { Config, GitHubConfig, LocalConfig } from '../config';
-import { CloudConfig, ComponentSchema, fields, SlugFormField } from '../src';
+import { CloudConfig, ComponentSchema, SlugFormField } from '../src';
 import {
   getCollectionFormat,
   getCollectionItemPath,
@@ -14,6 +14,7 @@ import {
 import { collectDirectoriesUsedInSchema, getTreeKey } from './tree-key';
 import { getTreeNodeAtPath, TreeNode } from './trees';
 import pkgJson from '../package.json';
+import { object } from '../DocumentEditor/component-blocks/fields/object';
 
 export * from './path-utils';
 
@@ -36,25 +37,6 @@ export function keyedEntries<T extends Record<string, any>>(
 }
 
 export type MaybePromise<T> = T | Promise<T>;
-
-export async function sha1(content: Uint8Array) {
-  const hashBuffer = await crypto.subtle.digest('SHA-1', content);
-  let str = '';
-  for (const byte of new Uint8Array(hashBuffer)) {
-    str += byte.toString(16).padStart(2, '0');
-  }
-  return str;
-}
-
-const textEncoder = new TextEncoder();
-
-export function blobSha(contents: Uint8Array) {
-  const blobPrefix = textEncoder.encode('blob ' + contents.length + '\0');
-  const array = new Uint8Array(blobPrefix.byteLength + contents.byteLength);
-  array.set(blobPrefix, 0);
-  array.set(contents, blobPrefix.byteLength);
-  return sha1(array);
-}
 
 export function isGitHubConfig(config: Config): config is GitHubConfig {
   return config.storage.kind === 'github';
@@ -106,7 +88,7 @@ export function getEntriesInCollectionWithTreeKey(
   rootTree: Map<string, TreeNode>
 ): { key: string; slug: string }[] {
   const collectionConfig = config.collections![collection];
-  const schema = fields.object(collectionConfig.schema);
+  const schema = object(collectionConfig.schema);
   const formatInfo = getCollectionFormat(config, collection);
   const extension = getDataFileExtension(formatInfo);
   const glob = getSlugGlobForCollection(config, collection);
@@ -189,6 +171,8 @@ export const KEYSTATIC_CLOUD_API_URL = 'https://api.keystatic.cloud';
 export const KEYSTATIC_CLOUD_HEADERS = {
   'x-keystatic-version': pkgJson.version,
 };
+
+const textEncoder = new TextEncoder();
 
 export async function redirectToCloudAuth(from: string, config: Config) {
   if (config.storage.kind !== 'cloud') {

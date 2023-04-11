@@ -2,17 +2,16 @@ import LRUCache from 'lru-cache';
 import { useCallback, useMemo } from 'react';
 import { Config } from '../config';
 import { SlugFieldInfo } from '../DocumentEditor/component-blocks/fields/text/ui';
-import { transformProps } from '../DocumentEditor/component-blocks/utils';
+import { transformProps } from '../DocumentEditor/component-blocks/props-value';
 import { ComponentSchema, fields } from '../src';
 import { validateComponentBlockProps } from '../validate-component-block-props';
 import { getAuth } from './auth';
 import { loadDataFile, parseSerializedFormField } from './required-files';
 import { useTree } from './shell/data';
 import { getDirectoriesForTreeKey, getTreeKey } from './tree-key';
-import { TreeNode, getTreeNodeAtPath, TreeEntry } from './trees';
+import { TreeNode, getTreeNodeAtPath, TreeEntry, blobSha } from './trees';
 import { LOADING, useData } from './useData';
 import {
-  blobSha,
   FormatInfo,
   getEntryDataFilepath,
   isGitHubConfig,

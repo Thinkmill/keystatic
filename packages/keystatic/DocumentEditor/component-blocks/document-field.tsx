@@ -1,9 +1,10 @@
 import { Descendant } from 'slate';
 import { fixPath } from '../../app/path-utils';
 import { DocumentFeatures } from '../document-features';
-import { ComponentBlock, fields, ComponentSchema } from './api';
+import { ComponentBlock, ComponentSchema } from './api';
 import { getSrcPrefix } from './fields/image';
-import { transformProps } from './utils';
+import { transformProps } from './props-value';
+import { object } from './fields/object';
 
 export type CollectedFile = {
   data: Uint8Array;
@@ -22,7 +23,7 @@ export function collectFiles(
     if (node.type === 'component-block') {
       const componentBlock = componentBlocks[node.component];
       if (!componentBlock) return node;
-      const schema = fields.object(componentBlock.schema);
+      const schema = object(componentBlock.schema);
       return {
         ...node,
         props: transformPropsToFiles(
@@ -128,7 +129,7 @@ export function deserializeFiles(
     if (node.type === 'component-block') {
       const componentBlock = componentBlocks[node.component];
       if (!componentBlock) return node;
-      const schema = fields.object(componentBlock.schema);
+      const schema = object(componentBlock.schema);
       return {
         ...node,
         props: deserializeProps(

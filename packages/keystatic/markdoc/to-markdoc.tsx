@@ -1,8 +1,6 @@
 import { Node, Ast, NodeType } from '@markdoc/markdoc';
-import {
-  getValueAtPropPath,
-  ReadonlyPropPath,
-} from '../DocumentEditor/component-blocks/utils';
+import { ReadonlyPropPath } from '../DocumentEditor/component-blocks/utils';
+import { getValueAtPropPath } from '../DocumentEditor/component-blocks/props-value';
 import { areArraysEqual } from '../DocumentEditor/document-features-normalization';
 import { Mark } from '../DocumentEditor/utils';
 import { ComponentBlock, ComponentSchema } from '../src';

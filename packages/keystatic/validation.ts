@@ -1,5 +1,5 @@
 import { Text, Editor, Descendant } from 'slate';
-import { createDocumentEditorForNormalization } from './DocumentEditor/editor';
+import { createDocumentEditorForNormalization } from './DocumentEditor/create-editor';
 import { ComponentBlock } from './DocumentEditor/component-blocks/api';
 import {
   ElementFromValidation,

@@ -1,7 +1,6 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
 import { Item, Section } from '@react-stately/collections';
-import { FragmentData, gql } from '@ts-gql/tag/no-transform';
 import {
   createContext,
   ReactNode,
@@ -29,6 +28,7 @@ import { getRepoUrl, isCloudConfig, isGitHubConfig, pluralize } from '../utils';
 
 import { GitHubAppShellDataContext, useBranchInfo, useChanged } from './data';
 import { SidebarHeader } from './sidebar-header';
+import { ViewerContext } from './sidebar-data';
 
 export const SidebarContext = createContext<{
   sidebarIsOpen: boolean;
@@ -210,20 +210,6 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
     </Flex>
   );
 }
-
-export const SidebarFooter_viewer = gql`
-  fragment SidebarFooter_viewer on User {
-    id
-    name
-    login
-    avatarUrl
-    databaseId
-  }
-` as import('../../__generated__/ts-gql/SidebarFooter_viewer').type;
-
-export const ViewerContext = createContext<
-  FragmentData<typeof SidebarFooter_viewer> | undefined
->(undefined);
 
 function SidebarFooter(props: { config: GitHubConfig | CloudConfig }) {
   const viewer = useContext(ViewerContext);

@@ -16,13 +16,13 @@ import {
   BasicFormField,
   ComponentBlock,
   DocumentElement,
-  fields,
   FormFieldWithFileRequiringContentsForReader,
   SlugFormField,
 } from '../../api';
 import { text } from '../text';
 import { DocumentFieldInput } from './ui';
-import { createDocumentEditorForNormalization } from '../../../editor';
+import { createDocumentEditorForNormalization } from '../../../create-editor';
+import { object } from '../object';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -251,11 +251,11 @@ export function document({
       primaryExtension: '.mdoc',
       directories: [
         ...collectDirectoriesUsedInSchema(
-          fields.object(
+          object(
             Object.fromEntries(
               Object.entries(componentBlocks).map(([name, block]) => [
                 name,
-                fields.object(block.schema),
+                object(block.schema),
               ])
             )
           )

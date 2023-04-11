@@ -131,5 +131,5 @@ export function getAllowedDirectories(config: Config) {
       )
     );
   }
-  return allowedDirectories;
+  return [...new Set(allowedDirectories)];
 }

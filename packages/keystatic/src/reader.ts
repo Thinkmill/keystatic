@@ -26,7 +26,7 @@ import {
   loadDataFile,
   parseSerializedFormField,
 } from '../app/required-files';
-import { getValueAtPropPath } from '../DocumentEditor/component-blocks/utils';
+import { getValueAtPropPath } from '../DocumentEditor/component-blocks/props-value';
 import { Dirent } from 'fs';
 
 type EntryReaderOpts = { resolveLinkedFiles?: boolean };
@@ -338,6 +338,27 @@ function singletonReader(
   };
 }
 
+export type Reader<
+  Collections extends {
+    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+  },
+  Singletons extends {
+    [key: string]: Singleton<Record<string, ComponentSchema>>;
+  }
+> = {
+  collections: {
+    [Key in keyof Collections]: CollectionReader<
+      Collections[Key]['schema'],
+      Collections[Key]['slugField']
+    >;
+  };
+  singletons: {
+    [Key in keyof Singletons]: SingletonReader<Singletons[Key]['schema']>;
+  };
+  config: Config<Collections, Singletons>;
+  repoPath: string;
+};
+
 export function createReader<
   Collections extends {
     [key: string]: Collection<Record<string, ComponentSchema>, string>;
@@ -348,17 +369,7 @@ export function createReader<
 >(
   repoPath: string,
   config: Config<Collections, Singletons>
-): {
-  collections: {
-    [Key in keyof Collections]: CollectionReader<
-      Collections[Key]['schema'],
-      Collections[Key]['slugField']
-    >;
-  };
-  singletons: {
-    [Key in keyof Singletons]: SingletonReader<Singletons[Key]['schema']>;
-  };
-} {
+): Reader<Collections, Singletons> {
   return {
     collections: Object.fromEntries(
       Object.keys(config.collections || {}).map(key => [
@@ -372,5 +383,7 @@ export function createReader<
         singletonReader(repoPath, key, config),
       ])
     ) as any,
+    repoPath,
+    config,
   };
 }
