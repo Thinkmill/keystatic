@@ -20,7 +20,7 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
         direction="column"
         justifyContent="center"
         gap="xlarge"
-        maxWidth={400}
+        maxWidth="scale.4600"
         elementType="form"
         action={`https://github.com${
           organization ? `/organizations/${organization}` : ''

@@ -279,7 +279,7 @@ export function InsertMenu({
         {children}
       </span>
       <Popover
-        width="size.alias.singleLineWidth"
+        width="alias.singleLineWidth"
         placement="bottom start"
         isNonModal
         hideArrow

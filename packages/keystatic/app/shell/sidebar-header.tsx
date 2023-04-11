@@ -110,7 +110,7 @@ export function SidebarHeader() {
       gap="regular"
       paddingX="xlarge"
       borderBottom="muted"
-      height="xlarge"
+      height="element.xlarge"
       alignItems="center"
     >
       <BranchPicker

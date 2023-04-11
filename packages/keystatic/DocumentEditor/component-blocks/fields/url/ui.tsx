@@ -1,5 +1,4 @@
 'use client';
-import { tokenSchema } from '@voussoir/style';
 import { TextField } from '@voussoir/text-field';
 import { useReducer } from 'react';
 import { FormFieldInputProps } from '../../api';
@@ -15,8 +14,8 @@ export function UrlFieldInput(
   const [blurred, onBlur] = useReducer(() => true, false);
   return (
     <TextField
-      width="initial"
-      maxWidth={`calc(${tokenSchema.size.alias.singleLineWidth} * 3)`}
+      width="auto"
+      maxWidth="scale.6000"
       label={props.label}
       description={props.description}
       autoFocus={props.autoFocus}

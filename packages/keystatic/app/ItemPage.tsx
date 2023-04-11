@@ -532,7 +532,7 @@ function ItemPageWrapper(props: {
         <Flex
           alignItems="center"
           justifyContent="center"
-          minHeight="size.scale.3000"
+          minHeight="scale.3000"
         >
           <ProgressCircle
             aria-label="Loading Item"

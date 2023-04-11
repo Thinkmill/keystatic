@@ -14,7 +14,7 @@ export function CreatedGitHubApp(props: { config: GitHubConfig }) {
         direction="column"
         justifyContent="center"
         gap="xlarge"
-        maxWidth={400}
+        maxWidth="scale.4600"
       >
         <Heading>You've installed Keystatic! 🎉</Heading>
         <Text>

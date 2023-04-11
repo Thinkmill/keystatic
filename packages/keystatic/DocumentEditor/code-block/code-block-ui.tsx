@@ -112,7 +112,7 @@ export function CodeElement({
           <Flex gap="regular" padding="regular">
             <Combobox
               aria-label="Language"
-              width="size.scale.2000"
+              width="scale.2000"
               allowsCustomValue // allow consumers to support other languages
               inputValue={inputValue}
               onInputChange={setInputValue}
