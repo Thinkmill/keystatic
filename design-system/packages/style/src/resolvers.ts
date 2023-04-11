@@ -1,7 +1,14 @@
+import { assertNever } from 'emery';
 import { get } from 'lodash';
 
 import { tokenSchema } from './tokens';
-import { CSSProp, MaybeArray, StyleResolver } from './types';
+import {
+  CSSProp,
+  DimensionKey,
+  LooseSizeDimension,
+  MaybeArray,
+  StyleResolver,
+} from './types';
 
 // Utils
 // ----------------------------------------------------------------------------
@@ -43,8 +50,41 @@ export function border<P extends MaybeArray<CSSProp>>(
   };
   return [prop, resolver];
 }
-function size(prop: MaybeArray<CSSProp>) {
-  return resolvePropWithPath(prop, 'size.element');
+function isDimensionKey(value: string): value is DimensionKey {
+  let [prop, key] = value.split('.');
+  if (!prop || !key) {
+    return false;
+  }
+  // @ts-expect-error
+  return !!tokenSchema.size[prop][key];
+}
+export function sizeResolver(value: LooseSizeDimension) {
+  if (typeof value === 'number') {
+    if (value === 0) {
+      return `${value}px`;
+    }
+    assertNever(value);
+  }
+
+  if (isDimensionKey(value)) {
+    let [prop, key] = value.split('.');
+    // @ts-expect-error
+    return tokenSchema.size[prop][key];
+  }
+
+  if (
+    value === 'auto' ||
+    value === 'inherit' ||
+    value === '100%' ||
+    value === '100vh' ||
+    value === '100vw'
+  ) {
+    return value;
+  }
+  assertNever(value);
+}
+function size(cssProp: MaybeArray<CSSProp>) {
+  return [cssProp, sizeResolver];
 }
 function space(prop: MaybeArray<CSSProp>) {
   return resolvePropWithPath(prop, 'size.space');

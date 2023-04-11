@@ -11,7 +11,12 @@ export {
 } from './context';
 export { filterStyleProps } from './filterStyleProps';
 export { FocusRing } from './FocusRing';
-export { maybeTokenByKey, resolveProp, resolvePropWithPath } from './resolvers';
+export {
+  maybeTokenByKey,
+  resolveProp,
+  resolvePropWithPath,
+  sizeResolver,
+} from './resolvers';
 export { breakpointQueries } from './responsive';
 export { tokenSchema } from './tokens';
 export { useIsMobileDevice } from './useIsMobileDevice';

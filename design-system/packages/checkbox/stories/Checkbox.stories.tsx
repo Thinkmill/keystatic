@@ -17,7 +17,7 @@ storiesOf('Components/Checkbox', module)
   .add('states', () => renderStates())
   .add('auto focus', () => render({ autoFocus: true }))
   .add('long label', () => (
-    <Checkbox onChange={action('change')} width={320}>
+    <Checkbox onChange={action('change')} UNSAFE_style={{ width: 320 }}>
       Long checkbox label. Gingerbread brownie danish marshmallow tootsie roll
       caramels tiramisu cake candy canes.
     </Checkbox>
@@ -52,7 +52,11 @@ function renderStates() {
 
 function renderCustomLabel(props = {}) {
   return (
-    <Checkbox onChange={action('change')} width={320} {...props}>
+    <Checkbox
+      onChange={action('change')}
+      UNSAFE_style={{ width: 320 }}
+      {...props}
+    >
       <Grid gap="large">
         <Text>Custom checkbox label text, with multiple paragraphs.</Text>
         <Text>

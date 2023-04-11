@@ -3,7 +3,7 @@ import { Fragment, useEffect } from 'react';
 import { Button } from '@voussoir/button';
 import { menuIcon } from '@voussoir/icon/icons/menuIcon';
 import { Icon } from '@voussoir/icon';
-import { Box, Divider, Flex } from '@voussoir/layout';
+import { Box, Divider } from '@voussoir/layout';
 import { useLinkComponent } from '@voussoir/link';
 import { breakpointQueries, css, tokenSchema } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
@@ -28,14 +28,25 @@ export const Sidebar = ({ items }: { items: SidebarItem[] }) => {
 
   return (
     <Fragment>
-      <Flex
-        // borderEnd={{ tablet: 'muted' }}
-        backgroundColor="canvas"
-        direction="column"
-        height={{ mobile: sidebarIsOpen ? '100%' : undefined, tablet: '100%' }}
-        position="fixed"
-        width={{ mobile: '100vw', tablet: SIDEBAR_WIDTH }}
-        zIndex={1}
+      <div
+        data-open={sidebarIsOpen}
+        className={css({
+          backgroundColor: tokenSchema.color.background.canvas,
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'fixed',
+          zIndex: 1,
+          [breakpointQueries.below.tablet]: {
+            width: '100vw',
+            '[data-open=true]': {
+              height: '100%',
+            },
+          },
+          [breakpointQueries.above.mobile]: {
+            height: '100%',
+            width: SIDEBAR_WIDTH,
+          },
+        })}
       >
         <SidebarHeader
           menuIsOpen={sidebarIsOpen}
@@ -62,7 +73,7 @@ export const Sidebar = ({ items }: { items: SidebarItem[] }) => {
         >
           <NavItems items={items} />
         </Box>
-      </Flex>
+      </div>
       {/* <Box height={headerHeight} isHidden={{ above: 'mobile' }} /> */}
     </Fragment>
   );
@@ -95,13 +106,22 @@ function SidebarHeader({
 
   return (
     <Box backgroundColor="canvas">
-      <Flex
-        alignItems="center"
-        justifyContent="space-between"
-        paddingStart={{ mobile: 'large', tablet: 'xlarge' }}
-        paddingEnd={{ mobile: 'large', tablet: 'unset' }}
-        height={{ mobile: HEADER_HEIGHT, tablet: 'unset' }}
-        paddingY={{ mobile: 0, tablet: 'large' }}
+      <div
+        className={css({
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          paddingInlineStart: tokenSchema.size.space.large,
+
+          [breakpointQueries.above.mobile]: {
+            paddingInlineStart: tokenSchema.size.space.xlarge,
+            paddingBlock: tokenSchema.size.space.large,
+          },
+          [breakpointQueries.below.tablet]: {
+            height: HEADER_HEIGHT,
+            paddingInlineEnd: tokenSchema.size.space.large,
+          },
+        })}
       >
         <Box flex>
           <Link href="/" title="/ˈvuːswɑː/" className={linkClass}>
@@ -126,7 +146,7 @@ function SidebarHeader({
             <Icon src={menuIcon} />
           </Button>
         </Box>
-      </Flex>
+      </div>
       <Divider marginX="large" isHidden={{ above: 'mobile' }} />
     </Box>
   );

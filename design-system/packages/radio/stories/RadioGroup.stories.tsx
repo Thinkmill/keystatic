@@ -76,7 +76,7 @@ function renderLongLabel(
   radioProps = [{}, {}, {}]
 ) {
   return (
-    <RadioGroup width={320} {...props} onChange={action('onChange')}>
+    <RadioGroup width="scale.3400" {...props} onChange={action('onChange')}>
       <Radio value="bilby" {...radioProps[0]}>
         <Text>Bilby label text, with multiple paragraphs.</Text>
         <Text slot="description">

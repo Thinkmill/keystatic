@@ -86,10 +86,10 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
       direction="column"
       height="100%"
       position="fixed"
-      width={SIDEBAR_WIDTH}
       zIndex={100}
       UNSAFE_className={[
         css({
+          width: SIDEBAR_WIDTH,
           [breakpointQueries.above.mobile]: {
             '&::before': {
               boxShadow: `inset ${tokenSchema.size.shadow.medium} ${tokenSchema.color.shadow.muted}`,
@@ -224,7 +224,7 @@ function SidebarFooter(props: { config: GitHubConfig | CloudConfig }) {
       elementType="header"
       borderTop="muted"
       paddingX="xlarge"
-      height="xlarge"
+      height="element.xlarge"
       alignItems="center"
       justifyContent="space-between"
     >
@@ -247,7 +247,7 @@ function SidebarFooter(props: { config: GitHubConfig | CloudConfig }) {
               borderRadius="full"
               overflow="hidden"
               aspectRatio="1"
-              height="xsmall"
+              height="element.xsmall"
               src={viewer?.avatarUrl ?? ''}
             />
           )}

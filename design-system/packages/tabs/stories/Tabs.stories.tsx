@@ -47,7 +47,7 @@ storiesOf('Components/Tabs', module)
     return (
       <Tabs
         aria-label="Tab example"
-        maxWidth={500}
+        maxWidth="scale.5000"
         onSelectionChange={action('onSelectionChange')}
       >
         <TabList>
@@ -124,7 +124,7 @@ function render<T>(props: Partial<TabsProps<T>> = {}) {
     <Tabs
       {...props}
       aria-label="Tabs example"
-      maxWidth={440}
+      maxWidth="scale.4600"
       onSelectionChange={action('onSelectionChange')}
     >
       <TabList>
@@ -167,7 +167,7 @@ function renderWithIcons<T>(props: Partial<TabsProps<T>> = {}) {
     <Tabs
       {...props}
       aria-label="Tabs with icons example"
-      maxWidth={500}
+      maxWidth="scale.5000"
       onSelectionChange={action('onSelectionChange')}
     >
       <TabList>

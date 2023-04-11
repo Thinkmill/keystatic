@@ -44,7 +44,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
       <AppShellBody>
         <Flex direction="column" gap="xlarge">
           <Grid
-            columns={{ tablet: ['5fr', '3fr'], desktop: ['3fr', '1fr'] }}
+            columns={{ tablet: '5fr 3fr', desktop: '3fr 1fr' }}
             gap="xxlarge"
           >
             <Flex direction="column" gap="xxlarge" minWidth={0}>
@@ -210,7 +210,7 @@ function Branches() {
           <ListView
             aria-labelledby="branches-heading"
             items={branches}
-            maxHeight="size.scale.3000"
+            maxHeight="scale.3000"
             selectionMode="single"
             selectionStyle="highlight"
             selectedKeys={[branchInfo.currentBranch]}

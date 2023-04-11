@@ -48,7 +48,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
         flexShrink={0}
         justifyContent="center"
         pointerEvents="none"
-        width="regular"
+        width="element.regular"
       >
         <Icon src={searchIcon} color="neutralSecondary" />
       </Flex>

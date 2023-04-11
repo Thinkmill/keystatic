@@ -58,10 +58,10 @@ automatically mirrored in RTL languages, and can be nested to create more
 complex layouts.
 
 ```jsx {% live=true %}
-<Flex direction="column" gap="medium" width={240}>
-  <Placeholder height="large" />
-  <Placeholder height="large" />
-  <Placeholder height="large" />
+<Flex direction="column" gap="medium" width="scale.2400">
+  <Placeholder height="element.large" />
+  <Placeholder height="element.large" />
+  <Placeholder height="element.large" />
 </Flex>
 ```
 
@@ -78,7 +78,7 @@ with any components or elements as children. Grid layouts are automatically
 mirrored in RTL languages, and can be nested to create more complex layouts.
 
 ```jsx {% live=true %}
-<Grid columns={['1fr', '3fr']} rows={repeat(2, 'large')} gap="medium">
+<Grid columns="1fr 3fr" rows={['element.large', 'element.large']} gap="medium">
   <Placeholder />
   <Placeholder />
   <Placeholder gridColumn="2" gridRow="1/3">
@@ -124,7 +124,7 @@ Resize your browser window to see how the layout changes.
   }}
   gap="medium"
 >
-  <Placeholder gridArea="header" height="large">
+  <Placeholder gridArea="header" height="element.large">
     Header
   </Placeholder>
   <Flex
@@ -132,21 +132,21 @@ Resize your browser window to see how the layout changes.
     direction={{ mobile: 'row', tablet: 'column' }}
     gap="small"
   >
-    <Placeholder minWidth="large" />
-    <Placeholder minWidth="large" />
-    <Placeholder minWidth="large" />
+    <Placeholder minWidth="element.large" />
+    <Placeholder minWidth="element.large" />
+    <Placeholder minWidth="element.large" />
   </Flex>
-  <Placeholder gridArea="main" height={120}>
+  <Placeholder gridArea="main" height="scale.1200">
     Main
   </Placeholder>
   <Placeholder
     gridArea="aside"
-    minHeight="large"
+    minHeight="element.large"
     isHidden={{ below: 'desktop' }}
   >
     Aside
   </Placeholder>
-  <Placeholder gridArea="footer" height="large">
+  <Placeholder gridArea="footer" height="element.large">
     Footer
   </Placeholder>
 </Grid>

@@ -30,11 +30,11 @@ import { ListBoxBase, listStyles, useListBoxLayout } from '@voussoir/listbox';
 import { Popover } from '@voussoir/overlays';
 import { ProgressCircle } from '@voussoir/progress';
 import {
-  FocusRing,
-  useIsMobileDevice,
-  css,
   ClassList,
+  FocusRing,
+  css,
   tokenSchema,
+  useIsMobileDevice,
 } from '@voussoir/style';
 import {
   TextFieldPrimitive,
@@ -141,7 +141,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
   return (
     <>
       <FieldPrimitive
-        width="size.alias.singleLineWidth"
+        width="alias.singleLineWidth"
         {...props}
         descriptionProps={descriptionProps}
         errorMessageProps={errorMessageProps}
@@ -185,7 +185,11 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
           UNSAFE_className={listStyles}
           renderEmptyState={() =>
             isAsync && (
-              <Flex height="regular" alignItems="center" paddingX="medium">
+              <Flex
+                height="element.regular"
+                alignItems="center"
+                paddingX="medium"
+              >
                 <Text color="neutralSecondary">
                   {loadingState === 'loading'
                     ? stringFormatter.format('loading')
@@ -245,7 +249,7 @@ const ComboboxInput = React.forwardRef(function ComboboxInput(
       flexShrink={0}
       justifyContent="center"
       pointerEvents="none"
-      width="regular"
+      width="element.regular"
     >
       <ProgressCircle
         aria-label={stringFormatter.format('loading')}

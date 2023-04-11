@@ -51,8 +51,8 @@ storiesOf('Components/TableView', module)
     (args: ArgTypes) => (
       <TableView
         aria-label="TableView with selection"
-        width={300}
-        height={200}
+        width="scale.3400"
+        height="scale.2400"
         onSelectionChange={onSelectionChange}
         {...args}
       >
@@ -192,8 +192,8 @@ storiesOf('Components/TableView', module)
     return (
       <TableView
         aria-label="TableView with dynamic contents"
-        width={600}
-        height={200}
+        width="scale.6000"
+        height="scale.2400"
         selectionMode="multiple"
         // onRowAction={(...args) => {
         //   console.log('onRowAction', ...args);

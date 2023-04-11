@@ -164,7 +164,7 @@ When selection is not enabled, `ActionGroup` displays as many items as possible
 and collapses the remaining items into a "more actions" menu.
 
 ```jsx {% live=true %}
-<ActionGroup overflowMode="collapse" maxWidth={200}>
+<ActionGroup overflowMode="collapse" maxWidth="scale.2400">
   <Item key="add" textValue="add">
     <Icon src={plusIcon} />
     <Text>Add</Text>
@@ -200,7 +200,7 @@ the group to assistive technology.
   overflowMode="collapse"
   selectionMode="multiple"
   summaryIcon={<Icon src={typeIcon} />}
-  maxWidth={100}
+  maxWidth="scale.1200"
 >
   <Item key="bold" textValue="bold">
     <Icon src={boldIcon} />
@@ -236,7 +236,7 @@ displayed inside the menu button when collapsed.
   defaultSelectedKeys={['left']}
   disallowEmptySelection
   buttonLabelBehavior="hide"
-  maxWidth={100}
+  maxWidth="scale.1200"
 >
   <Item key="left" textValue="left">
     <Icon src={alignLeftIcon} />
@@ -327,7 +327,7 @@ The `isJustified` prop will divide the available horizontal space evenly among
 the buttons.
 
 ```jsx {% live=true %}
-<ActionGroup isJustified width={300}>
+<ActionGroup isJustified width="scale.3600">
   <Item key="add">Add</Item>
   <Item key="edit">Edit</Item>
   <Item key="delete">Delete</Item>

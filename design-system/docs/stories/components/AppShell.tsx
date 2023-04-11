@@ -22,13 +22,11 @@ export const AppShell = ({ children }: PropsWithChildren) => {
     <Flex width="100vw" minHeight="100vh">
       <Flex
         isHidden={{ below: 'tablet' }}
-        // paddingBottom="xlarge"
         direction="column"
-        // gap="regular"
         height="100vh"
         position="sticky"
         insetTop="0"
-        width="280px"
+        UNSAFE_style={{ width: 280 }}
       >
         <Box paddingStart="xlarge" paddingY="medium">
           <Logo />
@@ -100,7 +98,7 @@ const Logo = () => (
   </Flex>
 );
 const LogoMark = () => (
-  <AspectRatio value="1" height="medium">
+  <AspectRatio value="1" height="element.medium">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 35 34"

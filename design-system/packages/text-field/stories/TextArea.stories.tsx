@@ -42,19 +42,19 @@ storiesOf('Components/TextArea', module)
   )
   .add('custom height', (args: Parameters) => (
     <Grid columns="repeat(3, minmax(140px, 1fr))" gap="regular">
-      <TextArea {...args} label="With label" height="160px" />
+      <TextArea {...args} label="With label" height="scale.2000" />
       <TextArea
         {...args}
         label="With description"
         description="Description text."
-        height="160px"
+        height="scale.2000"
       />
       <TextArea
         {...args}
         label="With error message"
         description="Description text."
         errorMessage="Error message text."
-        height="160px"
+        height="scale.2000"
       />
     </Grid>
   ))
@@ -97,7 +97,7 @@ function renderControlled(props = {}) {
         <TextArea
           {...props}
           {...args}
-          width={240}
+          width="scale.3000"
           onChange={setValue}
           value={value}
         />

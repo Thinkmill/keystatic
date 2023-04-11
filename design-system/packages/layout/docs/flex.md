@@ -37,10 +37,10 @@ consistent.
 for [wrapping content](#wrapping).
 
 ```jsx {% live=true %}
-<Flex gap="medium" height="large">
-  <Placeholder width="large" />
-  <Placeholder width="large" />
-  <Placeholder width="large" />
+<Flex gap="medium" height="element.large">
+  <Placeholder width="element.large" />
+  <Placeholder width="element.large" />
+  <Placeholder width="element.large" />
 </Flex>
 ```
 
@@ -53,9 +53,9 @@ vertical stacks.
 
 ```jsx {% live=true %}
 <Flex direction="column" gap="medium">
-  <Placeholder height="large" />
-  <Placeholder height="large" />
-  <Placeholder height="large" />
+  <Placeholder height="element.large" />
+  <Placeholder height="element.large" />
+  <Placeholder height="element.large" />
 </Flex>
 ```
 
@@ -74,9 +74,9 @@ This example horizontally centers items in a vertical stack.
 
 ```jsx {% live=true %}
 <Flex direction="column" gap="medium" alignItems="center">
-  <Placeholder height="large" width="large" />
-  <Placeholder height="large" width="size.container.xsmall" />
-  <Placeholder height="large" width="large" />
+  <Placeholder height="element.large" width="element.large" />
+  <Placeholder height="element.large" width="container.xsmall" />
+  <Placeholder height="element.large" width="element.large" />
 </Flex>
 ```
 
@@ -96,9 +96,9 @@ This example distributes the available space between each item in the container.
 
 ```jsx {% live=true %}
 <Flex justifyContent="space-between">
-  <Placeholder height="large" width="large" />
-  <Placeholder height="large" width="size.container.xsmall" />
-  <Placeholder height="large" width="large" />
+  <Placeholder height="element.large" width="element.large" />
+  <Placeholder height="element.large" width="container.xsmall" />
+  <Placeholder height="element.large" width="element.large" />
 </Flex>
 ```
 
@@ -113,14 +113,14 @@ When the `wrap` prop is enabled, items can wrap onto multiple lines.
   borderRadius="small"
   gap="medium"
   padding="medium"
-  width={220}
+  width="scale.3000"
 >
-  <Placeholder height="large" width="large" />
-  <Placeholder height="large" width="large" />
-  <Placeholder height="large" width="large" />
-  <Placeholder height="large" width="large" />
-  <Placeholder height="large" width="large" />
-  <Placeholder height="large" width="large" />
+  <Placeholder height="element.large" width="element.large" />
+  <Placeholder height="element.large" width="element.large" />
+  <Placeholder height="element.large" width="element.large" />
+  <Placeholder height="element.large" width="element.large" />
+  <Placeholder height="element.large" width="element.large" />
+  <Placeholder height="element.large" width="element.large" />
 </Flex>
 ```
 
@@ -137,12 +137,12 @@ layouts. It also uses the `flex` prop on children to expand them to fill a ratio
 of the remaining space.
 
 ```jsx {% live=true %}
-<Flex direction="column" gap="medium" height={240}>
-  <Placeholder height="large">Header</Placeholder>
+<Flex direction="column" gap="medium" height="scale.3000">
+  <Placeholder height="element.large">Header</Placeholder>
   <Flex gap="medium" flex>
     <Placeholder flex={1}>Sidebar</Placeholder>
     <Placeholder flex={3}>Content</Placeholder>
   </Flex>
-  <Placeholder height="large">Footer</Placeholder>
+  <Placeholder height="element.large">Footer</Placeholder>
 </Flex>
 ```

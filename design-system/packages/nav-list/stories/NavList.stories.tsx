@@ -10,12 +10,12 @@ import { NavList, NavGroup, NavItem } from '../src';
 
 storiesOf('Components/NavList', module)
   .add('default', () => (
-    <NavList width="size.alias.singleLineWidth">
+    <NavList width="alias.singleLineWidth">
       <NavItem href="#">Item</NavItem>
     </NavList>
   ))
   .add('current', () => (
-    <NavList width="size.alias.singleLineWidth">
+    <NavList width="alias.singleLineWidth">
       <NavItem href="#" aria-current="page">
         Current item
       </NavItem>
@@ -23,7 +23,7 @@ storiesOf('Components/NavList', module)
     </NavList>
   ))
   .add('long labels', () => (
-    <NavList width="size.alias.singleLineWidth">
+    <NavList width="alias.singleLineWidth">
       <NavItem href="#" aria-current="page">
         <Text>Labels should be concise, but may wrap when necessary</Text>
       </NavItem>
@@ -33,7 +33,7 @@ storiesOf('Components/NavList', module)
     </NavList>
   ))
   .add('icons', () => (
-    <NavList width="size.alias.singleLineWidth">
+    <NavList width="alias.singleLineWidth">
       <NavItem href="#" aria-current="page">
         <Icon src={homeIcon} />
         <Text>Home</Text>
@@ -49,7 +49,7 @@ storiesOf('Components/NavList', module)
     </NavList>
   ))
   .add('dividers', () => (
-    <NavList width="size.alias.singleLineWidth">
+    <NavList width="alias.singleLineWidth">
       <NavItem href="#">Top</NavItem>
       <Divider />
       <NavItem href="#" aria-current="page">
@@ -64,7 +64,7 @@ storiesOf('Components/NavList', module)
     </NavList>
   ))
   .add('groups', () => (
-    <NavList width="size.alias.singleLineWidth">
+    <NavList width="alias.singleLineWidth">
       <NavItem href="#">Item outside above</NavItem>
       <NavGroup title="Text only group">
         <NavItem href="#" aria-current="page">
@@ -91,7 +91,7 @@ storiesOf('Components/NavList', module)
     </NavList>
   ))
   .add('custom', () => (
-    <NavList width={360} maxWidth="100%">
+    <NavList maxWidth="100%" UNSAFE_style={{ width: 360 }}>
       <NavItem href="#" aria-current="page">
         <Emoji symbol="🎨" />
         <Text flex>Custom item 1</Text>
@@ -103,8 +103,7 @@ storiesOf('Components/NavList', module)
         <Box
           backgroundColor="criticalEmphasis"
           borderRadius="full"
-          height={8}
-          width={8}
+          UNSAFE_style={{ height: 8, width: 8 }}
         >
           <Text visuallyHidden>Danger</Text>
         </Box>

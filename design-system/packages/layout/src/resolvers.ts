@@ -1,13 +1,13 @@
 import {
-  maybeTokenByKey,
   resolveProp,
   resolvePropWithPath,
-  LooseSizeDimension,
   StyleResolver,
   FlexStyleProps,
   useStyleProps,
   GridStyleProps,
   filterStyleProps,
+  LooseSizeDimension,
+  sizeResolver,
 } from '@voussoir/style';
 
 // Resolvers
@@ -79,6 +79,23 @@ function flexWrapValue(value: unknown) {
 // Grid
 // ----------------------------------------------------------------------------
 
+type FractionUnit = `${number}fr`;
+type GridDimension = LooseSizeDimension | FractionUnit;
+
+function isFractionUnit(value: string): value is FractionUnit {
+  return value.endsWith('fr');
+}
+function gridSizeResolver(value: GridDimension) {
+  if (typeof value === 'number') {
+    return value;
+  }
+  if (isFractionUnit(value)) {
+    return value;
+  }
+
+  return sizeResolver(value);
+}
+
 export function useGridStyleProps(props: GridStyleProps) {
   return useStyleProps({ inline: false, ...props }, gridStyleProps);
 }
@@ -93,8 +110,10 @@ export const gridStyleProps = {
   ...sharedStyleProps,
   inline: resolveProp('display', displayInline('grid')),
   autoFlow: resolveProp('gridAutoFlow'),
-  autoColumns: resolvePropWithPath('gridAutoColumns', 'size.element'),
-  autoRows: resolvePropWithPath('gridAutoRows', 'size.element'),
+  // @ts-ignore FIXME: The `StyleResolver` type is not generic enough to support this.
+  autoColumns: resolveProp('gridAutoColumns', sizeResolver),
+  // @ts-ignore FIXME: The `StyleResolver` type is not generic enough to support this.
+  autoRows: resolveProp('gridAutoRows', sizeResolver),
   // @ts-ignore FIXME: The `StyleResolver` type is not generic enough to support this.
   areas: resolveProp('gridTemplateAreas', gridTemplateAreasValue),
   // @ts-ignore FIXME: The `StyleResolver` type is not generic enough to support this.
@@ -107,21 +126,15 @@ export const gridStyleProps = {
   alignContent: resolveProp('alignContent'),
 };
 
-function gridTemplateAreasValue<T>(value: T[]) {
-  return value.map(v => `"${v}"`).join('\n');
+function gridTemplateAreasValue<T>(values: T[]) {
+  return values.map(value => `"${value}"`).join('\n');
 }
-function gridDimensionValue<T extends LooseSizeDimension>(value: T) {
-  if (typeof value === 'number') {
-    return `${value}px`;
-  }
-  return maybeTokenByKey('size.element', value);
-}
-function gridTemplateValue<T extends LooseSizeDimension>(value: T | T[]) {
+function gridTemplateValue<T extends GridDimension>(value: T | T[]) {
   if (Array.isArray(value)) {
-    return value.map(gridDimensionValue).join(' ');
+    return value.map(gridSizeResolver).join(' ');
   }
 
-  return gridDimensionValue(value);
+  return value;
 }
 
 // Utils
@@ -135,9 +148,9 @@ function gridTemplateValue<T extends LooseSizeDimension>(value: T | T[]) {
  */
 export function repeat(
   count: number | 'auto-fill' | 'auto-fit',
-  repeat: LooseSizeDimension | LooseSizeDimension[]
+  repeat: GridDimension
 ): string {
-  return `repeat(${count}, ${gridTemplateValue(repeat)})`;
+  return `repeat(${count}, ${gridSizeResolver(repeat)})`;
 }
 
 /**
@@ -146,11 +159,8 @@ export function repeat(
  * @param min - The minimum size.
  * @param max - The maximum size.
  */
-export function minmax(
-  min: LooseSizeDimension,
-  max: LooseSizeDimension
-): string {
-  return `minmax(${gridDimensionValue(min)}, ${gridDimensionValue(max)})`;
+export function minmax(min: GridDimension, max: GridDimension): string {
+  return `minmax(${gridSizeResolver(min)}, ${gridSizeResolver(max)})`;
 }
 
 /**
@@ -158,6 +168,6 @@ export function minmax(
  * See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/fit-content).
  * @param dimension - The size to clamp.
  */
-export function fitContent(dimension: LooseSizeDimension): string {
-  return `fit-content(${gridDimensionValue(dimension)})`;
+export function fitContent(dimension: GridDimension): string {
+  return `fit-content(${gridSizeResolver(dimension)})`;
 }

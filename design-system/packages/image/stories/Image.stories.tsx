@@ -1,5 +1,5 @@
 import { action, storiesOf } from '@voussoir/storybook';
-import { Box, Flex, Grid, repeat } from '@voussoir/layout';
+import { Box, Flex, Grid } from '@voussoir/layout';
 import { Text } from '@voussoir/typography';
 import { useState } from 'react';
 
@@ -13,14 +13,14 @@ storiesOf('Components/Image', module)
       src="https://via.placeholder.com/600x400"
       alt=""
       aspectRatio="3/2"
-      width={300}
+      UNSAFE_style={{ width: 300 }}
     />
   ))
   .add('fit', () => (
     <Grid
-      columns={repeat(2, '1fr')}
+      columns="repeat(2, 1fr)"
       gap="large"
-      width="size.container.small"
+      UNSAFE_style={{ width: 660 }}
       maxWidth="100%"
     >
       <Image
@@ -54,7 +54,7 @@ storiesOf('Components/Image', module)
       alt=""
       src={`https://via.placeholder.com/300x200?text=Overlay+content`}
       aspectRatio="3/2"
-      width={300}
+      UNSAFE_style={{ width: 300 }}
     >
       <Flex alignItems="end" justifyContent="end">
         <Box padding="medium" backgroundColor="canvas">
@@ -70,7 +70,7 @@ storiesOf('Components/Image', module)
         and throttle your connection to see the difference between "eager" and
         "lazy" loading. You will need to remount the story.
       </p>
-      <Box width={300}>
+      <Box UNSAFE_style={{ width: 300 }}>
         <Image
           alt=""
           src={`https://via.placeholder.com/300x200?text=Above+the+fold`}
@@ -86,7 +86,7 @@ storiesOf('Components/Image', module)
         another lazily-loaded image.
       </p>
       <div style={{ height: 2560 }} />
-      <Box width={300}>
+      <Box UNSAFE_style={{ width: 300 }}>
         <Image
           alt=""
           src={`https://via.placeholder.com/300x200?text=Below+the+fold&${++belowTheFoldId}`}
@@ -104,7 +104,7 @@ storiesOf('Components/Image', module)
     return (
       <Box
         backgroundColor={hasError ? 'criticalEmphasis' : 'surfaceSecondary'}
-        width={300}
+        UNSAFE_style={{ width: 300 }}
       >
         <Image
           aspectRatio="300 / 200"

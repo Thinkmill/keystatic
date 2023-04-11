@@ -20,9 +20,9 @@ relationships can be set on most components.
 
 ```jsx {% live=true %}
 <Flex direction="column" position="relative" padding="small">
-  <Text alignSelf="center" width={120}>
-    Style prop example
-  </Text>
+  <Box alignSelf="center" width="scale.1200">
+    <Text>Style prop example</Text>
+  </Box>
   <Badge position="absolute" insetTop="small" insetEnd="small">
     Placement
   </Badge>
@@ -53,12 +53,11 @@ desktop: 1280
 wide: 1768 # target exceptionally wide viewports, which may undermine proximity relationships
 ```
 
-In this example, the [Notice](/package/notice) has a default width of `50%`,
-which is overridden to `size.container.xsmall` at the `desktop` breakpoint.
-Resize your browser window to see this in action.
+In this example, the [Notice](/package/notice) has styles applied at the
+`desktop` breakpoint. Resize your browser window to see this in action.
 
 ```jsx {% live=true %}
-<Notice width={{ mobile: '50%', desktop: 'size.container.small' }}>
+<Notice width={{ desktop: 'container.xsmall' }} marginX={{ desktop: 'auto' }}>
   Responsive example
 </Notice>
 ```
@@ -77,22 +76,22 @@ most cases.
 
 ```jsx {% live=true %}
 <Grid gap="regular">
-  <Placeholder isHidden={{ below: 'wide' }} height="large">
+  <Placeholder isHidden={{ below: 'wide' }} height="element.large">
     1. Hidden below wide
   </Placeholder>
-  <Placeholder isHidden={{ below: 'desktop' }} height="large">
+  <Placeholder isHidden={{ below: 'desktop' }} height="element.large">
     2. Hidden below desktop
   </Placeholder>
-  <Placeholder isHidden={{ below: 'tablet' }} height="large">
+  <Placeholder isHidden={{ below: 'tablet' }} height="element.large">
     3. Hidden below tablet
   </Placeholder>
-  <Placeholder isHidden={{ above: 'mobile' }} height="large">
+  <Placeholder isHidden={{ above: 'mobile' }} height="element.large">
     4. Hidden above mobile
   </Placeholder>
-  <Placeholder isHidden={{ above: 'tablet' }} height="large">
+  <Placeholder isHidden={{ above: 'tablet' }} height="element.large">
     5. Hidden above tablet
   </Placeholder>
-  <Placeholder isHidden={{ above: 'desktop' }} height="large">
+  <Placeholder isHidden={{ above: 'desktop' }} height="element.large">
     6. Hidden above desktop
   </Placeholder>
 </Grid>

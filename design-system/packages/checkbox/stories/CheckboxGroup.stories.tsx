@@ -80,7 +80,7 @@ function renderLongLabel(
 ) {
   return (
     <CheckboxGroup
-      width={320}
+      UNSAFE_style={{ width: 320 }}
       {...props}
       onChange={action('onChange')}
       description="Please select one."

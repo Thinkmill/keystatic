@@ -2,7 +2,7 @@
 import { ReactNode } from 'react';
 
 import { Box, Flex } from '@voussoir/layout';
-import { css, tokenSchema } from '@voussoir/style';
+import { FlexStyleProps, css, tokenSchema } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
 
 // Inline code
@@ -29,12 +29,10 @@ export const InlineCode = ({ children }: { children: string }) => {
 // Placeholder element
 
 type PlaceholderProps = {
-  height?: string | number;
-  width?: string | number;
   children?: ReactNode;
   represent?: 'image' | 'text';
   shape?: 'square' | 'round';
-};
+} & FlexStyleProps;
 
 export const placeholderCounter = 'ksv-placeholder-counter';
 
@@ -42,7 +40,7 @@ export const Placeholder = ({
   children,
   represent = 'text',
   shape = 'square',
-  ...props
+  ...flexStyleProps
 }: PlaceholderProps) => {
   const svgStyles = css({
     position: 'absolute' as const,
@@ -88,10 +86,10 @@ export const Placeholder = ({
       justifyContent="center"
       overflow="hidden"
       position="relative"
-      minHeight="small"
-      minWidth="small"
+      minHeight="element.small"
+      minWidth="element.small"
       maxWidth="100%"
-      {...props}
+      {...flexStyleProps}
     >
       {represent === 'image' ? (
         <svg xmlns="http://www.w3.org/2000/svg" className={svgStyles}>

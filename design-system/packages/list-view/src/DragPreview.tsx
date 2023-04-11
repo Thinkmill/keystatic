@@ -97,7 +97,8 @@ export function DragPreview(props: DragPreviewProps<unknown>) {
               gridArea: 'thumbnail',
               marginEnd: 'regular',
               overflow: 'hidden',
-              height: density === 'compact' ? 'small' : 'regular',
+              height:
+                density === 'compact' ? 'element.small' : 'element.regular',
               UNSAFE_className: 'ksv-list-view-item-thumbnail',
             },
             button: {
@@ -126,7 +127,7 @@ export function DragPreview(props: DragPreviewProps<unknown>) {
               backgroundColor="accentEmphasis"
               borderRadius="small"
               gridArea="badge"
-              minWidth="small"
+              minWidth="element.small"
               padding="small"
               UNSAFE_className="ksv-list-view-item-badge"
             >

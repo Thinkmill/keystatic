@@ -166,7 +166,7 @@ Item labels should never be so long that they require truncation, except in
 instances where navigation is user-generated.
 
 ```jsx {% live=true %}
-<NavList width={240}>
+<NavList width="scale.3000">
   <NavItem href="#" aria-current="page">
     Labels should be concise, but may wrap when necessary
   </NavItem>

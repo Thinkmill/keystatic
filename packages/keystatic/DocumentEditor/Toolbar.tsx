@@ -221,7 +221,7 @@ const HeadingMenu = ({
     () => (
       <Picker
         flexShrink={0}
-        width="size.scale.1700"
+        width="scale.1700"
         prominence="low"
         aria-label="Text block"
         items={items}
@@ -363,7 +363,9 @@ function InlineMarks({
     );
     return (
       <ActionGroup
-        minWidth={`calc(${tokenSchema.size.element.medium} * 4)`}
+        UNSAFE_className={css({
+          minWidth: `calc(${tokenSchema.size.element.medium} * 4)`,
+        })}
         prominence="low"
         density="compact"
         buttonLabelBehavior="hide"

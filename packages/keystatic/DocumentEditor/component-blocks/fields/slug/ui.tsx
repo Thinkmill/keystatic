@@ -103,7 +103,7 @@ export function SlugFieldInput(
             Regenerate
           </ActionButton>
           {/* display shim to offset the error message */}
-          {slugErrorMessage !== undefined && <Box height="xsmall" />}
+          {slugErrorMessage !== undefined && <Box height="element.xsmall" />}
         </Flex>
       </Flex>
     </Flex>

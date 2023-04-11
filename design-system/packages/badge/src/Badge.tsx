@@ -72,7 +72,7 @@ export const Badge: ForwardRefExoticComponent<
       // appearance
       backgroundColor={bg}
       borderRadius="full"
-      height="small"
+      height="element.small"
       minWidth={0}
       paddingX="regular"
       // layout

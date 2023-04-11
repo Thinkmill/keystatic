@@ -41,7 +41,7 @@ See how the aspect ratio can be used to implement
 [adaptive media in layout](#adaptive-media-in-layout).
 
 ```jsx {% live=true %}
-<Grid columns={repeat(3, '1fr')} gap="large">
+<Grid columns="repeat(3, 1fr)" gap="large">
   <Image
     alt="aspect-ratio example—16:9"
     src="/example-landscape-colour.jpg"
@@ -67,7 +67,7 @@ defaults to `"cover"` so image content fills the available space afforded by the
 [aspect ratio](#aspect-ratio).
 
 ```jsx {% live=true %}
-<Grid columns={repeat(3, '1fr')} gap="large">
+<Grid columns="repeat(3, 1fr)" gap="large">
   <Image
     alt="fit:cover example"
     src="/example-landscape-colour.jpg"
@@ -163,14 +163,14 @@ the ratio to suit your layout depending on the viewport.
   boxShadow="small regular"
   direction={{ mobile: 'column', tablet: 'row' }}
   overflow="hidden"
-  width={{ mobile: 280, tablet: 'auto' }}
+  width={{ mobile: 'scale.3000', tablet: 'auto' }}
 >
   <Image
     alt=""
     src="/example-landscape-colour.jpg"
     aspectRatio={{ mobile: '16/9', tablet: '1', medium: '4/3' }}
     flex={{ mobile: 'auto', tablet: 1 }}
-    minWidth={120}
+    minWidth="scale.1600"
   />
   <Box direction="column" gap="large" padding="large" flex={3}>
     <Text>

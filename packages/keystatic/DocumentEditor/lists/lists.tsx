@@ -199,9 +199,14 @@ export const ListItem = forwardRef(function ListItem(
   ref: Ref<HTMLElement>
 ) {
   const type = useContext(ListContext);
+  const commonStyles = {
+    height: tokenSchema.fontsize.text.medium.capheight,
+    width: '1em',
+  };
   const className =
     type === 'ol'
       ? css({
+          ...commonStyles,
           color: tokenSchema.color.foreground.neutral,
           fontSize: tokenSchema.fontsize.text.medium.size,
           '::before': {
@@ -213,7 +218,7 @@ export const ListItem = forwardRef(function ListItem(
             fontFamily: tokenSchema.typography.fontFamily.base,
           },
         })
-      : undefined;
+      : css(commonStyles);
   const bullet =
     type === 'ol' ? null : (
       <Text size="small" color="neutral">
@@ -227,10 +232,8 @@ export const ListItem = forwardRef(function ListItem(
         aria-hidden="true"
         alignItems="center"
         flexShrink={0}
-        height={tokenSchema.fontsize.text.medium.capheight}
         justifyContent={type === 'ul' ? 'center' : 'start'}
         userSelect="none"
-        width="1em"
         UNSAFE_className={className}
       >
         {bullet}

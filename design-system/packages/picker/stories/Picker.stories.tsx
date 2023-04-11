@@ -210,8 +210,8 @@ storiesOf('Components/Picker', module)
     <Flex gap="large" direction="column">
       <Picker
         label="Test"
-        width={120}
         onSelectionChange={action('selectionChange')}
+        UNSAFE_style={{ width: 120 }}
       >
         <Item>One</Item>
         <Item>Two</Item>
@@ -219,7 +219,7 @@ storiesOf('Components/Picker', module)
       </Picker>
       <Picker
         label="Test"
-        width={400}
+        width="auto"
         onSelectionChange={action('selectionChange')}
       >
         <Item>One</Item>
@@ -354,11 +354,11 @@ storiesOf('Components/Picker', module)
     <Box
       backgroundColor="surface"
       border="neutral"
-      width={200}
-      height={100}
+      width="scale.2400"
+      height="scale.1200"
       overflow="auto"
     >
-      <Box width={400} height={200}>
+      <Box width="scale.5000" height="scale.2400">
         <Picker label="Test" autoFocus>
           <Item key="One">One</Item>
           <Item key="Two">Two</Item>

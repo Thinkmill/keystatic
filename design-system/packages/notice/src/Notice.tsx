@@ -107,8 +107,8 @@ export function Notice(props: NoticeProps) {
       alignItems="center"
       areas={['icon heading', 'icon content']}
       columnGap="medium"
-      columns={['size.icon.medium', 'auto']}
-      rows={[minmax('size.icon.medium', 'auto'), 'auto']}
+      columns={['icon.medium', 'auto']}
+      rows={`${minmax('icon.medium', 'auto')} auto`}
     >
       <Icon
         src={icon}

@@ -95,7 +95,7 @@ function Swatch({ backgroundColor = 'surface', ...props }: BoxProps) {
   return (
     <Box
       borderRadius="small"
-      height="large"
+      height="element.large"
       padding="regular"
       backgroundColor={backgroundColor}
       {...props}

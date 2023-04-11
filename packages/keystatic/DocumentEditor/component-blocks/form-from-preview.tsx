@@ -209,7 +209,7 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
         aria-labelledby={labelId}
         items={props.elements}
         dragAndDropHooks={dragAndDropHooks}
-        height={props.elements.length ? undefined : 'size.scale.2000'}
+        height={props.elements.length ? undefined : 'scale.2000'}
         renderEmptyState={() => (
           <Flex
             direction="column"

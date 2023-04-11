@@ -16,7 +16,7 @@ export function RepoNotFound(props: { config: GitHubConfig }) {
         direction="column"
         justifyContent="center"
         gap="xlarge"
-        maxWidth={400}
+        maxWidth="scale.4600"
       >
         <Flex justifyContent="center">
           <Heading>Repo not found</Heading>

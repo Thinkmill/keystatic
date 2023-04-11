@@ -162,7 +162,7 @@ const ComboboxButton = React.forwardRef(function ComboboxButton(
     <FocusRing>
       <Flex
         position="relative"
-        width="size.alias.singleLineWidth"
+        width="alias.singleLineWidth"
         zIndex={0} // create a new stacking context
         {...toDataAttributes({ readonly: props.isReadOnly })}
         {...mergeProps(hoverProps, buttonProps)}
@@ -358,7 +358,7 @@ function ComboboxTray<T extends object>(props: ComboboxTrayProps<T>) {
       flexShrink={0}
       justifyContent="center"
       pointerEvents="none"
-      width="regular"
+      width="element.regular"
     >
       <ProgressCircle
         aria-label={stringFormatter.format('loading')}
@@ -473,7 +473,11 @@ function ComboboxTray<T extends object>(props: ComboboxTrayProps<T>) {
           shouldUseVirtualFocus
           renderEmptyState={() =>
             loadingState !== 'loading' && (
-              <Flex height="regular" alignItems="center" paddingX="medium">
+              <Flex
+                height="element.regular"
+                alignItems="center"
+                paddingX="medium"
+              >
                 <Text color="neutralSecondary">
                   {stringFormatter.format('noResults')}
                 </Text>

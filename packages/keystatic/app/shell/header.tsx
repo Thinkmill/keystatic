@@ -130,13 +130,13 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
       backgroundColor="surface"
       borderBottom="muted"
       elementType="header"
-      height="xlarge"
+      height="element.xlarge"
       insetTop={0}
       position="sticky"
       zIndex={3}
     >
       <AppShellContainer>
-        <Flex alignItems="center" height="xlarge" gap="regular">
+        <Flex alignItems="center" height="element.xlarge" gap="regular">
           <ActionButton
             prominence="low"
             isHidden={{ above: 'mobile' }}

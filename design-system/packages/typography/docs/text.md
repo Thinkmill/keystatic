@@ -219,7 +219,7 @@ content to overflow its container should be a deliberate decision. This helps to
 avoid an unusually long string of text causing layout problems.
 
 ```jsx {% live=true %}
-<Box border="neutral" padding="medium" borderRadius="small" width={240}>
+<Box border="neutral" padding="medium" borderRadius="small" width="scale.3000">
   <Text overflow="breakword">
     While <em>pneumonoultramicroscopicsilicovolcanoconiosis</em> is an actual
     medical term, most people will never hear a doctor (attempt to) say this
@@ -235,7 +235,7 @@ expect the content to be extremely short, and may otherwise be "squashed" by
 surrounding elements.
 
 ```jsx {% live=true %}
-<Box border="neutral" padding="medium" borderRadius="small" width={240}>
+<Box border="neutral" padding="medium" borderRadius="small" width="scale.3000">
   <Text overflow="nowrap">
     While <em>pneumonoultramicroscopicsilicovolcanoconiosis</em> is an actual
     medical term, most people will never hear a doctor (attempt to) say this
@@ -251,7 +251,7 @@ breaking rules. Words or unbroken strings (like URLs) will not break, even if
 they overflow the container.
 
 ```jsx {% live=true %}
-<Box border="neutral" padding="medium" borderRadius="small" width={240}>
+<Box border="neutral" padding="medium" borderRadius="small" width="scale.3000">
   <Text overflow="unset">
     While <em>pneumonoultramicroscopicsilicovolcanoconiosis</em> is an actual
     medical term, most people will never hear a doctor (attempt to) say this
@@ -373,7 +373,7 @@ keeps the decimal in the same place and makes numerical data easier to read and
 compare.
 
 ```jsx {% live=true %}
-<Grid gap="regular" width={240}>
+<Grid gap="regular" width="scale.3000">
   <Box border="neutral" padding="medium" borderRadius="small">
     <Text align="FORCE_right" variant="tabular-nums">
       12121.21

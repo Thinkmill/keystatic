@@ -13,7 +13,7 @@ storiesOf('Components/Modal', module)
     let state = useOverlayTriggerState({ isOpen: true });
     return (
       <Modal state={state}>
-        <Box padding="xlarge" width="size.container.xsmall">
+        <Box padding="xlarge" width="container.xsmall">
           <Text>
             Modal is a low-level utility component for implementing things like
             dialogs and popovers, in a layer above the page.
@@ -104,7 +104,7 @@ storiesOf('Components/Modal', module)
           state={state}
           isDismissable
           // style props
-          width="size.container.xsmall"
+          width="container.xsmall"
           UNSAFE_className="custom-modal"
           UNSAFE_style={{ overflow: 'auto' }}
         >

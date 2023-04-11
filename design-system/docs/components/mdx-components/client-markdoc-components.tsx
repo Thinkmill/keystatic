@@ -49,9 +49,14 @@ export const ol = getList('ol');
 
 export function ListItem(props: Omit<HTMLAttributes<HTMLLIElement>, 'color'>) {
   const type = useContext(ListContext);
+  const commonStyles = {
+    height: tokenSchema.fontsize.text.medium.capheight,
+    width: '1em',
+  };
   const className =
     type === 'ol'
       ? css({
+          ...commonStyles,
           color: tokenSchema.color.foreground.neutral,
           fontSize: tokenSchema.fontsize.text.medium.size,
           '::before': {
@@ -59,7 +64,7 @@ export function ListItem(props: Omit<HTMLAttributes<HTMLLIElement>, 'color'>) {
             counterIncrement: listCounter,
           },
         })
-      : undefined;
+      : css(commonStyles);
   const bullet =
     type === 'ol' ? null : (
       <Text size="small" color="neutral">
@@ -73,10 +78,8 @@ export function ListItem(props: Omit<HTMLAttributes<HTMLLIElement>, 'color'>) {
         aria-hidden="true"
         alignItems="center"
         flexShrink={0}
-        height={tokenSchema.fontsize.text.medium.capheight}
         justifyContent={type === 'ul' ? 'center' : 'start'}
         userSelect="none"
-        width="1em"
         UNSAFE_className={className}
       >
         {bullet}

@@ -1,17 +1,13 @@
-// import { linkTo } from '@storybook/addon-links';
 import { Meta } from '@storybook/react';
 import { ComponentProps, Key, ReactNode, useMemo, useState } from 'react';
 
 import { Badge } from '@voussoir/badge';
 import { Button } from '@voussoir/button';
-// import { Image } from '@voussoir/image';
 import { Icon } from '@voussoir/icon';
 import { copyIcon } from '@voussoir/icon/icons/copyIcon';
 import { saveIcon } from '@voussoir/icon/icons/saveIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-// import { Divider, Flex, Grid } from '@voussoir/layout';
 import { Flex, Grid } from '@voussoir/layout';
-// import { TextLink, useLinkComponent } from '@voussoir/link';
 import { TextLink } from '@voussoir/link';
 import {
   Cell,
@@ -27,6 +23,7 @@ import { Heading, Text } from '@voussoir/typography';
 
 import { AppShell } from './components';
 import { pokemonItems } from './data';
+import { breakpointQueries, css } from '@voussoir/style';
 
 export default {
   title: 'Patterns / Composition',
@@ -51,7 +48,7 @@ export const AppDashboard = () => {
         <Flex
           gap="regular"
           alignItems="center"
-          height="medium"
+          height="element.medium"
           marginY="medium"
         >
           <Text color="neutralEmphasis" weight="semibold">
@@ -73,7 +70,7 @@ export const AppDashboard = () => {
           >
             {['Users', 'Puppies', 'Reviews'].map(name => (
               <Flex
-                minHeight="large"
+                minHeight="element.large"
                 direction="column"
                 gap="regular"
                 alignItems="start"
@@ -102,7 +99,7 @@ export const AppDashboard = () => {
             gap="medium"
           >
             <Flex
-              minHeight="large"
+              minHeight="element.large"
               direction="column"
               gap="regular"
               alignItems="start"
@@ -167,7 +164,7 @@ export const AppList = () => {
         <Flex
           gap="regular"
           alignItems="center"
-          height="medium"
+          height="element.medium"
           marginY="medium"
         >
           <Text color="neutralEmphasis" weight="semibold">
@@ -247,53 +244,6 @@ export const AppList = () => {
 };
 
 // =============================================================================
-// LIST: Custom
-// =============================================================================
-
-// const AppListCustom = () => {
-//   return (
-//     <AppShell>
-//       <Flex
-//         // backgroundColor="surface"
-//         direction="column"
-//         paddingX="xlarge"
-//         paddingBottom="xlarge"
-//         gap="regular"
-//         flex
-//       >
-//         <Flex
-//           gap="regular"
-//           alignItems="center"
-//           height="medium"
-//           marginY="medium"
-//         >
-//           <Text color="neutralEmphasis" weight="semibold">
-//             Something should go here, but what?
-//           </Text>
-//         </Flex>
-
-//         <Grid gap="xxlarge">
-//           <Heading size="large">Puppies</Heading>
-
-//           <Grid
-//             columns={{
-//               tablet: 'repeat(2, 1fr)',
-//               desktop: 'repeat(3, 1fr)',
-//               wide: 'repeat(4, 1fr)',
-//             }}
-//             gap="large"
-//           >
-//             {Array.from({ length: 12 }).map((_, index) => (
-//               <ProductCard key={index} />
-//             ))}
-//           </Grid>
-//         </Grid>
-//       </Flex>
-//     </AppShell>
-//   );
-// };
-
-// =============================================================================
 // ITEM VIEW
 // =============================================================================
 
@@ -311,7 +261,7 @@ export const AppItem = () => {
         <Flex
           gap="regular"
           alignItems="center"
-          height="medium"
+          height="element.medium"
           marginY="medium"
         >
           <Text color="neutralEmphasis" weight="semibold">
@@ -333,7 +283,7 @@ export const AppItem = () => {
 
         <Flex gap="xlarge" direction={{ mobile: 'column', desktop: 'row' }}>
           <Flex gap="large" direction="column" flex>
-            <Heading size="large" minHeight="large">
+            <Heading size="large" minHeight="element.large">
               My dog is cool
             </Heading>
             <Flex gap="xlarge" direction="column">
@@ -358,10 +308,14 @@ export const AppItem = () => {
           <Flex
             gap="xxlarge"
             direction="column"
-            width={{ desktop: 280 }}
             minWidth={0}
+            UNSAFE_className={css({
+              [breakpointQueries.above.desktop]: {
+                width: 280,
+              },
+            })}
           >
-            <Flex gap="regular" minHeight="large">
+            <Flex gap="regular" minHeight="element.large">
               <Button flex={{ desktop: true }} prominence="high">
                 <Icon src={saveIcon} />
                 <Text>Save</Text>
@@ -460,54 +414,3 @@ const MetaDataItem = ({
     {children}
   </Flex>
 );
-
-// function randomInt() {
-//   return Math.floor(Math.random() * 10);
-// }
-
-// const ProductCard = () => {
-//   const LinkComponent = useLinkComponent(null);
-//   return (
-//     <Flex
-//       direction="column"
-//       backgroundColor="canvas"
-//       borderRadius="medium"
-//       overflow="hidden"
-//       boxShadow="small regular"
-//       // width={320}
-//     >
-//       <LinkComponent href="linkToStory:app-item">
-//         <Image
-//           src={`https://place-puppy.com/60${randomInt()}x40${randomInt()}`}
-//           alt="A photo of one or more puppies"
-//           aspectRatio="16/9"
-//         />
-//       </LinkComponent>
-//       <Grid gap="large" padding="large">
-//         <Grid gap="regular">
-//           <Text size="small" color="neutralSecondary" weight="semibold" casing="uppercase">
-//             Caption
-//           </Text>
-//           <Text truncate={2}>
-//             A puppy is a juvenile dog. Some puppies can weigh 1-1.5 kg, while
-//             larger ones can weigh up to 7-11 kg. All healthy puppies grow
-//             quickly after birth. A puppy's coat color may change as the puppy
-//             grows older.
-//           </Text>
-//         </Grid>
-//         <Divider />
-//         <Grid gap="regular">
-//           <Text size="small" color="neutralSecondary" weight="semibold" casing="uppercase">
-//             Tags
-//           </Text>
-//           <Flex wrap gap="small">
-//             <Badge>Animalia</Badge>
-//             <Badge>Mammalia</Badge>
-//             <Badge>Canidae</Badge>
-//             <Badge>Canis</Badge>
-//           </Flex>
-//         </Grid>
-//       </Grid>
-//     </Flex>
-//   );
-// };
