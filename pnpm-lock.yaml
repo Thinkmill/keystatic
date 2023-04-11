@@ -201,6 +201,53 @@ importers:
       tsx: 3.12.3
       typescript: 5.0.2
 
+  apps/next-simple-app-dir:
+    specifiers:
+      '@babel/runtime': ^7.18.3
+      '@keystatic/core': ^0.0.87
+      '@keystatic/next': ^0.0.6
+      '@preconstruct/next': ^4.0.0
+      '@ts-gql/compiler': ^0.16.1
+      '@ts-gql/next': ^17.0.0
+      '@types/react': ^18.0.25
+      '@voussoir/action-group': ^0.1.3
+      '@voussoir/button': ^0.1.5
+      '@voussoir/icon': ^0.2.0
+      '@voussoir/layout': ^0.1.2
+      '@voussoir/notice': ^0.1.2
+      '@voussoir/tooltip': ^0.1.2
+      '@voussoir/typography': ^0.1.3
+      chokidar: ^3.5.3
+      graphql: ^16.6.0
+      next: ^13.2.4
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      tsx: ^3.8.0
+      typescript: ^5.0.2
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@keystatic/core': link:../../packages/keystatic
+      '@keystatic/next': link:../../packages/next
+      '@preconstruct/next': 4.0.0
+      '@types/react': 18.0.28
+      '@voussoir/action-group': link:../../design-system/packages/action-group
+      '@voussoir/button': link:../../design-system/packages/button
+      '@voussoir/icon': link:../../design-system/packages/icon
+      '@voussoir/layout': link:../../design-system/packages/layout
+      '@voussoir/notice': link:../../design-system/packages/notice
+      '@voussoir/tooltip': link:../../design-system/packages/tooltip
+      '@voussoir/typography': link:../../design-system/packages/typography
+      chokidar: 3.5.3
+      graphql: 16.6.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    devDependencies:
+      '@ts-gql/compiler': 0.16.3_graphql@16.6.0
+      '@ts-gql/next': 17.0.0_geby35jtnxiaox3zmodjvon224
+      next: 13.2.4_biqbaboplfbrettd7655fr4n2y
+      tsx: 3.12.3
+      typescript: 5.0.2
+
   apps/remix:
     specifiers:
       '@keystatic/core': ^0.0.87
@@ -2247,12 +2294,16 @@ importers:
       '@babel/runtime': ^7.18.3
       '@keystatic/core': ^0.0.87
       '@types/react': ^18.0.25
+      chokidar: ^3.5.3
       next: ^13.2.4
       react: ^18.2.0
       react-dom: ^18.2.0
+      server-only: ^0.0.1
     dependencies:
       '@babel/runtime': 7.21.0
       '@types/react': 18.0.28
+      chokidar: 3.5.3
+      server-only: 0.0.1
     devDependencies:
       '@keystatic/core': link:../keystatic
       next: 13.2.4_biqbaboplfbrettd7655fr4n2y
@@ -10646,7 +10697,6 @@ packages:
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
     engines: {node: '>=8'}
-    dev: true
 
   /bindings/1.5.0:
     resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==}
@@ -11254,7 +11304,6 @@ packages:
       readdirp: 3.6.0
     optionalDependencies:
       fsevents: 2.3.2
-    dev: true
 
   /chownr/1.1.4:
     resolution: {integrity: sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==}
@@ -15527,7 +15576,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       binary-extensions: 2.2.0
-    dev: true
 
   /is-boolean-object/1.1.2:
     resolution: {integrity: sha512-gDYaKHJmnj4aWxyj6YHyXVpdQawtVLHU5cb+eztPGczf6cjuTdwve5ZIEfgXqH4e57An1D1AKf8CZ3kYrQRqYA==}
@@ -20212,7 +20260,6 @@ packages:
     engines: {node: '>=8.10.0'}
     dependencies:
       picomatch: 2.3.1
-    dev: true
 
   /recast/0.21.5:
     resolution: {integrity: sha512-hjMmLaUXAm1hIuTqOdeYObMslq/q+Xff6QE3Y2P+uoHAg2nmVlLBps2hzh1UJDdMtDTMXOFewK6ky51JQIeECg==}
@@ -20991,6 +21038,10 @@ packages:
 
   /server-destroy/1.0.1:
     resolution: {integrity: sha512-rb+9B5YBIEzYcD6x2VKidaa+cqYBJQKnU4oe4E3ANwRRN56yk/ua1YCJT1n21NTS8w6CcOclAKNP3PhdCXKYtQ==}
+
+  /server-only/0.0.1:
+    resolution: {integrity: sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==}
+    dev: false
 
   /set-blocking/2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}

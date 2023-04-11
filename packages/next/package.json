@@ -20,6 +20,10 @@
       "module": "./ui/pages/dist/keystatic-next-ui-pages.esm.js",
       "default": "./ui/pages/dist/keystatic-next-ui-pages.cjs.js"
     },
+    "./reader-refresh": {
+      "module": "./reader-refresh/dist/keystatic-next-reader-refresh.esm.js",
+      "default": "./reader-refresh/dist/keystatic-next-reader-refresh.cjs.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "dist/keystatic.cjs.js",
@@ -27,11 +31,14 @@
   "files": [
     "dist",
     "api",
-    "ui"
+    "ui",
+    "reader-refresh"
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@types/react": "^18.0.25"
+    "@types/react": "^18.0.25",
+    "chokidar": "^3.5.3",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@keystatic/core": "^0.0.87",
@@ -49,7 +56,8 @@
     "entrypoints": [
       "ui/pages.tsx",
       "ui/app.tsx",
-      "api.tsx"
+      "api.tsx",
+      "reader-refresh.tsx"
     ]
   }
 }
