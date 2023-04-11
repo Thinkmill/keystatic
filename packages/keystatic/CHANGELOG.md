@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.87
+
+### Patch Changes
+
+- bdeef7d: Fix log in page breaking setup flow
+
 ## 0.0.86
 
 ### Patch Changes
