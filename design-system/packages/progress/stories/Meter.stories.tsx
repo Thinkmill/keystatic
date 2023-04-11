@@ -49,8 +49,10 @@ storiesOf('Components/Meter', module)
   .add('parent width 100px', () => (
     <span style={{ width: '100px' }}>{render()}</span>
   ))
-  .add('width: 300px', () => render({ width: '300px', value: 100 }))
-  .add('width: 30px', () => render({ width: '30px' }))
+  .add('width: 100%', () => render({ width: '100%', value: 33 }))
+  .add('width: 100px', () =>
+    render({ UNSAFE_style: { width: '100px' }, value: 33 })
+  )
   .add('Using raw values for minValue, maxValue, and value', () =>
     render({
       maxValue: 12345678,

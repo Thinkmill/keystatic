@@ -222,7 +222,7 @@ function Picker<T extends object>(
 
   return (
     <FieldPrimitive
-      width="size.alias.singleLineWidth"
+      width="alias.singleLineWidth"
       {...props}
       ref={forwardedRef}
       labelProps={labelProps}

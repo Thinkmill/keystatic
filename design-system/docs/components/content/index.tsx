@@ -48,10 +48,9 @@ const Content = (props: ElementProps) => {
     <Box
       flex
       marginX="auto"
-      maxWidth={840}
-      minWidth={0}
       marginTop={{ mobile: HEADER_HEIGHT, tablet: 0 }}
       padding={{ mobile: 'large', tablet: 'xlarge' }}
+      UNSAFE_style={{ maxWidth: 840, minWidth: 0 }}
     >
       {/* PROSE */}
       <Flex
@@ -82,7 +81,7 @@ const Aside = () => {
       overflow="hidden auto"
       padding="xlarge"
       position="fixed"
-      width={ASIDE_WIDTH}
+      UNSAFE_style={{ width: ASIDE_WIDTH }}
     >
       <TableOfContents />
     </Box>
@@ -153,7 +152,7 @@ const HeadingItem = ({
         alignItems="center"
         borderRadius="small"
         gap="small"
-        height="regular"
+        height="element.regular"
         paddingX="medium"
         position="relative"
         UNSAFE_className={css({

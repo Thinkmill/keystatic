@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
 
 import { Box, Divider, Flex, Grid } from '@voussoir/layout';
-import { tokenSchema } from '@voussoir/style';
+import { css, tokenSchema } from '@voussoir/style';
 import { Heading, Text } from '@voussoir/typography';
 
 export default {
@@ -30,8 +30,10 @@ export const ColorTokens = () => {
             direction="column"
             gap="large"
             key={sectionKey}
-            width="size.container.small"
             maxWidth="100%"
+            UNSAFE_className={css({
+              width: tokenSchema.size.container.small,
+            })}
           >
             <Heading size="medium">{sectionKey}</Heading>
             <Grid
@@ -58,8 +60,8 @@ export const ColorTokens = () => {
                     >
                       <Box
                         borderRadius="small"
-                        height="regular"
-                        width="regular"
+                        height="element.regular"
+                        width="element.regular"
                         UNSAFE_style={{
                           backgroundColor: value,
                           boxShadow: 'inset 0 0 0 1px rgba(0, 0, 0, 0.1)',
@@ -129,8 +131,8 @@ export const SizeTokens = () => {
                     >
                       <Box
                         backgroundColor="accentEmphasis"
-                        height="small"
-                        width="regular"
+                        height="element.small"
+                        width="element.regular"
                         UNSAFE_style={{
                           width: value,
                         }}

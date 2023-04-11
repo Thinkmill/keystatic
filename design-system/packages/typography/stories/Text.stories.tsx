@@ -53,7 +53,7 @@ storiesOf('Components/Typography/Text', module)
     </Grid>
   ))
   .add('overflow', () => (
-    <Flex direction="column" gap="medium" width={200}>
+    <Flex direction="column" gap="medium" width="scale.2400">
       <Box border="neutral" padding="regular">
         <Text overflow="unset">
           <strong>Unset</strong> KeystoneVoussoirComponentLibrary {getPangram()}
@@ -99,7 +99,7 @@ storiesOf('Components/Typography/Text', module)
     </Flex>
   ))
   .add('truncate', () => (
-    <Grid gap="large" width={320} maxWidth="100%">
+    <Grid gap="large" width="scale.3400" maxWidth="100%">
       <Text truncate>
         The quick brown fox jumps over the lazy dog. The five boxing wizards
         jump quickly. Pack my box with five dozen liquor jugs. How vexingly

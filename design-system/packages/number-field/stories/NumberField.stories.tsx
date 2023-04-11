@@ -102,7 +102,7 @@ storiesOf('Components/NumberField', module)
       description: 'Please select your age.',
     })
   )
-  .add('custom width', () => render({ width: 'size.container.xsmall' }))
+  .add('custom width', () => render({ width: 'container.xsmall' }))
   .add('custom width no visible label', () =>
     renderNoLabel({
       width: 'size.container.xsmall',
@@ -223,7 +223,7 @@ function NumberFieldWithCurrencySelect(props: NumberFieldProps) {
       {...props}
       value={value}
       onChange={chain(setValue, action('onChange'))}
-      width="size.alias.singleLineWidth"
+      width="alias.singleLineWidth"
     />
   );
 }

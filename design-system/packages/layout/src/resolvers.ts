@@ -1,8 +1,6 @@
 import {
-  maybeTokenByKey,
   resolveProp,
   resolvePropWithPath,
-  LooseSizeDimension,
   StyleResolver,
   FlexStyleProps,
   useStyleProps,
@@ -97,10 +95,8 @@ export const gridStyleProps = {
   autoRows: resolvePropWithPath('gridAutoRows', 'size.element'),
   // @ts-ignore FIXME: The `StyleResolver` type is not generic enough to support this.
   areas: resolveProp('gridTemplateAreas', gridTemplateAreasValue),
-  // @ts-ignore FIXME: The `StyleResolver` type is not generic enough to support this.
-  columns: resolveProp('gridTemplateColumns', gridTemplateValue),
-  // @ts-ignore FIXME: The `StyleResolver` type is not generic enough to support this.
-  rows: resolveProp('gridTemplateRows', gridTemplateValue),
+  columns: resolveProp('gridTemplateColumns'),
+  rows: resolveProp('gridTemplateRows'),
   justifyItems: resolveProp('justifyItems'),
   justifyContent: resolveProp('justifyContent'),
   alignItems: resolveProp('alignItems'),
@@ -109,55 +105,4 @@ export const gridStyleProps = {
 
 function gridTemplateAreasValue<T>(value: T[]) {
   return value.map(v => `"${v}"`).join('\n');
-}
-function gridDimensionValue<T extends LooseSizeDimension>(value: T) {
-  if (typeof value === 'number') {
-    return `${value}px`;
-  }
-  return maybeTokenByKey('size.element', value);
-}
-function gridTemplateValue<T extends LooseSizeDimension>(value: T | T[]) {
-  if (Array.isArray(value)) {
-    return value.map(gridDimensionValue).join(' ');
-  }
-
-  return gridDimensionValue(value);
-}
-
-// Utils
-// ============================================================================
-
-/**
- * Can be used to make a repeating fragment of the columns or rows list.
- * See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/repeat).
- * @param count - The number of times to repeat the fragment.
- * @param repeat - The fragment to repeat.
- */
-export function repeat(
-  count: number | 'auto-fill' | 'auto-fit',
-  repeat: LooseSizeDimension | LooseSizeDimension[]
-): string {
-  return `repeat(${count}, ${gridTemplateValue(repeat)})`;
-}
-
-/**
- * Defines a size range greater than or equal to min and less than or equal to max.
- * See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/minmax).
- * @param min - The minimum size.
- * @param max - The maximum size.
- */
-export function minmax(
-  min: LooseSizeDimension,
-  max: LooseSizeDimension
-): string {
-  return `minmax(${gridDimensionValue(min)}, ${gridDimensionValue(max)})`;
-}
-
-/**
- * Clamps a given size to an available size.
- * See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/fit-content).
- * @param dimension - The size to clamp.
- */
-export function fitContent(dimension: LooseSizeDimension): string {
-  return `fit-content(${gridDimensionValue(dimension)})`;
 }

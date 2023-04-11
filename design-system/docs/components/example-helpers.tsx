@@ -42,7 +42,8 @@ export const Placeholder = ({
   children,
   represent = 'text',
   shape = 'square',
-  ...props
+  height,
+  width,
 }: PlaceholderProps) => {
   const svgStyles = css({
     position: 'absolute' as const,
@@ -88,10 +89,10 @@ export const Placeholder = ({
       justifyContent="center"
       overflow="hidden"
       position="relative"
-      minHeight="small"
-      minWidth="small"
+      minHeight="element.small"
+      minWidth="element.small"
       maxWidth="100%"
-      {...props}
+      UNSAFE_style={{ height, width }}
     >
       {represent === 'image' ? (
         <svg xmlns="http://www.w3.org/2000/svg" className={svgStyles}>

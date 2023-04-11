@@ -27,7 +27,7 @@ storiesOf('Components/ButtonGroup', module)
   .add(
     'alignment',
     (args: ArgTypes) => (
-      <Flex border="emphasis" borderWidth="large" width={300}>
+      <Flex border="emphasis" borderWidth="large" UNSAFE_style={{ width: 300 }}>
         <ButtonGroup {...args} flex>
           <Button prominence="high">Primary</Button>
           <Button>Secondary</Button>

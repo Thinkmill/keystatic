@@ -46,7 +46,7 @@ export function HidingColumns() {
           </Flex>
         ))}
       </Flex>
-      <TableView aria-label="Table with hideable columns" width={500}>
+      <TableView aria-label="Table with hideable columns" width="scale.5000">
         <TableHeader columns={columns.filter(c => visibleColumns.has(c.key))}>
           {column => <Column>{column.title}</Column>}
         </TableHeader>

@@ -8,7 +8,7 @@ storiesOf('Components/Typography/Heading', module)
     <Heading>The quick brown fox jumps over the lazy dog.</Heading>
   ))
   .add('align', () => (
-    <Grid gap="xlarge" width={320}>
+    <Grid gap="xlarge" width="scale.3600">
       <Heading align="start">Start</Heading>
       <Heading align="center">Center</Heading>
       <Heading align="end">End</Heading>
@@ -31,7 +31,7 @@ storiesOf('Components/Typography/Heading', module)
     </Grid>
   ))
   .add('truncate', () => (
-    <Grid gap="xlarge" width={320} maxWidth="100%">
+    <Grid gap="xlarge" width="scale.3600" maxWidth="100%">
       <Heading truncate>
         The quick brown fox jumps over the lazy dog. The five boxing wizards
         jump quickly. Pack my box with five dozen liquor jugs. How vexingly

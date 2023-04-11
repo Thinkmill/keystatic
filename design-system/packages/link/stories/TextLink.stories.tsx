@@ -21,7 +21,7 @@ storiesOf('Components/TextLink', module)
     </Grid>
   ))
   .add('truncate', () => (
-    <Grid gap="large" width={280} maxWidth="100%">
+    <Grid gap="large" maxWidth="100%" UNSAFE_style={{ width: 280 }}>
       <Text truncate>
         <TextLink>
           The quick brown fox jumps over the lazy dog. The five boxing wizards

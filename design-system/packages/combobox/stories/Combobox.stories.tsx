@@ -211,7 +211,7 @@ storiesOf('Components/Combobox', module)
   .add('autoFocus', () => render({ autoFocus: true }))
   .add('loadingState', () => {
     return (
-      <Flex gap="large" direction="column" width={240}>
+      <Flex gap="large" direction="column" UNSAFE_style={{ width: 240 }}>
         {render({ label: 'Combobox (loading)', loadingState: 'loading' })}
         {render({ label: 'Combobox (filtering)', loadingState: 'filtering' })}
         {render({

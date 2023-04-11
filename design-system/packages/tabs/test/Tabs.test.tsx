@@ -357,7 +357,7 @@ describe('tabs/Tabs', function () {
 
   it('tabpanel should have tabIndex=0 only when there are no focusable elements', async function () {
     let { getByRole, getAllByRole } = renderWithProvider(
-      <Tabs aria-label="Tab Example" maxWidth={500}>
+      <Tabs aria-label="Tab Example" maxWidth="scale.5000">
         <TabList>
           <Item>Tab 1</Item>
           <Item>Tab 2</Item>
@@ -390,7 +390,7 @@ describe('tabs/Tabs', function () {
 
   it('TabPanel children do not share values between panels', () => {
     let { getByDisplayValue, getAllByRole, getByTestId } = renderWithProvider(
-      <Tabs aria-label="Tab Example" maxWidth={500}>
+      <Tabs aria-label="Tab Example" maxWidth="scale.5000">
         <TabList>
           <Item>Tab 1</Item>
           <Item>Tab 2</Item>

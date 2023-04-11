@@ -27,6 +27,7 @@ import { Heading, Text } from '@voussoir/typography';
 
 import { AppShell } from './components';
 import { pokemonItems } from './data';
+import { breakpointQueries, css } from '@voussoir/style';
 
 export default {
   title: 'Patterns / Composition',
@@ -51,7 +52,7 @@ export const AppDashboard = () => {
         <Flex
           gap="regular"
           alignItems="center"
-          height="medium"
+          height="element.medium"
           marginY="medium"
         >
           <Text color="neutralEmphasis" weight="semibold">
@@ -73,7 +74,7 @@ export const AppDashboard = () => {
           >
             {['Users', 'Puppies', 'Reviews'].map(name => (
               <Flex
-                minHeight="large"
+                minHeight="element.large"
                 direction="column"
                 gap="regular"
                 alignItems="start"
@@ -102,7 +103,7 @@ export const AppDashboard = () => {
             gap="medium"
           >
             <Flex
-              minHeight="large"
+              minHeight="element.large"
               direction="column"
               gap="regular"
               alignItems="start"
@@ -167,7 +168,7 @@ export const AppList = () => {
         <Flex
           gap="regular"
           alignItems="center"
-          height="medium"
+          height="element.medium"
           marginY="medium"
         >
           <Text color="neutralEmphasis" weight="semibold">
@@ -311,7 +312,7 @@ export const AppItem = () => {
         <Flex
           gap="regular"
           alignItems="center"
-          height="medium"
+          height="element.medium"
           marginY="medium"
         >
           <Text color="neutralEmphasis" weight="semibold">
@@ -333,7 +334,7 @@ export const AppItem = () => {
 
         <Flex gap="xlarge" direction={{ mobile: 'column', desktop: 'row' }}>
           <Flex gap="large" direction="column" flex>
-            <Heading size="large" minHeight="large">
+            <Heading size="large" minHeight="element.large">
               My dog is cool
             </Heading>
             <Flex gap="xlarge" direction="column">
@@ -358,10 +359,14 @@ export const AppItem = () => {
           <Flex
             gap="xxlarge"
             direction="column"
-            width={{ desktop: 280 }}
             minWidth={0}
+            UNSAFE_className={css({
+              [breakpointQueries.above.desktop]: {
+                width: 280,
+              },
+            })}
           >
-            <Flex gap="regular" minHeight="large">
+            <Flex gap="regular" minHeight="element.large">
               <Button flex={{ desktop: true }} prominence="high">
                 <Icon src={saveIcon} />
                 <Text>Save</Text>

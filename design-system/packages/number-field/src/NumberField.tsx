@@ -50,7 +50,7 @@ export const NumberField: ForwardRefExoticComponent<
 
   return (
     <TextFieldPrimitive
-      width="size.alias.singleLineWidth"
+      width="alias.singleLineWidth"
       {...filterDOMProps(props, { omit: omittedProps })}
       descriptionProps={descriptionProps}
       errorMessageProps={errorMessageProps}

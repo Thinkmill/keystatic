@@ -25,7 +25,7 @@ storiesOf('Components/Popover', module)
           Always open
         </ActionButton>
         <Popover {...overlayProps} triggerRef={triggerRef} state={state}>
-          <Box padding="xlarge" width={320} maxWidth="100%">
+          <Box padding="xlarge" maxWidth="100%" UNSAFE_style={{ width: 320 }}>
             <Text>
               Popovers are small overlays that open on demand. They let users
               access additional content and actions without cluttering the page.
