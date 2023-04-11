@@ -62,11 +62,28 @@ export type SizeRadius = keyof VoussoirTheme['size']['radius'];
 export type SizeShadow = keyof VoussoirTheme['size']['shadow'];
 export type SizeSpace = keyof VoussoirTheme['size']['space'];
 
+type Sizes = VoussoirTheme['size'];
+export type DimensionKey =
+  | `alias.${keyof Sizes['alias']}`
+  | `border.${keyof Sizes['border']}`
+  | `container.${keyof Sizes['container']}`
+  | `element.${keyof Sizes['element']}`
+  | `icon.${keyof Sizes['icon']}`
+  | `scale.${keyof Sizes['scale']}`;
+
 // PROPS
 // ============================================================================
 
+// TODO: remove this type, it's unsafe.
 export type Loose<T> = T | number | (string & {});
-export type LooseSizeDimension = Loose<SizeElement>;
+export type LooseSizeDimension =
+  | DimensionKey
+  | 0
+  | 'auto'
+  | 'inherit'
+  | '100%'
+  | '100vh'
+  | '100vw';
 export type LooseSizeSpace = Loose<SizeSpace>;
 
 export type ResponsiveProp<T> = Partial<Record<Breakpoint, T>>;
@@ -316,9 +333,9 @@ export type GridStyleProps = {
   /** Defines the sizes of each column in the grid. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-columns). */
   columns?: Responsive<string | LooseSizeDimension[]>;
   /** Defines the size of implicitly generated columns. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-auto-columns). */
-  autoColumns?: Responsive<LooseSizeDimension>;
+  autoColumns?: Responsive<string | LooseSizeDimension>;
   /** Defines the size of implicitly generated rows. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-auto-rows). */
-  autoRows?: Responsive<LooseSizeDimension>;
+  autoRows?: Responsive<string | LooseSizeDimension>;
   /** Controls how auto-placed items are flowed into the grid. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-auto-flow). */
   autoFlow?: Responsive<'row' | 'column' | 'row dense' | 'column dense'>;
   /**

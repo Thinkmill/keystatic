@@ -1,7 +1,13 @@
 import { get } from 'lodash';
 
 import { tokenSchema } from './tokens';
-import { CSSProp, MaybeArray, StyleResolver } from './types';
+import {
+  CSSProp,
+  DimensionKey,
+  LooseSizeDimension,
+  MaybeArray,
+  StyleResolver,
+} from './types';
 
 // Utils
 // ----------------------------------------------------------------------------
@@ -43,8 +49,29 @@ export function border<P extends MaybeArray<CSSProp>>(
   };
   return [prop, resolver];
 }
-function size(prop: MaybeArray<CSSProp>) {
-  return resolvePropWithPath(prop, 'size.element');
+function isDimensionKey(value: string): value is DimensionKey {
+  let [prop, key] = value.split('.');
+  if (!prop || !key) {
+    return false;
+  }
+  // @ts-expect-error
+  return !!tokenSchema.size[prop][key];
+}
+function size(cssProp: MaybeArray<CSSProp>) {
+  const resolver = (value: LooseSizeDimension) => {
+    if (typeof value === 'number') {
+      return `${value}px`;
+    }
+
+    if (isDimensionKey(value)) {
+      let [prop, key] = value.split('.');
+      // @ts-expect-error
+      return tokenSchema.size[prop][key];
+    }
+
+    return value;
+  };
+  return [cssProp, resolver];
 }
 function space(prop: MaybeArray<CSSProp>) {
   return resolvePropWithPath(prop, 'size.space');
