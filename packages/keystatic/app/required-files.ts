@@ -4,12 +4,10 @@ import {
   ComponentSchema,
   FormFieldWithFile,
 } from '../DocumentEditor/component-blocks/api';
-import {
-  ReadonlyPropPath,
-  traverseProps,
-} from '../DocumentEditor/component-blocks/utils';
+import { ReadonlyPropPath } from '../DocumentEditor/component-blocks/utils';
 import { FormatInfo } from './path-utils';
 import { getSlugFromState } from './utils';
+import { traverseProps } from '../DocumentEditor/component-blocks/props-value';
 
 export type RequiredFile = {
   path: ReadonlyPropPath;

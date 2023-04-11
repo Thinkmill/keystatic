@@ -1,9 +1,7 @@
 import { Node } from '@markdoc/markdoc';
 import { Descendant } from 'slate';
-import {
-  getValueAtPropPath,
-  ReadonlyPropPath,
-} from '../DocumentEditor/component-blocks/utils';
+import { ReadonlyPropPath } from '../DocumentEditor/component-blocks/utils';
+import { getValueAtPropPath } from '../DocumentEditor/component-blocks/props-value';
 import {
   getInlineNodes,
   addMarkToChildren,

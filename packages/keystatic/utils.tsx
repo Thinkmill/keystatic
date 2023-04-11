@@ -3,7 +3,6 @@ import { assert, assertNever } from 'emery';
 import { useContext, useState } from 'react';
 
 import { ComponentSchema, fields } from './DocumentEditor/component-blocks/api';
-import { asyncTransformProps } from './DocumentEditor/component-blocks/utils';
 import { dump } from 'js-yaml';
 import { useMutation } from 'urql';
 import { fromUint8Array } from 'js-base64';
@@ -30,6 +29,7 @@ import { getDirectoriesForTreeKey, getTreeKey } from './app/tree-key';
 import { getPropPathPortion } from './app/required-files';
 import { AppSlugContext } from './app/onboarding/install-app';
 import { createUrqlClient } from './app/provider';
+import { asyncTransformProps } from './DocumentEditor/component-blocks/props-value';
 
 const textEncoder = new TextEncoder();
 

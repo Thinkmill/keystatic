@@ -26,7 +26,7 @@ import {
   loadDataFile,
   parseSerializedFormField,
 } from '../app/required-files';
-import { getValueAtPropPath } from '../DocumentEditor/component-blocks/utils';
+import { getValueAtPropPath } from '../DocumentEditor/component-blocks/props-value';
 import { Dirent } from 'fs';
 
 type EntryReaderOpts = { resolveLinkedFiles?: boolean };

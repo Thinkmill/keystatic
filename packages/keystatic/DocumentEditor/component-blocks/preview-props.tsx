@@ -8,35 +8,11 @@ import {
   GenericPreviewProps,
   BasicFormField,
 } from './api';
-import { updateValue } from './initial-values';
-
-const arrayValuesToElementKeys = new WeakMap<
-  readonly unknown[],
-  readonly string[]
->();
-
-let counter = 0;
-
-export function getKeysForArrayValue(value: readonly unknown[]) {
-  if (!arrayValuesToElementKeys.has(value)) {
-    arrayValuesToElementKeys.set(
-      value,
-      Array.from({ length: value.length }, getNewArrayElementKey)
-    );
-  }
-  return arrayValuesToElementKeys.get(value)!;
-}
-
-export function setKeysForArrayValue(
-  value: readonly unknown[],
-  elementIds: readonly string[]
-) {
-  arrayValuesToElementKeys.set(value, elementIds);
-}
-
-export function getNewArrayElementKey() {
-  return (counter++).toString();
-}
+import {
+  getKeysForArrayValue,
+  setKeysForArrayValue,
+  updateValue,
+} from './initial-values';
 
 function castToMemoizedInfoForSchema<
   T extends {
@@ -295,7 +271,7 @@ export function createGetPreviewProps<
   ): GenericPreviewProps<Schema, ChildFieldElement> {
     return previewPropsFactories[schema.kind](
       schema as any,
-      value,
+      value as any,
       memoedThing as any,
       path,
       getInnerProp
