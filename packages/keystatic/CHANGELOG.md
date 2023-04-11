@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.89
+
+### Patch Changes
+
+- d5e079a: Remove circular dependencies causing broken build
+
 ## 0.0.88
 
 ### Patch Changes
