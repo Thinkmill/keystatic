@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/next",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -41,7 +41,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.0.87",
+    "@keystatic/core": "^0.0.88",
     "next": "^13.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
