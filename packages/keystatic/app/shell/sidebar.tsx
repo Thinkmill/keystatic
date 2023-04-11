@@ -25,7 +25,7 @@ import { CloudConfig, Config, GitHubConfig } from '../../config';
 
 import l10nMessages from '../l10n/index.json';
 import { useRouter } from '../router';
-import { getRepoUrl, isGitHubConfig, pluralize } from '../utils';
+import { getRepoUrl, isCloudConfig, isGitHubConfig, pluralize } from '../utils';
 
 import { GitHubAppShellDataContext, useBranchInfo, useChanged } from './data';
 import { SidebarHeader } from './sidebar-header';
@@ -118,8 +118,9 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
         'keystatic-sidebar',
       ]}
     >
-      {(props.config.storage.kind === 'github' ||
-        props.config.storage.kind === 'cloud') && <SidebarHeader />}
+      {(isGitHubConfig(props.config) || isCloudConfig(props.config)) && (
+        <SidebarHeader />
+      )}
 
       {/*
   ======================================================================
@@ -196,7 +197,9 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
         </NavList>
       </Flex>
 
-      {isGitHubConfig(props.config) && <SidebarFooter config={props.config} />}
+      {(isGitHubConfig(props.config) || isCloudConfig(props.config)) && (
+        <SidebarFooter config={props.config} />
+      )}
 
       <VisuallyHidden
         elementType="button"

@@ -2,7 +2,7 @@ import { fromUint8Array } from 'js-base64';
 import { isDefined } from 'emery';
 
 import { Config, GitHubConfig, LocalConfig } from '../config';
-import { ComponentSchema, fields, SlugFormField } from '../src';
+import { CloudConfig, ComponentSchema, fields, SlugFormField } from '../src';
 import {
   getCollectionFormat,
   getCollectionItemPath,
@@ -62,6 +62,10 @@ export function isGitHubConfig(config: Config): config is GitHubConfig {
 
 export function isLocalConfig(config: Config): config is LocalConfig {
   return config.storage.kind === 'local';
+}
+
+export function isCloudConfig(config: Config): config is CloudConfig {
+  return config.storage.kind === 'cloud';
 }
 
 export function getRepoPath(config: { mainOwner: string; mainRepo: string }) {
