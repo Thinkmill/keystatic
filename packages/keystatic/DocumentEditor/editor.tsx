@@ -1,13 +1,4 @@
-import {
-  Editor,
-  NodeEntry,
-  Path,
-  Transforms,
-  Text,
-  Node,
-  Element,
-  Descendant,
-} from 'slate';
+import { Node, Element, Descendant } from 'slate';
 
 export type Block = Exclude<Element, { type: 'link' }>;
 
