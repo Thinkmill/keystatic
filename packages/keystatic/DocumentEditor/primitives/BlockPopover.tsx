@@ -58,7 +58,8 @@ const typeMatcher = nodeTypeMatcher(
   'image',
   'layout',
   'link',
-  'table'
+  'table',
+  'heading'
 );
 
 const ActiveBlockPopoverContext = createContext<undefined | Element>(undefined);

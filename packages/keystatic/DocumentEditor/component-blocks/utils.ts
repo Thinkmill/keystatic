@@ -59,6 +59,7 @@ export function getDocumentFeaturesForChildField(
       softBreaks: options.formatting?.softBreaks === 'inherit',
     };
   }
+  const headingLevels = options.formatting?.headingLevels;
   return {
     kind: 'block',
     inlineMarks,
@@ -84,10 +85,17 @@ export function getDocumentFeaturesForChildField(
                 blockquote: false,
                 code: false,
               },
-        headingLevels:
-          options.formatting?.headingLevels === 'inherit'
-            ? editorDocumentFeatures.formatting.headingLevels
-            : options.formatting?.headingLevels || [],
+        headings:
+          headingLevels === 'inherit'
+            ? editorDocumentFeatures.formatting.headings
+            : {
+                levels: headingLevels
+                  ? editorDocumentFeatures.formatting.headings.levels.filter(
+                      level => headingLevels.includes(level)
+                    )
+                  : [],
+                schema: editorDocumentFeatures.formatting.headings.schema,
+              },
         listTypes:
           options.formatting?.listTypes === 'inherit'
             ? editorDocumentFeatures.formatting.listTypes

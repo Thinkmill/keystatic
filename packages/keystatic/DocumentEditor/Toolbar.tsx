@@ -63,9 +63,9 @@ export function Toolbar({
   return (
     <ToolbarContainer>
       <ToolbarScrollArea>
-        {!!documentFeatures.formatting.headingLevels.length && (
+        {!!documentFeatures.formatting.headings.levels.length && (
           <HeadingMenu
-            headingLevels={documentFeatures.formatting.headingLevels}
+            headingLevels={documentFeatures.formatting.headings.levels}
           />
         )}
         {hasMarks && (
@@ -204,7 +204,7 @@ type HeadingItem = { name: string; id: string | number };
 const HeadingMenu = ({
   headingLevels,
 }: {
-  headingLevels: DocumentFeatures['formatting']['headingLevels'];
+  headingLevels: DocumentFeatures['formatting']['headings']['levels'];
 }) => {
   const { editor, textStyles } = useToolbarState();
   const isDisabled = textStyles.allowedHeadingLevels.length === 0;

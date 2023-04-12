@@ -78,8 +78,8 @@ export function normalizeElementBasedOnDocumentFeatures(
 ): boolean {
   if (
     (node.type === 'heading' &&
-      (!formatting.headingLevels.length ||
-        !formatting.headingLevels.includes(node.level))) ||
+      (!formatting.headings.levels.length ||
+        !formatting.headings.levels.includes(node.level))) ||
     (node.type === 'ordered-list' && !formatting.listTypes.ordered) ||
     (node.type === 'unordered-list' && !formatting.listTypes.unordered) ||
     (node.type === 'code' && !formatting.blockTypes.code) ||

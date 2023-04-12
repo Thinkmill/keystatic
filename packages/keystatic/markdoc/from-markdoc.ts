@@ -143,22 +143,20 @@ function fromMarkdocNode(
     };
   }
   if (node.type === 'fence') {
+    const { language, content, ...rest } = node.attributes;
     return {
       type: 'code',
-      children: [
-        { text: node.attributes.content.replace(/\n$/, '') } as TextWithMarks,
-      ],
-      ...(typeof node.attributes.language === 'string'
-        ? { language: node.attributes.language }
-        : {}),
+      children: [{ text: content.replace(/\n$/, '') } as TextWithMarks],
+      ...(typeof language === 'string' ? { language } : {}),
+      ...rest,
     };
   }
   if (node.type === 'heading') {
     return {
-      type: 'heading',
+      ...node.attributes,
       level: node.attributes.level,
+      type: 'heading',
       children: inlineFromMarkdoc(node.children),
-      textAlign: node.attributes.textAlign,
     };
   }
   if (node.type === 'list') {
@@ -298,13 +296,6 @@ function fromMarkdocNode(
           fields: componentBlock.schema,
         });
         if (singleChildField) {
-          // [
-          //     {
-          //       type: `component-${singleChildField.options.kind}-prop`,
-          //       children: node.children.map(x => fromMarkdocNode(x, componentBlocks)),
-          //       propPath: singleChildField.path,
-          //     },
-          //   ]
           const newAttributes = JSON.parse(JSON.stringify(node.attributes));
           const children: Descendant[] = [];
           toChildrenAndProps(
