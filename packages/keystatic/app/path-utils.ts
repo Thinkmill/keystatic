@@ -2,7 +2,7 @@ import { assert } from 'emery';
 import { Config, DataFormat, Format, Glob } from '../config';
 import {
   ComponentSchema,
-  FormFieldWithFile,
+  ContentFormField,
 } from '../DocumentEditor/component-blocks/api';
 
 export function fixPath(path: string) {
@@ -92,7 +92,7 @@ export function getSingletonPath(config: Config, singleton: string) {
 
 export function getDataFileExtension(formatInfo: FormatInfo) {
   return formatInfo.contentField
-    ? formatInfo.contentField.config.serializeToFile.primaryExtension
+    ? formatInfo.contentField.config.contentExtension
     : '.' + formatInfo.data;
 }
 
@@ -117,14 +117,12 @@ function getFormatInfo(
       `${format.contentField} is not a form field`
     );
     assert(
-      'serializeToFile' in field && field.serializeToFile?.kind === 'multi',
-      `${format.contentField} does not have a multi serializeToFile config`
+      field.formKind === 'content',
+      `${format.contentField} is not a content field`
     );
     contentField = {
       key: format.contentField,
-      config: field as typeof field & {
-        serializeToFile: { kind: 'multi' };
-      },
+      config: field as ContentFormField<any, any, any>,
     };
   }
   return {
@@ -139,9 +137,7 @@ export type FormatInfo = {
   contentField:
     | {
         key: string;
-        config: FormFieldWithFile<any, any> & {
-          serializeToFile: { kind: 'multi' };
-        };
+        config: ContentFormField<any, any, any>;
       }
     | undefined;
   dataLocation: 'index' | 'outer';

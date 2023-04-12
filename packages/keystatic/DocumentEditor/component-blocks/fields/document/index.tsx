@@ -1,28 +1,27 @@
 import Markdoc from '@markdoc/markdoc';
 
-import { Editor } from 'slate';
+import { Descendant, Editor } from 'slate';
 
 import { fromMarkdoc } from '../../../../markdoc/from-markdoc';
 import { toMarkdocDocument } from '../../../../markdoc/to-markdoc';
 import { DocumentFeatures } from '../../../document-features';
-import {
-  CollectedFile,
-  collectFiles,
-  deserializeFiles,
-} from '../../document-field';
+import { deserializeFiles } from '../../document-field';
 import { collectDirectoriesUsedInSchema } from '../../../../app/tree-key';
 import {
   BasicFormField,
   ComponentBlock,
   ComponentSchema,
   DocumentElement,
-  FormFieldWithFileRequiringContentsForReader,
+  ContentFormField,
   SlugFormField,
+  FormFieldStoredValue,
 } from '../../api';
 import { text } from '../text';
 import { DocumentFieldInput } from './ui';
 import { createDocumentEditorForNormalization } from '../../../create-editor';
 import { object } from '../object';
+import { FieldDataError } from '../error';
+import { basicFormFieldWithSimpleReaderParse } from '../utils';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -71,7 +70,7 @@ type FormattingConfig = {
 
 export type BasicStringFormField =
   | BasicFormField<string>
-  | SlugFormField<string, undefined>;
+  | SlugFormField<string, string, string, null>;
 
 type DocumentFeaturesConfig = {
   formatting?: true | FormattingConfig;
@@ -91,21 +90,33 @@ type DocumentFeaturesConfig = {
   tables?: true;
 };
 
-const defaultAltField: SlugFormField<string, undefined> = text({
+const defaultAltField: SlugFormField<string, string, string, null> = text({
   label: 'Alt text',
   description: 'This text will be used by screen readers and search engines.',
 });
 
-const emptyTitleField: BasicFormField<string> = {
-  kind: 'form',
-  Input() {
-    return null;
-  },
-  defaultValue: '',
-  validate(value) {
-    return typeof value === 'string';
-  },
-};
+const emptyTitleField: BasicFormField<string> =
+  basicFormFieldWithSimpleReaderParse({
+    Input() {
+      return null;
+    },
+    defaultValue() {
+      return '';
+    },
+    parse(value) {
+      if (value === undefined) return '';
+      if (typeof value !== 'string') {
+        throw new FieldDataError('Must be string');
+      }
+      return value;
+    },
+    validate(value) {
+      return value;
+    },
+    serialize(value) {
+      return { value };
+    },
+  });
 
 export function normaliseDocumentFeatures(
   config: DocumentFeaturesConfig
@@ -242,21 +253,24 @@ export function document({
   label: string;
   componentBlocks?: Record<string, ComponentBlock>;
   description?: string;
-} & DocumentFeaturesConfig): FormFieldWithFileRequiringContentsForReader<
+} & DocumentFeaturesConfig): ContentFormField<
+  DocumentElement[],
   DocumentElement[],
   DocumentElement[]
 > {
   const documentFeatures = normaliseDocumentFeatures(documentFeaturesConfig);
   const parse =
     (mode: 'read' | 'edit') =>
-    (data: {
-      value: unknown;
-      primary: Uint8Array | undefined;
-      other: ReadonlyMap<string, Uint8Array>;
-      external?: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
-      slug?: string;
-    }): DocumentElement[] => {
-      const markdoc = textDecoder.decode(data.primary);
+    (
+      _value: FormFieldStoredValue,
+      data: {
+        content: Uint8Array | undefined;
+        other: ReadonlyMap<string, Uint8Array>;
+        external: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
+        slug: string | undefined;
+      }
+    ): DocumentElement[] => {
+      const markdoc = textDecoder.decode(data.content);
       const document = fromMarkdoc(Markdoc.parse(markdoc), componentBlocks);
       const editor = createDocumentEditorForNormalization(
         documentFeatures,
@@ -276,7 +290,10 @@ export function document({
     };
   return {
     kind: 'form',
-    defaultValue: [{ type: 'paragraph', children: [{ text: '' }] }],
+    formKind: 'content',
+    defaultValue() {
+      return [{ type: 'paragraph', children: [{ text: '' }] }];
+    },
     Input(props) {
       return (
         <DocumentFieldInput
@@ -288,78 +305,62 @@ export function document({
         />
       );
     },
-    validate() {
-      return true;
-    },
-    serializeToFile: {
-      kind: 'multi',
-      primaryExtension: '.mdoc',
-      directories: [
-        ...collectDirectoriesUsedInSchema(
-          object(
-            Object.fromEntries(
-              Object.entries(componentBlocks).map(([name, block]) => [
-                name,
-                object(block.schema),
-              ])
-            )
-          )
-        ),
-        ...(typeof documentFeatures.images === 'object' &&
-        typeof documentFeatures.images.directory === 'string'
-          ? [documentFeatures.images.directory]
-          : []),
-      ],
-      parse: parse('edit'),
-      async serialize(value, slug) {
-        const collectedFiles: CollectedFile[] = [];
-        const transformed = collectFiles(
-          value as any,
-          componentBlocks,
-          collectedFiles,
-          documentFeatures,
-          slug
-        );
 
-        const other = new Map<string, Uint8Array>();
-        const external = new Map<string, Map<string, Uint8Array>>();
-        for (const file of collectedFiles) {
-          if (file.parent === undefined) {
-            other.set(file.filename, file.data);
-            continue;
-          }
-          if (!external.has(file.parent)) {
-            external.set(file.parent, new Map());
-          }
-          external.get(file.parent)!.set(file.filename, file.data);
+    parse: parse('edit'),
+    contentExtension: '.mdoc',
+    validate(value) {
+      return value;
+    },
+    directories: [
+      ...collectDirectoriesUsedInSchema(
+        object(
+          Object.fromEntries(
+            Object.entries(componentBlocks).map(([name, block]) => [
+              name,
+              object(block.schema),
+            ])
+          )
+        )
+      ),
+      ...(typeof documentFeatures.images === 'object' &&
+      typeof documentFeatures.images.directory === 'string'
+        ? [documentFeatures.images.directory]
+        : []),
+    ],
+    serialize(value, opts) {
+      const { extraFiles, node } = toMarkdocDocument(
+        value as any as Descendant[],
+        {
+          componentBlocks,
+          documentFeatures,
+          slug: opts.slug,
         }
-        try {
-          return {
-            primary: textEncoder.encode(
-              Markdoc.format(
-                Markdoc.parse(
-                  Markdoc.format(
-                    toMarkdocDocument(transformed, {
-                      componentBlocks,
-                      documentFeatures,
-                    })
-                  )
-                )
-              )
-            ),
-            other,
-            external,
-            value: undefined,
-          };
-        } catch (err) {
-          debugger;
-          throw err;
+      );
+
+      const other = new Map<string, Uint8Array>();
+      const external = new Map<string, Map<string, Uint8Array>>();
+      for (const file of extraFiles) {
+        if (file.parent === undefined) {
+          other.set(file.path, file.contents);
+          continue;
         }
-      },
-      reader: {
-        requiresContentInReader: true,
-        parseToReader: parse('read'),
-      },
+        if (!external.has(file.parent)) {
+          external.set(file.parent, new Map());
+        }
+        external.get(file.parent)!.set(file.path, file.contents);
+      }
+
+      return {
+        content: textEncoder.encode(
+          Markdoc.format(Markdoc.parse(Markdoc.format(node)))
+        ),
+        other,
+        external,
+        value: undefined,
+      };
+    },
+    reader: {
+      parse: parse('read'),
     },
   };
 }

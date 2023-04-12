@@ -1,5 +1,7 @@
 import { Glob } from '../../../../config';
+import { FormFieldStoredValue } from '../../../../src';
 import { SlugFormField } from '../../api';
+import { FieldDataError } from '../error';
 import { TextFieldInput } from './ui';
 
 export function validateText(
@@ -20,13 +22,25 @@ export function validateText(
     return `${fieldLabel} must be no longer than ${max} characters`;
   }
   if (slugInfo) {
+    if (val === '') {
+      return `${fieldLabel} must not be empty`;
+    }
     if (val === '..') {
       return `${fieldLabel} must not be ..`;
     }
     if (val === '.') {
       return `${fieldLabel} must not be .`;
     }
-    if (badSlashForGlobPattern(slugInfo.glob).test(val)) {
+    if (slugInfo.glob === '**') {
+      const split = val.split('/');
+      if (split.some(s => s === '..')) {
+        return `${fieldLabel} must not contain ..`;
+      }
+      if (split.some(s => s === '.')) {
+        return `${fieldLabel} must not be .`;
+      }
+    }
+    if ((slugInfo.glob === '*' ? /[\\/]/ : /[\\]/).test(val)) {
       return `${fieldLabel} must not contain slashes`;
     }
     if (slugInfo.slugs.has(val)) {
@@ -35,20 +49,17 @@ export function validateText(
   }
 }
 
-const badSlashForGlobPattern = (glob: Glob) =>
-  glob === '*' ? /[\\/]/ : /[\\]/;
-
-export function isValidSlug(
-  val: string,
-  slugInfo: { slugs: Set<string>; glob: Glob }
-) {
-  return (
-    val !== '..' &&
-    val !== '.' &&
-    !badSlashForGlobPattern(slugInfo.glob).test(val) &&
-    !slugInfo.slugs.has(val)
-  );
+function parseAsNormalField(value: FormFieldStoredValue) {
+  if (value === undefined) {
+    return '';
+  }
+  if (typeof value !== 'string') {
+    throw new FieldDataError('Must be a string');
+  }
+  return value;
 }
+
+const emptySet = new Set<string>();
 
 export function text({
   label,
@@ -67,9 +78,20 @@ export function text({
     };
   };
   multiline?: boolean;
-}): SlugFormField<string, undefined> {
+}): SlugFormField<string, string, string, null> {
+  function validate(
+    value: string,
+    slugField: { slugs: Set<string>; glob: Glob } | undefined
+  ) {
+    const message = validateText(value, min, max, label, slugField);
+    if (message !== undefined) {
+      throw new FieldDataError(message);
+    }
+    return value;
+  }
   return {
     kind: 'form',
+    formKind: 'slug',
     Input(props) {
       return (
         <TextFieldInput
@@ -82,29 +104,38 @@ export function text({
         />
       );
     },
-    defaultValue,
-    validate(value, slugInfo) {
-      if (
-        !(
-          typeof value === 'string' &&
-          value.length >= Math.max(min, slugInfo ? 1 : 0) &&
-          value.length <= max
-        )
-      ) {
-        return false;
-      }
-      if (slugInfo) {
-        return isValidSlug(value, slugInfo);
-      }
-      return true;
+    defaultValue() {
+      return defaultValue;
     },
-    slug: {
-      parse(data) {
-        return data.slug;
+    parse(value, args) {
+      if (args?.slug !== undefined) {
+        return args.slug;
+      }
+      return parseAsNormalField(value);
+    },
+    serialize(value) {
+      return { value: value === '' ? undefined : value };
+    },
+    serializeWithSlug(value) {
+      return { slug: value, value: undefined };
+    },
+
+    reader: {
+      parse(value) {
+        const parsed = parseAsNormalField(value);
+        return validate(parsed, undefined);
       },
-      serialize(value) {
-        return { slug: value, value: undefined };
+      parseWithSlug(_value, args) {
+        validate(parseAsNormalField(args.slug), {
+          glob: args.glob,
+          slugs: emptySet,
+        });
+        return null;
       },
+    },
+
+    validate(value, args) {
+      return validate(value, args?.slugField);
     },
   };
 }

@@ -6,6 +6,8 @@ import { DocumentFeaturesForNormalization } from '../document-features-normaliza
 import { Mark } from '../utils';
 import { ComponentSchema, ChildField } from './api';
 import { SlugFieldInfo } from './fields/text/ui';
+import { FieldDataError } from './fields/error';
+import { PropValidationError } from '../../parse-props';
 
 export type DocumentFeaturesForChildField =
   | {
@@ -171,50 +173,102 @@ export function getSchemaAtPropPath(
   });
 }
 
+function flattenErrors(error: unknown): unknown[] {
+  if (error instanceof AggregateError) {
+    return error.errors.flatMap(flattenErrors);
+  }
+  return [error];
+}
+
+export function formatFormDataError(error: unknown) {
+  const flatErrors = flattenErrors(error);
+
+  return flatErrors
+    .map(error => {
+      if (error instanceof PropValidationError) {
+        const path = error.path.join('.');
+        return `${path}: ${
+          error.cause instanceof FieldDataError
+            ? error.cause.message
+            : `Unexpected error: ${error.cause}`
+        }`;
+      }
+      return `Unexpected error: ${error}`;
+    })
+    .join('\n');
+}
+
+export function toFormattedFormDataError(error: unknown) {
+  const formatted = formatFormDataError(error);
+  return new Error(`Field validation failed:\n` + formatted);
+}
+
 export function clientSideValidateProp(
+  schema: ComponentSchema,
+  value: any,
+  slugField: SlugFieldInfo | undefined
+) {
+  try {
+    validateValueWithSchema(schema, value, slugField);
+    return true;
+  } catch (error) {
+    console.warn(toFormattedFormDataError(error));
+    return false;
+  }
+}
+
+export function validateValueWithSchema(
   schema: ComponentSchema,
   value: any,
   slugField: SlugFieldInfo | undefined,
   path: ReadonlyPropPath = []
-): boolean {
+): void {
   switch (schema.kind) {
     case 'child': {
-      return true;
+      return;
     }
     case 'form': {
-      if (slugField && path[path.length - 1] === slugField?.field) {
-        return schema.validate(value, {
-          slugs: slugField.slugs,
-          glob: slugField.glob,
-        });
+      try {
+        if (slugField && path[path.length - 1] === slugField?.field) {
+          schema.validate(value, {
+            slugField: { slugs: slugField.slugs, glob: slugField.glob },
+          });
+          return;
+        }
+        schema.validate(value, undefined);
+      } catch (err) {
+        throw new PropValidationError(err, path, schema);
       }
-      return schema.validate(value, undefined);
+      return;
     }
     case 'conditional': {
-      if (!schema.discriminant.validate(value.discriminant)) {
-        return false;
-      }
-      return clientSideValidateProp(
+      schema.discriminant.validate(value.discriminant);
+      validateValueWithSchema(
         schema.values[value.discriminant],
         value.value,
         undefined,
         path.concat('value')
       );
+      return;
     }
     case 'object': {
+      const errors: unknown[] = [];
       for (const [key, childProp] of Object.entries(schema.fields)) {
-        if (
-          !clientSideValidateProp(
+        try {
+          validateValueWithSchema(
             childProp,
             value[key],
             key === slugField?.field ? slugField : undefined,
             path.concat(key)
-          )
-        ) {
-          return false;
+          );
+        } catch (err) {
+          errors.push(err);
         }
       }
-      return true;
+      if (errors.length > 0) {
+        throw new AggregateError(errors);
+      }
+      return;
     }
     case 'array': {
       let slugInfo: undefined | { slugField: string; slugs: string[] };
@@ -231,9 +285,11 @@ export function clientSideValidateProp(
           ),
         };
       }
+      const errors: unknown[] = [];
+
       for (const [idx, innerVal] of (value as unknown[]).entries()) {
-        if (
-          !clientSideValidateProp(
+        try {
+          validateValueWithSchema(
             schema.element,
             innerVal,
             slugInfo === undefined
@@ -244,12 +300,15 @@ export function clientSideValidateProp(
                   glob: '*',
                 },
             path.concat(idx)
-          )
-        ) {
-          return false;
+          );
+        } catch (err) {
+          errors.push(err);
         }
       }
-      return true;
+      if (errors.length > 0) {
+        throw new AggregateError(errors);
+      }
+      return;
     }
   }
 }

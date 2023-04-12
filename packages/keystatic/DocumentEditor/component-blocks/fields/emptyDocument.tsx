@@ -1,37 +1,33 @@
-import { FormFieldWithFileRequiringContentsForReader } from '../api';
+import { ContentFormField } from '../api';
 
-export function emptyDocument(): FormFieldWithFileRequiringContentsForReader<
-  null,
-  null
-> {
+export function emptyDocument(): ContentFormField<null, null, null> {
   return {
     kind: 'form',
+    formKind: 'content',
     Input() {
       return null;
     },
-    defaultValue: null,
-    validate(value) {
-      return value === null || value === undefined;
+    defaultValue() {
+      return null;
     },
-    serializeToFile: {
-      kind: 'multi',
+    parse() {
+      return null;
+    },
+    contentExtension: '.mdoc',
+    serialize() {
+      return {
+        value: undefined,
+        content: new Uint8Array(),
+        external: new Map(),
+        other: new Map(),
+      };
+    },
+    validate(value) {
+      return value;
+    },
+    reader: {
       parse() {
         return null;
-      },
-      async serialize() {
-        return {
-          value: undefined,
-          primary: new Uint8Array(),
-          other: new Map(),
-          external: new Map(),
-        };
-      },
-      primaryExtension: '.mdoc',
-      reader: {
-        requiresContentInReader: true,
-        parseToReader() {
-          return null;
-        },
       },
     },
   };

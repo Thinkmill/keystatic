@@ -8,7 +8,7 @@ import {
   ValueForReadingDeep,
 } from '../DocumentEditor/component-blocks/api';
 import fs from 'fs/promises';
-import path from 'path';
+import nodePath from 'path';
 import {
   FormatInfo,
   getCollectionFormat,
@@ -20,14 +20,14 @@ import {
   getSingletonPath,
   getSlugGlobForCollection,
 } from '../app/path-utils';
-import { validateComponentBlockProps } from '../validate-component-block-props';
-import {
-  getRequiredFiles,
-  loadDataFile,
-  parseSerializedFormField,
-} from '../app/required-files';
+import { parseProps } from '../parse-props';
+import { loadDataFile } from '../app/required-files';
 import { getValueAtPropPath } from '../DocumentEditor/component-blocks/props-value';
 import { Dirent } from 'fs';
+import {
+  ReadonlyPropPath,
+  formatFormDataError,
+} from '../DocumentEditor/component-blocks/utils';
 
 type EntryReaderOpts = { resolveLinkedFiles?: boolean };
 
@@ -64,7 +64,12 @@ type CollectionEntryWithResolvedLinkedFiles<
   SlugField extends string
 > = {
   [Key in keyof Schema]: SlugField extends Key
-    ? Schema[Key] extends SlugFormField<any, infer SlugSerializedValue>
+    ? Schema[Key] extends SlugFormField<
+        any,
+        any,
+        any,
+        infer SlugSerializedValue
+      >
       ? SlugSerializedValue
       : ValueForReadingDeep<Schema[Key]>
     : ValueForReadingDeep<Schema[Key]>;
@@ -75,7 +80,12 @@ type CollectionEntry<
   SlugField extends string
 > = {
   [Key in keyof Schema]: SlugField extends Key
-    ? Schema[Key] extends SlugFormField<any, infer SlugSerializedValue>
+    ? Schema[Key] extends SlugFormField<
+        any,
+        any,
+        any,
+        infer SlugSerializedValue
+      >
       ? SlugSerializedValue
       : ValueForReading<Schema[Key]>
     : ValueForReading<Schema[Key]>;
@@ -98,7 +108,12 @@ type CollectionReader<
   ) => Promise<
     | {
         [Key in keyof Schema]: SlugField extends Key
-          ? Schema[Key] extends SlugFormField<any, infer SlugSerializedValue>
+          ? Schema[Key] extends SlugFormField<
+              any,
+              any,
+              any,
+              infer SlugSerializedValue
+            >
             ? SlugSerializedValue
             : ValueForReadingWithMode<
                 Schema[Key],
@@ -118,7 +133,12 @@ type CollectionReader<
       slug: string;
       entry: {
         [Key in keyof Schema]: SlugField extends Key
-          ? Schema[Key] extends SlugFormField<any, infer SlugSerializedValue>
+          ? Schema[Key] extends SlugFormField<
+              any,
+              any,
+              any,
+              infer SlugSerializedValue
+            >
             ? SlugSerializedValue
             : ValueForReadingWithMode<
                 Schema[Key],
@@ -151,7 +171,7 @@ async function getAllEntries(
     await Promise.all(
       (
         await fs
-          .readdir(path.join(root, prefix), { withFileTypes: true })
+          .readdir(nodePath.join(root, prefix), { withFileTypes: true })
           .catch(err => {
             if ((err as any).code === 'ENOENT') {
               return [];
@@ -189,7 +209,7 @@ function collectionReader(
       glob === '*'
         ? (
             await fs
-              .readdir(path.join(repoPath, collectionPath), {
+              .readdir(nodePath.join(repoPath, collectionPath), {
                 withFileTypes: true,
               })
               .catch(err => {
@@ -199,7 +219,7 @@ function collectionReader(
                 throw err;
               })
           ).map(x => ({ entry: x, name: x.name }))
-        : await getAllEntries(path.join(repoPath, collectionPath), '');
+        : await getAllEntries(nodePath.join(repoPath, collectionPath), '');
 
     return (
       await Promise.all(
@@ -208,7 +228,7 @@ function collectionReader(
             if (!x.entry.isDirectory()) return [];
             try {
               await fs.stat(
-                path.join(
+                nodePath.join(
                   repoPath,
                   getEntryDataFilepath(
                     `${collectionPath}/${x.name}`,
@@ -242,7 +262,8 @@ function collectionReader(
         glob,
       },
       repoPath,
-      args[0]
+      args[0],
+      `"${slug}" in collection "${collection}"`
     );
 
   return {
@@ -266,7 +287,7 @@ function collectionReader(
 }
 
 async function readItem(
-  schema: ComponentSchema,
+  rootSchema: ComponentSchema,
   formatInfo: FormatInfo,
   itemDir: string,
   slugField:
@@ -277,12 +298,13 @@ async function readItem(
       }
     | undefined,
   repoPath: string,
-  opts: EntryReaderOpts | undefined
+  opts: EntryReaderOpts | undefined,
+  debugReference: string
 ) {
   let dataFile: Uint8Array;
   try {
     dataFile = await fs.readFile(
-      path.resolve(repoPath, getEntryDataFilepath(itemDir, formatInfo))
+      nodePath.resolve(repoPath, getEntryDataFilepath(itemDir, formatInfo))
     );
   } catch (err) {
     if ((err as any).code === 'ENOENT') {
@@ -291,82 +313,72 @@ async function readItem(
     throw err;
   }
   const { loaded, extraFakeFile } = loadDataFile(dataFile, formatInfo);
-  const validated = validateComponentBlockProps(
-    schema,
-    loaded,
-    [],
-    slugField === undefined
-      ? undefined
-      : {
-          field: slugField.field,
-          slug: slugField.slug,
-          mode: 'read',
-          slugs: new Set(),
-          glob: slugField.glob,
+
+  const contentFieldPathsToEagerlyResolve: ReadonlyPropPath[] | undefined =
+    opts?.resolveLinkedFiles ? [] : undefined;
+  let validated: any;
+  try {
+    validated = parseProps(
+      rootSchema,
+      loaded,
+      [],
+      [],
+      (schema, value, path, pathWithArrayFieldSlugs) => {
+        if (schema.formKind === 'asset') {
+          return schema.reader.parse(value);
         }
-  );
-  const requiredFiles = getRequiredFiles(validated, schema, slugField?.slug);
-  await Promise.all(
-    requiredFiles.map(async file => {
-      const parentValue = getValueAtPropPath(
-        validated,
-        file.path.slice(0, -1)
-      ) as any;
-      const keyOnParent = file.path[file.path.length - 1];
-      const originalValue = parentValue[keyOnParent];
-      if (file.schema.serializeToFile.reader.requiresContentInReader) {
-        const loadData = async () => {
-          const loadedFiles = new Map<string, Uint8Array>();
-          if (file.file) {
-            const filepath = `${
-              file.file.parent
-                ? `${file.file.parent}${slugField ? slugField.slug : ''}`
-                : itemDir
-            }/${file.file.filename}`;
-            if (file.file.filename === extraFakeFile?.path) {
-              loadedFiles.set(filepath, extraFakeFile.contents);
+        if (schema.formKind === 'content') {
+          contentFieldPathsToEagerlyResolve?.push(path);
+          return async () => {
+            let content: undefined | Uint8Array;
+            const filename =
+              pathWithArrayFieldSlugs.join('/') + schema.contentExtension;
+            if (filename === extraFakeFile?.path) {
+              content = extraFakeFile.contents;
             } else {
-              const contents = await fs
-                .readFile(path.resolve(repoPath, filepath))
+              content = await fs
+                .readFile(nodePath.resolve(repoPath, `${itemDir}/${filename}`))
                 .catch(x => {
                   if ((x as any).code === 'ENOENT') return undefined;
                   throw x;
                 });
-              if (contents) {
-                loadedFiles.set(filepath, contents);
-              }
             }
-          }
-          return parseSerializedFormField(
-            originalValue,
-            file,
-            loadedFiles,
-            'read',
-            itemDir,
-            slugField?.slug,
-            validated,
-            schema
-          );
-        };
-        if (opts?.resolveLinkedFiles) {
-          parentValue[keyOnParent] = await loadData();
-        } else {
-          parentValue[keyOnParent] = loadData;
+
+            return schema.reader.parse(value, { content });
+          };
         }
-      } else {
-        parentValue[keyOnParent] = parseSerializedFormField(
-          originalValue,
-          file,
-          new Map(),
-          'read',
-          itemDir,
-          slugField?.slug,
-          validated,
-          schema
-        );
+        if (path.length === 1 && path[0] === slugField?.field) {
+          if (schema.formKind !== 'slug') {
+            throw new Error(
+              `Slug field ${slugField.field} is not a slug field`
+            );
+          }
+          return schema.reader.parseWithSlug(value, {
+            slug: slugField.slug,
+            glob: slugField.glob,
+          });
+        }
+        return schema.reader.parse(value);
       }
-    })
-  );
+    );
+
+    if (contentFieldPathsToEagerlyResolve?.length) {
+      await Promise.all(
+        contentFieldPathsToEagerlyResolve.map(async path => {
+          const parentValue = getValueAtPropPath(
+            validated,
+            path.slice(0, -1)
+          ) as any;
+          const keyOnParent = path[path.length - 1];
+          const originalValue = parentValue[keyOnParent];
+          parentValue[keyOnParent] = await originalValue();
+        })
+      );
+    }
+  } catch (err) {
+    const formatted = formatFormDataError(err);
+    throw new Error(`Invalid data for ${debugReference}:\n${formatted}`);
+  }
 
   return validated;
 }
@@ -381,7 +393,15 @@ function singletonReader(
   const schema = fields.object(config.singletons![singleton].schema);
   return {
     read: (...args) =>
-      readItem(schema, formatInfo, singletonPath, undefined, repoPath, args[0]),
+      readItem(
+        schema,
+        formatInfo,
+        singletonPath,
+        undefined,
+        repoPath,
+        args[0],
+        `singleton "${singleton}"`
+      ),
   };
 }
 

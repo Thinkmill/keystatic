@@ -24,20 +24,12 @@ function collectDirectoriesUsedInSchemaInner(
     return;
   }
   if (schema.kind === 'form') {
-    if ('serializeToFile' in schema) {
-      if (
-        schema.serializeToFile.kind === 'asset' &&
-        schema.serializeToFile.directory !== undefined
-      ) {
-        directories.add(fixPath(schema.serializeToFile.directory));
-      }
-      if (
-        schema.serializeToFile.kind === 'multi' &&
-        schema.serializeToFile.directories !== undefined
-      ) {
-        for (const directory of schema.serializeToFile.directories) {
-          directories.add(fixPath(directory));
-        }
+    if (schema.formKind === 'asset' && schema.directory !== undefined) {
+      directories.add(fixPath(schema.directory));
+    }
+    if (schema.formKind === 'content' && schema.directories !== undefined) {
+      for (const directory of schema.directories) {
+        directories.add(fixPath(directory));
       }
     }
     return;

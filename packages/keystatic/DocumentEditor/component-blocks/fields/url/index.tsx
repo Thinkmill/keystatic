@@ -1,6 +1,11 @@
 import { isValidURL } from '../../../isValidURL';
 import { BasicFormField } from '../../api';
-import { RequiredValidation } from '../utils';
+import { FieldDataError } from '../error';
+import {
+  RequiredValidation,
+  assertRequired,
+  basicFormFieldWithSimpleReaderParse,
+} from '../utils';
 import { UrlFieldInput } from './ui';
 
 export function validateUrl(
@@ -28,10 +33,10 @@ export function url<IsRequired extends boolean | undefined>({
   validation?: { isRequired?: IsRequired };
   description?: string;
 } & RequiredValidation<IsRequired>): BasicFormField<
+  string | null,
   string | (IsRequired extends true ? never : null)
 > {
-  return {
-    kind: 'form',
+  return basicFormFieldWithSimpleReaderParse({
     Input(props) {
       return (
         <UrlFieldInput
@@ -42,9 +47,28 @@ export function url<IsRequired extends boolean | undefined>({
         />
       );
     },
-    defaultValue,
-    validate(val) {
-      return validateUrl(validation, val, label) === undefined;
+    defaultValue() {
+      return defaultValue ?? null;
     },
-  };
+    parse(value) {
+      if (value === undefined) {
+        return null;
+      }
+      if (typeof value !== 'string') {
+        throw new FieldDataError('Must be a string');
+      }
+      return value;
+    },
+    validate(value) {
+      const message = validateUrl(validation, value, label);
+      if (message !== undefined) {
+        throw new FieldDataError(message);
+      }
+      assertRequired(value, validation, label);
+      return value;
+    },
+    serialize(value) {
+      return { value: value === null ? undefined : value };
+    },
+  });
 }

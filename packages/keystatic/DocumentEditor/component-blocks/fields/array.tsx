@@ -16,6 +16,8 @@ export function array<ElementField extends ComponentSchema>(
       ? {
           [K in keyof ElementField['fields']]: ElementField['fields'][K] extends SlugFormField<
             any,
+            any,
+            any,
             any
           >
             ? K

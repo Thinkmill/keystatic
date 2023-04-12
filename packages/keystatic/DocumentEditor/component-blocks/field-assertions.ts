@@ -62,8 +62,9 @@ function assertValidComponentSchemaInner(
     }
     if (schema.kind === 'conditional') {
       schemaAncestors.push(schema);
-      const stringifiedDefaultDiscriminant =
-        schema.discriminant.defaultValue.toString();
+      const stringifiedDefaultDiscriminant = schema.discriminant
+        .defaultValue()
+        .toString();
       for (const [key, innerProp] of Object.entries(schema.values)) {
         propPath.push(key);
         if (schema.values[key] !== innerProp) {

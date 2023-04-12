@@ -3,14 +3,6 @@ import { Glob } from '../../config';
 
 import { ChildField } from './fields/child';
 
-export type FormFieldValue =
-  | string
-  | number
-  | boolean
-  | null
-  | readonly FormFieldValue[]
-  | { [key: string]: FormFieldValue | undefined };
-
 export type FormFieldInputProps<Value> = {
   value: Value;
   onChange(value: Value): void;
@@ -22,142 +14,169 @@ export type FormFieldInputProps<Value> = {
   forceValidation: boolean;
 };
 
-export type BasicFormField<Value> = {
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | readonly JsonValue[]
+  | { [key: string]: JsonValue };
+
+type JsonValueWithoutNull = JsonValue & {};
+
+export type FormFieldStoredValue = JsonValueWithoutNull | undefined;
+
+export type BasicFormField<
+  ParsedValue extends {} | null,
+  ValidatedValue extends ParsedValue = ParsedValue,
+  ReaderValue = ValidatedValue
+> = {
   kind: 'form';
-  Input(props: FormFieldInputProps<Value>): ReactElement | null;
-  defaultValue: Value;
+  formKind?: undefined;
+  Input(props: FormFieldInputProps<ParsedValue>): ReactElement | null;
+  defaultValue(): ParsedValue;
+  parse(value: FormFieldStoredValue): ParsedValue;
   /**
-   * validate will be called in two cases:
-   * - on the client in the editor when a user is changing the value.
-   *   Returning `false` will block closing the form
-   *   and saving the item.
-   * - on the server when a change is received before allowing it to be saved
-   *   if `true` is returned
-   * @param value The value of the form field. You should NOT trust
-   * this value to be of the correct type because it could come from
-   * a potentially malicious client
+   * If undefined is returned, the field will generally not be written,
+   * except in array fields where it will be stored as null
    */
-  validate(value: unknown): boolean;
+  serialize(value: ParsedValue): { value: FormFieldStoredValue };
+  validate(value: ParsedValue): ValidatedValue;
+  reader: {
+    parse(value: FormFieldStoredValue): ReaderValue;
+  };
 };
 
-export type FormField<Value> =
-  | BasicFormField<Value>
-  | FormFieldWithFile<Value, any>
-  | SlugFormField<Value, any>;
+export type SlugFormField<
+  ParsedValue extends {} | null,
+  ValidatedValue extends ParsedValue,
+  ReaderValue,
+  ReaderValueAsSlugField
+> = {
+  kind: 'form';
+  formKind: 'slug';
+  Input(props: FormFieldInputProps<ParsedValue>): ReactElement | null;
+  defaultValue(): ParsedValue;
+  parse(
+    value: FormFieldStoredValue,
+    extra: { slug: string } | undefined
+  ): ParsedValue;
 
-export type SlugFormField<Value, SerializedValue> = Omit<
-  BasicFormField<Value>,
-  'validate'
-> & {
-  slug: {
-    serialize(value: Value): { slug: string; value: SerializedValue };
-    parse(data: { slug: string; value: unknown }): Value;
+  serialize(value: ParsedValue): { value: FormFieldStoredValue };
+  serializeWithSlug(value: ParsedValue): {
+    slug: string;
+    value: FormFieldStoredValue;
   };
   validate(
-    value: unknown,
-    slugFieldInfo: { slugs: Set<string>; glob: Glob } | undefined
-  ): boolean;
-};
-
-export type FormFieldWithFile<Value, DataInReader> =
-  | FormFieldWithFileRequiringContentsForReader<Value, DataInReader>
-  | FormFieldWithFileNotRequiringContentsForReader<Value, DataInReader>;
-
-export type FormFieldWithFileRequiringContentsForReader<Value, DataInReader> =
-  BasicFormField<Value> & {
-    serializeToFile:
-      | (BaseSerializeToSingleFile<Value> & {
-          reader: {
-            requiresContentInReader: true;
-            parseToReader(data: {
-              content: Uint8Array | undefined;
-              value: unknown;
-              suggestedFilenamePrefix: string | undefined;
-            }): DataInReader;
-          };
-        })
-      | (BaseSerializeToFiles<Value> & {
-          reader: {
-            requiresContentInReader: true;
-            parseToReader(data: {
-              value: unknown;
-              primary: Uint8Array | undefined;
-            }): DataInReader;
-          };
-        });
-  };
-export type FormFieldWithFileNotRequiringContentsForReader<
-  Value,
-  DataInReader
-> = BasicFormField<Value> & {
-  serializeToFile:
-    | (BaseSerializeToSingleFile<Value> & {
-        reader: {
-          requiresContentInReader: false;
-          parseToReader(data: {
-            value: unknown;
-            suggestedFilenamePrefix: string | undefined;
-          }): DataInReader;
-        };
-      })
-    | (BaseSerializeToFiles<Value> & {
-        reader: {
-          requiresContentInReader: false;
-          parseToReader(data: { value: unknown }): DataInReader;
-        };
-      });
-};
-
-type BaseSerializeToSingleFile<Value> = {
-  kind: 'asset';
-  directory?: string;
-  filename(
-    value: unknown,
-    suggestedFilenamePrefix: string | undefined,
-    slug: string | undefined
-  ): string | undefined;
-  serialize(
-    value: Value,
-    suggestedFilenamePrefix: string | undefined,
-    slug: string | undefined
-  ): {
-    value: unknown;
-  } & (
-    | { content: undefined }
-    | {
-        content: Uint8Array;
-        filename: string;
+    value: ParsedValue,
+    extra: { slugField: { slugs: Set<string>; glob: Glob } } | undefined
+  ): ValidatedValue;
+  reader: {
+    parse(value: FormFieldStoredValue): ReaderValue;
+    parseWithSlug(
+      value: FormFieldStoredValue,
+      extra: {
+        slug: string;
+        glob: Glob;
       }
-  );
-  parse(data: {
-    content: Uint8Array | undefined;
-    value: unknown;
-    suggestedFilenamePrefix: string | undefined;
-    slug: string | undefined;
-  }): Value;
+    ): ReaderValueAsSlugField;
+  };
 };
 
-type BaseSerializeToFiles<Value> = {
-  kind: 'multi';
-  primaryExtension: string;
-  directories?: string[];
+export type AssetFormField<
+  ParsedValue extends {} | null,
+  ValidatedValue extends ParsedValue,
+  ReaderValue
+> = {
+  kind: 'form';
+  formKind: 'asset';
+  Input(props: FormFieldInputProps<ParsedValue>): ReactElement | null;
+  directory?: string;
+  defaultValue(): ParsedValue;
+  filename(
+    value: FormFieldStoredValue,
+    extra: {
+      suggestedFilenamePrefix: string | undefined;
+      slug: string | undefined;
+    }
+  ): string | undefined;
+  parse(
+    value: FormFieldStoredValue,
+    extra: {
+      asset: Uint8Array | undefined;
+      slug: string | undefined;
+    }
+  ): ParsedValue;
   serialize(
-    value: Value,
-    slug: string | undefined
-  ): Promise<{
-    value: unknown;
-    primary: Uint8Array | undefined;
+    value: ParsedValue,
+    extra: {
+      suggestedFilenamePrefix: string | undefined;
+      slug: string | undefined;
+    }
+  ): {
+    value: FormFieldStoredValue;
+    asset: { content: Uint8Array; filename: string } | undefined;
+  };
+
+  validate(value: ParsedValue): ValidatedValue;
+  reader: {
+    parse(value: FormFieldStoredValue): ReaderValue;
+  };
+};
+
+export type ContentFormField<
+  ParsedValue extends {} | null,
+  ValidatedValue extends ParsedValue,
+  ReaderValue
+> = {
+  kind: 'form';
+  formKind: 'content';
+  contentExtension: string;
+  directories?: string[];
+
+  Input(props: FormFieldInputProps<ParsedValue>): ReactElement | null;
+  defaultValue(): ParsedValue;
+  parse(
+    value: FormFieldStoredValue,
+    args: {
+      content: Uint8Array | undefined;
+      other: ReadonlyMap<string, Uint8Array>;
+      external: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
+      slug: string | undefined;
+    }
+  ): ParsedValue;
+  serialize(
+    value: ParsedValue,
+    extra: {
+      slug: string | undefined;
+    }
+  ): {
+    value: FormFieldStoredValue;
+    content: Uint8Array | undefined;
     other: ReadonlyMap<string, Uint8Array>;
     external: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
-  }>;
-  parse(data: {
-    value: unknown;
-    primary: Uint8Array | undefined;
-    other: ReadonlyMap<string, Uint8Array>;
-    external?: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
-    slug: string | undefined;
-  }): Value;
+  };
+
+  validate(value: ParsedValue): ValidatedValue;
+  reader: {
+    parse(
+      value: FormFieldStoredValue,
+      extra: {
+        content: Uint8Array | undefined;
+      }
+    ): ReaderValue;
+  };
 };
+
+export type FormField<
+  ParsedValue extends {} | null,
+  ValidatedValue extends ParsedValue,
+  ReaderValue
+> =
+  | BasicFormField<ParsedValue, ValidatedValue, ReaderValue>
+  | SlugFormField<ParsedValue, ValidatedValue, ReaderValue, any>
+  | AssetFormField<ParsedValue, ValidatedValue, ReaderValue>
+  | ContentFormField<ParsedValue, ValidatedValue, ReaderValue>;
 
 export type DocumentNode = DocumentElement | DocumentText;
 
@@ -195,9 +214,15 @@ export interface ObjectField<
 }
 
 export type ConditionalField<
-  DiscriminantField extends BasicFormField<string | boolean>,
+  DiscriminantField extends BasicFormField<
+    string | boolean,
+    string | boolean,
+    string | boolean
+  >,
   ConditionalValues extends {
-    [Key in `${DiscriminantField['defaultValue']}`]: ComponentSchema;
+    [Key in `${ReturnType<
+      DiscriminantField['defaultValue']
+    >}`]: ComponentSchema;
   }
 > = {
   kind: 'conditional';
@@ -219,9 +244,12 @@ type ArrayFieldInComponentSchema = {
 
 export type ComponentSchema =
   | ChildField
-  | FormField<any>
+  | FormField<any, any, any>
   | ObjectField
-  | ConditionalField<BasicFormField<any>, { [key: string]: ComponentSchema }>
+  | ConditionalField<
+      BasicFormField<any, any, any>,
+      { [key: string]: ComponentSchema }
+    >
   | ArrayFieldInComponentSchema;
 
 export * as fields from './fields';
@@ -259,9 +287,9 @@ type ChildFieldPreviewProps<Schema extends ChildField, ChildFieldElement> = {
   readonly schema: Schema;
 };
 
-type FormFieldPreviewProps<Schema extends FormField<any>> = {
-  readonly value: Schema['defaultValue'];
-  onChange(value: Schema['defaultValue']): void;
+type FormFieldPreviewProps<Schema extends FormField<any, any, any>> = {
+  readonly value: ReturnType<Schema['defaultValue']>;
+  onChange(value: ReturnType<Schema['defaultValue']>): void;
   readonly schema: Schema;
 };
 
@@ -292,7 +320,9 @@ type ConditionalFieldPreviewProps<
       Schema['discriminant'],
       Key
     >;
-    onChange<Discriminant extends Schema['discriminant']['defaultValue']>(
+    onChange<
+      Discriminant extends ReturnType<Schema['discriminant']['defaultValue']>
+    >(
       discriminant: Discriminant,
       value?: InitialOrUpdateValueFromComponentPropField<
         Schema['values'][`${Discriminant}`]
@@ -330,7 +360,7 @@ export type GenericPreviewProps<
   ChildFieldElement
 > = Schema extends ChildField
   ? ChildFieldPreviewProps<Schema, ChildFieldElement>
-  : Schema extends FormField<any>
+  : Schema extends FormField<any, any, any>
   ? FormFieldPreviewProps<Schema>
   : Schema extends ObjectField<any>
   ? ObjectFieldPreviewProps<Schema, ChildFieldElement>
@@ -349,8 +379,8 @@ export type InitialOrUpdateValueFromComponentPropField<
   Schema extends ComponentSchema
 > = Schema extends ChildField
   ? undefined
-  : Schema extends FormField<infer Value>
-  ? Value | undefined
+  : Schema extends FormField<infer ParsedValue, any, any>
+  ? ParsedValue | undefined
   : Schema extends ObjectField<infer Value>
   ? {
       readonly [Key in keyof Value]?: InitialOrUpdateValueFromComponentPropField<
@@ -377,9 +407,9 @@ export type InitialOrUpdateValueFromComponentPropField<
   : never;
 
 type DiscriminantStringToDiscriminantValue<
-  DiscriminantField extends FormField<any>,
+  DiscriminantField extends FormField<any, any, any>,
   DiscriminantString extends PropertyKey
-> = DiscriminantField['defaultValue'] extends boolean
+> = ReturnType<DiscriminantField['defaultValue']> extends boolean
   ? 'true' extends DiscriminantString
     ? true
     : 'false' extends DiscriminantString
@@ -425,14 +455,16 @@ export function component<
 
 type Comp<Props> = (props: Props) => ReactElement | null;
 
-export type ValueForComponentSchema<Schema extends ComponentSchema> =
+export type ParsedValueForComponentSchema<Schema extends ComponentSchema> =
   Schema extends ChildField
     ? null
-    : Schema extends FormField<infer Value>
+    : Schema extends FormField<infer Value, any, any>
     ? Value
     : Schema extends ObjectField<infer Value>
     ? {
-        readonly [Key in keyof Value]: ValueForComponentSchema<Value[Key]>;
+        readonly [Key in keyof Value]: ParsedValueForComponentSchema<
+          Value[Key]
+        >;
       }
     : Schema extends ConditionalField<infer DiscriminantField, infer Values>
     ? {
@@ -441,25 +473,23 @@ export type ValueForComponentSchema<Schema extends ComponentSchema> =
             DiscriminantField,
             Key
           >;
-          readonly value: ValueForComponentSchema<Values[Key]>;
+          readonly value: ParsedValueForComponentSchema<Values[Key]>;
         };
       }[keyof Values]
     : Schema extends ArrayField<infer ElementField>
-    ? readonly ValueForComponentSchema<ElementField>[]
+    ? readonly ParsedValueForComponentSchema<ElementField>[]
     : never;
 
 export type ValueForReading<Schema extends ComponentSchema> =
   Schema extends ChildField
     ? null
-    : Schema extends FormFieldWithFileRequiringContentsForReader<
-        any,
-        infer Value
-      >
+    : Schema extends ContentFormField<any, any, infer Value>
     ? () => Promise<Value>
-    : Schema extends
-        | FormFieldWithFileNotRequiringContentsForReader<any, infer Value>
-        | SlugFormField<infer Value, any>
-        | BasicFormField<infer Value>
+    : Schema extends BasicFormField<any, any, infer Value>
+    ? Value
+    : Schema extends SlugFormField<any, any, infer Value, any>
+    ? Value
+    : Schema extends AssetFormField<any, any, infer Value>
     ? Value
     : Schema extends ObjectField<infer Value>
     ? {
@@ -482,11 +512,7 @@ export type ValueForReading<Schema extends ComponentSchema> =
 export type ValueForReadingDeep<Schema extends ComponentSchema> =
   Schema extends ChildField
     ? null
-    : Schema extends
-        | FormFieldWithFileRequiringContentsForReader<any, infer Value>
-        | FormFieldWithFileNotRequiringContentsForReader<any, infer Value>
-        | SlugFormField<infer Value, any>
-        | BasicFormField<infer Value>
+    : Schema extends FormField<any, any, infer Value>
     ? Value
     : Schema extends ObjectField<infer Value>
     ? {

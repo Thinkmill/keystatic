@@ -1,14 +1,22 @@
 import { BasicFormField } from '../api';
+import { basicFormFieldWithSimpleReaderParse } from './utils';
 
 export function empty(): BasicFormField<null> {
-  return {
-    kind: 'form',
+  return basicFormFieldWithSimpleReaderParse({
     Input() {
       return null;
     },
-    defaultValue: null,
-    validate(value) {
-      return value === null || value === undefined;
+    defaultValue() {
+      return null;
     },
-  };
+    parse() {
+      return null;
+    },
+    serialize() {
+      return { value: undefined };
+    },
+    validate(value) {
+      return value;
+    },
+  });
 }

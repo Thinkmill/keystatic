@@ -1,5 +1,5 @@
 import { assertNever, assert } from 'emery/assertions';
-import { ComponentSchema, ValueForComponentSchema } from './api';
+import { ComponentSchema, ParsedValueForComponentSchema } from './api';
 import { setKeysForArrayValue, getKeysForArrayValue } from './initial-values';
 import { ReadonlyPropPath } from './utils';
 
@@ -63,9 +63,13 @@ export function transformProps(
   visitors: {
     [Kind in ComponentSchema['kind']]?: (
       schema: Extract<ComponentSchema, { kind: Kind }>,
-      value: ValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>,
+      value: ParsedValueForComponentSchema<
+        Extract<ComponentSchema, { kind: Kind }>
+      >,
       path: ReadonlyPropPath
-    ) => ValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>;
+    ) => ParsedValueForComponentSchema<
+      Extract<ComponentSchema, { kind: Kind }>
+    >;
   },
   path: ReadonlyPropPath = []
 ): unknown {
@@ -130,10 +134,12 @@ export async function asyncTransformProps(
   visitors: {
     [Kind in ComponentSchema['kind']]?: (
       schema: Extract<ComponentSchema, { kind: Kind }>,
-      value: ValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>,
+      value: ParsedValueForComponentSchema<
+        Extract<ComponentSchema, { kind: Kind }>
+      >,
       path: ReadonlyPropPath
     ) => Promise<
-      ValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>
+      ParsedValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>
     >;
   },
   path: ReadonlyPropPath = []

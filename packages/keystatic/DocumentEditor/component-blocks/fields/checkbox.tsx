@@ -1,6 +1,8 @@
 import { Checkbox } from '@voussoir/checkbox';
 import { Text } from '@voussoir/typography';
 import { BasicFormField } from '../api';
+import { FieldDataError } from './error';
+import { basicFormFieldWithSimpleReaderParse } from './utils';
 
 export function checkbox({
   label,
@@ -11,8 +13,7 @@ export function checkbox({
   defaultValue?: boolean;
   description?: string;
 }): BasicFormField<boolean> {
-  return {
-    kind: 'form',
+  return basicFormFieldWithSimpleReaderParse({
     Input({ value, onChange, autoFocus }) {
       return (
         <Checkbox isSelected={value} onChange={onChange} autoFocus={autoFocus}>
@@ -21,9 +22,21 @@ export function checkbox({
         </Checkbox>
       );
     },
-    defaultValue,
-    validate(value) {
-      return typeof value === 'boolean';
+    defaultValue() {
+      return defaultValue;
     },
-  };
+    parse(value) {
+      if (value === undefined) return defaultValue;
+      if (typeof value !== 'boolean') {
+        throw new FieldDataError('Must be a boolean');
+      }
+      return value;
+    },
+    validate(value) {
+      return value;
+    },
+    serialize(value) {
+      return { value };
+    },
+  });
 }

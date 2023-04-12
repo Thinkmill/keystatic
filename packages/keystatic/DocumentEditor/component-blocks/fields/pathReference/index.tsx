@@ -1,5 +1,10 @@
 import { BasicFormField } from '../../api';
-import { RequiredValidation } from '../utils';
+import { FieldDataError } from '../error';
+import {
+  RequiredValidation,
+  assertRequired,
+  basicFormFieldWithSimpleReaderParse,
+} from '../utils';
 import { PathReferenceInput } from './ui';
 
 export function pathReference<IsRequired extends boolean | undefined>({
@@ -13,10 +18,10 @@ export function pathReference<IsRequired extends boolean | undefined>({
   validation?: { isRequired?: IsRequired };
   description?: string;
 } & RequiredValidation<IsRequired>): BasicFormField<
+  string | null,
   string | (IsRequired extends true ? never : null)
 > {
-  return {
-    kind: 'form',
+  return basicFormFieldWithSimpleReaderParse({
     Input(props) {
       return (
         <PathReferenceInput
@@ -28,9 +33,24 @@ export function pathReference<IsRequired extends boolean | undefined>({
         />
       );
     },
-    defaultValue: null as any,
-    validate: val =>
-      typeof val === 'string' ||
-      (validation?.isRequired ? false : val === null),
-  };
+    defaultValue() {
+      return null;
+    },
+    parse(value) {
+      if (value === undefined) {
+        return null;
+      }
+      if (typeof value !== 'string') {
+        throw new FieldDataError('Must be a string');
+      }
+      return value;
+    },
+    validate(value) {
+      assertRequired(value, validation, label);
+      return value;
+    },
+    serialize(value) {
+      return { value: value === null ? undefined : value };
+    },
+  });
 }
