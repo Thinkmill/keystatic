@@ -89,7 +89,7 @@ export function withBlockMarkdownShortcuts(
     features => features.formatting.listTypes.unordered
   );
 
-  documentFeatures.formatting.headingLevels.forEach(level => {
+  documentFeatures.formatting.headings.levels.forEach(level => {
     addShortcut(
       '#'.repeat(level) + ' ',
       () => {
@@ -101,7 +101,7 @@ export function withBlockMarkdownShortcuts(
           }
         );
       },
-      features => features.formatting.headingLevels.includes(level),
+      features => features.formatting.headings.levels.includes(level),
       'heading-or-paragraph'
     );
   });

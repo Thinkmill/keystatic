@@ -9,6 +9,8 @@ import {
   findSingleChildField,
   PathToChildFieldWithOption,
 } from './find-children';
+import { DocumentFeatures } from '../DocumentEditor/document-features';
+import { getInitialPropsValueFromInitializer } from '../DocumentEditor/component-blocks/initial-values';
 
 function toInline(nodes: ElementFromValidation[]): Node {
   return new Ast.Node('inline', {}, nodes.flatMap(toMarkdocInline));
@@ -55,21 +57,28 @@ function toMarkdocInline(node: ElementFromValidation): Node | Node[] {
 
 export function toMarkdocDocument(
   nodes: ElementFromValidation[],
-  componentBlocks: Record<string, ComponentBlock>
+  config: {
+    componentBlocks: Record<string, ComponentBlock>;
+    documentFeatures: DocumentFeatures;
+  }
 ) {
   return new Ast.Node(
     'document',
     {},
-    nodes.flatMap(x => toMarkdoc(x, componentBlocks))
+    nodes.flatMap(x => toMarkdoc(x, config))
   );
 }
 
-function removeUnnecessaryChildFieldValues(
+function removeUnnecessaryFieldValues(
   schema: ComponentSchema,
   parent: ComponentSchema | undefined,
   value: unknown
 ): unknown {
   if (schema.kind === 'form') {
+    // i am very unsure about this magic not writing defaults
+    if (value === schema.defaultValue && parent?.kind === 'object') {
+      return undefined;
+    }
     return value;
   }
   if (schema.kind === 'child') {
@@ -80,7 +89,7 @@ function removeUnnecessaryChildFieldValues(
   }
   if (schema.kind === 'array') {
     return (value as unknown[]).map(x =>
-      removeUnnecessaryChildFieldValues(schema.element, schema, x)
+      removeUnnecessaryFieldValues(schema.element, schema, x)
     );
   }
   if (schema.kind === 'object') {
@@ -88,7 +97,7 @@ function removeUnnecessaryChildFieldValues(
       Object.entries(schema.fields)
         .map(([key, innerSchema]) => [
           key,
-          removeUnnecessaryChildFieldValues(
+          removeUnnecessaryFieldValues(
             innerSchema,
             schema,
             (value as any)[key]
@@ -100,7 +109,7 @@ function removeUnnecessaryChildFieldValues(
   if (schema.kind === 'conditional') {
     return {
       discriminant: (value as any).discriminant,
-      value: removeUnnecessaryChildFieldValues(
+      value: removeUnnecessaryFieldValues(
         schema.values[(value as any).discriminant],
         schema,
         (value as any).value
@@ -179,7 +188,10 @@ function toChildrenAndProps(
 
 function toMarkdoc(
   node: ElementFromValidation,
-  componentBlocks: Record<string, ComponentBlock>
+  config: {
+    componentBlocks: Record<string, ComponentBlock>;
+    documentFeatures: DocumentFeatures;
+  }
 ): Node {
   if (node.type === 'paragraph') {
     const markdocNode = new Ast.Node(
@@ -208,13 +220,42 @@ function toMarkdoc(
     ]);
   }
   if (node.type === 'code') {
-    let content = (node.children[0] as { text: string }).text + '\n';
-    return new Ast.Node('fence', { content, language: node.language }, [
-      new Ast.Node('text', { content }),
-    ]);
+    const extraAttributes: Record<string, unknown> = {};
+    const { children, language, type, ...rest } = node;
+    const schema =
+      typeof config.documentFeatures.formatting.blockTypes.code === 'object'
+        ? config.documentFeatures.formatting.blockTypes.code.schema
+        : undefined;
+    if (schema && Object.keys(schema.fields).length > 0) {
+      Object.assign(
+        extraAttributes,
+        removeUnnecessaryFieldValues(
+          schema,
+          undefined,
+          getInitialPropsValueFromInitializer(schema, rest)
+        )
+      );
+    }
+
+    let content = (children[0] as { text: string }).text + '\n';
+
+    const markdocNode = new Ast.Node(
+      'fence',
+      { content, language, ...extraAttributes },
+      [new Ast.Node('text', { content })]
+    );
+
+    for (const [key, value] of Object.entries(extraAttributes)) {
+      markdocNode.annotations.push({
+        name: key,
+        value,
+        type: 'attribute',
+      });
+    }
+
+    return markdocNode;
   }
-  const _toMarkdoc = (node: ElementFromValidation) =>
-    toMarkdoc(node, componentBlocks);
+  const _toMarkdoc = (node: ElementFromValidation) => toMarkdoc(node, config);
   if (node.type === 'blockquote') {
     return new Ast.Node('blockquote', {}, node.children.map(_toMarkdoc));
   }
@@ -251,21 +292,35 @@ function toMarkdoc(
     );
   }
   if (node.type === 'heading') {
+    const extraAttributes: Record<string, unknown> = {};
+    if (node.textAlign) {
+      extraAttributes.textAlign = node.textAlign;
+    }
+    const { children, level, textAlign, type, ...rest } = node;
+    const schema = config.documentFeatures.formatting.headings.schema;
+    if (Object.keys(schema.fields).length > 0) {
+      Object.assign(
+        extraAttributes,
+        removeUnnecessaryFieldValues(
+          schema,
+          undefined,
+          getInitialPropsValueFromInitializer(schema, rest)
+        )
+      );
+    }
     const markdocNode = new Ast.Node(
       'heading',
-      {
-        level: node.level,
-        ...(node.textAlign ? { textAlign: node.textAlign } : {}),
-      },
+      { level: node.level, ...extraAttributes },
       [toInline(node.children)]
     );
-    if (node.textAlign) {
+    for (const [key, value] of Object.entries(extraAttributes)) {
       markdocNode.annotations.push({
-        name: 'textAlign',
-        value: node.textAlign,
+        name: key,
+        value,
         type: 'attribute',
       });
     }
+
     return markdocNode;
   }
   if (node.type === 'ordered-list') {
@@ -303,7 +358,7 @@ function toMarkdoc(
       node.children.length === 1 &&
       node.children[0].type === 'component-inline-prop' &&
       node.children[0].propPath === undefined;
-    const componentBlock = componentBlocks[node.component] as
+    const componentBlock = config.componentBlocks[node.component] as
       | ComponentBlock
       | undefined;
 
@@ -331,7 +386,7 @@ function toMarkdoc(
     }
 
     const attributes = componentBlock
-      ? (removeUnnecessaryChildFieldValues(
+      ? (removeUnnecessaryFieldValues(
           { kind: 'object' as const, fields: componentBlock.schema },
           undefined,
           node.props
@@ -383,7 +438,7 @@ function toMarkdoc(
     const children = [inline];
     const nestedList = node.children[1];
     if (nestedList) {
-      children.push(toMarkdoc(nestedList, componentBlocks));
+      children.push(toMarkdoc(nestedList, config));
     }
     return new Ast.Node('item', {}, children);
   }

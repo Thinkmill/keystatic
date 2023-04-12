@@ -77,8 +77,11 @@ export const createToolbarState = (
         dividers: true,
         formatting: {
           alignment: { center: true, end: true },
-          blockTypes: { blockquote: true, code: true },
-          headingLevels: [1, 2, 3, 4, 5, 6],
+          blockTypes: {
+            blockquote: true,
+            code: editorDocumentFeatures.formatting.blockTypes.code,
+          },
+          headings: editorDocumentFeatures.formatting.headings,
           listTypes: { ordered: true, unordered: true },
         },
         layouts: editorDocumentFeatures.layouts,
@@ -167,7 +170,7 @@ export const createToolbarState = (
       selected: headingEntry ? headingEntry[0].level : 'normal',
       allowedHeadingLevels:
         locationDocumentFeatures.kind === 'block' && !listEntry
-          ? locationDocumentFeatures.documentFeatures.formatting.headingLevels
+          ? locationDocumentFeatures.documentFeatures.formatting.headings.levels
           : [],
     },
     code: {

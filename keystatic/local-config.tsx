@@ -29,7 +29,26 @@ export default config({
         heroImage: fields.image({ label: 'Hero Image' }),
         content: fields.document({
           label: 'Content',
-          formatting: true,
+          formatting: {
+            alignment: true,
+            blockTypes: {
+              blockquote: true,
+              code: {
+                schema: {
+                  filename: fields.text({ label: 'Filename' }),
+                },
+              },
+            },
+            headingLevels: {
+              levels: true,
+              schema: {
+                id: fields.text({ label: 'ID' }),
+              },
+            },
+            inlineMarks: true,
+            listTypes: true,
+            softBreaks: true,
+          },
           layouts: [
             [1, 1],
             [1, 2],

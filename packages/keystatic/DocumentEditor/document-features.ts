@@ -1,3 +1,4 @@
+import { ObjectField } from '../src';
 import { BasicStringFormField } from './component-blocks/fields/document';
 
 export type DocumentFeatures = {
@@ -20,10 +21,13 @@ export type DocumentFeatures = {
       center: boolean;
       end: boolean;
     };
-    headingLevels: (1 | 2 | 3 | 4 | 5 | 6)[];
+    headings: {
+      schema: ObjectField;
+      levels: (1 | 2 | 3 | 4 | 5 | 6)[];
+    };
     blockTypes: {
       blockquote: boolean;
-      code: boolean;
+      code: false | { schema: ObjectField };
     };
     softBreaks: boolean;
   };

@@ -43,7 +43,9 @@ function getOptions(
     })),
     ...toolbarState.textStyles.allowedHeadingLevels
       .filter(a =>
-        toolbarState.editorDocumentFeatures.formatting.headingLevels.includes(a)
+        toolbarState.editorDocumentFeatures.formatting.headings.levels.includes(
+          a
+        )
       )
       .map(level => ({
         label: `Heading ${level}`,

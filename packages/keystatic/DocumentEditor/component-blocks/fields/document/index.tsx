@@ -15,6 +15,7 @@ import { collectDirectoriesUsedInSchema } from '../../../../app/tree-key';
 import {
   BasicFormField,
   ComponentBlock,
+  ComponentSchema,
   DocumentElement,
   FormFieldWithFileRequiringContentsForReader,
   SlugFormField,
@@ -26,6 +27,8 @@ import { object } from '../object';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
+
+type HeadingLevels = true | readonly (1 | 2 | 3 | 4 | 5 | 6)[];
 
 type FormattingConfig = {
   inlineMarks?:
@@ -52,12 +55,17 @@ type FormattingConfig = {
         center?: true;
         end?: true;
       };
-  headingLevels?: true | readonly (1 | 2 | 3 | 4 | 5 | 6)[];
+  headingLevels?:
+    | HeadingLevels
+    | {
+        levels: HeadingLevels;
+        schema?: Record<string, ComponentSchema>;
+      };
   blockTypes?:
     | true
     | {
         blockquote?: true;
-        code?: true;
+        code?: true | { schema?: Record<string, ComponentSchema> };
       };
   softBreaks?: true;
 };
@@ -129,15 +137,53 @@ export function normaliseDocumentFeatures(
             },
       blockTypes:
         formatting?.blockTypes === true
-          ? { blockquote: true, code: true }
+          ? { blockquote: true, code: { schema: object({}) } }
           : {
               blockquote: !!formatting.blockTypes?.blockquote,
-              code: !!formatting.blockTypes?.code,
+              code: (() => {
+                if (formatting.blockTypes?.code === undefined) {
+                  return false as const;
+                }
+                if (
+                  formatting.blockTypes.code === true ||
+                  !formatting.blockTypes.code.schema
+                ) {
+                  return { schema: object({}) };
+                }
+                for (const key of ['type', 'children', 'language']) {
+                  if (key in formatting.blockTypes.code.schema) {
+                    throw new Error(
+                      `"${key}" cannot be a key in the schema for code blocks`
+                    );
+                  }
+                }
+                return { schema: object(formatting.blockTypes.code.schema) };
+              })(),
             },
-      headingLevels:
-        formatting?.headingLevels === true
-          ? [1, 2, 3, 4, 5, 6]
-          : [...new Set(formatting?.headingLevels)].sort(),
+      headings: (() => {
+        const opt = formatting?.headingLevels;
+        const obj =
+          typeof opt === 'object' && 'levels' in opt
+            ? opt
+            : { levels: opt, schema: undefined };
+        if (obj.schema) {
+          for (const key of ['type', 'children', 'level', 'textAlign']) {
+            if (key in obj.schema) {
+              throw new Error(
+                `"${key}" cannot be a key in the schema for headings`
+              );
+            }
+          }
+        }
+        return {
+          levels: [
+            ...new Set(
+              obj.levels === true ? ([1, 2, 3, 4, 5, 6] as const) : obj.levels
+            ),
+          ],
+          schema: object(obj.schema ?? {}),
+        };
+      })(),
       inlineMarks:
         formatting.inlineMarks === true
           ? {
@@ -294,10 +340,10 @@ export function document({
               Markdoc.format(
                 Markdoc.parse(
                   Markdoc.format(
-                    toMarkdocDocument(
-                      transformed as ElementFromValidation[],
-                      componentBlocks
-                    )
+                    toMarkdocDocument(transformed as ElementFromValidation[], {
+                      componentBlocks,
+                      documentFeatures,
+                    })
                   )
                 )
               )

@@ -35,7 +35,11 @@ export function makeAPIRouteHandler(_config: APIRouteConfig) {
         return;
       }
 
-      const { watch } = require('chokidar');
+      const a = require;
+
+      const b = 'chokidar';
+
+      const { watch } = a(b);
 
       const watcher = watch(directories, { ignored: [/node_modules/] });
       const waitForNextEvent = createWatcher(watcher);
