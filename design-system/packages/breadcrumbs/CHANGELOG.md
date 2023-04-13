@@ -1,5 +1,15 @@
 # @voussoir/breadcrumbs
 
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies [e9b0e64]
+  - @voussoir/button@0.1.7
+  - @voussoir/layout@0.1.3
+  - @voussoir/style@0.1.5
+  - @voussoir/typography@0.1.4
+
 ## 0.1.6
 
 ### Patch Changes

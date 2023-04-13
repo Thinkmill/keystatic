@@ -1,5 +1,41 @@
 # @keystatic/core
 
+## 0.0.90
+
+### Patch Changes
+
+- e9b0e64: Strict dimension types.
+- e390566: Add `formatting.blockTypes.code.schema` and
+  `formatting.headingLevels.schema` options to `fields.document` to allow adding
+  arbitrary attributes to code blocks and headings.
+- 28eeba4: Add `Entry` and `EntryWithResolvedLinkedFiles` types to
+  `@keystatic/core/reader`
+- Updated dependencies [e9b0e64]
+  - @voussoir/action-group@0.1.4
+  - @voussoir/badge@0.1.4
+  - @voussoir/button@0.1.7
+  - @voussoir/checkbox@0.2.4
+  - @voussoir/combobox@0.1.5
+  - @voussoir/image@0.1.3
+  - @voussoir/layout@0.1.3
+  - @voussoir/link@0.1.3
+  - @voussoir/list-view@0.1.5
+  - @voussoir/nav-list@0.1.2
+  - @voussoir/notice@0.1.4
+  - @voussoir/number-field@0.1.4
+  - @voussoir/overlays@0.1.5
+  - @voussoir/picker@0.1.4
+  - @voussoir/progress@0.1.2
+  - @voussoir/radio@0.1.5
+  - @voussoir/search-field@0.1.5
+  - @voussoir/style@0.1.5
+  - @voussoir/table@0.1.4
+  - @voussoir/tabs@0.1.3
+  - @voussoir/text-field@0.1.6
+  - @voussoir/typography@0.1.4
+  - @voussoir/breadcrumbs@0.1.7
+  - @voussoir/toast@0.1.7
+
 ## 0.0.89
 
 ### Patch Changes

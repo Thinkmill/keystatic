@@ -1,5 +1,11 @@
 # @voussoir/style
 
+## 0.1.5
+
+### Patch Changes
+
+- e9b0e64: Strict dimension types.
+
 ## 0.1.4
 
 ### Patch Changes
