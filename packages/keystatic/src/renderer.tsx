@@ -41,7 +41,13 @@ interface Renderers {
       textAlign: 'center' | 'end' | undefined;
     }>;
     blockquote: OnlyChildrenComponent;
-    code: Component<{ children: string }> | keyof JSX.IntrinsicElements;
+    code:
+      | Component<{
+          children: string;
+          language?: string;
+          [key: string]: unknown;
+        }>
+      | keyof JSX.IntrinsicElements;
     layout: Component<{
       layout: [number, ...number[]];
       children: ReactElement[];
@@ -51,6 +57,7 @@ interface Renderers {
       level: 1 | 2 | 3 | 4 | 5 | 6;
       children: ReactNode;
       textAlign: 'center' | 'end' | undefined;
+      [key: string]: unknown;
     }>;
     list: Component<{
       type: 'ordered' | 'unordered';
@@ -94,7 +101,13 @@ export const defaultRenderers: Renderers = {
       let Heading = `h${level}` as 'h1';
       return <Heading style={{ textAlign }} children={children} />;
     },
-    code: 'pre',
+    code({ children }) {
+      return (
+        <pre>
+          <code>{children}</code>
+        </pre>
+      );
+    },
     list: ({ children, type }) => {
       const List = type === 'ordered' ? 'ol' : 'ul';
       return (
@@ -200,8 +213,11 @@ function DocumentNode({
         node.children[0] &&
         typeof node.children[0].text === 'string'
       ) {
+        const { type, children, ...rest } = node;
         return (
-          <renderers.block.code>{node.children[0].text}</renderers.block.code>
+          <renderers.block.code {...rest}>
+            {node.children[0].text}
+          </renderers.block.code>
         );
       }
       break;
@@ -218,13 +234,8 @@ function DocumentNode({
       return <renderers.block.divider />;
     }
     case 'heading': {
-      return (
-        <renderers.block.heading
-          textAlign={node.textAlign as any}
-          level={node.level as any}
-          children={children}
-        />
-      );
+      const { type, children: _children, ...rest } = node;
+      return <renderers.block.heading {...(rest as any)} children={children} />;
     }
     case 'component-block': {
       const Comp = componentBlocks[node.component as string];
