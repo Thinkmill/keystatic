@@ -10,7 +10,6 @@ import {
   collectFiles,
   deserializeFiles,
 } from '../../document-field';
-import { ElementFromValidation } from '../../../../structure-validation';
 import { collectDirectoriesUsedInSchema } from '../../../../app/tree-key';
 import {
   BasicFormField,
@@ -340,7 +339,7 @@ export function document({
               Markdoc.format(
                 Markdoc.parse(
                   Markdoc.format(
-                    toMarkdocDocument(transformed as ElementFromValidation[], {
+                    toMarkdocDocument(transformed, {
                       componentBlocks,
                       documentFeatures,
                     })

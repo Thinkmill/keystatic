@@ -9,8 +9,6 @@ import { createDocumentEditor, DocumentEditorEditable } from '..';
 import { ComponentBlock } from '../component-blocks/api';
 import { DocumentFeatures } from '../document-features';
 import { createToolbarState, ToolbarStateProvider } from '../toolbar-state';
-import { validateDocumentStructure } from '../../structure-validation';
-import { validateAndNormalizeDocument } from '../../validation';
 import { VoussoirProvider } from '@voussoir/core';
 import { normaliseDocumentFeatures } from '../component-blocks/fields/document';
 
@@ -76,19 +74,6 @@ expect.extend({
       isNot: this.isNot,
       promise: this.promise,
     };
-    const receivedConfig = (received as any).__config;
-    validateAndNormalizeDocument(
-      received.children,
-      receivedConfig.documentFeatures,
-      receivedConfig.componentBlocks
-    );
-
-    const expectedConfig = (expected as any).__config;
-    validateAndNormalizeDocument(
-      expected.children,
-      expectedConfig.documentFeatures,
-      expectedConfig.componentBlocks
-    );
 
     const pass =
       this.equals(received.children, expected.children) &&
@@ -199,14 +184,6 @@ export const makeEditor = (
   ) as Editor & {
     container?: HTMLElement;
   };
-  // for validation
-  (editor as any).__config = {
-    documentFeatures,
-    componentBlocks,
-  };
-
-  validateDocumentStructure(editor.children);
-
   // just a smoke test for the toolbar state
   createToolbarState(editor, componentBlocks, documentFeatures);
   const { onChange } = editor;
@@ -329,12 +306,6 @@ function nodeToReactElement(
     nodeToReactElement(editor, x, selection, path.concat(i))
   );
   if (Editor.isEditor(node)) {
-    const config = (editor as any).__config;
-    validateAndNormalizeDocument(
-      node.children,
-      config.documentFeatures,
-      config.componentBlocks
-    );
     const marks = Editor.marks(node);
 
     return createElement('editor', {

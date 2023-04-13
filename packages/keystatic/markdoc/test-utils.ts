@@ -5,7 +5,6 @@ import {
   makeEditor,
 } from '../DocumentEditor/tests/utils';
 import { ComponentBlock } from '../src';
-import { ElementFromValidation } from '../structure-validation';
 import { toMarkdocDocument } from './to-markdoc';
 
 export function toMarkdoc(
@@ -16,7 +15,7 @@ export function toMarkdoc(
   return Markdoc.format(
     Markdoc.parse(
       Markdoc.format(
-        toMarkdocDocument(children as ElementFromValidation[], {
+        toMarkdocDocument(children, {
           componentBlocks,
           documentFeatures: defaultDocumentFeatures,
         })

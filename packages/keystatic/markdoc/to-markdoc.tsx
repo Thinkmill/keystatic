@@ -4,15 +4,15 @@ import { getValueAtPropPath } from '../DocumentEditor/component-blocks/props-val
 import { areArraysEqual } from '../DocumentEditor/document-features-normalization';
 import { Mark } from '../DocumentEditor/utils';
 import { ComponentBlock, ComponentSchema } from '../src';
-import { ElementFromValidation } from '../structure-validation';
 import {
   findSingleChildField,
   PathToChildFieldWithOption,
 } from './find-children';
 import { DocumentFeatures } from '../DocumentEditor/document-features';
 import { getInitialPropsValueFromInitializer } from '../DocumentEditor/component-blocks/initial-values';
+import { Descendant } from 'slate';
 
-function toInline(nodes: ElementFromValidation[]): Node {
+function toInline(nodes: Descendant[]): Node {
   return new Ast.Node('inline', {}, nodes.flatMap(toMarkdocInline));
 }
 
@@ -27,7 +27,7 @@ const markToMarkdoc: Record<Mark, { type: NodeType; tag?: string }> = {
   superscript: { type: 'tag', tag: 'sup' },
 };
 
-function toMarkdocInline(node: ElementFromValidation): Node | Node[] {
+function toMarkdocInline(node: Descendant): Node | Node[] {
   if (node.type === 'link') {
     return new Ast.Node(
       'link',
@@ -56,7 +56,7 @@ function toMarkdocInline(node: ElementFromValidation): Node | Node[] {
 }
 
 export function toMarkdocDocument(
-  nodes: ElementFromValidation[],
+  nodes: Descendant[],
   config: {
     componentBlocks: Record<string, ComponentBlock>;
     documentFeatures: DocumentFeatures;
@@ -187,7 +187,7 @@ function toChildrenAndProps(
 }
 
 function toMarkdoc(
-  node: ElementFromValidation,
+  node: Descendant,
   config: {
     componentBlocks: Record<string, ComponentBlock>;
     documentFeatures: DocumentFeatures;
@@ -255,7 +255,7 @@ function toMarkdoc(
 
     return markdocNode;
   }
-  const _toMarkdoc = (node: ElementFromValidation) => toMarkdoc(node, config);
+  const _toMarkdoc = (node: Descendant) => toMarkdoc(node, config);
   if (node.type === 'blockquote') {
     return new Ast.Node('blockquote', {}, node.children.map(_toMarkdoc));
   }

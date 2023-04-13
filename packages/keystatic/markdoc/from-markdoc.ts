@@ -8,7 +8,6 @@ import {
   setLinkForChildren,
 } from '../DocumentEditor/pasting/utils';
 import { ComponentBlock } from '../src';
-import { TextWithMarks } from '../structure-validation';
 import {
   findSingleChildField,
   PathToChildFieldWithOption,
@@ -146,7 +145,7 @@ function fromMarkdocNode(
     const { language, content, ...rest } = node.attributes;
     return {
       type: 'code',
-      children: [{ text: content.replace(/\n$/, '') } as TextWithMarks],
+      children: [{ text: content.replace(/\n$/, '') }],
       ...(typeof language === 'string' ? { language } : {}),
       ...rest,
     };
