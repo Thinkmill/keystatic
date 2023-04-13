@@ -1,5 +1,15 @@
 # @voussoir/typography
 
+## 0.1.4
+
+### Patch Changes
+
+- e9b0e64: Strict dimension types.
+- Updated dependencies [e9b0e64]
+  - @voussoir/layout@0.1.3
+  - @voussoir/link@0.1.3
+  - @voussoir/style@0.1.5
+
 ## 0.1.3
 
 ### Patch Changes
