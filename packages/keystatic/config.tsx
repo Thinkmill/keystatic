@@ -102,7 +102,8 @@ export type Config<
     | { kind: 'cloud'; project: string };
   collections?: Collections;
   singletons?: Singletons;
-};
+} & ({} extends Collections ? {} : { collections: Collections }) &
+  ({} extends Singletons ? {} : { singletons: Singletons });
 
 export function config<
   Collections extends {

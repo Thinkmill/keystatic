@@ -33,13 +33,60 @@ type EntryReaderOpts = { resolveLinkedFiles?: boolean };
 
 type ValueForReadingWithMode<
   Schema extends ComponentSchema,
-  Opts extends boolean | undefined
-> = Opts extends true ? ValueForReadingDeep<Schema> : ValueForReading<Schema>;
+  ResolveLinkedFiles extends boolean | undefined
+> = ResolveLinkedFiles extends true
+  ? ValueForReadingDeep<Schema>
+  : ValueForReading<Schema>;
 
 type OptionalChain<
   T extends {} | undefined,
   Key extends keyof (T & {})
 > = T extends {} ? T[Key] : undefined;
+
+export type Entry<
+  CollectionOrSingleton extends Collection<any, any> | Singleton<any>
+> = CollectionOrSingleton extends Collection<infer Schema, infer SlugField>
+  ? CollectionEntry<Schema, SlugField>
+  : CollectionOrSingleton extends Singleton<infer Schema>
+  ? SingletonEntry<Schema>
+  : never;
+
+export type EntryWithResolvedLinkedFiles<
+  CollectionOrSingleton extends Collection<any, any> | Singleton<any>
+> = CollectionOrSingleton extends Collection<infer Schema, infer SlugField>
+  ? CollectionEntryWithResolvedLinkedFiles<Schema, SlugField>
+  : CollectionOrSingleton extends Singleton<infer Schema>
+  ? SingletonEntryWithResolvedLinkedFiles<Schema>
+  : never;
+
+type CollectionEntryWithResolvedLinkedFiles<
+  Schema extends Record<string, ComponentSchema>,
+  SlugField extends string
+> = {
+  [Key in keyof Schema]: SlugField extends Key
+    ? Schema[Key] extends SlugFormField<any, infer SlugSerializedValue>
+      ? SlugSerializedValue
+      : ValueForReadingDeep<Schema[Key]>
+    : ValueForReadingDeep<Schema[Key]>;
+};
+
+type CollectionEntry<
+  Schema extends Record<string, ComponentSchema>,
+  SlugField extends string
+> = {
+  [Key in keyof Schema]: SlugField extends Key
+    ? Schema[Key] extends SlugFormField<any, infer SlugSerializedValue>
+      ? SlugSerializedValue
+      : ValueForReading<Schema[Key]>
+    : ValueForReading<Schema[Key]>;
+};
+
+type SingletonEntryWithResolvedLinkedFiles<
+  Schema extends Record<string, ComponentSchema>
+> = ValueForReadingDeep<ObjectField<Schema>>;
+
+type SingletonEntry<Schema extends Record<string, ComponentSchema>> =
+  ValueForReading<ObjectField<Schema>>;
 
 type CollectionReader<
   Schema extends Record<string, ComponentSchema>,

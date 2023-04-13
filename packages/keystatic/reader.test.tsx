@@ -1,7 +1,7 @@
 /** @jest-environment node */
 import path from 'path';
 import { component, fields, collection, config } from './src';
-import { createReader } from './src/reader';
+import { EntryWithResolvedLinkedFiles, createReader } from './src/reader';
 
 const localConfig = config({
   storage: {
@@ -53,6 +53,21 @@ const localConfig = config({
     }),
   },
 });
+
+type Post = EntryWithResolvedLinkedFiles<
+  (typeof localConfig)['collections']['posts']
+>;
+
+(() => {
+  const post: {
+    title: string;
+    publishDate: string | null;
+    heroImage: any;
+    content: any;
+    authors: readonly { name: string; bio: any }[];
+  } = {} as any as Post;
+  console.log(post);
+})();
 
 test('list', async () => {
   const reader = createReader(path.join(__dirname, 'test-data'), localConfig);
