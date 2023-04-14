@@ -115,7 +115,7 @@ test('read', async () => {
           },
         ],
         "src": "blank.png",
-        "title": undefined,
+        "title": "",
         "type": "image",
       },
       {
@@ -169,7 +169,7 @@ test('read deep', async () => {
             },
           ],
           "src": "blank.png",
-          "title": undefined,
+          "title": "",
           "type": "image",
         },
         {
@@ -253,7 +253,7 @@ test('read all deep', async () => {
                 },
               ],
               "src": "blank.png",
-              "title": undefined,
+              "title": "",
               "type": "image",
             },
             {
