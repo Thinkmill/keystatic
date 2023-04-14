@@ -66,16 +66,16 @@ export const Text = forwardRefWithAs<TextProps, 'span'>(
       </ElementType>
     );
 
-    // avoid nested providers
-    if (prevContext || visuallyHidden) {
-      return element;
-    }
-
     // avoid unnecessary re-renders
     const nextContext = useMemo(
       () => ({ size, color, weight }),
       [size, color, weight]
     );
+
+    // avoid nested providers
+    if (prevContext || visuallyHidden) {
+      return element;
+    }
 
     return (
       <TextContext.Provider value={nextContext}>{element}</TextContext.Provider>
