@@ -185,7 +185,7 @@ function fromMarkdocNode(
         type: 'image',
         src: decodeURI(image.attributes.src) as any,
         alt: image.attributes.alt,
-        title: image.attributes.title,
+        title: image.attributes.title ?? '',
         children: [{ text: '' }],
       };
     }
