@@ -1,5 +1,16 @@
 # @keystatic/core
 
+## 0.0.91
+
+### Patch Changes
+
+- e0292c2: Remove unused dependencies
+- f435b49: Fix `DocumentRenderer` not providing `language` to the code block
+  renderer and not providing arbitrary props to the code block and heading
+  renderer.
+- a09b11d: Fix attempting to edit an image's details after saving it without a
+  title erroring
+
 ## 0.0.90
 
 ### Patch Changes
