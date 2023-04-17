@@ -12,29 +12,20 @@ interface InputSegmentProps extends DatePickerBase<DateValue> {
   state: DateFieldState;
 }
 
-interface LiteralSegmentProps {
-  segment: DateSegment;
-}
-
 export function InputSegment({
   segment,
   state,
   ...otherProps
 }: InputSegmentProps) {
-  switch (segment.type) {
-    // A separator, e.g. punctuation
-    case 'literal':
-      return <LiteralSegment segment={segment} />;
-
-    // Editable segment
-    default:
-      return (
-        <EditableSegment segment={segment} state={state} {...otherProps} />
-      );
+  if (segment.type === 'literal') {
+    return <LiteralSegment segment={segment} />;
   }
+
+  return <EditableSegment segment={segment} state={state} {...otherProps} />;
 }
 
-function LiteralSegment({ segment }: LiteralSegmentProps) {
+/** A separator, e.g. punctuation like "/" or "." */
+function LiteralSegment({ segment }: { segment: DateSegment }) {
   return (
     <Text
       elementType="span"

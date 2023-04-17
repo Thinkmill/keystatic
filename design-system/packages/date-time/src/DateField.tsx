@@ -3,7 +3,6 @@ import { useDateField } from '@react-aria/datepicker';
 import { useLocale } from '@react-aria/i18n';
 import { useDateFieldState } from '@react-stately/datepicker';
 import { DateValue } from '@react-types/datepicker';
-import { FocusableRef } from '@react-types/shared';
 import React, { ReactElement, Ref, useRef } from 'react';
 
 import { useProviderProps } from '@voussoir/core';
@@ -12,8 +11,8 @@ import { classNames } from '@voussoir/style';
 
 import { Input } from './Input';
 import { InputSegment } from './InputSegment';
-import { useFocusManagerRef, useFormatHelpText } from './utils';
 import { DateFieldProps } from './types';
+import { useFocusManagerRef, useFormatHelpText } from './utils';
 
 const datepickerStyles = {};
 
@@ -85,6 +84,6 @@ function DateField<T extends DateValue>(
  * Each part of a date value is displayed in an individually editable segment.
  */
 const _DateField = React.forwardRef(DateField) as <T extends DateValue>(
-  props: DateFieldProps<T> & { ref?: FocusableRef<HTMLElement> }
+  props: DateFieldProps<T> & { ref?: Ref<HTMLDivElement> }
 ) => ReactElement;
 export { _DateField as DateField };

@@ -108,6 +108,5 @@ storiesOf('Components/DateField', module)
 
 function ControlledExample() {
   const [value, setValue] = useState(new CalendarDate(2023, 4, 14));
-  console.log(value);
   return <DateField label="Date" value={value} onChange={setValue} />;
 }
