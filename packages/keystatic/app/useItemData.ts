@@ -2,11 +2,10 @@ import LRUCache from 'lru-cache';
 import { useCallback, useMemo } from 'react';
 import { Config } from '../config';
 import { SlugFieldInfo } from '../DocumentEditor/component-blocks/fields/text/ui';
-import { transformProps } from '../DocumentEditor/component-blocks/props-value';
 import { ComponentSchema, fields } from '../src';
-import { validateComponentBlockProps } from '../validate-component-block-props';
+import { parseProps } from '../parse-props';
 import { getAuth } from './auth';
-import { loadDataFile, parseSerializedFormField } from './required-files';
+import { loadDataFile } from './required-files';
 import { useTree } from './shell/data';
 import { getDirectoriesForTreeKey, getTreeKey } from './tree-key';
 import { TreeNode, getTreeNodeAtPath, TreeEntry, blobSha } from './trees';
@@ -19,6 +18,7 @@ import {
   KEYSTATIC_CLOUD_HEADERS,
   MaybePromise,
 } from './utils';
+import { toFormattedFormDataError } from '../DocumentEditor/component-blocks/utils';
 
 function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
   const dataFilepath = getEntryDataFilepath(args.dirpath, args.format);
@@ -27,19 +27,6 @@ function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
     throw new Error(`Could not find data file at ${dataFilepath}`);
   }
   const { loaded, extraFakeFile } = loadDataFile(data, args.format);
-  const schema = fields.object(args.schema);
-  const validated = validateComponentBlockProps(
-    schema,
-    loaded,
-    [],
-    args.slug
-      ? {
-          ...args.slug,
-          mode: 'parse',
-          slug: args.slug.slug,
-        }
-      : undefined
-  );
   const filesWithFakeFile = new Map(files);
   if (extraFakeFile) {
     filesWithFakeFile.set(
@@ -47,24 +34,90 @@ function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
       extraFakeFile.contents
     );
   }
-  const rootSchema = schema;
-  const initialState = transformProps(schema, validated, {
-    form(schema, val, path) {
-      if ('serializeToFile' in schema) {
-        return parseSerializedFormField(
-          val,
-          { path, schema },
-          filesWithFakeFile,
-          'edit',
-          args.dirpath,
-          args.slug?.slug,
-          validated,
-          rootSchema
-        );
+  const rootSchema = fields.object(args.schema);
+  let initialState;
+  try {
+    initialState = parseProps(
+      rootSchema,
+      loaded,
+      [],
+      [],
+      (schema, value, path, pathWithArrayFieldSlugs) => {
+        if (path.length === 1 && path[0] === args.slug?.field) {
+          if (schema.formKind !== 'slug') {
+            throw new Error(`slugField is not a slug field`);
+          }
+          return schema.parse(value, { slug: args.slug.slug });
+        }
+        if (schema.formKind === 'asset') {
+          const suggestedFilenamePrefix = pathWithArrayFieldSlugs.join('/');
+          const filepath = schema.filename(value, {
+            suggestedFilenamePrefix,
+            slug: args.slug?.slug,
+          });
+          const asset = filepath
+            ? filesWithFakeFile.get(
+                `${
+                  schema.directory
+                    ? `${schema.directory}${
+                        args.slug?.slug === undefined
+                          ? ''
+                          : `/${args.slug.slug}`
+                      }`
+                    : args.dirpath
+                }/${filepath}`
+              )
+            : undefined;
+
+          return schema.parse(value, { asset, slug: args.slug?.slug });
+        }
+        if (schema.formKind === 'content') {
+          const rootPath = `${args.dirpath}/${pathWithArrayFieldSlugs.join(
+            '/'
+          )}`;
+          const mainFilepath = rootPath + schema.contentExtension;
+          const mainContents = filesWithFakeFile.get(mainFilepath);
+
+          const otherFiles = new Map<string, Uint8Array>();
+          const otherDirectories = new Map<string, Map<string, Uint8Array>>();
+
+          for (const [filename] of filesWithFakeFile) {
+            if (filename.startsWith(rootPath + '/')) {
+              const relativePath = filename.slice(rootPath.length + 1);
+              otherFiles.set(relativePath, filesWithFakeFile.get(filename)!);
+            }
+          }
+          for (const dir of schema.directories ?? []) {
+            const dirFiles = new Map<string, Uint8Array>();
+            const start = `${dir}${
+              args.slug?.slug === undefined ? '' : `/${args.slug?.slug}`
+            }/`;
+            for (const [filename, val] of filesWithFakeFile) {
+              if (filename.startsWith(start)) {
+                const relativePath = filename.slice(start.length);
+                dirFiles.set(relativePath, val);
+              }
+            }
+            if (dirFiles.size) {
+              otherDirectories.set(dir, dirFiles);
+            }
+          }
+
+          return schema.parse(value, {
+            content: mainContents,
+            other: otherFiles,
+            external: otherDirectories,
+            slug: args.slug?.slug,
+          });
+        }
+
+        return schema.parse(value, undefined);
       }
-      return val;
-    },
-  }) as Record<string, unknown>;
+    );
+  } catch (err) {
+    throw toFormattedFormDataError(err);
+  }
+
   const initialFiles = [...files.keys()];
 
   return { initialState, initialFiles };

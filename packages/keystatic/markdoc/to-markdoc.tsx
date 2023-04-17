@@ -3,7 +3,7 @@ import { ReadonlyPropPath } from '../DocumentEditor/component-blocks/utils';
 import { getValueAtPropPath } from '../DocumentEditor/component-blocks/props-value';
 import { areArraysEqual } from '../DocumentEditor/document-features-normalization';
 import { Mark } from '../DocumentEditor/utils';
-import { ComponentBlock, ComponentSchema } from '../src';
+import { ComponentBlock } from '../src';
 import {
   findSingleChildField,
   PathToChildFieldWithOption,
@@ -11,6 +11,9 @@ import {
 import { DocumentFeatures } from '../DocumentEditor/document-features';
 import { getInitialPropsValueFromInitializer } from '../DocumentEditor/component-blocks/initial-values';
 import { Descendant } from 'slate';
+import { fixPath } from '../app/path-utils';
+import { getSrcPrefixForImageBlock } from '../DocumentEditor/component-blocks/document-field';
+import { serializeProps } from '../serialize-props';
 
 function toInline(nodes: Descendant[]): Node {
   return new Ast.Node('inline', {}, nodes.flatMap(toMarkdocInline));
@@ -57,65 +60,30 @@ function toMarkdocInline(node: Descendant): Node | Node[] {
 
 export function toMarkdocDocument(
   nodes: Descendant[],
-  config: {
+  _config: {
     componentBlocks: Record<string, ComponentBlock>;
     documentFeatures: DocumentFeatures;
+    slug: string | undefined;
   }
 ) {
-  return new Ast.Node(
+  const extraFiles: {
+    contents: Uint8Array;
+    path: string;
+    parent: string | undefined;
+  }[] = [];
+  const config = {
+    ..._config,
+    extraFiles,
+  };
+  const node = new Ast.Node(
     'document',
     {},
     nodes.flatMap(x => toMarkdoc(x, config))
   );
-}
-
-function removeUnnecessaryFieldValues(
-  schema: ComponentSchema,
-  parent: ComponentSchema | undefined,
-  value: unknown
-): unknown {
-  if (schema.kind === 'form') {
-    // i am very unsure about this magic not writing defaults
-    if (value === schema.defaultValue && parent?.kind === 'object') {
-      return undefined;
-    }
-    return value;
-  }
-  if (schema.kind === 'child') {
-    if (parent?.kind === 'array') {
-      return null;
-    }
-    return undefined;
-  }
-  if (schema.kind === 'array') {
-    return (value as unknown[]).map(x =>
-      removeUnnecessaryFieldValues(schema.element, schema, x)
-    );
-  }
-  if (schema.kind === 'object') {
-    return Object.fromEntries(
-      Object.entries(schema.fields)
-        .map(([key, innerSchema]) => [
-          key,
-          removeUnnecessaryFieldValues(
-            innerSchema,
-            schema,
-            (value as any)[key]
-          ),
-        ])
-        .filter(([, val]) => val !== undefined)
-    );
-  }
-  if (schema.kind === 'conditional') {
-    return {
-      discriminant: (value as any).discriminant,
-      value: removeUnnecessaryFieldValues(
-        schema.values[(value as any).discriminant],
-        schema,
-        (value as any).value
-      ),
-    };
-  }
+  return {
+    node,
+    extraFiles,
+  };
 }
 
 function toChildrenAndProps(
@@ -191,6 +159,12 @@ function toMarkdoc(
   config: {
     componentBlocks: Record<string, ComponentBlock>;
     documentFeatures: DocumentFeatures;
+    slug: string | undefined;
+    extraFiles: {
+      contents: Uint8Array;
+      path: string;
+      parent: string | undefined;
+    }[];
   }
 ): Node {
   if (node.type === 'paragraph') {
@@ -209,10 +183,24 @@ function toMarkdoc(
     return markdocNode;
   }
   if (node.type === 'image') {
+    config.extraFiles.push({
+      contents: node.src.content,
+      path: node.src.filename,
+      parent:
+        typeof config.documentFeatures.images === 'object' &&
+        typeof config.documentFeatures.images.directory === 'string'
+          ? fixPath(config.documentFeatures.images.directory)
+          : undefined,
+    });
     return new Ast.Node('paragraph', {}, [
       new Ast.Node('inline', {}, [
         new Ast.Node('image', {
-          src: encodeURI(node.src as unknown as string),
+          src: encodeURI(
+            `${getSrcPrefixForImageBlock(
+              config.documentFeatures,
+              config.slug
+            )}${node.src.filename}`
+          ),
           alt: node.alt,
           title: node.title,
         }),
@@ -227,14 +215,14 @@ function toMarkdoc(
         ? config.documentFeatures.formatting.blockTypes.code.schema
         : undefined;
     if (schema && Object.keys(schema.fields).length > 0) {
-      Object.assign(
-        extraAttributes,
-        removeUnnecessaryFieldValues(
-          schema,
-          undefined,
-          getInitialPropsValueFromInitializer(schema, rest)
-        )
+      const serialized = serializeProps(
+        getInitialPropsValueFromInitializer(schema, rest),
+        schema,
+        undefined,
+        config.slug
       );
+      Object.assign(extraAttributes, serialized.value);
+      config.extraFiles.push(...serialized.extraFiles);
     }
 
     let content = (children[0] as { text: string }).text + '\n';
@@ -301,10 +289,11 @@ function toMarkdoc(
     if (Object.keys(schema.fields).length > 0) {
       Object.assign(
         extraAttributes,
-        removeUnnecessaryFieldValues(
+        serializeProps(
+          getInitialPropsValueFromInitializer(schema, rest),
           schema,
           undefined,
-          getInitialPropsValueFromInitializer(schema, rest)
+          config.slug
         )
       );
     }
@@ -385,15 +374,17 @@ function toMarkdoc(
       }
     }
 
-    const attributes = componentBlock
-      ? (removeUnnecessaryFieldValues(
-          { kind: 'object' as const, fields: componentBlock.schema },
-          undefined,
-          node.props
-        ) as Record<string, unknown>)
-      : node.props;
+    let attributes = node.props;
 
     if (componentBlock) {
+      const serialized = serializeProps(
+        node.props,
+        { kind: 'object' as const, fields: componentBlock.schema },
+        undefined,
+        config.slug
+      );
+      attributes = serialized.value as Record<string, unknown>;
+      config.extraFiles.push(...serialized.extraFiles);
       const singleChildField = findSingleChildField({
         kind: 'object',
         fields: componentBlock.schema,

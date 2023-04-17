@@ -51,6 +51,18 @@ const localConfig = config({
         ),
       },
     }),
+    other: collection({
+      label: 'Other',
+      path: 'other/*',
+      slugField: 'slug',
+      schema: {
+        slug: fields.text({ label: 'Slug' }),
+        date: fields.date({ label: 'Date' }),
+        integer: fields.integer({ label: 'Integer' }),
+        text: fields.text({ label: 'Text' }),
+        anotherText: fields.text({ label: 'Another Text' }),
+      },
+    }),
   },
 });
 
@@ -272,5 +284,16 @@ test('read all deep', async () => {
         "slug": "2023-is-finally-here",
       },
     ]
+  `);
+});
+
+test('errors', async () => {
+  const reader = createReader(path.join(__dirname, 'test-data'), localConfig);
+  await expect(reader.collections.other.read('invalid')).rejects
+    .toMatchInlineSnapshot(`
+    [Error: Invalid data for "invalid" in collection "other":
+    date: Date is not a valid date
+    integer: Must be a number
+    text: Must be a string]
   `);
 });

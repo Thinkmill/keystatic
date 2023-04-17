@@ -12,14 +12,10 @@ export function toMarkdoc(
   componentBlocks: Record<string, ComponentBlock>
 ) {
   const { children } = makeEditor(node);
-  return Markdoc.format(
-    Markdoc.parse(
-      Markdoc.format(
-        toMarkdocDocument(children, {
-          componentBlocks,
-          documentFeatures: defaultDocumentFeatures,
-        })
-      )
-    )
-  );
+  const root = toMarkdocDocument(children, {
+    componentBlocks,
+    documentFeatures: defaultDocumentFeatures,
+    slug: undefined,
+  }).node;
+  return Markdoc.format(Markdoc.parse(Markdoc.format(root)));
 }

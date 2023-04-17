@@ -4,7 +4,7 @@ import {
   ComponentSchema,
   GenericPreviewProps,
   InitialOrUpdateValueFromComponentPropField,
-  ValueForComponentSchema,
+  ParsedValueForComponentSchema,
 } from './api';
 import { getKeysForArrayValue, setKeysForArrayValue } from './initial-values';
 
@@ -14,7 +14,7 @@ const previewPropsToValueConverter: {
       Extract<ComponentSchema, { kind: Kind }>,
       unknown
     >
-  ) => ValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>;
+  ) => ParsedValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>;
 } = {
   child() {
     return null;
@@ -48,13 +48,15 @@ const previewPropsToValueConverter: {
 
 export function previewPropsToValue<Schema extends ComponentSchema>(
   props: GenericPreviewProps<ComponentSchema, unknown>
-): ValueForComponentSchema<Schema> {
+): ParsedValueForComponentSchema<Schema> {
   return (previewPropsToValueConverter[props.schema.kind] as any)(props);
 }
 
 const valueToUpdaters: {
   [Kind in ComponentSchema['kind']]: (
-    value: ValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>,
+    value: ParsedValueForComponentSchema<
+      Extract<ComponentSchema, { kind: Kind }>
+    >,
     schema: Extract<ComponentSchema, { kind: Kind }>
   ) => InitialOrUpdateValueFromComponentPropField<
     Extract<ComponentSchema, { kind: Kind }>
@@ -93,14 +95,14 @@ const valueToUpdaters: {
 };
 
 export function valueToUpdater<Schema extends ComponentSchema>(
-  value: ValueForComponentSchema<Schema>,
+  value: ParsedValueForComponentSchema<Schema>,
   schema: ComponentSchema
 ): InitialOrUpdateValueFromComponentPropField<Schema> {
   return (valueToUpdaters[schema.kind] as any)(value, schema);
 }
 
 export function setValueToPreviewProps<Schema extends ComponentSchema>(
-  value: ValueForComponentSchema<Schema>,
+  value: ParsedValueForComponentSchema<Schema>,
   props: GenericPreviewProps<ComponentSchema, unknown>
 ) {
   if (isKind(props, 'child')) {

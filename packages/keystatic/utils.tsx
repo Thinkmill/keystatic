@@ -1,5 +1,5 @@
 import { gql } from '@ts-gql/tag/no-transform';
-import { assert, assertNever } from 'emery';
+import { assert } from 'emery';
 import { useContext, useState } from 'react';
 
 import { ComponentSchema, fields } from './DocumentEditor/component-blocks/api';
@@ -24,12 +24,10 @@ import {
   updateTreeWithChanges,
 } from './app/trees';
 import { Config } from './src';
-import { isSlugFormField } from './app/utils';
 import { getDirectoriesForTreeKey, getTreeKey } from './app/tree-key';
-import { getPropPathPortion } from './app/required-files';
 import { AppSlugContext } from './app/onboarding/install-app';
 import { createUrqlClient } from './app/provider';
-import { asyncTransformProps } from './DocumentEditor/component-blocks/props-value';
+import { serializeProps } from './serialize-props';
 
 const textEncoder = new TextEncoder();
 
@@ -95,10 +93,11 @@ export function useUpsertItem(args: {
           return false;
         }
         setState({ kind: 'loading' });
-        let { value: stateWithExtraFilesRemoved, extraFiles } = await toFiles(
+        let { value: stateWithExtraFilesRemoved, extraFiles } = serializeProps(
           args.state,
           fields.object(args.schema),
-          args.slug
+          args.slug?.field,
+          args.slug?.value
         );
         const dataFormat = args.format.data;
         let dataContent = textEncoder.encode(
@@ -108,7 +107,7 @@ export function useUpsertItem(args: {
         );
 
         if (args.format.contentField) {
-          const filename = `${args.format.contentField.key}${args.format.contentField.config.serializeToFile.primaryExtension}`;
+          const filename = `${args.format.contentField.key}${args.format.contentField.config.contentExtension}`;
           let contents: undefined | Uint8Array;
           extraFiles = extraFiles.filter(x => {
             if (x.path !== filename) return true;
@@ -408,109 +407,6 @@ export function useDeleteItem(args: {
       setState({ kind: 'idle' });
     },
   ] as const;
-}
-
-export async function toFiles(
-  rootValue: unknown,
-  rootSchema: ComponentSchema,
-  slug: { field: string; value: string } | undefined
-) {
-  const extraFiles: {
-    path: string;
-    parent: string | undefined;
-    contents: Uint8Array;
-  }[] = [];
-  return {
-    value: await asyncTransformProps(rootSchema, rootValue, {
-      async form(schema, value, propPath) {
-        if (propPath.length === 1 && slug?.field === propPath[0]) {
-          if (!isSlugFormField(schema)) {
-            throw new Error('slugField is a not a slug field');
-          }
-          return schema.slug.serialize(value).value;
-        }
-        if ('serializeToFile' in schema && schema.serializeToFile) {
-          if (schema.serializeToFile.kind === 'asset') {
-            const suggestedFilenamePrefix = getPropPathPortion(
-              propPath,
-              rootSchema,
-              rootValue
-            );
-
-            const { content, value: forYaml } =
-              schema.serializeToFile.serialize(
-                value,
-                suggestedFilenamePrefix,
-                slug?.value
-              );
-            if (content) {
-              const path = schema.serializeToFile.filename(
-                forYaml,
-                suggestedFilenamePrefix,
-                slug?.value
-              );
-              if (path) {
-                extraFiles.push({
-                  path,
-                  contents: content,
-                  parent: schema.serializeToFile.directory,
-                });
-              }
-            }
-            return forYaml;
-          }
-          if (schema.serializeToFile.kind === 'multi') {
-            const {
-              other,
-              external,
-              primary,
-              value: forYaml,
-            } = await schema.serializeToFile.serialize(value, slug?.value);
-            if (primary) {
-              extraFiles.push({
-                path:
-                  getPropPathPortion(propPath, rootSchema, rootValue) +
-                  schema.serializeToFile.primaryExtension,
-                contents: primary,
-                parent: undefined,
-              });
-            }
-            for (const [key, contents] of other) {
-              extraFiles.push({
-                path:
-                  getPropPathPortion(propPath, rootSchema, rootValue) +
-                  '/' +
-                  key,
-                contents,
-                parent: undefined,
-              });
-            }
-            const allowedDirectories = new Set(
-              schema.serializeToFile.directories
-            );
-            for (const [directory, contents] of external) {
-              if (!allowedDirectories.has(directory)) {
-                throw new Error(
-                  `Invalid directory ${directory} in multi-file serialization`
-                );
-              }
-              for (const [filename, fileContents] of contents) {
-                extraFiles.push({
-                  path: filename,
-                  contents: fileContents,
-                  parent: directory,
-                });
-              }
-            }
-            return forYaml;
-          }
-          assertNever(schema.serializeToFile);
-        }
-        return value;
-      },
-    }),
-    extraFiles,
-  };
 }
 
 const FetchRef = gql`

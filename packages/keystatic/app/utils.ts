@@ -2,7 +2,7 @@ import { fromUint8Array } from 'js-base64';
 import { isDefined } from 'emery';
 
 import { Config, GitHubConfig, LocalConfig } from '../config';
-import { CloudConfig, ComponentSchema, SlugFormField } from '../src';
+import { CloudConfig, ComponentSchema } from '../src';
 import {
   getCollectionFormat,
   getCollectionItemPath,
@@ -57,16 +57,6 @@ export function getRepoUrl(config: { mainOwner: string; mainRepo: string }) {
   return `https://github.com/${getRepoPath(config)}`;
 }
 
-export function isSlugFormField(
-  schema: ComponentSchema
-): schema is SlugFormField<unknown, unknown> {
-  return (
-    schema.kind === 'form' &&
-    'slug' in schema &&
-    typeof schema.slug === 'object'
-  );
-}
-
 export function getSlugFromState(
   collectionConfig: {
     slugField: string;
@@ -76,10 +66,10 @@ export function getSlugFromState(
 ) {
   const value = state[collectionConfig.slugField];
   const field = collectionConfig.schema[collectionConfig.slugField];
-  if (!isSlugFormField(field)) {
+  if (field.kind !== 'form' || field.formKind !== 'slug') {
     throw new Error(`slugField is not a slug field`);
   }
-  return field.slug.serialize(value).slug;
+  return field.serializeWithSlug(value).slug;
 }
 
 export function getEntriesInCollectionWithTreeKey(

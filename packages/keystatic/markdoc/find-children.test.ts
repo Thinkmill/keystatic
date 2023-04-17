@@ -137,18 +137,27 @@ test('array', () => {
             },
             "heading": {
               "Input": [Function],
-              "defaultValue": "",
+              "defaultValue": [Function],
+              "formKind": "slug",
               "kind": "form",
-              "slug": {
+              "parse": [Function],
+              "reader": {
                 "parse": [Function],
-                "serialize": [Function],
+                "parseWithSlug": [Function],
               },
+              "serialize": [Function],
+              "serializeWithSlug": [Function],
               "validate": [Function],
             },
             "href": {
               "Input": [Function],
-              "defaultValue": "",
+              "defaultValue": [Function],
               "kind": "form",
+              "parse": [Function],
+              "reader": {
+                "parse": [Function],
+              },
+              "serialize": [Function],
               "validate": [Function],
             },
           },

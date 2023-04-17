@@ -65,15 +65,11 @@ export function useObjectURL(data: Uint8Array | null) {
 }
 
 export function ImageFieldInput(
-  props: FormFieldInputProps<
-    | {
-        kind: 'uploaded';
-        data: Uint8Array;
-        extension: string;
-        filename: string;
-      }
-    | { kind: 'none' }
-  > & {
+  props: FormFieldInputProps<{
+    data: Uint8Array;
+    extension: string;
+    filename: string;
+  } | null> & {
     label: string;
     description: string | undefined;
     validation: { isRequired?: boolean } | undefined;
@@ -82,7 +78,7 @@ export function ImageFieldInput(
   const { value } = props;
   const [blurred, onBlur] = useReducer(() => true, false);
   const isInEditor = useIsInDocumentEditor();
-  const objectUrl = useObjectURL(value.kind === 'uploaded' ? value.data : null);
+  const objectUrl = useObjectURL(value === null ? null : value.data);
   return (
     <Flex direction="column" gap="medium">
       <FieldLabel>{props.label}</FieldLabel>
@@ -99,7 +95,6 @@ export function ImageFieldInput(
               const extension = image.filename.match(/\.([^.]+$)/)?.[1];
               if (extension) {
                 props.onChange({
-                  kind: 'uploaded',
                   data: image.content,
                   extension,
                   filename: image.filename,
@@ -110,11 +105,11 @@ export function ImageFieldInput(
         >
           Choose file
         </ActionButton>
-        {value.kind === 'uploaded' && (
+        {value !== null && (
           <ActionButton
             prominence="low"
             onPress={() => {
-              props.onChange({ kind: 'none' });
+              props.onChange(null);
               onBlur();
             }}
           >
@@ -141,7 +136,7 @@ export function ImageFieldInput(
           />
         </Box>
       )}
-      {isInEditor && value.kind === 'uploaded' && (
+      {isInEditor && value !== null && (
         <TextField
           label="Filename"
           onChange={filename => {
@@ -152,7 +147,7 @@ export function ImageFieldInput(
       )}
       {(props.forceValidation || blurred) &&
         props.validation?.isRequired &&
-        value.kind === 'none' && (
+        value === null && (
           <FieldMessage>{props.label} is required</FieldMessage>
         )}
     </Flex>

@@ -1,6 +1,7 @@
 import { fixPath } from '../../../../app/path-utils';
-import { FormFieldWithFileNotRequiringContentsForReader } from '../../api';
-import { RequiredValidation } from '../utils';
+import { AssetFormField } from '../../api';
+import { FieldDataError } from '../error';
+import { RequiredValidation, assertRequired } from '../utils';
 import { ImageFieldInput } from './ui';
 
 export function image<IsRequired extends boolean | undefined>({
@@ -15,18 +16,15 @@ export function image<IsRequired extends boolean | undefined>({
   validation?: { isRequired?: IsRequired };
   description?: string;
   publicPath?: string;
-} & RequiredValidation<IsRequired>): FormFieldWithFileNotRequiringContentsForReader<
-  | {
-      kind: 'uploaded';
-      data: Uint8Array;
-      extension: string;
-      filename: string;
-    }
-  | { kind: 'none' },
+} & RequiredValidation<IsRequired>): AssetFormField<
+  { data: Uint8Array; extension: string; filename: string } | null,
+  | { data: Uint8Array; extension: string; filename: string }
+  | (IsRequired extends true ? never : null),
   string | (IsRequired extends true ? never : null)
 > {
   return {
     kind: 'form',
+    formKind: 'asset',
     Input(props) {
       return (
         <ImageFieldInput
@@ -37,75 +35,56 @@ export function image<IsRequired extends boolean | undefined>({
         />
       );
     },
-    defaultValue: { kind: 'none' },
-    validate(value) {
-      if (
-        typeof value === 'object' &&
-        value !== null &&
-        'kind' in value &&
-        value.kind === 'none' &&
-        validation?.isRequired
-      ) {
-        return false;
-      }
-      return true;
+    defaultValue() {
+      return null;
     },
-    serializeToFile: {
-      kind: 'asset',
-      directory: directory ? fixPath(directory) : undefined,
-      filename(value, suggestedFilenamePrefix, slug) {
-        if (typeof value === 'string') {
-          return value.slice(getSrcPrefix(publicPath, slug).length);
+    filename(value, args) {
+      if (typeof value === 'string') {
+        return value.slice(getSrcPrefix(publicPath, args.slug).length);
+      }
+      return undefined;
+    },
+    parse(value, args) {
+      if (value === undefined) {
+        return null;
+      }
+      if (typeof value !== 'string') {
+        throw new FieldDataError('Must be a string');
+      }
+      if (args.asset === undefined) {
+        return null;
+      }
+      return {
+        data: args.asset,
+        filename: value.slice(getSrcPrefix(publicPath, args.slug).length),
+        extension: value.match(/\.([^.]+$)/)?.[1] ?? '',
+      };
+    },
+    validate(value) {
+      assertRequired(value, validation, label);
+      return value;
+    },
+    serialize(value, args) {
+      if (value === null) {
+        return { value: undefined, asset: undefined };
+      }
+      const filename = args.suggestedFilenamePrefix
+        ? args.suggestedFilenamePrefix + '.' + value.extension
+        : value.filename;
+      return {
+        value: `${getSrcPrefix(publicPath, args.slug)}${filename}`,
+        asset: { filename, content: value.data },
+      };
+    },
+    directory: directory ? fixPath(directory) : undefined,
+    reader: {
+      parse(value) {
+        if (typeof value !== 'string' && value !== undefined) {
+          throw new FieldDataError('Must be a string');
         }
-        if (
-          typeof value === 'object' &&
-          value !== null &&
-          'extension' in value &&
-          typeof value.extension === 'string'
-        ) {
-          return suggestedFilenamePrefix + '.' + value.extension;
-        }
-      },
-      parse({ content, value, slug }) {
-        if (!content) {
-          return { kind: 'none' };
-        }
-        return {
-          kind: 'uploaded',
-          data: content,
-          extension:
-            value && typeof value === 'object' && 'extension' in value
-              ? (value as any).extension
-              : typeof value === 'string'
-              ? value.match(/\.([^.]+$)/)?.[1]
-              : '',
-          filename:
-            typeof value === 'string'
-              ? value.slice(getSrcPrefix(publicPath, slug).length)
-              : '',
-        };
-      },
-      serialize(value, suggestedFilenamePrefix, slug) {
-        if (value.kind === 'none') {
-          return { value: null, content: undefined };
-        }
-        const filename = suggestedFilenamePrefix
-          ? suggestedFilenamePrefix + '.' + value.extension
-          : value.filename;
-        return {
-          value: `${getSrcPrefix(publicPath, slug)}${filename}`,
-          content: value.data,
-          filename,
-        };
-      },
-      reader: {
-        requiresContentInReader: false,
-        parseToReader({ value, suggestedFilenamePrefix }) {
-          if (!value) return null as any;
-          return typeof value === 'string'
-            ? value
-            : suggestedFilenamePrefix + '.' + (value as any).extension;
-        },
+        const val = value === undefined ? null : value;
+        assertRequired(val, validation, label);
+        return val;
       },
     },
   };

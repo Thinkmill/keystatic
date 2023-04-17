@@ -1,16 +1,18 @@
 import { BasicFormField } from '../../api';
-import { RequiredValidation } from '../utils';
+import { FieldDataError } from '../error';
+import {
+  RequiredValidation,
+  assertRequired,
+  basicFormFieldWithSimpleReaderParse,
+} from '../utils';
 import { DateFieldInput } from './ui';
 
 export function validateDate(
   validation: { min?: string; max?: string; isRequired?: boolean } | undefined,
-  value: unknown,
+  value: string | null,
   label: string
 ) {
-  if (
-    value !== null &&
-    (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value))
-  ) {
+  if (value !== null && !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     return `${label} is not a valid date`;
   }
 
@@ -45,10 +47,10 @@ export function date<IsRequired extends boolean | undefined>({
   validation?: { isRequired?: IsRequired; min?: string; max?: string };
   description?: string;
 } & RequiredValidation<IsRequired>): BasicFormField<
+  string | null,
   string | (IsRequired extends true ? never : null)
 > {
-  const field: BasicFormField<string | null> = {
-    kind: 'form',
+  return basicFormFieldWithSimpleReaderParse({
     Input(props) {
       return (
         <DateFieldInput
@@ -59,7 +61,7 @@ export function date<IsRequired extends boolean | undefined>({
         />
       );
     },
-    get defaultValue() {
+    defaultValue() {
       if (defaultValue === undefined) {
         return null;
       }
@@ -72,9 +74,25 @@ export function date<IsRequired extends boolean | undefined>({
       const day = String(today.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
     },
-    validate(value) {
-      return validateDate(validation, value, label) === undefined;
+    parse(value) {
+      if (value === undefined) {
+        return null;
+      }
+      if (typeof value !== 'string') {
+        throw new FieldDataError('Must be a string');
+      }
+      return value;
     },
-  };
-  return field as any;
+    serialize(value) {
+      return { value: value === null ? undefined : value };
+    },
+    validate(value) {
+      const message = validateDate(validation, value, label);
+      if (message !== undefined) {
+        throw new FieldDataError(message);
+      }
+      assertRequired(value, validation, label);
+      return value;
+    },
+  });
 }

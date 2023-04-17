@@ -56,11 +56,11 @@ export function getInitialValue(type: string, componentBlock: ComponentBlock) {
 export function getInitialPropsValue(schema: ComponentSchema): any {
   switch (schema.kind) {
     case 'form':
-      return schema.defaultValue;
+      return schema.defaultValue();
     case 'child':
       return null;
     case 'conditional': {
-      const defaultValue = schema.discriminant.defaultValue;
+      const defaultValue = schema.discriminant.defaultValue();
       return {
         discriminant: defaultValue,
         value: getInitialPropsValue(schema.values[defaultValue.toString()]),
@@ -86,13 +86,13 @@ export function getInitialPropsValueFromInitializer(
 ): any {
   switch (schema.kind) {
     case 'form':
-      return initializer === undefined ? schema.defaultValue : initializer;
+      return initializer === undefined ? schema.defaultValue() : initializer;
     case 'child':
       return null;
     case 'conditional': {
       const defaultValue =
         initializer === undefined
-          ? schema.discriminant.defaultValue
+          ? schema.discriminant.defaultValue()
           : initializer.discriminant;
       return {
         discriminant: defaultValue,

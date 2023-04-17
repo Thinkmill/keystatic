@@ -2,119 +2,9 @@ import { Descendant } from 'slate';
 import { fixPath } from '../../app/path-utils';
 import { DocumentFeatures } from '../document-features';
 import { ComponentBlock, ComponentSchema } from './api';
-import { getSrcPrefix } from './fields/image';
 import { transformProps } from './props-value';
 import { object } from './fields/object';
-
-export type CollectedFile = {
-  data: Uint8Array;
-  filename: string;
-  parent: string | undefined;
-};
-
-export function collectFiles(
-  nodes: Descendant[],
-  componentBlocks: Record<string, ComponentBlock>,
-  collectedFiles: CollectedFile[],
-  documentFeatures: DocumentFeatures,
-  slug: string | undefined
-): Descendant[] {
-  return nodes.map((node): Descendant => {
-    if (node.type === 'component-block') {
-      const componentBlock = componentBlocks[node.component];
-      if (!componentBlock) return node;
-      const schema = object(componentBlock.schema);
-      return {
-        ...node,
-        props: transformPropsToFiles(
-          schema,
-          node.props,
-          collectedFiles,
-          slug
-        ) as Record<string, any>,
-      };
-    }
-    if (node.type === 'image') {
-      collectedFiles.push({
-        data: node.src.content,
-        filename: node.src.filename,
-        parent:
-          typeof documentFeatures.images === 'object' &&
-          typeof documentFeatures.images.directory === 'string'
-            ? fixPath(documentFeatures.images.directory)
-            : undefined,
-      });
-      return {
-        type: 'image',
-        src: `${getSrcPrefixForImageBlock(documentFeatures, slug)}${
-          node.src.filename
-        }` as any,
-        alt: node.alt,
-        title: node.title,
-        children: [],
-      };
-    }
-    if (typeof node.type === 'string') {
-      const children = collectFiles(
-        node.children,
-        componentBlocks,
-        collectedFiles,
-        documentFeatures,
-        slug
-      );
-      return { ...node, children };
-    }
-    return node;
-  });
-}
-
-function transformPropsToFiles(
-  schema: ComponentSchema,
-  value: unknown,
-  collectedFiles: CollectedFile[],
-  slug: string | undefined
-): unknown {
-  return transformProps(schema, value, {
-    form(schema, value) {
-      if ('serializeToFile' in schema && schema.serializeToFile) {
-        if (schema.serializeToFile.kind === 'asset') {
-          const { content, value: forYaml } = schema.serializeToFile.serialize(
-            value,
-            undefined,
-            slug
-          );
-          const filename = schema.serializeToFile.filename(
-            forYaml,
-            undefined,
-            slug
-          );
-          if (filename && content) {
-            collectedFiles.push({
-              data: content,
-              filename,
-              parent: schema.serializeToFile.directory,
-            });
-          }
-          return forYaml;
-        }
-        throw new Error('not implemented');
-      }
-      return value;
-    },
-  });
-}
-
-function getSrcPrefixForImageBlock(
-  documentFeatures: DocumentFeatures,
-  slug: string | undefined
-) {
-  return getSrcPrefix(
-    typeof documentFeatures.images === 'object'
-      ? documentFeatures.images.publicPath
-      : undefined,
-    slug
-  );
-}
+import { getSrcPrefix } from './fields/image';
 
 export function deserializeFiles(
   nodes: Descendant[],
@@ -195,43 +85,43 @@ function deserializeProps(
 ) {
   return transformProps(schema, value, {
     form: (schema, value) => {
-      if ('serializeToFile' in schema && schema.serializeToFile) {
-        if (schema.serializeToFile.kind === 'asset') {
-          if (
-            !schema.serializeToFile.reader.requiresContentInReader &&
-            mode === 'read'
-          ) {
-            return schema.serializeToFile.reader.parseToReader({
-              value: value,
-              suggestedFilenamePrefix: undefined,
-            });
-          }
-          const filename = schema.serializeToFile.filename(
-            value,
-            undefined,
-            slug
-          );
-          return (
-            mode === 'read' &&
-              schema.serializeToFile.reader.requiresContentInReader
-              ? schema.serializeToFile.reader.parseToReader
-              : schema.serializeToFile.parse
-          )({
-            value: value,
-            content: filename
-              ? schema.serializeToFile.directory
-                ? otherFiles
-                    .get(schema.serializeToFile.directory)
-                    ?.get(filename)
-                : files.get(filename)
-              : undefined,
-            suggestedFilenamePrefix: undefined,
-            slug,
-          });
+      if (schema.formKind === 'asset') {
+        if (mode === 'read') {
+          return schema.reader.parse(value);
         }
-        throw new Error('not implemented');
+        const filename = schema.filename(value, {
+          slug,
+          suggestedFilenamePrefix: undefined,
+        });
+        return schema.parse(value, {
+          asset: filename
+            ? schema.directory
+              ? otherFiles.get(schema.directory)?.get(filename)
+              : files.get(filename)
+            : undefined,
+          slug,
+        });
       }
-      return value;
+
+      if (schema.formKind === 'content') {
+        throw new Error('Not implemented');
+      }
+      if (mode === 'read') {
+        return schema.reader.parse(value);
+      }
+      return schema.parse(value, undefined);
     },
   });
+}
+
+export function getSrcPrefixForImageBlock(
+  documentFeatures: DocumentFeatures,
+  slug: string | undefined
+) {
+  return getSrcPrefix(
+    typeof documentFeatures.images === 'object'
+      ? documentFeatures.images.publicPath
+      : undefined,
+    slug
+  );
 }
