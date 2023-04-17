@@ -41,7 +41,7 @@ const localeCollections = Object.fromEntries(
   Object.entries(locales).map(([key, label]) => [
     key,
     collection({
-      path: `packages/keystatic/app/l10n/${key}/*/`,
+      path: `packages/keystatic/src/app/l10n/${key}/*/`,
       format: 'json',
       label,
       slugField: 'key',
