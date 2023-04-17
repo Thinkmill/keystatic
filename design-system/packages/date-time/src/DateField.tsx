@@ -7,14 +7,11 @@ import React, { ReactElement, Ref, useRef } from 'react';
 
 import { useProviderProps } from '@voussoir/core';
 import { FieldPrimitive } from '@voussoir/field';
-import { classNames } from '@voussoir/style';
 
 import { Input } from './Input';
 import { InputSegment } from './InputSegment';
 import { DateFieldProps } from './types';
 import { useFocusManagerRef, useFormatHelpText } from './utils';
-
-const datepickerStyles = {};
 
 function DateField<T extends DateValue>(
   props: DateFieldProps<T>,
@@ -51,10 +48,6 @@ function DateField<T extends DateValue>(
       descriptionProps={descriptionProps}
       errorMessageProps={errorMessageProps}
       // validationState={state.validationState}
-      UNSAFE_className={classNames(
-        datepickerStyles,
-        'react-spectrum-Datepicker-fieldWrapper'
-      )}
     >
       <Input
         ref={inputRef}
@@ -62,7 +55,6 @@ function DateField<T extends DateValue>(
         isDisabled={isDisabled}
         autoFocus={autoFocus}
         validationState={state.validationState}
-        className={classNames(datepickerStyles, 'react-spectrum-DateField')}
       >
         {state.segments.map((segment, i) => (
           <InputSegment

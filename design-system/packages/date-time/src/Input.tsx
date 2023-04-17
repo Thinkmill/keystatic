@@ -5,19 +5,16 @@ import { ReactNode, forwardRef, useRef } from 'react';
 import { classNames, css, tokenSchema } from '@voussoir/style';
 import { toDataAttributes } from '@voussoir/utils';
 
-const datepickerStyles = {};
-const textfieldStyles = {};
-
 type InputProps = {
   autoFocus?: boolean;
-  isDisabled?: boolean;
-  inputClassName?: string;
-  validationState?: 'valid' | 'invalid';
   children?: ReactNode;
-  fieldProps?: any;
   className?: string;
-  style?: any;
   disableFocusRing?: boolean;
+  fieldProps?: any;
+  inputClassName?: string;
+  isDisabled?: boolean;
+  style?: any;
+  validationState?: 'valid' | 'invalid';
 };
 
 export const Input = forwardRef<HTMLDivElement, InputProps>(function Input(
@@ -26,14 +23,14 @@ export const Input = forwardRef<HTMLDivElement, InputProps>(function Input(
 ) {
   let inputRef = useRef(null);
   let {
-    isDisabled,
-    inputClassName,
-    validationState,
     children,
-    fieldProps,
     className,
-    style,
     disableFocusRing,
+    fieldProps,
+    inputClassName,
+    isDisabled,
+    style,
+    validationState,
   } = props;
 
   let { focusProps, isFocusVisible, isFocused } = useFocusRing({
@@ -42,18 +39,6 @@ export const Input = forwardRef<HTMLDivElement, InputProps>(function Input(
   });
 
   let isInvalid = validationState === 'invalid' && !isDisabled;
-  let textfieldClass = classNames(
-    textfieldStyles,
-    'spectrum-Textfield',
-    {
-      'spectrum-Textfield--invalid': isInvalid,
-      'spectrum-Textfield--valid': validationState === 'valid' && !isDisabled,
-      'focus-ring': isFocusVisible && !disableFocusRing,
-    },
-    classNames(datepickerStyles, 'react-spectrum-Datepicker-field'),
-    className
-  );
-
   let inputStyles = useInputStyles(inputClassName, {
     isDisabled,
     isInvalid,
@@ -65,7 +50,7 @@ export const Input = forwardRef<HTMLDivElement, InputProps>(function Input(
     <div
       role="presentation"
       {...mergeProps(fieldProps, focusProps)}
-      className={textfieldClass}
+      className={className}
       style={style}
     >
       <div role="presentation" {...inputStyles}>
