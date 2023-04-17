@@ -12,17 +12,19 @@ export function useHasChanged(args: {
 }) {
   const initialFilesForUpdate = useMemo(
     () =>
-      serializeProps(
-        args.initialState,
-        args.schema,
-        args.slugField,
-        args.slugField
-          ? getSlugFromState(
-              { schema: args.schema.fields, slugField: args.slugField },
-              args.initialState as Record<string, unknown>
-            )
-          : undefined
-      ),
+      args.initialState === null
+        ? null
+        : serializeProps(
+            args.initialState,
+            args.schema,
+            args.slugField,
+            args.slugField
+              ? getSlugFromState(
+                  { schema: args.schema.fields, slugField: args.slugField },
+                  args.initialState as Record<string, unknown>
+                )
+              : undefined
+          ),
     [args.initialState, args.schema, args.slugField]
   );
 
