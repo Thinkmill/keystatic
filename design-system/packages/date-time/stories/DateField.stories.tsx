@@ -13,31 +13,31 @@ import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
 import { DateField } from '../src';
 import { useState } from 'react';
 
-storiesOf('Components/DateField', module)
+storiesOf('Components/Date and Time/DateField', module)
   .add('default', () => <DateField label="Date" />)
   .add('default value', () => (
     <DateField label="Date" defaultValue={parseDate('2023-04-14')} />
   ))
   .add('controlled value', () => <ControlledExample />)
   .add('datetime', () => (
-    <DateField label="Date" defaultValue={parseDateTime('2023-04-14T12:57')} />
+    <DateField label="Date" defaultValue={parseDateTime('2023-04-14T14:45')} />
   ))
   .add('datetime: zoned', () => (
     <DateField
       label="Date"
-      defaultValue={parseZonedDateTime('2023-04-14T12:57[Australia/Sydney]')}
+      defaultValue={parseZonedDateTime('2023-04-14T14:45[Australia/Sydney]')}
     />
   ))
   .add('datetime: absolute', () => (
     <DateField
       label="Date"
-      defaultValue={parseAbsoluteToLocal('2023-04-14T12:57:00Z')}
+      defaultValue={parseAbsoluteToLocal('2023-04-14T14:45:00Z')}
     />
   ))
   .add('datetime: absolute + zoned', () => (
     <DateField
       label="Date"
-      defaultValue={parseAbsolute('2023-04-14T12:57:00Z', 'Australia/Sydney')}
+      defaultValue={parseAbsolute('2023-04-14T14:45:00Z', 'Australia/Sydney')}
     />
   ))
   .add('min: 2010/1/1, max: 2020/1/1', () => (
@@ -68,7 +68,6 @@ storiesOf('Components/DateField', module)
   .add('events', () => (
     <DateField
       label="Date"
-      onChange={action('onChange')}
       onBlur={action('onBlur')}
       onFocus={action('onFocus')}
       onFocusChange={action('onFocusChange')}

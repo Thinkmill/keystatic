@@ -1,0 +1,69 @@
+import { useTimeField } from '@react-aria/datepicker';
+import { useLocale } from '@react-aria/i18n';
+import React, { ReactElement, Ref, useRef } from 'react';
+
+import { TimeValue } from '@react-types/datepicker';
+import { useTimeFieldState } from '@react-stately/datepicker';
+
+import { useProviderProps } from '@voussoir/core';
+import { FieldPrimitive } from '@voussoir/field';
+
+import { Input } from './Input';
+import { InputSegment } from './InputSegment';
+import { TimeFieldProps } from './types';
+import { useFocusManagerRef } from './utils';
+
+function TimeField<T extends TimeValue>(
+  props: TimeFieldProps<T>,
+  ref: Ref<HTMLDivElement>
+) {
+  props = useProviderProps(props);
+  let { autoFocus, isDisabled, isReadOnly, isRequired } = props;
+
+  let domRef = useFocusManagerRef(ref);
+  let { locale } = useLocale();
+  let state = useTimeFieldState({ ...props, locale });
+
+  let inputRef = useRef(null);
+  let { labelProps, fieldProps, descriptionProps, errorMessageProps } =
+    useTimeField(props, state, inputRef);
+
+  return (
+    <FieldPrimitive
+      {...props}
+      ref={domRef}
+      labelProps={labelProps}
+      descriptionProps={descriptionProps}
+      errorMessageProps={errorMessageProps}
+      // validationState={state.validationState}
+    >
+      <Input
+        ref={inputRef}
+        fieldProps={fieldProps}
+        isDisabled={isDisabled}
+        autoFocus={autoFocus}
+        validationState={state.validationState}
+      >
+        {state.segments.map((segment, i) => (
+          <InputSegment
+            key={i}
+            segment={segment}
+            state={state}
+            isDisabled={isDisabled}
+            isReadOnly={isReadOnly}
+            isRequired={isRequired}
+          />
+        ))}
+      </Input>
+    </FieldPrimitive>
+  );
+}
+
+/**
+ * TimeFields allow users to enter and edit time values using a keyboard.
+ * Each part of the time is displayed in an individually editable segment.
+ */
+const _TimeField = React.forwardRef(TimeField) as <T extends TimeValue>(
+  props: TimeFieldProps<T> & { ref?: Ref<HTMLDivElement> }
+) => ReactElement;
+export { _TimeField as TimeField };

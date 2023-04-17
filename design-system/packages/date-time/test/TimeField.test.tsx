@@ -1,18 +1,19 @@
+import { Time } from '@internationalized/date';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
 
 import { act, fireEvent, renderWithProvider } from '@voussoir/test-utils';
 
-import { DateField } from '../src';
+import { TimeField } from '../src';
 
-describe('date-time/DateField', () => {
+describe('date-time/TimeField', () => {
   it('should be labellable', () => {
     let { getAllByRole, getByText } = renderWithProvider(
-      <DateField label="Date" />
+      <TimeField label="Time" />
     );
 
-    let label = getByText('Date');
+    let label = getByText('Time');
 
     let group = getAllByRole('group')[0];
     expect(group).toHaveAttribute('aria-labelledby', label.id);
@@ -27,17 +28,44 @@ describe('date-time/DateField', () => {
       );
     }
   });
+  it('should include a value description', function () {
+    let { getByRole, getAllByRole } = renderWithProvider(
+      <TimeField label="Date" value={new Time(14, 45)} />
+    );
+
+    let group = getByRole('group');
+    expect(group).toHaveAttribute('aria-describedby');
+
+    let describedBy = group.getAttribute('aria-describedby');
+    let description = describedBy!
+      .split(' ')
+      .map(d => {
+        let el = document.getElementById(d);
+        return el ? el.textContent : null;
+      })
+      .join(' ');
+    expect(description).toBe('Selected Time: 2:45 PM');
+
+    let segments = getAllByRole('spinbutton');
+    expect(segments[0]).toHaveAttribute(
+      'aria-describedby',
+      group.getAttribute('aria-describedby')
+    );
+
+    for (let segment of segments.slice(1)) {
+      expect(segment).not.toHaveAttribute('aria-describedby');
+    }
+  });
   it('should pass through data attributes', function () {
     let { getByTestId } = renderWithProvider(
-      <DateField label="Date" data-testid="foo" />
+      <TimeField label="Time" data-testid="foo" />
     );
     expect(getByTestId('foo')).toHaveAttribute('role', 'group');
   });
-
   it('should support focusing via a ref', function () {
     let ref = createRef<HTMLDivElement>();
     let { getAllByRole } = renderWithProvider(
-      <DateField label="Date" ref={ref} />
+      <TimeField label="Time" ref={ref} />
     );
     expect(ref.current).toHaveProperty('focus');
 
@@ -46,7 +74,7 @@ describe('date-time/DateField', () => {
   });
   it('should support autoFocus', function () {
     let { getAllByRole } = renderWithProvider(
-      <DateField label="Date" autoFocus />
+      <TimeField label="Time" autoFocus />
     );
     expect(document.activeElement).toBe(getAllByRole('spinbutton')[0]);
   });
@@ -68,8 +96,8 @@ describe('date-time/DateField', () => {
 
     it('should focus field and switching segments via tab does not change focus', async function () {
       let { getAllByRole } = renderWithProvider(
-        <DateField
-          label="Date"
+        <TimeField
+          label="Time"
           onBlur={onBlurSpy}
           onFocus={onFocusSpy}
           onFocusChange={onFocusChangeSpy}
@@ -97,8 +125,8 @@ describe('date-time/DateField', () => {
 
     it('should call blur when focus leaves', async function () {
       let { getAllByRole } = renderWithProvider(
-        <DateField
-          label="Date"
+        <TimeField
+          label="Time"
           onBlur={onBlurSpy}
           onFocus={onFocusSpy}
           onFocusChange={onFocusChangeSpy}
@@ -128,7 +156,7 @@ describe('date-time/DateField', () => {
 
     it('should trigger right arrow key event for segment navigation', async function () {
       let { getAllByRole } = renderWithProvider(
-        <DateField label="Date" onKeyDown={onKeyDownSpy} onKeyUp={onKeyUpSpy} />
+        <TimeField label="Time" onKeyDown={onKeyDownSpy} onKeyUp={onKeyUpSpy} />
       );
       let segments = getAllByRole('spinbutton');
 

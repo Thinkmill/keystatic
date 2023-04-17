@@ -1,10 +1,14 @@
 import {
-  AriaDateFieldProps,
   DateValue,
   Granularity,
+  MappedDateValue,
+  MappedTimeValue,
+  TimeValue,
 } from '@react-types/datepicker';
+import { FocusableProps } from '@react-types/shared';
 
 import { FieldProps } from '@voussoir/field';
+import { ValueBase } from '@voussoir/types';
 
 export type DateFieldProps<T extends DateValue> = {
   /** The minimum allowed date that a user may select. */
@@ -24,5 +28,29 @@ export type DateFieldProps<T extends DateValue> = {
    * @default false
    */
   hideTimeZone?: boolean;
-} & AriaDateFieldProps<T> &
+} & FocusableProps &
+  ValueBase<T | null, MappedDateValue<T>> &
+  FieldProps;
+
+export type TimeFieldProps<T extends TimeValue> = {
+  /** Whether to display the time in 12 or 24 hour format. By default, this is determined by the user's locale. */
+  hourCycle?: 12 | 24;
+  /**
+   * Determines the smallest unit that is displayed in the time picker.
+   * @default 'minute'
+   */
+  granularity?: 'hour' | 'minute' | 'second';
+  /** Whether to hide the time zone abbreviation. */
+  hideTimeZone?: boolean;
+  /**
+   * A placeholder time that influences the format of the placeholder shown when no value is selected.
+   * Defaults to 12:00 AM or 00:00 depending on the hour cycle.
+   */
+  placeholderValue?: T;
+  /** The minimum allowed time that a user may select. */
+  minValue?: TimeValue;
+  /** The maximum allowed time that a user may select. */
+  maxValue?: TimeValue;
+} & FocusableProps &
+  ValueBase<T | null, MappedTimeValue<T>> &
   FieldProps;
