@@ -1,4 +1,4 @@
-import { Collection, Config, Glob, Singleton } from '../config';
+import { Collection, Config, Glob, Singleton } from './config';
 import {
   ComponentSchema,
   fields,
@@ -6,7 +6,7 @@ import {
   SlugFormField,
   ValueForReading,
   ValueForReadingDeep,
-} from '../DocumentEditor/component-blocks/api';
+} from './form/api';
 import fs from 'fs/promises';
 import nodePath from 'path';
 import {
@@ -19,15 +19,13 @@ import {
   getSingletonFormat,
   getSingletonPath,
   getSlugGlobForCollection,
-} from '../app/path-utils';
-import { parseProps } from '../parse-props';
-import { loadDataFile } from '../app/required-files';
-import { getValueAtPropPath } from '../DocumentEditor/component-blocks/props-value';
+} from './app/path-utils';
+import { parseProps } from './form/parse-props';
+import { loadDataFile } from './app/required-files';
+import { getValueAtPropPath } from './form/props-value';
 import { Dirent } from 'fs';
-import {
-  ReadonlyPropPath,
-  formatFormDataError,
-} from '../DocumentEditor/component-blocks/utils';
+import { ReadonlyPropPath } from './form/fields/document/DocumentEditor/component-blocks/utils';
+import { formatFormDataError } from './form/errors';
 
 type EntryReaderOpts = { resolveLinkedFiles?: boolean };
 

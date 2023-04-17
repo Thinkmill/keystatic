@@ -57,4 +57,4 @@ coverage
 .contentlayer
 
 pnpm-lock.yaml
-packages/keystatic/DocumentEditor/prism.js
+packages/keystatic/src/form/fields/document/DocumentEditor/prism.js

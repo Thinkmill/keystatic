@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-const localesDir = path.join(__dirname, '../app/l10n');
+const localesDir = path.join(__dirname, '../src/app/l10n');
 (async () => {
   const locales: Record<string, Record<string, string>> = {};
   await Promise.all(
@@ -39,7 +39,7 @@ const localesDir = path.join(__dirname, '../app/l10n');
     })
   );
   await fs.writeFile(
-    path.join(__dirname, '../app/l10n/index.json'),
+    path.join(localesDir, 'index.json'),
     JSON.stringify(locales, null, 2) + '\n' // carriage return to make prettier happy
   );
 })();
