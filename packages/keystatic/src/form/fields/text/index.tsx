@@ -69,7 +69,7 @@ export function text({
   multiline = false,
 }: {
   label: string;
-  defaultValue?: string;
+  defaultValue?: string | (() => string);
   description?: string;
   validation?: {
     length?: {
@@ -105,7 +105,7 @@ export function text({
       );
     },
     defaultValue() {
-      return defaultValue;
+      return typeof defaultValue === 'string' ? defaultValue : defaultValue();
     },
     parse(value, args) {
       if (args?.slug !== undefined) {
