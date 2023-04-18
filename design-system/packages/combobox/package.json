@@ -21,7 +21,7 @@
     "@react-aria/combobox": "^3.4.4",
     "@react-aria/dialog": "^3.4.2",
     "@react-aria/focus": "^3.10.0",
-    "@react-aria/i18n": "^3.6.2",
+    "@react-aria/i18n": "^3.7.1",
     "@react-aria/interactions": "^3.13.0",
     "@react-aria/label": "^3.4.4",
     "@react-aria/overlays": "^3.12.0",
