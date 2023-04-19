@@ -103,7 +103,7 @@ function useInputStyles(inputClassName: string | undefined, state: InputState) {
       '&[data-invalid=true]': {
         borderColor: tokenSchema.color.alias.borderInvalid,
       },
-      '&[data-focus=true]': {
+      '&[data-focus]': {
         borderColor: tokenSchema.color.alias.borderFocused,
         boxShadow: `0 0 0 1px ${tokenSchema.color.alias.borderFocused}`,
       },

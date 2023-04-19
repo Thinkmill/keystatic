@@ -38,6 +38,9 @@ function DateField<T extends DateValue>(
   if (description && !props.description) {
     descriptionProps.id = undefined;
   }
+  if (props.errorMessage) {
+    state.validationState = 'invalid';
+  }
 
   return (
     <FieldPrimitive

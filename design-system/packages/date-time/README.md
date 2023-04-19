@@ -1,4 +1,3 @@
-# @voussoir/badge
+# @voussoir/date-time
 
-A badge is a decorative indicator used to either call attention to an item or
-for communicating non-actionable, supplemental information.
+The date-time package contains components for inputting dates and times.

@@ -28,6 +28,10 @@ function TimeField<T extends TimeValue>(
   let { labelProps, fieldProps, descriptionProps, errorMessageProps } =
     useTimeField(props, state, inputRef);
 
+  if (props.errorMessage) {
+    state.validationState = 'invalid';
+  }
+
   return (
     <FieldPrimitive
       {...props}

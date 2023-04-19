@@ -31,6 +31,7 @@ function LiteralSegment({ segment }: { segment: DateSegment }) {
       elementType="span"
       aria-hidden="true"
       color="neutralTertiary"
+      trim={false}
       UNSAFE_className={css({
         userSelect: 'none',
         whiteSpace: 'pre',
