@@ -1,4 +1,4 @@
 # @keystar-ui/ssr
 
-How to use Voussoir with server side rendering, for frameworks like Next and
+How to use Keystar UI with server side rendering, for frameworks like Next and
 Gatsby.

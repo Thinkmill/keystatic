@@ -1,3 +1,3 @@
 # @keystar-ui/layout
 
-Layout components and utilities for the Voussoir design system.
+Layout components and utilities for the Keystar UI design system.

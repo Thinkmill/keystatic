@@ -7,8 +7,8 @@ addons.register('theme-switcher', api => {
   let query = window.matchMedia('(prefers-color-scheme: dark)');
   let update = () => {
     let theme = query.matches ? themes.dark : themes.normal;
-    theme.brandTitle = 'Voussoir';
-    theme.brandUrl = 'https://voussoir.vercel.app/';
+    theme.brandTitle = 'Keystar UI';
+    theme.brandUrl = 'https://keystar-ui.vercel.app/';
     api.setOptions({ theme });
     addons.getChannel().emit(FORCE_RE_RENDER);
   };

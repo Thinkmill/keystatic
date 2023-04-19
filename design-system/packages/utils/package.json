@@ -1,7 +1,7 @@
 {
   "name": "@keystar-ui/utils",
   "version": "2.0.2",
-  "description": "Utility hooks, types, and components for Voussoir.",
+  "description": "Utility hooks, types, and components for Keystar UI.",
   "license": "MIT",
   "main": "dist/keystar-ui-utils.cjs.js",
   "module": "dist/keystar-ui-utils.esm.js",

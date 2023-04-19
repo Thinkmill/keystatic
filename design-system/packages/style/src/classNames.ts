@@ -24,7 +24,7 @@ export function classNames(...inputs: ClassNamesArg[]) {
 
 /**
  * A thin wrapper around Map to manage component class names. Keys are prefixed
- * with the component name and Voussoir's prefix.
+ * with the component name and Keystar UI's prefix.
  */
 export class ClassList extends Map {
   prefix: string;

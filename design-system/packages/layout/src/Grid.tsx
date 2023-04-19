@@ -10,7 +10,7 @@ export type GridProps = {
 } & GridStyleProps;
 
 /**
- * A layout container using CSS grid. Voussoir dimension values provide
+ * A layout container using CSS grid. Keystar UI dimension values provide
  * consistent sizing and spacing.
  */
 export const Grid = forwardRefWithAs<GridProps, 'div'>(

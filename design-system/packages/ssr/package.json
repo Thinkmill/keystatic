@@ -1,7 +1,7 @@
 {
   "name": "@keystar-ui/ssr",
   "version": "0.2.1",
-  "description": "SSR approaches for Voussoir.",
+  "description": "SSR approaches for Keystar UI.",
   "license": "MIT",
   "main": "dist/keystar-ui-ssr.cjs.js",
   "module": "dist/keystar-ui-ssr.esm.js",

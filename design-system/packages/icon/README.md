@@ -1,3 +1,3 @@
 # @keystar-ui/icon
 
-Iconography for the Voussoir design system.
+Iconography for the Keystar UI design system.

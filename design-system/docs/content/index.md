@@ -1,29 +1,8 @@
 ---
-title: Meet Voussoir
+title: Meet Keystar UI
 description:
-  Voussoir is a design system created by Thinkmill to help us build high-quality
-  interfaces for Keystone, our open-source headless CMS.
----
-
-## Voo-what?
-
-From [Wikipedia](https://en.wikipedia.org/wiki/Voussoir):
-
-> A voussoir (/vuˈswɑːr/) is a wedge-shaped element, typically a stone, which is
-> used in building an arch or vault. Although each unit in an arch or vault is a
-> voussoir, two units are of distinct functional importance: the keystone and
-> the springer. The keystone is the centre stone or masonry unit at the apex of
-> an arch. The springer is the lowest voussoir on each side, located where the
-> curve of the arch springs from the vertical support or abutment of the wall or
-> pier.
-
-A design system is a collection of reusable components, guided by clear
-standards, that can be assembled together to build any number of applications.
-
-While it may sound odd at first, we believe "voussoir" is a great descriptor for
-the system designed to service [Keystone](https://keystonejs.com/); a tool that
-enables consumers to build their own applications.
-
+  Keystar UI is a design system created by Thinkmill to help us build high-quality
+  interfaces for our R&D projects including Keystatic, our next-gen Static Content CMS, and KeystoneJS, our open-source headless CMS and API Platform.
 ---
 
 ## Roadmap

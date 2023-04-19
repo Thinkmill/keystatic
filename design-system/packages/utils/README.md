@@ -1,3 +1,3 @@
 # @keystar-ui/utils
 
-Utilities for the Voussoir design system.
+Utilities for the Keystar UI design system.

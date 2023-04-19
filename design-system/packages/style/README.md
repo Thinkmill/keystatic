@@ -1,3 +1,3 @@
 # @keystar-ui/style
 
-Styling solutions for the Voussoir design system.
+Styling solutions for the Keystar UI design system.

@@ -20,6 +20,10 @@ export const NavItems = ({ items }: { items: SidebarItem[] }) => {
 
       <Divider />
       <NavGroup title="Resources">
+        <NavItem href="https://keystatic.thinkmill.com.au/">
+          <Icon src={bookIcon} />
+          <Text>Keystatic</Text>
+        </NavItem>
         <NavItem href="https://github.com/thinkmill/keystatic">
           <Icon src={githubIcon} />
           <Text>Keystar UI on GitHub</Text>

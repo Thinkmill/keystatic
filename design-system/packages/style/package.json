@@ -1,7 +1,7 @@
 {
   "name": "@keystar-ui/style",
   "version": "0.1.5",
-  "description": "Styling approaches in Voussoir.",
+  "description": "Styling approaches in Keystar UI.",
   "license": "MIT",
   "main": "dist/keystar-ui-style.cjs.js",
   "module": "dist/keystar-ui-style.esm.js",

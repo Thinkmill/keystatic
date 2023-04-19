@@ -2,7 +2,7 @@ const babelConfig = require('../../babel.config.json');
 const webpack = require('webpack');
 
 module.exports = {
-  title: 'Playroom | Keystone Voussoir',
+  title: 'Playroom | Keystar UI',
   components: './playroom/components.ts',
   outputPath: './public/playroom/',
   baseUrl: '/playroom/',

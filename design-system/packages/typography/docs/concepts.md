@@ -2,7 +2,7 @@
 title: Typography
 description:
   Typography is an important part of the design system—type could account for
-  85-90% of any given screen. Use Voussoir's typographic patterns, guidelines,
+  85-90% of any given screen. Use Keystar UI's typographic patterns, guidelines,
   and components to create an accessible and effective content hierarchy.
 category: Concepts
 ---
@@ -11,7 +11,7 @@ category: Concepts
 
 ### Styling
 
-Styles, _including resets_, are **only** provided to Voussoir components. We do
+Styles, _including resets_, are **only** provided to Keystar UI components. We do
 this to avoid polluting the global CSS scope, so third-party and consumer styles
 aren't unexpectedly affected by our styling opinions (and vice versa).
 
@@ -50,7 +50,7 @@ Do NOT use underline for emphasis. Underline text is reserved for
 
 ```jsx {% live=true %}
 <Text>
-  I <em>love</em> building interfaces with Voussoir.
+  I <em>love</em> building interfaces with Keystar UI.
 </Text>
 ```
 
