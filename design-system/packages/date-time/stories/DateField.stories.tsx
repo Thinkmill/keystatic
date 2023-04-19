@@ -197,7 +197,7 @@ const calendars = [
 ];
 
 function Example<T extends DateValue>(props: DateFieldProps<T>) {
-  let [locale, setLocale] = React.useState('');
+  let [locale, setLocale] = React.useState<React.Key>('');
   let [calendar, setCalendar] = React.useState<React.Key>(calendars[0].key);
   let { locale: defaultLocale } = useLocale();
 
@@ -213,25 +213,16 @@ function Example<T extends DateValue>(props: DateFieldProps<T>) {
     [pref]
   );
   let otherCalendars = React.useMemo(
-    () => calendars.filter(c => !preferredCalendars.some(p => p.key === c.key)),
+    () =>
+      calendars.filter(c => !preferredCalendars.some(p => p?.key === c.key)),
     [preferredCalendars]
   );
 
-  let updateLocale = locale => {
+  let updateLocale = (locale: React.Key) => {
     setLocale(locale);
     let pref = preferences.find(p => p.locale === locale);
-    setCalendar(pref.ordering.split(' ')[0]);
+    setCalendar(pref!.ordering.split(' ')[0]);
   };
-
-  console.log({
-    locale,
-    calendar,
-    resolved:
-      (locale || defaultLocale) +
-      (calendar && calendar !== preferredCalendars[0].key
-        ? '-u-ca-' + calendar
-        : ''),
-  });
 
   return (
     <Flex direction="column" gap="large" alignItems="center">
@@ -250,7 +241,7 @@ function Example<T extends DateValue>(props: DateFieldProps<T>) {
           onSelectionChange={setCalendar}
         >
           <Section title="Preferred" items={preferredCalendars}>
-            {item => <Item>{item.name}</Item>}
+            {item => <Item>{item?.name || 'ERROR'}</Item>}
           </Section>
           <Section title="Other" items={otherCalendars}>
             {item => <Item>{item.name}</Item>}
@@ -260,7 +251,7 @@ function Example<T extends DateValue>(props: DateFieldProps<T>) {
       <VoussoirProvider
         locale={
           (locale || defaultLocale) +
-          (calendar && calendar !== preferredCalendars[0].key
+          (calendar && calendar !== preferredCalendars[0]?.key
             ? '-u-ca-' + calendar
             : '')
         }
