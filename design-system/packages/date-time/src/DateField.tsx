@@ -74,11 +74,14 @@ function DateField<T extends DateValue>(
   );
 }
 
+// forwardRef doesn't support generic parameters, so cast the result to the correct type
+// https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
+
 /**
  * DateFields allow users to enter and edit date and time values using a keyboard.
  * Each part of a date value is displayed in an individually editable segment.
  */
-const _DateField = React.forwardRef(DateField) as <T extends DateValue>(
+const _DateField: <T extends DateValue>(
   props: DateFieldProps<T> & { ref?: Ref<HTMLDivElement> }
-) => ReactElement;
+) => ReactElement = React.forwardRef(DateField as any) as any;
 export { _DateField as DateField };
