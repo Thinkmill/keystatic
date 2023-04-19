@@ -804,6 +804,7 @@ importers:
       '@react-aria/utils': ^3.14.2
       '@react-stately/datepicker': ^3.4.0
       '@react-types/datepicker': ^3.3.0
+      '@react-types/shared': ^3.14.1
       '@types/react': ^18.0.25
       '@voussoir/core': ^5.0.1
       '@voussoir/field': ^0.1.5
@@ -829,6 +830,7 @@ importers:
       '@react-aria/utils': 3.16.0_react@18.2.0
       '@react-stately/datepicker': 3.4.0_react@18.2.0
       '@react-types/datepicker': 3.3.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/core': link:../core
       '@voussoir/field': link:../field
       '@voussoir/icon': link:../icon
@@ -6079,7 +6081,7 @@ packages:
       '@react-aria/visually-hidden': 3.6.1_react@18.2.0
       '@react-stately/dnd': 3.0.1_react@18.2.0
       '@react-types/button': 3.7.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -6105,7 +6107,7 @@ packages:
     dependencies:
       '@react-aria/interactions': 3.14.0_react@18.2.0
       '@react-aria/utils': 3.15.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       clsx: 1.2.1
       react: 18.2.0
@@ -6159,7 +6161,7 @@ packages:
       '@react-aria/utils': 3.14.2_react@18.2.0
       '@react-stately/list': 3.6.1_react@18.2.0
       '@react-types/checkbox': 3.4.1_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     transitivePeerDependencies:
@@ -6177,7 +6179,7 @@ packages:
       '@internationalized/string': 3.1.0
       '@react-aria/ssr': 3.5.0_react@18.2.0
       '@react-aria/utils': 3.15.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6262,7 +6264,7 @@ packages:
     dependencies:
       '@react-aria/focus': 3.11.0_react@18.2.0
       '@react-aria/utils': 3.15.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
@@ -6276,7 +6278,7 @@ packages:
       '@react-aria/interactions': 3.13.1_react@18.2.0
       '@react-aria/utils': 3.14.2_react@18.2.0
       '@react-types/link': 3.3.6_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6290,7 +6292,7 @@ packages:
       '@react-aria/interactions': 3.14.0_react@18.2.0
       '@react-aria/utils': 3.15.0_react@18.2.0
       '@react-types/link': 3.4.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6308,7 +6310,7 @@ packages:
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-stately/list': 3.6.1_react@18.2.0
       '@react-types/listbox': 3.3.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6341,7 +6343,7 @@ packages:
       '@react-stately/tree': 3.4.1_react@18.2.0
       '@react-types/button': 3.7.0_react@18.2.0
       '@react-types/menu': 3.7.3_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -6354,7 +6356,7 @@ packages:
     dependencies:
       '@react-aria/progress': 3.3.4_react@18.2.0
       '@react-types/meter': 3.2.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6374,7 +6376,7 @@ packages:
       '@react-stately/numberfield': 3.3.1_react@18.2.0
       '@react-types/button': 3.7.0_react@18.2.0
       '@react-types/numberfield': 3.3.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@react-types/textfield': 3.6.2_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
@@ -6417,7 +6419,7 @@ packages:
       '@react-stately/overlays': 3.5.0_react@18.2.0
       '@react-types/button': 3.7.1_react@18.2.0
       '@react-types/overlays': 3.7.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -6432,7 +6434,7 @@ packages:
       '@react-aria/label': 3.4.4_react@18.2.0
       '@react-aria/utils': 3.14.2_react@18.2.0
       '@react-types/progress': 3.2.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6449,7 +6451,7 @@ packages:
       '@react-aria/utils': 3.14.2_react@18.2.0
       '@react-stately/radio': 3.6.2_react@18.2.0
       '@react-types/radio': 3.3.1_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6466,7 +6468,7 @@ packages:
       '@react-stately/searchfield': 3.3.4_react@18.2.0
       '@react-types/button': 3.7.0_react@18.2.0
       '@react-types/searchfield': 3.3.6_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6488,7 +6490,7 @@ packages:
       '@react-stately/select': 3.3.4_react@18.2.0
       '@react-types/button': 3.7.0_react@18.2.0
       '@react-types/select': 3.6.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -6505,7 +6507,7 @@ packages:
       '@react-aria/utils': 3.14.2_react@18.2.0
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-stately/selection': 3.11.2_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6516,7 +6518,7 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-aria/utils': 3.14.2_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6596,7 +6598,7 @@ packages:
       '@react-stately/virtualizer': 3.4.1_react@18.2.0
       '@react-types/checkbox': 3.4.1_react@18.2.0
       '@react-types/grid': 3.1.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@react-types/table': 3.4.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
@@ -6615,7 +6617,7 @@ packages:
       '@react-aria/utils': 3.14.2_react@18.2.0
       '@react-stately/list': 3.6.1_react@18.2.0
       '@react-stately/tabs': 3.2.4_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@react-types/tabs': 3.1.5_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
@@ -6629,7 +6631,7 @@ packages:
       '@react-aria/focus': 3.10.1_react@18.2.0
       '@react-aria/label': 3.4.4_react@18.2.0
       '@react-aria/utils': 3.14.2_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@react-types/textfield': 3.6.2_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
@@ -6646,7 +6648,7 @@ packages:
       '@react-aria/utils': 3.15.0_react@18.2.0
       '@react-stately/toast': 3.0.0-alpha.1_react@18.2.0
       '@react-types/button': 3.7.1_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6661,7 +6663,7 @@ packages:
       '@react-aria/utils': 3.15.0_react@18.2.0
       '@react-stately/toggle': 3.4.4_react@18.2.0
       '@react-types/checkbox': 3.4.1_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@react-types/switch': 3.2.5_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
@@ -6676,7 +6678,7 @@ packages:
       '@react-aria/interactions': 3.13.1_react@18.2.0
       '@react-aria/utils': 3.14.2_react@18.2.0
       '@react-stately/tooltip': 3.2.4_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@react-types/tooltip': 3.2.5_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
@@ -6731,7 +6733,7 @@ packages:
       '@react-aria/interactions': 3.13.1_react@18.2.0
       '@react-aria/utils': 3.14.2_react@18.2.0
       '@react-stately/virtualizer': 3.4.1_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -6744,7 +6746,7 @@ packages:
     dependencies:
       '@react-aria/interactions': 3.13.1_react@18.2.0
       '@react-aria/utils': 3.14.2_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       clsx: 1.2.1
       react: 18.2.0
@@ -6757,7 +6759,7 @@ packages:
     dependencies:
       '@react-aria/interactions': 3.14.0_react@18.2.0
       '@react-aria/utils': 3.15.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       clsx: 1.2.1
       react: 18.2.0
@@ -6806,7 +6808,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
 
@@ -6831,7 +6833,7 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-stately/selection': 3.11.2_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6856,7 +6858,7 @@ packages:
       '@react-stately/table': 3.7.0_react@18.2.0
       '@react-stately/virtualizer': 3.4.1_react@18.2.0
       '@react-types/grid': 3.1.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@react-types/table': 3.4.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
@@ -6883,7 +6885,7 @@ packages:
       '@react-stately/overlays': 3.4.4_react@18.2.0
       '@react-stately/utils': 3.5.2_react@18.2.0
       '@react-types/menu': 3.7.3_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6896,7 +6898,7 @@ packages:
       '@internationalized/number': 3.1.2
       '@react-stately/utils': 3.5.2_react@18.2.0
       '@react-types/numberfield': 3.3.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6941,7 +6943,7 @@ packages:
     dependencies:
       '@react-stately/utils': 3.5.2_react@18.2.0
       '@react-types/radio': 3.3.1_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6953,7 +6955,7 @@ packages:
     dependencies:
       '@react-stately/utils': 3.5.2_react@18.2.0
       '@react-types/searchfield': 3.3.6_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6969,7 +6971,7 @@ packages:
       '@react-stately/selection': 3.11.2_react@18.2.0
       '@react-stately/utils': 3.5.2_react@18.2.0
       '@react-types/select': 3.6.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6981,7 +6983,7 @@ packages:
     dependencies:
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-stately/utils': 3.6.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -6995,7 +6997,7 @@ packages:
       '@react-stately/grid': 3.4.2_react@18.2.0
       '@react-stately/selection': 3.11.2_react@18.2.0
       '@react-types/grid': 3.1.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@react-types/table': 3.4.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
@@ -7055,7 +7057,7 @@ packages:
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-stately/selection': 3.11.2_react@18.2.0
       '@react-stately/utils': 3.5.2_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -7083,7 +7085,7 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-aria/utils': 3.14.2_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -7150,7 +7152,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
     dev: false
 
@@ -7180,7 +7182,7 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-types/overlays': 3.7.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
     dev: false
 
@@ -7199,7 +7201,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
     dev: false
 
@@ -7208,7 +7210,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
     dev: false
 
@@ -7237,7 +7239,7 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-aria/interactions': 3.14.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
     dev: false
 
@@ -7256,7 +7258,7 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-types/overlays': 3.6.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
     dev: false
 
@@ -7275,7 +7277,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
     dev: false
 
@@ -7284,7 +7286,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
     dev: false
 
@@ -7293,7 +7295,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
     dev: false
 
@@ -7320,7 +7322,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
     dev: false
 
@@ -7339,7 +7341,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
     dev: false
 
@@ -7364,7 +7366,6 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       react: 18.2.0
-    dev: false
 
   /@react-types/switch/3.2.5_react@18.2.0:
     resolution: {integrity: sha512-DlUL0Bz79SUTRje/i8m6qn4Ipn+q8QnyIkyJhkoHeH1R0YNude8xZrBPWbj3zfdddAGDFSF1NzP69q0xmNAcTQ==}
@@ -7391,7 +7392,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
     dev: false
 
@@ -9863,7 +9864,7 @@ packages:
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-stately/list': 3.6.1_react@18.2.0
       '@react-types/actiongroup': 3.3.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/button': 0.1.7_biqbaboplfbrettd7655fr4n2y
       '@voussoir/core': 5.0.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.0_biqbaboplfbrettd7655fr4n2y
@@ -9911,7 +9912,7 @@ packages:
       '@react-aria/utils': 3.15.0_react@18.2.0
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-types/breadcrumbs': 3.5.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/button': 0.1.7_biqbaboplfbrettd7655fr4n2y
       '@voussoir/core': 5.0.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.0_biqbaboplfbrettd7655fr4n2y
@@ -9940,7 +9941,7 @@ packages:
       '@react-aria/interactions': 3.14.0_react@18.2.0
       '@react-aria/utils': 3.15.0_react@18.2.0
       '@react-types/button': 3.7.1_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/core': 5.0.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.0_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
@@ -9967,7 +9968,7 @@ packages:
       '@react-aria/focus': 3.11.0_react@18.2.0
       '@react-stately/checkbox': 3.3.2_react@18.2.0
       '@react-stately/toggle': 3.4.4_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/core': 5.0.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/field': 0.1.5_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.0_biqbaboplfbrettd7655fr4n2y
@@ -10003,7 +10004,7 @@ packages:
       '@react-stately/combobox': 3.3.1_react@18.2.0
       '@react-types/button': 3.7.1_react@18.2.0
       '@react-types/combobox': 3.5.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/button': 0.1.7_biqbaboplfbrettd7655fr4n2y
       '@voussoir/core': 5.0.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/field': 0.1.5_biqbaboplfbrettd7655fr4n2y
@@ -10083,7 +10084,7 @@ packages:
       '@babel/runtime': 7.21.0
       '@react-aria/dnd': 3.0.1_biqbaboplfbrettd7655fr4n2y
       '@react-stately/dnd': 3.0.1_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false
@@ -10177,7 +10178,7 @@ packages:
       '@react-aria/interactions': 3.14.0_react@18.2.0
       '@react-aria/link': 3.4.0_react@18.2.0
       '@react-aria/utils': 3.15.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/style': 0.1.5_biqbaboplfbrettd7655fr4n2y
       '@voussoir/types': 0.1.2_biqbaboplfbrettd7655fr4n2y
       '@voussoir/typography': 0.1.4_biqbaboplfbrettd7655fr4n2y
@@ -10211,7 +10212,7 @@ packages:
       '@react-stately/layout': 3.10.0_react@18.2.0
       '@react-stately/list': 3.6.1_react@18.2.0
       '@react-types/grid': 3.1.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/checkbox': 0.2.4_biqbaboplfbrettd7655fr4n2y
       '@voussoir/core': 5.0.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/drag-and-drop': 0.1.1_biqbaboplfbrettd7655fr4n2y
@@ -10248,7 +10249,7 @@ packages:
       '@react-stately/layout': 3.10.0_react@18.2.0
       '@react-stately/list': 3.6.1_react@18.2.0
       '@react-stately/virtualizer': 3.4.1_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/core': 5.0.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.0_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
@@ -10286,7 +10287,7 @@ packages:
       '@react-stately/utils': 3.6.0_react@18.2.0
       '@react-types/menu': 3.7.3_react@18.2.0
       '@react-types/overlays': 3.7.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/button': 0.1.7_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.0_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
@@ -10361,7 +10362,7 @@ packages:
       '@react-stately/numberfield': 3.3.1_react@18.2.0
       '@react-types/button': 3.7.1_react@18.2.0
       '@react-types/numberfield': 3.3.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/button': 0.1.7_biqbaboplfbrettd7655fr4n2y
       '@voussoir/core': 5.0.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/field': 0.1.5_biqbaboplfbrettd7655fr4n2y
@@ -10417,7 +10418,7 @@ packages:
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-stately/select': 3.3.4_react@18.2.0
       '@react-types/select': 3.6.5_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/button': 0.1.7_biqbaboplfbrettd7655fr4n2y
       '@voussoir/core': 5.0.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/field': 0.1.5_biqbaboplfbrettd7655fr4n2y
@@ -10465,7 +10466,7 @@ packages:
       '@react-aria/radio': 3.4.2_react@18.2.0
       '@react-stately/radio': 3.6.2_react@18.2.0
       '@react-types/radio': 3.3.1_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/core': 5.0.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/field': 0.1.5_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
@@ -10565,7 +10566,7 @@ packages:
       '@react-aria/table': 3.7.0_biqbaboplfbrettd7655fr4n2y
       '@react-aria/utils': 3.15.0_react@18.2.0
       '@react-stately/table': 3.7.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/checkbox': 0.2.4_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.0_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
@@ -10592,7 +10593,7 @@ packages:
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-stately/list': 3.6.1_react@18.2.0
       '@react-stately/tabs': 3.2.4_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@react-types/tabs': 3.1.5_react@18.2.0
       '@voussoir/core': 5.0.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
@@ -10619,7 +10620,7 @@ packages:
       '@react-aria/textfield': 3.8.1_react@18.2.0
       '@react-aria/utils': 3.15.0_react@18.2.0
       '@react-stately/utils': 3.6.0_react@18.2.0
-      '@react-types/shared': 3.17.0_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/field': 0.1.5_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/style': 0.1.5_biqbaboplfbrettd7655fr4n2y
