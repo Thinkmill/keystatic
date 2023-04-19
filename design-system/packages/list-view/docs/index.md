@@ -262,7 +262,7 @@ return (
       items={items}
     >
       {item => (
-        <Item>
+        <Item textValue={`${item.title}. ${item.description}`}>
           <Text>{item.title}</Text>
           <Text slot="description">{item.description}</Text>
         </Item>
@@ -274,7 +274,7 @@ return (
       items={items}
     >
       {item => (
-        <Item>
+        <Item textValue={`${item.title}. ${item.description}`}>
           <Text>{item.title}</Text>
           <Text slot="description">{item.description}</Text>
         </Item>
