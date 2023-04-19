@@ -7,6 +7,7 @@ import { filterDOMProps, mergeProps, useObjectRef } from '@react-aria/utils';
 import type { DroppableCollectionState } from '@react-stately/dnd';
 import { ListLayout } from '@react-stately/layout';
 import { ListState, useListState } from '@react-stately/list';
+import { assert } from 'emery';
 import React, {
   PropsWithChildren,
   ReactElement,
@@ -332,13 +333,17 @@ function ListView<T extends object>(
       {DragPreview && isListDraggable && (
         <DragPreview ref={preview}>
           {() => {
-            // @ts-expect-error
+            // @ts-expect-error FIXME
             let item = state.collection.getItem(dragState.draggedKey);
+
+            assert(item != null, 'Dragged item must exist in collection.');
+
             // @ts-expect-error
             let itemCount = dragState.draggingKeys.size;
             // @ts-expect-error
             let itemHeight = layout.getLayoutInfo(dragState.draggedKey).rect
               .height;
+
             return (
               <DragPreviewElement
                 item={item}
