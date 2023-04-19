@@ -215,8 +215,8 @@ return (
 `DateField` accepts an `onChange` prop which is triggered whenever the date is
 edited by the user. The example below uses `onChange` to update a separate
 element with a formatted version of the date in the user's locale and local time
-zone. This is done by converting the date to a native JavaScript Date object to
-pass to the formatter.
+zone. This is done by converting the date to a native JavaScript `Date` object
+to pass to the formatter.
 
 ```jsx {% live=true %}
 // import { getLocalTimeZone } from '@internationalized/date';

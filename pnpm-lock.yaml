@@ -285,6 +285,7 @@ importers:
     specifiers:
       '@babel/core': ^7.18.5
       '@babel/runtime': ^7.18.3
+      '@internationalized/date': ^3.2.0
       '@markdoc/markdoc': ^0.2.2
       '@preconstruct/next': ^4.0.0
       '@react-aria/i18n': ^3.7.1
@@ -360,6 +361,7 @@ importers:
     dependencies:
       '@babel/core': 7.21.0
       '@babel/runtime': 7.21.0
+      '@internationalized/date': 3.2.0
       '@markdoc/markdoc': 0.2.2_pmekkgnqduwlme35zpnqhenc34
       '@react-aria/i18n': 3.7.1_react@18.2.0
       '@types/js-yaml': 4.0.5
@@ -5060,12 +5062,6 @@ packages:
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
 
-  /@internationalized/date/3.1.0:
-    resolution: {integrity: sha512-wjeur7K4AecT+YwoBmBXQ/+n5lP69tuZc34hw09s44EozZK7FZHSyfPvRp5/xEb2D6abLboskDY4jG+Nt0TNUQ==}
-    dependencies:
-      '@swc/helpers': 0.4.14
-    dev: false
-
   /@internationalized/date/3.2.0:
     resolution: {integrity: sha512-VDMHN1m33L4eqPs5BaihzgQJXyaORbMoHOtrapFxx179J8ucY5CRIHYsq5RRLKPHZWgjNfa5v6amWWDkkMFywA==}
     dependencies:
@@ -6175,7 +6171,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@internationalized/date': 3.1.0
+      '@internationalized/date': 3.2.0
       '@internationalized/message': 3.1.0
       '@internationalized/number': 3.2.0
       '@internationalized/string': 3.1.0

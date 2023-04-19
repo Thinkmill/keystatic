@@ -97,7 +97,7 @@ function EditableSegment({ segment, state }: InputSegmentProps) {
         data-hidden={!segment.isPlaceholder}
         className={css({
           display: 'block',
-          // fontStyle: 'italic',
+          fontStyle: 'italic',
           height: '0',
           pointerEvents: 'none',
           textAlign: 'center',
