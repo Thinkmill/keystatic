@@ -72,8 +72,8 @@ async function createEntrypointPkgJsons() {
       );
       await fs.mkdir(path.dirname(pkgPath), { recursive: true });
       const pkgJson = {
-        main: `dist/voussoir-icon-icons-${icon.name}.cjs.js`,
-        module: `dist/voussoir-icon-icons-${icon.name}.esm.js`,
+        main: `dist/keystar-ui-icon-icons-${icon.name}.cjs.js`,
+        module: `dist/keystar-ui-icon-icons-${icon.name}.esm.js`,
       };
       await fs.writeFile(pkgPath, JSON.stringify(pkgJson, null, 2) + '\n');
     })

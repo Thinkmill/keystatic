@@ -1,10 +1,10 @@
 'use client';
-import { Checkbox } from '@voussoir/checkbox';
-import { FieldLabel } from '@voussoir/field';
-import { Flex } from '@voussoir/layout';
+import { Checkbox } from '@keystar-ui/checkbox';
+import { FieldLabel } from '@keystar-ui/field';
+import { Flex } from '@keystar-ui/layout';
 import { useId } from 'react';
 import { FormFieldInputProps } from '../../api';
-import { Text } from '@voussoir/typography';
+import { Text } from '@keystar-ui/typography';
 
 export function MultiselectFieldInput<Value extends string>(
   props: FormFieldInputProps<readonly Value[]> & {

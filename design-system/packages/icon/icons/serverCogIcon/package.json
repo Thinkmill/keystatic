@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-serverCogIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-serverCogIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-serverCogIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-serverCogIcon.esm.js"
 }

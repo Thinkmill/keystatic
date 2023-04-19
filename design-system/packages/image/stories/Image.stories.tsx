@@ -1,6 +1,6 @@
-import { action, storiesOf } from '@voussoir/storybook';
-import { Box, Flex, Grid } from '@voussoir/layout';
-import { Text } from '@voussoir/typography';
+import { action, storiesOf } from '@keystar-ui/storybook';
+import { Box, Flex, Grid } from '@keystar-ui/layout';
+import { Text } from '@keystar-ui/typography';
 import { useState } from 'react';
 
 import { Image } from '../src';

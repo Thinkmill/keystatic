@@ -1,4 +1,4 @@
-# @voussoir/link
+# @keystar-ui/link
 
 Links are used for taking users from one page to another.
 

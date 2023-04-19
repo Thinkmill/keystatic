@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-anchorIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-anchorIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-anchorIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-anchorIcon.esm.js"
 }

@@ -3,12 +3,12 @@ import { useObjectRef } from '@react-aria/utils';
 import { useSearchFieldState } from '@react-stately/searchfield';
 import { forwardRef } from 'react';
 
-import { ClearButton } from '@voussoir/button';
-import { searchIcon } from '@voussoir/icon/icons/searchIcon';
-import { Icon } from '@voussoir/icon';
-import { Flex } from '@voussoir/layout';
-import { css } from '@voussoir/style';
-import { TextFieldPrimitive } from '@voussoir/text-field';
+import { ClearButton } from '@keystar-ui/button';
+import { searchIcon } from '@keystar-ui/icon/icons/searchIcon';
+import { Icon } from '@keystar-ui/icon';
+import { Flex } from '@keystar-ui/layout';
+import { css } from '@keystar-ui/style';
+import { TextFieldPrimitive } from '@keystar-ui/text-field';
 
 import { SearchFieldProps } from './types';
 

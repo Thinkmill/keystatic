@@ -1,5 +1,5 @@
-import { Flex } from '@voussoir/layout';
-import { storiesOf } from '@voussoir/storybook';
+import { Flex } from '@keystar-ui/layout';
+import { storiesOf } from '@keystar-ui/storybook';
 
 import { Avatar } from '../src';
 

@@ -1,4 +1,4 @@
-import { filterStyleProps } from '@voussoir/style';
+import { filterStyleProps } from '@keystar-ui/style';
 
 describe('style/filterStyleProps', function () {
   it('should omit style props', function () {

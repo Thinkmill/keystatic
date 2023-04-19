@@ -1,4 +1,4 @@
-import { VoussoirTheme } from '@voussoir/style';
+import { VoussoirTheme } from '@keystar-ui/style';
 import { useLayoutEffect } from 'react';
 import { documentElementClasses } from './globals';
 import { useProvider } from './VoussoirProvider';

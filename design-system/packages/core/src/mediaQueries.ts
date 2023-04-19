@@ -1,4 +1,4 @@
-import { useMediaQuery } from '@voussoir/style';
+import { useMediaQuery } from '@keystar-ui/style';
 
 // FANTASY API
 export type ColorScheme = 'light' | 'dark';

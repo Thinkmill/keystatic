@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 
-import { globeIcon } from '@voussoir/icon/icons/globeIcon';
-import { Icon } from '@voussoir/icon';
-import { Text } from '@voussoir/typography';
+import { globeIcon } from '@keystar-ui/icon/icons/globeIcon';
+import { Icon } from '@keystar-ui/icon';
+import { Text } from '@keystar-ui/typography';
 import {
   act,
   fireEvent,
@@ -11,7 +11,7 @@ import {
   KEYS,
   renderWithProvider,
   within,
-} from '@voussoir/test-utils';
+} from '@keystar-ui/test-utils';
 
 import { Item, Picker, Section } from '../src';
 

@@ -1,10 +1,10 @@
-import { action, storiesOf } from '@voussoir/storybook';
+import { action, storiesOf } from '@keystar-ui/storybook';
 
-import { plusCircleIcon } from '@voussoir/icon/icons/plusCircleIcon';
-import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
-import { Icon } from '@voussoir/icon';
-import { Flex } from '@voussoir/layout';
-import { Text } from '@voussoir/typography';
+import { plusCircleIcon } from '@keystar-ui/icon/icons/plusCircleIcon';
+import { chevronRightIcon } from '@keystar-ui/icon/icons/chevronRightIcon';
+import { Icon } from '@keystar-ui/icon';
+import { Flex } from '@keystar-ui/layout';
+import { Text } from '@keystar-ui/typography';
 
 import { ActionButton, ActionButtonProps } from '../src';
 

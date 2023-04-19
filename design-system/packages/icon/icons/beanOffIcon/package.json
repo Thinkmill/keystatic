@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-beanOffIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-beanOffIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-beanOffIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-beanOffIcon.esm.js"
 }

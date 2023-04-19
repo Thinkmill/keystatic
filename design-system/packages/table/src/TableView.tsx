@@ -15,9 +15,9 @@ import {
 import { mergeProps } from '@react-aria/utils';
 import { TableState, useTableState } from '@react-stately/table';
 
-import { Checkbox } from '@voussoir/checkbox';
-import { Text } from '@voussoir/typography';
-import { isReactText } from '@voussoir/utils';
+import { Checkbox } from '@keystar-ui/checkbox';
+import { Text } from '@keystar-ui/typography';
+import { isReactText } from '@keystar-ui/utils';
 
 import { ColumnProps, TableProps } from './types';
 import {

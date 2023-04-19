@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-hammerIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-hammerIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-hammerIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-hammerIcon.esm.js"
 }

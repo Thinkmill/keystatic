@@ -1,4 +1,4 @@
-# @voussoir/overlays
+# @keystar-ui/overlays
 
 An overlay provides contextual information and/or options in the form of an
 additional layer on top of the interface.

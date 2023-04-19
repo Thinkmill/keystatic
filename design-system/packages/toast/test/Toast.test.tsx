@@ -1,14 +1,14 @@
 import '@testing-library/jest-dom';
 import { ReactNode, useState } from 'react';
 
-import { Button } from '@voussoir/button';
+import { Button } from '@keystar-ui/button';
 import {
   act,
   fireEvent,
   firePress,
   renderWithProvider,
   within,
-} from '@voussoir/test-utils';
+} from '@keystar-ui/test-utils';
 
 import { Toaster, ToastOptions, toastQueue } from '../src';
 import { clearToastQueue } from '../src/Toaster';

@@ -1,14 +1,14 @@
 {
-  "name": "@voussoir/drag-and-drop",
+  "name": "@keystar-ui/drag-and-drop",
   "version": "0.1.1",
   "description": "Drag and drop is a common UI interaction that allows users to transfer data between two locations by directly moving a visual representation on screen.",
   "license": "MIT",
-  "main": "dist/voussoir-drag-and-drop.cjs.js",
-  "module": "dist/voussoir-drag-and-drop.esm.js",
+  "main": "dist/keystar-ui-drag-and-drop.cjs.js",
+  "module": "dist/keystar-ui-drag-and-drop.esm.js",
   "exports": {
     ".": {
-      "module": "./dist/voussoir-drag-and-drop.esm.js",
-      "default": "./dist/voussoir-drag-and-drop.cjs.js"
+      "module": "./dist/keystar-ui-drag-and-drop.esm.js",
+      "default": "./dist/keystar-ui-drag-and-drop.cjs.js"
     },
     "./package.json": "./package.json"
   },

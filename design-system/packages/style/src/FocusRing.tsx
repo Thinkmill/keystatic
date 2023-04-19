@@ -2,7 +2,7 @@ import { FocusRingProps, useFocusRing } from '@react-aria/focus';
 import { mergeProps } from '@react-aria/utils';
 import { Children, cloneElement } from 'react';
 
-import { toDataAttributes } from '@voussoir/utils';
+import { toDataAttributes } from '@keystar-ui/utils';
 
 /**
  * A utility component for styling interactions. Applies data-attributes to the

@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-citrusIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-citrusIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-citrusIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-citrusIcon.esm.js"
 }

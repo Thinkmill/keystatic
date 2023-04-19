@@ -1,9 +1,9 @@
 'use client';
 import { ReactNode } from 'react';
 
-import { Box, Flex } from '@voussoir/layout';
-import { FlexStyleProps, css, tokenSchema } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
+import { Box, Flex } from '@keystar-ui/layout';
+import { FlexStyleProps, css, tokenSchema } from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
 
 // Inline code
 

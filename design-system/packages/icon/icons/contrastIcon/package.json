@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-contrastIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-contrastIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-contrastIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-contrastIcon.esm.js"
 }

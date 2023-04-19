@@ -5,8 +5,8 @@ import {
   TextInputBase,
 } from '@react-types/shared';
 
-import { FieldProps } from '@voussoir/field';
-import { BaseStyleProps } from '@voussoir/style';
+import { FieldProps } from '@keystar-ui/field';
+import { BaseStyleProps } from '@keystar-ui/style';
 
 export type MenuTriggerAction = 'focus' | 'input' | 'manual';
 

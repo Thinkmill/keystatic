@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-folderInputIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-folderInputIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-folderInputIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-folderInputIcon.esm.js"
 }

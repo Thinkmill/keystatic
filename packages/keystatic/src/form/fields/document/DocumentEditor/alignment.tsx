@@ -1,16 +1,16 @@
 import { Transforms } from 'slate';
 import { ReactEditor } from 'slate-react';
 
-import { Item } from '@voussoir/action-group';
-import { ActionButton } from '@voussoir/button';
-import { alignLeftIcon } from '@voussoir/icon/icons/alignLeftIcon';
-import { alignRightIcon } from '@voussoir/icon/icons/alignRightIcon';
-import { alignCenterIcon } from '@voussoir/icon/icons/alignCenterIcon';
-import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { Icon } from '@voussoir/icon';
-import { Menu, MenuTrigger } from '@voussoir/menu';
-import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
-import { Text } from '@voussoir/typography';
+import { Item } from '@keystar-ui/action-group';
+import { ActionButton } from '@keystar-ui/button';
+import { alignLeftIcon } from '@keystar-ui/icon/icons/alignLeftIcon';
+import { alignRightIcon } from '@keystar-ui/icon/icons/alignRightIcon';
+import { alignCenterIcon } from '@keystar-ui/icon/icons/alignCenterIcon';
+import { chevronDownIcon } from '@keystar-ui/icon/icons/chevronDownIcon';
+import { Icon } from '@keystar-ui/icon';
+import { Menu, MenuTrigger } from '@keystar-ui/menu';
+import { TooltipTrigger, Tooltip } from '@keystar-ui/tooltip';
+import { Text } from '@keystar-ui/typography';
 
 import { DocumentFeatures } from './document-features';
 import { useToolbarState } from './toolbar-state';

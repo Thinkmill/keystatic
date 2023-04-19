@@ -26,23 +26,23 @@ import {
   ClearButton,
   FieldButtonProps,
   useFieldButton,
-} from '@voussoir/button';
-import { FieldPrimitive } from '@voussoir/field';
-import { Icon } from '@voussoir/icon';
-import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { ListBoxBase, useListBoxLayout } from '@voussoir/listbox';
-import { Tray } from '@voussoir/overlays';
-import { ProgressCircle } from '@voussoir/progress';
-import { FocusRing, css, tokenSchema, transition } from '@voussoir/style';
-import { TextFieldPrimitive } from '@voussoir/text-field';
+} from '@keystar-ui/button';
+import { FieldPrimitive } from '@keystar-ui/field';
+import { Icon } from '@keystar-ui/icon';
+import { chevronDownIcon } from '@keystar-ui/icon/icons/chevronDownIcon';
+import { ListBoxBase, useListBoxLayout } from '@keystar-ui/listbox';
+import { Tray } from '@keystar-ui/overlays';
+import { ProgressCircle } from '@keystar-ui/progress';
+import { FocusRing, css, tokenSchema, transition } from '@keystar-ui/style';
+import { TextFieldPrimitive } from '@keystar-ui/text-field';
 
-import { useProviderProps } from '@voussoir/core';
+import { useProviderProps } from '@keystar-ui/core';
 
 import localizedMessages from '../l10n.json';
 import { ComboboxProps } from './types';
-import { Flex } from '@voussoir/layout';
-import { Text } from '@voussoir/typography';
-import { toDataAttributes } from '@voussoir/utils';
+import { Flex } from '@keystar-ui/layout';
+import { Text } from '@keystar-ui/typography';
+import { toDataAttributes } from '@keystar-ui/utils';
 
 function MobileCombobox<T extends object>(
   props: ComboboxProps<T>,

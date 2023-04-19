@@ -1,8 +1,8 @@
 import { LabelAria } from '@react-aria/label';
 import { ReactElement, ReactNode } from 'react';
 
-import { BaseStyleProps } from '@voussoir/style';
-import { AriaLabellingProps, DOMProps, InputBaseProps } from '@voussoir/types';
+import { BaseStyleProps } from '@keystar-ui/style';
+import { AriaLabellingProps, DOMProps, InputBaseProps } from '@keystar-ui/types';
 
 export type FieldRenderProp = (props: LabelAria['fieldProps']) => ReactElement;
 

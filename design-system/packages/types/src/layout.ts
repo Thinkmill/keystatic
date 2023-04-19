@@ -1,4 +1,4 @@
-import { BaseStyleProps, SizeBorder } from '@voussoir/style';
+import { BaseStyleProps, SizeBorder } from '@keystar-ui/style';
 
 import { AriaLabellingProps, DOMProps } from './dom';
 

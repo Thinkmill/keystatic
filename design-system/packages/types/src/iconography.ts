@@ -1,4 +1,4 @@
-import { BaseStyleProps, ColorForeground, SizeIcon } from '@voussoir/style';
+import { BaseStyleProps, ColorForeground, SizeIcon } from '@keystar-ui/style';
 import { ReactElement } from 'react';
 
 import { DOMProps } from './dom';

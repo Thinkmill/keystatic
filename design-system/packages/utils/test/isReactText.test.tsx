@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 
-import { flattenChildren, isReactText } from '@voussoir/utils';
+import { flattenChildren, isReactText } from '@keystar-ui/utils';
 
 let fragmentOfReactText = (
   <Fragment>

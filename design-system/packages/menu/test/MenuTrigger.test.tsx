@@ -12,7 +12,7 @@ import {
   renderWithProvider,
   within,
   KEYS,
-} from '@voussoir/test-utils';
+} from '@keystar-ui/test-utils';
 
 import {
   Item,
@@ -22,7 +22,7 @@ import {
   MenuTriggerProps,
   Section,
 } from '../src';
-import { Button, ButtonProps } from '@voussoir/button';
+import { Button, ButtonProps } from '@keystar-ui/button';
 import { createRef } from 'react';
 
 let triggerText = 'Menu Button';

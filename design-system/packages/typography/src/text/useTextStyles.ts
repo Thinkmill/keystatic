@@ -4,8 +4,8 @@ import {
   maybeTokenByKey,
   tokenSchema,
   useStyleProps,
-} from '@voussoir/style';
-import { PartialRequired, TextProps } from '@voussoir/types';
+} from '@keystar-ui/style';
+import { PartialRequired, TextProps } from '@keystar-ui/types';
 
 import { useTextContext } from './context';
 import { getTrimStyles } from '../getTrimStyles';

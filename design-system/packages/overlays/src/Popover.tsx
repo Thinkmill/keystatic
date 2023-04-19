@@ -16,9 +16,9 @@ import {
   tokenSchema,
   transition,
   useStyleProps,
-} from '@voussoir/style';
-import { Direction } from '@voussoir/types';
-import { toDataAttributes } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { Direction } from '@keystar-ui/types';
+import { toDataAttributes } from '@keystar-ui/utils';
 
 import { Blanket } from './Blanket';
 import { Overlay } from './Overlay';

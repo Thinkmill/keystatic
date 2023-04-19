@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-paperclipIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-paperclipIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-paperclipIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-paperclipIcon.esm.js"
 }

@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentStoryObj } from '@voussoir/storybook';
+import { ComponentMeta, ComponentStoryObj } from '@keystar-ui/storybook';
 
 import { Field } from '../src';
 

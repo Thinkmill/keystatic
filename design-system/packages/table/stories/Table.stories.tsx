@@ -1,4 +1,4 @@
-import { action, ArgTypes, storiesOf } from '@voussoir/storybook';
+import { action, ArgTypes, storiesOf } from '@keystar-ui/storybook';
 import { Key, useMemo, useState } from 'react';
 
 import {

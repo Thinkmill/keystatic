@@ -1,7 +1,7 @@
 import { FocusableProps } from '@react-types/shared';
 
-import { FieldProps } from '@voussoir/field';
-import { RangeInputBase, TextInputDOMEvents, ValueBase } from '@voussoir/types';
+import { FieldProps } from '@keystar-ui/field';
+import { RangeInputBase, TextInputDOMEvents, ValueBase } from '@keystar-ui/types';
 
 export type NumberFieldProps = {
   /**

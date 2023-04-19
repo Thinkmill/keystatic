@@ -1,6 +1,6 @@
 import { useLocale } from '@react-aria/i18n';
 
-import { IconProps } from '@voussoir/types';
+import { IconProps } from '@keystar-ui/types';
 
 import { Icon } from './Icon';
 

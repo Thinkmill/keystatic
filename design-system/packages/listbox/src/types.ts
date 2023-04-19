@@ -1,5 +1,5 @@
-import { BaseStyleProps } from '@voussoir/style';
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
+import { BaseStyleProps } from '@keystar-ui/style';
+import { AriaLabellingProps, DOMProps } from '@keystar-ui/types';
 
 import {
   AsyncLoadable,

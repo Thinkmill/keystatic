@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react';
 
-import { Notice } from '@voussoir/notice';
+import { Notice } from '@keystar-ui/notice';
 
 import { CloudConfig, Config, GitHubConfig } from '../config';
 import { CollectionPage } from './CollectionPage';
@@ -23,7 +23,7 @@ import { CreatedGitHubApp } from './onboarding/created-github-app';
 import { KeystaticSetup } from './onboarding/setup';
 import { RepoNotFound } from './onboarding/repo-not-found';
 import { isCloudConfig, isGitHubConfig, redirectToCloudAuth } from './utils';
-import { Text } from '@voussoir/typography';
+import { Text } from '@keystar-ui/typography';
 import { AppSlugProvider } from './onboarding/install-app';
 import {
   GitHubAppShellDataContext,
@@ -31,10 +31,10 @@ import {
 } from './shell/data';
 import { KeystaticCloudAuthCallback } from './cloud-auth-callback';
 import { getAuth } from './auth';
-import { Button } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { githubIcon } from '@voussoir/icon/icons/githubIcon';
-import { Flex } from '@voussoir/layout';
+import { Button } from '@keystar-ui/button';
+import { Icon } from '@keystar-ui/icon';
+import { githubIcon } from '@keystar-ui/icon/icons/githubIcon';
+import { Flex } from '@keystar-ui/layout';
 
 function parseParamsWithoutBranch(params: string[]) {
   if (params.length === 0) {

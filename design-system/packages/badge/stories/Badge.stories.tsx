@@ -1,8 +1,8 @@
-import { storiesOf } from '@voussoir/storybook';
-import { arrowUpRightIcon } from '@voussoir/icon/icons/arrowUpRightIcon';
-import { Icon } from '@voussoir/icon';
-import { Flex } from '@voussoir/layout';
-import { Numeral } from '@voussoir/typography';
+import { storiesOf } from '@keystar-ui/storybook';
+import { arrowUpRightIcon } from '@keystar-ui/icon/icons/arrowUpRightIcon';
+import { Icon } from '@keystar-ui/icon';
+import { Flex } from '@keystar-ui/layout';
+import { Numeral } from '@keystar-ui/typography';
 
 import { Badge } from '../src';
 

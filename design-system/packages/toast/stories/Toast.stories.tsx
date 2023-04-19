@@ -1,16 +1,16 @@
 import { useLandmark } from '@react-aria/landmark';
 import React, { useRef, useState } from 'react';
 
-import { ActionButton } from '@voussoir/button';
-import { Dialog, DialogTrigger } from '@voussoir/dialog';
-import { Icon } from '@voussoir/icon';
-import { checkCircle2Icon } from '@voussoir/icon/icons/checkCircle2Icon';
-import { infoIcon } from '@voussoir/icon/icons/infoIcon';
-import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
-import { Box, Flex } from '@voussoir/layout';
-import { Content } from '@voussoir/slots';
-import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
-import { Heading, Text } from '@voussoir/typography';
+import { ActionButton } from '@keystar-ui/button';
+import { Dialog, DialogTrigger } from '@keystar-ui/dialog';
+import { Icon } from '@keystar-ui/icon';
+import { checkCircle2Icon } from '@keystar-ui/icon/icons/checkCircle2Icon';
+import { infoIcon } from '@keystar-ui/icon/icons/infoIcon';
+import { alertTriangleIcon } from '@keystar-ui/icon/icons/alertTriangleIcon';
+import { Box, Flex } from '@keystar-ui/layout';
+import { Content } from '@keystar-ui/slots';
+import { ArgTypes, action, storiesOf } from '@keystar-ui/storybook';
+import { Heading, Text } from '@keystar-ui/typography';
 
 import { Toaster, ToastOptions, toastQueue } from '../src';
 

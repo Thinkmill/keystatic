@@ -1,16 +1,16 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useContext, useMemo } from 'react';
 
-import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
-import { ActionButton } from '@voussoir/button';
-import { DialogTrigger } from '@voussoir/dialog';
-import { Icon } from '@voussoir/icon';
-import { plusIcon } from '@voussoir/icon/icons/plusIcon';
-import { Flex, Grid } from '@voussoir/layout';
-import { ListView } from '@voussoir/list-view';
-import { ProgressCircle } from '@voussoir/progress';
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
-import { Heading, Text } from '@voussoir/typography';
+import { Breadcrumbs, Item } from '@keystar-ui/breadcrumbs';
+import { ActionButton } from '@keystar-ui/button';
+import { DialogTrigger } from '@keystar-ui/dialog';
+import { Icon } from '@keystar-ui/icon';
+import { plusIcon } from '@keystar-ui/icon/icons/plusIcon';
+import { Flex, Grid } from '@keystar-ui/layout';
+import { ListView } from '@keystar-ui/list-view';
+import { ProgressCircle } from '@keystar-ui/progress';
+import { Tooltip, TooltipTrigger } from '@keystar-ui/tooltip';
+import { Heading, Text } from '@keystar-ui/typography';
 
 import { Config } from '../../config';
 

@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
-import { useSlotProps } from '@voussoir/slots';
-import { HeadingProps } from '@voussoir/types';
-import { forwardRefWithAs } from '@voussoir/utils/ts';
+import { useSlotProps } from '@keystar-ui/slots';
+import { HeadingProps } from '@keystar-ui/types';
+import { forwardRefWithAs } from '@keystar-ui/utils/ts';
 
 import { HeadingContext } from './context';
 import { useHeadingStyles } from './useHeadingStyles';

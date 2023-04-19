@@ -1,7 +1,7 @@
-import { action, storiesOf } from '@voussoir/storybook';
+import { action, storiesOf } from '@keystar-ui/storybook';
 
-import { Grid } from '@voussoir/layout';
-import { Heading, Text } from '@voussoir/typography';
+import { Grid } from '@keystar-ui/layout';
+import { Heading, Text } from '@keystar-ui/typography';
 
 import { TextLink, TextLinkProps } from '../src';
 

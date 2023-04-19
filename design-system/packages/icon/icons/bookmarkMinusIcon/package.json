@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-bookmarkMinusIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-bookmarkMinusIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-bookmarkMinusIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-bookmarkMinusIcon.esm.js"
 }

@@ -1,10 +1,10 @@
 import { assert, warning } from 'emery';
 import { useMemo } from 'react';
 
-import { useSlotProps } from '@voussoir/slots';
-import { TextProps } from '@voussoir/types';
-import { filterDOMProps } from '@voussoir/utils';
-import { forwardRefWithAs } from '@voussoir/utils/ts';
+import { useSlotProps } from '@keystar-ui/slots';
+import { TextProps } from '@keystar-ui/types';
+import { filterDOMProps } from '@keystar-ui/utils';
+import { forwardRefWithAs } from '@keystar-ui/utils/ts';
 
 import { TextContext, TextContextType, useTextContext } from './context';
 import { useTextStyles } from './useTextStyles';

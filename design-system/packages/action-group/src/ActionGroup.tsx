@@ -24,24 +24,24 @@ import {
   RefObject,
 } from 'react';
 
-import { ActionButton } from '@voussoir/button';
-import { VoussoirProvider, useProviderProps } from '@voussoir/core';
-import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { moreHorizontalIcon } from '@voussoir/icon/icons/moreHorizontalIcon';
-import { Icon } from '@voussoir/icon';
-import { Item, Menu, MenuTrigger } from '@voussoir/menu';
-import { Kbd, Text } from '@voussoir/typography';
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
-import { ClearSlots, SlotProvider, useSlotProps } from '@voussoir/slots';
+import { ActionButton } from '@keystar-ui/button';
+import { VoussoirProvider, useProviderProps } from '@keystar-ui/core';
+import { chevronDownIcon } from '@keystar-ui/icon/icons/chevronDownIcon';
+import { moreHorizontalIcon } from '@keystar-ui/icon/icons/moreHorizontalIcon';
+import { Icon } from '@keystar-ui/icon';
+import { Item, Menu, MenuTrigger } from '@keystar-ui/menu';
+import { Kbd, Text } from '@keystar-ui/typography';
+import { Tooltip, TooltipTrigger } from '@keystar-ui/tooltip';
+import { ClearSlots, SlotProvider, useSlotProps } from '@keystar-ui/slots';
 import {
   BaseStyleProps,
   classNames,
   css,
   tokenSchema,
   useStyleProps,
-} from '@voussoir/style';
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
-import { filterDOMProps, isReactText, toDataAttributes } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { AriaLabellingProps, DOMProps } from '@keystar-ui/types';
+import { filterDOMProps, isReactText, toDataAttributes } from '@keystar-ui/utils';
 
 import { ActionGroupProps } from './types';
 

@@ -11,11 +11,11 @@ import {
   Ref,
 } from 'react';
 
-import { Flex } from '@voussoir/layout';
-import { BaseStyleProps, css, useStyleProps } from '@voussoir/style';
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
-import { filterDOMProps } from '@voussoir/utils';
-import { SlotProvider } from '@voussoir/slots';
+import { Flex } from '@keystar-ui/layout';
+import { BaseStyleProps, css, useStyleProps } from '@keystar-ui/style';
+import { AriaLabellingProps, DOMProps } from '@keystar-ui/types';
+import { filterDOMProps } from '@keystar-ui/utils';
+import { SlotProvider } from '@keystar-ui/slots';
 
 import {
   itemContentGutter,

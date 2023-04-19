@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 
 import { render, RenderOptions } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { TestProvider } from '@voussoir/core';
+import { TestProvider } from '@keystar-ui/core';
 import { ReactElement } from 'react';
 
 import { Button } from '../src';

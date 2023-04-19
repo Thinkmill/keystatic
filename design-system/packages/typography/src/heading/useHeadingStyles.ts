@@ -1,5 +1,5 @@
-import { ClassList, css, tokenSchema, useStyleProps } from '@voussoir/style';
-import { HeadingProps, PartialRequired } from '@voussoir/types';
+import { ClassList, css, tokenSchema, useStyleProps } from '@keystar-ui/style';
+import { HeadingProps, PartialRequired } from '@keystar-ui/types';
 
 import { getTrimStyles } from '../getTrimStyles';
 import { textOptimizationStyles } from '../text/useTextStyles';

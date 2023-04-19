@@ -1,13 +1,13 @@
-import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
+import { ArgTypes, action, storiesOf } from '@keystar-ui/storybook';
 
-import { alignCenterVerticalIcon } from '@voussoir/icon/icons/alignCenterVerticalIcon';
-import { alignStartVerticalIcon } from '@voussoir/icon/icons/alignStartVerticalIcon';
-import { alignEndVerticalIcon } from '@voussoir/icon/icons/alignEndVerticalIcon';
-import { boldIcon } from '@voussoir/icon/icons/boldIcon';
-import { italicIcon } from '@voussoir/icon/icons/italicIcon';
-import { Icon } from '@voussoir/icon';
-import { Flex } from '@voussoir/layout';
-import { Text } from '@voussoir/typography';
+import { alignCenterVerticalIcon } from '@keystar-ui/icon/icons/alignCenterVerticalIcon';
+import { alignStartVerticalIcon } from '@keystar-ui/icon/icons/alignStartVerticalIcon';
+import { alignEndVerticalIcon } from '@keystar-ui/icon/icons/alignEndVerticalIcon';
+import { boldIcon } from '@keystar-ui/icon/icons/boldIcon';
+import { italicIcon } from '@keystar-ui/icon/icons/italicIcon';
+import { Icon } from '@keystar-ui/icon';
+import { Flex } from '@keystar-ui/layout';
+import { Text } from '@keystar-ui/typography';
 
 import { Combobox, ComboboxProps, Item, Section } from '../src';
 

@@ -1,6 +1,6 @@
-import { storiesOf, action } from '@voussoir/storybook';
+import { storiesOf, action } from '@keystar-ui/storybook';
 
-import { ActionButton } from '@voussoir/button';
+import { ActionButton } from '@keystar-ui/button';
 
 import { AlertDialog, AlertDialogProps, DialogTrigger } from '../src';
 import { getParagraph } from './common';

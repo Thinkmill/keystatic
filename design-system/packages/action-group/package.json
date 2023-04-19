@@ -1,14 +1,14 @@
 {
-  "name": "@voussoir/action-group",
+  "name": "@keystar-ui/action-group",
   "version": "0.1.4",
   "description": "Group related action buttons together.",
   "license": "MIT",
-  "main": "dist/voussoir-action-group.cjs.js",
-  "module": "dist/voussoir-action-group.esm.js",
+  "main": "dist/keystar-ui-action-group.cjs.js",
+  "module": "dist/keystar-ui-action-group.esm.js",
   "exports": {
     ".": {
-      "module": "./dist/voussoir-action-group.esm.js",
-      "default": "./dist/voussoir-action-group.cjs.js"
+      "module": "./dist/keystar-ui-action-group.esm.js",
+      "default": "./dist/keystar-ui-action-group.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -17,6 +17,17 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
+    "@keystar-ui/button": "^0.1.7",
+    "@keystar-ui/core": "^5.0.1",
+    "@keystar-ui/icon": "^0.2.0",
+    "@keystar-ui/layout": "^0.1.3",
+    "@keystar-ui/menu": "^0.1.2",
+    "@keystar-ui/slots": "^0.1.2",
+    "@keystar-ui/style": "^0.1.5",
+    "@keystar-ui/tooltip": "^0.1.2",
+    "@keystar-ui/types": "^0.1.1",
+    "@keystar-ui/typography": "^0.1.4",
+    "@keystar-ui/utils": "^2.0.2",
     "@react-aria/actiongroup": "^3.4.3",
     "@react-aria/focus": "^3.10.0",
     "@react-aria/interactions": "^3.13.0",
@@ -24,23 +35,12 @@
     "@react-stately/collections": "^3.5.0",
     "@react-stately/list": "^3.6.0",
     "@react-types/actiongroup": "^3.3.5",
-    "@react-types/shared": "^3.14.1",
-    "@voussoir/button": "^0.1.7",
-    "@voussoir/core": "^5.0.1",
-    "@voussoir/icon": "^0.2.0",
-    "@voussoir/layout": "^0.1.3",
-    "@voussoir/menu": "^0.1.2",
-    "@voussoir/slots": "^0.1.2",
-    "@voussoir/style": "^0.1.5",
-    "@voussoir/tooltip": "^0.1.2",
-    "@voussoir/types": "^0.1.1",
-    "@voussoir/typography": "^0.1.4",
-    "@voussoir/utils": "^2.0.2"
+    "@react-types/shared": "^3.14.1"
   },
   "devDependencies": {
+    "@keystar-ui/storybook": "^0.0.1",
+    "@keystar-ui/test-utils": "^2.0.2",
     "@types/react": "^18.0.25",
-    "@voussoir/storybook": "^0.0.1",
-    "@voussoir/test-utils": "^2.0.2",
     "react": "^18.2.0"
   },
   "peerDependencies": {

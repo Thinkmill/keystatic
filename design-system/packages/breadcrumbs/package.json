@@ -1,14 +1,14 @@
 {
-  "name": "@voussoir/breadcrumbs",
+  "name": "@keystar-ui/breadcrumbs",
   "version": "0.1.7",
   "description": "Breadcrumbs show hierarchy and navigational context for a user's location within an application.",
   "license": "MIT",
-  "main": "dist/voussoir-breadcrumbs.cjs.js",
-  "module": "dist/voussoir-breadcrumbs.esm.js",
+  "main": "dist/keystar-ui-breadcrumbs.cjs.js",
+  "module": "dist/keystar-ui-breadcrumbs.esm.js",
   "exports": {
     ".": {
-      "module": "./dist/voussoir-breadcrumbs.esm.js",
-      "default": "./dist/voussoir-breadcrumbs.cjs.js"
+      "module": "./dist/keystar-ui-breadcrumbs.esm.js",
+      "default": "./dist/keystar-ui-breadcrumbs.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -17,6 +17,16 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
+    "@keystar-ui/button": "0.1.7",
+    "@keystar-ui/core": "5.0.1",
+    "@keystar-ui/icon": "^0.2.0",
+    "@keystar-ui/layout": "^0.1.3",
+    "@keystar-ui/menu": "0.1.3",
+    "@keystar-ui/slots": "^0.1.2",
+    "@keystar-ui/style": "^0.1.5",
+    "@keystar-ui/types": "^0.1.1",
+    "@keystar-ui/typography": "^0.1.4",
+    "@keystar-ui/utils": "^2.0.2",
     "@react-aria/breadcrumbs": "^3.5.0",
     "@react-aria/i18n": "^3.6.2",
     "@react-aria/interactions": "^3.13.0",
@@ -24,22 +34,12 @@
     "@react-stately/collections": "^3.5.0",
     "@react-types/breadcrumbs": "^3.5.0",
     "@react-types/shared": "^3.14.1",
-    "@voussoir/button": "0.1.7",
-    "@voussoir/core": "5.0.1",
-    "@voussoir/icon": "^0.2.0",
-    "@voussoir/layout": "^0.1.3",
-    "@voussoir/menu": "0.1.3",
-    "@voussoir/slots": "^0.1.2",
-    "@voussoir/style": "^0.1.5",
-    "@voussoir/types": "^0.1.1",
-    "@voussoir/typography": "^0.1.4",
-    "@voussoir/utils": "^2.0.2",
     "emery": "^1.4.1"
   },
   "devDependencies": {
+    "@keystar-ui/storybook": "^0.0.1",
+    "@keystar-ui/test-utils": "^2.0.2",
     "@types/react": "^18.0.25",
-    "@voussoir/storybook": "^0.0.1",
-    "@voussoir/test-utils": "^2.0.2",
     "react": "^18.2.0"
   },
   "peerDependencies": {

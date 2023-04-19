@@ -1,14 +1,14 @@
 {
-  "name": "@voussoir/types",
+  "name": "@keystar-ui/types",
   "version": "0.1.2",
   "description": "",
   "license": "MIT",
-  "main": "dist/voussoir-types.cjs.js",
-  "module": "dist/voussoir-types.esm.js",
+  "main": "dist/keystar-ui-types.cjs.js",
+  "module": "dist/keystar-ui-types.esm.js",
   "exports": {
     ".": {
-      "module": "./dist/voussoir-types.esm.js",
-      "default": "./dist/voussoir-types.cjs.js"
+      "module": "./dist/keystar-ui-types.esm.js",
+      "default": "./dist/keystar-ui-types.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -17,7 +17,7 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@voussoir/style": "^0.1.3"
+    "@keystar-ui/style": "^0.1.3"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",

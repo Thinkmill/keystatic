@@ -11,19 +11,19 @@ import {
   useRef,
 } from 'react';
 
-import { ActionButton } from '@voussoir/button';
-import { xIcon } from '@voussoir/icon/icons/xIcon';
-import { Icon } from '@voussoir/icon';
-import { Grid } from '@voussoir/layout';
-import { SlotProvider } from '@voussoir/slots';
+import { ActionButton } from '@keystar-ui/button';
+import { xIcon } from '@keystar-ui/icon/icons/xIcon';
+import { Icon } from '@keystar-ui/icon';
+import { Grid } from '@keystar-ui/layout';
+import { SlotProvider } from '@keystar-ui/slots';
 import {
   breakpointQueries,
   classNames,
   css,
   tokenSchema,
   useStyleProps,
-} from '@voussoir/style';
-import { toDataAttributes, useHasChild } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { toDataAttributes, useHasChild } from '@keystar-ui/utils';
 
 import localizedMessages from '../l10n.json';
 import { DialogContext, DialogContextValue } from './context';

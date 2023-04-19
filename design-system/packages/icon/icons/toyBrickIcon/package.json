@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-toyBrickIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-toyBrickIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-toyBrickIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-toyBrickIcon.esm.js"
 }

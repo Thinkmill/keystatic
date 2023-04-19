@@ -1,9 +1,9 @@
-import { action, ArgTypes, storiesOf } from '@voussoir/storybook';
+import { action, ArgTypes, storiesOf } from '@keystar-ui/storybook';
 
-import { Button, ActionButton } from '@voussoir/button';
-import { Flex } from '@voussoir/layout';
-import { TextLink } from '@voussoir/link';
-import { Text } from '@voussoir/typography';
+import { Button, ActionButton } from '@keystar-ui/button';
+import { Flex } from '@keystar-ui/layout';
+import { TextLink } from '@keystar-ui/link';
+import { Text } from '@keystar-ui/typography';
 
 import { Tooltip, TooltipTrigger, TooltipTriggerProps } from '../src';
 import { MOUSE_REST_TIMEOUT } from '../src/TooltipTrigger';

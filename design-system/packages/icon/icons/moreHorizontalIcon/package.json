@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-moreHorizontalIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-moreHorizontalIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-moreHorizontalIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-moreHorizontalIcon.esm.js"
 }

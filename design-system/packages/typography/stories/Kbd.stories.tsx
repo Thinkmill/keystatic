@@ -1,8 +1,8 @@
-import { storiesOf } from '@voussoir/storybook';
+import { storiesOf } from '@keystar-ui/storybook';
 
-import { Flex } from '@voussoir/layout';
-import { SlotProvider } from '@voussoir/slots';
-import { tokenSchema } from '@voussoir/style';
+import { Flex } from '@keystar-ui/layout';
+import { SlotProvider } from '@keystar-ui/slots';
+import { tokenSchema } from '@keystar-ui/style';
 
 import { Kbd, Text } from '../src';
 

@@ -8,8 +8,8 @@ import {
 } from '@testing-library/react';
 import { createRef, ReactElement } from 'react';
 
-import { Button } from '@voussoir/button';
-import { TestProvider } from '@voussoir/core';
+import { Button } from '@keystar-ui/button';
+import { TestProvider } from '@keystar-ui/core';
 
 import { Tooltip, TooltipTrigger } from '../src';
 import { MOUSE_REST_TIMEOUT } from '../src/TooltipTrigger';

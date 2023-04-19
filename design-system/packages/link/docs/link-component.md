@@ -19,8 +19,8 @@ to function properly.
 ```jsx
 import React from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
-import { VoussoirProvider } from '@voussoir/core';
-import { makeLinkComponent } from '@voussoir/link';
+import { VoussoirProvider } from '@keystar-ui/core';
+import { makeLinkComponent } from '@keystar-ui/link';
 
 // First create your custom link:
 const CustomLink = makeLinkComponent(({ href, ...otherProps }, ref) => {

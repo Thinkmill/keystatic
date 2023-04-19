@@ -4,18 +4,18 @@ import { useHover } from '@react-aria/interactions';
 import { mergeProps } from '@react-aria/utils';
 import React, { Fragment, useMemo, useRef } from 'react';
 
-import { Icon } from '@voussoir/icon';
-import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
-import { chevronLeftIcon } from '@voussoir/icon/icons/chevronLeftIcon';
+import { Icon } from '@keystar-ui/icon';
+import { chevronRightIcon } from '@keystar-ui/icon/icons/chevronRightIcon';
+import { chevronLeftIcon } from '@keystar-ui/icon/icons/chevronLeftIcon';
 import {
   ClassList,
   classNames,
   css,
   FocusRing,
   tokenSchema,
-} from '@voussoir/style';
-import {} from '@voussoir/typography';
-import { toDataAttributes } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import {} from '@keystar-ui/typography';
+import { toDataAttributes } from '@keystar-ui/utils';
 
 import { BreadcrumbItemProps } from './types';
 

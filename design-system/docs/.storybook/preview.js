@@ -1,4 +1,4 @@
-import { tokenSchema } from '@voussoir/style';
+import { tokenSchema } from '@keystar-ui/style';
 
 import { withProviderSwitcher } from './addons/provider';
 

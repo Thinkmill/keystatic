@@ -1,6 +1,6 @@
-import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
+import { ArgTypes, action, storiesOf } from '@keystar-ui/storybook';
 
-import { Text } from '@voussoir/typography';
+import { Text } from '@keystar-ui/typography';
 
 import { Radio, RadioGroup, RadioGroupProps } from '../src';
 

@@ -2,7 +2,7 @@ import { ForwardedRef, forwardRef, useCallback, useState } from 'react';
 import { Overlay as ReactAriaOverlay } from '@react-aria/overlays';
 import { OverlayProps } from '@react-types/overlays';
 
-import { VoussoirProvider } from '@voussoir/core';
+import { VoussoirProvider } from '@keystar-ui/core';
 
 import { OpenTransition } from './OpenTransition';
 

@@ -15,16 +15,16 @@ import React, {
   useRef,
 } from 'react';
 
-import { useProvider } from '@voussoir/core';
-import { ProgressCircle } from '@voussoir/progress';
+import { useProvider } from '@keystar-ui/core';
+import { ProgressCircle } from '@keystar-ui/progress';
 import {
   FocusRing,
   classNames,
   css,
   tokenSchema,
   useStyleProps,
-} from '@voussoir/style';
-import { toDataAttributes } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { toDataAttributes } from '@keystar-ui/utils';
 
 import localizedMessages from '../l10n.json';
 import { ListViewProvider, useListViewContext } from './context';

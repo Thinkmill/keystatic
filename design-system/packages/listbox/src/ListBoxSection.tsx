@@ -7,11 +7,11 @@ import { Node } from '@react-types/shared';
 import { warning } from 'emery';
 import { Fragment, ReactNode, useRef } from 'react';
 
-import { classNames, css, tokenSchema } from '@voussoir/style';
+import { classNames, css, tokenSchema } from '@keystar-ui/style';
 
 import { useListBoxContext } from './context';
-import { Text } from '@voussoir/typography';
-import { Divider } from '@voussoir/layout';
+import { Text } from '@keystar-ui/typography';
+import { Divider } from '@keystar-ui/layout';
 
 interface ListBoxSectionProps<T> {
   reusableView: ReusableView<Node<T>, unknown>;

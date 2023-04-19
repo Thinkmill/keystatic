@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
-import { BaseStyleProps } from '@voussoir/style';
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
+import { BaseStyleProps } from '@keystar-ui/style';
+import { AriaLabellingProps, DOMProps } from '@keystar-ui/types';
 
 // Common props
 // -----------------------------------------------------------------------------

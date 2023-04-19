@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-cloudSunIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-cloudSunIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-cloudSunIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-cloudSunIcon.esm.js"
 }

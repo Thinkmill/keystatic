@@ -1,14 +1,14 @@
 {
-  "name": "@voussoir/number-field",
+  "name": "@keystar-ui/number-field",
   "version": "0.1.4",
   "description": "Number fields allow users to enter a number, and increment or decrement the value using step buttons.",
   "license": "MIT",
-  "main": "dist/voussoir-number-field.cjs.js",
-  "module": "dist/voussoir-number-field.esm.js",
+  "main": "dist/keystar-ui-number-field.cjs.js",
+  "module": "dist/keystar-ui-number-field.esm.js",
   "exports": {
     ".": {
-      "module": "./dist/voussoir-number-field.esm.js",
-      "default": "./dist/voussoir-number-field.cjs.js"
+      "module": "./dist/keystar-ui-number-field.esm.js",
+      "default": "./dist/keystar-ui-number-field.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -17,6 +17,16 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
+    "@keystar-ui/button": "^0.1.7",
+    "@keystar-ui/core": "^5.0.1",
+    "@keystar-ui/field": "^0.1.5",
+    "@keystar-ui/icon": "^0.2.0",
+    "@keystar-ui/layout": "^0.1.3",
+    "@keystar-ui/style": "^0.1.5",
+    "@keystar-ui/text-field": "^0.1.6",
+    "@keystar-ui/types": "^0.1.1",
+    "@keystar-ui/typography": "^0.1.4",
+    "@keystar-ui/utils": "^2.0.2",
     "@react-aria/button": "^3.6.3",
     "@react-aria/focus": "^3.10.0",
     "@react-aria/i18n": "^3.6.2",
@@ -27,22 +37,12 @@
     "@react-types/button": "^3.7.0",
     "@react-types/numberfield": "^3.3.5",
     "@react-types/shared": "^3.14.1",
-    "@voussoir/button": "^0.1.7",
-    "@voussoir/core": "^5.0.1",
-    "@voussoir/field": "^0.1.5",
-    "@voussoir/icon": "^0.2.0",
-    "@voussoir/layout": "^0.1.3",
-    "@voussoir/style": "^0.1.5",
-    "@voussoir/text-field": "^0.1.6",
-    "@voussoir/types": "^0.1.1",
-    "@voussoir/typography": "^0.1.4",
-    "@voussoir/utils": "^2.0.2",
     "emery": "^1.4.1"
   },
   "devDependencies": {
+    "@keystar-ui/storybook": "^0.0.1",
+    "@keystar-ui/test-utils": "^2.0.2",
     "@types/react": "^18.0.25",
-    "@voussoir/storybook": "^0.0.1",
-    "@voussoir/test-utils": "^2.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

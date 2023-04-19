@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-calendarMinusIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-calendarMinusIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-calendarMinusIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-calendarMinusIcon.esm.js"
 }

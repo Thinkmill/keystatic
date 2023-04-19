@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { TextField, TextFieldProps } from '../src';
-import { TestProvider } from '@voussoir/core';
+import { TestProvider } from '@keystar-ui/core';
 
 let testId = 'test-id';
 let inputText = 'Hello world';

@@ -9,9 +9,9 @@ import {
   useMemo,
 } from 'react';
 
-import { useSlotProps } from '@voussoir/slots';
-import { FocusRing, classNames, css } from '@voussoir/style';
-import { PropsWithElementType } from '@voussoir/utils/ts';
+import { useSlotProps } from '@keystar-ui/slots';
+import { FocusRing, classNames, css } from '@keystar-ui/style';
+import { PropsWithElementType } from '@keystar-ui/utils/ts';
 
 import { FieldButtonProps } from './types';
 import { useActionButtonStyles } from './useActionButtonStyles';

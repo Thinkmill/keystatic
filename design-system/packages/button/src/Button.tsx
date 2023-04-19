@@ -4,12 +4,12 @@ import { useButton } from '@react-aria/button';
 import { useHover } from '@react-aria/interactions';
 import { mergeProps, useObjectRef } from '@react-aria/utils';
 
-import { useProviderProps } from '@voussoir/core';
-import { useLinkComponent } from '@voussoir/link';
-import { SlotProvider, useSlotProps } from '@voussoir/slots';
-import { FocusRing } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
-import { filterDOMProps, isReactText } from '@voussoir/utils';
+import { useProviderProps } from '@keystar-ui/core';
+import { useLinkComponent } from '@keystar-ui/link';
+import { SlotProvider, useSlotProps } from '@keystar-ui/slots';
+import { FocusRing } from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
+import { filterDOMProps, isReactText } from '@keystar-ui/utils';
 
 import {
   ButtonElementProps,

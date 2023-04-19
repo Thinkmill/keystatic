@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-baggageClaimIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-baggageClaimIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-baggageClaimIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-baggageClaimIcon.esm.js"
 }

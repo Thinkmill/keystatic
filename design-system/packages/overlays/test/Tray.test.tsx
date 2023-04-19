@@ -4,7 +4,7 @@ import {
 } from '@react-stately/overlays';
 import '@testing-library/jest-dom';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { TestProvider } from '@voussoir/core';
+import { TestProvider } from '@keystar-ui/core';
 
 import { Tray, TrayProps } from '../src';
 

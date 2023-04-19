@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 
-import { Flex } from '@voussoir/layout';
-import { Text } from '@voussoir/typography';
+import { Flex } from '@keystar-ui/layout';
+import { Text } from '@keystar-ui/typography';
 
 export const SummaryBlock = ({ children }: PropsWithChildren) => {
   return (

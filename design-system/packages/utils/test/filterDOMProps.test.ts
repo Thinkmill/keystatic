@@ -1,4 +1,4 @@
-import { filterDOMProps } from '@voussoir/utils';
+import { filterDOMProps } from '@keystar-ui/utils';
 
 const junk = { a: 1, b: 2, c: 3 };
 const labellable = {

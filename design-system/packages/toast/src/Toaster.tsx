@@ -96,7 +96,7 @@ function addToast(
 ): CloseFunction {
   // Dispatch a custom event so that toasts can be intercepted and re-targeted, e.g. when inside an iframe.
   if (typeof CustomEvent !== 'undefined' && typeof window !== 'undefined') {
-    let event = new CustomEvent('voussoir-toast', {
+    let event = new CustomEvent('keystar-ui-toast', {
       cancelable: true,
       bubbles: true,
       detail: {

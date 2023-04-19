@@ -1,4 +1,4 @@
-import { useIsSSR } from '@voussoir/ssr';
+import { useIsSSR } from '@keystar-ui/ssr';
 
 import { breakpoints } from './responsive';
 

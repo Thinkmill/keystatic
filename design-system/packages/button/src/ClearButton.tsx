@@ -3,8 +3,8 @@ import { useHover } from '@react-aria/interactions';
 import { mergeProps, useObjectRef } from '@react-aria/utils';
 import { ForwardedRef, forwardRef } from 'react';
 
-import { xIcon } from '@voussoir/icon/icons/xIcon';
-import { Icon } from '@voussoir/icon';
+import { xIcon } from '@keystar-ui/icon/icons/xIcon';
+import { Icon } from '@keystar-ui/icon';
 import {
   classNames,
   css,
@@ -12,9 +12,9 @@ import {
   tokenSchema,
   transition,
   useStyleProps,
-} from '@voussoir/style';
-import { toDataAttributes } from '@voussoir/utils';
-import { PropsWithElementType } from '@voussoir/utils/ts';
+} from '@keystar-ui/style';
+import { toDataAttributes } from '@keystar-ui/utils';
+import { PropsWithElementType } from '@keystar-ui/utils/ts';
 
 import { ButtonProps } from './types';
 

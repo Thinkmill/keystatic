@@ -1,13 +1,13 @@
 'use client';
 import { useEffect, useState } from 'react';
 
-import { Button } from '@voussoir/button';
-import { VoussoirProviderProps } from '@voussoir/core';
-import { RootVoussoirProvider } from '@voussoir/next';
-import { moonIcon } from '@voussoir/icon/icons/moonIcon';
-import { sunIcon } from '@voussoir/icon/icons/sunIcon';
-import { Icon } from '@voussoir/icon';
-import { css, useMediaQuery } from '@voussoir/style';
+import { Button } from '@keystar-ui/button';
+import { VoussoirProviderProps } from '@keystar-ui/core';
+import { RootVoussoirProvider } from '@keystar-ui/next';
+import { moonIcon } from '@keystar-ui/icon/icons/moonIcon';
+import { sunIcon } from '@keystar-ui/icon/icons/sunIcon';
+import { Icon } from '@keystar-ui/icon';
+import { css, useMediaQuery } from '@keystar-ui/style';
 
 export function ThemeProvider({
   children,

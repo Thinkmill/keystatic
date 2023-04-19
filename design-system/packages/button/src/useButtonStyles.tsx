@@ -5,8 +5,8 @@ import {
   tokenSchema,
   transition,
   useStyleProps,
-} from '@voussoir/style';
-import { toDataAttributes } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { toDataAttributes } from '@keystar-ui/utils';
 
 import { ButtonProps } from './types';
 

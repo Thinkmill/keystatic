@@ -1,6 +1,6 @@
 import { PrismTheme } from 'prism-react-renderer';
 
-import { tokenSchema } from '@voussoir/style';
+import { tokenSchema } from '@keystar-ui/style';
 
 export function usePrismTheme(): PrismTheme {
   const { color } = tokenSchema;

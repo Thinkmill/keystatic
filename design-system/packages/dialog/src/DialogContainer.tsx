@@ -1,7 +1,7 @@
 import { useOverlayTriggerState } from '@react-stately/overlays';
 import React, { ReactElement, useRef } from 'react';
 
-import { Modal } from '@voussoir/overlays';
+import { Modal } from '@keystar-ui/overlays';
 
 import { DialogContext } from './context';
 import { DialogContainerProps } from './types';

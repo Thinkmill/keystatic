@@ -4,15 +4,15 @@ description: Utilities for integrating Voussoir with Next.js's `app` directory.
 category: Introduction
 ---
 
-> `@voussoir/next` only works with Next.js's `app` directory. It does not work
+> `@keystar-ui/next` only works with Next.js's `app` directory. It does not work
 > with the `pages` directory.
 
 ## RootVoussoirProvider
 
-The `RootVoussoirProvider` exported from `@voussoir/next` should be rendered as
+The `RootVoussoirProvider` exported from `@keystar-ui/next` should be rendered as
 the `html` element in your root `layout` file to make server rendering styles
 work properly. If you need another `VoussoirProvider` in your tree, you should
-use the normal `VoussoirProvider` exported from `@voussoir/core`.
+use the normal `VoussoirProvider` exported from `@keystar-ui/core`.
 
 ## `mediaQueryOnlyColorSchemeScaleScript`
 
@@ -29,7 +29,7 @@ change the color scheme or scale, you should write your own script instead.
 import {
   RootVoussoirProvider,
   mediaQueryOnlyColorSchemeScaleScript,
-} from '@voussoir/next';
+} from '@keystar-ui/next';
 import { Inter } from 'next/font/google';
 
 const inter = Inter({

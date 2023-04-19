@@ -1,4 +1,4 @@
-import { ArgTypes, storiesOf } from '@voussoir/storybook';
+import { ArgTypes, storiesOf } from '@keystar-ui/storybook';
 
 import { ProgressCircle } from '../src';
 

@@ -1,11 +1,11 @@
 import { useId } from '@react-aria/utils';
 import { ReactNode } from 'react';
 
-import { Box } from '@voussoir/layout';
-import { classNames, css, tokenSchema } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
-import { DOMProps } from '@voussoir/types';
-import { filterDOMProps } from '@voussoir/utils';
+import { Box } from '@keystar-ui/layout';
+import { classNames, css, tokenSchema } from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
+import { DOMProps } from '@keystar-ui/types';
+import { filterDOMProps } from '@keystar-ui/utils';
 
 import {
   itemContentGutter,

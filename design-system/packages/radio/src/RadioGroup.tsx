@@ -6,10 +6,10 @@ import React, {
   forwardRef,
 } from 'react';
 
-import { useProviderProps } from '@voussoir/core';
-import { FieldPrimitive, validateFieldProps } from '@voussoir/field';
-import { classNames, css, tokenSchema } from '@voussoir/style';
-import { toDataAttributes } from '@voussoir/utils';
+import { useProviderProps } from '@keystar-ui/core';
+import { FieldPrimitive, validateFieldProps } from '@keystar-ui/field';
+import { classNames, css, tokenSchema } from '@keystar-ui/style';
+import { toDataAttributes } from '@keystar-ui/utils';
 
 import { RadioContext } from './context';
 import { RadioGroupProps } from './types';

@@ -1,3 +1,3 @@
-# @voussoir/nav-list
+# @keystar-ui/nav-list
 
 Render a list of navigation links.

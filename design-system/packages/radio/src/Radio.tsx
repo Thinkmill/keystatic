@@ -1,7 +1,7 @@
 import { useRadio } from '@react-aria/radio';
 import { HTMLAttributes, useMemo, useRef } from 'react';
 
-import { SlotProvider } from '@voussoir/slots';
+import { SlotProvider } from '@keystar-ui/slots';
 import {
   FocusRing,
   classNames,
@@ -9,9 +9,9 @@ import {
   tokenSchema,
   transition,
   useStyleProps,
-} from '@voussoir/style';
-import { Text } from '@voussoir/typography';
-import { isReactText } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
+import { isReactText } from '@keystar-ui/utils';
 
 import { useRadioProvider } from './context';
 import { RadioProps } from './types';

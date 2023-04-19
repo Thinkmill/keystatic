@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-slackIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-slackIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-slackIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-slackIcon.esm.js"
 }

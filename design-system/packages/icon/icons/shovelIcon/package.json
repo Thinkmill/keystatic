@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-shovelIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-shovelIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-shovelIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-shovelIcon.esm.js"
 }

@@ -1,11 +1,11 @@
 import { ReactEventHandler, ReactNode } from 'react';
 
-import { AspectRatio, AspectRatioProps } from '@voussoir/layout';
-import { BoxStyleProps, classNames, css, useStyleProps } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
-import { filterDOMProps } from '@voussoir/utils';
+import { AspectRatio, AspectRatioProps } from '@keystar-ui/layout';
+import { BoxStyleProps, classNames, css, useStyleProps } from '@keystar-ui/style';
+import { DOMProps } from '@keystar-ui/types';
+import { filterDOMProps } from '@keystar-ui/utils';
 import { warning } from 'emery';
-import { useSlotProps } from '@voussoir/slots';
+import { useSlotProps } from '@keystar-ui/slots';
 
 const supportedProps = new Set(['loading', 'onError', 'onLoad', 'src']);
 

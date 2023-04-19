@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-shrubIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-shrubIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-shrubIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-shrubIcon.esm.js"
 }

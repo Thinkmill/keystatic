@@ -7,11 +7,11 @@ import {
   useContext,
 } from 'react';
 
-import { Button, ButtonGroup } from '@voussoir/button';
-import { Content } from '@voussoir/slots';
-import { useStyleProps } from '@voussoir/style';
-import { Heading, Text } from '@voussoir/typography';
-import { isReactText } from '@voussoir/utils';
+import { Button, ButtonGroup } from '@keystar-ui/button';
+import { Content } from '@keystar-ui/slots';
+import { useStyleProps } from '@keystar-ui/style';
+import { Heading, Text } from '@keystar-ui/typography';
+import { isReactText } from '@keystar-ui/utils';
 
 import { DialogContext, DialogContextValue } from './context';
 import { Dialog } from './Dialog';

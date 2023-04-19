@@ -1,7 +1,7 @@
 import NextLink from 'next/link';
 import { ForwardedRef } from 'react';
 
-import { makeLinkComponent } from '@voussoir/link';
+import { makeLinkComponent } from '@keystar-ui/link';
 
 /**
  * Resolves internal links using the

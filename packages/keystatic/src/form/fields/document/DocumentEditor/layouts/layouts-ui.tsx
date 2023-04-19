@@ -2,14 +2,14 @@ import { useMemo } from 'react';
 import { Editor, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 
-import { ActionGroup, Item } from '@voussoir/action-group';
-import { ActionButton } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { columnsIcon } from '@voussoir/icon/icons/columnsIcon';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Flex } from '@voussoir/layout';
-import { css, tokenSchema } from '@voussoir/style';
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
+import { ActionGroup, Item } from '@keystar-ui/action-group';
+import { ActionButton } from '@keystar-ui/button';
+import { Icon } from '@keystar-ui/icon';
+import { columnsIcon } from '@keystar-ui/icon/icons/columnsIcon';
+import { trash2Icon } from '@keystar-ui/icon/icons/trash2Icon';
+import { Flex } from '@keystar-ui/layout';
+import { css, tokenSchema } from '@keystar-ui/style';
+import { Tooltip, TooltipTrigger } from '@keystar-ui/tooltip';
 
 import { DocumentFeatures } from '../document-features';
 import {

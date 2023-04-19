@@ -16,9 +16,9 @@ import {
   useMemo,
 } from 'react';
 
-import { useProvider } from '@voussoir/core';
-import { ProgressCircle } from '@voussoir/progress';
-import { useStyleProps } from '@voussoir/style';
+import { useProvider } from '@keystar-ui/core';
+import { ProgressCircle } from '@keystar-ui/progress';
+import { useStyleProps } from '@keystar-ui/style';
 
 import localizedMessages from '../l10n.json';
 import { ListBoxContext } from './context';

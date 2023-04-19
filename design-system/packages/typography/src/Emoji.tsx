@@ -5,9 +5,9 @@ import {
   Ref,
 } from 'react';
 
-import { BaseStyleProps, useStyleProps } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
-import { filterDOMProps } from '@voussoir/utils';
+import { BaseStyleProps, useStyleProps } from '@keystar-ui/style';
+import { DOMProps } from '@keystar-ui/types';
+import { filterDOMProps } from '@keystar-ui/utils';
 
 export type EmojiProps = {
   /** Label used to describe the symbol that will be announced to screen readers. */

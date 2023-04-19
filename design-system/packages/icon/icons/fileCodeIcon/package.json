@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-fileCodeIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-fileCodeIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-fileCodeIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-fileCodeIcon.esm.js"
 }

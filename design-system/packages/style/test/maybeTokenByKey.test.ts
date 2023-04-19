@@ -1,4 +1,4 @@
-import { maybeTokenByKey } from '@voussoir/style';
+import { maybeTokenByKey } from '@keystar-ui/style';
 
 describe('style/maybeTokenByKey', function () {
   describe('number', function () {

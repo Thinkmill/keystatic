@@ -23,14 +23,14 @@ Each icon is exposed from its own entry point to reduce the bundle size and
 improve performance. Icon entry points follow the pattern:
 
 ```jsx
-import { nameOfTheIcon } from '@voussoir/icon/icons/nameOfTheIcon';
+import { nameOfTheIcon } from '@keystar-ui/icon/icons/nameOfTheIcon';
 ```
 
 When you need multiple icons, import from multiple entry points:
 
 ```jsx
-import { editIcon } from '@voussoir/icon/icons/editIcon';
-import { trashCanIcon } from '@voussoir/icon/icons/trashCanIcon';
+import { editIcon } from '@keystar-ui/icon/icons/editIcon';
+import { trashCanIcon } from '@keystar-ui/icon/icons/trashCanIcon';
 ```
 
 ### Accessibility

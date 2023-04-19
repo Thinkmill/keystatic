@@ -1,6 +1,6 @@
 'use client';
-import { Flex } from '@voussoir/layout';
-import { css, tokenSchema } from '@voussoir/style';
+import { Flex } from '@keystar-ui/layout';
+import { css, tokenSchema } from '@keystar-ui/style';
 
 import { Highlight } from './highlight';
 

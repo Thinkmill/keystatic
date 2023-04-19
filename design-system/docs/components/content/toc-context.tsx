@@ -7,7 +7,7 @@ import {
   useMemo,
 } from 'react';
 
-import { Heading as _Heading } from '@voussoir/typography';
+import { Heading as _Heading } from '@keystar-ui/typography';
 
 import { HEADER_HEIGHT } from '../../components/constants';
 import { HeadingEntry } from '../../utils/generate-toc';

@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-mailCheckIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-mailCheckIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-mailCheckIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-mailCheckIcon.esm.js"
 }

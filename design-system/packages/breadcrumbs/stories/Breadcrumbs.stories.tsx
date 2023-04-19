@@ -1,5 +1,5 @@
-import { Box } from '@voussoir/layout';
-import { action, storiesOf } from '@voussoir/storybook';
+import { Box } from '@keystar-ui/layout';
+import { action, storiesOf } from '@keystar-ui/storybook';
 
 import { Breadcrumbs, BreadcrumbsProps, Item } from '../src';
 

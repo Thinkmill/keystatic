@@ -1,11 +1,11 @@
 import { HTMLAttributes, ReactNode } from 'react';
 
-import { Icon } from '@voussoir/icon';
-import { checkIcon } from '@voussoir/icon/icons/checkIcon';
-import { ClearSlots, SlotProvider } from '@voussoir/slots';
-import { classNames, css, tokenSchema } from '@voussoir/style';
-import { toDataAttributes } from '@voussoir/utils';
-import { forwardRefWithAs } from '@voussoir/utils/ts';
+import { Icon } from '@keystar-ui/icon';
+import { checkIcon } from '@keystar-ui/icon/icons/checkIcon';
+import { ClearSlots, SlotProvider } from '@keystar-ui/slots';
+import { classNames, css, tokenSchema } from '@keystar-ui/style';
+import { toDataAttributes } from '@keystar-ui/utils';
+import { forwardRefWithAs } from '@keystar-ui/utils/ts';
 
 type ListItemProps = {
   children: ReactNode;

@@ -1,5 +1,5 @@
-import { css, transition } from '@voussoir/style';
-import { toDataAttributes } from '@voussoir/utils';
+import { css, transition } from '@keystar-ui/style';
+import { toDataAttributes } from '@keystar-ui/utils';
 
 import { BlanketProps } from './types';
 

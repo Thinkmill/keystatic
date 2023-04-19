@@ -3,7 +3,7 @@ import {
   VisuallyHiddenProps,
 } from '@react-aria/visually-hidden';
 
-import { BreakpointRange, useResponsiveRange } from '@voussoir/style';
+import { BreakpointRange, useResponsiveRange } from '@keystar-ui/style';
 
 export function useVisuallyHiddenRange(
   range?: BreakpointRange

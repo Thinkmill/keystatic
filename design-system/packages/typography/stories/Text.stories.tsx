@@ -1,5 +1,5 @@
-import { storiesOf } from '@voussoir/storybook';
-import { Box, Divider, Flex, Grid } from '@voussoir/layout';
+import { storiesOf } from '@keystar-ui/storybook';
+import { Box, Divider, Flex, Grid } from '@keystar-ui/layout';
 
 import { Text } from '../src/text';
 

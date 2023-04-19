@@ -1,19 +1,19 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useMemo, useState } from 'react';
 
-import { Badge } from '@voussoir/badge';
-import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
-import { Button } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { alertCircleIcon } from '@voussoir/icon/icons/alertCircleIcon';
-import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
-import { folderTreeIcon } from '@voussoir/icon/icons/folderTreeIcon';
-import { listStartIcon } from '@voussoir/icon/icons/listStartIcon';
-import { Flex } from '@voussoir/layout';
-import { TextLink } from '@voussoir/link';
-import { ActionMenu } from '@voussoir/menu';
-import { ProgressCircle } from '@voussoir/progress';
-import { SearchField } from '@voussoir/search-field';
+import { Badge } from '@keystar-ui/badge';
+import { Breadcrumbs, Item } from '@keystar-ui/breadcrumbs';
+import { Button } from '@keystar-ui/button';
+import { Icon } from '@keystar-ui/icon';
+import { alertCircleIcon } from '@keystar-ui/icon/icons/alertCircleIcon';
+import { externalLinkIcon } from '@keystar-ui/icon/icons/externalLinkIcon';
+import { folderTreeIcon } from '@keystar-ui/icon/icons/folderTreeIcon';
+import { listStartIcon } from '@keystar-ui/icon/icons/listStartIcon';
+import { Flex } from '@keystar-ui/layout';
+import { TextLink } from '@keystar-ui/link';
+import { ActionMenu } from '@keystar-ui/menu';
+import { ProgressCircle } from '@keystar-ui/progress';
+import { SearchField } from '@keystar-ui/search-field';
 import {
   TableView,
   TableBody,
@@ -22,8 +22,8 @@ import {
   Cell,
   Row,
   SortDescriptor,
-} from '@voussoir/table';
-import { Text } from '@voussoir/typography';
+} from '@keystar-ui/table';
+import { Text } from '@keystar-ui/typography';
 
 import { Config } from '../config';
 import { sortByDescriptor } from './collection-sort';

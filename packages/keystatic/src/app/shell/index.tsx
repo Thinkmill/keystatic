@@ -6,11 +6,11 @@ import {
   useContext,
 } from 'react';
 
-import { alertCircleIcon } from '@voussoir/icon/icons/alertCircleIcon';
-import { Icon } from '@voussoir/icon';
-import { Box, BoxProps, Flex } from '@voussoir/layout';
-import { VoussoirTheme, css, transition } from '@voussoir/style';
-import { Heading, Text } from '@voussoir/typography';
+import { alertCircleIcon } from '@keystar-ui/icon/icons/alertCircleIcon';
+import { Icon } from '@keystar-ui/icon';
+import { Box, BoxProps, Flex } from '@keystar-ui/layout';
+import { VoussoirTheme, css, transition } from '@keystar-ui/style';
+import { Heading, Text } from '@keystar-ui/typography';
 
 import { Config } from '../../config';
 import {

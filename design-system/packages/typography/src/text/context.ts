@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { TextProps } from '@voussoir/types';
+import { TextProps } from '@keystar-ui/types';
 
 export type TextContextType = Pick<TextProps, 'color' | 'size' | 'weight'>;
 

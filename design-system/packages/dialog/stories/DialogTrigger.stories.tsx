@@ -1,11 +1,11 @@
 import { chain } from '@react-aria/utils';
-import { action, storiesOf } from '@voussoir/storybook';
+import { action, storiesOf } from '@keystar-ui/storybook';
 import { useRef } from 'react';
 
-import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
-import { Flex } from '@voussoir/layout';
-import { Content, Header } from '@voussoir/slots';
-import { Heading, Text } from '@voussoir/typography';
+import { ActionButton, Button, ButtonGroup } from '@keystar-ui/button';
+import { Flex } from '@keystar-ui/layout';
+import { Content, Header } from '@keystar-ui/slots';
+import { Heading, Text } from '@keystar-ui/typography';
 
 import { AlertDialog, Dialog, DialogTrigger, DialogTriggerProps } from '../src';
 import { getParagraph } from './common';

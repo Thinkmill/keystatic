@@ -1,7 +1,7 @@
 'use client';
-import { ActionButton } from '@voussoir/button';
-import { Flex, Box } from '@voussoir/layout';
-import { TextField } from '@voussoir/text-field';
+import { ActionButton } from '@keystar-ui/button';
+import { Flex, Box } from '@keystar-ui/layout';
+import { TextField } from '@keystar-ui/text-field';
 import { useContext, useState } from 'react';
 import { FormFieldInputProps } from '../../api';
 import { SlugFieldContext, PathContext } from '../text/ui';

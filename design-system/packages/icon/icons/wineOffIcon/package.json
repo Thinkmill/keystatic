@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-wineOffIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-wineOffIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-wineOffIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-wineOffIcon.esm.js"
 }

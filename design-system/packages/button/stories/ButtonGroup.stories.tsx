@@ -1,7 +1,7 @@
-import { ArgTypes, storiesOf } from '@voussoir/storybook';
+import { ArgTypes, storiesOf } from '@keystar-ui/storybook';
 
-import { Box, Flex } from '@voussoir/layout';
-import { Text } from '@voussoir/typography';
+import { Box, Flex } from '@keystar-ui/layout';
+import { Text } from '@keystar-ui/typography';
 
 import { ButtonGroup, Button } from '../src';
 

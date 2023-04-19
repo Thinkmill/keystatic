@@ -24,9 +24,9 @@ import React, {
   useState,
 } from 'react';
 
-import { useProvider, useProviderProps } from '@voussoir/core';
-import { Item, Picker, PickerProps } from '@voussoir/picker';
-import { SlotProvider } from '@voussoir/slots';
+import { useProvider, useProviderProps } from '@keystar-ui/core';
+import { Item, Picker, PickerProps } from '@keystar-ui/picker';
+import { SlotProvider } from '@keystar-ui/slots';
 import {
   FocusRing,
   classNames,
@@ -34,9 +34,9 @@ import {
   tokenSchema,
   transition,
   useStyleProps,
-} from '@voussoir/style';
-import { Text } from '@voussoir/typography';
-import { filterDOMProps, toDataAttributes, isReactText } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
+import { filterDOMProps, toDataAttributes, isReactText } from '@keystar-ui/utils';
 
 import {
   TabsProps,

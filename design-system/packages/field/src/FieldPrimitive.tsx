@@ -1,6 +1,6 @@
-import { Flex } from '@voussoir/layout';
-import { BaseStyleProps, useStyleProps } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
+import { Flex } from '@keystar-ui/layout';
+import { BaseStyleProps, useStyleProps } from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
 import {
   forwardRef,
   ForwardRefExoticComponent,

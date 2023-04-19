@@ -7,8 +7,8 @@ import {
 import { assertNever } from 'emery';
 import { Children, Fragment, ReactElement, useEffect, useRef } from 'react';
 
-import { Modal, Popover, PopoverProps, Tray } from '@voussoir/overlays';
-import { useMediaQuery } from '@voussoir/style';
+import { Modal, Popover, PopoverProps, Tray } from '@keystar-ui/overlays';
+import { useMediaQuery } from '@keystar-ui/style';
 
 import { DialogContext } from './context';
 import { DialogRenderFn, DialogProps, DialogTriggerProps } from './types';

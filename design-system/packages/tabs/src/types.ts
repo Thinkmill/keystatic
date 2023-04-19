@@ -7,7 +7,7 @@ import {
 } from '@react-types/shared';
 import { Key, ReactNode } from 'react';
 
-import { BaseStyleProps } from '@voussoir/style';
+import { BaseStyleProps } from '@keystar-ui/style';
 
 export type TabProminence = 'low' | 'default';
 

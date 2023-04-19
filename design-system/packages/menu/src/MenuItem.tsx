@@ -6,9 +6,9 @@ import { TreeState } from '@react-stately/tree';
 import { Node } from '@react-types/shared';
 import { Key, useRef } from 'react';
 
-import { ListItem } from '@voussoir/listbox';
-import { Text } from '@voussoir/typography';
-import { isReactText } from '@voussoir/utils';
+import { ListItem } from '@keystar-ui/listbox';
+import { Text } from '@keystar-ui/typography';
+import { isReactText } from '@keystar-ui/utils';
 
 import { useMenuContext } from './context';
 

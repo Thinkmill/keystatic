@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-fileBarChartIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-fileBarChartIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-fileBarChartIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-fileBarChartIcon.esm.js"
 }

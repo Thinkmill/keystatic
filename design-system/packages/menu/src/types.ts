@@ -5,8 +5,8 @@ import {
 import { DisabledBehavior } from '@react-types/shared';
 import { ReactElement } from 'react';
 
-import { BaseStyleProps } from '@voussoir/style';
-import { ActionButtonProps } from '@voussoir/button';
+import { BaseStyleProps } from '@keystar-ui/style';
+import { ActionButtonProps } from '@keystar-ui/button';
 
 export type MenuProps<T> = {
   /** Whether `disabledKeys` applies to all interactions, or only selection. */

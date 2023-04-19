@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 
 import { Breadcrumbs, Item } from '../src';
-import { renderWithProvider, within } from '@voussoir/test-utils';
+import { renderWithProvider, within } from '@keystar-ui/test-utils';
 
 describe('breadcrumbs/Breadcrumbs', () => {
   beforeEach(() => {

@@ -1,11 +1,11 @@
 import { useRef } from 'react';
 import { useOverlayTrigger } from '@react-aria/overlays';
 import { useOverlayTriggerState } from '@react-stately/overlays';
-import { ArgTypes, storiesOf } from '@voussoir/storybook';
+import { ArgTypes, storiesOf } from '@keystar-ui/storybook';
 
-import { ActionButton } from '@voussoir/button';
-import { Box, Flex } from '@voussoir/layout';
-import { Text } from '@voussoir/typography';
+import { ActionButton } from '@keystar-ui/button';
+import { Box, Flex } from '@keystar-ui/layout';
+import { Text } from '@keystar-ui/typography';
 
 import { Placement, Popover } from '../src';
 

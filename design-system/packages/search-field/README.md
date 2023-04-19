@@ -1,3 +1,3 @@
-# @voussoir/search-field
+# @keystar-ui/search-field
 
 Search fields are text fields, specifically designed for search behaviour.

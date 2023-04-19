@@ -1,13 +1,13 @@
-import { arrowUpIcon } from '@voussoir/icon/icons/arrowUpIcon';
-import { Icon } from '@voussoir/icon';
+import { arrowUpIcon } from '@keystar-ui/icon/icons/arrowUpIcon';
+import { Icon } from '@keystar-ui/icon';
 import {
   classNames,
   css,
   tokenSchema,
   transition,
   useStyleProps,
-} from '@voussoir/style';
-import { toDataAttributes } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { toDataAttributes } from '@keystar-ui/utils';
 
 import { TableProps } from './types';
 

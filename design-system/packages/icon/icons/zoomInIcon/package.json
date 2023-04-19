@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-zoomInIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-zoomInIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-zoomInIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-zoomInIcon.esm.js"
 }

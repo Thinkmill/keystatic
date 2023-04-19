@@ -2,9 +2,9 @@ import { AriaCheckboxGroupProps } from '@react-aria/checkbox';
 import { FocusableProps, Orientation } from '@react-types/shared';
 import { ReactNode } from 'react';
 
-import { FieldProps } from '@voussoir/field';
-import { BaseStyleProps } from '@voussoir/style';
-import { DOMProps, InputBaseProps } from '@voussoir/types';
+import { FieldProps } from '@keystar-ui/field';
+import { BaseStyleProps } from '@keystar-ui/style';
+import { DOMProps, InputBaseProps } from '@keystar-ui/types';
 
 export type ToggleProps = {
   /**

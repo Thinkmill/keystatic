@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-databaseBackupIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-databaseBackupIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-databaseBackupIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-databaseBackupIcon.esm.js"
 }

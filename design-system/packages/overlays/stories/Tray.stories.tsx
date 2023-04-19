@@ -1,10 +1,10 @@
 import { chain } from '@react-aria/utils';
 import { useOverlayTriggerState } from '@react-stately/overlays';
-import { action, storiesOf } from '@voussoir/storybook';
+import { action, storiesOf } from '@keystar-ui/storybook';
 import { useRef, useState } from 'react';
 
-import { Box, Divider, Flex, Grid } from '@voussoir/layout';
-import { Heading, Text } from '@voussoir/typography';
+import { Box, Divider, Flex, Grid } from '@keystar-ui/layout';
+import { Heading, Text } from '@keystar-ui/typography';
 
 import { Tray } from '../src';
 

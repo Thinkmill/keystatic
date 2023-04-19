@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-powerOffIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-powerOffIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-powerOffIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-powerOffIcon.esm.js"
 }

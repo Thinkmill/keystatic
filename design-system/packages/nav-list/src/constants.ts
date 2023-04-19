@@ -1,4 +1,4 @@
-import { tokenSchema } from '@voussoir/style';
+import { tokenSchema } from '@keystar-ui/style';
 
 export const listBlockGutter = tokenSchema.size.space.large;
 

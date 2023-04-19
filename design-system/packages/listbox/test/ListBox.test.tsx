@@ -8,10 +8,10 @@ import {
 } from '@testing-library/react';
 import { ReactElement } from 'react';
 
-import { TestProvider } from '@voussoir/core';
-import { globeIcon } from '@voussoir/icon/icons/globeIcon';
-import { Icon } from '@voussoir/icon';
-import { Text } from '@voussoir/typography';
+import { TestProvider } from '@keystar-ui/core';
+import { globeIcon } from '@keystar-ui/icon/icons/globeIcon';
+import { Icon } from '@keystar-ui/icon';
+import { Text } from '@keystar-ui/typography';
 
 import { Item, ListBox, Section } from '../src';
 

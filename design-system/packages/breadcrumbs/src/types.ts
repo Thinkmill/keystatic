@@ -5,8 +5,8 @@ import {
 import { ItemProps } from '@react-types/shared';
 import { Key, ReactElement } from 'react';
 
-import { BaseStyleProps } from '@voussoir/style';
-import { TextProps } from '@voussoir/typography';
+import { BaseStyleProps } from '@keystar-ui/style';
+import { TextProps } from '@keystar-ui/typography';
 
 type BreadcrumbSize = NonNullable<TextProps['size']>;
 

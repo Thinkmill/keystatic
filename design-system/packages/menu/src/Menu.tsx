@@ -3,8 +3,8 @@ import { mergeProps, useObjectRef, useSyncRef } from '@react-aria/utils';
 import { useTreeState } from '@react-stately/tree';
 import React, { RefObject, ReactElement, useContext } from 'react';
 
-import { listStyles } from '@voussoir/listbox';
-import { classNames, useStyleProps } from '@voussoir/style';
+import { listStyles } from '@keystar-ui/listbox';
+import { classNames, useStyleProps } from '@keystar-ui/style';
 
 import { MenuContext } from './context';
 import { MenuItem } from './MenuItem';

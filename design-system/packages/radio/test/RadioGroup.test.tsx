@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 // import userEvent from '@testing-library/user-event';
 
-import { fireEvent, renderWithProvider } from '@voussoir/test-utils';
+import { fireEvent, renderWithProvider } from '@keystar-ui/test-utils';
 
 import { Radio, RadioGroup, RadioGroupProps } from '../src';
 

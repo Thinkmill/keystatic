@@ -10,17 +10,17 @@ import {
   useRef,
 } from 'react';
 
-import { Axis, DirectionIndicator } from '@voussoir/overlays';
-import { SlotProvider } from '@voussoir/slots';
+import { Axis, DirectionIndicator } from '@keystar-ui/overlays';
+import { SlotProvider } from '@keystar-ui/slots';
 import {
   classNames,
   css,
   tokenSchema,
   transition,
   useStyleProps,
-} from '@voussoir/style';
-import { Text } from '@voussoir/typography';
-import { filterDOMProps, isReactText, toDataAttributes } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
+import { filterDOMProps, isReactText, toDataAttributes } from '@keystar-ui/utils';
 
 import { TooltipContext } from './context';
 import { TooltipProps } from './types';

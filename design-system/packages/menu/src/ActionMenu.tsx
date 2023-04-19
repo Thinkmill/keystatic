@@ -6,11 +6,11 @@ import { Menu } from './Menu';
 import { MenuTrigger } from './MenuTrigger';
 import { ActionMenuProps } from './types';
 
-import { ActionButton } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { moreHorizontalIcon } from '@voussoir/icon/icons/moreHorizontalIcon';
-import { useSlotProps } from '@voussoir/slots';
-import { filterDOMProps } from '@voussoir/utils';
+import { ActionButton } from '@keystar-ui/button';
+import { Icon } from '@keystar-ui/icon';
+import { moreHorizontalIcon } from '@keystar-ui/icon/icons/moreHorizontalIcon';
+import { useSlotProps } from '@keystar-ui/slots';
+import { filterDOMProps } from '@keystar-ui/utils';
 
 function ActionMenu<T extends object>(
   props: ActionMenuProps<T>,

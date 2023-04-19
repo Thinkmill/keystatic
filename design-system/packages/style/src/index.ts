@@ -23,8 +23,8 @@ export { useIsMobileDevice } from './useIsMobileDevice';
 export { useMediaQuery } from './useMediaQuery';
 export { useStyleProps } from './useStyleProps';
 
-// NOTE: some package's types are "hoisted" up to '@voussoir/types' avoiding
+// NOTE: some package's types are "hoisted" up to '@keystar-ui/types' avoiding
 // circular dependencies, allowing safe imports internally. this package is the
-// exception, it is the only internal dependency of '@voussoir/types' and
+// exception, it is the only internal dependency of '@keystar-ui/types' and
 // therefore cannot import from it.
 export * from './types';

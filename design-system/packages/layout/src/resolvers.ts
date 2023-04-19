@@ -8,7 +8,7 @@ import {
   filterStyleProps,
   LooseSizeDimension,
   sizeResolver,
-} from '@voussoir/style';
+} from '@keystar-ui/style';
 
 // Resolvers
 // ============================================================================

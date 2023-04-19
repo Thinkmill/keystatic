@@ -1,6 +1,6 @@
 import { assert } from 'emery';
 
-import { SortDescriptor } from '@voussoir/table';
+import { SortDescriptor } from '@keystar-ui/table';
 
 interface DataRecord extends Record<string, any> {}
 

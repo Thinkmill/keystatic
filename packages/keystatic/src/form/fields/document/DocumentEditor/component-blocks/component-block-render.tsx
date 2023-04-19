@@ -1,4 +1,4 @@
-import { css } from '@voussoir/style';
+import { css } from '@keystar-ui/style';
 import React, { useContext, useMemo, ReactElement } from 'react';
 import { Element } from 'slate';
 import { ComponentBlock } from '../../../../api';

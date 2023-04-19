@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-wheatIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-wheatIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-wheatIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-wheatIcon.esm.js"
 }

@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-alertTriangleIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-alertTriangleIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-alertTriangleIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-alertTriangleIcon.esm.js"
 }

@@ -1,7 +1,7 @@
 import { HTMLAttributes } from 'react';
 
-import { css } from '@voussoir/style';
-import { isReactText } from '@voussoir/utils';
+import { css } from '@keystar-ui/style';
+import { isReactText } from '@keystar-ui/utils';
 
 type TruncateProps = {
   /**

@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom';
 import { render, RenderOptions } from '@testing-library/react';
-import { TestProvider } from '@voussoir/core';
+import { TestProvider } from '@keystar-ui/core';
 
-import { globeIcon } from '@voussoir/icon/icons/globeIcon';
-import { Icon } from '@voussoir/icon';
+import { globeIcon } from '@keystar-ui/icon/icons/globeIcon';
+import { Icon } from '@keystar-ui/icon';
 import { createRef, ReactElement } from 'react';
 
 import { Tooltip } from '../src';

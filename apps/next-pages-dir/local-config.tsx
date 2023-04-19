@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 
-import { ActionGroup, Item } from '@voussoir/action-group';
-import { ActionButton } from '@voussoir/button';
-import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
-import { checkCircle2Icon } from '@voussoir/icon/icons/checkCircle2Icon';
-import { infoIcon } from '@voussoir/icon/icons/infoIcon';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Icon } from '@voussoir/icon';
-import { Notice } from '@voussoir/notice';
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
-import { Text } from '@voussoir/typography';
-import { Flex } from '@voussoir/layout';
+import { ActionGroup, Item } from '@keystar-ui/action-group';
+import { ActionButton } from '@keystar-ui/button';
+import { alertTriangleIcon } from '@keystar-ui/icon/icons/alertTriangleIcon';
+import { checkCircle2Icon } from '@keystar-ui/icon/icons/checkCircle2Icon';
+import { infoIcon } from '@keystar-ui/icon/icons/infoIcon';
+import { trash2Icon } from '@keystar-ui/icon/icons/trash2Icon';
+import { Icon } from '@keystar-ui/icon';
+import { Notice } from '@keystar-ui/notice';
+import { Tooltip, TooltipTrigger } from '@keystar-ui/tooltip';
+import { Text } from '@keystar-ui/typography';
+import { Flex } from '@keystar-ui/layout';
 
 import {
   config,

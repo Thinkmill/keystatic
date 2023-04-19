@@ -12,10 +12,10 @@ import {
   tokenSchema,
   useStyleProps,
   SizeElement,
-} from '@voussoir/style';
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
-import { Text } from '@voussoir/typography';
-import { filterDOMProps } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { AriaLabellingProps, DOMProps } from '@keystar-ui/types';
+import { Text } from '@keystar-ui/typography';
+import { filterDOMProps } from '@keystar-ui/utils';
 
 export type AvatarProps = {
   /**

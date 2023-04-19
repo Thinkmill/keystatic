@@ -212,7 +212,7 @@ be used both within stylesheets and runtime code.
 [the Box primitive](#the-box-primitive).
 
 ```jsx
-import { css, tokenSchema } from '@voussoir/style';
+import { css, tokenSchema } from '@keystar-ui/style';
 
 function SomeComponent(props) {
   return (

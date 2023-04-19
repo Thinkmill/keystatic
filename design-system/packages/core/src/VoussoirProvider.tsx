@@ -2,18 +2,18 @@ import { createContext, HTMLAttributes, useContext } from 'react';
 import { I18nProvider, useLocale } from '@react-aria/i18n';
 import { ModalProvider, useModalProvider } from '@react-aria/overlays';
 
-import { DefaultLinkComponent, LinkComponentContext } from '@voussoir/link';
+import { DefaultLinkComponent, LinkComponentContext } from '@keystar-ui/link';
 import {
   BreakpointProvider,
   useMatchedBreakpoints,
   useStyleProps,
-} from '@voussoir/style';
-import { filterDOMProps } from '@voussoir/utils';
-import { SSRProvider } from '@voussoir/ssr';
+} from '@keystar-ui/style';
+import { filterDOMProps } from '@keystar-ui/utils';
+import { SSRProvider } from '@keystar-ui/ssr';
 
 import { useColorScheme, useScale } from './mediaQueries';
 import { VoussoirProviderContext, VoussoirProviderProps } from './types';
-import { forwardRefWithAs } from '@voussoir/utils/ts';
+import { forwardRefWithAs } from '@keystar-ui/utils/ts';
 import { documentElementClasses } from './globals';
 
 /** Consolidates core functionality and dependencies of the Voussoir component library. */

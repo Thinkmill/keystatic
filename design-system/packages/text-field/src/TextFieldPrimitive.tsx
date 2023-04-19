@@ -8,14 +8,14 @@ import {
 import { useHover } from '@react-aria/interactions';
 import { mergeProps, useObjectRef } from '@react-aria/utils';
 
-import { FieldPrimitive } from '@voussoir/field';
+import { FieldPrimitive } from '@keystar-ui/field';
 import {
   FocusRing,
   classNames,
   css,
   tokenSchema,
   transition,
-} from '@voussoir/style';
+} from '@keystar-ui/style';
 
 import { TextFieldPrimitiveProps } from './types';
 

@@ -1,4 +1,4 @@
-import { BaseStyleProps, useStyleProps } from '@voussoir/style';
+import { BaseStyleProps, useStyleProps } from '@keystar-ui/style';
 
 const PATHS = {
   chevronDown:

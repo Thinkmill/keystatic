@@ -1,7 +1,7 @@
-import { action, ArgTypes, storiesOf } from '@voussoir/storybook';
+import { action, ArgTypes, storiesOf } from '@keystar-ui/storybook';
 
-import { Grid } from '@voussoir/layout';
-import { Text } from '@voussoir/typography';
+import { Grid } from '@keystar-ui/layout';
+import { Text } from '@keystar-ui/typography';
 
 import { Checkbox, CheckboxProps } from '../src';
 

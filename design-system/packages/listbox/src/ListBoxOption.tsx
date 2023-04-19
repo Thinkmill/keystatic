@@ -8,8 +8,8 @@ import { mergeProps } from '@react-aria/utils';
 import { Node } from '@react-types/shared';
 import { useRef } from 'react';
 
-import { Text } from '@voussoir/typography';
-import { isReactText } from '@voussoir/utils';
+import { Text } from '@keystar-ui/typography';
+import { isReactText } from '@keystar-ui/utils';
 
 import { useListBoxContext } from './context';
 import { ListItem } from './ListItem';

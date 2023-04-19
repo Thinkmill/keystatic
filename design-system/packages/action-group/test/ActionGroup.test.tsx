@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { renderWithProvider } from '@voussoir/test-utils';
+import { renderWithProvider } from '@keystar-ui/test-utils';
 
 import { ActionGroup, Item } from '../src';
 

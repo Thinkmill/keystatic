@@ -7,7 +7,7 @@ import {
   FontSizeHeading,
   FontSizeText,
   FontWeight,
-} from '@voussoir/style';
+} from '@keystar-ui/style';
 
 import { DOMProps } from './dom';
 

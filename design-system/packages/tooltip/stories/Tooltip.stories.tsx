@@ -1,6 +1,6 @@
-import { storiesOf } from '@voussoir/storybook';
-import { Flex } from '@voussoir/layout';
-import { Kbd, Numeral, Text } from '@voussoir/typography';
+import { storiesOf } from '@keystar-ui/storybook';
+import { Flex } from '@keystar-ui/layout';
+import { Kbd, Numeral, Text } from '@keystar-ui/typography';
 
 import { Tooltip } from '../src';
 import { TooltipContext } from '../src/context';

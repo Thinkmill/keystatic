@@ -1,15 +1,15 @@
 import React, { SVGProps } from 'react';
 
-import { useSlotProps } from '@voussoir/slots';
+import { useSlotProps } from '@keystar-ui/slots';
 import {
   classNames,
   css,
   maybeTokenByKey,
   tokenSchema,
   useStyleProps,
-} from '@voussoir/style';
-import { IconProps } from '@voussoir/types';
-import { filterDOMProps, toDataAttributes } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { IconProps } from '@keystar-ui/types';
+import { filterDOMProps, toDataAttributes } from '@keystar-ui/utils';
 
 export const Icon = (props: IconProps) => {
   props = useSlotProps(props, 'icon');

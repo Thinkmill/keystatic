@@ -4,9 +4,9 @@ import {
   BoxStyleProps,
   filterStyleProps,
   useStyleProps,
-} from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
-import { forwardRefWithAs } from '@voussoir/utils/ts';
+} from '@keystar-ui/style';
+import { DOMProps } from '@keystar-ui/types';
+import { forwardRefWithAs } from '@keystar-ui/utils/ts';
 
 export type BoxProps = {
   children?: ReactNode;

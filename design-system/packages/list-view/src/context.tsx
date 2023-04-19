@@ -7,7 +7,7 @@ import { ListState } from '@react-stately/list';
 import { LoadingState } from '@react-types/shared';
 import { Key, createContext, useContext } from 'react';
 
-import { DragAndDropHooks } from '@voussoir/drag-and-drop';
+import { DragAndDropHooks } from '@keystar-ui/drag-and-drop';
 
 interface ListViewContextValue<T> {
   density: 'compact' | 'regular' | 'spacious';

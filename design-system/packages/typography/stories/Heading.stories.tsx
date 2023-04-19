@@ -1,5 +1,5 @@
-import { storiesOf } from '@voussoir/storybook';
-import { Grid } from '@voussoir/layout';
+import { storiesOf } from '@keystar-ui/storybook';
+import { Grid } from '@keystar-ui/layout';
 
 import { Heading } from '../src';
 

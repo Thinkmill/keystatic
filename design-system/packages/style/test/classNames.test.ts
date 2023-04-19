@@ -1,4 +1,4 @@
-import { classNames, resetClassName } from '@voussoir/style';
+import { classNames, resetClassName } from '@keystar-ui/style';
 
 describe('style/classNames', function () {
   it('includes the reset className, once', function () {

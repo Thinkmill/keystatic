@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 
-import { globeIcon } from '@voussoir/icon/icons/globeIcon';
-import { Icon } from '@voussoir/icon';
-import { renderWithProvider } from '@voussoir/test-utils';
+import { globeIcon } from '@keystar-ui/icon/icons/globeIcon';
+import { Icon } from '@keystar-ui/icon';
+import { renderWithProvider } from '@keystar-ui/test-utils';
 
 import { Badge } from '../src';
 

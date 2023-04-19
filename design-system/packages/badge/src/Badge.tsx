@@ -7,12 +7,12 @@ import {
   Ref,
 } from 'react';
 
-import { Flex } from '@voussoir/layout';
-import { SlotProvider } from '@voussoir/slots';
-import { BaseStyleProps, useStyleProps } from '@voussoir/style';
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
-import { Text } from '@voussoir/typography';
-import { filterDOMProps, isReactText } from '@voussoir/utils';
+import { Flex } from '@keystar-ui/layout';
+import { SlotProvider } from '@keystar-ui/slots';
+import { BaseStyleProps, useStyleProps } from '@keystar-ui/style';
+import { AriaLabellingProps, DOMProps } from '@keystar-ui/types';
+import { Text } from '@keystar-ui/typography';
+import { filterDOMProps, isReactText } from '@keystar-ui/utils';
 
 type BadgeTones =
   | 'accent'

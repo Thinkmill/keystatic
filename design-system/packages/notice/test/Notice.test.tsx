@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 
-import { Content } from '@voussoir/slots';
-import { Heading, Text } from '@voussoir/typography';
+import { Content } from '@keystar-ui/slots';
+import { Heading, Text } from '@keystar-ui/typography';
 
 import { Notice } from '../src';
 

@@ -5,9 +5,9 @@ import { useMenuTriggerState } from '@react-stately/menu';
 import { Placement } from '@react-types/overlays';
 import React, { ForwardedRef, forwardRef, Fragment, useRef } from 'react';
 
-import { Popover, Tray } from '@voussoir/overlays';
-import { SlotProvider } from '@voussoir/slots';
-import { tokenSchema, useIsMobileDevice } from '@voussoir/style';
+import { Popover, Tray } from '@keystar-ui/overlays';
+import { SlotProvider } from '@keystar-ui/slots';
+import { tokenSchema, useIsMobileDevice } from '@keystar-ui/style';
 
 import { MenuContext } from './context';
 import { MenuTriggerProps } from './types';

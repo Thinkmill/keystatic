@@ -1,13 +1,13 @@
 import { useRouter } from './router';
 import { FormEvent, useMemo, useState } from 'react';
 
-import { Badge } from '@voussoir/badge';
-import { Button, ButtonGroup } from '@voussoir/button';
-import { DialogContainer } from '@voussoir/dialog';
-import { Flex } from '@voussoir/layout';
-import { Notice } from '@voussoir/notice';
-import { ProgressCircle } from '@voussoir/progress';
-import { Heading, Text } from '@voussoir/typography';
+import { Badge } from '@keystar-ui/badge';
+import { Button, ButtonGroup } from '@keystar-ui/button';
+import { DialogContainer } from '@keystar-ui/dialog';
+import { Flex } from '@keystar-ui/layout';
+import { Notice } from '@keystar-ui/notice';
+import { ProgressCircle } from '@keystar-ui/progress';
+import { Heading, Text } from '@keystar-ui/typography';
 
 import { Config } from '../config';
 import { FormValueContentFromPreviewProps } from '../form/form-from-preview';
@@ -27,8 +27,8 @@ import { mergeDataStates } from './useData';
 import { useHasChanged } from './useHasChanged';
 import { useItemData } from './useItemData';
 import { useUpsertItem } from './updating';
-import { Icon } from '@voussoir/icon';
-import { refreshCwIcon } from '@voussoir/icon/icons/refreshCwIcon';
+import { Icon } from '@keystar-ui/icon';
+import { refreshCwIcon } from '@keystar-ui/icon/icons/refreshCwIcon';
 import { ForkRepoDialog } from './fork-repo';
 
 type SingletonPageProps = {

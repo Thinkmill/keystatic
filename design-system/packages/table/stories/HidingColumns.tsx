@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Checkbox } from '@voussoir/checkbox';
-import { Flex } from '@voussoir/layout';
+import { Checkbox } from '@keystar-ui/checkbox';
+import { Flex } from '@keystar-ui/layout';
 
 import {
   Cell,
@@ -10,8 +10,8 @@ import {
   TableBody,
   TableHeader,
   TableView,
-} from '@voussoir/table';
-import { Text } from '@voussoir/typography';
+} from '@keystar-ui/table';
+import { Text } from '@keystar-ui/typography';
 
 export function HidingColumns() {
   let [visibleColumns, setVisibleColumns] = React.useState(

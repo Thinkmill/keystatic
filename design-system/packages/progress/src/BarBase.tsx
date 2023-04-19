@@ -9,9 +9,9 @@ import {
   tokenSchema,
   transition,
   useStyleProps,
-} from '@voussoir/style';
-import { Text } from '@voussoir/typography';
-import { toDataAttributes } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
+import { toDataAttributes } from '@keystar-ui/utils';
 
 import { ProgressBarProps } from './types';
 

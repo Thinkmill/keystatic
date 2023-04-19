@@ -3,7 +3,7 @@ import { OverlayTriggerState } from '@react-stately/overlays';
 import { OverlayProps } from '@react-types/overlays';
 import { HTMLAttributes, ReactNode } from 'react';
 
-import { BaseStyleProps } from '@voussoir/style';
+import { BaseStyleProps } from '@keystar-ui/style';
 
 export type BlanketProps = {
   isOpen?: boolean;

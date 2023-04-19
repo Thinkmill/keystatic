@@ -1,10 +1,10 @@
 import { useSeparator } from '@react-aria/separator';
 
-import { useSlotProps } from '@voussoir/slots';
-import { css, classNames, useStyleProps, tokenSchema } from '@voussoir/style';
-import { DividerProps } from '@voussoir/types';
-import { filterDOMProps } from '@voussoir/utils';
-import { forwardRefWithAs } from '@voussoir/utils/ts';
+import { useSlotProps } from '@keystar-ui/slots';
+import { css, classNames, useStyleProps, tokenSchema } from '@keystar-ui/style';
+import { DividerProps } from '@keystar-ui/types';
+import { filterDOMProps } from '@keystar-ui/utils';
+import { forwardRefWithAs } from '@keystar-ui/utils/ts';
 
 /**
  * Dividers bring clarity to a layout by grouping and dividing content in close proximity.

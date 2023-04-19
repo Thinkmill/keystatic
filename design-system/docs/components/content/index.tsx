@@ -1,11 +1,11 @@
 'use client';
 import { HTMLAttributes, ReactNode, Fragment, useCallback } from 'react';
 
-import { ChevronEndIcon } from '@voussoir/icon';
-import { Box, Flex } from '@voussoir/layout';
-import { LinkComponentProps } from '@voussoir/link';
-import { css, tokenSchema } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
+import { ChevronEndIcon } from '@keystar-ui/icon';
+import { Box, Flex } from '@keystar-ui/layout';
+import { LinkComponentProps } from '@keystar-ui/link';
+import { css, tokenSchema } from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
 
 import { HeadingEntry } from '../../utils/generate-toc';
 import { ASIDE_WIDTH, HEADER_HEIGHT, SIDEBAR_WIDTH } from '../constants';

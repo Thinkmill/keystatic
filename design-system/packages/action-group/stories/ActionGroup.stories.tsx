@@ -1,28 +1,28 @@
-import { action, storiesOf } from '@voussoir/storybook';
+import { action, storiesOf } from '@keystar-ui/storybook';
 
-import { alignCenterIcon } from '@voussoir/icon/icons/alignCenterIcon';
-import { alignJustifyIcon } from '@voussoir/icon/icons/alignJustifyIcon';
-import { alignLeftIcon } from '@voussoir/icon/icons/alignLeftIcon';
-import { alignRightIcon } from '@voussoir/icon/icons/alignRightIcon';
-import { boldIcon } from '@voussoir/icon/icons/boldIcon';
-import { italicIcon } from '@voussoir/icon/icons/italicIcon';
-import { strikethroughIcon } from '@voussoir/icon/icons/strikethroughIcon';
-import { underlineIcon } from '@voussoir/icon/icons/underlineIcon';
-import { subscriptIcon } from '@voussoir/icon/icons/subscriptIcon';
-import { superscriptIcon } from '@voussoir/icon/icons/superscriptIcon';
-import { typeIcon } from '@voussoir/icon/icons/typeIcon';
-import { editIcon } from '@voussoir/icon/icons/editIcon';
-import { copyIcon } from '@voussoir/icon/icons/copyIcon';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { plusIcon } from '@voussoir/icon/icons/plusIcon';
-import { Icon } from '@voussoir/icon';
-import { Flex } from '@voussoir/layout';
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
-import { Kbd, Text } from '@voussoir/typography';
+import { alignCenterIcon } from '@keystar-ui/icon/icons/alignCenterIcon';
+import { alignJustifyIcon } from '@keystar-ui/icon/icons/alignJustifyIcon';
+import { alignLeftIcon } from '@keystar-ui/icon/icons/alignLeftIcon';
+import { alignRightIcon } from '@keystar-ui/icon/icons/alignRightIcon';
+import { boldIcon } from '@keystar-ui/icon/icons/boldIcon';
+import { italicIcon } from '@keystar-ui/icon/icons/italicIcon';
+import { strikethroughIcon } from '@keystar-ui/icon/icons/strikethroughIcon';
+import { underlineIcon } from '@keystar-ui/icon/icons/underlineIcon';
+import { subscriptIcon } from '@keystar-ui/icon/icons/subscriptIcon';
+import { superscriptIcon } from '@keystar-ui/icon/icons/superscriptIcon';
+import { typeIcon } from '@keystar-ui/icon/icons/typeIcon';
+import { editIcon } from '@keystar-ui/icon/icons/editIcon';
+import { copyIcon } from '@keystar-ui/icon/icons/copyIcon';
+import { trash2Icon } from '@keystar-ui/icon/icons/trash2Icon';
+import { plusIcon } from '@keystar-ui/icon/icons/plusIcon';
+import { Icon } from '@keystar-ui/icon';
+import { Flex } from '@keystar-ui/layout';
+import { Tooltip, TooltipTrigger } from '@keystar-ui/tooltip';
+import { Kbd, Text } from '@keystar-ui/typography';
 import { PropsWithChildren } from 'react';
 
 import { ActionGroup, ActionGroupProps, Item } from '../src';
-import { css } from '@voussoir/style';
+import { css } from '@keystar-ui/style';
 
 let onSelectionChange = action('onSelectionChange');
 const formattingItems = [

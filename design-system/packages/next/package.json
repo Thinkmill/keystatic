@@ -1,14 +1,14 @@
 {
-  "name": "@voussoir/next",
+  "name": "@keystar-ui/next",
   "version": "0.1.2",
   "description": "",
   "license": "MIT",
-  "main": "dist/voussoir-next.cjs.js",
-  "module": "dist/voussoir-next.esm.js",
+  "main": "dist/keystar-ui-next.cjs.js",
+  "module": "dist/keystar-ui-next.esm.js",
   "exports": {
     ".": {
-      "module": "./dist/voussoir-next.esm.js",
-      "default": "./dist/voussoir-next.cjs.js"
+      "module": "./dist/keystar-ui-next.esm.js",
+      "default": "./dist/keystar-ui-next.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -16,9 +16,9 @@
     "dist"
   ],
   "dependencies": {
-    "@voussoir/core": "^5.0.1",
-    "@voussoir/link": "^0.1.2",
-    "@voussoir/style": "^0.1.3"
+    "@keystar-ui/core": "^5.0.1",
+    "@keystar-ui/link": "^0.1.2",
+    "@keystar-ui/style": "^0.1.3"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",

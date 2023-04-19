@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-syringeIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-syringeIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-syringeIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-syringeIcon.esm.js"
 }

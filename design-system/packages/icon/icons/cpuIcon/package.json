@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-cpuIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-cpuIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-cpuIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-cpuIcon.esm.js"
 }

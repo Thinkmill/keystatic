@@ -1,17 +1,17 @@
 import { forwardRef, ReactNode, useMemo } from 'react';
 
-import { useLinkComponent } from '@voussoir/link';
-import { SlotProvider } from '@voussoir/slots';
+import { useLinkComponent } from '@keystar-ui/link';
+import { SlotProvider } from '@keystar-ui/slots';
 import {
   FocusRing,
   classNames,
   css,
   tokenSchema,
   transition,
-} from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
-import { Text } from '@voussoir/typography';
-import { filterDOMProps, isReactText } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { DOMProps } from '@keystar-ui/types';
+import { Text } from '@keystar-ui/typography';
+import { filterDOMProps, isReactText } from '@keystar-ui/utils';
 import { itemIndicatorGutter, itemIndicatorWidth } from './constants';
 
 export type NavItemProps = {

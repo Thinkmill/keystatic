@@ -11,4 +11,4 @@ export { Numeral } from './Numeral';
 export type { EmojiProps } from './Emoji';
 export type { KbdProps } from './Kbd';
 export type { NumeralProps } from './Numeral';
-export type { HeadingProps, TextProps } from '@voussoir/types';
+export type { HeadingProps, TextProps } from '@keystar-ui/types';

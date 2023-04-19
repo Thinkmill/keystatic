@@ -1,5 +1,5 @@
-import { Flex } from '@voussoir/layout';
-import { Heading, Text } from '@voussoir/typography';
+import { Flex } from '@keystar-ui/layout';
+import { Heading, Text } from '@keystar-ui/typography';
 import { useEffect } from 'react';
 import { GitHubConfig } from '../..';
 import cookie from 'cookie';

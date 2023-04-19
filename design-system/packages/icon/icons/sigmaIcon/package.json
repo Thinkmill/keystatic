@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-sigmaIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-sigmaIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-sigmaIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-sigmaIcon.esm.js"
 }

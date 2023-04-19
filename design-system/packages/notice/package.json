@@ -1,14 +1,14 @@
 {
-  "name": "@voussoir/notice",
+  "name": "@keystar-ui/notice",
   "version": "0.1.4",
   "description": "Use notices to highlight information that affects a section, feature or page. Draw attention without interrupting users from their current task.",
   "license": "MIT",
-  "main": "dist/voussoir-notice.cjs.js",
-  "module": "dist/voussoir-notice.esm.js",
+  "main": "dist/keystar-ui-notice.cjs.js",
+  "module": "dist/keystar-ui-notice.esm.js",
   "exports": {
     ".": {
-      "module": "./dist/voussoir-notice.esm.js",
-      "default": "./dist/voussoir-notice.cjs.js"
+      "module": "./dist/keystar-ui-notice.esm.js",
+      "default": "./dist/keystar-ui-notice.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -17,15 +17,15 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
+    "@keystar-ui/icon": "^0.2.0",
+    "@keystar-ui/layout": "^0.1.3",
+    "@keystar-ui/slots": "^0.1.2",
+    "@keystar-ui/ssr": "^0.2.1",
+    "@keystar-ui/style": "^0.1.5",
+    "@keystar-ui/types": "^0.1.1",
+    "@keystar-ui/typography": "^0.1.4",
+    "@keystar-ui/utils": "^2.0.2",
     "@react-aria/utils": "^3.14.2",
-    "@voussoir/icon": "^0.2.0",
-    "@voussoir/layout": "^0.1.3",
-    "@voussoir/slots": "^0.1.2",
-    "@voussoir/ssr": "^0.2.1",
-    "@voussoir/style": "^0.1.5",
-    "@voussoir/types": "^0.1.1",
-    "@voussoir/typography": "^0.1.4",
-    "@voussoir/utils": "^2.0.2",
     "emery": "^1.4.1"
   },
   "devDependencies": {

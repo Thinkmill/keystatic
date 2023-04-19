@@ -6,14 +6,14 @@ import {
 } from '@react-types/shared';
 import { ReactNode } from 'react';
 
-import { BaseStyleProps } from '@voussoir/style';
+import { BaseStyleProps } from '@keystar-ui/style';
 import {
   AnchorDOMProps,
   AriaLabellingProps,
   DOMProps,
   Orientation,
   PartialRequired,
-} from '@voussoir/types';
+} from '@keystar-ui/types';
 
 export type ButtonProminence = 'default' | 'high' | 'low';
 export type ButtonTone = 'neutral' | 'accent' | 'critical';

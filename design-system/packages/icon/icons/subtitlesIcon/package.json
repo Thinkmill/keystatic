@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-subtitlesIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-subtitlesIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-subtitlesIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-subtitlesIcon.esm.js"
 }

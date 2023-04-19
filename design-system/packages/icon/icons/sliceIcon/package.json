@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-sliceIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-sliceIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-sliceIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-sliceIcon.esm.js"
 }

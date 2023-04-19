@@ -1,18 +1,18 @@
 {
-  "name": "@voussoir/utils",
+  "name": "@keystar-ui/utils",
   "version": "2.0.2",
   "description": "Utility hooks, types, and components for Voussoir.",
   "license": "MIT",
-  "main": "dist/voussoir-utils.cjs.js",
-  "module": "dist/voussoir-utils.esm.js",
+  "main": "dist/keystar-ui-utils.cjs.js",
+  "module": "dist/keystar-ui-utils.esm.js",
   "exports": {
     ".": {
-      "module": "./dist/voussoir-utils.esm.js",
-      "default": "./dist/voussoir-utils.cjs.js"
+      "module": "./dist/keystar-ui-utils.esm.js",
+      "default": "./dist/keystar-ui-utils.cjs.js"
     },
     "./ts": {
-      "module": "./ts/dist/voussoir-utils-ts.esm.js",
-      "default": "./ts/dist/voussoir-utils-ts.cjs.js"
+      "module": "./ts/dist/keystar-ui-utils-ts.esm.js",
+      "default": "./ts/dist/keystar-ui-utils-ts.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -22,11 +22,11 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
+    "@keystar-ui/style": "^0.1.3",
+    "@keystar-ui/types": "^0.1.1",
     "@react-aria/focus": "^3.10.0",
     "@react-aria/utils": "^3.14.2",
     "@react-aria/visually-hidden": "^3.6.1",
-    "@voussoir/style": "^0.1.3",
-    "@voussoir/types": "^0.1.1",
     "emery": "^1.4.1",
     "react-keyed-flatten-children": "^1.3.0"
   },

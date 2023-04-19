@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-gaugeIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-gaugeIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-gaugeIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-gaugeIcon.esm.js"
 }

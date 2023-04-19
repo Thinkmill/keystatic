@@ -1,13 +1,13 @@
 import '@testing-library/jest-dom';
 
-import { Button } from '@voussoir/button';
+import { Button } from '@keystar-ui/button';
 import {
   act,
   fireEvent,
   firePress,
   renderWithProvider,
   within,
-} from '@voussoir/test-utils';
+} from '@keystar-ui/test-utils';
 
 import { ListView, Item } from '../src';
 

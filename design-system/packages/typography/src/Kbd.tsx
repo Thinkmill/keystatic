@@ -10,10 +10,10 @@ import {
   useSyncExternalStore,
 } from 'react';
 
-import { useSlotProps } from '@voussoir/slots';
-import { BaseStyleProps, css } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
-import { filterDOMProps } from '@voussoir/utils';
+import { useSlotProps } from '@keystar-ui/slots';
+import { BaseStyleProps, css } from '@keystar-ui/style';
+import { DOMProps } from '@keystar-ui/types';
+import { filterDOMProps } from '@keystar-ui/utils';
 
 import { useTextStyles } from './text';
 

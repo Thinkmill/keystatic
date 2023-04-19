@@ -1,12 +1,12 @@
-import { action, storiesOf } from '@voussoir/storybook';
+import { action, storiesOf } from '@keystar-ui/storybook';
 
-import { Icon } from '@voussoir/icon';
-import { bookmarkIcon } from '@voussoir/icon/icons/bookmarkIcon';
-import { calendarIcon } from '@voussoir/icon/icons/calendarIcon';
-import { gaugeIcon } from '@voussoir/icon/icons/gaugeIcon';
-import { Divider, Flex } from '@voussoir/layout';
-import { tokenSchema } from '@voussoir/style';
-import { Heading, Text } from '@voussoir/typography';
+import { Icon } from '@keystar-ui/icon';
+import { bookmarkIcon } from '@keystar-ui/icon/icons/bookmarkIcon';
+import { calendarIcon } from '@keystar-ui/icon/icons/calendarIcon';
+import { gaugeIcon } from '@keystar-ui/icon/icons/gaugeIcon';
+import { Divider, Flex } from '@keystar-ui/layout';
+import { tokenSchema } from '@keystar-ui/style';
+import { Heading, Text } from '@keystar-ui/typography';
 import { useState } from 'react';
 
 import { Item, TabList, TabPanels, Tabs, TabsProps } from '../src';

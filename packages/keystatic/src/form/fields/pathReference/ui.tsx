@@ -1,5 +1,5 @@
 'use client';
-import { Combobox, Item } from '@voussoir/combobox';
+import { Combobox, Item } from '@keystar-ui/combobox';
 import { filter } from 'minimatch';
 import { useReducer, useMemo, useState, useEffect } from 'react';
 import { useTree } from '../../../app/shell/data';

@@ -19,13 +19,13 @@ import {
   Ref,
 } from 'react';
 
-import { ActionButton } from '@voussoir/button';
-import { useProviderProps } from '@voussoir/core';
-import { Icon } from '@voussoir/icon';
-import { folderClosedIcon } from '@voussoir/icon/icons/folderClosedIcon';
-import { folderOpenIcon } from '@voussoir/icon/icons/folderOpenIcon';
-import { Menu, MenuTrigger } from '@voussoir/menu';
-import { classNames, css, tokenSchema, useStyleProps } from '@voussoir/style';
+import { ActionButton } from '@keystar-ui/button';
+import { useProviderProps } from '@keystar-ui/core';
+import { Icon } from '@keystar-ui/icon';
+import { folderClosedIcon } from '@keystar-ui/icon/icons/folderClosedIcon';
+import { folderOpenIcon } from '@keystar-ui/icon/icons/folderOpenIcon';
+import { Menu, MenuTrigger } from '@keystar-ui/menu';
+import { classNames, css, tokenSchema, useStyleProps } from '@keystar-ui/style';
 
 import { BreadcrumbItem, breadcrumbsClassList } from './BreadcrumbItem';
 import { BreadcrumbsProps } from './types';

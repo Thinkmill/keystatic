@@ -1,7 +1,7 @@
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import { ReactElement, StrictMode } from 'react';
 
-import { TestProvider } from '@voussoir/core';
+import { TestProvider } from '@keystar-ui/core';
 
 export function renderWithProvider(
   ui: ReactElement,

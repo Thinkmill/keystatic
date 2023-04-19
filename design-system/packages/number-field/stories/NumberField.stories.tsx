@@ -1,8 +1,8 @@
 import { chain } from '@react-aria/utils';
-import { action, storiesOf } from '@voussoir/storybook';
+import { action, storiesOf } from '@keystar-ui/storybook';
 import { useState } from 'react';
 
-import { Button } from '@voussoir/button';
+import { Button } from '@keystar-ui/button';
 
 import { NumberField, NumberFieldProps } from '../src';
 

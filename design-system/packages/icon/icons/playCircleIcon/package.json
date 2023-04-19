@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-playCircleIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-playCircleIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-playCircleIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-playCircleIcon.esm.js"
 }

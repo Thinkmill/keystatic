@@ -1,8 +1,8 @@
 import { AriaRadioGroupProps, AriaRadioProps } from '@react-aria/radio';
 import { ReactNode } from 'react';
 
-import { FieldProps } from '@voussoir/field';
-import { BaseStyleProps } from '@voussoir/style';
+import { FieldProps } from '@keystar-ui/field';
+import { BaseStyleProps } from '@keystar-ui/style';
 
 export type RadioProps = AriaRadioProps & BaseStyleProps;
 

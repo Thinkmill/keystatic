@@ -3,7 +3,7 @@ import {
   IconProps,
   HeadingProps,
   TextProps,
-} from '@voussoir/types';
+} from '@keystar-ui/types';
 import { ReactNode } from 'react';
 
 export type HTMLTag = keyof JSX.IntrinsicElements & keyof HTMLElementTagNameMap;

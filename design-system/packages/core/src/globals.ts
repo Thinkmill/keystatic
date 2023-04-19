@@ -4,10 +4,10 @@ import {
   resetClassName,
   tokenSchema,
   VoussoirTheme,
-} from '@voussoir/style';
+} from '@keystar-ui/style';
 
 import { cssCustomProperties } from './cssCustomProperties';
-import { ColorScheme, ScaleScheme } from '@voussoir/types';
+import { ColorScheme, ScaleScheme } from '@keystar-ui/types';
 
 type StrictBackground = keyof VoussoirTheme['color']['background'];
 

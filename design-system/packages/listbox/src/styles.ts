@@ -1,4 +1,4 @@
-import { css, tokenSchema } from '@voussoir/style';
+import { css, tokenSchema } from '@keystar-ui/style';
 
 export const listStyles = css({
   borderRadius: 'inherit',

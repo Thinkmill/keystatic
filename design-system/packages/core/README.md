@@ -1,3 +1,3 @@
-# @voussoir/core
+# @keystar-ui/core
 
 Core functions and components for the Voussoir design system.

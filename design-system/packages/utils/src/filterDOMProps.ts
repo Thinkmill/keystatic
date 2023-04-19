@@ -1,4 +1,4 @@
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
+import { AriaLabellingProps, DOMProps } from '@keystar-ui/types';
 
 const defaultPropNames = new Set(['aria-hidden', 'id', 'title', 'form']);
 const labellingPropNames = new Set([

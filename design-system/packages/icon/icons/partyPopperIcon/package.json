@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-partyPopperIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-partyPopperIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-partyPopperIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-partyPopperIcon.esm.js"
 }

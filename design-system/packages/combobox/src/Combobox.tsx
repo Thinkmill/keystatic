@@ -20,27 +20,27 @@ import React, {
   useState,
 } from 'react';
 
-import { FieldButton } from '@voussoir/button';
-import { useProvider, useProviderProps } from '@voussoir/core';
-import { FieldPrimitive } from '@voussoir/field';
-import { Icon } from '@voussoir/icon';
-import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { Flex } from '@voussoir/layout';
-import { ListBoxBase, listStyles, useListBoxLayout } from '@voussoir/listbox';
-import { Popover } from '@voussoir/overlays';
-import { ProgressCircle } from '@voussoir/progress';
+import { FieldButton } from '@keystar-ui/button';
+import { useProvider, useProviderProps } from '@keystar-ui/core';
+import { FieldPrimitive } from '@keystar-ui/field';
+import { Icon } from '@keystar-ui/icon';
+import { chevronDownIcon } from '@keystar-ui/icon/icons/chevronDownIcon';
+import { Flex } from '@keystar-ui/layout';
+import { ListBoxBase, listStyles, useListBoxLayout } from '@keystar-ui/listbox';
+import { Popover } from '@keystar-ui/overlays';
+import { ProgressCircle } from '@keystar-ui/progress';
 import {
   ClassList,
   FocusRing,
   css,
   tokenSchema,
   useIsMobileDevice,
-} from '@voussoir/style';
+} from '@keystar-ui/style';
 import {
   TextFieldPrimitive,
   validateTextFieldProps,
-} from '@voussoir/text-field';
-import { Text } from '@voussoir/typography';
+} from '@keystar-ui/text-field';
+import { Text } from '@keystar-ui/typography';
 
 import localizedMessages from '../l10n.json';
 

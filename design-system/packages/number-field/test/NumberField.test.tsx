@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { firePress, renderWithProvider } from '@voussoir/test-utils';
+import { firePress, renderWithProvider } from '@keystar-ui/test-utils';
 import userEvent from '@testing-library/user-event';
 
 import { NumberField, NumberFieldProps } from '../src';

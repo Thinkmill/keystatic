@@ -1,8 +1,8 @@
 import { AriaSelectProps } from '@react-types/select';
-import { ActionButtonProps } from '@voussoir/button';
+import { ActionButtonProps } from '@keystar-ui/button';
 
-import { FieldProps } from '@voussoir/field';
-import { BaseStyleProps } from '@voussoir/style';
+import { FieldProps } from '@keystar-ui/field';
+import { BaseStyleProps } from '@keystar-ui/style';
 
 export type PickerProps<T> = {
   /**

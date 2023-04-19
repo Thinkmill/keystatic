@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-facebookIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-facebookIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-facebookIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-facebookIcon.esm.js"
 }

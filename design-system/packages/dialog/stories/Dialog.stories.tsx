@@ -1,9 +1,9 @@
-import { storiesOf } from '@voussoir/storybook';
+import { storiesOf } from '@keystar-ui/storybook';
 
-import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
-import { Flex } from '@voussoir/layout';
-import { Content, Footer, Header } from '@voussoir/slots';
-import { Heading, Text } from '@voussoir/typography';
+import { ActionButton, Button, ButtonGroup } from '@keystar-ui/button';
+import { Flex } from '@keystar-ui/layout';
+import { Content, Footer, Header } from '@keystar-ui/slots';
+import { Heading, Text } from '@keystar-ui/typography';
 import { ReactElement } from 'react';
 
 import { Dialog, DialogProps, DialogTrigger } from '../src';

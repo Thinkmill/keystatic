@@ -1,4 +1,4 @@
-# @voussoir/field
+# @keystar-ui/field
 
 The `Field` component associates a form control with a label, and an optional
 description and/or error message. This is useful for providing context about how

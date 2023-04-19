@@ -2,16 +2,16 @@ import { useMemo } from 'react';
 import { Editor } from 'slate';
 import { RenderElementProps, useSelected } from 'slate-react';
 
-import { ActionButton } from '@voussoir/button';
-import { Box } from '@voussoir/layout';
-import { css, tokenSchema } from '@voussoir/style';
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
-import { Text, Kbd } from '@voussoir/typography';
+import { ActionButton } from '@keystar-ui/button';
+import { Box } from '@keystar-ui/layout';
+import { css, tokenSchema } from '@keystar-ui/style';
+import { Tooltip, TooltipTrigger } from '@keystar-ui/tooltip';
+import { Text, Kbd } from '@keystar-ui/typography';
 
 import { useToolbarState } from './toolbar-state';
 import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from './ui-utils';
-import { Icon } from '@voussoir/icon';
-import { minusIcon } from '@voussoir/icon/icons/minusIcon';
+import { Icon } from '@keystar-ui/icon';
+import { minusIcon } from '@keystar-ui/icon/icons/minusIcon';
 
 export function insertDivider(editor: Editor) {
   insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading(editor, {

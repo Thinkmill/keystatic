@@ -9,10 +9,10 @@ import { useNumberField } from '@react-aria/numberfield';
 import { useObjectRef } from '@react-aria/utils';
 import { useNumberFieldState } from '@react-stately/numberfield';
 
-import { useProvider, useProviderProps } from '@voussoir/core';
-import { css, tokenSchema } from '@voussoir/style';
-import { TextFieldPrimitive } from '@voussoir/text-field';
-import { filterDOMProps, toDataAttributes } from '@voussoir/utils';
+import { useProvider, useProviderProps } from '@keystar-ui/core';
+import { css, tokenSchema } from '@keystar-ui/style';
+import { TextFieldPrimitive } from '@keystar-ui/text-field';
+import { filterDOMProps, toDataAttributes } from '@keystar-ui/utils';
 
 import { StepButton } from './StepButton';
 import { NumberFieldProps } from './types';

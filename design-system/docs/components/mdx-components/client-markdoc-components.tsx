@@ -1,7 +1,7 @@
 'use client';
-import { Box, Flex } from '@voussoir/layout';
-import { css, tokenSchema } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
+import { Box, Flex } from '@keystar-ui/layout';
+import { css, tokenSchema } from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
 import { ReactNode, createContext, HTMLAttributes, useContext } from 'react';
 
 export function Article(props: { children: ReactNode }) {

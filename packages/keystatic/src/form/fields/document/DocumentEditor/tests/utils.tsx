@@ -9,7 +9,7 @@ import { createDocumentEditor, DocumentEditorEditable } from '..';
 import { ComponentBlock } from '../../../../api';
 import { DocumentFeatures } from '../document-features';
 import { createToolbarState, ToolbarStateProvider } from '../toolbar-state';
-import { VoussoirProvider } from '@voussoir/core';
+import { VoussoirProvider } from '@keystar-ui/core';
 import { normaliseDocumentFeatures } from '../..';
 
 export { __jsx as jsx } from './jsx/namespace';

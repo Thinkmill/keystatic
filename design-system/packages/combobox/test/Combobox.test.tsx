@@ -7,7 +7,7 @@ import {
   fireEvent,
   firePress,
   renderWithProvider,
-} from '@voussoir/test-utils';
+} from '@keystar-ui/test-utils';
 
 import { Combobox, Item } from '../src';
 

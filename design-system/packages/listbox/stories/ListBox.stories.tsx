@@ -1,15 +1,15 @@
 import { useAsyncList } from '@react-stately/data';
-import { action, storiesOf } from '@voussoir/storybook';
-import { alignCenterVerticalIcon } from '@voussoir/icon/icons/alignCenterVerticalIcon';
-import { alignStartVerticalIcon } from '@voussoir/icon/icons/alignStartVerticalIcon';
-import { alignEndVerticalIcon } from '@voussoir/icon/icons/alignEndVerticalIcon';
-import { copyIcon } from '@voussoir/icon/icons/copyIcon';
-import { clipboardCopyIcon } from '@voussoir/icon/icons/clipboardCopyIcon';
-import { scissorsIcon } from '@voussoir/icon/icons/scissorsIcon';
-import { Icon } from '@voussoir/icon';
+import { action, storiesOf } from '@keystar-ui/storybook';
+import { alignCenterVerticalIcon } from '@keystar-ui/icon/icons/alignCenterVerticalIcon';
+import { alignStartVerticalIcon } from '@keystar-ui/icon/icons/alignStartVerticalIcon';
+import { alignEndVerticalIcon } from '@keystar-ui/icon/icons/alignEndVerticalIcon';
+import { copyIcon } from '@keystar-ui/icon/icons/copyIcon';
+import { clipboardCopyIcon } from '@keystar-ui/icon/icons/clipboardCopyIcon';
+import { scissorsIcon } from '@keystar-ui/icon/icons/scissorsIcon';
+import { Icon } from '@keystar-ui/icon';
 
-import { Flex } from '@voussoir/layout';
-import { Kbd, Text } from '@voussoir/typography';
+import { Flex } from '@keystar-ui/layout';
+import { Kbd, Text } from '@keystar-ui/typography';
 
 import { Item, ListBox, Section } from '../src';
 

@@ -1,10 +1,10 @@
 import { GridNode } from '@react-types/grid';
 
-import { Flex, Grid } from '@voussoir/layout';
-import { SlotProvider } from '@voussoir/slots';
-import { classNames, css, tokenSchema } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
-import { isReactText, toDataAttributes } from '@voussoir/utils';
+import { Flex, Grid } from '@keystar-ui/layout';
+import { SlotProvider } from '@keystar-ui/slots';
+import { classNames, css, tokenSchema } from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
+import { isReactText, toDataAttributes } from '@keystar-ui/utils';
 
 import type { ListViewProps } from './types';
 

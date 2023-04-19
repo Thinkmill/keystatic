@@ -1,4 +1,4 @@
-import { VoussoirTheme } from '@voussoir/style';
+import { VoussoirTheme } from '@keystar-ui/style';
 
 type FontDefinition = VoussoirTheme['fontsize']['text']['medium']; // 'medium' is arbitrary, we just want the shape
 /**

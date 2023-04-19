@@ -5,8 +5,8 @@ import {
 } from '@react-aria/tooltip';
 import { PositionProps } from '@react-types/overlays';
 
-import { BaseStyleProps } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
+import { BaseStyleProps } from '@keystar-ui/style';
+import { DOMProps } from '@keystar-ui/types';
 
 export type TooltipProps = {
   /** The content to display within the tooltip. */

@@ -7,8 +7,8 @@ import {
   TextareaHTMLAttributes,
 } from 'react';
 
-import { FieldProps } from '@voussoir/field';
-import { Conditional, TextInputDOMProps, ValueBase } from '@voussoir/types';
+import { FieldProps } from '@keystar-ui/field';
+import { Conditional, TextInputDOMProps, ValueBase } from '@keystar-ui/types';
 
 export type TextFieldPrimitiveProps = TextFieldProps & {
   /**

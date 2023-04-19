@@ -1,6 +1,6 @@
 import { warning } from 'emery';
 
-import { validateFieldProps } from '@voussoir/field';
+import { validateFieldProps } from '@keystar-ui/field';
 
 import { TextFieldProps } from './types';
 

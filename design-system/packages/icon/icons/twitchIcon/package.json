@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-twitchIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-twitchIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-twitchIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-twitchIcon.esm.js"
 }

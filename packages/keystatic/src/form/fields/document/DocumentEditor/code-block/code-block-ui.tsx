@@ -4,15 +4,15 @@ import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 import { Item } from '@react-stately/collections';
 import { matchSorter } from 'match-sorter';
 
-import { ActionButton } from '@voussoir/button';
-import { Combobox } from '@voussoir/combobox';
-import { codeIcon } from '@voussoir/icon/icons/codeIcon';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Icon } from '@voussoir/icon';
-import { Flex } from '@voussoir/layout';
-import { css, tokenSchema } from '@voussoir/style';
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
-import { Kbd, Text } from '@voussoir/typography';
+import { ActionButton } from '@keystar-ui/button';
+import { Combobox } from '@keystar-ui/combobox';
+import { codeIcon } from '@keystar-ui/icon/icons/codeIcon';
+import { trash2Icon } from '@keystar-ui/icon/icons/trash2Icon';
+import { Icon } from '@keystar-ui/icon';
+import { Flex } from '@keystar-ui/layout';
+import { css, tokenSchema } from '@keystar-ui/style';
+import { Tooltip, TooltipTrigger } from '@keystar-ui/tooltip';
+import { Kbd, Text } from '@keystar-ui/typography';
 
 import { useDocumentEditorConfig, useToolbarState } from '../toolbar-state';
 import {

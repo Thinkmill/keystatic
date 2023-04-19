@@ -1,10 +1,10 @@
-import { storiesOf } from '@voussoir/storybook';
-import { Icon } from '@voussoir/icon';
-import { homeIcon } from '@voussoir/icon/icons/homeIcon';
-import { mailsIcon } from '@voussoir/icon/icons/mailsIcon';
-import { tagIcon } from '@voussoir/icon/icons/tagIcon';
-import { Box, Divider } from '@voussoir/layout';
-import { Emoji, Text } from '@voussoir/typography';
+import { storiesOf } from '@keystar-ui/storybook';
+import { Icon } from '@keystar-ui/icon';
+import { homeIcon } from '@keystar-ui/icon/icons/homeIcon';
+import { mailsIcon } from '@keystar-ui/icon/icons/mailsIcon';
+import { tagIcon } from '@keystar-ui/icon/icons/tagIcon';
+import { Box, Divider } from '@keystar-ui/layout';
+import { Emoji, Text } from '@keystar-ui/typography';
 
 import { NavList, NavGroup, NavItem } from '../src';
 

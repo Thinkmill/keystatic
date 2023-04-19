@@ -1,7 +1,7 @@
 'use client';
 
-import { cache } from '@voussoir/style';
-import { VoussoirProvider, VoussoirProviderProps } from '@voussoir/core';
+import { cache } from '@keystar-ui/style';
+import { VoussoirProvider, VoussoirProviderProps } from '@keystar-ui/core';
 import { useServerInsertedHTML } from 'next/navigation';
 import { forwardRef, ForwardRefExoticComponent, Ref, useRef } from 'react';
 import { UniversalNextLink } from './UniversalNextLink';

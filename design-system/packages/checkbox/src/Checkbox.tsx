@@ -2,10 +2,10 @@ import { useCheckbox, useCheckboxGroupItem } from '@react-aria/checkbox';
 import { useToggleState } from '@react-stately/toggle';
 import { HTMLAttributes, useContext, useMemo, useRef } from 'react';
 
-import { Icon } from '@voussoir/icon';
-import { checkIcon } from '@voussoir/icon/icons/checkIcon';
-import { minusIcon } from '@voussoir/icon/icons/minusIcon';
-import { SlotProvider } from '@voussoir/slots';
+import { Icon } from '@keystar-ui/icon';
+import { checkIcon } from '@keystar-ui/icon/icons/checkIcon';
+import { minusIcon } from '@keystar-ui/icon/icons/minusIcon';
+import { SlotProvider } from '@keystar-ui/slots';
 import {
   FocusRing,
   classNames,
@@ -13,9 +13,9 @@ import {
   tokenSchema,
   transition,
   useStyleProps,
-} from '@voussoir/style';
-import { Text } from '@voussoir/typography';
-import { isReactText } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
+import { isReactText } from '@keystar-ui/utils';
 
 import { CheckboxProps } from './types';
 import { CheckboxGroupContext } from './context';

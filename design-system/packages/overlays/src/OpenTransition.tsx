@@ -1,7 +1,7 @@
 import { Children, ReactNode } from 'react';
 import Transition, { TransitionProps } from 'react-transition-group/Transition';
 
-import { cloneValidElement } from '@voussoir/utils';
+import { cloneValidElement } from '@keystar-ui/utils';
 
 export type OpenTransitionProps = Omit<TransitionProps, 'children'> & {
   children: ReactNode;

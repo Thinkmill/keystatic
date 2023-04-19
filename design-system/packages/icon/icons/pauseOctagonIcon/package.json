@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-pauseOctagonIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-pauseOctagonIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-pauseOctagonIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-pauseOctagonIcon.esm.js"
 }

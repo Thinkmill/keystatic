@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-drumstickIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-drumstickIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-drumstickIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-drumstickIcon.esm.js"
 }

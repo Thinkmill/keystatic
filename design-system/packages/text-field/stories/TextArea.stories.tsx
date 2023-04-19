@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { action, storiesOf, Parameters } from '@voussoir/storybook';
-import { Grid } from '@voussoir/layout';
+import { action, storiesOf, Parameters } from '@keystar-ui/storybook';
+import { Grid } from '@keystar-ui/layout';
 
 import { TextArea } from '../src';
 

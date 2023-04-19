@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { FontSizeHeading } from '@voussoir/style';
+import { FontSizeHeading } from '@keystar-ui/style';
 
 type HeadingContextType = { size: FontSizeHeading };
 

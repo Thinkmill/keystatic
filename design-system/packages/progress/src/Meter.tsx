@@ -1,6 +1,6 @@
 import { useMeter } from '@react-aria/meter';
-import { css, tokenSchema } from '@voussoir/style';
-import { toDataAttributes } from '@voussoir/utils';
+import { css, tokenSchema } from '@keystar-ui/style';
+import { toDataAttributes } from '@keystar-ui/utils';
 import { ForwardedRef, forwardRef } from 'react';
 
 import { BarBase } from './BarBase';

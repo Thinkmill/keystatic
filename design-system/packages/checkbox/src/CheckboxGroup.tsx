@@ -6,13 +6,13 @@ import React, {
   forwardRef,
 } from 'react';
 
-import { useProviderProps } from '@voussoir/core';
-import { FieldPrimitive, validateFieldProps } from '@voussoir/field';
-import { classNames, css, tokenSchema } from '@voussoir/style';
+import { useProviderProps } from '@keystar-ui/core';
+import { FieldPrimitive, validateFieldProps } from '@keystar-ui/field';
+import { classNames, css, tokenSchema } from '@keystar-ui/style';
 
 import { CheckboxGroupContext } from './context';
 import { CheckboxGroupProps } from './types';
-import { toDataAttributes } from '@voussoir/utils';
+import { toDataAttributes } from '@keystar-ui/utils';
 
 /**
  * A checkbox group allows users to select one or more items from a list of

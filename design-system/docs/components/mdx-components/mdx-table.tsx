@@ -1,7 +1,7 @@
 'use client';
-import { Box, BoxProps } from '@voussoir/layout';
-import { css } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
+import { Box, BoxProps } from '@keystar-ui/layout';
+import { css } from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
 
 export function MdxTable({ children, ...rest }: BoxProps): JSX.Element {
   return (

@@ -17,10 +17,10 @@ import {
   VoussoirProvider,
   useProvider,
   useProviderProps,
-} from '@voussoir/core';
-import { useSlotProps } from '@voussoir/slots';
-import { classNames, css, tokenSchema, useStyleProps } from '@voussoir/style';
-import { filterDOMProps, toDataAttributes } from '@voussoir/utils';
+} from '@keystar-ui/core';
+import { useSlotProps } from '@keystar-ui/slots';
+import { classNames, css, tokenSchema, useStyleProps } from '@keystar-ui/style';
+import { filterDOMProps, toDataAttributes } from '@keystar-ui/utils';
 
 import { ButtonGroupProps } from './types';
 

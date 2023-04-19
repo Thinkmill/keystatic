@@ -1,15 +1,15 @@
-import { action, ArgTypes, storiesOf } from '@voussoir/storybook';
+import { action, ArgTypes, storiesOf } from '@keystar-ui/storybook';
 
 import { Item, Menu, MenuTrigger, Section } from '../src';
-import { alignCenterVerticalIcon } from '@voussoir/icon/icons/alignCenterVerticalIcon';
-import { alignStartVerticalIcon } from '@voussoir/icon/icons/alignStartVerticalIcon';
-import { alignEndVerticalIcon } from '@voussoir/icon/icons/alignEndVerticalIcon';
-import { globeIcon } from '@voussoir/icon/icons/globeIcon';
-import { boldIcon } from '@voussoir/icon/icons/boldIcon';
-import { italicIcon } from '@voussoir/icon/icons/italicIcon';
-import { Icon } from '@voussoir/icon';
-import { Kbd, Text } from '@voussoir/typography';
-import { ActionButton } from '@voussoir/button';
+import { alignCenterVerticalIcon } from '@keystar-ui/icon/icons/alignCenterVerticalIcon';
+import { alignStartVerticalIcon } from '@keystar-ui/icon/icons/alignStartVerticalIcon';
+import { alignEndVerticalIcon } from '@keystar-ui/icon/icons/alignEndVerticalIcon';
+import { globeIcon } from '@keystar-ui/icon/icons/globeIcon';
+import { boldIcon } from '@keystar-ui/icon/icons/boldIcon';
+import { italicIcon } from '@keystar-ui/icon/icons/italicIcon';
+import { Icon } from '@keystar-ui/icon';
+import { Kbd, Text } from '@keystar-ui/typography';
+import { ActionButton } from '@keystar-ui/button';
 import { cloneElement } from 'react';
 
 let iconMap = {

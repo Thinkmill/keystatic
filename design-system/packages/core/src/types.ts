@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 
-import { LinkComponent } from '@voussoir/link';
-import { RootStyleProps, VoussoirTheme } from '@voussoir/style';
-import { ColorScheme, Emphasis, ScaleScheme } from '@voussoir/types';
+import { LinkComponent } from '@keystar-ui/link';
+import { RootStyleProps, VoussoirTheme } from '@keystar-ui/style';
+import { ColorScheme, Emphasis, ScaleScheme } from '@keystar-ui/types';
 
 type VoussoirContextProps = {
   /** Whether descendants should be displayed with the emphasized style. */

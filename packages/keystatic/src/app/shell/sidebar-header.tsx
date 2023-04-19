@@ -4,14 +4,14 @@ import { gql } from '@ts-gql/tag/no-transform';
 import { ReactElement, useContext, useMemo, useReducer } from 'react';
 import { useMutation } from 'urql';
 
-import { AlertDialog, DialogContainer } from '@voussoir/dialog';
-import { Icon } from '@voussoir/icon';
-import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
-import { gitBranchPlusIcon } from '@voussoir/icon/icons/gitBranchPlusIcon';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Flex } from '@voussoir/layout';
-import { ActionMenu } from '@voussoir/menu';
-import { Text } from '@voussoir/typography';
+import { AlertDialog, DialogContainer } from '@keystar-ui/dialog';
+import { Icon } from '@keystar-ui/icon';
+import { externalLinkIcon } from '@keystar-ui/icon/icons/externalLinkIcon';
+import { gitBranchPlusIcon } from '@keystar-ui/icon/icons/gitBranchPlusIcon';
+import { trash2Icon } from '@keystar-ui/icon/icons/trash2Icon';
+import { Flex } from '@keystar-ui/layout';
+import { ActionMenu } from '@keystar-ui/menu';
+import { Text } from '@keystar-ui/typography';
 
 import { useRouter } from '../router';
 import { BranchPicker, CreateBranchDialog } from '../branch-selection';

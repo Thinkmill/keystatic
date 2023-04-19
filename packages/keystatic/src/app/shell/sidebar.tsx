@@ -9,16 +9,16 @@ import {
   useState,
 } from 'react';
 
-import { Badge } from '@voussoir/badge';
-import { ActionButton } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { Image } from '@voussoir/image';
-import { Flex } from '@voussoir/layout';
-import { MenuTrigger, Menu } from '@voussoir/menu';
-import { NavList, NavItem, NavGroup } from '@voussoir/nav-list';
-import { css, breakpointQueries, tokenSchema } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
+import { Badge } from '@keystar-ui/badge';
+import { ActionButton } from '@keystar-ui/button';
+import { Icon } from '@keystar-ui/icon';
+import { chevronDownIcon } from '@keystar-ui/icon/icons/chevronDownIcon';
+import { Image } from '@keystar-ui/image';
+import { Flex } from '@keystar-ui/layout';
+import { MenuTrigger, Menu } from '@keystar-ui/menu';
+import { NavList, NavItem, NavGroup } from '@keystar-ui/nav-list';
+import { css, breakpointQueries, tokenSchema } from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
 
 import { CloudConfig, Config, GitHubConfig } from '../../config';
 

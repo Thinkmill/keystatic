@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-flashlightIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-flashlightIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-flashlightIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-flashlightIcon.esm.js"
 }

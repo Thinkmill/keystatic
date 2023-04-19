@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 
-import { globeIcon } from '@voussoir/icon/icons/globeIcon';
-import { Icon } from '@voussoir/icon';
+import { globeIcon } from '@keystar-ui/icon/icons/globeIcon';
+import { Icon } from '@keystar-ui/icon';
 import {
   act,
   fireEvent,
@@ -9,8 +9,8 @@ import {
   KEYS,
   render,
   within,
-} from '@voussoir/test-utils';
-import { Kbd, Text } from '@voussoir/typography';
+} from '@keystar-ui/test-utils';
+import { Kbd, Text } from '@keystar-ui/typography';
 
 import { Item, Menu, MenuProps, Section } from '../src';
 

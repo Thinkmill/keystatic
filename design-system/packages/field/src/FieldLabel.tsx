@@ -1,9 +1,9 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { AllHTMLAttributes } from 'react';
 
-import { css, tokenSchema } from '@voussoir/style';
-import { useTextStyles } from '@voussoir/typography';
-import { forwardRefWithAs } from '@voussoir/utils/ts';
+import { css, tokenSchema } from '@keystar-ui/style';
+import { useTextStyles } from '@keystar-ui/typography';
+import { forwardRefWithAs } from '@keystar-ui/utils/ts';
 
 import localizedMessages from '../l10n.json';
 

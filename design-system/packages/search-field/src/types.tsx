@@ -1,4 +1,4 @@
-import { TextFieldProps } from '@voussoir/text-field';
+import { TextFieldProps } from '@keystar-ui/text-field';
 
 export type SearchFieldProps = {
   /** Handler that is called when the field is submitted. */

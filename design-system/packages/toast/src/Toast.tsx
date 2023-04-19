@@ -3,24 +3,24 @@ import { useToast } from '@react-aria/toast';
 import { useObjectRef } from '@react-aria/utils';
 import { ForwardedRef, forwardRef, useMemo } from 'react';
 
-import { Button, ClearButton } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { checkCircle2Icon } from '@voussoir/icon/icons/checkCircle2Icon';
-import { infoIcon } from '@voussoir/icon/icons/infoIcon';
-import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
+import { Button, ClearButton } from '@keystar-ui/button';
+import { Icon } from '@keystar-ui/icon';
+import { checkCircle2Icon } from '@keystar-ui/icon/icons/checkCircle2Icon';
+import { infoIcon } from '@keystar-ui/icon/icons/infoIcon';
+import { alertTriangleIcon } from '@keystar-ui/icon/icons/alertTriangleIcon';
 import {
   classNames,
   css,
   keyframes,
   tokenSchema,
   useStyleProps,
-} from '@voussoir/style';
-import { Text } from '@voussoir/typography';
-import { isReactText } from '@voussoir/utils';
+} from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
+import { isReactText } from '@keystar-ui/utils';
 
 import intlMessages from '../l10n.json';
 import { ToastProps } from './types';
-import { SlotProvider } from '@voussoir/slots';
+import { SlotProvider } from '@keystar-ui/slots';
 
 const ICONS = {
   info: infoIcon,

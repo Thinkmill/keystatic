@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import {
   ClientSideOnlyDocumentElement,
   VoussoirProvider,
-} from '@voussoir/core';
+} from '@keystar-ui/core';
 
 export default function FrameComponent({
   children,

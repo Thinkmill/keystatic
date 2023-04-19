@@ -1,14 +1,14 @@
 {
-  "name": "@voussoir/core",
+  "name": "@keystar-ui/core",
   "version": "5.0.1",
   "description": "",
   "license": "MIT",
-  "main": "dist/voussoir-core.cjs.js",
-  "module": "dist/voussoir-core.esm.js",
+  "main": "dist/keystar-ui-core.cjs.js",
+  "module": "dist/keystar-ui-core.esm.js",
   "exports": {
     ".": {
-      "module": "./dist/voussoir-core.esm.js",
-      "default": "./dist/voussoir-core.cjs.js"
+      "module": "./dist/keystar-ui-core.esm.js",
+      "default": "./dist/keystar-ui-core.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -17,13 +17,13 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
+    "@keystar-ui/link": "^0.1.2",
+    "@keystar-ui/ssr": "^0.2.1",
+    "@keystar-ui/style": "^0.1.3",
+    "@keystar-ui/types": "^0.1.1",
+    "@keystar-ui/utils": "^2.0.2",
     "@react-aria/i18n": "^3.6.2",
     "@react-aria/overlays": "^3.12.0",
-    "@voussoir/link": "^0.1.2",
-    "@voussoir/ssr": "^0.2.1",
-    "@voussoir/style": "^0.1.3",
-    "@voussoir/types": "^0.1.1",
-    "@voussoir/utils": "^2.0.2",
     "assert": "^2.0.0",
     "dedent": "^0.7.0",
     "emery": "^1.4.1"

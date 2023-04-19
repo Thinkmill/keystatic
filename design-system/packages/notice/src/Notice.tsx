@@ -1,21 +1,21 @@
 import { useSlotId } from '@react-aria/utils';
 import { ReactNode, useMemo, useRef } from 'react';
 
-import { checkCircle2Icon } from '@voussoir/icon/icons/checkCircle2Icon';
-import { infoIcon } from '@voussoir/icon/icons/infoIcon';
-import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
-import { Icon } from '@voussoir/icon';
-import { Grid, minmax } from '@voussoir/layout';
-import { Content, SlotProvider } from '@voussoir/slots';
-import { filterDOMProps, isReactText, useHasChild } from '@voussoir/utils';
-import { DOMProps } from '@voussoir/types';
+import { checkCircle2Icon } from '@keystar-ui/icon/icons/checkCircle2Icon';
+import { infoIcon } from '@keystar-ui/icon/icons/infoIcon';
+import { alertTriangleIcon } from '@keystar-ui/icon/icons/alertTriangleIcon';
+import { Icon } from '@keystar-ui/icon';
+import { Grid, minmax } from '@keystar-ui/layout';
+import { Content, SlotProvider } from '@keystar-ui/slots';
+import { filterDOMProps, isReactText, useHasChild } from '@keystar-ui/utils';
+import { DOMProps } from '@keystar-ui/types';
 import {
   BaseStyleProps,
   css,
   tokenSchema,
   useStyleProps,
-} from '@voussoir/style';
-import { Text } from '@voussoir/typography';
+} from '@keystar-ui/style';
+import { Text } from '@keystar-ui/typography';
 
 const toneToIcon = {
   caution: alertTriangleIcon,

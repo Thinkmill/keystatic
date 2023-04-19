@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-rocketIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-rocketIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-rocketIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-rocketIcon.esm.js"
 }

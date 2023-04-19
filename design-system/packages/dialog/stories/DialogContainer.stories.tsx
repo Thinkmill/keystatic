@@ -1,10 +1,10 @@
 import { chain } from '@react-aria/utils';
-import { action, storiesOf } from '@voussoir/storybook';
+import { action, storiesOf } from '@keystar-ui/storybook';
 import { useReducer } from 'react';
 
-import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
-import { Content, Header } from '@voussoir/slots';
-import { Heading, Text } from '@voussoir/typography';
+import { ActionButton, Button, ButtonGroup } from '@keystar-ui/button';
+import { Content, Header } from '@keystar-ui/slots';
+import { Heading, Text } from '@keystar-ui/typography';
 
 import {
   Dialog,

@@ -1,4 +1,4 @@
 {
-  "main": "dist/voussoir-icon-icons-helpingHandIcon.cjs.js",
-  "module": "dist/voussoir-icon-icons-helpingHandIcon.esm.js"
+  "main": "dist/keystar-ui-icon-icons-helpingHandIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-helpingHandIcon.esm.js"
 }
