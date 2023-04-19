@@ -56,18 +56,18 @@ storiesOf('Components/Typography/Text', module)
     <Flex direction="column" gap="medium" width="scale.2400">
       <Box border="neutral" padding="regular">
         <Text overflow="unset">
-          <strong>Unset</strong> KeystoneVoussoirComponentLibrary {getPangram()}
+          <strong>Unset</strong> KeystoneKeystarUIComponentLibrary {getPangram()}
         </Text>
       </Box>
       <Box border="neutral" padding="regular">
         <Text overflow="nowrap">
-          <strong>Nowrap</strong> KeystoneVoussoirComponentLibrary{' '}
+          <strong>Nowrap</strong> KeystoneKeystarUIComponentLibrary{' '}
           {getPangram()}
         </Text>
       </Box>
       <Box border="neutral" padding="regular">
         <Text overflow="breakword">
-          <strong>Breakword (default)</strong> KeystoneVoussoirComponentLibrary{' '}
+          <strong>Breakword (default)</strong> KeystoneKeystarUIComponentLibrary{' '}
           {getPangram()}
         </Text>
       </Box>

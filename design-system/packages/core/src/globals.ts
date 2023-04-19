@@ -3,13 +3,13 @@ import {
   injectGlobal,
   resetClassName,
   tokenSchema,
-  VoussoirTheme,
+  KeystarUITheme,
 } from '@keystar-ui/style';
 
 import { cssCustomProperties } from './cssCustomProperties';
 import { ColorScheme, ScaleScheme } from '@keystar-ui/types';
 
-type StrictBackground = keyof VoussoirTheme['color']['background'];
+type StrictBackground = keyof KeystarUITheme['color']['background'];
 
 export const documentElementClasses = (args: {
   bodyBackground?: StrictBackground;

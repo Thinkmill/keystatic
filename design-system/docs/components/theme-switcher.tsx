@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 
 import { Button } from '@keystar-ui/button';
-import { VoussoirProviderProps } from '@keystar-ui/core';
-import { RootVoussoirProvider } from '@keystar-ui/next';
+import { KeystarUIProviderProps } from '@keystar-ui/core';
+import { RootKeystarUIProvider } from '@keystar-ui/next';
 import { moonIcon } from '@keystar-ui/icon/icons/moonIcon';
 import { sunIcon } from '@keystar-ui/icon/icons/sunIcon';
 import { Icon } from '@keystar-ui/icon';
@@ -12,14 +12,14 @@ import { css, useMediaQuery } from '@keystar-ui/style';
 export function ThemeProvider({
   children,
   ...otherProps
-}: Omit<VoussoirProviderProps, 'colorScheme' | 'linkComponent'> & {
+}: Omit<KeystarUIProviderProps, 'colorScheme' | 'linkComponent'> & {
   fontClassName: string;
 }) {
   const colorScheme = useCurrentColorScheme();
   return (
-    <RootVoussoirProvider {...otherProps} colorScheme={colorScheme}>
+    <RootKeystarUIProvider {...otherProps} colorScheme={colorScheme}>
       {children}
-    </RootVoussoirProvider>
+    </RootKeystarUIProvider>
   );
 }
 

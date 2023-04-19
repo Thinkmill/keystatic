@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
 
 import { LinkComponent } from '@keystar-ui/link';
-import { RootStyleProps, VoussoirTheme } from '@keystar-ui/style';
+import { RootStyleProps, KeystarUITheme } from '@keystar-ui/style';
 import { ColorScheme, Emphasis, ScaleScheme } from '@keystar-ui/types';
 
-type VoussoirContextProps = {
+type KeystarUIContextProps = {
   /** Whether descendants should be displayed with the emphasized style. */
   emphasis?: Emphasis;
   /** Whether descendants should be disabled. */
@@ -17,13 +17,13 @@ type VoussoirContextProps = {
   // validationState?: ValidationState;
 };
 
-export type VoussoirProviderProps = {
+export type KeystarUIProviderProps = {
   /** The content of the Provider. */
   children: ReactNode;
   /**
    * The theme for your application.
    */
-  // theme?: VoussoirTheme;
+  // theme?: KeystarUITheme;
   /**
    * The color scheme for your application.
    * Defaults to operating system preferences.
@@ -51,13 +51,13 @@ export type VoussoirProviderProps = {
   linkComponent?: LinkComponent;
 
   /**
-   * The background color of the body element. This will only have an effect if the `VoussoirProvider` is rendered as the `html` element.
+   * The background color of the body element. This will only have an effect if the `KeystarUIProvider` is rendered as the `html` element.
    */
-  bodyBackground?: keyof VoussoirTheme['color']['background'];
-} & VoussoirContextProps &
+  bodyBackground?: keyof KeystarUITheme['color']['background'];
+} & KeystarUIContextProps &
   RootStyleProps;
 
-export type VoussoirProviderContext = {
+export type KeystarUIProviderContext = {
   /**
    * The package version number of the nearest parent Provider.
    */
@@ -65,7 +65,7 @@ export type VoussoirProviderContext = {
   /**
    * The theme of the nearest parent Provider.
    */
-  // theme: VoussoirTheme;
+  // theme: KeystarUITheme;
   /**
    * The color scheme of the nearest parent Provider.
    */
@@ -74,4 +74,4 @@ export type VoussoirProviderContext = {
    * The scale of the nearest parent Provider.
    */
   scale: ScaleScheme;
-} & VoussoirContextProps;
+} & KeystarUIContextProps;

@@ -2,8 +2,8 @@ import { cx, ClassNamesArg } from '@emotion/css';
 import { warning } from 'emery';
 
 export const classNamePrefix = 'ksv';
-export const resetClassName = voussoirClassName('reset');
-export function voussoirClassName(className: string) {
+export const resetClassName = keystarUIClassName('reset');
+export function keystarUIClassName(className: string) {
   return `${classNamePrefix}:${className}`;
 }
 
@@ -31,7 +31,7 @@ export class ClassList extends Map {
 
   constructor(componentName: string) {
     super();
-    this.prefix = voussoirClassName(componentName);
+    this.prefix = keystarUIClassName(componentName);
   }
 
   root() {

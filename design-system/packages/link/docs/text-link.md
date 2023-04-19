@@ -54,4 +54,4 @@ When no `href` is provided, the component is rendered as a `button` element.
 
 This component renders a native anchor element by default, which
 [can be customised](/package/link/link-component) via the `"linkComponent"` prop
-on the `VoussoirProvider`.
+on the `KeystarUIProvider`.

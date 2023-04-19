@@ -6,7 +6,7 @@ import LinkTo from '@storybook/addon-links/react';
 
 import {
   ClientSideOnlyDocumentElement,
-  VoussoirProvider,
+  KeystarUIProvider,
 } from '@keystar-ui/core';
 import { makeLinkComponent } from '@keystar-ui/link';
 
@@ -52,7 +52,7 @@ function ProviderUpdater(props) {
   const Wrapper = props.options.mainElement == null ? 'main' : Fragment;
 
   return (
-    <VoussoirProvider
+    <KeystarUIProvider
       linkComponent={StorybookLink}
       colorScheme={useDarkMode() ? 'dark' : 'light'}
       scale={scaleValue}
@@ -64,7 +64,7 @@ function ProviderUpdater(props) {
       />
       <ClientSideOnlyDocumentElement />
       <Wrapper>{storyReady && props.children}</Wrapper>
-    </VoussoirProvider>
+    </KeystarUIProvider>
   );
 }
 

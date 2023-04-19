@@ -1,10 +1,10 @@
-import { VoussoirTheme } from '@keystar-ui/style';
+import { KeystarUITheme } from '@keystar-ui/style';
 import { useLayoutEffect } from 'react';
 import { documentElementClasses } from './globals';
-import { useProvider } from './VoussoirProvider';
+import { useProvider } from './KeystarUIProvider';
 
 export function ClientSideOnlyDocumentElement(props: {
-  bodyBackground?: keyof VoussoirTheme['color']['background'];
+  bodyBackground?: keyof KeystarUITheme['color']['background'];
 }) {
   const context = useProvider();
   const classes = documentElementClasses({

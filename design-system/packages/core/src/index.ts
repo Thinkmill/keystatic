@@ -1,10 +1,10 @@
 export {
-  VoussoirProvider,
+  KeystarUIProvider,
   useProvider,
   useProviderProps,
-} from './VoussoirProvider';
+} from './KeystarUIProvider';
 export { ClientSideOnlyDocumentElement } from './ClientSideOnlyDocumentElement';
 export { documentElementClasses } from './globals';
 export { TestProvider } from './TestProvider';
 
-export type { VoussoirProviderProps } from './types';
+export type { KeystarUIProviderProps } from './types';

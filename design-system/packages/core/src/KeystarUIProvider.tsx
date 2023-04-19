@@ -12,13 +12,13 @@ import { filterDOMProps } from '@keystar-ui/utils';
 import { SSRProvider } from '@keystar-ui/ssr';
 
 import { useColorScheme, useScale } from './mediaQueries';
-import { VoussoirProviderContext, VoussoirProviderProps } from './types';
+import { KeystarUIProviderContext, KeystarUIProviderProps } from './types';
 import { forwardRefWithAs } from '@keystar-ui/utils/ts';
 import { documentElementClasses } from './globals';
 
-/** Consolidates core functionality and dependencies of the Voussoir component library. */
-export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
-  function VoussoirProvider(props, forwardedRef) {
+/** Consolidates core functionality and dependencies of the Keystar UI component library. */
+export const KeystarUIProvider = forwardRefWithAs<KeystarUIProviderProps, 'div'>(
+  function KeystarUIProvider(props, forwardedRef) {
     let prevContext = useContext(Context);
     let prevColorScheme = prevContext && prevContext.colorScheme;
 
@@ -103,7 +103,7 @@ export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
 );
 
 const ProviderWrapper = forwardRefWithAs<
-  VoussoirProviderProps & HTMLAttributes<HTMLElement>,
+  KeystarUIProviderProps & HTMLAttributes<HTMLElement>,
   'div'
 >(function ProviderWrapper(props, forwardedRef) {
   let { children, style } = props;
@@ -133,7 +133,7 @@ const ProviderWrapper = forwardRefWithAs<
 
 // Context
 
-const Context = createContext<VoussoirProviderContext | null>(null);
+const Context = createContext<KeystarUIProviderContext | null>(null);
 Context.displayName = 'ProviderContext';
 
 /**
@@ -141,10 +141,10 @@ Context.displayName = 'ProviderContext';
  * Provider. Properties explicitly set by the nearest parent Provider override
  * those provided by preceeding Providers.
  */
-export function useProvider(): VoussoirProviderContext {
+export function useProvider(): KeystarUIProviderContext {
   let context = useContext(Context);
   if (!context) {
-    throw new Error('Attempt to access context outside of VoussoirProvider.');
+    throw new Error('Attempt to access context outside of KeystarUIProvider.');
   }
   return context;
 }

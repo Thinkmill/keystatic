@@ -1,2 +1,2 @@
-export { RootVoussoirProvider } from './RootVoussoirProvider';
+export { RootKeystarUIProvider } from './RootKeystarUIProvider';
 export { mediaQueryOnlyColorSchemeScaleScript } from './script';

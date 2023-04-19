@@ -1,1 +1,1 @@
-export { VoussoirProvider as TestProvider } from './VoussoirProvider';
+export { KeystarUIProvider as TestProvider } from './KeystarUIProvider';

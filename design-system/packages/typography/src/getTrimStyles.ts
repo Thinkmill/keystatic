@@ -1,6 +1,6 @@
-import { VoussoirTheme } from '@keystar-ui/style';
+import { KeystarUITheme } from '@keystar-ui/style';
 
-type FontDefinition = VoussoirTheme['fontsize']['text']['medium']; // 'medium' is arbitrary, we just want the shape
+type FontDefinition = KeystarUITheme['fontsize']['text']['medium']; // 'medium' is arbitrary, we just want the shape
 /**
  * Using [capsize](https://seek-oss.github.io/capsize/), get the leading-trim
  * styles for a text element.

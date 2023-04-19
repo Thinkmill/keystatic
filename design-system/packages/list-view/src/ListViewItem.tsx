@@ -19,7 +19,7 @@ import { assert } from 'emery';
 import React, { useRef } from 'react';
 
 import { Checkbox } from '@keystar-ui/checkbox';
-import { VoussoirProvider } from '@keystar-ui/core';
+import { KeystarUIProvider } from '@keystar-ui/core';
 import { Icon } from '@keystar-ui/icon';
 import { chevronLeftIcon } from '@keystar-ui/icon/icons/chevronLeftIcon';
 import { chevronRightIcon } from '@keystar-ui/icon/icons/chevronRightIcon';
@@ -214,7 +214,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
     item.rendered
   );
   if (isDisabled) {
-    content = <VoussoirProvider isDisabled>{content}</VoussoirProvider>;
+    content = <KeystarUIProvider isDisabled>{content}</KeystarUIProvider>;
   }
 
   return (

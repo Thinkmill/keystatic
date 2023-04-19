@@ -9,7 +9,7 @@ import {
 import { alertCircleIcon } from '@keystar-ui/icon/icons/alertCircleIcon';
 import { Icon } from '@keystar-ui/icon';
 import { Box, BoxProps, Flex } from '@keystar-ui/layout';
-import { VoussoirTheme, css, transition } from '@keystar-ui/style';
+import { KeystarUITheme, css, transition } from '@keystar-ui/style';
 import { Heading, Text } from '@keystar-ui/typography';
 
 import { Config } from '../../config';
@@ -133,7 +133,7 @@ export const AppShellBody = ({ children }: PropsWithChildren) => {
 };
 
 type AppShellContextValue = {
-  containerWidth: keyof VoussoirTheme['size']['container'];
+  containerWidth: keyof KeystarUITheme['size']['container'];
 };
 const AppShellContext = createContext<AppShellContextValue>({
   containerWidth: 'medium',

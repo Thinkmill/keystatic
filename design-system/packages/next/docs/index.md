@@ -1,18 +1,18 @@
 ---
 title: Next.js
-description: Utilities for integrating Voussoir with Next.js's `app` directory.
+description: Utilities for integrating Keystar UI with Next.js's `app` directory.
 category: Introduction
 ---
 
 > `@keystar-ui/next` only works with Next.js's `app` directory. It does not work
 > with the `pages` directory.
 
-## RootVoussoirProvider
+## RootKeystarUIProvider
 
-The `RootVoussoirProvider` exported from `@keystar-ui/next` should be rendered as
+The `RootKeystarUIProvider` exported from `@keystar-ui/next` should be rendered as
 the `html` element in your root `layout` file to make server rendering styles
-work properly. If you need another `VoussoirProvider` in your tree, you should
-use the normal `VoussoirProvider` exported from `@keystar-ui/core`.
+work properly. If you need another `KeystarUIProvider` in your tree, you should
+use the normal `KeystarUIProvider` exported from `@keystar-ui/core`.
 
 ## `mediaQueryOnlyColorSchemeScaleScript`
 
@@ -27,7 +27,7 @@ change the color scheme or scale, you should write your own script instead.
 ```tsx
 // app/layout.tsx
 import {
-  RootVoussoirProvider,
+  RootKeystarUIProvider,
   mediaQueryOnlyColorSchemeScaleScript,
 } from '@keystar-ui/next';
 import { Inter } from 'next/font/google';
@@ -40,10 +40,10 @@ const inter = Inter({
 
 export default function Layout(props: { children: ReactNode }) {
   return (
-    <RootVoussoirProvider fontClassName={inter.variable}>
+    <RootKeystarUIProvider fontClassName={inter.variable}>
       <head>{mediaQueryOnlyColorSchemeScaleScript}</head>
       <body>{props.children}</body>
-    </RootVoussoirProvider>
+    </RootKeystarUIProvider>
   );
 }
 ```

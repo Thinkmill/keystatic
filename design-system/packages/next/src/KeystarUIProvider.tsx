@@ -1,7 +1,7 @@
 'use client';
 
 import { cache } from '@keystar-ui/style';
-import { VoussoirProvider, VoussoirProviderProps } from '@keystar-ui/core';
+import { KeystarUIProvider, KeystarUIProviderProps } from '@keystar-ui/core';
 import { useServerInsertedHTML } from 'next/navigation';
 import { forwardRef, ForwardRefExoticComponent, Ref, useRef } from 'react';
 import { UniversalNextLink } from './UniversalNextLink';
@@ -19,9 +19,9 @@ cache.insert = (...args) => {
   return prevInsert(...args);
 };
 
-export const RootVoussoirProvider: ForwardRefExoticComponent<
-  VoussoirProviderProps & { fontClassName: string; ref?: Ref<HTMLHtmlElement> }
-> = forwardRef(function RootVoussoirProvider(props, ref) {
+export const RootKeystarUIProvider: ForwardRefExoticComponent<
+  KeystarUIProviderProps & { fontClassName: string; ref?: Ref<HTMLHtmlElement> }
+> = forwardRef(function RootKeystarUIProvider(props, ref) {
   const lastIndexRef = useRef(0);
 
   useServerInsertedHTML(() => {
@@ -43,7 +43,7 @@ export const RootVoussoirProvider: ForwardRefExoticComponent<
     );
   });
   return (
-    <VoussoirProvider
+    <KeystarUIProvider
       {...props}
       UNSAFE_className={`${props.fontClassName}${
         props.UNSAFE_className ? ` ${props.UNSAFE_className}` : ''

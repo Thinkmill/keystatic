@@ -5,7 +5,7 @@ Links are used for taking users from one page to another.
 ## useLinkComponent
 
 Returns an anchor element (`a`) by default, or the custom `linkComponent`
-implementation that was provided via `VoussoirProvider`.
+implementation that was provided via `KeystarUIProvider`.
 
 ## TextLink
 

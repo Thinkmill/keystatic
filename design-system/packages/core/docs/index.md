@@ -1,6 +1,6 @@
 ---
 title: Core
-description: Core functions and components for Voussoir.
+description: Core functions and components for Keystar UI.
 category: Introduction
 ---
 
@@ -17,11 +17,11 @@ const [colorScheme, toggleScheme] = React.useReducer(
 );
 
 return (
-  <VoussoirProvider colorScheme={colorScheme}>
+  <KeystarUIProvider colorScheme={colorScheme}>
     <Button onPress={toggleScheme} aria-pressed={colorScheme === 'dark'}>
       Dark
     </Button>
     <Text>Test</Text>
-  </VoussoirProvider>
+  </KeystarUIProvider>
 );
 ```

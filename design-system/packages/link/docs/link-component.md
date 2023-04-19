@@ -7,7 +7,7 @@ category: Navigation
 
 ## Provider
 
-The `linkComponent` prop allows you to customise the rendering of Voussoir links
+The `linkComponent` prop allows you to customise the rendering of Keystar UI links
 (e.g. [TextLink](/package/link/text-link), [NavItem](/package/nav-list)) across
 an entire application. This is useful for conditionally rendering React Router
 links, handling analytics, etc.
@@ -19,7 +19,7 @@ to function properly.
 ```jsx
 import React from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
-import { VoussoirProvider } from '@keystar-ui/core';
+import { KeystarUIProvider } from '@keystar-ui/core';
 import { makeLinkComponent } from '@keystar-ui/link';
 
 // First create your custom link:
@@ -33,7 +33,7 @@ const CustomLink = makeLinkComponent(({ href, ...otherProps }, ref) => {
 
 // Then pass it to the provider:
 export const App = () => (
-  <VoussoirProvider linkComponent={CustomLink}>...</VoussoirProvider>
+  <KeystarUIProvider linkComponent={CustomLink}>...</KeystarUIProvider>
 );
 ```
 

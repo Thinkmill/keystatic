@@ -1,6 +1,6 @@
 import {
   ClientSideOnlyDocumentElement,
-  VoussoirProvider,
+  KeystarUIProvider,
 } from '@keystar-ui/core';
 import { makeLinkComponent } from '@keystar-ui/link';
 import { Toaster } from '@keystar-ui/toast';
@@ -227,7 +227,7 @@ export default function Provider({
     [Link]
   );
   return (
-    <VoussoirProvider linkComponent={UniversalLink}>
+    <KeystarUIProvider linkComponent={UniversalLink}>
       <ClientSideOnlyDocumentElement bodyBackground="surface" />
       <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
@@ -237,6 +237,6 @@ export default function Provider({
         {children}
       </UrqlProvider>
       <Toaster />
-    </VoussoirProvider>
+    </KeystarUIProvider>
   );
 }

@@ -18,12 +18,12 @@ export type StyleResolverMap = Record<string, [StyleTarget, StyleResolver]>;
 // THEME
 // ============================================================================
 
-export type VoussoirTheme = typeof tokenSchema;
+export type KeystarUITheme = typeof tokenSchema;
 
 // TODO: should sub-types be derived here?
 
 // bad idea???
-type ColorAliases = `color.alias.${keyof VoussoirTheme['color']['alias']}`;
+type ColorAliases = `color.alias.${keyof KeystarUITheme['color']['alias']}`;
 type KeysStartingWith<
   Keys,
   Prefix extends string
@@ -36,33 +36,33 @@ type BackgroundAliases = KeysStartingWith<
 type BorderAliases = KeysStartingWith<ColorAliases, 'color.alias.border'>;
 // type ForegroundAliases = KeysStartingWith<ColorAliases, 'color.alias.foreground'>;
 
-export type AnimationDuration = keyof VoussoirTheme['animation']['duration'];
-export type AnimationEasing = keyof VoussoirTheme['animation']['easing'];
+export type AnimationDuration = keyof KeystarUITheme['animation']['duration'];
+export type AnimationEasing = keyof KeystarUITheme['animation']['easing'];
 
 export type ColorBackground =
-  | keyof VoussoirTheme['color']['background']
+  | keyof KeystarUITheme['color']['background']
   | BackgroundAliases;
 export type ColorBorder =
-  | keyof VoussoirTheme['color']['border']
+  | keyof KeystarUITheme['color']['border']
   | BorderAliases;
 export type ColorForeground =
-  | keyof VoussoirTheme['color']['foreground']
+  | keyof KeystarUITheme['color']['foreground']
   | ColorAliases;
-export type ColorShadow = keyof VoussoirTheme['color']['shadow'];
+export type ColorShadow = keyof KeystarUITheme['color']['shadow'];
 
-export type FontFamily = keyof VoussoirTheme['typography']['fontFamily'];
-export type FontWeight = keyof VoussoirTheme['typography']['fontWeight'];
-export type FontSizeHeading = keyof VoussoirTheme['fontsize']['heading'];
-export type FontSizeText = keyof VoussoirTheme['fontsize']['text'];
+export type FontFamily = keyof KeystarUITheme['typography']['fontFamily'];
+export type FontWeight = keyof KeystarUITheme['typography']['fontWeight'];
+export type FontSizeHeading = keyof KeystarUITheme['fontsize']['heading'];
+export type FontSizeText = keyof KeystarUITheme['fontsize']['text'];
 
-export type SizeBorder = keyof VoussoirTheme['size']['border'];
-export type SizeElement = keyof VoussoirTheme['size']['element'];
-export type SizeIcon = keyof VoussoirTheme['size']['icon'];
-export type SizeRadius = keyof VoussoirTheme['size']['radius'];
-export type SizeShadow = keyof VoussoirTheme['size']['shadow'];
-export type SizeSpace = keyof VoussoirTheme['size']['space'];
+export type SizeBorder = keyof KeystarUITheme['size']['border'];
+export type SizeElement = keyof KeystarUITheme['size']['element'];
+export type SizeIcon = keyof KeystarUITheme['size']['icon'];
+export type SizeRadius = keyof KeystarUITheme['size']['radius'];
+export type SizeShadow = keyof KeystarUITheme['size']['shadow'];
+export type SizeSpace = keyof KeystarUITheme['size']['space'];
 
-type Sizes = VoussoirTheme['size'];
+type Sizes = KeystarUITheme['size'];
 export type DimensionKey =
   | `alias.${keyof Sizes['alias']}`
   | `border.${keyof Sizes['border']}`
