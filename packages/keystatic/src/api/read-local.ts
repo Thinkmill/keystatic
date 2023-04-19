@@ -4,11 +4,11 @@ import {
   getCollectionPath,
   getSingletonFormat,
   getSingletonPath,
-} from '../../app/path-utils';
+} from '../app/path-utils';
 import { updateTreeWithChanges, blobSha } from './trees-server-side';
-import { Config } from '../../config';
-import { getDirectoriesForTreeKey } from '../../app/tree-key';
-import { fields } from '../../DocumentEditor/component-blocks/api';
+import { Config } from '../config';
+import { getDirectoriesForTreeKey } from '../app/tree-key';
+import { fields } from '../form/api';
 import ignore from 'ignore';
 
 async function readDirEntries(dir: string) {

@@ -1,4 +1,4 @@
-import { TreeEntry } from '../app/trees';
+import { TreeEntry } from '../src/app/trees';
 import { readToDirEntries } from '../src/api/read-local';
 import { testdir } from './test-utils';
 

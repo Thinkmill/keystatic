@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.92
+
+### Patch Changes
+
+- 5dff1df: Allow `defaultValue` to be a function in `fields.text`
+
 ## 0.0.91
 
 ### Patch Changes
