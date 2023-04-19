@@ -24,7 +24,7 @@
     "@react-stately/collections": "^3.5.0",
     "@react-stately/list": "^3.6.0",
     "@react-stately/tabs": "^3.2.4",
-    "@react-types/shared": "^3.14.1",
+    "@react-types/shared": "^3.18.0",
     "@react-types/tabs": "^3.1.5",
     "@voussoir/core": "^5.0.1",
     "@voussoir/layout": "^0.1.3",

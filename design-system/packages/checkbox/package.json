@@ -21,7 +21,7 @@
     "@react-aria/focus": "^3.10.0",
     "@react-stately/checkbox": "^3.3.2",
     "@react-stately/toggle": "^3.4.3",
-    "@react-types/shared": "^3.14.1",
+    "@react-types/shared": "^3.18.0",
     "@voussoir/core": "^5.0.1",
     "@voussoir/field": "^0.1.5",
     "@voussoir/icon": "^0.2.0",

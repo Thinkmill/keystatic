@@ -32,7 +32,7 @@
     "@react-stately/utils": "^3.5.1",
     "@react-types/menu": "^3.7.3",
     "@react-types/overlays": "^3.6.5",
-    "@react-types/shared": "^3.14.1",
+    "@react-types/shared": "^3.18.0",
     "@voussoir/button": "^0.1.5",
     "@voussoir/icon": "^0.2.0",
     "@voussoir/layout": "^0.1.2",

@@ -24,7 +24,7 @@
     "@react-stately/collections": "^3.5.0",
     "@react-stately/select": "^3.3.3",
     "@react-types/select": "^3.6.5",
-    "@react-types/shared": "^3.14.1",
+    "@react-types/shared": "^3.18.0",
     "@voussoir/button": "^0.1.7",
     "@voussoir/core": "^5.0.1",
     "@voussoir/field": "^0.1.5",

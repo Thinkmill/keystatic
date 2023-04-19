@@ -26,7 +26,7 @@
     "@react-stately/numberfield": "^3.3.0",
     "@react-types/button": "^3.7.0",
     "@react-types/numberfield": "^3.3.5",
-    "@react-types/shared": "^3.14.1",
+    "@react-types/shared": "^3.18.0",
     "@voussoir/button": "^0.1.7",
     "@voussoir/core": "^5.0.1",
     "@voussoir/field": "^0.1.5",
