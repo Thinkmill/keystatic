@@ -25,6 +25,7 @@
     "@react-aria/utils": "^3.14.2",
     "@react-stately/datepicker": "^3.4.0",
     "@react-types/datepicker": "^3.3.0",
+    "@react-types/shared": "^3.14.1",
     "@voussoir/core": "^5.0.1",
     "@voussoir/field": "^0.1.5",
     "@voussoir/icon": "^0.2.0",
