@@ -112,7 +112,8 @@ function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
         }
 
         return schema.parse(value, undefined);
-      }
+      },
+      false
     );
   } catch (err) {
     throw toFormattedFormDataError(err);

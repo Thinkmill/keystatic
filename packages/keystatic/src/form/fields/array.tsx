@@ -24,6 +24,12 @@ export function array<ElementField extends ComponentSchema>(
             : never;
         }[keyof ElementField['fields']]
       : never;
+    validation?: {
+      length?: {
+        min?: number;
+        max?: number;
+      };
+    };
   }
 ): ArrayField<ElementField> {
   return {
@@ -34,5 +40,6 @@ export function array<ElementField extends ComponentSchema>(
     itemLabel: opts?.itemLabel,
     asChildTag: opts?.asChildTag,
     slugField: opts?.slugField as string,
+    validation: opts?.validation,
   };
 }

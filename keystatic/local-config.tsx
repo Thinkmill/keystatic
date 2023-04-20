@@ -187,7 +187,16 @@ export default config({
               links: true,
             }),
           }),
-          { label: 'Authors', itemLabel: props => props.fields.name.value }
+          {
+            label: 'Authors',
+            itemLabel: props => props.fields.name.value,
+            validation: {
+              length: {
+                max: 5,
+                min: 1,
+              },
+            },
+          }
         ),
       },
     }),

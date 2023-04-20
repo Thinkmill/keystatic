@@ -357,7 +357,8 @@ async function readItem(
           });
         }
         return schema.reader.parse(value);
-      }
+      },
+      true
     );
 
     if (contentFieldPathsToEagerlyResolve?.length) {
