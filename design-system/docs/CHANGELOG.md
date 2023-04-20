@@ -1,5 +1,47 @@
 # @voussoir/docs
 
+## 0.0.10
+
+### Patch Changes
+
+- c1c33e2: New package "@voussoir/date-time" exports components `DateField` and
+  `TimeField`.
+
+  **Related**
+
+  - Fix conditional "visuallyHidden" on `Text` component.
+  - Bump "@react-aria/i18n" from `3.6.2` to `3.7.1` for all relevant packages.
+  - Bump "@react-types/shared" from `3.14.1` to `3.18.0` for all relevant
+    packages.
+  - Add exports from "@react-aria/i18n" and "@internationalized/date" to docs'
+    scope.
+
+- Updated dependencies [c1c33e2]
+  - @voussoir/action-group@0.1.5
+  - @voussoir/breadcrumbs@0.1.8
+  - @voussoir/button@0.1.8
+  - @voussoir/checkbox@0.2.5
+  - @voussoir/combobox@0.1.6
+  - @voussoir/core@5.0.2
+  - @voussoir/date-time@0.1.1
+  - @voussoir/dialog@0.2.3
+  - @voussoir/drag-and-drop@0.1.2
+  - @voussoir/field@0.1.6
+  - @voussoir/icon@0.2.1
+  - @voussoir/link@0.1.4
+  - @voussoir/list-view@0.1.6
+  - @voussoir/listbox@0.1.5
+  - @voussoir/menu@0.1.4
+  - @voussoir/number-field@0.1.5
+  - @voussoir/overlays@0.1.6
+  - @voussoir/picker@0.1.5
+  - @voussoir/radio@0.1.6
+  - @voussoir/table@0.1.5
+  - @voussoir/tabs@0.1.4
+  - @voussoir/text-field@0.1.7
+  - @voussoir/toast@0.1.8
+  - @voussoir/typography@0.1.5
+
 ## 0.0.9
 
 ### Patch Changes
