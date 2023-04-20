@@ -190,12 +190,6 @@ export default config({
           {
             label: 'Authors',
             itemLabel: props => props.fields.name.value,
-            validation: {
-              length: {
-                max: 5,
-                min: 1,
-              },
-            },
           }
         ),
       },
