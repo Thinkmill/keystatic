@@ -201,6 +201,12 @@ export type ArrayField<ElementField extends ComponentSchema> = {
   itemLabel?(props: unknown): string;
   asChildTag?: string;
   slugField?: string;
+  validation?: {
+    length?: {
+      min?: number;
+      max?: number;
+    };
+  };
 };
 
 export interface ObjectField<
@@ -240,6 +246,12 @@ type ArrayFieldInComponentSchema = {
   itemLabel?(props: unknown): string;
   asChildTag?: string;
   slugField?: string;
+  validation?: {
+    length?: {
+      min?: number;
+      max?: number;
+    };
+  };
 };
 
 export type ComponentSchema =

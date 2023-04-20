@@ -14,7 +14,7 @@ import {
 import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
 import { Dialog, DialogContainer } from '@voussoir/dialog';
 import { ItemDropTarget, useDragAndDrop } from '@voussoir/drag-and-drop';
-import { FieldLabel } from '@voussoir/field';
+import { FieldLabel, FieldMessage } from '@voussoir/field';
 import { Icon } from '@voussoir/icon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Flex } from '@voussoir/layout';
@@ -268,7 +268,20 @@ function ArrayFieldPreview(props: DefaultFieldProps<'array'>) {
           );
         }}
       </ListView>
-
+      {props.forceValidation &&
+        (props.schema.validation?.length?.min !== undefined &&
+        props.elements.length < props.schema.validation.length.min ? (
+          <FieldMessage>
+            Must have at least {props.schema.validation.length.min} item
+            {props.schema.validation.length.min === 1 ? '' : 's'}
+          </FieldMessage>
+        ) : props.schema.validation?.length?.max !== undefined &&
+          props.elements.length > props.schema.validation.length.max ? (
+          <FieldMessage>
+            Must have at most {props.schema.validation.length.max} item
+            {props.schema.validation.length.max === 1 ? '' : 's'}
+          </FieldMessage>
+        ) : undefined)}
       <DialogContainer
         onDismiss={() => {
           setModalState({ state: 'closed' });

@@ -4,6 +4,7 @@ import { SlugFieldInfo } from './fields/text/ui';
 import { FieldDataError } from './fields/error';
 import { PropValidationError } from './parse-props';
 import { ReadonlyPropPath } from './fields/document/DocumentEditor/component-blocks/utils';
+import { validateArrayLength } from './validate-array-length';
 
 function flattenErrors(error: unknown): unknown[] {
   if (error instanceof AggregateError) {
@@ -118,8 +119,12 @@ export function validateValueWithSchema(
         };
       }
       const errors: unknown[] = [];
-
-      for (const [idx, innerVal] of (value as unknown[]).entries()) {
+      const val = value as unknown[];
+      const error = validateArrayLength(schema, value, path);
+      if (error !== undefined) {
+        errors.push(error);
+      }
+      for (const [idx, innerVal] of val.entries()) {
         try {
           validateValueWithSchema(
             schema.element,

@@ -3,6 +3,7 @@ import { ComponentSchema } from './api';
 import { ReadonlyPropPath } from './fields/document/DocumentEditor/component-blocks/utils';
 import { FormField, FormFieldStoredValue, JsonValue } from '..';
 import { FieldDataError } from './fields/error';
+import { validateArrayLength } from './validate-array-length';
 
 export class PropValidationError extends Error {
   path: ReadonlyPropPath;
@@ -37,7 +38,9 @@ export function parseProps(
     value: FormFieldStoredValue,
     path: ReadonlyPropPath,
     pathWithArrayFieldSlugs: readonly string[]
-  ) => any
+  ) => any,
+  /** This should be true for the reader and false elsewhere */
+  validateArrayFieldLength: boolean
 ): any {
   let value = toFormFieldStoredValue(_value);
   if (schema.kind === 'form') {
@@ -74,7 +77,8 @@ export function parseProps(
       value.discriminant,
       path.concat('discriminant'),
       pathWithArrayFieldSlugs.concat('discriminant'),
-      parseFormField
+      parseFormField,
+      validateArrayFieldLength
     );
 
     return {
@@ -84,7 +88,8 @@ export function parseProps(
         value.value,
         path.concat('value'),
         pathWithArrayFieldSlugs.concat('value'),
-        parseFormField
+        parseFormField,
+        validateArrayFieldLength
       ),
     };
   }
@@ -118,7 +123,8 @@ export function parseProps(
           individualVal,
           path.concat(key),
           pathWithArrayFieldSlugs.concat(key),
-          parseFormField
+          parseFormField,
+          validateArrayFieldLength
         );
         val[key] = propVal;
       } catch (err) {
@@ -143,6 +149,12 @@ export function parseProps(
     }
     const errors: unknown[] = [];
     try {
+      if (validateArrayFieldLength) {
+        const error = validateArrayLength(schema, value, path);
+        if (error !== undefined) {
+          errors.push(error);
+        }
+      }
       return value.map((innerVal, i) => {
         try {
           let slug = i.toString();
@@ -190,7 +202,8 @@ export function parseProps(
             innerVal,
             path.concat(i),
             pathWithArrayFieldSlugs.concat(slug),
-            parseFormField
+            parseFormField,
+            validateArrayFieldLength
           );
         } catch (err) {
           errors.push(err);
