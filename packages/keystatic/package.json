@@ -69,9 +69,10 @@
     "@ts-gql/tag": "^0.7.0",
     "@types/node": "16.11.13",
     "@types/react": "^18.0.25",
-    "@urql/exchange-auth": "^2.0.0",
-    "@urql/exchange-graphcache": "^5.2.0",
-    "@urql/exchange-persisted-fetch": "^2.1.0",
+    "@urql/core": "^4.0.4",
+    "@urql/exchange-auth": "^2.1.0",
+    "@urql/exchange-graphcache": "^6.0.1",
+    "@urql/exchange-persisted": "^3.0.0",
     "@voussoir/action-group": "^0.1.5",
     "@voussoir/badge": "^0.1.4",
     "@voussoir/breadcrumbs": "^0.1.8",
@@ -133,7 +134,7 @@
     "slate-history": "^0.86.0",
     "slate-hyperscript": "^0.77.0",
     "slate-react": "^0.91.9",
-    "urql": "^3.0.4",
+    "urql": "^4.0.0",
     "zod": "^3.20.2"
   },
   "devDependencies": {

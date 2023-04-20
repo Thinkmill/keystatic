@@ -22,7 +22,7 @@ import { cacheExchange } from '@urql/exchange-graphcache';
 import { authExchange } from '@urql/exchange-auth';
 import { getAuth, getSyncAuth } from './auth';
 import { CloudAppShellQuery, GitHubAppShellQuery } from './shell/data';
-import { persistedFetchExchange } from '@urql/exchange-persisted-fetch';
+import { persistedExchange } from '@urql/exchange-persisted';
 import {
   KEYSTATIC_CLOUD_API_URL,
   KEYSTATIC_CLOUD_HEADERS,
@@ -172,7 +172,7 @@ export function createUrqlClient(config: Config): Client {
       ...(config.storage.kind === 'github'
         ? []
         : [
-            persistedFetchExchange({
+            persistedExchange({
               enableForMutation: true,
               enforcePersistedQueries: true,
             }),
