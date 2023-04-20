@@ -24,7 +24,7 @@
     "@react-stately/collections": "^3.5.0",
     "@react-stately/list": "^3.6.0",
     "@react-types/actiongroup": "^3.3.5",
-    "@react-types/shared": "^3.14.1",
+    "@react-types/shared": "^3.18.0",
     "@voussoir/button": "^0.1.7",
     "@voussoir/core": "^5.0.1",
     "@voussoir/icon": "^0.2.0",

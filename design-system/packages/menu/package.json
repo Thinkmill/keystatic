@@ -18,7 +18,7 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "@react-aria/focus": "^3.10.0",
-    "@react-aria/i18n": "^3.6.2",
+    "@react-aria/i18n": "^3.7.1",
     "@react-aria/interactions": "^3.13.0",
     "@react-aria/menu": "^3.7.0",
     "@react-aria/overlays": "^3.12.0",
@@ -32,7 +32,7 @@
     "@react-stately/utils": "^3.5.1",
     "@react-types/menu": "^3.7.3",
     "@react-types/overlays": "^3.6.5",
-    "@react-types/shared": "^3.14.1",
+    "@react-types/shared": "^3.18.0",
     "@voussoir/button": "^0.1.5",
     "@voussoir/icon": "^0.2.0",
     "@voussoir/layout": "^0.1.2",

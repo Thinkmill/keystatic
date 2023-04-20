@@ -25,7 +25,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ThemeProvider fontClassName={inter.variable} locale="en">
+    <ThemeProvider fontClassName={inter.variable} locale="en-AU">
       <head>
         <script
           dangerouslySetInnerHTML={{

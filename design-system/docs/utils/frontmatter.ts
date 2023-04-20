@@ -8,6 +8,7 @@ export const categories = [
   'Layout',
   'Typography',
   'Forms',
+  'Date and time',
   'Navigation',
   'Overlays',
   'Feedback',

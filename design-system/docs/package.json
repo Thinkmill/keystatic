@@ -18,8 +18,9 @@
   "dependencies": {
     "@babel/core": "^7.18.5",
     "@babel/runtime": "^7.18.3",
+    "@internationalized/date": "^3.2.0",
     "@markdoc/markdoc": "^0.2.2",
-    "@react-aria/i18n": "^3.6.2",
+    "@react-aria/i18n": "^3.7.1",
     "@types/js-yaml": "^4.0.5",
     "@voussoir/action-group": "^0.1.4",
     "@voussoir/avatar": "^0.1.2",
@@ -29,6 +30,7 @@
     "@voussoir/checkbox": "^0.2.4",
     "@voussoir/combobox": "^0.1.5",
     "@voussoir/core": "^5.0.1",
+    "@voussoir/date-time": "^0.1.0",
     "@voussoir/dialog": "^0.2.1",
     "@voussoir/drag-and-drop": "^0.1.1",
     "@voussoir/field": "^0.1.5",

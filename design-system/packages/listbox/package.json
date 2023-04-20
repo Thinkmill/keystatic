@@ -18,7 +18,7 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "@react-aria/focus": "^3.10.0",
-    "@react-aria/i18n": "^3.6.2",
+    "@react-aria/i18n": "^3.7.1",
     "@react-aria/interactions": "^3.13.0",
     "@react-aria/listbox": "^3.7.1",
     "@react-aria/separator": "^3.2.5",
@@ -29,7 +29,7 @@
     "@react-stately/layout": "^3.10.0",
     "@react-stately/list": "^3.6.0",
     "@react-stately/virtualizer": "^3.4.0",
-    "@react-types/shared": "^3.14.1",
+    "@react-types/shared": "^3.18.0",
     "@voussoir/core": "^5.0.1",
     "@voussoir/icon": "^0.2.0",
     "@voussoir/layout": "^0.1.2",

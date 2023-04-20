@@ -22,7 +22,7 @@
     "@react-aria/table": "^3.5.0",
     "@react-aria/utils": "^3.14.2",
     "@react-stately/table": "^3.5.0",
-    "@react-types/shared": "^3.14.1",
+    "@react-types/shared": "^3.18.0",
     "@voussoir/checkbox": "^0.2.4",
     "@voussoir/icon": "^0.2.0",
     "@voussoir/layout": "^0.1.3",

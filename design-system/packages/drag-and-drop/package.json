@@ -19,7 +19,7 @@
     "@babel/runtime": "^7.18.3",
     "@react-aria/dnd": "^3.0.1",
     "@react-stately/dnd": "^3.0.1",
-    "@react-types/shared": "^3.14.1"
+    "@react-types/shared": "^3.18.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",

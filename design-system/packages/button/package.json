@@ -22,7 +22,7 @@
     "@react-aria/interactions": "^3.13.0",
     "@react-aria/utils": "^3.14.2",
     "@react-types/button": "^3.7.0",
-    "@react-types/shared": "^3.14.1",
+    "@react-types/shared": "^3.18.0",
     "@voussoir/core": "^5.0.1",
     "@voussoir/icon": "^0.2.0",
     "@voussoir/layout": "^0.1.3",

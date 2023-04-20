@@ -20,7 +20,7 @@
     "@react-aria/radio": "^3.4.2",
     "@react-stately/radio": "^3.6.2",
     "@react-types/radio": "^3.3.1",
-    "@react-types/shared": "^3.14.1",
+    "@react-types/shared": "^3.18.0",
     "@voussoir/core": "^5.0.1",
     "@voussoir/field": "^0.1.5",
     "@voussoir/layout": "^0.1.3",
