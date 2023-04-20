@@ -23,7 +23,8 @@ export function useHasChanged(args: {
                   { schema: args.schema.fields, slugField: args.slugField },
                   args.initialState as Record<string, unknown>
                 )
-              : undefined
+              : undefined,
+            true
           ),
     [args.initialState, args.schema, args.slugField]
   );
@@ -39,7 +40,8 @@ export function useHasChanged(args: {
               { schema: args.schema.fields, slugField: args.slugField },
               args.state as Record<string, unknown>
             )
-          : undefined
+          : undefined,
+        true
       ),
     [args.state, args.schema, args.slugField]
   );

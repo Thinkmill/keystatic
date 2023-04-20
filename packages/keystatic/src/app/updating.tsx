@@ -97,7 +97,8 @@ export function useUpsertItem(args: {
           args.state,
           fields.object(args.schema),
           args.slug?.field,
-          args.slug?.value
+          args.slug?.value,
+          true
         );
         const dataFormat = args.format.data;
         let dataContent = textEncoder.encode(

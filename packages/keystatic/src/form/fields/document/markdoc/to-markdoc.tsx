@@ -219,7 +219,8 @@ function toMarkdoc(
         getInitialPropsValueFromInitializer(schema, rest),
         schema,
         undefined,
-        config.slug
+        config.slug,
+        false
       );
       Object.assign(extraAttributes, serialized.value);
       config.extraFiles.push(...serialized.extraFiles);
@@ -293,7 +294,8 @@ function toMarkdoc(
           getInitialPropsValueFromInitializer(schema, rest),
           schema,
           undefined,
-          config.slug
+          config.slug,
+          false
         )
       );
     }
@@ -381,7 +383,8 @@ function toMarkdoc(
         node.props,
         { kind: 'object' as const, fields: componentBlock.schema },
         undefined,
-        config.slug
+        config.slug,
+        false
       );
       attributes = serialized.value as Record<string, unknown>;
       config.extraFiles.push(...serialized.extraFiles);

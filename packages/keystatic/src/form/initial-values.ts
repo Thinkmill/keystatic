@@ -1,6 +1,6 @@
 import { assertNever } from 'emery';
 
-import { ComponentSchema } from './api';
+import { ComponentSchema, ParsedValueForComponentSchema } from './api';
 
 const arrayValuesToElementKeys = new WeakMap<
   readonly unknown[],
@@ -30,7 +30,13 @@ export function getNewArrayElementKey() {
   return (counter++).toString();
 }
 
-export function getInitialPropsValue(schema: ComponentSchema): any {
+export const getInitialPropsValue = _getInitialPropsValue as <
+  Schema extends ComponentSchema
+>(
+  schema: Schema
+) => ParsedValueForComponentSchema<Schema>;
+
+function _getInitialPropsValue(schema: ComponentSchema): unknown {
   switch (schema.kind) {
     case 'form':
       return schema.defaultValue();
