@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/core",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "",
   "license": "MIT",
   "main": "dist/voussoir-core.cjs.js",
@@ -19,7 +19,7 @@
     "@babel/runtime": "^7.18.3",
     "@react-aria/i18n": "^3.7.1",
     "@react-aria/overlays": "^3.12.0",
-    "@voussoir/link": "^0.1.2",
+    "@voussoir/link": "^0.1.4",
     "@voussoir/ssr": "^0.2.1",
     "@voussoir/style": "^0.1.3",
     "@voussoir/types": "^0.1.1",

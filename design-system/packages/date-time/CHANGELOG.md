@@ -1,6 +1,6 @@
-# @voussoir/drag-and-drop
+# @voussoir/date-time
 
-## 0.1.2
+## 0.1.1
 
 ### Patch Changes
 
@@ -16,14 +16,8 @@
   - Add exports from "@react-aria/i18n" and "@internationalized/date" to docs'
     scope.
 
-## 0.1.1
-
-### Patch Changes
-
-- aeac610: Updated generated TypeScript declaration
-
-## 0.1.0
-
-### Minor Changes
-
-- 3eaab6d: Initial Release
+- Updated dependencies [c1c33e2]
+  - @voussoir/core@5.0.2
+  - @voussoir/field@0.1.6
+  - @voussoir/icon@0.2.1
+  - @voussoir/typography@0.1.5

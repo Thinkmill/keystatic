@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/icon",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Icons are visual symbols used to represent ideas, objects, or actions. They communicate messages at a glance, afford interactivity, and draw attention to important information.",
   "license": "MIT",
   "main": "dist/voussoir-icon.cjs.js",
