@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.95
+
+### Patch Changes
+
+- c70a21d: Fix navigating between some pages preserving state when they
+  shouldn't
+
 ## 0.0.94
 
 ### Patch Changes
