@@ -440,8 +440,8 @@ function singletonReader(
     );
   return {
     read,
-    readOrThrow: (...opts) => {
-      const entry = (read as any)(...opts);
+    readOrThrow: async (...opts) => {
+      const entry = await (read as any)(...opts);
       if (entry === null) {
         throw new Error(`Singleton "${singleton}" not found`);
       }
