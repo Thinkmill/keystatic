@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.94
+
+### Patch Changes
+
+- 7fc5360: Add `readOrThrow` to singleton and collection readers
+- 0545908: Update `urql`
+
 ## 0.0.93
 
 ### Patch Changes
