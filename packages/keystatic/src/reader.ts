@@ -124,6 +124,27 @@ type CollectionReader<
       }
     | null
   >;
+  readOrThrow: <Opts extends [opts?: EntryReaderOpts]>(
+    slug: string,
+    ...opts: Opts & [opts?: EntryReaderOpts]
+  ) => Promise<{
+    [Key in keyof Schema]: SlugField extends Key
+      ? Schema[Key] extends SlugFormField<
+          any,
+          any,
+          any,
+          infer SlugSerializedValue
+        >
+        ? SlugSerializedValue
+        : ValueForReadingWithMode<
+            Schema[Key],
+            OptionalChain<Opts[0], 'resolveLinkedFiles'>
+          >
+      : ValueForReadingWithMode<
+          Schema[Key],
+          OptionalChain<Opts[0], 'resolveLinkedFiles'>
+        >;
+  }>;
   all: <Opts extends [opts?: EntryReaderOpts]>(
     ...opts: Opts & [opts?: EntryReaderOpts]
   ) => Promise<
@@ -159,6 +180,14 @@ type SingletonReader<Schema extends Record<string, ComponentSchema>> = {
     ObjectField<Schema>,
     OptionalChain<Opts[0], 'resolveLinkedFiles'>
   > | null>;
+  readOrThrow: <Opts extends [opts?: EntryReaderOpts]>(
+    ...opts: Opts & [opts?: EntryReaderOpts]
+  ) => Promise<
+    ValueForReadingWithMode<
+      ObjectField<Schema>,
+      OptionalChain<Opts[0], 'resolveLinkedFiles'>
+    >
+  >;
 };
 
 async function getAllEntries(
@@ -266,6 +295,15 @@ function collectionReader(
 
   return {
     read,
+    readOrThrow: async (...args) => {
+      const entry = await (read as any)(...args);
+      if (entry === null) {
+        throw new Error(
+          `Entry "${args[0]}" not found in collection "${collection}"`
+        );
+      }
+      return entry;
+    },
     // TODO: this could drop the fs.stat call that list does for each item
     // since we just immediately read it
     all: async (...args) => {
@@ -390,17 +428,25 @@ function singletonReader(
   const formatInfo = getSingletonFormat(config, singleton);
   const singletonPath = getSingletonPath(config, singleton);
   const schema = fields.object(config.singletons![singleton].schema);
+  const read: SingletonReader<any>['read'] = (...args) =>
+    readItem(
+      schema,
+      formatInfo,
+      singletonPath,
+      undefined,
+      repoPath,
+      args[0],
+      `singleton "${singleton}"`
+    );
   return {
-    read: (...args) =>
-      readItem(
-        schema,
-        formatInfo,
-        singletonPath,
-        undefined,
-        repoPath,
-        args[0],
-        `singleton "${singleton}"`
-      ),
+    read,
+    readOrThrow: (...opts) => {
+      const entry = (read as any)(...opts);
+      if (entry === null) {
+        throw new Error(`Singleton "${singleton}" not found`);
+      }
+      return entry;
+    },
   };
 }
 
