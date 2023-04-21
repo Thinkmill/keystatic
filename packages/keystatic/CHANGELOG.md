@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.96
+
+### Patch Changes
+
+- 3f684fd: Fix `readOrThrow` in the reader for singletons
+
 ## 0.0.95
 
 ### Patch Changes
