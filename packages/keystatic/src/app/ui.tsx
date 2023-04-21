@@ -141,12 +141,14 @@ function PageInner({ config }: { config: Config }) {
         parsedParams.collection in (config.collections || {}) ? (
           parsedParams.kind === 'create' ? (
             <CreateItem
+              key={parsedParams.collection}
               collection={parsedParams.collection}
               config={config}
               basePath={basePath}
             />
           ) : parsedParams.kind === 'edit' ? (
             <ItemPage
+              key={parsedParams.collection}
               collection={parsedParams.collection}
               basePath={basePath}
               config={config}
@@ -154,6 +156,7 @@ function PageInner({ config }: { config: Config }) {
             />
           ) : (
             <CollectionPage
+              key={parsedParams.collection}
               basePath={basePath}
               collection={parsedParams.collection}
               config={config as unknown as Config}
@@ -171,6 +174,7 @@ function PageInner({ config }: { config: Config }) {
       ) : parsedParams.singleton ? (
         parsedParams.singleton in (config.singletons || {}) ? (
           <SingletonPage
+            key={parsedParams.singleton}
             config={config as unknown as Config}
             singleton={parsedParams.singleton}
           />
