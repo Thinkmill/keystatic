@@ -2,7 +2,13 @@ import { useHover } from '@react-aria/interactions';
 import { useSwitch } from '@react-aria/switch';
 import { useToggleState } from '@react-stately/toggle';
 import { AriaSwitchProps } from '@react-types/switch';
-import { forwardRef, ForwardedRef, useRef, useMemo } from 'react';
+import {
+  ForwardedRef,
+  ForwardRefExoticComponent,
+  forwardRef,
+  useRef,
+  useMemo,
+} from 'react';
 
 import { useProviderProps } from '@voussoir/core';
 import { SlotProvider } from '@voussoir/slots';
@@ -32,42 +38,49 @@ export type SwitchProps = AriaSwitchProps &
     size?: 'small' | 'regular';
   };
 
-function Switch(
-  props: SwitchProps,
-  forwardedRef: ForwardedRef<HTMLLabelElement>
-) {
-  props = useProviderProps(props);
-  let { autoFocus, children, ...otherProps } = props;
+/**
+ * Switches allow users to turn an individual option on or off.
+ * They are usually used to activate or deactivate a specific setting.
+ */
+export const Switch: ForwardRefExoticComponent<SwitchProps> = forwardRef(
+  function Switch(
+    props: SwitchProps,
+    forwardedRef: ForwardedRef<HTMLLabelElement>
+  ) {
+    props = useProviderProps(props);
+    let { autoFocus, children, ...otherProps } = props;
 
-  let inputRef = useRef<HTMLInputElement>(null);
-  let state = useToggleState(props);
-  let { inputProps } = useSwitch(props, state, inputRef);
-  let styleProps = useSwitchStyles(otherProps);
-  const slots = useMemo(
-    () =>
-      ({
-        text: { color: 'inherit' },
-        description: { color: 'neutralTertiary' },
-      } as const),
-    []
-  );
+    let inputRef = useRef<HTMLInputElement>(null);
+    let state = useToggleState(props);
+    let { inputProps } = useSwitch(props, state, inputRef);
+    let styleProps = useSwitchStyles(otherProps);
 
-  return (
-    <label {...styleProps.label} ref={forwardedRef}>
-      <FocusRing autoFocus={autoFocus}>
-        <input {...styleProps.input} {...inputProps} ref={inputRef} />
-      </FocusRing>
-      <span {...styleProps.indicator} />
-      {children && (
-        <SlotProvider slots={slots}>
-          <span {...styleProps.content}>
-            {isReactText(children) ? <Text>{children}</Text> : children}
-          </span>
-        </SlotProvider>
-      )}
-    </label>
-  );
-}
+    const slots = useMemo(
+      () =>
+        ({
+          text: { color: 'inherit' },
+          description: { color: 'neutralTertiary' },
+        } as const),
+      []
+    );
+
+    return (
+      <label {...styleProps.label} ref={forwardedRef}>
+        <FocusRing autoFocus={autoFocus}>
+          <input {...styleProps.input} {...inputProps} ref={inputRef} />
+        </FocusRing>
+        <span {...styleProps.indicator} />
+        {children && (
+          <SlotProvider slots={slots}>
+            <span {...styleProps.content}>
+              {isReactText(children) ? <Text>{children}</Text> : children}
+            </span>
+          </SlotProvider>
+        )}
+      </label>
+    );
+  }
+);
 
 function useSwitchStyles(props: SwitchProps) {
   let { isDisabled = false, prominence, size, ...otherProps } = props;
@@ -223,10 +236,3 @@ function useSwitchStyles(props: SwitchProps) {
     label: labelStyleProps,
   };
 }
-
-/**
- * Switches allow users to turn an individual option on or off.
- * They are usually used to activate or deactivate a specific setting.
- */
-const _Switch = forwardRef(Switch);
-export { _Switch as Switch };
