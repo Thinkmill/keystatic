@@ -1,5 +1,11 @@
 # @voussoir/docs
 
+## 0.0.11
+
+### Patch Changes
+
+- 01e292f: New package "@voussoir/switch" exports `Switch` component.
+
 ## 0.0.10
 
 ### Patch Changes
