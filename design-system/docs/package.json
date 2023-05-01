@@ -53,6 +53,7 @@
     "@voussoir/slots": "^0.1.2",
     "@voussoir/ssr": "^0.2.1",
     "@voussoir/style": "^0.1.5",
+    "@voussoir/switch": "^0.1.0",
     "@voussoir/table": "^0.1.5",
     "@voussoir/tabs": "^0.1.4",
     "@voussoir/test-utils": "^2.0.2",

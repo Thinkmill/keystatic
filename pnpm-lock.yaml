@@ -332,6 +332,7 @@ importers:
       '@voussoir/slots': ^0.1.2
       '@voussoir/ssr': ^0.2.1
       '@voussoir/style': ^0.1.5
+      '@voussoir/switch': ^0.1.0
       '@voussoir/table': ^0.1.5
       '@voussoir/tabs': ^0.1.4
       '@voussoir/test-utils': ^2.0.2
@@ -396,6 +397,7 @@ importers:
       '@voussoir/slots': link:../packages/slots
       '@voussoir/ssr': link:../packages/ssr
       '@voussoir/style': link:../packages/style
+      '@voussoir/switch': link:../packages/switch
       '@voussoir/table': link:../packages/table
       '@voussoir/tabs': link:../packages/tabs
       '@voussoir/test-utils': link:../packages/test-utils
@@ -1725,6 +1727,43 @@ importers:
       '@voussoir/storybook': link:../../docs/storybook
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+
+  design-system/packages/switch:
+    specifiers:
+      '@babel/runtime': ^7.18.3
+      '@react-aria/interactions': ^3.13.0
+      '@react-aria/switch': ^3.5.0
+      '@react-stately/toggle': ^3.4.3
+      '@react-types/switch': ^3.3.1
+      '@types/react': ^18.0.25
+      '@voussoir/core': ^5.0.1
+      '@voussoir/layout': ^0.1.3
+      '@voussoir/slots': ^0.1.2
+      '@voussoir/storybook': ^0.0.1
+      '@voussoir/style': ^0.1.5
+      '@voussoir/test-utils': ^2.0.2
+      '@voussoir/types': ^0.1.1
+      '@voussoir/typography': ^0.1.4
+      '@voussoir/utils': ^2.0.2
+      react: ^18.2.0
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@react-aria/interactions': 3.15.0_react@18.2.0
+      '@react-aria/switch': 3.5.0_react@18.2.0
+      '@react-stately/toggle': 3.4.4_react@18.2.0
+      '@react-types/switch': 3.3.1_react@18.2.0
+      '@voussoir/core': link:../core
+      '@voussoir/slots': link:../slots
+      '@voussoir/style': link:../style
+      '@voussoir/types': link:../types
+      '@voussoir/typography': link:../typography
+      '@voussoir/utils': link:../utils
+    devDependencies:
+      '@types/react': 18.0.28
+      '@voussoir/layout': link:../layout
+      '@voussoir/storybook': link:../../docs/storybook
+      '@voussoir/test-utils': link:../test-utils
+      react: 18.2.0
 
   design-system/packages/table:
     specifiers:
@@ -6594,6 +6633,18 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@react-aria/switch/3.5.0_react@18.2.0:
+    resolution: {integrity: sha512-nMrwT0McuQ7ki6rSDFIuf9qa9UjcA1XJQ9zDRD2CC10F48xpHHi12iZpS8GAEdG2jTNdCZ3qSO1HsIt63uEQoQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-aria/toggle': 3.6.0_react@18.2.0
+      '@react-stately/toggle': 3.5.1_react@18.2.0
+      '@react-types/switch': 3.3.1_react@18.2.0
+      '@swc/helpers': 0.4.14
+      react: 18.2.0
+    dev: false
+
   /@react-aria/table/3.7.0_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-1YqOeb8r8pxIYyfa5qNdCoM3fNQELM4d+9DanoNJhgnehoq9QDI9A1pGC2pvK2PN2y9IuTJM+U/ITjSpPBoGjQ==}
     peerDependencies:
@@ -6678,6 +6729,22 @@ packages:
       '@react-types/checkbox': 3.4.1_react@18.2.0
       '@react-types/shared': 3.18.0_react@18.2.0
       '@react-types/switch': 3.2.5_react@18.2.0
+      '@swc/helpers': 0.4.14
+      react: 18.2.0
+    dev: false
+
+  /@react-aria/toggle/3.6.0_react@18.2.0:
+    resolution: {integrity: sha512-W6xncx5zzqCaPU2XsgjWnACHL3WBpxphYLvF5XlICRg0nZVjGPIWPDDUGyDoPsSUeGMW2vxtFY6erKXtcy4Kgw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-aria/focus': 3.12.0_react@18.2.0
+      '@react-aria/interactions': 3.15.0_react@18.2.0
+      '@react-aria/utils': 3.16.0_react@18.2.0
+      '@react-stately/toggle': 3.5.1_react@18.2.0
+      '@react-types/checkbox': 3.4.3_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/switch': 3.3.1_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
     dev: false
@@ -7043,8 +7110,20 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-stately/utils': 3.5.2_react@18.2.0
+      '@react-stately/utils': 3.6.0_react@18.2.0
       '@react-types/checkbox': 3.4.1_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
+      '@swc/helpers': 0.4.14
+      react: 18.2.0
+    dev: false
+
+  /@react-stately/toggle/3.5.1_react@18.2.0:
+    resolution: {integrity: sha512-PF4ZaATpXWu7DkneGSZ2/PA6LJ1MrhKNiaENTZlbojXMRr5kK33wPzaDW7I8O25IUm0+rvQicv7A6QkEOxgOPg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-stately/utils': 3.6.0_react@18.2.0
+      '@react-types/checkbox': 3.4.3_react@18.2.0
       '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
@@ -7162,6 +7241,15 @@ packages:
 
   /@react-types/checkbox/3.4.1_react@18.2.0:
     resolution: {integrity: sha512-kDMpy9SntjGQ7x00m5zmW8GENPouOtyiDgiEDKsPXUr2iYqHsNtricqVyG9S9+6hqpzuu8BzTcvZamc/xYjzlg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-types/shared': 3.18.0_react@18.2.0
+      react: 18.2.0
+    dev: false
+
+  /@react-types/checkbox/3.4.3_react@18.2.0:
+    resolution: {integrity: sha512-kn2f8mK88yvRrCfh8jYCDL2xpPhSApFWk9+qjWGsX/bnGGob7D5n71YYQ4cS58117YK2nrLc/AyQJXcZnJiA7Q==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
@@ -7371,6 +7459,16 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-types/checkbox': 3.4.1_react@18.2.0
+      '@react-types/shared': 3.18.0_react@18.2.0
+      react: 18.2.0
+    dev: false
+
+  /@react-types/switch/3.3.1_react@18.2.0:
+    resolution: {integrity: sha512-EvKWPtcOLTF7Wh8YCxJEtmqRZX3qSLRYPaIntl/CKF+14QXErPXwOn0ObLfy6VNda5jDJBOecWpgC69JEjkvfw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-types/checkbox': 3.4.3_react@18.2.0
       '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
     dev: false
@@ -15628,7 +15726,7 @@ packages:
     resolution: {integrity: sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw==}
     engines: {node: '>= 4.0'}
     os: [darwin]
-    deprecated: fsevents 1 will break on node v14+ and could be using insecure binaries. Upgrade to fsevents 2.
+    deprecated: The v1 package contains DANGEROUS / INSECURE binaries. Upgrade to safe fsevents v2
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
