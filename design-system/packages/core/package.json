@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/core",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "",
   "license": "MIT",
   "main": "dist/voussoir-core.cjs.js",
