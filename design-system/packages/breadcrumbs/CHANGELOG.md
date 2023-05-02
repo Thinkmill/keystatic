@@ -1,5 +1,12 @@
 # @voussoir/breadcrumbs
 
+## 0.1.9
+
+### Patch Changes
+
+- Updated dependencies [e86df04]
+  - @voussoir/core@5.0.3
+
 ## 0.1.8
 
 ### Patch Changes

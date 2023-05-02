@@ -1,5 +1,11 @@
 # @voussoir/core
 
+## 5.0.3
+
+### Patch Changes
+
+- e86df04: Refactor to avoid hot-reload issue when in development.
+
 ## 5.0.2
 
 ### Patch Changes
