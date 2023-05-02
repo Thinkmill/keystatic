@@ -1,4 +1,4 @@
-import { createContext, HTMLAttributes, useContext } from 'react';
+import { HTMLAttributes, useContext } from 'react';
 import { I18nProvider, useLocale } from '@react-aria/i18n';
 import { ModalProvider, useModalProvider } from '@react-aria/overlays';
 
@@ -10,11 +10,12 @@ import {
 } from '@voussoir/style';
 import { filterDOMProps } from '@voussoir/utils';
 import { SSRProvider } from '@voussoir/ssr';
-
-import { useColorScheme, useScale } from './mediaQueries';
-import { VoussoirProviderContext, VoussoirProviderProps } from './types';
 import { forwardRefWithAs } from '@voussoir/utils/ts';
+
+import { Context, useProvider } from './context';
 import { documentElementClasses } from './globals';
+import { useColorScheme, useScale } from './mediaQueries';
+import { VoussoirProviderProps } from './types';
 
 /** Consolidates core functionality and dependencies of the Voussoir component library. */
 export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
@@ -130,38 +131,3 @@ const ProviderWrapper = forwardRefWithAs<
     </ElementType>
   );
 });
-
-// Context
-
-const Context = createContext<VoussoirProviderContext | null>(null);
-Context.displayName = 'ProviderContext';
-
-/**
- * Returns the settings and styles applied by the nearest parent
- * Provider. Properties explicitly set by the nearest parent Provider override
- * those provided by preceeding Providers.
- */
-export function useProvider(): VoussoirProviderContext {
-  let context = useContext(Context);
-  if (!context) {
-    throw new Error('Attempt to access context outside of VoussoirProvider.');
-  }
-  return context;
-}
-
-export function useProviderProps<T>(props: T): T {
-  let context = useProvider();
-  if (!context) {
-    return props;
-  }
-  return Object.assign(
-    {},
-    {
-      // prominence: context.prominence,
-      isDisabled: context.isDisabled,
-      isRequired: context.isRequired,
-      isReadOnly: context.isReadOnly,
-    },
-    props
-  );
-}
