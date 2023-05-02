@@ -1,7 +1,8 @@
 import { VoussoirTheme } from '@voussoir/style';
 import { useLayoutEffect } from 'react';
+
+import { useProvider } from './context';
 import { documentElementClasses } from './globals';
-import { useProvider } from './VoussoirProvider';
 
 export function ClientSideOnlyDocumentElement(props: {
   bodyBackground?: keyof VoussoirTheme['color']['background'];

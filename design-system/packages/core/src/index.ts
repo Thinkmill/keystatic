@@ -1,8 +1,5 @@
-export {
-  VoussoirProvider,
-  useProvider,
-  useProviderProps,
-} from './VoussoirProvider';
+export { VoussoirProvider } from './VoussoirProvider';
+export { useProvider, useProviderProps } from './context';
 export { ClientSideOnlyDocumentElement } from './ClientSideOnlyDocumentElement';
 export { documentElementClasses } from './globals';
 export { TestProvider } from './TestProvider';
