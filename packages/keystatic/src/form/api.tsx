@@ -207,6 +207,7 @@ export type ArrayField<ElementField extends ComponentSchema> = {
       max?: number;
     };
   };
+  Input?(props: unknown): ReactElement | null;
 };
 
 export interface ObjectField<
@@ -217,14 +218,11 @@ export interface ObjectField<
 > {
   kind: 'object';
   fields: Fields;
+  Input?(props: unknown): ReactElement | null;
 }
 
 export type ConditionalField<
-  DiscriminantField extends BasicFormField<
-    string | boolean,
-    string | boolean,
-    string | boolean
-  >,
+  DiscriminantField extends BasicFormField<string | boolean>,
   ConditionalValues extends {
     [Key in `${ReturnType<
       DiscriminantField['defaultValue']
@@ -234,6 +232,7 @@ export type ConditionalField<
   kind: 'conditional';
   discriminant: DiscriminantField;
   values: ConditionalValues;
+  Input?(props: unknown): ReactElement | null;
 };
 
 // this is written like this rather than ArrayField<ComponentSchema> to avoid TypeScript erroring about circularity
@@ -252,6 +251,7 @@ type ArrayFieldInComponentSchema = {
       max?: number;
     };
   };
+  Input?(props: unknown): ReactElement | null;
 };
 
 export type ComponentSchema =
@@ -427,7 +427,7 @@ type DiscriminantStringToDiscriminantValue<
     : 'false' extends DiscriminantString
     ? false
     : never
-  : DiscriminantString;
+  : DiscriminantString & string;
 
 export type PreviewPropsForToolbar<Schema extends ComponentSchema> =
   GenericPreviewProps<Schema, undefined>;

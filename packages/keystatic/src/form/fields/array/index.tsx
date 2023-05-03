@@ -3,7 +3,7 @@ import {
   GenericPreviewProps,
   ArrayField,
   SlugFormField,
-} from '../api';
+} from '../../api';
 
 export function array<ElementField extends ComponentSchema>(
   element: ElementField,

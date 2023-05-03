@@ -1,4 +1,4 @@
-import { BasicFormField, ComponentSchema, ConditionalField } from '../api';
+import { BasicFormField, ComponentSchema, ConditionalField } from '../../api';
 
 export function conditional<
   DiscriminantField extends BasicFormField<string> | BasicFormField<boolean>,

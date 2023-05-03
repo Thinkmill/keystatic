@@ -1,4 +1,4 @@
-import { ComponentSchema, ObjectField } from '../api';
+import { ComponentSchema, ObjectField } from '../../api';
 
 export function object<Fields extends Record<string, ComponentSchema>>(
   fields: Fields
