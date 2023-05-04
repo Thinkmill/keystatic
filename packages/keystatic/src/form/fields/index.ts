@@ -16,3 +16,4 @@ export { select } from './select';
 export { slug } from './slug';
 export { text } from './text';
 export { url } from './url';
+export { blocks } from './blocks';

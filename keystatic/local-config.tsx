@@ -20,6 +20,24 @@ export default config({
       label: 'Posts',
       slugField: 'slug',
       schema: {
+        blocks: fields.blocks(
+          {
+            a: {
+              label: 'A',
+              schema: fields.object({
+                onA: fields.text({ label: 'On A' }),
+              }),
+            },
+            b: {
+              label: 'B',
+              itemLabel: props => `B: ${props.fields.onB.value}`,
+              schema: fields.object({
+                onB: fields.text({ label: 'On B' }),
+              }),
+            },
+          },
+          { label: 'Blocks' }
+        ),
         title: fields.text({ label: 'Title' }),
         slug: fields.text({
           label: 'Slug',

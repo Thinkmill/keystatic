@@ -225,7 +225,7 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
   );
 }
 
-function ArrayFieldValidationMessages<Element extends ComponentSchema>(
+export function ArrayFieldValidationMessages<Element extends ComponentSchema>(
   props: GenericPreviewProps<ArrayField<Element>, unknown> &
     ExtraFieldInputProps
 ) {
@@ -249,7 +249,7 @@ function ArrayFieldValidationMessages<Element extends ComponentSchema>(
   );
 }
 
-function ArrayFieldListView<Element extends ComponentSchema>(
+export function ArrayFieldListView<Element extends ComponentSchema>(
   props: GenericPreviewProps<ArrayField<Element>, unknown> &
     ExtraFieldInputProps & {
       labelId: string;
