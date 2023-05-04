@@ -1,4 +1,5 @@
 packages:
+  - 'docs'
   - 'design-system/packages/*'
   - 'design-system/docs'
   - 'design-system/docs/storybook'
