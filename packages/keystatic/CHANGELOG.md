@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.97
+
+### Patch Changes
+
+- b0ef96e: Add `fields.block()`
+
 ## 0.0.96
 
 ### Patch Changes
