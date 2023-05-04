@@ -1,5 +1,12 @@
 # @keystatic/test-next-app
 
+## 0.0.67
+
+### Patch Changes
+
+- Updated dependencies [b0ef96e]
+  - @keystatic/core@0.0.97
+
 ## 0.0.66
 
 ### Patch Changes
