@@ -1,8 +1,8 @@
 {
-  "name": "keystatic-deploy",
+  "name": "keystatic-docs",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "dev": "next"
   },
