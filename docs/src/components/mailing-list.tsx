@@ -1,5 +1,5 @@
-import MailingListForm from "./forms/mailing-list";
-import Divider from "./divider";
+import MailingListForm from './forms/mailing-list';
+import Divider from './divider';
 
 export default function MailingList() {
   return (
