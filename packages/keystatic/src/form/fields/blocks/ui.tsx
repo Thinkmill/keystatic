@@ -1,3 +1,4 @@
+'use client';
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { ActionButton, ButtonGroup, Button } from '@voussoir/button';
 import { DialogContainer, Dialog, useDialogContainer } from '@voussoir/dialog';
