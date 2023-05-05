@@ -1,31 +1,31 @@
-import Link from "next/link";
-import { AllHTMLAttributes, ButtonHTMLAttributes } from "react";
+import Link from 'next/link';
+import { AllHTMLAttributes, ButtonHTMLAttributes } from 'react';
 
-import { cx } from "../utils";
+import { cx } from '../utils';
 
 type ButtonProps = {
-  impact?: "bold" | "light";
+  impact?: 'bold' | 'light';
   href?: string;
   isLoading?: boolean;
-  type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
+  type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
 } & AllHTMLAttributes<HTMLButtonElement | HTMLAnchorElement>;
 
 const baseClasses =
-  "block rounded-lg px-5 py-3 text-center font-semibold leading-none border";
-const impactClasses: Record<ButtonProps["impact"] & {}, string> = {
-  bold: "rounded-lg bg-black px-5 py-3 text-center font-semibold leading-none text-white hover:bg-stone-800 border-transparent",
+  'block rounded-lg px-5 py-3 text-center font-semibold leading-none border';
+const impactClasses: Record<ButtonProps['impact'] & {}, string> = {
+  bold: 'rounded-lg bg-black px-5 py-3 text-center font-semibold leading-none text-white hover:bg-stone-800 border-transparent',
   light:
-    "rounded-lg bg-transparent border-black text-black px-5 py-3 text-center font-semibold leading-none hover:bg-stone-800/10",
+    'rounded-lg bg-transparent border-black text-black px-5 py-3 text-center font-semibold leading-none hover:bg-stone-800/10',
 };
 
 // ----------
 
 export default function Button({
-  impact = "bold",
+  impact = 'bold',
   href,
   isLoading = false,
   children,
-  className = "",
+  className = '',
   ...props
 }: ButtonProps) {
   return href ? (
