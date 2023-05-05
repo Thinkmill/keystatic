@@ -24,7 +24,7 @@ export default function Docs() {
         </NavContainer>
 
         {/** CONTENT */}
-        <div className="lg:pl-64 pt-24 flex-1">
+        <div className="lg:pl-60 pt-24 flex-1">
           <div className="pt-10 pl-12">
             {/** INNER CONTENT (markdoc goes here) */}
             <h2 className="text-3xl font-bold sm:text-4xl">

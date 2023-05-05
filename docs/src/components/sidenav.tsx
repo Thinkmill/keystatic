@@ -3,7 +3,7 @@ import { cx } from '../utils';
 
 export function NavContainer({ children }: { children: ReactNode }) {
   return (
-    <div className="hidden lg:block fixed w-64 h-screen pt-24">
+    <div className="hidden lg:block fixed w-60 h-screen pt-24">
       <nav className="h-full pt-2 pb-10 pr-6 pl-4 -ml-4 border-r border-stone-400/20 overflow-y-auto">
         {children}
       </nav>
