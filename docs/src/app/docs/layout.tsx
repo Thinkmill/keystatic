@@ -34,16 +34,46 @@ export default function RootLayout({
             </NavContainer>
 
             {/** CONTENT */}
-            <div className="lg:pl-60 pt-24 flex-1">
-              <div className="py-10 pl-12 ">
+            <div className="lg:pl-56 pt-24 flex-1">
+              <div className="py-10 lg:pl-12">
                 {/** INNER CONTENT (markdoc goes here) */}
-                <div className="grid gap-6 grid-cols-[auto,12rem]">
-                  <div>{children}</div>
+                <div className="flex gap-8">
+                  <div className="flex-1">{children}</div>
 
-                  <div className="sticky top-28 self-start">
-                    <h5 className="text-xs uppercase text-stone-600">
+                  {/** TOCs */}
+                  <div className="w-[12rem] sticky top-28 self-start hidden md:block lg:hidden 2lg:block">
+                    <h5 className="text-xs uppercase text-black text-stone-500">
                       On this page
                     </h5>
+
+                    <ul className="mt-2">
+                      <li>
+                        <a
+                          className="block text-sm text-stone-600 leading-tight py-1 font-semibold hover:underline"
+                          href="#"
+                        >
+                          Example
+                        </a>
+                      </li>
+
+                      <li>
+                        <a
+                          className="block text-sm text-stone-500 leading-tight py-1 hover:underline"
+                          href="#"
+                        >
+                          Example with really long label
+                        </a>
+                      </li>
+
+                      <li>
+                        <a
+                          className="block text-xs text-stone-500 pl-2 leading-tight py-1 hover:underline"
+                          href="#"
+                        >
+                          Example with really long label label label
+                        </a>
+                      </li>
+                    </ul>
                   </div>
                 </div>
 
