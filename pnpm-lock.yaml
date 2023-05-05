@@ -2101,14 +2101,14 @@ importers:
       '@hapi/iron': ^7.0.0
       '@headlessui/react': ^1.7.11
       '@heroicons/react': ^2.0.16
+      '@keystatic/core': workspace:^0.0.97
+      '@keystatic/next': workspace:^0.0.7
       '@tailwindcss/forms': ^0.5.3
       '@tailwindcss/typography': ^0.5.9
       '@types/cookie': ^0.5.1
       '@types/node': 16.11.13
       '@types/react': ^18.0.25
       '@vercel/analytics': ^0.1.8
-      '@voussoir/layout': workspace:^0.1.3
-      '@voussoir/next': workspace:^0.1.1
       autoprefixer: ^10.4.13
       cookie: ^0.5.0
       next: ^13.2.4
@@ -2125,13 +2125,13 @@ importers:
       '@hapi/iron': 7.0.1
       '@headlessui/react': 1.7.14_biqbaboplfbrettd7655fr4n2y
       '@heroicons/react': 2.0.17_react@18.2.0
+      '@keystatic/core': link:../packages/keystatic
+      '@keystatic/next': link:../packages/next
       '@tailwindcss/forms': 0.5.3_tailwindcss@3.3.2
       '@types/cookie': 0.5.1
       '@types/node': 16.11.13
       '@types/react': 18.0.28
       '@vercel/analytics': 0.1.11_react@18.2.0
-      '@voussoir/layout': link:../design-system/packages/layout
-      '@voussoir/next': link:../design-system/packages/next
       cookie: 0.5.0
       next: 13.2.4_biqbaboplfbrettd7655fr4n2y
       next-seo: 5.15.0_ld2jel3hspngo3u5lti2kgl2sq
