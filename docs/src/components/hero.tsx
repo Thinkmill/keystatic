@@ -1,10 +1,10 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 const features = [
-  "First-class CMS experience",
-  "Visually edit Markdoc & components",
-  "TypeScript API, no database",
-  "Integrates with Astro, Remix and Next.js",
+  'First-class CMS experience',
+  'Visually edit Markdoc & components',
+  'TypeScript API, no database',
+  'Integrates with Astro, Remix and Next.js',
 ];
 
 export default function Hero() {
@@ -17,11 +17,11 @@ export default function Hero() {
             Hey there, early birds. We’re building Keystatic in the open (
             <a href="#mailing-list" className="underline">
               subscribe
-            </a>{" "}
+            </a>{' '}
             or follow us above), and we’re pretty early in the process.
             Keystatic isn’t really production ready yet, and is still janky in
             places. So read this website the way you would a poster for an
-            unreleased movie –{" "}
+            unreleased movie –{' '}
             <strong>it’s going to be great, once it’s more complete</strong>.
           </p>
         </div>
@@ -29,7 +29,7 @@ export default function Hero() {
       <div className="mx-auto grid max-w-7xl gap-y-8 py-12 px-6 md:gap-y-16 md:py-16 lg:grid-cols-12 lg:items-center">
         <div className="text-center lg:col-span-7 lg:pr-8 lg:text-left xl:col-span-6">
           <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">
-            Meet{" "}
+            Meet{' '}
             <span className="relative">
               <svg
                 className="absolute -right-2 bottom-0 w-[105%]"
@@ -74,19 +74,19 @@ export default function Hero() {
               />
             </svg>
             <span className="font-medium">
-              Keystatic is another{" "}
+              Keystatic is another{' '}
               <Link
                 href="https://thinkmill.com.au"
                 className="underline hover:text-keystatic-gray-dark"
               >
                 Thinkmill
-              </Link>{" "}
+              </Link>{' '}
               project
             </span>
           </div>
         </div>
         <ul className="mx-auto max-w-xl space-y-6 rounded-2xl bg-white p-8 text-xl leading-none lg:col-span-6 lg:col-start-8 lg:max-w-none">
-          {features.map((feature) => (
+          {features.map(feature => (
             <li key={feature} className="flex items-center gap-4">
               <svg
                 className="w-4"

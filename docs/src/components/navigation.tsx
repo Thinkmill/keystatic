@@ -36,8 +36,7 @@ export default function Index({ showCta = true }: NavigationProps) {
 
           <div
             className={cx(
-              'flex flex-col items-center gap-2 min-[400px]:flex-row',
-              showCta ? '' : 'md:mr-12'
+              'flex flex-col items-center gap-2 min-[400px]:flex-row'
             )}
           >
             <div className="flex gap-2">

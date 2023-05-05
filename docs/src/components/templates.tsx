@@ -1,22 +1,22 @@
-import { useRouter } from "next/router";
-import Image from "next/image";
+import { useRouter } from 'next/router';
+import Image from 'next/image';
 
-import { BellIcon } from "@heroicons/react/24/outline";
-import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
+import { BellIcon } from '@heroicons/react/24/outline';
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 
-import GetAccessForm from "./forms/get-access";
-import GetNotifiedForm from "./forms/get-notified";
+import GetAccessForm from './forms/get-access';
+import GetNotifiedForm from './forms/get-notified';
 
-import { cx } from "../utils";
+import { cx } from '../utils';
 
-import Button from "./button";
-import Dialog from "./dialog";
-import { MouseEventHandler, useEffect, useState } from "react";
+import Button from './button';
+import Dialog from './dialog';
+import { MouseEventHandler, useEffect, useState } from 'react';
 
-import blankTemplateImage from "../../public/images/templates/blank@3x.png";
-import marketingTemplateImage from "../../public/images/templates/marketing@3x.png";
-import blogTemplateImage from "../../public/images/templates/blog@3x.png";
-import comingSoonTemplateImage from "../../public/images/templates/coming-soon@3x.png";
+import blankTemplateImage from '../../public/images/templates/blank@3x.png';
+import marketingTemplateImage from '../../public/images/templates/marketing@3x.png';
+import blogTemplateImage from '../../public/images/templates/blog@3x.png';
+import comingSoonTemplateImage from '../../public/images/templates/coming-soon@3x.png';
 
 export type Template = {
   id: string;
@@ -30,74 +30,74 @@ export type Template = {
     suggestedName: string;
   };
   preview?: string;
-  status: "available" | "coming soon";
+  status: 'available' | 'coming soon';
 };
 
 const templates: Template[] = [
   {
-    id: "blank",
-    name: "Start from a blank canvas",
-    label: "Blank",
-    text: "A barebone starting point. Keystatic with a simple Post collection, and no frontend design.",
+    id: 'blank',
+    name: 'Start from a blank canvas',
+    label: 'Blank',
+    text: 'A barebone starting point. Keystatic with a simple Post collection, and no frontend design.',
     image: blankTemplateImage.src,
     repo: {
-      owner: "thinkmill",
-      name: "keystatic-template",
-      suggestedName: "keystatic-app",
+      owner: 'thinkmill',
+      name: 'keystatic-template',
+      suggestedName: 'keystatic-app',
     },
-    status: "available",
+    status: 'available',
   },
   {
-    id: "marketing",
-    name: "Marketing landing page",
-    label: "Marketing",
-    text: "A fictive product marketing landing page demo, built with Tailwind CSS and Next.js.",
+    id: 'marketing',
+    name: 'Marketing landing page',
+    label: 'Marketing',
+    text: 'A fictive product marketing landing page demo, built with Tailwind CSS and Next.js.',
     image: marketingTemplateImage.src,
     repo: {
-      owner: "thinkmill",
-      name: "keystatic-starter-landing-page",
-      suggestedName: "keystatic-landing-page",
+      owner: 'thinkmill',
+      name: 'keystatic-starter-landing-page',
+      suggestedName: 'keystatic-landing-page',
     },
-    preview: "https://landing-page.keystatic-starter.thinkmill.com.au",
-    status: "available",
+    preview: 'https://landing-page.keystatic-starter.thinkmill.com.au',
+    status: 'available',
   },
   {
-    id: "blog",
-    name: "Blog",
-    label: "Blog",
+    id: 'blog',
+    name: 'Blog',
+    label: 'Blog',
     text: "A blog post starter template showcasing Keystatic's Document field. Built with Next.js and Tailwind CSS.",
     image: blogTemplateImage.src,
     repo: {
-      owner: "thinkmill",
-      name: "keystatic-starter-blog",
-      suggestedName: "keystatic-blog",
+      owner: 'thinkmill',
+      name: 'keystatic-starter-blog',
+      suggestedName: 'keystatic-blog',
     },
-    preview: "https://blog.keystatic-starter.thinkmill.com.au",
-    status: "available",
+    preview: 'https://blog.keystatic-starter.thinkmill.com.au',
+    status: 'available',
   },
   {
-    id: "docs",
-    name: "Documentation site",
-    label: "Docs",
+    id: 'docs',
+    name: 'Documentation site',
+    label: 'Docs',
     text: "We're building a docs website example. Stay tuned!",
     image: comingSoonTemplateImage.src,
     // repo: {
     //   owner: "thinkmill",
     //   name: "n/a",
     // },
-    status: "coming soon",
+    status: 'coming soon',
   },
   {
-    id: "product-list",
-    name: "Product list & ordering",
-    label: "Product List",
+    id: 'product-list',
+    name: 'Product list & ordering',
+    label: 'Product List',
     text: "A product listing template exploring Keystatic's Relationship field.",
     image: comingSoonTemplateImage.src,
     // repo: {
     //   owner: "thinkmill",
     //   name: "n/a",
     // },
-    status: "coming soon",
+    status: 'coming soon',
   },
 ];
 
@@ -114,7 +114,7 @@ function useLastTruthyValue<T>(val: T): T {
 export default function Templates() {
   const router = useRouter();
   const { template } = router.query;
-  const templateMatch = templates.find((t) => t.id === template);
+  const templateMatch = templates.find(t => t.id === template);
 
   const lastTemplate = useLastTruthyValue(templateMatch);
 
@@ -139,17 +139,17 @@ export default function Templates() {
       </svg>
       <div className="mx-auto max-w-7xl px-6 pt-16 pb-24 sm:pb-32">
         <ul className="grid items-stretch gap-8 md:grid-cols-2 xl:grid-cols-3">
-          {templates.map((template) => (
+          {templates.map(template => (
             <li key={template.id}>
               <div
                 className={cx(
-                  "grid h-full grid-rows-[auto,1fr] overflow-hidden rounded-xl border border-black",
-                  template.id === "blank" ? "border-dashed" : ""
+                  'grid h-full grid-rows-[auto,1fr] overflow-hidden rounded-xl border border-black',
+                  template.id === 'blank' ? 'border-dashed' : ''
                 )}
               >
                 <Image
                   alt={`${template.label} template screenshot`}
-                  src={template?.image ?? "/images/product-screen.png"}
+                  src={template?.image ?? '/images/product-screen.png'}
                   width={800}
                   height={540}
                   className="border-b border-black object-cover"
@@ -184,7 +184,7 @@ export default function Templates() {
         ---------------------------------
       */}
       <Dialog
-        open={templateMatch?.status === "available"}
+        open={templateMatch?.status === 'available'}
         onClose={onClose}
         header={() => (
           <>
@@ -194,7 +194,7 @@ export default function Templates() {
             <h2 className="mt-4 text-3xl font-bold sm:text-4xl sm:leading-tight">
               Create a new Keystatic project with the <br />
               <span className="text-yellow-500">
-                {lastTemplate ? lastTemplate.label : templates[0].label}{" "}
+                {lastTemplate ? lastTemplate.label : templates[0].label}{' '}
                 Template.
               </span>
             </h2>
@@ -204,7 +204,7 @@ export default function Templates() {
         {templateMatch && (
           <div className="mt-6">
             <h3 className="text-2xl font-bold leading-7">
-              Tell us a bit about yourself{" "}
+              Tell us a bit about yourself{' '}
               <span className="text-lg font-normal text-gray-500">
                 (optional)
               </span>
@@ -220,7 +220,7 @@ export default function Templates() {
         ---------------------------------
       */}
       <Dialog
-        open={templateMatch?.status === "coming soon"}
+        open={templateMatch?.status === 'coming soon'}
         onClose={onClose}
         header={() => (
           <>
@@ -255,7 +255,7 @@ function CtaButtons({
   // ------------------------------
   // Blank temlpate (no preview)
   // ------------------------------
-  if (template.id === "blank") {
+  if (template.id === 'blank') {
     return (
       <Button className="mt-6" onClick={onClick}>
         Get started
@@ -266,7 +266,7 @@ function CtaButtons({
   // ------------------------------
   // Coming soon template
   // ------------------------------
-  if (template.status === "coming soon") {
+  if (template.status === 'coming soon') {
     return (
       <Button
         className="mt-6 flex items-center justify-center gap-2.5"
