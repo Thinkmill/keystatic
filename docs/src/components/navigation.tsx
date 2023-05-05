@@ -1,18 +1,17 @@
-import Link from "next/link";
-import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
+import Link from 'next/link';
 
-import Button from "./button";
-import { cx } from "../utils";
+import Button from './button';
+import { cx } from '../utils';
 
 type NavigationProps = {
   showCta?: boolean;
 };
 
-export default function Index({ showCta = true }) {
+export default function Index({ showCta = true }: NavigationProps) {
   return (
-    <header className="bg-keystatic-gray-light">
-      <div className="mx-auto max-w-7xl py-6 px-6">
-        <nav className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+    <header className="bg-keystatic-gray-light w-full">
+      <div className="mx-auto max-w-7xl">
+        <nav className="h-24 py-6 px-6 flex flex-col items-center justify-between gap-4 sm:flex-row">
           <Link href="/" className="flex items-center gap-3">
             <svg
               className="h-4"
@@ -34,10 +33,10 @@ export default function Index({ showCta = true }) {
               />
             </svg>
           </Link>
+
           <div
             className={cx(
-              "flex flex-col items-center gap-2 min-[400px]:flex-row",
-              showCta ? "" : "md:mr-12"
+              'flex flex-col items-center gap-2 min-[400px]:flex-row'
             )}
           >
             <div className="flex gap-2">
@@ -67,6 +66,7 @@ export default function Index({ showCta = true }) {
                   </defs>
                 </svg>
               </Link>
+
               <Link
                 href="https://github.com/thinkmill/keystatic"
                 className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
@@ -84,6 +84,7 @@ export default function Index({ showCta = true }) {
                   />
                 </svg>
               </Link>
+
               <Link
                 href="https://twitter.com/thekeystatic"
                 className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
@@ -109,14 +110,13 @@ export default function Index({ showCta = true }) {
                 </svg>
               </Link>
             </div>
+
             {showCta && (
               <Button
-                href="https://thinkmill.notion.site/Keystatic-9f141cb1ac3c44b5ad02f1ae9b5543d8"
-                target="_blank"
+                href="/docs"
                 className="flex flex-1 items-center justify-center gap-2.5"
               >
-                <span>Read the docs</span>
-                <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                <span>Docs</span>
               </Button>
             )}
           </div>

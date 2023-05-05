@@ -19875,7 +19875,7 @@ packages:
       react: '>=16.0.0'
       react-dom: '>=16.0.0'
     dependencies:
-      next: 13.2.4_biqbaboplfbrettd7655fr4n2y
+      next: 13.2.4_6m24vuloj5ihw4zc5lbsktc4fu
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false
