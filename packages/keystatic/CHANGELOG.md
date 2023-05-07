@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.98
+
+### Patch Changes
+
+- c0257be: Fix edit modal not working in `fields.block()`
+
 ## 0.0.97
 
 ### Patch Changes
