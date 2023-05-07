@@ -41,7 +41,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.0.97",
+    "@keystatic/core": "^0.0.98",
     "next": "^13.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
