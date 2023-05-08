@@ -10,8 +10,8 @@ export default function Index({ showCta = true }: NavigationProps) {
   return (
     <header className="bg-keystatic-gray-light w-full">
       <div className="mx-auto max-w-7xl">
-        <nav className="h-24 py-6 px-6 flex flex-row items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-3">
+        <nav className="lg:h-24 py-6 px-6 flex flex-row items-center justify-between gap-6">
+          <Link href="/">
             <svg
               className="h-4"
               xmlns="http://www.w3.org/2000/svg"
@@ -33,8 +33,9 @@ export default function Index({ showCta = true }: NavigationProps) {
             </svg>
           </Link>
 
-          <div className="hidden lg:flex flex-row items-center gap-2">
-            <div className="flex gap-2">
+          {/** COMMUNITY LINKS */}
+          <div className="flex flex-row items-center gap-4 justify-between">
+            <div className={`${showCta ? 'hidden sm:flex' : 'flex'} gap-2`}>
               <Link
                 href="https://fosstodon.org/@keystatic"
                 className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
@@ -107,16 +108,13 @@ export default function Index({ showCta = true }: NavigationProps) {
             </div>
 
             {showCta && (
-              <Button
-                href="/docs"
-                className="flex flex-1 items-center justify-center gap-2.5"
-              >
+              <Button href="/docs" className="flex items-center justify-center">
                 <span>Docs</span>
               </Button>
             )}
           </div>
 
-          <Button
+          {/* <Button
             href="/docs"
             impact="light"
             className="px-3 pt-2 pb-2 lg:hidden"
@@ -138,7 +136,7 @@ export default function Index({ showCta = true }: NavigationProps) {
               </svg>
               Menu
             </div>
-          </Button>
+          </Button> */}
         </nav>
       </div>
     </header>
