@@ -1,12 +1,19 @@
+'use client';
+
 import Link from 'next/link';
 
 import Button from './button';
+import { useState } from 'react';
+import { NavItem, NavList, TopNavItem } from './sidenav';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 type NavigationProps = {
   showCta?: boolean;
 };
 
 export default function Index({ showCta = true }: NavigationProps) {
+  const [navOpen, setNavOpen] = useState(false);
+
   return (
     <header className="bg-keystatic-gray-light w-full">
       <div className="mx-auto max-w-7xl">
@@ -33,79 +40,8 @@ export default function Index({ showCta = true }: NavigationProps) {
             </svg>
           </Link>
 
-          {/** COMMUNITY LINKS */}
-          <div className="flex flex-row items-center gap-4 justify-between">
-            <div className={`${showCta ? 'hidden sm:flex' : 'flex'} gap-2`}>
-              <Link
-                href="https://fosstodon.org/@keystatic"
-                className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
-              >
-                <span className="sr-only">Keystatic on Mastodon</span>
-                <svg
-                  className="h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 16 16"
-                >
-                  <g clipPath="url(#a)">
-                    <path
-                      fill="#000"
-                      fillRule="evenodd"
-                      d="M11.941.206c1.776.262 3.275 1.617 3.506 3.336.1 1.023.05 2.56.027 3.306l-.011.39c0 .101-.015 1.017-.02 1.114-.156 2.457-1.688 3.427-3.297 3.736l-.058.013-.015.003c-1.02.199-2.114.252-3.151.281-.248.007-.495.007-.743.007a13.04 13.04 0 0 1-3.062-.364.035.035 0 0 0-.044.036c.029.326.1.647.212.955.139.357.624 1.213 2.427 1.213 1.049.002 2.093-.12 3.113-.364a.035.035 0 0 1 .016 0c.005.001.01.003.014.007a.036.036 0 0 1 .013.027v1.206a.038.038 0 0 1-.015.029c-.319.23-.747.367-1.123.486l-.05.016c-.17.054-.344.1-.519.142a8.792 8.792 0 0 1-4.796-.254c-1.442-.506-2.914-1.746-3.278-3.237a17.596 17.596 0 0 1-.41-2.454C.596 8.932.568 8.027.54 7.12.53 6.78.52 6.437.506 6.095c-.034-.87-.015-1.82.17-2.677C1.057 1.678 2.634.46 4.361.206a4.68 4.68 0 0 0 .12-.02C4.824.126 5.537 0 7.856 0h.02c2.63 0 3.766.161 4.065.206Zm.956 9.539V5.474c0-.873-.222-1.567-.667-2.08-.461-.513-1.064-.776-1.812-.776-.865 0-1.52.333-1.956.998l-.421.707-.422-.707c-.436-.665-1.09-.998-1.957-.998-.748 0-1.351.263-1.811.776-.446.514-.668 1.207-.668 2.08v4.27h1.691V5.6c0-.873.368-1.318 1.103-1.318.813 0 1.221.526 1.221 1.566v2.27h1.683v-2.27c0-1.04.407-1.566 1.22-1.566.74 0 1.103.445 1.103 1.318v4.145h1.693Z"
-                      clipRule="evenodd"
-                    />
-                  </g>
-                  <defs>
-                    <clipPath id="a">
-                      <path fill="#fff" d="M0 0h16v16H0z" />
-                    </clipPath>
-                  </defs>
-                </svg>
-              </Link>
-
-              <Link
-                href="https://github.com/thinkmill/keystatic"
-                className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
-              >
-                <span className="sr-only">Keystatic on GitHub</span>
-                <svg
-                  className="h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill="#000"
-                    d="M8 0a8 8 0 0 0-2.529 15.591c.4.074.529-.174.529-.384v-1.49c-2.225.484-2.689-.944-2.689-.944-.364-.924-.888-1.17-.888-1.17-.726-.497.055-.486.055-.486.803.056 1.226.824 1.226.824.713 1.223 1.871.87 2.328.665.071-.517.279-.87.508-1.07-1.777-.203-3.645-.889-3.645-3.953 0-.874.313-1.588.824-2.148-.082-.202-.356-1.016.078-2.117 0 0 .672-.215 2.201.82A7.673 7.673 0 0 1 8 3.868c.68.004 1.365.093 2.004.27 1.527-1.035 2.198-.82 2.198-.82.435 1.102.161 1.916.079 2.117.513.56.823 1.274.823 2.148 0 3.072-1.871 3.749-3.653 3.947.287.248.549.735.549 1.481v2.196c0 .212.128.462.534.384A8.002 8.002 0 0 0 8 0Z"
-                  />
-                </svg>
-              </Link>
-
-              <Link
-                href="https://twitter.com/thekeystatic"
-                className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
-              >
-                <span className="sr-only">Keystatic on Twitter</span>
-                <svg
-                  className="h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 16 16"
-                >
-                  <g clipPath="url(#a)">
-                    <path
-                      fill="#000"
-                      d="M16 3.038a6.554 6.554 0 0 1-1.885.517 3.288 3.288 0 0 0 1.443-1.816 6.576 6.576 0 0 1-2.085.796A3.285 3.285 0 0 0 7.88 5.528 9.319 9.319 0 0 1 1.114 2.1a3.287 3.287 0 0 0 1.015 4.383 3.269 3.269 0 0 1-1.486-.41c-.036 1.52 1.054 2.943 2.633 3.26a3.29 3.29 0 0 1-1.483.055 3.285 3.285 0 0 0 3.067 2.28A6.6 6.6 0 0 1 0 13.027 9.293 9.293 0 0 0 5.032 14.5c6.095 0 9.538-5.147 9.33-9.764A6.684 6.684 0 0 0 16 3.038Z"
-                    />
-                  </g>
-                  <defs>
-                    <clipPath id="a">
-                      <path fill="#fff" d="M0 0h16v16H0z" />
-                    </clipPath>
-                  </defs>
-                </svg>
-              </Link>
-            </div>
+          <div className="hidden lg:flex flex-row items-center gap-4 justify-between">
+            <SocialLinks />
 
             {showCta && (
               <Button href="/docs" className="flex items-center justify-center">
@@ -114,8 +50,8 @@ export default function Index({ showCta = true }: NavigationProps) {
             )}
           </div>
 
-          {/* <Button
-            href="/docs"
+          <Button
+            onClick={() => setNavOpen(true)}
             impact="light"
             className="px-3 pt-2 pb-2 lg:hidden"
           >
@@ -136,9 +72,171 @@ export default function Index({ showCta = true }: NavigationProps) {
               </svg>
               Menu
             </div>
-          </Button> */}
+          </Button>
+
+          <div
+            onClick={prev => setNavOpen(!prev)}
+            className={`fixed top-0 left-0 bottom-0 right-0 bg-stone-800/[.6] z-30 transition-opacity lg:hidden ${
+              navOpen
+                ? 'visible opacity-100'
+                : 'invisible opacity-0 lg:visible lg:opacity-100'
+            }`}
+          />
+
+          <ul
+            className={`overflow-y-auto list-none fixed top-0 bg-white h-screen right-0 w-64 z-30 drop-shadow-2xl flex flex-col transition-[right] ${
+              !navOpen ? '-right-full' : 'right-0'
+            }`}
+          >
+            {/* Close button */}
+            <div className="sticky top-0 left-0 right-0 p-4 bg-white z-30 justify-end flex">
+              <button
+                type="button"
+                className="flex items-center justify-center rounded-lg bg-keystatic-gray h-10 w-10 hover:bg-stone-300 hover:text-stone-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                onClick={() => setNavOpen(false)}
+              >
+                <span className="sr-only">Close menu</span>
+                <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            <div className="px-4 pb-10">
+              <TopNavItem label="Meet Keystatic" href="/" />
+
+              <TopNavItem label="Docs" href="/docs" />
+
+              <div className="pt-6">
+                <NavList title="Getting started">
+                  <NavItem label="Automated setup" href="/" />
+                  <NavItem label="Manual installation" href="/" />
+                </NavList>
+
+                <NavList title="Integration guides">
+                  <NavItem label="Astro" href="/" />
+                  <NavItem label="Next.js" href="/" />
+                  <NavItem label="Remix" href="/" />
+                </NavList>
+
+                <NavList title="Learn Keystatic">
+                  <NavItem label="Collections & Singletons" href="/" />
+                  <NavItem label="Local vs. GitHub" href="/" />
+                  <NavItem label="Reader API" href="/" />
+                  <NavItem label="Renderer API" href="/" />
+                  <NavItem label="Content Organisation" href="/" />
+                  <NavItem label="FAQ" href="/" />
+                </NavList>
+
+                <NavList title="Fields API">
+                  <NavItem label="Text" href="/" />
+                  <NavItem label="Integer" href="/" />
+                  <NavItem label="URL" href="/" />
+                  <NavItem label="Path Reference" href="/" />
+                  <NavItem label="Relationship" href="/" />
+                  <NavItem label="Select" href="/" />
+                  <NavItem label="Slug" href="/" />
+                  <NavItem label="Multi-Select" href="/" />
+                  <NavItem label="Checkbox" href="/" />
+                  <NavItem label="Image" href="/" />
+                  <NavItem label="Date" href="/" />
+                  <NavItem label="Empty" href="/" />
+                  <NavItem label="Child" href="/" />
+                  <NavItem label="Object" href="/" />
+                  <NavItem label="Conditional" href="/" />
+                  <NavItem label="Document" href="/" />
+                  <NavItem label="Array" href="/" />
+                </NavList>
+
+                <NavList title="Community">
+                  <NavItem label="GitHub Discussions" href="/" />
+                  <NavItem label="Socials" href="/" />
+                </NavList>
+              </div>
+
+              <hr className="h-px my-3 mx-4 border-stone-400/20" />
+
+              <div className="flex flex-row items-center gap-4 justify-center px-4 pt-6">
+                <SocialLinks />
+              </div>
+            </div>
+          </ul>
         </nav>
       </div>
     </header>
+  );
+}
+
+export function SocialLinks() {
+  return (
+    <div className="flex gap-2">
+      <Link
+        href="https://fosstodon.org/@keystatic"
+        className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
+      >
+        <span className="sr-only">Keystatic on Mastodon</span>
+        <svg
+          className="h-4 w-4"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 16 16"
+        >
+          <g clipPath="url(#a)">
+            <path
+              fill="#000"
+              fillRule="evenodd"
+              d="M11.941.206c1.776.262 3.275 1.617 3.506 3.336.1 1.023.05 2.56.027 3.306l-.011.39c0 .101-.015 1.017-.02 1.114-.156 2.457-1.688 3.427-3.297 3.736l-.058.013-.015.003c-1.02.199-2.114.252-3.151.281-.248.007-.495.007-.743.007a13.04 13.04 0 0 1-3.062-.364.035.035 0 0 0-.044.036c.029.326.1.647.212.955.139.357.624 1.213 2.427 1.213 1.049.002 2.093-.12 3.113-.364a.035.035 0 0 1 .016 0c.005.001.01.003.014.007a.036.036 0 0 1 .013.027v1.206a.038.038 0 0 1-.015.029c-.319.23-.747.367-1.123.486l-.05.016c-.17.054-.344.1-.519.142a8.792 8.792 0 0 1-4.796-.254c-1.442-.506-2.914-1.746-3.278-3.237a17.596 17.596 0 0 1-.41-2.454C.596 8.932.568 8.027.54 7.12.53 6.78.52 6.437.506 6.095c-.034-.87-.015-1.82.17-2.677C1.057 1.678 2.634.46 4.361.206a4.68 4.68 0 0 0 .12-.02C4.824.126 5.537 0 7.856 0h.02c2.63 0 3.766.161 4.065.206Zm.956 9.539V5.474c0-.873-.222-1.567-.667-2.08-.461-.513-1.064-.776-1.812-.776-.865 0-1.52.333-1.956.998l-.421.707-.422-.707c-.436-.665-1.09-.998-1.957-.998-.748 0-1.351.263-1.811.776-.446.514-.668 1.207-.668 2.08v4.27h1.691V5.6c0-.873.368-1.318 1.103-1.318.813 0 1.221.526 1.221 1.566v2.27h1.683v-2.27c0-1.04.407-1.566 1.22-1.566.74 0 1.103.445 1.103 1.318v4.145h1.693Z"
+              clipRule="evenodd"
+            />
+          </g>
+          <defs>
+            <clipPath id="a">
+              <path fill="#fff" d="M0 0h16v16H0z" />
+            </clipPath>
+          </defs>
+        </svg>
+      </Link>
+
+      <Link
+        href="https://github.com/thinkmill/keystatic"
+        className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
+      >
+        <span className="sr-only">Keystatic on GitHub</span>
+        <svg
+          className="h-4 w-4"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill="#000"
+            d="M8 0a8 8 0 0 0-2.529 15.591c.4.074.529-.174.529-.384v-1.49c-2.225.484-2.689-.944-2.689-.944-.364-.924-.888-1.17-.888-1.17-.726-.497.055-.486.055-.486.803.056 1.226.824 1.226.824.713 1.223 1.871.87 2.328.665.071-.517.279-.87.508-1.07-1.777-.203-3.645-.889-3.645-3.953 0-.874.313-1.588.824-2.148-.082-.202-.356-1.016.078-2.117 0 0 .672-.215 2.201.82A7.673 7.673 0 0 1 8 3.868c.68.004 1.365.093 2.004.27 1.527-1.035 2.198-.82 2.198-.82.435 1.102.161 1.916.079 2.117.513.56.823 1.274.823 2.148 0 3.072-1.871 3.749-3.653 3.947.287.248.549.735.549 1.481v2.196c0 .212.128.462.534.384A8.002 8.002 0 0 0 8 0Z"
+          />
+        </svg>
+      </Link>
+
+      <Link
+        href="https://twitter.com/thekeystatic"
+        className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
+      >
+        <span className="sr-only">Keystatic on Twitter</span>
+        <svg
+          className="h-4 w-4"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 16 16"
+        >
+          <g clipPath="url(#a)">
+            <path
+              fill="#000"
+              d="M16 3.038a6.554 6.554 0 0 1-1.885.517 3.288 3.288 0 0 0 1.443-1.816 6.576 6.576 0 0 1-2.085.796A3.285 3.285 0 0 0 7.88 5.528 9.319 9.319 0 0 1 1.114 2.1a3.287 3.287 0 0 0 1.015 4.383 3.269 3.269 0 0 1-1.486-.41c-.036 1.52 1.054 2.943 2.633 3.26a3.29 3.29 0 0 1-1.483.055 3.285 3.285 0 0 0 3.067 2.28A6.6 6.6 0 0 1 0 13.027 9.293 9.293 0 0 0 5.032 14.5c6.095 0 9.538-5.147 9.33-9.764A6.684 6.684 0 0 0 16 3.038Z"
+            />
+          </g>
+          <defs>
+            <clipPath id="a">
+              <path fill="#fff" d="M0 0h16v16H0z" />
+            </clipPath>
+          </defs>
+        </svg>
+      </Link>
+    </div>
   );
 }
