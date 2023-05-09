@@ -1,3 +1,6 @@
+---
+title: Adding Keystatic to a Next.js project
+---
 ## Installing dependencies
 
 We're going to need to install a few packages to get Keystatic going.
@@ -12,12 +15,12 @@ npm install @keystatic/core @keystatic/next
 
 ## Creating a Keystatic config file
 
-Keystatic needs a config fie. This is where you can connect a project with a specific GitHub repository and define a content schema.
+Keystatic needs a config file. This is where you can connect a project with a specific GitHub repository and define a content schema.
 
 Let's create a file called `keystatic.config.tsx` (or `.jsx` if not using TypeScript) in the root of the project:
 
-```jsx
-// keystatic.config.tsx
+```typescript
+// keystatic.config.ts
 import { config, fields, singleton } from '@keystatic/core'
 
 export default config({
@@ -36,9 +39,7 @@ export default config({
 })
 ```
 
- 
-
-We export a config object wrapped in the `config` function imported from `@keystatic/core`. 
+We export a config object wrapped in the `config` function imported from `@keystatic/core`.
 
 For now, we set the `storage` strategy to `local`, and we create a “homepage” `singleton` which contains one text field: `headline`.
 
@@ -100,7 +101,7 @@ export default function Page() {
 
 Great! So now, we should be able to visit the `/keystatic` router in the browser.
 
-[INSERT PICTURE]
+![](keystatic-astro1.png)
 
 Our Keystatic Admin UI is here! 🎉
 
@@ -127,13 +128,13 @@ We should be all set to go for our Keystatic Admin UI now.
 
 Try and visit the `/keystatic` page in the browser one more time, and click on the “Homepage” singleton:
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9aa266a6-f9a5-4e2c-a2ae-4eca773ac1ac/Untitled.png)
+Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9aa266a6-f9a5-4e2c-a2ae-4eca773ac1ac/Untitled.png
 
 It's working: our “Headline” text field is here.
 
 Go ahead and fill that field with something, and hit `Create`:
 
-![CleanShot 2023-02-27 at 15.43.46@2x.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5c2847e7-b188-4006-9e4b-d882458a8d8e/CleanShot_2023-02-27_at_15.43.462x.png)
+Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5c2847e7-b188-4006-9e4b-d882458a8d8e/CleanShot_2023-02-27_at_15.43.462x.png
 
 Check your source code again. Notice anything?
 
@@ -149,7 +150,7 @@ Inside, you'll find a `_homepage` directory.
 
 That directory contains an `index.yaml` file with… the `headline` text you’ve just created!
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5c4244fc-e644-4038-89f9-85ebec61367c/Untitled.png)
+Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5c4244fc-e644-4038-89f9-85ebec61367c/Untitled.png
 
 Niiiice ✨
 
@@ -236,6 +237,6 @@ export default async function Index() {
 
 ```
 
-![CleanShot 2023-02-27 at 16.12.14@2x.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ff732a63-b110-4f4b-91f9-1882167279f2/CleanShot_2023-02-27_at_16.12.142x.png)
+Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ff732a63-b110-4f4b-91f9-1882167279f2/CleanShot_2023-02-27_at_16.12.142x.png
 
 Beautiful!

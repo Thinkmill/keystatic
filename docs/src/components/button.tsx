@@ -1,31 +1,31 @@
-import Link from "next/link";
-import { AllHTMLAttributes, ButtonHTMLAttributes } from "react";
+import Link from 'next/link';
+import { AllHTMLAttributes, ButtonHTMLAttributes } from 'react';
 
-import { cx } from "../utils";
+import { cx } from '../utils';
 
 type ButtonProps = {
-  impact?: "bold" | "light";
+  impact?: 'bold' | 'light';
   href?: string;
   isLoading?: boolean;
-  type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
+  type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
 } & AllHTMLAttributes<HTMLButtonElement | HTMLAnchorElement>;
 
 const baseClasses =
-  "block rounded-lg px-5 py-3 text-center font-semibold leading-none border";
-const impactClasses: Record<ButtonProps["impact"] & {}, string> = {
-  bold: "rounded-lg bg-black px-5 py-3 text-center font-semibold leading-none text-white hover:bg-stone-800 border-transparent",
+  'block rounded-lg px-5 py-3 text-center font-semibold leading-none border';
+const impactClasses: Record<ButtonProps['impact'] & {}, string> = {
+  bold: 'rounded-lg bg-black px-5 py-3 text-center font-semibold leading-none text-white hover:bg-stone-800 border-transparent',
   light:
-    "rounded-lg bg-transparent border-black text-black px-5 py-3 text-center font-semibold leading-none hover:bg-stone-800/10",
+    'rounded-lg bg-transparent border-black text-black px-5 py-3 text-center font-semibold leading-none hover:bg-stone-800/10',
 };
 
 // ----------
 
 export default function Button({
-  impact = "bold",
+  impact = 'bold',
   href,
   isLoading = false,
   children,
-  className = "",
+  className = '',
   ...props
 }: ButtonProps) {
   return href ? (
@@ -62,12 +62,12 @@ function Spinner() {
           r="10"
           stroke="currentColor"
           strokeWidth="4"
-        ></circle>
+        />
         <path
           className="opacity-75"
           fill="currentColor"
           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        ></path>
+        />
       </svg>
     </div>
   );

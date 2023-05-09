@@ -29,7 +29,10 @@ export default function RootLayout({
               <NavList title="Getting started">
                 <NavItem label="Introduction" href="/" current />
                 <NavItem label="Automated setup" href="/" />
-                <NavItem label="Manual installation" href="/" />
+                <NavItem
+                  label="Manual installation"
+                  href="/docs/installation-next-js"
+                />
               </NavList>
             </NavContainer>
 
