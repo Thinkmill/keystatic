@@ -11,28 +11,31 @@ const getRenderers = (
 ): DocumentRendererProps['renderers'] => ({
   // use your editor's autocomplete to see what other renderers you can override
   inline: {
-    bold: ({ children }) => {
-      return <strong>{children}</strong>;
-    },
-    code: ({ children }) => {
-      return (
-        <code className="font-mono bg-gray-200 text-sm p-1 rounded-md">
-          {children}
-        </code>
-      );
-    },
+    bold: ({ children }) => <strong>{children}</strong>,
+    code: ({ children }) => (
+      <code className="font-mono bg-gray-200 text-sm p-1 rounded-md">
+        {children}
+      </code>
+    ),
+    link: ({ href, children }) => (
+      <a
+        className="cursor-pointer underline hover:text-thinkmill-red"
+        href={href}
+      >
+        {children}
+      </a>
+    ),
   },
   block: {
-    heading: ({ level, children }) => {
-      return <Heading level={level}>{children}</Heading>;
-    },
-    paragraph: ({ children, textAlign }) => {
-      return (
-        <p className="text-md text-stone-700" style={{ textAlign }}>
-          {children}
-        </p>
-      );
-    },
+    heading: ({ level, children }) => (
+      <Heading level={level}>{children}</Heading>
+    ),
+
+    paragraph: ({ children, textAlign }) => (
+      <p className="text-md text-stone-700" style={{ textAlign }}>
+        {children}
+      </p>
+    ),
     code: ({ children, language }) => {
       let codeBlock = children;
       try {
@@ -49,7 +52,7 @@ const getRenderers = (
     },
     image: ({ src, alt }) => (
       <img
-        className="rounded-md"
+        className="rounded-md my-2"
         src={`/images/content/${slug}/${src}`}
         alt={alt}
       />
