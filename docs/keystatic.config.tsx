@@ -45,7 +45,7 @@ export default config({
                 href: fields.text({
                   label: 'Href',
                   description:
-                    'For links that are not a page, e.g. external links',
+                    'For links that are not a docs page, e.g. external links',
                 }),
               }),
               {

@@ -1,9 +1,9 @@
 navGroups:
   - groupName: Getting started
     items:
-      - label: Manual Installation
-        href: /
       - label: Automated setup
+        page: automated-setup-with-template
+      - label: Manual Installation
         href: /
   - groupName: Integration guides
     items:
@@ -16,9 +16,9 @@ navGroups:
   - groupName: Learn Keystatic
     items:
       - label: Collections & Singletons
-        href: /
+        page: collections-and-singletons
       - label: Local vs. GitHub
-        href: /
+        page: local-vs-git-hub-storage-strategy
       - label: Reader API
         href: /
       - label: Renderer API

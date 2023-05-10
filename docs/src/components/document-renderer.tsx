@@ -17,14 +17,16 @@ const getRenderers = (
         {children}
       </code>
     ),
-    link: ({ href, children }) => (
-      <a
-        className="cursor-pointer underline hover:text-thinkmill-red"
-        href={href}
-      >
-        {children}
-      </a>
-    ),
+    link: ({ href, children }) => {
+      return (
+        <a
+          className="cursor-pointer underline hover:text-thinkmill-red"
+          href={href}
+        >
+          {children}
+        </a>
+      );
+    },
   },
   block: {
     heading: ({ level, children }) => (
@@ -53,7 +55,7 @@ const getRenderers = (
     image: ({ src, alt }) => (
       <img
         className="rounded-md my-2"
-        src={`/images/content/${slug}/${src}`}
+        src={src.includes('https') ? src : `/images/content/${slug}/${src}`}
         alt={alt}
       />
     ),
