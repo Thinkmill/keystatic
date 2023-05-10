@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.99
+
+### Patch Changes
+
+- f62dca6: Increase gap between fields
+- 4823b3d: Fix adding `fields.conditional` to an already existing entry
+
 ## 0.0.98
 
 ### Patch Changes
