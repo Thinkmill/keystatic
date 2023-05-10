@@ -1,9 +1,10 @@
-import { storiesOf } from '@voussoir/storybook';
+import { action, storiesOf } from '@voussoir/storybook';
 
 import { ActionButton } from '@voussoir/button';
 import { Icon } from '@voussoir/icon';
 import { boldIcon } from '@voussoir/icon/icons/boldIcon';
 import { code2Icon } from '@voussoir/icon/icons/code2Icon';
+import { componentIcon } from '@voussoir/icon/icons/componentIcon';
 import { fileCodeIcon } from '@voussoir/icon/icons/fileCodeIcon';
 import { indentIcon } from '@voussoir/icon/icons/indentIcon';
 import { italicIcon } from '@voussoir/icon/icons/italicIcon';
@@ -14,11 +15,20 @@ import { listOrderedIcon } from '@voussoir/icon/icons/listOrderedIcon';
 // import { unlinkIcon } from '@voussoir/icon/icons/unlinkIcon';
 import { Box, Divider, Flex } from '@voussoir/layout';
 import { Heading, Text } from '@voussoir/typography';
-import { useEffect, useState } from 'react';
+import { HTMLProps, useEffect, useState } from 'react';
 
-import { EditorPopover } from '../src';
+import {
+  EditorPopover,
+  EditorPopoverTrigger,
+  EditorPopoverProvider,
+} from '../src';
+// import { Item, Menu } from '@voussoir/menu';
+import { Combobox, Item } from '@voussoir/combobox';
 
 storiesOf('Editor/Popover', module)
+  .addDecorator(story => (
+    <EditorPopoverProvider>{story()}</EditorPopoverProvider>
+  ))
   .add('default', () => {
     let [isOpen, setOpen] = useState(false);
     let [triggerRef, setTriggerRef] = useState<HTMLButtonElement | null>(null);
@@ -42,6 +52,29 @@ storiesOf('Editor/Popover', module)
             <Text>Popover content</Text>
           </Box>
         </EditorPopover>
+      </Flex>
+    );
+  })
+  .add('overlay children', () => {
+    let [isOpen, setOpen] = useState(false);
+    let [triggerRef, setTriggerRef] = useState<HTMLButtonElement | null>(null);
+    return (
+      <Flex
+        direction="column"
+        maxWidth="container.xsmall"
+        marginX="auto"
+        gap="xlarge"
+      >
+        <EditorPopoverTrigger>
+          <ActionButton>Press me</ActionButton>
+          <Flex padding="regular" gap="regular">
+            <Combobox aria-label="Combobox" placeholder="Placeholder">
+              <Item key="One">One</Item>
+              <Item key="Two">Two</Item>
+              <Item key="Three">Three has a long label that will wrap</Item>
+            </Combobox>
+          </Flex>
+        </EditorPopoverTrigger>
       </Flex>
     );
   })
@@ -182,6 +215,93 @@ storiesOf('Editor/Popover', module)
         </EditorPopover>
       </Flex>
     );
+  })
+  .add('content editable', () => {
+    const range = useRangeFromDocumentSelection();
+
+    return (
+      <Flex
+        direction="column"
+        gap="large"
+        maxWidth="container.small"
+        marginX="auto"
+      >
+        <Node>
+          Candy canes halvah bear claw wafer toffee cake wafer. Apple pie sweet
+          roll gummi bears macaroon jelly beans. Dessert brownie tootsie roll
+          cotton candy jelly-o. Halvah pudding cookie pastry cheesecake
+          liquorice caramels macaroon gummies.
+        </Node>
+        <Node>
+          Jelly marzipan halvah muffin halvah gummi bears sweet roll cookie.
+          Powder cheesecake tiramisu halvah pie jelly-o cotton candy. Chupa
+          chups topping marshmallow biscuit gingerbread. Cotton candy carrot
+          cake candy cookie danish jelly.
+        </Node>
+        <Node>
+          Shortbread sweet roll jujubes halvah sesame snaps wafer wafer. Sweet
+          roll topping sugar plum fruitcake cookie soufflé sugar plum pastry
+          sweet. Cake gummies sugar plum bear claw dessert. Pie cookie cake
+          marzipan jelly beans.
+        </Node>
+        <Node>
+          Wafer jelly-o jelly beans croissant tart fruitcake marzipan cake.
+          Cheesecake gingerbread cake sesame snaps cheesecake powder chupa chups
+          cheesecake shortbread. Chupa chups liquorice pastry dragée sesame
+          snaps brownie chocolate bar lemon drops. Macaroon sesame snaps
+          chocolate bar candy canes tootsie roll chocolate bar.
+        </Node>
+        <Node>
+          Cake muffin cheesecake liquorice chupa chups. Cheesecake apple pie
+          powder pudding gummi bears chocolate marshmallow sweet sugar plum.
+          Marshmallow tiramisu cheesecake topping sweet jujubes biscuit jelly
+          beans chupa chups.
+        </Node>
+        <EditorPopover isOpen={!!range} reference={range}>
+          <Flex padding="small" gap="small">
+            <ActionButton prominence="low" aria-label="bold">
+              <Icon src={boldIcon} />
+            </ActionButton>
+            <ActionButton prominence="low" aria-label="italic">
+              <Icon src={italicIcon} />
+            </ActionButton>
+            <ActionButton prominence="low" aria-label="Strikethrough">
+              <Icon src={strikethroughIcon} />
+            </ActionButton>
+
+            <Divider orientation="vertical" />
+
+            <ActionButton prominence="low" aria-label="Link">
+              <Icon src={linkIcon} />
+            </ActionButton>
+
+            <Divider orientation="vertical" />
+
+            <ActionButton prominence="low" aria-label="Bulleted list">
+              <Icon src={listIcon} />
+            </ActionButton>
+            <ActionButton prominence="low" aria-label="Ordered list">
+              <Icon src={listOrderedIcon} />
+            </ActionButton>
+
+            <Divider orientation="vertical" />
+
+            <ActionButton prominence="low" aria-label="Blockquote">
+              <Icon src={indentIcon} />
+            </ActionButton>
+
+            <Divider orientation="vertical" />
+
+            <ActionButton prominence="low" aria-label="Code">
+              <Icon src={code2Icon} />
+            </ActionButton>
+            <ActionButton prominence="low" aria-label="Code block">
+              <Icon src={fileCodeIcon} />
+            </ActionButton>
+          </Flex>
+        </EditorPopover>
+      </Flex>
+    );
   });
 
 function useRangeFromDocumentSelection() {
@@ -204,4 +324,41 @@ function useRangeFromDocumentSelection() {
   }, []);
 
   return range;
+}
+
+function Node(props: HTMLProps<HTMLDivElement>) {
+  let [isVisible, setVisible] = useState(false);
+  let [isOpen, setOpen] = useState(false);
+  let [floatingRef, setFloatingRef] = useState<HTMLDivElement | null>(null);
+  let [triggerRef, setTriggerRef] = useState<HTMLDivElement | null>(null);
+  return (
+    <>
+      <Flex
+        alignItems="start"
+        gap="regular"
+        onMouseEnter={() => setVisible(true)}
+        onMouseLeave={() => setVisible(false)}
+      >
+        <div
+          onClick={() => setOpen(bool => !bool)}
+          ref={setTriggerRef}
+          style={{ opacity: isVisible ? 1 : 0 }}
+        >
+          <Icon src={componentIcon} color="neutralTertiary" />
+        </div>
+        <Text>{props.children}</Text>
+      </Flex>
+
+      <EditorPopover
+        isOpen={isOpen}
+        reference={triggerRef}
+        ref={setFloatingRef}
+        placement="bottom-start"
+      >
+        <Box padding="regular">
+          <Text>Popover content.</Text>
+        </Box>
+      </EditorPopover>
+    </>
+  );
 }
