@@ -21,7 +21,7 @@ export function ObjectFieldInput<
     ? findFocusableObjectFieldKey(schema)
     : undefined;
   return (
-    <Flex gap="large" direction="column">
+    <Flex gap="xlarge" direction="column">
       {Object.entries(fields).map(
         ([key, propVal]) =>
           isNonChildFieldPreviewProps(propVal) && (
