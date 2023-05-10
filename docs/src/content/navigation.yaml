@@ -1,0 +1,73 @@
+navGroups:
+  - groupName: Getting started
+    items:
+      - label: Manual Installation
+        href: /
+      - label: Automated setup
+        href: /
+  - groupName: Integration guides
+    items:
+      - label: Astro
+        page: installation-astro
+      - label: Next.js
+        page: installation-next-js
+      - label: Remix
+        page: /
+  - groupName: Learn Keystatic
+    items:
+      - label: Collections & Singletons
+        href: /
+      - label: Local vs. GitHub
+        href: /
+      - label: Reader API
+        href: /
+      - label: Renderer API
+        href: /
+      - label: Content Organisation
+        href: /
+      - label: FAQ
+        href: /
+  - groupName: Fields API
+    items:
+      - label: Text
+        href: /
+      - label: Integer
+        href: /
+      - label: URL
+        href: /
+      - label: Path Reference
+        href: /
+      - label: Relationship
+        href: /
+      - label: Select
+        href: /
+      - label: Slug
+        href: /
+      - label: Multi-Select
+        href: /
+      - label: Checkbox
+        href: /
+      - label: Image
+        href: /
+      - label: Date
+        href: /
+      - label: Empty
+        href: /
+      - label: Child
+        href: /
+      - label: Object
+        href: /
+      - label: Conditional
+        href: /
+      - label: Document
+        href: /
+      - label: Array
+        href: /
+  - groupName: Community
+    items:
+      - label: GitHub Discussions
+        href: https://github.com/Thinkmill/keystatic/discussions
+      - label: Mastodon
+        href: https://fosstodon.org/@keystatic
+      - label: Twitter
+        href: https://twitter.com/thekeystatic

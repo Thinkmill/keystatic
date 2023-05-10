@@ -34,10 +34,12 @@ export function NavItem({
   label,
   href,
   current,
+  title,
 }: {
   label: string;
   href: string;
   current?: boolean;
+  title?: string;
 }) {
   // TODO next/link
   return (
@@ -50,6 +52,7 @@ export function NavItem({
             : ''
         )}
         href={href}
+        title={title}
       >
         {label}
       </a>
