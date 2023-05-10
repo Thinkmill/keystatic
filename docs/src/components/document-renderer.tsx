@@ -45,7 +45,7 @@ const getRenderers = (
       }
       return (
         <code
-          className="[&>pre]:p-4 text-sm"
+          className="[&>pre]:p-4 [&>pre]:rounded-md text-sm"
           dangerouslySetInnerHTML={{ __html: codeBlock }}
         />
       );
