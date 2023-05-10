@@ -36,7 +36,7 @@ export function ConditionalFieldInput<
     string | boolean
   >;
   return (
-    <Flex gap="large" direction="column">
+    <Flex gap="xlarge" direction="column">
       {useMemo(
         () => (
           <AddToPathProvider part="discriminant">
