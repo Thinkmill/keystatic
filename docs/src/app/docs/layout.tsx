@@ -24,11 +24,13 @@ export default async function RootLayout({
 
   const navigationMap = navigation?.navGroups.map(({ groupName, items }) => ({
     groupName,
-    items: items.map(({ label, page: slug, href }) => {
-      const page = slug ? pagesBySlug[slug] : null;
+    items: items.map(({ label, link }) => {
+      const { discriminant, value } = link;
+      const page = discriminant === 'page' && value ? pagesBySlug[value] : null;
+      const url = discriminant === 'url' ? value : `/docs/${page?.slug}`;
       return {
         label: label || page?.entry.title || '',
-        slug: slug || href,
+        href: url || '',
         title: page?.entry.title,
       };
     }),
@@ -49,59 +51,11 @@ export default async function RootLayout({
             <NavContainer>
               {navigationMap?.map(({ groupName, items }) => (
                 <NavList title={groupName}>
-                  {items.map(({ label, slug, title }) => (
-                    <NavItem
-                      label={label}
-                      href={`/docs/${slug}`}
-                      title={title}
-                    />
+                  {items.map(({ label, href, title }) => (
+                    <NavItem label={label} href={href} title={title} />
                   ))}
                 </NavList>
               ))}
-
-              {/* <NavList title="Getting started">
-                <NavItem label="Automated setup" href="/" />
-                <NavItem label="Manual installation" href="/" />
-              </NavList>
-              <NavList title="Integration guides">
-                <NavItem label="Astro" href="/" />
-                <NavItem label="Next.js" href="/" />
-                <NavItem label="Remix" href="/" />
-              </NavList>
-
-              <NavList title="Learn Keystatic">
-                <NavItem label="Collections & Singletons" href="/" />
-                <NavItem label="Local vs. GitHub" href="/" />
-                <NavItem label="Reader API" href="/" />
-                <NavItem label="Renderer API" href="/" />
-                <NavItem label="Content Organisation" href="/" />
-                <NavItem label="FAQ" href="/" />
-              </NavList>
-
-              <NavList title="Fields API">
-                <NavItem label="Text" href="/" />
-                <NavItem label="Integer" href="/" />
-                <NavItem label="URL" href="/" />
-                <NavItem label="Path Reference" href="/" />
-                <NavItem label="Relationship" href="/" />
-                <NavItem label="Select" href="/" />
-                <NavItem label="Slug" href="/" />
-                <NavItem label="Multi-Select" href="/" />
-                <NavItem label="Checkbox" href="/" />
-                <NavItem label="Image" href="/" />
-                <NavItem label="Date" href="/" />
-                <NavItem label="Empty" href="/" />
-                <NavItem label="Child" href="/" />
-                <NavItem label="Object" href="/" />
-                <NavItem label="Conditional" href="/" />
-                <NavItem label="Document" href="/" />
-                <NavItem label="Array" href="/" />
-              </NavList>
-
-              <NavList title="Community">
-                <NavItem label="GitHub Discussions" href="/" />
-                <NavItem label="Socials" href="/" />
-              </NavList> */}
             </NavContainer>
 
             {/** CONTENT */}

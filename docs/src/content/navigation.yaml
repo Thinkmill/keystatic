@@ -2,72 +2,134 @@ navGroups:
   - groupName: Getting started
     items:
       - label: Automated setup
-        page: automated-setup-with-template
+        link:
+          discriminant: page
+          value: automated-setup-with-template
       - label: Manual Installation
-        href: /
+        link:
+          discriminant: url
+          value: /docs
   - groupName: Integration guides
     items:
       - label: Astro
-        page: installation-astro
+        link:
+          discriminant: page
+          value: installation-astro
       - label: Next.js
-        page: installation-next-js
+        link:
+          discriminant: page
+          value: installation-next-js
       - label: Remix
-        page: /
+        link:
+          discriminant: page
+          value: /docs
   - groupName: Learn Keystatic
     items:
       - label: Collections & Singletons
-        page: collections-and-singletons
+        link:
+          discriminant: page
+          value: collections-and-singletons
       - label: Local vs. GitHub
-        page: local-vs-git-hub-storage-strategy
+        link:
+          discriminant: page
+          value: local-vs-git-hub-storage-strategy
       - label: Reader API
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Renderer API
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Content Organisation
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: FAQ
-        href: /
+        link:
+          discriminant: url
+          value: /docs
   - groupName: Fields API
     items:
       - label: Text
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Integer
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: URL
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Path Reference
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Relationship
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Select
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Slug
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Multi-Select
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Checkbox
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Image
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Date
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Empty
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Child
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Object
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Conditional
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Document
-        href: /
+        link:
+          discriminant: url
+          value: /docs
       - label: Array
-        href: /
+        link:
+          discriminant: url
+          value: /docs
   - groupName: Community
     items:
       - label: GitHub Discussions
-        href: https://github.com/Thinkmill/keystatic/discussions
+        link:
+          discriminant: url
+          value: https://github.com/Thinkmill/keystatic/discussions
       - label: Mastodon
-        href: https://fosstodon.org/@keystatic
+        link:
+          discriminant: url
+          value: https://fosstodon.org/@keystatic
       - label: Twitter
-        href: https://twitter.com/thekeystatic
+        link:
+          discriminant: url
+          value: https://twitter.com/thekeystatic

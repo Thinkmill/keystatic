@@ -36,17 +36,25 @@ export default config({
                 label: fields.text({
                   label: 'Label',
                   description:
-                    "Required when using the href field, or overriding the page's title",
+                    "Required when using a URL, or overriding the page's title",
                 }),
-                page: fields.relationship({
-                  label: 'Page',
-                  collection: 'pages',
-                }),
-                href: fields.text({
-                  label: 'Href',
-                  description:
-                    'For links that are not a docs page, e.g. external links',
-                }),
+                link: fields.conditional(
+                  fields.select({
+                    label: 'Page or URL',
+                    options: [
+                      { label: 'Page', value: 'page' },
+                      { label: 'URL', value: 'url' },
+                    ],
+                    defaultValue: 'page',
+                  }),
+                  {
+                    page: fields.relationship({
+                      label: 'Page',
+                      collection: 'pages',
+                    }),
+                    url: fields.text({ label: 'URL' }),
+                  }
+                ),
               }),
               {
                 label: 'Navigation Links',
