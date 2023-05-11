@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.100
+
+### Patch Changes
+
+- 9bc953d: Fix `forceValidation` not being passed through to field inputs
+  correctly
+
 ## 0.0.99
 
 ### Patch Changes
