@@ -1,4 +1,4 @@
-import { action, storiesOf } from '@voussoir/storybook';
+import { storiesOf } from '@voussoir/storybook';
 
 import { ActionButton } from '@voussoir/button';
 import { Icon } from '@voussoir/icon';
@@ -15,72 +15,98 @@ import { listOrderedIcon } from '@voussoir/icon/icons/listOrderedIcon';
 // import { unlinkIcon } from '@voussoir/icon/icons/unlinkIcon';
 import { Box, Divider, Flex } from '@voussoir/layout';
 import { Heading, Text } from '@voussoir/typography';
-import { HTMLProps, useEffect, useState } from 'react';
+import { HTMLProps, useEffect, useRef, useState } from 'react';
 
-import {
-  EditorPopover,
-  EditorPopoverTrigger,
-  EditorPopoverProvider,
-} from '../src';
+import { EditorPopover, EditorPopoverRef } from '../src';
 // import { Item, Menu } from '@voussoir/menu';
 import { Combobox, Item } from '@voussoir/combobox';
+import { Menu } from '@voussoir/menu';
 
 storiesOf('Editor/Popover', module)
-  .addDecorator(story => (
-    <EditorPopoverProvider>{story()}</EditorPopoverProvider>
-  ))
   .add('default', () => {
     let [isOpen, setOpen] = useState(false);
     let [triggerRef, setTriggerRef] = useState<HTMLButtonElement | null>(null);
+
     return (
-      <Flex
-        direction="column"
-        maxWidth="container.xsmall"
-        marginX="auto"
-        gap="xlarge"
-      >
+      <>
         <ActionButton
+          onPress={() => setOpen(bool => !bool)}
           ref={setTriggerRef}
-          onFocus={() => setOpen(true)}
-          onBlur={() => setOpen(false)}
-          type="button"
         >
           Press me
         </ActionButton>
-        <EditorPopover isOpen={isOpen} reference={triggerRef}>
-          <Box padding="regular">
-            <Text>Popover content</Text>
-          </Box>
-        </EditorPopover>
+        {isOpen && triggerRef && (
+          <EditorPopover reference={triggerRef}>
+            <Box padding="regular">
+              <Text>Popover content</Text>
+            </Box>
+          </EditorPopover>
+        )}
+      </>
+    );
+  })
+  .add('refs', () => {
+    let floating = useRef<EditorPopoverRef | null>(null);
+    let [isOpen, setOpen] = useState(false);
+    let [triggerRef, setTriggerRef] = useState<HTMLButtonElement | null>(null);
+
+    return (
+      <Flex gap="large">
+        <ActionButton
+          onPress={() => setOpen(bool => !bool)}
+          ref={setTriggerRef}
+        >
+          Press me
+        </ActionButton>
+        {isOpen && (
+          <ActionButton
+            onPress={() => {
+              console.log(floating.current);
+            }}
+          >
+            Log ref data
+          </ActionButton>
+        )}
+        {isOpen && triggerRef && (
+          <EditorPopover ref={floating} reference={triggerRef}>
+            <Box padding="regular">
+              <Text>Popover content</Text>
+            </Box>
+          </EditorPopover>
+        )}
       </Flex>
     );
   })
   .add('overlay children', () => {
     let [isOpen, setOpen] = useState(false);
     let [triggerRef, setTriggerRef] = useState<HTMLButtonElement | null>(null);
+
     return (
-      <Flex
-        direction="column"
-        maxWidth="container.xsmall"
-        marginX="auto"
-        gap="xlarge"
-      >
-        <EditorPopoverTrigger>
-          <ActionButton>Press me</ActionButton>
-          <Flex padding="regular" gap="regular">
-            <Combobox aria-label="Combobox" placeholder="Placeholder">
-              <Item key="One">One</Item>
-              <Item key="Two">Two</Item>
-              <Item key="Three">Three has a long label that will wrap</Item>
-            </Combobox>
-          </Flex>
-        </EditorPopoverTrigger>
-      </Flex>
+      <>
+        <ActionButton
+          onPress={() => setOpen(bool => !bool)}
+          ref={setTriggerRef}
+        >
+          Press me
+        </ActionButton>
+        {isOpen && triggerRef && (
+          <EditorPopover reference={triggerRef}>
+            <Box padding="regular">
+              <Combobox aria-label="Combobox" placeholder="Placeholder">
+                <Item key="One">One</Item>
+                <Item key="Two">Two</Item>
+                <Item key="Three">Three has a long label that will wrap</Item>
+              </Combobox>
+            </Box>
+          </EditorPopover>
+        )}
+      </>
     );
   })
   .add('sticky', () => {
     let [isOpen, setOpen] = useState(false);
     let [triggerRef, setTriggerRef] = useState<HTMLImageElement | null>(null);
+
     return (
       <Flex
         direction="column"
@@ -122,14 +148,6 @@ storiesOf('Editor/Popover', module)
             outlineOffset: -2,
           }}
         />
-        <EditorPopover isOpen={isOpen} reference={triggerRef} sticky>
-          <Box padding="regular" maxWidth="container.xsmall">
-            <Text>
-              This popover will overlap the target, staying in view when the
-              parent is scrolled.
-            </Text>
-          </Box>
-        </EditorPopover>
         <Text>
           Sesame snaps soufflé cupcake cupcake tiramisu danish bear claw powder.
           Dessert gummi bears cookie shortbread lemon drops muffin tiramisu
@@ -146,6 +164,16 @@ storiesOf('Editor/Popover', module)
           danish cheesecake carrot cake marshmallow. Carrot cake jelly beans
           sweet macaroon jujubes pudding.
         </Text>
+        {triggerRef && isOpen && (
+          <EditorPopover sticky reference={triggerRef}>
+            <Box padding="regular" maxWidth="container.xsmall">
+              <Text>
+                This popover will overlap the target, staying in view when the
+                parent is scrolled.
+              </Text>
+            </Box>
+          </EditorPopover>
+        )}
       </Flex>
     );
   })
@@ -153,7 +181,12 @@ storiesOf('Editor/Popover', module)
     const range = useRangeFromDocumentSelection();
 
     return (
-      <Flex direction="column" maxWidth="container.small" marginX="auto">
+      <Flex
+        direction="column"
+        maxWidth="container.xsmall"
+        marginX="auto"
+        gap="xlarge"
+      >
         <Text>
           Sesame snaps soufflé cupcake cupcake tiramisu danish bear claw powder.
           Dessert gummi bears cookie shortbread lemon drops muffin tiramisu
@@ -170,60 +203,103 @@ storiesOf('Editor/Popover', module)
           danish cheesecake carrot cake marshmallow. Carrot cake jelly beans
           sweet macaroon jujubes pudding.
         </Text>
-        <EditorPopover isOpen={!!range} reference={range}>
-          <Flex padding="small" gap="small">
-            <ActionButton prominence="low" aria-label="bold">
-              <Icon src={boldIcon} />
-            </ActionButton>
-            <ActionButton prominence="low" aria-label="italic">
-              <Icon src={italicIcon} />
-            </ActionButton>
-            <ActionButton prominence="low" aria-label="Strikethrough">
-              <Icon src={strikethroughIcon} />
-            </ActionButton>
+        {range && (
+          <EditorPopover reference={range}>
+            <Flex padding="small" gap="small">
+              <ActionButton prominence="low" aria-label="bold">
+                <Icon src={boldIcon} />
+              </ActionButton>
+              <ActionButton prominence="low" aria-label="italic">
+                <Icon src={italicIcon} />
+              </ActionButton>
+              <ActionButton prominence="low" aria-label="Strikethrough">
+                <Icon src={strikethroughIcon} />
+              </ActionButton>
 
-            <Divider orientation="vertical" />
+              <Divider orientation="vertical" />
 
-            <ActionButton prominence="low" aria-label="Link">
-              <Icon src={linkIcon} />
-            </ActionButton>
+              <ActionButton prominence="low" aria-label="Link">
+                <Icon src={linkIcon} />
+              </ActionButton>
 
-            <Divider orientation="vertical" />
+              <Divider orientation="vertical" />
 
-            <ActionButton prominence="low" aria-label="Bulleted list">
-              <Icon src={listIcon} />
-            </ActionButton>
-            <ActionButton prominence="low" aria-label="Ordered list">
-              <Icon src={listOrderedIcon} />
-            </ActionButton>
+              <ActionButton prominence="low" aria-label="Bulleted list">
+                <Icon src={listIcon} />
+              </ActionButton>
+              <ActionButton prominence="low" aria-label="Ordered list">
+                <Icon src={listOrderedIcon} />
+              </ActionButton>
 
-            <Divider orientation="vertical" />
+              <Divider orientation="vertical" />
 
-            <ActionButton prominence="low" aria-label="Blockquote">
-              <Icon src={indentIcon} />
-            </ActionButton>
+              <ActionButton prominence="low" aria-label="Blockquote">
+                <Icon src={indentIcon} />
+              </ActionButton>
 
-            <Divider orientation="vertical" />
+              <Divider orientation="vertical" />
 
-            <ActionButton prominence="low" aria-label="Code">
-              <Icon src={code2Icon} />
-            </ActionButton>
-            <ActionButton prominence="low" aria-label="Code block">
-              <Icon src={fileCodeIcon} />
-            </ActionButton>
-          </Flex>
-        </EditorPopover>
+              <ActionButton prominence="low" aria-label="Code">
+                <Icon src={code2Icon} />
+              </ActionButton>
+              <ActionButton prominence="low" aria-label="Code block">
+                <Icon src={fileCodeIcon} />
+              </ActionButton>
+            </Flex>
+          </EditorPopover>
+        )}
       </Flex>
     );
   })
   .add('content editable', () => {
-    const range = useRangeFromDocumentSelection();
+    const [range, setRange] = useState<Range | null>(null);
 
     return (
       <Flex
         direction="column"
+        width="container.xsmall"
+        marginX="auto"
+        gap="xlarge"
+      >
+        <div
+          contentEditable
+          onInput={e => {
+            // @ts-expect-error
+            if (e.nativeEvent?.data === '/') {
+              let selection = window.getSelection();
+
+              if (selection) {
+                setRange(selection.getRangeAt(0));
+              }
+            } else {
+              setRange(null);
+            }
+          }}
+          dangerouslySetInnerHTML={{
+            __html: `<p>Type "/" to reveal the popover.</p><p>Cupcake ipsum dolor sit amet
+          shortbread tart. Cupcake jelly macaroon tart pie. Brownie jelly sugar
+          plum oat cake wafer cheesecake oat cake pie caramels. Marshmallow
+          brownie gingerbread topping brownie jelly beans.</p>`,
+          }}
+        />
+        {range && (
+          <EditorPopover reference={range} placement="bottom-start">
+            <Menu aria-label="action menu">
+              <Item>Edit</Item>
+              <Item>Share</Item>
+              <Item>Duplicate</Item>
+            </Menu>
+          </EditorPopover>
+        )}
+      </Flex>
+    );
+  })
+  .add('attributes?', () => {
+    return (
+      <Flex
+        direction="column"
         gap="large"
-        maxWidth="container.small"
+        maxWidth="container.xsmall"
         marginX="auto"
       >
         <Node>
@@ -257,49 +333,6 @@ storiesOf('Editor/Popover', module)
           Marshmallow tiramisu cheesecake topping sweet jujubes biscuit jelly
           beans chupa chups.
         </Node>
-        <EditorPopover isOpen={!!range} reference={range}>
-          <Flex padding="small" gap="small">
-            <ActionButton prominence="low" aria-label="bold">
-              <Icon src={boldIcon} />
-            </ActionButton>
-            <ActionButton prominence="low" aria-label="italic">
-              <Icon src={italicIcon} />
-            </ActionButton>
-            <ActionButton prominence="low" aria-label="Strikethrough">
-              <Icon src={strikethroughIcon} />
-            </ActionButton>
-
-            <Divider orientation="vertical" />
-
-            <ActionButton prominence="low" aria-label="Link">
-              <Icon src={linkIcon} />
-            </ActionButton>
-
-            <Divider orientation="vertical" />
-
-            <ActionButton prominence="low" aria-label="Bulleted list">
-              <Icon src={listIcon} />
-            </ActionButton>
-            <ActionButton prominence="low" aria-label="Ordered list">
-              <Icon src={listOrderedIcon} />
-            </ActionButton>
-
-            <Divider orientation="vertical" />
-
-            <ActionButton prominence="low" aria-label="Blockquote">
-              <Icon src={indentIcon} />
-            </ActionButton>
-
-            <Divider orientation="vertical" />
-
-            <ActionButton prominence="low" aria-label="Code">
-              <Icon src={code2Icon} />
-            </ActionButton>
-            <ActionButton prominence="low" aria-label="Code block">
-              <Icon src={fileCodeIcon} />
-            </ActionButton>
-          </Flex>
-        </EditorPopover>
       </Flex>
     );
   });
@@ -329,7 +362,6 @@ function useRangeFromDocumentSelection() {
 function Node(props: HTMLProps<HTMLDivElement>) {
   let [isVisible, setVisible] = useState(false);
   let [isOpen, setOpen] = useState(false);
-  let [floatingRef, setFloatingRef] = useState<HTMLDivElement | null>(null);
   let [triggerRef, setTriggerRef] = useState<HTMLDivElement | null>(null);
   return (
     <>
@@ -342,23 +374,20 @@ function Node(props: HTMLProps<HTMLDivElement>) {
         <div
           onClick={() => setOpen(bool => !bool)}
           ref={setTriggerRef}
-          style={{ opacity: isVisible ? 1 : 0 }}
+          style={{ opacity: isVisible || isOpen ? 1 : 0 }}
         >
           <Icon src={componentIcon} color="neutralTertiary" />
         </div>
         <Text>{props.children}</Text>
       </Flex>
 
-      <EditorPopover
-        isOpen={isOpen}
-        reference={triggerRef}
-        ref={setFloatingRef}
-        placement="bottom-start"
-      >
-        <Box padding="regular">
-          <Text>Popover content.</Text>
-        </Box>
-      </EditorPopover>
+      {isOpen && triggerRef && (
+        <EditorPopover reference={triggerRef} placement="bottom-start">
+          <Box padding="regular">
+            <Text>Popover content</Text>
+          </Box>
+        </EditorPopover>
+      )}
     </>
   );
 }

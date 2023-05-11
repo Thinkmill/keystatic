@@ -18,7 +18,6 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "@floating-ui/react": "^0.24.0",
-    "@react-aria/overlays": "^3.12.0",
     "@voussoir/button": "^0.1.8",
     "@voussoir/icon": "^0.2.1",
     "@voussoir/layout": "^0.1.3",

@@ -1,11 +1,11 @@
-import { Placement, ReferenceElement } from '@floating-ui/react';
+import { ContextData, Placement, ReferenceElement } from '@floating-ui/react';
 import { ReactNode } from 'react';
 
 export type EditorPopoverProps = {
   children: ReactNode;
-  isOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  reference?: ReferenceElement | null;
+  reference: ReferenceElement;
   placement?: Placement;
   sticky?: boolean;
 };
+
+export type EditorPopoverRef = { context: ContextData; update: () => void };

@@ -1,10 +1,10 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef, useImperativeHandle, useState } from 'react';
 import {
+  ContextData,
   FloatingPortal,
   autoUpdate,
   useFloating,
   useInteractions,
-  useMergeRefs,
   useRole,
 } from '@floating-ui/react';
 
@@ -12,21 +12,18 @@ import { DialogElement } from './styled-components';
 import { EditorPopoverProps } from './types';
 import { getMiddleware } from './utils';
 
-export const EditorPopover = forwardRef<HTMLDivElement, EditorPopoverProps>(
-  function EditorPopover(props, forwardedRef) {
-    const {
-      children,
-      isOpen,
-      onOpenChange,
-      placement = 'bottom',
-      reference,
-    } = props;
+export type EditorPopoverRef = { context: ContextData; update: () => void };
 
+export const EditorPopover = forwardRef<EditorPopoverRef, EditorPopoverProps>(
+  function EditorPopover(props, forwardedRef) {
+    const { children, reference, placement = 'bottom' } = props;
+
+    // Floating UI stuff
+    // ------------------------------
     const [floating, setFloating] = useState<HTMLDivElement | null>(null);
     const middleware = getMiddleware(props);
-    const { floatingStyles, context } = useFloating({
-      open: isOpen,
-      onOpenChange,
+    const { floatingStyles, context, update } = useFloating({
+      open: true,
       middleware,
       whileElementsMounted: autoUpdate,
       elements: { reference, floating },
@@ -34,16 +31,19 @@ export const EditorPopover = forwardRef<HTMLDivElement, EditorPopoverProps>(
     });
     const role = useRole(context);
     const { getFloatingProps } = useInteractions([role]);
-    const floatingRef = useMergeRefs([setFloating, forwardedRef]);
 
-    if (!isOpen || !reference) {
-      return null;
-    }
+    useImperativeHandle(
+      forwardedRef,
+      () => {
+        return { context, update };
+      },
+      [context, update]
+    );
 
     return (
       <FloatingPortal>
         <DialogElement
-          ref={floatingRef}
+          ref={setFloating}
           style={floatingStyles}
           {...getFloatingProps()}
         >

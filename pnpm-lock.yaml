@@ -922,7 +922,6 @@ importers:
     specifiers:
       '@babel/runtime': ^7.18.3
       '@floating-ui/react': ^0.24.0
-      '@react-aria/overlays': ^3.12.0
       '@types/react': ^18.0.25
       '@voussoir/button': ^0.1.8
       '@voussoir/combobox': ^0.1.6
@@ -942,7 +941,6 @@ importers:
     dependencies:
       '@babel/runtime': 7.21.0
       '@floating-ui/react': 0.24.0_biqbaboplfbrettd7655fr4n2y
-      '@react-aria/overlays': 3.13.0_biqbaboplfbrettd7655fr4n2y
       '@voussoir/button': link:../button
       '@voussoir/icon': link:../icon
       '@voussoir/layout': link:../layout
