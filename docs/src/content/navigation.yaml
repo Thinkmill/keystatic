@@ -35,20 +35,20 @@ navGroups:
           value: local-vs-git-hub-storage-strategy
       - label: Reader API
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: reader-api
       - label: Renderer API
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: renderer-api
       - label: Content Organisation
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: how-keystatic-organises-your-content
       - label: FAQ
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: frequently-asked-questions
   - groupName: Fields API
     items:
       - label: Text

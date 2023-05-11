@@ -5,12 +5,15 @@ Keystatic currently has two strategies for its content generation: `github` and 
 
 ## GitHub strategy
 
-<aside>
-⚡ In most cases where external collaboration from contributors is anticipated, the `github` approach will make more sense: it enables anyone with a GitHub account (and “write” rights on the repo) to make commits, create branches and open Pull Requests for content changes.
+{% aside %}
+{% component-inline-prop propPath=["icon"] %}⚡️{% /component-inline-prop %}
+
+{% component-block-prop propPath=["content"] %}
+In most cases where external collaboration from contributors is anticipated, the `github` approach will make more sense: it enables anyone with a GitHub account (and “write” rights on the repo) to make commits, create branches and open Pull Requests for content changes.
 
 This strategy requires your project to be on an existing GitHub repository.
-
-</aside>
+{% /component-block-prop %}
+{% /aside %}
 
 In your Keystatic config, you can set the `storage` strategy to `github` like so:
 
@@ -56,14 +59,17 @@ You know the `github` strategy is working if you see the GitHub-related UI eleme
 
 ## Local strategy
 
-<aside>
-⚡ The `local` strategy is much _simpler_ than the `github` strategy, but it’s more limiting in its collaboration capabilities.
+{% aside %}
+{% component-inline-prop propPath=["icon"] %}⚡️{% /component-inline-prop %}
+
+{% component-block-prop propPath=["content"] %}
+The `local` strategy is much _simpler_ than the `github` strategy, but it’s more limiting in its collaboration capabilities.
 
 If you’re a solo dev or a team that only wants to use Keystatic while running it locally, the `local` strategy might be **great** for you!
 
 You don’t need a GitHub App to run that strategy. You don’t need a GitHub account at all, actually. The content files are generated on inside your local project directly.
-
-</aside>
+{% /component-block-prop %}
+{% /aside %}
 
 In your Keystatic config, you can set the `storage` strategy to `local` like so:
 

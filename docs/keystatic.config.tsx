@@ -11,11 +11,18 @@ export const componentBlocks = {
   aside: component({
     preview: props => {
       return (
-        <div className="flex items-center gap-3 rounded-2xl bg-keystatic-gray px-5 py-4">
+        <div
+          style={{
+            display: 'flex',
+            gap: '0.5rem',
+            borderLeft: '3px',
+            borderLeftStyle: 'solid',
+            borderLeftColor: '#eee',
+            paddingLeft: '0.5rem',
+          }}
+        >
           <div>{props.fields.icon.element}</div>
-          <div style={{ fontStyle: 'italic', color: '#4A5568' }}>
-            {props.fields.content.element}
-          </div>
+          <div>{props.fields.content.element}</div>
         </div>
       );
     },

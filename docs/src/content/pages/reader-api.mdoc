@@ -1,0 +1,75 @@
+---
+title: Reader API
+---
+The Reader API is a Node.js API that lets you _read_ Keystatic content from your file system.
+
+{% aside %}
+{% component-inline-prop propPath=["icon"] %}⚠️{% /component-inline-prop %}
+
+{% component-block-prop propPath=["content"] %}
+The code can only run on the server, and not in the browser.
+{% /component-block-prop %}
+{% /aside %}
+
+---
+
+## Usage
+
+First, import the `createReader` function, as well as your Keystatic config file:
+
+```
+*import* { createReader } *from* '@keystatic/core/reader'
+import keystaticConfig from '../../keystatic.config'
+
+```
+
+You can then create a new `reader` by calling `createReader` and passing it two parameters:
+
+1. the path (relative to root) to the content files (as specified in the `directory` property of a given collection/singleton)
+1. the Keystatic config
+
+Here’s an example:
+
+```javascript
+const reader = createReader('', keystaticConfig)
+```
+
+The `reader` will now give you access to the following **async** functions:
+
+### For collections
+
+You can get an **array of slugs** for a given collection with:
+
+```javascript
+const slugs = await reader.collections.{collectionName}.list() 
+```
+
+You can get the data for a specific collection entry with:
+
+```javascript
+const entry = await reader.collections.{collectionName}.read(slug)
+```
+
+### For singletons
+
+You can get the data for a specific singleton with:
+
+```javascript
+const data = await reader.singletons.{singletonName}.read()
+```
+
+**Remember:** this code cannot run in the browser, as it’s using some Node.js APIs.
+
+Good places to use the Reader API are:
+
+- `getStaticProps` in **Next.js**
+- the frontmatter in **Astro** files
+- the `loader()` function in **Remix**
+
+### The Document field’s structured data
+
+If you retrieve content from a `document` field in Keystatic, you’ll get a JSON object with structured data.
+
+It can be a lot of work to turn this data object as HTML to render it on a page.
+
+Luckily, Keystatic also provides a `[DocumentRenderer` component]([https://www.notion.so/Renderer-API-6ac021fcabac42bf92eff3ba0ad07efc](https://www.notion.so/Renderer-API-6ac021fcabac42bf92eff3ba0ad07efc)) that does all the heavy lifting for you, and is highly customisable.

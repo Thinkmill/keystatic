@@ -15,8 +15,6 @@ To use it, you need:
 - A **custom GitHub App** that is allowed to access your project repo
 
 You _can_ do that manually… but we’ve created a little semi-automated onboarding process. It turns a lengthy manual setup into a series of… _button clicks_ ✨
-
-__
 {% /component-block-prop %}
 {% /aside %}
 
@@ -24,13 +22,19 @@ You’ll be promoted to go through a few steps. You can read the **step by step 
 
 Missing image automated-journey.png
 
-☝️ **Disclaimer/context**
+{% aside %}
+{% component-inline-prop propPath=["icon"] %}☝️{% /component-inline-prop %}
+
+{% component-block-prop propPath=["content"] %}
+**Disclaimer/context**
 
 To automate the creation of the GitHub repo and set it up with the GitHub App, we’re leveraging Vercel as a platform. It helps us create, deploy a repo and hook into the project creation to create the GitHub App and add required environment variables.
 
 This lets us provide the _quickest pathway_ to having a Keystatic project setup and deployed to start iterating. That said, **using Vercel is not a requirement** - you can host a Keystatic project somewhere else. Vercel just happens to help us “automate” the getting started story elegantly.
 
 We’ll be adding more pathways to create a new project as we go, and based on the feedback we get.
+{% /component-block-prop %}
+{% /aside %}
 
 ## Step by step walkthrough
 
@@ -141,13 +145,17 @@ Have a play with Keystatic and let us know what you think!
 
 ---
 
-<aside> 👀 **Where’s the front end?**
+{% aside %}
+{% component-inline-prop propPath=["icon"] %}👀{% /component-inline-prop %}
+
+{% component-block-prop propPath=["content"] %}
+**Where’s the front end?**
 
 If you’ve selected the `blank` starter template, you won’t have any frontend besides the “Go to Keystatic” link.
 
 For examples of front ends wired up with Keystatic with some demo content, try out one of our existing [templates](https://keystatic.thinkmill.com.au) like the [Marketing Landing Page](https://keystatic.thinkmill.com.au?template=marketing) or the [Blog Template](https://keystatic.thinkmill.com.au?template=blog)!
-
-</aside>
+{% /component-block-prop %}
+{% /aside %}
 
 ---
 

@@ -82,12 +82,18 @@ const getRenderers = (
     ),
     list: ({ type, children }) => {
       if (type === 'ordered') {
-        return <ol className="list-decimal">{children}</ol>;
+        return (
+          <ol className="list-decimal">
+            {children.map((child, index) => (
+              <li key={index}>{child}</li>
+            ))}
+          </ol>
+        );
       }
       return (
         <ul className="list-disc ml-4">
-          {children.map(child => (
-            <li>{child}</li>
+          {children.map((child, index) => (
+            <li key={index}>{child}</li>
           ))}
         </ul>
       );
