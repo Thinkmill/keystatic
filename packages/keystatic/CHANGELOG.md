@@ -1,5 +1,19 @@
 # @keystatic/core
 
+## 0.0.100
+
+### Patch Changes
+
+- 9bc953d: Fix `forceValidation` not being passed through to field inputs
+  correctly
+
+## 0.0.99
+
+### Patch Changes
+
+- f62dca6: Increase gap between fields
+- 4823b3d: Fix adding `fields.conditional` to an already existing entry
+
 ## 0.0.98
 
 ### Patch Changes

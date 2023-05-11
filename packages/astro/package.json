@@ -46,7 +46,7 @@
     "set-cookie-parser": "^2.5.1"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.0.98",
+    "@keystatic/core": "^0.0.100",
     "@types/cookie": "^0.5.1",
     "@types/set-cookie-parser": "^2.4.2",
     "astro": "^2.0.14",

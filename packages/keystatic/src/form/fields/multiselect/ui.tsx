@@ -33,6 +33,7 @@ export function MultiselectFieldInput<Value extends string>(
       )}
       {props.options.map(option => (
         <Checkbox
+          key={option.value}
           isSelected={props.value.includes(option.value)}
           onChange={() => {
             if (props.value.includes(option.value)) {
