@@ -4,6 +4,27 @@ import {
 } from '@keystatic/core/renderer';
 import shiki from 'shiki';
 import Heading from './heading';
+import { InferRenderersForComponentBlocks } from '@keystatic/core';
+import { componentBlocks } from '../../keystatic.config';
+
+export default async function DocumentRenderer({
+  slug,
+  document,
+}: DocumentRendererProps & { slug: string }) {
+  const hightlighter = await shiki.getHighlighter({
+    theme: 'material-theme-lighter',
+  });
+
+  return (
+    <div className="flex flex-col gap-4">
+      <KeystaticRenderer
+        document={document}
+        renderers={getRenderers(slug, hightlighter)}
+        componentBlocks={componentBlockRenderers}
+      />
+    </div>
+  );
+}
 
 const getRenderers = (
   slug: string,
@@ -59,23 +80,30 @@ const getRenderers = (
         alt={alt}
       />
     ),
+    list: ({ type, children }) => {
+      if (type === 'ordered') {
+        return <ol className="list-decimal">{children}</ol>;
+      }
+      return (
+        <ul className="list-disc ml-4">
+          {children.map(child => (
+            <li>{child}</li>
+          ))}
+        </ul>
+      );
+    },
   },
 });
 
-export default async function DocumentRenderer({
-  slug,
-  document,
-}: DocumentRendererProps & { slug: string }) {
-  const hightlighter = await shiki.getHighlighter({
-    theme: 'material-theme-lighter',
-  });
-
-  return (
-    <div className="flex flex-col gap-4">
-      <KeystaticRenderer
-        document={document}
-        renderers={getRenderers(slug, hightlighter)}
-      />
-    </div>
-  );
-}
+const componentBlockRenderers: InferRenderersForComponentBlocks<
+  typeof componentBlocks
+> = {
+  aside: props => {
+    return (
+      <div className="flex gap-3 rounded-2xl bg-keystatic-gray px-5 py-4">
+        <div className="text-2xl">{props.icon}</div>
+        <div className="flex flex-col gap-3">{props.content}</div>
+      </div>
+    );
+  },
+};

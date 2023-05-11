@@ -1,5 +1,44 @@
 // keystatic.config.tsx
-import { config, fields, collection, singleton } from '@keystatic/core';
+import {
+  config,
+  fields,
+  collection,
+  singleton,
+  component,
+} from '@keystatic/core';
+
+export const componentBlocks = {
+  aside: component({
+    preview: props => {
+      return (
+        <div className="flex items-center gap-3 rounded-2xl bg-keystatic-gray px-5 py-4">
+          <div>{props.fields.icon.element}</div>
+          <div style={{ fontStyle: 'italic', color: '#4A5568' }}>
+            {props.fields.content.element}
+          </div>
+        </div>
+      );
+    },
+    label: 'Aside',
+    schema: {
+      icon: fields.child({
+        kind: 'inline',
+        placeholder: 'Emoji icon...',
+      }),
+      content: fields.child({
+        kind: 'block',
+        placeholder: 'Aside...',
+        formatting: {
+          inlineMarks: 'inherit',
+          softBreaks: 'inherit',
+          listTypes: 'inherit',
+        },
+        links: 'inherit',
+      }),
+    },
+    chromeless: true,
+  }),
+};
 
 export default config({
   storage: {
@@ -19,6 +58,7 @@ export default config({
           dividers: true,
           links: true,
           images: { directory: 'public/images/content' },
+          componentBlocks,
         }),
       },
     }),
