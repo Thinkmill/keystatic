@@ -1,8 +1,10 @@
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 
-import { BellIcon } from '@heroicons/react/24/outline';
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
+import {
+  BellIcon,
+  ArrowTopRightOnSquareIcon,
+} from '@heroicons/react/24/outline';
 
 import GetAccessForm from './forms/get-access';
 import GetNotifiedForm from './forms/get-notified';
@@ -88,6 +90,18 @@ const templates: Template[] = [
     status: 'coming soon',
   },
   {
+    id: 'docs',
+    name: 'Meetup site',
+    label: 'Docs',
+    text: 'A template to show-off your meetup.',
+    image: comingSoonTemplateImage.src,
+    // repo: {
+    //   owner: "thinkmill",
+    //   name: "n/a",
+    // },
+    status: 'coming soon',
+  },
+  {
     id: 'product-list',
     name: 'Product list & ordering',
     label: 'Product List',
@@ -153,7 +167,7 @@ export default function Templates() {
                   width={800}
                   height={540}
                   className="border-b border-black object-cover"
-                ></Image>
+                />
 
                 <div className="grid h-full grid-rows-[auto,1fr,auto] p-6">
                   <h3 className="text-2xl font-semibold leading-none">
@@ -178,7 +192,7 @@ export default function Templates() {
         </ul>
       </div>
 
-      {/* 
+      {/*
         ---------------------------------
         Get Access Dialog
         ---------------------------------
@@ -214,7 +228,7 @@ export default function Templates() {
         )}
       </Dialog>
 
-      {/* 
+      {/*
         ---------------------------------
         Request Access Dialog
         ---------------------------------

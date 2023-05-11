@@ -1,5 +1,4 @@
-import Image from "next/image";
-import Divider from "./divider";
+import Divider from './divider';
 
 export default function Intro() {
   return (
@@ -32,8 +31,8 @@ export default function Intro() {
 
         <div className="pt-16 text-center sm:pt-24 lg:pt-28">
           <h2 className="text-3xl font-bold sm:text-4xl">
-            Take it for a <span className="italic">(really early)</span> spin
-            and tell us what you think
+            Take it for an <span className="italic">early</span> spin and tell
+            us what you think
           </h2>
 
           <Divider className="mx-auto mt-4" />

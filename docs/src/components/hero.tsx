@@ -10,26 +10,10 @@ const features = [
 export default function Hero() {
   return (
     <section className="overflow-hidden bg-keystatic-gray-light">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="flex flex-col gap-4 rounded-2xl border border-stone-400/40 bg-keystatic-gray p-6 sm:flex-row sm:gap-6 sm:p-8 md:items-center md:gap-8">
-          <span className="text-2xl sm:text-3xl">🚧</span>
-          <p className="text-sm sm:text-base md:text-lg">
-            Hey there, early birds. We’re building Keystatic in the open (
-            <a href="#mailing-list" className="underline">
-              subscribe
-            </a>{' '}
-            or follow us above), and we’re pretty early in the process.
-            Keystatic isn’t really production ready yet, and is still janky in
-            places. So read this website the way you would a poster for an
-            unreleased movie –{' '}
-            <strong>it’s going to be great, once it’s more complete</strong>.
-          </p>
-        </div>
-      </div>
       <div className="mx-auto grid max-w-7xl gap-y-8 py-12 px-6 md:gap-y-16 md:py-16 lg:grid-cols-12 lg:items-center">
         <div className="text-center lg:col-span-7 lg:pr-8 lg:text-left xl:col-span-6">
           <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">
-            Meet{' '}
+            Content Management for your{' '}
             <span className="relative">
               <svg
                 className="absolute -right-2 bottom-0 w-[105%]"
@@ -42,7 +26,7 @@ export default function Hero() {
                   d="m4.239.201 92.684 2.883 100.722 7.097 99.043 7.211 94.363 2.77-21.813 9.088 14.042 9.919 2.873 8.7-14.795 6.043 7.844 5.477 7.843 5.476-14.691 6.037 11.104 9.535 3.927 10.77-93.59-1.7-100.082-5.647-116.75-3.055-76.39-9.559 12.857-8.312-11.94-9.45 5.534-10.258-4.618-7.502 16.812-1.055L7.21 20.478l5.332-11.703L4.239.201Z"
                 />
               </svg>
-              <span className="relative">Keystatic</span>
+              <span className="relative">Codebase</span>
             </span>
           </h1>
           <p className="mx-auto mt-8 max-w-2xl text-xl text-stone-600 md:text-2xl lg:mx-0">
