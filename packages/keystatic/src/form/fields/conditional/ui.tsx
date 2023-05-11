@@ -44,7 +44,7 @@ export function ConditionalFieldInput<
               autoFocus={!!autoFocus}
               value={discriminant}
               onChange={onChange}
-              forceValidation={!!forceValidation}
+              forceValidation={forceValidation}
             />
           </AddToPathProvider>
         ),

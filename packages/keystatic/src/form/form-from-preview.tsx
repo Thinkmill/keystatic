@@ -63,7 +63,7 @@ export const InnerFormValueContentFromPreviewProps: MemoExoticComponent<
     <Input
       {...(props as any)}
       autoFocus={!!props.autoFocus}
-      forceValidation={!!props.autoFocus}
+      forceValidation={!!props.forceValidation}
     />
   );
 });
@@ -85,7 +85,7 @@ export const FormValueContentFromPreviewProps: MemoExoticComponent<
         <Input
           {...(props as any)}
           autoFocus={!!props.autoFocus}
-          forceValidation={!!props.autoFocus}
+          forceValidation={!!props.forceValidation}
         />
       </SlugFieldProvider>
     </PathContextProvider>
