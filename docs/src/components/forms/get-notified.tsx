@@ -1,9 +1,9 @@
-import { useRouter } from "next/router";
-import { ArrowSmallRightIcon } from "@heroicons/react/24/solid";
+import { useRouter } from 'next/router';
+import { ArrowSmallRightIcon } from '@heroicons/react/24/solid';
 
-import Button from "../button";
-import { useFormSubmission } from "../../hooks/useFormSubmission";
-import { GET_NOTIFIED_TABLE_ID } from "./table-id";
+import Button from '../button';
+import { useFormSubmission } from '../../hooks/useFormSubmission';
+import { GET_NOTIFIED_TABLE_ID } from './table-id';
 
 export default function GetNotifiedForm() {
   const router = useRouter();

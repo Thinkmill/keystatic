@@ -1,8 +1,7 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { z } from "zod";
-import Iron from "@hapi/iron";
-import cookie from "cookie";
-import { randomBytes } from "crypto";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { z } from 'zod';
+import Iron from '@hapi/iron';
+import cookie from 'cookie';
 
 const expectedParamsSchema = z.object({
   code: z.string(),
@@ -19,25 +18,25 @@ const accessTokenResponseSchema = z.object({
   user_id: z.string(),
 });
 
-const projectsSchema = z.array(
-  z.object({
-    id: z.string(),
-    alias: z.array(z.object({ domain: z.string() })).optional(),
-    link: z
-      .object({
-        type: z.string().optional(),
-        org: z.string().optional(),
-        repo: z.string(),
-      })
-      .optional(),
-    env: z.array(
-      z.object({
-        key: z.string(),
-        value: z.string(),
-      })
-    ),
-  })
-);
+// const projectsSchema = z.array(
+//   z.object({
+//     id: z.string(),
+//     alias: z.array(z.object({ domain: z.string() })).optional(),
+//     link: z
+//       .object({
+//         type: z.string().optional(),
+//         org: z.string().optional(),
+//         repo: z.string(),
+//       })
+//       .optional(),
+//     env: z.array(
+//       z.object({
+//         key: z.string(),
+//         value: z.string(),
+//       })
+//     ),
+//   })
+// );
 
 export default async function handler(
   req: NextApiRequest,
@@ -46,16 +45,16 @@ export default async function handler(
   const params = expectedParamsSchema.safeParse(req.query);
 
   if (!params.success) {
-    res.status(400).send("Unexpected query parameters");
+    res.status(400).send('Unexpected query parameters');
     return;
   }
 
   const accessTokenRes = await fetch(
-    "https://api.vercel.com/v2/oauth/access_token",
+    'https://api.vercel.com/v2/oauth/access_token',
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: new URLSearchParams({
         client_id: process.env.NEXT_PUBLIC_VERCEL_CLIENT_ID!,
@@ -66,7 +65,7 @@ export default async function handler(
     }
   );
   if (!accessTokenRes.ok) {
-    res.status(500).send("Failed to get access token");
+    res.status(500).send('Failed to get access token');
     return;
   }
 
@@ -75,7 +74,7 @@ export default async function handler(
   );
 
   if (!accessTokenData.success) {
-    res.status(500).send("Bad access token data");
+    res.status(500).send('Bad access token data');
     return;
   }
 
@@ -95,11 +94,11 @@ export default async function handler(
   );
 
   res.setHeader(
-    "Set-Cookie",
+    'Set-Cookie',
     cookie.serialize(`ks-${params.data.configurationId}`, cookieData, {
-      sameSite: "lax",
-      path: "/",
-      secure: process.env.NODE_ENV === "production",
+      sameSite: 'lax',
+      path: '/',
+      secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       expires: new Date(Date.now() + 60 * 60 * 24 * 1000),
       maxAge: 60 * 60 * 24,

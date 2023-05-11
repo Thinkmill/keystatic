@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const AIRTABLE_TOKEN = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN;
 const BASE_ID = process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID;
@@ -17,10 +17,10 @@ export function useFormSubmission() {
   const sendForm = async ({
     tableId,
     form,
-    onSuccess = () => router.push("/thank-you"),
+    onSuccess = () => router.push('/thank-you'),
   }: Props) => {
-    if (tableId === "NOT_SET") {
-      alert("Airtable ID is not set, skipping form submission");
+    if (tableId === 'NOT_SET') {
+      alert('Airtable ID is not set, skipping form submission');
       onSuccess();
       return;
     }
@@ -33,10 +33,10 @@ export function useFormSubmission() {
     const res = await fetch(
       `https://api.airtable.com/v0/${BASE_ID}/${tableId}`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${AIRTABLE_TOKEN}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ fields: formFieldValues }),
       }
@@ -49,7 +49,7 @@ export function useFormSubmission() {
       setIsLoading(false);
       // TODO: Do something to let the user know something went wrong
       const json = await res.json();
-      console.log("error submitting the form ", { json });
+      console.log('error submitting the form ', { json });
     }
   };
 

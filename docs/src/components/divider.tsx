@@ -1,14 +1,14 @@
-import { cx } from "../utils";
+import { cx } from '../utils';
 
 export default function Divider({
-  className = "",
+  className = '',
   ...props
-}: React.ComponentProps<"svg">) {
+}: React.ComponentProps<'svg'>) {
   return (
     <svg
       {...props}
       role="separator"
-      className={cx("h-[7px] w-[100px]", className)}
+      className={cx('h-[7px] w-[100px]', className)}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 100 7"

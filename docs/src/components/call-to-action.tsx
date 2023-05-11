@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
+import { useState } from 'react';
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 
-import Dialog from "./dialog";
-import Button from "./button";
-import SendMessageForm from "./forms/send-message";
+import Dialog from './dialog';
+import Button from './button';
+import SendMessageForm from './forms/send-message';
 
 export default function CallToAction() {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +38,7 @@ export default function CallToAction() {
           />
         </svg>
         <h2 className="mt-6 text-3xl font-bold sm:text-4xl">
-          Tell us what{" "}
+          Tell us what{' '}
           <span className="relative">
             <svg
               className="absolute -right-1 bottom-0 w-[115%]"
@@ -52,23 +52,23 @@ export default function CallToAction() {
               />
             </svg>
             <span className="relative">you</span>
-          </span>{" "}
+          </span>{' '}
           think
         </h2>
         <p className="mt-6 text-lg text-keystatic-gray-dark">
-          We're building Keystatic in the open as part of{" "}
+          We're building Keystatic in the open as part of{' '}
           <a
             href="https://www.thinkmill.com.au/"
             target="_blank"
             className="cursor-pointer underline hover:text-thinkmill-red"
           >
             Thinkmill Labs
-          </a>{" "}
-          Research &amp; Development. Feedback on{" "}
+          </a>{' '}
+          Research &amp; Development. Feedback on{' '}
           <span className="font-semibold">
             how we're going, what you're looking for, and what you'd like to see
             next
-          </span>{" "}
+          </span>{' '}
           is super helpful as we progress!
         </p>
         <div className="mx-auto mt-10 flex max-w-sm flex-col justify-center gap-3 sm:max-w-none sm:flex-row">
