@@ -1,5 +1,5 @@
 ---
-title: 'Local vs GitHub: Storage Strategy'
+title: 'Local vs GitHub: storage strategy'
 ---
 Keystatic currently has two strategies for its content generation: `github` and `local`.
 
@@ -17,18 +17,18 @@ This strategy requires your project to be on an existing GitHub repository.
 
 In your Keystatic config, you can set the `storage` strategy to `github` like so:
 
-```
+```typescript
 // Keystatic config
 import { config } from '@keystatic/core'
 
 export default config({
-	storage: {
-		kind: 'github',
-		repo: {
-			owner: YOUR_REPO_OWNER,
-			name: YOUR_REPO_NAME
-		}
-	}
+  storage: {
+    kind: 'github',
+    repo: {
+      owner: YOUR_REPO_OWNER,
+      name: YOUR_REPO_NAME
+    }
+  }
 })
 
 ```
@@ -73,12 +73,12 @@ You don’t need a GitHub App to run that strategy. You don’t need a GitHub ac
 
 In your Keystatic config, you can set the `storage` strategy to `local` like so:
 
-```
+```typescript
 // Keystatic config
 import { config } from '@keystatic/core'
 
 export default config({
-	storage: { kind: 'local' }
+  storage: { kind: 'local' }
 })
 
 ```

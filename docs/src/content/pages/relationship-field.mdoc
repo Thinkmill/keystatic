@@ -1,0 +1,21 @@
+---
+title: Relationship field
+---
+```typescript
+relationship({
+  label: string;
+  collection: string;
+  validation?: {
+    isRequired?: IsRequired;
+  };
+  description?: string;
+})
+```
+
+{% aside %}
+{% component-inline-prop propPath=["icon"] %}⚠️{% /component-inline-prop %}
+
+{% component-block-prop propPath=["content"] %}
+The collection string must match one of the keys used in the collections config object.
+{% /component-block-prop %}
+{% /aside %}

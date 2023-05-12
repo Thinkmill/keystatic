@@ -53,72 +53,72 @@ navGroups:
     items:
       - label: Text
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: text-field
       - label: Integer
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: integer-field
       - label: URL
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: url-field
       - label: Path Reference
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: path-reference-field
       - label: Relationship
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: relationship-field
       - label: Select
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: select-field
       - label: Slug
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: slug-field
       - label: Multi-Select
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: multi-select-field
       - label: Checkbox
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: checkbox-field
       - label: Image
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: image-field
       - label: Date
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: date-field
       - label: Empty
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: empty-field
       - label: Child
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: child-field
       - label: Object
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: object-field
       - label: Conditional
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: conditional-field
       - label: Document
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: document-field
       - label: Array
         link:
-          discriminant: url
-          value: /docs
+          discriminant: page
+          value: array-field
   - groupName: Community
     items:
       - label: GitHub Discussions

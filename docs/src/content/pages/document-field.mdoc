@@ -1,0 +1,25 @@
+---
+title: Document field
+---
+```typescript
+document({
+  label: string;
+  componentBlocks?: Record<string, ComponentBlock> | undefined;
+  description?: string | undefined;
+  formatting?: true | FormattingConfig;
+  links?: true;
+  dividers?: true;
+  images?:
+    | true
+    | {
+        directory?: string;
+        publicPath?: string;
+        schema?: {
+          alt?: BasicStringFormField;
+          title?: BasicStringFormField;
+        };
+      };
+  layouts?: readonly (readonly [number, ...number[]])[];
+  tables?: true;
+};
+```

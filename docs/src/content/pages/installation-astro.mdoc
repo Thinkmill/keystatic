@@ -5,7 +5,6 @@ This guide assumes you are trying to add Keystatic to an existing Astro v2 proje
 
 Here, I've created a brand new Astro project, using the `Include sample files` option:
 
-![](keystone-astro0.png)
 
 ## Installing dependencies
 
@@ -127,7 +126,6 @@ export default defineConfig({
 
 Now, visit the `/keystatic` route once again in your browser:
 
-![](keystatic-astro1.png)
 
 Our Keystatic Admin UI is here! 🎉
 
@@ -155,13 +153,11 @@ We should be all set to go for our Keystatic Admin UI now.
 
 Try and visit the `/keystatic` page in the browser one more time, and click on the “Homepage” singleton:
 
-![](keystone-astro2.png)
 
 It's working: our “Headline” text field is here.
 
 Go ahead and fill that field with something, and hit `Create`:
 
-![](keystone-astro3.png)
 
 Check your source code again. Notice anything?
 
@@ -177,7 +173,6 @@ Inside, you'll find a `_homepage` directory.
 
 That directory contains an `index.yaml` file with… the `headline` text you've just created!
 
-![](keystone-astro4.png)
 
 Niiiice ✨
 
@@ -214,6 +209,5 @@ Try and replace the homepage's `h1` tag with your homepage headline from Keystat
 <h1>{homepageData.headline}</h1>
 ```
 
-![](keystone-astro5.png)
 
 Beautiful!

@@ -1,0 +1,17 @@
+---
+title: Text field
+---
+```typescript
+text({
+  label: string;
+  defaultValue?: string | (() => string) | undefined;
+  description?: string | undefined;
+  validation?: {
+    length?: {
+      min?: number | undefined;
+      max?: number | undefined;
+    } | undefined;
+  } | undefined;
+  multiline?: boolean | undefined;
+})
+```

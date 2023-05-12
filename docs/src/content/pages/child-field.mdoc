@@ -1,0 +1,23 @@
+---
+title: Child field
+---
+```typescript
+child(options: {
+  kind: 'block';
+  placeholder: string;
+  formatting?: BlockFormattingConfig | 'inherit';
+  dividers?: 'inherit';
+  links?: 'inherit';
+  images?: 'inherit';
+  tables?: 'inherit';
+  componentBlocks?: 'inherit';
+} | {
+  kind: 'inline';
+  placeholder: string;
+  formatting?: 'inherit' | {
+    inlineMarks?: InlineMarksConfig;
+    softBreaks?: 'inherit';
+  };
+  links?: 'inherit';
+})
+```

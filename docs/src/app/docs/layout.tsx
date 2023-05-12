@@ -50,9 +50,14 @@ export default async function RootLayout({
             {/** SIDE NAV */}
             <NavContainer>
               {navigationMap?.map(({ groupName, items }) => (
-                <NavList title={groupName}>
+                <NavList key={groupName} title={groupName}>
                   {items.map(({ label, href, title }) => (
-                    <NavItem label={label} href={href} title={title} />
+                    <NavItem
+                      key={href}
+                      label={label}
+                      href={href}
+                      title={title}
+                    />
                   ))}
                 </NavList>
               ))}
