@@ -1,6 +1,7 @@
 # keystatic-deploy
 
-To submit forms to airtable, you need to add a `.env` file in the project root with the following environment variables:
+To submit forms to airtable, you need to add a `.env` file in the project root
+with the following environment variables:
 
 ```sh
 NEXT_PUBLIC_AIRTABLE_TOKEN="XXXXX"
