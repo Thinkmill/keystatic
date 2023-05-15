@@ -9,10 +9,12 @@
   },
   "exports": {
     "./ui": {
+      "types": "./ui/dist/keystatic-remix-ui.cjs.js",
       "module": "./ui/dist/keystatic-remix-ui.esm.js",
       "default": "./ui/dist/keystatic-remix-ui.cjs.js"
     },
     "./api": {
+      "types": "./api/dist/keystatic-remix-api.cjs.js",
       "module": "./api/dist/keystatic-remix-api.esm.js",
       "default": "./api/dist/keystatic-remix-api.cjs.js"
     },

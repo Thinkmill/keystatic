@@ -7,6 +7,7 @@
   "module": "dist/voussoir-next.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-next.cjs.js",
       "module": "./dist/voussoir-next.esm.js",
       "default": "./dist/voussoir-next.cjs.js"
     },

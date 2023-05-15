@@ -7,6 +7,7 @@
   "module": "dist/voussoir-tooltip.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-tooltip.cjs.js",
       "module": "./dist/voussoir-tooltip.esm.js",
       "default": "./dist/voussoir-tooltip.cjs.js"
     },

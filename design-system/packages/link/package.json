@@ -7,6 +7,7 @@
   "module": "dist/voussoir-link.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-link.cjs.js",
       "module": "./dist/voussoir-link.esm.js",
       "default": "./dist/voussoir-link.cjs.js"
     },

@@ -7,6 +7,7 @@
   "module": "dist/voussoir-badge.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-badge.cjs.js",
       "module": "./dist/voussoir-badge.esm.js",
       "default": "./dist/voussoir-badge.cjs.js"
     },

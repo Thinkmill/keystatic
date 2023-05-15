@@ -7,6 +7,7 @@
   "module": "dist/voussoir-drag-and-drop.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-drag-and-drop.cjs.js",
       "module": "./dist/voussoir-drag-and-drop.esm.js",
       "default": "./dist/voussoir-drag-and-drop.cjs.js"
     },
