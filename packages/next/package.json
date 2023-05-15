@@ -9,18 +9,22 @@
   },
   "exports": {
     "./api": {
+      "types": "./api/dist/keystatic-next-api.cjs.js",
       "module": "./api/dist/keystatic-next-api.esm.js",
       "default": "./api/dist/keystatic-next-api.cjs.js"
     },
     "./ui/app": {
+      "types": "./ui/app/dist/keystatic-next-ui-app.cjs.js",
       "module": "./ui/app/dist/keystatic-next-ui-app.esm.js",
       "default": "./ui/app/dist/keystatic-next-ui-app.cjs.js"
     },
     "./ui/pages": {
+      "types": "./ui/pages/dist/keystatic-next-ui-pages.cjs.js",
       "module": "./ui/pages/dist/keystatic-next-ui-pages.esm.js",
       "default": "./ui/pages/dist/keystatic-next-ui-pages.cjs.js"
     },
     "./reader-refresh": {
+      "types": "./reader-refresh/dist/keystatic-next-reader-refresh.cjs.js",
       "module": "./reader-refresh/dist/keystatic-next-reader-refresh.esm.js",
       "default": "./reader-refresh/dist/keystatic-next-reader-refresh.cjs.js"
     },

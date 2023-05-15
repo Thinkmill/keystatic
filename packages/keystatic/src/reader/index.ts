@@ -1,4 +1,4 @@
-import { Collection, Config, Glob, Singleton } from './config';
+import { Collection, Config, Glob, Singleton } from '../config';
 import {
   ComponentSchema,
   fields,
@@ -6,7 +6,7 @@ import {
   SlugFormField,
   ValueForReading,
   ValueForReadingDeep,
-} from './form/api';
+} from '../form/api';
 import fs from 'fs/promises';
 import nodePath from 'path';
 import {
@@ -19,13 +19,14 @@ import {
   getSingletonFormat,
   getSingletonPath,
   getSlugGlobForCollection,
-} from './app/path-utils';
-import { parseProps } from './form/parse-props';
-import { loadDataFile } from './app/required-files';
-import { getValueAtPropPath } from './form/props-value';
+} from '../app/path-utils';
+import { parseProps } from '../form/parse-props';
+import { loadDataFile } from '../app/required-files';
+import { getValueAtPropPath } from '../form/props-value';
 import { Dirent } from 'fs';
-import { ReadonlyPropPath } from './form/fields/document/DocumentEditor/component-blocks/utils';
-import { formatFormDataError } from './form/errors';
+import { ReadonlyPropPath } from '../form/fields/document/DocumentEditor/component-blocks/utils';
+import { formatFormDataError } from '../form/errors';
+import { cache } from '#react-cache-in-react-server';
 
 type EntryReaderOpts = { resolveLinkedFiles?: boolean };
 
@@ -220,7 +221,7 @@ async function getAllEntries(
   ).flat();
 }
 
-async function listCollection(
+const listCollection = cache(async function listCollection(
   repoPath: string,
   collectionPath: string,
   glob: Glob,
@@ -269,7 +270,7 @@ async function listCollection(
       })
     )
   ).flat();
-}
+});
 
 function collectionReader(
   repoPath: string,
@@ -328,7 +329,7 @@ function collectionReader(
   };
 }
 
-async function readItem(
+const readItem = cache(async function readItem(
   rootSchema: ComponentSchema,
   formatInfo: FormatInfo,
   itemDir: string,
@@ -416,7 +417,7 @@ async function readItem(
   }
 
   return validated;
-}
+});
 
 function singletonReader(
   repoPath: string,

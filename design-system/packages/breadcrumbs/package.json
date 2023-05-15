@@ -7,6 +7,7 @@
   "module": "dist/voussoir-breadcrumbs.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-breadcrumbs.cjs.js",
       "module": "./dist/voussoir-breadcrumbs.esm.js",
       "default": "./dist/voussoir-breadcrumbs.cjs.js"
     },

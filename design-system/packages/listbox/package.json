@@ -7,6 +7,7 @@
   "module": "dist/voussoir-listbox.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-listbox.cjs.js",
       "module": "./dist/voussoir-listbox.esm.js",
       "default": "./dist/voussoir-listbox.cjs.js"
     },
