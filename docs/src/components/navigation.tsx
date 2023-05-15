@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { NavItem, NavList } from './sidenav';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { usePathname } from 'next/navigation';
+import FocusLock from 'react-focus-lock';
 
 type NavigationProps = {
   navigationMap?: {
@@ -86,43 +87,52 @@ export default function Index({ navigationMap }: NavigationProps) {
               navOpen ? '-right-0' : '-right-full'
             }`}
           >
-            {/* Close button */}
-            <div className="sticky top-0 left-0 right-0 p-4 bg-white z-30 justify-end flex">
-              <button
-                type="button"
-                className="flex items-center justify-center rounded-lg bg-keystatic-gray h-10 w-10 hover:bg-stone-300 hover:text-stone-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                onClick={() => setNavOpen(false)}
-              >
-                <span className="sr-only">Close menu</span>
-                <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
-            </div>
-
-            <div className="px-4 pb-10">
-              <NavItem level="top" label="Home" href="/" />
-
-              <div className="pt-6">
-                {navigationMap?.map(({ groupName, items }) => (
-                  <NavList key={groupName} title={groupName}>
-                    {items.map(({ label, href, title }) => (
-                      <NavItem
-                        key={href}
-                        label={label}
-                        href={href}
-                        title={title}
-                        level="sub"
-                      />
-                    ))}
-                  </NavList>
-                ))}
+            <FocusLock disabled={!navOpen}>
+              {/* Close button */}
+              <div className="sticky top-0 left-0 right-0 p-4 bg-white z-30 justify-end flex">
+                <button
+                  type="button"
+                  className="flex items-center justify-center rounded-lg bg-keystatic-gray h-10 w-10 hover:bg-stone-300 hover:text-stone-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  onClick={() => setNavOpen(false)}
+                  tabIndex={navOpen ? 0 : -1}
+                >
+                  <span className="sr-only">Close menu</span>
+                  <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+                </button>
               </div>
 
-              <hr className="h-px my-3 mx-4 border-stone-400/20" />
+              <div className="px-4 pb-10">
+                <NavItem
+                  level="top"
+                  label="Home"
+                  href="/"
+                  tabIndex={navOpen ? 0 : -1}
+                />
 
-              <div className="flex flex-row items-center gap-4 justify-center px-4 pt-6">
-                <SocialLinks />
+                <div className="pt-6">
+                  {navigationMap?.map(({ groupName, items }) => (
+                    <NavList key={groupName} title={groupName}>
+                      {items.map(({ label, href, title }) => (
+                        <NavItem
+                          key={href}
+                          label={label}
+                          href={href}
+                          title={title}
+                          level="sub"
+                          tabIndex={navOpen ? 0 : -1}
+                        />
+                      ))}
+                    </NavList>
+                  ))}
+                </div>
+
+                <hr className="h-px my-3 mx-4 border-stone-400/20" />
+
+                <div className="flex flex-row items-center gap-4 justify-center px-4 pt-6">
+                  <SocialLinks tabIndex={navOpen ? 0 : -1} />
+                </div>
               </div>
-            </div>
+            </FocusLock>
           </ul>
         </nav>
       </div>
@@ -130,12 +140,13 @@ export default function Index({ navigationMap }: NavigationProps) {
   );
 }
 
-export function SocialLinks() {
+export function SocialLinks({ tabIndex }: { tabIndex?: number }) {
   return (
     <div className="flex gap-2">
       <Link
         href="https://fosstodon.org/@keystatic"
         className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
+        tabIndex={tabIndex}
       >
         <span className="sr-only">Keystatic on Mastodon</span>
         <svg
@@ -163,6 +174,7 @@ export function SocialLinks() {
       <Link
         href="https://github.com/thinkmill/keystatic"
         className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
+        tabIndex={tabIndex}
       >
         <span className="sr-only">Keystatic on GitHub</span>
         <svg
@@ -181,6 +193,7 @@ export function SocialLinks() {
       <Link
         href="https://twitter.com/thekeystatic"
         className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
+        tabIndex={tabIndex}
       >
         <span className="sr-only">Keystatic on Twitter</span>
         <svg

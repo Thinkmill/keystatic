@@ -45,9 +45,10 @@ type NavItemProps = {
   level: 'top' | 'sub';
   current?: boolean;
   title?: string;
+  tabIndex?: number;
 };
 
-export function NavItem({ label, href, level, title }: NavItemProps) {
+export function NavItem({ label, href, level, title, tabIndex }: NavItemProps) {
   const pathname = usePathname();
   const isCurrentPage = href === pathname;
 
@@ -67,6 +68,7 @@ export function NavItem({ label, href, level, title }: NavItemProps) {
           className={cx(styleShared, isCurrentPage ? styleCurrent : styleIdle)}
           href={href}
           title={title}
+          tabIndex={tabIndex}
         >
           {label}
         </a>

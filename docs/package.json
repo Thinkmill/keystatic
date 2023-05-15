@@ -24,6 +24,7 @@
     "next-seo": "^5.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-focus-lock": "^2.9.4",
     "shiki": "^0.14.2",
     "typescript": "^5.0.2",
     "zod": "^3.20.2"
