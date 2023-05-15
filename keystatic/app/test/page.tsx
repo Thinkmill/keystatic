@@ -2,37 +2,29 @@
 import { createReader } from '@keystatic/core/reader';
 import localConfig from '../../local-config';
 
+function time() {
+  const start = performance.now();
+  return () => {
+    const end = performance.now();
+    return end - start;
+  };
+}
+
 export default async function Page() {
   const reader = createReader('../packages/keystatic/test-data', localConfig);
-  const slugs = await reader.collections.posts.list();
+  const endFirst = time();
+  const entries = await reader.collections.posts.all();
+  const firstTime = endFirst();
+  const endSecond = time();
+  await reader.collections.posts.all();
+  const secondTime = endSecond();
   return (
     <div>
-      <ul>
-        {slugs.map(slug => (
-          <li key={slug}>{slug}</li>
-        ))}
-      </ul>
-      {await Promise.all(
-        slugs.map(async slug => {
-          const item = await reader.collections.posts.read(slug);
-          if (!item) return null;
-          return (
-            <div key={slug}>
-              <pre>
-                {JSON.stringify(
-                  {
-                    title: item.title,
-                    authors: item.authors.map(x => x.name),
-                    content: await item.content(),
-                  },
-                  null,
-                  2
-                )}
-              </pre>
-            </div>
-          );
-        })
-      )}
+      <div>
+        <p>first: {firstTime}</p>
+        <p>second: {secondTime}</p>
+      </div>
+      <pre>{JSON.stringify(entries, null, 2)}</pre>
     </div>
   );
 }
