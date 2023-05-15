@@ -5,7 +5,7 @@ import Navigation from './navigation';
 export default function Footer() {
   return (
     <footer className="bg-keystatic-gray-light pb-10">
-      <Navigation showCta={false} />
+      <Navigation />
       <div className="mx-auto mt-4 flex max-w-7xl flex-col justify-between gap-y-4 gap-x-12 px-6 text-center md:flex-row md:text-left">
         <p className="leading-none text-keystatic-gray-dark">
           &copy; {new Date().getFullYear()} Thinkmill. All rights reserved.{' '}

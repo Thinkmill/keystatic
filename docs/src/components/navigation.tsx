@@ -4,14 +4,21 @@ import Link from 'next/link';
 
 import Button from './button';
 import { useState } from 'react';
-import { NavItem, NavList, TopNavItem } from './sidenav';
+import { NavItem, NavList } from './sidenav';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
 type NavigationProps = {
-  showCta?: boolean;
+  navigationMap?: {
+    groupName: string;
+    items: {
+      label: string;
+      href: string;
+      title: string | undefined;
+    }[];
+  }[];
 };
 
-export default function Index({ showCta = true }: NavigationProps) {
+export default function Index({ navigationMap }: NavigationProps) {
   const [navOpen, setNavOpen] = useState(false);
 
   return (
@@ -42,12 +49,6 @@ export default function Index({ showCta = true }: NavigationProps) {
 
           <div className="hidden lg:flex flex-row items-center gap-4 justify-between">
             <SocialLinks />
-
-            {showCta && (
-              <Button href="/docs" className="flex items-center justify-center">
-                <span>Docs</span>
-              </Button>
-            )}
           </div>
 
           <Button
@@ -84,8 +85,8 @@ export default function Index({ showCta = true }: NavigationProps) {
           />
 
           <ul
-            className={`overflow-y-auto list-none fixed top-0 bg-white h-screen right-0 w-64 z-30 drop-shadow-2xl flex flex-col transition-[right] ${
-              !navOpen ? '-right-full' : 'right-0'
+            className={`overflow-y-auto list-none fixed top-0 bg-white h-screen w-64 z-30 drop-shadow-2xl flex flex-col transition-[right] ${
+              navOpen ? '-right-0' : '-right-full'
             }`}
           >
             {/* Close button */}
@@ -101,55 +102,22 @@ export default function Index({ showCta = true }: NavigationProps) {
             </div>
 
             <div className="px-4 pb-10">
-              <TopNavItem label="Meet Keystatic" href="/" />
-
-              <TopNavItem label="Docs" href="/docs" />
+              <NavItem level="top" label="Home" href="/" />
 
               <div className="pt-6">
-                <NavList title="Getting started">
-                  <NavItem label="Automated setup" href="/" />
-                  <NavItem label="Manual installation" href="/" />
-                </NavList>
-
-                <NavList title="Integration guides">
-                  <NavItem label="Astro" href="/" />
-                  <NavItem label="Next.js" href="/" />
-                  <NavItem label="Remix" href="/" />
-                </NavList>
-
-                <NavList title="Learn Keystatic">
-                  <NavItem label="Collections & Singletons" href="/" />
-                  <NavItem label="Local vs. GitHub" href="/" />
-                  <NavItem label="Reader API" href="/" />
-                  <NavItem label="Renderer API" href="/" />
-                  <NavItem label="Content Organisation" href="/" />
-                  <NavItem label="FAQ" href="/" />
-                </NavList>
-
-                <NavList title="Fields API">
-                  <NavItem label="Text" href="/" />
-                  <NavItem label="Integer" href="/" />
-                  <NavItem label="URL" href="/" />
-                  <NavItem label="Path Reference" href="/" />
-                  <NavItem label="Relationship" href="/" />
-                  <NavItem label="Select" href="/" />
-                  <NavItem label="Slug" href="/" />
-                  <NavItem label="Multi-Select" href="/" />
-                  <NavItem label="Checkbox" href="/" />
-                  <NavItem label="Image" href="/" />
-                  <NavItem label="Date" href="/" />
-                  <NavItem label="Empty" href="/" />
-                  <NavItem label="Child" href="/" />
-                  <NavItem label="Object" href="/" />
-                  <NavItem label="Conditional" href="/" />
-                  <NavItem label="Document" href="/" />
-                  <NavItem label="Array" href="/" />
-                </NavList>
-
-                <NavList title="Community">
-                  <NavItem label="GitHub Discussions" href="/" />
-                  <NavItem label="Socials" href="/" />
-                </NavList>
+                {navigationMap?.map(({ groupName, items }) => (
+                  <NavList key={groupName} title={groupName}>
+                    {items.map(({ label, href, title }) => (
+                      <NavItem
+                        key={href}
+                        label={label}
+                        href={href}
+                        title={title}
+                        level="sub"
+                      />
+                    ))}
+                  </NavList>
+                ))}
               </div>
 
               <hr className="h-px my-3 mx-4 border-stone-400/20" />

@@ -8,7 +8,7 @@ import { createReader } from '@keystatic/core/reader';
 const reader = createReader('', keystaticConfig);
 
 export const metadata = {
-  title: 'Keystatic - docs',
+  title: 'Keystatic - Docs',
   description: 'Documentation for Keystatic',
 };
 
@@ -28,6 +28,7 @@ export default async function RootLayout({
       const { discriminant, value } = link;
       const page = discriminant === 'page' && value ? pagesBySlug[value] : null;
       const url = discriminant === 'url' ? value : `/docs/${page?.slug}`;
+
       return {
         label: label || page?.entry.title || '',
         href: url || '',
@@ -42,7 +43,7 @@ export default async function RootLayout({
         <div>
           {/** TOP NAV */}
           <div className="border-b border-stone-400/20 flex items-center w-full lg:fixed z-20 lg:z-30">
-            <Navigation />
+            <Navigation navigationMap={navigationMap} />
           </div>
 
           {/** MAIN */}
@@ -57,6 +58,7 @@ export default async function RootLayout({
                       label={label}
                       href={href}
                       title={title}
+                      level="sub"
                     />
                   ))}
                 </NavList>

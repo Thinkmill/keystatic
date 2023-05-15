@@ -37,65 +37,33 @@ export function NavList({
   );
 }
 
-const navItemStyleShared = 'rounded-md px-4 py-2 block text-sm';
-
-const navItemStyleIdle =
-  'hover:bg-keystatic-gray-light font-medium text-stone-600';
-
-const navItemStyleCurrent =
-  'bg-keystatic-gray text-stone-700 font-semibold before:block before:absolute before:inset-y-2 before:inset-x-0 before:bg-keystatic-gray-dark before:w-1 before:rounded-r';
-
-export function NavItem({
-  label,
-  href,
-  current,
-  title,
-}: {
+type NavItemProps = {
   label: string;
   href: string;
+  level: 'top' | 'sub';
   current?: boolean;
   title?: string;
-}) {
+};
+
+export function NavItem({ label, href, level, current, title }: NavItemProps) {
   // TODO next/link
+  const styleShared =
+    level === 'top'
+      ? 'rounded-md px-4 py-2 block text-md'
+      : 'rounded-md px-4 py-2 block text-sm';
+  const styleIdle =
+    level === 'top'
+      ? 'hover:bg-keystatic-gray-light font-medium text-stone-600'
+      : 'hover:bg-keystatic-gray-light font-medium text-stone-600';
+  const styleCurrent =
+    level === 'top'
+      ? 'bg-keystatic-gray text-stone-700 font-semibold'
+      : 'bg-keystatic-gray text-stone-700 font-semibold before:block before:absolute before:inset-y-2 before:inset-x-0 before:bg-keystatic-gray-dark before:w-1 before:rounded-r';
+
   return (
     <li className="relative" aria-current={current ? 'page' : false}>
       <a
-        className={cx(
-          navItemStyleShared,
-          current ? navItemStyleCurrent : navItemStyleIdle
-        )}
-        href={href}
-      >
-        {label}
-      </a>
-    </li>
-  );
-}
-
-const topNavItemStyleShared = 'rounded-md px-4 py-2 block text-md';
-
-const topNavItemStyleIdle =
-  'hover:bg-keystatic-gray-light font-medium text-stone-600';
-
-const topNavItemStyleCurrent = 'bg-keystatic-gray text-stone-700 font-semibold';
-
-export function TopNavItem({
-  label,
-  href,
-  current,
-}: {
-  label: string;
-  href: string;
-  current?: boolean;
-}) {
-  // TODO next/link
-  return (
-    <li className="relative" aria-current={current ? 'page' : false}>
-      <a
-        className={cx(
-          topNavItemStyleShared,
-          current ? topNavItemStyleCurrent : topNavItemStyleIdle
-        )}
+        className={cx(styleShared, current ? styleCurrent : styleIdle)}
         href={href}
         title={title}
       >
