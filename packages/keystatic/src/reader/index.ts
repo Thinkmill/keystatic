@@ -1,4 +1,4 @@
-import { Collection, Config, Glob, Singleton } from './config';
+import { Collection, Config, Glob, Singleton } from '../config';
 import {
   ComponentSchema,
   fields,
@@ -6,7 +6,7 @@ import {
   SlugFormField,
   ValueForReading,
   ValueForReadingDeep,
-} from './form/api';
+} from '../form/api';
 import fs from 'fs/promises';
 import nodePath from 'path';
 import {
@@ -19,13 +19,14 @@ import {
   getSingletonFormat,
   getSingletonPath,
   getSlugGlobForCollection,
-} from './app/path-utils';
-import { parseProps } from './form/parse-props';
-import { loadDataFile } from './app/required-files';
-import { getValueAtPropPath } from './form/props-value';
+} from '../app/path-utils';
+import { parseProps } from '../form/parse-props';
+import { loadDataFile } from '../app/required-files';
+import { getValueAtPropPath } from '../form/props-value';
 import { Dirent } from 'fs';
-import { ReadonlyPropPath } from './form/fields/document/DocumentEditor/component-blocks/utils';
-import { formatFormDataError } from './form/errors';
+import { ReadonlyPropPath } from '../form/fields/document/DocumentEditor/component-blocks/utils';
+import { formatFormDataError } from '../form/errors';
+import { cache } from '#react-cache-in-react-server';
 
 type EntryReaderOpts = { resolveLinkedFiles?: boolean };
 
@@ -220,6 +221,57 @@ async function getAllEntries(
   ).flat();
 }
 
+const listCollection = cache(async function listCollection(
+  repoPath: string,
+  collectionPath: string,
+  glob: Glob,
+  formatInfo: FormatInfo,
+  extension: string
+) {
+  const entries: { entry: Dirent; name: string }[] =
+    glob === '*'
+      ? (
+          await fs
+            .readdir(nodePath.join(repoPath, collectionPath), {
+              withFileTypes: true,
+            })
+            .catch(err => {
+              if ((err as any).code === 'ENOENT') {
+                return [];
+              }
+              throw err;
+            })
+        ).map(x => ({ entry: x, name: x.name }))
+      : await getAllEntries(nodePath.join(repoPath, collectionPath), '');
+
+  return (
+    await Promise.all(
+      entries.map(async x => {
+        if (formatInfo.dataLocation === 'index') {
+          if (!x.entry.isDirectory()) return [];
+          try {
+            await fs.stat(
+              nodePath.join(
+                repoPath,
+                getEntryDataFilepath(`${collectionPath}/${x.name}`, formatInfo)
+              )
+            );
+            return [x.name];
+          } catch (err) {
+            if ((err as any).code === 'ENOENT') {
+              return [];
+            }
+            throw err;
+          }
+        } else {
+          if (!x.entry.isFile() || !x.name.endsWith(extension)) return [];
+          return [x.name.slice(0, -extension.length)];
+        }
+      })
+    )
+  ).flat();
+});
+
 function collectionReader(
   repoPath: string,
   collection: string,
@@ -231,67 +283,22 @@ function collectionReader(
   const schema = fields.object(collectionConfig.schema);
   const glob = getSlugGlobForCollection(config, collection);
   const extension = getDataFileExtension(formatInfo);
-  async function list() {
-    const entries: { entry: Dirent; name: string }[] =
-      glob === '*'
-        ? (
-            await fs
-              .readdir(nodePath.join(repoPath, collectionPath), {
-                withFileTypes: true,
-              })
-              .catch(err => {
-                if ((err as any).code === 'ENOENT') {
-                  return [];
-                }
-                throw err;
-              })
-          ).map(x => ({ entry: x, name: x.name }))
-        : await getAllEntries(nodePath.join(repoPath, collectionPath), '');
 
-    return (
-      await Promise.all(
-        entries.map(async x => {
-          if (formatInfo.dataLocation === 'index') {
-            if (!x.entry.isDirectory()) return [];
-            try {
-              await fs.stat(
-                nodePath.join(
-                  repoPath,
-                  getEntryDataFilepath(
-                    `${collectionPath}/${x.name}`,
-                    formatInfo
-                  )
-                )
-              );
-              return [x.name];
-            } catch (err) {
-              if ((err as any).code === 'ENOENT') {
-                return [];
-              }
-              throw err;
-            }
-          } else {
-            if (!x.entry.isFile() || !x.name.endsWith(extension)) return [];
-            return [x.name.slice(0, -extension.length)];
-          }
-        })
-      )
-    ).flat();
-  }
   const read: CollectionReader<any, any>['read'] = (slug, ...args) =>
     readItem(
       schema,
       formatInfo,
       getCollectionItemPath(config, collection, slug),
-      {
-        field: collectionConfig.slugField,
-        slug,
-        glob,
-      },
       repoPath,
-      args[0],
-      `"${slug}" in collection "${collection}"`
+      args[0]?.resolveLinkedFiles,
+      `"${slug}" in collection "${collection}"`,
+      slug,
+      collectionConfig.slugField,
+      glob
     );
+
+  const list = () =>
+    listCollection(repoPath, collectionPath, glob, formatInfo, extension);
 
   return {
     read,
@@ -322,20 +329,14 @@ function collectionReader(
   };
 }
 
-async function readItem(
+const readItem = cache(async function readItem(
   rootSchema: ComponentSchema,
   formatInfo: FormatInfo,
   itemDir: string,
-  slugField:
-    | {
-        slug: string;
-        field: string;
-        glob: Glob;
-      }
-    | undefined,
   repoPath: string,
-  opts: EntryReaderOpts | undefined,
-  debugReference: string
+  resolveLinkedFiles: boolean | undefined,
+  debugReference: string,
+  ...slugInfo: [slug: undefined] | [slug: string, field: string, glob: Glob]
 ) {
   let dataFile: Uint8Array;
   try {
@@ -351,7 +352,7 @@ async function readItem(
   const { loaded, extraFakeFile } = loadDataFile(dataFile, formatInfo);
 
   const contentFieldPathsToEagerlyResolve: ReadonlyPropPath[] | undefined =
-    opts?.resolveLinkedFiles ? [] : undefined;
+    resolveLinkedFiles ? [] : undefined;
   let validated: any;
   try {
     validated = parseProps(
@@ -383,16 +384,14 @@ async function readItem(
             return schema.reader.parse(value, { content });
           };
         }
-        if (path.length === 1 && path[0] === slugField?.field) {
-          if (schema.formKind !== 'slug') {
-            throw new Error(
-              `Slug field ${slugField.field} is not a slug field`
-            );
+        if (path.length === 1 && slugInfo[0] !== undefined) {
+          const [slug, slugField, glob] = slugInfo;
+          if (path[0] === slugField) {
+            if (schema.formKind !== 'slug') {
+              throw new Error(`Slug field ${slugInfo[1]} is not a slug field`);
+            }
+            return schema.reader.parseWithSlug(value, { slug, glob });
           }
-          return schema.reader.parseWithSlug(value, {
-            slug: slugField.slug,
-            glob: slugField.glob,
-          });
         }
         return schema.reader.parse(value);
       },
@@ -418,7 +417,7 @@ async function readItem(
   }
 
   return validated;
-}
+});
 
 function singletonReader(
   repoPath: string,
@@ -433,10 +432,10 @@ function singletonReader(
       schema,
       formatInfo,
       singletonPath,
-      undefined,
       repoPath,
-      args[0],
-      `singleton "${singleton}"`
+      args[0]?.resolveLinkedFiles,
+      `singleton "${singleton}"`,
+      undefined
     );
   return {
     read,

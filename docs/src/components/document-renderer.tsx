@@ -30,7 +30,6 @@ const getRenderers = (
   slug: string,
   highlighter: shiki.Highlighter
 ): DocumentRendererProps['renderers'] => ({
-  // use your editor's autocomplete to see what other renderers you can override
   inline: {
     bold: ({ children }) => <strong>{children}</strong>,
     code: ({ children }) => (

@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/core",
-  "version": "0.0.97",
+  "version": "0.0.101",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -9,28 +9,58 @@
   },
   "exports": {
     "./ui": {
+      "types": "./ui/dist/keystatic-core-ui.cjs.js",
+      "react-server": {
+        "module": "./ui/dist/keystatic-core-ui.react-server.esm.js",
+        "default": "./ui/dist/keystatic-core-ui.react-server.cjs.js"
+      },
       "module": "./ui/dist/keystatic-core-ui.esm.js",
       "default": "./ui/dist/keystatic-core-ui.cjs.js"
     },
     ".": {
+      "types": "./dist/keystatic-core.cjs.js",
+      "react-server": {
+        "module": "./dist/keystatic-core.react-server.esm.js",
+        "default": "./dist/keystatic-core.react-server.cjs.js"
+      },
       "module": "./dist/keystatic-core.esm.js",
       "default": "./dist/keystatic-core.cjs.js"
     },
-    "./reader": {
-      "module": "./reader/dist/keystatic-core-reader.esm.js",
-      "default": "./reader/dist/keystatic-core-reader.cjs.js"
-    },
     "./api/utils": {
+      "types": "./api/utils/dist/keystatic-core-api-utils.cjs.js",
+      "react-server": {
+        "module": "./api/utils/dist/keystatic-core-api-utils.react-server.esm.js",
+        "default": "./api/utils/dist/keystatic-core-api-utils.react-server.cjs.js"
+      },
       "module": "./api/utils/dist/keystatic-core-api-utils.esm.js",
       "default": "./api/utils/dist/keystatic-core-api-utils.cjs.js"
     },
     "./renderer": {
+      "types": "./renderer/dist/keystatic-core-renderer.cjs.js",
+      "react-server": {
+        "module": "./renderer/dist/keystatic-core-renderer.react-server.esm.js",
+        "default": "./renderer/dist/keystatic-core-renderer.react-server.cjs.js"
+      },
       "module": "./renderer/dist/keystatic-core-renderer.esm.js",
       "default": "./renderer/dist/keystatic-core-renderer.cjs.js"
     },
     "./api/generic": {
+      "types": "./api/generic/dist/keystatic-core-api-generic.cjs.js",
+      "react-server": {
+        "module": "./api/generic/dist/keystatic-core-api-generic.react-server.esm.js",
+        "default": "./api/generic/dist/keystatic-core-api-generic.react-server.cjs.js"
+      },
       "module": "./api/generic/dist/keystatic-core-api-generic.esm.js",
       "default": "./api/generic/dist/keystatic-core-api-generic.cjs.js"
+    },
+    "./reader": {
+      "types": "./reader/dist/keystatic-core-reader.cjs.js",
+      "react-server": {
+        "module": "./reader/dist/keystatic-core-reader.react-server.esm.js",
+        "default": "./reader/dist/keystatic-core-reader.react-server.cjs.js"
+      },
+      "module": "./reader/dist/keystatic-core-reader.esm.js",
+      "default": "./reader/dist/keystatic-core-reader.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -166,7 +196,7 @@
       "index.ts",
       "api/generic.ts",
       "api/utils.ts",
-      "reader.ts",
+      "reader/index.ts",
       "renderer.tsx",
       "ui.tsx"
     ]
@@ -177,6 +207,12 @@
     "addTypename": false,
     "scalars": {
       "GitObjectID": "string"
+    }
+  },
+  "imports": {
+    "#react-cache-in-react-server": {
+      "react-server": "./src/reader/react-server-cache.ts",
+      "default": "./src/reader/noop-cache.ts"
     }
   }
 }

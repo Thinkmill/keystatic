@@ -9,7 +9,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
 
   const page = await reader.collections.pages.read(slug);
 
-  if (!page) return <div>Post not found</div>;
+  if (!page) return <div>Page not found</div>;
 
   return (
     <div>

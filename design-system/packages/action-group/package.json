@@ -7,6 +7,7 @@
   "module": "dist/voussoir-action-group.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-action-group.cjs.js",
       "module": "./dist/voussoir-action-group.esm.js",
       "default": "./dist/voussoir-action-group.cjs.js"
     },

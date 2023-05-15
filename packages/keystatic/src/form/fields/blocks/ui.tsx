@@ -155,7 +155,10 @@ export function BlocksFieldInput<Key extends string>(
                       ]);
                       return;
                     }
-                    setValueToPreviewProps(val, props.elements[modalState.idx]);
+                    setValueToPreviewProps(
+                      val,
+                      props.elements[modalState.idx].value
+                    );
                   }}
                 />
               </Content>

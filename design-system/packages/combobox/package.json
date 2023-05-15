@@ -7,6 +7,7 @@
   "module": "dist/voussoir-combobox.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-combobox.cjs.js",
       "module": "./dist/voussoir-combobox.esm.js",
       "default": "./dist/voussoir-combobox.cjs.js"
     },

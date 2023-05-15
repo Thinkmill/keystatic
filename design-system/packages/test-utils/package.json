@@ -7,6 +7,7 @@
   "module": "dist/voussoir-test-utils.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-test-utils.cjs.js",
       "module": "./dist/voussoir-test-utils.esm.js",
       "default": "./dist/voussoir-test-utils.cjs.js"
     },
