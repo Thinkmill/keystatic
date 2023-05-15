@@ -8,7 +8,7 @@ import { Analytics } from '@vercel/analytics/react';
 import '../styles/global.css';
 
 const meta = {
-  title: 'Meet Keystatic',
+  title: 'Keystatic - Content Management for your Codebase',
   description:
     "Keystatic is a new tool from Thinkmill Labs that opens up your code-based content (written in Markdown, JSON or YAML) to contributors who aren't technical.",
 };
@@ -26,6 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
     setRootUrl(root);
     setCurrentUrl(current);
   }, [router.pathname]);
+
   return (
     <>
       <DefaultSeo

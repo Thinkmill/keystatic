@@ -2,6 +2,8 @@
 
 import { ReactNode, useId } from 'react';
 import { cx } from '../utils';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 export function NavContainer({ children }: { children: ReactNode }) {
   return (
@@ -45,30 +47,30 @@ type NavItemProps = {
   title?: string;
 };
 
-export function NavItem({ label, href, level, current, title }: NavItemProps) {
-  // TODO next/link
-  const styleShared =
-    level === 'top'
-      ? 'rounded-md px-4 py-2 block text-md'
-      : 'rounded-md px-4 py-2 block text-sm';
-  const styleIdle =
-    level === 'top'
-      ? 'hover:bg-keystatic-gray-light font-medium text-stone-600'
-      : 'hover:bg-keystatic-gray-light font-medium text-stone-600';
+export function NavItem({ label, href, level, title }: NavItemProps) {
+  const pathname = usePathname();
+  const isCurrentPage = href === pathname;
+
+  const styleShared = `rounded-md px-4 py-2 block ${
+    level === 'top' ? 'text-md' : 'text-sm'
+  }`;
+
+  const styleIdle = 'hover:bg-keystatic-gray-light font-medium text-stone-600';
+
   const styleCurrent =
-    level === 'top'
-      ? 'bg-keystatic-gray text-stone-700 font-semibold'
-      : 'bg-keystatic-gray text-stone-700 font-semibold before:block before:absolute before:inset-y-2 before:inset-x-0 before:bg-keystatic-gray-dark before:w-1 before:rounded-r';
+    'bg-keystatic-gray text-stone-700 font-semibold before:block before:absolute before:inset-y-2 before:inset-x-0 before:bg-keystatic-gray-dark before:w-1 before:rounded-r';
 
   return (
-    <li className="relative" aria-current={current ? 'page' : false}>
-      <a
-        className={cx(styleShared, current ? styleCurrent : styleIdle)}
-        href={href}
-        title={title}
-      >
-        {label}
-      </a>
+    <li className="relative" aria-current={isCurrentPage ? 'page' : false}>
+      <Link href={href} legacyBehavior>
+        <a
+          className={cx(styleShared, isCurrentPage ? styleCurrent : styleIdle)}
+          href={href}
+          title={title}
+        >
+          {label}
+        </a>
+      </Link>
     </li>
   );
 }

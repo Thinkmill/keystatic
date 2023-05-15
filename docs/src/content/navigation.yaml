@@ -1,7 +1,11 @@
 navGroups:
   - groupName: Getting started
     items:
-      - label: Automated setup
+      - label: Introduction
+        link:
+          discriminant: page
+          value: introduction
+      - label: Automated Setup
         link:
           discriminant: page
           value: automated-setup-with-template
