@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.0.101
+
+### Patch Changes
+
+- e03a94d: `@keystatic/core/reader` now uses React's `cache` function in server
+  component environments
+
 ## 0.0.100
 
 ### Patch Changes
