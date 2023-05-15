@@ -1,0 +1,165 @@
+---
+title: How Keystatic organises your content
+---
+Keystatic gives you a lot of control and flexibility with _where_ your content gets generated, both at the `collection/singleton` level, and at the `field` level for certain field types, like images.
+
+Let’s start with the `collection/singleton` options.
+
+# Collections & Singletons output
+
+You can define _where_ Keystatic should store collection entries and singletons via the `path` property in the collection/singleton top-level options.
+
+```javascript
+// Keystatic config
+export default config({
+  collections: {
+    posts: collection({
+      label: 'Posts',
+      path: 'content/posts/*/',
+      // ...
+    })
+  },
+  singletons: {
+    settings: singleton({
+      label: 'Settings',
+      path: 'content/posts/',
+      // ...
+   })
+  }
+})
+
+```
+
+The optional trailing slash `/` on that path has an impact on the content structure - read below for more details on `collection paths` and `singleton paths`.
+
+## Collections
+
+The `path` property for collections is a string that contains a `*` wildcard representing the `slug` of an entry.
+
+If not specified, the default `path` value will be `{collection-name}/*/`.
+
+{% aside %}
+{% component-inline-prop propPath=["icon"] %}⚡️{% /component-inline-prop %}
+
+{% component-block-prop propPath=["content"] %}
+**Why a**`*`**symbol?**
+
+The `*` wildcard in the `path` is useful when you want to collocate Keystatic’s output with your existing source code, that may be nested a few levels deep inside an _**entry**_ you’re writing content for.
+
+For example, you may be writing documentation for Design System components.
+
+Say you want Keystatic to output your documentation entries in `packages/design-system/{component-name}/docs/`.
+
+You can use `path: ‘packages/design-system/*/docs/’` to do just that 👍
+{% /component-block-prop %}
+{% /aside %}
+
+### Paths ending with a trailing slash `/`
+
+If the path ends with a trailing slash `/`, each entry will be created in its own directory named after the slug:
+
+```
+collection-name
+  slug
+    index.yaml
+    other.mdoc
+```
+
+Say you create two entries in the `posts` collection, where the `path` is set to `'content/posts/*/'`.
+
+Since there is a trailing slash in the `path`, the generated output will look like so:
+
+```
+content
+  posts
+    my-first-post
+      index.yaml
+      other.mdoc
+    my-second-post
+      index.yaml
+      other.mdoc
+```
+
+### Paths ending without a trailing slash
+
+If the path does not end with a trailing slash, entries’ index files will be created immediately inside the collection directory:
+
+```
+collection-name
+  slug.yaml
+  slug
+    other.mdoc
+```
+
+Say you create two entries in the `posts` collection, where the `path` is set to `'content/posts/*'`.
+
+Since there is no trailing slash in the `path`, the generated output will look like so:
+
+```
+content
+  my-first-post.yaml
+  my-first-post
+    other.mdoc
+  my-second-post.yaml
+  my-second-post
+    other.mdoc
+```
+
+## Singletons
+
+The `path` property for singletons does not contain a `*` wildcard.
+
+If not specified, the default `path` value for singletons will be `{singleton-name}/`.
+
+### Paths ending with a trailing slash `/`
+
+If the path ends with a trailing slash `/`, the singleton’s content ill be created in its own directory named after the slug:
+
+```
+singleton-name
+  slug
+    index.yaml
+    other.mdoc
+
+```
+
+### Paths ending without a trailing slash
+
+If the path does not end with a trailing slash, the singleton’s index file will be created immediately inside the singleton directory:
+
+```
+singleton-name
+  slug.yaml
+  slug
+    other.mdoc
+
+```
+
+---
+
+# Individual fields output
+
+Right now, only **images** allow you to decide _where_ content should be generated, independently of the `collection/singleton` level `path` settings.
+
+{% aside %}
+{% component-inline-prop propPath=["icon"] %}⚡️{% /component-inline-prop %}
+
+{% component-block-prop propPath=["content"] %}
+The reason for this is certain frameworks (like Next.js) need your images to be in a specific directory (like `/public`) to be easily accessible.
+
+Instead of generating **all** your content inside the `public` directory to satisfy this requirement, Keystatic lets you define a specific path for your images only.
+{% /component-block-prop %}
+{% /aside %}
+
+Here’s how you define where an image gets generated for a given `collection` or `singleton`:
+
+```javascript
+// In the context of a `posts` collection...
+coverImage: fields.image({
+  label: "Cover Image",
+  directory: "public/images/posts",
+}),
+
+```
+
+Regardless of where the `posts` entries are created, the `coverImage` image will be generated in `public/images/posts/{post-slug}`.

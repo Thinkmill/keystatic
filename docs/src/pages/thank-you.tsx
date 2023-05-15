@@ -1,9 +1,5 @@
-import Navigation from "../components/navigation";
-import Hero from "../components/hero";
-import Intro from "../components/intro";
-import Templates from "../components/templates";
-import CallToAction from "../components/call-to-action";
-import Footer from "../components/footer";
+import Navigation from '../components/navigation';
+import Footer from '../components/footer';
 
 export default function Index() {
   return (
@@ -13,7 +9,7 @@ export default function Index() {
         <div className="mx-auto max-w-6xl px-6 py-32">
           <div className="max-w-2xl">
             <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">
-              Thank you for being{" "}
+              Thank you for being{' '}
               <span className="relative">
                 <svg
                   className="absolute -right-1 bottom-0 w-full"

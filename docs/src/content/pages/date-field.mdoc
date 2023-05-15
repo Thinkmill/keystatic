@@ -1,0 +1,17 @@
+---
+title: Date field
+---
+```typescript
+date({
+  label: string;
+  defaultValue?: string | {
+    kind: 'today';
+  };
+  validation?: {
+    isRequired?: IsRequired;
+    min?: string;
+    max?: string;
+  };
+  description?: string;
+})
+```

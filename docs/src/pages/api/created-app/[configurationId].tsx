@@ -1,8 +1,8 @@
-import cookie from "cookie";
-import { randomBytes } from "crypto";
-import { NextApiRequest, NextApiResponse } from "next";
-import { z } from "zod";
-import { getCookieData } from "../../../cookie-data";
+import cookie from 'cookie';
+import { randomBytes } from 'crypto';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { z } from 'zod';
+import { getCookieData } from '../../../cookie-data';
 
 const ghAppSchema = z.object({
   slug: z.string(),
@@ -22,7 +22,7 @@ const domainsSchema = z.object({
 
 const projectSchema = z.object({
   link: z.object({
-    type: z.literal("github"),
+    type: z.literal('github'),
     org: z.string(),
     repo: z.string(),
   }),
@@ -33,10 +33,10 @@ export default async function resolver(
   res: NextApiResponse
 ) {
   if (
-    typeof req.query.code !== "string" ||
+    typeof req.query.code !== 'string' ||
     !/^[a-zA-Z0-9]+$/.test(req.query.code)
   ) {
-    res.status(400).send("Bad Request");
+    res.status(400).send('Bad Request');
     return;
   }
   const cookieData = await getCookieData(
@@ -46,7 +46,7 @@ export default async function resolver(
   const [project, ghAppRes, vercelDomainsRes] = await Promise.all([
     fetch(
       `https://api.vercel.com/v9/projects/${cookieData.projectId}${
-        cookieData.teamId ? `?teamId=${cookieData.teamId}` : ""
+        cookieData.teamId ? `?teamId=${cookieData.teamId}` : ''
       }`,
       {
         headers: {
@@ -54,8 +54,8 @@ export default async function resolver(
         },
       }
     )
-      .then((x) => x.json())
-      .then(async (project) => {
+      .then(x => x.json())
+      .then(async project => {
         const parsedProject = projectSchema.safeParse(project);
         if (!parsedProject.success) {
           throw new Error(
@@ -66,13 +66,13 @@ export default async function resolver(
       }),
     fetch(
       `https://api.github.com/app-manifests/${req.query.code}/conversions`,
-      { method: "POST", headers: { Accept: "application/json" } }
+      { method: 'POST', headers: { Accept: 'application/json' } }
     ),
     fetch(
       `https://api.vercel.com/v9/projects/${
         cookieData.projectId
       }/domains?production=true${
-        cookieData.teamId ? `&teamId=${cookieData.teamId}` : ""
+        cookieData.teamId ? `&teamId=${cookieData.teamId}` : ''
       }`,
       { headers: { Authorization: `Bearer ${cookieData.accessToken}` } }
     ),
@@ -80,12 +80,12 @@ export default async function resolver(
 
   if (!ghAppRes.ok) {
     console.log(ghAppRes);
-    res.status(500).send("An error occurred while creating the GitHub App");
+    res.status(500).send('An error occurred while creating the GitHub App');
     return;
   }
   if (!vercelDomainsRes.ok) {
     console.log(vercelDomainsRes);
-    res.status(500).send("An error occurred while fetching production domain");
+    res.status(500).send('An error occurred while fetching production domain');
     return;
   }
 
@@ -99,12 +99,12 @@ export default async function resolver(
 
   if (!ghAppDataResult.success) {
     console.log(ghAppDataRaw);
-    res.status(500).send("An unexpected response was received from GitHub");
+    res.status(500).send('An unexpected response was received from GitHub');
     return;
   }
   if (!vercelDomainsResult.success) {
     console.log(vercelDomainsResult);
-    res.status(500).send("An unexpected response was received from Verel");
+    res.status(500).send('An unexpected response was received from Verel');
     return;
   }
 
@@ -112,10 +112,10 @@ export default async function resolver(
   const airtableRes = await fetch(
     `https://api.airtable.com/v0/${process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID}/${process.env.AIRTABLE_REPO_TABLE_ID}`,
     {
-      method: "POST",
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_AIRTABLE_TOKEN}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         fields: {
@@ -127,7 +127,7 @@ export default async function resolver(
     }
   );
   if (!airtableRes.ok) {
-    console.log("failed to log repo to airtable");
+    console.log('failed to log repo to airtable');
     console.error(airtableRes);
     throw new Error(
       `failed to log repo to airtable ${airtableRes.status}:\n` +
@@ -143,37 +143,37 @@ export default async function resolver(
       headers: {
         Authorization: `Bearer ${cookieData.accessToken}`,
       },
-      method: "post",
+      method: 'post',
       body: JSON.stringify([
         {
-          type: "encrypted",
-          key: "KEYSTATIC_GITHUB_CLIENT_ID",
+          type: 'encrypted',
+          key: 'KEYSTATIC_GITHUB_CLIENT_ID',
           value: ghAppDataResult.data.client_id,
-          target: ["development", "production", "preview"],
+          target: ['development', 'production', 'preview'],
         },
         {
-          type: "encrypted",
-          key: "KEYSTATIC_GITHUB_CLIENT_SECRET",
+          type: 'encrypted',
+          key: 'KEYSTATIC_GITHUB_CLIENT_SECRET',
           value: ghAppDataResult.data.client_secret,
-          target: ["development", "production", "preview"],
+          target: ['development', 'production', 'preview'],
         },
         {
-          type: "encrypted",
-          key: "KEYSTATIC_SECRET",
-          value: randomBytes(40).toString("hex"),
-          target: ["development", "production", "preview"],
+          type: 'encrypted',
+          key: 'KEYSTATIC_SECRET',
+          value: randomBytes(40).toString('hex'),
+          target: ['development', 'production', 'preview'],
         },
         {
-          type: "plain",
-          key: "NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG",
+          type: 'plain',
+          key: 'NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG',
           value: ghAppDataResult.data.slug,
-          target: ["development", "production", "preview"],
+          target: ['development', 'production', 'preview'],
         },
         {
-          type: "plain",
-          key: "KEYSTATIC_URL",
+          type: 'plain',
+          key: 'KEYSTATIC_URL',
           value: `https://${vercelDomainsResult.data.domains[0].name}`,
-          target: ["production", "preview"],
+          target: ['production', 'preview'],
         },
       ]),
     }
@@ -183,15 +183,15 @@ export default async function resolver(
     console.error(await envUpdatingRes.text());
     res
       .status(500)
-      .send("An error occurred while updating environment variables");
+      .send('An error occurred while updating environment variables');
     return;
   }
   res.setHeader(
-    "Set-Cookie",
-    cookie.serialize(`ks-${req.query.configurationId}`, "", {
-      sameSite: "lax",
-      path: "/",
-      secure: process.env.NODE_ENV === "production",
+    'Set-Cookie',
+    cookie.serialize(`ks-${req.query.configurationId}`, '', {
+      sameSite: 'lax',
+      path: '/',
+      secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       expires: new Date(),
       maxAge: 0,

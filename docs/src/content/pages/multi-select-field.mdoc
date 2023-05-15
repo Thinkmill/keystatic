@@ -1,0 +1,14 @@
+---
+title: Multi-Select field
+---
+```typescript
+multiselect<Option extends {
+  label: string;
+  value: string;
+}>({
+  label: string;
+  options: readonly Option[];
+  defaultValue?: readonly Option['value'][];
+  description?: string;
+})
+```

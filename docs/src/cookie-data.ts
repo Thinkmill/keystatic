@@ -1,6 +1,6 @@
-import Iron from "@hapi/iron";
-import { z } from "zod";
-import { IncomingMessage } from "http";
+import Iron from '@hapi/iron';
+import { z } from 'zod';
+import { IncomingMessage } from 'http';
 
 const paramsSchema = z.object({
   t: z.string(),
@@ -21,7 +21,7 @@ export async function getCookieData(
 ) {
   const cookieData = req.cookies[`ks-${configurationId}`];
   if (!cookieData) {
-    throw new Error("Cookie not found");
+    throw new Error('Cookie not found');
   }
 
   const unsealedData = await Iron.unseal(
@@ -29,8 +29,8 @@ export async function getCookieData(
     process.env.SESSION_SECRET!,
     Iron.defaults
   );
-  if (typeof unsealedData !== "string") {
-    throw new Error("Cookie data is not a string");
+  if (typeof unsealedData !== 'string') {
+    throw new Error('Cookie data is not a string');
   }
   const _parsedParams = Object.fromEntries([
     ...new URLSearchParams(unsealedData),

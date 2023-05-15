@@ -1,10 +1,10 @@
-import { useRouter } from "next/router";
-import { ArrowSmallRightIcon } from "@heroicons/react/24/solid";
+import { useRouter } from 'next/router';
+import { ArrowSmallRightIcon } from '@heroicons/react/24/solid';
 
-import Button from "../button";
-import { useFormSubmission } from "../../hooks/useFormSubmission";
-import type { Template } from "../templates";
-import { GET_ACCESS_TABLE_ID } from "./table-id";
+import Button from '../button';
+import { useFormSubmission } from '../../hooks/useFormSubmission';
+import type { Template } from '../templates';
+import { GET_ACCESS_TABLE_ID } from './table-id';
 
 export default function GetAccessForm({ template }: { template: Template }) {
   const router = useRouter();
@@ -18,19 +18,19 @@ export default function GetAccessForm({ template }: { template: Template }) {
       form,
       onSuccess: () => {
         if (!template.repo) return;
-        const url = new URL("https://vercel.com/new/clone");
-        url.searchParams.set("repository-name", template.repo.suggestedName);
-        url.searchParams.set("project-name", template.repo.suggestedName);
+        const url = new URL('https://vercel.com/new/clone');
+        url.searchParams.set('repository-name', template.repo.suggestedName);
+        url.searchParams.set('project-name', template.repo.suggestedName);
         url.searchParams.set(
-          "redirect-url",
+          'redirect-url',
           `${process.env.NEXT_PUBLIC_SITE_URL}/api/deployed`
         );
         url.searchParams.set(
-          "repository-url",
+          'repository-url',
           `https://github.com/${template.repo.owner}/${template.repo.name}`
         );
         url.searchParams.set(
-          "integration-ids",
+          'integration-ids',
           process.env.NEXT_PUBLIC_VERCEL_CLIENT_ID!
         );
 

@@ -11,7 +11,7 @@ export default function PrivacyPolicy() {
       </p>
       <p>
         Included in this policy is rationale for why we are collecting this
-        information, how it is collected, and why you need, or may want, to{" "}
+        information, how it is collected, and why you need, or may want, to{' '}
         <strong>opt-in</strong>. By opting-in, <strong>you consent </strong>
         to us collecting, holding, analysing and using the data which you
         provide in accordance with this policy, which may be updated from time
@@ -31,13 +31,13 @@ export default function PrivacyPolicy() {
       <p>
         We ask for your <strong>personal information </strong>in our mailer
         sign-up form. This sign-up form is located on the Keystatic website. You
-        will be shown the sign-up form, but are able to{" "}
-        <strong>skip this step</strong> based on your preference to receive{" "}
+        will be shown the sign-up form, but are able to{' '}
+        <strong>skip this step</strong> based on your preference to receive{' '}
         <strong>or not receive </strong>
         communications from Thinkmill Labs Pty Ltd about Keystatic.
       </p>
       <p>
-        We only collect personal information (1) that will{" "}
+        We only collect personal information (1) that will{' '}
         <strong>reasonably inform our ability to improve Keystatic </strong>
         software for its users; and (2) so that we may communicate with you; and
         we do so in accordance with the Australian Privacy Principles. The types
@@ -72,11 +72,11 @@ export default function PrivacyPolicy() {
         information/data so that we may communicate with you, to help us
         understand how Keystatic may be used, and to learn about the people
         trying this new software. Completing the sign-up form, and providing
-        your personal information, is{" "}
+        your personal information, is{' '}
         <strong>not required to use the Keystatic software</strong>.
       </p>
       <p>
-        We collect and hold personal information for{" "}
+        We collect and hold personal information for{' '}
         <strong>a variety of purposes </strong>– and different kinds of personal
         information are used for different purposes. In each case, however, the
         personal information we collect and hold is reasonably necessary for our
@@ -125,7 +125,7 @@ export default function PrivacyPolicy() {
       <p>
         If you want to review (and, if necessary, correct) personal information
         that Thinkmill Labs Pty Ltd may have collected and holds on you, please
-        contact our Privacy Officer at{" "}
+        contact our Privacy Officer at{' '}
         <a href="mailto:keystatic@thinkmill.com.au">
           keystatic@thinkmill.com.au
         </a>
@@ -138,10 +138,10 @@ export default function PrivacyPolicy() {
       </p>
       <h2>Complaining about any breach of this policy</h2>
       <p>
-        Contact our Privacy Officer at{" "}
+        Contact our Privacy Officer at{' '}
         <a href="mailto:keystatic@thinkmill.com.au">
           keystatic@thinkmill.com.au
-        </a>{" "}
+        </a>{' '}
         if you have any complaints about breaches by Thinkmill of any applicable
         privacy legislation and principles. We will treat any complaint about a
         breach of privacy legislation or any relevant privacy principles

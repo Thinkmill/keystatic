@@ -1,8 +1,8 @@
-import { useFormSubmission } from "../../hooks/useFormSubmission";
+import { useFormSubmission } from '../../hooks/useFormSubmission';
 
-import Button from "../button";
+import Button from '../button';
 
-import { MAILING_LIST_TABLE_ID } from "./table-id";
+import { MAILING_LIST_TABLE_ID } from './table-id';
 
 export default function MailingListForm() {
   const { sendForm, isLoading } = useFormSubmission();

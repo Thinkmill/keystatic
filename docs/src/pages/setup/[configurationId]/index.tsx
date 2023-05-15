@@ -1,8 +1,8 @@
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { z } from "zod";
-import { getCookieData } from "../../../cookie-data";
-import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import { z } from 'zod';
+import { getCookieData } from '../../../cookie-data';
+import { useRouter } from 'next/router';
+import { useEffect, useRef } from 'react';
 
 export default function SetupProjectPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -15,22 +15,22 @@ export default function SetupProjectPage(
   return (
     <div
       style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100%",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
       }}
     >
       <form
         method="post"
         action={`https://github.com${
-          props.isOrg ? `/organizations/${props.owner}` : ""
+          props.isOrg ? `/organizations/${props.owner}` : ''
         }/settings/apps/new`}
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
         }}
       >
         <input
@@ -43,18 +43,18 @@ export default function SetupProjectPage(
             redirect_url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/created-app/${router.query.configurationId}`,
             callback_urls: [
               `https://${props.domain}/api/keystatic/github/oauth/callback`,
-              "http://localhost:3000/api/keystatic/github/oauth/callback",
-              "http://127.0.0.1/api/keystatic/github/oauth/callback",
+              'http://localhost:3000/api/keystatic/github/oauth/callback',
+              'http://127.0.0.1/api/keystatic/github/oauth/callback',
             ],
             request_oauth_on_install: true,
             default_permissions: {
-              contents: "write",
-              metadata: "read",
-              pull_requests: "read",
+              contents: 'write',
+              metadata: 'read',
+              pull_requests: 'read',
             },
           })}
         />
-        <button ref={buttonRef} style={{ display: "none" }} type="submit">
+        <button ref={buttonRef} style={{ display: 'none' }} type="submit">
           Create GitHub App
         </button>
       </form>
@@ -74,14 +74,14 @@ const domainsSchema = z.object({
 
 const projectSchema = z.object({
   link: z.object({
-    type: z.literal("github"),
+    type: z.literal('github'),
     org: z.string(),
     repo: z.string(),
   }),
 });
 
 const ghUserSchema = z.object({
-  type: z.union([z.literal("User"), z.literal("Organization")]),
+  type: z.union([z.literal('User'), z.literal('Organization')]),
 });
 
 export const getServerSideProps = async (
@@ -95,7 +95,7 @@ export const getServerSideProps = async (
   const [extraData, domains] = await Promise.all([
     fetch(
       `https://api.vercel.com/v9/projects/${cookieData.projectId}${
-        cookieData.teamId ? `?teamId=${cookieData.teamId}` : ""
+        cookieData.teamId ? `?teamId=${cookieData.teamId}` : ''
       }`,
       {
         headers: {
@@ -103,8 +103,8 @@ export const getServerSideProps = async (
         },
       }
     )
-      .then((x) => x.json())
-      .then((project) => {
+      .then(x => x.json())
+      .then(project => {
         const parsedProject = projectSchema.safeParse(project);
         if (!parsedProject.success) {
           throw new Error(
@@ -118,24 +118,24 @@ export const getServerSideProps = async (
             Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
           },
         })
-          .then((x) => x.json())
-          .then((x) => {
+          .then(x => x.json())
+          .then(x => {
             const { type } = ghUserSchema.parse(x);
-            return { owner: org, repo, isOrg: type === "Organization" };
+            return { owner: org, repo, isOrg: type === 'Organization' };
           });
       }),
     fetch(
       `https://api.vercel.com/v9/projects/${
         cookieData.projectId
       }/domains?production=true${
-        cookieData.teamId ? `&teamId=${cookieData.teamId}` : ""
+        cookieData.teamId ? `&teamId=${cookieData.teamId}` : ''
       }`,
       {
         headers: {
           Authorization: `Bearer ${cookieData.accessToken}`,
         },
       }
-    ).then(async (res) => domainsSchema.safeParse(await res.json())),
+    ).then(async res => domainsSchema.safeParse(await res.json())),
   ]);
   if (!domains.success) {
     throw new Error(
@@ -143,7 +143,7 @@ export const getServerSideProps = async (
     );
   }
   if (domains.data.domains.length === 0) {
-    throw new Error("expected at least one domain");
+    throw new Error('expected at least one domain');
   }
   const domain = domains.data.domains[0].name;
   return {

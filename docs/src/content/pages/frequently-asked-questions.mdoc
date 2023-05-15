@@ -1,0 +1,41 @@
+---
+title: Frequently asked questions
+---
+### Do I need `reactStrictMode: false` to use Keystatic?
+
+Yes, you do.
+
+If you’re hitting strange issues, like your content not persisting after hitting save, or some Admin UI error notifications… there’s a good chance you have React strict more turned on.
+
+Turning it off will make most of those issues go away.
+
+### Can I increase `Body exceeded 1mb limit` on an entry?
+
+When creating a new entry, you might hit the following error:
+
+Untitled
+
+In the context of Next.js, this is because API routes have a size limitations for requests and responses
+
+You can increase (or turn off in the case of the response) these limit by **exporting a custom config** to the `pages/api/keystatic/[[...params]].tsx` API page like so:
+
+```diff
+import { makeAPIRouteHandler } from '@keystatic/next/api'
+import keystaticConfig from '../../../keystatic.config'
+
++ export const config = {
++   api: {
++     bodyParser: {
++       sizeLimit: '20mb',
++     },
++     responseLimit: '20mb',
++   },
++ }
+
+export default makeAPIRouteHandler({ config: keystaticConfig })
+
+```
+
+You’ll find more information on Next.js’ API route config documentation here:
+
+[https://nextjs.org/docs/api-routes/request-helpers#custom-config](https://nextjs.org/docs/api-routes/request-helpers#custom-config)

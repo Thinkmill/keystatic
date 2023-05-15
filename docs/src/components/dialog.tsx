@@ -1,6 +1,6 @@
-import { Fragment, ReactElement, ReactNode } from "react";
-import { Dialog as DialogHui, Transition } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { Fragment, ReactElement, ReactNode } from 'react';
+import { Dialog as DialogHui, Transition } from '@headlessui/react';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 type DialogProps = {
   open: boolean;

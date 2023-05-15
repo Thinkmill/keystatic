@@ -2,17 +2,40 @@ import Link from 'next/link';
 import Navigation from '../../components/navigation';
 import { NavContainer, NavList, NavItem } from '../../components/sidenav';
 import '../../styles/global.css';
+import keystaticConfig from '../../../keystatic.config';
+import { createReader } from '@keystatic/core/reader';
+
+const reader = createReader('', keystaticConfig);
 
 export const metadata = {
   title: 'Keystatic - docs',
   description: 'Documentation for Keystatic',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const navigation = await reader.singletons.navigation.read();
+  const pages = await reader.collections.pages.all();
+
+  const pagesBySlug = Object.fromEntries(pages.map(page => [page.slug, page]));
+
+  const navigationMap = navigation?.navGroups.map(({ groupName, items }) => ({
+    groupName,
+    items: items.map(({ label, link }) => {
+      const { discriminant, value } = link;
+      const page = discriminant === 'page' && value ? pagesBySlug[value] : null;
+      const url = discriminant === 'url' ? value : `/docs/${page?.slug}`;
+      return {
+        label: label || page?.entry.title || '',
+        href: url || '',
+        title: page?.entry.title,
+      };
+    }),
+  }));
+
   return (
     <html lang="en">
       <body>
@@ -26,50 +49,18 @@ export default function RootLayout({
           <main className="max-w-7xl min-h-screen mx-auto">
             {/** SIDE NAV */}
             <NavContainer>
-              <NavList title="Getting started">
-                <NavItem label="Automated setup" href="/" />
-                <NavItem label="Manual installation" href="/" />
-              </NavList>
-
-              <NavList title="Integration guides">
-                <NavItem label="Astro" href="/" />
-                <NavItem label="Next.js" href="/" />
-                <NavItem label="Remix" href="/" />
-              </NavList>
-
-              <NavList title="Learn Keystatic">
-                <NavItem label="Collections & Singletons" href="/" />
-                <NavItem label="Local vs. GitHub" href="/" />
-                <NavItem label="Reader API" href="/" />
-                <NavItem label="Renderer API" href="/" />
-                <NavItem label="Content Organisation" href="/" />
-                <NavItem label="FAQ" href="/" />
-              </NavList>
-
-              <NavList title="Fields API">
-                <NavItem label="Text" href="/" />
-                <NavItem label="Integer" href="/" />
-                <NavItem label="URL" href="/" />
-                <NavItem label="Path Reference" href="/" />
-                <NavItem label="Relationship" href="/" />
-                <NavItem label="Select" href="/" />
-                <NavItem label="Slug" href="/" />
-                <NavItem label="Multi-Select" href="/" />
-                <NavItem label="Checkbox" href="/" />
-                <NavItem label="Image" href="/" />
-                <NavItem label="Date" href="/" />
-                <NavItem label="Empty" href="/" />
-                <NavItem label="Child" href="/" />
-                <NavItem label="Object" href="/" />
-                <NavItem label="Conditional" href="/" />
-                <NavItem label="Document" href="/" />
-                <NavItem label="Array" href="/" />
-              </NavList>
-
-              <NavList title="Community">
-                <NavItem label="GitHub Discussions" href="/" />
-                <NavItem label="Socials" href="/" />
-              </NavList>
+              {navigationMap?.map(({ groupName, items }) => (
+                <NavList key={groupName} title={groupName}>
+                  {items.map(({ label, href, title }) => (
+                    <NavItem
+                      key={href}
+                      label={label}
+                      href={href}
+                      title={title}
+                    />
+                  ))}
+                </NavList>
+              ))}
             </NavContainer>
 
             {/** CONTENT */}

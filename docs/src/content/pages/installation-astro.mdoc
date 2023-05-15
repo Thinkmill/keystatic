@@ -1,0 +1,213 @@
+---
+title: Adding Keystatic to an Astro project
+---
+This guide assumes you are trying to add Keystatic to an existing Astro v2 project.
+
+Here, I've created a brand new Astro project, using the `Include sample files` option:
+
+
+## Installing dependencies
+
+We're going to need to install a few packages to get Keystatic going.
+
+Keystatic has a dependency on React, so first we need to add Astro's React integration:
+
+```bash
+npx astro add react
+```
+
+Let's install two packages from npm:
+
+```bash
+npm install @keystatic/core @keystatic/astro
+```
+
+---
+
+## Creating a Keystatic config file
+
+Keystatic needs a config file. This is where you can connect a project with a specific GitHub repository and define a content schema.
+
+Let's create a file called `keystatic.config.tsx` (or `.jsx` if not using TypeScript) in the root of the project:
+
+```jsx
+// keystatic.config.tsx
+import { config, fields, singleton } from '@keystatic/core'
+
+export default config({
+  storage: {
+    kind: 'local',
+  },
+  singletons: {
+    homepage: singleton({
+      label: 'Homepage',
+      path: 'src/content/_homepage',
+      schema: {
+        headline: fields.text({ label: 'Headline' }),
+      },
+    }),
+  },
+})
+```
+
+We export a config object wrapped in the `config` function imported from `@keystatic/core`.
+
+For now, we set the `storage` strategy to `local`, and we create a “homepage” `singleton` which contains one text field: `headline`.
+
+This is all Keystatic needs to start managing content, config wise.
+
+Now, we need to display the Keystatic Admin UI in our site!
+
+---
+
+## Keystatic Admin UI pages
+
+In our `pages` directory, we want every route within the `/keystatic` segment to become a Keystatic Admin UI route.
+
+We can leverage Astro's [Rest parameters](https://docs.astro.build/en/core-concepts/routing/#rest-parameters) to match file paths of any depth.
+
+Let's create a new page called `keystatic/[...params].astro`:
+
+```jsx
+---
+// src/pages/keystatic/[...params].astro
+
+// TODO: Display Keystatic pages
+---
+```
+
+The Keystatic Admin UI is built with React. So that we can import and mount this app here with React, let's create a new file outside of the pages directory.
+
+I'll put it in the project root, alongside our Keystatic config file.
+
+```jsx
+// keystatic.page.tsx
+import { makePage } from '@keystatic/astro/ui'
+import keystaticConfig from './keystatic.config'
+
+export const Keystatic = makePage(keystaticConfig)
+```
+
+Now, we can import that file in our `keystatic/[...params].astro` page, and mount the component on the clientside only:
+
+```jsx
+---
+// src/pages/keystatic/[...params].astro
+import { Keystatic } from '../../../keystatic.page'
+---
+
+<Keystatic client:only />
+```
+
+Great! So now, we should be able to visit the `/keystatic` router in the browser.
+
+**Oh no.**
+
+If you tried, you're getting this error:
+
+`getStaticPaths() function is required for dynamic routes. Make sure that you export a getStaticPaths function from your dynamic route.`
+
+Two lines further, we get this nugget of information:
+
+`Alternatively, set output: "server" in your Astro config file to switch to a non-static server build.`
+
+Let's do that!
+
+### Turning on SSR mode
+
+In the `astro.config.mjs`, add the `output: 'server'` option:
+
+```diff
+export default defineConfig({
++  output: 'server',
+  integrations: [react()],
+})
+```
+
+Now, visit the `/keystatic` route once again in your browser:
+
+
+Our Keystatic Admin UI is here! 🎉
+
+We also have a “Homepage” `singleton`, since we created that in our Keystatic config.
+
+Before we can use this, we also need to create some `API routes` for Keystatic
+
+## Keystatic API Routes
+
+In the `pages` directory, create a new file called `api/keystatic/[...params].ts`
+
+Once again, we use Astro's Rest parameters here.
+
+```jsx
+// src/pages/api/keystatic/[...params].ts
+import { makeHandler } from '@keystatic/astro/api'
+import keystaticConfig from '../../../../keystatic.config'
+
+export const all = makeHandler({
+  config: keystaticConfig,
+})
+```
+
+We should be all set to go for our Keystatic Admin UI now.
+
+Try and visit the `/keystatic` page in the browser one more time, and click on the “Homepage” singleton:
+
+
+It's working: our “Headline” text field is here.
+
+Go ahead and fill that field with something, and hit `Create`:
+
+
+Check your source code again. Notice anything?
+
+In our Keystatic config file, we have set the `storage` kind to `local`. For our `homepage` singleton, we set the `path` property to the following:
+
+```jsx
+path: 'src/content/_homepage',
+```
+
+If you look in the `src` directory, a new `content` folder should have been created.
+
+Inside, you'll find a `_homepage` directory.
+
+That directory contains an `index.yaml` file with… the `headline` text you've just created!
+
+
+Niiiice ✨
+
+Let's try display that on the frontend now.
+
+---
+
+## Displaying Keystatic content on the frontend
+
+Keystatic comes with its own `reader` Node API to bring content to the front end.
+
+Inside of the site's homepage, let's use that API to get the `headline` field value:
+
+```jsx
+---
+// src/pages/index.astro
+import { createReader } from '@keystatic/core/reader'
+
+// 1. Create a reader
+const reader = createReader('', keystaticConfig)
+
+// 2. Read the "Homepage" singleton
+const homepageData = await reader.singletons.homepage.read()
+---
+```
+
+This `homepageData` will give us a JSON object with all the fields inside the `homepage` singleton.
+
+Actually, there is only one field for now.
+
+Try and replace the homepage's `h1` tag with your homepage headline from Keystatic:
+
+```html
+<h1>{homepageData.headline}</h1>
+```
+
+
+Beautiful!
