@@ -45,7 +45,7 @@
     "@changesets/changelog-github": "^0.4.5",
     "@changesets/cli": "^2.23.0",
     "@manypkg/cli": "^0.19.1",
-    "@preconstruct/cli": "^2.5.0",
+    "@preconstruct/cli": "^2.6.3",
     "@testing-library/dom": "^8.20.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -78,6 +78,9 @@
       "design-system/packages/*",
       "packages/*"
     ],
-    "exports": true
+    "exports": true,
+    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
+      "importsConditions": true
+    }
   }
 }

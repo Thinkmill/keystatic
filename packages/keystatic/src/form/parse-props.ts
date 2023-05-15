@@ -4,6 +4,7 @@ import { ReadonlyPropPath } from './fields/document/DocumentEditor/component-blo
 import { FormField, FormFieldStoredValue, JsonValue } from '..';
 import { FieldDataError } from './fields/error';
 import { validateArrayLength } from './validate-array-length';
+import { getInitialPropsValue } from './initial-values';
 
 export class PropValidationError extends Error {
   path: ReadonlyPropPath;
@@ -55,7 +56,7 @@ export function parseProps(
   }
   if (schema.kind === 'conditional') {
     if (value === undefined) {
-      return undefined;
+      return getInitialPropsValue(schema);
     }
     try {
       if (typeof value !== 'object' || value === null || isArray(value)) {

@@ -7,6 +7,7 @@
   "module": "dist/voussoir-switch.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-switch.cjs.js",
       "module": "./dist/voussoir-switch.esm.js",
       "default": "./dist/voussoir-switch.cjs.js"
     },

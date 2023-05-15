@@ -7,6 +7,7 @@
   "module": "dist/voussoir-notice.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-notice.cjs.js",
       "module": "./dist/voussoir-notice.esm.js",
       "default": "./dist/voussoir-notice.cjs.js"
     },

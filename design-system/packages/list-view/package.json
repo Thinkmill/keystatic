@@ -7,6 +7,7 @@
   "module": "dist/voussoir-list-view.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-list-view.cjs.js",
       "module": "./dist/voussoir-list-view.esm.js",
       "default": "./dist/voussoir-list-view.cjs.js"
     },

@@ -7,6 +7,7 @@
   "module": "dist/voussoir-next.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-next.cjs.js",
       "module": "./dist/voussoir-next.esm.js",
       "default": "./dist/voussoir-next.cjs.js"
     },
@@ -22,7 +23,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
-    "next": "^13.2.4",
+    "next": "^13.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

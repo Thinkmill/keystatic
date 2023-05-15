@@ -7,6 +7,7 @@
   "module": "dist/voussoir-checkbox.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-checkbox.cjs.js",
       "module": "./dist/voussoir-checkbox.esm.js",
       "default": "./dist/voussoir-checkbox.cjs.js"
     },
