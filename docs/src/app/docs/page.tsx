@@ -1,5 +1,4 @@
 import Button from '../../components/button';
-// import Divider from '../../components/divider';
 
 export default function Docs() {
   return (
@@ -21,8 +20,6 @@ export default function Docs() {
           <span className="relative">Docs</span>
         </span>
       </h2>
-
-      {/* <Divider className="mx-auto mt-5 lg:mx-0" /> */}
 
       <p className="mt-6 text-lg text-stone-600">
         Keystatic is a new project from
@@ -49,14 +46,6 @@ export default function Docs() {
       <ul className="mt-8 grid items-stretch gap-8 grid-cols-1 md:grid-cols-2">
         <li>
           <div className="grid h-full grid-rows-[auto,1fr] overflow-hidden rounded-xl border border-black">
-            {/* <Image
-                  alt={`${template.label} template screenshot`}
-                  src={template?.image ?? '/images/product-screen.png'}
-                  width={800}
-                  height={540}
-                  className="border-b border-black object-cover"
-                ></Image> */}
-
             <div className="grid h-full grid-rows-[auto,1fr,auto] p-6">
               <h2 className="text-xl font-semibold leading-tight">
                 New Features & Updates
@@ -78,13 +67,6 @@ export default function Docs() {
 
         <li>
           <div className="grid h-full grid-rows-[auto,1fr] overflow-hidden rounded-xl border border-black">
-            {/* <Image
-                  alt={`${template.label} template screenshot`}
-                  src={template?.image ?? '/images/product-screen.png'}
-                  width={800}
-                  height={540}
-                  className="border-b border-black object-cover"
-                ></Image> */}
 
             <div className="grid h-full grid-rows-[auto,1fr,auto] p-6">
               <h2 className="text-xl font-semibold leading-tight">
