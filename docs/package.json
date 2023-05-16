@@ -9,10 +9,9 @@
   "keywords": [],
   "author": "",
   "dependencies": {
-    "@hapi/iron": "^7.0.0",
     "@headlessui/react": "^1.7.11",
     "@heroicons/react": "^2.0.16",
-    "@keystatic/core": "0.0.97",
+    "@keystatic/core": "0.0.102",
     "@keystatic/next": "0.0.7",
     "@tailwindcss/forms": "^0.5.3",
     "@types/cookie": "^0.5.1",
@@ -20,14 +19,13 @@
     "@types/react": "^18.0.25",
     "@vercel/analytics": "^0.1.8",
     "cookie": "^0.5.0",
-    "next": "^13.2.4",
+    "next": "^13.4.1",
     "next-seo": "^5.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-focus-lock": "^2.9.4",
     "shiki": "^0.14.2",
-    "typescript": "^5.0.2",
-    "zod": "^3.20.2"
+    "typescript": "^5.0.2"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",

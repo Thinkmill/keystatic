@@ -4,6 +4,6 @@ module.exports = {
   typescript: { ignoreBuildErrors: true },
   experimental: {
     appDir: true,
-    externalDir: true
+    externalDir: true,
   },
 };

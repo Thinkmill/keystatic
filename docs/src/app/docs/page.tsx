@@ -51,7 +51,6 @@ export default function Docs() {
 
         <li>
           <div className="grid h-full grid-rows-[auto,1fr] overflow-hidden rounded-xl border border-black">
-
             <div className="grid h-full grid-rows-[auto,1fr,auto] p-6">
               <h2 className="text-xl font-semibold leading-tight">
                 New Features & Updates

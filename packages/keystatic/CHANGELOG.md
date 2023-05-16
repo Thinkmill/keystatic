@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.102
+
+### Patch Changes
+
+- 3a1cd9af: Fix TypeScript declarations
+
 ## 0.0.101
 
 ### Patch Changes
