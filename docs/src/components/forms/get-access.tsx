@@ -23,7 +23,7 @@ export default function GetAccessForm({ template }: { template: Template }) {
         url.searchParams.set('project-name', template.repo.suggestedName);
         url.searchParams.set(
           'redirect-url',
-          `${process.env.NEXT_PUBLIC_SITE_URL}/api/deployed`
+          `https://keystatic.cloud/deploy/deployed`
         );
         url.searchParams.set(
           'repository-url',
