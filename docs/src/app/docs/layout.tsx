@@ -37,66 +37,57 @@ export default async function RootLayout({
   }));
 
   return (
-    <html lang="en">
-      <body>
-        <div>
-          {/** TOP NAV */}
-          <div className="border-b border-stone-400/20 flex items-center w-full fixed z-20">
-            <Navigation />
-          </div>
+    <div>
+      {/** TOP NAV */}
+      <div className="border-b border-stone-400/20 flex items-center w-full fixed z-20">
+        <Navigation />
+      </div>
 
-          {/** MAIN */}
-          <main className="max-w-7xl min-h-screen mx-auto px-6">
-            {/** SIDE NAV */}
-            <NavContainer>
-              {navigationMap?.map(({ groupName, items }) => (
-                <NavList key={groupName} title={groupName}>
-                  {items.map(({ label, href, title }) => (
-                    <NavItem
-                      key={href}
-                      label={label}
-                      href={href}
-                      title={title}
-                    />
-                  ))}
-                </NavList>
+      {/** MAIN */}
+      <main className="max-w-7xl min-h-screen mx-auto px-6">
+        {/** SIDE NAV */}
+        <NavContainer>
+          {navigationMap?.map(({ groupName, items }) => (
+            <NavList key={groupName} title={groupName}>
+              {items.map(({ label, href, title }) => (
+                <NavItem key={href} label={label} href={href} title={title} />
               ))}
-            </NavContainer>
+            </NavList>
+          ))}
+        </NavContainer>
 
-            {/** CONTENT */}
-            <div className="lg:pl-60 pt-24 flex-1">
-              <div className="py-10 pl-12 ">
-                {/** INNER CONTENT (markdoc goes here) */}
-                <div className="grid gap-6 grid-cols-[auto,12rem]">
-                  <div>{children}</div>
+        {/** CONTENT */}
+        <div className="lg:pl-60 pt-24 flex-1">
+          <div className="py-10 pl-12 ">
+            {/** INNER CONTENT (markdoc goes here) */}
+            <div className="grid gap-6 grid-cols-[auto,12rem]">
+              <div>{children}</div>
 
-                  <div className="sticky top-28 self-start">
-                    <h5 className="text-xs uppercase text-stone-600">
-                      On this page
-                    </h5>
-                  </div>
-                </div>
-
-                {/** FOOTER */}
-                <footer>
-                  <hr className="h-px my-8 border-stone-400/20 mb-8" />
-
-                  <p className="leading-none text-keystatic-gray-dark text-sm">
-                    &copy; {new Date().getFullYear()} Thinkmill. All rights
-                    reserved.{' '}
-                    <Link
-                      href="/privacy-policy"
-                      className="underline hover:text-black"
-                    >
-                      Privacy policy
-                    </Link>
-                  </p>
-                </footer>
+              <div className="sticky top-28 self-start">
+                <h5 className="text-xs uppercase text-stone-600">
+                  On this page
+                </h5>
               </div>
             </div>
-          </main>
+
+            {/** FOOTER */}
+            <footer>
+              <hr className="h-px my-8 border-stone-400/20 mb-8" />
+
+              <p className="leading-none text-keystatic-gray-dark text-sm">
+                &copy; {new Date().getFullYear()} Thinkmill. All rights
+                reserved.{' '}
+                <Link
+                  href="/privacy-policy"
+                  className="underline hover:text-black"
+                >
+                  Privacy policy
+                </Link>
+              </p>
+            </footer>
+          </div>
         </div>
-      </body>
-    </html>
+      </main>
+    </div>
   );
 }

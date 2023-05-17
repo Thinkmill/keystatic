@@ -1,6 +1,6 @@
-import Navigation from '../components/navigation';
-import PrivacyPolicy from '../components/privacy-policy';
-import Footer from '../components/footer';
+import Navigation from '../../components/navigation';
+import PrivacyPolicy from '../../components/privacy-policy';
+import Footer from '../../components/footer';
 
 export default function PrivacyPolicyPage() {
   return (

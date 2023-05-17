@@ -2111,7 +2111,6 @@ importers:
       autoprefixer: ^10.4.13
       cookie: ^0.5.0
       next: ^13.4.1
-      next-seo: ^5.4.0
       postcss: ^8.4.21
       prettier: ^2.7.1
       prettier-plugin-tailwindcss: ^0.2.2
@@ -2132,7 +2131,6 @@ importers:
       '@vercel/analytics': 0.1.11_react@18.2.0
       cookie: 0.5.0
       next: 13.4.1_biqbaboplfbrettd7655fr4n2y
-      next-seo: 5.15.0_2xek2u27flvv5bywadnu4xxgx4
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       shiki: 0.14.2
@@ -12502,7 +12500,7 @@ packages:
       mississippi: 3.0.0
       mkdirp: 0.5.6
       move-concurrently: 1.0.1
-      promise-inflight: 1.0.1
+      promise-inflight: 1.0.1_bluebird@3.7.2
       rimraf: 2.7.1
       ssri: 6.0.2
       unique-filename: 1.1.1
@@ -21445,6 +21443,17 @@ packages:
     peerDependenciesMeta:
       bluebird:
         optional: true
+    dev: true
+
+  /promise-inflight/1.0.1_bluebird@3.7.2:
+    resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
+    peerDependencies:
+      bluebird: '*'
+    peerDependenciesMeta:
+      bluebird:
+        optional: true
+    dependencies:
+      bluebird: 3.7.2
     dev: true
 
   /promise.allsettled/1.0.6:

@@ -1,4 +1,5 @@
-import { useRouter } from 'next/router';
+'use client';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
 import {
@@ -83,22 +84,14 @@ const templates: Template[] = [
     label: 'Docs',
     text: "We're building a docs website example. Stay tuned!",
     image: comingSoonTemplateImage.src,
-    // repo: {
-    //   owner: "thinkmill",
-    //   name: "n/a",
-    // },
     status: 'coming soon',
   },
   {
-    id: 'docs',
+    id: 'meetup',
     name: 'Meetup site',
     label: 'Docs',
     text: 'A template to show-off your meetup.',
     image: comingSoonTemplateImage.src,
-    // repo: {
-    //   owner: "thinkmill",
-    //   name: "n/a",
-    // },
     status: 'coming soon',
   },
   {
@@ -107,10 +100,6 @@ const templates: Template[] = [
     label: 'Product List',
     text: "A product listing template exploring Keystatic's Relationship field.",
     image: comingSoonTemplateImage.src,
-    // repo: {
-    //   owner: "thinkmill",
-    //   name: "n/a",
-    // },
     status: 'coming soon',
   },
 ];
@@ -127,14 +116,18 @@ function useLastTruthyValue<T>(val: T): T {
 
 export default function Templates() {
   const router = useRouter();
-  const { template } = router.query;
+  const searchParams = useSearchParams();
+  const template = searchParams?.get('template');
+
   const templateMatch = templates.find(t => t.id === template);
 
   const lastTemplate = useLastTruthyValue(templateMatch);
 
   const onClose = () => {
-    const { template: _template, ...restQuery } = router.query;
-    router.push({ query: restQuery }, undefined, { scroll: false });
+    // Remove the template search param
+    const queryParams = new URLSearchParams(searchParams || '');
+    queryParams.delete('template');
+    router.push(`/?${queryParams.toString()}`);
   };
 
   return (
@@ -178,11 +171,9 @@ export default function Templates() {
                   <CtaButtons
                     template={template}
                     onClick={() => {
-                      router.push(
-                        { query: { ...router.query, template: template.id } },
-                        undefined,
-                        { scroll: false }
-                      );
+                      const params = new URLSearchParams(searchParams || '');
+                      params.append('template', template.id);
+                      router.push(`/?${params.toString()}`);
                     }}
                   />
                 </div>
