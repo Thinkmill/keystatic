@@ -9,7 +9,7 @@ const features = [
 
 export default function Hero() {
   return (
-    <section className="overflow-hidden bg-keystatic-gray-light">
+    <section className="overflow-hidden bg-white">
       <div className="mx-auto grid max-w-7xl gap-y-8 py-12 px-6 md:gap-y-16 md:py-16 lg:grid-cols-12 lg:items-center">
         <div className="text-center lg:col-span-7 lg:pr-8 lg:text-left xl:col-span-6">
           <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">

@@ -1,14 +1,17 @@
-import Link from 'next/link';
-import Navigation from '../../components/navigation';
-import { NavContainer, NavList, NavItem } from '../../components/sidenav';
+import { HeaderNav } from '../../components/navigation/header-nav';
 import '../../styles/global.css';
 import keystaticConfig from '../../../keystatic.config';
 import { createReader } from '@keystatic/core/reader';
+import { SideNav } from '../../components/navigation/side-nav';
+import { NavGroup } from '../../components/navigation/nav-group';
+import { NavItem } from '../../components/navigation/nav-item';
+import { DocsFooter } from '../../components/footer';
+import { TableOfContents } from '../../components/navigation/toc';
 
 const reader = createReader('', keystaticConfig);
 
 export const metadata = {
-  title: 'Keystatic - docs',
+  title: 'Keystatic - Docs',
   description: 'Documentation for Keystatic',
 };
 
@@ -28,6 +31,7 @@ export default async function RootLayout({
       const { discriminant, value } = link;
       const page = discriminant === 'page' && value ? pagesBySlug[value] : null;
       const url = discriminant === 'url' ? value : `/docs/${page?.slug}`;
+
       return {
         label: label || page?.entry.title || '',
         href: url || '',
@@ -39,52 +43,40 @@ export default async function RootLayout({
   return (
     <div>
       {/** TOP NAV */}
-      <div className="border-b border-stone-400/20 flex items-center w-full fixed z-20">
-        <Navigation />
+      <div className="border-b border-stone-400/20 flex items-center w-full lg:fixed z-20 lg:z-30">
+        <HeaderNav navigationMap={navigationMap} />
       </div>
 
       {/** MAIN */}
-      <main className="max-w-7xl min-h-screen mx-auto px-6">
-        {/** SIDE NAV */}
-        <NavContainer>
+      <main className="max-w-7xl min-h-screen mx-auto">
+        <SideNav>
           {navigationMap?.map(({ groupName, items }) => (
-            <NavList key={groupName} title={groupName}>
+            <NavGroup key={groupName} title={groupName}>
               {items.map(({ label, href, title }) => (
-                <NavItem key={href} label={label} href={href} title={title} />
+                <NavItem
+                  key={href}
+                  label={label}
+                  href={href}
+                  title={title}
+                  level="sub"
+                />
               ))}
-            </NavList>
+            </NavGroup>
           ))}
-        </NavContainer>
+        </SideNav>
 
         {/** CONTENT */}
-        <div className="lg:pl-60 pt-24 flex-1">
-          <div className="py-10 pl-12 ">
-            {/** INNER CONTENT (markdoc goes here) */}
-            <div className="grid gap-6 grid-cols-[auto,12rem]">
-              <div>{children}</div>
+        <div className="px-6 flex-1 lg:pl-60 lg:pt-24">
+          <div className="py-10 lg:pl-12">
+            <div className="flex gap-8">
+              {/** INNER CONTENT */}
+              <div className="flex-1">{children}</div>
 
-              <div className="sticky top-28 self-start">
-                <h5 className="text-xs uppercase text-stone-600">
-                  On this page
-                </h5>
-              </div>
+              {/** TOCs */}
+              <TableOfContents />
             </div>
 
-            {/** FOOTER */}
-            <footer>
-              <hr className="h-px my-8 border-stone-400/20 mb-8" />
-
-              <p className="leading-none text-keystatic-gray-dark text-sm">
-                &copy; {new Date().getFullYear()} Thinkmill. All rights
-                reserved.{' '}
-                <Link
-                  href="/privacy-policy"
-                  className="underline hover:text-black"
-                >
-                  Privacy policy
-                </Link>
-              </p>
-            </footer>
+            <DocsFooter />
           </div>
         </div>
       </main>

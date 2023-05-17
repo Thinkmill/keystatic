@@ -1,10 +1,10 @@
-import Navigation from '../../components/navigation';
+import { HeaderNav } from '../../components/navigation/header-nav';
 import Footer from '../../components/footer';
 
 export default function Index() {
   return (
     <div className="flex min-h-screen flex-col">
-      <Navigation />
+      <HeaderNav />
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-6 py-32">
           <div className="max-w-2xl">

@@ -22,6 +22,7 @@
     "next": "^13.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-focus-lock": "^2.9.4",
     "shiki": "^0.14.2",
     "typescript": "^5.0.2"
   },
