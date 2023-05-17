@@ -2,6 +2,11 @@ import Head from 'next/head';
 import { Analytics } from '@vercel/analytics/react';
 
 import '../styles/global.css';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+import { HeaderNav } from '../components/navigation/header-nav';
+
+const reader = createReader('', keystaticConfig);
 
 export const metadata = {
   title: 'Meet Keystatic',
@@ -26,11 +31,31 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const navigation = await reader.singletons.navigation.read();
+  const pages = await reader.collections.pages.all();
+
+  const pagesBySlug = Object.fromEntries(pages.map(page => [page.slug, page]));
+
+  const navigationMap = navigation?.navGroups.map(({ groupName, items }) => ({
+    groupName,
+    items: items.map(({ label, link }) => {
+      const { discriminant, value } = link;
+      const page = discriminant === 'page' && value ? pagesBySlug[value] : null;
+      const url = discriminant === 'url' ? value : `/docs/${page?.slug}`;
+
+      return {
+        label: label || page?.entry.title || '',
+        href: url || '',
+        title: page?.entry.title,
+      };
+    }),
+  }));
+
   return (
     <html lang="en">
       <Head>
@@ -56,7 +81,15 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
       </Head>
-      <body>{children}</body>
+
+      <body>
+        <div className="min-h-screen">
+          <HeaderNav navigationMap={navigationMap} />
+
+          <main>{children}</main>
+        </div>
+      </body>
+
       <Analytics />
     </html>
   );
