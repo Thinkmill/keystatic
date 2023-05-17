@@ -1,4 +1,4 @@
-import Navigation from '../components/navigation';
+import Navigation from '../components/navigation/header-nav';
 import PrivacyPolicy from '../components/privacy-policy';
 import Footer from '../components/footer';
 
