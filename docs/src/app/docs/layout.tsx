@@ -40,8 +40,7 @@ export default async function RootLayout({
   }));
 
   return (
-    <>
-      {/* <main className="max-w-7xl min-h-screen mx-auto"> */}
+    <div className="max-w-7xl min-h-screen mx-auto">
       <SideNav>
         {navigationMap?.map(({ groupName, items }) => (
           <NavGroup key={groupName} title={groupName}>
@@ -72,7 +71,6 @@ export default async function RootLayout({
           <DocsFooter />
         </div>
       </div>
-      {/* </main> */}
-    </>
+    </div>
   );
 }
