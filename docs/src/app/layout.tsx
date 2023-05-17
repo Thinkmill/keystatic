@@ -86,7 +86,7 @@ export default async function RootLayout({
         <div className="min-h-screen">
           <HeaderNav navigationMap={navigationMap} />
 
-          <main>{children}</main>
+          {children}
         </div>
       </body>
 

@@ -8,11 +8,13 @@ import Footer from '../components/footer';
 export default function Homepage() {
   return (
     <>
-      <Hero />
-      <Intro />
-      <Templates />
-      <MailingList />
-      <CallToAction />
+      <main>
+        <Hero />
+        <Intro />
+        <Templates />
+        <MailingList />
+        <CallToAction />
+      </main>
       <Footer />
     </>
   );
