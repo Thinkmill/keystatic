@@ -1,11 +1,14 @@
 import Link from 'next/link';
 
 export function SocialLinks({ tabIndex }: { tabIndex?: number }) {
+  const styles =
+    'shrink-0 rounded-lg p-3 hover:bg-keystatic-gray-light active:bg-keystatic-gray transition-colors';
+
   return (
     <div className="flex gap-2">
       <Link
         href="https://fosstodon.org/@keystatic"
-        className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
+        className={styles}
         tabIndex={tabIndex}
       >
         <span className="sr-only">Keystatic on Mastodon</span>
@@ -33,7 +36,7 @@ export function SocialLinks({ tabIndex }: { tabIndex?: number }) {
 
       <Link
         href="https://github.com/thinkmill/keystatic"
-        className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
+        className={styles}
         tabIndex={tabIndex}
       >
         <span className="sr-only">Keystatic on GitHub</span>
@@ -52,7 +55,7 @@ export function SocialLinks({ tabIndex }: { tabIndex?: number }) {
 
       <Link
         href="https://twitter.com/thekeystatic"
-        className="shrink-0 rounded-lg bg-keystatic-gray p-3 hover:bg-stone-300"
+        className={styles}
         tabIndex={tabIndex}
       >
         <span className="sr-only">Keystatic on Twitter</span>

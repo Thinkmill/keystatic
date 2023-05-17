@@ -16,14 +16,14 @@ export type NavProps = {
   }[];
 };
 
-export default function HeaderNav({ navigationMap }: NavProps) {
+export function HeaderNav({ navigationMap }: NavProps) {
   return (
-    <header className="bg-keystatic-gray-light w-full">
+    <header className="bg-white w-full">
       <div className="mx-auto max-w-7xl">
         <nav className="lg:h-24 py-6 px-6 flex flex-row items-center justify-between gap-6">
           <KeystaticLogo />
 
-          <div className="hidden lg:flex flex-row items-center gap-4 justify-between">
+          <div className="hidden lg:flex flex-row items-center gap-6 justify-between">
             <SocialLinks />
             <Button href="/docs/introduction">Docs</Button>
           </div>

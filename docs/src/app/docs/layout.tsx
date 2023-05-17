@@ -1,4 +1,4 @@
-import Navigation from '../../components/navigation/header-nav';
+import { HeaderNav } from '../../components/navigation/header-nav';
 import '../../styles/global.css';
 import keystaticConfig from '../../../keystatic.config';
 import { createReader } from '@keystatic/core/reader';
@@ -46,7 +46,7 @@ export default async function RootLayout({
         <div>
           {/** TOP NAV */}
           <div className="border-b border-stone-400/20 flex items-center w-full lg:fixed z-20 lg:z-30">
-            <Navigation navigationMap={navigationMap} />
+            <HeaderNav navigationMap={navigationMap} />
           </div>
 
           {/** MAIN */}

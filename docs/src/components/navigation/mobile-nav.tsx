@@ -128,7 +128,7 @@ export function MobileNav({ navigationMap }: NavProps) {
 
             <hr className="h-px my-3 mx-4 border-stone-400/20" />
 
-            <div className="flex flex-row items-center gap-4 justify-center px-4 pt-6">
+            <div className="flex flex-row items-center gap-4 justify-center px-4 pt-4">
               <SocialLinks tabIndex={navOpen ? 0 : -1} />
             </div>
           </div>

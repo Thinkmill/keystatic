@@ -1,4 +1,4 @@
-import Navigation, { NavProps } from '../components/navigation/header-nav';
+import { HeaderNav, NavProps } from '../components/navigation/header-nav';
 import Hero from '../components/hero';
 import Intro from '../components/intro';
 import Templates from '../components/templates';
@@ -13,7 +13,7 @@ const reader = createReader('', keystaticConfig);
 export default function Index({ navigationMap }: NavProps) {
   return (
     <div className="min-h-screen">
-      <Navigation navigationMap={navigationMap} />
+      <HeaderNav navigationMap={navigationMap} />
 
       <main>
         <Hero />
