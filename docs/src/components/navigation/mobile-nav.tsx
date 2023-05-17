@@ -85,8 +85,8 @@ export function MobileNav({ navigationMap }: NavProps) {
         <FocusLock disabled={!navOpen}>
           {/* Sticky close */}
           <div
-            className={`sticky top-0 left-0 right-0 p-2 bg-white z-30 justify-end flex ${
-              scrollTop > 0 ? 'drop-shadow-lg' : ''
+            className={`sticky top-0 left-0 right-0 p-2 bg-white z-30 justify-end flex transition-shadow ${
+              scrollTop === 0 ? 'shadow-none' : 'shadow-lg'
             }`}
           >
             <button
