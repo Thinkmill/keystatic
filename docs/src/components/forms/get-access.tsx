@@ -1,4 +1,3 @@
-// import { useRouter } from 'next/router';
 import { ArrowSmallRightIcon } from '@heroicons/react/24/solid';
 
 import Button from '../button';
