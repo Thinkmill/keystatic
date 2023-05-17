@@ -4,6 +4,7 @@ import Button from '../button';
 import { KeystaticLogo } from './keystatic-logo';
 import { SocialLinks } from './social-links';
 import { MobileNav } from './mobile-nav';
+import { usePathname } from 'next/navigation';
 
 export type NavProps = {
   navigationMap?: {
@@ -17,6 +18,9 @@ export type NavProps = {
 };
 
 export function HeaderNav({ navigationMap }: NavProps) {
+  const pathname = usePathname();
+  const isDocsNav = pathname?.includes('/docs');
+
   return (
     <header className="bg-white w-full">
       <div className="mx-auto max-w-7xl">
