@@ -90,7 +90,7 @@ const templates: Template[] = [
     status: 'coming soon',
   },
   {
-    id: 'docs',
+    id: 'meetup',
     name: 'Meetup site',
     label: 'Docs',
     text: 'A template to show-off your meetup.',
