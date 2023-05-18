@@ -22,7 +22,11 @@ export function HeaderNav({ navigationMap }: NavProps) {
   const isDocsNav = pathname?.includes('/docs');
 
   return (
-    <header className="bg-white w-full">
+    <header
+      className={`bg-white w-full ${
+        isDocsNav ? 'border-b border-stone-400/20 lg:fixed z-20 lg:z-30' : ''
+      }`}
+    >
       <div className="mx-auto max-w-7xl">
         <nav className="lg:h-24 py-6 px-6 flex flex-row items-center justify-between gap-6">
           <KeystaticLogo />
