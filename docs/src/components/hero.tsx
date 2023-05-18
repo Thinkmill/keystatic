@@ -1,22 +1,23 @@
 import Link from 'next/link';
+import Button from './button';
 
-const features = [
-  'First-class CMS experience',
-  'Visually edit Markdoc & components',
-  'TypeScript API, no database',
-  'Integrates with Astro, Remix and Next.js',
-];
+// const features = [
+//   'First-class CMS experience',
+//   'Visually edit Markdoc & components',
+//   'TypeScript API, no database',
+//   'Integrates with Astro, Remix and Next.js',
+// ];
 
 export default function Hero() {
   return (
     <section className="overflow-hidden bg-white">
-      <div className="mx-auto grid max-w-7xl gap-y-8 py-12 px-6 md:gap-y-16 md:py-16 lg:grid-cols-12 lg:items-center">
-        <div className="text-center lg:col-span-7 lg:pr-8 lg:text-left xl:col-span-6">
-          <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">
+      <div className="mx-auto max-w-7xl py-12 px-6 md:py-16 flex flex-col items-center gap-10">
+        <div className="text-center max-w-xl flex flex-col items-center gap-8">
+          <h1 className="font-extrabold text-4xl sm:text-5xl md:text-6xl lg:text-5xl">
             Content Management for your{' '}
             <span className="relative">
               <svg
-                className="absolute -right-2 bottom-0 w-[105%]"
+                className="absolute -right-3 -bottom-1.5 w-[110%]"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 392 92"
@@ -29,15 +30,15 @@ export default function Hero() {
               <span className="relative">Codebase</span>
             </span>
           </h1>
-          <p className="mx-auto mt-8 max-w-2xl text-xl text-stone-600 md:text-2xl lg:mx-0">
+
+          <p className="text-lg font-semibold">
             A new tool that makes Markdown, JSON and YAML content in your
             codebase editable by humans.
           </p>
-          <p className="mx-auto mt-6 max-w-2xl text-xl text-stone-600 md:text-2xl lg:mx-0">
-            Live edit content on GitHub or your local file system, without
-            disrupting your existing code and workflows.
-          </p>
-          <div className="mt-12 inline-flex items-center gap-3 rounded-2xl bg-keystatic-gray px-5 py-4">
+
+          <Button className="w-80">Read the docs</Button>
+
+          <div className="inline-flex items-center gap-2">
             <svg
               className="h-6 w-6 shrink-0"
               xmlns="http://www.w3.org/2000/svg"
@@ -69,27 +70,24 @@ export default function Hero() {
             </span>
           </div>
         </div>
-        <ul className="mx-auto max-w-xl space-y-6 rounded-2xl bg-white p-8 text-xl leading-none lg:col-span-6 lg:col-start-8 lg:max-w-none">
-          {features.map(feature => (
-            <li key={feature} className="flex items-center gap-4">
-              <svg
-                className="w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 17 19"
-              >
-                <path
-                  fill="#000"
-                  fillRule="evenodd"
-                  d="M12.737.879c.432.007.843.097 1.234.27a.65.65 0 0 0 .369.492.64.64 0 0 1-.032.427 7.283 7.283 0 0 1-.787 1.658 35.621 35.621 0 0 0-3.189 5.197 93.757 93.757 0 0 0 4.542-.592c.69.096 1.066.482 1.13 1.157-.057.377-.271.611-.642.703-1.73.25-3.465.455-5.207.614A.327.327 0 0 0 10 10.9a48.017 48.017 0 0 0 4.902 4.477c.299.336.98.484.885.995-.051.273-.302.366-.412.578-.67.198-1.3.092-1.893-.32a88.354 88.354 0 0 1-5.033-4.701 38.147 38.147 0 0 0-1.138 1.917 30.24 30.24 0 0 1-2.465 4.393 1.063 1.063 0 0 1-.786.156 7.004 7.004 0 0 1-1.008-.325c-.25-.237-.315-.516-.196-.837a18.657 18.657 0 0 0 2.617-4.453c.295-.553.617-1.089.968-1.608-1.594.207-3.195.41-4.801.607a2.657 2.657 0 0 1-1.346-.743c-.156-.38-.071-.695.255-.947 1.464-.208 2.93-.409 4.395-.602.433-.089.859-.188 1.276-.298a103.558 103.558 0 0 0-3.783-5.144c-.509-.75-.316-1.2.58-1.352.373-.031.71.066 1.01.29 1.317 1.86 2.641 3.71 3.974 5.552a212.906 212.906 0 0 1 3.357-5.471c.362-.587.654-1.21.876-1.865.162-.127.33-.234.503-.32Z"
-                  clipRule="evenodd"
-                  opacity=".953"
-                />
-              </svg>
-              <span className="text-keystatic-gray-dark">{feature}</span>
-            </li>
-          ))}
-        </ul>
+
+        <p className="text-sm text-stone-600 text-center">
+          Live edit content on GitHub or your local file system, without
+          disrupting your existing code and workflows.
+        </p>
+
+        <div className="relative w-full h-[21rem]">
+          <img
+            src="/images/hero-mdoc.png"
+            alt="Content edited in a markdoc file, in a code editor"
+            className="absolute lg:w-[54rem] -left-[4rem] "
+          />
+          <img
+            src="/images/hero-editor.png"
+            alt="Content edited in a WYSIWIG editor in Keystatic Admin UI"
+            className="absolute lg:w-[54rem] -right-[4rem] -top-[2.5rem]"
+          />
+        </div>
       </div>
     </section>
   );
