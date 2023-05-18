@@ -4,14 +4,11 @@ import { NavGroup } from '../../components/navigation/nav-group';
 import { NavItem } from '../../components/navigation/nav-item';
 import { DocsFooter } from '../../components/footer';
 import { TableOfContents } from '../../components/navigation/toc';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../../keystatic.config';
-
-const reader = createReader('', keystaticConfig);
+import { getNavigationMap } from '../../utils/reader';
 
 export const metadata = {
   title: 'Keystatic - Docs',
-  description: 'Documentation for Keystatic',
+  description: 'Documentation for Keystatic.',
 };
 
 export default async function RootLayout({
@@ -19,25 +16,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const navigation = await reader.singletons.navigation.read();
-  const pages = await reader.collections.pages.all();
-
-  const pagesBySlug = Object.fromEntries(pages.map(page => [page.slug, page]));
-
-  const navigationMap = navigation?.navGroups.map(({ groupName, items }) => ({
-    groupName,
-    items: items.map(({ label, link }) => {
-      const { discriminant, value } = link;
-      const page = discriminant === 'page' && value ? pagesBySlug[value] : null;
-      const url = discriminant === 'url' ? value : `/docs/${page?.slug}`;
-
-      return {
-        label: label || page?.entry.title || '',
-        href: url || '',
-        title: page?.entry.title,
-      };
-    }),
-  }));
+  const navigationMap = await getNavigationMap();
 
   return (
     <div className="max-w-7xl min-h-screen mx-auto">
