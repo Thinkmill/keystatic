@@ -1,13 +1,13 @@
-import { useRouter } from 'next/router';
 import { ArrowSmallRightIcon } from '@heroicons/react/24/solid';
 
 import Button from '../button';
 import { useFormSubmission } from '../../hooks/useFormSubmission';
 import type { Template } from '../templates';
 import { GET_ACCESS_TABLE_ID } from './table-id';
+import { useSearchParams } from 'next/navigation';
 
 export default function GetAccessForm({ template }: { template: Template }) {
-  const router = useRouter();
+  const templateParam = useSearchParams()?.get('template') || '';
   const { sendForm, isLoading } = useFormSubmission();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -41,7 +41,7 @@ export default function GetAccessForm({ template }: { template: Template }) {
   return (
     <form className="mt-6" onSubmit={handleSubmit}>
       <input type="hidden" name="form-type" value="get-access" />
-      <input type="hidden" name="template" value={router.query.template} />
+      <input type="hidden" name="template" value={templateParam} />
       <div className="grid grid-cols-2 gap-6">
         <div>
           <label className="block font-medium" htmlFor="name">
