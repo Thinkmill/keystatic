@@ -134,7 +134,7 @@ export default function Templates() {
     // Remove the template search param
     const queryParams = new URLSearchParams(searchParams || '');
     queryParams.delete('template');
-    router.push(`/?${queryParams.toString()}`);
+    router.push(`/?${queryParams}`);
   };
 
   return (
@@ -180,7 +180,7 @@ export default function Templates() {
                     onClick={() => {
                       const params = new URLSearchParams(searchParams || '');
                       params.append('template', template.id);
-                      router.push(`/?${params.toString()}`);
+                      router.push(`/?${params}`);
                     }}
                   />
                 </div>
