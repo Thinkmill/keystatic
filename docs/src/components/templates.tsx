@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 
 import {
   BellIcon,
@@ -37,13 +37,19 @@ export type Template = {
   status: 'available' | 'coming soon';
 };
 
+// This is a temporary typecheck fix: when running keystatic's root typecheck command it doesn't
+// apply the next-env.d.ts in the docs directory so believes the image imports are strings.
+// As the images will be moved to cloud hosting this is a temporary work around.
+const getImageSrc = (image: string | StaticImageData) =>
+  typeof image === 'string' ? image : image.src;
+
 const templates: Template[] = [
   {
     id: 'blank',
     name: 'Start from a blank canvas',
     label: 'Blank',
     text: 'A barebone starting point. Keystatic with a simple Post collection, and no frontend design.',
-    image: blankTemplateImage.src,
+    image: getImageSrc(blankTemplateImage),
     repo: {
       owner: 'thinkmill',
       name: 'keystatic-template',
@@ -56,7 +62,7 @@ const templates: Template[] = [
     name: 'Marketing landing page',
     label: 'Marketing',
     text: 'A fictive product marketing landing page demo, built with Tailwind CSS and Next.js.',
-    image: marketingTemplateImage.src,
+    image: getImageSrc(marketingTemplateImage),
     repo: {
       owner: 'thinkmill',
       name: 'keystatic-starter-landing-page',
@@ -70,7 +76,7 @@ const templates: Template[] = [
     name: 'Blog',
     label: 'Blog',
     text: "A blog post starter template showcasing Keystatic's Document field. Built with Next.js and Tailwind CSS.",
-    image: blogTemplateImage.src,
+    image: getImageSrc(blogTemplateImage),
     repo: {
       owner: 'thinkmill',
       name: 'keystatic-starter-blog',
@@ -84,7 +90,7 @@ const templates: Template[] = [
     name: 'Documentation site',
     label: 'Docs',
     text: "We're building a docs website example. Stay tuned!",
-    image: comingSoonTemplateImage.src,
+    image: getImageSrc(comingSoonTemplateImage),
     status: 'coming soon',
   },
   {
@@ -92,7 +98,7 @@ const templates: Template[] = [
     name: 'Meetup site',
     label: 'Docs',
     text: 'A template to show-off your meetup.',
-    image: comingSoonTemplateImage.src,
+    image: getImageSrc(comingSoonTemplateImage),
     status: 'coming soon',
   },
   {
@@ -100,7 +106,7 @@ const templates: Template[] = [
     name: 'Product list & ordering',
     label: 'Product List',
     text: "A product listing template exploring Keystatic's Relationship field.",
-    image: comingSoonTemplateImage.src,
+    image: getImageSrc(comingSoonTemplateImage),
     status: 'coming soon',
   },
 ];
