@@ -1,5 +1,6 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
 import Image, { StaticImageData } from 'next/image';
 
 import {
@@ -121,13 +122,24 @@ function useLastTruthyValue<T>(val: T): T {
 }
 
 export default function Templates() {
-  const [currentTemplateId, setCurrentTemplateId] = useState('');
+  const searchParams = useSearchParams();
+  const urlTemplateId = searchParams?.get('template') || '';
+
+  const [currentTemplateId, setCurrentTemplateId] = useState(urlTemplateId);
 
   const templateMatch = templates.find(t => t.id === currentTemplateId);
-
   const lastTemplate = useLastTruthyValue(templateMatch);
 
   const onClose = () => {
+    // Remove the template search param
+    const queryParams = new URLSearchParams(searchParams || '');
+    queryParams.delete('template');
+    history.pushState(
+      {},
+      '',
+      Array.from(queryParams.entries()).length ? `?${queryParams}` : '/'
+    );
+
     setCurrentTemplateId('');
   };
 
@@ -171,7 +183,12 @@ export default function Templates() {
 
                   <CtaButtons
                     template={template}
-                    onClick={() => setCurrentTemplateId(template.id)}
+                    onClick={() => {
+                      const params = new URLSearchParams(searchParams || '');
+                      params.set('template', template.id);
+                      history.pushState({}, '', `?${params}`);
+                      setCurrentTemplateId(template.id);
+                    }}
                   />
                 </div>
               </div>
