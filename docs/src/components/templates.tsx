@@ -134,11 +134,7 @@ export default function Templates() {
     // Remove the template search param
     const queryParams = new URLSearchParams(searchParams || '');
     queryParams.delete('template');
-    history.pushState(
-      {},
-      '',
-      Array.from(queryParams.entries()).length ? `?${queryParams}` : '/'
-    );
+    history.pushState({}, '', queryParams.size ? `?${queryParams}` : '/');
 
     setCurrentTemplateId('');
   };
