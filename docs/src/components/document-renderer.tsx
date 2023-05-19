@@ -6,6 +6,8 @@ import shiki from 'shiki';
 import Heading from './heading';
 import { InferRenderersForComponentBlocks } from '@keystatic/core';
 import { componentBlocks } from '../../keystatic.config';
+import { getDefaultSrcSet } from '../utils';
+import { CONTENT_MAX_WIDTH_DESKTOP } from '../constants';
 
 export default async function DocumentRenderer({
   slug,
@@ -109,6 +111,20 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         <div className="text-2xl">{props.icon}</div>
         <div className="flex flex-col gap-3">{props.content}</div>
       </div>
+    );
+  },
+  'cloud-image': ({ href: src, alt, sizes, height, width }) => {
+    const imgMaxWidthPx = `${parseInt(CONTENT_MAX_WIDTH_DESKTOP) * 16}`;
+
+    return (
+      <img
+        alt={alt || ''}
+        src={src}
+        height={height}
+        width={width || imgMaxWidthPx}
+        srcSet={getDefaultSrcSet({ src })}
+        sizes={sizes || `(max-width: 375px) 375px, ${imgMaxWidthPx}px`}
+      />
     );
   },
 };

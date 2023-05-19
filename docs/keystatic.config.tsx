@@ -6,6 +6,7 @@ import {
   singleton,
   component,
 } from '@keystatic/core';
+import { CloudImagePreview } from './src/components/previews/CloudImagePreview';
 
 export const componentBlocks = {
   aside: component({
@@ -44,6 +45,36 @@ export const componentBlocks = {
       }),
     },
     chromeless: true,
+  }),
+  'cloud-image': component({
+    preview: CloudImagePreview,
+    label: 'Cloud image',
+    schema: {
+      href: fields.text({
+        label: 'Href *',
+        validation: {
+          length: {
+            min: 1,
+          },
+        },
+      }),
+      alt: fields.text({
+        label: 'Alt text',
+      }),
+      height: fields.text({
+        label: 'Height',
+      }),
+      width: fields.text({
+        label: 'Width',
+      }),
+      srcSet: fields.text({
+        label: 'Src set',
+      }),
+      sizes: fields.text({
+        label: 'Sizes',
+      }),
+    },
+    chromeless: false,
   }),
 };
 
