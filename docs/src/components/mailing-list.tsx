@@ -1,3 +1,5 @@
+'use client';
+
 import MailingListForm from './forms/mailing-list';
 import Divider from './divider';
 

@@ -1,12 +1,12 @@
-import { useRouter } from 'next/router';
 import { ArrowSmallRightIcon } from '@heroicons/react/24/solid';
 
 import Button from '../button';
 import { useFormSubmission } from '../../hooks/useFormSubmission';
 import { GET_NOTIFIED_TABLE_ID } from './table-id';
+import { useSearchParams } from 'next/navigation';
 
 export default function GetNotifiedForm() {
-  const router = useRouter();
+  const templateParam = useSearchParams()?.get('template') || '';
   const { sendForm, isLoading } = useFormSubmission();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -20,7 +20,7 @@ export default function GetNotifiedForm() {
   return (
     <form className="mt-8" onSubmit={handleSubmit}>
       <input type="hidden" name="form-type" value="get-notified" />
-      <input type="hidden" name="template" value={router.query.template} />
+      <input type="hidden" name="template" value={templateParam} />
       <div className="flex items-center gap-3">
         <input
           type="checkbox"
