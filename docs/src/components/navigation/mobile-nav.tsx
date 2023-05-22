@@ -78,7 +78,7 @@ export function MobileNav({ navigationMap }: NavProps) {
       {/** Slideout menu */}
       <ul
         onScroll={onScrollHandler}
-        className={`overflow-y-auto list-none fixed lg:hidden top-0 bg-white h-screen w-64 z-30 drop-shadow-2xl flex flex-col transition-[right] duration-300 ${
+        className={`overflow-y-auto list-none fixed lg:hidden top-0 bg-white h-[100dvh] w-64 z-30 drop-shadow-2xl flex flex-col transition-[right] duration-300 ${
           navOpen ? '-right-0' : '-right-full'
         }`}
       >
@@ -86,7 +86,7 @@ export function MobileNav({ navigationMap }: NavProps) {
           {/* Sticky close */}
           <div
             className={`sticky top-0 left-0 right-0 p-2 bg-white z-30 justify-end flex transition-shadow ${
-              scrollTop === 0 ? 'shadow-none' : 'shadow-lg'
+              scrollTop <= 0 ? 'shadow-none' : 'shadow-lg'
             }`}
           >
             <button

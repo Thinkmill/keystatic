@@ -1,9 +1,7 @@
 export function TableOfContents() {
   return (
     <div className="w-[12rem] sticky top-10 lg:top-32 self-start hidden md:block lg:hidden 2lg:block">
-      <h5 className="text-xs uppercase text-black text-stone-500">
-        On this page
-      </h5>
+      <h5 className="text-xs uppercase text-stone-500">On this page</h5>
 
       <ul className="mt-2">
         <li>
