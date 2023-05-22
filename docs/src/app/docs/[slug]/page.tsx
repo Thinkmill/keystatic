@@ -1,7 +1,7 @@
 import { createReader } from '@keystatic/core/reader';
 import DocumentRenderer from '../../../components/document-renderer';
 import keystaticConfig from '../../../../keystatic.config';
-import { TableOfContents } from '../../../components/navigation/toc';
+import { TableOfContents } from '../../../components/navigation/table-of-contents';
 
 const reader = createReader('', keystaticConfig);
 
