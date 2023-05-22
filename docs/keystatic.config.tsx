@@ -60,18 +60,26 @@ export const componentBlocks = {
       }),
       alt: fields.text({
         label: 'Alt text',
+        description:
+          'Include an alt text description or leave blank for decorative images',
       }),
-      height: fields.integer({
+      height: fields.text({
         label: 'Height',
+        description:
+          'The intrinsic height of the image, in pixels. Must be an integer without a unit - e.g. 100',
       }),
-      width: fields.integer({
+      width: fields.text({
         label: 'Width',
+        description:
+          'The intrinsic width of the image, in pixels. Must be an integer without a unit - e.g. 100',
       }),
       srcSet: fields.text({
-        label: 'Src set',
+        label: 'Srcset',
+        description: 'Optionally override the defualt srcset',
       }),
       sizes: fields.text({
         label: 'Sizes',
+        description: 'Optionally override the defualt sizes',
       }),
     },
     chromeless: false,

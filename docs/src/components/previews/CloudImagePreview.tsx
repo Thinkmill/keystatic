@@ -19,8 +19,22 @@ export function CloudImagePreview(props: any) {
     <>
       <p>Href: {src}</p>
       <p>Alt text: {alt}</p>
-      {height && <p>Height: {height}</p>}
-      {width && <p>Width: {width}</p>}
+      {height &&
+        (isNaN(Number(height)) ? (
+          <p style={{ color: 'red' }}>
+            Invalid height, please enter an integer, e.g. 100
+          </p>
+        ) : (
+          <p>Height: {height}</p>
+        ))}
+      {width &&
+        (isNaN(Number(width)) ? (
+          <p style={{ color: 'red' }}>
+            Invalid width, please enter an integer, e.g. 100
+          </p>
+        ) : (
+          <p>Width: {width}</p>
+        ))}
 
       {isLoading && <ProgressCircle aria-label="Loading…" isIndeterminate />}
       <img
