@@ -77,7 +77,7 @@ const getRenderers = (
     image: ({ src, alt }) => (
       <img
         className="rounded-md my-2"
-        src={src.includes('https') ? src : `/images/content/${slug}/${src}`}
+        src={`/images/content/${slug}/${src}`}
         alt={alt}
       />
     ),
@@ -124,6 +124,7 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         width={width ?? imgMaxWidthPx}
         srcSet={srcSet || getDefaultSrcSet({ src })}
         sizes={sizes || `(max-width: 375px) 375px, ${imgMaxWidthPx}px`}
+        className="rounded-md my-2"
       />
     );
   },
