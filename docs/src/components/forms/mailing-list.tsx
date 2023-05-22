@@ -34,7 +34,7 @@ export default function MailingListForm() {
         type="submit"
         isLoading={isLoading}
       >
-        Sign up
+        Send me updates
       </Button>
     </form>
   );
