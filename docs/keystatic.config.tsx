@@ -61,7 +61,14 @@ export default config({
         title: fields.slug({ name: { label: 'Title' } }),
         content: fields.document({
           label: 'Content',
-          formatting: true,
+          formatting: {
+            inlineMarks: true,
+            listTypes: true,
+            alignment: true,
+            headingLevels: [2, 3],
+            blockTypes: true,
+            softBreaks: true,
+          },
           dividers: true,
           links: true,
           images: { directory: 'public/images/content' },

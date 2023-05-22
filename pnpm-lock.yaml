@@ -2102,6 +2102,7 @@ importers:
       '@heroicons/react': ^2.0.16
       '@keystatic/core': 0.0.102
       '@keystatic/next': 0.0.7
+      '@sindresorhus/slugify': ^1.1.2
       '@tailwindcss/forms': ^0.5.3
       '@tailwindcss/typography': ^0.5.9
       '@types/cookie': ^0.5.1
@@ -2124,6 +2125,7 @@ importers:
       '@heroicons/react': 2.0.17_react@18.2.0
       '@keystatic/core': link:../packages/keystatic
       '@keystatic/next': link:../packages/next
+      '@sindresorhus/slugify': 1.1.2
       '@tailwindcss/forms': 0.5.3_tailwindcss@3.3.2
       '@types/cookie': 0.5.1
       '@types/node': 16.11.13

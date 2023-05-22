@@ -60,15 +60,7 @@ export default async function RootLayout({
         <div className="lg:pl-60 pt-24 flex-1">
           <div className="py-10 pl-12 ">
             {/** INNER CONTENT (markdoc goes here) */}
-            <div className="grid gap-6 grid-cols-[auto,12rem]">
-              <div>{children}</div>
-
-              <div className="sticky top-28 self-start">
-                <h5 className="text-xs uppercase text-stone-600">
-                  On this page
-                </h5>
-              </div>
-            </div>
+            <div className="grid gap-6 grid-cols-[auto,12rem]">{children}</div>
 
             {/** FOOTER */}
             <footer>
