@@ -22,6 +22,9 @@ You’ll be promoted to go through a few steps. You can read the **step by step 
 
 Missing image automated-journey.png
 
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template0.png" /%}
+
 {% aside %}
 {% component-inline-prop propPath=["icon"] %}☝️{% /component-inline-prop %}
 
@@ -40,51 +43,63 @@ We’ll be adding more pathways to create a new project as we go, and based on t
 
 Start by visiting the following URL: [https://keystatic.thinkmill.com.au](https://keystatic.thinkmill.com.au)
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d54f006d-9260-40b8-9fd4-4bfd58af7f48/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template1.png" /%}
 
 Select one of the starter templates:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6e079d6e-1d0e-4864-a2fa-9c0071d6a459/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template2.png" /%}
 
 You’ll be prompted to tell us about yourself. This is optional, but it helps us understand _who_ is using Keystatic and how we can make it better.
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2144ec45-e6b0-4ee6-a862-ed625ace2d25/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template3.png" /%}
 
 After that, you’ll be taken to Vercel’s project starter dashboard, where you’ll be prompted to create a new GIT repo based on the template you’ve selected in the previous step:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6ce9de9c-a7e2-4c64-b15a-004ae5ff5687/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template4.png" /%}
 
 Change the GitHub scope and repo name if needed, and click the create button.
 
 You will then be prompted to add an integration:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/213f744c-3a70-421e-88bc-65a7f37aa789/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template5.png" /%}
 
 Click Add. You may need to authenticate with GitHub if you have 2FA turned on:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/dbc21bff-e291-4f16-a337-83973075585f/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template6.png" /%}
 
 You’ll be prompted to create a new GitHub App:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d11eae82-e8e3-4696-ac5a-298911955621/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template7.png" /%}
 
 When you do so, you’ll be redirected back to the Vercel project starter, and you’ll see your new project being deployed 🎉
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/fb84550d-acd1-4321-b20f-91bbd354743b/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template8.png" /%}
 
 Once the project is deployed, you will be prompted to install the GitHub App you’ve created.
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2e923084-b6e8-468e-a2c0-917ebe3f0f60/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template9.png" /%}
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/04e63cbc-783e-4400-8e3f-0b18054116d6/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template10.png" /%}
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8b5c3a27-d96a-497c-ac80-0f1218270550/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template11.png" /%}
 
 Click Install & Authorize.
 
 Aaaaannnnd… Here comes Keystatic! ✨
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/dcc7529c-672f-46f0-8d32-12a486e77e5a/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template12.png" /%}
 
 At this point, you’re all setup with a fully deployed project using Keystatic. You can start creating, editing and deleting content.
 
@@ -94,17 +109,21 @@ Chances are you want to work on your project locally though. Let’s get you set
 
 First, clone the GitHub repo you’ve just created:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a8d67dca-8db6-4171-8b04-a2ee568f1c09/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template13.png" /%}
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/71fd5d0b-383c-4c46-b76d-4a7278e789aa/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template14.png" /%}
 
 Move into your cloned repo, and run `npm install` to add the dependencies:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/df729c8f-db2d-467c-a885-180fe9284935/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template15.png" /%}
 
 If you try running the project with `npm run dev` and visit the `/keystatic` URL, you’ll find out you’re missing some required environment variables:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/08a1fb8f-5a68-48ae-a63a-5f2d164f5de1/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template16.png" /%}
 
 Why did that not happen on the remote?
 
@@ -112,34 +131,43 @@ Well, behind the scenes, those variables were created and added to the Vercel pr
 
 Check this out:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cf955dd1-d279-429b-bb51-d39a22d3e86e/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template17.png" /%}
 
 If you open up your local project with your code editor of choice and check the `.env` file, you’ll see… it’s empty:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/03370945-814c-4d64-ac0d-b7f362203fda/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template18.png" /%}
 
 Copy the environment variables from the `Development` environment from Vercel:
 
-<aside> 💻 **Note:** If you’re using the `vercel` CLI, you can also pull these environment variables into your project:
+{% aside %}
+{% component-inline-prop propPath=["icon"] %}💻{% /component-inline-prop %}
+
+{% component-block-prop propPath=["content"] %}
+**Note:** If you’re using the `vercel` CLI, you can also pull these environment variables into your project:
 
 1. `vercel link` to link the project
 1. `vercel env pull` to pull the variables
 
 You’ll end up with a series of variables starting with `VERCEL_*`, that you can safely delete.
+{% /component-block-prop %}
+{% /aside %}
 
-</aside>
-
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/02b8c6eb-0228-4657-813d-5e078ae03c93/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template19.png" /%}
 
 When you’re done, your `.env` file should look like this:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/4625fffa-fc64-4275-a5c3-855c10031942/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template20.png" /%}
 
 **Congratulations! ✨**
 
 At this point, you’re all setup locally and remotely. You just need to make sure that your project runs on port `3000`.
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1a663eb4-3c06-47ad-a5ae-a9520424f255/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template21.png" /%}
 
 Have a play with Keystatic and let us know what you think!
 
@@ -165,15 +193,18 @@ Here’s a mini challenge to get you started.
 
 The `keystatic.tsx` file is where we define Keystatic’s content schema. You can see that right now, we have a `collection` of `posts` setup:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a18d4c54-09dc-4f3a-97b2-4510322bb114/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template22.png" /%}
 
 It’s set to generate content in `content/posts`, and if you look at the `schema` object, you’ll see fields defined for a `title`, `slug`, `content`and `authors`:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7575b7ba-c87f-419d-af7f-5e376308d95d/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template23.png" /%}
 
 Surprise surprise, if you go in the Keystatic Admin UI and create a new post, those are the exact fields you can see:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/59f548a6-cf6b-42e2-9c7c-374b18c6decc/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template24.png" /%}
 
 Just for fun, add a new field to the posts’ `schema`. Anything you’d like to try!
 
@@ -181,15 +212,18 @@ Actually, the TypeScript autocompletion makes is super easy to see what’s avai
 
 Choose a new field name, type `fields.` and you should be presented with some choices:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/11e00bc9-eab9-4c5a-9de1-79023766d368/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template25.png" /%}
 
 Here I’ll choose `checkbox`, but feel free to try something else! I’ll add a required `label` too:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/66bfb345-436c-4213-8e43-f2541fc11fc6/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template26.png" /%}
 
 When you’re done, hit save and head back to the browser and look at what happened:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/49801581-521f-483b-9343-1b0747ee1458/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template27.png" /%}
 
 Oh, look! A new opt-in checkbox 🎉
 
@@ -197,31 +231,38 @@ Notice on the top left that you’re on the `main` branch. When you create the p
 
 Instead, create a new branch from the menu next to the branch dropdown:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6df992c6-5d6c-4a43-8b50-2d4fc6eb3c30/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template28.png" /%}
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b24c138c-c0a1-423a-ae63-f76ec113cd82/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template29.png" /%}
 
 You are now on the `test` branch, and you can even see a new option to create a Pull Request!
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/16906ded-6fe6-4df3-aba5-99e5a71986c6/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template30.png" /%}
 
 Okay, fill up the new post form with some content, and hit create:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/97b4c309-550b-4423-885c-8a9d58682896/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template31.png" /%}
 
 You’ve just created a commit in the `test` branch on the GitHub remote!
 
 Go check! But actually, it’s even more rewarding to create a PR from the Admin UI:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c989295c-5ff3-4f0f-87fe-0a46ff81cfc9/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template32.png" /%}
 
 Yep - you can see a new PR form on GitHub.
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7a9a9454-f4cc-4145-a419-8a036c3e473f/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template33.png" /%}
 
 Scroll down, and see the changes made to the codebase:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d9f67856-18d4-463e-91b4-7b20db51719f/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template34.png" /%}
 
 The new post is being created in `content/posts`, just like we defined in the `config.ts`.
 
@@ -229,11 +270,13 @@ You can’t see these code changes locally, they’re only on the remote so far.
 
 You can pull the `test` branch, or create and merge that new PR and pull from `main`:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/009a1a0a-14fb-4e7d-a88e-ac3f93fd78c0/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template35.png" /%}
 
 After pulling, you’ll see the new `content/posts` folder in your local project:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f942a66e-7b73-4873-a0d0-f8d8e661d922/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/automated-with-template36.png" /%}
 
 Nicely done!
 
@@ -241,7 +284,7 @@ We hope this onboarding guide was useful ❤️
 
 ---
 
-# Tell us what you think!
+## Tell us what you think!
 
 We're building Keystatic in the open as part of [Thinkmill Labs](https://www.thinkmill.com.au/) Research & Development.
 
