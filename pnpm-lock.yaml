@@ -2109,6 +2109,7 @@ importers:
       '@types/node': 16.11.13
       '@types/react': ^18.0.25
       '@vercel/analytics': ^0.1.8
+      '@voussoir/progress': 0.1.2
       autoprefixer: ^10.4.13
       cookie: ^0.5.0
       next: ^13.4.1
@@ -2131,6 +2132,7 @@ importers:
       '@types/node': 16.11.13
       '@types/react': 18.0.28
       '@vercel/analytics': 0.1.11_react@18.2.0
+      '@voussoir/progress': link:../design-system/packages/progress
       cookie: 0.5.0
       next: 13.4.1_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
