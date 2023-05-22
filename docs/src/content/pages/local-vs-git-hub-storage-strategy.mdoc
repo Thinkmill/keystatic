@@ -35,25 +35,30 @@ export default config({
 
 When you visit the `/keystatic` route in the browser for the first time with the `github` storage strategy, you’ll be invited to create or configure a GitHub app:
 
-CleanShot 2023-03-01 at 14.10.43@2x.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy1.png" /%}
 
 If you click on the “Create GitHub App” button, you’ll be taken to GitHub and asked for a name for your App.
 
 Once you create it, you should see this screen:
 
-CleanShot 2023-03-01 at 14.11.51@2x.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy2.png" /%}
 
 Click on “Install GitHub App” and give it access to your repo:
 
-CleanShot 2023-03-01 at 14.13.28@2x.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy3.png" /%}
 
 If you look at your project, a new `.env`  file should have been created with some Keystatic environment variables:
 
-CleanShot 2023-03-01 at 14.17.39@2x.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy4.png" /%}
 
 If you visit `/keystatic` one more time, you should see the Keystatic dashboard!
 
-CleanShot 2023-03-01 at 14.28.08@2x.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy5.png" /%}
 
 You know the `github` strategy is working if you see the GitHub-related UI elements (branch selector, GitHub contextual dropdown menu, branch list).
 
@@ -87,4 +92,5 @@ That’s it!
 
 You’ll notice there are no signs of GitHub-related UI elements in the Keystatic Admin UI:
 
-CleanShot 2023-03-01 at 14.35.45@2x.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy6.png" /%}

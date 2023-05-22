@@ -1,6 +1,9 @@
 ---
 title: Adding Keystatic to a Next.js project
 ---
+
+This guide assumes you are trying to add Keystatic to an existing Next.js 13 project.
+
 ## Installing dependencies
 
 We're going to need to install a few packages to get Keystatic going.
@@ -17,7 +20,7 @@ npm install @keystatic/core @keystatic/next
 
 Keystatic needs a config file. This is where you can connect a project with a specific GitHub repository and define a content schema.
 
-Let's create a file called `keystatic.config.tsx` (or `.jsx` if not using TypeScript) in the root of the project:
+Let's create a file called `keystatic.config.ts` (or `.js` if not using TypeScript) in the root of the project:
 
 ```typescript
 // keystatic.config.ts
