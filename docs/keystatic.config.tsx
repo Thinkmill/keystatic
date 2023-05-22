@@ -61,10 +61,10 @@ export const componentBlocks = {
       alt: fields.text({
         label: 'Alt text',
       }),
-      height: fields.text({
+      height: fields.integer({
         label: 'Height',
       }),
-      width: fields.text({
+      width: fields.integer({
         label: 'Width',
       }),
       srcSet: fields.text({

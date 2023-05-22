@@ -113,16 +113,16 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
       </div>
     );
   },
-  'cloud-image': ({ href: src, alt, sizes, height, width }) => {
+  'cloud-image': ({ href: src, alt, sizes, height, width, srcSet }) => {
     const imgMaxWidthPx = `${parseInt(CONTENT_MAX_WIDTH_DESKTOP) * 16}`;
 
     return (
       <img
         alt={alt || ''}
         src={src}
-        height={height}
-        width={width || imgMaxWidthPx}
-        srcSet={getDefaultSrcSet({ src })}
+        height={height ?? undefined}
+        width={width ?? imgMaxWidthPx}
+        srcSet={srcSet || getDefaultSrcSet({ src })}
         sizes={sizes || `(max-width: 375px) 375px, ${imgMaxWidthPx}px`}
       />
     );
