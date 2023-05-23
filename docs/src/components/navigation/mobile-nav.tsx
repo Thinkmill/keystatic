@@ -33,7 +33,7 @@ export function MobileNav({ navigationMap }: NavProps) {
 
   // Close the mobile menu when ESC key is pressed
   useEffect(() => {
-    let onKeydownEsc = (event: KeyboardEvent) => {
+    const onKeydownEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         closeNav();
       }
