@@ -6,4 +6,14 @@ module.exports = {
     appDir: true,
     externalDir: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'keystatic.io',
+        port: '',
+        pathname: '/images/keystatic-docs/**',
+      },
+    ],
+  },
 };

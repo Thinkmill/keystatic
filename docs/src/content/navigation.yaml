@@ -5,10 +5,6 @@ navGroups:
         link:
           discriminant: page
           value: automated-setup-with-template
-      - label: Manual Installation
-        link:
-          discriminant: url
-          value: /docs
   - groupName: Integration guides
     items:
       - label: Astro

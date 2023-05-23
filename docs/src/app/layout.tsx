@@ -10,7 +10,7 @@ export const metadata = {
   openGraph: {
     images: [
       {
-        url: `/images/og-image.jpg`,
+        url: 'https://keystatic.io/images/keystatic-docs/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Keystatic cover image',
