@@ -18,7 +18,7 @@ export default function Footer() {
         </p>
 
         <p className="leading-tight text-keystatic-gray-dark text-center md:text-right">
-          Made with <span className="text-[#ff3838]">♥</span> in Australia by a
+          Made with <span className="text-[#ff3838]">❤️</span> in Australia by a
           team from 30 countries.
         </p>
       </div>
