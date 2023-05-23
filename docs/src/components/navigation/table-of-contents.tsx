@@ -12,7 +12,7 @@ type TableOfContentsProps = {
 export function TableOfContents({ headings }: TableOfContentsProps) {
   return (
     <div className="w-[12rem] sticky top-10 lg:top-32 self-start hidden md:block">
-      <h5 className="text-xs uppercase text-stone-500">On this page</h5>
+      <h2 className="text-xs uppercase text-stone-500">On this page</h2>
 
       <ul className="mt-2 flex flex-col gap-3">
         {headings.map(({ level, text }) => (

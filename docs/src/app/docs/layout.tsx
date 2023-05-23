@@ -60,7 +60,7 @@ export default async function RootLayout({
         <div className="lg:pl-60 pt-24 flex-1">
           <div className="py-10 pl-12 ">
             {/** INNER CONTENT (markdoc goes here) */}
-            <div className="grid gap-6 grid-cols-[auto,12rem]">{children}</div>
+            {children}
 
             {/** FOOTER */}
             <footer>

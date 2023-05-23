@@ -9,11 +9,7 @@ type HeadingProps = {
 };
 type ValidHeading = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
-export default function Heading({
-  level,
-  children,
-  anchor = false,
-}: HeadingProps) {
+export default function Heading({ level, children, anchor }: HeadingProps) {
   const Tag: ValidHeading = `h${level}`;
   let textClasses = 'text-3xl font-bold';
   switch (level) {
