@@ -26,7 +26,7 @@ module.exports = {
         '7xl': 1224, // 1200px + 24px gutter (px-6)
       },
       screens: {
-        '2lg': '1100px',
+        '2lg': '68.75rem',
       },
     },
   },

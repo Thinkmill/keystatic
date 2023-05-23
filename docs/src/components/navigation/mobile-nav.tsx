@@ -45,8 +45,9 @@ export function MobileNav({ navigationMap }: NavProps) {
         onClick={openNav}
         impact="light"
         className="px-3 pt-2 pb-2 lg:hidden"
+        aria-label="Open menu"
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" aria-hidden="true">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -77,12 +78,13 @@ export function MobileNav({ navigationMap }: NavProps) {
 
       {/** Slideout menu */}
       <ul
+        aria-expanded={navOpen}
         onScroll={onScrollHandler}
         className={`overflow-y-auto list-none fixed lg:hidden top-0 bg-white h-[100dvh] w-64 z-30 drop-shadow-2xl flex flex-col transition-[right] duration-300 ${
           navOpen ? '-right-0' : '-right-full'
         }`}
       >
-        <FocusLock disabled={!navOpen}>
+        <FocusLock disabled={!navOpen} returnFocus>
           {/* Sticky close */}
           <div
             className={`sticky top-0 left-0 right-0 p-2 bg-white z-30 justify-end flex transition-shadow ${
