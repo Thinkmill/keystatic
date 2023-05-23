@@ -7,10 +7,12 @@
   "module": "dist/voussoir-utils.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-utils.cjs.js",
       "module": "./dist/voussoir-utils.esm.js",
       "default": "./dist/voussoir-utils.cjs.js"
     },
     "./ts": {
+      "types": "./ts/dist/voussoir-utils-ts.cjs.js",
       "module": "./ts/dist/voussoir-utils-ts.esm.js",
       "default": "./ts/dist/voussoir-utils-ts.cjs.js"
     },

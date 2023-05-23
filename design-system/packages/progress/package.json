@@ -7,6 +7,7 @@
   "module": "dist/voussoir-progress.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-progress.cjs.js",
       "module": "./dist/voussoir-progress.esm.js",
       "default": "./dist/voussoir-progress.cjs.js"
     },

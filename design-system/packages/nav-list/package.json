@@ -7,6 +7,7 @@
   "module": "dist/voussoir-nav-list.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-nav-list.cjs.js",
       "module": "./dist/voussoir-nav-list.esm.js",
       "default": "./dist/voussoir-nav-list.cjs.js"
     },
