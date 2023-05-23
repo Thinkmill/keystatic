@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '../button';
-import { KeystaticLogo } from './keystatic-logo';
+import { KeystaticLogoLink } from './keystatic-logo-link';
 import { SocialLinks } from './social-links';
 import { MobileNav } from './mobile-nav';
 import { usePathname } from 'next/navigation';
@@ -19,7 +19,7 @@ export type NavProps = {
 
 export function HeaderNav({ navigationMap }: NavProps) {
   const pathname = usePathname();
-  const isDocsNav = pathname?.includes('/docs');
+  const isDocsNav = pathname?.startsWith('/docs');
 
   return (
     <header
@@ -29,7 +29,7 @@ export function HeaderNav({ navigationMap }: NavProps) {
     >
       <div className="mx-auto max-w-7xl">
         <nav className="lg:h-24 py-6 px-6 flex flex-row items-center justify-between gap-6">
-          <KeystaticLogo />
+          <KeystaticLogoLink />
 
           <div className="hidden lg:flex flex-row items-center gap-6 justify-between">
             <SocialLinks />
