@@ -1,10 +1,10 @@
 import { storiesOf } from '@voussoir/storybook';
 
 import { ActionButton } from '@voussoir/button';
+import { Combobox, Item } from '@voussoir/combobox';
 import { Icon } from '@voussoir/icon';
 import { boldIcon } from '@voussoir/icon/icons/boldIcon';
 import { code2Icon } from '@voussoir/icon/icons/code2Icon';
-import { componentIcon } from '@voussoir/icon/icons/componentIcon';
 import { fileCodeIcon } from '@voussoir/icon/icons/fileCodeIcon';
 import { indentIcon } from '@voussoir/icon/icons/indentIcon';
 import { italicIcon } from '@voussoir/icon/icons/italicIcon';
@@ -12,15 +12,12 @@ import { strikethroughIcon } from '@voussoir/icon/icons/strikethroughIcon';
 import { linkIcon } from '@voussoir/icon/icons/linkIcon';
 import { listIcon } from '@voussoir/icon/icons/listIcon';
 import { listOrderedIcon } from '@voussoir/icon/icons/listOrderedIcon';
-// import { unlinkIcon } from '@voussoir/icon/icons/unlinkIcon';
+import { Menu } from '@voussoir/menu';
 import { Box, Divider, Flex } from '@voussoir/layout';
 import { Heading, Text } from '@voussoir/typography';
-import { HTMLProps, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { EditorPopover, EditorPopoverRef } from '../src';
-// import { Item, Menu } from '@voussoir/menu';
-import { Combobox, Item } from '@voussoir/combobox';
-import { Menu } from '@voussoir/menu';
 
 storiesOf('Editor/Popover', module)
   .add('default', () => {
@@ -293,48 +290,6 @@ storiesOf('Editor/Popover', module)
         )}
       </Flex>
     );
-  })
-  .add('attributes?', () => {
-    return (
-      <Flex
-        direction="column"
-        gap="large"
-        maxWidth="container.xsmall"
-        marginX="auto"
-      >
-        <Node>
-          Candy canes halvah bear claw wafer toffee cake wafer. Apple pie sweet
-          roll gummi bears macaroon jelly beans. Dessert brownie tootsie roll
-          cotton candy jelly-o. Halvah pudding cookie pastry cheesecake
-          liquorice caramels macaroon gummies.
-        </Node>
-        <Node>
-          Jelly marzipan halvah muffin halvah gummi bears sweet roll cookie.
-          Powder cheesecake tiramisu halvah pie jelly-o cotton candy. Chupa
-          chups topping marshmallow biscuit gingerbread. Cotton candy carrot
-          cake candy cookie danish jelly.
-        </Node>
-        <Node>
-          Shortbread sweet roll jujubes halvah sesame snaps wafer wafer. Sweet
-          roll topping sugar plum fruitcake cookie soufflé sugar plum pastry
-          sweet. Cake gummies sugar plum bear claw dessert. Pie cookie cake
-          marzipan jelly beans.
-        </Node>
-        <Node>
-          Wafer jelly-o jelly beans croissant tart fruitcake marzipan cake.
-          Cheesecake gingerbread cake sesame snaps cheesecake powder chupa chups
-          cheesecake shortbread. Chupa chups liquorice pastry dragée sesame
-          snaps brownie chocolate bar lemon drops. Macaroon sesame snaps
-          chocolate bar candy canes tootsie roll chocolate bar.
-        </Node>
-        <Node>
-          Cake muffin cheesecake liquorice chupa chups. Cheesecake apple pie
-          powder pudding gummi bears chocolate marshmallow sweet sugar plum.
-          Marshmallow tiramisu cheesecake topping sweet jujubes biscuit jelly
-          beans chupa chups.
-        </Node>
-      </Flex>
-    );
   });
 
 function useRangeFromDocumentSelection() {
@@ -357,37 +312,4 @@ function useRangeFromDocumentSelection() {
   }, []);
 
   return range;
-}
-
-function Node(props: HTMLProps<HTMLDivElement>) {
-  let [isVisible, setVisible] = useState(false);
-  let [isOpen, setOpen] = useState(false);
-  let [triggerRef, setTriggerRef] = useState<HTMLDivElement | null>(null);
-  return (
-    <>
-      <Flex
-        alignItems="start"
-        gap="regular"
-        onMouseEnter={() => setVisible(true)}
-        onMouseLeave={() => setVisible(false)}
-      >
-        <div
-          onClick={() => setOpen(bool => !bool)}
-          ref={setTriggerRef}
-          style={{ opacity: isVisible || isOpen ? 1 : 0 }}
-        >
-          <Icon src={componentIcon} color="neutralTertiary" />
-        </div>
-        <Text>{props.children}</Text>
-      </Flex>
-
-      {isOpen && triggerRef && (
-        <EditorPopover reference={triggerRef} placement="bottom-start">
-          <Box padding="regular">
-            <Text>Popover content</Text>
-          </Box>
-        </EditorPopover>
-      )}
-    </>
-  );
 }

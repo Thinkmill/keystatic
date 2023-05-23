@@ -1,16 +1,34 @@
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import {
+  HTMLProps,
+  ReactNode,
+  forwardRef,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import {
   ContextData,
   FloatingPortal,
+  Middleware,
+  Placement,
+  ReferenceElement,
   autoUpdate,
+  flip,
+  inline,
+  limitShift,
+  offset,
+  shift,
   useFloating,
   useInteractions,
   useRole,
 } from '@floating-ui/react';
+import { css, tokenSchema } from '@voussoir/style';
 
-import { DialogElement } from './styled-components';
-import { EditorPopoverProps } from './types';
-import { getMiddleware } from './utils';
+export type EditorPopoverProps = {
+  children: ReactNode;
+  reference: ReferenceElement;
+  placement?: Placement;
+  sticky?: boolean;
+};
 
 export type EditorPopoverRef = { context: ContextData; update: () => void };
 
@@ -18,16 +36,13 @@ export const EditorPopover = forwardRef<EditorPopoverRef, EditorPopoverProps>(
   function EditorPopover(props, forwardedRef) {
     const { children, reference, placement = 'bottom' } = props;
 
-    // Floating UI stuff
-    // ------------------------------
     const [floating, setFloating] = useState<HTMLDivElement | null>(null);
     const middleware = getMiddleware(props);
     const { floatingStyles, context, update } = useFloating({
-      open: true,
-      middleware,
-      whileElementsMounted: autoUpdate,
       elements: { reference, floating },
+      middleware,
       placement,
+      whileElementsMounted: autoUpdate,
     });
     const role = useRole(context);
     const { getFloatingProps } = useInteractions([role]);
@@ -53,3 +68,61 @@ export const EditorPopover = forwardRef<EditorPopoverRef, EditorPopoverProps>(
     );
   }
 );
+
+// Utils
+// ------------------------------
+
+export const DEFAULT_OFFSET = 8;
+
+export function getMiddleware(
+  props: EditorPopoverProps
+): Array<Middleware | null | undefined | false> {
+  const { sticky } = props;
+
+  if (sticky) {
+    return [
+      offset(DEFAULT_OFFSET),
+      shift({
+        crossAxis: true,
+        padding: DEFAULT_OFFSET,
+        limiter: limitShift({
+          offset: ({ rects }) => ({
+            crossAxis: rects.floating.height,
+          }),
+        }),
+      }),
+    ];
+  }
+
+  return [
+    offset(DEFAULT_OFFSET),
+    flip({ padding: DEFAULT_OFFSET }),
+    shift({ padding: DEFAULT_OFFSET }),
+    inline(),
+  ];
+}
+
+// Styled components
+// ------------------------------
+
+export const DialogElement = forwardRef<
+  HTMLDivElement,
+  HTMLProps<HTMLDivElement>
+>(function DialogElement(props, forwardedRef) {
+  return (
+    <div
+      ref={forwardedRef}
+      {...props}
+      className={css({
+        backgroundColor: tokenSchema.color.background.surface,
+        borderRadius: tokenSchema.size.radius.medium,
+        border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.emphasis}`,
+        boxShadow: `${tokenSchema.size.shadow.medium} ${tokenSchema.color.shadow.regular}`,
+        minHeight: tokenSchema.size.element.regular,
+        minWidth: tokenSchema.size.element.regular,
+        outline: 0,
+        overflowY: 'auto',
+      })}
+    />
+  );
+});
