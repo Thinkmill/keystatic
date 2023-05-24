@@ -1,3 +1,4 @@
+const { MAIN_EL_MAX_WIDTH } = require('./src/constants');
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 /** @type {import('tailwindcss').Config} */
@@ -24,7 +25,10 @@ module.exports = {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
       maxWidth: {
-        '7xl': 1224, // 1200px + 24px gutter (px-6)
+        '7xl': MAIN_EL_MAX_WIDTH,
+      },
+      screens: {
+        '2lg': '68.75rem',
       },
       screens: {
         '2lg': '68.75rem',

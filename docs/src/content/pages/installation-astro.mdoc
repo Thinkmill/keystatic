@@ -5,6 +5,9 @@ This guide assumes you are trying to add Keystatic to an existing Astro v2 proje
 
 Here, I've created a brand new Astro project, using the `Include sample files` option:
 
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/astro-create.png"
+   alt="Create Astro project" /%}
 
 ## Installing dependencies
 
@@ -126,6 +129,9 @@ export default defineConfig({
 
 Now, visit the `/keystatic` route once again in your browser:
 
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/astro-keystatic-dashboard.png"
+   alt="Keystatic dashboard for Astro demo" /%}
 
 Our Keystatic Admin UI is here! 🎉
 
@@ -153,11 +159,17 @@ We should be all set to go for our Keystatic Admin UI now.
 
 Try and visit the `/keystatic` page in the browser one more time, and click on the “Homepage” singleton:
 
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/astro-keystatic-homepage.png"
+   alt="Keystatic homepage singleton for Astro demo" /%}
 
 It's working: our “Headline” text field is here.
 
 Go ahead and fill that field with something, and hit `Create`:
 
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/astro-keystatic-homepage-2.png"
+   alt="Keystatic homepage singleton for Astro demo with headline" /%}
 
 Check your source code again. Notice anything?
 
@@ -173,6 +185,9 @@ Inside, you'll find a `_homepage` directory.
 
 That directory contains an `index.yaml` file with… the `headline` text you've just created!
 
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/astro-code-editor.png"
+   alt="Code editor with Keystatic files for Astro demo" /%}
 
 Niiiice ✨
 
@@ -209,5 +224,8 @@ Try and replace the homepage's `h1` tag with your homepage headline from Keystat
 <h1>{homepageData.headline}</h1>
 ```
 
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/astro-keystatic-ui.png"
+   alt="Home page of the website with updated heading for Astro demo" /%}
 
 Beautiful!
