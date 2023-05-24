@@ -1,13 +1,14 @@
 import Link from 'next/link';
 
-export function KeystaticLogo() {
+export function KeystaticLogoLink() {
   return (
-    <Link href="/">
+    <Link href="/" aria-label="Home of Keystatic">
       <svg
         className="h-4"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 111 16"
+        aria-hidden="true"
       >
         <path
           fill="#000"

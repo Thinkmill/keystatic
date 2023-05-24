@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { KeystaticLogo } from './navigation/keystatic-logo';
+import { KeystaticLogoLink } from './navigation/keystatic-logo-link';
 import { SocialLinks } from './navigation/social-links';
 
 export default function Footer() {
@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="bg-keystatic-gray-light pb-10">
       <div className="mx-auto max-w-7xl">
         <nav className="p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <KeystaticLogo />
+          <KeystaticLogoLink />
           <SocialLinks />
         </nav>
       </div>
@@ -18,7 +18,7 @@ export default function Footer() {
         </p>
 
         <p className="leading-tight text-keystatic-gray-dark text-center md:text-right">
-          Made with <span className="text-[#ff3838]">♥</span> in Australia by a
+          Made with <span className="text-[#ff3838]">❤️</span> in Australia by a
           team from 30 countries.
         </p>
       </div>
