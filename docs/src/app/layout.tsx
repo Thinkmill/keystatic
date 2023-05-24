@@ -26,9 +26,10 @@ export const metadata = {
     siteName: 'Keystatic',
   },
   twitter: {
-    handle: '@thekeystatic',
-    site: '@site',
-    cardType: 'summary_large_image',
+    card: 'summary_large_image',
+    title: 'Keystatic',
+    description: 'Content management for your codebase.',
+    site: '@thekeystatic',
   },
 };
 
