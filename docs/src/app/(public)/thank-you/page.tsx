@@ -1,11 +1,9 @@
-import Navigation from '../../components/navigation';
-import Footer from '../../components/footer';
+import Footer from '../../../components/footer';
 
-export default function Index() {
+export default function ThankYouPage() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navigation />
-      <main className="flex-1">
+    <>
+      <main>
         <div className="mx-auto max-w-6xl px-6 py-32">
           <div className="max-w-2xl">
             <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">
@@ -34,6 +32,6 @@ export default function Index() {
         </div>
       </main>
       <Footer />
-    </div>
+    </>
   );
 }
