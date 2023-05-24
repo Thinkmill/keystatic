@@ -4,7 +4,7 @@ import Button from './button';
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-white">
-      <div className="mx-auto max-w-7xl py-12 px-6 md:py-16 flex flex-col items-center gap-10">
+      <div className="mx-auto max-w-7xl pt-12 px-6 md:py-16 flex flex-col items-center gap-10">
         <div className="w-full max-w-xl flex flex-col items-center gap-8 text-center">
           <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl">
             Content Management
@@ -33,7 +33,7 @@ export default function Hero() {
 
           <Button className="w-full max-w-xs">Read the docs</Button>
 
-          <div className="inline-flex items-center gap-2">
+          <div className="inline-flex items-center gap-2 text-left">
             <svg
               className="h-6 w-6 shrink-0"
               xmlns="http://www.w3.org/2000/svg"
@@ -66,22 +66,21 @@ export default function Hero() {
           </div>
         </div>
 
-        <p className="text-sm text-stone-600 text-center">
+        <p className="text-sm text-neutral-600 text-center">
           Live edit content on GitHub or your local file system, without
           disrupting your existing code and workflows.
         </p>
 
-        <div className="relative w-full h-[21rem]">
+        <div className="relative w-full h-[100vw] md:h-[22vw] lg:h-[25vw] xl:h-[20rem]">
           <img
             src="/images/hero-mdoc.png"
             alt="Content edited in a markdoc file, in a code editor"
-            // className="absolute lg:w-[54rem] -left-[4rem]"
-            className="absolute md:w-2/3 -left-[5%]"
+            className="absolute max-w-none w-[110vw] -right-[40%] -top-[5%] md:max-w-full md:w-2/3 md:-left-[5%]"
           />
           <img
             src="/images/hero-editor.png"
             alt="Content edited in a WYSIWIG editor in Keystatic Admin UI"
-            className="absolute md:w-2/3 -right-[5%] -top-[2.5rem]"
+            className="absolute max-w-none w-[110vw] -right-[25%] -bottom-[5%] md:max-w-full md:w-2/3 md:-right-[5%] md:-top-[2.5rem]"
           />
         </div>
       </div>

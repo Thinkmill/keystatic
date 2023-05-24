@@ -3,11 +3,6 @@
 import { useSearchParams } from 'next/navigation';
 import Image, { StaticImageData } from 'next/image';
 
-import {
-  BellIcon,
-  ArrowTopRightOnSquareIcon,
-} from '@heroicons/react/24/outline';
-
 import GetAccessForm from './forms/get-access';
 import GetNotifiedForm from './forms/get-notified';
 
@@ -144,7 +139,7 @@ export default function Templates() {
   };
 
   return (
-    <section className="relative bg-keystatic-gray-light">
+    <section className="relative bg-keystatic-gray-light pb-12">
       <svg
         className="absolute inset-x-0 bottom-0"
         xmlns="http://www.w3.org/2000/svg"
@@ -158,29 +153,29 @@ export default function Templates() {
         />
       </svg>
 
-      <div className="mx-auto max-w-7xl px-6 pt-6 pb-24 sm:pb-32">
-        <ul className="grid items-stretch gap-8 md:grid-cols-2 xl:grid-cols-3">
+      <div className="mx-auto max-w-7xl pt-6 pb-12 overflow-y-auto">
+        <ul className="inline-flex gap-6 lg:gap-8 lg:grid lg:items-stretch lg:grid-cols-3 px-6">
           {templates.map(template => (
             <li key={template.id}>
-              <div
-                className={cx(
-                  'grid h-full grid-rows-[auto,1fr] overflow-hidden rounded-xl border border-black',
-                  template.id === 'blank' ? 'border-dashed' : ''
-                )}
-              >
+              <div className="min-w-[19rem] grid h-full grid-rows-[auto,1fr] overflow-hidden rounded-xl shadow-card bg-white">
                 <Image
                   alt={`${template.label} template screenshot`}
                   src={template?.image ?? '/images/product-screen.png'}
                   width={800}
                   height={540}
-                  className="border-b border-black object-cover"
+                  className={cx(
+                    'object-cover',
+                    template.id !== 'blank'
+                      ? 'border-b border-keystatic-gray'
+                      : ''
+                  )}
                 />
 
                 <div className="grid h-full grid-rows-[auto,1fr,auto] p-6">
-                  <h3 className="text-2xl font-semibold leading-none">
-                    {template.name}
-                  </h3>
-                  <p className="mt-6 text-lg text-stone-700">{template.text}</p>
+                  <h3 className="text-xl font-semibold">{template.name}</h3>
+                  <p className="mt-2 text-md text-keystatic-gray-dark">
+                    {template.text}
+                  </p>
 
                   <CtaButtons
                     template={template}
@@ -288,13 +283,8 @@ function CtaButtons({
   // ------------------------------
   if (template.status === 'coming soon') {
     return (
-      <Button
-        className="mt-6 flex items-center justify-center gap-2.5"
-        impact="light"
-        onClick={onClick}
-      >
-        <span>Get notified</span>
-        <BellIcon className="h-4 w-4" />
+      <Button className="mt-6" impact="light" onClick={onClick}>
+        Get notified
       </Button>
     );
   }
@@ -303,18 +293,17 @@ function CtaButtons({
   // Available template
   // ------------------------------
   return (
-    <div className="mt-6 flex gap-3">
+    <div className="mt-6 flex gap-4">
       <Button className="flex-1" onClick={onClick}>
         Get started
       </Button>
       <Button
         impact="light"
-        className="flex flex-1 items-center justify-center gap-2.5"
+        className="flex"
         href={template.preview}
         target="_blank"
       >
-        <span>Preview</span>
-        <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+        Preview
       </Button>
     </div>
   );

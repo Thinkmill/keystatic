@@ -11,10 +11,11 @@ export default function Features() {
       {/* swirly arrow */}
       <div className="mx-auto max-w-7xl relative">
         <svg
-          className="absolute -top-8 right-6 w-14 -translate-y-1/2 sm:w-16 md:right-0 lg:w-20"
+          className="-scale-x-1 md:scale-x-1 absolute -top-24 w-20 left-[4vw] md:left-auto md:right-2 xl:-right-6"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 115 168"
+          aria-hidden="true"
         >
           <path
             fill="#000"
@@ -23,14 +24,14 @@ export default function Features() {
         </svg>
       </div>
 
-      <ul className="px-6 py-8 overflow-x-auto flex gap-8">
+      <ul className="px-6 py-8 overflow-x-auto flex gap-4 md:gap-8">
         {features.map(feature => (
           <li
             key={feature}
-            className="flex items-center gap-2 bg-keystatic-gray rounded-lg py-4 px-6 shrink-0 first:ml-auto last:mr-auto"
+            className="flex items-center gap-2 bg-keystatic-gray rounded-lg py-3 px-4 md:py-4 md:px-6 shrink-0 first:ml-auto last:mr-auto"
           >
             <svg
-              className="w-4 shrink-0"
+              className="w-3 md:w-4 shrink-0"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 17 19"
@@ -43,7 +44,7 @@ export default function Features() {
                 opacity=".953"
               />
             </svg>
-            <span className="text-lg shrink-0">{feature}</span>
+            <span className="md:text-lg shrink-0">{feature}</span>
           </li>
         ))}
       </ul>

@@ -6,11 +6,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        black: '#171717',
         keystatic: {
           gray: {
-            DEFAULT: '#F0EDEB',
-            light: '#F9F8F7',
-            dark: '#4D4D4D',
+            DEFAULT: '#E8E8E8',
+            light: '#F8F8F8',
+            dark: '#2e2e2e',
           },
           highlight: '#F7DE5B',
           secondary: '#375CDC',
@@ -27,6 +28,13 @@ module.exports = {
       },
       screens: {
         '2lg': '1100px',
+      },
+      scale: {
+        1: '1',
+        '-1': '-1',
+      },
+      boxShadow: {
+        card: '0px 16px 48px 0px rgba(0, 0, 0, 0.08)',
       },
     },
   },

@@ -19,7 +19,7 @@ export default function MailingList() {
       </svg>
 
       <div className="mx-auto max-w-5xl px-6 pt-12 pb-16 sm:pt-16 sm:pb-24 md:pt-24 md:pb-32">
-        <div className="grid items-center justify-center gap-16 lg:grid-cols-2 xl:gap-32">
+        <div className="grid items-center justify-center gap-8 lg:gap-16 lg:grid-cols-2 xl:gap-32">
           <div className="text-center lg:text-left">
             <h2 className="text-3xl font-bold sm:text-4xl">
               Get Keystatic updates

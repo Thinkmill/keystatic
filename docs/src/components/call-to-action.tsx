@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 
 import Dialog from './dialog';
 import Button from './button';
@@ -38,7 +37,7 @@ export default function CallToAction() {
         </svg>
       </div>
 
-      <div className="mx-auto max-w-3xl py-12 px-6 text-center md:py-24">
+      <div className="mx-auto max-w-3xl pt-12 pb-16 px-6 text-center md:pt-16 md:pb-24">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -81,22 +80,18 @@ export default function CallToAction() {
           >
             Thinkmill Labs
           </a>{' '}
-          Research &amp; Development. Feedback on{' '}
-          <span className="font-semibold">
-            how we're going, what you're looking for, and what you'd like to see
-            next
-          </span>{' '}
-          is super helpful as we progress!
+          Research &amp; Development. Feedback on how we're going, what you're
+          looking for, and what you'd like to see next is super helpful as we
+          progress!
         </p>
         <div className="mx-auto mt-10 flex max-w-sm flex-col justify-center gap-3 sm:max-w-none sm:flex-row">
           <Button
             href="https://github.com/Thinkmill/keystatic/discussions"
             target="_blank"
-            className="flex items-center gap-2.5"
           >
-            <span>Join the discussion on GitHub</span>
-            <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+            Join the discussion on GitHub
           </Button>
+
           <Button impact="light" onClick={() => setIsOpen(true)}>
             Send us a message
           </Button>

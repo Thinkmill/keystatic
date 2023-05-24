@@ -29,7 +29,7 @@ export default function Footer() {
 export function DocsFooter() {
   return (
     <footer>
-      <hr className="h-px my-8 border-stone-400/20 mb-8" />
+      <hr className="h-px my-8 border-keystatic-gray mb-8" />
 
       <p className="leading-tight text-keystatic-gray-dark text-sm">
         <CopyrightPrivacyPolicyContent />
