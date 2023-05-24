@@ -1,11 +1,15 @@
 navGroups:
   - groupName: Getting started
     items:
+      - label: Introduction
+        link:
+          discriminant: page
+          value: introduction
       - label: Automated setup
         link:
           discriminant: page
           value: automated-setup-with-template
-      - label: Manual Installation
+      - label: Manual installation
         link:
           discriminant: url
           value: /docs
@@ -41,7 +45,7 @@ navGroups:
         link:
           discriminant: page
           value: renderer-api
-      - label: Content Organisation
+      - label: Organised content
         link:
           discriminant: page
           value: how-keystatic-organises-your-content

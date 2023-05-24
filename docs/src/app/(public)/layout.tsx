@@ -1,10 +1,12 @@
 import Head from 'next/head';
 import { Analytics } from '@vercel/analytics/react';
 
-import '../styles/global.css';
+import '../../styles/global.css';
+import { HeaderNav } from '../../components/navigation/header-nav';
+import { getNavigationMap } from '../../utils/reader';
 
 export const metadata = {
-  title: 'Meet Keystatic',
+  title: 'Keystatic',
   description:
     "Keystatic is a new tool from Thinkmill Labs that opens up your code-based content (written in Markdown, JSON or YAML) to contributors who aren't technical.",
   openGraph: {
@@ -26,11 +28,13 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const navigationMap = await getNavigationMap();
+
   return (
     <html lang="en">
       <Head>
@@ -56,7 +60,14 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
       </Head>
-      <body>{children}</body>
+
+      <body>
+        <div className="min-h-screen">
+          <HeaderNav navigationMap={navigationMap} />
+          {children}
+        </div>
+      </body>
+
       <Analytics />
     </html>
   );
