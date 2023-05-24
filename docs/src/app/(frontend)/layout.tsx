@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import { Analytics } from '@vercel/analytics/react';
 
-import '../styles/global.css';
-import { HeaderNav } from '../components/navigation/header-nav';
-import { getNavigationMap } from '../utils/reader';
+import '../../styles/global.css';
+import { HeaderNav } from '../../components/navigation/header-nav';
+import { getNavigationMap } from '../../utils/reader';
 
 export const metadata = {
   title: 'Keystatic',

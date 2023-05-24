@@ -1,10 +1,10 @@
-import '../../styles/global.css';
-import { SideNav } from '../../components/navigation/side-nav';
-import { NavGroup } from '../../components/navigation/nav-group';
-import { NavItem } from '../../components/navigation/nav-item';
-import { DocsFooter } from '../../components/footer';
-import { TableOfContents } from '../../components/navigation/toc';
-import { getNavigationMap } from '../../utils/reader';
+import '../../../styles/global.css';
+import { SideNav } from '../../../components/navigation/side-nav';
+import { NavGroup } from '../../../components/navigation/nav-group';
+import { NavItem } from '../../../components/navigation/nav-item';
+import { DocsFooter } from '../../../components/footer';
+import { TableOfContents } from '../../../components/navigation/toc';
+import { getNavigationMap } from '../../../utils/reader';
 
 export const metadata = {
   title: 'Keystatic - Docs',
