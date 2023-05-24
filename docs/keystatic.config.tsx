@@ -6,6 +6,7 @@ import {
   singleton,
   component,
 } from '@keystatic/core';
+import { CloudImagePreview } from './src/components/previews/CloudImagePreview';
 
 export const componentBlocks = {
   aside: component({
@@ -44,6 +45,44 @@ export const componentBlocks = {
       }),
     },
     chromeless: true,
+  }),
+  'cloud-image': component({
+    preview: CloudImagePreview,
+    label: 'Cloud image',
+    schema: {
+      href: fields.text({
+        label: 'Href *',
+        validation: {
+          length: {
+            min: 1,
+          },
+        },
+      }),
+      alt: fields.text({
+        label: 'Alt text',
+        description:
+          'Include an alt text description or leave blank for decorative images',
+      }),
+      height: fields.text({
+        label: 'Height',
+        description:
+          'The intrinsic height of the image, in pixels. Must be an integer without a unit - e.g. 100',
+      }),
+      width: fields.text({
+        label: 'Width',
+        description:
+          'The intrinsic width of the image, in pixels. Must be an integer without a unit - e.g. 100',
+      }),
+      srcSet: fields.text({
+        label: 'Srcset',
+        description: 'Optionally override the defualt srcset',
+      }),
+      sizes: fields.text({
+        label: 'Sizes',
+        description: 'Optionally override the defualt sizes',
+      }),
+    },
+    chromeless: false,
   }),
 };
 
