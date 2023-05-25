@@ -30,9 +30,6 @@ module.exports = {
       screens: {
         '2lg': '68.75rem',
       },
-      screens: {
-        '2lg': '68.75rem',
-      },
       scale: {
         1: '1',
         '-1': '-1',
