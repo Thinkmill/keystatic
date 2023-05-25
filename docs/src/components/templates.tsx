@@ -140,7 +140,7 @@ export default function Templates() {
   };
 
   return (
-    <section className="relative bg-keystatic-gray-light pb-12">
+    <section className="relative bg-keystatic-gray-light pb-6 sm:pb-12 lg:pb-16">
       <svg
         className="absolute inset-x-0 bottom-0"
         xmlns="http://www.w3.org/2000/svg"
