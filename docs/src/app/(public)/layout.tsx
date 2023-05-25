@@ -1,7 +1,9 @@
 import { Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 
-import '../styles/global.css';
+import '../../styles/global.css';
+import { HeaderNav } from '../../components/navigation/header-nav';
+import { getNavigationMap } from '../../utils/reader';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -10,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: 'Meet Keystatic',
+  title: 'Keystatic',
   description:
     "Keystatic is a new tool from Thinkmill Labs that opens up your code-based content (written in Markdown, JSON or YAML) to contributors who aren't technical.",
   openGraph: {
@@ -33,14 +35,21 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const navigationMap = await getNavigationMap();
+
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <div className="min-h-screen">
+          <HeaderNav navigationMap={navigationMap} />
+          {children}
+        </div>
+      </body>
       <Analytics />
     </html>
   );

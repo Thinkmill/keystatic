@@ -26,6 +26,9 @@ module.exports = {
       maxWidth: {
         '7xl': MAIN_EL_MAX_WIDTH,
       },
+      screens: {
+        '2lg': '68.75rem',
+      },
     },
   },
   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],

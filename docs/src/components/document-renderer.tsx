@@ -52,7 +52,9 @@ const getRenderers = (
   },
   block: {
     heading: ({ level, children }) => (
-      <Heading level={level}>{children}</Heading>
+      <Heading level={level} anchor>
+        {children}
+      </Heading>
     ),
 
     paragraph: ({ children, textAlign }) => (
