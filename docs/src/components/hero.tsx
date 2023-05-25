@@ -79,10 +79,10 @@ export default function Hero() {
             alt="Content edited in a markdoc file, in a code editor"
             width={784}
             height={549}
-            className="absolute max-w-none w-[110vw] -right-[40%] -top-[5%] md:max-w-full md:w-2/3 md:-left-[5%]"
+            className="absolute max-w-none w-[110vw] -right-[40%] -top-[5%] md:top-0 md:max-w-full md:w-2/3 md:-left-[5%]"
           />
           <img
-            src="https://keystatic.io/images/keystatic-docs/hero-editor.png"
+            src="https://keystatic.io/images/keystatic-docs/hero-editor-current.png"
             alt="Content edited in a WYSIWIG editor in Keystatic Admin UI"
             width={784}
             height={549}
