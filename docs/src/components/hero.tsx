@@ -32,7 +32,9 @@ export default function Hero() {
             codebase editable by humans.
           </p>
 
-          <Button className="w-full max-w-xs">Read the docs</Button>
+          <Button className="w-full max-w-xs" href="/docs">
+            Read the docs
+          </Button>
 
           <div className="inline-flex items-center gap-2 text-left">
             <svg
