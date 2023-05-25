@@ -276,11 +276,15 @@ function CtaButtons({
   onClick: MouseEventHandler<HTMLButtonElement>;
 }) {
   // ------------------------------
-  // Blank temlpate (no preview)
+  // Blank template (no preview)
   // ------------------------------
   if (template.id === 'blank') {
     return (
-      <Button className="mt-6" onClick={onClick}>
+      <Button
+        className="mt-6"
+        onClick={onClick}
+        aria-label="Get started with a blank template"
+      >
         Get started
       </Button>
     );
@@ -291,7 +295,12 @@ function CtaButtons({
   // ------------------------------
   if (template.status === 'coming soon') {
     return (
-      <Button className="mt-6" impact="light" onClick={onClick}>
+      <Button
+        className="mt-6"
+        impact="light"
+        onClick={onClick}
+        aria-label={`Get notified when the ${template.name} template is available`}
+      >
         Get notified
       </Button>
     );
@@ -302,7 +311,11 @@ function CtaButtons({
   // ------------------------------
   return (
     <div className="mt-6 flex gap-4">
-      <Button className="flex-1" onClick={onClick}>
+      <Button
+        className="flex-1"
+        onClick={onClick}
+        aria-label={`Get started with the ${template.name} template`}
+      >
         Get started
       </Button>
       <Button
@@ -310,6 +323,7 @@ function CtaButtons({
         className="flex"
         href={template.preview}
         target="_blank"
+        aria-label={`Preview the ${template.name} template in a new tab`}
       >
         Preview
       </Button>
