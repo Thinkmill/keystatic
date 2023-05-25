@@ -19,7 +19,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
           <li>
             <a
               className={`block text-sm text-stone-600 leading-tight hover:underline ${
-                level > 2 ? 'pl-2' : ''
+                level > 2 ? 'pl-2 text-xs' : ''
               }`}
               href={`#${slugify(text)}`}
             >
