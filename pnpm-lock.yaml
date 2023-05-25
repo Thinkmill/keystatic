@@ -2102,6 +2102,7 @@ importers:
       '@heroicons/react': ^2.0.16
       '@keystatic/core': 0.0.102
       '@keystatic/next': 0.0.7
+      '@markdoc/markdoc': ^0.2.2
       '@sindresorhus/slugify': ^1.1.2
       '@tailwindcss/forms': ^0.5.3
       '@tailwindcss/typography': ^0.5.9
@@ -2109,6 +2110,7 @@ importers:
       '@types/node': 16.11.13
       '@types/react': ^18.0.25
       '@vercel/analytics': ^0.1.8
+      '@voussoir/core': ^5.0.3
       '@voussoir/progress': 0.1.2
       autoprefixer: ^10.4.13
       cookie: ^0.5.0
@@ -2127,12 +2129,14 @@ importers:
       '@heroicons/react': 2.0.18_react@18.2.0
       '@keystatic/core': link:../packages/keystatic
       '@keystatic/next': link:../packages/next
+      '@markdoc/markdoc': 0.2.2_pmekkgnqduwlme35zpnqhenc34
       '@sindresorhus/slugify': 1.1.2
       '@tailwindcss/forms': 0.5.3_tailwindcss@3.3.2
       '@types/cookie': 0.5.1
       '@types/node': 16.11.13
       '@types/react': 18.0.28
       '@vercel/analytics': 0.1.11_react@18.2.0
+      '@voussoir/core': link:../design-system/packages/core
       '@voussoir/progress': link:../design-system/packages/progress
       cookie: 0.5.0
       next: 13.4.1_biqbaboplfbrettd7655fr4n2y
@@ -12530,7 +12534,7 @@ packages:
       minipass-pipeline: 1.2.4
       mkdirp: 1.0.4
       p-map: 4.0.0
-      promise-inflight: 1.0.1
+      promise-inflight: 1.0.1_bluebird@3.7.2
       rimraf: 3.0.2
       ssri: 8.0.1
       tar: 6.1.13
@@ -21451,15 +21455,6 @@ packages:
   /process/0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
-    dev: true
-
-  /promise-inflight/1.0.1:
-    resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
-    peerDependencies:
-      bluebird: '*'
-    peerDependenciesMeta:
-      bluebird:
-        optional: true
     dev: true
 
   /promise-inflight/1.0.1_bluebird@3.7.2:

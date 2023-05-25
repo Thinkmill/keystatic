@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Button from './button';
+import { EditorAndMarkdoc } from './EditorAndMarkdoc';
 
 export default function Hero() {
   return (
@@ -74,20 +75,7 @@ export default function Hero() {
         </p>
 
         <div className="relative w-full h-[100vw] md:h-[22vw] lg:h-[25vw] xl:h-[20rem]">
-          <img
-            src="https://keystatic.io/images/keystatic-docs/hero-markdoc.png"
-            alt="Content edited in a markdoc file, in a code editor"
-            width={784}
-            height={549}
-            className="absolute max-w-none w-[110vw] -right-[40%] -top-[5%] md:top-0 md:max-w-full md:w-2/3 md:-left-[5%]"
-          />
-          <img
-            src="https://keystatic.io/images/keystatic-docs/hero-editor-current.png"
-            alt="Content edited in a WYSIWIG editor in Keystatic Admin UI"
-            width={784}
-            height={549}
-            className="absolute max-w-none w-[110vw] -right-[25%] -bottom-[5%] md:max-w-full md:w-2/3 md:-right-[5%] md:-top-[2.5rem]"
-          />
+          <EditorAndMarkdoc />
         </div>
       </div>
 
