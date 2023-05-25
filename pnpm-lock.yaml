@@ -2102,6 +2102,7 @@ importers:
       '@heroicons/react': ^2.0.16
       '@keystatic/core': 0.0.102
       '@keystatic/next': 0.0.7
+      '@sindresorhus/slugify': ^1.1.2
       '@tailwindcss/forms': ^0.5.3
       '@tailwindcss/typography': ^0.5.9
       '@types/cookie': ^0.5.1
@@ -2126,6 +2127,7 @@ importers:
       '@heroicons/react': 2.0.18_react@18.2.0
       '@keystatic/core': link:../packages/keystatic
       '@keystatic/next': link:../packages/next
+      '@sindresorhus/slugify': 1.1.2
       '@tailwindcss/forms': 0.5.3_tailwindcss@3.3.2
       '@types/cookie': 0.5.1
       '@types/node': 16.11.13
@@ -7781,7 +7783,7 @@ packages:
       glob: 7.2.3
       is-reference: 1.2.1
       magic-string: 0.25.9
-      resolve: 1.22.2
+      resolve: 1.22.1
       rollup: 2.79.1
     dev: false
 
@@ -7805,7 +7807,7 @@ packages:
       builtin-modules: 3.3.0
       deepmerge: 4.3.0
       is-module: 1.0.0
-      resolve: 1.22.2
+      resolve: 1.22.1
       rollup: 2.79.1
     dev: false
 
