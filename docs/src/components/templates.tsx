@@ -170,8 +170,8 @@ export default function Templates() {
                   <Image
                     alt={`${template.label} template screenshot`}
                     src={template?.image ?? '/images/product-screen.png'}
-                    width={800}
-                    height={540}
+                    width={323}
+                    height={214}
                     className="object-cover"
                   />
                 </div>
