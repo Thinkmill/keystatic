@@ -35,6 +35,7 @@ export default function Features() {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 17 19"
+              aria-hidden="true"
             >
               <path
                 fill="#000"

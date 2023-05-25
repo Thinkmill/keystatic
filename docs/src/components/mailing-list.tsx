@@ -10,6 +10,7 @@ export default function MailingList() {
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 1440 30"
+        aria-hidden="true"
       >
         <path
           className="fill-white"

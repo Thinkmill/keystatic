@@ -62,6 +62,7 @@ export default function Dialog({
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 592 30"
+                    aria-hidden="true"
                   >
                     <path
                       className="fill-keystatic-gray-light"
@@ -76,6 +77,7 @@ export default function Dialog({
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 54 124"
+                    aria-hidden="true"
                   >
                     <path
                       fill="#000"

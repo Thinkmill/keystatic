@@ -15,6 +15,7 @@ export default function CallToAction() {
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 1440 30"
+        aria-hidden="true"
       >
         <path
           className="fill-keystatic-gray-light"
@@ -29,6 +30,7 @@ export default function CallToAction() {
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 54 124"
+          aria-hidden="true"
         >
           <path
             fill="#000"
@@ -43,6 +45,7 @@ export default function CallToAction() {
           fill="none"
           viewBox="0 0 33 36"
           className="mx-auto w-8"
+          aria-hidden="true"
         >
           <path
             fill="#000"
@@ -61,6 +64,7 @@ export default function CallToAction() {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 109 62"
+              aria-hidden="true"
             >
               <path
                 fill="#F7DE5B"

@@ -16,6 +16,7 @@ export default function Hero() {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 392 92"
+                aria-hidden="true"
               >
                 <path
                   fill="#F7DE5B"
@@ -41,6 +42,7 @@ export default function Hero() {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 fill="#ED0000"
@@ -96,6 +98,7 @@ export default function Hero() {
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 -256 1440 40"
+        aria-hidden="true"
       >
         <path
           className="fill-keystatic-gray-light"

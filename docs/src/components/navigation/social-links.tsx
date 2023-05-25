@@ -17,6 +17,7 @@ export function SocialLinks({ tabIndex }: { tabIndex?: number }) {
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 16 16"
+          aria-hidden="true"
         >
           <g clipPath="url(#mastodon-cp)">
             <path
@@ -45,6 +46,7 @@ export function SocialLinks({ tabIndex }: { tabIndex?: number }) {
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 16 16"
+          aria-hidden="true"
         >
           <path
             fill="#000"
@@ -64,6 +66,7 @@ export function SocialLinks({ tabIndex }: { tabIndex?: number }) {
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 16 16"
+          aria-hidden="true"
         >
           <g clipPath="url(#twitter-cp)">
             <path
