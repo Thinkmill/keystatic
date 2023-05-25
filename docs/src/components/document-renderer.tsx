@@ -6,8 +6,8 @@ import shiki from 'shiki';
 import Heading from './heading';
 import { InferRenderersForComponentBlocks } from '@keystatic/core';
 import { componentBlocks } from '../../keystatic.config';
-import { getDefaultSrcSet } from '../utils';
 import { CONTENT_MAX_WIDTH_DESKTOP } from '../constants';
+import CloudImage from './cloud-image';
 
 export default async function DocumentRenderer({
   slug,
@@ -71,7 +71,7 @@ const getRenderers = (
       }
       return (
         <code
-          className="[&>pre]:p-4 [&>pre]:rounded-md text-sm"
+          className="[&>pre]:whitespace-break-spaces [&>pre]:break-all [&>pre]:p-4 [&>pre]:rounded-md text-sm"
           dangerouslySetInnerHTML={{ __html: codeBlock }}
         />
       );
@@ -119,12 +119,12 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
     const imgMaxWidthPx = `${parseInt(CONTENT_MAX_WIDTH_DESKTOP) * 16}`;
 
     return (
-      <img
-        alt={alt || ''}
+      <CloudImage
+        alt={alt}
         src={src}
-        height={height ?? undefined}
+        height={height}
         width={width ?? imgMaxWidthPx}
-        srcSet={srcSet || getDefaultSrcSet({ src })}
+        srcSet={srcSet}
         sizes={sizes || `(max-width: 375px) 375px, ${imgMaxWidthPx}px`}
         className="rounded-md my-2"
       />

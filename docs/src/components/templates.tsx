@@ -15,7 +15,7 @@ import { cx } from '../utils';
 import Button from './button';
 import Dialog from './dialog';
 import { MouseEventHandler, useEffect, useState } from 'react';
-import Image from 'next/image';
+import CloudImage from './cloud-image';
 
 const blankTemplateImage =
   'https://keystatic.io/images/keystatic-docs/templates-blank.png';
@@ -165,7 +165,7 @@ export default function Templates() {
                   template.id === 'blank' ? 'border-dashed' : ''
                 )}
               >
-                <Image
+                <CloudImage
                   alt={`${template.label} template screenshot`}
                   src={template?.image}
                   width={800}
