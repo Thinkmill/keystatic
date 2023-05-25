@@ -155,7 +155,10 @@ export default function Templates() {
       </svg>
 
       <div className="mx-auto max-w-7xl pt-6 pb-12 overflow-y-auto">
-        <ul className="inline-flex gap-6 lg:gap-8 lg:grid lg:items-stretch lg:grid-cols-3 px-6">
+        <ul
+          className="inline-flex gap-6 lg:gap-8 lg:grid lg:items-stretch lg:grid-cols-3 px-6"
+          role="list"
+        >
           {templates.map(template => (
             <li key={template.id}>
               <div className="min-w-[19rem] grid h-full grid-rows-[auto,1fr] overflow-hidden rounded-xl shadow-card bg-white">
