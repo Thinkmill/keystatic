@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.104
+
+### Patch Changes
+
+- a489421d: Add `fields.file`
+
 ## 0.0.103
 
 ### Patch Changes
