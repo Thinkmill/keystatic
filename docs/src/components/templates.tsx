@@ -12,10 +12,11 @@ import Button from './button';
 import Dialog from './dialog';
 import { MouseEventHandler, useEffect, useState } from 'react';
 
-import blankTemplateImage from '../../public/images/templates/blank@3x.png';
-import marketingTemplateImage from '../../public/images/templates/marketing@3x.png';
-import blogTemplateImage from '../../public/images/templates/blog@3x.png';
-import comingSoonTemplateImage from '../../public/images/templates/coming-soon@3x.png';
+import blankTemplateImage from '../../public/images/templates/blank@2x.png';
+import marketingTemplateImage from '../../public/images/templates/marketing@2x.png';
+import blogTemplateImage from '../../public/images/templates/blog@2x.png';
+import meetupTemplateImage from '../../public/images/templates/meetup@2x.png';
+import comingSoonTemplateImage from '../../public/images/templates/coming-soon@2x.png';
 
 export type Template = {
   id: string;
@@ -81,18 +82,18 @@ const templates: Template[] = [
     status: 'available',
   },
   {
+    id: 'meetup',
+    name: 'Meetup site',
+    label: 'Meetup',
+    text: 'A template to show-off your meetup.',
+    image: getImageSrc(meetupTemplateImage),
+    status: 'coming soon',
+  },
+  {
     id: 'docs',
     name: 'Documentation site',
     label: 'Docs',
     text: "We're building a docs website example. Stay tuned!",
-    image: getImageSrc(comingSoonTemplateImage),
-    status: 'coming soon',
-  },
-  {
-    id: 'meetup',
-    name: 'Meetup site',
-    label: 'Docs',
-    text: 'A template to show-off your meetup.',
     image: getImageSrc(comingSoonTemplateImage),
     status: 'coming soon',
   },
@@ -158,18 +159,22 @@ export default function Templates() {
           {templates.map(template => (
             <li key={template.id}>
               <div className="min-w-[19rem] grid h-full grid-rows-[auto,1fr] overflow-hidden rounded-xl shadow-card bg-white">
-                <Image
-                  alt={`${template.label} template screenshot`}
-                  src={template?.image ?? '/images/product-screen.png'}
-                  width={800}
-                  height={540}
+                <div
                   className={cx(
-                    'object-cover',
+                    'px-6 pt-6',
                     template.id !== 'blank'
                       ? 'border-b border-keystatic-gray'
                       : ''
                   )}
-                />
+                >
+                  <Image
+                    alt={`${template.label} template screenshot`}
+                    src={template?.image ?? '/images/product-screen.png'}
+                    width={800}
+                    height={540}
+                    className="object-cover"
+                  />
+                </div>
 
                 <div className="grid h-full grid-rows-[auto,1fr,auto] p-6">
                   <h3 className="text-xl font-semibold">{template.name}</h3>
