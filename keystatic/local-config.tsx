@@ -310,6 +310,7 @@ export default config({
           dividers: true,
           links: true,
         }),
+        file: fields.file({ label: 'File', description }),
         image: fields.image({ label: 'Image', description }),
         pathReference: fields.pathReference({
           label: 'Path Reference',

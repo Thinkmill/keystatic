@@ -10,19 +10,18 @@ import { useIsInDocumentEditor } from '../document/DocumentEditor';
 import { useState, useEffect, useReducer } from 'react';
 import { FormFieldInputProps } from '../../api';
 
-export function getUploadedImage(): Promise<
-  { content: Uint8Array; filename: string } | undefined
-> {
+export function getUploadedFile(
+  accept: string
+): Promise<{ content: Uint8Array; filename: string } | undefined> {
   return new Promise(resolve => {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = 'image/*';
+    input.accept = accept;
     let didChange = false;
     input.onchange = () => {
       didChange = true;
       const file = input.files?.[0];
-      const extension = file?.name.match(/\.([^.]+$)/)?.[1];
-      if (file && extension) {
+      if (file) {
         file.arrayBuffer().then(buffer => {
           resolve({
             content: new Uint8Array(buffer),
@@ -48,6 +47,12 @@ export function getUploadedImage(): Promise<
     document.body.appendChild(input);
     input.click();
   });
+}
+
+export function getUploadedImage(): Promise<
+  { content: Uint8Array; filename: string } | undefined
+> {
+  return getUploadedFile('image/*');
 }
 
 export function useObjectURL(data: Uint8Array | null) {
