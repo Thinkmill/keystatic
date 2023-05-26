@@ -1,7 +1,6 @@
 ---
 title: Collections & singletons
 ---
-# Collections & Singletons
 
 Keystatic has two _concepts_ or mechanisms to manage data: `collections` and `singletons`.
 
@@ -13,7 +12,7 @@ A series of blog posts, cooking recipes or testimonials from happy customers.
 
 To create a `collection` in your project, add a `collections` key to your Kesytatic config:
 
-```
+```jsx
 // Keystatic config
 import { config, collection } from '@keystatic/core'
 
@@ -30,11 +29,13 @@ export default config({
 
 The config above creates a new `testimonials` collection.
 
-Untitled
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/collectionsandsingletons1.png" /%}
 
 Wrapping the `testimonials` config object inside the `collection()` function provides TypeScript autocomplete goodness ✨
 
-CleanShot 2023-03-01 at 13.54.04@2x.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/collectionsandsingletons2.png" /%}
 
 ## Singletons
 
@@ -42,7 +43,7 @@ When you want a “one-of-a-kind” data entry, such as a “Settings” page or
 
 To create a `singleton` in your project, add a `singleton` key to your Keystatic config:
 
-```
+```jsx
 // Keystatic config
 import { config, singleton } from '@keystatic/core'
 
@@ -61,6 +62,10 @@ export default config({
 
 The config above creates a new `homepage` singleton.
 
-CleanShot 2023-03-01 at 13.49.45@2x.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/collectionsandsingletons3.png" /%}
 
 Wrapping the `homepage` config object inside the `singleton()` function provides TypeScript autocomplete goodness ✨
+
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/collectionsandsingletons4.png" /%}

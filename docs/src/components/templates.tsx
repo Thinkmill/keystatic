@@ -1,7 +1,6 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import Image, { StaticImageData } from 'next/image';
 
 import GetAccessForm from './forms/get-access';
 import GetNotifiedForm from './forms/get-notified';
@@ -11,19 +10,25 @@ import { cx } from '../utils';
 import Button from './button';
 import Dialog from './dialog';
 import { MouseEventHandler, useEffect, useState } from 'react';
+import CloudImage from './cloud-image';
 
-import blankTemplateImage from '../../public/images/templates/blank@2x.png';
-import marketingTemplateImage from '../../public/images/templates/marketing@2x.png';
-import blogTemplateImage from '../../public/images/templates/blog@2x.png';
-import meetupTemplateImage from '../../public/images/templates/meetup@2x.png';
-import comingSoonTemplateImage from '../../public/images/templates/coming-soon@2x.png';
+const blankTemplateImage =
+  'https://keystatic.io/images/keystatic-docs/template-blank.png';
+const marketingTemplateImage =
+  'https://keystatic.io/images/keystatic-docs/template-marketing.png';
+const blogTemplateImage =
+  'https://keystatic.io/images/keystatic-docs/template-blog.png';
+const meetupTemplateImage =
+  'https://keystatic.io/images/keystatic-docs/template-meetup.png';
+const comingSoonTemplateImage =
+  'https://keystatic.io/images/keystatic-docs/template-coming-soon.png';
 
 export type Template = {
   id: string;
   name: string;
   label: string;
   text: string;
-  image?: string;
+  image: string;
   repo?: {
     owner: string;
     name: string;
@@ -33,19 +38,13 @@ export type Template = {
   status: 'available' | 'coming soon';
 };
 
-// This is a temporary typecheck fix: when running keystatic's root typecheck command it doesn't
-// apply the next-env.d.ts in the docs directory so believes the image imports are strings.
-// As the images will be moved to cloud hosting this is a temporary work around.
-const getImageSrc = (image: string | StaticImageData) =>
-  typeof image === 'string' ? image : image.src;
-
 const templates: Template[] = [
   {
     id: 'blank',
     name: 'Start from a blank canvas',
     label: 'Blank',
     text: 'A barebone starting point. Keystatic with a simple Post collection, and no frontend design.',
-    image: getImageSrc(blankTemplateImage),
+    image: blankTemplateImage,
     repo: {
       owner: 'thinkmill',
       name: 'keystatic-template',
@@ -58,7 +57,7 @@ const templates: Template[] = [
     name: 'Marketing landing page',
     label: 'Marketing',
     text: 'A fictive product marketing landing page demo, built with Tailwind CSS and Next.js.',
-    image: getImageSrc(marketingTemplateImage),
+    image: marketingTemplateImage,
     repo: {
       owner: 'thinkmill',
       name: 'keystatic-starter-landing-page',
@@ -72,7 +71,7 @@ const templates: Template[] = [
     name: 'Blog',
     label: 'Blog',
     text: "A blog post starter template showcasing Keystatic's Document field. Built with Next.js and Tailwind CSS.",
-    image: getImageSrc(blogTemplateImage),
+    image: blogTemplateImage,
     repo: {
       owner: 'thinkmill',
       name: 'keystatic-starter-blog',
@@ -86,7 +85,7 @@ const templates: Template[] = [
     name: 'Meetup site',
     label: 'Meetup',
     text: 'A template to show-off your meetup.',
-    image: getImageSrc(meetupTemplateImage),
+    image: meetupTemplateImage,
     status: 'coming soon',
   },
   {
@@ -94,7 +93,7 @@ const templates: Template[] = [
     name: 'Documentation site',
     label: 'Docs',
     text: "We're building a docs website example. Stay tuned!",
-    image: getImageSrc(comingSoonTemplateImage),
+    image: comingSoonTemplateImage,
     status: 'coming soon',
   },
   {
@@ -102,7 +101,7 @@ const templates: Template[] = [
     name: 'Product list & ordering',
     label: 'Product List',
     text: "A product listing template exploring Keystatic's Relationship field.",
-    image: getImageSrc(comingSoonTemplateImage),
+    image: comingSoonTemplateImage,
     status: 'coming soon',
   },
 ];
@@ -171,9 +170,9 @@ export default function Templates() {
                       : ''
                   )}
                 >
-                  <Image
+                  <CloudImage
                     alt={`${template.label} template screenshot`}
-                    src={template?.image ?? '/images/product-screen.png'}
+                    src={template?.image}
                     width={323}
                     height={214}
                     className="object-cover"

@@ -1,9 +1,15 @@
-import Head from 'next/head';
+import { Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 
 import '../../styles/global.css';
 import { HeaderNav } from '../../components/navigation/header-nav';
 import { getNavigationMap } from '../../utils/reader';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 export const metadata = {
   title: 'Keystatic',
@@ -12,7 +18,7 @@ export const metadata = {
   openGraph: {
     images: [
       {
-        url: `/images/og-image.jpg`,
+        url: 'https://keystatic.io/images/keystatic-docs/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Keystatic cover image',
@@ -22,9 +28,10 @@ export const metadata = {
     siteName: 'Keystatic',
   },
   twitter: {
-    handle: '@thekeystatic',
-    site: '@site',
-    cardType: 'summary_large_image',
+    card: 'summary_large_image',
+    title: 'Keystatic',
+    description: 'Content management for your codebase.',
+    site: '@thekeystatic',
   },
 };
 
@@ -37,37 +44,12 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <Head>
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
-        <link rel="manifest" href="/site.webmanifest" />
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
-        <meta name="msapplication-TileColor" content="#da532c" />
-        <meta name="theme-color" content="#ffffff" />
-      </Head>
-
-      <body>
+      <body className={inter.className}>
         <div className="min-h-screen">
           <HeaderNav navigationMap={navigationMap} />
           {children}
         </div>
       </body>
-
       <Analytics />
     </html>
   );

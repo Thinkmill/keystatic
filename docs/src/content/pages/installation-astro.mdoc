@@ -94,10 +94,8 @@ export const Keystatic = makePage(keystaticConfig)
 Now, we can import that file in our `keystatic/[...params].astro` page, and mount the component on the clientside only:
 
 ```jsx
----
 // src/pages/keystatic/[...params].astro
 import { Keystatic } from '../../../keystatic.page'
----
 
 <Keystatic client:only />
 ```
