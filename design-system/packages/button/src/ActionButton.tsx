@@ -48,8 +48,8 @@ export const ActionButton: ForwardRefExoticComponent<
       <button
         ref={domRef}
         {...styleProps}
-        {...filterDOMProps(otherProps)}
         {...mergeProps(buttonProps, hoverProps)}
+        {...filterDOMProps(otherProps, { pick: new Set(['tabIndex']) })}
       >
         {children}
       </button>
