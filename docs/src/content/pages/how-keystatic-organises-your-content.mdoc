@@ -5,7 +5,7 @@ Keystatic gives you a lot of control and flexibility with _where_ your content g
 
 Let’s start with the `collection/singleton` options.
 
-# Collections & Singletons output
+## Collections & Singletons output
 
 You can define _where_ Keystatic should store collection entries and singletons via the `path` property in the collection/singleton top-level options.
 
@@ -42,7 +42,7 @@ If not specified, the default `path` value will be `{collection-name}/*/`.
 {% component-inline-prop propPath=["icon"] %}⚡️{% /component-inline-prop %}
 
 {% component-block-prop propPath=["content"] %}
-**Why a**`*`**symbol?**
+**Why a** `*` **symbol?**
 
 The `*` wildcard in the `path` is useful when you want to collocate Keystatic’s output with your existing source code, that may be nested a few levels deep inside an _**entry**_ you’re writing content for.
 
@@ -58,7 +58,7 @@ You can use `path: ‘packages/design-system/*/docs/’` to do just that 👍
 
 If the path ends with a trailing slash `/`, each entry will be created in its own directory named after the slug:
 
-```
+```yaml
 collection-name
   slug
     index.yaml
@@ -69,7 +69,7 @@ Say you create two entries in the `posts` collection, where the `path` is set to
 
 Since there is a trailing slash in the `path`, the generated output will look like so:
 
-```
+```yaml
 content
   posts
     my-first-post
@@ -84,7 +84,7 @@ content
 
 If the path does not end with a trailing slash, entries’ index files will be created immediately inside the collection directory:
 
-```
+```yaml
 collection-name
   slug.yaml
   slug
@@ -95,7 +95,7 @@ Say you create two entries in the `posts` collection, where the `path` is set to
 
 Since there is no trailing slash in the `path`, the generated output will look like so:
 
-```
+```yaml
 content
   my-first-post.yaml
   my-first-post
@@ -115,7 +115,7 @@ If not specified, the default `path` value for singletons will be `{singleton-na
 
 If the path ends with a trailing slash `/`, the singleton’s content ill be created in its own directory named after the slug:
 
-```
+```yaml
 singleton-name
   slug
     index.yaml
@@ -127,7 +127,7 @@ singleton-name
 
 If the path does not end with a trailing slash, the singleton’s index file will be created immediately inside the singleton directory:
 
-```
+```yaml
 singleton-name
   slug.yaml
   slug
@@ -137,7 +137,7 @@ singleton-name
 
 ---
 
-# Individual fields output
+## Individual fields output
 
 Right now, only **images** allow you to decide _where_ content should be generated, independently of the `collection/singleton` level `path` settings.
 

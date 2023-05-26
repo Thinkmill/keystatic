@@ -1,6 +1,9 @@
 ---
 title: Adding Keystatic to a Next.js project
 ---
+
+This guide assumes you are trying to add Keystatic to an existing Next.js 13 project.
+
 ## Installing dependencies
 
 We're going to need to install a few packages to get Keystatic going.
@@ -17,7 +20,7 @@ npm install @keystatic/core @keystatic/next
 
 Keystatic needs a config file. This is where you can connect a project with a specific GitHub repository and define a content schema.
 
-Let's create a file called `keystatic.config.tsx` (or `.jsx` if not using TypeScript) in the root of the project:
+Let's create a file called `keystatic.config.ts` (or `.js` if not using TypeScript) in the root of the project:
 
 ```typescript
 // keystatic.config.ts
@@ -101,6 +104,10 @@ export default function Page() {
 
 Great! So now, we should be able to visit the `/keystatic` router in the browser.
 
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/astro-keystatic-dashboard.png"
+   alt="Keystatic dashboard for Next.js demo" /%}
+
 Our Keystatic Admin UI is here! 🎉
 
 We also have a “Homepage” `singleton`, since we created that in our Keystatic config.
@@ -111,7 +118,7 @@ Before we can use this, we also need to create some `API routes` for Keystatic
 
 In the `pages` directory, create a new file called `api/keystatic/[...params].ts`
 
-Once again, we use Astro’s Rest parameters here.
+Once again, we use Next.js's dynamic route segments here.
 
 ```jsx
 // src/pages/api/keystatic/[...params].ts
@@ -126,13 +133,17 @@ We should be all set to go for our Keystatic Admin UI now.
 
 Try and visit the `/keystatic` page in the browser one more time, and click on the “Homepage” singleton:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9aa266a6-f9a5-4e2c-a2ae-4eca773ac1ac/Untitled.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/astro-keystatic-homepage.png"
+   alt="Keystatic homepage singleton for Next.js demo" /%}
 
 It's working: our “Headline” text field is here.
 
 Go ahead and fill that field with something, and hit `Create`:
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5c2847e7-b188-4006-9e4b-d882458a8d8e/CleanShot_2023-02-27_at_15.43.462x.png
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/astro-keystatic-homepage-2.png"
+   alt="Keystatic homepage singleton for Next.js demo with headline" /%}
 
 Check your source code again. Notice anything?
 
@@ -148,8 +159,6 @@ Inside, you'll find a `_homepage` directory.
 
 That directory contains an `index.yaml` file with… the `headline` text you’ve just created!
 
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5c4244fc-e644-4038-89f9-85ebec61367c/Untitled.png
-
 Niiiice ✨
 
 Let's try display that on the frontend now.
@@ -161,13 +170,11 @@ Let's try display that on the frontend now.
 Keystatic comes with its own `reader` Node API to bring content to the front end. As it is a Node API it must be run server-side.
 
 ```jsx
----
 // 1. Create a reader
 const reader = createReader('', config);
 
 // 2. Read the "Homepage" singleton
 const homepageData = await reader.singletons.homepage.read();
----
 ```
 
 This `homepageData` will give us a JSON object with all the fields inside the `homepage` singleton.
@@ -234,7 +241,3 @@ export default async function Index() {
 }
 
 ```
-
-Missing image https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ff732a63-b110-4f4b-91f9-1882167279f2/CleanShot_2023-02-27_at_16.12.142x.png
-
-Beautiful!

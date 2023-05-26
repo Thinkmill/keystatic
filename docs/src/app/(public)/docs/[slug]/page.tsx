@@ -22,7 +22,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
     .filter(heading => heading.text);
 
   return (
-    <div className="grid gap-6 grid-cols-[auto,12rem]">
+    <div className="grid gap-6 grid-cols-[auto] md:grid-cols-[auto,12rem]">
       <div>
         <h1 className="text-3xl font-bold sm:text-4xl mb-4">{page.title}</h1>
         <div>
