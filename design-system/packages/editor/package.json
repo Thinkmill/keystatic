@@ -7,6 +7,7 @@
   "module": "dist/voussoir-editor.esm.js",
   "exports": {
     ".": {
+      "types": "./dist/voussoir-editor.cjs.js",
       "module": "./dist/voussoir-editor.esm.js",
       "default": "./dist/voussoir-editor.cjs.js"
     },
@@ -18,15 +19,23 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "@floating-ui/react": "^0.24.0",
+    "@react-aria/actiongroup": "^3.4.3",
+    "@react-aria/focus": "^3.10.0",
+    "@react-aria/i18n": "^3.7.1",
+    "@react-aria/interactions": "^3.13.0",
+    "@react-stately/list": "^3.6.0",
+    "@react-stately/utils": "^3.5.1",
     "@voussoir/button": "^0.1.8",
     "@voussoir/icon": "^0.2.1",
     "@voussoir/layout": "^0.1.3",
     "@voussoir/menu": "0.1.4",
     "@voussoir/slots": "^0.1.2",
     "@voussoir/style": "^0.1.5",
+    "@voussoir/tooltip": "workspace:^0.1.3",
     "@voussoir/types": "^0.1.1",
     "@voussoir/typography": "^0.1.4",
-    "@voussoir/utils": "^2.0.2"
+    "@voussoir/utils": "^2.0.2",
+    "emery": "^1.4.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
