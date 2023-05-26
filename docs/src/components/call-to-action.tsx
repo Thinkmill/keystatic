@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Dialog from './dialog';
 import Button from './button';
 import SendMessageForm from './forms/send-message';
+import { StarIcon } from './icons/star-icon';
 
 export default function CallToAction() {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,22 +40,8 @@ export default function CallToAction() {
         </svg>
       </div>
 
-      <div className="mx-auto max-w-3xl pt-12 pb-16 px-6 text-center md:pt-16 md:pb-24">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 33 36"
-          className="mx-auto w-8"
-          aria-hidden="true"
-        >
-          <path
-            fill="#000"
-            fillRule="evenodd"
-            d="M25.475.757a6.285 6.285 0 0 1 2.467.541c.075.445.321.774.737.985a1.28 1.28 0 0 1-.063.853 14.575 14.575 0 0 1-1.574 3.315 71.235 71.235 0 0 0-6.378 10.395 187.49 187.49 0 0 0 9.084-1.183c1.38.191 2.133.962 2.26 2.313-.114.754-.542 1.222-1.284 1.406-3.459.5-6.93.91-10.414 1.227a.653.653 0 0 0-.309.192 96.066 96.066 0 0 0 9.804 8.953c.596.672 1.96.969 1.768 1.99-.102.545-.602.733-.823 1.155-1.339.398-2.601.185-3.786-.64a176.583 176.583 0 0 1-10.065-9.401 76.27 76.27 0 0 0-2.277 3.835 60.483 60.483 0 0 1-4.93 8.786c-.472.306-.996.41-1.572.312-.678-.163-1.35-.38-2.016-.65-.5-.474-.63-1.032-.392-1.675a37.317 37.317 0 0 0 5.235-8.906 35.987 35.987 0 0 1 1.935-3.217c-3.189.415-6.39.82-9.602 1.216a5.314 5.314 0 0 1-2.69-1.488c-.314-.759-.144-1.39.509-1.892 2.927-.417 5.857-.819 8.79-1.205a46.712 46.712 0 0 0 2.551-.597c-2.41-3.5-4.933-6.93-7.566-10.288-1.018-1.498-.631-2.398 1.16-2.702.746-.063 1.42.13 2.022.58 2.631 3.718 5.28 7.419 7.947 11.103a426.154 426.154 0 0 1 6.713-10.942 18.337 18.337 0 0 0 1.753-3.73c.324-.254.66-.467 1.006-.641Z"
-            clipRule="evenodd"
-            opacity=".953"
-          />
-        </svg>
+      <div className="mx-auto max-w-3xl pt-12 pb-16 px-6 flex flex-col items-center text-center md:pt-16 md:pb-24">
+        <StarIcon size="large" />
 
         <h2 className="mt-6 text-3xl font-bold sm:text-4xl">
           Tell us what{' '}
