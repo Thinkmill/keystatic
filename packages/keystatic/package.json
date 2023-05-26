@@ -85,7 +85,7 @@
     "@emotion/css": "^11.9.0",
     "@emotion/weak-memoize": "^0.3.0",
     "@hapi/iron": "^7.0.0",
-    "@markdoc/markdoc": "^0.2.2",
+    "@markdoc/markdoc": "^0.3.0",
     "@react-aria/focus": "^3.10.0",
     "@react-aria/i18n": "^3.7.1",
     "@react-aria/interactions": "^3.13.0",
