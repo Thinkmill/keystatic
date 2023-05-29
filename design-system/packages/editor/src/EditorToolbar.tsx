@@ -8,7 +8,7 @@ import {
   DOMAttributes,
   ValueBase,
 } from '@react-types/shared';
-import { assert, assertNever } from 'emery';
+import { assertNever } from 'emery';
 
 import {
   ActionButton,
@@ -145,9 +145,7 @@ function useSelectionItem(props: EditorToolbarItemProps): {
       },
     };
   }
-
-  // @ts-expect-error
-  assertNever(context.selectionMode);
+  assertNever(context);
 }
 
 export type SelectionMode = 'none' | 'single' | 'multiple';
@@ -157,14 +155,13 @@ type EditorToolbarGroupProps = AriaLabelingProps & {
 } & (
     | ({ selectionMode: 'multiple' } & ValueBase<Key[]>)
     | ({ selectionMode: 'single' } & ValueBase<Key | null>)
+    | { selectionMode?: 'none' }
   );
 export function EditorToolbarGroup(props: EditorToolbarGroupProps) {
-  let { selectionMode = 'none' } = props;
-
-  if (selectionMode === 'single') {
+  if (props.selectionMode === 'single') {
     return <EditorSingleSelectionGroup {...props} />;
   }
-  if (selectionMode === 'multiple') {
+  if (props.selectionMode === 'multiple') {
     return <EditorMultipleSelectionGroup {...props} />;
   }
 
@@ -175,9 +172,9 @@ export function EditorToolbarGroup(props: EditorToolbarGroupProps) {
   );
 }
 /** @private SINGLE selection */
-function EditorSingleSelectionGroup(props: EditorToolbarGroupProps) {
-  assert(props.selectionMode === 'single');
-
+function EditorSingleSelectionGroup(
+  props: EditorToolbarGroupProps & { selectionMode: 'single' }
+) {
   let [selectedValue, setSelectedValue] = useControlledState<Key | null>(
     props.value!,
     props.defaultValue!,
@@ -203,9 +200,9 @@ function EditorSingleSelectionGroup(props: EditorToolbarGroupProps) {
   );
 }
 /** @private MULTI selection */
-function EditorMultipleSelectionGroup(props: EditorToolbarGroupProps) {
-  assert(props.selectionMode === 'multiple');
-
+function EditorMultipleSelectionGroup(
+  props: EditorToolbarGroupProps & { selectionMode: 'multiple' }
+) {
   let [selectedValue, setSelectedValue] = useControlledState(
     props.value!,
     props.defaultValue || [],
