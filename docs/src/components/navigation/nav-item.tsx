@@ -22,10 +22,10 @@ export function NavItem({ label, href, level, title, tabIndex }: NavItemProps) {
   }`;
 
   const styleIdle =
-    'hover:bg-keystatic-gray-light active:bg-keystatic-gray font-medium text-stone-600';
+    'hover:bg-keystatic-gray-light active:bg-keystatic-gray font-medium text-neutral-600';
 
   const styleCurrent =
-    'bg-keystatic-gray text-stone-700 font-semibold before:block before:absolute before:inset-y-1 before:-inset-x-2 before:bg-keystatic-gray-dark before:w-1 before:rounded before:transition-all';
+    'bg-keystatic-gray text-keystatic-gray-dark font-semibold before:block before:absolute before:inset-y-1 before:-inset-x-2 before:bg-keystatic-gray-dark before:w-1 before:rounded before:transition-all';
 
   return (
     <li className="relative" aria-current={isCurrentPage ? 'page' : false}>

@@ -13,9 +13,9 @@ type ButtonProps = {
 const baseClasses =
   'block rounded-lg px-5 py-3 text-center font-semibold leading-none border transition-colors';
 const impactClasses: Record<ButtonProps['impact'] & {}, string> = {
-  bold: 'rounded-lg bg-black px-5 py-3 text-center font-semibold leading-none text-white hover:bg-stone-800 border-transparent',
+  bold: 'rounded-lg bg-black px-5 py-3 text-center font-semibold leading-none text-white hover:bg-neutral-800 border-transparent',
   light:
-    'rounded-lg bg-transparent border-black text-black px-5 py-3 text-center font-semibold leading-none hover:bg-stone-800/10 active:bg-stone-800/20',
+    'rounded-lg bg-transparent border-black text-black px-5 py-3 text-center font-semibold leading-none hover:bg-neutral-800/10 active:bg-neutral-800/20',
 };
 
 // ----------
@@ -54,6 +54,7 @@ function Spinner() {
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
+        aria-hidden="true"
       >
         <circle
           className="opacity-25"

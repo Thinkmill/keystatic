@@ -12,6 +12,7 @@ export default function Divider({
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 100 7"
+      aria-hidden="true"
     >
       <path
         fill="#000"

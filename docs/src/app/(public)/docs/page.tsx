@@ -5,7 +5,7 @@ export default function Docs() {
     <>
       <h1 className="text-3xl font-bold sm:text-4xl">Keystatic Docs</h1>
 
-      <p className="mt-6 text-lg text-stone-600">
+      <p className="mt-6 text-lg text-neutral-600">
         Keystatic is a new project from
         [Thinkmill](https://www.thinkmill.com.au) which opens up your code-based
         content (written in Markdown, JSON or YAML) to contributors who would
@@ -15,7 +15,7 @@ export default function Docs() {
 
       {/** WIP notice? */}
       <div className="relative rounded-lg p-5 bg-keystatic-gray-light w-full mt-6">
-        <blockquote className="text-stone-600">
+        <blockquote className="text-neutral-600">
           <p className="flex gap-5 items-center">
             <span className="text-3xl">🚧</span>
             <span>
@@ -34,7 +34,7 @@ export default function Docs() {
               <h2 className="text-xl font-semibold leading-tight">
                 New Features & Updates
               </h2>
-              <p className="mt-4 text-stone-700">
+              <p className="mt-4 text-keystatic-gray-dark">
                 Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
                 lorem ipsum lorem ipsum lorem ipsum.
               </p>
@@ -55,7 +55,7 @@ export default function Docs() {
               <h2 className="text-xl font-semibold leading-tight">
                 New Features & Updates
               </h2>
-              <p className="mt-4 text-stone-700">
+              <p className="mt-4 text-keystatic-gray-dark">
                 Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
                 lorem ipsum lorem ipsum lorem ipsum.
               </p>

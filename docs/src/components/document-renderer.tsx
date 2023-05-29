@@ -58,7 +58,7 @@ const getRenderers = (
     ),
 
     paragraph: ({ children, textAlign }) => (
-      <p className="text-md text-stone-700" style={{ textAlign }}>
+      <p className="text-md text-keystatic-gray-dark" style={{ textAlign }}>
         {children}
       </p>
     ),
