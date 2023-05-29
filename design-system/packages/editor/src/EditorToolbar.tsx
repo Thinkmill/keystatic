@@ -6,7 +6,6 @@ import { useControlledState } from '@react-stately/utils';
 import {
   AriaLabelingProps,
   DOMAttributes,
-  FocusableElement,
   ValueBase,
 } from '@react-types/shared';
 import { assert, assertNever } from 'emery';
@@ -19,24 +18,27 @@ import {
 import { Divider, Flex } from '@voussoir/layout';
 import { filterDOMProps } from '@voussoir/utils';
 import {
-  FocusEvent,
+  Dispatch,
   Key,
   KeyboardEvent,
   PropsWithChildren,
   ReactNode,
   RefObject,
+  SetStateAction,
   createContext,
   useContext,
+  useEffect,
+  useId,
   useRef,
   useState,
 } from 'react';
 
-interface EditorToolbarState {
+type EditorToolbarState = {
   /** The value of the last focused node. */
-  readonly lastFocusedNode: FocusableElement | null;
+  readonly lastFocusedId: Key | null;
   /** Sets the last focused node. */
-  setLastFocusedNode(value: FocusableElement | null): void;
-}
+  setLastFocusedId: Dispatch<SetStateAction<Key | null>>;
+};
 type EditorToolbarContextType = {
   state: EditorToolbarState;
 };
@@ -68,7 +70,9 @@ export function EditorToolbar(props: EditorToolbarProps) {
   );
 }
 
+// =============================================================================
 // Group
+// =============================================================================
 
 type GroupSelectionType =
   | {
@@ -227,6 +231,10 @@ function EditorMultipleSelectionGroup(props: EditorToolbarGroupProps) {
   );
 }
 
+// =============================================================================
+// Item
+// =============================================================================
+
 type EditorToolbarItemProps = {
   /** The contents of the item. */
   children?: ReactNode;
@@ -239,8 +247,7 @@ type EditorToolbarItemProps = {
 /** A toolbar item may be a checkbox/radio/toggle button, depending on context. */
 export function EditorToolbarItem(props: EditorToolbarItemProps) {
   let { children, isDisabled, ...otherProps } = props;
-  let ref = useRef<HTMLButtonElement>(null);
-  let { itemProps } = useToolbarItem(ref);
+  let { itemProps } = useToolbarItem(props);
   let { isSelected, buttonProps } = useSelectionItem(props);
 
   return (
@@ -248,7 +255,6 @@ export function EditorToolbarItem(props: EditorToolbarItemProps) {
     // like role and tabIndex.
     <PressResponder {...mergeProps(buttonProps, itemProps, otherProps)}>
       <ActionButton
-        ref={ref}
         prominence="low"
         isDisabled={isDisabled}
         isSelected={isSelected}
@@ -261,12 +267,11 @@ export function EditorToolbarItem(props: EditorToolbarItemProps) {
 
 type EditorToolbarButtonProps = Omit<ToggleButtonProps, 'prominence'>;
 export function EditorToolbarButton(props: EditorToolbarButtonProps) {
-  let ref = useRef<HTMLButtonElement>(null);
-  let { itemProps } = useToolbarItem(ref);
+  let { itemProps } = useToolbarItem(props);
 
   return (
     <PressResponder {...itemProps}>
-      <ToggleButton ref={ref} prominence="low" {...props} />
+      <ToggleButton prominence="low" {...props} />
     </PressResponder>
   );
 }
@@ -275,8 +280,9 @@ export function EditorToolbarSeparator() {
   return <Divider orientation="vertical" flexShrink={0} />;
 }
 
+// =============================================================================
 // Utils
-// ------------------------------
+// =============================================================================
 
 function filterDOMPropsWithLabelWarning<P extends AriaLabelingProps>(props: P) {
   let { 'aria-labelledby': ariaLabelledby, 'aria-label': ariaLabel } = props;
@@ -290,27 +296,39 @@ function filterDOMPropsWithLabelWarning<P extends AriaLabelingProps>(props: P) {
   return filterDOMProps(props, { labellable: true });
 }
 
-function useToolbarItem(ref: RefObject<HTMLElement>) {
+function useToolbarItem<P extends { isDisabled?: boolean }>(props: P) {
+  let { isDisabled } = props;
   let { state } = useToolbarContext();
-  let tabIndex =
-    state.lastFocusedNode === ref.current || state.lastFocusedNode == null
-      ? 0
-      : -1;
+  let { lastFocusedId, setLastFocusedId } = state;
+  let id = useId();
+  let tabIndex = lastFocusedId === id || lastFocusedId == null ? 0 : -1;
+
+  // clear the last focused ID when the item is unmounted or becomes disabled,
+  // which will reset the tabIndex for each item to 0 avoiding a situation where
+  // the user cannot tab to any items
+  useEffect(() => {
+    let reset = (lastId: Key | null) => (lastId === id ? null : lastId);
+    if (isDisabled) {
+      setLastFocusedId(reset);
+    }
+    return () => {
+      setLastFocusedId(reset);
+    };
+  }, [id, isDisabled, setLastFocusedId]);
 
   return {
     itemProps: {
       tabIndex,
-      onFocus: (e: FocusEvent) => {
-        state.setLastFocusedNode(e.target as FocusableElement);
+      id,
+      onFocus: () => {
+        setLastFocusedId(id);
       },
     },
   };
 }
 
 function useToolbar(props: EditorToolbarProps, ref: RefObject<HTMLElement>) {
-  let [lastFocusedNode, setLastFocusedNode] = useState<FocusableElement | null>(
-    null
-  );
+  let [lastFocusedId, setLastFocusedId] = useState<Key | null>(null);
   let { direction } = useLocale();
   let focusManager = createFocusManager(ref, { wrap: true });
   let isRtl = direction === 'rtl';
@@ -362,8 +380,8 @@ function useToolbar(props: EditorToolbarProps, ref: RefObject<HTMLElement>) {
       'aria-orientation': 'horizontal' as const,
     },
     state: {
-      lastFocusedNode,
-      setLastFocusedNode,
+      lastFocusedId,
+      setLastFocusedId,
     },
   };
 }

@@ -13,6 +13,7 @@ import { listOrderedIcon } from '@voussoir/icon/icons/listOrderedIcon';
 import { Flex } from '@voussoir/layout';
 import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
 import { Kbd, Text } from '@voussoir/typography';
+import { useState } from 'react';
 
 import {
   EditorToolbar,
@@ -23,9 +24,10 @@ import {
 } from '../src';
 
 storiesOf('Editor/Toolbar', module).add('default', () => {
+  let [visible, setVisible] = useState(true);
   return (
     <Flex direction="column" gap="large" alignItems="start">
-      <button>before</button>
+      <button onClick={() => setVisible(b => !b)}>before</button>
       <EditorToolbar aria-label="Formatting options">
         <EditorToolbarGroup
           selectionMode="multiple"
@@ -53,7 +55,7 @@ storiesOf('Editor/Toolbar', module).add('default', () => {
             <EditorToolbarItem
               value="strikethrough"
               aria-label="strikethrough"
-              isDisabled
+              isDisabled={visible}
             >
               <Icon src={strikethroughIcon} />
             </EditorToolbarItem>
