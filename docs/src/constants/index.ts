@@ -14,4 +14,4 @@ export const MAIN_EL_MAX_WIDTH = '76.5rem'; // 1200px + 24px gutter (`px-6`) as 
  * -----------------------------------
  * Total: 42rem
  */
-export const CONTENT_MAX_WIDTH_DESKTOP = '42rem';
+export const CONTENT_MAX_WIDTH_DESKTOP = '43.5rem';

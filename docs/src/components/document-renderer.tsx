@@ -13,7 +13,7 @@ export default async function DocumentRenderer({
   slug,
   document,
 }: DocumentRendererProps & { slug: string }) {
-  const hightlighter = await shiki.getHighlighter({
+  const highlighter = await shiki.getHighlighter({
     theme: 'material-theme-lighter',
   });
 
@@ -21,7 +21,7 @@ export default async function DocumentRenderer({
     <div className="flex flex-col gap-4">
       <KeystaticRenderer
         document={document}
-        renderers={getRenderers(slug, hightlighter)}
+        renderers={getRenderers(slug, highlighter)}
         componentBlocks={componentBlockRenderers}
       />
     </div>
@@ -35,14 +35,14 @@ const getRenderers = (
   inline: {
     bold: ({ children }) => <strong>{children}</strong>,
     code: ({ children }) => (
-      <code className="font-mono bg-gray-200 text-sm p-1 rounded-md">
+      <code className="font-mono bg-neutral-100 text-sm text-black px-1 py-0.5 rounded-md border border-neutral-200">
         {children}
       </code>
     ),
     link: ({ href, children }) => {
       return (
         <a
-          className="cursor-pointer underline hover:text-thinkmill-red"
+          className="cursor-pointer underline hover:text-thinkmill-red" // TODO
           href={href}
         >
           {children}
@@ -58,7 +58,7 @@ const getRenderers = (
     ),
 
     paragraph: ({ children, textAlign }) => (
-      <p className="text-md text-stone-700" style={{ textAlign }}>
+      <p className="text-md text-neutral-700" style={{ textAlign }}>
         {children}
       </p>
     ),
@@ -71,14 +71,14 @@ const getRenderers = (
       }
       return (
         <code
-          className="[&>pre]:whitespace-break-spaces [&>pre]:break-all [&>pre]:p-4 [&>pre]:rounded-md text-sm"
+          className="[&>pre]:whitespace-break-spaces [&>pre]:break-all [&>pre]:p-4 [&>pre]:rounded-lg text-sm my-2"
           dangerouslySetInnerHTML={{ __html: codeBlock }}
         />
       );
     },
     image: ({ src, alt }) => (
       <img
-        className="rounded-md my-2"
+        className="rounded-lg my-2"
         src={`/images/content/${slug}/${src}`}
         alt={alt}
       />
@@ -109,9 +109,11 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
 > = {
   aside: props => {
     return (
-      <div className="flex gap-3 rounded-2xl bg-keystatic-gray px-5 py-4">
-        <div className="text-2xl">{props.icon}</div>
-        <div className="flex flex-col gap-3">{props.content}</div>
+      <div className="flex gap-3 rounded-lg bg-keystatic-gray-light border border-keystatic-gray px-4 py-4 my-2">
+        <div className="text-2xl" aria-hidden="true">
+          {props.icon}
+        </div>
+        <div className="flex flex-col gap-3 py-2">{props.content}</div>
       </div>
     );
   },
@@ -126,7 +128,7 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         width={width ?? imgMaxWidthPx}
         srcSet={srcSet}
         sizes={sizes || `(max-width: 375px) 375px, ${imgMaxWidthPx}px`}
-        className="rounded-md my-2"
+        className="rounded-lg my-2"
       />
     );
   },
