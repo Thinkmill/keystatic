@@ -228,12 +228,12 @@ function EditorMultipleSelectionGroup(props: EditorToolbarGroupProps) {
 }
 
 type EditorToolbarItemProps = {
-  /** The value of the item. */
-  value: Key;
-  /** Whether the item is disabled. */
-  isDisabled?: boolean;
   /** The contents of the item. */
   children?: ReactNode;
+  /** Whether the item is disabled. */
+  isDisabled?: boolean;
+  /** The value of the item. */
+  value: Key;
 };
 
 /** A toolbar item may be a checkbox/radio/toggle button, depending on context. */
@@ -244,7 +244,8 @@ export function EditorToolbarItem(props: EditorToolbarItemProps) {
   let { isSelected, buttonProps } = useSelectionItem(props);
 
   return (
-    // Use a PressResponder to send DOM props through, allow overriding things like role and tabIndex.
+    // Use a PressResponder to send DOM props through, allow overriding things
+    // like role and tabIndex.
     <PressResponder {...mergeProps(buttonProps, itemProps, otherProps)}>
       <ActionButton
         ref={ref}

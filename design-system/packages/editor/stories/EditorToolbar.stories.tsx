@@ -10,7 +10,9 @@ import { strikethroughIcon } from '@voussoir/icon/icons/strikethroughIcon';
 import { linkIcon } from '@voussoir/icon/icons/linkIcon';
 import { listIcon } from '@voussoir/icon/icons/listIcon';
 import { listOrderedIcon } from '@voussoir/icon/icons/listOrderedIcon';
+import { Flex } from '@voussoir/layout';
 import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
+import { Kbd, Text } from '@voussoir/typography';
 
 import {
   EditorToolbar,
@@ -19,19 +21,18 @@ import {
   EditorToolbarItem,
   EditorToolbarSeparator,
 } from '../src';
-import { Kbd, Text } from '@voussoir/typography';
 
 storiesOf('Editor/Toolbar', module).add('default', () => {
   return (
-    <>
-      {/* <button>before</button> */}
+    <Flex direction="column" gap="large" alignItems="start">
+      <button>before</button>
       <EditorToolbar aria-label="Formatting options">
         <EditorToolbarGroup
           selectionMode="multiple"
           aria-label="Text formatting"
         >
           <TooltipTrigger>
-            <EditorToolbarItem value="bold" aria-label="bold" isDisabled>
+            <EditorToolbarItem value="bold" aria-label="bold">
               <Icon src={boldIcon} />
             </EditorToolbarItem>
             <Tooltip>
@@ -49,7 +50,11 @@ storiesOf('Editor/Toolbar', module).add('default', () => {
             </Tooltip>
           </TooltipTrigger>
           <TooltipTrigger>
-            <EditorToolbarItem value="strikethrough" aria-label="strikethrough">
+            <EditorToolbarItem
+              value="strikethrough"
+              aria-label="strikethrough"
+              isDisabled
+            >
               <Icon src={strikethroughIcon} />
             </EditorToolbarItem>
             <Tooltip>Strikethrough</Tooltip>
@@ -121,7 +126,7 @@ storiesOf('Editor/Toolbar', module).add('default', () => {
           </TooltipTrigger>
         </EditorToolbarGroup>
       </EditorToolbar>
-      {/* <button>after</button> */}
-    </>
+      <button>after</button>
+    </Flex>
   );
 });
