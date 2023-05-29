@@ -14,6 +14,7 @@ export default function ThankYouPage() {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 410 101"
+                  aria-hidden="true"
                 >
                   <path
                     fill="#F7DE5B"

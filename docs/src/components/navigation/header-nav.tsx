@@ -24,7 +24,7 @@ export function HeaderNav({ navigationMap }: NavProps) {
   return (
     <header
       className={`bg-white w-full ${
-        isDocsNav ? 'border-b border-stone-400/20 lg:fixed z-20 lg:z-30' : ''
+        isDocsNav ? 'border-b border-keystatic-gray lg:fixed z-20 lg:z-30' : ''
       }`}
     >
       <div className="mx-auto max-w-7xl">
