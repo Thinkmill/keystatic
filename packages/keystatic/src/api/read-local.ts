@@ -54,7 +54,8 @@ async function collectEntriesInDir(
         .filter(entry => {
           if (
             (!entry.isDirectory() && !entry.isFile()) ||
-            entry.name === '.git'
+            entry.name === '.git' ||
+            entry.name === 'node_modules'
           ) {
             return false;
           }
