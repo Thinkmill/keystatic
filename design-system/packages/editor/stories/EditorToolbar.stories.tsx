@@ -31,7 +31,7 @@ storiesOf('Editor/Toolbar', module).add('default', () => {
           aria-label="Text formatting"
         >
           <TooltipTrigger>
-            <EditorToolbarItem value="bold" aria-label="bold">
+            <EditorToolbarItem value="bold" aria-label="bold" isDisabled>
               <Icon src={boldIcon} />
             </EditorToolbarItem>
             <Tooltip>

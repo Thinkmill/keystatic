@@ -45,8 +45,6 @@ type AriaProps = {
   type?: 'button' | 'submit' | 'reset';
   /** Identifies the form element that should be used when type="submit" */
   form?: string;
-  /** Allow or prevent the button from being sequentially focusable. */
-  tabIndex?: number;
 };
 
 // ActionButton

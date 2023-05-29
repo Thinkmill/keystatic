@@ -89,10 +89,11 @@ function useGroupSelectionContext() {
   }
   return context;
 }
-function useSelectionItem(value: Key): {
+function useSelectionItem(props: EditorToolbarItemProps): {
   isSelected: boolean;
   buttonProps: PressProps & DOMAttributes;
 } {
+  let { isDisabled, value } = props;
   let context = useGroupSelectionContext();
 
   if (context.selectionMode === 'single') {
@@ -103,6 +104,10 @@ function useSelectionItem(value: Key): {
       buttonProps: {
         'aria-checked': isSelected,
         onPress: () => {
+          if (isDisabled) {
+            return;
+          }
+
           if (isSelected) {
             setSelectedValue(null);
           } else {
@@ -121,6 +126,10 @@ function useSelectionItem(value: Key): {
       buttonProps: {
         'aria-pressed': isSelected,
         onPress: () => {
+          if (isDisabled) {
+            return;
+          }
+
           if (selectedValue.includes(value)) {
             setSelectedValue(
               selectedValue.filter(existingValue => existingValue !== value)
@@ -229,16 +238,20 @@ type EditorToolbarItemProps = {
 
 /** A toolbar item may be a checkbox/radio/toggle button, depending on context. */
 export function EditorToolbarItem(props: EditorToolbarItemProps) {
-  let { children, value, ...otherProps } = props;
+  let { children, isDisabled, ...otherProps } = props;
   let ref = useRef<HTMLButtonElement>(null);
   let { itemProps } = useToolbarItem(ref);
-  let { isSelected, buttonProps } = useSelectionItem(value);
+  let { isSelected, buttonProps } = useSelectionItem(props);
 
   return (
-    // Use a PressResponder to send DOM props through.
-    // Button doesn't allow overriding the role by default.
+    // Use a PressResponder to send DOM props through, allow overriding things like role and tabIndex.
     <PressResponder {...mergeProps(buttonProps, itemProps, otherProps)}>
-      <ActionButton ref={ref} prominence="low" isSelected={isSelected}>
+      <ActionButton
+        ref={ref}
+        prominence="low"
+        isDisabled={isDisabled}
+        isSelected={isSelected}
+      >
         {children}
       </ActionButton>
     </PressResponder>
@@ -251,11 +264,9 @@ export function EditorToolbarButton(props: EditorToolbarButtonProps) {
   let { itemProps } = useToolbarItem(ref);
 
   return (
-    <ToggleButton
-      ref={ref}
-      prominence="low"
-      {...mergeProps(props, itemProps)}
-    />
+    <PressResponder {...itemProps}>
+      <ToggleButton ref={ref} prominence="low" {...props} />
+    </PressResponder>
   );
 }
 
