@@ -1,6 +1,27 @@
 ---
 title: Select field
 ---
+The `select` field displays a select input.
+
+It needs an array of options, as well as a `defaultValue` matching one of the options.
+
+## Example usage
+
+```typescript
+role: fields.select({
+  label: 'Role',
+  description: "The person's role at the company",
+  options: [
+    { label: 'Designer', value: 'designer' },
+    { label: 'Developer', value: 'developer' },
+    { label: 'Product manager', value: 'product-manager' },
+  ],
+  defaultValue: 'designer'
+}) 
+```
+
+## Type signature
+
 ```typescript
 select<Option extends {
   label: string;
