@@ -1,23 +1,23 @@
 import { FocusScope, createFocusManager } from '@react-aria/focus';
 import { useLocale } from '@react-aria/i18n';
+import { PressProps, PressResponder } from '@react-aria/interactions';
 import { mergeProps } from '@react-aria/utils';
 import { useControlledState } from '@react-stately/utils';
 import {
   AriaLabelingProps,
+  DOMAttributes,
   FocusableElement,
   ValueBase,
 } from '@react-types/shared';
-import { assert } from 'emery';
+import { assert, assertNever } from 'emery';
 
 import {
   ActionButton,
-  // ActionButtonProps,
   ToggleButton,
   ToggleButtonProps,
 } from '@voussoir/button';
 import { Divider, Flex } from '@voussoir/layout';
 import { filterDOMProps } from '@voussoir/utils';
-// import { filterDOMProps } from '@voussoir/utils';
 import {
   FocusEvent,
   Key,
@@ -70,11 +70,17 @@ export function EditorToolbar(props: EditorToolbarProps) {
 
 // Group
 
-type GroupSelectionType = {
-  getOnPress: (value: Key) => () => void;
-  getIsSelected: (value: Key) => boolean;
-  role: 'button' | 'radio';
-};
+type GroupSelectionType =
+  | {
+      selectionMode: 'single';
+      selectedValue: Key | null;
+      setSelectedValue: (value: Key | null) => void;
+    }
+  | {
+      selectionMode: 'multiple';
+      selectedValue: Key[];
+      setSelectedValue: (value: Key[]) => void;
+    };
 const GroupSelectionContext = createContext<GroupSelectionType | null>(null);
 function useGroupSelectionContext() {
   let context = useContext(GroupSelectionContext);
@@ -82,6 +88,53 @@ function useGroupSelectionContext() {
     throw new Error('useGroupSelectionContext must be used within a group');
   }
   return context;
+}
+function useSelectionItem(value: Key): {
+  isSelected: boolean;
+  buttonProps: PressProps & DOMAttributes;
+} {
+  let context = useGroupSelectionContext();
+
+  if (context.selectionMode === 'single') {
+    let { selectedValue, setSelectedValue } = context;
+    let isSelected = selectedValue === value;
+    return {
+      isSelected,
+      buttonProps: {
+        'aria-checked': isSelected,
+        onPress: () => {
+          if (isSelected) {
+            setSelectedValue(null);
+          } else {
+            setSelectedValue(value);
+          }
+        },
+        role: 'radio' as const,
+      },
+    };
+  }
+  if (context.selectionMode === 'multiple') {
+    let { selectedValue, setSelectedValue } = context;
+    let isSelected = selectedValue.includes(value);
+    return {
+      isSelected,
+      buttonProps: {
+        'aria-pressed': isSelected,
+        onPress: () => {
+          if (selectedValue.includes(value)) {
+            setSelectedValue(
+              selectedValue.filter(existingValue => existingValue !== value)
+            );
+          } else {
+            setSelectedValue(selectedValue.concat(value));
+          }
+        },
+      },
+    };
+  }
+
+  // @ts-expect-error
+  assertNever(context.selectionMode);
 }
 
 export type SelectionMode = 'none' | 'single' | 'multiple';
@@ -119,15 +172,9 @@ function EditorSingleSelectionGroup(props: EditorToolbarGroupProps) {
   );
 
   let context = {
-    getOnPress: (value: Key) => () => {
-      if (value === selectedValue) {
-        setSelectedValue(null);
-      } else {
-        setSelectedValue(value);
-      }
-    },
-    getIsSelected: (value: Key) => value === selectedValue,
-    role: 'radio' as const,
+    selectionMode: props.selectionMode,
+    selectedValue,
+    setSelectedValue,
   };
 
   return (
@@ -153,24 +200,16 @@ function EditorMultipleSelectionGroup(props: EditorToolbarGroupProps) {
   );
 
   let context = {
-    getOnPress: (value: Key) => () => {
-      if (selectedValue.includes(value)) {
-        setSelectedValue(
-          selectedValue.filter(existingValue => existingValue !== value)
-        );
-      } else {
-        setSelectedValue(selectedValue.concat(value));
-      }
-    },
-    getIsSelected: (value: Key) => selectedValue.includes(value),
-    role: 'button' as const,
+    selectionMode: props.selectionMode,
+    selectedValue,
+    setSelectedValue,
   };
 
   return (
     <GroupSelectionContext.Provider value={context}>
       <Flex
         gap="xsmall"
-        role="radiogroup"
+        role="group"
         {...filterDOMPropsWithLabelWarning(props)}
       >
         {props.children}
@@ -193,19 +232,16 @@ export function EditorToolbarItem(props: EditorToolbarItemProps) {
   let { children, value, ...otherProps } = props;
   let ref = useRef<HTMLButtonElement>(null);
   let { itemProps } = useToolbarItem(ref);
-  let groupContext = useGroupSelectionContext();
+  let { isSelected, buttonProps } = useSelectionItem(value);
 
   return (
-    <ActionButton
-      ref={ref}
-      prominence="low"
-      {...mergeProps(itemProps, otherProps)}
-      onPress={groupContext.getOnPress(value)}
-      isSelected={groupContext.getIsSelected(value)}
-      // role={groupContext.role}
-    >
-      {children}
-    </ActionButton>
+    // Use a PressResponder to send DOM props through.
+    // Button doesn't allow overriding the role by default.
+    <PressResponder {...mergeProps(buttonProps, itemProps, otherProps)}>
+      <ActionButton ref={ref} prominence="low" isSelected={isSelected}>
+        {children}
+      </ActionButton>
+    </PressResponder>
   );
 }
 
