@@ -165,12 +165,21 @@ function fromMarkdocNode(
     };
   }
   if (node.type === 'item') {
-    const children = [
+    const children: Descendant[] = [
       {
-        type: 'list-item-content' as const,
+        type: 'list-item-content',
         children: inlineFromMarkdoc([node.children[0]]),
       },
     ];
+    if (node.children[1]?.type === 'list') {
+      const list = node.children[1];
+      children.push({
+        type: list.attributes.ordered ? 'ordered-list' : 'unordered-list',
+        children: list.children.flatMap(x =>
+          fromMarkdocNode(x, componentBlocks)
+        ),
+      });
+    }
     return { type: 'list-item', children };
   }
   if (node.type === 'paragraph') {

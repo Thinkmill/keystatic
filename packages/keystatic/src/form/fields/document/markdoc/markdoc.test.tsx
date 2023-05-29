@@ -74,6 +74,60 @@ test('basic', () => {
   `);
 });
 
+test('nested list', () => {
+  const markdoc = toMarkdoc(
+    <editor>
+      <unordered-list>
+        <list-item>
+          <list-item-content>
+            <text>Something</text>
+          </list-item-content>
+          <unordered-list>
+            <list-item>
+              <list-item-content>
+                <text>Something</text>
+              </list-item-content>
+            </list-item>
+          </unordered-list>
+        </list-item>
+      </unordered-list>
+      <paragraph>
+        <text />
+      </paragraph>
+    </editor>
+  );
+  expect(markdoc).toMatchInlineSnapshot(`
+    "- Something
+      - Something
+    "
+  `);
+  expect(fromMarkdoc(markdoc)).toMatchInlineSnapshot(`
+    <editor>
+      <unordered-list>
+        <list-item>
+          <list-item-content>
+            <text>
+              Something
+            </text>
+          </list-item-content>
+          <unordered-list>
+            <list-item>
+              <list-item-content>
+                <text>
+                  Something
+                </text>
+              </list-item-content>
+            </list-item>
+          </unordered-list>
+        </list-item>
+      </unordered-list>
+      <paragraph>
+        <text />
+      </paragraph>
+    </editor>
+  `);
+});
+
 test('textAlign', () => {
   const markdoc = toMarkdoc(
     <editor>
