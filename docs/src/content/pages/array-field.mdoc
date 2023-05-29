@@ -1,6 +1,58 @@
 ---
 title: Array field
 ---
+The `array` field lets you create `Add one more` scenarios where you need _one or multiple_ instances of a specific field schema.
+
+You pass a single field to the `array` field —&nbsp;but this field can be an `object` field to create complex structures.
+
+The `label` for the `array` field is defined as an options object (optional) as the second argument. It's also useful to define the `itemLabel` for each instance of the array, to give it a more meaningful label than the default `Item 1`, `Item 2` etc.
+
+## Example usage
+
+Simple:
+
+```typescript
+tags: fields.array(
+  fields.text({label: 'Tag' }),
+  // Labelling options
+  {
+    label: 'Tag',
+    itemLabel: props => props.value
+  }
+)
+```
+
+Complex:
+
+```typescript
+complexArray: fields.array(
+  fields.object({
+    name: fields.text({ label: 'Name' }),
+    age: fields.integer({ label: 'Age' }),
+    projects: fields.array(
+      fields.relationship({
+        label: 'Projects',
+        collection: 'projects',
+        validation: {
+          isRequired: true,
+        },
+      }),
+      {
+        label: 'Projects',
+        itemLabel: (props) => props.value ?? 'Select a project',
+      }
+    ),
+  }),
+  // Labelling options
+  {
+    label: 'Complex Array',
+    itemLabel: (props) => props.fields.name.value,
+  }
+),
+```
+
+## Type signature
+
 ```typescript
 array<ElementField extends ComponentSchema>(
   element: ElementField,

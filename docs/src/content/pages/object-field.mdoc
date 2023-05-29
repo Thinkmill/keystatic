@@ -1,16 +1,44 @@
 ---
 title: Object field
 ---
-## Example
+The `object` fields lets you structure complex object schemas that can contain any other field types.
+
+## Usage example
+
+Simple:
 
 ```typescript
-object({
-  name: fields.text(),
-  age: fields.integer()
+snapshot: fields.object({
+  name: fields.text({ label: 'Name' }),
+  age: fields.integer({ label: 'Age' }),
 })
 ```
 
-## Signature
+Complex:
+
+```typescript
+snapshot: fields.object({
+  name: fields.text({ label: 'Name' }),
+  age: fields.integer({ label: 'Age' }),
+
+  // Nested relationship array
+  projects: fields.array(
+    fields.relationship({
+      label: 'Projects',
+      collection: 'projects',
+      validation: {
+        isRequired: true,
+      },
+    }),
+    {
+      label: 'Projects',
+      itemLabel: (props) => props.value ?? 'Please select a project',
+    }
+  ),
+})
+```
+
+## Type signature
 
 ```typescript
 object<Fields extends Record<string, ComponentSchema>>(fields: Fields)
