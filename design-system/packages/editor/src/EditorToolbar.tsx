@@ -364,9 +364,9 @@ function useToolbar(props: EditorToolbarProps, ref: RefObject<HTMLElement>) {
         e.preventDefault();
         e.stopPropagation();
         if (e.key === 'ArrowLeft' && isRtl) {
-          focusManager.focusNext({ wrap: true });
+          focusManager.focusNext();
         } else {
-          focusManager.focusPrevious({ wrap: true });
+          focusManager.focusPrevious();
         }
         break;
     }
