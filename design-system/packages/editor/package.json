@@ -31,7 +31,7 @@
     "@voussoir/menu": "0.1.4",
     "@voussoir/slots": "^0.1.2",
     "@voussoir/style": "^0.1.5",
-    "@voussoir/tooltip": "workspace:^0.1.3",
+    "@voussoir/tooltip": "0.1.3",
     "@voussoir/types": "^0.1.1",
     "@voussoir/typography": "^0.1.4",
     "@voussoir/utils": "^2.0.2",

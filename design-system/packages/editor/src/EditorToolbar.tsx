@@ -190,7 +190,7 @@ type EditorToolbarItemProps = {
 
 /** A toolbar item may be a checkbox/radio/toggle button, depending on context. */
 export function EditorToolbarItem(props: EditorToolbarItemProps) {
-  let { value, children } = props;
+  let { children, value, ...otherProps } = props;
   let ref = useRef<HTMLButtonElement>(null);
   let { itemProps } = useToolbarItem(ref);
   let groupContext = useGroupSelectionContext();
@@ -199,7 +199,7 @@ export function EditorToolbarItem(props: EditorToolbarItemProps) {
     <ActionButton
       ref={ref}
       prominence="low"
-      {...itemProps}
+      {...mergeProps(itemProps, otherProps)}
       onPress={groupContext.getOnPress(value)}
       isSelected={groupContext.getIsSelected(value)}
       // role={groupContext.role}
