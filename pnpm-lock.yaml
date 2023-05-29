@@ -924,12 +924,10 @@ importers:
     specifiers:
       '@babel/runtime': ^7.18.3
       '@floating-ui/react': ^0.24.0
-      '@react-aria/actiongroup': ^3.4.3
       '@react-aria/focus': ^3.10.0
       '@react-aria/i18n': ^3.7.1
       '@react-aria/interactions': ^3.13.0
       '@react-aria/utils': ^3.14.2
-      '@react-stately/list': ^3.6.0
       '@react-stately/utils': ^3.5.1
       '@react-types/shared': ^3.18.0
       '@types/react': ^18.0.25
@@ -953,21 +951,17 @@ importers:
     dependencies:
       '@babel/runtime': 7.21.0
       '@floating-ui/react': 0.24.0_biqbaboplfbrettd7655fr4n2y
-      '@react-aria/actiongroup': 3.4.4_react@18.2.0
       '@react-aria/focus': 3.12.0_react@18.2.0
       '@react-aria/i18n': 3.7.1_react@18.2.0
       '@react-aria/interactions': 3.15.0_react@18.2.0
       '@react-aria/utils': 3.16.0_react@18.2.0
-      '@react-stately/list': 3.6.1_react@18.2.0
       '@react-stately/utils': 3.6.0_react@18.2.0
       '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/button': link:../button
       '@voussoir/icon': link:../icon
       '@voussoir/layout': link:../layout
-      '@voussoir/menu': link:../menu
       '@voussoir/slots': link:../slots
       '@voussoir/style': link:../style
-      '@voussoir/tooltip': link:../tooltip
       '@voussoir/types': link:../types
       '@voussoir/typography': link:../typography
       '@voussoir/utils': link:../utils
@@ -976,8 +970,10 @@ importers:
       '@types/react': 18.0.28
       '@voussoir/combobox': link:../combobox
       '@voussoir/core': link:../core
+      '@voussoir/menu': link:../menu
       '@voussoir/storybook': link:../../docs/storybook
       '@voussoir/test-utils': link:../test-utils
+      '@voussoir/tooltip': link:../tooltip
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
 
