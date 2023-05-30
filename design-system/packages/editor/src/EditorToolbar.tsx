@@ -1,7 +1,7 @@
 import { FocusScope, createFocusManager } from '@react-aria/focus';
 import { useLocale } from '@react-aria/i18n';
 import { PressProps, PressResponder } from '@react-aria/interactions';
-import { mergeProps } from '@react-aria/utils';
+import { isMac, mergeProps } from '@react-aria/utils';
 import { useControlledState } from '@react-stately/utils';
 import {
   AriaLabelingProps,
@@ -335,6 +335,15 @@ function useToolbar(props: EditorToolbarProps, ref: RefObject<HTMLElement>) {
       return;
     }
 
+    // let users navigate by group with alt/ctrl + arrow keys
+    let accept = (node: Element) => {
+      let isFirstChild = node.parentElement?.firstElementChild === node;
+      let isGroupChild = /group/.test(node.parentElement?.role || '');
+
+      return !isGroupChild || isFirstChild;
+    };
+    let options = (isMac() ? e.altKey : e.ctrlKey) ? { accept } : {};
+
     switch (e.key) {
       case 'Home':
         e.preventDefault();
@@ -351,9 +360,9 @@ function useToolbar(props: EditorToolbarProps, ref: RefObject<HTMLElement>) {
         e.preventDefault();
         e.stopPropagation();
         if (e.key === 'ArrowRight' && isRtl) {
-          focusManager.focusPrevious();
+          focusManager.focusPrevious(options);
         } else {
-          focusManager.focusNext();
+          focusManager.focusNext(options);
         }
         break;
       case 'ArrowLeft':
@@ -361,9 +370,9 @@ function useToolbar(props: EditorToolbarProps, ref: RefObject<HTMLElement>) {
         e.preventDefault();
         e.stopPropagation();
         if (e.key === 'ArrowLeft' && isRtl) {
-          focusManager.focusNext();
+          focusManager.focusNext(options);
         } else {
-          focusManager.focusPrevious();
+          focusManager.focusPrevious(options);
         }
         break;
     }
