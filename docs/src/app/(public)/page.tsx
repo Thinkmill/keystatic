@@ -1,4 +1,4 @@
-import Hero from '../../components/hero';
+import EditableHero from '../../components/home-page-editors/editable-hero';
 import Intro from '../../components/intro';
 import Templates from '../../components/templates';
 import MailingList from '../../components/mailing-list';
@@ -10,7 +10,7 @@ export default function Homepage() {
   return (
     <>
       <main>
-        <Hero />
+        <EditableHero />
         <Features />
         <Intro />
         <Templates />

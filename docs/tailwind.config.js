@@ -21,6 +21,14 @@ module.exports = {
           red: '#ED0000',
         },
       },
+      height: {
+        124: '31rem',
+        152: '38rem',
+      },
+      width: {
+        168: '42rem',
+        340: '85rem',
+      },
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
@@ -36,6 +44,54 @@ module.exports = {
       },
       boxShadow: {
         card: '0px 16px 48px 0px rgba(0, 0, 0, 0.08)',
+      },
+      keyframes: {
+        bringToFront: {
+          '0%': {
+            zIndex: -1,
+            left: '5%',
+            top: '1%',
+            transform: 'scale(0.9)',
+          },
+          '49%': {
+            zIndex: -1,
+            left: 0,
+          },
+          '50%': {
+            zIndex: 3,
+            left: 0,
+            top: '1%',
+          },
+          '100%': {
+            zIndex: 3,
+            left: '3%',
+            top: '1%',
+            transform: 'scale(1)',
+          },
+        },
+        sendToBack: {
+          '100%': {
+            zIndex: -1,
+            left: '5%',
+            top: '1%',
+            transform: 'scale(0.9)',
+          },
+          '50%': {
+            zIndex: -1,
+            left: 0,
+          },
+          '49%': {
+            zIndex: 3,
+            left: 0,
+            top: '1%',
+          },
+          '0%': {
+            zIndex: 3,
+            left: '3%',
+            top: '1%',
+            transform: 'scale(1)',
+          },
+        },
       },
     },
   },
