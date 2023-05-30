@@ -20,7 +20,7 @@
     "@babel/runtime": "^7.18.3",
     "@react-aria/i18n": "^3.7.1",
     "@react-aria/toast": "3.0.0-alpha.1",
-    "@react-aria/utils": "^3.14.2",
+    "@react-aria/utils": "^3.17.0",
     "@react-stately/toast": "3.0.0-alpha.1",
     "@voussoir/button": "0.1.8",
     "@voussoir/core": "^5.0.2",
