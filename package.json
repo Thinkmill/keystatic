@@ -16,6 +16,7 @@
     "dev:docs": "pnpm --filter=docs dev",
     "dev:playroom": "pnpm --filter=docs dev:playroom",
     "dev:storybook": "pnpm --filter=docs dev:storybook",
+    "dev:create": "pnpm --filter=create dev",
     "docs:build": "pnpm run build:docs",
     "eslint": "eslint .",
     "format": "prettier --write",
