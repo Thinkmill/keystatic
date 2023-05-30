@@ -19,7 +19,7 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "@react-aria/checkbox": "^3.5.1",
-    "@react-aria/focus": "^3.10.0",
+    "@react-aria/focus": "^3.12.1",
     "@react-stately/checkbox": "^3.3.2",
     "@react-stately/toggle": "^3.4.3",
     "@react-types/shared": "^3.18.0",
