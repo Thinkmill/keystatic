@@ -924,10 +924,10 @@ importers:
     specifiers:
       '@babel/runtime': ^7.18.3
       '@floating-ui/react': ^0.24.0
-      '@react-aria/focus': ^3.10.0
+      '@react-aria/focus': ^3.12.1
       '@react-aria/i18n': ^3.7.1
-      '@react-aria/interactions': ^3.13.0
-      '@react-aria/utils': ^3.14.2
+      '@react-aria/interactions': ^3.15.1
+      '@react-aria/utils': ^3.17.0
       '@react-stately/utils': ^3.5.1
       '@react-types/shared': ^3.18.0
       '@types/react': ^18.0.25
@@ -946,10 +946,10 @@ importers:
     dependencies:
       '@babel/runtime': 7.21.0
       '@floating-ui/react': 0.24.2_biqbaboplfbrettd7655fr4n2y
-      '@react-aria/focus': 3.12.0_react@18.2.0
+      '@react-aria/focus': 3.12.1_react@18.2.0
       '@react-aria/i18n': 3.7.1_react@18.2.0
-      '@react-aria/interactions': 3.15.0_react@18.2.0
-      '@react-aria/utils': 3.16.0_react@18.2.0
+      '@react-aria/interactions': 3.15.1_react@18.2.0
+      '@react-aria/utils': 3.17.0_react@18.2.0
       '@react-stately/utils': 3.6.0_react@18.2.0
       '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/button': link:../button
@@ -6220,6 +6220,7 @@ packages:
       '@swc/helpers': 0.4.14
       clsx: 1.2.1
       react: 18.2.0
+    dev: false
 
   /@react-aria/focus/3.12.1_react@18.2.0:
     resolution: {integrity: sha512-i1bRz27mRFnrDpYpRvm/6Zm+FbGo0WygNQiLVgTce7WY+39oLERIGRrE8Ovy6rY9Hr4MGBAXz2Q+o9oTOgeBgA==}
@@ -6317,6 +6318,7 @@ packages:
       '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
+    dev: false
 
   /@react-aria/interactions/3.15.1_react@18.2.0:
     resolution: {integrity: sha512-khtpxSvos885rxMep6DRe8RGZjtD16ZuLxhFBtL1dXqSv5XZxaXKOmI8Yx1F8AkVIPdB72MmjG8dz3PpM3PPYg==}
@@ -6832,6 +6834,7 @@ packages:
       '@swc/helpers': 0.4.14
       clsx: 1.2.1
       react: 18.2.0
+    dev: false
 
   /@react-aria/utils/3.17.0_react@18.2.0:
     resolution: {integrity: sha512-NEul0cQ6tQPdNSHYzNYD+EfFabeYNvDwEiHB82kK/Tsfhfm84SM+baben/at2N51K7iRrJPr5hC5fi4+P88lNg==}

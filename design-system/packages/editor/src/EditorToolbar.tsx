@@ -1,6 +1,6 @@
 import { FocusScope, createFocusManager } from '@react-aria/focus';
 import { useLocale } from '@react-aria/i18n';
-import { PressProps, PressResponder, usePress } from '@react-aria/interactions';
+import { PressProps, PressResponder } from '@react-aria/interactions';
 import { isMac, mergeProps } from '@react-aria/utils';
 import { useControlledState } from '@react-stately/utils';
 import {
@@ -276,12 +276,6 @@ export function EditorToolbarButton(props: EditorToolbarButtonProps) {
 
 export function EditorToolbarSeparator() {
   return <Divider orientation="vertical" flexShrink={0} />;
-}
-
-function TestButton(props) {
-  let { children } = props;
-  let { pressProps } = usePress(props);
-  return <button {...pressProps}>{children}</button>;
 }
 
 // =============================================================================
