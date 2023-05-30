@@ -18,13 +18,11 @@ export default async function DocumentRenderer({
   });
 
   return (
-    <div className="flex flex-col gap-4">
-      <KeystaticRenderer
-        document={document}
-        renderers={getRenderers(slug, highlighter)}
-        componentBlocks={componentBlockRenderers}
-      />
-    </div>
+    <KeystaticRenderer
+      document={document}
+      renderers={getRenderers(slug, highlighter)}
+      componentBlocks={componentBlockRenderers}
+    />
   );
 }
 
