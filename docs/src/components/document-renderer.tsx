@@ -14,7 +14,7 @@ export default async function DocumentRenderer({
   document,
 }: DocumentRendererProps & { slug: string }) {
   const highlighter = await shiki.getHighlighter({
-    theme: 'material-theme-lighter',
+    theme: 'min-light',
   });
 
   return (
@@ -41,10 +41,7 @@ const getRenderers = (
     ),
     link: ({ href, children }) => {
       return (
-        <a
-          className="cursor-pointer underline hover:text-thinkmill-red" // TODO
-          href={href}
-        >
+        <a className="cursor-pointer underline hover:no-underline" href={href}>
           {children}
         </a>
       );
@@ -56,7 +53,6 @@ const getRenderers = (
         {children}
       </Heading>
     ),
-
     paragraph: ({ children, textAlign }) => (
       <p className="text-md text-keystatic-gray-dark" style={{ textAlign }}>
         {children}
@@ -64,14 +60,24 @@ const getRenderers = (
     ),
     code: ({ children, language }) => {
       let codeBlock = children;
+
       try {
-        codeBlock = highlighter.codeToHtml(children, { lang: language });
+        const tokens = highlighter.codeToThemedTokens(children, language);
+        codeBlock = shiki.renderToHtml(tokens, {
+          elements: {
+            // Override the default <pre> so shiki background color doesn't get injected
+            pre({ children }) {
+              return `<pre tabIndex="0">${children}</pre>`;
+            },
+          },
+        });
       } catch (error) {
         console.error('Error highlighting codeblock', error);
       }
+
       return (
-        <code
-          className="[&>pre]:whitespace-break-spaces [&>pre]:break-all [&>pre]:p-4 [&>pre]:rounded-lg text-sm my-2"
+        <div
+          className="[&>pre]:whitespace-break-spaces [&>pre]:break-all [&>pre]:p-4 [&>pre]:rounded-lg [&>pre]:border [&>pre]:border-keystatic-gray [&>pre]:bg-keystatic-gray-light text-sm my-2"
           dangerouslySetInnerHTML={{ __html: codeBlock }}
         />
       );
@@ -86,7 +92,7 @@ const getRenderers = (
     list: ({ type, children }) => {
       if (type === 'ordered') {
         return (
-          <ol className="list-decimal">
+          <ol className="text-keystatic-gray-dark list-decimal list-inside">
             {children.map((child, index) => (
               <li key={index}>{child}</li>
             ))}
@@ -94,12 +100,15 @@ const getRenderers = (
         );
       }
       return (
-        <ul className="list-disc ml-4">
+        <ul className="text-keystatic-gray-dark list-disc ml-4">
           {children.map((child, index) => (
             <li key={index}>{child}</li>
           ))}
         </ul>
       );
+    },
+    divider: () => {
+      return <hr className="border-keystatic-gray my-2" />;
     },
   },
 });
@@ -109,16 +118,14 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
 > = {
   aside: props => {
     return (
-      <div className="flex gap-3 rounded-lg bg-keystatic-gray-light border border-keystatic-gray px-4 py-4 my-2">
-        <div className="text-2xl" aria-hidden="true">
-          {props.icon}
-        </div>
-        <div className="flex flex-col gap-3 py-2">{props.content}</div>
+      <div className="flex flex-col sm:flex-row gap-4 rounded-lg bg-keystatic-gray-light px-4 py-6 my-2">
+        <div className="flex text-3xl h-6 items-center">{props.icon}</div>
+        <div className="flex flex-col gap-3">{props.content}</div>
       </div>
     );
   },
   'cloud-image': ({ href: src, alt, sizes, height, width, srcSet }) => {
-    const imgMaxWidthPx = `${parseInt(CONTENT_MAX_WIDTH_DESKTOP) * 16}`;
+    const imgMaxWidthPx = `${parseFloat(CONTENT_MAX_WIDTH_DESKTOP) * 16}`;
 
     return (
       <CloudImage
