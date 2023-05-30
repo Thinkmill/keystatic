@@ -65,7 +65,7 @@ const getRenderers = (
         const tokens = highlighter.codeToThemedTokens(children, language);
         codeBlock = shiki.renderToHtml(tokens, {
           elements: {
-            // Override the default <pre> so shiki background color doesn't get injected
+            // Override shiki's <pre> so its default background color doesn't get applied
             pre({ children }) {
               return `<pre tabIndex="0">${children}</pre>`;
             },

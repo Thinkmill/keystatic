@@ -44,7 +44,7 @@ export default function Heading({ level, children, anchor }: HeadingProps) {
     );
   }
 
-  return <Tag className={cx(textClasses, 'mt-4')}>{children}</Tag>;
+  return <Tag className={cx(textClasses, 'mt-6')}>{children}</Tag>;
 }
 
 const getSlug = (node: ReactNode) => slugify(getTextNode(node));
