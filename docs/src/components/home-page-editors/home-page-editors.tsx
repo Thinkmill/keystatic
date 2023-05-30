@@ -79,38 +79,36 @@ export function HomePageEditors({
     <>
       {/* TODO: this needs to deal with tailwind messing stuff up */}
       <VoussoirProvider>
-        <div>
-          <div className="relative h-152 w-340 z-0">
-            <div className="absolute top-0 left-0 z-0 animate-[sendToBack_0.3s_forwards_ease-in-out] focus-within:animate-[bringToFront_0.3s_forwards_ease-in-out]">
-              <CodeEditorChrome>
-                <CodeMirror
-                  theme={nord}
-                  height="26.5rem"
-                  value={mdEditorValue}
-                  extensions={[
-                    EditorView.lineWrapping,
-                    markdown({
-                      base: markdownLanguage,
-                      codeLanguages: languages,
-                    }),
-                  ]}
-                  onChange={convertToKsEditorValue}
-                  ref={mdEditorRef}
-                />
-              </CodeEditorChrome>
-            </div>
+        <div className="relative h-152 w-340 z-0">
+          <div className="peer absolute top-0 left-0 z-0 animate-[sendToBack_0.3s_forwards_ease-in-out] focus-within:animate-[bringToFront_0.3s_forwards_ease-in-out]">
+            <CodeEditorChrome>
+              <CodeMirror
+                theme={nord}
+                height="26.5rem"
+                value={mdEditorValue}
+                extensions={[
+                  EditorView.lineWrapping,
+                  markdown({
+                    base: markdownLanguage,
+                    codeLanguages: languages,
+                  }),
+                ]}
+                onChange={convertToKsEditorValue}
+                ref={mdEditorRef}
+              />
+            </CodeEditorChrome>
+          </div>
 
-            <div className="absolute top-0 right-0 z-1">
-              <BrowserChrome>
-                <DocumentEditor
-                  documentFeatures={documentFeatures}
-                  componentBlocks={componentBlocks}
-                  value={editorValue}
-                  onChange={convertToMdEditorValue}
-                  key={isMdEditorFocused() ? mdEditorValue.length : fixedKey}
-                />
-              </BrowserChrome>
-            </div>
+          <div className="absolute top-0 right-0 z-1 peer-focus-within:scale-90 transition-transform">
+            <BrowserChrome>
+              <DocumentEditor
+                documentFeatures={documentFeatures}
+                componentBlocks={componentBlocks}
+                value={editorValue}
+                onChange={convertToMdEditorValue}
+                key={isMdEditorFocused() ? mdEditorValue.length : fixedKey}
+              />
+            </BrowserChrome>
           </div>
         </div>
       </VoussoirProvider>

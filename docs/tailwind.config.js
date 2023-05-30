@@ -64,7 +64,7 @@ module.exports = {
           },
           '100%': {
             zIndex: 3,
-            left: '3%',
+            left: '5%',
             top: '1%',
             transform: 'scale(1)',
           },
@@ -87,7 +87,7 @@ module.exports = {
           },
           '0%': {
             zIndex: 3,
-            left: '3%',
+            left: '5%',
             top: '1%',
             transform: 'scale(1)',
           },
