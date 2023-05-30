@@ -608,6 +608,7 @@ importers:
       '@react-aria/focus': ^3.10.0
       '@react-aria/interactions': ^3.13.0
       '@react-aria/utils': ^3.14.2
+      '@react-stately/toggle': ^3.4.3
       '@react-types/button': ^3.7.0
       '@react-types/shared': ^3.18.0
       '@types/react': ^18.0.25
@@ -629,6 +630,7 @@ importers:
       '@react-aria/focus': 3.10.1_react@18.2.0
       '@react-aria/interactions': 3.13.1_react@18.2.0
       '@react-aria/utils': 3.14.2_react@18.2.0
+      '@react-stately/toggle': 3.5.1_react@18.2.0
       '@react-types/button': 3.7.0_react@18.2.0
       '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/core': link:../core
@@ -6013,7 +6015,7 @@ packages:
       '@react-aria/focus': 3.10.1_react@18.2.0
       '@react-aria/interactions': 3.13.1_react@18.2.0
       '@react-aria/utils': 3.14.2_react@18.2.0
-      '@react-stately/toggle': 3.4.4_react@18.2.0
+      '@react-stately/toggle': 3.5.1_react@18.2.0
       '@react-types/button': 3.7.0_react@18.2.0
       '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
@@ -6029,7 +6031,7 @@ packages:
       '@react-aria/toggle': 3.4.2_react@18.2.0
       '@react-aria/utils': 3.14.2_react@18.2.0
       '@react-stately/checkbox': 3.3.2_react@18.2.0
-      '@react-stately/toggle': 3.4.4_react@18.2.0
+      '@react-stately/toggle': 3.5.1_react@18.2.0
       '@react-types/checkbox': 3.4.1_react@18.2.0
       '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
@@ -6179,7 +6181,7 @@ packages:
       '@react-stately/grid': 3.4.2_react@18.2.0
       '@react-stately/selection': 3.11.2_react@18.2.0
       '@react-stately/virtualizer': 3.4.1_react@18.2.0
-      '@react-types/checkbox': 3.4.1_react@18.2.0
+      '@react-types/checkbox': 3.4.3_react@18.2.0
       '@react-types/grid': 3.1.5_react@18.2.0
       '@react-types/shared': 3.18.0_react@18.2.0
       '@swc/helpers': 0.4.14
@@ -6712,8 +6714,8 @@ packages:
       '@react-aria/focus': 3.11.0_react@18.2.0
       '@react-aria/interactions': 3.14.0_react@18.2.0
       '@react-aria/utils': 3.15.0_react@18.2.0
-      '@react-stately/toggle': 3.4.4_react@18.2.0
-      '@react-types/checkbox': 3.4.1_react@18.2.0
+      '@react-stately/toggle': 3.5.1_react@18.2.0
+      '@react-types/checkbox': 3.4.3_react@18.2.0
       '@react-types/shared': 3.18.0_react@18.2.0
       '@react-types/switch': 3.2.5_react@18.2.0
       '@swc/helpers': 0.4.14
@@ -6837,7 +6839,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-stately/toggle': 3.4.4_react@18.2.0
+      '@react-stately/toggle': 3.5.1_react@18.2.0
       '@react-stately/utils': 3.5.2_react@18.2.0
       '@react-types/checkbox': 3.4.1_react@18.2.0
       '@react-types/shared': 3.18.0_react@18.2.0
@@ -7445,7 +7447,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-types/checkbox': 3.4.1_react@18.2.0
+      '@react-types/checkbox': 3.4.3_react@18.2.0
       '@react-types/shared': 3.18.0_react@18.2.0
       react: 18.2.0
     dev: false
@@ -10092,7 +10094,7 @@ packages:
       '@react-aria/checkbox': 3.7.1_react@18.2.0
       '@react-aria/focus': 3.11.0_react@18.2.0
       '@react-stately/checkbox': 3.3.2_react@18.2.0
-      '@react-stately/toggle': 3.4.4_react@18.2.0
+      '@react-stately/toggle': 3.5.1_react@18.2.0
       '@react-types/shared': 3.18.0_react@18.2.0
       '@voussoir/core': 5.0.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/field': 0.1.6_biqbaboplfbrettd7655fr4n2y
