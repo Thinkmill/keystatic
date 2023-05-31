@@ -1,15 +1,15 @@
 {
-  "name": "@voussoir/table",
-  "version": "0.1.5",
-  "description": "Tables are containers for displaying information. They allow users to quickly scan, sort, compare, and take action on large amounts of data.",
+  "name": "@voussoir/editor",
+  "version": "0.1.0",
+  "description": "Utility hooks and components for the ProseMirror editor.",
   "license": "MIT",
-  "main": "dist/voussoir-table.cjs.js",
-  "module": "dist/voussoir-table.esm.js",
+  "main": "dist/voussoir-editor.cjs.js",
+  "module": "dist/voussoir-editor.esm.js",
   "exports": {
     ".": {
-      "types": "./dist/voussoir-table.cjs.js",
-      "module": "./dist/voussoir-table.esm.js",
-      "default": "./dist/voussoir-table.cjs.js"
+      "types": "./dist/voussoir-editor.cjs.js",
+      "module": "./dist/voussoir-editor.esm.js",
+      "default": "./dist/voussoir-editor.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -18,24 +18,26 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
+    "@floating-ui/react": "^0.24.0",
     "@react-aria/focus": "^3.12.1",
+    "@react-aria/i18n": "^3.7.1",
     "@react-aria/interactions": "^3.15.1",
-    "@react-aria/table": "^3.5.0",
     "@react-aria/utils": "^3.17.0",
-    "@react-stately/table": "^3.5.0",
+    "@react-stately/utils": "^3.5.1",
     "@react-types/shared": "^3.18.0",
-    "@voussoir/checkbox": "^0.2.5",
+    "@voussoir/button": "^0.1.8",
     "@voussoir/icon": "^0.2.1",
     "@voussoir/layout": "^0.1.3",
-    "@voussoir/slots": "^0.1.2",
     "@voussoir/style": "^0.1.5",
-    "@voussoir/types": "^0.1.1",
-    "@voussoir/typography": "^0.1.5",
-    "@voussoir/utils": "^2.0.2"
+    "@voussoir/typography": "^0.1.4",
+    "@voussoir/utils": "^2.0.2",
+    "emery": "^1.4.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
     "@voussoir/storybook": "^0.0.1",
+    "@voussoir/test-utils": "^2.0.2",
+    "@voussoir/tooltip": "0.1.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

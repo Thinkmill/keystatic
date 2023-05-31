@@ -19,9 +19,9 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "@emotion/css": "^11.9.0",
-    "@react-aria/focus": "^3.10.0",
+    "@react-aria/focus": "^3.12.1",
     "@react-aria/ssr": "^3.4.1",
-    "@react-aria/utils": "^3.14.2",
+    "@react-aria/utils": "^3.17.0",
     "@voussoir/ssr": "^0.2.1",
     "@voussoir/utils": "^2.0.2",
     "emery": "^1.4.1",
