@@ -49,7 +49,7 @@ module.exports = {
         bringToFront: {
           '0%': {
             zIndex: -1,
-            left: '5%',
+            left: '10%',
             top: '1%',
             transform: 'scale(0.9)',
           },
@@ -64,15 +64,14 @@ module.exports = {
           },
           '100%': {
             zIndex: 3,
-            left: '5%',
-            top: '1%',
+            left: 0,
             transform: 'scale(1)',
           },
         },
         sendToBack: {
           '100%': {
             zIndex: -1,
-            left: '5%',
+            left: '10%',
             top: '1%',
             transform: 'scale(0.9)',
           },
@@ -87,7 +86,7 @@ module.exports = {
           },
           '0%': {
             zIndex: 3,
-            left: '5%',
+            left: '10%',
             top: '1%',
             transform: 'scale(1)',
           },

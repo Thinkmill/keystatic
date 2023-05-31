@@ -10,8 +10,7 @@ import { fromMarkdoc } from '../../../../packages/keystatic/src/form/fields/docu
 import Markdoc from '@markdoc/markdoc';
 import { componentBlocks } from './component-blocks';
 
-export const initialMarkdoc = `
-{% fancy-heading %}
+export const initialMarkdoc = `{% fancy-heading %}
 {% component-block-prop propPath=["plainLine1"] %}
 Content Management
 {% /component-block-prop %}

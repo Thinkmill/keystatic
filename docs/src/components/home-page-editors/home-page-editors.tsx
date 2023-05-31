@@ -4,6 +4,7 @@ import React, {
   Dispatch,
   SetStateAction,
   useCallback,
+  useEffect,
   useRef,
   useState,
 } from 'react';
@@ -40,8 +41,38 @@ export function HomePageEditors({
   setEditorValue: Dispatch<SetStateAction<Descendant[]>>;
 }) {
   const [mdEditorValue, setMdEditorValue] = useState(initialMarkdoc);
+  const [hasFocusedMdEditor, setHasFocusedMdEditor] = useState<
+    boolean | undefined
+  >(undefined);
 
   const mdEditorRef = useRef<ReactCodeMirrorRef>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    let options = {
+      root: null,
+      rootMargin: '0px',
+    };
+
+    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+          mdEditorRef.current?.view?.contentDOM.blur();
+          setHasFocusedMdEditor(false);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(handleIntersect, options);
+    observer.observe(container);
+
+    return () => {
+      observer.unobserve(container);
+    };
+  }, []);
 
   const isMdEditorFocused = () =>
     typeof document !== 'undefined' &&
@@ -66,7 +97,6 @@ export function HomePageEditors({
       );
 
       setEditorValue(newEditorValue);
-
       setMdEditorValue(markdocString);
     },
     [setEditorValue]
@@ -75,43 +105,54 @@ export function HomePageEditors({
   // Prevent the Keystatic editor from re-rendering when it's focused
   const fixedKey = '1';
 
+  // TODO: this needs to deal with tailwind messing stuff up
   return (
-    <>
-      {/* TODO: this needs to deal with tailwind messing stuff up */}
-      <VoussoirProvider>
-        <div className="relative h-152 w-340 z-0">
-          <div className="peer absolute top-0 left-0 z-0 animate-[sendToBack_0.3s_forwards_ease-in-out] focus-within:animate-[bringToFront_0.3s_forwards_ease-in-out]">
-            <CodeEditorChrome>
-              <CodeMirror
-                theme={nord}
-                height="26.5rem"
-                value={mdEditorValue}
-                extensions={[
-                  EditorView.lineWrapping,
-                  markdown({
-                    base: markdownLanguage,
-                    codeLanguages: languages,
-                  }),
-                ]}
-                onChange={convertToKsEditorValue}
-                ref={mdEditorRef}
-              />
-            </CodeEditorChrome>
-          </div>
-
-          <div className="absolute top-0 right-0 z-1 peer-focus-within:scale-90 transition-transform">
-            <BrowserChrome>
-              <DocumentEditor
-                documentFeatures={documentFeatures}
-                componentBlocks={componentBlocks}
-                value={editorValue}
-                onChange={convertToMdEditorValue}
-                key={isMdEditorFocused() ? mdEditorValue.length : fixedKey}
-              />
-            </BrowserChrome>
-          </div>
+    <VoussoirProvider ref={containerRef}>
+      <div
+        onAnimationEnd={event => {
+          if (event.animationName === 'bringToFront') {
+            setHasFocusedMdEditor(true);
+          }
+        }}
+        className="relative h-152 w-340 z-0"
+      >
+        <div
+          className={`absolute top-0 left-0 z-0 ${
+            hasFocusedMdEditor
+              ? ''
+              : 'animate-[sendToBack_0.4s_forwards_ease-in-out] focus-within:animate-[bringToFront_0.4s_forwards_ease-in-out]'
+          }`}
+        >
+          <CodeEditorChrome>
+            <CodeMirror
+              theme={nord}
+              height="27.25rem"
+              value={mdEditorValue}
+              extensions={[
+                EditorView.lineWrapping,
+                markdown({
+                  base: markdownLanguage,
+                  codeLanguages: languages,
+                }),
+              ]}
+              onChange={convertToKsEditorValue}
+              ref={mdEditorRef}
+            />
+          </CodeEditorChrome>
         </div>
-      </VoussoirProvider>
-    </>
+
+        <div className="absolute top-0 right-0 z-1">
+          <BrowserChrome>
+            <DocumentEditor
+              documentFeatures={documentFeatures}
+              componentBlocks={componentBlocks}
+              value={editorValue}
+              onChange={convertToMdEditorValue}
+              key={isMdEditorFocused() ? mdEditorValue.length : fixedKey}
+            />
+          </BrowserChrome>
+        </div>
+      </div>
+    </VoussoirProvider>
   );
 }
