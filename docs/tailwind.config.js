@@ -21,14 +21,6 @@ module.exports = {
           red: '#ED0000',
         },
       },
-      height: {
-        124: '31rem',
-        152: '38rem',
-      },
-      width: {
-        168: '42rem',
-        340: '85rem',
-      },
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },

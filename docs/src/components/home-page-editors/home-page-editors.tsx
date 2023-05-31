@@ -114,7 +114,7 @@ export function HomePageEditors({
             setHasFocusedMdEditor(true);
           }
         }}
-        className="relative h-152 w-340 z-0"
+        className="relative h-[38rem] w-[85rem] z-0"
       >
         <div
           className={`absolute top-0 left-0 z-0 ${

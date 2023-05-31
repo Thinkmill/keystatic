@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 export function CodeEditorChrome({ children }: { children: ReactNode }) {
   return (
-    <div className="rounded-xl bg-sky-950 shadow-2xl w-168">
+    <div className="rounded-xl bg-sky-950 shadow-2xl w-[42rem]">
       {/* <!-- Header bar --> */}
       <div className="flex border-b border-sky-900">
         {/* <!-- Controls --> */}
