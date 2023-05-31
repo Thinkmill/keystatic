@@ -45,7 +45,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="min-h-screen">
+        <div className="min-h-screen flex flex-col">
           <HeaderNav navigationMap={navigationMap} />
           {children}
         </div>

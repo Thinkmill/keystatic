@@ -18,7 +18,7 @@ export default async function RootLayout({
   const navigationMap = await getNavigationMap();
 
   return (
-    <div className="max-w-7xl min-h-screen mx-auto">
+    <div className="max-w-7xl min-h-screen mx-auto w-full">
       <SideNav>
         {navigationMap?.map(({ groupName, items }) => (
           <NavGroup key={groupName} title={groupName}>
