@@ -18,8 +18,8 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@react-aria/focus": "^3.10.0",
-    "@react-aria/utils": "^3.14.2",
+    "@react-aria/focus": "^3.12.1",
+    "@react-aria/utils": "^3.17.0",
     "@voussoir/layout": "^0.1.3",
     "@voussoir/link": "^0.1.3",
     "@voussoir/slots": "^0.1.2",

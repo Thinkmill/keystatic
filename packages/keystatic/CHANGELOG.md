@@ -1,5 +1,25 @@
 # @keystatic/core
 
+## 0.0.105
+
+### Patch Changes
+
+- d04a6130: Fix nesting lists parsing in the document field
+- 8ba818f5: Update `@markdoc/markdoc` to `0.3.0`
+
+## 0.0.104
+
+### Patch Changes
+
+- a489421d: Add `fields.file`
+
+## 0.0.103
+
+### Patch Changes
+
+- 73c26e63: Never send the structure of `node_modules` in the tree used in local
+  mode, even if it's not gitignored
+
 ## 0.0.102
 
 ### Patch Changes

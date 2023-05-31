@@ -24,13 +24,14 @@ export function useActionButtonStyles(
 ) {
   const { prominence = 'default' } = props;
   const { isHovered, isPressed } = state;
+  const isSelected = props.isSelected || state.isSelected;
   const styleProps = useStyleProps(props);
 
   return {
     ...toDataAttributes({
       interaction: isPressed ? 'press' : isHovered ? 'hover' : undefined,
       prominence: prominence === 'default' ? undefined : prominence,
-      selected: ('isSelected' in props && props.isSelected) || undefined,
+      selected: isSelected || undefined,
       static: props.static,
     }),
     style: styleProps.style,

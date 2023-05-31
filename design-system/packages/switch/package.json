@@ -18,7 +18,7 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@react-aria/interactions": "^3.13.0",
+    "@react-aria/interactions": "^3.15.1",
     "@react-aria/switch": "^3.5.0",
     "@react-stately/toggle": "^3.4.3",
     "@react-types/switch": "^3.3.1",
