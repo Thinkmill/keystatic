@@ -1,0 +1,17 @@
+---
+title: Object field
+---
+## Example
+
+```typescript
+object({
+  name: fields.text(),
+  age: fields.integer()
+})
+```
+
+## Signature
+
+```typescript
+object<Fields extends Record<string, ComponentSchema>>(fields: Fields)
+```

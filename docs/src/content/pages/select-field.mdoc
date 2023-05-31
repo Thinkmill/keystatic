@@ -1,0 +1,14 @@
+---
+title: Select field
+---
+```typescript
+select<Option extends {
+  label: string;
+  value: string;
+}>({
+  label: string;
+  options: readonly Option[];
+  defaultValue: Option['value'];
+  description?: string;
+})
+```
