@@ -13,7 +13,7 @@ export function NavGroup({
     <div className="lg:-ml-4 pb-6">
       <h3
         id={id}
-        className="text-xs uppercase font-normal text-stone-500 mb-2 px-4"
+        className="text-xs uppercase font-normal text-neutral-500 mb-2 px-4"
       >
         {title}
       </h3>

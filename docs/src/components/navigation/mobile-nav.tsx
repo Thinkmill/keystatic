@@ -70,6 +70,7 @@ export function MobileNav({ navigationMap }: NavProps) {
             strokeWidth={1.5}
             stroke="currentColor"
             className="w-6 h-6"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -84,7 +85,7 @@ export function MobileNav({ navigationMap }: NavProps) {
       {/** Blanket */}
       <div
         onClick={closeNav}
-        className={`fixed top-0 left-0 bottom-0 right-0 bg-stone-800/[.6] z-30 transition-opacity duration-300 lg:hidden ${
+        className={`fixed top-0 left-0 bottom-0 right-0 bg-neutral-800/[.6] z-30 transition-opacity duration-300 lg:hidden ${
           navOpen
             ? 'visible opacity-100'
             : 'invisible opacity-0 lg:visible lg:opacity-100'
@@ -143,7 +144,7 @@ export function MobileNav({ navigationMap }: NavProps) {
               ))}
             </div>
 
-            <hr className="h-px my-3 mx-4 border-stone-400/20" />
+            <hr className="h-px my-3 mx-4 border-keystatic-gray" />
 
             <div className="flex flex-row items-center gap-4 justify-center px-4 pt-4">
               <SocialLinks tabIndex={navOpen ? 0 : -1} />
