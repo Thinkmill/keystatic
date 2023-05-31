@@ -23,10 +23,14 @@ export default async function Docs({ params }: { params: { slug: string } }) {
 
   return (
     <div className="grid gap-6 grid-cols-[auto] md:grid-cols-[auto,12rem]">
-      <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-extrabold sm:text-3xl">{page.title}</h1>
-        {/* @ts-expect-error Server Component */}
-        <DocumentRenderer slug={slug} document={await page.content()} />
+      <div>
+        <h1 className="text-2xl font-extrabold sm:text-3xl mb-6">
+          {page.title}
+        </h1>
+        <div className="flex flex-col gap-4">
+          {/* @ts-expect-error Server Component */}
+          <DocumentRenderer slug={slug} document={await page.content()} />
+        </div>
       </div>
       <TableOfContents headings={headings} />
     </div>
