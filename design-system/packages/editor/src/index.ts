@@ -1,5 +1,6 @@
 'use client';
 
+export { EditorListbox } from './EditorListbox';
 export { EditorPopover } from './EditorPopover';
 export {
   EditorToolbar,
