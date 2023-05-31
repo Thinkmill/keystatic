@@ -34,7 +34,9 @@ export default function EditableHero() {
       <div className="mx-auto max-w-7xl pt-12 px-6 md:py-16 flex flex-col items-center gap-10">
         <div className="w-full max-w-xl flex flex-col items-center gap-8 text-center">
           <HomePageDocumentRenderer
-            document={editorValue as DocumentRendererProps['document']}
+            document={
+              editorValue as unknown as DocumentRendererProps['document']
+            }
           />
 
           <Button className="w-full max-w-xs" href="/docs">
