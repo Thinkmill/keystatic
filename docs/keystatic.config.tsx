@@ -84,6 +84,31 @@ export const componentBlocks = {
     },
     chromeless: false,
   }),
+  tag: component({
+    preview: props => {
+      return (
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            borderRadius: '999px',
+            paddingLeft: '0.25rem',
+            paddingRight: '0.25rem',
+          }}
+        >
+          {props.fields.text.element}
+        </div>
+      );
+    },
+    label: 'Tag',
+    schema: {
+      text: fields.child({
+        kind: 'inline',
+        placeholder: 'Tag text...',
+      }),
+    },
+    chromeless: true,
+  }),
 };
 
 export default config({
