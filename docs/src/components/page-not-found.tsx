@@ -29,7 +29,6 @@ export function PageNotFound({
         <span className="font-mono bg-keystatic-gray-light px-2 py-1 rounded border border-keystatic-gray text-black">
           {path}
         </span>
-        .
       </p>
 
       <div className="flex">
