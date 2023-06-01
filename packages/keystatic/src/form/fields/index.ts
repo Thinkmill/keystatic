@@ -7,6 +7,7 @@ export { document } from './document';
 export { emptyDocument } from './emptyDocument';
 export { empty } from './empty';
 export { image } from './image';
+export { file } from './file';
 export { integer } from './integer';
 export { multiselect } from './multiselect';
 export { object } from './object';

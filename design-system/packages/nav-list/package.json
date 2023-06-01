@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/nav-list",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Render a list of navigation links.",
   "license": "MIT",
   "main": "dist/voussoir-nav-list.cjs.js",
@@ -18,15 +18,15 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@react-aria/focus": "^3.10.0",
-    "@react-aria/utils": "^3.14.2",
+    "@react-aria/focus": "^3.12.1",
+    "@react-aria/utils": "^3.17.0",
     "@voussoir/layout": "^0.1.3",
-    "@voussoir/link": "^0.1.3",
-    "@voussoir/slots": "^0.1.2",
-    "@voussoir/style": "^0.1.5",
+    "@voussoir/link": "^0.1.5",
+    "@voussoir/slots": "^0.1.3",
+    "@voussoir/style": "^0.1.6",
     "@voussoir/types": "^0.1.1",
-    "@voussoir/typography": "^0.1.4",
-    "@voussoir/utils": "^2.0.2"
+    "@voussoir/typography": "^0.1.6",
+    "@voussoir/utils": "^2.0.3"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
