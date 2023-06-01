@@ -1,5 +1,6 @@
 import { Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
+import { RootVoussoirProvider } from '@voussoir/next';
 
 import '../../styles/global.css';
 import { HeaderNav } from '../../components/navigation/header-nav';
@@ -43,7 +44,7 @@ export default async function RootLayout({
   const navigationMap = await getNavigationMap();
 
   return (
-    <html lang="en">
+    <RootVoussoirProvider fontClassName={inter.variable} locale="en-AU">
       <body className={inter.className}>
         <div className="min-h-screen">
           <HeaderNav navigationMap={navigationMap} />
@@ -51,6 +52,6 @@ export default async function RootLayout({
         </div>
       </body>
       <Analytics />
-    </html>
+    </RootVoussoirProvider>
   );
 }
