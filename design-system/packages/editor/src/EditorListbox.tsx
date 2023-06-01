@@ -6,11 +6,9 @@ import {
   CollectionBase,
   MultipleSelection,
 } from '@react-types/shared';
-import { Key, ReactElement, RefObject, useCallback, useEffect } from 'react';
+import { Key, RefObject, useEffect } from 'react';
 
-import { Icon } from '@voussoir/icon';
-import { Item, ListBoxBase, useListBoxLayout } from '@voussoir/listbox';
-import { Kbd, KbdProps, Text } from '@voussoir/typography';
+import { ListBoxBase, useListBoxLayout } from '@voussoir/listbox';
 import { BaseStyleProps } from '@voussoir/style';
 
 export type EditorListboxProps<T> = {
@@ -18,7 +16,7 @@ export type EditorListboxProps<T> = {
   scrollRef?: RefObject<HTMLElement>;
   onAction?: (key: Key) => void;
   onEscape?: () => void;
-} & Omit<CollectionBase<T>, 'children'> &
+} & CollectionBase<T> &
   AriaLabelingProps &
   MultipleSelection &
   Pick<
@@ -26,33 +24,9 @@ export type EditorListboxProps<T> = {
     'height' | 'width' | 'maxHeight' | 'maxWidth' | 'minHeight' | 'minWidth'
   >;
 
-type KbdOption = 'alt' | 'meta' | 'shift';
-type KbdOptions = KbdOption[];
-type KbdFormat = readonly [...KbdOptions, Key] | string;
-type ItemBase = {
-  description?: string;
-  icon?: ReactElement;
-  id: Key;
-  kbd?: KbdFormat;
-  label: string;
-};
-
-export function EditorListbox<T extends ItemBase>(
-  props: EditorListboxProps<T>
-) {
+export function EditorListbox<T extends object>(props: EditorListboxProps<T>) {
   let { listenerRef, onEscape, scrollRef, ...otherProps } = props;
-  let children = useCallback(
-    (item: T) => (
-      <Item key={item.id} textValue={item.label}>
-        <Text>{item.label}</Text>
-        {item.description && <Text slot="description">{item.description}</Text>}
-        {item.kbd && <Kbd {...getKbdProps(item.kbd)} />}
-        {item.icon && <Icon src={item.icon} />}
-      </Item>
-    ),
-    []
-  );
-  let state = useListState({ children, ...props });
+  let state = useListState(props);
   let layout = useListBoxLayout(state);
 
   // keyboard and selection management
@@ -98,18 +72,4 @@ export function EditorListbox<T extends ItemBase>(
       {...otherProps}
     />
   );
-}
-
-function getKbdProps(format: KbdFormat) {
-  if (typeof format === 'string') {
-    return { children: format };
-  }
-
-  let [children, ...options] = [...format].reverse();
-  let props: KbdProps = { children };
-  for (let option of options as KbdOptions) {
-    props[option] = true;
-  }
-
-  return props;
 }
