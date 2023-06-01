@@ -1,8 +1,7 @@
 import slugify from '@sindresorhus/slugify';
 import { ReactNode } from 'react';
 import { LinkIcon } from '@heroicons/react/24/outline';
-import { getTextNode } from '../utils';
-import { cx } from '../utils';
+import { cx, getTextNode } from '../utils';
 
 type HeadingProps = {
   level: 1 | 2 | 3 | 4 | 5 | 6;
