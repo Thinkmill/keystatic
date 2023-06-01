@@ -13,7 +13,6 @@ export function makeHandler(_config: APIRouteConfig) {
       clientSecret:
         _config.clientSecret ?? import.meta.env.KEYSTATIC_GITHUB_CLIENT_SECRET,
       secret: _config.secret ?? import.meta.env.KEYSTATIC_SECRET,
-      url: _config.url ?? import.meta.env.KEYSTATIC_URL,
     },
     {
       slugEnvName: 'PUBLIC_KEYSTATIC_GITHUB_APP_SLUG',

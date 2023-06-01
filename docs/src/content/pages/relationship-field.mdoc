@@ -1,0 +1,64 @@
+---
+title: Relationship field
+---
+The `relationship` field is a reference to the `slug` of a specific collection entry.
+
+To create a one-to-many relationship, wrap the `relationship` field inside an [array field](/docs/array-field).
+
+{% aside %}
+{% component-inline-prop propPath=["icon"] %}⚠️{% /component-inline-prop %}
+
+{% component-block-prop propPath=["content"] %}
+The collection string must match one of the keys used in the collections config object.
+{% /component-block-prop %}
+{% /aside %}
+
+{% aside %}
+{% component-inline-prop propPath=["icon"] %}☝️{% /component-inline-prop %}
+
+{% component-block-prop propPath=["content"] %}
+Heads up: the `relationship` field will only store a static `string` representing the `slug` of the selected collection entry.
+
+If the slug of the entry in question changes, the stored value **will not be updated**. In other words, the relationship will be broken.
+{% /component-block-prop %}
+{% /aside %}
+
+## Usage example
+
+Example of `has-one` relationship:
+
+```typescript
+country: fields.relationship({
+  label: 'Country',
+  description: 'The country this person lives in',
+  collection: 'countries'
+})
+```
+
+Example of `has-many` relationship:
+
+```typescript
+authors: fields.array(
+  fields.relationship({
+    label: 'Authors',
+    description: 'A list of authors for this post',
+    collection: 'posts'
+  }), {
+    label: 'Authors',
+    itemLabel: props => props.value
+  }
+)
+```
+
+## Type signature
+
+```typescript
+relationship({
+  label: string;
+  collection: string;
+  validation?: {
+    isRequired?: IsRequired;
+  };
+  description?: string;
+})
+```

@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/link",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Link is used for taking users to destinations, or moving from one page to another.",
   "license": "MIT",
   "main": "dist/voussoir-link.cjs.js",
@@ -24,10 +24,10 @@
     "@react-aria/link": "^3.3.5",
     "@react-aria/utils": "^3.17.0",
     "@react-types/shared": "^3.18.0",
-    "@voussoir/style": "^0.1.5",
+    "@voussoir/style": "^0.1.6",
     "@voussoir/types": "^0.1.1",
-    "@voussoir/typography": "^0.1.5",
-    "@voussoir/utils": "^2.0.2",
+    "@voussoir/typography": "^0.1.6",
+    "@voussoir/utils": "^2.0.3",
     "dedent": "^0.7.0",
     "emery": "^1.4.1"
   },

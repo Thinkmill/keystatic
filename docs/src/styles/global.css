@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #__next {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+  html {
+    @apply scroll-smooth;
+  }
+}

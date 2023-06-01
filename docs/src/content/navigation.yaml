@@ -1,0 +1,135 @@
+navGroups:
+  - groupName: Getting started
+    items:
+      - label: Introduction
+        link:
+          discriminant: page
+          value: introduction
+      - label: Automated setup
+        link:
+          discriminant: page
+          value: automated-setup-with-template
+  - groupName: Integration guides
+    items:
+      - label: Astro
+        link:
+          discriminant: page
+          value: installation-astro
+      - label: Next.js
+        link:
+          discriminant: page
+          value: installation-next-js
+      - label: Remix
+        link:
+          discriminant: page
+          value: /docs
+  - groupName: Learn Keystatic
+    items:
+      - label: Collections & Singletons
+        link:
+          discriminant: page
+          value: collections-and-singletons
+      - label: Local vs. GitHub
+        link:
+          discriminant: page
+          value: local-vs-git-hub-storage-strategy
+      - label: Reader API
+        link:
+          discriminant: page
+          value: reader-api
+      - label: Renderer API
+        link:
+          discriminant: page
+          value: renderer-api
+      - label: Organised content
+        link:
+          discriminant: page
+          value: how-keystatic-organises-your-content
+      - label: FAQ
+        link:
+          discriminant: page
+          value: frequently-asked-questions
+  - groupName: Fields API
+    items:
+      - label: Text
+        link:
+          discriminant: page
+          value: text-field
+      - label: Integer
+        link:
+          discriminant: page
+          value: integer-field
+      - label: URL
+        link:
+          discriminant: page
+          value: url-field
+      - label: Path Reference
+        link:
+          discriminant: page
+          value: path-reference-field
+      - label: Relationship
+        link:
+          discriminant: page
+          value: relationship-field
+      - label: Select
+        link:
+          discriminant: page
+          value: select-field
+      - label: Slug
+        link:
+          discriminant: page
+          value: slug-field
+      - label: Multi-Select
+        link:
+          discriminant: page
+          value: multi-select-field
+      - label: Checkbox
+        link:
+          discriminant: page
+          value: checkbox-field
+      - label: Image
+        link:
+          discriminant: page
+          value: image-field
+      - label: Date
+        link:
+          discriminant: page
+          value: date-field
+      - label: Empty
+        link:
+          discriminant: page
+          value: empty-field
+      - label: Child
+        link:
+          discriminant: page
+          value: child-field
+      - label: Object
+        link:
+          discriminant: page
+          value: object-field
+      - label: Conditional
+        link:
+          discriminant: page
+          value: conditional-field
+      - label: Document
+        link:
+          discriminant: page
+          value: document-field
+      - label: Array
+        link:
+          discriminant: page
+          value: array-field
+  - groupName: Community
+    items:
+      - label: GitHub Discussions
+        link:
+          discriminant: url
+          value: https://github.com/Thinkmill/keystatic/discussions
+      - label: Mastodon
+        link:
+          discriminant: url
+          value: https://fosstodon.org/@keystatic
+      - label: Twitter
+        link:
+          discriminant: url
+          value: https://twitter.com/thekeystatic

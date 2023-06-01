@@ -14,7 +14,12 @@ export function makeAPIRouteHandler(_config: APIRouteConfig) {
     req: NextApiRequest,
     res: NextApiResponse
   ) {
-    const parsedUrl = new URL(req.url || '', 'http://localhost');
+    const host = req.headers['x-forwarded-host'] || req.headers['host'];
+    const proto =
+      req.headers['x-forwarded-proto'] || (req.socket as any).encrypted
+        ? 'https'
+        : 'http';
+    const parsedUrl = new URL(`${proto}://${host}${req.url}`);
     if (
       parsedUrl.pathname.startsWith('/api/keystatic/reader-refresh/') &&
       process.env.NODE_ENV === 'development'
@@ -71,7 +76,7 @@ export function makeAPIRouteHandler(_config: APIRouteConfig) {
       },
       json: async () => req.body,
       method: req.method!,
-      url: req.url!,
+      url: parsedUrl.toString(),
     });
 
     if (headers) {

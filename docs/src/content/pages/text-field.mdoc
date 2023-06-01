@@ -1,0 +1,32 @@
+---
+title: Text field
+---
+The `text` field is used to store a string.
+
+For longer strings, you can add the `multiline: true` option, which will convert the default text input into a `textarea`.
+
+## Usage example
+
+```typescript
+quote: fields.text({
+  label: 'Quote',
+  multiline: true
+})
+```
+
+## Type signature
+
+```typescript
+text({
+  label: string;
+  defaultValue?: string | (() => string) | undefined;
+  description?: string | undefined;
+  validation?: {
+    length?: {
+      min?: number | undefined;
+      max?: number | undefined;
+    } | undefined;
+  } | undefined;
+  multiline?: boolean | undefined;
+})
+```
