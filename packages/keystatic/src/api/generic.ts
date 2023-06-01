@@ -120,17 +120,11 @@ export function makeGenericAPIRouteHandler(
     };
   }
 
-  const missingKeys = (['clientId', 'clientSecret', 'secret'] as const).filter(
-    x => !_config2[x]
-  );
-
-  if (
-    !_config2.clientId ||
-    !_config2.clientSecret ||
-    !_config2.secret ||
-    !_config2.config
-  ) {
+  if (!_config2.clientId || !_config2.clientSecret || !_config2.secret) {
     if (process.env.NODE_ENV !== 'development') {
+      const missingKeys = (
+        ['clientId', 'clientSecret', 'secret'] as const
+      ).filter(x => !_config2[x]);
       throw new Error(
         `Missing required config in Keystatic API setup when using the 'github' storage mode:\n${missingKeys
           .map(
