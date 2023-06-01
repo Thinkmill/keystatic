@@ -1,10 +1,9 @@
-import { createReader } from '@keystatic/core/reader';
 import { TableOfContents } from '../../../../components/navigation/table-of-contents';
 import DocumentRenderer from '../../../../components/document-renderer';
-import keystaticConfig from '../../../../../keystatic.config';
 import { notFound } from 'next/navigation';
+import { reader } from '../../../../utils/reader';
 
-const reader = createReader('', keystaticConfig);
+export const dynamic = 'error';
 
 export default async function Docs({ params }: { params: { slug: string } }) {
   const { slug } = params;
