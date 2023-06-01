@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/style",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Styling approaches in Voussoir.",
   "license": "MIT",
   "main": "dist/voussoir-style.cjs.js",
@@ -23,7 +23,7 @@
     "@react-aria/ssr": "^3.4.1",
     "@react-aria/utils": "^3.17.0",
     "@voussoir/ssr": "^0.2.1",
-    "@voussoir/utils": "^2.0.2",
+    "@voussoir/utils": "^2.0.3",
     "emery": "^1.4.1",
     "facepaint": "^1.2.1",
     "lodash": "^4.17.21"
