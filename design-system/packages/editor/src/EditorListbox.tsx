@@ -1,93 +1,64 @@
-import {
-  ListKeyboardDelegate,
-  useSelectableCollection,
-} from '@react-aria/selection';
+import { useSelectableCollection } from '@react-aria/selection';
 import { chain } from '@react-aria/utils';
-import { useSingleSelectListState } from '@react-stately/list';
+import { useListState } from '@react-stately/list';
 import {
   AriaLabelingProps,
   CollectionBase,
-  SingleSelection,
+  MultipleSelection,
 } from '@react-types/shared';
-import { Key, RefObject, useCallback, useEffect, useMemo, useRef } from 'react';
+import { Key, ReactElement, RefObject, useCallback, useEffect } from 'react';
 
+import { Icon } from '@voussoir/icon';
 import { Item, ListBoxBase, useListBoxLayout } from '@voussoir/listbox';
-import { Kbd, Text } from '@voussoir/typography';
+import { Kbd, KbdProps, Text } from '@voussoir/typography';
+import { BaseStyleProps } from '@voussoir/style';
 
 export type EditorListboxProps<T> = {
   listenerRef: RefObject<HTMLElement>;
   scrollRef?: RefObject<HTMLElement>;
+  onAction?: (key: Key) => void;
   onEscape?: () => void;
 } & Omit<CollectionBase<T>, 'children'> &
   AriaLabelingProps &
-  SingleSelection;
+  MultipleSelection &
+  Pick<
+    BaseStyleProps,
+    'height' | 'width' | 'maxHeight' | 'maxWidth' | 'minHeight' | 'minWidth'
+  >;
 
+type KbdOption = 'alt' | 'meta' | 'shift';
+type KbdOptions = KbdOption[];
+type KbdFormat = readonly [...KbdOptions, Key] | string;
 type ItemBase = {
-  label: string;
   description?: string;
-  kbd?:
-    | string
-    | { alt?: boolean; meta?: boolean; shift?: boolean; text: string };
+  icon?: ReactElement;
   id: Key;
+  kbd?: KbdFormat;
+  label: string;
 };
 
 export function EditorListbox<T extends ItemBase>(
   props: EditorListboxProps<T>
 ) {
-  let {
-    items,
-    disabledKeys,
-    defaultSelectedKey,
-    listenerRef,
-    onEscape,
-    onSelectionChange,
-    scrollRef,
-    selectedKey,
-    ...ariaProps
-  } = props;
+  let { listenerRef, onEscape, scrollRef, ...otherProps } = props;
   let children = useCallback(
     (item: T) => (
       <Item key={item.id} textValue={item.label}>
         <Text>{item.label}</Text>
         {item.description && <Text slot="description">{item.description}</Text>}
-        {item.kbd &&
-          (typeof item.kbd === 'string' ? (
-            <Kbd>{item.kbd}</Kbd>
-          ) : (
-            <Kbd alt={item.kbd.alt} meta={item.kbd.meta} shift={item.kbd.shift}>
-              {item.kbd.text}
-            </Kbd>
-          ))}
+        {item.kbd && <Kbd {...getKbdProps(item.kbd)} />}
+        {item.icon && <Icon src={item.icon} />}
       </Item>
     ),
     []
   );
-  let state = useSingleSelectListState({
-    items,
-    children,
-    disabledKeys,
-    defaultSelectedKey,
-    onSelectionChange,
-    selectedKey,
-  });
+  let state = useListState({ children, ...props });
   let layout = useListBoxLayout(state);
 
   // keyboard and selection management
-  let listBoxRef = useRef<HTMLDivElement>(null);
-  let keyboardDelegate = useMemo(
-    () =>
-      new ListKeyboardDelegate(
-        // @ts-expect-error
-        state.collection,
-        state.disabledKeys,
-        listBoxRef
-      ),
-    [state.collection, state.disabledKeys, listBoxRef]
-  );
   let { collectionProps } = useSelectableCollection({
-    keyboardDelegate,
+    keyboardDelegate: layout,
     ref: listenerRef,
-    scrollRef,
     selectionManager: state.selectionManager,
     disallowEmptySelection: true,
     disallowTypeAhead: true,
@@ -98,7 +69,8 @@ export function EditorListbox<T extends ItemBase>(
   let onKeyDown = (e: KeyboardEvent) => {
     switch (e.key) {
       case 'Enter':
-        state.setSelectedKey(state.selectionManager.focusedKey);
+        state.selectionManager.select(state.selectionManager.focusedKey);
+        props.onAction?.(state.selectionManager.focusedKey);
         break;
       case 'Escape':
         onEscape?.();
@@ -116,7 +88,6 @@ export function EditorListbox<T extends ItemBase>(
 
   return (
     <ListBoxBase
-      ref={listBoxRef}
       layout={layout}
       state={state}
       autoFocus="first"
@@ -124,7 +95,21 @@ export function EditorListbox<T extends ItemBase>(
       focusOnPointerEnter
       shouldUseVirtualFocus
       shouldFocusWrap
-      {...ariaProps}
+      {...otherProps}
     />
   );
+}
+
+function getKbdProps(format: KbdFormat) {
+  if (typeof format === 'string') {
+    return { children: format };
+  }
+
+  let [children, ...options] = [...format].reverse();
+  let props: KbdProps = { children };
+  for (let option of options as KbdOptions) {
+    props[option] = true;
+  }
+
+  return props;
 }
