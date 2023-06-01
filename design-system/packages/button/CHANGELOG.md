@@ -1,5 +1,24 @@
 # @voussoir/button
 
+## 0.2.0
+
+### Minor Changes
+
+- 6a33f487: New `ToggleButton` exported from "@voussoir/button" package.
+
+### Patch Changes
+
+- 30298e81: Update to latest react-aria packages:
+  - @react-aria/focus
+  - @react-aria/interactions
+  - @react-aria/utils
+- Updated dependencies [30298e81]
+  - @voussoir/typography@0.1.6
+  - @voussoir/slots@0.1.3
+  - @voussoir/style@0.1.6
+  - @voussoir/utils@2.0.3
+  - @voussoir/link@0.1.5
+
 ## 0.1.8
 
 ### Patch Changes
