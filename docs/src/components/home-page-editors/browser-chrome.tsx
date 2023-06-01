@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 export function BrowserChrome({ children }: { children: ReactNode }) {
   return (
-    <div className="h-[31rem] rounded-xl border border-neutral-200 bg-neutral-50 shadow-2xl w-[42rem]">
+    <div className="h-[31rem] rounded-xl border border-neutral-200 bg-neutral-50 shadow-2xl">
       {/* <!-- Header bar --> */}
       <div className="grid grid-cols-7 px-2 pb-3 pt-2">
         {/* <!-- Controls --> */}
@@ -18,7 +18,7 @@ export function BrowserChrome({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      <div className="px-3 pb-3">{children}</div>
+      <div className="px-3 pb-3 h-[90%]">{children}</div>
     </div>
   );
 }

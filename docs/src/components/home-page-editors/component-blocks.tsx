@@ -7,9 +7,9 @@ import { PreviewHeading1 } from './preview-heading-1';
 import { Heading1 } from './heading-1';
 
 export const componentBlocks = {
-  'fancy-heading': component({
+  'hilight-heading': component({
     preview: PreviewHeading1,
-    label: 'Fancy heading',
+    label: 'Hilight heading',
     schema: {
       plainLine1: fields.child({
         kind: 'block',
@@ -30,9 +30,9 @@ export const componentBlocks = {
         },
         links: 'inherit',
       }),
-      fancy: fields.child({
+      hilight: fields.child({
         kind: 'inline',
-        placeholder: 'Fancy text...',
+        placeholder: 'Hilighted text...',
         formatting: {
           inlineMarks: 'inherit',
           softBreaks: 'inherit',
@@ -47,7 +47,7 @@ export const componentBlocks = {
 export const componentBlockRenderers: InferRenderersForComponentBlocks<
   typeof componentBlocks
 > = {
-  'fancy-heading': props => {
+  'hilight-heading': props => {
     return <Heading1 {...props} />;
   },
 };

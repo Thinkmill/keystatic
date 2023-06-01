@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 export function CodeEditorChrome({ children }: { children: ReactNode }) {
   return (
-    <div className="rounded-xl bg-sky-950 shadow-2xl w-[42rem]">
+    <div className="rounded-xl bg-sky-950 shadow-2xl">
       {/* <!-- Header bar --> */}
       <div className="flex border-b border-sky-900">
         {/* <!-- Controls --> */}
@@ -13,7 +13,7 @@ export function CodeEditorChrome({ children }: { children: ReactNode }) {
         </div>
 
         {/* <!-- File tab --> */}
-        <div className="flex items-center overflow-hidden px-2 py-1 text-center text-sm text-sky-100 -mb-px border-l border-r border-sky-900">
+        <div className="flex items-center overflow-hidden px-2 py-1 text-center text-sm text-sky-100 -mb-px border-l border-r border-x-sky-900 border-t-sky-900 border-b border-b-sky-950">
           content.mdoc
         </div>
       </div>

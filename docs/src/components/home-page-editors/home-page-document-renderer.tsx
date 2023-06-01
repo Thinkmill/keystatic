@@ -20,15 +20,18 @@ export function HomePageDocumentRenderer({ document }: DocumentRendererProps) {
 const renderers: DocumentRendererProps['renderers'] = {
   block: {
     heading: ({ level, children }) => (
-      <Heading level={level} anchor>
-        {children}
-      </Heading>
+      <Heading level={level}>{children}</Heading>
     ),
 
     paragraph: ({ children, textAlign }) => (
-      <p className="text-md text-keystatic-gray-dark" style={{ textAlign }}>
+      <p className="text-lg text-keystatic-gray-dark" style={{ textAlign }}>
         {children}
       </p>
+    ),
+  },
+  inline: {
+    bold: ({ children }) => (
+      <strong className="font-semibold">{children}</strong>
     ),
   },
 };

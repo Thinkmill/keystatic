@@ -1,6 +1,7 @@
 import slugify from '@sindresorhus/slugify';
 import { ReactNode } from 'react';
 import { LinkIcon } from '@heroicons/react/24/outline';
+import { getTextNode } from '../utils';
 
 type HeadingProps = {
   level: 1 | 2 | 3 | 4 | 5 | 6;
@@ -47,22 +48,3 @@ export default function Heading({ level, children, anchor }: HeadingProps) {
 }
 
 const getSlug = (node: ReactNode) => slugify(getTextNode(node));
-
-const getTextNode = (node: ReactNode): string => {
-  if (!node) return '';
-  if (typeof node === 'string') return node;
-  if (typeof node === 'number') return String(node);
-  // Node object expected for Headings
-  if (
-    typeof node === 'object' &&
-    'text' in node &&
-    typeof node.text === 'string'
-  ) {
-    return node.text;
-  }
-  if (node instanceof Array) return node.map(getTextNode).join('');
-  if (typeof node === 'object' && 'props' in node && 'node' in node.props) {
-    return getTextNode(node.props.node);
-  }
-  return '';
-};

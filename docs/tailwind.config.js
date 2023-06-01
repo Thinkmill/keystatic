@@ -38,49 +38,44 @@ module.exports = {
         card: '0px 16px 48px 0px rgba(0, 0, 0, 0.08)',
       },
       keyframes: {
-        bringToFront: {
+        bringCodeEditorToFront: {
           '0%': {
-            zIndex: -1,
-            left: '10%',
-            top: '1%',
-            transform: 'scale(0.9)',
-          },
-          '49%': {
-            zIndex: -1,
-            left: 0,
-          },
-          '50%': {
             zIndex: 3,
-            left: 0,
-            top: '1%',
+            filter: 'brightness(80%)',
           },
           '100%': {
             zIndex: 3,
-            left: 0,
-            transform: 'scale(1)',
+            filter: 'brightness(100%)',
           },
         },
-        sendToBack: {
+        sendCodeEditorToBack: {
           '100%': {
             zIndex: -1,
-            left: '10%',
-            top: '1%',
-            transform: 'scale(0.9)',
-          },
-          '50%': {
-            zIndex: -1,
-            left: 0,
-          },
-          '49%': {
-            zIndex: 3,
-            left: 0,
-            top: '1%',
+            filter: 'brightness(80%)',
           },
           '0%': {
+            zIndex: -1,
+            filter: 'brightness(100%)',
+          },
+        },
+        bringBrowserToFront: {
+          '0%': {
             zIndex: 3,
-            left: '10%',
-            top: '1%',
-            transform: 'scale(1)',
+            filter: 'brightness(95%)',
+          },
+          '100%': {
+            zIndex: 3,
+            filter: 'brightness(100%)',
+          },
+        },
+        sendBrowserToBack: {
+          '100%': {
+            zIndex: -1,
+            filter: 'brightness(95%)',
+          },
+          '0%': {
+            zIndex: -1,
+            filter: 'brightness(100%)',
           },
         },
       },

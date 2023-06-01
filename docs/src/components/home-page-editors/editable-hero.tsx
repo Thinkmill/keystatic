@@ -10,23 +10,14 @@ import { fromMarkdoc } from '../../../../packages/keystatic/src/form/fields/docu
 import Markdoc from '@markdoc/markdoc';
 import { componentBlocks } from './component-blocks';
 
-export const initialMarkdoc = `{% fancy-heading %}
-{% component-block-prop propPath=["plainLine1"] %}
-Content Management
-{% /component-block-prop %}
-
-{% component-inline-prop propPath=["plainLine2"] %}for your {% /component-inline-prop %}
-
-{% component-inline-prop propPath=["fancy"] %}Codebase{% /component-inline-prop %}
-{% /fancy-heading %}
-
-**A new tool that makes Markdown, JSON and YAML content in your codebase editable by humans.**
-`;
-
-const initial = fromMarkdoc(Markdoc.parse(initialMarkdoc), componentBlocks);
-
-export default function EditableHero() {
-  const [editorValue, setEditorValue] = useState(initial);
+export default function EditableHero({
+  initialMarkdoc,
+}: {
+  initialMarkdoc: string;
+}) {
+  const [ksEditorValue, setKsEditorValue] = useState(
+    fromMarkdoc(Markdoc.parse(initialMarkdoc), componentBlocks)
+  );
 
   return (
     <section className="relative overflow-hidden bg-white">
@@ -34,7 +25,7 @@ export default function EditableHero() {
         <div className="w-full max-w-xl flex flex-col items-center gap-8 text-center">
           <HomePageDocumentRenderer
             document={
-              editorValue as unknown as DocumentRendererProps['document']
+              ksEditorValue as unknown as DocumentRendererProps['document']
             }
           />
 
@@ -82,8 +73,9 @@ export default function EditableHero() {
         </p>
 
         <HomePageEditors
-          editorValue={editorValue}
-          setEditorValue={setEditorValue}
+          initialMarkdoc={initialMarkdoc}
+          ksEditorValue={ksEditorValue}
+          setKsEditorValue={setKsEditorValue}
         />
       </div>
 

@@ -14,3 +14,7 @@
     @apply scroll-smooth;
   }
 }
+
+:root {
+  --font-inter: --var(Inter var);
+}
