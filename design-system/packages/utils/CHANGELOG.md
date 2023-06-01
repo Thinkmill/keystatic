@@ -1,5 +1,16 @@
 # @voussoir/utils
 
+## 2.0.3
+
+### Patch Changes
+
+- 30298e81: Update to latest react-aria packages:
+  - @react-aria/focus
+  - @react-aria/interactions
+  - @react-aria/utils
+- Updated dependencies [30298e81]
+  - @voussoir/style@0.1.6
+
 ## 2.0.2
 
 ### Patch Changes

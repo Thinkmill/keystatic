@@ -1,5 +1,14 @@
 # localization
 
+## 0.1.75
+
+### Patch Changes
+
+- Updated dependencies [618ba4aa]
+- Updated dependencies [30298e81]
+  - @keystatic/core@0.0.106
+  - @keystatic/next@0.0.8
+
 ## 0.1.74
 
 ### Patch Changes
