@@ -11,7 +11,8 @@ type NavItemProps = {
   current?: boolean;
   title?: string;
   tabIndex?: number;
-  comingSoon?: string;
+  comingSoon?: boolean;
+  comingSoonBadgeLabel?: string;
 };
 
 export function NavItem({
@@ -21,6 +22,7 @@ export function NavItem({
   title,
   tabIndex,
   comingSoon,
+  comingSoonBadgeLabel,
 }: NavItemProps) {
   const pathname = usePathname();
   const isCurrentPage = href === pathname;
@@ -37,7 +39,7 @@ export function NavItem({
 
   return (
     <li className="relative" aria-current={isCurrentPage ? 'page' : false}>
-      {!!comingSoon ? (
+      {comingSoon ? (
         <div
           className={cx(
             styleShared,
@@ -45,9 +47,11 @@ export function NavItem({
           )}
         >
           {label}
-          <div className="px-1 py-0.5 rounded bg-amber-100 text-amber-800/80 font-medium text-[0.6875rem] leading-none uppercase self-start">
-            {comingSoon}
-          </div>
+          {comingSoonBadgeLabel && (
+            <div className="px-1 py-0.5 rounded bg-amber-100 text-amber-800/80 font-medium text-[0.6875rem] leading-none uppercase self-start">
+              {comingSoonBadgeLabel}
+            </div>
+          )}
         </div>
       ) : (
         <Link href={href} legacyBehavior>
