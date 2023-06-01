@@ -115,14 +115,14 @@ storiesOf('Editor/Listbox', module)
             reference={triggerRef}
             placement="bottom-start"
             adaptToViewport="stretch"
+            minHeight="alias.singleLineWidth"
           >
             <EditorListbox
               aria-label="popover example"
-              items={basicItems}
+              items={complexItems[0].children}
               children={childRenderer}
               listenerRef={listenerRef}
-              maxHeight="inherit"
-              width="alias.singleLineWidth"
+              UNSAFE_style={{ width: 320 }}
             />
           </EditorPopover>
         )}
@@ -245,7 +245,7 @@ let complexItems = [
       {
         id: 'heading-3',
         label: 'Heading 3',
-        description: 'Use this for sub-sections and group headings',
+        description: 'Use this for sub-sections',
         kbd: ['meta', 'alt', '3'],
         icon: heading3Icon,
       },

@@ -6,9 +6,9 @@ import {
   CollectionBase,
   MultipleSelection,
 } from '@react-types/shared';
-import { Key, RefObject, useEffect } from 'react';
+import { Key, RefObject, useEffect, useRef } from 'react';
 
-import { ListBoxBase, useListBoxLayout } from '@voussoir/listbox';
+import { ListBoxBase, listStyles, useListBoxLayout } from '@voussoir/listbox';
 import { BaseStyleProps } from '@voussoir/style';
 
 export type EditorListboxProps<T> = {
@@ -21,7 +21,14 @@ export type EditorListboxProps<T> = {
   MultipleSelection &
   Pick<
     BaseStyleProps,
-    'height' | 'width' | 'maxHeight' | 'maxWidth' | 'minHeight' | 'minWidth'
+    | 'height'
+    | 'width'
+    | 'maxHeight'
+    | 'maxWidth'
+    | 'minHeight'
+    | 'minWidth'
+    | 'UNSAFE_className'
+    | 'UNSAFE_style'
   >;
 
 export function EditorListbox<T extends object>(props: EditorListboxProps<T>) {
@@ -30,9 +37,11 @@ export function EditorListbox<T extends object>(props: EditorListboxProps<T>) {
   let layout = useListBoxLayout(state);
 
   // keyboard and selection management
+  let listboxRef = useRef<HTMLDivElement>(null);
   let { collectionProps } = useSelectableCollection({
     keyboardDelegate: layout,
     ref: listenerRef,
+    scrollRef: scrollRef ?? listboxRef,
     selectionManager: state.selectionManager,
     disallowEmptySelection: true,
     disallowTypeAhead: true,
@@ -62,13 +71,14 @@ export function EditorListbox<T extends object>(props: EditorListboxProps<T>) {
 
   return (
     <ListBoxBase
+      ref={listboxRef}
       layout={layout}
       state={state}
       autoFocus="first"
-      height="inherit"
-      focusOnPointerEnter
+      // focusOnPointerEnter
       shouldUseVirtualFocus
       shouldFocusWrap
+      UNSAFE_className={listStyles}
       {...otherProps}
     />
   );
