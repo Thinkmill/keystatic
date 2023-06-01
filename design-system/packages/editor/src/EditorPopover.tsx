@@ -118,7 +118,7 @@ export function getMiddleware(
       size({
         apply({ elements, availableHeight }) {
           Object.assign(elements.floating.style, {
-            maxHeight: `${Math.min(availableHeight, DIALOG_MAX_HEIGHT)}px`,
+            maxHeight: `${availableHeight}px`,
           });
         },
         padding: DEFAULT_OFFSET,
@@ -137,8 +137,6 @@ export function getMiddleware(
 // Styled components
 // ------------------------------
 
-const DIALOG_MAX_HEIGHT = 440;
-
 export const DialogElement = forwardRef<
   HTMLDivElement,
   HTMLProps<HTMLDivElement>
@@ -156,7 +154,6 @@ export const DialogElement = forwardRef<
           boxShadow: `${tokenSchema.size.shadow.medium} ${tokenSchema.color.shadow.regular}`,
           boxSizing: 'content-box', // resolves measurement/scroll issues related to border
           minHeight: tokenSchema.size.element.regular,
-          maxHeight: DIALOG_MAX_HEIGHT, // TODO: component token?
           minWidth: tokenSchema.size.element.regular,
           outline: 0,
         }),
