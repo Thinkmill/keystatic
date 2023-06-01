@@ -8,6 +8,7 @@ type ButtonProps = {
   href?: string;
   isLoading?: boolean;
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
+  hardNavigation?: boolean;
 } & AllHTMLAttributes<HTMLButtonElement | HTMLAnchorElement>;
 
 const baseClasses =
@@ -25,17 +26,27 @@ export default function Button({
   href,
   isLoading = false,
   children,
+  hardNavigation = false,
   className = '',
   ...props
 }: ButtonProps) {
   return href ? (
-    <Link
-      href={href}
-      {...props}
-      className={cx(baseClasses, className, impactClasses[impact])}
-    >
-      {children}
-    </Link>
+    !hardNavigation ? (
+      <Link
+        href={href}
+        {...props}
+        className={cx(baseClasses, className, impactClasses[impact])}
+      >
+        {children}
+      </Link>
+    ) : (
+      <a
+        href={href}
+        className={cx(baseClasses, className, impactClasses[impact])}
+      >
+        {children}
+      </a>
+    )
   ) : (
     <button
       {...props}

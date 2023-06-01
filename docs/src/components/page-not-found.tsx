@@ -36,6 +36,7 @@ export function PageNotFound({
           impact="light"
           className=""
           href={backTo === 'docs' ? '/docs' : '/'}
+          hardNavigation={backTo === 'docs' ? false : true}
         >
           Back to {backTo === 'docs' ? 'Docs' : 'Home'}
         </Button>

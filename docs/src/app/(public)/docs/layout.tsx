@@ -1,4 +1,3 @@
-import '../../../styles/global.css';
 import { SideNav } from '../../../components/navigation/side-nav';
 import { NavGroup } from '../../../components/navigation/nav-group';
 import { NavItem } from '../../../components/navigation/nav-item';
