@@ -13,6 +13,7 @@ export type NavProps = {
       label: string;
       href: string;
       title: string | undefined;
+      comingSoon: string;
     }[];
   }[];
 };

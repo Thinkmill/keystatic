@@ -21,8 +21,8 @@ navGroups:
           value: installation-next-js
       - label: Remix
         link:
-          discriminant: page
-          value: /docs
+          discriminant: coming-soon
+          value: Soon
   - groupName: Learn Keystatic
     items:
       - label: Collections & Singletons

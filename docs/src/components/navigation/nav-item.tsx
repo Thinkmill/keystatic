@@ -11,9 +11,17 @@ type NavItemProps = {
   current?: boolean;
   title?: string;
   tabIndex?: number;
+  comingSoon?: string;
 };
 
-export function NavItem({ label, href, level, title, tabIndex }: NavItemProps) {
+export function NavItem({
+  label,
+  href,
+  level,
+  title,
+  tabIndex,
+  comingSoon,
+}: NavItemProps) {
   const pathname = usePathname();
   const isCurrentPage = href === pathname;
 
@@ -22,23 +30,40 @@ export function NavItem({ label, href, level, title, tabIndex }: NavItemProps) {
   }`;
 
   const styleIdle =
-    'hover:bg-keystatic-gray-light active:bg-keystatic-gray font-medium text-neutral-600';
+    'font-medium text-neutral-600 hover:bg-keystatic-gray-light active:bg-keystatic-gray';
 
   const styleCurrent =
     'bg-keystatic-gray text-keystatic-gray-dark font-semibold before:block before:absolute before:inset-y-1 before:-inset-x-2 before:bg-keystatic-gray-dark before:w-1 before:rounded before:transition-all';
 
   return (
     <li className="relative" aria-current={isCurrentPage ? 'page' : false}>
-      <Link href={href} legacyBehavior>
-        <a
-          className={cx(styleShared, isCurrentPage ? styleCurrent : styleIdle)}
-          href={href}
-          title={title}
-          tabIndex={tabIndex}
+      {!!comingSoon ? (
+        <div
+          className={cx(
+            styleShared,
+            'inline-flex gap-1 items-baseline text-neutral-500'
+          )}
         >
           {label}
-        </a>
-      </Link>
+          <div className="px-1 py-0.5 rounded bg-amber-100 text-amber-800/80 font-medium text-[0.6875rem] leading-none uppercase self-start">
+            {comingSoon}
+          </div>
+        </div>
+      ) : (
+        <Link href={href} legacyBehavior>
+          <a
+            className={cx(
+              styleShared,
+              isCurrentPage ? styleCurrent : styleIdle
+            )}
+            href={href}
+            title={title}
+            tabIndex={tabIndex}
+          >
+            {label}
+          </a>
+        </Link>
+      )}
     </li>
   );
 }
