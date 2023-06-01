@@ -1,6 +1,19 @@
 ---
 title: Date field
 ---
+The `date` field stores a Date string, collected from an `<input type="date">` form field.
+
+## Usage example
+
+```typescript
+date: fields.date({
+  label: 'Event date',
+  description: 'The date of the event'
+})
+```
+
+## Type signature
+
 ```typescript
 date({
   label: string;
