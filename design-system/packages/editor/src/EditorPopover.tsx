@@ -17,6 +17,7 @@ import {
   limitShift,
   offset,
   shift,
+  size,
   useFloating,
   useInteractions,
   useRole,
@@ -27,7 +28,11 @@ export type EditorPopoverProps = {
   children: ReactNode;
   reference: ReferenceElement;
   placement?: Placement;
-  sticky?: boolean;
+  /**
+   * How the popover should adapt when constrained by available space in the viewport.
+   * @default 'flip'
+   */
+  adaptToViewport?: 'flip' | 'stick' | 'stretch';
 };
 
 export type EditorPopoverRef = { context: ContextData; update: () => void };
@@ -77,9 +82,9 @@ export const DEFAULT_OFFSET = 8;
 export function getMiddleware(
   props: EditorPopoverProps
 ): Array<Middleware | null | undefined | false> {
-  const { sticky } = props;
+  const { adaptToViewport } = props;
 
-  if (sticky) {
+  if (adaptToViewport === 'stick') {
     return [
       offset(DEFAULT_OFFSET),
       shift({
@@ -90,6 +95,21 @@ export function getMiddleware(
             crossAxis: rects.floating.height,
           }),
         }),
+      }),
+    ];
+  }
+  if (adaptToViewport === 'stretch') {
+    return [
+      flip(),
+      offset(DEFAULT_OFFSET),
+      size({
+        apply({ elements, availableHeight }) {
+          Object.assign(elements.floating.style, {
+            maxHeight: `${availableHeight}px`,
+            // minWidth: `${rects.reference.width}px`,
+          });
+        },
+        padding: DEFAULT_OFFSET,
       }),
     ];
   }
