@@ -1,6 +1,7 @@
 import Prism from '../prism';
 
 const languages = [
+  { label: 'Plain text', value: 'plain' },
   { label: 'C', value: 'c' },
   { label: 'C++', value: 'cpp' },
   { label: 'Arduino', value: 'arduino' },
@@ -61,11 +62,12 @@ const languagesToAliases = new Map(
   languages.map(lang => [lang.value, [] as string[]])
 );
 
+languagesToAliases.set('plain', ['plain']);
+
 for (const [alias, canonicalName] of aliasesToCanonicalName) {
   languagesToAliases.get(canonicalName)!.push(alias);
 }
 export const languagesWithAliases = [
-  { label: 'Plain text', value: 'plain', aliases: [] },
   ...[...languagesToAliases].map(([canonicalName, aliases]) => ({
     label: canonicalNameToLabel.get(canonicalName)!,
     value: canonicalName,

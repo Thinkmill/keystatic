@@ -1,6 +1,11 @@
 'use client';
 
-export { EditorListbox } from './EditorListbox';
+export {
+  EditorListbox,
+  useEditorListbox,
+  type EditorListboxProps,
+} from './EditorListbox';
+export type { ReferenceElement, VirtualElement } from '@floating-ui/react';
 export { Item, Section } from '@voussoir/listbox';
 export { EditorPopover } from './EditorPopover';
 export {

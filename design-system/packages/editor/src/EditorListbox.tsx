@@ -31,7 +31,9 @@ export type EditorListboxProps<T> = {
     | 'UNSAFE_style'
   >;
 
-export function EditorListbox<T extends object>(props: EditorListboxProps<T>) {
+export function useEditorListbox<T extends object>(
+  props: EditorListboxProps<T>
+) {
   let { listenerRef, onEscape, scrollRef, ...otherProps } = props;
   let state = useListState(props);
   let layout = useListBoxLayout(state);
@@ -54,6 +56,7 @@ export function EditorListbox<T extends object>(props: EditorListboxProps<T>) {
       case 'Enter':
         state.selectionManager.select(state.selectionManager.focusedKey);
         props.onAction?.(state.selectionManager.focusedKey);
+        e.preventDefault();
         break;
       case 'Escape':
         onEscape?.();
@@ -62,24 +65,32 @@ export function EditorListbox<T extends object>(props: EditorListboxProps<T>) {
   };
 
   let keydownListener = chain(onKeyDown, collectionProps.onKeyDown);
+  return {
+    keydownListener,
+    listbox: (
+      <ListBoxBase
+        ref={listboxRef}
+        layout={layout}
+        state={state}
+        autoFocus="first"
+        // focusOnPointerEnter
+        shouldUseVirtualFocus
+        shouldFocusWrap
+        UNSAFE_className={listStyles}
+        {...otherProps}
+      />
+    ),
+  };
+}
+
+export function EditorListbox<T extends object>(props: EditorListboxProps<T>) {
+  const { keydownListener, listbox } = useEditorListbox(props);
 
   useEffect(() => {
-    let domNode = listenerRef.current;
+    let domNode = props.listenerRef.current;
     domNode?.addEventListener('keydown', keydownListener);
     return () => domNode?.removeEventListener('keydown', keydownListener);
-  }, [keydownListener, listenerRef]);
+  }, [keydownListener, props.listenerRef]);
 
-  return (
-    <ListBoxBase
-      ref={listboxRef}
-      layout={layout}
-      state={state}
-      autoFocus="first"
-      // focusOnPointerEnter
-      shouldUseVirtualFocus
-      shouldFocusWrap
-      UNSAFE_className={listStyles}
-      {...otherProps}
-    />
-  );
+  return listbox;
 }

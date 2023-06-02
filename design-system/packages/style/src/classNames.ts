@@ -1,5 +1,5 @@
 import { cx, ClassNamesArg } from '@emotion/css';
-import { warning } from 'emery';
+// import { warning } from 'emery';
 
 export const classNamePrefix = 'ksv';
 export const resetClassName = voussoirClassName('reset');
@@ -47,7 +47,7 @@ export class ClassList extends Map {
   }
 
   selector(element: string) {
-    warning(this.has(element), `ClassList: "${element}" is not declared.`);
+    // warning(this.has(element), `ClassList: "${element}" is not declared.`);
 
     return `.${this.get(element)}`.replace(/:/g, '\\:');
   }
