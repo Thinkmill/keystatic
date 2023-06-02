@@ -19,7 +19,7 @@ export const nordInit = (
 ): ReactCodeMirrorProps['theme'] => {
   const { theme = 'dark', settings = {}, styles = [] } = options || {};
   return createTheme({
-    theme: theme,
+    theme,
     settings: {
       ...defaultSettingsNord,
       ...settings,

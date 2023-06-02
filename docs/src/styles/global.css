@@ -15,6 +15,12 @@
   }
 }
 
+/* Restore inter font in Keystatic editor. */
 :root {
   --font-inter: --var(Inter var);
+}
+
+/* Override the Code Mirror outline on focus. */
+.cm-focused.cm-focused {
+  outline: 0;
 }
