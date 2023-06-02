@@ -16,9 +16,8 @@ export function makeAPIRouteHandler(_config: APIRouteConfig) {
   ) {
     const host = req.headers['x-forwarded-host'] || req.headers['host'];
     const proto =
-      req.headers['x-forwarded-proto'] || (req.socket as any).encrypted
-        ? 'https'
-        : 'http';
+      req.headers['x-forwarded-proto'] ||
+      ((req.socket as any).encrypted ? 'https' : 'http');
     const parsedUrl = new URL(`${proto}://${host}${req.url}`);
     if (
       parsedUrl.pathname.startsWith('/api/keystatic/reader-refresh/') &&
