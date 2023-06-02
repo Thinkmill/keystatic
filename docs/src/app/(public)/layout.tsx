@@ -44,7 +44,11 @@ export default async function RootLayout({
   const navigationMap = await getNavigationMap();
 
   return (
-    <RootVoussoirProvider fontClassName={inter.variable} locale="en-AU">
+    <RootVoussoirProvider
+      defaultColorScheme="light"
+      fontClassName={inter.variable}
+      locale="en-AU"
+    >
       <body className={inter.className}>
         <div className="min-h-screen">
           <HeaderNav navigationMap={navigationMap} />
