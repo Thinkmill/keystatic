@@ -6,8 +6,10 @@ import {
 } from './trees';
 import { webcrypto } from 'node:crypto';
 
-// even though Node already does this, Jest seems to be weird so we need to do this
-globalThis.crypto = webcrypto as any;
+// node only started setting the web crypto api globally in newer versions
+if (!globalThis.crypto) {
+  globalThis.crypto = webcrypto as any;
+}
 
 const treeCases = {
   c0a024bf32e4945701974161f663096ac2cc4ea9: `040000 tree 20908c89b720236da0ab3a9f4ded951c98fdb395	2023-is-finally-here

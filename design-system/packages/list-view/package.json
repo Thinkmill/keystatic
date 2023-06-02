@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@react-stately/data": "^3.7.0",
-    "@types/react": "^18.0.25",
+    "@types/react": "^18.2.8",
     "@voussoir/action-group": "^0.1.6",
     "@voussoir/button": "^0.2.0",
     "@voussoir/image": "^0.1.3",

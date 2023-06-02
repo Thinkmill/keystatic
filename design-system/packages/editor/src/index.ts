@@ -1,5 +1,7 @@
 'use client';
 
+export { EditorListbox } from './EditorListbox';
+export { Item, Section } from '@voussoir/listbox';
 export { EditorPopover } from './EditorPopover';
 export {
   EditorToolbar,
