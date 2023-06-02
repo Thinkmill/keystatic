@@ -929,6 +929,7 @@ importers:
       '@react-aria/focus': ^3.12.1
       '@react-aria/i18n': ^3.7.1
       '@react-aria/interactions': ^3.15.1
+      '@react-aria/selection': ^3.12.0
       '@react-aria/utils': ^3.17.0
       '@react-stately/layout': ^3.10.0
       '@react-stately/list': ^3.6.0
@@ -954,6 +955,7 @@ importers:
       '@react-aria/focus': 3.12.1_react@18.2.0
       '@react-aria/i18n': 3.7.1_react@18.2.0
       '@react-aria/interactions': 3.15.1_react@18.2.0
+      '@react-aria/selection': 3.12.1_react@18.2.0
       '@react-aria/utils': 3.17.0_react@18.2.0
       '@react-stately/layout': 3.10.0_react@18.2.0
       '@react-stately/list': 3.6.1_react@18.2.0
@@ -12636,7 +12638,7 @@ packages:
       minipass-pipeline: 1.2.4
       mkdirp: 1.0.4
       p-map: 4.0.0
-      promise-inflight: 1.0.1_bluebird@3.7.2
+      promise-inflight: 1.0.1
       rimraf: 3.0.2
       ssri: 8.0.1
       tar: 6.1.13
@@ -21557,6 +21559,15 @@ packages:
   /process/0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
+    dev: true
+
+  /promise-inflight/1.0.1:
+    resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
+    peerDependencies:
+      bluebird: '*'
+    peerDependenciesMeta:
+      bluebird:
+        optional: true
     dev: true
 
   /promise-inflight/1.0.1_bluebird@3.7.2:
