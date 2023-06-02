@@ -1,5 +1,11 @@
 # @voussoir/editor
 
+## 0.2.0
+
+### Minor Changes
+
+- 4114d6d4: Export new `EditorListbox` from "@voussoir/editor" package.
+
 ## 0.1.1
 
 ### Patch Changes

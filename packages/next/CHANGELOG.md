@@ -1,5 +1,12 @@
 # @keystatic/next
 
+## 0.0.9
+
+### Patch Changes
+
+- 098a199a: Fix inferring the wrong protocol when creating a full url that a
+  user likely requested from
+
 ## 0.0.8
 
 ### Patch Changes

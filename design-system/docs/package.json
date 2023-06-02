@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/docs",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -33,7 +33,7 @@
     "@voussoir/date-time": "^0.1.2",
     "@voussoir/dialog": "^0.2.4",
     "@voussoir/drag-and-drop": "^0.1.2",
-    "@voussoir/editor": "^0.1.1",
+    "@voussoir/editor": "^0.2.0",
     "@voussoir/field": "^0.1.6",
     "@voussoir/icon": "^0.2.1",
     "@voussoir/image": "^0.1.3",
