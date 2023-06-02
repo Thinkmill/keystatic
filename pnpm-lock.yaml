@@ -2163,7 +2163,7 @@ importers:
       '@headlessui/react': ^1.7.11
       '@heroicons/react': ^2.0.16
       '@keystatic/core': 0.0.106
-      '@keystatic/next': 0.0.8
+      '@keystatic/next': 0.0.9
       '@lezer/highlight': ^1.1.6
       '@markdoc/markdoc': ^0.3.0
       '@sindresorhus/slugify': ^1.1.2
@@ -2171,7 +2171,7 @@ importers:
       '@tailwindcss/typography': ^0.5.9
       '@types/cookie': ^0.5.1
       '@types/node': 16.11.13
-      '@types/react': ^18.0.25
+      '@types/react': ^18.2.8
       '@uiw/codemirror-themes': ^4.20.2
       '@uiw/react-codemirror': ^4.20.2
       '@vercel/analytics': ^0.1.8
@@ -2198,14 +2198,14 @@ importers:
       '@headlessui/react': 1.7.14_biqbaboplfbrettd7655fr4n2y
       '@heroicons/react': 2.0.18_react@18.2.0
       '@keystatic/core': link:../packages/keystatic
-      '@keystatic/next': 0.0.8_7sbbbi6fu4dkq3abdqg3h4nw5y
+      '@keystatic/next': link:../packages/next
       '@lezer/highlight': 1.1.6
-      '@markdoc/markdoc': 0.3.0_pmekkgnqduwlme35zpnqhenc34
+      '@markdoc/markdoc': 0.3.0_i2bxsyfskhzbpjanbovidbfj7u
       '@sindresorhus/slugify': 1.1.2
       '@tailwindcss/forms': 0.5.3_tailwindcss@3.3.2
       '@types/cookie': 0.5.1
       '@types/node': 16.11.13
-      '@types/react': 18.0.28
+      '@types/react': 18.2.8
       '@uiw/codemirror-themes': 4.20.2_@codemirror+view@6.12.0
       '@uiw/react-codemirror': 4.20.2_mz5qg3ry5yymypdih6annmqhzm
       '@vercel/analytics': 0.1.11_react@18.2.0
@@ -2216,7 +2216,7 @@ importers:
       next: 13.4.1_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      react-focus-lock: 2.9.4_pmekkgnqduwlme35zpnqhenc34
+      react-focus-lock: 2.9.4_i2bxsyfskhzbpjanbovidbfj7u
       shiki: 0.14.2
       slate: 0.91.4
       typescript: 5.1.3
@@ -6100,24 +6100,6 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /@keystatic/next/0.0.8_7sbbbi6fu4dkq3abdqg3h4nw5y:
-    resolution: {integrity: sha512-KE2RonWGNnQVx6ngSSYForakQBU3tGjTBTBg1uc46qPWqu16LOUaqRoPKcbora2PCHBuxWlcB9FioGz0/YbzgQ==}
-    peerDependencies:
-      '@keystatic/core': '*'
-      next: '13'
-      react: ^18.2.0
-      react-dom: ^18.2.0
-    dependencies:
-      '@babel/runtime': 7.21.0
-      '@keystatic/core': link:packages/keystatic
-      '@types/react': 18.2.8
-      chokidar: 3.5.3
-      next: 13.4.1_biqbaboplfbrettd7655fr4n2y
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      server-only: 0.0.1
-    dev: false
-
   /@leichtgewicht/ip-codec/2.0.4:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
     dev: true
@@ -6297,24 +6279,6 @@ packages:
         optional: true
     dependencies:
       '@types/react': 18.2.8
-      react: 18.2.0
-    optionalDependencies:
-      '@types/markdown-it': 12.2.3
-    dev: false
-
-  /@markdoc/markdoc/0.3.0_pmekkgnqduwlme35zpnqhenc34:
-    resolution: {integrity: sha512-QWCF8krIIw52ulflfnoff0yG1eKl9CCGA3KAiOjHyYtHNzSEouFh8lO52nAaO3qV2Ctj1GTB8TTb2rTfvISQfA==}
-    engines: {node: '>=14.7.0'}
-    peerDependencies:
-      '@types/react': '*'
-      react: '*'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      react:
-        optional: true
-    dependencies:
-      '@types/react': 18.0.28
       react: 18.2.0
     optionalDependencies:
       '@types/markdown-it': 12.2.3
@@ -10151,14 +10115,6 @@ packages:
     dependencies:
       '@types/react': 18.2.8
     dev: true
-
-  /@types/react/18.0.28:
-    resolution: {integrity: sha512-RD0ivG1kEztNBdoAK7lekI9M+azSnitIn85h4iOiaLjaTrMjzslhaqCGaI4IyCJ1RljWiLCEu4jyrLLgqxBTew==}
-    dependencies:
-      '@types/prop-types': 15.7.5
-      '@types/scheduler': 0.16.2
-      csstype: 3.1.1
-    dev: false
 
   /@types/react/18.2.8:
     resolution: {integrity: sha512-lTyWUNrd8ntVkqycEEplasWy2OxNlShj3zqS0LuB1ENUGis5HodmhM7DtCoUGbxj3VW/WsGA0DUhpG6XrM7gPA==}
@@ -22412,7 +22368,7 @@ packages:
       react-is: 17.0.2
     dev: true
 
-  /react-focus-lock/2.9.4_pmekkgnqduwlme35zpnqhenc34:
+  /react-focus-lock/2.9.4_i2bxsyfskhzbpjanbovidbfj7u:
     resolution: {integrity: sha512-7pEdXyMseqm3kVjhdVH18sovparAzLg5h6WvIx7/Ck3ekjhrrDMEegHSa3swwC8wgfdd7DIdUVRGeiHT9/7Sgg==}
     peerDependencies:
       '@types/react': ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -22422,13 +22378,13 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.21.0
-      '@types/react': 18.0.28
+      '@types/react': 18.2.8
       focus-lock: 0.11.6
       prop-types: 15.8.1
       react: 18.2.0
       react-clientside-effect: 1.2.6_react@18.2.0
-      use-callback-ref: 1.3.0_pmekkgnqduwlme35zpnqhenc34
-      use-sidecar: 1.1.2_pmekkgnqduwlme35zpnqhenc34
+      use-callback-ref: 1.3.0_i2bxsyfskhzbpjanbovidbfj7u
+      use-sidecar: 1.1.2_i2bxsyfskhzbpjanbovidbfj7u
     dev: false
 
   /react-inspector/5.1.1_react@18.2.0:
@@ -25250,7 +25206,7 @@ packages:
       - graphql
     dev: false
 
-  /use-callback-ref/1.3.0_pmekkgnqduwlme35zpnqhenc34:
+  /use-callback-ref/1.3.0_i2bxsyfskhzbpjanbovidbfj7u:
     resolution: {integrity: sha512-3FT9PRuRdbB9HfXhEq35u4oZkvpJ5kuYbpqhCfmiZyReuRgpnhDlbr2ZEnnuS0RrJAPn6l23xjFg9kpDM+Ms7w==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -25260,7 +25216,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.0.28
+      '@types/react': 18.2.8
       react: 18.2.0
       tslib: 2.5.0
     dev: false
@@ -25274,7 +25230,7 @@ packages:
       react: 18.2.0
     dev: true
 
-  /use-sidecar/1.1.2_pmekkgnqduwlme35zpnqhenc34:
+  /use-sidecar/1.1.2_i2bxsyfskhzbpjanbovidbfj7u:
     resolution: {integrity: sha512-epTbsLuzZ7lPClpz2TyryBfztm7m+28DlEv2ZCQ3MDr5ssiwyOwGH/e5F9CkfWjJ1t4clvI58yF822/GUkjjhw==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -25284,7 +25240,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 18.0.28
+      '@types/react': 18.2.8
       detect-node-es: 1.1.0
       react: 18.2.0
       tslib: 2.5.0
