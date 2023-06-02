@@ -16,7 +16,7 @@
     "@hapi/iron": "^7.0.0",
     "@keystatic/astro": "^0.0.8",
     "@keystatic/core": "^0.0.106",
-    "@types/react": "^18.0.25",
+    "@types/react": "^18.2.8",
     "@types/react-dom": "^18.0.11",
     "astro": "^2.0.14",
     "cookie": "^0.5.0",
