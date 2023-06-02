@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/test-next-pages-dir",
-  "version": "0.0.75",
+  "version": "0.0.76",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -11,7 +11,7 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "@keystatic/core": "^0.0.106",
-    "@keystatic/next": "^0.0.8",
+    "@keystatic/next": "^0.0.9",
     "@preconstruct/next": "^4.0.0",
     "@types/react": "^18.0.25",
     "@voussoir/action-group": "^0.1.6",

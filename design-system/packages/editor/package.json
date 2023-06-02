@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/editor",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Utility hooks and components for the ProseMirror editor.",
   "license": "MIT",
   "main": "dist/voussoir-editor.cjs.js",
