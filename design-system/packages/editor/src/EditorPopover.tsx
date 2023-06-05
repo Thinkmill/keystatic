@@ -17,18 +17,37 @@ import {
   limitShift,
   offset,
   shift,
+  size,
   useFloating,
-  useInteractions,
-  useRole,
 } from '@floating-ui/react';
-import { css, tokenSchema } from '@voussoir/style';
+import {
+  BaseStyleProps,
+  classNames,
+  css,
+  tokenSchema,
+  useStyleProps,
+} from '@voussoir/style';
 
 export type EditorPopoverProps = {
   children: ReactNode;
   reference: ReferenceElement;
   placement?: Placement;
-  sticky?: boolean;
-};
+  /**
+   * How the popover should adapt when constrained by available space in the viewport.
+   * @default 'flip'
+   */
+  adaptToViewport?: 'flip' | 'stick' | 'stretch';
+} & Pick<
+  BaseStyleProps,
+  | 'height'
+  | 'width'
+  | 'maxHeight'
+  | 'maxWidth'
+  | 'minHeight'
+  | 'minWidth'
+  | 'UNSAFE_className'
+  | 'UNSAFE_style'
+>;
 
 export type EditorPopoverRef = { context: ContextData; update: () => void };
 
@@ -36,6 +55,7 @@ export const EditorPopover = forwardRef<EditorPopoverRef, EditorPopoverProps>(
   function EditorPopover(props, forwardedRef) {
     const { children, reference, placement = 'bottom' } = props;
 
+    const styleProps = useStyleProps(props);
     const [floating, setFloating] = useState<HTMLDivElement | null>(null);
     const middleware = getMiddleware(props);
     const { floatingStyles, context, update } = useFloating({
@@ -44,8 +64,6 @@ export const EditorPopover = forwardRef<EditorPopoverRef, EditorPopoverProps>(
       placement,
       whileElementsMounted: autoUpdate,
     });
-    const role = useRole(context);
-    const { getFloatingProps } = useInteractions([role]);
 
     useImperativeHandle(
       forwardedRef,
@@ -59,8 +77,8 @@ export const EditorPopover = forwardRef<EditorPopoverRef, EditorPopoverProps>(
       <FloatingPortal>
         <DialogElement
           ref={setFloating}
-          style={floatingStyles}
-          {...getFloatingProps()}
+          {...styleProps}
+          style={{ ...floatingStyles, ...styleProps.style }}
         >
           {children}
         </DialogElement>
@@ -77,9 +95,9 @@ export const DEFAULT_OFFSET = 8;
 export function getMiddleware(
   props: EditorPopoverProps
 ): Array<Middleware | null | undefined | false> {
-  const { sticky } = props;
+  const { adaptToViewport } = props;
 
-  if (sticky) {
+  if (adaptToViewport === 'stick') {
     return [
       offset(DEFAULT_OFFSET),
       shift({
@@ -90,6 +108,20 @@ export function getMiddleware(
             crossAxis: rects.floating.height,
           }),
         }),
+      }),
+    ];
+  }
+  if (adaptToViewport === 'stretch') {
+    return [
+      flip(),
+      offset(DEFAULT_OFFSET),
+      size({
+        apply({ elements, availableHeight }) {
+          Object.assign(elements.floating.style, {
+            maxHeight: `${availableHeight}px`,
+          });
+        },
+        padding: DEFAULT_OFFSET,
       }),
     ];
   }
@@ -111,18 +143,22 @@ export const DialogElement = forwardRef<
 >(function DialogElement(props, forwardedRef) {
   return (
     <div
+      role="dialog"
       ref={forwardedRef}
       {...props}
-      className={css({
-        backgroundColor: tokenSchema.color.background.surface,
-        borderRadius: tokenSchema.size.radius.medium,
-        border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.emphasis}`,
-        boxShadow: `${tokenSchema.size.shadow.medium} ${tokenSchema.color.shadow.regular}`,
-        minHeight: tokenSchema.size.element.regular,
-        minWidth: tokenSchema.size.element.regular,
-        outline: 0,
-        overflowY: 'auto',
-      })}
+      className={classNames(
+        css({
+          backgroundColor: tokenSchema.color.background.surface,
+          borderRadius: tokenSchema.size.radius.medium,
+          border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.emphasis}`,
+          boxShadow: `${tokenSchema.size.shadow.medium} ${tokenSchema.color.shadow.regular}`,
+          boxSizing: 'content-box', // resolves measurement/scroll issues related to border
+          minHeight: tokenSchema.size.element.regular,
+          minWidth: tokenSchema.size.element.regular,
+          outline: 0,
+        }),
+        props.className
+      )}
     />
   );
 });

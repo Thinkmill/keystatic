@@ -1,5 +1,21 @@
 # @keystatic/next
 
+## 0.0.9
+
+### Patch Changes
+
+- 098a199a: Fix inferring the wrong protocol when creating a full url that a
+  user likely requested from
+
+## 0.0.8
+
+### Patch Changes
+
+- 618ba4aa: Remove `url`/`KEYSTATIC_URL` config option
+- Updated dependencies [618ba4aa]
+- Updated dependencies [30298e81]
+  - @keystatic/core@0.0.106
+
 ## 0.0.7
 
 ### Patch Changes

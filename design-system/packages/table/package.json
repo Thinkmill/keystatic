@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/table",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Tables are containers for displaying information. They allow users to quickly scan, sort, compare, and take action on large amounts of data.",
   "license": "MIT",
   "main": "dist/voussoir-table.cjs.js",
@@ -24,17 +24,17 @@
     "@react-aria/utils": "^3.17.0",
     "@react-stately/table": "^3.5.0",
     "@react-types/shared": "^3.18.0",
-    "@voussoir/checkbox": "^0.2.5",
+    "@voussoir/checkbox": "^0.2.6",
     "@voussoir/icon": "^0.2.1",
     "@voussoir/layout": "^0.1.3",
-    "@voussoir/slots": "^0.1.2",
-    "@voussoir/style": "^0.1.5",
+    "@voussoir/slots": "^0.1.3",
+    "@voussoir/style": "^0.1.6",
     "@voussoir/types": "^0.1.1",
-    "@voussoir/typography": "^0.1.5",
-    "@voussoir/utils": "^2.0.2"
+    "@voussoir/typography": "^0.1.6",
+    "@voussoir/utils": "^2.0.3"
   },
   "devDependencies": {
-    "@types/react": "^18.0.25",
+    "@types/react": "^18.2.8",
     "@voussoir/storybook": "^0.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

@@ -113,7 +113,7 @@ export function BlocksFieldInput<Key extends string>(
           setModalState({
             kind: 'edit',
             idx,
-            initial: previewPropsToValue(props.elements[idx]),
+            initial: previewPropsToValue(props.elements[idx] as any),
           });
         }}
       />

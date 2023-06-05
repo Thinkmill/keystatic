@@ -1,5 +1,28 @@
 # @keystatic/test-next-app
 
+## 0.0.77
+
+### Patch Changes
+
+- Updated dependencies [098a199a]
+  - @keystatic/next@0.0.9
+
+## 0.0.76
+
+### Patch Changes
+
+- Updated dependencies [6a33f487]
+- Updated dependencies [618ba4aa]
+- Updated dependencies [30298e81]
+  - @voussoir/button@0.2.0
+  - @keystatic/core@0.0.106
+  - @keystatic/next@0.0.8
+  - @voussoir/action-group@0.1.6
+  - @voussoir/typography@0.1.6
+  - @voussoir/tooltip@0.1.4
+  - @voussoir/notice@0.1.5
+  - @voussoir/style@0.1.6
+
 ## 0.0.75
 
 ### Patch Changes
