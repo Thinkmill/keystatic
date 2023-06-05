@@ -147,19 +147,7 @@ export default config({
                       collection: 'pages',
                     }),
                     url: fields.text({ label: 'URL' }),
-                    'coming-soon': fields.conditional(
-                      fields.checkbox({
-                        label: 'Coming soon badge',
-                        defaultValue: false,
-                      }),
-                      {
-                        true: fields.text({
-                          label: 'Badge label',
-                          defaultValue: 'Soon',
-                        }),
-                        false: fields.empty(),
-                      }
-                    ),
+                    'coming-soon': fields.empty(),
                   }
                 ),
               }),

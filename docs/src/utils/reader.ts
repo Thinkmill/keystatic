@@ -16,17 +16,12 @@ export async function getNavigationMap() {
       const page = discriminant === 'page' && value ? pagesBySlug[value] : null;
       const url = discriminant === 'url' ? value : `/docs/${page?.slug}`;
       const comingSoon = discriminant === 'coming-soon' ? true : false;
-      const comingSoonBadgeLabel =
-        discriminant === 'coming-soon' && value.discriminant
-          ? value.value
-          : undefined;
 
       return {
         label: label || page?.entry.title || '',
         href: url || '',
         title: page?.entry.title,
         comingSoon: comingSoon,
-        comingSoonBadgeLabel: comingSoonBadgeLabel,
       };
     }),
   }));

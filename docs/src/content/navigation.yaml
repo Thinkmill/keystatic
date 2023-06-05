@@ -22,9 +22,6 @@ navGroups:
       - label: Remix
         link:
           discriminant: coming-soon
-          value:
-            discriminant: true
-            value: Soon
   - groupName: Learn Keystatic
     items:
       - label: Collections & Singletons

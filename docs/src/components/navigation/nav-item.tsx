@@ -12,7 +12,6 @@ type NavItemProps = {
   title?: string;
   tabIndex?: number;
   comingSoon?: boolean;
-  comingSoonBadgeLabel?: string;
 };
 
 export function NavItem({
@@ -22,7 +21,6 @@ export function NavItem({
   title,
   tabIndex,
   comingSoon,
-  comingSoonBadgeLabel,
 }: NavItemProps) {
   const pathname = usePathname();
   const isCurrentPage = href === pathname;
@@ -47,9 +45,9 @@ export function NavItem({
           )}
         >
           {label}
-          {comingSoonBadgeLabel && (
-            <div className="px-1 py-0.5 rounded bg-amber-100 text-amber-800/80 font-medium text-[0.6875rem] leading-none uppercase self-start">
-              {comingSoonBadgeLabel}
+          {comingSoon && (
+            <div className="px-1 py-0.5 rounded bg-amber-100 text-amber-800/80 font-medium text-[0.625rem] leading-none uppercase self-start">
+              Soon
             </div>
           )}
         </div>
