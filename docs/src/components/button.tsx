@@ -8,7 +8,6 @@ type ButtonProps = {
   href?: string;
   isLoading?: boolean;
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
-  hardNavigation?: boolean;
 } & AllHTMLAttributes<HTMLButtonElement | HTMLAnchorElement>;
 
 const baseClasses =
