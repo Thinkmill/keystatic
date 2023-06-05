@@ -108,6 +108,18 @@ const getRenderers = (
     divider: () => {
       return <hr className="border-keystatic-gray my-2" />;
     },
+    layout: ({ layout, children }) => (
+      <div
+        className="grid gap-4"
+        style={{
+          gridTemplateColumns: layout.map(x => `${x}fr`).join(' '),
+        }}
+      >
+        {children.map((element, i) => (
+          <div key={i}>{element}</div>
+        ))}
+      </div>
+    ),
   },
 });
 
@@ -135,6 +147,17 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         sizes={sizes || `(max-width: 375px) 375px, ${imgMaxWidthPx}px`}
         className="rounded-lg my-2"
       />
+    );
+  },
+  tags: ({ tags }) => {
+    return (
+      <div className="flex gap-2">
+        {tags.map(tag => (
+          <div className="rounded-full px-2 py-1 bg-amber-100 text-amber-800/80 font-medium text-[0.6875rem] leading-none uppercase self-start inline">
+            {tag}
+          </div>
+        ))}
+      </div>
     );
   },
 };

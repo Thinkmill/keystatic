@@ -84,30 +84,29 @@ export const componentBlocks = {
     },
     chromeless: false,
   }),
-  tag: component({
+  tags: component({
     preview: props => {
       return (
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            borderRadius: '999px',
-            paddingLeft: '0.25rem',
-            paddingRight: '0.25rem',
-          }}
-        >
-          {props.fields.text.element}
+        <div style={{ display: 'flex', gap: '2rem' }}>
+          {props.fields.tags.value.map(tag => (
+            <span>{tag}</span>
+          ))}
         </div>
       );
     },
-    label: 'Tag',
+    label: 'Tags',
     schema: {
-      text: fields.child({
-        kind: 'inline',
-        placeholder: 'Tag text...',
+      tags: fields.multiselect({
+        label: 'Tags',
+        options: [
+          { label: 'Local', value: 'Local' },
+          { label: 'Github', value: 'github' },
+          { label: 'New project', value: 'New project' },
+          { label: 'Existing project', value: 'Existing project' },
+        ],
       }),
     },
-    chromeless: true,
+    chromeless: false,
   }),
 };
 
@@ -133,6 +132,7 @@ export default config({
             blockTypes: true,
             softBreaks: true,
           },
+          layouts: [[1, 1]],
           dividers: true,
           links: true,
           images: { directory: 'public/images/content' },
