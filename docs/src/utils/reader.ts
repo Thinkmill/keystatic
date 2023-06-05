@@ -15,13 +15,12 @@ export async function getNavigationMap() {
       const { discriminant, value } = link;
       const page = discriminant === 'page' && value ? pagesBySlug[value] : null;
       const url = discriminant === 'url' ? value : `/docs/${page?.slug}`;
-      const comingSoon = discriminant === 'coming-soon' ? true : false;
 
       return {
         label: label || page?.entry.title || '',
         href: url || '',
         title: page?.entry.title,
-        comingSoon: comingSoon,
+        comingSoon: discriminant === 'coming-soon',
       };
     }),
   }));
