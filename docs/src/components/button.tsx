@@ -26,27 +26,17 @@ export default function Button({
   href,
   isLoading = false,
   children,
-  hardNavigation = false,
   className = '',
   ...props
 }: ButtonProps) {
   return href ? (
-    !hardNavigation ? (
-      <Link
-        href={href}
-        {...props}
-        className={cx(baseClasses, className, impactClasses[impact])}
-      >
-        {children}
-      </Link>
-    ) : (
-      <a
-        href={href}
-        className={cx(baseClasses, className, impactClasses[impact])}
-      >
-        {children}
-      </a>
-    )
+    <Link
+      href={href}
+      {...props}
+      className={cx(baseClasses, className, impactClasses[impact])}
+    >
+      {children}
+    </Link>
   ) : (
     <button
       {...props}

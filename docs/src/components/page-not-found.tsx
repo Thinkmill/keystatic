@@ -2,25 +2,13 @@
 
 import { usePathname } from 'next/navigation';
 import Button from './button';
-import { cx } from '../utils';
 
-export function PageNotFound({
-  backTo = 'home',
-}: {
-  backTo?: 'home' | 'docs';
-}) {
+export function PageNotFound() {
   const path = usePathname();
 
   return (
     <div className="flex flex-col gap-8">
-      <h1
-        className={cx(
-          `font-extrabold`,
-          backTo === 'docs'
-            ? 'text-2xl sm:text-3xl'
-            : 'text-3xl sm:text-4xl md:text-5xl'
-        )}
-      >
+      <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl">
         404: Page not found <span aria-hidden="true">🕵️</span>
       </h1>
 
@@ -32,13 +20,8 @@ export function PageNotFound({
       </p>
 
       <div className="flex">
-        <Button
-          impact="light"
-          className=""
-          href={backTo === 'docs' ? '/docs' : '/'}
-          hardNavigation={backTo === 'docs' ? false : true}
-        >
-          Back to {backTo === 'docs' ? 'Docs' : 'Home'}
+        <Button impact="light" href="/">
+          Back to Home
         </Button>
       </div>
     </div>
