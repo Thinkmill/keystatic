@@ -89,7 +89,15 @@ export const componentBlocks = {
       return (
         <div style={{ display: 'flex', gap: '2rem' }}>
           {props.fields.tags.value.map(tag => (
-            <span>{tag}</span>
+            <span
+              style={{
+                border: 'solid 1px #ddd',
+                padding: '0.5rem',
+                borderRadius: '20px',
+              }}
+            >
+              {tag}
+            </span>
           ))}
         </div>
       );

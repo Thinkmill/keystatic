@@ -116,7 +116,9 @@ const getRenderers = (
         }}
       >
         {children.map((element, i) => (
-          <div key={i}>{element}</div>
+          <div key={i} className="rounded-lg bg-keystatic-gray-light px-4 py-4">
+            {element}
+          </div>
         ))}
       </div>
     ),
