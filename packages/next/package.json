@@ -46,13 +46,13 @@
   },
   "devDependencies": {
     "@keystatic/core": "^0.0.105",
-    "next": "^13.4.1",
+    "next": "^13.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "peerDependencies": {
     "@keystatic/core": "*",
-    "next": "13",
+    "next": "13.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
