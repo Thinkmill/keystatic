@@ -14,7 +14,6 @@ export type NavProps = {
       href: string;
       title: string | undefined;
       comingSoon?: boolean;
-      comingSoonBadgeLabel?: string;
     }[];
   }[];
 };
