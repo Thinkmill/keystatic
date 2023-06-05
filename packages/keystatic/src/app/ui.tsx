@@ -2,6 +2,7 @@ import { useRouter, Router, RouterProvider } from './router';
 import {
   AnchorHTMLAttributes,
   ReactElement,
+  ReactNode,
   RefAttributes,
   useContext,
   useEffect,
@@ -257,7 +258,7 @@ export function Keystatic(props: {
   link: (
     props: { href: string } & AnchorHTMLAttributes<HTMLAnchorElement> &
       RefAttributes<HTMLAnchorElement>
-  ) => ReactElement | null;
+  ) => ReactNode;
   appSlug?: { envName: string; value: string | undefined };
 }) {
   if (

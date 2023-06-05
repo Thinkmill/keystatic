@@ -107,7 +107,13 @@ export const MenuTrigger = forwardRef(function MenuTrigger(
           {menuTrigger}
         </PressResponder>
       </SlotProvider>
-      <MenuContext.Provider value={menuContext}>{overlay}</MenuContext.Provider>
+      <MenuContext.Provider
+        // TODO: Fix this type error
+        // @ts-expect-error
+        value={menuContext}
+      >
+        {overlay}
+      </MenuContext.Provider>
     </Fragment>
   );
 });
