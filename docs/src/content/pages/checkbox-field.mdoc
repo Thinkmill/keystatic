@@ -1,6 +1,21 @@
 ---
 title: Checkbox field
 ---
+The `checkbox` field is used to store a `boolean`.
+
+A single checkbox is used in the Admin UI for this field.
+
+## Example usage
+
+```typescript
+draft: fields.checkbox({
+  label: 'Draft',
+  description: 'Set this post as draft to prevent it from being published'
+})
+```
+
+## Type signature
+
 ```typescript
 checkbox({
   label: string;

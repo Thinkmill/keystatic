@@ -1,5 +1,43 @@
 # @keystatic/core
 
+## 0.0.106
+
+### Patch Changes
+
+- 618ba4aa: Remove `url`/`KEYSTATIC_URL` config option
+- 30298e81: Update to latest react-aria packages:
+  - @react-aria/focus
+  - @react-aria/interactions
+  - @react-aria/utils
+- Updated dependencies [6a33f487]
+- Updated dependencies [30298e81]
+  - @voussoir/button@0.2.0
+  - @voussoir/action-group@0.1.6
+  - @voussoir/number-field@0.1.6
+  - @voussoir/search-field@0.1.6
+  - @voussoir/breadcrumbs@0.1.10
+  - @voussoir/text-field@0.1.8
+  - @voussoir/typography@0.1.6
+  - @voussoir/list-view@0.1.7
+  - @voussoir/checkbox@0.2.6
+  - @voussoir/combobox@0.1.7
+  - @voussoir/nav-list@0.1.3
+  - @voussoir/overlays@0.1.7
+  - @voussoir/progress@0.1.3
+  - @voussoir/listbox@0.1.6
+  - @voussoir/tooltip@0.1.4
+  - @voussoir/dialog@0.2.4
+  - @voussoir/notice@0.1.5
+  - @voussoir/picker@0.1.6
+  - @voussoir/slots@0.1.3
+  - @voussoir/style@0.1.6
+  - @voussoir/table@0.1.6
+  - @voussoir/toast@0.1.9
+  - @voussoir/utils@2.0.3
+  - @voussoir/link@0.1.5
+  - @voussoir/menu@0.1.5
+  - @voussoir/tabs@0.1.5
+
 ## 0.0.105
 
 ### Patch Changes

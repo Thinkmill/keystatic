@@ -60,7 +60,11 @@ let getAllowedDropOperationsAction = action('getAllowedDropOperationsAction');
 storiesOf('Components/ListView', module)
   .addParameters(parameters)
   .add('default', (args: any) => (
-    <ListView width={250} aria-label="list view example" {...args}>
+    <ListView
+      width="alias.singleLineWidth"
+      aria-label="list view example"
+      {...args}
+    >
       <Item>Design Systems</Item>
       <Item>Product Development</Item>
       <Item>Team Augmentation</Item>
@@ -69,7 +73,7 @@ storiesOf('Components/ListView', module)
   ))
   .add('actions', (args: any) => (
     <ListView
-      width={250}
+      width="alias.singleLineWidth"
       aria-label="list view actions example"
       onAction={action('onAction')}
       onSelectionChange={action('onSelectionChange')}
@@ -85,8 +89,8 @@ storiesOf('Components/ListView', module)
     <ListView
       aria-label="list view dynamic items example"
       items={complexItems}
-      width="300px"
-      height={250}
+      width="container.xsmall"
+      height="alias.singleLineWidth"
       onAction={action('onAction')}
       {...args}
       selectionMode="none"
@@ -114,8 +118,8 @@ storiesOf('Components/ListView', module)
   .add('empty list', (args: any) => (
     <ListView
       aria-label="empty ListView"
-      width={300}
-      height={300}
+      width="container.xsmall"
+      height="alias.singleLineWidth"
       renderEmptyState={renderEmptyState}
       {...args}
     >
@@ -125,8 +129,8 @@ storiesOf('Components/ListView', module)
   .add('loading', (args: any) => (
     <ListView
       aria-label="loading ListView"
-      width={300}
-      height={300}
+      width="container.xsmall"
+      height="alias.singleLineWidth"
       loadingState="loading"
       {...args}
     >
@@ -136,8 +140,8 @@ storiesOf('Components/ListView', module)
   .add('loadingMore', (args: any) => (
     <ListView
       aria-label="loading more ListView"
-      width={300}
-      height={300}
+      width="alias.singleLineWidth"
+      height="alias.singleLineWidth"
       loadingState="loadingMore"
       {...args}
     >
@@ -150,7 +154,7 @@ storiesOf('Components/ListView', module)
   .add('async loading', (args: any) => <AsyncList {...args} />)
   .add('thumbnails', (args: any) => (
     <ListView
-      width="250px"
+      width="alias.singleLineWidth"
       items={thumbnailItems}
       aria-label="ListView with thumbnails"
       {...args}
@@ -166,7 +170,7 @@ storiesOf('Components/ListView', module)
     </ListView>
   ))
   .add('long text', (args: any) => (
-    <ListView width="250px" {...args}>
+    <ListView width="alias.singleLineWidth" {...args}>
       <Item>Safe hands for your bold product plans</Item>
       <Item textValue="Expertise & Capabilities">
         <Text>Expertise & Capabilities</Text>
@@ -351,8 +355,8 @@ function AsyncList(props: any) {
     <ListView
       selectionMode="multiple"
       aria-label="example async loading list"
-      width={300}
-      height={300}
+      width="alias.singleLineWidth"
+      height="alias.singleLineWidth"
       items={list.items}
       loadingState={list.loadingState}
       onLoadMore={list.loadMore}
@@ -445,7 +449,7 @@ export function ReorderExample(props: any) {
     <ListView
       aria-label="reorderable list view"
       selectionMode="multiple"
-      width={300}
+      width="alias.singleLineWidth"
       height="100%"
       items={list.items}
       disabledKeys={disabledKeys}

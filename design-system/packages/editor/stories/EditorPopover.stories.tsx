@@ -134,7 +134,7 @@ storiesOf('Editor/Popover', module)
           sweet macaroon jujubes pudding.
         </Text>
         {triggerRef && isOpen && (
-          <EditorPopover sticky reference={triggerRef}>
+          <EditorPopover adaptToViewport="stick" reference={triggerRef}>
             <Box padding="regular" maxWidth="container.xsmall">
               <Text>
                 This popover will overlap the target, staying in view when the

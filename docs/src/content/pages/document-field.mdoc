@@ -1,6 +1,44 @@
 ---
 title: Document field
 ---
+The `document` field is a highly customizable, currently&nbsp;[Slate](https://docs.slatejs.org/)-based
+{% sup %}1{% /sup %}
+, rich text editor.
+
+It lets content creators quickly and easily edit content in your system.&nbsp;
+
+---
+
+{% sup %}1{% /sup %}
+soon-to-be powered by ProseMirror
+
+## Usage example
+
+```typescript
+document: fields.document({
+  label: 'Document',
+  formatting: true,
+  links: true,
+  componentBlocks: {
+    quote: component({
+      preview: () => null,
+      label: 'Quote',
+      schema: {
+        content: fields.child({
+          kind: 'block',
+          placeholder: 'Quote...',
+          formatting: { inlineMarks: 'inherit', softBreaks: 'inherit' },
+          links: 'inherit',
+        }),
+        attribution: fields.child({ kind: 'inline', placeholder: 'Attribution...' }),
+      },
+    }),
+  },
+}),
+```
+
+## Type signature
+
 ```typescript
 document({
   label: string;
