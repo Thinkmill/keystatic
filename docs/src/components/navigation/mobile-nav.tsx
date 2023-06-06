@@ -130,7 +130,7 @@ export function MobileNav({ navigationMap }: NavProps) {
             <div className="pt-6">
               {navigationMap?.map(({ groupName, items }) => (
                 <NavGroup key={groupName} title={groupName}>
-                  {items.map(({ label, href, title }) => (
+                  {items.map(({ label, href, title, comingSoon }) => (
                     <NavItem
                       key={href}
                       label={label}
@@ -138,6 +138,7 @@ export function MobileNav({ navigationMap }: NavProps) {
                       title={title}
                       level="sub"
                       tabIndex={navOpen ? 0 : -1}
+                      comingSoon={comingSoon}
                     />
                   ))}
                 </NavGroup>

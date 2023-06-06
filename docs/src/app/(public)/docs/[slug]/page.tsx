@@ -2,6 +2,7 @@ import { createReader } from '@keystatic/core/reader';
 import { TableOfContents } from '../../../../components/navigation/table-of-contents';
 import DocumentRenderer from '../../../../components/document-renderer';
 import keystaticConfig from '../../../../../keystatic.config';
+import { notFound } from 'next/navigation';
 
 const reader = createReader('', keystaticConfig);
 
@@ -10,7 +11,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
 
   const page = await reader.collections.pages.read(slug);
 
-  if (!page) return <div>Page not found</div>;
+  if (!page) notFound();
 
   // Filter headings from the document content
   const headings = (await page.content())

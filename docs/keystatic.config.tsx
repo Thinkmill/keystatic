@@ -169,10 +169,11 @@ export default config({
                 }),
                 link: fields.conditional(
                   fields.select({
-                    label: 'Page or URL',
+                    label: 'Link type',
                     options: [
                       { label: 'Page', value: 'page' },
                       { label: 'URL', value: 'url' },
+                      { label: 'Coming soon (no link)', value: 'coming-soon' },
                     ],
                     defaultValue: 'page',
                   }),
@@ -182,11 +183,12 @@ export default config({
                       collection: 'pages',
                     }),
                     url: fields.text({ label: 'URL' }),
+                    'coming-soon': fields.empty(),
                   }
                 ),
               }),
               {
-                label: 'Navigation Links',
+                label: 'Navigation items',
                 itemLabel: props => props.fields.label.value,
               }
             ),
