@@ -7,6 +7,7 @@ import { MobileNav } from './mobile-nav';
 import { usePathname } from 'next/navigation';
 
 export type NavProps = {
+  ignoreDocNavStyles?: boolean;
   navigationMap?: {
     groupName: string;
     items: {
@@ -17,9 +18,14 @@ export type NavProps = {
   }[];
 };
 
-export function HeaderNav({ navigationMap }: NavProps) {
+export function HeaderNav({
+  navigationMap,
+  ignoreDocNavStyles = false,
+}: NavProps) {
   const pathname = usePathname();
-  const isDocsNav = pathname?.startsWith('/docs');
+
+  /** Different style for HeaderNav under /docs or if explicitly passed in to ignore (not-found.tsx) */
+  const isDocsNav = pathname?.startsWith('/docs') && !ignoreDocNavStyles;
 
   return (
     <header
