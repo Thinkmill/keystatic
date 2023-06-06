@@ -14,9 +14,17 @@ type TableOfContentsProps = {
 
 export function TableOfContents({ headings }: TableOfContentsProps) {
   // TODO make fixed instead of position sticky
-  // TODO rewrite into a new object that you can map over
-  const slugs = headings.map(({ text }) => {
-    return `#${slugify(text)}`;
+  // TODO fix identical headings so they get a unique slug?
+  const headingsWithSlugs = headings.map(({ level, text }) => {
+    return {
+      level,
+      text,
+      slug: `#${slugify(text)}`,
+    };
+  });
+
+  const slugs = headingsWithSlugs.map(({ slug }) => {
+    return slug;
   });
 
   const { activeHeadingSlug } = useHeadingObserver(slugs);
@@ -26,17 +34,17 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
       <h2 className="text-xs uppercase text-neutral-500">On this page</h2>
 
       <ul className="mt-4 flex flex-col gap-3">
-        {headings.map(({ level, text }) => (
+        {headingsWithSlugs.map(({ level, text, slug }) => (
           <li key={text}>
             <a
               className={`block text-sm leading-tight hover:underline ${
                 level > 2 ? 'pl-2 text-xs' : ''
               } ${
-                activeHeadingSlug === `${slugify(text)}`
+                `#${activeHeadingSlug}` === slug
                   ? 'font-medium text-neutral-700'
                   : 'text-neutral-600'
               }`}
-              href={`#${slugify(text)}`}
+              href={slug}
             >
               {text}
             </a>
@@ -63,8 +71,10 @@ function useHeadingObserver(slugs: string[]) {
     };
 
     observer.current = new IntersectionObserver(handleObserver, {
-      rootMargin: '-96px 0px -50% 0px',
+      rootMargin: '-130px 0px -50% 0px',
     });
+
+    if (!selectors) return;
 
     const elements = document.querySelectorAll(selectors);
 
