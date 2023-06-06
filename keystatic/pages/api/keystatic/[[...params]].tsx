@@ -15,6 +15,5 @@ export default makeAPIRouteHandler({
     'GITHUB_CLIENT_SECRET',
     process.env.GITHUB_CLIENT_SECRET
   ),
-  url: process.env.AUTH_URL,
   config: localConfig,
 });

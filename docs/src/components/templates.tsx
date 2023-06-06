@@ -154,7 +154,7 @@ export default function Templates() {
         />
       </svg>
 
-      <div className="mx-auto max-w-7xl pt-6 pb-12 overflow-y-auto">
+      <div className="mx-auto max-w-7xl pt-6 pb-12 overflow-y-auto lg:overflow-visible">
         <ul
           className="inline-flex gap-6 lg:gap-8 lg:grid lg:items-stretch lg:grid-cols-3 px-6"
           role="list"

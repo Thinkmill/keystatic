@@ -1,5 +1,14 @@
 # @keystatic/astro
 
+## 0.0.8
+
+### Patch Changes
+
+- 618ba4aa: Remove `url`/`KEYSTATIC_URL` config option
+- Updated dependencies [618ba4aa]
+- Updated dependencies [30298e81]
+  - @keystatic/core@0.0.106
+
 ## 0.0.7
 
 ### Patch Changes
