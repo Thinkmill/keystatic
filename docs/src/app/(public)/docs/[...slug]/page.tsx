@@ -6,9 +6,10 @@ import { notFound } from 'next/navigation';
 
 const reader = createReader('', keystaticConfig);
 
-export default async function Docs({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function Docs({ params }: { params: { slug: string[] } }) {
+  const { slug: slugPath } = params;
 
+  const slug = slugPath.join('/');
   const page = await reader.collections.pages.read(slug);
 
   if (!page) notFound();
@@ -29,6 +30,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
           {page.title}
         </h1>
         <div className="flex flex-col gap-4">
+          {/* @ts-expect-error react-server component */}
           <DocumentRenderer slug={slug} document={await page.content()} />
         </div>
       </div>
@@ -41,6 +43,6 @@ export async function generateStaticParams() {
   const slugs = await reader.collections.pages.list();
 
   return slugs.map(slug => ({
-    slug,
+    slug: slug.split('/'),
   }));
 }

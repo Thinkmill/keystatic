@@ -54,71 +54,71 @@ navGroups:
       - label: Text
         link:
           discriminant: page
-          value: text-field
+          value: fields/text
       - label: Integer
         link:
           discriminant: page
-          value: integer-field
+          value: fields/integer
       - label: URL
         link:
           discriminant: page
-          value: url-field
+          value: fields/url
       - label: Path Reference
         link:
           discriminant: page
-          value: path-reference-field
+          value: fields/path-reference
       - label: Relationship
         link:
           discriminant: page
-          value: relationship-field
+          value: fields/relationship
       - label: Select
         link:
           discriminant: page
-          value: select-field
+          value: fields/select
       - label: Slug
         link:
           discriminant: page
-          value: slug-field
+          value: fields/slug
       - label: Multi-Select
         link:
           discriminant: page
-          value: multi-select-field
+          value: fields/multi-select
       - label: Checkbox
         link:
           discriminant: page
-          value: checkbox-field
+          value: fields/checkbox
       - label: Image
         link:
           discriminant: page
-          value: image-field
+          value: fields/image
       - label: Date
         link:
           discriminant: page
-          value: date-field
+          value: fields/date
       - label: Empty
         link:
           discriminant: page
-          value: empty-field
+          value: fields/empty
       - label: Child
         link:
           discriminant: page
-          value: child-field
+          value: fields/child
       - label: Object
         link:
           discriminant: page
-          value: object-field
+          value: fields/object
       - label: Conditional
         link:
           discriminant: page
-          value: conditional-field
+          value: fields/conditional
       - label: Document
         link:
           discriminant: page
-          value: document-field
+          value: fields/document
       - label: Array
         link:
           discriminant: page
-          value: array-field
+          value: fields/array
   - groupName: Community
     items:
       - label: GitHub Discussions
