@@ -5,6 +5,9 @@ navGroups:
         link:
           discriminant: page
           value: introduction
+      - link:
+          discriminant: page
+          value: quick-start
       - label: Automated setup
         link:
           discriminant: page
@@ -21,8 +24,7 @@ navGroups:
           value: installation-next-js
       - label: Remix
         link:
-          discriminant: page
-          value: /docs
+          discriminant: coming-soon
   - groupName: Learn Keystatic
     items:
       - label: Collections & Singletons

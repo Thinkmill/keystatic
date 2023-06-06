@@ -20,6 +20,7 @@ export async function getNavigationMap() {
         label: label || page?.entry.title || '',
         href: url || '',
         title: page?.entry.title,
+        comingSoon: discriminant === 'coming-soon',
       };
     }),
   }));

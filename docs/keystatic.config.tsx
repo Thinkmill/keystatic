@@ -84,6 +84,41 @@ export const componentBlocks = {
     },
     chromeless: false,
   }),
+  tags: component({
+    preview: props => {
+      return (
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          {props.fields.tags.value.map(tag => (
+            <span
+              style={{
+                border: 'solid 1px #ddd',
+                padding: '0.25rem 0.5rem',
+                borderRadius: '20px',
+                fontSize: '11px',
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      );
+    },
+    label: 'Tags',
+    schema: {
+      tags: fields.multiselect({
+        label: 'Tags',
+        options: [
+          { label: 'Local', value: 'Local' },
+          { label: 'Github', value: 'github' },
+          { label: 'New project', value: 'New project' },
+          { label: 'Existing project', value: 'Existing project' },
+          { label: 'Astro', value: 'Astro' },
+          { label: 'Next.js', value: 'Next.js' },
+        ],
+      }),
+    },
+    chromeless: false,
+  }),
 };
 
 export default config({
@@ -108,6 +143,7 @@ export default config({
             blockTypes: true,
             softBreaks: true,
           },
+          layouts: [[1, 1]],
           dividers: true,
           links: true,
           images: { directory: 'public/images/content' },
@@ -133,10 +169,11 @@ export default config({
                 }),
                 link: fields.conditional(
                   fields.select({
-                    label: 'Page or URL',
+                    label: 'Link type',
                     options: [
                       { label: 'Page', value: 'page' },
                       { label: 'URL', value: 'url' },
+                      { label: 'Coming soon (no link)', value: 'coming-soon' },
                     ],
                     defaultValue: 'page',
                   }),
@@ -146,11 +183,12 @@ export default config({
                       collection: 'pages',
                     }),
                     url: fields.text({ label: 'URL' }),
+                    'coming-soon': fields.empty(),
                   }
                 ),
               }),
               {
-                label: 'Navigation Links',
+                label: 'Navigation items',
                 itemLabel: props => props.fields.label.value,
               }
             ),

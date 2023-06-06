@@ -50,7 +50,7 @@ export function filterDOMProps<P extends Record<string, any>>(
 
   for (const prop in props) {
     if (
-      Object.hasOwn(props, prop) &&
+      Object.prototype.hasOwnProperty.call(props, prop) &&
       (defaultPropNames.has(prop) ||
         (options.labellable && labellingPropNames.has(prop)) ||
         ('pick' in options && options.pick?.has(prop)) ||
