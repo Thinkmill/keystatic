@@ -112,7 +112,9 @@ const getRenderers = (
       <div
         className="grid gap-4"
         style={{
-          gridTemplateColumns: layout.map(x => `${x}fr`).join(' '),
+          gridTemplateColumns: layout
+            .map(layoutFraction => `${layoutFraction}fr`)
+            .join(' '),
         }}
       >
         {children.map((element, i) => (
