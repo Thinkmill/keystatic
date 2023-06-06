@@ -1,14 +1,4 @@
-import { Inter } from 'next/font/google';
-
-import '../../styles/global.css';
-import { HeaderNav } from '../../components/navigation/header-nav';
-import { getNavigationMap } from '../../utils/reader';
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-});
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata = {
   title: 'Keystatic',
@@ -34,17 +24,15 @@ export const metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const navigationMap = await getNavigationMap();
-
   return (
-    <div className={`min-h-screen flex flex-col ${inter.className}`}>
-      <HeaderNav navigationMap={navigationMap} />
-      {children}
-    </div>
+    <html lang="en">
+      <body>{children}</body>
+      <Analytics />
+    </html>
   );
 }
