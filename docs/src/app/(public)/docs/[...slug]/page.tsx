@@ -30,7 +30,6 @@ export default async function Docs({ params }: { params: { slug: string[] } }) {
           {page.title}
         </h1>
         <div className="flex flex-col gap-4">
-          {/* @ts-expect-error react-server component */}
           <DocumentRenderer slug={slug} document={await page.content()} />
         </div>
       </div>
