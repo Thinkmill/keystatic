@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.2.8",
+    "@voussoir/button": "^0.2.0",
     "@voussoir/core": "^5.0.1",
     "@voussoir/storybook": "^0.0.1",
     "@voussoir/test-utils": "^2.0.2",

@@ -1,20 +1,37 @@
-// import { chain } from '@react-aria/utils';
-import { usePress } from '@react-aria/interactions';
-import { Collection, Node } from '@react-types/shared';
+import { focusSafely, getFocusableTreeWalker } from '@react-aria/focus';
+import { isFocusVisible, useHover } from '@react-aria/interactions';
+import {
+  getScrollParent,
+  mergeProps,
+  scrollIntoViewport,
+} from '@react-aria/utils';
 import {
   useSelectableCollection,
   useSelectableItem,
 } from '@react-aria/selection';
-import { useCollator } from '@react-aria/i18n';
+import { useCollator, useLocale } from '@react-aria/i18n';
 import { TreeState, useTreeState } from '@react-stately/tree';
-import React, { Key, useMemo, useRef } from 'react';
+import {
+  Collection,
+  DOMAttributes,
+  FocusableElement,
+  Node,
+} from '@react-types/shared';
+import React, {
+  Key,
+  KeyboardEvent as ReactKeyboardEvent,
+  RefObject,
+  useMemo,
+  useRef,
+} from 'react';
 
 import { Icon } from '@voussoir/icon';
+import { chevronLeftIcon } from '@voussoir/icon/icons/chevronLeftIcon';
 import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
 import { css, tokenSchema, useStyleProps } from '@voussoir/style';
 
 import { NavTreeProps } from './types';
-import { isReactText } from '@voussoir/utils';
+import { isReactText, toDataAttributes } from '@voussoir/utils';
 import { Text } from '@voussoir/typography';
 import { SlotProvider } from '@voussoir/slots';
 import { Box } from '@voussoir/layout';
@@ -32,47 +49,14 @@ export function NavTree<T extends object>(props: NavTreeProps<T>) {
   );
 
   let { collectionProps } = useSelectableCollection({
+    ...props,
     keyboardDelegate,
     ref,
     selectionManager: state.selectionManager,
   });
 
   return (
-    <div
-      {...collectionProps}
-      {...styleProps}
-      onKeyDown={e => {
-        collectionProps?.onKeyDown?.(e);
-        let { selectionManager } = state;
-
-        let isExpanded = state.expandedKeys.has(selectionManager.focusedKey);
-        let item = state.collection.getItem(selectionManager.focusedKey);
-        console.log(state.expandedKeys);
-        switch (e.key) {
-          case 'ArrowLeft':
-            if (item?.hasChildNodes && isExpanded) {
-              state.toggleKey(selectionManager.focusedKey);
-            } else if (item?.parentKey) {
-              selectionManager.setFocusedKey(item.parentKey);
-            }
-            break;
-          case 'ArrowRight':
-            if (item?.hasChildNodes && !isExpanded) {
-              state.toggleKey(selectionManager.focusedKey);
-            } else if (item?.hasChildNodes) {
-              let firstChild = state.collection.getKeyAfter(
-                selectionManager.focusedKey
-              );
-              if (firstChild) {
-                selectionManager.setFocusedKey(firstChild);
-              }
-            }
-            break;
-        }
-      }}
-      ref={ref}
-      role="tree"
-    >
+    <div {...collectionProps} {...styleProps} ref={ref} role="treegrid">
       {resolveTreeNodes({ nodes: state.collection, state })}
     </div>
   );
@@ -92,20 +76,15 @@ function resolveTreeNodes<T>({
 
 function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
   let ref = useRef<HTMLDivElement>(null);
+  let { direction } = useLocale();
+  let { itemProps, isFocused, isSelected } = useTreeItem(
+    { onAction: () => state.toggleKey(node.key), node },
+    state,
+    ref
+  );
 
-  let { itemProps } = useSelectableItem({
-    key: node.key,
-    selectionManager: state.selectionManager,
-    ref: ref,
-  });
-
-  let { pressProps } = usePress({
-    ...itemProps,
-    onPress: () => state.toggleKey(node.key),
-  });
-
+  let isRtl = direction === 'rtl';
   let isExpanded = node.hasChildNodes && state.expandedKeys.has(node.key);
-  let isSelected = state.selectionManager.isSelected(node.key);
   let contents = isReactText(node.rendered) ? (
     <Text>{node.rendered}</Text>
   ) : (
@@ -115,61 +94,68 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
   return (
     <SlotProvider
       slots={{
-        text: {
-          truncate: true,
+        button: {
+          elementType: 'span',
+          marginStart: 'auto',
+          prominence: 'low',
         },
+        text: { color: 'inherit', truncate: true },
       }}
     >
       <div
-        {...pressProps}
+        {...itemProps}
+        {...toDataAttributes({ focused: isFocused })}
+        aria-level={node.level}
         aria-expanded={node.hasChildNodes ? isExpanded : undefined}
         aria-selected={isSelected}
         ref={ref}
-        role="treeitem"
-        className={css({})}
+        role="row"
+        className={css({
+          borderRadius: tokenSchema.size.radius.regular,
+          color: tokenSchema.color.alias.foregroundIdle,
+          cursor: 'default',
+          paddingInlineStart: `calc(${tokenSchema.size.space.regular} * ${
+            node.level + 1
+          })`,
+          outline: 'none',
+
+          '&[data-focused=true]': {
+            backgroundColor: tokenSchema.color.alias.backgroundFocused,
+            color: tokenSchema.color.alias.foregroundHovered,
+          },
+        })}
       >
         <div
-          role="presentation"
+          role="gridcell"
           className={css({
             alignItems: 'center',
             display: 'flex',
-            // gap: tokenSchema.size.space.small,
-            padding: tokenSchema.size.space.regular,
-            paddingInlineStart: tokenSchema.size.space.xlarge,
+            minHeight: tokenSchema.size.element.regular,
+            padding: tokenSchema.size.alias.focusRing,
+            gap: tokenSchema.size.space.small,
           })}
         >
           {node.hasChildNodes ? (
             <Icon
-              src={chevronRightIcon}
+              src={isRtl ? chevronLeftIcon : chevronRightIcon}
               color="neutralTertiary"
               UNSAFE_style={{
                 // marginInlineStart: `calc(${tokenSchema.size.space.xlarge} * -1)`,
-                transform: `rotate(${isExpanded ? 90 : 0}deg)`,
+                transform: `rotate(${isExpanded ? (isRtl ? -90 : 90) : 0}deg)`,
               }}
             />
           ) : (
             <Box width="element.xsmall" />
           )}
-          <div className={css({})}>{contents}</div>
+          {contents}
         </div>
-        {isExpanded && (
-          <div
-            className={css({
-              borderInlineStart: isSelected
-                ? `1px solid ${tokenSchema.color.border.muted}`
-                : undefined,
-              paddingInlineStart: tokenSchema.size.space.regular,
-            })}
-            role="group"
-          >
-            {resolveTreeNodes({
-              // @ts-expect-error
-              nodes: node.childNodes,
-              state,
-            })}
-          </div>
-        )}
       </div>
+      {isExpanded &&
+        resolveTreeNodes({
+          // @ts-expect-error
+          nodes: node.childNodes,
+          state,
+        })}
     </SlotProvider>
   );
 }
@@ -276,4 +262,150 @@ class TreeKeyboardDelegate<T> {
 
     return null;
   }
+}
+
+type TreeItemOptions<T> = {
+  /** Handler that is called when a user performs an action on an item. */
+  onAction?: (key: Key) => void;
+  /** An object representing the tree item. */
+  node: Node<T>;
+  /** Whether the tree item is contained in a virtual scroller. */
+  isVirtualized?: boolean;
+  /** Whether selection should occur on press up instead of press down. */
+  shouldSelectOnPressUp?: boolean;
+};
+
+/**
+ * Provides the behavior and accessibility implementation for an item within a tree.
+ * @param props - Props for the tree item.
+ * @param state - State of the parent list, as returned by `useTreeState`.
+ * @param ref - The ref attached to the tree element.
+ */
+export function useTreeItem<T>(
+  props: TreeItemOptions<T>,
+  state: TreeState<T>,
+  ref: RefObject<FocusableElement>
+) {
+  // Copied from useGridListItem + some modifications to make it not so grid specific
+  let { node, isVirtualized, shouldSelectOnPressUp } = props;
+  let { selectionManager } = state;
+  let { direction } = useLocale();
+
+  let { itemProps: selectableItemProps, ...itemStates } = useSelectableItem({
+    key: node.key,
+    selectionManager,
+    ref,
+    isVirtualized,
+    shouldSelectOnPressUp,
+    onAction: () => state.toggleKey(node.key),
+  });
+
+  let { hoverProps } = useHover({
+    isDisabled: state.disabledKeys.has(node.key),
+    onHoverStart() {
+      if (!isFocusVisible()) {
+        state.selectionManager.setFocused(true);
+        state.selectionManager.setFocusedKey(node.key);
+      }
+    },
+  });
+
+  let onKeyDownCapture = (e: ReactKeyboardEvent) => {
+    if (!ref.current || !e.currentTarget.contains(e.target as Element)) {
+      return;
+    }
+
+    let walker = getFocusableTreeWalker(ref.current);
+    walker.currentNode = document.activeElement as FocusableElement;
+
+    let isExpanded = state.expandedKeys.has(node.key);
+    let item = state.collection.getItem(node.key);
+
+    let handleArrowBackward = (focusable: FocusableElement) => {
+      if (focusable) {
+        e.preventDefault();
+        e.stopPropagation();
+        focusSafely(focusable);
+        scrollIntoViewport(focusable, {
+          containingElement: getScrollParent(ref.current!),
+        });
+      } else {
+        if (item?.hasChildNodes && isExpanded) {
+          state.toggleKey(node.key);
+        } else if (item?.parentKey) {
+          selectionManager.setFocusedKey(item.parentKey);
+        }
+      }
+    };
+    let handleArrowForward = (focusable: FocusableElement) => {
+      if (item?.hasChildNodes && !isExpanded) {
+        state.toggleKey(node.key);
+      } else if (focusable) {
+        e.preventDefault();
+        e.stopPropagation();
+        focusSafely(focusable);
+        scrollIntoViewport(focusable, {
+          containingElement: getScrollParent(ref.current!),
+        });
+      } else if (item?.hasChildNodes) {
+        let firstChild = state.collection.getKeyAfter(node.key);
+        if (firstChild) {
+          selectionManager.setFocusedKey(firstChild);
+        }
+      }
+    };
+
+    switch (e.key) {
+      case 'ArrowLeft': {
+        if (direction === 'rtl') {
+          handleArrowForward(walker.nextNode() as FocusableElement);
+        } else {
+          handleArrowBackward(walker.previousNode() as FocusableElement);
+        }
+        break;
+      }
+      case 'ArrowRight': {
+        if (direction === 'rtl') {
+          handleArrowBackward(walker.previousNode() as FocusableElement);
+        } else {
+          handleArrowForward(walker.nextNode() as FocusableElement);
+        }
+        break;
+      }
+      case 'ArrowUp':
+      case 'ArrowDown':
+        // Prevent this event from reaching row children, e.g. menu buttons. We want arrow keys to navigate
+        // to the row above/below instead. We need to re-dispatch the event from a higher parent so it still
+        // bubbles and gets handled by useSelectableCollection.
+        if (!e.altKey && ref.current.contains(e.target as Element)) {
+          e.stopPropagation();
+          e.preventDefault();
+          ref.current?.parentElement?.dispatchEvent(
+            new KeyboardEvent(e.nativeEvent.type, e.nativeEvent)
+          );
+        }
+        break;
+    }
+  };
+
+  let itemProps: DOMAttributes = mergeProps(selectableItemProps, hoverProps, {
+    onKeyDownCapture,
+    'aria-label': node.textValue || undefined,
+    'aria-selected': selectionManager.canSelectItem(node.key)
+      ? selectionManager.isSelected(node.key)
+      : undefined,
+    'aria-disabled': selectionManager.isDisabled(node.key) || undefined,
+  });
+
+  // if (isVirtualized) {
+  //   itemProps['aria-rowindex'] = node.index + 1;
+  // }
+
+  return {
+    itemProps,
+    isExpanded: node.hasChildNodes && state.expandedKeys.has(node.key),
+    isFocused:
+      selectionManager.isFocused && selectionManager.focusedKey === node.key, // FIXME: this can be removed when `useSelectableItem` is from latest
+    ...itemStates,
+  };
 }
