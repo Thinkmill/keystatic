@@ -90,17 +90,21 @@ const getRenderers = (
     list: ({ type, children }) => {
       if (type === 'ordered') {
         return (
-          <ol className="text-keystatic-gray-dark list-decimal list-inside">
+          <ol className="text-keystatic-gray-dark list-decimal list-inside mt-2">
             {children.map((child, index) => (
-              <li key={index}>{child}</li>
+              <li key={index} className="mb-2 leading-tight">
+                {child}
+              </li>
             ))}
           </ol>
         );
       }
       return (
-        <ul className="text-keystatic-gray-dark list-disc ml-4">
+        <ul className="text-keystatic-gray-dark list-disc ml-4 mt-2">
           {children.map((child, index) => (
-            <li key={index}>{child}</li>
+            <li key={index} className="mb-2 leading-tight">
+              {child}
+            </li>
           ))}
         </ul>
       );
@@ -110,13 +114,16 @@ const getRenderers = (
     },
     layout: ({ layout, children }) => (
       <div
-        className="grid gap-4"
+        className="grid gap-6 my-2"
         style={{
           gridTemplateColumns: layout.map(x => `${x}fr`).join(' '),
         }}
       >
         {children.map((element, i) => (
-          <div key={i} className="rounded-lg bg-keystatic-gray-light px-4 py-4">
+          <div
+            key={i}
+            className="rounded-lg bg-keystatic-gray-light p-4 text-sm"
+          >
             {element}
           </div>
         ))}
