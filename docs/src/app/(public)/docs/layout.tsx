@@ -21,13 +21,14 @@ export default async function RootLayout({
       <SideNav>
         {navigationMap?.map(({ groupName, items }) => (
           <NavGroup key={groupName} title={groupName}>
-            {items.map(({ label, href, title }) => (
+            {items.map(({ label, href, title, comingSoon }) => (
               <NavItem
                 key={href}
                 label={label}
                 href={href}
                 title={title}
                 level="sub"
+                comingSoon={comingSoon}
               />
             ))}
           </NavGroup>
