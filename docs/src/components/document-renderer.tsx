@@ -154,12 +154,27 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
   tags: ({ tags }) => {
     return (
       <div className="flex gap-2">
-        {tags.map(tag => (
-          <div className="rounded-full px-2 py-1 bg-amber-100 text-amber-800/80 font-medium text-[0.6875rem] leading-none uppercase self-start inline">
+        {tags.map((tag, index) => (
+          <div
+            className={`${getTagClasses(
+              index
+            )} rounded-full px-2 py-1 font-medium text-[0.6875rem] leading-none uppercase self-start inline`}
+          >
             {tag}
           </div>
         ))}
       </div>
     );
   },
+};
+
+const getTagClasses = (index: number) => {
+  switch (index) {
+    case 0:
+      return 'bg-indigo-100 text-indigo-800/80';
+    case 1:
+      return 'bg-amber-100 text-amber-800/80';
+    default:
+      return 'bg-fuchsia-100 text-fuchsia-800/80';
+  }
 };

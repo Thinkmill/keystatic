@@ -87,13 +87,14 @@ export const componentBlocks = {
   tags: component({
     preview: props => {
       return (
-        <div style={{ display: 'flex', gap: '2rem' }}>
+        <div style={{ display: 'flex', gap: '1rem' }}>
           {props.fields.tags.value.map(tag => (
             <span
               style={{
                 border: 'solid 1px #ddd',
-                padding: '0.5rem',
+                padding: '0.25rem 0.5rem',
                 borderRadius: '20px',
+                fontSize: '11px',
               }}
             >
               {tag}
@@ -111,6 +112,8 @@ export const componentBlocks = {
           { label: 'Github', value: 'github' },
           { label: 'New project', value: 'New project' },
           { label: 'Existing project', value: 'Existing project' },
+          { label: 'Astro', value: 'Astro' },
+          { label: 'Next.js', value: 'Next.js' },
         ],
       }),
     },

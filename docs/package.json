@@ -4,7 +4,8 @@
   "description": "",
   "private": true,
   "scripts": {
-    "dev": "next"
+    "dev": "next",
+    "build": "next build"
   },
   "keywords": [],
   "author": "",
