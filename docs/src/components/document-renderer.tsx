@@ -112,25 +112,20 @@ const getRenderers = (
     divider: () => {
       return <hr className="border-keystatic-gray my-2" />;
     },
-    layout: ({ layout, children }) => (
-      <div
-        className="grid gap-6 my-2"
-        style={{
-          gridTemplateColumns: layout
-            .map(layoutFraction => `${layoutFraction}fr`)
-            .join(' '),
-        }}
-      >
-        {children.map((element, i) => (
-          <div
-            key={i}
-            className="rounded-lg bg-keystatic-gray-light p-4 text-sm"
-          >
-            {element}
-          </div>
-        ))}
-      </div>
-    ),
+    layout: ({ children }) => {
+      return (
+        <div className="grid gap-6 my-2 grid-cols-1 sm:grid-cols-2">
+          {children.map((element, i) => (
+            <div
+              key={i}
+              className="rounded-lg bg-keystatic-gray-light p-4 text-sm"
+            >
+              {element}
+            </div>
+          ))}
+        </div>
+      );
+    },
   },
 });
 
