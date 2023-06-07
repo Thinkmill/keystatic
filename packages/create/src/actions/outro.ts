@@ -6,8 +6,8 @@ export const outro = (ctx: Context) => {
   log.message('Your project is ready!');
 
   log.message(`Next steps:
-cd ${ctx.projectName}
-${ctx.packageManager === 'npm' ? 'npm run' : ctx.packageManager} dev`);
+  cd ${ctx.projectName}
+  ${ctx.packageManager === 'npm' ? 'npm run' : ctx.packageManager} dev`);
 
   log.message(`If you have any questions or feedback reach out to us at:
 https://github.com/Thinkmill/keystatic/discussions`);
