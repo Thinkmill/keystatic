@@ -28,10 +28,10 @@ You can then create a new `reader` by calling `createReader` and passing it two 
 1. The path (relative to root) to the content files (as specified in the `directory` property of a given collection/singleton)
 1. The Keystatic config
 
-Here’s an example:
+Here's an example:
 
 ```javascript
-const reader = createReader('', keystaticConfig);
+const reader = createReader(process.cwd(), keystaticConfig);
 ```
 
 The `reader` will now give you access to the following **async** functions:
@@ -67,7 +67,7 @@ const data = await reader.singletons.{singletonName}.read();
 const navigation = await reader.singletons.navigation.read();
 ```
 
-**Remember:** this code cannot run in the browser, as it’s using some Node.js APIs.
+**Remember:** this code cannot run in the browser, as it's using some Node.js APIs.
 
 Good places to use the Reader API are:
 
@@ -76,9 +76,9 @@ Good places to use the Reader API are:
 - The `loader()` function in **Remix**
 - In **React Server Components**
 
-## The Document field’s structured data
+## The Document field's structured data
 
-If you retrieve content from a `document` field in Keystatic, you’ll get a JSON object with structured data.
+If you retrieve content from a `document` field in Keystatic, you'll get a JSON object with structured data.
 
 It can be a lot of work to turn this data object as HTML to render it on a page.
 

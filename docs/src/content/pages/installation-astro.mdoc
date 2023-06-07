@@ -205,7 +205,7 @@ Inside of the site's homepage, let's use that API to get the `headline` field va
 import { createReader } from '@keystatic/core/reader'
 
 // 1. Create a reader
-const reader = createReader('', keystaticConfig)
+const reader = createReader(process.cwd(), keystaticConfig)
 
 // 2. Read the "Homepage" singleton
 const homepageData = await reader.singletons.homepage.read()

@@ -116,7 +116,7 @@ Before we can use this, we also need to create some `API routes` for Keystatic
 
 ## Keystatic API Routes
 
-In the `pages` directory, create a new file called `api/keystatic/[...params].ts`
+Create a new file at `pages/api/keystatic/[...params].ts`
 
 Once again, we use Next.js's dynamic route segments here.
 
@@ -157,7 +157,7 @@ If you look in the `src` directory, a new `content` folder should have been crea
 
 Inside, you'll find a `_homepage` directory.
 
-That directory contains an `index.yaml` file with… the `headline` text you’ve just created!
+That directory contains an `index.yaml` file with… the `headline` text you've just created!
 
 Niiiice ✨
 
@@ -171,7 +171,7 @@ Keystatic comes with its own `reader` Node API to bring content to the front end
 
 ```jsx
 // 1. Create a reader
-const reader = createReader('', config);
+const reader = createReader(process.cwd(), config);
 
 // 2. Read the "Homepage" singleton
 const homepageData = await reader.singletons.homepage.read();
@@ -182,6 +182,31 @@ This `homepageData` will give us a JSON object with all the fields inside the `h
 Actually, there is only one field for now.
 
 Where you call the `reader` API in your app will depend on whether you are building your site in Next's `pages` or `app` directory.
+
+### Data-fetching in the app directory
+
+When building pages in Next's `app` directory, getting the data from the `reader` API can be done directly in a server-component.
+
+```jsx
+// src/app/page.tsx
+import { createReader } from '@keystatic/core/reader';
+import config from '../../keystatic.config';
+
+export default async function Index() {
+  // 1. Create a reader
+  const reader = createReader(process.cwd(), config);
+
+  // 2. Read the "Homepage" singleton
+  const homepageData = await reader.singletons.homepage.read();
+
+  return (
+    <main>
+      <h1>{homepageData?.headline}</h1>
+    </main>
+  );
+}
+
+```
 
 ### Data-fetching in the pages directory
 
@@ -195,7 +220,7 @@ import { InferGetStaticPropsType } from 'next';
 
 export async function getStaticProps() {
   // 1. Create a reader
-  const reader = createReader('', config);
+  const reader = createReader(process.cwd(), config);
 
   // 2. Read the "Homepage" singleton
   const homepageData = await reader.singletons.homepage.read();
@@ -215,29 +240,4 @@ export default function Index({
     </main>
   );
 }
-```
-
-### Data-fetching in the app directory
-
-When building pages in Next's `app` directory, getting the data from the `reader` API can be done directly in a server-component.
-
-```jsx
-// src/app/page.tsx
-import { createReader } from '@keystatic/core/reader';
-import config from '../../keystatic.config';
-
-export default async function Index() {
-  // 1. Create a reader
-  const reader = createReader('', config);
-
-  // 2. Read the "Homepage" singleton
-  const homepageData = await reader.singletons.homepage.read();
-
-  return (
-    <main>
-      <h1>{homepageData?.headline}</h1>
-    </main>
-  );
-}
-
 ```
