@@ -28,7 +28,7 @@
     "picocolors": "^1.0.0"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.0.105",
+    "@keystatic/core": "^0.0.106",
     "tsx": "^3.8.0"
   },
   "peerDependencies": {

@@ -5,5 +5,4 @@ packages:
   - 'keystatic'
   - 'packages/*'
   - 'apps/*'
-  - 'templates/*'
   - 'docs'
