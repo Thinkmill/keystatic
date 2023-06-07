@@ -5,21 +5,21 @@ title: Frequently asked questions
 
 Yes, you do.
 
-If you're hitting strange issues, like your content not persisting after hitting save, or some Admin UI error notifications… there's a good chance you have React strict more turned on.
+If you're hitting strange issues, like your content not persisting after hitting save, or some Admin UI error notifications… there's a good chance you have React Strict Mode turned on.
 
 Turning it off will make most of those issues go away.
 
-## Can I increase "Body exceeded 1mb limit" on an entry?
+## When uploading an image I received the error "Body exceeded 1mb limit"
 
-When creating a new entry, you might hit the following error:
+When creating a new entry in the Admin UI, you might hit the following error when trying to save your changes:
 
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/faq1.png"
    alt="Screenshot of the Keystatic Admin with the error message \"Body exceeded 1mb limit\"" /%}
 
-In the context of Next.js, this is because API routes have a size limitations for requests and responses
+In the context of Next.js, this is because API routes have size limitations for requests and responses.
 
-You can increase (or turn off in the case of the response) these limit by **exporting a custom config** to the `pages/api/keystatic/[[...params]].tsx` API page like so:
+You can increase (or turn off in the case of the response) these limits by **exporting a custom config** to the `pages/api/keystatic/[[...params]].tsx` API page like so:
 
 ```diff
 import { makeAPIRouteHandler } from '@keystatic/next/api'
