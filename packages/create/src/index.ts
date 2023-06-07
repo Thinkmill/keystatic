@@ -7,6 +7,7 @@ export type Context = {
   projectName?: string;
   packageManager?: 'npm' | 'pnpm' | 'yarn';
   framework: 'Next.js' | 'Astro' | 'Remix';
+  cwd?: string;
 };
 
 async function main() {

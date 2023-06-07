@@ -4,7 +4,7 @@ import { Context } from '..';
 
 export const createProject = async (ctx: Context) => {
   const spin = spinner();
-  spin.start(`Creating your ⚡️ Keystatic ⚡️ ${ctx.framework} project...`);
+  spin.start(`Creating your ⚡️ Keystatic ${ctx.framework} project...`);
 
   const template =
     'github:thinkmill/keystatic/templates/next-app-dir#create-cli';
@@ -12,7 +12,7 @@ export const createProject = async (ctx: Context) => {
     await downloadTemplate(template, {
       force: true,
       provider: 'github',
-      cwd: process.cwd(),
+      cwd: ctx.cwd,
       dir: '.',
     });
   } catch (err: any) {

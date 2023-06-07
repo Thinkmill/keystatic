@@ -7,7 +7,8 @@ export const outro = (ctx: Context) => {
 
   log.message(`Next steps:
   cd ${ctx.projectName}
-  ${ctx.packageManager === 'npm' ? 'npm run' : ctx.packageManager} dev`);
+  ${ctx.packageManager === 'npm' ? 'npm run' : ctx.packageManager} dev
+  http://localhost:3000`);
 
   log.message(`If you have any questions or feedback reach out to us at:
 https://github.com/Thinkmill/keystatic/discussions`);
