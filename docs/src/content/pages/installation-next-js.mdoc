@@ -218,10 +218,10 @@ import { createReader } from '@keystatic/core/reader';
 import config from '../../keystatic.config';
 import { InferGetStaticPropsType } from 'next';
 
-export async function getStaticProps() {
-  // 1. Create a reader
-  const reader = createReader(process.cwd(), config);
+// 1. Create a reader
+const reader = createReader(process.cwd(), config);
 
+export async function getStaticProps() {
   // 2. Read the "Homepage" singleton
   const homepageData = await reader.singletons.homepage.read();
 
