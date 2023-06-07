@@ -1,0 +1,34 @@
+---
+title: Image field
+---
+The `image` field is used to upload an image.
+
+You can specify an optional `directory` where to store that image in your project tree. This is useful when you want your images in a `public` or `static` directory, to adhere to conventions for a specific framework.
+
+There's also an optional `publicPath` option that lets you define how the image path should be retrieved when reading the value of the field.
+
+## Example usage
+
+```typescript
+avatar: fields.image({
+  label: 'Avatar',
+  description: 'The avatar for this user',
+  // This will output the images in the "public" directory
+  directory: 'public/images/avatars',
+  publicPath: '/images/avatars/'
+})
+```
+
+## Type signature
+
+```typescript
+image({
+  label: string;
+  directory?: string;
+  validation?: {
+    isRequired?: IsRequired;
+  };
+  description?: string;
+  publicPath?: string;
+})
+```

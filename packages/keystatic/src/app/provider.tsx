@@ -7,7 +7,7 @@ import { Toaster } from '@voussoir/toast';
 import {
   AnchorHTMLAttributes,
   ForwardedRef,
-  ReactElement,
+  ReactNode,
   RefAttributes,
   useMemo,
 } from 'react';
@@ -191,7 +191,7 @@ export default function Provider({
   Link: (
     props: { href: string } & AnchorHTMLAttributes<HTMLAnchorElement> &
       RefAttributes<HTMLAnchorElement>
-  ) => ReactElement | null;
+  ) => ReactNode;
   config: Config;
 }) {
   const UniversalLink = useMemo(

@@ -1,0 +1,96 @@
+---
+title: 'Local vs GitHub: storage strategy'
+---
+Keystatic currently has two strategies for its content generation: `github` and `local`.
+
+## GitHub strategy
+
+{% aside %}
+{% component-inline-prop propPath=["icon"] %}⚡️{% /component-inline-prop %}
+
+{% component-block-prop propPath=["content"] %}
+In most cases where external collaboration from contributors is anticipated, the `github` approach will make more sense: it enables anyone with a GitHub account (and “write” rights on the repo) to make commits, create branches and open Pull Requests for content changes.
+
+This strategy requires your project to be on an existing GitHub repository.
+{% /component-block-prop %}
+{% /aside %}
+
+In your Keystatic config, you can set the `storage` strategy to `github` like so:
+
+```typescript
+// Keystatic config
+import { config } from '@keystatic/core'
+
+export default config({
+  storage: {
+    kind: 'github',
+    repo: {
+      owner: YOUR_REPO_OWNER,
+      name: YOUR_REPO_NAME
+    }
+  }
+})
+
+```
+
+When you visit the `/keystatic` route in the browser for the first time with the `github` storage strategy, you’ll be invited to create or configure a GitHub app:
+
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy1.png" /%}
+
+If you click on the “Create GitHub App” button, you’ll be taken to GitHub and asked for a name for your App.
+
+Once you create it, you should see this screen:
+
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy2.png" /%}
+
+Click on “Install GitHub App” and give it access to your repo:
+
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy3.png" /%}
+
+If you look at your project, a new `.env`  file should have been created with some Keystatic environment variables:
+
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy4.png" /%}
+
+If you visit `/keystatic` one more time, you should see the Keystatic dashboard!
+
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy5.png" /%}
+
+You know the `github` strategy is working if you see the GitHub-related UI elements (branch selector, GitHub contextual dropdown menu, branch list).
+
+## Local strategy
+
+{% aside %}
+{% component-inline-prop propPath=["icon"] %}⚡️{% /component-inline-prop %}
+
+{% component-block-prop propPath=["content"] %}
+The `local` strategy is much _simpler_ than the `github` strategy, but it’s more limiting in its collaboration capabilities.
+
+If you’re a solo dev or a team that only wants to use Keystatic while running it locally, the `local` strategy might be **great** for you!
+
+You don’t need a GitHub App to run that strategy. You don’t need a GitHub account at all, actually. The content files are generated on inside your local project directly.
+{% /component-block-prop %}
+{% /aside %}
+
+In your Keystatic config, you can set the `storage` strategy to `local` like so:
+
+```typescript
+// Keystatic config
+import { config } from '@keystatic/core'
+
+export default config({
+  storage: { kind: 'local' }
+})
+
+```
+
+That’s it!
+
+You’ll notice there are no signs of GitHub-related UI elements in the Keystatic Admin UI:
+
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy6.png" /%}

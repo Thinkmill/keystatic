@@ -1,0 +1,53 @@
+---
+title: Slug field
+---
+The `slug` field auto-generates a URL-friendly string alongside another text string.
+
+Typically used in scenarios where you'd want a `text` field to define the slug of an entry — think of a post `title` or an author `name`. You set that field to a `slug` field instead. It will store the `text` string you need, while also generating a `slug` for you.
+
+You'll be presented with two input fields in the Admin UI. You can manually override that `slug` value, and have control over the labels for both fields.
+
+## Usage example
+
+```typescript
+title: fields.slug({
+  name: {
+    label: 'Title',
+    description: 'The title of the post',
+  },
+  // Optional slug label overrides
+  slug: {
+    label: 'SEO-friendly slug',
+    description: 'This will define the file/folder name for this entry'
+  }
+})
+```
+
+## Type signature
+
+```typescript
+slug(args: {
+  name: {
+    label: string;
+    defaultValue?: string;
+    description?: string;
+    validation?: {
+      length?: {
+        min?: number;
+        max?: number;
+      };
+    };
+  };
+  slug?: {
+    label?: string;
+    generate?: (name: string) => string;
+    description?: string;
+    validation?: {
+      length?: {
+        min?: number;
+        max?: number;
+      };
+    };
+  };
+})
+```

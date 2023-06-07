@@ -1,5 +1,13 @@
 # @keystatic/remix-test-app
 
+## 0.0.69
+
+### Patch Changes
+
+- Updated dependencies [618ba4aa]
+- Updated dependencies [30298e81]
+  - @keystatic/core@0.0.106
+
 ## 0.0.68
 
 ### Patch Changes

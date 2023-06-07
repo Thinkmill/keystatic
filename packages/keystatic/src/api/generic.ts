@@ -22,8 +22,6 @@ export type APIRouteConfig = {
   clientId?: string;
   /** @default process.env.KEYSTATIC_GITHUB_CLIENT_SECRET */
   clientSecret?: string;
-  /** @default process.env.KEYSTATIC_URL */
-  url?: string;
   /** @default process.env.KEYSTATIC_SECRET */
   secret?: string;
   localBaseDirectory?: string;
@@ -33,7 +31,6 @@ export type APIRouteConfig = {
 type InnerAPIRouteConfig = {
   clientId: string;
   clientSecret: string;
-  url: string | undefined;
   secret: string;
   config: Config;
 };
@@ -62,6 +59,13 @@ function redirect(
     headers: [...(initialHeaders ?? []), ['Location', to]],
   };
 }
+
+const keyToEnvVar = {
+  clientId: 'KEYSTATIC_GITHUB_CLIENT_ID',
+  clientSecret: 'KEYSTATIC_GITHUB_CLIENT_SECRET',
+  secret: 'KEYSTATIC_SECRET',
+};
+
 export function makeGenericAPIRouteHandler(
   _config: APIRouteConfig,
   options?: { slugEnvName?: string }
@@ -70,7 +74,6 @@ export function makeGenericAPIRouteHandler(
     clientId: _config.clientId ?? process.env.KEYSTATIC_GITHUB_CLIENT_ID,
     clientSecret:
       _config.clientSecret ?? process.env.KEYSTATIC_GITHUB_CLIENT_SECRET,
-    url: _config.url ?? process.env.KEYSTATIC_URL ?? undefined,
     secret: _config.secret ?? process.env.KEYSTATIC_SECRET,
     config: _config.config,
   };
@@ -78,19 +81,60 @@ export function makeGenericAPIRouteHandler(
     _config.localBaseDirectory ?? process.cwd()
   );
 
-  const getParams = (req: KeystaticRequest) =>
-    new URL(req.url, 'http://localhost').pathname
+  const getParams = (req: KeystaticRequest) => {
+    let url;
+    try {
+      url = new URL(req.url);
+    } catch (err) {
+      throw new Error(
+        `Found incomplete URL in Keystatic API route URL handler${
+          options?.slugEnvName === 'NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG'
+            ? ". Make sure you're using the latest version of @keystatic/next"
+            : ''
+        }`
+      );
+    }
+    return url.pathname
       .replace(/^\/api\/keystatic\/?/, '')
       .split('/')
       .map(x => decodeURIComponent(x))
       .filter(Boolean);
+  };
 
-  if (
-    !_config2.clientId ||
-    !_config2.clientSecret ||
-    (!_config2.url && process.env.NODE_ENV !== 'development') ||
-    !_config2.secret
-  ) {
+  if (_config2.config.storage.kind === 'local') {
+    return async function keystaticAPIRoute(
+      req: KeystaticRequest
+    ): Promise<KeystaticResponse> {
+      const params = getParams(req);
+      const joined = params.join('/');
+      if (req.method === 'GET' && joined === 'tree') {
+        return tree(req, _config2.config, baseDirectory);
+      }
+      if (req.method === 'GET' && params[0] === 'blob') {
+        return blob(req, _config2.config, params, baseDirectory);
+      }
+      if (req.method === 'POST' && joined === 'update') {
+        return update(req, _config2.config, baseDirectory);
+      }
+      return { status: 404, body: 'Not Found' };
+    };
+  }
+
+  if (!_config2.clientId || !_config2.clientSecret || !_config2.secret) {
+    if (process.env.NODE_ENV !== 'development') {
+      const missingKeys = (
+        ['clientId', 'clientSecret', 'secret'] as const
+      ).filter(x => !_config2[x]);
+      throw new Error(
+        `Missing required config in Keystatic API setup when using the 'github' storage mode:\n${missingKeys
+          .map(
+            key => `- ${key} (can be provided via ${keyToEnvVar[key]} env var)`
+          )
+          .join(
+            '\n'
+          )}\n\nIf you've created your GitHub app locally, make sure to copy the environment variables from your local env file to your deployed environment`
+      );
+    }
     return async function keystaticAPIRoute(
       req: KeystaticRequest
     ): Promise<KeystaticResponse> {
@@ -106,24 +150,12 @@ export function makeGenericAPIRouteHandler(
       ) {
         return redirect('/keystatic/setup');
       }
-      if (_config2.config?.storage.kind === 'local') {
-        if (req.method === 'GET' && joined === 'tree') {
-          return tree(req, _config2.config, baseDirectory);
-        }
-        if (req.method === 'GET' && params[0] === 'blob') {
-          return blob(req, _config2.config, params, baseDirectory);
-        }
-        if (req.method === 'POST' && joined === 'update') {
-          return update(req, _config2.config, baseDirectory);
-        }
-      }
       return { status: 404, body: 'Not Found' };
     };
   }
   const config: InnerAPIRouteConfig = {
     clientId: _config2.clientId,
     clientSecret: _config2.clientSecret,
-    url: _config2.url,
     secret: _config2.secret,
     config: _config2.config,
   };
@@ -136,21 +168,21 @@ export function makeGenericAPIRouteHandler(
     if (joined === 'github/oauth/callback') {
       return githubOauthCallback(req, config);
     }
-    if (joined === 'from-template-deploy') {
-      return redirect(`${config.url}/keystatic/from-template-deploy`);
+    // TODO: this is the last usage of KEYSTATIC_URL, it should go away ideally
+    if (
+      joined === 'from-template-deploy' &&
+      process.env.KEYSTATIC_URL !== undefined
+    ) {
+      let url: URL | undefined;
+      try {
+        url = new URL(process.env.KEYSTATIC_URL);
+      } catch {}
+      if (url) {
+        return redirect(
+          `${process.env.KEYSTATIC_URL}/keystatic/from-template-deploy`
+        );
+      }
     }
-    if (config.config?.storage.kind === 'local') {
-      if (req.method === 'GET' && joined === 'tree') {
-        return tree(req, config.config, baseDirectory);
-      }
-      if (req.method === 'GET' && params[0] === 'blob') {
-        return blob(req, config.config, params, baseDirectory);
-      }
-      if (req.method === 'POST' && params[0] === 'update') {
-        return update(req, config.config, baseDirectory);
-      }
-    }
-
     if (joined === 'github/login') {
       return githubLogin(req, config);
     }
@@ -503,21 +535,18 @@ async function githubLogin(
   req: KeystaticRequest,
   config: InnerAPIRouteConfig
 ): Promise<KeystaticResponse> {
-  const rawFrom = new URL(req.url, 'http://localhost').searchParams.get('from');
+  const reqUrl = new URL(req.url);
+  const rawFrom = reqUrl.searchParams.get('from');
   const from =
     typeof rawFrom === 'string' && keystaticRouteRegex.test(rawFrom)
       ? rawFrom
       : '/';
-  const host = req.headers.get('host');
-  const port = (host ? new URL(`http://${host}`).port : undefined) || '80';
   const state = randomBytes(10).toString('hex');
   const url = new URL('https://github.com/login/oauth/authorize');
   url.searchParams.set('client_id', config.clientId);
   url.searchParams.set(
     'redirect_uri',
-    `${
-      config.url === undefined ? `http://127.0.0.1:${port}` : config.url
-    }/api/keystatic/github/oauth/callback`
+    `${reqUrl.origin}/api/keystatic/github/oauth/callback`
   );
   if (from === '/') {
     return redirect(url.toString());
