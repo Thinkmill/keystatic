@@ -14,7 +14,7 @@ export default async function DocumentRenderer({
   document,
 }: DocumentRendererProps & { slug: string }) {
   const highlighter = await shiki.getHighlighter({
-    theme: 'min-light',
+    theme: 'github-light',
   });
 
   return (
