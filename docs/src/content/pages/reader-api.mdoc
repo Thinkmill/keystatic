@@ -25,7 +25,7 @@ import keystaticConfig from '../../keystatic.config';
 
 You can then create a new `reader` by calling `createReader` and passing it two arguments:
 
-1. The path (relative to root) to the content files (as specified in the `directory` property of a given collection/singleton)
+1. The path (relative to root) to the content files as specified in the `directory` property of a given collection/singleton. In most setups this will just be the current working directory: `process.cwd()`.
 1. The Keystatic config
 
 Here's an example:
