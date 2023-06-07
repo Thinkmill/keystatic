@@ -6,9 +6,10 @@ import { notFound } from 'next/navigation';
 
 const reader = createReader('', keystaticConfig);
 
-export default async function Docs({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function Docs({ params }: { params: { slug: string[] } }) {
+  const { slug: slugPath } = params;
 
+  const slug = slugPath.join('/');
   const page = await reader.collections.pages.read(slug);
 
   if (!page) notFound();
@@ -41,6 +42,6 @@ export async function generateStaticParams() {
   const slugs = await reader.collections.pages.list();
 
   return slugs.map(slug => ({
-    slug,
+    slug: slug.split('/'),
   }));
 }

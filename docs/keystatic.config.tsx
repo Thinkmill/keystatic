@@ -130,7 +130,7 @@ export default config({
       label: 'Pages',
       slugField: 'title',
       format: { contentField: 'content' },
-      path: 'src/content/pages/*',
+      path: 'src/content/pages/**',
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         content: fields.document({
