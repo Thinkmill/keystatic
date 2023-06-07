@@ -1,6 +1,7 @@
 import fs from 'node:fs';
-import path from 'node:path';
-import { text, isCancel } from '@clack/prompts';
+// import path from 'node:path';
+import { text, confirm, log, isCancel } from '@clack/prompts';
+import color from 'picocolors';
 import { cancelStep } from '../utils';
 import { Context } from '..';
 
@@ -15,17 +16,30 @@ export const projectName = async (ctx: Context) => {
 
   if (typeof projectName === 'string') {
     ctx.projectName = projectName;
-    // Check for package.json
-    // if true = We seem to be in a project already, do you wish to continue here?
+
     if (projectName === '.' || projectName === './') {
       ctx.cwd = process.cwd();
     } else {
       ctx.cwd = projectName;
     }
 
-    // const isProject = fs.existsSync(path.join(ctx.cwd, 'package.json'));
-    // if (isProject) {
+    const isDirectoryEmpty =
+      fs.existsSync(ctx.cwd) && fs.readdirSync(ctx.cwd).length;
+    if (isDirectoryEmpty) {
+      log.warn(
+        `${color.blue(ctx.cwd)} is ${color.red(
+          'not empty'
+        )}. Some files may be overwritten.`
+      );
 
-    // }
+      const shouldContinue = await confirm({
+        message: 'Do you wish to continue?',
+        initialValue: false,
+      });
+
+      if (!shouldContinue || isCancel(shouldContinue)) {
+        cancelStep('Exiting create Keystatic app');
+      }
+    }
   }
 };

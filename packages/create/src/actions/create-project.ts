@@ -1,15 +1,25 @@
-import { spinner } from '@clack/prompts';
+import { spinner, log } from '@clack/prompts';
 import { downloadTemplate } from 'giget';
+import color from 'picocolors';
 import { Context } from '..';
+
+const templates = {
+  nextAppDir: 'github:thinkmill/keystatic/templates/next-app-dir#create-cli',
+};
 
 export const createProject = async (ctx: Context) => {
   const spin = spinner();
-  spin.start(`Creating your ⚡️ Keystatic ${ctx.framework} project...`);
+  log.step(
+    `Creating your ${color.green(
+      `⚡️ Keystatic ${ctx.framework}`
+    )} project at ${color.blue(ctx.projectName)}`
+  );
 
-  const template =
-    'github:thinkmill/keystatic/templates/next-app-dir#create-cli';
+  spin.start(`Downloading template and creating files...`);
+
+  const defaultTemplate = templates.nextAppDir;
   try {
-    await downloadTemplate(template, {
+    await downloadTemplate(defaultTemplate, {
       force: true,
       provider: 'github',
       cwd: ctx.cwd,

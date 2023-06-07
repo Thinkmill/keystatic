@@ -1,17 +1,18 @@
-import { log, outro as outroPrompt } from '@clack/prompts';
-import color from 'picocolors';
+import { log, outro as outroPrompt, note } from '@clack/prompts';
 import { Context } from '..';
 
 export const outro = (ctx: Context) => {
   log.message('Your project is ready!');
 
-  log.message(`Next steps:
-  cd ${ctx.projectName}
-  ${ctx.packageManager === 'npm' ? 'npm run' : ctx.packageManager} dev
-  http://localhost:3000`);
+  note(
+    `cd ${ctx.projectName}
+${ctx.packageManager === 'npm' ? 'npm run' : ctx.packageManager} dev
+http://127.0.0.1:3000/keystatic`,
+    'Next steps:'
+  );
 
   log.message(`If you have any questions or feedback reach out to us at:
 https://github.com/Thinkmill/keystatic/discussions`);
 
-  outroPrompt(`${color.inverse('Happy coding ⚡️')}`);
+  outroPrompt(`Happy coding ⚡️`);
 };
