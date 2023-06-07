@@ -11,13 +11,15 @@ export type Context = {
   cwd?: string;
 };
 
+type Step = (ctx: Context) => Promise<void> | void;
+
 async function main() {
   const ctx: Context = {
     framework: 'Next.js',
     packageManager: getPackageManager().name,
   };
 
-  const steps = [intro, projectName, createProject, outro];
+  const steps: Step[] = [intro, projectName, createProject, outro];
 
   for (const step of steps) {
     await step(ctx);

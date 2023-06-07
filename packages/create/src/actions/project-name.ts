@@ -1,5 +1,4 @@
 import fs from 'node:fs';
-// import path from 'node:path';
 import { text, confirm, log, isCancel } from '@clack/prompts';
 import color from 'picocolors';
 import { cancelStep } from '../utils';
