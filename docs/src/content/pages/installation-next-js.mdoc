@@ -89,7 +89,7 @@ export default function RootLayout() {
 
 ```
 
-To ensure all routes in the keystatic segment work as expected, we can leverage Next's [Dynamic Route Segments](https://beta.nextjs.org/docs/routing/route-handlers#dynamic-route-segments) to match file paths of any depth.
+To ensure all routes in the keystatic segment work as expected, we can leverage Next.js' [Optional Catch-all Segments](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes#optional-catch-all-segments) to match file paths of any depth.
 
 Let's create a new folder called `[[...params]]`, and add a `page.tsx` file with the following:
 
@@ -181,21 +181,21 @@ This `homepageData` will give us a JSON object with all the fields inside the `h
 
 Actually, there is only one field for now.
 
-Where you call the `reader` API in your app will depend on whether you are building your site in Next's `pages` or `app` directory.
+Where you call the `reader` API in your app will depend on whether you are building your site in Next.js' `pages` or `app` directory.
 
 ### Data-fetching in the app directory
 
-When building pages in Next's `app` directory, getting the data from the `reader` API can be done directly in a server-component.
+When building pages in Next.js' `app` directory, getting the data from the `reader` API can be done directly in a server-component.
 
 ```jsx
 // src/app/page.tsx
 import { createReader } from '@keystatic/core/reader';
 import config from '../../keystatic.config';
 
-export default async function Index() {
-  // 1. Create a reader
-  const reader = createReader(process.cwd(), config);
+// 1. Create a reader
+const reader = createReader(process.cwd(), config);
 
+export default async function Index() {
   // 2. Read the "Homepage" singleton
   const homepageData = await reader.singletons.homepage.read();
 
@@ -210,7 +210,7 @@ export default async function Index() {
 
 ### Data-fetching in the pages directory
 
-When building pages in Next's `pages` directory, getting the data from the `reader` API must be done in the `getStaticProps` function for staticly generated sites, or in `getServerSideProps` for apps running on a server.
+When building pages in Next.js' `pages` directory, getting the data from the `reader` API must be done in the `getStaticProps` function for staticly generated sites, or in `getServerSideProps` for apps running on a server.
 
 ```jsx
 // src/pages/index.tsx
