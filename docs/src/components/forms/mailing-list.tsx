@@ -26,7 +26,7 @@ export default function MailingListForm() {
           name="mailing-list-email"
           id="mailing-list-email"
           required
-          className="mt-3 w-full rounded-lg border border-black p-3 leading-none"
+          className="form-input mt-3 w-full rounded-lg border border-black p-3 leading-none"
         />
       </div>
       <Button

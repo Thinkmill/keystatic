@@ -39,4 +39,10 @@ module.exports = {
       },
     },
   },
+  plugins: [
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/forms')({
+      strategy: 'class', // only generate classes (to not globally override Voussiour input styles)
+    }),
+  ],
 };

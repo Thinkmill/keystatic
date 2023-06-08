@@ -1,14 +1,6 @@
-import { Inter } from 'next/font/google';
-
 import '../../styles/global.css';
 import { HeaderNav } from '../../components/navigation/header-nav';
 import { getNavigationMap } from '../../utils/reader';
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-});
 
 export const metadata = {
   title: 'Keystatic',
@@ -42,7 +34,7 @@ export default async function RootLayout({
   const navigationMap = await getNavigationMap();
 
   return (
-    <div className={`min-h-screen flex flex-col ${inter.variable} font-sans`}>
+    <div className="min-h-screen flex flex-col">
       <HeaderNav navigationMap={navigationMap} />
       {children}
     </div>
