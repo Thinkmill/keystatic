@@ -1,6 +1,6 @@
 import { cancel } from '@clack/prompts';
 
-export const cancelStep = (message = 'Keystatic creation cancelled') => {
+export const cancelStep = (message = 'Keystatic app creation cancelled') => {
   cancel(message);
   return process.exit(0);
 };

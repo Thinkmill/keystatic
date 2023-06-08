@@ -6,6 +6,7 @@ export const outro = (ctx: Context) => {
 
   note(
     `cd ${ctx.projectName}
+${ctx.packageManager} install
 ${ctx.packageManager === 'npm' ? 'npm run' : ctx.packageManager} dev
 http://127.0.0.1:3000/keystatic`,
     'Next steps:'
