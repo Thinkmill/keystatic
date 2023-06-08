@@ -2168,7 +2168,7 @@ importers:
       '@types/node': 16.11.13
       '@types/react': ^18.2.8
       '@vercel/analytics': ^0.1.8
-      '@voussoir/core': workspace:^5.0.3
+      '@voussoir/core': ^5.0.3
       '@voussoir/progress': 0.1.3
       autoprefixer: ^10.4.13
       cookie: ^0.5.0
@@ -12640,7 +12640,7 @@ packages:
       minipass-pipeline: 1.2.4
       mkdirp: 1.0.4
       p-map: 4.0.0
-      promise-inflight: 1.0.1
+      promise-inflight: 1.0.1_bluebird@3.7.2
       rimraf: 3.0.2
       ssri: 8.0.1
       tar: 6.1.13
@@ -21552,15 +21552,6 @@ packages:
   /process/0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
-    dev: true
-
-  /promise-inflight/1.0.1:
-    resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
-    peerDependencies:
-      bluebird: '*'
-    peerDependenciesMeta:
-      bluebird:
-        optional: true
     dev: true
 
   /promise-inflight/1.0.1_bluebird@3.7.2:
