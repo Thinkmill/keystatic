@@ -51,7 +51,7 @@ export default function SendMessageForm() {
           id="message"
           name="message"
           rows={8}
-          className="mt-3 w-full rounded-lg border border-black p-3 leading-none"
+          className="form-textarea mt-3 w-full rounded-lg border border-black p-3 leading-none"
         />
       </div>
 
