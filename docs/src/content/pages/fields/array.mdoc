@@ -9,7 +9,7 @@ The `label` for the `array` field is defined as an options object (optional) as 
 
 ## Example usage
 
-Simple:
+### Simple
 
 ```typescript
 tags: fields.array(
@@ -22,7 +22,7 @@ tags: fields.array(
 )
 ```
 
-Complex:
+### Complex
 
 ```typescript
 complexArray: fields.array(
@@ -53,32 +53,4 @@ complexArray: fields.array(
 
 ## Type signature
 
-```typescript
-array<ElementField extends ComponentSchema>(
-  element: ElementField,
-  opts?: {
-    label?: string;
-    description?: string;
-    itemLabel?: (props: GenericPreviewProps<ElementField, unknown>) => string;
-    asChildTag?: string;
-    slugField?: ElementField extends { kind: 'object' }
-      ? {
-          [K in keyof ElementField['fields']]: ElementField['fields'][K] extends SlugFormField<
-            any,
-            any,
-            any,
-            any
-          >
-            ? K
-            : never;
-        }[keyof ElementField['fields']]
-      : never;
-    validation?: {
-      length?: {
-        min?: number;
-        max?: number;
-      };
-    };
-  }
-)
-```
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.array](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.array)
