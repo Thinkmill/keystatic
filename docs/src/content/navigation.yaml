@@ -39,10 +39,6 @@ navGroups:
         link:
           discriminant: page
           value: reader-api
-      - label: Renderer API
-        link:
-          discriminant: page
-          value: renderer-api
       - label: Organised content
         link:
           discriminant: page
@@ -53,18 +49,50 @@ navGroups:
           value: frequently-asked-questions
   - groupName: Fields API
     items:
-      - label: Text
+      - label: Array
         link:
           discriminant: page
-          value: fields/text
+          value: fields/array
+      - label: Checkbox
+        link:
+          discriminant: page
+          value: fields/checkbox
+      - label: Child
+        link:
+          discriminant: page
+          value: fields/child
+      - label: Conditional
+        link:
+          discriminant: page
+          value: fields/conditional
+      - label: Date
+        link:
+          discriminant: page
+          value: fields/date
+      - label: Document
+        link:
+          discriminant: page
+          value: fields/document
+      - label: Empty
+        link:
+          discriminant: page
+          value: fields/empty
+      - label: Image
+        link:
+          discriminant: page
+          value: fields/image
       - label: Integer
         link:
           discriminant: page
           value: fields/integer
-      - label: URL
+      - label: Multi-Select
         link:
           discriminant: page
-          value: fields/url
+          value: fields/multi-select
+      - label: Object
+        link:
+          discriminant: page
+          value: fields/object
       - label: Path Reference
         link:
           discriminant: page
@@ -81,56 +109,20 @@ navGroups:
         link:
           discriminant: page
           value: fields/slug
-      - label: Multi-Select
+      - label: Text
         link:
           discriminant: page
-          value: fields/multi-select
-      - label: Checkbox
+          value: fields/text
+      - label: URL
         link:
           discriminant: page
-          value: fields/checkbox
-      - label: Image
-        link:
-          discriminant: page
-          value: fields/image
-      - label: Date
-        link:
-          discriminant: page
-          value: fields/date
-      - label: Empty
-        link:
-          discriminant: page
-          value: fields/empty
-      - label: Child
-        link:
-          discriminant: page
-          value: fields/child
-      - label: Object
-        link:
-          discriminant: page
-          value: fields/object
-      - label: Conditional
-        link:
-          discriminant: page
-          value: fields/conditional
-      - label: Document
-        link:
-          discriminant: page
-          value: fields/document
-      - label: Array
-        link:
-          discriminant: page
-          value: fields/array
+          value: fields/url
   - groupName: Community
     items:
       - label: GitHub Discussions
         link:
           discriminant: url
           value: https://github.com/Thinkmill/keystatic/discussions
-      - label: Mastodon
-        link:
-          discriminant: url
-          value: https://fosstodon.org/@keystatic
       - label: Twitter
         link:
           discriminant: url
