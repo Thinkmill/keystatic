@@ -8,13 +8,18 @@ import { InferRenderersForComponentBlocks } from '@keystatic/core';
 import { componentBlocks } from '../../keystatic.config';
 import { CONTENT_MAX_WIDTH_DESKTOP } from '../constants';
 import CloudImage from './cloud-image';
+import fs from 'fs';
+
+const keystaticCodeTheme = JSON.parse(
+  fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
+);
 
 export default async function DocumentRenderer({
   slug,
   document,
 }: DocumentRendererProps & { slug: string }) {
   const highlighter = await shiki.getHighlighter({
-    theme: 'min-light',
+    theme: keystaticCodeTheme,
   });
 
   return (

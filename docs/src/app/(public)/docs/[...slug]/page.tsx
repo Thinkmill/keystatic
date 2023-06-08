@@ -4,7 +4,7 @@ import DocumentRenderer from '../../../../components/document-renderer';
 import keystaticConfig from '../../../../../keystatic.config';
 import { notFound } from 'next/navigation';
 
-const reader = createReader('', keystaticConfig);
+const reader = createReader(process.cwd(), keystaticConfig);
 
 export default async function Docs({ params }: { params: { slug: string[] } }) {
   const { slug: slugPath } = params;
