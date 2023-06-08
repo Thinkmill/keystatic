@@ -32,7 +32,7 @@ We're working on it! Things are experimental at the moment.
 
 But if you're curious and brave, check out
 [keystatic.com](https://keystatic.com) to try it out (and check out our growing
-collection of templates)
+collection of templates).
 
 Follow [@thekeystatic](https://twitter.com/thekeystatic) on Twitter, and
 [subscribe to our mailing list](https://keystatic.com/#mailing-list) for
