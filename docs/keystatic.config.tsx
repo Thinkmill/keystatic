@@ -119,6 +119,23 @@ export const componentBlocks = {
     },
     chromeless: false,
   }),
+  fieldComponent: component({
+    preview: props => {
+      return <div>{props.fields.field.value}</div>;
+    },
+    label: 'Field component',
+    schema: {
+      field: fields.select({
+        label: 'Field component',
+        defaultValue: 'text',
+        options: [
+          { label: 'Text', value: 'text' },
+          { label: 'Select', value: 'select' },
+        ],
+      }),
+    },
+    chromeless: false,
+  }),
 };
 
 export default config({

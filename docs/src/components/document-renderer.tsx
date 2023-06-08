@@ -9,6 +9,7 @@ import { componentBlocks } from '../../keystatic.config';
 import { CONTENT_MAX_WIDTH_DESKTOP } from '../constants';
 import CloudImage from './cloud-image';
 import fs from 'fs';
+import { Text } from './fields/text';
 
 const keystaticCodeTheme = JSON.parse(
   fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
@@ -174,6 +175,15 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         ))}
       </div>
     );
+  },
+  fieldComponent: ({ field }) => {
+    switch (field) {
+      case 'text':
+        return <Text />;
+
+      default:
+        return <div>Field not found</div>;
+    }
   },
 };
 
