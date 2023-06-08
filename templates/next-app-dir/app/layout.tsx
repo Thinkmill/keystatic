@@ -1,6 +1,3 @@
-import { ReaderRefresh } from '@keystatic/next/reader-refresh';
-import { reader } from './reader';
-
 export default function RootLayout({
   children,
 }: {
@@ -8,10 +5,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        {children}
-        <ReaderRefresh reader={reader} />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

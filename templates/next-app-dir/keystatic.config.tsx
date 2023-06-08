@@ -8,11 +8,10 @@ export default config({
     posts: collection({
       label: 'Posts',
       slugField: 'title',
-      path: '/posts/*',
+      path: 'posts/*',
       format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
-        publishDate: fields.date({ label: 'Publish Date' }),
         content: fields.document({
           label: 'Content',
           formatting: true,
