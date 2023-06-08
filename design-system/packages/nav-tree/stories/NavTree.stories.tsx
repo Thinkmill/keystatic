@@ -1,5 +1,5 @@
 import { action, storiesOf } from '@voussoir/storybook';
-import { useRef } from 'react';
+import { Key, useRef } from 'react';
 
 import { ActionButton } from '@voussoir/button';
 import { Icon } from '@voussoir/icon';
@@ -85,8 +85,10 @@ storiesOf('Components/NavTree', module)
   .add('flat items', () => (
     <NavTree
       items={flatItems}
-      onSelectionChange={action('onSelectionChange')}
+      onAction={action('onAction')}
       children={itemRenderer}
+      selectionMode="single"
+      onSelectionChange={actionOnSet('onSelectionChange')}
     />
   ))
   .add('nested items', () => {
@@ -100,21 +102,55 @@ storiesOf('Components/NavTree', module)
       >
         <NavTree
           items={nestedItems}
-          onSelectionChange={action('onSelectionChange')}
+          onAction={action('onAction')}
+          onExpandedChange={actionOnSet('onExpandedChange')}
           children={itemRenderer}
           scrollRef={scrollRef}
+        />
+      </Box>
+    );
+  })
+  .add('selected item', () => {
+    let scrollRef = useRef<HTMLDivElement>(null);
+    let selectedKey = 'Eastern grey kangaroo';
+    let expandedKeys = findParents(flattenItems(nestedItems), selectedKey);
+
+    return (
+      <Box
+        height="container.xsmall"
+        width="container.xsmall"
+        overflow="auto"
+        ref={scrollRef}
+      >
+        <NavTree
+          items={nestedItems}
+          onAction={action('onAction')}
+          onExpandedChange={actionOnSet('onExpandedChange')}
+          onSelectionChange={actionOnSet('onSelectionChange')}
+          children={itemRenderer}
+          scrollRef={scrollRef}
+          defaultExpandedKeys={expandedKeys}
+          defaultSelectedKeys={[selectedKey]}
+          selectionMode="single"
           // shouldFocusWrap
         />
       </Box>
     );
   });
 
+function actionOnSet(name: string) {
+  return (keys: 'all' | Set<Key>) => action(name)([...keys]);
+}
+
 function itemRenderer<T extends { name: string }>(
   item: T & { children?: T[] }
 ) {
   return (
     <Item key={item.name} childItems={item.children} textValue={item.name}>
-      <Text>{item.name}</Text>
+      <Text>
+        {item.name}
+        {!!item.children?.length && ` (${item.children.length})`}
+      </Text>
       {item.children && item.children.length && (
         <ActionButton>
           <Icon src={plusIcon} />
@@ -122,4 +158,30 @@ function itemRenderer<T extends { name: string }>(
       )}
     </Item>
   );
+}
+
+type WithChildren<T> = T & { children?: WithChildren<T>[] };
+type Item = WithChildren<{ name: string }>;
+type FlatItem = WithChildren<{ name: string; parentKey: string }>;
+
+function findParents(allItems: FlatItem[], selectedKey: string) {
+  let itemMap = new Map(allItems.map(item => [item.name, item]));
+
+  let getParentNames = (key: string, parents: string[]): string[] => {
+    let item = itemMap.get(key);
+    if (!item) return parents;
+    let parentItem = itemMap.get(item.parentKey);
+    if (!parentItem) return parents;
+    return getParentNames(parentItem.name, [...parents, parentItem.name]);
+  };
+
+  return getParentNames(selectedKey, []);
+}
+function flattenItems(items: Item[], parentKey = ''): FlatItem[] {
+  return items.flatMap((item: Item) => {
+    let { name, children } = item;
+    let currentItem = { name, parentKey };
+    let nestedItems = children ? flattenItems(children, name) : [];
+    return [currentItem, ...nestedItems];
+  });
 }

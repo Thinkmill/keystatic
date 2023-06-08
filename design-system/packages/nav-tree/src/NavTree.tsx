@@ -21,6 +21,7 @@ import React, {
   Key,
   KeyboardEvent as ReactKeyboardEvent,
   RefObject,
+  useId,
   useMemo,
   useRef,
 } from 'react';
@@ -35,8 +36,17 @@ import { isReactText, toDataAttributes } from '@voussoir/utils';
 import { Text } from '@voussoir/typography';
 import { SlotProvider } from '@voussoir/slots';
 import { Box } from '@voussoir/layout';
+import { getItemCount } from '@react-stately/collections';
+import { TreeKeyboardDelegate } from './TreeKeyboardDelegate';
+
+interface TreeMapShared {
+  id: string;
+  onAction: (key: Key) => void;
+}
+export const treeMap = new WeakMap<TreeState<unknown>, TreeMapShared>();
 
 export function NavTree<T extends object>(props: NavTreeProps<T>) {
+  let { onAction } = props;
   let state = useTreeState(props);
   let ref = useRef<HTMLDivElement>(null);
   let styleProps = useStyleProps(props);
@@ -54,6 +64,9 @@ export function NavTree<T extends object>(props: NavTreeProps<T>) {
     ref,
     selectionManager: state.selectionManager,
   });
+
+  let id = useId();
+  treeMap.set(state, { id, onAction });
 
   return (
     <div {...collectionProps} {...styleProps} ref={ref} role="treegrid">
@@ -77,14 +90,15 @@ function resolveTreeNodes<T>({
 function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
   let ref = useRef<HTMLDivElement>(null);
   let { direction } = useLocale();
-  let { itemProps, isFocused, isSelected } = useTreeItem(
-    { onAction: () => state.toggleKey(node.key), node },
+  // @ts-expect-error
+  let { onAction } = treeMap.get(state);
+  let { itemProps, isExpanded, isFocused } = useTreeItem(
+    { onAction, node },
     state,
     ref
   );
 
   let isRtl = direction === 'rtl';
-  let isExpanded = node.hasChildNodes && state.expandedKeys.has(node.key);
   let contents = isReactText(node.rendered) ? (
     <Text>{node.rendered}</Text>
   ) : (
@@ -99,41 +113,69 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
           marginStart: 'auto',
           prominence: 'low',
         },
-        text: { color: 'inherit', truncate: true },
+        text: { color: 'inherit', truncate: true, weight: 'inherit' },
       }}
     >
       <div
         {...itemProps}
-        {...toDataAttributes({ focused: isFocused })}
-        aria-level={node.level}
-        aria-expanded={node.hasChildNodes ? isExpanded : undefined}
-        aria-selected={isSelected}
+        {...toDataAttributes({
+          focused: isFocused
+            ? isFocusVisible()
+              ? 'visible'
+              : 'true'
+            : undefined,
+        })}
         ref={ref}
         role="row"
         className={css({
-          borderRadius: tokenSchema.size.radius.regular,
           color: tokenSchema.color.alias.foregroundIdle,
           cursor: 'default',
-          paddingInlineStart: `calc(${tokenSchema.size.space.regular} * ${
-            node.level + 1
-          })`,
+          fontWeight: tokenSchema.typography.fontWeight.medium,
+          position: 'relative',
           outline: 'none',
-
-          '&[data-focused=true]': {
-            backgroundColor: tokenSchema.color.alias.backgroundFocused,
-            color: tokenSchema.color.alias.foregroundHovered,
-          },
+          padding: tokenSchema.size.alias.focusRing,
+          paddingInlineStart: tokenSchema.size.space.regular,
         })}
       >
         <div
           role="gridcell"
           className={css({
             alignItems: 'center',
+            borderRadius: `calc(${tokenSchema.size.radius.regular} + ${tokenSchema.size.alias.focusRing})`,
             display: 'flex',
+            gap: tokenSchema.size.space.small,
             minHeight: tokenSchema.size.element.regular,
             padding: tokenSchema.size.alias.focusRing,
-            gap: tokenSchema.size.space.small,
+            paddingInlineStart: `calc(${tokenSchema.size.space.regular} * var(--inset))`,
+
+            '[data-focused] > &': {
+              backgroundColor: tokenSchema.color.alias.backgroundFocused,
+              color: tokenSchema.color.alias.foregroundHovered,
+            },
+            // '[data-focused=visible] > &': {
+            //   outline: `${tokenSchema.size.alias.focusRing} solid ${tokenSchema.color.alias.focusRing}`,
+            // },
+
+            '[aria-selected=true] > &': {
+              backgroundColor: tokenSchema.color.alias.backgroundPressed,
+              color: tokenSchema.color.alias.foregroundHovered,
+              fontWeight: tokenSchema.typography.fontWeight.semibold,
+
+              '&::before': {
+                backgroundColor: tokenSchema.color.background.accentEmphasis,
+                borderRadius: tokenSchema.size.space.small,
+                content: '""',
+                insetBlock: tokenSchema.size.space.xsmall,
+                insetInlineStart: 0,
+                position: 'absolute',
+                width: tokenSchema.size.space.small,
+              },
+            },
           })}
+          style={{
+            // @ts-expect-error
+            '--inset': node.level + 1,
+          }}
         >
           {node.hasChildNodes ? (
             <Icon
@@ -160,110 +202,6 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
   );
 }
 
-class TreeKeyboardDelegate<T> {
-  collator: Intl.Collator;
-  collection: Collection<Node<T>>;
-  disabledKeys: Set<Key>;
-
-  constructor(
-    collator: Intl.Collator,
-    collection: Collection<Node<T>>,
-    disabledKeys: Set<Key>
-  ) {
-    this.collator = collator;
-    this.collection = collection;
-    this.disabledKeys = disabledKeys;
-  }
-
-  getKeyAbove(key: Key) {
-    let { collection, disabledKeys } = this;
-    let keyBefore = collection.getKeyBefore(key);
-
-    while (keyBefore !== null) {
-      let item = collection.getItem(keyBefore);
-
-      if (item?.type === 'item' && !disabledKeys.has(item.key)) {
-        return keyBefore;
-      }
-
-      keyBefore = collection.getKeyBefore(keyBefore);
-    }
-
-    return null;
-  }
-
-  getKeyBelow(key: Key) {
-    let { collection, disabledKeys } = this;
-    let keyBelow = collection.getKeyAfter(key);
-
-    while (keyBelow !== null) {
-      let item = collection.getItem(keyBelow);
-
-      if (item?.type === 'item' && !disabledKeys.has(item.key)) {
-        return keyBelow;
-      }
-
-      keyBelow = collection.getKeyAfter(keyBelow);
-    }
-
-    return null;
-  }
-
-  getFirstKey() {
-    let { collection, disabledKeys } = this;
-    let key = collection.getFirstKey();
-
-    while (key !== null) {
-      let item = collection.getItem(key);
-
-      if (item?.type === 'item' && !disabledKeys.has(item.key)) {
-        return key;
-      }
-
-      key = collection.getKeyAfter(key);
-    }
-
-    return null;
-  }
-
-  getLastKey() {
-    let { collection, disabledKeys } = this;
-    let key = collection.getLastKey();
-
-    while (key !== null) {
-      let item = collection.getItem(key);
-
-      if (item?.type === 'item' && !disabledKeys.has(item.key)) {
-        return key;
-      }
-
-      key = collection.getKeyBefore(key);
-    }
-
-    return null;
-  }
-
-  getKeyForSearch(search: string, fromKey = this.getFirstKey()) {
-    let { collator, collection } = this;
-    let key = fromKey;
-
-    while (key !== null) {
-      let item = collection.getItem(key);
-
-      if (
-        item?.textValue &&
-        collator.compare(search, item.textValue.slice(0, search.length)) === 0
-      ) {
-        return key;
-      }
-
-      key = this.getKeyBelow(key);
-    }
-
-    return null;
-  }
-}
-
 type TreeItemOptions<T> = {
   /** Handler that is called when a user performs an action on an item. */
   onAction?: (key: Key) => void;
@@ -287,7 +225,7 @@ export function useTreeItem<T>(
   ref: RefObject<FocusableElement>
 ) {
   // Copied from useGridListItem + some modifications to make it not so grid specific
-  let { node, isVirtualized, shouldSelectOnPressUp } = props;
+  let { node, isVirtualized, onAction, shouldSelectOnPressUp } = props;
   let { selectionManager } = state;
   let { direction } = useLocale();
 
@@ -297,15 +235,25 @@ export function useTreeItem<T>(
     ref,
     isVirtualized,
     shouldSelectOnPressUp,
-    onAction: () => state.toggleKey(node.key),
+    onAction: () => {
+      if (onAction) {
+        onAction(node.key);
+      }
+
+      if (node.hasChildNodes) {
+        state.toggleKey(node.key);
+      }
+    },
   });
+
+  let isExpanded = node.hasChildNodes && state.expandedKeys.has(node.key);
 
   let { hoverProps } = useHover({
     isDisabled: state.disabledKeys.has(node.key),
     onHoverStart() {
       if (!isFocusVisible()) {
-        state.selectionManager.setFocused(true);
-        state.selectionManager.setFocusedKey(node.key);
+        selectionManager.setFocused(true);
+        selectionManager.setFocusedKey(node.key);
       }
     },
   });
@@ -318,9 +266,6 @@ export function useTreeItem<T>(
     let walker = getFocusableTreeWalker(ref.current);
     walker.currentNode = document.activeElement as FocusableElement;
 
-    let isExpanded = state.expandedKeys.has(node.key);
-    let item = state.collection.getItem(node.key);
-
     let handleArrowBackward = (focusable: FocusableElement) => {
       if (focusable) {
         e.preventDefault();
@@ -330,15 +275,15 @@ export function useTreeItem<T>(
           containingElement: getScrollParent(ref.current!),
         });
       } else {
-        if (item?.hasChildNodes && isExpanded) {
+        if (node.hasChildNodes && isExpanded) {
           state.toggleKey(node.key);
-        } else if (item?.parentKey) {
-          selectionManager.setFocusedKey(item.parentKey);
+        } else if (node?.parentKey) {
+          selectionManager.setFocusedKey(node.parentKey);
         }
       }
     };
     let handleArrowForward = (focusable: FocusableElement) => {
-      if (item?.hasChildNodes && !isExpanded) {
+      if (node.hasChildNodes && !isExpanded) {
         state.toggleKey(node.key);
       } else if (focusable) {
         e.preventDefault();
@@ -347,7 +292,7 @@ export function useTreeItem<T>(
         scrollIntoViewport(focusable, {
           containingElement: getScrollParent(ref.current!),
         });
-      } else if (item?.hasChildNodes) {
+      } else if (node.hasChildNodes) {
         let firstChild = state.collection.getKeyAfter(node.key);
         if (firstChild) {
           selectionManager.setFocusedKey(firstChild);
@@ -388,22 +333,28 @@ export function useTreeItem<T>(
     }
   };
 
-  let itemProps: DOMAttributes = mergeProps(selectableItemProps, hoverProps, {
+  let itemProps: DOMAttributes = {
+    ...mergeProps(selectableItemProps, hoverProps),
     onKeyDownCapture,
     'aria-label': node.textValue || undefined,
-    'aria-selected': selectionManager.canSelectItem(node.key)
-      ? selectionManager.isSelected(node.key)
-      : undefined,
-    'aria-disabled': selectionManager.isDisabled(node.key) || undefined,
-  });
+    'aria-disabled': itemStates.isDisabled || undefined,
+    'aria-level': node.level + 1,
+    'aria-expanded': isExpanded || undefined,
+    // hmm...
+    'aria-current': itemStates.isSelected ? 'page' : undefined,
+    'aria-selected': itemStates.isSelected || undefined,
+  };
 
-  // if (isVirtualized) {
-  //   itemProps['aria-rowindex'] = node.index + 1;
-  // }
+  if (isVirtualized) {
+    let index = Number(state.collection.getItem(node.key)?.index);
+    itemProps['aria-posinset'] = Number.isNaN(index) ? undefined : index + 1;
+    // itemProps['aria-rowindex'] = index;
+    itemProps['aria-setsize'] = getItemCount(state.collection);
+  }
 
   return {
     itemProps,
-    isExpanded: node.hasChildNodes && state.expandedKeys.has(node.key),
+    isExpanded,
     isFocused:
       selectionManager.isFocused && selectionManager.focusedKey === node.key, // FIXME: this can be removed when `useSelectableItem` is from latest
     ...itemStates,
