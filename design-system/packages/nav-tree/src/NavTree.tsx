@@ -1,10 +1,6 @@
 import { focusSafely, getFocusableTreeWalker } from '@react-aria/focus';
 import { isFocusVisible, useHover } from '@react-aria/interactions';
-import {
-  getScrollParent,
-  mergeProps,
-  scrollIntoViewport,
-} from '@react-aria/utils';
+import { mergeProps } from '@react-aria/utils';
 import {
   useSelectableCollection,
   useSelectableItem,
@@ -268,12 +264,7 @@ export function useTreeItem<T>(
 
     let handleArrowBackward = (focusable: FocusableElement) => {
       if (focusable) {
-        e.preventDefault();
-        e.stopPropagation();
         focusSafely(focusable);
-        scrollIntoViewport(focusable, {
-          containingElement: getScrollParent(ref.current!),
-        });
       } else {
         if (node.hasChildNodes && isExpanded) {
           state.toggleKey(node.key);
@@ -286,12 +277,7 @@ export function useTreeItem<T>(
       if (node.hasChildNodes && !isExpanded) {
         state.toggleKey(node.key);
       } else if (focusable) {
-        e.preventDefault();
-        e.stopPropagation();
         focusSafely(focusable);
-        scrollIntoViewport(focusable, {
-          containingElement: getScrollParent(ref.current!),
-        });
       } else if (node.hasChildNodes) {
         let firstChild = state.collection.getKeyAfter(node.key);
         if (firstChild) {
@@ -317,19 +303,6 @@ export function useTreeItem<T>(
         }
         break;
       }
-      case 'ArrowUp':
-      case 'ArrowDown':
-        // Prevent this event from reaching row children, e.g. menu buttons. We want arrow keys to navigate
-        // to the row above/below instead. We need to re-dispatch the event from a higher parent so it still
-        // bubbles and gets handled by useSelectableCollection.
-        if (!e.altKey && ref.current.contains(e.target as Element)) {
-          e.stopPropagation();
-          e.preventDefault();
-          ref.current?.parentElement?.dispatchEvent(
-            new KeyboardEvent(e.nativeEvent.type, e.nativeEvent)
-          );
-        }
-        break;
     }
   };
 
