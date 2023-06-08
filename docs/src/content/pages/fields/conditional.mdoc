@@ -86,16 +86,4 @@ featuredMedia: fields.conditional(
 
 ## Type signature
 
-```typescript
-conditional<
-  DiscriminantField extends BasicFormField<string> | BasicFormField<boolean>,
-  ConditionalValues extends {
-    [Key in `${ReturnType<
-      DiscriminantField['defaultValue']
-    >}`]: ComponentSchema;
-  }
->(
-  discriminant: DiscriminantField,
-  values: ConditionalValues
-)
-```
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.conditional](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.conditional)
