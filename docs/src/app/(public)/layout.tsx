@@ -42,7 +42,7 @@ export default async function RootLayout({
   const navigationMap = await getNavigationMap();
 
   return (
-    <div className={`min-h-screen flex flex-col ${inter.className}`}>
+    <div className={`min-h-screen flex flex-col ${inter.variable} font-sans`}>
       <HeaderNav navigationMap={navigationMap} />
       {children}
     </div>

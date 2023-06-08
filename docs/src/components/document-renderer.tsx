@@ -81,7 +81,7 @@ const getRenderers = (
 
       return (
         <div
-          className="[&>pre]:whitespace-break-spaces [&>pre]:break-all [&>pre]:p-4 [&>pre]:rounded-lg [&>pre]:border [&>pre]:border-keystatic-gray [&>pre]:bg-keystatic-gray-light text-sm my-2"
+          className="[&>pre]:whitespace-break-spaces [&>pre]:break-all [&>pre]:px-6 [&>pre]:py-4 [&>pre]:rounded-lg [&>pre]:border [&>pre]:border-keystatic-gray [&>pre]:bg-white text-sm my-2"
           dangerouslySetInnerHTML={{ __html: codeBlock }}
         />
       );

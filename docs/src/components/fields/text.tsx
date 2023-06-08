@@ -1,13 +1,14 @@
 'use client';
-import { VoussoirProvider } from '@voussoir/core';
+
 import { TextFieldInput } from '../../../../packages/keystatic/src/form/fields/text/ui';
+import { FrameComponent } from './frame';
 
 export const Text = () => {
   return (
-    <VoussoirProvider>
+    <FrameComponent>
       <TextFieldInput
         multiline={false}
-        label="Text field"
+        label="Label"
         description={undefined}
         min={0}
         max={100}
@@ -16,6 +17,6 @@ export const Text = () => {
         autoFocus={false}
         forceValidation={false}
       />
-    </VoussoirProvider>
+    </FrameComponent>
   );
 };
