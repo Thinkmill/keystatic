@@ -10,14 +10,16 @@ import { CONTENT_MAX_WIDTH_DESKTOP } from '../constants';
 import CloudImage from './cloud-image';
 import fs from 'fs';
 
+const keystaticCodeTheme = JSON.parse(
+  fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
+);
+
 export default async function DocumentRenderer({
   slug,
   document,
 }: DocumentRendererProps & { slug: string }) {
   const highlighter = await shiki.getHighlighter({
-    theme: JSON.parse(
-      fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
-    ),
+    theme: keystaticCodeTheme,
   });
 
   return (
