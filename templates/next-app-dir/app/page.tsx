@@ -7,14 +7,10 @@ export default async function Homepage() {
   return (
     <div>
       <h1>Keystatic ⚡️</h1>
+      <p>This homepage shows how to load a collection from the reader API.</p>
       <p>
-        This page is an example of loading a collection of data from the reader
-        API.
-      </p>
-      <p>
-        Click the link below to see an example of loading a specific item from
-        the collection, or{' '}
-        <a href="/keystatic">click here to visit the Admin UI.</a>
+        <a href="/keystatic">Click here to visit the Admin UI</a>, or the link
+        below to view a post in the collection.
       </p>
       <h2>Posts</h2>
       <ul>
