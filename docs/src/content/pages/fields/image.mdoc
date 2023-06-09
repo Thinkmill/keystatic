@@ -1,11 +1,15 @@
 ---
 title: Image field
 ---
-The `image` field is used to upload an image.
+The `image` field is used to store an image. In the Admin UI, it renders a "Choose file" button, and when a file has been selected it shows an preview image along with a "Remove" button.
 
-You can specify an optional `directory` where to store that image in your project tree. This is useful when you want your images in a `public` or `static` directory, to adhere to conventions for a specific framework.
+In [local](/docs/local-vs-git-hub-storage-strategy#local-strategy) mode it will save it as a file in your repository. It [GitHub mode](/docs/local-vs-git-hub-storage-strategy#git-hub-strategy) it will commit it into the repository.
 
-There's also an optional `publicPath` option that lets you define how the image path should be retrieved when reading the value of the field.
+## Storage options
+
+You can optionally specify a `directory` from your project tree to store the image in. This is useful when you want your images in a `public` or `static` directory, to adhere to conventions for a specific framework.
+
+There's also an optional `publicPath` that lets you define how the image path should be retrieved when reading the value of the field.
 
 ## Example usage
 
