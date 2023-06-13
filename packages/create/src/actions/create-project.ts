@@ -1,12 +1,28 @@
-import fs from 'node:fs';
+import {
+  createWriteStream,
+  rmdirSync,
+  rmSync,
+  mkdirSync,
+  existsSync,
+} from 'node:fs';
+import { pipeline } from 'node:stream';
+import { promisify } from 'node:util';
 import { spinner, log } from '@clack/prompts';
-import { downloadTemplate } from 'giget';
+import fetch from 'node-fetch-native';
 import color from 'picocolors';
+import tar from 'tar';
 import { Context } from '..';
 
+const registryDomain = 'https://registry.npmjs.org';
+// These templates reference their npm package name
 const templates = {
-  // To target a branch add it to the end of this string after a hash, e.g. #create-cli
-  nextAppDir: 'github:thinkmill/keystatic/templates/next-app-dir',
+  nextjs: '@keystatic/templates-nextjs',
+};
+
+type PackageInfo = {
+  dist: {
+    tarball: string;
+  };
 };
 
 export const createProject = async (ctx: Context) => {
@@ -19,25 +35,31 @@ export const createProject = async (ctx: Context) => {
 
   spin.start(`Downloading template and creating files...`);
 
-  const defaultTemplate = templates.nextAppDir;
+  const defaultTemplate = templates.nextjs;
   try {
-    await downloadTemplate(defaultTemplate, {
-      force: true,
-      provider: 'github',
-      cwd: ctx.cwd,
-      dir: '.',
-    });
+    // Get latest package info from npm
+    const packageInfo: PackageInfo = await fetch(
+      `${registryDomain}/${defaultTemplate}/latest`
+    ).then(response => response.json());
+
+    if (!existsSync(ctx.cwd)) {
+      mkdirSync(ctx.cwd);
+    }
+
+    // Stream latest tarball to the specified directory
+    const tarballFile = `${ctx.cwd}/template.tgz`;
+    const tarballResponse = await fetch(packageInfo.dist.tarball);
+    const stream = createWriteStream(tarballFile);
+    await promisify(pipeline)(tarballResponse.body as any, stream);
+
+    // npm packages come in a directory named 'package'. Use strip to remove the directory.
+    await tar.extract({ file: tarballFile, cwd: ctx.cwd, strip: 1 });
+
+    rmSync(tarballFile);
   } catch (err: any) {
-    fs.rmdirSync(ctx.cwd);
+    rmdirSync(ctx.cwd);
     log.error('Error downloading template');
     throw new Error(err.message);
-  }
-
-  // giget doesn't throw if the repo exists but the template doesn't exist in it.
-  // Check directory isn't empty to confirm.
-  if (fs.readdirSync(ctx.cwd).length === 0) {
-    fs.rmdirSync(ctx.cwd);
-    throw new Error('Template not found.');
   }
 
   spin.stop('Done ✅');

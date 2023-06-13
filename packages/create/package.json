@@ -24,8 +24,10 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "@clack/prompts": "^0.6.3",
-    "giget": "^1.1.2",
-    "picocolors": "^1.0.0"
+    "@types/tar": "^6.1.5",
+    "node-fetch-native": "^1.2.0",
+    "picocolors": "^1.0.0",
+    "tar": "^6.1.15"
   },
   "devDependencies": {
     "@keystatic/core": "^0.0.106",
