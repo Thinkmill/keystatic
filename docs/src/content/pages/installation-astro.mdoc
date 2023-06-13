@@ -218,6 +218,9 @@ const reader = createReader(process.cwd(), keystaticConfig)
 
 // 2. Read the "Homepage" singleton
 const homepageData = await reader.singletons.homepage.read()
+
+// 3. Statically generate this page on build time
+export const prerender = true
 ---
 ```
 
