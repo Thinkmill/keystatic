@@ -53,6 +53,10 @@ navGroups:
         link:
           discriminant: page
           value: fields/array
+      - label: Blocks
+        link:
+          discriminant: page
+          value: fields/blocks
       - label: Checkbox
         link:
           discriminant: page
