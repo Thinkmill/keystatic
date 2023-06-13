@@ -102,6 +102,12 @@ import { Keystatic } from '../../../keystatic.page'
 <Keystatic client:only />
 ```
 
+Next, start up Astro's integrated server:
+
+```
+npm run dev
+```
+
 Great! So now, we should be able to visit the `/keystatic` router in the browser.
 
 **Oh no.**
@@ -205,6 +211,7 @@ Inside of the site's homepage, let's use that API to get the `headline` field va
 ---
 // src/pages/index.astro
 import { createReader } from '@keystatic/core/reader'
+import keystaticConfig from '../../keystatic.config'
 
 // 1. Create a reader
 const reader = createReader(process.cwd(), keystaticConfig)
