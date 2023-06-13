@@ -18,8 +18,6 @@ const impactClasses: Record<ButtonProps['impact'] & {}, string> = {
     'rounded-lg bg-transparent border-black text-black px-5 py-3 text-center font-semibold leading-none hover:bg-neutral-800/10 active:bg-neutral-800/20',
 };
 
-// ----------
-
 export default function Button({
   impact = 'bold',
   href,
