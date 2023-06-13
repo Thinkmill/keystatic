@@ -3,7 +3,7 @@ title: How Keystatic organises your content
 ---
 Keystatic gives you a lot of control and flexibility with _where_ your content gets generated, both at the `collection/singleton` level, and at the `field` level for certain field types, like images.
 
-Let’s start with the `collection/singleton` options.
+Let's start with the `collection/singleton` options.
 
 ## Collections & Singletons output
 
@@ -44,13 +44,13 @@ If not specified, the default `path` value will be `{collection-name}/*/`.
 {% component-block-prop propPath=["content"] %}
 **Why a** `*` **symbol?**
 
-The `*` wildcard in the `path` is useful when you want to collocate Keystatic’s output with your existing source code, that may be nested a few levels deep inside an _**entry**_ you’re writing content for.
+The `*` wildcard in the `path` is useful when you want to collocate Keystatic's output with your existing source code, that may be nested a few levels deep inside an _**entry**_ you're writing content for.
 
 For example, you may be writing documentation for Design System components.
 
 Say you want Keystatic to output your documentation entries in `packages/design-system/{component-name}/docs/`.
 
-You can use `path: ‘packages/design-system/*/docs/’` to do just that 👍
+You can use `path: 'packages/design-system/*/docs/'` to do just that 👍
 {% /component-block-prop %}
 {% /aside %}
 
@@ -82,7 +82,7 @@ content
 
 ### Paths ending without a trailing slash
 
-If the path does not end with a trailing slash, entries’ index files will be created immediately inside the collection directory:
+If the path does not end with a trailing slash, entries' index files will be created immediately inside the collection directory:
 
 ```yaml
 collection-name
@@ -113,7 +113,7 @@ If not specified, the default `path` value for singletons will be `{singleton-na
 
 ### Paths ending with a trailing slash `/`
 
-If the path ends with a trailing slash `/`, the singleton’s content ill be created in its own directory named after the slug:
+If the path ends with a trailing slash `/`, the singleton's content ill be created in its own directory named after the slug:
 
 ```yaml
 singleton-name
@@ -125,7 +125,7 @@ singleton-name
 
 ### Paths ending without a trailing slash
 
-If the path does not end with a trailing slash, the singleton’s index file will be created immediately inside the singleton directory:
+If the path does not end with a trailing slash, the singleton's index file will be created immediately inside the singleton directory:
 
 ```yaml
 singleton-name
@@ -151,7 +151,7 @@ Instead of generating **all** your content inside the `public` directory to sati
 {% /component-block-prop %}
 {% /aside %}
 
-Here’s how you define where an image gets generated for a given `collection` or `singleton`:
+Here's how you define where an image gets generated for a given `collection` or `singleton`:
 
 ```javascript
 // In the context of a `posts` collection...
