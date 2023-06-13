@@ -85,10 +85,10 @@ navGroups:
         link:
           discriminant: page
           value: fields/integer
-      - label: Multi-Select
+      - label: Multiselect
         link:
           discriminant: page
-          value: fields/multi-select
+          value: fields/multiselect
       - label: Object
         link:
           discriminant: page
