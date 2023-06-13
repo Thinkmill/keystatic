@@ -15,7 +15,7 @@ export default async function Homepage() {
       <h2>Posts</h2>
       <ul>
         {posts.map(post => (
-          <li>
+          <li key={post.slug}>
             <a href={`/${post.slug}`}>{post.entry.title}</a>
           </li>
         ))}

@@ -22,9 +22,9 @@ export const projectName = async (ctx: Context) => {
       ctx.cwd = projectName;
     }
 
-    const isDirectoryEmpty =
+    const isDirectoryNotEmpty =
       fs.existsSync(ctx.cwd) && fs.readdirSync(ctx.cwd).length;
-    if (isDirectoryEmpty) {
+    if (isDirectoryNotEmpty) {
       log.warn(
         `${color.blue(ctx.cwd)} is ${color.red(
           'not empty'
