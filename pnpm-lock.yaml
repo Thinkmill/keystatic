@@ -2286,12 +2286,10 @@ importers:
     specifiers:
       '@babel/runtime': ^7.18.3
       '@clack/prompts': ^0.6.3
-      '@keystatic/core': ^0.0.106
       '@types/tar': ^6.1.5
       node-fetch-native: ^1.2.0
       picocolors: ^1.0.0
       tar: ^6.1.15
-      tsx: ^3.8.0
     dependencies:
       '@babel/runtime': 7.21.0
       '@clack/prompts': 0.6.3
@@ -2299,9 +2297,6 @@ importers:
       node-fetch-native: 1.2.0
       picocolors: 1.0.0
       tar: 6.1.15
-    devDependencies:
-      '@keystatic/core': link:../keystatic
-      tsx: 3.12.3
 
   packages/keystatic:
     specifiers:
@@ -12678,7 +12673,7 @@ packages:
       mississippi: 3.0.0
       mkdirp: 0.5.6
       move-concurrently: 1.0.1
-      promise-inflight: 1.0.1
+      promise-inflight: 1.0.1_bluebird@3.7.2
       rimraf: 2.7.1
       ssri: 6.0.2
       unique-filename: 1.1.1
@@ -12702,7 +12697,7 @@ packages:
       minipass-pipeline: 1.2.4
       mkdirp: 1.0.4
       p-map: 4.0.0
-      promise-inflight: 1.0.1
+      promise-inflight: 1.0.1_bluebird@3.7.2
       rimraf: 3.0.2
       ssri: 8.0.1
       tar: 6.1.13
@@ -21619,13 +21614,15 @@ packages:
     engines: {node: '>= 0.6.0'}
     dev: true
 
-  /promise-inflight/1.0.1:
+  /promise-inflight/1.0.1_bluebird@3.7.2:
     resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
     peerDependencies:
       bluebird: '*'
     peerDependenciesMeta:
       bluebird:
         optional: true
+    dependencies:
+      bluebird: 3.7.2
     dev: true
 
   /promise.allsettled/1.0.6:
