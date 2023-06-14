@@ -94,10 +94,18 @@ export const Keystatic = makePage(keystaticConfig)
 Now, we can import that file in our `keystatic/[...params].astro` page, and mount the component on the clientside only:
 
 ```jsx
+---
 // src/pages/keystatic/[...params].astro
 import { Keystatic } from '../../../keystatic.page'
+---
 
 <Keystatic client:only />
+```
+
+Next, start up Astro's integrated server:
+
+```
+npm run dev
 ```
 
 Great! So now, we should be able to visit the `/keystatic` router in the browser.
@@ -203,6 +211,7 @@ Inside of the site's homepage, let's use that API to get the `headline` field va
 ---
 // src/pages/index.astro
 import { createReader } from '@keystatic/core/reader'
+import keystaticConfig from '../../keystatic.config'
 
 // 1. Create a reader
 const reader = createReader(process.cwd(), keystaticConfig)

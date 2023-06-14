@@ -1,11 +1,13 @@
 ---
 title: Object field
 ---
-The `object` field lets you structure complex object schemas that can contain any other field types.
+The `object` field is used to create complex object schemas that can contain any other fields. 
 
-## Usage example
+It's particularly useful when you need a set of fields for each option in an [array field](/docs/fields/array), [conditional field](/docs/fields/conditional) or [blocks field](/docs/fields/blocks).
 
-Simple:
+## Usage examples
+
+### Simple
 
 ```typescript
 snapshot: fields.object({
@@ -14,7 +16,7 @@ snapshot: fields.object({
 })
 ```
 
-Complex:
+### Complex
 
 ```typescript
 snapshot: fields.object({
@@ -40,6 +42,4 @@ snapshot: fields.object({
 
 ## Type signature
 
-```typescript
-object<Fields extends Record<string, ComponentSchema>>(fields: Fields)
-```
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.object](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.object)
