@@ -10,7 +10,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
 
   return (
     <div>
-      <h1>{post?.title}</h1>
+      <h1>{post.title}</h1>
       <div>
         <DocumentRenderer document={await post.content()} />
       </div>
