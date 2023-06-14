@@ -1,22 +1,19 @@
 'use client';
 
 import { FrameComponent } from './frame';
-import { TextFieldInput } from '../../../../packages/keystatic/src/form/fields/text/ui';
+import { DateFieldInput } from '../../../../packages/keystatic/src/form/fields/date/ui';
 import { useState } from 'react';
 
-export const TextField = () => {
-  const [value, setValue] = useState('');
+export const DateField = () => {
+  const [value, setValue] = useState<string | null>(null);
 
   return (
     <FrameComponent>
-      <TextFieldInput
+      <DateFieldInput
         autoFocus={false}
         description={undefined}
         forceValidation={false}
         label="Label"
-        max={100}
-        min={0}
-        multiline={false}
         onChange={setValue}
         value={value}
       />

@@ -9,7 +9,17 @@ import { componentBlocks } from '../../keystatic.config';
 import { CONTENT_MAX_WIDTH_DESKTOP } from '../constants';
 import CloudImage from './cloud-image';
 import fs from 'fs';
-import { Text } from './fields/text';
+import { TextField } from './fields/text';
+import { URLField } from './fields/url';
+import { SelectField } from './fields/select';
+import { RelationshipField } from './fields/relationship';
+import { PathReferenceField } from './fields/path-reference';
+import { MultiselectField } from './fields/multiselect';
+import { IntegerField } from './fields/integer';
+import { DateField } from './fields/date';
+import { CheckboxField } from './fields/checkbox';
+import { SlugField } from './fields/slug';
+import { ImageField } from './fields/image';
 
 const keystaticCodeTheme = JSON.parse(
   fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
@@ -121,9 +131,9 @@ const getRenderers = (
     layout: ({ children }) => {
       return (
         <div className="grid gap-6 my-2 grid-cols-1 sm:grid-cols-2">
-          {children.map((element, i) => (
+          {children.map((element, index) => (
             <div
-              key={i}
+              key={index}
               className="rounded-lg bg-keystatic-gray-light p-4 text-sm"
             >
               {element}
@@ -166,6 +176,7 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
       <div className="flex gap-2">
         {tags.map((tag, index) => (
           <div
+            key={index}
             className={`${getTagClasses(
               index
             )} rounded-full px-2 py-1 font-medium text-[0.6875rem] leading-none uppercase self-start inline`}
@@ -179,7 +190,27 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
   fieldComponent: ({ field }) => {
     switch (field) {
       case 'text':
-        return <Text />;
+        return <TextField />;
+      case 'url':
+        return <URLField />;
+      case 'select':
+        return <SelectField />;
+      case 'relationship':
+        return <RelationshipField />;
+      case 'path-reference':
+        return <PathReferenceField />;
+      case 'multiselect':
+        return <MultiselectField />;
+      case 'integer':
+        return <IntegerField />;
+      case 'date':
+        return <DateField />;
+      case 'checkbox':
+        return <CheckboxField />;
+      case 'slug':
+        return <SlugField />;
+      case 'image':
+        return <ImageField />;
 
       default:
         return <div>Field not found</div>;

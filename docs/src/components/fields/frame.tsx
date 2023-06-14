@@ -7,7 +7,7 @@ export function FrameComponent({
   children: ReactNode;
 }): JSX.Element {
   return (
-    <div className="my-2 px-6 py-8 bg-keystatic-gray-light rounded-lg">
+    <div className="my-2 px-6 py-6 bg-keystatic-gray-light rounded-lg">
       <VoussoirProvider colorScheme="light" scale="medium">
         {children}
       </VoussoirProvider>

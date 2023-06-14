@@ -1,23 +1,21 @@
 'use client';
 
 import { FrameComponent } from './frame';
-import { TextFieldInput } from '../../../../packages/keystatic/src/form/fields/text/ui';
+import { UrlFieldInput } from '../../../../packages/keystatic/src/form/fields/url/ui';
 import { useState } from 'react';
 
-export const TextField = () => {
-  const [value, setValue] = useState('');
+export const URLField = () => {
+  const [value, setValue] = useState<string | null>('');
 
   return (
     <FrameComponent>
-      <TextFieldInput
+      <UrlFieldInput
         autoFocus={false}
         description={undefined}
         forceValidation={false}
         label="Label"
-        max={100}
-        min={0}
-        multiline={false}
         onChange={setValue}
+        validation={undefined}
         value={value}
       />
     </FrameComponent>
