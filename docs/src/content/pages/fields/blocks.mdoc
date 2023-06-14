@@ -1,0 +1,31 @@
+---
+title: Blocks field
+---
+The `blocks` field is similar to the [array field](/docs/fields/array) in that you can create "Add one more" scenarios, but with the difference that it lets you define a separate field schema for each instance.
+
+## Usage example
+
+```typescript
+links: fields.blocks(
+  {
+    // First block option is a link to a Page
+    page: {
+      label: 'Page',
+      schema: fields.relationship({
+        label: 'Page',
+        collection: 'pages',
+      }),
+    },
+    // Second block option is a link to a URL
+    url: {
+      label: 'URL',
+      schema: fields.text({ label: 'URL' }),
+    },
+  },
+  { label: 'Links' }
+),
+```
+
+## Type signature
+
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.blocks](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.blocks)

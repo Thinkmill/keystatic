@@ -1,15 +1,15 @@
 ---
 title: Array field
 ---
-The `array` field lets you create `Add one more` scenarios where you need _one or multiple_ instances of a specific field schema.
+The `array` field is used to create "Add one more" scenarios where you need _one or multiple_ instances of a specific field schema.
 
-You pass a single field to the `array` field —&nbsp;but this field can be an `object` field to create complex structures.
+You can only pass a single field to the `array` field — but this field can be an [object field](/docs/fields/object) to create complex structures.
 
-The `label` for the `array` field is defined as an options object (optional) as the second argument. It's also useful to define the `itemLabel` for each instance of the array, to give it a more meaningful label than the default `Item 1`, `Item 2` etc.
+The `label` for the `array` field can optionally be defined in the second parameter, as an options object. It's also useful to define the `itemLabel` for each instance of the array, to give it a more meaningful label than the default `Item 1`, `Item 2` etc.
 
 ## Example usage
 
-Simple:
+### Simple
 
 ```typescript
 tags: fields.array(
@@ -22,7 +22,7 @@ tags: fields.array(
 )
 ```
 
-Complex:
+### Complex
 
 ```typescript
 complexArray: fields.array(
@@ -53,32 +53,4 @@ complexArray: fields.array(
 
 ## Type signature
 
-```typescript
-array<ElementField extends ComponentSchema>(
-  element: ElementField,
-  opts?: {
-    label?: string;
-    description?: string;
-    itemLabel?: (props: GenericPreviewProps<ElementField, unknown>) => string;
-    asChildTag?: string;
-    slugField?: ElementField extends { kind: 'object' }
-      ? {
-          [K in keyof ElementField['fields']]: ElementField['fields'][K] extends SlugFormField<
-            any,
-            any,
-            any,
-            any
-          >
-            ? K
-            : never;
-        }[keyof ElementField['fields']]
-      : never;
-    validation?: {
-      length?: {
-        min?: number;
-        max?: number;
-      };
-    };
-  }
-)
-```
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.array](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.array)
