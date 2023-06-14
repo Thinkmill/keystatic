@@ -126,7 +126,6 @@ function ToastToggle(options: ToastOptions) {
 
 function MainLandmark(props: any) {
   let ref = useRef<HTMLElement>(null);
-  // @ts-expect-error dom refs may be null until after the first render. not sure what react-aria expects in these cases.
   let { landmarkProps } = useLandmark({ ...props, role: 'main' }, ref);
   return (
     <Box

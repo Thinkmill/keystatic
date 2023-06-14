@@ -1,4 +1,4 @@
-import { AriaSelectProps } from '@react-types/select';
+import { SpectrumPickerProps } from '@react-types/select';
 import { ActionButtonProps } from '@voussoir/button';
 
 import { FieldProps } from '@voussoir/field';
@@ -24,7 +24,7 @@ export type PickerProps<T> = {
    * @default true
    */
   shouldFlip?: boolean;
-} & AriaSelectProps<T> &
+} & SpectrumPickerProps<T> &
   FieldProps &
   Pick<ActionButtonProps, 'prominence'> &
   BaseStyleProps;

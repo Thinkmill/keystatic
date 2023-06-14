@@ -54,7 +54,8 @@ function Combobox<T extends object>(
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
   props = useProviderProps(props);
-  props = validateTextFieldProps(props);
+  // TODO: fix these as anys
+  props = validateTextFieldProps(props as any) as any;
 
   let isMobile = useIsMobileDevice();
   if (isMobile) {

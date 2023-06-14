@@ -1,7 +1,4 @@
-import {
-  AriaMenuProps,
-  MenuTriggerProps as SpectrumTriggerProps,
-} from '@react-types/menu';
+import { AriaMenuProps, SpectrumMenuTriggerProps } from '@react-types/menu';
 import { DisabledBehavior } from '@react-types/shared';
 import { ReactElement } from 'react';
 
@@ -17,13 +14,13 @@ export type MenuProps<T> = {
 export type MenuTriggerProps = {
   /** The  trigger element and `Menu`. */
   children: ReactElement[];
-} & SpectrumTriggerProps;
+} & SpectrumMenuTriggerProps;
 
 export type ActionMenuProps<T> = {
   /** Whether the element should receive focus on render. */
   autoFocus?: boolean; // override MenuProps
   /** Whether the button is disabled. */
   isDisabled?: boolean;
-} & Omit<SpectrumTriggerProps, 'trigger'> &
+} & Omit<SpectrumMenuTriggerProps, 'trigger'> &
   MenuProps<T> &
   Pick<ActionButtonProps, 'prominence'>;
