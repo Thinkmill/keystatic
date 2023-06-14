@@ -1,14 +1,9 @@
-import { Styles } from '../styles';
+import '../styles.css';
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      {children}
-      <Styles />
-    </>
-  );
+  return <>{children}</>;
 }

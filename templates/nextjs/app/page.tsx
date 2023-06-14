@@ -1,5 +1,6 @@
-import { Styles } from './styles';
+import Link from 'next/link';
 import { reader } from './reader';
+import './styles.css';
 
 export default async function Homepage() {
   const posts = await reader.collections.posts.all();
@@ -16,12 +17,10 @@ export default async function Homepage() {
       <ul>
         {posts.map(post => (
           <li key={post.slug}>
-            <a href={`/${post.slug}`}>{post.entry.title}</a>
+            <Link href={`/${post.slug}`}>{post.entry.title}</Link>
           </li>
         ))}
       </ul>
-
-      <Styles />
     </div>
   );
 }
