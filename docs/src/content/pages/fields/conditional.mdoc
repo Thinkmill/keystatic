@@ -1,16 +1,18 @@
 ---
 title: Conditional field
 ---
-The `conditional` field lets you setup a&nbsp;`discriminant`&nbsp;for a condition that can be either a&nbsp;`checkbox`&nbsp;or a&nbsp;`select`&nbsp;field with a few options.
+The `conditional` field is used when you need to display entirely different fields based on a condition. 
 
-You can then display an entirely different set of fields based on the condition, by providing a key for each condition:
+In the first argument, define the condition by using either a `checkbox` or a `select` field. 
 
-- `true`/`false`&nbsp;if you used a&nbsp;`checkbox`
-- each possible value if you used a&nbsp;`select`
+In the second argument, define which field(s) to display for each condition by passing an object with each conditions' value as a key:
 
-## Usage example
+- `true`/`false`&nbsp;if you used a&nbsp;`checkbox` field, or
+- each possible value if you used a&nbsp;`select` field.
 
-### Checkbox discriminant
+## Usage examples
+
+### Checkbox
 
 Let's say you want to optionally display SEO title/description fields, but only if a user checks a checkbox.
 
@@ -30,7 +32,7 @@ seo: fields.conditional(
 )
 ```
 
-### Select discriminant
+### Select
 
 Here's a more complex example where you have an optional&nbsp;`Featured media`&nbsp;field for an entry.
 
@@ -86,16 +88,4 @@ featuredMedia: fields.conditional(
 
 ## Type signature
 
-```typescript
-conditional<
-  DiscriminantField extends BasicFormField<string> | BasicFormField<boolean>,
-  ConditionalValues extends {
-    [Key in `${ReturnType<
-      DiscriminantField['defaultValue']
-    >}`]: ComponentSchema;
-  }
->(
-  discriminant: DiscriminantField,
-  values: ConditionalValues
-)
-```
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.conditional](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.conditional)

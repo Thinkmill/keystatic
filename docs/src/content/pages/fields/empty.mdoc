@@ -1,15 +1,13 @@
 ---
 title: Empty field
 ---
-The `empty` field is useful in conjunction with the [conditional field](/docs/conditional-field).
-
-In scenarios where you want one _condition_ to not show _any_ fields at all, you can use an `empty` field.
+The `empty` field is useful in conjunction with the [conditional field](/docs/fields/conditional), in scenarios where you want one _condition_ to not show _any_ fields at all.
 
 ## Usage example
 
 ```typescript
 seo: fields.conditional(
-  // See fields.conditional docs for details on conditional field
+  // See fields.conditional docs for details on the conditional field
   fields.checkbox({ 
     label: 'Define custom SEO tags', 
     defaultValue: false,
