@@ -17,6 +17,7 @@ import { IntegerField } from './fields/integer';
 import { DateField } from './fields/date';
 import { SlugField } from './fields/slug';
 import { ImageField } from './fields/image';
+import { FileField } from './fields/file';
 
 const keystaticCodeTheme = JSON.parse(
   fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
@@ -202,6 +203,8 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         return <SlugField />;
       case 'image':
         return <ImageField />;
+      case 'file':
+        return <FileField />;
 
       default:
         return <div>Field not found</div>;

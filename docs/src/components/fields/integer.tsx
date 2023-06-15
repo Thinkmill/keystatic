@@ -10,12 +10,12 @@ export const IntegerField = () => {
   return (
     <FrameComponent>
       <IntegerFieldInput
-        label="Label"
+        label="Age"
         onChange={setValue}
         autoFocus={false}
         forceValidation={false}
-        description={undefined}
-        validation={undefined}
+        description="The person's age"
+        validation={{ min: 0, max: 120 }}
         value={value}
       />
     </FrameComponent>

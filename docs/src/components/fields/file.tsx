@@ -1,10 +1,10 @@
 'use client';
 
 import { FrameComponent } from './frame';
-import { ImageFieldInput } from '../../../../packages/keystatic/src/form/fields/image/ui';
+import { FileFieldInput } from '../../../../packages/keystatic/src/form/fields/file/ui';
 import { useState } from 'react';
 
-export const ImageField = () => {
+export const FileField = () => {
   const [value, setValue] = useState<{
     data: Uint8Array;
     extension: string;
@@ -13,9 +13,9 @@ export const ImageField = () => {
 
   return (
     <FrameComponent>
-      <ImageFieldInput
-        label="Avatar"
-        description="The avatar for this user"
+      <FileFieldInput
+        label="Resume"
+        description="The resume for this user"
         validation={undefined}
         value={value}
         onChange={setValue}

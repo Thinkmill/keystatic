@@ -11,9 +11,9 @@ export const DateField = () => {
     <FrameComponent>
       <DateFieldInput
         autoFocus={false}
-        description={undefined}
+        description="The date of the event"
         forceValidation={false}
-        label="Label"
+        label="Event date"
         onChange={setValue}
         value={value}
       />

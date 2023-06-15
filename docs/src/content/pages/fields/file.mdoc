@@ -1,0 +1,30 @@
+---
+title: File field
+---
+{% fieldComponent field="file" /%}
+
+The `file` field is used to store a file. In the Admin UI it renders an file picker component.
+
+In [local storage mode](/docs/local-vs-git-hub-storage-strategy#local-strategy) it will save it as a file in your repository. It [GitHub storage mode](/docs/local-vs-git-hub-storage-strategy#git-hub-strategy) it will commit it into the repository.
+
+## Storage options
+
+You can optionally specify a `directory` from your project tree to store the file in. This is useful when you want your files in a `public` or `static` directory, to adhere to conventions for a specific framework.
+
+There's also an optional `publicPath` that lets you define how the file path should be retrieved when reading the value of the field.
+
+## Example usage
+
+```typescript
+resume: fields.file({
+  label: 'Resume',
+  description: 'The resume for this user',
+  // This will output the files in the "public" directory
+  directory: 'public/files/resumes',
+  publicPath: '/files/resumes/'
+})
+```
+
+## Type signature
+
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.file](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.file)
