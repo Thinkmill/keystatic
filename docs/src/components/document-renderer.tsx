@@ -106,7 +106,7 @@ const getRenderers = (
         return (
           <ol className="text-keystatic-gray-dark list-decimal list-inside mt-2">
             {children.map((child, index) => (
-              <li key={index} className="mb-2 leading-tight">
+              <li key={index} className="mb-2">
                 {child}
               </li>
             ))}
@@ -116,7 +116,7 @@ const getRenderers = (
       return (
         <ul className="text-keystatic-gray-dark list-disc ml-4 mt-2">
           {children.map((child, index) => (
-            <li key={index} className="mb-2 leading-tight">
+            <li key={index} className="mb-2">
               {child}
             </li>
           ))}
