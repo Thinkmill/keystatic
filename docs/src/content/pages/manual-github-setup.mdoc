@@ -16,6 +16,10 @@ If you need an example repo to follow along, you can clone the [Keystatic Manual
 
 ## Step-by-step walkthrough
 
+Let's connect your Keystatic project to GitHub, step by step ✨
+
+### Switch to GitHub storage kind
+
 Assuming your Keystatic project is currently setup with `local` mode, the `storage` key in your config looks like this:
 
 ```typescript
@@ -41,11 +45,13 @@ storage: {
 
 Make sure the repo `owner` and `name` values match an existing GitHub repository. You can store these values in your `.env` file, or directly inline them in the config —&nbsp;up to you!
 
----
+### Log in with GitHub
 
 Next time you visit a `/keystatic` route in your browser, you will be prompted to login with GitHub:
 
 ![Screenshot of the "Log in with GitHub" button](CleanShot%202023-06-15%20at%2015.00.13@2x.png)
+
+### Keystatic setup
 
 Since the project is not connected yet, clicking on the login button should redirect you to a `/keystatic/setup` page:
 
@@ -54,3 +60,39 @@ Since the project is not connected yet, clicking on the login button should redi
 If you happen to know the URL of your deployed project and/or the GitHub repo is owned by a GitHub organization, you can fill in those fields.
 
 Otherwise, leave them blank and click on "Create GitHub App".
+
+### Create  a custom GitHub App
+
+This will take you to GitHub and prompt you to give a name for your custom GitHub App:
+
+![Screenshot of GitHub custom app creation UI](CleanShot%202023-06-15%20at%2015.07.57@2x.png)
+
+### Grant repo access
+
+When the custom App is created, you'll need to install it and give it access to your GitHub repo:
+
+![](CleanShot%202023-06-15%20at%2015.09.52@2x.png)
+
+![](CleanShot%202023-06-15%20at%2015.12.09@2x.png)
+
+After that, you'll be taken back to your local Keystatic Admin UI. But this time, you should see references to your GitHub repo and branches! 🎉
+
+![](CleanShot%202023-06-15%20at%2015.13.39@2x.png)
+
+### Environment variables
+
+How is Keystatic now connected to our GitHub repo?
+
+The answer lies in the `.env` file of your project:
+
+```bash
+# Keystatic
+KEYSTATIC_GITHUB_CLIENT_ID=...
+KEYSTATIC_GITHUB_CLIENT_SECRET=...
+KEYSTATIC_SECRET=...
+NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=...
+```
+
+Besides creating a custom GitHub app, the setup process has also generated **environment variables** used to authenticate users with GitHub, based on their access to the GitHub repo specified in your config's `storage.repo` settings.
+
+If the user has `write` access to the repo, they'll be able to access `/keystatic` routes 👍
