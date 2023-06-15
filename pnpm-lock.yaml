@@ -2282,6 +2282,22 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
 
+  packages/create:
+    specifiers:
+      '@babel/runtime': ^7.18.3
+      '@clack/prompts': ^0.6.3
+      '@types/tar': ^6.1.5
+      node-fetch-native: ^1.2.0
+      picocolors: ^1.0.0
+      tar: ^6.1.15
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@clack/prompts': 0.6.3
+      '@types/tar': 6.1.5
+      node-fetch-native: 1.2.0
+      picocolors: 1.0.0
+      tar: 6.1.15
+
   packages/keystatic:
     specifiers:
       '@babel/runtime': ^7.18.3
@@ -2532,6 +2548,25 @@ importers:
       '@remix-run/react': 1.13.0_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+
+  templates/nextjs:
+    specifiers:
+      '@keystatic/core': ^0.0.106
+      '@keystatic/next': ^0.0.9
+      '@types/react': ^18.2.8
+      next: ^13.4.4
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      typescript: ^5.1.3
+    dependencies:
+      '@keystatic/core': link:../../packages/keystatic
+      '@keystatic/next': link:../../packages/next
+      next: 13.4.4_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    devDependencies:
+      '@types/react': 18.2.8
+      typescript: 5.1.3
 
 packages:
 
@@ -4302,6 +4337,23 @@ packages:
       human-id: 1.0.2
       prettier: 2.8.4
     dev: false
+
+  /@clack/core/0.3.2:
+    resolution: {integrity: sha512-FZnsNynwGDIDktx6PEZK1EuCkFpY4ldEX6VYvfl0dqeoLPb9Jpw1xoUXaVcGR8ExmYNm1w2vdGdJkEUYD/2pqg==}
+    dependencies:
+      picocolors: 1.0.0
+      sisteransi: 1.0.5
+    dev: false
+
+  /@clack/prompts/0.6.3:
+    resolution: {integrity: sha512-AM+kFmAHawpUQv2q9+mcB6jLKxXGjgu/r2EQjEwujgpCdzrST6BJqYw00GRn56/L/Izw5U7ImoLmy00X/r80Pw==}
+    dependencies:
+      '@clack/core': 0.3.2
+      picocolors: 1.0.0
+      sisteransi: 1.0.5
+    dev: false
+    bundledDependencies:
+      - is-unicode-supported
 
   /@colors/colors/1.5.0:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
@@ -9762,6 +9814,13 @@ packages:
     resolution: {integrity: sha512-ipixuVrh2OdNmauvtT51o3d8z12p6LtFW9in7U79der/kwejjdNchQC5UMn5u/KxNoM7VHHOs/l8KS8uHxhODQ==}
     dev: true
 
+  /@types/tar/6.1.5:
+    resolution: {integrity: sha512-qm2I/RlZij5RofuY7vohTpYNaYcrSQlN2MyjucQc7ZweDwaEWkdN/EeNh6e9zjK6uEm6PwjdMXkcj05BxZdX1Q==}
+    dependencies:
+      '@types/node': 16.11.13
+      minipass: 4.0.3
+    dev: false
+
   /@types/tern/0.23.4:
     resolution: {integrity: sha512-JAUw1iXGO1qaWwEOzxTKJZ/5JxVeON9kvGZ/osgZaJImBnyjyn0cjovPsf6FNLmyGY8Vw9DoXZCMlfMkMwHRWg==}
     dependencies:
@@ -10170,7 +10229,7 @@ packages:
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-stately/list': 3.6.1_react@18.2.0
       '@react-types/actiongroup': 3.3.5_react@18.2.0
-      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/button': 0.2.0_biqbaboplfbrettd7655fr4n2y
       '@voussoir/core': 5.0.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.1_biqbaboplfbrettd7655fr4n2y
@@ -10218,7 +10277,7 @@ packages:
       '@react-aria/utils': 3.17.0_react@18.2.0
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-types/breadcrumbs': 3.5.0_react@18.2.0
-      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/button': 0.2.0_biqbaboplfbrettd7655fr4n2y
       '@voussoir/core': 5.0.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.1_biqbaboplfbrettd7655fr4n2y
@@ -10303,7 +10362,7 @@ packages:
       '@react-aria/focus': 3.12.1_react@18.2.0
       '@react-stately/checkbox': 3.3.2_react@18.2.0
       '@react-stately/toggle': 3.5.1_react@18.2.0
-      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/core': 5.0.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/field': 0.1.6_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.1_biqbaboplfbrettd7655fr4n2y
@@ -10332,14 +10391,14 @@ packages:
       '@react-aria/focus': 3.12.1_react@18.2.0
       '@react-aria/i18n': 3.7.1_react@18.2.0
       '@react-aria/interactions': 3.15.1_react@18.2.0
-      '@react-aria/label': 3.4.4_react@18.2.0
+      '@react-aria/label': 3.5.1_react@18.2.0
       '@react-aria/overlays': 3.13.0_biqbaboplfbrettd7655fr4n2y
       '@react-aria/utils': 3.17.0_react@18.2.0
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-stately/combobox': 3.3.1_react@18.2.0
-      '@react-types/button': 3.7.1_react@18.2.0
+      '@react-types/button': 3.7.2_react@18.2.0
       '@react-types/combobox': 3.5.5_react@18.2.0
-      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/button': 0.2.0_biqbaboplfbrettd7655fr4n2y
       '@voussoir/core': 5.0.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/field': 0.1.6_biqbaboplfbrettd7655fr4n2y
@@ -10394,7 +10453,7 @@ packages:
       '@react-aria/interactions': 3.15.1_react@18.2.0
       '@react-aria/overlays': 3.13.0_biqbaboplfbrettd7655fr4n2y
       '@react-aria/utils': 3.17.0_react@18.2.0
-      '@react-stately/overlays': 3.5.0_react@18.2.0
+      '@react-stately/overlays': 3.5.1_react@18.2.0
       '@voussoir/button': 0.2.0_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
@@ -10419,7 +10478,7 @@ packages:
       '@babel/runtime': 7.21.0
       '@react-aria/dnd': 3.0.1_biqbaboplfbrettd7655fr4n2y
       '@react-stately/dnd': 3.0.1_react@18.2.0
-      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false
@@ -10547,7 +10606,7 @@ packages:
       '@react-stately/layout': 3.10.0_react@18.2.0
       '@react-stately/list': 3.6.1_react@18.2.0
       '@react-types/grid': 3.1.5_react@18.2.0
-      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/checkbox': 0.2.6_biqbaboplfbrettd7655fr4n2y
       '@voussoir/core': 5.0.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/drag-and-drop': 0.1.2_biqbaboplfbrettd7655fr4n2y
@@ -10584,7 +10643,7 @@ packages:
       '@react-stately/layout': 3.10.0_react@18.2.0
       '@react-stately/list': 3.6.1_react@18.2.0
       '@react-stately/virtualizer': 3.4.1_react@18.2.0
-      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/core': 5.0.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
@@ -10621,8 +10680,8 @@ packages:
       '@react-stately/tree': 3.4.1_react@18.2.0
       '@react-stately/utils': 3.6.0_react@18.2.0
       '@react-types/menu': 3.7.3_react@18.2.0
-      '@react-types/overlays': 3.7.0_react@18.2.0
-      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/overlays': 3.7.1_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/button': 0.2.0_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
@@ -10695,9 +10754,9 @@ packages:
       '@react-aria/numberfield': 3.3.4_biqbaboplfbrettd7655fr4n2y
       '@react-aria/utils': 3.17.0_react@18.2.0
       '@react-stately/numberfield': 3.3.1_react@18.2.0
-      '@react-types/button': 3.7.1_react@18.2.0
+      '@react-types/button': 3.7.2_react@18.2.0
       '@react-types/numberfield': 3.3.5_react@18.2.0
-      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/button': 0.2.0_biqbaboplfbrettd7655fr4n2y
       '@voussoir/core': 5.0.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/field': 0.1.6_biqbaboplfbrettd7655fr4n2y
@@ -10724,8 +10783,8 @@ packages:
       '@react-aria/i18n': 3.7.1_react@18.2.0
       '@react-aria/overlays': 3.13.0_biqbaboplfbrettd7655fr4n2y
       '@react-aria/utils': 3.17.0_react@18.2.0
-      '@react-stately/overlays': 3.5.0_react@18.2.0
-      '@react-types/overlays': 3.7.0_react@18.2.0
+      '@react-stately/overlays': 3.5.1_react@18.2.0
+      '@react-types/overlays': 3.7.1_react@18.2.0
       '@voussoir/core': 5.0.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/slots': 0.1.3_biqbaboplfbrettd7655fr4n2y
@@ -10753,7 +10812,7 @@ packages:
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-stately/select': 3.3.4_react@18.2.0
       '@react-types/select': 3.6.5_react@18.2.0
-      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/button': 0.2.0_biqbaboplfbrettd7655fr4n2y
       '@voussoir/core': 5.0.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/field': 0.1.6_biqbaboplfbrettd7655fr4n2y
@@ -10801,7 +10860,7 @@ packages:
       '@react-aria/radio': 3.4.2_react@18.2.0
       '@react-stately/radio': 3.6.2_react@18.2.0
       '@react-types/radio': 3.3.1_react@18.2.0
-      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/core': 5.0.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/field': 0.1.6_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
@@ -10863,7 +10922,7 @@ packages:
       react: ^18.2.0
     dependencies:
       '@babel/runtime': 7.21.0
-      '@react-aria/ssr': 3.5.0_react@18.2.0
+      '@react-aria/ssr': 3.6.0_react@18.2.0
       react: 18.2.0
     dev: false
 
@@ -10901,7 +10960,7 @@ packages:
       '@react-aria/table': 3.7.0_biqbaboplfbrettd7655fr4n2y
       '@react-aria/utils': 3.17.0_react@18.2.0
       '@react-stately/table': 3.7.0_react@18.2.0
-      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/checkbox': 0.2.6_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
@@ -10928,7 +10987,7 @@ packages:
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-stately/list': 3.6.1_react@18.2.0
       '@react-stately/tabs': 3.2.4_react@18.2.0
-      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       '@react-types/tabs': 3.1.5_react@18.2.0
       '@voussoir/core': 5.0.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
@@ -10955,7 +11014,7 @@ packages:
       '@react-aria/textfield': 3.8.1_react@18.2.0
       '@react-aria/utils': 3.17.0_react@18.2.0
       '@react-stately/utils': 3.6.0_react@18.2.0
-      '@react-types/shared': 3.18.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/field': 0.1.6_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/style': 0.1.6_biqbaboplfbrettd7655fr4n2y
@@ -11008,7 +11067,7 @@ packages:
       '@react-aria/tooltip': 3.3.4_react@18.2.0
       '@react-aria/utils': 3.17.0_react@18.2.0
       '@react-stately/tooltip': 3.2.4_react@18.2.0
-      '@react-types/overlays': 3.7.0_react@18.2.0
+      '@react-types/overlays': 3.7.1_react@18.2.0
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/overlays': 0.1.7_biqbaboplfbrettd7655fr4n2y
       '@voussoir/slots': 0.1.3_biqbaboplfbrettd7655fr4n2y
@@ -12638,7 +12697,7 @@ packages:
       minipass-pipeline: 1.2.4
       mkdirp: 1.0.4
       p-map: 4.0.0
-      promise-inflight: 1.0.1
+      promise-inflight: 1.0.1_bluebird@3.7.2
       rimraf: 3.0.2
       ssri: 8.0.1
       tar: 6.1.13
@@ -12918,7 +12977,6 @@ packages:
   /chownr/2.0.0:
     resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
     engines: {node: '>=10'}
-    dev: true
 
   /chrome-trace-event/1.0.3:
     resolution: {integrity: sha512-p3KULyQg4S7NIHixdwbGX+nFHkoBiA4YQmyWtjb8XngSKV124nJmRysgAeujbUVb15vh+RvFUfCPqU7rXk+hZg==}
@@ -15946,7 +16004,6 @@ packages:
     engines: {node: '>= 8'}
     dependencies:
       minipass: 3.3.6
-    dev: true
 
   /fs-monkey/1.0.3:
     resolution: {integrity: sha512-cybjIfiiE+pTWicSCLFHSrXZ6EilF30oh91FDP9S2B051prEa7QWfrVTQm10/dDpswBDXZugPa1Ogu8Yh+HV0Q==}
@@ -19755,12 +19812,15 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       yallist: 4.0.0
-    dev: true
 
   /minipass/4.0.3:
     resolution: {integrity: sha512-OW2r4sQ0sI+z5ckEt5c1Tri4xTgZwYDxpE54eqWlQloQRoWtXjqt9udJ5Z4dSv7wK+nfFI7FRXyCpBSft+gpFw==}
     engines: {node: '>=8'}
-    dev: true
+
+  /minipass/5.0.0:
+    resolution: {integrity: sha512-3FnjYuehv9k6ovOEbyOswadCDPX1piCfhV8ncmYtHOjuPwylVWsghTLo7rabjC3Rx5xD4HDx8Wm1xnMF7S5qFQ==}
+    engines: {node: '>=8'}
+    dev: false
 
   /minizlib/2.1.2:
     resolution: {integrity: sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==}
@@ -19768,7 +19828,6 @@ packages:
     dependencies:
       minipass: 3.3.6
       yallist: 4.0.0
-    dev: true
 
   /mississippi/3.0.0:
     resolution: {integrity: sha512-x471SsVjUtBRtcvd4BzKE9kFC+/2TeWgKCgw0bZcw1b9l2X3QX5vCWgF+KaZaYm87Ss//rHnWryupDrgLvmSkA==}
@@ -19814,7 +19873,6 @@ packages:
     resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
     engines: {node: '>=10'}
     hasBin: true
-    dev: true
 
   /mlly/1.1.1:
     resolution: {integrity: sha512-Jnlh4W/aI4GySPo6+DyTN17Q75KKbLTyFK8BrGhjNP4rxuUjbRWhE6gHg3bs33URWAF44FRm7gdQA348i3XxRw==}
@@ -20086,6 +20144,10 @@ packages:
     dependencies:
       minimatch: 3.1.2
     dev: true
+
+  /node-fetch-native/1.2.0:
+    resolution: {integrity: sha512-5IAMBTl9p6PaAjYCnMv5FmqIF6GcZnawAVnzaCG0rX2aYZJ4CxEkZNtVPuTRug7fL7wyM5BQYTlAzcyMPi6oTQ==}
+    dev: false
 
   /node-fetch/2.6.7:
     resolution: {integrity: sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==}
@@ -21550,15 +21612,6 @@ packages:
   /process/0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
-    dev: true
-
-  /promise-inflight/1.0.1:
-    resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
-    peerDependencies:
-      bluebird: '*'
-    peerDependenciesMeta:
-      bluebird:
-        optional: true
     dev: true
 
   /promise-inflight/1.0.1_bluebird@3.7.2:
@@ -23886,6 +23939,18 @@ packages:
       mkdirp: 1.0.4
       yallist: 4.0.0
     dev: true
+
+  /tar/6.1.15:
+    resolution: {integrity: sha512-/zKt9UyngnxIT/EAGYuxaMYgOIJiP81ab9ZfkILq4oNLPFX50qyYmu7jRj9qeXoxmJHjGlbH0+cm2uy1WCs10A==}
+    engines: {node: '>=10'}
+    dependencies:
+      chownr: 2.0.0
+      fs-minipass: 2.1.0
+      minipass: 5.0.0
+      minizlib: 2.1.2
+      mkdirp: 1.0.4
+      yallist: 4.0.0
+    dev: false
 
   /telejson/6.0.8:
     resolution: {integrity: sha512-nerNXi+j8NK1QEfBHtZUN/aLdDcyupA//9kAboYLrtzZlPLpUfqbVGWb9zz91f/mIjRbAYhbgtnJHY8I1b5MBg==}
