@@ -12,15 +12,11 @@ import fs from 'fs';
 import { TextField } from './fields/text';
 import { URLField } from './fields/url';
 import { SelectField } from './fields/select';
-import { RelationshipField } from './fields/relationship';
-import { PathReferenceField } from './fields/path-reference';
 import { MultiselectField } from './fields/multiselect';
 import { IntegerField } from './fields/integer';
 import { DateField } from './fields/date';
-import { CheckboxField } from './fields/checkbox';
 import { SlugField } from './fields/slug';
 import { ImageField } from './fields/image';
-import { DocumentField } from './fields/document';
 
 const keystaticCodeTheme = JSON.parse(
   fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
@@ -196,24 +192,16 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         return <URLField />;
       case 'select':
         return <SelectField />;
-      case 'relationship':
-        return <RelationshipField />;
-      case 'path-reference':
-        return <PathReferenceField />;
       case 'multiselect':
         return <MultiselectField />;
       case 'integer':
         return <IntegerField />;
       case 'date':
         return <DateField />;
-      case 'checkbox':
-        return <CheckboxField />;
       case 'slug':
         return <SlugField />;
       case 'image':
         return <ImageField />;
-      case 'document':
-        return <DocumentField />;
 
       default:
         return <div>Field not found</div>;

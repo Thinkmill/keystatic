@@ -2161,7 +2161,6 @@ importers:
       '@heroicons/react': ^2.0.16
       '@keystatic/core': ^0.0.106
       '@keystatic/next': ^0.0.9
-      '@markdoc/markdoc': ^0.3.0
       '@sindresorhus/slugify': ^1.1.2
       '@tailwindcss/forms': ^0.5.3
       '@tailwindcss/typography': ^0.5.9
@@ -2169,11 +2168,8 @@ importers:
       '@types/node': 16.11.13
       '@types/react': ^18.2.8
       '@vercel/analytics': ^0.1.8
-      '@voussoir/checkbox': workspace:^0.2.6
-      '@voussoir/combobox': ^0.1.7
       '@voussoir/core': ^5.0.3
       '@voussoir/progress': 0.1.3
-      '@voussoir/typography': workspace:^0.1.6
       autoprefixer: ^10.4.13
       cookie: ^0.5.0
       next: ^13.4.4
@@ -2191,18 +2187,14 @@ importers:
       '@heroicons/react': 2.0.18_react@18.2.0
       '@keystatic/core': link:../packages/keystatic
       '@keystatic/next': link:../packages/next
-      '@markdoc/markdoc': 0.3.0_i2bxsyfskhzbpjanbovidbfj7u
       '@sindresorhus/slugify': 1.1.2
       '@tailwindcss/forms': 0.5.3_tailwindcss@3.3.2
       '@types/cookie': 0.5.1
       '@types/node': 16.11.13
       '@types/react': 18.2.8
       '@vercel/analytics': 0.1.11_react@18.2.0
-      '@voussoir/checkbox': link:../design-system/packages/checkbox
-      '@voussoir/combobox': link:../design-system/packages/combobox
       '@voussoir/core': link:../design-system/packages/core
       '@voussoir/progress': link:../design-system/packages/progress
-      '@voussoir/typography': link:../design-system/packages/typography
       cookie: 0.5.0
       next: 13.4.4_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0

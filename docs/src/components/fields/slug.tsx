@@ -6,7 +6,17 @@ import { SlugFieldInput } from '../../../../packages/keystatic/src/form/fields/s
 import { useState } from 'react';
 
 export const SlugField = () => {
-  const args = { name: { label: 'Title', defaultValue: 'My first post' } };
+  const args = {
+    name: {
+      label: 'Title',
+      description: 'The title of the post',
+      defaultValue: 'My first post',
+    },
+    slug: {
+      label: 'SEO-friendly slug',
+      description: 'This will define the file/folder name for this entry',
+    },
+  };
   const naiveGenerateSlug: (name: string) => string = slugify;
   const defaultValue = {
     name: args.name.defaultValue ?? '',

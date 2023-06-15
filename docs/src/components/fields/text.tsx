@@ -13,10 +13,10 @@ export const TextField = () => {
         autoFocus={false}
         description={undefined}
         forceValidation={false}
-        label="Label"
+        label="Quote"
         max={100}
         min={0}
-        multiline={false}
+        multiline
         onChange={setValue}
         value={value}
       />

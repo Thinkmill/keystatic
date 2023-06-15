@@ -5,17 +5,18 @@ import { SelectFieldInput } from '../../../../packages/keystatic/src/form/fields
 import { useState } from 'react';
 
 export const SelectField = () => {
-  const [value, setValue] = useState('option-1');
+  const [value, setValue] = useState('designer');
 
   return (
     <FrameComponent>
       <SelectFieldInput
-        label="Label"
+        label="Role"
+        description="The person's role at the company"
         onChange={setValue}
         options={[
-          { label: 'Option 1', value: 'option-1' },
-          { label: 'Option 2', value: 'option-2' },
-          { label: 'Option 3', value: 'option-3' },
+          { label: 'Designer', value: 'designer' },
+          { label: 'Developer', value: 'developer' },
+          { label: 'Product manager', value: 'product-manager' },
         ]}
         value={value}
       />
