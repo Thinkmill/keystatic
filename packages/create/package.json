@@ -2,9 +2,7 @@
   "name": "@keystatic/create",
   "version": "0.0.0",
   "license": "MIT",
-  "bin": {
-    "create-keystatic": "./bin.js"
-  },
+  "bin": "./bin.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/Thinkmill/keystatic/",
