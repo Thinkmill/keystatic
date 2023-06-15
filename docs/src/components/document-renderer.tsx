@@ -20,6 +20,7 @@ import { DateField } from './fields/date';
 import { CheckboxField } from './fields/checkbox';
 import { SlugField } from './fields/slug';
 import { ImageField } from './fields/image';
+import { DocumentField } from './fields/document';
 
 const keystaticCodeTheme = JSON.parse(
   fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
@@ -211,6 +212,8 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         return <SlugField />;
       case 'image':
         return <ImageField />;
+      case 'document':
+        return <DocumentField />;
 
       default:
         return <div>Field not found</div>;

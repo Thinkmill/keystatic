@@ -1,4 +1,7 @@
-const { MAIN_EL_MAX_WIDTH } = require('./src/constants');
+const {
+  MAIN_EL_MAX_WIDTH,
+  CONTENT_MAX_WIDTH_DESKTOP,
+} = require('./src/constants');
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 /** @type {import('tailwindcss').Config} */
@@ -26,6 +29,7 @@ module.exports = {
       },
       maxWidth: {
         '7xl': MAIN_EL_MAX_WIDTH,
+        'content-desktop': CONTENT_MAX_WIDTH_DESKTOP,
       },
       screens: {
         '2lg': '68.75rem',

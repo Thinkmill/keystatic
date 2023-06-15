@@ -140,6 +140,7 @@ export const componentBlocks = {
           { label: 'Checkbox', value: 'checkbox' },
           { label: 'Slug', value: 'slug' },
           { label: 'Image', value: 'image' },
+          { label: 'Document', value: 'document' },
         ],
       }),
     },
