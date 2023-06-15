@@ -12,7 +12,7 @@ navGroups:
         link:
           discriminant: page
           value: automated-setup-with-template
-      - label: Manual GitHub Setup
+      - label: Manual GitHub setup
         link:
           discriminant: page
           value: manual-github-setup
