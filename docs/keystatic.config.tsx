@@ -8,6 +8,56 @@ import {
   NotEditable,
 } from '@keystatic/core';
 import { CloudImagePreview } from './src/components/previews/CloudImagePreview';
+import { Config } from '@markdoc/markdoc';
+
+const markdocConfig: Config = {
+  tags: {
+    aside: {
+      attributes: {
+        icon: {
+          type: String,
+          required: true,
+        },
+      },
+      render: 'Aside',
+    },
+    'cloud-image': {
+      render: 'CloudImage',
+      attributes: {
+        href: {
+          type: String,
+          required: true,
+        },
+        alt: {
+          type: String,
+        },
+      },
+    },
+    tags: {
+      render: 'Tags',
+      attributes: {
+        tags: {
+          type: Array,
+          validate(value) {
+            if (
+              !Array.isArray(value) ||
+              value.some(v => typeof v !== 'string')
+            ) {
+              return [
+                {
+                  message: 'tags must be text',
+                  id: 'tags-text',
+                  level: 'critical',
+                },
+              ];
+            }
+            return [];
+          },
+        },
+      },
+    },
+  },
+};
 
 export const componentBlocks = {
   aside: component({
