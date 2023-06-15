@@ -37,6 +37,20 @@ Wrapping the `testimonials` config object inside the `collection()` function pro
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/collectionsandsingletons2.png" /%}
 
+### Slug field
+
+Use the `slugField` option to define what field in your `schema` should be used as the slug for each item. It's recommended to combine it with the [slug field](/docs/fields/slug) to let users customise and regenerate each slug in the Admin UI.
+
+```typescript
+testimonials: collection({
+  label: 'Testimonials',
+  schema: {
+    title: fields.slug({ name: { label: 'Title' } }),
+  },
+  slugField: 'title',
+}),
+```
+
 ## Singletons
 
 When you want a “one-of-a-kind” data entry, such as a “Settings” page or maybe a very specific set of fields for the “Homepage” of a website… you'll want to use a `singleton`
