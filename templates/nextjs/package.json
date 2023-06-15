@@ -2,7 +2,6 @@
   "name": "@keystatic/templates-nextjs",
   "version": "0.0.1",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "build": "next build",
     "dev": "next dev",
