@@ -12,6 +12,10 @@ navGroups:
         link:
           discriminant: page
           value: automated-setup-with-template
+      - label: Manual GitHub Setup
+        link:
+          discriminant: page
+          value: manual-github-setup
   - groupName: Integration guides
     items:
       - label: Astro

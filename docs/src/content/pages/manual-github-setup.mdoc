@@ -1,0 +1,56 @@
+---
+title: Manual GitHub setup
+---
+{% aside icon="⚡️" %}
+**TL:DR**
+
+This guide walks you through the steps of manually connecting your existing Keystatic project to GitHub.
+
+It makes the assumption that you already have:
+
+- An existing **GitHub repository**
+- Keystatic working in `local` mode
+{% /aside %}
+
+If you need an example repo to follow along, you can clone the [Keystatic Manual GitHub Setup Demo](https://github.com/Thinkmill/keystatic-manual-setup-demo) repo.
+
+## Step-by-step walkthrough
+
+Assuming your Keystatic project is currently setup with `local` mode, the `storage` key in your config looks like this:
+
+```typescript
+storage: {
+  kind: 'local',
+}
+```
+
+Let's change this to use the `github` kind instead.
+
+This expects a `repo` object with keys for the repo `owner` and `name`:
+
+```diff
+storage: {
+-  kind: 'local',
++  kind: 'github',
++  repo: {
++    owner: REPO_OWNER,
++    name: REPO_NAME
++  }   
+}
+```
+
+Make sure the repo `owner` and `name` values match an existing GitHub repository. You can store these values in your `.env` file, or directly inline them in the config —&nbsp;up to you!
+
+---
+
+Next time you visit a `/keystatic` route in your browser, you will be prompted to login with GitHub:
+
+![Screenshot of the "Log in with GitHub" button](CleanShot%202023-06-15%20at%2015.00.13@2x.png)
+
+Since the project is not connected yet, clicking on the login button should redirect you to a `/keystatic/setup` page:
+
+![Screenshot of the Keystatic setup page](CleanShot%202023-06-15%20at%2015.02.23@2x.png)
+
+If you happen to know the URL of your deployed project and/or the GitHub repo is owned by a GitHub organization, you can fill in those fields.
+
+Otherwise, leave them blank and click on "Create GitHub App".
