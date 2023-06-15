@@ -1,14 +1,14 @@
 'use client';
 
-import { FrameComponent } from './frame';
+import { FieldDemoFrame } from './frame';
 import { DateFieldInput } from '../../../../packages/keystatic/src/form/fields/date/ui';
 import { useState } from 'react';
 
-export const DateField = () => {
+export const DateFieldDemo = () => {
   const [value, setValue] = useState<string | null>(null);
 
   return (
-    <FrameComponent>
+    <FieldDemoFrame>
       <DateFieldInput
         autoFocus={false}
         description="The date of the event"
@@ -17,6 +17,6 @@ export const DateField = () => {
         onChange={setValue}
         value={value}
       />
-    </FrameComponent>
+    </FieldDemoFrame>
   );
 };

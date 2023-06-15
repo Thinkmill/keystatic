@@ -1,14 +1,14 @@
 'use client';
 
-import { FrameComponent } from './frame';
+import { FieldDemoFrame } from './frame';
 import { SelectFieldInput } from '../../../../packages/keystatic/src/form/fields/select/ui';
 import { useState } from 'react';
 
-export const SelectField = () => {
+export const SelectFieldDemo = () => {
   const [value, setValue] = useState('designer');
 
   return (
-    <FrameComponent>
+    <FieldDemoFrame>
       <SelectFieldInput
         label="Role"
         description="The person's role at the company"
@@ -20,6 +20,6 @@ export const SelectField = () => {
         ]}
         value={value}
       />
-    </FrameComponent>
+    </FieldDemoFrame>
   );
 };

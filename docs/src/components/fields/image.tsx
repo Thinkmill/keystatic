@@ -1,10 +1,10 @@
 'use client';
 
-import { FrameComponent } from './frame';
+import { FieldDemoFrame } from './frame';
 import { ImageFieldInput } from '../../../../packages/keystatic/src/form/fields/image/ui';
 import { useState } from 'react';
 
-export const ImageField = () => {
+export const ImageFieldDemo = () => {
   const [value, setValue] = useState<{
     data: Uint8Array;
     extension: string;
@@ -12,7 +12,7 @@ export const ImageField = () => {
   } | null>(null);
 
   return (
-    <FrameComponent>
+    <FieldDemoFrame>
       <ImageFieldInput
         label="Avatar"
         description="The avatar for this user"
@@ -22,6 +22,6 @@ export const ImageField = () => {
         autoFocus={false}
         forceValidation={false}
       />
-    </FrameComponent>
+    </FieldDemoFrame>
   );
 };

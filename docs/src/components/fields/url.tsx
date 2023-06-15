@@ -1,14 +1,14 @@
 'use client';
 
-import { FrameComponent } from './frame';
+import { FieldDemoFrame } from './frame';
 import { UrlFieldInput } from '../../../../packages/keystatic/src/form/fields/url/ui';
 import { useState } from 'react';
 
-export const URLField = () => {
+export const URLFieldDemo = () => {
   const [value, setValue] = useState<string | null>(null);
 
   return (
-    <FrameComponent>
+    <FieldDemoFrame>
       <UrlFieldInput
         label="URL"
         description="The website URL"
@@ -18,6 +18,6 @@ export const URLField = () => {
         validation={undefined}
         forceValidation={false}
       />
-    </FrameComponent>
+    </FieldDemoFrame>
   );
 };

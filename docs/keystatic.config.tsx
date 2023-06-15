@@ -119,14 +119,14 @@ export const componentBlocks = {
     },
     chromeless: false,
   }),
-  fieldComponent: component({
+  fieldDemo: component({
     preview: props => {
       return <div>{props.fields.field.value}</div>;
     },
-    label: 'Field component',
+    label: 'Field demo',
     schema: {
       field: fields.select({
-        label: 'Field component',
+        label: 'Field',
         defaultValue: 'text',
         options: [
           { label: 'Date', value: 'date' },

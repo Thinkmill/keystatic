@@ -1,10 +1,10 @@
 'use client';
 
-import { FrameComponent } from './frame';
+import { FieldDemoFrame } from './frame';
 import { FileFieldInput } from '../../../../packages/keystatic/src/form/fields/file/ui';
 import { useState } from 'react';
 
-export const FileField = () => {
+export const FileFieldDemo = () => {
   const [value, setValue] = useState<{
     data: Uint8Array;
     extension: string;
@@ -12,7 +12,7 @@ export const FileField = () => {
   } | null>(null);
 
   return (
-    <FrameComponent>
+    <FieldDemoFrame>
       <FileFieldInput
         label="Resume"
         description="The resume for this user"
@@ -22,6 +22,6 @@ export const FileField = () => {
         autoFocus={false}
         forceValidation={false}
       />
-    </FrameComponent>
+    </FieldDemoFrame>
   );
 };

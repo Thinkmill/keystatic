@@ -1,14 +1,14 @@
 'use client';
 
-import { FrameComponent } from './frame';
+import { FieldDemoFrame } from './frame';
 import { IntegerFieldInput } from '../../../../packages/keystatic/src/form/fields/integer/ui';
 import { useState } from 'react';
 
-export const IntegerField = () => {
+export const IntegerFieldDemo = () => {
   const [value, setValue] = useState<number | null>(null);
 
   return (
-    <FrameComponent>
+    <FieldDemoFrame>
       <IntegerFieldInput
         label="Age"
         onChange={setValue}
@@ -18,6 +18,6 @@ export const IntegerField = () => {
         validation={{ min: 0, max: 120 }}
         value={value}
       />
-    </FrameComponent>
+    </FieldDemoFrame>
   );
 };

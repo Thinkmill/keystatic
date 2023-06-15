@@ -1,11 +1,11 @@
 'use client';
 
 import slugify from '@sindresorhus/slugify';
-import { FrameComponent } from './frame';
+import { FieldDemoFrame } from './frame';
 import { SlugFieldInput } from '../../../../packages/keystatic/src/form/fields/slug/ui';
 import { useState } from 'react';
 
-export const SlugField = () => {
+export const SlugFieldDemo = () => {
   const args = {
     name: {
       label: 'Title',
@@ -25,7 +25,7 @@ export const SlugField = () => {
   const [value, setValue] = useState(defaultValue);
 
   return (
-    <FrameComponent>
+    <FieldDemoFrame>
       <SlugFieldInput
         defaultValue={defaultValue}
         args={args}
@@ -35,6 +35,6 @@ export const SlugField = () => {
         forceValidation={false}
         value={value}
       />
-    </FrameComponent>
+    </FieldDemoFrame>
   );
 };

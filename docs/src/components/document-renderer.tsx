@@ -9,15 +9,15 @@ import { componentBlocks } from '../../keystatic.config';
 import { CONTENT_MAX_WIDTH_DESKTOP } from '../constants';
 import CloudImage from './cloud-image';
 import fs from 'fs';
-import { TextField } from './fields/text';
-import { URLField } from './fields/url';
-import { SelectField } from './fields/select';
-import { MultiselectField } from './fields/multiselect';
-import { IntegerField } from './fields/integer';
-import { DateField } from './fields/date';
-import { SlugField } from './fields/slug';
-import { ImageField } from './fields/image';
-import { FileField } from './fields/file';
+import { TextFieldDemo } from './fields/text';
+import { URLFieldDemo } from './fields/url';
+import { SelectFieldDemo } from './fields/select';
+import { MultiselectFieldDemo } from './fields/multiselect';
+import { IntegerFieldDemo } from './fields/integer';
+import { DateFieldDemo } from './fields/date';
+import { SlugFieldDemo } from './fields/slug';
+import { ImageFieldDemo } from './fields/image';
+import { FileFieldDemo } from './fields/file';
 
 const keystaticCodeTheme = JSON.parse(
   fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
@@ -185,26 +185,26 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
       </div>
     );
   },
-  fieldComponent: ({ field }) => {
+  fieldDemo: ({ field }) => {
     switch (field) {
       case 'text':
-        return <TextField />;
+        return <TextFieldDemo />;
       case 'url':
-        return <URLField />;
+        return <URLFieldDemo />;
       case 'select':
-        return <SelectField />;
+        return <SelectFieldDemo />;
       case 'multiselect':
-        return <MultiselectField />;
+        return <MultiselectFieldDemo />;
       case 'integer':
-        return <IntegerField />;
+        return <IntegerFieldDemo />;
       case 'date':
-        return <DateField />;
+        return <DateFieldDemo />;
       case 'slug':
-        return <SlugField />;
+        return <SlugFieldDemo />;
       case 'image':
-        return <ImageField />;
+        return <ImageFieldDemo />;
       case 'file':
-        return <FileField />;
+        return <FileFieldDemo />;
 
       default:
         return <div>Field not found</div>;

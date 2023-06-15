@@ -1,14 +1,14 @@
 'use client';
 
-import { FrameComponent } from './frame';
+import { FieldDemoFrame } from './frame';
 import { TextFieldInput } from '../../../../packages/keystatic/src/form/fields/text/ui';
 import { useState } from 'react';
 
-export const TextField = () => {
+export const TextFieldDemo = () => {
   const [value, setValue] = useState('');
 
   return (
-    <FrameComponent>
+    <FieldDemoFrame>
       <TextFieldInput
         autoFocus={false}
         description={undefined}
@@ -20,6 +20,6 @@ export const TextField = () => {
         onChange={setValue}
         value={value}
       />
-    </FrameComponent>
+    </FieldDemoFrame>
   );
 };

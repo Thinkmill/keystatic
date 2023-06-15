@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { VoussoirProvider } from '@voussoir/core';
 
-export function FrameComponent({
+export function FieldDemoFrame({
   children,
 }: {
   children: ReactNode;
