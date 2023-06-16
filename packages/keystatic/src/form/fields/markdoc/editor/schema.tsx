@@ -9,6 +9,7 @@ import {
   Node,
 } from 'prosemirror-model';
 import { classes } from './utils';
+import { WithReactNodeViewSpec } from './react-node-views';
 import {
   InsertMenuItem,
   WithInsertMenuNodeSpec,
@@ -104,7 +105,9 @@ const liDOM: DOMOutputSpec = [
   0,
 ];
 
-export type EditorNodeSpec = NodeSpec & WithInsertMenuNodeSpec;
+export type EditorNodeSpec = NodeSpec &
+  WithReactNodeViewSpec &
+  WithInsertMenuNodeSpec;
 
 const inlineContent = `(text | (text hard_break) | attribute)*`;
 

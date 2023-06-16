@@ -7,6 +7,7 @@ import { tokenSchema } from '@voussoir/style';
 import { Toolbar } from './Toolbar';
 import { prosemirrorStyles } from './utils';
 import { EditorPopover } from './popovers';
+import { NodeViews } from './react-node-views';
 import { ProseMirrorEditable, ProseMirrorEditor } from './editor-view';
 import { AutocompleteDecoration } from './autocomplete/decoration';
 
@@ -64,6 +65,7 @@ export const Editor = forwardRef(function Editor(
         <Toolbar />
         <ProseMirrorEditable className={editableStyles} />
       </Box>
+      <NodeViews state={props.value} />
       <EditorPopover state={props.value} />
       <AutocompleteDecoration />
     </ProseMirrorEditor>

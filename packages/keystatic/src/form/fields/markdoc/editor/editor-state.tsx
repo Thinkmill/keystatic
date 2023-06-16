@@ -9,6 +9,7 @@ import { inputRulesForSchema } from './inputrules/rules';
 import { keymapForSchema } from './commands/keymap';
 import { markdocClipboard } from './markdoc/clipboard';
 import { nodeInSelectionDecorations } from './node-in-selection';
+import { reactNodeViews } from './react-node-views';
 import { autocompleteDecoration } from './autocomplete/decoration';
 import { keydownHandler } from './keydown';
 import { gapCursor } from './gapcursor';
@@ -36,6 +37,7 @@ export function createEditorState(
       keymap(keymapForSchema(schema)),
       markdocClipboard(),
       nodeInSelectionDecorations(),
+      reactNodeViews(doc.type.schema),
       autocompleteDecoration(),
     ],
     doc,
