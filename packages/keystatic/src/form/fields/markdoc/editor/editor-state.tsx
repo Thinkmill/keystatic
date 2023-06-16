@@ -14,6 +14,7 @@ import { keydownHandler } from './keydown';
 import { gapCursor } from './gapcursor';
 import { attributes } from './attributes';
 import { dropCursor } from './dropcursor';
+import { codeBlockSyntaxHighlighting } from './code-block-highlighting';
 
 export function createEditorState(
   doc: Node,
@@ -37,6 +38,7 @@ export function createEditorState(
       markdocClipboard(),
       nodeInSelectionDecorations(),
       autocompleteDecoration(),
+      codeBlockSyntaxHighlighting(),
     ],
     doc,
   });

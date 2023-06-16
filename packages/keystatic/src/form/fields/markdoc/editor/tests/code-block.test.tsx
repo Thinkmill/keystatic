@@ -77,7 +77,9 @@ test('enter inserts a new line', async () => {
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
-      <code_block>
+      <code_block
+        language="plain"
+      >
         <text>
           asdkjnajsndakjndkjnaksdjnasdasdasd
     some text
@@ -104,7 +106,9 @@ test('insertBreak when at end with \n as last character just adds a new line', a
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
-      <code_block>
+      <code_block
+        language="plain"
+      >
         <text>
           asdkjnajsndakjndkjnaksdjn
     asdasdasd
@@ -134,12 +138,16 @@ test('shift+enter in the middle of a code block splits it', async () => {
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
-      <code_block>
+      <code_block
+        language="plain"
+      >
         <text>
           some text
         </text>
       </code_block>
-      <code_block>
+      <code_block
+        language="plain"
+      >
         <text>
           <cursor />
           more text
@@ -167,7 +175,9 @@ test('shift+enter at the end of a code block inserts a paragraph after', async (
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
-      <code_block>
+      <code_block
+        language="plain"
+      >
         <text>
           some textmore text
 
@@ -198,7 +208,9 @@ test('shift+enter at the start of a code block inserts a paragraph before', asyn
   expect(state()).toMatchInlineSnapshot(`
     <doc>
       <paragraph />
-      <code_block>
+      <code_block
+        language="plain"
+      >
         <text>
           <cursor />
           some textmore text
@@ -265,18 +277,24 @@ test('clicking on the code block button converts the current nodes to code block
   await user.click(button);
   expect(state()).toMatchInlineSnapshot(`
     <doc>
-      <code_block>
+      <code_block
+        language=""
+      >
         <text>
           blah
           <anchor />
         </text>
       </code_block>
-      <code_block>
+      <code_block
+        language=""
+      >
         <text>
           more
         </text>
       </code_block>
-      <code_block>
+      <code_block
+        language=""
+      >
         <text>
           more
           <head />

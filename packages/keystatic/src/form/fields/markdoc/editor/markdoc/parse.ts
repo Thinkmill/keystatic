@@ -251,12 +251,15 @@ function markdocNodeToProseMirrorNode(
     return createAndFill(node, schema.nodes.doc, {});
   }
   if (node.type === 'fence') {
-    return createAndFill(node, schema.nodes.code_block, {
-      language:
-        typeof node.attributes.language === 'string'
-          ? node.attributes.language
-          : 'plain',
-    });
+    return schema.nodes.code_block.createAndFill(
+      {
+        language:
+          typeof node.attributes.language === 'string'
+            ? node.attributes.language
+            : 'plain',
+      },
+      schema.schema.text(node.attributes.content.slice(0, -1))
+    );
   }
   if (node.type === 'hr') {
     return createAndFill(node, schema.nodes.divider, {});

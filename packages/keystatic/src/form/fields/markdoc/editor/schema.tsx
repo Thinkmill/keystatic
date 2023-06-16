@@ -237,6 +237,9 @@ const nodeSpecs = {
     content: 'text*',
     group: 'block',
     defining: true,
+    attrs: {
+      language: { default: '' },
+    },
     insertMenu: {
       label: 'Code block',
       command: setBlockType,
