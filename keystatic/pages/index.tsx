@@ -15,9 +15,8 @@ export default function Index() {
     >
       <h1>Demo app</h1>
       <p>
-        <a href="https://keystatic.thinkmill.com.au/">Keystatic</a> is a new
-        tool that makes Markdown, JSON and YAML content in your codebase
-        editable by humans.
+        <a href="https://keystatic.com">Keystatic</a> is a new tool that makes
+        Markdown, JSON and YAML content in your codebase editable by humans.
       </p>
       <p>
         <Link href="/keystatic">Start editing</Link>.
