@@ -205,7 +205,10 @@ function markdocNodeToProseMirrorNode(
     return addMark(node, schema.marks.italic);
   }
   if (node.type === 'code') {
-    return addMark(node, schema.marks.code);
+    return schema.schema.text(node.attributes.content, [
+      ...getState().marks,
+      schema.marks.code.create(),
+    ]);
   }
   if (node.type === 's') {
     return addMark(node, schema.marks.strikethrough);

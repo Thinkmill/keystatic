@@ -404,7 +404,7 @@ export declare namespace jsx {
   }
 }
 
-function toEditorState(doc: Node): EditorStateDescription {
+export function toEditorState(doc: Node): EditorStateDescription {
   if (!(doc instanceof Node)) {
     throw new Error('toEditorState only accepts a single node');
   }
@@ -539,7 +539,7 @@ const editorStateSerializer: NewPlugin = {
   },
 };
 
-type EditorStateDescription = {
+export type EditorStateDescription = {
   get(): EditorState;
 };
 
