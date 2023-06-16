@@ -12,8 +12,10 @@ export function OpenTransition(props: OpenTransitionProps) {
   return (
     <Transition timeout={{ enter: 0, exit: 320 }} {...props}>
       {state =>
-        Children.map(children, child =>
-          cloneValidElement(child, { isOpen: state === 'entered' })
+        Children.map(
+          children,
+          child =>
+            cloneValidElement(child, { isOpen: state === 'entered' }) ?? child
         )
       }
     </Transition>
