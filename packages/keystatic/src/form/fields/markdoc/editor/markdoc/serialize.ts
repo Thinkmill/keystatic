@@ -20,7 +20,8 @@ function textblockChildren(fragment: Fragment): MarkdocNode[] {
   const children: MarkdocNode[] = [];
   fragment.forEach(child => {
     if (child.text !== undefined) {
-      let node = new Ast.Node('text', { content: child.text }, []);
+      const textNode = new Ast.Node('text', { content: child.text }, []);
+      let node = textNode;
       const schema = getEditorSchema(child.type.schema);
       let linkMark: Mark | undefined;
       for (const mark of child.marks) {
@@ -33,7 +34,8 @@ function textblockChildren(fragment: Fragment): MarkdocNode[] {
           type = 'strong';
         }
         if (mark.type === schema.marks.code) {
-          type = 'code';
+          textNode.type = 'code';
+          continue;
         }
         if (mark.type === schema.marks.italic) {
           type = 'em';
