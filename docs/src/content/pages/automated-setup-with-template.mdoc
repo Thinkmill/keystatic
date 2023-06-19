@@ -1,10 +1,7 @@
 ---
 title: Automated setup (with template)
 ---
-{% aside %}
-{% component-inline-prop propPath=["icon"] %}⚡️{% /component-inline-prop %}
-
-{% component-block-prop propPath=["content"] %}
+{% aside icon="⚡️" %}
 **TL:DR**
 
 Keystatic deeply integrates with GitHub.
@@ -14,27 +11,22 @@ To use it, you need:
 - A **GitHub repository** for your project
 - A **custom GitHub App** that is allowed to access your project repo
 
-You _can_ do that manually… but we’ve created a little semi-automated onboarding process. It turns a lengthy manual setup into a series of… _button clicks_ ✨
-{% /component-block-prop %}
+You *can* do that manually… but we’ve created a little semi-automated onboarding process. It turns a lengthy manual setup into a series of… *button clicks* ✨
 {% /aside %}
 
-You’ll be prompted to go through a few steps. You can read the **step by step walkthrough** below for details, but here’s a visual representation of the _mostly automated_ journey you’ll be taken on:
+You’ll be prompted to go through a few steps. You can read the **step by step walkthrough** below for details, but here’s a visual representation of the *mostly automated* journey you’ll be taken on:
 
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template0.png" /%}
 
-{% aside %}
-{% component-inline-prop propPath=["icon"] %}☝️{% /component-inline-prop %}
-
-{% component-block-prop propPath=["content"] %}
+{% aside icon="☝️" %}
 **Disclaimer/context**
 
 To automate the creation of the GitHub repo and set it up with the GitHub App, we’re leveraging Vercel as a platform. It helps us create, deploy a repo and hook into the project creation to create the GitHub App and add required environment variables.
 
-This lets us provide the _quickest pathway_ to having a Keystatic project setup and deployed to start iterating. That said, **using Vercel is not a requirement** - you can host a Keystatic project somewhere else. Vercel just happens to help us “automate” the getting started story elegantly.
+This lets us provide the *quickest pathway* to having a Keystatic project setup and deployed to start iterating. That said, **using Vercel is not a requirement** - you can host a Keystatic project somewhere else. Vercel just happens to help us “automate” the getting started story elegantly.
 
 We’ll be adding more pathways to create a new project as we go, and based on the feedback we get.
-{% /component-block-prop %}
 {% /aside %}
 
 ## Step by step walkthrough
@@ -49,7 +41,7 @@ Select one of the starter templates:
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template2.png" /%}
 
-You’ll be prompted to tell us about yourself. This is optional, but it helps us understand _who_ is using Keystatic and how we can make it better.
+You’ll be prompted to tell us about yourself. This is optional, but it helps us understand *who* is using Keystatic and how we can make it better.
 
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template3.png" /%}
@@ -139,17 +131,13 @@ If you open up your local project with your code editor of choice and check the 
 
 Copy the environment variables from the `Development` environment from Vercel:
 
-{% aside %}
-{% component-inline-prop propPath=["icon"] %}💻{% /component-inline-prop %}
-
-{% component-block-prop propPath=["content"] %}
+{% aside icon="💻" %}
 **Note:** If you’re using the `vercel` CLI, you can also pull these environment variables into your project:
 
 1. `vercel link` to link the project
 1. `vercel env pull` to pull the variables
 
 You’ll end up with a series of variables starting with `VERCEL_*`, that you can safely delete.
-{% /component-block-prop %}
 {% /aside %}
 
 {% cloud-image
@@ -171,16 +159,12 @@ Have a play with Keystatic and let us know what you think!
 
 ---
 
-{% aside %}
-{% component-inline-prop propPath=["icon"] %}👀{% /component-inline-prop %}
-
-{% component-block-prop propPath=["content"] %}
+{% aside icon="👀" %}
 **Where’s the front end?**
 
 If you’ve selected the `blank` starter template, you won’t have any frontend besides the “Go to Keystatic” link.
 
 For examples of front ends wired up with Keystatic with some demo content, try out one of our existing [templates](https://keystatic.thinkmill.com.au) like the [Marketing Landing Page](https://keystatic.thinkmill.com.au?template=marketing) or the [Blog Template](https://keystatic.thinkmill.com.au?template=blog)!
-{% /component-block-prop %}
 {% /aside %}
 
 ---

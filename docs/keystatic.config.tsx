@@ -5,6 +5,7 @@ import {
   collection,
   singleton,
   component,
+  NotEditable,
 } from '@keystatic/core';
 import { CloudImagePreview } from './src/components/previews/CloudImagePreview';
 
@@ -22,16 +23,15 @@ export const componentBlocks = {
             paddingLeft: '0.5rem',
           }}
         >
-          <div>{props.fields.icon.element}</div>
+          <NotEditable>{props.fields.icon.value}</NotEditable>
           <div>{props.fields.content.element}</div>
         </div>
       );
     },
     label: 'Aside',
     schema: {
-      icon: fields.child({
-        kind: 'inline',
-        placeholder: 'Emoji icon...',
+      icon: fields.text({
+        label: 'Emoji icon...',
       }),
       content: fields.child({
         kind: 'block',
@@ -44,7 +44,6 @@ export const componentBlocks = {
         links: 'inherit',
       }),
     },
-    chromeless: true,
   }),
   'cloud-image': component({
     preview: CloudImagePreview,
