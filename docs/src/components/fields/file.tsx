@@ -15,7 +15,7 @@ export const FileFieldDemo = () => {
     <FieldDemoFrame>
       <FileFieldInput
         label="Resume"
-        description="The resume for this user"
+        description="Summary of qualifications for this job applicant"
         validation={undefined}
         value={value}
         onChange={setValue}
