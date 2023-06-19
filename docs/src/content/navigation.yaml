@@ -9,14 +9,14 @@ navGroups:
         link:
           discriminant: page
           value: quick-start
-      - label: Connect to GitHub with Vercel
-        link:
-          discriminant: page
-          value: connect-to-github-with-vercel
       - label: Connect to GitHub
         link:
           discriminant: page
           value: connect-to-github
+      - label: Connect to GitHub with Vercel
+        link:
+          discriminant: page
+          value: connect-to-github-with-vercel
   - groupName: Integration guides
     items:
       - label: Astro
