@@ -32,6 +32,9 @@ export function ReaderRefreshClient(props: { currentKey: string }) {
               `/api/keystatic/reader-refresh/${props.currentKey}`,
               { signal: abortController.signal }
             );
+            if (res.status === 404) {
+              return;
+            }
             if (res.ok) {
               const key = await res.text();
               if (key !== props.currentKey) {
