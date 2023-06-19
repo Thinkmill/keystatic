@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Button from './button';
+import { CopyCommandButton } from './copy-command-button';
 
 export default function Hero() {
   return (
@@ -32,9 +33,13 @@ export default function Hero() {
             codebase editable by humans.
           </p>
 
-          <Button className="w-full max-w-xs" href="/docs">
-            Read the docs
-          </Button>
+          <div className="flex gap-3">
+            <Button className="" href="/docs">
+              Read the docs
+            </Button>
+
+            <CopyCommandButton />
+          </div>
 
           <div className="inline-flex items-center gap-2 text-left">
             <svg
