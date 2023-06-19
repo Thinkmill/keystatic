@@ -5,13 +5,18 @@ navGroups:
         link:
           discriminant: page
           value: introduction
-      - link:
-          discriminant: page
-          value: quick-start
-      - label: Automated setup
+      - label: Quick start
         link:
           discriminant: page
-          value: automated-setup-with-template
+          value: quick-start
+      - label: Connect to GitHub
+        link:
+          discriminant: page
+          value: connect-to-github
+      - label: Connect to GitHub with Vercel
+        link:
+          discriminant: page
+          value: connect-to-github-with-vercel
   - groupName: Integration guides
     items:
       - label: Astro
