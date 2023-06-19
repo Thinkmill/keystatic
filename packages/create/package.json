@@ -1,0 +1,34 @@
+{
+  "name": "@keystatic/create",
+  "version": "0.0.1",
+  "license": "MIT",
+  "bin": {
+    "create-keystatic": "./bin.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Thinkmill/keystatic/",
+    "directory": "packages/create"
+  },
+  "scripts": {
+    "dev": "node ."
+  },
+  "main": "dist/keystatic-create.cjs.js",
+  "module": "dist/keystatic-create.esm.js",
+  "exports": {
+    ".": {
+      "types": "./dist/keystatic-create.cjs.js",
+      "module": "./dist/keystatic-create.esm.js",
+      "default": "./dist/keystatic-create.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.18.3",
+    "@clack/prompts": "^0.6.3",
+    "@types/tar": "^6.1.5",
+    "node-fetch-native": "^1.2.0",
+    "picocolors": "^1.0.0",
+    "tar": "^6.1.15"
+  }
+}

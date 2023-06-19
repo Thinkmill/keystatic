@@ -5,22 +5,14 @@ The `relationship` field is a reference to the `slug` of a specific collection e
 
 To create a one-to-many relationship, wrap the `relationship` field inside an [array field](/docs/fields/array).
 
-{% aside %}
-{% component-inline-prop propPath=["icon"] %}⚠️{% /component-inline-prop %}
-
-{% component-block-prop propPath=["content"] %}
+{% aside icon="⚠️" %}
 The collection string must match one of the keys used in the collections config object.
-{% /component-block-prop %}
 {% /aside %}
 
-{% aside %}
-{% component-inline-prop propPath=["icon"] %}☝️{% /component-inline-prop %}
-
-{% component-block-prop propPath=["content"] %}
+{% aside icon="☝️" %}
 Heads up: the `relationship` field will only store a static `string` representing the `slug` of the selected collection entry.
 
 If the slug of the entry in question changes, the stored value **will not be updated**. In other words, the relationship will be broken.
-{% /component-block-prop %}
 {% /aside %}
 
 ## Usage examples

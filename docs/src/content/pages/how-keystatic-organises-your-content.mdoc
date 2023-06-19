@@ -38,10 +38,7 @@ The `path` property for collections is a string that contains a `*` wildcard rep
 
 If not specified, the default `path` value will be `{collection-name}/*/`.
 
-{% aside %}
-{% component-inline-prop propPath=["icon"] %}⚡️{% /component-inline-prop %}
-
-{% component-block-prop propPath=["content"] %}
+{% aside icon="⚡️" %}
 **Why a** `*` **symbol?**
 
 The `*` wildcard in the `path` is useful when you want to collocate Keystatic's output with your existing source code, that may be nested a few levels deep inside an _**entry**_ you're writing content for.
@@ -51,7 +48,6 @@ For example, you may be writing documentation for Design System components.
 Say you want Keystatic to output your documentation entries in `packages/design-system/{component-name}/docs/`.
 
 You can use `path: 'packages/design-system/*/docs/'` to do just that 👍
-{% /component-block-prop %}
 {% /aside %}
 
 ### Paths ending with a trailing slash `/`
@@ -141,14 +137,10 @@ singleton-name
 
 Right now, only **images** allow you to decide _where_ content should be generated, independently of the `collection/singleton` level `path` settings.
 
-{% aside %}
-{% component-inline-prop propPath=["icon"] %}⚡️{% /component-inline-prop %}
-
-{% component-block-prop propPath=["content"] %}
+{% aside icon="⚡️" %}
 The reason for this is certain frameworks (like Next.js) need your images to be in a specific directory (like `/public`) to be easily accessible.
 
 Instead of generating **all** your content inside the `public` directory to satisfy this requirement, Keystatic lets you define a specific path for your images only.
-{% /component-block-prop %}
 {% /aside %}
 
 Here's how you define where an image gets generated for a given `collection` or `singleton`:
