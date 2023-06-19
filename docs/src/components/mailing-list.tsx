@@ -4,7 +4,9 @@ import MailingListForm from './forms/mailing-list';
 
 export default function MailingList() {
   return (
-    <section id="mailing-list" className="relative bg-keystatic-highlight">
+    <section className="relative bg-keystatic-highlight">
+      {/* Using this hidden link while there is a Next 13 issue for # links: https://github.com/vercel/next.js/issues/44295 */}
+      <a id="mailing-list" aria-hidden="true" className="sr-only" />
       <svg
         className="absolute inset-x-0 bottom-0"
         xmlns="http://www.w3.org/2000/svg"
