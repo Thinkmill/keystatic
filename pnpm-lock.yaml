@@ -131,7 +131,7 @@ importers:
   apps/localization:
     specifiers:
       '@keystatic/core': ^0.0.107
-      '@keystatic/next': ^0.0.10
+      '@keystatic/next': ^0.0.11
       '@preconstruct/next': ^4.0.0
       '@types/node': 16.11.13
       '@types/react': ^18.2.8
@@ -205,7 +205,7 @@ importers:
     specifiers:
       '@babel/runtime': ^7.18.3
       '@keystatic/core': ^0.0.107
-      '@keystatic/next': ^0.0.10
+      '@keystatic/next': ^0.0.11
       '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
       '@ts-gql/next': ^17.0.0
@@ -2160,7 +2160,7 @@ importers:
       '@headlessui/react': ^1.7.11
       '@heroicons/react': ^2.0.16
       '@keystatic/core': ^0.0.107
-      '@keystatic/next': ^0.0.10
+      '@keystatic/next': ^0.0.11
       '@sindresorhus/slugify': ^1.1.2
       '@tailwindcss/forms': ^0.5.3
       '@tailwindcss/typography': ^0.5.9
@@ -2212,7 +2212,7 @@ importers:
     specifiers:
       '@babel/runtime': ^7.18.3
       '@keystatic/core': ^0.0.107
-      '@keystatic/next': ^0.0.10
+      '@keystatic/next': ^0.0.11
       '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
       '@ts-gql/next': ^17.0.0
@@ -2582,7 +2582,7 @@ importers:
   templates/nextjs:
     specifiers:
       '@keystatic/core': ^0.0.107
-      '@keystatic/next': ^0.0.10
+      '@keystatic/next': ^0.0.11
       '@types/react': ^18.2.8
       next: ^13.4.4
       react: ^18.2.0
@@ -5786,7 +5786,7 @@ packages:
       '@voussoir/nav-list': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/notice': 0.1.5_biqbaboplfbrettd7655fr4n2y
       '@voussoir/number-field': 0.1.6_biqbaboplfbrettd7655fr4n2y
-      '@voussoir/overlays': 0.1.7_biqbaboplfbrettd7655fr4n2y
+      '@voussoir/overlays': 0.1.8_biqbaboplfbrettd7655fr4n2y
       '@voussoir/picker': 0.1.6_biqbaboplfbrettd7655fr4n2y
       '@voussoir/progress': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/radio': 0.1.6_biqbaboplfbrettd7655fr4n2y
@@ -10442,7 +10442,7 @@ packages:
       '@voussoir/icon': 0.2.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/listbox': 0.1.6_biqbaboplfbrettd7655fr4n2y
-      '@voussoir/overlays': 0.1.7_biqbaboplfbrettd7655fr4n2y
+      '@voussoir/overlays': 0.1.8_biqbaboplfbrettd7655fr4n2y
       '@voussoir/progress': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/slots': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/style': 0.1.6_biqbaboplfbrettd7655fr4n2y
@@ -10494,7 +10494,7 @@ packages:
       '@voussoir/button': 0.2.0_biqbaboplfbrettd7655fr4n2y
       '@voussoir/icon': 0.2.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
-      '@voussoir/overlays': 0.1.7_biqbaboplfbrettd7655fr4n2y
+      '@voussoir/overlays': 0.1.8_biqbaboplfbrettd7655fr4n2y
       '@voussoir/slots': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/style': 0.1.6_biqbaboplfbrettd7655fr4n2y
       '@voussoir/types': 0.1.2_biqbaboplfbrettd7655fr4n2y
@@ -10723,7 +10723,7 @@ packages:
       '@voussoir/icon': 0.2.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/listbox': 0.1.6_biqbaboplfbrettd7655fr4n2y
-      '@voussoir/overlays': 0.1.7_biqbaboplfbrettd7655fr4n2y
+      '@voussoir/overlays': 0.1.8_biqbaboplfbrettd7655fr4n2y
       '@voussoir/slots': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/style': 0.1.6_biqbaboplfbrettd7655fr4n2y
       '@voussoir/types': 0.1.2_biqbaboplfbrettd7655fr4n2y
@@ -10809,8 +10809,8 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /@voussoir/overlays/0.1.7_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-5eA/lsSBDNhvSeoc3ueiYC4CSngJXhJ2ETRKWSsxxwa/H119fo4of2OmZjQdFf35E/17QQl+FcYBKKWGtfsaKg==}
+  /@voussoir/overlays/0.1.8_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-7IOsxncW6GY8KHD4lYrQHNuW9VG6sj/1RCBnG+OSrW6t1fUvVyn9UqmdO+xu2S+vzo9mxklObS6RgVcUUrndLA==}
     engines: {node: '>= 14.13'}
     peerDependencies:
       react: ^18.2.0
@@ -10856,7 +10856,7 @@ packages:
       '@voussoir/icon': 0.2.1_biqbaboplfbrettd7655fr4n2y
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/listbox': 0.1.6_biqbaboplfbrettd7655fr4n2y
-      '@voussoir/overlays': 0.1.7_biqbaboplfbrettd7655fr4n2y
+      '@voussoir/overlays': 0.1.8_biqbaboplfbrettd7655fr4n2y
       '@voussoir/progress': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/slots': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/style': 0.1.6_biqbaboplfbrettd7655fr4n2y
@@ -11106,7 +11106,7 @@ packages:
       '@react-stately/tooltip': 3.2.4_react@18.2.0
       '@react-types/overlays': 3.7.1_react@18.2.0
       '@voussoir/layout': 0.1.3_biqbaboplfbrettd7655fr4n2y
-      '@voussoir/overlays': 0.1.7_biqbaboplfbrettd7655fr4n2y
+      '@voussoir/overlays': 0.1.8_biqbaboplfbrettd7655fr4n2y
       '@voussoir/slots': 0.1.3_biqbaboplfbrettd7655fr4n2y
       '@voussoir/style': 0.1.6_biqbaboplfbrettd7655fr4n2y
       '@voussoir/types': 0.1.2_biqbaboplfbrettd7655fr4n2y

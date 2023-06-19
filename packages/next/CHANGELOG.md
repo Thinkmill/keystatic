@@ -1,5 +1,11 @@
 # @keystatic/next
 
+## 0.0.11
+
+### Patch Changes
+
+- 0327f443: Fix `next` peer dependency
+
 ## 0.0.10
 
 ### Patch Changes
