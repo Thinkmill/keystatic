@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystatic-next-route-handler.cjs.js",
+  "module": "dist/keystatic-next-route-handler.esm.js"
+}
