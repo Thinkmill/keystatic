@@ -1,5 +1,13 @@
 # @keystatic/next
 
+## 0.0.10
+
+### Patch Changes
+
+- cd2d22d7: Add `@keystatic/next/route-handler`
+- Updated dependencies [0016a2b0]
+  - @keystatic/core@0.0.107
+
 ## 0.0.9
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/test-next-app",
-  "version": "0.0.77",
+  "version": "0.0.78",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@keystatic/core": "^0.0.106",
-    "@keystatic/next": "^0.0.9",
+    "@keystatic/core": "^0.0.107",
+    "@keystatic/next": "^0.0.10",
     "@preconstruct/next": "^4.0.0",
     "@types/react": "^18.2.8",
     "@voussoir/action-group": "^0.1.6",

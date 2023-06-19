@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.0.107
+
+### Patch Changes
+
+- 0016a2b0: Add experimental new editor for testing
+- Updated dependencies [0016a2b0]
+  - @voussoir/overlays@0.1.8
+
 ## 0.0.106
 
 ### Patch Changes

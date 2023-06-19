@@ -6,6 +6,7 @@ import {
   component,
   NotEditable,
 } from '@keystatic/core';
+import { __experimental_markdoc_field } from '@keystatic/core/form/fields/markdoc';
 import { NoteToolbar, Note } from './note';
 
 const description = 'Some description';
@@ -321,6 +322,7 @@ export default config({
           description,
           collection: 'posts',
         }),
+        markdoc: __experimental_markdoc_field({ label: 'Markdoc', config: {} }),
       },
     }),
   },

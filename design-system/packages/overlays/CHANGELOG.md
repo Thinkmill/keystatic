@@ -1,5 +1,12 @@
 # @voussoir/overlays
 
+## 0.1.8
+
+### Patch Changes
+
+- 0016a2b0: Render non-elements inside `OpenTransition` instead of rendering
+  null
+
 ## 0.1.7
 
 ### Patch Changes
