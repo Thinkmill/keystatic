@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/templates-nextjs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "scripts": {
     "build": "next build",
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@keystatic/core": "^0.0.107",
-    "@keystatic/next": "^0.0.10",
+    "@keystatic/next": "^0.0.11",
     "next": "^13.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
