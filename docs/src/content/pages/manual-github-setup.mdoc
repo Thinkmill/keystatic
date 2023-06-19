@@ -49,13 +49,21 @@ Make sure the repo `owner` and `name` values match an existing GitHub repository
 
 Next time you visit a `/keystatic` route in your browser, you will be prompted to login with GitHub:
 
-![Screenshot of the "Log in with GitHub" button](CleanShot%202023-06-15%20at%2015.00.13@2x.png)
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/github-login.png"
+   alt="Screenshot of the Login with GitHub button"
+   height="318"
+   width="638" /%}
 
 ### Keystatic setup
 
 Since the project is not connected yet, clicking on the login button should redirect you to a `/keystatic/setup` page:
 
-![Screenshot of the Keystatic setup page](CleanShot%202023-06-15%20at%2015.02.23@2x.png)
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/keystatic-setup.png"
+   alt="Screenshot of Keystatic App setup"
+   height="1480"
+   width="1468" /%}
 
 If you happen to know the URL of your deployed project and/or the GitHub repo is owned by a GitHub organization, you can fill in those fields.
 
@@ -65,19 +73,35 @@ Otherwise, leave them blank and click on "Create GitHub App".
 
 This will take you to GitHub and prompt you to give a name for your custom GitHub App:
 
-![Screenshot of GitHub custom app creation UI](CleanShot%202023-06-15%20at%2015.07.57@2x.png)
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/github-app-creation.png"
+   alt="Screenshot of GitHub's New App creation UI"
+   height="550"
+   width="1210" /%}
 
 ### Grant repo access
 
 When the custom App is created, you'll need to install it and give it access to your GitHub repo:
 
-![](CleanShot%202023-06-15%20at%2015.09.52@2x.png)
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/keystatic-installed.png"
+   alt="Screenshot of successful Keystatic App installation"
+   height="666"
+   width="892" /%}
 
-![](CleanShot%202023-06-15%20at%2015.12.09@2x.png)
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/authorize-app.png"
+   alt="Screenshot of GitHub custom app authorization UI"
+   height="1902"
+   width="1348" /%}
 
 After that, you'll be taken back to your local Keystatic Admin UI. But this time, you should see references to your GitHub repo and branches! 🎉
 
-![](CleanShot%202023-06-15%20at%2015.13.39@2x.png)
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/keystatic-branch-ui.png"
+   alt="Screenshot of Keystatic's Admin UI for branch dropdown"
+   height="250"
+   width="672" /%}
 
 ### Environment variables
 
