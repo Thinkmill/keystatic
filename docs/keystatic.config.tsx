@@ -118,6 +118,30 @@ export const componentBlocks = {
     },
     chromeless: false,
   }),
+  fieldDemo: component({
+    preview: props => {
+      return <div>{props.fields.field.value}</div>;
+    },
+    label: 'Field demo',
+    schema: {
+      field: fields.select({
+        label: 'Field',
+        defaultValue: 'text',
+        options: [
+          { label: 'Date', value: 'date' },
+          { label: 'File', value: 'file' },
+          { label: 'Image', value: 'image' },
+          { label: 'Integer', value: 'integer' },
+          { label: 'Multiselect', value: 'multiselect' },
+          { label: 'Select', value: 'select' },
+          { label: 'Slug', value: 'slug' },
+          { label: 'Text', value: 'text' },
+          { label: 'URL', value: 'url' },
+        ],
+      }),
+    },
+    chromeless: false,
+  }),
 };
 
 export default config({

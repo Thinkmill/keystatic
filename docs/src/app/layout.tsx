@@ -1,4 +1,11 @@
 import { Analytics } from '@vercel/analytics/react';
+import { Inter } from 'next/font/google';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 export const metadata = {
   title: 'Keystatic',
@@ -31,7 +38,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={`${inter.variable} font-sans`}>{children}</body>
       <Analytics />
     </html>
   );

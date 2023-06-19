@@ -1,6 +1,8 @@
 ---
 title: Slug field
 ---
+{% fieldDemo field="slug" /%}
+
 The `slug` field auto-generates a URL-friendly string alongside another text string.
 
 Typically used in scenarios where you'd want a `text` field to define the slug of an entry — think of a post `title` or an author `name`. You set that field to a `slug` field instead. It will store the `text` string you need, while also generating a `slug` for you.
@@ -22,6 +24,13 @@ title: fields.slug({
   }
 })
 ```
+
+{% aside icon="📢" %}
+The following components have a `slugField` option:
+
+- [Collection](/docs/collections-and-singletons#slug-field) (use in conjunction with the `slug` field)
+- [Array field](/docs/fields/array#slug-field)
+{% /aside %}
 
 ## Type signature
 

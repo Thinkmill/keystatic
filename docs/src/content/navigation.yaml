@@ -86,6 +86,10 @@ navGroups:
         link:
           discriminant: page
           value: fields/empty
+      - label: File
+        link:
+          discriminant: page
+          value: fields/file
       - label: Image
         link:
           discriminant: page
