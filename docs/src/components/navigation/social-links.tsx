@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { MastodonIcon } from '../icons/mastodon-icon';
 import { GithubIcon } from '../icons/github-icon';
 import { TwitterIcon } from '../icons/twitter-icon';
 
@@ -9,15 +8,6 @@ export function SocialLinks({ tabIndex }: { tabIndex?: number }) {
 
   return (
     <div className="flex gap-2">
-      <Link
-        href="https://fosstodon.org/@keystatic"
-        className={styles}
-        tabIndex={tabIndex}
-      >
-        <span className="sr-only">Keystatic on Mastodon</span>
-        <MastodonIcon />
-      </Link>
-
       <Link
         href="https://github.com/thinkmill/keystatic"
         className={styles}

@@ -1,0 +1,35 @@
+---
+title: Document field
+---
+The `document` field is a highly customizable rich text editor.
+
+It lets content creators quickly and easily edit content in your system.
+
+## Usage example
+
+```typescript
+document: fields.document({
+  label: 'Document',
+  formatting: true,
+  links: true,
+  componentBlocks: {
+    quote: component({
+      preview: () => null,
+      label: 'Quote',
+      schema: {
+        content: fields.child({
+          kind: 'block',
+          placeholder: 'Quote...',
+          formatting: { inlineMarks: 'inherit', softBreaks: 'inherit' },
+          links: 'inherit',
+        }),
+        attribution: fields.child({ kind: 'inline', placeholder: 'Attribution...' }),
+      },
+    }),
+  },
+}),
+```
+
+## Type signature
+
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.document](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.document)

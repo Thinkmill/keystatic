@@ -5,10 +5,18 @@ navGroups:
         link:
           discriminant: page
           value: introduction
-      - label: Automated setup
+      - label: Quick start
         link:
           discriminant: page
-          value: automated-setup-with-template
+          value: quick-start
+      - label: Connect to GitHub
+        link:
+          discriminant: page
+          value: connect-to-github
+      - label: Connect to GitHub with Vercel
+        link:
+          discriminant: page
+          value: connect-to-github-with-vercel
   - groupName: Integration guides
     items:
       - label: Astro
@@ -21,8 +29,7 @@ navGroups:
           value: installation-next-js
       - label: Remix
         link:
-          discriminant: page
-          value: /docs
+          discriminant: coming-soon
   - groupName: Learn Keystatic
     items:
       - label: Collections & Singletons
@@ -37,10 +44,6 @@ navGroups:
         link:
           discriminant: page
           value: reader-api
-      - label: Renderer API
-        link:
-          discriminant: page
-          value: renderer-api
       - label: Organised content
         link:
           discriminant: page
@@ -51,84 +54,88 @@ navGroups:
           value: frequently-asked-questions
   - groupName: Fields API
     items:
-      - label: Text
-        link:
-          discriminant: page
-          value: text-field
-      - label: Integer
-        link:
-          discriminant: page
-          value: integer-field
-      - label: URL
-        link:
-          discriminant: page
-          value: url-field
-      - label: Path Reference
-        link:
-          discriminant: page
-          value: path-reference-field
-      - label: Relationship
-        link:
-          discriminant: page
-          value: relationship-field
-      - label: Select
-        link:
-          discriminant: page
-          value: select-field
-      - label: Slug
-        link:
-          discriminant: page
-          value: slug-field
-      - label: Multi-Select
-        link:
-          discriminant: page
-          value: multi-select-field
-      - label: Checkbox
-        link:
-          discriminant: page
-          value: checkbox-field
-      - label: Image
-        link:
-          discriminant: page
-          value: image-field
-      - label: Date
-        link:
-          discriminant: page
-          value: date-field
-      - label: Empty
-        link:
-          discriminant: page
-          value: empty-field
-      - label: Child
-        link:
-          discriminant: page
-          value: child-field
-      - label: Object
-        link:
-          discriminant: page
-          value: object-field
-      - label: Conditional
-        link:
-          discriminant: page
-          value: conditional-field
-      - label: Document
-        link:
-          discriminant: page
-          value: document-field
       - label: Array
         link:
           discriminant: page
-          value: array-field
+          value: fields/array
+      - label: Blocks
+        link:
+          discriminant: page
+          value: fields/blocks
+      - label: Checkbox
+        link:
+          discriminant: page
+          value: fields/checkbox
+      - label: Child
+        link:
+          discriminant: page
+          value: fields/child
+      - label: Conditional
+        link:
+          discriminant: page
+          value: fields/conditional
+      - label: Date
+        link:
+          discriminant: page
+          value: fields/date
+      - label: Document
+        link:
+          discriminant: page
+          value: fields/document
+      - label: Empty
+        link:
+          discriminant: page
+          value: fields/empty
+      - label: File
+        link:
+          discriminant: page
+          value: fields/file
+      - label: Image
+        link:
+          discriminant: page
+          value: fields/image
+      - label: Integer
+        link:
+          discriminant: page
+          value: fields/integer
+      - label: Multiselect
+        link:
+          discriminant: page
+          value: fields/multiselect
+      - label: Object
+        link:
+          discriminant: page
+          value: fields/object
+      - label: Path Reference
+        link:
+          discriminant: page
+          value: fields/path-reference
+      - label: Relationship
+        link:
+          discriminant: page
+          value: fields/relationship
+      - label: Select
+        link:
+          discriminant: page
+          value: fields/select
+      - label: Slug
+        link:
+          discriminant: page
+          value: fields/slug
+      - label: Text
+        link:
+          discriminant: page
+          value: fields/text
+      - label: URL
+        link:
+          discriminant: page
+          value: fields/url
   - groupName: Community
     items:
       - label: GitHub Discussions
         link:
           discriminant: url
           value: https://github.com/Thinkmill/keystatic/discussions
-      - label: Mastodon
-        link:
-          discriminant: url
-          value: https://fosstodon.org/@keystatic
       - label: Twitter
         link:
           discriminant: url

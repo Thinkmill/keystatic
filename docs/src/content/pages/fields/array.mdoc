@@ -1,0 +1,84 @@
+---
+title: Array field
+---
+The `array` field is used to create "Add one more" scenarios where you need _one or multiple_ instances of a specific field schema.
+
+You can only pass a single field to the `array` field — but this field can be an [object field](/docs/fields/object) to create complex structures.
+
+The `label` for the `array` field can optionally be defined in the second parameter, as an options object. It's also useful to define the `itemLabel` for each instance of the array, to give it a more meaningful label than the default `Item 1`, `Item 2` etc.
+
+## Example usage
+
+### Simple
+
+```typescript
+tags: fields.array(
+  fields.text({ label: 'Tag' }),
+  // Labelling options
+  {
+    label: 'Tag',
+    itemLabel: props => props.value
+  }
+)
+```
+
+### Complex
+
+```typescript
+complexArray: fields.array(
+  fields.object({
+    name: fields.text({ label: 'Name' }),
+    age: fields.integer({ label: 'Age' }),
+    projects: fields.array(
+      fields.relationship({
+        label: 'Projects',
+        collection: 'projects',
+        validation: {
+          isRequired: true,
+        },
+      }),
+      {
+        label: 'Projects',
+        itemLabel: (props) => props.value ?? 'Select a project',
+      }
+    ),
+  }),
+  // Labelling options
+  {
+    label: 'Complex Array',
+    itemLabel: (props) => props.fields.name.value,
+  }
+),
+```
+
+## Slug field
+
+The array field's `slugField` option is useful to replace indexes normally in file paths for images or documents etc.
+
+It works similarly to the slugField option in [Collections](/docs/collections-and-singletons#collections) (including uniqueness validation), but with the difference that the slug is still written to the YAML/JSON.
+
+For example, to change the slug from `/authors/0/bio.mdoc` to `/authors/name/bio.mdoc` you can do the following:
+
+```typescript
+authors: fields.array(
+  fields.object({
+    name: fields.text({ label: 'Name' }),
+    bio: fields.document({
+      label: 'Bio',
+      formatting: true,
+      dividers: true,
+      links: true,
+    }),
+  }),
+  {
+    label: 'Authors',
+    slugField: 'name',
+    itemLabel: props => props.fields.name.value,
+  }
+),
+```
+
+
+## Type signature
+
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.array](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.array)

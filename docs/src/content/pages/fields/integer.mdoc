@@ -1,0 +1,25 @@
+---
+title: Integer field
+---
+{% fieldDemo field="integer" /%}
+
+The `integer` field is used to store a number.
+
+You can optionally specify a range with `validation.min` and `validation.max`.
+
+## Usage example
+
+```typescript
+age: fields.integer({
+  label: 'Age',
+  description: "The person's age",
+  validation: {
+    min: 0,
+    max: 120
+  }
+})
+```
+
+## Type signature
+
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.integer](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.integer)

@@ -28,7 +28,7 @@ export default function SendMessageForm() {
             type="text"
             id="name"
             name="name"
-            className="mt-3 w-full rounded-lg border border-black p-3 leading-none"
+            className="form-input mt-3 w-full rounded-lg border border-black p-3 leading-none"
           />
         </div>
         <div>
@@ -39,7 +39,7 @@ export default function SendMessageForm() {
             type="email"
             id="email"
             name="email"
-            className="mt-3 w-full rounded-lg border border-black p-3 leading-none"
+            className="form-input mt-3 w-full rounded-lg border border-black p-3 leading-none"
           />
         </div>
       </div>
@@ -51,7 +51,7 @@ export default function SendMessageForm() {
           id="message"
           name="message"
           rows={8}
-          className="mt-3 w-full rounded-lg border border-black p-3 leading-none"
+          className="form-textarea mt-3 w-full rounded-lg border border-black p-3 leading-none"
         />
       </div>
 
@@ -66,7 +66,7 @@ export default function SendMessageForm() {
       <div className="mt-8 flex items-center gap-3">
         <input
           type="checkbox"
-          className="h-6 w-6 rounded-md border-2 border-black text-yellow-500"
+          className="form-input h-6 w-6 rounded-md border-2 border-black text-yellow-500"
           id="opt-in-updates"
           name="opt-in-updates"
         />
@@ -77,7 +77,7 @@ export default function SendMessageForm() {
       <div className="mt-8 flex items-center gap-3">
         <input
           type="checkbox"
-          className="h-6 w-6 rounded-md border-2 border-black text-yellow-500"
+          className="form-input h-6 w-6 rounded-md border-2 border-black text-yellow-500"
           id="opt-in-channel"
           name="opt-in-channel"
         />

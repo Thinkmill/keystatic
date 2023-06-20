@@ -1,0 +1,45 @@
+---
+title: Object field
+---
+The `object` field is used to create complex object schemas that can contain any other fields. 
+
+It's particularly useful when you need a set of fields for each option in an [array field](/docs/fields/array), [conditional field](/docs/fields/conditional) or [blocks field](/docs/fields/blocks).
+
+## Usage examples
+
+### Simple
+
+```typescript
+snapshot: fields.object({
+  name: fields.text({ label: 'Name' }),
+  age: fields.integer({ label: 'Age' }),
+})
+```
+
+### Complex
+
+```typescript
+snapshot: fields.object({
+  name: fields.text({ label: 'Name' }),
+  age: fields.integer({ label: 'Age' }),
+
+  // Nested relationship array
+  projects: fields.array(
+    fields.relationship({
+      label: 'Projects',
+      collection: 'projects',
+      validation: {
+        isRequired: true,
+      },
+    }),
+    {
+      label: 'Projects',
+      itemLabel: (props) => props.value ?? 'Please select a project',
+    }
+  ),
+})
+```
+
+## Type signature
+
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.object](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.object)

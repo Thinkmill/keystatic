@@ -7,7 +7,6 @@ import { Toaster } from '@voussoir/toast';
 import {
   AnchorHTMLAttributes,
   ForwardedRef,
-  ReactElement,
   ReactNode,
   RefAttributes,
   useMemo,

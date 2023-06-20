@@ -1,0 +1,19 @@
+---
+title: URL field
+---
+{% fieldDemo field="url" /%}
+
+The `url` field stores a string that is a sanitized URL. It uses `@braintree/sanitize-url` under the hood.
+
+## Usage example
+
+```typescript
+url: fields.url({
+  label: 'URL',
+  description: 'The website URL'
+})
+```
+
+## Type signature
+
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.url](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.url)

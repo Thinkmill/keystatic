@@ -29,6 +29,15 @@ const nextConfig = {
   },
   experimental: { appDir: true },
   reactStrictMode: false,
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/keystatic',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 module.exports = withTsGql(withPreconstruct(nextConfig));
