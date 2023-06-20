@@ -1,4 +1,4 @@
-import { css } from '@voussoir/style';
+import { css, tokenSchema } from '@voussoir/style';
 import { useRef, useCallback, useEffect } from 'react';
 
 export const classes = {
@@ -21,6 +21,16 @@ export function weakMemoize<Arg extends object, Return>(
     return result;
   };
 }
+
+export const nodeWithBorder = css({
+  border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
+  borderRadius: tokenSchema.size.radius.regular,
+  [`&.${classes.nodeInSelection}, &.${classes.nodeSelection}`]: {
+    borderColor: tokenSchema.color.alias.borderSelected,
+    outline: 'none !important',
+    boxShadow: `0 0 0 1px ${tokenSchema.color.alias.borderSelected}`,
+  },
+});
 
 export const prosemirrorStyles = css`
   .ProseMirror {

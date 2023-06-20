@@ -291,6 +291,17 @@ const HeadingMenu = (props: { headingType: NodeType }) => {
 };
 
 function InsertBlockMenu() {
+  const commandDispatch = useEditorDispatchCommand();
+  const schema = useEditorSchema();
+
+  const items = useMemo(
+    () => schema.insertMenuItems.filter(x => x.forToolbar),
+    [schema.insertMenuItems]
+  );
+  const idToItem = useMemo(
+    () => new Map(items.map(item => [item.id, item])),
+    [items]
+  );
   return (
     <MenuTrigger align="end">
       <TooltipTrigger>
@@ -304,12 +315,19 @@ function InsertBlockMenu() {
         </Tooltip>
       </TooltipTrigger>
       <Menu
-        onAction={() => {
-          // insertComponentBlock(editor, componentBlocks, key as string);
+        onAction={id => {
+          const command = idToItem.get(id as string)?.command;
+          if (command) {
+            commandDispatch(command);
+          }
         }}
-        items={[['a', { label: 'something' }]] as const}
+        items={items}
       >
-        {([key, item]) => <Item key={key}>{item.label}</Item>}
+        {item => (
+          <Item key={item.id} textValue={item.label}>
+            {item.label}
+          </Item>
+        )}
       </Menu>
     </MenuTrigger>
   );
