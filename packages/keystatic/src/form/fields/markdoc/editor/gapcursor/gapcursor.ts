@@ -3,6 +3,8 @@ import { Selection, NodeSelection } from 'prosemirror-state';
 import { Slice, ResolvedPos, Node } from 'prosemirror-model';
 import { Mappable } from 'prosemirror-transform';
 
+export const independentForGapCursor = '@@independentForGapCursor';
+
 /// Gap cursor selections are represented using this class. Its
 /// `$anchor` and `$head` properties both point at the cursor position.
 export class GapCursor extends Selection {
@@ -132,7 +134,8 @@ function closedBefore($pos: ResolvedPos) {
       if (
         (before.childCount == 0 && !before.inlineContent) ||
         before.isAtom ||
-        before.type.spec.isolating
+        before.type.spec.isolating ||
+        before.type.spec[independentForGapCursor]
       ) {
         return true;
       }
@@ -155,7 +158,8 @@ function closedAfter($pos: ResolvedPos) {
       if (
         (after.childCount == 0 && !after.inlineContent) ||
         after.isAtom ||
-        after.type.spec.isolating
+        after.type.spec.isolating ||
+        after.type.spec[independentForGapCursor]
       ) {
         return true;
       }

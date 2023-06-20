@@ -50,14 +50,13 @@ export function inputRulesForSchema({ nodes, marks }: EditorSchema) {
 
   rules.push({
     pattern: /^(#{1,6})\s$/,
-    handler: replaceTypeInputRuleHandler(nodes.heading, match => ({
+    handler: textblockTypeInputRuleHandler(nodes.heading, match => ({
       level: match[1].length,
     })),
   });
 
   for (const [markName, shortcuts] of simpleMarkShortcuts) {
     const mark = marks[markName];
-    if (!mark) continue;
     for (const shortcut of shortcuts) {
       rules.push({
         pattern: new RegExp(
@@ -88,22 +87,21 @@ export function inputRulesForSchema({ nodes, marks }: EditorSchema) {
       });
     }
   }
-  if (marks.link) {
-    const linkType = marks.link;
-    rules.push({
-      pattern: /(?:^|[^!])\[(.*)\]\((.*)\)$/,
-      handler(state, [, text, href], __start, end) {
-        const start = end - href.length - text.length - 4;
-        if (!allowsMarkType(state.doc, start, end, linkType)) return null;
-        const tr = state.tr;
-        tr.addMark(start, end, linkType.create({ href }));
-        tr.delete(start + 1 + text.length, end);
-        tr.delete(start, start + 1);
-        tr.removeStoredMark(linkType);
-        return tr;
-      },
-    });
-  }
+  const linkType = marks.link;
+  rules.push({
+    pattern: /(?:^|[^!])\[(.*)\]\((.*)\)$/,
+    handler(state, [, text, href], __start, end) {
+      const start = end - href.length - text.length - 4;
+      if (!allowsMarkType(state.doc, start, end, linkType)) return null;
+      const tr = state.tr;
+      tr.addMark(start, end, linkType.create({ href }));
+      tr.delete(start + 1 + text.length, end);
+      tr.delete(start, start + 1);
+      tr.removeStoredMark(linkType);
+      return tr;
+    },
+  });
+
   rules.push(insertMenuInputRule);
   rules.push(attributeMenuInputRule);
   return rules;

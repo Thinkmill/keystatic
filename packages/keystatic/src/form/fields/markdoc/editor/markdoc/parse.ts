@@ -128,14 +128,14 @@ function parseAnnotations(node: MarkdocNode): ProseMirrorNode[] {
   const schema = getSchema();
   return node.annotations.map((x): ProseMirrorNode => {
     if (x.type === 'id') {
-      return schema.nodes.attribute.createChecked({ key: 'id' }, [
+      return schema.nodes.attribute.createChecked({ name: 'id' }, [
         schema.nodes.attribute_string.createChecked(null, [
           schema.schema.text(x.name),
         ]),
       ]);
     }
     if (x.type === 'class') {
-      return schema.nodes.attribute.createChecked({ key: 'class' }, [
+      return schema.nodes.attribute.createChecked({ name: 'class' }, [
         schema.nodes.attribute_string.createChecked(null, [
           schema.schema.text(x.name),
         ]),
@@ -164,9 +164,9 @@ function parseAnnotations(node: MarkdocNode): ProseMirrorNode[] {
         type: node.type,
         location: node.location,
       });
-      return schema.nodes.attribute.createAndFill({ key: x.name })!;
+      return schema.nodes.attribute.createAndFill({ name: x.name })!;
     }
-    return schema.nodes.attribute.createChecked({ key: x.name }, [val]);
+    return schema.nodes.attribute.createChecked({ name: x.name }, [val]);
   });
 }
 
@@ -303,9 +303,7 @@ function markdocNodeToProseMirrorNode(
           )
         )
       ),
-      ...(children.length
-        ? [schema.nodes.tag_slot.createChecked({ name: 'children' }, children)]
-        : []),
+      ...children,
     ];
 
     const pmNode = schema.nodes.tag.createChecked(
