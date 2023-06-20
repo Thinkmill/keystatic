@@ -8,22 +8,20 @@ export function CopyCommandButton() {
   const copyCommandText = 'npm create @keystatic@latest';
   const [isCopied, setIsCopied] = useState(false);
 
-  const handleCopyCommand = () => {
-    copyTextToClipboard(copyCommandText)
-      .then(() => {
-        setIsCopied(true);
-        setTimeout(() => {
-          setIsCopied(false);
-        }, 1500);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  const handleCopyCommand = async () => {
+    try {
+      await copyTextToClipboard(copyCommandText);
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 1500);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
     <Button
-      className="border-keystatic-gray items-center py-0"
       impact="light"
       onClick={handleCopyCommand}
       aria-label="Copy npm command for creating a Keystatic project"
