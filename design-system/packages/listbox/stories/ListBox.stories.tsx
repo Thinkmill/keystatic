@@ -1,5 +1,5 @@
 import { useAsyncList } from '@react-stately/data';
-import { action } from '@voussoir/storybook';
+import { Meta, action } from '@voussoir/storybook';
 import { alignCenterVerticalIcon } from '@voussoir/icon/icons/alignCenterVerticalIcon';
 import { alignStartVerticalIcon } from '@voussoir/icon/icons/alignStartVerticalIcon';
 import { alignEndVerticalIcon } from '@voussoir/icon/icons/alignEndVerticalIcon';
@@ -73,7 +73,7 @@ for (let i = 0; i < 50; i++) {
   lotsOfSections.push({ name: 'Section ' + i, children });
 }
 
-export default {
+const meta: Meta = {
   title: 'Components/ListBox',
 
   decorators: [
@@ -93,6 +93,7 @@ export default {
     ),
   ],
 };
+export default meta;
 
 export const Default = () => (
   <ListBox flexGrow={1} aria-labelledby="label" items={flatOptions}>

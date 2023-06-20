@@ -7,35 +7,18 @@ export default {
   title: 'Components/Breadcrumbs',
 };
 
-export const Default = renderDefaultBreadcrumbs();
+export const Default = render();
 
-Default.story = {
-  name: 'default',
-};
+export const Disabled = render({ isDisabled: true });
 
-export const Disabled = renderDefaultBreadcrumbs({ isDisabled: true });
+export const SizeSmall = render({ size: 'small' });
+SizeSmall.storyName = 'size: small';
 
-Disabled.story = {
-  name: 'disabled',
-};
+export const SizeMedium = render({ size: 'medium' });
+SizeMedium.storyName = 'size: medium';
 
-export const SizeSmall = renderDefaultBreadcrumbs({ size: 'small' });
-
-SizeSmall.story = {
-  name: 'size: small',
-};
-
-export const SizeMedium = renderDefaultBreadcrumbs({ size: 'medium' });
-
-SizeMedium.story = {
-  name: 'size: medium',
-};
-
-export const SizeLarge = renderDefaultBreadcrumbs({ size: 'large' });
-
-SizeLarge.story = {
-  name: 'size: large',
-};
+export const SizeLarge = render({ size: 'large' });
+SizeLarge.storyName = 'size: large';
 
 export const ManyItems = renderBreadcrumbs(
   <Breadcrumbs onAction={action('onAction')}>
@@ -48,10 +31,6 @@ export const ManyItems = renderBreadcrumbs(
   </Breadcrumbs>
 );
 
-ManyItems.story = {
-  name: 'many items',
-};
-
 export const ShowRoot = renderBreadcrumbs(
   <Breadcrumbs onAction={action('onAction')} showRoot>
     <Item key="Home">Home</Item>
@@ -62,10 +41,6 @@ export const ShowRoot = renderBreadcrumbs(
     <Item key="Impact Drill Drivers">Impact Drill Drivers</Item>
   </Breadcrumbs>
 );
-
-ShowRoot.story = {
-  name: 'show root',
-};
 
 export const Resizable = renderBreadcrumbs(
   <Box
@@ -86,19 +61,11 @@ export const Resizable = renderBreadcrumbs(
   </Box>
 );
 
-Resizable.story = {
-  name: 'resizable',
-};
-
 export const SingleItem = renderBreadcrumbs(
   <Breadcrumbs onAction={action('onAction')}>
     <Item key="dashboard">Dashboard</Item>
   </Breadcrumbs>
 );
-
-SingleItem.story = {
-  name: 'single item',
-};
 
 // mitigate the flex-center wrapper, which squashes its contents
 function renderBreadcrumbs(children: React.ReactNode) {
@@ -115,7 +82,11 @@ function renderBreadcrumbs(children: React.ReactNode) {
   );
 }
 
-function renderDefaultBreadcrumbs<T>(props: Partial<BreadcrumbsProps<T>> = {}) {
+interface Render extends Function {
+  storyName?: string;
+}
+
+function render<T>(props: Partial<BreadcrumbsProps<T>> = {}): Render {
   return renderBreadcrumbs(
     <Breadcrumbs onAction={action('onAction')} {...props}>
       <Item key="dashboard">Dashboard</Item>

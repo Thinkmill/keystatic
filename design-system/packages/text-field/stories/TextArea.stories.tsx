@@ -16,58 +16,34 @@ export default {
 };
 
 export const Default = render();
-export const ValueTestControlled = render({ value: 'Test' });
 
-ValueTestControlled.story = {
-  name: 'value: Test (controlled)',
-};
+export const ValueTestControlled = render({ value: 'Test' });
+ValueTestControlled.storyName = 'value: Test (controlled)';
 
 export const DefaultValueTestUncontrolled = render({ defaultValue: 'Test' });
-
-DefaultValueTestUncontrolled.story = {
-  name: 'defaultValue: Test (uncontrolled)',
-};
+DefaultValueTestUncontrolled.storyName = 'defaultValue: Test (uncontrolled)';
 
 export const AutoFocusTrue = render({ autoFocus: true });
-
-AutoFocusTrue.story = {
-  name: 'autoFocus: true',
-};
+AutoFocusTrue.storyName = 'autoFocus: true';
 
 export const NoVisibleLabel = render({
   label: null,
   'aria-label': 'Hidden label',
 });
 
-NoVisibleLabel.story = {
-  name: 'no visible label',
-};
-
 export const WithDescription = render({
   description:
     'Description text provides information to assist the user in completing a field.',
 });
-
-WithDescription.story = {
-  name: 'with description',
-};
 
 export const WithErrorMessage = render({
   errorMessage:
     'Error messages inform the user when the input does not meet validation criteria.',
 });
 
-WithErrorMessage.story = {
-  name: 'with error message',
-};
-
 export const WithControlledInteraction = renderControlled({
   label: 'Controlled interaction',
 });
-
-WithControlledInteraction.story = {
-  name: 'with controlled interaction',
-};
 
 export const CustomHeight = (args: Parameters) => (
   <Grid columns="repeat(3, minmax(140px, 1fr))" gap="regular">
@@ -88,13 +64,9 @@ export const CustomHeight = (args: Parameters) => (
   </Grid>
 );
 
-CustomHeight.story = {
-  name: 'custom height',
-};
-
 export const CustomWidth = render({
   paddingX: 'regular',
-  width: 'size.container.small',
+  width: 'container.xsmall',
   maxWidth: '100%',
   description:
     'Description text provides information to assist the user in completing a field.',
@@ -102,11 +74,11 @@ export const CustomWidth = render({
     'Error messages inform the user when the input does not meet validation criteria.',
 });
 
-CustomWidth.story = {
-  name: 'custom width',
-};
+interface Render extends Function {
+  storyName?: string;
+}
 
-function render(props = {}) {
+function render(props = {}): Render {
   return function renderWithArgs(args: Parameters) {
     return (
       <TextArea
