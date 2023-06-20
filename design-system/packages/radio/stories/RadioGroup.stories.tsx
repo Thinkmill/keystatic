@@ -4,9 +4,12 @@ import { Text } from '@voussoir/typography';
 
 import { Radio, RadioGroup, RadioGroupProps } from '../src';
 
-storiesOf('Components/RadioGroup', module)
-  .addParameters({
+export default {
+  title: 'Components/RadioGroup',
+
+  parameters: {
     providerSwitcher: { status: 'positive' },
+
     args: {
       label: 'Favourite marsupial',
       isDisabled: false,
@@ -14,6 +17,7 @@ storiesOf('Components/RadioGroup', module)
       isRequired: false,
       orientation: 'vertical',
     },
+
     argTypes: {
       orientation: {
         control: {
@@ -22,34 +26,73 @@ storiesOf('Components/RadioGroup', module)
         },
       },
     },
-  })
-  .add('default', (args: ArgTypes) => render(args))
-  .add('defaultValue: quokka', (args: ArgTypes) =>
-    render({ ...args, defaultValue: 'quokka' })
-  )
-  .add('controlled: quokka', (args: ArgTypes) =>
-    render({ ...args, value: 'quokka' })
-  )
-  .add('isDisabled on one radio', (args: ArgTypes) =>
-    render(args, [{}, { isDisabled: true }, {}])
-  )
-  .add('with description', (args: ArgTypes) =>
-    render({ ...args, description: 'Please select one.' })
-  )
-  .add('with error message', (args: ArgTypes) =>
-    render({
-      ...args,
-      description: 'Please select one.',
-      errorMessage: 'You must select a value.',
-    })
-  )
-  .add('no visible label', (args: ArgTypes) =>
-    render({ ...args, label: null, 'aria-label': 'Favourite marsupial' })
-  )
-  .add('custom label', (args: ArgTypes) => renderLongLabel(args))
-  .add('autoFocus on one radio', (args: ArgTypes) =>
-    render(args, [{}, { autoFocus: true }, {}])
-  );
+  },
+};
+
+export const Default = (args: ArgTypes) => render(args);
+
+Default.story = {
+  name: 'default',
+};
+
+export const DefaultValueQuokka = (args: ArgTypes) =>
+  render({ ...args, defaultValue: 'quokka' });
+
+DefaultValueQuokka.story = {
+  name: 'defaultValue: quokka',
+};
+
+export const ControlledQuokka = (args: ArgTypes) =>
+  render({ ...args, value: 'quokka' });
+
+ControlledQuokka.story = {
+  name: 'controlled: quokka',
+};
+
+export const IsDisabledOnOneRadio = (args: ArgTypes) =>
+  render(args, [{}, { isDisabled: true }, {}]);
+
+IsDisabledOnOneRadio.story = {
+  name: 'isDisabled on one radio',
+};
+
+export const WithDescription = (args: ArgTypes) =>
+  render({ ...args, description: 'Please select one.' });
+
+WithDescription.story = {
+  name: 'with description',
+};
+
+export const WithErrorMessage = (args: ArgTypes) =>
+  render({
+    ...args,
+    description: 'Please select one.',
+    errorMessage: 'You must select a value.',
+  });
+
+WithErrorMessage.story = {
+  name: 'with error message',
+};
+
+export const NoVisibleLabel = (args: ArgTypes) =>
+  render({ ...args, label: null, 'aria-label': 'Favourite marsupial' });
+
+NoVisibleLabel.story = {
+  name: 'no visible label',
+};
+
+export const CustomLabel = (args: ArgTypes) => renderLongLabel(args);
+
+CustomLabel.story = {
+  name: 'custom label',
+};
+
+export const AutoFocusOnOneRadio = (args: ArgTypes) =>
+  render(args, [{}, { autoFocus: true }, {}]);
+
+AutoFocusOnOneRadio.story = {
+  name: 'autoFocus on one radio',
+};
 
 function render(props: Partial<RadioGroupProps>, radioProps = [{}, {}, {}]) {
   return (

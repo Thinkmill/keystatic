@@ -81,57 +81,104 @@ const argTypes = {
   },
 };
 
-storiesOf('Components/TooltipTrigger', module)
-  .add('default', renderTooltip(), { argTypes })
-  .add('isOpen (controlled)', renderTooltip({ isOpen: true }), { argTypes })
-  .add('defaultOpen (uncontrolled)', renderTooltip({ defaultOpen: true }), {
+export default {
+  title: 'Components/TooltipTrigger',
+};
+
+export const Default = renderTooltip();
+
+Default.story = {
+  name: 'default',
+  parameters: { argTypes },
+};
+
+export const IsOpenControlled = renderTooltip({ isOpen: true });
+
+IsOpenControlled.story = {
+  name: 'isOpen (controlled)',
+  parameters: { argTypes },
+};
+
+export const DefaultOpenUncontrolled = renderTooltip({ defaultOpen: true });
+
+DefaultOpenUncontrolled.story = {
+  name: 'defaultOpen (uncontrolled)',
+
+  parameters: {
     argTypes,
-  })
-  .add('trigger disabled', () => (
+  },
+};
+
+export const TriggerDisabled = () => (
+  <TooltipTrigger>
+    <ActionButton isDisabled>Trigger</ActionButton>
+    <Tooltip>Tooltip content</Tooltip>
+  </TooltipTrigger>
+);
+
+TriggerDisabled.story = {
+  name: 'trigger disabled',
+};
+
+export const TooltipDisabled = renderTooltip({ isDisabled: true });
+
+TooltipDisabled.story = {
+  name: 'tooltip disabled',
+  parameters: { argTypes },
+};
+
+export const AnchorTriggers = () => (
+  <Flex direction="column" gap="large" alignItems="start">
     <TooltipTrigger>
-      <ActionButton isDisabled>Trigger</ActionButton>
+      <Button href="https://example.com">Anchor w/role=button</Button>
       <Tooltip>Tooltip content</Tooltip>
     </TooltipTrigger>
-  ))
-  .add('tooltip disabled', renderTooltip({ isDisabled: true }), { argTypes })
-  .add('anchor triggers', () => (
-    <Flex direction="column" gap="large" alignItems="start">
+    <Text>
+      Content that includes a{' '}
       <TooltipTrigger>
-        <Button href="https://example.com">Anchor w/role=button</Button>
+        <TextLink href="https://example.com">text link</TextLink>
+        <Tooltip>Tooltip content</Tooltip>
+      </TooltipTrigger>{' '}
+      wrapped in a tooltip trigger.
+    </Text>
+  </Flex>
+);
+
+AnchorTriggers.story = {
+  name: 'anchor triggers',
+};
+
+export const Multiple = () => (
+  <Flex gap="regular">
+    {['one', 'two', 'three'].map(n => (
+      <TooltipTrigger key={n}>
+        <ActionButton>{n}</ActionButton>
         <Tooltip>Tooltip content</Tooltip>
       </TooltipTrigger>
-      <Text>
-        Content that includes a{' '}
-        <TooltipTrigger>
-          <TextLink href="https://example.com">text link</TextLink>
-          <Tooltip>Tooltip content</Tooltip>
-        </TooltipTrigger>{' '}
-        wrapped in a tooltip trigger.
-      </Text>
-    </Flex>
-  ))
-  .add('multiple', () => (
-    <Flex gap="regular">
-      {['one', 'two', 'three'].map(n => (
-        <TooltipTrigger key={n}>
-          <ActionButton>{n}</ActionButton>
-          <Tooltip>Tooltip content</Tooltip>
-        </TooltipTrigger>
-      ))}
-    </Flex>
-  ))
-  .add('collisions', () => (
-    <Flex direction="column" gap="large" alignSelf="start">
-      <TooltipTrigger placement="start">
-        <ActionButton>Flip</ActionButton>
-        <Tooltip>Tooltip content</Tooltip>
-      </TooltipTrigger>
-      <TooltipTrigger>
-        <ActionButton>Offset</ActionButton>
-        <Tooltip>Tooltip content</Tooltip>
-      </TooltipTrigger>
-    </Flex>
-  ));
+    ))}
+  </Flex>
+);
+
+Multiple.story = {
+  name: 'multiple',
+};
+
+export const Collisions = () => (
+  <Flex direction="column" gap="large" alignSelf="start">
+    <TooltipTrigger placement="start">
+      <ActionButton>Flip</ActionButton>
+      <Tooltip>Tooltip content</Tooltip>
+    </TooltipTrigger>
+    <TooltipTrigger>
+      <ActionButton>Offset</ActionButton>
+      <Tooltip>Tooltip content</Tooltip>
+    </TooltipTrigger>
+  </Flex>
+);
+
+Collisions.story = {
+  name: 'collisions',
+};
 
 function renderTooltip(props: Partial<TooltipTriggerProps> = {}) {
   return function tooltipWithArgs(args: ArgTypes) {

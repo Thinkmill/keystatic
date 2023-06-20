@@ -9,29 +9,56 @@ import { useState } from 'react';
 
 import { ToggleButton, ToggleButtonProps } from '../src';
 
-storiesOf('Components/Button/ToggleButton', module)
-  .add('default', () => render())
-  .add('icon', () => renderWithIcon())
-  .add('icon only', () => renderWithIconOnly())
-  .add('low prominence', () => (
-    <Flex direction="column" gap="regular">
-      {render('Neutral', { prominence: 'low' })}
-      {renderWithIcon('Neutral icon', { prominence: 'low' })}
-      {renderWithIconOnly('Neutral icon only', { prominence: 'low' })}
-    </Flex>
-  ))
-  .add('controlled', () => {
-    let [selected, setSelected] = useState(false);
-    return (
-      <div>
-        <ToggleButton isSelected={selected} onChange={setSelected}>
-          Press Me
-        </ToggleButton>
-        <br />
-        {selected ? 'true' : 'false'}
-      </div>
-    );
-  });
+export default {
+  title: 'Components/Button/ToggleButton',
+};
+
+export const Default = () => render();
+
+Default.story = {
+  name: 'default',
+};
+
+export const _Icon = () => renderWithIcon();
+
+_Icon.story = {
+  name: 'icon',
+};
+
+export const IconOnly = () => renderWithIconOnly();
+
+IconOnly.story = {
+  name: 'icon only',
+};
+
+export const LowProminence = () => (
+  <Flex direction="column" gap="regular">
+    {render('Neutral', { prominence: 'low' })}
+    {renderWithIcon('Neutral icon', { prominence: 'low' })}
+    {renderWithIconOnly('Neutral icon only', { prominence: 'low' })}
+  </Flex>
+);
+
+LowProminence.story = {
+  name: 'low prominence',
+};
+
+export const Controlled = () => {
+  let [selected, setSelected] = useState(false);
+  return (
+    <div>
+      <ToggleButton isSelected={selected} onChange={setSelected}>
+        Press Me
+      </ToggleButton>
+      <br />
+      {selected ? 'true' : 'false'}
+    </div>
+  );
+};
+
+Controlled.story = {
+  name: 'controlled',
+};
 
 function render(label = 'Default', props: ToggleButtonProps = {}) {
   return (

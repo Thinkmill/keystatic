@@ -62,165 +62,223 @@ const defaultActions = {
   onFocus: action('onFocus'),
 };
 
-storiesOf('Components/Combobox', module)
-  .add(
-    'default (with controls)',
-    (args: ArgTypes) => (
-      <Combobox
-        label="Combobox"
-        placeholder="Placeholder"
-        {...defaultActions}
-        {...args}
-      >
-        <Item key="One">One</Item>
-        <Item key="Two">Two</Item>
-        <Item key="Three">Three has a long label that will wrap</Item>
-      </Combobox>
-    ),
-    {
-      argTypes: {
-        label: {
-          control: 'text',
-          defaultValue: 'Label text',
-        },
-        description: {
-          control: 'text',
-        },
-        errorMessage: {
-          control: 'text',
-        },
-        isDisabled: {
-          control: 'boolean',
-          defaultValue: false,
-        },
-        isReadOnly: {
-          control: 'boolean',
-          defaultValue: false,
-        },
-        isRequired: {
-          control: 'boolean',
-          defaultValue: false,
-        },
-        menuTrigger: {
-          control: 'select',
-          defaultValue: 'input',
-          options: ['input', 'focus', 'manual'],
-        },
-        direction: {
-          control: 'select',
-          defaultValue: 'bottom',
-          options: ['top', 'bottom'],
-        },
+export default {
+  title: 'Components/Combobox',
+};
+
+export const DefaultWithControls = (args: ArgTypes) => (
+  <Combobox
+    label="Combobox"
+    placeholder="Placeholder"
+    {...defaultActions}
+    {...args}
+  >
+    <Item key="One">One</Item>
+    <Item key="Two">Two</Item>
+    <Item key="Three">Three has a long label that will wrap</Item>
+  </Combobox>
+);
+
+DefaultWithControls.story = {
+  name: 'default (with controls)',
+
+  parameters: {
+    argTypes: {
+      label: {
+        control: 'text',
+        defaultValue: 'Label text',
       },
-    }
-  )
-  .add('sections', () => (
-    <Combobox label="Combobox" {...defaultActions}>
-      <Section title="Marsupials" key="Marsupials">
-        <Item key="Bilby">Bilby</Item>
-        <Item key="Kangaroo">Kangaroo</Item>
-        <Item key="Quokka">Quokka</Item>
+      description: {
+        control: 'text',
+      },
+      errorMessage: {
+        control: 'text',
+      },
+      isDisabled: {
+        control: 'boolean',
+        defaultValue: false,
+      },
+      isReadOnly: {
+        control: 'boolean',
+        defaultValue: false,
+      },
+      isRequired: {
+        control: 'boolean',
+        defaultValue: false,
+      },
+      menuTrigger: {
+        control: 'select',
+        defaultValue: 'input',
+        options: ['input', 'focus', 'manual'],
+      },
+      direction: {
+        control: 'select',
+        defaultValue: 'bottom',
+        options: ['top', 'bottom'],
+      },
+    },
+  },
+};
+
+export const Sections = () => (
+  <Combobox label="Combobox" {...defaultActions}>
+    <Section title="Marsupials" key="Marsupials">
+      <Item key="Bilby">Bilby</Item>
+      <Item key="Kangaroo">Kangaroo</Item>
+      <Item key="Quokka">Quokka</Item>
+    </Section>
+    <Section title="Other" key="Other">
+      <Item key="Echidna">Echidna</Item>
+      <Item key="Dingo">Dingo</Item>
+      <Item key="Cassowary">Cassowary</Item>
+    </Section>
+  </Combobox>
+);
+
+Sections.story = {
+  name: 'sections',
+};
+
+export const Dynamic = () => (
+  <Combobox label="Combobox" defaultItems={flatItems} {...defaultActions}>
+    {item => <Item key={item.id}>{item.name}</Item>}
+  </Combobox>
+);
+
+Dynamic.story = {
+  name: 'dynamic',
+};
+
+export const DynamicWithSections = () => (
+  <Combobox label="Combobox" defaultItems={nestedItems} {...defaultActions}>
+    {section => (
+      <Section items={section.children} title={section.name} key={section.name}>
+        {item => <Item key={item.name}>{item.name}</Item>}
       </Section>
-      <Section title="Other" key="Other">
-        <Item key="Echidna">Echidna</Item>
-        <Item key="Dingo">Dingo</Item>
-        <Item key="Cassowary">Cassowary</Item>
+    )}
+  </Combobox>
+);
+
+DynamicWithSections.story = {
+  name: 'dynamic with sections',
+};
+
+export const ManySections = () => (
+  <Combobox label="Combobox" defaultItems={manySections}>
+    {section => (
+      <Section items={section.children} title={section.name} key={section.name}>
+        {item => <Item key={item.name}>{item.name}</Item>}
       </Section>
-    </Combobox>
-  ))
-  .add('dynamic', () => (
-    <Combobox label="Combobox" defaultItems={flatItems} {...defaultActions}>
-      {item => <Item key={item.id}>{item.name}</Item>}
-    </Combobox>
-  ))
-  .add('dynamic with sections', () => (
-    <Combobox label="Combobox" defaultItems={nestedItems} {...defaultActions}>
-      {section => (
-        <Section
-          items={section.children}
-          title={section.name}
-          key={section.name}
-        >
-          {item => <Item key={item.name}>{item.name}</Item>}
-        </Section>
-      )}
-    </Combobox>
-  ))
-  .add('many sections', () => (
-    <Combobox label="Combobox" defaultItems={manySections}>
-      {section => (
-        <Section
-          items={section.children}
-          title={section.name}
-          key={section.name}
-        >
-          {item => <Item key={item.name}>{item.name}</Item>}
-        </Section>
-      )}
-    </Combobox>
-  ))
-  .add('complex items', () => (
-    <Combobox label="Combobox" {...defaultActions}>
-      <Section title="Section 1">
-        <Item textValue="Bold">
-          <Icon src={boldIcon} />
-          <Text>Bold</Text>
-        </Item>
-        <Item textValue="Italic">
-          <Icon src={italicIcon} />
-          <Text>Italic</Text>
-        </Item>
+    )}
+  </Combobox>
+);
+
+ManySections.story = {
+  name: 'many sections',
+};
+
+export const ComplexItems = () => (
+  <Combobox label="Combobox" {...defaultActions}>
+    <Section title="Section 1">
+      <Item textValue="Bold">
+        <Icon src={boldIcon} />
+        <Text>Bold</Text>
+      </Item>
+      <Item textValue="Italic">
+        <Icon src={italicIcon} />
+        <Text>Italic</Text>
+      </Item>
+    </Section>
+    <Section title="Section 3">
+      <Item textValue="Left">
+        <Icon src={alignStartVerticalIcon} />
+        <Text>Left</Text>
+        <Text slot="description">The description text for left is long</Text>
+      </Item>
+      <Item textValue="Center has a long label that wraps">
+        <Icon src={alignCenterVerticalIcon} />
+        <Text>Center has a long label that wraps</Text>
+      </Item>
+      <Item textValue="Right">
+        <Icon src={alignEndVerticalIcon} />
+        <Text>Right</Text>
+      </Item>
+    </Section>
+  </Combobox>
+);
+
+ComplexItems.story = {
+  name: 'complex items',
+};
+
+export const DisabledKeys = () => (
+  <Combobox
+    label="Combobox"
+    defaultItems={nestedItems}
+    disabledKeys={['a-3', 'b-1', 'b-2']}
+    {...defaultActions}
+  >
+    {section => (
+      <Section items={section.children} title={section.name}>
+        {item => <Item>{item.name}</Item>}
       </Section>
-      <Section title="Section 3">
-        <Item textValue="Left">
-          <Icon src={alignStartVerticalIcon} />
-          <Text>Left</Text>
-          <Text slot="description">The description text for left is long</Text>
-        </Item>
-        <Item textValue="Center has a long label that wraps">
-          <Icon src={alignCenterVerticalIcon} />
-          <Text>Center has a long label that wraps</Text>
-        </Item>
-        <Item textValue="Right">
-          <Icon src={alignEndVerticalIcon} />
-          <Text>Right</Text>
-        </Item>
-      </Section>
-    </Combobox>
-  ))
-  .add('disabledKeys', () => (
-    <Combobox
-      label="Combobox"
-      defaultItems={nestedItems}
-      disabledKeys={['a-3', 'b-1', 'b-2']}
-      {...defaultActions}
-    >
-      {section => (
-        <Section items={section.children} title={section.name}>
-          {item => <Item>{item.name}</Item>}
-        </Section>
-      )}
-    </Combobox>
-  ))
-  .add('isDisabled', () => render({ isDisabled: true, selectedKey: 'One' }))
-  .add('isReadOnly', () => render({ isReadOnly: true, selectedKey: 'One' }))
-  .add('isRequired', () =>
-    render({ isRequired: true, defaultSelectedKey: 'One' })
-  )
-  .add('allowsCustomValue', () => render({ allowsCustomValue: true }))
-  .add('autoFocus', () => render({ autoFocus: true }))
-  .add('loadingState', () => {
-    return (
-      <Flex gap="large" direction="column" UNSAFE_style={{ width: 240 }}>
-        {render({ label: 'Combobox (loading)', loadingState: 'loading' })}
-        {render({ label: 'Combobox (filtering)', loadingState: 'filtering' })}
-        {render({
-          label: 'Combobox (loading more)',
-          loadingState: 'loadingMore',
-        })}
-      </Flex>
-    );
-  });
+    )}
+  </Combobox>
+);
+
+DisabledKeys.story = {
+  name: 'disabledKeys',
+};
+
+export const IsDisabled = () =>
+  render({ isDisabled: true, selectedKey: 'One' });
+
+IsDisabled.story = {
+  name: 'isDisabled',
+};
+
+export const IsReadOnly = () =>
+  render({ isReadOnly: true, selectedKey: 'One' });
+
+IsReadOnly.story = {
+  name: 'isReadOnly',
+};
+
+export const IsRequired = () =>
+  render({ isRequired: true, defaultSelectedKey: 'One' });
+
+IsRequired.story = {
+  name: 'isRequired',
+};
+
+export const AllowsCustomValue = () => render({ allowsCustomValue: true });
+
+AllowsCustomValue.story = {
+  name: 'allowsCustomValue',
+};
+
+export const AutoFocus = () => render({ autoFocus: true });
+
+AutoFocus.story = {
+  name: 'autoFocus',
+};
+
+export const LoadingState = () => {
+  return (
+    <Flex gap="large" direction="column" UNSAFE_style={{ width: 240 }}>
+      {render({ label: 'Combobox (loading)', loadingState: 'loading' })}
+      {render({ label: 'Combobox (filtering)', loadingState: 'filtering' })}
+      {render({
+        label: 'Combobox (loading more)',
+        loadingState: 'loadingMore',
+      })}
+    </Flex>
+  );
+};
+
+LoadingState.story = {
+  name: 'loadingState',
+};
 
 function render<T>(props: Partial<ComboboxProps<T>>) {
   return (

@@ -3,48 +3,88 @@ import { useMemo, useState } from 'react';
 
 import { SearchField } from '../src';
 
-storiesOf('Components/SearchField', module)
-  .addParameters({
+export default {
+  title: 'Components/SearchField',
+
+  parameters: {
     args: {
       label: 'Search',
       isDisabled: false,
     },
+
     argTypes: {},
-  })
-  .add('Default', render())
-  .add('value: Test (controlled)', render({ value: 'Test' }))
-  .add('defaultValue: Test (uncontrolled)', render({ defaultValue: 'Test' }))
-  .add('autoFocus: true', render({ autoFocus: true }))
-  .add(
-    'no visible label',
-    render({ label: null, 'aria-label': 'Hidden label' })
-  )
-  .add('no icon', render({ showIcon: false }))
-  .add(
-    'with description',
-    render({
-      description:
-        'Description text provides information to assist the user in completing a field.',
-    })
-  )
-  .add(
-    'with error message',
-    render({
-      errorMessage:
-        'Error messages inform the user when the input does not meet validation criteria.',
-    })
-  )
-  .add('with validation', renderWithValidation())
-  .add(
-    'custom width',
-    render({
-      width: 240,
-      description:
-        'Description text provides information to assist the user in completing a field.',
-      errorMessage:
-        'Error messages inform the user when the input does not meet validation criteria.',
-    })
-  );
+  },
+};
+
+export const Default = render();
+export const ValueTestControlled = render({ value: 'Test' });
+
+ValueTestControlled.story = {
+  name: 'value: Test (controlled)',
+};
+
+export const DefaultValueTestUncontrolled = render({ defaultValue: 'Test' });
+
+DefaultValueTestUncontrolled.story = {
+  name: 'defaultValue: Test (uncontrolled)',
+};
+
+export const AutoFocusTrue = render({ autoFocus: true });
+
+AutoFocusTrue.story = {
+  name: 'autoFocus: true',
+};
+
+export const NoVisibleLabel = render({
+  label: null,
+  'aria-label': 'Hidden label',
+});
+
+NoVisibleLabel.story = {
+  name: 'no visible label',
+};
+
+export const NoIcon = render({ showIcon: false });
+
+NoIcon.story = {
+  name: 'no icon',
+};
+
+export const WithDescription = render({
+  description:
+    'Description text provides information to assist the user in completing a field.',
+});
+
+WithDescription.story = {
+  name: 'with description',
+};
+
+export const WithErrorMessage = render({
+  errorMessage:
+    'Error messages inform the user when the input does not meet validation criteria.',
+});
+
+WithErrorMessage.story = {
+  name: 'with error message',
+};
+
+export const WithValidation = renderWithValidation();
+
+WithValidation.story = {
+  name: 'with validation',
+};
+
+export const CustomWidth = render({
+  width: 240,
+  description:
+    'Description text provides information to assist the user in completing a field.',
+  errorMessage:
+    'Error messages inform the user when the input does not meet validation criteria.',
+});
+
+CustomWidth.story = {
+  name: 'custom width',
+};
 
 function render(props = {}) {
   return function renderWithArgs(args: Parameters) {

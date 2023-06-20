@@ -8,49 +8,81 @@ import { Text } from '@voussoir/typography';
 
 import { ActionButton, ActionButtonProps } from '../src';
 
-storiesOf('Components/Button/ActionButton', module)
-  .add('default', () => render())
-  .add('icon', () => renderWithIcon())
-  .add('icon only', () => renderWithIconOnly())
-  .add('low prominence', () => (
-    <Flex direction="column" gap="regular">
-      {render('Neutral', { prominence: 'low' })}
-      {renderWithIcon('Neutral icon', { prominence: 'low' })}
-      {renderWithIconOnly('Neutral icon only', { prominence: 'low' })}
-    </Flex>
-  ))
-  .add('static: light', () => (
-    <Flex
-      direction="column"
-      gap="regular"
-      backgroundColor="accentEmphasis"
-      padding="large"
-    >
-      {render('Default', { prominence: 'default', static: 'light' })}
-      {render('Low', { prominence: 'low', static: 'light' })}
-      {renderWithIcon('Default icon', {
-        prominence: 'default',
-        static: 'light',
-      })}
-      {renderWithIcon('Low icon', { prominence: 'low', static: 'light' })}
-    </Flex>
-  ))
-  .add('static: dark', () => (
-    <Flex
-      direction="column"
-      gap="regular"
-      backgroundColor="accent"
-      padding="large"
-    >
-      {render('Default', { prominence: 'default', static: 'dark' })}
-      {render('Low', { prominence: 'low', static: 'dark' })}
-      {renderWithIcon('Default icon', {
-        prominence: 'default',
-        static: 'dark',
-      })}
-      {renderWithIcon('Low icon', { prominence: 'low', static: 'dark' })}
-    </Flex>
-  ));
+export default {
+  title: 'Components/Button/ActionButton',
+};
+
+export const Default = () => render();
+
+Default.story = {
+  name: 'default',
+};
+
+export const _Icon = () => renderWithIcon();
+
+_Icon.story = {
+  name: 'icon',
+};
+
+export const IconOnly = () => renderWithIconOnly();
+
+IconOnly.story = {
+  name: 'icon only',
+};
+
+export const LowProminence = () => (
+  <Flex direction="column" gap="regular">
+    {render('Neutral', { prominence: 'low' })}
+    {renderWithIcon('Neutral icon', { prominence: 'low' })}
+    {renderWithIconOnly('Neutral icon only', { prominence: 'low' })}
+  </Flex>
+);
+
+LowProminence.story = {
+  name: 'low prominence',
+};
+
+export const StaticLight = () => (
+  <Flex
+    direction="column"
+    gap="regular"
+    backgroundColor="accentEmphasis"
+    padding="large"
+  >
+    {render('Default', { prominence: 'default', static: 'light' })}
+    {render('Low', { prominence: 'low', static: 'light' })}
+    {renderWithIcon('Default icon', {
+      prominence: 'default',
+      static: 'light',
+    })}
+    {renderWithIcon('Low icon', { prominence: 'low', static: 'light' })}
+  </Flex>
+);
+
+StaticLight.story = {
+  name: 'static: light',
+};
+
+export const StaticDark = () => (
+  <Flex
+    direction="column"
+    gap="regular"
+    backgroundColor="accent"
+    padding="large"
+  >
+    {render('Default', { prominence: 'default', static: 'dark' })}
+    {render('Low', { prominence: 'low', static: 'dark' })}
+    {renderWithIcon('Default icon', {
+      prominence: 'default',
+      static: 'dark',
+    })}
+    {renderWithIcon('Low icon', { prominence: 'low', static: 'dark' })}
+  </Flex>
+);
+
+StaticDark.story = {
+  name: 'static: dark',
+};
 
 function render(label = 'Default', props: ActionButtonProps = {}) {
   return (

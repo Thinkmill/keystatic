@@ -5,27 +5,58 @@ import { Text } from '@voussoir/typography';
 
 import { Checkbox, CheckboxProps } from '../src';
 
-storiesOf('Components/Checkbox', module)
-  .add('Default', (args: ArgTypes) => render(args), {
+export default {
+  title: 'Components/Checkbox',
+};
+
+export const Default = (args: ArgTypes) => render(args);
+
+Default.story = {
+  parameters: {
     argTypes: {
       isSelected: { control: 'boolean' },
       isIndeterminate: { control: 'boolean' },
       isDisabled: { control: 'boolean' },
       isReadOnly: { control: 'boolean' },
     },
-  })
-  .add('states', () => renderStates())
-  .add('auto focus', () => render({ autoFocus: true }))
-  .add('long label', () => (
-    <Checkbox onChange={action('change')} UNSAFE_style={{ width: 320 }}>
-      Long checkbox label. Gingerbread brownie danish marshmallow tootsie roll
-      caramels tiramisu cake candy canes.
-    </Checkbox>
-  ))
-  .add('custom label', () => renderCustomLabel())
-  .add('no label', () =>
-    renderNoLabel({ 'aria-label': 'This checkbox has no visible label' })
-  );
+  },
+};
+
+export const States = () => renderStates();
+
+States.story = {
+  name: 'states',
+};
+
+export const AutoFocus = () => render({ autoFocus: true });
+
+AutoFocus.story = {
+  name: 'auto focus',
+};
+
+export const LongLabel = () => (
+  <Checkbox onChange={action('change')} UNSAFE_style={{ width: 320 }}>
+    Long checkbox label. Gingerbread brownie danish marshmallow tootsie roll
+    caramels tiramisu cake candy canes.
+  </Checkbox>
+);
+
+LongLabel.story = {
+  name: 'long label',
+};
+
+export const CustomLabel = () => renderCustomLabel();
+
+CustomLabel.story = {
+  name: 'custom label',
+};
+
+export const NoLabel = () =>
+  renderNoLabel({ 'aria-label': 'This checkbox has no visible label' });
+
+NoLabel.story = {
+  name: 'no label',
+};
 
 function render(props: Partial<CheckboxProps> = {}) {
   return (

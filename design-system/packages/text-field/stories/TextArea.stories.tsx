@@ -4,72 +4,111 @@ import { Grid } from '@voussoir/layout';
 
 import { TextArea } from '../src';
 
-storiesOf('Components/TextArea', module)
-  .addParameters({
+export default {
+  title: 'Components/TextArea',
+
+  parameters: {
     args: {
       label: 'Label text',
       isDisabled: false,
       isReadOnly: false,
       isRequired: false,
     },
+
     argTypes: {},
-  })
-  .add('Default', render())
-  .add('value: Test (controlled)', render({ value: 'Test' }))
-  .add('defaultValue: Test (uncontrolled)', render({ defaultValue: 'Test' }))
-  .add('autoFocus: true', render({ autoFocus: true }))
-  .add(
-    'no visible label',
-    render({ label: null, 'aria-label': 'Hidden label' })
-  )
-  .add(
-    'with description',
-    render({
-      description:
-        'Description text provides information to assist the user in completing a field.',
-    })
-  )
-  .add(
-    'with error message',
-    render({
-      errorMessage:
-        'Error messages inform the user when the input does not meet validation criteria.',
-    })
-  )
-  .add(
-    'with controlled interaction',
-    renderControlled({ label: 'Controlled interaction' })
-  )
-  .add('custom height', (args: Parameters) => (
-    <Grid columns="repeat(3, minmax(140px, 1fr))" gap="regular">
-      <TextArea {...args} label="With label" height="scale.2000" />
-      <TextArea
-        {...args}
-        label="With description"
-        description="Description text."
-        height="scale.2000"
-      />
-      <TextArea
-        {...args}
-        label="With error message"
-        description="Description text."
-        errorMessage="Error message text."
-        height="scale.2000"
-      />
-    </Grid>
-  ))
-  .add(
-    'custom width',
-    render({
-      paddingX: 'regular',
-      width: 'size.container.small',
-      maxWidth: '100%',
-      description:
-        'Description text provides information to assist the user in completing a field.',
-      errorMessage:
-        'Error messages inform the user when the input does not meet validation criteria.',
-    })
-  );
+  },
+};
+
+export const Default = render();
+export const ValueTestControlled = render({ value: 'Test' });
+
+ValueTestControlled.story = {
+  name: 'value: Test (controlled)',
+};
+
+export const DefaultValueTestUncontrolled = render({ defaultValue: 'Test' });
+
+DefaultValueTestUncontrolled.story = {
+  name: 'defaultValue: Test (uncontrolled)',
+};
+
+export const AutoFocusTrue = render({ autoFocus: true });
+
+AutoFocusTrue.story = {
+  name: 'autoFocus: true',
+};
+
+export const NoVisibleLabel = render({
+  label: null,
+  'aria-label': 'Hidden label',
+});
+
+NoVisibleLabel.story = {
+  name: 'no visible label',
+};
+
+export const WithDescription = render({
+  description:
+    'Description text provides information to assist the user in completing a field.',
+});
+
+WithDescription.story = {
+  name: 'with description',
+};
+
+export const WithErrorMessage = render({
+  errorMessage:
+    'Error messages inform the user when the input does not meet validation criteria.',
+});
+
+WithErrorMessage.story = {
+  name: 'with error message',
+};
+
+export const WithControlledInteraction = renderControlled({
+  label: 'Controlled interaction',
+});
+
+WithControlledInteraction.story = {
+  name: 'with controlled interaction',
+};
+
+export const CustomHeight = (args: Parameters) => (
+  <Grid columns="repeat(3, minmax(140px, 1fr))" gap="regular">
+    <TextArea {...args} label="With label" height="scale.2000" />
+    <TextArea
+      {...args}
+      label="With description"
+      description="Description text."
+      height="scale.2000"
+    />
+    <TextArea
+      {...args}
+      label="With error message"
+      description="Description text."
+      errorMessage="Error message text."
+      height="scale.2000"
+    />
+  </Grid>
+);
+
+CustomHeight.story = {
+  name: 'custom height',
+};
+
+export const CustomWidth = render({
+  paddingX: 'regular',
+  width: 'size.container.small',
+  maxWidth: '100%',
+  description:
+    'Description text provides information to assist the user in completing a field.',
+  errorMessage:
+    'Error messages inform the user when the input does not meet validation criteria.',
+});
+
+CustomWidth.story = {
+  name: 'custom width',
+};
 
 function render(props = {}) {
   return function renderWithArgs(args: Parameters) {

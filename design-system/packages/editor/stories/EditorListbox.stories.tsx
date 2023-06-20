@@ -47,88 +47,110 @@ for (let i = 0; i < 50; i++) {
   manyItems.push({ label: 'Item ' + i, id: i });
 }
 
-storiesOf('Editor/Listbox', module)
-  .add('default', () => {
-    let listenerRef = useListenerRef();
-    return (
-      <EditorListbox
-        aria-label="default example"
-        items={basicItems}
-        children={childRenderer}
-        listenerRef={listenerRef}
-        width="alias.singleLineWidth"
-        onAction={action('onAction')}
-      />
-    );
-  })
-  .add('many items', () => {
-    let listenerRef = useListenerRef();
-    return (
-      <EditorListbox
-        aria-label="many items example"
-        items={manyItems}
-        children={childRenderer}
-        listenerRef={listenerRef}
-        selectionMode="multiple"
-        width="alias.singleLineWidth"
-        height="alias.singleLineWidth"
-      />
-    );
-  })
-  .add('complex items', () => {
-    let listenerRef = useListenerRef();
-    return (
-      <EditorListbox
-        aria-label="complex items example"
-        items={complexItems}
-        children={section => (
-          <Section key={section.id} aria-label={section.label}>
-            {section.children.map(childRenderer)}
-          </Section>
-        )}
-        listenerRef={listenerRef}
-        width="container.xsmall"
-      />
-    );
-  })
-  .add('within popover', () => {
-    let listenerRef = useListenerRef();
-    let [triggerRef, setTriggerRef] = useState<HTMLElement | null>(null);
+export default {
+  title: 'Editor/Listbox',
+};
 
-    return (
-      <>
-        <Box
-          paddingX="medium"
-          ref={setTriggerRef}
-          UNSAFE_style={{
-            marginBottom: 600,
-            marginTop: 600,
-            marginInlineStart: 300,
-          }}
+export const Default = () => {
+  let listenerRef = useListenerRef();
+  return (
+    <EditorListbox
+      aria-label="default example"
+      items={basicItems}
+      children={childRenderer}
+      listenerRef={listenerRef}
+      width="alias.singleLineWidth"
+      onAction={action('onAction')}
+    />
+  );
+};
+
+Default.story = {
+  name: 'default',
+};
+
+export const ManyItems = () => {
+  let listenerRef = useListenerRef();
+  return (
+    <EditorListbox
+      aria-label="many items example"
+      items={manyItems}
+      children={childRenderer}
+      listenerRef={listenerRef}
+      selectionMode="multiple"
+      width="alias.singleLineWidth"
+      height="alias.singleLineWidth"
+    />
+  );
+};
+
+ManyItems.story = {
+  name: 'many items',
+};
+
+export const ComplexItems = () => {
+  let listenerRef = useListenerRef();
+  return (
+    <EditorListbox
+      aria-label="complex items example"
+      items={complexItems}
+      children={section => (
+        <Section key={section.id} aria-label={section.label}>
+          {section.children.map(childRenderer)}
+        </Section>
+      )}
+      listenerRef={listenerRef}
+      width="container.xsmall"
+    />
+  );
+};
+
+ComplexItems.story = {
+  name: 'complex items',
+};
+
+export const WithinPopover = () => {
+  let listenerRef = useListenerRef();
+  let [triggerRef, setTriggerRef] = useState<HTMLElement | null>(null);
+
+  return (
+    <>
+      <Box
+        paddingX="medium"
+        ref={setTriggerRef}
+        UNSAFE_style={{
+          marginBottom: 600,
+          marginTop: 600,
+          marginInlineStart: 300,
+        }}
+      >
+        <Text color="accent" weight="medium">
+          /insert-menu
+        </Text>
+      </Box>
+      {triggerRef && (
+        <EditorPopover
+          reference={triggerRef}
+          placement="bottom-start"
+          adaptToViewport="stretch"
+          minHeight="alias.singleLineWidth"
         >
-          <Text color="accent" weight="medium">
-            /insert-menu
-          </Text>
-        </Box>
-        {triggerRef && (
-          <EditorPopover
-            reference={triggerRef}
-            placement="bottom-start"
-            adaptToViewport="stretch"
-            minHeight="alias.singleLineWidth"
-          >
-            <EditorListbox
-              aria-label="popover example"
-              items={complexItems[0].children}
-              children={childRenderer}
-              listenerRef={listenerRef}
-              UNSAFE_style={{ width: 320 }}
-            />
-          </EditorPopover>
-        )}
-      </>
-    );
-  });
+          <EditorListbox
+            aria-label="popover example"
+            items={complexItems[0].children}
+            children={childRenderer}
+            listenerRef={listenerRef}
+            UNSAFE_style={{ width: 320 }}
+          />
+        </EditorPopover>
+      )}
+    </>
+  );
+};
+
+WithinPopover.story = {
+  name: 'within popover',
+};
 
 // Utils
 // -----------------------------------------------------------------------------

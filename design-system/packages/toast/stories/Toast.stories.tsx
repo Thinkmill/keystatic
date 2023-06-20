@@ -14,12 +14,24 @@ import { Heading, Text } from '@voussoir/typography';
 
 import { Toaster, ToastOptions, toastQueue } from '../src';
 
-storiesOf('Components/Toast', module)
-  .addParameters({
+export default {
+  title: 'Components/Toast',
+
+  decorators: [
+    story => (
+      <>
+        <Toaster />
+        <MainLandmark>{story()}</MainLandmark>
+      </>
+    ),
+  ],
+
+  parameters: {
     args: {
       shouldCloseOnAction: false,
       timeout: null,
     },
+
     argTypes: {
       timeout: {
         control: {
@@ -28,29 +40,38 @@ storiesOf('Components/Toast', module)
         },
       },
     },
-  })
-  .addDecorator(story => (
-    <>
-      <Toaster />
-      <MainLandmark>{story()}</MainLandmark>
-    </>
-  ))
-  .add('Default', (args: ArgTypes) => <Example {...args} />)
-  .add('Actions', (args: ArgTypes) => (
-    <Example {...args} actionLabel="Action" onAction={action('onAction')} />
-  ))
-  .add('Within dialog', (args: ArgTypes) => (
-    <DialogTrigger isDismissable>
-      <ActionButton>Open dialog</ActionButton>
-      <Dialog>
-        <Heading>Toasty</Heading>
-        <Content>
-          <Example {...args} />
-        </Content>
-      </Dialog>
-    </DialogTrigger>
-  ))
-  .add('Programmatic closing', (args: ArgTypes) => <ToastToggle {...args} />);
+  },
+};
+
+export const Default = (args: ArgTypes) => <Example {...args} />;
+
+export const Actions = (args: ArgTypes) => (
+  <Example {...args} actionLabel="Action" onAction={action('onAction')} />
+);
+
+export const WithinDialog = (args: ArgTypes) => (
+  <DialogTrigger isDismissable>
+    <ActionButton>Open dialog</ActionButton>
+    <Dialog>
+      <Heading>Toasty</Heading>
+      <Content>
+        <Example {...args} />
+      </Content>
+    </Dialog>
+  </DialogTrigger>
+);
+
+WithinDialog.story = {
+  name: 'Within dialog',
+};
+
+export const ProgrammaticClosing = (args: ArgTypes) => (
+  <ToastToggle {...args} />
+);
+
+ProgrammaticClosing.story = {
+  name: 'Programmatic closing',
+};
 
 function Example(options: ToastOptions) {
   return (

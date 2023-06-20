@@ -10,71 +10,78 @@ import { Heading, Text } from '@voussoir/typography';
 import { AlertDialog, Dialog, DialogTrigger, DialogTriggerProps } from '../src';
 import { getParagraph } from './common';
 
-storiesOf('Components/Dialog/DialogTrigger', module)
-  .add('default', () => render({}))
-  .add('type: popover', () => renderPopover({ type: 'popover' }))
-  .add('type: modal', () => render({ type: 'modal' }))
-  .add('type: modal isDismissable', () =>
-    render({ type: 'modal', isDismissable: true })
-  )
-  .add('type: fullscreen', () => render({ type: 'fullscreen' }))
-  .add('type: tray', () => renderPopover({ type: 'tray' }))
-  .add('mobileType: fullscreen', () =>
-    render({ type: 'modal', mobileType: 'fullscreen' })
-  )
-  .add('popover with mobileType: modal', () =>
-    renderPopover({ mobileType: 'modal' })
-  )
-  .add('popover with mobileType: tray', () =>
-    renderPopover({ mobileType: 'tray' })
-  )
-  .add('nested modals', () => (
-    <div style={{ paddingTop: 100 }}>
-      <input />
-      <DialogTrigger isDismissable>
-        <ActionButton>Open dialog</ActionButton>
-        <Dialog>
-          <Content>
-            <input />
-            <input />
-            <DialogTrigger isDismissable>
-              <ActionButton>Open dialog</ActionButton>
-              <Dialog>
-                <Content>
-                  <input />
-                  <input />
-                </Content>
-              </Dialog>
-            </DialogTrigger>
-          </Content>
-        </Dialog>
-      </DialogTrigger>
-    </div>
-  ))
-  .add('nested popovers', () => (
-    <div style={{ paddingTop: 100 }}>
-      <DialogTrigger type="popover">
-        <ActionButton>Open dialog</ActionButton>
-        <Dialog>
-          <Content>
-            <input />
-            <input />
-            <DialogTrigger type="popover">
-              <ActionButton>Open dialog</ActionButton>
-              <Dialog>
-                <Content>Hi!</Content>
-              </Dialog>
-            </DialogTrigger>
-          </Content>
-        </Dialog>
-      </DialogTrigger>
-    </div>
-  ))
-  .add('popover inside scroll view', () => (
-    <div style={{ height: 100, display: 'flex' }}>
-      <div style={{ paddingTop: 100, height: 100, overflow: 'auto' }}>
-        <div style={{ height: 200 }}>
-          <DialogTrigger type="popover">
+export default {
+  title: 'Components/Dialog/DialogTrigger',
+};
+
+export const Default = () => render({});
+
+Default.story = {
+  name: 'default',
+};
+
+export const TypePopover = () => renderPopover({ type: 'popover' });
+
+TypePopover.story = {
+  name: 'type: popover',
+};
+
+export const TypeModal = () => render({ type: 'modal' });
+
+TypeModal.story = {
+  name: 'type: modal',
+};
+
+export const TypeModalIsDismissable = () =>
+  render({ type: 'modal', isDismissable: true });
+
+TypeModalIsDismissable.story = {
+  name: 'type: modal isDismissable',
+};
+
+export const TypeFullscreen = () => render({ type: 'fullscreen' });
+
+TypeFullscreen.story = {
+  name: 'type: fullscreen',
+};
+
+export const TypeTray = () => renderPopover({ type: 'tray' });
+
+TypeTray.story = {
+  name: 'type: tray',
+};
+
+export const MobileTypeFullscreen = () =>
+  render({ type: 'modal', mobileType: 'fullscreen' });
+
+MobileTypeFullscreen.story = {
+  name: 'mobileType: fullscreen',
+};
+
+export const PopoverWithMobileTypeModal = () =>
+  renderPopover({ mobileType: 'modal' });
+
+PopoverWithMobileTypeModal.story = {
+  name: 'popover with mobileType: modal',
+};
+
+export const PopoverWithMobileTypeTray = () =>
+  renderPopover({ mobileType: 'tray' });
+
+PopoverWithMobileTypeTray.story = {
+  name: 'popover with mobileType: tray',
+};
+
+export const NestedModals = () => (
+  <div style={{ paddingTop: 100 }}>
+    <input />
+    <DialogTrigger isDismissable>
+      <ActionButton>Open dialog</ActionButton>
+      <Dialog>
+        <Content>
+          <input />
+          <input />
+          <DialogTrigger isDismissable>
             <ActionButton>Open dialog</ActionButton>
             <Dialog>
               <Content>
@@ -83,150 +90,269 @@ storiesOf('Components/Dialog/DialogTrigger', module)
               </Content>
             </Dialog>
           </DialogTrigger>
-        </div>
-      </div>
-      <div style={{ paddingTop: 100, height: 100, overflow: 'auto', flex: 1 }}>
-        <div style={{ height: 200 }}>scroll around</div>
-      </div>
-    </div>
-  ))
-  .add('offset', () => renderPopover({ offset: 50 }))
-  .add('crossOffset', () => renderPopover({ crossOffset: 50 }))
-  .add('shouldFlip: true', () =>
-    renderPopover({
-      placement: 'start',
-      shouldFlip: true,
-      width: 'calc(100vh - 100px)',
-    })
-  )
-  .add('shouldFlip: false', () =>
-    renderPopover({
-      placement: 'start',
-      shouldFlip: false,
-      width: 'calc(100vh - 100px)',
-    })
-  )
-  .add('shouldFlip: true with offset', () =>
-    renderPopover({
-      placement: 'start',
-      shouldFlip: true,
-      offset: 50,
-      width: 'calc(100vh - 100px)',
-    })
-  )
-  .add('keyboard dismiss disabled: modal', () =>
-    render({ type: 'modal', isKeyboardDismissDisabled: true })
-  )
-  .add('keyboard dismiss disabled: popover', () =>
-    renderPopover({
-      placement: 'bottom',
-      isKeyboardDismissDisabled: true,
-    })
-  )
-  .add('keyboard dismiss disabled: tray', () =>
-    renderPopover({ type: 'tray', isKeyboardDismissDisabled: true })
-  )
-  .add('containerPadding', () =>
-    renderPopover({
-      placement: 'bottom',
-      width: 'calc(100vh - 100px)',
-      containerPadding: 200,
-    })
-  )
-  .add('close function with button: popover', () => (
-    <div style={{ display: 'flex', margin: '100px 0' }}>
-      <DialogTrigger type="popover" onOpenChange={action('open change')}>
-        <ActionButton>Open dialog</ActionButton>
-        {close => (
+        </Content>
+      </Dialog>
+    </DialogTrigger>
+  </div>
+);
+
+NestedModals.story = {
+  name: 'nested modals',
+};
+
+export const NestedPopovers = () => (
+  <div style={{ paddingTop: 100 }}>
+    <DialogTrigger type="popover">
+      <ActionButton>Open dialog</ActionButton>
+      <Dialog>
+        <Content>
+          <input />
+          <input />
+          <DialogTrigger type="popover">
+            <ActionButton>Open dialog</ActionButton>
+            <Dialog>
+              <Content>Hi!</Content>
+            </Dialog>
+          </DialogTrigger>
+        </Content>
+      </Dialog>
+    </DialogTrigger>
+  </div>
+);
+
+NestedPopovers.story = {
+  name: 'nested popovers',
+};
+
+export const PopoverInsideScrollView = () => (
+  <div style={{ height: 100, display: 'flex' }}>
+    <div style={{ paddingTop: 100, height: 100, overflow: 'auto' }}>
+      <div style={{ height: 200 }}>
+        <DialogTrigger type="popover">
+          <ActionButton>Open dialog</ActionButton>
           <Dialog>
-            <Heading>Dialog title</Heading>
-            <Header>
-              <Text size="small" color="neutralSecondary">
-                Optional header content
-              </Text>
-            </Header>
             <Content>
-              <Text>{getParagraph(3)}</Text>
+              <input />
+              <input />
             </Content>
-            <ButtonGroup>
-              <Button onPress={chain(close, action('cancel'))}>Cancel</Button>
-            </ButtonGroup>
           </Dialog>
-        )}
-      </DialogTrigger>
+        </DialogTrigger>
+      </div>
     </div>
-  ))
-  .add('targetRef', () => <TriggerWithRef type="popover" />)
-  .add('alert dialog', () => renderAlert({}))
-  .add('crossoffset examples', () => (
-    <Flex gap="regular" alignSelf="center">
-      <Flex gap="regular" direction="column" alignItems="start">
-        <span>Left Top</span>
-        <div>
-          <span>-50</span>
-          {renderPopover({ placement: 'left top', crossOffset: -50 }, false)}
-        </div>
-        <div>
-          <span>0</span>
-          {renderPopover({ placement: 'left top' }, false)}
-        </div>
-        <div>
-          <span>50</span>
-          {renderPopover({ placement: 'left top', crossOffset: 50 }, false)}
-        </div>
-      </Flex>
-      <Flex gap="regular" direction="column" alignItems="start">
-        <span>Left</span>
-        <div>
-          <span>-50</span>
-          {renderPopover({ placement: 'left', crossOffset: -50 }, false)}
-        </div>
-        <div>
-          <span>0</span>
-          {renderPopover({ placement: 'left' }, false)}
-        </div>
-        <div>
-          <span>50</span>
-          {renderPopover({ placement: 'left', crossOffset: 50 }, false)}
-        </div>
-      </Flex>
-      <Flex gap="regular" direction="column" alignItems="start">
-        <span>Left Bottom</span>
-        <div>
-          <span>-50</span>
-          {renderPopover({ placement: 'left bottom', crossOffset: -50 }, false)}
-        </div>
-        <div>
-          <span>0</span>
-          {renderPopover({ placement: 'left bottom' }, false)}
-        </div>
-        <div>
-          <span>50</span>
-          {renderPopover({ placement: 'left bottom', crossOffset: 50 }, false)}
-        </div>
-      </Flex>
-    </Flex>
-  ))
-  .add('trigger visible through underlay', () => renderTriggerNotCentered({}))
-  .add('2 popovers', () => (
-    <Flex gap="regular">
-      <DialogTrigger type="popover">
-        <ActionButton>Open dialog</ActionButton>
+    <div style={{ paddingTop: 100, height: 100, overflow: 'auto', flex: 1 }}>
+      <div style={{ height: 200 }}>scroll around</div>
+    </div>
+  </div>
+);
+
+PopoverInsideScrollView.story = {
+  name: 'popover inside scroll view',
+};
+
+export const Offset = () => renderPopover({ offset: 50 });
+
+Offset.story = {
+  name: 'offset',
+};
+
+export const CrossOffset = () => renderPopover({ crossOffset: 50 });
+
+CrossOffset.story = {
+  name: 'crossOffset',
+};
+
+export const ShouldFlipTrue = () =>
+  renderPopover({
+    placement: 'start',
+    shouldFlip: true,
+    width: 'calc(100vh - 100px)',
+  });
+
+ShouldFlipTrue.story = {
+  name: 'shouldFlip: true',
+};
+
+export const ShouldFlipFalse = () =>
+  renderPopover({
+    placement: 'start',
+    shouldFlip: false,
+    width: 'calc(100vh - 100px)',
+  });
+
+ShouldFlipFalse.story = {
+  name: 'shouldFlip: false',
+};
+
+export const ShouldFlipTrueWithOffset = () =>
+  renderPopover({
+    placement: 'start',
+    shouldFlip: true,
+    offset: 50,
+    width: 'calc(100vh - 100px)',
+  });
+
+ShouldFlipTrueWithOffset.story = {
+  name: 'shouldFlip: true with offset',
+};
+
+export const KeyboardDismissDisabledModal = () =>
+  render({ type: 'modal', isKeyboardDismissDisabled: true });
+
+KeyboardDismissDisabledModal.story = {
+  name: 'keyboard dismiss disabled: modal',
+};
+
+export const KeyboardDismissDisabledPopover = () =>
+  renderPopover({
+    placement: 'bottom',
+    isKeyboardDismissDisabled: true,
+  });
+
+KeyboardDismissDisabledPopover.story = {
+  name: 'keyboard dismiss disabled: popover',
+};
+
+export const KeyboardDismissDisabledTray = () =>
+  renderPopover({ type: 'tray', isKeyboardDismissDisabled: true });
+
+KeyboardDismissDisabledTray.story = {
+  name: 'keyboard dismiss disabled: tray',
+};
+
+export const ContainerPadding = () =>
+  renderPopover({
+    placement: 'bottom',
+    width: 'calc(100vh - 100px)',
+    containerPadding: 200,
+  });
+
+ContainerPadding.story = {
+  name: 'containerPadding',
+};
+
+export const CloseFunctionWithButtonPopover = () => (
+  <div style={{ display: 'flex', margin: '100px 0' }}>
+    <DialogTrigger type="popover" onOpenChange={action('open change')}>
+      <ActionButton>Open dialog</ActionButton>
+      {close => (
         <Dialog>
+          <Heading>Dialog title</Heading>
+          <Header>
+            <Text size="small" color="neutralSecondary">
+              Optional header content
+            </Text>
+          </Header>
           <Content>
-            <input />
-            <input />
+            <Text>{getParagraph(3)}</Text>
           </Content>
+          <ButtonGroup>
+            <Button onPress={chain(close, action('cancel'))}>Cancel</Button>
+          </ButtonGroup>
         </Dialog>
-      </DialogTrigger>
-      <DialogTrigger type="popover">
-        <ActionButton>Open dialog</ActionButton>
-        <Dialog>
-          <Content>Hi!</Content>
-        </Dialog>
-      </DialogTrigger>
+      )}
+    </DialogTrigger>
+  </div>
+);
+
+CloseFunctionWithButtonPopover.story = {
+  name: 'close function with button: popover',
+};
+
+export const TargetRef = () => <TriggerWithRef type="popover" />;
+
+TargetRef.story = {
+  name: 'targetRef',
+};
+
+export const _AlertDialog = () => renderAlert({});
+
+_AlertDialog.story = {
+  name: 'alert dialog',
+};
+
+export const CrossoffsetExamples = () => (
+  <Flex gap="regular" alignSelf="center">
+    <Flex gap="regular" direction="column" alignItems="start">
+      <span>Left Top</span>
+      <div>
+        <span>-50</span>
+        {renderPopover({ placement: 'left top', crossOffset: -50 }, false)}
+      </div>
+      <div>
+        <span>0</span>
+        {renderPopover({ placement: 'left top' }, false)}
+      </div>
+      <div>
+        <span>50</span>
+        {renderPopover({ placement: 'left top', crossOffset: 50 }, false)}
+      </div>
     </Flex>
-  ));
+    <Flex gap="regular" direction="column" alignItems="start">
+      <span>Left</span>
+      <div>
+        <span>-50</span>
+        {renderPopover({ placement: 'left', crossOffset: -50 }, false)}
+      </div>
+      <div>
+        <span>0</span>
+        {renderPopover({ placement: 'left' }, false)}
+      </div>
+      <div>
+        <span>50</span>
+        {renderPopover({ placement: 'left', crossOffset: 50 }, false)}
+      </div>
+    </Flex>
+    <Flex gap="regular" direction="column" alignItems="start">
+      <span>Left Bottom</span>
+      <div>
+        <span>-50</span>
+        {renderPopover({ placement: 'left bottom', crossOffset: -50 }, false)}
+      </div>
+      <div>
+        <span>0</span>
+        {renderPopover({ placement: 'left bottom' }, false)}
+      </div>
+      <div>
+        <span>50</span>
+        {renderPopover({ placement: 'left bottom', crossOffset: 50 }, false)}
+      </div>
+    </Flex>
+  </Flex>
+);
+
+CrossoffsetExamples.story = {
+  name: 'crossoffset examples',
+};
+
+export const TriggerVisibleThroughUnderlay = () => renderTriggerNotCentered({});
+
+TriggerVisibleThroughUnderlay.story = {
+  name: 'trigger visible through underlay',
+};
+
+export const _2Popovers = () => (
+  <Flex gap="regular">
+    <DialogTrigger type="popover">
+      <ActionButton>Open dialog</ActionButton>
+      <Dialog>
+        <Content>
+          <input />
+          <input />
+        </Content>
+      </Dialog>
+    </DialogTrigger>
+    <DialogTrigger type="popover">
+      <ActionButton>Open dialog</ActionButton>
+      <Dialog>
+        <Content>Hi!</Content>
+      </Dialog>
+    </DialogTrigger>
+  </Flex>
+);
+
+_2Popovers.story = {
+  name: '2 popovers',
+};
 
 function render({ width = 'auto', ...props }) {
   return (
