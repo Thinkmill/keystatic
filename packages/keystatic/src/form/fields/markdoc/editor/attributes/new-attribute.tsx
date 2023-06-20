@@ -22,7 +22,7 @@ import { globalAttributes } from '@markdoc/markdoc';
 import { domNodeToEditorView } from '.';
 
 type AttributeItem = {
-  key: string;
+  name: string;
   extra: string | undefined;
   command: Command;
 };
@@ -59,19 +59,19 @@ export function addNewAttributeAutocompleteDecoration(
 
 function childRenderer(item: AttributeItem) {
   return (
-    <Item key={item.key} textValue={item.key}>
-      {item.key}
+    <Item key={item.name} textValue={item.name}>
+      {item.name}
     </Item>
   );
 }
 
-function addAttribute(key: string): Command {
+function addAttribute(name: string): Command {
   return (state, dispatch, view) => {
     if (dispatch) {
       const tr = state.tr;
       tr.insert(
         state.selection.from,
-        getAttributeType(state.schema).createAndFill({ key })!
+        getAttributeType(state.schema).createAndFill({ name })!
       );
       tr.setSelection(new NodeSelection(tr.doc.resolve(state.selection.from)));
       dispatch(tr);
@@ -103,10 +103,10 @@ function NewAttributeMenu(props: { query: string; from: number; to: number }) {
               .markdocConfig?.nodes?.[ancestorNodeAllowingAttributes.type.name]
               ?.attributes,
           };
-          return Object.keys(attributes).map(key => ({
-            key,
-            extra: key === 'id' ? '#' : key === 'class' ? '.' : undefined,
-            command: addAttribute(key),
+          return Object.keys(attributes).map(name => ({
+            name,
+            extra: name === 'id' ? '#' : name === 'class' ? '.' : undefined,
+            command: addAttribute(name),
           }));
         })(),
         props.query,
@@ -122,7 +122,7 @@ function NewAttributeMenu(props: { query: string; from: number; to: number }) {
     if (options.length === 1) {
       dispatchCommand(
         wrapCommandAfterRemovingAutocompleteDecoration(
-          addAttribute(options[0].key)
+          addAttribute(options[0].name)
         )
       );
       return true;
@@ -143,11 +143,11 @@ function NewAttributeMenu(props: { query: string; from: number; to: number }) {
         viewRef.current?.dispatch(removeAutocompleteDecoration(editorState.tr));
       }}
       onAction={key => {
-        const option = options.find(option => option.key === key);
+        const option = options.find(option => option.name === key);
         if (!option) return;
         dispatchCommand(
           wrapCommandAfterRemovingAutocompleteDecoration(
-            addAttribute(option.key)
+            addAttribute(option.name)
           )
         );
       }}
