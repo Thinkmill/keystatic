@@ -14,17 +14,16 @@ To create a `collection` in your project, add a `collections` key to your Keysta
 
 ```jsx
 // Keystatic config
-import { config, collection } from '@keystatic/core'
+import { config, collection } from '@keystatic/core';
 
 export default config({
-	// ...
-	collections: {
-		testimonials: collection({
-			label: 'Testimonials'
-		})
-	}
-}) 
-
+  // ...
+  collections: {
+    testimonials: collection({
+      label: 'Testimonials',
+    }),
+  },
+});
 ```
 
 The config above creates a new `testimonials` collection.
@@ -37,27 +36,39 @@ Wrapping the `testimonials` config object inside the `collection()` function pro
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/collectionsandsingletons2.png" /%}
 
+### Slug field
+
+Use the `slugField` option to define what field in your collection `schema` should be used as the slug for each item. It's recommended to combine it with the [slug field](/docs/fields/slug) to let users customise and regenerate each slug in the Admin UI.
+
+```typescript
+testimonials: collection({
+  label: 'Testimonials',
+  schema: {
+    title: fields.slug({ name: { label: 'Title' } }),
+  },
+  slugField: 'title',
+}),
+```
+
 ## Singletons
 
-When you want a “one-of-a-kind” data entry, such as a “Settings” page or maybe a very specific set of fields for the “Homepage” of a website… you'll want to use a `singleton`
+When you want a “one-of-a-kind” data entry, such as a “Settings” page or maybe a very specific set of fields for the “Homepage” of a website, you'll want to use a `singleton`.
 
 To create a `singleton` in your project, add a `singleton` key to your Keystatic config:
 
 ```jsx
 // Keystatic config
-import { config, singleton } from '@keystatic/core'
+import { config, singleton } from '@keystatic/core';
 
 export default config({
-	// ...
-	singletons: {
-		homepage: singleton({
-      label: 'Homepage'
-			// ...
-    })
-	}
-})
-
-
+  // ...
+  singletons: {
+    homepage: singleton({
+      label: 'Homepage',
+      // ...
+    }),
+  },
+});
 ```
 
 The config above creates a new `homepage` singleton.
