@@ -1,5 +1,4 @@
-import { focusSafely, getFocusableTreeWalker } from '@react-aria/focus';
-import { isFocusVisible, useHover } from '@react-aria/interactions';
+import { isFocusVisible, useHover, usePress } from '@react-aria/interactions';
 import { mergeProps } from '@react-aria/utils';
 import {
   useSelectableCollection,
@@ -12,6 +11,7 @@ import {
   DOMAttributes,
   FocusableElement,
   Node,
+  PressEvent,
 } from '@react-types/shared';
 import React, {
   Key,
@@ -56,6 +56,7 @@ export function NavTree<T extends object>(props: NavTreeProps<T>) {
 
   let { collectionProps } = useSelectableCollection({
     ...props,
+    allowsTabNavigation: true,
     keyboardDelegate,
     ref,
     selectionManager: state.selectionManager,
@@ -86,13 +87,7 @@ function resolveTreeNodes<T>({
 function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
   let ref = useRef<HTMLDivElement>(null);
   let { direction } = useLocale();
-  // @ts-expect-error
-  let { onAction } = treeMap.get(state);
-  let { itemProps, isExpanded, isFocused } = useTreeItem(
-    { onAction, node },
-    state,
-    ref
-  );
+  let { itemProps, isExpanded, isFocused } = useTreeItem({ node }, state, ref);
 
   let isRtl = direction === 'rtl';
   let contents = isReactText(node.rendered) ? (
@@ -105,6 +100,7 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
     <SlotProvider
       slots={{
         button: {
+          isHidden: !isFocused,
           elementType: 'span',
           marginStart: 'auto',
           prominence: 'low',
@@ -221,28 +217,48 @@ export function useTreeItem<T>(
   ref: RefObject<FocusableElement>
 ) {
   // Copied from useGridListItem + some modifications to make it not so grid specific
-  let { node, isVirtualized, onAction, shouldSelectOnPressUp } = props;
+  let { node, isVirtualized } = props;
   let { selectionManager } = state;
+  let treeData = treeMap.get(state);
   let { direction } = useLocale();
+
+  let onAction = () => {
+    if (treeData?.onAction) {
+      treeData.onAction(node.key);
+    }
+
+    if (node.hasChildNodes) {
+      state.toggleKey(node.key);
+    }
+  };
 
   let { itemProps: selectableItemProps, ...itemStates } = useSelectableItem({
     key: node.key,
     selectionManager,
     ref,
     isVirtualized,
-    shouldSelectOnPressUp,
-    onAction: () => {
-      if (onAction) {
-        onAction(node.key);
-      }
-
-      if (node.hasChildNodes) {
-        state.toggleKey(node.key);
-      }
-    },
+    shouldSelectOnPressUp: true,
   });
 
-  let isExpanded = node.hasChildNodes && state.expandedKeys.has(node.key);
+  let onPressStart = (e: PressEvent) => {
+    if (e.pointerType === 'keyboard' && onAction) {
+      onAction();
+    }
+  };
+  let onPressUp = (e: PressEvent) => {
+    if (e.pointerType !== 'keyboard') {
+      if (onAction) {
+        onAction();
+      }
+    }
+  };
+  let { pressProps } = usePress({
+    onPressStart,
+    onPressUp,
+    isDisabled: itemStates.isDisabled,
+  });
+
+  let isExpanded = state.expandedKeys.has(node.key);
 
   let { hoverProps } = useHover({
     isDisabled: state.disabledKeys.has(node.key),
@@ -259,25 +275,16 @@ export function useTreeItem<T>(
       return;
     }
 
-    let walker = getFocusableTreeWalker(ref.current);
-    walker.currentNode = document.activeElement as FocusableElement;
-
-    let handleArrowBackward = (focusable: FocusableElement) => {
-      if (focusable) {
-        focusSafely(focusable);
-      } else {
-        if (node.hasChildNodes && isExpanded) {
-          state.toggleKey(node.key);
-        } else if (node?.parentKey) {
-          selectionManager.setFocusedKey(node.parentKey);
-        }
+    let handleArrowBackward = () => {
+      if (node.hasChildNodes && isExpanded) {
+        state.toggleKey(node.key);
+      } else if (node?.parentKey) {
+        selectionManager.setFocusedKey(node.parentKey);
       }
     };
-    let handleArrowForward = (focusable: FocusableElement) => {
+    let handleArrowForward = () => {
       if (node.hasChildNodes && !isExpanded) {
         state.toggleKey(node.key);
-      } else if (focusable) {
-        focusSafely(focusable);
       } else if (node.hasChildNodes) {
         let firstChild = state.collection.getKeyAfter(node.key);
         if (firstChild) {
@@ -289,17 +296,17 @@ export function useTreeItem<T>(
     switch (e.key) {
       case 'ArrowLeft': {
         if (direction === 'rtl') {
-          handleArrowForward(walker.nextNode() as FocusableElement);
+          handleArrowForward();
         } else {
-          handleArrowBackward(walker.previousNode() as FocusableElement);
+          handleArrowBackward();
         }
         break;
       }
       case 'ArrowRight': {
         if (direction === 'rtl') {
-          handleArrowBackward(walker.previousNode() as FocusableElement);
+          handleArrowBackward();
         } else {
-          handleArrowForward(walker.nextNode() as FocusableElement);
+          handleArrowForward();
         }
         break;
       }
@@ -307,15 +314,15 @@ export function useTreeItem<T>(
   };
 
   let itemProps: DOMAttributes = {
-    ...mergeProps(selectableItemProps, hoverProps),
+    ...mergeProps(selectableItemProps, pressProps, hoverProps),
     onKeyDownCapture,
     'aria-label': node.textValue || undefined,
     'aria-disabled': itemStates.isDisabled || undefined,
     'aria-level': node.level + 1,
-    'aria-expanded': isExpanded || undefined,
+    'aria-expanded': node.hasChildNodes ? isExpanded : undefined,
     // hmm...
-    'aria-current': itemStates.isSelected ? 'page' : undefined,
-    'aria-selected': itemStates.isSelected || undefined,
+    // 'aria-current': itemStates.isSelected ? 'page' : undefined,
+    'aria-selected': node.hasChildNodes ? undefined : itemStates.isSelected,
   };
 
   if (isVirtualized) {
@@ -327,7 +334,7 @@ export function useTreeItem<T>(
 
   return {
     itemProps,
-    isExpanded,
+    isExpanded: node.hasChildNodes && isExpanded,
     isFocused:
       selectionManager.isFocused && selectionManager.focusedKey === node.key, // FIXME: this can be removed when `useSelectableItem` is from latest
     ...itemStates,
