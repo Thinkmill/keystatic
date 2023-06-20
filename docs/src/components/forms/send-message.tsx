@@ -58,8 +58,8 @@ export default function SendMessageForm() {
       <hr className="mt-10 border-dashed border-t-black" />
 
       <p className="mt-10">
-        We’re building Keystatic in the open over the coming weeks and months.
-        If you’re interested in following along, there’s a few ways you do
+        We're building Keystatic in the open over the coming weeks and months.
+        If you're interested in following along, there's a few ways you do
         that... No spam, just sharing the adventure!
       </p>
 

@@ -65,7 +65,7 @@ export default function Hero() {
               />
             </svg>
             <span className="font-medium text-sm">
-              Keystatic is another{' '}
+              Keystatic is a{' '}
               <Link
                 href="https://thinkmill.com.au"
                 className="underline hover:text-keystatic-gray-dark"

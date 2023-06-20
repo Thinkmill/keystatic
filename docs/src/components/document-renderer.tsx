@@ -127,7 +127,7 @@ const getRenderers = (
       );
     },
     divider: () => {
-      return <hr className="border-keystatic-gray my-2" />;
+      return <hr className="border-keystatic-gray my-8 peer" />;
     },
     layout: ({ children }) => {
       return (

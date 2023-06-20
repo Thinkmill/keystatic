@@ -49,8 +49,8 @@ export default function PrivacyPolicy() {
       </ul>
       <p>
         An open-text field where you voluntarily submit information of your
-        choosing which could include, the type of project you’re working on,
-        what you’d like to do with Keystatic etc.
+        choosing which could include, the type of project you're working on,
+        what you'd like to do with Keystatic etc.
       </p>
       <p>
         Your opt-in consent to join our mailing list for launch communications
