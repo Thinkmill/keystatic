@@ -24,7 +24,7 @@ export default function ThankYouPage() {
             </span>
           </h1>
           <p className="mt-10 text-2xl text-keystatic-gray-dark">
-            We’re looking forward to sharing updates with you in the coming
+            We're looking forward to sharing updates with you in the coming
             weeks and months.
           </p>
         </div>
