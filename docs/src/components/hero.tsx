@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import Button from './button';
+import { CopyCommandButton } from './copy-command-button';
 
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-white">
-      <div className="mx-auto max-w-7xl pt-12 px-6 md:py-16 flex flex-col items-center gap-10">
-        <div className="w-full max-w-xl flex flex-col items-center gap-8 text-center">
+      <div className="mx-auto max-w-7xl pt-12 px-6 md:py-16 flex flex-col items-center gap-12 md:gap-16">
+        <div className="w-full max-w-2xl flex flex-col items-center gap-8 text-center">
           <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl">
             Content Management
             <br />
@@ -27,14 +28,20 @@ export default function Hero() {
             </span>
           </h1>
 
-          <p className="text-lg font-semibold">
+          <p className="text-lg font-normal">
             A new tool that makes Markdown, JSON and YAML content in your
-            codebase editable by humans.
+            codebase editable by humans. Live edit content on GitHub or your
+            local file system, without disrupting your existing code and
+            workflows.
           </p>
 
-          <Button className="w-full max-w-xs" href="/docs">
-            Read the docs
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button className="" href="/docs">
+              Read the docs
+            </Button>
+
+            <CopyCommandButton />
+          </div>
 
           <div className="inline-flex items-center gap-2 text-left">
             <svg
@@ -69,11 +76,6 @@ export default function Hero() {
             </span>
           </div>
         </div>
-
-        <p className="text-sm text-neutral-600 text-center">
-          Live edit content on GitHub or your local file system, without
-          disrupting your existing code and workflows.
-        </p>
 
         <div className="relative w-full h-[100vw] md:h-[22vw] lg:h-[25vw] xl:h-[20rem]">
           <img
