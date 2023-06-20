@@ -5,7 +5,7 @@ import { copyTextToClipboard } from '../utils';
 import Button from './button';
 
 export function CopyCommandButton() {
-  const copyCommandText = 'npm install @keystatic';
+  const copyCommandText = 'npm create @keystatic@latest';
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopyCommand = () => {
