@@ -17,7 +17,7 @@ export const getAttributeType = weakMemoize(function getAttributesType(
 export const attributeSchema = {
   attribute: {
     attrs: {
-      key: {},
+      name: {},
     },
     content: 'attribute_expression',
     inline: true,
@@ -25,24 +25,15 @@ export const attributeSchema = {
     toDOM(node) {
       return [
         'span',
-        { class: css({ border: '1px black solid' }), contenteditable: false },
-        [
-          'span',
-          {
-            'data-attr':
-              node.attrs.key === 'id'
-                ? '#'
-                : node.attrs.key === 'class'
-                ? '.'
-                : `${node.attrs.key}=`,
-            class: css({ content: 'attr(data-attr)' }),
-          },
-        ],
-        [
-          'span',
-          { class: css({ minWidth: 50, width: 50, display: 'inline-block' }) },
-          0,
-        ],
+        {
+          'data-attr':
+            node.attrs.name === 'id'
+              ? '#'
+              : node.attrs.name === 'class'
+              ? '.'
+              : `${node.attrs.name}`,
+        },
+        0,
       ];
     },
   },

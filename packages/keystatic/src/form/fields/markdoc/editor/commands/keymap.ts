@@ -2,7 +2,6 @@ import {
   chainCommands,
   joinUp,
   joinDown,
-  selectParentNode,
   toggleMark,
   setBlockType,
   createParagraphNear,
@@ -26,8 +25,8 @@ import {
   sinkListItem,
 } from '../lists';
 import { EditorSchema } from '../schema';
-import { Command } from 'prosemirror-state';
-import { NodeType } from 'prosemirror-model';
+import { Command, NodeSelection } from 'prosemirror-state';
+import { NodeType, ResolvedPos } from 'prosemirror-model';
 
 const mac =
   typeof navigator != 'undefined'
@@ -44,6 +43,28 @@ const codeModiferEnterCommand: Command = (state, dispatch, view) => {
     dispatch,
     view
   );
+};
+
+function findSelectableAncestor($pos: ResolvedPos, startDepth: number) {
+  for (let depth = startDepth; depth > 0; depth--) {
+    let pos = $pos.before(depth);
+    const node = $pos.doc.nodeAt(pos);
+    if (node && node.type.spec.selectable !== false) {
+      return pos;
+    }
+  }
+}
+
+const selectParentSelectableNode: Command = (state, dispatch) => {
+  const { $from, to } = state.selection;
+  const same = $from.sharedDepth(to);
+  if (same === 0) return false;
+  const pos = findSelectableAncestor($from, same);
+  if (pos === undefined) return false;
+  if (dispatch) {
+    dispatch(state.tr.setSelection(NodeSelection.create(state.doc, pos)));
+  }
+  return true;
 };
 
 export function keymapForSchema({ nodes, marks }: EditorSchema) {
@@ -129,7 +150,7 @@ export function keymapForSchema({ nodes, marks }: EditorSchema) {
   }
   add('Alt-ArrowUp', joinUp);
   add('Alt-ArrowDown', joinDown);
-  add('Escape', selectParentNode);
+  add('Escape', selectParentSelectableNode);
   if (nodes.unordered_list) {
     add('Shift-Ctrl-8', toggleList(nodes.unordered_list));
   }
