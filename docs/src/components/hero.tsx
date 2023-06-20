@@ -33,7 +33,7 @@ export default function Hero() {
             codebase editable by humans.
           </p>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Button className="" href="/docs">
               Read the docs
             </Button>

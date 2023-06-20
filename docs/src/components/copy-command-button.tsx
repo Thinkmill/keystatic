@@ -28,13 +28,13 @@ export function CopyCommandButton() {
       onClick={handleCopyCommand}
       aria-label="Copy npm command for creating a Keystatic project"
     >
-      <div className="flex gap-4 font-mono">
+      <div className="flex gap-4 font-mono text-sm items-center leading-none">
         {copyCommandText}
 
         {isCopied ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="w-4 h-4 text-green-800"
+            className="w-4 h-4 text-green-800 shrink-0"
             fill="none"
             shapeRendering="geometricPrecision"
             stroke="currentColor"
@@ -49,7 +49,7 @@ export function CopyCommandButton() {
         ) : (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="w-4 h-4"
+            className="w-4 h-4 shrink-0"
             fill="none"
             shapeRendering="geometricPrecision"
             stroke="currentColor"
