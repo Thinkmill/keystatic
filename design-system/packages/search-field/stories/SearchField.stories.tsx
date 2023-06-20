@@ -1,104 +1,74 @@
-import { action, Parameters } from '@voussoir/storybook';
+import { action, Meta, Parameters, StoryObj } from '@voussoir/storybook';
 import { useMemo, useState } from 'react';
 
 import { SearchField } from '../src';
 
-export default {
+type Story = StoryObj<typeof SearchField>;
+
+const meta: Meta = {
   title: 'Components/SearchField',
-
+  component: SearchField,
   parameters: {
-    args: {
-      label: 'Search',
-      isDisabled: false,
-    },
-
-    argTypes: {},
+    controls: { exclude: ['onChange', 'onSubmit', 'onClear', 'UNSAFE_style'] },
+  },
+  args: {
+    label: 'Search',
+    isDisabled: false,
+    onChange: action('change'),
+    onSubmit: action('submit'),
+    onClear: action('clear'),
   },
 };
 
-export const Default = render();
-export const ValueTestControlled = render({ value: 'Test' });
+export default meta;
 
-ValueTestControlled.story = {
-  name: 'value: Test (controlled)',
+export const Default = { args: {} };
+
+export const ValueTestControlled: Story = { args: { value: 'Test' } };
+ValueTestControlled.storyName = 'value: Test (controlled)';
+
+export const DefaultValueTestUncontrolled: Story = {
+  args: { defaultValue: 'Test' },
+};
+DefaultValueTestUncontrolled.storyName = 'defaultValue: Test (uncontrolled)';
+
+export const AutoFocusTrue: Story = { args: { autoFocus: true } };
+AutoFocusTrue.storyName = 'autoFocus: true';
+
+export const NoVisibleLabel: Story = {
+  args: {
+    label: null,
+    'aria-label': 'Hidden label',
+  },
 };
 
-export const DefaultValueTestUncontrolled = render({ defaultValue: 'Test' });
+export const NoIcon: Story = { args: { showIcon: false } };
 
-DefaultValueTestUncontrolled.story = {
-  name: 'defaultValue: Test (uncontrolled)',
+export const WithDescription: Story = {
+  args: {
+    description:
+      'Description text provides information to assist the user in completing a field.',
+  },
 };
 
-export const AutoFocusTrue = render({ autoFocus: true });
-
-AutoFocusTrue.story = {
-  name: 'autoFocus: true',
-};
-
-export const NoVisibleLabel = render({
-  label: null,
-  'aria-label': 'Hidden label',
-});
-
-NoVisibleLabel.story = {
-  name: 'no visible label',
-};
-
-export const NoIcon = render({ showIcon: false });
-
-NoIcon.story = {
-  name: 'no icon',
-};
-
-export const WithDescription = render({
-  description:
-    'Description text provides information to assist the user in completing a field.',
-});
-
-WithDescription.story = {
-  name: 'with description',
-};
-
-export const WithErrorMessage = render({
-  errorMessage:
-    'Error messages inform the user when the input does not meet validation criteria.',
-});
-
-WithErrorMessage.story = {
-  name: 'with error message',
+export const WithErrorMessage = {
+  args: {
+    errorMessage:
+      'Error messages inform the user when the input does not meet validation criteria.',
+  },
 };
 
 export const WithValidation = renderWithValidation();
 
-WithValidation.story = {
-  name: 'with validation',
+export const CustomWidth = {
+  args: {
+    UNSAFE_style: { width: 320 },
+    description:
+      'Description text provides information to assist the user in completing a field.',
+    errorMessage:
+      'Error messages inform the user when the input does not meet validation criteria.',
+  },
 };
-
-export const CustomWidth = render({
-  width: 240,
-  description:
-    'Description text provides information to assist the user in completing a field.',
-  errorMessage:
-    'Error messages inform the user when the input does not meet validation criteria.',
-});
-
-CustomWidth.story = {
-  name: 'custom width',
-};
-
-function render(props = {}) {
-  return function renderWithArgs(args: Parameters) {
-    return (
-      <SearchField
-        {...args}
-        {...props}
-        onChange={action('change')}
-        onSubmit={action('submit')}
-        onClear={action('clear')}
-      />
-    );
-  };
-}
 
 function renderWithValidation(props = {}) {
   function Example(args: Parameters) {

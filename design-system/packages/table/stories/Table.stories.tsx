@@ -1,4 +1,5 @@
 import { action, ArgTypes } from '@voussoir/storybook';
+import { tokenSchema } from '@voussoir/style';
 import { Key, useMemo, useState } from 'react';
 
 import {
@@ -22,7 +23,12 @@ export default {
 };
 
 export const StaticContents = (args: ArgTypes) => (
-  <TableView aria-label="TableView with static contents" {...args}>
+  <TableView
+    aria-label="TableView with static contents"
+    width="scale.3400"
+    // height="scale.2400"
+    {...args}
+  >
     <TableHeader>
       <Column key="foo">Foo</Column>
       <Column key="bar">Bar</Column>
@@ -45,17 +51,13 @@ export const StaticContents = (args: ArgTypes) => (
 
 StaticContents.story = {
   name: 'static contents',
-
-  parameters: {
-    argTypes: {},
-  },
 };
 
 export const Selection = (args: ArgTypes) => (
   <TableView
     aria-label="TableView with selection"
     width="scale.3400"
-    height="scale.2400"
+    // height="scale.2400"
     onSelectionChange={onSelectionChange}
     {...args}
   >
@@ -79,55 +81,13 @@ export const Selection = (args: ArgTypes) => (
   </TableView>
 );
 
-Selection.story = {
-  name: 'selection',
-  parameters: {
-    argTypes: { selectionMode: radioArg(['none', 'single', 'multiple'], 2) },
-  },
+Selection.args = {
+  selectionMode: 'multiple',
 };
-
-export const ColumnProps = (args: ArgTypes) => (
-  <TableView
-    aria-label="TableView illustrating column props"
-    selectionMode="multiple"
-    onSelectionChange={onSelectionChange}
-    {...args}
-  >
-    <TableHeader>
-      <Column minWidth={240}>File Name</Column>
-      <Column width={80}>Type</Column>
-      <Column width={80} align="end">
-        Size
-      </Column>
-    </TableHeader>
-    <TableBody>
-      <Row>
-        <Cell>
-          2018 Proposal with very very very very very very long long long long
-          long filename
-        </Cell>
-        <Cell>PDF</Cell>
-        <Cell>214 KB</Cell>
-      </Row>
-      <Row>
-        <Cell>Budget</Cell>
-        <Cell>XLS</Cell>
-        <Cell>120 KB</Cell>
-      </Row>
-    </TableBody>
-  </TableView>
-);
-
-ColumnProps.story = {
-  name: 'column props',
-
-  parameters: {
-    argTypes: {
-      overflowMode: radioInlineArg(['truncate', 'wrap'], 1),
-      density: radioArg(['compact', 'regular', 'spacious'], 1),
-      width: numberRangeArg({ min: 400, max: 940, step: 10 }, 620),
-      height: numberArg(200),
-    },
+Selection.argTypes = {
+  selectionMode: {
+    control: 'radio',
+    options: ['none', 'single', 'multiple'],
   },
 };
 
@@ -163,16 +123,32 @@ export const TableProps = (args: ArgTypes) => (
   </TableView>
 );
 
-TableProps.story = {
-  name: 'table props',
-
-  parameters: {
-    argTypes: {
-      overflowMode: radioInlineArg(['truncate', 'wrap'], 1),
-      density: radioArg(['compact', 'regular', 'spacious'], 1),
-      width: numberRangeArg({ min: 400, max: 940, step: 10 }, 620),
-      height: numberArg(200),
-    },
+TableProps.args = {
+  overflowMode: 'wrap',
+  density: 'regular',
+  height: 'scale.2400',
+  width: 'scale.6000',
+};
+TableProps.argTypes = {
+  overflowMode: {
+    control: 'inline-radio',
+    options: ['truncate', 'wrap'],
+  },
+  density: {
+    control: 'radio',
+    options: ['compact', 'regular', 'spacious'],
+  },
+  height: {
+    control: 'select',
+    options: Object.keys(tokenSchema.size.scale)
+      .filter(key => Number(key) >= 2000)
+      .map(key => `scale.${key}`),
+  },
+  width: {
+    control: 'select',
+    options: Object.keys(tokenSchema.size.scale)
+      .filter(key => Number(key) >= 2000)
+      .map(key => `scale.${key}`),
   },
 };
 
@@ -273,36 +249,6 @@ export const DynamicContents = () => {
 DynamicContents.story = {
   name: 'dynamic contents',
 };
-
-// Utils
-// ----------------------------------------------------------------------------
-
-// TODO: move to some common place
-
-function numberArg(defaultValue: number) {
-  return { control: 'number', defaultValue };
-}
-function numberRangeArg(
-  { min = 0, max = 100, step = 0 }: { min: number; max: number; step: number },
-  defaultValue: number
-) {
-  return {
-    control: { type: 'range', min, max, step },
-    defaultValue,
-  };
-}
-function radioArg<T>(options: T[], defaultValueIndex: number = 0) {
-  return {
-    control: { type: 'radio', options },
-    defaultValue: options[defaultValueIndex],
-  };
-}
-function radioInlineArg<T>(options: T[], defaultValueIndex: number = 0) {
-  return {
-    control: { type: 'inline-radio', options },
-    defaultValue: options[defaultValueIndex],
-  };
-}
 
 // Data
 // ----------------------------------------------------------------------------

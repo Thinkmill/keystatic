@@ -7,7 +7,7 @@ import { ActionButton } from '@voussoir/button';
 import { Box, Flex } from '@voussoir/layout';
 import { Text } from '@voussoir/typography';
 
-import { Placement, Popover } from '../src';
+import { Placement as PlacementType, Popover } from '../src';
 
 export default {
   title: 'Components/Popover',
@@ -43,8 +43,8 @@ Default.story = {
   name: 'default',
 };
 
-export const _Placement = (args: ArgTypes) => {
-  let placement = args.placement as unknown as Placement;
+export const Placement = (args: ArgTypes) => {
+  let placement = args.placement as unknown as PlacementType;
   let targetRef = useRef<HTMLButtonElement>(null);
   let overlayRef = useRef<HTMLDivElement>(null);
 
@@ -78,42 +78,38 @@ export const _Placement = (args: ArgTypes) => {
   );
 };
 
-_Placement.story = {
-  name: 'placement',
-
-  parameters: {
-    argTypes: {
-      hideArrow: { control: 'boolean', defaultValue: false },
-      placement: {
-        defaultValue: 'bottom',
-        control: {
-          type: 'select',
-          options: [
-            'bottom',
-            'bottom left',
-            'bottom right',
-            'bottom start',
-            'bottom end',
-            'top',
-            'top left',
-            'top right',
-            'top start',
-            'top end',
-            'left',
-            'left top',
-            'left bottom',
-            'start',
-            'start top',
-            'start bottom',
-            'right',
-            'right top',
-            'right bottom',
-            'end',
-            'end top',
-            'end bottom',
-          ] as const,
-        },
-      },
+Placement.args = {
+  hideArrow: false,
+  placement: 'bottom',
+};
+Placement.argTypes = {
+  placement: {
+    control: {
+      type: 'select',
     },
+    options: [
+      'bottom',
+      'bottom left',
+      'bottom right',
+      'bottom start',
+      'bottom end',
+      'top',
+      'top left',
+      'top right',
+      'top start',
+      'top end',
+      'left',
+      'left top',
+      'left bottom',
+      'start',
+      'start top',
+      'start bottom',
+      'right',
+      'right top',
+      'right bottom',
+      'end',
+      'end top',
+      'end bottom',
+    ],
   },
 };

@@ -7,15 +7,11 @@ import { TextArea } from '../src';
 export default {
   title: 'Components/TextArea',
 
-  parameters: {
-    args: {
-      label: 'Label text',
-      isDisabled: false,
-      isReadOnly: false,
-      isRequired: false,
-    },
-
-    argTypes: {},
+  args: {
+    label: 'Label text',
+    isDisabled: false,
+    isReadOnly: false,
+    isRequired: false,
   },
 };
 

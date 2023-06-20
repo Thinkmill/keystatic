@@ -16,10 +16,6 @@ export const Default = () => (
   </ButtonGroup>
 );
 
-Default.story = {
-  name: 'default',
-};
-
 export const HorizontalWrap = () => (
   <>
     <Box position="absolute" padding="large" insetBottom={0} insetEnd={0}>
@@ -33,10 +29,6 @@ export const HorizontalWrap = () => (
   </>
 );
 
-HorizontalWrap.story = {
-  name: 'horizontal: wrap',
-};
-
 export const Alignment = (args: ArgTypes) => (
   <Flex border="emphasis" borderWidth="large" UNSAFE_style={{ width: 300 }}>
     <ButtonGroup {...args} flex>
@@ -46,15 +38,13 @@ export const Alignment = (args: ArgTypes) => (
   </Flex>
 );
 
-Alignment.story = {
-  name: 'alignment',
-
-  parameters: {
-    argTypes: {
-      align: radioArg(['start', 'center', 'end'], 0),
-      orientation: radioArg(['horizontal', 'vertical'], 0),
-    },
-  },
+Alignment.args = {
+  align: 'start',
+  orientation: 'horizontal',
+};
+Alignment.argTypes = {
+  align: radioArg(['start', 'center', 'end']),
+  orientation: radioArg(['horizontal', 'vertical']),
 };
 
 export const Disabled = () => (
@@ -69,9 +59,6 @@ Disabled.story = {
   name: 'disabled',
 };
 
-function radioArg<T>(options: T[], defaultValueIndex: number = 0) {
-  return {
-    control: { type: 'radio', options },
-    defaultValue: options[defaultValueIndex],
-  };
+function radioArg<T>(options: T[]) {
+  return { control: { type: 'radio' }, options };
 }

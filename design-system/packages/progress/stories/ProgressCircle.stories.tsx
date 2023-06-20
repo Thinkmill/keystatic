@@ -5,10 +5,8 @@ import { ProgressCircle } from '../src';
 export default {
   title: 'Components/ProgressCircle',
 
-  parameters: {
-    args: { value: 32 },
-    argTypes: { value: { control: { type: 'range', min: 0, max: 100 } } },
-  },
+  args: { value: 32 },
+  argTypes: { value: { control: { type: 'range', min: 0, max: 100 } } },
 };
 
 export const Default = (args: ArgTypes) => render(args);

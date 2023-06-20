@@ -7,24 +7,18 @@ import { Radio, RadioGroup, RadioGroupProps } from '../src';
 export default {
   title: 'Components/RadioGroup',
 
-  parameters: {
-    providerSwitcher: { status: 'positive' },
+  args: {
+    label: 'Favourite marsupial',
+    isDisabled: false,
+    isReadOnly: false,
+    isRequired: false,
+    orientation: 'vertical',
+  },
 
-    args: {
-      label: 'Favourite marsupial',
-      isDisabled: false,
-      isReadOnly: false,
-      isRequired: false,
-      orientation: 'vertical',
-    },
-
-    argTypes: {
-      orientation: {
-        control: {
-          type: 'radio',
-          options: ['horizontal', 'vertical'],
-        },
-      },
+  argTypes: {
+    orientation: {
+      control: { type: 'radio' },
+      options: ['horizontal', 'vertical'],
     },
   },
 };

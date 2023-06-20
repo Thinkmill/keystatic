@@ -6,62 +6,39 @@ import { Checkbox, CheckboxGroup, CheckboxGroupProps } from '../src';
 
 export default {
   title: 'Components/Checkbox/CheckboxGroup',
+  args: {
+    label: 'Favourite marsupial',
+    isDisabled: false,
+    isReadOnly: false,
+    isRequired: false,
+    orientation: 'vertical',
+  },
 
-  parameters: {
-    providerSwitcher: { status: 'positive' },
-
-    args: {
-      label: 'Favourite marsupial',
-      isDisabled: false,
-      isReadOnly: false,
-      isRequired: false,
-      orientation: 'vertical',
-    },
-
-    argTypes: {
-      orientation: {
-        control: {
-          type: 'checkbox',
-          options: ['horizontal', 'vertical'],
-        },
-      },
+  argTypes: {
+    orientation: {
+      options: ['horizontal', 'vertical'],
+      control: { type: 'radio' },
     },
   },
 };
 
 export const Default = (args: ArgTypes) => render(args);
 
-Default.story = {
-  name: 'default',
-};
-
 export const DefaultValueQuokka = (args: ArgTypes) =>
   render({ ...args, defaultValue: ['quokka'] });
 
-DefaultValueQuokka.story = {
-  name: 'defaultValue: quokka',
-};
+DefaultValueQuokka.storyName = 'defaultValue: quokka';
 
 export const ControlledQuokka = (args: ArgTypes) =>
   render({ ...args, value: ['quokka'] });
 
-ControlledQuokka.story = {
-  name: 'controlled: quokka',
-};
+ControlledQuokka.storyName = 'controlled: quokka';
 
 export const IsDisabledOnOneCheckbox = (args: ArgTypes) =>
   render(args, [{}, { isDisabled: true }, {}]);
 
-IsDisabledOnOneCheckbox.story = {
-  name: 'isDisabled on one checkbox',
-};
-
 export const WithDescription = (args: ArgTypes) =>
   render({ ...args, description: 'Please select one.' });
-
-WithDescription.story = {
-  name: 'with description',
-};
 
 export const WithErrorMessage = (args: ArgTypes) =>
   render({
@@ -70,29 +47,13 @@ export const WithErrorMessage = (args: ArgTypes) =>
     errorMessage: 'You must select a value.',
   });
 
-WithErrorMessage.story = {
-  name: 'with error message',
-};
-
 export const NoVisibleLabel = (args: ArgTypes) =>
   render({ ...args, label: null, 'aria-label': 'Favourite marsupial' });
 
-NoVisibleLabel.story = {
-  name: 'no visible label',
-};
-
 export const CustomLabel = (args: ArgTypes) => renderLongLabel(args);
-
-CustomLabel.story = {
-  name: 'custom label',
-};
 
 export const AutoFocusOnOneCheckbox = (args: ArgTypes) =>
   render(args, [{}, { autoFocus: true }, {}]);
-
-AutoFocusOnOneCheckbox.story = {
-  name: 'autoFocus on one checkbox',
-};
 
 function render(
   props: Partial<CheckboxGroupProps>,

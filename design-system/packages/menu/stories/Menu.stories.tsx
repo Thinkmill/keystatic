@@ -69,23 +69,6 @@ let complexOptions = [
   },
 ];
 
-const argTypes = {
-  direction: {
-    control: 'select',
-    defaultValue: 'bottom',
-    options: ['top', 'bottom', 'left', 'right', 'start', 'end'],
-  },
-  align: {
-    control: 'radio',
-    defaultValue: 'start',
-    options: ['start', 'end'],
-  },
-  shouldFlip: {
-    control: 'boolean',
-    defaultValue: true,
-  },
-};
-
 export default {
   title: 'Components/Menu',
 };
@@ -100,9 +83,20 @@ export const Static = (args: ArgTypes) =>
     args
   );
 
-Static.story = {
-  name: 'static',
-  parameters: { argTypes },
+Static.args = {
+  shouldFlip: true,
+  direction: 'bottom',
+  align: 'start',
+};
+Static.argTypes = {
+  direction: {
+    control: 'select',
+    options: ['top', 'bottom', 'left', 'right', 'start', 'end'],
+  },
+  align: {
+    control: 'radio',
+    options: ['start', 'end'],
+  },
 };
 
 export const Dynamic = () =>
@@ -501,9 +495,20 @@ export const ComplexItemsStatic = (args: ArgTypes) =>
     args
   );
 
-ComplexItemsStatic.story = {
-  name: 'complex items (static)',
-  parameters: { argTypes },
+ComplexItemsStatic.args = {
+  shouldFlip: true,
+  direction: 'bottom',
+  align: 'start',
+};
+ComplexItemsStatic.argTypes = {
+  direction: {
+    control: 'select',
+    options: ['top', 'bottom', 'left', 'right', 'start', 'end'],
+  },
+  align: {
+    control: 'radio',
+    options: ['start', 'end'],
+  },
 };
 
 export const ComplexItemsDynamic = () =>

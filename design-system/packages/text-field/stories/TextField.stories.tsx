@@ -1,88 +1,62 @@
 import { useMemo, useState } from 'react';
-import { action, Parameters } from '@voussoir/storybook';
+import { action, Parameters, StoryObj } from '@voussoir/storybook';
 
 import { TextField } from '../src';
+
+type Story = StoryObj<typeof TextField>;
 
 export default {
   title: 'Components/TextField',
 
-  parameters: {
-    args: {
-      label: 'Label text',
-      isDisabled: false,
-      isReadOnly: false,
-      isRequired: false,
-    },
-
-    argTypes: {},
+  args: {
+    label: 'Label text',
+    isDisabled: false,
+    isReadOnly: false,
+    isRequired: false,
   },
 };
 
-export const Default = render();
-export const ValueTestControlled = render({ value: 'Test' });
+export const Default: Story = render();
+export const ValueTestControlled: Story = render({ value: 'Test' });
 
-ValueTestControlled.story = {
-  name: 'value: Test (controlled)',
-};
+ValueTestControlled.storyName = 'value: Test (controlled)';
 
-export const DefaultValueTestUncontrolled = render({ defaultValue: 'Test' });
+export const DefaultValueTestUncontrolled: Story = render({
+  defaultValue: 'Test',
+});
 
-DefaultValueTestUncontrolled.story = {
-  name: 'defaultValue: Test (uncontrolled)',
-};
+DefaultValueTestUncontrolled.storyName = 'defaultValue: Test (uncontrolled)';
 
-export const TypeEmail = render({ type: 'email' });
+export const TypeEmail: Story = render({ type: 'email' });
 
-TypeEmail.story = {
-  name: 'type: email',
-};
+TypeEmail.storyName = 'type: email';
 
-export const Pattern09 = render({ pattern: '[0-9]+' });
+export const Pattern09: Story = render({ pattern: '[0-9]+' });
 
-Pattern09.story = {
-  name: 'pattern: [0-9]+',
-};
+Pattern09.storyName = 'pattern: [0-9]+';
 
-export const AutoFocusTrue = render({ autoFocus: true });
+export const AutoFocusTrue: Story = render({ autoFocus: true });
 
-AutoFocusTrue.story = {
-  name: 'autoFocus: true',
-};
+AutoFocusTrue.storyName = 'autoFocus: true';
 
-export const NoVisibleLabel = render({
+export const NoVisibleLabel: Story = render({
   label: null,
   'aria-label': 'Hidden label',
 });
 
-NoVisibleLabel.story = {
-  name: 'no visible label',
-};
-
-export const WithDescription = render({
+export const WithDescription: Story = render({
   description:
     'Description text provides information to assist the user in completing a field.',
 });
 
-WithDescription.story = {
-  name: 'with description',
-};
-
-export const WithErrorMessage = render({
+export const WithErrorMessage: Story = render({
   errorMessage:
     'Error messages inform the user when the input does not meet validation criteria.',
 });
 
-WithErrorMessage.story = {
-  name: 'with error message',
-};
-
 export const WithValidation = renderWithValidation();
 
-WithValidation.story = {
-  name: 'with validation',
-};
-
-export const InputDomEvents = render({
+export const InputDomEvents: Story = render({
   onCopy: action('onCopy'),
   onCut: action('onCut'),
   onPaste: action('onPaste'),
@@ -94,11 +68,7 @@ export const InputDomEvents = render({
   onInput: action('onInput'),
 });
 
-InputDomEvents.story = {
-  name: 'input dom events',
-};
-
-export const CustomWidth = render({
+export const CustomWidth: Story = render({
   paddingX: 'regular',
   width: 'size.container.small',
   maxWidth: '100%',
@@ -108,22 +78,18 @@ export const CustomWidth = render({
     'Error messages inform the user when the input does not meet validation criteria.',
 });
 
-CustomWidth.story = {
-  name: 'custom width',
-};
-
 function render(props = {}) {
-  return function renderWithArgs(args: Parameters) {
-    return (
+  return {
+    render: (args: Parameters) => (
       <TextField
-        {...args}
         {...props}
+        {...args}
         onChange={action('change')}
         onFocus={action('focus')}
         onBlur={action('blur')}
         UNSAFE_className="custom-class-name"
       />
-    );
+    ),
   };
 }
 

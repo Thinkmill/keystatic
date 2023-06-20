@@ -79,44 +79,25 @@ export const DefaultWithControls = (args: ArgTypes) => (
   </Combobox>
 );
 
-DefaultWithControls.story = {
-  name: 'default (with controls)',
-
-  parameters: {
-    argTypes: {
-      label: {
-        control: 'text',
-        defaultValue: 'Label text',
-      },
-      description: {
-        control: 'text',
-      },
-      errorMessage: {
-        control: 'text',
-      },
-      isDisabled: {
-        control: 'boolean',
-        defaultValue: false,
-      },
-      isReadOnly: {
-        control: 'boolean',
-        defaultValue: false,
-      },
-      isRequired: {
-        control: 'boolean',
-        defaultValue: false,
-      },
-      menuTrigger: {
-        control: 'select',
-        defaultValue: 'input',
-        options: ['input', 'focus', 'manual'],
-      },
-      direction: {
-        control: 'select',
-        defaultValue: 'bottom',
-        options: ['top', 'bottom'],
-      },
-    },
+DefaultWithControls.storyName = 'default (with controls)';
+DefaultWithControls.args = {
+  label: 'Label text',
+  description: '',
+  errorMessage: '',
+  isDisabled: false,
+  isReadOnly: false,
+  isRequired: false,
+  menuTrigger: 'input',
+  direction: 'bottom',
+};
+DefaultWithControls.argTypes = {
+  menuTrigger: {
+    control: 'select',
+    options: ['input', 'focus', 'manual'],
+  },
+  direction: {
+    control: 'select',
+    options: ['top', 'bottom'],
   },
 };
 
@@ -135,19 +116,11 @@ export const Sections = () => (
   </Combobox>
 );
 
-Sections.story = {
-  name: 'sections',
-};
-
 export const Dynamic = () => (
   <Combobox label="Combobox" defaultItems={flatItems} {...defaultActions}>
     {item => <Item key={item.id}>{item.name}</Item>}
   </Combobox>
 );
-
-Dynamic.story = {
-  name: 'dynamic',
-};
 
 export const DynamicWithSections = () => (
   <Combobox label="Combobox" defaultItems={nestedItems} {...defaultActions}>
@@ -159,10 +132,6 @@ export const DynamicWithSections = () => (
   </Combobox>
 );
 
-DynamicWithSections.story = {
-  name: 'dynamic with sections',
-};
-
 export const ManySections = () => (
   <Combobox label="Combobox" defaultItems={manySections}>
     {section => (
@@ -172,10 +141,6 @@ export const ManySections = () => (
     )}
   </Combobox>
 );
-
-ManySections.story = {
-  name: 'many sections',
-};
 
 export const ComplexItems = () => (
   <Combobox label="Combobox" {...defaultActions}>
@@ -207,10 +172,6 @@ export const ComplexItems = () => (
   </Combobox>
 );
 
-ComplexItems.story = {
-  name: 'complex items',
-};
-
 export const DisabledKeys = () => (
   <Combobox
     label="Combobox"
@@ -226,42 +187,18 @@ export const DisabledKeys = () => (
   </Combobox>
 );
 
-DisabledKeys.story = {
-  name: 'disabledKeys',
-};
-
 export const IsDisabled = () =>
   render({ isDisabled: true, selectedKey: 'One' });
-
-IsDisabled.story = {
-  name: 'isDisabled',
-};
 
 export const IsReadOnly = () =>
   render({ isReadOnly: true, selectedKey: 'One' });
 
-IsReadOnly.story = {
-  name: 'isReadOnly',
-};
-
 export const IsRequired = () =>
   render({ isRequired: true, defaultSelectedKey: 'One' });
 
-IsRequired.story = {
-  name: 'isRequired',
-};
-
 export const AllowsCustomValue = () => render({ allowsCustomValue: true });
 
-AllowsCustomValue.story = {
-  name: 'allowsCustomValue',
-};
-
 export const AutoFocus = () => render({ autoFocus: true });
-
-AutoFocus.story = {
-  name: 'autoFocus',
-};
 
 export const LoadingState = () => {
   return (
@@ -274,10 +211,6 @@ export const LoadingState = () => {
       })}
     </Flex>
   );
-};
-
-LoadingState.story = {
-  name: 'loadingState',
 };
 
 function render<T>(props: Partial<ComboboxProps<T>>) {

@@ -9,14 +9,13 @@ import { infoIcon } from '@voussoir/icon/icons/infoIcon';
 import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
 import { Box, Flex } from '@voussoir/layout';
 import { Content } from '@voussoir/slots';
-import { ArgTypes, action } from '@voussoir/storybook';
+import { ArgTypes, Meta, action } from '@voussoir/storybook';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Toaster, ToastOptions, toastQueue } from '../src';
 
-export default {
+const meta: Meta = {
   title: 'Components/Toast',
-
   decorators: [
     story => (
       <>
@@ -25,23 +24,18 @@ export default {
       </>
     ),
   ],
-
-  parameters: {
-    args: {
-      shouldCloseOnAction: false,
-      timeout: null,
-    },
-
-    argTypes: {
-      timeout: {
-        control: {
-          type: 'radio',
-          options: [null, 5000],
-        },
-      },
+  args: {
+    shouldCloseOnAction: false,
+    timeout: null,
+  },
+  argTypes: {
+    timeout: {
+      control: 'radio',
+      options: [null, 5000],
     },
   },
 };
+export default meta;
 
 export const Default = (args: ArgTypes) => <Example {...args} />;
 

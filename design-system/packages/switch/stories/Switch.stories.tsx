@@ -11,15 +11,10 @@ export default {
 
 export const Default = (args: ArgTypes) => render(args);
 
-Default.story = {
-  parameters: {
-    argTypes: {
-      isSelected: { control: 'boolean' },
-      isIndeterminate: { control: 'boolean' },
-      isDisabled: { control: 'boolean' },
-      isReadOnly: { control: 'boolean' },
-    },
-  },
+Default.args = {
+  isSelected: false,
+  isDisabled: false,
+  isReadOnly: false,
 };
 
 export const States = () => renderStates();

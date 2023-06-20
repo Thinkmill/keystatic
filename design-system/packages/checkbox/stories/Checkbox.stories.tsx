@@ -11,28 +11,16 @@ export default {
 
 export const Default = (args: ArgTypes) => render(args);
 
-Default.story = {
-  parameters: {
-    argTypes: {
-      isSelected: { control: 'boolean' },
-      isIndeterminate: { control: 'boolean' },
-      isDisabled: { control: 'boolean' },
-      isReadOnly: { control: 'boolean' },
-    },
-  },
+Default.args = {
+  isSelected: false,
+  isIndeterminate: false,
+  isDisabled: false,
+  isReadOnly: false,
 };
 
 export const States = () => renderStates();
 
-States.story = {
-  name: 'states',
-};
-
 export const AutoFocus = () => render({ autoFocus: true });
-
-AutoFocus.story = {
-  name: 'auto focus',
-};
 
 export const LongLabel = () => (
   <Checkbox onChange={action('change')} UNSAFE_style={{ width: 320 }}>
@@ -41,22 +29,10 @@ export const LongLabel = () => (
   </Checkbox>
 );
 
-LongLabel.story = {
-  name: 'long label',
-};
-
 export const CustomLabel = () => renderCustomLabel();
-
-CustomLabel.story = {
-  name: 'custom label',
-};
 
 export const NoLabel = () =>
   renderNoLabel({ 'aria-label': 'This checkbox has no visible label' });
-
-NoLabel.story = {
-  name: 'no label',
-};
 
 function render(props: Partial<CheckboxProps> = {}) {
   return (

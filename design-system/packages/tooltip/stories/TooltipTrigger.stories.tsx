@@ -1,4 +1,4 @@
-import { action, ArgTypes } from '@voussoir/storybook';
+import { action, ArgTypes, Meta } from '@voussoir/storybook';
 
 import { Button, ActionButton } from '@voussoir/button';
 import { Flex } from '@voussoir/layout';
@@ -8,106 +8,78 @@ import { Text } from '@voussoir/typography';
 import { Tooltip, TooltipTrigger, TooltipTriggerProps } from '../src';
 import { MOUSE_REST_TIMEOUT } from '../src/TooltipTrigger';
 
-const argTypes = {
-  placement: {
-    control: 'select',
-    defaultValue: 'top',
-    options: [
-      'top',
-      'top left',
-      'top right',
-      'top start',
-      'top end',
-      'bottom',
-      'bottom left',
-      'bottom right',
-      'bottom start',
-      'bottom end',
-      'left',
-      'left top',
-      'left bottom',
-      'right',
-      'right top',
-      'right bottom',
-      'start',
-      'start top',
-      'start bottom',
-      'end',
-      'end top',
-      'end bottom',
-    ],
+const meta: Meta = {
+  title: 'Components/Tooltip/TooltipTrigger',
+  // component: TooltipTrigger,
+  parameters: {
+    controls: { exclude: ['onOpenChange'] },
   },
-  delay: {
-    control: {
-      type: 'number',
-      defaultValue: MOUSE_REST_TIMEOUT,
-      min: 0,
-      max: 5000,
-      step: 100,
+  args: {
+    placement: 'top',
+    delay: MOUSE_REST_TIMEOUT,
+    shouldFlip: true,
+    offset: 0,
+    crossOffset: 0,
+    containerPadding: 0,
+    onOpenChange: action('onOpenChange'),
+  },
+
+  argTypes: {
+    placement: {
+      control: 'select',
+      options: [
+        'top',
+        'top left',
+        'top right',
+        'top start',
+        'top end',
+        'bottom',
+        'bottom left',
+        'bottom right',
+        'bottom start',
+        'bottom end',
+        'left',
+        'left top',
+        'left bottom',
+        'right',
+        'right top',
+        'right bottom',
+        'start',
+        'start top',
+        'start bottom',
+        'end',
+        'end top',
+        'end bottom',
+      ],
     },
-  },
-  offset: {
-    control: {
-      type: 'number',
-      defaultValue: 0,
-      min: -500,
-      max: 500,
+    delay: {
+      control: { type: 'number', min: 0, max: 5000, step: 100 },
     },
-  },
-  crossOffset: {
-    control: {
-      type: 'number',
-      defaultValue: 0,
-      min: -500,
-      max: 500,
+    offset: {
+      control: { type: 'number', min: -500, max: 500, step: 10 },
     },
-  },
-  containerPadding: {
-    control: {
-      type: 'number',
-      defaultValue: 0,
-      min: -500,
-      max: 500,
+    crossOffset: {
+      control: { type: 'number', min: -500, max: 500, step: 10 },
     },
-  },
-  shouldFlip: {
-    control: 'boolean',
-    defaultValue: true,
-  },
-  trigger: {
-    control: 'radio',
-    defaultValue: undefined,
-    options: [undefined, 'focus'],
+    containerPadding: {
+      control: { type: 'number', min: -500, max: 500, step: 10 },
+    },
+    trigger: {
+      control: 'radio',
+      description:
+        'By default, opens for both focus and hover. Can be made to open only for focus.',
+      options: [undefined, 'focus'],
+    },
   },
 };
 
-export default {
-  title: 'Components/TooltipTrigger',
-};
+export default meta;
 
 export const Default = renderTooltip();
 
-Default.story = {
-  name: 'default',
-  parameters: { argTypes },
-};
-
 export const IsOpenControlled = renderTooltip({ isOpen: true });
 
-IsOpenControlled.story = {
-  name: 'isOpen (controlled)',
-  parameters: { argTypes },
-};
-
 export const DefaultOpenUncontrolled = renderTooltip({ defaultOpen: true });
-
-DefaultOpenUncontrolled.story = {
-  name: 'defaultOpen (uncontrolled)',
-
-  parameters: {
-    argTypes,
-  },
-};
 
 export const TriggerDisabled = () => (
   <TooltipTrigger>
@@ -116,16 +88,7 @@ export const TriggerDisabled = () => (
   </TooltipTrigger>
 );
 
-TriggerDisabled.story = {
-  name: 'trigger disabled',
-};
-
 export const TooltipDisabled = renderTooltip({ isDisabled: true });
-
-TooltipDisabled.story = {
-  name: 'tooltip disabled',
-  parameters: { argTypes },
-};
 
 export const AnchorTriggers = () => (
   <Flex direction="column" gap="large" alignItems="start">
@@ -144,10 +107,6 @@ export const AnchorTriggers = () => (
   </Flex>
 );
 
-AnchorTriggers.story = {
-  name: 'anchor triggers',
-};
-
 export const Multiple = () => (
   <Flex gap="regular">
     {['one', 'two', 'three'].map(n => (
@@ -158,10 +117,6 @@ export const Multiple = () => (
     ))}
   </Flex>
 );
-
-Multiple.story = {
-  name: 'multiple',
-};
 
 export const Collisions = () => (
   <Flex direction="column" gap="large" alignSelf="start">
@@ -175,10 +130,6 @@ export const Collisions = () => (
     </TooltipTrigger>
   </Flex>
 );
-
-Collisions.story = {
-  name: 'collisions',
-};
 
 function renderTooltip(props: Partial<TooltipTriggerProps> = {}) {
   return function tooltipWithArgs(args: ArgTypes) {

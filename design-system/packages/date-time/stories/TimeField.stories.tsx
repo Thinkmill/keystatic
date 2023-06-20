@@ -124,23 +124,17 @@ export const Controls = (args: ArgTypes) => (
   />
 );
 
-Controls.story = {
-  name: 'controls',
-
-  parameters: {
-    argTypes: {
-      granularity: {
-        control: 'select',
-        options: ['hour', 'minute', 'second'],
-      },
-      hourCycle: {
-        control: 'select',
-        options: [12, 24],
-      },
-      hideTimeZone: {
-        control: 'boolean',
-      },
-    },
+Controls.argTypes = {
+  granularity: {
+    control: 'select',
+    options: ['hour', 'minute', 'second'],
+  },
+  hourCycle: {
+    control: 'select',
+    options: [12, 24],
+  },
+  hideTimeZone: {
+    control: 'boolean',
   },
 };
 

@@ -256,33 +256,29 @@ export const CurrencySwitcher = (args: {
   />
 );
 
-CurrencySwitcher.story = {
-  name: 'currency switcher',
-
-  parameters: {
-    argTypes: {
-      currency: {
-        defaultValue: 'EUR',
-        control: {
-          type: 'select',
-          options: ['EUR', 'USD', 'GBP', 'JPY'],
-        },
-      },
-      currencyDisplay: {
-        defaultValue: 'symbol',
-        control: {
-          type: 'select',
-          options: ['symbol', 'narrowSymbol', 'code', 'name'],
-        },
-      },
-      currencySign: {
-        defaultValue: 'standard',
-        control: {
-          type: 'select',
-          options: ['standard', 'accounting'],
-        },
-      },
-    } as const,
+CurrencySwitcher.args = {
+  currency: 'EUR',
+  currencyDisplay: 'symbol',
+  currencySign: 'standard',
+};
+CurrencySwitcher.argTypes = {
+  currency: {
+    control: {
+      type: 'select',
+    },
+    options: ['EUR', 'USD', 'GBP', 'JPY'],
+  },
+  currencyDisplay: {
+    control: {
+      type: 'select',
+    },
+    options: ['symbol', 'narrowSymbol', 'code', 'name'],
+  },
+  currencySign: {
+    control: {
+      type: 'select',
+    },
+    options: ['standard', 'accounting'],
   },
 };
 
