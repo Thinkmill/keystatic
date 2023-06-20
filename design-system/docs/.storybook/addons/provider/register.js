@@ -111,14 +111,12 @@ const LocaleSelector = ({ onChange, value }) => {
   const selectedLocale = locales.find(locale => locale.value === value);
   return (
     <WithTooltip
-      // mutationObserverOptions={{ childList: true }}
-      placement="top"
+      placement="bottom"
       trigger="click"
       // closeOnClick
       tooltip={({ onHide }) => {
         return (
           <TooltipLinkList
-            key="locale-selector"
             links={locales.map(locale => {
               let active = locale.value ? value === locale.value : !value;
               return {
@@ -138,7 +136,6 @@ const LocaleSelector = ({ onChange, value }) => {
       }}
     >
       <IconButton
-        key="locale"
         title={`Locale: ${selectedLocale ? selectedLocale.label : 'Auto'}`}
         active={value}
         style={{ gap: 8 }}
@@ -155,13 +152,12 @@ const ScaleSelector = ({ onChange, value }) => {
   const selectedScale = SCALES[selectedIndex];
   return (
     <WithTooltip
-      placement="top"
+      placement="bottom"
       trigger="click"
       // closeOnClick
       tooltip={({ onHide }) => {
         return (
           <TooltipLinkList
-            key="scale-selector"
             links={SCALES.map(scale => {
               let active = scale.value ? value === scale.value : !value;
               return {
@@ -180,7 +176,6 @@ const ScaleSelector = ({ onChange, value }) => {
       }}
     >
       <IconButton
-        key="scale"
         title={`Scale: ${value ? selectedScale.label : 'Auto'}`}
         active={value}
         // onClick={() => {
