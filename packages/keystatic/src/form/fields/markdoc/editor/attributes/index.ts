@@ -9,11 +9,12 @@ import {
 } from 'prosemirror-state';
 import { EditorView, NodeViewConstructor } from 'prosemirror-view';
 
-import { css } from '@voussoir/style';
+import { css, tokenSchema } from '@voussoir/style';
 import { undo, redo } from 'prosemirror-history';
 import { StepMap } from 'prosemirror-transform';
 import { getAttributeType } from './schema';
 import { selectAll } from 'prosemirror-commands';
+import { nodeWithBorder } from '../utils';
 
 export function attributes(): Plugin {
   return new Plugin({
@@ -44,79 +45,93 @@ export function attributes(): Plugin {
 
 const attributeNodeView: NodeViewConstructor = (node, outerView, getPos) => {
   const dom = document.createElement('span');
-  dom.className = css({
-    border: '1px black solid',
-    display: 'inline-block',
-    marginInline: 4,
-    '& .ProseMirror': {
-      outline: 'none',
-    },
-  });
-  const attributeKey = document.createElement('span');
-  attributeKey.textContent =
-    node.attrs.key === 'id'
+  dom.classList.add(
+    css({
+      display: 'inline-block',
+      marginInline: 4,
+      overflow: 'hidden',
+      verticalAlign: 'middle',
+      '::before': {
+        paddingInline: tokenSchema.size.space.small,
+        content: 'attr(data-name)',
+        display: 'inline-block',
+        backgroundColor: tokenSchema.color.background.surfaceTertiary,
+        borderRight: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
+      },
+    })
+  );
+  dom.classList.add(nodeWithBorder);
+  dom.dataset.name =
+    node.attrs.name === 'id'
       ? '#'
-      : node.attrs.key === 'class'
+      : node.attrs.name === 'class'
       ? '.'
-      : `${node.attrs.key}=`;
-  attributeKey.className = css({ paddingInline: 8 });
-  dom.appendChild(attributeKey);
+      : `${node.attrs.name}`;
+
   const inner = document.createElement('span');
-  inner.className = css({ minWidth: 50, display: 'inline-block' });
+  inner.className = css({
+    minWidth: 50,
+    display: 'inline-block',
+    outline: 'none',
+    backgroundColor: tokenSchema.color.background.canvas,
+  });
   dom.appendChild(inner);
 
-  const innerView = new EditorView(inner, {
-    state: EditorState.create({
-      doc: node,
-      plugins: [
-        keymap({
-          'Mod-z': () => undo(outerView.state, outerView.dispatch),
-          'Mod-y': () => redo(outerView.state, outerView.dispatch),
-          Escape: () => {
-            outerView.focus();
-            outerView.dispatch(
-              outerView.state.tr.setSelection(
-                NodeSelection.create(outerView.state.doc, getPos()!)
-              )
-            );
-            return true;
-          },
-          'Mod-a': selectAll,
-          Backspace: state => {
-            if (state.selection instanceof AllSelection) {
-              const pos = getPos()!;
-              outerView.dispatch(
-                outerView.state.tr.delete(pos, pos + node.nodeSize)
-              );
+  const innerView = new EditorView(
+    { mount: inner },
+    {
+      state: EditorState.create({
+        doc: node,
+        plugins: [
+          keymap({
+            'Mod-z': () => undo(outerView.state, outerView.dispatch),
+            'Mod-y': () => redo(outerView.state, outerView.dispatch),
+            Escape: () => {
               outerView.focus();
+              outerView.dispatch(
+                outerView.state.tr.setSelection(
+                  NodeSelection.create(outerView.state.doc, getPos()!)
+                )
+              );
               return true;
+            },
+            'Mod-a': selectAll,
+            Backspace: state => {
+              if (state.selection instanceof AllSelection) {
+                const pos = getPos()!;
+                outerView.dispatch(
+                  outerView.state.tr.delete(pos, pos + node.nodeSize)
+                );
+                outerView.focus();
+                return true;
+              }
+              return false;
+            },
+          }),
+        ],
+      }),
+      dispatchTransaction: (tr: Transaction) => {
+        let { state, transactions } = innerView.state.applyTransaction(tr);
+        innerView.updateState(state);
+        if (!tr.getMeta('fromOutside')) {
+          let outerTr = outerView.state.tr,
+            offsetMap = StepMap.offset(getPos()! + 1);
+          for (let i = 0; i < transactions.length; i++) {
+            let steps = transactions[i].steps;
+            for (let j = 0; j < steps.length; j++) {
+              outerTr.step(steps[j].map(offsetMap)!);
             }
-            return false;
-          },
-        }),
-      ],
-    }),
-    dispatchTransaction: (tr: Transaction) => {
-      let { state, transactions } = innerView.state.applyTransaction(tr);
-      innerView.updateState(state);
-      if (!tr.getMeta('fromOutside')) {
-        let outerTr = outerView.state.tr,
-          offsetMap = StepMap.offset(getPos()! + 1);
-        for (let i = 0; i < transactions.length; i++) {
-          let steps = transactions[i].steps;
-          for (let j = 0; j < steps.length; j++) {
-            outerTr.step(steps[j].map(offsetMap)!);
           }
+          if (outerTr.docChanged) outerView.dispatch(outerTr);
         }
-        if (outerTr.docChanged) outerView.dispatch(outerTr);
-      }
-    },
-    handleDOMEvents: {
-      mousedown: () => {
-        if (outerView.hasFocus()) innerView?.focus();
       },
-    },
-  });
+      handleDOMEvents: {
+        mousedown: () => {
+          if (outerView.hasFocus()) innerView?.focus();
+        },
+      },
+    }
+  );
   domNodeToEditorView.set(dom, innerView);
   return {
     dom,
