@@ -13,102 +13,155 @@ import { useLocale } from '@react-aria/i18n';
 import { VoussoirProvider } from '@voussoir/core';
 import { Flex } from '@voussoir/layout';
 import { Item, Picker, Section } from '@voussoir/picker';
-import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
+import { ArgTypes, action } from '@voussoir/storybook';
 import React from 'react';
 
 import { DateField, DateFieldProps } from '../src';
 
-storiesOf('Components/Date and Time/DateField', module)
-  .add('default', () => <Example label="Date" />)
-  .add('default value', () => (
-    <Example label="Date" defaultValue={parseDate('2023-04-14')} />
-  ))
-  .add('controlled value', () => <ControlledExample />)
-  .add('datetime', () => (
-    <Example label="Date" defaultValue={parseDateTime('2023-04-14T14:45')} />
-  ))
-  .add('datetime: zoned', () => (
-    <Example
-      label="Date"
-      defaultValue={parseZonedDateTime('2023-04-14T14:45[Australia/Sydney]')}
-    />
-  ))
-  .add('datetime: absolute', () => (
-    <Example
-      label="Date"
-      defaultValue={parseAbsoluteToLocal('2023-04-14T14:45:00Z')}
-    />
-  ))
-  .add('datetime: absolute + zoned', () => (
-    <Example
-      label="Date"
-      defaultValue={parseAbsolute('2023-04-14T14:45:00Z', 'Australia/Sydney')}
-    />
-  ))
-  .add('min: 2010/1/1, max: 2020/1/1', () => (
-    <Example
-      label="Date"
-      minValue={new CalendarDate(2010, 0, 1)}
-      maxValue={new CalendarDate(2020, 0, 1)}
-    />
-  ))
-  .add('date placeholder: 1980/1/1', () => (
-    <Example label="Date" placeholderValue={new CalendarDate(1980, 1, 1)} />
-  ))
-  .add('datetime placeholder: 1980/1/1 8AM', () => (
-    <Example
-      label="Date"
-      placeholderValue={new CalendarDateTime(1980, 1, 1, 8)}
-    />
-  ))
-  .add('date placeholder: 1980/1/1 (zoned)', () => (
-    <Example
-      label="Date"
-      placeholderValue={toZoned(
-        new CalendarDate(1980, 1, 1),
-        'Australia/Sydney'
-      )}
-    />
-  ))
-  .add('events', () => (
-    <Example
-      label="Date"
-      onBlur={action('onBlur')}
-      onFocus={action('onFocus')}
-      onFocusChange={action('onFocusChange')}
-      onKeyDown={action('onKeyDown')}
-      onKeyUp={action('onKeyUp')}
-      placeholderValue={new CalendarDateTime(1980, 1, 1, 8)}
-    />
-  ))
-  .add(
-    'controls',
-    (args: ArgTypes) => (
-      <Example
-        {...args}
-        label="Date"
-        placeholderValue={toZoned(
-          new CalendarDate(1980, 1, 1),
-          'Australia/Sydney'
-        )}
-      />
-    ),
-    {
-      argTypes: {
-        granularity: {
-          control: 'select',
-          options: ['day', 'hour', 'minute', 'second'],
-        },
-        hourCycle: {
-          control: 'select',
-          options: [12, 24],
-        },
-        hideTimeZone: {
-          control: 'boolean',
-        },
-      },
-    }
-  );
+export default {
+  title: 'Components/Date and Time/DateField',
+};
+
+export const Default = () => <Example label="Date" />;
+
+Default.story = {
+  name: 'default',
+};
+
+export const DefaultValue = () => (
+  <Example label="Date" defaultValue={parseDate('2023-04-14')} />
+);
+
+DefaultValue.story = {
+  name: 'default value',
+};
+
+export const ControlledValue = () => <ControlledExample />;
+
+ControlledValue.story = {
+  name: 'controlled value',
+};
+
+export const Datetime = () => (
+  <Example label="Date" defaultValue={parseDateTime('2023-04-14T14:45')} />
+);
+
+Datetime.story = {
+  name: 'datetime',
+};
+
+export const DatetimeZoned = () => (
+  <Example
+    label="Date"
+    defaultValue={parseZonedDateTime('2023-04-14T14:45[Australia/Sydney]')}
+  />
+);
+
+DatetimeZoned.story = {
+  name: 'datetime: zoned',
+};
+
+export const DatetimeAbsolute = () => (
+  <Example
+    label="Date"
+    defaultValue={parseAbsoluteToLocal('2023-04-14T14:45:00Z')}
+  />
+);
+
+DatetimeAbsolute.story = {
+  name: 'datetime: absolute',
+};
+
+export const DatetimeAbsoluteZoned = () => (
+  <Example
+    label="Date"
+    defaultValue={parseAbsolute('2023-04-14T14:45:00Z', 'Australia/Sydney')}
+  />
+);
+
+DatetimeAbsoluteZoned.story = {
+  name: 'datetime: absolute + zoned',
+};
+
+export const Min201011Max202011 = () => (
+  <Example
+    label="Date"
+    minValue={new CalendarDate(2010, 0, 1)}
+    maxValue={new CalendarDate(2020, 0, 1)}
+  />
+);
+
+Min201011Max202011.story = {
+  name: 'min: 2010/1/1, max: 2020/1/1',
+};
+
+export const DatePlaceholder198011 = () => (
+  <Example label="Date" placeholderValue={new CalendarDate(1980, 1, 1)} />
+);
+
+DatePlaceholder198011.story = {
+  name: 'date placeholder: 1980/1/1',
+};
+
+export const DatetimePlaceholder1980118Am = () => (
+  <Example
+    label="Date"
+    placeholderValue={new CalendarDateTime(1980, 1, 1, 8)}
+  />
+);
+
+DatetimePlaceholder1980118Am.story = {
+  name: 'datetime placeholder: 1980/1/1 8AM',
+};
+
+export const DatePlaceholder198011Zoned = () => (
+  <Example
+    label="Date"
+    placeholderValue={toZoned(new CalendarDate(1980, 1, 1), 'Australia/Sydney')}
+  />
+);
+
+DatePlaceholder198011Zoned.story = {
+  name: 'date placeholder: 1980/1/1 (zoned)',
+};
+
+export const Events = () => (
+  <Example
+    label="Date"
+    onBlur={action('onBlur')}
+    onFocus={action('onFocus')}
+    onFocusChange={action('onFocusChange')}
+    onKeyDown={action('onKeyDown')}
+    onKeyUp={action('onKeyUp')}
+    placeholderValue={new CalendarDateTime(1980, 1, 1, 8)}
+  />
+);
+
+Events.story = {
+  name: 'events',
+};
+
+export const Controls = (args: ArgTypes) => (
+  <Example
+    {...args}
+    label="Date"
+    placeholderValue={toZoned(new CalendarDate(1980, 1, 1), 'Australia/Sydney')}
+  />
+);
+
+Controls.argTypes = {
+  granularity: {
+    control: 'select',
+    options: ['day', 'hour', 'minute', 'second'],
+  },
+  hourCycle: {
+    control: 'select',
+    options: [12, 24],
+  },
+  hideTimeZone: {
+    control: 'boolean',
+  },
+};
 
 function ControlledExample() {
   const [value, setValue] = React.useState(new CalendarDate(2023, 4, 14));

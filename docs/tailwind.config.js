@@ -1,5 +1,6 @@
 const { MAIN_EL_MAX_WIDTH } = require('./src/constants');
 const defaultTheme = require('tailwindcss/defaultTheme');
+const plugin = require('tailwindcss/plugin');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -40,6 +41,9 @@ module.exports = {
     },
   },
   plugins: [
+    plugin(function ({ addVariant }) {
+      addVariant('peer-adjacent', ':merge(.peer) + &'); // adds custom support for adjacent sibling combinator
+    }),
     require('@tailwindcss/typography'),
     require('@tailwindcss/forms')({
       strategy: 'class', // only generate classes (to not globally override Voussiour input styles)

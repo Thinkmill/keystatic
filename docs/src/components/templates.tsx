@@ -251,7 +251,7 @@ export default function Templates() {
               Get notified of any updates about our launch.
             </h2>
             <p className="mt-4 text-keystatic-gray-dark">
-              If you’re interested in following along, there’s a few ways you do
+              If you're interested in following along, there's a few ways you do
               that... No spam, just sharing the adventure!
             </p>
           </>

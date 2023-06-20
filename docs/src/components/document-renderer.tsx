@@ -53,7 +53,10 @@ const getRenderers = (
     ),
     link: ({ href, children }) => {
       return (
-        <a className="cursor-pointer underline hover:no-underline" href={href}>
+        <a
+          className="cursor-pointer underline font-medium hover:no-underline"
+          href={href}
+        >
           {children}
         </a>
       );
@@ -124,7 +127,7 @@ const getRenderers = (
       );
     },
     divider: () => {
-      return <hr className="border-keystatic-gray my-2" />;
+      return <hr className="border-keystatic-gray my-8 peer" />;
     },
     layout: ({ children }) => {
       return (
