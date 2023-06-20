@@ -9,48 +9,63 @@ import { infoIcon } from '@voussoir/icon/icons/infoIcon';
 import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
 import { Box, Flex } from '@voussoir/layout';
 import { Content } from '@voussoir/slots';
-import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
+import { ArgTypes, Meta, action } from '@voussoir/storybook';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Toaster, ToastOptions, toastQueue } from '../src';
 
-storiesOf('Components/Toast', module)
-  .addParameters({
-    args: {
-      shouldCloseOnAction: false,
-      timeout: null,
+const meta: Meta = {
+  title: 'Components/Toast',
+  decorators: [
+    story => (
+      <>
+        <Toaster />
+        <MainLandmark>{story()}</MainLandmark>
+      </>
+    ),
+  ],
+  args: {
+    shouldCloseOnAction: false,
+    timeout: null,
+  },
+  argTypes: {
+    timeout: {
+      control: 'radio',
+      options: [null, 5000],
     },
-    argTypes: {
-      timeout: {
-        control: {
-          type: 'radio',
-          options: [null, 5000],
-        },
-      },
-    },
-  })
-  .addDecorator(story => (
-    <>
-      <Toaster />
-      <MainLandmark>{story()}</MainLandmark>
-    </>
-  ))
-  .add('Default', (args: ArgTypes) => <Example {...args} />)
-  .add('Actions', (args: ArgTypes) => (
-    <Example {...args} actionLabel="Action" onAction={action('onAction')} />
-  ))
-  .add('Within dialog', (args: ArgTypes) => (
-    <DialogTrigger isDismissable>
-      <ActionButton>Open dialog</ActionButton>
-      <Dialog>
-        <Heading>Toasty</Heading>
-        <Content>
-          <Example {...args} />
-        </Content>
-      </Dialog>
-    </DialogTrigger>
-  ))
-  .add('Programmatic closing', (args: ArgTypes) => <ToastToggle {...args} />);
+  },
+};
+export default meta;
+
+export const Default = (args: ArgTypes) => <Example {...args} />;
+
+export const Actions = (args: ArgTypes) => (
+  <Example {...args} actionLabel="Action" onAction={action('onAction')} />
+);
+
+export const WithinDialog = (args: ArgTypes) => (
+  <DialogTrigger isDismissable>
+    <ActionButton>Open dialog</ActionButton>
+    <Dialog>
+      <Heading>Toasty</Heading>
+      <Content>
+        <Example {...args} />
+      </Content>
+    </Dialog>
+  </DialogTrigger>
+);
+
+WithinDialog.story = {
+  name: 'Within dialog',
+};
+
+export const ProgrammaticClosing = (args: ArgTypes) => (
+  <ToastToggle {...args} />
+);
+
+ProgrammaticClosing.story = {
+  name: 'Programmatic closing',
+};
 
 function Example(options: ToastOptions) {
   return (

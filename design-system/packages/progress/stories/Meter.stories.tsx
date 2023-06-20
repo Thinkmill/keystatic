@@ -1,4 +1,4 @@
-import { ArgTypes, storiesOf } from '@voussoir/storybook';
+import { ArgTypes } from '@voussoir/storybook';
 
 import { Meter, MeterProps } from '../src';
 
@@ -7,65 +7,142 @@ const formatOptions = {
   unit: 'gigabyte',
 } as const;
 
-storiesOf('Components/Meter', module)
-  .addParameters({
-    args: { value: 32 },
-    argTypes: { value: { control: { type: 'range', min: 0, max: 100 } } },
-  })
-  .add('Default', (args: ArgTypes) => render(args))
-  .add('value: 50', () => render({ value: 50 }))
-  .add('value: 100', () => render({ value: 100 }))
-  .add('showValueLabel: true', (args: ArgTypes) =>
-    render({ showValueLabel: true, ...args })
-  )
-  .add('showValueLabel: false', (args: ArgTypes) =>
-    render({ showValueLabel: false, ...args })
-  )
-  .add('valueLabel: 1 of 4', () =>
-    render({ label: 'Sections completed', value: 25, valueLabel: '1 of 4' })
-  )
-  .add('formatOptions with unit style', (args: ArgTypes) =>
-    render({
-      ...args,
-      showValueLabel: true,
-      formatOptions,
-    })
-  )
-  .add('no visible label', (args: ArgTypes) =>
-    render({ label: null, 'aria-label': 'Loading…', ...args })
-  )
-  .add('long label', (args: ArgTypes) =>
-    render({
-      label: 'Really long meter label that goes on and on...',
-      ...args,
-    })
-  )
-  .add('tone: positive', () => render({ tone: 'positive', value: 20 }))
-  .add('tone: caution', () => render({ tone: 'caution', value: 40 }))
-  .add('tone: critical', () => render({ tone: 'critical', value: 80 }))
-  .add('parent width 100%', () => (
-    <span style={{ width: '100%' }}>{render()}</span>
-  ))
-  .add('parent width 100px', () => (
-    <span style={{ width: '100px' }}>{render()}</span>
-  ))
-  .add('width: 100%', () => render({ width: '100%', value: 33 }))
-  .add('width: 100px', () =>
-    render({ UNSAFE_style: { width: '100px' }, value: 33 })
-  )
-  .add('Using raw values for minValue, maxValue, and value', () =>
-    render({
-      maxValue: 12345678,
-      value: 9876543,
-    })
-  )
-  .add('Using raw values with number formatter', () =>
-    render({
-      maxValue: 12345678,
-      value: 9876543,
-      formatOptions,
-    })
-  );
+export default {
+  title: 'Components/Meter',
+
+  args: { value: 32 },
+  argTypes: { value: { control: { type: 'range', min: 0, max: 100 } } },
+};
+
+export const Default = (args: ArgTypes) => render(args);
+export const Value50 = () => render({ value: 50 });
+
+Value50.story = {
+  name: 'value: 50',
+};
+
+export const Value100 = () => render({ value: 100 });
+
+Value100.story = {
+  name: 'value: 100',
+};
+
+export const ShowValueLabelTrue = (args: ArgTypes) =>
+  render({ showValueLabel: true, ...args });
+
+ShowValueLabelTrue.story = {
+  name: 'showValueLabel: true',
+};
+
+export const ShowValueLabelFalse = (args: ArgTypes) =>
+  render({ showValueLabel: false, ...args });
+
+ShowValueLabelFalse.story = {
+  name: 'showValueLabel: false',
+};
+
+export const ValueLabel1Of4 = () =>
+  render({ label: 'Sections completed', value: 25, valueLabel: '1 of 4' });
+
+ValueLabel1Of4.story = {
+  name: 'valueLabel: 1 of 4',
+};
+
+export const FormatOptionsWithUnitStyle = (args: ArgTypes) =>
+  render({
+    ...args,
+    showValueLabel: true,
+    formatOptions,
+  });
+
+FormatOptionsWithUnitStyle.story = {
+  name: 'formatOptions with unit style',
+};
+
+export const NoVisibleLabel = (args: ArgTypes) =>
+  render({ label: null, 'aria-label': 'Loading…', ...args });
+
+NoVisibleLabel.story = {
+  name: 'no visible label',
+};
+
+export const LongLabel = (args: ArgTypes) =>
+  render({
+    label: 'Really long meter label that goes on and on...',
+    ...args,
+  });
+
+LongLabel.story = {
+  name: 'long label',
+};
+
+export const TonePositive = () => render({ tone: 'positive', value: 20 });
+
+TonePositive.story = {
+  name: 'tone: positive',
+};
+
+export const ToneCaution = () => render({ tone: 'caution', value: 40 });
+
+ToneCaution.story = {
+  name: 'tone: caution',
+};
+
+export const ToneCritical = () => render({ tone: 'critical', value: 80 });
+
+ToneCritical.story = {
+  name: 'tone: critical',
+};
+
+export const ParentWidth100 = () => (
+  <span style={{ width: '100%' }}>{render()}</span>
+);
+
+ParentWidth100.story = {
+  name: 'parent width 100%',
+};
+
+export const ParentWidth100Px = () => (
+  <span style={{ width: '100px' }}>{render()}</span>
+);
+
+ParentWidth100Px.story = {
+  name: 'parent width 100px',
+};
+
+export const Width100 = () => render({ width: '100%', value: 33 });
+
+Width100.story = {
+  name: 'width: 100%',
+};
+
+export const Width100Px = () =>
+  render({ UNSAFE_style: { width: '100px' }, value: 33 });
+
+Width100Px.story = {
+  name: 'width: 100px',
+};
+
+export const UsingRawValuesForMinValueMaxValueAndValue = () =>
+  render({
+    maxValue: 12345678,
+    value: 9876543,
+  });
+
+UsingRawValuesForMinValueMaxValueAndValue.story = {
+  name: 'Using raw values for minValue, maxValue, and value',
+};
+
+export const UsingRawValuesWithNumberFormatter = () =>
+  render({
+    maxValue: 12345678,
+    value: 9876543,
+    formatOptions,
+  });
+
+UsingRawValuesWithNumberFormatter.story = {
+  name: 'Using raw values with number formatter',
+};
 
 function render(props: MeterProps = {}) {
   return <Meter label="Storage" {...props} />;

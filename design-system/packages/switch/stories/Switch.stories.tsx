@@ -1,35 +1,70 @@
-import { action, ArgTypes, storiesOf } from '@voussoir/storybook';
+import { action, ArgTypes } from '@voussoir/storybook';
 
 import { Grid } from '@voussoir/layout';
 import { Text } from '@voussoir/typography';
 
 import { Switch, SwitchProps } from '../src';
 
-storiesOf('Components/Switch', module)
-  .add('Default', (args: ArgTypes) => render(args), {
-    argTypes: {
-      isSelected: { control: 'boolean' },
-      isIndeterminate: { control: 'boolean' },
-      isDisabled: { control: 'boolean' },
-      isReadOnly: { control: 'boolean' },
-    },
-  })
-  .add('states', () => renderStates())
-  .add('prominence: low', () =>
-    render({ prominence: 'low', defaultSelected: true })
-  )
-  .add('size: small', () => render({ size: 'small' }))
-  .add('auto focus', () => render({ autoFocus: true }))
-  .add('long label', () => (
-    <Switch onChange={action('change')} UNSAFE_style={{ width: 320 }}>
-      Long switch label. Gingerbread brownie danish marshmallow tootsie roll
-      caramels tiramisu cake candy canes.
-    </Switch>
-  ))
-  .add('custom label', () => renderCustomLabel())
-  .add('no label', () =>
-    renderNoLabel({ 'aria-label': 'This switch has no visible label' })
-  );
+export default {
+  title: 'Components/Switch',
+};
+
+export const Default = (args: ArgTypes) => render(args);
+
+Default.args = {
+  isSelected: false,
+  isDisabled: false,
+  isReadOnly: false,
+};
+
+export const States = () => renderStates();
+
+States.story = {
+  name: 'states',
+};
+
+export const ProminenceLow = () =>
+  render({ prominence: 'low', defaultSelected: true });
+
+ProminenceLow.story = {
+  name: 'prominence: low',
+};
+
+export const SizeSmall = () => render({ size: 'small' });
+
+SizeSmall.story = {
+  name: 'size: small',
+};
+
+export const AutoFocus = () => render({ autoFocus: true });
+
+AutoFocus.story = {
+  name: 'auto focus',
+};
+
+export const LongLabel = () => (
+  <Switch onChange={action('change')} UNSAFE_style={{ width: 320 }}>
+    Long switch label. Gingerbread brownie danish marshmallow tootsie roll
+    caramels tiramisu cake candy canes.
+  </Switch>
+);
+
+LongLabel.story = {
+  name: 'long label',
+};
+
+export const CustomLabel = () => renderCustomLabel();
+
+CustomLabel.story = {
+  name: 'custom label',
+};
+
+export const NoLabel = () =>
+  renderNoLabel({ 'aria-label': 'This switch has no visible label' });
+
+NoLabel.story = {
+  name: 'no label',
+};
 
 function render(props: Partial<SwitchProps> = {}) {
   return (

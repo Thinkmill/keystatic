@@ -1,4 +1,5 @@
-import addons, { types } from '@storybook/addons';
+import { types } from '@storybook/addons';
+import { addons } from '@storybook/manager-api';
 import { getQueryParams } from '@storybook/client-api';
 import {
   IconButton,
@@ -110,7 +111,7 @@ const LocaleSelector = ({ onChange, value }) => {
   const selectedLocale = locales.find(locale => locale.value === value);
   return (
     <WithTooltip
-      placement="top"
+      placement="bottom"
       trigger="click"
       // closeOnClick
       tooltip={({ onHide }) => {
@@ -135,13 +136,12 @@ const LocaleSelector = ({ onChange, value }) => {
       }}
     >
       <IconButton
-        key="locale"
-        title={`Locale: ${value ? selectedLocale.label : 'Auto'}`}
+        title={`Locale: ${selectedLocale ? selectedLocale.label : 'Auto'}`}
         active={value}
         style={{ gap: 8 }}
       >
         <Icons icon="globe" />
-        {value ? selectedLocale.value : null}
+        {selectedLocale ? selectedLocale.value : null}
       </IconButton>
     </WithTooltip>
   );
@@ -152,7 +152,7 @@ const ScaleSelector = ({ onChange, value }) => {
   const selectedScale = SCALES[selectedIndex];
   return (
     <WithTooltip
-      placement="top"
+      placement="bottom"
       trigger="click"
       // closeOnClick
       tooltip={({ onHide }) => {
@@ -176,7 +176,6 @@ const ScaleSelector = ({ onChange, value }) => {
       }}
     >
       <IconButton
-        key="scale"
         title={`Scale: ${value ? selectedScale.label : 'Auto'}`}
         active={value}
         // onClick={() => {
