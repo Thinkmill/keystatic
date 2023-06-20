@@ -33,6 +33,7 @@ export type InsertMenuItem = {
   id: string;
   label: string;
   description?: string;
+  forToolbar?: true;
   command: Command;
 };
 
