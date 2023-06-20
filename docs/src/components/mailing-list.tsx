@@ -22,11 +22,9 @@ export default function MailingList() {
       <div className="mx-auto max-w-5xl px-6 pt-12 pb-16 sm:pt-16 sm:pb-24 lg:pt-24 lg:pb-32">
         <div className="grid items-center justify-center gap-8 lg:gap-16 lg:grid-cols-2 xl:gap-32">
           <div className="text-center lg:text-left">
-            <a href="#mailing-list">
-              <h2 className="text-3xl font-bold sm:text-4xl">
-                Get Keystatic updates
-              </h2>
-            </a>
+            <h2 className="text-3xl font-bold sm:text-4xl">
+              Get Keystatic updates
+            </h2>
 
             <p className="mx-auto mt-6 max-w-xl">
               Be the first to get updates as we work on and ship new features,
