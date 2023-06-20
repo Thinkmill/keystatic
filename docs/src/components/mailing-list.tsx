@@ -28,7 +28,7 @@ export default function MailingList() {
 
             <p className="mx-auto mt-6 max-w-xl">
               Be the first to get updates as we work on and ship new features,
-              as well as early invites to a community space we’re setting up
+              as well as early invites to a community space we're setting up
               soon.
             </p>
           </div>
