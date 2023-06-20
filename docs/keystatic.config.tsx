@@ -142,6 +142,37 @@ export const componentBlocks = {
     },
     chromeless: false,
   }),
+  embed: component({
+    label: 'Embed',
+    preview: () => null,
+    schema: {
+      mediaType: fields.select({
+        label: 'Media type',
+        options: [
+          { label: 'Video', value: 'video' },
+          { label: 'Audio', value: 'audio' },
+        ],
+        defaultValue: 'video',
+      }),
+      embedCode: fields.text({
+        label: 'Embed code',
+        multiline: true,
+      }),
+    },
+  }),
+  videoGif: component({
+    label: 'Looping video (muted)',
+    preview: () => null,
+    schema: {
+      src: fields.file({
+        label: 'Video',
+        directory: 'public/writing',
+        publicPath: '/writing/',
+        validation: { isRequired: true },
+      }),
+      caption: fields.text({ label: 'Caption', multiline: true }),
+    },
+  }),
 };
 
 export default config({
@@ -149,6 +180,9 @@ export default config({
     kind: 'local',
   },
   collections: {
+    // ------------------------------
+    // Docs pages
+    // ------------------------------
     pages: collection({
       label: 'Pages',
       slugField: 'title',
@@ -171,6 +205,155 @@ export default config({
           links: true,
           images: { directory: 'public/images/content' },
           componentBlocks,
+        }),
+      },
+    }),
+
+    // ------------------------------
+    // Blog posts
+    // ------------------------------
+    blog: collection({
+      label: 'Blog posts',
+      path: 'src/content/blog/*/',
+      format: {
+        data: 'yaml',
+        contentField: '_content',
+      },
+      slugField: 'title',
+      schema: {
+        title: fields.slug({
+          name: {
+            label: 'Title',
+            validation: {
+              length: { min: 1 },
+            },
+          },
+        }),
+        draft: fields.checkbox({
+          label: 'Do not publish',
+          description:
+            'Check this box to prevent this post from being published',
+          defaultValue: false,
+        }),
+        publishedOn: fields.date({
+          label: 'Published on',
+          validation: {
+            isRequired: true,
+          },
+        }),
+        summary: fields.text({ label: 'Summary', multiline: true }),
+        authors: fields.array(
+          fields.relationship({
+            label: 'Author',
+            collection: 'authors',
+            validation: { isRequired: true },
+          }),
+          {
+            label: 'Authors',
+            itemLabel: props => props.value ?? 'Please select',
+          }
+        ),
+        tags: fields.array(
+          fields.relationship({
+            label: 'Tag',
+            collection: 'tags',
+            validation: { isRequired: true },
+          }),
+          {
+            label: 'Tags',
+            itemLabel: props => props.value ?? 'Please select',
+          }
+        ),
+        _content: fields.document({
+          label: 'Content',
+          links: true,
+          layouts: [[1], [1, 1]],
+          images: {
+            directory: 'src/content/blog/_images',
+            publicPath: '/src/content/blog/_images/',
+            schema: {
+              title: fields.text({
+                label: 'Caption',
+                description:
+                  'The text to display under the image in a caption.',
+              }),
+            },
+          },
+          dividers: true,
+          formatting: {
+            headingLevels: true,
+            blockTypes: true,
+            listTypes: true,
+            inlineMarks: {
+              code: true,
+              bold: true,
+              italic: true,
+              underline: true,
+              strikethrough: true,
+            },
+          },
+          tables: true,
+          componentBlocks: {
+            videoGif: component({
+              label: 'Looping video (muted)',
+              preview: () => null,
+              schema: {
+                src: fields.file({
+                  label: 'Video',
+                  directory: 'public/writing',
+                  publicPath: '/writing/',
+                  validation: { isRequired: true },
+                }),
+                caption: fields.text({ label: 'Caption', multiline: true }),
+              },
+            }),
+            embed: component({
+              label: 'Embed',
+              preview: () => null,
+              schema: {
+                mediaType: fields.select({
+                  label: 'Media type',
+                  options: [
+                    { label: 'Video', value: 'video' },
+                    { label: 'Audio', value: 'audio' },
+                  ],
+                  defaultValue: 'video',
+                }),
+                embedCode: fields.text({
+                  label: 'Embed code',
+                  multiline: true,
+                }),
+              },
+            }),
+            aside: component({
+              label: 'Aside',
+              preview: props => (
+                <aside
+                  style={{
+                    background: '#e7e7e7',
+                    padding: '0.75rem 1rem',
+                    borderRadius: 4,
+                  }}
+                >
+                  {props.fields.content.element}
+                </aside>
+              ),
+              chromeless: true,
+              schema: {
+                content: fields.child({
+                  links: 'inherit',
+                  placeholder: 'Add content here...',
+                  kind: 'block',
+                  formatting: 'inherit',
+                }),
+              },
+            }),
+          },
+        }),
+        canonical: fields.text({
+          label: 'Canonical URL',
+          description:
+            'Only fill is the canonical URL for this post is a different URL.',
         }),
       },
     }),
