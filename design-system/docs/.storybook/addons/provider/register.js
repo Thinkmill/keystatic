@@ -1,4 +1,5 @@
-import addons, { types } from '@storybook/addons';
+import { types } from '@storybook/addons';
+import { addons } from '@storybook/manager-api';
 import { getQueryParams } from '@storybook/client-api';
 import {
   IconButton,
@@ -110,12 +111,14 @@ const LocaleSelector = ({ onChange, value }) => {
   const selectedLocale = locales.find(locale => locale.value === value);
   return (
     <WithTooltip
+      // mutationObserverOptions={{ childList: true }}
       placement="top"
       trigger="click"
       // closeOnClick
       tooltip={({ onHide }) => {
         return (
           <TooltipLinkList
+            key="locale-selector"
             links={locales.map(locale => {
               let active = locale.value ? value === locale.value : !value;
               return {
@@ -136,12 +139,12 @@ const LocaleSelector = ({ onChange, value }) => {
     >
       <IconButton
         key="locale"
-        title={`Locale: ${value ? selectedLocale.label : 'Auto'}`}
+        title={`Locale: ${selectedLocale ? selectedLocale.label : 'Auto'}`}
         active={value}
         style={{ gap: 8 }}
       >
         <Icons icon="globe" />
-        {value ? selectedLocale.value : null}
+        {selectedLocale ? selectedLocale.value : null}
       </IconButton>
     </WithTooltip>
   );
@@ -158,6 +161,7 @@ const ScaleSelector = ({ onChange, value }) => {
       tooltip={({ onHide }) => {
         return (
           <TooltipLinkList
+            key="scale-selector"
             links={SCALES.map(scale => {
               let active = scale.value ? value === scale.value : !value;
               return {
