@@ -1,6 +1,5 @@
-import { storiesOf, action } from '@voussoir/storybook';
-
 import { ActionButton } from '@voussoir/button';
+import { action } from '@voussoir/storybook';
 
 import { AlertDialog, AlertDialogProps, DialogTrigger } from '../src';
 import { getParagraph } from './common';

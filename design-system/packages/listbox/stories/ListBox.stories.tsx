@@ -1,5 +1,5 @@
 import { useAsyncList } from '@react-stately/data';
-import { action, storiesOf } from '@voussoir/storybook';
+import { action } from '@voussoir/storybook';
 import { alignCenterVerticalIcon } from '@voussoir/icon/icons/alignCenterVerticalIcon';
 import { alignStartVerticalIcon } from '@voussoir/icon/icons/alignStartVerticalIcon';
 import { alignEndVerticalIcon } from '@voussoir/icon/icons/alignEndVerticalIcon';

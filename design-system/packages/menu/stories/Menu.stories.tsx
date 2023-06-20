@@ -1,4 +1,4 @@
-import { action, ArgTypes, storiesOf } from '@voussoir/storybook';
+import { action, ArgTypes } from '@voussoir/storybook';
 
 import { Item, Menu, MenuTrigger, Section } from '../src';
 import { alignCenterVerticalIcon } from '@voussoir/icon/icons/alignCenterVerticalIcon';

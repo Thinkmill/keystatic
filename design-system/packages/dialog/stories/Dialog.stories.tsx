@@ -1,5 +1,3 @@
-import { storiesOf } from '@voussoir/storybook';
-
 import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
 import { Flex } from '@voussoir/layout';
 import { Content, Footer, Header } from '@voussoir/slots';

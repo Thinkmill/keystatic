@@ -1,4 +1,4 @@
-import { ArgTypes, storiesOf } from '@voussoir/storybook';
+import { ArgTypes } from '@voussoir/storybook';
 
 import { ProgressCircle } from '../src';
 

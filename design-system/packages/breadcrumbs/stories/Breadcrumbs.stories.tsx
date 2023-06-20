@@ -1,5 +1,5 @@
 import { Box } from '@voussoir/layout';
-import { action, storiesOf } from '@voussoir/storybook';
+import { action } from '@voussoir/storybook';
 
 import { Breadcrumbs, BreadcrumbsProps, Item } from '../src';
 

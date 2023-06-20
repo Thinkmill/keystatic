@@ -1,4 +1,4 @@
-import { action, storiesOf } from '@voussoir/storybook';
+import { action } from '@voussoir/storybook';
 
 import { Grid } from '@voussoir/layout';
 import { Heading, Text } from '@voussoir/typography';

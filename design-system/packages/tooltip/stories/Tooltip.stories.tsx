@@ -1,4 +1,3 @@
-import { storiesOf } from '@voussoir/storybook';
 import { Flex } from '@voussoir/layout';
 import { Kbd, Numeral, Text } from '@voussoir/typography';
 

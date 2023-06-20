@@ -1,4 +1,4 @@
-import { action, storiesOf } from '@voussoir/storybook';
+import { action } from '@voussoir/storybook';
 import { Key, ReactElement, useEffect, useRef, useState } from 'react';
 
 import { Icon } from '@voussoir/icon';

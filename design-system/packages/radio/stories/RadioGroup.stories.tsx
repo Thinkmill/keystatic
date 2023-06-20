@@ -1,4 +1,4 @@
-import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
+import { ArgTypes, action } from '@voussoir/storybook';
 
 import { Text } from '@voussoir/typography';
 

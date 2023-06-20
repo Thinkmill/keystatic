@@ -1,4 +1,3 @@
-import { storiesOf } from '@voussoir/storybook';
 import { Grid } from '@voussoir/layout';
 
 import { Heading } from '../src';

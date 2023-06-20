@@ -9,7 +9,7 @@ import { infoIcon } from '@voussoir/icon/icons/infoIcon';
 import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
 import { Box, Flex } from '@voussoir/layout';
 import { Content } from '@voussoir/slots';
-import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
+import { ArgTypes, action } from '@voussoir/storybook';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Toaster, ToastOptions, toastQueue } from '../src';

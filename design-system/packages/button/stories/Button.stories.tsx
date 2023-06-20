@@ -1,4 +1,4 @@
-import { action, storiesOf } from '@voussoir/storybook';
+import { action } from '@voussoir/storybook';
 
 import { plusCircleIcon } from '@voussoir/icon/icons/plusCircleIcon';
 import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';

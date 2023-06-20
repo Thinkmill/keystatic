@@ -1,4 +1,4 @@
-import { action, storiesOf } from '@voussoir/storybook';
+import { action } from '@voussoir/storybook';
 
 import { Icon } from '@voussoir/icon';
 import { bookmarkIcon } from '@voussoir/icon/icons/bookmarkIcon';

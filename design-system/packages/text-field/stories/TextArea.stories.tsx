@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { action, storiesOf, Parameters } from '@voussoir/storybook';
+import { action, Parameters } from '@voussoir/storybook';
 import { Grid } from '@voussoir/layout';
 
 import { TextArea } from '../src';

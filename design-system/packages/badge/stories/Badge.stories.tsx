@@ -1,4 +1,3 @@
-import { storiesOf } from '@voussoir/storybook';
 import { arrowUpRightIcon } from '@voussoir/icon/icons/arrowUpRightIcon';
 import { Icon } from '@voussoir/icon';
 import { Flex } from '@voussoir/layout';

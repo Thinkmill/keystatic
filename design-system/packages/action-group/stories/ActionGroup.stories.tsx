@@ -1,4 +1,4 @@
-import { action, storiesOf } from '@voussoir/storybook';
+import { action } from '@voussoir/storybook';
 
 import { alignCenterIcon } from '@voussoir/icon/icons/alignCenterIcon';
 import { alignJustifyIcon } from '@voussoir/icon/icons/alignJustifyIcon';

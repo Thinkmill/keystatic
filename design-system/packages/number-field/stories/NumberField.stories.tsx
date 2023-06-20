@@ -1,5 +1,5 @@
 import { chain } from '@react-aria/utils';
-import { action, storiesOf } from '@voussoir/storybook';
+import { action } from '@voussoir/storybook';
 import { useState } from 'react';
 
 import { Button } from '@voussoir/button';

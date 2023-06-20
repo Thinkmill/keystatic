@@ -1,4 +1,4 @@
-import { action, ArgTypes, storiesOf } from '@voussoir/storybook';
+import { action, ArgTypes } from '@voussoir/storybook';
 
 import { Button, ActionButton } from '@voussoir/button';
 import { Flex } from '@voussoir/layout';

@@ -1,4 +1,4 @@
-import { action, storiesOf } from '@voussoir/storybook';
+import { action } from '@voussoir/storybook';
 import { Box, Flex, Grid } from '@voussoir/layout';
 import { Text } from '@voussoir/typography';
 import { useState } from 'react';

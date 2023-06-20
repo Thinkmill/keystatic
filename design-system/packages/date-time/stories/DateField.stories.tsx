@@ -13,7 +13,7 @@ import { useLocale } from '@react-aria/i18n';
 import { VoussoirProvider } from '@voussoir/core';
 import { Flex } from '@voussoir/layout';
 import { Item, Picker, Section } from '@voussoir/picker';
-import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
+import { ArgTypes, action } from '@voussoir/storybook';
 import React from 'react';
 
 import { DateField, DateFieldProps } from '../src';

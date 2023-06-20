@@ -1,5 +1,3 @@
-import { storiesOf } from '@voussoir/storybook';
-
 import { Icon } from '@voussoir/icon';
 import { boldIcon } from '@voussoir/icon/icons/boldIcon';
 import { code2Icon } from '@voussoir/icon/icons/code2Icon';

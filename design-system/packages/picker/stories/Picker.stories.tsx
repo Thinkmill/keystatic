@@ -1,5 +1,5 @@
 import { useAsyncList } from '@react-stately/data';
-import { action, storiesOf } from '@voussoir/storybook';
+import { action } from '@voussoir/storybook';
 import { useState } from 'react';
 
 import { Button } from '@voussoir/button';

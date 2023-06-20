@@ -1,4 +1,3 @@
-import { storiesOf } from '@voussoir/storybook';
 import { Box, Divider, Flex, Grid } from '@voussoir/layout';
 
 import { Text } from '../src/text';

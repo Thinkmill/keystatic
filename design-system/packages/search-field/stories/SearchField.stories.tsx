@@ -1,4 +1,4 @@
-import { action, storiesOf, Parameters } from '@voussoir/storybook';
+import { action, Parameters } from '@voussoir/storybook';
 import { useMemo, useState } from 'react';
 
 import { SearchField } from '../src';
