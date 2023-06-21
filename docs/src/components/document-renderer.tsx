@@ -213,6 +213,12 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         return <div>Field not found</div>;
     }
   },
+  embed: () => {
+    return <div>I am an embed</div>;
+  },
+  videoGif: () => {
+    return <div>I am a videoGif</div>;
+  },
 };
 
 const getTagClasses = (index: number) => {

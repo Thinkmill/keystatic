@@ -27,3 +27,18 @@ export async function getNavigationMap() {
 
   return navigationMap;
 }
+
+export async function getBlogPostsMap() {
+  const pages = await reader.collections.pages.all();
+
+  // const pagesBySlug = Object.fromEntries(pages.map(page => [page.slug, page]));
+
+  const blogPosts = pages.map(({ slug, entry }) => {
+    return {
+      title: entry.title,
+      slug: slug,
+    };
+  });
+
+  return blogPosts;
+}

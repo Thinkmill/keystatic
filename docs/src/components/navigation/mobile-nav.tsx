@@ -127,6 +127,20 @@ export function MobileNav({ navigationMap }: NavProps) {
               tabIndex={navOpen ? 0 : -1}
             />
 
+            <NavItem
+              level="top"
+              label="Docs"
+              href="/docs"
+              tabIndex={navOpen ? 0 : -1}
+            />
+
+            <NavItem
+              level="top"
+              label="Blog"
+              href="/blog"
+              tabIndex={navOpen ? 0 : -1}
+            />
+
             <div className="pt-6">
               {navigationMap?.map(({ groupName, items }) => (
                 <NavGroup key={groupName} title={groupName}>

@@ -102,10 +102,10 @@ export const componentBlocks = {
         </div>
       );
     },
-    label: 'Tags',
+    label: 'Project',
     schema: {
       tags: fields.multiselect({
-        label: 'Tags',
+        label: 'Project tags',
         options: [
           { label: 'Local', value: 'Local' },
           { label: 'Github', value: 'github' },
@@ -175,6 +175,13 @@ export const componentBlocks = {
   }),
 };
 
+const formatting = {
+  headingLevels: [2, 3],
+  blockTypes: true,
+  listTypes: true,
+  inlineMarks: true,
+} as const;
+
 export default config({
   storage: {
     kind: 'local',
@@ -184,7 +191,7 @@ export default config({
     // Docs pages
     // ------------------------------
     pages: collection({
-      label: 'Pages',
+      label: 'Docs pages',
       slugField: 'title',
       format: { contentField: 'content' },
       path: 'src/content/pages/**',
@@ -192,19 +199,12 @@ export default config({
         title: fields.slug({ name: { label: 'Title' } }),
         content: fields.document({
           label: 'Content',
-          formatting: {
-            inlineMarks: true,
-            listTypes: true,
-            alignment: true,
-            headingLevels: [2, 3],
-            blockTypes: true,
-            softBreaks: true,
-          },
-          layouts: [[1, 1]],
           dividers: true,
+          layouts: [[1, 1]],
           links: true,
           images: { directory: 'public/images/content' },
           componentBlocks,
+          formatting,
         }),
       },
     }),
@@ -214,12 +214,11 @@ export default config({
     // ------------------------------
     blog: collection({
       label: 'Blog posts',
-      path: 'src/content/blog/*/',
-      format: {
-        data: 'yaml',
-        contentField: '_content',
-      },
       slugField: 'title',
+      path: 'src/content/blog/**',
+      format: {
+        contentField: 'content',
+      },
       schema: {
         title: fields.slug({
           name: {
@@ -242,35 +241,34 @@ export default config({
           },
         }),
         summary: fields.text({ label: 'Summary', multiline: true }),
-        authors: fields.array(
-          fields.relationship({
-            label: 'Author',
-            collection: 'authors',
-            validation: { isRequired: true },
-          }),
-          {
-            label: 'Authors',
-            itemLabel: props => props.value ?? 'Please select',
-          }
-        ),
-        tags: fields.array(
-          fields.relationship({
-            label: 'Tag',
-            collection: 'tags',
-            validation: { isRequired: true },
-          }),
-          {
-            label: 'Tags',
-            itemLabel: props => props.value ?? 'Please select',
-          }
-        ),
-        _content: fields.document({
+        // authors: fields.array(
+        //   fields.relationship({
+        //     label: 'Author',
+        //     collection: 'authors',
+        //     validation: { isRequired: true },
+        //   }),
+        //   {
+        //     label: 'Authors',
+        //     itemLabel: props => props.value ?? 'Please select',
+        //   }
+        // ),
+        // tags: fields.array(
+        //   fields.relationship({
+        //     label: 'Tag',
+        //     collection: 'tags',
+        //     validation: { isRequired: true },
+        //   }),
+        //   {
+        //     label: 'Tags',
+        //     itemLabel: props => props.value ?? 'Please select',
+        //   }
+        // ),
+        content: fields.document({
           label: 'Content',
           links: true,
-          layouts: [[1], [1, 1]],
+          layouts: [[1, 1]],
           images: {
-            directory: 'src/content/blog/_images',
-            publicPath: '/src/content/blog/_images/',
+            directory: 'public/images/content',
             schema: {
               title: fields.text({
                 label: 'Caption',
@@ -280,75 +278,9 @@ export default config({
             },
           },
           dividers: true,
-          formatting: {
-            headingLevels: true,
-            blockTypes: true,
-            listTypes: true,
-            inlineMarks: {
-              code: true,
-              bold: true,
-              italic: true,
-              underline: true,
-              strikethrough: true,
-            },
-          },
           tables: true,
-          componentBlocks: {
-            videoGif: component({
-              label: 'Looping video (muted)',
-              preview: () => null,
-              schema: {
-                src: fields.file({
-                  label: 'Video',
-                  directory: 'public/writing',
-                  publicPath: '/writing/',
-                  validation: { isRequired: true },
-                }),
-                caption: fields.text({ label: 'Caption', multiline: true }),
-              },
-            }),
-            embed: component({
-              label: 'Embed',
-              preview: () => null,
-              schema: {
-                mediaType: fields.select({
-                  label: 'Media type',
-                  options: [
-                    { label: 'Video', value: 'video' },
-                    { label: 'Audio', value: 'audio' },
-                  ],
-                  defaultValue: 'video',
-                }),
-                embedCode: fields.text({
-                  label: 'Embed code',
-                  multiline: true,
-                }),
-              },
-            }),
-            aside: component({
-              label: 'Aside',
-              preview: props => (
-                <aside
-                  style={{
-                    background: '#e7e7e7',
-                    padding: '0.75rem 1rem',
-                    borderRadius: 4,
-                  }}
-                >
-                  {props.fields.content.element}
-                </aside>
-              ),
-              chromeless: true,
-              schema: {
-                content: fields.child({
-                  links: 'inherit',
-                  placeholder: 'Add content here...',
-                  kind: 'block',
-                  formatting: 'inherit',
-                }),
-              },
-            }),
-          },
+          componentBlocks: componentBlocks,
+          formatting,
         }),
         canonical: fields.text({
           label: 'Canonical URL',
