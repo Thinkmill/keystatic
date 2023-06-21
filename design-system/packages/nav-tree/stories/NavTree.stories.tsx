@@ -1,4 +1,4 @@
-import { action, storiesOf } from '@voussoir/storybook';
+import { action } from '@voussoir/storybook';
 import { Key, useRef } from 'react';
 
 import { ActionButton } from '@voussoir/button';
@@ -81,62 +81,67 @@ let nestedItems = [
   },
 ];
 
-storiesOf('Components/NavTree', module)
-  .add('flat items', () => (
-    <NavTree
-      items={flatItems}
-      onAction={action('onAction')}
-      children={itemRenderer}
-      selectionMode="single"
-      onSelectionChange={actionOnSet('onSelectionChange')}
-    />
-  ))
-  .add('nested items', () => {
-    let scrollRef = useRef<HTMLDivElement>(null);
-    return (
-      <Box
-        height="container.xsmall"
-        width="container.xsmall"
-        overflow="auto"
-        ref={scrollRef}
-      >
-        <NavTree
-          items={nestedItems}
-          onAction={action('onAction')}
-          onExpandedChange={actionOnSet('onExpandedChange')}
-          children={itemRenderer}
-          scrollRef={scrollRef}
-        />
-      </Box>
-    );
-  })
-  .add('selected item', () => {
-    let scrollRef = useRef<HTMLDivElement>(null);
-    let selectedKey = 'Eastern grey kangaroo';
-    let expandedKeys = findParents(flattenItems(nestedItems), selectedKey);
+export default {
+  title: 'Components/NavTree',
+};
 
-    return (
-      <Box
-        height="container.xsmall"
-        width="container.xsmall"
-        overflow="auto"
-        ref={scrollRef}
-      >
-        <NavTree
-          items={nestedItems}
-          onAction={action('onAction')}
-          onExpandedChange={actionOnSet('onExpandedChange')}
-          onSelectionChange={actionOnSet('onSelectionChange')}
-          children={itemRenderer}
-          scrollRef={scrollRef}
-          defaultExpandedKeys={expandedKeys}
-          defaultSelectedKeys={[selectedKey]}
-          selectionMode="single"
-          // shouldFocusWrap
-        />
-      </Box>
-    );
-  });
+export const FlatItems = () => (
+  <NavTree
+    items={flatItems}
+    onAction={action('onAction')}
+    children={itemRenderer}
+    selectionMode="single"
+    onSelectionChange={actionOnSet('onSelectionChange')}
+  />
+);
+
+export const NestedItems = () => {
+  let scrollRef = useRef<HTMLDivElement>(null);
+  return (
+    <Box
+      height="container.xsmall"
+      width="container.xsmall"
+      overflow="auto"
+      ref={scrollRef}
+    >
+      <NavTree
+        items={nestedItems}
+        onAction={action('onAction')}
+        onExpandedChange={actionOnSet('onExpandedChange')}
+        children={itemRenderer}
+        scrollRef={scrollRef}
+      />
+    </Box>
+  );
+};
+
+export const SelectedItem = () => {
+  let scrollRef = useRef<HTMLDivElement>(null);
+  let selectedKey = 'Eastern grey kangaroo';
+  let expandedKeys = findParents(flattenItems(nestedItems), selectedKey);
+
+  return (
+    <Box
+      height="container.xsmall"
+      width="container.xsmall"
+      overflow="auto"
+      ref={scrollRef}
+    >
+      <NavTree
+        items={nestedItems}
+        onAction={action('onAction')}
+        onExpandedChange={actionOnSet('onExpandedChange')}
+        onSelectionChange={actionOnSet('onSelectionChange')}
+        children={itemRenderer}
+        scrollRef={scrollRef}
+        defaultExpandedKeys={expandedKeys}
+        defaultSelectedKeys={[selectedKey]}
+        selectionMode="single"
+        // shouldFocusWrap
+      />
+    </Box>
+  );
+};
 
 function actionOnSet(name: string) {
   return (keys: 'all' | Set<Key>) => action(name)([...keys]);
