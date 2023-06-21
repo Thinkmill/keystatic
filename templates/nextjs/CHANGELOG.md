@@ -1,5 +1,11 @@
 # @keystatic/templates-nextjs
 
+## 0.0.4
+
+### Patch Changes
+
+- 12905059: Moved API routes from pages to app directory.
+
 ## 0.0.3
 
 ### Patch Changes
