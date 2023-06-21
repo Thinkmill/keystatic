@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, useMemo } from 'react';
+import { ReactElement, ReactNode, useMemo, useState } from 'react';
 
 import { ActionGroup, Item } from '@voussoir/action-group';
 import { ActionButton } from '@voussoir/button';
@@ -10,6 +10,7 @@ import { removeFormattingIcon } from '@voussoir/icon/icons/removeFormattingIcon'
 import { typeIcon } from '@voussoir/icon/icons/typeIcon';
 import { italicIcon } from '@voussoir/icon/icons/italicIcon';
 import { strikethroughIcon } from '@voussoir/icon/icons/strikethroughIcon';
+import { quoteIcon } from '@voussoir/icon/icons/quoteIcon';
 import { Icon } from '@voussoir/icon';
 import { Flex } from '@voussoir/layout';
 import { MenuTrigger, Menu } from '@voussoir/menu';
@@ -17,10 +18,20 @@ import { css, tokenSchema } from '@voussoir/style';
 import { Text, Kbd } from '@voussoir/typography';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 
-// import { ToolbarSeparator } from './primitives';
+import {
+  EditorToolbar,
+  EditorToolbarGroup,
+  EditorToolbarItem,
+  EditorToolbarSeparator,
+  EditorToolbarButton,
+} from './new-primitives';
 import { Picker } from '@voussoir/picker';
-// import { tableIcon } from '@voussoir/icon/icons/tableIcon';
-import { Command, EditorState, TextSelection } from 'prosemirror-state';
+import {
+  Command,
+  EditorState,
+  SelectionRange,
+  TextSelection,
+} from 'prosemirror-state';
 import {
   useEditorDispatchCommand,
   useEditorSchema,
@@ -28,14 +39,17 @@ import {
 } from './editor-view';
 import { minusIcon } from '@voussoir/icon/icons/minusIcon';
 import { setBlockType, toggleMark, wrapIn } from 'prosemirror-commands';
-import { MarkType, NodeType } from 'prosemirror-model';
-import { quoteIcon } from '@voussoir/icon/icons/quoteIcon';
+import { Attrs, MarkType, Node, NodeType } from 'prosemirror-model';
 import { listIcon } from '@voussoir/icon/icons/listIcon';
+import { fileCodeIcon } from '@voussoir/icon/icons/fileCodeIcon';
 import { listOrderedIcon } from '@voussoir/icon/icons/listOrderedIcon';
 import { toggleList } from './lists';
 import { insertNode, toggleCodeBlock } from './commands/misc';
+import { linkIcon } from '@voussoir/icon/icons/linkIcon';
+import { DialogContainer } from '@voussoir/dialog';
+import { LinkDialog } from './popovers/link-toolbar';
 
-function EditorToolbarButton(props: {
+function EditorToolbarButton_OLD(props: {
   children: ReactNode;
   'aria-label': string;
   isSelected?: (editorState: EditorState) => boolean;
@@ -65,56 +79,226 @@ function EditorToolbarButton(props: {
   );
 }
 
-// export const tableButton = (
-//   <TooltipTrigger>
-//     <EditorToolbarButton command={() => {}}>
-//       <Icon src={tableIcon} />
-//     </EditorToolbarButton>
-//     <TableButton />
-//     <Tooltip>
-//       <Text>Table</Text>
-//     </Tooltip>
-//   </TooltipTrigger>
-// );
+function isString(val: unknown): val is string {
+  return typeof val === 'string';
+}
 
-export function Toolbar() {
+function multiSelectionAsAddAndRemove(
+  val: string[],
+  handlers: {
+    onAdd: (key: string) => void;
+    onRemove: (key: string) => void;
+  }
+) {
+  return {
+    value: val,
+    onChange: (newVal: React.Key[]) => {
+      if (!newVal.every(isString)) return;
+      for (const addedKey of newVal.filter(v => !val.includes(v))) {
+        handlers.onAdd(addedKey);
+      }
+      for (const removedKey of val.filter(v => !newVal.includes(v))) {
+        handlers.onRemove(removedKey);
+      }
+    },
+    selectionMode: 'multiple' as const,
+  };
+}
+
+function AddLinkDialog(props: { onClose: () => void }) {
+  const state = useEditorState();
+  const schema = useEditorSchema();
+  const runCommand = useEditorDispatchCommand();
+
+  return (
+    <LinkDialog
+      text={
+        state.selection.empty
+          ? undefined
+          : state.doc.textBetween(state.selection.from, state.selection.to)
+      }
+      href=""
+      onSubmit={data => {
+        runCommand(addMark(schema.marks.link, { href: data.href }));
+        props.onClose();
+      }}
+    />
+  );
+}
+
+function markApplies(
+  doc: Node,
+  ranges: readonly SelectionRange[],
+  type: MarkType
+) {
+  for (let i = 0; i < ranges.length; i++) {
+    let { $from, $to } = ranges[i];
+    let can =
+      $from.depth == 0
+        ? doc.inlineContent && doc.type.allowsMarkType(type)
+        : false;
+    doc.nodesBetween($from.pos, $to.pos, node => {
+      if (can) return false;
+      can = node.inlineContent && node.type.allowsMarkType(type);
+    });
+    if (can) return true;
+  }
+  return false;
+}
+
+function hasMarkInSelection(state: EditorState, markType: MarkType) {
+  if (state.selection.empty) {
+    return markType.isInSet(state.storedMarks || state.selection.$from.marks());
+  }
+  for (const { $from, $to } of state.selection.ranges) {
+    if (state.doc.rangeHasMark($from.pos, $to.pos, markType)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function addMark(markType: MarkType, attrs: Attrs | null = null): Command {
+  return function (state, dispatch) {
+    if (!(state.selection instanceof TextSelection)) return false;
+    let { empty, $cursor, ranges } = state.selection;
+    if (
+      (empty && !$cursor) ||
+      !markApplies(state.doc, ranges, markType) ||
+      hasMarkInSelection(state, markType)
+    ) {
+      return false;
+    }
+    if (dispatch) {
+      if ($cursor) {
+        if (markType.isInSet(state.storedMarks || $cursor.marks())) {
+          dispatch(state.tr.removeStoredMark(markType));
+        } else {
+          dispatch(state.tr.addStoredMark(markType.create(attrs)));
+        }
+      } else {
+        let { tr } = state;
+
+        for (let i = 0; i < ranges.length; i++) {
+          let { $from, $to } = ranges[i];
+          let from = $from.pos,
+            to = $to.pos,
+            start = $from.nodeAfter,
+            end = $to.nodeBefore;
+          let spaceStart =
+            start && start.isText ? /^\s*/.exec(start.text!)![0].length : 0;
+          let spaceEnd =
+            end && end.isText ? /\s*$/.exec(end.text!)![0].length : 0;
+          if (from + spaceStart < to) {
+            from += spaceStart;
+            to -= spaceEnd;
+          }
+          tr.addMark(from, to, markType.create(attrs));
+        }
+        dispatch(tr.scrollIntoView());
+      }
+    }
+    return true;
+  };
+}
+
+function LinkToolbarItem() {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const editorState = useEditorState();
+  const schema = useEditorSchema();
+  const isDisabled = !addMark(schema.marks.link, { href: '' })(editorState);
+  return useMemo(
+    () => (
+      <>
+        <EditorToolbarButton isDisabled={isDisabled} aria-label="link">
+          <Icon src={linkIcon} />
+        </EditorToolbarButton>
+        <DialogContainer
+          onDismiss={() => {
+            setDialogOpen(false);
+          }}
+        >
+          {dialogOpen && (
+            <AddLinkDialog
+              onClose={() => {
+                setDialogOpen(false);
+              }}
+            />
+          )}
+        </DialogContainer>
+      </>
+    ),
+    [dialogOpen, isDisabled]
+  );
+}
+
+function NewToolbar() {
+  const state = useEditorState();
+  const runCommand = useEditorDispatchCommand();
+  const toggleMarkByKey = (key: string) => {
+    const markType = state.schema.marks[key];
+    if (markType) {
+      runCommand(toggleMark(markType));
+    }
+  };
+
   const { nodes } = useEditorSchema();
   return (
-    <ToolbarContainer>
-      <ToolbarScrollArea>
-        <HeadingMenu headingType={nodes.heading} />
-        <InlineMarks />
-        <ListButtons />
-        <ToolbarGroup>
-          <TooltipTrigger>
-            <EditorToolbarButton
-              command={insertNode(nodes.divider)}
-              aria-label="Divider"
-            >
-              <Icon src={minusIcon} />
-            </EditorToolbarButton>
-            <Tooltip>
-              <Text>Divider</Text>
-              <Kbd>---</Kbd>
-            </Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <EditorToolbarButton
-              aria-label="Quote"
-              command={wrapIn(nodes.blockquote)}
-            >
-              <Icon src={quoteIcon} />
-            </EditorToolbarButton>
-            <Tooltip>
-              <Text>Quote</Text>
-              <Kbd>{'>⎵'}</Kbd>
-            </Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <EditorToolbarButton
-              aria-label="Code block"
-              command={toggleCodeBlock(nodes.code_block, nodes.paragraph)}
-              isSelected={(state: EditorState) => {
+    <EditorToolbar aria-label="Formatting options">
+      <EditorToolbarGroup
+        {...multiSelectionAsAddAndRemove(
+          ['bold', 'italic', 'strikethrough'].filter(mark => {
+            const markType = state.schema.marks[mark];
+            return !!mark && isMarkActive(markType)(state);
+          }),
+          { onAdd: toggleMarkByKey, onRemove: toggleMarkByKey }
+        )}
+        aria-label="Text formatting"
+      >
+        <EditorToolbarItem value="bold" aria-label="bold">
+          <Icon src={boldIcon} />
+        </EditorToolbarItem>
+        <EditorToolbarItem value="italic" aria-label="italic">
+          <Icon src={italicIcon} />
+        </EditorToolbarItem>
+        <EditorToolbarItem value="strikethrough" aria-label="strikethrough">
+          <Icon src={strikethroughIcon} />
+        </EditorToolbarItem>
+      </EditorToolbarGroup>
+
+      <EditorToolbarSeparator />
+
+      <LinkToolbarItem />
+
+      <EditorToolbarSeparator />
+
+      <EditorToolbarGroup selectionMode="single" aria-label="Lists">
+        <EditorToolbarItem value="bulleted" aria-label="bulleted list">
+          <Icon src={listIcon} />
+        </EditorToolbarItem>
+        <EditorToolbarItem value="numbered" aria-label="numbered list">
+          <Icon src={listOrderedIcon} />
+        </EditorToolbarItem>
+      </EditorToolbarGroup>
+
+      <EditorToolbarSeparator />
+
+      <EditorToolbarButton
+        onPress={() => {
+          runCommand(wrapIn(nodes.blockquote));
+        }}
+        aria-label="Blockquote"
+      >
+        <Icon src={quoteIcon} />
+      </EditorToolbarButton>
+
+      <EditorToolbarSeparator />
+
+      <EditorToolbarGroup
+        value={
+          isMarkActive(state.schema.marks.code)(state)
+            ? 'code'
+            : ((state: EditorState) => {
                 let hasCodeBlock = false;
                 for (const range of state.selection.ranges) {
                   state.doc.nodesBetween(
@@ -129,19 +313,92 @@ export function Toolbar() {
                   if (hasCodeBlock) break;
                 }
                 return hasCodeBlock;
-              }}
-            >
-              <Icon src={codeIcon} />
-            </EditorToolbarButton>
-            <Tooltip>
-              <Text>Code block</Text>
-              <Kbd>```</Kbd>
-            </Tooltip>
-          </TooltipTrigger>
-        </ToolbarGroup>
-      </ToolbarScrollArea>
-      <InsertBlockMenu />
-    </ToolbarContainer>
+              })(state)
+            ? 'code-block'
+            : null
+        }
+        selectionMode="single"
+        aria-label="Code formatting"
+      >
+        <EditorToolbarItem value="code" aria-label="Code">
+          <Icon src={codeIcon} />
+        </EditorToolbarItem>
+        <EditorToolbarItem value="code-block" aria-label="Code block">
+          <Icon src={fileCodeIcon} />
+        </EditorToolbarItem>
+      </EditorToolbarGroup>
+    </EditorToolbar>
+  );
+}
+
+export function Toolbar() {
+  const { nodes } = useEditorSchema();
+  return (
+    <div>
+      <NewToolbar />
+      <ToolbarContainer>
+        <ToolbarScrollArea>
+          <HeadingMenu headingType={nodes.heading} />
+          <InlineMarks />
+          <ListButtons />
+          <ToolbarGroup>
+            <TooltipTrigger>
+              <EditorToolbarButton_OLD
+                command={insertNode(nodes.divider)}
+                aria-label="Divider"
+              >
+                <Icon src={minusIcon} />
+              </EditorToolbarButton_OLD>
+              <Tooltip>
+                <Text>Divider</Text>
+                <Kbd>---</Kbd>
+              </Tooltip>
+            </TooltipTrigger>
+            <TooltipTrigger>
+              <EditorToolbarButton_OLD
+                aria-label="Quote"
+                command={wrapIn(nodes.blockquote)}
+              >
+                <Icon src={quoteIcon} />
+              </EditorToolbarButton_OLD>
+              <Tooltip>
+                <Text>Quote</Text>
+                <Kbd>{'>⎵'}</Kbd>
+              </Tooltip>
+            </TooltipTrigger>
+            <TooltipTrigger>
+              <EditorToolbarButton_OLD
+                aria-label="Code block"
+                command={toggleCodeBlock(nodes.code_block, nodes.paragraph)}
+                isSelected={(state: EditorState) => {
+                  let hasCodeBlock = false;
+                  for (const range of state.selection.ranges) {
+                    state.doc.nodesBetween(
+                      range.$from.pos,
+                      range.$to.pos,
+                      node => {
+                        if (node.type === nodes.code_block) {
+                          hasCodeBlock = true;
+                        }
+                      }
+                    );
+                    if (hasCodeBlock) break;
+                  }
+                  return hasCodeBlock;
+                }}
+              >
+                <Icon src={codeIcon} />
+              </EditorToolbarButton_OLD>
+              <Tooltip>
+                <Text>Code block</Text>
+                <Kbd>```</Kbd>
+              </Tooltip>
+            </TooltipTrigger>
+          </ToolbarGroup>
+        </ToolbarScrollArea>
+        <InsertBlockMenu />
+      </ToolbarContainer>
+    </div>
   );
 }
 

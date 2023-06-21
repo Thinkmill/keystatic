@@ -16,6 +16,7 @@ import localizedMessages from '../../../../../app/l10n/index.json';
 
 export function LinkToolbar(props: {
   href: string;
+  text: string;
   onHrefChange: (href: string) => void;
   onUnlink: () => void;
 }) {
@@ -56,7 +57,7 @@ export function LinkToolbar(props: {
       >
         {dialogOpen && (
           <LinkDialog
-            text=""
+            text={props.text}
             href={props.href}
             onSubmit={({ href }) => {
               props.onHrefChange(href);
@@ -68,15 +69,12 @@ export function LinkToolbar(props: {
   );
 }
 
-function LinkDialog({
-  onSubmit,
-  ...props
-}: {
-  href?: string;
-  text?: string;
+export function LinkDialog(props: {
+  href: string;
+  text: string | undefined;
   onSubmit: (value: { href: string }) => void;
 }) {
-  let [href, setHref] = useState(props.href || '');
+  let [href, setHref] = useState(props.href);
   let [touched, setTouched] = useState(false);
 
   let { dismiss } = useDialogContainer();
@@ -92,14 +90,16 @@ function LinkDialog({
           event.preventDefault();
           if (!showInvalidState) {
             dismiss();
-            onSubmit({ href });
+            props.onSubmit({ href });
           }
         }}
       >
         <Heading>{props.href ? 'Edit' : 'Add'} link</Heading>
         <Content>
           <Flex gap="large" direction="column">
-            <TextField label="Text" value={props.text} isReadOnly />
+            {props.text !== undefined && (
+              <TextField label="Text" value={props.text} isReadOnly />
+            )}
             <TextField
               autoFocus
               isRequired

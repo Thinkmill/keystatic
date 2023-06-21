@@ -236,9 +236,6 @@ const nodeSpecs = {
         css({
           marginBlock: '1em',
           overflow: 'hidden',
-          '& > *': {
-            paddingInline: tokenSchema.size.space.small,
-          },
         })
       );
       element.classList.add(nodeWithBorder);
@@ -356,7 +353,21 @@ const nodeSpecs = {
 
 const italicDOM: DOMOutputSpec = ['em', 0];
 const boldDOM: DOMOutputSpec = ['strong', 0];
-const inlineCodeDOM: DOMOutputSpec = ['code', 0];
+const inlineCodeDOM: DOMOutputSpec = [
+  'code',
+  {
+    class: css({
+      backgroundColor: tokenSchema.color.background.accent,
+      paddingInline: tokenSchema.size.space.xsmall,
+      paddingBlock: 2,
+      borderRadius: tokenSchema.size.radius.small,
+      color: tokenSchema.color.foreground.neutralEmphasis,
+      fontSize: '0.85em',
+      fontFamily: tokenSchema.typography.fontFamily.code,
+    }),
+  },
+  0,
+];
 const strikethroughDOM: DOMOutputSpec = ['s', 0];
 
 const markSpecs = {
@@ -435,7 +446,6 @@ const markSpecs = {
     },
   },
   code: {
-    shortcuts: ['Mod-`', 'Mod-Shift-M', 'Mod-E', 'Mod-e'],
     parseDOM: [{ tag: 'code' }],
     toDOM() {
       return inlineCodeDOM;
