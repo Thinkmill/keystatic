@@ -53,7 +53,7 @@ const attributeNodeView: NodeViewConstructor = (node, outerView, getPos) => {
       verticalAlign: 'middle',
       '::before': {
         paddingInline: tokenSchema.size.space.small,
-        content: 'attr(data-name)',
+        content: 'attr(data-markdoc-attribute)',
         display: 'inline-block',
         backgroundColor: tokenSchema.color.background.surfaceTertiary,
         borderRight: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
@@ -61,7 +61,7 @@ const attributeNodeView: NodeViewConstructor = (node, outerView, getPos) => {
     })
   );
   dom.classList.add(nodeWithBorder);
-  dom.dataset.name =
+  dom.dataset.markdocAttribute =
     node.attrs.name === 'id'
       ? '#'
       : node.attrs.name === 'class'
@@ -75,6 +75,8 @@ const attributeNodeView: NodeViewConstructor = (node, outerView, getPos) => {
     outline: 'none',
     backgroundColor: tokenSchema.color.background.canvas,
   });
+  // to enter this via keyboard, users can press enter while in a node selection on the attribute in the parent document
+  inner.tabIndex = -1;
   dom.appendChild(inner);
 
   const innerView = new EditorView(
