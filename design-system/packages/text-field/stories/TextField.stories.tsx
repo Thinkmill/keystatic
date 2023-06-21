@@ -1,82 +1,95 @@
 import { useMemo, useState } from 'react';
-import { action, storiesOf, Parameters } from '@voussoir/storybook';
+import { action, Parameters, StoryObj } from '@voussoir/storybook';
 
 import { TextField } from '../src';
 
-storiesOf('Components/TextField', module)
-  .addParameters({
-    args: {
-      label: 'Label text',
-      isDisabled: false,
-      isReadOnly: false,
-      isRequired: false,
-    },
-    argTypes: {},
-  })
-  .add('Default', render())
-  .add('value: Test (controlled)', render({ value: 'Test' }))
-  .add('defaultValue: Test (uncontrolled)', render({ defaultValue: 'Test' }))
-  .add('type: email', render({ type: 'email' }))
-  .add('pattern: [0-9]+', render({ pattern: '[0-9]+' }))
-  .add('autoFocus: true', render({ autoFocus: true }))
-  .add(
-    'no visible label',
-    render({ label: null, 'aria-label': 'Hidden label' })
-  )
-  .add(
-    'with description',
-    render({
-      description:
-        'Description text provides information to assist the user in completing a field.',
-    })
-  )
-  .add(
-    'with error message',
-    render({
-      errorMessage:
-        'Error messages inform the user when the input does not meet validation criteria.',
-    })
-  )
-  .add('with validation', renderWithValidation())
-  .add(
-    'input dom events',
-    render({
-      onCopy: action('onCopy'),
-      onCut: action('onCut'),
-      onPaste: action('onPaste'),
-      onCompositionStart: action('onCompositionStart'),
-      onCompositionEnd: action('onCompositionEnd'),
-      onCompositionUpdate: action('onCompositionUpdate'),
-      onSelect: action('onSelect'),
-      onBeforeInput: action('onBeforeInput'),
-      onInput: action('onInput'),
-    })
-  )
-  .add(
-    'custom width',
-    render({
-      paddingX: 'regular',
-      width: 'size.container.small',
-      maxWidth: '100%',
-      description:
-        'Description text provides information to assist the user in completing a field.',
-      errorMessage:
-        'Error messages inform the user when the input does not meet validation criteria.',
-    })
-  );
+type Story = StoryObj<typeof TextField>;
+
+export default {
+  title: 'Components/TextField',
+
+  args: {
+    label: 'Label text',
+    isDisabled: false,
+    isReadOnly: false,
+    isRequired: false,
+  },
+};
+
+export const Default: Story = render();
+export const ValueTestControlled: Story = render({ value: 'Test' });
+
+ValueTestControlled.storyName = 'value: Test (controlled)';
+
+export const DefaultValueTestUncontrolled: Story = render({
+  defaultValue: 'Test',
+});
+
+DefaultValueTestUncontrolled.storyName = 'defaultValue: Test (uncontrolled)';
+
+export const TypeEmail: Story = render({ type: 'email' });
+
+TypeEmail.storyName = 'type: email';
+
+export const Pattern09: Story = render({ pattern: '[0-9]+' });
+
+Pattern09.storyName = 'pattern: [0-9]+';
+
+export const AutoFocusTrue: Story = render({ autoFocus: true });
+
+AutoFocusTrue.storyName = 'autoFocus: true';
+
+export const NoVisibleLabel: Story = render({
+  label: null,
+  'aria-label': 'Hidden label',
+});
+
+export const WithDescription: Story = render({
+  description:
+    'Description text provides information to assist the user in completing a field.',
+});
+
+export const WithErrorMessage: Story = render({
+  errorMessage:
+    'Error messages inform the user when the input does not meet validation criteria.',
+});
+
+export const WithValidation = renderWithValidation();
+
+export const InputDomEvents: Story = render({
+  onCopy: action('onCopy'),
+  onCut: action('onCut'),
+  onPaste: action('onPaste'),
+  onCompositionStart: action('onCompositionStart'),
+  onCompositionEnd: action('onCompositionEnd'),
+  onCompositionUpdate: action('onCompositionUpdate'),
+  onSelect: action('onSelect'),
+  onBeforeInput: action('onBeforeInput'),
+  onInput: action('onInput'),
+});
+
+export const CustomWidth: Story = render({
+  paddingX: 'regular',
+  width: 'size.container.small',
+  maxWidth: '100%',
+  description:
+    'Description text provides information to assist the user in completing a field.',
+  errorMessage:
+    'Error messages inform the user when the input does not meet validation criteria.',
+});
 
 function render(props = {}) {
-  return function renderWithArgs(args: Parameters) {
-    return (
+  return {
+    render: (args: Parameters) => (
       <TextField
-        {...args}
         {...props}
+        {...args}
         onChange={action('change')}
         onFocus={action('focus')}
         onBlur={action('blur')}
         UNSAFE_className="custom-class-name"
       />
-    );
+    ),
   };
 }
 

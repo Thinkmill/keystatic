@@ -1,64 +1,74 @@
-import { action, storiesOf, Parameters } from '@voussoir/storybook';
+import { action, Meta, Parameters, StoryObj } from '@voussoir/storybook';
 import { useMemo, useState } from 'react';
 
 import { SearchField } from '../src';
 
-storiesOf('Components/SearchField', module)
-  .addParameters({
-    args: {
-      label: 'Search',
-      isDisabled: false,
-    },
-    argTypes: {},
-  })
-  .add('Default', render())
-  .add('value: Test (controlled)', render({ value: 'Test' }))
-  .add('defaultValue: Test (uncontrolled)', render({ defaultValue: 'Test' }))
-  .add('autoFocus: true', render({ autoFocus: true }))
-  .add(
-    'no visible label',
-    render({ label: null, 'aria-label': 'Hidden label' })
-  )
-  .add('no icon', render({ showIcon: false }))
-  .add(
-    'with description',
-    render({
-      description:
-        'Description text provides information to assist the user in completing a field.',
-    })
-  )
-  .add(
-    'with error message',
-    render({
-      errorMessage:
-        'Error messages inform the user when the input does not meet validation criteria.',
-    })
-  )
-  .add('with validation', renderWithValidation())
-  .add(
-    'custom width',
-    render({
-      width: 240,
-      description:
-        'Description text provides information to assist the user in completing a field.',
-      errorMessage:
-        'Error messages inform the user when the input does not meet validation criteria.',
-    })
-  );
+type Story = StoryObj<typeof SearchField>;
 
-function render(props = {}) {
-  return function renderWithArgs(args: Parameters) {
-    return (
-      <SearchField
-        {...args}
-        {...props}
-        onChange={action('change')}
-        onSubmit={action('submit')}
-        onClear={action('clear')}
-      />
-    );
-  };
-}
+const meta: Meta = {
+  title: 'Components/SearchField',
+  component: SearchField,
+  parameters: {
+    controls: { exclude: ['onChange', 'onSubmit', 'onClear', 'UNSAFE_style'] },
+  },
+  args: {
+    label: 'Search',
+    isDisabled: false,
+    onChange: action('change'),
+    onSubmit: action('submit'),
+    onClear: action('clear'),
+  },
+};
+
+export default meta;
+
+export const Default = { args: {} };
+
+export const ValueTestControlled: Story = { args: { value: 'Test' } };
+ValueTestControlled.storyName = 'value: Test (controlled)';
+
+export const DefaultValueTestUncontrolled: Story = {
+  args: { defaultValue: 'Test' },
+};
+DefaultValueTestUncontrolled.storyName = 'defaultValue: Test (uncontrolled)';
+
+export const AutoFocusTrue: Story = { args: { autoFocus: true } };
+AutoFocusTrue.storyName = 'autoFocus: true';
+
+export const NoVisibleLabel: Story = {
+  args: {
+    label: null,
+    'aria-label': 'Hidden label',
+  },
+};
+
+export const NoIcon: Story = { args: { showIcon: false } };
+
+export const WithDescription: Story = {
+  args: {
+    description:
+      'Description text provides information to assist the user in completing a field.',
+  },
+};
+
+export const WithErrorMessage = {
+  args: {
+    errorMessage:
+      'Error messages inform the user when the input does not meet validation criteria.',
+  },
+};
+
+export const WithValidation = renderWithValidation();
+
+export const CustomWidth = {
+  args: {
+    UNSAFE_style: { width: 320 },
+    description:
+      'Description text provides information to assist the user in completing a field.',
+    errorMessage:
+      'Error messages inform the user when the input does not meet validation criteria.',
+  },
+};
 
 function renderWithValidation(props = {}) {
   function Example(args: Parameters) {
