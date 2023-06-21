@@ -7,7 +7,9 @@ import {
   component,
   NotEditable,
 } from '@keystatic/core';
+import { __experimental_markdoc_field } from '@keystatic/core/form/fields/markdoc';
 import { CloudImagePreview } from './src/components/previews/CloudImagePreview';
+import { Config } from '@markdoc/markdoc';
 
 export const componentBlocks = {
   aside: component({
@@ -144,6 +146,55 @@ export const componentBlocks = {
   }),
 };
 
+const markdocConfig: Config = {
+  tags: {
+    aside: {
+      render: 'Aside',
+      attributes: {
+        icon: {
+          type: String,
+          required: true,
+        },
+      },
+    },
+    'cloud-image': {
+      render: 'CloudImage',
+      attributes: {
+        href: {
+          type: String,
+          required: true,
+        },
+        alt: {
+          type: String,
+        },
+      },
+    },
+    tags: {
+      render: 'Tags',
+      attributes: {
+        tags: {
+          type: Array,
+          validate(value) {
+            if (
+              !Array.isArray(value) ||
+              value.some(v => typeof v !== 'string')
+            ) {
+              return [
+                {
+                  message: 'tags must be text',
+                  id: 'tags-text',
+                  level: 'critical',
+                },
+              ];
+            }
+            return [];
+          },
+        },
+      },
+    },
+  },
+};
+
 export default config({
   storage: {
     kind: 'local',
@@ -171,6 +222,19 @@ export default config({
           links: true,
           images: { directory: 'public/images/content' },
           componentBlocks,
+        }),
+      },
+    }),
+    pagesWithMarkdocField: collection({
+      label: 'Pages with new editor',
+      slugField: 'title',
+      format: { contentField: 'content' },
+      path: 'src/content/pages/**',
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        content: __experimental_markdoc_field({
+          label: 'Content',
+          config: markdocConfig,
         }),
       },
     }),
