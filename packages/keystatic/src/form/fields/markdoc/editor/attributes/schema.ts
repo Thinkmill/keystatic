@@ -1,7 +1,7 @@
 import { css } from '@voussoir/style';
 import { EditorNodeSpec } from '../schema';
 import { Schema } from 'prosemirror-model';
-import { weakMemoize } from '../utils';
+import { markdocIdentifierPattern, weakMemoize } from '../utils';
 
 export const getAttributeType = weakMemoize(function getAttributesType(
   schema: Schema
@@ -22,11 +22,26 @@ export const attributeSchema = {
     content: 'attribute_expression',
     inline: true,
     atom: true,
+    parseDOM: [
+      {
+        tag: '[data-markdoc-attribute]',
+        getAttrs(node) {
+          if (typeof node === 'string') return false;
+          let name = node.getAttribute('data-markdoc-attribute');
+          if (name === '#') name = 'id';
+          if (name === '.') name = 'class';
+          if (name === null || !markdocIdentifierPattern.test(name)) {
+            return false;
+          }
+          return { name };
+        },
+      },
+    ],
     toDOM(node) {
       return [
         'span',
         {
-          'data-attr':
+          'data-markdoc-attribute':
             node.attrs.name === 'id'
               ? '#'
               : node.attrs.name === 'class'
@@ -41,8 +56,9 @@ export const attributeSchema = {
     group: 'attribute_expression',
     content: 'text*',
     marks: '',
+    parseDOM: [{ tag: '[data-markdoc-expression="string"]' }],
     toDOM() {
-      return ['span', { class: css({ color: 'green' }) }, 0];
+      return ['span', { 'data-markdoc-expression': 'string' }, 0];
     },
   },
   attribute_null: {

@@ -8,6 +8,8 @@ export const classes = {
   focused: 'ProseMirror-focused',
 };
 
+export const markdocIdentifierPattern = /^[a-zA-Z][-_a-zA-Z0-9]*$/;
+
 export function weakMemoize<Arg extends object, Return>(
   func: (arg: Arg) => Return
 ): (arg: Arg) => Return {
