@@ -1,5 +1,5 @@
 import { action } from '@voussoir/storybook';
-import { Key, useRef } from 'react';
+import { Key, useRef, useState } from 'react';
 
 import { ActionButton } from '@voussoir/button';
 import { Icon } from '@voussoir/icon';
@@ -90,8 +90,7 @@ export const FlatItems = () => (
     items={flatItems}
     onAction={action('onAction')}
     children={itemRenderer}
-    selectionMode="single"
-    onSelectionChange={actionOnSet('onSelectionChange')}
+    onSelectionChange={action('onSelectionChange')}
   />
 );
 
@@ -108,6 +107,7 @@ export const NestedItems = () => {
         items={nestedItems}
         onAction={action('onAction')}
         onExpandedChange={actionOnSet('onExpandedChange')}
+        onSelectionChange={action('onSelectionChange')}
         children={itemRenderer}
         scrollRef={scrollRef}
       />
@@ -116,8 +116,8 @@ export const NestedItems = () => {
 };
 
 export const SelectedItem = () => {
+  let [selectedKey, setSelectedKey] = useState<Key>('Eastern grey kangaroo');
   let scrollRef = useRef<HTMLDivElement>(null);
-  let selectedKey = 'Eastern grey kangaroo';
   let expandedKeys = findParents(flattenItems(nestedItems), selectedKey);
 
   return (
@@ -131,13 +131,11 @@ export const SelectedItem = () => {
         items={nestedItems}
         onAction={action('onAction')}
         onExpandedChange={actionOnSet('onExpandedChange')}
-        onSelectionChange={actionOnSet('onSelectionChange')}
+        onSelectionChange={setSelectedKey}
         children={itemRenderer}
         scrollRef={scrollRef}
         defaultExpandedKeys={expandedKeys}
-        selectedKeys={[selectedKey]}
-        // defaultSelectedKeys={[selectedKey]}
-        selectionMode="single"
+        selectedKey={selectedKey}
         // shouldFocusWrap
       />
     </Box>
@@ -170,11 +168,11 @@ type WithChildren<T> = T & { children?: WithChildren<T>[] };
 type Item = WithChildren<{ name: string }>;
 type FlatItem = WithChildren<{ name: string; parentKey: string }>;
 
-function findParents(allItems: FlatItem[], selectedKey: string) {
+function findParents(allItems: FlatItem[], selectedKey: Key) {
   let itemMap = new Map(allItems.map(item => [item.name, item]));
 
-  let getParentNames = (key: string, parents: string[]): string[] => {
-    let item = itemMap.get(key);
+  let getParentNames = (key: Key, parents: Key[]): Key[] => {
+    let item = itemMap.get(key as string);
     if (!item) return parents;
     let parentItem = itemMap.get(item.parentKey);
     if (!parentItem) return parents;

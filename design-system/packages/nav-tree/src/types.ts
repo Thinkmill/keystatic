@@ -3,19 +3,26 @@ import {
   CollectionBase,
   DOMProps,
   Expandable,
-  MultipleSelection,
 } from '@react-types/shared';
 import { Key, RefObject } from 'react';
 
 import { BaseStyleProps } from '@voussoir/style';
 
+// deviate from react-stately's types
+type ControlledSelection = {
+  /** The currently selected key in the collection. */
+  selectedKey?: Key | null;
+  /** Handler that is called when the selection changes. */
+  onSelectionChange?: (key: Key) => any;
+};
+
 export type NavTreeProps<T> = CollectionBase<T> & {
   /**
-   * Handler that is called when a user performs an action on the item. The
-   * exact user event depends on the collection's `selectionBehavior` and
-   * the interaction modality.
+   * Handler that is called when a user performs _any_ action on an item.
+   * Generally prefer the more specific `onSelectionChange` and
+   * `onExpandedChange` handlers.
    */
-  onAction: (key: Key) => void;
+  onAction: (key: Key) => any;
   /**
    * Whether focus should wrap around when the end/start is reached.
    * @default false
@@ -27,7 +34,7 @@ export type NavTreeProps<T> = CollectionBase<T> & {
    */
   scrollRef?: RefObject<HTMLElement>;
 } & Expandable &
-  MultipleSelection &
+  ControlledSelection &
   DOMProps &
   AriaLabelingProps &
   BaseStyleProps;

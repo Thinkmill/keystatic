@@ -41,6 +41,7 @@ import { TreeKeyboardDelegate } from './TreeKeyboardDelegate';
 type NavTreeContext = {
   id: string;
   onAction: (key: Key) => void;
+  onSelectionChange?: (key: Key) => void;
   selectedAncestralKeys: Key[];
 };
 
@@ -56,16 +57,25 @@ function useTreeContext() {
 const MAX_EXPAND_DEPTH = 2;
 
 export function NavTree<T extends object>(props: NavTreeProps<T>) {
-  let { onAction } = props;
+  let { onAction, onSelectionChange, selectedKey, ...otherProps } = props;
+  let ref = useRef<HTMLDivElement>(null);
+  let styleProps = useStyleProps(props);
 
+  // tweak selection behaviour
   let [selectedAncestralKeys, setSelectedAncestralKeys] = React.useState<Key[]>(
     []
   );
-  let state = useTreeState(props);
-  let ref = useRef<HTMLDivElement>(null);
-  let styleProps = useStyleProps(props);
-  let collator = useCollator({ usage: 'search', sensitivity: 'base' });
+  let selectionProps = useMemo(() => {
+    if (selectedKey) {
+      let selectedKeys = new Set([selectedKey]);
+      return { selectedKeys, selectionMode: 'single' as const };
+    }
+    return {};
+  }, [selectedKey]);
 
+  // tree state
+  let state = useTreeState({ ...otherProps, ...selectionProps });
+  let collator = useCollator({ usage: 'search', sensitivity: 'base' });
   let keyboardDelegate = useMemo(
     () =>
       new TreeKeyboardDelegate(collator, state.collection, state.disabledKeys),
@@ -82,8 +92,8 @@ export function NavTree<T extends object>(props: NavTreeProps<T>) {
 
   let id = useId();
   let context = useMemo(
-    () => ({ id, onAction, selectedAncestralKeys }),
-    [id, onAction, selectedAncestralKeys]
+    () => ({ id, onAction, onSelectionChange, selectedAncestralKeys }),
+    [id, onAction, onSelectionChange, selectedAncestralKeys]
   );
 
   useEffect(() => {
@@ -219,7 +229,8 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
                 width: tokenSchema.size.scale[75],
               },
             },
-            '[aria-selected=true] > &': {
+
+            '[aria-current=page] > &': {
               backgroundColor: tokenSchema.color.alias.backgroundHovered,
               color: tokenSchema.color.alias.foregroundHovered,
               fontWeight: tokenSchema.typography.fontWeight.semibold,
@@ -234,7 +245,7 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
                 width: tokenSchema.size.space.small,
               },
             },
-            '[aria-selected=true][data-focused] > &': {
+            '[aria-current=page][data-focused] > &': {
               backgroundColor: tokenSchema.color.alias.backgroundSelected,
             },
           })}
@@ -269,14 +280,10 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
 }
 
 type TreeItemOptions<T> = {
-  /** Handler that is called when a user performs an action on an item. */
-  onAction?: (key: Key) => void;
   /** An object representing the tree item. */
   node: Node<T>;
   /** Whether the tree item is contained in a virtual scroller. */
   isVirtualized?: boolean;
-  /** Whether selection should occur on press up instead of press down. */
-  shouldSelectOnPressUp?: boolean;
 };
 
 /**
@@ -300,6 +307,8 @@ export function useTreeItem<T>(
   let isSelectedAncestor = treeData?.selectedAncestralKeys.includes(node.key);
 
   let onPress = (e: PressEvent) => {
+    treeData.onAction(node.key);
+
     if (node.hasChildNodes) {
       // allow the user to alt+click to expand/collapse all descendants
       if (e.altKey) {
@@ -319,7 +328,7 @@ export function useTreeItem<T>(
         state.toggleKey(node.key);
       }
     } else {
-      treeData.onAction(node.key);
+      treeData.onSelectionChange?.(node.key);
     }
   };
 
@@ -392,6 +401,7 @@ export function useTreeItem<T>(
 
     switch (e.key) {
       case 'ArrowLeft': {
+        e.preventDefault();
         if (direction === 'rtl') {
           handleArrowForward();
         } else {
@@ -400,6 +410,7 @@ export function useTreeItem<T>(
         break;
       }
       case 'ArrowRight': {
+        e.preventDefault();
         if (direction === 'rtl') {
           handleArrowBackward();
         } else {
@@ -418,14 +429,12 @@ export function useTreeItem<T>(
     'aria-level': node.level + 1,
     'aria-expanded': node.hasChildNodes ? isExpanded : undefined,
     // hmm...
-    // 'aria-current': itemStates.isSelected ? 'page' : undefined,
-    'aria-selected': node.hasChildNodes ? undefined : itemStates.isSelected,
+    'aria-current': itemStates.isSelected ? 'page' : undefined,
   };
 
   if (isVirtualized) {
     let index = Number(state.collection.getItem(node.key)?.index);
     itemProps['aria-posinset'] = Number.isNaN(index) ? undefined : index + 1;
-    // itemProps['aria-rowindex'] = index;
     itemProps['aria-setsize'] = getItemCount(state.collection);
   }
 
