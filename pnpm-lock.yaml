@@ -1410,7 +1410,7 @@ importers:
       '@react-aria/virtualizer': ^3.6.0
       '@react-stately/collections': ^3.5.0
       '@react-stately/layout': ^3.10.0
-      '@react-stately/tree': ^3.4.0
+      '@react-stately/tree': 3.0.0-nightly.2274
       '@react-stately/virtualizer': ^3.4.0
       '@react-types/shared': ^3.18.0
       '@types/react': ^18.2.8
@@ -1438,7 +1438,7 @@ importers:
       '@react-aria/virtualizer': 3.6.1_biqbaboplfbrettd7655fr4n2y
       '@react-stately/collections': 3.5.1_react@18.2.0
       '@react-stately/layout': 3.10.0_react@18.2.0
-      '@react-stately/tree': 3.4.1_react@18.2.0
+      '@react-stately/tree': 3.0.0-nightly.2274_react@18.2.0
       '@react-stately/virtualizer': 3.4.1_react@18.2.0
       '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/icon': link:../icon
@@ -7363,6 +7363,16 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@react-stately/collections/3.0.0-nightly.2274_react@18.2.0:
+    resolution: {integrity: sha512-F4NzNDYNZR7HFXuvYY5wJD0E0DYrYAJ4qJlfg34AwnUkJsKtxOX9Hgxt8A7mihbn4A2nxiiAK/fzBGkn+fZhIg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-types/shared': 3.0.0-nightly.2274_react@18.2.0
+      '@swc/helpers': 0.5.1
+      react: 18.2.0
+    dev: false
+
   /@react-stately/collections/3.5.1_react@18.2.0:
     resolution: {integrity: sha512-egzVrZC5eFc5RJBpqUkzxd2aJOHZ2T1o7horEi8tAWZkg4YI+AmKrqela4ijVrrB9l1GO9z06qPT1UoPkFrC1w==}
     peerDependencies:
@@ -7561,6 +7571,18 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@react-stately/selection/3.0.0-nightly.2274_react@18.2.0:
+    resolution: {integrity: sha512-v7DGQXtFZdLXwqpysjE+/ZBFN1E0G9K8h/hDagdsr4oxOjbQYDAD+Dq1ezC81baBKIEb+9OybgPjdQTjq0xpHQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-stately/collections': 3.0.0-nightly.2274_react@18.2.0
+      '@react-stately/utils': 3.0.0-nightly.2274_react@18.2.0
+      '@react-types/shared': 3.0.0-nightly.2274_react@18.2.0
+      '@swc/helpers': 0.5.1
+      react: 18.2.0
+    dev: false
+
   /@react-stately/selection/3.11.2_react@18.2.0:
     resolution: {integrity: sha512-g21Y36xhYkXO3yzz0BYSBqnD38olvEwsJUqBXGZfx//bshMC2FNmI5sRYMAi36stxWbwzBvB01OytxfLLxCXCA==}
     peerDependencies:
@@ -7646,6 +7668,19 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@react-stately/tree/3.0.0-nightly.2274_react@18.2.0:
+    resolution: {integrity: sha512-UMt4bcVLVMF0CeCJeZzGTdxiKR/2bVrtCRhmSQi1VFSYpqsPD7NwJMgUwsbZannV4jYhvK5l4Xr2CCyCalwh5Q==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-stately/collections': 3.0.0-nightly.2274_react@18.2.0
+      '@react-stately/selection': 3.0.0-nightly.2274_react@18.2.0
+      '@react-stately/utils': 3.0.0-nightly.2274_react@18.2.0
+      '@react-types/shared': 3.0.0-nightly.2274_react@18.2.0
+      '@swc/helpers': 0.5.1
+      react: 18.2.0
+    dev: false
+
   /@react-stately/tree/3.4.1_react@18.2.0:
     resolution: {integrity: sha512-kIXeJOHgGGaUFnAD2wyRIiOwOw/+PN1OXo46n8+dPTFIYwR4+IWFNG8OMjVlIiSLPYWMCzzxZBE9a5grmbmNWQ==}
     peerDependencies:
@@ -7656,6 +7691,15 @@ packages:
       '@react-stately/utils': 3.6.0_react@18.2.0
       '@react-types/shared': 3.18.1_react@18.2.0
       '@swc/helpers': 0.4.14
+      react: 18.2.0
+    dev: false
+
+  /@react-stately/utils/3.0.0-nightly.2274_react@18.2.0:
+    resolution: {integrity: sha512-6xege6Nh0XVThE3xceFA5F+oOBkWNyjsuvjJ2X42ohZd/htylwC/Lw6BlseEnc9nvHLqkUgrvxqES2YpZkjUcA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@swc/helpers': 0.5.1
       react: 18.2.0
     dev: false
 
@@ -7948,6 +7992,14 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-types/shared': 3.18.1_react@18.2.0
+      react: 18.2.0
+    dev: false
+
+  /@react-types/shared/3.0.0-nightly.2274_react@18.2.0:
+    resolution: {integrity: sha512-FtA1GKEljyun1ALvoCicHJXqvciwlj9y7LQzhwqvasn77kGUIAMQaPP5K7f83B+yFWpQkS/0ECfMp47Q2s7Q3Q==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
       react: 18.2.0
     dev: false
 

@@ -39,10 +39,13 @@ interface TreeMapShared {
   id: string;
   onAction: (key: Key) => void;
 }
+
 export const treeMap = new WeakMap<TreeState<unknown>, TreeMapShared>();
+const MAX_EXPAND_DEPTH = 2;
 
 export function NavTree<T extends object>(props: NavTreeProps<T>) {
   let { onAction } = props;
+
   let state = useTreeState(props);
   let ref = useRef<HTMLDivElement>(null);
   let styleProps = useStyleProps(props);
@@ -66,7 +69,12 @@ export function NavTree<T extends object>(props: NavTreeProps<T>) {
   treeMap.set(state, { id, onAction });
 
   return (
-    <div {...collectionProps} {...styleProps} ref={ref} role="treegrid">
+    <div
+      {...collectionProps}
+      {...styleProps}
+      ref={ref}
+      role="treegrid"
+    >
       {resolveTreeNodes({ nodes: state.collection, state })}
     </div>
   );
@@ -87,7 +95,11 @@ function resolveTreeNodes<T>({
 function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
   let ref = useRef<HTMLDivElement>(null);
   let { direction } = useLocale();
-  let { itemProps, isExpanded, isFocused } = useTreeItem({ node }, state, ref);
+  let { itemProps, isExpanded, isPressed, isFocused } = useTreeItem(
+    { node },
+    state,
+    ref
+  );
 
   let isRtl = direction === 'rtl';
   let contents = isReactText(node.rendered) ? (
@@ -111,6 +123,7 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
       <div
         {...itemProps}
         {...toDataAttributes({
+          pressed: isPressed || undefined,
           focused: isFocused
             ? isFocusVisible()
               ? 'visible'
@@ -144,10 +157,26 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
               backgroundColor: tokenSchema.color.alias.backgroundFocused,
               color: tokenSchema.color.alias.foregroundHovered,
             },
+            '[data-pressed] > &': {
+              backgroundColor: tokenSchema.color.alias.backgroundPressed,
+              color: tokenSchema.color.alias.foregroundPressed,
+            },
             // '[data-focused=visible] > &': {
             //   outline: `${tokenSchema.size.alias.focusRing} solid ${tokenSchema.color.alias.focusRing}`,
             // },
 
+            '[data-selected-ancestor=true][aria-expanded=false] > &': {
+              '&::before': {
+                backgroundColor: tokenSchema.color.background.accentEmphasis,
+                borderRadius: tokenSchema.size.space.small,
+                content: '""',
+                insetBlockStart: `calc(${tokenSchema.size.element.regular} / 2 + ${tokenSchema.size.alias.focusRing})`,
+                insetInlineStart: 0,
+                position: 'absolute',
+                height: tokenSchema.size.space.regular,
+                width: tokenSchema.size.space.regular,
+              },
+            },
             '[aria-selected=true] > &': {
               backgroundColor: tokenSchema.color.alias.backgroundPressed,
               color: tokenSchema.color.alias.foregroundHovered,
@@ -222,13 +251,31 @@ export function useTreeItem<T>(
   let treeData = treeMap.get(state);
   let { direction } = useLocale();
 
-  let onAction = () => {
+  let isExpanded = state.expandedKeys.has(node.key);
+
+  let onAction = (e: PressEvent) => {
     if (treeData?.onAction) {
       treeData.onAction(node.key);
     }
 
     if (node.hasChildNodes) {
-      state.toggleKey(node.key);
+      // allow the user to alt+click to expand/collapse all descendants
+      if (e.altKey) {
+        let depth = isExpanded ? Infinity : MAX_EXPAND_DEPTH;
+        let descendants = getDescendantNodes(node, state.collection, depth);
+
+        let newKeys = new Set(state.expandedKeys);
+        for (let descendant of descendants) {
+          if (isExpanded) {
+            newKeys.delete(descendant.key);
+          } else {
+            newKeys.add(descendant.key);
+          }
+        }
+        state.setExpandedKeys(newKeys);
+      } else {
+        state.toggleKey(node.key);
+      }
     }
   };
 
@@ -242,13 +289,13 @@ export function useTreeItem<T>(
 
   let onPressStart = (e: PressEvent) => {
     if (e.pointerType === 'keyboard' && onAction) {
-      onAction();
+      onAction(e);
     }
   };
   let onPressUp = (e: PressEvent) => {
     if (e.pointerType !== 'keyboard') {
       if (onAction) {
-        onAction();
+        onAction(e);
       }
     }
   };
@@ -257,8 +304,6 @@ export function useTreeItem<T>(
     onPressUp,
     isDisabled: itemStates.isDisabled,
   });
-
-  let isExpanded = state.expandedKeys.has(node.key);
 
   let { hoverProps } = useHover({
     isDisabled: state.disabledKeys.has(node.key),
@@ -277,14 +322,34 @@ export function useTreeItem<T>(
 
     let handleArrowBackward = () => {
       if (node.hasChildNodes && isExpanded) {
-        state.toggleKey(node.key);
+        if (e.altKey) {
+          let expandedKeys = new Set(state.expandedKeys);
+          for (let descendant of getDescendantNodes(node, state.collection)) {
+            expandedKeys.delete(descendant.key);
+          }
+          state.setExpandedKeys(expandedKeys);
+        } else {
+          state.toggleKey(node.key);
+        }
       } else if (node?.parentKey) {
         selectionManager.setFocusedKey(node.parentKey);
       }
     };
     let handleArrowForward = () => {
       if (node.hasChildNodes && !isExpanded) {
-        state.toggleKey(node.key);
+        if (e.altKey) {
+          let expandedKeys = new Set(state.expandedKeys);
+          for (let descendant of getDescendantNodes(
+            node,
+            state.collection,
+            MAX_EXPAND_DEPTH
+          )) {
+            expandedKeys.add(descendant.key);
+          }
+          state.setExpandedKeys(expandedKeys);
+        } else {
+          state.toggleKey(node.key);
+        }
       } else if (node.hasChildNodes) {
         let firstChild = state.collection.getKeyAfter(node.key);
         if (firstChild) {
@@ -339,4 +404,42 @@ export function useTreeItem<T>(
       selectionManager.isFocused && selectionManager.focusedKey === node.key, // FIXME: this can be removed when `useSelectableItem` is from latest
     ...itemStates,
   };
+}
+
+/** Get descendants that contain children, inclusive of the root node. */
+function getDescendantNodes<T>(
+  node: Node<T>,
+  collection: Collection<Node<T>>,
+  depth = Infinity
+) {
+  const descendants = new Set<Node<T>>();
+
+  if (depth === 0 || !node.hasChildNodes) {
+    return descendants;
+  }
+
+  descendants.add(node);
+
+  for (let child of getChildNodes(node, collection)) {
+    const childDescendants = getDescendantNodes(child, collection, depth - 1);
+    for (let descendant of childDescendants) {
+      descendants.add(descendant);
+    }
+  }
+
+  return descendants;
+}
+
+// TODO: import from `@react-stately/collections` when it's available.
+function getChildNodes<T>(
+  node: Node<T>,
+  collection: Collection<Node<T>>
+): Iterable<Node<T>> {
+  // New API: call collection.getChildren with the node key.
+  if (typeof collection.getChildren === 'function') {
+    return collection.getChildren(node.key);
+  }
+
+  // Old API: access childNodes directly.
+  return node.childNodes;
 }
