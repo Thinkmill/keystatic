@@ -17,6 +17,9 @@ import React, {
   Key,
   KeyboardEvent as ReactKeyboardEvent,
   RefObject,
+  createContext,
+  useContext,
+  useEffect,
   useId,
   useMemo,
   useRef,
@@ -25,7 +28,7 @@ import React, {
 import { Icon } from '@voussoir/icon';
 import { chevronLeftIcon } from '@voussoir/icon/icons/chevronLeftIcon';
 import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
-import { css, tokenSchema, useStyleProps } from '@voussoir/style';
+import { classNames, css, tokenSchema, useStyleProps } from '@voussoir/style';
 
 import { NavTreeProps } from './types';
 import { isReactText, toDataAttributes } from '@voussoir/utils';
@@ -35,17 +38,29 @@ import { Box } from '@voussoir/layout';
 import { getItemCount } from '@react-stately/collections';
 import { TreeKeyboardDelegate } from './TreeKeyboardDelegate';
 
-interface TreeMapShared {
+type NavTreeContext = {
   id: string;
   onAction: (key: Key) => void;
+  selectedAncestralKeys: Key[];
+};
+
+const TreeContext = createContext<NavTreeContext | null>(null);
+function useTreeContext() {
+  let context = useContext(TreeContext);
+  if (context === null) {
+    throw new Error('NavTree: missing context');
+  }
+  return context;
 }
 
-export const treeMap = new WeakMap<TreeState<unknown>, TreeMapShared>();
 const MAX_EXPAND_DEPTH = 2;
 
 export function NavTree<T extends object>(props: NavTreeProps<T>) {
   let { onAction } = props;
 
+  let [selectedAncestralKeys, setSelectedAncestralKeys] = React.useState<Key[]>(
+    []
+  );
   let state = useTreeState(props);
   let ref = useRef<HTMLDivElement>(null);
   let styleProps = useStyleProps(props);
@@ -66,7 +81,23 @@ export function NavTree<T extends object>(props: NavTreeProps<T>) {
   });
 
   let id = useId();
-  treeMap.set(state, { id, onAction });
+  let context = useMemo(
+    () => ({ id, onAction, selectedAncestralKeys }),
+    [id, onAction, selectedAncestralKeys]
+  );
+
+  useEffect(() => {
+    if (state.selectionManager.firstSelectedKey) {
+      let item = state.collection.getItem(
+        state.selectionManager.firstSelectedKey
+      );
+
+      if (item) {
+        let ancestors = getAncestors(state.collection, item);
+        setSelectedAncestralKeys(ancestors.map(item => item.key));
+      }
+    }
+  }, [state.collection, state.selectionManager.firstSelectedKey]);
 
   // we're focusing each tree item on hover to avoid double handling, so we need
   // to "clear" focus when the user eventually moves their mouse away
@@ -77,15 +108,18 @@ export function NavTree<T extends object>(props: NavTreeProps<T>) {
   });
 
   return (
-    <div
-      {...collectionProps}
-      {...hoverProps}
-      {...styleProps}
-      ref={ref}
-      role="treegrid"
-    >
-      {resolveTreeNodes({ nodes: state.collection, state })}
-    </div>
+    <TreeContext.Provider value={context}>
+      <div
+        {...collectionProps}
+        {...hoverProps}
+        {...styleProps}
+        className={classNames(styleProps.className, css({ outline: 'none' }))}
+        ref={ref}
+        role="treegrid"
+      >
+        {resolveTreeNodes({ nodes: state.collection, state })}
+      </div>
+    </TreeContext.Provider>
   );
 }
 
@@ -104,11 +138,8 @@ function resolveTreeNodes<T>({
 function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
   let ref = useRef<HTMLDivElement>(null);
   let { direction } = useLocale();
-  let { itemProps, isExpanded, isPressed, isFocused } = useTreeItem(
-    { node },
-    state,
-    ref
-  );
+  let { itemProps, isExpanded, isPressed, isFocused, isSelectedAncestor } =
+    useTreeItem({ node }, state, ref);
 
   let isRtl = direction === 'rtl';
   let contents = isReactText(node.rendered) ? (
@@ -132,6 +163,7 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
       <div
         {...itemProps}
         {...toDataAttributes({
+          selectedAncestor: isSelectedAncestor || undefined,
           pressed: isPressed || undefined,
           focused: isFocused
             ? isFocusVisible()
@@ -159,11 +191,11 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
             display: 'flex',
             gap: tokenSchema.size.space.small,
             minHeight: tokenSchema.size.element.regular,
-            padding: tokenSchema.size.alias.focusRing,
+            // padding: tokenSchema.size.alias.focusRing,
             paddingInlineStart: `calc(${tokenSchema.size.space.regular} * var(--inset))`,
 
             '[data-focused] > &': {
-              backgroundColor: tokenSchema.color.alias.backgroundFocused,
+              backgroundColor: tokenSchema.color.alias.backgroundHovered,
               color: tokenSchema.color.alias.foregroundHovered,
             },
             '[data-pressed] > &': {
@@ -179,15 +211,16 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
                 backgroundColor: tokenSchema.color.background.accentEmphasis,
                 borderRadius: tokenSchema.size.space.small,
                 content: '""',
-                insetBlockStart: `calc(${tokenSchema.size.element.regular} / 2 + ${tokenSchema.size.alias.focusRing})`,
+                insetBlockStart: `50%`,
                 insetInlineStart: 0,
+                marginBlockStart: `calc(${tokenSchema.size.scale[75]} / 2 * -1)`,
                 position: 'absolute',
-                height: tokenSchema.size.space.regular,
-                width: tokenSchema.size.space.regular,
+                height: tokenSchema.size.scale[75],
+                width: tokenSchema.size.scale[75],
               },
             },
             '[aria-selected=true] > &': {
-              backgroundColor: tokenSchema.color.alias.backgroundPressed,
+              backgroundColor: tokenSchema.color.alias.backgroundHovered,
               color: tokenSchema.color.alias.foregroundHovered,
               fontWeight: tokenSchema.typography.fontWeight.semibold,
 
@@ -195,11 +228,14 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
                 backgroundColor: tokenSchema.color.background.accentEmphasis,
                 borderRadius: tokenSchema.size.space.small,
                 content: '""',
-                insetBlock: tokenSchema.size.space.xsmall,
+                insetBlock: tokenSchema.size.space.small,
                 insetInlineStart: 0,
                 position: 'absolute',
                 width: tokenSchema.size.space.small,
               },
+            },
+            '[aria-selected=true][data-focused] > &': {
+              backgroundColor: tokenSchema.color.alias.backgroundSelected,
             },
           })}
           style={{
@@ -257,16 +293,13 @@ export function useTreeItem<T>(
   // Copied from useGridListItem + some modifications to make it not so grid specific
   let { node, isVirtualized } = props;
   let { selectionManager } = state;
-  let treeData = treeMap.get(state);
+  let treeData = useTreeContext();
   let { direction } = useLocale();
 
   let isExpanded = state.expandedKeys.has(node.key);
+  let isSelectedAncestor = treeData?.selectedAncestralKeys.includes(node.key);
 
-  let onAction = (e: PressEvent) => {
-    if (treeData?.onAction) {
-      treeData.onAction(node.key);
-    }
-
+  let onPress = (e: PressEvent) => {
     if (node.hasChildNodes) {
       // allow the user to alt+click to expand/collapse all descendants
       if (e.altKey) {
@@ -285,6 +318,8 @@ export function useTreeItem<T>(
       } else {
         state.toggleKey(node.key);
       }
+    } else {
+      treeData.onAction(node.key);
     }
   };
 
@@ -293,24 +328,12 @@ export function useTreeItem<T>(
     selectionManager,
     ref,
     isVirtualized,
+    // shouldUseVirtualFocus: true,
     shouldSelectOnPressUp: true,
   });
 
-  let onPressStart = (e: PressEvent) => {
-    if (e.pointerType === 'keyboard' && onAction) {
-      onAction(e);
-    }
-  };
-  let onPressUp = (e: PressEvent) => {
-    if (e.pointerType !== 'keyboard') {
-      if (onAction) {
-        onAction(e);
-      }
-    }
-  };
   let { pressProps } = usePress({
-    onPressStart,
-    onPressUp,
+    onPress,
     isDisabled: itemStates.isDisabled,
   });
 
@@ -409,6 +432,7 @@ export function useTreeItem<T>(
   return {
     itemProps,
     isExpanded: node.hasChildNodes && isExpanded,
+    isSelectedAncestor,
     isFocused:
       selectionManager.isFocused && selectionManager.focusedKey === node.key, // FIXME: this can be removed when `useSelectableItem` is from latest
     ...itemStates,
@@ -451,4 +475,19 @@ function getChildNodes<T>(
 
   // Old API: access childNodes directly.
   return node.childNodes;
+}
+
+function getAncestors<T>(
+  collection: Collection<Node<T>>,
+  node: Node<T>
+): Node<T>[] {
+  let parents = [];
+
+  while (node?.parentKey != null) {
+    // @ts-expect-error if there's a `parentKey`, there's a parent...
+    node = collection.getItem(node.parentKey);
+    parents.unshift(node);
+  }
+
+  return parents;
 }

@@ -135,7 +135,8 @@ export const SelectedItem = () => {
         children={itemRenderer}
         scrollRef={scrollRef}
         defaultExpandedKeys={expandedKeys}
-        defaultSelectedKeys={[selectedKey]}
+        selectedKeys={[selectedKey]}
+        // defaultSelectedKeys={[selectedKey]}
         selectionMode="single"
         // shouldFocusWrap
       />
@@ -154,7 +155,7 @@ function itemRenderer<T extends { name: string }>(
     <Item key={item.name} childItems={item.children} textValue={item.name}>
       <Text>
         {item.name}
-        {!!item.children?.length && ` (${item.children.length})`}
+        {/* {!!item.children?.length && ` (${item.children.length})`} */}
       </Text>
       {item.children && item.children.length && (
         <ActionButton>
