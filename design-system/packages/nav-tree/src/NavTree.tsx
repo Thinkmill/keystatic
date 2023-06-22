@@ -18,6 +18,7 @@ import React, {
   KeyboardEvent as ReactKeyboardEvent,
   RefObject,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useId,
@@ -28,13 +29,13 @@ import React, {
 import { Icon } from '@voussoir/icon';
 import { chevronLeftIcon } from '@voussoir/icon/icons/chevronLeftIcon';
 import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
+// import { dotIcon } from '@voussoir/icon/icons/dotIcon';
 import { classNames, css, tokenSchema, useStyleProps } from '@voussoir/style';
 
 import { NavTreeProps } from './types';
 import { isReactText, toDataAttributes } from '@voussoir/utils';
 import { Text } from '@voussoir/typography';
 import { SlotProvider } from '@voussoir/slots';
-import { Box } from '@voussoir/layout';
 import { getItemCount } from '@react-stately/collections';
 import { TreeKeyboardDelegate } from './TreeKeyboardDelegate';
 
@@ -137,12 +138,51 @@ function resolveTreeNodes<T>({
   nodes,
   state,
 }: {
-  nodes: Collection<Node<T>>;
+  nodes: Iterable<Node<T>>;
   state: TreeState<T>;
 }) {
-  return Array.from(nodes).map((node: Node<T>) => (
-    <TreeItem node={node} key={node.key} state={state} />
-  ));
+  return Array.from(nodes).map((node: Node<T>) => {
+    let Comp = node.type === 'section' ? TreeSection : TreeItem;
+    return <Comp key={node.key} node={node} state={state} />;
+  });
+}
+
+function TreeSection<T>({
+  node,
+  state,
+}: {
+  node: Node<T>;
+  state: TreeState<T>;
+}) {
+  // TODO: review accessibility
+  return (
+    <>
+      <div role="rowgroup">
+        <div role="row">
+          <div role="columnheader" aria-sort="none">
+            <Text
+              casing="uppercase"
+              size="small"
+              color="neutralSecondary"
+              weight="medium"
+              UNSAFE_className={css({
+                paddingBlock: tokenSchema.size.space.medium,
+                paddingInline: tokenSchema.size.space.medium,
+              })}
+            >
+              {node.rendered}
+            </Text>
+          </div>
+        </div>
+      </div>
+      <div role="rowgroup">
+        {resolveTreeNodes({
+          nodes: getChildNodes(node, state.collection),
+          state,
+        })}
+      </div>
+    </>
+  );
 }
 
 function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
@@ -156,6 +196,20 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
     <Text>{node.rendered}</Text>
   ) : (
     node.rendered
+  );
+
+  let itemClassName = css({
+    color: tokenSchema.color.alias.foregroundIdle,
+    cursor: 'default',
+    fontWeight: tokenSchema.typography.fontWeight.medium,
+    position: 'relative',
+    outline: 'none',
+    padding: tokenSchema.size.alias.focusRing,
+    paddingInlineStart: tokenSchema.size.space.regular,
+  });
+  let itemStyle = useCallback(
+    (selector: string) => `.${itemClassName}${selector}`,
+    [itemClassName]
   );
 
   return (
@@ -183,32 +237,25 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
         })}
         ref={ref}
         role="row"
-        className={css({
-          color: tokenSchema.color.alias.foregroundIdle,
-          cursor: 'default',
-          fontWeight: tokenSchema.typography.fontWeight.medium,
-          position: 'relative',
-          outline: 'none',
-          padding: tokenSchema.size.alias.focusRing,
-          paddingInlineStart: tokenSchema.size.space.regular,
-        })}
+        className={itemClassName}
       >
         <div
           role="gridcell"
           className={css({
             alignItems: 'center',
-            borderRadius: `calc(${tokenSchema.size.radius.regular} + ${tokenSchema.size.alias.focusRing})`,
+            // borderRadius: `calc(${tokenSchema.size.radius.regular} + ${tokenSchema.size.alias.focusRing})`,
+            borderRadius: tokenSchema.size.radius.regular,
             display: 'flex',
             gap: tokenSchema.size.space.small,
             minHeight: tokenSchema.size.element.regular,
             // padding: tokenSchema.size.alias.focusRing,
             paddingInlineStart: `calc(${tokenSchema.size.space.regular} * var(--inset))`,
 
-            '[data-focused] > &': {
+            [itemStyle('[data-focused] > &')]: {
               backgroundColor: tokenSchema.color.alias.backgroundHovered,
               color: tokenSchema.color.alias.foregroundHovered,
             },
-            '[data-pressed] > &': {
+            [itemStyle('[data-pressed] > &')]: {
               backgroundColor: tokenSchema.color.alias.backgroundPressed,
               color: tokenSchema.color.alias.foregroundPressed,
             },
@@ -216,21 +263,23 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
             //   outline: `${tokenSchema.size.alias.focusRing} solid ${tokenSchema.color.alias.focusRing}`,
             // },
 
-            '[data-selected-ancestor=true][aria-expanded=false] > &': {
+            [itemStyle(
+              '[data-selected-ancestor=true][aria-expanded=false] > &'
+            )]: {
               '&::before': {
                 backgroundColor: tokenSchema.color.background.accentEmphasis,
                 borderRadius: tokenSchema.size.space.small,
                 content: '""',
                 insetBlockStart: `50%`,
                 insetInlineStart: 0,
-                marginBlockStart: `calc(${tokenSchema.size.scale[75]} / 2 * -1)`,
+                marginBlockStart: `calc(${tokenSchema.size.space.medium} / 2 * -1)`,
                 position: 'absolute',
-                height: tokenSchema.size.scale[75],
-                width: tokenSchema.size.scale[75],
+                height: tokenSchema.size.space.medium,
+                width: tokenSchema.size.space.small,
               },
             },
 
-            '[aria-current=page] > &': {
+            [itemStyle('[aria-current=page] > &')]: {
               backgroundColor: tokenSchema.color.alias.backgroundHovered,
               color: tokenSchema.color.alias.foregroundHovered,
               fontWeight: tokenSchema.typography.fontWeight.semibold,
@@ -245,8 +294,8 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
                 width: tokenSchema.size.space.small,
               },
             },
-            '[aria-current=page][data-focused] > &': {
-              backgroundColor: tokenSchema.color.alias.backgroundSelected,
+            [itemStyle('[aria-current=page][data-focused] > &')]: {
+              backgroundColor: tokenSchema.color.alias.backgroundPressed,
             },
           })}
           style={{
@@ -259,20 +308,29 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
               src={isRtl ? chevronLeftIcon : chevronRightIcon}
               color="neutralTertiary"
               UNSAFE_style={{
-                // marginInlineStart: `calc(${tokenSchema.size.space.xlarge} * -1)`,
                 transform: `rotate(${isExpanded ? (isRtl ? -90 : 90) : 0}deg)`,
               }}
             />
           ) : (
-            <Box width="element.xsmall" />
+            <Icon
+              // TODO: replace with `dotIcon` after updating to latest "lucide icons"
+              src={
+                <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2">
+                  <circle cx="12.1" cy="12.1" r="1" />
+                </svg>
+              }
+              color="neutralTertiary"
+              UNSAFE_style={{
+                transform: `rotate(${isExpanded ? (isRtl ? -90 : 90) : 0}deg)`,
+              }}
+            />
           )}
           {contents}
         </div>
       </div>
       {isExpanded &&
         resolveTreeNodes({
-          // @ts-expect-error
-          nodes: node.childNodes,
+          nodes: getChildNodes(node, state.collection),
           state,
         })}
     </SlotProvider>
@@ -373,7 +431,10 @@ export function useTreeItem<T>(
           state.toggleKey(node.key);
         }
       } else if (node?.parentKey) {
-        selectionManager.setFocusedKey(node.parentKey);
+        let parentNode = state.collection.getItem(node.parentKey);
+        if (parentNode?.type === 'item') {
+          selectionManager.setFocusedKey(node.parentKey);
+        }
       }
     };
     let handleArrowForward = () => {

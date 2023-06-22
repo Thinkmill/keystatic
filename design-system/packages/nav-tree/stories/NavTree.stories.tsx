@@ -7,7 +7,7 @@ import { plusIcon } from '@voussoir/icon/icons/plusIcon';
 import { Box } from '@voussoir/layout';
 import { Text } from '@voussoir/typography';
 
-import { NavTree, Item } from '../src';
+import { NavTree, Item, Section } from '../src';
 
 let flatItems = [
   { id: 1, name: 'Echidna' },
@@ -111,6 +111,52 @@ export const NestedItems = () => {
         children={itemRenderer}
         scrollRef={scrollRef}
       />
+    </Box>
+  );
+};
+
+export const GroupedItems = () => {
+  let scrollRef = useRef<HTMLDivElement>(null);
+  return (
+    <Box
+      height="container.xsmall"
+      width="container.xsmall"
+      overflow="auto"
+      ref={scrollRef}
+    >
+      <NavTree
+        items={nestedItems}
+        onAction={action('onAction')}
+        onExpandedChange={actionOnSet('onExpandedChange')}
+        onSelectionChange={action('onSelectionChange')}
+        scrollRef={scrollRef}
+      >
+        {section => (
+          <Section
+            key={section.name}
+            items={section.children}
+            title={section.name}
+          >
+            {item => (
+              <Item
+                key={item.name}
+                childItems={item.children}
+                textValue={item.name}
+              >
+                <Text>
+                  {item.name}
+                  {/* {!!item.children?.length && ` (${item.children.length})`} */}
+                </Text>
+                {item.children && item.children.length && (
+                  <ActionButton>
+                    <Icon src={plusIcon} />
+                  </ActionButton>
+                )}
+              </Item>
+            )}
+          </Section>
+        )}
+      </NavTree>
     </Box>
   );
 };
