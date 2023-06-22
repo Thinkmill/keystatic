@@ -68,9 +68,18 @@ export function NavTree<T extends object>(props: NavTreeProps<T>) {
   let id = useId();
   treeMap.set(state, { id, onAction });
 
+  // we're focusing each tree item on hover to avoid double handling, so we need
+  // to "clear" focus when the user eventually moves their mouse away
+  let { hoverProps } = useHover({
+    onHoverEnd() {
+      state.selectionManager.setFocusedKey(null);
+    },
+  });
+
   return (
     <div
       {...collectionProps}
+      {...hoverProps}
       {...styleProps}
       ref={ref}
       role="treegrid"
