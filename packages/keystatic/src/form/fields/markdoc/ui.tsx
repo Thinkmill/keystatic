@@ -12,6 +12,10 @@ import weakMemoize from '@emotion/weak-memoize';
 import { Node } from 'prosemirror-model';
 import { MarkdocCodeEditor } from './code-editor';
 import { TabList, Item, TabPanels, Tabs } from '@keystar/ui/tabs';
+import { createPatch } from 'diff';
+import { Notice } from '@keystar/ui/notice';
+import { syntaxOnlyMarkdocValidate } from './editor/utils';
+import { Text } from '@keystar/ui/typography';
 
 const serializeDoc = weakMemoize(function serializeState(node: Node) {
   return Markdoc.format(
@@ -24,23 +28,27 @@ function RichTextEditor(props: {
   onChange: (value: string) => void;
   editorSchema: EditorSchema;
 }) {
+  const parsedVal = useMemo(() => Markdoc.parse(props.value), [props.value]);
   const valueAsProseMirrorDoc = useMemo(
-    () => markdocToProseMirror(Markdoc.parse(props.value), props.editorSchema),
-    [props.editorSchema, props.value]
+    () => markdocToProseMirror(parsedVal, props.editorSchema),
+    [props.editorSchema, parsedVal]
   );
+
+  const serializedFromValue = serializeDoc(valueAsProseMirrorDoc);
+  const formattedParsed = Markdoc.format(parsedVal);
+  if (serializedFromValue !== formattedParsed) {
+    const patch = createPatch('markdoc', formattedParsed, serializedFromValue);
+    throw new Error('failed to round trip markdoc. diff:\n' + patch);
+  }
+
   const [editorState, setEditorState] = useState(() => {
-    const doc = markdocToProseMirror(
-      Markdoc.parse(props.value),
-      props.editorSchema
-    );
+    const doc = markdocToProseMirror(parsedVal, props.editorSchema);
     return createEditorState(doc);
   });
   const serialized = serializeDoc(editorState.doc);
   if (serialized !== serializeDoc(valueAsProseMirrorDoc)) {
     setEditorState(
-      createEditorState(
-        markdocToProseMirror(Markdoc.parse(props.value), props.editorSchema)
-      )
+      createEditorState(markdocToProseMirror(parsedVal, props.editorSchema))
     );
   }
   return (
@@ -69,8 +77,9 @@ class ErrorBoundary extends React.Component<
   render() {
     if (this.state.error) {
       return (
-        <div>
-          Something went wrong.
+        <Notice>
+          Something went wrong! This means there's likely something that can be
+          improved in Keystatic.
           <pre>
             {(() => {
               try {
@@ -87,7 +96,7 @@ class ErrorBoundary extends React.Component<
             })()}
           </pre>
           {}
-        </div>
+        </Notice>
       );
     }
     return this.props.children;
@@ -101,21 +110,39 @@ export function DocumentFieldInput(
     editorSchema: EditorSchema;
   }
 ) {
+  const parsed = useMemo(() => {
+    const ast = Markdoc.parse(props.value);
+    return {
+      ast,
+      syntaxErrors: syntaxOnlyMarkdocValidate(ast),
+      allErrors: Markdoc.validate(ast, props.editorSchema.markdocConfig),
+    };
+  }, [props.editorSchema.markdocConfig, props.value]);
+
   return (
     <FieldPrimitive label={props.label} description={props.description}>
-      <Tabs aria-label="Tabs example">
+      <Tabs>
         <TabList>
           <Item key="rich-text">Rich Text</Item>
-          <Item key="code">Code</Item>
+          <Item key="code">
+            <Text>Code {parsed.allErrors.length ? '(Errors)' : null}</Text>
+          </Item>
         </TabList>
         <TabPanels>
           <Item key="rich-text">
             <ErrorBoundary>
-              <RichTextEditor
-                value={props.value}
-                onChange={props.onChange}
-                editorSchema={props.editorSchema}
-              />
+              {parsed.syntaxErrors.length ? (
+                <Notice tone="caution">
+                  This content has syntax errors so this editor isn't available.
+                  Please go to the code tab to fix the syntax errors.
+                </Notice>
+              ) : (
+                <RichTextEditor
+                  value={props.value}
+                  onChange={props.onChange}
+                  editorSchema={props.editorSchema}
+                />
+              )}
             </ErrorBoundary>
           </Item>
           <Item key="code">

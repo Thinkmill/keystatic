@@ -655,6 +655,7 @@ importers:
       '@ts-gql/next': ^17.0.0
       '@ts-gql/tag': ^0.7.0
       '@types/cookie': ^0.5.1
+      '@types/diff': ^5.0.3
       '@types/is-hotkey': ^0.1.7
       '@types/js-yaml': ^4.0.5
       '@types/node': 16.11.13
@@ -668,6 +669,7 @@ importers:
       '@urql/exchange-persisted': ^3.0.0
       apply-ref: ^1.0.0
       cookie: ^0.5.0
+      diff: ^5.1.0
       emery: ^1.4.1
       escape-string-regexp: ^4.0.0
       eslint: ^8.18.0
@@ -751,6 +753,7 @@ importers:
       '@urql/exchange-persisted': 3.0.0_graphql@16.6.0
       apply-ref: 1.0.0
       cookie: 0.5.0
+      diff: 5.1.0
       emery: 1.4.1
       escape-string-regexp: 4.0.0
       fast-deep-equal: 3.1.3
@@ -790,6 +793,7 @@ importers:
       '@ts-gql/eslint-plugin': 0.8.5_zxeajgyublgrbqnioyf65anicm
       '@ts-gql/next': 17.0.0_geby35jtnxiaox3zmodjvon224
       '@types/cookie': 0.5.1
+      '@types/diff': 5.0.3
       '@types/is-hotkey': 0.1.7
       '@types/js-yaml': 4.0.5
       '@types/prismjs': 1.26.0
@@ -7682,6 +7686,10 @@ packages:
 
   /@types/detect-port/1.3.3:
     resolution: {integrity: sha512-bV/jQlAJ/nPY3XqSatkGpu+nGzou+uSwrH1cROhn+jBFg47yaNH+blW4C7p9KhopC7QxCv/6M86s37k8dMk0Yg==}
+    dev: true
+
+  /@types/diff/5.0.3:
+    resolution: {integrity: sha512-amrLbRqTU9bXMCc6uX0sWpxsQzRIo9z6MJPkH1pkez/qOxuqSZVuryJAWoBRq94CeG8JxY+VK4Le9HtjQR5T9A==}
     dev: true
 
   /@types/doctrine/0.0.3:

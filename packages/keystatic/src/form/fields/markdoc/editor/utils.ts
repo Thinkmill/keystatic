@@ -1,3 +1,4 @@
+import { Node, ValidateError } from '@markdoc/markdoc';
 import { css, tokenSchema } from '@keystar/ui/style';
 import { useRef, useCallback, useEffect } from 'react';
 
@@ -9,6 +10,21 @@ export const classes = {
 };
 
 export const markdocIdentifierPattern = /^[a-zA-Z][-_a-zA-Z0-9]*$/;
+
+export function syntaxOnlyMarkdocValidate(parsed: Node): ValidateError[] {
+  const parseErrors: ValidateError[] = [];
+  for (const node of parsed.walk()) {
+    for (const err of node.errors) {
+      parseErrors.push({
+        error: err,
+        lines: node.lines,
+        type: node.type,
+        location: node.location,
+      });
+    }
+  }
+  return parseErrors;
+}
 
 export function weakMemoize<Arg extends object, Return>(
   func: (arg: Arg) => Return
