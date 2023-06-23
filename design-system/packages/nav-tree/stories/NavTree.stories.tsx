@@ -21,62 +21,132 @@ let flatItems = [
   { id: 9, name: 'Bilby' },
 ];
 
-let nestedItems = [
+let nestedItems: Item[] = [
   {
-    name: 'Marsupials',
+    name: 'Animals',
     children: [
       {
-        name: 'Bilby',
-        children: [{ name: 'Greater bilby' }, { name: 'Lesser bilby' }],
-      },
-      {
-        name: 'Kangaroo',
+        name: 'Mammals',
         children: [
-          { name: 'Red kangaroo' },
           {
-            name: 'Grey kangaroo',
+            name: 'Carnivores',
             children: [
-              { name: 'Eastern grey kangaroo' },
-              { name: 'Western grey kangaroo' },
+              { name: 'Lion' },
+              { name: 'Tiger' },
+              { name: 'Leopard' },
             ],
           },
-          { name: 'Tree kangaroo' },
-          { name: 'Wallaroo' },
+          {
+            name: 'Herbivores',
+            children: [
+              { name: 'Elephant' },
+              { name: 'Giraffe' },
+              {
+                name: 'Kangaroo',
+                children: [
+                  { name: 'Red kangaroo' },
+                  { name: 'Grey kangaroo' },
+                  { name: 'Tree kangaroo' },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Primates',
+            children: [
+              { name: 'Chimpanzee' },
+              { name: 'Gorilla' },
+              { name: 'Orangutan' },
+            ],
+          },
         ],
       },
       {
-        name: 'Quokka',
+        name: 'Birds',
+        children: [
+          { name: 'Eagles' },
+          { name: 'Parrots' },
+          {
+            name: 'Water Birds',
+            children: [
+              { name: 'Swan' },
+              {
+                name: 'Duck',
+                children: [
+                  { name: 'Mallard Duck' },
+                  { name: 'Pekin Duck' },
+                  { name: 'Muscovy Duck' },
+                ],
+              },
+              { name: 'Pelican' },
+            ],
+          },
+        ],
       },
       {
-        name: 'Wombat',
+        name: 'Reptiles',
         children: [
-          { name: 'Common wombat' },
-          { name: 'Northern hairy-nosed wombat' },
-          { name: 'Southern hairy-nosed wombat' },
+          { name: 'Snake' },
+          { name: 'Lizard' },
+          {
+            name: 'Turtles',
+            children: [
+              { name: 'Sea Turtle' },
+              { name: 'Box Turtle' },
+              { name: 'Snapping Turtle' },
+            ],
+          },
         ],
       },
     ],
   },
   {
-    name: 'Other',
+    name: 'Plants',
     children: [
       {
-        name: 'Echidna',
+        name: 'Flowering Plants',
         children: [
-          { name: 'Short-beaked echidna' },
-          { name: 'Long-beaked echidna' },
+          {
+            name: 'Trees',
+            children: [
+              {
+                name: 'Oak',
+                children: [
+                  { name: 'White Oak' },
+                  { name: 'Red Oak' },
+                  { name: 'Live Oak' },
+                ],
+              },
+              { name: 'Maple' },
+              { name: 'Palm' },
+            ],
+          },
+          {
+            name: 'Flowers',
+            children: [
+              { name: 'Rose' },
+              { name: 'Sunflower' },
+              { name: 'Tulip' },
+            ],
+          },
         ],
       },
-      { name: 'Dingo' },
       {
-        name: 'Cassowary',
+        name: 'Ferns',
         children: [
-          { name: 'Southern cassowary' },
-          { name: 'Northern cassowary' },
-          { name: 'Dwarf cassowary' },
+          { name: 'Maidenhair Fern' },
+          { name: "Bird's Nest Fern" },
+          { name: 'Tree Fern' },
         ],
       },
-      { name: 'Platypus' },
+      {
+        name: 'Cacti',
+        children: [
+          { name: 'Saguaro' },
+          { name: 'Prickly Pear' },
+          { name: 'Barrel Cactus' },
+        ],
+      },
     ],
   },
 ];
@@ -97,12 +167,7 @@ export const FlatItems = () => (
 export const NestedItems = () => {
   let scrollRef = useRef<HTMLDivElement>(null);
   return (
-    <Box
-      height="container.xsmall"
-      width="container.xsmall"
-      overflow="auto"
-      ref={scrollRef}
-    >
+    <Box height="100vh" width="scale.3400" overflow="auto" ref={scrollRef}>
       <NavTree
         items={nestedItems}
         onAction={action('onAction')}
@@ -118,12 +183,7 @@ export const NestedItems = () => {
 export const GroupedItems = () => {
   let scrollRef = useRef<HTMLDivElement>(null);
   return (
-    <Box
-      height="container.xsmall"
-      width="container.xsmall"
-      overflow="auto"
-      ref={scrollRef}
-    >
+    <Box height="100vh" width="scale.3400" overflow="auto" ref={scrollRef}>
       <NavTree
         items={nestedItems}
         onAction={action('onAction')}
@@ -162,17 +222,12 @@ export const GroupedItems = () => {
 };
 
 export const SelectedItem = () => {
-  let [selectedKey, setSelectedKey] = useState<Key>('Eastern grey kangaroo');
+  let [selectedKey, setSelectedKey] = useState<Key>('Grey kangaroo');
   let scrollRef = useRef<HTMLDivElement>(null);
   let expandedKeys = findParents(flattenItems(nestedItems), selectedKey);
 
   return (
-    <Box
-      height="container.xsmall"
-      width="container.xsmall"
-      overflow="auto"
-      ref={scrollRef}
-    >
+    <Box height="100vh" width="scale.3400" overflow="auto" ref={scrollRef}>
       <NavTree
         items={nestedItems}
         onAction={action('onAction')}
