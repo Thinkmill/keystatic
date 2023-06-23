@@ -148,6 +148,13 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "@braintree/sanitize-url": "^6.0.2",
+    "@codemirror/commands": "^6.2.4",
+    "@codemirror/lang-javascript": "^6.1.9",
+    "@codemirror/lang-markdown": "^6.1.1",
+    "@codemirror/language": "^6.8.0",
+    "@codemirror/lint": "^6.2.2",
+    "@codemirror/state": "^6.2.1",
+    "@codemirror/view": "^6.13.2",
     "@emotion/css": "^11.9.0",
     "@emotion/weak-memoize": "^0.3.0",
     "@floating-ui/react": "^0.24.0",

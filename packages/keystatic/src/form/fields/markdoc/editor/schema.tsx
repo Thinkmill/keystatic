@@ -451,7 +451,7 @@ export type EditorSchema = {
   marks: {
     [_ in keyof typeof markSpecs]: MarkType;
   };
-  markdocConfig: Config | undefined;
+  markdocConfig: Config;
   insertMenuItems: InsertMenuItem[];
 };
 
