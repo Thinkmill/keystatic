@@ -144,7 +144,7 @@ export const componentBlocks = {
   }),
   embed: component({
     label: 'Embed',
-    preview: () => null,
+    preview: props => <div>{props.fields.mediaType.value}</div>,
     schema: {
       mediaType: fields.select({
         label: 'Media type',
@@ -158,19 +158,6 @@ export const componentBlocks = {
         label: 'Embed code',
         multiline: true,
       }),
-    },
-  }),
-  videoGif: component({
-    label: 'Looping video (muted)',
-    preview: () => null,
-    schema: {
-      src: fields.file({
-        label: 'Video',
-        directory: 'public/writing',
-        publicPath: '/writing/',
-        validation: { isRequired: true },
-      }),
-      caption: fields.text({ label: 'Caption', multiline: true }),
     },
   }),
 };
@@ -241,28 +228,6 @@ export default config({
           },
         }),
         summary: fields.text({ label: 'Summary', multiline: true }),
-        // authors: fields.array(
-        //   fields.relationship({
-        //     label: 'Author',
-        //     collection: 'authors',
-        //     validation: { isRequired: true },
-        //   }),
-        //   {
-        //     label: 'Authors',
-        //     itemLabel: props => props.value ?? 'Please select',
-        //   }
-        // ),
-        // tags: fields.array(
-        //   fields.relationship({
-        //     label: 'Tag',
-        //     collection: 'tags',
-        //     validation: { isRequired: true },
-        //   }),
-        //   {
-        //     label: 'Tags',
-        //     itemLabel: props => props.value ?? 'Please select',
-        //   }
-        // ),
         content: fields.document({
           label: 'Content',
           links: true,
@@ -282,10 +247,38 @@ export default config({
           componentBlocks: componentBlocks,
           formatting,
         }),
-        canonical: fields.text({
-          label: 'Canonical URL',
+        authors: fields.array(
+          fields.relationship({
+            label: 'Author',
+            collection: 'authors',
+            validation: { isRequired: true },
+          }),
+          {
+            label: 'Authors',
+            itemLabel: props => props.value ?? 'Please select',
+          }
+        ),
+      },
+    }),
+
+    // ------------------------------
+    // Authors
+    // ------------------------------
+    authors: collection({
+      label: 'Authors',
+      slugField: 'name',
+      path: 'src/content/authors/**',
+      schema: {
+        name: fields.text({
+          label: 'Name',
+          validation: {
+            length: { min: 1 },
+          },
+        }),
+        link: fields.url({
+          label: 'URL',
           description:
-            'Only fill is the canonical URL for this post is a different URL.',
+            'Optionally link the author name to e.g. their social media.',
         }),
       },
     }),
@@ -338,5 +331,29 @@ export default config({
         ),
       },
     }),
+    // authors: singleton({
+    //   label: 'Authors',
+    //   schema: {
+    //     author: fields.array(
+    //       fields.object({
+    //         name: fields.text({
+    //           label: 'Name',
+    //           validation: {
+    //             length: { min: 1 },
+    //           },
+    //         }),
+    //         link: fields.url({
+    //           label: 'URL',
+    //           description:
+    //             'Optionally link the author name to e.g. their social media.',
+    //         }),
+    //       }),
+    //       {
+    //         label: 'Authors',
+    //         itemLabel: props => props.fields.name.value,
+    //       }
+    //     ),
+    //   },
+    // }),
   },
 });

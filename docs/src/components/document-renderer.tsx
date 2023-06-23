@@ -18,6 +18,7 @@ import { DateFieldDemo } from './fields/date';
 import { SlugFieldDemo } from './fields/slug';
 import { ImageFieldDemo } from './fields/image';
 import { FileFieldDemo } from './fields/file';
+import { Embed, EmbedProps } from './embed';
 
 const keystaticCodeTheme = JSON.parse(
   fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
@@ -213,11 +214,13 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         return <div>Field not found</div>;
     }
   },
-  embed: () => {
-    return <div>I am an embed</div>;
-  },
-  videoGif: () => {
-    return <div>I am a videoGif</div>;
+  embed: ({ mediaType, embedCode }) => {
+    return (
+      <Embed
+        mediaType={mediaType as EmbedProps['mediaType']}
+        embedCode={embedCode}
+      />
+    );
   },
 };
 
