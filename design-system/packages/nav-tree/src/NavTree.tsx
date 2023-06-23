@@ -55,8 +55,6 @@ function useTreeContext() {
   return context;
 }
 
-const MAX_EXPAND_DEPTH = 2;
-
 export function NavTree<T extends object>(props: NavTreeProps<T>) {
   let { onAction, onSelectionChange, selectedKey, ...otherProps } = props;
   let ref = useRef<HTMLDivElement>(null);
@@ -110,19 +108,11 @@ export function NavTree<T extends object>(props: NavTreeProps<T>) {
     }
   }, [state.collection, state.selectionManager.firstSelectedKey]);
 
-  // we're focusing each tree item on hover to avoid double handling, so we need
-  // to "clear" focus when the user eventually moves their mouse away
-  let { hoverProps } = useHover({
-    onHoverEnd() {
-      state.selectionManager.setFocusedKey(null);
-    },
-  });
-
   return (
     <TreeContext.Provider value={context}>
       <div
         {...collectionProps}
-        {...hoverProps}
+        // {...hoverProps}
         {...styleProps}
         className={classNames(styleProps.className, css({ outline: 'none' }))}
         ref={ref}
@@ -188,8 +178,14 @@ function TreeSection<T>({
 function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
   let ref = useRef<HTMLDivElement>(null);
   let { direction } = useLocale();
-  let { itemProps, isExpanded, isPressed, isFocused, isSelectedAncestor } =
-    useTreeItem({ node }, state, ref);
+  let {
+    itemProps,
+    isExpanded,
+    isPressed,
+    isHovered,
+    isFocused,
+    isSelectedAncestor,
+  } = useTreeItem({ node }, state, ref);
 
   let isRtl = direction === 'rtl';
   let contents = isReactText(node.rendered) ? (
@@ -208,7 +204,8 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
     paddingInlineStart: tokenSchema.size.space.regular,
   });
   let itemStyle = useCallback(
-    (selector: string) => `.${itemClassName}${selector}`,
+    (...selectors: string[]) =>
+      selectors.map(selector => `.${itemClassName}${selector}`).join(', '),
     [itemClassName]
   );
 
@@ -216,7 +213,7 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
     <SlotProvider
       slots={{
         button: {
-          isHidden: !isFocused,
+          isHidden: !(isFocused && isFocusVisible()) && !isHovered,
           elementType: 'span',
           marginStart: 'auto',
           prominence: 'low',
@@ -228,6 +225,7 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
         {...itemProps}
         {...toDataAttributes({
           selectedAncestor: isSelectedAncestor || undefined,
+          hovered: isHovered || undefined,
           pressed: isPressed || undefined,
           focused: isFocused
             ? isFocusVisible()
@@ -248,10 +246,13 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
             display: 'flex',
             gap: tokenSchema.size.space.small,
             minHeight: tokenSchema.size.element.regular,
-            // padding: tokenSchema.size.alias.focusRing,
             paddingInlineStart: `calc(${tokenSchema.size.space.regular} * var(--inset))`,
 
-            [itemStyle('[data-focused] > &')]: {
+            '[role=rowgroup] &': {
+              paddingInlineStart: `calc(${tokenSchema.size.space.regular} * calc(var(--inset) - 1))`,
+            },
+
+            [itemStyle('[data-hovered] > &', '[data-focused=visible] > &')]: {
               backgroundColor: tokenSchema.color.alias.backgroundHovered,
               color: tokenSchema.color.alias.foregroundHovered,
             },
@@ -355,7 +356,6 @@ export function useTreeItem<T>(
   state: TreeState<T>,
   ref: RefObject<FocusableElement>
 ) {
-  // Copied from useGridListItem + some modifications to make it not so grid specific
   let { node, isVirtualized } = props;
   let { selectionManager } = state;
   let treeData = useTreeContext();
@@ -370,8 +370,7 @@ export function useTreeItem<T>(
     if (node.hasChildNodes) {
       // allow the user to alt+click to expand/collapse all descendants
       if (e.altKey) {
-        let depth = isExpanded ? Infinity : MAX_EXPAND_DEPTH;
-        let descendants = getDescendantNodes(node, state.collection, depth);
+        let descendants = getDescendantNodes(node, state.collection);
 
         let newKeys = new Set(state.expandedKeys);
         for (let descendant of descendants) {
@@ -399,19 +398,13 @@ export function useTreeItem<T>(
     shouldSelectOnPressUp: true,
   });
 
-  let { pressProps } = usePress({
+  let { isPressed, pressProps } = usePress({
     onPress,
     isDisabled: itemStates.isDisabled,
   });
 
-  let { hoverProps } = useHover({
-    isDisabled: state.disabledKeys.has(node.key),
-    onHoverStart() {
-      if (!isFocusVisible()) {
-        selectionManager.setFocused(true);
-        selectionManager.setFocusedKey(node.key);
-      }
-    },
+  let { isHovered, hoverProps } = useHover({
+    isDisabled: itemStates.isDisabled,
   });
 
   let onKeyDownCapture = (e: ReactKeyboardEvent) => {
@@ -441,11 +434,7 @@ export function useTreeItem<T>(
       if (node.hasChildNodes && !isExpanded) {
         if (e.altKey) {
           let expandedKeys = new Set(state.expandedKeys);
-          for (let descendant of getDescendantNodes(
-            node,
-            state.collection,
-            MAX_EXPAND_DEPTH
-          )) {
+          for (let descendant of getDescendantNodes(node, state.collection)) {
             expandedKeys.add(descendant.key);
           }
           state.setExpandedKeys(expandedKeys);
@@ -489,7 +478,6 @@ export function useTreeItem<T>(
     'aria-disabled': itemStates.isDisabled || undefined,
     'aria-level': node.level + 1,
     'aria-expanded': node.hasChildNodes ? isExpanded : undefined,
-    // hmm...
     'aria-current': itemStates.isSelected ? 'page' : undefined,
   };
 
@@ -501,11 +489,13 @@ export function useTreeItem<T>(
 
   return {
     itemProps,
+    ...itemStates,
     isExpanded: node.hasChildNodes && isExpanded,
     isSelectedAncestor,
+    isHovered,
+    isPressed, // should come from `itemStates` but not working for some reason...
     isFocused:
       selectionManager.isFocused && selectionManager.focusedKey === node.key, // FIXME: this can be removed when `useSelectableItem` is from latest
-    ...itemStates,
   };
 }
 
