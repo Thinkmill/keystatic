@@ -14,7 +14,7 @@ import { MarkdocCodeEditor } from './code-editor';
 import { TabList, Item, TabPanels, Tabs } from '@keystar/ui/tabs';
 import { createPatch } from 'diff';
 import { Notice } from '@keystar/ui/notice';
-import { syntaxOnlyMarkdocValidate } from './editor/utils';
+import { syntaxOnlyMarkdocValidate } from './utils';
 import { Text } from '@keystar/ui/typography';
 
 const serializeDoc = weakMemoize(function serializeState(node: Node) {
@@ -52,15 +52,13 @@ function RichTextEditor(props: {
     );
   }
   return (
-    <>
-      <Editor
-        value={editorState}
-        onChange={state => {
-          setEditorState(state);
-          props.onChange(serializeDoc(state.doc));
-        }}
-      />
-    </>
+    <Editor
+      value={editorState}
+      onChange={newState => {
+        setEditorState(newState);
+        props.onChange(serializeDoc(newState.doc));
+      }}
+    />
   );
 }
 

@@ -6,6 +6,7 @@ import Markdoc, {
 import { ContentFormField } from '../../api';
 import { DocumentFieldInput } from './ui';
 import { EditorSchema, createEditorSchema } from './editor/schema';
+import { syntaxOnlyMarkdocValidate } from './utils';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -47,7 +48,18 @@ export function __experimental_markdoc_field({
     },
 
     parse: (_, { content }) => {
-      return textDecoder.decode(content);
+      const text = textDecoder.decode(content);
+      const parsed = Markdoc.parse(text);
+      for (const node of parsed.walk()) {
+        if (node.type === 'em' || node.type === 'strong') {
+          delete node.attributes.marker;
+        }
+      }
+      const syntaxErrors = syntaxOnlyMarkdocValidate(parsed);
+      if (syntaxErrors.length) {
+        return text;
+      }
+      return Markdoc.format(parsed);
     },
     contentExtension: '.mdoc',
     validate(value) {

@@ -92,7 +92,7 @@ function genericConvertNode(
       location: markdocNode.location,
     });
   }
-  const node = nodeType.createChecked(attrs, children);
+  const node = nodeType.createAndFill(attrs, children);
   if (!node) {
     error({
       error: {
@@ -260,9 +260,6 @@ function markdocNodeToProseMirrorNode(
     return schema.schema.text(node.attributes.content, getState().marks);
   }
   if (node.type === 'item') {
-    if (node.annotations.length) {
-      throw new Error('annotations not yet supported on list items');
-    }
     const updatedNode = new Ast.Node(
       'item',
       node.attributes,
@@ -288,20 +285,25 @@ function markdocNodeToProseMirrorNode(
     const children = childrenToProseMirrorNodes(node.children);
     const tagChildren = [
       schema.nodes.tag_attributes.createChecked(null, parseAnnotations(node)),
-      ...Object.entries(node.slots).map(([slotName, slotContent]) =>
-        schema.nodes.tag_slot.createChecked(
-          { name: slotName },
-          childrenToProseMirrorNodes([slotContent])
-        )
-      ),
       ...children,
     ];
-
-    const pmNode = schema.nodes.tag.createChecked(
-      { name: node.tag },
-      tagChildren
-    );
-    return pmNode;
+    const tagType =
+      tagChildren.length === 1 &&
+      node.findSchema(schema.markdocConfig)?.selfClosing
+        ? schema.nodes.tag_self_closing
+        : schema.nodes.tag_with_children;
+    if (
+      tagType === schema.nodes.tag_with_children &&
+      tagChildren.length === 1
+    ) {
+      tagChildren.push(schema.nodes.paragraph.createChecked());
+    }
+    try {
+      return tagType.createChecked({ name: node.tag }, tagChildren);
+    } catch (err) {
+      console.log(tagChildren);
+      throw err;
+    }
   }
 
   error({

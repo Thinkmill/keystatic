@@ -7,7 +7,7 @@ import Markdoc, {
 } from '@markdoc/markdoc';
 import { Fragment, Mark, Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorSchema, getEditorSchema } from '../schema';
-import { syntaxOnlyMarkdocValidate } from '../utils';
+import { syntaxOnlyMarkdocValidate } from '../../utils';
 
 function blocks(fragment: Fragment): MarkdocNode[] {
   const children: MarkdocNode[] = [];
@@ -117,7 +117,10 @@ export function proseMirrorToMarkdoc(node: ProseMirrorNode): MarkdocNode {
   if (node.type === schema.nodes.unordered_list) {
     return new Ast.Node('list', { ordered: false }, blocks(node.content));
   }
-  if (node.type === schema.nodes.tag) {
+  if (
+    node.type === schema.nodes.tag_self_closing ||
+    node.type === schema.nodes.tag_with_children
+  ) {
     const annotations: AttributeValue[] = [];
     const children: MarkdocNode[] = [];
     node.content.forEach((node, _, i) => {
