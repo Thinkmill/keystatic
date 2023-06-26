@@ -41,7 +41,7 @@ import { TreeKeyboardDelegate } from './TreeKeyboardDelegate';
 
 type NavTreeContext = {
   id: string;
-  onAction: (key: Key) => void;
+  onAction?: (key: Key) => void;
   onSelectionChange?: (key: Key) => void;
   selectedAncestralKeys: Key[];
 };
@@ -365,7 +365,7 @@ export function useTreeItem<T>(
   let isSelectedAncestor = treeData?.selectedAncestralKeys.includes(node.key);
 
   let onPress = (e: PressEvent) => {
-    treeData.onAction(node.key);
+    treeData.onAction?.(node.key);
 
     if (node.hasChildNodes) {
       // allow the user to alt+click to expand/collapse all descendants

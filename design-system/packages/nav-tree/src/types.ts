@@ -22,7 +22,7 @@ export type NavTreeProps<T> = CollectionBase<T> & {
    * Generally prefer the more specific `onSelectionChange` and
    * `onExpandedChange` handlers.
    */
-  onAction: (key: Key) => any;
+  onAction?: (key: Key) => any;
   /**
    * Whether focus should wrap around when the end/start is reached.
    * @default false
