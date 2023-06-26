@@ -32,36 +32,45 @@ export default config({
 When you visit the `/keystatic` route in the browser for the first time with the `github` storage strategy, you'll be invited to create or configure a GitHub app:
 
 {% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/storagestrategy1.png" /%}
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy1.png"
+   alt="Keystatic prompting to create a GitHub app" /%}
 
 If you click on the “Create GitHub App” button, you'll be taken to GitHub and asked for a name for your App.
 
 Once you create it, you should see this screen:
 
 {% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/storagestrategy2.png" /%}
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy2.png"
+   alt="card with You've installed Keystatic! text and button with Install GitHub App" /%}
 
 Click on “Install GitHub App” and give it access to your repo:
 
 {% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/storagestrategy3.png" /%}
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy3.png"
+   alt="permission prompt on GitHub to give Keystatic access to read and write code" /%}
 
 If you look at your project, a new `.env`  file should have been created with some Keystatic environment variables:
 
-{% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/storagestrategy4.png" /%}
+```bash
+# Keystatic
+KEYSTATIC_GITHUB_CLIENT_ID=...
+KEYSTATIC_GITHUB_CLIENT_SECRET=...
+KEYSTATIC_SECRET=...
+PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=...
+```
 
 If you visit `/keystatic` one more time, you should see the Keystatic dashboard!
 
 {% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/storagestrategy5.png" /%}
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy5.png"
+   alt="Keystatic with branch picker, menu for creating and deleted branches, and creating a pull request" /%}
 
 You know the `github` strategy is working if you see the GitHub-related UI elements (branch selector, GitHub contextual dropdown menu, branch list).
 
 ## Local strategy
 
 {% aside icon="⚡️" %}
-The `local` strategy is much _simpler_ than the `github` strategy, but it's more limiting in its collaboration capabilities.
+The `local` strategy is much *simpler* than the `github` strategy, but it's more limiting in its collaboration capabilities.
 
 If you're a solo dev or a team that only wants to use Keystatic while running it locally, the `local` strategy might be **great** for you!
 
@@ -85,4 +94,5 @@ That's it!
 You'll notice there are no signs of GitHub-related UI elements in the Keystatic Admin UI:
 
 {% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/storagestrategy6.png" /%}
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy6.png"
+   alt="Keystatic without git branch picker" /%}

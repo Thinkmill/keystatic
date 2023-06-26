@@ -11,7 +11,7 @@ import {
   Slice,
   Fragment,
 } from 'prosemirror-model';
-import { classes, nodeWithBorder } from './utils';
+import { classes, markdocIdentifierPattern, nodeWithBorder } from './utils';
 import {
   InsertMenuItem,
   WithInsertMenuNodeSpec,
@@ -66,6 +66,7 @@ const dividerDOM: DOMOutputSpec = [
 const codeDOM: DOMOutputSpec = [
   'pre',
   {
+    spellcheck: 'false',
     class: css({
       backgroundColor: tokenSchema.color.background.surface,
       borderRadius: tokenSchema.size.radius.medium,
@@ -127,10 +128,12 @@ const nodeSpecs = {
     content: 'attribute*',
     selectable: false,
     defining: true,
+    parseDOM: [{ tag: '[data-markdoc-attributes]' }],
     toDOM() {
       return [
         'div',
         {
+          'data-markdoc-attributes': '1',
           class: css({
             display: 'block',
             backgroundColor: tokenSchema.color.background.surface,
@@ -212,9 +215,22 @@ const nodeSpecs = {
     defining: true,
     [independentForGapCursor]: true,
     content: 'tag_attributes tag_slot* block*',
+    parseDOM: [
+      {
+        tag: '[data-markdoc-tag]',
+        getAttrs(node) {
+          if (typeof node === 'string') return false;
+          let name = node.getAttribute('data-markdoc-tag');
+          if (name === null || !markdocIdentifierPattern.test(name)) {
+            return false;
+          }
+          return { name };
+        },
+      },
+    ],
     toDOM(node) {
       const element = document.createElement('div');
-      element.dataset.tag = node.attrs.name;
+      element.dataset.markdocTag = node.attrs.name;
       element.style.setProperty('--tag-name', JSON.stringify(node.attrs.name));
       element.classList.add(
         css({

@@ -6,7 +6,7 @@ import { css } from '@emotion/css';
 import { tokenSchema } from '@voussoir/style';
 import { Toolbar } from './Toolbar';
 import { prosemirrorStyles } from './utils';
-import { EditorPopover } from './popovers';
+import { EditorPopoverDecoration } from './popovers';
 import { ProseMirrorEditable, ProseMirrorEditor } from './editor-view';
 import { AutocompleteDecoration } from './autocomplete/decoration';
 
@@ -43,6 +43,7 @@ const editableStyles = css({
   a: {
     color: tokenSchema.color.foreground.accent,
   },
+  color: tokenSchema.color.foreground.neutral,
 });
 
 export const Editor = forwardRef(function Editor(
@@ -64,7 +65,7 @@ export const Editor = forwardRef(function Editor(
         <Toolbar />
         <ProseMirrorEditable className={editableStyles} />
       </Box>
-      <EditorPopover state={props.value} />
+      <EditorPopoverDecoration state={props.value} />
       <AutocompleteDecoration />
     </ProseMirrorEditor>
   );

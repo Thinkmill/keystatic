@@ -14,6 +14,7 @@
     "@heroicons/react": "^2.0.16",
     "@keystatic/core": "^0.0.107",
     "@keystatic/next": "^0.0.11",
+    "@markdoc/markdoc": "^0.3.0",
     "@sindresorhus/slugify": "^1.1.2",
     "@tailwindcss/forms": "^0.5.3",
     "@types/cookie": "^0.5.1",

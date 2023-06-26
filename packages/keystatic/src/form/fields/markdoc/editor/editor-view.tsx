@@ -5,6 +5,7 @@ import React, {
   MutableRefObject,
   ReactNode,
   forwardRef,
+  useCallback,
   useContext,
   useImperativeHandle,
   useLayoutEffect,
@@ -34,6 +35,17 @@ export function useEditorSchema() {
 
 export function useEditorViewRef() {
   return useStableEditorContext().view;
+}
+
+export function useEditorViewInEffect() {
+  const editorViewRef = useEditorViewRef();
+  const state = useEditorState();
+  return useCallback(() => {
+    if (editorViewRef.current && editorViewRef.current.state !== state) {
+      editorViewRef.current?.updateState(state);
+    }
+    return editorViewRef.current;
+  }, [editorViewRef, state]);
 }
 
 export function useLayoutEffectWithEditorUpdated(effect: () => void) {

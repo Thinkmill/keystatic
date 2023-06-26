@@ -1,55 +1,59 @@
-import { ArgTypes, action, storiesOf } from '@voussoir/storybook';
+import { ArgTypes, action } from '@voussoir/storybook';
 
 import { Text } from '@voussoir/typography';
 
 import { Checkbox, CheckboxGroup, CheckboxGroupProps } from '../src';
 
-storiesOf('Components/Checkbox/CheckboxGroup', module)
-  .addParameters({
-    providerSwitcher: { status: 'positive' },
-    args: {
-      label: 'Favourite marsupial',
-      isDisabled: false,
-      isReadOnly: false,
-      isRequired: false,
-      orientation: 'vertical',
+export default {
+  title: 'Components/Checkbox/CheckboxGroup',
+  args: {
+    label: 'Favourite marsupial',
+    isDisabled: false,
+    isReadOnly: false,
+    isRequired: false,
+    orientation: 'vertical',
+  },
+
+  argTypes: {
+    orientation: {
+      options: ['horizontal', 'vertical'],
+      control: { type: 'radio' },
     },
-    argTypes: {
-      orientation: {
-        control: {
-          type: 'checkbox',
-          options: ['horizontal', 'vertical'],
-        },
-      },
-    },
-  })
-  .add('default', (args: ArgTypes) => render(args))
-  .add('defaultValue: quokka', (args: ArgTypes) =>
-    render({ ...args, defaultValue: ['quokka'] })
-  )
-  .add('controlled: quokka', (args: ArgTypes) =>
-    render({ ...args, value: ['quokka'] })
-  )
-  .add('isDisabled on one checkbox', (args: ArgTypes) =>
-    render(args, [{}, { isDisabled: true }, {}])
-  )
-  .add('with description', (args: ArgTypes) =>
-    render({ ...args, description: 'Please select one.' })
-  )
-  .add('with error message', (args: ArgTypes) =>
-    render({
-      ...args,
-      description: 'Please select one.',
-      errorMessage: 'You must select a value.',
-    })
-  )
-  .add('no visible label', (args: ArgTypes) =>
-    render({ ...args, label: null, 'aria-label': 'Favourite marsupial' })
-  )
-  .add('custom label', (args: ArgTypes) => renderLongLabel(args))
-  .add('autoFocus on one checkbox', (args: ArgTypes) =>
-    render(args, [{}, { autoFocus: true }, {}])
-  );
+  },
+};
+
+export const Default = (args: ArgTypes) => render(args);
+
+export const DefaultValueQuokka = (args: ArgTypes) =>
+  render({ ...args, defaultValue: ['quokka'] });
+
+DefaultValueQuokka.storyName = 'defaultValue: quokka';
+
+export const ControlledQuokka = (args: ArgTypes) =>
+  render({ ...args, value: ['quokka'] });
+
+ControlledQuokka.storyName = 'controlled: quokka';
+
+export const IsDisabledOnOneCheckbox = (args: ArgTypes) =>
+  render(args, [{}, { isDisabled: true }, {}]);
+
+export const WithDescription = (args: ArgTypes) =>
+  render({ ...args, description: 'Please select one.' });
+
+export const WithErrorMessage = (args: ArgTypes) =>
+  render({
+    ...args,
+    description: 'Please select one.',
+    errorMessage: 'You must select a value.',
+  });
+
+export const NoVisibleLabel = (args: ArgTypes) =>
+  render({ ...args, label: null, 'aria-label': 'Favourite marsupial' });
+
+export const CustomLabel = (args: ArgTypes) => renderLongLabel(args);
+
+export const AutoFocusOnOneCheckbox = (args: ArgTypes) =>
+  render(args, [{}, { autoFocus: true }, {}]);
 
 function render(
   props: Partial<CheckboxGroupProps>,

@@ -208,6 +208,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-element-to-jsx-string": "^15.0.0",
+    "resize-observer-polyfill": "^1.5.1",
     "signal-exit": "^3.0.7",
     "tsx": "^3.8.0",
     "typescript": "^5.1.3"

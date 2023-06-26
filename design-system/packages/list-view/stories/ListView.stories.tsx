@@ -1,4 +1,4 @@
-import { action, storiesOf } from '@voussoir/storybook';
+import { action } from '@voussoir/storybook';
 import { useAsyncList, useListData } from '@react-stately/data';
 import { ItemDropTarget } from '@react-types/shared';
 import React from 'react';
@@ -57,148 +57,200 @@ const parameters = {
 
 let getAllowedDropOperationsAction = action('getAllowedDropOperationsAction');
 
-storiesOf('Components/ListView', module)
-  .addParameters(parameters)
-  .add('default', (args: any) => (
-    <ListView
-      width="alias.singleLineWidth"
-      aria-label="list view example"
-      {...args}
-    >
-      <Item>Design Systems</Item>
-      <Item>Product Development</Item>
-      <Item>Team Augmentation</Item>
-      <Item>API Platforms</Item>
-    </ListView>
-  ))
-  .add('actions', (args: any) => (
-    <ListView
-      width="alias.singleLineWidth"
-      aria-label="list view actions example"
-      onAction={action('onAction')}
-      onSelectionChange={action('onSelectionChange')}
-      {...args}
-    >
-      <Item key="design-systems">Design Systems</Item>
-      <Item key="product-development">Product Development</Item>
-      <Item key="team-augmentation">Team Augmentation</Item>
-      <Item key="api-platforms">API Platforms</Item>
-    </ListView>
-  ))
-  .add('dynamic items', (args: any) => (
-    <ListView
-      aria-label="list view dynamic items example"
-      items={complexItems}
-      width="container.xsmall"
-      height="alias.singleLineWidth"
-      onAction={action('onAction')}
-      {...args}
-      selectionMode="none"
-    >
-      {(item: any) => (
-        <Item key={item.key} textValue={item.name}>
-          <Text>{item.name}</Text>
-          <ActionGroup
-            buttonLabelBehavior="hide"
-            onAction={action(`actionGroup/${item.key}`)}
-          >
-            <Item key="duplicate">
-              <Icon src={copyIcon} />
-              <Text>Duplicate</Text>
-            </Item>
-            <Item key="delete">
-              <Icon src={trash2Icon} />
-              <Text>Delete</Text>
-            </Item>
-          </ActionGroup>
-        </Item>
-      )}
-    </ListView>
-  ))
-  .add('empty list', (args: any) => (
-    <ListView
-      aria-label="empty ListView"
-      width="container.xsmall"
-      height="alias.singleLineWidth"
-      renderEmptyState={renderEmptyState}
-      {...args}
-    >
-      {[]}
-    </ListView>
-  ))
-  .add('loading', (args: any) => (
-    <ListView
-      aria-label="loading ListView"
-      width="container.xsmall"
-      height="alias.singleLineWidth"
-      loadingState="loading"
-      {...args}
-    >
-      {[]}
-    </ListView>
-  ))
-  .add('loadingMore', (args: any) => (
-    <ListView
-      aria-label="loading more ListView"
-      width="alias.singleLineWidth"
-      height="alias.singleLineWidth"
-      loadingState="loadingMore"
-      {...args}
-    >
-      <Item>Design Systems</Item>
-      <Item>Product Development</Item>
-      <Item>Team Augmentation</Item>
-      <Item>API Platforms</Item>
-    </ListView>
-  ))
-  .add('async loading', (args: any) => <AsyncList {...args} />)
-  .add('thumbnails', (args: any) => (
-    <ListView
-      width="alias.singleLineWidth"
-      items={thumbnailItems}
-      aria-label="ListView with thumbnails"
-      {...args}
-    >
-      {(item: any) => (
-        <Item textValue={item.title}>
-          {item.url && <Image aspectRatio="1" src={item.url} alt="" />}
-          {item.illustration}
-          <Text>{item.title}</Text>
-          {item.url && <Text slot="description">JPG</Text>}
-        </Item>
-      )}
-    </ListView>
-  ))
-  .add('long text', (args: any) => (
-    <ListView width="alias.singleLineWidth" {...args}>
-      <Item>Safe hands for your bold product plans</Item>
-      <Item textValue="Expertise & Capabilities">
-        <Text>Expertise & Capabilities</Text>
-        <Text slot="description">
-          Functional products and cross-functional teams form the basis of how
-          we make compelling software.
-        </Text>
+export default {
+  title: 'Components/ListView',
+  parameters,
+};
+
+export const Default = (args: any) => (
+  <ListView
+    width="alias.singleLineWidth"
+    aria-label="list view example"
+    {...args}
+  >
+    <Item>Design Systems</Item>
+    <Item>Product Development</Item>
+    <Item>Team Augmentation</Item>
+    <Item>API Platforms</Item>
+  </ListView>
+);
+
+Default.story = {
+  name: 'default',
+};
+
+export const Actions = (args: any) => (
+  <ListView
+    width="alias.singleLineWidth"
+    aria-label="list view actions example"
+    onAction={action('onAction')}
+    onSelectionChange={action('onSelectionChange')}
+    {...args}
+  >
+    <Item key="design-systems">Design Systems</Item>
+    <Item key="product-development">Product Development</Item>
+    <Item key="team-augmentation">Team Augmentation</Item>
+    <Item key="api-platforms">API Platforms</Item>
+  </ListView>
+);
+
+Actions.story = {
+  name: 'actions',
+};
+
+export const DynamicItems = (args: any) => (
+  <ListView
+    aria-label="list view dynamic items example"
+    items={complexItems}
+    width="container.xsmall"
+    height="alias.singleLineWidth"
+    onAction={action('onAction')}
+    {...args}
+    selectionMode="none"
+  >
+    {(item: any) => (
+      <Item key={item.key} textValue={item.name}>
+        <Text>{item.name}</Text>
+        <ActionGroup
+          buttonLabelBehavior="hide"
+          onAction={action(`actionGroup/${item.key}`)}
+        >
+          <Item key="duplicate">
+            <Icon src={copyIcon} />
+            <Text>Duplicate</Text>
+          </Item>
+          <Item key="delete">
+            <Icon src={trash2Icon} />
+            <Text>Delete</Text>
+          </Item>
+        </ActionGroup>
       </Item>
-      <Item textValue="How we engage">
-        <Text>How we engage</Text>
-        <Text slot="description">
-          Simple and nimble engagement structures. We can work with your team,
-          or be your team.
-        </Text>
+    )}
+  </ListView>
+);
+
+DynamicItems.story = {
+  name: 'dynamic items',
+};
+
+export const EmptyList = (args: any) => (
+  <ListView
+    aria-label="empty ListView"
+    width="container.xsmall"
+    height="alias.singleLineWidth"
+    renderEmptyState={renderEmptyState}
+    {...args}
+  >
+    {[]}
+  </ListView>
+);
+
+EmptyList.story = {
+  name: 'empty list',
+};
+
+export const Loading = (args: any) => (
+  <ListView
+    aria-label="loading ListView"
+    width="container.xsmall"
+    height="alias.singleLineWidth"
+    loadingState="loading"
+    {...args}
+  >
+    {[]}
+  </ListView>
+);
+
+Loading.story = {
+  name: 'loading',
+};
+
+export const LoadingMore = (args: any) => (
+  <ListView
+    aria-label="loading more ListView"
+    width="alias.singleLineWidth"
+    height="alias.singleLineWidth"
+    loadingState="loadingMore"
+    {...args}
+  >
+    <Item>Design Systems</Item>
+    <Item>Product Development</Item>
+    <Item>Team Augmentation</Item>
+    <Item>API Platforms</Item>
+  </ListView>
+);
+
+LoadingMore.story = {
+  name: 'loadingMore',
+};
+
+export const AsyncLoading = (args: any) => <AsyncList {...args} />;
+
+AsyncLoading.story = {
+  name: 'async loading',
+};
+
+export const Thumbnails = (args: any) => (
+  <ListView
+    width="alias.singleLineWidth"
+    items={thumbnailItems}
+    aria-label="ListView with thumbnails"
+    {...args}
+  >
+    {(item: any) => (
+      <Item textValue={item.title}>
+        {item.url && <Image aspectRatio="1" src={item.url} alt="" />}
+        {item.illustration}
+        <Text>{item.title}</Text>
+        {item.url && <Text slot="description">JPG</Text>}
       </Item>
-    </ListView>
-  ))
-  .add('drag within list (reorder)', (args: any) => (
-    <Flex direction="row" wrap alignItems="center">
-      <ReorderExample
-        {...args}
-        disabledKeys={['1']}
-        onDrop={action('drop')}
-        onDragStart={action('dragStart')}
-        onDragEnd={action('dragEnd')}
-      />
-    </Flex>
-  ));
+    )}
+  </ListView>
+);
+
+Thumbnails.story = {
+  name: 'thumbnails',
+};
+
+export const LongText = (args: any) => (
+  <ListView width="alias.singleLineWidth" {...args}>
+    <Item>Safe hands for your bold product plans</Item>
+    <Item textValue="Expertise & Capabilities">
+      <Text>Expertise & Capabilities</Text>
+      <Text slot="description">
+        Functional products and cross-functional teams form the basis of how we
+        make compelling software.
+      </Text>
+    </Item>
+    <Item textValue="How we engage">
+      <Text>How we engage</Text>
+      <Text slot="description">
+        Simple and nimble engagement structures. We can work with your team, or
+        be your team.
+      </Text>
+    </Item>
+  </ListView>
+);
+
+LongText.story = {
+  name: 'long text',
+};
+
+export const DragWithinListReorder = (args: any) => (
+  <Flex direction="row" wrap alignItems="center">
+    <ReorderExample
+      {...args}
+      disabledKeys={['1']}
+      onDrop={action('drop')}
+      onDragStart={action('dragStart')}
+      onDragEnd={action('dragEnd')}
+    />
+  </Flex>
+);
+
+DragWithinListReorder.story = {
+  name: 'drag within list (reorder)',
+};
 
 // Data
 // ------------------------------
@@ -373,7 +425,7 @@ function AsyncList(props: any) {
   );
 }
 
-export function ReorderExample(props: any) {
+function ReorderExample(props: any) {
   let {
     onDrop,
     onDragStart,
