@@ -19,6 +19,7 @@ import { SlugFieldDemo } from './fields/slug';
 import { ImageFieldDemo } from './fields/image';
 import { FileFieldDemo } from './fields/file';
 import { Embed, EmbedProps } from './embed';
+import Link from 'next/link';
 
 const keystaticCodeTheme = JSON.parse(
   fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
@@ -54,12 +55,12 @@ const getRenderers = (
     ),
     link: ({ href, children }) => {
       return (
-        <a
+        <Link
           className="cursor-pointer underline font-medium hover:no-underline"
           href={href}
         >
           {children}
-        </a>
+        </Link>
       );
     },
   },

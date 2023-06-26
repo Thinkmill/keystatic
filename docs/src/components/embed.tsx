@@ -1,11 +1,11 @@
 export type EmbedProps = {
-  mediaType: 'video' | 'audio';
+  mediaType: 'video' | 'tweet';
   embedCode: string;
 };
 
 const mediaTypeClasses: Record<EmbedProps['mediaType'], string> = {
-  video: '[&>iframe]:aspect-video [&>iframe]:w-full',
-  audio: '[&>iframe]:w-full',
+  video: '[&>iframe]:aspect-video [&>iframe]:w-full my-2',
+  tweet: 'flex justify-center my-2',
 };
 
 export function Embed({ mediaType, embedCode }: EmbedProps) {

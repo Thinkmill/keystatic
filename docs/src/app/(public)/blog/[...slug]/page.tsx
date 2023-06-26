@@ -12,9 +12,19 @@ export default async function BlogPost({
   const { slug: slugPath } = params;
 
   const slug = slugPath.join('/');
-  const page = await reader.collections.blog.read(slug);
 
-  if (!page) notFound();
+  const blogData = await reader.collections.blog.read(slug);
+
+  if (!blogData) notFound();
+
+  const authorData = await reader.collections.authors.all();
+
+  const page = {
+    ...blogData,
+    authors: blogData.authors.map(authorSlug =>
+      authorData.find(author => author.slug === authorSlug)
+    ),
+  };
 
   const today = new Date();
   const publishedDate = page.publishedOn;
@@ -22,7 +32,7 @@ export default async function BlogPost({
   const formattedDate = format(parsedDate, 'MMMM do, yyyy');
 
   return (
-    <>
+    <div className="flex flex-col gap-8">
       <p>
         <Link
           href="/blog"
@@ -44,16 +54,35 @@ export default async function BlogPost({
         </Link>
       </p>
 
-      <h1 className="text-2xl font-extrabold sm:text-3xl">{page.title}</h1>
+      <div className="flex flex-col gap-2">
+        <h1 className="text-2xl font-extrabold sm:text-3xl">{page.title}</h1>
 
-      <p className="text-sm mb-4 text-keystatic-gray-dark">
-        Published on {formattedDate} by TODO
-      </p>
+        <p className="text-sm text-neutral-500">
+          Published on {formattedDate} by{' '}
+          {page.authors.map((author, index) => (
+            <span key={index}>
+              {index > 0 &&
+                (index === page.authors.length - 1 ? ' and ' : ', ')}
+
+              {author?.entry.link ? (
+                <a
+                  href={author.entry.link}
+                  className="underline hover:no-underline"
+                >
+                  {author.entry.name}
+                </a>
+              ) : (
+                <span>{author?.entry.name}</span>
+              )}
+            </span>
+          ))}
+        </p>
+      </div>
 
       <div className="flex flex-col gap-4">
         <DocumentRenderer slug={slug} document={await page.content()} />
       </div>
-    </>
+    </div>
   );
 }
 

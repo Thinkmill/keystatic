@@ -47,7 +47,7 @@ export default async function Blog() {
       <ol>
         {sortedBlogPosts.map(({ slug, formattedDate, entry }, index) => (
           <li key={index} className="border-t border-keystatic-gray py-8">
-            <p className="text-sm text-keystatic-gray-dark">{formattedDate}</p>
+            <p className="text-sm text-neutral-500">{formattedDate}</p>
 
             <div className="flex flex-col gap-4">
               <span>

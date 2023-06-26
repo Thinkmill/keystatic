@@ -144,13 +144,13 @@ export const componentBlocks = {
   }),
   embed: component({
     label: 'Embed',
-    preview: props => <div>{props.fields.mediaType.value}</div>,
+    preview: props => <div>{props.fields.embedCode.value}</div>,
     schema: {
       mediaType: fields.select({
         label: 'Media type',
         options: [
           { label: 'Video', value: 'video' },
-          { label: 'Audio', value: 'audio' },
+          { label: 'Tweet', value: 'tweet' },
         ],
         defaultValue: 'video',
       }),
@@ -256,6 +256,7 @@ export default config({
           {
             label: 'Authors',
             itemLabel: props => props.value ?? 'Please select',
+            validation: { length: { min: 1 } },
           }
         ),
       },
@@ -269,16 +270,21 @@ export default config({
       slugField: 'name',
       path: 'src/content/authors/**',
       schema: {
-        name: fields.text({
-          label: 'Name',
-          validation: {
-            length: { min: 1 },
+        name: fields.slug({
+          name: {
+            label: 'Name',
+            validation: {
+              length: { min: 1 },
+            },
           },
         }),
         link: fields.url({
           label: 'URL',
           description:
             'Optionally link the author name to e.g. their social media.',
+          validation: {
+            isRequired: false,
+          },
         }),
       },
     }),
@@ -331,29 +337,5 @@ export default config({
         ),
       },
     }),
-    // authors: singleton({
-    //   label: 'Authors',
-    //   schema: {
-    //     author: fields.array(
-    //       fields.object({
-    //         name: fields.text({
-    //           label: 'Name',
-    //           validation: {
-    //             length: { min: 1 },
-    //           },
-    //         }),
-    //         link: fields.url({
-    //           label: 'URL',
-    //           description:
-    //             'Optionally link the author name to e.g. their social media.',
-    //         }),
-    //       }),
-    //       {
-    //         label: 'Authors',
-    //         itemLabel: props => props.fields.name.value,
-    //       }
-    //     ),
-    //   },
-    // }),
   },
 });
