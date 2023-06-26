@@ -199,6 +199,7 @@ function useTextFieldStyles() {
       height: 'auto',
       minHeight: tokenSchema.size.scale['700'],
       overflow: 'auto',
+      paddingBlock: tokenSchema.size.space.regular,
       resize: 'none',
     },
   });
