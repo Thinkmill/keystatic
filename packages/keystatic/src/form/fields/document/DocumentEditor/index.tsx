@@ -559,7 +559,7 @@ let styles: any = {
   minHeight: tokenSchema.size.scale[2000],
   minWidth: 0,
   padding: tokenSchema.size.space.medium,
-  // antialiase editor text, to match the rest of the app
+  // antialiased editor text, to match the rest of the app
   MozOsxFontSmoothing: 'grayscale',
   WebkitFontSmoothing: 'antialiased',
 };
