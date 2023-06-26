@@ -51,7 +51,7 @@ export default function GetAccessForm({ template }: { template: Template }) {
             type="text"
             id="name"
             name="name"
-            className="mt-3 w-full rounded-lg border border-black p-3 leading-none"
+            className="form-input mt-3 w-full rounded-lg border border-black p-3 leading-none"
           />
         </div>
         <div>
@@ -62,7 +62,7 @@ export default function GetAccessForm({ template }: { template: Template }) {
             type="email"
             id="email"
             name="email"
-            className="mt-3 w-full rounded-lg border border-black p-3 leading-none"
+            className="form-input mt-3 w-full rounded-lg border border-black p-3 leading-none"
           />
         </div>
       </div>
@@ -74,22 +74,22 @@ export default function GetAccessForm({ template }: { template: Template }) {
           id="working-on"
           name="working-on"
           rows={8}
-          className="mt-3 w-full rounded-lg border border-black p-3 leading-none"
+          className="form-textarea mt-3 w-full rounded-lg border border-black p-3 leading-none"
         />
       </div>
 
       <hr className="mt-10 border-dashed border-t-black" />
 
       <p className="mt-10">
-        We’re building Keystatic in the open over the coming weeks and months.
-        If you’re interested in following along, there’s a few ways you do
+        We're building Keystatic in the open over the coming weeks and months.
+        If you're interested in following along, there's a few ways you do
         that... No spam, just sharing the adventure!
       </p>
 
       <div className="mt-8 flex items-center gap-3">
         <input
           type="checkbox"
-          className="h-6 w-6 rounded-md border-2 border-black text-yellow-500"
+          className="form-checkbox h-6 w-6 rounded-md border-2 border-black text-yellow-500"
           id="opt-in-updates"
           name="opt-in-updates"
         />
@@ -100,7 +100,7 @@ export default function GetAccessForm({ template }: { template: Template }) {
       <div className="mt-8 flex items-center gap-3">
         <input
           type="checkbox"
-          className="h-6 w-6 rounded-md border-2 border-black text-yellow-500"
+          className="form-checkbox h-6 w-6 rounded-md border-2 border-black text-yellow-500"
           id="opt-in-channel"
           name="opt-in-channel"
         />

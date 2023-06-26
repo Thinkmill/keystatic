@@ -9,7 +9,7 @@ import { cx } from '../utils';
 
 import Button from './button';
 import Dialog from './dialog';
-import { MouseEventHandler, useEffect, useState } from 'react';
+import { MouseEventHandler, Suspense, useEffect, useState } from 'react';
 import CloudImage from './cloud-image';
 
 const blankTemplateImage =
@@ -117,6 +117,18 @@ function useLastTruthyValue<T>(val: T): T {
 }
 
 export default function Templates() {
+  /* As the <TemplateList /> component uses useSearchParams it must be wrapped in
+   * a Suspense boundary to prevent the whole tree being rendered client-side only.
+   * See: https://nextjs.org/docs/app/api-reference/functions/use-search-params#static-rendering
+   */
+  return (
+    <Suspense>
+      <TemplateList />
+    </Suspense>
+  );
+}
+
+function TemplateList() {
   const searchParams = useSearchParams();
   const urlTemplateId = searchParams?.get('template') || '';
 
@@ -251,7 +263,7 @@ export default function Templates() {
               Get notified of any updates about our launch.
             </h2>
             <p className="mt-4 text-keystatic-gray-dark">
-              If you’re interested in following along, there’s a few ways you do
+              If you're interested in following along, there's a few ways you do
               that... No spam, just sharing the adventure!
             </p>
           </>

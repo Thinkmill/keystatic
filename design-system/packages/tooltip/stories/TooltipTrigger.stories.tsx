@@ -1,4 +1,4 @@
-import { action, ArgTypes, storiesOf } from '@voussoir/storybook';
+import { action, ArgTypes, Meta } from '@voussoir/storybook';
 
 import { Button, ActionButton } from '@voussoir/button';
 import { Flex } from '@voussoir/layout';
@@ -8,130 +8,128 @@ import { Text } from '@voussoir/typography';
 import { Tooltip, TooltipTrigger, TooltipTriggerProps } from '../src';
 import { MOUSE_REST_TIMEOUT } from '../src/TooltipTrigger';
 
-const argTypes = {
-  placement: {
-    control: 'select',
-    defaultValue: 'top',
-    options: [
-      'top',
-      'top left',
-      'top right',
-      'top start',
-      'top end',
-      'bottom',
-      'bottom left',
-      'bottom right',
-      'bottom start',
-      'bottom end',
-      'left',
-      'left top',
-      'left bottom',
-      'right',
-      'right top',
-      'right bottom',
-      'start',
-      'start top',
-      'start bottom',
-      'end',
-      'end top',
-      'end bottom',
-    ],
+const meta: Meta = {
+  title: 'Components/Tooltip/TooltipTrigger',
+  // component: TooltipTrigger,
+  parameters: {
+    controls: { exclude: ['onOpenChange'] },
   },
-  delay: {
-    control: {
-      type: 'number',
-      defaultValue: MOUSE_REST_TIMEOUT,
-      min: 0,
-      max: 5000,
-      step: 100,
+  args: {
+    placement: 'top',
+    delay: MOUSE_REST_TIMEOUT,
+    shouldFlip: true,
+    offset: 0,
+    crossOffset: 0,
+    containerPadding: 0,
+    onOpenChange: action('onOpenChange'),
+  },
+
+  argTypes: {
+    placement: {
+      control: 'select',
+      options: [
+        'top',
+        'top left',
+        'top right',
+        'top start',
+        'top end',
+        'bottom',
+        'bottom left',
+        'bottom right',
+        'bottom start',
+        'bottom end',
+        'left',
+        'left top',
+        'left bottom',
+        'right',
+        'right top',
+        'right bottom',
+        'start',
+        'start top',
+        'start bottom',
+        'end',
+        'end top',
+        'end bottom',
+      ],
     },
-  },
-  offset: {
-    control: {
-      type: 'number',
-      defaultValue: 0,
-      min: -500,
-      max: 500,
+    delay: {
+      control: { type: 'number', min: 0, max: 5000, step: 100 },
     },
-  },
-  crossOffset: {
-    control: {
-      type: 'number',
-      defaultValue: 0,
-      min: -500,
-      max: 500,
+    offset: {
+      control: { type: 'number', min: -500, max: 500, step: 10 },
     },
-  },
-  containerPadding: {
-    control: {
-      type: 'number',
-      defaultValue: 0,
-      min: -500,
-      max: 500,
+    crossOffset: {
+      control: { type: 'number', min: -500, max: 500, step: 10 },
     },
-  },
-  shouldFlip: {
-    control: 'boolean',
-    defaultValue: true,
-  },
-  trigger: {
-    control: 'radio',
-    defaultValue: undefined,
-    options: [undefined, 'focus'],
+    containerPadding: {
+      control: { type: 'number', min: -500, max: 500, step: 10 },
+    },
+    trigger: {
+      control: 'radio',
+      description:
+        'By default, opens for both focus and hover. Can be made to open only for focus.',
+      options: [undefined, 'focus'],
+    },
   },
 };
 
-storiesOf('Components/TooltipTrigger', module)
-  .add('default', renderTooltip(), { argTypes })
-  .add('isOpen (controlled)', renderTooltip({ isOpen: true }), { argTypes })
-  .add('defaultOpen (uncontrolled)', renderTooltip({ defaultOpen: true }), {
-    argTypes,
-  })
-  .add('trigger disabled', () => (
+export default meta;
+
+export const Default = renderTooltip();
+
+export const IsOpenControlled = renderTooltip({ isOpen: true });
+
+export const DefaultOpenUncontrolled = renderTooltip({ defaultOpen: true });
+
+export const TriggerDisabled = () => (
+  <TooltipTrigger>
+    <ActionButton isDisabled>Trigger</ActionButton>
+    <Tooltip>Tooltip content</Tooltip>
+  </TooltipTrigger>
+);
+
+export const TooltipDisabled = renderTooltip({ isDisabled: true });
+
+export const AnchorTriggers = () => (
+  <Flex direction="column" gap="large" alignItems="start">
     <TooltipTrigger>
-      <ActionButton isDisabled>Trigger</ActionButton>
+      <Button href="https://example.com">Anchor w/role=button</Button>
       <Tooltip>Tooltip content</Tooltip>
     </TooltipTrigger>
-  ))
-  .add('tooltip disabled', renderTooltip({ isDisabled: true }), { argTypes })
-  .add('anchor triggers', () => (
-    <Flex direction="column" gap="large" alignItems="start">
+    <Text>
+      Content that includes a{' '}
       <TooltipTrigger>
-        <Button href="https://example.com">Anchor w/role=button</Button>
+        <TextLink href="https://example.com">text link</TextLink>
+        <Tooltip>Tooltip content</Tooltip>
+      </TooltipTrigger>{' '}
+      wrapped in a tooltip trigger.
+    </Text>
+  </Flex>
+);
+
+export const Multiple = () => (
+  <Flex gap="regular">
+    {['one', 'two', 'three'].map(n => (
+      <TooltipTrigger key={n}>
+        <ActionButton>{n}</ActionButton>
         <Tooltip>Tooltip content</Tooltip>
       </TooltipTrigger>
-      <Text>
-        Content that includes a{' '}
-        <TooltipTrigger>
-          <TextLink href="https://example.com">text link</TextLink>
-          <Tooltip>Tooltip content</Tooltip>
-        </TooltipTrigger>{' '}
-        wrapped in a tooltip trigger.
-      </Text>
-    </Flex>
-  ))
-  .add('multiple', () => (
-    <Flex gap="regular">
-      {['one', 'two', 'three'].map(n => (
-        <TooltipTrigger key={n}>
-          <ActionButton>{n}</ActionButton>
-          <Tooltip>Tooltip content</Tooltip>
-        </TooltipTrigger>
-      ))}
-    </Flex>
-  ))
-  .add('collisions', () => (
-    <Flex direction="column" gap="large" alignSelf="start">
-      <TooltipTrigger placement="start">
-        <ActionButton>Flip</ActionButton>
-        <Tooltip>Tooltip content</Tooltip>
-      </TooltipTrigger>
-      <TooltipTrigger>
-        <ActionButton>Offset</ActionButton>
-        <Tooltip>Tooltip content</Tooltip>
-      </TooltipTrigger>
-    </Flex>
-  ));
+    ))}
+  </Flex>
+);
+
+export const Collisions = () => (
+  <Flex direction="column" gap="large" alignSelf="start">
+    <TooltipTrigger placement="start">
+      <ActionButton>Flip</ActionButton>
+      <Tooltip>Tooltip content</Tooltip>
+    </TooltipTrigger>
+    <TooltipTrigger>
+      <ActionButton>Offset</ActionButton>
+      <Tooltip>Tooltip content</Tooltip>
+    </TooltipTrigger>
+  </Flex>
+);
 
 function renderTooltip(props: Partial<TooltipTriggerProps> = {}) {
   return function tooltipWithArgs(args: ArgTypes) {

@@ -51,6 +51,34 @@ complexArray: fields.array(
 ),
 ```
 
+## Slug field
+
+The array field's `slugField` option is useful to replace indexes normally in file paths for images or documents etc.
+
+It works similarly to the slugField option in [Collections](/docs/collections-and-singletons#collections) (including uniqueness validation), but with the difference that the slug is still written to the YAML/JSON.
+
+For example, to change the slug from `/authors/0/bio.mdoc` to `/authors/name/bio.mdoc` you can do the following:
+
+```typescript
+authors: fields.array(
+  fields.object({
+    name: fields.text({ label: 'Name' }),
+    bio: fields.document({
+      label: 'Bio',
+      formatting: true,
+      dividers: true,
+      links: true,
+    }),
+  }),
+  {
+    label: 'Authors',
+    slugField: 'name',
+    itemLabel: props => props.fields.name.value,
+  }
+),
+```
+
+
 ## Type signature
 
 Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.array](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.array)

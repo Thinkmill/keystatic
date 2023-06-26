@@ -1,5 +1,11 @@
 # @voussoir/docs
 
+## 0.0.14
+
+### Patch Changes
+
+- 686dfc3d: Storybook migrate from 6 to 7.
+
 ## 0.0.13
 
 ### Patch Changes
