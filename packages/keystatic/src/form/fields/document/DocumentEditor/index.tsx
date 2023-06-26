@@ -345,11 +345,6 @@ export function DocumentEditor({
 
         <DocumentEditorEditable
           id="document-editor-boundary"
-          className={css({
-            padding: tokenSchema.size.space.medium,
-            height: 'auto',
-            minWidth: 0,
-          })}
           {...props}
           readOnly={onChange === undefined}
         />
@@ -559,8 +554,14 @@ let styles: any = {
   flex: 1,
   fontFamily: tokenSchema.typography.fontFamily.base,
   fontSize: tokenSchema.fontsize.text.regular.size,
+  height: 'auto',
   lineHeight: 1.4,
   minHeight: tokenSchema.size.scale[2000],
+  minWidth: 0,
+  padding: tokenSchema.size.space.medium,
+  // antialiase editor text, to match the rest of the app
+  MozOsxFontSmoothing: 'grayscale',
+  WebkitFontSmoothing: 'antialiased',
 };
 
 let listDepth = 10;
