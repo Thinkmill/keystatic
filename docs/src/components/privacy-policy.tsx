@@ -1,6 +1,6 @@
 export default function PrivacyPolicy() {
   return (
-    <div className="prose mx-auto max-w-screen-md px-6 py-10 lg:prose-lg md:pb-24">
+    <div className="prose mx-auto max-w-screen-md px-6 py-10 lg:py-16 lg:prose-lg md:pb-24">
       <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl">
         Keystatic Privacy Policy
       </h1>
