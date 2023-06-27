@@ -8,7 +8,7 @@ export const formInputIcon = (
     width="1em"
     height="1em"
   >
-    <rect x={2} y={6} width={20} height={12} rx={2} />
+    <rect width={20} height={12} x={2} y={6} rx={2} />
     <path d="M12 12h.01M17 12h.01M7 12h.01" />
   </svg>
 );

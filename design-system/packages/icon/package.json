@@ -4586,7 +4586,7 @@
     "@svgr/plugin-prettier": "^6.5.1",
     "@svgr/plugin-svgo": "^6.5.1",
     "@types/react": "^18.2.8",
-    "lucide-static": "^0.127.0",
+    "lucide-static": "^0.252.0",
     "react": "^18.2.0",
     "tsx": "^3.8.0"
   },

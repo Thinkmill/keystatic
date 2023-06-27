@@ -8,6 +8,6 @@ export const rectangleVerticalIcon = (
     width="1em"
     height="1em"
   >
-    <rect x={6} y={2} width={12} height={20} rx={2} />
+    <rect width={12} height={20} x={6} y={2} rx={2} />
   </svg>
 );
