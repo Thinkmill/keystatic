@@ -339,6 +339,10 @@ export default config({
         }),
       },
     }),
+
+    // ------------------------------
+    // For testing purposes only
+    // ------------------------------
     pagesWithMarkdocField: collection({
       label: 'Pages with new editor',
       slugField: 'title',
@@ -354,6 +358,9 @@ export default config({
     }),
   },
   singletons: {
+    // ------------------------------
+    // Docs navigation
+    // ------------------------------
     navigation: singleton({
       label: 'Navigation',
       path: 'src/content/navigation',
