@@ -99,26 +99,6 @@ const getRenderers = (
         />
       );
     },
-    image: ({ src, alt, title }) => {
-      return title ? (
-        <figure>
-          <img
-            className="rounded-lg my-2"
-            src={`/images/content/${slug}/${src}`}
-            alt={alt}
-          />
-          <figcaption className="text-sm text-neutral-500 mb-2">
-            {title}
-          </figcaption>
-        </figure>
-      ) : (
-        <img
-          className="rounded-lg my-2"
-          src={`/images/content/${slug}/${src}`}
-          alt={alt}
-        />
-      );
-    },
     list: ({ type, children }) => {
       if (type === 'ordered') {
         return (
@@ -172,7 +152,15 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
       </div>
     );
   },
-  'cloud-image': ({ href: src, alt, sizes, height, width, srcSet }) => {
+  'cloud-image': ({
+    href: src,
+    alt,
+    sizes,
+    height,
+    width,
+    srcSet,
+    caption,
+  }) => {
     const imgMaxWidthPx = `${parseFloat(CONTENT_MAX_WIDTH_DESKTOP) * 16}`;
 
     return (
@@ -184,6 +172,7 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         srcSet={srcSet}
         sizes={sizes || `(max-width: 375px) 375px, ${imgMaxWidthPx}px`}
         className="rounded-lg my-2"
+        caption={caption}
       />
     );
   },

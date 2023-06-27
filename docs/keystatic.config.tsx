@@ -82,6 +82,11 @@ export const componentBlocks = {
         label: 'Sizes',
         description: 'Optionally override the defualt sizes',
       }),
+      caption: fields.text({
+        label: 'Caption',
+        description:
+          'Optionally add a caption to display in small text below the image',
+      }),
     },
     chromeless: false,
   }),
@@ -171,16 +176,6 @@ const formatting = {
   inlineMarks: true,
 } as const;
 
-const images = {
-  directory: 'public/images/content',
-  schema: {
-    title: fields.text({
-      label: 'Caption',
-      description: 'The text to display under the image in a caption.',
-    }),
-  },
-};
-
 const markdocConfig: Config = {
   tags: {
     aside: {
@@ -250,7 +245,6 @@ export default config({
           dividers: true,
           layouts: [[1, 1]],
           links: true,
-          images,
           componentBlocks,
           formatting,
         }),
@@ -293,7 +287,6 @@ export default config({
           label: 'Content',
           links: true,
           layouts: [[1, 1]],
-          images,
           dividers: true,
           tables: true,
           componentBlocks,
