@@ -8,6 +8,6 @@ export const arrowUpRightIcon = (
     width="1em"
     height="1em"
   >
-    <path d="M7 17 17 7M7 7h10v10" />
+    <path d="M7 7h10v10M7 17 17 7" />
   </svg>
 );

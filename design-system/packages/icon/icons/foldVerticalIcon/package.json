@@ -1,0 +1,4 @@
+{
+  "main": "dist/voussoir-icon-icons-foldVerticalIcon.cjs.js",
+  "module": "dist/voussoir-icon-icons-foldVerticalIcon.esm.js"
+}

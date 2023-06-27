@@ -1,0 +1,4 @@
+{
+  "main": "dist/voussoir-icon-icons-clipboardPasteIcon.cjs.js",
+  "module": "dist/voussoir-icon-icons-clipboardPasteIcon.esm.js"
+}

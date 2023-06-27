@@ -1036,7 +1036,7 @@ importers:
       '@voussoir/style': ^0.1.3
       '@voussoir/types': ^0.1.1
       '@voussoir/utils': ^2.0.2
-      lucide-static: ^0.127.0
+      lucide-static: ^0.252.0
       react: ^18.2.0
       tsx: ^3.8.0
     dependencies:
@@ -1053,7 +1053,7 @@ importers:
       '@svgr/plugin-prettier': 6.5.1_@svgr+core@6.5.1
       '@svgr/plugin-svgo': 6.5.1_@svgr+core@6.5.1
       '@types/react': 18.2.8
-      lucide-static: 0.127.0
+      lucide-static: 0.252.0
       react: 18.2.0
       tsx: 3.12.3
 
@@ -18005,8 +18005,8 @@ packages:
     resolution: {integrity: sha512-9kkuMZHnLH/8qXARvYSjNvq8S1GYFFzynQTAfKeaJ0sIrR3PUPuu37Z+EiIANiZBvpfTf2B5y8ecDLSMWlLv+w==}
     engines: {node: '>=12'}
 
-  /lucide-static/0.127.0:
-    resolution: {integrity: sha512-75I8O2G8ti03DX9QzaR4jypo3t7potGYKDAgh0wLqeF5khw8K4pofdRwxrvjjCm0R+is5taaxgqp31ruJcARlw==}
+  /lucide-static/0.252.0:
+    resolution: {integrity: sha512-nbfKHRns53Sk1NI2nSaR4WihfEgsjb6M+6yGA5Lfu8R7a1TM62sat4vIjWIQDy6Js3//7SakoOFFp4ThGcbusA==}
     dev: true
 
   /lz-string/1.4.4:

@@ -8,7 +8,7 @@ export const laptop2Icon = (
     width="1em"
     height="1em"
   >
-    <rect x={3} y={4} width={18} height={12} rx={2} ry={2} />
+    <rect width={18} height={12} x={3} y={4} rx={2} ry={2} />
     <path d="M2 20h20" />
   </svg>
 );

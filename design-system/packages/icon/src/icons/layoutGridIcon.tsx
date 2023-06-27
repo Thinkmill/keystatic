@@ -8,6 +8,9 @@ export const layoutGridIcon = (
     width="1em"
     height="1em"
   >
-    <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
+    <rect width={7} height={7} x={3} y={3} rx={1} />
+    <rect width={7} height={7} x={14} y={3} rx={1} />
+    <rect width={7} height={7} x={14} y={14} rx={1} />
+    <rect width={7} height={7} x={3} y={14} rx={1} />
   </svg>
 );
