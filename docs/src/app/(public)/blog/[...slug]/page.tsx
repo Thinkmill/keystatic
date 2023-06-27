@@ -2,7 +2,8 @@ import DocumentRenderer from '../../../../components/document-renderer';
 import { notFound } from 'next/navigation';
 import { reader } from '../../../../utils/reader';
 import Link from 'next/link';
-import { format, parse } from 'date-fns';
+import { parseAndFormatPublishedDate } from '../../../../utils';
+import { ArrowLeftIcon } from '../../../../components/icons/arrow-left';
 
 export default async function BlogPost({
   params,
@@ -10,15 +11,21 @@ export default async function BlogPost({
   params: { slug: string[] };
 }) {
   const { slug: slugPath } = params;
-
   const slug = slugPath.join('/');
 
+  // Reads the content data for this blog post
   const blogData = await reader.collections.blog.read(slug);
 
   if (!blogData) notFound();
 
+  // Gets all the authors data
   const authorData = await reader.collections.authors.all();
 
+  /**
+   * Combines the blog post data with the matched author data
+   * - blogData.authors gives us an array of author slugs that are related to this blog post (fields.relationship)
+   * - map over them to find a match in the 'author' collection and return its details
+   */
   const page = {
     ...blogData,
     authors: blogData.authors.map(authorSlug =>
@@ -26,10 +33,7 @@ export default async function BlogPost({
     ),
   };
 
-  const today = new Date();
-  const publishedDate = page.publishedOn;
-  const parsedDate = parse(publishedDate, 'yyyy-M-d', today);
-  const formattedDate = format(parsedDate, 'MMMM do, yyyy');
+  const { formattedDate } = parseAndFormatPublishedDate(page.publishedOn);
 
   return (
     <div className="flex flex-col gap-8">
@@ -38,18 +42,7 @@ export default async function BlogPost({
           href="/blog"
           className="underline hover:no-underline font-medium inline-flex gap-1 items-center"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className="w-5 h-5"
-          >
-            <path
-              fillRule="evenodd"
-              d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z"
-              clipRule="evenodd"
-            />
-          </svg>
+          <ArrowLeftIcon />
           All blog posts
         </Link>
       </p>

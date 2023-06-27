@@ -2,7 +2,7 @@ import Footer from '../../../components/footer';
 
 export const metadata = {
   title: 'Keystatic - Blog',
-  description: 'News and updates from Keystatic.',
+  description: 'Latest news and updates from the Keystatic team.',
 };
 
 export default async function RootLayout({

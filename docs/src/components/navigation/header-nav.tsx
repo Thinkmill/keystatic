@@ -1,6 +1,5 @@
 'use client';
 
-// import Button from '../button';
 import { KeystaticLogoLink } from './keystatic-logo-link';
 import { SocialLinks } from './social-links';
 import { MobileNav } from './mobile-nav';
