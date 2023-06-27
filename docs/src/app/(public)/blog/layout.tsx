@@ -12,7 +12,7 @@ export default async function RootLayout({
 }) {
   return (
     <>
-      <main className="max-w-7xl min-h-screen mx-auto w-full px-6 py-10">
+      <main className="max-w-7xl mx-auto w-full px-6 pt-10 pb-16 flex flex-1">
         <div className="mx-auto w-full sm:max-w-xl flex flex-col gap-4">
           {children}
         </div>
