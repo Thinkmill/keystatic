@@ -12,10 +12,8 @@ export default async function RootLayout({
 }) {
   return (
     <>
-      <main className="max-w-7xl mx-auto w-full px-6 pt-10 lg:pt-16 pb-16 flex flex-1">
-        <div className="mx-auto w-full sm:max-w-xl flex flex-col gap-4">
-          {children}
-        </div>
+      <main className="mx-auto w-full sm:max-w-xl flex flex-col flex-1 gap-4 px-6 pt-10 lg:pt-16 pb-16">
+        {children}
       </main>
       <Footer />
     </>
