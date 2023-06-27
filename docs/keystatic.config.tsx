@@ -171,6 +171,16 @@ const formatting = {
   inlineMarks: true,
 } as const;
 
+const images = {
+  directory: 'public/images/content',
+  schema: {
+    title: fields.text({
+      label: 'Caption',
+      description: 'The text to display under the image in a caption.',
+    }),
+  },
+};
+
 const markdocConfig: Config = {
   tags: {
     aside: {
@@ -240,7 +250,7 @@ export default config({
           dividers: true,
           layouts: [[1, 1]],
           links: true,
-          images: { directory: 'public/images/content' },
+          images,
           componentBlocks,
           formatting,
         }),
@@ -283,19 +293,10 @@ export default config({
           label: 'Content',
           links: true,
           layouts: [[1, 1]],
-          images: {
-            directory: 'public/images/content',
-            schema: {
-              title: fields.text({
-                label: 'Caption',
-                description:
-                  'The text to display under the image in a caption.',
-              }),
-            },
-          },
+          images,
           dividers: true,
           tables: true,
-          componentBlocks: componentBlocks,
+          componentBlocks,
           formatting,
         }),
         authors: fields.array(

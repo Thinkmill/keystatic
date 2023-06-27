@@ -99,13 +99,26 @@ const getRenderers = (
         />
       );
     },
-    image: ({ src, alt }) => (
-      <img
-        className="rounded-lg my-2"
-        src={`/images/content/${slug}/${src}`}
-        alt={alt}
-      />
-    ),
+    image: ({ src, alt, title }) => {
+      return title ? (
+        <figure>
+          <img
+            className="rounded-lg my-2"
+            src={`/images/content/${slug}/${src}`}
+            alt={alt}
+          />
+          <figcaption className="text-sm text-neutral-500 mb-2">
+            {title}
+          </figcaption>
+        </figure>
+      ) : (
+        <img
+          className="rounded-lg my-2"
+          src={`/images/content/${slug}/${src}`}
+          alt={alt}
+        />
+      );
+    },
     list: ({ type, children }) => {
       if (type === 'ordered') {
         return (
