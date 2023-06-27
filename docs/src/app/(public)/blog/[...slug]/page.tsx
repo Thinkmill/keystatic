@@ -4,6 +4,7 @@ import { reader } from '../../../../utils/reader';
 import Link from 'next/link';
 import { parseAndFormatPublishedDate } from '../../../../utils';
 import { ArrowLeftIcon } from '../../../../components/icons/arrow-left';
+import { Fragment } from 'react';
 
 export default async function BlogPost({
   params,
@@ -53,7 +54,7 @@ export default async function BlogPost({
         <p className="text-sm text-neutral-500">
           Published on {formattedDate} by{' '}
           {page.authors.map((author, index) => (
-            <span key={index}>
+            <Fragment key={index}>
               {index > 0 &&
                 (index === page.authors.length - 1 ? ' and ' : ', ')}
 
@@ -65,9 +66,9 @@ export default async function BlogPost({
                   {author.entry.name}
                 </a>
               ) : (
-                <span>{author?.entry.name}</span>
+                <>{author?.entry.name}</>
               )}
-            </span>
+            </Fragment>
           ))}
         </p>
       </div>

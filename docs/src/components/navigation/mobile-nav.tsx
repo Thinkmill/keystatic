@@ -132,6 +132,7 @@ export function MobileNav({ navigationMap }: NavProps) {
               label="Docs"
               href="/docs"
               tabIndex={navOpen ? 0 : -1}
+              currentPage={pathname?.startsWith('/docs')}
             />
 
             <NavItem
@@ -139,6 +140,7 @@ export function MobileNav({ navigationMap }: NavProps) {
               label="Blog"
               href="/blog"
               tabIndex={navOpen ? 0 : -1}
+              currentPage={pathname?.startsWith('/blog')}
             />
 
             <div className="pt-6">

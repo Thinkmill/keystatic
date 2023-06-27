@@ -30,8 +30,8 @@ export default async function Blog() {
 
   return (
     <>
-      <div className="text-center mb-8">
-        <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl mb-6">
+      <div className="sm:text-center mb-8">
+        <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl mb-8">
           Blog
         </h1>
 
@@ -43,15 +43,16 @@ export default async function Blog() {
       <ol>
         {sortedPublishedBlogPosts.map(
           ({ slug, formattedDate, entry }, index) => (
-            <li key={index} className="border-t border-keystatic-gray py-8">
+            <li
+              key={index}
+              className="border-t border-keystatic-gray py-8 flex flex-col gap-2"
+            >
               <p className="text-sm text-neutral-500">{formattedDate}</p>
 
-              <div className="flex flex-col gap-4">
-                <span>
-                  <Link href={`blog/${slug}`}>
-                    <Heading level={2}>{entry.title}</Heading>
-                  </Link>
-                </span>
+              <div className="flex flex-col gap-6">
+                <Link href={`blog/${slug}`}>
+                  <Heading level={2}>{entry.title}</Heading>
+                </Link>
 
                 {entry.summary && <p>{entry.summary}</p>}
 
@@ -59,9 +60,10 @@ export default async function Blog() {
                   <Link
                     href={`blog/${slug}`}
                     className="underline hover:no-underline font-medium inline-flex gap-1 items-center"
+                    tabIndex={-1}
+                    aria-hidden
                   >
-                    Read more{' '}
-                    <span className="sr-only">about {entry.title}</span>
+                    Read more
                     <ArrowRightIcon />
                   </Link>
                 </p>

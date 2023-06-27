@@ -45,7 +45,7 @@ export default function Heading({ level, children, anchor }: HeadingProps) {
   }
 
   return (
-    <Tag className={cx(textClasses, 'mt-6 first:mt-2 peer-adjacent:mt-0')}>
+    <Tag className={cx(textClasses, 'mt-6 first:mt-0 peer-adjacent:mt-0')}>
       {children}
     </Tag>
   );

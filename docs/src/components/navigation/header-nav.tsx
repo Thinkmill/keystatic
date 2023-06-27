@@ -40,7 +40,9 @@ export function HeaderNav({
   return (
     <header
       className={`bg-white w-full ${
-        isDocsNav ? 'border-b border-keystatic-gray lg:fixed z-20 lg:z-30' : ''
+        isDocsNav
+          ? 'lg:border-b lg:border-keystatic-gray lg:fixed z-20 lg:z-30'
+          : ''
       }`}
     >
       <div className="mx-auto max-w-7xl">
