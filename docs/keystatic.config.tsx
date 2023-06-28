@@ -80,7 +80,7 @@ export const componentBlocks = {
       }),
       sizes: fields.text({
         label: 'Sizes',
-        description: 'Optionally override the defualt sizes',
+        description: 'Optionally override the default sizes',
       }),
       caption: fields.text({
         label: 'Caption',
