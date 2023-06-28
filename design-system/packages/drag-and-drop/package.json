@@ -18,8 +18,8 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@react-aria/dnd": "^3.0.1",
-    "@react-stately/dnd": "^3.0.1",
+    "@react-aria/dnd": "^3.3.0",
+    "@react-stately/dnd": "^3.2.2",
     "@react-types/shared": "^3.18.0"
   },
   "devDependencies": {

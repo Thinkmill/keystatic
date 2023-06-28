@@ -1,19 +1,16 @@
 import {
+  AriaLabelingProps,
+  DOMProps,
   FocusableDOMProps,
   FocusableProps,
+  Orientation,
   PressEvents,
   ValidationState,
 } from '@react-types/shared';
 import { ReactNode } from 'react';
 
 import { BaseStyleProps } from '@voussoir/style';
-import {
-  AnchorDOMProps,
-  AriaLabellingProps,
-  DOMProps,
-  Orientation,
-  PartialRequired,
-} from '@voussoir/types';
+import { AnchorDOMProps, PartialRequired } from '@voussoir/types';
 
 export type ButtonProminence = 'default' | 'high' | 'low';
 export type ButtonTone = 'neutral' | 'accent' | 'critical';
@@ -70,7 +67,7 @@ export type ActionButtonProps = {
 } & PressEvents &
   FocusableProps &
   FocusableDOMProps &
-  AriaLabellingProps &
+  AriaLabelingProps &
   AriaProps &
   BaseStyleProps;
 
@@ -125,7 +122,7 @@ export type CommonProps = {
 } & PressEvents &
   FocusableProps &
   FocusableDOMProps &
-  AriaLabellingProps &
+  AriaLabelingProps &
   BaseStyleProps;
 
 export type ButtonElementProps = CommonProps & AriaProps;

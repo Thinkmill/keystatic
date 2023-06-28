@@ -1,3 +1,5 @@
+import { AriaLabelingProps, DOMProps } from '@react-types/shared';
+import { filterDOMProps } from '@react-aria/utils';
 import {
   ReactNode,
   forwardRef,
@@ -10,9 +12,8 @@ import {
 import { Flex } from '@voussoir/layout';
 import { SlotProvider } from '@voussoir/slots';
 import { BaseStyleProps, useStyleProps } from '@voussoir/style';
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
 import { Text } from '@voussoir/typography';
-import { filterDOMProps, isReactText } from '@voussoir/utils';
+import { isReactText } from '@voussoir/utils';
 
 type BadgeTones =
   | 'accent'
@@ -33,7 +34,7 @@ export type BadgeProps = {
   tone?: BadgeTones;
 } & BaseStyleProps &
   DOMProps &
-  AriaLabellingProps;
+  AriaLabelingProps;
 
 /**
  * A badge is a decorative indicator used to either call attention to an item or
@@ -68,7 +69,7 @@ export const Badge: ForwardRefExoticComponent<
       UNSAFE_className={styleProps.className}
       UNSAFE_style={styleProps.style}
       ref={forwardedRef}
-      {...filterDOMProps(otherProps, { labellable: true })}
+      {...filterDOMProps(otherProps, { labelable: true })}
       // appearance
       backgroundColor={bg}
       borderRadius="full"

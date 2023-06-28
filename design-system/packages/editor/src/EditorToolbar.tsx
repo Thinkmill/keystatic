@@ -1,7 +1,7 @@
 import { FocusScope, createFocusManager } from '@react-aria/focus';
 import { useLocale } from '@react-aria/i18n';
 import { PressProps, PressResponder } from '@react-aria/interactions';
-import { isMac, mergeProps } from '@react-aria/utils';
+import { filterDOMProps, isMac, mergeProps } from '@react-aria/utils';
 import { useControlledState } from '@react-stately/utils';
 import {
   AriaLabelingProps,
@@ -16,7 +16,6 @@ import {
   ToggleButtonProps,
 } from '@voussoir/button';
 import { Divider, Flex } from '@voussoir/layout';
-import { filterDOMProps } from '@voussoir/utils';
 import {
   Dispatch,
   Key,
@@ -291,7 +290,7 @@ function filterDOMPropsWithLabelWarning<P extends AriaLabelingProps>(props: P) {
     );
   }
 
-  return filterDOMProps(props, { labellable: true });
+  return filterDOMProps(props, { labelable: true });
 }
 
 function useToolbarItem<P extends { isDisabled?: boolean }>(props: P) {

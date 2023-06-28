@@ -1,14 +1,15 @@
 import { useMenuSection } from '@react-aria/menu';
 import { useSeparator } from '@react-aria/separator';
+import { getChildNodes } from '@react-stately/collections';
 import { TreeState } from '@react-stately/tree';
 import { Node } from '@react-types/shared';
 import { Fragment, Key } from 'react';
 
+import { Divider } from '@voussoir/layout';
 import { classNames, css, tokenSchema } from '@voussoir/style';
+import { Text } from '@voussoir/typography';
 
 import { MenuItem } from './MenuItem';
-import { Text } from '@voussoir/typography';
-import { Divider } from '@voussoir/layout';
 
 interface MenuSectionProps<T> {
   item: Node<T>;
@@ -55,7 +56,7 @@ export function MenuSection<T>(props: MenuSectionProps<T>) {
           </Text>
         )}
         <ul {...groupProps} className={classNames('ksv-menu-section')}>
-          {[...item.childNodes].map(node => {
+          {[...getChildNodes(item, state.collection)].map(node => {
             let item = (
               <MenuItem
                 key={node.key}

@@ -12,13 +12,12 @@ export function CloudImagePreview(props: any) {
   const srcSet = props.fields.srcSet.value;
   const height = props.fields.height.value;
   const width = props.fields.width.value;
+  const caption = props.fields.caption.value;
 
   const [isLoading, setIsLoading] = useState(!!src);
 
   return (
     <>
-      <p>Href: {src}</p>
-      <p>Alt text: {alt}</p>
       {height &&
         (isNaN(Number(height)) ? (
           <p style={{ color: 'red' }}>
@@ -46,6 +45,9 @@ export function CloudImagePreview(props: any) {
         sizes={sizes || `${parseInt(CONTENT_MAX_WIDTH_DESKTOP) * 16}px`}
         onLoad={() => setIsLoading(false)}
       />
+      <p style={{ margin: '0' }}>Href: {src}</p>
+      <p style={{ margin: '0' }}>Alt text: {alt}</p>
+      {caption && <p style={{ margin: '0' }}>Caption: {caption}</p>}
     </>
   );
 }

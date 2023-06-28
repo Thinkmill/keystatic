@@ -1,3 +1,5 @@
+import { filterDOMProps } from '@react-aria/utils';
+import { DOMProps } from '@react-types/shared';
 import { forwardRef, ReactNode, useMemo } from 'react';
 
 import { useLinkComponent } from '@voussoir/link';
@@ -9,9 +11,9 @@ import {
   tokenSchema,
   transition,
 } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
 import { Text } from '@voussoir/typography';
-import { filterDOMProps, isReactText } from '@voussoir/utils';
+import { isReactText } from '@voussoir/utils';
+
 import { itemIndicatorGutter, itemIndicatorWidth } from './constants';
 
 export type NavItemProps = {

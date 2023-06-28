@@ -1,8 +1,6 @@
+import { AriaLabelingProps, DOMProps, Orientation } from '@react-types/shared';
+
 import { BaseStyleProps, SizeBorder } from '@voussoir/style';
-
-import { AriaLabellingProps, DOMProps } from './dom';
-
-export type Orientation = 'horizontal' | 'vertical';
 
 export type DividerProps = {
   /**
@@ -20,6 +18,6 @@ export type DividerProps = {
    * @default 'divider'
    */
   slot?: string;
-} & AriaLabellingProps &
+} & AriaLabelingProps &
   DOMProps &
   BaseStyleProps;

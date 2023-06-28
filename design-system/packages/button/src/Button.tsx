@@ -1,15 +1,14 @@
-import { ForwardedRef, forwardRef, useMemo } from 'react';
-
 import { useButton } from '@react-aria/button';
 import { useHover } from '@react-aria/interactions';
-import { mergeProps, useObjectRef } from '@react-aria/utils';
+import { filterDOMProps, mergeProps, useObjectRef } from '@react-aria/utils';
+import { ForwardedRef, forwardRef, useMemo } from 'react';
 
 import { useProviderProps } from '@voussoir/core';
 import { useLinkComponent } from '@voussoir/link';
 import { SlotProvider, useSlotProps } from '@voussoir/slots';
 import { FocusRing } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
-import { filterDOMProps, isReactText } from '@voussoir/utils';
+import { isReactText } from '@voussoir/utils';
 
 import {
   ButtonElementProps,

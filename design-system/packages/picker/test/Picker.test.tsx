@@ -705,7 +705,7 @@ describe('picker/Picker', () => {
       expect(value).toHaveAttribute('id');
       expect(picker).toHaveAttribute(
         'aria-labelledby',
-        `${label.id} ${value.id}`
+        `${value.id} ${label.id}`
       );
 
       firePress(picker);
@@ -732,7 +732,7 @@ describe('picker/Picker', () => {
       expect(picker).toHaveAttribute('aria-label', 'Test');
       expect(picker).toHaveAttribute(
         'aria-labelledby',
-        `${picker.id} ${value.id}`
+        `${value.id} ${picker.id}`
       );
 
       firePress(picker);
@@ -756,7 +756,7 @@ describe('picker/Picker', () => {
       let value = getByText('Select an option…').parentElement as HTMLElement; // capsize requires truncation styles on child node
       expect(picker).toHaveAttribute('id');
       expect(value).toHaveAttribute('id');
-      expect(picker).toHaveAttribute('aria-labelledby', `foo ${value.id}`);
+      expect(picker).toHaveAttribute('aria-labelledby', `${value.id} foo`);
 
       firePress(picker);
       act(() => jest.runAllTimers());
@@ -786,7 +786,7 @@ describe('picker/Picker', () => {
       expect(picker).toHaveAttribute('aria-label', 'Test');
       expect(picker).toHaveAttribute(
         'aria-labelledby',
-        `foo ${picker.id} ${value.id}`
+        `${value.id} ${picker.id} foo`
       );
 
       firePress(picker);
@@ -794,7 +794,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(listbox).toHaveAttribute('aria-labelledby', `foo ${picker.id}`);
+      expect(listbox).toHaveAttribute('aria-labelledby', `${picker.id} foo`);
     });
 
     describe('isRequired', function () {
@@ -823,7 +823,7 @@ describe('picker/Picker', () => {
         expect(value).toHaveAttribute('id');
         expect(picker).toHaveAttribute(
           'aria-labelledby',
-          `${label?.id} ${value.id}`
+          `${value.id} ${label?.id}`
         );
 
         firePress(picker);
@@ -1366,10 +1366,10 @@ describe('picker/Picker', () => {
       act(() => jest.runAllTimers());
 
       let listbox = getByRole('listbox');
-      let items = within(listbox).getAllByRole('option');
+      let items = getAllByRole('option');
       expect(items.length).toBe(6);
 
-      let groups = within(listbox).getAllByRole('group');
+      let groups = getAllByRole('group');
       expect(groups).toHaveLength(2);
       expect(groups[0]).toHaveAttribute(
         'aria-labelledby',
@@ -1414,12 +1414,12 @@ describe('picker/Picker', () => {
       );
       expect(groups[1]).toContainElement(items[5]);
 
-      expect(getByText('Section 1')).toHaveAttribute('aria-hidden', 'true');
+      expect(getByText('Section 1')).toHaveAttribute('role', 'presentation');
       expect(groups[1]).toHaveAttribute(
         'aria-labelledby',
         getByText('Section 2').id
       );
-      expect(getByText('Section 2')).toHaveAttribute('aria-hidden', 'true');
+      expect(getByText('Section 2')).toHaveAttribute('role', 'presentation');
 
       expect(document.activeElement).toBe(listbox);
 

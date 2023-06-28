@@ -1,3 +1,5 @@
+import { filterDOMProps } from '@react-aria/utils';
+import { DOMProps } from '@react-types/shared';
 import {
   ForwardedRef,
   forwardRef,
@@ -6,8 +8,6 @@ import {
 } from 'react';
 
 import { BaseStyleProps, useStyleProps } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
-import { filterDOMProps } from '@voussoir/utils';
 
 export type EmojiProps = {
   /** Label used to describe the symbol that will be announced to screen readers. */

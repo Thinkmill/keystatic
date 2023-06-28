@@ -1,13 +1,13 @@
 import { Alignment } from '@react-types/shared';
-import { action, Meta, Story } from '@voussoir/storybook';
-import React, { Key, useState } from 'react';
+import { action, Meta } from '@voussoir/storybook';
+import React, { useState } from 'react';
 
 import { Checkbox } from '@voussoir/checkbox';
 import { Flex } from '@voussoir/layout';
 import { Picker } from '@voussoir/picker';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 
-import { ActionMenuProps, ActionMenu, Item, Section } from '../src';
+import { ActionMenuProps, ActionMenu, Item } from '../src';
 
 const meta: Meta<ActionMenuProps<object>> = {
   title: 'Components/ActionMenu',
@@ -16,16 +16,13 @@ const meta: Meta<ActionMenuProps<object>> = {
 
 export default meta;
 
-const Template =
-  <T extends object>(): Story<ActionMenuProps<T>> =>
-  args =>
-    (
-      <ActionMenu onAction={action('action')} {...args}>
-        <Item key="one">One</Item>
-        <Item key="two">Two</Item>
-        <Item key="three">Three</Item>
-      </ActionMenu>
-    );
+const Template = <T extends object>(args: ActionMenuProps<T>) => (
+  <ActionMenu onAction={action('action')} {...args}>
+    <Item key="one">One</Item>
+    <Item key="two">Two</Item>
+    <Item key="three">Three</Item>
+  </ActionMenu>
+);
 
 type Direction = 'bottom' | 'top' | 'left' | 'right' | 'start' | 'end';
 const directionItems = [
@@ -78,15 +75,13 @@ function DirectionAlignment() {
   const [direction, setDirection] = useState<Direction>('bottom');
   const [shouldFlip, setShouldFlip] = useState(true);
 
-  const handleAlignChange = (key: Key) => {
-    key = key.toString();
+  const handleAlignChange = (key: string) => {
     if (isOfAlignment(key)) {
       setAlignment(key);
     }
   };
 
-  const handleDirectionChange = (key: Key) => {
-    key = key.toString();
+  const handleDirectionChange = (key: string) => {
     if (isOfDirection(key)) {
       setDirection(key);
     }
@@ -98,7 +93,7 @@ function DirectionAlignment() {
         label="Align"
         items={alignItems}
         selectedKey={align}
-        onSelectionChange={handleAlignChange}
+        onSelectionChange={key => handleAlignChange(String(key))}
       >
         {item => <Item key={item.key}>{item.label}</Item>}
       </Picker>
@@ -106,7 +101,7 @@ function DirectionAlignment() {
         label="Direction"
         items={directionItems}
         selectedKey={direction}
-        onSelectionChange={handleDirectionChange}
+        onSelectionChange={key => handleDirectionChange(String(key))}
       >
         {item => <Item key={item.key}>{item.label}</Item>}
       </Picker>
@@ -127,29 +122,45 @@ function DirectionAlignment() {
   );
 }
 
-export const Default = Template().bind({});
-Default.args = {};
+export const Default = {
+  render: Template,
+  args: {},
+};
 
-export const AriaLabel = Template().bind({});
-AriaLabel.args = { 'aria-label': 'Some more actions' };
+export const AriaLabel = {
+  render: Template,
+  args: { 'aria-label': 'Some more actions' },
+};
 
-export const DOMId = Template().bind({});
-DOMId.args = { id: 'my-action-menu' };
+export const DOMId = {
+  render: Template,
+  args: { id: 'my-action-menu' },
+};
 
-export const Prominence = Template().bind({});
-Prominence.args = { prominence: 'low' };
+export const Quiet = {
+  render: Template,
+  args: { isQuiet: true },
+};
 
-export const Disabled = Template().bind({});
-Disabled.args = { isDisabled: true };
+export const Disabled = {
+  render: Template,
+  args: { isDisabled: true },
+};
 
-export const DisabledKeys = Template().bind({});
-DisabledKeys.args = { disabledKeys: ['two'] };
+export const DisabledKeys = {
+  render: Template,
+  args: { disabledKeys: ['two'] },
+};
 
-export const AutoFocus = Template().bind({});
-AutoFocus.args = { autoFocus: true };
+export const AutoFocus = {
+  render: Template,
+  args: { autoFocus: true },
+};
 
-export const DefaultOpen = Template().bind({});
-DefaultOpen.args = { onOpenChange: action('openChange'), defaultOpen: true };
+export const DefaultOpen = {
+  render: Template,
+  args: { onOpenChange: action('openChange'), defaultOpen: true },
+};
 
 export const ControlledOpen = () => {
   let [open, setOpen] = React.useState(false);
@@ -180,36 +191,16 @@ export const WithTooltip = () => (
   </TooltipTrigger>
 );
 
-export const Selection = () => (
-  <ActionMenu
-    selectionMode="single"
-    disabledKeys={['actionable-four', 'actionable-five', 'actionable-six']}
-    defaultSelectedKeys={['selectable-one']}
-    disabledBehavior="selection"
-    disallowEmptySelection
-    onAction={action('onAction')}
-  >
-    <Section title="Selectable">
-      <Item key="selectable-one">One</Item>
-      <Item key="selectable-two">Two</Item>
-      <Item key="selectable-three">Three</Item>
-    </Section>
-    <Section title="Actionable">
-      <Item key="actionable-four">Four</Item>
-      <Item key="actionable-five">Five</Item>
-      <Item key="actionable-six">Six</Item>
-    </Section>
-  </ActionMenu>
-);
-
 export const Dynamic = () => {
   const items = [
-    { id: 'a', label: 'Cut' },
-    { id: 'b', label: 'Copy' },
-    { id: 'c', label: 'Paste' },
+    { key: 'cut', label: 'Cut' },
+    { key: 'copy', label: 'Copy' },
+    { key: 'paste', label: 'Paste' },
   ];
 
   return (
-    <ActionMenu items={items}>{item => <Item>{item.label}</Item>}</ActionMenu>
+    <ActionMenu items={items}>
+      {item => <Item key={item.key}>{item.label}</Item>}
+    </ActionMenu>
   );
 };

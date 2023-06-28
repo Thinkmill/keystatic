@@ -5,7 +5,7 @@ import { CopyCommandButton } from './copy-command-button';
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-white">
-      <div className="mx-auto max-w-7xl pt-12 px-6 md:py-16 flex flex-col items-center gap-12 md:gap-16">
+      <div className="mx-auto max-w-7xl pt-10 px-6 md:pb-10 lg:py-16 flex flex-col items-center gap-12 md:gap-16">
         <div className="w-full max-w-2xl flex flex-col items-center gap-8 text-center">
           <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl">
             Content Management
