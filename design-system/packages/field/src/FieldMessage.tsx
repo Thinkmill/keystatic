@@ -1,11 +1,11 @@
 import { PropsWithChildren } from 'react';
+import { DOMProps } from '@react-types/shared';
 
 import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
 import { Icon } from '@voussoir/icon';
 import { Flex } from '@voussoir/layout';
 import { css, tokenSchema } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
-import { DOMProps } from '@voussoir/types';
 
 type FieldMessageProps = PropsWithChildren<DOMProps>;
 

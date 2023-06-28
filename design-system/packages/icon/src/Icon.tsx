@@ -1,3 +1,4 @@
+import { filterDOMProps } from '@react-aria/utils';
 import React, { SVGProps } from 'react';
 
 import { useSlotProps } from '@voussoir/slots';
@@ -9,7 +10,7 @@ import {
   useStyleProps,
 } from '@voussoir/style';
 import { IconProps } from '@voussoir/types';
-import { filterDOMProps, toDataAttributes } from '@voussoir/utils';
+import { toDataAttributes } from '@voussoir/utils';
 
 export const Icon = (props: IconProps) => {
   props = useSlotProps(props, 'icon');
@@ -47,7 +48,7 @@ export const Icon = (props: IconProps) => {
 
   return React.cloneElement(props.src as React.ReactSVGElement, {
     ...toDataAttributes({ strokeScaling, size }),
-    ...filterDOMProps(otherProps, { labellable: true }),
+    ...filterDOMProps(otherProps, { labelable: true }),
     'aria-hidden': !hasAriaLabel,
     focusable: 'false',
     role: 'img',

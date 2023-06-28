@@ -18,13 +18,12 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@react-aria/utils": "^3.17.0",
+    "@react-aria/utils": "^3.18.0",
+    "@react-types/shared": "^3.18.0",
     "@voussoir/icon": "^0.2.0",
     "@voussoir/layout": "^0.1.3",
     "@voussoir/slots": "^0.1.3",
-    "@voussoir/ssr": "^0.2.1",
     "@voussoir/style": "^0.1.6",
-    "@voussoir/types": "^0.1.1",
     "@voussoir/typography": "^0.1.6",
     "@voussoir/utils": "^2.0.3",
     "emery": "^1.4.1"
