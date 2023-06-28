@@ -18,8 +18,8 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@react-aria/i18n": "^3.7.1",
-    "@react-aria/label": "^3.4.4",
+    "@react-aria/i18n": "^3.8.0",
+    "@react-aria/label": "^3.6.0",
     "@voussoir/icon": "^0.2.1",
     "@voussoir/layout": "^0.1.2",
     "@voussoir/slots": "^0.1.2",

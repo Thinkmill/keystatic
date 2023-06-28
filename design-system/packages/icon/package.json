@@ -5913,7 +5913,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@react-aria/i18n": "^3.7.1",
+    "@react-aria/i18n": "^3.8.0",
     "@voussoir/layout": "^0.1.2",
     "@voussoir/slots": "^0.1.2",
     "@voussoir/style": "^0.1.3",

@@ -18,9 +18,9 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@react-aria/meter": "^3.3.3",
-    "@react-aria/progress": "^3.3.3",
-    "@react-aria/utils": "^3.17.0",
+    "@react-aria/meter": "^3.4.3",
+    "@react-aria/progress": "^3.4.3",
+    "@react-aria/utils": "^3.18.0",
     "@voussoir/style": "^0.1.6",
     "@voussoir/types": "^0.1.1",
     "@voussoir/typography": "^0.1.6",

@@ -20,7 +20,7 @@
     "@babel/runtime": "^7.18.3",
     "@internationalized/date": "^3.2.0",
     "@markdoc/markdoc": "^0.3.0",
-    "@react-aria/i18n": "^3.7.1",
+    "@react-aria/i18n": "^3.8.0",
     "@types/js-yaml": "^4.0.5",
     "@voussoir/action-group": "^0.1.6",
     "@voussoir/avatar": "^0.1.2",

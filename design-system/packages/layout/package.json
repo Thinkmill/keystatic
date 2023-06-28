@@ -18,7 +18,7 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@react-aria/separator": "^3.2.5",
+    "@react-aria/separator": "^3.3.3",
     "@voussoir/slots": "^0.1.2",
     "@voussoir/style": "^0.1.5",
     "@voussoir/types": "^0.1.1",

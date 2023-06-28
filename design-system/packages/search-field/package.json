@@ -18,9 +18,9 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@react-aria/searchfield": "^3.4.3",
-    "@react-aria/utils": "^3.17.0",
-    "@react-stately/searchfield": "^3.3.3",
+    "@react-aria/searchfield": "^3.5.3",
+    "@react-aria/utils": "^3.18.0",
+    "@react-stately/searchfield": "^3.4.3",
     "@voussoir/button": "^0.2.0",
     "@voussoir/icon": "^0.2.0",
     "@voussoir/layout": "^0.1.3",
