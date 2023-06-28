@@ -7,8 +7,6 @@ The Reader API is a Node.js API that lets you _read_ Keystatic content from your
 The code can only run on the server, and not in the browser.
 {% /aside %}
 
----
-
 ## Usage
 
 First, import the `createReader` function, as well as your Keystatic config file:
@@ -76,7 +74,7 @@ const navigation = await reader.singletons.navigation.read();
 
 Good places to use the Reader API are:
 
-- `getStaticProps` in **Next.js**
+- `getStaticProps` in **Next.js (Pages Router)**
 - The frontmatter in **Astro** files
 - The `loader()` function in **Remix**
 - In **React Server Components**
