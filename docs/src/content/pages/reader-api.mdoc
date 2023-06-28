@@ -1,7 +1,7 @@
 ---
 title: Reader API
 ---
-The Reader API is a Node.js API that lets you _read_ Keystatic content from your file system.
+The Reader API is a Node.js API that lets you *read* Keystatic content from your file system.
 
 {% aside icon="⚠️" %}
 The code can only run on the server, and not in the browser.
@@ -14,7 +14,6 @@ First, import the `createReader` function, as well as your Keystatic config file
 ```javascript
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../keystatic.config';
-
 ```
 
 You can then create a new `reader` by calling `createReader` and passing it two arguments:
@@ -85,4 +84,4 @@ If you retrieve content from a `document` field in Keystatic, you'll get a JSON 
 
 It can be a lot of work to turn this data object as HTML to render it on a page.
 
-Luckily, Keystatic also provides a `DocumentRenderer`[ component](/docs/renderer-api) that does all the heavy lifting for you, and is highly customisable.
+Luckily, Keystatic also provides a `DocumentRenderer` that does all the heavy lifting for you, and is highly customisable.
