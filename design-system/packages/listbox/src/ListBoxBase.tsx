@@ -179,7 +179,7 @@ function ListBoxBase<T>(
 
 // forwardRef doesn't support generic parameters, so cast the result to the correct type
 // https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
-const _ListBoxBase = forwardRef(ListBoxBase as any) as <T>(
+const _ListBoxBase: <T>(
   props: ListBoxBaseProps<T> & { ref?: RefObject<HTMLDivElement> }
-) => ReactElement;
+) => ReactElement = forwardRef(ListBoxBase as any) as any;
 export { _ListBoxBase as ListBoxBase };
