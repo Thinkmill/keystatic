@@ -10,8 +10,8 @@ export default async function Blog() {
 
   if (!blogPosts) notFound();
 
-  // Sort posts by publishedOn date, and filter out draft posts
-  const sortedPublishedBlogPosts = blogPosts
+  // Filter out draft posts, and sort posts by publishedOn date
+  const publishedSortedBlogPosts = blogPosts
     .map(post => {
       const { parsedDate, formattedDate } = parseAndFormatPublishedDate(
         post.entry.publishedOn
@@ -23,10 +23,8 @@ export default async function Blog() {
         formattedDate,
       };
     })
-    .sort((a: { parsedDate: Date }, b: { parsedDate: Date }) =>
-      a.parsedDate < b.parsedDate ? 1 : -1
-    )
-    .filter((post: { entry: { draft: boolean } }) => !post.entry.draft);
+    .filter(post => !post.entry.draft)
+    .sort((a, b) => (a.parsedDate < b.parsedDate ? 1 : -1));
 
   return (
     <>
@@ -41,7 +39,7 @@ export default async function Blog() {
       </div>
 
       <ol>
-        {sortedPublishedBlogPosts.map(
+        {publishedSortedBlogPosts.map(
           ({ slug, formattedDate, entry }, index) => (
             <li
               key={index}
