@@ -4,9 +4,9 @@ import {
   TooltipTriggerProps as AriaTooltipTriggerProps,
 } from '@react-aria/tooltip';
 import { PositionProps } from '@react-types/overlays';
+import { DOMProps } from '@react-types/shared';
 
 import { BaseStyleProps } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
 
 export type TooltipProps = {
   /** The content to display within the tooltip. */

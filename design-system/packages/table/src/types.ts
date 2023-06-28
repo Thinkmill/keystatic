@@ -1,12 +1,12 @@
 import {
   CollectionChildren,
+  DOMProps,
   MultipleSelection,
   Sortable,
 } from '@react-types/shared';
 import { Key, ReactElement, ReactNode } from 'react';
 
 import { BaseStyleProps } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
 
 type ColumnElement<T> = ReactElement<ColumnProps<T>>;
 type ColumnRenderer<T> = (item: T) => ColumnElement<T>;

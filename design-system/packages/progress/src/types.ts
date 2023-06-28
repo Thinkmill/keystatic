@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
+import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 
 import { BaseStyleProps } from '@voussoir/style';
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
 
 // Common props
 // -----------------------------------------------------------------------------
@@ -30,7 +30,7 @@ interface CommonProgressProps {
 export interface CommonBarProps
   extends CommonProgressProps,
     DOMProps,
-    AriaLabellingProps,
+    AriaLabelingProps,
     BaseStyleProps {
   /** The content to display as the label. */
   label?: ReactNode;
@@ -78,7 +78,7 @@ export interface ProgressBarProps extends CommonBarProps {
 export interface ProgressCircleProps
   extends CommonProgressProps,
     DOMProps,
-    AriaLabellingProps,
+    AriaLabelingProps,
     BaseStyleProps {
   /**
    * Whether progress is indeterminate.

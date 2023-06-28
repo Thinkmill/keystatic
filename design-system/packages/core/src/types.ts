@@ -1,3 +1,4 @@
+import { DOMProps } from '@react-types/shared';
 import { ReactNode } from 'react';
 
 import { LinkComponent } from '@voussoir/link';
@@ -55,6 +56,7 @@ export type VoussoirProviderProps = {
    */
   bodyBackground?: keyof VoussoirTheme['color']['background'];
 } & VoussoirContextProps &
+  DOMProps &
   RootStyleProps;
 
 export type VoussoirProviderContext = {

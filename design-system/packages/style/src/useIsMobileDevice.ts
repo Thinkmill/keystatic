@@ -1,4 +1,4 @@
-import { useIsSSR } from '@voussoir/ssr';
+import { useIsSSR } from '@react-aria/ssr';
 
 import { breakpoints } from './responsive';
 

@@ -1,7 +1,7 @@
-import { FocusableProps, PressEvents } from '@react-types/shared';
+import { DOMProps, FocusableProps, PressEvents } from '@react-types/shared';
 import { ReactNode } from 'react';
 
-import { AnchorDOMProps, DOMProps, PartialRequired } from '@voussoir/types';
+import { AnchorDOMProps, PartialRequired } from '@voussoir/types';
 
 export type TextLinkProminence = 'default' | 'high';
 

@@ -1,7 +1,7 @@
-import { BaseStyleProps, ColorForeground, SizeIcon } from '@voussoir/style';
+import { DOMProps } from '@react-types/shared';
 import { ReactElement } from 'react';
 
-import { DOMProps } from './dom';
+import { BaseStyleProps, ColorForeground, SizeIcon } from '@voussoir/style';
 
 export type IconProps = {
   src: ReactElement;

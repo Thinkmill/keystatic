@@ -2,6 +2,7 @@ import { useHover, usePress } from '@react-aria/interactions';
 import { useLocale } from '@react-aria/i18n';
 import { useTab, useTabList, useTabPanel } from '@react-aria/tabs';
 import {
+  filterDOMProps,
   mergeProps,
   useId,
   useLayoutEffect,
@@ -36,7 +37,7 @@ import {
   useStyleProps,
 } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
-import { filterDOMProps, toDataAttributes, isReactText } from '@voussoir/utils';
+import { toDataAttributes, isReactText } from '@voussoir/utils';
 
 import {
   TabsProps,

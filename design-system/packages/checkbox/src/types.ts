@@ -1,10 +1,15 @@
 import { AriaCheckboxGroupProps } from '@react-aria/checkbox';
-import { FocusableProps, Orientation } from '@react-types/shared';
+import {
+  DOMProps,
+  InputBase,
+  FocusableProps,
+  Orientation,
+  Validation,
+} from '@react-types/shared';
 import { ReactNode } from 'react';
 
 import { FieldProps } from '@voussoir/field';
 import { BaseStyleProps } from '@voussoir/style';
-import { DOMProps, InputBaseProps } from '@voussoir/types';
 
 export type ToggleProps = {
   /**
@@ -31,7 +36,8 @@ export type ToggleProps = {
    * The name of the input element, used when submitting an HTML form. See [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#htmlattrdefname).
    */
   name?: string;
-} & InputBaseProps &
+} & InputBase &
+  Pick<Validation, 'isRequired'> &
   FocusableProps;
 
 export type CheckboxProps = {

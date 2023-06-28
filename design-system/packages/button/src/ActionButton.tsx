@@ -1,3 +1,6 @@
+import { useButton } from '@react-aria/button';
+import { useHover } from '@react-aria/interactions';
+import { filterDOMProps, mergeProps, useObjectRef } from '@react-aria/utils';
 import {
   ForwardedRef,
   forwardRef,
@@ -6,15 +9,11 @@ import {
   useMemo,
 } from 'react';
 
-import { useButton } from '@react-aria/button';
-import { useHover } from '@react-aria/interactions';
-import { mergeProps, useObjectRef } from '@react-aria/utils';
-
 import { useProviderProps } from '@voussoir/core';
 import { SlotProvider, SlotContextType, useSlotProps } from '@voussoir/slots';
 import { FocusRing } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
-import { filterDOMProps, isReactText } from '@voussoir/utils';
+import { isReactText } from '@voussoir/utils';
 
 import {
   actionButtonClassList,
