@@ -88,7 +88,7 @@ function DirectionAlignment() {
   };
 
   return (
-    <Flex alignItems="end" gap={10} wrap>
+    <Flex alignItems="end" gap="regular" wrap>
       <Picker
         label="Align"
         items={alignItems}
