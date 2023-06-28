@@ -56,13 +56,18 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
 }
 
 function useHeadingObserver(slugs: string[]) {
-  const observer = useRef<IntersectionObserver>();
-  const [activeHeadingSlug, setActiveHeadingSlug] = useState('');
+  const observerTop = useRef<IntersectionObserver>();
+  const observerBottom = useRef<IntersectionObserver>();
+  const [activeHeadingSlug, setActiveHeadingSlug] = useState('overview');
+  const [bottomHeadingSlug, setBottomHeadingSlug] = useState('');
+
+  console.log({ activeHeadingSlug });
+  console.log({ bottomHeadingSlug });
 
   const selectors = slugs.join(', ');
 
   useEffect(() => {
-    const handleObserver = (entries: IntersectionObserverEntry[]) => {
+    const handleObserverTop = (entries: IntersectionObserverEntry[]) => {
       entries.forEach(entry => {
         if (entry?.isIntersecting) {
           setActiveHeadingSlug(entry.target.id);
@@ -70,17 +75,49 @@ function useHeadingObserver(slugs: string[]) {
       });
     };
 
-    observer.current = new IntersectionObserver(handleObserver, {
-      rootMargin: '-130px 0px -50% 0px',
+    observerTop.current = new IntersectionObserver(handleObserverTop, {
+      rootMargin: '-100px 0px -50% 0px',
+      threshold: 1,
     });
 
     if (!selectors) return;
 
     const elements = document.querySelectorAll(selectors);
 
-    elements.forEach(element => observer.current?.observe(element));
+    elements.forEach(element => {
+      observerTop.current?.observe(element);
+    });
 
-    return () => observer.current?.disconnect();
+    return () => {
+      observerTop.current?.disconnect();
+    };
+  }, [selectors]);
+
+  useEffect(() => {
+    const handleObserverBottom = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach(entry => {
+        if (entry?.isIntersecting) {
+          setBottomHeadingSlug(entry.target.id);
+        }
+      });
+    };
+
+    observerBottom.current = new IntersectionObserver(handleObserverBottom, {
+      rootMargin: '-50% 0px 0px 0px',
+      threshold: 1,
+    });
+
+    if (!selectors) return;
+
+    const elements = document.querySelectorAll(selectors);
+
+    elements.forEach(element => {
+      observerBottom.current?.observe(element);
+    });
+
+    return () => {
+      observerBottom.current?.disconnect();
+    };
   }, [selectors]);
 
   return { activeHeadingSlug };

@@ -14,8 +14,13 @@ export default async function Docs({ params }: { params: { slug: string[] } }) {
 
   if (!page) notFound();
 
+  const overviewHeading = {
+    level: 1,
+    text: 'Overview',
+  };
+
   // Filter headings from the document content
-  const headings = (await page.content())
+  const headingsFromContent = (await page.content())
     .filter(child => child.type === 'heading')
     .map(heading => ({
       level: heading.level as number,
@@ -23,10 +28,15 @@ export default async function Docs({ params }: { params: { slug: string[] } }) {
     }))
     .filter(heading => heading.text);
 
+  const headings = [overviewHeading, ...headingsFromContent];
+
   return (
     <div className="grid gap-6 grid-cols-[auto] md:grid-cols-[auto,12rem]">
       <div>
-        <h1 className="text-2xl font-extrabold sm:text-3xl mb-6">
+        <h1
+          id="overview"
+          className="text-2xl font-extrabold sm:text-3xl mb-6 scroll-mt-[7rem]"
+        >
           {page.title}
         </h1>
         <div className="flex flex-col gap-4 [&_a]:break-all">
