@@ -38,14 +38,8 @@ function ActionMenu<T extends object>(
       <Menu
         children={props.children}
         items={props.items}
-        disabledBehavior={props.disabledBehavior}
         disabledKeys={props.disabledKeys}
-        disallowEmptySelection={props.disallowEmptySelection}
         onAction={props.onAction}
-        onSelectionChange={props.onSelectionChange}
-        selectionMode={props.selectionMode}
-        selectedKeys={props.selectedKeys}
-        defaultSelectedKeys={props.defaultSelectedKeys}
       />
     </MenuTrigger>
   );
