@@ -18,6 +18,8 @@ import { DateFieldDemo } from './fields/date';
 import { SlugFieldDemo } from './fields/slug';
 import { ImageFieldDemo } from './fields/image';
 import { FileFieldDemo } from './fields/file';
+import { Embed, EmbedProps } from './embed';
+import Link from 'next/link';
 
 const keystaticCodeTheme = JSON.parse(
   fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
@@ -53,12 +55,12 @@ const getRenderers = (
     ),
     link: ({ href, children }) => {
       return (
-        <a
+        <Link
           className="cursor-pointer underline font-medium hover:no-underline"
           href={href}
         >
           {children}
-        </a>
+        </Link>
       );
     },
   },
@@ -97,13 +99,6 @@ const getRenderers = (
         />
       );
     },
-    image: ({ src, alt }) => (
-      <img
-        className="rounded-lg my-2"
-        src={`/images/content/${slug}/${src}`}
-        alt={alt}
-      />
-    ),
     list: ({ type, children }) => {
       if (type === 'ordered') {
         return (
@@ -157,7 +152,15 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
       </div>
     );
   },
-  'cloud-image': ({ href: src, alt, sizes, height, width, srcSet }) => {
+  'cloud-image': ({
+    href: src,
+    alt,
+    sizes,
+    height,
+    width,
+    srcSet,
+    caption,
+  }) => {
     const imgMaxWidthPx = `${parseFloat(CONTENT_MAX_WIDTH_DESKTOP) * 16}`;
 
     return (
@@ -169,6 +172,7 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         srcSet={srcSet}
         sizes={sizes || `(max-width: 375px) 375px, ${imgMaxWidthPx}px`}
         className="rounded-lg my-2"
+        caption={caption}
       />
     );
   },
@@ -212,6 +216,14 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
       default:
         return <div>Field not found</div>;
     }
+  },
+  embed: ({ mediaType, embedCode }) => {
+    return (
+      <Embed
+        mediaType={mediaType as EmbedProps['mediaType']}
+        embedCode={embedCode}
+      />
+    );
   },
 };
 

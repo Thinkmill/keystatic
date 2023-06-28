@@ -8,6 +8,7 @@ type CloudImageProps = {
   srcSet?: string;
   sizes?: string;
   className?: string;
+  caption?: string;
 };
 
 export default function CloudImage({
@@ -18,8 +19,24 @@ export default function CloudImage({
   width,
   srcSet,
   className,
+  caption,
 }: CloudImageProps) {
-  return (
+  return caption ? (
+    <figure>
+      <img
+        alt={alt || ''}
+        src={src}
+        height={height}
+        width={width}
+        srcSet={srcSet || getDefaultSrcSet({ src })}
+        sizes={sizes}
+        className={className}
+      />
+      <figcaption className="text-sm text-neutral-500 mb-2">
+        {caption}
+      </figcaption>
+    </figure>
+  ) : (
     <img
       alt={alt || ''}
       src={src}
