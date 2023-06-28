@@ -144,7 +144,6 @@
     "@voussoir/radio": "^0.1.6",
     "@voussoir/search-field": "^0.1.6",
     "@voussoir/slots": "^0.1.3",
-    "@voussoir/ssr": "^0.2.1",
     "@voussoir/style": "^0.1.6",
     "@voussoir/table": "^0.1.6",
     "@voussoir/tabs": "^0.1.5",

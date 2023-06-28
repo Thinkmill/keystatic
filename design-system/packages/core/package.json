@@ -23,7 +23,6 @@
     "@react-aria/utils": "^3.18.0",
     "@react-types/shared": "^3.18.0",
     "@voussoir/link": "^0.1.4",
-    "@voussoir/ssr": "^0.2.1",
     "@voussoir/style": "^0.1.3",
     "@voussoir/types": "^0.1.1",
     "@voussoir/utils": "^2.0.2",

@@ -22,7 +22,6 @@
     "@react-aria/focus": "^3.13.0",
     "@react-aria/ssr": "^3.7.0",
     "@react-aria/utils": "^3.18.0",
-    "@voussoir/ssr": "^0.2.1",
     "@voussoir/utils": "^2.0.3",
     "emery": "^1.4.1",
     "facepaint": "^1.2.1",

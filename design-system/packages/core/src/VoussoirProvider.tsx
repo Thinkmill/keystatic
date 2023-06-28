@@ -9,7 +9,6 @@ import {
   useMatchedBreakpoints,
   useStyleProps,
 } from '@voussoir/style';
-import { SSRProvider } from '@voussoir/ssr';
 import { forwardRefWithAs } from '@voussoir/utils/ts';
 
 import { Context, useProvider } from './context';
@@ -86,19 +85,17 @@ export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
     }
 
     return (
-      <SSRProvider>
-        <Context.Provider value={context}>
-          <BreakpointProvider value={matchedBreakpoints}>
-            <I18nProvider locale={locale}>
-              <ModalProvider>
-                <LinkComponentContext.Provider value={linkComponent}>
-                  {contents}
-                </LinkComponentContext.Provider>
-              </ModalProvider>
-            </I18nProvider>
-          </BreakpointProvider>
-        </Context.Provider>
-      </SSRProvider>
+      <Context.Provider value={context}>
+        <BreakpointProvider value={matchedBreakpoints}>
+          <I18nProvider locale={locale}>
+            <ModalProvider>
+              <LinkComponentContext.Provider value={linkComponent}>
+                {contents}
+              </LinkComponentContext.Provider>
+            </ModalProvider>
+          </I18nProvider>
+        </BreakpointProvider>
+      </Context.Provider>
     );
   }
 );
