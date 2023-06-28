@@ -1,10 +1,11 @@
+import { useCollator, useLocale } from '@react-aria/i18n';
 import { isFocusVisible, useHover, usePress } from '@react-aria/interactions';
-import { mergeProps } from '@react-aria/utils';
 import {
   useSelectableCollection,
   useSelectableItem,
 } from '@react-aria/selection';
-import { useCollator, useLocale } from '@react-aria/i18n';
+import { mergeProps } from '@react-aria/utils';
+import { getChildNodes, getItemCount } from '@react-stately/collections';
 import { TreeState, useTreeState } from '@react-stately/tree';
 import {
   Collection,
@@ -29,15 +30,14 @@ import React, {
 import { Icon } from '@voussoir/icon';
 import { chevronLeftIcon } from '@voussoir/icon/icons/chevronLeftIcon';
 import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
-// import { dotIcon } from '@voussoir/icon/icons/dotIcon';
-import { classNames, css, tokenSchema, useStyleProps } from '@voussoir/style';
-
-import { NavTreeProps } from './types';
-import { isReactText, toDataAttributes } from '@voussoir/utils';
-import { Text } from '@voussoir/typography';
+import { dotIcon } from '@voussoir/icon/icons/dotIcon';
 import { SlotProvider } from '@voussoir/slots';
-import { getItemCount } from '@react-stately/collections';
+import { classNames, css, tokenSchema, useStyleProps } from '@voussoir/style';
+import { Text } from '@voussoir/typography';
+import { isReactText, toDataAttributes } from '@voussoir/utils';
+
 import { TreeKeyboardDelegate } from './TreeKeyboardDelegate';
+import { NavTreeProps } from './types';
 
 type NavTreeContext = {
   id: string;
@@ -137,6 +137,7 @@ function resolveTreeNodes<T>({
   });
 }
 
+// TODO: review accessibility
 function TreeSection<T>({
   node,
   state,
@@ -144,7 +145,6 @@ function TreeSection<T>({
   node: Node<T>;
   state: TreeState<T>;
 }) {
-  // TODO: review accessibility
   return (
     <>
       <div role="rowgroup">
@@ -314,12 +314,7 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
             />
           ) : (
             <Icon
-              // TODO: replace with `dotIcon` after updating to latest "lucide icons"
-              src={
-                <svg width="24" height="24" viewBox="0 0 24 24" strokeWidth="2">
-                  <circle cx="12.1" cy="12.1" r="1" />
-                </svg>
-              }
+              src={dotIcon}
               color="neutralTertiary"
               UNSAFE_style={{
                 transform: `rotate(${isExpanded ? (isRtl ? -90 : 90) : 0}deg)`,
@@ -397,12 +392,7 @@ export function useTreeItem<T>(
     // shouldUseVirtualFocus: true,
     shouldSelectOnPressUp: true,
   });
-
-  let { isPressed, pressProps } = usePress({
-    onPress,
-    isDisabled: itemStates.isDisabled,
-  });
-
+  let { pressProps } = usePress({ onPress, isDisabled: itemStates.isDisabled });
   let { isHovered, hoverProps } = useHover({
     isDisabled: itemStates.isDisabled,
   });
@@ -493,9 +483,6 @@ export function useTreeItem<T>(
     isExpanded: node.hasChildNodes && isExpanded,
     isSelectedAncestor,
     isHovered,
-    isPressed, // should come from `itemStates` but not working for some reason...
-    isFocused:
-      selectionManager.isFocused && selectionManager.focusedKey === node.key, // FIXME: this can be removed when `useSelectableItem` is from latest
   };
 }
 
@@ -521,20 +508,6 @@ function getDescendantNodes<T>(
   }
 
   return descendants;
-}
-
-// TODO: import from `@react-stately/collections` when it's available.
-function getChildNodes<T>(
-  node: Node<T>,
-  collection: Collection<Node<T>>
-): Iterable<Node<T>> {
-  // New API: call collection.getChildren with the node key.
-  if (typeof collection.getChildren === 'function') {
-    return collection.getChildren(node.key);
-  }
-
-  // Old API: access childNodes directly.
-  return node.childNodes;
 }
 
 function getAncestors<T>(
