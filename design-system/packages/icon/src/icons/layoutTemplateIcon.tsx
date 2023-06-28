@@ -8,6 +8,8 @@ export const layoutTemplateIcon = (
     width="1em"
     height="1em"
   >
-    <path d="M21 3H3v7h18V3zM21 14h-5v7h5v-7zM12 14H3v7h9v-7z" />
+    <rect width={18} height={7} x={3} y={3} rx={1} />
+    <rect width={9} height={7} x={3} y={14} rx={1} />
+    <rect width={5} height={7} x={16} y={14} rx={1} />
   </svg>
 );

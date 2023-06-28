@@ -1,0 +1,30 @@
+---
+title: Image field
+---
+{% fieldDemo field="image" /%}
+
+The `image` field is used to store an image. In the Admin UI it renders an image picker component.
+
+In [local storage mode](/docs/local-vs-git-hub-storage-strategy#local-strategy) it will save it as a file in your repository. It [GitHub storage mode](/docs/local-vs-git-hub-storage-strategy#git-hub-strategy) it will commit it into the repository.
+
+## Storage options
+
+You can optionally specify a `directory` from your project tree to store the image in. This is useful when you want your images in a `public` or `static` directory, to adhere to conventions for a specific framework.
+
+There's also an optional `publicPath` that lets you define how the image path should be retrieved when reading the value of the field.
+
+## Example usage
+
+```typescript
+avatar: fields.image({
+  label: 'Avatar',
+  description: 'The avatar for this user',
+  // This will output the images in the "public" directory
+  directory: 'public/images/avatars',
+  publicPath: '/images/avatars/'
+})
+```
+
+## Type signature
+
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.image](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.image)

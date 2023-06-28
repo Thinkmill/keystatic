@@ -67,7 +67,9 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
     if (exact) {
       return href === router.href ? 'page' : undefined;
     }
-    return router.href.startsWith(href) ? 'page' : undefined;
+    return href === router.href || router.href.startsWith(`${href}/`)
+      ? 'page'
+      : undefined;
   };
 
   const collectionsArray = Object.entries(props.config.collections || {});

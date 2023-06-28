@@ -5,4 +5,13 @@ module.exports = {
   experimental: {
     externalDir: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/docs',
+        destination: '/docs/introduction',
+        permanent: false,
+      },
+    ];
+  },
 };

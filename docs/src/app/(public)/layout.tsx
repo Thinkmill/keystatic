@@ -1,15 +1,6 @@
-import { Inter } from 'next/font/google';
-import { Analytics } from '@vercel/analytics/react';
-
 import '../../styles/global.css';
 import { HeaderNav } from '../../components/navigation/header-nav';
 import { getNavigationMap } from '../../utils/reader';
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-});
 
 export const metadata = {
   title: 'Keystatic',
@@ -43,14 +34,9 @@ export default async function RootLayout({
   const navigationMap = await getNavigationMap();
 
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div className="min-h-screen">
-          <HeaderNav navigationMap={navigationMap} />
-          {children}
-        </div>
-      </body>
-      <Analytics />
-    </html>
+    <div className="min-h-screen flex flex-col">
+      <HeaderNav navigationMap={navigationMap} />
+      {children}
+    </div>
   );
 }

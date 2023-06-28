@@ -22,7 +22,7 @@ export function filterStyleProps<Props extends {}>(
   ]);
 
   for (const prop in props) {
-    if (Object.hasOwn(props, prop) && !omit.has(prop)) {
+    if (Object.prototype.hasOwnProperty.call(props, prop) && !omit.has(prop)) {
       filteredProps[prop] = props[prop];
     }
   }

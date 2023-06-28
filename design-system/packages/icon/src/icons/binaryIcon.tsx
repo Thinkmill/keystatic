@@ -8,6 +8,8 @@ export const binaryIcon = (
     width="1em"
     height="1em"
   >
-    <path d="M6 20h4M14 10h4M6 14h2v6M14 4h2v6M6 4h4v6H6zM14 14h4v6h-4z" />
+    <rect x={14} y={14} width={4} height={6} rx={2} />
+    <rect x={6} y={4} width={4} height={6} rx={2} />
+    <path d="M6 20h4M14 10h4M6 14h2v6M14 4h2v6" />
   </svg>
 );

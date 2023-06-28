@@ -1,7 +1,7 @@
 export default function PrivacyPolicy() {
   return (
-    <div className="prose mx-auto max-w-screen-md px-6 py-12 lg:prose-lg md:py-24">
-      <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">
+    <div className="prose mx-auto max-w-screen-md px-6 py-12 lg:prose-lg md:pb-24">
+      <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl">
         Keystatic Privacy Policy
       </h1>
       <p>
@@ -49,8 +49,8 @@ export default function PrivacyPolicy() {
       </ul>
       <p>
         An open-text field where you voluntarily submit information of your
-        choosing which could include, the type of project you’re working on,
-        what you’d like to do with Keystatic etc.
+        choosing which could include, the type of project you're working on,
+        what you'd like to do with Keystatic etc.
       </p>
       <p>
         Your opt-in consent to join our mailing list for launch communications

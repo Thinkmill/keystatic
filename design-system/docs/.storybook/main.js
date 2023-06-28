@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-
 module.exports = {
   stories: [
     ...fs
@@ -20,8 +19,10 @@ module.exports = {
     './addons/provider/register',
     './addons/theme/register',
   ],
-
-  framework: '@storybook/react',
+  framework: {
+    name: '@storybook/nextjs',
+    options: {},
+  },
   typescript: {
     reactDocgen: false,
   },

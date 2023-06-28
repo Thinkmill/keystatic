@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/next",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -23,6 +23,11 @@
       "module": "./ui/pages/dist/keystatic-next-ui-pages.esm.js",
       "default": "./ui/pages/dist/keystatic-next-ui-pages.cjs.js"
     },
+    "./route-handler": {
+      "types": "./route-handler/dist/keystatic-next-route-handler.cjs.js",
+      "module": "./route-handler/dist/keystatic-next-route-handler.esm.js",
+      "default": "./route-handler/dist/keystatic-next-route-handler.cjs.js"
+    },
     "./reader-refresh": {
       "types": "./reader-refresh/dist/keystatic-next-reader-refresh.cjs.js",
       "module": "./reader-refresh/dist/keystatic-next-reader-refresh.esm.js",
@@ -36,7 +41,8 @@
     "dist",
     "api",
     "ui",
-    "reader-refresh"
+    "reader-refresh",
+    "route-handler"
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
@@ -45,8 +51,8 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.0.106",
-    "next": "^13.4.1",
+    "@keystatic/core": "^0.0.107",
+    "next": "^13.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -61,6 +67,7 @@
       "ui/pages.tsx",
       "ui/app.tsx",
       "api.tsx",
+      "route-handler.tsx",
       "reader-refresh.tsx"
     ]
   }

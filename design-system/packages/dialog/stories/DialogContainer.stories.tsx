@@ -1,5 +1,5 @@
 import { chain } from '@react-aria/utils';
-import { action, storiesOf } from '@voussoir/storybook';
+import { action } from '@voussoir/storybook';
 import { useReducer } from 'react';
 
 import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
@@ -14,67 +14,94 @@ import {
 } from '../src';
 import { getParagraph } from './common';
 
-storiesOf('Components/Dialog/DialogContainer', module)
-  .add('default', () => {
-    let [isOpen, toggleOpen] = useReducer(b => !b, false);
+export default {
+  title: 'Components/Dialog/DialogContainer',
+};
 
-    return (
-      <>
-        <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
-        <DialogContainer onDismiss={toggleOpen}>
-          {isOpen && <ExampleDialog />}
-        </DialogContainer>
-      </>
-    );
-  })
-  .add('isDismissable', () => {
-    let [isOpen, toggleOpen] = useReducer(b => !b, false);
+export const Default = () => {
+  let [isOpen, toggleOpen] = useReducer(b => !b, false);
 
-    return (
-      <>
-        <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
-        <DialogContainer isDismissable onDismiss={toggleOpen}>
-          {isOpen && <ExampleDialog />}
-        </DialogContainer>
-      </>
-    );
-  })
-  .add('type=fullscreen', () => {
-    let [isOpen, toggleOpen] = useReducer(b => !b, false);
+  return (
+    <>
+      <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
+      <DialogContainer onDismiss={toggleOpen}>
+        {isOpen && <ExampleDialog />}
+      </DialogContainer>
+    </>
+  );
+};
 
-    return (
-      <>
-        <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
-        <DialogContainer type="fullscreen" onDismiss={toggleOpen}>
-          {isOpen && <ExampleDialog />}
-        </DialogContainer>
-      </>
-    );
-  })
-  .add('size=small', () => {
-    let [isOpen, toggleOpen] = useReducer(b => !b, false);
+Default.story = {
+  name: 'default',
+};
 
-    return (
-      <>
-        <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
-        <DialogContainer onDismiss={toggleOpen}>
-          {isOpen && <ExampleDialog size="small" />}
-        </DialogContainer>
-      </>
-    );
-  })
-  .add('size=large', () => {
-    let [isOpen, toggleOpen] = useReducer(b => !b, false);
+export const IsDismissable = () => {
+  let [isOpen, toggleOpen] = useReducer(b => !b, false);
 
-    return (
-      <>
-        <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
-        <DialogContainer onDismiss={toggleOpen}>
-          {isOpen && <ExampleDialog size="large" />}
-        </DialogContainer>
-      </>
-    );
-  });
+  return (
+    <>
+      <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
+      <DialogContainer isDismissable onDismiss={toggleOpen}>
+        {isOpen && <ExampleDialog />}
+      </DialogContainer>
+    </>
+  );
+};
+
+IsDismissable.story = {
+  name: 'isDismissable',
+};
+
+export const TypeFullscreen = () => {
+  let [isOpen, toggleOpen] = useReducer(b => !b, false);
+
+  return (
+    <>
+      <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
+      <DialogContainer type="fullscreen" onDismiss={toggleOpen}>
+        {isOpen && <ExampleDialog />}
+      </DialogContainer>
+    </>
+  );
+};
+
+TypeFullscreen.story = {
+  name: 'type=fullscreen',
+};
+
+export const SizeSmall = () => {
+  let [isOpen, toggleOpen] = useReducer(b => !b, false);
+
+  return (
+    <>
+      <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
+      <DialogContainer onDismiss={toggleOpen}>
+        {isOpen && <ExampleDialog size="small" />}
+      </DialogContainer>
+    </>
+  );
+};
+
+SizeSmall.story = {
+  name: 'size=small',
+};
+
+export const SizeLarge = () => {
+  let [isOpen, toggleOpen] = useReducer(b => !b, false);
+
+  return (
+    <>
+      <ActionButton onPress={toggleOpen}>Open dialog</ActionButton>
+      <DialogContainer onDismiss={toggleOpen}>
+        {isOpen && <ExampleDialog size="large" />}
+      </DialogContainer>
+    </>
+  );
+};
+
+SizeLarge.story = {
+  name: 'size=large',
+};
 
 function ExampleDialog(props: Partial<DialogProps>) {
   let container = useDialogContainer();

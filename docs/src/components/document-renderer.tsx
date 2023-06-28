@@ -8,13 +8,27 @@ import { InferRenderersForComponentBlocks } from '@keystatic/core';
 import { componentBlocks } from '../../keystatic.config';
 import { CONTENT_MAX_WIDTH_DESKTOP } from '../constants';
 import CloudImage from './cloud-image';
+import fs from 'fs';
+import { TextFieldDemo } from './fields/text';
+import { URLFieldDemo } from './fields/url';
+import { SelectFieldDemo } from './fields/select';
+import { MultiselectFieldDemo } from './fields/multiselect';
+import { IntegerFieldDemo } from './fields/integer';
+import { DateFieldDemo } from './fields/date';
+import { SlugFieldDemo } from './fields/slug';
+import { ImageFieldDemo } from './fields/image';
+import { FileFieldDemo } from './fields/file';
+
+const keystaticCodeTheme = JSON.parse(
+  fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
+);
 
 export default async function DocumentRenderer({
   slug,
   document,
 }: DocumentRendererProps & { slug: string }) {
   const highlighter = await shiki.getHighlighter({
-    theme: 'min-light',
+    theme: keystaticCodeTheme,
   });
 
   return (
@@ -39,7 +53,10 @@ const getRenderers = (
     ),
     link: ({ href, children }) => {
       return (
-        <a className="cursor-pointer underline hover:no-underline" href={href}>
+        <a
+          className="cursor-pointer underline font-medium hover:no-underline"
+          href={href}
+        >
           {children}
         </a>
       );
@@ -75,7 +92,7 @@ const getRenderers = (
 
       return (
         <div
-          className="[&>pre]:whitespace-break-spaces [&>pre]:break-all [&>pre]:p-4 [&>pre]:rounded-lg [&>pre]:border [&>pre]:border-keystatic-gray [&>pre]:bg-keystatic-gray-light text-sm my-2"
+          className="[&>pre]:whitespace-break-spaces [&>pre]:break-all [&>pre]:px-6 [&>pre]:py-4 [&>pre]:rounded-lg [&>pre]:border [&>pre]:border-keystatic-gray [&>pre]:bg-white text-sm my-2"
           dangerouslySetInnerHTML={{ __html: codeBlock }}
         />
       );
@@ -90,23 +107,41 @@ const getRenderers = (
     list: ({ type, children }) => {
       if (type === 'ordered') {
         return (
-          <ol className="text-keystatic-gray-dark list-decimal list-inside">
+          <ol className="text-keystatic-gray-dark list-decimal list-inside mt-2">
             {children.map((child, index) => (
-              <li key={index}>{child}</li>
+              <li key={index} className="mb-2">
+                {child}
+              </li>
             ))}
           </ol>
         );
       }
       return (
-        <ul className="text-keystatic-gray-dark list-disc ml-4">
+        <ul className="text-keystatic-gray-dark list-disc ml-4 mt-2">
           {children.map((child, index) => (
-            <li key={index}>{child}</li>
+            <li key={index} className="mb-2">
+              {child}
+            </li>
           ))}
         </ul>
       );
     },
     divider: () => {
-      return <hr className="border-keystatic-gray my-2" />;
+      return <hr className="border-keystatic-gray my-8 peer" />;
+    },
+    layout: ({ children }) => {
+      return (
+        <div className="grid gap-6 my-2 grid-cols-1 sm:grid-cols-2">
+          {children.map((element, index) => (
+            <div
+              key={index}
+              className="rounded-lg bg-keystatic-gray-light p-4 text-sm"
+            >
+              {element}
+            </div>
+          ))}
+        </div>
+      );
     },
   },
 });
@@ -137,4 +172,56 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
       />
     );
   },
+  tags: ({ tags }) => {
+    return (
+      <div className="flex gap-2">
+        {tags.map((tag, index) => (
+          <div
+            key={index}
+            className={`${getTagClasses(
+              index
+            )} rounded-full px-2 py-1 font-medium text-[0.6875rem] leading-none uppercase self-start inline`}
+          >
+            {tag}
+          </div>
+        ))}
+      </div>
+    );
+  },
+  fieldDemo: ({ field }) => {
+    switch (field) {
+      case 'text':
+        return <TextFieldDemo />;
+      case 'url':
+        return <URLFieldDemo />;
+      case 'select':
+        return <SelectFieldDemo />;
+      case 'multiselect':
+        return <MultiselectFieldDemo />;
+      case 'integer':
+        return <IntegerFieldDemo />;
+      case 'date':
+        return <DateFieldDemo />;
+      case 'slug':
+        return <SlugFieldDemo />;
+      case 'image':
+        return <ImageFieldDemo />;
+      case 'file':
+        return <FileFieldDemo />;
+
+      default:
+        return <div>Field not found</div>;
+    }
+  },
+};
+
+const getTagClasses = (index: number) => {
+  switch (index) {
+    case 0:
+      return 'bg-indigo-100 text-indigo-800/80';
+    case 1:
+      return 'bg-amber-100 text-amber-800/80';
+    default:
+      return 'bg-fuchsia-100 text-fuchsia-800/80';
+  }
 };

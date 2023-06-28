@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useDarkMode } from 'storybook-dark-mode';
-import addons, { makeDecorator } from '@storybook/addons';
+import { makeDecorator } from '@storybook/addons';
+import { addons } from '@storybook/preview-api';
 import { getQueryParams } from '@storybook/client-api';
 import LinkTo from '@storybook/addon-links/react';
 

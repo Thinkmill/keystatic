@@ -1,0 +1,37 @@
+---
+title: Child field
+---
+The `child` field allows you to embed an editable region inside of a component block preview.
+
+See the [document field](/docs/fields/document) for more information about component blocks.
+
+## Usage example
+
+```typescript
+document: fields.document({
+  label: 'Document',
+  formatting: true,
+  links: true,
+  componentBlocks: {
+    quote: component({
+      preview: () => null,
+      label: 'Quote',
+      schema: {
+        // Make the quote editable
+        content: fields.child({
+          kind: 'block',
+          placeholder: 'Quote...',
+          formatting: { inlineMarks: 'inherit', softBreaks: 'inherit' },
+          links: 'inherit',
+        }),
+        // Make the attribution editable
+        attribution: fields.child({ kind: 'inline', placeholder: 'Attribution...' }),
+      },
+    }),
+  },
+}),
+```
+
+## Type signature
+
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.child](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.child)
