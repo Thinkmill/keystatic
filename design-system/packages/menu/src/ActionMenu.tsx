@@ -1,4 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { filterDOMProps } from '@react-aria/utils';
 import { ForwardedRef, forwardRef, ReactElement, Ref } from 'react';
 
 import localizedMessages from '../l10n.json';
@@ -10,7 +11,6 @@ import { ActionButton } from '@voussoir/button';
 import { Icon } from '@voussoir/icon';
 import { moreHorizontalIcon } from '@voussoir/icon/icons/moreHorizontalIcon';
 import { useSlotProps } from '@voussoir/slots';
-import { filterDOMProps } from '@voussoir/utils';
 
 function ActionMenu<T extends object>(
   props: ActionMenuProps<T>,
@@ -18,7 +18,7 @@ function ActionMenu<T extends object>(
 ) {
   props = useSlotProps(props, 'actionMenu');
   let stringFormatter = useLocalizedStringFormatter(localizedMessages);
-  let buttonProps = filterDOMProps(props, { labellable: true });
+  let buttonProps = filterDOMProps(props, { labelable: true });
   if (buttonProps['aria-label'] === undefined) {
     buttonProps['aria-label'] = stringFormatter.format('moreActions');
   }
@@ -38,14 +38,8 @@ function ActionMenu<T extends object>(
       <Menu
         children={props.children}
         items={props.items}
-        disabledBehavior={props.disabledBehavior}
         disabledKeys={props.disabledKeys}
-        disallowEmptySelection={props.disallowEmptySelection}
         onAction={props.onAction}
-        onSelectionChange={props.onSelectionChange}
-        selectionMode={props.selectionMode}
-        selectedKeys={props.selectedKeys}
-        defaultSelectedKeys={props.defaultSelectedKeys}
       />
     </MenuTrigger>
   );

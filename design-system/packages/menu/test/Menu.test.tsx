@@ -55,7 +55,7 @@ describe('menu/Menu', () => {
         section.getAttribute('aria-labelledby')!
       );
       expect(heading).toBeTruthy();
-      expect(heading).toHaveAttribute('aria-hidden', 'true');
+      expect(heading).toHaveAttribute('role', 'presentation');
     }
 
     let dividers = within(menu).getAllByRole('separator');
@@ -65,7 +65,7 @@ describe('menu/Menu', () => {
     expect(items.length).toBe(5);
     for (let item of items) {
       expect(item).toHaveAttribute('tabindex');
-      expect(item).toHaveAttribute('aria-disabled');
+      expect(item).not.toHaveAttribute('aria-disabled');
     }
     let item1 = within(menu).getByText('Foo');
     let item2 = within(menu).getByText('Bar');

@@ -1,25 +1,21 @@
+import { useLocale } from '@react-aria/i18n';
+import { useNumberField } from '@react-aria/numberfield';
+import { filterDOMProps, useObjectRef } from '@react-aria/utils';
+import { useNumberFieldState } from '@react-stately/numberfield';
 import {
   ForwardedRef,
   forwardRef,
   ForwardRefExoticComponent,
   Ref,
 } from 'react';
-import { useLocale } from '@react-aria/i18n';
-import { useNumberField } from '@react-aria/numberfield';
-import { useObjectRef } from '@react-aria/utils';
-import { useNumberFieldState } from '@react-stately/numberfield';
 
 import { useProvider, useProviderProps } from '@voussoir/core';
 import { css, tokenSchema } from '@voussoir/style';
 import { TextFieldPrimitive } from '@voussoir/text-field';
-import { filterDOMProps, toDataAttributes } from '@voussoir/utils';
+import { toDataAttributes } from '@voussoir/utils';
 
 import { StepButton } from './StepButton';
 import { NumberFieldProps } from './types';
-
-// Props that conflict with `TextFieldPrimitive`. The relevant DOM props are
-// passed down via `inputProps`, so nothing is lost, just a type issue.
-const omittedProps = new Set(['onChange', 'value', 'defaultValue']);
 
 /**
  * Number fields let users enter a numeric value and incrementally increase or
@@ -51,7 +47,7 @@ export const NumberField: ForwardRefExoticComponent<
   return (
     <TextFieldPrimitive
       width="alias.singleLineWidth"
-      {...filterDOMProps(props, { omit: omittedProps })}
+      {...filterDOMProps(props)}
       descriptionProps={descriptionProps}
       errorMessageProps={errorMessageProps}
       labelProps={labelProps}

@@ -1,6 +1,7 @@
 import { HTMLAttributes, useContext } from 'react';
 import { I18nProvider, useLocale } from '@react-aria/i18n';
 import { ModalProvider, useModalProvider } from '@react-aria/overlays';
+import { filterDOMProps } from '@react-aria/utils';
 
 import { DefaultLinkComponent, LinkComponentContext } from '@voussoir/link';
 import {
@@ -8,8 +9,6 @@ import {
   useMatchedBreakpoints,
   useStyleProps,
 } from '@voussoir/style';
-import { filterDOMProps } from '@voussoir/utils';
-import { SSRProvider } from '@voussoir/ssr';
 import { forwardRefWithAs } from '@voussoir/utils/ts';
 
 import { Context, useProvider } from './context';
@@ -86,19 +85,17 @@ export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
     }
 
     return (
-      <SSRProvider>
-        <Context.Provider value={context}>
-          <BreakpointProvider value={matchedBreakpoints}>
-            <I18nProvider locale={locale}>
-              <ModalProvider>
-                <LinkComponentContext.Provider value={linkComponent}>
-                  {contents}
-                </LinkComponentContext.Provider>
-              </ModalProvider>
-            </I18nProvider>
-          </BreakpointProvider>
-        </Context.Provider>
-      </SSRProvider>
+      <Context.Provider value={context}>
+        <BreakpointProvider value={matchedBreakpoints}>
+          <I18nProvider locale={locale}>
+            <ModalProvider>
+              <LinkComponentContext.Provider value={linkComponent}>
+                {contents}
+              </LinkComponentContext.Provider>
+            </ModalProvider>
+          </I18nProvider>
+        </BreakpointProvider>
+      </Context.Provider>
     );
   }
 );

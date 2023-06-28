@@ -2,6 +2,7 @@ import { useActionGroup, useActionGroupItem } from '@react-aria/actiongroup';
 import { FocusScope } from '@react-aria/focus';
 import { PressResponder } from '@react-aria/interactions';
 import {
+  filterDOMProps,
   mergeProps,
   useId,
   useLayoutEffect,
@@ -10,7 +11,7 @@ import {
   useValueEffect,
 } from '@react-aria/utils';
 import { ListState, useListState } from '@react-stately/list';
-import { Node } from '@react-types/shared';
+import { AriaLabelingProps, DOMProps, Node } from '@react-types/shared';
 import {
   ForwardedRef,
   Key,
@@ -40,8 +41,7 @@ import {
   tokenSchema,
   useStyleProps,
 } from '@voussoir/style';
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
-import { filterDOMProps, isReactText, toDataAttributes } from '@voussoir/utils';
+import { isReactText, toDataAttributes } from '@voussoir/utils';
 
 import { ActionGroupProps } from './types';
 
@@ -231,7 +231,7 @@ function ActionGroup<T extends object>(
   // If there are no visible items, don't apply any props to the action group container
   // and pass all aria labeling props through to the menu button.
   if (overflowMode === 'collapse' && visibleItems === 0) {
-    menuProps = filterDOMProps(props, { labellable: true });
+    menuProps = filterDOMProps(props, { labelable: true });
     actionGroupProps = {};
   }
 
@@ -482,7 +482,7 @@ function ActionGroupItem<T>({
   return button;
 }
 
-interface ActionGroupMenuProps<T> extends AriaLabellingProps {
+interface ActionGroupMenuProps<T> extends AriaLabelingProps {
   hideButtonText?: boolean;
   isDisabled?: boolean;
   isOnlyItem?: boolean;

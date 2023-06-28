@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
+import { DOMProps } from '@react-types/shared';
 
 import {
   BoxStyleProps,
   filterStyleProps,
   useStyleProps,
 } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
 import { forwardRefWithAs } from '@voussoir/utils/ts';
 
 export type BoxProps = {
