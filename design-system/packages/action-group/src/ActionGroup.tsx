@@ -10,7 +10,7 @@ import {
   useValueEffect,
 } from '@react-aria/utils';
 import { ListState, useListState } from '@react-stately/list';
-import { Node } from '@react-types/shared';
+import { AriaLabelingProps, DOMProps, Node } from '@react-types/shared';
 import {
   ForwardedRef,
   Key,
@@ -40,7 +40,6 @@ import {
   tokenSchema,
   useStyleProps,
 } from '@voussoir/style';
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
 import { filterDOMProps, isReactText, toDataAttributes } from '@voussoir/utils';
 
 import { ActionGroupProps } from './types';
@@ -482,7 +481,7 @@ function ActionGroupItem<T>({
   return button;
 }
 
-interface ActionGroupMenuProps<T> extends AriaLabellingProps {
+interface ActionGroupMenuProps<T> extends AriaLabelingProps {
   hideButtonText?: boolean;
   isDisabled?: boolean;
   isOnlyItem?: boolean;

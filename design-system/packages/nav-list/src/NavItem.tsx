@@ -1,4 +1,5 @@
 import { forwardRef, ReactNode, useMemo } from 'react';
+import { DOMProps } from '@react-types/shared';
 
 import { useLinkComponent } from '@voussoir/link';
 import { SlotProvider } from '@voussoir/slots';
@@ -9,9 +10,9 @@ import {
   tokenSchema,
   transition,
 } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
 import { Text } from '@voussoir/typography';
 import { filterDOMProps, isReactText } from '@voussoir/utils';
+
 import { itemIndicatorGutter, itemIndicatorWidth } from './constants';
 
 export type NavItemProps = {

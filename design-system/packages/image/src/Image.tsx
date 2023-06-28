@@ -1,8 +1,8 @@
 import { ReactEventHandler, ReactNode } from 'react';
+import { DOMProps } from '@react-types/shared';
 
 import { AspectRatio, AspectRatioProps } from '@voussoir/layout';
 import { BoxStyleProps, classNames, css, useStyleProps } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
 import { filterDOMProps } from '@voussoir/utils';
 import { warning } from 'emery';
 import { useSlotProps } from '@voussoir/slots';

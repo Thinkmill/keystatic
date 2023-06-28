@@ -6,11 +6,11 @@ import {
   ForwardRefExoticComponent,
   Ref,
 } from 'react';
+import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 
 import { Flex } from '@voussoir/layout';
 import { SlotProvider } from '@voussoir/slots';
 import { BaseStyleProps, useStyleProps } from '@voussoir/style';
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
 import { Text } from '@voussoir/typography';
 import { filterDOMProps, isReactText } from '@voussoir/utils';
 
@@ -33,7 +33,7 @@ export type BadgeProps = {
   tone?: BadgeTones;
 } & BaseStyleProps &
   DOMProps &
-  AriaLabellingProps;
+  AriaLabelingProps;
 
 /**
  * A badge is a decorative indicator used to either call attention to an item or

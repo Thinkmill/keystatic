@@ -1,4 +1,4 @@
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
+import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 
 const defaultPropNames = new Set(['aria-hidden', 'id', 'title', 'form']);
 const labellingPropNames = new Set([
@@ -45,7 +45,7 @@ const propRegex = /^(data-.*)$/;
 export function filterDOMProps<P extends Record<string, any>>(
   props: P,
   options: Options = {}
-): DOMProps & AriaLabellingProps {
+): DOMProps & AriaLabelingProps {
   let filteredProps: any = {};
 
   for (const prop in props) {

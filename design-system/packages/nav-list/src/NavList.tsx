@@ -1,4 +1,5 @@
 import { useLayoutEffect, useObjectRef } from '@react-aria/utils';
+import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 import {
   ForwardedRef,
   ReactNode,
@@ -13,7 +14,6 @@ import {
 
 import { Flex } from '@voussoir/layout';
 import { BaseStyleProps, css, useStyleProps } from '@voussoir/style';
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
 import { filterDOMProps } from '@voussoir/utils';
 import { SlotProvider } from '@voussoir/slots';
 
@@ -27,7 +27,7 @@ export type NavListProps = {
   children: ReactNode;
 } & BaseStyleProps &
   DOMProps &
-  AriaLabellingProps;
+  AriaLabelingProps;
 
 /** Navigation lists let users navigate the application. */
 export const NavList: ForwardRefExoticComponent<

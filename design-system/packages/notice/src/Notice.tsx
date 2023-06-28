@@ -1,4 +1,5 @@
 import { useSlotId } from '@react-aria/utils';
+import { DOMProps } from '@react-types/shared';
 import { ReactNode, useMemo, useRef } from 'react';
 
 import { checkCircle2Icon } from '@voussoir/icon/icons/checkCircle2Icon';
@@ -8,7 +9,6 @@ import { Icon } from '@voussoir/icon';
 import { Grid, minmax } from '@voussoir/layout';
 import { Content, SlotProvider } from '@voussoir/slots';
 import { filterDOMProps, isReactText, useHasChild } from '@voussoir/utils';
-import { DOMProps } from '@voussoir/types';
 import {
   BaseStyleProps,
   css,

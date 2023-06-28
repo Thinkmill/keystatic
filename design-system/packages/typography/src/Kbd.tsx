@@ -9,10 +9,10 @@ import {
   useMemo,
   useSyncExternalStore,
 } from 'react';
+import { DOMProps } from '@react-types/shared';
 
 import { useSlotProps } from '@voussoir/slots';
 import { BaseStyleProps, css } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
 import { filterDOMProps } from '@voussoir/utils';
 
 import { useTextStyles } from './text';

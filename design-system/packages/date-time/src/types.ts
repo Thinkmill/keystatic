@@ -5,10 +5,9 @@ import {
   MappedTimeValue,
   TimeValue,
 } from '@react-types/datepicker';
-import { FocusableProps } from '@react-types/shared';
+import { FocusableProps, ValueBase } from '@react-types/shared';
 
 import { FieldProps } from '@voussoir/field';
-import { ValueBase } from '@voussoir/types';
 
 export type DateFieldProps<T extends DateValue> = {
   /** The minimum allowed date that a user may select. */

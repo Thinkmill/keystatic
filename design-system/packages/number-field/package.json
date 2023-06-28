@@ -35,7 +35,6 @@
     "@voussoir/layout": "^0.1.3",
     "@voussoir/style": "^0.1.6",
     "@voussoir/text-field": "^0.1.8",
-    "@voussoir/types": "^0.1.1",
     "@voussoir/typography": "^0.1.6",
     "@voussoir/utils": "^2.0.3",
     "emery": "^1.4.1"

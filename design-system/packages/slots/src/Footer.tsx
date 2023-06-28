@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
+import { DOMProps } from '@react-types/shared';
 
 import { BaseStyleProps, useStyleProps } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
 import { filterDOMProps } from '@voussoir/utils';
 import { forwardRefWithAs } from '@voussoir/utils/ts';
 
