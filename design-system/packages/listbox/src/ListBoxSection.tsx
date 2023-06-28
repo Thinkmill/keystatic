@@ -1,10 +1,13 @@
 import { useLocale } from '@react-aria/i18n';
 import { useListBoxSection } from '@react-aria/listbox';
 import { useSeparator } from '@react-aria/separator';
-import { layoutInfoToStyle, useVirtualizerItem } from '@react-aria/virtualizer';
-import { ReusableView } from '@react-stately/virtualizer';
+import {
+  VirtualizerItemOptions,
+  layoutInfoToStyle,
+  useVirtualizerItem,
+} from '@react-aria/virtualizer';
+import { LayoutInfo } from '@react-stately/virtualizer';
 import { Node } from '@react-types/shared';
-import { warning } from 'emery';
 import { Fragment, ReactNode, useRef } from 'react';
 
 import { classNames, css, tokenSchema } from '@voussoir/style';
@@ -13,26 +16,18 @@ import { useListBoxContext } from './context';
 import { Text } from '@voussoir/typography';
 import { Divider } from '@voussoir/layout';
 
-interface ListBoxSectionProps<T> {
-  reusableView: ReusableView<Node<T>, unknown>;
-  header: ReusableView<Node<T>, unknown>;
+interface ListBoxSectionProps<T> extends Omit<VirtualizerItemOptions, 'ref'> {
+  headerLayoutInfo: LayoutInfo;
+  item: Node<T>;
   children?: ReactNode;
 }
 
 /** @private */
 export function ListBoxSection<T>(props: ListBoxSectionProps<T>) {
-  let { children, reusableView, header } = props;
-  let item = reusableView.content;
-  let ariaLabel = item['aria-label'];
-
-  warning(
-    !!(item.rendered || ariaLabel),
-    'A section must have a title or aria-label.'
-  );
-
+  let { children, layoutInfo, headerLayoutInfo, virtualizer, item } = props;
   let { headingProps, groupProps } = useListBoxSection({
     heading: item.rendered,
-    'aria-label': ariaLabel,
+    'aria-label': item['aria-label'],
   });
 
   let { separatorProps } = useSeparator({
@@ -41,7 +36,8 @@ export function ListBoxSection<T>(props: ListBoxSectionProps<T>) {
 
   let headerRef = useRef<HTMLDivElement>(null);
   useVirtualizerItem({
-    reusableView: header,
+    layoutInfo: headerLayoutInfo,
+    virtualizer,
     ref: headerRef,
   });
 
@@ -53,11 +49,7 @@ export function ListBoxSection<T>(props: ListBoxSectionProps<T>) {
       <div
         role="presentation"
         ref={headerRef}
-        style={
-          header.layoutInfo
-            ? layoutInfoToStyle(header.layoutInfo, direction)
-            : undefined
-        }
+        style={layoutInfoToStyle(headerLayoutInfo, direction)}
       >
         {item.key !== state.collection.getFirstKey() && (
           <Divider
@@ -73,10 +65,7 @@ export function ListBoxSection<T>(props: ListBoxSectionProps<T>) {
             size="small"
             color="neutralSecondary"
             weight="medium"
-            UNSAFE_className={css({
-              paddingBlock: tokenSchema.size.space.medium,
-              paddingInline: tokenSchema.size.space.medium,
-            })}
+            UNSAFE_className={css({ padding: tokenSchema.size.space.medium })}
             {...headingProps}
           >
             {item.rendered}
@@ -85,11 +74,7 @@ export function ListBoxSection<T>(props: ListBoxSectionProps<T>) {
       </div>
       <div
         {...groupProps}
-        style={
-          reusableView.layoutInfo
-            ? layoutInfoToStyle(reusableView.layoutInfo, direction)
-            : undefined
-        }
+        style={layoutInfoToStyle(layoutInfo, direction)}
         className={classNames(css({}), 'ListBoxSection')}
       >
         {children}
