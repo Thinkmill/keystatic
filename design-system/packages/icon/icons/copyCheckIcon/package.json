@@ -1,0 +1,4 @@
+{
+  "main": "dist/voussoir-icon-icons-copyCheckIcon.cjs.js",
+  "module": "dist/voussoir-icon-icons-copyCheckIcon.esm.js"
+}

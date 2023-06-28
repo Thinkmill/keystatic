@@ -9,6 +9,6 @@ export const arrowLeftCircleIcon = (
     height="1em"
   >
     <circle cx={12} cy={12} r={10} />
-    <path d="m12 8-4 4 4 4M16 12H8" />
+    <path d="M16 12H8M12 8l-4 4 4 4" />
   </svg>
 );

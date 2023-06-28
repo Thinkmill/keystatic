@@ -21,6 +21,11 @@
       "module": "./icons/xIcon/dist/voussoir-icon-icons-xIcon.esm.js",
       "default": "./icons/xIcon/dist/voussoir-icon-icons-xIcon.cjs.js"
     },
+    "./icons/piIcon": {
+      "types": "./icons/piIcon/dist/voussoir-icon-icons-piIcon.cjs.js",
+      "module": "./icons/piIcon/dist/voussoir-icon-icons-piIcon.esm.js",
+      "default": "./icons/piIcon/dist/voussoir-icon-icons-piIcon.cjs.js"
+    },
     "./icons/tvIcon": {
       "types": "./icons/tvIcon/dist/voussoir-icon-icons-tvIcon.cjs.js",
       "module": "./icons/tvIcon/dist/voussoir-icon-icons-tvIcon.esm.js",
@@ -30,6 +35,11 @@
       "types": "./icons/axeIcon/dist/voussoir-icon-icons-axeIcon.cjs.js",
       "module": "./icons/axeIcon/dist/voussoir-icon-icons-axeIcon.esm.js",
       "default": "./icons/axeIcon/dist/voussoir-icon-icons-axeIcon.cjs.js"
+    },
+    "./icons/banIcon": {
+      "types": "./icons/banIcon/dist/voussoir-icon-icons-banIcon.cjs.js",
+      "module": "./icons/banIcon/dist/voussoir-icon-icons-banIcon.esm.js",
+      "default": "./icons/banIcon/dist/voussoir-icon-icons-banIcon.cjs.js"
     },
     "./icons/bedIcon": {
       "types": "./icons/bedIcon/dist/voussoir-icon-icons-bedIcon.cjs.js",
@@ -85,6 +95,11 @@
       "types": "./icons/dogIcon/dist/voussoir-icon-icons-dogIcon.cjs.js",
       "module": "./icons/dogIcon/dist/voussoir-icon-icons-dogIcon.esm.js",
       "default": "./icons/dogIcon/dist/voussoir-icon-icons-dogIcon.cjs.js"
+    },
+    "./icons/dotIcon": {
+      "types": "./icons/dotIcon/dist/voussoir-icon-icons-dotIcon.cjs.js",
+      "module": "./icons/dotIcon/dist/voussoir-icon-icons-dotIcon.esm.js",
+      "default": "./icons/dotIcon/dist/voussoir-icon-icons-dotIcon.cjs.js"
     },
     "./icons/earIcon": {
       "types": "./icons/earIcon/dist/voussoir-icon-icons-earIcon.cjs.js",
@@ -151,6 +166,11 @@
       "module": "./icons/pinIcon/dist/voussoir-icon-icons-pinIcon.esm.js",
       "default": "./icons/pinIcon/dist/voussoir-icon-icons-pinIcon.cjs.js"
     },
+    "./icons/ratIcon": {
+      "types": "./icons/ratIcon/dist/voussoir-icon-icons-ratIcon.cjs.js",
+      "module": "./icons/ratIcon/dist/voussoir-icon-icons-ratIcon.esm.js",
+      "default": "./icons/ratIcon/dist/voussoir-icon-icons-ratIcon.cjs.js"
+    },
     "./icons/rssIcon": {
       "types": "./icons/rssIcon/dist/voussoir-icon-icons-rssIcon.cjs.js",
       "module": "./icons/rssIcon/dist/voussoir-icon-icons-rssIcon.esm.js",
@@ -180,6 +200,11 @@
       "types": "./icons/zapIcon/dist/voussoir-icon-icons-zapIcon.cjs.js",
       "module": "./icons/zapIcon/dist/voussoir-icon-icons-zapIcon.esm.js",
       "default": "./icons/zapIcon/dist/voussoir-icon-icons-zapIcon.cjs.js"
+    },
+    "./icons/atomIcon": {
+      "types": "./icons/atomIcon/dist/voussoir-icon-icons-atomIcon.cjs.js",
+      "module": "./icons/atomIcon/dist/voussoir-icon-icons-atomIcon.esm.js",
+      "default": "./icons/atomIcon/dist/voussoir-icon-icons-atomIcon.cjs.js"
     },
     "./icons/babyIcon": {
       "types": "./icons/babyIcon/dist/voussoir-icon-icons-babyIcon.cjs.js",
@@ -251,6 +276,11 @@
       "module": "./icons/castIcon/dist/voussoir-icon-icons-castIcon.esm.js",
       "default": "./icons/castIcon/dist/voussoir-icon-icons-castIcon.cjs.js"
     },
+    "./icons/clubIcon": {
+      "types": "./icons/clubIcon/dist/voussoir-icon-icons-clubIcon.cjs.js",
+      "module": "./icons/clubIcon/dist/voussoir-icon-icons-clubIcon.esm.js",
+      "default": "./icons/clubIcon/dist/voussoir-icon-icons-clubIcon.cjs.js"
+    },
     "./icons/codeIcon": {
       "types": "./icons/codeIcon/dist/voussoir-icon-icons-codeIcon.cjs.js",
       "module": "./icons/codeIcon/dist/voussoir-icon-icons-codeIcon.esm.js",
@@ -315,6 +345,11 @@
       "types": "./icons/giftIcon/dist/voussoir-icon-icons-giftIcon.cjs.js",
       "module": "./icons/giftIcon/dist/voussoir-icon-icons-giftIcon.esm.js",
       "default": "./icons/giftIcon/dist/voussoir-icon-icons-giftIcon.cjs.js"
+    },
+    "./icons/goalIcon": {
+      "types": "./icons/goalIcon/dist/voussoir-icon-icons-goalIcon.cjs.js",
+      "module": "./icons/goalIcon/dist/voussoir-icon-icons-goalIcon.esm.js",
+      "default": "./icons/goalIcon/dist/voussoir-icon-icons-goalIcon.cjs.js"
     },
     "./icons/grabIcon": {
       "types": "./icons/grabIcon/dist/voussoir-icon-icons-grabIcon.cjs.js",
@@ -436,6 +471,11 @@
       "module": "./icons/redoIcon/dist/voussoir-icon-icons-redoIcon.esm.js",
       "default": "./icons/redoIcon/dist/voussoir-icon-icons-redoIcon.cjs.js"
     },
+    "./icons/rowsIcon": {
+      "types": "./icons/rowsIcon/dist/voussoir-icon-icons-rowsIcon.cjs.js",
+      "module": "./icons/rowsIcon/dist/voussoir-icon-icons-rowsIcon.esm.js",
+      "default": "./icons/rowsIcon/dist/voussoir-icon-icons-rowsIcon.cjs.js"
+    },
     "./icons/saveIcon": {
       "types": "./icons/saveIcon/dist/voussoir-icon-icons-saveIcon.cjs.js",
       "module": "./icons/saveIcon/dist/voussoir-icon-icons-saveIcon.esm.js",
@@ -480,6 +520,11 @@
       "types": "./icons/tentIcon/dist/voussoir-icon-icons-tentIcon.cjs.js",
       "module": "./icons/tentIcon/dist/voussoir-icon-icons-tentIcon.esm.js",
       "default": "./icons/tentIcon/dist/voussoir-icon-icons-tentIcon.cjs.js"
+    },
+    "./icons/textIcon": {
+      "types": "./icons/textIcon/dist/voussoir-icon-icons-textIcon.cjs.js",
+      "module": "./icons/textIcon/dist/voussoir-icon-icons-textIcon.esm.js",
+      "default": "./icons/textIcon/dist/voussoir-icon-icons-textIcon.cjs.js"
     },
     "./icons/typeIcon": {
       "types": "./icons/typeIcon/dist/voussoir-icon-icons-typeIcon.cjs.js",
@@ -546,6 +591,16 @@
       "module": "./icons/awardIcon/dist/voussoir-icon-icons-awardIcon.esm.js",
       "default": "./icons/awardIcon/dist/voussoir-icon-icons-awardIcon.cjs.js"
     },
+    "./icons/badgeIcon": {
+      "types": "./icons/badgeIcon/dist/voussoir-icon-icons-badgeIcon.cjs.js",
+      "module": "./icons/badgeIcon/dist/voussoir-icon-icons-badgeIcon.esm.js",
+      "default": "./icons/badgeIcon/dist/voussoir-icon-icons-badgeIcon.cjs.js"
+    },
+    "./icons/bookXIcon": {
+      "types": "./icons/bookXIcon/dist/voussoir-icon-icons-bookXIcon.cjs.js",
+      "module": "./icons/bookXIcon/dist/voussoir-icon-icons-bookXIcon.esm.js",
+      "default": "./icons/bookXIcon/dist/voussoir-icon-icons-bookXIcon.cjs.js"
+    },
     "./icons/boxesIcon": {
       "types": "./icons/boxesIcon/dist/voussoir-icon-icons-boxesIcon.cjs.js",
       "module": "./icons/boxesIcon/dist/voussoir-icon-icons-boxesIcon.esm.js",
@@ -591,6 +646,11 @@
       "module": "./icons/coinsIcon/dist/voussoir-icon-icons-coinsIcon.esm.js",
       "default": "./icons/coinsIcon/dist/voussoir-icon-icons-coinsIcon.cjs.js"
     },
+    "./icons/copyXIcon": {
+      "types": "./icons/copyXIcon/dist/voussoir-icon-icons-copyXIcon.cjs.js",
+      "module": "./icons/copyXIcon/dist/voussoir-icon-icons-copyXIcon.esm.js",
+      "default": "./icons/copyXIcon/dist/voussoir-icon-icons-copyXIcon.cjs.js"
+    },
     "./icons/crossIcon": {
       "types": "./icons/crossIcon/dist/voussoir-icon-icons-crossIcon.cjs.js",
       "module": "./icons/crossIcon/dist/voussoir-icon-icons-crossIcon.esm.js",
@@ -635,6 +695,21 @@
       "types": "./icons/dicesIcon/dist/voussoir-icon-icons-dicesIcon.cjs.js",
       "module": "./icons/dicesIcon/dist/voussoir-icon-icons-dicesIcon.esm.js",
       "default": "./icons/dicesIcon/dist/voussoir-icon-icons-dicesIcon.cjs.js"
+    },
+    "./icons/disc2Icon": {
+      "types": "./icons/disc2Icon/dist/voussoir-icon-icons-disc2Icon.cjs.js",
+      "module": "./icons/disc2Icon/dist/voussoir-icon-icons-disc2Icon.esm.js",
+      "default": "./icons/disc2Icon/dist/voussoir-icon-icons-disc2Icon.cjs.js"
+    },
+    "./icons/disc3Icon": {
+      "types": "./icons/disc3Icon/dist/voussoir-icon-icons-disc3Icon.cjs.js",
+      "module": "./icons/disc3Icon/dist/voussoir-icon-icons-disc3Icon.esm.js",
+      "default": "./icons/disc3Icon/dist/voussoir-icon-icons-disc3Icon.cjs.js"
+    },
+    "./icons/donutIcon": {
+      "types": "./icons/donutIcon/dist/voussoir-icon-icons-donutIcon.cjs.js",
+      "module": "./icons/donutIcon/dist/voussoir-icon-icons-donutIcon.esm.js",
+      "default": "./icons/donutIcon/dist/voussoir-icon-icons-donutIcon.cjs.js"
     },
     "./icons/edit2Icon": {
       "types": "./icons/edit2Icon/dist/voussoir-icon-icons-edit2Icon.cjs.js",
@@ -711,10 +786,20 @@
       "module": "./icons/grapeIcon/dist/voussoir-icon-icons-grapeIcon.esm.js",
       "default": "./icons/grapeIcon/dist/voussoir-icon-icons-grapeIcon.cjs.js"
     },
+    "./icons/groupIcon": {
+      "types": "./icons/groupIcon/dist/voussoir-icon-icons-groupIcon.cjs.js",
+      "module": "./icons/groupIcon/dist/voussoir-icon-icons-groupIcon.esm.js",
+      "default": "./icons/groupIcon/dist/voussoir-icon-icons-groupIcon.cjs.js"
+    },
     "./icons/heartIcon": {
       "types": "./icons/heartIcon/dist/voussoir-icon-icons-heartIcon.cjs.js",
       "module": "./icons/heartIcon/dist/voussoir-icon-icons-heartIcon.esm.js",
       "default": "./icons/heartIcon/dist/voussoir-icon-icons-heartIcon.cjs.js"
+    },
+    "./icons/hotelIcon": {
+      "types": "./icons/hotelIcon/dist/voussoir-icon-icons-hotelIcon.cjs.js",
+      "module": "./icons/hotelIcon/dist/voussoir-icon-icons-hotelIcon.esm.js",
+      "default": "./icons/hotelIcon/dist/voussoir-icon-icons-hotelIcon.cjs.js"
     },
     "./icons/imageIcon": {
       "types": "./icons/imageIcon/dist/voussoir-icon-icons-imageIcon.cjs.js",
@@ -766,6 +851,11 @@
       "module": "./icons/medalIcon/dist/voussoir-icon-icons-medalIcon.esm.js",
       "default": "./icons/medalIcon/dist/voussoir-icon-icons-medalIcon.cjs.js"
     },
+    "./icons/mergeIcon": {
+      "types": "./icons/mergeIcon/dist/voussoir-icon-icons-mergeIcon.cjs.js",
+      "module": "./icons/mergeIcon/dist/voussoir-icon-icons-mergeIcon.esm.js",
+      "default": "./icons/mergeIcon/dist/voussoir-icon-icons-mergeIcon.cjs.js"
+    },
     "./icons/minusIcon": {
       "types": "./icons/minusIcon/dist/voussoir-icon-icons-minusIcon.cjs.js",
       "module": "./icons/minusIcon/dist/voussoir-icon-icons-minusIcon.esm.js",
@@ -780,6 +870,11 @@
       "types": "./icons/musicIcon/dist/voussoir-icon-icons-musicIcon.cjs.js",
       "module": "./icons/musicIcon/dist/voussoir-icon-icons-musicIcon.esm.js",
       "default": "./icons/musicIcon/dist/voussoir-icon-icons-musicIcon.cjs.js"
+    },
+    "./icons/orbitIcon": {
+      "types": "./icons/orbitIcon/dist/voussoir-icon-icons-orbitIcon.cjs.js",
+      "module": "./icons/orbitIcon/dist/voussoir-icon-icons-orbitIcon.esm.js",
+      "default": "./icons/orbitIcon/dist/voussoir-icon-icons-orbitIcon.cjs.js"
     },
     "./icons/pauseIcon": {
       "types": "./icons/pauseIcon/dist/voussoir-icon-icons-pauseIcon.cjs.js",
@@ -815,6 +910,11 @@
       "types": "./icons/quoteIcon/dist/voussoir-icon-icons-quoteIcon.cjs.js",
       "module": "./icons/quoteIcon/dist/voussoir-icon-icons-quoteIcon.esm.js",
       "default": "./icons/quoteIcon/dist/voussoir-icon-icons-quoteIcon.cjs.js"
+    },
+    "./icons/radarIcon": {
+      "types": "./icons/radarIcon/dist/voussoir-icon-icons-radarIcon.cjs.js",
+      "module": "./icons/radarIcon/dist/voussoir-icon-icons-radarIcon.esm.js",
+      "default": "./icons/radarIcon/dist/voussoir-icon-icons-radarIcon.cjs.js"
     },
     "./icons/radioIcon": {
       "types": "./icons/radioIcon/dist/voussoir-icon-icons-radioIcon.cjs.js",
@@ -891,11 +991,6 @@
       "module": "./icons/slackIcon/dist/voussoir-icon-icons-slackIcon.esm.js",
       "default": "./icons/slackIcon/dist/voussoir-icon-icons-slackIcon.cjs.js"
     },
-    "./icons/slashIcon": {
-      "types": "./icons/slashIcon/dist/voussoir-icon-icons-slashIcon.cjs.js",
-      "module": "./icons/slashIcon/dist/voussoir-icon-icons-slashIcon.esm.js",
-      "default": "./icons/slashIcon/dist/voussoir-icon-icons-slashIcon.cjs.js"
-    },
     "./icons/sliceIcon": {
       "types": "./icons/sliceIcon/dist/voussoir-icon-icons-sliceIcon.cjs.js",
       "module": "./icons/sliceIcon/dist/voussoir-icon-icons-sliceIcon.esm.js",
@@ -906,10 +1001,30 @@
       "module": "./icons/smileIcon/dist/voussoir-icon-icons-smileIcon.esm.js",
       "default": "./icons/smileIcon/dist/voussoir-icon-icons-smileIcon.cjs.js"
     },
+    "./icons/spaceIcon": {
+      "types": "./icons/spaceIcon/dist/voussoir-icon-icons-spaceIcon.cjs.js",
+      "module": "./icons/spaceIcon/dist/voussoir-icon-icons-spaceIcon.esm.js",
+      "default": "./icons/spaceIcon/dist/voussoir-icon-icons-spaceIcon.cjs.js"
+    },
+    "./icons/spadeIcon": {
+      "types": "./icons/spadeIcon/dist/voussoir-icon-icons-spadeIcon.cjs.js",
+      "module": "./icons/spadeIcon/dist/voussoir-icon-icons-spadeIcon.esm.js",
+      "default": "./icons/spadeIcon/dist/voussoir-icon-icons-spadeIcon.cjs.js"
+    },
+    "./icons/splitIcon": {
+      "types": "./icons/splitIcon/dist/voussoir-icon-icons-splitIcon.cjs.js",
+      "module": "./icons/splitIcon/dist/voussoir-icon-icons-splitIcon.esm.js",
+      "default": "./icons/splitIcon/dist/voussoir-icon-icons-splitIcon.cjs.js"
+    },
     "./icons/stampIcon": {
       "types": "./icons/stampIcon/dist/voussoir-icon-icons-stampIcon.cjs.js",
       "module": "./icons/stampIcon/dist/voussoir-icon-icons-stampIcon.esm.js",
       "default": "./icons/stampIcon/dist/voussoir-icon-icons-stampIcon.cjs.js"
+    },
+    "./icons/storeIcon": {
+      "types": "./icons/storeIcon/dist/voussoir-icon-icons-storeIcon.cjs.js",
+      "module": "./icons/storeIcon/dist/voussoir-icon-icons-storeIcon.esm.js",
+      "default": "./icons/storeIcon/dist/voussoir-icon-icons-storeIcon.cjs.js"
     },
     "./icons/swordIcon": {
       "types": "./icons/swordIcon/dist/voussoir-icon-icons-swordIcon.cjs.js",
@@ -950,6 +1065,11 @@
       "types": "./icons/undo2Icon/dist/voussoir-icon-icons-undo2Icon.cjs.js",
       "module": "./icons/undo2Icon/dist/voussoir-icon-icons-undo2Icon.esm.js",
       "default": "./icons/undo2Icon/dist/voussoir-icon-icons-undo2Icon.cjs.js"
+    },
+    "./icons/user2Icon": {
+      "types": "./icons/user2Icon/dist/voussoir-icon-icons-user2Icon.cjs.js",
+      "module": "./icons/user2Icon/dist/voussoir-icon-icons-user2Icon.esm.js",
+      "default": "./icons/user2Icon/dist/voussoir-icon-icons-user2Icon.cjs.js"
     },
     "./icons/userXIcon": {
       "types": "./icons/userXIcon/dist/voussoir-icon-icons-userXIcon.cjs.js",
@@ -1006,6 +1126,11 @@
       "module": "./icons/axis3dIcon/dist/voussoir-icon-icons-axis3dIcon.esm.js",
       "default": "./icons/axis3dIcon/dist/voussoir-icon-icons-axis3dIcon.cjs.js"
     },
+    "./icons/badgeXIcon": {
+      "types": "./icons/badgeXIcon/dist/voussoir-icon-icons-badgeXIcon.cjs.js",
+      "module": "./icons/badgeXIcon/dist/voussoir-icon-icons-badgeXIcon.esm.js",
+      "default": "./icons/badgeXIcon/dist/voussoir-icon-icons-badgeXIcon.cjs.js"
+    },
     "./icons/bananaIcon": {
       "types": "./icons/bananaIcon/dist/voussoir-icon-icons-bananaIcon.cjs.js",
       "module": "./icons/bananaIcon/dist/voussoir-icon-icons-bananaIcon.esm.js",
@@ -1026,6 +1151,16 @@
       "module": "./icons/blindsIcon/dist/voussoir-icon-icons-blindsIcon.esm.js",
       "default": "./icons/blindsIcon/dist/voussoir-icon-icons-blindsIcon.cjs.js"
     },
+    "./icons/bookUpIcon": {
+      "types": "./icons/bookUpIcon/dist/voussoir-icon-icons-bookUpIcon.cjs.js",
+      "module": "./icons/bookUpIcon/dist/voussoir-icon-icons-bookUpIcon.esm.js",
+      "default": "./icons/bookUpIcon/dist/voussoir-icon-icons-bookUpIcon.cjs.js"
+    },
+    "./icons/bracesIcon": {
+      "types": "./icons/bracesIcon/dist/voussoir-icon-icons-bracesIcon.cjs.js",
+      "module": "./icons/bracesIcon/dist/voussoir-icon-icons-bracesIcon.esm.js",
+      "default": "./icons/bracesIcon/dist/voussoir-icon-icons-bracesIcon.cjs.js"
+    },
     "./icons/cameraIcon": {
       "types": "./icons/cameraIcon/dist/voussoir-icon-icons-cameraIcon.cjs.js",
       "module": "./icons/cameraIcon/dist/voussoir-icon-icons-cameraIcon.esm.js",
@@ -1036,6 +1171,11 @@
       "module": "./icons/carrotIcon/dist/voussoir-icon-icons-carrotIcon.esm.js",
       "default": "./icons/carrotIcon/dist/voussoir-icon-icons-carrotIcon.cjs.js"
     },
+    "./icons/castleIcon": {
+      "types": "./icons/castleIcon/dist/voussoir-icon-icons-castleIcon.cjs.js",
+      "module": "./icons/castleIcon/dist/voussoir-icon-icons-castleIcon.esm.js",
+      "default": "./icons/castleIcon/dist/voussoir-icon-icons-castleIcon.cjs.js"
+    },
     "./icons/cherryIcon": {
       "types": "./icons/cherryIcon/dist/voussoir-icon-icons-cherryIcon.cjs.js",
       "module": "./icons/cherryIcon/dist/voussoir-icon-icons-cherryIcon.esm.js",
@@ -1045,6 +1185,11 @@
       "types": "./icons/chromeIcon/dist/voussoir-icon-icons-chromeIcon.cjs.js",
       "module": "./icons/chromeIcon/dist/voussoir-icon-icons-chromeIcon.esm.js",
       "default": "./icons/chromeIcon/dist/voussoir-icon-icons-chromeIcon.cjs.js"
+    },
+    "./icons/churchIcon": {
+      "types": "./icons/churchIcon/dist/voussoir-icon-icons-churchIcon.cjs.js",
+      "module": "./icons/churchIcon/dist/voussoir-icon-icons-churchIcon.esm.js",
+      "default": "./icons/churchIcon/dist/voussoir-icon-icons-churchIcon.cjs.js"
     },
     "./icons/circleIcon": {
       "types": "./icons/circleIcon/dist/voussoir-icon-icons-circleIcon.cjs.js",
@@ -1281,6 +1426,11 @@
       "module": "./icons/move3dIcon/dist/voussoir-icon-icons-move3dIcon.esm.js",
       "default": "./icons/move3dIcon/dist/voussoir-icon-icons-move3dIcon.cjs.js"
     },
+    "./icons/moveUpIcon": {
+      "types": "./icons/moveUpIcon/dist/voussoir-icon-icons-moveUpIcon.cjs.js",
+      "module": "./icons/moveUpIcon/dist/voussoir-icon-icons-moveUpIcon.esm.js",
+      "default": "./icons/moveUpIcon/dist/voussoir-icon-icons-moveUpIcon.cjs.js"
+    },
     "./icons/music2Icon": {
       "types": "./icons/music2Icon/dist/voussoir-icon-icons-music2Icon.cjs.js",
       "module": "./icons/music2Icon/dist/voussoir-icon-icons-music2Icon.esm.js",
@@ -1305,6 +1455,11 @@
       "types": "./icons/optionIcon/dist/voussoir-icon-icons-optionIcon.cjs.js",
       "module": "./icons/optionIcon/dist/voussoir-icon-icons-optionIcon.esm.js",
       "default": "./icons/optionIcon/dist/voussoir-icon-icons-optionIcon.cjs.js"
+    },
+    "./icons/pcCaseIcon": {
+      "types": "./icons/pcCaseIcon/dist/voussoir-icon-icons-pcCaseIcon.cjs.js",
+      "module": "./icons/pcCaseIcon/dist/voussoir-icon-icons-pcCaseIcon.esm.js",
+      "default": "./icons/pcCaseIcon/dist/voussoir-icon-icons-pcCaseIcon.cjs.js"
     },
     "./icons/pencilIcon": {
       "types": "./icons/pencilIcon/dist/voussoir-icon-icons-pencilIcon.cjs.js",
@@ -1351,6 +1506,11 @@
       "module": "./icons/routerIcon/dist/voussoir-icon-icons-routerIcon.esm.js",
       "default": "./icons/routerIcon/dist/voussoir-icon-icons-routerIcon.cjs.js"
     },
+    "./icons/schoolIcon": {
+      "types": "./icons/schoolIcon/dist/voussoir-icon-icons-schoolIcon.cjs.js",
+      "module": "./icons/schoolIcon/dist/voussoir-icon-icons-schoolIcon.esm.js",
+      "default": "./icons/schoolIcon/dist/voussoir-icon-icons-schoolIcon.cjs.js"
+    },
     "./icons/scrollIcon": {
       "types": "./icons/scrollIcon/dist/voussoir-icon-icons-scrollIcon.cjs.js",
       "module": "./icons/scrollIcon/dist/voussoir-icon-icons-scrollIcon.esm.js",
@@ -1365,6 +1525,11 @@
       "types": "./icons/serverIcon/dist/voussoir-icon-icons-serverIcon.cjs.js",
       "module": "./icons/serverIcon/dist/voussoir-icon-icons-serverIcon.esm.js",
       "default": "./icons/serverIcon/dist/voussoir-icon-icons-serverIcon.cjs.js"
+    },
+    "./icons/shapesIcon": {
+      "types": "./icons/shapesIcon/dist/voussoir-icon-icons-shapesIcon.cjs.js",
+      "module": "./icons/shapesIcon/dist/voussoir-icon-icons-shapesIcon.esm.js",
+      "default": "./icons/shapesIcon/dist/voussoir-icon-icons-shapesIcon.cjs.js"
     },
     "./icons/share2Icon": {
       "types": "./icons/share2Icon/dist/voussoir-icon-icons-share2Icon.cjs.js",
@@ -1471,10 +1636,25 @@
       "module": "./icons/unlockIcon/dist/voussoir-icon-icons-unlockIcon.esm.js",
       "default": "./icons/unlockIcon/dist/voussoir-icon-icons-unlockIcon.cjs.js"
     },
+    "./icons/unplugIcon": {
+      "types": "./icons/unplugIcon/dist/voussoir-icon-icons-unplugIcon.cjs.js",
+      "module": "./icons/unplugIcon/dist/voussoir-icon-icons-unplugIcon.esm.js",
+      "default": "./icons/unplugIcon/dist/voussoir-icon-icons-unplugIcon.cjs.js"
+    },
     "./icons/uploadIcon": {
       "types": "./icons/uploadIcon/dist/voussoir-icon-icons-uploadIcon.cjs.js",
       "module": "./icons/uploadIcon/dist/voussoir-icon-icons-uploadIcon.esm.js",
       "default": "./icons/uploadIcon/dist/voussoir-icon-icons-uploadIcon.cjs.js"
+    },
+    "./icons/userX2Icon": {
+      "types": "./icons/userX2Icon/dist/voussoir-icon-icons-userX2Icon.cjs.js",
+      "module": "./icons/userX2Icon/dist/voussoir-icon-icons-userX2Icon.esm.js",
+      "default": "./icons/userX2Icon/dist/voussoir-icon-icons-userX2Icon.cjs.js"
+    },
+    "./icons/users2Icon": {
+      "types": "./icons/users2Icon/dist/voussoir-icon-icons-users2Icon.cjs.js",
+      "module": "./icons/users2Icon/dist/voussoir-icon-icons-users2Icon.esm.js",
+      "default": "./icons/users2Icon/dist/voussoir-icon-icons-users2Icon.cjs.js"
     },
     "./icons/volumeIcon": {
       "types": "./icons/volumeIcon/dist/voussoir-icon-icons-volumeIcon.cjs.js",
@@ -1541,6 +1721,11 @@
       "module": "./icons/beanOffIcon/dist/voussoir-icon-icons-beanOffIcon.esm.js",
       "default": "./icons/beanOffIcon/dist/voussoir-icon-icons-beanOffIcon.cjs.js"
     },
+    "./icons/bellDotIcon": {
+      "types": "./icons/bellDotIcon/dist/voussoir-icon-icons-bellDotIcon.cjs.js",
+      "module": "./icons/bellDotIcon/dist/voussoir-icon-icons-bellDotIcon.esm.js",
+      "default": "./icons/bellDotIcon/dist/voussoir-icon-icons-bellDotIcon.cjs.js"
+    },
     "./icons/bellOffIcon": {
       "types": "./icons/bellOffIcon/dist/voussoir-icon-icons-bellOffIcon.cjs.js",
       "module": "./icons/bellOffIcon/dist/voussoir-icon-icons-bellOffIcon.esm.js",
@@ -1550,6 +1735,16 @@
       "types": "./icons/bitcoinIcon/dist/voussoir-icon-icons-bitcoinIcon.cjs.js",
       "module": "./icons/bitcoinIcon/dist/voussoir-icon-icons-bitcoinIcon.esm.js",
       "default": "./icons/bitcoinIcon/dist/voussoir-icon-icons-bitcoinIcon.cjs.js"
+    },
+    "./icons/bookKeyIcon": {
+      "types": "./icons/bookKeyIcon/dist/voussoir-icon-icons-bookKeyIcon.cjs.js",
+      "module": "./icons/bookKeyIcon/dist/voussoir-icon-icons-bookKeyIcon.esm.js",
+      "default": "./icons/bookKeyIcon/dist/voussoir-icon-icons-bookKeyIcon.cjs.js"
+    },
+    "./icons/bookUp2Icon": {
+      "types": "./icons/bookUp2Icon/dist/voussoir-icon-icons-bookUp2Icon.cjs.js",
+      "module": "./icons/bookUp2Icon/dist/voussoir-icon-icons-bookUp2Icon.esm.js",
+      "default": "./icons/bookUp2Icon/dist/voussoir-icon-icons-bookUp2Icon.cjs.js"
     },
     "./icons/chefHatIcon": {
       "types": "./icons/chefHatIcon/dist/voussoir-icon-icons-chefHatIcon.cjs.js",
@@ -1581,6 +1776,11 @@
       "module": "./icons/columnsIcon/dist/voussoir-icon-icons-columnsIcon.esm.js",
       "default": "./icons/columnsIcon/dist/voussoir-icon-icons-columnsIcon.cjs.js"
     },
+    "./icons/combineIcon": {
+      "types": "./icons/combineIcon/dist/voussoir-icon-icons-combineIcon.cjs.js",
+      "module": "./icons/combineIcon/dist/voussoir-icon-icons-combineIcon.esm.js",
+      "default": "./icons/combineIcon/dist/voussoir-icon-icons-combineIcon.cjs.js"
+    },
     "./icons/commandIcon": {
       "types": "./icons/commandIcon/dist/voussoir-icon-icons-commandIcon.cjs.js",
       "module": "./icons/commandIcon/dist/voussoir-icon-icons-commandIcon.esm.js",
@@ -1600,6 +1800,11 @@
       "types": "./icons/cupSodaIcon/dist/voussoir-icon-icons-cupSodaIcon.cjs.js",
       "module": "./icons/cupSodaIcon/dist/voussoir-icon-icons-cupSodaIcon.esm.js",
       "default": "./icons/cupSodaIcon/dist/voussoir-icon-icons-cupSodaIcon.cjs.js"
+    },
+    "./icons/dessertIcon": {
+      "types": "./icons/dessertIcon/dist/voussoir-icon-icons-dessertIcon.cjs.js",
+      "module": "./icons/dessertIcon/dist/voussoir-icon-icons-dessertIcon.esm.js",
+      "default": "./icons/dessertIcon/dist/voussoir-icon-icons-dessertIcon.cjs.js"
     },
     "./icons/diamondIcon": {
       "types": "./icons/diamondIcon/dist/voussoir-icon-icons-diamondIcon.cjs.js",
@@ -1736,6 +1941,11 @@
       "module": "./icons/luggageIcon/dist/voussoir-icon-icons-luggageIcon.esm.js",
       "default": "./icons/luggageIcon/dist/voussoir-icon-icons-luggageIcon.cjs.js"
     },
+    "./icons/mailboxIcon": {
+      "types": "./icons/mailboxIcon/dist/voussoir-icon-icons-mailboxIcon.cjs.js",
+      "module": "./icons/mailboxIcon/dist/voussoir-icon-icons-mailboxIcon.esm.js",
+      "default": "./icons/mailboxIcon/dist/voussoir-icon-icons-mailboxIcon.cjs.js"
+    },
     "./icons/martiniIcon": {
       "types": "./icons/martiniIcon/dist/voussoir-icon-icons-martiniIcon.cjs.js",
       "module": "./icons/martiniIcon/dist/voussoir-icon-icons-martiniIcon.esm.js",
@@ -1811,20 +2021,55 @@
       "module": "./icons/pointerIcon/dist/voussoir-icon-icons-pointerIcon.esm.js",
       "default": "./icons/pointerIcon/dist/voussoir-icon-icons-pointerIcon.cjs.js"
     },
+    "./icons/popcornIcon": {
+      "types": "./icons/popcornIcon/dist/voussoir-icon-icons-popcornIcon.cjs.js",
+      "module": "./icons/popcornIcon/dist/voussoir-icon-icons-popcornIcon.esm.js",
+      "default": "./icons/popcornIcon/dist/voussoir-icon-icons-popcornIcon.cjs.js"
+    },
     "./icons/printerIcon": {
       "types": "./icons/printerIcon/dist/voussoir-icon-icons-printerIcon.cjs.js",
       "module": "./icons/printerIcon/dist/voussoir-icon-icons-printerIcon.esm.js",
       "default": "./icons/printerIcon/dist/voussoir-icon-icons-printerIcon.cjs.js"
+    },
+    "./icons/rainbowIcon": {
+      "types": "./icons/rainbowIcon/dist/voussoir-icon-icons-rainbowIcon.cjs.js",
+      "module": "./icons/rainbowIcon/dist/voussoir-icon-icons-rainbowIcon.esm.js",
+      "default": "./icons/rainbowIcon/dist/voussoir-icon-icons-rainbowIcon.cjs.js"
+    },
+    "./icons/receiptIcon": {
+      "types": "./icons/receiptIcon/dist/voussoir-icon-icons-receiptIcon.cjs.js",
+      "module": "./icons/receiptIcon/dist/voussoir-icon-icons-receiptIcon.esm.js",
+      "default": "./icons/receiptIcon/dist/voussoir-icon-icons-receiptIcon.cjs.js"
     },
     "./icons/recycleIcon": {
       "types": "./icons/recycleIcon/dist/voussoir-icon-icons-recycleIcon.cjs.js",
       "module": "./icons/recycleIcon/dist/voussoir-icon-icons-recycleIcon.esm.js",
       "default": "./icons/recycleIcon/dist/voussoir-icon-icons-recycleIcon.cjs.js"
     },
+    "./icons/redoDotIcon": {
+      "types": "./icons/redoDotIcon/dist/voussoir-icon-icons-redoDotIcon.cjs.js",
+      "module": "./icons/redoDotIcon/dist/voussoir-icon-icons-redoDotIcon.esm.js",
+      "default": "./icons/redoDotIcon/dist/voussoir-icon-icons-redoDotIcon.cjs.js"
+    },
     "./icons/repeat1Icon": {
       "types": "./icons/repeat1Icon/dist/voussoir-icon-icons-repeat1Icon.cjs.js",
       "module": "./icons/repeat1Icon/dist/voussoir-icon-icons-repeat1Icon.esm.js",
       "default": "./icons/repeat1Icon/dist/voussoir-icon-icons-repeat1Icon.cjs.js"
+    },
+    "./icons/repeat2Icon": {
+      "types": "./icons/repeat2Icon/dist/voussoir-icon-icons-repeat2Icon.cjs.js",
+      "module": "./icons/repeat2Icon/dist/voussoir-icon-icons-repeat2Icon.esm.js",
+      "default": "./icons/repeat2Icon/dist/voussoir-icon-icons-repeat2Icon.cjs.js"
+    },
+    "./icons/replaceIcon": {
+      "types": "./icons/replaceIcon/dist/voussoir-icon-icons-replaceIcon.cjs.js",
+      "module": "./icons/replaceIcon/dist/voussoir-icon-icons-replaceIcon.esm.js",
+      "default": "./icons/replaceIcon/dist/voussoir-icon-icons-replaceIcon.cjs.js"
+    },
+    "./icons/saveAllIcon": {
+      "types": "./icons/saveAllIcon/dist/voussoir-icon-icons-saveAllIcon.cjs.js",
+      "module": "./icons/saveAllIcon/dist/voussoir-icon-icons-saveAllIcon.esm.js",
+      "default": "./icons/saveAllIcon/dist/voussoir-icon-icons-saveAllIcon.cjs.js"
     },
     "./icons/scale3dIcon": {
       "types": "./icons/scale3dIcon/dist/voussoir-icon-icons-scale3dIcon.cjs.js",
@@ -1836,25 +2081,30 @@
       "module": "./icons/scalingIcon/dist/voussoir-icon-icons-scalingIcon.esm.js",
       "default": "./icons/scalingIcon/dist/voussoir-icon-icons-scalingIcon.cjs.js"
     },
+    "./icons/school2Icon": {
+      "types": "./icons/school2Icon/dist/voussoir-icon-icons-school2Icon.cjs.js",
+      "module": "./icons/school2Icon/dist/voussoir-icon-icons-school2Icon.esm.js",
+      "default": "./icons/school2Icon/dist/voussoir-icon-icons-school2Icon.cjs.js"
+    },
+    "./icons/searchXIcon": {
+      "types": "./icons/searchXIcon/dist/voussoir-icon-icons-searchXIcon.cjs.js",
+      "module": "./icons/searchXIcon/dist/voussoir-icon-icons-searchXIcon.esm.js",
+      "default": "./icons/searchXIcon/dist/voussoir-icon-icons-searchXIcon.cjs.js"
+    },
     "./icons/shuffleIcon": {
       "types": "./icons/shuffleIcon/dist/voussoir-icon-icons-shuffleIcon.cjs.js",
       "module": "./icons/shuffleIcon/dist/voussoir-icon-icons-shuffleIcon.esm.js",
       "default": "./icons/shuffleIcon/dist/voussoir-icon-icons-shuffleIcon.cjs.js"
-    },
-    "./icons/sidebarIcon": {
-      "types": "./icons/sidebarIcon/dist/voussoir-icon-icons-sidebarIcon.cjs.js",
-      "module": "./icons/sidebarIcon/dist/voussoir-icon-icons-sidebarIcon.esm.js",
-      "default": "./icons/sidebarIcon/dist/voussoir-icon-icons-sidebarIcon.cjs.js"
     },
     "./icons/slidersIcon": {
       "types": "./icons/slidersIcon/dist/voussoir-icon-icons-slidersIcon.cjs.js",
       "module": "./icons/slidersIcon/dist/voussoir-icon-icons-slidersIcon.esm.js",
       "default": "./icons/slidersIcon/dist/voussoir-icon-icons-slidersIcon.cjs.js"
     },
-    "./icons/sortAscIcon": {
-      "types": "./icons/sortAscIcon/dist/voussoir-icon-icons-sortAscIcon.cjs.js",
-      "module": "./icons/sortAscIcon/dist/voussoir-icon-icons-sortAscIcon.esm.js",
-      "default": "./icons/sortAscIcon/dist/voussoir-icon-icons-sortAscIcon.cjs.js"
+    "./icons/sparkleIcon": {
+      "types": "./icons/sparkleIcon/dist/voussoir-icon-icons-sparkleIcon.cjs.js",
+      "module": "./icons/sparkleIcon/dist/voussoir-icon-icons-sparkleIcon.esm.js",
+      "default": "./icons/sparkleIcon/dist/voussoir-icon-icons-sparkleIcon.cjs.js"
     },
     "./icons/speakerIcon": {
       "types": "./icons/speakerIcon/dist/voussoir-icon-icons-speakerIcon.cjs.js",
@@ -1906,6 +2156,16 @@
       "module": "./icons/twitterIcon/dist/voussoir-icon-icons-twitterIcon.esm.js",
       "default": "./icons/twitterIcon/dist/voussoir-icon-icons-twitterIcon.cjs.js"
     },
+    "./icons/undoDotIcon": {
+      "types": "./icons/undoDotIcon/dist/voussoir-icon-icons-undoDotIcon.cjs.js",
+      "module": "./icons/undoDotIcon/dist/voussoir-icon-icons-undoDotIcon.esm.js",
+      "default": "./icons/undoDotIcon/dist/voussoir-icon-icons-undoDotIcon.cjs.js"
+    },
+    "./icons/ungroupIcon": {
+      "types": "./icons/ungroupIcon/dist/voussoir-icon-icons-ungroupIcon.cjs.js",
+      "module": "./icons/ungroupIcon/dist/voussoir-icon-icons-ungroupIcon.esm.js",
+      "default": "./icons/ungroupIcon/dist/voussoir-icon-icons-ungroupIcon.cjs.js"
+    },
     "./icons/unlink2Icon": {
       "types": "./icons/unlink2Icon/dist/voussoir-icon-icons-unlink2Icon.cjs.js",
       "module": "./icons/unlink2Icon/dist/voussoir-icon-icons-unlink2Icon.esm.js",
@@ -1935,6 +2195,11 @@
       "types": "./icons/volumeXIcon/dist/voussoir-icon-icons-volumeXIcon.cjs.js",
       "module": "./icons/volumeXIcon/dist/voussoir-icon-icons-volumeXIcon.esm.js",
       "default": "./icons/volumeXIcon/dist/voussoir-icon-icons-volumeXIcon.cjs.js"
+    },
+    "./icons/wallet2Icon": {
+      "types": "./icons/wallet2Icon/dist/voussoir-icon-icons-wallet2Icon.cjs.js",
+      "module": "./icons/wallet2Icon/dist/voussoir-icon-icons-wallet2Icon.esm.js",
+      "default": "./icons/wallet2Icon/dist/voussoir-icon-icons-wallet2Icon.cjs.js"
     },
     "./icons/webhookIcon": {
       "types": "./icons/webhookIcon/dist/voussoir-icon-icons-webhookIcon.cjs.js",
@@ -2021,15 +2286,40 @@
       "module": "./icons/bellRingIcon/dist/voussoir-icon-icons-bellRingIcon.esm.js",
       "default": "./icons/bellRingIcon/dist/voussoir-icon-icons-bellRingIcon.cjs.js"
     },
+    "./icons/bookCopyIcon": {
+      "types": "./icons/bookCopyIcon/dist/voussoir-icon-icons-bookCopyIcon.cjs.js",
+      "module": "./icons/bookCopyIcon/dist/voussoir-icon-icons-bookCopyIcon.esm.js",
+      "default": "./icons/bookCopyIcon/dist/voussoir-icon-icons-bookCopyIcon.cjs.js"
+    },
+    "./icons/bookDownIcon": {
+      "types": "./icons/bookDownIcon/dist/voussoir-icon-icons-bookDownIcon.cjs.js",
+      "module": "./icons/bookDownIcon/dist/voussoir-icon-icons-bookDownIcon.esm.js",
+      "default": "./icons/bookDownIcon/dist/voussoir-icon-icons-bookDownIcon.cjs.js"
+    },
+    "./icons/bookLockIcon": {
+      "types": "./icons/bookLockIcon/dist/voussoir-icon-icons-bookLockIcon.cjs.js",
+      "module": "./icons/bookLockIcon/dist/voussoir-icon-icons-bookLockIcon.esm.js",
+      "default": "./icons/bookLockIcon/dist/voussoir-icon-icons-bookLockIcon.cjs.js"
+    },
     "./icons/bookOpenIcon": {
       "types": "./icons/bookOpenIcon/dist/voussoir-icon-icons-bookOpenIcon.cjs.js",
       "module": "./icons/bookOpenIcon/dist/voussoir-icon-icons-bookOpenIcon.esm.js",
       "default": "./icons/bookOpenIcon/dist/voussoir-icon-icons-bookOpenIcon.cjs.js"
     },
+    "./icons/bookPlusIcon": {
+      "types": "./icons/bookPlusIcon/dist/voussoir-icon-icons-bookPlusIcon.cjs.js",
+      "module": "./icons/bookPlusIcon/dist/voussoir-icon-icons-bookPlusIcon.esm.js",
+      "default": "./icons/bookPlusIcon/dist/voussoir-icon-icons-bookPlusIcon.cjs.js"
+    },
     "./icons/bookmarkIcon": {
       "types": "./icons/bookmarkIcon/dist/voussoir-icon-icons-bookmarkIcon.cjs.js",
       "module": "./icons/bookmarkIcon/dist/voussoir-icon-icons-bookmarkIcon.esm.js",
       "default": "./icons/bookmarkIcon/dist/voussoir-icon-icons-bookmarkIcon.cjs.js"
+    },
+    "./icons/bracketsIcon": {
+      "types": "./icons/bracketsIcon/dist/voussoir-icon-icons-bracketsIcon.cjs.js",
+      "module": "./icons/bracketsIcon/dist/voussoir-icon-icons-bracketsIcon.esm.js",
+      "default": "./icons/bracketsIcon/dist/voussoir-icon-icons-bracketsIcon.cjs.js"
     },
     "./icons/brainCogIcon": {
       "types": "./icons/brainCogIcon/dist/voussoir-icon-icons-brainCogIcon.cjs.js",
@@ -2071,10 +2361,20 @@
       "module": "./icons/cloudSunIcon/dist/voussoir-icon-icons-cloudSunIcon.esm.js",
       "default": "./icons/cloudSunIcon/dist/voussoir-icon-icons-cloudSunIcon.cjs.js"
     },
+    "./icons/contact2Icon": {
+      "types": "./icons/contact2Icon/dist/voussoir-icon-icons-contact2Icon.cjs.js",
+      "module": "./icons/contact2Icon/dist/voussoir-icon-icons-contact2Icon.esm.js",
+      "default": "./icons/contact2Icon/dist/voussoir-icon-icons-contact2Icon.cjs.js"
+    },
     "./icons/contrastIcon": {
       "types": "./icons/contrastIcon/dist/voussoir-icon-icons-contrastIcon.cjs.js",
       "module": "./icons/contrastIcon/dist/voussoir-icon-icons-contrastIcon.esm.js",
       "default": "./icons/contrastIcon/dist/voussoir-icon-icons-contrastIcon.cjs.js"
+    },
+    "./icons/copyPlusIcon": {
+      "types": "./icons/copyPlusIcon/dist/voussoir-icon-icons-copyPlusIcon.cjs.js",
+      "module": "./icons/copyPlusIcon/dist/voussoir-icon-icons-copyPlusIcon.esm.js",
+      "default": "./icons/copyPlusIcon/dist/voussoir-icon-icons-copyPlusIcon.cjs.js"
     },
     "./icons/copyleftIcon": {
       "types": "./icons/copyleftIcon/dist/voussoir-icon-icons-copyleftIcon.cjs.js",
@@ -2090,6 +2390,11 @@
       "types": "./icons/databaseIcon/dist/voussoir-icon-icons-databaseIcon.cjs.js",
       "module": "./icons/databaseIcon/dist/voussoir-icon-icons-databaseIcon.esm.js",
       "default": "./icons/databaseIcon/dist/voussoir-icon-icons-databaseIcon.cjs.js"
+    },
+    "./icons/doorOpenIcon": {
+      "types": "./icons/doorOpenIcon/dist/voussoir-icon-icons-doorOpenIcon.cjs.js",
+      "module": "./icons/doorOpenIcon/dist/voussoir-icon-icons-doorOpenIcon.esm.js",
+      "default": "./icons/doorOpenIcon/dist/voussoir-icon-icons-doorOpenIcon.cjs.js"
     },
     "./icons/downloadIcon": {
       "types": "./icons/downloadIcon/dist/voussoir-icon-icons-downloadIcon.cjs.js",
@@ -2261,6 +2566,11 @@
       "module": "./icons/joystickIcon/dist/voussoir-icon-icons-joystickIcon.esm.js",
       "default": "./icons/joystickIcon/dist/voussoir-icon-icons-joystickIcon.cjs.js"
     },
+    "./icons/keyRoundIcon": {
+      "types": "./icons/keyRoundIcon/dist/voussoir-icon-icons-keyRoundIcon.cjs.js",
+      "module": "./icons/keyRoundIcon/dist/voussoir-icon-icons-keyRoundIcon.esm.js",
+      "default": "./icons/keyRoundIcon/dist/voussoir-icon-icons-keyRoundIcon.cjs.js"
+    },
     "./icons/keyboardIcon": {
       "types": "./icons/keyboardIcon/dist/voussoir-icon-icons-keyboardIcon.cjs.js",
       "module": "./icons/keyboardIcon/dist/voussoir-icon-icons-keyboardIcon.esm.js",
@@ -2281,6 +2591,11 @@
       "module": "./icons/lifeBuoyIcon/dist/voussoir-icon-icons-lifeBuoyIcon.esm.js",
       "default": "./icons/lifeBuoyIcon/dist/voussoir-icon-icons-lifeBuoyIcon.cjs.js"
     },
+    "./icons/ligatureIcon": {
+      "types": "./icons/ligatureIcon/dist/voussoir-icon-icons-ligatureIcon.cjs.js",
+      "module": "./icons/ligatureIcon/dist/voussoir-icon-icons-ligatureIcon.esm.js",
+      "default": "./icons/ligatureIcon/dist/voussoir-icon-icons-ligatureIcon.cjs.js"
+    },
     "./icons/link2OffIcon": {
       "types": "./icons/link2OffIcon/dist/voussoir-icon-icons-link2OffIcon.cjs.js",
       "module": "./icons/link2OffIcon/dist/voussoir-icon-icons-link2OffIcon.esm.js",
@@ -2295,6 +2610,21 @@
       "types": "./icons/listPlusIcon/dist/voussoir-icon-icons-listPlusIcon.cjs.js",
       "module": "./icons/listPlusIcon/dist/voussoir-icon-icons-listPlusIcon.esm.js",
       "default": "./icons/listPlusIcon/dist/voussoir-icon-icons-listPlusIcon.cjs.js"
+    },
+    "./icons/listTodoIcon": {
+      "types": "./icons/listTodoIcon/dist/voussoir-icon-icons-listTodoIcon.cjs.js",
+      "module": "./icons/listTodoIcon/dist/voussoir-icon-icons-listTodoIcon.esm.js",
+      "default": "./icons/listTodoIcon/dist/voussoir-icon-icons-listTodoIcon.cjs.js"
+    },
+    "./icons/listTreeIcon": {
+      "types": "./icons/listTreeIcon/dist/voussoir-icon-icons-listTreeIcon.cjs.js",
+      "module": "./icons/listTreeIcon/dist/voussoir-icon-icons-listTreeIcon.esm.js",
+      "default": "./icons/listTreeIcon/dist/voussoir-icon-icons-listTreeIcon.cjs.js"
+    },
+    "./icons/lollipopIcon": {
+      "types": "./icons/lollipopIcon/dist/voussoir-icon-icons-lollipopIcon.cjs.js",
+      "module": "./icons/lollipopIcon/dist/voussoir-icon-icons-lollipopIcon.esm.js",
+      "default": "./icons/lollipopIcon/dist/voussoir-icon-icons-lollipopIcon.cjs.js"
     },
     "./icons/mailOpenIcon": {
       "types": "./icons/mailOpenIcon/dist/voussoir-icon-icons-mailOpenIcon.cjs.js",
@@ -2316,10 +2646,30 @@
       "module": "./icons/minimizeIcon/dist/voussoir-icon-icons-minimizeIcon.esm.js",
       "default": "./icons/minimizeIcon/dist/voussoir-icon-icons-minimizeIcon.cjs.js"
     },
+    "./icons/monitorXIcon": {
+      "types": "./icons/monitorXIcon/dist/voussoir-icon-icons-monitorXIcon.cjs.js",
+      "module": "./icons/monitorXIcon/dist/voussoir-icon-icons-monitorXIcon.esm.js",
+      "default": "./icons/monitorXIcon/dist/voussoir-icon-icons-monitorXIcon.cjs.js"
+    },
+    "./icons/moonStarIcon": {
+      "types": "./icons/moonStarIcon/dist/voussoir-icon-icons-moonStarIcon.cjs.js",
+      "module": "./icons/moonStarIcon/dist/voussoir-icon-icons-moonStarIcon.esm.js",
+      "default": "./icons/moonStarIcon/dist/voussoir-icon-icons-moonStarIcon.cjs.js"
+    },
     "./icons/mountainIcon": {
       "types": "./icons/mountainIcon/dist/voussoir-icon-icons-mountainIcon.cjs.js",
       "module": "./icons/mountainIcon/dist/voussoir-icon-icons-mountainIcon.esm.js",
       "default": "./icons/mountainIcon/dist/voussoir-icon-icons-mountainIcon.cjs.js"
+    },
+    "./icons/moveDownIcon": {
+      "types": "./icons/moveDownIcon/dist/voussoir-icon-icons-moveDownIcon.cjs.js",
+      "module": "./icons/moveDownIcon/dist/voussoir-icon-icons-moveDownIcon.esm.js",
+      "default": "./icons/moveDownIcon/dist/voussoir-icon-icons-moveDownIcon.cjs.js"
+    },
+    "./icons/moveLeftIcon": {
+      "types": "./icons/moveLeftIcon/dist/voussoir-icon-icons-moveLeftIcon.cjs.js",
+      "module": "./icons/moveLeftIcon/dist/voussoir-icon-icons-moveLeftIcon.esm.js",
+      "default": "./icons/moveLeftIcon/dist/voussoir-icon-icons-moveLeftIcon.cjs.js"
     },
     "./icons/package2Icon": {
       "types": "./icons/package2Icon/dist/voussoir-icon-icons-package2Icon.cjs.js",
@@ -2336,15 +2686,35 @@
       "module": "./icons/palmtreeIcon/dist/voussoir-icon-icons-palmtreeIcon.esm.js",
       "default": "./icons/palmtreeIcon/dist/voussoir-icon-icons-palmtreeIcon.cjs.js"
     },
+    "./icons/panelTopIcon": {
+      "types": "./icons/panelTopIcon/dist/voussoir-icon-icons-panelTopIcon.cjs.js",
+      "module": "./icons/panelTopIcon/dist/voussoir-icon-icons-panelTopIcon.esm.js",
+      "default": "./icons/panelTopIcon/dist/voussoir-icon-icons-panelTopIcon.cjs.js"
+    },
     "./icons/phoneOffIcon": {
       "types": "./icons/phoneOffIcon/dist/voussoir-icon-icons-phoneOffIcon.cjs.js",
       "module": "./icons/phoneOffIcon/dist/voussoir-icon-icons-phoneOffIcon.esm.js",
       "default": "./icons/phoneOffIcon/dist/voussoir-icon-icons-phoneOffIcon.cjs.js"
     },
+    "./icons/piSquareIcon": {
+      "types": "./icons/piSquareIcon/dist/voussoir-icon-icons-piSquareIcon.cjs.js",
+      "module": "./icons/piSquareIcon/dist/voussoir-icon-icons-piSquareIcon.esm.js",
+      "default": "./icons/piSquareIcon/dist/voussoir-icon-icons-piSquareIcon.cjs.js"
+    },
     "./icons/pieChartIcon": {
       "types": "./icons/pieChartIcon/dist/voussoir-icon-icons-pieChartIcon.cjs.js",
       "module": "./icons/pieChartIcon/dist/voussoir-icon-icons-pieChartIcon.esm.js",
       "default": "./icons/pieChartIcon/dist/voussoir-icon-icons-pieChartIcon.cjs.js"
+    },
+    "./icons/plugZap2Icon": {
+      "types": "./icons/plugZap2Icon/dist/voussoir-icon-icons-plugZap2Icon.cjs.js",
+      "module": "./icons/plugZap2Icon/dist/voussoir-icon-icons-plugZap2Icon.esm.js",
+      "default": "./icons/plugZap2Icon/dist/voussoir-icon-icons-plugZap2Icon.cjs.js"
+    },
+    "./icons/popsicleIcon": {
+      "types": "./icons/popsicleIcon/dist/voussoir-icon-icons-popsicleIcon.cjs.js",
+      "module": "./icons/popsicleIcon/dist/voussoir-icon-icons-popsicleIcon.esm.js",
+      "default": "./icons/popsicleIcon/dist/voussoir-icon-icons-popsicleIcon.cjs.js"
     },
     "./icons/powerOffIcon": {
       "types": "./icons/powerOffIcon/dist/voussoir-icon-icons-powerOffIcon.cjs.js",
@@ -2401,20 +2771,40 @@
       "module": "./icons/skipBackIcon/dist/voussoir-icon-icons-skipBackIcon.esm.js",
       "default": "./icons/skipBackIcon/dist/voussoir-icon-icons-skipBackIcon.cjs.js"
     },
-    "./icons/sortDescIcon": {
-      "types": "./icons/sortDescIcon/dist/voussoir-icon-icons-sortDescIcon.cjs.js",
-      "module": "./icons/sortDescIcon/dist/voussoir-icon-icons-sortDescIcon.esm.js",
-      "default": "./icons/sortDescIcon/dist/voussoir-icon-icons-sortDescIcon.cjs.js"
+    "./icons/sparklesIcon": {
+      "types": "./icons/sparklesIcon/dist/voussoir-icon-icons-sparklesIcon.cjs.js",
+      "module": "./icons/sparklesIcon/dist/voussoir-icon-icons-sparklesIcon.esm.js",
+      "default": "./icons/sparklesIcon/dist/voussoir-icon-icons-sparklesIcon.cjs.js"
+    },
+    "./icons/sprayCanIcon": {
+      "types": "./icons/sprayCanIcon/dist/voussoir-icon-icons-sprayCanIcon.cjs.js",
+      "module": "./icons/sprayCanIcon/dist/voussoir-icon-icons-sprayCanIcon.esm.js",
+      "default": "./icons/sprayCanIcon/dist/voussoir-icon-icons-sprayCanIcon.cjs.js"
+    },
+    "./icons/squirrelIcon": {
+      "types": "./icons/squirrelIcon/dist/voussoir-icon-icons-squirrelIcon.cjs.js",
+      "module": "./icons/squirrelIcon/dist/voussoir-icon-icons-squirrelIcon.esm.js",
+      "default": "./icons/squirrelIcon/dist/voussoir-icon-icons-squirrelIcon.cjs.js"
     },
     "./icons/starHalfIcon": {
       "types": "./icons/starHalfIcon/dist/voussoir-icon-icons-starHalfIcon.cjs.js",
       "module": "./icons/starHalfIcon/dist/voussoir-icon-icons-starHalfIcon.esm.js",
       "default": "./icons/starHalfIcon/dist/voussoir-icon-icons-starHalfIcon.cjs.js"
     },
+    "./icons/stepBackIcon": {
+      "types": "./icons/stepBackIcon/dist/voussoir-icon-icons-stepBackIcon.cjs.js",
+      "module": "./icons/stepBackIcon/dist/voussoir-icon-icons-stepBackIcon.esm.js",
+      "default": "./icons/stepBackIcon/dist/voussoir-icon-icons-stepBackIcon.cjs.js"
+    },
     "./icons/terminalIcon": {
       "types": "./icons/terminalIcon/dist/voussoir-icon-icons-terminalIcon.cjs.js",
       "module": "./icons/terminalIcon/dist/voussoir-icon-icons-terminalIcon.esm.js",
       "default": "./icons/terminalIcon/dist/voussoir-icon-icons-terminalIcon.cjs.js"
+    },
+    "./icons/testTubeIcon": {
+      "types": "./icons/testTubeIcon/dist/voussoir-icon-icons-testTubeIcon.cjs.js",
+      "module": "./icons/testTubeIcon/dist/voussoir-icon-icons-testTubeIcon.esm.js",
+      "default": "./icons/testTubeIcon/dist/voussoir-icon-icons-testTubeIcon.cjs.js"
     },
     "./icons/thumbsUpIcon": {
       "types": "./icons/thumbsUpIcon/dist/voussoir-icon-icons-thumbsUpIcon.cjs.js",
@@ -2425,6 +2815,11 @@
       "types": "./icons/timerOffIcon/dist/voussoir-icon-icons-timerOffIcon.cjs.js",
       "module": "./icons/timerOffIcon/dist/voussoir-icon-icons-timerOffIcon.esm.js",
       "default": "./icons/timerOffIcon/dist/voussoir-icon-icons-timerOffIcon.cjs.js"
+    },
+    "./icons/touchpadIcon": {
+      "types": "./icons/touchpadIcon/dist/voussoir-icon-icons-touchpadIcon.cjs.js",
+      "module": "./icons/touchpadIcon/dist/voussoir-icon-icons-touchpadIcon.esm.js",
+      "default": "./icons/touchpadIcon/dist/voussoir-icon-icons-touchpadIcon.cjs.js"
     },
     "./icons/toyBrickIcon": {
       "types": "./icons/toyBrickIcon/dist/voussoir-icon-icons-toyBrickIcon.cjs.js",
@@ -2446,6 +2841,11 @@
       "module": "./icons/umbrellaIcon/dist/voussoir-icon-icons-umbrellaIcon.esm.js",
       "default": "./icons/umbrellaIcon/dist/voussoir-icon-icons-umbrellaIcon.cjs.js"
     },
+    "./icons/userCog2Icon": {
+      "types": "./icons/userCog2Icon/dist/voussoir-icon-icons-userCog2Icon.cjs.js",
+      "module": "./icons/userCog2Icon/dist/voussoir-icon-icons-userCog2Icon.esm.js",
+      "default": "./icons/userCog2Icon/dist/voussoir-icon-icons-userCog2Icon.cjs.js"
+    },
     "./icons/userPlusIcon": {
       "types": "./icons/userPlusIcon/dist/voussoir-icon-icons-userPlusIcon.cjs.js",
       "module": "./icons/userPlusIcon/dist/voussoir-icon-icons-userPlusIcon.esm.js",
@@ -2456,10 +2856,10 @@
       "module": "./icons/utensilsIcon/dist/voussoir-icon-icons-utensilsIcon.esm.js",
       "default": "./icons/utensilsIcon/dist/voussoir-icon-icons-utensilsIcon.cjs.js"
     },
-    "./icons/verifiedIcon": {
-      "types": "./icons/verifiedIcon/dist/voussoir-icon-icons-verifiedIcon.cjs.js",
-      "module": "./icons/verifiedIcon/dist/voussoir-icon-icons-verifiedIcon.esm.js",
-      "default": "./icons/verifiedIcon/dist/voussoir-icon-icons-verifiedIcon.cjs.js"
+    "./icons/variableIcon": {
+      "types": "./icons/variableIcon/dist/voussoir-icon-icons-variableIcon.cjs.js",
+      "module": "./icons/variableIcon/dist/voussoir-icon-icons-variableIcon.esm.js",
+      "default": "./icons/variableIcon/dist/voussoir-icon-icons-variableIcon.cjs.js"
     },
     "./icons/videoOffIcon": {
       "types": "./icons/videoOffIcon/dist/voussoir-icon-icons-videoOffIcon.cjs.js",
@@ -2470,6 +2870,11 @@
       "types": "./icons/wheatOffIcon/dist/voussoir-icon-icons-wheatOffIcon.cjs.js",
       "module": "./icons/wheatOffIcon/dist/voussoir-icon-icons-wheatOffIcon.esm.js",
       "default": "./icons/wheatOffIcon/dist/voussoir-icon-icons-wheatOffIcon.cjs.js"
+    },
+    "./icons/workflowIcon": {
+      "types": "./icons/workflowIcon/dist/voussoir-icon-icons-workflowIcon.cjs.js",
+      "module": "./icons/workflowIcon/dist/voussoir-icon-icons-workflowIcon.esm.js",
+      "default": "./icons/workflowIcon/dist/voussoir-icon-icons-workflowIcon.cjs.js"
     },
     "./icons/wrapTextIcon": {
       "types": "./icons/wrapTextIcon/dist/voussoir-icon-icons-wrapTextIcon.cjs.js",
@@ -2491,6 +2896,16 @@
       "module": "./icons/alignLeftIcon/dist/voussoir-icon-icons-alignLeftIcon.esm.js",
       "default": "./icons/alignLeftIcon/dist/voussoir-icon-icons-alignLeftIcon.cjs.js"
     },
+    "./icons/ampersandIcon": {
+      "types": "./icons/ampersandIcon/dist/voussoir-icon-icons-ampersandIcon.cjs.js",
+      "module": "./icons/ampersandIcon/dist/voussoir-icon-icons-ampersandIcon.esm.js",
+      "default": "./icons/ampersandIcon/dist/voussoir-icon-icons-ampersandIcon.cjs.js"
+    },
+    "./icons/appWindowIcon": {
+      "types": "./icons/appWindowIcon/dist/voussoir-icon-icons-appWindowIcon.cjs.js",
+      "module": "./icons/appWindowIcon/dist/voussoir-icon-icons-appWindowIcon.esm.js",
+      "default": "./icons/appWindowIcon/dist/voussoir-icon-icons-appWindowIcon.cjs.js"
+    },
     "./icons/arrowDownIcon": {
       "types": "./icons/arrowDownIcon/dist/voussoir-icon-icons-arrowDownIcon.cjs.js",
       "module": "./icons/arrowDownIcon/dist/voussoir-icon-icons-arrowDownIcon.esm.js",
@@ -2500,6 +2915,41 @@
       "types": "./icons/arrowLeftIcon/dist/voussoir-icon-icons-arrowLeftIcon.cjs.js",
       "module": "./icons/arrowLeftIcon/dist/voussoir-icon-icons-arrowLeftIcon.esm.js",
       "default": "./icons/arrowLeftIcon/dist/voussoir-icon-icons-arrowLeftIcon.cjs.js"
+    },
+    "./icons/arrowUp01Icon": {
+      "types": "./icons/arrowUp01Icon/dist/voussoir-icon-icons-arrowUp01Icon.cjs.js",
+      "module": "./icons/arrowUp01Icon/dist/voussoir-icon-icons-arrowUp01Icon.esm.js",
+      "default": "./icons/arrowUp01Icon/dist/voussoir-icon-icons-arrowUp01Icon.cjs.js"
+    },
+    "./icons/arrowUp10Icon": {
+      "types": "./icons/arrowUp10Icon/dist/voussoir-icon-icons-arrowUp10Icon.cjs.js",
+      "module": "./icons/arrowUp10Icon/dist/voussoir-icon-icons-arrowUp10Icon.esm.js",
+      "default": "./icons/arrowUp10Icon/dist/voussoir-icon-icons-arrowUp10Icon.cjs.js"
+    },
+    "./icons/arrowUpAZIcon": {
+      "types": "./icons/arrowUpAZIcon/dist/voussoir-icon-icons-arrowUpAZIcon.cjs.js",
+      "module": "./icons/arrowUpAZIcon/dist/voussoir-icon-icons-arrowUpAZIcon.esm.js",
+      "default": "./icons/arrowUpAZIcon/dist/voussoir-icon-icons-arrowUpAZIcon.cjs.js"
+    },
+    "./icons/arrowUpZAIcon": {
+      "types": "./icons/arrowUpZAIcon/dist/voussoir-icon-icons-arrowUpZAIcon.cjs.js",
+      "module": "./icons/arrowUpZAIcon/dist/voussoir-icon-icons-arrowUpZAIcon.esm.js",
+      "default": "./icons/arrowUpZAIcon/dist/voussoir-icon-icons-arrowUpZAIcon.cjs.js"
+    },
+    "./icons/badgeHelpIcon": {
+      "types": "./icons/badgeHelpIcon/dist/voussoir-icon-icons-badgeHelpIcon.cjs.js",
+      "module": "./icons/badgeHelpIcon/dist/voussoir-icon-icons-badgeHelpIcon.esm.js",
+      "default": "./icons/badgeHelpIcon/dist/voussoir-icon-icons-badgeHelpIcon.cjs.js"
+    },
+    "./icons/badgeInfoIcon": {
+      "types": "./icons/badgeInfoIcon/dist/voussoir-icon-icons-badgeInfoIcon.cjs.js",
+      "module": "./icons/badgeInfoIcon/dist/voussoir-icon-icons-badgeInfoIcon.esm.js",
+      "default": "./icons/badgeInfoIcon/dist/voussoir-icon-icons-badgeInfoIcon.cjs.js"
+    },
+    "./icons/badgePlusIcon": {
+      "types": "./icons/badgePlusIcon/dist/voussoir-icon-icons-badgePlusIcon.cjs.js",
+      "module": "./icons/badgePlusIcon/dist/voussoir-icon-icons-badgePlusIcon.esm.js",
+      "default": "./icons/badgePlusIcon/dist/voussoir-icon-icons-badgePlusIcon.cjs.js"
     },
     "./icons/barChart2Icon": {
       "types": "./icons/barChart2Icon/dist/voussoir-icon-icons-barChart2Icon.cjs.js",
@@ -2531,10 +2981,20 @@
       "module": "./icons/bellMinusIcon/dist/voussoir-icon-icons-bellMinusIcon.esm.js",
       "default": "./icons/bellMinusIcon/dist/voussoir-icon-icons-bellMinusIcon.cjs.js"
     },
+    "./icons/biohazardIcon": {
+      "types": "./icons/biohazardIcon/dist/voussoir-icon-icons-biohazardIcon.cjs.js",
+      "module": "./icons/biohazardIcon/dist/voussoir-icon-icons-biohazardIcon.esm.js",
+      "default": "./icons/biohazardIcon/dist/voussoir-icon-icons-biohazardIcon.cjs.js"
+    },
     "./icons/bluetoothIcon": {
       "types": "./icons/bluetoothIcon/dist/voussoir-icon-icons-bluetoothIcon.cjs.js",
       "module": "./icons/bluetoothIcon/dist/voussoir-icon-icons-bluetoothIcon.esm.js",
       "default": "./icons/bluetoothIcon/dist/voussoir-icon-icons-bluetoothIcon.cjs.js"
+    },
+    "./icons/bookMinusIcon": {
+      "types": "./icons/bookMinusIcon/dist/voussoir-icon-icons-bookMinusIcon.cjs.js",
+      "module": "./icons/bookMinusIcon/dist/voussoir-icon-icons-bookMinusIcon.esm.js",
+      "default": "./icons/bookMinusIcon/dist/voussoir-icon-icons-bookMinusIcon.cjs.js"
     },
     "./icons/boxSelectIcon": {
       "types": "./icons/boxSelectIcon/dist/voussoir-icon-icons-boxSelectIcon.cjs.js",
@@ -2551,6 +3011,11 @@
       "module": "./icons/building2Icon/dist/voussoir-icon-icons-building2Icon.esm.js",
       "default": "./icons/building2Icon/dist/voussoir-icon-icons-building2Icon.cjs.js"
     },
+    "./icons/cakeSliceIcon": {
+      "types": "./icons/cakeSliceIcon/dist/voussoir-icon-icons-cakeSliceIcon.cjs.js",
+      "module": "./icons/cakeSliceIcon/dist/voussoir-icon-icons-cakeSliceIcon.esm.js",
+      "default": "./icons/cakeSliceIcon/dist/voussoir-icon-icons-cakeSliceIcon.cjs.js"
+    },
     "./icons/calendarXIcon": {
       "types": "./icons/calendarXIcon/dist/voussoir-icon-icons-calendarXIcon.cjs.js",
       "module": "./icons/calendarXIcon/dist/voussoir-icon-icons-calendarXIcon.esm.js",
@@ -2560,6 +3025,21 @@
       "types": "./icons/cameraOffIcon/dist/voussoir-icon-icons-cameraOffIcon.cjs.js",
       "module": "./icons/cameraOffIcon/dist/voussoir-icon-icons-cameraOffIcon.esm.js",
       "default": "./icons/cameraOffIcon/dist/voussoir-icon-icons-cameraOffIcon.cjs.js"
+    },
+    "./icons/candyCaneIcon": {
+      "types": "./icons/candyCaneIcon/dist/voussoir-icon-icons-candyCaneIcon.cjs.js",
+      "module": "./icons/candyCaneIcon/dist/voussoir-icon-icons-candyCaneIcon.esm.js",
+      "default": "./icons/candyCaneIcon/dist/voussoir-icon-icons-candyCaneIcon.cjs.js"
+    },
+    "./icons/caseLowerIcon": {
+      "types": "./icons/caseLowerIcon/dist/voussoir-icon-icons-caseLowerIcon.cjs.js",
+      "module": "./icons/caseLowerIcon/dist/voussoir-icon-icons-caseLowerIcon.esm.js",
+      "default": "./icons/caseLowerIcon/dist/voussoir-icon-icons-caseLowerIcon.cjs.js"
+    },
+    "./icons/caseUpperIcon": {
+      "types": "./icons/caseUpperIcon/dist/voussoir-icon-icons-caseUpperIcon.cjs.js",
+      "module": "./icons/caseUpperIcon/dist/voussoir-icon-icons-caseUpperIcon.esm.js",
+      "default": "./icons/caseUpperIcon/dist/voussoir-icon-icons-caseUpperIcon.cjs.js"
     },
     "./icons/chevronUpIcon": {
       "types": "./icons/chevronUpIcon/dist/voussoir-icon-icons-chevronUpIcon.cjs.js",
@@ -2575,6 +3055,11 @@
       "types": "./icons/circleDotIcon/dist/voussoir-icon-icons-circleDotIcon.cjs.js",
       "module": "./icons/circleDotIcon/dist/voussoir-icon-icons-circleDotIcon.esm.js",
       "default": "./icons/circleDotIcon/dist/voussoir-icon-icons-circleDotIcon.cjs.js"
+    },
+    "./icons/circleOffIcon": {
+      "types": "./icons/circleOffIcon/dist/voussoir-icon-icons-circleOffIcon.cjs.js",
+      "module": "./icons/circleOffIcon/dist/voussoir-icon-icons-circleOffIcon.esm.js",
+      "default": "./icons/circleOffIcon/dist/voussoir-icon-icons-circleOffIcon.cjs.js"
     },
     "./icons/clipboardIcon": {
       "types": "./icons/clipboardIcon/dist/voussoir-icon-icons-clipboardIcon.cjs.js",
@@ -2605,6 +3090,21 @@
       "types": "./icons/componentIcon/dist/voussoir-icon-icons-componentIcon.cjs.js",
       "module": "./icons/componentIcon/dist/voussoir-icon-icons-componentIcon.esm.js",
       "default": "./icons/componentIcon/dist/voussoir-icon-icons-componentIcon.cjs.js"
+    },
+    "./icons/copyCheckIcon": {
+      "types": "./icons/copyCheckIcon/dist/voussoir-icon-icons-copyCheckIcon.cjs.js",
+      "module": "./icons/copyCheckIcon/dist/voussoir-icon-icons-copyCheckIcon.esm.js",
+      "default": "./icons/copyCheckIcon/dist/voussoir-icon-icons-copyCheckIcon.cjs.js"
+    },
+    "./icons/copyMinusIcon": {
+      "types": "./icons/copyMinusIcon/dist/voussoir-icon-icons-copyMinusIcon.cjs.js",
+      "module": "./icons/copyMinusIcon/dist/voussoir-icon-icons-copyMinusIcon.esm.js",
+      "default": "./icons/copyMinusIcon/dist/voussoir-icon-icons-copyMinusIcon.cjs.js"
+    },
+    "./icons/copySlashIcon": {
+      "types": "./icons/copySlashIcon/dist/voussoir-icon-icons-copySlashIcon.cjs.js",
+      "module": "./icons/copySlashIcon/dist/voussoir-icon-icons-copySlashIcon.esm.js",
+      "default": "./icons/copySlashIcon/dist/voussoir-icon-icons-copySlashIcon.cjs.js"
     },
     "./icons/copyrightIcon": {
       "types": "./icons/copyrightIcon/dist/voussoir-icon-icons-copyrightIcon.cjs.js",
@@ -2646,6 +3146,11 @@
       "module": "./icons/fileClockIcon/dist/voussoir-icon-icons-fileClockIcon.esm.js",
       "default": "./icons/fileClockIcon/dist/voussoir-icon-icons-fileClockIcon.cjs.js"
     },
+    "./icons/fileCode2Icon": {
+      "types": "./icons/fileCode2Icon/dist/voussoir-icon-icons-fileCode2Icon.cjs.js",
+      "module": "./icons/fileCode2Icon/dist/voussoir-icon-icons-fileCode2Icon.esm.js",
+      "default": "./icons/fileCode2Icon/dist/voussoir-icon-icons-fileCode2Icon.cjs.js"
+    },
     "./icons/fileDigitIcon": {
       "types": "./icons/fileDigitIcon/dist/voussoir-icon-icons-fileDigitIcon.cjs.js",
       "module": "./icons/fileDigitIcon/dist/voussoir-icon-icons-fileDigitIcon.esm.js",
@@ -2686,6 +3191,11 @@
       "module": "./icons/filePlus2Icon/dist/voussoir-icon-icons-filePlus2Icon.esm.js",
       "default": "./icons/filePlus2Icon/dist/voussoir-icon-icons-filePlus2Icon.cjs.js"
     },
+    "./icons/fileStackIcon": {
+      "types": "./icons/fileStackIcon/dist/voussoir-icon-icons-fileStackIcon.cjs.js",
+      "module": "./icons/fileStackIcon/dist/voussoir-icon-icons-fileStackIcon.esm.js",
+      "default": "./icons/fileStackIcon/dist/voussoir-icon-icons-fileStackIcon.cjs.js"
+    },
     "./icons/fileType2Icon": {
       "types": "./icons/fileType2Icon/dist/voussoir-icon-icons-fileType2Icon.cjs.js",
       "module": "./icons/fileType2Icon/dist/voussoir-icon-icons-fileType2Icon.esm.js",
@@ -2700,6 +3210,16 @@
       "types": "./icons/folderCogIcon/dist/voussoir-icon-icons-folderCogIcon.cjs.js",
       "module": "./icons/folderCogIcon/dist/voussoir-icon-icons-folderCogIcon.esm.js",
       "default": "./icons/folderCogIcon/dist/voussoir-icon-icons-folderCogIcon.cjs.js"
+    },
+    "./icons/folderDotIcon": {
+      "types": "./icons/folderDotIcon/dist/voussoir-icon-icons-folderDotIcon.cjs.js",
+      "module": "./icons/folderDotIcon/dist/voussoir-icon-icons-folderDotIcon.esm.js",
+      "default": "./icons/folderDotIcon/dist/voussoir-icon-icons-folderDotIcon.cjs.js"
+    },
+    "./icons/folderGitIcon": {
+      "types": "./icons/folderGitIcon/dist/voussoir-icon-icons-folderGitIcon.cjs.js",
+      "module": "./icons/folderGitIcon/dist/voussoir-icon-icons-folderGitIcon.esm.js",
+      "default": "./icons/folderGitIcon/dist/voussoir-icon-icons-folderGitIcon.cjs.js"
     },
     "./icons/folderKeyIcon": {
       "types": "./icons/folderKeyIcon/dist/voussoir-icon-icons-folderKeyIcon.cjs.js",
@@ -2750,6 +3270,11 @@
       "types": "./icons/instagramIcon/dist/voussoir-icon-icons-instagramIcon.cjs.js",
       "module": "./icons/instagramIcon/dist/voussoir-icon-icons-instagramIcon.esm.js",
       "default": "./icons/instagramIcon/dist/voussoir-icon-icons-instagramIcon.cjs.js"
+    },
+    "./icons/keySquareIcon": {
+      "types": "./icons/keySquareIcon/dist/voussoir-icon-icons-keySquareIcon.cjs.js",
+      "module": "./icons/keySquareIcon/dist/voussoir-icon-icons-keySquareIcon.esm.js",
+      "default": "./icons/keySquareIcon/dist/voussoir-icon-icons-keySquareIcon.cjs.js"
     },
     "./icons/lampFloorIcon": {
       "types": "./icons/lampFloorIcon/dist/voussoir-icon-icons-lampFloorIcon.cjs.js",
@@ -2836,10 +3361,25 @@
       "module": "./icons/minimize2Icon/dist/voussoir-icon-icons-minimize2Icon.esm.js",
       "default": "./icons/minimize2Icon/dist/voussoir-icon-icons-minimize2Icon.cjs.js"
     },
+    "./icons/monitorUpIcon": {
+      "types": "./icons/monitorUpIcon/dist/voussoir-icon-icons-monitorUpIcon.cjs.js",
+      "module": "./icons/monitorUpIcon/dist/voussoir-icon-icons-monitorUpIcon.esm.js",
+      "default": "./icons/monitorUpIcon/dist/voussoir-icon-icons-monitorUpIcon.cjs.js"
+    },
+    "./icons/moveRightIcon": {
+      "types": "./icons/moveRightIcon/dist/voussoir-icon-icons-moveRightIcon.cjs.js",
+      "module": "./icons/moveRightIcon/dist/voussoir-icon-icons-moveRightIcon.esm.js",
+      "default": "./icons/moveRightIcon/dist/voussoir-icon-icons-moveRightIcon.cjs.js"
+    },
     "./icons/newspaperIcon": {
       "types": "./icons/newspaperIcon/dist/voussoir-icon-icons-newspaperIcon.cjs.js",
       "module": "./icons/newspaperIcon/dist/voussoir-icon-icons-newspaperIcon.esm.js",
       "default": "./icons/newspaperIcon/dist/voussoir-icon-icons-newspaperIcon.cjs.js"
+    },
+    "./icons/panelLeftIcon": {
+      "types": "./icons/panelLeftIcon/dist/voussoir-icon-icons-panelLeftIcon.cjs.js",
+      "module": "./icons/panelLeftIcon/dist/voussoir-icon-icons-panelLeftIcon.esm.js",
+      "default": "./icons/panelLeftIcon/dist/voussoir-icon-icons-panelLeftIcon.cjs.js"
     },
     "./icons/paperclipIcon": {
       "types": "./icons/paperclipIcon/dist/voussoir-icon-icons-paperclipIcon.cjs.js",
@@ -2856,6 +3396,16 @@
       "module": "./icons/piggyBankIcon/dist/voussoir-icon-icons-piggyBankIcon.esm.js",
       "default": "./icons/piggyBankIcon/dist/voussoir-icon-icons-piggyBankIcon.cjs.js"
     },
+    "./icons/projectorIcon": {
+      "types": "./icons/projectorIcon/dist/voussoir-icon-icons-projectorIcon.cjs.js",
+      "module": "./icons/projectorIcon/dist/voussoir-icon-icons-projectorIcon.esm.js",
+      "default": "./icons/projectorIcon/dist/voussoir-icon-icons-projectorIcon.cjs.js"
+    },
+    "./icons/radiationIcon": {
+      "types": "./icons/radiationIcon/dist/voussoir-icon-icons-radiationIcon.cjs.js",
+      "module": "./icons/radiationIcon/dist/voussoir-icon-icons-radiationIcon.esm.js",
+      "default": "./icons/radiationIcon/dist/voussoir-icon-icons-radiationIcon.cjs.js"
+    },
     "./icons/refreshCwIcon": {
       "types": "./icons/refreshCwIcon/dist/voussoir-icon-icons-refreshCwIcon.cjs.js",
       "module": "./icons/refreshCwIcon/dist/voussoir-icon-icons-refreshCwIcon.esm.js",
@@ -2865,6 +3415,11 @@
       "types": "./icons/rotateCcwIcon/dist/voussoir-icon-icons-rotateCcwIcon.cjs.js",
       "module": "./icons/rotateCcwIcon/dist/voussoir-icon-icons-rotateCcwIcon.esm.js",
       "default": "./icons/rotateCcwIcon/dist/voussoir-icon-icons-rotateCcwIcon.cjs.js"
+    },
+    "./icons/satelliteIcon": {
+      "types": "./icons/satelliteIcon/dist/voussoir-icon-icons-satelliteIcon.cjs.js",
+      "module": "./icons/satelliteIcon/dist/voussoir-icon-icons-satelliteIcon.esm.js",
+      "default": "./icons/satelliteIcon/dist/voussoir-icon-icons-satelliteIcon.cjs.js"
     },
     "./icons/serverCogIcon": {
       "types": "./icons/serverCogIcon/dist/voussoir-icon-icons-serverCogIcon.cjs.js",
@@ -2901,6 +3456,11 @@
       "module": "./icons/snowflakeIcon/dist/voussoir-icon-icons-snowflakeIcon.esm.js",
       "default": "./icons/snowflakeIcon/dist/voussoir-icon-icons-snowflakeIcon.cjs.js"
     },
+    "./icons/squareDotIcon": {
+      "types": "./icons/squareDotIcon/dist/voussoir-icon-icons-squareDotIcon.cjs.js",
+      "module": "./icons/squareDotIcon/dist/voussoir-icon-icons-squareDotIcon.esm.js",
+      "default": "./icons/squareDotIcon/dist/voussoir-icon-icons-squareDotIcon.cjs.js"
+    },
     "./icons/subscriptIcon": {
       "types": "./icons/subscriptIcon/dist/voussoir-icon-icons-subscriptIcon.cjs.js",
       "module": "./icons/subscriptIcon/dist/voussoir-icon-icons-subscriptIcon.esm.js",
@@ -2915,6 +3475,21 @@
       "types": "./icons/sunMediumIcon/dist/voussoir-icon-icons-sunMediumIcon.cjs.js",
       "module": "./icons/sunMediumIcon/dist/voussoir-icon-icons-sunMediumIcon.esm.js",
       "default": "./icons/sunMediumIcon/dist/voussoir-icon-icons-sunMediumIcon.cjs.js"
+    },
+    "./icons/testTube2Icon": {
+      "types": "./icons/testTube2Icon/dist/voussoir-icon-icons-testTube2Icon.cjs.js",
+      "module": "./icons/testTube2Icon/dist/voussoir-icon-icons-testTube2Icon.esm.js",
+      "default": "./icons/testTube2Icon/dist/voussoir-icon-icons-testTube2Icon.cjs.js"
+    },
+    "./icons/testTubesIcon": {
+      "types": "./icons/testTubesIcon/dist/voussoir-icon-icons-testTubesIcon.cjs.js",
+      "module": "./icons/testTubesIcon/dist/voussoir-icon-icons-testTubesIcon.esm.js",
+      "default": "./icons/testTubesIcon/dist/voussoir-icon-icons-testTubesIcon.cjs.js"
+    },
+    "./icons/textQuoteIcon": {
+      "types": "./icons/textQuoteIcon/dist/voussoir-icon-icons-textQuoteIcon.cjs.js",
+      "module": "./icons/textQuoteIcon/dist/voussoir-icon-icons-textQuoteIcon.esm.js",
+      "default": "./icons/textQuoteIcon/dist/voussoir-icon-icons-textQuoteIcon.cjs.js"
     },
     "./icons/underlineIcon": {
       "types": "./icons/underlineIcon/dist/voussoir-icon-icons-underlineIcon.cjs.js",
@@ -2931,10 +3506,35 @@
       "module": "./icons/userMinusIcon/dist/voussoir-icon-icons-userMinusIcon.esm.js",
       "default": "./icons/userMinusIcon/dist/voussoir-icon-icons-userMinusIcon.cjs.js"
     },
+    "./icons/userPlus2Icon": {
+      "types": "./icons/userPlus2Icon/dist/voussoir-icon-icons-userPlus2Icon.cjs.js",
+      "module": "./icons/userPlus2Icon/dist/voussoir-icon-icons-userPlus2Icon.esm.js",
+      "default": "./icons/userPlus2Icon/dist/voussoir-icon-icons-userPlus2Icon.cjs.js"
+    },
+    "./icons/videotapeIcon": {
+      "types": "./icons/videotapeIcon/dist/voussoir-icon-icons-videotapeIcon.cjs.js",
+      "module": "./icons/videotapeIcon/dist/voussoir-icon-icons-videotapeIcon.esm.js",
+      "default": "./icons/videotapeIcon/dist/voussoir-icon-icons-videotapeIcon.cjs.js"
+    },
     "./icons/voicemailIcon": {
       "types": "./icons/voicemailIcon/dist/voussoir-icon-icons-voicemailIcon.cjs.js",
       "module": "./icons/voicemailIcon/dist/voussoir-icon-icons-voicemailIcon.esm.js",
       "default": "./icons/voicemailIcon/dist/voussoir-icon-icons-voicemailIcon.cjs.js"
+    },
+    "./icons/wallpaperIcon": {
+      "types": "./icons/wallpaperIcon/dist/voussoir-icon-icons-wallpaperIcon.cjs.js",
+      "module": "./icons/wallpaperIcon/dist/voussoir-icon-icons-wallpaperIcon.esm.js",
+      "default": "./icons/wallpaperIcon/dist/voussoir-icon-icons-wallpaperIcon.cjs.js"
+    },
+    "./icons/warehouseIcon": {
+      "types": "./icons/warehouseIcon/dist/voussoir-icon-icons-warehouseIcon.cjs.js",
+      "module": "./icons/warehouseIcon/dist/voussoir-icon-icons-warehouseIcon.esm.js",
+      "default": "./icons/warehouseIcon/dist/voussoir-icon-icons-warehouseIcon.cjs.js"
+    },
+    "./icons/wholeWordIcon": {
+      "types": "./icons/wholeWordIcon/dist/voussoir-icon-icons-wholeWordIcon.cjs.js",
+      "module": "./icons/wholeWordIcon/dist/voussoir-icon-icons-wholeWordIcon.esm.js",
+      "default": "./icons/wholeWordIcon/dist/voussoir-icon-icons-wholeWordIcon.cjs.js"
     },
     "./icons/alarmCheckIcon": {
       "types": "./icons/alarmCheckIcon/dist/voussoir-icon-icons-alarmCheckIcon.cjs.js",
@@ -2956,6 +3556,11 @@
       "module": "./icons/alignRightIcon/dist/voussoir-icon-icons-alignRightIcon.esm.js",
       "default": "./icons/alignRightIcon/dist/voussoir-icon-icons-alignRightIcon.cjs.js"
     },
+    "./icons/ampersandsIcon": {
+      "types": "./icons/ampersandsIcon/dist/voussoir-icon-icons-ampersandsIcon.cjs.js",
+      "module": "./icons/ampersandsIcon/dist/voussoir-icon-icons-ampersandsIcon.esm.js",
+      "default": "./icons/ampersandsIcon/dist/voussoir-icon-icons-ampersandsIcon.cjs.js"
+    },
     "./icons/arrowBigUpIcon": {
       "types": "./icons/arrowBigUpIcon/dist/voussoir-icon-icons-arrowBigUpIcon.cjs.js",
       "module": "./icons/arrowBigUpIcon/dist/voussoir-icon-icons-arrowBigUpIcon.esm.js",
@@ -2966,10 +3571,30 @@
       "module": "./icons/arrowRightIcon/dist/voussoir-icon-icons-arrowRightIcon.esm.js",
       "default": "./icons/arrowRightIcon/dist/voussoir-icon-icons-arrowRightIcon.cjs.js"
     },
+    "./icons/badgeAlertIcon": {
+      "types": "./icons/badgeAlertIcon/dist/voussoir-icon-icons-badgeAlertIcon.cjs.js",
+      "module": "./icons/badgeAlertIcon/dist/voussoir-icon-icons-badgeAlertIcon.esm.js",
+      "default": "./icons/badgeAlertIcon/dist/voussoir-icon-icons-badgeAlertIcon.cjs.js"
+    },
+    "./icons/badgeCheckIcon": {
+      "types": "./icons/badgeCheckIcon/dist/voussoir-icon-icons-badgeCheckIcon.cjs.js",
+      "module": "./icons/badgeCheckIcon/dist/voussoir-icon-icons-badgeCheckIcon.esm.js",
+      "default": "./icons/badgeCheckIcon/dist/voussoir-icon-icons-badgeCheckIcon.cjs.js"
+    },
+    "./icons/badgeMinusIcon": {
+      "types": "./icons/badgeMinusIcon/dist/voussoir-icon-icons-badgeMinusIcon.cjs.js",
+      "module": "./icons/badgeMinusIcon/dist/voussoir-icon-icons-badgeMinusIcon.esm.js",
+      "default": "./icons/badgeMinusIcon/dist/voussoir-icon-icons-badgeMinusIcon.cjs.js"
+    },
     "./icons/batteryLowIcon": {
       "types": "./icons/batteryLowIcon/dist/voussoir-icon-icons-batteryLowIcon.cjs.js",
       "module": "./icons/batteryLowIcon/dist/voussoir-icon-icons-batteryLowIcon.esm.js",
       "default": "./icons/batteryLowIcon/dist/voussoir-icon-icons-batteryLowIcon.cjs.js"
+    },
+    "./icons/bookMarkedIcon": {
+      "types": "./icons/bookMarkedIcon/dist/voussoir-icon-icons-bookMarkedIcon.cjs.js",
+      "module": "./icons/bookMarkedIcon/dist/voussoir-icon-icons-bookMarkedIcon.esm.js",
+      "default": "./icons/bookMarkedIcon/dist/voussoir-icon-icons-bookMarkedIcon.cjs.js"
     },
     "./icons/calculatorIcon": {
       "types": "./icons/calculatorIcon/dist/voussoir-icon-icons-calculatorIcon.cjs.js",
@@ -3005,6 +3630,11 @@
       "types": "./icons/dollarSignIcon/dist/voussoir-icon-icons-dollarSignIcon.cjs.js",
       "module": "./icons/dollarSignIcon/dist/voussoir-icon-icons-dollarSignIcon.esm.js",
       "default": "./icons/dollarSignIcon/dist/voussoir-icon-icons-dollarSignIcon.cjs.js"
+    },
+    "./icons/doorClosedIcon": {
+      "types": "./icons/doorClosedIcon/dist/voussoir-icon-icons-doorClosedIcon.cjs.js",
+      "module": "./icons/doorClosedIcon/dist/voussoir-icon-icons-doorClosedIcon.esm.js",
+      "default": "./icons/doorClosedIcon/dist/voussoir-icon-icons-doorClosedIcon.cjs.js"
     },
     "./icons/fileAudio2Icon": {
       "types": "./icons/fileAudio2Icon/dist/voussoir-icon-icons-fileAudio2Icon.cjs.js",
@@ -3076,6 +3706,11 @@
       "module": "./icons/folderEditIcon/dist/voussoir-icon-icons-folderEditIcon.esm.js",
       "default": "./icons/folderEditIcon/dist/voussoir-icon-icons-folderEditIcon.cjs.js"
     },
+    "./icons/folderGit2Icon": {
+      "types": "./icons/folderGit2Icon/dist/voussoir-icon-icons-folderGit2Icon.cjs.js",
+      "module": "./icons/folderGit2Icon/dist/voussoir-icon-icons-folderGit2Icon.esm.js",
+      "default": "./icons/folderGit2Icon/dist/voussoir-icon-icons-folderGit2Icon.cjs.js"
+    },
     "./icons/folderLockIcon": {
       "types": "./icons/folderLockIcon/dist/voussoir-icon-icons-folderLockIcon.cjs.js",
       "module": "./icons/folderLockIcon/dist/voussoir-icon-icons-folderLockIcon.esm.js",
@@ -3091,6 +3726,16 @@
       "module": "./icons/folderPlusIcon/dist/voussoir-icon-icons-folderPlusIcon.esm.js",
       "default": "./icons/folderPlusIcon/dist/voussoir-icon-icons-folderPlusIcon.cjs.js"
     },
+    "./icons/folderRootIcon": {
+      "types": "./icons/folderRootIcon/dist/voussoir-icon-icons-folderRootIcon.cjs.js",
+      "module": "./icons/folderRootIcon/dist/voussoir-icon-icons-folderRootIcon.esm.js",
+      "default": "./icons/folderRootIcon/dist/voussoir-icon-icons-folderRootIcon.cjs.js"
+    },
+    "./icons/folderSyncIcon": {
+      "types": "./icons/folderSyncIcon/dist/voussoir-icon-icons-folderSyncIcon.cjs.js",
+      "module": "./icons/folderSyncIcon/dist/voussoir-icon-icons-folderSyncIcon.esm.js",
+      "default": "./icons/folderSyncIcon/dist/voussoir-icon-icons-folderSyncIcon.cjs.js"
+    },
     "./icons/folderTreeIcon": {
       "types": "./icons/folderTreeIcon/dist/voussoir-icon-icons-folderTreeIcon.cjs.js",
       "module": "./icons/folderTreeIcon/dist/voussoir-icon-icons-folderTreeIcon.esm.js",
@@ -3100,6 +3745,11 @@
       "types": "./icons/footprintsIcon/dist/voussoir-icon-icons-footprintsIcon.cjs.js",
       "module": "./icons/footprintsIcon/dist/voussoir-icon-icons-footprintsIcon.esm.js",
       "default": "./icons/footprintsIcon/dist/voussoir-icon-icons-footprintsIcon.cjs.js"
+    },
+    "./icons/ganttChartIcon": {
+      "types": "./icons/ganttChartIcon/dist/voussoir-icon-icons-ganttChartIcon.cjs.js",
+      "module": "./icons/ganttChartIcon/dist/voussoir-icon-icons-ganttChartIcon.esm.js",
+      "default": "./icons/ganttChartIcon/dist/voussoir-icon-icons-ganttChartIcon.cjs.js"
     },
     "./icons/gitCompareIcon": {
       "types": "./icons/gitCompareIcon/dist/voussoir-icon-icons-gitCompareIcon.cjs.js",
@@ -3151,25 +3801,50 @@
       "module": "./icons/layoutListIcon/dist/voussoir-icon-icons-layoutListIcon.esm.js",
       "default": "./icons/layoutListIcon/dist/voussoir-icon-icons-layoutListIcon.cjs.js"
     },
+    "./icons/leafyGreenIcon": {
+      "types": "./icons/leafyGreenIcon/dist/voussoir-icon-icons-leafyGreenIcon.cjs.js",
+      "module": "./icons/leafyGreenIcon/dist/voussoir-icon-icons-leafyGreenIcon.esm.js",
+      "default": "./icons/leafyGreenIcon/dist/voussoir-icon-icons-leafyGreenIcon.cjs.js"
+    },
     "./icons/listChecksIcon": {
       "types": "./icons/listChecksIcon/dist/voussoir-icon-icons-listChecksIcon.cjs.js",
       "module": "./icons/listChecksIcon/dist/voussoir-icon-icons-listChecksIcon.esm.js",
       "default": "./icons/listChecksIcon/dist/voussoir-icon-icons-listChecksIcon.cjs.js"
+    },
+    "./icons/listFilterIcon": {
+      "types": "./icons/listFilterIcon/dist/voussoir-icon-icons-listFilterIcon.cjs.js",
+      "module": "./icons/listFilterIcon/dist/voussoir-icon-icons-listFilterIcon.esm.js",
+      "default": "./icons/listFilterIcon/dist/voussoir-icon-icons-listFilterIcon.cjs.js"
     },
     "./icons/mailSearchIcon": {
       "types": "./icons/mailSearchIcon/dist/voussoir-icon-icons-mailSearchIcon.cjs.js",
       "module": "./icons/mailSearchIcon/dist/voussoir-icon-icons-mailSearchIcon.esm.js",
       "default": "./icons/mailSearchIcon/dist/voussoir-icon-icons-mailSearchIcon.cjs.js"
     },
+    "./icons/menuSquareIcon": {
+      "types": "./icons/menuSquareIcon/dist/voussoir-icon-icons-menuSquareIcon.cjs.js",
+      "module": "./icons/menuSquareIcon/dist/voussoir-icon-icons-menuSquareIcon.esm.js",
+      "default": "./icons/menuSquareIcon/dist/voussoir-icon-icons-menuSquareIcon.cjs.js"
+    },
     "./icons/microscopeIcon": {
       "types": "./icons/microscopeIcon/dist/voussoir-icon-icons-microscopeIcon.cjs.js",
       "module": "./icons/microscopeIcon/dist/voussoir-icon-icons-microscopeIcon.esm.js",
       "default": "./icons/microscopeIcon/dist/voussoir-icon-icons-microscopeIcon.cjs.js"
     },
+    "./icons/monitorDotIcon": {
+      "types": "./icons/monitorDotIcon/dist/voussoir-icon-icons-monitorDotIcon.cjs.js",
+      "module": "./icons/monitorDotIcon/dist/voussoir-icon-icons-monitorDotIcon.esm.js",
+      "default": "./icons/monitorDotIcon/dist/voussoir-icon-icons-monitorDotIcon.cjs.js"
+    },
     "./icons/monitorOffIcon": {
       "types": "./icons/monitorOffIcon/dist/voussoir-icon-icons-monitorOffIcon.cjs.js",
       "module": "./icons/monitorOffIcon/dist/voussoir-icon-icons-monitorOffIcon.esm.js",
       "default": "./icons/monitorOffIcon/dist/voussoir-icon-icons-monitorOffIcon.cjs.js"
+    },
+    "./icons/moveUpLeftIcon": {
+      "types": "./icons/moveUpLeftIcon/dist/voussoir-icon-icons-moveUpLeftIcon.cjs.js",
+      "module": "./icons/moveUpLeftIcon/dist/voussoir-icon-icons-moveUpLeftIcon.esm.js",
+      "default": "./icons/moveUpLeftIcon/dist/voussoir-icon-icons-moveUpLeftIcon.cjs.js"
     },
     "./icons/navigationIcon": {
       "types": "./icons/navigationIcon/dist/voussoir-icon-icons-navigationIcon.cjs.js",
@@ -3181,10 +3856,20 @@
       "module": "./icons/paintbrushIcon/dist/voussoir-icon-icons-paintbrushIcon.esm.js",
       "default": "./icons/paintbrushIcon/dist/voussoir-icon-icons-paintbrushIcon.cjs.js"
     },
+    "./icons/panelRightIcon": {
+      "types": "./icons/panelRightIcon/dist/voussoir-icon-icons-panelRightIcon.cjs.js",
+      "module": "./icons/panelRightIcon/dist/voussoir-icon-icons-panelRightIcon.esm.js",
+      "default": "./icons/panelRightIcon/dist/voussoir-icon-icons-panelRightIcon.cjs.js"
+    },
     "./icons/playCircleIcon": {
       "types": "./icons/playCircleIcon/dist/voussoir-icon-icons-playCircleIcon.cjs.js",
       "module": "./icons/playCircleIcon/dist/voussoir-icon-icons-playCircleIcon.esm.js",
       "default": "./icons/playCircleIcon/dist/voussoir-icon-icons-playCircleIcon.cjs.js"
+    },
+    "./icons/playSquareIcon": {
+      "types": "./icons/playSquareIcon/dist/voussoir-icon-icons-playSquareIcon.cjs.js",
+      "module": "./icons/playSquareIcon/dist/voussoir-icon-icons-playSquareIcon.esm.js",
+      "default": "./icons/playSquareIcon/dist/voussoir-icon-icons-playSquareIcon.cjs.js"
     },
     "./icons/plusCircleIcon": {
       "types": "./icons/plusCircleIcon/dist/voussoir-icon-icons-plusCircleIcon.cjs.js",
@@ -3196,10 +3881,30 @@
       "module": "./icons/plusSquareIcon/dist/voussoir-icon-icons-plusSquareIcon.esm.js",
       "default": "./icons/plusSquareIcon/dist/voussoir-icon-icons-plusSquareIcon.cjs.js"
     },
+    "./icons/radioTowerIcon": {
+      "types": "./icons/radioTowerIcon/dist/voussoir-icon-icons-radioTowerIcon.cjs.js",
+      "module": "./icons/radioTowerIcon/dist/voussoir-icon-icons-radioTowerIcon.esm.js",
+      "default": "./icons/radioTowerIcon/dist/voussoir-icon-icons-radioTowerIcon.cjs.js"
+    },
     "./icons/refreshCcwIcon": {
       "types": "./icons/refreshCcwIcon/dist/voussoir-icon-icons-refreshCcwIcon.cjs.js",
       "module": "./icons/refreshCcwIcon/dist/voussoir-icon-icons-refreshCcwIcon.esm.js",
       "default": "./icons/refreshCcwIcon/dist/voussoir-icon-icons-refreshCcwIcon.cjs.js"
+    },
+    "./icons/replaceAllIcon": {
+      "types": "./icons/replaceAllIcon/dist/voussoir-icon-icons-replaceAllIcon.cjs.js",
+      "module": "./icons/replaceAllIcon/dist/voussoir-icon-icons-replaceAllIcon.esm.js",
+      "default": "./icons/replaceAllIcon/dist/voussoir-icon-icons-replaceAllIcon.cjs.js"
+    },
+    "./icons/scrollTextIcon": {
+      "types": "./icons/scrollTextIcon/dist/voussoir-icon-icons-scrollTextIcon.cjs.js",
+      "module": "./icons/scrollTextIcon/dist/voussoir-icon-icons-scrollTextIcon.esm.js",
+      "default": "./icons/scrollTextIcon/dist/voussoir-icon-icons-scrollTextIcon.cjs.js"
+    },
+    "./icons/searchCodeIcon": {
+      "types": "./icons/searchCodeIcon/dist/voussoir-icon-icons-searchCodeIcon.cjs.js",
+      "module": "./icons/searchCodeIcon/dist/voussoir-icon-icons-searchCodeIcon.esm.js",
+      "default": "./icons/searchCodeIcon/dist/voussoir-icon-icons-searchCodeIcon.cjs.js"
     },
     "./icons/showerHeadIcon": {
       "types": "./icons/showerHeadIcon/dist/voussoir-icon-icons-showerHeadIcon.cjs.js",
@@ -3221,6 +3926,16 @@
       "module": "./icons/smartphoneIcon/dist/voussoir-icon-icons-smartphoneIcon.esm.js",
       "default": "./icons/smartphoneIcon/dist/voussoir-icon-icons-smartphoneIcon.cjs.js"
     },
+    "./icons/spellCheckIcon": {
+      "types": "./icons/spellCheckIcon/dist/voussoir-icon-icons-spellCheckIcon.cjs.js",
+      "module": "./icons/spellCheckIcon/dist/voussoir-icon-icons-spellCheckIcon.esm.js",
+      "default": "./icons/spellCheckIcon/dist/voussoir-icon-icons-spellCheckIcon.cjs.js"
+    },
+    "./icons/squareCodeIcon": {
+      "types": "./icons/squareCodeIcon/dist/voussoir-icon-icons-squareCodeIcon.cjs.js",
+      "module": "./icons/squareCodeIcon/dist/voussoir-icon-icons-squareCodeIcon.esm.js",
+      "default": "./icons/squareCodeIcon/dist/voussoir-icon-icons-squareCodeIcon.cjs.js"
+    },
     "./icons/stickyNoteIcon": {
       "types": "./icons/stickyNoteIcon/dist/voussoir-icon-icons-stickyNoteIcon.cjs.js",
       "module": "./icons/stickyNoteIcon/dist/voussoir-icon-icons-stickyNoteIcon.esm.js",
@@ -3240,6 +3955,11 @@
       "types": "./icons/textCursorIcon/dist/voussoir-icon-icons-textCursorIcon.cjs.js",
       "module": "./icons/textCursorIcon/dist/voussoir-icon-icons-textCursorIcon.esm.js",
       "default": "./icons/textCursorIcon/dist/voussoir-icon-icons-textCursorIcon.cjs.js"
+    },
+    "./icons/textSelectIcon": {
+      "types": "./icons/textSelectIcon/dist/voussoir-icon-icons-textSelectIcon.cjs.js",
+      "module": "./icons/textSelectIcon/dist/voussoir-icon-icons-textSelectIcon.esm.js",
+      "default": "./icons/textSelectIcon/dist/voussoir-icon-icons-textSelectIcon.cjs.js"
     },
     "./icons/thumbsDownIcon": {
       "types": "./icons/thumbsDownIcon/dist/voussoir-icon-icons-thumbsDownIcon.cjs.js",
@@ -3261,6 +3981,26 @@
       "module": "./icons/trendingUpIcon/dist/voussoir-icon-icons-trendingUpIcon.esm.js",
       "default": "./icons/trendingUpIcon/dist/voussoir-icon-icons-trendingUpIcon.cjs.js"
     },
+    "./icons/userCheck2Icon": {
+      "types": "./icons/userCheck2Icon/dist/voussoir-icon-icons-userCheck2Icon.cjs.js",
+      "module": "./icons/userCheck2Icon/dist/voussoir-icon-icons-userCheck2Icon.esm.js",
+      "default": "./icons/userCheck2Icon/dist/voussoir-icon-icons-userCheck2Icon.cjs.js"
+    },
+    "./icons/userCircleIcon": {
+      "types": "./icons/userCircleIcon/dist/voussoir-icon-icons-userCircleIcon.cjs.js",
+      "module": "./icons/userCircleIcon/dist/voussoir-icon-icons-userCircleIcon.esm.js",
+      "default": "./icons/userCircleIcon/dist/voussoir-icon-icons-userCircleIcon.cjs.js"
+    },
+    "./icons/userMinus2Icon": {
+      "types": "./icons/userMinus2Icon/dist/voussoir-icon-icons-userMinus2Icon.cjs.js",
+      "module": "./icons/userMinus2Icon/dist/voussoir-icon-icons-userMinus2Icon.esm.js",
+      "default": "./icons/userMinus2Icon/dist/voussoir-icon-icons-userMinus2Icon.cjs.js"
+    },
+    "./icons/userSquareIcon": {
+      "types": "./icons/userSquareIcon/dist/voussoir-icon-icons-userSquareIcon.cjs.js",
+      "module": "./icons/userSquareIcon/dist/voussoir-icon-icons-userSquareIcon.esm.js",
+      "default": "./icons/userSquareIcon/dist/voussoir-icon-icons-userSquareIcon.cjs.js"
+    },
     "./icons/vibrateOffIcon": {
       "types": "./icons/vibrateOffIcon/dist/voussoir-icon-icons-vibrateOffIcon.cjs.js",
       "module": "./icons/vibrateOffIcon/dist/voussoir-icon-icons-vibrateOffIcon.esm.js",
@@ -3276,6 +4016,31 @@
       "module": "./icons/alignCenterIcon/dist/voussoir-icon-icons-alignCenterIcon.esm.js",
       "default": "./icons/alignCenterIcon/dist/voussoir-icon-icons-alignCenterIcon.cjs.js"
     },
+    "./icons/arrowDown01Icon": {
+      "types": "./icons/arrowDown01Icon/dist/voussoir-icon-icons-arrowDown01Icon.cjs.js",
+      "module": "./icons/arrowDown01Icon/dist/voussoir-icon-icons-arrowDown01Icon.esm.js",
+      "default": "./icons/arrowDown01Icon/dist/voussoir-icon-icons-arrowDown01Icon.cjs.js"
+    },
+    "./icons/arrowDown10Icon": {
+      "types": "./icons/arrowDown10Icon/dist/voussoir-icon-icons-arrowDown10Icon.cjs.js",
+      "module": "./icons/arrowDown10Icon/dist/voussoir-icon-icons-arrowDown10Icon.esm.js",
+      "default": "./icons/arrowDown10Icon/dist/voussoir-icon-icons-arrowDown10Icon.cjs.js"
+    },
+    "./icons/arrowDownAZIcon": {
+      "types": "./icons/arrowDownAZIcon/dist/voussoir-icon-icons-arrowDownAZIcon.cjs.js",
+      "module": "./icons/arrowDownAZIcon/dist/voussoir-icon-icons-arrowDownAZIcon.esm.js",
+      "default": "./icons/arrowDownAZIcon/dist/voussoir-icon-icons-arrowDownAZIcon.cjs.js"
+    },
+    "./icons/arrowDownUpIcon": {
+      "types": "./icons/arrowDownUpIcon/dist/voussoir-icon-icons-arrowDownUpIcon.cjs.js",
+      "module": "./icons/arrowDownUpIcon/dist/voussoir-icon-icons-arrowDownUpIcon.esm.js",
+      "default": "./icons/arrowDownUpIcon/dist/voussoir-icon-icons-arrowDownUpIcon.cjs.js"
+    },
+    "./icons/arrowDownZAIcon": {
+      "types": "./icons/arrowDownZAIcon/dist/voussoir-icon-icons-arrowDownZAIcon.cjs.js",
+      "module": "./icons/arrowDownZAIcon/dist/voussoir-icon-icons-arrowDownZAIcon.esm.js",
+      "default": "./icons/arrowDownZAIcon/dist/voussoir-icon-icons-arrowDownZAIcon.cjs.js"
+    },
     "./icons/arrowUpDownIcon": {
       "types": "./icons/arrowUpDownIcon/dist/voussoir-icon-icons-arrowUpDownIcon.cjs.js",
       "module": "./icons/arrowUpDownIcon/dist/voussoir-icon-icons-arrowUpDownIcon.esm.js",
@@ -3285,6 +4050,11 @@
       "types": "./icons/arrowUpLeftIcon/dist/voussoir-icon-icons-arrowUpLeftIcon.cjs.js",
       "module": "./icons/arrowUpLeftIcon/dist/voussoir-icon-icons-arrowUpLeftIcon.esm.js",
       "default": "./icons/arrowUpLeftIcon/dist/voussoir-icon-icons-arrowUpLeftIcon.cjs.js"
+    },
+    "./icons/barChartBigIcon": {
+      "types": "./icons/barChartBigIcon/dist/voussoir-icon-icons-barChartBigIcon.cjs.js",
+      "module": "./icons/barChartBigIcon/dist/voussoir-icon-icons-barChartBigIcon.esm.js",
+      "default": "./icons/barChartBigIcon/dist/voussoir-icon-icons-barChartBigIcon.cjs.js"
     },
     "./icons/batteryFullIcon": {
       "types": "./icons/batteryFullIcon/dist/voussoir-icon-icons-batteryFullIcon.cjs.js",
@@ -3321,20 +4091,30 @@
       "module": "./icons/chevronLeftIcon/dist/voussoir-icon-icons-chevronLeftIcon.esm.js",
       "default": "./icons/chevronLeftIcon/dist/voussoir-icon-icons-chevronLeftIcon.cjs.js"
     },
+    "./icons/circleEqualIcon": {
+      "types": "./icons/circleEqualIcon/dist/voussoir-icon-icons-circleEqualIcon.cjs.js",
+      "module": "./icons/circleEqualIcon/dist/voussoir-icon-icons-circleEqualIcon.esm.js",
+      "default": "./icons/circleEqualIcon/dist/voussoir-icon-icons-circleEqualIcon.cjs.js"
+    },
+    "./icons/circleSlashIcon": {
+      "types": "./icons/circleSlashIcon/dist/voussoir-icon-icons-circleSlashIcon.cjs.js",
+      "module": "./icons/circleSlashIcon/dist/voussoir-icon-icons-circleSlashIcon.esm.js",
+      "default": "./icons/circleSlashIcon/dist/voussoir-icon-icons-circleSlashIcon.cjs.js"
+    },
     "./icons/codesandboxIcon": {
       "types": "./icons/codesandboxIcon/dist/voussoir-icon-icons-codesandboxIcon.cjs.js",
       "module": "./icons/codesandboxIcon/dist/voussoir-icon-icons-codesandboxIcon.esm.js",
       "default": "./icons/codesandboxIcon/dist/voussoir-icon-icons-codesandboxIcon.cjs.js"
     },
-    "./icons/curlyBracesIcon": {
-      "types": "./icons/curlyBracesIcon/dist/voussoir-icon-icons-curlyBracesIcon.cjs.js",
-      "module": "./icons/curlyBracesIcon/dist/voussoir-icon-icons-curlyBracesIcon.esm.js",
-      "default": "./icons/curlyBracesIcon/dist/voussoir-icon-icons-curlyBracesIcon.cjs.js"
-    },
     "./icons/fastForwardIcon": {
       "types": "./icons/fastForwardIcon/dist/voussoir-icon-icons-fastForwardIcon.cjs.js",
       "module": "./icons/fastForwardIcon/dist/voussoir-icon-icons-fastForwardIcon.esm.js",
       "default": "./icons/fastForwardIcon/dist/voussoir-icon-icons-fastForwardIcon.cjs.js"
+    },
+    "./icons/ferrisWheelIcon": {
+      "types": "./icons/ferrisWheelIcon/dist/voussoir-icon-icons-ferrisWheelIcon.cjs.js",
+      "module": "./icons/ferrisWheelIcon/dist/voussoir-icon-icons-ferrisWheelIcon.esm.js",
+      "default": "./icons/ferrisWheelIcon/dist/voussoir-icon-icons-ferrisWheelIcon.cjs.js"
     },
     "./icons/fileArchiveIcon": {
       "types": "./icons/fileArchiveIcon/dist/voussoir-icon-icons-fileArchiveIcon.cjs.js",
@@ -3406,6 +4186,11 @@
       "module": "./icons/indianRupeeIcon/dist/voussoir-icon-icons-indianRupeeIcon.esm.js",
       "default": "./icons/indianRupeeIcon/dist/voussoir-icon-icons-indianRupeeIcon.cjs.js"
     },
+    "./icons/iterationCwIcon": {
+      "types": "./icons/iterationCwIcon/dist/voussoir-icon-icons-iterationCwIcon.cjs.js",
+      "module": "./icons/iterationCwIcon/dist/voussoir-icon-icons-iterationCwIcon.esm.js",
+      "default": "./icons/iterationCwIcon/dist/voussoir-icon-icons-iterationCwIcon.cjs.js"
+    },
     "./icons/japaneseYenIcon": {
       "types": "./icons/japaneseYenIcon/dist/voussoir-icon-icons-japaneseYenIcon.cjs.js",
       "module": "./icons/japaneseYenIcon/dist/voussoir-icon-icons-japaneseYenIcon.esm.js",
@@ -3426,6 +4211,11 @@
       "module": "./icons/listOrderedIcon/dist/voussoir-icon-icons-listOrderedIcon.esm.js",
       "default": "./icons/listOrderedIcon/dist/voussoir-icon-icons-listOrderedIcon.cjs.js"
     },
+    "./icons/listRestartIcon": {
+      "types": "./icons/listRestartIcon/dist/voussoir-icon-icons-listRestartIcon.cjs.js",
+      "module": "./icons/listRestartIcon/dist/voussoir-icon-icons-listRestartIcon.esm.js",
+      "default": "./icons/listRestartIcon/dist/voussoir-icon-icons-listRestartIcon.cjs.js"
+    },
     "./icons/locateFixedIcon": {
       "types": "./icons/locateFixedIcon/dist/voussoir-icon-icons-locateFixedIcon.cjs.js",
       "module": "./icons/locateFixedIcon/dist/voussoir-icon-icons-locateFixedIcon.esm.js",
@@ -3436,6 +4226,11 @@
       "module": "./icons/mailWarningIcon/dist/voussoir-icon-icons-mailWarningIcon.esm.js",
       "default": "./icons/mailWarningIcon/dist/voussoir-icon-icons-mailWarningIcon.cjs.js"
     },
+    "./icons/memoryStickIcon": {
+      "types": "./icons/memoryStickIcon/dist/voussoir-icon-icons-memoryStickIcon.cjs.js",
+      "module": "./icons/memoryStickIcon/dist/voussoir-icon-icons-memoryStickIcon.esm.js",
+      "default": "./icons/memoryStickIcon/dist/voussoir-icon-icons-memoryStickIcon.cjs.js"
+    },
     "./icons/minusCircleIcon": {
       "types": "./icons/minusCircleIcon/dist/voussoir-icon-icons-minusCircleIcon.cjs.js",
       "module": "./icons/minusCircleIcon/dist/voussoir-icon-icons-minusCircleIcon.esm.js",
@@ -3445,6 +4240,26 @@
       "types": "./icons/minusSquareIcon/dist/voussoir-icon-icons-minusSquareIcon.cjs.js",
       "module": "./icons/minusSquareIcon/dist/voussoir-icon-icons-minusSquareIcon.esm.js",
       "default": "./icons/minusSquareIcon/dist/voussoir-icon-icons-minusSquareIcon.cjs.js"
+    },
+    "./icons/monitorDownIcon": {
+      "types": "./icons/monitorDownIcon/dist/voussoir-icon-icons-monitorDownIcon.cjs.js",
+      "module": "./icons/monitorDownIcon/dist/voussoir-icon-icons-monitorDownIcon.esm.js",
+      "default": "./icons/monitorDownIcon/dist/voussoir-icon-icons-monitorDownIcon.cjs.js"
+    },
+    "./icons/monitorPlayIcon": {
+      "types": "./icons/monitorPlayIcon/dist/voussoir-icon-icons-monitorPlayIcon.cjs.js",
+      "module": "./icons/monitorPlayIcon/dist/voussoir-icon-icons-monitorPlayIcon.esm.js",
+      "default": "./icons/monitorPlayIcon/dist/voussoir-icon-icons-monitorPlayIcon.cjs.js"
+    },
+    "./icons/monitorStopIcon": {
+      "types": "./icons/monitorStopIcon/dist/voussoir-icon-icons-monitorStopIcon.cjs.js",
+      "module": "./icons/monitorStopIcon/dist/voussoir-icon-icons-monitorStopIcon.esm.js",
+      "default": "./icons/monitorStopIcon/dist/voussoir-icon-icons-monitorStopIcon.cjs.js"
+    },
+    "./icons/moveUpRightIcon": {
+      "types": "./icons/moveUpRightIcon/dist/voussoir-icon-icons-moveUpRightIcon.cjs.js",
+      "module": "./icons/moveUpRightIcon/dist/voussoir-icon-icons-moveUpRightIcon.esm.js",
+      "default": "./icons/moveUpRightIcon/dist/voussoir-icon-icons-moveUpRightIcon.cjs.js"
     },
     "./icons/navigation2Icon": {
       "types": "./icons/navigation2Icon/dist/voussoir-icon-icons-navigation2Icon.cjs.js",
@@ -3471,6 +4286,16 @@
       "module": "./icons/paintbrush2Icon/dist/voussoir-icon-icons-paintbrush2Icon.esm.js",
       "default": "./icons/paintbrush2Icon/dist/voussoir-icon-icons-paintbrush2Icon.cjs.js"
     },
+    "./icons/panelBottomIcon": {
+      "types": "./icons/panelBottomIcon/dist/voussoir-icon-icons-panelBottomIcon.cjs.js",
+      "module": "./icons/panelBottomIcon/dist/voussoir-icon-icons-panelBottomIcon.esm.js",
+      "default": "./icons/panelBottomIcon/dist/voussoir-icon-icons-panelBottomIcon.cjs.js"
+    },
+    "./icons/parenthesesIcon": {
+      "types": "./icons/parenthesesIcon/dist/voussoir-icon-icons-parenthesesIcon.cjs.js",
+      "module": "./icons/parenthesesIcon/dist/voussoir-icon-icons-parenthesesIcon.esm.js",
+      "default": "./icons/parenthesesIcon/dist/voussoir-icon-icons-parenthesesIcon.cjs.js"
+    },
     "./icons/partyPopperIcon": {
       "types": "./icons/partyPopperIcon/dist/voussoir-icon-icons-partyPopperIcon.cjs.js",
       "module": "./icons/partyPopperIcon/dist/voussoir-icon-icons-partyPopperIcon.esm.js",
@@ -3486,10 +4311,25 @@
       "module": "./icons/phoneMissedIcon/dist/voussoir-icon-icons-phoneMissedIcon.esm.js",
       "default": "./icons/phoneMissedIcon/dist/voussoir-icon-icons-phoneMissedIcon.cjs.js"
     },
+    "./icons/pocketKnifeIcon": {
+      "types": "./icons/pocketKnifeIcon/dist/voussoir-icon-icons-pocketKnifeIcon.cjs.js",
+      "module": "./icons/pocketKnifeIcon/dist/voussoir-icon-icons-pocketKnifeIcon.esm.js",
+      "default": "./icons/pocketKnifeIcon/dist/voussoir-icon-icons-pocketKnifeIcon.cjs.js"
+    },
     "./icons/screenShareIcon": {
       "types": "./icons/screenShareIcon/dist/voussoir-icon-icons-screenShareIcon.cjs.js",
       "module": "./icons/screenShareIcon/dist/voussoir-icon-icons-screenShareIcon.esm.js",
       "default": "./icons/screenShareIcon/dist/voussoir-icon-icons-screenShareIcon.cjs.js"
+    },
+    "./icons/searchCheckIcon": {
+      "types": "./icons/searchCheckIcon/dist/voussoir-icon-icons-searchCheckIcon.cjs.js",
+      "module": "./icons/searchCheckIcon/dist/voussoir-icon-icons-searchCheckIcon.esm.js",
+      "default": "./icons/searchCheckIcon/dist/voussoir-icon-icons-searchCheckIcon.cjs.js"
+    },
+    "./icons/searchSlashIcon": {
+      "types": "./icons/searchSlashIcon/dist/voussoir-icon-icons-searchSlashIcon.cjs.js",
+      "module": "./icons/searchSlashIcon/dist/voussoir-icon-icons-searchSlashIcon.esm.js",
+      "default": "./icons/searchSlashIcon/dist/voussoir-icon-icons-searchSlashIcon.cjs.js"
     },
     "./icons/serverCrashIcon": {
       "types": "./icons/serverCrashIcon/dist/voussoir-icon-icons-serverCrashIcon.cjs.js",
@@ -3516,15 +4356,45 @@
       "module": "./icons/shoppingBagIcon/dist/voussoir-icon-icons-shoppingBagIcon.esm.js",
       "default": "./icons/shoppingBagIcon/dist/voussoir-icon-icons-shoppingBagIcon.cjs.js"
     },
-    "./icons/sidebarOpenIcon": {
-      "types": "./icons/sidebarOpenIcon/dist/voussoir-icon-icons-sidebarOpenIcon.cjs.js",
-      "module": "./icons/sidebarOpenIcon/dist/voussoir-icon-icons-sidebarOpenIcon.esm.js",
-      "default": "./icons/sidebarOpenIcon/dist/voussoir-icon-icons-sidebarOpenIcon.cjs.js"
+    "./icons/sigmaSquareIcon": {
+      "types": "./icons/sigmaSquareIcon/dist/voussoir-icon-icons-sigmaSquareIcon.cjs.js",
+      "module": "./icons/sigmaSquareIcon/dist/voussoir-icon-icons-sigmaSquareIcon.esm.js",
+      "default": "./icons/sigmaSquareIcon/dist/voussoir-icon-icons-sigmaSquareIcon.cjs.js"
     },
     "./icons/skipForwardIcon": {
       "types": "./icons/skipForwardIcon/dist/voussoir-icon-icons-skipForwardIcon.cjs.js",
       "module": "./icons/skipForwardIcon/dist/voussoir-icon-icons-skipForwardIcon.esm.js",
       "default": "./icons/skipForwardIcon/dist/voussoir-icon-icons-skipForwardIcon.cjs.js"
+    },
+    "./icons/spellCheck2Icon": {
+      "types": "./icons/spellCheck2Icon/dist/voussoir-icon-icons-spellCheck2Icon.cjs.js",
+      "module": "./icons/spellCheck2Icon/dist/voussoir-icon-icons-spellCheck2Icon.esm.js",
+      "default": "./icons/spellCheck2Icon/dist/voussoir-icon-icons-spellCheck2Icon.cjs.js"
+    },
+    "./icons/squareEqualIcon": {
+      "types": "./icons/squareEqualIcon/dist/voussoir-icon-icons-squareEqualIcon.cjs.js",
+      "module": "./icons/squareEqualIcon/dist/voussoir-icon-icons-squareEqualIcon.esm.js",
+      "default": "./icons/squareEqualIcon/dist/voussoir-icon-icons-squareEqualIcon.cjs.js"
+    },
+    "./icons/squareGanttIcon": {
+      "types": "./icons/squareGanttIcon/dist/voussoir-icon-icons-squareGanttIcon.cjs.js",
+      "module": "./icons/squareGanttIcon/dist/voussoir-icon-icons-squareGanttIcon.esm.js",
+      "default": "./icons/squareGanttIcon/dist/voussoir-icon-icons-squareGanttIcon.cjs.js"
+    },
+    "./icons/squareSlashIcon": {
+      "types": "./icons/squareSlashIcon/dist/voussoir-icon-icons-squareSlashIcon.cjs.js",
+      "module": "./icons/squareSlashIcon/dist/voussoir-icon-icons-squareSlashIcon.esm.js",
+      "default": "./icons/squareSlashIcon/dist/voussoir-icon-icons-squareSlashIcon.cjs.js"
+    },
+    "./icons/squareStackIcon": {
+      "types": "./icons/squareStackIcon/dist/voussoir-icon-icons-squareStackIcon.cjs.js",
+      "module": "./icons/squareStackIcon/dist/voussoir-icon-icons-squareStackIcon.esm.js",
+      "default": "./icons/squareStackIcon/dist/voussoir-icon-icons-squareStackIcon.cjs.js"
+    },
+    "./icons/stepForwardIcon": {
+      "types": "./icons/stepForwardIcon/dist/voussoir-icon-icons-stepForwardIcon.cjs.js",
+      "module": "./icons/stepForwardIcon/dist/voussoir-icon-icons-stepForwardIcon.esm.js",
+      "default": "./icons/stepForwardIcon/dist/voussoir-icon-icons-stepForwardIcon.cjs.js"
     },
     "./icons/stethoscopeIcon": {
       "types": "./icons/stethoscopeIcon/dist/voussoir-icon-icons-stethoscopeIcon.cjs.js",
@@ -3546,15 +4416,35 @@
       "module": "./icons/toggleRightIcon/dist/voussoir-icon-icons-toggleRightIcon.esm.js",
       "default": "./icons/toggleRightIcon/dist/voussoir-icon-icons-toggleRightIcon.cjs.js"
     },
+    "./icons/touchpadOffIcon": {
+      "types": "./icons/touchpadOffIcon/dist/voussoir-icon-icons-touchpadOffIcon.cjs.js",
+      "module": "./icons/touchpadOffIcon/dist/voussoir-icon-icons-touchpadOffIcon.esm.js",
+      "default": "./icons/touchpadOffIcon/dist/voussoir-icon-icons-touchpadOffIcon.cjs.js"
+    },
     "./icons/uploadCloudIcon": {
       "types": "./icons/uploadCloudIcon/dist/voussoir-icon-icons-uploadCloudIcon.cjs.js",
       "module": "./icons/uploadCloudIcon/dist/voussoir-icon-icons-uploadCloudIcon.esm.js",
       "default": "./icons/uploadCloudIcon/dist/voussoir-icon-icons-uploadCloudIcon.cjs.js"
     },
+    "./icons/userCircle2Icon": {
+      "types": "./icons/userCircle2Icon/dist/voussoir-icon-icons-userCircle2Icon.cjs.js",
+      "module": "./icons/userCircle2Icon/dist/voussoir-icon-icons-userCircle2Icon.esm.js",
+      "default": "./icons/userCircle2Icon/dist/voussoir-icon-icons-userCircle2Icon.cjs.js"
+    },
+    "./icons/userSquare2Icon": {
+      "types": "./icons/userSquare2Icon/dist/voussoir-icon-icons-userSquare2Icon.cjs.js",
+      "module": "./icons/userSquare2Icon/dist/voussoir-icon-icons-userSquare2Icon.esm.js",
+      "default": "./icons/userSquare2Icon/dist/voussoir-icon-icons-userSquare2Icon.cjs.js"
+    },
     "./icons/utilityPoleIcon": {
       "types": "./icons/utilityPoleIcon/dist/voussoir-icon-icons-utilityPoleIcon.cjs.js",
       "module": "./icons/utilityPoleIcon/dist/voussoir-icon-icons-utilityPoleIcon.esm.js",
       "default": "./icons/utilityPoleIcon/dist/voussoir-icon-icons-utilityPoleIcon.cjs.js"
+    },
+    "./icons/walletCardsIcon": {
+      "types": "./icons/walletCardsIcon/dist/voussoir-icon-icons-walletCardsIcon.cjs.js",
+      "module": "./icons/walletCardsIcon/dist/voussoir-icon-icons-walletCardsIcon.esm.js",
+      "default": "./icons/walletCardsIcon/dist/voussoir-icon-icons-walletCardsIcon.cjs.js"
     },
     "./icons/alertOctagonIcon": {
       "types": "./icons/alertOctagonIcon/dist/voussoir-icon-icons-alertOctagonIcon.cjs.js",
@@ -3581,6 +4471,11 @@
       "module": "./icons/arrowUpRightIcon/dist/voussoir-icon-icons-arrowUpRightIcon.esm.js",
       "default": "./icons/arrowUpRightIcon/dist/voussoir-icon-icons-arrowUpRightIcon.cjs.js"
     },
+    "./icons/badgePercentIcon": {
+      "types": "./icons/badgePercentIcon/dist/voussoir-icon-icons-badgePercentIcon.cjs.js",
+      "module": "./icons/badgePercentIcon/dist/voussoir-icon-icons-badgePercentIcon.esm.js",
+      "default": "./icons/badgePercentIcon/dist/voussoir-icon-icons-badgePercentIcon.cjs.js"
+    },
     "./icons/baggageClaimIcon": {
       "types": "./icons/baggageClaimIcon/dist/voussoir-icon-icons-baggageClaimIcon.cjs.js",
       "module": "./icons/baggageClaimIcon/dist/voussoir-icon-icons-baggageClaimIcon.esm.js",
@@ -3590,6 +4485,11 @@
       "types": "./icons/bluetoothOffIcon/dist/voussoir-icon-icons-bluetoothOffIcon.cjs.js",
       "module": "./icons/bluetoothOffIcon/dist/voussoir-icon-icons-bluetoothOffIcon.esm.js",
       "default": "./icons/bluetoothOffIcon/dist/voussoir-icon-icons-bluetoothOffIcon.cjs.js"
+    },
+    "./icons/bookTemplateIcon": {
+      "types": "./icons/bookTemplateIcon/dist/voussoir-icon-icons-bookTemplateIcon.cjs.js",
+      "module": "./icons/bookTemplateIcon/dist/voussoir-icon-icons-bookTemplateIcon.esm.js",
+      "default": "./icons/bookTemplateIcon/dist/voussoir-icon-icons-bookTemplateIcon.cjs.js"
     },
     "./icons/bookmarkPlusIcon": {
       "types": "./icons/bookmarkPlusIcon/dist/voussoir-icon-icons-bookmarkPlusIcon.cjs.js",
@@ -3610,6 +4510,11 @@
       "types": "./icons/calendarPlusIcon/dist/voussoir-icon-icons-calendarPlusIcon.cjs.js",
       "module": "./icons/calendarPlusIcon/dist/voussoir-icon-icons-calendarPlusIcon.esm.js",
       "default": "./icons/calendarPlusIcon/dist/voussoir-icon-icons-calendarPlusIcon.cjs.js"
+    },
+    "./icons/cassetteTapeIcon": {
+      "types": "./icons/cassetteTapeIcon/dist/voussoir-icon-icons-cassetteTapeIcon.cjs.js",
+      "module": "./icons/cassetteTapeIcon/dist/voussoir-icon-icons-cassetteTapeIcon.esm.js",
+      "default": "./icons/cassetteTapeIcon/dist/voussoir-icon-icons-cassetteTapeIcon.cjs.js"
     },
     "./icons/checkCircle2Icon": {
       "types": "./icons/checkCircle2Icon/dist/voussoir-icon-icons-checkCircle2Icon.cjs.js",
@@ -3640,6 +4545,21 @@
       "types": "./icons/cigaretteOffIcon/dist/voussoir-icon-icons-cigaretteOffIcon.cjs.js",
       "module": "./icons/cigaretteOffIcon/dist/voussoir-icon-icons-cigaretteOffIcon.esm.js",
       "default": "./icons/cigaretteOffIcon/dist/voussoir-icon-icons-cigaretteOffIcon.cjs.js"
+    },
+    "./icons/circleDashedIcon": {
+      "types": "./icons/circleDashedIcon/dist/voussoir-icon-icons-circleDashedIcon.cjs.js",
+      "module": "./icons/circleDashedIcon/dist/voussoir-icon-icons-circleDashedIcon.esm.js",
+      "default": "./icons/circleDashedIcon/dist/voussoir-icon-icons-circleDashedIcon.cjs.js"
+    },
+    "./icons/circleSlash2Icon": {
+      "types": "./icons/circleSlash2Icon/dist/voussoir-icon-icons-circleSlash2Icon.cjs.js",
+      "module": "./icons/circleSlash2Icon/dist/voussoir-icon-icons-circleSlash2Icon.esm.js",
+      "default": "./icons/circleSlash2Icon/dist/voussoir-icon-icons-circleSlash2Icon.cjs.js"
+    },
+    "./icons/circuitBoardIcon": {
+      "types": "./icons/circuitBoardIcon/dist/voussoir-icon-icons-circuitBoardIcon.cjs.js",
+      "module": "./icons/circuitBoardIcon/dist/voussoir-icon-icons-circuitBoardIcon.esm.js",
+      "default": "./icons/circuitBoardIcon/dist/voussoir-icon-icons-circuitBoardIcon.cjs.js"
     },
     "./icons/clapperboardIcon": {
       "types": "./icons/clapperboardIcon/dist/voussoir-icon-icons-clapperboardIcon.cjs.js",
@@ -3716,10 +4636,20 @@
       "module": "./icons/flipVerticalIcon/dist/voussoir-icon-icons-flipVerticalIcon.esm.js",
       "default": "./icons/flipVerticalIcon/dist/voussoir-icon-icons-flipVerticalIcon.cjs.js"
     },
+    "./icons/foldVerticalIcon": {
+      "types": "./icons/foldVerticalIcon/dist/voussoir-icon-icons-foldVerticalIcon.cjs.js",
+      "module": "./icons/foldVerticalIcon/dist/voussoir-icon-icons-foldVerticalIcon.esm.js",
+      "default": "./icons/foldVerticalIcon/dist/voussoir-icon-icons-foldVerticalIcon.cjs.js"
+    },
     "./icons/folderClosedIcon": {
       "types": "./icons/folderClosedIcon/dist/voussoir-icon-icons-folderClosedIcon.cjs.js",
       "module": "./icons/folderClosedIcon/dist/voussoir-icon-icons-folderClosedIcon.esm.js",
       "default": "./icons/folderClosedIcon/dist/voussoir-icon-icons-folderClosedIcon.cjs.js"
+    },
+    "./icons/folderKanbanIcon": {
+      "types": "./icons/folderKanbanIcon/dist/voussoir-icon-icons-folderKanbanIcon.cjs.js",
+      "module": "./icons/folderKanbanIcon/dist/voussoir-icon-icons-folderKanbanIcon.esm.js",
+      "default": "./icons/folderKanbanIcon/dist/voussoir-icon-icons-folderKanbanIcon.cjs.js"
     },
     "./icons/folderOutputIcon": {
       "types": "./icons/folderOutputIcon/dist/voussoir-icon-icons-folderOutputIcon.cjs.js",
@@ -3735,6 +4665,11 @@
       "types": "./icons/gripVerticalIcon/dist/voussoir-icon-icons-gripVerticalIcon.cjs.js",
       "module": "./icons/gripVerticalIcon/dist/voussoir-icon-icons-gripVerticalIcon.esm.js",
       "default": "./icons/gripVerticalIcon/dist/voussoir-icon-icons-gripVerticalIcon.cjs.js"
+    },
+    "./icons/iterationCcwIcon": {
+      "types": "./icons/iterationCcwIcon/dist/voussoir-icon-icons-iterationCcwIcon.cjs.js",
+      "module": "./icons/iterationCcwIcon/dist/voussoir-icon-icons-iterationCcwIcon.esm.js",
+      "default": "./icons/iterationCcwIcon/dist/voussoir-icon-icons-iterationCcwIcon.cjs.js"
     },
     "./icons/lampWallDownIcon": {
       "types": "./icons/lampWallDownIcon/dist/voussoir-icon-icons-lampWallDownIcon.cjs.js",
@@ -3756,6 +4691,16 @@
       "module": "./icons/megaphoneOffIcon/dist/voussoir-icon-icons-megaphoneOffIcon.esm.js",
       "default": "./icons/megaphoneOffIcon/dist/voussoir-icon-icons-megaphoneOffIcon.cjs.js"
     },
+    "./icons/monitorCheckIcon": {
+      "types": "./icons/monitorCheckIcon/dist/voussoir-icon-icons-monitorCheckIcon.cjs.js",
+      "module": "./icons/monitorCheckIcon/dist/voussoir-icon-icons-monitorCheckIcon.esm.js",
+      "default": "./icons/monitorCheckIcon/dist/voussoir-icon-icons-monitorCheckIcon.cjs.js"
+    },
+    "./icons/monitorPauseIcon": {
+      "types": "./icons/monitorPauseIcon/dist/voussoir-icon-icons-monitorPauseIcon.cjs.js",
+      "module": "./icons/monitorPauseIcon/dist/voussoir-icon-icons-monitorPauseIcon.esm.js",
+      "default": "./icons/monitorPauseIcon/dist/voussoir-icon-icons-monitorPauseIcon.cjs.js"
+    },
     "./icons/moreVerticalIcon": {
       "types": "./icons/moreVerticalIcon/dist/voussoir-icon-icons-moreVerticalIcon.cjs.js",
       "module": "./icons/moreVerticalIcon/dist/voussoir-icon-icons-moreVerticalIcon.esm.js",
@@ -3776,6 +4721,11 @@
       "module": "./icons/moveDiagonalIcon/dist/voussoir-icon-icons-moveDiagonalIcon.esm.js",
       "default": "./icons/moveDiagonalIcon/dist/voussoir-icon-icons-moveDiagonalIcon.cjs.js"
     },
+    "./icons/moveDownLeftIcon": {
+      "types": "./icons/moveDownLeftIcon/dist/voussoir-icon-icons-moveDownLeftIcon.cjs.js",
+      "module": "./icons/moveDownLeftIcon/dist/voussoir-icon-icons-moveDownLeftIcon.esm.js",
+      "default": "./icons/moveDownLeftIcon/dist/voussoir-icon-icons-moveDownLeftIcon.cjs.js"
+    },
     "./icons/moveVerticalIcon": {
       "types": "./icons/moveVerticalIcon/dist/voussoir-icon-icons-moveVerticalIcon.cjs.js",
       "module": "./icons/moveVerticalIcon/dist/voussoir-icon-icons-moveVerticalIcon.esm.js",
@@ -3791,10 +4741,35 @@
       "module": "./icons/packageMinusIcon/dist/voussoir-icon-icons-packageMinusIcon.esm.js",
       "default": "./icons/packageMinusIcon/dist/voussoir-icon-icons-packageMinusIcon.cjs.js"
     },
+    "./icons/panelTopOpenIcon": {
+      "types": "./icons/panelTopOpenIcon/dist/voussoir-icon-icons-panelTopOpenIcon.cjs.js",
+      "module": "./icons/panelTopOpenIcon/dist/voussoir-icon-icons-panelTopOpenIcon.esm.js",
+      "default": "./icons/panelTopOpenIcon/dist/voussoir-icon-icons-panelTopOpenIcon.cjs.js"
+    },
     "./icons/pauseOctagonIcon": {
       "types": "./icons/pauseOctagonIcon/dist/voussoir-icon-icons-pauseOctagonIcon.cjs.js",
       "module": "./icons/pauseOctagonIcon/dist/voussoir-icon-icons-pauseOctagonIcon.esm.js",
       "default": "./icons/pauseOctagonIcon/dist/voussoir-icon-icons-pauseOctagonIcon.cjs.js"
+    },
+    "./icons/planeLandingIcon": {
+      "types": "./icons/planeLandingIcon/dist/voussoir-icon-icons-planeLandingIcon.cjs.js",
+      "module": "./icons/planeLandingIcon/dist/voussoir-icon-icons-planeLandingIcon.esm.js",
+      "default": "./icons/planeLandingIcon/dist/voussoir-icon-icons-planeLandingIcon.cjs.js"
+    },
+    "./icons/planeTakeoffIcon": {
+      "types": "./icons/planeTakeoffIcon/dist/voussoir-icon-icons-planeTakeoffIcon.cjs.js",
+      "module": "./icons/planeTakeoffIcon/dist/voussoir-icon-icons-planeTakeoffIcon.esm.js",
+      "default": "./icons/planeTakeoffIcon/dist/voussoir-icon-icons-planeTakeoffIcon.cjs.js"
+    },
+    "./icons/presentationIcon": {
+      "types": "./icons/presentationIcon/dist/voussoir-icon-icons-presentationIcon.cjs.js",
+      "module": "./icons/presentationIcon/dist/voussoir-icon-icons-presentationIcon.esm.js",
+      "default": "./icons/presentationIcon/dist/voussoir-icon-icons-presentationIcon.cjs.js"
+    },
+    "./icons/refreshCwOffIcon": {
+      "types": "./icons/refreshCwOffIcon/dist/voussoir-icon-icons-refreshCwOffIcon.cjs.js",
+      "module": "./icons/refreshCwOffIcon/dist/voussoir-icon-icons-refreshCwOffIcon.esm.js",
+      "default": "./icons/refreshCwOffIcon/dist/voussoir-icon-icons-refreshCwOffIcon.cjs.js"
     },
     "./icons/refrigeratorIcon": {
       "types": "./icons/refrigeratorIcon/dist/voussoir-icon-icons-refrigeratorIcon.cjs.js",
@@ -3811,20 +4786,25 @@
       "module": "./icons/russianRubleIcon/dist/voussoir-icon-icons-russianRubleIcon.esm.js",
       "default": "./icons/russianRubleIcon/dist/voussoir-icon-icons-russianRubleIcon.cjs.js"
     },
+    "./icons/scatterChartIcon": {
+      "types": "./icons/scatterChartIcon/dist/voussoir-icon-icons-scatterChartIcon.cjs.js",
+      "module": "./icons/scatterChartIcon/dist/voussoir-icon-icons-scatterChartIcon.esm.js",
+      "default": "./icons/scatterChartIcon/dist/voussoir-icon-icons-scatterChartIcon.cjs.js"
+    },
     "./icons/shoppingCartIcon": {
       "types": "./icons/shoppingCartIcon/dist/voussoir-icon-icons-shoppingCartIcon.cjs.js",
       "module": "./icons/shoppingCartIcon/dist/voussoir-icon-icons-shoppingCartIcon.esm.js",
       "default": "./icons/shoppingCartIcon/dist/voussoir-icon-icons-shoppingCartIcon.cjs.js"
     },
-    "./icons/sidebarCloseIcon": {
-      "types": "./icons/sidebarCloseIcon/dist/voussoir-icon-icons-sidebarCloseIcon.cjs.js",
-      "module": "./icons/sidebarCloseIcon/dist/voussoir-icon-icons-sidebarCloseIcon.esm.js",
-      "default": "./icons/sidebarCloseIcon/dist/voussoir-icon-icons-sidebarCloseIcon.cjs.js"
-    },
     "./icons/signalMediumIcon": {
       "types": "./icons/signalMediumIcon/dist/voussoir-icon-icons-signalMediumIcon.cjs.js",
       "module": "./icons/signalMediumIcon/dist/voussoir-icon-icons-signalMediumIcon.esm.js",
       "default": "./icons/signalMediumIcon/dist/voussoir-icon-icons-signalMediumIcon.cjs.js"
+    },
+    "./icons/squareKanbanIcon": {
+      "types": "./icons/squareKanbanIcon/dist/voussoir-icon-icons-squareKanbanIcon.cjs.js",
+      "module": "./icons/squareKanbanIcon/dist/voussoir-icon-icons-squareKanbanIcon.esm.js",
+      "default": "./icons/squareKanbanIcon/dist/voussoir-icon-icons-squareKanbanIcon.cjs.js"
     },
     "./icons/switchCameraIcon": {
       "types": "./icons/switchCameraIcon/dist/voussoir-icon-icons-switchCameraIcon.cjs.js",
@@ -3876,6 +4856,16 @@
       "module": "./icons/arrowUpCircleIcon/dist/voussoir-icon-icons-arrowUpCircleIcon.esm.js",
       "default": "./icons/arrowUpCircleIcon/dist/voussoir-icon-icons-arrowUpCircleIcon.cjs.js"
     },
+    "./icons/arrowUpSquareIcon": {
+      "types": "./icons/arrowUpSquareIcon/dist/voussoir-icon-icons-arrowUpSquareIcon.cjs.js",
+      "module": "./icons/arrowUpSquareIcon/dist/voussoir-icon-icons-arrowUpSquareIcon.esm.js",
+      "default": "./icons/arrowUpSquareIcon/dist/voussoir-icon-icons-arrowUpSquareIcon.cjs.js"
+    },
+    "./icons/arrowUpToLineIcon": {
+      "types": "./icons/arrowUpToLineIcon/dist/voussoir-icon-icons-arrowUpToLineIcon.cjs.js",
+      "module": "./icons/arrowUpToLineIcon/dist/voussoir-icon-icons-arrowUpToLineIcon.esm.js",
+      "default": "./icons/arrowUpToLineIcon/dist/voussoir-icon-icons-arrowUpToLineIcon.cjs.js"
+    },
     "./icons/batteryMediumIcon": {
       "types": "./icons/batteryMediumIcon/dist/voussoir-icon-icons-batteryMediumIcon.cjs.js",
       "module": "./icons/batteryMediumIcon/dist/voussoir-icon-icons-batteryMediumIcon.esm.js",
@@ -3916,15 +4906,15 @@
       "module": "./icons/calendarRangeIcon/dist/voussoir-icon-icons-calendarRangeIcon.esm.js",
       "default": "./icons/calendarRangeIcon/dist/voussoir-icon-icons-calendarRangeIcon.cjs.js"
     },
+    "./icons/caseSensitiveIcon": {
+      "types": "./icons/caseSensitiveIcon/dist/voussoir-icon-icons-caseSensitiveIcon.cjs.js",
+      "module": "./icons/caseSensitiveIcon/dist/voussoir-icon-icons-caseSensitiveIcon.esm.js",
+      "default": "./icons/caseSensitiveIcon/dist/voussoir-icon-icons-caseSensitiveIcon.cjs.js"
+    },
     "./icons/chevronsRightIcon": {
       "types": "./icons/chevronsRightIcon/dist/voussoir-icon-icons-chevronsRightIcon.cjs.js",
       "module": "./icons/chevronsRightIcon/dist/voussoir-icon-icons-chevronsRightIcon.esm.js",
       "default": "./icons/chevronsRightIcon/dist/voussoir-icon-icons-chevronsRightIcon.cjs.js"
-    },
-    "./icons/circleSlashedIcon": {
-      "types": "./icons/circleSlashedIcon/dist/voussoir-icon-icons-circleSlashedIcon.cjs.js",
-      "module": "./icons/circleSlashedIcon/dist/voussoir-icon-icons-circleSlashedIcon.esm.js",
-      "default": "./icons/circleSlashedIcon/dist/voussoir-icon-icons-circleSlashedIcon.cjs.js"
     },
     "./icons/clipboardCopyIcon": {
       "types": "./icons/clipboardCopyIcon/dist/voussoir-icon-icons-clipboardCopyIcon.cjs.js",
@@ -4006,6 +4996,11 @@
       "module": "./icons/folderArchiveIcon/dist/voussoir-icon-icons-folderArchiveIcon.esm.js",
       "default": "./icons/folderArchiveIcon/dist/voussoir-icon-icons-folderArchiveIcon.cjs.js"
     },
+    "./icons/folderOpenDotIcon": {
+      "types": "./icons/folderOpenDotIcon/dist/voussoir-icon-icons-folderOpenDotIcon.cjs.js",
+      "module": "./icons/folderOpenDotIcon/dist/voussoir-icon-icons-folderOpenDotIcon.esm.js",
+      "default": "./icons/folderOpenDotIcon/dist/voussoir-icon-icons-folderOpenDotIcon.cjs.js"
+    },
     "./icons/folderSearch2Icon": {
       "types": "./icons/folderSearch2Icon/dist/voussoir-icon-icons-folderSearch2Icon.cjs.js",
       "module": "./icons/folderSearch2Icon/dist/voussoir-icon-icons-folderSearch2Icon.esm.js",
@@ -4046,6 +5041,11 @@
       "module": "./icons/moveDiagonal2Icon/dist/voussoir-icon-icons-moveDiagonal2Icon.esm.js",
       "default": "./icons/moveDiagonal2Icon/dist/voussoir-icon-icons-moveDiagonal2Icon.cjs.js"
     },
+    "./icons/moveDownRightIcon": {
+      "types": "./icons/moveDownRightIcon/dist/voussoir-icon-icons-moveDownRightIcon.cjs.js",
+      "module": "./icons/moveDownRightIcon/dist/voussoir-icon-icons-moveDownRightIcon.esm.js",
+      "default": "./icons/moveDownRightIcon/dist/voussoir-icon-icons-moveDownRightIcon.cjs.js"
+    },
     "./icons/navigationOffIcon": {
       "types": "./icons/navigationOffIcon/dist/voussoir-icon-icons-navigationOffIcon.cjs.js",
       "module": "./icons/navigationOffIcon/dist/voussoir-icon-icons-navigationOffIcon.esm.js",
@@ -4055,6 +5055,16 @@
       "types": "./icons/packageSearchIcon/dist/voussoir-icon-icons-packageSearchIcon.cjs.js",
       "module": "./icons/packageSearchIcon/dist/voussoir-icon-icons-packageSearchIcon.esm.js",
       "default": "./icons/packageSearchIcon/dist/voussoir-icon-icons-packageSearchIcon.cjs.js"
+    },
+    "./icons/panelLeftOpenIcon": {
+      "types": "./icons/panelLeftOpenIcon/dist/voussoir-icon-icons-panelLeftOpenIcon.cjs.js",
+      "module": "./icons/panelLeftOpenIcon/dist/voussoir-icon-icons-panelLeftOpenIcon.esm.js",
+      "default": "./icons/panelLeftOpenIcon/dist/voussoir-icon-icons-panelLeftOpenIcon.cjs.js"
+    },
+    "./icons/panelTopCloseIcon": {
+      "types": "./icons/panelTopCloseIcon/dist/voussoir-icon-icons-panelTopCloseIcon.cjs.js",
+      "module": "./icons/panelTopCloseIcon/dist/voussoir-icon-icons-panelTopCloseIcon.esm.js",
+      "default": "./icons/panelTopCloseIcon/dist/voussoir-icon-icons-panelTopCloseIcon.cjs.js"
     },
     "./icons/parkingCircleIcon": {
       "types": "./icons/parkingCircleIcon/dist/voussoir-icon-icons-parkingCircleIcon.cjs.js",
@@ -4076,6 +5086,11 @@
       "module": "./icons/phoneOutgoingIcon/dist/voussoir-icon-icons-phoneOutgoingIcon.esm.js",
       "default": "./icons/phoneOutgoingIcon/dist/voussoir-icon-icons-phoneOutgoingIcon.cjs.js"
     },
+    "./icons/pilcrowSquareIcon": {
+      "types": "./icons/pilcrowSquareIcon/dist/voussoir-icon-icons-pilcrowSquareIcon.cjs.js",
+      "module": "./icons/pilcrowSquareIcon/dist/voussoir-icon-icons-pilcrowSquareIcon.esm.js",
+      "default": "./icons/pilcrowSquareIcon/dist/voussoir-icon-icons-pilcrowSquareIcon.cjs.js"
+    },
     "./icons/poundSterlingIcon": {
       "types": "./icons/poundSterlingIcon/dist/voussoir-icon-icons-poundSterlingIcon.cjs.js",
       "module": "./icons/poundSterlingIcon/dist/voussoir-icon-icons-poundSterlingIcon.esm.js",
@@ -4085,6 +5100,21 @@
       "types": "./icons/radioReceiverIcon/dist/voussoir-icon-icons-radioReceiverIcon.cjs.js",
       "module": "./icons/radioReceiverIcon/dist/voussoir-icon-icons-radioReceiverIcon.esm.js",
       "default": "./icons/radioReceiverIcon/dist/voussoir-icon-icons-radioReceiverIcon.cjs.js"
+    },
+    "./icons/refreshCcwDotIcon": {
+      "types": "./icons/refreshCcwDotIcon/dist/voussoir-icon-icons-refreshCcwDotIcon.cjs.js",
+      "module": "./icons/refreshCcwDotIcon/dist/voussoir-icon-icons-refreshCcwDotIcon.esm.js",
+      "default": "./icons/refreshCcwDotIcon/dist/voussoir-icon-icons-refreshCcwDotIcon.cjs.js"
+    },
+    "./icons/rollerCoasterIcon": {
+      "types": "./icons/rollerCoasterIcon/dist/voussoir-icon-icons-rollerCoasterIcon.cjs.js",
+      "module": "./icons/rollerCoasterIcon/dist/voussoir-icon-icons-rollerCoasterIcon.esm.js",
+      "default": "./icons/rollerCoasterIcon/dist/voussoir-icon-icons-rollerCoasterIcon.cjs.js"
+    },
+    "./icons/satelliteDishIcon": {
+      "types": "./icons/satelliteDishIcon/dist/voussoir-icon-icons-satelliteDishIcon.cjs.js",
+      "module": "./icons/satelliteDishIcon/dist/voussoir-icon-icons-satelliteDishIcon.esm.js",
+      "default": "./icons/satelliteDishIcon/dist/voussoir-icon-icons-satelliteDishIcon.cjs.js"
     },
     "./icons/smartphoneNfcIcon": {
       "types": "./icons/smartphoneNfcIcon/dist/voussoir-icon-icons-smartphoneNfcIcon.cjs.js",
@@ -4101,20 +5131,45 @@
       "module": "./icons/treeDeciduousIcon/dist/voussoir-icon-icons-treeDeciduousIcon.esm.js",
       "default": "./icons/treeDeciduousIcon/dist/voussoir-icon-icons-treeDeciduousIcon.cjs.js"
     },
+    "./icons/activitySquareIcon": {
+      "types": "./icons/activitySquareIcon/dist/voussoir-icon-icons-activitySquareIcon.cjs.js",
+      "module": "./icons/activitySquareIcon/dist/voussoir-icon-icons-activitySquareIcon.esm.js",
+      "default": "./icons/activitySquareIcon/dist/voussoir-icon-icons-activitySquareIcon.cjs.js"
+    },
     "./icons/archiveRestoreIcon": {
       "types": "./icons/archiveRestoreIcon/dist/voussoir-icon-icons-archiveRestoreIcon.cjs.js",
       "module": "./icons/archiveRestoreIcon/dist/voussoir-icon-icons-archiveRestoreIcon.esm.js",
       "default": "./icons/archiveRestoreIcon/dist/voussoir-icon-icons-archiveRestoreIcon.cjs.js"
+    },
+    "./icons/arrowBigUpDashIcon": {
+      "types": "./icons/arrowBigUpDashIcon/dist/voussoir-icon-icons-arrowBigUpDashIcon.cjs.js",
+      "module": "./icons/arrowBigUpDashIcon/dist/voussoir-icon-icons-arrowBigUpDashIcon.esm.js",
+      "default": "./icons/arrowBigUpDashIcon/dist/voussoir-icon-icons-arrowBigUpDashIcon.cjs.js"
     },
     "./icons/arrowDownRightIcon": {
       "types": "./icons/arrowDownRightIcon/dist/voussoir-icon-icons-arrowDownRightIcon.cjs.js",
       "module": "./icons/arrowDownRightIcon/dist/voussoir-icon-icons-arrowDownRightIcon.esm.js",
       "default": "./icons/arrowDownRightIcon/dist/voussoir-icon-icons-arrowDownRightIcon.cjs.js"
     },
+    "./icons/arrowDownToDotIcon": {
+      "types": "./icons/arrowDownToDotIcon/dist/voussoir-icon-icons-arrowDownToDotIcon.cjs.js",
+      "module": "./icons/arrowDownToDotIcon/dist/voussoir-icon-icons-arrowDownToDotIcon.esm.js",
+      "default": "./icons/arrowDownToDotIcon/dist/voussoir-icon-icons-arrowDownToDotIcon.cjs.js"
+    },
     "./icons/arrowLeftRightIcon": {
       "types": "./icons/arrowLeftRightIcon/dist/voussoir-icon-icons-arrowLeftRightIcon.cjs.js",
       "module": "./icons/arrowLeftRightIcon/dist/voussoir-icon-icons-arrowLeftRightIcon.esm.js",
       "default": "./icons/arrowLeftRightIcon/dist/voussoir-icon-icons-arrowLeftRightIcon.cjs.js"
+    },
+    "./icons/arrowRightLeftIcon": {
+      "types": "./icons/arrowRightLeftIcon/dist/voussoir-icon-icons-arrowRightLeftIcon.cjs.js",
+      "module": "./icons/arrowRightLeftIcon/dist/voussoir-icon-icons-arrowRightLeftIcon.esm.js",
+      "default": "./icons/arrowRightLeftIcon/dist/voussoir-icon-icons-arrowRightLeftIcon.cjs.js"
+    },
+    "./icons/arrowUpFromDotIcon": {
+      "types": "./icons/arrowUpFromDotIcon/dist/voussoir-icon-icons-arrowUpFromDotIcon.cjs.js",
+      "module": "./icons/arrowUpFromDotIcon/dist/voussoir-icon-icons-arrowUpFromDotIcon.esm.js",
+      "default": "./icons/arrowUpFromDotIcon/dist/voussoir-icon-icons-arrowUpFromDotIcon.cjs.js"
     },
     "./icons/batteryWarningIcon": {
       "types": "./icons/batteryWarningIcon/dist/voussoir-icon-icons-batteryWarningIcon.cjs.js",
@@ -4151,6 +5206,11 @@
       "module": "./icons/clipboardCheckIcon/dist/voussoir-icon-icons-clipboardCheckIcon.esm.js",
       "default": "./icons/clipboardCheckIcon/dist/voussoir-icon-icons-clipboardCheckIcon.cjs.js"
     },
+    "./icons/clipboardPasteIcon": {
+      "types": "./icons/clipboardPasteIcon/dist/voussoir-icon-icons-clipboardPasteIcon.cjs.js",
+      "module": "./icons/clipboardPasteIcon/dist/voussoir-icon-icons-clipboardPasteIcon.esm.js",
+      "default": "./icons/clipboardPasteIcon/dist/voussoir-icon-icons-clipboardPasteIcon.cjs.js"
+    },
     "./icons/cloudLightningIcon": {
       "types": "./icons/cloudLightningIcon/dist/voussoir-icon-icons-cloudLightningIcon.cjs.js",
       "module": "./icons/cloudLightningIcon/dist/voussoir-icon-icons-cloudLightningIcon.esm.js",
@@ -4176,6 +5236,11 @@
       "module": "./icons/flipHorizontalIcon/dist/voussoir-icon-icons-flipHorizontalIcon.esm.js",
       "default": "./icons/flipHorizontalIcon/dist/voussoir-icon-icons-flipHorizontalIcon.cjs.js"
     },
+    "./icons/foldHorizontalIcon": {
+      "types": "./icons/foldHorizontalIcon/dist/voussoir-icon-icons-foldHorizontalIcon.cjs.js",
+      "module": "./icons/foldHorizontalIcon/dist/voussoir-icon-icons-foldHorizontalIcon.esm.js",
+      "default": "./icons/foldHorizontalIcon/dist/voussoir-icon-icons-foldHorizontalIcon.cjs.js"
+    },
     "./icons/functionSquareIcon": {
       "types": "./icons/functionSquareIcon/dist/voussoir-icon-icons-functionSquareIcon.cjs.js",
       "module": "./icons/functionSquareIcon/dist/voussoir-icon-icons-functionSquareIcon.esm.js",
@@ -4196,10 +5261,20 @@
       "module": "./icons/heartHandshakeIcon/dist/voussoir-icon-icons-heartHandshakeIcon.esm.js",
       "default": "./icons/heartHandshakeIcon/dist/voussoir-icon-icons-heartHandshakeIcon.cjs.js"
     },
+    "./icons/layoutPanelTopIcon": {
+      "types": "./icons/layoutPanelTopIcon/dist/voussoir-icon-icons-layoutPanelTopIcon.cjs.js",
+      "module": "./icons/layoutPanelTopIcon/dist/voussoir-icon-icons-layoutPanelTopIcon.esm.js",
+      "default": "./icons/layoutPanelTopIcon/dist/voussoir-icon-icons-layoutPanelTopIcon.cjs.js"
+    },
     "./icons/layoutTemplateIcon": {
       "types": "./icons/layoutTemplateIcon/dist/voussoir-icon-icons-layoutTemplateIcon.cjs.js",
       "module": "./icons/layoutTemplateIcon/dist/voussoir-icon-icons-layoutTemplateIcon.esm.js",
       "default": "./icons/layoutTemplateIcon/dist/voussoir-icon-icons-layoutTemplateIcon.cjs.js"
+    },
+    "./icons/messagesSquareIcon": {
+      "types": "./icons/messagesSquareIcon/dist/voussoir-icon-icons-messagesSquareIcon.cjs.js",
+      "module": "./icons/messagesSquareIcon/dist/voussoir-icon-icons-messagesSquareIcon.esm.js",
+      "default": "./icons/messagesSquareIcon/dist/voussoir-icon-icons-messagesSquareIcon.cjs.js"
     },
     "./icons/monitorSpeakerIcon": {
       "types": "./icons/monitorSpeakerIcon/dist/voussoir-icon-icons-monitorSpeakerIcon.cjs.js",
@@ -4221,6 +5296,16 @@
       "module": "./icons/navigation2OffIcon/dist/voussoir-icon-icons-navigation2OffIcon.esm.js",
       "default": "./icons/navigation2OffIcon/dist/voussoir-icon-icons-navigation2OffIcon.cjs.js"
     },
+    "./icons/panelLeftCloseIcon": {
+      "types": "./icons/panelLeftCloseIcon/dist/voussoir-icon-icons-panelLeftCloseIcon.cjs.js",
+      "module": "./icons/panelLeftCloseIcon/dist/voussoir-icon-icons-panelLeftCloseIcon.esm.js",
+      "default": "./icons/panelLeftCloseIcon/dist/voussoir-icon-icons-panelLeftCloseIcon.cjs.js"
+    },
+    "./icons/panelRightOpenIcon": {
+      "types": "./icons/panelRightOpenIcon/dist/voussoir-icon-icons-panelRightOpenIcon.cjs.js",
+      "module": "./icons/panelRightOpenIcon/dist/voussoir-icon-icons-panelRightOpenIcon.esm.js",
+      "default": "./icons/panelRightOpenIcon/dist/voussoir-icon-icons-panelRightOpenIcon.cjs.js"
+    },
     "./icons/personStandingIcon": {
       "types": "./icons/personStandingIcon/dist/voussoir-icon-icons-personStandingIcon.cjs.js",
       "module": "./icons/personStandingIcon/dist/voussoir-icon-icons-personStandingIcon.esm.js",
@@ -4236,6 +5321,16 @@
       "module": "./icons/screenShareOffIcon/dist/voussoir-icon-icons-screenShareOffIcon.esm.js",
       "default": "./icons/screenShareOffIcon/dist/voussoir-icon-icons-screenShareOffIcon.cjs.js"
     },
+    "./icons/shieldQuestionIcon": {
+      "types": "./icons/shieldQuestionIcon/dist/voussoir-icon-icons-shieldQuestionIcon.cjs.js",
+      "module": "./icons/shieldQuestionIcon/dist/voussoir-icon-icons-shieldQuestionIcon.esm.js",
+      "default": "./icons/shieldQuestionIcon/dist/voussoir-icon-icons-shieldQuestionIcon.cjs.js"
+    },
+    "./icons/squareAsteriskIcon": {
+      "types": "./icons/squareAsteriskIcon/dist/voussoir-icon-icons-squareAsteriskIcon.cjs.js",
+      "module": "./icons/squareAsteriskIcon/dist/voussoir-icon-icons-squareAsteriskIcon.esm.js",
+      "default": "./icons/squareAsteriskIcon/dist/voussoir-icon-icons-squareAsteriskIcon.cjs.js"
+    },
     "./icons/terminalSquareIcon": {
       "types": "./icons/terminalSquareIcon/dist/voussoir-icon-icons-terminalSquareIcon.cjs.js",
       "module": "./icons/terminalSquareIcon/dist/voussoir-icon-icons-terminalSquareIcon.esm.js",
@@ -4246,20 +5341,65 @@
       "module": "./icons/thermometerSunIcon/dist/voussoir-icon-icons-thermometerSunIcon.esm.js",
       "default": "./icons/thermometerSunIcon/dist/voussoir-icon-icons-thermometerSunIcon.cjs.js"
     },
+    "./icons/unfoldVerticalIcon": {
+      "types": "./icons/unfoldVerticalIcon/dist/voussoir-icon-icons-unfoldVerticalIcon.cjs.js",
+      "module": "./icons/unfoldVerticalIcon/dist/voussoir-icon-icons-unfoldVerticalIcon.esm.js",
+      "default": "./icons/unfoldVerticalIcon/dist/voussoir-icon-icons-unfoldVerticalIcon.cjs.js"
+    },
     "./icons/arrowDownCircleIcon": {
       "types": "./icons/arrowDownCircleIcon/dist/voussoir-icon-icons-arrowDownCircleIcon.cjs.js",
       "module": "./icons/arrowDownCircleIcon/dist/voussoir-icon-icons-arrowDownCircleIcon.esm.js",
       "default": "./icons/arrowDownCircleIcon/dist/voussoir-icon-icons-arrowDownCircleIcon.cjs.js"
+    },
+    "./icons/arrowDownSquareIcon": {
+      "types": "./icons/arrowDownSquareIcon/dist/voussoir-icon-icons-arrowDownSquareIcon.cjs.js",
+      "module": "./icons/arrowDownSquareIcon/dist/voussoir-icon-icons-arrowDownSquareIcon.esm.js",
+      "default": "./icons/arrowDownSquareIcon/dist/voussoir-icon-icons-arrowDownSquareIcon.cjs.js"
+    },
+    "./icons/arrowDownToLineIcon": {
+      "types": "./icons/arrowDownToLineIcon/dist/voussoir-icon-icons-arrowDownToLineIcon.cjs.js",
+      "module": "./icons/arrowDownToLineIcon/dist/voussoir-icon-icons-arrowDownToLineIcon.esm.js",
+      "default": "./icons/arrowDownToLineIcon/dist/voussoir-icon-icons-arrowDownToLineIcon.cjs.js"
     },
     "./icons/arrowLeftCircleIcon": {
       "types": "./icons/arrowLeftCircleIcon/dist/voussoir-icon-icons-arrowLeftCircleIcon.cjs.js",
       "module": "./icons/arrowLeftCircleIcon/dist/voussoir-icon-icons-arrowLeftCircleIcon.esm.js",
       "default": "./icons/arrowLeftCircleIcon/dist/voussoir-icon-icons-arrowLeftCircleIcon.cjs.js"
     },
+    "./icons/arrowLeftSquareIcon": {
+      "types": "./icons/arrowLeftSquareIcon/dist/voussoir-icon-icons-arrowLeftSquareIcon.cjs.js",
+      "module": "./icons/arrowLeftSquareIcon/dist/voussoir-icon-icons-arrowLeftSquareIcon.esm.js",
+      "default": "./icons/arrowLeftSquareIcon/dist/voussoir-icon-icons-arrowLeftSquareIcon.cjs.js"
+    },
+    "./icons/arrowLeftToLineIcon": {
+      "types": "./icons/arrowLeftToLineIcon/dist/voussoir-icon-icons-arrowLeftToLineIcon.cjs.js",
+      "module": "./icons/arrowLeftToLineIcon/dist/voussoir-icon-icons-arrowLeftToLineIcon.esm.js",
+      "default": "./icons/arrowLeftToLineIcon/dist/voussoir-icon-icons-arrowLeftToLineIcon.cjs.js"
+    },
+    "./icons/arrowUpFromLineIcon": {
+      "types": "./icons/arrowUpFromLineIcon/dist/voussoir-icon-icons-arrowUpFromLineIcon.cjs.js",
+      "module": "./icons/arrowUpFromLineIcon/dist/voussoir-icon-icons-arrowUpFromLineIcon.esm.js",
+      "default": "./icons/arrowUpFromLineIcon/dist/voussoir-icon-icons-arrowUpFromLineIcon.cjs.js"
+    },
+    "./icons/badgeDollarSignIcon": {
+      "types": "./icons/badgeDollarSignIcon/dist/voussoir-icon-icons-badgeDollarSignIcon.cjs.js",
+      "module": "./icons/badgeDollarSignIcon/dist/voussoir-icon-icons-badgeDollarSignIcon.esm.js",
+      "default": "./icons/badgeDollarSignIcon/dist/voussoir-icon-icons-badgeDollarSignIcon.cjs.js"
+    },
     "./icons/batteryChargingIcon": {
       "types": "./icons/batteryChargingIcon/dist/voussoir-icon-icons-batteryChargingIcon.cjs.js",
       "module": "./icons/batteryChargingIcon/dist/voussoir-icon-icons-batteryChargingIcon.esm.js",
       "default": "./icons/batteryChargingIcon/dist/voussoir-icon-icons-batteryChargingIcon.cjs.js"
+    },
+    "./icons/chevronUpSquareIcon": {
+      "types": "./icons/chevronUpSquareIcon/dist/voussoir-icon-icons-chevronUpSquareIcon.cjs.js",
+      "module": "./icons/chevronUpSquareIcon/dist/voussoir-icon-icons-chevronUpSquareIcon.esm.js",
+      "default": "./icons/chevronUpSquareIcon/dist/voussoir-icon-icons-chevronUpSquareIcon.cjs.js"
+    },
+    "./icons/circleDotDashedIcon": {
+      "types": "./icons/circleDotDashedIcon/dist/voussoir-icon-icons-circleDotDashedIcon.cjs.js",
+      "module": "./icons/circleDotDashedIcon/dist/voussoir-icon-icons-circleDotDashedIcon.esm.js",
+      "default": "./icons/circleDotDashedIcon/dist/voussoir-icon-icons-circleDotDashedIcon.cjs.js"
     },
     "./icons/cornerDownRightIcon": {
       "types": "./icons/cornerDownRightIcon/dist/voussoir-icon-icons-cornerDownRightIcon.cjs.js",
@@ -4296,6 +5436,21 @@
       "module": "./icons/layoutDashboardIcon/dist/voussoir-icon-icons-layoutDashboardIcon.esm.js",
       "default": "./icons/layoutDashboardIcon/dist/voussoir-icon-icons-layoutDashboardIcon.cjs.js"
     },
+    "./icons/layoutPanelLeftIcon": {
+      "types": "./icons/layoutPanelLeftIcon/dist/voussoir-icon-icons-layoutPanelLeftIcon.cjs.js",
+      "module": "./icons/layoutPanelLeftIcon/dist/voussoir-icon-icons-layoutPanelLeftIcon.esm.js",
+      "default": "./icons/layoutPanelLeftIcon/dist/voussoir-icon-icons-layoutPanelLeftIcon.cjs.js"
+    },
+    "./icons/panelBottomOpenIcon": {
+      "types": "./icons/panelBottomOpenIcon/dist/voussoir-icon-icons-panelBottomOpenIcon.cjs.js",
+      "module": "./icons/panelBottomOpenIcon/dist/voussoir-icon-icons-panelBottomOpenIcon.esm.js",
+      "default": "./icons/panelBottomOpenIcon/dist/voussoir-icon-icons-panelBottomOpenIcon.cjs.js"
+    },
+    "./icons/panelRightCloseIcon": {
+      "types": "./icons/panelRightCloseIcon/dist/voussoir-icon-icons-panelRightCloseIcon.cjs.js",
+      "module": "./icons/panelRightCloseIcon/dist/voussoir-icon-icons-panelRightCloseIcon.esm.js",
+      "default": "./icons/panelRightCloseIcon/dist/voussoir-icon-icons-panelRightCloseIcon.cjs.js"
+    },
     "./icons/stretchVerticalIcon": {
       "types": "./icons/stretchVerticalIcon/dist/voussoir-icon-icons-stretchVerticalIcon.cjs.js",
       "module": "./icons/stretchVerticalIcon/dist/voussoir-icon-icons-stretchVerticalIcon.esm.js",
@@ -4316,15 +5471,55 @@
       "module": "./icons/alignEndVerticalIcon/dist/voussoir-icon-icons-alignEndVerticalIcon.esm.js",
       "default": "./icons/alignEndVerticalIcon/dist/voussoir-icon-icons-alignEndVerticalIcon.cjs.js"
     },
+    "./icons/arrowBigDownDashIcon": {
+      "types": "./icons/arrowBigDownDashIcon/dist/voussoir-icon-icons-arrowBigDownDashIcon.cjs.js",
+      "module": "./icons/arrowBigDownDashIcon/dist/voussoir-icon-icons-arrowBigDownDashIcon.esm.js",
+      "default": "./icons/arrowBigDownDashIcon/dist/voussoir-icon-icons-arrowBigDownDashIcon.cjs.js"
+    },
+    "./icons/arrowBigLeftDashIcon": {
+      "types": "./icons/arrowBigLeftDashIcon/dist/voussoir-icon-icons-arrowBigLeftDashIcon.cjs.js",
+      "module": "./icons/arrowBigLeftDashIcon/dist/voussoir-icon-icons-arrowBigLeftDashIcon.esm.js",
+      "default": "./icons/arrowBigLeftDashIcon/dist/voussoir-icon-icons-arrowBigLeftDashIcon.cjs.js"
+    },
     "./icons/arrowRightCircleIcon": {
       "types": "./icons/arrowRightCircleIcon/dist/voussoir-icon-icons-arrowRightCircleIcon.cjs.js",
       "module": "./icons/arrowRightCircleIcon/dist/voussoir-icon-icons-arrowRightCircleIcon.esm.js",
       "default": "./icons/arrowRightCircleIcon/dist/voussoir-icon-icons-arrowRightCircleIcon.cjs.js"
     },
+    "./icons/arrowRightSquareIcon": {
+      "types": "./icons/arrowRightSquareIcon/dist/voussoir-icon-icons-arrowRightSquareIcon.cjs.js",
+      "module": "./icons/arrowRightSquareIcon/dist/voussoir-icon-icons-arrowRightSquareIcon.esm.js",
+      "default": "./icons/arrowRightSquareIcon/dist/voussoir-icon-icons-arrowRightSquareIcon.cjs.js"
+    },
+    "./icons/arrowRightToLineIcon": {
+      "types": "./icons/arrowRightToLineIcon/dist/voussoir-icon-icons-arrowRightToLineIcon.cjs.js",
+      "module": "./icons/arrowRightToLineIcon/dist/voussoir-icon-icons-arrowRightToLineIcon.esm.js",
+      "default": "./icons/arrowRightToLineIcon/dist/voussoir-icon-icons-arrowRightToLineIcon.cjs.js"
+    },
+    "./icons/candlestickChartIcon": {
+      "types": "./icons/candlestickChartIcon/dist/voussoir-icon-icons-candlestickChartIcon.cjs.js",
+      "module": "./icons/candlestickChartIcon/dist/voussoir-icon-icons-candlestickChartIcon.esm.js",
+      "default": "./icons/candlestickChartIcon/dist/voussoir-icon-icons-candlestickChartIcon.cjs.js"
+    },
+    "./icons/circleDollarSignIcon": {
+      "types": "./icons/circleDollarSignIcon/dist/voussoir-icon-icons-circleDollarSignIcon.cjs.js",
+      "module": "./icons/circleDollarSignIcon/dist/voussoir-icon-icons-circleDollarSignIcon.esm.js",
+      "default": "./icons/circleDollarSignIcon/dist/voussoir-icon-icons-circleDollarSignIcon.cjs.js"
+    },
     "./icons/flagTriangleLeftIcon": {
       "types": "./icons/flagTriangleLeftIcon/dist/voussoir-icon-icons-flagTriangleLeftIcon.cjs.js",
       "module": "./icons/flagTriangleLeftIcon/dist/voussoir-icon-icons-flagTriangleLeftIcon.esm.js",
       "default": "./icons/flagTriangleLeftIcon/dist/voussoir-icon-icons-flagTriangleLeftIcon.cjs.js"
+    },
+    "./icons/panelBottomCloseIcon": {
+      "types": "./icons/panelBottomCloseIcon/dist/voussoir-icon-icons-panelBottomCloseIcon.cjs.js",
+      "module": "./icons/panelBottomCloseIcon/dist/voussoir-icon-icons-panelBottomCloseIcon.esm.js",
+      "default": "./icons/panelBottomCloseIcon/dist/voussoir-icon-icons-panelBottomCloseIcon.cjs.js"
+    },
+    "./icons/panelTopInactiveIcon": {
+      "types": "./icons/panelTopInactiveIcon/dist/voussoir-icon-icons-panelTopInactiveIcon.cjs.js",
+      "module": "./icons/panelTopInactiveIcon/dist/voussoir-icon-icons-panelTopInactiveIcon.esm.js",
+      "default": "./icons/panelTopInactiveIcon/dist/voussoir-icon-icons-panelTopInactiveIcon.cjs.js"
     },
     "./icons/parkingCircleOffIcon": {
       "types": "./icons/parkingCircleOffIcon/dist/voussoir-icon-icons-parkingCircleOffIcon.cjs.js",
@@ -4346,6 +5541,51 @@
       "module": "./icons/removeFormattingIcon/dist/voussoir-icon-icons-removeFormattingIcon.esm.js",
       "default": "./icons/removeFormattingIcon/dist/voussoir-icon-icons-removeFormattingIcon.cjs.js"
     },
+    "./icons/unfoldHorizontalIcon": {
+      "types": "./icons/unfoldHorizontalIcon/dist/voussoir-icon-icons-unfoldHorizontalIcon.cjs.js",
+      "module": "./icons/unfoldHorizontalIcon/dist/voussoir-icon-icons-unfoldHorizontalIcon.esm.js",
+      "default": "./icons/unfoldHorizontalIcon/dist/voussoir-icon-icons-unfoldHorizontalIcon.cjs.js"
+    },
+    "./icons/arrowBigRightDashIcon": {
+      "types": "./icons/arrowBigRightDashIcon/dist/voussoir-icon-icons-arrowBigRightDashIcon.cjs.js",
+      "module": "./icons/arrowBigRightDashIcon/dist/voussoir-icon-icons-arrowBigRightDashIcon.esm.js",
+      "default": "./icons/arrowBigRightDashIcon/dist/voussoir-icon-icons-arrowBigRightDashIcon.cjs.js"
+    },
+    "./icons/arrowDownFromLineIcon": {
+      "types": "./icons/arrowDownFromLineIcon/dist/voussoir-icon-icons-arrowDownFromLineIcon.cjs.js",
+      "module": "./icons/arrowDownFromLineIcon/dist/voussoir-icon-icons-arrowDownFromLineIcon.esm.js",
+      "default": "./icons/arrowDownFromLineIcon/dist/voussoir-icon-icons-arrowDownFromLineIcon.cjs.js"
+    },
+    "./icons/arrowLeftFromLineIcon": {
+      "types": "./icons/arrowLeftFromLineIcon/dist/voussoir-icon-icons-arrowLeftFromLineIcon.cjs.js",
+      "module": "./icons/arrowLeftFromLineIcon/dist/voussoir-icon-icons-arrowLeftFromLineIcon.esm.js",
+      "default": "./icons/arrowLeftFromLineIcon/dist/voussoir-icon-icons-arrowLeftFromLineIcon.cjs.js"
+    },
+    "./icons/arrowUpLeftSquareIcon": {
+      "types": "./icons/arrowUpLeftSquareIcon/dist/voussoir-icon-icons-arrowUpLeftSquareIcon.cjs.js",
+      "module": "./icons/arrowUpLeftSquareIcon/dist/voussoir-icon-icons-arrowUpLeftSquareIcon.esm.js",
+      "default": "./icons/arrowUpLeftSquareIcon/dist/voussoir-icon-icons-arrowUpLeftSquareIcon.cjs.js"
+    },
+    "./icons/arrowUpNarrowWideIcon": {
+      "types": "./icons/arrowUpNarrowWideIcon/dist/voussoir-icon-icons-arrowUpNarrowWideIcon.cjs.js",
+      "module": "./icons/arrowUpNarrowWideIcon/dist/voussoir-icon-icons-arrowUpNarrowWideIcon.esm.js",
+      "default": "./icons/arrowUpNarrowWideIcon/dist/voussoir-icon-icons-arrowUpNarrowWideIcon.cjs.js"
+    },
+    "./icons/arrowUpWideNarrowIcon": {
+      "types": "./icons/arrowUpWideNarrowIcon/dist/voussoir-icon-icons-arrowUpWideNarrowIcon.cjs.js",
+      "module": "./icons/arrowUpWideNarrowIcon/dist/voussoir-icon-icons-arrowUpWideNarrowIcon.esm.js",
+      "default": "./icons/arrowUpWideNarrowIcon/dist/voussoir-icon-icons-arrowUpWideNarrowIcon.cjs.js"
+    },
+    "./icons/chevronDownSquareIcon": {
+      "types": "./icons/chevronDownSquareIcon/dist/voussoir-icon-icons-chevronDownSquareIcon.cjs.js",
+      "module": "./icons/chevronDownSquareIcon/dist/voussoir-icon-icons-chevronDownSquareIcon.esm.js",
+      "default": "./icons/chevronDownSquareIcon/dist/voussoir-icon-icons-chevronDownSquareIcon.cjs.js"
+    },
+    "./icons/chevronLeftSquareIcon": {
+      "types": "./icons/chevronLeftSquareIcon/dist/voussoir-icon-icons-chevronLeftSquareIcon.cjs.js",
+      "module": "./icons/chevronLeftSquareIcon/dist/voussoir-icon-icons-chevronLeftSquareIcon.esm.js",
+      "default": "./icons/chevronLeftSquareIcon/dist/voussoir-icon-icons-chevronLeftSquareIcon.cjs.js"
+    },
     "./icons/chevronsLeftRightIcon": {
       "types": "./icons/chevronsLeftRightIcon/dist/voussoir-icon-icons-chevronsLeftRightIcon.cjs.js",
       "module": "./icons/chevronsLeftRightIcon/dist/voussoir-icon-icons-chevronsLeftRightIcon.esm.js",
@@ -4361,6 +5601,11 @@
       "module": "./icons/flagTriangleRightIcon/dist/voussoir-icon-icons-flagTriangleRightIcon.esm.js",
       "default": "./icons/flagTriangleRightIcon/dist/voussoir-icon-icons-flagTriangleRightIcon.cjs.js"
     },
+    "./icons/messageSquarePlusIcon": {
+      "types": "./icons/messageSquarePlusIcon/dist/voussoir-icon-icons-messageSquarePlusIcon.cjs.js",
+      "module": "./icons/messageSquarePlusIcon/dist/voussoir-icon-icons-messageSquarePlusIcon.esm.js",
+      "default": "./icons/messageSquarePlusIcon/dist/voussoir-icon-icons-messageSquarePlusIcon.cjs.js"
+    },
     "./icons/monitorSmartphoneIcon": {
       "types": "./icons/monitorSmartphoneIcon/dist/voussoir-icon-icons-monitorSmartphoneIcon.cjs.js",
       "module": "./icons/monitorSmartphoneIcon/dist/voussoir-icon-icons-monitorSmartphoneIcon.esm.js",
@@ -4370,6 +5615,11 @@
       "types": "./icons/mousePointerClickIcon/dist/voussoir-icon-icons-mousePointerClickIcon.cjs.js",
       "module": "./icons/mousePointerClickIcon/dist/voussoir-icon-icons-mousePointerClickIcon.esm.js",
       "default": "./icons/mousePointerClickIcon/dist/voussoir-icon-icons-mousePointerClickIcon.cjs.js"
+    },
+    "./icons/panelLeftInactiveIcon": {
+      "types": "./icons/panelLeftInactiveIcon/dist/voussoir-icon-icons-panelLeftInactiveIcon.cjs.js",
+      "module": "./icons/panelLeftInactiveIcon/dist/voussoir-icon-icons-panelLeftInactiveIcon.esm.js",
+      "default": "./icons/panelLeftInactiveIcon/dist/voussoir-icon-icons-panelLeftInactiveIcon.cjs.js"
     },
     "./icons/pictureInPicture2Icon": {
       "types": "./icons/pictureInPicture2Icon/dist/voussoir-icon-icons-pictureInPicture2Icon.cjs.js",
@@ -4406,6 +5656,16 @@
       "module": "./icons/alignStartVerticalIcon/dist/voussoir-icon-icons-alignStartVerticalIcon.esm.js",
       "default": "./icons/alignStartVerticalIcon/dist/voussoir-icon-icons-alignStartVerticalIcon.cjs.js"
     },
+    "./icons/arrowRightFromLineIcon": {
+      "types": "./icons/arrowRightFromLineIcon/dist/voussoir-icon-icons-arrowRightFromLineIcon.cjs.js",
+      "module": "./icons/arrowRightFromLineIcon/dist/voussoir-icon-icons-arrowRightFromLineIcon.esm.js",
+      "default": "./icons/arrowRightFromLineIcon/dist/voussoir-icon-icons-arrowRightFromLineIcon.cjs.js"
+    },
+    "./icons/arrowUpRightSquareIcon": {
+      "types": "./icons/arrowUpRightSquareIcon/dist/voussoir-icon-icons-arrowUpRightSquareIcon.cjs.js",
+      "module": "./icons/arrowUpRightSquareIcon/dist/voussoir-icon-icons-arrowUpRightSquareIcon.esm.js",
+      "default": "./icons/arrowUpRightSquareIcon/dist/voussoir-icon-icons-arrowUpRightSquareIcon.cjs.js"
+    },
     "./icons/barChartHorizontalIcon": {
       "types": "./icons/barChartHorizontalIcon/dist/voussoir-icon-icons-barChartHorizontalIcon.cjs.js",
       "module": "./icons/barChartHorizontalIcon/dist/voussoir-icon-icons-barChartHorizontalIcon.esm.js",
@@ -4421,25 +5681,70 @@
       "module": "./icons/bluetoothSearchingIcon/dist/voussoir-icon-icons-bluetoothSearchingIcon.esm.js",
       "default": "./icons/bluetoothSearchingIcon/dist/voussoir-icon-icons-bluetoothSearchingIcon.cjs.js"
     },
+    "./icons/chevronRightSquareIcon": {
+      "types": "./icons/chevronRightSquareIcon/dist/voussoir-icon-icons-chevronRightSquareIcon.cjs.js",
+      "module": "./icons/chevronRightSquareIcon/dist/voussoir-icon-icons-chevronRightSquareIcon.esm.js",
+      "default": "./icons/chevronRightSquareIcon/dist/voussoir-icon-icons-chevronRightSquareIcon.cjs.js"
+    },
     "./icons/clipboardSignatureIcon": {
       "types": "./icons/clipboardSignatureIcon/dist/voussoir-icon-icons-clipboardSignatureIcon.cjs.js",
       "module": "./icons/clipboardSignatureIcon/dist/voussoir-icon-icons-clipboardSignatureIcon.esm.js",
       "default": "./icons/clipboardSignatureIcon/dist/voussoir-icon-icons-clipboardSignatureIcon.cjs.js"
+    },
+    "./icons/panelRightInactiveIcon": {
+      "types": "./icons/panelRightInactiveIcon/dist/voussoir-icon-icons-panelRightInactiveIcon.cjs.js",
+      "module": "./icons/panelRightInactiveIcon/dist/voussoir-icon-icons-panelRightInactiveIcon.esm.js",
+      "default": "./icons/panelRightInactiveIcon/dist/voussoir-icon-icons-panelRightInactiveIcon.cjs.js"
     },
     "./icons/smartphoneChargingIcon": {
       "types": "./icons/smartphoneChargingIcon/dist/voussoir-icon-icons-smartphoneChargingIcon.cjs.js",
       "module": "./icons/smartphoneChargingIcon/dist/voussoir-icon-icons-smartphoneChargingIcon.esm.js",
       "default": "./icons/smartphoneChargingIcon/dist/voussoir-icon-icons-smartphoneChargingIcon.cjs.js"
     },
+    "./icons/squareDashedBottomIcon": {
+      "types": "./icons/squareDashedBottomIcon/dist/voussoir-icon-icons-squareDashedBottomIcon.cjs.js",
+      "module": "./icons/squareDashedBottomIcon/dist/voussoir-icon-icons-squareDashedBottomIcon.esm.js",
+      "default": "./icons/squareDashedBottomIcon/dist/voussoir-icon-icons-squareDashedBottomIcon.cjs.js"
+    },
+    "./icons/squareKanbanDashedIcon": {
+      "types": "./icons/squareKanbanDashedIcon/dist/voussoir-icon-icons-squareKanbanDashedIcon.cjs.js",
+      "module": "./icons/squareKanbanDashedIcon/dist/voussoir-icon-icons-squareKanbanDashedIcon.esm.js",
+      "default": "./icons/squareKanbanDashedIcon/dist/voussoir-icon-icons-squareKanbanDashedIcon.cjs.js"
+    },
     "./icons/alignCenterVerticalIcon": {
       "types": "./icons/alignCenterVerticalIcon/dist/voussoir-icon-icons-alignCenterVerticalIcon.cjs.js",
       "module": "./icons/alignCenterVerticalIcon/dist/voussoir-icon-icons-alignCenterVerticalIcon.esm.js",
       "default": "./icons/alignCenterVerticalIcon/dist/voussoir-icon-icons-alignCenterVerticalIcon.cjs.js"
     },
+    "./icons/arrowDownLeftSquareIcon": {
+      "types": "./icons/arrowDownLeftSquareIcon/dist/voussoir-icon-icons-arrowDownLeftSquareIcon.cjs.js",
+      "module": "./icons/arrowDownLeftSquareIcon/dist/voussoir-icon-icons-arrowDownLeftSquareIcon.esm.js",
+      "default": "./icons/arrowDownLeftSquareIcon/dist/voussoir-icon-icons-arrowDownLeftSquareIcon.cjs.js"
+    },
+    "./icons/arrowDownNarrowWideIcon": {
+      "types": "./icons/arrowDownNarrowWideIcon/dist/voussoir-icon-icons-arrowDownNarrowWideIcon.cjs.js",
+      "module": "./icons/arrowDownNarrowWideIcon/dist/voussoir-icon-icons-arrowDownNarrowWideIcon.esm.js",
+      "default": "./icons/arrowDownNarrowWideIcon/dist/voussoir-icon-icons-arrowDownNarrowWideIcon.cjs.js"
+    },
+    "./icons/arrowDownWideNarrowIcon": {
+      "types": "./icons/arrowDownWideNarrowIcon/dist/voussoir-icon-icons-arrowDownWideNarrowIcon.cjs.js",
+      "module": "./icons/arrowDownWideNarrowIcon/dist/voussoir-icon-icons-arrowDownWideNarrowIcon.esm.js",
+      "default": "./icons/arrowDownWideNarrowIcon/dist/voussoir-icon-icons-arrowDownWideNarrowIcon.cjs.js"
+    },
     "./icons/gitPullRequestDraftIcon": {
       "types": "./icons/gitPullRequestDraftIcon/dist/voussoir-icon-icons-gitPullRequestDraftIcon.cjs.js",
       "module": "./icons/gitPullRequestDraftIcon/dist/voussoir-icon-icons-gitPullRequestDraftIcon.esm.js",
       "default": "./icons/gitPullRequestDraftIcon/dist/voussoir-icon-icons-gitPullRequestDraftIcon.cjs.js"
+    },
+    "./icons/messageSquareDashedIcon": {
+      "types": "./icons/messageSquareDashedIcon/dist/voussoir-icon-icons-messageSquareDashedIcon.cjs.js",
+      "module": "./icons/messageSquareDashedIcon/dist/voussoir-icon-icons-messageSquareDashedIcon.esm.js",
+      "default": "./icons/messageSquareDashedIcon/dist/voussoir-icon-icons-messageSquareDashedIcon.cjs.js"
+    },
+    "./icons/panelBottomInactiveIcon": {
+      "types": "./icons/panelBottomInactiveIcon/dist/voussoir-icon-icons-panelBottomInactiveIcon.cjs.js",
+      "module": "./icons/panelBottomInactiveIcon/dist/voussoir-icon-icons-panelBottomInactiveIcon.esm.js",
+      "default": "./icons/panelBottomInactiveIcon/dist/voussoir-icon-icons-panelBottomInactiveIcon.cjs.js"
     },
     "./icons/rectangleHorizontalIcon": {
       "types": "./icons/rectangleHorizontalIcon/dist/voussoir-icon-icons-rectangleHorizontalIcon.cjs.js",
@@ -4461,6 +5766,11 @@
       "module": "./icons/alignStartHorizontalIcon/dist/voussoir-icon-icons-alignStartHorizontalIcon.esm.js",
       "default": "./icons/alignStartHorizontalIcon/dist/voussoir-icon-icons-alignStartHorizontalIcon.cjs.js"
     },
+    "./icons/arrowDownRightSquareIcon": {
+      "types": "./icons/arrowDownRightSquareIcon/dist/voussoir-icon-icons-arrowDownRightSquareIcon.cjs.js",
+      "module": "./icons/arrowDownRightSquareIcon/dist/voussoir-icon-icons-arrowDownRightSquareIcon.esm.js",
+      "default": "./icons/arrowDownRightSquareIcon/dist/voussoir-icon-icons-arrowDownRightSquareIcon.cjs.js"
+    },
     "./icons/gitPullRequestClosedIcon": {
       "types": "./icons/gitPullRequestClosedIcon/dist/voussoir-icon-icons-gitPullRequestClosedIcon.cjs.js",
       "module": "./icons/gitPullRequestClosedIcon/dist/voussoir-icon-icons-gitPullRequestClosedIcon.esm.js",
@@ -4476,20 +5786,50 @@
       "module": "./icons/alignCenterHorizontalIcon/dist/voussoir-icon-icons-alignCenterHorizontalIcon.esm.js",
       "default": "./icons/alignCenterHorizontalIcon/dist/voussoir-icon-icons-alignCenterHorizontalIcon.cjs.js"
     },
+    "./icons/arrowUpLeftFromCircleIcon": {
+      "types": "./icons/arrowUpLeftFromCircleIcon/dist/voussoir-icon-icons-arrowUpLeftFromCircleIcon.cjs.js",
+      "module": "./icons/arrowUpLeftFromCircleIcon/dist/voussoir-icon-icons-arrowUpLeftFromCircleIcon.esm.js",
+      "default": "./icons/arrowUpLeftFromCircleIcon/dist/voussoir-icon-icons-arrowUpLeftFromCircleIcon.cjs.js"
+    },
+    "./icons/barChartHorizontalBigIcon": {
+      "types": "./icons/barChartHorizontalBigIcon/dist/voussoir-icon-icons-barChartHorizontalBigIcon.cjs.js",
+      "module": "./icons/barChartHorizontalBigIcon/dist/voussoir-icon-icons-barChartHorizontalBigIcon.esm.js",
+      "default": "./icons/barChartHorizontalBigIcon/dist/voussoir-icon-icons-barChartHorizontalBigIcon.cjs.js"
+    },
     "./icons/splitSquareHorizontalIcon": {
       "types": "./icons/splitSquareHorizontalIcon/dist/voussoir-icon-icons-splitSquareHorizontalIcon.cjs.js",
       "module": "./icons/splitSquareHorizontalIcon/dist/voussoir-icon-icons-splitSquareHorizontalIcon.esm.js",
       "default": "./icons/splitSquareHorizontalIcon/dist/voussoir-icon-icons-splitSquareHorizontalIcon.cjs.js"
+    },
+    "./icons/arrowUpRightFromCircleIcon": {
+      "types": "./icons/arrowUpRightFromCircleIcon/dist/voussoir-icon-icons-arrowUpRightFromCircleIcon.cjs.js",
+      "module": "./icons/arrowUpRightFromCircleIcon/dist/voussoir-icon-icons-arrowUpRightFromCircleIcon.esm.js",
+      "default": "./icons/arrowUpRightFromCircleIcon/dist/voussoir-icon-icons-arrowUpRightFromCircleIcon.cjs.js"
+    },
+    "./icons/squareDashedBottomCodeIcon": {
+      "types": "./icons/squareDashedBottomCodeIcon/dist/voussoir-icon-icons-squareDashedBottomCodeIcon.cjs.js",
+      "module": "./icons/squareDashedBottomCodeIcon/dist/voussoir-icon-icons-squareDashedBottomCodeIcon.esm.js",
+      "default": "./icons/squareDashedBottomCodeIcon/dist/voussoir-icon-icons-squareDashedBottomCodeIcon.cjs.js"
     },
     "./icons/alignVerticalJustifyEndIcon": {
       "types": "./icons/alignVerticalJustifyEndIcon/dist/voussoir-icon-icons-alignVerticalJustifyEndIcon.cjs.js",
       "module": "./icons/alignVerticalJustifyEndIcon/dist/voussoir-icon-icons-alignVerticalJustifyEndIcon.esm.js",
       "default": "./icons/alignVerticalJustifyEndIcon/dist/voussoir-icon-icons-alignVerticalJustifyEndIcon.cjs.js"
     },
+    "./icons/arrowDownLeftFromCircleIcon": {
+      "types": "./icons/arrowDownLeftFromCircleIcon/dist/voussoir-icon-icons-arrowDownLeftFromCircleIcon.cjs.js",
+      "module": "./icons/arrowDownLeftFromCircleIcon/dist/voussoir-icon-icons-arrowDownLeftFromCircleIcon.esm.js",
+      "default": "./icons/arrowDownLeftFromCircleIcon/dist/voussoir-icon-icons-arrowDownLeftFromCircleIcon.cjs.js"
+    },
     "./icons/alignVerticalSpaceAroundIcon": {
       "types": "./icons/alignVerticalSpaceAroundIcon/dist/voussoir-icon-icons-alignVerticalSpaceAroundIcon.cjs.js",
       "module": "./icons/alignVerticalSpaceAroundIcon/dist/voussoir-icon-icons-alignVerticalSpaceAroundIcon.esm.js",
       "default": "./icons/alignVerticalSpaceAroundIcon/dist/voussoir-icon-icons-alignVerticalSpaceAroundIcon.cjs.js"
+    },
+    "./icons/arrowDownRightFromCircleIcon": {
+      "types": "./icons/arrowDownRightFromCircleIcon/dist/voussoir-icon-icons-arrowDownRightFromCircleIcon.cjs.js",
+      "module": "./icons/arrowDownRightFromCircleIcon/dist/voussoir-icon-icons-arrowDownRightFromCircleIcon.esm.js",
+      "default": "./icons/arrowDownRightFromCircleIcon/dist/voussoir-icon-icons-arrowDownRightFromCircleIcon.cjs.js"
     },
     "./icons/alignHorizontalJustifyEndIcon": {
       "types": "./icons/alignHorizontalJustifyEndIcon/dist/voussoir-icon-icons-alignHorizontalJustifyEndIcon.cjs.js",
@@ -4573,7 +5913,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@react-aria/i18n": "^3.7.1",
+    "@react-aria/i18n": "^3.8.0",
+    "@react-aria/utils": "^3.18.0",
     "@voussoir/layout": "^0.1.2",
     "@voussoir/slots": "^0.1.2",
     "@voussoir/style": "^0.1.3",
@@ -4586,7 +5927,7 @@
     "@svgr/plugin-prettier": "^6.5.1",
     "@svgr/plugin-svgo": "^6.5.1",
     "@types/react": "^18.2.8",
-    "lucide-static": "^0.127.0",
+    "lucide-static": "^0.252.0",
     "react": "^18.2.0",
     "tsx": "^3.8.0"
   },

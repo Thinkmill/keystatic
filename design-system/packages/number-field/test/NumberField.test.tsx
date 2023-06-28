@@ -24,10 +24,12 @@ function renderNumberField(
   let input = result.getByRole('textbox');
   let buttons = result.queryAllByRole('button');
   let group = result.getByRole('group');
+  let textField = result.queryByRole('textbox');
   let incrementButton = buttons[0];
   let decrementButton = buttons[1];
   return {
     ...result,
+    textField,
     user,
     input,
     group,
@@ -52,18 +54,15 @@ describe('number-field/NumberField', () => {
   });
 
   it('has correct aria and props', () => {
-    let { queryByLabelText, input, group, incrementButton, decrementButton } =
+    let { group, textField, incrementButton, decrementButton } =
       renderNumberField();
 
     expect(group).toBeDefined();
-
-    expect(queryByLabelText('Field label')).toEqual(input);
-    expect(input).toBeDefined();
-    expect(input).toHaveAttribute('type', 'text');
-    expect(input).toHaveAttribute('inputMode', 'numeric');
-
-    expect(incrementButton).toBeDefined();
-    expect(decrementButton).toBeDefined();
+    expect(textField).toBeTruthy();
+    expect(textField).toHaveAttribute('type', 'text');
+    expect(textField).toHaveAttribute('inputMode', 'numeric');
+    expect(incrementButton).toBeTruthy();
+    expect(decrementButton).toBeTruthy();
     expect(incrementButton).toHaveAttribute('tabIndex', '-1');
     expect(decrementButton).toHaveAttribute('tabIndex', '-1');
   });

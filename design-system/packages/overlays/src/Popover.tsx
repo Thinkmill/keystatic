@@ -1,7 +1,6 @@
-import { useLocale } from '@react-aria/i18n';
 import { DismissButton, usePopover } from '@react-aria/overlays';
 import { useObjectRef } from '@react-aria/utils';
-import { Placement, Axis } from '@react-types/overlays';
+import { Axis } from '@react-types/overlays';
 import {
   forwardRef,
   ForwardedRef,
@@ -17,7 +16,6 @@ import {
   transition,
   useStyleProps,
 } from '@voussoir/style';
-import { Direction } from '@voussoir/types';
 import { toDataAttributes } from '@voussoir/utils';
 
 import { Blanket } from './Blanket';
@@ -73,7 +71,7 @@ const PopoverWrapper = forwardRef(function PopoverWrapper(
 
   let styleProps = usePopoverStyles({
     ...props,
-    placement: usePreferredPlacement(props.placement, placement as Axis),
+    placement: placement as Axis,
   });
 
   // Attach Transition's nodeRef to outer most wrapper for node.reflow:
@@ -110,28 +108,6 @@ const PopoverWrapper = forwardRef(function PopoverWrapper(
 // Utils
 // -----------------------------------------------------------------------------
 
-// FIXME: It looks like the popover must paint first, before passing on the placement.
-// We need to patch it for the animation, which will often be fine, but there
-// may be a flash if it needs to flip... Hopefully it's resolved when the
-// updated `usePopover` is published.
-function usePreferredPlacement(placement: Placement = 'bottom', axis?: Axis) {
-  let { direction } = useLocale();
-  if (axis) {
-    return axis;
-  }
-
-  let logicalPosition = placement.split(' ')[0];
-
-  return translateRTL(logicalPosition, direction) as Axis;
-}
-
-function translateRTL(position: string, direction: Direction) {
-  if (direction === 'rtl') {
-    return position.replace('start', 'right').replace('end', 'left');
-  }
-  return position.replace('start', 'left').replace('end', 'right');
-}
-
 function usePopoverStyles(
   props: Omit<PopoverWrapperProps, 'placement'> & { placement: Axis }
 ) {
@@ -144,17 +120,13 @@ function usePopoverStyles(
     borderRadius: tokenSchema.size.radius.medium, // TODO: component token?
     border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.emphasis}`,
     boxSizing: 'content-box', // resolves measurement/scroll issues related to border
-    // boxShadow: `0 0 0 ${tokenSchema.size.border.regular} ${tokenSchema.color.border.emphasis}`,
-    minHeight: tokenSchema.size.element.regular,
-    minWidth: tokenSchema.size.element.regular,
     opacity: 0,
     outline: 0,
     pointerEvents: 'auto',
     position: 'absolute',
-    // use filter:drop-shadow instead of box-shadow so the arrow is included
-    filter: `drop-shadow(0 1px 4px ${tokenSchema.color.shadow.regular})`,
-    // filter bug in safari: https://stackoverflow.com/questions/56478925/safari-drop-shadow-filter-remains-visible-even-with-hidden-element
-    willChange: 'filter',
+    // drop shadow
+    filter: `drop-shadow(0 1px 4px ${tokenSchema.color.shadow.regular})`, // use filter:drop-shadow instead of box-shadow so the arrow is included
+    willChange: 'filter, transform', // filter bug in safari: https://stackoverflow.com/questions/56478925/safari-drop-shadow-filter-remains-visible-even-with-hidden-element
 
     // exit animation
     transition: [
@@ -166,33 +138,27 @@ function usePopoverStyles(
       }),
     ].join(', '),
 
-    // animate towards placement. re-enforce the illusion that the popover
-    // originates from, and is bound to, the trigger
-    '&[data-placement="top"]': {
-      marginBottom: offset,
-      transform: `translateY(${offset})`,
-    },
-    '&[data-placement="bottom"]': {
-      marginTop: offset,
-      transform: `translateY(calc(${offset} * -1))`,
-    },
-    '&[data-placement="left"]': {
-      marginRight: offset,
-      transform: `translateX(${offset})`,
-    },
-    '&[data-placement="right"]': {
-      marginLeft: offset,
-      transform: `translateX(calc(${offset} * -1))`,
-    },
-
-    '&[data-open="true"]': {
+    '&[data-open]': {
       opacity: 1,
-      transform: `translateX(0) translateY(0)`,
 
       // enter animation
       transition: transition(['opacity', 'transform'], {
         easing: 'easeOut',
       }),
+    },
+    // animate towards placement; re-enforce the illusion that the popover
+    // originates from, and is bound to, the trigger.
+    '&[data-placement=top][data-open]': {
+      transform: `translateY(calc(${offset} * -1))`,
+    },
+    '&[data-placement=bottom][data-open]': {
+      transform: `translateY(${offset})`,
+    },
+    '&[data-placement=left][data-open]': {
+      transform: `translateX(calc(${offset} * -1))`,
+    },
+    '&[data-placement=right][data-open]': {
+      transform: `translateX(${offset})`,
     },
   });
 

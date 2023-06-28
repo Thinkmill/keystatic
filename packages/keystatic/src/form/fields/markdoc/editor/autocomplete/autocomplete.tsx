@@ -1,15 +1,12 @@
 import {
   EditorListboxProps,
   EditorPopover,
-  VirtualElement,
   useEditorListbox,
 } from '../new-primitives';
-import { useMemo, useState } from 'react';
-import {
-  useEditorViewRef,
-  useLayoutEffectWithEditorUpdated,
-} from '../editor-view';
+import { useMemo } from 'react';
+import { useEditorViewRef } from '../editor-view';
 import { useEditorKeydownListener } from '../keydown';
+import { useEditorReferenceElement } from '../popovers/reference';
 
 export function EditorAutocomplete<Item extends object>(
   props: Omit<EditorListboxProps<Item>, 'listenerRef'> & {
@@ -18,33 +15,7 @@ export function EditorAutocomplete<Item extends object>(
   }
 ) {
   const viewRef = useEditorViewRef();
-  const [referenceElement, setReferenceElement] = useState<VirtualElement>({
-    getBoundingClientRect() {
-      const coords = viewRef.current!.coordsAtPos(props.from, props.to);
-      return {
-        x: coords.left,
-        y: coords.top,
-        width: coords.right - coords.left,
-        height: coords.bottom - coords.top,
-        top: coords.top,
-        right: coords.right,
-        bottom: coords.bottom,
-        left: coords.left,
-      };
-    },
-  });
-  useLayoutEffectWithEditorUpdated(() => {
-    const node = viewRef.current!.domAtPos(props.from).node;
-    const contextElement = node instanceof Element ? node : node.parentElement;
-    setReferenceElement(prevState => {
-      return prevState.contextElement === contextElement
-        ? prevState
-        : {
-            getBoundingClientRect: prevState.getBoundingClientRect,
-            contextElement: contextElement ?? undefined,
-          };
-    });
-  });
+  const referenceElement = useEditorReferenceElement(props.from, props.to);
   const listenerRef = useMemo(() => {
     return {
       get current() {
@@ -62,13 +33,15 @@ export function EditorAutocomplete<Item extends object>(
     return event.defaultPrevented;
   });
   return (
-    <EditorPopover
-      reference={referenceElement}
-      placement="bottom-start"
-      adaptToViewport="stretch"
-      minWidth="element.medium"
-    >
-      {listbox}
-    </EditorPopover>
+    referenceElement && (
+      <EditorPopover
+        reference={referenceElement}
+        placement="bottom-start"
+        adaptToViewport="stretch"
+        minWidth="element.medium"
+      >
+        {listbox}
+      </EditorPopover>
+    )
   );
 }

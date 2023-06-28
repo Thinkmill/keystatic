@@ -8,6 +8,6 @@ export const arrowBigDownIcon = (
     width="1em"
     height="1em"
   >
-    <path d="M9 3h6v11h4l-7 7-7-7h4z" />
+    <path d="M15 6v6h4l-7 7-7-7h4V6h6z" />
   </svg>
 );

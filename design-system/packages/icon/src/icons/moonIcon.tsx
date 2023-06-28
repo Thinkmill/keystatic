@@ -8,6 +8,6 @@ export const moonIcon = (
     width="1em"
     height="1em"
   >
-    <path d="M12 3a6.364 6.364 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
   </svg>
 );

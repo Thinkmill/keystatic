@@ -36,7 +36,7 @@ export default function Heading({ level, children, anchor }: HeadingProps) {
         id={slug}
         href={`#${slug}`}
         /* scrollMarginTop: 3rem (header padding) + 3rem (header content) + 1rem (top margin) */
-        className="group relative mt-6 scroll-mt-[7rem] first:mt-2 peer-adjacent:mt-0"
+        className="group relative mt-6 scroll-mt-[7rem] first:mt-0 peer-adjacent:mt-0"
       >
         <LinkIcon className="hidden group-hover:inline absolute -ml-5 mt-2 h-4 w-8 pr-4" />
         <Tag className={textClasses}>{children}</Tag>
@@ -45,7 +45,7 @@ export default function Heading({ level, children, anchor }: HeadingProps) {
   }
 
   return (
-    <Tag className={cx(textClasses, 'mt-6 first:mt-2 peer-adjacent:mt-0')}>
+    <Tag className={cx(textClasses, 'mt-6 first:mt-0 peer-adjacent:mt-0')}>
       {children}
     </Tag>
   );

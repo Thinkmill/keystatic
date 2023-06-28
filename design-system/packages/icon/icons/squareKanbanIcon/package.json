@@ -1,0 +1,4 @@
+{
+  "main": "dist/voussoir-icon-icons-squareKanbanIcon.cjs.js",
+  "module": "dist/voussoir-icon-icons-squareKanbanIcon.esm.js"
+}

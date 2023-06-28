@@ -1,3 +1,4 @@
+import { DOMProps } from '@react-types/shared';
 import { createContext, ReactNode, useContext } from 'react';
 
 import {
@@ -6,7 +7,6 @@ import {
   filterStyleProps,
   useStyleProps,
 } from '@voussoir/style';
-import { DOMProps } from '@voussoir/types';
 import { forwardRefWithAs } from '@voussoir/utils/ts';
 
 const levels = ['one', 'two', 'three'];

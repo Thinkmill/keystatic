@@ -9,6 +9,6 @@ export const tv2Icon = (
     height="1em"
   >
     <path d="M7 21h10" />
-    <rect x={2} y={3} width={20} height={14} rx={2} />
+    <rect width={20} height={14} x={2} y={3} rx={2} />
   </svg>
 );

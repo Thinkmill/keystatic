@@ -7,7 +7,9 @@ import {
   component,
   NotEditable,
 } from '@keystatic/core';
+import { __experimental_markdoc_field } from '@keystatic/core/form/fields/markdoc';
 import { CloudImagePreview } from './src/components/previews/CloudImagePreview';
+import { Config } from '@markdoc/markdoc';
 
 export const componentBlocks = {
   aside: component({
@@ -78,7 +80,12 @@ export const componentBlocks = {
       }),
       sizes: fields.text({
         label: 'Sizes',
-        description: 'Optionally override the defualt sizes',
+        description: 'Optionally override the default sizes',
+      }),
+      caption: fields.text({
+        label: 'Caption',
+        description:
+          'Optionally add a caption to display in small text below the image',
       }),
     },
     chromeless: false,
@@ -102,10 +109,10 @@ export const componentBlocks = {
         </div>
       );
     },
-    label: 'Tags',
+    label: 'Project',
     schema: {
       tags: fields.multiselect({
-        label: 'Tags',
+        label: 'Project tags',
         options: [
           { label: 'Local', value: 'Local' },
           { label: 'Github', value: 'github' },
@@ -142,6 +149,80 @@ export const componentBlocks = {
     },
     chromeless: false,
   }),
+  embed: component({
+    label: 'Embed',
+    preview: props => <div>{props.fields.embedCode.value}</div>,
+    schema: {
+      mediaType: fields.select({
+        label: 'Media type',
+        options: [
+          { label: 'Video', value: 'video' },
+          { label: 'Tweet', value: 'tweet' },
+        ],
+        defaultValue: 'video',
+      }),
+      embedCode: fields.text({
+        label: 'Embed code',
+        multiline: true,
+      }),
+    },
+  }),
+};
+
+const formatting = {
+  headingLevels: [2, 3],
+  blockTypes: true,
+  listTypes: true,
+  inlineMarks: true,
+} as const;
+
+const markdocConfig: Config = {
+  tags: {
+    aside: {
+      render: 'Aside',
+      attributes: {
+        icon: {
+          type: String,
+          required: true,
+        },
+      },
+    },
+    'cloud-image': {
+      render: 'CloudImage',
+      attributes: {
+        href: {
+          type: String,
+          required: true,
+        },
+        alt: {
+          type: String,
+        },
+      },
+    },
+    tags: {
+      render: 'Tags',
+      attributes: {
+        tags: {
+          type: Array,
+          validate(value) {
+            if (
+              !Array.isArray(value) ||
+              value.some(v => typeof v !== 'string')
+            ) {
+              return [
+                {
+                  message: 'tags must be text',
+                  id: 'tags-text',
+                  level: 'critical',
+                },
+              ];
+            }
+            return [];
+          },
+        },
+      },
+    },
+  },
 };
 
 export default config({
@@ -149,8 +230,11 @@ export default config({
     kind: 'local',
   },
   collections: {
+    // ------------------------------
+    // Docs pages
+    // ------------------------------
     pages: collection({
-      label: 'Pages',
+      label: 'Docs pages',
       slugField: 'title',
       format: { contentField: 'content' },
       path: 'src/content/pages/**',
@@ -158,24 +242,119 @@ export default config({
         title: fields.slug({ name: { label: 'Title' } }),
         content: fields.document({
           label: 'Content',
-          formatting: {
-            inlineMarks: true,
-            listTypes: true,
-            alignment: true,
-            headingLevels: [2, 3],
-            blockTypes: true,
-            softBreaks: true,
+          dividers: true,
+          layouts: [[1, 1]],
+          links: true,
+          componentBlocks,
+          formatting,
+        }),
+      },
+    }),
+
+    // ------------------------------
+    // Blog posts
+    // ------------------------------
+    blog: collection({
+      label: 'Blog posts',
+      slugField: 'title',
+      path: 'src/content/blog/**',
+      format: {
+        contentField: 'content',
+      },
+      schema: {
+        title: fields.slug({
+          name: {
+            label: 'Title',
+            validation: {
+              length: { min: 1 },
+            },
           },
+        }),
+        draft: fields.checkbox({
+          label: 'Do not publish',
+          description:
+            'Check this box to prevent this post from being published',
+          defaultValue: false,
+        }),
+        publishedOn: fields.date({
+          label: 'Published on',
+          validation: {
+            isRequired: true,
+          },
+        }),
+        summary: fields.text({ label: 'Summary', multiline: true }),
+        content: fields.document({
+          label: 'Content',
+          links: true,
           layouts: [[1, 1]],
           dividers: true,
-          links: true,
-          images: { directory: 'public/images/content' },
+          tables: true,
           componentBlocks,
+          formatting,
+        }),
+        authors: fields.array(
+          fields.relationship({
+            label: 'Author',
+            collection: 'authors',
+            validation: { isRequired: true },
+          }),
+          {
+            label: 'Authors',
+            itemLabel: props => props.value ?? 'Please select',
+            validation: { length: { min: 1 } },
+          }
+        ),
+      },
+    }),
+
+    // ------------------------------
+    // Authors
+    // ------------------------------
+    authors: collection({
+      label: 'Authors',
+      slugField: 'name',
+      path: 'src/content/authors/**',
+      schema: {
+        name: fields.slug({
+          name: {
+            label: 'Name',
+            validation: {
+              length: { min: 1 },
+            },
+          },
+        }),
+        link: fields.url({
+          label: 'URL',
+          description:
+            'Optionally link the author name to e.g. their social media.',
+          validation: {
+            isRequired: false,
+          },
+        }),
+      },
+    }),
+
+    // ------------------------------
+    // For testing purposes only
+    // ------------------------------
+    pagesWithMarkdocField: collection({
+      label: 'Pages with new editor',
+      slugField: 'title',
+      format: { contentField: 'content' },
+      path: 'src/content/pages/**',
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        content: __experimental_markdoc_field({
+          label: 'Content',
+          config: markdocConfig,
         }),
       },
     }),
   },
   singletons: {
+    // ------------------------------
+    // Docs navigation
+    // ------------------------------
     navigation: singleton({
       label: 'Navigation',
       path: 'src/content/navigation',

@@ -8,6 +8,6 @@ export const arrowBigUpIcon = (
     width="1em"
     height="1em"
   >
-    <path d="M9 21V10H5l7-7 7 7h-4v11z" />
+    <path d="M9 18v-6H5l7-7 7 7h-4v6H9z" />
   </svg>
 );

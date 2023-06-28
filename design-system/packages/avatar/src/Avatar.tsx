@@ -1,3 +1,5 @@
+import { filterDOMProps } from '@react-aria/utils';
+import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 import {
   forwardRef,
   ForwardedRef,
@@ -13,9 +15,7 @@ import {
   useStyleProps,
   SizeElement,
 } from '@voussoir/style';
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
 import { Text } from '@voussoir/typography';
-import { filterDOMProps } from '@voussoir/utils';
 
 export type AvatarProps = {
   /**
@@ -40,7 +40,7 @@ export type AvatarProps = {
 ) &
   Omit<BaseStyleProps, 'height' | 'width'> &
   DOMProps &
-  AriaLabellingProps;
+  AriaLabelingProps;
 
 /**
  * An avatar is a thumbnail representation of an entity, such as a user or an

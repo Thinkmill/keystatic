@@ -1,190 +1,173 @@
-import { Node } from 'prosemirror-model';
+import { Mark, MarkType, Node, ResolvedPos } from 'prosemirror-model';
 import { EditorState, TextSelection } from 'prosemirror-state';
-import {
-  ReactElement,
-  RefObject,
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-} from 'react';
+import { ReactElement, useMemo } from 'react';
 import { EditorSchema, getEditorSchema } from '../schema';
-import { BlockPopover } from '../primitives/BlockPopover';
 import { ActionButton } from '@voussoir/button';
 import { Icon } from '@voussoir/icon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Flex } from '@voussoir/layout';
 import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
-import {
-  useEditorViewRef,
-  useEditorDispatchCommand,
-  useLayoutEffectWithEditorUpdated,
-} from '../editor-view';
+import { useEditorDispatchCommand } from '../editor-view';
 import { LinkToolbar } from './link-toolbar';
 import { ToolbarSeparator } from '../primitives';
 import { CodeBlockLanguageCombobox } from './code-block-language';
+import { useEditorReferenceElement } from './reference';
+import { EditorPopover } from '../new-primitives';
 
-type PopoverRenderer = (props: {
+type NodePopoverRenderer = (props: {
   node: Node;
   state: EditorState;
   pos: number;
 }) => ReactElement | null;
 
-const popoverComponents: Record<string, PopoverRenderer> = {
+const popoverComponents: Record<string, NodePopoverRenderer> = {
   code_block: function CodeBlockPopover(props) {
-    const viewRef = useEditorViewRef();
     const dispatchCommand = useEditorDispatchCommand();
-    const triggerRef = useMemo((): RefObject<HTMLElement | null> => {
-      return {
-        get current() {
-          if (!viewRef.current) return null;
-          const { node } = viewRef.current.domAtPos(props.pos + 1);
-          if (!(node instanceof HTMLElement)) return null;
-          return node.parentElement;
-        },
-      };
-    }, [props.pos, viewRef]);
-    const updatePositionRef = useRef<() => void>(() => {});
-    useLayoutEffectWithEditorUpdated(
-      useCallback(() => {
-        // just to indicate that this is a dependency of the effect
-        // because we want to update the position when the state changes
-        // eslint-disable-next-line no-unused-expressions
-        props.state;
-        updatePositionRef.current();
-      }, [props.state, updatePositionRef])
-    );
     return (
-      <BlockPopover triggerRef={triggerRef} ref={updatePositionRef}>
-        <Flex gap="regular" padding="regular">
-          <CodeBlockLanguageCombobox
-            value={props.node.attrs.language}
-            onChange={val => {
+      <Flex gap="regular" padding="regular">
+        <CodeBlockLanguageCombobox
+          value={props.node.attrs.language}
+          onChange={val => {
+            dispatchCommand((state, dispatch) => {
+              if (dispatch) {
+                dispatch(
+                  state.tr.setNodeMarkup(props.pos, undefined, {
+                    ...props.node.attrs,
+                    language: val,
+                  })
+                );
+              }
+              return true;
+            });
+          }}
+        />
+        <ToolbarSeparator />
+        <TooltipTrigger>
+          <ActionButton
+            prominence="low"
+            onPress={() => {
               dispatchCommand((state, dispatch) => {
                 if (dispatch) {
                   dispatch(
-                    state.tr.setNodeMarkup(props.pos, undefined, {
-                      ...props.node.attrs,
-                      language: val,
-                    })
+                    state.tr.delete(props.pos, props.pos + props.node.nodeSize)
                   );
                 }
                 return true;
               });
             }}
-          />
-          <ToolbarSeparator />
-          <TooltipTrigger>
-            <ActionButton
-              prominence="low"
-              onPress={() => {
-                dispatchCommand((state, dispatch) => {
-                  if (dispatch) {
-                    dispatch(
-                      state.tr.delete(
-                        props.pos,
-                        props.pos + props.node.nodeSize
-                      )
-                    );
-                  }
-                  return true;
-                });
-              }}
-            >
-              <Icon src={trash2Icon} />
-            </ActionButton>
-            <Tooltip tone="critical">Remove</Tooltip>
-          </TooltipTrigger>
-        </Flex>
-      </BlockPopover>
+          >
+            <Icon src={trash2Icon} />
+          </ActionButton>
+          <Tooltip tone="critical">Remove</Tooltip>
+        </TooltipTrigger>
+      </Flex>
     );
   },
-} satisfies Partial<Record<keyof EditorSchema['nodes'], PopoverRenderer>>;
+} satisfies Partial<Record<keyof EditorSchema['nodes'], NodePopoverRenderer>>;
 
-// TODO: this is broken
-const LinkPopover: PopoverRenderer = props => {
-  const viewRef = useEditorViewRef();
+function markAround($pos: ResolvedPos, markType: MarkType) {
+  const { parent, parentOffset } = $pos;
+  const start = parent.childAfter(parentOffset);
+  if (!start.node) return null;
+
+  const mark = start.node.marks.find(mark => mark.type === markType);
+  if (!mark) return null;
+
+  let startIndex = $pos.index();
+  let startPos = $pos.start() + start.offset;
+  let endIndex = startIndex + 1;
+  let endPos = startPos + start.node.nodeSize;
+  while (startIndex > 0 && mark.isInSet(parent.child(startIndex - 1).marks)) {
+    startIndex -= 1;
+    startPos -= parent.child(startIndex).nodeSize;
+  }
+  while (
+    endIndex < parent.childCount &&
+    mark.isInSet(parent.child(endIndex).marks)
+  ) {
+    endPos += parent.child(endIndex).nodeSize;
+    endIndex += 1;
+  }
+  return { from: startPos, to: endPos, mark };
+}
+
+type MarkPopoverRenderer = (props: {
+  mark: Mark;
+  state: EditorState;
+  from: number;
+  to: number;
+}) => ReactElement | null;
+
+const LinkPopover: MarkPopoverRenderer = props => {
   const dispatchCommand = useEditorDispatchCommand();
-  const triggerRef = useMemo((): RefObject<HTMLElement | null> => {
-    return {
-      get current() {
-        if (!viewRef.current) return null;
-        const { node } = viewRef.current.domAtPos(props.pos + 1);
-        if (!(node instanceof HTMLElement)) return null;
-        return node;
-      },
-    };
-  }, [props.pos, viewRef]);
-  const updatePositionRef = useRef<() => void>(() => {});
-  useLayoutEffect(() => {
-    viewRef.current?.updateState(props.state);
-    updatePositionRef.current?.();
-  }, [props.pos, props.state, triggerRef, viewRef, updatePositionRef]);
-  const schema = getEditorSchema(props.state.schema);
-  if (!schema.marks.link) return null;
-  const href = schema.marks.link.isInSet(props.node.marks)?.attrs.href;
+  const href = props.mark.attrs.href;
   if (typeof href !== 'string') {
     return null;
   }
   return (
-    <BlockPopover triggerRef={triggerRef} ref={updatePositionRef}>
-      <LinkToolbar
-        href={href}
-        onUnlink={() => {
-          dispatchCommand((state, dispatch) => {
-            if (dispatch) {
-              dispatch(
-                state.tr.removeMark(
-                  props.pos,
-                  props.pos + props.node.nodeSize,
-                  state.schema.marks.link
+    <LinkToolbar
+      href={href}
+      onUnlink={() => {
+        dispatchCommand((state, dispatch) => {
+          if (dispatch) {
+            dispatch(
+              state.tr.removeMark(props.from, props.to, state.schema.marks.link)
+            );
+          }
+          return true;
+        });
+      }}
+      onHrefChange={href => {
+        dispatchCommand((state, dispatch) => {
+          if (dispatch) {
+            dispatch(
+              state.tr
+                .removeMark(props.from, props.to, state.schema.marks.link)
+                .addMark(
+                  props.from,
+                  props.to,
+                  state.schema.marks.link.create({ href })
                 )
-              );
-            }
-            return true;
-          });
-        }}
-        onHrefChange={href => {
-          dispatchCommand((state, dispatch) => {
-            if (dispatch) {
-              dispatch(
-                state.tr
-                  .removeMark(
-                    props.pos,
-                    props.pos + props.node.nodeSize,
-                    state.schema.marks.link
-                  )
-                  .addMark(
-                    props.pos,
-                    props.pos + props.node.nodeSize,
-                    state.schema.marks.link.create({ href })
-                  )
-              );
-            }
-            return true;
-          });
-        }}
-      />
-    </BlockPopover>
+            );
+          }
+          return true;
+        });
+      }}
+    />
   );
 };
 
-function getPopoverDecoration(
-  state: EditorState
-): { node: Node; component: PopoverRenderer; pos: number } | null {
+type PopoverDecoration =
+  | {
+      kind: 'node';
+      component: NodePopoverRenderer;
+      node: Node;
+      pos: number;
+    }
+  | {
+      kind: 'mark';
+      component: MarkPopoverRenderer;
+      mark: Mark;
+      from: number;
+      to: number;
+    };
+function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
   if (state.selection instanceof TextSelection) {
     const schema = getEditorSchema(state.schema);
-    if (schema.marks.link) {
-      const { $from, $to } = state.selection;
-      const nodeAfterFrom = $from.nodeAfter;
-      const nodeAfterTo = $to.nodeAfter;
-      if (nodeAfterFrom && nodeAfterTo) {
-        const linkMarkInFrom = schema.marks.link.isInSet(nodeAfterFrom.marks);
-        const linkMarkInTo = schema.marks.link.isInSet(nodeAfterTo.marks);
-        if (linkMarkInFrom && linkMarkInTo === linkMarkInTo) {
-          return { node: nodeAfterTo, component: LinkPopover, pos: $from.pos };
-        }
-      }
+    const linkAroundFrom = markAround(state.selection.$from, schema.marks.link);
+    const linkAroundTo = markAround(state.selection.$to, schema.marks.link);
+    if (
+      linkAroundFrom &&
+      linkAroundFrom.from === linkAroundTo?.from &&
+      linkAroundFrom.to === linkAroundTo.to
+    ) {
+      return {
+        kind: 'mark',
+        component: LinkPopover,
+        mark: linkAroundFrom.mark,
+        from: linkAroundFrom.from,
+        to: linkAroundFrom.to,
+      };
     }
   }
   const commonAncestorPos = state.selection.$from.start(
@@ -196,25 +179,60 @@ function getPopoverDecoration(
     if (!node) break;
     const renderer = popoverComponents[node.type.name];
     if (renderer !== undefined) {
-      return { node, component: renderer, pos: $pos.start(i) - 1 };
+      return {
+        kind: 'node',
+        node,
+        component: renderer,
+        pos: $pos.start(i) - 1,
+      };
     }
   }
 
   return null;
 }
 
-export function EditorPopover(props: { state: EditorState }) {
+function PopoverInner(props: {
+  decoration: PopoverDecoration;
+  state: EditorState;
+}) {
+  const from =
+    props.decoration.kind === 'node'
+      ? props.decoration.pos
+      : props.decoration.from;
+  const to =
+    props.decoration.kind === 'node'
+      ? props.decoration.pos + props.decoration.node.nodeSize
+      : props.decoration.to;
+  const reference = useEditorReferenceElement(from, to);
+  return (
+    reference && (
+      <EditorPopover
+        reference={reference}
+        placement="bottom"
+        adaptToViewport="stretch"
+        minWidth="element.medium"
+      >
+        {props.decoration.kind === 'node' ? (
+          <props.decoration.component
+            {...props.decoration}
+            state={props.state}
+          />
+        ) : (
+          <props.decoration.component
+            {...props.decoration}
+            state={props.state}
+          />
+        )}
+      </EditorPopover>
+    )
+  );
+}
+
+export function EditorPopoverDecoration(props: { state: EditorState }) {
   const popoverDecoration = useMemo(
     () => getPopoverDecoration(props.state),
     [props.state]
   );
   if (!popoverDecoration) return null;
-  return (
-    <popoverDecoration.component
-      key={popoverDecoration.node.type.name}
-      node={popoverDecoration.node}
-      pos={popoverDecoration.pos}
-      state={props.state}
-    />
-  );
+  return <PopoverInner decoration={popoverDecoration} state={props.state} />;
 }

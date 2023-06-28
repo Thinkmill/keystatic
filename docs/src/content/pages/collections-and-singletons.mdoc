@@ -1,8 +1,7 @@
 ---
 title: Collections & singletons
 ---
-
-Keystatic has two _concepts_ or mechanisms to manage data: `collections` and `singletons`.
+Keystatic has two *concepts* or mechanisms to manage data: `collections` and `singletons`.
 
 ## Collections
 
@@ -29,12 +28,14 @@ export default config({
 The config above creates a new `testimonials` collection.
 
 {% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/collectionsandsingletons1.png" /%}
+   href="https://keystatic.io/images/keystatic-docs/collectionsandsingletons1.png"
+   alt="Keystatic with testimonials collection selected in the sidebar" /%}
 
 Wrapping the `testimonials` config object inside the `collection()` function provides TypeScript autocomplete goodness ✨
 
 {% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/collectionsandsingletons2.png" /%}
+   href="https://keystatic.io/images/keystatic-docs/collectionsandsingletons2.png"
+   alt="Code with autocomplete menu inside a collection function call with 6 items: label, schema, slugField, directory, directorySuffix and format" /%}
 
 ### Slug field
 
@@ -74,9 +75,11 @@ export default config({
 The config above creates a new `homepage` singleton.
 
 {% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/collectionsandsingletons3.png" /%}
+   href="https://keystatic.io/images/keystatic-docs/collectionsandsingletons3.png"
+   alt="Keystatic with a homepage singleton selected with a text field: headline, welcome to keystatic" /%}
 
 Wrapping the `homepage` config object inside the `singleton()` function provides TypeScript autocomplete goodness ✨
 
 {% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/collectionsandsingletons4.png" /%}
+   href="https://keystatic.io/images/keystatic-docs/collectionsandsingletons4.png"
+   alt="Code with autocomplete menu inside a singleton function call with 4 items: label, schema, directory and format" /%}

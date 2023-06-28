@@ -12,6 +12,7 @@ type NavItemProps = {
   title?: string;
   tabIndex?: number;
   comingSoon?: boolean;
+  currentPage?: boolean;
 };
 
 export function NavItem({
@@ -21,9 +22,10 @@ export function NavItem({
   title,
   tabIndex,
   comingSoon,
+  currentPage,
 }: NavItemProps) {
   const pathname = usePathname();
-  const isCurrentPage = href === pathname;
+  const isCurrentPage = currentPage || href === pathname;
 
   const styleShared = `rounded-md px-4 py-2 block focus-visible:z-30 focus-visible:relative transition-colors ${
     level === 'top' ? 'text-md' : 'text-sm'
@@ -32,8 +34,11 @@ export function NavItem({
   const styleIdle =
     'font-medium text-neutral-600 hover:bg-keystatic-gray-light active:bg-keystatic-gray';
 
-  const styleCurrent =
-    'bg-keystatic-gray text-keystatic-gray-dark font-semibold before:block before:absolute before:inset-y-1 before:-inset-x-2 before:bg-keystatic-gray-dark before:w-1 before:rounded before:transition-all';
+  const styleCurrent = `bg-keystatic-gray text-keystatic-gray-dark font-semibold ${
+    level !== 'top'
+      ? 'before:block before:absolute before:inset-y-1 before:-inset-x-2 before:bg-keystatic-gray-dark before:w-1 before:rounded before:transition-all'
+      : ''
+  }`;
 
   return (
     <li className="relative" aria-current={isCurrentPage ? 'page' : false}>

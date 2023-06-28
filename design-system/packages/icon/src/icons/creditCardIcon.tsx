@@ -8,7 +8,7 @@ export const creditCardIcon = (
     width="1em"
     height="1em"
   >
-    <rect x={2} y={5} width={20} height={14} rx={2} />
+    <rect width={20} height={14} x={2} y={5} rx={2} />
     <path d="M2 10h20" />
   </svg>
 );
