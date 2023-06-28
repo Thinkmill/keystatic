@@ -1,0 +1,14 @@
+{
+  "name": "@keystatic/transform",
+  "private": true,
+  "dependencies": {
+    "@changesets/read": "^0.5.9",
+    "@manypkg/get-packages": "^2.2.0",
+    "globby": "^13.2.0",
+    "tsx": "^3.8.0"
+  },
+  "scripts": {
+    "run": "tsx new-pkg.mts && tsx update-usages.mts && tsx changesets.mts && cd .. && pnpm preconstruct fix && pnpm manypkg fix && pnpm format . && pnpm install",
+    "update-usages": "tsx update-usages.mts"
+  }
+}

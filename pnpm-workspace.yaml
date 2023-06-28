@@ -1,9 +1,11 @@
 packages:
   - 'design-system/packages/*'
   - 'design-system/docs'
+  - 'design-system/pkg'
   - 'design-system/docs/storybook'
   - 'keystatic'
   - 'packages/*'
   - 'apps/*'
   - 'templates/*'
   - 'docs'
+  - 'transform'
