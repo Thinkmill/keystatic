@@ -298,6 +298,9 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
             [itemStyle('[aria-current=page][data-focused] > &')]: {
               backgroundColor: tokenSchema.color.alias.backgroundPressed,
             },
+            [itemStyle('[aria-current=page][data-hovered] > &')]: {
+              backgroundColor: tokenSchema.color.alias.backgroundPressed,
+            },
           })}
           style={{
             // @ts-expect-error

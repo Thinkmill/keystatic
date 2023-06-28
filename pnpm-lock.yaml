@@ -326,6 +326,7 @@ importers:
       '@voussoir/listbox': ^0.1.6
       '@voussoir/menu': ^0.1.5
       '@voussoir/nav-list': ^0.1.3
+      '@voussoir/nav-tree': ^0.1.0
       '@voussoir/next': ^0.1.1
       '@voussoir/notice': ^0.1.5
       '@voussoir/number-field': ^0.1.6
@@ -392,6 +393,7 @@ importers:
       '@voussoir/listbox': link:../packages/listbox
       '@voussoir/menu': link:../packages/menu
       '@voussoir/nav-list': link:../packages/nav-list
+      '@voussoir/nav-tree': link:../packages/nav-tree
       '@voussoir/next': link:../packages/next
       '@voussoir/notice': link:../packages/notice
       '@voussoir/number-field': link:../packages/number-field

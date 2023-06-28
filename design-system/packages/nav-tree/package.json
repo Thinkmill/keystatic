@@ -1,6 +1,6 @@
 {
   "name": "@voussoir/nav-tree",
-  "version": "0.1.4",
+  "version": "0.1.0",
   "description": "Provides users with a way to navigate nested hierarchical information.",
   "license": "MIT",
   "main": "dist/voussoir-nav-tree.cjs.js",
