@@ -1,3 +1,5 @@
+import { AriaLabelingProps, DOMProps } from '@react-types/shared';
+import { filterDOMProps } from '@react-aria/utils';
 import {
   ReactNode,
   forwardRef,
@@ -6,13 +8,12 @@ import {
   ForwardRefExoticComponent,
   Ref,
 } from 'react';
-import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 
 import { Flex } from '@voussoir/layout';
 import { SlotProvider } from '@voussoir/slots';
 import { BaseStyleProps, useStyleProps } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
-import { filterDOMProps, isReactText } from '@voussoir/utils';
+import { isReactText } from '@voussoir/utils';
 
 type BadgeTones =
   | 'accent'
@@ -68,7 +69,7 @@ export const Badge: ForwardRefExoticComponent<
       UNSAFE_className={styleProps.className}
       UNSAFE_style={styleProps.style}
       ref={forwardedRef}
-      {...filterDOMProps(otherProps, { labellable: true })}
+      {...filterDOMProps(otherProps, { labelable: true })}
       // appearance
       backgroundColor={bg}
       borderRadius="full"

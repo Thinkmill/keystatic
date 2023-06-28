@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
+import { filterDOMProps } from '@react-aria/utils';
 import { DOMProps } from '@react-types/shared';
+import { ReactNode } from 'react';
 
 import { BaseStyleProps, useStyleProps } from '@voussoir/style';
-import { filterDOMProps } from '@voussoir/utils';
 import { forwardRefWithAs } from '@voussoir/utils/ts';
 
 import { useSlotProps } from './context';

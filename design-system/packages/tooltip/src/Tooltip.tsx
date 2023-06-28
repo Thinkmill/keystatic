@@ -1,5 +1,10 @@
 import { useTooltip } from '@react-aria/tooltip';
-import { mergeProps, mergeRefs, useObjectRef } from '@react-aria/utils';
+import {
+  filterDOMProps,
+  mergeProps,
+  mergeRefs,
+  useObjectRef,
+} from '@react-aria/utils';
 import {
   ForwardedRef,
   forwardRef,
@@ -20,7 +25,7 @@ import {
   useStyleProps,
 } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
-import { filterDOMProps, isReactText, toDataAttributes } from '@voussoir/utils';
+import { isReactText, toDataAttributes } from '@voussoir/utils';
 
 import { TooltipContext } from './context';
 import { TooltipProps } from './types';

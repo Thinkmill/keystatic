@@ -1,5 +1,6 @@
-import { forwardRef, ReactNode, useMemo } from 'react';
+import { filterDOMProps } from '@react-aria/utils';
 import { DOMProps } from '@react-types/shared';
+import { forwardRef, ReactNode, useMemo } from 'react';
 
 import { useLinkComponent } from '@voussoir/link';
 import { SlotProvider } from '@voussoir/slots';
@@ -11,7 +12,7 @@ import {
   transition,
 } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
-import { filterDOMProps, isReactText } from '@voussoir/utils';
+import { isReactText } from '@voussoir/utils';
 
 import { itemIndicatorGutter, itemIndicatorWidth } from './constants';
 

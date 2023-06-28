@@ -507,6 +507,7 @@ importers:
   design-system/packages/avatar:
     specifiers:
       '@babel/runtime': ^7.18.3
+      '@react-aria/utils': ^3.18.0
       '@react-types/shared': ^3.18.0
       '@types/react': ^18.2.8
       '@voussoir/layout': ^0.1.2
@@ -514,15 +515,14 @@ importers:
       '@voussoir/style': ^0.1.3
       '@voussoir/test-utils': ^2.0.2
       '@voussoir/typography': ^0.1.2
-      '@voussoir/utils': ^2.0.2
       react: ^18.2.0
     dependencies:
       '@babel/runtime': 7.21.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
       '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/layout': link:../layout
       '@voussoir/style': link:../style
       '@voussoir/typography': link:../typography
-      '@voussoir/utils': link:../utils
     devDependencies:
       '@types/react': 18.2.8
       '@voussoir/storybook': link:../../docs/storybook
@@ -532,6 +532,7 @@ importers:
   design-system/packages/badge:
     specifiers:
       '@babel/runtime': ^7.18.3
+      '@react-aria/utils': ^3.18.0
       '@react-types/shared': ^3.18.0
       '@types/react': ^18.2.8
       '@voussoir/core': ^5.0.1
@@ -546,6 +547,7 @@ importers:
       react: ^18.2.0
     dependencies:
       '@babel/runtime': 7.21.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
       '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/layout': link:../layout
       '@voussoir/slots': link:../slots
@@ -771,6 +773,8 @@ importers:
       '@babel/runtime': ^7.18.3
       '@react-aria/i18n': ^3.8.0
       '@react-aria/overlays': ^3.15.0
+      '@react-aria/utils': ^3.18.0
+      '@react-types/shared': ^3.18.0
       '@types/assert': ^1.5.6
       '@types/react': ^18.2.8
       '@voussoir/link': ^0.1.4
@@ -787,6 +791,8 @@ importers:
       '@babel/runtime': 7.21.0
       '@react-aria/i18n': 3.8.0_react@18.2.0
       '@react-aria/overlays': 3.15.0_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/utils': 3.18.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/link': link:../link
       '@voussoir/ssr': link:../ssr
       '@voussoir/style': link:../style
@@ -1016,6 +1022,7 @@ importers:
     specifiers:
       '@babel/runtime': ^7.18.3
       '@react-aria/i18n': ^3.8.0
+      '@react-aria/utils': ^3.18.0
       '@svgr/core': ^6.5.1
       '@svgr/plugin-jsx': ^6.5.1
       '@svgr/plugin-prettier': ^6.5.1
@@ -1032,6 +1039,7 @@ importers:
     dependencies:
       '@babel/runtime': 7.21.0
       '@react-aria/i18n': 3.8.0_react@18.2.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
       '@voussoir/layout': link:../layout
       '@voussoir/slots': link:../slots
       '@voussoir/style': link:../style
@@ -1050,6 +1058,7 @@ importers:
   design-system/packages/image:
     specifiers:
       '@babel/runtime': ^7.18.3
+      '@react-aria/utils': ^3.18.0
       '@react-types/shared': ^3.18.0
       '@types/react': ^18.2.8
       '@voussoir/layout': ^0.1.3
@@ -1062,6 +1071,7 @@ importers:
       react: ^18.2.0
     dependencies:
       '@babel/runtime': 7.21.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
       '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/layout': link:../layout
       '@voussoir/slots': link:../slots
@@ -1078,6 +1088,7 @@ importers:
     specifiers:
       '@babel/runtime': ^7.18.3
       '@react-aria/separator': ^3.3.3
+      '@react-aria/utils': ^3.18.0
       '@react-types/shared': ^3.18.0
       '@types/react': ^18.2.8
       '@voussoir/slots': ^0.1.2
@@ -1089,6 +1100,7 @@ importers:
     dependencies:
       '@babel/runtime': 7.21.0
       '@react-aria/separator': 3.3.3_react@18.2.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
       '@react-types/shared': 3.18.1_react@18.2.0
       '@voussoir/slots': link:../slots
       '@voussoir/style': link:../style
@@ -6529,7 +6541,7 @@ packages:
     dependencies:
       '@react-aria/focus': 3.12.1_react@18.2.0
       '@react-aria/interactions': 3.15.1_react@18.2.0
-      '@react-aria/utils': 3.17.0_react@18.2.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
       '@react-stately/toggle': 3.6.0_react@18.2.0
       '@react-types/button': 3.7.0_react@18.2.0
       '@react-types/shared': 3.18.1_react@18.2.0
@@ -6664,7 +6676,7 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-aria/interactions': 3.14.0_react@18.2.0
-      '@react-aria/utils': 3.15.0_react@18.2.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
       '@react-types/shared': 3.18.1_react@18.2.0
       '@swc/helpers': 0.4.14
       clsx: 1.2.1
@@ -6677,7 +6689,7 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-aria/interactions': 3.15.1_react@18.2.0
-      '@react-aria/utils': 3.17.0_react@18.2.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
       '@react-types/shared': 3.18.1_react@18.2.0
       '@swc/helpers': 0.4.14
       clsx: 1.2.1
@@ -6750,7 +6762,7 @@ packages:
       '@internationalized/number': 3.2.0
       '@internationalized/string': 3.1.0
       '@react-aria/ssr': 3.7.0_react@18.2.0
-      '@react-aria/utils': 3.15.0_react@18.2.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
       '@react-types/shared': 3.18.1_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
@@ -6777,7 +6789,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-aria/utils': 3.15.0_react@18.2.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
       '@react-types/shared': 3.18.1_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
@@ -6789,7 +6801,7 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-aria/ssr': 3.7.0_react@18.2.0
-      '@react-aria/utils': 3.17.0_react@18.2.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
       '@react-types/shared': 3.18.1_react@18.2.0
       '@swc/helpers': 0.4.14
       react: 18.2.0
@@ -6954,7 +6966,7 @@ packages:
       '@react-aria/i18n': 3.8.0_react@18.2.0
       '@react-aria/interactions': 3.16.0_react@18.2.0
       '@react-aria/ssr': 3.7.0_react@18.2.0
-      '@react-aria/utils': 3.15.0_react@18.2.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
       '@react-aria/visually-hidden': 3.7.0_react@18.2.0
       '@react-stately/overlays': 3.5.0_react@18.2.0
       '@react-types/button': 3.7.1_react@18.2.0
@@ -7327,7 +7339,7 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-aria/interactions': 3.14.0_react@18.2.0
-      '@react-aria/utils': 3.15.0_react@18.2.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
       '@react-types/shared': 3.18.1_react@18.2.0
       '@swc/helpers': 0.4.14
       clsx: 1.2.1

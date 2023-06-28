@@ -1,5 +1,6 @@
-import { ReactNode } from 'react';
+import { filterDOMProps } from '@react-aria/utils';
 import { DOMProps } from '@react-types/shared';
+import { ReactNode } from 'react';
 
 import {
   BaseStyleProps,
@@ -9,7 +10,6 @@ import {
   useResponsiveValue,
   useStyleProps,
 } from '@voussoir/style';
-import { filterDOMProps } from '@voussoir/utils';
 
 type RatioType = `${number}` | `${number}/${number}`;
 

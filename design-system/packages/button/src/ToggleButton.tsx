@@ -1,3 +1,7 @@
+import { useToggleButton } from '@react-aria/button';
+import { useHover } from '@react-aria/interactions';
+import { filterDOMProps, mergeProps, useObjectRef } from '@react-aria/utils';
+import { useToggleState } from '@react-stately/toggle';
 import {
   ForwardedRef,
   forwardRef,
@@ -5,15 +9,9 @@ import {
   Ref,
 } from 'react';
 
-import { useToggleButton } from '@react-aria/button';
-import { useHover } from '@react-aria/interactions';
-import { mergeProps, useObjectRef } from '@react-aria/utils';
-import { useToggleState } from '@react-stately/toggle';
-
 import { useProviderProps } from '@voussoir/core';
 import { useSlotProps } from '@voussoir/slots';
 import { FocusRing } from '@voussoir/style';
-import { filterDOMProps } from '@voussoir/utils';
 
 import { useActionButtonStyles } from './useActionButtonStyles';
 import { ToggleButtonProps } from './types';
@@ -50,7 +48,7 @@ export const ToggleButton: ForwardRefExoticComponent<
         ref={domRef}
         {...styleProps}
         {...mergeProps(buttonProps, hoverProps)}
-        {...filterDOMProps(otherProps, { pick: new Set(['tabIndex']) })}
+        {...filterDOMProps(otherProps)}
       >
         {children}
       </button>

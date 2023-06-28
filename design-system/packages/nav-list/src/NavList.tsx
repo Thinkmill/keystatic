@@ -1,4 +1,8 @@
-import { useLayoutEffect, useObjectRef } from '@react-aria/utils';
+import {
+  filterDOMProps,
+  useLayoutEffect,
+  useObjectRef,
+} from '@react-aria/utils';
 import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 import {
   ForwardedRef,
@@ -13,9 +17,8 @@ import {
 } from 'react';
 
 import { Flex } from '@voussoir/layout';
-import { BaseStyleProps, css, useStyleProps } from '@voussoir/style';
-import { filterDOMProps } from '@voussoir/utils';
 import { SlotProvider } from '@voussoir/slots';
+import { BaseStyleProps, css, useStyleProps } from '@voussoir/style';
 
 import {
   itemContentGutter,
@@ -70,7 +73,7 @@ export const NavList: ForwardRefExoticComponent<
       direction="column"
       UNSAFE_className={styleProps.className}
       UNSAFE_style={styleProps.style}
-      {...filterDOMProps(otherProps, { labellable: true })}
+      {...filterDOMProps(otherProps, { labelable: true })}
     >
       <Flex direction="column" elementType="ul" flex="1 0 0">
         <SlotProvider slots={slots}>{children}</SlotProvider>

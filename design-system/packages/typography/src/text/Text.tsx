@@ -1,9 +1,9 @@
+import { filterDOMProps } from '@react-aria/utils';
 import { assert, warning } from 'emery';
 import { useMemo } from 'react';
 
 import { useSlotProps } from '@voussoir/slots';
 import { TextProps } from '@voussoir/types';
-import { filterDOMProps } from '@voussoir/utils';
 import { forwardRefWithAs } from '@voussoir/utils/ts';
 
 import { TextContext, TextContextType, useTextContext } from './context';

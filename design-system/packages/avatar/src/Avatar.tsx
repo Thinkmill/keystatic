@@ -1,10 +1,11 @@
+import { filterDOMProps } from '@react-aria/utils';
+import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 import {
   forwardRef,
   ForwardedRef,
   ForwardRefExoticComponent,
   Ref,
 } from 'react';
-import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 
 import {
   BaseStyleProps,
@@ -15,7 +16,6 @@ import {
   SizeElement,
 } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
-import { filterDOMProps } from '@voussoir/utils';
 
 export type AvatarProps = {
   /**

@@ -1,11 +1,11 @@
-import { ReactEventHandler, ReactNode } from 'react';
+import { filterDOMProps } from '@react-aria/utils';
 import { DOMProps } from '@react-types/shared';
+import { warning } from 'emery';
+import { ReactEventHandler, ReactNode } from 'react';
 
 import { AspectRatio, AspectRatioProps } from '@voussoir/layout';
-import { BoxStyleProps, classNames, css, useStyleProps } from '@voussoir/style';
-import { filterDOMProps } from '@voussoir/utils';
-import { warning } from 'emery';
 import { useSlotProps } from '@voussoir/slots';
+import { BoxStyleProps, classNames, css, useStyleProps } from '@voussoir/style';
 
 const supportedProps = new Set(['loading', 'onError', 'onLoad', 'src']);
 
@@ -74,7 +74,7 @@ export function Image(props: ImageProps) {
       UNSAFE_style={styleProps.style}
     >
       <img
-        {...filterDOMProps(otherProps, { pick: supportedProps })}
+        {...filterDOMProps(otherProps, { propNames: supportedProps })}
         alt={alt}
         role={alt === '' ? 'presentation' : undefined}
         className={classNames(css({ objectFit: fit }))}

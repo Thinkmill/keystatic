@@ -1,9 +1,9 @@
 import { useSeparator } from '@react-aria/separator';
+import { filterDOMProps } from '@react-aria/utils';
 
 import { useSlotProps } from '@voussoir/slots';
 import { css, classNames, useStyleProps, tokenSchema } from '@voussoir/style';
 import { DividerProps } from '@voussoir/types';
-import { filterDOMProps } from '@voussoir/utils';
 import { forwardRefWithAs } from '@voussoir/utils/ts';
 
 /**
@@ -33,7 +33,7 @@ export const Divider = forwardRefWithAs<DividerProps, 'div'>(
       <Element
         {...styleProps}
         {...separatorProps}
-        {...filterDOMProps(otherProps, { pick: new Set(['role']) })}
+        {...filterDOMProps(otherProps, { propNames: new Set(['role']) })}
         ref={forwardedRef}
         className={classNames(
           `is-${orientation}`,

@@ -1,4 +1,4 @@
-import { useSlotId } from '@react-aria/utils';
+import { filterDOMProps, useSlotId } from '@react-aria/utils';
 import { DOMProps } from '@react-types/shared';
 import { ReactNode, useMemo, useRef } from 'react';
 
@@ -8,7 +8,7 @@ import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
 import { Icon } from '@voussoir/icon';
 import { Grid, minmax } from '@voussoir/layout';
 import { Content, SlotProvider } from '@voussoir/slots';
-import { filterDOMProps, isReactText, useHasChild } from '@voussoir/utils';
+import { isReactText, useHasChild } from '@voussoir/utils';
 import {
   BaseStyleProps,
   css,

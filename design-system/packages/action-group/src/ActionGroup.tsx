@@ -2,6 +2,7 @@ import { useActionGroup, useActionGroupItem } from '@react-aria/actiongroup';
 import { FocusScope } from '@react-aria/focus';
 import { PressResponder } from '@react-aria/interactions';
 import {
+  filterDOMProps,
   mergeProps,
   useId,
   useLayoutEffect,
@@ -40,7 +41,7 @@ import {
   tokenSchema,
   useStyleProps,
 } from '@voussoir/style';
-import { filterDOMProps, isReactText, toDataAttributes } from '@voussoir/utils';
+import { isReactText, toDataAttributes } from '@voussoir/utils';
 
 import { ActionGroupProps } from './types';
 
@@ -230,7 +231,7 @@ function ActionGroup<T extends object>(
   // If there are no visible items, don't apply any props to the action group container
   // and pass all aria labeling props through to the menu button.
   if (overflowMode === 'collapse' && visibleItems === 0) {
-    menuProps = filterDOMProps(props, { labellable: true });
+    menuProps = filterDOMProps(props, { labelable: true });
     actionGroupProps = {};
   }
 

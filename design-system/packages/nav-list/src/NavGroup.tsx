@@ -1,11 +1,10 @@
-import { useId } from '@react-aria/utils';
+import { filterDOMProps, useId } from '@react-aria/utils';
 import { DOMProps } from '@react-types/shared';
 import { ReactNode } from 'react';
 
 import { Box } from '@voussoir/layout';
 import { classNames, css, tokenSchema } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
-import { filterDOMProps } from '@voussoir/utils';
 
 import {
   itemContentGutter,
