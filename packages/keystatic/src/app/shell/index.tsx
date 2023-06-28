@@ -13,6 +13,8 @@ import { VoussoirTheme, css, transition } from '@voussoir/style';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../../config';
+
+import { ConfigContext } from './context';
 import {
   GitHubAppShellProvider,
   AppShellErrorContext,
@@ -20,15 +22,7 @@ import {
 } from './data';
 import { SidebarProvider, Sidebar, SIDEBAR_WIDTH } from './sidebar';
 import { isGitHubConfig, isLocalConfig } from '../utils';
-
-const ConfigContext = createContext<Config | null>(null);
-export function useConfig(): Config {
-  const config = useContext(ConfigContext);
-  if (!config) {
-    throw new Error('ConfigContext.Provider not found');
-  }
-  return config;
-}
+import { AppHeader } from './app-header';
 
 export const AppShell = (props: {
   config: Config;
@@ -38,6 +32,7 @@ export const AppShell = (props: {
 }) => {
   const inner = (
     <ConfigContext.Provider value={props.config}>
+      <AppHeader />
       <SidebarProvider>
         <Flex direction={{ mobile: 'column', tablet: 'row' }} minHeight="100vh">
           <Sidebar hrefBase={props.basePath} config={props.config} />

@@ -19,14 +19,9 @@ import { useRouter } from './router';
 import { Grid } from '@voussoir/layout';
 import { BranchInfoContext, Ref_base, useRepositoryId } from './shell/data';
 
-type BranchPickerProps = {
-  allBranches: string[];
-  currentBranch: string;
-  defaultBranch?: string;
-};
-
-export function BranchPicker(props: BranchPickerProps) {
-  const { allBranches, currentBranch, defaultBranch } = props;
+export function BranchPicker() {
+  const { allBranches, currentBranch, defaultBranch } =
+    useContext(BranchInfoContext);
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
   const items = useMemo(() => {
@@ -52,8 +47,6 @@ export function BranchPicker(props: BranchPickerProps) {
   return (
     <Picker
       aria-label={stringFormatter.format('currentBranch')}
-      flex
-      width="100%"
       items={items}
       selectedKey={currentBranch}
       onSelectionChange={key => {

@@ -1,6 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
-import { Item, Section } from '@react-stately/collections';
 import {
   createContext,
   ReactNode,
@@ -10,25 +9,18 @@ import {
 } from 'react';
 
 import { Badge } from '@voussoir/badge';
-import { ActionButton } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { Image } from '@voussoir/image';
 import { Flex } from '@voussoir/layout';
-import { MenuTrigger, Menu } from '@voussoir/menu';
 import { NavList, NavItem, NavGroup } from '@voussoir/nav-list';
 import { css, breakpointQueries, tokenSchema } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
 
-import { CloudConfig, Config, GitHubConfig } from '../../config';
+import { Config } from '../../config';
 
 import l10nMessages from '../l10n/index.json';
 import { useRouter } from '../router';
-import { getRepoUrl, isCloudConfig, isGitHubConfig, pluralize } from '../utils';
+import { pluralize } from '../utils';
 
-import { GitHubAppShellDataContext, useBranchInfo, useChanged } from './data';
-import { SidebarHeader } from './sidebar-header';
-import { ViewerContext } from './sidebar-data';
+import { useChanged } from './data';
 
 export const SidebarContext = createContext<{
   sidebarIsOpen: boolean;
@@ -92,16 +84,16 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
       UNSAFE_className={[
         css({
           width: SIDEBAR_WIDTH,
-          [breakpointQueries.above.mobile]: {
-            '&::before': {
-              boxShadow: `inset ${tokenSchema.size.shadow.medium} ${tokenSchema.color.shadow.muted}`,
-              content: '""',
-              inset: '-10% 0',
-              position: 'absolute',
-              pointerEvents: 'none',
-              width: 'inherit',
-            },
-          },
+          // [breakpointQueries.above.mobile]: {
+          //   '&::before': {
+          //     boxShadow: `inset ${tokenSchema.size.shadow.medium} ${tokenSchema.color.shadow.muted}`,
+          //     content: '""',
+          //     inset: '-10% 0',
+          //     position: 'absolute',
+          //     pointerEvents: 'none',
+          //     width: 'inherit',
+          //   },
+          // },
           [breakpointQueries.below.tablet]: {
             boxShadow: `${tokenSchema.size.shadow.large} ${tokenSchema.color.shadow.regular}`,
             left: 'auto',
@@ -120,10 +112,6 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
         'keystatic-sidebar',
       ]}
     >
-      {(isGitHubConfig(props.config) || isCloudConfig(props.config)) && (
-        <SidebarHeader />
-      )}
-
       {/*
   ======================================================================
   NAVIGATION
@@ -199,108 +187,12 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
         </NavList>
       </Flex>
 
-      {(isGitHubConfig(props.config) || isCloudConfig(props.config)) && (
-        <SidebarFooter config={props.config} />
-      )}
-
       <VisuallyHidden
         elementType="button"
         onClick={() => setSidebarOpen(false)}
       >
         close sidebar
       </VisuallyHidden>
-    </Flex>
-  );
-}
-
-function SidebarFooter(props: { config: GitHubConfig | CloudConfig }) {
-  const viewer = useContext(ViewerContext);
-  const appShellData = useContext(GitHubAppShellDataContext);
-  const fork =
-    appShellData?.data?.repository &&
-    'forks' in appShellData.data.repository &&
-    appShellData.data.repository.forks.nodes?.[0];
-  const branchInfo = useBranchInfo();
-  return (
-    <Flex
-      elementType="header"
-      borderTop="muted"
-      paddingX="xlarge"
-      height="element.xlarge"
-      alignItems="center"
-      justifyContent="space-between"
-    >
-      <Text
-        color="neutralEmphasis"
-        weight="semibold"
-        size="medium"
-        id="nav-title-id"
-        truncate
-      >
-        {props.config.storage.kind === 'github'
-          ? props.config.storage.repo.name
-          : props.config.storage.project}
-      </Text>
-      <MenuTrigger direction="top">
-        <ActionButton prominence="low" aria-label="app actions">
-          {props.config.storage.kind === 'github' && (
-            <Image
-              alt={`${viewer?.name ?? viewer?.login} avatar`}
-              borderRadius="full"
-              overflow="hidden"
-              aspectRatio="1"
-              height="element.xsmall"
-              src={viewer?.avatarUrl ?? ''}
-            />
-          )}
-          <Icon src={chevronDownIcon} />
-        </ActionButton>
-        <Menu
-          onAction={key => {
-            if (key === 'logout') {
-              if (props.config.storage.kind === 'github') {
-                window.location.href = '/api/keystatic/github/logout';
-              }
-              if (props.config.storage.kind === 'cloud') {
-                localStorage.removeItem('keystatic-cloud-access-token');
-                window.location.reload();
-              }
-            }
-            if (key === 'profile') {
-              window.open(
-                `https://github.com/${viewer?.login ?? ''}`,
-                '_blank',
-                'noopener,noreferrer'
-              );
-            }
-            if (key === 'repository') {
-              window.open(
-                getRepoUrl(branchInfo),
-                '_blank',
-                'noopener,noreferrer'
-              );
-            }
-            if (key === 'fork' && fork) {
-              window.open(
-                `https://github.com/${fork.owner.login}/${fork.name}`,
-                '_blank',
-                'noopener,noreferrer'
-              );
-            }
-          }}
-        >
-          <Item key="logout">Log out</Item>
-          <Section title="Github">
-            {[
-              ...(props.config.storage.kind === 'github'
-                ? [<Item key="profile">Profile</Item>]
-                : []),
-              <Item key="repository">Repository</Item>,
-              ...(fork ? [<Item key="fork">Fork</Item>] : []),
-            ]}
-          </Section>
-        </Menu>
-      </MenuTrigger>
     </Flex>
   );
 }

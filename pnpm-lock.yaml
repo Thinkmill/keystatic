@@ -2352,6 +2352,7 @@ importers:
       '@urql/exchange-graphcache': ^6.0.1
       '@urql/exchange-persisted': ^3.0.0
       '@voussoir/action-group': ^0.1.6
+      '@voussoir/avatar': ^0.1.4
       '@voussoir/badge': ^0.1.4
       '@voussoir/breadcrumbs': ^0.1.10
       '@voussoir/button': ^0.2.0
@@ -2464,6 +2465,7 @@ importers:
       '@urql/exchange-graphcache': 6.0.1_graphql@16.6.0
       '@urql/exchange-persisted': 3.0.0_graphql@16.6.0
       '@voussoir/action-group': link:../../design-system/packages/action-group
+      '@voussoir/avatar': link:../../design-system/packages/avatar
       '@voussoir/badge': link:../../design-system/packages/badge
       '@voussoir/breadcrumbs': link:../../design-system/packages/breadcrumbs
       '@voussoir/button': link:../../design-system/packages/button
