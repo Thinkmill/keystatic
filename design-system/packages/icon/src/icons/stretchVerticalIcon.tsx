@@ -8,7 +8,7 @@ export const stretchVerticalIcon = (
     width="1em"
     height="1em"
   >
-    <rect x={4} y={2} width={6} height={20} rx={2} />
-    <rect x={14} y={2} width={6} height={20} rx={2} />
+    <rect width={6} height={20} x={4} y={2} rx={2} />
+    <rect width={6} height={20} x={14} y={2} rx={2} />
   </svg>
 );

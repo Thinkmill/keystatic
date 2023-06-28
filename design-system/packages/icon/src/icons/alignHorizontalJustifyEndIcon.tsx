@@ -8,8 +8,8 @@ export const alignHorizontalJustifyEndIcon = (
     width="1em"
     height="1em"
   >
-    <rect x={2} y={5} width={6} height={14} rx={2} />
-    <rect x={12} y={7} width={6} height={10} rx={2} />
+    <rect width={6} height={14} x={2} y={5} rx={2} />
+    <rect width={6} height={10} x={12} y={7} rx={2} />
     <path d="M22 2v20" />
   </svg>
 );

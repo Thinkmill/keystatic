@@ -8,6 +8,6 @@ export const arrowUpDownIcon = (
     width="1em"
     height="1em"
   >
-    <path d="m11 17-4 4-4-4M7 21V9M21 7l-4-4-4 4M17 15V3" />
+    <path d="m21 16-4 4-4-4M17 20V4M3 8l4-4 4 4M7 4v16" />
   </svg>
 );

@@ -39,11 +39,7 @@ export const AppShell = (props: {
   const inner = (
     <ConfigContext.Provider value={props.config}>
       <SidebarProvider>
-        <Flex
-          direction={{ mobile: 'column', tablet: 'row' }}
-          width="100vw"
-          minHeight="100vh"
-        >
+        <Flex direction={{ mobile: 'column', tablet: 'row' }} minHeight="100vh">
           <Sidebar hrefBase={props.basePath} config={props.config} />
           <AppShellErrorContext.Consumer>
             {error =>

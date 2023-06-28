@@ -8,6 +8,6 @@ export const listChecksIcon = (
     width="1em"
     height="1em"
   >
-    <path d="M10 6h11M10 12h11M10 18h11M3 6l1 1 2-2M3 12l1 1 2-2M3 18l1 1 2-2" />
+    <path d="m3 17 2 2 4-4M3 7l2 2 4-4M13 6h8M13 12h8M13 18h8" />
   </svg>
 );

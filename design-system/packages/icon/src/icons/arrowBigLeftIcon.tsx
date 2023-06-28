@@ -8,6 +8,6 @@ export const arrowBigLeftIcon = (
     width="1em"
     height="1em"
   >
-    <path d="m3 12 7-7v4h11v6H10v4z" />
+    <path d="M18 15h-6v4l-7-7 7-7v4h6v6z" />
   </svg>
 );

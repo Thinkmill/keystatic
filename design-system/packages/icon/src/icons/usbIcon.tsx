@@ -8,9 +8,9 @@ export const usbIcon = (
     width="1em"
     height="1em"
   >
-    <circle cx={4} cy={20} r={1} />
     <circle cx={10} cy={7} r={1} />
-    <path d="M4 20 19 5M21 3l-3 1 2 2 1-3ZM10 7l-5 5 2 5M10 14l5 2 4-4" />
-    <path d="m18 12 1-1 1 1-1 1-1-1Z" />
+    <circle cx={4} cy={20} r={1} />
+    <path d="M4.7 19.3 19 5M21 3l-3 1 2 2ZM9.26 7.68 5 12l2 5M10 14l5 2 3.5-3.5" />
+    <path d="m18 12 1-1 1 1-1 1Z" />
   </svg>
 );

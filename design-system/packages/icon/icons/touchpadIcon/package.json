@@ -1,0 +1,4 @@
+{
+  "main": "dist/voussoir-icon-icons-touchpadIcon.cjs.js",
+  "module": "dist/voussoir-icon-icons-touchpadIcon.esm.js"
+}

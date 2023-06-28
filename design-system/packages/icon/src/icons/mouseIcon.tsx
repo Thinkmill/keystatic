@@ -8,7 +8,7 @@ export const mouseIcon = (
     width="1em"
     height="1em"
   >
-    <rect x={6} y={3} width={12} height={18} rx={6} />
-    <path d="M12 7v4" />
+    <rect x={5} y={2} width={14} height={20} rx={7} />
+    <path d="M12 6v4" />
   </svg>
 );

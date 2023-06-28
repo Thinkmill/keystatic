@@ -8,7 +8,7 @@ export const batteryFullIcon = (
     width="1em"
     height="1em"
   >
-    <rect x={2} y={7} width={16} height={10} rx={2} ry={2} />
+    <rect width={16} height={10} x={2} y={7} rx={2} ry={2} />
     <path d="M22 11v2M6 11v2M10 11v2M14 11v2" />
   </svg>
 );

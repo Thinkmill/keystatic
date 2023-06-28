@@ -8,7 +8,7 @@ export const tabletIcon = (
     width="1em"
     height="1em"
   >
-    <rect x={4} y={2} width={16} height={20} rx={2} ry={2} />
+    <rect width={16} height={20} x={4} y={2} rx={2} ry={2} />
     <path d="M12 18h.01" />
   </svg>
 );

@@ -9,6 +9,6 @@ export const discIcon = (
     height="1em"
   >
     <circle cx={12} cy={12} r={10} />
-    <circle cx={12} cy={12} r={3} />
+    <circle cx={12} cy={12} r={2} />
   </svg>
 );

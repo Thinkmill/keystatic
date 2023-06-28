@@ -241,6 +241,7 @@ function ListView<T extends object>(
                 backgroundColor: tokenSchema.color.background.canvas,
                 border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
                 borderRadius: tokenSchema.size.radius.medium,
+                boxSizing: 'content-box', // resolves measurement/scroll issues related to border
                 outline: 0,
                 overflow: 'auto',
                 position: 'relative',
