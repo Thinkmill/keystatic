@@ -1,4 +1,8 @@
-import { FocusableProps } from '@react-types/shared';
+import {
+  FocusableProps,
+  TextInputDOMProps,
+  ValueBase,
+} from '@react-types/shared';
 import {
   HTMLAttributes,
   InputHTMLAttributes,
@@ -8,7 +12,7 @@ import {
 } from 'react';
 
 import { FieldProps } from '@voussoir/field';
-import { Conditional, TextInputDOMProps, ValueBase } from '@voussoir/types';
+import { Conditional } from '@voussoir/types';
 
 export type TextFieldPrimitiveProps = TextFieldProps & {
   /**

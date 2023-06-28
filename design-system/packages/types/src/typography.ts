@@ -1,3 +1,4 @@
+import { DOMProps } from '@react-types/shared';
 import { ReactNode } from 'react';
 
 import {
@@ -8,8 +9,6 @@ import {
   FontSizeText,
   FontWeight,
 } from '@voussoir/style';
-
-import { DOMProps } from './dom';
 
 // ============================================================================
 // HEADING

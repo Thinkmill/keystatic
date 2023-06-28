@@ -4,7 +4,7 @@ export default function ThankYouPage() {
   return (
     <>
       <main className="mx-auto max-w-7xl px-6 pt-6 pb-12 flex flex-1 items-center w-full">
-        <div className="max-w-2xl">
+        <div className="max-w-xl">
           <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl">
             Thank you for being{' '}
             <span className="relative inline-block">
@@ -23,7 +23,7 @@ export default function ThankYouPage() {
               <span className="relative">curious!</span>
             </span>
           </h1>
-          <p className="mt-10 text-2xl text-keystatic-gray-dark">
+          <p className="mt-8 text-lg text-keystatic-gray-dark">
             We're looking forward to sharing updates with you in the coming
             weeks and months.
           </p>

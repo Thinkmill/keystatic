@@ -35,7 +35,7 @@ export default async function Docs({ params }: { params: { slug: string[] } }) {
       <div>
         <h1
           id="overview"
-          className="text-2xl font-extrabold sm:text-3xl mb-6 scroll-mt-[7rem]"
+          className="text-3xl font-extrabold mb-8 scroll-mt-[7rem]"
         >
           {page.title}
         </h1>

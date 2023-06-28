@@ -1,8 +1,13 @@
 import { LabelAria } from '@react-aria/label';
+import {
+  AriaLabelingProps,
+  DOMProps,
+  InputBase,
+  Validation,
+} from '@react-types/shared';
 import { ReactElement, ReactNode } from 'react';
 
 import { BaseStyleProps } from '@voussoir/style';
-import { AriaLabellingProps, DOMProps, InputBaseProps } from '@voussoir/types';
 
 export type FieldRenderProp = (props: LabelAria['fieldProps']) => ReactElement;
 
@@ -19,7 +24,8 @@ export type FieldProps = {
   errorMessage?: ReactNode;
   /** Concisely label the field. */
   label?: ReactNode;
-} & InputBaseProps &
-  AriaLabellingProps &
+} & InputBase &
+  Pick<Validation, 'isRequired'> &
+  AriaLabelingProps &
   BaseStyleProps &
   DOMProps;

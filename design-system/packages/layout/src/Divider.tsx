@@ -1,10 +1,19 @@
 import { useSeparator } from '@react-aria/separator';
+import { filterDOMProps } from '@react-aria/utils';
 
 import { useSlotProps } from '@voussoir/slots';
-import { css, classNames, useStyleProps, tokenSchema } from '@voussoir/style';
+import {
+  ClassList,
+  classNames,
+  css,
+  useStyleProps,
+  tokenSchema,
+} from '@voussoir/style';
 import { DividerProps } from '@voussoir/types';
-import { filterDOMProps } from '@voussoir/utils';
+import { toDataAttributes } from '@voussoir/utils';
 import { forwardRefWithAs } from '@voussoir/utils/ts';
+
+export const dividerClassList = new ClassList('Divider');
 
 /**
  * Dividers bring clarity to a layout by grouping and dividing content in close proximity.
@@ -33,22 +42,24 @@ export const Divider = forwardRefWithAs<DividerProps, 'div'>(
       <Element
         {...styleProps}
         {...separatorProps}
-        {...filterDOMProps(otherProps, { pick: new Set(['role']) })}
+        {...toDataAttributes({ orientation, size })}
+        {...filterDOMProps(otherProps, { propNames: new Set(['role']) })}
         ref={forwardedRef}
         className={classNames(
-          `is-${orientation}`,
-          `is-${size}`,
+          dividerClassList.root(),
           css({
             alignSelf: 'stretch',
             backgroundColor: tokenSchema.color.border.neutral,
             borderRadius: 'var(--size)',
 
-            '&.is-regular': { '--size': tokenSchema.size.border.regular },
-            '&.is-medium': { '--size': tokenSchema.size.border.medium },
-            '&.is-large': { '--size': tokenSchema.size.border.large },
+            '&[data-size=regular]': {
+              '--size': tokenSchema.size.border.regular,
+            },
+            '&[data-size=medium]': { '--size': tokenSchema.size.border.medium },
+            '&[data-size=large]': { '--size': tokenSchema.size.border.large },
 
-            '&.is-horizontal': { blockSize: 'var(--size)' },
-            '&.is-vertical': { inlineSize: 'var(--size)' },
+            '&[data-orientation=horizontal]': { blockSize: 'var(--size)' },
+            '&[data-orientation=vertical]': { blockSize: 'var(--size)' },
           }),
           styleProps.className
         )}

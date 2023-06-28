@@ -1,6 +1,6 @@
 /* https://github.com/adobe/react-spectrum/blob/main/packages/%40react-spectrum/utils/src/useMediaQuery.ts */
-import { useEffect, useState } from 'react';
 import { useIsSSR } from '@react-aria/ssr';
+import { useEffect, useState } from 'react';
 
 export function useMediaQuery(query: string) {
   let supportsMatchMedia =

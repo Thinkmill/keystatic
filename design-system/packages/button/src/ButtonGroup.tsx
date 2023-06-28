@@ -1,4 +1,5 @@
 import {
+  filterDOMProps,
   useLayoutEffect,
   useObjectRef,
   useResizeObserver,
@@ -20,7 +21,7 @@ import {
 } from '@voussoir/core';
 import { useSlotProps } from '@voussoir/slots';
 import { classNames, css, tokenSchema, useStyleProps } from '@voussoir/style';
-import { filterDOMProps, toDataAttributes } from '@voussoir/utils';
+import { toDataAttributes } from '@voussoir/utils';
 
 import { ButtonGroupProps } from './types';
 

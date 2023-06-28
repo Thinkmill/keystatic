@@ -24,9 +24,10 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@react-aria/focus": "^3.12.1",
-    "@react-aria/utils": "^3.17.0",
-    "@react-aria/visually-hidden": "^3.6.1",
+    "@react-aria/focus": "^3.13.0",
+    "@react-aria/utils": "^3.18.0",
+    "@react-aria/visually-hidden": "^3.8.2",
+    "@react-types/shared": "^3.18.0",
     "@voussoir/style": "^0.1.6",
     "@voussoir/types": "^0.1.1",
     "emery": "^1.4.1",

@@ -23,7 +23,7 @@ describe('date-time/DateField', () => {
       let segmentId = segment.getAttribute('id');
       expect(segment).toHaveAttribute(
         'aria-labelledby',
-        `${label.id} ${segmentId}`
+        `${segmentId} ${label.id}`
       );
     }
   });

@@ -1,8 +1,8 @@
 import { ReactElement, ReactNode, RefObject } from 'react';
+import { AriaLabelingProps, DOMProps } from '@react-types/shared';
 
 import { OverlayTriggerProps, PositionProps } from '@voussoir/overlays';
 import { BaseStyleProps } from '@voussoir/style';
-import { AriaLabellingProps, DOMProps } from '@voussoir/types';
 import { OverlayTriggerState } from '@react-stately/overlays';
 
 export type DialogType = 'modal' | 'popover' | 'tray' | 'fullscreen';
@@ -75,7 +75,7 @@ export type AriaDialogProps = {
    */
   role?: 'dialog' | 'alertdialog';
 } & DOMProps &
-  AriaLabellingProps;
+  AriaLabelingProps;
 
 export type DialogProps = {
   /** The contents of the Dialog. */

@@ -1,20 +1,13 @@
 import { FocusScope } from '@react-aria/focus';
-import { AriaListBoxOptions, useListBox } from '@react-aria/listbox';
+import { useListBox } from '@react-aria/listbox';
 import { useCollator, useLocalizedStringFormatter } from '@react-aria/i18n';
 import { mergeProps } from '@react-aria/utils';
 import { Virtualizer, VirtualizerItem } from '@react-aria/virtualizer';
 import { ListLayout } from '@react-stately/layout';
 import { ListState } from '@react-stately/list';
 import { ReusableView } from '@react-stately/virtualizer';
-import { FocusStrategy, Node } from '@react-types/shared';
-import {
-  RefObject,
-  forwardRef,
-  HTMLAttributes,
-  ReactElement,
-  ReactNode,
-  useMemo,
-} from 'react';
+import { Node } from '@react-types/shared';
+import { RefObject, forwardRef, ReactElement, ReactNode, useMemo } from 'react';
 
 import { useProvider } from '@voussoir/core';
 import { ProgressCircle } from '@voussoir/progress';
@@ -24,25 +17,7 @@ import localizedMessages from '../l10n.json';
 import { ListBoxContext } from './context';
 import { ListBoxOption } from './ListBoxOption';
 import { ListBoxSection } from './ListBoxSection';
-import { ListBoxProps } from './types';
-
-type ListBoxBaseProps<T> = AriaListBoxOptions<T> &
-  Omit<ListBoxProps<T>, 'children'> & {
-    layout: ListLayout<T>;
-    state: ListState<T>;
-    autoFocus?: boolean | FocusStrategy;
-    shouldFocusWrap?: boolean;
-    shouldSelectOnPressUp?: boolean;
-    focusOnPointerEnter?: boolean;
-    domProps?: HTMLAttributes<HTMLElement>;
-    disallowEmptySelection?: boolean;
-    shouldUseVirtualFocus?: boolean;
-    transitionDuration?: number;
-    isLoading?: boolean;
-    onLoadMore?: () => void;
-    renderEmptyState?: () => ReactNode;
-    onScroll?: () => void;
-  };
+import { ListBoxBaseProps } from './types';
 
 /** @private */
 export function useListBoxLayout<T>(state: ListState<T>) {
@@ -98,7 +73,7 @@ function ListBoxBase<T>(
 
   // This overrides collection view's renderWrapper to support heirarchy of items in sections.
   // The header is extracted from the children so it can receive ARIA labeling properties.
-  type View = ReusableView<Node<T>, unknown>;
+  type View = ReusableView<Node<T>, ReactNode>;
   let renderWrapper = (
     parent: View | null,
     reusableView: View,
@@ -106,26 +81,30 @@ function ListBoxBase<T>(
     renderChildren: (views: View[]) => ReactElement[]
   ) => {
     if (reusableView.viewType === 'section') {
-      let header = children.find(c => c.viewType === 'header');
-      if (header) {
-        return (
-          <ListBoxSection
-            key={reusableView.key}
-            reusableView={reusableView}
-            header={header}
-          >
-            {renderChildren(children.filter(c => c.viewType === 'item'))}
-          </ListBoxSection>
-        );
-      }
+      return (
+        <ListBoxSection
+          key={reusableView.key}
+          item={reusableView.content}
+          layoutInfo={reusableView.layoutInfo!}
+          virtualizer={reusableView.virtualizer}
+          headerLayoutInfo={
+            children.find(c => c.viewType === 'header')?.layoutInfo!
+          }
+        >
+          {renderChildren(children.filter(c => c.viewType === 'item'))}
+        </ListBoxSection>
+      );
     }
 
     return (
       <VirtualizerItem
         key={reusableView.key}
-        reusableView={reusableView}
-        parent={parent || undefined}
-      />
+        layoutInfo={reusableView.layoutInfo!}
+        virtualizer={reusableView.virtualizer}
+        parent={parent?.layoutInfo!}
+      >
+        {reusableView.rendered}
+      </VirtualizerItem>
     );
   };
 
@@ -137,6 +116,7 @@ function ListBoxBase<T>(
           {...mergeProps(listBoxProps, domProps)}
           ref={forwardedRef}
           focusedKey={state.selectionManager.focusedKey}
+          autoFocus={!!props.autoFocus}
           sizeToFit="height"
           scrollDirection="vertical"
           layout={layout}
@@ -199,7 +179,7 @@ function ListBoxBase<T>(
 
 // forwardRef doesn't support generic parameters, so cast the result to the correct type
 // https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
-const _ListBoxBase = forwardRef(ListBoxBase as any) as <T>(
+const _ListBoxBase: <T>(
   props: ListBoxBaseProps<T> & { ref?: RefObject<HTMLDivElement> }
-) => ReactElement;
+) => ReactElement = forwardRef(ListBoxBase as any) as any;
 export { _ListBoxBase as ListBoxBase };
