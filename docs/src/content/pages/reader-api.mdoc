@@ -52,6 +52,15 @@ const entry = await reader.collections.{collectionName}.read(slug);
 const post = await reader.collections.post.read(slug);
 ```
 
+You can get an array of objects containing **both** slug and entry data for a collection with:
+
+```javascript
+const entry = await reader.collections.{collectionName}.all();
+
+// Example
+const blog = await reader.collections.blog.all();
+```
+
 ### For singletons
 
 You can get the data for a specific singleton with:
