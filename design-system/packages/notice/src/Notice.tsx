@@ -11,11 +11,14 @@ import { Content, SlotProvider } from '@voussoir/slots';
 import { isReactText, useHasChild } from '@voussoir/utils';
 import {
   BaseStyleProps,
+  ClassList,
   css,
   tokenSchema,
   useStyleProps,
 } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
+
+export const noticeClassList = new ClassList('Notice');
 
 const toneToIcon = {
   caution: alertTriangleIcon,
@@ -50,9 +53,10 @@ export function Notice(props: NoticeProps) {
   const { children, tone = 'neutral', ...otherProps } = props;
   const ref = useRef<HTMLElement | null>(null);
   const styleProps = useStyleProps(otherProps);
+  const headingClassName = noticeClassList.declare('heading');
   const headingId = useSlotId();
   const contentId = useSlotId();
-  const hasHeading = useHasChild(`#${headingId}`, ref);
+  const hasHeading = useHasChild(noticeClassList.selector('heading'), ref);
 
   const coercedTone = tone === 'neutral' ? 'accent' : tone;
   const icon = toneToIcon[tone];
@@ -78,11 +82,19 @@ export function Notice(props: NoticeProps) {
           elementType: 'div',
           gridArea: 'heading',
           id: headingId,
+          UNSAFE_className: headingClassName,
           size: 'small',
         },
         text: { color: coercedTone, weight: 'medium' },
       } as const),
-    [coercedTone, contentId, contentStyles, hasHeading, headingId]
+    [
+      coercedTone,
+      contentId,
+      contentStyles,
+      hasHeading,
+      headingClassName,
+      headingId,
+    ]
   );
 
   return (

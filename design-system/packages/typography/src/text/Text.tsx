@@ -58,7 +58,7 @@ export const Text = forwardRefWithAs<TextProps, 'span'>(
     const element = (
       <ElementType
         ref={forwardedRef}
-        {...filterDOMProps(otherProps)}
+        {...filterDOMProps(otherProps, { propNames: new Set(['role']) })}
         {...styleProps}
         {...visuallyHiddenProps}
       >

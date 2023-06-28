@@ -1,6 +1,5 @@
 import { useLocale } from '@react-aria/i18n';
 import { useListBoxSection } from '@react-aria/listbox';
-import { useSeparator } from '@react-aria/separator';
 import {
   VirtualizerItemOptions,
   layoutInfoToStyle,
@@ -30,10 +29,6 @@ export function ListBoxSection<T>(props: ListBoxSectionProps<T>) {
     'aria-label': item['aria-label'],
   });
 
-  let { separatorProps } = useSeparator({
-    elementType: 'li',
-  });
-
   let headerRef = useRef<HTMLDivElement>(null);
   useVirtualizerItem({
     layoutInfo: headerLayoutInfo,
@@ -53,7 +48,7 @@ export function ListBoxSection<T>(props: ListBoxSectionProps<T>) {
       >
         {item.key !== state.collection.getFirstKey() && (
           <Divider
-            {...separatorProps}
+            role="presentation"
             elementType="div"
             size="medium"
             UNSAFE_className={css({ margin: tokenSchema.size.space.medium })}
@@ -61,12 +56,12 @@ export function ListBoxSection<T>(props: ListBoxSectionProps<T>) {
         )}
         {item.rendered && (
           <Text
+            {...headingProps}
             casing="uppercase"
-            size="small"
             color="neutralSecondary"
+            size="small"
             weight="medium"
             UNSAFE_className={css({ padding: tokenSchema.size.space.medium })}
-            {...headingProps}
           >
             {item.rendered}
           </Text>

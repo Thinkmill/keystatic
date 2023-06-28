@@ -88,11 +88,15 @@ describe('pickers/ListBox', () => {
         section.getAttribute('aria-labelledby') ?? ''
       );
       expect(heading).toBeTruthy();
-      expect(heading).toHaveAttribute('aria-hidden', 'true');
-    }
+      expect(heading).toHaveAttribute('role', 'presentation');
 
-    let dividers = within(listbox).getAllByRole('separator');
-    expect(dividers.length).toBe(sectionItemData.length - 1);
+      // Separator should render for sections after first section
+      if (section !== sections[0]) {
+        let divider = heading?.previousElementSibling;
+        expect(divider).toHaveAttribute('role', 'presentation');
+        expect(divider).toHaveClass('ksv:Divider');
+      }
+    }
 
     let items = within(listbox).getAllByRole('option');
     expect(items.length).toBe(
@@ -102,7 +106,7 @@ describe('pickers/ListBox', () => {
     for (let item of items) {
       expect(item).toHaveAttribute('tabindex');
       expect(item).not.toHaveAttribute('aria-selected');
-      expect(item).toHaveAttribute('aria-disabled');
+      expect(item).not.toHaveAttribute('aria-disabled');
       expect(item).toHaveAttribute('aria-posinset', '' + i++);
       expect(item).toHaveAttribute('aria-setsize');
     }
