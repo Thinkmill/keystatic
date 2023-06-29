@@ -14,11 +14,6 @@ export default async function Docs({ params }: { params: { slug: string[] } }) {
 
   if (!page) notFound();
 
-  const overviewHeading = {
-    level: 1,
-    text: 'Overview',
-  };
-
   // Filter headings from the document content
   const headingsFromContent = (await page.content())
     .filter(child => child.type === 'heading')
@@ -28,6 +23,11 @@ export default async function Docs({ params }: { params: { slug: string[] } }) {
     }))
     .filter(heading => heading.text);
 
+  // Manually add the persistent #overview heading, to send to TOCs
+  const overviewHeading = {
+    level: 1,
+    text: 'Overview',
+  };
   const headings = [overviewHeading, ...headingsFromContent];
 
   return (

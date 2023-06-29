@@ -41,8 +41,8 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
                 level > 2 ? 'pl-2 text-xs' : ''
               } ${
                 `#${activeHeadingSlug}` === slug
-                  ? 'font-medium text-neutral-700'
-                  : 'text-neutral-600'
+                  ? 'text-keystatic-gray-dark'
+                  : 'text-neutral-500'
               }`}
               href={slug}
             >
@@ -61,39 +61,31 @@ function useHeadingObserver(slugs: string[]) {
   const [activeHeadingSlug, setActiveHeadingSlug] = useState('overview');
   const [bottomHeadingSlug, setBottomHeadingSlug] = useState('');
 
-  console.log({ activeHeadingSlug });
-  console.log({ bottomHeadingSlug });
-
   const selectors = slugs.join(', ');
 
+  // Fixes long sections when scroll upwards
+  useEffect(() => {
+    if (bottomHeadingSlug === activeHeadingSlug) {
+      const activeIndex = slugs.indexOf(`#${activeHeadingSlug}`);
+
+      if (activeIndex > 0) {
+        const previousHeading = slugs[activeIndex - 1].replace('#', '');
+        setActiveHeadingSlug(previousHeading);
+      }
+    }
+  }, [activeHeadingSlug, bottomHeadingSlug, slugs]);
+
+  // TOP observer controls the active TOC heading
   useEffect(() => {
     const handleObserverTop = (entries: IntersectionObserverEntry[]) => {
       entries.forEach(entry => {
         if (entry?.isIntersecting) {
           setActiveHeadingSlug(entry.target.id);
+          setBottomHeadingSlug('');
         }
       });
     };
 
-    observerTop.current = new IntersectionObserver(handleObserverTop, {
-      rootMargin: '-100px 0px -50% 0px',
-      threshold: 1,
-    });
-
-    if (!selectors) return;
-
-    const elements = document.querySelectorAll(selectors);
-
-    elements.forEach(element => {
-      observerTop.current?.observe(element);
-    });
-
-    return () => {
-      observerTop.current?.disconnect();
-    };
-  }, [selectors]);
-
-  useEffect(() => {
     const handleObserverBottom = (entries: IntersectionObserverEntry[]) => {
       entries.forEach(entry => {
         if (entry?.isIntersecting) {
@@ -102,23 +94,32 @@ function useHeadingObserver(slugs: string[]) {
       });
     };
 
-    observerBottom.current = new IntersectionObserver(handleObserverBottom, {
-      rootMargin: '-50% 0px 0px 0px',
-      threshold: 1,
-    });
-
     if (!selectors) return;
 
     const elements = document.querySelectorAll(selectors);
 
+    observerTop.current = new IntersectionObserver(handleObserverTop, {
+      rootMargin: '-100px 0px -75% 0px',
+      threshold: 1,
+    });
+
+    observerBottom.current = new IntersectionObserver(handleObserverBottom, {
+      rootMargin: '-75% 0px 0px 0px',
+      threshold: 1,
+    });
+
     elements.forEach(element => {
+      observerTop.current?.observe(element);
       observerBottom.current?.observe(element);
     });
 
     return () => {
+      observerTop.current?.disconnect();
       observerBottom.current?.disconnect();
     };
   }, [selectors]);
+
+  // BOTTOM observer to know when an active heading is in bottom of screen
 
   return { activeHeadingSlug };
 }
