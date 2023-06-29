@@ -20,7 +20,7 @@ import {
   AppShellErrorContext,
   LocalAppShellProvider,
 } from './data';
-import { SidebarProvider, Sidebar, SIDEBAR_WIDTH } from './sidebar';
+import { SidebarProvider, Sidebar } from './sidebar';
 import { isGitHubConfig, isLocalConfig } from '../utils';
 import { AppHeader } from './app-header';
 
@@ -32,26 +32,28 @@ export const AppShell = (props: {
 }) => {
   const inner = (
     <ConfigContext.Provider value={props.config}>
-      <AppHeader />
       <SidebarProvider>
-        <Flex direction={{ mobile: 'column', tablet: 'row' }} minHeight="100vh">
-          <Sidebar hrefBase={props.basePath} config={props.config} />
-          <AppShellErrorContext.Consumer>
-            {error =>
-              error &&
-              !error?.graphQLErrors.some(
-                err => (err?.originalError as any)?.type === 'NOT_FOUND'
-              ) ? (
-                <EmptyState
-                  icon={alertCircleIcon}
-                  title="Failed to load shell"
-                  message={error.message}
-                />
-              ) : (
-                props.children
-              )
-            }
-          </AppShellErrorContext.Consumer>
+        <Flex direction="column" minHeight="100vh">
+          <AppHeader />
+          <Flex direction={{ mobile: 'column', tablet: 'row' }} flex>
+            <Sidebar hrefBase={props.basePath} config={props.config} />
+            <AppShellErrorContext.Consumer>
+              {error =>
+                error &&
+                !error?.graphQLErrors.some(
+                  err => (err?.originalError as any)?.type === 'NOT_FOUND'
+                ) ? (
+                  <EmptyState
+                    icon={alertCircleIcon}
+                    title="Failed to load shell"
+                    message={error.message}
+                  />
+                ) : (
+                  props.children
+                )
+              }
+            </AppShellErrorContext.Consumer>
+          </Flex>
         </Flex>
       </SidebarProvider>
     </ConfigContext.Provider>
@@ -138,9 +140,7 @@ export const AppShellRoot = ({
       <Box
         elementType="main"
         flex
-        minHeight="100vh"
         minWidth={0}
-        paddingStart={{ tablet: SIDEBAR_WIDTH }}
         UNSAFE_className={css({
           '&::before': {
             backgroundColor: '#0006',

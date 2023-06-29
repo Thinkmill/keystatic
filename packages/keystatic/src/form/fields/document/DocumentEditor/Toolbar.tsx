@@ -20,7 +20,7 @@ import { underlineIcon } from '@voussoir/icon/icons/underlineIcon';
 import { Icon } from '@voussoir/icon';
 import { Flex } from '@voussoir/layout';
 import { MenuTrigger, Menu } from '@voussoir/menu';
-import { css, tokenSchema } from '@voussoir/style';
+import { breakpointQueries, css, tokenSchema } from '@voussoir/style';
 import { Text, Kbd } from '@voussoir/typography';
 import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
 
@@ -145,10 +145,15 @@ const ToolbarContainer = ({ children }: { children: ReactNode }) => {
       backgroundColor="canvas"
       borderTopStartRadius="medium"
       borderTopEndRadius="medium"
-      // NOTE: sticky behavior needs to be kept in sync with the app's header
-      insetTop={`calc(${tokenSchema.size.element.xlarge} - ${tokenSchema.size.border.regular})`}
       position="sticky"
       zIndex={2}
+      // NOTE: top offset (sticky) must be kept in sync with the app's header
+      UNSAFE_className={css({
+        top: `calc(${tokenSchema.size.element.large} - ${tokenSchema.size.border.regular})`,
+        [breakpointQueries.above.mobile]: {
+          top: `calc(${tokenSchema.size.element.xlarge} - ${tokenSchema.size.border.regular})`,
+        },
+      })}
     >
       {children}
       <Flex

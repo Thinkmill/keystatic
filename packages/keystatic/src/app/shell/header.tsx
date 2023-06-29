@@ -1,9 +1,9 @@
 import { ActionButton } from '@voussoir/button';
 import { Icon } from '@voussoir/icon';
 import { menuIcon } from '@voussoir/icon/icons/menuIcon';
-import { Box, Flex } from '@voussoir/layout';
+import { Flex } from '@voussoir/layout';
 import { PropsWithChildren, useContext, useRef, useEffect } from 'react';
-import { AppShellContainer } from '.';
+
 import { SidebarContext } from './sidebar';
 
 function documentSelector(selector: string): HTMLElement | null {
@@ -126,28 +126,27 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
   }, [setSidebarOpen, menuButtonRef]);
 
   return (
-    <Box
+    <Flex
+      alignItems="center"
       backgroundColor="surface"
       borderBottom="muted"
       elementType="header"
-      height="element.xlarge"
+      gap="regular"
+      height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
       insetTop={0}
+      paddingX={{ mobile: 'regular', tablet: 'xlarge' }}
       position="sticky"
       zIndex={3}
     >
-      <AppShellContainer>
-        <Flex alignItems="center" height="element.xlarge" gap="regular">
-          <ActionButton
-            prominence="low"
-            isHidden={{ above: 'mobile' }}
-            onPress={onPress}
-            ref={menuButtonRef}
-          >
-            <Icon src={menuIcon} />
-          </ActionButton>
-          {children}
-        </Flex>
-      </AppShellContainer>
-    </Box>
+      <ActionButton
+        prominence="low"
+        isHidden={{ above: 'mobile' }}
+        onPress={onPress}
+        ref={menuButtonRef}
+      >
+        <Icon src={menuIcon} />
+      </ActionButton>
+      {children}
+    </Flex>
   );
 };

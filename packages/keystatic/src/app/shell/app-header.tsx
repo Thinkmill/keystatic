@@ -63,11 +63,9 @@ export const AppHeader = () => {
 function CloudHeader({ config }: { config: CloudConfig }) {
   return (
     <HeaderOuter>
-      <Flex alignItems="center" gap="large" minHeight="scale.700">
-        <ZapLogo />
-        <Text>{config.storage.project}</Text>
-        <GitControls />
-      </Flex>
+      <ZapLogo />
+      <Text>{config.storage.project}</Text>
+      <GitControls />
     </HeaderOuter>
   );
 }
@@ -78,27 +76,26 @@ function CloudHeader({ config }: { config: CloudConfig }) {
 function GithubHeader({ config }: { config: GitHubConfig }) {
   return (
     <HeaderOuter>
-      <Flex alignItems="center" gap="large" minHeight="scale.700">
-        <ZapLogo />
+      <ZapLogo />
 
-        <Text
-          color="neutralEmphasis"
-          weight="semibold"
-          // truncate
-        >
-          {config.storage.repo.name}
-        </Text>
-        <Text
-          color="neutralTertiary"
-          // weight="semibold"
-          role="presentation"
-        >
-          /
-        </Text>
-        <GitControls />
-        <Box flex="1" />
-        <ViewerAvatar />
-      </Flex>
+      <Text
+        color="neutralEmphasis"
+        weight="semibold"
+        truncate
+        isHidden={{ below: 'tablet' }}
+      >
+        {config.storage.repo.name}
+      </Text>
+      <Text
+        color="neutralTertiary"
+        role="presentation"
+        isHidden={{ below: 'tablet' }}
+      >
+        /
+      </Text>
+      <GitControls />
+      <Box flex="1" />
+      <ViewerAvatar />
     </HeaderOuter>
   );
 }
@@ -110,10 +107,10 @@ function LocalHeader({ config }: { config: LocalConfig }) {
   console.log('local header', config);
   return (
     <HeaderOuter>
-      <Flex alignItems="center" gap="large" minHeight="scale.700">
-        <ZapLogo />
-        <Text>Local header</Text>
-      </Flex>
+      <ZapLogo />
+      <Text color="neutralEmphasis" weight="semibold">
+        Keystatic
+      </Text>
     </HeaderOuter>
   );
 }
@@ -124,9 +121,18 @@ function LocalHeader({ config }: { config: LocalConfig }) {
 
 function HeaderOuter({ children }: { children: ReactNode }) {
   return (
-    <Box elementType="header" borderBottom="muted" paddingX="xlarge">
+    <Flex
+      elementType="header"
+      // styles
+      alignItems="center"
+      // backgroundColor="surface"
+      borderBottom="muted"
+      gap="regular"
+      height="scale.700"
+      paddingX={{ mobile: 'regular', tablet: 'xlarge' }}
+    >
       {children}
-    </Box>
+    </Flex>
   );
 }
 

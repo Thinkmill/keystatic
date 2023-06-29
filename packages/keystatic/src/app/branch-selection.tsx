@@ -11,6 +11,7 @@ import { Item, Picker } from '@voussoir/picker';
 import { ProgressCircle } from '@voussoir/progress';
 import { Radio, RadioGroup } from '@voussoir/radio';
 import { Content, Footer } from '@voussoir/slots';
+import { css } from '@voussoir/style';
 import { TextField } from '@voussoir/text-field';
 import { Heading, Text } from '@voussoir/typography';
 
@@ -59,11 +60,16 @@ export function BranchPicker() {
           );
         }
       }}
+      // styles
+      prominence="low"
+      width="auto"
+      menuWidth={288}
+      UNSAFE_className={css({ button: { contain: 'layout' } })}
     >
       {item => (
         <Item key={item.id} textValue={item.name}>
           <Icon src={gitBranchIcon} />
-          <Text>{item.name}</Text>
+          <Text truncate>{item.name}</Text>
           {'description' in item && (
             <Text slot="description">{item.description}</Text>
           )}
