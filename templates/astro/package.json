@@ -1,0 +1,23 @@
+{
+  "name": "@keystatic/templates-astro",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/markdoc": "^0.3.3",
+    "@astrojs/react": "^2.2.1",
+    "@keystatic/astro": "^0.0.8",
+    "@keystatic/core": "^0.0.107",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "astro": "^2.7.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
