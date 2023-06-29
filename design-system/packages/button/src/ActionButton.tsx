@@ -47,7 +47,7 @@ export const ActionButton: ForwardRefExoticComponent<
       <button
         ref={domRef}
         {...styleProps}
-        {...filterDOMProps(otherProps)}
+        {...filterDOMProps(otherProps, { propNames: new Set(['form']) })}
         {...mergeProps(buttonProps, hoverProps)}
       >
         {children}
