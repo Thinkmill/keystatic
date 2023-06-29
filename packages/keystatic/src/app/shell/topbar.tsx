@@ -45,7 +45,7 @@ import { useConfig } from './context';
 import { BranchInfoContext, GitHubAppShellDataContext } from './data';
 import { ViewerContext } from './sidebar-data';
 
-export const AppHeader = () => {
+export const TopBar = () => {
   let config = useConfig();
 
   if (isCloudConfig(config)) {
@@ -116,7 +116,7 @@ function GithubHeader({ config }: { config: GitHubConfig }) {
       </Text>
       <GitControls />
       <Box flex="1" />
-      <ViewerAvatar />
+      <UserMenu />
     </HeaderOuter>
   );
 }
@@ -157,11 +157,11 @@ function HeaderOuter({ children }: { children: ReactNode }) {
   );
 }
 
-function ViewerAvatar() {
-  let viewer = useContext(ViewerContext);
+function UserMenu() {
+  let user = useContext(ViewerContext);
   let config = useConfig();
 
-  if (!viewer) {
+  if (!user) {
     return null;
   }
 
@@ -174,33 +174,59 @@ function ViewerAvatar() {
         width="element.medium"
         UNSAFE_className={css({ borderRadius: '50%', padding: 0 })}
       >
-        <Avatar
-          alt={`${viewer.name ?? viewer.login} avatar`}
-          src={viewer.avatarUrl ?? ''}
-        />
+        <Avatar src={user.avatarUrl} name={user.name ?? undefined} />
       </ActionButton>
-      <Menu
-        onAction={key => {
-          if (key === 'logout') {
-            if (config.storage.kind === 'github') {
-              window.location.href = '/api/keystatic/github/logout';
+      <>
+        <Flex
+          borderBottom="muted"
+          gap="regular"
+          marginX="regular"
+          paddingY="regular"
+          paddingEnd="xxlarge"
+          alignItems="center"
+          UNSAFE_className={css({ userSelect: 'none' })}
+          aria-hidden
+        >
+          <Avatar
+            src={user.avatarUrl}
+            name={user.name ?? undefined}
+            size="small"
+          />
+          <Flex direction="column" gap="small">
+            <Text size="small" weight="semibold" color="neutralEmphasis">
+              {user.name ?? user.login}
+            </Text>
+            <Text size="small" color="neutralTertiary">
+              {user.login}
+            </Text>
+          </Flex>
+        </Flex>
+        <Menu
+          minWidth="scale.2400"
+          onAction={key => {
+            if (key === 'logout') {
+              switch (config.storage.kind) {
+                case 'github':
+                  window.location.href = '/api/keystatic/github/logout';
+                  break;
+                case 'cloud':
+                  localStorage.removeItem('keystatic-cloud-access-token');
+                  window.location.reload();
+                  break;
+              }
             }
-            if (config.storage.kind === 'cloud') {
-              localStorage.removeItem('keystatic-cloud-access-token');
-              window.location.reload();
-            }
-          }
-        }}
-      >
-        <Item key="manage" textValue="Manage account">
-          <Icon src={userIcon} />
-          <Text>Manage account</Text>
-        </Item>
-        <Item key="logout" textValue="Log out">
-          <Icon src={logOutIcon} />
-          <Text>Log out</Text>
-        </Item>
-      </Menu>
+          }}
+        >
+          <Item key="manage" textValue="Manage account">
+            <Icon src={userIcon} />
+            <Text>Manage account</Text>
+          </Item>
+          <Item key="logout" textValue="Log out">
+            <Icon src={logOutIcon} />
+            <Text>Log out</Text>
+          </Item>
+        </Menu>
+      </>
     </MenuTrigger>
   );
 }

@@ -16,7 +16,6 @@ import { Config } from '../../config';
 
 import { isGitHubConfig, isLocalConfig } from '../utils';
 
-import { AppHeader } from './app-header';
 import { MAIN_PANEL_ID, SIDE_PANEL_ID } from './constants';
 import { ConfigContext } from './context';
 import {
@@ -25,6 +24,7 @@ import {
   LocalAppShellProvider,
 } from './data';
 import { SidebarProvider, Sidebar } from './sidebar';
+import { TopBar } from './topbar';
 
 export const AppShell = (props: {
   config: Config;
@@ -36,7 +36,7 @@ export const AppShell = (props: {
     <ConfigContext.Provider value={props.config}>
       <SidebarProvider>
         <Flex direction="column" minHeight="100vh">
-          <AppHeader />
+          <TopBar />
           <Flex direction={{ mobile: 'column', tablet: 'row' }} flex>
             <Sidebar hrefBase={props.basePath} config={props.config} />
             <AppShellErrorContext.Consumer>
