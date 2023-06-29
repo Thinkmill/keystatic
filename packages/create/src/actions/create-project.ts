@@ -17,6 +17,8 @@ const registryDomain = 'https://registry.npmjs.org';
 // These templates reference their npm package name
 const templates = {
   nextjs: '@keystatic/templates-nextjs',
+  astro: '@keystatic/templates-astro',
+  remix: '@keystatic/templates-remix',
 };
 
 type PackageInfo = {
@@ -35,7 +37,14 @@ export const createProject = async (ctx: Context) => {
 
   spin.start(`Downloading template and creating files...`);
 
-  const defaultTemplate = templates.nextjs;
+  const templatesLookup: Record<Context['framework'], string> = {
+    'Next.js': templates.nextjs,
+    Astro: templates.astro,
+    Remix: templates.remix,
+  };
+
+  const defaultTemplate = templatesLookup[ctx.framework];
+
   try {
     // Get latest package info from npm
     const packageInfo: PackageInfo = await fetch(
