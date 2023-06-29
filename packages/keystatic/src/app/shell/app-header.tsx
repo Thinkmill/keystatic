@@ -12,16 +12,19 @@ import {
 import { useMutation } from 'urql';
 
 import { Avatar } from '@voussoir/avatar';
+import { ActionButton } from '@voussoir/button';
 import { AlertDialog, DialogContainer } from '@voussoir/dialog';
 import { Icon } from '@voussoir/icon';
 import { listTodoIcon } from '@voussoir/icon/icons/listTodoIcon';
+import { logOutIcon } from '@voussoir/icon/icons/logOutIcon';
 import { gitPullRequestIcon } from '@voussoir/icon/icons/gitPullRequestIcon';
 import { gitBranchPlusIcon } from '@voussoir/icon/icons/gitBranchPlusIcon';
 import { githubIcon } from '@voussoir/icon/icons/githubIcon';
 import { gitForkIcon } from '@voussoir/icon/icons/gitForkIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
+import { userIcon } from '@voussoir/icon/icons/userIcon';
 import { Box, Flex } from '@voussoir/layout';
-import { ActionMenu } from '@voussoir/menu';
+import { ActionMenu, Menu, MenuTrigger } from '@voussoir/menu';
 import { css } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
 
@@ -155,15 +158,50 @@ function HeaderOuter({ children }: { children: ReactNode }) {
 }
 
 function ViewerAvatar() {
-  const viewer = useContext(ViewerContext);
+  let viewer = useContext(ViewerContext);
+  let config = useConfig();
+
   if (!viewer) {
     return null;
   }
+
   return (
-    <Avatar
-      alt={`${viewer.name ?? viewer.login} avatar`}
-      src={viewer.avatarUrl ?? ''}
-    />
+    <MenuTrigger>
+      <ActionButton
+        aria-label="User menu"
+        prominence="low"
+        height="element.medium"
+        width="element.medium"
+        UNSAFE_className={css({ borderRadius: '50%', padding: 0 })}
+      >
+        <Avatar
+          alt={`${viewer.name ?? viewer.login} avatar`}
+          src={viewer.avatarUrl ?? ''}
+        />
+      </ActionButton>
+      <Menu
+        onAction={key => {
+          if (key === 'logout') {
+            if (config.storage.kind === 'github') {
+              window.location.href = '/api/keystatic/github/logout';
+            }
+            if (config.storage.kind === 'cloud') {
+              localStorage.removeItem('keystatic-cloud-access-token');
+              window.location.reload();
+            }
+          }
+        }}
+      >
+        <Item key="manage" textValue="Manage account">
+          <Icon src={userIcon} />
+          <Text>Manage account</Text>
+        </Item>
+        <Item key="logout" textValue="Log out">
+          <Icon src={logOutIcon} />
+          <Text>Log out</Text>
+        </Item>
+      </Menu>
+    </MenuTrigger>
   );
 }
 

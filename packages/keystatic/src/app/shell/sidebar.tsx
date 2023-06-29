@@ -73,7 +73,9 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
       zIndex={100}
       UNSAFE_className={[
         css({
-          maxWidth: '90%',
+          // ensure that there's always enough of gutter for the user to press
+          // and exit the sidebar
+          maxWidth: `calc(100% - ${tokenSchema.size.element.medium})`,
 
           [breakpointQueries.below.tablet]: {
             border: 0,

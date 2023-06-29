@@ -139,8 +139,9 @@ export const AppShellRoot = ({
 }: PropsWithChildren<Partial<AppShellContextValue>>) => {
   return (
     <AppShellContext.Provider value={{ containerWidth }}>
-      <Box
+      <Flex
         elementType="main"
+        direction="column"
         id={MAIN_PANEL_ID}
         flex
         minWidth={0}
@@ -180,7 +181,7 @@ export const AppShellRoot = ({
         })}
       >
         {children}
-      </Box>
+      </Flex>
     </AppShellContext.Provider>
   );
 };
