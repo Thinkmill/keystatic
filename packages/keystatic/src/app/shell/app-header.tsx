@@ -22,13 +22,13 @@ import { gitForkIcon } from '@voussoir/icon/icons/gitForkIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 import { Box, Flex } from '@voussoir/layout';
 import { ActionMenu } from '@voussoir/menu';
-import { css, tokenSchema } from '@voussoir/style';
+import { css } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
 
 import { CloudConfig, GitHubConfig, LocalConfig } from '../../config';
 
-import { useRouter } from '../router';
 import { BranchPicker, CreateBranchDialog } from '../branch-selection';
+import { useRouter } from '../router';
 import l10nMessages from '../l10n/index.json';
 import {
   getRepoUrl,
@@ -37,11 +37,28 @@ import {
   isLocalConfig,
 } from '../utils';
 
+import { ZapLogo } from './common';
 import { useConfig } from './context';
 import { BranchInfoContext, GitHubAppShellDataContext } from './data';
 import { ViewerContext } from './sidebar-data';
 
 export const AppHeader = () => {
+  let config = useConfig();
+
+  if (isCloudConfig(config)) {
+    return <CloudHeader config={config} />;
+  }
+  if (isGitHubConfig(config)) {
+    return <GithubHeader config={config} />;
+  }
+  if (isLocalConfig(config)) {
+    return <LocalHeader config={config} />;
+  }
+
+  throw new Error('Unknown config type.');
+};
+
+export const SidebarHeader = () => {
   let config = useConfig();
 
   if (isCloudConfig(config)) {
@@ -90,6 +107,7 @@ function GithubHeader({ config }: { config: GitHubConfig }) {
         color="neutralTertiary"
         role="presentation"
         isHidden={{ below: 'tablet' }}
+        UNSAFE_className={css({ userSelect: 'none' })}
       >
         /
       </Text>
@@ -128,7 +146,7 @@ function HeaderOuter({ children }: { children: ReactNode }) {
       // backgroundColor="surface"
       borderBottom="muted"
       gap="regular"
-      height="scale.700"
+      height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
       paddingX={{ mobile: 'regular', tablet: 'xlarge' }}
     >
       {children}
@@ -136,26 +154,15 @@ function HeaderOuter({ children }: { children: ReactNode }) {
   );
 }
 
-function ZapLogo() {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill={tokenSchema.color.foreground.neutral}
-      className={css({ flexShrink: 0 })}
-    >
-      <path d="M13.3982 1.08274C13.8054 1.25951 14.0473 1.68358 13.9923 2.12407L13.1328 9.00003H21C21.388 9.00003 21.741 9.22449 21.9056 9.57588C22.0702 9.92726 22.0166 10.3421 21.7682 10.6402L11.7682 22.6402C11.484 22.9812 11.009 23.0941 10.6018 22.9173C10.1946 22.7405 9.95267 22.3165 10.0077 21.876L10.8672 15H3.00002C2.612 15 2.25901 14.7756 2.09443 14.4242C1.92985 14.0728 1.9834 13.6579 2.2318 13.3598L12.2318 1.35986C12.516 1.01882 12.991 0.905971 13.3982 1.08274Z" />
-    </svg>
-  );
-}
-
 function ViewerAvatar() {
   const viewer = useContext(ViewerContext);
+  if (!viewer) {
+    return null;
+  }
   return (
     <Avatar
-      alt={`${viewer?.name ?? viewer?.login} avatar`}
-      src={viewer?.avatarUrl ?? ''}
+      alt={`${viewer.name ?? viewer.login} avatar`}
+      src={viewer.avatarUrl ?? ''}
     />
   );
 }

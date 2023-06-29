@@ -14,6 +14,10 @@ import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../../config';
 
+import { isGitHubConfig, isLocalConfig } from '../utils';
+
+import { AppHeader } from './app-header';
+import { MAIN_PANEL_ID, SIDE_PANEL_ID } from './constants';
 import { ConfigContext } from './context';
 import {
   GitHubAppShellProvider,
@@ -21,8 +25,6 @@ import {
   LocalAppShellProvider,
 } from './data';
 import { SidebarProvider, Sidebar } from './sidebar';
-import { isGitHubConfig, isLocalConfig } from '../utils';
-import { AppHeader } from './app-header';
 
 export const AppShell = (props: {
   config: Config;
@@ -139,6 +141,7 @@ export const AppShellRoot = ({
     <AppShellContext.Provider value={{ containerWidth }}>
       <Box
         elementType="main"
+        id={MAIN_PANEL_ID}
         flex
         minWidth={0}
         UNSAFE_className={css({
@@ -148,12 +151,31 @@ export const AppShellRoot = ({
             inset: 0,
             opacity: 0,
             pointerEvents: 'none',
+            visibility: 'hidden',
             position: 'fixed',
-            transition: transition('opacity'),
-            zIndex: 99,
+            zIndex: 5,
+
+            // exit animation
+            transition: [
+              transition('opacity', {
+                easing: 'easeOut',
+                duration: 'regular',
+                delay: 'short',
+              }),
+              transition('visibility', {
+                delay: 'regular',
+                duration: 0,
+                easing: 'linear',
+              }),
+            ].join(', '),
           },
-          'nav[data-visible=true] ~ &::before': {
+          [`#${SIDE_PANEL_ID}[data-visible=true] ~ &::before`]: {
             opacity: 1,
+            pointerEvents: 'auto',
+            visibility: 'visible',
+
+            // enter animation
+            transition: transition('opacity', { easing: 'easeIn' }),
           },
         })}
       >
