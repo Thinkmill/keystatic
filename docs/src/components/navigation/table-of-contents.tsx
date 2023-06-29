@@ -13,8 +13,6 @@ type TableOfContentsProps = {
 };
 
 export function TableOfContents({ headings }: TableOfContentsProps) {
-  // TODO make fixed instead of position sticky
-  // TODO fix identical headings so they get a unique slug?
   const headingsWithSlugs = headings.map(({ level, text }) => {
     return {
       level,
@@ -27,7 +25,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
     return slug;
   });
 
-  const { activeHeadingSlug } = useHeadingObserver(slugs);
+  const { activeHeading } = useHeadingObserver(slugs);
 
   return (
     <div className="w-[12rem] sticky top-10 lg:top-32 self-start hidden md:block">
@@ -40,7 +38,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
               className={`block text-sm leading-tight hover:underline ${
                 level > 2 ? 'pl-2 text-xs' : ''
               } ${
-                `#${activeHeadingSlug}` === slug
+                `#${activeHeading}` === slug
                   ? 'text-keystatic-gray-dark'
                   : 'text-neutral-500'
               }`}
@@ -56,40 +54,23 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
 }
 
 function useHeadingObserver(slugs: string[]) {
-  const observerTop = useRef<IntersectionObserver>();
-  const observerBottom = useRef<IntersectionObserver>();
-  const [activeHeadingSlug, setActiveHeadingSlug] = useState('overview');
-  const [bottomHeadingSlug, setBottomHeadingSlug] = useState('');
+  const observer = useRef<IntersectionObserver>();
+  const [activeHeading, setActiveHeading] = useState('overview');
+  const [visibleHeadings, setVisibleHeadings] = useState<string[]>([]);
 
   const selectors = slugs.join(', ');
 
-  // Fixes long sections when scroll upwards
   useEffect(() => {
-    if (bottomHeadingSlug === activeHeadingSlug) {
-      const activeIndex = slugs.indexOf(`#${activeHeadingSlug}`);
-
-      if (activeIndex > 0) {
-        const previousHeading = slugs[activeIndex - 1].replace('#', '');
-        setActiveHeadingSlug(previousHeading);
-      }
-    }
-  }, [activeHeadingSlug, bottomHeadingSlug, slugs]);
-
-  // TOP observer controls the active TOC heading
-  useEffect(() => {
-    const handleObserverTop = (entries: IntersectionObserverEntry[]) => {
+    const handleObserver = (entries: IntersectionObserverEntry[]) => {
       entries.forEach(entry => {
         if (entry?.isIntersecting) {
-          setActiveHeadingSlug(entry.target.id);
-          setBottomHeadingSlug('');
-        }
-      });
-    };
-
-    const handleObserverBottom = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach(entry => {
-        if (entry?.isIntersecting) {
-          setBottomHeadingSlug(entry.target.id);
+          // Add entry.target.id to the state array
+          setVisibleHeadings(prevState => [...prevState, entry.target.id]);
+        } else {
+          // Remove entry.target.id from the state array
+          setVisibleHeadings(prevState =>
+            prevState.filter(id => id !== entry.target.id)
+          );
         }
       });
     };
@@ -98,28 +79,43 @@ function useHeadingObserver(slugs: string[]) {
 
     const elements = document.querySelectorAll(selectors);
 
-    observerTop.current = new IntersectionObserver(handleObserverTop, {
-      rootMargin: '-100px 0px -75% 0px',
-      threshold: 1,
-    });
-
-    observerBottom.current = new IntersectionObserver(handleObserverBottom, {
-      rootMargin: '-75% 0px 0px 0px',
+    observer.current = new IntersectionObserver(handleObserver, {
+      rootMargin: '-100px 0px -25% 0px',
       threshold: 1,
     });
 
     elements.forEach(element => {
-      observerTop.current?.observe(element);
-      observerBottom.current?.observe(element);
+      observer.current?.observe(element);
     });
 
     return () => {
-      observerTop.current?.disconnect();
-      observerBottom.current?.disconnect();
+      observer.current?.disconnect();
     };
   }, [selectors]);
 
-  // BOTTOM observer to know when an active heading is in bottom of screen
+  /**
+   * Rearrange visible headings based on incoming slugs' order,
+   * and return the first one as the activeHeading.
+   */
+  useEffect(() => {
+    const sortedVisibleHeadings = visibleHeadings.sort((a, b) => {
+      const aIndex = slugs.findIndex(slug => slug === `#${a}`);
+      const bIndex = slugs.findIndex(slug => slug === `#${b}`);
 
-  return { activeHeadingSlug };
+      if (aIndex === -1) {
+        return bIndex === -1 ? 0 : 1; // Keep b if a not found
+      } else if (bIndex === -1) {
+        return -1; // Move a before b if b not found
+      }
+
+      return aIndex - bIndex; // Sort based on index difference
+    });
+
+    if (sortedVisibleHeadings[0]) {
+      // Set the first ordered visible heading as the active one
+      setActiveHeading(sortedVisibleHeadings[0]);
+    }
+  }, [slugs, visibleHeadings]);
+
+  return { activeHeading };
 }
