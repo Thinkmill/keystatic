@@ -138,6 +138,14 @@ function usePopoverStyles(
       }),
     ].join(', '),
 
+    // gutter between popover and viewport
+    '&[data-placement=top]': { marginTop: tokenSchema.size.space.regular },
+    '&[data-placement=bottom]': {
+      marginBottom: tokenSchema.size.space.regular,
+    },
+    '&[data-placement=left]': { marginLeft: tokenSchema.size.space.regular },
+    '&[data-placement=right]': { marginRight: tokenSchema.size.space.regular },
+
     '&[data-open]': {
       opacity: 1,
 
