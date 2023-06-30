@@ -55,7 +55,7 @@ export function FormForEntry({
     return (
       <PathContextProvider value={emptyArray}>
         <SlugFieldProvider value={slugField}>
-          <Grid columns={{ desktop: ['2fr', '1fr'] }} gap="xlarge">
+          <Grid columns={{ desktop: '2fr 1fr' }} gap="xlarge">
             <Grid gap="xlarge" order={{ desktop: 2 }}>
               {Object.entries(props.fields).map(([key, propVal]) =>
                 key === contentField.key ? null : (
