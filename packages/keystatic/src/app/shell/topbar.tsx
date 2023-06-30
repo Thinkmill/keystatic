@@ -12,7 +12,7 @@ import {
 import { useMutation } from 'urql';
 
 import { Avatar } from '@voussoir/avatar';
-import { ActionButton } from '@voussoir/button';
+import { ActionButton, Button } from '@voussoir/button';
 import { AlertDialog, DialogContainer } from '@voussoir/dialog';
 import { Icon } from '@voussoir/icon';
 import { listTodoIcon } from '@voussoir/icon/icons/listTodoIcon';
@@ -22,10 +22,10 @@ import { gitBranchPlusIcon } from '@voussoir/icon/icons/gitBranchPlusIcon';
 import { githubIcon } from '@voussoir/icon/icons/githubIcon';
 import { gitForkIcon } from '@voussoir/icon/icons/gitForkIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { userIcon } from '@voussoir/icon/icons/userIcon';
+// import { userIcon } from '@voussoir/icon/icons/userIcon';
 import { Box, Flex } from '@voussoir/layout';
 import { ActionMenu, Menu, MenuTrigger } from '@voussoir/menu';
-import { css } from '@voussoir/style';
+import { css, tokenSchema } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
 
 import { CloudConfig, GitHubConfig, LocalConfig } from '../../config';
@@ -85,7 +85,11 @@ function CloudHeader({ config }: { config: CloudConfig }) {
     <HeaderOuter>
       <ZapLogo />
       <Text>{config.storage.project}</Text>
-      <GitControls />
+      <Slash />
+      <BranchPicker />
+      <GitMenu />
+      {/* <Box flex="1" />
+      <UserMenu /> */}
     </HeaderOuter>
   );
 }
@@ -97,24 +101,21 @@ function GithubHeader({ config }: { config: GitHubConfig }) {
   return (
     <HeaderOuter>
       <ZapLogo />
-
-      <Text
-        color="neutralEmphasis"
-        weight="semibold"
-        truncate
+      <Button
+        href={`https://github.com/${config.storage.repo.owner}/${config.storage.repo.name}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        prominence="low"
         isHidden={{ below: 'tablet' }}
+        UNSAFE_className={css({
+          paddingInline: tokenSchema.size.space.regular,
+        })}
       >
-        {config.storage.repo.name}
-      </Text>
-      <Text
-        color="neutralTertiary"
-        role="presentation"
-        isHidden={{ below: 'tablet' }}
-        UNSAFE_className={css({ userSelect: 'none' })}
-      >
-        /
-      </Text>
-      <GitControls />
+        {config.storage.repo.owner}/{config.storage.repo.name}
+      </Button>
+      <Slash />
+      <BranchPicker />
+      <GitMenu />
       <Box flex="1" />
       <UserMenu />
     </HeaderOuter>
@@ -140,15 +141,28 @@ function LocalHeader({ config }: { config: LocalConfig }) {
 // Misc.
 // =============================================================================
 
+function Slash() {
+  return (
+    <Text
+      aria-hidden
+      color="neutralTertiary"
+      role="presentation"
+      isHidden={{ below: 'tablet' }}
+      UNSAFE_className={css({ userSelect: 'none' })}
+    >
+      /
+    </Text>
+  );
+}
+
 function HeaderOuter({ children }: { children: ReactNode }) {
   return (
     <Flex
       elementType="header"
       // styles
       alignItems="center"
-      // backgroundColor="surface"
       borderBottom="muted"
-      gap="regular"
+      gap="small"
       height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
       paddingX={{ mobile: 'regular', tablet: 'xlarge' }}
     >
@@ -217,10 +231,10 @@ function UserMenu() {
             }
           }}
         >
-          <Item key="manage" textValue="Manage account">
+          {/* <Item key="manage" textValue="Manage account">
             <Icon src={userIcon} />
             <Text>Manage account</Text>
-          </Item>
+          </Item> */}
           <Item key="logout" textValue="Log out">
             <Icon src={logOutIcon} />
             <Text>Log out</Text>
@@ -233,15 +247,6 @@ function UserMenu() {
 
 // Git controls
 // -----------------------------------------------------------------------------
-
-function GitControls() {
-  return (
-    <Flex gap="regular" alignItems="center">
-      <BranchPicker />
-      <GitMenu />
-    </Flex>
-  );
-}
 
 function GitMenu() {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);

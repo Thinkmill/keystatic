@@ -7,7 +7,6 @@ import { PropsWithChildren, useRef, useEffect } from 'react';
 import { MAIN_PANEL_ID, SIDE_PANEL_ID } from './constants';
 import { useSidebar } from './sidebar';
 import { usePreventScroll } from '@react-aria/overlays';
-// import { breakpointQueries, css, tokenSchema } from '@voussoir/style';
 
 function documentSelector(selector: string): HTMLElement | null {
   return document.querySelector(selector);
@@ -141,7 +140,7 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
       backgroundColor="surface"
       borderBottom="muted"
       elementType="header"
-      gap="regular"
+      gap={{ mobile: 'small', tablet: 'regular' }}
       height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
       minWidth={0}
       insetTop={0}
@@ -149,18 +148,6 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
       paddingStart={{ tablet: 'xlarge' }}
       position="sticky"
       zIndex={3}
-      // place at the bottom of the screen on mobile???
-      // UNSAFE_className={css({
-      //   [breakpointQueries.below.tablet]: {
-      //     borderTop: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
-      //     bottom: 0,
-      //     order: 1,
-      //   },
-      //   [breakpointQueries.above.mobile]: {
-      //     borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
-      //     top: 0,
-      //   },
-      // })}
     >
       <ActionButton
         prominence="low"
