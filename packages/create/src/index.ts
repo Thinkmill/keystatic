@@ -1,6 +1,6 @@
 import { log } from '@clack/prompts';
 import { intro } from './actions/intro';
-import { framework } from './actions/framework';
+import { frameworkChoice } from './actions/framework-choice';
 import { projectName } from './actions/project-name';
 import { createProject } from './actions/create-project';
 import { outro } from './actions/outro';
@@ -22,7 +22,13 @@ async function main() {
     cwd: process.cwd(),
   };
 
-  const steps: Step[] = [intro, framework, projectName, createProject, outro];
+  const steps: Step[] = [
+    intro,
+    frameworkChoice,
+    projectName,
+    createProject,
+    outro,
+  ];
 
   for (const step of steps) {
     try {
