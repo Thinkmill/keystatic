@@ -89,7 +89,7 @@ export function ImageFieldInput(
   const descriptionId = useId();
   return (
     <Flex
-      aria-aria-describedby={props.description ? descriptionId : undefined}
+      aria-describedby={props.description ? descriptionId : undefined}
       aria-labelledby={labelId}
       direction="column"
       gap="medium"
