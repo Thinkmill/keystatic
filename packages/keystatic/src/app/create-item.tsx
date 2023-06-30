@@ -11,7 +11,6 @@ import { toastQueue } from '@voussoir/toast';
 
 import { Config } from '../config';
 import { fields } from '../form/api';
-import { FormValueContentFromPreviewProps } from '../form/form-from-preview';
 import { getInitialPropsValue } from '../form/initial-values';
 import { createGetPreviewProps } from '../form/preview-props';
 import { clientSideValidateProp } from '../form/errors';
@@ -34,6 +33,7 @@ import { TreeNode } from './trees';
 import { useSlugsInCollection } from './useSlugsInCollection';
 import { ForkRepoDialog } from './fork-repo';
 import { useUpsertItem } from './updating';
+import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 
 const emptyMap = new Map<string, TreeNode>();
 
@@ -125,7 +125,9 @@ export function CreateItem(props: {
 
   return (
     <>
-      <AppShellRoot>
+      <AppShellRoot
+        containerWidth={containerWidthForEntryLayout(collectionConfig)}
+      >
         <AppShellHeader>
           <Breadcrumbs
             flex
@@ -173,11 +175,12 @@ export function CreateItem(props: {
             {createResult.kind === 'error' && (
               <Notice tone="critical">{createResult.error.message}</Notice>
             )}
-
-            <FormValueContentFromPreviewProps
+            <FormForEntry
+              previewProps={previewProps}
               forceValidation={forceValidation}
+              entryLayout={collectionConfig.entryLayout}
+              formatInfo={formatInfo}
               slugField={slugInfo}
-              {...previewProps}
             />
           </Flex>
         </AppShellBody>

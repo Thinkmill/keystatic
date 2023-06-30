@@ -10,7 +10,6 @@ import { ProgressCircle } from '@voussoir/progress';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../config';
-import { FormValueContentFromPreviewProps } from '../form/form-from-preview';
 import { createGetPreviewProps } from '../form/preview-props';
 import { fields } from '../form/api';
 import { clientSideValidateProp } from '../form/errors';
@@ -30,6 +29,7 @@ import { useUpsertItem } from './updating';
 import { Icon } from '@voussoir/icon';
 import { refreshCwIcon } from '@voussoir/icon/icons/refreshCwIcon';
 import { ForkRepoDialog } from './fork-repo';
+import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 
 type SingletonPageProps = {
   singleton: string;
@@ -94,13 +94,14 @@ function SingletonPage({
   )(state as Record<string, unknown>);
 
   const baseCommit = useBaseCommit();
+  const formatInfo = getSingletonFormat(config, singleton);
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
     state,
     initialFiles,
     config,
     schema: singletonConfig.schema,
     basePath: singletonPath,
-    format: getSingletonFormat(config, singleton),
+    format: formatInfo,
     currentLocalTreeKey: localTreeKey,
     currentTree,
     slug: undefined,
@@ -116,7 +117,9 @@ function SingletonPage({
   const formID = 'singleton-form';
 
   return (
-    <AppShellRoot>
+    <AppShellRoot
+      containerWidth={containerWidthForEntryLayout(singletonConfig)}
+    >
       <AppShellHeader>
         <Flex alignItems="center" gap="regular">
           <Heading elementType="h1" id="page-title" size="small">
@@ -167,10 +170,13 @@ function SingletonPage({
             {updateResult.kind === 'error' && (
               <Notice tone="critical">{updateResult.error.message}</Notice>
             )}
-            <FormValueContentFromPreviewProps
+            <FormForEntry
               key={localTreeKey}
+              previewProps={previewProps}
               forceValidation={forceValidation}
-              {...previewProps}
+              entryLayout={singletonConfig.entryLayout}
+              formatInfo={formatInfo}
+              slugField={undefined}
             />
             <DialogContainer
               // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since
