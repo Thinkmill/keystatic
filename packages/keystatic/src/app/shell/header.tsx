@@ -1,12 +1,14 @@
+import { usePreventScroll } from '@react-aria/overlays';
+import { PropsWithChildren, useRef, useEffect } from 'react';
+
 import { ActionButton } from '@voussoir/button';
 import { Icon } from '@voussoir/icon';
 import { menuIcon } from '@voussoir/icon/icons/menuIcon';
 import { Flex } from '@voussoir/layout';
-import { PropsWithChildren, useRef, useEffect } from 'react';
+import { breakpointQueries } from '@voussoir/style';
 
 import { MAIN_PANEL_ID, SIDE_PANEL_ID } from './constants';
 import { useSidebar } from './sidebar';
-import { usePreventScroll } from '@react-aria/overlays';
 
 function documentSelector(selector: string): HTMLElement | null {
   return document.querySelector(selector);
@@ -40,7 +42,8 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
   };
 
   useEffect(() => {
-    let mediaQueryList = window.matchMedia('(max-width: 1020px)');
+    let tabletBP = breakpointQueries.below.tablet.replace('@media', '').trim(); // a bit awkward, but stays in-sync with the component library
+    let mediaQueryList = window.matchMedia(tabletBP);
     let sidePanel = documentSelector(`#${SIDE_PANEL_ID}`);
     let mainPanel = documentSelector(`#${MAIN_PANEL_ID}`);
     let menuButtonElement = menuButtonRef.current;
