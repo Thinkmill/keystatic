@@ -58,7 +58,8 @@ export async function generateMetadata(
 
   const page = await reader.collections.pages.read(slug);
 
-  const previousImages = (await parent).openGraph?.images || [];
+  const parentOGImages = (await parent).openGraph?.images || [];
+  const parentTwitterSite = (await parent).twitter?.site ?? '';
 
   return {
     title: page?.title,
@@ -68,13 +69,13 @@ export async function generateMetadata(
       description: page?.summary,
       url: `https://keystatic.com/docs/${slug}`,
       type: 'article',
-      images: ['', ...previousImages],
+      images: ['', ...parentOGImages],
     },
     twitter: {
       card: 'summary_large_image',
       title: page?.title,
       description: page?.summary,
-      site: '@thekeystatic',
+      site: parentTwitterSite,
     },
   };
 }
