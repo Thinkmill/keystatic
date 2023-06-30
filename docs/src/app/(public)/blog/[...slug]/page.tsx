@@ -5,12 +5,13 @@ import Link from 'next/link';
 import { parseAndFormatPublishedDate } from '../../../../utils';
 import { ArrowLeftIcon } from '../../../../components/icons/arrow-left';
 import { Fragment } from 'react';
+import { Metadata, ResolvingMetadata } from 'next';
 
-export default async function BlogPost({
-  params,
-}: {
+type BlogProps = {
   params: { slug: string[] };
-}) {
+};
+
+export default async function BlogPost({ params }: BlogProps) {
   const { slug: slugPath } = params;
   const slug = slugPath.join('/');
 
@@ -86,4 +87,34 @@ export async function generateStaticParams() {
   return slugs.map(slug => ({
     slug: slug.split('/'),
   }));
+}
+
+export async function generateMetadata(
+  { params }: BlogProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const slugPath = params.slug;
+  const slug = slugPath.join('/');
+
+  const page = await reader.collections.blog.read(slug);
+
+  const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: page?.title,
+    description: page?.summary,
+    openGraph: {
+      title: page?.title,
+      description: page?.summary,
+      url: `https://keystatic.com/blog/${slug}`,
+      type: 'article',
+      images: ['', ...previousImages],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: page?.title,
+      description: page?.summary,
+      site: '@thekeystatic',
+    },
+  };
 }

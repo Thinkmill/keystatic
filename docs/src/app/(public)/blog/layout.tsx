@@ -1,7 +1,10 @@
 import Footer from '../../../components/footer';
 
 export const metadata = {
-  title: 'Keystatic - Blog',
+  title: {
+    template: '%s - Blog | Keystatic',
+    default: 'Blog',
+  },
   description: 'Latest news and updates from the Keystatic team.',
 };
 

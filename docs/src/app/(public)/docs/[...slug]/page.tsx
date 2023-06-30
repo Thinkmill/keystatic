@@ -3,10 +3,15 @@ import { TableOfContents } from '../../../../components/navigation/table-of-cont
 import DocumentRenderer from '../../../../components/document-renderer';
 import keystaticConfig from '../../../../../keystatic.config';
 import { notFound } from 'next/navigation';
+import { Metadata, ResolvingMetadata } from 'next';
 
 const reader = createReader(process.cwd(), keystaticConfig);
 
-export default async function Docs({ params }: { params: { slug: string[] } }) {
+type DocsProps = {
+  params: { slug: string[] };
+};
+
+export default async function Docs({ params }: DocsProps) {
   const { slug: slugPath } = params;
 
   const slug = slugPath.join('/');
@@ -42,4 +47,34 @@ export async function generateStaticParams() {
   return slugs.map(slug => ({
     slug: slug.split('/'),
   }));
+}
+
+export async function generateMetadata(
+  { params }: DocsProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const slugPath = params.slug;
+  const slug = slugPath.join('/');
+
+  const page = await reader.collections.pages.read(slug);
+
+  const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: page?.title,
+    description: page?.summary,
+    openGraph: {
+      title: page?.title,
+      description: page?.summary,
+      url: `https://keystatic.com/docs/${slug}`,
+      type: 'article',
+      images: ['', ...previousImages],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: page?.title,
+      description: page?.summary,
+      site: '@thekeystatic',
+    },
+  };
 }
