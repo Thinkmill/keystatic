@@ -2,7 +2,7 @@ import { ComponentSchema, SlugFormField } from './form/api';
 
 export type DataFormat = 'json' | 'yaml';
 export type Format = DataFormat | { data?: DataFormat; contentField?: string };
-
+export type EntryLayout = 'content' | 'form';
 export type Glob = '*' | '**';
 export type Collection<
   Schema extends Record<string, ComponentSchema>,
@@ -10,6 +10,7 @@ export type Collection<
 > = {
   label: string;
   path?: `${string}/${Glob}` | `${string}/${Glob}/${string}`;
+  entryLayout?: EntryLayout;
   format?: Format;
   slugField: SlugField;
   schema: Schema;
@@ -18,6 +19,7 @@ export type Collection<
 export type Singleton<Schema extends Record<string, ComponentSchema>> = {
   label: string;
   path?: string;
+  entryLayout?: EntryLayout;
   format?: Format;
   schema: Schema;
 };
