@@ -21,11 +21,14 @@ import { gitPullRequestIcon } from '@voussoir/icon/icons/gitPullRequestIcon';
 import { gitBranchPlusIcon } from '@voussoir/icon/icons/gitBranchPlusIcon';
 import { githubIcon } from '@voussoir/icon/icons/githubIcon';
 import { gitForkIcon } from '@voussoir/icon/icons/gitForkIcon';
+import { monitorIcon } from '@voussoir/icon/icons/monitorIcon';
+import { moonIcon } from '@voussoir/icon/icons/moonIcon';
+import { sunIcon } from '@voussoir/icon/icons/sunIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
 // import { userIcon } from '@voussoir/icon/icons/userIcon';
 import { Box, Flex } from '@voussoir/layout';
 import { ActionMenu, Menu, MenuTrigger } from '@voussoir/menu';
-import { css, tokenSchema } from '@voussoir/style';
+import { css, tokenSchema, useMediaQuery } from '@voussoir/style';
 import { Text } from '@voussoir/typography';
 
 import { CloudConfig, GitHubConfig, LocalConfig } from '../../config';
@@ -44,6 +47,7 @@ import { ZapLogo } from './common';
 import { useConfig } from './context';
 import { BranchInfoContext, GitHubAppShellDataContext } from './data';
 import { ViewerContext } from './sidebar-data';
+import { ColorScheme, useThemeContext } from './theme';
 
 export const TopBar = () => {
   let config = useConfig();
@@ -88,8 +92,9 @@ function CloudHeader({ config }: { config: CloudConfig }) {
       <Slash />
       <BranchPicker />
       <GitMenu />
-      {/* <Box flex="1" />
-      <UserMenu /> */}
+      <Box flex="1" />
+      <ThemeMenu />
+      {/* <UserMenu /> */}
     </HeaderOuter>
   );
 }
@@ -117,6 +122,7 @@ function GithubHeader({ config }: { config: GitHubConfig }) {
       <BranchPicker />
       <GitMenu />
       <Box flex="1" />
+      <ThemeMenu />
       <UserMenu />
     </HeaderOuter>
   );
@@ -133,6 +139,8 @@ function LocalHeader({ config }: { config: LocalConfig }) {
       <Text color="neutralEmphasis" weight="semibold">
         Keystatic
       </Text>
+      <Box flex="1" />
+      <ThemeMenu />
     </HeaderOuter>
   );
 }
@@ -170,6 +178,53 @@ function HeaderOuter({ children }: { children: ReactNode }) {
     </Flex>
   );
 }
+
+// Theme controls
+// -----------------------------------------------------------------------------
+
+const THEME_MODE = {
+  light: { icon: sunIcon, label: 'Light' },
+  dark: { icon: moonIcon, label: 'Dark' },
+  system: { icon: monitorIcon, label: 'System' },
+} as const;
+const themeItems = Object.entries(THEME_MODE).map(([id, { icon, label }]) => ({
+  id,
+  icon,
+  label,
+}));
+
+function ThemeMenu() {
+  let { theme, setTheme } = useThemeContext();
+  let matchesDark = useMediaQuery('(prefers-color-scheme: dark)');
+  let icon = THEME_MODE[theme].icon;
+  if (theme === 'system') {
+    icon = matchesDark ? moonIcon : sunIcon;
+  }
+
+  return (
+    <MenuTrigger>
+      <ActionButton aria-label="Theme" prominence="low">
+        <Icon src={icon} />
+      </ActionButton>
+      <Menu
+        items={themeItems}
+        onSelectionChange={([key]) => setTheme(key as ColorScheme)}
+        selectedKeys={[theme]}
+        selectionMode="single"
+      >
+        {item => (
+          <Item textValue={item.label}>
+            <Icon src={item.icon} />
+            <Text>{item.label}</Text>
+          </Item>
+        )}
+      </Menu>
+    </MenuTrigger>
+  );
+}
+
+// User controls
+// -----------------------------------------------------------------------------
 
 function UserMenu() {
   let user = useContext(ViewerContext);
