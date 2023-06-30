@@ -29,6 +29,7 @@ export const metadata = {
     siteName: 'Keystatic',
     type: 'website',
     url: 'https://keystatic.com',
+    locale: 'en_AU',
   },
   twitter: {
     card: 'summary_large_image',

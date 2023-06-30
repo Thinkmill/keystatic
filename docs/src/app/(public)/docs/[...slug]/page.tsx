@@ -68,7 +68,7 @@ export async function generateMetadata(
       title: page?.title,
       description: page?.summary,
       url: `https://keystatic.com/docs/${slug}`,
-      type: 'article',
+      type: 'website',
       images: ['', ...parentOGImages],
     },
     twitter: {
