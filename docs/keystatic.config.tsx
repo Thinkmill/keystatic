@@ -236,6 +236,7 @@ export default config({
     pages: collection({
       label: 'Docs pages',
       slugField: 'title',
+      entryLayout: 'content',
       format: { contentField: 'content' },
       path: 'src/content/pages/**',
       schema: {
@@ -258,6 +259,7 @@ export default config({
       label: 'Blog posts',
       slugField: 'title',
       path: 'src/content/blog/**',
+      entryLayout: 'content',
       format: {
         contentField: 'content',
       },

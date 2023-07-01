@@ -27,7 +27,6 @@ import { TextField } from '@voussoir/text-field';
 import { Heading, Text } from '@voussoir/typography';
 
 import { Config } from '../config';
-import { FormValueContentFromPreviewProps } from '../form/form-from-preview';
 import { createGetPreviewProps } from '../form/preview-props';
 import { fields } from '../form/api';
 import { clientSideValidateProp } from '../form/errors';
@@ -60,6 +59,7 @@ import { mergeDataStates } from './useData';
 import { useSlugsInCollection } from './useSlugsInCollection';
 import { SlugFieldInfo } from '../form/fields/text/ui';
 import { useDeleteItem, useUpsertItem } from './updating';
+import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 
 type ItemPageProps = {
   collection: string;
@@ -320,11 +320,13 @@ function ItemPage(props: ItemPageProps) {
             <Notice tone="critical">{deleteResult.error.message}</Notice>
           )}
           <AppShellBody>
-            <FormValueContentFromPreviewProps
+            <FormForEntry
               key={localTreeKey}
+              previewProps={previewProps}
               forceValidation={forceValidation}
+              entryLayout={collectionConfig.entryLayout}
+              formatInfo={formatInfo}
               slugField={props.slugInfo}
-              {...previewProps}
             />
           </AppShellBody>
           <DialogContainer
@@ -586,7 +588,9 @@ const ItemPageShell = (
   const collectionConfig = props.config.collections![props.collection]!;
 
   return (
-    <AppShellRoot>
+    <AppShellRoot
+      containerWidth={containerWidthForEntryLayout(collectionConfig)}
+    >
       <AppShellHeader>
         <Breadcrumbs
           flex
