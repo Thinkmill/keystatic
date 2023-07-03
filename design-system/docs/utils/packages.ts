@@ -9,7 +9,7 @@ import { cache } from './cache';
 
 export const projectDir = path.resolve(process.cwd(), '..');
 
-export const packagesDir = path.join(projectDir, 'packages');
+const pkgSrcDir = path.resolve(projectDir, 'pkg/src');
 
 export async function getDocEntries(
   entries: Dirent[],
@@ -41,14 +41,14 @@ type PackageDocSlugs = Map<PackageName, string[][]>;
 
 export const getAllPackageDocSlugs = cache(
   async function getAllPackageDocSlugs(): Promise<PackageDocSlugs> {
-    const dirEntries = await readdirE('../packages');
+    const dirEntries = await readdirE('../pkg/src');
     const entries = await Promise.all(
       dirEntries.map(
         async (entry): Promise<undefined | [string, string[][]]> => {
           if (!entry.isDirectory()) {
             return;
           }
-          const docsDir = path.join(packagesDir, entry.name, 'docs');
+          const docsDir = path.join(pkgSrcDir, entry.name, 'docs');
           let entries;
           try {
             entries = await fs.readdir(docsDir, { withFileTypes: true });
@@ -143,7 +143,7 @@ export async function getNavigation(): Promise<SidebarItem[]> {
     for (const slug of docSlugs) {
       const promise = (async (): Promise<Info> => {
         const href = `/package/${packageName}${joinSlug(slug)}`;
-        const filename = `packages/${packageName}/docs/${slug.join('/')}.md`;
+        const filename = `pkg/src/${packageName}/docs/${slug.join('/')}.md`;
         const content = await readFileE(`../${filename}`);
         const { title, category } = extractFrontmatter(filename, content);
         return { category, title, href };
@@ -187,20 +187,22 @@ export async function getNavigation(): Promise<SidebarItem[]> {
   return items;
 }
 
-async function getComponentReexports(packagesDirEnts: Dirent[]) {
+async function getComponentReexports() {
+  const pkgSrcDirEntries = await readdirE(pkgSrcDir);
   const packages = (
     await Promise.all(
-      packagesDirEnts.map(async entry => {
-        try {
-          const stats = await fs.stat(
-            path.join(packagesDir, entry.name, 'package.json')
-          );
-          if (stats.isFile()) {
+      pkgSrcDirEntries.map(async entry => {
+        if (!entry.isDirectory()) return;
+        const innerEntries = await fs.readdir(
+          path.join(pkgSrcDir, entry.name),
+          { withFileTypes: true }
+        );
+        for (const innerEntry of innerEntries) {
+          if (
+            innerEntry.isFile() &&
+            (innerEntry.name === 'index.ts' || innerEntry.name === 'index.tsx')
+          ) {
             return entry.name;
-          }
-        } catch (err: any) {
-          if (err.code !== 'ENOENT') {
-            throw err;
           }
         }
       })
@@ -222,8 +224,6 @@ export async function getContentDocEntries() {
 export const GENERATED_DIR = 'generated';
 
 export async function writeComponentReexports() {
-  const components = await readdirE('../packages').then(entries =>
-    getComponentReexports(entries)
-  );
+  const components = await getComponentReexports();
   await fs.writeFile(`${GENERATED_DIR}/components.ts`, components);
 }
