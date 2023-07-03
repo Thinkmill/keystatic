@@ -564,6 +564,7 @@ export function TabList<T extends object>(props: TabListProps<T>) {
           styleProps.className
         )}
       >
+        {/* @ts-expect-error FIXME */}
         <TabPicker
           {...props}
           {...tabProps}
