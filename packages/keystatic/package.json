@@ -199,7 +199,6 @@
     "@types/js-yaml": "^4.0.5",
     "@types/prismjs": "^1.26.0",
     "@types/signal-exit": "^3.0.1",
-    "@voussoir/test-utils": "^2.0.2",
     "eslint": "^8.18.0",
     "fast-glob": "^3.2.12",
     "jest-diff": "^29.0.1",

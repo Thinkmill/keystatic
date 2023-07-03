@@ -2247,7 +2247,6 @@ importers:
       '@voussoir/style': ^0.1.6
       '@voussoir/table': ^0.1.6
       '@voussoir/tabs': ^0.1.5
-      '@voussoir/test-utils': ^2.0.2
       '@voussoir/text-field': ^0.1.8
       '@voussoir/toast': ^0.1.9
       '@voussoir/tooltip': ^0.1.4
@@ -2409,7 +2408,6 @@ importers:
       '@types/js-yaml': 4.0.5
       '@types/prismjs': 1.26.0
       '@types/signal-exit': 3.0.1
-      '@voussoir/test-utils': link:../../design-system/packages/test-utils
       eslint: 8.34.0
       fast-glob: 3.2.12
       jest-diff: 29.4.3
