@@ -1,5 +1,5 @@
 'use client';
-import { FieldPrimitive } from '@voussoir/field';
+import { FieldPrimitive } from '@keystar/ui/field';
 import { DocumentEditor } from './DocumentEditor';
 import {
   ComponentBlock,

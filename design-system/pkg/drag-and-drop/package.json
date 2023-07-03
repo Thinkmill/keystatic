@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-drag-and-drop.cjs.js",
+  "module": "dist/keystar-ui-drag-and-drop.esm.js"
+}

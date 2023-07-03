@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-barChartBigIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-barChartBigIcon.esm.js"
+}

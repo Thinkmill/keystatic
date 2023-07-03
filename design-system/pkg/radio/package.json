@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-radio.cjs.js",
+  "module": "dist/keystar-ui-radio.esm.js"
+}

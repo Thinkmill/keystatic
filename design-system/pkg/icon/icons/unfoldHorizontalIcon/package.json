@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-unfoldHorizontalIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-unfoldHorizontalIcon.esm.js"
+}

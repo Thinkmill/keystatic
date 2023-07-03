@@ -1,0 +1,80 @@
+{
+  "ar-AE": { "info": "معلومات", "critical": "خطأ", "positive": "تم بنجاح" },
+  "bg-BG": { "info": "Инфо", "critical": "Грешка", "positive": "Успех" },
+  "cs-CZ": { "info": "Informace", "critical": "Chyba", "positive": "Úspěch" },
+  "da-DK": { "info": "Info", "critical": "Fejl", "positive": "Fuldført" },
+  "de-DE": {
+    "info": "Informationen",
+    "critical": "Fehler",
+    "positive": "Erfolg"
+  },
+  "el-GR": {
+    "info": "Πληροφορίες",
+    "critical": "Σφάλμα",
+    "positive": "Επιτυχία"
+  },
+  "en-US": { "info": "Info", "critical": "Error", "positive": "Success" },
+  "es-ES": { "info": "Información", "critical": "Error", "positive": "Éxito" },
+  "et-EE": { "info": "Teave", "critical": "Viga", "positive": "Valmis" },
+  "fi-FI": { "info": "Tiedot", "critical": "Virhe", "positive": "Onnistui" },
+  "fr-FR": { "info": "Infos", "critical": "Erreur", "positive": "Succès" },
+  "he-IL": { "info": "מידע", "critical": "שגיאה", "positive": "הצלחה" },
+  "hr-HR": {
+    "info": "Informacije",
+    "critical": "Pogreška",
+    "positive": "Uspješno"
+  },
+  "hu-HU": { "info": "Információ", "critical": "Hiba", "positive": "Siker" },
+  "it-IT": {
+    "info": "Informazioni",
+    "critical": "Errore",
+    "positive": "Operazione riuscita"
+  },
+  "ja-JP": { "info": "情報", "critical": "エラー", "positive": "成功" },
+  "ko-KR": { "info": "정보", "critical": "오류", "positive": "성공" },
+  "lt-LT": {
+    "info": "Informacija",
+    "critical": "Klaida",
+    "positive": "Sėkmingai"
+  },
+  "lv-LV": {
+    "info": "Informācija",
+    "critical": "Kļūda",
+    "positive": "Izdevās"
+  },
+  "nb-NO": { "info": "Info", "critical": "Feil", "positive": "Vellykket" },
+  "nl-NL": { "info": "Info", "critical": "Fout", "positive": "Geslaagd" },
+  "pl-PL": {
+    "info": "Informacje",
+    "critical": "Błąd",
+    "positive": "Powodzenie"
+  },
+  "pt-BR": { "info": "Informações", "critical": "Erro", "positive": "Sucesso" },
+  "pt-PT": { "info": "Informação", "critical": "Erro", "positive": "Sucesso" },
+  "ro-RO": { "info": "Informaţii", "critical": "Eroare", "positive": "Succes" },
+  "ru-RU": {
+    "info": "Информация",
+    "critical": "Ошибка",
+    "positive": "Успешно"
+  },
+  "sk-SK": { "info": "Informácie", "critical": "Chyba", "positive": "Úspech" },
+  "sl-SI": {
+    "info": "Informacije",
+    "critical": "Napaka",
+    "positive": "Uspešno"
+  },
+  "sr-SP": {
+    "info": "Informacije",
+    "critical": "Greška",
+    "positive": "Uspešno"
+  },
+  "sv-SE": { "info": "Info", "critical": "Fel", "positive": "Lyckades" },
+  "tr-TR": { "info": "Bilgiler", "critical": "Hata", "positive": "Başarılı" },
+  "uk-UA": {
+    "info": "Інформація",
+    "critical": "Помилка",
+    "positive": "Успішно"
+  },
+  "zh-CN": { "info": "信息", "critical": "错误", "positive": "成功" },
+  "zh-TW": { "info": "資訊", "critical": "錯誤", "positive": "成功" }
+}

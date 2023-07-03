@@ -1,7 +1,7 @@
-import { ActionButton } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { menuIcon } from '@voussoir/icon/icons/menuIcon';
-import { Box, Flex } from '@voussoir/layout';
+import { ActionButton } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
+import { menuIcon } from '@keystar/ui/icon/icons/menuIcon';
+import { Box, Flex } from '@keystar/ui/layout';
 import { PropsWithChildren, useContext, useRef, useEffect } from 'react';
 import { AppShellContainer } from '.';
 import { SidebarContext } from './sidebar';

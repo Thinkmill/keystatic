@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-date-time.cjs.js",
+  "module": "dist/keystar-ui-date-time.esm.js"
+}

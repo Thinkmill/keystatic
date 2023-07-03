@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-test-utils.cjs.js",
+  "module": "dist/keystar-ui-test-utils.esm.js"
+}

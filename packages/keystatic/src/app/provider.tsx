@@ -1,9 +1,9 @@
 import {
   ClientSideOnlyDocumentElement,
   VoussoirProvider,
-} from '@voussoir/core';
-import { makeLinkComponent } from '@voussoir/link';
-import { Toaster } from '@voussoir/toast';
+} from '@keystar/ui/core';
+import { makeLinkComponent } from '@keystar/ui/link';
+import { Toaster } from '@keystar/ui/toast';
 import {
   AnchorHTMLAttributes,
   ForwardedRef,

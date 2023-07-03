@@ -210,7 +210,7 @@ async function getComponentReexports(packagesDirEnts: Dirent[]) {
   return packages
     .sort()
     .filter(x => x !== 'types' && x !== 'test-utils')
-    .map(pkg => `export * from '@voussoir/${pkg}';`)
+    .map(pkg => `export * from '@keystar/ui/${pkg}';`)
     .join('\n');
 }
 

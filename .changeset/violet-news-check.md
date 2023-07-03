@@ -1,5 +1,5 @@
 ---
-'@voussoir/list-view': patch
+'@keystar/ui': patch
 '@keystatic/core': patch
 ---
 

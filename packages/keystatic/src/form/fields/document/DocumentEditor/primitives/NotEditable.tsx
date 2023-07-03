@@ -1,4 +1,4 @@
-import { css } from '@voussoir/style';
+import { css } from '@keystar/ui/style';
 import { HTMLAttributes, forwardRef } from 'react';
 
 export const NotEditable = forwardRef<
