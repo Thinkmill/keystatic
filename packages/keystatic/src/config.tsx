@@ -1,4 +1,5 @@
 import { ComponentSchema, SlugFormField } from './form/api';
+import type { Locale } from './app/l10n/locales';
 
 export type DataFormat = 'json' | 'yaml';
 export type Format = DataFormat | { data?: DataFormat; contentField?: string };
@@ -24,6 +25,10 @@ export type Singleton<Schema extends Record<string, ComponentSchema>> = {
   schema: Schema;
 };
 
+type CommonConfig = {
+  locale?: Locale;
+};
+
 export type GitHubConfig<
   Collections extends {
     [key: string]: Collection<Record<string, ComponentSchema>, string>;
@@ -42,7 +47,7 @@ export type GitHubConfig<
   };
   collections?: Collections;
   singletons?: Singletons;
-};
+} & CommonConfig;
 
 export type LocalConfig<
   Collections extends {
@@ -61,7 +66,7 @@ export type LocalConfig<
   };
   collections?: Collections;
   singletons?: Singletons;
-};
+} & CommonConfig;
 
 export type CloudConfig<
   Collections extends {
@@ -78,7 +83,7 @@ export type CloudConfig<
   storage: { kind: 'cloud'; project: string };
   collections?: Collections;
   singletons?: Singletons;
-};
+} & CommonConfig;
 
 export type Config<
   Collections extends {
@@ -102,7 +107,8 @@ export type Config<
   collections?: Collections;
   singletons?: Singletons;
 } & ({} extends Collections ? {} : { collections: Collections }) &
-  ({} extends Singletons ? {} : { singletons: Singletons });
+  ({} extends Singletons ? {} : { singletons: Singletons }) &
+  CommonConfig;
 
 export function config<
   Collections extends {
