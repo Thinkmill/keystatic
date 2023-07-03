@@ -7,4 +7,3 @@ packages:
   - 'apps/*'
   - 'templates/*'
   - 'docs'
-  - 'transform'
