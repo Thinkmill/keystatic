@@ -4,11 +4,12 @@ import { PropsWithChildren, useRef, useEffect } from 'react';
 import { ActionButton } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
 import { menuIcon } from '@keystar/ui/icon/icons/menuIcon';
-import { Flex } from '@keystar/ui/layout';
+import { Box, Flex } from '@keystar/ui/layout';
 import { breakpointQueries } from '@keystar/ui/style';
 
 import { MAIN_PANEL_ID, SIDE_PANEL_ID } from './constants';
 import { useSidebar } from './sidebar';
+import { AppShellContainer } from '.';
 
 function documentSelector(selector: string): HTMLElement | null {
   return document.querySelector(selector);
@@ -42,8 +43,10 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
   };
 
   useEffect(() => {
-    let tabletBP = breakpointQueries.below.tablet.replace('@media', '').trim(); // a bit awkward, but stays in-sync with the component library
-    let mediaQueryList = window.matchMedia(tabletBP);
+    let belowTablet = breakpointQueries.below.tablet
+      .replace('@media', '')
+      .trim(); // a bit awkward, but stays in-sync with the component library
+    let mediaQueryList = window.matchMedia(belowTablet);
     let sidePanel = documentSelector(`#${SIDE_PANEL_ID}`);
     let mainPanel = documentSelector(`#${MAIN_PANEL_ID}`);
     let menuButtonElement = menuButtonRef.current;
@@ -138,29 +141,32 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
   }, [setSidebarOpen, menuButtonRef]);
 
   return (
-    <Flex
-      alignItems="center"
+    <Box
       backgroundColor="surface"
       borderBottom="muted"
       elementType="header"
-      gap={{ mobile: 'small', tablet: 'regular' }}
       height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
-      minWidth={0}
       insetTop={0}
-      paddingEnd={{ mobile: 'regular', tablet: 'xlarge' }}
-      paddingStart={{ tablet: 'xlarge' }}
       position="sticky"
       zIndex={3}
     >
-      <ActionButton
-        prominence="low"
-        isHidden={{ above: 'mobile' }}
-        onPress={onPress}
-        ref={menuButtonRef}
-      >
-        <Icon src={menuIcon} />
-      </ActionButton>
-      {children}
-    </Flex>
+      <AppShellContainer>
+        <Flex
+          alignItems="center"
+          gap={{ mobile: 'small', tablet: 'regular' }}
+          height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
+        >
+          <ActionButton
+            prominence="low"
+            isHidden={{ above: 'mobile' }}
+            onPress={onPress}
+            ref={menuButtonRef}
+          >
+            <Icon src={menuIcon} />
+          </ActionButton>
+          {children}
+        </Flex>
+      </AppShellContainer>
+    </Box>
   );
 };

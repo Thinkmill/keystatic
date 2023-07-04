@@ -1,4 +1,5 @@
-import { Box, Grid } from '@keystar/ui/layout';
+import { Grid } from '@keystar/ui/layout';
+import { breakpointQueries, useMediaQuery } from '@keystar/ui/style';
 
 import { FormatInfo } from './path-utils';
 import { ReadonlyPropPath } from '../form/fields/document/DocumentEditor/component-blocks/utils';
@@ -45,18 +46,25 @@ export function FormForEntry({
   forceValidation: boolean | undefined;
   slugField: SlugFieldInfo | undefined;
 }) {
+  const isAboveTablet = useMediaQuery(breakpointQueries.above.tablet);
   const props = _previewProps as GenericPreviewProps<
     ObjectField<Record<string, NonChildFieldComponentSchema>>,
     unknown
   >;
 
-  if (entryLayout === 'content' && formatInfo.contentField) {
+  if (entryLayout === 'content' && formatInfo.contentField && isAboveTablet) {
     const { contentField } = formatInfo;
     return (
       <PathContextProvider value={emptyArray}>
         <SlugFieldProvider value={slugField}>
-          <Grid columns={{ desktop: '2fr 1fr' }} gap="xlarge">
-            <Grid gap="xlarge" order={{ desktop: 2 }}>
+          <Grid columns="2fr 1fr" gap="xlarge" alignItems="start">
+            <AddToPathProvider part={contentField.key}>
+              <InnerFormValueContentFromPreviewProps
+                forceValidation={forceValidation}
+                {...props.fields[contentField.key]}
+              />
+            </AddToPathProvider>
+            <Grid gap="xlarge">
               {Object.entries(props.fields).map(([key, propVal]) =>
                 key === contentField.key ? null : (
                   <AddToPathProvider key={key} part={key}>
@@ -68,19 +76,12 @@ export function FormForEntry({
                 )
               )}
             </Grid>
-            <Box minWidth={0}>
-              <AddToPathProvider part={contentField.key}>
-                <InnerFormValueContentFromPreviewProps
-                  forceValidation={forceValidation}
-                  {...props.fields[contentField.key]}
-                />
-              </AddToPathProvider>
-            </Box>
           </Grid>
         </SlugFieldProvider>
       </PathContextProvider>
     );
   }
+
   return (
     <FormValueContentFromPreviewProps
       autoFocus
