@@ -142,7 +142,15 @@ function SingletonPage({
             aria-label="Reset"
             // prominence="low"
             isDisabled={updateResult.kind === 'loading' || !hasChanged}
-            onPress={() => window.location.reload()}
+            onPress={() => {
+              setState({
+                localTreeKey: localTreeKey,
+                state:
+                  initialState === null
+                    ? getInitialPropsValue(schema)
+                    : initialState,
+              });
+            }}
           >
             <Icon isHidden={{ above: 'mobile' }} src={refreshCwIcon} />
             <Text isHidden={{ below: 'tablet' }}>Reset</Text>

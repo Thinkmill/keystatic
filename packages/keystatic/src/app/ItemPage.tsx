@@ -230,7 +230,7 @@ function ItemPage(props: ItemPageProps) {
               onAction={key => {
                 switch (key) {
                   case 'reset':
-                    window.location.reload(); // TODO: can we do this w/o a full reload?
+                    setState({ state: initialState, localTreeKey });
                     break;
                   case 'delete':
                     setDeleteAlertOpen(true);
