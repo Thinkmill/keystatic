@@ -1,19 +1,19 @@
 'use client';
-import { ActionGroup, Item } from '@voussoir/action-group';
-import { ActionButton } from '@voussoir/button';
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
-import { Text } from '@voussoir/typography';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Icon } from '@voussoir/icon';
-import { Divider, Flex } from '@voussoir/layout';
+import { ActionGroup, Item } from '@keystar/ui/action-group';
+import { ActionButton } from '@keystar/ui/button';
+import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
+import { Text } from '@keystar/ui/typography';
+import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
+import { Icon } from '@keystar/ui/icon';
+import { Divider, Flex } from '@keystar/ui/layout';
 
 import { PropsWithChildren } from 'react';
 
-import { alertOctagonIcon } from '@voussoir/icon/icons/alertOctagonIcon';
-import { alertTriangleIcon } from '@voussoir/icon/icons/alertTriangleIcon';
-import { checkCircle2Icon } from '@voussoir/icon/icons/checkCircle2Icon';
-import { infoIcon } from '@voussoir/icon/icons/infoIcon';
-import { css, tokenSchema } from '@voussoir/style';
+import { alertOctagonIcon } from '@keystar/ui/icon/icons/alertOctagonIcon';
+import { alertTriangleIcon } from '@keystar/ui/icon/icons/alertTriangleIcon';
+import { checkCircle2Icon } from '@keystar/ui/icon/icons/checkCircle2Icon';
+import { infoIcon } from '@keystar/ui/icon/icons/infoIcon';
+import { css, tokenSchema } from '@keystar/ui/style';
 
 const toneToIcon = {
   caution: alertTriangleIcon,

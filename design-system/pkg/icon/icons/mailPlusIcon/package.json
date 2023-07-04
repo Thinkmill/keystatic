@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-mailPlusIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-mailPlusIcon.esm.js"
+}

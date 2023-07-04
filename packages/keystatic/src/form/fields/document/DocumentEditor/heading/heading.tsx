@@ -1,12 +1,12 @@
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
-import { tokenSchema } from '@voussoir/style';
+import { tokenSchema } from '@keystar/ui/style';
 import { blockElementSpacing } from '../ui-utils';
 import { BlockPopover, BlockPopoverTrigger } from '../primitives';
-import { ActionButton } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Flex } from '@voussoir/layout';
-import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
+import { ActionButton } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
+import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
+import { Flex } from '@keystar/ui/layout';
+import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 
 import { Transforms } from 'slate';
 import {

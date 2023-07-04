@@ -1,10 +1,10 @@
 'use client';
 import { ReactNode } from 'react';
 
-import { Flex } from '@voussoir/layout';
+import { Flex } from '@keystar/ui/layout';
 
 import { SidebarItem, Sidebar, SidebarProvider } from './sidebar';
-import { Toaster } from '@voussoir/toast';
+import { Toaster } from '@keystar/ui/toast';
 
 export function Layout({
   children,

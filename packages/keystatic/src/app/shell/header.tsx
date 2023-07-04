@@ -1,11 +1,11 @@
 import { usePreventScroll } from '@react-aria/overlays';
 import { PropsWithChildren, useRef, useEffect } from 'react';
 
-import { ActionButton } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { menuIcon } from '@voussoir/icon/icons/menuIcon';
-import { Flex } from '@voussoir/layout';
-import { breakpointQueries } from '@voussoir/style';
+import { ActionButton } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
+import { menuIcon } from '@keystar/ui/icon/icons/menuIcon';
+import { Flex } from '@keystar/ui/layout';
+import { breakpointQueries } from '@keystar/ui/style';
 
 import { MAIN_PANEL_ID, SIDE_PANEL_ID } from './constants';
 import { useSidebar } from './sidebar';

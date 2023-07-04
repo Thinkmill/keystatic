@@ -1,5 +1,5 @@
-import { Checkbox } from '@voussoir/checkbox';
-import { Text } from '@voussoir/typography';
+import { Checkbox } from '@keystar/ui/checkbox';
+import { Text } from '@keystar/ui/typography';
 import { BasicFormField } from '../api';
 import { FieldDataError } from './error';
 import { basicFormFieldWithSimpleReaderParse } from './utils';

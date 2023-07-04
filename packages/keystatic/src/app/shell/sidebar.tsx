@@ -7,11 +7,11 @@ import {
   useState,
 } from 'react';
 
-import { Badge } from '@voussoir/badge';
-import { Box, Flex } from '@voussoir/layout';
-import { NavList, NavItem, NavGroup } from '@voussoir/nav-list';
-import { css, breakpointQueries, tokenSchema } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
+import { Badge } from '@keystar/ui/badge';
+import { Box, Flex } from '@keystar/ui/layout';
+import { NavList, NavItem, NavGroup } from '@keystar/ui/nav-list';
+import { css, breakpointQueries, tokenSchema } from '@keystar/ui/style';
+import { Text } from '@keystar/ui/typography';
 
 import { Config } from '../../config';
 

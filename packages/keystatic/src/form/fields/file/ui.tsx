@@ -1,9 +1,9 @@
 'use client';
-import { ButtonGroup, ActionButton, Button } from '@voussoir/button';
-import { FieldLabel, FieldMessage } from '@voussoir/field';
-import { Flex } from '@voussoir/layout';
-import { TextField } from '@voussoir/text-field';
-import { Text } from '@voussoir/typography';
+import { ButtonGroup, ActionButton, Button } from '@keystar/ui/button';
+import { FieldLabel, FieldMessage } from '@keystar/ui/field';
+import { Flex } from '@keystar/ui/layout';
+import { TextField } from '@keystar/ui/text-field';
+import { Text } from '@keystar/ui/typography';
 
 import { useIsInDocumentEditor } from '../document/DocumentEditor';
 import { useId, useReducer } from 'react';

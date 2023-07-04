@@ -1,4 +1,4 @@
-import { Box, Grid } from '@voussoir/layout';
+import { Box, Grid } from '@keystar/ui/layout';
 
 import { FormatInfo } from './path-utils';
 import { ReadonlyPropPath } from '../form/fields/document/DocumentEditor/component-blocks/utils';

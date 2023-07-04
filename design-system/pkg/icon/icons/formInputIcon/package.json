@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-formInputIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-formInputIcon.esm.js"
+}
