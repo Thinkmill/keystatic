@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-planeIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-planeIcon.esm.js"
+}

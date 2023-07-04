@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ProgressCircle } from '@voussoir/progress';
+import { ProgressCircle } from '@keystar/ui/progress';
 import { getDefaultSrcSet } from '../../utils';
 import { CONTENT_MAX_WIDTH_DESKTOP } from '../../constants';
 

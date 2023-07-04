@@ -76,7 +76,7 @@
   },
   "preconstruct": {
     "packages": [
-      "design-system/packages/*",
+      "design-system/pkg",
       "packages/*"
     ],
     "exports": true,

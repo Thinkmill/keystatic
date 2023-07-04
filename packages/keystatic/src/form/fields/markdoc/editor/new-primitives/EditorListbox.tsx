@@ -8,8 +8,8 @@ import {
 } from '@react-types/shared';
 import { Key, RefObject, useEffect, useRef } from 'react';
 
-import { ListBoxBase, listStyles, useListBoxLayout } from '@voussoir/listbox';
-import { BaseStyleProps } from '@voussoir/style';
+import { ListBoxBase, listStyles, useListBoxLayout } from '@keystar/ui/listbox';
+import { BaseStyleProps } from '@keystar/ui/style';
 
 export type EditorListboxProps<T> = {
   listenerRef: RefObject<HTMLElement>;

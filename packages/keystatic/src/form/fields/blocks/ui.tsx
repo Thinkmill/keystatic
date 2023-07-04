@@ -1,11 +1,15 @@
 'use client';
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { ActionButton, ButtonGroup, Button } from '@voussoir/button';
-import { DialogContainer, Dialog, useDialogContainer } from '@voussoir/dialog';
-import { FieldLabel } from '@voussoir/field';
-import { Flex } from '@voussoir/layout';
-import { Content } from '@voussoir/slots';
-import { Heading, Text } from '@voussoir/typography';
+import { ActionButton, ButtonGroup, Button } from '@keystar/ui/button';
+import {
+  DialogContainer,
+  Dialog,
+  useDialogContainer,
+} from '@keystar/ui/dialog';
+import { FieldLabel } from '@keystar/ui/field';
+import { Flex } from '@keystar/ui/layout';
+import { Content } from '@keystar/ui/slots';
+import { Heading, Text } from '@keystar/ui/typography';
 import { useId, useState, useMemo } from 'react';
 import {
   ArrayField,
@@ -30,7 +34,7 @@ import { ArrayFieldListView, ArrayFieldValidationMessages } from '../array/ui';
 import l10nMessages from '../../../app/l10n/index.json';
 import { createGetPreviewProps } from '../../preview-props';
 import { Item } from '@react-stately/collections';
-import { MenuTrigger, Menu } from '@voussoir/menu';
+import { MenuTrigger, Menu } from '@keystar/ui/menu';
 
 export function BlocksFieldInput<Key extends string>(
   props: GenericPreviewProps<

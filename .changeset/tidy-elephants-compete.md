@@ -1,5 +1,5 @@
 ---
-'@voussoir/icon': minor
+'@keystar/ui': minor
 ---
 
 Update lucide icons to `v0.252.0`

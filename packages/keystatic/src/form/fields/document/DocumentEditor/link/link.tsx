@@ -3,18 +3,22 @@ import { useEffect, useMemo, useState } from 'react';
 import { Editor, Node, Range, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 
-import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
-import { Dialog, DialogContainer, useDialogContainer } from '@voussoir/dialog';
-import { Icon } from '@voussoir/icon';
-import { editIcon } from '@voussoir/icon/icons/editIcon';
-import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
-import { linkIcon } from '@voussoir/icon/icons/linkIcon';
-import { unlinkIcon } from '@voussoir/icon/icons/unlinkIcon';
-import { Flex } from '@voussoir/layout';
-import { Content } from '@voussoir/slots';
-import { TextField } from '@voussoir/text-field';
-import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
-import { Heading, Text } from '@voussoir/typography';
+import { ActionButton, Button, ButtonGroup } from '@keystar/ui/button';
+import {
+  Dialog,
+  DialogContainer,
+  useDialogContainer,
+} from '@keystar/ui/dialog';
+import { Icon } from '@keystar/ui/icon';
+import { editIcon } from '@keystar/ui/icon/icons/editIcon';
+import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
+import { linkIcon } from '@keystar/ui/icon/icons/linkIcon';
+import { unlinkIcon } from '@keystar/ui/icon/icons/unlinkIcon';
+import { Flex } from '@keystar/ui/layout';
+import { Content } from '@keystar/ui/slots';
+import { TextField } from '@keystar/ui/text-field';
+import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
+import { Heading, Text } from '@keystar/ui/typography';
 
 import l10nMessages from '../../../../../app/l10n/index.json';
 import {

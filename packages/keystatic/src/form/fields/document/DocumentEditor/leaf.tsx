@@ -1,5 +1,5 @@
-import { Box } from '@voussoir/layout';
-import { css, tokenSchema } from '@voussoir/style';
+import { Box } from '@keystar/ui/layout';
+import { css, tokenSchema } from '@keystar/ui/style';
 import { ReactNode, useState } from 'react';
 import { RenderLeafProps } from 'slate-react';
 import { InsertMenu } from './insert-menu';

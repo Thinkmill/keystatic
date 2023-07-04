@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-picker.cjs.js",
+  "module": "dist/keystar-ui-picker.esm.js"
+}
