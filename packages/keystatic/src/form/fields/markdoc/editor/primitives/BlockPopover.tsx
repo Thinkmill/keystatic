@@ -20,8 +20,8 @@ import {
   useState,
 } from 'react';
 
-import { Overlay, PopoverProps } from '@voussoir/overlays';
-import { css, tokenSchema, transition } from '@voussoir/style';
+import { Overlay, PopoverProps } from '@keystar/ui/overlays';
+import { css, tokenSchema, transition } from '@keystar/ui/style';
 
 type BlockPopoverProps = Pick<PopoverProps, 'hideArrow' | 'placement'> & {
   triggerRef: RefObject<HTMLElement | null>;

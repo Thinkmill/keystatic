@@ -1,16 +1,15 @@
 import { useRouter } from './router';
 import { FormEvent, useMemo, useState } from 'react';
 
-import { Badge } from '@voussoir/badge';
-import { Button, ButtonGroup } from '@voussoir/button';
-import { DialogContainer } from '@voussoir/dialog';
-import { Flex } from '@voussoir/layout';
-import { Notice } from '@voussoir/notice';
-import { ProgressCircle } from '@voussoir/progress';
-import { Heading, Text } from '@voussoir/typography';
+import { Badge } from '@keystar/ui/badge';
+import { Button, ButtonGroup } from '@keystar/ui/button';
+import { DialogContainer } from '@keystar/ui/dialog';
+import { Flex } from '@keystar/ui/layout';
+import { Notice } from '@keystar/ui/notice';
+import { ProgressCircle } from '@keystar/ui/progress';
+import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../config';
-import { FormValueContentFromPreviewProps } from '../form/form-from-preview';
 import { createGetPreviewProps } from '../form/preview-props';
 import { fields } from '../form/api';
 import { clientSideValidateProp } from '../form/errors';
@@ -27,9 +26,10 @@ import { mergeDataStates } from './useData';
 import { useHasChanged } from './useHasChanged';
 import { useItemData } from './useItemData';
 import { useUpsertItem } from './updating';
-import { Icon } from '@voussoir/icon';
-import { refreshCwIcon } from '@voussoir/icon/icons/refreshCwIcon';
+import { Icon } from '@keystar/ui/icon';
+import { refreshCwIcon } from '@keystar/ui/icon/icons/refreshCwIcon';
 import { ForkRepoDialog } from './fork-repo';
+import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 
 type SingletonPageProps = {
   singleton: string;
@@ -94,13 +94,14 @@ function SingletonPage({
   )(state as Record<string, unknown>);
 
   const baseCommit = useBaseCommit();
+  const formatInfo = getSingletonFormat(config, singleton);
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
     state,
     initialFiles,
     config,
     schema: singletonConfig.schema,
     basePath: singletonPath,
-    format: getSingletonFormat(config, singleton),
+    format: formatInfo,
     currentLocalTreeKey: localTreeKey,
     currentTree,
     slug: undefined,
@@ -116,7 +117,9 @@ function SingletonPage({
   const formID = 'singleton-form';
 
   return (
-    <AppShellRoot>
+    <AppShellRoot
+      containerWidth={containerWidthForEntryLayout(singletonConfig)}
+    >
       <AppShellHeader>
         <Flex alignItems="center" gap="regular">
           <Heading elementType="h1" id="page-title" size="small">
@@ -139,7 +142,15 @@ function SingletonPage({
             aria-label="Reset"
             // prominence="low"
             isDisabled={updateResult.kind === 'loading' || !hasChanged}
-            onPress={() => window.location.reload()}
+            onPress={() => {
+              setState({
+                localTreeKey: localTreeKey,
+                state:
+                  initialState === null
+                    ? getInitialPropsValue(schema)
+                    : initialState,
+              });
+            }}
           >
             <Icon isHidden={{ above: 'mobile' }} src={refreshCwIcon} />
             <Text isHidden={{ below: 'tablet' }}>Reset</Text>
@@ -167,10 +178,12 @@ function SingletonPage({
             {updateResult.kind === 'error' && (
               <Notice tone="critical">{updateResult.error.message}</Notice>
             )}
-            <FormValueContentFromPreviewProps
-              key={localTreeKey}
+            <FormForEntry
+              previewProps={previewProps}
               forceValidation={forceValidation}
-              {...previewProps}
+              entryLayout={singletonConfig.entryLayout}
+              formatInfo={formatInfo}
+              slugField={undefined}
             />
             <DialogContainer
               // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since

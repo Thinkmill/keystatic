@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-bluetoothSearchingIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-bluetoothSearchingIcon.esm.js"
+}

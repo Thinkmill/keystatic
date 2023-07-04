@@ -1,12 +1,12 @@
 import { Fragment, useEffect } from 'react';
 
-import { Button } from '@voussoir/button';
-import { menuIcon } from '@voussoir/icon/icons/menuIcon';
-import { Icon } from '@voussoir/icon';
-import { Box, Divider } from '@voussoir/layout';
-import { useLinkComponent } from '@voussoir/link';
-import { breakpointQueries, css, tokenSchema } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
+import { Button } from '@keystar/ui/button';
+import { menuIcon } from '@keystar/ui/icon/icons/menuIcon';
+import { Icon } from '@keystar/ui/icon';
+import { Box, Divider } from '@keystar/ui/layout';
+import { useLinkComponent } from '@keystar/ui/link';
+import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
+import { Text } from '@keystar/ui/typography';
 
 import { HEADER_HEIGHT, SIDEBAR_WIDTH } from '../constants';
 import { useSidebarContext } from './context';

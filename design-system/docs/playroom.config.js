@@ -9,7 +9,7 @@ module.exports = {
   exampleCode: `<Text>Hello world</Text>`,
   frameComponent: './playroom/frame.tsx',
   port: 9000,
-  typeScriptFiles: ['../packages/*/src/*.{ts,tsx}', '!**/node_modules'],
+  typeScriptFiles: ['../pkg/src/**/*.{ts,tsx}', '!**/node_modules'],
   widths: [320, 768, 1024],
   webpackConfig: () => ({
     module: {

@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-flipHorizontalIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-flipHorizontalIcon.esm.js"
+}

@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-hopIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-hopIcon.esm.js"
+}

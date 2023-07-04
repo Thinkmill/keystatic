@@ -1,8 +1,9 @@
 import { ComponentSchema, SlugFormField } from './form/api';
+import type { Locale } from './app/l10n/locales';
 
 export type DataFormat = 'json' | 'yaml';
 export type Format = DataFormat | { data?: DataFormat; contentField?: string };
-
+export type EntryLayout = 'content' | 'form';
 export type Glob = '*' | '**';
 export type Collection<
   Schema extends Record<string, ComponentSchema>,
@@ -10,6 +11,7 @@ export type Collection<
 > = {
   label: string;
   path?: `${string}/${Glob}` | `${string}/${Glob}/${string}`;
+  entryLayout?: EntryLayout;
   format?: Format;
   slugField: SlugField;
   schema: Schema;
@@ -18,8 +20,13 @@ export type Collection<
 export type Singleton<Schema extends Record<string, ComponentSchema>> = {
   label: string;
   path?: string;
+  entryLayout?: EntryLayout;
   format?: Format;
   schema: Schema;
+};
+
+type CommonConfig = {
+  locale?: Locale;
 };
 
 export type GitHubConfig<
@@ -40,7 +47,7 @@ export type GitHubConfig<
   };
   collections?: Collections;
   singletons?: Singletons;
-};
+} & CommonConfig;
 
 export type LocalConfig<
   Collections extends {
@@ -59,7 +66,7 @@ export type LocalConfig<
   };
   collections?: Collections;
   singletons?: Singletons;
-};
+} & CommonConfig;
 
 export type CloudConfig<
   Collections extends {
@@ -76,7 +83,7 @@ export type CloudConfig<
   storage: { kind: 'cloud'; project: string };
   collections?: Collections;
   singletons?: Singletons;
-};
+} & CommonConfig;
 
 export type Config<
   Collections extends {
@@ -100,7 +107,8 @@ export type Config<
   collections?: Collections;
   singletons?: Singletons;
 } & ({} extends Collections ? {} : { collections: Collections }) &
-  ({} extends Singletons ? {} : { singletons: Singletons });
+  ({} extends Singletons ? {} : { singletons: Singletons }) &
+  CommonConfig;
 
 export function config<
   Collections extends {

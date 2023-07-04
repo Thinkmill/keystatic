@@ -8,8 +8,8 @@ import LinkTo from '@storybook/addon-links/react';
 import {
   ClientSideOnlyDocumentElement,
   VoussoirProvider,
-} from '@voussoir/core';
-import { makeLinkComponent } from '@voussoir/link';
+} from '@keystar/ui/core';
+import { makeLinkComponent } from '@keystar/ui/link';
 
 const providerValuesFromUrl = Object.entries(getQueryParams()).reduce(
   (acc, [k, v]) => {
