@@ -11,25 +11,25 @@ import {
 } from 'react';
 import { useMutation } from 'urql';
 
-import { Avatar } from '@voussoir/avatar';
-import { ActionButton, Button } from '@voussoir/button';
-import { AlertDialog, DialogContainer } from '@voussoir/dialog';
-import { Icon } from '@voussoir/icon';
-import { listTodoIcon } from '@voussoir/icon/icons/listTodoIcon';
-import { logOutIcon } from '@voussoir/icon/icons/logOutIcon';
-import { gitPullRequestIcon } from '@voussoir/icon/icons/gitPullRequestIcon';
-import { gitBranchPlusIcon } from '@voussoir/icon/icons/gitBranchPlusIcon';
-import { githubIcon } from '@voussoir/icon/icons/githubIcon';
-import { gitForkIcon } from '@voussoir/icon/icons/gitForkIcon';
-import { monitorIcon } from '@voussoir/icon/icons/monitorIcon';
-import { moonIcon } from '@voussoir/icon/icons/moonIcon';
-import { sunIcon } from '@voussoir/icon/icons/sunIcon';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { userIcon } from '@voussoir/icon/icons/userIcon';
-import { Box, Flex } from '@voussoir/layout';
-import { ActionMenu, Menu, MenuTrigger } from '@voussoir/menu';
-import { css, tokenSchema, useMediaQuery } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
+import { Avatar } from '@keystar/ui/avatar';
+import { ActionButton, Button } from '@keystar/ui/button';
+import { AlertDialog, DialogContainer } from '@keystar/ui/dialog';
+import { Icon } from '@keystar/ui/icon';
+import { listTodoIcon } from '@keystar/ui/icon/icons/listTodoIcon';
+import { logOutIcon } from '@keystar/ui/icon/icons/logOutIcon';
+import { gitPullRequestIcon } from '@keystar/ui/icon/icons/gitPullRequestIcon';
+import { gitBranchPlusIcon } from '@keystar/ui/icon/icons/gitBranchPlusIcon';
+import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
+import { gitForkIcon } from '@keystar/ui/icon/icons/gitForkIcon';
+import { monitorIcon } from '@keystar/ui/icon/icons/monitorIcon';
+import { moonIcon } from '@keystar/ui/icon/icons/moonIcon';
+import { sunIcon } from '@keystar/ui/icon/icons/sunIcon';
+import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
+import { userIcon } from '@keystar/ui/icon/icons/userIcon';
+import { Box, Flex } from '@keystar/ui/layout';
+import { ActionMenu, Menu, MenuTrigger } from '@keystar/ui/menu';
+import { css, tokenSchema, useMediaQuery } from '@keystar/ui/style';
+import { Text } from '@keystar/ui/typography';
 
 import { CloudConfig, GitHubConfig, LocalConfig } from '../../config';
 

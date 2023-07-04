@@ -1,37 +1,35 @@
+import { setBlockType, toggleMark, wrapIn } from 'prosemirror-commands';
+import { MarkType, NodeType } from 'prosemirror-model';
+import { Command, EditorState, TextSelection } from 'prosemirror-state';
 import { ReactElement, ReactNode, useMemo } from 'react';
 
 import { ActionGroup, Item } from '@keystar/ui/action-group';
 import { ActionButton } from '@keystar/ui/button';
-import { plusIcon } from '@keystar/ui/icon/icons/plusIcon';
+import { Icon } from '@keystar/ui/icon';
+import { boldIcon } from '@keystar/ui/icon/icons/boldIcon';
 import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
 import { codeIcon } from '@keystar/ui/icon/icons/codeIcon';
-import { boldIcon } from '@keystar/ui/icon/icons/boldIcon';
-import { removeFormattingIcon } from '@keystar/ui/icon/icons/removeFormattingIcon';
-import { typeIcon } from '@keystar/ui/icon/icons/typeIcon';
 import { italicIcon } from '@keystar/ui/icon/icons/italicIcon';
+import { listIcon } from '@keystar/ui/icon/icons/listIcon';
+import { listOrderedIcon } from '@keystar/ui/icon/icons/listOrderedIcon';
+import { minusIcon } from '@keystar/ui/icon/icons/minusIcon';
+import { plusIcon } from '@keystar/ui/icon/icons/plusIcon';
+import { quoteIcon } from '@keystar/ui/icon/icons/quoteIcon';
+import { removeFormattingIcon } from '@keystar/ui/icon/icons/removeFormattingIcon';
 import { strikethroughIcon } from '@keystar/ui/icon/icons/strikethroughIcon';
-import { Icon } from '@keystar/ui/icon';
+import { typeIcon } from '@keystar/ui/icon/icons/typeIcon';
 import { Flex } from '@keystar/ui/layout';
 import { MenuTrigger, Menu } from '@keystar/ui/menu';
-import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
-import { Text, Kbd } from '@keystar/ui/typography';
-import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
-
-// import { ToolbarSeparator } from './primitives';
 import { Picker } from '@keystar/ui/picker';
-// import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
-import { Command, EditorState, TextSelection } from 'prosemirror-state';
+import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
+import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
+import { Text, Kbd } from '@keystar/ui/typography';
+
 import {
   useEditorDispatchCommand,
   useEditorSchema,
   useEditorState,
 } from './editor-view';
-import { minusIcon } from '@keystar/ui/icon/icons/minusIcon';
-import { setBlockType, toggleMark, wrapIn } from 'prosemirror-commands';
-import { MarkType, NodeType } from 'prosemirror-model';
-import { quoteIcon } from '@keystar/ui/icon/icons/quoteIcon';
-import { listIcon } from '@keystar/ui/icon/icons/listIcon';
-import { listOrderedIcon } from '@keystar/ui/icon/icons/listOrderedIcon';
 import { toggleList } from './lists';
 import { insertNode, toggleCodeBlock } from './commands/misc';
 

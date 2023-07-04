@@ -1,4 +1,4 @@
-import { breakpointQueries, css, tokenSchema } from '@voussoir/style';
+import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
 
 export function ZapLogo() {
   return (
