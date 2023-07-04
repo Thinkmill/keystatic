@@ -4,6 +4,9 @@
   "license": "MIT",
   "main": "",
   "module": "",
+  "scripts": {
+    "build-icons": "tsx build-icons.ts && cd ../.. && pnpm preconstruct fix"
+  },
   "exports": {
     "./icon/all": {
       "types": "./icon/all/dist/keystar-ui-icon-all.cjs.js",
