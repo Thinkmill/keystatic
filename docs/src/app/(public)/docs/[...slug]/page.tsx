@@ -58,23 +58,29 @@ export async function generateMetadata(
 
   const page = await reader.collections.pages.read(slug);
 
+  const parentTitle = (await parent).title ?? 'Docs';
+  const title = page?.title ?? parentTitle;
+
+  const fallbackDescription = 'Documentation page for Keystatic.';
+  const description = page?.summary ? page.summary : fallbackDescription;
+
   const parentOGImages = (await parent).openGraph?.images || [];
   const parentTwitterSite = (await parent).twitter?.site ?? '';
 
   return {
-    title: page?.title,
-    description: page?.summary,
+    title,
+    description,
     openGraph: {
-      title: page?.title,
-      description: page?.summary,
+      title,
+      description,
       url: `https://keystatic.com/docs/${slug}`,
       type: 'website',
-      images: ['', ...parentOGImages],
+      images: parentOGImages,
     },
     twitter: {
       card: 'summary_large_image',
-      title: page?.title,
-      description: page?.summary,
+      title,
+      description,
       site: parentTwitterSite,
     },
   };
