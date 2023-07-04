@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { renderWithProvider } from '@keystar/ui/test-utils';
+import { renderWithProvider } from '#test-utils';
 
 import {
   EditorToolbar,

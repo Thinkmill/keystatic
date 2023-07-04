@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 
 import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';
 import { Icon } from '@keystar/ui/icon';
-import { renderWithProvider } from '@keystar/ui/test-utils';
+import { renderWithProvider } from '#test-utils';
 
 import { Badge } from '..';
 

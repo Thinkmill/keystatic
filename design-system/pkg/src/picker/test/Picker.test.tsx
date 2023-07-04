@@ -11,7 +11,7 @@ import {
   KEYS,
   renderWithProvider,
   within,
-} from '@keystar/ui/test-utils';
+} from '#test-utils';
 
 import { Item, Picker, Section } from '..';
 

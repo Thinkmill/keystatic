@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { createRef, ForwardedRef, forwardRef, useRef } from 'react';
 
-import { renderWithProvider } from '@keystar/ui/test-utils';
+import { renderWithProvider } from '#test-utils';
 
 import { Overlay, OverlayProps } from '..';
 

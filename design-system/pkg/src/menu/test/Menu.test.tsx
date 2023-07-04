@@ -2,14 +2,7 @@ import '@testing-library/jest-dom';
 
 import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';
 import { Icon } from '@keystar/ui/icon';
-import {
-  act,
-  fireEvent,
-  firePress,
-  KEYS,
-  render,
-  within,
-} from '@keystar/ui/test-utils';
+import { act, fireEvent, firePress, KEYS, render, within } from '#test-utils';
 import { Kbd, Text } from '@keystar/ui/typography';
 
 import { Item, Menu, MenuProps, Section } from '..';

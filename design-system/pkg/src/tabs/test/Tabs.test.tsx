@@ -8,7 +8,7 @@ import {
   renderWithProvider,
   waitFor,
   within,
-} from '@keystar/ui/test-utils';
+} from '#test-utils';
 
 import { Item, TabList, TabPanels, Tabs, TabsProps } from '..';
 

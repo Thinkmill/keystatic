@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 
-import { renderWithProvider } from '@keystar/ui/test-utils';
+import { renderWithProvider } from '#test-utils';
 
 import { Switch, SwitchProps } from '..';
 

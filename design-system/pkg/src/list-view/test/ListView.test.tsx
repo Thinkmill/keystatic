@@ -7,7 +7,7 @@ import {
   firePress,
   renderWithProvider,
   within,
-} from '@keystar/ui/test-utils';
+} from '#test-utils';
 
 import { ListView, Item } from '..';
 

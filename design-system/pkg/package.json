@@ -183,11 +183,6 @@
       "module": "./list-view/dist/keystar-ui-list-view.esm.js",
       "default": "./list-view/dist/keystar-ui-list-view.cjs.js"
     },
-    "./test-utils": {
-      "types": "./test-utils/dist/keystar-ui-test-utils.cjs.js",
-      "module": "./test-utils/dist/keystar-ui-test-utils.esm.js",
-      "default": "./test-utils/dist/keystar-ui-test-utils.cjs.js"
-    },
     "./text-field": {
       "types": "./text-field/dist/keystar-ui-text-field.cjs.js",
       "module": "./text-field/dist/keystar-ui-text-field.esm.js",
@@ -6225,12 +6220,16 @@
       "optional": true
     }
   },
+  "imports": {
+    "#test-utils": "./src/test-utils/index.ts"
+  },
   "preconstruct": {
     "entrypoints": [
       "*/index.{ts,tsx}",
       "utils/ts/index.ts",
       "icon/all.ts",
-      "icon/icons/*.tsx"
+      "icon/icons/*.tsx",
+      "!test-utils/index.ts"
     ]
   }
 }

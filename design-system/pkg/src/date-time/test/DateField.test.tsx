@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
 
-import { act, fireEvent, renderWithProvider } from '@keystar/ui/test-utils';
+import { act, fireEvent, renderWithProvider } from '#test-utils';
 
 import { DateField } from '..';
 

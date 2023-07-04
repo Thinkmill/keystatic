@@ -12,7 +12,7 @@ import {
   renderWithProvider,
   within,
   KEYS,
-} from '@keystar/ui/test-utils';
+} from '#test-utils';
 
 import {
   Item,

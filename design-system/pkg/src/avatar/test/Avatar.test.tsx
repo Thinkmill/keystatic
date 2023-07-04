@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 
-import { render } from '@keystar/ui/test-utils';
+import { render } from '#test-utils';
 
 import { Avatar } from '..';
 
