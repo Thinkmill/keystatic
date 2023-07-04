@@ -1,7 +1,11 @@
 import { ToastQueue, useToastQueue } from '@react-stately/toast';
-import React, { ReactNode, useEffect, useRef } from 'react';
+import React, {
+  ReactNode,
+  useEffect,
+  useRef,
+  useSyncExternalStore,
+} from 'react';
 import { warning } from 'emery';
-import { useSyncExternalStore } from 'use-sync-external-store/shim/index.js';
 
 import { Toast } from './Toast';
 import { ToastContainer } from './ToastContainer';
