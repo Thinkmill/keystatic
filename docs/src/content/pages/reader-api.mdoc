@@ -62,16 +62,17 @@ const posts = await reader.collections.blog.all();
 
 A common use case is to filter the entries based on a field's value before rendering them in the UI. You can use Keystatic's reader functions along with standard JS array methods like `.filter()` and `.sort()` to achieve this pattern.
 
-Let's say you're building a list page for blog posts, and the collection schema for each entry defines a `draft` checkbox field:
+Let's say you're building a list page for blog posts, and you only want to display published posts. The collection schema for each entry defines a `draft` checkbox field, indicating a not-to-be-published post:
 
-```javascript
-// keystatic.config
+```typescript
+// keystatic.config.ts
 blog: collection({
   // ...
   schema: {
     // ...
     draft: fields.checkbox({
-      label: 'Do not publish',
+      label: 'Convert to draft',
+      description: 'Prevent publishing of this post. This can be changed later.',
       defaultValue: false,
     }),
   },
@@ -80,8 +81,8 @@ blog: collection({
 
 Then before rendering the data, you can read and filter the entries to only render published posts (`draft === false`) like so:
 
-```javascript
-// blog.js
+```typescript
+// blog.ts
 const posts = await reader.collections.blog.all();
 const publishedPosts = posts.filter(post => !post.entry.draft);
 ```
