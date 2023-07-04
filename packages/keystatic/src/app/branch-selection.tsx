@@ -7,26 +7,22 @@ import { Button, ButtonGroup } from '@keystar/ui/button';
 import { Dialog } from '@keystar/ui/dialog';
 import { gitBranchIcon } from '@keystar/ui/icon/icons/gitBranchIcon';
 import { Icon } from '@keystar/ui/icon';
+import { Grid } from '@keystar/ui/layout';
 import { Item, Picker } from '@keystar/ui/picker';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { Radio, RadioGroup } from '@keystar/ui/radio';
 import { Content, Footer } from '@keystar/ui/slots';
+import { css } from '@keystar/ui/style';
 import { TextField } from '@keystar/ui/text-field';
 import { Heading, Text } from '@keystar/ui/typography';
 
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
-import { Grid } from '@keystar/ui/layout';
 import { BranchInfoContext, Ref_base, useRepositoryId } from './shell/data';
 
-type BranchPickerProps = {
-  allBranches: string[];
-  currentBranch: string;
-  defaultBranch?: string;
-};
-
-export function BranchPicker(props: BranchPickerProps) {
-  const { allBranches, currentBranch, defaultBranch } = props;
+export function BranchPicker() {
+  const { allBranches, currentBranch, defaultBranch } =
+    useContext(BranchInfoContext);
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
   const items = useMemo(() => {
@@ -52,8 +48,6 @@ export function BranchPicker(props: BranchPickerProps) {
   return (
     <Picker
       aria-label={stringFormatter.format('currentBranch')}
-      flex
-      width="100%"
       items={items}
       selectedKey={currentBranch}
       onSelectionChange={key => {
@@ -66,11 +60,16 @@ export function BranchPicker(props: BranchPickerProps) {
           );
         }
       }}
+      // styles
+      prominence="low"
+      width="auto"
+      menuWidth={288}
+      UNSAFE_className={css({ button: { contain: 'layout' } })}
     >
       {item => (
         <Item key={item.id} textValue={item.name}>
           <Icon src={gitBranchIcon} />
-          <Text>{item.name}</Text>
+          <Text truncate>{item.name}</Text>
           {'description' in item && (
             <Text slot="description">{item.description}</Text>
           )}

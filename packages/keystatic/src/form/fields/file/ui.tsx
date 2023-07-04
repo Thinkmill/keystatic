@@ -6,10 +6,11 @@ import { TextField } from '@keystar/ui/text-field';
 import { Text } from '@keystar/ui/typography';
 
 import { useIsInDocumentEditor } from '../document/DocumentEditor';
-import { useReducer } from 'react';
+import { useId, useReducer } from 'react';
 import { FormFieldInputProps } from '../../api';
 import { getUploadedFile, useObjectURL } from '../image/ui';
 
+// TODO: button labels ("Choose file", "Remove", "Download") need i18n support
 export function FileFieldInput(
   props: FormFieldInputProps<{
     data: Uint8Array;
@@ -25,11 +26,21 @@ export function FileFieldInput(
   const [blurred, onBlur] = useReducer(() => true, false);
   const isInEditor = useIsInDocumentEditor();
   const objectUrl = useObjectURL(value === null ? null : value.data);
+  const labelId = useId();
+  const descriptionId = useId();
   return (
-    <Flex direction="column" gap="medium">
-      <FieldLabel>{props.label}</FieldLabel>
+    <Flex
+      aria-describedby={props.description ? descriptionId : undefined}
+      aria-labelledby={labelId}
+      direction="column"
+      gap="medium"
+      role="group"
+    >
+      <FieldLabel id={labelId} elementType="span">
+        {props.label}
+      </FieldLabel>
       {props.description && (
-        <Text size="small" color="neutralSecondary">
+        <Text size="small" color="neutralSecondary" id={descriptionId}>
           {props.description}
         </Text>
       )}

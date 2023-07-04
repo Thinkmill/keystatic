@@ -37,7 +37,6 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
     style: styleProps.style,
     className: classNames(
       buttonClassList.root(),
-      styleProps.className,
       css({
         alignItems: 'center',
         borderRadius: tokenSchema.size.radius.regular,
@@ -294,7 +293,8 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
             },
           },
         },
-      })
+      }),
+      styleProps.className
     ),
   };
 }
