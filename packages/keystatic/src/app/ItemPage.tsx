@@ -321,7 +321,6 @@ function ItemPage(props: ItemPageProps) {
           )}
           <AppShellBody>
             <FormForEntry
-              key={localTreeKey}
               previewProps={previewProps}
               forceValidation={forceValidation}
               entryLayout={collectionConfig.entryLayout}

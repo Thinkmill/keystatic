@@ -171,7 +171,6 @@ function SingletonPage({
               <Notice tone="critical">{updateResult.error.message}</Notice>
             )}
             <FormForEntry
-              key={localTreeKey}
               previewProps={previewProps}
               forceValidation={forceValidation}
               entryLayout={singletonConfig.entryLayout}
