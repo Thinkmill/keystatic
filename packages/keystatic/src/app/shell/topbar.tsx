@@ -25,7 +25,7 @@ import { monitorIcon } from '@voussoir/icon/icons/monitorIcon';
 import { moonIcon } from '@voussoir/icon/icons/moonIcon';
 import { sunIcon } from '@voussoir/icon/icons/sunIcon';
 import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-// import { userIcon } from '@voussoir/icon/icons/userIcon';
+import { userIcon } from '@voussoir/icon/icons/userIcon';
 import { Box, Flex } from '@voussoir/layout';
 import { ActionMenu, Menu, MenuTrigger } from '@voussoir/menu';
 import { css, tokenSchema, useMediaQuery } from '@voussoir/style';
@@ -88,7 +88,15 @@ function CloudHeader({ config }: { config: CloudConfig }) {
   return (
     <HeaderOuter>
       <ZapLogo />
-      <Text>{config.storage.project}</Text>
+      <Text
+        color="neutralEmphasis"
+        weight="semibold"
+        marginX="regular"
+        truncate
+        isHidden={{ below: 'tablet' }}
+      >
+        {config.storage.project}
+      </Text>
       <Slash />
       <BranchPicker />
       <GitMenu />
@@ -229,6 +237,23 @@ function ThemeMenu() {
 function UserMenu() {
   let user = useContext(ViewerContext);
   let config = useConfig();
+  const menuItems = useMemo(() => {
+    let items = [
+      {
+        id: 'logout',
+        label: 'Log out',
+        icon: logOutIcon,
+      },
+    ];
+    if (isCloudConfig(config)) {
+      items.unshift({
+        id: 'manage',
+        label: 'Manage account',
+        icon: userIcon,
+      });
+    }
+    return items;
+  }, [config]);
 
   if (!user) {
     return null;
@@ -271,29 +296,32 @@ function UserMenu() {
           </Flex>
         </Flex>
         <Menu
+          items={menuItems}
           minWidth="scale.2400"
           onAction={key => {
-            if (key === 'logout') {
-              switch (config.storage.kind) {
-                case 'github':
-                  window.location.href = '/api/keystatic/github/logout';
-                  break;
-                case 'cloud':
-                  localStorage.removeItem('keystatic-cloud-access-token');
-                  window.location.reload();
-                  break;
-              }
+            switch (key) {
+              case 'manage':
+                openBlankTargetSafely('https://keystatic.cloud/account');
+                break;
+              case 'logout':
+                switch (config.storage.kind) {
+                  case 'github':
+                    window.location.href = '/api/keystatic/github/logout';
+                    break;
+                  case 'cloud':
+                    localStorage.removeItem('keystatic-cloud-access-token');
+                    window.location.reload();
+                    break;
+                }
             }
           }}
         >
-          {/* <Item key="manage" textValue="Manage account">
-            <Icon src={userIcon} />
-            <Text>Manage account</Text>
-          </Item> */}
-          <Item key="logout" textValue="Log out">
-            <Icon src={logOutIcon} />
-            <Text>Log out</Text>
-          </Item>
+          {item => (
+            <Item textValue={item.label}>
+              <Icon src={item.icon} />
+              <Text>{item.label}</Text>
+            </Item>
+          )}
         </Menu>
       </>
     </MenuTrigger>
