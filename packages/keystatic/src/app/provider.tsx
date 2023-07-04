@@ -30,7 +30,6 @@ import {
 } from './utils';
 import { Config } from '../config';
 import { ThemeProvider, useTheme } from './shell/theme';
-import { I18nProvider, useLocale } from '@react-aria/i18n';
 
 export function createUrqlClient(config: Config): Client {
   const repo = {
@@ -184,15 +183,6 @@ export function createUrqlClient(config: Config): Client {
   });
 }
 
-function Locale({ children }: { children: JSX.Element }) {
-  let { locale, direction } = useLocale();
-  return (
-    <div lang={locale} dir={direction}>
-      {children}
-    </div>
-  );
-}
-
 export default function Provider({
   children,
   Link,
@@ -242,6 +232,7 @@ export default function Provider({
     <ThemeProvider value={themeContext}>
       <VoussoirProvider
         linkComponent={UniversalLink}
+        locale={config.locale || 'en-US'}
         colorScheme={
           themeContext.theme === 'system' ? undefined : themeContext.theme
         }
@@ -252,9 +243,7 @@ export default function Provider({
           rel="stylesheet"
         />
         <UrqlProvider value={useMemo(() => createUrqlClient(config), [config])}>
-          <I18nProvider locale={config.locale || 'en-US'}>
-            <Locale>{children}</Locale>
-          </I18nProvider>
+          {children}
         </UrqlProvider>
         <Toaster />
       </VoussoirProvider>
