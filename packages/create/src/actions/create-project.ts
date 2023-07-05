@@ -39,7 +39,7 @@ export const createProject = async (ctx: Context) => {
   const templatesLookup: Record<Context['framework'], string> = {
     'Next.js': templates.nextjs,
     Astro: templates.astro,
-    Remix: templates.remix,
+    Remix: '',
   };
 
   const defaultTemplate = templatesLookup[ctx.framework];
