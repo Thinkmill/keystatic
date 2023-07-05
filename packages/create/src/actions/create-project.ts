@@ -13,6 +13,8 @@ import color from 'picocolors';
 import tar from 'tar';
 import { Context } from '..';
 
+type NextOrAstro = Extract<Context['framework'], 'Astro' | 'Next.js'>;
+
 const registryDomain = 'https://registry.npmjs.org';
 // These templates reference their npm package name
 const templates = {
@@ -36,13 +38,12 @@ export const createProject = async (ctx: Context) => {
 
   spin.start(`Downloading template and creating files...`);
 
-  const templatesLookup: Record<Context['framework'], string> = {
+  const templatesLookup: Record<NextOrAstro, string> = {
     'Next.js': templates.nextjs,
     Astro: templates.astro,
-    Remix: '',
   };
 
-  const defaultTemplate = templatesLookup[ctx.framework];
+  const defaultTemplate = templatesLookup[ctx.framework as NextOrAstro];
 
   try {
     // Get latest package info from npm
