@@ -5,8 +5,10 @@ import { DocsFooter } from '../../../components/footer';
 import { getNavigationMap } from '../../../utils/reader';
 
 export const metadata = {
-  title: 'Keystatic - Docs',
-  description: 'Documentation for Keystatic.',
+  title: {
+    template: '%s - Docs | Keystatic',
+    default: 'Docs',
+  },
 };
 
 export default async function RootLayout({
