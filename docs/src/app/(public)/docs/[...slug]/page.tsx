@@ -20,7 +20,7 @@ export default async function Docs({ params }: DocsProps) {
   if (!page) notFound();
 
   // Filter headings from the document content
-  const headings = (await page.content())
+  const headingsFromContent = (await page.content())
     .filter(child => child.type === 'heading')
     .map(heading => ({
       level: heading.level as number,
@@ -28,10 +28,22 @@ export default async function Docs({ params }: DocsProps) {
     }))
     .filter(heading => heading.text);
 
+  // Manually add the persistent #overview heading, to send to TOCs
+  const overviewHeading = {
+    level: 1,
+    text: 'Overview',
+  };
+  const headings = [overviewHeading, ...headingsFromContent];
+
   return (
     <div className="grid gap-6 grid-cols-[auto] md:grid-cols-[auto,12rem]">
       <div>
-        <h1 className="text-3xl font-extrabold mb-8">{page.title}</h1>
+        <h1
+          id="overview"
+          className="text-3xl font-extrabold mb-8 scroll-mt-[7rem]"
+        >
+          {page.title}
+        </h1>
         <div className="flex flex-col gap-4 [&_a]:break-all">
           <DocumentRenderer slug={slug} document={await page.content()} />
         </div>
