@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "next",
-    "build": "next build"
+    "build": "next build",
+    "start": "next start"
   },
   "keywords": [],
   "author": "",
