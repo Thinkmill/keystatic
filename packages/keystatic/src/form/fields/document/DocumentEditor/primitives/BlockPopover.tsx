@@ -23,8 +23,8 @@ import {
 } from 'react';
 import { Element, Editor } from 'slate';
 
-import { Overlay, PopoverProps } from '@voussoir/overlays';
-import { css, tokenSchema, transition } from '@voussoir/style';
+import { Overlay, PopoverProps } from '@keystar/ui/overlays';
+import { css, tokenSchema, transition } from '@keystar/ui/style';
 
 import { nodeTypeMatcher } from '../utils';
 

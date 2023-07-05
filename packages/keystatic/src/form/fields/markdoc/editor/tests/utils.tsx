@@ -7,7 +7,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Editor } from '../index';
 import { GapCursor } from '../gapcursor/gapcursor';
-import { VoussoirProvider } from '@voussoir/core';
+import { VoussoirProvider } from '@keystar/ui/core';
 import { createRef } from 'react';
 import { plugins, format, NewPlugin } from 'pretty-format';
 import { EditorView } from 'prosemirror-view';

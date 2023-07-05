@@ -1,7 +1,7 @@
 import { Fragment, Node } from 'prosemirror-model';
 import Prism from '../../document/DocumentEditor/prism';
 import { Decoration, DecorationAttrs, DecorationSet } from 'prosemirror-view';
-import { css, tokenSchema } from '@voussoir/style';
+import { css, tokenSchema } from '@keystar/ui/style';
 import { weakMemoize } from './utils';
 import { Plugin } from 'prosemirror-state';
 

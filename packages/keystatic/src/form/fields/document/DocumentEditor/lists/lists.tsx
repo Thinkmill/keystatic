@@ -2,10 +2,10 @@ import { Editor, Element, Node, Path, Transforms } from 'slate';
 
 import { isElementActive } from '../utils';
 import { getListTypeAbove, useToolbarState } from '../toolbar-state';
-import { ActionGroup, Item } from '@voussoir/action-group';
-import { Kbd, Text } from '@voussoir/typography';
-import { listIcon } from '@voussoir/icon/icons/listIcon';
-import { listOrderedIcon } from '@voussoir/icon/icons/listOrderedIcon';
+import { ActionGroup, Item } from '@keystar/ui/action-group';
+import { Kbd, Text } from '@keystar/ui/typography';
+import { listIcon } from '@keystar/ui/icon/icons/listIcon';
+import { listOrderedIcon } from '@keystar/ui/icon/icons/listOrderedIcon';
 import { ReactEditor, RenderElementProps } from 'slate-react';
 import {
   createContext,
@@ -16,9 +16,9 @@ import {
   useContext,
   useMemo,
 } from 'react';
-import { Flex } from '@voussoir/layout';
-import { css, tokenSchema } from '@voussoir/style';
-import { Icon } from '@voussoir/icon';
+import { Flex } from '@keystar/ui/layout';
+import { css, tokenSchema } from '@keystar/ui/style';
+import { Icon } from '@keystar/ui/icon';
 import { isBlock } from '../editor';
 import { isListNode } from './with-list';
 

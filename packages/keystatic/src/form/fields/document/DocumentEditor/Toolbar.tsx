@@ -2,27 +2,28 @@ import { ReactNode, useMemo } from 'react';
 import { Editor, Transforms } from 'slate';
 import { ReactEditor, useSlateStatic } from 'slate-react';
 
-import { ActionGroup, Item } from '@voussoir/action-group';
-import { ActionButton, Button } from '@voussoir/button';
-import { plusIcon } from '@voussoir/icon/icons/plusIcon';
-import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { codeIcon } from '@voussoir/icon/icons/codeIcon';
-import { maximizeIcon } from '@voussoir/icon/icons/maximizeIcon';
-import { minimizeIcon } from '@voussoir/icon/icons/minimizeIcon';
-import { boldIcon } from '@voussoir/icon/icons/boldIcon';
-import { removeFormattingIcon } from '@voussoir/icon/icons/removeFormattingIcon';
-import { typeIcon } from '@voussoir/icon/icons/typeIcon';
-import { italicIcon } from '@voussoir/icon/icons/italicIcon';
-import { strikethroughIcon } from '@voussoir/icon/icons/strikethroughIcon';
-import { subscriptIcon } from '@voussoir/icon/icons/subscriptIcon';
-import { superscriptIcon } from '@voussoir/icon/icons/superscriptIcon';
-import { underlineIcon } from '@voussoir/icon/icons/underlineIcon';
-import { Icon } from '@voussoir/icon';
-import { Flex } from '@voussoir/layout';
-import { MenuTrigger, Menu } from '@voussoir/menu';
-import { css, tokenSchema } from '@voussoir/style';
-import { Text, Kbd } from '@voussoir/typography';
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
+import { ActionGroup, Item } from '@keystar/ui/action-group';
+import { ActionButton, Button } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
+import { boldIcon } from '@keystar/ui/icon/icons/boldIcon';
+import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
+import { codeIcon } from '@keystar/ui/icon/icons/codeIcon';
+import { italicIcon } from '@keystar/ui/icon/icons/italicIcon';
+import { maximizeIcon } from '@keystar/ui/icon/icons/maximizeIcon';
+import { minimizeIcon } from '@keystar/ui/icon/icons/minimizeIcon';
+import { plusIcon } from '@keystar/ui/icon/icons/plusIcon';
+import { removeFormattingIcon } from '@keystar/ui/icon/icons/removeFormattingIcon';
+import { strikethroughIcon } from '@keystar/ui/icon/icons/strikethroughIcon';
+import { subscriptIcon } from '@keystar/ui/icon/icons/subscriptIcon';
+import { superscriptIcon } from '@keystar/ui/icon/icons/superscriptIcon';
+import { typeIcon } from '@keystar/ui/icon/icons/typeIcon';
+import { underlineIcon } from '@keystar/ui/icon/icons/underlineIcon';
+import { Flex } from '@keystar/ui/layout';
+import { MenuTrigger, Menu } from '@keystar/ui/menu';
+import { Picker } from '@keystar/ui/picker';
+import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
+import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
+import { Text, Kbd } from '@keystar/ui/typography';
 
 import { TextAlignMenu } from './alignment';
 import { blockquoteButton } from './blockquote/blockquote-ui';
@@ -36,7 +37,6 @@ import { ListButtons } from './lists/lists';
 import { ToolbarSeparator } from './primitives';
 import { useDocumentEditorConfig, useToolbarState } from './toolbar-state';
 import { clearFormatting } from './utils';
-import { Picker } from '@voussoir/picker';
 import { imageButton } from './image';
 import { tableButton } from './table/table-ui';
 
@@ -145,10 +145,15 @@ const ToolbarContainer = ({ children }: { children: ReactNode }) => {
       backgroundColor="canvas"
       borderTopStartRadius="medium"
       borderTopEndRadius="medium"
-      // NOTE: sticky behavior needs to be kept in sync with the app's header
-      insetTop={`calc(${tokenSchema.size.element.xlarge} - ${tokenSchema.size.border.regular})`}
       position="sticky"
       zIndex={2}
+      // NOTE: top offset (sticky) must be kept in sync with the app's header
+      UNSAFE_className={css({
+        top: `calc(${tokenSchema.size.element.large} - ${tokenSchema.size.border.regular})`,
+        [breakpointQueries.above.mobile]: {
+          top: `calc(${tokenSchema.size.element.xlarge} - ${tokenSchema.size.border.regular})`,
+        },
+      })}
     >
       {children}
       <Flex

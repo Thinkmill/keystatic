@@ -1,5 +1,21 @@
 # @keystatic/test-next-app
 
+## 0.0.80
+
+### Patch Changes
+
+- bbbca74f: Add `locale` config option, now defaults to `en-US` instead of
+  auto-detecting the Browser's locale.
+- Updated dependencies [bbbca74f]
+- Updated dependencies [944dbe67]
+- Updated dependencies [8a9fa5f8]
+- Updated dependencies [91857b9b]
+- Updated dependencies [0bafd9f1]
+- Updated dependencies [50105597]
+- Updated dependencies [9f16e062]
+  - @keystatic/core@0.0.108
+  - @keystar/ui@0.1.0
+
 ## 0.0.79
 
 ### Patch Changes

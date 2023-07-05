@@ -1,5 +1,5 @@
 import { Item } from '@react-stately/collections';
-import { Combobox } from '@voussoir/combobox';
+import { Combobox } from '@keystar/ui/combobox';
 import { matchSorter } from 'match-sorter';
 import { useMemo, useState } from 'react';
 import {

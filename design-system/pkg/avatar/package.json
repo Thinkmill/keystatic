@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-avatar.cjs.js",
+  "module": "dist/keystar-ui-avatar.esm.js"
+}

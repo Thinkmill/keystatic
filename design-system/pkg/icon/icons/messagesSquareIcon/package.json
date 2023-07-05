@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-messagesSquareIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-messagesSquareIcon.esm.js"
+}

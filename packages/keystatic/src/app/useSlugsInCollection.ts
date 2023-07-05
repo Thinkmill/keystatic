@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useConfig } from './shell';
+import { useConfig } from './shell/context';
 import { useTree } from './shell/data';
 import { getEntriesInCollectionWithTreeKey } from './utils';
 

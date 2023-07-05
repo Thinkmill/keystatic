@@ -7,18 +7,18 @@ import {
   useSlateStatic,
 } from 'slate-react';
 
-import { ActionButton } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { sheetIcon } from '@voussoir/icon/icons/sheetIcon';
-import { tableIcon } from '@voussoir/icon/icons/tableIcon';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Flex } from '@voussoir/layout';
-import { Item, Menu, MenuTrigger } from '@voussoir/menu';
-import { css, tokenSchema } from '@voussoir/style';
-import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
-import { Text } from '@voussoir/typography';
-import { toDataAttributes } from '@voussoir/utils';
+import { ActionButton } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
+import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
+import { sheetIcon } from '@keystar/ui/icon/icons/sheetIcon';
+import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
+import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
+import { Flex } from '@keystar/ui/layout';
+import { Item, Menu, MenuTrigger } from '@keystar/ui/menu';
+import { css, tokenSchema } from '@keystar/ui/style';
+import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
+import { Text } from '@keystar/ui/typography';
+import { toDataAttributes } from '@keystar/ui/utils';
 
 import {
   BlockPopover,

@@ -2,15 +2,15 @@ import { useMemo } from 'react';
 import { Editor, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps } from 'slate-react';
 
-import { ActionButton } from '@voussoir/button';
-import { quoteIcon } from '@voussoir/icon/icons/quoteIcon';
-import { Icon } from '@voussoir/icon';
-import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
-import { Kbd, Text } from '@voussoir/typography';
+import { ActionButton } from '@keystar/ui/button';
+import { quoteIcon } from '@keystar/ui/icon/icons/quoteIcon';
+import { Icon } from '@keystar/ui/icon';
+import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
+import { Kbd, Text } from '@keystar/ui/typography';
 
 import { useToolbarState } from '../toolbar-state';
 import { isElementActive } from '../utils';
-import { Box } from '@voussoir/layout';
+import { Box } from '@keystar/ui/layout';
 import { blockElementSpacing } from '../ui-utils';
 
 export const insertBlockquote = (editor: Editor) => {
