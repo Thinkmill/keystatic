@@ -9,7 +9,7 @@ import { cancelStep, getPackageManager } from './utils';
 export type Context = {
   projectName?: string;
   packageManager?: string;
-  framework: 'Next.js' | 'Astro' | 'Remix';
+  framework: 'Next.js' | 'Astro';
   cwd: string;
 };
 
