@@ -3,11 +3,13 @@ title: Adding Keystatic to an Astro project
 ---
 This guide assumes you are trying to add Keystatic to an existing Astro v2 project.
 
-Here, I've created a brand new Astro project, using the `Include sample files` option:
+If you don't have an existing Astro project, you can create a new one with the following command:
 
-{% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/astro-create.png"
-   alt="Create Astro project" /%}
+```bash
+npm create astro@latest
+```
+
+Now, let's add Keystatic to our project!
 
 ## Installing dependencies
 
@@ -35,31 +37,41 @@ Let's create a file called `keystatic.config.tsx` (or `.jsx` if not using TypeSc
 
 ```jsx
 // keystatic.config.tsx
-import { config, fields, singleton } from '@keystatic/core'
+import { config, fields, collection } from '@keystatic/core'
 
 export default config({
   storage: {
     kind: 'local',
   },
-  singletons: {
-    homepage: singleton({
-      label: 'Homepage',
-      path: 'src/content/_homepage',
+  collections: {
+    posts: collection({
+      label: 'Posts',
+      slugField: 'title',
+      path: 'src/content/posts/*',
+      format: { contentField: 'content' },
       schema: {
-        headline: fields.text({ label: 'Headline' }),
+        title: fields.slug({ name: { label: 'Title' } }),
+        content: fields.document({
+          label: 'Content',
+          formatting: true,
+          dividers: true,
+          links: true,
+          images: true,
+        }),
       },
     }),
   },
 })
+
 ```
 
 We export a config object wrapped in the `config` function imported from `@keystatic/core`.
 
-For now, we set the `storage` strategy to `local`, and we create a “homepage” `singleton` which contains one text field: `headline`.
+For now, we set the `storage` strategy to `local`, and we create a “posts” `collection.`
 
-This is all Keystatic needs to start managing content, config wise.
+This is all Keystatic needs to start managing content, configuration-wise.
 
-Now, we need to display the Keystatic Admin UI in our site!
+Now, we need to display the Keystatic Admin UI on our site!
 
 ---
 
@@ -69,7 +81,7 @@ In our `pages` directory, we want every route within the `/keystatic` segment to
 
 We can leverage Astro's [Rest parameters](https://docs.astro.build/en/core-concepts/routing/#rest-parameters) to match file paths of any depth.
 
-Let's create a new page called `keystatic/[...params].astro`:
+Let's create a new page called `src/pages/eystatic/[...params].astro`:
 
 ```jsx
 ---
@@ -108,11 +120,15 @@ Next, start up Astro's integrated server:
 npm run dev
 ```
 
+### Visiting the Keystatic Admin UI
+
 Great! So now, we should be able to visit the `/keystatic` router in the browser.
+
+Try it!
 
 **Oh no.**
 
-If you tried, you're getting this error:
+We're getting this error:
 
 `getStaticPaths() function is required for dynamic routes. Make sure that you export a getStaticPaths function from your dynamic route.`
 
@@ -120,34 +136,44 @@ Two lines further, we get this nugget of information:
 
 `Alternatively, set output: "server" in your Astro config file to switch to a non-static server build.`
 
-Let's do that!
+We *could* do this, but Astro actually has a new `hybrid` rendering mode, which works even better for our needs.
 
-### Turning on SSR mode
+### Astro's SSR hybrid mode
 
-In the `astro.config.mjs`, add the `output: 'server'` option:
+In the `astro.config.mjs`, add the `output: 'hybrid'` option:
 
 ```diff
 export default defineConfig({
-+ output: 'server',
++ output: 'hybrid',
   integrations: [react()],
 })
 ```
 
-Now, visit the `/keystatic` route once again in your browser:
+Hybrid rendering will still try to pre-render every page by default, with a mechanism to opt out of it.
 
-{% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/astro-keystatic-dashboard.png"
-   alt="Keystatic dashboard for Astro demo" /%}
+We *don't want* prerendering on Keystatic routes. Let's export a `const prerender = false` in our Keystatic pages file:
 
-Our Keystatic Admin UI is here! 🎉
+```diff
+---
+// src/pages/keystatic/[...params].astro
+import { Keystatic } from '../../../keystatic.page'
 
-We also have a “Homepage” `singleton`, since we created that in our Keystatic config.
++ export const prerender = false
+---
 
-Before we can use this, we also need to create some `API routes` for Keystatic
+<Keystatic client:only />
+
+```
+
+Now, try visit the `/keystatic` route once again. You should see the Keystatic Admin UI! 🎉
+
+But before we can read and write data, we also need to create some `API routes` for Keystatic
+
+---
 
 ## Keystatic API Routes
 
-In the `pages` directory, create a new file called `api/keystatic/[...params].ts`
+Create a new file called `src/pages/api/keystatic/[...params].ts`
 
 Once again, we use Astro's Rest parameters here.
 
@@ -159,80 +185,146 @@ import keystaticConfig from '../../../../keystatic.config'
 export const all = makeHandler({
   config: keystaticConfig,
 })
+
+export const prerender = false
 ```
 
-We should be all set to go for our Keystatic Admin UI now.
+Notice we also opt out of prerendering for those routes.
 
-Try and visit the `/keystatic` page in the browser one more time, and click on the “Homepage” singleton:
+We should be all set to use Keystatic now.
 
-{% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/astro-keystatic-homepage.png"
-   alt="Keystatic homepage singleton for Astro demo" /%}
+### Creating a new post
 
-It's working: our “Headline” text field is here.
+Try and visit the `/keystatic` page in the browser one more time, and click on the “Posts” collection.
 
-Go ahead and fill that field with something, and hit `Create`:
+Go ahead, and create a new post!
 
-{% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/astro-keystatic-homepage-2.png"
-   alt="Keystatic homepage singleton for Astro demo with headline" /%}
+{% aside icon="☝️" %}
+In our Keystatic config file, we've set the `path` property for our `posts` collection to `src/content/posts/*`.
 
-Check your source code again. Notice anything?
+As a result, creating a new post from the Keystatic Admin UI should create a new `content` directory in the `src` directory, with the new post `.mdoc` file inside!
+{% /aside %}
 
-In our Keystatic config file, we have set the `storage` kind to `local`. For our `homepage` singleton, we set the `path` property to the following:
+If everything worked correctly, you'll find your new post inside the `src/content/posts` directory:
 
-```jsx
-path: 'src/content/_homepage',
+```bash
+src/
+  content/
+    my-first-post.mdoc   
 ```
 
-If you look in the `src` directory, a new `content` folder should have been created.
+That Markdoc file should look something like this:
 
-Inside, you'll find a `_homepage` directory.
+```markdown
+---
+title: My First Post
+---
 
-That directory contains an `index.yaml` file with… the `headline` text you've just created!
-
-{% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/astro-code-editor.png"
-   alt="Code editor with Keystatic files for Astro demo" /%}
+This is my very first post. I am **super** excited.
+```
 
 Niiiice ✨
 
-Let's try display that on the frontend now.
+Let's try to display that post on the frontend now.
 
 ---
 
-## Displaying Keystatic content on the frontend
+## Rendering Keystatic content
 
-Keystatic comes with its own `reader` Node API to bring content to the front end.
+{% aside icon="💡" %}
+Keystatic provides its own Reader and Renderer APIs to pull data from the file system into your frontend.
 
-Inside of the site's homepage, let's use that API to get the `headline` field value:
+However, you can also leverage [Astro's built-in content collections](https://docs.astro.build/en/guides/content-collections/) if you prefer.
+{% /aside %}
 
-```jsx
----
-// src/pages/index.astro
-import { createReader } from '@keystatic/core/reader'
-import keystaticConfig from '../../keystatic.config'
+### Using the Keystatic Reader API
 
-// 1. Create a reader
-const reader = createReader(process.cwd(), keystaticConfig)
+To display content in your frontend with Keystatic's Reader API, please refer to the [Reader API documentation](/docs/reader-api).
 
-// 2. Read the "Homepage" singleton
-const homepageData = await reader.singletons.homepage.read()
----
+### Using Astro's content collections
+
+The **TL;DR;** here: Astro provides its own built-in mechanism to pull-in content from the file system into JSON data.
+
+Paired with the `@astrojs/markdoc` integration, it works perfectly with Keystatic-generated content!
+
+Check out the Astro documentation on [content collections](https://docs.astro.build/en/guides/content-collections/) and the [Markdoc integration](https://docs.astro.build/en/guides/integrations-guide/markdoc/) for more details.
+
+### Astro's Markdoc integration
+
+Let's add the `@astrojs/markdoc` integration so that Astro's content collections know what to do with Keystatic's `.mdoc` files:
+
+```bash
+npx astro add markdoc
 ```
 
-This `homepageData` will give us a JSON object with all the fields inside the `homepage` singleton.
+Now, you can use Astro's `getCollection` helper to read data from Markdoc files!
 
-Actually, there is only one field for now.
+### Displaying a collection list
 
-Try and replace the homepage's `h1` tag with your homepage headline from Keystatic:
+In any `.astro` page, you can get all `posts` collection entries like so:
 
-```html
-<h1>{homepageData.headline}</h1>
+```tsx
+---
+import { getCollection } from 'astro:content'
+
+const posts = await getCollection('posts')
+---
+
+<main>
+  <pre>{JSON.stringify(posts, null, 2)}</pre>
+</main>
+
 ```
 
-{% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/astro-keystatic-ui.png"
-   alt="Home page of the website with updated heading for Astro demo" /%}
+Since we told Keystatic to manage `posts` in `src/content/posts`, they'll be available as Astro's content collections as the `posts` collection slug.
 
-Beautiful!
+Pretty cool, eh?
+
+### Displaying a single collection entry
+
+You can also get a single collection entry by its slug:
+
+```tsx
+---
+import { getEntry } from 'astro:content'
+
+const post = await getEntry('posts', 'my-first-post')
+---
+
+<main>
+  <pre>{JSON.stringify(post, null, 2)}</pre>
+</main>
+```
+
+### Rendering document field content
+
+If you look at the output from our `post` entry from above, you'll notice that the `body` field – the `content` of our post – is displaying raw Markdoc.
+
+But you probably want to render HTML instead on your page.
+
+Well, good news: Astro provides a `<Content />` component that can do the heavy lifting of converting rich text data into properly formatted markup:
+
+```tsx
+---
+import { getEntry } from 'astro:content'
+
+const post = await getEntry('posts', 'my-first-post')
+const { Content } = await post.render()
+---
+
+<main>
+  <h1>{post.data.title}</h1>
+  <Content />
+</main>
+
+```
+
+Sweet!
+
+---
+
+## Deploying Keystatic + Astro
+
+Because Keystatic needs to run serverside code and use Node.js APIs, you'll need to add an [Astro adapter](https://docs.astro.build/en/guides/server-side-rendering/#adding-an-adapter) to deploy your project.
+
+You'll also probably want to [connect Keystatic to GitHub](/docs/connect-to-github) so you can manage content on the deployed instance of the project.

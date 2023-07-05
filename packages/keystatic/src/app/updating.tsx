@@ -52,6 +52,58 @@ function combineFrontmatterAndContents(
   return array;
 }
 
+function serializeEntryToFiles(args: {
+  basePath: string;
+  config: Config;
+  schema: Record<string, ComponentSchema>;
+  format: FormatInfo;
+  state: unknown;
+  slug: { value: string; field: string } | undefined;
+}) {
+  let { value: stateWithExtraFilesRemoved, extraFiles } = serializeProps(
+    args.state,
+    fields.object(args.schema),
+    args.slug?.field,
+    args.slug?.value,
+    true
+  );
+  const dataFormat = args.format.data;
+  let dataContent = textEncoder.encode(
+    dataFormat === 'json'
+      ? JSON.stringify(stateWithExtraFilesRemoved, null, 2) + '\n'
+      : dump(stateWithExtraFilesRemoved)
+  );
+
+  if (args.format.contentField) {
+    const filename = `${args.format.contentField.key}${args.format.contentField.config.contentExtension}`;
+    let contents: undefined | Uint8Array;
+    extraFiles = extraFiles.filter(x => {
+      if (x.path !== filename) return true;
+      contents = x.contents;
+      return false;
+    });
+    assert(contents !== undefined, 'Expected content field to be present');
+    dataContent = combineFrontmatterAndContents(dataContent, contents);
+  }
+
+  return [
+    {
+      path: getEntryDataFilepath(args.basePath, args.format),
+      contents: dataContent,
+    },
+    ...extraFiles.map(file => ({
+      path: `${
+        file.parent
+          ? args.slug
+            ? `${file.parent}/${args.slug.value}`
+            : file.parent
+          : args.basePath
+      }/${file.path}`,
+      contents: file.contents,
+    })),
+  ];
+}
+
 export function useUpsertItem(args: {
   state: unknown;
   initialFiles: string[] | undefined;
@@ -93,51 +145,16 @@ export function useUpsertItem(args: {
           return false;
         }
         setState({ kind: 'loading' });
-        let { value: stateWithExtraFilesRemoved, extraFiles } = serializeProps(
-          args.state,
-          fields.object(args.schema),
-          args.slug?.field,
-          args.slug?.value,
-          true
-        );
-        const dataFormat = args.format.data;
-        let dataContent = textEncoder.encode(
-          dataFormat === 'json'
-            ? JSON.stringify(stateWithExtraFilesRemoved, null, 2) + '\n'
-            : dump(stateWithExtraFilesRemoved)
-        );
 
-        if (args.format.contentField) {
-          const filename = `${args.format.contentField.key}${args.format.contentField.config.contentExtension}`;
-          let contents: undefined | Uint8Array;
-          extraFiles = extraFiles.filter(x => {
-            if (x.path !== filename) return true;
-            contents = x.contents;
-            return false;
-          });
-          assert(
-            contents !== undefined,
-            'Expected content field to be present'
-          );
-          dataContent = combineFrontmatterAndContents(dataContent, contents);
-        }
+        let additions = serializeEntryToFiles({
+          basePath: args.basePath,
+          config: args.config,
+          schema: args.schema,
+          format: args.format,
+          state: args.state,
+          slug: args.slug,
+        });
 
-        let additions = [
-          {
-            path: getEntryDataFilepath(args.basePath, args.format),
-            contents: dataContent,
-          },
-          ...extraFiles.map(file => ({
-            path: `${
-              file.parent
-                ? args.slug
-                  ? `${file.parent}/${args.slug.value}`
-                  : file.parent
-                : args.basePath
-            }/${file.path}`,
-            contents: file.contents,
-          })),
-        ];
         const additionPathToSha = new Map(
           await Promise.all(
             additions.map(
@@ -206,23 +223,17 @@ export function useUpsertItem(args: {
               return false;
             }
             if (gqlError.type === 'STALE_DATA') {
-              let refData;
-              try {
-                // we don't want this to go into the cache yet
-                // so we create a new client just for this
-                refData = await createUrqlClient(args.config)
-                  .query(FetchRef, {
-                    owner: repoWithWriteAccess!.owner,
-                    name: repoWithWriteAccess!.name,
-                    ref: `refs/heads/${branchInfo.currentBranch}`,
-                  })
-                  .toPromise();
-                if (!refData.data?.repository?.ref?.target) {
-                  throw new Error('Branch not found');
-                }
-              } catch (error: any) {
-                setState({ kind: 'error', error });
-                return false;
+              // we don't want this to go into the cache yet
+              // so we create a new client just for this
+              const refData = await createUrqlClient(args.config)
+                .query(FetchRef, {
+                  owner: repoWithWriteAccess!.owner,
+                  name: repoWithWriteAccess!.name,
+                  ref: `refs/heads/${branchInfo.currentBranch}`,
+                })
+                .toPromise();
+              if (!refData.data?.repository?.ref?.target) {
+                throw new Error('Branch not found');
               }
 
               const tree = await fetchGitHubTreeData(

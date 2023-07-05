@@ -7,9 +7,9 @@ import { useOverlayTrigger } from '@react-aria/overlays';
 import { useListState } from '@react-stately/list';
 import { useOverlayTriggerState } from '@react-stately/overlays';
 
-import { Item, ListBoxBase, useListBoxLayout } from '@voussoir/listbox';
-import { Popover } from '@voussoir/overlays';
-import { css, tokenSchema } from '@voussoir/style';
+import { Item, ListBoxBase, useListBoxLayout } from '@keystar/ui/listbox';
+import { Popover } from '@keystar/ui/overlays';
+import { css, tokenSchema } from '@keystar/ui/style';
 
 import { insertComponentBlock } from './component-blocks';
 import { ComponentBlock } from '../../../api';

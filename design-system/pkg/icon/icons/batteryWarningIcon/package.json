@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-batteryWarningIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-batteryWarningIcon.esm.js"
+}

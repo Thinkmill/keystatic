@@ -1,4 +1,4 @@
-import { css } from '@voussoir/style';
+import { css } from '@keystar/ui/style';
 import { EditorNodeSpec } from '../schema';
 import { Schema } from 'prosemirror-model';
 import { markdocIdentifierPattern, weakMemoize } from '../utils';

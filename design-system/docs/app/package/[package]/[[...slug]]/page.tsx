@@ -24,7 +24,7 @@ export async function generateMetadata({
   params: { package: string; slug?: string[] };
 }): Promise<Metadata> {
   const { content: rawDocContent, path } = await readDocFile(
-    `packages/${params.package}/docs`,
+    `pkg/src/${params.package}/docs`,
     (params.slug ?? []).join('/')
   );
 
@@ -36,7 +36,7 @@ export default async function Page(props: {
   params: { slug?: string[]; package: string };
 }) {
   const { content: rawDocContent, path } = await readDocFile(
-    `packages/${props.params.package}/docs`,
+    `pkg/src/${props.params.package}/docs`,
     (props.params.slug ?? []).join('/')
   );
 

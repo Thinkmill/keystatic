@@ -1,5 +1,5 @@
 import weakMemoize from '@emotion/weak-memoize';
-import { css, tokenSchema } from '@voussoir/style';
+import { css, tokenSchema } from '@keystar/ui/style';
 import {
   Command,
   EditorState,

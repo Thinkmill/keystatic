@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-strikethroughIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-strikethroughIcon.esm.js"
+}

@@ -23,8 +23,8 @@ import {
 import { Editable, ReactEditor, Slate, useSlate, withReact } from 'slate-react';
 import { EditableProps } from 'slate-react/dist/components/editable';
 
-import { Box } from '@voussoir/layout';
-import { classNames, css, tokenSchema } from '@voussoir/style';
+import { Box } from '@keystar/ui/layout';
+import { classNames, css, tokenSchema } from '@keystar/ui/style';
 
 import { DocumentFeatures } from './document-features';
 import { ComponentBlock } from '../../../api';
