@@ -1,8 +1,8 @@
-import { ActionButton, Button } from '@voussoir/button';
-import { Flex } from '@voussoir/layout';
-import { Notice } from '@voussoir/notice';
-import { TextField } from '@voussoir/text-field';
-import { Text } from '@voussoir/typography';
+import { ActionButton, Button } from '@keystar/ui/button';
+import { Flex } from '@keystar/ui/layout';
+import { Notice } from '@keystar/ui/notice';
+import { TextField } from '@keystar/ui/text-field';
+import { Text } from '@keystar/ui/typography';
 import { useRouter } from '../router';
 import { GitHubConfig } from '../../config';
 import { createContext, useContext } from 'react';

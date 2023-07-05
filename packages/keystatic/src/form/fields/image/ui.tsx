@@ -1,13 +1,13 @@
 'use client';
-import { ButtonGroup, ActionButton } from '@voussoir/button';
-import { FieldLabel, FieldMessage } from '@voussoir/field';
-import { Flex, Box } from '@voussoir/layout';
-import { tokenSchema } from '@voussoir/style';
-import { TextField } from '@voussoir/text-field';
-import { Text } from '@voussoir/typography';
+import { ButtonGroup, ActionButton } from '@keystar/ui/button';
+import { FieldLabel, FieldMessage } from '@keystar/ui/field';
+import { Flex, Box } from '@keystar/ui/layout';
+import { tokenSchema } from '@keystar/ui/style';
+import { TextField } from '@keystar/ui/text-field';
+import { Text } from '@keystar/ui/typography';
 
 import { useIsInDocumentEditor } from '../document/DocumentEditor';
-import { useState, useEffect, useReducer } from 'react';
+import { useState, useEffect, useReducer, useId } from 'react';
 import { FormFieldInputProps } from '../../api';
 
 export function getUploadedFile(
@@ -69,6 +69,7 @@ export function useObjectURL(data: Uint8Array | null) {
   return url;
 }
 
+// TODO: button labels ("Choose file", "Remove") need i18n support
 export function ImageFieldInput(
   props: FormFieldInputProps<{
     data: Uint8Array;
@@ -84,11 +85,21 @@ export function ImageFieldInput(
   const [blurred, onBlur] = useReducer(() => true, false);
   const isInEditor = useIsInDocumentEditor();
   const objectUrl = useObjectURL(value === null ? null : value.data);
+  const labelId = useId();
+  const descriptionId = useId();
   return (
-    <Flex direction="column" gap="medium">
-      <FieldLabel>{props.label}</FieldLabel>
+    <Flex
+      aria-describedby={props.description ? descriptionId : undefined}
+      aria-labelledby={labelId}
+      direction="column"
+      gap="medium"
+      role="group"
+    >
+      <FieldLabel id={labelId} elementType="span">
+        {props.label}
+      </FieldLabel>
       {props.description && (
-        <Text size="small" color="neutralSecondary">
+        <Text size="small" color="neutralSecondary" id={descriptionId}>
           {props.description}
         </Text>
       )}

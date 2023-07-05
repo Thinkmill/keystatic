@@ -1,4 +1,4 @@
-import { Flex } from '@voussoir/layout';
+import { Flex } from '@keystar/ui/layout';
 import { useMemo } from 'react';
 import {
   GenericPreviewProps,

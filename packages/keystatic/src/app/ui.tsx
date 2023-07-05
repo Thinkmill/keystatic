@@ -1,4 +1,3 @@
-import { useRouter, Router, RouterProvider } from './router';
 import {
   AnchorHTMLAttributes,
   ReactElement,
@@ -9,7 +8,12 @@ import {
   useState,
 } from 'react';
 
-import { Notice } from '@voussoir/notice';
+import { Button } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
+import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
+import { Flex } from '@keystar/ui/layout';
+import { Notice } from '@keystar/ui/notice';
+import { Text } from '@keystar/ui/typography';
 
 import { CloudConfig, Config, GitHubConfig } from '../config';
 import { CollectionPage } from './CollectionPage';
@@ -23,19 +27,15 @@ import { FromTemplateDeploy } from './onboarding/from-template-deploy';
 import { CreatedGitHubApp } from './onboarding/created-github-app';
 import { KeystaticSetup } from './onboarding/setup';
 import { RepoNotFound } from './onboarding/repo-not-found';
-import { isCloudConfig, isGitHubConfig, redirectToCloudAuth } from './utils';
-import { Text } from '@voussoir/typography';
 import { AppSlugProvider } from './onboarding/install-app';
+import { useRouter, Router, RouterProvider } from './router';
+import { isCloudConfig, isGitHubConfig, redirectToCloudAuth } from './utils';
 import {
   GitHubAppShellDataContext,
   GitHubAppShellDataProvider,
 } from './shell/data';
 import { KeystaticCloudAuthCallback } from './cloud-auth-callback';
 import { getAuth } from './auth';
-import { Button } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { githubIcon } from '@voussoir/icon/icons/githubIcon';
-import { Flex } from '@voussoir/layout';
 
 function parseParamsWithoutBranch(params: string[]) {
   if (params.length === 0) {

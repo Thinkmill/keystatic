@@ -1,7 +1,7 @@
 import rangeParser from 'parse-numeric-range';
 import PrismHighlight, { Language, Prism } from 'prism-react-renderer';
 
-import { Box } from '@voussoir/layout';
+import { Box } from '@keystar/ui/layout';
 
 import { usePrismTheme } from './prism-theme';
 

@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
-  "packageManager": "pnpm@7.27.0",
+  "packageManager": "pnpm@7.33.3",
+  "engines": {
+    "pnpm": "7.33.3"
+  },
   "scripts": {
     "build:docs": "pnpm --filter=keystatic-docs build",
     "build:designsystem": "pnpm --filter=@voussoir/docs build",
@@ -76,7 +79,7 @@
   },
   "preconstruct": {
     "packages": [
-      "design-system/packages/*",
+      "design-system/pkg",
       "packages/*"
     ],
     "exports": true,

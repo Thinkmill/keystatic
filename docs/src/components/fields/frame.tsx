@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { VoussoirProvider } from '@voussoir/core';
+import { VoussoirProvider } from '@keystar/ui/core';
 
 export function FieldDemoFrame({
   children,

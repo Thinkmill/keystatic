@@ -1,41 +1,5 @@
 import { collection, config, fields } from '@keystatic/core';
-
-const locales = {
-  'ar-AE': 'Arabic (UAE) 🇦🇪',
-  'bg-BG': 'Bulgarian (Bulgaria) 🇧🇬',
-  'cs-CZ': 'Czech (Czech Republic) 🇨🇿',
-  'da-DK': 'Danish (Denmark) 🇩🇰',
-  'de-DE': 'German (Germany) 🇩🇪',
-  'el-GR': 'Greek (Greece) 🇬🇷',
-  'en-US': 'English (United States) 🇺🇸',
-  'es-ES': 'Spanish (Spain) 🇪🇸',
-  'et-EE': 'Estonian (Estonia) 🇪🇪',
-  'fi-FI': 'Finnish (Finland) 🇫🇮',
-  'fr-FR': 'French (France) 🇫🇷',
-  'he-IL': 'Hebrew (Israel) 🇮🇱',
-  'hr-HR': 'Croatian (Croatia) 🇭🇷',
-  'hu-HU': 'Hungarian (Hungary) 🇭🇺',
-  'it-IT': 'Italian (Italy) 🇮🇹',
-  'ja-JP': 'Japanese (Japan) 🇯🇵',
-  'ko-KR': 'Korean (Korea) 🇰🇷',
-  'lt-LT': 'Lithuanian (Lithuania) 🇱🇹',
-  'lv-LV': 'Latvian (Latvia) 🇱🇻',
-  'nb-NO': 'Norwegian (Norway) 🇳🇴',
-  'nl-NL': 'Dutch (Netherlands) 🇳🇱',
-  'pl-PL': 'Polish (Poland) 🇵🇱',
-  'pt-BR': 'Portuguese (Brazil) 🇧🇷',
-  'pt-PT': 'Portuguese (Portugal) 🇵🇹',
-  'ro-RO': 'Romanian (Romania) 🇷🇴',
-  'ru-RU': 'Russian (Russia) 🇷🇺',
-  'sk-SK': 'Slovak (Slovakia) 🇸🇰',
-  'sl-SI': 'Slovenian (Slovenia) 🇸🇮',
-  'sr-SP': 'Serbian (Serbia) 🇷🇸',
-  'sv-SE': 'Swedish (Sweden) 🇸🇪',
-  'tr-TR': 'Turkish (Turkey) 🇹🇷',
-  'uk-UA': 'Ukrainian (Ukraine) 🇺🇦',
-  'zh-CN': 'Chinese (Simplified) 🇨🇳',
-  'zh-TW': 'Chinese (Traditional) 🇨🇳',
-};
+import { locales } from '../../../packages/keystatic/src/app/l10n/locales';
 
 const localeCollections = Object.fromEntries(
   Object.entries(locales).map(([key, label]) => [
@@ -76,10 +40,11 @@ const localeCollections = Object.fromEntries(
 );
 
 export default config({
-  storage: {
-    kind: 'github',
-    repo: { name: 'keystatic', owner: 'thinkmill' },
-  },
+  // storage: {
+  //   kind: 'github',
+  //   repo: { name: 'keystatic', owner: 'thinkmill' },
+  // },
+  storage: { kind: 'local' },
   collections: {
     ...localeCollections,
   },

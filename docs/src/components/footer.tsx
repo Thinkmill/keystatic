@@ -28,7 +28,7 @@ export default function Footer() {
 
 export function DocsFooter() {
   return (
-    <footer className="py-4">
+    <footer className="py-4 mb-24">
       <hr className="h-px my-8 border-keystatic-gray mb-8" />
 
       <p className="leading-tight text-keystatic-gray-dark text-sm">
