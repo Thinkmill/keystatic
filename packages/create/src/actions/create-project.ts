@@ -18,7 +18,7 @@ const registryDomain = 'https://registry.npmjs.org';
 const templates = {
   nextjs: '@keystatic/templates-nextjs',
   astro: '@keystatic/templates-astro',
-  remix: '@keystatic/templates-remix',
+  remix: '@keystatic/templates-remix', // Doesn't exist yet
 };
 
 type PackageInfo = {
