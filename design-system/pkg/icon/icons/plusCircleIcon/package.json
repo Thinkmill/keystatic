@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-plusCircleIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-plusCircleIcon.esm.js"
+}

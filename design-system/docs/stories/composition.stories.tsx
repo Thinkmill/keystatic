@@ -1,14 +1,14 @@
 import { Meta } from '@storybook/react';
 import { ComponentProps, Key, ReactNode, useMemo, useState } from 'react';
 
-import { Badge } from '@voussoir/badge';
-import { Button } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { copyIcon } from '@voussoir/icon/icons/copyIcon';
-import { saveIcon } from '@voussoir/icon/icons/saveIcon';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Flex, Grid } from '@voussoir/layout';
-import { TextLink } from '@voussoir/link';
+import { Badge } from '@keystar/ui/badge';
+import { Button } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
+import { copyIcon } from '@keystar/ui/icon/icons/copyIcon';
+import { saveIcon } from '@keystar/ui/icon/icons/saveIcon';
+import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
+import { Flex, Grid } from '@keystar/ui/layout';
+import { TextLink } from '@keystar/ui/link';
 import {
   Cell,
   Column,
@@ -17,13 +17,13 @@ import {
   TableBody,
   TableHeader,
   TableView,
-} from '@voussoir/table';
-import { TextField } from '@voussoir/text-field';
-import { Heading, Text } from '@voussoir/typography';
+} from '@keystar/ui/table';
+import { TextField } from '@keystar/ui/text-field';
+import { Heading, Text } from '@keystar/ui/typography';
 
 import { AppShell } from './components';
 import { pokemonItems } from './data';
-import { breakpointQueries, css } from '@voussoir/style';
+import { breakpointQueries, css } from '@keystar/ui/style';
 
 export default {
   title: 'Patterns / Composition',

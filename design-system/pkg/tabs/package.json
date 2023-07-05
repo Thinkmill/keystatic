@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-tabs.cjs.js",
+  "module": "dist/keystar-ui-tabs.esm.js"
+}

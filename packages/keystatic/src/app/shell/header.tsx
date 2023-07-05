@@ -1,66 +1,74 @@
-import { ActionButton } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { menuIcon } from '@voussoir/icon/icons/menuIcon';
-import { Box, Flex } from '@voussoir/layout';
-import { PropsWithChildren, useContext, useRef, useEffect } from 'react';
-import { AppShellContainer } from '.';
-import { SidebarContext } from './sidebar';
+import { usePreventScroll } from '@react-aria/overlays';
+import { PropsWithChildren, useRef, useEffect } from 'react';
+
+import { ActionButton } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
+import { menuIcon } from '@keystar/ui/icon/icons/menuIcon';
+import { Flex } from '@keystar/ui/layout';
+import { breakpointQueries } from '@keystar/ui/style';
+
+import { MAIN_PANEL_ID, SIDE_PANEL_ID } from './constants';
+import { useSidebar } from './sidebar';
 
 function documentSelector(selector: string): HTMLElement | null {
   return document.querySelector(selector);
 }
 
 export const AppShellHeader = ({ children }: PropsWithChildren) => {
-  const { setSidebarOpen } = useContext(SidebarContext);
+  const { sidebarIsOpen, setSidebarOpen } = useSidebar();
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
+  usePreventScroll({ isDisabled: !sidebarIsOpen });
+
   let onPress = () => {
-    let nav = documentSelector('.keystatic-sidebar');
-    let main = documentSelector('main');
+    let sidePanel = documentSelector(`#${SIDE_PANEL_ID}`);
+    let mainPanel = documentSelector(`#${MAIN_PANEL_ID}`);
 
-    if (nav && main) {
-      nav.dataset.visible = nav.dataset.visible === 'true' ? 'false' : 'true';
+    if (sidePanel && mainPanel) {
+      sidePanel.dataset.visible =
+        sidePanel.dataset.visible === 'true' ? 'false' : 'true';
 
-      if (nav.dataset.visible === 'true') {
+      if (sidePanel.dataset.visible === 'true') {
         setSidebarOpen(true);
-        main.setAttribute('aria-hidden', 'true');
-        nav.tabIndex = -1;
-        nav.focus();
+        mainPanel.setAttribute('aria-hidden', 'true');
+        sidePanel.tabIndex = -1;
+        sidePanel.focus();
       } else {
         setSidebarOpen(false);
-        main.removeAttribute('aria-hidden');
-        nav.removeAttribute('tabindex');
+        mainPanel.removeAttribute('aria-hidden');
+        sidePanel.removeAttribute('tabindex');
       }
     }
   };
 
   useEffect(() => {
-    let mediaQueryList = window.matchMedia('(max-width: 1020px)');
-    let nav = documentSelector('.keystatic-sidebar');
-    let main = documentSelector('main');
-    let hamburgerButton = menuButtonRef.current;
+    let tabletBP = breakpointQueries.below.tablet.replace('@media', '').trim(); // a bit awkward, but stays in-sync with the component library
+    let mediaQueryList = window.matchMedia(tabletBP);
+    let sidePanel = documentSelector(`#${SIDE_PANEL_ID}`);
+    let mainPanel = documentSelector(`#${MAIN_PANEL_ID}`);
+    let menuButtonElement = menuButtonRef.current;
 
     let removeVisible = (isNotResponsive = false) => {
       setSidebarOpen(false);
 
-      if (nav && main) {
+      if (sidePanel && mainPanel) {
         if (
-          hamburgerButton &&
-          nav.contains(document.activeElement) &&
+          menuButtonElement &&
+          sidePanel.contains(document.activeElement) &&
           !isNotResponsive
         ) {
-          hamburgerButton.focus();
+          menuButtonElement.focus();
         }
 
-        nav.dataset.visible = 'false';
-        main.removeAttribute('aria-hidden');
-        nav.removeAttribute('tabindex');
+        sidePanel.dataset.visible = 'false';
+        mainPanel.removeAttribute('aria-hidden');
+        sidePanel.removeAttribute('tabindex');
       }
     };
 
     /* collapse nav when underlying content is clicked */
-    let onClick = (e: MouseEvent) => {
-      if (e.target !== hamburgerButton) {
+    let onMouseDown = (e: MouseEvent) => {
+      if (!menuButtonElement?.contains(e.target as Node)) {
         removeVisible();
       }
     };
@@ -74,8 +82,12 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
 
     /* trap keyboard focus within expanded nav */
     let onKeydownTab = (event: KeyboardEvent) => {
-      if (event.key === 'Tab' && nav && nav.dataset.visible === 'true') {
-        let tabbables = nav.querySelectorAll('button, a[href]');
+      if (
+        event.key === 'Tab' &&
+        sidePanel &&
+        sidePanel.dataset.visible === 'true'
+      ) {
+        let tabbables = sidePanel.querySelectorAll('button, a[href]');
         let first = tabbables[0] as HTMLElement;
         let last = tabbables[tabbables.length - 1] as HTMLElement;
 
@@ -97,9 +109,9 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
     };
 
     document.addEventListener('keydown', onKeydownEsc);
-    if (nav && main) {
-      main.addEventListener('click', onClick);
-      nav.addEventListener('keydown', onKeydownTab);
+    if (sidePanel && mainPanel) {
+      mainPanel.addEventListener('mousedown', onMouseDown);
+      sidePanel.addEventListener('keydown', onKeydownTab);
     }
 
     let useEventListener =
@@ -112,9 +124,9 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
 
     return () => {
       document.removeEventListener('keydown', onKeydownEsc);
-      if (nav && main) {
-        main.removeEventListener('click', onClick);
-        nav.removeEventListener('keydown', onKeydownTab);
+      if (sidePanel && mainPanel) {
+        mainPanel.removeEventListener('mousedown', onMouseDown);
+        sidePanel.removeEventListener('keydown', onKeydownTab);
       }
 
       if (useEventListener) {
@@ -126,28 +138,29 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
   }, [setSidebarOpen, menuButtonRef]);
 
   return (
-    <Box
+    <Flex
+      alignItems="center"
       backgroundColor="surface"
       borderBottom="muted"
       elementType="header"
-      height="element.xlarge"
+      gap={{ mobile: 'small', tablet: 'regular' }}
+      height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
+      minWidth={0}
       insetTop={0}
+      paddingEnd={{ mobile: 'regular', tablet: 'xlarge' }}
+      paddingStart={{ tablet: 'xlarge' }}
       position="sticky"
       zIndex={3}
     >
-      <AppShellContainer>
-        <Flex alignItems="center" height="element.xlarge" gap="regular">
-          <ActionButton
-            prominence="low"
-            isHidden={{ above: 'mobile' }}
-            onPress={onPress}
-            ref={menuButtonRef}
-          >
-            <Icon src={menuIcon} />
-          </ActionButton>
-          {children}
-        </Flex>
-      </AppShellContainer>
-    </Box>
+      <ActionButton
+        prominence="low"
+        isHidden={{ above: 'mobile' }}
+        onPress={onPress}
+        ref={menuButtonRef}
+      >
+        <Icon src={menuIcon} />
+      </ActionButton>
+      {children}
+    </Flex>
   );
 };

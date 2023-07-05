@@ -1,5 +1,5 @@
-import { ProgressCircle } from '@voussoir/progress';
-import { Text } from '@voussoir/typography';
+import { ProgressCircle } from '@keystar/ui/progress';
+import { Text } from '@keystar/ui/typography';
 import { useEffect, useMemo, useState } from 'react';
 import { z } from 'zod';
 import { Config } from '../config';

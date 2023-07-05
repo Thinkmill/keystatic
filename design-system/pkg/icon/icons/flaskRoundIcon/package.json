@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-flaskRoundIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-flaskRoundIcon.esm.js"
+}

@@ -6,29 +6,25 @@ import {
   useContext,
 } from 'react';
 
-import { alertCircleIcon } from '@voussoir/icon/icons/alertCircleIcon';
-import { Icon } from '@voussoir/icon';
-import { Box, BoxProps, Flex } from '@voussoir/layout';
-import { VoussoirTheme, css, transition } from '@voussoir/style';
-import { Heading, Text } from '@voussoir/typography';
+import { alertCircleIcon } from '@keystar/ui/icon/icons/alertCircleIcon';
+import { Icon } from '@keystar/ui/icon';
+import { Box, BoxProps, Flex } from '@keystar/ui/layout';
+import { VoussoirTheme, css, transition } from '@keystar/ui/style';
+import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../../config';
+
+import { isGitHubConfig, isLocalConfig } from '../utils';
+
+import { MAIN_PANEL_ID, SIDE_PANEL_ID } from './constants';
+import { ConfigContext } from './context';
 import {
   GitHubAppShellProvider,
   AppShellErrorContext,
   LocalAppShellProvider,
 } from './data';
-import { SidebarProvider, Sidebar, SIDEBAR_WIDTH } from './sidebar';
-import { isGitHubConfig, isLocalConfig } from '../utils';
-
-const ConfigContext = createContext<Config | null>(null);
-export function useConfig(): Config {
-  const config = useContext(ConfigContext);
-  if (!config) {
-    throw new Error('ConfigContext.Provider not found');
-  }
-  return config;
-}
+import { SidebarProvider, Sidebar } from './sidebar';
+import { TopBar } from './topbar';
 
 export const AppShell = (props: {
   config: Config;
@@ -39,24 +35,27 @@ export const AppShell = (props: {
   const inner = (
     <ConfigContext.Provider value={props.config}>
       <SidebarProvider>
-        <Flex direction={{ mobile: 'column', tablet: 'row' }} minHeight="100vh">
-          <Sidebar hrefBase={props.basePath} config={props.config} />
-          <AppShellErrorContext.Consumer>
-            {error =>
-              error &&
-              !error?.graphQLErrors.some(
-                err => (err?.originalError as any)?.type === 'NOT_FOUND'
-              ) ? (
-                <EmptyState
-                  icon={alertCircleIcon}
-                  title="Failed to load shell"
-                  message={error.message}
-                />
-              ) : (
-                props.children
-              )
-            }
-          </AppShellErrorContext.Consumer>
+        <Flex direction="column" minHeight="100vh">
+          <TopBar />
+          <Flex direction={{ mobile: 'column', tablet: 'row' }} flex>
+            <Sidebar hrefBase={props.basePath} config={props.config} />
+            <AppShellErrorContext.Consumer>
+              {error =>
+                error &&
+                !error?.graphQLErrors.some(
+                  err => (err?.originalError as any)?.type === 'NOT_FOUND'
+                ) ? (
+                  <EmptyState
+                    icon={alertCircleIcon}
+                    title="Failed to load shell"
+                    message={error.message}
+                  />
+                ) : (
+                  props.children
+                )
+              }
+            </AppShellErrorContext.Consumer>
+          </Flex>
         </Flex>
       </SidebarProvider>
     </ConfigContext.Provider>
@@ -140,12 +139,12 @@ export const AppShellRoot = ({
 }: PropsWithChildren<Partial<AppShellContextValue>>) => {
   return (
     <AppShellContext.Provider value={{ containerWidth }}>
-      <Box
+      <Flex
         elementType="main"
+        direction="column"
+        id={MAIN_PANEL_ID}
         flex
-        minHeight="100vh"
         minWidth={0}
-        paddingStart={{ tablet: SIDEBAR_WIDTH }}
         UNSAFE_className={css({
           '&::before': {
             backgroundColor: '#0006',
@@ -153,17 +152,36 @@ export const AppShellRoot = ({
             inset: 0,
             opacity: 0,
             pointerEvents: 'none',
+            visibility: 'hidden',
             position: 'fixed',
-            transition: transition('opacity'),
-            zIndex: 99,
+            zIndex: 5,
+
+            // exit animation
+            transition: [
+              transition('opacity', {
+                easing: 'easeOut',
+                duration: 'regular',
+                delay: 'short',
+              }),
+              transition('visibility', {
+                delay: 'regular',
+                duration: 0,
+                easing: 'linear',
+              }),
+            ].join(', '),
           },
-          'nav[data-visible=true] ~ &::before': {
+          [`#${SIDE_PANEL_ID}[data-visible=true] ~ &::before`]: {
             opacity: 1,
+            pointerEvents: 'auto',
+            visibility: 'visible',
+
+            // enter animation
+            transition: transition('opacity', { easing: 'easeIn' }),
           },
         })}
       >
         {children}
-      </Box>
+      </Flex>
     </AppShellContext.Provider>
   );
 };

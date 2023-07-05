@@ -1,37 +1,35 @@
+import { setBlockType, toggleMark, wrapIn } from 'prosemirror-commands';
+import { MarkType, NodeType } from 'prosemirror-model';
+import { Command, EditorState, TextSelection } from 'prosemirror-state';
 import { ReactElement, ReactNode, useMemo } from 'react';
 
-import { ActionGroup, Item } from '@voussoir/action-group';
-import { ActionButton } from '@voussoir/button';
-import { plusIcon } from '@voussoir/icon/icons/plusIcon';
-import { chevronDownIcon } from '@voussoir/icon/icons/chevronDownIcon';
-import { codeIcon } from '@voussoir/icon/icons/codeIcon';
-import { boldIcon } from '@voussoir/icon/icons/boldIcon';
-import { removeFormattingIcon } from '@voussoir/icon/icons/removeFormattingIcon';
-import { typeIcon } from '@voussoir/icon/icons/typeIcon';
-import { italicIcon } from '@voussoir/icon/icons/italicIcon';
-import { strikethroughIcon } from '@voussoir/icon/icons/strikethroughIcon';
-import { Icon } from '@voussoir/icon';
-import { Flex } from '@voussoir/layout';
-import { MenuTrigger, Menu } from '@voussoir/menu';
-import { css, tokenSchema } from '@voussoir/style';
-import { Text, Kbd } from '@voussoir/typography';
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
+import { ActionGroup, Item } from '@keystar/ui/action-group';
+import { ActionButton } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
+import { boldIcon } from '@keystar/ui/icon/icons/boldIcon';
+import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
+import { codeIcon } from '@keystar/ui/icon/icons/codeIcon';
+import { italicIcon } from '@keystar/ui/icon/icons/italicIcon';
+import { listIcon } from '@keystar/ui/icon/icons/listIcon';
+import { listOrderedIcon } from '@keystar/ui/icon/icons/listOrderedIcon';
+import { minusIcon } from '@keystar/ui/icon/icons/minusIcon';
+import { plusIcon } from '@keystar/ui/icon/icons/plusIcon';
+import { quoteIcon } from '@keystar/ui/icon/icons/quoteIcon';
+import { removeFormattingIcon } from '@keystar/ui/icon/icons/removeFormattingIcon';
+import { strikethroughIcon } from '@keystar/ui/icon/icons/strikethroughIcon';
+import { typeIcon } from '@keystar/ui/icon/icons/typeIcon';
+import { Flex } from '@keystar/ui/layout';
+import { MenuTrigger, Menu } from '@keystar/ui/menu';
+import { Picker } from '@keystar/ui/picker';
+import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
+import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
+import { Text, Kbd } from '@keystar/ui/typography';
 
-// import { ToolbarSeparator } from './primitives';
-import { Picker } from '@voussoir/picker';
-// import { tableIcon } from '@voussoir/icon/icons/tableIcon';
-import { Command, EditorState, TextSelection } from 'prosemirror-state';
 import {
   useEditorDispatchCommand,
   useEditorSchema,
   useEditorState,
 } from './editor-view';
-import { minusIcon } from '@voussoir/icon/icons/minusIcon';
-import { setBlockType, toggleMark, wrapIn } from 'prosemirror-commands';
-import { MarkType, NodeType } from 'prosemirror-model';
-import { quoteIcon } from '@voussoir/icon/icons/quoteIcon';
-import { listIcon } from '@voussoir/icon/icons/listIcon';
-import { listOrderedIcon } from '@voussoir/icon/icons/listOrderedIcon';
 import { toggleList } from './lists';
 import { insertNode, toggleCodeBlock } from './commands/misc';
 
@@ -157,10 +155,15 @@ const ToolbarContainer = ({ children }: { children: ReactNode }) => {
       backgroundColor="canvas"
       borderTopStartRadius="medium"
       borderTopEndRadius="medium"
-      // NOTE: sticky behavior needs to be kept in sync with the app's header
-      insetTop={`calc(${tokenSchema.size.element.xlarge} - ${tokenSchema.size.border.regular})`}
       position="sticky"
       zIndex={2}
+      // NOTE: top offset (sticky) must be kept in sync with the app's header
+      UNSAFE_className={css({
+        top: `calc(${tokenSchema.size.element.large} - ${tokenSchema.size.border.regular})`,
+        [breakpointQueries.above.mobile]: {
+          top: `calc(${tokenSchema.size.element.xlarge} - ${tokenSchema.size.border.regular})`,
+        },
+      })}
     >
       {children}
       <Flex

@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-shuffleIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-shuffleIcon.esm.js"
+}

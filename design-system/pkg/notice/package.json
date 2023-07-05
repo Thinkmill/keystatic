@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-notice.cjs.js",
+  "module": "dist/keystar-ui-notice.esm.js"
+}

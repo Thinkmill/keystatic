@@ -10,24 +10,23 @@ import {
   useState,
 } from 'react';
 
-import { Badge } from '@voussoir/badge';
-import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
-import { Button, ButtonGroup } from '@voussoir/button';
-import { AlertDialog, Dialog, DialogContainer } from '@voussoir/dialog';
-import { Icon } from '@voussoir/icon';
-import { externalLinkIcon } from '@voussoir/icon/icons/externalLinkIcon';
-import { historyIcon } from '@voussoir/icon/icons/historyIcon';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Box, Flex } from '@voussoir/layout';
-import { ActionMenu, Section } from '@voussoir/menu';
-import { Notice } from '@voussoir/notice';
-import { ProgressCircle } from '@voussoir/progress';
-import { Content } from '@voussoir/slots';
-import { TextField } from '@voussoir/text-field';
-import { Heading, Text } from '@voussoir/typography';
+import { Badge } from '@keystar/ui/badge';
+import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
+import { Button, ButtonGroup } from '@keystar/ui/button';
+import { AlertDialog, Dialog, DialogContainer } from '@keystar/ui/dialog';
+import { Icon } from '@keystar/ui/icon';
+import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
+import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
+import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
+import { Box, Flex } from '@keystar/ui/layout';
+import { ActionMenu, Section } from '@keystar/ui/menu';
+import { Notice } from '@keystar/ui/notice';
+import { ProgressCircle } from '@keystar/ui/progress';
+import { Content } from '@keystar/ui/slots';
+import { TextField } from '@keystar/ui/text-field';
+import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../config';
-import { FormValueContentFromPreviewProps } from '../form/form-from-preview';
 import { createGetPreviewProps } from '../form/preview-props';
 import { fields } from '../form/api';
 import { clientSideValidateProp } from '../form/errors';
@@ -60,6 +59,7 @@ import { mergeDataStates } from './useData';
 import { useSlugsInCollection } from './useSlugsInCollection';
 import { SlugFieldInfo } from '../form/fields/text/ui';
 import { useDeleteItem, useUpsertItem } from './updating';
+import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 
 type ItemPageProps = {
   collection: string;
@@ -230,7 +230,7 @@ function ItemPage(props: ItemPageProps) {
               onAction={key => {
                 switch (key) {
                   case 'reset':
-                    window.location.reload(); // TODO: can we do this w/o a full reload?
+                    setState({ state: initialState, localTreeKey });
                     break;
                   case 'delete':
                     setDeleteAlertOpen(true);
@@ -320,11 +320,12 @@ function ItemPage(props: ItemPageProps) {
             <Notice tone="critical">{deleteResult.error.message}</Notice>
           )}
           <AppShellBody>
-            <FormValueContentFromPreviewProps
-              key={localTreeKey}
+            <FormForEntry
+              previewProps={previewProps}
               forceValidation={forceValidation}
+              entryLayout={collectionConfig.entryLayout}
+              formatInfo={formatInfo}
               slugField={props.slugInfo}
-              {...previewProps}
             />
           </AppShellBody>
           <DialogContainer
@@ -586,7 +587,9 @@ const ItemPageShell = (
   const collectionConfig = props.config.collections![props.collection]!;
 
   return (
-    <AppShellRoot>
+    <AppShellRoot
+      containerWidth={containerWidthForEntryLayout(collectionConfig)}
+    >
       <AppShellHeader>
         <Breadcrumbs
           flex

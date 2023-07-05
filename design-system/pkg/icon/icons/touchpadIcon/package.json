@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-touchpadIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-touchpadIcon.esm.js"
+}

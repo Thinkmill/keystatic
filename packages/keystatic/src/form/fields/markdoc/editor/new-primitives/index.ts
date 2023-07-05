@@ -4,7 +4,7 @@ export {
   type EditorListboxProps,
 } from './EditorListbox';
 export type { ReferenceElement, VirtualElement } from '@floating-ui/react';
-export { Item, Section } from '@voussoir/listbox';
+export { Item, Section } from '@keystar/ui/listbox';
 export { EditorPopover } from './EditorPopover';
 export {
   EditorToolbar,

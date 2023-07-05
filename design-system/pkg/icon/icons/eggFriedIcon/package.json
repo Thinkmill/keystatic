@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-eggFriedIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-eggFriedIcon.esm.js"
+}
