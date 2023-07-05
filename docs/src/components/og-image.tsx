@@ -1,4 +1,12 @@
 export default function OgImage({ title }: { title: string }) {
+  const titleLength = title.length;
+
+  // This would perhaps be better handled with ch units (or other) in CSS,
+  // but I am not actually sure it would.
+  let titleSize = '80px';
+  if (titleLength > 12) titleSize = '60px';
+  if (titleLength > 20) titleSize = '44px';
+
   return (
     <div
       style={{
@@ -68,7 +76,7 @@ export default function OgImage({ title }: { title: string }) {
           style={{
             textAlign: 'center',
             padding: 90,
-            fontSize: '44px',
+            fontSize: titleSize,
             fontWeight: 800,
             fontFamily:
               'ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"',

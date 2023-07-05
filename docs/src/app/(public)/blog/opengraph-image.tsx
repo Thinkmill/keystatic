@@ -8,7 +8,7 @@ export const size = {
 };
 export const contentType = 'image/png';
 
-const title = 'This is a blog post title, just to test things out.';
+const title = 'Blog';
 
 export default async function Image() {
   return new ImageResponse(<OgImage title={title} />, {
