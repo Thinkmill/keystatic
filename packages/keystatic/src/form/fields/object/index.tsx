@@ -1,7 +1,8 @@
-import { ComponentSchema, ObjectField } from '../../api';
+import { ComponentSchema, ObjectField, ObjectFieldOptions } from '../../api';
 
 export function object<Fields extends Record<string, ComponentSchema>>(
-  fields: Fields
+  fields: Fields,
+  opts?: ObjectFieldOptions
 ): ObjectField<Fields> {
-  return { kind: 'object', fields };
+  return { ...opts, kind: 'object', fields };
 }
