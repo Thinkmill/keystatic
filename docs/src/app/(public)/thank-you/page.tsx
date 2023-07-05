@@ -1,5 +1,9 @@
 import Footer from '../../../components/footer';
 
+export const metadata = {
+  title: 'Thank you',
+};
+
 export default function ThankYouPage() {
   return (
     <>
