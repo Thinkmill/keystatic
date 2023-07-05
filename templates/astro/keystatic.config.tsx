@@ -1,5 +1,5 @@
 // keystatic.config.tsx
-import { config, fields, collection } from '@keystatic/core'
+import { config, fields, collection } from '@keystatic/core';
 
 export default config({
   storage: {
@@ -23,4 +23,4 @@ export default config({
       },
     }),
   },
-})
+});
