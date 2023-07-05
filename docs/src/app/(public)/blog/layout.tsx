@@ -12,7 +12,11 @@ export default async function RootLayout({
 }) {
   return (
     <>
-      <main className="mx-auto w-full sm:max-w-xl flex flex-col flex-1 gap-4 px-6 pt-10 lg:pt-16 pb-16">
+      <main
+        className="mx-auto w-full sm:max-w-xl flex flex-col flex-1 gap-4 px-6 pt-10 lg:pt-16 pb-16 outline-0"
+        tabIndex={-1}
+        aria-labelledby="heading-1-overview"
+      >
         {children}
       </main>
       <Footer />

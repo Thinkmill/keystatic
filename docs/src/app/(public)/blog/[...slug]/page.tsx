@@ -49,7 +49,12 @@ export default async function BlogPost({
       </p>
 
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-extrabold sm:text-3xl">{page.title}</h1>
+        <h1
+          className="text-2xl font-extrabold sm:text-3xl"
+          id="heading-1-overview"
+        >
+          {page.title}
+        </h1>
 
         <p className="text-sm text-neutral-500">
           Published on {formattedDate} by{' '}

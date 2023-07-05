@@ -26,7 +26,9 @@ export default async function Docs({ params }: { params: { slug: string[] } }) {
   return (
     <div className="grid gap-6 grid-cols-[auto] md:grid-cols-[auto,12rem]">
       <div>
-        <h1 className="text-3xl font-extrabold mb-8">{page.title}</h1>
+        <h1 className="text-3xl font-extrabold mb-8" id="heading-1-overview">
+          {page.title}
+        </h1>
         <div className="flex flex-col gap-4 [&_a]:break-all">
           <DocumentRenderer slug={slug} document={await page.content()} />
         </div>

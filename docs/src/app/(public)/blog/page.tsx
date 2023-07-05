@@ -29,7 +29,10 @@ export default async function Blog() {
   return (
     <>
       <div className="sm:text-center mb-8">
-        <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl mb-8">
+        <h1
+          className="font-extrabold text-3xl sm:text-4xl md:text-5xl mb-8"
+          id="heading-1-overview"
+        >
           Blog
         </h1>
 

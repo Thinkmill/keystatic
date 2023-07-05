@@ -9,7 +9,11 @@ import Features from '../../components/features';
 export default function Homepage() {
   return (
     <>
-      <main>
+      <main
+        tabIndex={-1}
+        aria-labelledby="heading-1-overview"
+        className="outline-0"
+      >
         <Hero />
         <Features />
         <Intro />

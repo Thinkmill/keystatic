@@ -7,7 +7,11 @@ export default function Hero() {
     <section className="relative overflow-hidden bg-white">
       <div className="mx-auto max-w-7xl pt-10 px-6 md:pb-10 lg:py-16 flex flex-col items-center gap-12 md:gap-16">
         <div className="w-full max-w-2xl flex flex-col items-center gap-8 text-center">
-          <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl">
+          <h1
+            className="font-extrabold text-3xl sm:text-4xl md:text-5xl"
+            id="heading-1-overview"
+            aria-label="Content management for your code base"
+          >
             Content Management
             <br />
             for your{' '}

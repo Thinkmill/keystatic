@@ -13,7 +13,11 @@ export default async function NotFound() {
     <div className="min-h-screen flex flex-col">
       <HeaderNav navigationMap={navigationMap} ignoreDocNavStyles />
 
-      <main className="mx-auto max-w-7xl px-6 pt-6 pb-12 flex flex-1 items-center w-full">
+      <main
+        className="mx-auto max-w-7xl px-6 pt-6 pb-12 flex flex-1 items-center w-full outline-0"
+        tabIndex={-1}
+        aria-labelledby="heading-1-overview"
+      >
         <PageNotFound />
       </main>
 

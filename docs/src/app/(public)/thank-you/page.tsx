@@ -3,9 +3,16 @@ import Footer from '../../../components/footer';
 export default function ThankYouPage() {
   return (
     <>
-      <main className="mx-auto max-w-7xl px-6 pt-6 pb-12 flex flex-1 items-center w-full">
+      <main
+        className="mx-auto max-w-7xl px-6 pt-6 pb-12 flex flex-1 items-center w-full outline-0"
+        tabIndex={-1}
+        aria-labelledby="heading-1-overview"
+      >
         <div className="max-w-xl">
-          <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl">
+          <h1
+            className="font-extrabold text-3xl sm:text-4xl md:text-5xl"
+            id="heading-1-overview"
+          >
             Thank you for being{' '}
             <span className="relative inline-block">
               <svg

@@ -38,7 +38,11 @@ export default async function RootLayout({
       {/** CONTENT */}
       <div className="px-6 flex-1 lg:pl-60 lg:pt-24">
         <div className="py-10 lg:pl-12">
-          <main className="flex gap-8">
+          <main
+            className="flex gap-8 outline-0"
+            tabIndex={-1}
+            aria-labelledby="heading-1-overview"
+          >
             {/** INNER CONTENT */}
             <div className="flex-1">{children}</div>
           </main>

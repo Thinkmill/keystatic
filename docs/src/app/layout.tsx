@@ -1,5 +1,7 @@
 import { Analytics } from '@vercel/analytics/react';
 import { Inter } from 'next/font/google';
+import { Suspense } from 'react';
+import { NavigationEvents } from '../components/navigation-events';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -40,6 +42,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} font-sans`}>{children}</body>
       <Analytics />
+      <Suspense fallback={null}>
+        <NavigationEvents />
+      </Suspense>
     </html>
   );
 }
