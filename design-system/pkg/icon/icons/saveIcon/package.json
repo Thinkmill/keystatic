@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-saveIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-saveIcon.esm.js"
+}

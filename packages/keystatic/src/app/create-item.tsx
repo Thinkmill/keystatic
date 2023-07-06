@@ -1,13 +1,13 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useMemo, useState } from 'react';
 
-import { Button } from '@voussoir/button';
-import { Breadcrumbs, Item } from '@voussoir/breadcrumbs';
-import { DialogContainer } from '@voussoir/dialog';
-import { Flex } from '@voussoir/layout';
-import { Notice } from '@voussoir/notice';
-import { ProgressCircle } from '@voussoir/progress';
-import { toastQueue } from '@voussoir/toast';
+import { Button } from '@keystar/ui/button';
+import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
+import { DialogContainer } from '@keystar/ui/dialog';
+import { Flex } from '@keystar/ui/layout';
+import { Notice } from '@keystar/ui/notice';
+import { ProgressCircle } from '@keystar/ui/progress';
+import { toastQueue } from '@keystar/ui/toast';
 
 import { Config } from '../config';
 import { fields } from '../form/api';

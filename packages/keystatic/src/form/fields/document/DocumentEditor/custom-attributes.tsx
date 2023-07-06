@@ -1,20 +1,24 @@
 import { createGetPreviewProps } from '../../../preview-props';
 import { ObjectField } from '../../../api';
-import { Dialog, DialogContainer, useDialogContainer } from '@voussoir/dialog';
+import {
+  Dialog,
+  DialogContainer,
+  useDialogContainer,
+} from '@keystar/ui/dialog';
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { clientSideValidateProp } from '../../../errors';
-import { Content } from '@voussoir/slots';
+import { Content } from '@keystar/ui/slots';
 import { FormValueContentFromPreviewProps } from '../../../form-from-preview';
-import { ButtonGroup, Button, ActionButton } from '@voussoir/button';
-import { Heading } from '@voussoir/typography';
+import { ButtonGroup, Button, ActionButton } from '@keystar/ui/button';
+import { Heading } from '@keystar/ui/typography';
 import { useState, useMemo } from 'react';
 import l10nMessages from '../../../../app/l10n/index.json';
 import { focusWithPreviousSelection } from './ui-utils';
 import { ReactEditor, useSlateStatic } from 'slate-react';
 import { Element, Transforms } from 'slate';
-import { Icon } from '@voussoir/icon';
-import { editIcon } from '@voussoir/icon/icons/editIcon';
-import { TooltipTrigger, Tooltip } from '@voussoir/tooltip';
+import { Icon } from '@keystar/ui/icon';
+import { editIcon } from '@keystar/ui/icon/icons/editIcon';
+import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { getInitialPropsValueFromInitializer } from '../../../initial-values';
 
 function CustomAttributesDialogInner(props: {

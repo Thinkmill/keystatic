@@ -1,9 +1,9 @@
 import {
   ClientSideOnlyDocumentElement,
   VoussoirProvider,
-} from '@voussoir/core';
-import { makeLinkComponent } from '@voussoir/link';
-import { Toaster } from '@voussoir/toast';
+} from '@keystar/ui/core';
+import { makeLinkComponent } from '@keystar/ui/link';
+import { Toaster } from '@keystar/ui/toast';
 import {
   AnchorHTMLAttributes,
   ForwardedRef,
@@ -29,6 +29,7 @@ import {
   redirectToCloudAuth,
 } from './utils';
 import { Config } from '../config';
+import { ThemeProvider, useTheme } from './shell/theme';
 
 export function createUrqlClient(config: Config): Client {
   const repo = {
@@ -226,17 +227,26 @@ export default function Provider({
       ),
     [Link]
   );
+  let themeContext = useTheme();
   return (
-    <VoussoirProvider linkComponent={UniversalLink}>
-      <ClientSideOnlyDocumentElement bodyBackground="surface" />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet"
-      />
-      <UrqlProvider value={useMemo(() => createUrqlClient(config), [config])}>
-        {children}
-      </UrqlProvider>
-      <Toaster />
-    </VoussoirProvider>
+    <ThemeProvider value={themeContext}>
+      <VoussoirProvider
+        linkComponent={UniversalLink}
+        locale={config.locale || 'en-US'}
+        colorScheme={
+          themeContext.theme === 'system' ? undefined : themeContext.theme
+        }
+      >
+        <ClientSideOnlyDocumentElement bodyBackground="surface" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+        <UrqlProvider value={useMemo(() => createUrqlClient(config), [config])}>
+          {children}
+        </UrqlProvider>
+        <Toaster />
+      </VoussoirProvider>
+    </ThemeProvider>
   );
 }

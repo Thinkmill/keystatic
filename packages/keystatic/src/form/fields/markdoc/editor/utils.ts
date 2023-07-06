@@ -1,4 +1,4 @@
-import { css, tokenSchema } from '@voussoir/style';
+import { css, tokenSchema } from '@keystar/ui/style';
 import { useRef, useCallback, useEffect } from 'react';
 
 export const classes = {

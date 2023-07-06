@@ -9,7 +9,7 @@ import {
 } from 'prosemirror-state';
 import { EditorView, NodeViewConstructor } from 'prosemirror-view';
 
-import { css, tokenSchema } from '@voussoir/style';
+import { css, tokenSchema } from '@keystar/ui/style';
 import { undo, redo } from 'prosemirror-history';
 import { StepMap } from 'prosemirror-transform';
 import { getAttributeType } from './schema';

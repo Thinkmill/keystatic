@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-clipboardTypeIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-clipboardTypeIcon.esm.js"
+}

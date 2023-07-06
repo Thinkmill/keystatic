@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-partyPopperIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-partyPopperIcon.esm.js"
+}

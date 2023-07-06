@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-gripIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-gripIcon.esm.js"
+}

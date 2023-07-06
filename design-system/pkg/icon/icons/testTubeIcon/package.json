@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-testTubeIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-testTubeIcon.esm.js"
+}

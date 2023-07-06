@@ -1,5 +1,5 @@
 'use client';
-import { css, tokenSchema } from '@voussoir/style';
+import { css, tokenSchema } from '@keystar/ui/style';
 import {
   DOMOutputSpec,
   NodeSpec,
