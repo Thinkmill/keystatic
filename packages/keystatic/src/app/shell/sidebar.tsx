@@ -24,6 +24,7 @@ import { SIDE_PANEL_ID } from './constants';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
 import { ZapLogo } from './common';
 import { useConfig } from './context';
+import { serializeRepoConfig } from '../repo-config';
 
 const SidebarContext = createContext<{
   sidebarIsOpen: boolean;
@@ -122,7 +123,7 @@ function SidebarHeader() {
     text = config.storage.project;
   }
   if (isGitHubConfig(config)) {
-    text = config.storage.repo.name;
+    text = serializeRepoConfig(config.storage.repo);
   }
 
   return (

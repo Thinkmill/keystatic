@@ -1,5 +1,6 @@
 import { ComponentSchema, SlugFormField } from './form/api';
 import type { Locale } from './app/l10n/locales';
+import { RepoConfig } from './app/repo-config';
 
 export type DataFormat = 'json' | 'yaml';
 export type Format = DataFormat | { data?: DataFormat; contentField?: string };
@@ -43,7 +44,7 @@ export type GitHubConfig<
 > = {
   storage: {
     kind: 'github';
-    repo: { owner: string; name: string };
+    repo: RepoConfig;
   };
   collections?: Collections;
   singletons?: Singletons;
@@ -101,7 +102,7 @@ export type Config<
     | { kind: 'local' }
     | {
         kind: 'github';
-        repo: { owner: string; name: string };
+        repo: RepoConfig;
       }
     | { kind: 'cloud'; project: string };
   collections?: Collections;
