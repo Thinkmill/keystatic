@@ -212,7 +212,11 @@ function ThemeMenu() {
 
   return (
     <MenuTrigger>
-      <ActionButton aria-label="Theme" prominence="low">
+      <ActionButton
+        aria-label="Theme"
+        prominence="low"
+        UNSAFE_className={css({ borderRadius: '50%', padding: 0 })}
+      >
         <Icon src={icon} />
       </ActionButton>
       <Menu
@@ -267,7 +271,11 @@ function UserMenu() {
         prominence="low"
         UNSAFE_className={css({ borderRadius: '50%', padding: 0 })}
       >
-        <Avatar src={user.avatarUrl} name={user.name ?? undefined} />
+        <Avatar
+          src={user.avatarUrl}
+          name={user.name ?? undefined}
+          size="small"
+        />
       </ActionButton>
       <>
         <Flex

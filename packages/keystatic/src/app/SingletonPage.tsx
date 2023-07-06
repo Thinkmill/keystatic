@@ -165,67 +165,69 @@ function SingletonPage({
           </Button>
         </ButtonGroup>
       </AppShellHeader>
-      <AppShellBody isScrollable>
-        <form
-          id={formID}
-          onSubmit={(event: FormEvent) => {
-            if (event.target !== event.currentTarget) return;
-            event.preventDefault();
-            onCreate();
-          }}
+      <Flex
+        elementType="form"
+        id={formID}
+        onSubmit={(event: FormEvent) => {
+          if (event.target !== event.currentTarget) return;
+          event.preventDefault();
+          onCreate();
+        }}
+        direction="column"
+        gap="xxlarge"
+        height="100%"
+        minHeight={0}
+        minWidth={0}
+      >
+        {updateResult.kind === 'error' && (
+          <Notice tone="critical">{updateResult.error.message}</Notice>
+        )}
+        <FormForEntry
+          previewProps={previewProps}
+          forceValidation={forceValidation}
+          entryLayout={singletonConfig.entryLayout}
+          formatInfo={formatInfo}
+          slugField={undefined}
+        />
+        <DialogContainer
+          // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since
+          // this doesn't open on click but after doing a network request and it failing and manually wiring about a popover and modal would be a pain
+          onDismiss={resetUpdateItem}
         >
-          <Flex direction="column" gap="xxlarge" paddingBottom="xlarge">
-            {updateResult.kind === 'error' && (
-              <Notice tone="critical">{updateResult.error.message}</Notice>
-            )}
-            <FormForEntry
-              previewProps={previewProps}
-              forceValidation={forceValidation}
-              entryLayout={singletonConfig.entryLayout}
-              formatInfo={formatInfo}
-              slugField={undefined}
+          {updateResult.kind === 'needs-new-branch' && (
+            <CreateBranchDuringUpdateDialog
+              branchOid={baseCommit}
+              onCreate={async newBranch => {
+                router.push(
+                  `/keystatic/branch/${encodeURIComponent(
+                    newBranch
+                  )}/singleton/${encodeURIComponent(singleton)}`
+                );
+                update({ branch: newBranch, sha: baseCommit });
+              }}
+              reason={updateResult.reason}
+              onDismiss={resetUpdateItem}
             />
-            <DialogContainer
-              // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since
-              // this doesn't open on click but after doing a network request and it failing and manually wiring about a popover and modal would be a pain
+          )}
+        </DialogContainer>
+        <DialogContainer
+          // ideally this would be a popover on desktop but using a DialogTrigger
+          // wouldn't work since this doesn't open on click but after doing a
+          // network request and it failing and manually wiring about a popover
+          // and modal would be a pain
+          onDismiss={resetUpdateItem}
+        >
+          {updateResult.kind === 'needs-fork' && isGitHubConfig(config) && (
+            <ForkRepoDialog
+              onCreate={async () => {
+                update();
+              }}
               onDismiss={resetUpdateItem}
-            >
-              {updateResult.kind === 'needs-new-branch' && (
-                <CreateBranchDuringUpdateDialog
-                  branchOid={baseCommit}
-                  onCreate={async newBranch => {
-                    router.push(
-                      `/keystatic/branch/${encodeURIComponent(
-                        newBranch
-                      )}/singleton/${encodeURIComponent(singleton)}`
-                    );
-                    update({ branch: newBranch, sha: baseCommit });
-                  }}
-                  reason={updateResult.reason}
-                  onDismiss={resetUpdateItem}
-                />
-              )}
-            </DialogContainer>
-            <DialogContainer
-              // ideally this would be a popover on desktop but using a DialogTrigger
-              // wouldn't work since this doesn't open on click but after doing a
-              // network request and it failing and manually wiring about a popover
-              // and modal would be a pain
-              onDismiss={resetUpdateItem}
-            >
-              {updateResult.kind === 'needs-fork' && isGitHubConfig(config) && (
-                <ForkRepoDialog
-                  onCreate={async () => {
-                    update();
-                  }}
-                  onDismiss={resetUpdateItem}
-                  config={config}
-                />
-              )}
-            </DialogContainer>
-          </Flex>
-        </form>
-      </AppShellBody>
+              config={config}
+            />
+          )}
+        </DialogContainer>
+      </Flex>
     </AppShellRoot>
   );
 }

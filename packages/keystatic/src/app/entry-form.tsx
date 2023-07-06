@@ -1,4 +1,4 @@
-import { Grid } from '@keystar/ui/layout';
+import { Box, Grid } from '@keystar/ui/layout';
 import { breakpoints } from '@keystar/ui/style';
 import { useResizeObserver } from '@react-aria/utils';
 import { useRef, useState } from 'react';
@@ -23,13 +23,16 @@ import {
   Collection,
   Singleton,
 } from '..';
+import { ContentPanelLayout } from './shell/panels';
+import { ScrollView } from './shell/primitives';
+import { AppShellContainer } from './shell';
 
 const emptyArray: ReadonlyPropPath = [];
 
 export function containerWidthForEntryLayout(
   config: Collection<any, any> | Singleton<any>
 ) {
-  return config.entryLayout === 'content' ? 'large' : 'medium';
+  return config.entryLayout === 'content' ? 'none' : 'medium';
 }
 
 export function FormForEntry({
@@ -69,43 +72,62 @@ export function FormForEntry({
   if (entryLayout === 'content' && formatInfo.contentField && isAboveTablet) {
     const { contentField } = formatInfo;
     return (
-      <div ref={ref}>
+      <Box height="100%" ref={ref}>
         <PathContextProvider value={emptyArray}>
           <SlugFieldProvider value={slugField}>
-            <Grid columns="2fr 1fr" gap="xlarge" alignItems="start">
-              <AddToPathProvider part={contentField.key}>
-                <InnerFormValueContentFromPreviewProps
-                  forceValidation={forceValidation}
-                  {...props.fields[contentField.key]}
-                />
-              </AddToPathProvider>
-              <Grid gap="xlarge">
-                {Object.entries(props.fields).map(([key, propVal]) =>
-                  key === contentField.key ? null : (
-                    <AddToPathProvider key={key} part={key}>
-                      <InnerFormValueContentFromPreviewProps
-                        forceValidation={forceValidation}
-                        {...propVal}
-                      />
-                    </AddToPathProvider>
-                  )
-                )}
-              </Grid>
-            </Grid>
+            <ContentPanelLayout>
+              <ScrollView>
+                <Box
+                  padding={{ mobile: 'regular', tablet: 'xlarge' }}
+                  minHeight={0}
+                  minWidth={0}
+                  maxWidth="container.medium"
+                  marginX="auto"
+                >
+                  <AddToPathProvider part={contentField.key}>
+                    <InnerFormValueContentFromPreviewProps
+                      forceValidation={forceValidation}
+                      {...props.fields[contentField.key]}
+                    />
+                  </AddToPathProvider>
+                </Box>
+              </ScrollView>
+              <ScrollView>
+                <Grid
+                  gap="xlarge"
+                  padding={{ mobile: 'regular', tablet: 'xlarge' }}
+                >
+                  {Object.entries(props.fields).map(([key, propVal]) =>
+                    key === contentField.key ? null : (
+                      <AddToPathProvider key={key} part={key}>
+                        <InnerFormValueContentFromPreviewProps
+                          forceValidation={forceValidation}
+                          {...propVal}
+                        />
+                      </AddToPathProvider>
+                    )
+                  )}
+                </Grid>
+              </ScrollView>
+            </ContentPanelLayout>
           </SlugFieldProvider>
         </PathContextProvider>
-      </div>
+      </Box>
     );
   }
 
   return (
-    <div ref={ref}>
-      <FormValueContentFromPreviewProps
-        // autoFocus
-        forceValidation={forceValidation}
-        slugField={slugField}
-        {...props}
-      />
-    </div>
+    <Box height="100%" ref={ref}>
+      <ScrollView>
+        <AppShellContainer padding={{ mobile: 'regular', tablet: 'xlarge' }}>
+          <FormValueContentFromPreviewProps
+            // autoFocus
+            forceValidation={forceValidation}
+            slugField={slugField}
+            {...props}
+          />
+        </AppShellContainer>
+      </ScrollView>
+    </Box>
   );
 }

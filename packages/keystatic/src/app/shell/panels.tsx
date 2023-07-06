@@ -152,6 +152,32 @@ export const MainPanelLayout = ({
   );
 };
 
+export const ContentPanelLayout = ({
+  children,
+}: {
+  children: [ReactElement, ReactElement];
+}) => {
+  const [main, aside] = children;
+
+  return (
+    <PanelGroup
+      disablePointerEventsDuringResize
+      id="content"
+      autoSaveId="content"
+      direction="horizontal"
+      className={css({ flex: 1 })}
+    >
+      <Panel minSize={25} maxSize={75} defaultSize={67}>
+        {main}
+      </Panel>
+      <ResizeHandle />
+      <Panel minSize={25} maxSize={75} defaultSize={33}>
+        {aside}
+      </Panel>
+    </PanelGroup>
+  );
+};
+
 // Utils
 // -----------------------------------------------------------------------------
 
@@ -183,7 +209,7 @@ function ResizeHandle(props: Omit<PanelResizeHandleProps, 'className'>) {
     <PanelResizeHandle
       {...props}
       className={css({
-        borderInlineEnd: `1px solid ${tokenSchema.color.border.muted}`,
+        borderInlineEnd: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
         boxSizing: 'border-box',
         outline: 0,
         position: 'relative',
@@ -206,7 +232,8 @@ function ResizeHandle(props: Omit<PanelResizeHandleProps, 'className'>) {
           backgroundColor: tokenSchema.color.border.emphasis,
           content: '""',
           insetBlock: 0,
-          insetInline: `calc(${tokenSchema.size.space.xsmall} / -2)`,
+          insetInline: `50%`,
+          width: tokenSchema.size.space.xsmall,
           opacity: 0,
           position: 'absolute',
           transition: transition('opacity'),

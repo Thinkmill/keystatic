@@ -46,7 +46,7 @@ type CollectionPageProps = {
 
 export function CollectionPage(props: CollectionPageProps) {
   const { collection, config } = props;
-  const containerWidth = 'medium'; // TODO: use a "large" when we have more columns
+  const containerWidth = 'none'; // TODO: use a "large" when we have more columns
   const collectionConfig = config.collections?.[collection];
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const branchInfo = useBranchInfo();
@@ -240,7 +240,7 @@ function CollectionTable(
           onSortChange={setSortDescriptor}
           sortDescriptor={sortDescriptor}
           overflowMode="truncate"
-          // prominence="low"
+          prominence="low"
           onRowAction={key => {
             router.push(
               `${props.basePath}/collection/${encodeURIComponent(

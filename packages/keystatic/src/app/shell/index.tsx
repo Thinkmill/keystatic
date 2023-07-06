@@ -12,7 +12,6 @@ import { Box, BoxProps, Flex } from '@keystar/ui/layout';
 import {
   VoussoirTheme,
   breakpointQueries,
-  css,
   useMediaQuery,
 } from '@keystar/ui/style';
 import { Heading, Text } from '@keystar/ui/typography';
@@ -31,6 +30,7 @@ import {
 import { SidebarDialog, SidebarPanel, SidebarProvider } from './sidebar';
 import { TopBar } from './topbar';
 import { MainPanelLayout } from './panels';
+import { ScrollView } from './primitives';
 
 export const AppShell = (props: {
   config: Config;
@@ -143,15 +143,7 @@ export const AppShellBody = ({
   isScrollable,
 }: PropsWithChildren<{ isScrollable?: boolean }>) => {
   return (
-    <div
-      data-scrollable={isScrollable || undefined}
-      className={css({
-        '&[data-scrollable]': {
-          overflowY: 'auto',
-          WebkitOverflowScrolling: 'touch',
-        },
-      })}
-    >
+    <ScrollView isDisabled={!isScrollable}>
       <AppShellContainer
         // padding on the container so descendants can use sticky positioning
         // with simple relative offsets
@@ -159,12 +151,12 @@ export const AppShellBody = ({
       >
         {children}
       </AppShellContainer>
-    </div>
+    </ScrollView>
   );
 };
 
 type AppShellContextValue = {
-  containerWidth: keyof VoussoirTheme['size']['container'];
+  containerWidth: keyof VoussoirTheme['size']['container'] | 'none';
 };
 const AppShellContext = createContext<AppShellContextValue>({
   containerWidth: 'medium',
@@ -193,9 +185,16 @@ export const AppShellRoot = ({
 
 export const AppShellContainer = (props: BoxProps) => {
   const { containerWidth } = useContext(AppShellContext);
+  const maxWidth =
+    containerWidth === 'none'
+      ? undefined
+      : (`container.${containerWidth}` as const);
+
   return (
     <Box
-      maxWidth={`container.${containerWidth}`}
+      minHeight={0}
+      minWidth={0}
+      maxWidth={maxWidth}
       marginX="auto"
       paddingX={{ mobile: 'regular', tablet: 'xlarge' }}
       {...props}

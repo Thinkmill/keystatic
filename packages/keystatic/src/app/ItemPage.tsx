@@ -19,7 +19,6 @@ import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
 import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { Box, Flex } from '@keystar/ui/layout';
-import { ActionMenu, Section } from '@keystar/ui/menu';
 import { Notice } from '@keystar/ui/notice';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { Content } from '@keystar/ui/slots';
@@ -60,6 +59,8 @@ import { useSlugsInCollection } from './useSlugsInCollection';
 import { SlugFieldInfo } from '../form/fields/text/ui';
 import { useDeleteItem, useUpsertItem } from './updating';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
+import { ActionGroup } from '@keystar/ui/action-group';
+import { breakpointQueries, useMediaQuery } from '@keystar/ui/style';
 
 type ItemPageProps = {
   collection: string;
@@ -83,9 +84,7 @@ function ItemPage(props: ItemPageProps) {
     localTreeKey,
     currentTree,
   } = props;
-  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
-  const [deleteAlertIsOpen, setDeleteAlertOpen] = useState(false);
   const [forceValidation, setForceValidation] = useState(false);
   const collectionConfig = config.collections![collection]!;
   const schema = useMemo(
@@ -148,6 +147,31 @@ function ItemPage(props: ItemPageProps) {
     currentTree,
   });
 
+  const onReset = () => {
+    setState({ state: initialState, localTreeKey });
+  };
+  const onView = () => {
+    assert(isGitHubConfig(config));
+    let filePath =
+      formatInfo.dataLocation === 'index'
+        ? `/tree/${branchInfo.currentBranch}/${currentBasePath}`
+        : `/blob/${
+            branchInfo.currentBranch
+          }/${currentBasePath}${getDataFileExtension(formatInfo)}`;
+    window.open(
+      `${getRepoUrl(branchInfo)}${filePath}`,
+      '_blank',
+      'noopener,noreferrer'
+    );
+  };
+  const onDelete = async () => {
+    if (await deleteItem()) {
+      router.push(
+        `${props.basePath}/collection/${encodeURIComponent(collection)}`
+      );
+    }
+  };
+
   const onUpdate = async () => {
     if (!clientSideValidateProp(schema, state, props.slugInfo)) {
       setForceValidation(true);
@@ -165,141 +189,19 @@ function ItemPage(props: ItemPageProps) {
   };
   const formID = 'item-edit-form';
 
-  const menuActions = useMemo(() => {
-    type SectionType = { label: string; children: ActionType[] };
-    type ActionType = {
-      icon: ReactElement;
-      isDisabled?: boolean;
-      key: Key;
-      label: string;
-    };
-    let items: SectionType[] = [];
-    let keystaticSection: ActionType[] = [
-      {
-        key: 'reset',
-        label: 'Reset changes', // TODO: l10n
-        isDisabled: hasChanged,
-        icon: historyIcon,
-      },
-      {
-        key: 'delete',
-        label: 'Delete entry', // TODO: l10n
-        icon: trash2Icon,
-      },
-    ];
-    let githubSection: ActionType[] = [];
-    items.push({ label: 'Entry actions', children: keystaticSection });
-
-    if (isGitHubConfig(props.config)) {
-      githubSection.push({
-        key: 'view',
-        label: 'View on GitHub',
-        icon: externalLinkIcon,
-      });
-    }
-    if (githubSection.length > 0) {
-      items.push({ label: 'GitHub actions', children: githubSection });
-    }
-
-    return items;
-  }, [hasChanged, props.config]);
-
   return (
     <>
       <ItemPageShell
         headerActions={
-          <>
-            {updateResult.kind === 'loading' ? (
-              <ProgressCircle
-                aria-label="Updating entry"
-                isIndeterminate
-                size="small"
-                alignSelf="center"
-              />
-            ) : (
-              hasChanged && <Badge tone="pending">Unsaved</Badge>
-            )}
-            <ActionMenu
-              items={menuActions}
-              prominence="low"
-              disabledKeys={!hasChanged ? ['reset'] : []}
-              isDisabled={
-                deleteResult.kind === 'loading' ||
-                updateResult.kind === 'loading'
-              }
-              onAction={key => {
-                switch (key) {
-                  case 'reset':
-                    setState({ state: initialState, localTreeKey });
-                    break;
-                  case 'delete':
-                    setDeleteAlertOpen(true);
-                    break;
-                  case 'view':
-                    assert(isGitHubConfig(config));
-                    let filePath =
-                      formatInfo.dataLocation === 'index'
-                        ? `/tree/${branchInfo.currentBranch}/${currentBasePath}`
-                        : `/blob/${
-                            branchInfo.currentBranch
-                          }/${currentBasePath}${getDataFileExtension(
-                            formatInfo
-                          )}`;
-                    window.open(
-                      `${getRepoUrl(branchInfo)}${filePath}`,
-                      '_blank',
-                      'noopener,noreferrer'
-                    );
-                    break;
-                }
-              }}
-            >
-              {section => (
-                <Section
-                  key={section.label}
-                  items={section.children}
-                  aria-label={section.label}
-                >
-                  {item => (
-                    <Item key={item.key} textValue={item.label}>
-                      <Icon src={item.icon} />
-                      <Text>{item.label}</Text>
-                    </Item>
-                  )}
-                </Section>
-              )}
-            </ActionMenu>
-            <Button
-              form={formID}
-              isDisabled={updateResult.kind === 'loading'}
-              prominence="high"
-              type="submit"
-            >
-              {stringFormatter.format('save')}
-            </Button>
-            <DialogContainer onDismiss={() => setDeleteAlertOpen(false)}>
-              {deleteAlertIsOpen && (
-                <AlertDialog
-                  title="Delete entry"
-                  tone="critical"
-                  cancelLabel="Cancel"
-                  primaryActionLabel="Yes, delete"
-                  autoFocusButton="cancel"
-                  onPrimaryAction={async () => {
-                    if (await deleteItem()) {
-                      router.push(
-                        `${props.basePath}/collection/${encodeURIComponent(
-                          collection
-                        )}`
-                      );
-                    }
-                  }}
-                >
-                  Are you sure? This action cannot be undone.
-                </AlertDialog>
-              )}
-            </DialogContainer>
-          </>
+          <HeaderActions
+            config={config}
+            formID={formID}
+            isLoading={updateResult.kind === 'loading'}
+            hasChanged={hasChanged}
+            onDelete={onDelete}
+            onReset={onReset}
+            onView={onView}
+          />
         }
         {...props}
       >
@@ -309,26 +211,28 @@ function ItemPage(props: ItemPageProps) {
         {deleteResult.kind === 'error' && (
           <Notice tone="critical">{deleteResult.error.message}</Notice>
         )}
-        <AppShellBody isScrollable>
-          <Box
-            id={formID}
-            minWidth={0}
-            elementType="form"
-            onSubmit={(event: FormEvent) => {
-              if (event.target !== event.currentTarget) return;
-              event.preventDefault();
-              onUpdate();
-            }}
-          >
-            <FormForEntry
-              previewProps={previewProps}
-              forceValidation={forceValidation}
-              entryLayout={collectionConfig.entryLayout}
-              formatInfo={formatInfo}
-              slugField={props.slugInfo}
-            />
-          </Box>
-        </AppShellBody>
+        {/* <AppShellBody isScrollable> */}
+        <Box
+          id={formID}
+          height="100%"
+          minHeight={0}
+          minWidth={0}
+          elementType="form"
+          onSubmit={(event: FormEvent) => {
+            if (event.target !== event.currentTarget) return;
+            event.preventDefault();
+            onUpdate();
+          }}
+        >
+          <FormForEntry
+            previewProps={previewProps}
+            forceValidation={forceValidation}
+            entryLayout={collectionConfig.entryLayout}
+            formatInfo={formatInfo}
+            slugField={props.slugInfo}
+          />
+        </Box>
+        {/* </AppShellBody> */}
         <DialogContainer
           // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since
           // this doesn't open on click but after doing a network request and it failing and manually wiring about a popover and modal would be a pain
@@ -407,6 +311,138 @@ function ItemPage(props: ItemPageProps) {
             )}
         </DialogContainer>
       </ItemPageShell>
+    </>
+  );
+}
+
+function HeaderActions(props: {
+  config: Config;
+  formID: string;
+  hasChanged: boolean;
+  isLoading: boolean;
+  onDelete: () => void;
+  onReset: () => void;
+  onView: () => void;
+}) {
+  let { config, formID, hasChanged, isLoading, onDelete, onReset, onView } =
+    props;
+  const isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
+  const isGithub = isGitHubConfig(config);
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  const [deleteAlertIsOpen, setDeleteAlertOpen] = useState(false);
+
+  const menuActions = useMemo(() => {
+    type ActionType = {
+      icon: ReactElement;
+      isDisabled?: boolean;
+      key: Key;
+      label: string;
+    };
+    let items: ActionType[] = [
+      {
+        key: 'reset',
+        label: 'Reset changes', // TODO: l10n
+        icon: historyIcon,
+      },
+      {
+        key: 'delete',
+        label: 'Delete entry', // TODO: l10n
+        icon: trash2Icon,
+      },
+    ];
+    if (isGithub) {
+      items.push({
+        key: 'view',
+        label: 'View on GitHub',
+        icon: externalLinkIcon,
+      });
+    }
+
+    return items;
+  }, [isGithub]);
+
+  const indicatorElement = (() => {
+    if (isLoading) {
+      return (
+        <ProgressCircle
+          aria-label="Saving changes"
+          isIndeterminate
+          size="small"
+          alignSelf="center"
+        />
+      );
+    }
+
+    if (hasChanged) {
+      return isBelowTablet ? (
+        <Box
+          backgroundColor="pendingEmphasis"
+          height="icon.small"
+          width="icon.small"
+          borderRadius="full"
+        />
+      ) : (
+        <Badge tone="pending">Unsaved</Badge>
+      );
+    }
+
+    return null;
+  })();
+
+  return (
+    <>
+      {indicatorElement}
+      <ActionGroup
+        buttonLabelBehavior="hide"
+        overflowMode="collapse"
+        prominence="low"
+        density="compact"
+        maxWidth={isBelowTablet ? 'element.regular' : undefined} // force switch to action menu on small devices
+        items={menuActions}
+        disabledKeys={hasChanged ? [] : ['reset']}
+        onAction={key => {
+          switch (key) {
+            case 'reset':
+              onReset();
+              break;
+            case 'delete':
+              setDeleteAlertOpen(true);
+              break;
+            case 'view':
+              onView();
+              break;
+          }
+        }}
+      >
+        {item => (
+          <Item key={item.key} textValue={item.label}>
+            <Icon src={item.icon} />
+            <Text>{item.label}</Text>
+          </Item>
+        )}
+      </ActionGroup>
+      <Button
+        form={formID}
+        isDisabled={isLoading}
+        prominence="high"
+        type="submit"
+      >
+        {stringFormatter.format('save')}
+      </Button>
+      <DialogContainer onDismiss={() => setDeleteAlertOpen(false)}>
+        {deleteAlertIsOpen && (
+          <AlertDialog
+            title="Delete entry"
+            tone="critical"
+            cancelLabel="Cancel"
+            primaryActionLabel="Yes, delete"
+            autoFocusButton="cancel"
+            onPrimaryAction={onDelete}
+          >
+            Are you sure? This action cannot be undone.
+          </AlertDialog>
+        )}
+      </DialogContainer>
     </>
   );
 }
