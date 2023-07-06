@@ -34,13 +34,7 @@ export function useSidebar() {
 }
 
 export function SidebarProvider(props: { children: ReactNode }) {
-  // const router = useRouter();
-  // const isMobile = useIsMobileDevice();
   const state = useOverlayTriggerState({});
-
-  // useEffect(() => {
-  //   if (isMobile) state.close();
-  // }, [isMobile, router.href]);
 
   return (
     <SidebarContext.Provider value={state}>
