@@ -1,12 +1,12 @@
 import { PropsWithChildren } from 'react';
 
-import { bookIcon } from '@voussoir/icon/icons/bookIcon';
-import { codeIcon } from '@voussoir/icon/icons/codeIcon';
-import { Icon } from '@voussoir/icon';
-import { AspectRatio, Box, Flex } from '@voussoir/layout';
-import { NavList, NavGroup, NavItem } from '@voussoir/nav-list';
-import { tokenSchema } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
+import { bookIcon } from '@keystar/ui/icon/icons/bookIcon';
+import { codeIcon } from '@keystar/ui/icon/icons/codeIcon';
+import { Icon } from '@keystar/ui/icon';
+import { AspectRatio, Box, Flex } from '@keystar/ui/layout';
+import { NavList, NavGroup, NavItem } from '@keystar/ui/nav-list';
+import { tokenSchema } from '@keystar/ui/style';
+import { Text } from '@keystar/ui/typography';
 
 function isCurrent(storyId: string) {
   const searchParams = new URLSearchParams(window.location.search);

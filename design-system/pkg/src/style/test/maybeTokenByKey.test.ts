@@ -1,0 +1,44 @@
+import { maybeTokenByKey } from '@keystar/ui/style';
+
+describe('style/maybeTokenByKey', function () {
+  describe('number', function () {
+    it('100', function () {
+      let value = maybeTokenByKey('', 100);
+      expect(value).toBe(100);
+    });
+  });
+
+  describe('units', function () {
+    it('%', function () {
+      let value = maybeTokenByKey('', '100%');
+      expect(value).toBe('100%');
+    });
+    it('vh', function () {
+      let value = maybeTokenByKey('', '100vh');
+      expect(value).toBe('100vh');
+    });
+  });
+
+  describe('variables', function () {
+    it('regular space', function () {
+      let value = maybeTokenByKey('size.space', 'regular');
+      expect(value).toBe('var(--ksv-size-space-regular)');
+    });
+    it('neutral border', function () {
+      let value = maybeTokenByKey('color.border', 'neutral');
+      expect(value).toBe('var(--ksv-color-border-neutral)');
+    });
+    it('medium font weight', function () {
+      let value = maybeTokenByKey('typography.fontWeight', 'bold');
+      expect(value).toBe('var(--ksv-typography-font-weight-bold)');
+    });
+    it('size.container.small', function () {
+      let value = maybeTokenByKey('', 'size.container.small');
+      expect(value).toBe('var(--ksv-size-container-small)');
+    });
+    it('color.alias.foregroundDisabled', function () {
+      let value = maybeTokenByKey('', 'color.alias.foregroundDisabled');
+      expect(value).toBe('var(--ksv-color-alias-foreground-disabled)');
+    });
+  });
+});

@@ -1,14 +1,14 @@
-import { ActionButton, Button, ButtonGroup } from '@voussoir/button';
-import { Dialog, DialogContainer } from '@voussoir/dialog';
-import { ItemDropTarget, useDragAndDrop } from '@voussoir/drag-and-drop';
-import { FieldLabel, FieldMessage } from '@voussoir/field';
-import { Icon } from '@voussoir/icon';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Flex } from '@voussoir/layout';
-import { Item, ListView } from '@voussoir/list-view';
-import { Content } from '@voussoir/slots';
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
-import { Heading, Text } from '@voussoir/typography';
+import { ActionButton, Button, ButtonGroup } from '@keystar/ui/button';
+import { Dialog, DialogContainer } from '@keystar/ui/dialog';
+import { ItemDropTarget, useDragAndDrop } from '@keystar/ui/drag-and-drop';
+import { FieldLabel, FieldMessage } from '@keystar/ui/field';
+import { Icon } from '@keystar/ui/icon';
+import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
+import { Flex } from '@keystar/ui/layout';
+import { Item, ListView } from '@keystar/ui/list-view';
+import { Content } from '@keystar/ui/slots';
+import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
+import { Heading, Text } from '@keystar/ui/typography';
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 
 import {

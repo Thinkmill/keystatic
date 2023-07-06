@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-listbox.cjs.js",
+  "module": "dist/keystar-ui-listbox.esm.js"
+}

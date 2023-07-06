@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-monitorPauseIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-monitorPauseIcon.esm.js"
+}

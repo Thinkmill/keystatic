@@ -313,6 +313,16 @@ export default config({
         }),
         file: fields.file({ label: 'File', description }),
         image: fields.image({ label: 'Image', description }),
+        object: fields.object(
+          {
+            a: fields.text({ label: 'A' }),
+            b: fields.text({ label: 'B' }),
+          },
+          {
+            label: 'Object',
+            description,
+          }
+        ),
         pathReference: fields.pathReference({
           label: 'Path Reference',
           description,

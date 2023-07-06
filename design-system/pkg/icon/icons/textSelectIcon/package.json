@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-textSelectIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-textSelectIcon.esm.js"
+}

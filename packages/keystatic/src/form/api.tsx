@@ -210,12 +210,17 @@ export type ArrayField<ElementField extends ComponentSchema> = {
   Input?(props: unknown): ReactElement | null;
 };
 
+export type ObjectFieldOptions = {
+  label?: string;
+  description?: string;
+};
+
 export interface ObjectField<
   Fields extends Record<string, ComponentSchema> = Record<
     string,
     ComponentSchema
   >
-> {
+> extends ObjectFieldOptions {
   kind: 'object';
   fields: Fields;
   Input?(props: unknown): ReactElement | null;

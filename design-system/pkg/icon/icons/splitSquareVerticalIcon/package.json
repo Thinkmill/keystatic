@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-splitSquareVerticalIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-splitSquareVerticalIcon.esm.js"
+}

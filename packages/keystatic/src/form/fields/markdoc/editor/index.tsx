@@ -1,9 +1,9 @@
 import { EditorView } from 'prosemirror-view';
 import { EditorState } from 'prosemirror-state';
 import { Ref, forwardRef } from 'react';
-import { Box } from '@voussoir/layout';
+import { Box } from '@keystar/ui/layout';
 import { css } from '@emotion/css';
-import { tokenSchema } from '@voussoir/style';
+import { tokenSchema } from '@keystar/ui/style';
 import { Toolbar } from './Toolbar';
 import { prosemirrorStyles } from './utils';
 import { EditorPopoverDecoration } from './popovers';

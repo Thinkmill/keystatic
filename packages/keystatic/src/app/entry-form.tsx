@@ -1,4 +1,4 @@
-import { Box, Grid } from '@voussoir/layout';
+import { Box, Grid } from '@keystar/ui/layout';
 
 import { FormatInfo } from './path-utils';
 import { ReadonlyPropPath } from '../form/fields/document/DocumentEditor/component-blocks/utils';
@@ -55,7 +55,11 @@ export function FormForEntry({
     return (
       <PathContextProvider value={emptyArray}>
         <SlugFieldProvider value={slugField}>
-          <Grid columns={{ desktop: '2fr 1fr' }} gap="xlarge">
+          <Grid
+            alignItems="start"
+            columns={{ desktop: '2fr 1fr' }}
+            gap="xlarge"
+          >
             <Grid gap="xlarge" order={{ desktop: 2 }}>
               {Object.entries(props.fields).map(([key, propVal]) =>
                 key === contentField.key ? null : (

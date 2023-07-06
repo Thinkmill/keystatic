@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-vibrateIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-vibrateIcon.esm.js"
+}
