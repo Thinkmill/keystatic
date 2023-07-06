@@ -48,11 +48,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans`}>{children}</body>
+      <body className={`${inter.variable} font-sans`}>
+        {children}
+        <Suspense fallback={null}>
+          <NavigationEvents />
+        </Suspense>
+      </body>
       <Analytics />
-      <Suspense fallback={null}>
-        <NavigationEvents />
-      </Suspense>
     </html>
   );
 }

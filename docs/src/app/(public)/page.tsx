@@ -10,7 +10,7 @@ import { Main } from '../../components/main';
 export default function Homepage() {
   return (
     <>
-      <Main>
+      <Main isFocusable={false}>
         <Hero />
         <Features />
         <Intro />

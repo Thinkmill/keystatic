@@ -10,7 +10,7 @@ export function NavigationEvents() {
   useEffect(() => {
     // Always focus `<main />` on page navigation for accessibility
     const mainEl = document.querySelector('main');
-    mainEl?.focus();
+    mainEl?.focus({ preventScroll: true });
   }, [pathname, searchParams]);
 
   return null;
