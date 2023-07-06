@@ -48,7 +48,7 @@ const Content = (props: ElementProps) => {
     <Box
       flex
       marginX="auto"
-      marginTop={{ mobile: HEADER_HEIGHT, tablet: 0 }}
+      marginTop={{ mobile: HEADER_HEIGHT, tablet: 'large' }}
       padding={{ mobile: 'large', tablet: 'xlarge' }}
       UNSAFE_style={{ maxWidth: 840, minWidth: 0 }}
     >
@@ -75,7 +75,6 @@ const Aside = () => {
     <Box
       elementType="aside"
       isHidden={{ below: 'desktop' }}
-      // backgroundColor="inset"
       height="100%"
       insetEnd={0}
       overflow="hidden auto"
@@ -83,7 +82,9 @@ const Aside = () => {
       position="fixed"
       UNSAFE_style={{ width: ASIDE_WIDTH }}
     >
-      <TableOfContents />
+      <Box marginTop="large">
+        <TableOfContents />
+      </Box>
     </Box>
   );
 };

@@ -7,7 +7,7 @@ category: Navigation
 
 ## Provider
 
-The `linkComponent` prop allows you to customise the rendering of Voussoir links
+The `linkComponent` prop allows you to customise the rendering of Keystar UI links
 (e.g. [TextLink](/package/link/text-link), [NavItem](/package/nav-list)) across
 an entire application. This is useful for conditionally rendering React Router
 links, handling analytics, etc.

@@ -1,6 +1,6 @@
 ---
 title: Next.js
-description: Utilities for integrating Voussoir with Next.js's `app` directory.
+description: Utilities for integrating Keystar UI with Next.js's `app` directory.
 category: Introduction
 ---
 

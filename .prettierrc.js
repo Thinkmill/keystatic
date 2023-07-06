@@ -11,7 +11,7 @@ module.exports = {
   //   '^react$',
   //   '^[a-zA-Z](.*)',
   //   '^@(.*)',
-  //   '^@(?!voussoir)(.*)$',
+  //   '^@(?!keystar)(.*)$',
   //   '^[./]',
   // ],
   // importOrderSeparation: true,
