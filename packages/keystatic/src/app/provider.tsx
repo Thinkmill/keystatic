@@ -30,18 +30,13 @@ import {
 } from './utils';
 import { Config } from '../config';
 import { ThemeProvider, useTheme } from './shell/theme';
+import { parseRepoConfig } from './repo-config';
 
 export function createUrqlClient(config: Config): Client {
-  const repo = {
-    owner:
-      config.storage.kind === 'github'
-        ? config.storage.repo.owner
-        : 'repo-owner',
-    name:
-      config.storage.kind === 'github'
-        ? config.storage.repo.owner
-        : 'repo-name',
-  };
+  const repo =
+    config.storage.kind === 'github'
+      ? parseRepoConfig(config.storage.repo)
+      : { owner: 'repo-owner', name: 'repo-name' };
   return createClient({
     url:
       config.storage.kind === 'github'
