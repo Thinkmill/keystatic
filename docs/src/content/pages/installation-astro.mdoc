@@ -37,8 +37,8 @@ Keystatic needs a config file. This is where you can connect a project with a sp
 Let's create a file called `keystatic.config.tsx` (or `.jsx` if not using TypeScript) in the root of the project:
 
 ```jsx
-// keystatic.config.tsx
-import { config, fields, collection } from '@keystatic/core'
+// keystatic.config.ts
+import { config, fields, collection } from '@keystatic/core';
 
 export default config({
   storage: {
@@ -62,8 +62,7 @@ export default config({
       },
     }),
   },
-})
-
+});
 ```
 
 We export a config object wrapped in the `config` function imported from `@keystatic/core`.
