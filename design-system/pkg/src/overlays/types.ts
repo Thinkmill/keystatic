@@ -8,7 +8,8 @@ import { BaseStyleProps } from '@keystar/ui/style';
 export type BlanketProps = {
   isOpen?: boolean;
   isTransparent?: boolean;
-} & HTMLAttributes<HTMLDivElement>;
+} & BaseStyleProps &
+  HTMLAttributes<HTMLDivElement>;
 
 // Popover
 // -----------------------------------------------------------------------------
