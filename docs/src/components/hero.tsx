@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Button from './button';
 import { CopyCommandButton } from './copy-command-button';
+import { H1_ID } from '../constants';
 
 export default function Hero() {
   return (
@@ -9,7 +10,7 @@ export default function Hero() {
         <div className="w-full max-w-2xl flex flex-col items-center gap-8 text-center">
           <h1
             className="font-extrabold text-3xl sm:text-4xl md:text-5xl"
-            id="heading-1-overview"
+            id={H1_ID}
             aria-label="Content management for your code base"
           >
             Content Management

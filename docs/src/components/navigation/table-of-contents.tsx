@@ -2,6 +2,7 @@
 
 import slugify from '@sindresorhus/slugify';
 import { useEffect, useRef, useState } from 'react';
+import { H1_ID } from '../../constants';
 
 type Heading = {
   level: number;
@@ -55,7 +56,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
 
 function useHeadingObserver(slugs: string[]) {
   const observer = useRef<IntersectionObserver>();
-  const [activeHeading, setActiveHeading] = useState('heading-1-overview');
+  const [activeHeading, setActiveHeading] = useState(H1_ID);
   const [visibleHeadings, setVisibleHeadings] = useState<string[]>([]);
 
   const selectors = slugs.join(', ');

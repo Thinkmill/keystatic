@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Button from './button';
+import { H1_ID } from '../constants';
 
 export function PageNotFound() {
   const path = usePathname();
@@ -10,7 +11,7 @@ export function PageNotFound() {
     <div className="flex flex-col gap-8">
       <h1
         className="font-extrabold text-3xl sm:text-4xl md:text-5xl"
-        id="heading-1-overview"
+        id={H1_ID}
       >
         404: Page not found <span aria-hidden="true">🕵️</span>
       </h1>

@@ -4,6 +4,7 @@ import DocumentRenderer from '../../../../components/document-renderer';
 import keystaticConfig from '../../../../../keystatic.config';
 import { notFound } from 'next/navigation';
 import { Metadata, ResolvingMetadata } from 'next';
+import { H1_ID } from '../../../../constants';
 
 const reader = createReader(process.cwd(), keystaticConfig);
 
@@ -28,7 +29,7 @@ export default async function Docs({ params }: DocsProps) {
     }))
     .filter(heading => heading.text);
 
-  // Manually add the persistent #heading-1-overview heading, to send to TOCs
+  // Manually add the persistent #${H1_ID} heading, to send to TOCs
   const overviewHeading = {
     level: 1,
     text: 'Overview',
@@ -39,7 +40,7 @@ export default async function Docs({ params }: DocsProps) {
     <div className="grid gap-6 grid-cols-[auto] md:grid-cols-[auto,12rem]">
       <div>
         <h1
-          id="heading-1-overview"
+          id={H1_ID}
           className="text-3xl font-extrabold mb-8 scroll-mt-[7rem]"
         >
           {page.title}

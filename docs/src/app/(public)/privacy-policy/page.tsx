@@ -1,5 +1,6 @@
 import PrivacyPolicy from '../../../components/privacy-policy';
 import Footer from '../../../components/footer';
+import { Main } from '../../../components/main';
 
 export const metadata = {
   title: 'Privacy policy',
@@ -8,13 +9,9 @@ export const metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <>
-      <main
-        tabIndex={-1}
-        aria-labelledby="heading-1-overview"
-        className="outline-0"
-      >
+      <Main>
         <PrivacyPolicy />
-      </main>
+      </Main>
       <Footer />
     </>
   );
