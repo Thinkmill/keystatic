@@ -3,6 +3,7 @@ import {
   VoussoirProvider,
 } from '@keystar/ui/core';
 import { makeLinkComponent } from '@keystar/ui/link';
+import { injectGlobal } from '@keystar/ui/style';
 import { Toaster } from '@keystar/ui/toast';
 import {
   AnchorHTMLAttributes,
@@ -30,6 +31,9 @@ import {
 } from './utils';
 import { Config } from '../config';
 import { ThemeProvider, useTheme } from './shell/theme';
+
+// NOTE: scroll behaviour is handled by shell components
+injectGlobal({ body: { overflow: 'hidden' } });
 
 export function createUrqlClient(config: Config): Client {
   const repo = {
@@ -195,6 +199,7 @@ export default function Provider({
   ) => ReactNode;
   config: Config;
 }) {
+  const themeContext = useTheme();
   const UniversalLink = useMemo(
     () =>
       makeLinkComponent(
@@ -227,7 +232,7 @@ export default function Provider({
       ),
     [Link]
   );
-  let themeContext = useTheme();
+
   return (
     <ThemeProvider value={themeContext}>
       <VoussoirProvider

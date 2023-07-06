@@ -147,6 +147,7 @@
     "prosemirror-state": "^1.4.2",
     "prosemirror-transform": "^1.7.1",
     "prosemirror-view": "^1.30.2",
+    "react-resizable-panels": "^0.0.53",
     "scroll-into-view-if-needed": "^3.0.3",
     "slate": "^0.91.4",
     "slate-history": "^0.86.0",

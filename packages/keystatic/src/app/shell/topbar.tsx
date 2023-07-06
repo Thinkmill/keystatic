@@ -264,11 +264,13 @@ function UserMenu() {
       <ActionButton
         aria-label="User menu"
         prominence="low"
-        height="element.medium"
-        width="element.medium"
         UNSAFE_className={css({ borderRadius: '50%', padding: 0 })}
       >
-        <Avatar src={user.avatarUrl} name={user.name ?? undefined} />
+        <Avatar
+          src={user.avatarUrl}
+          name={user.name ?? undefined}
+          size="small"
+        />
       </ActionButton>
       <>
         <Flex

@@ -67,7 +67,7 @@ export function CollectionPage(props: CollectionPageProps) {
   return (
     <AppShellRoot containerWidth={containerWidth}>
       <AppShellHeader>
-        <Breadcrumbs size="medium" flex minWidth={0}>
+        <Breadcrumbs flex minWidth={0}>
           <Item key="collection">{collectionConfig.label}</Item>
         </Breadcrumbs>
 
@@ -222,7 +222,7 @@ function CollectionTable(
   }, [filteredItems, sortDescriptor]);
 
   return (
-    <AppShellBody>
+    <AppShellBody isScrollable>
       <Flex direction="column" gap="large">
         <Flex gap="large" alignItems="start" justifyContent="space-between">
           <SearchField
@@ -240,6 +240,7 @@ function CollectionTable(
           onSortChange={setSortDescriptor}
           sortDescriptor={sortDescriptor}
           overflowMode="truncate"
+          // prominence="low"
           onRowAction={key => {
             router.push(
               `${props.basePath}/collection/${encodeURIComponent(

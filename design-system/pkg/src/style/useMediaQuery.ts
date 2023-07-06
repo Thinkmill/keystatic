@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
  * @example
  * let isBelowTablet = useMediaQuery('(max-width: 768px)');
  */
-export function useMediaQuery(query: string) {
+export function useMediaQuery(query: string): boolean {
   query = normalizeQuery(query);
 
   let supportsMatchMedia =

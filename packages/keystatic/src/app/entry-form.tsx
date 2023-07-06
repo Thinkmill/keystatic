@@ -1,5 +1,7 @@
 import { Grid } from '@keystar/ui/layout';
-import { breakpointQueries, useMediaQuery } from '@keystar/ui/style';
+import { breakpoints } from '@keystar/ui/style';
+import { useResizeObserver } from '@react-aria/utils';
+import { useRef, useState } from 'react';
 
 import { FormatInfo } from './path-utils';
 import { ReadonlyPropPath } from '../form/fields/document/DocumentEditor/component-blocks/utils';
@@ -46,48 +48,64 @@ export function FormForEntry({
   forceValidation: boolean | undefined;
   slugField: SlugFieldInfo | undefined;
 }) {
-  const isAboveTablet = useMediaQuery(breakpointQueries.above.tablet);
+  const [isAboveTablet, setIsAboveTablet] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
   const props = _previewProps as GenericPreviewProps<
     ObjectField<Record<string, NonChildFieldComponentSchema>>,
     unknown
   >;
 
+  useResizeObserver({
+    ref,
+    onResize: () => {
+      let element = ref.current;
+      if (element) {
+        const width = element.getBoundingClientRect().width;
+        setIsAboveTablet(width >= breakpoints.tablet);
+      }
+    },
+  });
+
   if (entryLayout === 'content' && formatInfo.contentField && isAboveTablet) {
     const { contentField } = formatInfo;
     return (
-      <PathContextProvider value={emptyArray}>
-        <SlugFieldProvider value={slugField}>
-          <Grid columns="2fr 1fr" gap="xlarge" alignItems="start">
-            <AddToPathProvider part={contentField.key}>
-              <InnerFormValueContentFromPreviewProps
-                forceValidation={forceValidation}
-                {...props.fields[contentField.key]}
-              />
-            </AddToPathProvider>
-            <Grid gap="xlarge">
-              {Object.entries(props.fields).map(([key, propVal]) =>
-                key === contentField.key ? null : (
-                  <AddToPathProvider key={key} part={key}>
-                    <InnerFormValueContentFromPreviewProps
-                      forceValidation={forceValidation}
-                      {...propVal}
-                    />
-                  </AddToPathProvider>
-                )
-              )}
+      <div ref={ref}>
+        <PathContextProvider value={emptyArray}>
+          <SlugFieldProvider value={slugField}>
+            <Grid columns="2fr 1fr" gap="xlarge" alignItems="start">
+              <AddToPathProvider part={contentField.key}>
+                <InnerFormValueContentFromPreviewProps
+                  forceValidation={forceValidation}
+                  {...props.fields[contentField.key]}
+                />
+              </AddToPathProvider>
+              <Grid gap="xlarge">
+                {Object.entries(props.fields).map(([key, propVal]) =>
+                  key === contentField.key ? null : (
+                    <AddToPathProvider key={key} part={key}>
+                      <InnerFormValueContentFromPreviewProps
+                        forceValidation={forceValidation}
+                        {...propVal}
+                      />
+                    </AddToPathProvider>
+                  )
+                )}
+              </Grid>
             </Grid>
-          </Grid>
-        </SlugFieldProvider>
-      </PathContextProvider>
+          </SlugFieldProvider>
+        </PathContextProvider>
+      </div>
     );
   }
 
   return (
-    <FormValueContentFromPreviewProps
-      autoFocus
-      forceValidation={forceValidation}
-      slugField={slugField}
-      {...props}
-    />
+    <div ref={ref}>
+      <FormValueContentFromPreviewProps
+        // autoFocus
+        forceValidation={forceValidation}
+        slugField={slugField}
+        {...props}
+      />
+    </div>
   );
 }

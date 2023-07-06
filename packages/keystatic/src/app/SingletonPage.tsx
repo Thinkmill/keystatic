@@ -165,7 +165,7 @@ function SingletonPage({
           </Button>
         </ButtonGroup>
       </AppShellHeader>
-      <AppShellBody>
+      <AppShellBody isScrollable>
         <form
           id={formID}
           onSubmit={(event: FormEvent) => {

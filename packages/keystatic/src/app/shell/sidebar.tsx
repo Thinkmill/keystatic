@@ -1,4 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { VisuallyHidden } from '@react-aria/visually-hidden';
 import {
   createContext,
   ReactNode,
@@ -8,22 +9,24 @@ import {
 } from 'react';
 
 import { Badge } from '@keystar/ui/badge';
-import { Box, Flex } from '@keystar/ui/layout';
+import { Flex } from '@keystar/ui/layout';
 import { NavList, NavItem, NavGroup } from '@keystar/ui/nav-list';
-import { css, breakpointQueries, tokenSchema } from '@keystar/ui/style';
+import {
+  css,
+  breakpointQueries,
+  tokenSchema,
+  useIsMobileDevice,
+} from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
 import { Config } from '../../config';
 
 import l10nMessages from '../l10n/index.json';
 import { useRouter } from '../router';
-import { isCloudConfig, isGitHubConfig, pluralize } from '../utils';
+import { pluralize } from '../utils';
 
 import { useChanged } from './data';
 import { SIDE_PANEL_ID } from './constants';
-import { VisuallyHidden } from '@react-aria/visually-hidden';
-import { ZapLogo } from './common';
-import { useConfig } from './context';
 
 const SidebarContext = createContext<{
   sidebarIsOpen: boolean;
@@ -41,10 +44,11 @@ export function useSidebar() {
 export function SidebarProvider(props: { children: ReactNode }) {
   const [sidebarIsOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
+  const isMobile = useIsMobileDevice();
 
   useEffect(() => {
-    setSidebarOpen(false);
-  }, [router.href]);
+    if (isMobile) setSidebarOpen(false);
+  }, [isMobile, router.href]);
 
   const sidebarContext = { sidebarIsOpen, setSidebarOpen };
 
@@ -64,19 +68,13 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
       id={SIDE_PANEL_ID}
       // styles
       backgroundColor="surface"
-      borderEnd="muted"
       direction="column"
-      insetTop={0}
-      maxHeight="100vh"
-      position="sticky"
-      width="scale.3600"
-      zIndex={100}
+      height="100%"
       UNSAFE_className={[
         css({
           // ensure that there's always enough of gutter for the user to press
           // and exit the sidebar
-          maxWidth: `calc(100% - ${tokenSchema.size.element.medium})`,
-
+          // maxWidth: `calc(100% - ${tokenSchema.size.element.medium})`,
           [breakpointQueries.below.tablet]: {
             border: 0,
             boxShadow: `${tokenSchema.size.shadow.large} ${tokenSchema.color.shadow.regular}`,
@@ -87,7 +85,6 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
             right: '100%',
             transition: 'transform 200ms, visibility 0s 200ms',
             visibility: 'hidden',
-
             '&[data-visible=true]': {
               transform: 'translate(100%)',
               transitionDelay: '0s',
@@ -97,7 +94,7 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
         }),
       ]}
     >
-      {sidebarIsOpen && <SidebarHeader />}
+      {/* {sidebarIsOpen && <SidebarHeader />} */}
 
       <SidebarNav {...props} />
 
@@ -110,33 +107,6 @@ export function Sidebar(props: { config: Config; hrefBase: string }) {
           close sidebar
         </VisuallyHidden>
       )}
-    </Flex>
-  );
-}
-
-function SidebarHeader() {
-  let config = useConfig();
-  let text = 'Keystatic';
-
-  if (isCloudConfig(config)) {
-    text = config.storage.project;
-  }
-  if (isGitHubConfig(config)) {
-    text = config.storage.repo.name;
-  }
-
-  return (
-    <Flex
-      alignItems="center"
-      borderBottom="muted"
-      gap="regular"
-      height="element.large"
-      paddingX="xlarge"
-    >
-      <ZapLogo />
-      <Text color="neutralEmphasis" weight="semibold">
-        {text}
-      </Text>
     </Flex>
   );
 }
@@ -159,7 +129,15 @@ export function SidebarNav(props: { config: Config; hrefBase: string }) {
   const changedData = useChanged();
 
   return (
-    <Box flex overflow="auto" paddingEnd="large" paddingY="large">
+    <div
+      className={css({
+        flex: 1,
+        overflowY: 'auto',
+        paddingBlock: tokenSchema.size.space.large,
+        paddingInlineEnd: tokenSchema.size.space.large,
+        WebkitOverflowScrolling: 'touch',
+      })}
+    >
       <NavList>
         <NavItem
           href={props.hrefBase}
@@ -182,7 +160,9 @@ export function SidebarNav(props: { config: Config; hrefBase: string }) {
                 : 0;
               return (
                 <NavItem key={key} href={href} aria-current={isCurrent(href)}>
-                  <Text>{collection.label}</Text>
+                  <Text truncate title={collection.label}>
+                    {collection.label}
+                  </Text>
                   {!!allChangesCount && (
                     <Badge tone="accent" marginStart="auto">
                       <Text>{allChangesCount}</Text>
@@ -206,7 +186,9 @@ export function SidebarNav(props: { config: Config; hrefBase: string }) {
               const href = `${props.hrefBase}/singleton/${key}`;
               return (
                 <NavItem key={key} href={href} aria-current={isCurrent(href)}>
-                  <Text>{collection.label}</Text>
+                  <Text truncate title={collection.label}>
+                    {collection.label}
+                  </Text>
                   {changedData.singletons.has(key) && (
                     <Badge tone="accent" marginStart="auto">
                       Changed
@@ -218,6 +200,6 @@ export function SidebarNav(props: { config: Config; hrefBase: string }) {
           </NavGroup>
         )}
       </NavList>
-    </Box>
+    </div>
   );
 }

@@ -303,23 +303,23 @@ function ItemPage(props: ItemPageProps) {
         }
         {...props}
       >
-        <Box
-          id={formID}
-          minWidth={0}
-          elementType="form"
-          onSubmit={(event: FormEvent) => {
-            if (event.target !== event.currentTarget) return;
-            event.preventDefault();
-            onUpdate();
-          }}
-        >
-          {updateResult.kind === 'error' && (
-            <Notice tone="critical">{updateResult.error.message}</Notice>
-          )}
-          {deleteResult.kind === 'error' && (
-            <Notice tone="critical">{deleteResult.error.message}</Notice>
-          )}
-          <AppShellBody>
+        {updateResult.kind === 'error' && (
+          <Notice tone="critical">{updateResult.error.message}</Notice>
+        )}
+        {deleteResult.kind === 'error' && (
+          <Notice tone="critical">{deleteResult.error.message}</Notice>
+        )}
+        <AppShellBody isScrollable>
+          <Box
+            id={formID}
+            minWidth={0}
+            elementType="form"
+            onSubmit={(event: FormEvent) => {
+              if (event.target !== event.currentTarget) return;
+              event.preventDefault();
+              onUpdate();
+            }}
+          >
             <FormForEntry
               previewProps={previewProps}
               forceValidation={forceValidation}
@@ -327,85 +327,85 @@ function ItemPage(props: ItemPageProps) {
               formatInfo={formatInfo}
               slugField={props.slugInfo}
             />
-          </AppShellBody>
-          <DialogContainer
-            // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since
-            // this doesn't open on click but after doing a network request and it failing and manually wiring about a popover and modal would be a pain
-            onDismiss={resetUpdateItem}
-          >
-            {updateResult.kind === 'needs-new-branch' && (
-              <CreateBranchDuringUpdateDialog
-                branchOid={baseCommit}
-                onCreate={async newBranch => {
-                  const itemBasePath = `/keystatic/branch/${encodeURIComponent(
-                    newBranch
-                  )}/collection/${encodeURIComponent(collection)}/item/`;
-                  router.push(itemBasePath + encodeURIComponent(itemSlug));
-                  const slug = getSlugFromState(collectionConfig, state);
+          </Box>
+        </AppShellBody>
+        <DialogContainer
+          // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since
+          // this doesn't open on click but after doing a network request and it failing and manually wiring about a popover and modal would be a pain
+          onDismiss={resetUpdateItem}
+        >
+          {updateResult.kind === 'needs-new-branch' && (
+            <CreateBranchDuringUpdateDialog
+              branchOid={baseCommit}
+              onCreate={async newBranch => {
+                const itemBasePath = `/keystatic/branch/${encodeURIComponent(
+                  newBranch
+                )}/collection/${encodeURIComponent(collection)}/item/`;
+                router.push(itemBasePath + encodeURIComponent(itemSlug));
+                const slug = getSlugFromState(collectionConfig, state);
 
-                  const hasUpdated = await update({
-                    branch: newBranch,
-                    sha: baseCommit,
-                  });
+                const hasUpdated = await update({
+                  branch: newBranch,
+                  sha: baseCommit,
+                });
+                if (hasUpdated && slug !== itemSlug) {
+                  router.replace(itemBasePath + encodeURIComponent(slug));
+                }
+              }}
+              reason={updateResult.reason}
+              onDismiss={resetUpdateItem}
+            />
+          )}
+        </DialogContainer>
+        <DialogContainer
+          // ideally this would be a popover on desktop but using a DialogTrigger
+          // wouldn't work since this doesn't open on click but after doing a
+          // network request and it failing and manually wiring about a popover
+          // and modal would be a pain
+          onDismiss={resetUpdateItem}
+        >
+          {updateResult.kind === 'needs-fork' &&
+            isGitHubConfig(props.config) && (
+              <ForkRepoDialog
+                onCreate={async () => {
+                  const slug = getSlugFromState(collectionConfig, state);
+                  const hasUpdated = await update();
                   if (hasUpdated && slug !== itemSlug) {
-                    router.replace(itemBasePath + encodeURIComponent(slug));
-                  }
-                }}
-                reason={updateResult.reason}
-                onDismiss={resetUpdateItem}
-              />
-            )}
-          </DialogContainer>
-          <DialogContainer
-            // ideally this would be a popover on desktop but using a DialogTrigger
-            // wouldn't work since this doesn't open on click but after doing a
-            // network request and it failing and manually wiring about a popover
-            // and modal would be a pain
-            onDismiss={resetUpdateItem}
-          >
-            {updateResult.kind === 'needs-fork' &&
-              isGitHubConfig(props.config) && (
-                <ForkRepoDialog
-                  onCreate={async () => {
-                    const slug = getSlugFromState(collectionConfig, state);
-                    const hasUpdated = await update();
-                    if (hasUpdated && slug !== itemSlug) {
-                      router.replace(
-                        `${props.basePath}/collection/${encodeURIComponent(
-                          collection
-                        )}/item/${encodeURIComponent(slug)}`
-                      );
-                    }
-                  }}
-                  onDismiss={resetUpdateItem}
-                  config={props.config}
-                />
-              )}
-          </DialogContainer>
-          <DialogContainer
-            // ideally this would be a popover on desktop but using a DialogTrigger
-            // wouldn't work since this doesn't open on click but after doing a
-            // network request and it failing and manually wiring about a popover
-            // and modal would be a pain
-            onDismiss={resetDeleteItem}
-          >
-            {deleteResult.kind === 'needs-fork' &&
-              isGitHubConfig(props.config) && (
-                <ForkRepoDialog
-                  onCreate={async () => {
-                    await deleteItem();
-                    router.push(
+                    router.replace(
                       `${props.basePath}/collection/${encodeURIComponent(
                         collection
-                      )}`
+                      )}/item/${encodeURIComponent(slug)}`
                     );
-                  }}
-                  onDismiss={resetDeleteItem}
-                  config={props.config}
-                />
-              )}
-          </DialogContainer>
-        </Box>
+                  }
+                }}
+                onDismiss={resetUpdateItem}
+                config={props.config}
+              />
+            )}
+        </DialogContainer>
+        <DialogContainer
+          // ideally this would be a popover on desktop but using a DialogTrigger
+          // wouldn't work since this doesn't open on click but after doing a
+          // network request and it failing and manually wiring about a popover
+          // and modal would be a pain
+          onDismiss={resetDeleteItem}
+        >
+          {deleteResult.kind === 'needs-fork' &&
+            isGitHubConfig(props.config) && (
+              <ForkRepoDialog
+                onCreate={async () => {
+                  await deleteItem();
+                  router.push(
+                    `${props.basePath}/collection/${encodeURIComponent(
+                      collection
+                    )}`
+                  );
+                }}
+                onDismiss={resetDeleteItem}
+                config={props.config}
+              />
+            )}
+        </DialogContainer>
       </ItemPageShell>
     </>
   );
@@ -594,7 +594,6 @@ const ItemPageShell = (
         <Breadcrumbs
           flex
           minWidth={0}
-          size="medium"
           onAction={key => {
             if (key === 'collection') {
               router.push(

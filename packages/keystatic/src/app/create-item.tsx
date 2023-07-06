@@ -132,7 +132,6 @@ export function CreateItem(props: {
           <Breadcrumbs
             flex
             minWidth={0}
-            size="medium"
             onAction={key => {
               if (key === 'collection') {
                 router.push(collectionPath);

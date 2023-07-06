@@ -21,7 +21,7 @@ import { underlineIcon } from '@keystar/ui/icon/icons/underlineIcon';
 import { Flex } from '@keystar/ui/layout';
 import { MenuTrigger, Menu } from '@keystar/ui/menu';
 import { Picker } from '@keystar/ui/picker';
-import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
+import { css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text, Kbd } from '@keystar/ui/typography';
 
@@ -147,13 +147,7 @@ const ToolbarContainer = ({ children }: { children: ReactNode }) => {
       borderTopEndRadius="medium"
       position="sticky"
       zIndex={2}
-      // NOTE: top offset (sticky) must be kept in sync with the app's header
-      UNSAFE_className={css({
-        top: `calc(${tokenSchema.size.element.large} - ${tokenSchema.size.border.regular})`,
-        [breakpointQueries.above.mobile]: {
-          top: `calc(${tokenSchema.size.element.xlarge} - ${tokenSchema.size.border.regular})`,
-        },
-      })}
+      insetTop={0}
     >
       {children}
       <Flex
