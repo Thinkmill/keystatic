@@ -1,16 +1,16 @@
 ---
 title: Styling
 description:
-  This page describes how styling works in Keystar UI, including how to customize
-  spacing, sizing, and positioning, and how to create your own custom components
-  using Keystar UI styles.
+  This page describes how styling works in Keystar UI, including how to
+  customize spacing, sizing, and positioning, and how to create your own custom
+  components using Keystar UI styles.
 category: Concepts
 ---
 
 ## Style props
 
-Keystar UI components support a limited set of styling options, including layout,
-spacing, sizing, and positioning options.
+Keystar UI components support a limited set of styling options, including
+layout, spacing, sizing, and positioning options.
 
 ### Patterns
 
@@ -205,8 +205,8 @@ By default, `Box` renders a div element. You can customise this using the
 
 ### Token schema
 
-The `tokenSchema` object provides access to Keystar UI’s CSS variables, which can
-be used both within stylesheets and runtime code.
+The `tokenSchema` object provides access to Keystar UI’s CSS variables, which
+can be used both within stylesheets and runtime code.
 
 **NOTE:** You should only write custom CSS if you’re unable to use
 [the Box primitive](#the-box-primitive).
@@ -355,11 +355,11 @@ sometimes customisations may be needed.
 While the `className` and `style` props are not supported in Keystar UI
 components, there are two escape hatches that you can **use at your own risk**.
 These are `UNSAFE_className` and `UNSAFE_style`, which should be considered a
-**last resort**. They can be used to work around bugs or limitations in
-Keystar UI, but should not be employed long term.
+**last resort**. They can be used to work around bugs or limitations in Keystar
+UI, but should not be employed long term.
 
 The reasoning behind this is that future updates may cause unintended breaking
 changes in modified components. If the internal DOM structure or CSS properties
-of a Keystar UI component change, this may lead to conflicts with CSS overrides in
-your code. For this reason, `className` and `style` are unsafe, and if you use
-them know that you are doing so at your own risk.
+of a Keystar UI component change, this may lead to conflicts with CSS overrides
+in your code. For this reason, `className` and `style` are unsafe, and if you
+use them know that you are doing so at your own risk.

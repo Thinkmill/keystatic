@@ -11,9 +11,9 @@ category: Concepts
 
 ### Styling
 
-Styles, _including resets_, are **only** provided to Keystar UI components. We do
-this to avoid polluting the global CSS scope, so third-party and consumer styles
-aren't unexpectedly affected by our styling opinions (and vice versa).
+Styles, _including resets_, are **only** provided to Keystar UI components. We
+do this to avoid polluting the global CSS scope, so third-party and consumer
+styles aren't unexpectedly affected by our styling opinions (and vice versa).
 
 These styling decisions are especially important when considering how
 [spacing](#spacing) behaves between typographic elements.

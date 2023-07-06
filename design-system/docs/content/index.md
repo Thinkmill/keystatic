@@ -1,7 +1,8 @@
 ---
 title: Meet Keystar UI
 description:
-  Keystar UI is a design system created by Thinkmill to help us build high-quality interfaces for KeystoneJS and Keystatic.
+  Keystar UI is a design system created by Thinkmill to help us build
+  high-quality interfaces for KeystoneJS and Keystatic.
 ---
 
 ## Roadmap
