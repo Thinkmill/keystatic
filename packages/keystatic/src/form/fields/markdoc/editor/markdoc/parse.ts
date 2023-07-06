@@ -1,9 +1,5 @@
 'use client';
-import Markdoc, {
-  Ast,
-  Node as MarkdocNode,
-  ValidateError,
-} from '@markdoc/markdoc';
+import { Ast, Node as MarkdocNode, ValidateError } from '@markdoc/markdoc';
 import {
   Mark,
   MarkType,
@@ -70,29 +66,17 @@ function notAllowed(node: MarkdocNode) {
   return childrenToProseMirrorNodes(node.children);
 }
 
-function genericConvertNode(
+function createAndFill(
   markdocNode: MarkdocNode,
   nodeType: NodeType,
   attrs: Record<string, any>,
-  supportsAnnotations: boolean
+  extraChildren?: ProseMirrorNode[]
 ) {
-  let children = childrenToProseMirrorNodes(markdocNode.children);
-
-  if (supportsAnnotations) {
-    children = [...children, ...parseAnnotations(markdocNode)];
-  } else if (markdocNode.annotations.length) {
-    error({
-      error: {
-        id: 'unexpected-annotations',
-        level: 'critical',
-        message: `${markdocNode.type} has unexpected annotations`,
-      },
-      lines: markdocNode.lines,
-      type: markdocNode.type,
-      location: markdocNode.location,
-    });
-  }
-  const node = nodeType.createAndFill(attrs, children);
+  const children = childrenToProseMirrorNodes(markdocNode.children);
+  const node = nodeType.createAndFill(
+    attrs,
+    extraChildren ? [...children, ...extraChildren] : children
+  );
   if (!node) {
     error({
       error: {
@@ -145,20 +129,43 @@ function parseAnnotations(node: MarkdocNode): ProseMirrorNode[] {
   return node.annotations.map((x): ProseMirrorNode => {
     if (x.type === 'id') {
       return schema.nodes.attribute.createChecked({ name: 'id' }, [
-        schema.schema.text(x.name),
+        schema.nodes.attribute_string.createChecked(null, [
+          schema.schema.text(x.name),
+        ]),
       ]);
     }
     if (x.type === 'class') {
       return schema.nodes.attribute.createChecked({ name: 'class' }, [
-        schema.schema.text(x.name),
+        schema.nodes.attribute_string.createChecked(null, [
+          schema.schema.text(x.name),
+        ]),
       ]);
     }
-    let val =
-      typeof x.value === 'string'
-        ? schema.schema.text(x.value)
-        : schema.nodes.attribute_expression.createChecked({
-            value: Markdoc.format(x.value),
-          });
+    let val: undefined | ProseMirrorNode;
+    if (typeof x.value === 'string') {
+      val = schema.nodes.attribute_string.createChecked(null, [
+        schema.schema.text(x.value),
+      ]);
+    }
+    if (x.value === true) {
+      val = schema.nodes.attribute_true.createChecked();
+    }
+    if (x.value === false) {
+      val = schema.nodes.attribute_false.createChecked();
+    }
+    if (val === undefined) {
+      error({
+        error: {
+          id: 'unimplemented-annotation',
+          level: 'critical',
+          message: `currently, only string and boolean annotations are implemented (got ${x.value})`,
+        },
+        lines: node.lines,
+        type: node.type,
+        location: node.location,
+      });
+      return schema.nodes.attribute.createAndFill({ name: x.name })!;
+    }
     return schema.nodes.attribute.createChecked({ name: x.name }, [val]);
   });
 }
@@ -217,26 +224,33 @@ function markdocNodeToProseMirrorNode(
     return schema.nodes.hard_break.create();
   }
   if (node.type === 'blockquote') {
-    return genericConvertNode(node, schema.nodes.blockquote, {}, false);
+    return createAndFill(node, schema.nodes.blockquote, {});
   }
   if (node.type === 'heading') {
-    return genericConvertNode(
+    return createAndFill(
       node,
       schema.nodes.heading,
-      { level: node.attributes.level },
-      true
+      {
+        level: node.attributes.level,
+      },
+      parseAnnotations(node)
     );
   }
   if (node.type === 'paragraph') {
-    return genericConvertNode(node, schema.nodes.paragraph, {}, true);
+    return createAndFill(
+      node,
+      schema.nodes.paragraph,
+      {},
+      parseAnnotations(node)
+    );
+  }
+  if (node.type === 'comment') {
+    return [];
   }
   if (node.type === 'document') {
-    return genericConvertNode(node, schema.nodes.doc, {}, false);
+    return createAndFill(node, schema.nodes.doc, {});
   }
   if (node.type === 'fence') {
-    if (node.annotations.length) {
-      throw new Error('annotations on code blocks not yet supported');
-    }
     return schema.nodes.code_block.createAndFill(
       {
         language:
@@ -248,7 +262,7 @@ function markdocNodeToProseMirrorNode(
     );
   }
   if (node.type === 'hr') {
-    return genericConvertNode(node, schema.nodes.divider, {}, false);
+    return createAndFill(node, schema.nodes.divider, {});
   }
   if (node.type === 'link') {
     return addMark(
@@ -260,50 +274,55 @@ function markdocNodeToProseMirrorNode(
     return schema.schema.text(node.attributes.content, getState().marks);
   }
   if (node.type === 'item') {
-    const updatedNode = new Ast.Node(
-      'item',
-      node.attributes,
-      node.children.map(node => {
-        if (node.type !== 'inline') return node;
-        return new Ast.Node('paragraph', {}, [node]);
-      })
-    );
-
-    return genericConvertNode(updatedNode, schema.nodes.list_item, {}, false);
+    if (node.children[0]?.type === 'inline') {
+      node = new Ast.Node('item', node.attributes, [
+        new Ast.Node('paragraph', {}, node.children),
+      ]);
+    }
+    return createAndFill(node, schema.nodes.list_item, {});
   }
   if (node.type === 'list') {
-    return genericConvertNode(
+    return createAndFill(
       node,
       node.attributes.ordered
         ? schema.nodes.ordered_list
         : schema.nodes.unordered_list,
-      {},
-      false
+      {}
     );
   }
   if (node.type === 'tag' && node.tag) {
     const children = childrenToProseMirrorNodes(node.children);
     const tagChildren = [
       schema.nodes.tag_attributes.createChecked(null, parseAnnotations(node)),
+      ...Object.entries(node.slots).map(
+        ([slotName, slotContent]) => (
+          console.log(slotContent),
+          schema.nodes.tag_slot.createChecked(
+            { name: slotName },
+            childrenToProseMirrorNodes([slotContent])
+          )
+        )
+      ),
       ...children,
     ];
-    const tagType =
-      tagChildren.length === 1 &&
-      node.findSchema(schema.markdocConfig)?.selfClosing
-        ? schema.nodes.tag_self_closing
-        : schema.nodes.tag_with_children;
-    if (
-      tagType === schema.nodes.tag_with_children &&
-      tagChildren.length === 1
-    ) {
-      tagChildren.push(schema.nodes.paragraph.createChecked());
+
+    const pmNode = schema.nodes.tag.createChecked(
+      { name: node.tag },
+      tagChildren
+    );
+    if (!pmNode) {
+      error({
+        error: {
+          id: 'unexpected-children',
+          level: 'critical',
+          message: `${node.type} has unexpected children`,
+        },
+        lines: node.lines,
+        type: node.type,
+        location: node.location,
+      });
     }
-    try {
-      return tagType.createChecked({ name: node.tag }, tagChildren);
-    } catch (err) {
-      console.log(tagChildren);
-      throw err;
-    }
+    return pmNode;
   }
 
   error({

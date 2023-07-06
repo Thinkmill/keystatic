@@ -189,7 +189,6 @@ const markdocConfig: Config = {
     },
     'cloud-image': {
       render: 'CloudImage',
-      selfClosing: true,
       attributes: {
         href: {
           type: String,
@@ -202,7 +201,6 @@ const markdocConfig: Config = {
     },
     tags: {
       render: 'Tags',
-      selfClosing: true,
       attributes: {
         tags: {
           type: Array,
