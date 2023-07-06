@@ -8,44 +8,19 @@ import { panelLeftCloseIcon } from '@keystar/ui/icon/icons/panelLeftCloseIcon';
 import { panelRightOpenIcon } from '@keystar/ui/icon/icons/panelRightOpenIcon';
 import { panelRightCloseIcon } from '@keystar/ui/icon/icons/panelRightCloseIcon';
 import { Box, Flex } from '@keystar/ui/layout';
+import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
 
-import { MAIN_PANEL_ID, SIDE_PANEL_ID } from './constants';
 import { useSidebar } from './sidebar';
 import { AppShellContainer } from '.';
 
-function documentSelector(selector: string): HTMLElement | null {
-  return document.querySelector(selector);
-}
-
 export const AppShellHeader = ({ children }: PropsWithChildren) => {
-  const { sidebarIsOpen, setSidebarOpen } = useSidebar();
+  const sidebarState = useSidebar();
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const { direction } = useLocale();
 
-  let onPress = () => {
-    let sidePanel = documentSelector(`#${SIDE_PANEL_ID}`);
-    let mainPanel = documentSelector(`#${MAIN_PANEL_ID}`);
-
-    if (sidePanel && mainPanel) {
-      sidePanel.dataset.visible =
-        sidePanel.dataset.visible === 'true' ? 'false' : 'true';
-
-      if (sidePanel.dataset.visible === 'true') {
-        setSidebarOpen(true);
-        mainPanel.setAttribute('aria-hidden', 'true');
-        sidePanel.tabIndex = -1;
-        sidePanel.focus();
-      } else {
-        setSidebarOpen(false);
-        mainPanel.removeAttribute('aria-hidden');
-        sidePanel.removeAttribute('tabindex');
-      }
-    }
-  };
-
-  let icon = sidebarIsOpen ? panelLeftCloseIcon : panelLeftOpenIcon;
+  let icon = sidebarState.isOpen ? panelLeftCloseIcon : panelLeftOpenIcon;
   if (direction === 'rtl') {
-    icon = sidebarIsOpen ? panelRightCloseIcon : panelRightOpenIcon;
+    icon = sidebarState.isOpen ? panelRightCloseIcon : panelRightOpenIcon;
   }
 
   return (
@@ -53,22 +28,27 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
       backgroundColor="surface"
       borderBottom="muted"
       elementType="header"
-      height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
-      // insetTop={0}
-      // position="sticky"
-      // zIndex={3}
+      height={{ mobile: 'element.large', tablet: 'scale.700' }}
+      flexShrink={0}
     >
       <AppShellContainer>
         <Flex
           alignItems="center"
           gap={{ mobile: 'small', tablet: 'regular' }}
-          height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
+          height={{ mobile: 'element.large', tablet: 'scale.700' }}
         >
           <ActionButton
             prominence="low"
-            isHidden={sidebarIsOpen ? { above: 'mobile' } : undefined}
-            onPress={onPress}
+            isHidden={sidebarState.isOpen ? { above: 'mobile' } : undefined}
+            onPress={sidebarState.toggle}
             ref={menuButtonRef}
+            UNSAFE_className={css({
+              marginInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
+              [breakpointQueries.below.tablet]: {
+                borderStartStartRadius: 0,
+                borderEndStartRadius: 0,
+              },
+            })}
           >
             <Icon src={icon} />
           </ActionButton>

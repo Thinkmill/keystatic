@@ -178,8 +178,9 @@ function HeaderOuter({ children }: { children: ReactNode }) {
       // styles
       alignItems="center"
       borderBottom="muted"
+      flexShrink={0}
       gap="small"
-      height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
+      height={{ mobile: 'element.large', tablet: 'scale.700' }}
       paddingX={{ mobile: 'regular', tablet: 'xlarge' }}
     >
       {children}
@@ -266,11 +267,7 @@ function UserMenu() {
         prominence="low"
         UNSAFE_className={css({ borderRadius: '50%', padding: 0 })}
       >
-        <Avatar
-          src={user.avatarUrl}
-          name={user.name ?? undefined}
-          size="small"
-        />
+        <Avatar src={user.avatarUrl} name={user.name ?? undefined} />
       </ActionButton>
       <>
         <Flex

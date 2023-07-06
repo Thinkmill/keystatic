@@ -39,7 +39,12 @@ import {
   AppShellErrorContext,
   LocalAppShellProvider,
 } from './data';
-import { SidebarProvider, Sidebar, useSidebar } from './sidebar';
+import {
+  SidebarDialog,
+  SidebarPanel,
+  SidebarProvider,
+  useSidebar,
+} from './sidebar';
 import { TopBar } from './topbar';
 
 export const AppShell = (props: {
@@ -76,16 +81,14 @@ export const AppShell = (props: {
           <TopBar />
           {isBelowTablet ? (
             <>
-              <Sidebar hrefBase={props.basePath} config={props.config} />
+              <SidebarDialog hrefBase={props.basePath} config={props.config} />
               {content}
             </>
           ) : (
-            <PanelLayout
-              sidebar={
-                <Sidebar hrefBase={props.basePath} config={props.config} />
-              }
-              content={content}
-            />
+            <PanelLayout>
+              <SidebarPanel hrefBase={props.basePath} config={props.config} />
+              {content}
+            </PanelLayout>
           )}
         </Flex>
       </SidebarProvider>
@@ -146,29 +149,28 @@ function getInitialSizes() {
 }
 
 const PanelLayout = ({
-  sidebar,
-  content,
+  children,
 }: {
-  sidebar: ReactNode;
-  content: ReactNode;
+  children: [ReactElement, ReactElement];
 }) => {
   let [isDragging, setIsDragging] = useState(false);
   let [size, setSize] = useState(() => getInitialSizes());
-  let { sidebarIsOpen, setSidebarOpen } = useSidebar();
+  let sidebarState = useSidebar();
   let sidebarPanelRef = useRef<ImperativePanelHandle>(null);
+  let [sidebar, content] = children;
 
   // Sync sidebar context with panel state.
   useLayoutEffect(() => {
     let panel = sidebarPanelRef.current;
     if (panel) {
-      if (sidebarIsOpen) {
+      if (sidebarState.isOpen) {
         panel.resize(size.defaultSize);
       } else {
         panel.collapse();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sidebarIsOpen]);
+  }, [sidebarState.isOpen]);
 
   // Handle cases where the sidebar has an invalid size. This can happen when
   // the panel has been resized in a larger window, then the window is resized
@@ -233,7 +235,7 @@ const PanelLayout = ({
         defaultSize={size.defaultSize}
         maxSize={size.maxSize}
         minSize={size.minSize}
-        onCollapse={isCollapsed => setSidebarOpen(!isCollapsed)}
+        onCollapse={isCollapsed => sidebarState.setOpen(!isCollapsed)}
         ref={sidebarPanelRef}
         className={css({
           // containerName: 'sidepanel',
@@ -244,7 +246,7 @@ const PanelLayout = ({
       </Panel>
       <PanelResizeHandle
         onDragging={setIsDragging}
-        disabled={!isDragging && !sidebarIsOpen}
+        disabled={!isDragging && !sidebarState.isOpen}
         className={css({
           borderInlineEnd: `1px solid ${tokenSchema.color.border.muted}`,
           boxSizing: 'border-box',
@@ -377,43 +379,10 @@ export const AppShellRoot = ({
         direction="column"
         id={MAIN_PANEL_ID}
         flex
-        minWidth={0}
-        // height={{ tablet: '100%' }}
         height="100%"
-        // UNSAFE_className={css({
-        //   '&::before': {
-        //     backgroundColor: '#0006',
-        //     content: '""',
-        //     inset: 0,
-        //     opacity: 0,
-        //     pointerEvents: 'none',
-        //     visibility: 'hidden',
-        //     position: 'fixed',
-        //     zIndex: 5,
-
-        //     // exit animation
-        //     transition: [
-        //       transition('opacity', {
-        //         easing: 'easeOut',
-        //         duration: 'regular',
-        //         delay: 'short',
-        //       }),
-        //       transition('visibility', {
-        //         delay: 'regular',
-        //         duration: 0,
-        //         easing: 'linear',
-        //       }),
-        //     ].join(', '),
-        //   },
-        //   [`#${SIDE_PANEL_ID}[data-visible=true] ~ &::before`]: {
-        //     opacity: 1,
-        //     pointerEvents: 'auto',
-        //     visibility: 'visible',
-
-        //     // enter animation
-        //     transition: transition('opacity', { easing: 'easeIn' }),
-        //   },
-        // })}
+        // fix flexbox issues
+        minHeight={0}
+        minWidth={0}
       >
         {children}
       </Flex>
