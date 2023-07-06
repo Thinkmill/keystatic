@@ -121,7 +121,7 @@ export function useBodyStyleProps() {
 
       '.ksv-table-view:not([data-prominence="low"]) &': {
         backgroundColor: tokenSchema.color.background.canvas,
-        border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
+        border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
         borderRadius: tokenSchema.size.radius.medium,
       },
     }),
@@ -238,6 +238,8 @@ export function useRowStyleProps(state: {
   isPressed: boolean;
   isHovered: boolean;
 }) {
+  let calculatedRadius = `calc(${tokenSchema.size.radius.medium} - ${tokenSchema.size.border.regular})`;
+
   const className = css({
     boxSizing: 'border-box',
     display: 'flex',
@@ -245,19 +247,17 @@ export function useRowStyleProps(state: {
     outline: 0,
 
     // prominence
-    '.ksv-table-view:not([data-prominence="low"]) &:not(:last-child)': {
+    '&:not(:last-child)': {
       borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
-
+    },
+    '.ksv-table-view:not([data-prominence="low"]) &': {
       '&:first-child': {
-        borderStartStartRadius: tokenSchema.size.radius.medium,
-        borderStartEndRadius: tokenSchema.size.radius.medium,
+        borderStartStartRadius: calculatedRadius,
+        borderStartEndRadius: calculatedRadius,
       },
       '&:last-child': {
-        borderEndStartRadius: tokenSchema.size.radius.medium,
-        borderEndEndRadius: tokenSchema.size.radius.medium,
-      },
-      '&:not(:last-child)': {
-        borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
+        borderEndStartRadius: calculatedRadius,
+        borderEndEndRadius: calculatedRadius,
       },
     },
 
