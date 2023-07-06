@@ -40,9 +40,7 @@ const editableStyles = css({
   fontFamily: tokenSchema.typography.fontFamily.base,
   fontSize: tokenSchema.fontsize.text.regular.size,
   lineHeight: 1.4,
-  a: {
-    color: tokenSchema.color.foreground.accent,
-  },
+  a: { color: tokenSchema.color.foreground.accent },
   color: tokenSchema.color.foreground.neutral,
 });
 
