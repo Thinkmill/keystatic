@@ -1,4 +1,9 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { DismissButton, useModalOverlay } from '@react-aria/overlays';
+import {
+  OverlayTriggerState,
+  useOverlayTriggerState,
+} from '@react-stately/overlays';
 import { createContext, ReactNode, useContext, useEffect, useRef } from 'react';
 
 import { Badge } from '@keystar/ui/badge';
@@ -18,11 +23,7 @@ import { useChanged } from './data';
 import { SIDE_PANEL_ID } from './constants';
 import { ZapLogo } from './common';
 import { useConfig } from './context';
-import {
-  OverlayTriggerState,
-  useOverlayTriggerState,
-} from '@react-stately/overlays';
-import { DismissButton, useModalOverlay } from '@react-aria/overlays';
+import { serializeRepoConfig } from '../repo-config';
 
 const SidebarContext = createContext<OverlayTriggerState | null>(null);
 export function useSidebar() {
@@ -59,7 +60,7 @@ function SidebarHeader() {
     text = config.storage.project;
   }
   if (isGitHubConfig(config)) {
-    text = config.storage.repo.name;
+    text = serializeRepoConfig(config.storage.repo);
   }
 
   return (

@@ -6,6 +6,7 @@ import { css } from '@keystar/ui/style';
 import { TextField } from '@keystar/ui/text-field';
 import { Heading, Text } from '@keystar/ui/typography';
 import { GitHubConfig } from '../..';
+import { parseRepoConfig } from '../repo-config';
 
 export function KeystaticSetup(props: { config: GitHubConfig }) {
   const [deployedURL, setDeployedURL] = useState('');
@@ -72,7 +73,9 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
           name="manifest"
           className={css({ display: 'none' })}
           value={JSON.stringify({
-            name: `${props.config.storage.repo.owner} Keystatic`,
+            name: `${
+              parseRepoConfig(props.config.storage.repo).owner
+            } Keystatic`,
             url: deployedURL
               ? `${deployedURL}/keystatic`
               : `${window.location.origin}/keystatic`,

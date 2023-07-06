@@ -2,6 +2,7 @@ import { Flex } from '@keystar/ui/layout';
 import { Heading, Text } from '@keystar/ui/typography';
 import { GitHubConfig } from '../..';
 import { InstallGitHubApp } from './install-app';
+import { serializeRepoConfig } from '../repo-config';
 
 export function CreatedGitHubApp(props: { config: GitHubConfig }) {
   return (
@@ -23,7 +24,8 @@ export function CreatedGitHubApp(props: { config: GitHubConfig }) {
         </Text>
         <Text>
           Make sure to add the App to the{' '}
-          <code>{props.config.storage.repo.name}</code> repository.
+          <code>{serializeRepoConfig(props.config.storage.repo)}</code>{' '}
+          repository.
         </Text>
         <InstallGitHubApp config={props.config} />
       </Flex>

@@ -5,11 +5,8 @@ import Markdoc, {
 
 import { ContentFormField } from '../../api';
 import { DocumentFieldInput } from './ui';
-import { EditorState } from 'prosemirror-state';
-import { createEditorState } from './editor/editor-state';
 import { EditorSchema, createEditorSchema } from './editor/schema';
-import { proseMirrorToMarkdoc } from './editor/markdoc/serialize';
-import { markdocToProseMirror } from './editor/markdoc/parse';
+import { syntaxOnlyMarkdocValidate } from './utils';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -37,32 +34,40 @@ export function __experimental_markdoc_field({
     kind: 'form',
     formKind: 'content',
     defaultValue() {
-      return createEditorState(getSchema().nodes.doc.createAndFill()!);
+      return '';
     },
     Input(props) {
       return (
         <DocumentFieldInput
           description={description}
           label={label}
+          editorSchema={getSchema()}
           {...props}
         />
       );
     },
 
     parse: (_, { content }) => {
-      const markdoc = textDecoder.decode(content);
-      const doc = markdocToProseMirror(Markdoc.parse(markdoc), getSchema());
-      return createEditorState(doc);
+      const text = textDecoder.decode(content);
+      const parsed = Markdoc.parse(text);
+      for (const node of parsed.walk()) {
+        if (node.type === 'em' || node.type === 'strong') {
+          delete node.attributes.marker;
+        }
+      }
+      const syntaxErrors = syntaxOnlyMarkdocValidate(parsed);
+      if (syntaxErrors.length) {
+        return text;
+      }
+      return Markdoc.format(parsed);
     },
     contentExtension: '.mdoc',
     validate(value) {
       return value;
     },
     serialize(value) {
-      const markdocNode = proseMirrorToMarkdoc(value.doc);
-      const markdoc = Markdoc.format(markdocNode);
       return {
-        content: textEncoder.encode(Markdoc.format(Markdoc.parse(markdoc))),
+        content: textEncoder.encode(value),
         external: new Map(),
         other: new Map(),
         value: undefined,
@@ -78,5 +83,5 @@ export function __experimental_markdoc_field({
 }
 
 export declare namespace __experimental_markdoc_field {
-  type Field = ContentFormField<EditorState, EditorState, { ast: MarkdocNode }>;
+  type Field = ContentFormField<string, string, { ast: MarkdocNode }>;
 }

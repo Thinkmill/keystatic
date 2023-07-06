@@ -8,6 +8,8 @@ import {
   InnerFormValueContentFromPreviewProps,
 } from '../../form-from-preview';
 import { AddToPathProvider } from '../text/ui';
+import { useId } from 'react';
+import { Text } from '@keystar/ui/typography';
 
 export function ObjectFieldInput<
   Fields extends Record<string, ComponentSchema>
@@ -20,7 +22,7 @@ export function ObjectFieldInput<
   const firstFocusable = autoFocus
     ? findFocusableObjectFieldKey(schema)
     : undefined;
-  return (
+  const inner = (
     <Flex gap="xlarge" direction="column">
       {Object.entries(fields).map(
         ([key, propVal]) =>
@@ -34,6 +36,34 @@ export function ObjectFieldInput<
             </AddToPathProvider>
           )
       )}
+    </Flex>
+  );
+  const id = useId();
+
+  if (!schema.label) {
+    return inner;
+  }
+
+  const labelId = `${id}-label`;
+  const descriptionId = `${id}-description`;
+  return (
+    <Flex
+      role="group"
+      gap="medium"
+      marginY="large"
+      aria-labelledby={labelId}
+      aria-describedby={schema.description ? descriptionId : undefined}
+      direction="column"
+    >
+      <Text color="neutral" size="medium" weight="medium" id={labelId}>
+        {schema.label}
+      </Text>
+      {!!schema.description && (
+        <Text id={descriptionId} size="regular" color="neutralSecondary">
+          {schema.description}
+        </Text>
+      )}
+      {inner}
     </Flex>
   );
 }

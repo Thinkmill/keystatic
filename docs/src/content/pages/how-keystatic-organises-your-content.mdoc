@@ -1,13 +1,14 @@
 ---
 title: How Keystatic organises your content
+summary: Control and flexibility with where your content gets generated.
 ---
-Keystatic gives you a lot of control and flexibility with _where_ your content gets generated, both at the `collection/singleton` level, and at the `field` level for certain field types, like images.
+Keystatic gives you a lot of control and flexibility with *where* your content gets generated, both at the `collection/singleton` level, and at the `field` level for certain field types, like images.
 
 Let's start with the `collection/singleton` options.
 
 ## Collections & Singletons output
 
-You can define _where_ Keystatic should store collection entries and singletons via the `path` property in the collection/singleton top-level options.
+You can define *where* Keystatic should store collection entries and singletons via the `path` property in the collection/singleton top-level options.
 
 ```javascript
 // Keystatic config
@@ -41,7 +42,7 @@ If not specified, the default `path` value will be `{collection-name}/*/`.
 {% aside icon="⚡️" %}
 **Why a** `*` **symbol?**
 
-The `*` wildcard in the `path` is useful when you want to collocate Keystatic's output with your existing source code, that may be nested a few levels deep inside an _**entry**_ you're writing content for.
+The `*` wildcard in the `path` is useful when you want to collocate Keystatic's output with your existing source code, that may be nested a few levels deep inside an ***entry*** you're writing content for.
 
 For example, you may be writing documentation for Design System components.
 
@@ -50,7 +51,7 @@ Say you want Keystatic to output your documentation entries in `packages/design-
 You can use `path: 'packages/design-system/*/docs/'` to do just that 👍
 {% /aside %}
 
-### Paths ending with a trailing slash `/`
+### Collection paths ending with a trailing slash `/`
 
 If the path ends with a trailing slash `/`, each entry will be created in its own directory named after the slug:
 
@@ -76,7 +77,7 @@ content
       other.mdoc
 ```
 
-### Paths ending without a trailing slash
+### Collection paths ending without a trailing slash
 
 If the path does not end with a trailing slash, entries' index files will be created immediately inside the collection directory:
 
@@ -107,7 +108,7 @@ The `path` property for singletons does not contain a `*` wildcard.
 
 If not specified, the default `path` value for singletons will be `{singleton-name}/`.
 
-### Paths ending with a trailing slash `/`
+### Singleton paths ending with a trailing slash `/`
 
 If the path ends with a trailing slash `/`, the singleton's content ill be created in its own directory named after the slug:
 
@@ -119,7 +120,7 @@ singleton-name
 
 ```
 
-### Paths ending without a trailing slash
+### Singleton paths ending without a trailing slash
 
 If the path does not end with a trailing slash, the singleton's index file will be created immediately inside the singleton directory:
 
@@ -135,7 +136,7 @@ singleton-name
 
 ## Individual fields output
 
-Right now, only **images** allow you to decide _where_ content should be generated, independently of the `collection/singleton` level `path` settings.
+Right now, only **images** allow you to decide *where* content should be generated, independently of the `collection/singleton` level `path` settings.
 
 {% aside icon="⚡️" %}
 The reason for this is certain frameworks (like Next.js) need your images to be in a specific directory (like `/public`) to be easily accessible.

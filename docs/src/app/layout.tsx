@@ -8,10 +8,15 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: 'Keystatic',
+  title: {
+    template: '%s | Keystatic',
+    default: 'Keystatic',
+  },
   description:
     "Keystatic is a new tool from Thinkmill Labs that opens up your code-based content (written in Markdown, JSON or YAML) to contributors who aren't technical.",
   openGraph: {
+    title: 'Keystatic',
+    description: 'Content management for your codebase.',
     images: [
       {
         url: 'https://keystatic.io/images/keystatic-docs/og-image.jpg',
@@ -22,6 +27,9 @@ export const metadata = {
       },
     ],
     siteName: 'Keystatic',
+    type: 'website',
+    url: 'https://keystatic.com',
+    locale: 'en_AU',
   },
   twitter: {
     card: 'summary_large_image',
