@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@astrojs/node": "^5.0.3",
-    "@astrojs/react": "^2.0.2",
+    "@astrojs/react": "^2.2.1",
     "@braintree/sanitize-url": "^6.0.2",
     "@hapi/iron": "^7.0.0",
     "@keystatic/astro": "^0.0.8",

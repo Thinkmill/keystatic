@@ -1,5 +1,6 @@
 import { log } from '@clack/prompts';
 import { intro } from './actions/intro';
+import { frameworkChoice } from './actions/framework-choice';
 import { projectName } from './actions/project-name';
 import { createProject } from './actions/create-project';
 import { outro } from './actions/outro';
@@ -8,7 +9,7 @@ import { cancelStep, getPackageManager } from './utils';
 export type Context = {
   projectName?: string;
   packageManager?: string;
-  framework: 'Next.js' | 'Astro' | 'Remix';
+  framework: 'Next.js' | 'Astro';
   cwd: string;
 };
 
@@ -21,7 +22,13 @@ async function main() {
     cwd: process.cwd(),
   };
 
-  const steps: Step[] = [intro, projectName, createProject, outro];
+  const steps: Step[] = [
+    intro,
+    frameworkChoice,
+    projectName,
+    createProject,
+    outro,
+  ];
 
   for (const step of steps) {
     try {
