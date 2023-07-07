@@ -26,7 +26,11 @@ export default function Features() {
         </svg>
       </div>
 
-      <ul className="px-6 py-8 overflow-x-auto flex gap-4 md:gap-8" role="list">
+      <ul
+        tabIndex={0}
+        className="px-6 py-8 overflow-x-auto flex gap-4 md:gap-8"
+        role="list"
+      >
         {features.map(feature => (
           <li
             key={feature}

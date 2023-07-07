@@ -176,55 +176,45 @@ const nodeSpecs = {
       ];
     },
   },
-  tag_self_closing: {
+  tag_slot: {
     attrs: {
-      name: {},
+      name: { default: 'children' },
     },
-    group: 'block',
+    content: 'block+',
     defining: true,
-    [independentForGapCursor]: true,
-    content: 'tag_attributes',
-    parseDOM: [
-      {
-        tag: '[data-markdoc-tag]',
-        getAttrs(node) {
-          if (typeof node === 'string') return false;
-          let name = node.getAttribute('data-markdoc-tag');
-          if (name === null || !markdocIdentifierPattern.test(name)) {
-            return false;
-          }
-          return { name };
-        },
-      },
-    ],
     toDOM(node) {
-      const element = document.createElement('div');
-      element.dataset.markdocTag = node.attrs.name;
-      element.style.setProperty('--tag-name', JSON.stringify(node.attrs.name));
-      element.classList.add(
-        css({
-          marginBlock: '1em',
-          overflow: 'hidden',
-          '& > *': {
-            paddingInline: tokenSchema.size.space.small,
-          },
-        })
-      );
-      element.classList.add(nodeWithBorder);
-      return {
-        dom: element,
-        contentDOM: element,
-      };
+      if (node.attrs.name === 'children') {
+        return [
+          'div',
+          { class: css({ borderTop: '2px solid green', paddingInline: -2 }) },
+          0,
+        ];
+      }
+      return [
+        'div',
+        {
+          'data-slot': node.attrs.name,
+          class: css({
+            borderTop: '2px solid green',
+            paddingInline: -2,
+            '::before': {
+              content: `attr(data-slot)`,
+              display: 'inline-block',
+            },
+          }),
+        },
+        0,
+      ];
     },
   },
-  tag_with_children: {
+  tag: {
     attrs: {
       name: {},
     },
     group: 'block',
     defining: true,
     [independentForGapCursor]: true,
-    content: 'tag_attributes block+',
+    content: 'tag_attributes tag_slot* block*',
     parseDOM: [
       {
         tag: '[data-markdoc-tag]',
@@ -461,7 +451,7 @@ export type EditorSchema = {
   marks: {
     [_ in keyof typeof markSpecs]: MarkType;
   };
-  markdocConfig: Config;
+  markdocConfig: Config | undefined;
   insertMenuItems: InsertMenuItem[];
 };
 
@@ -503,18 +493,18 @@ export function createEditorSchema(markdocConfig: Config) {
       }
     }
     const tag_attributes = nodes.tag_attributes.createChecked(null, attributes);
-    const tagType = tagConfig.selfClosing
-      ? nodes.tag_self_closing
-      : nodes.tag_with_children;
-    const tag = tagType.createChecked(
-      { name: tagName },
-      tagConfig.selfClosing
-        ? [tag_attributes]
-        : [tag_attributes, nodes.paragraph.createAndFill()!]
-    );
+    const tagChildren = [tag_attributes];
+    for (const [slotName, slotConfig] of Object.entries(
+      tagConfig.slots ?? {}
+    )) {
+      if (slotConfig.required) {
+        tagChildren.push(nodes.tag_slot.createAndFill({ name: slotName })!);
+      }
+    }
+    const tag = nodes.tag.createChecked({ name: tagName }, tagChildren);
 
     const slice = new Slice(Fragment.fromArray([tag]), 0, 0);
-    const childrenMatch = tagType.contentMatch.edge(0).next;
+    const childrenMatch = nodes.tag.contentMatch.edge(0).next;
     insertMenuItems.push({
       label: tagName,
       forToolbar: true,
@@ -526,7 +516,7 @@ export function createEditorSchema(markdocConfig: Config) {
           blockRange.$from
             .node(-1)
             .contentMatchAt(blockRange.$from.index(-1))
-            .matchType(tagType) === null
+            .matchType(nodes.tag) === null
         ) {
           return false;
         }

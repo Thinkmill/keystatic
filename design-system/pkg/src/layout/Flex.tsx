@@ -10,7 +10,7 @@ export type FlexProps = {
 } & FlexStyleProps;
 
 /**
- * A layout container CSS flex. Voussoir dimension values provide
+ * A layout container CSS flex. Keystar UI dimension values provide
  * consistent spacing between items.
  */
 export const Flex = forwardRefWithAs<FlexProps, 'div'>(

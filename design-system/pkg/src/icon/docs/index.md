@@ -9,7 +9,7 @@ category: Media
 
 ## Example
 
-Voussoir uses the amazing [Lucide icons](https://lucide.dev).
+Keystar UI uses the amazing [Lucide icons](https://lucide.dev).
 
 ```jsx {% live=true %}
 <Icon src={editIcon} />

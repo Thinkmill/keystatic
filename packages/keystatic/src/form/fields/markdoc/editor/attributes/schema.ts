@@ -19,7 +19,7 @@ export const attributeSchema = {
     attrs: {
       name: {},
     },
-    content: 'text* | attribute_expression',
+    content: 'attribute_expression',
     inline: true,
     atom: true,
     parseDOM: [
@@ -52,23 +52,72 @@ export const attributeSchema = {
       ];
     },
   },
-  attribute_expression: {
-    attrs: {
-      value: {},
+  attribute_string: {
+    group: 'attribute_expression',
+    content: 'text*',
+    marks: '',
+    parseDOM: [{ tag: '[data-markdoc-expression="string"]' }],
+    toDOM() {
+      return ['span', { 'data-markdoc-expression': 'string' }, 0];
     },
-    inline: true,
-    toDOM(node) {
+  },
+  attribute_null: {
+    group: 'attribute_expression',
+    toDOM() {
+      return ['span', { class: css({ color: 'lightsteelblue' }) }, 'null'];
+    },
+  },
+  attribute_true: {
+    group: 'attribute_expression',
+    toDOM() {
+      return ['span', { class: css({ color: 'lightsteelblue' }) }, 'true'];
+    },
+  },
+  attribute_false: {
+    group: 'attribute_expression',
+    toDOM() {
+      return ['span', { class: css({ color: 'lightsteelblue' }) }, 'false'];
+    },
+  },
+  attribute_number: {
+    group: 'attribute_expression',
+    content: 'text*',
+    marks: '',
+    toDOM() {
+      return ['span', { class: css({ color: 'lightsteelblue' }) }, 'null'];
+    },
+  },
+  attribute_variable: {
+    group: 'attribute_expression',
+    content: 'text*',
+    marks: '',
+    toDOM() {
       return [
         'span',
-        {
-          'data-markdoc-attribute-expression': node.attrs.value,
-          class: css({
-            '::before': {
-              display: 'inline',
-              content: 'attr(data-markdoc-attribute-expression)',
-            },
-          }),
-        },
+        { class: css({ color: 'lightsteelblue' }) },
+        '$',
+        ['span', 0],
+      ];
+    },
+  },
+  attribute_object: {
+    group: 'attribute_expression',
+    content: 'attribute*',
+    marks: '',
+    toDOM() {
+      return [
+        'span',
+        [
+          'span',
+          { class: css({ color: 'green' }), contenteditable: false },
+          '{',
+        ],
+        ['span', 0],
+        [
+          'span',
+          { class: css({ color: 'green' }), contenteditable: false },
+          '}',
+        ],
       ];
     },
   },

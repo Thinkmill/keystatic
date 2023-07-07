@@ -1,6 +1,6 @@
 /** @type {import('@jest/types').Config.InitialOptions} */
 const config = {
-  displayName: 'voussoir',
+  displayName: 'keystar/ui',
   testEnvironment: 'jsdom',
   clearMocks: true,
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],

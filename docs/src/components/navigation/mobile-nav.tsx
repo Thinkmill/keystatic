@@ -47,7 +47,7 @@ export function MobileNav({ navigationMap }: NavProps) {
   }, [closeNav]);
 
   const onScrollHandler = (
-    event: UIEvent<HTMLUListElement> & { target: HTMLUListElement }
+    event: UIEvent<HTMLDivElement> & { target: HTMLUListElement }
   ) => {
     const { target } = event;
     setScrollTop(target.scrollTop);
@@ -61,6 +61,9 @@ export function MobileNav({ navigationMap }: NavProps) {
         impact="light"
         className="px-3 pt-2 pb-2 lg:hidden"
         aria-label="Open menu"
+        aria-expanded={navOpen}
+        aria-haspopup="true"
+        aria-controls="slideout-menu"
       >
         <div className="flex items-center gap-2" aria-hidden="true">
           <svg
@@ -93,11 +96,10 @@ export function MobileNav({ navigationMap }: NavProps) {
       />
 
       {/** Slideout menu */}
-      <ul
-        aria-expanded={navOpen}
+      <div
         onScroll={onScrollHandler}
         className={`overflow-y-auto list-none fixed lg:hidden top-0 bg-white h-[100dvh] w-64 z-30 drop-shadow-2xl flex flex-col transition-[right] duration-300 ${
-          navOpen ? '-right-0' : '-right-full'
+          navOpen ? 'visible -right-0' : 'hidden -right-full'
         }`}
       >
         <FocusLock disabled={!navOpen} returnFocus>
@@ -119,56 +121,56 @@ export function MobileNav({ navigationMap }: NavProps) {
           </div>
 
           {/** Nav list items */}
-          <div className="px-2 pb-10">
-            <NavItem
-              level="top"
-              label="Home"
-              href="/"
-              tabIndex={navOpen ? 0 : -1}
-            />
+          <div className="px-2" id="slideout-menu">
+            <NavGroup title="Main pages" visuallyHideTitle>
+              <NavItem
+                level="top"
+                label="Home"
+                href="/"
+                tabIndex={navOpen ? 0 : -1}
+              />
 
-            <NavItem
-              level="top"
-              label="Docs"
-              href="/docs"
-              tabIndex={navOpen ? 0 : -1}
-              currentPage={pathname?.startsWith('/docs')}
-            />
+              <NavItem
+                level="top"
+                label="Docs"
+                href="/docs"
+                tabIndex={navOpen ? 0 : -1}
+                currentPage={pathname === '/docs'}
+              />
 
-            <NavItem
-              level="top"
-              label="Blog"
-              href="/blog"
-              tabIndex={navOpen ? 0 : -1}
-              currentPage={pathname?.startsWith('/blog')}
-            />
+              <NavItem
+                level="top"
+                label="Blog"
+                href="/blog"
+                tabIndex={navOpen ? 0 : -1}
+                currentPage={pathname === '/blog'}
+              />
+            </NavGroup>
 
-            <div className="pt-6">
-              {navigationMap?.map(({ groupName, items }) => (
-                <NavGroup key={groupName} title={groupName}>
-                  {items.map(({ label, href, title, comingSoon }) => (
-                    <NavItem
-                      key={href}
-                      label={label}
-                      href={href}
-                      title={title}
-                      level="sub"
-                      tabIndex={navOpen ? 0 : -1}
-                      comingSoon={comingSoon}
-                    />
-                  ))}
-                </NavGroup>
-              ))}
-            </div>
+            {navigationMap?.map(({ groupName, items }) => (
+              <NavGroup key={groupName} title={groupName}>
+                {items.map(({ label, href, title, comingSoon }) => (
+                  <NavItem
+                    key={href}
+                    label={label}
+                    href={href}
+                    title={title}
+                    level="sub"
+                    tabIndex={navOpen ? 0 : -1}
+                    comingSoon={comingSoon}
+                  />
+                ))}
+              </NavGroup>
+            ))}
 
             <hr className="h-px my-3 mx-4 border-keystatic-gray" />
 
-            <div className="flex flex-row items-center gap-4 justify-center px-4 pt-4">
+            <div className="flex flex-row items-center gap-4 justify-center px-4 pt-4 pb-10">
               <SocialLinks tabIndex={navOpen ? 0 : -1} />
             </div>
           </div>
         </FocusLock>
-      </ul>
+      </div>
     </>
   );
 }

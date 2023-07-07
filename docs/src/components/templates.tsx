@@ -335,7 +335,7 @@ function CtaButtons({
         className="flex"
         href={template.preview}
         target="_blank"
-        aria-label={`Preview the ${template.name} template in a new tab`}
+        aria-label={`Preview the ${template.name} template (Opens in new tab)`}
       >
         Preview
       </Button>
