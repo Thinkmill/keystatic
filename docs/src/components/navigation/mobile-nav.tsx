@@ -62,6 +62,8 @@ export function MobileNav({ navigationMap }: NavProps) {
         className="px-3 pt-2 pb-2 lg:hidden"
         aria-label="Open menu"
         aria-expanded={navOpen}
+        aria-haspopup="true"
+        aria-controls="slideout-menu"
       >
         <div className="flex items-center gap-2" aria-hidden="true">
           <svg
@@ -97,7 +99,7 @@ export function MobileNav({ navigationMap }: NavProps) {
       <div
         onScroll={onScrollHandler}
         className={`overflow-y-auto list-none fixed lg:hidden top-0 bg-white h-[100dvh] w-64 z-30 drop-shadow-2xl flex flex-col transition-[right] duration-300 ${
-          navOpen ? '-right-0' : '-right-full'
+          navOpen ? 'visible -right-0' : 'hidden -right-full'
         }`}
       >
         <FocusLock disabled={!navOpen} returnFocus>
@@ -119,7 +121,7 @@ export function MobileNav({ navigationMap }: NavProps) {
           </div>
 
           {/** Nav list items */}
-          <div className="px-2">
+          <div className="px-2" id="slideout-menu">
             <NavGroup title="Main pages" visuallyHideTitle>
               <NavItem
                 level="top"
@@ -133,7 +135,7 @@ export function MobileNav({ navigationMap }: NavProps) {
                 label="Docs"
                 href="/docs"
                 tabIndex={navOpen ? 0 : -1}
-                currentPage={pathname?.startsWith('/docs')}
+                currentPage={pathname === '/docs'}
               />
 
               <NavItem
@@ -141,7 +143,7 @@ export function MobileNav({ navigationMap }: NavProps) {
                 label="Blog"
                 href="/blog"
                 tabIndex={navOpen ? 0 : -1}
-                currentPage={pathname?.startsWith('/blog')}
+                currentPage={pathname === '/blog'}
               />
             </NavGroup>
 
