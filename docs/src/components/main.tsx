@@ -17,7 +17,7 @@ export const Main = ({
   ...props
 }: MainProps) => (
   <main
-    className={`outline-0 ${className || ''}`}
+    className={`outline-none ${className || ''}`}
     aria-labelledby={H1_ID}
     {...(isFocusable && { tabIndex: -1 })}
     {...props}
