@@ -1,5 +1,16 @@
 # @keystatic/templates-nextjs
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [4e595627]
+- Updated dependencies [477b4e96]
+- Updated dependencies [b832e495]
+- Updated dependencies [b6f4fb12]
+- Updated dependencies [68e3be7c]
+  - @keystatic/core@0.0.109
+
 ## 0.0.5
 
 ### Patch Changes
