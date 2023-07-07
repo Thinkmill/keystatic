@@ -41,12 +41,12 @@ export const createProject = async (ctx: Context) => {
     Astro: templates.astro,
   };
 
-  const defaultTemplate = templatesLookup[ctx.framework];
+  const template = templatesLookup[ctx.framework];
 
   try {
     // Get latest package info from npm
     const packageInfo: PackageInfo = await fetch(
-      `${registryDomain}/${defaultTemplate}/latest`
+      `${registryDomain}/${template}/latest`
     ).then(response => response.json());
 
     if (!existsSync(ctx.cwd)) {
