@@ -22,7 +22,7 @@ surrounding text.
 
 ```jsx {% live=true %}
 <Text>
-  Built with <Emoji symbol="💖" label="love" /> using Voussoir.
+  Built with <Emoji symbol="💖" label="love" /> using Keystar UI.
 </Text>
 ```
 
