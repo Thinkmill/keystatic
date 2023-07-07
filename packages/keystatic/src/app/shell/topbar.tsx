@@ -223,6 +223,7 @@ function ThemeMenu() {
       <Menu
         items={themeItems}
         onSelectionChange={([key]) => setTheme(key as ColorScheme)}
+        disallowEmptySelection
         selectedKeys={[theme]}
         selectionMode="single"
       >
