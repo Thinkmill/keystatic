@@ -1,16 +1,16 @@
 ---
 title: Styling
 description:
-  This page describes how styling works in Voussoir, including how to customize
-  spacing, sizing, and positioning, and how to create your own custom components
-  using Voussoir styles.
+  This page describes how styling works in Keystar UI, including how to
+  customize spacing, sizing, and positioning, and how to create your own custom
+  components using Keystar UI styles.
 category: Concepts
 ---
 
 ## Style props
 
-Voussoir components support a limited set of styling options, including layout,
-spacing, sizing, and positioning options.
+Keystar UI components support a limited set of styling options, including
+layout, spacing, sizing, and positioning options.
 
 ### Patterns
 
@@ -104,7 +104,7 @@ is a module of CSS introducing logical properties and values that provide the
 ability to control layout through logical, rather than physical, direction and
 dimension mappings.
 
-Voussoir's style props employ logical property syntax for **inline**, but not
+Keystar UI's style props employ logical property syntax for **inline**, but not
 block properties. For example `marginLeft` is instead `marginStart`, which means
 everything _just&nbsp;works_ for RTL languages.
 
@@ -205,8 +205,8 @@ By default, `Box` renders a div element. You can customise this using the
 
 ### Token schema
 
-The `tokenSchema` object provides access to Voussoir’s CSS variables, which can
-be used both within stylesheets and runtime code.
+The `tokenSchema` object provides access to Keystar UI’s CSS variables, which
+can be used both within stylesheets and runtime code.
 
 **NOTE:** You should only write custom CSS if you’re unable to use
 [the Box primitive](#the-box-primitive).
@@ -349,17 +349,17 @@ TODO: just drop the entire schema here? probs not...
 
 ## Escape hatches
 
-We encourage folks to use Voussoir components "as is", however we realise that
+We encourage folks to use Keystar UI components "as is", however we realise that
 sometimes customisations may be needed.
 
-While the `className` and `style` props are not supported in Voussoir
+While the `className` and `style` props are not supported in Keystar UI
 components, there are two escape hatches that you can **use at your own risk**.
 These are `UNSAFE_className` and `UNSAFE_style`, which should be considered a
-**last resort**. They can be used to work around bugs or limitations in
-Voussoir, but should not be employed long term.
+**last resort**. They can be used to work around bugs or limitations in Keystar
+UI, but should not be employed long term.
 
 The reasoning behind this is that future updates may cause unintended breaking
 changes in modified components. If the internal DOM structure or CSS properties
-of a Voussoir component change, this may lead to conflicts with CSS overrides in
-your code. For this reason, `className` and `style` are unsafe, and if you use
-them know that you are doing so at your own risk.
+of a Keystar UI component change, this may lead to conflicts with CSS overrides
+in your code. For this reason, `className` and `style` are unsafe, and if you
+use them know that you are doing so at your own risk.

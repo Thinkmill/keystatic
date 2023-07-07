@@ -14,7 +14,7 @@ const description = 'Some description';
 export default config({
   storage: {
     kind: 'github',
-    repo: { owner: 'Thinkmill', name: 'keystatic-test-repo' },
+    repo: 'Thinkmill/keystatic-test-repo',
   },
   collections: {
     posts: collection({

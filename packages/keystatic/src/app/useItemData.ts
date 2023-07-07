@@ -19,6 +19,7 @@ import {
   MaybePromise,
 } from './utils';
 import { toFormattedFormDataError } from '../form/errors';
+import { serializeRepoConfig } from './repo-config';
 
 function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
   const dataFilepath = getEntryDataFilepath(args.dirpath, args.format);
@@ -256,7 +257,9 @@ async function fetchGitHubBlob(config: Config, oid: string): Promise<Response> {
   const auth = await getAuth(config);
   return fetch(
     config.storage.kind === 'github'
-      ? `https://api.github.com/repos/${config.storage.repo.owner}/${config.storage.repo.name}/git/blobs/${oid}`
+      ? `https://api.github.com/repos/${serializeRepoConfig(
+          config.storage.repo
+        )}/git/blobs/${oid}`
       : `${KEYSTATIC_CLOUD_API_URL}/v1/github/blob/${oid}`,
     {
       headers: {

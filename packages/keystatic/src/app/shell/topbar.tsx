@@ -48,6 +48,7 @@ import { useConfig } from './context';
 import { BranchInfoContext, GitHubAppShellDataContext } from './data';
 import { ViewerContext } from './sidebar-data';
 import { ColorScheme, useThemeContext } from './theme';
+import { serializeRepoConfig } from '../repo-config';
 
 export const TopBar = () => {
   let config = useConfig();
@@ -115,7 +116,7 @@ function GithubHeader({ config }: { config: GitHubConfig }) {
     <HeaderOuter>
       <ZapLogo />
       <Button
-        href={`https://github.com/${config.storage.repo.owner}/${config.storage.repo.name}`}
+        href={`https://github.com/${serializeRepoConfig(config.storage.repo)}`}
         target="_blank"
         rel="noopener noreferrer"
         prominence="low"
@@ -124,7 +125,7 @@ function GithubHeader({ config }: { config: GitHubConfig }) {
           paddingInline: tokenSchema.size.space.regular,
         })}
       >
-        {config.storage.repo.owner}/{config.storage.repo.name}
+        {serializeRepoConfig(config.storage.repo)}
       </Button>
       <Slash />
       <BranchPicker />

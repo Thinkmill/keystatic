@@ -36,6 +36,7 @@ import {
 } from './shell/data';
 import { KeystaticCloudAuthCallback } from './cloud-auth-callback';
 import { getAuth } from './auth';
+import { assertValidRepoConfig } from './repo-config';
 
 function parseParamsWithoutBranch(params: string[]) {
   if (params.length === 0) {
@@ -261,11 +262,8 @@ export function Keystatic(props: {
   ) => ReactNode;
   appSlug?: { envName: string; value: string | undefined };
 }) {
-  if (
-    props.config.storage.kind === 'github' &&
-    (!props.config.storage.repo.owner || !props.config.storage.repo.name)
-  ) {
-    throw new Error('Missing storage.repo.owner or storage.repo.name');
+  if (props.config.storage.kind === 'github') {
+    assertValidRepoConfig(props.config.storage.repo);
   }
   useEffect(() => {
     if (window.location.hostname === 'localhost') {

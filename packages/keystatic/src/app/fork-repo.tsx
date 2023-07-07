@@ -13,6 +13,7 @@ import { Notice } from '@keystar/ui/notice';
 import { AppSlugContext } from './onboarding/install-app';
 import { Flex } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
+import { parseRepoConfig, serializeRepoConfig } from './repo-config';
 
 export function ForkRepoDialog(props: {
   onDismiss: () => void;
@@ -37,7 +38,10 @@ export function ForkRepoDialog(props: {
           const auth = await getAuth(props.config);
           if (!auth) throw new Error('Unauthorized');
           const res = await client
-            .query(GitHubAppShellQuery, props.config.storage.repo)
+            .query(
+              GitHubAppShellQuery,
+              parseRepoConfig(props.config.storage.repo)
+            )
             .toPromise();
           if (
             res.data?.repository?.forks.nodes?.some(
@@ -92,7 +96,9 @@ export function ForkRepoDialog(props: {
               <Text>
                 To start,{' '}
                 <TextLink
-                  href={`https://github.com/${props.config.storage.repo.owner}/${props.config.storage.repo.name}/fork`}
+                  href={`https://github.com/${serializeRepoConfig(
+                    props.config.storage.repo
+                  )}/fork`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
