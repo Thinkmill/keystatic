@@ -3,7 +3,7 @@ title: Box
 description:
   Box is a general purpose low-level primitive with no specific semantics that
   can be used for layout and styling. All other layout primitives, and most of
-  Voussoir's components, are made up of Boxes.
+  Keystar UI's components, are made up of Boxes.
 category: Layout
 ---
 

@@ -6,10 +6,10 @@ export default function Footer() {
   return (
     <footer className="bg-keystatic-gray-light pb-10">
       <div className="mx-auto max-w-7xl">
-        <nav className="p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="p-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <KeystaticLogoLink />
           <SocialLinks />
-        </nav>
+        </div>
       </div>
 
       <div className="mx-auto mt-2 flex max-w-7xl flex-col justify-between gap-y-4 gap-x-12 px-6 text-center md:flex-row">

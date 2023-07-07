@@ -1,4 +1,6 @@
 import Footer from '../../../components/footer';
+import { Main } from '../../../components/main';
+import { H1_ID } from '../../../constants';
 
 export const metadata = {
   title: 'Thank you',
@@ -7,9 +9,12 @@ export const metadata = {
 export default function ThankYouPage() {
   return (
     <>
-      <main className="mx-auto max-w-7xl px-6 pt-6 pb-12 flex flex-1 items-center w-full">
+      <Main className="mx-auto max-w-7xl px-6 pt-6 pb-12 flex flex-1 items-center w-full">
         <div className="max-w-xl">
-          <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl">
+          <h1
+            className="font-extrabold text-3xl sm:text-4xl md:text-5xl"
+            id={H1_ID}
+          >
             Thank you for being{' '}
             <span className="relative inline-block">
               <svg
@@ -32,7 +37,7 @@ export default function ThankYouPage() {
             weeks and months.
           </p>
         </div>
-      </main>
+      </Main>
       <Footer />
     </>
   );
