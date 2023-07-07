@@ -1,13 +1,18 @@
 import Link from 'next/link';
 import Button from './button';
 import { CopyCommandButton } from './copy-command-button';
+import { H1_ID } from '../constants';
 
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-white">
       <div className="mx-auto max-w-7xl pt-10 px-6 md:pb-10 lg:py-16 flex flex-col items-center gap-12 md:gap-16">
         <div className="w-full max-w-2xl flex flex-col items-center gap-8 text-center">
-          <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl">
+          <h1
+            className="font-extrabold text-3xl sm:text-4xl md:text-5xl"
+            id={H1_ID}
+            aria-label="Content management for your code base"
+          >
             Content Management
             <br />
             for your{' '}

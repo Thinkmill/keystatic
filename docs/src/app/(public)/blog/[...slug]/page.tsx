@@ -6,6 +6,7 @@ import { parseAndFormatPublishedDate } from '../../../../utils';
 import { ArrowLeftIcon } from '../../../../components/icons/arrow-left';
 import { Fragment } from 'react';
 import { Metadata, ResolvingMetadata } from 'next';
+import { H1_ID } from '../../../../constants';
 
 type BlogProps = {
   params: { slug: string[] };
@@ -50,7 +51,9 @@ export default async function BlogPost({ params }: BlogProps) {
       </p>
 
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-extrabold sm:text-3xl">{page.title}</h1>
+        <h1 className="text-2xl font-extrabold sm:text-3xl" id={H1_ID}>
+          {page.title}
+        </h1>
 
         <p className="text-sm text-neutral-500">
           Published on {formattedDate} by{' '}

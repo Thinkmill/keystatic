@@ -9,6 +9,12 @@ import { StarIcon } from './icons/star-icon';
 
 export default function CallToAction() {
   const [isOpen, setIsOpen] = useState(false);
+
+  const linkLabels = {
+    tmLabs: 'Thinkmill Labs',
+    ksDiscussions: 'Join the discussion on GitHub',
+  };
+
   return (
     <section className="relative bg-white">
       <svg
@@ -68,8 +74,9 @@ export default function CallToAction() {
             href="https://www.thinkmill.com.au/"
             target="_blank"
             className="cursor-pointer underline hover:text-thinkmill-red"
+            aria-label={`${linkLabels.tmLabs} (Opens in new tab)`}
           >
-            Thinkmill Labs
+            {linkLabels.tmLabs}
           </a>{' '}
           Research &amp; Development. Feedback on how we're going, what you're
           looking for, and what you'd like to see next is super helpful as we
@@ -79,8 +86,9 @@ export default function CallToAction() {
           <Button
             href="https://github.com/Thinkmill/keystatic/discussions"
             target="_blank"
+            aria-label={`${linkLabels.ksDiscussions} (Opens in new tab)`}
           >
-            Join the discussion on GitHub
+            {linkLabels.ksDiscussions}
           </Button>
 
           <Button impact="light" onClick={() => setIsOpen(true)}>
