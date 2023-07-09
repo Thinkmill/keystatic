@@ -1,5 +1,5 @@
 {
-  "name": "@keystatic/test-astro",
+  "name": "@example/astro",
   "type": "module",
   "version": "0.0.73",
   "private": true,

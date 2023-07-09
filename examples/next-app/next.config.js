@@ -7,7 +7,7 @@ const withTsGql =
   (phase, thing) => {
     if (phase === 'phase-development-server') {
       compiler
-        .watch(path.resolve(__dirname, '../packages/keystatic'))
+        .watch(path.resolve(__dirname, '../../packages/keystatic'))
         .catch(err => {
           console.error(err.toString());
           process.exit(1);

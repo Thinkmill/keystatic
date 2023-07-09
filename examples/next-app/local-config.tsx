@@ -16,6 +16,9 @@ export default config({
     kind: 'github',
     repo: 'Thinkmill/keystatic-test-repo',
   },
+  // storage: {
+  //   kind: 'local',
+  // },
   collections: {
     posts: collection({
       label: 'Posts',

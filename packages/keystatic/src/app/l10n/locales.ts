@@ -2,7 +2,7 @@
 // names aren't used directly in Keystatic, they're just here to document the
 // ones we support.
 
-// The locales object is also used by `/apps/localization` to generate config
+// The locales object is also used by `/examples/localization` to generate config
 // for managing locale translations in Keystatic itself (!!)
 
 export const locales = {

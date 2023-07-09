@@ -1,5 +1,5 @@
 {
-  "name": "@keystatic/test-next-app",
+  "name": "@example/next-app",
   "version": "0.0.81",
   "license": "MIT",
   "private": true,
