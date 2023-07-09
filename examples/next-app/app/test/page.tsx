@@ -1,6 +1,6 @@
 // this page mainly exists to make sure @keystatic/core/reader from server components
 import { createReader } from '@keystatic/core/reader';
-import localConfig from '../../local-config';
+import localConfig from '../../keystatic.config';
 
 function time() {
   const start = performance.now();

@@ -1,4 +1,4 @@
-import localConfig from '../../../../local-config';
+import localConfig from '../../../../keystatic.config';
 import { makeRouteHandler } from '@keystatic/next/route-handler';
 
 const fakeValueInPreviewEnv =
