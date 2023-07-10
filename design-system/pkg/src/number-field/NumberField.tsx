@@ -28,7 +28,7 @@ export const NumberField: ForwardRefExoticComponent<
   forwardedRef: ForwardedRef<HTMLInputElement>
 ) {
   props = useProviderProps(props);
-  let { label, isReadOnly, isDisabled, hideStepper } = props;
+  let { isReadOnly, isDisabled, hideStepper, label, description } = props;
 
   let { locale } = useLocale();
   let state = useNumberFieldState({ ...props, locale });
@@ -48,9 +48,10 @@ export const NumberField: ForwardRefExoticComponent<
     <TextFieldPrimitive
       width="alias.singleLineWidth"
       {...filterDOMProps(props)}
+      label={label}
+      description={description}
       descriptionProps={descriptionProps}
       errorMessageProps={errorMessageProps}
-      label={label}
       labelProps={labelProps}
       inputWrapperProps={{
         ...groupProps,
