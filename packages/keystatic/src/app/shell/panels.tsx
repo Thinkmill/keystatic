@@ -1,6 +1,12 @@
-import { css, tokenSchema, transition } from '@keystar/ui/style';
+import {
+  breakpointQueries,
+  css,
+  tokenSchema,
+  transition,
+  useMediaQuery,
+} from '@keystar/ui/style';
 import { useLayoutEffect } from '@react-aria/utils';
-import { ReactElement, useRef, useState } from 'react';
+import { ReactElement, ReactNode, useRef, useState } from 'react';
 import {
   PanelGroup,
   Panel,
@@ -9,50 +15,21 @@ import {
   PanelResizeHandleProps,
 } from 'react-resizable-panels';
 
-import { useSidebar } from './sidebar';
+import { Config } from '../../config';
 
-const SIDEBAR_MIN_PERCENT = 14;
-const SIDEBAR_DEFAULT_PERCENT = 20;
-const SIDEBAR_MAX_PERCENT = 48;
-const SIDEBAR_MIN_PX = 180;
-const SIDEBAR_DEFAULT_PX = 260;
-const SIDEBAR_MAX_PX = 600;
+import { SidebarDialog, SidebarPanel, useSidebar } from './sidebar';
 
-const calcDefault = (t: number) =>
-  toFixedNumber((SIDEBAR_DEFAULT_PX / t) * 100, 0);
-const calcMin = (t: number) => toFixedNumber((SIDEBAR_MIN_PX / t) * 100, 0);
-const calcMax = (t: number) =>
-  toFixedNumber(Math.min((SIDEBAR_MAX_PX / t) * 100, SIDEBAR_MAX_PERCENT), 0);
-
-function getInitialSizes() {
-  if (typeof window === 'undefined') {
-    return {
-      minSize: SIDEBAR_MIN_PERCENT,
-      maxSize: SIDEBAR_MAX_PERCENT,
-      defaultSize: SIDEBAR_DEFAULT_PERCENT,
-    };
-  }
-
-  // Fallback to `window.innerWidth`, which doesn't include scrollbars but it's
-  // okay for this approximation.
-  let viewportWidth = window.visualViewport?.width || window.innerWidth;
-
-  let minSize = calcMin(viewportWidth);
-  let maxSize = calcMax(viewportWidth);
-  let defaultSize = calcDefault(viewportWidth);
-  return { minSize, maxSize, defaultSize };
-}
-
-export const MainPanelLayout = ({
-  children,
-}: {
-  children: [ReactElement, ReactElement];
+export const MainPanelLayout = (props: {
+  children: ReactNode;
+  basePath: string;
+  config: Config;
 }) => {
+  let { basePath, children, config } = props;
+  let isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
   let [isDragging, setIsDragging] = useState(false);
   let [size, setSize] = useState(() => getInitialSizes());
   let sidebarState = useSidebar();
   let sidebarPanelRef = useRef<ImperativePanelHandle>(null);
-  let [sidebar, content] = children;
 
   // Sync sidebar context with panel state.
   useLayoutEffect(() => {
@@ -122,32 +99,28 @@ export const MainPanelLayout = ({
       direction="horizontal"
       className={css({ flex: 1 })}
     >
-      <Panel
-        collapsible
-        defaultSize={size.defaultSize}
-        maxSize={size.maxSize}
-        minSize={size.minSize}
-        onCollapse={isCollapsed => sidebarState.setOpen(!isCollapsed)}
-        ref={sidebarPanelRef}
-        className={css({
-          // containerName: 'sidepanel',
-          // containerType: 'inline-size',
-        })}
-      >
-        {sidebar}
-      </Panel>
-      <ResizeHandle
-        onDragging={setIsDragging}
-        disabled={!isDragging && !sidebarState.isOpen}
-      />
-      <Panel
-        className={css({
-          // containerName: 'mainpanel',
-          // containerType: 'inline-size',
-        })}
-      >
-        {content}
-      </Panel>
+      {isBelowTablet ? (
+        <SidebarDialog hrefBase={basePath} config={config} />
+      ) : (
+        <>
+          <Panel
+            order={1}
+            collapsible
+            defaultSize={size.defaultSize}
+            maxSize={size.maxSize}
+            minSize={size.minSize}
+            onCollapse={isCollapsed => sidebarState.setOpen(!isCollapsed)}
+            ref={sidebarPanelRef}
+          >
+            <SidebarPanel hrefBase={basePath} config={config} />
+          </Panel>
+          <ResizeHandle
+            onDragging={setIsDragging}
+            disabled={!isDragging && !sidebarState.isOpen}
+          />
+        </>
+      )}
+      <Panel order={2}>{children}</Panel>
     </PanelGroup>
   );
 };
@@ -180,6 +153,38 @@ export const ContentPanelLayout = ({
 
 // Utils
 // -----------------------------------------------------------------------------
+
+const SIDEBAR_MIN_PERCENT = 14;
+const SIDEBAR_DEFAULT_PERCENT = 20;
+const SIDEBAR_MAX_PERCENT = 48;
+const SIDEBAR_MIN_PX = 180;
+const SIDEBAR_DEFAULT_PX = 260;
+const SIDEBAR_MAX_PX = 600;
+
+const calcDefault = (t: number) =>
+  toFixedNumber((SIDEBAR_DEFAULT_PX / t) * 100, 0);
+const calcMin = (t: number) => toFixedNumber((SIDEBAR_MIN_PX / t) * 100, 0);
+const calcMax = (t: number) =>
+  toFixedNumber(Math.min((SIDEBAR_MAX_PX / t) * 100, SIDEBAR_MAX_PERCENT), 0);
+
+function getInitialSizes() {
+  if (typeof window === 'undefined') {
+    return {
+      minSize: SIDEBAR_MIN_PERCENT,
+      maxSize: SIDEBAR_MAX_PERCENT,
+      defaultSize: SIDEBAR_DEFAULT_PERCENT,
+    };
+  }
+
+  // Fallback to `window.innerWidth`, which doesn't include scrollbars but it's
+  // okay for this approximation.
+  let viewportWidth = window.visualViewport?.width || window.innerWidth;
+
+  let minSize = calcMin(viewportWidth);
+  let maxSize = calcMax(viewportWidth);
+  let defaultSize = calcDefault(viewportWidth);
+  return { minSize, maxSize, defaultSize };
+}
 
 /** Takes a value and forces it to the closest min/max if it's outside. */
 export function clamp(

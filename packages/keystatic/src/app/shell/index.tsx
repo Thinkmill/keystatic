@@ -9,11 +9,7 @@ import {
 import { alertCircleIcon } from '@keystar/ui/icon/icons/alertCircleIcon';
 import { Icon } from '@keystar/ui/icon';
 import { Box, BoxProps, Flex } from '@keystar/ui/layout';
-import {
-  VoussoirTheme,
-  breakpointQueries,
-  useMediaQuery,
-} from '@keystar/ui/style';
+import { VoussoirTheme } from '@keystar/ui/style';
 import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../../config';
@@ -27,7 +23,7 @@ import {
   AppShellErrorContext,
   LocalAppShellProvider,
 } from './data';
-import { SidebarDialog, SidebarPanel, SidebarProvider } from './sidebar';
+import { SidebarProvider } from './sidebar';
 import { TopBar } from './topbar';
 import { MainPanelLayout } from './panels';
 import { ScrollView } from './primitives';
@@ -38,8 +34,6 @@ export const AppShell = (props: {
   currentBranch: string;
   basePath: string;
 }) => {
-  const isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
-
   const content = (
     <AppShellErrorContext.Consumer>
       {error =>
@@ -64,21 +58,14 @@ export const AppShell = (props: {
       <SidebarProvider>
         <Flex direction="column" height="100vh">
           <TopBar />
-          {isBelowTablet ? (
-            <>
-              <SidebarDialog hrefBase={props.basePath} config={props.config} />
-              {content}
-            </>
-          ) : (
-            <MainPanelLayout>
-              <SidebarPanel hrefBase={props.basePath} config={props.config} />
-              {content}
-            </MainPanelLayout>
-          )}
+          <MainPanelLayout basePath={props.basePath} config={props.config}>
+            {content}
+          </MainPanelLayout>
         </Flex>
       </SidebarProvider>
     </ConfigContext.Provider>
   );
+
   if (isGitHubConfig(props.config) || props.config.storage.kind === 'cloud') {
     return (
       <GitHubAppShellProvider
