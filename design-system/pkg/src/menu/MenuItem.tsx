@@ -57,8 +57,6 @@ export function MenuItem<T>(props: MenuItemProps<T>) {
       ? 'menuitem'
       : undefined;
 
-  console.log(key, state.selectionManager);
-
   return (
     <ListItem
       {...mergeProps(menuItemProps, { role }, hoverProps, focusProps)}
