@@ -26,7 +26,7 @@ import {
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
-import { AppShellBody, AppShellRoot } from './shell';
+import { AppShellRoot } from './shell';
 import { AppShellHeader } from './shell/header';
 import { useBaseCommit, useTree } from './shell/data';
 import { TreeNode } from './trees';
@@ -132,7 +132,6 @@ export function CreateItem(props: {
           <Breadcrumbs
             flex
             minWidth={0}
-            size="medium"
             onAction={key => {
               if (key === 'collection') {
                 router.push(collectionPath);
@@ -159,31 +158,31 @@ export function CreateItem(props: {
             {stringFormatter.format('create')}
           </Button>
         </AppShellHeader>
-        <AppShellBody>
-          <Flex
-            id={formID}
-            elementType="form"
-            onSubmit={event => {
-              if (event.target !== event.currentTarget) return;
-              event.preventDefault();
-              onCreate();
-            }}
-            direction="column"
-            gap="xxlarge"
-            // padding="xlarge"
-          >
-            {createResult.kind === 'error' && (
-              <Notice tone="critical">{createResult.error.message}</Notice>
-            )}
-            <FormForEntry
-              previewProps={previewProps}
-              forceValidation={forceValidation}
-              entryLayout={collectionConfig.entryLayout}
-              formatInfo={formatInfo}
-              slugField={slugInfo}
-            />
-          </Flex>
-        </AppShellBody>
+        <Flex
+          id={formID}
+          elementType="form"
+          onSubmit={event => {
+            if (event.target !== event.currentTarget) return;
+            event.preventDefault();
+            onCreate();
+          }}
+          direction="column"
+          gap="xxlarge"
+          height="100%"
+          minHeight={0}
+          minWidth={0}
+        >
+          {createResult.kind === 'error' && (
+            <Notice tone="critical">{createResult.error.message}</Notice>
+          )}
+          <FormForEntry
+            previewProps={previewProps}
+            forceValidation={forceValidation}
+            entryLayout={collectionConfig.entryLayout}
+            formatInfo={formatInfo}
+            slugField={slugInfo}
+          />
+        </Flex>
       </AppShellRoot>
 
       <DialogContainer

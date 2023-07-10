@@ -37,11 +37,11 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
   return (
     <AppShellRoot containerWidth="large">
       <AppShellHeader>
-        <Breadcrumbs flex size="medium" minWidth={0}>
+        <Breadcrumbs flex minWidth={0}>
           <Item key="dashboard">{stringFormatter.format('dashboard')}</Item>
         </Breadcrumbs>
       </AppShellHeader>
-      <AppShellBody>
+      <AppShellBody isScrollable>
         <Flex direction="column" gap="xlarge">
           <Grid
             columns={{ tablet: '5fr 3fr', desktop: '3fr 1fr' }}

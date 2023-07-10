@@ -1,16 +1,16 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { DismissButton, useModalOverlay } from '@react-aria/overlays';
 import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+  OverlayTriggerState,
+  useOverlayTriggerState,
+} from '@react-stately/overlays';
+import { createContext, ReactNode, useContext, useEffect, useRef } from 'react';
 
 import { Badge } from '@keystar/ui/badge';
-import { Box, Flex } from '@keystar/ui/layout';
+import { Flex } from '@keystar/ui/layout';
+import { Blanket } from '@keystar/ui/overlays';
 import { NavList, NavItem, NavGroup } from '@keystar/ui/nav-list';
-import { css, breakpointQueries, tokenSchema } from '@keystar/ui/style';
+import { css, tokenSchema, transition } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
 import { Config } from '../../config';
@@ -21,96 +21,33 @@ import { isCloudConfig, isGitHubConfig, pluralize } from '../utils';
 
 import { useChanged } from './data';
 import { SIDE_PANEL_ID } from './constants';
-import { VisuallyHidden } from '@react-aria/visually-hidden';
 import { ZapLogo } from './common';
 import { useConfig } from './context';
 import { serializeRepoConfig } from '../repo-config';
 
-const SidebarContext = createContext<{
-  sidebarIsOpen: boolean;
-  setSidebarOpen: (isOpen: boolean) => void;
-}>({
-  sidebarIsOpen: false,
-  setSidebarOpen: () => {
-    throw new Error('SidebarContext not set');
-  },
-});
+const SidebarContext = createContext<OverlayTriggerState | null>(null);
 export function useSidebar() {
-  return useContext(SidebarContext);
+  let context = useContext(SidebarContext);
+  if (!context) {
+    throw new Error('useSidebar must be within a SidebarProvider');
+  }
+  return context;
 }
 
 export function SidebarProvider(props: { children: ReactNode }) {
-  const [sidebarIsOpen, setSidebarOpen] = useState(false);
-  const router = useRouter();
-
-  useEffect(() => {
-    setSidebarOpen(false);
-  }, [router.href]);
-
-  const sidebarContext = { sidebarIsOpen, setSidebarOpen };
+  const state = useOverlayTriggerState({});
 
   return (
-    <SidebarContext.Provider value={sidebarContext}>
+    <SidebarContext.Provider value={state}>
       {props.children}
     </SidebarContext.Provider>
   );
 }
 
-export function Sidebar(props: { config: Config; hrefBase: string }) {
-  const { sidebarIsOpen, setSidebarOpen } = useContext(SidebarContext);
-
+export function SidebarPanel(props: { hrefBase: string; config: Config }) {
   return (
-    <Flex
-      data-visible={sidebarIsOpen}
-      id={SIDE_PANEL_ID}
-      // styles
-      backgroundColor="surface"
-      borderEnd="muted"
-      direction="column"
-      insetTop={0}
-      maxHeight="100vh"
-      position="sticky"
-      width="scale.3600"
-      zIndex={100}
-      UNSAFE_className={[
-        css({
-          // ensure that there's always enough of gutter for the user to press
-          // and exit the sidebar
-          maxWidth: `calc(100% - ${tokenSchema.size.element.medium})`,
-
-          [breakpointQueries.below.tablet]: {
-            border: 0,
-            boxShadow: `${tokenSchema.size.shadow.large} ${tokenSchema.color.shadow.regular}`,
-            height: '100vh',
-            left: 'auto',
-            outline: 0,
-            position: 'fixed',
-            right: '100%',
-            transition: 'transform 200ms, visibility 0s 200ms',
-            visibility: 'hidden',
-
-            '&[data-visible=true]': {
-              transform: 'translate(100%)',
-              transitionDelay: '0s',
-              visibility: 'unset',
-            },
-          },
-        }),
-      ]}
-    >
-      {sidebarIsOpen && <SidebarHeader />}
-
+    <Flex backgroundColor="surface" direction="column" height="100%">
       <SidebarNav {...props} />
-
-      {/* let screen reader users exit the sidebar on mobile devices */}
-      {sidebarIsOpen && (
-        <VisuallyHidden
-          elementType="button"
-          onClick={() => setSidebarOpen(false)}
-        >
-          close sidebar
-        </VisuallyHidden>
-      )}
     </Flex>
   );
 }
@@ -142,7 +79,83 @@ function SidebarHeader() {
   );
 }
 
-export function SidebarNav(props: { config: Config; hrefBase: string }) {
+export function SidebarDialog(props: { hrefBase: string; config: Config }) {
+  const state = useSidebar();
+  const router = useRouter();
+
+  // close the sidebar when the route changes
+  useEffect(() => {
+    state.close();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.href]);
+
+  let dialogRef = useRef<HTMLDivElement>(null);
+  let { modalProps, underlayProps } = useModalOverlay(
+    { isDismissable: true },
+    state,
+    dialogRef
+  );
+
+  return (
+    <>
+      <Blanket {...underlayProps} isOpen={state.isOpen} zIndex={10} />
+      <div
+        data-visible={state.isOpen}
+        id={SIDE_PANEL_ID}
+        ref={dialogRef}
+        {...modalProps}
+        // styles
+        className={css({
+          backgroundColor: tokenSchema.color.background.surface,
+          boxShadow: `${tokenSchema.size.shadow.large} ${tokenSchema.color.shadow.regular}`,
+          display: 'flex',
+          flexDirection: 'column',
+          inset: 0,
+          insetInlineEnd: 'auto',
+          // ensure that there's always enough of gutter for the user to press
+          // and exit the sidebar
+          maxWidth: `calc(100% - ${tokenSchema.size.element.medium})`,
+          minWidth: tokenSchema.size.scale[3000],
+          outline: 0,
+          pointerEvents: 'none',
+          position: 'fixed',
+          transform: 'translateX(-100%)',
+          visibility: 'hidden',
+          zIndex: 10,
+
+          // exit animation
+          transition: [
+            transition('transform', {
+              easing: 'easeIn',
+              duration: 'short',
+              // delay: 'short',
+            }),
+            transition('visibility', {
+              delay: 'regular',
+              duration: 0,
+              easing: 'linear',
+            }),
+          ].join(', '),
+
+          '&[data-visible=true]': {
+            transform: 'translateX(0)',
+            // enter animation
+            transition: transition('transform', { easing: 'easeOut' }),
+            pointerEvents: 'auto',
+            visibility: 'visible',
+          },
+        })}
+      >
+        <SidebarHeader />
+        <SidebarNav {...props} />
+        <DismissButton onDismiss={state.close} />
+      </div>
+    </>
+  );
+}
+
+export function SidebarNav(props: { hrefBase: string; config: Config }) {
+  let config = useConfig();
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
   const isCurrent = (href: string, { exact = false } = {}) => {
@@ -154,13 +167,21 @@ export function SidebarNav(props: { config: Config; hrefBase: string }) {
       : undefined;
   };
 
-  const collectionsArray = Object.entries(props.config.collections || {});
-  const singletonsArray = Object.entries(props.config.singletons || {});
+  const collectionsArray = Object.entries(config.collections || {});
+  const singletonsArray = Object.entries(config.singletons || {});
 
   const changedData = useChanged();
 
   return (
-    <Box flex overflow="auto" paddingEnd="large" paddingY="large">
+    <div
+      className={css({
+        flex: 1,
+        overflowY: 'auto',
+        paddingBlock: tokenSchema.size.space.large,
+        paddingInlineEnd: tokenSchema.size.space.large,
+        WebkitOverflowScrolling: 'touch',
+      })}
+    >
       <NavList>
         <NavItem
           href={props.hrefBase}
@@ -183,7 +204,9 @@ export function SidebarNav(props: { config: Config; hrefBase: string }) {
                 : 0;
               return (
                 <NavItem key={key} href={href} aria-current={isCurrent(href)}>
-                  <Text>{collection.label}</Text>
+                  <Text truncate title={collection.label}>
+                    {collection.label}
+                  </Text>
                   {!!allChangesCount && (
                     <Badge tone="accent" marginStart="auto">
                       <Text>{allChangesCount}</Text>
@@ -207,7 +230,9 @@ export function SidebarNav(props: { config: Config; hrefBase: string }) {
               const href = `${props.hrefBase}/singleton/${key}`;
               return (
                 <NavItem key={key} href={href} aria-current={isCurrent(href)}>
-                  <Text>{collection.label}</Text>
+                  <Text truncate title={collection.label}>
+                    {collection.label}
+                  </Text>
                   {changedData.singletons.has(key) && (
                     <Badge tone="accent" marginStart="auto">
                       Changed
@@ -219,6 +244,6 @@ export function SidebarNav(props: { config: Config; hrefBase: string }) {
           </NavGroup>
         )}
       </NavList>
-    </Box>
+    </div>
   );
 }
