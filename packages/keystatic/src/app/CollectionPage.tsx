@@ -35,7 +35,7 @@ type CollectionPageProps = {
   config: Config;
   basePath: string;
 };
-type CollectionStatus = 'loading' | 'okay' | 'error';
+type CollectionStatus = 'loading' | 'loaded' | 'error';
 type CollectionState = {
   status: CollectionStatus;
   setStatus: (status: CollectionStatus) => void;
@@ -44,7 +44,7 @@ type CollectionState = {
 };
 
 function useCollectionState(collection: string): CollectionState {
-  const [status, setStatus] = useState<CollectionStatus>('okay');
+  const [status, setStatus] = useState<CollectionStatus>('loaded');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -89,8 +89,10 @@ export function CollectionPage(props: CollectionPageProps) {
     <AppShellRoot containerWidth={containerWidth}>
       <CollectionPageHeader
         collectionLabel={collectionConfig.label}
+        createHref={`${props.basePath}/collection/${encodeURIComponent(
+          props.collection
+        )}/create`}
         {...collectionState}
-        {...props}
       />
       <CollectionPageContent
         searchTerm={debouncedSearchTerm}
@@ -102,12 +104,13 @@ export function CollectionPage(props: CollectionPageProps) {
 }
 
 function CollectionPageHeader(
-  props: CollectionPageProps &
-    CollectionState & {
-      collectionLabel: string;
-    }
+  props: CollectionState & {
+    createHref: string;
+    collectionLabel: string;
+  }
 ) {
-  const { collectionLabel, searchTerm, setSearchTerm, status } = props;
+  const { collectionLabel, createHref, searchTerm, setSearchTerm, status } =
+    props;
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   return (
@@ -117,7 +120,7 @@ function CollectionPageHeader(
       </Breadcrumbs>
       <div role="search">
         <SearchField
-          isDisabled={status !== 'okay'}
+          isDisabled={status !== 'loaded'}
           aria-label={stringFormatter.format('search')} // TODO: l10n "Search {collection}"?
           onChange={setSearchTerm}
           onClear={() => setSearchTerm('')}
@@ -126,13 +129,7 @@ function CollectionPageHeader(
           width="scale.2400"
         />
       </div>
-      <Button
-        marginStart="auto"
-        prominence="high"
-        href={`${props.basePath}/collection/${encodeURIComponent(
-          props.collection
-        )}/create`}
-      >
+      <Button marginStart="auto" prominence="high" href={createHref}>
         {stringFormatter.format('add')}
       </Button>
     </AppShellHeader>
@@ -145,8 +142,22 @@ function CollectionPageContent(props: CollectionPageContentProps) {
   const { setStatus } = props;
   const trees = useTree();
 
+  const tree =
+    trees.merged.kind === 'loaded'
+      ? trees.merged.data.current.entries.get(
+          getCollectionPath(props.config, props.collection)
+        )
+      : null;
+
+  useEffect(() => {
+    let status = trees.merged.kind;
+    if (tree?.type !== 'tree') {
+      status = 'error';
+    }
+    setStatus(status);
+  }, [setStatus, tree?.type, trees.merged.kind]);
+
   if (trees.merged.kind === 'error') {
-    setStatus('error');
     return (
       <EmptyState
         icon={alertCircleIcon}
@@ -162,7 +173,6 @@ function CollectionPageContent(props: CollectionPageContentProps) {
   }
 
   if (trees.merged.kind === 'loading') {
-    setStatus('loading');
     return (
       <EmptyState>
         <ProgressCircle
@@ -174,11 +184,7 @@ function CollectionPageContent(props: CollectionPageContentProps) {
     );
   }
 
-  const tree = trees.merged.data.current.entries.get(
-    getCollectionPath(props.config, props.collection)
-  );
   if (!tree) {
-    setStatus('error');
     return (
       <EmptyState
         icon={listStartIcon}
@@ -201,7 +207,6 @@ function CollectionPageContent(props: CollectionPageContentProps) {
   }
 
   if (tree.type !== 'tree') {
-    setStatus('error');
     return (
       <EmptyState
         icon={folderTreeIcon}
@@ -227,8 +232,7 @@ function CollectionTable(
     };
   }
 ) {
-  let { searchTerm, setStatus } = props;
-  setStatus('okay');
+  let { searchTerm } = props;
 
   let router = useRouter();
   let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
@@ -270,17 +274,6 @@ function CollectionTable(
   }, [filteredItems, sortDescriptor]);
 
   return (
-    // <AppShellBody isScrollable>
-    // <Flex direction="column" gap="large">
-    // <Flex gap="large" alignItems="start" justifyContent="space-between">
-    //   <SearchField
-    //     aria-label={stringFormatter.format('search')}
-    //     onChange={setSearchTerm}
-    //     onClear={() => setSearchTerm('')}
-    //     placeholder={stringFormatter.format('search')}
-    //     value={searchTerm}
-    //   />
-    // </Flex>
     <TableView
       aria-labelledby="page-title"
       flex
