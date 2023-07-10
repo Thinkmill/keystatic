@@ -118,6 +118,7 @@ export function EmptyState(props: EmptyStateProps) {
       gap="large"
       justifyContent="center"
       minHeight="scale.3000"
+      padding={{ mobile: 'regular', tablet: 'xlarge' }}
     >
       {'children' in props ? (
         props.children
@@ -126,7 +127,11 @@ export function EmptyState(props: EmptyStateProps) {
           {props.icon && (
             <Icon src={props.icon} size="large" color="neutralEmphasis" />
           )}
-          {props.title && <Heading size="medium">{props.title}</Heading>}
+          {props.title && (
+            <Heading align="center" size="medium">
+              {props.title}
+            </Heading>
+          )}
           {props.message && <Text align="center">{props.message}</Text>}
           {props.actions}
         </>
@@ -195,7 +200,7 @@ export const AppShellContainer = (props: BoxProps) => {
       minHeight={0}
       minWidth={0}
       maxWidth={maxWidth}
-      marginX="auto"
+      // marginX="auto"
       paddingX={{ mobile: 'regular', tablet: 'xlarge' }}
       {...props}
     />

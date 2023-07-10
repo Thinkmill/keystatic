@@ -90,7 +90,6 @@ export function useTableStyleProps<T>(props: TableProps<T>) {
         flexDirection: 'column',
         minHeight: 0,
         minWidth: 0,
-        overflow: 'auto',
       })
     ),
     style: styleProps.style,
@@ -107,7 +106,7 @@ export function useHeadStyleProps() {
       flexDirection: 'column',
 
       '.ksv-table-view[data-prominence="low"] &': {
-        borderBottom: `${tokenSchema.size.border.medium} solid ${tokenSchema.color.border.neutral}`,
+        borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
       },
     }),
   };
@@ -118,10 +117,11 @@ export function useBodyStyleProps() {
       display: 'flex',
       flexDirection: 'column',
       flex: 1,
+      overflow: 'auto',
 
       '.ksv-table-view:not([data-prominence="low"]) &': {
         backgroundColor: tokenSchema.color.background.canvas,
-        border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
+        border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
         borderRadius: tokenSchema.size.radius.medium,
       },
     }),
@@ -246,10 +246,11 @@ export function useRowStyleProps(state: {
     position: 'relative',
     outline: 0,
 
-    // prominence
     '&:not(:last-child)': {
-      borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
+      borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
     },
+
+    // prominence
     '.ksv-table-view:not([data-prominence="low"]) &': {
       '&:first-child': {
         borderStartStartRadius: calculatedRadius,

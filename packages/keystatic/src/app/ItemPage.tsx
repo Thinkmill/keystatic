@@ -346,7 +346,7 @@ function HeaderActions(props: {
       },
       {
         key: 'delete',
-        label: 'Delete entry', // TODO: l10n
+        label: 'Delete entry…', // TODO: l10n
         icon: trash2Icon,
       },
     ];

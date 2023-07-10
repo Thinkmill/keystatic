@@ -25,7 +25,6 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
 
   return (
     <Box
-      backgroundColor="surface"
       borderBottom="muted"
       elementType="header"
       height={{ mobile: 'element.large', tablet: 'scale.700' }}
