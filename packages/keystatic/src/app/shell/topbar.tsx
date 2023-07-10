@@ -179,8 +179,9 @@ function HeaderOuter({ children }: { children: ReactNode }) {
       // styles
       alignItems="center"
       borderBottom="muted"
+      flexShrink={0}
       gap="small"
-      height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
+      height={{ mobile: 'element.large', tablet: 'scale.700' }}
       paddingX={{ mobile: 'regular', tablet: 'xlarge' }}
     >
       {children}
@@ -212,12 +213,17 @@ function ThemeMenu() {
 
   return (
     <MenuTrigger>
-      <ActionButton aria-label="Theme" prominence="low">
+      <ActionButton
+        aria-label="Theme"
+        prominence="low"
+        UNSAFE_className={css({ borderRadius: '50%', padding: 0 })}
+      >
         <Icon src={icon} />
       </ActionButton>
       <Menu
         items={themeItems}
         onSelectionChange={([key]) => setTheme(key as ColorScheme)}
+        disallowEmptySelection
         selectedKeys={[theme]}
         selectionMode="single"
       >
@@ -265,11 +271,13 @@ function UserMenu() {
       <ActionButton
         aria-label="User menu"
         prominence="low"
-        height="element.medium"
-        width="element.medium"
         UNSAFE_className={css({ borderRadius: '50%', padding: 0 })}
       >
-        <Avatar src={user.avatarUrl} name={user.name ?? undefined} />
+        <Avatar
+          src={user.avatarUrl}
+          name={user.name ?? undefined}
+          size="small"
+        />
       </ActionButton>
       <>
         <Flex

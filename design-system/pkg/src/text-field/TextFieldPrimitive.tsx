@@ -183,8 +183,15 @@ function useTextFieldStyles() {
     WebkitFontSmoothing: 'antialiased',
     MozOsxFontSmoothing: 'grayscale',
 
+    '::placeholder': {
+      color: tokenSchema.color.foreground.neutralTertiary,
+    },
+
     '&:disabled, &[aria-disabled]': {
       color: tokenSchema.color.alias.foregroundDisabled,
+      '::placeholder': {
+        color: tokenSchema.color.alias.foregroundDisabled,
+      },
     },
 
     /* Remove the inner padding and cancel buttons for input[type="search"] in Chrome and Safari on macOS. */
