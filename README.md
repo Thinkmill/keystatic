@@ -46,7 +46,7 @@ next is super helpful as we progress!
 
 ## Developing Keystatic
 
-If you want to try Keystatic, we recommend following our [guides](https://keystatic.com/docs/introduction) or using the CLI rather than running the example apps in this repo.
+If you want to try Keystatic, we recommend following our [guides](https://keystatic.com/docs/introduction) or using the CLI rather than running the dev-projects in this repo.
 
 They're intended for testing and developing features, and aren't great examples of actual Keystatic projects.
 
@@ -54,7 +54,7 @@ However, if you want to spin up Keystatic for local development in the monorepo,
 
 ```sh
 pnpm install
-cd examples/{example}
+cd dev-projects/{example}
 pnpm run dev
 ```
 
