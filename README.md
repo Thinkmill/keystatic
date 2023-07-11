@@ -46,11 +46,15 @@ next is super helpful as we progress!
 
 ## Developing Keystatic
 
-If you want to try Keystatic, we recommend following our [guides](https://keystatic.com/docs/introduction) or using the CLI rather than running the dev-projects in this repo.
+If you want to try Keystatic, we recommend following our
+[guides](https://keystatic.com/docs/introduction) or using the CLI rather than
+running the dev-projects in this repo.
 
-They're intended for testing and developing features, and aren't great examples of actual Keystatic projects.
+They're intended for testing and developing features, and aren't great examples
+of actual Keystatic projects.
 
-However, if you want to spin up Keystatic for local development in the monorepo, you can! Run the following:
+However, if you want to spin up Keystatic for local development in the monorepo,
+you can! Run the following:
 
 ```sh
 pnpm install
@@ -60,10 +64,12 @@ pnpm run dev
 
 ### Requirements
 
-* node.js v18
-* pnpm
+- node.js v18
+- pnpm
 
-Note: if you are getting an error with `pnpm`, make sure you're using [corepack](https://nodejs.org/api/corepack.html), uninstall pnpm, and then run `corepack enable pnpm`.
+Note: if you are getting an error with `pnpm`, make sure you're using
+[corepack](https://nodejs.org/api/corepack.html), uninstall pnpm, and then run
+`corepack enable pnpm`.
 
 ---
 
