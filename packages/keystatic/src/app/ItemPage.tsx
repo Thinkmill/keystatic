@@ -10,6 +10,7 @@ import {
   useState,
 } from 'react';
 
+import { ActionGroup } from '@keystar/ui/action-group';
 import { Badge } from '@keystar/ui/badge';
 import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
 import { Button, ButtonGroup } from '@keystar/ui/button';
@@ -22,25 +23,21 @@ import { Box, Flex } from '@keystar/ui/layout';
 import { Notice } from '@keystar/ui/notice';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { Content } from '@keystar/ui/slots';
+import { breakpointQueries, useMediaQuery } from '@keystar/ui/style';
 import { TextField } from '@keystar/ui/text-field';
 import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../config';
 import { createGetPreviewProps } from '../form/preview-props';
 import { fields } from '../form/api';
+import { SlugFieldInfo } from '../form/fields/text/ui';
 import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
-import {
-  getCollectionFormat,
-  getCollectionItemPath,
-  getRepoUrl,
-  getSlugFromState,
-  isGitHubConfig,
-} from './utils';
 
 import { useCreateBranchMutation } from './branch-selection';
-import l10nMessages from './l10n/index.json';
+import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { ForkRepoDialog } from './fork-repo';
+import l10nMessages from './l10n/index.json';
 import { getDataFileExtension, getSlugGlobForCollection } from './path-utils';
 import { useRouter } from './router';
 import { AppShellBody, AppShellRoot } from './shell';
@@ -52,15 +49,18 @@ import {
 } from './shell/data';
 import { AppShellHeader } from './shell/header';
 import { TreeNode } from './trees';
+import { useDeleteItem, useUpsertItem } from './updating';
 import { useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
 import { mergeDataStates } from './useData';
 import { useSlugsInCollection } from './useSlugsInCollection';
-import { SlugFieldInfo } from '../form/fields/text/ui';
-import { useDeleteItem, useUpsertItem } from './updating';
-import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
-import { ActionGroup } from '@keystar/ui/action-group';
-import { breakpointQueries, useMediaQuery } from '@keystar/ui/style';
+import {
+  getCollectionFormat,
+  getCollectionItemPath,
+  getRepoUrl,
+  getSlugFromState,
+  isGitHubConfig,
+} from './utils';
 
 type ItemPageProps = {
   collection: string;
@@ -377,8 +377,8 @@ function HeaderActions(props: {
       return isBelowTablet ? (
         <Box
           backgroundColor="pendingEmphasis"
-          height="icon.small"
-          width="icon.small"
+          height="scale.100"
+          width="scale.100"
           borderRadius="full"
         />
       ) : (

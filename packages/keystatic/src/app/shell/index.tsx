@@ -105,7 +105,7 @@ export function EmptyState(props: EmptyStateProps) {
       gap="large"
       justifyContent="center"
       minHeight="scale.3000"
-      padding={{ mobile: 'regular', tablet: 'xlarge' }}
+      paddingX={{ mobile: 'medium', tablet: 'xlarge', desktop: 'xxlarge' }}
     >
       {'children' in props ? (
         props.children
@@ -188,7 +188,7 @@ export const AppShellContainer = (props: BoxProps) => {
       minWidth={0}
       maxWidth={maxWidth}
       // marginX="auto"
-      paddingX={{ mobile: 'regular', tablet: 'xlarge' }}
+      paddingX={{ mobile: 'medium', tablet: 'xlarge', desktop: 'xxlarge' }}
       {...props}
     />
   );

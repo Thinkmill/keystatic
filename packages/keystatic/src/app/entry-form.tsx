@@ -78,7 +78,11 @@ export function FormForEntry({
             <ContentPanelLayout>
               <ScrollView>
                 <Box
-                  padding={{ mobile: 'regular', tablet: 'xlarge' }}
+                  padding={{
+                    mobile: 'medium',
+                    tablet: 'xlarge',
+                    desktop: 'xxlarge',
+                  }}
                   minHeight={0}
                   minWidth={0}
                   maxWidth="container.medium"
@@ -95,7 +99,11 @@ export function FormForEntry({
               <ScrollView>
                 <Grid
                   gap="xlarge"
-                  padding={{ mobile: 'regular', tablet: 'xlarge' }}
+                  padding={{
+                    mobile: 'medium',
+                    tablet: 'xlarge',
+                    desktop: 'xxlarge',
+                  }}
                 >
                   {Object.entries(props.fields).map(([key, propVal]) =>
                     key === contentField.key ? null : (
@@ -119,7 +127,9 @@ export function FormForEntry({
   return (
     <Box height="100%" ref={ref}>
       <ScrollView>
-        <AppShellContainer padding={{ mobile: 'regular', tablet: 'xlarge' }}>
+        <AppShellContainer
+          paddingY={{ mobile: 'medium', tablet: 'xlarge', desktop: 'xxlarge' }}
+        >
           <FormValueContentFromPreviewProps
             // autoFocus
             forceValidation={forceValidation}
