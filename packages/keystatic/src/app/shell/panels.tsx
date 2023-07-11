@@ -214,10 +214,12 @@ function ResizeHandle(props: Omit<PanelResizeHandleProps, 'className'>) {
     <PanelResizeHandle
       {...props}
       className={css({
-        borderInlineEnd: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
+        backgroundColor: tokenSchema.color.border.muted,
         boxSizing: 'border-box',
         outline: 0,
         position: 'relative',
+        transition: transition('background-color'),
+        width: tokenSchema.size.border.regular,
         zIndex: 1,
 
         // hide when disabled
@@ -234,21 +236,27 @@ function ResizeHandle(props: Omit<PanelResizeHandleProps, 'className'>) {
 
         // drag indicator
         '&::after': {
-          backgroundColor: tokenSchema.color.border.emphasis,
+          backgroundColor: tokenSchema.color.alias.backgroundHovered,
           content: '""',
           insetBlock: 0,
-          insetInline: `50%`,
-          width: tokenSchema.size.space.xsmall,
+          insetInline: `calc(${tokenSchema.size.border.medium} * -1)`,
           opacity: 0,
           position: 'absolute',
           transition: transition('opacity'),
         },
-        '&:hover::after': {
-          opacity: 1,
-          transition: transition('opacity', { delay: 300 }), // delay to avoid flicker. user may just be mousing around the screen; wait for intent
+        // delay to avoid flicker. user may just be mousing around the screen; wait for intent
+        '&:hover': {
+          backgroundColor: tokenSchema.color.border.neutral,
+          transitionDelay: tokenSchema.animation.duration.regular,
+
+          '&::after': {
+            opacity: 1,
+            transitionDelay: tokenSchema.animation.duration.regular,
+          },
         },
         '&[data-resize-handle-active]::after': {
           backgroundColor: tokenSchema.color.background.accentEmphasis,
+          insetInline: `calc(${tokenSchema.size.border.regular} * -1)`,
           opacity: 1,
         },
       })}

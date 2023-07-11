@@ -10,7 +10,6 @@ import { listStartIcon } from '@keystar/ui/icon/icons/listStartIcon';
 import { TextLink } from '@keystar/ui/link';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { SearchField } from '@keystar/ui/search-field';
-import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
 import {
   TableView,
   TableBody,
@@ -281,37 +280,26 @@ function CollectionTable(
       onSortChange={setSortDescriptor}
       sortDescriptor={sortDescriptor}
       overflowMode="truncate"
-      prominence="low"
-      // margin="medium"
+      // prominence="low"
+      margin={{ mobile: 'regular', tablet: 'medium' }}
       onRowAction={key => {
         router.push(getItemPath(props.basePath, props.collection, key));
       }}
-      UNSAFE_className={css({
-        '[role=row]> :first-child': {
-          paddingInlineStart: tokenSchema.size.space.regular,
-        },
-        '[role=row]> :last-child': {
-          paddingInlineStart: tokenSchema.size.space.regular,
-        },
-        [breakpointQueries.above.mobile]: {
-          '[role=row]> :first-child': {
-            paddingInlineStart: tokenSchema.size.space.xlarge,
-          },
-          '[role=row]> :last-child': {
-            paddingInlineStart: tokenSchema.size.space.xlarge,
-          },
-        },
-      })}
     >
       <TableHeader
         columns={[
           { name: 'Name', key: 'name' },
-          { name: 'Status', key: 'status', width: 140 },
+          {
+            name: 'Status',
+            key: 'status',
+            minWidth: 140,
+            width: '20%',
+          },
         ]}
       >
-        {column => (
-          <Column isRowHeader allowsSorting width={column.width}>
-            {column.name}
+        {({ name, key, ...options }) => (
+          <Column key={key} isRowHeader allowsSorting {...options}>
+            {name}
           </Column>
         )}
       </TableHeader>
