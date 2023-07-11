@@ -42,10 +42,8 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
             onPress={sidebarState.toggle}
             ref={menuButtonRef}
             UNSAFE_className={css({
-              marginInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
-              [breakpointQueries.below.tablet]: {
-                borderStartStartRadius: 0,
-                borderEndStartRadius: 0,
+              [breakpointQueries.above.tablet]: {
+                marginInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
               },
             })}
           >

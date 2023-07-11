@@ -19,7 +19,7 @@ function getStyleFromColumn(props: CellProps) {
   const { maxWidth, minWidth, width } = props;
 
   if (width) {
-    return { flex: '0 0 auto', width };
+    return { flex: '0 0 auto', width, maxWidth, minWidth };
   }
 
   return { maxWidth, minWidth };
@@ -116,7 +116,6 @@ export function useBodyStyleProps() {
     className: css({
       display: 'flex',
       flexDirection: 'column',
-      flex: 1,
       overflow: 'auto',
 
       '.ksv-table-view:not([data-prominence="low"]) &': {
