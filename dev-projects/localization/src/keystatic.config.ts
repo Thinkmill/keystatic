@@ -1,5 +1,5 @@
 import { collection, config, fields } from '@keystatic/core';
-import { locales } from '@keystatic/core/src/app/l10n/locales';
+import { locales } from '../../../packages/keystatic/src/app/l10n/locales';
 
 const localeCollections = Object.fromEntries(
   Object.entries(locales).map(([key, label]) => [
