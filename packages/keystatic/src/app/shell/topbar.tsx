@@ -182,7 +182,8 @@ function HeaderOuter({ children }: { children: ReactNode }) {
       flexShrink={0}
       gap="small"
       height={{ mobile: 'element.large', tablet: 'scale.700' }}
-      paddingX={{ mobile: 'regular', tablet: 'xlarge' }}
+      paddingX={{ mobile: 'medium', tablet: 'xlarge' }}
+      paddingEnd={{ desktop: 'xxlarge' }}
     >
       {children}
     </Flex>

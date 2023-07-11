@@ -42,6 +42,7 @@ export function TableView<T extends object>(props: TableProps<T>) {
   let { collection } = state;
   let { gridProps } = useTable(props, state, ref);
   let styleProps = useTableStyleProps(props);
+  let rows = [...collection.body.childNodes];
 
   return (
     <div {...gridProps} {...styleProps} ref={ref}>
@@ -68,27 +69,35 @@ export function TableView<T extends object>(props: TableProps<T>) {
       </TableHead>
 
       <TableBody>
-        {[...collection.body.childNodes].map(row => (
-          <TableRow
-            key={row.key}
-            item={row}
-            state={state}
-            hasAction={!!props.onRowAction}
-          >
-            {[...row.childNodes].map(cell =>
-              cell.props.isSelectionCell ? (
-                <TableCheckboxCell key={cell.key} cell={cell} state={state} />
-              ) : (
-                <TableCell
-                  key={cell.key}
-                  cell={cell}
-                  state={state}
-                  overflowMode={props.overflowMode}
-                />
-              )
-            )}
-          </TableRow>
-        ))}
+        {!rows.length && props.renderEmptyState ? (
+          <div role="row" aria-rowindex={2}>
+            <div role="rowheader" aria-colspan={collection.columnCount}>
+              {props.renderEmptyState()}
+            </div>
+          </div>
+        ) : (
+          rows.map(row => (
+            <TableRow
+              key={row.key}
+              item={row}
+              state={state}
+              hasAction={!!props.onRowAction}
+            >
+              {[...row.childNodes].map(cell =>
+                cell.props.isSelectionCell ? (
+                  <TableCheckboxCell key={cell.key} cell={cell} state={state} />
+                ) : (
+                  <TableCell
+                    key={cell.key}
+                    cell={cell}
+                    state={state}
+                    overflowMode={props.overflowMode}
+                  />
+                )
+              )}
+            </TableRow>
+          ))
+        )}
       </TableBody>
     </div>
   );

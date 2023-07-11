@@ -1,12 +1,20 @@
 import {
   breakpointQueries,
+  breakpoints,
   css,
   tokenSchema,
   transition,
   useMediaQuery,
 } from '@keystar/ui/style';
 import { useLayoutEffect } from '@react-aria/utils';
-import { ReactElement, ReactNode, useRef, useState } from 'react';
+import {
+  ReactElement,
+  ReactNode,
+  createContext,
+  useContext,
+  useRef,
+  useState,
+} from 'react';
 import {
   PanelGroup,
   Panel,
@@ -19,17 +27,53 @@ import { Config } from '../../config';
 
 import { SidebarDialog, SidebarPanel, useSidebar } from './sidebar';
 
+// Content context
+// ------------------------------
+
+type ContentSize = keyof typeof breakpoints;
+type AboveSize = Exclude<ContentSize, 'wide'>;
+type BelowSize = Exclude<ContentSize, 'mobile'>;
+type QueryOptions =
+  | { above: AboveSize; below: BelowSize }
+  | { above: AboveSize }
+  | { below: BelowSize };
+
+const ContentPanelContext = createContext<ContentSize>('mobile');
+
+export function useContentPanelSize() {
+  return useContext(ContentPanelContext);
+}
+export function useContentPanelQuery(options: QueryOptions) {
+  const sizes = ['mobile', 'tablet', 'desktop', 'wide'];
+  const size = useContentPanelSize();
+
+  const startIndex = 'above' in options ? sizes.indexOf(options.above) + 1 : 0;
+  const endIndex =
+    'below' in options ? sizes.indexOf(options.below) - 1 : sizes.length - 1;
+  const range = sizes.slice(startIndex, endIndex + 1);
+
+  return range.includes(size);
+}
+
+// Main panel layout
+// -----------------------------------------------------------------------------
+
 export const MainPanelLayout = (props: {
   children: ReactNode;
   basePath: string;
   config: Config;
 }) => {
   let { basePath, children, config } = props;
+
   let isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
   let [isDragging, setIsDragging] = useState(false);
   let [size, setSize] = useState(() => getInitialSizes());
+  let [contentSize, setContentSize] = useState<ContentSize>('mobile');
   let sidebarState = useSidebar();
   let sidebarPanelRef = useRef<ImperativePanelHandle>(null);
+
+  const contentPanelId = 'content';
+  const panelGroupId = 'main';
 
   // Sync sidebar context with panel state.
   useLayoutEffect(() => {
@@ -58,30 +102,52 @@ export const MainPanelLayout = (props: {
 
   useLayoutEffect(() => {
     const panelGroup: HTMLElement | null = document.querySelector(
-      '[data-panel-group-id="main"]'
+      `[data-panel-group-id="${panelGroupId}"]`
+    );
+    const contentPanel: HTMLElement | null = document.querySelector(
+      `[data-panel-id="${contentPanelId}"]`
     );
     const resizeHandles: NodeListOf<HTMLElement> = document.querySelectorAll(
       '[data-panel-resize-handle-id]'
     );
 
-    if (!panelGroup) {
+    if (!panelGroup || !contentPanel) {
       return;
     }
 
     const observer = new ResizeObserver(() => {
-      let width = panelGroup.offsetWidth;
+      // GROUP: pixel fixes
+      let groupWidth = panelGroup.offsetWidth;
 
-      // subtract the width of the resize handles
       resizeHandles.forEach(resizeHandle => {
-        width -= resizeHandle.offsetWidth;
+        // subtract the width of the resize handles
+        groupWidth -= resizeHandle.offsetWidth;
       });
 
-      let minSize = calcMin(width);
-      let maxSize = calcMax(width);
-      let defaultSize = calcDefault(width);
+      let minSize = calcMin(groupWidth);
+      let maxSize = calcMax(groupWidth);
+      let defaultSize = calcDefault(groupWidth);
+
       setSize({ minSize, maxSize, defaultSize });
+
+      // CONTENT PANEL: for context
+      let contentWidth = contentPanel.offsetWidth;
+
+      setContentSize(() => {
+        if (contentWidth >= breakpoints.wide) {
+          return 'wide';
+        }
+        if (contentWidth >= breakpoints.desktop) {
+          return 'desktop';
+        }
+        if (contentWidth >= breakpoints.tablet) {
+          return 'tablet';
+        }
+        return 'mobile';
+      });
     });
     observer.observe(panelGroup);
+    observer.observe(contentPanel);
     resizeHandles.forEach(resizeHandle => {
       observer.observe(resizeHandle);
     });
@@ -92,38 +158,45 @@ export const MainPanelLayout = (props: {
   }, []);
 
   return (
-    <PanelGroup
-      disablePointerEventsDuringResize
-      id="main"
-      autoSaveId="main"
-      direction="horizontal"
-      className={css({ flex: 1 })}
-    >
-      {isBelowTablet ? (
-        <SidebarDialog hrefBase={basePath} config={config} />
-      ) : (
-        <>
-          <Panel
-            order={1}
-            collapsible
-            defaultSize={size.defaultSize}
-            maxSize={size.maxSize}
-            minSize={size.minSize}
-            onCollapse={isCollapsed => sidebarState.setOpen(!isCollapsed)}
-            ref={sidebarPanelRef}
-          >
-            <SidebarPanel hrefBase={basePath} config={config} />
-          </Panel>
-          <ResizeHandle
-            onDragging={setIsDragging}
-            disabled={!isDragging && !sidebarState.isOpen}
-          />
-        </>
-      )}
-      <Panel order={2}>{children}</Panel>
-    </PanelGroup>
+    <ContentPanelContext.Provider value={contentSize}>
+      <PanelGroup
+        disablePointerEventsDuringResize
+        id={panelGroupId}
+        autoSaveId={panelGroupId}
+        direction="horizontal"
+        className={css({ flex: 1 })}
+      >
+        {isBelowTablet ? (
+          <SidebarDialog hrefBase={basePath} config={config} />
+        ) : (
+          <>
+            <Panel
+              order={1}
+              collapsible
+              defaultSize={size.defaultSize}
+              maxSize={size.maxSize}
+              minSize={size.minSize}
+              onCollapse={isCollapsed => sidebarState.setOpen(!isCollapsed)}
+              ref={sidebarPanelRef}
+            >
+              <SidebarPanel hrefBase={basePath} config={config} />
+            </Panel>
+            <ResizeHandle
+              onDragging={setIsDragging}
+              disabled={!isDragging && !sidebarState.isOpen}
+            />
+          </>
+        )}
+        <Panel order={2} id={contentPanelId}>
+          {children}
+        </Panel>
+      </PanelGroup>
+    </ContentPanelContext.Provider>
   );
 };
+
+// Content panel layout
+// -----------------------------------------------------------------------------
 
 export const ContentPanelLayout = ({
   children,
@@ -131,12 +204,13 @@ export const ContentPanelLayout = ({
   children: [ReactElement, ReactElement];
 }) => {
   const [main, aside] = children;
+  const panelGroupId = 'content';
 
   return (
     <PanelGroup
       disablePointerEventsDuringResize
-      id="content"
-      autoSaveId="content"
+      id={panelGroupId}
+      autoSaveId={panelGroupId}
       direction="horizontal"
       className={css({ flex: 1 })}
     >

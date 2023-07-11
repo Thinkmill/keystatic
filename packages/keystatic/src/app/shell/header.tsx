@@ -8,7 +8,7 @@ import { panelLeftCloseIcon } from '@keystar/ui/icon/icons/panelLeftCloseIcon';
 import { panelRightOpenIcon } from '@keystar/ui/icon/icons/panelRightOpenIcon';
 import { panelRightCloseIcon } from '@keystar/ui/icon/icons/panelRightCloseIcon';
 import { Box, Flex } from '@keystar/ui/layout';
-import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
+import { css, tokenSchema } from '@keystar/ui/style';
 
 import { useSidebar } from './sidebar';
 import { AppShellContainer } from '.';
@@ -42,9 +42,7 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
             onPress={sidebarState.toggle}
             ref={menuButtonRef}
             UNSAFE_className={css({
-              [breakpointQueries.above.tablet]: {
-                marginInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
-              },
+              marginInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
             })}
           >
             <Icon src={icon} />

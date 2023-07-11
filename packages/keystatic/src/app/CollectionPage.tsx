@@ -6,10 +6,12 @@ import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
 import { Button } from '@keystar/ui/button';
 import { alertCircleIcon } from '@keystar/ui/icon/icons/alertCircleIcon';
 import { folderTreeIcon } from '@keystar/ui/icon/icons/folderTreeIcon';
-import { listStartIcon } from '@keystar/ui/icon/icons/listStartIcon';
+import { listXIcon } from '@keystar/ui/icon/icons/listXIcon';
+import { searchXIcon } from '@keystar/ui/icon/icons/searchXIcon';
 import { TextLink } from '@keystar/ui/link';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { SearchField } from '@keystar/ui/search-field';
+import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
 import {
   TableView,
   TableBody,
@@ -186,7 +188,7 @@ function CollectionPageContent(props: CollectionPageContentProps) {
   if (!tree) {
     return (
       <EmptyState
-        icon={listStartIcon}
+        icon={listXIcon}
         title="Empty collection"
         message={
           <>
@@ -275,16 +277,33 @@ function CollectionTable(
   return (
     <TableView
       aria-labelledby="page-title"
-      flex
       selectionMode="none"
       onSortChange={setSortDescriptor}
       sortDescriptor={sortDescriptor}
       overflowMode="truncate"
-      // prominence="low"
-      margin={{ mobile: 'regular', tablet: 'medium' }}
       onRowAction={key => {
         router.push(getItemPath(props.basePath, props.collection, key));
       }}
+      renderEmptyState={() => (
+        <EmptyState
+          icon={searchXIcon}
+          title="No results"
+          message={`No items matching "${searchTerm}" were found.`}
+        />
+      )}
+      // prominence="low"
+      flex
+      marginTop={{ tablet: 'large' }}
+      marginBottom={{ mobile: 'regular', tablet: 'xlarge' }}
+      UNSAFE_className={css({
+        marginInline: tokenSchema.size.space.regular,
+        [breakpointQueries.above.mobile]: {
+          marginInline: `calc(${tokenSchema.size.space.xlarge} - ${tokenSchema.size.space.medium})`,
+        },
+        [breakpointQueries.above.tablet]: {
+          marginInline: `calc(${tokenSchema.size.space.xxlarge} - ${tokenSchema.size.space.medium})`,
+        },
+      })}
     >
       <TableHeader
         columns={[
