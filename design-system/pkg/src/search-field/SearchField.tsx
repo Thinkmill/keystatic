@@ -50,7 +50,14 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
         pointerEvents="none"
         width="element.regular"
       >
-        <Icon src={searchIcon} color="neutralSecondary" />
+        <Icon
+          src={searchIcon}
+          color={
+            props.isDisabled
+              ? 'color.alias.foregroundDisabled'
+              : 'neutralSecondary'
+          }
+        />
       </Flex>
     );
 

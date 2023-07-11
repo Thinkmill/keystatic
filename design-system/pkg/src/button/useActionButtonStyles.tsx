@@ -90,20 +90,17 @@ export function useActionButtonStyles(
         '&:not([data-prominence])': {
           backgroundColor: tokenSchema.color.background.surface,
           borderColor: tokenSchema.color.alias.borderIdle,
-          boxShadow: `${tokenSchema.size.shadow.small} ${tokenSchema.color.shadow.muted}`,
           color: tokenSchema.color.alias.foregroundIdle,
 
           // interactions
           '&[data-interaction=hover]': {
             backgroundColor: tokenSchema.color.alias.backgroundHovered,
             borderColor: tokenSchema.color.alias.borderHovered,
-            boxShadow: `${tokenSchema.size.shadow.small} ${tokenSchema.color.shadow.regular}`,
             color: tokenSchema.color.alias.foregroundHovered,
           },
           '&[data-interaction=press]': {
             backgroundColor: tokenSchema.color.alias.backgroundPressed,
             borderColor: tokenSchema.color.alias.borderPressed,
-            boxShadow: 'none',
             color: tokenSchema.color.alias.foregroundPressed,
           },
 
@@ -120,14 +117,12 @@ export function useActionButtonStyles(
           '&:disabled, &[aria-disabled=true], &[data-disabled=true]': {
             backgroundColor: tokenSchema.color.alias.backgroundDisabled,
             borderColor: 'transparent',
-            boxShadow: 'none',
             color: tokenSchema.color.alias.foregroundDisabled,
           },
 
           // static
           '&[data-static]': {
             backgroundColor: 'transparent',
-            boxShadow: 'none',
           },
           '&[data-static=light]': {
             borderColor: '#fff6',
@@ -190,7 +185,6 @@ export function useActionButtonStyles(
           },
           '&:disabled, &[aria-disabled=true], &[data-disabled=true]': {
             borderColor: 'transparent',
-            boxShadow: 'none',
             color: tokenSchema.color.alias.foregroundDisabled,
           },
 

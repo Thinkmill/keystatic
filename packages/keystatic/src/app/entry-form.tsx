@@ -20,13 +20,16 @@ import {
   Collection,
   Singleton,
 } from '..';
+import { ContentPanelLayout, useContentPanelQuery } from './shell/panels';
+import { ScrollView } from './shell/primitives';
+import { AppShellContainer } from './shell';
 
 const emptyArray: ReadonlyPropPath = [];
 
 export function containerWidthForEntryLayout(
   config: Collection<any, any> | Singleton<any>
 ) {
-  return config.entryLayout === 'content' ? 'large' : 'medium';
+  return config.entryLayout === 'content' ? 'none' : 'medium';
 }
 
 export function FormForEntry({
@@ -45,52 +48,77 @@ export function FormForEntry({
   forceValidation: boolean | undefined;
   slugField: SlugFieldInfo | undefined;
 }) {
+  const isAboveMobile = useContentPanelQuery({ above: 'mobile' });
   const props = _previewProps as GenericPreviewProps<
     ObjectField<Record<string, NonChildFieldComponentSchema>>,
     unknown
   >;
 
-  if (entryLayout === 'content' && formatInfo.contentField) {
+  if (entryLayout === 'content' && formatInfo.contentField && isAboveMobile) {
     const { contentField } = formatInfo;
     return (
       <PathContextProvider value={emptyArray}>
         <SlugFieldProvider value={slugField}>
-          <Grid
-            alignItems="start"
-            columns={{ desktop: '2fr 1fr' }}
-            gap="xlarge"
-          >
-            <Grid gap="xlarge" order={{ desktop: 2 }}>
-              {Object.entries(props.fields).map(([key, propVal]) =>
-                key === contentField.key ? null : (
-                  <AddToPathProvider key={key} part={key}>
-                    <InnerFormValueContentFromPreviewProps
-                      forceValidation={forceValidation}
-                      {...propVal}
-                    />
-                  </AddToPathProvider>
-                )
-              )}
-            </Grid>
-            <Box minWidth={0}>
-              <AddToPathProvider part={contentField.key}>
-                <InnerFormValueContentFromPreviewProps
-                  forceValidation={forceValidation}
-                  {...props.fields[contentField.key]}
-                />
-              </AddToPathProvider>
-            </Box>
-          </Grid>
+          <ContentPanelLayout>
+            <ScrollView>
+              <Box
+                padding={{
+                  mobile: 'medium',
+                  tablet: 'xlarge',
+                  desktop: 'xxlarge',
+                }}
+                minHeight={0}
+                minWidth={0}
+                maxWidth="container.medium"
+                marginX="auto"
+              >
+                <AddToPathProvider part={contentField.key}>
+                  <InnerFormValueContentFromPreviewProps
+                    forceValidation={forceValidation}
+                    {...props.fields[contentField.key]}
+                  />
+                </AddToPathProvider>
+              </Box>
+            </ScrollView>
+            <ScrollView>
+              <Grid
+                gap="xlarge"
+                padding={{
+                  mobile: 'medium',
+                  tablet: 'xlarge',
+                  desktop: 'xxlarge',
+                }}
+              >
+                {Object.entries(props.fields).map(([key, propVal]) =>
+                  key === contentField.key ? null : (
+                    <AddToPathProvider key={key} part={key}>
+                      <InnerFormValueContentFromPreviewProps
+                        forceValidation={forceValidation}
+                        {...propVal}
+                      />
+                    </AddToPathProvider>
+                  )
+                )}
+              </Grid>
+            </ScrollView>
+          </ContentPanelLayout>
         </SlugFieldProvider>
       </PathContextProvider>
     );
   }
+
   return (
-    <FormValueContentFromPreviewProps
-      autoFocus
-      forceValidation={forceValidation}
-      slugField={slugField}
-      {...props}
-    />
+    <ScrollView>
+      <AppShellContainer
+        paddingY={{ mobile: 'medium', tablet: 'xlarge', desktop: 'xxlarge' }}
+      >
+        <FormValueContentFromPreviewProps
+          // autoFocus
+          forceValidation={forceValidation}
+          slugField={slugField}
+          {...props}
+        />
+      </AppShellContainer>
+    </ScrollView>
   );
 }

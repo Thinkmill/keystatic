@@ -8,7 +8,7 @@ import { assertNever } from 'emery';
 import { Children, Fragment, ReactElement, useEffect, useRef } from 'react';
 
 import { Modal, Popover, PopoverProps, Tray } from '@keystar/ui/overlays';
-import { useMediaQuery } from '@keystar/ui/style';
+import { breakpointQueries, useMediaQuery } from '@keystar/ui/style';
 
 import { DialogContext } from './context';
 import { DialogRenderFn, DialogProps, DialogTriggerProps } from './types';
@@ -31,8 +31,7 @@ function DialogTrigger(props: DialogTriggerProps) {
   let [trigger, content] = children as [ReactElement, DialogRenderFn];
 
   // On small devices, show a modal or tray instead of a popover.
-  // TODO: DNA variable?
-  let isMobile = useMediaQuery('(max-width: 700px)');
+  let isMobile = useMediaQuery(breakpointQueries.below.tablet);
   if (isMobile) {
     // handle cases where desktop popovers need a close button for the mobile modal view
     if (type !== 'modal' && mobileType === 'modal') {

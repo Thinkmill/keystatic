@@ -440,7 +440,7 @@ export const ComplexItemsStatic = (args: ArgTypes) =>
       selectionMode="multiple"
       defaultSelectedKeys={['bold', 'italic']}
       disabledKeys={['zoom-in', 'italic']}
-      disabledBehavior="selection"
+      // disabledBehavior="selection"
     >
       <Section title="Section 1">
         <Item key="bold" textValue="Bold">
@@ -496,6 +496,7 @@ export const ComplexItemsStatic = (args: ArgTypes) =>
   );
 
 ComplexItemsStatic.args = {
+  isOpen: true,
   shouldFlip: true,
   direction: 'bottom',
   align: 'start',

@@ -1,7 +1,10 @@
 'use client';
+import { useLocale } from '@react-aria/i18n';
 import { HTMLAttributes, ReactNode, Fragment, useCallback } from 'react';
 
-import { ChevronEndIcon } from '@keystar/ui/icon';
+import { Icon } from '@keystar/ui/icon';
+import { chevronLeftIcon } from '@keystar/ui/icon/icons/chevronLeftIcon';
+import { chevronRightIcon } from '@keystar/ui/icon/icons/chevronRightIcon';
 import { Box, Flex } from '@keystar/ui/layout';
 import { LinkComponentProps } from '@keystar/ui/link';
 import { css, tokenSchema } from '@keystar/ui/style';
@@ -142,6 +145,9 @@ const HeadingItem = ({
 }: HeadingItemProps) => {
   const isSubItem = level > 2;
   // const isActive = useIsActive(id);
+  const { direction } = useLocale();
+  const chevronEndIcon =
+    direction === 'rtl' ? chevronLeftIcon : chevronRightIcon;
 
   return (
     <Box elementType="li" marginTop={isSubItem ? undefined : 'regular'}>
@@ -172,7 +178,7 @@ const HeadingItem = ({
           },
         })}
       >
-        {isSubItem && <ChevronEndIcon size="small" />}
+        {isSubItem && <Icon src={chevronEndIcon} size="small" />}
         <Text
           trim={false}
           color="inherit"

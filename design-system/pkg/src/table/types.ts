@@ -36,6 +36,8 @@ export type TableProps<T> = {
    * @default 'default'
    */
   prominence?: 'default' | 'low';
+  /** What should render when there is no content to display. */
+  renderEmptyState?: () => JSX.Element;
 } & BaseStyleProps &
   DOMProps &
   MultipleSelection &
