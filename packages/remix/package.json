@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@keystatic/core": "^0.0.109",
-    "@remix-run/react": "^1.13.0",
+    "@remix-run/react": "^1.18.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
