@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
-  "packageManager": "pnpm@7.27.0",
+  "packageManager": "pnpm@7.33.3",
+  "engines": {
+    "pnpm": "7.33.3"
+  },
   "scripts": {
     "build:docs": "pnpm --filter=keystatic-docs build",
-    "build:designsystem": "pnpm --filter=@voussoir/docs build",
+    "build:designsystem": "pnpm --filter=@keystar/docs build",
     "build:packages": "cd packages/keystatic && pnpm run setup && cd ../.. && preconstruct build",
     "check:format": "prettier --check",
     "check:lint": "eslint",
@@ -16,9 +19,9 @@
     "dev:create": "pnpm --filter=create dev",
     "dev:localization": "pnpm --filter=localization dev",
     "dev:docs": "pnpm --filter=keystatic-docs dev",
-    "dev:designsystem": "pnpm --filter=@voussoir/docs dev",
-    "dev:playroom": "pnpm --filter=@voussoir/docs dev:playroom",
-    "dev:storybook": "pnpm --filter=@voussoir/docs dev:storybook",
+    "dev:designsystem": "pnpm --filter=@keystar/docs dev",
+    "dev:playroom": "pnpm --filter=@keystar/docs dev:playroom",
+    "dev:storybook": "pnpm --filter=@keystar/docs dev:storybook",
     "docs:build": "pnpm run build:designsystem",
     "eslint": "eslint .",
     "format": "prettier --write",
@@ -28,7 +31,7 @@
     "prettier": "prettier **/*.{ts,tsx}",
     "release": "pnpm build:packages && changeset publish",
     "start:docs": "pnpm --filter=keystatic-docs start",
-    "start:designsystem": "pnpm --filter=@voussoir/docs start",
+    "start:designsystem": "pnpm --filter=@keystar/docs start",
     "static": "pnpm run validate && pnpm run test",
     "test": "pnpm run test:unit",
     "test-strict": "cross-env STRICT_MODE=1 pnpm run test",
@@ -46,7 +49,7 @@
     "@changesets/changelog-github": "^0.4.5",
     "@changesets/cli": "^2.23.0",
     "@manypkg/cli": "^0.19.1",
-    "@preconstruct/cli": "^2.6.4",
+    "@preconstruct/cli": "^2.8.0",
     "@testing-library/dom": "^8.20.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -76,7 +79,7 @@
   },
   "preconstruct": {
     "packages": [
-      "design-system/packages/*",
+      "design-system/pkg",
       "packages/*"
     ],
     "exports": true,

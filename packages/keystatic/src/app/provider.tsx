@@ -1,9 +1,10 @@
 import {
   ClientSideOnlyDocumentElement,
   VoussoirProvider,
-} from '@voussoir/core';
-import { makeLinkComponent } from '@voussoir/link';
-import { Toaster } from '@voussoir/toast';
+} from '@keystar/ui/core';
+import { makeLinkComponent } from '@keystar/ui/link';
+import { injectGlobal } from '@keystar/ui/style';
+import { Toaster } from '@keystar/ui/toast';
 import {
   AnchorHTMLAttributes,
   ForwardedRef,
@@ -29,18 +30,17 @@ import {
   redirectToCloudAuth,
 } from './utils';
 import { Config } from '../config';
+import { ThemeProvider, useTheme } from './shell/theme';
+import { parseRepoConfig } from './repo-config';
+
+// NOTE: scroll behaviour is handled by shell components
+injectGlobal({ body: { overflow: 'hidden' } });
 
 export function createUrqlClient(config: Config): Client {
-  const repo = {
-    owner:
-      config.storage.kind === 'github'
-        ? config.storage.repo.owner
-        : 'repo-owner',
-    name:
-      config.storage.kind === 'github'
-        ? config.storage.repo.owner
-        : 'repo-name',
-  };
+  const repo =
+    config.storage.kind === 'github'
+      ? parseRepoConfig(config.storage.repo)
+      : { owner: 'repo-owner', name: 'repo-name' };
   return createClient({
     url:
       config.storage.kind === 'github'
@@ -194,6 +194,7 @@ export default function Provider({
   ) => ReactNode;
   config: Config;
 }) {
+  const themeContext = useTheme();
   const UniversalLink = useMemo(
     () =>
       makeLinkComponent(
@@ -226,17 +227,26 @@ export default function Provider({
       ),
     [Link]
   );
+
   return (
-    <VoussoirProvider linkComponent={UniversalLink}>
-      <ClientSideOnlyDocumentElement bodyBackground="surface" />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet"
-      />
-      <UrqlProvider value={useMemo(() => createUrqlClient(config), [config])}>
-        {children}
-      </UrqlProvider>
-      <Toaster />
-    </VoussoirProvider>
+    <ThemeProvider value={themeContext}>
+      <VoussoirProvider
+        linkComponent={UniversalLink}
+        locale={config.locale || 'en-US'}
+        colorScheme={
+          themeContext.theme === 'system' ? undefined : themeContext.theme
+        }
+      >
+        <ClientSideOnlyDocumentElement bodyBackground="surface" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+        <UrqlProvider value={useMemo(() => createUrqlClient(config), [config])}>
+          {children}
+        </UrqlProvider>
+        <Toaster />
+      </VoussoirProvider>
+    </ThemeProvider>
   );
 }

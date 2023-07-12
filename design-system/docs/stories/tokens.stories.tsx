@@ -1,8 +1,8 @@
 import { Meta } from '@storybook/react';
 
-import { Box, Divider, Flex, Grid } from '@voussoir/layout';
-import { css, tokenSchema } from '@voussoir/style';
-import { Heading, Text } from '@voussoir/typography';
+import { Box, Divider, Flex, Grid } from '@keystar/ui/layout';
+import { css, tokenSchema } from '@keystar/ui/style';
+import { Heading, Text } from '@keystar/ui/typography';
 
 export default {
   title: 'Patterns / Tokens',

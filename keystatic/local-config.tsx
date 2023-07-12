@@ -14,13 +14,18 @@ const description = 'Some description';
 export default config({
   storage: {
     kind: 'github',
-    repo: { owner: 'Thinkmill', name: 'keystatic-test-repo' },
+    repo: 'Thinkmill/keystatic-test-repo',
   },
   collections: {
     posts: collection({
       label: 'Posts',
       slugField: 'slug',
       schema: {
+        title: fields.text({ label: 'Title' }),
+        slug: fields.text({
+          label: 'Slug',
+          validation: { length: { min: 4 } },
+        }),
         blocks: fields.blocks(
           {
             a: {
@@ -39,11 +44,6 @@ export default config({
           },
           { label: 'Blocks' }
         ),
-        title: fields.text({ label: 'Title' }),
-        slug: fields.text({
-          label: 'Slug',
-          validation: { length: { min: 4 } },
-        }),
         publishDate: fields.date({ label: 'Publish Date' }),
         heroImage: fields.image({ label: 'Hero Image' }),
         content: fields.document({
@@ -217,11 +217,27 @@ export default config({
       label: 'People',
       path: 'some/directory/people/*/',
       slugField: 'username',
+      entryLayout: 'content',
+      format: { contentField: 'bio' },
       schema: {
         name: fields.text({ label: 'Name' }),
         username: fields.text({
           label: 'Username',
           validation: { length: { min: 4 } },
+        }),
+        bio: fields.document({
+          label: 'Bio',
+          images: true,
+          formatting: {
+            inlineMarks: {
+              bold: true,
+              code: true,
+              italic: true,
+              strikethrough: true,
+            },
+            listTypes: true,
+            softBreaks: true,
+          },
         }),
         favouritePost: fields.relationship({
           label: 'Favourite Post',
@@ -313,6 +329,16 @@ export default config({
         }),
         file: fields.file({ label: 'File', description }),
         image: fields.image({ label: 'Image', description }),
+        object: fields.object(
+          {
+            a: fields.text({ label: 'A' }),
+            b: fields.text({ label: 'B' }),
+          },
+          {
+            label: 'Object',
+            description,
+          }
+        ),
         pathReference: fields.pathReference({
           label: 'Path Reference',
           description,

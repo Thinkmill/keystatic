@@ -1,11 +1,14 @@
 'use client';
+import { useLocale } from '@react-aria/i18n';
 import { HTMLAttributes, ReactNode, Fragment, useCallback } from 'react';
 
-import { ChevronEndIcon } from '@voussoir/icon';
-import { Box, Flex } from '@voussoir/layout';
-import { LinkComponentProps } from '@voussoir/link';
-import { css, tokenSchema } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
+import { Icon } from '@keystar/ui/icon';
+import { chevronLeftIcon } from '@keystar/ui/icon/icons/chevronLeftIcon';
+import { chevronRightIcon } from '@keystar/ui/icon/icons/chevronRightIcon';
+import { Box, Flex } from '@keystar/ui/layout';
+import { LinkComponentProps } from '@keystar/ui/link';
+import { css, tokenSchema } from '@keystar/ui/style';
+import { Text } from '@keystar/ui/typography';
 
 import { HeadingEntry } from '../../utils/generate-toc';
 import { ASIDE_WIDTH, HEADER_HEIGHT, SIDEBAR_WIDTH } from '../constants';
@@ -48,7 +51,7 @@ const Content = (props: ElementProps) => {
     <Box
       flex
       marginX="auto"
-      marginTop={{ mobile: HEADER_HEIGHT, tablet: 0 }}
+      marginTop={{ mobile: HEADER_HEIGHT, tablet: 'large' }}
       padding={{ mobile: 'large', tablet: 'xlarge' }}
       UNSAFE_style={{ maxWidth: 840, minWidth: 0 }}
     >
@@ -75,7 +78,6 @@ const Aside = () => {
     <Box
       elementType="aside"
       isHidden={{ below: 'desktop' }}
-      // backgroundColor="inset"
       height="100%"
       insetEnd={0}
       overflow="hidden auto"
@@ -83,7 +85,9 @@ const Aside = () => {
       position="fixed"
       UNSAFE_style={{ width: ASIDE_WIDTH }}
     >
-      <TableOfContents />
+      <Box marginTop="large">
+        <TableOfContents />
+      </Box>
     </Box>
   );
 };
@@ -141,6 +145,9 @@ const HeadingItem = ({
 }: HeadingItemProps) => {
   const isSubItem = level > 2;
   // const isActive = useIsActive(id);
+  const { direction } = useLocale();
+  const chevronEndIcon =
+    direction === 'rtl' ? chevronLeftIcon : chevronRightIcon;
 
   return (
     <Box elementType="li" marginTop={isSubItem ? undefined : 'regular'}>
@@ -171,7 +178,7 @@ const HeadingItem = ({
           },
         })}
       >
-        {isSubItem && <ChevronEndIcon size="small" />}
+        {isSubItem && <Icon src={chevronEndIcon} size="small" />}
         <Text
           trim={false}
           color="inherit"

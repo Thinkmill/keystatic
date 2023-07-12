@@ -236,10 +236,16 @@ export default config({
     pages: collection({
       label: 'Docs pages',
       slugField: 'title',
+      entryLayout: 'content',
       format: { contentField: 'content' },
       path: 'src/content/pages/**',
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
+        summary: fields.text({
+          label: 'Summary',
+          description: 'The summary is used for the metadata description.',
+          multiline: true,
+        }),
         content: fields.document({
           label: 'Content',
           dividers: true,
@@ -258,6 +264,7 @@ export default config({
       label: 'Blog posts',
       slugField: 'title',
       path: 'src/content/blog/**',
+      entryLayout: 'content',
       format: {
         contentField: 'content',
       },
@@ -282,7 +289,12 @@ export default config({
             isRequired: true,
           },
         }),
-        summary: fields.text({ label: 'Summary', multiline: true }),
+        summary: fields.text({
+          label: 'Summary',
+          description:
+            'The summary is displayed on the blog list page and also the metadata description.',
+          multiline: true,
+        }),
         content: fields.document({
           label: 'Content',
           links: true,

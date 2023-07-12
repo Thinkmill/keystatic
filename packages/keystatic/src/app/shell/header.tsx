@@ -1,149 +1,51 @@
-import { ActionButton } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { menuIcon } from '@voussoir/icon/icons/menuIcon';
-import { Box, Flex } from '@voussoir/layout';
-import { PropsWithChildren, useContext, useRef, useEffect } from 'react';
-import { AppShellContainer } from '.';
-import { SidebarContext } from './sidebar';
+import { useLocale } from '@react-aria/i18n';
+import { PropsWithChildren, useRef } from 'react';
 
-function documentSelector(selector: string): HTMLElement | null {
-  return document.querySelector(selector);
-}
+import { ActionButton } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
+import { panelLeftOpenIcon } from '@keystar/ui/icon/icons/panelLeftOpenIcon';
+import { panelLeftCloseIcon } from '@keystar/ui/icon/icons/panelLeftCloseIcon';
+import { panelRightOpenIcon } from '@keystar/ui/icon/icons/panelRightOpenIcon';
+import { panelRightCloseIcon } from '@keystar/ui/icon/icons/panelRightCloseIcon';
+import { Box, Flex } from '@keystar/ui/layout';
+import { css, tokenSchema } from '@keystar/ui/style';
+
+import { useSidebar } from './sidebar';
+import { AppShellContainer } from '.';
 
 export const AppShellHeader = ({ children }: PropsWithChildren) => {
-  const { setSidebarOpen } = useContext(SidebarContext);
+  const sidebarState = useSidebar();
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const { direction } = useLocale();
 
-  let onPress = () => {
-    let nav = documentSelector('.keystatic-sidebar');
-    let main = documentSelector('main');
-
-    if (nav && main) {
-      nav.dataset.visible = nav.dataset.visible === 'true' ? 'false' : 'true';
-
-      if (nav.dataset.visible === 'true') {
-        setSidebarOpen(true);
-        main.setAttribute('aria-hidden', 'true');
-        nav.tabIndex = -1;
-        nav.focus();
-      } else {
-        setSidebarOpen(false);
-        main.removeAttribute('aria-hidden');
-        nav.removeAttribute('tabindex');
-      }
-    }
-  };
-
-  useEffect(() => {
-    let mediaQueryList = window.matchMedia('(max-width: 1020px)');
-    let nav = documentSelector('.keystatic-sidebar');
-    let main = documentSelector('main');
-    let hamburgerButton = menuButtonRef.current;
-
-    let removeVisible = (isNotResponsive = false) => {
-      setSidebarOpen(false);
-
-      if (nav && main) {
-        if (
-          hamburgerButton &&
-          nav.contains(document.activeElement) &&
-          !isNotResponsive
-        ) {
-          hamburgerButton.focus();
-        }
-
-        nav.dataset.visible = 'false';
-        main.removeAttribute('aria-hidden');
-        nav.removeAttribute('tabindex');
-      }
-    };
-
-    /* collapse nav when underlying content is clicked */
-    let onClick = (e: MouseEvent) => {
-      if (e.target !== hamburgerButton) {
-        removeVisible();
-      }
-    };
-
-    /* collapse expanded nav when esc key is pressed */
-    let onKeydownEsc = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        removeVisible();
-      }
-    };
-
-    /* trap keyboard focus within expanded nav */
-    let onKeydownTab = (event: KeyboardEvent) => {
-      if (event.key === 'Tab' && nav && nav.dataset.visible === 'true') {
-        let tabbables = nav.querySelectorAll('button, a[href]');
-        let first = tabbables[0] as HTMLElement;
-        let last = tabbables[tabbables.length - 1] as HTMLElement;
-
-        if (event.shiftKey && event.target === first) {
-          event.preventDefault();
-          last.focus();
-        } else if (!event.shiftKey && event.target === last) {
-          event.preventDefault();
-          first.focus();
-        }
-      }
-    };
-
-    /* restore default behavior when responsive media query no longer matches */
-    let mediaQueryTest = (event: any) => {
-      if (!event.matches) {
-        removeVisible(true);
-      }
-    };
-
-    document.addEventListener('keydown', onKeydownEsc);
-    if (nav && main) {
-      main.addEventListener('click', onClick);
-      nav.addEventListener('keydown', onKeydownTab);
-    }
-
-    let useEventListener =
-      typeof mediaQueryList.addEventListener === 'function';
-    if (useEventListener) {
-      mediaQueryList.addEventListener('change', mediaQueryTest);
-    } else {
-      mediaQueryList.addListener(mediaQueryTest);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', onKeydownEsc);
-      if (nav && main) {
-        main.removeEventListener('click', onClick);
-        nav.removeEventListener('keydown', onKeydownTab);
-      }
-
-      if (useEventListener) {
-        mediaQueryList.removeEventListener('change', mediaQueryTest);
-      } else {
-        mediaQueryList.removeListener(mediaQueryTest);
-      }
-    };
-  }, [setSidebarOpen, menuButtonRef]);
+  let icon = sidebarState.isOpen ? panelLeftCloseIcon : panelLeftOpenIcon;
+  if (direction === 'rtl') {
+    icon = sidebarState.isOpen ? panelRightCloseIcon : panelRightOpenIcon;
+  }
 
   return (
     <Box
-      backgroundColor="surface"
       borderBottom="muted"
       elementType="header"
-      height="element.xlarge"
-      insetTop={0}
-      position="sticky"
-      zIndex={3}
+      height={{ mobile: 'element.large', tablet: 'scale.700' }}
+      flexShrink={0}
     >
       <AppShellContainer>
-        <Flex alignItems="center" height="element.xlarge" gap="regular">
+        <Flex
+          alignItems="center"
+          gap={{ mobile: 'small', tablet: 'regular' }}
+          height={{ mobile: 'element.large', tablet: 'scale.700' }}
+        >
           <ActionButton
             prominence="low"
-            isHidden={{ above: 'mobile' }}
-            onPress={onPress}
+            isHidden={sidebarState.isOpen ? { above: 'mobile' } : undefined}
+            onPress={sidebarState.toggle}
             ref={menuButtonRef}
+            UNSAFE_className={css({
+              marginInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
+            })}
           >
-            <Icon src={menuIcon} />
+            <Icon src={icon} />
           </ActionButton>
           {children}
         </Flex>

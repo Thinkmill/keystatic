@@ -1,14 +1,15 @@
-import { Flex } from '@voussoir/layout';
-import { Heading, Text } from '@voussoir/typography';
+import { Flex } from '@keystar/ui/layout';
+import { Heading, Text } from '@keystar/ui/typography';
 import { useEffect } from 'react';
 import { GitHubConfig } from '../..';
 import cookie from 'cookie';
 import { InstallGitHubApp } from './install-app';
+import { serializeRepoConfig } from '../repo-config';
 
 export function FromTemplateDeploy(props: { config: GitHubConfig }) {
   useEffect(() => {
     const parsedCookies = cookie.parse(document.cookie);
-    const repo = `${props.config.storage.repo.owner}/${props.config.storage.repo.name}`;
+    const repo = serializeRepoConfig(props.config.storage.repo);
     const cookieName = 'ks-template';
     if (parsedCookies[cookieName] !== repo) {
       document.cookie = cookie.serialize(cookieName, repo, {
@@ -19,7 +20,7 @@ export function FromTemplateDeploy(props: { config: GitHubConfig }) {
         sameSite: 'lax',
       });
     }
-  }, [props.config.storage.repo.name, props.config.storage.repo.owner]);
+  }, [props.config.storage.repo]);
 
   return (
     <Flex alignItems="center" justifyContent="center" margin="xxlarge">
@@ -40,7 +41,8 @@ export function FromTemplateDeploy(props: { config: GitHubConfig }) {
         </Text>
         <Text>
           Make sure to add the App to the{' '}
-          <code>{props.config.storage.repo.name}</code> repository.
+          <code>{serializeRepoConfig(props.config.storage.repo)}</code>{' '}
+          repository.
         </Text>
         <InstallGitHubApp config={props.config} />
       </Flex>

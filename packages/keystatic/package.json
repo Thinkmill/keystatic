@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/core",
-  "version": "0.0.107",
+  "version": "0.0.109",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -10,6 +10,14 @@
   "exports": {
     "./ui": {
       "types": "./ui/dist/keystatic-core-ui.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./ui/dist/keystatic-core-ui.node.react-server.esm.js",
+          "default": "./ui/dist/keystatic-core-ui.node.react-server.cjs.js"
+        },
+        "module": "./ui/dist/keystatic-core-ui.node.esm.js",
+        "default": "./ui/dist/keystatic-core-ui.node.cjs.js"
+      },
       "react-server": {
         "module": "./ui/dist/keystatic-core-ui.react-server.esm.js",
         "default": "./ui/dist/keystatic-core-ui.react-server.cjs.js"
@@ -19,6 +27,14 @@
     },
     ".": {
       "types": "./dist/keystatic-core.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./dist/keystatic-core.node.react-server.esm.js",
+          "default": "./dist/keystatic-core.node.react-server.cjs.js"
+        },
+        "module": "./dist/keystatic-core.node.esm.js",
+        "default": "./dist/keystatic-core.node.cjs.js"
+      },
       "react-server": {
         "module": "./dist/keystatic-core.react-server.esm.js",
         "default": "./dist/keystatic-core.react-server.cjs.js"
@@ -28,6 +44,14 @@
     },
     "./api/utils": {
       "types": "./api/utils/dist/keystatic-core-api-utils.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./api/utils/dist/keystatic-core-api-utils.node.react-server.esm.js",
+          "default": "./api/utils/dist/keystatic-core-api-utils.node.react-server.cjs.js"
+        },
+        "module": "./api/utils/dist/keystatic-core-api-utils.node.esm.js",
+        "default": "./api/utils/dist/keystatic-core-api-utils.node.cjs.js"
+      },
       "react-server": {
         "module": "./api/utils/dist/keystatic-core-api-utils.react-server.esm.js",
         "default": "./api/utils/dist/keystatic-core-api-utils.react-server.cjs.js"
@@ -37,6 +61,14 @@
     },
     "./renderer": {
       "types": "./renderer/dist/keystatic-core-renderer.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./renderer/dist/keystatic-core-renderer.node.react-server.esm.js",
+          "default": "./renderer/dist/keystatic-core-renderer.node.react-server.cjs.js"
+        },
+        "module": "./renderer/dist/keystatic-core-renderer.node.esm.js",
+        "default": "./renderer/dist/keystatic-core-renderer.node.cjs.js"
+      },
       "react-server": {
         "module": "./renderer/dist/keystatic-core-renderer.react-server.esm.js",
         "default": "./renderer/dist/keystatic-core-renderer.react-server.cjs.js"
@@ -46,6 +78,14 @@
     },
     "./api/generic": {
       "types": "./api/generic/dist/keystatic-core-api-generic.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./api/generic/dist/keystatic-core-api-generic.node.react-server.esm.js",
+          "default": "./api/generic/dist/keystatic-core-api-generic.node.react-server.cjs.js"
+        },
+        "module": "./api/generic/dist/keystatic-core-api-generic.node.esm.js",
+        "default": "./api/generic/dist/keystatic-core-api-generic.node.cjs.js"
+      },
       "react-server": {
         "module": "./api/generic/dist/keystatic-core-api-generic.react-server.esm.js",
         "default": "./api/generic/dist/keystatic-core-api-generic.react-server.cjs.js"
@@ -55,6 +95,14 @@
     },
     "./reader": {
       "types": "./reader/dist/keystatic-core-reader.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./reader/dist/keystatic-core-reader.node.react-server.esm.js",
+          "default": "./reader/dist/keystatic-core-reader.node.react-server.cjs.js"
+        },
+        "module": "./reader/dist/keystatic-core-reader.node.esm.js",
+        "default": "./reader/dist/keystatic-core-reader.node.cjs.js"
+      },
       "react-server": {
         "module": "./reader/dist/keystatic-core-reader.react-server.esm.js",
         "default": "./reader/dist/keystatic-core-reader.react-server.cjs.js"
@@ -64,6 +112,14 @@
     },
     "./form/fields/markdoc": {
       "types": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.node.react-server.esm.js",
+          "default": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.node.react-server.cjs.js"
+        },
+        "module": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.node.esm.js",
+        "default": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.node.cjs.js"
+      },
       "react-server": {
         "module": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.react-server.esm.js",
         "default": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.react-server.cjs.js"
@@ -96,6 +152,7 @@
     "@emotion/weak-memoize": "^0.3.0",
     "@floating-ui/react": "^0.24.0",
     "@hapi/iron": "^7.0.0",
+    "@keystar/ui": "^0.1.1",
     "@markdoc/markdoc": "^0.3.0",
     "@react-aria/focus": "^3.13.0",
     "@react-aria/i18n": "^3.8.0",
@@ -118,41 +175,6 @@
     "@urql/exchange-auth": "^2.1.0",
     "@urql/exchange-graphcache": "^6.0.1",
     "@urql/exchange-persisted": "^3.0.0",
-    "@voussoir/action-group": "^0.1.6",
-    "@voussoir/badge": "^0.1.4",
-    "@voussoir/breadcrumbs": "^0.1.10",
-    "@voussoir/button": "^0.2.0",
-    "@voussoir/checkbox": "^0.2.6",
-    "@voussoir/combobox": "^0.1.7",
-    "@voussoir/core": "^5.0.2",
-    "@voussoir/dialog": "^0.2.4",
-    "@voussoir/drag-and-drop": "^0.1.2",
-    "@voussoir/field": "^0.1.6",
-    "@voussoir/icon": "^0.2.1",
-    "@voussoir/image": "^0.1.3",
-    "@voussoir/layout": "^0.1.3",
-    "@voussoir/link": "^0.1.5",
-    "@voussoir/list-view": "^0.1.7",
-    "@voussoir/listbox": "^0.1.6",
-    "@voussoir/menu": "^0.1.5",
-    "@voussoir/nav-list": "^0.1.3",
-    "@voussoir/notice": "^0.1.5",
-    "@voussoir/number-field": "^0.1.6",
-    "@voussoir/overlays": "^0.1.8",
-    "@voussoir/picker": "^0.1.6",
-    "@voussoir/progress": "^0.1.3",
-    "@voussoir/radio": "^0.1.6",
-    "@voussoir/search-field": "^0.1.6",
-    "@voussoir/slots": "^0.1.3",
-    "@voussoir/style": "^0.1.6",
-    "@voussoir/table": "^0.1.6",
-    "@voussoir/tabs": "^0.1.5",
-    "@voussoir/text-field": "^0.1.8",
-    "@voussoir/toast": "^0.1.9",
-    "@voussoir/tooltip": "^0.1.4",
-    "@voussoir/types": "^0.1.2",
-    "@voussoir/typography": "^0.1.6",
-    "@voussoir/utils": "^2.0.3",
     "apply-ref": "^1.0.0",
     "cookie": "^0.5.0",
     "emery": "^1.4.1",
@@ -181,6 +203,7 @@
     "prosemirror-state": "^1.4.2",
     "prosemirror-transform": "^1.7.1",
     "prosemirror-view": "^1.30.2",
+    "react-resizable-panels": "^0.0.53",
     "scroll-into-view-if-needed": "^3.0.3",
     "slate": "^0.91.4",
     "slate-history": "^0.86.0",
@@ -199,7 +222,6 @@
     "@types/js-yaml": "^4.0.5",
     "@types/prismjs": "^1.26.0",
     "@types/signal-exit": "^3.0.1",
-    "@voussoir/test-utils": "^2.0.2",
     "eslint": "^8.18.0",
     "fast-glob": "^3.2.12",
     "jest-diff": "^29.0.1",
@@ -239,6 +261,10 @@
     "#react-cache-in-react-server": {
       "react-server": "./src/reader/react-server-cache.ts",
       "default": "./src/reader/noop-cache.ts"
+    },
+    "#sha1": {
+      "node": "./src/sha1/node.ts",
+      "default": "./src/sha1/webcrypto.ts"
     }
   }
 }

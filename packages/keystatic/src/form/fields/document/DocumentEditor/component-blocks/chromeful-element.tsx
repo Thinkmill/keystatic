@@ -11,14 +11,14 @@ import {
 } from 'react';
 import { RenderElementProps, useSelected } from 'slate-react';
 
-import { ActionButton, Button } from '@voussoir/button';
-import { FieldMessage } from '@voussoir/field';
-import { trash2Icon } from '@voussoir/icon/icons/trash2Icon';
-import { Icon } from '@voussoir/icon';
-import { Flex } from '@voussoir/layout';
-import { css, tokenSchema } from '@voussoir/style';
-import { Tooltip, TooltipTrigger } from '@voussoir/tooltip';
-import { Text } from '@voussoir/typography';
+import { ActionButton, Button } from '@keystar/ui/button';
+import { FieldMessage } from '@keystar/ui/field';
+import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
+import { Icon } from '@keystar/ui/icon';
+import { Flex } from '@keystar/ui/layout';
+import { css, tokenSchema } from '@keystar/ui/style';
+import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
+import { Text } from '@keystar/ui/typography';
 
 import l10nMessages from '../../../../../app/l10n/index.json';
 import {

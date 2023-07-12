@@ -1,5 +1,5 @@
 import { assert } from 'emery';
-import { createHash } from 'crypto';
+import { sha1 } from '#sha1';
 
 type Changes = {
   additions: {
@@ -8,10 +8,6 @@ type Changes = {
   }[];
   deletions: string[];
 };
-
-async function sha1(content: Uint8Array) {
-  return createHash('sha1').update(content).digest('hex');
-}
 
 export function blobSha(contents: Uint8Array) {
   const blobPrefix = textEncoder.encode('blob ' + contents.length + '\0');

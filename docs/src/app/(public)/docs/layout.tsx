@@ -3,10 +3,13 @@ import { NavGroup } from '../../../components/navigation/nav-group';
 import { NavItem } from '../../../components/navigation/nav-item';
 import { DocsFooter } from '../../../components/footer';
 import { getNavigationMap } from '../../../utils/reader';
+import { Main } from '../../../components/main';
 
 export const metadata = {
-  title: 'Keystatic - Docs',
-  description: 'Documentation for Keystatic.',
+  title: {
+    template: '%s - Docs | Keystatic',
+    default: 'Docs',
+  },
 };
 
 export default async function RootLayout({
@@ -38,10 +41,10 @@ export default async function RootLayout({
       {/** CONTENT */}
       <div className="px-6 flex-1 lg:pl-60 lg:pt-24">
         <div className="py-10 lg:pl-12">
-          <main className="flex gap-8">
+          <Main className="flex gap-8">
             {/** INNER CONTENT */}
             <div className="flex-1">{children}</div>
-          </main>
+          </Main>
 
           <DocsFooter />
         </div>

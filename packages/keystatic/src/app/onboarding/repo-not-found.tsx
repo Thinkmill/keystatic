@@ -1,11 +1,12 @@
-import { Flex } from '@voussoir/layout';
-import { Heading, Text } from '@voussoir/typography';
+import { Flex } from '@keystar/ui/layout';
+import { Heading, Text } from '@keystar/ui/typography';
 
 import { GitHubConfig } from '../..';
 import { InstallGitHubApp } from './install-app';
+import { serializeRepoConfig } from '../repo-config';
 
 export function RepoNotFound(props: { config: GitHubConfig }) {
-  const repo = `${props.config.storage.repo.owner}/${props.config.storage.repo.name}`;
+  const repo = serializeRepoConfig(props.config.storage.repo);
   return (
     <Flex alignItems="center" justifyContent="center" margin="xxlarge">
       <Flex

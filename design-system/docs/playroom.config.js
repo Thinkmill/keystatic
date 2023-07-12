@@ -2,14 +2,14 @@ const babelConfig = require('../../babel.config.json');
 const webpack = require('webpack');
 
 module.exports = {
-  title: 'Playroom | Keystone Voussoir',
+  title: 'Playroom | Keystar UI',
   components: './playroom/components.ts',
   outputPath: './public/playroom/',
   baseUrl: '/playroom/',
   exampleCode: `<Text>Hello world</Text>`,
   frameComponent: './playroom/frame.tsx',
   port: 9000,
-  typeScriptFiles: ['../packages/*/src/*.{ts,tsx}', '!**/node_modules'],
+  typeScriptFiles: ['../pkg/src/**/*.{ts,tsx}', '!**/node_modules'],
   widths: [320, 768, 1024],
   webpackConfig: () => ({
     module: {

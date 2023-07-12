@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export function KeystaticLogoLink() {
   return (
-    <Link href="/" aria-label="Home of Keystatic">
+    <Link href="/" aria-label="Keystatic">
       <svg
         className="h-4"
         xmlns="http://www.w3.org/2000/svg"

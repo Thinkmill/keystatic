@@ -1,11 +1,12 @@
-import { ActionButton, Button } from '@voussoir/button';
-import { Flex } from '@voussoir/layout';
-import { Notice } from '@voussoir/notice';
-import { TextField } from '@voussoir/text-field';
-import { Text } from '@voussoir/typography';
+import { ActionButton, Button } from '@keystar/ui/button';
+import { Flex } from '@keystar/ui/layout';
+import { Notice } from '@keystar/ui/notice';
+import { TextField } from '@keystar/ui/text-field';
+import { Text } from '@keystar/ui/typography';
 import { useRouter } from '../router';
 import { GitHubConfig } from '../../config';
 import { createContext, useContext } from 'react';
+import { parseRepoConfig } from '../repo-config';
 
 export const AppSlugContext = createContext<
   { envName: string; value: string | undefined } | undefined
@@ -19,6 +20,7 @@ export function InstallGitHubApp(props: { config: GitHubConfig }) {
   const appSlug =
     new URL(router.href, 'https://example.com').searchParams.get('slug') ??
     appSlugFromContext?.value;
+  const parsedRepo = parseRepoConfig(props.config.storage.repo);
   return (
     <Flex direction="column" gap="regular">
       <Flex alignItems="end" gap="regular">
@@ -26,11 +28,11 @@ export function InstallGitHubApp(props: { config: GitHubConfig }) {
           label="Repo Name"
           width="100%"
           isReadOnly
-          value={props.config.storage.repo.name}
+          value={parsedRepo.name}
         />
         <ActionButton
           onPress={() => {
-            navigator.clipboard.writeText(props.config.storage.repo.name);
+            navigator.clipboard.writeText(parsedRepo.name);
           }}
         >
           Copy Repo Name

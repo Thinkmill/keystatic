@@ -33,6 +33,7 @@ import LRU from 'lru-cache';
 import { isDefined } from 'emery';
 import { getAuth } from '../auth';
 import { ViewerContext, SidebarFooter_viewer } from './sidebar-data';
+import { parseRepoConfig, serializeRepoConfig } from '../repo-config';
 
 export function fetchLocalTree(sha: string) {
   if (treeCache.has(sha)) {
@@ -117,16 +118,13 @@ export function GitHubAppShellDataProvider(props: {
       props.config.storage.kind === 'github'
         ? GitHubAppShellQuery
         : CloudAppShellQuery,
-    variables: {
-      name:
-        props.config.storage.kind === 'github'
-          ? props.config.storage.repo.name
-          : 'repo-name',
-      owner:
-        props.config.storage.kind === 'github'
-          ? props.config.storage.repo.owner
-          : 'repo-owner',
-    },
+    variables:
+      props.config.storage.kind === 'github'
+        ? parseRepoConfig(props.config.storage.repo)
+        : {
+            name: 'repo-name',
+            owner: 'repo-owner',
+          },
   });
   return (
     <GitHubAppShellDataContext.Provider value={state}>
@@ -481,7 +479,9 @@ export function fetchGitHubTreeData(sha: string, config: Config) {
       if (!auth) throw new Error('Not authorized');
       return fetch(
         config.storage.kind === 'github'
-          ? `https://api.github.com/repos/${config.storage.repo.owner}/${config.storage.repo.name}/git/trees/${sha}?recursive=1`
+          ? `https://api.github.com/repos/${serializeRepoConfig(
+              config.storage.repo
+            )}/git/trees/${sha}?recursive=1`
           : `${KEYSTATIC_CLOUD_API_URL}/v1/github/trees/${sha}`,
         {
           headers: {

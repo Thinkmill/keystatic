@@ -1,7 +1,7 @@
 ---
 title: Adding Keystatic to a Next.js project
+summary: Integrating Keystatic with an existing Next.js 13 project.
 ---
-
 This guide assumes you are trying to add Keystatic to an existing Next.js 13 project.
 
 ## Installing dependencies
@@ -116,17 +116,19 @@ Before we can use this, we also need to create some `API routes` for Keystatic
 
 ## Keystatic API Routes
 
-Create a new file at `pages/api/keystatic/[...params].ts`
+Create a new file at `app/api/keystatic/[...params]/route.ts`
 
 Once again, we use Next.js's dynamic route segments here.
 
 ```jsx
-// src/pages/api/keystatic/[...params].ts
+// src/app/api/keystatic/[...params]/route.ts
 
-import { makeAPIRouteHandler } from '@keystatic/next/api';
-import config from '../../../../keystatic.config';
+import { makeRouteHandler } from '@keystatic/next/route-handler';
+import config from '../../../../../keystatic.config';
 
-export default makeAPIRouteHandler({ config });
+export const { POST, GET } = makeRouteHandler({
+  config,
+});
 ```
 
 We should be all set to go for our Keystatic Admin UI now.

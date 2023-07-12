@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-icon-icons-webcamIcon.cjs.js",
+  "module": "dist/keystar-ui-icon-icons-webcamIcon.esm.js"
+}

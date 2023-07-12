@@ -3,7 +3,7 @@ import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 import { Glob } from '../../../config';
 import { ReadonlyPropPath } from '../document/DocumentEditor/component-blocks/utils';
 import { FormFieldInputProps } from '../../api';
-import { TextArea, TextField } from '@voussoir/text-field';
+import { TextArea, TextField } from '@keystar/ui/text-field';
 import { validateText } from '.';
 
 export type SlugFieldInfo = {

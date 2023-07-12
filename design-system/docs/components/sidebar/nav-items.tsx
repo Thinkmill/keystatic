@@ -1,9 +1,9 @@
-import { bookIcon } from '@voussoir/icon/icons/bookIcon';
-import { githubIcon } from '@voussoir/icon/icons/githubIcon';
-import { Icon } from '@voussoir/icon';
-import { Divider } from '@voussoir/layout';
-import { NavGroup, NavItem, NavList } from '@voussoir/nav-list';
-import { Text } from '@voussoir/typography';
+import { bookIcon } from '@keystar/ui/icon/icons/bookIcon';
+import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
+import { Icon } from '@keystar/ui/icon';
+import { Divider } from '@keystar/ui/layout';
+import { NavGroup, NavItem, NavList } from '@keystar/ui/nav-list';
+import { Text } from '@keystar/ui/typography';
 
 import { SidebarItem } from './types';
 import { usePathname } from 'next/navigation';
@@ -20,13 +20,17 @@ export const NavItems = ({ items }: { items: SidebarItem[] }) => {
 
       <Divider />
       <NavGroup title="Resources">
+        <NavItem href="https://keystatic.com/">
+          <Icon src={bookIcon} />
+          <Text>Keystatic Docs</Text>
+        </NavItem>
         <NavItem href="https://keystonejs.com/">
           <Icon src={bookIcon} />
           <Text>KeystoneJS Docs</Text>
         </NavItem>
-        <NavItem href="https://github.com/keystonejs/voussoir">
+        <NavItem href="https://github.com/thinkmill/keystatic">
           <Icon src={githubIcon} />
-          <Text>Voussoir on GitHub</Text>
+          <Text>Keystar UI on GitHub</Text>
         </NavItem>
       </NavGroup>
     </NavList>
