@@ -158,6 +158,11 @@
       "module": "./nav-list/dist/keystar-ui-nav-list.esm.js",
       "default": "./nav-list/dist/keystar-ui-nav-list.cjs.js"
     },
+    "./nav-tree": {
+      "types": "./nav-tree/dist/keystar-ui-nav-tree.cjs.js",
+      "module": "./nav-tree/dist/keystar-ui-nav-tree.esm.js",
+      "default": "./nav-tree/dist/keystar-ui-nav-tree.cjs.js"
+    },
     "./overlays": {
       "types": "./overlays/dist/keystar-ui-overlays.cjs.js",
       "module": "./overlays/dist/keystar-ui-overlays.esm.js",
