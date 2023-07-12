@@ -5,8 +5,8 @@ import {
   HTMLAttributes,
   Ref,
 } from 'react';
-import { useHover } from '@react-aria/interactions';
-import { mergeProps, useObjectRef } from '@react-aria/utils';
+import { useHover, usePress } from '@react-aria/interactions';
+import { useObjectRef } from '@react-aria/utils';
 
 import { FieldPrimitive } from '@keystar/ui/field';
 import {
@@ -16,6 +16,7 @@ import {
   tokenSchema,
   transition,
 } from '@keystar/ui/style';
+import { toDataAttributes } from '@keystar/ui/utils';
 
 import { TextFieldPrimitiveProps } from './types';
 
@@ -51,6 +52,23 @@ export const TextFieldPrimitive: ForwardRefExoticComponent<
   let inputClassName = useTextFieldStyles();
   let inputRef = useObjectRef(forwardedRef);
 
+  // Sits behind everything, should only trigger when the press is "through"
+  // (e.g. `pointer-events: none`) a start or end element.
+  // NOTE: When CSS supports the `:has()` selector, we can detect interactive
+  // children and automatically apply pointer-event styles.
+  let onIndicatorPressStart = () => {
+    if (document.activeElement === inputRef.current) {
+      return;
+    }
+
+    inputRef.current.focus();
+  };
+  let { pressProps } = usePress({
+    isDisabled,
+    onPressStart: onIndicatorPressStart,
+    preventFocusOnPress: true,
+  });
+
   return (
     <FieldPrimitive
       isRequired={isRequired}
@@ -63,20 +81,12 @@ export const TextFieldPrimitive: ForwardRefExoticComponent<
       {...otherProps}
     >
       <div
-        // TODO: Needs review, feels hacky.
-        // Captures events on itself, so _should_ only trigger when the press is
-        // "through" (pointer-events: none) a start/end element.
-        onPointerDown={e => {
-          if (e.currentTarget === e.target) {
-            inputRef?.current?.focus();
-            e.preventDefault();
-          }
-        }}
         {...inputWrapperProps}
+        {...hoverProps}
         className={classNames(
           css({
             display: 'flex',
-            flex: '1 1 auto', // !!(isMultiline && props.height)
+            flex: '1 1 auto',
             position: 'relative',
             zIndex: 0,
           }),
@@ -86,20 +96,20 @@ export const TextFieldPrimitive: ForwardRefExoticComponent<
         {startElement}
         <FocusRing autoFocus={autoFocus} isTextInput>
           <InputElement
-            {...mergeProps(hoverProps, inputProps)}
-            // FIXME: replace class variants with data attributes, for consistency.
-            className={classNames(
-              { isHovered, isMultiline },
-              inputClassName,
-              inputProps?.className
-            )}
+            {...inputProps}
+            {...toDataAttributes({
+              adornment: getAdornmentType(props),
+              hovered: isHovered || undefined,
+              multiline: isMultiline || undefined,
+            })}
+            className={classNames(inputClassName, inputProps?.className)}
             data-adornment={getAdornmentType(props)}
             // @ts-ignore FIXME: not sure how to properly resolve this type
             ref={inputRef}
             rows={isMultiline ? 1 : undefined}
           />
         </FocusRing>
-        <InputStateIndicator inputClassName={inputClassName} />
+        <InputStateIndicator inputClassName={inputClassName} {...pressProps} />
         {endElement}
       </div>
     </FieldPrimitive>
@@ -132,17 +142,15 @@ const InputStateIndicator = ({
         backgroundColor: tokenSchema.color.background.canvas,
         border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
         borderRadius: tokenSchema.size.radius.regular,
+        cursor: 'text',
         inset: 0,
         position: 'absolute',
         transition: transition(['border-color', 'box-shadow']),
         zIndex: -1,
 
-        [s('.isHovered')]: {
+        [s('[data-hovered]')]: {
           borderColor: tokenSchema.color.alias.borderHovered,
         },
-        // [s('[data-focus=visible]')]: {
-        //   boxShadow: `0 0 0 1px ${tokenSchema.color.alias.borderFocused}`,
-        // },
 
         [s(':invalid', '[aria-invalid]')]: {
           borderColor: tokenSchema.color.alias.borderInvalid,
@@ -156,6 +164,7 @@ const InputStateIndicator = ({
         [s(':disabled', '[aria-disabled]')]: {
           backgroundColor: tokenSchema.color.background.surfaceSecondary,
           borderColor: 'transparent',
+          cursor: 'auto',
         },
       })}
     />
@@ -202,7 +211,7 @@ function useTextFieldStyles() {
     // TEXTAREA
     // ------------------------------
 
-    '&.isMultiline': {
+    '&[data-multiline]': {
       height: 'auto',
       minHeight: tokenSchema.size.scale['700'],
       overflow: 'auto',
