@@ -6,7 +6,7 @@ import {
 } from '@react-types/shared';
 import { Key, RefObject } from 'react';
 
-import { BaseStyleProps } from '@voussoir/style';
+import { BaseStyleProps } from '@keystar/ui/style';
 
 // deviate from react-stately's types
 type ControlledSelection = {

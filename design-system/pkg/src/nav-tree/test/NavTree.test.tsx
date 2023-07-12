@@ -1,9 +1,10 @@
 import '@testing-library/jest-dom';
 
-import { fireEvent, renderWithProvider } from '@voussoir/test-utils';
+import { Text } from '@keystar/ui/typography';
 
-import { Item, NavTree } from '../src';
-import { Text } from '@voussoir/typography';
+import { fireEvent, renderWithProvider } from '#test-utils';
+
+import { Item, NavTree } from '../index';
 
 describe('nav-tree/NavTree', () => {
   it('renders', () => {

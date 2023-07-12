@@ -27,14 +27,14 @@ import React, {
   useRef,
 } from 'react';
 
-import { Icon } from '@voussoir/icon';
-import { chevronLeftIcon } from '@voussoir/icon/icons/chevronLeftIcon';
-import { chevronRightIcon } from '@voussoir/icon/icons/chevronRightIcon';
-import { dotIcon } from '@voussoir/icon/icons/dotIcon';
-import { SlotProvider } from '@voussoir/slots';
-import { classNames, css, tokenSchema, useStyleProps } from '@voussoir/style';
-import { Text } from '@voussoir/typography';
-import { isReactText, toDataAttributes } from '@voussoir/utils';
+import { Icon } from '@keystar/ui/icon';
+import { chevronLeftIcon } from '@keystar/ui/icon/icons/chevronLeftIcon';
+import { chevronRightIcon } from '@keystar/ui/icon/icons/chevronRightIcon';
+import { fileIcon } from '@keystar/ui/icon/icons/fileIcon';
+import { SlotProvider } from '@keystar/ui/slots';
+import { classNames, css, tokenSchema, useStyleProps } from '@keystar/ui/style';
+import { Text } from '@keystar/ui/typography';
+import { isReactText, toDataAttributes } from '@keystar/ui/utils';
 
 import { TreeKeyboardDelegate } from './TreeKeyboardDelegate';
 import { NavTreeProps } from './types';
@@ -252,7 +252,8 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
               paddingInlineStart: `calc(${tokenSchema.size.space.regular} * calc(var(--inset) - 1))`,
             },
 
-            [itemStyle('[data-hovered] > &', '[data-focused=visible] > &')]: {
+            // interaction states
+            [itemStyle('[data-hovered] > &')]: {
               backgroundColor: tokenSchema.color.alias.backgroundHovered,
               color: tokenSchema.color.alias.foregroundHovered,
             },
@@ -260,10 +261,12 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
               backgroundColor: tokenSchema.color.alias.backgroundPressed,
               color: tokenSchema.color.alias.foregroundPressed,
             },
-            // '[data-focused=visible] > &': {
-            //   outline: `${tokenSchema.size.alias.focusRing} solid ${tokenSchema.color.alias.focusRing}`,
-            // },
+            [itemStyle('[data-focused=visible] > &')]: {
+              outline: `${tokenSchema.size.alias.focusRing} solid ${tokenSchema.color.alias.focusRing}`,
+            },
 
+            // indicate when a collapsed item contains the selected item, so
+            // that the user always knows where they are in the tree
             [itemStyle(
               '[data-selected-ancestor=true][aria-expanded=false] > &'
             )]: {
@@ -280,6 +283,7 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
               },
             },
 
+            // selected item
             [itemStyle('[aria-current=page] > &')]: {
               backgroundColor: tokenSchema.color.alias.backgroundHovered,
               color: tokenSchema.color.alias.foregroundHovered,
@@ -294,9 +298,6 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
                 position: 'absolute',
                 width: tokenSchema.size.space.small,
               },
-            },
-            [itemStyle('[aria-current=page][data-focused] > &')]: {
-              backgroundColor: tokenSchema.color.alias.backgroundPressed,
             },
             [itemStyle('[aria-current=page][data-hovered] > &')]: {
               backgroundColor: tokenSchema.color.alias.backgroundPressed,
@@ -317,7 +318,7 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
             />
           ) : (
             <Icon
-              src={dotIcon}
+              src={fileIcon}
               color="neutralTertiary"
               UNSAFE_style={{
                 transform: `rotate(${isExpanded ? (isRtl ? -90 : 90) : 0}deg)`,

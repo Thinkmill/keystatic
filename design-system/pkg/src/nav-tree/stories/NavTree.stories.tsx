@@ -1,13 +1,13 @@
-import { action } from '@voussoir/storybook';
+import { action } from '@keystar/ui-storybook';
 import { Key, useRef, useState } from 'react';
 
-import { ActionButton } from '@voussoir/button';
-import { Icon } from '@voussoir/icon';
-import { plusIcon } from '@voussoir/icon/icons/plusIcon';
-import { Box } from '@voussoir/layout';
-import { Text } from '@voussoir/typography';
+import { ActionButton } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
+import { plusIcon } from '@keystar/ui/icon/icons/plusIcon';
+import { Box } from '@keystar/ui/layout';
+import { Text } from '@keystar/ui/typography';
 
-import { NavTree, Item, Section } from '../src';
+import { NavTree, Item, Section } from '../index';
 
 let flatItems = [
   { id: 1, name: 'Echidna' },
