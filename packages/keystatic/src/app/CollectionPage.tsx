@@ -1,11 +1,10 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { Key, useEffect, useMemo, useState } from 'react';
+import React, { Key, useEffect, useMemo, useState } from 'react';
 
 import { Badge } from '@keystar/ui/badge';
 import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
 import { Button } from '@keystar/ui/button';
 import { alertCircleIcon } from '@keystar/ui/icon/icons/alertCircleIcon';
-import { folderTreeIcon } from '@keystar/ui/icon/icons/folderTreeIcon';
 import { listXIcon } from '@keystar/ui/icon/icons/listXIcon';
 import { searchXIcon } from '@keystar/ui/icon/icons/searchXIcon';
 import { TextLink } from '@keystar/ui/link';
@@ -30,61 +29,22 @@ import { AppShellRoot, EmptyState } from './shell';
 import { useTree, TreeData } from './shell/data';
 import { AppShellHeader } from './shell/header';
 import { getCollectionPath, getEntriesInCollectionWithTreeKey } from './utils';
+import { notFound } from './not-found';
 
 type CollectionPageProps = {
   collection: string;
   config: Config;
   basePath: string;
 };
-type CollectionStatus = 'loading' | 'loaded' | 'error';
-type CollectionState = {
-  status: CollectionStatus;
-  setStatus: (status: CollectionStatus) => void;
-  searchTerm: string;
-  setSearchTerm: (value: string) => void;
-};
-
-function useCollectionState(collection: string): CollectionState {
-  const [status, setStatus] = useState<CollectionStatus>('loaded');
-  const [searchTerm, setSearchTerm] = useState('');
-
-  useEffect(() => {
-    setSearchTerm('');
-  }, [collection]);
-
-  return { status, setStatus, searchTerm, setSearchTerm };
-}
 
 export function CollectionPage(props: CollectionPageProps) {
   const { collection, config } = props;
   const containerWidth = 'none'; // TODO: use a "large" when we have more columns
   const collectionConfig = config.collections?.[collection];
+  if (!collectionConfig) notFound();
+  const [searchTerm, setSearchTerm] = useState('');
 
-  let collectionState = useCollectionState(collection);
-  let debouncedSearchTerm = useDebouncedValue(collectionState.searchTerm, 300);
-
-  if (!collectionConfig) {
-    return (
-      <AppShellRoot containerWidth={containerWidth}>
-        <AppShellHeader>
-          <Breadcrumbs flex minWidth={0}>
-            {/* TODO: l10n */}
-            <Item key="collection">Error…</Item>
-          </Breadcrumbs>
-        </AppShellHeader>
-        <EmptyState
-          icon={alertCircleIcon}
-          title="Not found"
-          message={`Collection "${collection}" not found in config.`}
-          actions={
-            <Button tone="accent" href={props.basePath}>
-              Dashboard
-            </Button>
-          }
-        />
-      </AppShellRoot>
-    );
-  }
+  let debouncedSearchTerm = useDebouncedValue(searchTerm, 300);
 
   return (
     <AppShellRoot containerWidth={containerWidth}>
@@ -93,25 +53,21 @@ export function CollectionPage(props: CollectionPageProps) {
         createHref={`${props.basePath}/collection/${encodeURIComponent(
           props.collection
         )}/create`}
-        {...collectionState}
+        searchTerm={searchTerm}
+        onSearchTermChange={setSearchTerm}
       />
-      <CollectionPageContent
-        searchTerm={debouncedSearchTerm}
-        setStatus={collectionState.setStatus}
-        {...props}
-      />
+      <CollectionPageContent searchTerm={debouncedSearchTerm} {...props} />
     </AppShellRoot>
   );
 }
 
-function CollectionPageHeader(
-  props: CollectionState & {
-    createHref: string;
-    collectionLabel: string;
-  }
-) {
-  const { collectionLabel, createHref, searchTerm, setSearchTerm, status } =
-    props;
+function CollectionPageHeader(props: {
+  createHref: string;
+  collectionLabel: string;
+  searchTerm: string;
+  onSearchTermChange: (value: string) => void;
+}) {
+  const { collectionLabel, createHref } = props;
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   return (
@@ -121,12 +77,11 @@ function CollectionPageHeader(
       </Breadcrumbs>
       <div role="search">
         <SearchField
-          isDisabled={status !== 'loaded'}
           aria-label={stringFormatter.format('search')} // TODO: l10n "Search {collection}"?
-          onChange={setSearchTerm}
-          onClear={() => setSearchTerm('')}
+          onChange={props.onSearchTermChange}
+          onClear={() => props.onSearchTermChange('')}
           placeholder={stringFormatter.format('search')}
-          value={searchTerm}
+          value={props.searchTerm}
           width="scale.2400"
         />
       </div>
@@ -137,10 +92,8 @@ function CollectionPageHeader(
   );
 }
 
-type CollectionPageContentProps = CollectionPageProps &
-  Pick<CollectionState, 'searchTerm' | 'setStatus'>;
+type CollectionPageContentProps = CollectionPageProps & { searchTerm: string };
 function CollectionPageContent(props: CollectionPageContentProps) {
-  const { setStatus } = props;
   const trees = useTree();
 
   const tree =
@@ -149,14 +102,6 @@ function CollectionPageContent(props: CollectionPageContentProps) {
           getCollectionPath(props.config, props.collection)
         )
       : null;
-
-  useEffect(() => {
-    let status = trees.merged.kind;
-    if (tree?.type !== 'tree') {
-      status = 'error';
-    }
-    setStatus(status);
-  }, [setStatus, tree?.type, trees.merged.kind]);
 
   if (trees.merged.kind === 'error') {
     return (
@@ -202,21 +147,6 @@ function CollectionPageContent(props: CollectionPageContentProps) {
             </TextLink>{' '}
             to see it here.
           </>
-        }
-      />
-    );
-  }
-
-  if (tree.type !== 'tree') {
-    return (
-      <EmptyState
-        icon={folderTreeIcon}
-        title="Unable to load collection"
-        message="Could not find collection directory in repository."
-        actions={
-          <Button tone="accent" href={props.basePath}>
-            Dashboard
-          </Button>
         }
       />
     );
@@ -339,8 +269,6 @@ function CollectionTable(
         )}
       </TableBody>
     </TableView>
-    // </Flex>
-    // </AppShellBody>
   );
 }
 
