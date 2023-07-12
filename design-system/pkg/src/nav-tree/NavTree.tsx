@@ -30,7 +30,7 @@ import React, {
 import { Icon } from '@keystar/ui/icon';
 import { chevronLeftIcon } from '@keystar/ui/icon/icons/chevronLeftIcon';
 import { chevronRightIcon } from '@keystar/ui/icon/icons/chevronRightIcon';
-import { fileIcon } from '@keystar/ui/icon/icons/fileIcon';
+import { dotIcon } from '@keystar/ui/icon/icons/dotIcon';
 import { SlotProvider } from '@keystar/ui/slots';
 import { classNames, css, tokenSchema, useStyleProps } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
@@ -317,13 +317,7 @@ function TreeItem<T>({ node, state }: { node: Node<T>; state: TreeState<T> }) {
               }}
             />
           ) : (
-            <Icon
-              src={fileIcon}
-              color="neutralTertiary"
-              UNSAFE_style={{
-                transform: `rotate(${isExpanded ? (isRtl ? -90 : 90) : 0}deg)`,
-              }}
-            />
+            <Icon src={dotIcon} color="neutralTertiary" />
           )}
           {contents}
         </div>
