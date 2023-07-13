@@ -37,7 +37,10 @@ export function useTextStyles(
       fontFamily: tokenSchema.typography.fontFamily.base,
       fontSize: fontDefinition.size,
       fontVariantNumeric: variant,
-      fontWeight: tokenSchema.typography.fontWeight[weight],
+      fontWeight:
+        weight === 'inherit'
+          ? undefined
+          : tokenSchema.typography.fontWeight[weight],
       minWidth: 0,
       textAlign: align ? alignmentMap[align] : undefined,
       textTransform: casing,

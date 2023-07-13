@@ -49,6 +49,7 @@ export const StepButton = forwardRef(function StepButton(
         css({
           alignItems: 'center',
           color: tokenSchema.color.alias.foregroundIdle,
+          cursor: 'default',
           display: 'flex',
           justifyContent: 'center',
           transition: transition('border-color'),
