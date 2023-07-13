@@ -78,7 +78,7 @@ export async function generateMetadata(
   const description = page?.summary ? page.summary : fallbackDescription;
 
   const parentOGImages = (await parent).openGraph?.images || [];
-  const image = `http://localhost:3000/og?title=${title}`;
+  const image = `https://keystatic.com/og?title=${title}`;
   const parentTwitterSite = (await parent).twitter?.site ?? '';
 
   return {
