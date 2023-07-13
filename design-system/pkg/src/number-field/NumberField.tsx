@@ -10,7 +10,7 @@ import {
 } from 'react';
 
 import { useProvider, useProviderProps } from '@keystar/ui/core';
-import { css, tokenSchema } from '@keystar/ui/style';
+import { css, onlyStyleProps, tokenSchema } from '@keystar/ui/style';
 import { TextFieldPrimitive } from '@keystar/ui/text-field';
 import { toDataAttributes } from '@keystar/ui/utils';
 
@@ -48,6 +48,7 @@ export const NumberField: ForwardRefExoticComponent<
     <TextFieldPrimitive
       width="alias.singleLineWidth"
       {...filterDOMProps(props)}
+      {...onlyStyleProps(props)}
       label={label}
       description={description}
       descriptionProps={descriptionProps}
