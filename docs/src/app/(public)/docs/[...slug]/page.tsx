@@ -43,7 +43,7 @@ export default async function Docs({ params }: DocsProps) {
   const overviewHeading = {
     level: 1,
     text: 'Overview',
-    slug: H1_ID,
+    slug: `#${H1_ID}`,
   };
   const headings = [overviewHeading, ...headingsWithSlugs];
 
