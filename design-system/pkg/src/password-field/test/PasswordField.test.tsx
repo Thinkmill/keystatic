@@ -34,7 +34,7 @@ describe('password-field/PasswordField', () => {
   });
 
   it('renders the reveal button', () => {
-    let { queryByLabelText } = renderPasswordField({
+    let { getByLabelText } = renderPasswordField({
       defaultValue: inputText,
     });
 
