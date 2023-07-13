@@ -1,6 +1,6 @@
 ---
 title: Core
-description: Core functions and components for Voussoir.
+description: Core functions and components for Keystar UI.
 category: Introduction
 ---
 

@@ -5,18 +5,19 @@ import MailingList from '../../components/mailing-list';
 import CallToAction from '../../components/call-to-action';
 import Footer from '../../components/footer';
 import Features from '../../components/features';
+import { Main } from '../../components/main';
 
 export default function Homepage() {
   return (
     <>
-      <main>
+      <Main isFocusable={false}>
         <Hero />
         <Features />
         <Intro />
         <Templates />
         <MailingList />
         <CallToAction />
-      </main>
+      </Main>
       <Footer />
     </>
   );

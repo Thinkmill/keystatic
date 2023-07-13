@@ -9,22 +9,24 @@ import {
 import { alertCircleIcon } from '@keystar/ui/icon/icons/alertCircleIcon';
 import { Icon } from '@keystar/ui/icon';
 import { Box, BoxProps, Flex } from '@keystar/ui/layout';
-import { VoussoirTheme, css, transition } from '@keystar/ui/style';
+import { VoussoirTheme } from '@keystar/ui/style';
 import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../../config';
 
 import { isGitHubConfig, isLocalConfig } from '../utils';
 
-import { MAIN_PANEL_ID, SIDE_PANEL_ID } from './constants';
+import { MAIN_PANEL_ID } from './constants';
 import { ConfigContext } from './context';
 import {
   GitHubAppShellProvider,
   AppShellErrorContext,
   LocalAppShellProvider,
 } from './data';
-import { SidebarProvider, Sidebar } from './sidebar';
+import { SidebarProvider } from './sidebar';
 import { TopBar } from './topbar';
+import { MainPanelLayout } from './panels';
+import { ScrollView } from './primitives';
 
 export const AppShell = (props: {
   config: Config;
@@ -32,34 +34,38 @@ export const AppShell = (props: {
   currentBranch: string;
   basePath: string;
 }) => {
+  const content = (
+    <AppShellErrorContext.Consumer>
+      {error =>
+        error &&
+        !error?.graphQLErrors.some(
+          err => (err?.originalError as any)?.type === 'NOT_FOUND'
+        ) ? (
+          <EmptyState
+            icon={alertCircleIcon}
+            title="Failed to load shell"
+            message={error.message}
+          />
+        ) : (
+          props.children
+        )
+      }
+    </AppShellErrorContext.Consumer>
+  );
+
   const inner = (
     <ConfigContext.Provider value={props.config}>
       <SidebarProvider>
-        <Flex direction="column" minHeight="100vh">
+        <Flex direction="column" height="100vh">
           <TopBar />
-          <Flex direction={{ mobile: 'column', tablet: 'row' }} flex>
-            <Sidebar hrefBase={props.basePath} config={props.config} />
-            <AppShellErrorContext.Consumer>
-              {error =>
-                error &&
-                !error?.graphQLErrors.some(
-                  err => (err?.originalError as any)?.type === 'NOT_FOUND'
-                ) ? (
-                  <EmptyState
-                    icon={alertCircleIcon}
-                    title="Failed to load shell"
-                    message={error.message}
-                  />
-                ) : (
-                  props.children
-                )
-              }
-            </AppShellErrorContext.Consumer>
-          </Flex>
+          <MainPanelLayout basePath={props.basePath} config={props.config}>
+            {content}
+          </MainPanelLayout>
         </Flex>
       </SidebarProvider>
     </ConfigContext.Provider>
   );
+
   if (isGitHubConfig(props.config) || props.config.storage.kind === 'cloud') {
     return (
       <GitHubAppShellProvider
@@ -99,6 +105,7 @@ export function EmptyState(props: EmptyStateProps) {
       gap="large"
       justifyContent="center"
       minHeight="scale.3000"
+      paddingX={{ mobile: 'medium', tablet: 'xlarge', desktop: 'xxlarge' }}
     >
       {'children' in props ? (
         props.children
@@ -107,7 +114,11 @@ export function EmptyState(props: EmptyStateProps) {
           {props.icon && (
             <Icon src={props.icon} size="large" color="neutralEmphasis" />
           )}
-          {props.title && <Heading size="medium">{props.title}</Heading>}
+          {props.title && (
+            <Heading align="center" size="medium">
+              {props.title}
+            </Heading>
+          )}
           {props.message && <Text align="center">{props.message}</Text>}
           {props.actions}
         </>
@@ -119,16 +130,25 @@ export function EmptyState(props: EmptyStateProps) {
 // Composite components
 // -----------------------------------------------------------------------------
 
-export const AppShellBody = ({ children }: PropsWithChildren) => {
+export const AppShellBody = ({
+  children,
+  isScrollable,
+}: PropsWithChildren<{ isScrollable?: boolean }>) => {
   return (
-    <Box paddingY="xlarge">
-      <AppShellContainer>{children}</AppShellContainer>
-    </Box>
+    <ScrollView isDisabled={!isScrollable}>
+      <AppShellContainer
+        // padding on the container so descendants can use sticky positioning
+        // with simple relative offsets
+        paddingY="xlarge"
+      >
+        {children}
+      </AppShellContainer>
+    </ScrollView>
   );
 };
 
 type AppShellContextValue = {
-  containerWidth: keyof VoussoirTheme['size']['container'];
+  containerWidth: keyof VoussoirTheme['size']['container'] | 'none';
 };
 const AppShellContext = createContext<AppShellContextValue>({
   containerWidth: 'medium',
@@ -144,41 +164,10 @@ export const AppShellRoot = ({
         direction="column"
         id={MAIN_PANEL_ID}
         flex
+        height="100%"
+        // fix flexbox issues
+        minHeight={0}
         minWidth={0}
-        UNSAFE_className={css({
-          '&::before': {
-            backgroundColor: '#0006',
-            content: '""',
-            inset: 0,
-            opacity: 0,
-            pointerEvents: 'none',
-            visibility: 'hidden',
-            position: 'fixed',
-            zIndex: 5,
-
-            // exit animation
-            transition: [
-              transition('opacity', {
-                easing: 'easeOut',
-                duration: 'regular',
-                delay: 'short',
-              }),
-              transition('visibility', {
-                delay: 'regular',
-                duration: 0,
-                easing: 'linear',
-              }),
-            ].join(', '),
-          },
-          [`#${SIDE_PANEL_ID}[data-visible=true] ~ &::before`]: {
-            opacity: 1,
-            pointerEvents: 'auto',
-            visibility: 'visible',
-
-            // enter animation
-            transition: transition('opacity', { easing: 'easeIn' }),
-          },
-        })}
       >
         {children}
       </Flex>
@@ -188,11 +177,18 @@ export const AppShellRoot = ({
 
 export const AppShellContainer = (props: BoxProps) => {
   const { containerWidth } = useContext(AppShellContext);
+  const maxWidth =
+    containerWidth === 'none'
+      ? undefined
+      : (`container.${containerWidth}` as const);
+
   return (
     <Box
-      maxWidth={`container.${containerWidth}`}
-      marginX="auto"
-      paddingX={{ mobile: 'regular', tablet: 'xlarge' }}
+      minHeight={0}
+      minWidth={0}
+      maxWidth={maxWidth}
+      // marginX="auto"
+      paddingX={{ mobile: 'medium', tablet: 'xlarge', desktop: 'xxlarge' }}
       {...props}
     />
   );

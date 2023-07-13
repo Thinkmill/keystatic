@@ -10,9 +10,9 @@ import {
 
 import { Button } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
+import { fileX2Icon } from '@keystar/ui/icon/icons/fileX2Icon';
 import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
 import { Flex } from '@keystar/ui/layout';
-import { Notice } from '@keystar/ui/notice';
 import { Text } from '@keystar/ui/typography';
 
 import { CloudConfig, Config, GitHubConfig } from '../config';
@@ -21,7 +21,7 @@ import { CreateItem } from './create-item';
 import { DashboardPage } from './dashboard';
 import { ItemPage } from './ItemPage';
 import Provider from './provider';
-import { AppShell, AppShellBody, AppShellRoot } from './shell';
+import { AppShell, AppShellBody, AppShellRoot, EmptyState } from './shell';
 import { SingletonPage } from './SingletonPage';
 import { FromTemplateDeploy } from './onboarding/from-template-deploy';
 import { CreatedGitHubApp } from './onboarding/created-github-app';
@@ -36,6 +36,8 @@ import {
 } from './shell/data';
 import { KeystaticCloudAuthCallback } from './cloud-auth-callback';
 import { getAuth } from './auth';
+import { assertValidRepoConfig } from './repo-config';
+import { NotFoundBoundary, notFound } from './not-found';
 
 function parseParamsWithoutBranch(params: string[]) {
   if (params.length === 0) {
@@ -135,11 +137,24 @@ function PageInner({ config }: { config: Config }) {
     parsedParams = parseParamsWithoutBranch(params);
     basePath = '/keystatic';
   }
-  if (!parsedParams) return <Text>Not found</Text>;
   return wrapper(
     <AppShell config={config} currentBranch={branch || ''} basePath={basePath}>
-      {parsedParams?.collection ? (
-        parsedParams.collection in (config.collections || {}) ? (
+      <NotFoundBoundary
+        fallback={
+          <AppShellRoot>
+            <AppShellBody>
+              <EmptyState
+                icon={fileX2Icon}
+                title="Not found"
+                message="This page could not be found."
+              />
+            </AppShellBody>
+          </AppShellRoot>
+        }
+      >
+        {parsedParams === null ? (
+          <AlwaysNotFound />
+        ) : parsedParams.collection ? (
           parsedParams.kind === 'create' ? (
             <CreateItem
               key={parsedParams.collection}
@@ -163,39 +178,25 @@ function PageInner({ config }: { config: Config }) {
               config={config as unknown as Config}
             />
           )
-        ) : (
-          <AppShellRoot>
-            <AppShellBody>
-              <Notice tone="critical">
-                Collection "{parsedParams.collection}" not found.
-              </Notice>
-            </AppShellBody>
-          </AppShellRoot>
-        )
-      ) : parsedParams.singleton ? (
-        parsedParams.singleton in (config.singletons || {}) ? (
+        ) : parsedParams.singleton ? (
           <SingletonPage
             key={parsedParams.singleton}
             config={config as unknown as Config}
             singleton={parsedParams.singleton}
           />
         ) : (
-          <AppShellRoot>
-            <AppShellBody>
-              <Notice tone="critical">
-                Singleton "{parsedParams.singleton}" not found.
-              </Notice>
-            </AppShellBody>
-          </AppShellRoot>
-        )
-      ) : (
-        <DashboardPage
-          config={config as unknown as Config}
-          basePath={basePath}
-        />
-      )}
+          <DashboardPage
+            config={config as unknown as Config}
+            basePath={basePath}
+          />
+        )}
+      </NotFoundBoundary>
     </AppShell>
   );
+}
+
+function AlwaysNotFound(): never {
+  notFound();
 }
 
 function AuthWrapper(props: {
@@ -261,11 +262,8 @@ export function Keystatic(props: {
   ) => ReactNode;
   appSlug?: { envName: string; value: string | undefined };
 }) {
-  if (
-    props.config.storage.kind === 'github' &&
-    (!props.config.storage.repo.owner || !props.config.storage.repo.name)
-  ) {
-    throw new Error('Missing storage.repo.owner or storage.repo.name');
+  if (props.config.storage.kind === 'github') {
+    assertValidRepoConfig(props.config.storage.repo);
   }
   useEffect(() => {
     if (window.location.hostname === 'localhost') {

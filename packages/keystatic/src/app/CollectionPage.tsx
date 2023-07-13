@@ -1,19 +1,16 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useMemo, useState } from 'react';
+import React, { Key, useEffect, useMemo, useState } from 'react';
 
 import { Badge } from '@keystar/ui/badge';
 import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
 import { Button } from '@keystar/ui/button';
-import { Icon } from '@keystar/ui/icon';
 import { alertCircleIcon } from '@keystar/ui/icon/icons/alertCircleIcon';
-import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
-import { folderTreeIcon } from '@keystar/ui/icon/icons/folderTreeIcon';
-import { listStartIcon } from '@keystar/ui/icon/icons/listStartIcon';
-import { Flex } from '@keystar/ui/layout';
+import { listXIcon } from '@keystar/ui/icon/icons/listXIcon';
+import { searchXIcon } from '@keystar/ui/icon/icons/searchXIcon';
 import { TextLink } from '@keystar/ui/link';
-import { ActionMenu } from '@keystar/ui/menu';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { SearchField } from '@keystar/ui/search-field';
+import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
 import {
   TableView,
   TableBody,
@@ -23,20 +20,16 @@ import {
   Row,
   SortDescriptor,
 } from '@keystar/ui/table';
-import { Text } from '@keystar/ui/typography';
 
 import { Config } from '../config';
 import { sortByDescriptor } from './collection-sort';
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
-import { AppShellBody, AppShellRoot, EmptyState } from './shell';
-import { useTree, TreeData, useBranchInfo } from './shell/data';
+import { AppShellRoot, EmptyState } from './shell';
+import { useTree, TreeData } from './shell/data';
 import { AppShellHeader } from './shell/header';
-import {
-  getCollectionPath,
-  getEntriesInCollectionWithTreeKey,
-  getRepoUrl,
-} from './utils';
+import { getCollectionPath, getEntriesInCollectionWithTreeKey } from './utils';
+import { notFound } from './not-found';
 
 type CollectionPageProps = {
   collection: string;
@@ -46,78 +39,81 @@ type CollectionPageProps = {
 
 export function CollectionPage(props: CollectionPageProps) {
   const { collection, config } = props;
-  const containerWidth = 'medium'; // TODO: use a "large" when we have more columns
+  const containerWidth = 'none'; // TODO: use a "large" when we have more columns
   const collectionConfig = config.collections?.[collection];
-  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
-  const branchInfo = useBranchInfo();
+  if (!collectionConfig) notFound();
+  const [searchTerm, setSearchTerm] = useState('');
 
-  if (!collectionConfig) {
-    return (
-      <AppShellRoot containerWidth={containerWidth}>
-        <div /> {/* Take the "header" grid area */}
-        <EmptyState
-          icon={alertCircleIcon}
-          title="Not found"
-          message={`Collection "${collection}" not found in config.`}
-        />
-      </AppShellRoot>
-    );
-  }
+  let debouncedSearchTerm = useDebouncedValue(searchTerm, 300);
 
   return (
     <AppShellRoot containerWidth={containerWidth}>
-      <AppShellHeader>
-        <Breadcrumbs size="medium" flex minWidth={0}>
-          <Item key="collection">{collectionConfig.label}</Item>
-        </Breadcrumbs>
-
-        {(config.storage.kind === 'github' ||
-          config.storage.kind === 'cloud') && (
-          <ActionMenu
-            prominence="low"
-            onAction={key => {
-              switch (key) {
-                case 'view':
-                  let collectionPath = `/tree/${branchInfo.currentBranch}/${collection}`;
-                  window.open(
-                    `${getRepoUrl(branchInfo)}${collectionPath}`,
-                    '_blank',
-                    'noopener,noreferrer'
-                  );
-                  break;
-              }
-            }}
-          >
-            <Item key="view" textValue="View on GitHub">
-              <Icon src={externalLinkIcon} />
-              <Text>View on GitHub</Text>
-            </Item>
-          </ActionMenu>
-        )}
-        <Button
-          marginStart="auto"
-          prominence="high"
-          href={`${props.basePath}/collection/${encodeURIComponent(
-            props.collection
-          )}/create`}
-        >
-          {stringFormatter.format('add')}
-        </Button>
-      </AppShellHeader>
-
-      <CollectionPageContent {...props} />
+      <CollectionPageHeader
+        collectionLabel={collectionConfig.label}
+        createHref={`${props.basePath}/collection/${encodeURIComponent(
+          props.collection
+        )}/create`}
+        searchTerm={searchTerm}
+        onSearchTermChange={setSearchTerm}
+      />
+      <CollectionPageContent searchTerm={debouncedSearchTerm} {...props} />
     </AppShellRoot>
   );
 }
 
-function CollectionPageContent(props: CollectionPageProps) {
+function CollectionPageHeader(props: {
+  createHref: string;
+  collectionLabel: string;
+  searchTerm: string;
+  onSearchTermChange: (value: string) => void;
+}) {
+  const { collectionLabel, createHref } = props;
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
+
+  return (
+    <AppShellHeader>
+      <Breadcrumbs flex minWidth={0}>
+        <Item key="collection">{collectionLabel}</Item>
+      </Breadcrumbs>
+      <div role="search">
+        <SearchField
+          aria-label={stringFormatter.format('search')} // TODO: l10n "Search {collection}"?
+          onChange={props.onSearchTermChange}
+          onClear={() => props.onSearchTermChange('')}
+          placeholder={stringFormatter.format('search')}
+          value={props.searchTerm}
+          width="scale.2400"
+        />
+      </div>
+      <Button marginStart="auto" prominence="high" href={createHref}>
+        {stringFormatter.format('add')}
+      </Button>
+    </AppShellHeader>
+  );
+}
+
+type CollectionPageContentProps = CollectionPageProps & { searchTerm: string };
+function CollectionPageContent(props: CollectionPageContentProps) {
   const trees = useTree();
+
+  const tree =
+    trees.merged.kind === 'loaded'
+      ? trees.merged.data.current.entries.get(
+          getCollectionPath(props.config, props.collection)
+        )
+      : null;
+
   if (trees.merged.kind === 'error') {
     return (
       <EmptyState
         icon={alertCircleIcon}
         title="Unable to load collection"
         message={trees.merged.error.message}
+        actions={
+          <Button tone="accent" href={props.basePath}>
+            Dashboard
+          </Button>
+        }
       />
     );
   }
@@ -134,13 +130,10 @@ function CollectionPageContent(props: CollectionPageProps) {
     );
   }
 
-  const tree = trees.merged.data.current.entries.get(
-    getCollectionPath(props.config, props.collection)
-  );
   if (!tree) {
     return (
       <EmptyState
-        icon={listStartIcon}
+        icon={listXIcon}
         title="Empty collection"
         message={
           <>
@@ -159,30 +152,20 @@ function CollectionPageContent(props: CollectionPageProps) {
     );
   }
 
-  if (tree.type !== 'tree') {
-    return (
-      <EmptyState
-        icon={folderTreeIcon}
-        title="Unable to load collection"
-        message="Could not find collection directory in repository."
-      />
-    );
-  }
-
   return <CollectionTable {...props} trees={trees.merged.data} />;
 }
 
 function CollectionTable(
-  props: CollectionPageProps & {
+  props: CollectionPageContentProps & {
     trees: {
       default: TreeData;
       current: TreeData;
     };
   }
 ) {
-  let stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  let { searchTerm } = props;
+
   let router = useRouter();
-  let [searchTerm, setSearchTerm] = useState('');
   let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: 'name',
     direction: 'ascending',
@@ -222,62 +205,90 @@ function CollectionTable(
   }, [filteredItems, sortDescriptor]);
 
   return (
-    <AppShellBody>
-      <Flex direction="column" gap="large">
-        <Flex gap="large" alignItems="start" justifyContent="space-between">
-          <SearchField
-            aria-label={stringFormatter.format('search')}
-            onChange={setSearchTerm}
-            onClear={() => setSearchTerm('')}
-            placeholder={stringFormatter.format('search')}
-            value={searchTerm}
-          />
-        </Flex>
-        <TableView
-          aria-labelledby="page-title"
-          width="100%"
-          selectionMode="none"
-          onSortChange={setSortDescriptor}
-          sortDescriptor={sortDescriptor}
-          overflowMode="truncate"
-          onRowAction={key => {
-            router.push(
-              `${props.basePath}/collection/${encodeURIComponent(
-                props.collection
-              )}/item/${encodeURIComponent(key)}`
-            );
-          }}
-          // UNSAFE_className={css({
-          //   '[role=row]> :first-child': { paddingInlineStart: tokenSchema.size.space.xlarge },
-          //   '[role=row]> :last-child': { paddingInlineStart: tokenSchema.size.space.xlarge },
-          // })}
-        >
-          <TableHeader
-            columns={[
-              { name: 'Name', key: 'name' },
-              { name: 'Status', key: 'status', width: 140 },
-            ]}
-          >
-            {column => (
-              <Column isRowHeader allowsSorting width={column.width}>
-                {column.name}
-              </Column>
-            )}
-          </TableHeader>
-          <TableBody items={sortedItems}>
-            {item => (
-              <Row key={item.name}>
-                <Cell textValue={item.name}>{item.name}</Cell>
-                <Cell textValue={item.status}>
-                  <Badge tone={statusTones[item.status]}>{item.status}</Badge>
-                </Cell>
-              </Row>
-            )}
-          </TableBody>
-        </TableView>
-      </Flex>
-    </AppShellBody>
+    <TableView
+      aria-labelledby="page-title"
+      selectionMode="none"
+      onSortChange={setSortDescriptor}
+      sortDescriptor={sortDescriptor}
+      overflowMode="truncate"
+      onRowAction={key => {
+        router.push(getItemPath(props.basePath, props.collection, key));
+      }}
+      renderEmptyState={() => (
+        <EmptyState
+          icon={searchXIcon}
+          title="No results"
+          message={`No items matching "${searchTerm}" were found.`}
+        />
+      )}
+      // prominence="low"
+      flex
+      marginTop={{ tablet: 'large' }}
+      marginBottom={{ mobile: 'regular', tablet: 'xlarge' }}
+      UNSAFE_className={css({
+        marginInline: tokenSchema.size.space.regular,
+        [breakpointQueries.above.mobile]: {
+          marginInline: `calc(${tokenSchema.size.space.xlarge} - ${tokenSchema.size.space.medium})`,
+        },
+        [breakpointQueries.above.tablet]: {
+          marginInline: `calc(${tokenSchema.size.space.xxlarge} - ${tokenSchema.size.space.medium})`,
+        },
+      })}
+    >
+      <TableHeader
+        columns={[
+          { name: 'Name', key: 'name' },
+          {
+            name: 'Status',
+            key: 'status',
+            minWidth: 140,
+            width: '20%',
+          },
+        ]}
+      >
+        {({ name, key, ...options }) => (
+          <Column key={key} isRowHeader allowsSorting {...options}>
+            {name}
+          </Column>
+        )}
+      </TableHeader>
+      <TableBody items={sortedItems}>
+        {item => (
+          <Row key={item.name}>
+            <Cell textValue={item.name}>
+              <TextLink
+                href={getItemPath(props.basePath, props.collection, item.name)}
+              >
+                {item.name}
+              </TextLink>
+            </Cell>
+            <Cell textValue={item.status}>
+              <Badge tone={statusTones[item.status]}>{item.status}</Badge>
+            </Cell>
+          </Row>
+        )}
+      </TableBody>
+    </TableView>
   );
+}
+
+function getItemPath(basePath: string, collection: string, key: Key): string {
+  return `${basePath}/collection/${encodeURIComponent(
+    collection
+  )}/item/${encodeURIComponent(key)}`;
+}
+export function useDebouncedValue<T>(value: T, delay = 300): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
 }
 
 const statusTones = {

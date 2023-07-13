@@ -19,7 +19,7 @@ function getStyleFromColumn(props: CellProps) {
   const { maxWidth, minWidth, width } = props;
 
   if (width) {
-    return { flex: '0 0 auto', width };
+    return { flex: '0 0 auto', width, maxWidth, minWidth };
   }
 
   return { maxWidth, minWidth };
@@ -90,7 +90,6 @@ export function useTableStyleProps<T>(props: TableProps<T>) {
         flexDirection: 'column',
         minHeight: 0,
         minWidth: 0,
-        overflow: 'auto',
       })
     ),
     style: styleProps.style,
@@ -107,7 +106,7 @@ export function useHeadStyleProps() {
       flexDirection: 'column',
 
       '.ksv-table-view[data-prominence="low"] &': {
-        borderBottom: `${tokenSchema.size.border.medium} solid ${tokenSchema.color.border.neutral}`,
+        borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
       },
     }),
   };
@@ -117,7 +116,7 @@ export function useBodyStyleProps() {
     className: css({
       display: 'flex',
       flexDirection: 'column',
-      flex: 1,
+      overflow: 'auto',
 
       '.ksv-table-view:not([data-prominence="low"]) &': {
         backgroundColor: tokenSchema.color.background.canvas,
@@ -238,26 +237,27 @@ export function useRowStyleProps(state: {
   isPressed: boolean;
   isHovered: boolean;
 }) {
+  let calculatedRadius = `calc(${tokenSchema.size.radius.medium} - ${tokenSchema.size.border.regular})`;
+
   const className = css({
     boxSizing: 'border-box',
     display: 'flex',
     position: 'relative',
     outline: 0,
 
-    // prominence
-    '.ksv-table-view:not([data-prominence="low"]) &:not(:last-child)': {
-      borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
+    '&:not(:last-child)': {
+      borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
+    },
 
+    // prominence
+    '.ksv-table-view:not([data-prominence="low"]) &': {
       '&:first-child': {
-        borderStartStartRadius: tokenSchema.size.radius.medium,
-        borderStartEndRadius: tokenSchema.size.radius.medium,
+        borderStartStartRadius: calculatedRadius,
+        borderStartEndRadius: calculatedRadius,
       },
       '&:last-child': {
-        borderEndStartRadius: tokenSchema.size.radius.medium,
-        borderEndEndRadius: tokenSchema.size.radius.medium,
-      },
-      '&:not(:last-child)': {
-        borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
+        borderEndStartRadius: calculatedRadius,
+        borderEndEndRadius: calculatedRadius,
       },
     },
 

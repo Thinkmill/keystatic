@@ -57,8 +57,20 @@ export const ListItem = forwardRefWithAs<ListItemProps, 'div'>(
       position: 'relative',
       paddingInline: tokenSchema.size.space.small,
 
-      '& .list-item-checkmark': {
-        stroke: tokenSchema.color.alias.foregroundSelected,
+      '& .list-item-text': {
+        marginBlock: `calc((${tokenSchema.size.icon.regular} - ${tokenSchema.fontsize.text.regular.capheight}) / 2)`,
+      },
+
+      [`&:not([aria-disabled=true])`]: {
+        '& .list-item-checkmark': {
+          stroke: tokenSchema.color.alias.foregroundSelected,
+        },
+        '& .list-item-text': {
+          color: tokenSchema.color.foreground.neutralEmphasis,
+        },
+        '& .list-item-icon': {
+          color: tokenSchema.color.foreground.neutralSecondary,
+        },
       },
 
       // standard menu items: no selection indicator
@@ -140,13 +152,12 @@ export const ListItem = forwardRefWithAs<ListItemProps, 'div'>(
         color: 'inherit',
         gridArea: 'text',
         weight: 'medium',
-        UNSAFE_className: css({
-          marginBlock: `calc((${tokenSchema.size.icon.regular} - ${tokenSchema.fontsize.text.regular.capheight}) / 2)`,
-        }),
+        UNSAFE_className: 'list-item-text',
       },
       icon: {
         gridArea: 'icon',
         marginEnd: 'regular',
+        UNSAFE_className: 'list-item-icon',
       },
       description: {
         color: 'neutralSecondary',

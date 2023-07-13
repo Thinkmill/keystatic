@@ -1,0 +1,9 @@
+* @emmatown
+/docs/ @simonswiss @BarnabyBishop @emmatown @JedWatson
+/dev-projects/ @simonswiss @BarnabyBishop @emmatown @JedWatson
+/packages/create/ @simonswiss @BarnabyBishop @emmatown @JedWatson
+/templates/ @simonswiss @BarnabyBishop @emmatown @JedWatson
+/design-system/ @jossmac
+
+# this seems to work to exclude a file
+pnpm-lock.yaml @ghost

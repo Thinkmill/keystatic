@@ -140,6 +140,6 @@ export type TextProps = {
    *
    * @default 'regular'
    * */
-  weight?: FontWeight;
+  weight?: 'inherit' | FontWeight;
 } & BaseStyleProps &
   DOMProps;

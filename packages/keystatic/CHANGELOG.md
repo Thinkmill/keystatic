@@ -1,5 +1,25 @@
 # @keystatic/core
 
+## 0.0.109
+
+### Patch Changes
+
+- 4e595627: Avoid full page refreshes when resetting on entry pages
+- 477b4e96: The `storage.repo` option now accepts a repository in the form of
+  `owner/repo`
+- b832e495: Layout refactor that moves some stuff out of the sidebar into an app
+  header.
+
+  Component library:
+
+  - `/button` — fix class name order so consumer styles override.
+  - `/overlays` — fix gutter between popover and viewport.
+
+- b6f4fb12: Avoid remounting entry form on save
+- 68e3be7c: Add second argument for `label` and `description` to `fields.object`
+- Updated dependencies [b832e495]
+  - @keystar/ui@0.1.1
+
 ## 0.0.108
 
 ### Patch Changes

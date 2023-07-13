@@ -1,5 +1,8 @@
 import { useMemo, useState } from 'react';
 import { action, Parameters, StoryObj } from '@keystar/ui-storybook';
+import { ActionButton } from '@keystar/ui/button';
+import { Flex } from '@keystar/ui/layout';
+import { Text } from '@keystar/ui/typography';
 
 import { TextField } from '..';
 
@@ -78,16 +81,30 @@ export const CustomWidth: Story = render({
     'Error messages inform the user when the input does not meet validation criteria.',
 });
 
+export const StaticElement: Story = render({
+  startElement: (
+    <Flex pointerEvents="none" alignSelf="center" marginStart="regular">
+      <Text color="neutralTertiary" size="small" weight="medium">
+        Prefix
+      </Text>
+    </Flex>
+  ),
+});
+
+export const InteractiveElement: Story = render({
+  endElement: <ActionButton prominence="low">Action</ActionButton>,
+});
+
 function render(props = {}) {
   return {
     render: (args: Parameters) => (
       <TextField
-        {...props}
         {...args}
         onChange={action('change')}
         onFocus={action('focus')}
         onBlur={action('blur')}
         UNSAFE_className="custom-class-name"
+        {...props}
       />
     ),
   };

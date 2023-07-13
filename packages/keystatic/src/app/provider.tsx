@@ -3,6 +3,7 @@ import {
   VoussoirProvider,
 } from '@keystar/ui/core';
 import { makeLinkComponent } from '@keystar/ui/link';
+import { injectGlobal } from '@keystar/ui/style';
 import { Toaster } from '@keystar/ui/toast';
 import {
   AnchorHTMLAttributes,
@@ -30,18 +31,16 @@ import {
 } from './utils';
 import { Config } from '../config';
 import { ThemeProvider, useTheme } from './shell/theme';
+import { parseRepoConfig } from './repo-config';
+
+// NOTE: scroll behaviour is handled by shell components
+injectGlobal({ body: { overflow: 'hidden' } });
 
 export function createUrqlClient(config: Config): Client {
-  const repo = {
-    owner:
-      config.storage.kind === 'github'
-        ? config.storage.repo.owner
-        : 'repo-owner',
-    name:
-      config.storage.kind === 'github'
-        ? config.storage.repo.owner
-        : 'repo-name',
-  };
+  const repo =
+    config.storage.kind === 'github'
+      ? parseRepoConfig(config.storage.repo)
+      : { owner: 'repo-owner', name: 'repo-name' };
   return createClient({
     url:
       config.storage.kind === 'github'
@@ -195,6 +194,7 @@ export default function Provider({
   ) => ReactNode;
   config: Config;
 }) {
+  const themeContext = useTheme();
   const UniversalLink = useMemo(
     () =>
       makeLinkComponent(
@@ -227,7 +227,7 @@ export default function Provider({
       ),
     [Link]
   );
-  let themeContext = useTheme();
+
   return (
     <ThemeProvider value={themeContext}>
       <VoussoirProvider

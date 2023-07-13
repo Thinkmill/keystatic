@@ -48,6 +48,7 @@ import { useConfig } from './context';
 import { BranchInfoContext, GitHubAppShellDataContext } from './data';
 import { ViewerContext } from './sidebar-data';
 import { ColorScheme, useThemeContext } from './theme';
+import { serializeRepoConfig } from '../repo-config';
 
 export const TopBar = () => {
   let config = useConfig();
@@ -115,7 +116,7 @@ function GithubHeader({ config }: { config: GitHubConfig }) {
     <HeaderOuter>
       <ZapLogo />
       <Button
-        href={`https://github.com/${config.storage.repo.owner}/${config.storage.repo.name}`}
+        href={`https://github.com/${serializeRepoConfig(config.storage.repo)}`}
         target="_blank"
         rel="noopener noreferrer"
         prominence="low"
@@ -124,7 +125,7 @@ function GithubHeader({ config }: { config: GitHubConfig }) {
           paddingInline: tokenSchema.size.space.regular,
         })}
       >
-        {config.storage.repo.owner}/{config.storage.repo.name}
+        {serializeRepoConfig(config.storage.repo)}
       </Button>
       <Slash />
       <BranchPicker />
@@ -178,9 +179,11 @@ function HeaderOuter({ children }: { children: ReactNode }) {
       // styles
       alignItems="center"
       borderBottom="muted"
+      flexShrink={0}
       gap="small"
-      height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
-      paddingX={{ mobile: 'regular', tablet: 'xlarge' }}
+      height={{ mobile: 'element.large', tablet: 'scale.700' }}
+      paddingX={{ mobile: 'medium', tablet: 'xlarge' }}
+      paddingEnd={{ desktop: 'xxlarge' }}
     >
       {children}
     </Flex>
@@ -211,12 +214,17 @@ function ThemeMenu() {
 
   return (
     <MenuTrigger>
-      <ActionButton aria-label="Theme" prominence="low">
+      <ActionButton
+        aria-label="Theme"
+        prominence="low"
+        UNSAFE_className={css({ borderRadius: '50%', padding: 0 })}
+      >
         <Icon src={icon} />
       </ActionButton>
       <Menu
         items={themeItems}
         onSelectionChange={([key]) => setTheme(key as ColorScheme)}
+        disallowEmptySelection
         selectedKeys={[theme]}
         selectionMode="single"
       >
@@ -264,11 +272,13 @@ function UserMenu() {
       <ActionButton
         aria-label="User menu"
         prominence="low"
-        height="element.medium"
-        width="element.medium"
         UNSAFE_className={css({ borderRadius: '50%', padding: 0 })}
       >
-        <Avatar src={user.avatarUrl} name={user.name ?? undefined} />
+        <Avatar
+          src={user.avatarUrl}
+          name={user.name ?? undefined}
+          size="small"
+        />
       </ActionButton>
       <>
         <Flex

@@ -17,7 +17,7 @@ export {
   resolvePropWithPath,
   sizeResolver,
 } from './resolvers';
-export { breakpointQueries } from './responsive';
+export { breakpoints, breakpointQueries } from './responsive';
 export { tokenSchema } from './tokens';
 export { useIsMobileDevice } from './useIsMobileDevice';
 export { useMediaQuery } from './useMediaQuery';

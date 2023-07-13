@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/core",
-  "version": "0.0.108",
+  "version": "0.0.109",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -10,6 +10,14 @@
   "exports": {
     "./ui": {
       "types": "./ui/dist/keystatic-core-ui.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./ui/dist/keystatic-core-ui.node.react-server.esm.js",
+          "default": "./ui/dist/keystatic-core-ui.node.react-server.cjs.js"
+        },
+        "module": "./ui/dist/keystatic-core-ui.node.esm.js",
+        "default": "./ui/dist/keystatic-core-ui.node.cjs.js"
+      },
       "react-server": {
         "module": "./ui/dist/keystatic-core-ui.react-server.esm.js",
         "default": "./ui/dist/keystatic-core-ui.react-server.cjs.js"
@@ -19,6 +27,14 @@
     },
     ".": {
       "types": "./dist/keystatic-core.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./dist/keystatic-core.node.react-server.esm.js",
+          "default": "./dist/keystatic-core.node.react-server.cjs.js"
+        },
+        "module": "./dist/keystatic-core.node.esm.js",
+        "default": "./dist/keystatic-core.node.cjs.js"
+      },
       "react-server": {
         "module": "./dist/keystatic-core.react-server.esm.js",
         "default": "./dist/keystatic-core.react-server.cjs.js"
@@ -28,6 +44,14 @@
     },
     "./api/utils": {
       "types": "./api/utils/dist/keystatic-core-api-utils.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./api/utils/dist/keystatic-core-api-utils.node.react-server.esm.js",
+          "default": "./api/utils/dist/keystatic-core-api-utils.node.react-server.cjs.js"
+        },
+        "module": "./api/utils/dist/keystatic-core-api-utils.node.esm.js",
+        "default": "./api/utils/dist/keystatic-core-api-utils.node.cjs.js"
+      },
       "react-server": {
         "module": "./api/utils/dist/keystatic-core-api-utils.react-server.esm.js",
         "default": "./api/utils/dist/keystatic-core-api-utils.react-server.cjs.js"
@@ -37,6 +61,14 @@
     },
     "./renderer": {
       "types": "./renderer/dist/keystatic-core-renderer.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./renderer/dist/keystatic-core-renderer.node.react-server.esm.js",
+          "default": "./renderer/dist/keystatic-core-renderer.node.react-server.cjs.js"
+        },
+        "module": "./renderer/dist/keystatic-core-renderer.node.esm.js",
+        "default": "./renderer/dist/keystatic-core-renderer.node.cjs.js"
+      },
       "react-server": {
         "module": "./renderer/dist/keystatic-core-renderer.react-server.esm.js",
         "default": "./renderer/dist/keystatic-core-renderer.react-server.cjs.js"
@@ -46,6 +78,14 @@
     },
     "./api/generic": {
       "types": "./api/generic/dist/keystatic-core-api-generic.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./api/generic/dist/keystatic-core-api-generic.node.react-server.esm.js",
+          "default": "./api/generic/dist/keystatic-core-api-generic.node.react-server.cjs.js"
+        },
+        "module": "./api/generic/dist/keystatic-core-api-generic.node.esm.js",
+        "default": "./api/generic/dist/keystatic-core-api-generic.node.cjs.js"
+      },
       "react-server": {
         "module": "./api/generic/dist/keystatic-core-api-generic.react-server.esm.js",
         "default": "./api/generic/dist/keystatic-core-api-generic.react-server.cjs.js"
@@ -55,6 +95,14 @@
     },
     "./reader": {
       "types": "./reader/dist/keystatic-core-reader.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./reader/dist/keystatic-core-reader.node.react-server.esm.js",
+          "default": "./reader/dist/keystatic-core-reader.node.react-server.cjs.js"
+        },
+        "module": "./reader/dist/keystatic-core-reader.node.esm.js",
+        "default": "./reader/dist/keystatic-core-reader.node.cjs.js"
+      },
       "react-server": {
         "module": "./reader/dist/keystatic-core-reader.react-server.esm.js",
         "default": "./reader/dist/keystatic-core-reader.react-server.cjs.js"
@@ -64,6 +112,14 @@
     },
     "./form/fields/markdoc": {
       "types": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.node.react-server.esm.js",
+          "default": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.node.react-server.cjs.js"
+        },
+        "module": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.node.esm.js",
+        "default": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.node.cjs.js"
+      },
       "react-server": {
         "module": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.react-server.esm.js",
         "default": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.react-server.cjs.js"
@@ -96,7 +152,7 @@
     "@emotion/weak-memoize": "^0.3.0",
     "@floating-ui/react": "^0.24.0",
     "@hapi/iron": "^7.0.0",
-    "@keystar/ui": "^0.1.0",
+    "@keystar/ui": "^0.1.1",
     "@markdoc/markdoc": "^0.3.0",
     "@react-aria/focus": "^3.13.0",
     "@react-aria/i18n": "^3.8.0",
@@ -147,6 +203,7 @@
     "prosemirror-state": "^1.4.2",
     "prosemirror-transform": "^1.7.1",
     "prosemirror-view": "^1.30.2",
+    "react-resizable-panels": "^0.0.53",
     "scroll-into-view-if-needed": "^3.0.3",
     "slate": "^0.91.4",
     "slate-history": "^0.86.0",
@@ -204,6 +261,10 @@
     "#react-cache-in-react-server": {
       "react-server": "./src/reader/react-server-cache.ts",
       "default": "./src/reader/noop-cache.ts"
+    },
+    "#sha1": {
+      "node": "./src/sha1/node.ts",
+      "default": "./src/sha1/webcrypto.ts"
     }
   }
 }

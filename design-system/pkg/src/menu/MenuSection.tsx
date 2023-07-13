@@ -32,12 +32,7 @@ export function MenuSection<T>(props: MenuSectionProps<T>) {
   return (
     <Fragment>
       {item.key !== state.collection.getFirstKey() && (
-        <Divider
-          {...separatorProps}
-          elementType="li"
-          size="medium"
-          UNSAFE_className={css({ margin: tokenSchema.size.space.medium })}
-        />
+        <Divider {...separatorProps} elementType="li" marginY="small" />
       )}
       <li {...itemProps}>
         {item.rendered && (
@@ -47,7 +42,7 @@ export function MenuSection<T>(props: MenuSectionProps<T>) {
             color="neutralSecondary"
             weight="medium"
             UNSAFE_className={css({
-              paddingBlock: tokenSchema.size.space.medium,
+              paddingBlock: tokenSchema.size.space.regular,
               paddingInline: tokenSchema.size.space.medium,
             })}
             {...headingProps}

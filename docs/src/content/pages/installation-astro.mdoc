@@ -1,5 +1,6 @@
 ---
 title: Adding Keystatic to an Astro project
+summary: Integrating Keystatic with an existing Astro v2 project.
 ---
 This guide assumes you are trying to add Keystatic to an existing Astro v2 project.
 
@@ -36,8 +37,8 @@ Keystatic needs a config file. This is where you can connect a project with a sp
 Let's create a file called `keystatic.config.tsx` (or `.jsx` if not using TypeScript) in the root of the project:
 
 ```jsx
-// keystatic.config.tsx
-import { config, fields, collection } from '@keystatic/core'
+// keystatic.config.ts
+import { config, fields, collection } from '@keystatic/core';
 
 export default config({
   storage: {
@@ -61,8 +62,7 @@ export default config({
       },
     }),
   },
-})
-
+});
 ```
 
 We export a config object wrapped in the `config` function imported from `@keystatic/core`.
@@ -81,7 +81,7 @@ In our `pages` directory, we want every route within the `/keystatic` segment to
 
 We can leverage Astro's [Rest parameters](https://docs.astro.build/en/core-concepts/routing/#rest-parameters) to match file paths of any depth.
 
-Let's create a new page called `src/pages/eystatic/[...params].astro`:
+Let's create a new page called `src/pages/keystatic/[...params].astro`:
 
 ```jsx
 ---
