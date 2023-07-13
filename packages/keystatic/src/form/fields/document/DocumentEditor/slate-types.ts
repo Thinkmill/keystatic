@@ -48,12 +48,14 @@ type TableCell = {
 type CodeBlock = {
   type: 'code';
   language?: string;
+  extraAttributes?: Record<string, unknown>;
 };
 
 type Heading = {
   type: 'heading';
   level: 1 | 2 | 3 | 4 | 5 | 6;
   textAlign?: 'center' | 'end' | undefined;
+  extraAttributes?: Record<string, unknown>;
 };
 
 type Paragraph = {

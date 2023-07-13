@@ -12,7 +12,7 @@ import { DocumentFeatures } from '../DocumentEditor/document-features';
 import { getInitialPropsValueFromInitializer } from '../../../initial-values';
 import { Descendant } from 'slate';
 import { fixPath } from '../../../../app/path-utils';
-import { getSrcPrefixForImageBlock } from '../DocumentEditor/component-blocks/document-field';
+import { getSrcPrefixForImageBlock } from './document-field';
 import { serializeProps } from '../../../serialize-props';
 
 function toInline(nodes: Descendant[]): Node {
@@ -208,33 +208,37 @@ function toMarkdoc(
     ]);
   }
   if (node.type === 'code') {
-    const extraAttributes: Record<string, unknown> = {};
-    const { children, language, type, ...rest } = node;
+    const extraMarkdocAttributes: Record<string, unknown> = {};
     const schema =
       typeof config.documentFeatures.formatting.blockTypes.code === 'object'
         ? config.documentFeatures.formatting.blockTypes.code.schema
         : undefined;
-    if (schema && Object.keys(schema.fields).length > 0) {
+    if (
+      schema &&
+      Object.keys(schema.fields).length > 0 &&
+      node.extraAttributes &&
+      Object.keys(node.extraAttributes).length > 0
+    ) {
       const serialized = serializeProps(
-        getInitialPropsValueFromInitializer(schema, rest),
+        node.extraAttributes,
         schema,
         undefined,
         config.slug,
         false
       );
-      Object.assign(extraAttributes, serialized.value);
+      Object.assign(extraMarkdocAttributes, serialized.value);
       config.extraFiles.push(...serialized.extraFiles);
     }
 
-    let content = (children[0] as { text: string }).text + '\n';
+    let content = (node.children[0] as { text: string }).text + '\n';
 
     const markdocNode = new Ast.Node(
       'fence',
-      { content, language, ...extraAttributes },
+      { content, language: node.language, ...extraMarkdocAttributes },
       [new Ast.Node('text', { content })]
     );
 
-    for (const [key, value] of Object.entries(extraAttributes)) {
+    for (const [key, value] of Object.entries(extraMarkdocAttributes)) {
       markdocNode.annotations.push({
         name: key,
         value,
@@ -281,30 +285,31 @@ function toMarkdoc(
     );
   }
   if (node.type === 'heading') {
-    const extraAttributes: Record<string, unknown> = {};
+    const extraMarkdocAttributes: Record<string, unknown> = {};
     if (node.textAlign) {
-      extraAttributes.textAlign = node.textAlign;
+      extraMarkdocAttributes.textAlign = node.textAlign;
     }
-    const { children, level, textAlign, type, ...rest } = node;
     const schema = config.documentFeatures.formatting.headings.schema;
-    if (Object.keys(schema.fields).length > 0) {
-      Object.assign(
-        extraAttributes,
-        serializeProps(
-          getInitialPropsValueFromInitializer(schema, rest),
-          schema,
-          undefined,
-          config.slug,
-          false
-        )
+    if (
+      Object.keys(schema.fields).length > 0 &&
+      node.extraAttributes &&
+      Object.keys(node.extraAttributes).length
+    ) {
+      const serialized = serializeProps(
+        node.extraAttributes,
+        schema,
+        undefined,
+        config.slug,
+        false
       );
+      Object.assign(extraMarkdocAttributes, serialized.value);
     }
     const markdocNode = new Ast.Node(
       'heading',
-      { level: node.level, ...extraAttributes },
+      { level: node.level, ...extraMarkdocAttributes },
       [toInline(node.children)]
     );
-    for (const [key, value] of Object.entries(extraAttributes)) {
+    for (const [key, value] of Object.entries(extraMarkdocAttributes)) {
       markdocNode.annotations.push({
         name: key,
         value,

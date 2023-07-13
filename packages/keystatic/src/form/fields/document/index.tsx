@@ -5,7 +5,7 @@ import { Descendant, Editor } from 'slate';
 import { fromMarkdoc } from './markdoc/from-markdoc';
 import { toMarkdocDocument } from './markdoc/to-markdoc';
 import { DocumentFeatures } from './DocumentEditor/document-features';
-import { deserializeFiles } from './DocumentEditor/component-blocks/document-field';
+import { deserializeFiles } from './markdoc/document-field';
 import { collectDirectoriesUsedInSchema } from '../../../app/tree-key';
 import {
   BasicFormField,

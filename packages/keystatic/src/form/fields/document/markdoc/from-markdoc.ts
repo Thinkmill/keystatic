@@ -142,20 +142,21 @@ function fromMarkdocNode(
     };
   }
   if (node.type === 'fence') {
-    const { language, content, ...rest } = node.attributes;
+    const { language, content, ...extraAttributes } = node.attributes;
     return {
       type: 'code',
       children: [{ text: content.replace(/\n$/, '') }],
       ...(typeof language === 'string' ? { language } : {}),
-      ...rest,
+      ...(Object.keys(extraAttributes).length > 0 ? { extraAttributes } : {}),
     };
   }
   if (node.type === 'heading') {
+    const { level, ...extraAttributes } = node.attributes;
     return {
-      ...node.attributes,
       level: node.attributes.level,
       type: 'heading',
       children: inlineFromMarkdoc(node.children),
+      ...(Object.keys(extraAttributes).length > 0 ? { extraAttributes } : {}),
     };
   }
   if (node.type === 'list') {

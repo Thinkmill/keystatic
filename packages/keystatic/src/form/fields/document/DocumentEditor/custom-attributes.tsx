@@ -59,7 +59,6 @@ function CustomAttributesDialogInner(props: {
           if (clientSideValidateProp(props.schema, state, undefined)) {
             dismiss();
             const path = ReactEditor.findPath(editor, props.element);
-            console.log(state);
             Transforms.setNodes(editor, state, { at: path });
           }
         }}

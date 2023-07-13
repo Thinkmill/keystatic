@@ -1,10 +1,10 @@
 import { Descendant } from 'slate';
-import { fixPath } from '../../../../../app/path-utils';
-import { DocumentFeatures } from '../document-features';
-import { ComponentBlock, ComponentSchema } from '../../../../api';
-import { transformProps } from '../../../../props-value';
-import { object } from '../../../object';
-import { getSrcPrefix } from '../../../image';
+import { fixPath } from '../../../../app/path-utils';
+import { DocumentFeatures } from '../DocumentEditor/document-features';
+import { ComponentBlock, ComponentSchema } from '../../../api';
+import { transformProps } from '../../../props-value';
+import { object } from '../../object';
+import { getSrcPrefix } from '../../image';
 
 export function deserializeFiles(
   nodes: Descendant[],
@@ -30,6 +30,36 @@ export function deserializeFiles(
           mode,
           slug
         ) as Record<string, any>,
+      };
+    }
+    if (
+      (node.type === 'heading' || node.type === 'code') &&
+      'extraAttributes' in node
+    ) {
+      const { extraAttributes, ...rest } = node;
+      if (mode === 'read') {
+        return {
+          ...extraAttributes,
+          ...rest,
+        };
+      }
+      const schema =
+        node.type === 'heading'
+          ? documentFeatures.formatting.headings.schema
+          : documentFeatures.formatting.blockTypes.code === false
+          ? object({})
+          : documentFeatures.formatting.blockTypes.code.schema;
+
+      return {
+        ...node,
+        extraAttributes: deserializeProps(
+          schema,
+          extraAttributes,
+          files,
+          otherFiles,
+          mode,
+          slug
+        ) as Record<string, unknown>,
       };
     }
     if (
