@@ -1,5 +1,21 @@
 # @keystar/ui
 
+## 0.1.2
+
+### Patch Changes
+
+- e667fb9c: Allow users to resize parts of the UI:
+
+  - the sidebar navigation pane
+  - secondary fields, when `entryLayout='content'`
+
+- aec6359b: Support "renderEmptyState" prop on `TableView` component.
+- b30c4b45: Remove bespoke icon implementations.
+- ef586da4: fixes a bug where non-interactive adornments block pointer events
+- 6c58f038: introduce `nav-tree` package, and components
+- 7fe8d2f4: Fix label and description support in `NumberField`
+- 781884f9: tidy panels and collection table appearance
+
 ## 0.1.1
 
 ### Patch Changes
