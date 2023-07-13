@@ -296,7 +296,7 @@ function toMarkdoc(
           undefined,
           config.slug,
           false
-        )
+        ).value
       );
     }
     const markdocNode = new Ast.Node(
