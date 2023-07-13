@@ -78,7 +78,7 @@ export async function generateMetadata(
   const description = page?.summary ? page.summary : fallbackDescription;
 
   const parentOGImages = (await parent).openGraph?.images || [];
-  const image = `https://keystatic-site-thinkmill-labs.vercel.app/og?title=${title}`;
+  const image = `/og?title=${title}`;
   const parentTwitterSite = (await parent).twitter?.site ?? '';
 
   return {
