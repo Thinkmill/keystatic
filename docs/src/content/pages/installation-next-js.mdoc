@@ -165,25 +165,6 @@ Niiiice ✨
 
 Let's try display that on the frontend now.
 
-### Using a base directory
-
-If you are working in a monorepo your content might be stored in a nested folder, in this case you should make use of the `localBaseDirectory`
-
-```jsx
-// ../../pages/api/keystatic/[[...params]].tsx
-import { makeAPIRouteHandler } from "@keystatic/next/api";
-import path from "path";
-
-import keystaticConfig from "../../../keystatic.config";
-
-export default makeAPIRouteHandler({
-  localBaseDirectory: path.resolve(process.cwd(), "../.."),
-  config: keystaticConfig,
-});
-```
-
-You will also need to make sure to initialise the reader using this relative path.
-
 ---
 
 ## Displaying Keystatic content on the frontend
