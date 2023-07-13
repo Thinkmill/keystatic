@@ -38,7 +38,7 @@ describe('password-field/PasswordField', () => {
       defaultValue: inputText,
     });
 
-    expect(queryByLabelText('Show Password')).toBeTruthy();
+    expect(getByLabelText('Show Password')).toBeVisible();
   });
   it('hides the reveal button when requested', () => {
     let { queryByLabelText } = renderPasswordField({
