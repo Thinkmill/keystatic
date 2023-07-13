@@ -61,6 +61,7 @@ import {
   getSlugFromState,
   isGitHubConfig,
 } from './utils';
+import { notFound } from './not-found';
 
 type ItemPageProps = {
   collection: string;
@@ -513,6 +514,8 @@ function ItemPageWrapper(props: {
   config: Config;
   basePath: string;
 }) {
+  const collectionConfig = props.config.collections?.[props.collection];
+  if (!collectionConfig) notFound();
   const format = useMemo(
     () => getCollectionFormat(props.config, props.collection),
     [props.config, props.collection]
@@ -520,7 +523,6 @@ function ItemPageWrapper(props: {
 
   const allSlugs = useSlugsInCollection(props.collection);
 
-  const collectionConfig = props.config.collections![props.collection]!;
   const slugInfo = useMemo(() => {
     const slugs = new Set(allSlugs);
     slugs.delete(props.itemSlug);

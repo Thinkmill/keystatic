@@ -30,6 +30,7 @@ import { Icon } from '@keystar/ui/icon';
 import { refreshCwIcon } from '@keystar/ui/icon/icons/refreshCwIcon';
 import { ForkRepoDialog } from './fork-repo';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
+import { notFound } from './not-found';
 
 type SingletonPageProps = {
   singleton: string;
@@ -233,7 +234,8 @@ function SingletonPage({
 }
 
 function SingletonPageWrapper(props: { singleton: string; config: Config }) {
-  const singletonConfig = props.config.singletons![props.singleton]!;
+  const singletonConfig = props.config.singletons?.[props.singleton];
+  if (!singletonConfig) notFound();
   const header = (
     <AppShellHeader>
       <Heading elementType="h1" id="page-title" size="small">

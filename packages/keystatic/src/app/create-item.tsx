@@ -34,6 +34,7 @@ import { useSlugsInCollection } from './useSlugsInCollection';
 import { ForkRepoDialog } from './fork-repo';
 import { useUpsertItem } from './updating';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
+import { notFound } from './not-found';
 
 const emptyMap = new Map<string, TreeNode>();
 
@@ -44,7 +45,8 @@ export function CreateItem(props: {
 }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
-  const collectionConfig = props.config.collections![props.collection]!;
+  const collectionConfig = props.config.collections?.[props.collection];
+  if (!collectionConfig) notFound();
   const [forceValidation, setForceValidation] = useState(false);
   const schema = useMemo(
     () => fields.object(collectionConfig.schema),
