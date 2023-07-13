@@ -1,3 +1,3 @@
 {
-  "installCommand": "cd .. && pnpm install"
+  "installCommand": "cd ../.. && pnpm install"
 }
