@@ -18,7 +18,7 @@ category: Forms
 
 ### Label
 
-Every search field must have a label.
+Every password field must have a label.
 
 ```jsx {% live=true %}
 <PasswordField label="Password" />
@@ -59,7 +59,7 @@ met. Prompting the user to adjust their input.
 
 ### Disabled
 
-A search field can be disabled by setting the `isDisabled` prop. This can be
+A password field can be disabled by setting the `isDisabled` prop. This can be
 used to maintain layout continuity and communicate that a field may become
 available later.
 
