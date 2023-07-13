@@ -1,12 +1,12 @@
 'use client';
 
-import slugify from '@sindresorhus/slugify';
 import { useEffect, useRef, useState } from 'react';
 import { H1_ID } from '../../constants';
 
 type Heading = {
   level: number;
   text: string;
+  slug: string;
 };
 
 type TableOfContentsProps = {
@@ -14,15 +14,7 @@ type TableOfContentsProps = {
 };
 
 export function TableOfContents({ headings }: TableOfContentsProps) {
-  const headingsWithSlugs = headings.map(({ level, text }) => {
-    return {
-      level,
-      text,
-      slug: `#${slugify(text)}`,
-    };
-  });
-
-  const slugs = headingsWithSlugs.map(({ slug }) => {
+  const slugs = headings.map(({ slug }) => {
     return slug;
   });
 
@@ -33,7 +25,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
       <h2 className="text-xs uppercase text-neutral-500">On this page</h2>
 
       <ul className="mt-4 flex flex-col gap-3">
-        {headingsWithSlugs.map(({ level, text, slug }) => (
+        {headings.map(({ level, text, slug }) => (
           <li key={text}>
             <a
               className={`block text-sm leading-tight hover:underline ${
