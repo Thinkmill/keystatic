@@ -1,5 +1,27 @@
 # @keystatic/core
 
+## 0.0.110
+
+### Patch Changes
+
+- e667fb9c: Allow users to resize parts of the UI:
+
+  - the sidebar navigation pane
+  - secondary fields, when `entryLayout='content'`
+
+- aec6359b: Support "renderEmptyState" prop on `TableView` component.
+- e0c4c37e: Fix custom attributes on headings in `fields.document`
+- 781884f9: tidy panels and collection table appearance
+- cafe3695: Improved not found states
+- Updated dependencies [e667fb9c]
+- Updated dependencies [aec6359b]
+- Updated dependencies [b30c4b45]
+- Updated dependencies [ef586da4]
+- Updated dependencies [6c58f038]
+- Updated dependencies [7fe8d2f4]
+- Updated dependencies [781884f9]
+  - @keystar/ui@0.1.2
+
 ## 0.0.109
 
 ### Patch Changes
