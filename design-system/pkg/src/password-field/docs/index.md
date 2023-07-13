@@ -88,11 +88,11 @@ prevent a password manager from asking the user if they would like to save
 username and password information, or from automatically filling in those values
 in a site's login form.
 
-### Reveal button
+### Text reveal
 
 The input is masked by default, which can be toggled using an optional reveal
-button. Use the `hideRevealButton` prop to hide the reveal button.
+button. Use the `allowTextReveal` prop to hide the reveal button.
 
 ```jsx {% live=true %}
-<PasswordField label="Password" hideRevealButton />
+<PasswordField label="Password" allowTextReveal={false} />
 ```

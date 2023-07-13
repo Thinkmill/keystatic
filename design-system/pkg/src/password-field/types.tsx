@@ -30,11 +30,11 @@ export type PasswordFieldState = {
   /** Sets the value of the password field. */
   setValue(value: string): void;
   /** The current type of the password field. */
-  readonly type: PasswordFieldType;
+  readonly secureTextEntry: boolean;
   /** Sets the type of the password field. */
-  setType(type: PasswordFieldType): void;
+  setSecureTextEntry(isSecure: boolean): void;
   /** Toggles the type of the password field. */
-  toggleType(): void;
+  toggleSecureTextEntry(): void;
 };
 
 export type PasswordFieldProps = {
@@ -45,9 +45,11 @@ export type PasswordFieldProps = {
    */
   autoComplete?: 'new-password' | 'current-password' | (string & {});
   /**
-   * Whether to hide the reveal button.
+   * Allow users to reveal the input text. When true, a button is displayed
+   * that toggles secure text entry.
+   * @default true
    */
-  hideRevealButton?: boolean;
+  allowTextReveal?: boolean;
 } & ValueBase<string> &
   FieldProps &
   FocusableProps &

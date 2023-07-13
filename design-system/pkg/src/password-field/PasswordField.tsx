@@ -34,7 +34,7 @@ export const PasswordField: ForwardRefExoticComponent<
   props = validateTextFieldProps(props);
   let {
     description,
-    hideRevealButton,
+    allowTextReveal = true,
     isDisabled,
     isReadOnly,
     isRequired,
@@ -69,10 +69,10 @@ export const PasswordField: ForwardRefExoticComponent<
       isReadOnly={isReadOnly}
       isRequired={isRequired}
       endElement={
-        !hideRevealButton && (
+        allowTextReveal && (
           <RevealButton
             isDisabled={isDisabled}
-            isRevealed={state.type === 'text'}
+            secureTextEntry={state.secureTextEntry}
             {...revealButtonProps}
           />
         )
@@ -85,9 +85,9 @@ export const PasswordField: ForwardRefExoticComponent<
  * @private the reveal button is used to show and hide input text.
  */
 export function RevealButton(
-  props: ActionButtonProps & { isRevealed: boolean }
+  props: ActionButtonProps & { secureTextEntry: boolean }
 ) {
-  let { isRevealed, ...otherProps } = props;
+  let { secureTextEntry, ...otherProps } = props;
   return (
     <ActionButton
       {...otherProps}
@@ -107,7 +107,7 @@ export function RevealButton(
         },
       })}
     >
-      <Icon src={isRevealed ? eyeOffIcon : eyeIcon} />
+      <Icon src={secureTextEntry ? eyeIcon : eyeOffIcon} />
     </ActionButton>
   );
 }

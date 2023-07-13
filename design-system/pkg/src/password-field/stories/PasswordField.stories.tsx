@@ -30,9 +30,9 @@ export const AutoFocus = () => render({ autoFocus: true });
 
 AutoFocus.storyName = 'autoFocus';
 
-export const HideRevealButton = () => render({ hideRevealButton: true });
+export const HideRevealButton = () => render({ allowTextReveal: false });
 
-HideRevealButton.storyName = 'hideRevealButton';
+HideRevealButton.storyName = 'allowTextReveal=false';
 
 export const Required = () => render({ isRequired: true });
 

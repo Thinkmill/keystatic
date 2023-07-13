@@ -24,13 +24,14 @@ export function usePasswordField(
 ): PasswordFieldAria {
   let { autoComplete = 'current-password', isDisabled } = props;
 
+  let type = state.secureTextEntry ? 'password' : 'text';
   let { labelProps, inputProps, descriptionProps, errorMessageProps } =
     useTextField(
       {
         ...props,
         value: state.value,
         onChange: state.setValue,
-        type: state.type,
+        type,
         autoComplete,
       },
       inputRef
@@ -64,9 +65,9 @@ export function usePasswordField(
     'aria-labelledby': ariaLabelledby
       ? `${revealButtonId} ${ariaLabelledby}`
       : undefined,
-    'aria-pressed': state.type === 'text',
+    'aria-pressed': !state.secureTextEntry,
     isDisabled,
-    onPress: state.toggleType,
+    onPress: state.toggleSecureTextEntry,
   };
 
   return {
