@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.1.3
+
+### Patch Changes
+
+- a048349f: introduce new `PasswordField` component
+
 ## 0.1.2
 
 ### Patch Changes
