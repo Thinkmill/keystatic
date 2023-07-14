@@ -10,6 +10,8 @@ export async function GET(req: NextRequest) {
   ).then(res => res.arrayBuffer());
   const fontData = await font;
 
+  console.log('origin', req.nextUrl.origin);
+
   const titleLength = postTitle.length;
 
   let titleSize = '120px';
@@ -26,7 +28,7 @@ export async function GET(req: NextRequest) {
           flexDirection: 'column',
           alignItems: 'flex-start',
           justifyContent: 'center',
-          backgroundImage: `url(${req.nextUrl.origin}/opengraph-bg.png)`,
+          backgroundImage: `url(https://keystatic.com/opengraph-bg.png)`,
         }}
       >
         <div
