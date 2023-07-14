@@ -3,6 +3,7 @@ import { ImageResponse, NextRequest } from 'next/server';
 export const runtime = 'edge';
 
 export async function GET(req: NextRequest) {
+  console.log({ req });
   const { searchParams } = req.nextUrl;
   const postTitle = searchParams.get('title') || '';
   const font = fetch(
@@ -12,9 +13,9 @@ export async function GET(req: NextRequest) {
 
   const titleLength = postTitle.length;
 
-  let titleSize = '80px';
-  if (titleLength > 18) titleSize = '64px';
-  if (titleLength > 32) titleSize = '56px';
+  let titleSize = '120px';
+  if (titleLength > 18) titleSize = '96px';
+  if (titleLength > 32) titleSize = '84px';
 
   return new ImageResponse(
     (
@@ -26,13 +27,13 @@ export async function GET(req: NextRequest) {
           flexDirection: 'column',
           alignItems: 'flex-start',
           justifyContent: 'center',
-          backgroundImage: 'url(http://localhost:3000/opengraph-bg.png)',
+          backgroundImage: `url(${req.nextUrl.origin}/opengraph-bg.png)`,
         }}
       >
         <div
           style={{
-            marginLeft: 600,
-            marginRight: 40,
+            marginLeft: 900,
+            marginRight: 60,
             display: 'flex',
             fontSize: titleSize,
             fontWeight: 800,
@@ -48,8 +49,8 @@ export async function GET(req: NextRequest) {
       </div>
     ),
     {
-      width: 1200,
-      height: 630,
+      width: 1801,
+      height: 945,
       fonts: [
         {
           name: 'Inter',
