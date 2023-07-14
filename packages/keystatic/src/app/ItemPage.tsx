@@ -378,10 +378,12 @@ function HeaderActions(props: {
       return isBelowTablet ? (
         <Box
           backgroundColor="pendingEmphasis"
-          height="scale.100"
-          width="scale.100"
+          height="scale.75"
+          width="scale.75"
           borderRadius="full"
-        />
+        >
+          <Text visuallyHidden>Unsaved</Text>
+        </Box>
       ) : (
         <Badge tone="pending">Unsaved</Badge>
       );
