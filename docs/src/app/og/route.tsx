@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
           flexDirection: 'column',
           alignItems: 'flex-start',
           justifyContent: 'center',
-          backgroundImage: `url(https://keystatic.com/opengraph-bg.png)`,
+          backgroundImage: `url(https://keystatic.io/images/keystatic-docs/opengraph-bg.png)`,
         }}
       >
         <div
