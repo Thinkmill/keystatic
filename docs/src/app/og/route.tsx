@@ -3,7 +3,6 @@ import { ImageResponse, NextRequest } from 'next/server';
 export const runtime = 'edge';
 
 export async function GET(req: NextRequest) {
-  console.log({ req });
   const { searchParams } = req.nextUrl;
   const postTitle = searchParams.get('title') || '';
   const font = fetch(
