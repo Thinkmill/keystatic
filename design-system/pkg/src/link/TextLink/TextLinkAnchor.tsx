@@ -25,8 +25,8 @@ export const TextLinkAnchor = forwardRef<
     ...otherProps
   } = props;
 
+  const LinkComponent = useLinkComponent(forwardedRef);
   const domRef = useObjectRef(forwardedRef);
-  const LinkComponent = useLinkComponent(domRef);
   const { Wrapper, ...styleProps } = useTextLink(props);
   const { linkProps } = useLink(otherProps, domRef);
 
