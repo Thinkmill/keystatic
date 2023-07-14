@@ -519,6 +519,7 @@ importers:
 
   docs:
     specifiers:
+      '@fontsource/inter': ^5.0.5
       '@headlessui/react': ^1.7.11
       '@heroicons/react': ^2.0.16
       '@keystar/ui': ^0.1.2
@@ -546,6 +547,7 @@ importers:
       tailwindcss: ^3.2.6
       typescript: ^5.1.3
     dependencies:
+      '@fontsource/inter': 5.0.5
       '@headlessui/react': 1.7.14_biqbaboplfbrettd7655fr4n2y
       '@heroicons/react': 2.0.18_react@18.2.0
       '@keystar/ui': link:../design-system/pkg
@@ -5149,6 +5151,10 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       tabbable: 6.1.2
+    dev: false
+
+  /@fontsource/inter/5.0.5:
+    resolution: {integrity: sha512-RE1JmWRB6Kxo+1nXUnORSSH5uKgUZ2QEQE+h/nsNt758C+17G9y26E9QiAsIqsG13NpKhwn22EeECfyC+da5ew==}
     dev: false
 
   /@formatjs/ecma402-abstract/1.17.0:

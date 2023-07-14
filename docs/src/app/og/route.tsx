@@ -5,12 +5,12 @@ export const runtime = 'edge';
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const postTitle = searchParams.get('title') || '';
-  const font = fetch(
-    new URL('../../../public/fonts/Inter-Bold.ttf', import.meta.url)
+  const fontData = await fetch(
+    new URL(
+      '../../../node_modules/@fontsource/inter/files/inter-latin-700-normal.woff',
+      import.meta.url
+    )
   ).then(res => res.arrayBuffer());
-  const fontData = await font;
-
-  console.log('origin', req.nextUrl.origin);
 
   const titleLength = postTitle.length;
 
