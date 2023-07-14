@@ -13,7 +13,7 @@ import { isReactText } from '@keystar/ui/utils';
 import {
   ButtonElementProps,
   ButtonProps,
-  CommonProps,
+  CommonButtonProps,
   LinkElementProps,
 } from './types';
 import { buttonClassList, useButtonStyles } from './useButtonStyles';
@@ -35,7 +35,7 @@ export const Button = forwardRef(function Button(
   // let contents = hasIcon && hasLabel ? 'mixed' : hasLabel ? 'text' : 'icon';
   let contents = 'unknown';
 
-  if ('href' in props) {
+  if ('href' in props && props.href) {
     return (
       <FocusRing autoFocus={props.autoFocus}>
         <LinkButton
@@ -138,7 +138,7 @@ const BaseButton = forwardRef(function Button(
 // Utils
 // -----------------------------------------------------------------------------
 
-export const useButtonChildren = (props: CommonProps) => {
+export const useButtonChildren = (props: CommonButtonProps) => {
   const { children } = props;
 
   // avoid unnecessary re-renders
