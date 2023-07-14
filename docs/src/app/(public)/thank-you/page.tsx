@@ -3,7 +3,29 @@ import { Main } from '../../../components/main';
 import { H1_ID } from '../../../constants';
 
 export const metadata = {
-  title: 'Thank you',
+  title: {
+    template: '%s - Thank you | Keystatic',
+    default: 'Thank you',
+  },
+  description: 'Thank you for being curious!',
+  openGraph: {
+    title: 'Thank you',
+    description: 'Thank you for being curious!',
+    images: [
+      {
+        url: '/og?title=Privacy+policy',
+      },
+    ],
+    siteName: 'Keystatic',
+    type: 'website',
+    url: 'https://keystatic.com/thank-you',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Thank you',
+    description: 'Thank you for being curious!',
+    site: '@thekeystatic',
+  },
 };
 
 export default function ThankYouPage() {
