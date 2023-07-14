@@ -12,28 +12,20 @@ export default {
 
 export const Default = () => render({});
 
-Default.story = {
-  name: 'default',
-};
+Default.storyName = 'default';
 
 export const DefaultValue10 = () => render({ defaultValue: 10 });
 
-DefaultValue10.story = {
-  name: 'defaultValue: 10',
-};
+DefaultValue10.storyName = 'defaultValue: 10';
 
 export const Value10 = () => render({ value: 10 });
 
-Value10.story = {
-  name: 'value: 10',
-};
+Value10.storyName = 'value: 10';
 
 export const MaximumFractionDigits0 = () =>
   render({ formatOptions: { maximumFractionDigits: 0 } });
 
-MaximumFractionDigits0.story = {
-  name: 'maximumFractionDigits = 0',
-};
+MaximumFractionDigits0.storyName = 'maximumFractionDigits = 0';
 
 export const Currency = () =>
   render({
@@ -41,16 +33,12 @@ export const Currency = () =>
     label: 'Price',
   });
 
-Currency.story = {
-  name: 'currency',
-};
+Currency.storyName = 'currency';
 
 export const Percent = () =>
   render({ formatOptions: { style: 'percent' }, label: 'Tax' });
 
-Percent.story = {
-  name: 'percent',
-};
+Percent.storyName = 'percent';
 
 export const PercentMaxFractionDigits2NoMinFractionDigits = () =>
   render({
@@ -58,9 +46,8 @@ export const PercentMaxFractionDigits2NoMinFractionDigits = () =>
     label: 'Tax',
   });
 
-PercentMaxFractionDigits2NoMinFractionDigits.story = {
-  name: 'percent, max fraction digits: 2, no min fraction digits',
-};
+PercentMaxFractionDigits2NoMinFractionDigits.storyName =
+  'percent, max fraction digits: 2, no min fraction digits';
 
 export const PercentMin2Max2FractionDigits = () =>
   render({
@@ -72,9 +59,8 @@ export const PercentMin2Max2FractionDigits = () =>
     label: 'Tax',
   });
 
-PercentMin2Max2FractionDigits.story = {
-  name: 'percent min = 2 max = 2 fraction digits',
-};
+PercentMin2Max2FractionDigits.storyName =
+  'percent min = 2 max = 2 fraction digits';
 
 export const PercentMin2Max3FractionDigits = () =>
   render({
@@ -86,16 +72,13 @@ export const PercentMin2Max3FractionDigits = () =>
     label: 'Tax',
   });
 
-PercentMin2Max3FractionDigits.story = {
-  name: 'percent min = 2 max = 3 fraction digits',
-};
+PercentMin2Max3FractionDigits.storyName =
+  'percent min = 2 max = 3 fraction digits';
 
 export const MinValue00FractionDigits = () =>
   render({ minValue: 0, formatOptions: { maximumFractionDigits: 0 } });
 
-MinValue00FractionDigits.story = {
-  name: 'minValue = 0, 0 fraction digits',
-};
+MinValue00FractionDigits.storyName = 'minValue = 0, 0 fraction digits';
 
 export const PercentUsingSign = () =>
   render({
@@ -103,93 +86,65 @@ export const PercentUsingSign = () =>
     label: 'Tax',
   });
 
-PercentUsingSign.story = {
-  name: 'percent using sign',
-};
+PercentUsingSign.storyName = 'percent using sign';
 
 export const Disabled = () => render({ isDisabled: true });
 
-Disabled.story = {
-  name: 'disabled',
-};
+Disabled.storyName = 'disabled';
 
 export const Readonly = () => render({ defaultValue: 10, isReadOnly: true });
 
-Readonly.story = {
-  name: 'readonly',
-};
+Readonly.storyName = 'readonly';
 
 export const ErrorMessage = () =>
   render({ errorMessage: 'Some validation message.' });
 
-ErrorMessage.story = {
-  name: 'errorMessage',
-};
+ErrorMessage.storyName = 'errorMessage';
 
 export const MinValue0MaxValue20 = () => render({ minValue: 0, maxValue: 20 });
 
-MinValue0MaxValue20.story = {
-  name: 'minValue = 0, maxValue = 20',
-};
+MinValue0MaxValue20.storyName = 'minValue = 0, maxValue = 20';
 
 export const MinValue50MaxValue20 = () =>
   render({ minValue: -50, maxValue: -20 });
 
-MinValue50MaxValue20.story = {
-  name: 'minValue = -50, maxValue = -20',
-};
+MinValue50MaxValue20.storyName = 'minValue = -50, maxValue = -20';
 
 export const MinValue20MaxValue50 = () =>
   render({ minValue: 20, maxValue: 50 });
 
-MinValue20MaxValue50.story = {
-  name: 'minValue = 20, maxValue = 50',
-};
+MinValue20MaxValue50.storyName = 'minValue = 20, maxValue = 50';
 
 export const MinValue0DefaultValue0 = () =>
   render({ minValue: 0, defaultValue: 0 });
 
-MinValue0DefaultValue0.story = {
-  name: 'minValue = 0, defaultValue = 0',
-};
+MinValue0DefaultValue0.storyName = 'minValue = 0, defaultValue = 0';
 
 export const Step5 = () => render({ step: 5 });
 
-Step5.story = {
-  name: 'step = 5',
-};
+Step5.storyName = 'step = 5';
 
 export const Step3WithMin2Max21 = () =>
   render({ step: 3, minValue: 2, maxValue: 21 });
 
-Step3WithMin2Max21.story = {
-  name: 'step = 3 with min = 2, max = 21',
-};
+Step3WithMin2Max21.storyName = 'step = 3 with min = 2, max = 21';
 
 export const AutoFocus = () => render({ autoFocus: true });
 
-AutoFocus.story = {
-  name: 'autoFocus',
-};
+AutoFocus.storyName = 'autoFocus';
 
 export const HideStepper = () => render({ hideStepper: true });
 
-HideStepper.story = {
-  name: 'hideStepper',
-};
+HideStepper.storyName = 'hideStepper';
 
 export const Required = () => render({ isRequired: true });
 
-Required.story = {
-  name: 'required',
-};
+Required.storyName = 'required';
 
 export const NoVisibleLabel = () =>
   renderNoLabel({ isRequired: true, 'aria-label': 'Width' });
 
-NoVisibleLabel.story = {
-  name: 'no visible label',
-};
+NoVisibleLabel.storyName = 'no visible label';
 
 export const AriaLabelledby = () => (
   <>
@@ -204,9 +159,7 @@ export const AriaLabelledby = () => (
   </>
 );
 
-AriaLabelledby.story = {
-  name: 'aria-labelledby',
-};
+AriaLabelledby.storyName = 'aria-labelledby';
 
 export const WithDescriptionNoVisibleLabel = () =>
   renderNoLabel({
@@ -214,32 +167,24 @@ export const WithDescriptionNoVisibleLabel = () =>
     description: 'Please select your age.',
   });
 
-WithDescriptionNoVisibleLabel.story = {
-  name: 'with description, no visible label',
-};
+WithDescriptionNoVisibleLabel.storyName = 'with description, no visible label';
 
 export const CustomWidth = () => render({ width: 'container.xsmall' });
 
-CustomWidth.story = {
-  name: 'custom width',
-};
+CustomWidth.storyName = 'custom width';
 
 export const CustomWidthNoVisibleLabel = () =>
   renderNoLabel({
-    width: 'size.container.xsmall',
+    width: 'container.xsmall',
     isRequired: true,
     'aria-label': 'Width',
   });
 
-CustomWidthNoVisibleLabel.story = {
-  name: 'custom width no visible label',
-};
+CustomWidthNoVisibleLabel.storyName = 'custom width no visible label';
 
 export const Controlled = () => <NumberFieldControlled />;
 
-Controlled.story = {
-  name: 'controlled',
-};
+Controlled.storyName = 'controlled';
 
 export const CurrencySwitcher = (args: {
   currency?: string;
@@ -282,12 +227,6 @@ CurrencySwitcher.argTypes = {
   },
 };
 
-export const MinWidth = () => render({ width: 0 });
-
-MinWidth.story = {
-  name: 'min width',
-};
-
 export const FocusEvents = () =>
   render({
     onBlur: action('onBlur'),
@@ -297,9 +236,7 @@ export const FocusEvents = () =>
     onKeyUp: action('onKeyUp'),
   });
 
-FocusEvents.story = {
-  name: 'focus events',
-};
+FocusEvents.storyName = 'focus events';
 
 export const InputDomEvents = () =>
   render({
@@ -314,17 +251,14 @@ export const InputDomEvents = () =>
     onInput: action('onInput'),
   });
 
-InputDomEvents.story = {
-  name: 'input dom events',
-};
+InputDomEvents.storyName = 'input dom events';
 
 export const ResetControlledStateToBlankWithNull = () => (
   <NumberFieldControlledStateReset />
 );
 
-ResetControlledStateToBlankWithNull.story = {
-  name: 'reset controlled state to blank with null',
-};
+ResetControlledStateToBlankWithNull.storyName =
+  'reset controlled state to blank with null';
 
 function render(props: NumberFieldProps = {}) {
   return (

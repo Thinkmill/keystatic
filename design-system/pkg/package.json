@@ -778,6 +778,11 @@
       "module": "./icon/icons/wineIcon/dist/keystar-ui-icon-icons-wineIcon.esm.js",
       "default": "./icon/icons/wineIcon/dist/keystar-ui-icon-icons-wineIcon.cjs.js"
     },
+    "./password-field": {
+      "types": "./password-field/dist/keystar-ui-password-field.cjs.js",
+      "module": "./password-field/dist/keystar-ui-password-field.esm.js",
+      "default": "./password-field/dist/keystar-ui-password-field.cjs.js"
+    },
     "./icon/icons/albumIcon": {
       "types": "./icon/icons/albumIcon/dist/keystar-ui-icon-icons-albumIcon.cjs.js",
       "module": "./icon/icons/albumIcon/dist/keystar-ui-icon-icons-albumIcon.esm.js",
