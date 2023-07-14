@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const postTitle = searchParams.get('title') || '';
   const font = fetch(
-    new URL('../../../public/fonts/Inter-ExtraBold.ttf', import.meta.url)
+    new URL('../../../public/fonts/Inter-Bold.ttf', import.meta.url)
   ).then(res => res.arrayBuffer());
   const fontData = await font;
 
@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
             marginRight: 60,
             display: 'flex',
             fontSize: titleSize,
-            fontWeight: 800,
+            fontWeight: 700,
             fontFamily: 'Inter',
             letterSpacing: '-0.025em',
             fontStyle: 'normal',
