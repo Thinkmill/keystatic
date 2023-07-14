@@ -9,7 +9,7 @@ export {
   useMatchedBreakpoints,
   useResponsiveRange,
 } from './context';
-export { filterStyleProps } from './filterStyleProps';
+export { filterStyleProps, onlyStyleProps } from './filterStyleProps';
 export { FocusRing } from './FocusRing';
 export {
   maybeTokenByKey,
