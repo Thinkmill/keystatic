@@ -179,7 +179,7 @@ export const MainPanelLayout = (props: {
               onCollapse={isCollapsed => sidebarState.setOpen(!isCollapsed)}
               ref={sidebarPanelRef}
               className={css({
-                containerName: 'sidebar-panel',
+                containerName: 'app-side-panel',
                 containerType: 'inline-size',
               })}
             >
@@ -195,7 +195,7 @@ export const MainPanelLayout = (props: {
           order={2}
           id={contentPanelId}
           className={css({
-            containerName: 'content-panel',
+            containerName: 'app-main-panel',
             containerType: 'inline-size',
           })}
         >
