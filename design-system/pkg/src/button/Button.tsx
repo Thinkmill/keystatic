@@ -30,19 +30,11 @@ export const Button = forwardRef(function Button(
   props = useSlotProps(props, 'button');
   const children = useButtonChildren(props);
   const domRef = useObjectRef(forwardedRef);
-  // let hasLabel = useHasChild('.ksv-text', domRef);
-  // let hasIcon = useHasChild('.ksv-icon', domRef);
-  // let contents = hasIcon && hasLabel ? 'mixed' : hasLabel ? 'text' : 'icon';
-  let contents = 'unknown';
 
   if ('href' in props && props.href) {
     return (
       <FocusRing autoFocus={props.autoFocus}>
-        <LinkButton
-          data-contents={contents}
-          ref={domRef as ForwardedRef<HTMLAnchorElement>}
-          {...props}
-        >
+        <LinkButton ref={domRef as ForwardedRef<HTMLAnchorElement>} {...props}>
           {children}
         </LinkButton>
       </FocusRing>
@@ -51,11 +43,7 @@ export const Button = forwardRef(function Button(
 
   return (
     <FocusRing autoFocus={props.autoFocus}>
-      <BaseButton
-        data-contents={contents}
-        ref={domRef as ForwardedRef<HTMLButtonElement>}
-        {...props}
-      >
+      <BaseButton ref={domRef as ForwardedRef<HTMLButtonElement>} {...props}>
         {children}
       </BaseButton>
     </FocusRing>
