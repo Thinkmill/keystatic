@@ -21,7 +21,6 @@ export const TextLinkAnchor = forwardRef<
     referrerPolicy,
     rel,
     target,
-    type,
     ...otherProps
   } = props;
 
@@ -41,7 +40,6 @@ export const TextLinkAnchor = forwardRef<
         referrerPolicy={referrerPolicy}
         rel={rel}
         target={target}
-        type={type}
         {...mergeProps(linkProps, styleProps)}
       >
         {children}

@@ -10,7 +10,7 @@ import {
 import { ReactNode } from 'react';
 
 import { BaseStyleProps } from '@keystar/ui/style';
-import { AnchorDOMProps, Never, PartialRequired } from '@keystar/ui/types';
+import { AnchorDOMProps } from '@keystar/ui/types';
 
 export type ButtonProminence = 'default' | 'high' | 'low';
 export type ButtonTone = 'neutral' | 'accent' | 'critical';
@@ -44,9 +44,6 @@ type AriaProps = {
   form?: string;
 };
 
-// NOTE: omit mime "type" to avoid conflict with button "type"
-export type WithHref = PartialRequired<Omit<AnchorDOMProps, 'type'>, 'href'>;
-
 // ActionButton
 // -----------------------------------------------------------------------------
 
@@ -77,10 +74,10 @@ export type ActionButtonElementProps = {
 } & CommonActionButtonProps &
   AriaProps;
 
-export type ActionLinkElementProps = CommonActionButtonProps & WithHref;
+export type ActionLinkElementProps = CommonActionButtonProps & AnchorDOMProps;
 
 export type ActionButtonProps =
-  | (Never<WithHref> & ActionButtonElementProps)
+  | ActionButtonElementProps
   | ActionLinkElementProps;
 
 // ToggleButton
@@ -139,11 +136,9 @@ export type CommonButtonProps = {
 
 export type ButtonElementProps = CommonButtonProps & AriaProps;
 
-export type LinkElementProps = CommonButtonProps & WithHref;
+export type LinkElementProps = CommonButtonProps & AnchorDOMProps;
 
-export type ButtonProps =
-  | (Never<WithHref> & ButtonElementProps)
-  | LinkElementProps;
+export type ButtonProps = ButtonElementProps | LinkElementProps;
 
 // ButtonGroup
 // -----------------------------------------------------------------------------
