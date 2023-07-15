@@ -130,6 +130,9 @@ const BaseButton = forwardRef(function BaseActionButton(
 // Utils
 // -----------------------------------------------------------------------------
 
+let iconClassName = actionButtonClassList.declare('icon');
+let textClassName = actionButtonClassList.declare('text');
+
 export const useActionButtonChildren = (
   props: CommonActionButtonProps,
   alternateSlots?: SlotContextType
@@ -139,15 +142,16 @@ export const useActionButtonChildren = (
   // avoid unnecessary re-renders
   const slots = useMemo(() => {
     return {
+      ...alternateSlots,
       icon: {
-        UNSAFE_className: actionButtonClassList.declare('icon'),
+        UNSAFE_className: iconClassName,
         ...alternateSlots?.icon,
       },
       text: {
         color: 'inherit',
         overflow: 'unset',
         trim: false,
-        UNSAFE_className: actionButtonClassList.declare('text'),
+        UNSAFE_className: textClassName,
         ...alternateSlots?.text,
       },
     } as const;
