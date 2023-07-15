@@ -64,6 +64,9 @@ export function useActionButtonStyles(
           fontWeight: 'inherit',
           marginInline: tokenSchema.size.space.small,
         },
+        [`&:has(${actionButtonClassList.selector('icon')}:only-child)`]: {
+          paddingInline: 0,
+        },
 
         // FOCUS RING
         '--focus-ring-color': tokenSchema.color.alias.focusRing,
