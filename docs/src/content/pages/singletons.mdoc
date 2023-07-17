@@ -1,0 +1,47 @@
+---
+title: Singletons
+summary: >-
+  When you want a “one-of-a-kind” data entry, such as a “Settings” page or maybe
+  a very specific set of fields for the “Homepage” of a website, you'll want to
+  use a singleton.
+---
+When you want a “one-of-a-kind” data entry, such as a “Settings” page or maybe a very specific set of fields for the “Homepage” of a website, you'll want to use a `singleton`.
+
+## Example singleton
+
+Here's how you'd define a `settings` singleton:
+
+```jsx
+// keystatic.config.ts
+import { config, singleton } from '@keystatic/core';
+
+export default config({
+  // ...
+  singletons: {
+    settings: singleton({
+      label: 'Settings',
+      schema: {}
+    }),
+  },
+});
+```
+
+## Path configuration
+
+You can use the `path` option to specify *where* to store any given singleton:
+
+```diff
+settings: singleton({
+  label: 'Settings',
++ path: 'custom/content/path/settings'
+  schema: {}
+}),
+```
+
+By default, Keystatic will store a singleton at the root of your project, in a directory that matches the singleton key.
+
+You can learn more about the `path` option on the [Organised content page](/docs/how-keystatic-organises-your-content#singletons).
+
+## Type signature
+
+Find the latest version of the `Singleton` type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.Singleton](https://docsmill.dev/npm/@keystatic/core@latest#/.Singleton)
