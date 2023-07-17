@@ -1,5 +1,5 @@
 import { FragmentData, gql } from '@ts-gql/tag/no-transform';
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 
 export const SidebarFooter_viewer = gql`
   fragment SidebarFooter_viewer on User {
@@ -14,3 +14,7 @@ export const SidebarFooter_viewer = gql`
 export const ViewerContext = createContext<
   FragmentData<typeof SidebarFooter_viewer> | undefined
 >(undefined);
+
+export function useViewer() {
+  return useContext(ViewerContext);
+}

@@ -24,7 +24,8 @@ export function useActionButtonStyles(
 ) {
   const { prominence = 'default' } = props;
   const { isHovered, isPressed } = state;
-  const isSelected = props.isSelected || state.isSelected;
+  const isSelected =
+    ('isSelected' in props && props.isSelected) || state.isSelected;
   const styleProps = useStyleProps(props);
 
   return {

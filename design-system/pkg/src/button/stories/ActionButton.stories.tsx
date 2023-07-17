@@ -84,6 +84,29 @@ StaticDark.story = {
   name: 'static: dark',
 };
 
+export const Anchor = () => (
+  <Flex direction="column" gap="regular">
+    <Flex gap="regular">
+      <ActionButton href="https://example.com">Anchor</ActionButton>
+      <ActionButton isDisabled href="https://example.com">
+        Anchor
+      </ActionButton>
+    </Flex>
+    <Flex gap="regular">
+      <ActionButton prominence="low" href="https://example.com">
+        Anchor
+      </ActionButton>
+      <ActionButton prominence="low" isDisabled href="https://example.com">
+        Anchor
+      </ActionButton>
+    </Flex>
+  </Flex>
+);
+
+Anchor.story = {
+  name: 'anchor',
+};
+
 function render(label = 'Default', props: ActionButtonProps = {}) {
   return (
     <Flex gap="regular">
