@@ -1,7 +1,7 @@
 import { DOMProps, FocusableProps, PressEvents } from '@react-types/shared';
 import { ReactNode } from 'react';
 
-import { AnchorDOMProps, PartialRequired } from '@keystar/ui/types';
+import { AnchorDOMProps } from '@keystar/ui/types';
 
 export type TextLinkProminence = 'default' | 'high';
 
@@ -17,7 +17,6 @@ export type TextLinkButtonProps = {
   PressEvents &
   FocusableProps;
 
-export type TextLinkAnchorProps = TextLinkButtonProps &
-  PartialRequired<AnchorDOMProps, 'href'>;
+export type TextLinkAnchorProps = TextLinkButtonProps & AnchorDOMProps;
 
 export type TextLinkProps = TextLinkButtonProps | TextLinkAnchorProps;

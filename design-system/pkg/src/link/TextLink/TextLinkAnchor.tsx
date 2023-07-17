@@ -21,12 +21,11 @@ export const TextLinkAnchor = forwardRef<
     referrerPolicy,
     rel,
     target,
-    type,
     ...otherProps
   } = props;
 
+  const LinkComponent = useLinkComponent(forwardedRef);
   const domRef = useObjectRef(forwardedRef);
-  const LinkComponent = useLinkComponent(domRef);
   const { Wrapper, ...styleProps } = useTextLink(props);
   const { linkProps } = useLink(otherProps, domRef);
 
@@ -41,7 +40,6 @@ export const TextLinkAnchor = forwardRef<
         referrerPolicy={referrerPolicy}
         rel={rel}
         target={target}
-        type={type}
         {...mergeProps(linkProps, styleProps)}
       >
         {children}

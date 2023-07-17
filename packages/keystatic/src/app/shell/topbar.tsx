@@ -46,7 +46,7 @@ import {
 import { ZapLogo } from './common';
 import { useConfig } from './context';
 import { BranchInfoContext, GitHubAppShellDataContext } from './data';
-import { ViewerContext } from './sidebar-data';
+import { useViewer } from './viewer-data';
 import { ColorScheme, useThemeContext } from './theme';
 import { serializeRepoConfig } from '../repo-config';
 
@@ -243,7 +243,7 @@ function ThemeMenu() {
 // -----------------------------------------------------------------------------
 
 function UserMenu() {
-  let user = useContext(ViewerContext);
+  let user = useViewer();
   let config = useConfig();
   const menuItems = useMemo(() => {
     let items = [

@@ -64,9 +64,6 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
         },
 
         // contents
-        '&[data-contents=icon]': {
-          paddingInline: tokenSchema.size.space.regular,
-        },
         [buttonClassList.childSelector('text')]: {
           fontSize: 'inherit',
           fontWeight: 'inherit',
