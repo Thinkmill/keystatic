@@ -12,6 +12,11 @@ module.exports = {
         destination: '/docs/introduction',
         permanent: false,
       },
+      {
+        source: '/docs/collections-and-singletons',
+        destination: '/docs/collections',
+        permanent: true,
+      },
     ];
   },
 };
