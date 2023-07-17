@@ -20,25 +20,39 @@ export const breakpoints: Record<Breakpoint, number> = {
 };
 
 // external stuff for composing responsive styles
-const above = (bp: number) => `@media (min-width: ${bp}px)`;
-const below = (bp: number) => `@media (max-width: ${bp - 1}px)`;
+const mediaAbove = (bp: number) => `@media (min-width: ${bp}px)`;
+const mediaBelow = (bp: number) => `@media (max-width: ${bp - 1}px)`;
+const containerAbove = (bp: number) => `@container (min-width: ${bp}px)`;
+const containerBelow = (bp: number) => `@container (max-width: ${bp - 1}px)`;
 export const breakpointQueries = {
   above: {
-    mobile: above(breakpoints.tablet),
-    tablet: above(breakpoints.desktop),
-    desktop: above(breakpoints.wide),
+    mobile: mediaAbove(breakpoints.tablet),
+    tablet: mediaAbove(breakpoints.desktop),
+    desktop: mediaAbove(breakpoints.wide),
   },
   below: {
-    tablet: below(breakpoints.tablet),
-    desktop: below(breakpoints.desktop),
-    wide: below(breakpoints.wide),
+    tablet: mediaBelow(breakpoints.tablet),
+    desktop: mediaBelow(breakpoints.desktop),
+    wide: mediaBelow(breakpoints.wide),
+  },
+};
+export const containerQueries = {
+  above: {
+    mobile: containerAbove(breakpoints.tablet),
+    tablet: containerAbove(breakpoints.desktop),
+    desktop: containerAbove(breakpoints.wide),
+  },
+  below: {
+    tablet: containerBelow(breakpoints.tablet),
+    desktop: containerBelow(breakpoints.desktop),
+    wide: containerBelow(breakpoints.wide),
   },
 };
 
 // internal stuff, mostly for `useStyleProps` hook
 const breakpointNames = typedKeys(breakpoints);
 const { mobile: _mobile, ...breakpointsWithoutMobile } = breakpoints;
-const mediaQueries = Object.values(breakpointsWithoutMobile).map(above);
+const mediaQueries = Object.values(breakpointsWithoutMobile).map(mediaAbove);
 export const mapToMediaQueries = facepaint(mediaQueries);
 
 // CSS Utils
