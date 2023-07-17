@@ -4,7 +4,7 @@ import { useMediaQuery } from '@keystar/ui/style';
 export type ColorScheme = 'light' | 'dark';
 export type Scale = 'medium' | 'large';
 
-export function useColorScheme(defaultColorScheme: ColorScheme): ColorScheme {
+export function useColorScheme(defaultColorScheme?: ColorScheme): ColorScheme {
   let matchesDark = useMediaQuery('(prefers-color-scheme: dark)');
   let matchesLight = useMediaQuery('(prefers-color-scheme: light)');
 

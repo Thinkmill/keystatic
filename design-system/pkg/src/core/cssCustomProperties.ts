@@ -1,7 +1,7 @@
 export const cssCustomProperties = `
 /**
  * Do not edit directly
- * Generated on Thu, 09 Feb 2023 22:36:45 GMT
+ * Generated on Mon, 17 Jul 2023 05:30:37 GMT
  */
 
 .ksv-theme {
@@ -20,6 +20,7 @@ export const cssCustomProperties = `
   --ksv-size-radius-regular: 6px;
   --ksv-size-radius-medium: 8px;
   --ksv-size-radius-large: 12px;
+  --ksv-size-radius-xlarge: 16px;
   --ksv-size-border-regular: 1px;
   --ksv-size-border-medium: 2px;
   --ksv-size-border-large: 4px;
@@ -46,10 +47,10 @@ export const cssCustomProperties = `
 }
 /**
  * Do not edit directly
- * Generated on Thu, 09 Feb 2023 22:36:45 GMT
+ * Generated on Mon, 17 Jul 2023 05:30:37 GMT
  */
 
-.ksv-theme--medium, .ksv-theme--large {
+.ksv-scale--medium, .ksv-scale--large {
   --ksv-size-space-xxlarge: var(--ksv-size-scale-400);
   --ksv-size-space-xlarge: var(--ksv-size-scale-300);
   --ksv-size-space-large: var(--ksv-size-scale-200);
@@ -75,10 +76,10 @@ export const cssCustomProperties = `
 }
 /**
  * Do not edit directly
- * Generated on Thu, 09 Feb 2023 22:36:45 GMT
+ * Generated on Mon, 17 Jul 2023 05:30:37 GMT
  */
 
-.ksv-theme--light, .ksv-theme--dark {
+.ksv-scheme--light, .ksv-scheme--dark {
   --ksv-color-border-highlight: var(--ksv-color-scale-pink6);
   --ksv-color-border-pending: var(--ksv-color-scale-purple6);
   --ksv-color-border-critical: var(--ksv-color-scale-red6);
@@ -136,10 +137,10 @@ export const cssCustomProperties = `
 }
 /**
  * Do not edit directly
- * Generated on Thu, 09 Feb 2023 22:36:45 GMT
+ * Generated on Mon, 17 Jul 2023 05:30:37 GMT
  */
 
-.ksv-theme--large {
+.ksv-scale--large {
   --ksv-fontsize-scale-900: 44px;
   --ksv-fontsize-scale-800: 39px;
   --ksv-fontsize-scale-700: 34px;
@@ -240,10 +241,10 @@ export const cssCustomProperties = `
 }
 /**
  * Do not edit directly
- * Generated on Thu, 09 Feb 2023 22:36:45 GMT
+ * Generated on Mon, 17 Jul 2023 05:30:37 GMT
  */
 
-.ksv-theme--medium {
+.ksv-scale--medium {
   --ksv-fontsize-scale-900: 36px;
   --ksv-fontsize-scale-800: 32px;
   --ksv-fontsize-scale-700: 28px;
@@ -344,10 +345,10 @@ export const cssCustomProperties = `
 }
 /**
  * Do not edit directly
- * Generated on Thu, 09 Feb 2023 22:36:45 GMT
+ * Generated on Mon, 17 Jul 2023 05:30:37 GMT
  */
 
-.ksv-theme--dark {
+.ksv-scheme--dark {
   --ksv-color-shadow-emphasis: rgba(0, 0, 0, 0.6);
   --ksv-color-shadow-regular: rgba(0, 0, 0, 0.4);
   --ksv-color-shadow-muted: rgba(0, 0, 0, 0.2);
@@ -444,10 +445,10 @@ export const cssCustomProperties = `
 }
 /**
  * Do not edit directly
- * Generated on Thu, 09 Feb 2023 22:36:45 GMT
+ * Generated on Mon, 17 Jul 2023 05:30:37 GMT
  */
 
-.ksv-theme--light {
+.ksv-scheme--light {
   --ksv-color-shadow-emphasis: rgba(0, 0, 0, 0.2);
   --ksv-color-shadow-regular: rgba(0, 0, 0, 0.15);
   --ksv-color-shadow-muted: rgba(0, 0, 0, 0.05);
@@ -541,5 +542,4 @@ export const cssCustomProperties = `
   --ksv-color-alias-background-focused: rgba(44, 44, 44, 0.06);
   --ksv-color-alias-background-hovered: rgba(44, 44, 44, 0.06);
   --ksv-color-alias-background-idle: var(--ksv-color-scale-slate2);
-}
-`;
+}`;

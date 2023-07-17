@@ -16,9 +16,9 @@ export const documentElementClasses = (args: {
   colorScheme?: ColorScheme;
   scale?: ScaleScheme;
 }) => {
-  return `${documentReset(args.bodyBackground)} ksv-theme ksv-theme--${
+  return `${documentReset(args.bodyBackground)} ksv-theme ksv-scheme--${
     args.colorScheme
-  } ksv-theme--${args.scale}`;
+  } ksv-scale--${args.scale}`;
 };
 
 /**

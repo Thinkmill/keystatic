@@ -1,24 +1,35 @@
-const script = `let classList = document.documentElement.classList;
+const script = `
+let classList = document.documentElement.classList;
 let style = document.documentElement.style;
-let dark = window.matchMedia('(prefers-color-scheme: dark)');
-if (dark.matches) {
-  classList.remove('ksv-theme--light');
-  classList.add('ksv-theme--dark');
+
+let storedPreference = localStorage.getItem('keystatic-root-color-scheme');
+let systemPreference = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+let preference = storedPreference === 'light' || storedPreference === 'dark' ? storedPreference : systemPreference;
+
+if (preference === 'dark') {
+  classList.remove('ksv-scheme--light');
+  classList.add('ksv-scheme--dark');
   style.colorScheme = 'dark';
 } else {
-  classList.add('ksv-theme--light');
-  classList.remove('ksv-theme--dark');
+  classList.remove('ksv-scheme--dark');
+  classList.add('ksv-scheme--light');
   style.colorScheme = 'light';
 }
+
 let fine = window.matchMedia('(any-pointer: fine)');
 if (!fine.matches) {
-  classList.remove('ksv-theme--medium');
-  classList.add('ksv-theme--large');
+  classList.remove('ksv-scale--medium');
+  classList.add('ksv-scale--large');
 } else {
-  classList.add('ksv-theme--medium');
-  classList.remove('ksv-theme--large');
-}`.replace(/\n|\s{2,}/g, '');
+  classList.add('ksv-scale--medium');
+  classList.remove('ksv-scale--large');
+}
+`.replace(/\n|\s{2,}/g, '');
 
+/** @deprecated use `nextRootScript` instead. */
 export const mediaQueryOnlyColorSchemeScaleScript = (
+  <script dangerouslySetInnerHTML={{ __html: script }} />
+);
+export const nextRootScript = (
   <script dangerouslySetInnerHTML={{ __html: script }} />
 );
