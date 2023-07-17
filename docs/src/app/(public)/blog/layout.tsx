@@ -12,11 +12,7 @@ export const metadata = {
     description: 'Latest news and updates from the Keystatic team.',
     images: [
       {
-        url: 'https://keystatic.io/images/keystatic-docs/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Keystatic cover image',
-        type: 'image/jpeg',
+        url: '/og?title=Blog',
       },
     ],
     siteName: 'Keystatic',

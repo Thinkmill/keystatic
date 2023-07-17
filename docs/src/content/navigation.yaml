@@ -30,32 +30,34 @@ navGroups:
       - label: Remix
         link:
           discriminant: coming-soon
-  - groupName: Learn Keystatic
+  - groupName: Core concepts
+    items:
+      - label: Organised content
+        link:
+          discriminant: page
+          value: how-keystatic-organises-your-content
+      - label: Local vs. GitHub mode
+        link:
+          discriminant: page
+          value: local-vs-git-hub-storage-strategy
+  - groupName: Reference
     items:
       - label: Configuration
         link:
           discriminant: page
           value: configuration
-      - label: Collections & Singletons
+      - label: Collections
         link:
           discriminant: page
-          value: collections-and-singletons
-      - label: Local vs. GitHub
+          value: collections
+      - label: Singletons
         link:
           discriminant: page
-          value: local-vs-git-hub-storage-strategy
+          value: singletons
       - label: Reader API
         link:
           discriminant: page
           value: reader-api
-      - label: Organised content
-        link:
-          discriminant: page
-          value: how-keystatic-organises-your-content
-      - label: FAQ
-        link:
-          discriminant: page
-          value: frequently-asked-questions
   - groupName: Fields API
     items:
       - label: Array
