@@ -32,6 +32,10 @@ navGroups:
           discriminant: coming-soon
   - groupName: Learn Keystatic
     items:
+      - label: Configuration
+        link:
+          discriminant: page
+          value: configuration
       - label: Collections & Singletons
         link:
           discriminant: page
