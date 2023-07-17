@@ -1,20 +1,14 @@
 ---
-title: Collections & singletons
+title: Collections
 summary: >-
-  Keystatic has two concepts or mechanisms to manage data: collections and
-  singletons.
+  Think of a collection as anything you'd want multiple instances of. A series
+  of blog posts, cooking recipes, or testimonials from happy customers.
 ---
-Keystatic has two *concepts* or mechanisms to manage data: `collections` and `singletons`.
-
-Those are defined in the [Keystatic configuration](/docs/configuration).
-
-## Collections
-
 Think of a `collection` as anything you'd want multiple instances of. A series of blog posts, cooking recipes, or testimonials from happy customers.
 
 Collections are defined within the `collections` key of the Keystatic `config`. Each collection has its own key and is wrapped in a `collection()` function.
 
-### Example collection
+## Example collection
 
 Here's how you'd define a `testimonial` collection, where each entry has an `author` and a `quote` fields:
 
@@ -37,7 +31,7 @@ export default config({
 });
 ```
 
-### Slug field
+## Slug field
 
 Use the `slugField` option to define what field in your collection `schema` should be used as the slug for each item. It's recommended to combine it with the [slug field](/docs/fields/slug) to let users customise and regenerate each slug in the Admin UI.
 
@@ -51,7 +45,7 @@ testimonials: collection({
 }),
 ```
 
-### File system path
+## Path configuration
 
 You can use the `path` option to specify *where* to store entries for any given collection:
 
@@ -68,43 +62,6 @@ By default, Keystatic will store entries at the root of your project, in a direc
 
 You can learn more about the `path` option on the [Organised content page](/docs/how-keystatic-organises-your-content#collections).
 
----
+## Type signature
 
-## Singletons
-
-When you want a “one-of-a-kind” data entry, such as a “Settings” page or maybe a very specific set of fields for the “Homepage” of a website, you'll want to use a `singleton`.
-
-### Example singleton
-
-Here's how you'd define a `settings` singleton:
-
-```jsx
-// keystatic.config.ts
-import { config, singleton } from '@keystatic/core';
-
-export default config({
-  // ...
-  singletons: {
-    settings: singleton({
-      label: 'Settings',
-      schema: {}
-    }),
-  },
-});
-```
-
-### File system path
-
-You can use the `path` option to specify *where* to store any given singleton:
-
-```diff
-settings: singleton({
-  label: 'Settings',
-+ path: 'custom/content/path/settings'
-  schema: {}
-}),
-```
-
-By default, Keystatic will store a singleton at the root of your project, in a directory that matches the singleton key.
-
-You can learn more about the `path` option on the [Organised content page](/docs/how-keystatic-organises-your-content#singletons).
+Find the latest version of the `Collection` type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.Collection](https://docsmill.dev/npm/@keystatic/core@latest#/.Collection)
