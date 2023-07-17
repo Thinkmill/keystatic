@@ -10,7 +10,7 @@ import {
 import { ReactNode } from 'react';
 
 import { BaseStyleProps } from '@keystar/ui/style';
-import { AnchorDOMProps, PartialRequired } from '@keystar/ui/types';
+import { AnchorDOMProps } from '@keystar/ui/types';
 
 export type ButtonProminence = 'default' | 'high' | 'low';
 export type ButtonTone = 'neutral' | 'accent' | 'critical';
@@ -47,13 +47,11 @@ type AriaProps = {
 // ActionButton
 // -----------------------------------------------------------------------------
 
-export type ActionButtonProps = {
+export type CommonActionButtonProps = {
   /** The content to display in the button. */
   children?: ReactNode;
   /** Whether the button is disabled. */
   isDisabled?: boolean;
-  /** Whether the button is selected. */
-  isSelected?: boolean;
   /**
    * The static style to apply. Useful when the button appears over a
    * background.
@@ -68,8 +66,19 @@ export type ActionButtonProps = {
   FocusableProps &
   FocusableDOMProps &
   AriaLabelingProps &
-  AriaProps &
   BaseStyleProps;
+
+export type ActionButtonElementProps = {
+  /** Whether the button is selected. */
+  isSelected?: boolean;
+} & CommonActionButtonProps &
+  AriaProps;
+
+export type ActionLinkElementProps = CommonActionButtonProps & AnchorDOMProps;
+
+export type ActionButtonProps =
+  | ActionButtonElementProps
+  | ActionLinkElementProps;
 
 // ToggleButton
 // -----------------------------------------------------------------------------
@@ -99,7 +108,7 @@ export type FieldButtonProps = ActionButtonProps & {
 // Button
 // -----------------------------------------------------------------------------
 
-export type CommonProps = {
+export type CommonButtonProps = {
   /** The content to display in the button. */
   children?: ReactNode;
   /** Whether the button is disabled. */
@@ -125,12 +134,9 @@ export type CommonProps = {
   AriaLabelingProps &
   BaseStyleProps;
 
-export type ButtonElementProps = CommonProps & AriaProps;
+export type ButtonElementProps = CommonButtonProps & AriaProps;
 
-// NOTE: omit mime "type" to avoid conflict with button "type", and force
-// required "href" to ensure discriminated union. should be fine...
-export type LinkElementProps = CommonProps &
-  PartialRequired<Omit<AnchorDOMProps, 'type'>, 'href'>;
+export type LinkElementProps = CommonButtonProps & AnchorDOMProps;
 
 export type ButtonProps = ButtonElementProps | LinkElementProps;
 

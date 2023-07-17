@@ -21,7 +21,7 @@ export default {
 
 export const Default = () => {
   let [isOpen, setOpen] = useState(false);
-  let [triggerRef, setTriggerRef] = useState<HTMLButtonElement | null>(null);
+  let [triggerRef, setTriggerRef] = useState<HTMLElement | null>(null);
 
   return (
     <>
@@ -46,7 +46,7 @@ Default.story = {
 export const Refs = () => {
   let floating = useRef<EditorPopoverRef | null>(null);
   let [isOpen, setOpen] = useState(false);
-  let [triggerRef, setTriggerRef] = useState<HTMLButtonElement | null>(null);
+  let [triggerRef, setTriggerRef] = useState<HTMLElement | null>(null);
 
   return (
     <Flex gap="large">
