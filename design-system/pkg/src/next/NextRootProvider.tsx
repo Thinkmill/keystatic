@@ -1,12 +1,27 @@
 'use client';
 
-import { cache } from '@keystar/ui/style';
-import { VoussoirProvider, VoussoirProviderProps } from '@keystar/ui/core';
+import { cache, useMediaQuery } from '@keystar/ui/style';
+import { VoussoirProvider } from '@keystar/ui/core';
 import { useServerInsertedHTML } from 'next/navigation';
-import { forwardRef, ForwardRefExoticComponent, Ref, useRef } from 'react';
+import { ReactNode, useRef } from 'react';
 import { UniversalNextLink } from './UniversalNextLink';
+import { ColorSchemeProvider, useRootColorScheme } from './useRootColorScheme';
 
 cache.compat = true;
+
+type NextRootProviderProps = {
+  children: ReactNode;
+  fontClassName: string;
+  locale?: string;
+};
+
+export function NextRootProvider(props: NextRootProviderProps) {
+  return (
+    <ColorSchemeProvider>
+      <InnerProvider {...props} />
+    </ColorSchemeProvider>
+  );
+}
 
 const insertedKeys = Object.keys(cache.inserted);
 
@@ -19,11 +34,14 @@ cache.insert = (...args) => {
   return prevInsert(...args);
 };
 
-/** @deprecated — use `NextRootProvider` instead. */
-export const RootVoussoirProvider: ForwardRefExoticComponent<
-  VoussoirProviderProps & { fontClassName: string; ref?: Ref<HTMLHtmlElement> }
-> = forwardRef(function RootVoussoirProvider(props, ref) {
-  const lastIndexRef = useRef(0);
+function InnerProvider(props: NextRootProviderProps) {
+  let lastIndexRef = useRef(0);
+  let { colorScheme } = useRootColorScheme();
+  let prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
+
+  if (colorScheme === 'system') {
+    colorScheme = prefersDark ? 'dark' : 'light';
+  }
 
   useServerInsertedHTML(() => {
     const names = insertedKeys.slice(lastIndexRef.current);
@@ -43,15 +61,14 @@ export const RootVoussoirProvider: ForwardRefExoticComponent<
       />
     );
   });
+
   return (
     <VoussoirProvider
       {...props}
-      UNSAFE_className={`${props.fontClassName}${
-        props.UNSAFE_className ? ` ${props.UNSAFE_className}` : ''
-      }`}
-      ref={ref}
+      UNSAFE_className={props.fontClassName}
+      colorScheme={colorScheme}
       elementType="html"
       linkComponent={UniversalNextLink}
     />
   );
-});
+}

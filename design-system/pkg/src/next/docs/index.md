@@ -8,29 +8,26 @@ category: Introduction
 > `@keystar/ui/next` only works with Next.js's `app` directory. It does not work
 > with the `pages` directory.
 
-## RootVoussoirProvider
+## NextRootProvider
 
-The `RootVoussoirProvider` exported from `@keystar/ui/next` should be rendered
-as the `html` element in your root `layout` file to make server rendering styles
+The `NextRootProvider` exported from `@keystar/ui/next` should be rendered as
+the `html` element in your root `layout` file to make server rendering styles
 work properly. If you need another `VoussoirProvider` in your tree, you should
 use the normal `VoussoirProvider` exported from `@keystar/ui/core`.
 
-## `mediaQueryOnlyColorSchemeScaleScript`
+## `nextRootScript`
 
 To make sure that the color scheme and scale is correct before the main
 client-side JavaScript loads, you should render a script tag that updates the
-class names in the head. A default `mediaQueryOnlyColorSchemeScaleScript` export
-is provided for this. This only looks at media queries, if you allow the user to
-change the color scheme or scale, you should write your own script instead.
+class names in the head. A default `nextRootScript` export is provided for this.
+This only looks at media queries, if you allow the user to change the color
+scheme or scale, you should write your own script instead.
 
 ## Example
 
 ```tsx
 // app/layout.tsx
-import {
-  RootVoussoirProvider,
-  mediaQueryOnlyColorSchemeScaleScript,
-} from '@keystar/ui/next';
+import { NextRootProvider, nextRootScript } from '@keystar/ui/next';
 import { Inter } from 'next/font/google';
 
 const inter = Inter({
@@ -41,10 +38,10 @@ const inter = Inter({
 
 export default function Layout(props: { children: ReactNode }) {
   return (
-    <RootVoussoirProvider fontClassName={inter.variable}>
-      <head>{mediaQueryOnlyColorSchemeScaleScript}</head>
+    <NextRootProvider fontClassName={inter.variable}>
+      <head>{nextRootScript}</head>
       <body>{props.children}</body>
-    </RootVoussoirProvider>
+    </NextRootProvider>
   );
 }
 ```
