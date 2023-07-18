@@ -7,7 +7,7 @@ import { sunIcon } from '@keystar/ui/icon/icons/sunIcon';
 import { Icon } from '@keystar/ui/icon';
 import { MenuTrigger, Menu, Item } from '@keystar/ui/menu';
 import { useRootColorScheme } from '@keystar/ui/next';
-import { useMediaQuery } from '@keystar/ui/style';
+import { css } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
 const SCHEMES = {
@@ -24,16 +24,14 @@ const themeItems = Object.entries(SCHEMES).map(([id, { icon, label }]) => ({
 
 export function ColorSchemeMenu() {
   let { colorScheme, setColorScheme } = useRootColorScheme();
-  let matchesDark = useMediaQuery('(prefers-color-scheme: dark)');
-  let icon = SCHEMES[colorScheme].icon;
-  if (colorScheme === 'system') {
-    icon = matchesDark ? moonIcon : sunIcon;
-  }
+  let hideWhenLight = css({ '.ksv-scheme--light &': { display: 'none' } });
+  let hideWhenDark = css({ '.ksv-scheme--dark &': { display: 'none' } });
 
   return (
     <MenuTrigger>
       <ActionButton aria-label="Theme" prominence="low">
-        <Icon src={icon} />
+        <Icon src={moonIcon} UNSAFE_className={hideWhenLight} />
+        <Icon src={sunIcon} UNSAFE_className={hideWhenDark} />
       </ActionButton>
       <Menu
         items={themeItems}
