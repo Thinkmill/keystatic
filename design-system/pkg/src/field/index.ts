@@ -1,3 +1,5 @@
+'use client';
+
 export { Field } from './Field';
 export { FieldLabel } from './FieldLabel';
 export { FieldMessage } from './FieldMessage';

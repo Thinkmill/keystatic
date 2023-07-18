@@ -1,3 +1,5 @@
+'use client';
+
 export { useSlotProps, SlotProvider, ClearSlots } from './context';
 
 export { Content } from './Content';
