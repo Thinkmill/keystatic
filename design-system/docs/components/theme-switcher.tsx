@@ -10,17 +10,12 @@ import { useRootColorScheme } from '@keystar/ui/next';
 import { css } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
-const SCHEMES = {
-  light: { icon: sunIcon, label: 'Light' },
-  dark: { icon: moonIcon, label: 'Dark' },
-  system: { icon: monitorIcon, label: 'System' },
-} as const;
-type ColorScheme = keyof typeof SCHEMES;
-const themeItems = Object.entries(SCHEMES).map(([id, { icon, label }]) => ({
-  id,
-  icon,
-  label,
-}));
+type ColorScheme = 'light' | 'dark' | 'system';
+const items = [
+  { icon: sunIcon, label: 'Light', key: 'light' },
+  { icon: moonIcon, label: 'Dark', key: 'dark' },
+  { icon: monitorIcon, label: 'System', key: 'system' },
+] as const;
 
 export function ColorSchemeMenu() {
   let { colorScheme, setColorScheme } = useRootColorScheme();
@@ -34,14 +29,14 @@ export function ColorSchemeMenu() {
         <Icon src={sunIcon} UNSAFE_className={hideWhenDark} />
       </ActionButton>
       <Menu
-        items={themeItems}
+        items={items}
         onSelectionChange={([key]) => setColorScheme(key as ColorScheme)}
         disallowEmptySelection
         selectedKeys={[colorScheme]}
         selectionMode="single"
       >
         {item => (
-          <Item textValue={item.label}>
+          <Item key={item.key} textValue={item.label}>
             <Icon src={item.icon} />
             <Text>{item.label}</Text>
           </Item>
