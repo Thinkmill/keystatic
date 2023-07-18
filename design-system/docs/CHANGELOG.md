@@ -1,5 +1,14 @@
 # @voussoir/docs
 
+## 0.0.17
+
+### Patch Changes
+
+- f272b8ee: consolidate color-scheme logic surrounding ssr
+- Updated dependencies [f272b8ee]
+- Updated dependencies [bf6a27bb]
+  - @keystar/ui@0.1.4
+
 ## 0.0.16
 
 ### Patch Changes
