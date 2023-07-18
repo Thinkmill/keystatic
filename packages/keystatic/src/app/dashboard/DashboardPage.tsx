@@ -20,7 +20,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
 
   return (
     <AppShellRoot containerWidth="large">
-      <AppShellHeader>
+      <AppShellHeader onlyShowOnMobile>
         <Breadcrumbs flex minWidth={0}>
           <Item key="dashboard">{stringFormatter.format('dashboard')}</Item>
         </Breadcrumbs>

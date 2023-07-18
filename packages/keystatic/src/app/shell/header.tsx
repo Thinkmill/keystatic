@@ -13,7 +13,12 @@ import { css, tokenSchema } from '@keystar/ui/style';
 import { useSidebar } from './sidebar';
 import { AppShellContainer } from '.';
 
-export const AppShellHeader = ({ children }: PropsWithChildren) => {
+type AppShellHeaderProps = { onlyShowOnMobile?: boolean } & PropsWithChildren;
+
+export const AppShellHeader = ({
+  children,
+  onlyShowOnMobile,
+}: AppShellHeaderProps) => {
   const sidebarState = useSidebar();
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const { direction } = useLocale();
@@ -28,6 +33,7 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
       borderBottom="muted"
       elementType="header"
       height={{ mobile: 'element.large', tablet: 'scale.700' }}
+      isHidden={onlyShowOnMobile ? { above: 'mobile' } : undefined}
       flexShrink={0}
     >
       <AppShellContainer>
