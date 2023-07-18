@@ -1,3 +1,5 @@
+'use client';
+
 export { Blanket } from './Blanket';
 export { DirectionIndicator } from './DirectionIndicator';
 export { Modal } from './Modal';
