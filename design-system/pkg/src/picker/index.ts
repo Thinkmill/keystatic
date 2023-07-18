@@ -1,3 +1,5 @@
+'use client';
+
 export { Item, Section } from '@react-stately/collections';
 
 export { Picker } from './Picker';
