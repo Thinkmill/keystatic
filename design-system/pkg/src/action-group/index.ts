@@ -1,3 +1,5 @@
+'use client';
+
 export { Item } from '@react-stately/collections';
 
 export { ActionGroup } from './ActionGroup';

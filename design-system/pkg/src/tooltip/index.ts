@@ -1,4 +1,5 @@
 'use client';
+
 export { Tooltip } from './Tooltip';
 export { TooltipTrigger } from './TooltipTrigger';
 
