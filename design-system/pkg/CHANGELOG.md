@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.1.5
+
+### Patch Changes
+
+- 0ab08c7c: add 'use client' pragma to exports
+
 ## 0.1.4
 
 ### Patch Changes

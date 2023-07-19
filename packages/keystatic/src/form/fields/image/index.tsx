@@ -2,6 +2,7 @@ import { fixPath } from '../../../app/path-utils';
 import { AssetFormField } from '../../api';
 import { FieldDataError } from '../error';
 import { RequiredValidation, assertRequired } from '../utils';
+import { getSrcPrefix } from './getSrcPrefix';
 import { ImageFieldInput } from './ui';
 
 export function image<IsRequired extends boolean | undefined>({
@@ -88,13 +89,4 @@ export function image<IsRequired extends boolean | undefined>({
       },
     },
   };
-}
-
-export function getSrcPrefix(
-  publicPath: string | undefined,
-  slug: string | undefined
-) {
-  return typeof publicPath === 'string'
-    ? `/${fixPath(publicPath)}/${slug === undefined ? '' : slug + '/'}`
-    : '';
 }
