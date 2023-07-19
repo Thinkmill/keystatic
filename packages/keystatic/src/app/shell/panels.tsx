@@ -241,10 +241,10 @@ export const ContentPanelLayout = ({
 
 const SIDEBAR_MIN_PERCENT = 14;
 const SIDEBAR_DEFAULT_PERCENT = 20;
-const SIDEBAR_MAX_PERCENT = 48;
+const SIDEBAR_MAX_PERCENT = 40;
 const SIDEBAR_MIN_PX = 180;
 const SIDEBAR_DEFAULT_PX = 260;
-const SIDEBAR_MAX_PX = 600;
+const SIDEBAR_MAX_PX = 360;
 
 const calcDefault = (t: number) =>
   toFixedNumber((SIDEBAR_DEFAULT_PX / t) * 100, 0);
