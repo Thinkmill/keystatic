@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.0.112
+
+### Patch Changes
+
+- efc83c9c: A leading `/` is no longer added to the `publicPath` in
+  `fields.image`, `fields.file`, and `images` in `fields.document`
+- Updated dependencies [0ab08c7c]
+  - @keystar/ui@0.1.5
+
 ## 0.0.111
 
 ### Patch Changes
