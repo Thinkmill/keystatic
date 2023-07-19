@@ -22,7 +22,7 @@ export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
     let prevContext = useContext(Context);
     let prevColorScheme = prevContext && prevContext.colorScheme;
 
-    let autoColorScheme = useColorScheme('light');
+    let autoColorScheme = useColorScheme(props.defaultColorScheme);
     let autoScale = useScale();
     let { locale: prevLocale } = useLocale();
     let matchedBreakpoints = useMatchedBreakpoints();

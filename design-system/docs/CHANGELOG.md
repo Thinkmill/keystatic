@@ -1,5 +1,28 @@
 # @voussoir/docs
 
+## 0.0.17
+
+### Patch Changes
+
+- f272b8ee: consolidate color-scheme logic surrounding ssr
+- Updated dependencies [f272b8ee]
+- Updated dependencies [bf6a27bb]
+  - @keystar/ui@0.1.4
+
+## 0.0.16
+
+### Patch Changes
+
+- b30c4b45: Remove bespoke icon implementations.
+- Updated dependencies [e667fb9c]
+- Updated dependencies [aec6359b]
+- Updated dependencies [b30c4b45]
+- Updated dependencies [ef586da4]
+- Updated dependencies [6c58f038]
+- Updated dependencies [7fe8d2f4]
+- Updated dependencies [781884f9]
+  - @keystar/ui@0.1.2
+
 ## 0.0.15
 
 ### Patch Changes

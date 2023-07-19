@@ -1,5 +1,6 @@
 import { HTMLAttributes } from 'react';
 import { defaultStyleProps } from './resolvers';
+import { BaseStyleProps } from '.';
 
 const defaultStyleKeys = Object.keys(defaultStyleProps);
 
@@ -23,6 +24,31 @@ export function filterStyleProps<Props extends {}>(
 
   for (const prop in props) {
     if (Object.prototype.hasOwnProperty.call(props, prop) && !omit.has(prop)) {
+      filteredProps[prop] = props[prop];
+    }
+  }
+
+  return filteredProps;
+}
+
+/**
+ * Filters out non-style props.
+ * @param props - The component props to be filtered.
+ */
+export function onlyStyleProps<Props extends {}>(props: Props): BaseStyleProps {
+  let filteredProps: any = {};
+  let include = new Set([
+    'isHidden',
+    'UNSAFE_className',
+    'UNSAFE_style',
+    ...defaultStyleKeys,
+  ]);
+
+  for (const prop in props) {
+    if (
+      Object.prototype.hasOwnProperty.call(props, prop) &&
+      include.has(prop)
+    ) {
       filteredProps[prop] = props[prop];
     }
   }

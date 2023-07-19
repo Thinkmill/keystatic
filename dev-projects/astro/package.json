@@ -1,7 +1,7 @@
 {
   "name": "@example/astro",
   "type": "module",
-  "version": "0.0.73",
+  "version": "0.0.75",
   "private": true,
   "scripts": {
     "dev": "astro dev",
@@ -15,7 +15,7 @@
     "@braintree/sanitize-url": "^6.0.2",
     "@hapi/iron": "^7.0.0",
     "@keystatic/astro": "^0.0.8",
-    "@keystatic/core": "^0.0.109",
+    "@keystatic/core": "^0.0.111",
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.0.11",
     "astro": "^2.0.14",

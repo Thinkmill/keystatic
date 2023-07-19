@@ -81,7 +81,7 @@ importers:
       '@babel/core': ^7.18.5
       '@babel/runtime': ^7.18.3
       '@internationalized/date': ^3.3.0
-      '@keystar/ui': ^0.1.0
+      '@keystar/ui': ^0.1.4
       '@markdoc/markdoc': ^0.3.0
       '@preconstruct/next': ^4.0.0
       '@react-aria/i18n': ^3.8.0
@@ -380,7 +380,7 @@ importers:
       '@braintree/sanitize-url': ^6.0.2
       '@hapi/iron': ^7.0.0
       '@keystatic/astro': ^0.0.8
-      '@keystatic/core': ^0.0.109
+      '@keystatic/core': ^0.0.111
       '@types/react': ^18.2.8
       '@types/react-dom': ^18.0.11
       astro: ^2.0.14
@@ -427,7 +427,7 @@ importers:
 
   dev-projects/localization:
     specifiers:
-      '@keystatic/core': ^0.0.109
+      '@keystatic/core': ^0.0.111
       '@keystatic/next': ^0.0.11
       '@preconstruct/next': ^4.0.0
       '@types/node': 16.11.13
@@ -456,8 +456,8 @@ importers:
   dev-projects/next-app:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystar/ui': ^0.1.1
-      '@keystatic/core': ^0.0.109
+      '@keystar/ui': ^0.1.4
+      '@keystatic/core': ^0.0.111
       '@keystatic/next': ^0.0.11
       '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
@@ -488,7 +488,7 @@ importers:
 
   dev-projects/remix:
     specifiers:
-      '@keystatic/core': ^0.0.109
+      '@keystatic/core': ^0.0.111
       '@keystatic/remix': ^0.0.4
       '@remix-run/dev': ^1.18.1
       '@remix-run/node': ^1.18.1
@@ -519,10 +519,11 @@ importers:
 
   docs:
     specifiers:
+      '@fontsource/inter': ^5.0.5
       '@headlessui/react': ^1.7.11
       '@heroicons/react': ^2.0.16
-      '@keystar/ui': ^0.1.1
-      '@keystatic/core': ^0.0.109
+      '@keystar/ui': ^0.1.4
+      '@keystatic/core': ^0.0.111
       '@keystatic/next': ^0.0.11
       '@markdoc/markdoc': ^0.3.0
       '@sindresorhus/slugify': ^1.1.2
@@ -546,6 +547,7 @@ importers:
       tailwindcss: ^3.2.6
       typescript: ^5.1.3
     dependencies:
+      '@fontsource/inter': 5.0.5
       '@headlessui/react': 1.7.14_biqbaboplfbrettd7655fr4n2y
       '@heroicons/react': 2.0.18_react@18.2.0
       '@keystar/ui': link:../design-system/pkg
@@ -577,7 +579,7 @@ importers:
   packages/astro:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.109
+      '@keystatic/core': ^0.0.111
       '@types/cookie': ^0.5.1
       '@types/react': ^18.2.8
       '@types/set-cookie-parser': ^2.4.2
@@ -625,7 +627,8 @@ importers:
       '@emotion/weak-memoize': ^0.3.0
       '@floating-ui/react': ^0.24.0
       '@hapi/iron': ^7.0.0
-      '@keystar/ui': ^0.1.1
+      '@internationalized/string': ^3.1.1
+      '@keystar/ui': ^0.1.4
       '@markdoc/markdoc': ^0.3.0
       '@react-aria/focus': ^3.13.0
       '@react-aria/i18n': ^3.8.0
@@ -711,6 +714,7 @@ importers:
       '@emotion/weak-memoize': 0.3.0
       '@floating-ui/react': 0.24.2_biqbaboplfbrettd7655fr4n2y
       '@hapi/iron': 7.0.1
+      '@internationalized/string': 3.1.1
       '@keystar/ui': link:../../design-system/pkg
       '@markdoc/markdoc': 0.3.0_i2bxsyfskhzbpjanbovidbfj7u
       '@react-aria/focus': 3.13.0_react@18.2.0
@@ -795,7 +799,7 @@ importers:
   packages/next:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.109
+      '@keystatic/core': ^0.0.111
       '@types/react': ^18.2.8
       chokidar: ^3.5.3
       next: ^13.4.8
@@ -816,7 +820,7 @@ importers:
   packages/remix:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.109
+      '@keystatic/core': ^0.0.111
       '@remix-run/react': ^1.18.1
       '@types/react': ^18.2.8
       react: ^18.2.0
@@ -835,7 +839,7 @@ importers:
       '@astrojs/markdoc': ^0.3.3
       '@astrojs/react': ^2.2.1
       '@keystatic/astro': ^0.0.8
-      '@keystatic/core': ^0.0.109
+      '@keystatic/core': ^0.0.111
       '@types/react': ^18.2.8
       '@types/react-dom': ^18.0.11
       astro: ^2.0.14
@@ -854,7 +858,7 @@ importers:
 
   templates/nextjs:
     specifiers:
-      '@keystatic/core': ^0.0.109
+      '@keystatic/core': ^0.0.111
       '@keystatic/next': ^0.0.11
       '@types/react': ^18.2.8
       next: ^13.4.8
@@ -5149,6 +5153,10 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       tabbable: 6.1.2
+    dev: false
+
+  /@fontsource/inter/5.0.5:
+    resolution: {integrity: sha512-RE1JmWRB6Kxo+1nXUnORSSH5uKgUZ2QEQE+h/nsNt758C+17G9y26E9QiAsIqsG13NpKhwn22EeECfyC+da5ew==}
     dev: false
 
   /@formatjs/ecma402-abstract/1.17.0:

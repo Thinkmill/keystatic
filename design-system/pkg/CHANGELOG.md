@@ -1,5 +1,51 @@
 # @keystar/ui
 
+## 0.1.4
+
+### Patch Changes
+
+- f272b8ee: consolidate color-scheme logic surrounding ssr
+- bf6a27bb: Update dashboard page to use card-like interface elements for
+  collections and singletons.
+
+  Related app changes:
+
+  - declare side and main app panels as "inline-size" containers
+  - less obtrusive change indicators on sidebar singleton
+  - create `useLocalizedString` hook, which abstracts l10n message import to one
+    location
+
+  Related component library changes:
+
+  - adjust `AnchorDOMProps` type; require "href" property and remove (MIME)
+    "type" property
+  - support "href" (and friends) on `ActionButton` component
+  - expose `containerQueries` from "style" package
+  - fix class list declaration issue, which was causing a warning from
+    `FieldButton` component
+
+## 0.1.3
+
+### Patch Changes
+
+- a048349f: introduce new `PasswordField` component
+
+## 0.1.2
+
+### Patch Changes
+
+- e667fb9c: Allow users to resize parts of the UI:
+
+  - the sidebar navigation pane
+  - secondary fields, when `entryLayout='content'`
+
+- aec6359b: Support "renderEmptyState" prop on `TableView` component.
+- b30c4b45: Remove bespoke icon implementations.
+- ef586da4: fixes a bug where non-interactive adornments block pointer events
+- 6c58f038: introduce `nav-tree` package, and components
+- 7fe8d2f4: Fix label and description support in `NumberField`
+- 781884f9: tidy panels and collection table appearance
+
 ## 0.1.1
 
 ### Patch Changes

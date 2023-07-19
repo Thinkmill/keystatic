@@ -7,7 +7,7 @@ import {
 import { createContext, ReactNode, useContext, useEffect, useRef } from 'react';
 
 import { Badge } from '@keystar/ui/badge';
-import { Flex } from '@keystar/ui/layout';
+import { Box, Flex } from '@keystar/ui/layout';
 import { Blanket } from '@keystar/ui/overlays';
 import { NavList, NavItem, NavGroup } from '@keystar/ui/nav-list';
 import { css, tokenSchema, transition } from '@keystar/ui/style';
@@ -212,10 +212,10 @@ export function SidebarNav(props: { hrefBase: string; config: Config }) {
                       <Text>{allChangesCount}</Text>
                       <Text visuallyHidden>
                         {pluralize(allChangesCount, {
-                          singular: 'item',
+                          singular: 'change',
+                          plural: 'changes',
                           inclusive: false,
-                        })}{' '}
-                        changed
+                        })}
                       </Text>
                     </Badge>
                   )}
@@ -234,9 +234,15 @@ export function SidebarNav(props: { hrefBase: string; config: Config }) {
                     {collection.label}
                   </Text>
                   {changedData.singletons.has(key) && (
-                    <Badge tone="accent" marginStart="auto">
-                      Changed
-                    </Badge>
+                    <Box
+                      backgroundColor="accentEmphasis"
+                      height="scale.75"
+                      width="scale.75"
+                      borderRadius="full"
+                      marginStart="auto"
+                    >
+                      <Text visuallyHidden>Changed</Text>
+                    </Box>
                   )}
                 </NavItem>
               );

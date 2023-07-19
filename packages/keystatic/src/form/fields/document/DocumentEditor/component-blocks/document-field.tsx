@@ -4,7 +4,7 @@ import { DocumentFeatures } from '../document-features';
 import { ComponentBlock, ComponentSchema } from '../../../../api';
 import { transformProps } from '../../../../props-value';
 import { object } from '../../../object';
-import { getSrcPrefix } from '../../../image';
+import { getSrcPrefix } from '../../../image/getSrcPrefix';
 
 export function deserializeFiles(
   nodes: Descendant[],

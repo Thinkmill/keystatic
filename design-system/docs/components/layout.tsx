@@ -15,7 +15,12 @@ export function Layout({
 }): JSX.Element {
   return (
     <SidebarProvider>
-      <Flex height="100vh">
+      <Flex
+        height="100vh"
+        // create a stacking context for app contents, ensuring portalled
+        // dialogs etc. are always on top w/o z-index hacks
+        UNSAFE_style={{ isolation: 'isolate' }}
+      >
         <Sidebar items={navigation} />
         {children}
       </Flex>

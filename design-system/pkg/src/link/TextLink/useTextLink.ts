@@ -49,6 +49,7 @@ export function useTextLink({
         textUnderlineOffset: tokenSchema.size.border.medium,
 
         '&[data-hover="true"], &[data-focus="visible"]': {
+          color: tokenSchema.color.foreground.neutralEmphasis,
           textDecorationColor: tokenSchema.color.foreground.neutral,
         },
         '&[data-focus="visible"]': {

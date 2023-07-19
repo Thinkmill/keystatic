@@ -88,7 +88,7 @@ export async function generateMetadata(
   const fallbackDescription = 'Documentation page for Keystatic.';
   const description = page?.summary ? page.summary : fallbackDescription;
 
-  const parentOGImages = (await parent).openGraph?.images || [];
+  const image = `/og?title=${title}`;
   const parentTwitterSite = (await parent).twitter?.site ?? '';
 
   return {
@@ -99,7 +99,7 @@ export async function generateMetadata(
       description,
       url: `https://keystatic.com/docs/${slug}`,
       type: 'website',
-      images: parentOGImages,
+      images: [{ url: image }],
     },
     twitter: {
       card: 'summary_large_image',

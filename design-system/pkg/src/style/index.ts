@@ -9,7 +9,7 @@ export {
   useMatchedBreakpoints,
   useResponsiveRange,
 } from './context';
-export { filterStyleProps } from './filterStyleProps';
+export { filterStyleProps, onlyStyleProps } from './filterStyleProps';
 export { FocusRing } from './FocusRing';
 export {
   maybeTokenByKey,
@@ -17,7 +17,7 @@ export {
   resolvePropWithPath,
   sizeResolver,
 } from './resolvers';
-export { breakpoints, breakpointQueries } from './responsive';
+export { breakpoints, breakpointQueries, containerQueries } from './responsive';
 export { tokenSchema } from './tokens';
 export { useIsMobileDevice } from './useIsMobileDevice';
 export { useMediaQuery } from './useMediaQuery';

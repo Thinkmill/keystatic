@@ -1,5 +1,54 @@
 # @keystatic/core
 
+## 0.0.111
+
+### Patch Changes
+
+- bf6a27bb: Update dashboard page to use card-like interface elements for
+  collections and singletons.
+
+  Related app changes:
+
+  - declare side and main app panels as "inline-size" containers
+  - less obtrusive change indicators on sidebar singleton
+  - create `useLocalizedString` hook, which abstracts l10n message import to one
+    location
+
+  Related component library changes:
+
+  - adjust `AnchorDOMProps` type; require "href" property and remove (MIME)
+    "type" property
+  - support "href" (and friends) on `ActionButton` component
+  - expose `containerQueries` from "style" package
+  - fix class list declaration issue, which was causing a warning from
+    `FieldButton` component
+
+- Updated dependencies [f272b8ee]
+- Updated dependencies [bf6a27bb]
+  - @keystar/ui@0.1.4
+
+## 0.0.110
+
+### Patch Changes
+
+- e667fb9c: Allow users to resize parts of the UI:
+
+  - the sidebar navigation pane
+  - secondary fields, when `entryLayout='content'`
+
+- aec6359b: Support "renderEmptyState" prop on `TableView` component.
+- e0c4c37e: Fix custom attributes on headings in `fields.document`
+- 781884f9: tidy panels and collection table appearance
+- cafe3695: Improved not found states
+- Updated dependencies [e667fb9c]
+- Updated dependencies [aec6359b]
+- Updated dependencies [b30c4b45]
+- Updated dependencies [ef586da4]
+- Updated dependencies [6c58f038]
+- Updated dependencies [7fe8d2f4]
+- Updated dependencies [781884f9]
+  - @keystar/ui@0.1.2
+
 ## 0.0.109
 
 ### Patch Changes

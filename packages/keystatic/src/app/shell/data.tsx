@@ -32,7 +32,7 @@ import {
 import LRU from 'lru-cache';
 import { isDefined } from 'emery';
 import { getAuth } from '../auth';
-import { ViewerContext, SidebarFooter_viewer } from './sidebar-data';
+import { ViewerContext, SidebarFooter_viewer } from './viewer-data';
 import { parseRepoConfig, serializeRepoConfig } from '../repo-config';
 
 export function fetchLocalTree(sha: string) {

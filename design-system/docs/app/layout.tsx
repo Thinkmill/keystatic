@@ -1,9 +1,10 @@
+import { NextRootProvider, nextRootScript } from '@keystar/ui/next';
 import { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+
+import { Layout } from '../components/layout';
 import { getNavigation } from '../utils/packages';
 import { basePageTitle } from './utils';
-import { Inter } from 'next/font/google';
-import { ThemeProvider } from '../components/theme-switcher';
-import { Layout } from '../components/layout';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -25,33 +26,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ThemeProvider fontClassName={inter.variable} locale="en-AU">
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(() => {
-              let classList = document.documentElement.classList;
-              let style = document.documentElement.style;
-              let dark = window.matchMedia('(prefers-color-scheme: dark)');
-              if (localStorage.theme === 'dark' || (!localStorage.theme && dark.matches)) {
-                classList.remove('ksv-theme--light');
-                classList.add('ksv-theme--dark');
-                style.colorScheme = 'dark';
-              }
-
-              let fine = window.matchMedia('(any-pointer: fine)');
-              if (fine.matches) {
-                classList.add('ksv-theme--medium');
-                classList.remove('ksv-theme--large');
-              }
-            })();
-      `.replace(/\n|\s{2,}/g, ''),
-          }}
-        />
-      </head>
+    <NextRootProvider fontClassName={inter.variable} locale="en-US">
+      <head>{nextRootScript}</head>
       <body>
         <Layout navigation={await getNavigation()}>{children}</Layout>
       </body>
-    </ThemeProvider>
+    </NextRootProvider>
   );
 }

@@ -1,2 +1,4 @@
 export { RootVoussoirProvider } from './RootVoussoirProvider';
-export { mediaQueryOnlyColorSchemeScaleScript } from './script';
+export { NextRootProvider } from './NextRootProvider';
+export { mediaQueryOnlyColorSchemeScaleScript, nextRootScript } from './script';
+export { useRootColorScheme } from './useRootColorScheme';

@@ -1,0 +1,67 @@
+---
+title: Collections
+summary: >-
+  Think of a collection as anything you'd want multiple instances of. A series
+  of blog posts, cooking recipes, or testimonials from happy customers.
+---
+Think of a `collection` as anything you'd want multiple instances of. A series of blog posts, cooking recipes, or testimonials from happy customers.
+
+Collections are defined within the `collections` key of the Keystatic `config`. Each collection has its own key and is wrapped in a `collection()` function.
+
+## Example collection
+
+Here's how you'd define a `testimonial` collection, where each entry has an `author` and a `quote` fields:
+
+```jsx
+// keystatic.config.ts
+import { config, collection } from '@keystatic/core';
+
+export default config({
+  // ...
+  collections: {
+    testimonials: collection({
+      label: 'Testimonials',
+      slugField: 'author',
+      schema: {
+        author: fields.slug({ name: { label: 'Author' } }),
+        quote: fields.text({ label: 'Quote', multiline: true })
+      }
+    }),
+  },
+});
+```
+
+## Slug field
+
+Use the `slugField` option to define what field in your collection `schema` should be used as the slug for each item. It's recommended to combine it with the [slug field](/docs/fields/slug) to let users customise and regenerate each slug in the Admin UI.
+
+```typescript
+testimonials: collection({
+  label: 'Testimonials',
+  schema: {
+    title: fields.slug({ name: { label: 'Title' } }),
+  },
+  slugField: 'title',
+}),
+```
+
+## Path configuration
+
+You can use the `path` option to specify *where* to store entries for any given collection:
+
+```diff
+testimonials: collection({
+  label: 'Testimonials',
+  // ...
++ path: 'custom/content/path/testimonials/*'
+  schema: {}
+}),
+```
+
+By default, Keystatic will store entries at the root of your project, in a directory that matches the collection key.
+
+You can learn more about the `path` option on the [Organised content page](/docs/how-keystatic-organises-your-content#collections).
+
+## Type signature
+
+Find the latest version of the `Collection` type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.Collection](https://docsmill.dev/npm/@keystatic/core@latest#/.Collection)

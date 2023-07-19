@@ -12,7 +12,7 @@ import { HEADER_HEIGHT, SIDEBAR_WIDTH } from '../constants';
 import { useSidebarContext } from './context';
 import { NavItems } from './nav-items';
 import { SidebarItem } from './types';
-import { ThemeSwitcher } from '../theme-switcher';
+import { ColorSchemeMenu } from '../theme-switcher';
 
 /** Responsively render sidebar navigation items. */
 export const Sidebar = ({ items }: { items: SidebarItem[] }) => {
@@ -36,6 +36,7 @@ export const Sidebar = ({ items }: { items: SidebarItem[] }) => {
           flexDirection: 'column',
           position: 'fixed',
           zIndex: 1,
+
           [breakpointQueries.below.tablet]: {
             width: '100vw',
             '[data-open=true]': {
@@ -131,7 +132,7 @@ function SidebarHeader({
           </Link>
         </Box>
 
-        <ThemeSwitcher />
+        <ColorSchemeMenu />
         <Box
           title={menuLabel}
           role="presentation"

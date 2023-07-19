@@ -19,6 +19,7 @@ cache.insert = (...args) => {
   return prevInsert(...args);
 };
 
+/** @deprecated — use `NextRootProvider` instead. */
 export const RootVoussoirProvider: ForwardRefExoticComponent<
   VoussoirProviderProps & { fontClassName: string; ref?: Ref<HTMLHtmlElement> }
 > = forwardRef(function RootVoussoirProvider(props, ref) {

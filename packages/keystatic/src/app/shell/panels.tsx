@@ -178,6 +178,10 @@ export const MainPanelLayout = (props: {
               minSize={size.minSize}
               onCollapse={isCollapsed => sidebarState.setOpen(!isCollapsed)}
               ref={sidebarPanelRef}
+              className={css({
+                containerName: 'app-side-panel',
+                containerType: 'inline-size',
+              })}
             >
               <SidebarPanel hrefBase={basePath} config={config} />
             </Panel>
@@ -187,7 +191,14 @@ export const MainPanelLayout = (props: {
             />
           </>
         )}
-        <Panel order={2} id={contentPanelId}>
+        <Panel
+          order={2}
+          id={contentPanelId}
+          className={css({
+            containerName: 'app-main-panel',
+            containerType: 'inline-size',
+          })}
+        >
           {children}
         </Panel>
       </PanelGroup>
@@ -298,6 +309,7 @@ function ResizeHandle(props: Omit<PanelResizeHandleProps, 'className'>) {
 
         // hide when disabled
         '&[data-panel-resize-handle-enabled=false]': {
+          position: 'absolute', // take no space when hidden
           visibility: 'hidden',
         },
 
