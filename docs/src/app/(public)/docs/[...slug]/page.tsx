@@ -5,6 +5,7 @@ import keystaticConfig from '../../../../../keystatic.config';
 import { notFound } from 'next/navigation';
 import { Metadata, ResolvingMetadata } from 'next';
 import { H1_ID } from '../../../../constants';
+import slugify from '@sindresorhus/slugify';
 
 const reader = createReader(process.cwd(), keystaticConfig);
 
@@ -29,12 +30,22 @@ export default async function Docs({ params }: DocsProps) {
     }))
     .filter(heading => heading.text);
 
+  // Add slug
+  const headingsWithSlugs = headingsFromContent.map(({ level, text }) => {
+    return {
+      level,
+      text,
+      slug: `#${slugify(text)}`,
+    };
+  });
+
   // Manually add the persistent #${H1_ID} heading, to send to TOCs
   const overviewHeading = {
     level: 1,
     text: 'Overview',
+    slug: `#${H1_ID}`,
   };
-  const headings = [overviewHeading, ...headingsFromContent];
+  const headings = [overviewHeading, ...headingsWithSlugs];
 
   return (
     <div className="grid gap-6 grid-cols-[auto] md:grid-cols-[auto,12rem]">
