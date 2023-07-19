@@ -1,5 +1,14 @@
 # keystatic-docs
 
+## 1.0.9
+
+### Patch Changes
+
+- Updated dependencies [efc83c9c]
+- Updated dependencies [0ab08c7c]
+  - @keystatic/core@0.0.112
+  - @keystar/ui@0.1.5
+
 ## 1.0.8
 
 ### Patch Changes
