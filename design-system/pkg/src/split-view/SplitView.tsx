@@ -11,15 +11,14 @@ import { filterDOMProps } from '@react-aria/utils';
 import {
   ForwardedRef,
   HTMLAttributes,
-  createContext,
   forwardRef,
-  useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react';
 
+import { SplitViewProvider, useSplitView } from './context';
 import { resetGlobalCursorStyle, setGlobalCursorStyle } from './cursor';
 import { defaultStorage } from './storage';
 import {
@@ -29,18 +28,7 @@ import {
   SplitPaneSecondaryProps,
   SplitViewProps,
 } from './types';
-import { getPosition, px } from './utils';
-
-const SplitViewContext = createContext<{
-  id: string;
-  activity: 'pointer' | 'keyboard' | undefined;
-}>({
-  id: '',
-  activity: undefined,
-});
-function useSplitView() {
-  return useContext(SplitViewContext);
-}
+import { getPercentage, getPosition, px } from './utils';
 
 const MAX_WIDTH_PROP = '--primary-pane-max-width';
 const MAX_WIDTH_VAR = `var(${MAX_WIDTH_PROP})`;
@@ -49,6 +37,7 @@ const MIN_WIDTH_VAR = `var(${MIN_WIDTH_PROP})`;
 const WIDTH_PROP = '--primary-pane-width';
 const WIDTH_VAR = `var(${WIDTH_PROP})`;
 const SNAP_REGION_PX = 32;
+const KEYBOARD_ARROW_STEPS = 10;
 
 export function SplitView(props: SplitViewProps) {
   let {
@@ -171,7 +160,7 @@ export function SplitView(props: SplitViewProps) {
     };
     const onKeyDown = (e: KeyboardEvent) => {
       // allow 10 steps between the min and max
-      let step = Math.round((maxSize - minSize) / 10);
+      let step = Math.round((maxSize - minSize) / KEYBOARD_ARROW_STEPS);
       let increment = () => setSize(size => Math.min(size + step, maxSize));
       let decrement = () => setSize(size => Math.max(size - step, minSize));
 
@@ -215,7 +204,7 @@ export function SplitView(props: SplitViewProps) {
   }, [maxSize, minSize, defaultSize, isReversed, size]);
 
   return (
-    <SplitViewContext.Provider
+    <SplitViewProvider
       value={{
         id,
         activity: isDragging
@@ -252,19 +241,14 @@ export function SplitView(props: SplitViewProps) {
           // set min, max, and now values as percentages of the total width
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-valuenow={getAriaValueNow(size, minSize, maxSize)}
+          aria-valuenow={getPercentage(size, minSize, maxSize)}
           aria-label="Resize"
           ref={resizeHandleRef}
         />
         {endPane}
       </div>
-    </SplitViewContext.Provider>
+    </SplitViewProvider>
   );
-}
-
-// integer between 0 and 100
-function getAriaValueNow(value: number, min: number, max: number) {
-  return Math.round(((value - min) / (max - min)) * 100);
 }
 
 // Styled components

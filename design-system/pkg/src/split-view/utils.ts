@@ -9,6 +9,14 @@ export function getPosition(e: ResizeEvent) {
   return 0;
 }
 
+export function getPercentage(value: number, min: number, max: number) {
+  return Math.round(((value - min) / (max - min)) * 100);
+}
+
+export function px(value: number) {
+  return `${value}px`;
+}
+
 export function isKeyDown(event: ResizeEvent): event is KeyboardEvent {
   return event.type === 'keydown';
 }
@@ -17,8 +25,4 @@ export function isMouseEvent(event: ResizeEvent): event is MouseEvent {
 }
 export function isTouchEvent(event: ResizeEvent): event is TouchEvent {
   return event.type.startsWith('touch');
-}
-
-export function px(value: number) {
-  return `${value}px`;
 }

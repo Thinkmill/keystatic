@@ -29,7 +29,7 @@ export const InverseOrder = () => (
     </SplitPanePrimary>
   </SplitView>
 );
-InverseOrder.storyName = 'inverse order';
+InverseOrder.storyName = 'secondary | primary';
 
 export const ResizeHandler = () => (
   <SplitView
