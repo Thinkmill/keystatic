@@ -17,10 +17,14 @@ export type SplitViewProps = {
   children: [ReactElement, ReactElement];
   /** The default size of the primary pane, in pixels. */
   defaultSize: number;
+  /** Control the collapsed state of the primary pane. */
+  isCollapsed?: boolean;
   /** The minimum size of the primary pane, in pixels. */
   minSize: number;
   /** The minimum size of the primary pane, in pixels. */
   maxSize: number;
+  /** Callback that is called when the user collapses the primary pane. */
+  onCollapse?: () => void;
   /** Callback that is called when the user resizes the panes. */
   onResize?: (value: number) => void;
   /**

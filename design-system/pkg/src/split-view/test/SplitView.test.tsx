@@ -50,6 +50,14 @@ describe('split-view/SplitView', () => {
     expect(getByTestId('foo')).toHaveAttribute('id', 'bar');
   });
 
+  it('is collapsible', () => {
+    const { getByText, getByRole } = renderSplitView({ isCollapsed: true });
+
+    expect(getByText('Primary')).not.toBeVisible();
+    expect(getByRole('separator', { hidden: true })).not.toBeVisible();
+    expect(getByText('Secondary')).toBeVisible();
+  });
+
   it('supports keyboard resize', async function () {
     let onResize = jest.fn();
     let user = userEvent.setup();

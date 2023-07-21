@@ -13,6 +13,19 @@ export function getPercentage(value: number, min: number, max: number) {
   return Math.round(((value - min) / (max - min)) * 100);
 }
 
+export function getPrimaryPane(
+  wrapper?: Element | null
+): HTMLDivElement | null {
+  if (!wrapper) return null;
+  return wrapper.querySelector('[data-split-pane-primary]');
+}
+export function getSecondaryPane(
+  wrapper?: Element | null
+): HTMLDivElement | null {
+  if (!wrapper) return null;
+  return wrapper.querySelector('[data-split-pane-secondary]');
+}
+
 export function px(value: number) {
   return `${value}px`;
 }

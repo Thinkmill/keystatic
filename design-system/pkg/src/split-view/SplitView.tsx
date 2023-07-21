@@ -7,10 +7,13 @@ import {
 } from '@keystar/ui/style';
 import { useId } from '@keystar/ui/utils';
 import { useLocale } from '@react-aria/i18n';
-import { filterDOMProps } from '@react-aria/utils';
+import { filterDOMProps, useUpdateEffect } from '@react-aria/utils';
+import { clamp } from '@react-stately/utils';
 import {
   ForwardedRef,
+  ForwardRefExoticComponent,
   HTMLAttributes,
+  Ref,
   forwardRef,
   useEffect,
   useMemo,
@@ -28,7 +31,7 @@ import {
   SplitPaneSecondaryProps,
   SplitViewProps,
 } from './types';
-import { getPercentage, getPosition, px } from './utils';
+import { getPercentage, getPosition, getPrimaryPane, px } from './utils';
 
 const MAX_WIDTH_PROP = '--primary-pane-max-width';
 const MAX_WIDTH_VAR = `var(${MAX_WIDTH_PROP})`;
@@ -44,8 +47,10 @@ export function SplitView(props: SplitViewProps) {
     autoSaveId,
     children,
     defaultSize,
+    isCollapsed,
     minSize,
     maxSize,
+    onCollapse,
     onResize,
     storage = defaultStorage,
   } = props;
@@ -56,6 +61,7 @@ export function SplitView(props: SplitViewProps) {
   const styleProps = useStyleProps(props);
 
   const [isDragging, setDragging] = useState(false);
+  // const [collapseRequested, setCollapseRequested] = useState(false);
   const [handleIsFocused, setHandleFocus] = useState(false);
   const [size, setSize] = useState(() => {
     let size = defaultSize;
@@ -82,10 +88,11 @@ export function SplitView(props: SplitViewProps) {
       : startType === 'secondary';
   }, [direction, startPane]);
 
-  // sync primary pane size with subscribers
+  // sync size with subscribers
+  useUpdateEffect(() => onResize?.(size), [size]);
   useEffect(() => {
     wrapperRef.current?.style.setProperty(WIDTH_PROP, px(size));
-    onResize?.(size);
+
     if (autoSaveId) {
       storage.setItem(autoSaveId, px(size));
     }
@@ -94,12 +101,13 @@ export function SplitView(props: SplitViewProps) {
   useEffect(() => {
     const wrapper = wrapperRef.current;
     const resizeHandle = resizeHandleRef.current;
-    const primaryPane: HTMLDivElement | null | undefined =
-      wrapperRef.current?.querySelector(`[data-split-pane-primary]`);
+    const primaryPane = getPrimaryPane(wrapperRef.current);
 
     if (!wrapper || !resizeHandle || !primaryPane) {
       return;
     }
+
+    let collapseRequested = false;
 
     const onMove = (e: ResizeEvent) => {
       if (e.defaultPrevented) {
@@ -117,6 +125,18 @@ export function SplitView(props: SplitViewProps) {
         nextWidth = defaultSize;
       }
 
+      // soft collapse the primary pane. mimic VS code behavior; collapse when
+      // smaller than half of its min-size. collapse state is committed when
+      // drag handle is released.
+      if (primaryPane.hasAttribute('data-split-view-collapsible')) {
+        collapseRequested = nextWidth <= minSize / 2;
+      }
+      if (collapseRequested) {
+        primaryPane.style.setProperty('width', '0px');
+      } else {
+        primaryPane.style.removeProperty('width');
+      }
+
       moveRef.current = nextWidth;
       wrapper.style.setProperty(WIDTH_PROP, px(moveRef.current));
 
@@ -132,9 +152,18 @@ export function SplitView(props: SplitViewProps) {
 
     const stopDragging = () => {
       resizeHandle.blur();
-      setSize(Number.parseInt(getComputedStyle(primaryPane).width));
       setDragging(false);
       resetGlobalCursorStyle();
+
+      if (collapseRequested) {
+        onCollapse?.();
+        wrapper.style.setProperty(WIDTH_PROP, px(size));
+        primaryPane.style.removeProperty('width');
+      } else {
+        setSize(clamp(moveRef.current, minSize, maxSize));
+      }
+
+      collapseRequested = false;
 
       document.body.removeEventListener('mousemove', onMove);
       document.body.removeEventListener('touchmove', onMove);
@@ -158,6 +187,7 @@ export function SplitView(props: SplitViewProps) {
       window.addEventListener('mouseup', stopDragging);
       window.addEventListener('touchend', stopDragging);
     };
+
     const onKeyDown = (e: KeyboardEvent) => {
       // allow 10 steps between the min and max
       let step = Math.round((maxSize - minSize) / KEYBOARD_ARROW_STEPS);
@@ -192,21 +222,25 @@ export function SplitView(props: SplitViewProps) {
     };
 
     let options = { passive: true };
+    let reset = () => setSize(defaultSize);
     resizeHandle.addEventListener('mousedown', startDragging, options);
     resizeHandle.addEventListener('touchstart', startDragging, options);
+    resizeHandle.addEventListener('dblclick', reset);
     resizeHandle.addEventListener('keydown', onKeyDown);
 
     return () => {
       resizeHandle.removeEventListener('mousedown', startDragging);
       resizeHandle.removeEventListener('touchstart', startDragging);
+      resizeHandle.addEventListener('dblclick', reset);
       resizeHandle.removeEventListener('keydown', onKeyDown);
     };
-  }, [maxSize, minSize, defaultSize, isReversed, size]);
+  }, [maxSize, minSize, defaultSize, isReversed, size, onCollapse]);
 
   return (
     <SplitViewProvider
       value={{
         id,
+        isCollapsed,
         activity: isDragging
           ? 'pointer'
           : handleIsFocused
@@ -236,9 +270,7 @@ export function SplitView(props: SplitViewProps) {
         <SplitViewResizeHandle
           onBlur={() => setHandleFocus(false)}
           onFocus={() => setHandleFocus(true)}
-          onDoubleClick={() => setSize(defaultSize)}
           aria-controls={`primary-pane-${id}`}
-          // set min, max, and now values as percentages of the total width
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={getPercentage(size, minSize, maxSize)}
@@ -256,17 +288,27 @@ export function SplitView(props: SplitViewProps) {
 
 type ResizeHandleProps = HTMLAttributes<HTMLDivElement>;
 
-export function SplitPanePrimary(props: SplitPanePrimaryProps) {
-  let { id, activity } = useSplitView();
+export const SplitPanePrimary: ForwardRefExoticComponent<
+  SplitPanePrimaryProps & { ref?: Ref<HTMLDivElement> }
+> = forwardRef(function SplitPanePrimary(
+  props: SplitPanePrimaryProps,
+  forwardedRef: ForwardedRef<HTMLDivElement>
+) {
+  let { activity, id, isCollapsed } = useSplitView();
   let styleProps = useStyleProps(props);
 
   return (
     <div
       {...styleProps}
       {...filterDOMProps(props)}
+      ref={forwardedRef}
       id={`primary-pane-${id}`}
       data-split-pane-primary={id}
       data-split-view-activity={activity}
+      data-split-view-collapsible={
+        typeof isCollapsed === 'boolean' || undefined
+      }
+      data-split-view-collapsed={isCollapsed || undefined}
       className={classNames(
         css({
           containerType: 'inline-size',
@@ -275,8 +317,12 @@ export function SplitPanePrimary(props: SplitPanePrimaryProps) {
           // prevent the secondary pane from collapsing completely, regardless of
           // consumer preference. losing the drag handle is a bad experience.
           maxWidth: `calc(100% - 100px)`,
-          minWidth: `100px`,
 
+          // hide when collapsed
+          '&[data-split-view-collapsed]': {
+            display: 'none',
+          },
+          // disable interactive elements during drag
           '&[data-split-view-activity=pointer]': {
             pointerEvents: 'none',
           },
@@ -287,10 +333,16 @@ export function SplitPanePrimary(props: SplitPanePrimaryProps) {
       {props.children}
     </div>
   );
-}
+});
+// @ts-expect-error FIXME: this feels super dodgy
 SplitPanePrimary.pane = 'primary';
 
-export function SplitPaneSecondary(props: SplitPaneSecondaryProps) {
+export const SplitPaneSecondary: ForwardRefExoticComponent<
+  SplitPaneSecondaryProps & { ref?: Ref<HTMLDivElement> }
+> = forwardRef(function SplitPaneSecondary(
+  props: SplitPaneSecondaryProps,
+  forwardedRef: ForwardedRef<HTMLDivElement>
+) {
   let { id, activity } = useSplitView();
   let styleProps = useStyleProps(props);
 
@@ -298,14 +350,19 @@ export function SplitPaneSecondary(props: SplitPaneSecondaryProps) {
     <div
       {...styleProps}
       {...filterDOMProps(props)}
+      ref={forwardedRef}
       data-split-pane-secondary={id}
       data-split-view-activity={activity}
       className={classNames(
         css({
           containerType: 'inline-size',
           flex: `1 1 0`,
+          // prevent the secondary pane from collapsing completely, regardless of
+          // consumer preference. losing the drag handle is a bad experience.
+          minWidth: `100px`,
           overflow: 'hidden',
 
+          // disable interactive elements during drag
           '&[data-split-view-activity=pointer]': {
             pointerEvents: 'none',
           },
@@ -316,14 +373,15 @@ export function SplitPaneSecondary(props: SplitPaneSecondaryProps) {
       {props.children}
     </div>
   );
-}
+});
+// @ts-expect-error FIXME: this feels super dodgy
 SplitPaneSecondary.pane = 'secondary';
 
 const SplitViewResizeHandle = forwardRef(function SplitViewResizeHandle(
   props: ResizeHandleProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
-  let { id, activity } = useSplitView();
+  let { activity, id, isCollapsed } = useSplitView();
 
   return (
     <div
@@ -331,6 +389,7 @@ const SplitViewResizeHandle = forwardRef(function SplitViewResizeHandle(
       ref={forwardedRef}
       data-split-view-resize-handle={id}
       data-split-view-activity={activity}
+      data-split-view-collapsed={isCollapsed || undefined}
       role="separator"
       aria-orientation="vertical"
       tabIndex={0}
@@ -347,10 +406,9 @@ const SplitViewResizeHandle = forwardRef(function SplitViewResizeHandle(
         width: tokenSchema.size.border.regular,
         zIndex: 1,
 
-        // hide when disabled
-        '&[aria-disabled]': {
-          position: 'absolute', // take no space when hidden
-          visibility: 'hidden',
+        // hide when collapsed
+        '&[data-split-view-collapsed]': {
+          display: 'none',
         },
 
         // increase hit area

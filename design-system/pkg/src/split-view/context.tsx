@@ -2,10 +2,15 @@ import { createContext, useContext } from 'react';
 
 import { ResizeActivity } from './types';
 
-type ContextType = { id: string; activity: ResizeActivity };
+type ContextType = {
+  activity: ResizeActivity;
+  id: string;
+  isCollapsed: boolean | undefined;
+};
 const SplitViewContext = createContext<ContextType>({
-  id: '',
   activity: undefined,
+  id: '',
+  isCollapsed: undefined,
 });
 
 /** @private */

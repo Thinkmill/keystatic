@@ -1,7 +1,9 @@
+import { ActionButton } from '@keystar/ui/button';
 import { Text } from '@keystar/ui/typography';
+import { action } from '@keystar/ui-storybook';
+import { useState } from 'react';
 
 import { SplitView, SplitPanePrimary, SplitPaneSecondary } from '../index';
-import { action } from '@keystar/ui-storybook';
 
 export default {
   title: 'Components/SplitView',
@@ -48,6 +50,31 @@ export const ResizeHandler = () => (
   </SplitView>
 );
 ResizeHandler.storyName = 'resize handler';
+
+export const CollapseBehaviour = () => {
+  let [isCollapsed, setCollapsed] = useState(false);
+  return (
+    <SplitView
+      defaultSize={200}
+      minSize={100}
+      maxSize={400}
+      height="100vh"
+      onResize={action('onResize')}
+      onCollapse={() => setCollapsed(true)}
+      isCollapsed={isCollapsed}
+    >
+      <SplitPanePrimary>
+        <Text>Primary</Text>
+      </SplitPanePrimary>
+      <SplitPaneSecondary>
+        <ActionButton onPress={() => setCollapsed(b => !b)}>
+          {isCollapsed ? 'Expand' : 'Collapse'}
+        </ActionButton>
+      </SplitPaneSecondary>
+    </SplitView>
+  );
+};
+CollapseBehaviour.storyName = 'collapse handler';
 
 export const Storage = () => (
   <SplitView
