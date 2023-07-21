@@ -35,7 +35,7 @@ export function useSidebar() {
 }
 
 export function SidebarProvider(props: { children: ReactNode }) {
-  const state = useOverlayTriggerState({});
+  const state = useOverlayTriggerState({ defaultOpen: true });
 
   return (
     <SidebarContext.Provider value={state}>

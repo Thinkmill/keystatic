@@ -38,6 +38,8 @@ export const AppShellHeader = ({ children }: PropsWithChildren) => {
         >
           <ActionButton
             prominence="low"
+            aria-label="Open app navigation"
+            aria-pressed={sidebarState.isOpen}
             isHidden={sidebarState.isOpen ? { above: 'mobile' } : undefined}
             onPress={sidebarState.toggle}
             ref={menuButtonRef}
