@@ -4,13 +4,12 @@ export default function Intro() {
       <div className="relative mx-auto max-w-4xl px-6 pt-10 sm:pt-12 pb-6">
         <div className="text-center">
           <h2 className="text-3xl font-bold sm:text-4xl">
-            Take it for an <span className="italic">early</span> spin and tell
-            us what you think
+            Two-way editing, effortlessly
           </h2>
 
           <p className="mt-6 text-lg">
-            Use one of the templates below or, start from a blank canvas to get
-            up and running.
+            Create a new Next.js or Astro project in seconds with the Keystatic
+            CLI:
           </p>
         </div>
       </div>

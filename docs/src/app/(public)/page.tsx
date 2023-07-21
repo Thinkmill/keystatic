@@ -1,6 +1,6 @@
 import Hero from '../../components/hero';
 import Intro from '../../components/intro';
-import Templates from '../../components/templates';
+import Storytelling from '../../components/storytelling';
 import MailingList from '../../components/mailing-list';
 import CallToAction from '../../components/call-to-action';
 import Footer from '../../components/footer';
@@ -14,7 +14,7 @@ export default function Homepage() {
         <Hero />
         <Features />
         <Intro />
-        <Templates />
+        <Storytelling />
         <MailingList />
         <CallToAction />
       </Main>
