@@ -3,7 +3,7 @@ import { BaseStyleProps } from '@keystar/ui/style';
 import { DOMProps } from '@react-types/shared';
 
 export type CursorState = 'horizontal' | 'horizontal-max' | 'horizontal-min';
-
+export type ResizeEvent = KeyboardEvent | MouseEvent | TouchEvent;
 export type SplitViewStorage = {
   getItem(name: string): string | null;
   setItem(name: string, value: string): void;

@@ -5,8 +5,9 @@ import {
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
+import { useId } from '@keystar/ui/utils';
 import { useLocale } from '@react-aria/i18n';
-// import { useLayoutEffect } from '@react-aria/utils';
+import { filterDOMProps } from '@react-aria/utils';
 import {
   ForwardedRef,
   HTMLAttributes,
@@ -14,7 +15,6 @@ import {
   forwardRef,
   useContext,
   useEffect,
-  useId,
   useMemo,
   useRef,
   useState,
@@ -24,11 +24,12 @@ import { resetGlobalCursorStyle, setGlobalCursorStyle } from './cursor';
 import { defaultStorage } from './storage';
 import {
   CursorState,
+  ResizeEvent,
   SplitPanePrimaryProps,
   SplitPaneSecondaryProps,
   SplitViewProps,
 } from './types';
-import { filterDOMProps } from '@react-aria/utils';
+import { getPosition, px } from './utils';
 
 const SplitViewContext = createContext<{
   id: string;
@@ -41,19 +42,13 @@ function useSplitView() {
   return useContext(SplitViewContext);
 }
 
-const WIDTH_PROP = '--primary-pane-width';
-const MIN_WIDTH_PROP = '--primary-pane-min-width';
 const MAX_WIDTH_PROP = '--primary-pane-max-width';
-const WIDTH_VAR = `var(${WIDTH_PROP})`;
-const MIN_WIDTH_VAR = `var(${MIN_WIDTH_PROP})`;
 const MAX_WIDTH_VAR = `var(${MAX_WIDTH_PROP})`;
-
-function px(value: number) {
-  return `${value}px`;
-}
-function toUnit(value: number) {
-  return isFinite(value) ? `${value}px` : '100%';
-}
+const MIN_WIDTH_PROP = '--primary-pane-min-width';
+const MIN_WIDTH_VAR = `var(${MIN_WIDTH_PROP})`;
+const WIDTH_PROP = '--primary-pane-width';
+const WIDTH_VAR = `var(${WIDTH_PROP})`;
+const SNAP_REGION_PX = 32;
 
 export function SplitView(props: SplitViewProps) {
   let {
@@ -67,7 +62,7 @@ export function SplitView(props: SplitViewProps) {
   } = props;
   const [startPane, endPane] = children;
 
-  const id = useId();
+  const id = useId(props.id);
   const { direction } = useLocale();
   const styleProps = useStyleProps(props);
 
@@ -77,19 +72,17 @@ export function SplitView(props: SplitViewProps) {
     let size = defaultSize;
     if (autoSaveId) {
       let savedSize = storage.getItem(autoSaveId);
-      console.log(savedSize);
       if (savedSize) {
         size = Number.parseInt(savedSize);
       }
     }
     return size;
   });
-  console.log(size);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const resizeHandleRef = useRef<HTMLDivElement>(null);
-  const dragOffsetRef = useRef(0);
-  const adjustedRef = useRef(0);
+  const offsetRef = useRef(0);
+  const moveRef = useRef(0);
 
   // drag logic is reversed when the primary pane is on the right or RTL
   const isReversed = useMemo(() => {
@@ -126,41 +119,38 @@ export function SplitView(props: SplitViewProps) {
 
       e.preventDefault();
 
-      let delta = getPosition(e) - dragOffsetRef.current;
-
-      if (isReversed) {
-        delta = delta * -1;
-      }
-
-      let movement = size + delta;
+      let delta = getPosition(e) - offsetRef.current;
+      if (isReversed) delta = delta * -1;
+      let nextWidth = size + delta;
 
       // snap to the default width when the user drags near it
-      if (Math.abs(movement - defaultSize) < 16) {
-        movement = defaultSize;
+      if (Math.abs(nextWidth - defaultSize) < SNAP_REGION_PX / 2) {
+        nextWidth = defaultSize;
       }
 
-      adjustedRef.current = movement;
-      wrapper.style.setProperty(WIDTH_PROP, px(adjustedRef.current));
+      moveRef.current = nextWidth;
+      wrapper.style.setProperty(WIDTH_PROP, px(moveRef.current));
 
       let cursorStyle: CursorState = 'horizontal';
-      if (adjustedRef.current < minSize) {
+      if (moveRef.current < minSize) {
         cursorStyle = 'horizontal-min';
       }
-      if (adjustedRef.current > maxSize) {
+      if (moveRef.current > maxSize) {
         cursorStyle = 'horizontal-max';
       }
       setGlobalCursorStyle(cursorStyle, isReversed);
     };
 
     const stopDragging = () => {
-      document.body.removeEventListener('mousemove', onMove);
-      document.body.removeEventListener('touchmove', onMove);
       resizeHandle.blur();
-      // set computed width
       setSize(Number.parseInt(getComputedStyle(primaryPane).width));
-      // setSize(adjustedRef.current);
       setDragging(false);
       resetGlobalCursorStyle();
+
+      document.body.removeEventListener('mousemove', onMove);
+      document.body.removeEventListener('touchmove', onMove);
+      window.removeEventListener('mouseup', stopDragging);
+      window.removeEventListener('touchend', stopDragging);
     };
 
     const startDragging = (e: ResizeEvent) => {
@@ -172,7 +162,7 @@ export function SplitView(props: SplitViewProps) {
       }
 
       setDragging(true);
-      dragOffsetRef.current = getPosition(e);
+      offsetRef.current = getPosition(e);
 
       document.body.addEventListener('mousemove', onMove);
       document.body.addEventListener('touchmove', onMove);
@@ -181,9 +171,10 @@ export function SplitView(props: SplitViewProps) {
     };
     const onKeyDown = (e: KeyboardEvent) => {
       // allow 10 steps between the min and max
-      const step = (maxSize - minSize) / 10;
+      let step = Math.round((maxSize - minSize) / 10);
+      let increment = () => setSize(size => Math.min(size + step, maxSize));
+      let decrement = () => setSize(size => Math.max(size - step, minSize));
 
-      // TODO: support RTL
       switch (e.key) {
         case 'Home':
           e.preventDefault();
@@ -196,36 +187,30 @@ export function SplitView(props: SplitViewProps) {
         case 'ArrowLeft':
           e.preventDefault();
           if (isReversed) {
-            setSize(size => Math.min(size + step, maxSize));
+            increment();
           } else {
-            setSize(size => Math.max(size - step, minSize));
+            decrement();
           }
           break;
         case 'ArrowRight':
           e.preventDefault();
           if (isReversed) {
-            setSize(size => Math.max(size - step, minSize));
+            decrement();
           } else {
-            setSize(size => Math.min(size + step, maxSize));
+            increment();
           }
       }
     };
 
-    // attach mouse, touch and keyboard event handlers
-    resizeHandle.addEventListener('mousedown', startDragging, {
-      passive: true,
-    });
-    resizeHandle.addEventListener('touchstart', startDragging, {
-      passive: true,
-    });
+    let options = { passive: true };
+    resizeHandle.addEventListener('mousedown', startDragging, options);
+    resizeHandle.addEventListener('touchstart', startDragging, options);
     resizeHandle.addEventListener('keydown', onKeyDown);
 
     return () => {
       resizeHandle.removeEventListener('mousedown', startDragging);
       resizeHandle.removeEventListener('touchstart', startDragging);
       resizeHandle.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('mouseup', stopDragging);
-      window.removeEventListener('touchend', stopDragging);
     };
   }, [maxSize, minSize, defaultSize, isReversed, size]);
 
@@ -251,9 +236,9 @@ export function SplitView(props: SplitViewProps) {
             height: '100%',
             width: '100%',
             overflow: 'hidden',
-            [MIN_WIDTH_PROP]: toUnit(minSize),
-            [MAX_WIDTH_PROP]: toUnit(maxSize),
-            [WIDTH_PROP]: toUnit(defaultSize),
+            [MIN_WIDTH_PROP]: px(minSize),
+            [MAX_WIDTH_PROP]: px(maxSize),
+            [WIDTH_PROP]: px(defaultSize),
           }),
           styleProps.className
         )}
@@ -285,7 +270,7 @@ function getAriaValueNow(value: number, min: number, max: number) {
 // Styled components
 // -----------------------------------------------------------------------------
 
-type ResizeHandleProps = HTMLAttributes<HTMLDivElement> & {};
+type ResizeHandleProps = HTMLAttributes<HTMLDivElement>;
 
 export function SplitPanePrimary(props: SplitPanePrimaryProps) {
   let { id, activity } = useSplitView();
@@ -320,6 +305,7 @@ export function SplitPanePrimary(props: SplitPanePrimaryProps) {
   );
 }
 SplitPanePrimary.pane = 'primary';
+
 export function SplitPaneSecondary(props: SplitPaneSecondaryProps) {
   let { id, activity } = useSplitView();
   let styleProps = useStyleProps(props);
@@ -348,6 +334,7 @@ export function SplitPaneSecondary(props: SplitPaneSecondaryProps) {
   );
 }
 SplitPaneSecondary.pane = 'secondary';
+
 const SplitViewResizeHandle = forwardRef(function SplitViewResizeHandle(
   props: ResizeHandleProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
@@ -418,26 +405,3 @@ const SplitViewResizeHandle = forwardRef(function SplitViewResizeHandle(
     />
   );
 });
-
-// Utils
-// -----------------------------------------------------------------------------
-
-function getPosition(e: ResizeEvent) {
-  if (isMouseEvent(e)) {
-    return e.clientX;
-  } else if (isTouchEvent(e)) {
-    return e.touches[0].clientX;
-  }
-  return 0;
-}
-
-export type ResizeEvent = KeyboardEvent | MouseEvent | TouchEvent;
-export function isKeyDown(event: ResizeEvent): event is KeyboardEvent {
-  return event.type === 'keydown';
-}
-export function isMouseEvent(event: ResizeEvent): event is MouseEvent {
-  return event.type.startsWith('mouse');
-}
-export function isTouchEvent(event: ResizeEvent): event is TouchEvent {
-  return event.type.startsWith('touch');
-}
