@@ -60,7 +60,7 @@ export const CollapseBehaviour = () => {
       maxSize={400}
       height="100vh"
       onResize={action('onResize')}
-      onCollapse={() => setCollapsed(true)}
+      onCollapseChange={setCollapsed}
       isCollapsed={isCollapsed}
     >
       <SplitPanePrimary>

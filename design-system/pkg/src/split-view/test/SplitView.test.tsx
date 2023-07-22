@@ -54,7 +54,7 @@ describe('split-view/SplitView', () => {
     const { getByText, getByRole } = renderSplitView({ isCollapsed: true });
 
     expect(getByText('Primary')).not.toBeVisible();
-    expect(getByRole('separator', { hidden: true })).not.toBeVisible();
+    expect(getByRole('separator', { hidden: true })).toBeVisible();
     expect(getByText('Secondary')).toBeVisible();
   });
 
@@ -65,7 +65,14 @@ describe('split-view/SplitView', () => {
     const { getByRole } = renderSplitView({ id, onResize });
     const resizeHandle = getByRole('separator');
 
-    expect(onResize).toHaveBeenCalledWith(DEFAULT_SIZE);
+    expect(resizeHandle).toHaveAttribute('aria-valuemax', '100');
+    expect(resizeHandle).toHaveAttribute('aria-valuemin', '0');
+    expect(resizeHandle).toHaveAttribute(
+      'aria-valuenow',
+      Math.round(
+        ((DEFAULT_SIZE - MIN_SIZE) / (MAX_SIZE - MIN_SIZE)) * 100
+      ).toString()
+    );
 
     await user.tab();
     expect(resizeHandle).toHaveFocus();

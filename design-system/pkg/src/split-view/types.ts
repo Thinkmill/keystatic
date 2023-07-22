@@ -23,8 +23,18 @@ export type SplitViewProps = {
   minSize: number;
   /** The minimum size of the primary pane, in pixels. */
   maxSize: number;
-  /** Callback that is called when the user collapses the primary pane. */
-  onCollapse?: () => void;
+  /**
+   * Callback that is called when the user collapses or expands the primary
+   * pane. A _collapse_ event is triggered when the primary pane is dragged beyond
+   * half its minimum size, or the user presses the `Enter` key while the resize
+   * handle is focused.
+   *
+   * Because we visually hide the resize handle (unless focused) to complete the
+   * collapsed appearance, an _expand_ event will only occur when the user
+   * presses the `Enter` key on a collapsed resize handle—you MUST implement an
+   * alternative "expand" interaction for pointer users.
+   */
+  onCollapseChange?: (isCollapsed: boolean) => void;
   /** Callback that is called when the user resizes the panes. */
   onResize?: (value: number) => void;
   /**

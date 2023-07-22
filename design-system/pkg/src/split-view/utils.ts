@@ -13,17 +13,17 @@ export function getPercentage(value: number, min: number, max: number) {
   return Math.round(((value - min) / (max - min)) * 100);
 }
 
-export function getPrimaryPane(
-  wrapper?: Element | null
-): HTMLDivElement | null {
-  if (!wrapper) return null;
-  return wrapper.querySelector('[data-split-pane-primary]');
+export function getPrimaryPaneId(id: string) {
+  return `primary-pane-${id}`;
 }
-export function getSecondaryPane(
-  wrapper?: Element | null
-): HTMLDivElement | null {
-  if (!wrapper) return null;
-  return wrapper.querySelector('[data-split-pane-secondary]');
+export function getSecondaryPaneId(id: string) {
+  return `secondary-pane-${id}`;
+}
+export function getPrimaryPane(id: string) {
+  return document.getElementById(getPrimaryPaneId(id));
+}
+export function getSecondaryPane(id: string) {
+  return document.getElementById(getSecondaryPaneId(id));
 }
 
 export function px(value: number) {
