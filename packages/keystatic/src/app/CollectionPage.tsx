@@ -25,9 +25,9 @@ import { Config } from '../config';
 import { sortByDescriptor } from './collection-sort';
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
-import { AppShellRoot, EmptyState } from './shell';
+import { EmptyState } from './shell/empty-state';
 import { useTree, TreeData } from './shell/data';
-import { AppShellHeader } from './shell/header';
+import { PageRoot, PageHeader } from './shell/page';
 import { getCollectionPath, getEntriesInCollectionWithTreeKey } from './utils';
 import { notFound } from './not-found';
 
@@ -47,7 +47,7 @@ export function CollectionPage(props: CollectionPageProps) {
   let debouncedSearchTerm = useDebouncedValue(searchTerm, 300);
 
   return (
-    <AppShellRoot containerWidth={containerWidth}>
+    <PageRoot containerWidth={containerWidth}>
       <CollectionPageHeader
         collectionLabel={collectionConfig.label}
         createHref={`${props.basePath}/collection/${encodeURIComponent(
@@ -57,7 +57,7 @@ export function CollectionPage(props: CollectionPageProps) {
         onSearchTermChange={setSearchTerm}
       />
       <CollectionPageContent searchTerm={debouncedSearchTerm} {...props} />
-    </AppShellRoot>
+    </PageRoot>
   );
 }
 
@@ -71,7 +71,7 @@ function CollectionPageHeader(props: {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   return (
-    <AppShellHeader>
+    <PageHeader>
       <Breadcrumbs flex minWidth={0}>
         <Item key="collection">{collectionLabel}</Item>
       </Breadcrumbs>
@@ -88,7 +88,7 @@ function CollectionPageHeader(props: {
       <Button marginStart="auto" prominence="high" href={createHref}>
         {stringFormatter.format('add')}
       </Button>
-    </AppShellHeader>
+    </PageHeader>
   );
 }
 

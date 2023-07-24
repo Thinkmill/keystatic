@@ -1,4 +1,9 @@
 import { Box, Grid } from '@keystar/ui/layout';
+import {
+  SplitView,
+  SplitPanePrimary,
+  SplitPaneSecondary,
+} from '@keystar/ui/split-view';
 
 import { FormatInfo } from './path-utils';
 import { ReadonlyPropPath } from '../form/fields/document/DocumentEditor/component-blocks/utils';
@@ -20,9 +25,9 @@ import {
   Collection,
   Singleton,
 } from '..';
-import { ContentPanelLayout, useContentPanelQuery } from './shell/panels';
 import { ScrollView } from './shell/primitives';
-import { AppShellContainer } from './shell';
+import { PageContainer } from './shell/page';
+import { useContentPanelQuery } from './shell/context';
 
 const emptyArray: ReadonlyPropPath = [];
 
@@ -59,49 +64,59 @@ export function FormForEntry({
     return (
       <PathContextProvider value={emptyArray}>
         <SlugFieldProvider value={slugField}>
-          <ContentPanelLayout>
-            <ScrollView>
-              <Box
-                padding={{
-                  mobile: 'medium',
-                  tablet: 'xlarge',
-                  desktop: 'xxlarge',
-                }}
-                minHeight={0}
-                minWidth={0}
-                maxWidth="container.medium"
-                marginX="auto"
-              >
-                <AddToPathProvider part={contentField.key}>
-                  <InnerFormValueContentFromPreviewProps
-                    forceValidation={forceValidation}
-                    {...props.fields[contentField.key]}
-                  />
-                </AddToPathProvider>
-              </Box>
-            </ScrollView>
-            <ScrollView>
-              <Grid
-                gap="xlarge"
-                padding={{
-                  mobile: 'medium',
-                  tablet: 'xlarge',
-                  desktop: 'xxlarge',
-                }}
-              >
-                {Object.entries(props.fields).map(([key, propVal]) =>
-                  key === contentField.key ? null : (
-                    <AddToPathProvider key={key} part={key}>
-                      <InnerFormValueContentFromPreviewProps
-                        forceValidation={forceValidation}
-                        {...propVal}
-                      />
-                    </AddToPathProvider>
-                  )
-                )}
-              </Grid>
-            </ScrollView>
-          </ContentPanelLayout>
+          <SplitView
+            autoSaveId="keystatic-content-split-view"
+            defaultSize={320}
+            minSize={240}
+            maxSize={480}
+            flex
+          >
+            <SplitPaneSecondary>
+              <ScrollView>
+                <Box
+                  padding={{
+                    mobile: 'medium',
+                    tablet: 'xlarge',
+                    desktop: 'xxlarge',
+                  }}
+                  minHeight={0}
+                  minWidth={0}
+                  maxWidth="container.medium"
+                  marginX="auto"
+                >
+                  <AddToPathProvider part={contentField.key}>
+                    <InnerFormValueContentFromPreviewProps
+                      forceValidation={forceValidation}
+                      {...props.fields[contentField.key]}
+                    />
+                  </AddToPathProvider>
+                </Box>
+              </ScrollView>
+            </SplitPaneSecondary>
+            <SplitPanePrimary>
+              <ScrollView>
+                <Grid
+                  gap="xlarge"
+                  padding={{
+                    mobile: 'medium',
+                    tablet: 'xlarge',
+                    desktop: 'xxlarge',
+                  }}
+                >
+                  {Object.entries(props.fields).map(([key, propVal]) =>
+                    key === contentField.key ? null : (
+                      <AddToPathProvider key={key} part={key}>
+                        <InnerFormValueContentFromPreviewProps
+                          forceValidation={forceValidation}
+                          {...propVal}
+                        />
+                      </AddToPathProvider>
+                    )
+                  )}
+                </Grid>
+              </ScrollView>
+            </SplitPanePrimary>
+          </SplitView>
         </SlugFieldProvider>
       </PathContextProvider>
     );
@@ -109,7 +124,7 @@ export function FormForEntry({
 
   return (
     <ScrollView>
-      <AppShellContainer
+      <PageContainer
         paddingY={{ mobile: 'medium', tablet: 'xlarge', desktop: 'xxlarge' }}
       >
         <FormValueContentFromPreviewProps
@@ -118,7 +133,7 @@ export function FormForEntry({
           slugField={slugField}
           {...props}
         />
-      </AppShellContainer>
+      </PageContainer>
     </ScrollView>
   );
 }

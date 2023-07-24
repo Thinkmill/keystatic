@@ -188,6 +188,11 @@
       "module": "./list-view/dist/keystar-ui-list-view.esm.js",
       "default": "./list-view/dist/keystar-ui-list-view.cjs.js"
     },
+    "./split-view": {
+      "types": "./split-view/dist/keystar-ui-split-view.cjs.js",
+      "module": "./split-view/dist/keystar-ui-split-view.esm.js",
+      "default": "./split-view/dist/keystar-ui-split-view.cjs.js"
+    },
     "./text-field": {
       "types": "./text-field/dist/keystar-ui-text-field.cjs.js",
       "module": "./text-field/dist/keystar-ui-text-field.esm.js",

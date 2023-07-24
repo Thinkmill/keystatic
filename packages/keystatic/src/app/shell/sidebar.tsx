@@ -1,17 +1,25 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { DismissButton, useModalOverlay } from '@react-aria/overlays';
+import { useUpdateEffect } from '@react-aria/utils';
 import {
   OverlayTriggerState,
   useOverlayTriggerState,
 } from '@react-stately/overlays';
-import { createContext, ReactNode, useContext, useEffect, useRef } from 'react';
+import { createContext, ReactNode, useContext, useRef } from 'react';
 
 import { Badge } from '@keystar/ui/badge';
 import { Box, Flex } from '@keystar/ui/layout';
 import { Blanket } from '@keystar/ui/overlays';
 import { NavList, NavItem, NavGroup } from '@keystar/ui/nav-list';
-import { css, tokenSchema, transition } from '@keystar/ui/style';
+import {
+  breakpoints,
+  css,
+  tokenSchema,
+  transition,
+  useBreakpoint,
+} from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
+import { usePrevious } from '@keystar/ui/utils';
 
 import { Config } from '../../config';
 
@@ -24,6 +32,7 @@ import { SIDE_PANEL_ID } from './constants';
 import { ZapLogo } from './common';
 import { useConfig } from './context';
 import { serializeRepoConfig } from '../repo-config';
+import { typedKeys } from 'emery';
 
 const SidebarContext = createContext<OverlayTriggerState | null>(null);
 export function useSidebar() {
@@ -34,8 +43,24 @@ export function useSidebar() {
   return context;
 }
 
+const breakpointNames = typedKeys(breakpoints);
 export function SidebarProvider(props: { children: ReactNode }) {
-  const state = useOverlayTriggerState({});
+  const matchedBreakpoints = useBreakpoint();
+  const state = useOverlayTriggerState({
+    defaultOpen: matchedBreakpoints.includes('desktop'),
+  });
+
+  let breakpointIndex = breakpointNames.indexOf(matchedBreakpoints[0]);
+  let previousIndex = usePrevious(breakpointIndex) || 0;
+
+  useUpdateEffect(() => {
+    let larger = previousIndex < breakpointIndex;
+    if (larger && breakpointIndex >= 2) {
+      state.open();
+    } else if (breakpointIndex < 2) {
+      state.close();
+    }
+  }, [matchedBreakpoints]);
 
   return (
     <SidebarContext.Provider value={state}>
@@ -84,9 +109,8 @@ export function SidebarDialog(props: { hrefBase: string; config: Config }) {
   const router = useRouter();
 
   // close the sidebar when the route changes
-  useEffect(() => {
+  useUpdateEffect(() => {
     state.close();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.href]);
 
   let dialogRef = useRef<HTMLDivElement>(null);

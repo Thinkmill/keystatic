@@ -21,7 +21,9 @@ import { CreateItem } from './create-item';
 import { DashboardPage } from './dashboard';
 import { ItemPage } from './ItemPage';
 import Provider from './provider';
-import { AppShell, AppShellBody, AppShellRoot, EmptyState } from './shell';
+import { AppShell } from './shell';
+import { PageBody, PageRoot } from './shell/page';
+import { EmptyState } from './shell/empty-state';
 import { SingletonPage } from './SingletonPage';
 import { FromTemplateDeploy } from './onboarding/from-template-deploy';
 import { CreatedGitHubApp } from './onboarding/created-github-app';
@@ -141,15 +143,15 @@ function PageInner({ config }: { config: Config }) {
     <AppShell config={config} currentBranch={branch || ''} basePath={basePath}>
       <NotFoundBoundary
         fallback={
-          <AppShellRoot>
-            <AppShellBody>
+          <PageRoot>
+            <PageBody>
               <EmptyState
                 icon={fileX2Icon}
                 title="Not found"
                 message="This page could not be found."
               />
-            </AppShellBody>
-          </AppShellRoot>
+            </PageBody>
+          </PageRoot>
         }
       >
         {parsedParams === null ? (
