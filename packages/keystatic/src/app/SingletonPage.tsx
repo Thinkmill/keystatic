@@ -18,9 +18,8 @@ import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-util
 import { getSingletonFormat, getSingletonPath, isGitHubConfig } from './utils';
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
-import { AppShellBody, AppShellRoot } from './shell';
+import { PageBody, PageHeader, PageRoot } from './shell/page';
 import { useBaseCommit, useTree } from './shell/data';
-import { AppShellHeader } from './shell/header';
 import { TreeNode } from './trees';
 import { mergeDataStates } from './useData';
 import { useHasChanged } from './useHasChanged';
@@ -118,10 +117,8 @@ function SingletonPage({
   const formID = 'singleton-form';
 
   return (
-    <AppShellRoot
-      containerWidth={containerWidthForEntryLayout(singletonConfig)}
-    >
-      <AppShellHeader>
+    <PageRoot containerWidth={containerWidthForEntryLayout(singletonConfig)}>
+      <PageHeader>
         <Flex alignItems="center" gap="regular">
           <Heading elementType="h1" id="page-title" size="small">
             {singletonConfig.label}
@@ -165,7 +162,7 @@ function SingletonPage({
             {isCreating ? 'Create' : 'Save'}
           </Button>
         </ButtonGroup>
-      </AppShellHeader>
+      </PageHeader>
       <Flex
         elementType="form"
         id={formID}
@@ -229,7 +226,7 @@ function SingletonPage({
           )}
         </DialogContainer>
       </Flex>
-    </AppShellRoot>
+    </PageRoot>
   );
 }
 
@@ -237,11 +234,11 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
   const singletonConfig = props.config.singletons?.[props.singleton];
   if (!singletonConfig) notFound();
   const header = (
-    <AppShellHeader>
+    <PageHeader>
       <Heading elementType="h1" id="page-title" size="small">
         {singletonConfig.label}
       </Heading>
-    </AppShellHeader>
+    </PageHeader>
   );
   const format = useMemo(
     () => getSingletonFormat(props.config, props.singleton),
@@ -261,22 +258,22 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
   );
   if (combined.kind === 'error') {
     return (
-      <AppShellRoot>
+      <PageRoot>
         {header}
-        <AppShellBody>
+        <PageBody>
           <Notice margin="xxlarge" tone="critical">
             {combined.error.message}
           </Notice>
-        </AppShellBody>
-      </AppShellRoot>
+        </PageBody>
+      </PageRoot>
     );
   }
 
   if (combined.kind === 'loading') {
     return (
-      <AppShellRoot>
+      <PageRoot>
         {header}
-        <AppShellBody>
+        <PageBody>
           <Flex
             alignItems="center"
             justifyContent="center"
@@ -288,8 +285,8 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
               size="large"
             />
           </Flex>
-        </AppShellBody>
-      </AppShellRoot>
+        </PageBody>
+      </PageRoot>
     );
   }
 

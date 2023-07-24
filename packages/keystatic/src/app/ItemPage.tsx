@@ -40,14 +40,13 @@ import { ForkRepoDialog } from './fork-repo';
 import l10nMessages from './l10n/index.json';
 import { getDataFileExtension, getSlugGlobForCollection } from './path-utils';
 import { useRouter } from './router';
-import { AppShellBody, AppShellRoot } from './shell';
+import { PageBody, PageHeader, PageRoot } from './shell/page';
 import {
   useBaseCommit,
   useTree,
   useRepositoryId,
   useBranchInfo,
 } from './shell/data';
-import { AppShellHeader } from './shell/header';
 import { TreeNode } from './trees';
 import { useDeleteItem, useUpsertItem } from './updating';
 import { useItemData } from './useItemData';
@@ -212,7 +211,6 @@ function ItemPage(props: ItemPageProps) {
         {deleteResult.kind === 'error' && (
           <Notice tone="critical">{deleteResult.error.message}</Notice>
         )}
-        {/* <AppShellBody isScrollable> */}
         <Box
           id={formID}
           height="100%"
@@ -233,7 +231,6 @@ function ItemPage(props: ItemPageProps) {
             slugField={props.slugInfo}
           />
         </Box>
-        {/* </AppShellBody> */}
         <DialogContainer
           // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since
           // this doesn't open on click but after doing a network request and it failing and manually wiring about a popover and modal would be a pain
@@ -561,9 +558,9 @@ function ItemPageWrapper(props: {
   if (combined.kind === 'error') {
     return (
       <ItemPageShell {...props}>
-        <AppShellBody>
+        <PageBody>
           <Notice tone="critical">{combined.error.message}</Notice>
-        </AppShellBody>
+        </PageBody>
       </ItemPageShell>
     );
   }
@@ -588,9 +585,9 @@ function ItemPageWrapper(props: {
   if (combined.data.item === 'not-found') {
     return (
       <ItemPageShell {...props}>
-        <AppShellBody>
+        <PageBody>
           <Notice tone="caution">Entry not found.</Notice>
-        </AppShellBody>
+        </PageBody>
       </ItemPageShell>
     );
   }
@@ -627,10 +624,8 @@ const ItemPageShell = (
   const collectionConfig = props.config.collections![props.collection]!;
 
   return (
-    <AppShellRoot
-      containerWidth={containerWidthForEntryLayout(collectionConfig)}
-    >
-      <AppShellHeader>
+    <PageRoot containerWidth={containerWidthForEntryLayout(collectionConfig)}>
+      <PageHeader>
         <Breadcrumbs
           flex
           minWidth={0}
@@ -648,10 +643,10 @@ const ItemPageShell = (
           <Item key="item">{props.itemSlug}</Item>
         </Breadcrumbs>
         {props.headerActions}
-      </AppShellHeader>
+      </PageHeader>
 
       {props.children}
-    </AppShellRoot>
+    </PageRoot>
   );
 };
 

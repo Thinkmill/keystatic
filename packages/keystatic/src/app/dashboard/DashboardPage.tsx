@@ -7,8 +7,7 @@ import { Heading } from '@keystar/ui/typography';
 
 import { Config } from '../../config';
 import l10nMessages from '../l10n/index.json';
-import { AppShellBody, AppShellRoot } from '../shell';
-import { AppShellHeader } from '../shell/header';
+import { PageBody, PageHeader, PageRoot } from '../shell/page';
 import { useViewer } from '../shell/viewer-data';
 import { BranchSection } from './BranchSection';
 import { CollectionSection } from './CollectionSection';
@@ -19,13 +18,13 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
   const user = useViewer();
 
   return (
-    <AppShellRoot containerWidth="large">
-      <AppShellHeader>
+    <PageRoot containerWidth="large">
+      <PageHeader>
         <Breadcrumbs flex minWidth={0}>
           <Item key="dashboard">{stringFormatter.format('dashboard')}</Item>
         </Breadcrumbs>
-      </AppShellHeader>
-      <AppShellBody isScrollable>
+      </PageHeader>
+      <PageBody isScrollable>
         <Flex direction="column" gap="xxlarge">
           {user && (
             <Flex
@@ -48,7 +47,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
           <CollectionSection basePath={props.basePath} config={props.config} />
           <SingletonSection basePath={props.basePath} config={props.config} />
         </Flex>
-      </AppShellBody>
-    </AppShellRoot>
+      </PageBody>
+    </PageRoot>
   );
 }
