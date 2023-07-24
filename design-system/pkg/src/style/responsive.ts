@@ -14,9 +14,9 @@ import {
 
 export const breakpoints: Record<Breakpoint, number> = {
   mobile: 0,
-  tablet: 768,
-  desktop: 1280,
-  wide: 1768,
+  tablet: 740,
+  desktop: 992,
+  wide: 1200,
 };
 
 // external stuff for composing responsive styles

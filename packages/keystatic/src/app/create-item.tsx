@@ -26,8 +26,7 @@ import {
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
-import { AppShellRoot } from './shell';
-import { AppShellHeader } from './shell/header';
+import { PageRoot, PageHeader } from './shell/page';
 import { useBaseCommit, useTree } from './shell/data';
 import { TreeNode } from './trees';
 import { useSlugsInCollection } from './useSlugsInCollection';
@@ -127,10 +126,8 @@ export function CreateItem(props: {
 
   return (
     <>
-      <AppShellRoot
-        containerWidth={containerWidthForEntryLayout(collectionConfig)}
-      >
-        <AppShellHeader>
+      <PageRoot containerWidth={containerWidthForEntryLayout(collectionConfig)}>
+        <PageHeader>
           <Breadcrumbs
             flex
             minWidth={0}
@@ -159,7 +156,7 @@ export function CreateItem(props: {
           >
             {stringFormatter.format('create')}
           </Button>
-        </AppShellHeader>
+        </PageHeader>
         <Flex
           id={formID}
           elementType="form"
@@ -185,7 +182,7 @@ export function CreateItem(props: {
             slugField={slugInfo}
           />
         </Flex>
-      </AppShellRoot>
+      </PageRoot>
 
       <DialogContainer
         // ideally this would be a popover on desktop but using a DialogTrigger

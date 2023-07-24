@@ -695,7 +695,6 @@ importers:
       react: ^18.2.0
       react-dom: ^18.2.0
       react-element-to-jsx-string: ^15.0.0
-      react-resizable-panels: ^0.0.53
       resize-observer-polyfill: ^1.5.1
       scroll-into-view-if-needed: ^3.0.3
       signal-exit: ^3.0.7
@@ -766,7 +765,6 @@ importers:
       prosemirror-state: 1.4.3
       prosemirror-transform: 1.7.3
       prosemirror-view: 1.31.4
-      react-resizable-panels: 0.0.53_biqbaboplfbrettd7655fr4n2y
       scroll-into-view-if-needed: 3.0.6
       slate: 0.91.4
       slate-history: 0.86.0_slate@0.91.4
@@ -19358,16 +19356,6 @@ packages:
     resolution: {integrity: sha512-wViHqhAd8OHeLS/IRMJjTSDHF3U9eWi62F/MledQGPdJGDhodXJ9PBLNGr6WWL7qlH12Mt3TyTpbS+hGXMjCzQ==}
     engines: {node: '>=0.10.0'}
     dev: true
-
-  /react-resizable-panels/0.0.53_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-lGOJF0Hh5+Y+Usi7x8btmBTi+6CQV1/RKxnj6jVrzvJ9vLbftbSoJPzymOuX8ZCFimlEwP2AKsGtQVKG/KieHA==}
-    peerDependencies:
-      react: ^16.14.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
 
   /react-resize-detector/7.1.2_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-zXnPJ2m8+6oq9Nn8zsep/orts9vQv3elrpA+R8XTcW7DVVUJ9vwDwMXaBtykAYjMnkCIaOoK9vObyR7ZgFNlOw==}
