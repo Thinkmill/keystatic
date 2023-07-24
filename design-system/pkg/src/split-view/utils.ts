@@ -19,11 +19,17 @@ export function getPrimaryPaneId(id: string) {
 export function getSecondaryPaneId(id: string) {
   return `secondary-pane-${id}`;
 }
+export function getResizeHandleId(id: string) {
+  return `resize-handle-${id}`;
+}
 export function getPrimaryPane(id: string) {
   return document.getElementById(getPrimaryPaneId(id));
 }
 export function getSecondaryPane(id: string) {
   return document.getElementById(getSecondaryPaneId(id));
+}
+export function getResizeHandle(id: string) {
+  return document.getElementById(getResizeHandleId(id));
 }
 
 export function px(value: number) {

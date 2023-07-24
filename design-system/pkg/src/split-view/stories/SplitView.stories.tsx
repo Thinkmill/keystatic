@@ -1,6 +1,7 @@
 import { ActionButton } from '@keystar/ui/button';
 import { Text } from '@keystar/ui/typography';
 import { action } from '@keystar/ui-storybook';
+import { chain } from '@react-aria/utils';
 import { useState } from 'react';
 
 import { SplitView, SplitPanePrimary, SplitPaneSecondary } from '../index';
@@ -33,6 +34,25 @@ export const InverseOrder = () => (
 );
 InverseOrder.storyName = 'secondary | primary';
 
+export const Nested = () => (
+  <SplitView defaultSize={200} minSize={100} maxSize={400} height="100vh">
+    <SplitPanePrimary>
+      <Text>A. Primary</Text>
+    </SplitPanePrimary>
+    <SplitPaneSecondary>
+      <SplitView defaultSize={200} minSize={100} maxSize={400} height="100vh">
+        <SplitPaneSecondary>
+          <Text>B. Secondary</Text>
+        </SplitPaneSecondary>
+        <SplitPanePrimary>
+          <Text>B. Primary</Text>
+        </SplitPanePrimary>
+      </SplitView>
+    </SplitPaneSecondary>
+  </SplitView>
+);
+Nested.storyName = 'nested';
+
 export const ResizeHandler = () => (
   <SplitView
     defaultSize={200}
@@ -60,7 +80,7 @@ export const CollapseBehaviour = () => {
       maxSize={400}
       height="100vh"
       onResize={action('onResize')}
-      onCollapseChange={setCollapsed}
+      onCollapseChange={chain(setCollapsed, action('onCollapseChange'))}
       isCollapsed={isCollapsed}
     >
       <SplitPanePrimary>

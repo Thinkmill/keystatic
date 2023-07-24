@@ -36,6 +36,8 @@ import {
   getPosition,
   getPrimaryPane,
   getPrimaryPaneId,
+  getResizeHandle,
+  getResizeHandleId,
   getSecondaryPaneId,
   px,
 } from './utils';
@@ -82,11 +84,11 @@ export function SplitView(props: SplitViewProps) {
   });
 
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const resizeHandleRef = useRef<HTMLDivElement>(null);
   const offsetRef = useRef(0);
   const moveRef = useRef(0);
 
-  // drag logic is reversed when the primary pane is on the right or RTL
+  // reverse drag logic when the primary pane is on the right or if the locale
+  // direction is right-to-left
   const isReversed = useMemo(() => {
     // @ts-expect-error FIXME: this feels super dodgy
     let startType = startPane.type.pane;
@@ -108,7 +110,7 @@ export function SplitView(props: SplitViewProps) {
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
-    const resizeHandle = resizeHandleRef.current;
+    const resizeHandle = getResizeHandle(id);
     const primaryPane = getPrimaryPane(id);
 
     if (!wrapper || !resizeHandle || !primaryPane) {
@@ -130,9 +132,8 @@ export function SplitView(props: SplitViewProps) {
         nextWidth = defaultSize;
       }
 
-      // soft collapse the primary pane. mimic VS code behavior; collapse when
-      // smaller than half of its min-size. collapse state is committed when
-      // drag handle is released.
+      // soft collapse the primary pane when smaller than half of its min-size.
+      // collapse state is committed when the drag handle is released.
       if (collapseAllowed) {
         collapseRequested = nextWidth <= minSize / 2;
       }
@@ -237,26 +238,28 @@ export function SplitView(props: SplitViewProps) {
     };
 
     let options = { passive: true };
-    let onDoubleClick = () => {
+    let onDoubleClick = (e: MouseEvent) => {
       // reset to the default size when the drag handle is double-clicked. the
       // guard is to prevent this from firing when the user keeps the mouse down
       // after the second click and begins to drag, which yields some really
-      // weird behavior. note that the pointer event may occur across the width
-      // of the drag handle so we can't check the offset/start for equality.
-      if (Math.abs(moveRef.current - offsetRef.current) <= 5) {
+      // weird behavior.
+      if (e.clientX === offsetRef.current) {
         setSize(defaultSize);
       }
     };
-    resizeHandle.addEventListener('mousedown', startDragging, options);
-    resizeHandle.addEventListener('touchstart', startDragging, options);
+
+    resizeHandle.addEventListener('contextmenu', stopDragging);
     resizeHandle.addEventListener('dblclick', onDoubleClick);
     resizeHandle.addEventListener('keydown', onKeyDown);
+    resizeHandle.addEventListener('mousedown', startDragging, options);
+    resizeHandle.addEventListener('touchstart', startDragging, options);
 
     return () => {
+      resizeHandle.removeEventListener('contextmenu', stopDragging);
+      resizeHandle.removeEventListener('dblclick', onDoubleClick);
+      resizeHandle.removeEventListener('keydown', onKeyDown);
       resizeHandle.removeEventListener('mousedown', startDragging);
       resizeHandle.removeEventListener('touchstart', startDragging);
-      resizeHandle.addEventListener('dblclick', onDoubleClick);
-      resizeHandle.removeEventListener('keydown', onKeyDown);
     };
   }, [
     maxSize,
@@ -305,7 +308,6 @@ export function SplitView(props: SplitViewProps) {
           aria-valuenow={getPercentage(size, minSize, maxSize)}
           onBlur={() => setHandleFocus(false)}
           onFocus={() => setHandleFocus(true)}
-          ref={resizeHandleRef}
         />
         {endPane}
       </div>
@@ -424,13 +426,15 @@ const SplitViewResizeHandle = forwardRef(function SplitViewResizeHandle(
     <div
       {...props}
       ref={forwardedRef}
-      data-split-view-activity={activity}
-      data-split-view-collapsed={isCollapsed || undefined}
-      role="separator"
       aria-controls={getPrimaryPaneId(id)}
       aria-label="Resize" // FIXME: localize
       aria-orientation="vertical"
+      id={getResizeHandleId(id)}
+      role="separator"
       tabIndex={0}
+      data-split-view-resize-handle
+      data-split-view-activity={activity}
+      data-split-view-collapsed={isCollapsed || undefined}
       className={css({
         backgroundColor: tokenSchema.color.border.muted,
         boxSizing: 'border-box',
