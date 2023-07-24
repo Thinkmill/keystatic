@@ -16,7 +16,6 @@ import {
   Ref,
   forwardRef,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -38,6 +37,7 @@ import {
   getPrimaryPaneId,
   getResizeHandle,
   getResizeHandleId,
+  getSecondaryPane,
   getSecondaryPaneId,
   px,
 } from './utils';
@@ -69,6 +69,7 @@ export function SplitView(props: SplitViewProps) {
   const { direction } = useLocale();
   const styleProps = useStyleProps(props);
 
+  const [isReversed, setReversed] = useState(false);
   const [isDragging, setDragging] = useState(false);
   // const [collapseRequested, setCollapseRequested] = useState(false);
   const [handleIsFocused, setHandleFocus] = useState(false);
@@ -89,13 +90,16 @@ export function SplitView(props: SplitViewProps) {
 
   // reverse drag logic when the primary pane is on the right or if the locale
   // direction is right-to-left
-  const isReversed = useMemo(() => {
-    // @ts-expect-error FIXME: this feels super dodgy
-    let startType = startPane.type.pane;
-    return direction === 'rtl'
-      ? startType === 'primary'
-      : startType === 'secondary';
-  }, [direction, startPane]);
+  useEffect(() => {
+    const resizeHandle = getResizeHandle(id);
+    const primaryPane = getPrimaryPane(id);
+    const secondaryPane = getSecondaryPane(id);
+    setReversed(
+      direction === 'rtl'
+        ? resizeHandle?.previousElementSibling === primaryPane
+        : resizeHandle?.previousElementSibling === secondaryPane
+    );
+  }, [direction, id]);
 
   // sync size with subscribers
   useUpdateEffect(() => onResize?.(size), [size]);
@@ -372,8 +376,6 @@ export const SplitPanePrimary: ForwardRefExoticComponent<
     </div>
   );
 });
-// @ts-expect-error FIXME: this feels super dodgy
-SplitPanePrimary.pane = 'primary';
 
 export const SplitPaneSecondary: ForwardRefExoticComponent<
   SplitPaneSecondaryProps & { ref?: Ref<HTMLDivElement> }
@@ -413,8 +415,6 @@ export const SplitPaneSecondary: ForwardRefExoticComponent<
     </div>
   );
 });
-// @ts-expect-error FIXME: this feels super dodgy
-SplitPaneSecondary.pane = 'secondary';
 
 const SplitViewResizeHandle = forwardRef(function SplitViewResizeHandle(
   props: ResizeHandleProps,

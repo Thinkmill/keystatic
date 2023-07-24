@@ -3,7 +3,7 @@ title: SplitView
 description:
   A split view is two sections or "panes", including a moveable separator
   between them that allows users to change the relative size of the panes.
-category: Feedback
+category: Layout
 ---
 
 ## Example
@@ -13,11 +13,11 @@ content inside the pane. In this context, primary indicates which pane the user
 may resize, while the secondary pane fills the remaining space.
 
 ```jsx {% live=true %}
-<SplitView>
+<SplitView minSize={100} maxSize={400} defaultSize={200} height="element.large">
   <SplitPanePrimary>
     <Text>Primary</Text>
   </SplitPanePrimary>
-  <SplitPaneSecondary>
+  <SplitPaneSecondary paddingX="regular">
     <Text>Secondary</Text>
   </SplitPaneSecondary>
 </SplitView>
