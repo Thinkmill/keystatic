@@ -49,7 +49,7 @@ export default function DocsLinks() {
             <Link href="/docs" className="underline">
               Keystatic docs
             </Link>{' '}
-            are a good place to start digging:
+            are good places to start digging:
           </p>
         </div>
       </div>
