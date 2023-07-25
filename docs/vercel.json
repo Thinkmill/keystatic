@@ -4,9 +4,7 @@
     {
       "source": "/showcase/:path*",
       "destination": "https://uses.keystatic.com/:path*"
-    }
-  ],
-  "redirects": [
+    },
     {
       "source": "/_uses_assets/:filePath",
       "destination": "https://uses.keystatic.com/_uses_assets/:filePath"
