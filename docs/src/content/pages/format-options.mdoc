@@ -1,0 +1,155 @@
+---
+title: Format options
+summary: >-
+  The `format` option lets you configure Keystatic's output files. Choose
+  between JSON, YAML or Markdoc.
+---
+Keystatic is capable to store your data in multiple formats: `YAML`, `JSON` and `Markdoc`.
+
+By default, entries will be stored in a `YAML` file, with the exception of `document` fields, which will generate a sperate `.mdoc` file.
+
+The name and directory structure of entries is also affected by the `path` settings on a given collection or singleton. See the [Organised content](/docs/organised-content) page for more details.
+
+## Example (default format options)
+
+```typescript
+blog: collection({
+  label: 'Blog',
+  slugField: 'title',
+  schema: {
+    title: fields.slug({ name: { label: 'Title' } })
+    publishedDate: fields.date({ label: 'Published date' }),
+    body: fields.document({
+      label: 'Body',
+      formatting: true,
+      links: true
+    })
+  }
+})
+```
+
+With the above config, creating a new `blog` entry with a `what-a-day slug` will generate the following files:
+
+```bash
+blog/what-a-day
+├── index.yaml
+└── body.mdoc
+```
+
+The `index.yaml` file will look like so:
+
+```yaml
+title: What a day
+publishedDate: 2023-07-27
+```
+
+The `body.mdoc` file will look like so:
+
+```markdown
+What a **beautiful** day!
+
+## Let's go to the beach
+
+I say we pack our swimmers and towels and head to the beach. 
+
+Who's with me?
+```
+
+---
+
+## Example with JSON data
+
+We can specifically ask for `JSON` data instead of `YAML` with the `format.data` option in our `blog` collection:
+
+```diff
+blog: collection({
+  label: 'Blog',
+  slugField: 'title',
++ format: { data: 'JSON' },
+  schema: { //... }
+})
+```
+
+The files generated will now look like this:
+
+```bash
+blog/what-a-day
+├── index.json
+└── body.mdoc
+```
+
+The `index.json` file will look like so:
+
+```json
+{
+  "title": "What a day",
+  "publishedDate": "2023-07-27"
+}
+```
+
+The `body.mdoc` file will look like so:
+
+```markdown
+What a **beautiful** day!
+
+## Let's go to the beach
+
+I say we pack our swimmers and towels and head to the beach. 
+
+Who's with me?
+```
+
+---
+
+## Example with single file output
+
+Quite often, you may want Keystatic to output all the fields within the same file, with the "metadata" fields placed in a frontmatter on top of the file.
+
+The `format.contentField` option lets you do that.
+
+You need to reference a `document` field from the schema as the `contentField` value for it to work:
+
+```diff
+blog: collection({
+  label: 'Blog',
+  slugField: 'title',
++ format: { contentField: 'body' },
+  schema: {
+    title: fields.slug({ name: { label: 'Title' } })
+    publishedDate: fields.date({ label: 'Published date' }),
+    body: fields.document({
+      label: 'Body',
+      formatting: true,
+      links: true
+    })
+  }
+})
+```
+
+Instead of outputting the data for the `body` field in a separate file, Keystatic will now output everything inside a single `index.mdoc` file:
+
+```bash
+blog/what-a-day
+└── index.mdoc
+```
+
+The `index.mdoc` file will look like this:
+
+```markdown
+---
+title: What a day
+publishedDate: 2023-07-27
+---
+
+What a **beautiful** day!
+
+## Let's go to the beach
+
+I say we pack our swimmers and towels and head to the beach. 
+
+Who's with me?
+```
+
+## **Type signature**
+
+Find the latest version of the `Format` type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.Format](https://docsmill.dev/npm/@keystatic/core@latest#/.Format)

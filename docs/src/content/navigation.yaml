@@ -58,6 +58,14 @@ navGroups:
         link:
           discriminant: page
           value: reader-api
+      - label: Format options
+        link:
+          discriminant: page
+          value: format-options
+      - label: Entry Layout
+        link:
+          discriminant: page
+          value: entry-layout
   - groupName: Fields API
     items:
       - label: Array

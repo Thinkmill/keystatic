@@ -1,0 +1,45 @@
+---
+title: Entry layout
+summary: >-
+  The entryLayout option on collections and singletons lets you decide how much
+  prominence you give to your long-form WYSIWYG field.
+---
+Collections and singletons both have an `entryLayout` option, which can be set to either `"form"` (default) or `"content"`.
+
+While the default `"form"` layout stacks every field on top of each other, the `"content"` layout will give more prominence to a selected `document` filed and move all the other fields into a sidebar.
+
+{% aside icon="✋" %}
+**Note:** Setting the `entryLayout` will only take effect if `format.ontentField` is referencing a `document` field for the collection or entry.
+{% /aside %}
+
+See the [Format options](/docs/format-options) page for more details.
+
+## Example
+
+```typescript
+// keystatic.config.ts
+ 
+blog: collection({
+  label: 'Blog posts',
+  path: 'src/content/blog/**',
+  entryLayout: 'content',
+  format: {
+    contentField: 'body',
+  },
+  schema: {}
+)}
+```
+
+With the above config, the `blog` entry layout will put the `body` field front and center. All the other fields will be placed in a sidebar:
+
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/entrylayout-content.png"
+   alt="Screenshot of Keystatic's \"content\" entry layout."
+   height="939"
+   width="1496" /%}
+
+You can think about&nbsp;`entryLayout: "content"`&nbsp;as the "focus" copywriting mode!
+
+## **Type signature**
+
+Find the latest version of the `entryLayout`&nbsp;type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.EntryLayout](https://docsmill.dev/npm/@keystatic/core@latest#/.EntryLayout)
