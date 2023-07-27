@@ -145,6 +145,13 @@ export function MobileNav({ navigationMap }: NavProps) {
                 tabIndex={navOpen ? 0 : -1}
                 currentPage={pathname === '/blog'}
               />
+
+              <NavItem
+                level="top"
+                label="Showcase"
+                href="https://keystatic.com/showcase"
+                tabIndex={navOpen ? 0 : -1}
+              />
             </NavGroup>
 
             {navigationMap?.map(({ groupName, items }) => (
