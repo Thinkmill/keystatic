@@ -39,9 +39,6 @@ export type BadgeProps = {
 /**
  * A badge is a decorative indicator used to either call attention to an item or
  * for communicating non-actionable, supplemental information.
- *
- * Use badges to highlight an item's status for quick recognition. Badges should
- * contain short easy-to-scan text.
  */
 export const Badge: ForwardRefExoticComponent<
   BadgeProps & { ref?: Ref<HTMLDivElement> }
