@@ -238,6 +238,11 @@
       "module": "./search-field/dist/keystar-ui-search-field.esm.js",
       "default": "./search-field/dist/keystar-ui-search-field.cjs.js"
     },
+    "./status-light": {
+      "types": "./status-light/dist/keystar-ui-status-light.cjs.js",
+      "module": "./status-light/dist/keystar-ui-status-light.esm.js",
+      "default": "./status-light/dist/keystar-ui-status-light.cjs.js"
+    },
     "./drag-and-drop": {
       "types": "./drag-and-drop/dist/keystar-ui-drag-and-drop.cjs.js",
       "module": "./drag-and-drop/dist/keystar-ui-drag-and-drop.esm.js",
