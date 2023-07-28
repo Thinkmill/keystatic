@@ -1,5 +1,18 @@
 # @keystar/ui
 
+## 0.1.6
+
+### Patch Changes
+
+- 78c98496: A few updates and additions for work on the cloud app:
+
+  - expose `HStack` and `VStack` components from the "layout" package
+  - adjust `Tray` appearance on larger screens
+  - fix `Button` icon appearance
+  - expose `StatusLight` component from new "status-light" package
+
+- 062ccf49: Export `SplitView` components from new "split-view" package.
+
 ## 0.1.5
 
 ### Patch Changes

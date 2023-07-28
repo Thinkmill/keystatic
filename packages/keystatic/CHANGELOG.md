@@ -1,5 +1,15 @@
 # @keystatic/core
 
+## 0.0.113
+
+### Patch Changes
+
+- 07c63bab: Reduced sidebar panel max size
+- 062ccf49: Export `SplitView` components from new "split-view" package.
+- Updated dependencies [78c98496]
+- Updated dependencies [062ccf49]
+  - @keystar/ui@0.1.6
+
 ## 0.0.112
 
 ### Patch Changes

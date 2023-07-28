@@ -49,7 +49,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
         justifyContent: 'center',
         minWidth: tokenSchema.size.element.regular,
         outline: 0,
-        gap: tokenSchema.size.space.small,
+        gap: tokenSchema.size.space.regular,
         paddingInline: tokenSchema.size.space.large,
         position: 'relative',
         transitionDuration: '130ms',
@@ -63,10 +63,16 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           cursor: 'default',
         },
 
-        // contents
+        // inherit text styles from parent
         [buttonClassList.childSelector('text')]: {
           fontSize: 'inherit',
           fontWeight: 'inherit',
+        },
+        // special size for button icons. otherwise they appear too "thin"
+        // beside the bold text
+        [buttonClassList.childSelector('icon')]: {
+          height: tokenSchema.size.scale[225],
+          width: tokenSchema.size.scale[225],
         },
 
         // focus ring
