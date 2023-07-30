@@ -134,7 +134,6 @@ export const useButtonChildren = (props: CommonButtonProps) => {
     return {
       icon: {
         UNSAFE_className: buttonClassList.declare('icon'),
-        strokeScaling: false, // bump up the stroke width to match the font-weight
       },
       text: {
         color: 'inherit',

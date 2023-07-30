@@ -10,6 +10,8 @@ import { useModalOverlay } from '@react-aria/overlays';
 import { useObjectRef, useViewportSize } from '@react-aria/utils';
 
 import {
+  breakpointQueries,
+  breakpoints,
   classNames,
   css,
   tokenSchema,
@@ -71,7 +73,6 @@ let TrayWrapper = forwardRef(function TrayWrapper(
   // making the viewport resize. The visual viewport also shrinks when the
   // keyboard is displayed.
   let viewport = useViewportSize();
-  let maxWidth = 440;
 
   // Attach Transition's nodeRef to outer most wrapper for node.reflow:
   // https://github.com/reactjs/react-transition-group/blob/c89f807067b32eea6f68fd6c622190d88ced82e2/src/Transition.js#L231
@@ -129,11 +130,11 @@ let TrayWrapper = forwardRef(function TrayWrapper(
               zIndex: 2, // above blanket
 
               // NOTE: trays shouldn't be used for larger screens, but in case
-              // they do we need to tweak the appearance.
-              [`@media (min-width: ${maxWidth}px)`]: {
+              // they are we need to tweak the appearance.
+              [breakpointQueries.above.mobile]: {
                 borderStartStartRadius: tokenSchema.size.radius.medium, // TODO: component token?
                 borderStartEndRadius: tokenSchema.size.radius.medium, // TODO: component token?
-                maxWidth,
+                maxWidth: breakpoints.tablet,
               },
 
               // exit animation

@@ -5,6 +5,7 @@ export { Box } from './Box';
 export { Divider } from './Divider';
 export { Flex } from './Flex';
 export { Grid } from './Grid';
+export { HStack, VStack } from './Stack';
 export { Surface, useSurface } from './Surface';
 export {
   fitContent,

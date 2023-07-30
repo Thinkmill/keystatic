@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-status-light.cjs.js",
+  "module": "dist/keystar-ui-status-light.esm.js"
+}
