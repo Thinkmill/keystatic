@@ -1,3 +1,4 @@
+import { useLocale } from '@react-aria/i18n';
 import { useToastRegion } from '@react-aria/toast';
 import React, { ReactElement, useRef } from 'react';
 import ReactDOM from 'react-dom';
@@ -14,8 +15,16 @@ import { ToastContainerProps } from './types';
 
 /** @private Positioning and provider for toast children. */
 export function ToastContainer(props: ToastContainerProps): ReactElement {
-  let { children, state } = props;
-  let containerPlacement = useIsMobileDevice() ? 'center' : 'right';
+  let { children, position = 'bottom', state } = props;
+
+  let { direction } = useLocale();
+  let isMobileDevice = useIsMobileDevice();
+  let defaultPlacement = isMobileDevice
+    ? 'center'
+    : direction === 'rtl'
+    ? 'left'
+    : 'right';
+  let placement = props.placement || defaultPlacement;
 
   let ref = useRef<HTMLDivElement>(null);
   let { regionProps } = useToastRegion(props, state, ref);
@@ -26,8 +35,8 @@ export function ToastContainer(props: ToastContainerProps): ReactElement {
         <div
           {...regionProps}
           ref={ref}
-          data-position="bottom"
-          data-placement={containerPlacement}
+          data-position={position}
+          data-placement={placement}
           className={css({
             display: 'flex',
             insetInline: 0,

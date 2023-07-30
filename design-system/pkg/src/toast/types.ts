@@ -6,7 +6,18 @@ import {
 } from '@react-stately/toast';
 import { ReactNode } from 'react';
 
-export type ToasterProps = AriaToastRegionProps & {};
+export type ToasterProps = AriaToastRegionProps & {
+  /**
+   * The placement of the toast container.
+   * @default 'right'
+   */
+  placement?: 'left' | 'right' | 'center';
+  /**
+   * The position of the toast container.
+   * @default 'bottom'
+   */
+  position?: 'top' | 'bottom';
+};
 
 export type ToastOptions = Omit<SpectrumToastOptions, 'priority'> & {
   /** A label for the action button within the toast. */
@@ -30,7 +41,7 @@ export type ToastProps = {
   state: ToastState<ToastValue>;
 };
 
-export type ToastContainerProps = AriaToastRegionProps & {
+export type ToastContainerProps = ToasterProps & {
   children: ReactNode;
   state: ToastState<unknown>;
 };

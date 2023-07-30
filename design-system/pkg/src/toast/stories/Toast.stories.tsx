@@ -19,7 +19,10 @@ const meta: Meta = {
   decorators: [
     story => (
       <>
-        <Toaster />
+        <Toaster
+        // position="top"
+        // placement="left"
+        />
         <MainLandmark>{story()}</MainLandmark>
       </>
     ),
@@ -145,7 +148,7 @@ function MainLandmark(props: any) {
   return (
     <Box
       elementType="main"
-      aria-label="Danni's unicorn corral"
+      aria-label="Main landmark"
       ref={ref}
       padding="large"
       backgroundColor="surface"
