@@ -230,10 +230,10 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
 const getTagClasses = (index: number) => {
   switch (index) {
     case 0:
-      return 'bg-indigo-100 text-indigo-800/80';
+      return 'bg-indigo-100 text-indigo-800';
     case 1:
-      return 'bg-amber-100 text-amber-800/80';
+      return 'bg-amber-100 text-amber-800';
     default:
-      return 'bg-fuchsia-100 text-fuchsia-800/80';
+      return 'bg-fuchsia-100 text-fuchsia-800';
   }
 };
