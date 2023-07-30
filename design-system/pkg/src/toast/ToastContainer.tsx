@@ -15,16 +15,15 @@ import { ToastContainerProps } from './types';
 
 /** @private Positioning and provider for toast children. */
 export function ToastContainer(props: ToastContainerProps): ReactElement {
-  let { children, position = 'bottom', state } = props;
+  let { children, state } = props;
 
   let { direction } = useLocale();
   let isMobileDevice = useIsMobileDevice();
-  let defaultPlacement = isMobileDevice
+  let defaultPlacement = direction === 'rtl' ? 'left' : 'right';
+  let placement = isMobileDevice
     ? 'center'
-    : direction === 'rtl'
-    ? 'left'
-    : 'right';
-  let placement = props.placement || defaultPlacement;
+    : props.placement || defaultPlacement;
+  let position = isMobileDevice ? 'bottom' : props.position || 'bottom';
 
   let ref = useRef<HTMLDivElement>(null);
   let { regionProps } = useToastRegion(props, state, ref);
