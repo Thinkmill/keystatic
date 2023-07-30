@@ -9,9 +9,9 @@ import { ReactNode } from 'react';
 export type ToasterProps = AriaToastRegionProps & {
   /**
    * The placement of the toast container.
-   * @default 'right'
+   * @default 'end'
    */
-  placement?: 'left' | 'right' | 'center';
+  placement?: 'start' | 'end' | 'center';
   /**
    * The position of the toast container.
    * @default 'bottom'

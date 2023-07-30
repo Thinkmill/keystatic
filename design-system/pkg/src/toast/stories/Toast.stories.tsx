@@ -21,7 +21,7 @@ const meta: Meta = {
       <>
         <Toaster
         // position="top"
-        // placement="left"
+        // placement="start"
         />
         <MainLandmark>{story()}</MainLandmark>
       </>
