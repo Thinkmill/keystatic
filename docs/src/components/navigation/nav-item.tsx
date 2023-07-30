@@ -50,7 +50,7 @@ export function NavItem({
           )}
         >
           {label}
-          <div className="px-1 py-0.5 rounded bg-amber-100 text-amber-800/80 font-medium text-[0.625rem] leading-none uppercase self-start">
+          <div className="px-1 py-0.5 rounded bg-amber-100 text-amber-800 font-medium text-[0.625rem] leading-none uppercase self-start">
             Soon
           </div>
         </div>
