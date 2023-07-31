@@ -1,3 +1,4 @@
+import { useLocale } from '@react-aria/i18n';
 import { useToastRegion } from '@react-aria/toast';
 import React, { ReactElement, useRef } from 'react';
 import ReactDOM from 'react-dom';
@@ -15,7 +16,11 @@ import { ToastContainerProps } from './types';
 /** @private Positioning and provider for toast children. */
 export function ToastContainer(props: ToastContainerProps): ReactElement {
   let { children, state } = props;
-  let containerPlacement = useIsMobileDevice() ? 'center' : 'right';
+
+  let { direction } = useLocale();
+  let isMobileDevice = useIsMobileDevice();
+  let placement = isMobileDevice ? 'center' : props.placement || 'end';
+  let position = isMobileDevice ? 'bottom' : props.position || 'bottom';
 
   let ref = useRef<HTMLDivElement>(null);
   let { regionProps } = useToastRegion(props, state, ref);
@@ -26,15 +31,17 @@ export function ToastContainer(props: ToastContainerProps): ReactElement {
         <div
           {...regionProps}
           ref={ref}
-          data-position="bottom"
-          data-placement={containerPlacement}
+          // TODO: replace with CSS `dir(rtl)` when supported: https://caniuse.com/css-dir-pseudo
+          data-direction={direction}
+          data-position={position}
+          data-placement={placement}
           className={css({
             display: 'flex',
             insetInline: 0,
             outline: 'none',
             pointerEvents: 'none',
             position: 'fixed',
-            zIndex: 100050 /* above modals */,
+            zIndex: 100 /* above modals */,
 
             '&[data-focus=visible] > :first-child:after': {
               borderRadius: `calc(${tokenSchema.size.radius.regular} + ${tokenSchema.size.alias.focusRingGap})`,
@@ -59,24 +66,24 @@ export function ToastContainer(props: ToastContainerProps): ReactElement {
               '--slide-to': 'translateY(0)',
             },
 
-            '&[data-placement=left]': {
+            '&[data-placement=start]': {
               alignItems: 'flex-start',
               '--slide-from': 'translateX(-100%)',
               '--slide-to': 'translateX(0)',
 
-              '&:dir(rtl)': {
+              '&[data-direction=rtl]': {
                 '--slide-from': 'translateX(100%)',
               },
             },
             '&[data-placement=center]': {
               alignItems: 'center',
             },
-            '&[data-placement=right]': {
+            '&[data-placement=end]': {
               alignItems: 'flex-end',
               '--slide-from': 'translateX(100%)',
               '--slide-to': 'translateX(0)',
 
-              '&:dir(rtl)': {
+              '&[data-direction=rtl]': {
                 '--slide-from': 'translateX(-100%)',
               },
             },
