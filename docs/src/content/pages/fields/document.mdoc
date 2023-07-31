@@ -7,12 +7,60 @@ The `document` field is a highly customisable rich text editor.
 It lets content creators quickly and easily edit content in your system.
 
 ## Usage example
-
-```typescript
+```ts
 document: fields.document({
   label: 'Document',
   formatting: true,
   links: true,
+  images: true
+})
+```
+
+---
+
+## Formatting options
+
+The WYSIWYG toolbar can be customised to allow a range of formatting options. This is done via the `format` option on the `document` field.
+
+Setting `format: true` will enable all formatting options, but you can also specify only a specific subset of options you want to allow.
+
+```ts
+document: fields.document({
+  label: 'Document',
+  formatting: {
+    inlineMarks: {
+      bold: true,
+      italic: true,
+      underline: true,
+    }
+    listTypes: {
+      ordered: true,
+      unordered: true,
+    }
+    blockTypes: {
+      blockquote: true
+      code: true 
+    }
+  }
+})
+```
+
+### Formatting options type signature
+
+The type signature for the full list of available formatting options is availble at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.document.DocumentFeaturesConfig](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.document.DocumentFeaturesConfig)
+
+---
+
+## Component blocks
+
+The `document` field can register custom component blocks, which you can use to render custom UI components with props within your document field.
+
+Each component block has its own fields schema, and can be configured with a custom preview component.
+
+```ts
+document: fields.document({
+  label: 'Document',
+  formatting: true,
   componentBlocks: {
     quote: component({
       preview: () => null,
@@ -31,6 +79,10 @@ document: fields.document({
 }),
 ```
 
+---
+
 ## Type signature
 
-Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.document](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.document)
+The `document` field has many more configuration options like `images`, `layouts`, `tables`, `links` or `dividers`.
+
+For the full reference, you can find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.document](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.document)
