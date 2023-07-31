@@ -335,7 +335,8 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
       >
         <Grid
           UNSAFE_className={'ksv-list-view-item-grid'}
-          columns="auto auto auto 1fr auto auto auto"
+          // minmax supports `ActionGroup` buttonLabelBehavior="collapse"
+          columns="auto auto auto 1fr minmax(0px, auto) auto auto"
           rows="1fr auto"
           areas={[
             'draghandle checkbox thumbnail content actions actionmenu chevron',
@@ -467,7 +468,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
               actionMenu: {
                 UNSAFE_className: 'ksv-list-view-item-actionmenu',
                 prominence: 'low',
-                gridArea: 'actions',
+                gridArea: 'actionmenu',
               },
             }}
           >
