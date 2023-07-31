@@ -18,7 +18,7 @@
     "@keystatic/core": "^0.0.113",
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.0.11",
-    "astro": "^2.0.14",
+    "astro": "^2.9.6",
     "cookie": "^0.5.0",
     "direction": "^2.0.1",
     "is-hotkey": "^0.2.0",
