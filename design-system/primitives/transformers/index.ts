@@ -2,6 +2,8 @@ export { colorModify } from './colorModify';
 export { figmaAttributes } from './figmaAttributes';
 export { fontCapsize } from './fontCapsize';
 export { fontUnit } from './fontUnit';
+export { namePathToDotNotation } from './namePathToDotNotation';
 export { namePathToFigma } from './namePathToFigma';
+export { namePathToKebabCase } from './namePathToKebabCase';
 export { sizeShadow } from './sizeShadow';
 export { sizeUnit } from './sizeUnit';

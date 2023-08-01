@@ -5,6 +5,9 @@
  * @param string
  * @returns string
  */
-export const upperCaseFirstCharacter = ([firstLetter, ...restOfWord]: string): string => {
-  return firstLetter.toUpperCase() + restOfWord.join('')
-}
+export const upperCaseFirstCharacter = ([
+  firstLetter,
+  ...restOfWord
+]: string): string => {
+  return firstLetter.toUpperCase() + restOfWord.join('');
+};

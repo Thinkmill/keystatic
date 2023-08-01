@@ -1,7 +1,7 @@
 import { getMockToken } from '../test-utilities';
-import { namePathToDotNotation } from './namePathToDotNotation';
+import { namePathToKebabCase } from './namePathToKebabCase';
 
-describe('Transformer: namePathToDotNotation', () => {
+describe('Transformer: namePathToKebabCase', () => {
   it('converts path elements to dot.notation and ignores name proprty', () => {
     const input = [
       getMockToken({
@@ -22,14 +22,14 @@ describe('Transformer: namePathToDotNotation', () => {
       }),
     ];
     const expectedOutput = [
-      'path.to.token',
-      'PATH.tO.Token',
-      'path.toToken',
+      'path-to-token',
+      'PATH-tO-Token',
+      'path-toToken',
       'pathtoToken',
     ];
 
     expect(
-      input.map(item => namePathToDotNotation.transformer(item, {}))
+      input.map(item => namePathToKebabCase.transformer(item, {}))
     ).toStrictEqual(expectedOutput);
   });
 
@@ -49,12 +49,12 @@ describe('Transformer: namePathToDotNotation', () => {
       }),
     ];
     const expectedOutput = [
-      'start.pathToToken',
-      'start.PATHTOToken',
-      'start.pathToToken',
+      'start-path to token',
+      'start-PATH_tO-Token',
+      'start-path+toToken',
     ];
     expect(
-      input.map(item => namePathToDotNotation.transformer(item, {}))
+      input.map(item => namePathToKebabCase.transformer(item, {}))
     ).toStrictEqual(expectedOutput);
   });
 
@@ -69,9 +69,9 @@ describe('Transformer: namePathToDotNotation', () => {
         path: ['fgColor', '@', 'muted'],
       }),
     ];
-    const expectedOutput = ['fgColor.accent', 'fgColor.muted'];
+    const expectedOutput = ['fgColor-accent', 'fgColor-muted'];
     expect(
-      input.map(item => namePathToDotNotation.transformer(item, {}))
+      input.map(item => namePathToKebabCase.transformer(item, {}))
     ).toStrictEqual(expectedOutput);
   });
 
@@ -83,8 +83,8 @@ describe('Transformer: namePathToDotNotation', () => {
       name: 'tokenName',
       path: ['start', 'pathTo', 'token'],
     });
-    const expectedOutput = 'PRIMER.start.pathTo.token';
-    expect(namePathToDotNotation.transformer(input, platform)).toStrictEqual(
+    const expectedOutput = 'PRIMER-start-pathTo-token';
+    expect(namePathToKebabCase.transformer(input, platform)).toStrictEqual(
       expectedOutput
     );
   });

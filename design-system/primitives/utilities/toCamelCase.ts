@@ -1,18 +1,18 @@
-import {upperCaseFirstCharacter} from './upperCaseFirstCharacter'
+import { upperCaseFirstCharacter } from './upperCaseFirstCharacter';
 
 export const toCamelCase = (string: string | string[]) => {
   if (!Array.isArray(string)) {
-    string = [string]
+    string = [string];
   }
   // match unsupported characters
-  const regex = /[^a-zA-Z0-9]+/g
+  const regex = /[^a-zA-Z0-9]+/g;
   // replace any non-letter and non-number character and split into word array
   const stringArray = string
     .filter(part => part !== '@')
     .filter(Boolean)
     .join(' ')
     .replace(regex, ' ')
-    .split(' ')
+    .split(' ');
   return (
     stringArray
       // remove undefined if exists
@@ -20,10 +20,10 @@ export const toCamelCase = (string: string | string[]) => {
       // ucFirst all but first part
       .map((part: string, index: number) => {
         if (index > 0) {
-          return upperCaseFirstCharacter(part)
+          return upperCaseFirstCharacter(part);
         }
-        return part
+        return part;
       })
       .join('')
-  )
-}
+  );
+};

@@ -6,6 +6,7 @@ import {
   colorModify,
   fontCapsize,
   fontUnit,
+  namePathToKebabCase,
   sizeShadow,
   sizeUnit,
 } from './transformers';
@@ -27,21 +28,30 @@ StyleDictionary.registerFormat({
 // -----------------------------------------------------------------------------
 
 StyleDictionary.registerTransform({
+  name: 'name/pathToKebabCase',
+  ...namePathToKebabCase,
+});
+
+StyleDictionary.registerTransform({
   name: 'ks/color/modify',
   ...colorModify,
 });
+
 StyleDictionary.registerTransform({
   name: 'ks/font/capsize',
   ...fontCapsize,
 });
+
 StyleDictionary.registerTransform({
   name: 'ks/font/unit',
   ...fontUnit,
 });
+
 StyleDictionary.registerTransform({
   name: 'ks/size/shadow',
   ...sizeShadow,
 });
+
 StyleDictionary.registerTransform({
   name: 'ks/size/unit',
   ...sizeUnit,

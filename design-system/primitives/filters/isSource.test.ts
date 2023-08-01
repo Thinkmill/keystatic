@@ -1,6 +1,6 @@
 import type StyleDictionary from 'style-dictionary';
 
-import { getMockToken } from '../test-utils';
+import { getMockToken } from '../test-utilities';
 import { isSource } from './isSource';
 
 describe('Filter: isSource', () => {

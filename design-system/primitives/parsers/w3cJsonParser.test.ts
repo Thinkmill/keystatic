@@ -1,7 +1,7 @@
 import {
   parserOutput as expectedOutput,
   getMockParserInput,
-} from '../test-utils';
+} from '../test-utilities';
 import { w3cJsonParser } from './w3cJsonParser';
 
 describe('Parser: w3c token json5 parser', () => {
