@@ -2,7 +2,7 @@ import StyleDictionary from 'style-dictionary';
 
 import { TOKEN_PREFIX } from '../constants';
 
-export const css = (scale: string, scheme: string) => {
+export const css = (scheme: string, scale: string) => {
   return {
     prefix: TOKEN_PREFIX,
     transforms: [

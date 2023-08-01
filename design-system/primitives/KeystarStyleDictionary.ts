@@ -1,6 +1,7 @@
 import StyleDictionary from 'style-dictionary';
 
 import { javascriptTokenMap } from './formatters';
+import { w3cJsonParser } from './parsers';
 import {
   colorModify,
   fontCapsize,
@@ -8,6 +9,11 @@ import {
   sizeShadow,
   sizeUnit,
 } from './transformers';
+
+// Parsers
+// -----------------------------------------------------------------------------
+
+StyleDictionary.registerParser(w3cJsonParser);
 
 // Formatters
 // -----------------------------------------------------------------------------

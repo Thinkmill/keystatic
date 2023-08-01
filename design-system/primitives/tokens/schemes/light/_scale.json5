@@ -1,96 +1,551 @@
 {
   color: {
     scale: {
-      amber1: { value: "hsl(39, 70.0%, 99.0%)", scheme: "light" },
-      amber2: { value: "hsl(40, 100%, 96.5%)", scheme: "light" },
-      amber3: { value: "hsl(44, 100%, 91.7%)", scheme: "light" },
-      amber4: { value: "hsl(43, 100%, 86.8%)", scheme: "light" },
-      amber5: { value: "hsl(42, 100%, 81.8%)", scheme: "light" },
-      amber6: { value: "hsl(38, 99.7%, 76.3%)", scheme: "light" },
-      amber7: { value: "hsl(36, 86.1%, 67.1%)", scheme: "light" },
-      amber8: { value: "hsl(35, 85.2%, 55.1%)", scheme: "light" },
-      amber9: { value: "hsl(39, 100%, 57.0%)", scheme: "light" },
-      amber10: { value: "hsl(35, 100%, 55.5%)", scheme: "light" },
-      amber11: { value: "hsl(30, 100%, 34.0%)", scheme: "light" },
-      amber12: { value: "hsl(20, 80.0%, 17.0%)", scheme: "light" },
+      amber1: {
+        $value: '#fefdfb',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      amber2: {
+        $value: '#fff9ed',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      amber3: {
+        $value: '#fff4d5',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      amber4: {
+        $value: '#ffecbc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      amber5: {
+        $value: '#ffe3a2',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      amber6: {
+        $value: '#ffd386',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      amber7: {
+        $value: '#f3ba63',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      amber8: {
+        $value: '#ee9d2b',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      amber9: {
+        $value: '#ffb224',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      amber10: {
+        $value: '#ffa01c',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      amber11: {
+        $value: '#ad5700',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
 
-      green1: { value: "hsl(136, 50.0%, 98.9%)", scheme: "light" },
-      green2: { value: "hsl(138, 62.5%, 96.9%)", scheme: "light" },
-      green3: { value: "hsl(139, 55.2%, 94.5%)", scheme: "light" },
-      green4: { value: "hsl(140, 48.7%, 91.0%)", scheme: "light" },
-      green5: { value: "hsl(141, 43.7%, 86.0%)", scheme: "light" },
-      green6: { value: "hsl(143, 40.3%, 79.0%)", scheme: "light" },
-      green7: { value: "hsl(146, 38.5%, 69.0%)", scheme: "light" },
-      green8: { value: "hsl(151, 40.2%, 54.1%)", scheme: "light" },
-      green9: { value: "hsl(151, 55.0%, 41.5%)", scheme: "light" },
-      green10: { value: "hsl(152, 57.5%, 37.6%)", scheme: "light" },
-      green11: { value: "hsl(153, 67.0%, 28.5%)", scheme: "light" },
-      green12: { value: "hsl(155, 40.0%, 14.0%)", scheme: "light" },
+      green1: {
+        $value: '#fbfefc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      green2: {
+        $value: '#f2fcf5',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      green3: {
+        $value: '#e9f9ee',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      green4: {
+        $value: '#ddf3e4',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      green5: {
+        $value: '#ccebd7',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      green6: {
+        $value: '#b4dfc4',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      green7: {
+        $value: '#92ceac',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      green8: {
+        $value: '#5bb98c',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      green9: {
+        $value: '#30a46c',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      green10: {
+        $value: '#299764',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      green11: {
+        $value: '#18794e',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
 
-      indigo1: { value: "hsl(225, 60.0%, 99.4%)", scheme: "light" },
-      indigo2: { value: "hsl(223, 100%, 98.6%)", scheme: "light" },
-      indigo3: { value: "hsl(223, 98.4%, 97.1%)", scheme: "light" },
-      indigo4: { value: "hsl(223, 92.9%, 95.0%)", scheme: "light" },
-      indigo5: { value: "hsl(224, 87.1%, 92.0%)", scheme: "light" },
-      indigo6: { value: "hsl(224, 81.9%, 87.8%)", scheme: "light" },
-      indigo7: { value: "hsl(225, 77.4%, 82.1%)", scheme: "light" },
-      indigo8: { value: "hsl(226, 75.4%, 74.5%)", scheme: "light" },
-      indigo9: { value: "hsl(226, 70.0%, 55.5%)", scheme: "light" },
-      indigo10: { value: "hsl(226, 58.6%, 51.3%)", scheme: "light" },
-      indigo11: { value: "hsl(226, 55.0%, 45.0%)", scheme: "light" },
-      indigo12: { value: "hsl(226, 62.0%, 17.0%)", scheme: "light" },
+      indigo1: {
+        $value: '#fdfdfe',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      indigo2: {
+        $value: '#f8faff',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      indigo3: {
+        $value: '#f0f4ff',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      indigo4: {
+        $value: '#e6edfe',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      indigo5: {
+        $value: '#d9e2fc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      indigo6: {
+        $value: '#c6d4f9',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      indigo7: {
+        $value: '#aec0f5',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      indigo8: {
+        $value: '#8da4ef',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      indigo9: {
+        $value: '#3e63dd',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      indigo10: {
+        $value: '#3a5ccc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      indigo11: {
+        $value: '#3451b2',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
 
-      pink1: { value: "hsl(322, 100%, 99.4%)", scheme: "light" },
-      pink2: { value: "hsl(323, 100%, 98.4%)", scheme: "light" },
-      pink3: { value: "hsl(323, 86.3%, 96.5%)", scheme: "light" },
-      pink4: { value: "hsl(323, 78.7%, 94.2%)", scheme: "light" },
-      pink5: { value: "hsl(323, 72.2%, 91.1%)", scheme: "light" },
-      pink6: { value: "hsl(323, 66.3%, 86.6%)", scheme: "light" },
-      pink7: { value: "hsl(323, 62.0%, 80.1%)", scheme: "light" },
-      pink8: { value: "hsl(323, 60.3%, 72.4%)", scheme: "light" },
-      pink9: { value: "hsl(322, 65.0%, 54.5%)", scheme: "light" },
-      pink10: { value: "hsl(322, 63.9%, 50.7%)", scheme: "light" },
-      pink11: { value: "hsl(322, 75.0%, 46.0%)", scheme: "light" },
-      pink12: { value: "hsl(320, 70.0%, 13.5%)", scheme: "light" },
+      pink1: {
+        $value: '#fffcfe',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      pink2: {
+        $value: '#fff7fc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      pink3: {
+        $value: '#feeef8',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      pink4: {
+        $value: '#fce5f3',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      pink5: {
+        $value: '#f9d8ec',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      pink6: {
+        $value: '#f3c6e2',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      pink7: {
+        $value: '#ecadd4',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      pink8: {
+        $value: '#e38ec3',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      pink9: {
+        $value: '#d6409f',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      pink10: {
+        $value: '#d23197',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      pink11: {
+        $value: '#cd1d8d',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
 
-      purple1: { value: "hsl(280, 65.0%, 99.4%)", scheme: "light" },
-      purple2: { value: "hsl(276, 100%, 99.0%)", scheme: "light" },
-      purple3: { value: "hsl(276, 83.1%, 97.0%)", scheme: "light" },
-      purple4: { value: "hsl(275, 76.4%, 94.7%)", scheme: "light" },
-      purple5: { value: "hsl(275, 70.8%, 91.8%)", scheme: "light" },
-      purple6: { value: "hsl(274, 65.4%, 87.8%)", scheme: "light" },
-      purple7: { value: "hsl(273, 61.0%, 81.7%)", scheme: "light" },
-      purple8: { value: "hsl(272, 60.0%, 73.5%)", scheme: "light" },
-      purple9: { value: "hsl(272, 51.0%, 54.0%)", scheme: "light" },
-      purple10: { value: "hsl(272, 46.8%, 50.3%)", scheme: "light" },
-      purple11: { value: "hsl(272, 50.0%, 45.8%)", scheme: "light" },
-      purple12: { value: "hsl(272, 66.0%, 16.0%)", scheme: "light" },
+      purple1: {
+        $value: '#fefcfe',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      purple2: {
+        $value: '#fdfaff',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      purple3: {
+        $value: '#f9f1fe',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      purple4: {
+        $value: '#f3e7fc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      purple5: {
+        $value: '#eddbf9',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      purple6: {
+        $value: '#e3ccf4',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      purple7: {
+        $value: '#d3b4ed',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      purple8: {
+        $value: '#be93e4',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      purple9: {
+        $value: '#8e4ec6',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      purple10: {
+        $value: '#8445bc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      purple11: {
+        $value: '#793aaf',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
 
-      red1: { value: "hsl(359, 100%, 99.4%)", scheme: "light" },
-      red2: { value: "hsl(359, 100%, 98.6%)", scheme: "light" },
-      red3: { value: "hsl(360, 100%, 96.8%)", scheme: "light" },
-      red4: { value: "hsl(360, 97.9%, 94.8%)", scheme: "light" },
-      red5: { value: "hsl(360, 90.2%, 91.9%)", scheme: "light" },
-      red6: { value: "hsl(360, 81.7%, 87.8%)", scheme: "light" },
-      red7: { value: "hsl(359, 74.2%, 81.7%)", scheme: "light" },
-      red8: { value: "hsl(359, 69.5%, 74.3%)", scheme: "light" },
-      red9: { value: "hsl(358, 75.0%, 59.0%)", scheme: "light" },
-      red10: { value: "hsl(358, 69.4%, 55.2%)", scheme: "light" },
-      red11: { value: "hsl(358, 65.0%, 48.7%)", scheme: "light" },
-      red12: { value: "hsl(354, 50.0%, 14.6%)", scheme: "light" },
+      red1: {
+        $value: '#fffcfc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      red2: {
+        $value: '#fff8f8',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      red3: {
+        $value: '#ffefef',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      red4: {
+        $value: '#ffe5e5',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      red5: {
+        $value: '#fdd8d8',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      red6: {
+        $value: '#f9c6c6',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      red7: {
+        $value: '#f3aeaf',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      red8: {
+        $value: '#eb9091',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      red9: {
+        $value: '#e5484d',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      red10: {
+        $value: '#dc3d43',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      red11: {
+        $value: '#cd2b31',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
 
-      slate1: { value: "#FFFFFF", scheme: "light" }, // 50
-      slate2: { value: "#FAFAFA", scheme: "light" }, // 75
-      slate3: { value: "#F5F5F5", scheme: "light" }, // 100
-      slate4: { value: "#EAEAEA", scheme: "light" }, // 200
-      slate5: { value: "#E1E1E1", scheme: "light" }, // 300
-      slate6: { value: "#CACACA", scheme: "light" }, // 400
-      slate7: { value: "#B3B3B3", scheme: "light" }, // 500
-      slate8: { value: "#8E8E8E", scheme: "light" }, // 600
-      slate9: { value: "#6E6E6E", scheme: "light" }, // 700
-      slate10: { value: "#4B4B4B", scheme: "light" }, // 800
-      slate11: { value: "#2C2C2C", scheme: "light" }, // 900
-      slate12: { value: "#1e1e1e", scheme: "light" }, // ???
+      slate1: {
+        value: '#FFFFFF',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      slate2: {
+        value: '#FAFAFA',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      slate3: {
+        value: '#F5F5F5',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      slate4: {
+        value: '#EAEAEA',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      slate5: {
+        value: '#E1E1E1',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      slate6: {
+        value: '#CACACA',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      slate7: {
+        value: '#B3B3B3',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      slate8: {
+        value: '#8E8E8E',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      slate9: {
+        value: '#6E6E6E',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      slate10: {
+        value: '#4B4B4B',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
+      slate11: {
+        value: '#2C2C2C',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'scale/color/light' },
+        },
+      },
     },
   },
 }
