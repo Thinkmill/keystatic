@@ -221,7 +221,7 @@ function CollectionTable(
           message={`No items matching "${searchTerm}" were found.`}
         />
       )}
-      // prominence="low"
+      prominence="low"
       flex
       marginTop={{ tablet: 'large' }}
       marginBottom={{ mobile: 'regular', tablet: 'xlarge' }}
