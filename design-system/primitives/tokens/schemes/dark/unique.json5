@@ -1,0 +1,34 @@
+{
+  // modfied tokens cannot be shared by reference
+  color: {
+    alias: {
+      // use opacity, allowing any surface color beneath to be visible
+      backgroundIdle: { value: '{color.scale.slate2}' },
+      backgroundHovered: {
+        value: '{color.scale.slate11}',
+        modify: [{ setAlpha: 0.06 }],
+      },
+      backgroundFocused: {
+        value: '{color.scale.slate11}',
+        modify: [{ setAlpha: 0.06 }],
+      },
+      backgroundPressed: {
+        value: '{color.scale.slate11}',
+        modify: [{ setAlpha: 0.1 }],
+      },
+      backgroundSelected: {
+        value: '{color.scale.indigo9}',
+        modify: [{ setAlpha: 0.1 }],
+      },
+      backgroundSelectedHovered: {
+        value: '{color.scale.indigo9}',
+        modify: [{ setAlpha: 0.2 }],
+      },
+    },
+    shadow: {
+      muted: { value: 'rgba(0,0,0,0.2)' },
+      regular: { value: 'rgba(0,0,0,0.4)' },
+      emphasis: { value: 'rgba(0,0,0,0.6)' },
+    },
+  },
+}

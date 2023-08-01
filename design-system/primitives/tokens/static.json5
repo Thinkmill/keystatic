@@ -1,0 +1,72 @@
+{
+  size: {
+    container: {
+      xsmall: { value: 400, unit: "px", isStatic: true },
+      small: { value: 660, unit: "px", isStatic: true },
+      medium: { value: 940, unit: "px", isStatic: true },
+      large: { value: 1280, unit: "px", isStatic: true },
+      xlarge: { value: 1400, unit: "px", isStatic: true },
+    },
+    dialog: {
+      xsmall: { value: 320, unit: "px", isStatic: true },
+      small: { value: 420, unit: "px", isStatic: true },
+      medium: { value: 640, unit: "px", isStatic: true },
+      large: { value: 860, unit: "px", isStatic: true },
+      // xlarge: { value: 1280, unit: "px", isStatic: true }, // should probably just use the "fullscreen" variant
+    },
+    radius: {
+      full: { value: 9999, unit: "px", isStatic: true },
+      xsmall: { value: 2, unit: "px", isStatic: true },
+      small: { value: 4, unit: "px", isStatic: true },
+      regular: { value: 6, unit: "px", isStatic: true },
+      medium: { value: 8, unit: "px", isStatic: true },
+      large: { value: 12, unit: "px", isStatic: true },
+      xlarge: { value: 16, unit: "px", isStatic: true },
+    },
+    border: {
+      regular: { value: 1, unit: "px", isStatic: true },
+      medium: { value: 2, unit: "px", isStatic: true },
+      large: { value: 4, unit: "px", isStatic: true },
+    },
+    alias: {
+      focusRing: { value: 2, unit: "px", isStatic: true },
+      focusRingGap: { value: 2, unit: "px", isStatic: true },
+    },
+  },
+  color: {
+    global: {
+      black: { value: "#000000", isStatic: true },
+      white: { value: "#ffffff", isStatic: true },
+    },
+  },
+  typography: {
+    fontFamily: {
+      base: { value: "var(--font-inter, Inter)", isStatic: true },
+      code: { value: "Menlo", isStatic: true },
+    },
+    fontWeight: {
+      regular: { value: 400, unit: "", isStatic: true },
+      medium: { value: 500, unit: "", isStatic: true },
+      semibold: { value: 600, unit: "", isStatic: true },
+      bold: { value: 700, unit: "", isStatic: true },
+    },
+    lineheight: {
+      large: { value: 1.6, unit: "", isStatic: true },
+      medium: { value: 1.4, unit: "", isStatic: true },
+      small: { value: 1.2, unit: "", isStatic: true },
+    },
+  },
+  animation: {
+    duration: {
+      short: { value: 160, unit: "ms", isStatic: true },
+      regular: { value: 320, unit: "ms", isStatic: true },
+      long: { value: 960, unit: "ms", isStatic: true },
+      xlong: { value: 1920, unit: "ms", isStatic: true },
+    },
+    easing: {
+      easeInOut: { value: "cubic-bezier(.45, 0, .40, 1)", isStatic: true },
+      easeIn: { value: "cubic-bezier(.50, 0, 1, 1)", isStatic: true },
+      easeOut: { value: "cubic-bezier(0, 0, 0.40, 1)", isStatic: true },
+    },
+  },
+}

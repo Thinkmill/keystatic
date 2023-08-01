@@ -1,0 +1,32 @@
+{
+  "name": "@keystar/theme",
+  "description": "Typography, sizing, and color primitives for the Keystar design system",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "tsx ./scripts/build.ts"
+  },
+  "devDependencies": {
+    "@capsizecss/core": "^3.1.1",
+    "@capsizecss/metrics": "^1.2.0",
+    "@types/jest": "^29.5.2",
+    "@types/lodash": "^4.14.195",
+    "@types/node": "^20.4.0",
+    "@types/tinycolor2": "^1.4.3",
+    "chroma-js": "^2.4.2",
+    "emery": "^1.4.1",
+    "json5": "^2.2.1",
+    "lodash": "^4.17.21",
+    "prettier": "^2.7.1",
+    "style-dictionary": "^3.8.0",
+    "tinycolor2": "^1.4.1",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.1.6",
+    "tsx": "^3.8.0",
+    "zod": "^3.21.4",
+    "zod-validation-error": "^1.3.1"
+  }
+}
