@@ -197,7 +197,7 @@ export function useCellStyleProps(
         color: tokenSchema.color.foreground.neutralSecondary,
 
         ['&[aria-sort]']: {
-          cursor: 'pointer',
+          cursor: 'default',
 
           '&:hover, &[data-focus="visible"]': {
             color: tokenSchema.color.foreground.neutralEmphasis,
