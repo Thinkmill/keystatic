@@ -1,16 +1,23 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import React, { Key, useEffect, useMemo, useState } from 'react';
+import React, { Key, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Badge } from '@keystar/ui/badge';
 import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
-import { Button } from '@keystar/ui/button';
+import { ActionButton, Button } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
 import { alertCircleIcon } from '@keystar/ui/icon/icons/alertCircleIcon';
 import { listXIcon } from '@keystar/ui/icon/icons/listXIcon';
+import { searchIcon } from '@keystar/ui/icon/icons/searchIcon';
 import { searchXIcon } from '@keystar/ui/icon/icons/searchXIcon';
 import { TextLink } from '@keystar/ui/link';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { SearchField } from '@keystar/ui/search-field';
-import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
+import {
+  breakpointQueries,
+  css,
+  tokenSchema,
+  useMediaQuery,
+} from '@keystar/ui/style';
 import {
   TableView,
   TableBody,
@@ -69,23 +76,75 @@ function CollectionPageHeader(props: {
 }) {
   const { collectionLabel, createHref } = props;
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  const isAboveMobile = useMediaQuery(breakpointQueries.above.mobile);
+  const [searchVisible, setSearchVisible] = useState(isAboveMobile);
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setSearchVisible(isAboveMobile);
+  }, [isAboveMobile]);
 
   return (
     <PageHeader>
       <Breadcrumbs flex minWidth={0}>
         <Item key="collection">{collectionLabel}</Item>
       </Breadcrumbs>
-      <div role="search">
+      <div
+        role="search"
+        style={{
+          display: searchVisible ? 'block' : 'none',
+        }}
+      >
         <SearchField
+          ref={searchRef}
           aria-label={stringFormatter.format('search')} // TODO: l10n "Search {collection}"?
           onChange={props.onSearchTermChange}
-          onClear={() => props.onSearchTermChange('')}
+          onClear={() => {
+            props.onSearchTermChange('');
+            if (!isAboveMobile) {
+              // the timeout ensures that the "add" button isn't pressed
+              setTimeout(() => {
+                setSearchVisible(false);
+              }, 250);
+            }
+          }}
+          onBlur={() => {
+            if (!isAboveMobile && props.searchTerm === '') {
+              setSearchVisible(false);
+            }
+          }}
           placeholder={stringFormatter.format('search')}
           value={props.searchTerm}
           width="scale.2400"
         />
       </div>
-      <Button marginStart="auto" prominence="high" href={createHref}>
+      <ActionButton
+        aria-label="show search"
+        isHidden={searchVisible || { above: 'mobile' }}
+        onPress={() => {
+          setSearchVisible(true);
+          // NOTE: this hack is to force the search field to focus, and invoke
+          // the software keyboard on mobile safari
+          let tempInput = document.createElement('input');
+          tempInput.style.position = 'absolute';
+          tempInput.style.opacity = '0';
+          document.body.appendChild(tempInput);
+          tempInput.focus();
+
+          setTimeout(() => {
+            searchRef.current?.focus();
+            tempInput.remove();
+          }, 0);
+        }}
+      >
+        <Icon src={searchIcon} />
+      </ActionButton>
+      <Button
+        marginStart="auto"
+        prominence="high"
+        href={createHref}
+        isHidden={searchVisible ? { below: 'tablet' } : undefined}
+      >
         {stringFormatter.format('add')}
       </Button>
     </PageHeader>
