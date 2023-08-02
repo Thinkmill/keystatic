@@ -45,6 +45,7 @@ export const css: PlatformInitializer = (
       // new
       'color/hex',
       'color/hexAlpha',
+      'cubicBezier/css',
     ],
     files: [
       {

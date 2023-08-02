@@ -1,4 +1,4 @@
-// import glob from 'fast-glob';
+import glob from 'fast-glob';
 import type StyleDictionary from 'style-dictionary';
 
 import { KeystarStyleDictionary } from '../KeystarStyleDictionary';
@@ -42,6 +42,24 @@ export const buildDesignTokens = (
   buildOptions: ConfigGeneratorOptions
 ): void => {
   buildFigma(buildOptions);
+
+  /** -----------------------------------
+   * Animation tokens
+   * ----------------------------------- */
+  const animationFiles = glob.sync('tokens/animation/*');
+  for (const file of animationFiles) {
+    // build functional scales
+    KeystarStyleDictionary.extend(
+      getStyleDictionaryConfig(
+        `animation/${file
+          .replace('tokens/animation/', '')
+          .replace('.json5', '')}`,
+        [file],
+        [],
+        buildOptions
+      )
+    ).buildAllPlatforms();
+  }
 
   /** -----------------------------------
    * Colors, shadows & borders

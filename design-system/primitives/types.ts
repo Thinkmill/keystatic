@@ -67,6 +67,23 @@ export type BorderTokenValue = {
 export type ColorHex = string;
 
 /**
+ * @description a css cubic bezier string
+ * @format x1 | y1 | x2 | y2
+ */
+export type CubicBezier = string;
+
+/**
+ * @description cubic bezier coordinates
+ * @link https://design-tokens.github.io/community-group/format/#cubic-bezier
+ */
+export type CubicBezierTokenValue = [
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+];
+
+/**
  * @description a css shadow
  * @format inset? | offset-x | offset-y | blur-radius? | spread-radius? | color?
  */
@@ -93,6 +110,11 @@ export type ShadowTokenValue = {
 export type SizePx = `${number}px`;
 
 /**
+ * @description size in rem
+ */
+export type SizeRem = `${number}rem`;
+
+/**
  * Type definition for w3c typography composite token value
  * @link https://design-tokens.github.io/community-group/format/#typography
  */
@@ -107,17 +129,17 @@ export type TypographyTokenValue = {
 
 export type w3cTokenType =
   | 'color'
+  | 'cubicBezier'
   | 'dimension'
-  | 'fontFamily'
-  | 'fontWeight'
   | 'duration'
-  | 'cubicBezier';
+  | 'fontFamily'
+  | 'fontWeight';
 export type w3cCompositeTokenType =
-  | 'shadow'
   | 'border'
   | 'gradient'
-  | 'transition'
+  | 'shadow'
   | 'strokeStyle'
+  | 'transition'
   | 'typography';
 
 export interface w3cTransformedToken extends StyleDictionary.TransformedToken {

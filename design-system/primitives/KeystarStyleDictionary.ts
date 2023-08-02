@@ -10,6 +10,7 @@ import { w3cJsonParser } from './parsers';
 import {
   colorToHex,
   colorToHexAlpha,
+  cubicBezierToCss,
   figmaAttributes,
   fontCapsize,
   fontUnit,
@@ -66,6 +67,11 @@ StyleDictionary.registerTransform({
 StyleDictionary.registerTransform({
   name: 'color/rgbaFloat',
   ...colorToRgbaFloat,
+});
+
+StyleDictionary.registerTransform({
+  name: 'cubicBezier/css',
+  ...cubicBezierToCss,
 });
 
 StyleDictionary.registerTransform({

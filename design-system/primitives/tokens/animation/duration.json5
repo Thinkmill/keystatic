@@ -1,0 +1,10 @@
+{
+  animation: {
+    duration: {
+      short: { $value: '160ms', $type: 'cubicBezier' },
+      regular: { $value: '320ms', $type: 'cubicBezier' },
+      long: { $value: '960ms', $type: 'cubicBezier' },
+      xlong: { $value: '1920ms', $type: 'cubicBezier' },
+    },
+  },
+}
