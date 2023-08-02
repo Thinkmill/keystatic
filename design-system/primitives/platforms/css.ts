@@ -69,7 +69,7 @@ export const css: PlatformInitializer = (
         options: {
           showFileHeader: false,
           descriptions: false,
-          outputReferences: false,
+          outputReferences: true,
           ...options?.options,
         },
       },

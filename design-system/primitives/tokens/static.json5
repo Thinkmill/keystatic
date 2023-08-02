@@ -1,38 +1,4 @@
 {
-  size: {
-    container: {
-      xsmall: { value: 400, unit: 'px', isStatic: true },
-      small: { value: 660, unit: 'px', isStatic: true },
-      medium: { value: 940, unit: 'px', isStatic: true },
-      large: { value: 1280, unit: 'px', isStatic: true },
-      xlarge: { value: 1400, unit: 'px', isStatic: true },
-    },
-    dialog: {
-      xsmall: { value: 320, unit: 'px', isStatic: true },
-      small: { value: 420, unit: 'px', isStatic: true },
-      medium: { value: 640, unit: 'px', isStatic: true },
-      large: { value: 860, unit: 'px', isStatic: true },
-      // xlarge: { value: 1280, unit: "px", isStatic: true }, // should probably just use the "fullscreen" variant
-    },
-    radius: {
-      full: { value: 9999, unit: 'px', isStatic: true },
-      xsmall: { value: 2, unit: 'px', isStatic: true },
-      small: { value: 4, unit: 'px', isStatic: true },
-      regular: { value: 6, unit: 'px', isStatic: true },
-      medium: { value: 8, unit: 'px', isStatic: true },
-      large: { value: 12, unit: 'px', isStatic: true },
-      xlarge: { value: 16, unit: 'px', isStatic: true },
-    },
-    border: {
-      regular: { value: 1, unit: 'px', isStatic: true },
-      medium: { value: 2, unit: 'px', isStatic: true },
-      large: { value: 4, unit: 'px', isStatic: true },
-    },
-    alias: {
-      focusRing: { value: 2, unit: 'px', isStatic: true },
-      focusRingGap: { value: 2, unit: 'px', isStatic: true },
-    },
-  },
   typography: {
     fontFamily: {
       base: { value: 'var(--font-inter, Inter)', isStatic: true },

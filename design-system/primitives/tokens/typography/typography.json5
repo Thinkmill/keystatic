@@ -1,0 +1,23 @@
+{
+  typography: {
+    fontStack: {
+      // FIXME: this is a hack to get Next.js fonts working
+      base: { $value: 'var(--font-inter, Inter)', $type: 'fontFamily' },
+      code: {
+        $value: 'ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace',
+        $type: 'fontFamily',
+      },
+    },
+    fontWeight: {
+      regular: { $value: 400, $type: 'fontWeight' },
+      medium: { $value: 500, $type: 'fontWeight' },
+      semibold: { $value: 600, $type: 'fontWeight' },
+      bold: { $value: 700, $type: 'fontWeight' },
+    },
+    lineheight: {
+      large: { $value: 1.6, $type: 'number' },
+      medium: { $value: 1.4, $type: 'number' },
+      small: { $value: 1.2, $type: 'number' },
+    },
+  },
+}

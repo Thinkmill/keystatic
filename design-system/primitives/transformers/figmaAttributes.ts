@@ -13,6 +13,8 @@ type FigmaVariableScope =
   | 'TEXT_FILL'
   | 'STROKE';
 
+// stroke width not yet available in figma
+// https://help.figma.com/hc/en-us/articles/4406787442711#Coming_soon
 const figmaScopes: Record<string, FigmaVariableScope[]> = {
   all: ['ALL_SCOPES'],
   radius: ['CORNER_RADIUS'],

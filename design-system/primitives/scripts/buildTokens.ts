@@ -81,20 +81,18 @@ export const buildDesignTokens = (
   /** -----------------------------------
    * Size tokens
    * ----------------------------------- */
-  // const sizeFiles = glob.sync('src/tokens/functional/size/*');
-  // //
-  // for (const file of sizeFiles) {
-  //   KeystarStyleDictionary.extend(
-  //     getStyleDictionaryConfig(
-  //       `size/${file
-  //         .replace('src/tokens/functional/size/', '')
-  //         .replace('.json', '')}`,
-  //       [file],
-  //       ['src/tokens/base/size/size.json', ...sizeFiles],
-  //       buildOptions
-  //     )
-  //   ).buildAllPlatforms();
-  // }
+  const sizeFiles = glob.sync('tokens/size/*');
+  //
+  for (const file of sizeFiles) {
+    KeystarStyleDictionary.extend(
+      getStyleDictionaryConfig(
+        `size/${file.replace('tokens/size/', '').replace('.json5', '')}`,
+        [file],
+        [...sizeFiles],
+        buildOptions
+      )
+    ).buildAllPlatforms();
+  }
   // // build base scales
   // KeystarStyleDictionary.extend(
   //   // using includes as source
