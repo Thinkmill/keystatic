@@ -14,8 +14,8 @@ const validFigmaToken = (token: StyleDictionary.TransformedToken) => {
   // has a collection attribute
   if (
     !('$extensions' in token) ||
-    !('org.primer.figma' in token.$extensions) ||
-    !('collection' in token.$extensions['org.primer.figma'])
+    !('org.keystar.figma' in token.$extensions) ||
+    !('collection' in token.$extensions['org.keystar.figma'])
   ) {
     return false;
   }

@@ -2,18 +2,18 @@ import { toCamelCase } from './toCamelCase';
 
 describe('Utilities: toCamelCase', () => {
   it('it transforms all lowercase word', () => {
-    expect(toCamelCase('primer')).toStrictEqual('primer');
+    expect(toCamelCase('keystar')).toStrictEqual('keystar');
   });
 
   it('it transforms all lowercase sentence (words with spaces)', () => {
-    expect(toCamelCase('primer design token')).toStrictEqual(
-      'primerDesignToken'
+    expect(toCamelCase('keystar design token')).toStrictEqual(
+      'keystarDesignToken'
     );
   });
 
   it('it transforms all words with special chars', () => {
-    expect(toCamelCase('primer_design-token+edition')).toStrictEqual(
-      'primerDesignTokenEdition'
+    expect(toCamelCase('keystar_design-token+edition')).toStrictEqual(
+      'keystarDesignTokenEdition'
     );
   });
 
@@ -26,8 +26,8 @@ describe('Utilities: toCamelCase', () => {
   });
 
   it('it transforms array of words', () => {
-    expect(toCamelCase(['primer', 'design', 'token'])).toStrictEqual(
-      'primerDesignToken'
+    expect(toCamelCase(['keystar', 'design', 'token'])).toStrictEqual(
+      'keystarDesignToken'
     );
   });
 });

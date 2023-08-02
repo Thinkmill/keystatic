@@ -2,17 +2,17 @@ import { upperCaseFirstCharacter } from './upperCaseFirstCharacter';
 
 describe('Utilities: upperCaseFirstCharacter', () => {
   it('it transforms all lowercase word', () => {
-    expect(upperCaseFirstCharacter('primer')).toStrictEqual('Primer');
+    expect(upperCaseFirstCharacter('keystar')).toStrictEqual('Keystar');
   });
 
   it('it transforms all lowercase sentence (words with spaces)', () => {
-    expect(upperCaseFirstCharacter('primer design token')).toStrictEqual(
-      'Primer design token'
+    expect(upperCaseFirstCharacter('keystar design token')).toStrictEqual(
+      'Keystar design token'
     );
   });
 
   it('it preserves casing for words that are already all uppercased', () => {
-    expect(upperCaseFirstCharacter('PRIMER')).toStrictEqual('PRIMER');
+    expect(upperCaseFirstCharacter('KEYSTAR')).toStrictEqual('KEYSTAR');
   });
 
   it('it transforms all camelCase word', () => {
