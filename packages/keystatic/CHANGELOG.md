@@ -1,5 +1,20 @@
 # @keystatic/core
 
+## 0.0.114
+
+### Patch Changes
+
+- 6b4c476c: Frontend changes:
+
+  - collection: on mobile, toggle the seach field visibility
+  - dashboard: fix card focus appearance
+  - page header always full-width
+
+- f9f09616: Fix GitHub login button leading to a 404 with `@keystatic/astro`
+- Updated dependencies [6b4c476c]
+- Updated dependencies [29586e33]
+  - @keystar/ui@0.1.7
+
 ## 0.0.113
 
 ### Patch Changes

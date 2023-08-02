@@ -1,5 +1,17 @@
 # @keystar/ui
 
+## 0.1.7
+
+### Patch Changes
+
+- 6b4c476c: Frontend changes:
+
+  - collection: on mobile, toggle the seach field visibility
+  - dashboard: fix card focus appearance
+  - page header always full-width
+
+- 29586e33: support "position" and "placement" props on toaster
+
 ## 0.1.6
 
 ### Patch Changes
