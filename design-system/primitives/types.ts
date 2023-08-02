@@ -1,11 +1,11 @@
 import type StyleDictionary from 'style-dictionary';
 
 export type PlatformInitializer = (
-  // the filename including the extension (e.g. `.css`) and any subfolders after the buildPath (e.g. `functional`)
+  /** The filename including the extension (e.g. `.css`) and any subfolders after the buildPath (e.g. `functional`). */
   outputFile: string,
-  // the prefix is prepended to all tokens
+  /** The prefix is prepended to all tokens. */
   prefix: string | undefined,
-  // the build path in which the `outputFile` is placed
+  /** The build path in which the `outputFile` is placed. */
   buildPath: string,
   options?: StyleDictionary.Options
 ) => StyleDictionary.Platform;
@@ -25,11 +25,11 @@ export type StyleDictionaryConfigGenerator = (
 ) => StyleDictionary.Config;
 
 export type TokenBuildInput = {
-  // The output filename WITHOUT the extension
+  /** The output filename WITHOUT the extension. */
   filename: string;
-  // Array of `filepaths` to token files that should be converted and included in the output. Accepts relative or glob paths.
+  /** Array of `filepaths` to token files that should be converted and included in the output. Accepts relative or glob paths. */
   source: string[];
-  // Array of `filepaths` to token fils that should NOT be included in the output, but should be available to reference during compilation e.g. base color scales
+  /** Array of `filepaths` to token files that should NOT be included in the output, but should be available to reference during compilation e.g. base color scales. */
   include: string[];
 };
 

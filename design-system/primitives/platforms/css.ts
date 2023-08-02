@@ -1,90 +1,77 @@
 import StyleDictionary from 'style-dictionary';
 
+import type { PlatformInitializer } from '../types';
 import { TOKEN_PREFIX } from '../constants';
+import { isSource } from '../filters';
 
-export const css = (scheme: string, scale: string) => {
+const getCssSelectors = (
+  outputFile: string
+): { selector: string; selectorLight: string; selectorDark: string } => {
+  // check for dark in the beginning of the output filename
+  const lastSlash = outputFile.lastIndexOf('/');
+  const outputBasename = outputFile.substring(
+    lastSlash + 1,
+    outputFile.indexOf('.')
+  );
+  const themeName = outputBasename.replace(/-/g, '_');
+  const mode = outputBasename.substring(0, 4) === 'dark' ? 'dark' : 'light';
+
   return {
-    prefix: TOKEN_PREFIX,
+    selector: `[data-color-mode="${mode}"][data-${mode}-theme="${themeName}"]`,
+    selectorLight: `[data-color-mode="auto"][data-light-theme="${themeName}"]`,
+    selectorDark: `[data-color-mode="auto"][data-dark-theme="${themeName}"]`,
+  };
+};
+
+// buildPath: `dist/css/`,
+
+export const css: PlatformInitializer = (
+  outputFile,
+  prefix = TOKEN_PREFIX,
+  buildPath,
+  options
+): StyleDictionary.Platform => {
+  const { selector, selectorLight, selectorDark } = getCssSelectors(outputFile);
+  return {
+    prefix,
+    buildPath,
     transforms: [
+      // built-in
       'attribute/cti',
       'name/cti/kebab',
-
-      'ks/color/modify',
+      // old
       'ks/font/capsize',
       'ks/size/unit',
+      // new
+      'color/hex',
+      'color/hexAlpha',
     ],
-    buildPath: `build/css/`,
     files: [
       {
-        destination: `1-static.css`,
-        format: 'css/variables',
-        filter: (token: StyleDictionary.TransformedToken) => token.isStatic,
+        destination: `${outputFile}`,
+        format: 'css/themed',
+        filter: token => isSource(token) && options?.themed === true,
         options: {
-          // outputReferences: true,
-          selector: '.ksv-theme',
+          showFileHeader: false,
+          outputReferences: false,
+          descriptions: false,
+          selector,
+          selectorLight,
+          selectorDark,
+          ...options?.options,
         },
       },
       {
-        destination: `2-size-shared.css`,
+        destination: `${outputFile}`,
         format: 'css/variables',
-        filter: (token: StyleDictionary.TransformedToken) =>
-          token.isShared &&
-          ['fontsize', 'size'].includes(token.attributes?.category || '') &&
-          // modfied tokens cannot be shared by reference
-          !token.modify,
+        filter: token => isSource(token) && options?.themed !== true,
         options: {
-          outputReferences: true,
-          selector: scaleSelector('medium', 'large'),
-        },
-      },
-      {
-        destination: `3-color-shared.css`,
-        format: 'css/variables',
-        filter: (token: StyleDictionary.TransformedToken) =>
-          token.isShared &&
-          token.attributes?.category === 'color' &&
-          // modfied tokens cannot be shared by reference
-          !token.modify,
-        options: {
-          outputReferences: true,
-          selector: schemeSelector('light', 'dark'),
-        },
-      },
-      {
-        destination: `4-size-${scale}.css`,
-        filter: (token: StyleDictionary.TransformedToken) =>
-          !token.isShared &&
-          !token.isStatic &&
-          ['fontsize', 'size'].includes(token?.attributes?.category || '') &&
-          !isNaN(parseFloat(token.value)),
-        format: 'css/variables',
-        options: {
-          outputReferences: true,
-          selector: scaleSelector(scale),
-        },
-      },
-      {
-        destination: `5-color-${scheme}.css`,
-        filter: (token: StyleDictionary.TransformedToken) =>
-          !token.isShared &&
-          !token.isStatic &&
-          token.attributes?.category === 'color',
-        format: 'css/variables',
-        options: {
-          outputReferences: true,
-          selector: schemeSelector(scheme),
+          showFileHeader: false,
+          descriptions: false,
+          outputReferences: false,
+          ...options?.options,
         },
       },
     ],
   };
-};
-
-const selector = (prefix = 'theme', ...args: string[]) => {
-  return args.map(suffix => `.ksv-${prefix}` + '--' + suffix).join(', ');
-};
-const scaleSelector = (...args: string[]) => {
-  return selector('scale', ...args);
-};
-const schemeSelector = (...args: string[]) => {
-  return selector('scheme', ...args);
 };

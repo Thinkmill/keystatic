@@ -9,7 +9,7 @@ export const sizeShadow: StyleDictionary.Transform = {
     const oVal = token.original.value;
     return typeof oVal === 'object' && 'blur' in oVal && 'spread' in oVal;
   },
-  transformer: function colorModify(token: StyleDictionary.TransformedToken) {
+  transformer: function sizeShadow(token: StyleDictionary.TransformedToken) {
     const { x, y, blur, spread } = token.original.value;
     return `${x} ${y} ${blur} ${spread}`;
   },

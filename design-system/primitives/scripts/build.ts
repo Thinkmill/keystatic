@@ -1,5 +1,5 @@
 import { KeystarStyleDictionary } from '../KeystarStyleDictionary';
-import { css } from '../platforms/css';
+import { cssOLD } from '../platforms/cssOLD';
 import { javascript } from '../platforms/javascript';
 
 function getConfig(scheme: string, scale: string) {
@@ -7,11 +7,11 @@ function getConfig(scheme: string, scale: string) {
     source: [
       'tokens/static.@(json|json5)',
       `tokens/scales/${scale}/*.@(json|json5)`,
-      `tokens/schemes/${scheme}/*.@(json|json5)`,
+      `tokens/color/${scheme}/*.@(json|json5)`,
       'tokens/**/shared.@(json|json5)',
     ],
     platforms: {
-      css: css(scheme, scale),
+      css: cssOLD(scheme, scale),
       javascript: javascript(),
     },
   };

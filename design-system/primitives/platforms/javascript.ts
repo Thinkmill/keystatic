@@ -4,11 +4,11 @@ export const javascript = () => {
   return {
     prefix: TOKEN_PREFIX,
     transforms: ['attribute/cti', 'name/cti/kebab'],
-    buildPath: `build/javascript/`,
+    buildPath: `dist/javascript/`,
     files: [
       {
-        destination: `tokens.js`,
-        format: 'javascript/css-token-map',
+        destination: `tokenSchema.js`,
+        format: 'javascript/token-map',
       },
     ],
   };
