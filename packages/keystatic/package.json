@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/core",
-  "version": "0.0.113",
+  "version": "0.0.114",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -153,7 +153,7 @@
     "@floating-ui/react": "^0.24.0",
     "@hapi/iron": "^7.0.0",
     "@internationalized/string": "^3.1.1",
-    "@keystar/ui": "^0.1.6",
+    "@keystar/ui": "^0.1.7",
     "@markdoc/markdoc": "^0.3.0",
     "@react-aria/focus": "^3.13.0",
     "@react-aria/i18n": "^3.8.0",
