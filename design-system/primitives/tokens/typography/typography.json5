@@ -19,5 +19,210 @@
       medium: { $value: 1.4, $type: 'number' },
       small: { $value: 1.2, $type: 'number' },
     },
+
+    text: {
+      small: {
+        size: { $value: '12px', $type: 'dimension' },
+        lineheight: { $value: 1.4, $type: 'number' },
+        baselineTrim: {
+          $value: {
+            size: '{typography.text.small.size}',
+            lineheight: '{typography.text.small.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheightTrim: {
+          $value: {
+            size: '{typography.text.small.size}',
+            lineheight: '{typography.text.small.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheight: {
+          $value: {
+            size: '{typography.text.small.size}',
+            lineheight: '{typography.text.small.lineheight}',
+          },
+          $type: 'capsize',
+        },
+      },
+      regular: {
+        size: { $value: '14px', $type: 'dimension' },
+        lineheight: { $value: 1.4, $type: 'number' },
+        baselineTrim: {
+          $value: {
+            size: '{typography.text.regular.size}',
+            lineheight: '{typography.text.regular.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheightTrim: {
+          $value: {
+            size: '{typography.text.regular.size}',
+            lineheight: '{typography.text.regular.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheight: {
+          $value: {
+            size: '{typography.text.regular.size}',
+            lineheight: '{typography.text.regular.lineheight}',
+          },
+          $type: 'capsize',
+        },
+      },
+      medium: {
+        size: { $value: '16px', $type: 'dimension' },
+        lineheight: { $value: 1.4, $type: 'number' },
+        baselineTrim: {
+          $value: {
+            size: '{typography.text.medium.size}',
+            lineheight: '{typography.text.medium.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheightTrim: {
+          $value: {
+            size: '{typography.text.medium.size}',
+            lineheight: '{typography.text.medium.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheight: {
+          $value: {
+            size: '{typography.text.medium.size}',
+            lineheight: '{typography.text.medium.lineheight}',
+          },
+          $type: 'capsize',
+        },
+      },
+      large: {
+        size: { $value: '18px', $type: 'dimension' },
+        lineheight: { $value: 1.2, $type: 'number' },
+        baselineTrim: {
+          $value: {
+            size: '{typography.text.large.size}',
+            lineheight: '{typography.text.large.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheightTrim: {
+          $value: {
+            size: '{typography.text.large.size}',
+            lineheight: '{typography.text.large.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheight: {
+          $value: {
+            size: '{typography.text.large.size}',
+            lineheight: '{typography.text.large.lineheight}',
+          },
+          $type: 'capsize',
+        },
+      },
+    },
+    heading: {
+      small: {
+        size: { $value: '16px', $type: 'dimension' },
+        lineheight: { $value: 1.2, $type: 'number' },
+        baselineTrim: {
+          $value: {
+            size: '{typography.heading.small.size}',
+            lineheight: '{typography.heading.small.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheightTrim: {
+          $value: {
+            size: '{typography.heading.small.size}',
+            lineheight: '{typography.heading.small.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheight: {
+          $value: {
+            size: '{typography.heading.small.size}',
+            lineheight: '{typography.heading.small.lineheight}',
+          },
+          $type: 'capsize',
+        },
+      },
+      regular: {
+        size: { $value: '20px', $type: 'dimension' },
+        lineheight: { $value: 1.2, $type: 'number' },
+        baselineTrim: {
+          $value: {
+            size: '{typography.heading.regular.size}',
+            lineheight: '{typography.heading.regular.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheightTrim: {
+          $value: {
+            size: '{typography.heading.regular.size}',
+            lineheight: '{typography.heading.regular.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheight: {
+          $value: {
+            size: '{typography.heading.regular.size}',
+            lineheight: '{typography.heading.regular.lineheight}',
+          },
+          $type: 'capsize',
+        },
+      },
+      medium: {
+        size: { $value: '24px', $type: 'dimension' },
+        lineheight: { $value: 1.2, $type: 'number' },
+        baselineTrim: {
+          $value: {
+            size: '{typography.heading.medium.size}',
+            lineheight: '{typography.heading.medium.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheightTrim: {
+          $value: {
+            size: '{typography.heading.medium.size}',
+            lineheight: '{typography.heading.medium.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheight: {
+          $value: {
+            size: '{typography.heading.medium.size}',
+            lineheight: '{typography.heading.medium.lineheight}',
+          },
+          $type: 'capsize',
+        },
+      },
+      large: {
+        size: { $value: '32px', $type: 'dimension' },
+        lineheight: { $value: 1.2, $type: 'number' },
+        baselineTrim: {
+          $value: {
+            size: '{typography.heading.large.size}',
+            lineheight: '{typography.heading.large.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheightTrim: {
+          $value: {
+            size: '{typography.heading.large.size}',
+            lineheight: '{typography.heading.large.lineheight}',
+          },
+          $type: 'capsize',
+        },
+        capheight: {
+          $value: {
+            size: '{typography.heading.large.size}',
+            lineheight: '{typography.heading.large.lineheight}',
+          },
+          $type: 'capsize',
+        },
+      },
+    },
   },
 }

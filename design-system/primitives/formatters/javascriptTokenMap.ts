@@ -6,8 +6,6 @@ const { fileHeader } = StyleDictionary.formatHelpers;
 export const javascriptTokenMap: StyleDictionary.Formatter = ({
   dictionary,
   file,
-  // platform,
-  // options,
 }) => {
   const reference = {};
 

@@ -9,8 +9,7 @@ export const themes: TokenBuildInput[] = [
       `tokens/color/light/primitives.json5`,
       `tokens/color/light/patterns.json5`,
     ],
-    // include: [`tokens/base/color/light/light.json5`],
-    include: [],
+    include: [`tokens/color/light/scale.json5`],
   },
   {
     filename: 'dark',
@@ -19,7 +18,6 @@ export const themes: TokenBuildInput[] = [
       `tokens/color/dark/primitives.json5`,
       `tokens/color/dark/patterns.json5`,
     ],
-    // include: [`tokens/base/color/dark/dark.json5`],
-    include: [],
+    include: [`tokens/color/dark/scale.json5`],
   },
 ];

@@ -1,6 +1,7 @@
 // consider replacing with something like:
 // https://github.com/lukasoppermann/style-dictionary-utils
 export { isBorder } from './isBorder';
+export { isCapsize } from './isCapsize';
 export { isColor } from './isColor';
 export { isColorWithAlpha } from './isColorWithAlpha';
 export { isColorWithMix } from './isColorWithMix';

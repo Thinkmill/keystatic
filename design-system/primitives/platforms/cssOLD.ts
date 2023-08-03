@@ -9,7 +9,9 @@ export const cssOLD = (scheme: string, scale: string) => {
       'attribute/cti',
       'name/cti/kebab',
 
-      'ks/color/modify',
+      'color/hex',
+      'color/hexAlpha',
+      'cubicBezier/css',
       'ks/font/capsize',
       'ks/size/unit',
     ],

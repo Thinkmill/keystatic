@@ -32,8 +32,11 @@ const getStyleDictionaryConfig: StyleDictionaryConfigGenerator = (
     css: css(`css/${filename}.css`, options.prefix, options.buildPath, {
       themed: options.themed,
     }),
-    // javascript: javascript(`javascript/${filename}.js`, options.prefix, options.buildPath),
-    javascript: javascript(),
+    javascript: javascript(
+      `javascript/${filename}.js`,
+      options.prefix,
+      options.buildPath
+    ),
     ...platforms,
   },
 });
@@ -46,20 +49,14 @@ export const buildDesignTokens = (
   /** -----------------------------------
    * Animation tokens
    * ----------------------------------- */
-  const animationFiles = glob.sync('tokens/animation/*');
-  for (const file of animationFiles) {
-    // build functional scales
-    KeystarStyleDictionary.extend(
-      getStyleDictionaryConfig(
-        `animation/${file
-          .replace('tokens/animation/', '')
-          .replace('.json5', '')}`,
-        [file],
-        [],
-        buildOptions
-      )
-    ).buildAllPlatforms();
-  }
+  KeystarStyleDictionary.extend(
+    getStyleDictionaryConfig(
+      `animation/animation`,
+      ['tokens/animation/animation.json5'],
+      [],
+      buildOptions
+    )
+  ).buildAllPlatforms();
 
   /** -----------------------------------
    * Colors, shadows & borders
@@ -67,14 +64,10 @@ export const buildDesignTokens = (
   for (const { filename, source, include } of themes) {
     // build functional scales
     KeystarStyleDictionary.extend(
-      getStyleDictionaryConfig(
-        `themes/${filename}`,
-        source,
-        include,
-        { ...buildOptions, themed: true },
-        // disable fallbacks for themes
-        { fallbacks: undefined }
-      )
+      getStyleDictionaryConfig(`themes/${filename}`, source, include, {
+        ...buildOptions,
+        themed: true,
+      })
     ).buildAllPlatforms();
   }
 
@@ -93,23 +86,18 @@ export const buildDesignTokens = (
       )
     ).buildAllPlatforms();
   }
-  // // build base scales
-  // KeystarStyleDictionary.extend(
-  //   // using includes as source
-  //   getStyleDictionaryConfig(
-  //     `base/size/size`,
-  //     ['src/tokens/base/size/size.json'],
-  //     [],
-  //     {
-  //       buildPath: buildOptions.buildPath,
-  //       prefix: undefined,
-  //     }
-  //   )
-  // ).buildAllPlatforms();
 
-  // /** -----------------------------------
-  //  * Typography tokens
-  //  * ----------------------------------- */
+  /** -----------------------------------
+   * Typography tokens
+   * ----------------------------------- */
+  KeystarStyleDictionary.extend(
+    getStyleDictionaryConfig(
+      `typography/typography`,
+      ['tokens/typography/typography.json5'],
+      [],
+      buildOptions
+    )
+  ).buildAllPlatforms();
   // KeystarStyleDictionary.extend(
   //   getStyleDictionaryConfig(
   //     `functional/typography/typography`,
@@ -128,15 +116,6 @@ export const buildDesignTokens = (
   //         }
   //       ),
   //     }
-  //   )
-  // ).buildAllPlatforms();
-
-  // KeystarStyleDictionary.extend(
-  //   getStyleDictionaryConfig(
-  //     `base/typography/typography`,
-  //     [`src/tokens/base/typography/*.json`],
-  //     [],
-  //     buildOptions
   //   )
   // ).buildAllPlatforms();
 };

@@ -5,7 +5,9 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "tsx ./scripts/buildTokens.ts"
+    "build": "tsx ./scripts/build.ts",
+    "build:tokens": "tsx ./scripts/buildTokens.ts",
+    "build:figma": "tsx ./scripts/buildFigma.ts"
   },
   "devDependencies": {
     "@capsizecss/core": "^3.1.1",

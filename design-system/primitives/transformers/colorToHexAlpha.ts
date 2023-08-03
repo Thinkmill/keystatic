@@ -14,6 +14,7 @@ export const colorToHexAlpha: StyleDictionary.Transform = {
   type: `value`,
   transitive: true,
   matcher: isColorWithAlpha,
-  transformer: (token: StyleDictionary.TransformedToken) =>
-    toHex(alpha(getTokenValue(token), token.alpha, token)),
+  transformer: (token: StyleDictionary.TransformedToken) => {
+    return toHex(alpha(getTokenValue(token), token.alpha, token));
+  },
 };

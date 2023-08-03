@@ -41,11 +41,11 @@ export const css: PlatformInitializer = (
       'name/cti/kebab',
       // old
       'ks/font/capsize',
-      'ks/size/unit',
       // new
       'color/hex',
       'color/hexAlpha',
       'cubicBezier/css',
+      'typography/capsize',
     ],
     files: [
       {

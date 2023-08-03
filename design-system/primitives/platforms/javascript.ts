@@ -1,14 +1,23 @@
-import { TOKEN_PREFIX } from '../constants';
+import StyleDictionary from 'style-dictionary';
 
-export const javascript = () => {
+import { TOKEN_PREFIX } from '../constants';
+import { isSource } from '../filters';
+import { PlatformInitializer } from '../types';
+
+export const javascript: PlatformInitializer = (
+  outputFile,
+  prefix = TOKEN_PREFIX,
+  buildPath
+): StyleDictionary.Platform => {
   return {
-    prefix: TOKEN_PREFIX,
+    buildPath,
+    prefix,
     transforms: ['attribute/cti', 'name/cti/kebab'],
-    buildPath: `dist/javascript/`,
     files: [
       {
-        destination: `tokenSchema.js`,
+        destination: outputFile,
         format: 'javascript/token-map',
+        filter: isSource,
       },
     ],
   };

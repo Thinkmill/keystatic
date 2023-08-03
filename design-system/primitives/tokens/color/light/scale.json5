@@ -7,18 +7,14 @@
         $value: '#000000',
         $type: 'color',
         $extensions: {
-          'org.keystar.figma': {
-            collection: 'scale/color/light',
-          },
+          'org.keystar.figma': { collection: 'scale/color/light' },
         },
       },
       white: {
         $value: '#ffffff',
         $type: 'color',
         $extensions: {
-          'org.keystar.figma': {
-            collection: 'scale/color/light',
-          },
+          'org.keystar.figma': { collection: 'scale/color/light' },
         },
       },
 
@@ -505,77 +501,77 @@
       // Slate
       // -----------------------------------------------------------------------
       slate1: {
-        value: '#FFFFFF',
+        $value: '#FFFFFF',
         $type: 'color',
         $extensions: {
           'org.keystar.figma': { collection: 'scale/color/light' },
         },
       },
       slate2: {
-        value: '#FAFAFA',
+        $value: '#FAFAFA',
         $type: 'color',
         $extensions: {
           'org.keystar.figma': { collection: 'scale/color/light' },
         },
       },
       slate3: {
-        value: '#F5F5F5',
+        $value: '#F5F5F5',
         $type: 'color',
         $extensions: {
           'org.keystar.figma': { collection: 'scale/color/light' },
         },
       },
       slate4: {
-        value: '#EAEAEA',
+        $value: '#EAEAEA',
         $type: 'color',
         $extensions: {
           'org.keystar.figma': { collection: 'scale/color/light' },
         },
       },
       slate5: {
-        value: '#E1E1E1',
+        $value: '#E1E1E1',
         $type: 'color',
         $extensions: {
           'org.keystar.figma': { collection: 'scale/color/light' },
         },
       },
       slate6: {
-        value: '#CACACA',
+        $value: '#CACACA',
         $type: 'color',
         $extensions: {
           'org.keystar.figma': { collection: 'scale/color/light' },
         },
       },
       slate7: {
-        value: '#B3B3B3',
+        $value: '#B3B3B3',
         $type: 'color',
         $extensions: {
           'org.keystar.figma': { collection: 'scale/color/light' },
         },
       },
       slate8: {
-        value: '#8E8E8E',
+        $value: '#8E8E8E',
         $type: 'color',
         $extensions: {
           'org.keystar.figma': { collection: 'scale/color/light' },
         },
       },
       slate9: {
-        value: '#6E6E6E',
+        $value: '#6E6E6E',
         $type: 'color',
         $extensions: {
           'org.keystar.figma': { collection: 'scale/color/light' },
         },
       },
       slate10: {
-        value: '#4B4B4B',
+        $value: '#4B4B4B',
         $type: 'color',
         $extensions: {
           'org.keystar.figma': { collection: 'scale/color/light' },
         },
       },
       slate11: {
-        value: '#2C2C2C',
+        $value: '#2C2C2C',
         $type: 'color',
         $extensions: {
           'org.keystar.figma': { collection: 'scale/color/light' },

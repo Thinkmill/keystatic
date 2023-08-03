@@ -11,29 +11,29 @@ export const buildFigma = (buildOptions: ConfigGeneratorOptions): void => {
    * Colors
    * ----------------------------------- */
   // base colors
-  const baseScales = [
-    {
-      name: 'light',
-      source: [`tokens/color/light/scale.json5`],
-    },
-    {
-      name: 'dark',
-      source: [`tokens/color/dark/scale.json5`],
-    },
-  ];
+  // const baseScales = [
+  //   {
+  //     name: 'light',
+  //     source: [`tokens/color/light/scale.json5`],
+  //   },
+  //   {
+  //     name: 'dark',
+  //     source: [`tokens/color/dark/scale.json5`],
+  //   },
+  // ];
 
-  for (const { name, source } of baseScales) {
-    KeystarStyleDictionary.extend({
-      source,
-      platforms: {
-        figma: figma(
-          `figma/scales/${name}.json`,
-          buildOptions.prefix,
-          buildOptions.buildPath
-        ),
-      },
-    }).buildAllPlatforms();
-  }
+  // for (const { name, source } of baseScales) {
+  //   KeystarStyleDictionary.extend({
+  //     source,
+  //     platforms: {
+  //       figma: figma(
+  //         `figma/scales/${name}.json`,
+  //         buildOptions.prefix,
+  //         buildOptions.buildPath
+  //       ),
+  //     },
+  //   }).buildAllPlatforms();
+  // }
   //
   for (const { filename, source, include } of themes) {
     if (['light', 'dark'].includes(filename)) {

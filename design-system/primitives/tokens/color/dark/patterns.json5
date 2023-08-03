@@ -4,6 +4,19 @@
     alias: {
       // Backgrounds
       // -----------------------------------------------------------------------
+      blanket: {
+        $value: '#000000',
+        $type: 'color',
+        alpha: 0.6,
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'mode',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+
       backgroundIdle: {
         $value: '{color.scale.slate11}',
         $type: 'color',

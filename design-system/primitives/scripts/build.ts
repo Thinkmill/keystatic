@@ -1,6 +1,6 @@
 import { KeystarStyleDictionary } from '../KeystarStyleDictionary';
 import { cssOLD } from '../platforms/cssOLD';
-import { javascript } from '../platforms/javascript';
+import { javascriptOLD } from '../platforms/javascriptOLD';
 
 function getConfig(scheme: string, scale: string) {
   return {
@@ -12,7 +12,7 @@ function getConfig(scheme: string, scale: string) {
     ],
     platforms: {
       css: cssOLD(scheme, scale),
-      javascript: javascript(),
+      javascript: javascriptOLD(),
     },
   };
 }

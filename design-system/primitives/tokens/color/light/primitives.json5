@@ -453,7 +453,7 @@
     // -----------------------------------------------------------------------
     shadow: {
       muted: {
-        $value: '#000000',
+        $value: '#000000', // should be able to use {color.scale.black} but it breaks the figma build...
         $type: 'color',
         alpha: 0.05,
         $extensions: {

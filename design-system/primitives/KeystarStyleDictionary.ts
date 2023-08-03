@@ -18,6 +18,7 @@ import {
   namePathToKebabCase,
   sizeShadow,
   sizeUnit,
+  typographyToCapsize,
 } from './transformers';
 import { dimensionToPixelUnitless } from './transformers/dimensionToPixelUnitless';
 import { colorToRgbaFloat } from './transformers/colorToRgbaFloat';
@@ -97,6 +98,11 @@ StyleDictionary.registerTransform({
 StyleDictionary.registerTransform({
   name: 'name/pathToKebabCase',
   ...namePathToKebabCase,
+});
+
+StyleDictionary.registerTransform({
+  name: 'typography/capsize',
+  ...typographyToCapsize,
 });
 
 StyleDictionary.registerTransform({

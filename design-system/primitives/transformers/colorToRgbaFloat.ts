@@ -18,14 +18,17 @@ const toRgbaFloat = (
   if (tokenMixColor && isRgbaFloat(tokenMixColor)) {
     tokenMixColor = rgbaFloatToHex(tokenMixColor, false);
   }
+
   // mix color with mix color and weight
   const hex = toHex(
     mix(tokenValue, tokenMixColor || tokenValue, token.mix?.weight || 0)
   );
+
   // retrieve spots from hex value (hex 3, hex 6 or hex 8)
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(
     hex
   ) ?? ['00', '00', '00'];
+
   // return parsed rgba float object using alpha value from token, from hex code or defaults to 1
   return {
     r: parseInt(result[1], 16) / 255,
@@ -67,6 +70,7 @@ export const colorToRgbaFloat: StyleDictionary.Transform = {
     if (isRgbaFloat(token.value) && !('mix' in token) && !('alpha' in token)) {
       return token.value;
     }
+
     // convert hex or rgb values to rgba float
     return toRgbaFloat(token, token.alpha);
   },
