@@ -1,29 +1,31 @@
 import StyleDictionary from 'style-dictionary';
 
 import type { PlatformInitializer } from '../types';
-import { TOKEN_PREFIX } from '../constants';
+import {
+  SELECTOR_AUTO,
+  SELECTOR_DARK,
+  SELECTOR_LIGHT,
+  TOKEN_PREFIX,
+} from '../constants';
 import { isSource } from '../filters';
+import { filenameFromPath } from '../utilities';
 
 const getCssSelectors = (
   outputFile: string
-): { selector: string; selectorLight: string; selectorDark: string } => {
-  // check for dark in the beginning of the output filename
-  const lastSlash = outputFile.lastIndexOf('/');
-  const outputBasename = outputFile.substring(
-    lastSlash + 1,
-    outputFile.indexOf('.')
-  );
-  const themeName = outputBasename.replace(/-/g, '_');
-  const mode = outputBasename.substring(0, 4) === 'dark' ? 'dark' : 'light';
+): { selector: string; selectorDark?: string } => {
+  const mode = filenameFromPath(outputFile);
+
+  if (mode === 'dark') {
+    return {
+      selector: SELECTOR_DARK,
+      selectorDark: SELECTOR_AUTO,
+    };
+  }
 
   return {
-    selector: `[data-color-mode="${mode}"][data-${mode}-theme="${themeName}"]`,
-    selectorLight: `[data-color-mode="auto"][data-light-theme="${themeName}"]`,
-    selectorDark: `[data-color-mode="auto"][data-dark-theme="${themeName}"]`,
+    selector: `${SELECTOR_AUTO}, ${SELECTOR_LIGHT}`,
   };
 };
-
-// buildPath: `dist/css/`,
 
 export const css: PlatformInitializer = (
   outputFile,
@@ -31,7 +33,7 @@ export const css: PlatformInitializer = (
   buildPath,
   options
 ): StyleDictionary.Platform => {
-  const { selector, selectorLight, selectorDark } = getCssSelectors(outputFile);
+  const { selector, selectorDark } = getCssSelectors(outputFile);
   return {
     prefix,
     buildPath,
@@ -39,8 +41,6 @@ export const css: PlatformInitializer = (
       // built-in
       'attribute/cti',
       'name/cti/kebab',
-      // old
-      'ks/font/capsize',
       // new
       'color/hex',
       'color/hexAlpha',
@@ -57,7 +57,6 @@ export const css: PlatformInitializer = (
           outputReferences: false,
           descriptions: false,
           selector,
-          selectorLight,
           selectorDark,
           ...options?.options,
         },

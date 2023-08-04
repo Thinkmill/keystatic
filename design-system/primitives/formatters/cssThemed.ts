@@ -1,7 +1,9 @@
+import { format } from 'prettier';
 import StyleDictionary from 'style-dictionary';
 import type { FormatterArguments } from 'style-dictionary/types/Format';
-import { format } from 'prettier';
 import type { LineFormatting } from 'style-dictionary/types/FormatHelpers';
+
+import { SELECTOR_DEFAULT } from '../constants';
 
 const { fileHeader, formattedVariables } = StyleDictionary.formatHelpers;
 
@@ -16,17 +18,15 @@ export const cssThemed: StyleDictionary.Formatter = ({
   options = {},
   file,
 }: FormatterArguments) => {
-  const { selector, selectorLight, selectorDark } = options;
-  const { outputReferences, descriptions } = options;
+  const { descriptions, outputReferences, selector, selectorDark } = options;
   const formatting: LineFormatting = {
     commentStyle: descriptions ? 'long' : 'none',
   };
   // add file header
   const output = [fileHeader({ file })];
+
   // add single theme css
-  output.push(`${selector || ':root'}${
-    selectorLight ? `, ${selectorLight}` : ''
-  }{
+  output.push(`${selector || SELECTOR_DEFAULT} {
     ${formattedVariables({
       format: 'css',
       dictionary,
@@ -34,6 +34,7 @@ export const cssThemed: StyleDictionary.Formatter = ({
       formatting,
     })}
   }`);
+
   // add auto dark theme css
   if (selectorDark) {
     output.push(`@media (prefers-color-scheme: dark) {
@@ -47,6 +48,7 @@ export const cssThemed: StyleDictionary.Formatter = ({
       }
     }`);
   }
+
   // return prettified
   return format(output.join('\n'), { parser: 'css', printWidth: 500 });
 };

@@ -1,6 +1,6 @@
 {
   typography: {
-    fontStack: {
+    fontFamily: {
       // FIXME: this is a hack to get Next.js fonts working
       base: { $value: 'var(--font-inter, Inter)', $type: 'fontFamily' },
       code: {

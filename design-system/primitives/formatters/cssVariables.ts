@@ -2,6 +2,8 @@ import StyleDictionary from 'style-dictionary';
 import type { FormatterArguments } from 'style-dictionary/types/Format';
 import type { LineFormatting } from 'style-dictionary/types/FormatHelpers';
 
+import { SELECTOR_DEFAULT } from '../constants';
+
 const { fileHeader, formattedVariables } = StyleDictionary.formatHelpers;
 
 /**
@@ -15,7 +17,7 @@ export const cssVariables: StyleDictionary.Formatter = ({
   options = {},
   file,
 }: FormatterArguments) => {
-  const selector = options.selector ? options.selector : `:root`;
+  const selector = options.selector ? options.selector : SELECTOR_DEFAULT;
   const { outputReferences, descriptions } = options;
   const formatting: LineFormatting = {
     commentStyle: descriptions ? 'long' : 'none',
