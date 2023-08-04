@@ -8,6 +8,7 @@ import {
 } from './formatters';
 import { w3cJsonParser } from './parsers';
 import {
+  colorToCssAlpha,
   colorToHex,
   colorToHexAlpha,
   cubicBezierToCss,
@@ -68,6 +69,11 @@ StyleDictionary.registerTransform({
 StyleDictionary.registerTransform({
   name: 'color/rgbaFloat',
   ...colorToRgbaFloat,
+});
+
+StyleDictionary.registerTransform({
+  name: 'color/cssAlpha',
+  ...colorToCssAlpha,
 });
 
 StyleDictionary.registerTransform({

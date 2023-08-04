@@ -1,41 +1,38 @@
-import { KeystarStyleDictionary } from '../KeystarStyleDictionary';
-import { cssOLD } from '../platforms/cssOLD';
-import { javascriptOLD } from '../platforms/javascriptOLD';
+import glob from 'fast-glob';
+import fs from 'fs';
+import StyleDictionary from 'style-dictionary';
 
-function getConfig(scheme: string, scale: string) {
-  return {
-    source: [
-      'tokens/static.@(json|json5)',
-      `tokens/scales/${scale}/*.@(json|json5)`,
-      `tokens/color/${scheme}/*.@(json|json5)`,
-      'tokens/**/shared.@(json|json5)',
-    ],
-    platforms: {
-      css: cssOLD(scheme, scale),
-      javascript: javascriptOLD(),
-    },
-  };
-}
+const { fileHeader } = StyleDictionary.formatHelpers;
 
-// console.log("Build started...");
+const build = ({
+  destination,
+  files,
+}: {
+  destination: string;
+  files: string[];
+}) => {
+  // remove existing file
+  if (fs.existsSync(destination)) {
+    fs.unlinkSync(destination);
+  }
 
-// PROCESS TOKENS FOR SCHEMES, SCALES, AND PLATFORMS
+  // add file header
+  fs.writeFileSync(destination, fileHeader({ file: { destination } }));
 
-['light', 'dark'].map(function (scheme) {
-  ['medium', 'large'].map(function (scale) {
-    ['css', 'javascript'].map(function (platform) {
-      console.log(`\nProcessing: [${platform}] [${scheme}] [${scale}]`);
-
-      const DictionaryInstance = KeystarStyleDictionary.extend(
-        getConfig(scheme, scale)
-      );
-
-      DictionaryInstance.buildPlatform(platform);
-
-      // console.log("\nEnd processing");
-    });
+  // concat all css files into one
+  files.forEach(file => {
+    fs.appendFileSync(destination, fs.readFileSync(file).toString());
   });
-});
+};
 
-// console.log("\n==============================================");
-// console.log("\nBuild completed!");
+build({
+  // bring themes to the top of the file, but dark must be after light
+  files: glob.sync('dist/css/**/*.css').sort((a, b) => {
+    if (a.includes('theme')) return -1;
+    if (b.includes('theme')) return 1;
+    if (a.includes('dark')) return 1;
+    if (b.includes('dark')) return -1;
+    return 0;
+  }),
+  destination: 'dist/keystar.css',
+});

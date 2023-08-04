@@ -5,7 +5,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "tsx ./scripts/build.ts",
+    "build": "tsx ./scripts/buildTokens.ts && tsx ./scripts/build.ts",
     "build:tokens": "tsx ./scripts/buildTokens.ts",
     "build:figma": "tsx ./scripts/buildFigma.ts"
   },

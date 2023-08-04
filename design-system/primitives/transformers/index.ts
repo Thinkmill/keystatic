@@ -1,3 +1,4 @@
+export { colorToCssAlpha } from './colorToCssAlpha';
 export { colorToHex } from './colorToHex';
 export { colorToHexAlpha } from './colorToHexAlpha';
 export { cubicBezierToCss } from './cubicBezierToCss';
