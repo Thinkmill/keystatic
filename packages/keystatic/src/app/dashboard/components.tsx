@@ -67,6 +67,7 @@ export const DashboardCard = (
             href={props.href}
             className={css({
               color: tokenSchema.color.foreground.neutral,
+              outline: 'none',
               textDecoration: 'underline',
               textDecorationColor: 'transparent',
               textDecorationThickness: tokenSchema.size.border.regular,
@@ -76,9 +77,14 @@ export const DashboardCard = (
                 color: tokenSchema.color.foreground.neutralEmphasis,
                 textDecorationColor: tokenSchema.color.foreground.neutral,
               },
+              '&:focus-visible::before': {
+                outline: `${tokenSchema.size.alias.focusRing} solid ${tokenSchema.color.alias.focusRing}`,
+                outlineOffset: tokenSchema.size.alias.focusRingGap,
+              },
 
               // fill the available space so that the card is clickable
               '::before': {
+                borderRadius: tokenSchema.size.radius.medium,
                 content: '""',
                 position: 'absolute',
                 inset: 0,

@@ -67,7 +67,11 @@ export const PageHeader = ({ children }: PropsWithChildren) => {
       height={{ mobile: 'element.large', tablet: 'scale.700' }}
       flexShrink={0}
     >
-      <PageContainer>
+      <Box
+        minHeight={0}
+        minWidth={0}
+        paddingX={{ mobile: 'medium', tablet: 'xlarge', desktop: 'xxlarge' }}
+      >
         <Flex
           alignItems="center"
           gap={{ mobile: 'small', tablet: 'regular' }}
@@ -88,7 +92,7 @@ export const PageHeader = ({ children }: PropsWithChildren) => {
           </ActionButton>
           {children}
         </Flex>
-      </PageContainer>
+      </Box>
     </Box>
   );
 };
