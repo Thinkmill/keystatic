@@ -12,7 +12,7 @@ export const javascript: PlatformInitializer = (
   return {
     buildPath,
     prefix,
-    transforms: ['attribute/cti', 'name/cti/kebab'],
+    transforms: ['name/cti/kebab'],
     files: [
       {
         destination: outputFile,

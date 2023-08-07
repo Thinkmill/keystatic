@@ -32,11 +32,6 @@ const getStyleDictionaryConfig: StyleDictionaryConfigGenerator = (
     css: css(`css/${filename}.css`, options.prefix, options.buildPath, {
       themed: options.themed,
     }),
-    javascript: javascript(
-      `javascript/${filename}.js`,
-      options.prefix,
-      options.buildPath
-    ),
     ...platforms,
   },
 });
@@ -62,7 +57,6 @@ export const buildDesignTokens = (
    * Colors, shadows & borders
    * ----------------------------------- */
   for (const { filename, source, include } of themes) {
-    // build functional scales
     KeystarStyleDictionary.extend(
       getStyleDictionaryConfig(`themes/${filename}`, source, include, {
         ...buildOptions,
@@ -75,7 +69,6 @@ export const buildDesignTokens = (
    * Size tokens
    * ----------------------------------- */
   const sizeFiles = glob.sync('tokens/size/*');
-  //
   for (const file of sizeFiles) {
     KeystarStyleDictionary.extend(
       getStyleDictionaryConfig(
@@ -98,26 +91,27 @@ export const buildDesignTokens = (
       buildOptions
     )
   ).buildAllPlatforms();
-  // KeystarStyleDictionary.extend(
-  //   getStyleDictionaryConfig(
-  //     `functional/typography/typography`,
-  //     [`src/tokens/functional/typography/*.json`],
-  //     [`src/tokens/base/typography/*.json`],
-  //     buildOptions,
-  //     {
-  //       css: css(
-  //         `css/functional/typography/typography.css`,
-  //         buildOptions.prefix,
-  //         buildOptions.buildPath,
-  //         {
-  //           options: {
-  //             outputReferences: true,
-  //           },
-  //         }
-  //       ),
-  //     }
-  //   )
-  // ).buildAllPlatforms();
+
+  /** -----------------------------------
+   * JavaScript token schema
+   * ----------------------------------- */
+  const allFiles = glob.sync('tokens/**/*.json5');
+  KeystarStyleDictionary.extend(
+    getStyleDictionaryConfig(
+      `tokenSchema`,
+      // we don't care about values. dark tokens excluded to avoid collisions
+      allFiles.filter(name => !name.includes('dark')),
+      [],
+      buildOptions,
+      {
+        javascript: javascript(
+          `tokenSchema.js`,
+          buildOptions.prefix,
+          buildOptions.buildPath
+        ),
+      }
+    )
+  ).buildPlatform('javascript');
 };
 
 /** -----------------------------------
