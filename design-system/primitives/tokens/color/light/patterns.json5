@@ -11,7 +11,7 @@
       // Backgrounds
       // -----------------------------------------------------------------------
       blanket: {
-        $value: '#000000',
+        $value: '{color.scale.black}',
         $type: 'color',
         alpha: 0.6,
         $extensions: {

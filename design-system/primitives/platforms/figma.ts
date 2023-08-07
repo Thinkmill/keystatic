@@ -6,7 +6,7 @@ import type { PlatformInitializer } from '../types';
 
 const validFigmaToken = (token: StyleDictionary.TransformedToken) => {
   const validTypes = ['color', 'dimension'];
-  // is a siource token, not an included one
+  // is a source token, not an included one
   if (!isSource(token)) {
     return false;
   }

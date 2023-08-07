@@ -6,35 +6,64 @@ import { figma } from '../platforms';
 import type { ConfigGeneratorOptions } from '../types';
 import { themes } from './themes.config';
 
+/*
+Desired output
+------------------------------
+{
+  "id": "collection-id",
+  "name": "colors",
+  "modes": {
+    "1:0": "Light",
+    "1:1": "Dark"
+  },
+  "variableIds": ["loads-of-ids"],
+  "variables": [
+    {
+      "id": "token-id",
+      "name": "alias/backgroundPressed",
+      "type": "COLOR",
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "valuesByMode": {
+        "1:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "id-of-token"
+        },
+        "1:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "id-of-token"
+        }
+      },
+      "resolvedValuesByMode": {
+        "1:0": {
+          "resolvedValue": {
+            "r": 0,
+            "g": 0,
+            "b": 0,
+            "a": 0.114
+          },
+          "alias": "id-of-token",
+          "aliasName": "scales/black"
+        },
+        "1:1": {
+          "resolvedValue": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 0.124
+          },
+          "alias": "id-of-token",
+          "aliasName": "scales/white"
+        }
+      }
+    }
+  ]
+}
+*/
+
 export const buildFigma = (buildOptions: ConfigGeneratorOptions): void => {
   /** -----------------------------------
-   * Colors
+   * Color collection
    * ----------------------------------- */
-  // base colors
-  // const baseScales = [
-  //   {
-  //     name: 'light',
-  //     source: [`tokens/color/light/scale.json5`],
-  //   },
-  //   {
-  //     name: 'dark',
-  //     source: [`tokens/color/dark/scale.json5`],
-  //   },
-  // ];
-
-  // for (const { name, source } of baseScales) {
-  //   KeystarStyleDictionary.extend({
-  //     source,
-  //     platforms: {
-  //       figma: figma(
-  //         `figma/scales/${name}.json`,
-  //         buildOptions.prefix,
-  //         buildOptions.buildPath
-  //       ),
-  //     },
-  //   }).buildAllPlatforms();
-  // }
-  //
   for (const { filename, source, include } of themes) {
     if (['light', 'dark'].includes(filename)) {
       // build functional scales

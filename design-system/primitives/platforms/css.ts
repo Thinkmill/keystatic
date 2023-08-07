@@ -43,7 +43,8 @@ export const css: PlatformInitializer = (
       // new
       // 'name/pathToKebabCase',
       'color/hex',
-      'color/hexAlpha',
+      // 'color/hexAlpha',
+      'color/cssAlpha',
       'cubicBezier/css',
       'typography/capsize',
     ],
@@ -54,7 +55,7 @@ export const css: PlatformInitializer = (
         filter: token => isSource(token) && options?.themed === true,
         options: {
           showFileHeader: false,
-          outputReferences: false,
+          outputReferences: true,
           descriptions: false,
           selector,
           selectorDark,

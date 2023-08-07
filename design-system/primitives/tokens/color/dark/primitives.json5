@@ -453,7 +453,7 @@
     // -----------------------------------------------------------------------
     shadow: {
       muted: {
-        $value: '#000000',
+        $value: '{color.scale.black}',
         $type: 'color',
         alpha: 0.2,
         $extensions: {
@@ -464,7 +464,7 @@
         },
       },
       regular: {
-        $value: '#000000',
+        $value: '{color.scale.black}',
         $type: 'color',
         alpha: 0.4,
         $extensions: {
@@ -475,7 +475,7 @@
         },
       },
       emphasis: {
-        $value: '#000000',
+        $value: '{color.scale.black}',
         $type: 'color',
         alpha: 0.6,
         $extensions: {

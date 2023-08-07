@@ -9,7 +9,7 @@ import type {
 } from '../types';
 
 import { themes } from './themes.config';
-import { buildFigma } from './buildFigma';
+// import { buildFigma } from './buildFigma';
 
 /**
  * getStyleDictionaryConfig
@@ -39,7 +39,7 @@ const getStyleDictionaryConfig: StyleDictionaryConfigGenerator = (
 export const buildDesignTokens = (
   buildOptions: ConfigGeneratorOptions
 ): void => {
-  buildFigma(buildOptions);
+  // buildFigma(buildOptions);
 
   /** -----------------------------------
    * Animation tokens
