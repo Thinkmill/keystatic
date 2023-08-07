@@ -13,12 +13,8 @@ import {
   colorToHexAlpha,
   cubicBezierToCss,
   figmaAttributes,
-  fontCapsize,
-  fontUnit,
   namePathToFigma,
   namePathToKebabCase,
-  sizeShadow,
-  sizeUnit,
   typographyToCapsize,
 } from './transformers';
 import { dimensionToPixelUnitless } from './transformers/dimensionToPixelUnitless';
@@ -109,26 +105,6 @@ StyleDictionary.registerTransform({
 StyleDictionary.registerTransform({
   name: 'typography/capsize',
   ...typographyToCapsize,
-});
-
-StyleDictionary.registerTransform({
-  name: 'ks/font/capsize',
-  ...fontCapsize,
-});
-
-StyleDictionary.registerTransform({
-  name: 'ks/font/unit',
-  ...fontUnit,
-});
-
-StyleDictionary.registerTransform({
-  name: 'ks/size/shadow',
-  ...sizeShadow,
-});
-
-StyleDictionary.registerTransform({
-  name: 'ks/size/unit',
-  ...sizeUnit,
 });
 
 /**
