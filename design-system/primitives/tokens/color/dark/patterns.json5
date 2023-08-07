@@ -10,7 +10,7 @@
         alpha: 0.6,
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['bgColor'],
           },
@@ -23,7 +23,7 @@
         alpha: 0.04,
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['bgColor'],
           },
@@ -34,7 +34,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['bgColor'],
           },
@@ -46,7 +46,7 @@
         alpha: 0.06,
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['bgColor'],
           },
@@ -58,7 +58,7 @@
         alpha: 0.06,
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['bgColor'],
           },
@@ -70,7 +70,7 @@
         alpha: 0.1,
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['bgColor'],
           },
@@ -82,7 +82,7 @@
         alpha: 0.1,
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['bgColor'],
           },
@@ -94,7 +94,7 @@
         alpha: 0.2,
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['bgColor'],
           },
@@ -108,7 +108,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['borderColor'],
           },
@@ -120,7 +120,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['borderColor'],
           },
@@ -131,7 +131,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['borderColor'],
           },
@@ -142,7 +142,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['borderColor'],
           },
@@ -153,7 +153,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['borderColor'],
           },
@@ -164,7 +164,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['borderColor'],
           },
@@ -175,7 +175,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['borderColor'],
           },
@@ -186,7 +186,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['borderColor'],
           },
@@ -200,7 +200,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['fgColor'],
           },
@@ -211,7 +211,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['fgColor'],
           },
@@ -222,7 +222,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['fgColor'],
           },
@@ -233,7 +233,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['fgColor'],
           },
@@ -244,7 +244,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['fgColor'],
           },
@@ -255,7 +255,7 @@
         $type: 'color',
         $extensions: {
           'org.keystar.figma': {
-            collection: 'mode',
+            collection: 'color',
             mode: 'dark',
             scopes: ['fgColor'],
           },
