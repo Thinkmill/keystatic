@@ -39,9 +39,9 @@ export const css: PlatformInitializer = (
     buildPath,
     transforms: [
       // built-in
-      'attribute/cti',
       'name/cti/kebab',
       // new
+      // 'name/pathToKebabCase',
       'color/hex',
       'color/hexAlpha',
       'cubicBezier/css',
