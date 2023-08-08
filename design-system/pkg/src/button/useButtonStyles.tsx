@@ -166,7 +166,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
             backgroundColor: tokenSchema.color.scale.slate11,
           },
           '&[data-pressed]': {
-            backgroundColor: tokenSchema.color.scale.slate12,
+            backgroundColor: tokenSchema.color.scale.slate11,
           },
 
           // NOTE: "neutral" tone invalid for "high" prominence
