@@ -100,7 +100,7 @@ function SidebarHeader({
     color: tokenSchema.color.foreground.neutralEmphasis,
     display: 'flex',
     fontFamily: tokenSchema.typography.fontFamily.base,
-    fontSize: tokenSchema.fontsize.text.medium.size,
+    fontSize: tokenSchema.typography.text.medium.size,
     fontWeight: tokenSchema.typography.fontWeight.bold,
     textDecoration: 'none',
   });
