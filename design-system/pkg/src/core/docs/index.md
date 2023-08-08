@@ -11,10 +11,9 @@ Needs documentation in general...
 ## Provider
 
 ```jsx {% live=true %}
-const context = useProvider();
 const [colorScheme, toggleScheme] = React.useReducer(
   s => (s === 'dark' ? 'light' : 'dark'),
-  context.colorScheme
+  'light'
 );
 
 return (
@@ -22,7 +21,7 @@ return (
     <Switch
       isSelected={colorScheme === 'dark'}
       onChange={toggleScheme}
-      marginBottom="medium"
+      marginBottom="large"
     >
       Dark mode
     </Switch>
@@ -37,24 +36,6 @@ return (
           marginBottom: `calc(${tokenSchema.size.space.large} * -1)`,
         }}
       >
-        <Heading>Text samples</Heading>
-        <Flex wrap gap="medium">
-          <Text color="neutralEmphasis">Neutral Emphasis</Text>
-          <Text color="neutral">Neutral (default)</Text>
-          <Text color="neutralSecondary">Neutral Secondary</Text>
-          <Text color="neutralTertiary">Neutral Tertiary</Text>
-        </Flex>
-
-        <Flex wrap gap="medium">
-          <Text color="highlight">Highlight</Text>
-          <Text color="pending">Pending</Text>
-          <Text color="accent">Accent</Text>
-          <Text color="positive">Positive</Text>
-          <Text color="caution">Caution</Text>
-          <Text color="critical">Critical</Text>
-        </Flex>
-
-        <Heading>Control samples</Heading>
         <Flex wrap gap="medium" alignItems="end">
           <Picker label="Picker">
             <Item key="first">First</Item>

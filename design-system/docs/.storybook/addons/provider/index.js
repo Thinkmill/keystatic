@@ -25,21 +25,12 @@ function ProviderUpdater(props) {
   let [localeValue, setLocale] = useState(
     providerValuesFromUrl.locale || undefined
   );
-  // NOTE: Schemes currently listen to "storybook-dark-mode" changes. may need custom interface in the future.
-  // let [schemeValue, setScheme] = useState(
-  //   providerValuesFromUrl.scheme || undefined
-  // );
-  // let [scaleValue, setScale] = useState(
-  //   providerValuesFromUrl.scale || undefined
-  // );
   let [storyReady, setStoryReady] = useState(window.parent === window); // reduce content flash because it takes a moment to get the provider details
 
   useEffect(() => {
     let channel = addons.getChannel();
     let providerUpdate = event => {
       setLocale(event.locale);
-      // setScheme(event.scheme === 'Auto' ? undefined : event.scheme);
-      // setScale(event.scale === 'Auto' ? undefined : event.scale);
       setStoryReady(true);
     };
 
