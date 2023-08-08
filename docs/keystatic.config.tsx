@@ -1,4 +1,3 @@
-// keystatic.config.tsx
 import {
   config,
   fields,

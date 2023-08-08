@@ -1,35 +1,26 @@
 {
-  "name": "@keystar/theme",
-  "description": "Typography, sizing, and color primitives for the Keystar design system",
+  "name": "@keystar/primitives",
   "version": "0.0.1",
   "private": true,
+  "description": "Typography, size, and color primitives for the Keystar design system",
   "license": "MIT",
   "scripts": {
     "build": "tsx ./scripts/buildTokens.ts && tsx ./scripts/build.ts",
-    "build:tokens": "tsx ./scripts/buildTokens.ts",
-    "build:figma": "tsx ./scripts/buildFigma.ts"
+    "build:figma": "tsx ./scripts/buildFigma.ts",
+    "build:tokens": "tsx ./scripts/buildTokens.ts"
   },
   "devDependencies": {
     "@capsizecss/core": "^3.1.1",
     "@capsizecss/metrics": "^1.2.0",
-    "@types/jest": "^29.5.2",
-    "@types/lodash": "^4.14.195",
-    "@types/node": "^20.4.0",
-    "@types/tinycolor2": "^1.4.3",
+    "@types/lodash": "^4.14.191",
     "color2k": "^2.0.2",
     "emery": "^1.4.1",
-    "fast-glob": "^3.3.1",
+    "fast-glob": "^3.2.12",
     "json5": "^2.2.1",
     "lodash": "^4.17.21",
     "prettier": "^2.7.1",
     "style-dictionary": "^3.8.0",
-    "tinycolor2": "^1.4.1",
-    "ts-jest": "^29.1.1",
-    "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.2.0",
     "tsx": "^3.8.0",
-    "typescript": "^5.1.6",
-    "zod": "^3.21.4",
-    "zod-validation-error": "^1.3.1"
+    "typescript": "^5.1.3"
   }
 }
