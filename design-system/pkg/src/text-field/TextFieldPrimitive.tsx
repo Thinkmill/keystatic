@@ -176,7 +176,7 @@ function useTextFieldStyles() {
     color: tokenSchema.color.foreground.neutral,
     flex: 1,
     fontFamily: tokenSchema.typography.fontFamily.base,
-    fontSize: tokenSchema.fontsize.text.regular.size,
+    fontSize: tokenSchema.typography.text.regular.size,
     fontWeight: tokenSchema.typography.fontWeight.regular,
     height: tokenSchema.size.element.regular,
     lineHeight: tokenSchema.typography.lineheight.small,

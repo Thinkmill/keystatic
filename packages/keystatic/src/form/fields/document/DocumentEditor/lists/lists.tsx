@@ -200,7 +200,7 @@ export const ListItem = forwardRef(function ListItem(
 ) {
   const type = useContext(ListContext);
   const commonStyles = {
-    height: tokenSchema.fontsize.text.medium.capheight,
+    height: tokenSchema.typography.text.medium.capheight,
     width: '1em',
   };
   const className =
@@ -208,7 +208,7 @@ export const ListItem = forwardRef(function ListItem(
       ? css({
           ...commonStyles,
           color: tokenSchema.color.foreground.neutral,
-          fontSize: tokenSchema.fontsize.text.medium.size,
+          fontSize: tokenSchema.typography.text.medium.size,
           '::before': {
             display: 'flex',
             justifyContent: 'center',

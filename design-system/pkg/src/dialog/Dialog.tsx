@@ -132,7 +132,7 @@ export const Dialog: ForwardRefExoticComponent<
             UNSAFE_className={css({
               placeSelf: 'flex-start end',
               paddingInline: 0,
-              marginBlock: `calc((${tokenSchema.size.element.regular} - ${tokenSchema.fontsize.heading[headingSize].capheight}) / 2 * -1)`,
+              marginBlock: `calc((${tokenSchema.size.element.regular} - ${tokenSchema.typography.heading[headingSize].capheight}) / 2 * -1)`,
               marginInlineEnd: `calc(${tokenSchema.size.space.medium} * -1)`,
               marginInlineStart: tokenSchema.size.space.regular,
             })}
@@ -330,9 +330,9 @@ function getContentStyles() {
      * This is a shitty ~solution~ because it adds padding regardless of whether
      * or not there's trimmed text node that would require it.
      */
-    marginBlockEnd: tokenSchema.fontsize.text.regular.baselineTrim,
-    paddingBlockEnd: `calc(${tokenSchema.fontsize.text.regular.baselineTrim} * -1)`,
-    paddingBlockStart: `calc(${tokenSchema.fontsize.text.regular.capheightTrim} * -0.1)`, // capsize ascender clipping issue
+    marginBlockEnd: tokenSchema.typography.text.regular.baselineTrim,
+    paddingBlockEnd: `calc(${tokenSchema.typography.text.regular.baselineTrim} * -1)`,
+    paddingBlockStart: `calc(${tokenSchema.typography.text.regular.capheightTrim} * -0.1)`, // capsize ascender clipping issue
 
     '&[data-has-header]': {
       marginBlockStart: tokenSchema.size.space.xlarge,

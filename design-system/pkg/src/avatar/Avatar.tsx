@@ -80,26 +80,26 @@ export const Avatar: ForwardRefExoticComponent<
 
           // sizes
           '--avatar-size': tokenSchema.size.element.regular,
-          '--avatar-text-size': tokenSchema.fontsize.text.regular.size,
+          '--avatar-text-size': tokenSchema.typography.text.regular.size,
           '&[data-size=xsmall]': {
             '--avatar-size': tokenSchema.size.element.xsmall,
-            '--avatar-text-size': tokenSchema.fontsize.text.small.size,
+            '--avatar-text-size': tokenSchema.typography.text.small.size,
           },
           '&[data-size=small]': {
             '--avatar-size': tokenSchema.size.element.small,
-            '--avatar-text-size': tokenSchema.fontsize.text.small.size,
+            '--avatar-text-size': tokenSchema.typography.text.small.size,
           },
           '&[data-size=medium]': {
             '--avatar-size': tokenSchema.size.element.medium,
-            '--avatar-text-size': tokenSchema.fontsize.text.medium.size,
+            '--avatar-text-size': tokenSchema.typography.text.medium.size,
           },
           '&[data-size=large]': {
             '--avatar-size': tokenSchema.size.element.large,
-            '--avatar-text-size': tokenSchema.fontsize.text.large.size,
+            '--avatar-text-size': tokenSchema.typography.text.large.size,
           },
           '&[data-size=xlarge]': {
             '--avatar-size': tokenSchema.size.element.xlarge,
-            '--avatar-text-size': tokenSchema.fontsize.text.large.size,
+            '--avatar-text-size': tokenSchema.typography.text.large.size,
           },
         })
       )}

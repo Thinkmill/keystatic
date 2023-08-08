@@ -553,7 +553,7 @@ let styles: any = {
   color: tokenSchema.color.foreground.neutral,
   flex: 1,
   fontFamily: tokenSchema.typography.fontFamily.base,
-  fontSize: tokenSchema.fontsize.text.regular.size,
+  fontSize: tokenSchema.typography.text.regular.size,
   height: 'auto',
   lineHeight: 1.4,
   minHeight: tokenSchema.size.scale[2000],

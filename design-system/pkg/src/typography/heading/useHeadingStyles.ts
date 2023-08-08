@@ -12,7 +12,7 @@ export function useHeadingStyles({
   UNSAFE_className,
   ...otherProps
 }: PartialRequired<HeadingProps, 'size'>) {
-  const fontDefinition = tokenSchema.fontsize.heading[size];
+  const fontDefinition = tokenSchema.typography.heading[size];
   const trimStyles = getTrimStyles(fontDefinition);
   const styles = [
     {

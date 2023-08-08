@@ -31,7 +31,7 @@ function getStyleFromColumn(props: CellProps) {
 
 export const SortIndicator = () => {
   // fix alignment: reduce the space the icon takes up, w/o affecting the icon layout itself
-  let labelHeight = tokenSchema.fontsize.text.regular.capheight;
+  let labelHeight = tokenSchema.typography.text.regular.capheight;
 
   return (
     <span

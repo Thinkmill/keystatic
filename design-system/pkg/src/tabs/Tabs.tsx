@@ -222,10 +222,10 @@ function Tab<T>(props: TabProps<T>) {
             // modifiers
             '&[data-prominence=default]': {
               fontWeight: tokenSchema.typography.fontWeight.medium,
-              fontSize: tokenSchema.fontsize.text.regular.size,
+              fontSize: tokenSchema.typography.text.regular.size,
             },
             '&[data-prominence=low]': {
-              fontSize: tokenSchema.fontsize.text.regular.size,
+              fontSize: tokenSchema.typography.text.regular.size,
             },
 
             // orientation
@@ -233,7 +233,7 @@ function Tab<T>(props: TabProps<T>) {
               // modifiers
               '&[data-prominence=default]': {
                 fontWeight: tokenSchema.typography.fontWeight.medium,
-                fontSize: tokenSchema.fontsize.text.regular.size,
+                fontSize: tokenSchema.typography.text.regular.size,
                 height: tokenSchema.size.element.medium,
                 paddingBottom: tokenSchema.size.space.regular,
 
@@ -244,7 +244,7 @@ function Tab<T>(props: TabProps<T>) {
                 },
               },
               '&[data-prominence=low]': {
-                fontSize: tokenSchema.fontsize.text.regular.size,
+                fontSize: tokenSchema.typography.text.regular.size,
                 height: tokenSchema.size.element.regular,
                 paddingBottom: tokenSchema.size.space.small,
 
