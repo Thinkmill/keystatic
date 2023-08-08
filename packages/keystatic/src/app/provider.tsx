@@ -233,9 +233,7 @@ export default function Provider({
       <VoussoirProvider
         linkComponent={UniversalLink}
         locale={config.locale || 'en-US'}
-        colorScheme={
-          themeContext.theme === 'system' ? undefined : themeContext.theme
-        }
+        colorScheme={themeContext.theme}
       >
         <ClientSideOnlyDocumentElement />
         <link

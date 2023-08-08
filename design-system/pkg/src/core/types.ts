@@ -22,19 +22,10 @@ export type VoussoirProviderProps = {
   /** The content of the Provider. */
   children: ReactNode;
   /**
-   * The theme for your application.
-   */
-  // theme?: VoussoirTheme;
-  /**
-   * The color scheme for your application.
-   * Defaults to operating system preferences.
+   * The color scheme for your application. Defaults to operating system preferences.
+   * @default 'auto'
    */
   colorScheme?: ColorScheme;
-  /**
-   * The default color scheme if no operating system setting is available.
-   * @default 'light'
-   */
-  defaultColorScheme?: ColorScheme;
   /**
    * Sets the scale for your applications. Defaults based on device pointer type.
    */
