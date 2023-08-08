@@ -17,8 +17,5 @@
     "target": "esnext"
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules"],
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-  }
+  "exclude": ["node_modules"]
 }
