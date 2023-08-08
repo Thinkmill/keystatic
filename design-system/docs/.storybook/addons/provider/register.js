@@ -40,7 +40,7 @@ function ProviderFieldSetter({ api }) {
   let [values, setValues] = useState({
     locale: providerValuesFromUrl.locale || undefined,
     // scheme: providerValuesFromUrl.scheme || undefined,
-    scale: providerValuesFromUrl.scale || undefined,
+    // scale: providerValuesFromUrl.scale || undefined,
   });
   let channel = addons.getChannel();
 
@@ -60,14 +60,14 @@ function ProviderFieldSetter({ api }) {
   //     return next;
   //   });
   // };
-  let onScaleChange = newValue => {
-    // let newValue = e.target.value || undefined;
-    setValues(old => {
-      let next = { ...old, scale: newValue };
-      channel.emit('provider/updated', next);
-      return next;
-    });
-  };
+  // let onScaleChange = newValue => {
+  //   // let newValue = e.target.value || undefined;
+  //   setValues(old => {
+  //     let next = { ...old, scale: newValue };
+  //     channel.emit('provider/updated', next);
+  //     return next;
+  //   });
+  // };
 
   useEffect(() => {
     let storySwapped = () => {
@@ -83,14 +83,14 @@ function ProviderFieldSetter({ api }) {
     api.setQueryParams({
       'providerSwitcher-locale': values.locale || '',
       // 'providerSwitcher-scheme': values.scheme || '',
-      'providerSwitcher-scale': values.scale || '',
+      // 'providerSwitcher-scale': values.scale || '',
     });
   });
 
   return (
     <>
       <LocaleSelector value={values.locale} onChange={onLocaleChange} />
-      <ScaleSelector value={values.scale} onChange={onScaleChange} />
+      {/* <ScaleSelector value={values.scale} onChange={onScaleChange} /> */}
     </>
   );
 }
@@ -147,49 +147,49 @@ const LocaleSelector = ({ onChange, value }) => {
   );
 };
 
-const ScaleSelector = ({ onChange, value }) => {
-  const selectedIndex = SCALES.findIndex(scale => scale.value === value);
-  const selectedScale = SCALES[selectedIndex];
-  return (
-    <WithTooltip
-      placement="bottom"
-      trigger="click"
-      // closeOnClick
-      tooltip={({ onHide }) => {
-        return (
-          <TooltipLinkList
-            links={SCALES.map(scale => {
-              let active = scale.value ? value === scale.value : !value;
-              return {
-                id: scale.value,
-                title: scale.label,
-                left: <Checkmark active={active} />,
-                active,
-                onClick: () => {
-                  onChange(scale.value);
-                  onHide();
-                },
-              };
-            })}
-          />
-        );
-      }}
-    >
-      <IconButton
-        title={`Scale: ${value ? selectedScale.label : 'Auto'}`}
-        active={value}
-        // onClick={() => {
-        //   onChange(SCALES[(selectedIndex + 1) % SCALES.length].value);
-        // }}
-        style={{ gap: 8 }}
-      >
-        <Icons icon="ruler" />
-        {value ? selectedScale.label[0] : null}
-        {/* {value ? selectedScale.symbol : <Icons icon="globe" />} */}
-      </IconButton>
-    </WithTooltip>
-  );
-};
+// const ScaleSelector = ({ onChange, value }) => {
+//   const selectedIndex = SCALES.findIndex(scale => scale.value === value);
+//   const selectedScale = SCALES[selectedIndex];
+//   return (
+//     <WithTooltip
+//       placement="bottom"
+//       trigger="click"
+//       // closeOnClick
+//       tooltip={({ onHide }) => {
+//         return (
+//           <TooltipLinkList
+//             links={SCALES.map(scale => {
+//               let active = scale.value ? value === scale.value : !value;
+//               return {
+//                 id: scale.value,
+//                 title: scale.label,
+//                 left: <Checkmark active={active} />,
+//                 active,
+//                 onClick: () => {
+//                   onChange(scale.value);
+//                   onHide();
+//                 },
+//               };
+//             })}
+//           />
+//         );
+//       }}
+//     >
+//       <IconButton
+//         title={`Scale: ${value ? selectedScale.label : 'Auto'}`}
+//         active={value}
+//         // onClick={() => {
+//         //   onChange(SCALES[(selectedIndex + 1) % SCALES.length].value);
+//         // }}
+//         style={{ gap: 8 }}
+//       >
+//         <Icons icon="ruler" />
+//         {value ? selectedScale.label[0] : null}
+//         {/* {value ? selectedScale.symbol : <Icons icon="globe" />} */}
+//       </IconButton>
+//     </WithTooltip>
+//   );
+// };
 
 const Checkmark = ({ active }) => {
   return (

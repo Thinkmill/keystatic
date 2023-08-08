@@ -105,7 +105,7 @@ const ProviderWrapper = forwardRefWithAs<
   let { children, style } = props;
   let { locale, direction } = useLocale();
   let { modalProviderProps } = useModalProvider();
-  let { colorScheme, scale } = useProvider();
+  let { colorScheme } = useProvider();
   const ElementType = props.elementType ?? 'div';
   return (
     <ElementType
@@ -115,7 +115,6 @@ const ProviderWrapper = forwardRefWithAs<
       }${documentElementClasses({
         bodyBackground: props.bodyBackground,
         colorScheme,
-        scale,
       })}`}
       lang={locale}
       dir={direction}

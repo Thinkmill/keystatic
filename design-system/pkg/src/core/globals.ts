@@ -7,18 +7,17 @@ import {
 } from '@keystar/ui/style';
 
 import { cssCustomProperties } from './cssCustomProperties';
-import { ColorScheme, ScaleScheme } from '@keystar/ui/types';
+import { ColorScheme } from '@keystar/ui/types';
 
 type StrictBackground = keyof VoussoirTheme['color']['background'];
 
 export const documentElementClasses = (args: {
   bodyBackground?: StrictBackground;
   colorScheme?: ColorScheme;
-  scale?: ScaleScheme;
 }) => {
   return `${documentReset(args.bodyBackground)} ksv-theme ksv-scheme--${
     args.colorScheme
-  } ksv-scale--${args.scale}`;
+  }`;
 };
 
 /**

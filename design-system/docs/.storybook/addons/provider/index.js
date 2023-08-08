@@ -29,9 +29,9 @@ function ProviderUpdater(props) {
   // let [schemeValue, setScheme] = useState(
   //   providerValuesFromUrl.scheme || undefined
   // );
-  let [scaleValue, setScale] = useState(
-    providerValuesFromUrl.scale || undefined
-  );
+  // let [scaleValue, setScale] = useState(
+  //   providerValuesFromUrl.scale || undefined
+  // );
   let [storyReady, setStoryReady] = useState(window.parent === window); // reduce content flash because it takes a moment to get the provider details
 
   useEffect(() => {
@@ -39,7 +39,7 @@ function ProviderUpdater(props) {
     let providerUpdate = event => {
       setLocale(event.locale);
       // setScheme(event.scheme === 'Auto' ? undefined : event.scheme);
-      setScale(event.scale === 'Auto' ? undefined : event.scale);
+      // setScale(event.scale === 'Auto' ? undefined : event.scale);
       setStoryReady(true);
     };
 
@@ -56,7 +56,6 @@ function ProviderUpdater(props) {
     <VoussoirProvider
       linkComponent={StorybookLink}
       colorScheme={useDarkMode() ? 'dark' : 'light'}
-      scale={scaleValue}
       locale={localeValue}
     >
       <link
