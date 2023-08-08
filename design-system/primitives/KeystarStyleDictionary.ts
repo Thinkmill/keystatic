@@ -11,15 +11,16 @@ import {
   colorToCssAlpha,
   colorToHex,
   colorToHexAlpha,
+  colorToRgbaFloat,
   cubicBezierToCss,
+  dimensionToPixelUnitless,
   figmaAttributes,
+  fontWeightToNumber,
   namePathToFigma,
   namePathToKebabCase,
+  shadowDimensionToCssPartial,
   typographyToCapsize,
 } from './transformers';
-import { dimensionToPixelUnitless } from './transformers/dimensionToPixelUnitless';
-import { colorToRgbaFloat } from './transformers/colorToRgbaFloat';
-import { fontWeightToNumber } from './transformers/fontWeightToNumber';
 
 // Parsers
 // -----------------------------------------------------------------------------
@@ -100,6 +101,11 @@ StyleDictionary.registerTransform({
 StyleDictionary.registerTransform({
   name: 'name/pathToKebabCase',
   ...namePathToKebabCase,
+});
+
+StyleDictionary.registerTransform({
+  name: 'dimension/shadowToCssPartial',
+  ...shadowDimensionToCssPartial,
 });
 
 StyleDictionary.registerTransform({

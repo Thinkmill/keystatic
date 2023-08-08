@@ -13,5 +13,6 @@ export { isFromFile } from './isFromFile';
 export { isFontFamily } from './isFontFamily';
 export { isFontWeight } from './isFontWeight';
 export { isShadow } from './isShadow';
+export { isShadowDimension } from './isShadowDimension';
 export { isSource } from './isSource';
 export { isTypography } from './isTypography';

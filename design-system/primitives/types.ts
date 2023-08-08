@@ -105,6 +105,14 @@ export type ShadowTokenValue = {
 };
 
 /**
+ * temp shadow partial until we consolidate shadows, which should contain a color value
+ */
+export type ShadowDimensionTokenValue = Pick<
+  ShadowTokenValue,
+  'blur' | 'offsetX' | 'offsetY' | 'spread'
+>;
+
+/**
  * @description size in px
  */
 export type SizePx = `${number}px`;

@@ -46,6 +46,7 @@ export const css: PlatformInitializer = (
       // 'color/hexAlpha',
       'color/cssAlpha',
       'cubicBezier/css',
+      'dimension/shadowToCssPartial',
       'typography/capsize',
     ],
     files: [
