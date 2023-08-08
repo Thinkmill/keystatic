@@ -1,0 +1,402 @@
+{
+  size: {
+    scale: {
+      '0': {
+        $value: '0px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '10': {
+        $value: '1px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '25': {
+        $value: '2px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '40': {
+        $value: '3px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '50': {
+        $value: '4px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '65': {
+        $value: '5px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '75': {
+        $value: '6px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '85': {
+        $value: '7px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '100': {
+        $value: '8px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '115': {
+        $value: '9px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '125': {
+        $value: '10px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '130': {
+        $value: '11px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '150': {
+        $value: '12px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '160': {
+        $value: '13px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '175': {
+        $value: '14px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '200': {
+        $value: '16px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '225': {
+        $value: '18px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '250': {
+        $value: '20px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '275': {
+        $value: '22px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '300': {
+        $value: '24px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '325': {
+        $value: '26px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '350': {
+        $value: '28px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '400': {
+        $value: '32px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '450': {
+        $value: '36px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '500': {
+        $value: '40px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '550': {
+        $value: '44px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '600': {
+        $value: '48px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '675': {
+        $value: '54px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '700': {
+        $value: '56px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '800': {
+        $value: '64px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '900': {
+        $value: '72px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '1000': {
+        $value: '80px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '1200': {
+        $value: '96px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '1250': {
+        $value: '100px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '1600': {
+        $value: '128px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '1700': {
+        $value: '136px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '2000': {
+        $value: '160px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '2400': {
+        $value: '192px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '3000': {
+        $value: '240px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '3400': {
+        $value: '272px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '3600': {
+        $value: '288px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '4600': {
+        $value: '368px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '5000': {
+        $value: '400px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      '6000': {
+        $value: '480px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+    },
+  },
+}

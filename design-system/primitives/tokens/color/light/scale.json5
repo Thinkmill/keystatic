@@ -1,0 +1,582 @@
+{
+  color: {
+    scale: {
+      // Static
+      // -----------------------------------------------------------------------
+      black: {
+        $value: '#000000',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      white: {
+        $value: '#ffffff',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+
+      // Amber
+      // -----------------------------------------------------------------------
+      amber1: {
+        $value: '#fefdfb',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      amber2: {
+        $value: '#fff9ed',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      amber3: {
+        $value: '#fff4d5',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      amber4: {
+        $value: '#ffecbc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      amber5: {
+        $value: '#ffe3a2',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      amber6: {
+        $value: '#ffd386',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      amber7: {
+        $value: '#f3ba63',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      amber8: {
+        $value: '#ee9d2b',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      amber9: {
+        $value: '#ffb224',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      amber10: {
+        $value: '#ffa01c',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      amber11: {
+        $value: '#ad5700',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+
+      // Green
+      // -----------------------------------------------------------------------
+      green1: {
+        $value: '#fbfefc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      green2: {
+        $value: '#f2fcf5',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      green3: {
+        $value: '#e9f9ee',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      green4: {
+        $value: '#ddf3e4',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      green5: {
+        $value: '#ccebd7',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      green6: {
+        $value: '#b4dfc4',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      green7: {
+        $value: '#92ceac',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      green8: {
+        $value: '#5bb98c',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      green9: {
+        $value: '#30a46c',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      green10: {
+        $value: '#299764',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      green11: {
+        $value: '#18794e',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+
+      // Indigo
+      // -----------------------------------------------------------------------
+      indigo1: {
+        $value: '#fdfdfe',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      indigo2: {
+        $value: '#f8faff',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      indigo3: {
+        $value: '#f0f4ff',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      indigo4: {
+        $value: '#e6edfe',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      indigo5: {
+        $value: '#d9e2fc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      indigo6: {
+        $value: '#c6d4f9',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      indigo7: {
+        $value: '#aec0f5',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      indigo8: {
+        $value: '#8da4ef',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      indigo9: {
+        $value: '#3e63dd',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      indigo10: {
+        $value: '#3a5ccc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      indigo11: {
+        $value: '#3451b2',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+
+      // Pink
+      // -----------------------------------------------------------------------
+      pink1: {
+        $value: '#fffcfe',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      pink2: {
+        $value: '#fff7fc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      pink3: {
+        $value: '#feeef8',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      pink4: {
+        $value: '#fce5f3',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      pink5: {
+        $value: '#f9d8ec',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      pink6: {
+        $value: '#f3c6e2',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      pink7: {
+        $value: '#ecadd4',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      pink8: {
+        $value: '#e38ec3',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      pink9: {
+        $value: '#d6409f',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      pink10: {
+        $value: '#d23197',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      pink11: {
+        $value: '#cd1d8d',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+
+      // Purple
+      // -----------------------------------------------------------------------
+      purple1: {
+        $value: '#fefcfe',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      purple2: {
+        $value: '#fdfaff',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      purple3: {
+        $value: '#f9f1fe',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      purple4: {
+        $value: '#f3e7fc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      purple5: {
+        $value: '#eddbf9',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      purple6: {
+        $value: '#e3ccf4',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      purple7: {
+        $value: '#d3b4ed',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      purple8: {
+        $value: '#be93e4',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      purple9: {
+        $value: '#8e4ec6',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      purple10: {
+        $value: '#8445bc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      purple11: {
+        $value: '#793aaf',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+
+      // Red
+      // -----------------------------------------------------------------------
+      red1: {
+        $value: '#fffcfc',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      red2: {
+        $value: '#fff8f8',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      red3: {
+        $value: '#ffefef',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      red4: {
+        $value: '#ffe5e5',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      red5: {
+        $value: '#fdd8d8',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      red6: {
+        $value: '#f9c6c6',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      red7: {
+        $value: '#f3aeaf',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      red8: {
+        $value: '#eb9091',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      red9: {
+        $value: '#e5484d',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      red10: {
+        $value: '#dc3d43',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      red11: {
+        $value: '#cd2b31',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+
+      // Slate
+      // -----------------------------------------------------------------------
+      slate1: {
+        $value: '#FFFFFF',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      slate2: {
+        $value: '#FAFAFA',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      slate3: {
+        $value: '#F5F5F5',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      slate4: {
+        $value: '#EAEAEA',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      slate5: {
+        $value: '#E1E1E1',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      slate6: {
+        $value: '#CACACA',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      slate7: {
+        $value: '#B3B3B3',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      slate8: {
+        $value: '#8E8E8E',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      slate9: {
+        $value: '#6E6E6E',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      slate10: {
+        $value: '#4B4B4B',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+      slate11: {
+        $value: '#2C2C2C',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': { collection: 'color', mode: 'light' },
+        },
+      },
+    },
+  },
+}

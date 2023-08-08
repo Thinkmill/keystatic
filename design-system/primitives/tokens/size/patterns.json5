@@ -1,0 +1,258 @@
+{
+  size: {
+    // TODO: scope these values. stroke width not yet available in figma:
+    // https://help.figma.com/hc/en-us/articles/4406787442711#Coming_soon
+    alias: {
+      focusRing: {
+        $value: '2px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      focusRingGap: {
+        $value: '2px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      singleLineHeight: {
+        $value: '{size.scale.400.value}',
+        $type: 'dimension',
+        $description: 'The height of a standard control, like a button.',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      singleLineWidth: {
+        $value: '{size.scale.2400.value}',
+        $type: 'dimension',
+        $description: 'The width of a standard control, like a text field.',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+    },
+
+    // Element
+    // -------------------------------------------------------------------------
+    element: {
+      xsmall: {
+        $value: '{size.scale.200.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      small: {
+        $value: '{size.scale.300.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      regular: {
+        $value: '{size.scale.400.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      medium: {
+        $value: '{size.scale.450.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      large: {
+        $value: '{size.scale.600.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      xlarge: {
+        $value: '{size.scale.800.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+    },
+
+    // Icon
+    // -------------------------------------------------------------------------
+    icon: {
+      small: {
+        $value: '{size.scale.150.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      regular: {
+        $value: '{size.scale.200.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      medium: {
+        $value: '{size.scale.300.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      large: {
+        $value: '{size.scale.400.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+    },
+
+    // Container
+    // -------------------------------------------------------------------------
+    container: {
+      xsmall: {
+        $value: '400px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      small: {
+        $value: '660px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      medium: {
+        $value: '940px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      large: {
+        $value: '1280px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      xlarge: {
+        $value: '1400px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+    },
+
+    // Dialog
+    // -------------------------------------------------------------------------
+    dialog: {
+      xsmall: {
+        $value: '320px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      small: {
+        $value: '420px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      medium: {
+        $value: '640px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+      large: {
+        $value: '860px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['size'],
+          },
+        },
+      },
+    },
+  },
+}

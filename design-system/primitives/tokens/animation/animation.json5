@@ -1,0 +1,15 @@
+{
+  animation: {
+    duration: {
+      short: { $value: '160ms', $type: 'duration' },
+      regular: { $value: '320ms', $type: 'duration' },
+      long: { $value: '960ms', $type: 'duration' },
+      xlong: { $value: '1920ms', $type: 'duration' },
+    },
+    easing: {
+      easeInOut: { $value: [0.45, 0, 0.4, 1], $type: 'cubicBezier' },
+      easeIn: { $value: [0.5, 0, 1, 1], $type: 'cubicBezier' },
+      easeOut: { $value: [0, 0, 0.4, 1], $type: 'cubicBezier' },
+    },
+  },
+}

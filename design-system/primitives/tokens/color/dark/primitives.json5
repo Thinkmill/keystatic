@@ -1,0 +1,490 @@
+{
+  color: {
+    // Backgrounds
+    // -----------------------------------------------------------------------
+    background: {
+      canvas: {
+        $value: '{color.scale.slate1}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      surface: {
+        $value: '{color.scale.slate2}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      surfaceSecondary: {
+        $value: '{color.scale.slate3}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      surfaceTertiary: {
+        $value: '{color.scale.slate4}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+
+      inverse: {
+        $value: '{color.scale.slate10}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+
+      accent: {
+        $value: '{color.scale.indigo3}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      accentEmphasis: {
+        $value: '{color.scale.indigo9}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      positive: {
+        $value: '{color.scale.green3}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      positiveEmphasis: {
+        $value: '{color.scale.green9}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      caution: {
+        $value: '{color.scale.amber3}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      cautionEmphasis: {
+        $value: '{color.scale.amber9}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      critical: {
+        $value: '{color.scale.red3}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      criticalEmphasis: {
+        $value: '{color.scale.red9}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      pending: {
+        $value: '{color.scale.purple3}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      pendingEmphasis: {
+        $value: '{color.scale.purple9}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      highlight: {
+        $value: '{color.scale.pink3}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      highlightEmphasis: {
+        $value: '{color.scale.pink9}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+    },
+
+    // Borders
+    // -----------------------------------------------------------------------
+    border: {
+      muted: {
+        $value: '{color.scale.slate4}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+      neutral: {
+        $value: '{color.scale.slate5}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+      emphasis: {
+        $value: '{color.scale.slate6}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+
+      accent: {
+        $value: '{color.scale.indigo6}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+      positive: {
+        $value: '{color.scale.green6}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+      caution: {
+        $value: '{color.scale.amber6}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+      critical: {
+        $value: '{color.scale.red6}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+      pending: {
+        $value: '{color.scale.purple6}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+      highlight: {
+        $value: '{color.scale.pink6}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+    },
+
+    // Foregrounds
+    // -----------------------------------------------------------------------
+    foreground: {
+      neutral: {
+        $value: '{color.scale.slate10}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      neutralEmphasis: {
+        $value: '{color.scale.slate11}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      neutralSecondary: {
+        $value: '{color.scale.slate9}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      neutralTertiary: {
+        $value: '{color.scale.slate8}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      onEmphasis: {
+        $value: '{color.scale.white}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+
+      inverse: {
+        $value: '{color.scale.slate2}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      inverseSecondary: {
+        $value: '{color.scale.slate6}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+
+      accent: {
+        $value: '{color.scale.indigo11}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      positive: {
+        $value: '{color.scale.green11}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      caution: {
+        $value: '{color.scale.amber11}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      critical: {
+        $value: '{color.scale.red11}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      pending: {
+        $value: '{color.scale.purple11}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      highlight: {
+        $value: '{color.scale.pink11}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+    },
+
+    // Shadows
+    // -----------------------------------------------------------------------
+    shadow: {
+      muted: {
+        $value: '{color.scale.black}',
+        $type: 'color',
+        alpha: 0.2,
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+          },
+        },
+      },
+      regular: {
+        $value: '{color.scale.black}',
+        $type: 'color',
+        alpha: 0.4,
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+          },
+        },
+      },
+      emphasis: {
+        $value: '{color.scale.black}',
+        $type: 'color',
+        alpha: 0.6,
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'dark',
+          },
+        },
+      },
+    },
+  },
+}

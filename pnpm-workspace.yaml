@@ -1,7 +1,8 @@
 packages:
   - 'design-system/docs'
-  - 'design-system/pkg'
   - 'design-system/docs/storybook'
+  - 'design-system/pkg'
+  - 'design-system/primitives'
   - 'dev-projects/*'
   - 'docs'
   - 'keystatic'

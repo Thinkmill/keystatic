@@ -1,0 +1,272 @@
+{
+  // NOTE: modfied tokens cannot be shared by reference
+  // --------------------------------------------------------------------------
+  // IDEA: store values separately and apply alpha when required, which would
+  // allow referential tokens e.g.
+  // --color-name-rgb: 12, 34, 56;
+  // --color-name: rgb(var(--color-name-rgb));
+  // --some-other-thing: rgba(var(--color-name-rgb), 0.5);
+  color: {
+    alias: {
+      // Backgrounds
+      // -----------------------------------------------------------------------
+      blanket: {
+        $value: '{color.scale.black}',
+        $type: 'color',
+        alpha: 0.6,
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+
+      backgroundIdle: {
+        $value: '{color.scale.slate11}',
+        $type: 'color',
+        alpha: 0.03,
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      backgroundDisabled: {
+        $value: '{color.scale.slate3}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      backgroundHovered: {
+        $value: '{color.scale.slate11}',
+        $type: 'color',
+        alpha: 0.06,
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      backgroundFocused: {
+        $value: '{color.scale.slate11}',
+        $type: 'color',
+        alpha: 0.06,
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      backgroundPressed: {
+        $value: '{color.scale.slate11}',
+        $type: 'color',
+        alpha: 0.1,
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      backgroundSelected: {
+        $value: '{color.scale.indigo9}',
+        $type: 'color',
+        alpha: 0.1,
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+      backgroundSelectedHovered: {
+        $value: '{color.scale.indigo9}',
+        $type: 'color',
+        alpha: 0.2,
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['bgColor'],
+          },
+        },
+      },
+
+      // Borders
+      // -----------------------------------------------------------------------
+      focusRing: {
+        $value: '{color.scale.indigo9}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+
+      borderIdle: {
+        $value: '{color.scale.slate6}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+      borderHovered: {
+        $value: '{color.scale.slate7}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+      borderPressed: {
+        $value: '{color.scale.slate8}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+      borderFocused: {
+        $value: '{color.scale.indigo9}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+      borderDisabled: {
+        $value: '{color.scale.slate4}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+      borderSelected: {
+        $value: '{color.scale.indigo9}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+      borderInvalid: {
+        $value: '{color.scale.red9}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['borderColor'],
+          },
+        },
+      },
+
+      // Foregrounds
+      // -----------------------------------------------------------------------
+      foregroundIdle: {
+        $value: '{color.scale.slate10}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      foregroundHovered: {
+        $value: '{color.scale.slate11}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      foregroundPressed: {
+        $value: '{color.scale.slate11}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      foregroundFocused: {
+        $value: '{color.scale.indigo11}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      foregroundDisabled: {
+        $value: '{color.scale.slate7}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+      foregroundSelected: {
+        $value: '{color.scale.indigo11}',
+        $type: 'color',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'color',
+            mode: 'light',
+            scopes: ['fgColor'],
+          },
+        },
+      },
+    },
+  },
+}

@@ -1,0 +1,197 @@
+{
+  size: {
+    // Border width
+    // -------------------------------------------------------------------------
+    // TODO: scope these values. stroke width not yet available in figma:
+    // https://help.figma.com/hc/en-us/articles/4406787442711#Coming_soon
+    border: {
+      regular: {
+        $value: '1px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      medium: {
+        $value: '2px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+      large: {
+        $value: '4px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+          },
+        },
+      },
+    },
+
+    // Radius
+    // -------------------------------------------------------------------------
+    radius: {
+      full: {
+        $value: '9999px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': { collection: 'size', scopes: ['radius'] },
+        },
+      },
+      xsmall: {
+        $value: '2px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['radius'],
+          },
+        },
+      },
+      small: {
+        $value: '4px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['radius'],
+          },
+        },
+      },
+      regular: {
+        $value: '6px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['radius'],
+          },
+        },
+      },
+      medium: {
+        $value: '8px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['radius'],
+          },
+        },
+      },
+      large: {
+        $value: '12px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['radius'],
+          },
+        },
+      },
+      xlarge: {
+        $value: '16px',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': {
+            collection: 'size',
+            scopes: ['radius'],
+          },
+        },
+      },
+    },
+
+    // Shadow
+    // -------------------------------------------------------------------------
+    shadow: {
+      small: {
+        $value: {
+          offsetX: '0px',
+          offsetY: '{size.scale.10.value}',
+          blur: '{size.scale.25.value}',
+          spread: '0px',
+        },
+        $type: 'shadow-dimension',
+      },
+      medium: {
+        $value: {
+          offsetX: '0px',
+          offsetY: '{size.scale.40.value}',
+          blur: '{size.scale.75.value}',
+          spread: '0px',
+        },
+        $type: 'shadow-dimension',
+      },
+      large: {
+        $value: {
+          offsetX: '0px',
+          offsetY: '{size.scale.100.value}',
+          blur: '{size.scale.300.value}',
+          spread: '0px',
+        },
+        $type: 'shadow-dimension',
+      },
+    },
+
+    // Space
+    // -------------------------------------------------------------------------
+    // NOTE: this needs to be split-up or reconsidered in some way — t-shirt
+    // sizes don't make sense without context
+    space: {
+      xsmall: {
+        $value: '{size.scale.25.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': { collection: 'size', scopes: ['gap'] },
+        },
+      },
+      small: {
+        $value: '{size.scale.50.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': { collection: 'size', scopes: ['gap'] },
+        },
+      },
+      regular: {
+        $value: '{size.scale.100.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': { collection: 'size', scopes: ['gap'] },
+        },
+      },
+      medium: {
+        $value: '{size.scale.150.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': { collection: 'size', scopes: ['gap'] },
+        },
+      },
+      large: {
+        $value: '{size.scale.200.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': { collection: 'size', scopes: ['gap'] },
+        },
+      },
+      xlarge: {
+        $value: '{size.scale.300.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': { collection: 'size', scopes: ['gap'] },
+        },
+      },
+      xxlarge: {
+        $value: '{size.scale.400.value}',
+        $type: 'dimension',
+        $extensions: {
+          'org.keystar.figma': { collection: 'size', scopes: ['gap'] },
+        },
+      },
+    },
+  },
+}
