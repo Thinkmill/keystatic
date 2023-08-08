@@ -57,7 +57,7 @@ function useGroupStyles() {
 function useHeadingStyles() {
   return css({
     color: tokenSchema.color.foreground.neutralSecondary,
-    fontSize: tokenSchema.fontsize.text.small.size,
+    fontSize: tokenSchema.typography.text.small.size,
     fontWeight: tokenSchema.typography.fontWeight.medium,
     paddingBlock: tokenSchema.size.space.regular,
     paddingInlineEnd: itemContentGutter,

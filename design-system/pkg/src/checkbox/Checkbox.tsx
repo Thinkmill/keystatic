@@ -218,7 +218,7 @@ const Content = (props: HTMLAttributes<HTMLDivElement>) => {
         css({
           color: tokenSchema.color.alias.foregroundIdle,
           display: 'grid',
-          paddingTop: `calc((${sizeToken} - ${tokenSchema.fontsize.text.regular.capheight}) / 2)`,
+          paddingTop: `calc((${sizeToken} - ${tokenSchema.typography.text.regular.capheight}) / 2)`,
           gap: tokenSchema.size.space.large,
 
           'input[type="checkbox"]:hover ~ &': {

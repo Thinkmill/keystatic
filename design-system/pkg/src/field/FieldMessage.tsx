@@ -16,7 +16,7 @@ export const FieldMessage = (props: FieldMessageProps) => {
       UNSAFE_className={css({ marginTop: 'calc(var(--icon-offset) * -1)' })}
       UNSAFE_style={{
         // @ts-ignore
-        '--icon-offset': `calc(${tokenSchema.size.icon.regular} - ${tokenSchema.fontsize.text.small.size})`,
+        '--icon-offset': `calc(${tokenSchema.size.icon.regular} - ${tokenSchema.typography.text.small.size})`,
       }}
     >
       <Icon src={alertTriangleIcon} color="critical" />

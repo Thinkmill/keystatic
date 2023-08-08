@@ -76,7 +76,7 @@ function Asterisk({ supplementRequiredState }: A11yLabelProps) {
         aria-hidden
         className={css({
           color: tokenSchema.color.foreground.critical,
-          fontSize: tokenSchema.fontsize.text.large.size,
+          fontSize: tokenSchema.typography.text.large.size,
           lineHeight: 1,
           paddingInlineStart: '0.125em',
         })}

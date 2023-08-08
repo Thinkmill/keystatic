@@ -131,7 +131,7 @@ function useSwitchStyles(props: SwitchProps) {
     className: css({
       color: tokenSchema.color.alias.foregroundIdle,
       display: 'grid',
-      paddingTop: `calc((var(--track-height) - ${tokenSchema.fontsize.text.regular.capheight}) / 2)`,
+      paddingTop: `calc((var(--track-height) - ${tokenSchema.typography.text.regular.capheight}) / 2)`,
       gap: tokenSchema.size.space.large,
 
       [`.${inputStyleProps.className}:hover ~ &`]: {

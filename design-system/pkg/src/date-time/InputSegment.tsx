@@ -62,7 +62,7 @@ function EditableSegment({ segment, state }: InputSegmentProps) {
 
         // text styles
         fontFamily: tokenSchema.typography.fontFamily.base,
-        fontSize: tokenSchema.fontsize.text.regular.size,
+        fontSize: tokenSchema.typography.text.regular.size,
         fontVariantNumeric: 'tabular-nums',
         fontWeight: tokenSchema.typography.fontWeight.regular,
         lineHeight: tokenSchema.typography.lineheight.small,
