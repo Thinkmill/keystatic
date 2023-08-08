@@ -34,9 +34,9 @@ npm install @keystatic/core @keystatic/astro
 
 Keystatic needs a config file. This is where you can connect a project with a specific GitHub repository and define a content schema.
 
-Let's create a file called `keystatic.config.tsx` (or `.jsx` if not using TypeScript) in the root of the project:
+Let's create a file called `keystatic.config.ts` (or `.js` if not using TypeScript) in the root of the project:
 
-```jsx
+```ts
 // keystatic.config.ts
 import { config, fields, collection } from '@keystatic/core';
 
@@ -83,7 +83,7 @@ We can leverage Astro's [Rest parameters](https://docs.astro.build/en/core-conce
 
 Let's create a new page called `src/pages/keystatic/[...params].astro`:
 
-```jsx
+```ts
 ---
 // src/pages/keystatic/[...params].astro
 
@@ -95,8 +95,8 @@ The Keystatic Admin UI is built with React. So that we can import and mount this
 
 I'll put it in the project root, alongside our Keystatic config file.
 
-```jsx
-// keystatic.page.tsx
+```ts
+// keystatic.page.ts
 import { makePage } from '@keystatic/astro/ui'
 import keystaticConfig from './keystatic.config'
 
@@ -105,7 +105,7 @@ export const Keystatic = makePage(keystaticConfig)
 
 Now, we can import that file in our `keystatic/[...params].astro` page, and mount the component on the clientside only:
 
-```jsx
+```ts
 ---
 // src/pages/keystatic/[...params].astro
 import { Keystatic } from '../../../keystatic.page'
