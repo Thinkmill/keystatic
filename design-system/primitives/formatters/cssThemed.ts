@@ -25,8 +25,12 @@ export const cssThemed: StyleDictionary.Formatter = ({
   // add file header
   const output = [fileHeader({ file })];
 
+  let colorScheme = selector.includes('dark') ? 'dark' : 'light';
+
   // add single theme css
   output.push(`${selector || SELECTOR_DEFAULT} {
+    color-scheme: ${colorScheme};
+
     ${formattedVariables({
       format: 'css',
       dictionary,
@@ -39,6 +43,8 @@ export const cssThemed: StyleDictionary.Formatter = ({
   if (selectorDark) {
     output.push(`@media (prefers-color-scheme: dark) {
       ${selectorDark} {
+        color-scheme: dark;
+
         ${formattedVariables({
           format: 'css',
           dictionary,
