@@ -29,6 +29,7 @@ import { userIcon } from '@keystar/ui/icon/icons/userIcon';
 import { Box, Flex } from '@keystar/ui/layout';
 import { ActionMenu, Menu, MenuTrigger } from '@keystar/ui/menu';
 import { css, tokenSchema, useMediaQuery } from '@keystar/ui/style';
+import { ColorScheme } from '@keystar/ui/types';
 import { Text } from '@keystar/ui/typography';
 
 import { CloudConfig, GitHubConfig, LocalConfig } from '../../config';
@@ -47,7 +48,7 @@ import { ZapLogo } from './common';
 import { useConfig } from './context';
 import { BranchInfoContext, GitHubAppShellDataContext } from './data';
 import { useViewer } from './viewer-data';
-import { ColorScheme, useThemeContext } from './theme';
+import { useThemeContext } from './theme';
 import { serializeRepoConfig } from '../repo-config';
 
 export const TopBar = () => {
@@ -196,7 +197,7 @@ function HeaderOuter({ children }: { children: ReactNode }) {
 const THEME_MODE = {
   light: { icon: sunIcon, label: 'Light' },
   dark: { icon: moonIcon, label: 'Dark' },
-  system: { icon: monitorIcon, label: 'System' },
+  auto: { icon: monitorIcon, label: 'System' },
 } as const;
 const themeItems = Object.entries(THEME_MODE).map(([id, { icon, label }]) => ({
   id,
@@ -208,7 +209,7 @@ function ThemeMenu() {
   let { theme, setTheme } = useThemeContext();
   let matchesDark = useMediaQuery('(prefers-color-scheme: dark)');
   let icon = THEME_MODE[theme].icon;
-  if (theme === 'system') {
+  if (theme === 'auto') {
     icon = matchesDark ? moonIcon : sunIcon;
   }
 

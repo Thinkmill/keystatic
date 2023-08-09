@@ -50,7 +50,7 @@ export const ol = getList('ol');
 export function ListItem(props: Omit<HTMLAttributes<HTMLLIElement>, 'color'>) {
   const type = useContext(ListContext);
   const commonStyles = {
-    height: tokenSchema.fontsize.text.medium.capheight,
+    height: tokenSchema.typography.text.medium.capheight,
     width: '1em',
   };
   const className =
@@ -58,7 +58,7 @@ export function ListItem(props: Omit<HTMLAttributes<HTMLLIElement>, 'color'>) {
       ? css({
           ...commonStyles,
           color: tokenSchema.color.foreground.neutral,
-          fontSize: tokenSchema.fontsize.text.medium.size,
+          fontSize: tokenSchema.typography.text.medium.size,
           '::before': {
             content: `counter(${listCounter}) "."`,
             counterIncrement: listCounter,
@@ -97,7 +97,7 @@ export function BlockQuote(props: HTMLAttributes<HTMLQuoteElement>) {
       position="relative"
       UNSAFE_className={css({
         color: tokenSchema.color.foreground.neutralSecondary,
-        // fontSize: tokenSchema.fontsize.text.regular.size,
+        // fontSize: tokenSchema.typography.text.regular.size,
         p: { color: 'inherit', fontSize: 'inherit' },
         '&::before': {
           color: tokenSchema.color.background.accent,

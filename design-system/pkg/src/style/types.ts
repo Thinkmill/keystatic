@@ -52,8 +52,8 @@ export type ColorShadow = keyof VoussoirTheme['color']['shadow'];
 
 export type FontFamily = keyof VoussoirTheme['typography']['fontFamily'];
 export type FontWeight = keyof VoussoirTheme['typography']['fontWeight'];
-export type FontSizeHeading = keyof VoussoirTheme['fontsize']['heading'];
-export type FontSizeText = keyof VoussoirTheme['fontsize']['text'];
+export type FontSizeHeading = keyof VoussoirTheme['typography']['heading'];
+export type FontSizeText = keyof VoussoirTheme['typography']['text'];
 
 export type SizeBorder = keyof VoussoirTheme['size']['border'];
 export type SizeElement = keyof VoussoirTheme['size']['element'];

@@ -8,19 +8,29 @@ import { Icon } from '@keystar/ui/icon';
 import { MenuTrigger, Menu, Item } from '@keystar/ui/menu';
 import { useRootColorScheme } from '@keystar/ui/next';
 import { css } from '@keystar/ui/style';
+import { ColorScheme } from '@keystar/ui/types';
 import { Text } from '@keystar/ui/typography';
 
-type ColorScheme = 'light' | 'dark' | 'system';
 const items = [
   { icon: sunIcon, label: 'Light', key: 'light' },
   { icon: moonIcon, label: 'Dark', key: 'dark' },
-  { icon: monitorIcon, label: 'System', key: 'system' },
+  { icon: monitorIcon, label: 'System', key: 'auto' },
 ] as const;
 
 export function ColorSchemeMenu() {
   let { colorScheme, setColorScheme } = useRootColorScheme();
-  let hideWhenLight = css({ '.ksv-scheme--light &': { display: 'none' } });
-  let hideWhenDark = css({ '.ksv-scheme--dark &': { display: 'none' } });
+  let hideWhenLight = css({
+    '.ksv-scheme--light &': { display: 'none' },
+    '.ksv-scheme--auto &': {
+      '@media (prefers-color-scheme: light)': { display: 'none' },
+    },
+  });
+  let hideWhenDark = css({
+    '.ksv-scheme--dark &': { display: 'none' },
+    '.ksv-scheme--auto &': {
+      '@media (prefers-color-scheme: dark)': { display: 'none' },
+    },
+  });
 
   return (
     <MenuTrigger>

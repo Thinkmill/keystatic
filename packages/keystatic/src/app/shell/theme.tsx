@@ -1,10 +1,10 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { ColorScheme } from '@keystar/ui/types';
 
-export type ColorScheme = 'light' | 'dark' | 'system';
 type ThemeContextType = ReturnType<typeof useTheme>;
 
 const ThemeContext = createContext<ThemeContextType>({
-  theme: 'system',
+  theme: 'auto',
   setTheme: () => {
     throw new Error('ThemeContext was not initialized.');
   },
@@ -15,12 +15,22 @@ const STORAGE_KEY = 'keystatic-color-scheme';
 // only for initializing the provider, for consumption use `useThemeContext()`
 export function useTheme() {
   let initialValue = (localStorage.getItem(STORAGE_KEY) ||
-    'system') as ColorScheme;
+    'auto') as ColorScheme;
+
   let [theme, setThemeValue] = useState<ColorScheme>(initialValue);
   let setTheme = (theme: ColorScheme) => {
     localStorage.setItem(STORAGE_KEY, theme);
     setThemeValue(theme);
   };
+
+  // fix for renamed value: "system" --> "auto"
+  // remove after a month or so: ~2023-10-01
+  useEffect(() => {
+    // @ts-expect-error
+    if (theme === 'system') {
+      setTheme('auto');
+    }
+  }, [theme]);
 
   return { theme, setTheme };
 }

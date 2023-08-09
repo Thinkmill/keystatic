@@ -1,6 +1,6 @@
 'use client';
 
-import { cache, useMediaQuery } from '@keystar/ui/style';
+import { cache } from '@keystar/ui/style';
 import { VoussoirProvider } from '@keystar/ui/core';
 import { useServerInsertedHTML } from 'next/navigation';
 import { ReactNode, useRef } from 'react';
@@ -37,11 +37,6 @@ cache.insert = (...args) => {
 function InnerProvider(props: NextRootProviderProps) {
   let lastIndexRef = useRef(0);
   let { colorScheme } = useRootColorScheme();
-  let prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
-
-  if (colorScheme === 'system') {
-    colorScheme = prefersDark ? 'dark' : 'light';
-  }
 
   useServerInsertedHTML(() => {
     const names = insertedKeys.slice(lastIndexRef.current);

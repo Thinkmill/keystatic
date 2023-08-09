@@ -43,7 +43,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
         cursor: 'default',
         display: 'inline-flex',
         flexShrink: 0,
-        fontSize: tokenSchema.fontsize.text.regular.size,
+        fontSize: tokenSchema.typography.text.regular.size,
         fontWeight: tokenSchema.typography.fontWeight.semibold,
         height: tokenSchema.size.element.regular,
         justifyContent: 'center',
@@ -166,7 +166,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
             backgroundColor: tokenSchema.color.scale.slate11,
           },
           '&[data-pressed]': {
-            backgroundColor: tokenSchema.color.scale.slate12,
+            backgroundColor: tokenSchema.color.scale.slate11,
           },
 
           // NOTE: "neutral" tone invalid for "high" prominence

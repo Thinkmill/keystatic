@@ -29,7 +29,7 @@ export function useTextStyles(
     ...otherProps
   } = props;
 
-  const fontDefinition = tokenSchema.fontsize.text[size];
+  const fontDefinition = tokenSchema.typography.text[size];
   const trimStyles = trim ? getTrimStyles(fontDefinition) : null;
   const styles = [
     {

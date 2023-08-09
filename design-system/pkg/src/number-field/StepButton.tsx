@@ -35,6 +35,10 @@ export const StepButton = forwardRef(function StepButton(
     domRef
   );
   let { hoverProps, isHovered } = useHover(props);
+
+  let incrementIcon = scale === 'large' ? plusIcon : chevronUpIcon;
+  let decrementIcon = scale === 'large' ? minusIcon : chevronDownIcon;
+
   return (
     <div
       {...toDataAttributes({
@@ -115,12 +119,8 @@ export const StepButton = forwardRef(function StepButton(
         })
       )}
     >
-      {direction === 'up' && scale === 'large' && <Icon src={plusIcon} />}
-      {direction === 'up' && scale === 'medium' && <Icon src={chevronUpIcon} />}
-      {direction === 'down' && scale === 'large' && <Icon src={minusIcon} />}
-      {direction === 'down' && scale === 'medium' && (
-        <Icon src={chevronDownIcon} />
-      )}
+      {direction === 'up' && <Icon src={incrementIcon} />}
+      {direction === 'down' && <Icon src={decrementIcon} />}
     </div>
   );
 });

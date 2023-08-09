@@ -7,8 +7,8 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { ColorScheme } from '@keystar/ui/types';
 
-type ColorScheme = 'light' | 'dark' | 'system';
 type ColorSchemeContextType = ReturnType<typeof useColorSchemeState>;
 
 const ColorSchemeContext = createContext<ColorSchemeContextType>({
@@ -42,13 +42,22 @@ function useColorSchemeState() {
     setStoredValue(colorScheme);
   };
 
+  // fix for renamed value: "system" --> "auto"
+  // remove after a month or so: ~2023-10-01
+  useEffect(() => {
+    // @ts-expect-error
+    if (colorScheme === 'system') {
+      setColorScheme('auto');
+    }
+  }, [colorScheme]);
+
   return { colorScheme, setColorScheme };
 }
 
 const useStoredColorScheme =
   typeof window === 'undefined'
     ? function useStoredColorScheme() {
-        return 'system';
+        return 'auto';
       }
     : function useStoredColorScheme() {
         return useLocalStorageValue(STORAGE_KEY);

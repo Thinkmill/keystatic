@@ -47,20 +47,20 @@ export function BreadcrumbItem(props: BreadcrumbItemProps) {
             css({
               color: tokenSchema.color.foreground.neutral,
               cursor: 'default',
-              fontSize: tokenSchema.fontsize.text.regular.size,
+              fontSize: tokenSchema.typography.text.regular.size,
               fontFamily: tokenSchema.typography.fontFamily.base,
               fontWeight: tokenSchema.typography.fontWeight.medium,
               WebkitFontSmoothing: 'antialiased',
               MozOsxFontSmoothing: 'grayscale',
 
               '&[data-size=small]': {
-                fontSize: tokenSchema.fontsize.text.small.size,
+                fontSize: tokenSchema.typography.text.small.size,
               },
               '&[data-size=medium]': {
-                fontSize: tokenSchema.fontsize.text.medium.size,
+                fontSize: tokenSchema.typography.text.medium.size,
               },
               '&[data-size=large]': {
-                fontSize: tokenSchema.fontsize.text.large.size,
+                fontSize: tokenSchema.typography.text.large.size,
               },
 
               '&:not([aria-current=page])': {

@@ -89,7 +89,7 @@ export function useActionButtonStyles(
 
         // prominence: default
         '&:not([data-prominence])': {
-          backgroundColor: tokenSchema.color.background.surface,
+          backgroundColor: tokenSchema.color.alias.backgroundIdle,
           borderColor: tokenSchema.color.alias.borderIdle,
           color: tokenSchema.color.alias.foregroundIdle,
 

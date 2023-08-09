@@ -13,7 +13,7 @@ import { forwardRefWithAs } from '@keystar/ui/utils/ts';
 
 import { Context, useProvider } from './context';
 import { documentElementClasses } from './globals';
-import { useColorScheme, useScale } from './mediaQueries';
+import { useScale } from './mediaQueries';
 import { VoussoirProviderProps } from './types';
 
 /** Consolidates core functionality and dependencies of the Voussoir component library. */
@@ -22,15 +22,14 @@ export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
     let prevContext = useContext(Context);
     let prevColorScheme = prevContext && prevContext.colorScheme;
 
-    let autoColorScheme = useColorScheme(props.defaultColorScheme);
     let autoScale = useScale();
     let { locale: prevLocale } = useLocale();
     let matchedBreakpoints = useMatchedBreakpoints();
 
-    // importance of color scheme props > parent > auto:(OS > default > omitted)
+    // importance of color scheme props > parent > auto
     let {
       children,
-      colorScheme = prevColorScheme ?? autoColorScheme,
+      colorScheme = prevColorScheme || 'auto',
       isDisabled,
       isRequired,
       isReadOnly,
@@ -74,7 +73,6 @@ export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
           ref={forwardedRef}
           {...props}
           style={{
-            colorScheme,
             isolation: !prevContext ? 'isolate' : undefined,
           }}
           elementType={(props.elementType ?? 'div') as any}
@@ -107,7 +105,7 @@ const ProviderWrapper = forwardRefWithAs<
   let { children, style } = props;
   let { locale, direction } = useLocale();
   let { modalProviderProps } = useModalProvider();
-  let { colorScheme, scale } = useProvider();
+  let { colorScheme } = useProvider();
   const ElementType = props.elementType ?? 'div';
   return (
     <ElementType
@@ -117,7 +115,6 @@ const ProviderWrapper = forwardRefWithAs<
       }${documentElementClasses({
         bodyBackground: props.bodyBackground,
         colorScheme,
-        scale,
       })}`}
       lang={locale}
       dir={direction}

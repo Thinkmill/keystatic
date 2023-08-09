@@ -17,11 +17,45 @@ const [colorScheme, toggleScheme] = React.useReducer(
 );
 
 return (
-  <VoussoirProvider colorScheme={colorScheme}>
-    <Button onPress={toggleScheme} aria-pressed={colorScheme === 'dark'}>
-      Dark
-    </Button>
-    <Text>Test</Text>
-  </VoussoirProvider>
+  <div>
+    <Switch
+      isSelected={colorScheme === 'dark'}
+      onChange={toggleScheme}
+      marginBottom="large"
+    >
+      Dark mode
+    </Switch>
+    <VoussoirProvider colorScheme={colorScheme}>
+      <Grid
+        gap="xlarge"
+        backgroundColor="canvas"
+        padding="large"
+        borderTop="muted"
+        UNSAFE_style={{
+          marginInline: `calc(${tokenSchema.size.space.large} * -1)`,
+          marginBottom: `calc(${tokenSchema.size.space.large} * -1)`,
+        }}
+      >
+        <Flex wrap gap="medium" alignItems="end">
+          <Picker label="Picker">
+            <Item key="first">First</Item>
+            <Item key="second">Second</Item>
+            <Item key="third">Third</Item>
+          </Picker>
+          <TextField
+            label="Text"
+            minWidth="alias.singleLineWidth"
+            isRequired
+            flex
+          />
+          <ActionButton>Action</ActionButton>
+        </Flex>
+        <ButtonGroup>
+          <Button prominence="high">Primary</Button>
+          <Button prominence="low">Secondary</Button>
+        </ButtonGroup>
+      </Grid>
+    </VoussoirProvider>
+  </div>
 );
 ```

@@ -38,7 +38,7 @@ const editableStyles = css({
   height: 'auto',
   minWidth: 0,
   fontFamily: tokenSchema.typography.fontFamily.base,
-  fontSize: tokenSchema.fontsize.text.regular.size,
+  fontSize: tokenSchema.typography.text.regular.size,
   lineHeight: 1.4,
   a: {
     color: tokenSchema.color.foreground.accent,

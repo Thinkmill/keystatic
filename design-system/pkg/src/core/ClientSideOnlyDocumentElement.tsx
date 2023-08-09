@@ -11,7 +11,6 @@ export function ClientSideOnlyDocumentElement(props: {
   const classes = documentElementClasses({
     bodyBackground: props.bodyBackground,
     colorScheme: context.colorScheme,
-    scale: context.scale,
   });
   useLayoutEffect(() => {
     const split = classes.split(' ');

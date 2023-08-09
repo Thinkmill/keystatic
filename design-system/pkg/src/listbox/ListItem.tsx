@@ -58,7 +58,7 @@ export const ListItem = forwardRefWithAs<ListItemProps, 'div'>(
       paddingInline: tokenSchema.size.space.small,
 
       '& .list-item-text': {
-        marginBlock: `calc((${tokenSchema.size.icon.regular} - ${tokenSchema.fontsize.text.regular.capheight}) / 2)`,
+        marginBlock: `calc((${tokenSchema.size.icon.regular} - ${tokenSchema.typography.text.regular.capheight}) / 2)`,
       },
 
       [`&:not([aria-disabled=true])`]: {
