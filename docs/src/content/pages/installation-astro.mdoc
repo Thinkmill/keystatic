@@ -16,13 +16,13 @@ Now, let's add Keystatic to our project!
 
 We're going to need to install a few packages to get Keystatic going.
 
-Keystatic has a dependency on React, so first we need to add Astro's React integration:
+Keystatic outputs Markdoc and has a dependency on React, so first we need to add Astro's first-party integrations for both:
 
 ```bash
-npx astro add react
+npx astro add react markdoc
 ```
 
-Let's install two packages from npm:
+Let's also install two Keystatic packages:
 
 ```bash
 npm install @keystatic/core @keystatic/astro
@@ -249,16 +249,6 @@ The **TL;DR;** here: Astro provides its own built-in mechanism to pull-in conten
 Paired with the `@astrojs/markdoc` integration, it works perfectly with Keystatic-generated content!
 
 Check out the Astro documentation on [content collections](https://docs.astro.build/en/guides/content-collections/) and the [Markdoc integration](https://docs.astro.build/en/guides/integrations-guide/markdoc/) for more details.
-
-### Astro's Markdoc integration
-
-Let's add the `@astrojs/markdoc` integration so that Astro's content collections know what to do with Keystatic's `.mdoc` files:
-
-```bash
-npx astro add markdoc
-```
-
-Now, you can use Astro's `getCollection` helper to read data from Markdoc files!
 
 ### Displaying a collection list
 
