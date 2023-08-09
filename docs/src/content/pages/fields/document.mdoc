@@ -81,8 +81,47 @@ document: fields.document({
 
 ---
 
-## Type signature
+## Other configuration options
 
 The `document` field has many more configuration options like `images`, `layouts`, `tables`, `links` or `dividers`.
+
+Here is a more comprehensive example:
+
+```ts
+content: fields.document({
+  label: 'Content',
+  links: true,
+  layouts: [[1], [1, 1]],
+  images: {
+    directory: 'src/content/blog/_images',
+    publicPath: '/src/content/blog/_images/',
+    schema: {
+      title: fields.text({
+        label: 'Caption',
+        description:
+          'The text to display under the image in a caption.',
+      }),
+    },
+  },
+  dividers: true,
+  formatting: {
+    headingLevels: true,
+    blockTypes: true,
+    listTypes: true,
+    inlineMarks: {
+      code: true,
+      bold: true,
+      italic: true,
+      underline: true,
+      strikethrough: true,
+    },
+  },
+  tables: true,
+}),
+```
+
+---
+
+## Type signature
 
 For the full reference, you can find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.document](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.document)
