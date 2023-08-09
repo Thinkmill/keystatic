@@ -31,6 +31,7 @@ export const DashboardGrid = (props: PropsWithChildren) => {
       className={css({
         display: 'grid',
         gap: tokenSchema.size.space.large,
+        gridAutoRows: tokenSchema.size.element.xlarge,
 
         [containerQueries.above.mobile]: {
           gridTemplateColumns: '1fr 1fr',
@@ -55,13 +56,12 @@ export const DashboardCard = (
 
   return (
     <Flex
-      position="relative"
-      border="muted"
-      borderRadius="medium"
+      alignItems="center"
       backgroundColor="canvas"
       padding="large"
+      position="relative"
     >
-      <Flex direction="column" gap="regular" flex>
+      <Flex direction="column" gap="medium" flex>
         <Heading elementType="h3" size="small" truncate>
           <Link
             href={props.href}
@@ -76,6 +76,15 @@ export const DashboardCard = (
               '&:hover': {
                 color: tokenSchema.color.foreground.neutralEmphasis,
                 textDecorationColor: tokenSchema.color.foreground.neutral,
+
+                '::before': {
+                  borderColor: tokenSchema.color.border.accent,
+                },
+              },
+              '&:active': {
+                '::before': {
+                  borderColor: tokenSchema.color.background.accentEmphasis,
+                },
               },
               '&:focus-visible::before': {
                 outline: `${tokenSchema.size.alias.focusRing} solid ${tokenSchema.color.alias.focusRing}`,
@@ -84,6 +93,7 @@ export const DashboardCard = (
 
               // fill the available space so that the card is clickable
               '::before': {
+                border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
                 borderRadius: tokenSchema.size.radius.medium,
                 content: '""',
                 position: 'absolute',
