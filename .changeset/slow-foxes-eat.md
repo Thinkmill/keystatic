@@ -1,7 +1,7 @@
 ---
 '@keystar/docs': patch
 '@keystatic/core': patch
-'@keystar/ui': patch
+'@keystar/ui': minor
 ---
 
 token schema updates
