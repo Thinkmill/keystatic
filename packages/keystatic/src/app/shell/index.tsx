@@ -7,7 +7,7 @@ import { Config } from '../../config';
 
 import { isGitHubConfig, isLocalConfig } from '../utils';
 
-import { ConfigContext } from './context';
+import { AppStateContext, ConfigContext } from './context';
 import {
   GitHubAppShellProvider,
   AppShellErrorContext,
@@ -45,14 +45,16 @@ export const AppShell = (props: {
 
   const inner = (
     <ConfigContext.Provider value={props.config}>
-      <SidebarProvider>
-        <Flex direction="column" height="100vh">
-          <TopBar />
-          <MainPanelLayout basePath={props.basePath} config={props.config}>
-            {content}
-          </MainPanelLayout>
-        </Flex>
-      </SidebarProvider>
+      <AppStateContext.Provider value={{ basePath: props.basePath }}>
+        <SidebarProvider>
+          <Flex direction="column" height="100vh">
+            <TopBar />
+            <MainPanelLayout basePath={props.basePath} config={props.config}>
+              {content}
+            </MainPanelLayout>
+          </Flex>
+        </SidebarProvider>
+      </AppStateContext.Provider>
     </ConfigContext.Provider>
   );
 
