@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { ColorScheme } from '@keystar/ui/types';
 
 type ThemeContextType = ReturnType<typeof useTheme>;
