@@ -32,7 +32,7 @@ import { css, tokenSchema, useMediaQuery } from '@keystar/ui/style';
 import { ColorScheme } from '@keystar/ui/types';
 import { Text } from '@keystar/ui/typography';
 
-import { CloudConfig, GitHubConfig, LocalConfig } from '../../config';
+import { CloudConfig, GitHubConfig } from '../../config';
 
 import { BranchPicker, CreateBranchDialog } from '../branch-selection';
 import { useRouter } from '../router';
@@ -45,7 +45,7 @@ import {
 } from '../utils';
 
 import { ZapLogo } from './common';
-import { useConfig } from './context';
+import { useAppState, useConfig } from './context';
 import { BranchInfoContext, GitHubAppShellDataContext } from './data';
 import { useViewer } from './viewer-data';
 import { useThemeContext } from './theme';
@@ -61,7 +61,7 @@ export const TopBar = () => {
     return <GithubHeader config={config} />;
   }
   if (isLocalConfig(config)) {
-    return <LocalHeader config={config} />;
+    return <LocalHeader />;
   }
 
   throw new Error('Unknown config type.');
@@ -77,7 +77,7 @@ export const SidebarHeader = () => {
     return <GithubHeader config={config} />;
   }
   if (isLocalConfig(config)) {
-    return <LocalHeader config={config} />;
+    return <LocalHeader />;
   }
 
   throw new Error('Unknown config type.');
@@ -89,7 +89,7 @@ export const SidebarHeader = () => {
 function CloudHeader({ config }: { config: CloudConfig }) {
   return (
     <HeaderOuter>
-      <ZapLogo />
+      <BrandButton />
       <Text
         color="neutralEmphasis"
         weight="semibold"
@@ -115,7 +115,7 @@ function CloudHeader({ config }: { config: CloudConfig }) {
 function GithubHeader({ config }: { config: GitHubConfig }) {
   return (
     <HeaderOuter>
-      <ZapLogo />
+      <BrandButton />
       <Button
         href={`https://github.com/${serializeRepoConfig(config.storage.repo)}`}
         target="_blank"
@@ -141,11 +141,10 @@ function GithubHeader({ config }: { config: GitHubConfig }) {
 // Local
 // -----------------------------------------------------------------------------
 
-function LocalHeader({ config }: { config: LocalConfig }) {
-  console.log('local header', config);
+function LocalHeader() {
   return (
     <HeaderOuter>
-      <ZapLogo />
+      <BrandButton />
       <Text color="neutralEmphasis" weight="semibold">
         Keystatic
       </Text>
@@ -158,6 +157,23 @@ function LocalHeader({ config }: { config: LocalConfig }) {
 // =============================================================================
 // Misc.
 // =============================================================================
+
+function BrandButton() {
+  let { basePath } = useAppState();
+  return (
+    <Button
+      aria-label="dashboard"
+      prominence="low"
+      href={basePath}
+      UNSAFE_style={{
+        marginInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
+        padding: 0,
+      }}
+    >
+      <ZapLogo />
+    </Button>
+  );
+}
 
 function Slash() {
   return (

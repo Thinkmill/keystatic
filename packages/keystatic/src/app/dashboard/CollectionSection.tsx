@@ -34,38 +34,32 @@ export function CollectionSection(props: { config: Config; basePath: string }) {
                 collection.key
               )}`}
               endElement={
-                <ActionButton
-                  aria-label={localizedString.format('add')}
-                  href={`${props.basePath}/collection/${encodeURIComponent(
-                    collection.key
-                  )}/create`}
-                >
-                  <Icon src={plusIcon} />
-                </ActionButton>
+                <Flex gap="medium" alignItems="center">
+                  {changes > 0 && (
+                    <Badge tone="accent">
+                      {pluralize(changes, {
+                        singular: 'change',
+                        plural: 'changes',
+                      })}
+                    </Badge>
+                  )}
+                  <ActionButton
+                    aria-label={localizedString.format('add')}
+                    href={`${props.basePath}/collection/${encodeURIComponent(
+                      collection.key
+                    )}/create`}
+                  >
+                    <Icon src={plusIcon} />
+                  </ActionButton>
+                </Flex>
               }
             >
-              <Flex
-                gap="regular"
-                alignItems="center"
-                minHeight="element.small"
-                flex
-                wrap
-              >
-                <Text>
-                  {pluralize(totalCount, {
-                    singular: 'entry',
-                    plural: 'entries',
-                  })}
-                </Text>
-                {changes > 0 && (
-                  <Badge tone="accent">
-                    {pluralize(changes, {
-                      singular: 'change',
-                      plural: 'changes',
-                    })}
-                  </Badge>
-                )}
-              </Flex>
+              <Text color="neutralSecondary">
+                {pluralize(totalCount, {
+                  singular: 'entry',
+                  plural: 'entries',
+                })}
+              </Text>
             </DashboardCard>
           );
         })}

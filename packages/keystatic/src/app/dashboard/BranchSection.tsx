@@ -28,7 +28,7 @@ export function BranchSection(props: { config: Config }) {
   let isDefaultBranch = branchInfo.currentBranch === branchInfo.defaultBranch;
 
   return (
-    <DashboardSection title={localizedString.format('branches')}>
+    <DashboardSection title={localizedString.format('currentBranch')}>
       <Flex
         alignItems="center"
         gap="regular"
@@ -38,14 +38,9 @@ export function BranchSection(props: { config: Config }) {
         padding="large"
       >
         <Icon src={gitBranchIcon} color="neutralTertiary" />
-        <Flex direction="column" gap="regular">
-          <Text weight="medium">{branchInfo.currentBranch}</Text>
-          <Text size="small" color="neutralSecondary">
-            {isDefaultBranch
-              ? localizedString.format('defaultBranch')
-              : localizedString.format('currentBranch')}
-          </Text>
-        </Flex>
+        <Text size="medium" weight="semibold">
+          {branchInfo.currentBranch}
+        </Text>
       </Flex>
       <Flex gap="regular" wrap>
         <DialogTrigger>

@@ -64,7 +64,7 @@ export const PageHeader = ({ children }: PropsWithChildren) => {
     <Box
       borderBottom="muted"
       elementType="header"
-      height={{ mobile: 'element.large', tablet: 'scale.700' }}
+      height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
       flexShrink={0}
     >
       <Box
@@ -75,7 +75,7 @@ export const PageHeader = ({ children }: PropsWithChildren) => {
         <Flex
           alignItems="center"
           gap={{ mobile: 'small', tablet: 'regular' }}
-          height={{ mobile: 'element.large', tablet: 'scale.700' }}
+          height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
         >
           <ActionButton
             prominence="low"
@@ -106,7 +106,7 @@ export const PageBody = ({
       <PageContainer
         // padding on the container so descendants can use sticky positioning
         // with simple relative offsets
-        paddingY="xlarge"
+        paddingY="xxlarge"
       >
         {children}
       </PageContainer>

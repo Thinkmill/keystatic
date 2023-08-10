@@ -1,10 +1,9 @@
 import { Badge } from '@keystar/ui/badge';
-import { Flex } from '@keystar/ui/layout';
 
-import { Config } from '../..';
-import { DashboardCard, DashboardGrid, DashboardSection } from './components';
+import { Config } from '../../config';
 import { useChanged } from '../shell/data';
 import { keyedEntries } from '../utils';
+import { DashboardCard, DashboardGrid, DashboardSection } from './components';
 
 export function SingletonSection(props: { config: Config; basePath: string }) {
   let changed = useChanged();
@@ -23,21 +22,14 @@ export function SingletonSection(props: { config: Config; basePath: string }) {
               href={`${props.basePath}/singleton/${encodeURIComponent(
                 singleton.key
               )}`}
-            >
-              <Flex
-                gap="regular"
-                alignItems="center"
-                minHeight="element.small"
-                flex
-                wrap
-              >
-                {changes ? (
+              endElement={
+                changes ? (
                   <Badge tone="accent">Changed</Badge>
                 ) : (
                   <Badge>Unchanged</Badge>
-                )}
-              </Flex>
-            </DashboardCard>
+                )
+              }
+            />
           );
         })}
       </DashboardGrid>

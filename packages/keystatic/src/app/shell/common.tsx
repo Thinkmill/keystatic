@@ -3,12 +3,13 @@ import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
 export function ZapLogo() {
   return (
     <svg
-      width="24"
-      height="24"
       viewBox="0 0 24 24"
       fill={tokenSchema.color.foreground.neutral}
       className={css({
         flexShrink: 0,
+        height: tokenSchema.size.scale[250],
+        width: tokenSchema.size.scale[250],
+
         [breakpointQueries.below.tablet]: {
           height: tokenSchema.size.icon.regular,
           width: tokenSchema.size.icon.regular,
