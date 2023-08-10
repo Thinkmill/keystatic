@@ -271,13 +271,16 @@ export function Keystatic(props: {
     assertValidRepoConfig(props.config.storage.repo);
   }
   useEffect(() => {
-    if (window.location.hostname === 'localhost') {
+    if (
+      window.location.hostname === 'localhost' &&
+      props.config.storage.kind !== 'local'
+    ) {
       window.location.href = window.location.href.replace(
         'localhost',
         '127.0.0.1'
       );
     }
-  }, []);
+  }, [props.config.storage.kind]);
   if (window.location.hostname === 'localhost') {
     return null;
   }
