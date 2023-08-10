@@ -1,5 +1,13 @@
 # @voussoir/docs
 
+## 0.0.18
+
+### Patch Changes
+
+- ad46c9dd: token schema updates
+- Updated dependencies [ad46c9dd]
+  - @keystar/ui@0.2.0
+
 ## 0.0.17
 
 ### Patch Changes
