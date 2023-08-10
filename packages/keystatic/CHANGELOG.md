@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.0.115
+
+### Patch Changes
+
+- ad46c9dd: token schema updates
+- 47102969: Misc. UI changes—align with Figma designs
+- Updated dependencies [ad46c9dd]
+  - @keystar/ui@0.2.0
+
 ## 0.0.114
 
 ### Patch Changes
