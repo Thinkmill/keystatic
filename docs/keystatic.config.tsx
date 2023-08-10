@@ -9,6 +9,33 @@ import {
 import { __experimental_markdoc_field } from '@keystatic/core/form/fields/markdoc';
 import { CloudImagePreview } from './src/components/previews/CloudImagePreview';
 import { Config } from '@markdoc/markdoc';
+import { CloudImage2Preview } from './src/components/previews/CloudImage2Preview';
+
+export const cloudImage2Schema = {
+  src: fields.text({
+    label: 'URL',
+    validation: {
+      length: {
+        min: 1,
+      },
+    },
+  }),
+  alt: fields.text({
+    label: 'Alt text',
+    description:
+      'Include an alt text description or leave blank for decorative images',
+  }),
+  height: fields.text({
+    label: 'Height',
+    description:
+      'The intrinsic height of the image, in pixels. Must be an integer without a unit - e.g. 100',
+  }),
+  width: fields.text({
+    label: 'Width',
+    description:
+      'The intrinsic width of the image, in pixels. Must be an integer without a unit - e.g. 100',
+  }),
+};
 
 export const componentBlocks = {
   aside: component({
@@ -88,6 +115,11 @@ export const componentBlocks = {
       }),
     },
     chromeless: false,
+  }),
+  'cloud-image-2': component({
+    preview: CloudImage2Preview,
+    label: 'Cloud image 2',
+    schema: cloudImage2Schema,
   }),
   tags: component({
     preview: props => {
