@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { DiscordIcon } from '../icons/discord-icon';
 import { GithubIcon } from '../icons/github-icon';
 import { TwitterIcon } from '../icons/twitter-icon';
 
@@ -24,6 +25,11 @@ export function SocialLinks({ tabIndex }: { tabIndex?: number }) {
       >
         <span className="sr-only">Keystatic on Twitter</span>
         <TwitterIcon />
+      </Link>
+
+      <Link href="/chat" className={styles} tabIndex={tabIndex}>
+        <span className="sr-only">Keystatic's Discord server</span>
+        <DiscordIcon />
       </Link>
     </div>
   );
