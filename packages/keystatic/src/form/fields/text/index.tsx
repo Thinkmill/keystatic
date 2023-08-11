@@ -43,8 +43,8 @@ export function validateText(
     if ((slugInfo.glob === '*' ? /[\\/]/ : /[\\]/).test(val)) {
       return `${fieldLabel} must not contain slashes`;
     }
-    if (/\s/.test(val)) {
-      return `${fieldLabel} must not contain spaces`;
+    if (/^\s|\s$/.test(val)) {
+      return `${fieldLabel} must not start or end with spaces`;
     }
     if (slugInfo.slugs.has(val)) {
       return `${fieldLabel} must be unique`;
