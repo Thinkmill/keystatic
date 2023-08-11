@@ -7,6 +7,11 @@ import markdoc from '@astrojs/markdoc';
 // https://astro.build/config
 export default defineConfig({
   output: 'hybrid',
-	site: 'https://example.com',
-  integrations: [tailwind(), react(), sitemap(), markdoc()]
+  site: 'https://example.com',
+  integrations: [tailwind(), react(), sitemap(), markdoc()],
+  vite: {
+    ssr: {
+      external: ['@keystatic/core'],
+    },
+  },
 });
