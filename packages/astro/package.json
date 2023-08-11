@@ -27,6 +27,9 @@
     "./internal/keystatic-api.js": "./internal/keystatic-api.js",
     "./internal/keystatic-astro-page.astro": "./internal/keystatic-astro-page.astro"
   },
+  "keywords": [
+    "astro-integration"
+  ],
   "main": "dist/keystatic-astro.cjs.js",
   "module": "dist/keystatic-astro.esm.js",
   "files": [
