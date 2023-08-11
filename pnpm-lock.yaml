@@ -455,14 +455,32 @@ importers:
 
   dev-projects/astro-content:
     specifiers:
+      '@astrojs/markdoc': ^0.4.4
+      '@astrojs/node': ^5.3.2
+      '@astrojs/react': ^2.2.1
       '@astrojs/sitemap': ^2.0.1
       '@astrojs/tailwind': ^4.0.0
+      '@keystatic/astro': ^0.0.8
+      '@keystatic/core': ^0.0.115
+      '@types/react': ^18.2.8
+      '@types/react-dom': ^18.0.11
       astro: ^2.10.5
+      react: ^18.2.0
+      react-dom: ^18.2.0
       tailwindcss: ^3.3.3
     dependencies:
+      '@astrojs/markdoc': 0.4.4_2r3t2gbqlb7coj6ti4rkqqrd4u
+      '@astrojs/node': 5.3.2_astro@2.10.5
+      '@astrojs/react': 2.2.1_gltvt74xzh7f5lvw2hzxriz5bu
       '@astrojs/sitemap': 2.0.1
       '@astrojs/tailwind': 4.0.0_hfviaf5oryc45wsnqt22q3vvce
+      '@keystatic/astro': link:../../packages/astro
+      '@keystatic/core': link:../../packages/keystatic
+      '@types/react': 18.2.20
+      '@types/react-dom': 18.2.7
       astro: 2.10.5
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
       tailwindcss: 3.3.3
 
   dev-projects/localization:
@@ -1001,6 +1019,28 @@ packages:
       vscode-languageserver-types: 3.17.3
       vscode-uri: 3.0.7
 
+  /@astrojs/markdoc/0.4.4_2r3t2gbqlb7coj6ti4rkqqrd4u:
+    resolution: {integrity: sha512-83TduLnHbhVh4xrJeX8rSPxCAVx8QcGUsRjwW6GZVPdkIVqWXTQBYIZpLT4KErQczSLSDVxmmiWcFbk8U5+dOQ==}
+    engines: {node: '>=16.12.0'}
+    peerDependencies:
+      astro: ^2.9.3
+    dependencies:
+      '@astrojs/internal-helpers': 0.1.1
+      '@astrojs/prism': 2.1.2
+      '@markdoc/markdoc': 0.3.0_j3ahe22lw6ac2w6qvqp4kjqnqy
+      astro: 2.10.5
+      esbuild: 0.17.19
+      github-slugger: 2.0.0
+      gray-matter: 4.0.3
+      htmlparser2: 9.0.0
+      kleur: 4.1.5
+      shiki: 0.14.2
+      zod: 3.21.4
+    transitivePeerDependencies:
+      - '@types/react'
+      - react
+    dev: false
+
   /@astrojs/markdoc/0.4.4_x2afuvymwgbgjf3yfxbkoywlze:
     resolution: {integrity: sha512-83TduLnHbhVh4xrJeX8rSPxCAVx8QcGUsRjwW6GZVPdkIVqWXTQBYIZpLT4KErQczSLSDVxmmiWcFbk8U5+dOQ==}
     engines: {node: '>=16.12.0'}
@@ -1063,6 +1103,25 @@ packages:
     engines: {node: '>=16.12.0'}
     dependencies:
       prismjs: 1.29.0
+
+  /@astrojs/react/2.2.1_gltvt74xzh7f5lvw2hzxriz5bu:
+    resolution: {integrity: sha512-nq5Zr8iWdwjSp5fh1NReaCplwsnL4w5PXAY5XWu1jE/frxEfF/ycGHrrhwWW0uJHX9G+kUtmQLR0GBhlR4FmAw==}
+    engines: {node: '>=16.12.0'}
+    peerDependencies:
+      '@types/react': ^17.0.50 || ^18.0.21
+      '@types/react-dom': ^17.0.17 || ^18.0.6
+      react: ^17.0.2 || ^18.0.0
+      react-dom: ^17.0.2 || ^18.0.0
+    dependencies:
+      '@babel/core': 7.21.0
+      '@babel/plugin-transform-react-jsx': 7.21.0_@babel+core@7.21.0
+      '@types/react': 18.2.20
+      '@types/react-dom': 18.2.7
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /@astrojs/react/2.2.1_lup3mrojszbe4cjr3p3v2c4u4i:
     resolution: {integrity: sha512-nq5Zr8iWdwjSp5fh1NReaCplwsnL4w5PXAY5XWu1jE/frxEfF/ycGHrrhwWW0uJHX9G+kUtmQLR0GBhlR4FmAw==}
@@ -5732,6 +5791,24 @@ packages:
       '@types/markdown-it': 12.2.3
     dev: false
 
+  /@markdoc/markdoc/0.3.0_j3ahe22lw6ac2w6qvqp4kjqnqy:
+    resolution: {integrity: sha512-QWCF8krIIw52ulflfnoff0yG1eKl9CCGA3KAiOjHyYtHNzSEouFh8lO52nAaO3qV2Ctj1GTB8TTb2rTfvISQfA==}
+    engines: {node: '>=14.7.0'}
+    peerDependencies:
+      '@types/react': '*'
+      react: '*'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.2.20
+      react: 18.2.0
+    optionalDependencies:
+      '@types/markdown-it': 12.2.3
+    dev: false
+
   /@ndelangen/get-tarball/3.0.9:
     resolution: {integrity: sha512-9JKTEik4vq+yGosHYhZ1tiH/3WpUS0Nh0kej4Agndhox8pAdWhEx5knFVRcb/ya9knCRCs1rPxNrSXTDdfVqpA==}
     dependencies:
@@ -9232,11 +9309,25 @@ packages:
     dependencies:
       '@types/react': 18.2.8
 
+  /@types/react-dom/18.2.7:
+    resolution: {integrity: sha512-GRaAEriuT4zp9N4p1i8BDBYmEyfo+xQ3yHjJU4eiK5NDa1RmUZG+unZABUTK4/Ox/M+GaHwb6Ow8rUITrtjszA==}
+    dependencies:
+      '@types/react': 18.2.20
+    dev: false
+
   /@types/react-transition-group/4.4.5:
     resolution: {integrity: sha512-juKD/eiSM3/xZYzjuzH6ZwpP+/lejltmiS3QEzV/vmb/Q8+HfDmxu+Baga8UEMGBqV88Nbg4l2hY/K2DkyaLLA==}
     dependencies:
       '@types/react': 18.2.8
     dev: true
+
+  /@types/react/18.2.20:
+    resolution: {integrity: sha512-WKNtmsLWJM/3D5mG4U84cysVY31ivmyw85dE84fOCk5Hx78wezB/XEjVPWl2JTZ5FkEeaTJf+VgUAUn3PE7Isw==}
+    dependencies:
+      '@types/prop-types': 15.7.5
+      '@types/scheduler': 0.16.2
+      csstype: 3.1.1
+    dev: false
 
   /@types/react/18.2.8:
     resolution: {integrity: sha512-lTyWUNrd8ntVkqycEEplasWy2OxNlShj3zqS0LuB1ENUGis5HodmhM7DtCoUGbxj3VW/WsGA0DUhpG6XrM7gPA==}
