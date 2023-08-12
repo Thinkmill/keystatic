@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.2.0
+
+### Minor Changes
+
+- ad46c9dd: token schema updates
+
 ## 0.1.7
 
 ### Patch Changes

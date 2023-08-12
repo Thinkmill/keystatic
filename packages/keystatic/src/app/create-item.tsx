@@ -129,6 +129,7 @@ export function CreateItem(props: {
       <PageRoot containerWidth={containerWidthForEntryLayout(collectionConfig)}>
         <PageHeader>
           <Breadcrumbs
+            size="medium"
             flex
             minWidth={0}
             onAction={key => {

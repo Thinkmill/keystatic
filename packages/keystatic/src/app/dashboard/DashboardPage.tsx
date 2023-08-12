@@ -1,7 +1,6 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 
 import { Avatar } from '@keystar/ui/avatar';
-import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
 import { Flex } from '@keystar/ui/layout';
 import { Heading } from '@keystar/ui/typography';
 
@@ -12,6 +11,7 @@ import { useViewer } from '../shell/viewer-data';
 import { BranchSection } from './BranchSection';
 import { CollectionSection } from './CollectionSection';
 import { SingletonSection } from './SingletonSection';
+import { tokenSchema } from '@keystar/ui/style';
 
 export function DashboardPage(props: { config: Config; basePath: string }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
@@ -20,9 +20,9 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
   return (
     <PageRoot containerWidth="large">
       <PageHeader>
-        <Breadcrumbs flex minWidth={0}>
-          <Item key="dashboard">{stringFormatter.format('dashboard')}</Item>
-        </Breadcrumbs>
+        <Heading elementType="h1" id="page-title" size="small">
+          {stringFormatter.format('dashboard')}
+        </Heading>
       </PageHeader>
       <PageBody isScrollable>
         <Flex direction="column" gap="xxlarge">
@@ -35,9 +35,15 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
               <Avatar
                 src={user.avatarUrl}
                 name={user.name ?? undefined}
-                size="medium"
+                size="large"
               />
-              <Heading size="large" elementType="p">
+              <Heading
+                size="medium"
+                elementType="p"
+                UNSAFE_style={{
+                  fontWeight: tokenSchema.typography.fontWeight.bold,
+                }}
+              >
                 Hello, {user.name ?? user.login}!
               </Heading>
             </Flex>

@@ -23,6 +23,23 @@ export function useConfig(): Config {
   return config;
 }
 
+// Meta context
+// -----------------------------------------------------------------------------
+
+type AppStateType = { basePath: string };
+
+export const AppStateContext = createContext<AppStateType>({
+  basePath: '/keystatic',
+});
+
+export function useAppState() {
+  const appState = useContext(AppStateContext);
+  if (!appState) {
+    throw new Error('AppStateContext.Provider not found');
+  }
+  return appState;
+}
+
 // Page context
 // -----------------------------------------------------------------------------
 

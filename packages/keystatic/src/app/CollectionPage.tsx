@@ -86,7 +86,7 @@ function CollectionPageHeader(props: {
 
   return (
     <PageHeader>
-      <Breadcrumbs flex minWidth={0}>
+      <Breadcrumbs size="medium" flex minWidth={0}>
         <Item key="collection">{collectionLabel}</Item>
       </Breadcrumbs>
       <div

@@ -628,6 +628,7 @@ const ItemPageShell = (
       <PageHeader>
         <Breadcrumbs
           flex
+          size="medium"
           minWidth={0}
           onAction={key => {
             if (key === 'collection') {

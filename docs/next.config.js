@@ -17,6 +17,12 @@ module.exports = {
         destination: '/docs/collections',
         permanent: true,
       },
+      // Discord server invite
+      {
+        source: '/chat',
+        destination: 'https://discord.gg/MZ3fcrQj',
+        permanent: true,
+      },
     ];
   },
 };
