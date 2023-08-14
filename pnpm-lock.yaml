@@ -464,6 +464,7 @@ importers:
       '@astrojs/tailwind': ^4.0.0
       '@keystatic/astro': ^0.0.8
       '@keystatic/core': ^0.0.115
+      '@tailwindcss/typography': ^0.5.9
       '@types/react': ^18.2.8
       '@types/react-dom': ^18.0.11
       astro: ^2.10.5
@@ -478,6 +479,7 @@ importers:
       '@astrojs/tailwind': 4.0.0_hfviaf5oryc45wsnqt22q3vvce
       '@keystatic/astro': link:../../packages/astro
       '@keystatic/core': link:../../packages/keystatic
+      '@tailwindcss/typography': 0.5.9_tailwindcss@3.3.3
       '@types/react': 18.2.20
       '@types/react-dom': 18.2.7
       astro: 2.10.5
@@ -8756,7 +8758,6 @@ packages:
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.3.3
-    dev: true
 
   /@testing-library/dom/8.20.0:
     resolution: {integrity: sha512-d9ULIT+a4EXLX3UU8FBjauG9NnsZHkHztXoIcTsOKoOw030fyjheN9svkTULjJxtYag9DZz5Jz5qkWZDPxTFwA==}
@@ -16416,7 +16417,6 @@ packages:
 
   /lodash.castarray/4.4.0:
     resolution: {integrity: sha512-aVx8ztPv7/2ULbArGJ2Y42bG1mEQ5mGjpdvrbJcJFU3TbYybe+QlLS4pst9zV52ymy2in1KpFPiZnAOATxD4+Q==}
-    dev: true
 
   /lodash.debounce/4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
@@ -16426,7 +16426,6 @@ packages:
 
   /lodash.isplainobject/4.0.6:
     resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
-    dev: true
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -18797,7 +18796,6 @@ packages:
     dependencies:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
-    dev: true
 
   /postcss-selector-parser/6.0.11:
     resolution: {integrity: sha512-zbARubNdogI9j7WY4nQJBiNqQf3sLS3wCP4WfOidu+p28LofJqDH1tcXypGrcmMHhDk2t9wGhCsYe/+szLTy1g==}
