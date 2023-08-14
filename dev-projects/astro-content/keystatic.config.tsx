@@ -45,7 +45,7 @@ export default config({
           },
         }),
         updatedDate: fields.date({
-          label: 'Pub Date',
+          label: 'Updated Date',
         }),
         heroImage: fields.text({
           label: 'Hero Image',
