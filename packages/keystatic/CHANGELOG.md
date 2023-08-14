@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.0.116
+
+### Patch Changes
+
+- c43d7045: Added validation to prevent whitespace at the start or end of slug
+  field values
+- 21395048: Update card style on dashboard
+
 ## 0.0.115
 
 ### Patch Changes
