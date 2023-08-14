@@ -78,7 +78,7 @@ export const DashboardCard = (
                 textDecorationColor: tokenSchema.color.foreground.neutral,
 
                 '::before': {
-                  borderColor: tokenSchema.color.border.accent,
+                  borderColor: tokenSchema.color.border.emphasis,
                 },
               },
               '&:active': {
