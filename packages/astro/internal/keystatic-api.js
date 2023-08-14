@@ -3,3 +3,5 @@ import { makeHandler } from '../api';
 import config from 'virtual:keystatic-config';
 
 export const all = makeHandler({ config });
+
+export const prerender = false;
