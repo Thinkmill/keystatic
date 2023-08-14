@@ -25,18 +25,11 @@ export default config({
       },
       schema: {
         title: fields.slug({
-          name: {
-            label: 'Title',
-            validation: {
-              isRequired: true,
-            },
-          },
+          name: { label: 'Title', validation: { length: { min: 1 } } },
         }),
         description: fields.text({
           label: 'Description',
-          validation: {
-            isRequired: true,
-          },
+          validation: { length: { min: 1 } },
         }),
         pubDate: fields.date({
           label: 'Pub Date',
