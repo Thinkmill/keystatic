@@ -3,9 +3,9 @@
 // all pages through the use of the <BaseHead /> component.
 
 interface Props {
-	title: string;
-	description: string;
-	image?: string;
+  title: string;
+  description: string;
+  image?: string;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -20,8 +20,20 @@ const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
 <meta name="generator" content={Astro.generator} />
 
 <!-- Font preloads -->
-<link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
-<link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
+<link
+  rel="preload"
+  href="/fonts/atkinson-regular.woff"
+  as="font"
+  type="font/woff"
+  crossorigin
+/>
+<link
+  rel="preload"
+  href="/fonts/atkinson-bold.woff"
+  as="font"
+  type="font/woff"
+  crossorigin
+/>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
