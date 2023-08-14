@@ -144,6 +144,7 @@ Content:`}
       componentBlock={componentBlock}
       element={currentElement}
       onChange={onPropsChange}
+      onRemove={onRemove}
     />
   );
 

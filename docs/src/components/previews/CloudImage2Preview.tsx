@@ -11,13 +11,25 @@ import { VStack } from '@keystar/ui/layout';
 export function CloudImage2Preview(
   props: PreviewProps<
     ObjectField<typeof import('../../../keystatic.config').cloudImage2Schema>
-  >
+  > & { onRemove(): void }
 ) {
   const src = props.fields.src.value;
   const alt = props.fields.alt.value;
 
   const dimensions = useImageDimensions(src);
 
+  useEffect(() => {
+    if (
+      dimensions &&
+      props.fields.width.value === '' &&
+      props.fields.height.value === ''
+    ) {
+      props.onChange({
+        height: dimensions.height.toString(),
+        width: dimensions.width.toString(),
+      });
+    }
+  });
   return (
     <NotEditable>
       <VStack gap="regular">
@@ -25,11 +37,25 @@ export function CloudImage2Preview(
           label="Image URL"
           value={props.fields.src.value}
           onChange={props.fields.src.onChange}
+          onPaste={event => {
+            const pattern = /^\s*!\[(.*)\]\(([a-z0-9_\-/:.]+)\)\s*$/;
+            const text = event.clipboardData.getData('text/plain');
+            const match = text.match(pattern);
+            if (match) {
+              event.preventDefault();
+              props.onChange({
+                src: match[2],
+                alt: match[1],
+                height: '',
+                width: '',
+              });
+            }
+          }}
         />
         <TextField
           label="Alt text"
-          value={props.fields.src.value}
-          onChange={props.fields.src.onChange}
+          value={props.fields.alt.value}
+          onChange={props.fields.alt.onChange}
         />
         <TextField
           label="Width"
@@ -63,6 +89,7 @@ export function CloudImage2Preview(
           srcSet={getDefaultSrcSet({ src })}
           sizes={`${parseInt(CONTENT_MAX_WIDTH_DESKTOP) * 16}px`}
         />
+        <ActionButton onPress={props.onRemove}>Remove</ActionButton>
       </VStack>
     </NotEditable>
   );

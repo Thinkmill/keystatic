@@ -24,11 +24,13 @@ export function ComponentBlockRender({
   element,
   onChange,
   children,
+  onRemove,
 }: {
   element: Element & { type: 'component-block' };
   onChange: (
     cb: (props: Record<string, unknown>) => Record<string, unknown>
   ) => void;
+  onRemove: () => void;
   componentBlock: ComponentBlock;
   children: any;
 }) {
@@ -61,9 +63,9 @@ export function ComponentBlockRender({
     <ChildrenByPathContext.Provider value={childrenByPath}>
       {useMemo(
         () => (
-          <ComponentBlockPreview {...previewProps} />
+          <ComponentBlockPreview onRemove={onRemove} {...previewProps} />
         ),
-        [previewProps, ComponentBlockPreview]
+        [ComponentBlockPreview, onRemove, previewProps]
       )}
       <span
         className={css({

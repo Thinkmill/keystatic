@@ -444,7 +444,9 @@ export function component<
 >(
   options: {
     /** The preview component shown in the editor */
-    preview: (props: PreviewProps<ObjectField<Schema>>) => ReactElement | null;
+    preview: (
+      props: PreviewProps<ObjectField<Schema>> & { onRemove(): void }
+    ) => ReactElement | null;
     /** The schema for the props that the preview component, toolbar and rendered component will receive */
     schema: Schema;
     /** The label to show in the insert menu and chrome around the block if chromeless is false */
@@ -452,10 +454,12 @@ export function component<
   } & (
     | {
         chromeless: true;
-        toolbar?: (props: {
-          props: PreviewPropsForToolbar<ObjectField<Schema>>;
-          onRemove(): void;
-        }) => ReactElement;
+        toolbar?:
+          | null
+          | ((props: {
+              props: PreviewPropsForToolbar<ObjectField<Schema>>;
+              onRemove(): void;
+            }) => ReactElement);
       }
     | {
         chromeless?: false;

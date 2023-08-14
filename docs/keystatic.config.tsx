@@ -120,6 +120,7 @@ export const componentBlocks = {
     preview: CloudImage2Preview,
     label: 'Cloud image 2',
     schema: cloudImage2Schema,
+    chromeless: true,
   }),
   tags: component({
     preview: props => {
