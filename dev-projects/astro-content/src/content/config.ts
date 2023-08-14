@@ -1,3 +1,4 @@
+// @ts-ignore
 import { defineCollection, z } from 'astro:content';
 
 const blog = defineCollection({
@@ -9,10 +10,12 @@ const blog = defineCollection({
     pubDate: z
       .string()
       .or(z.date())
+      // @ts-ignore
       .transform(val => new Date(val)),
     updatedDate: z
       .string()
       .optional()
+      // @ts-ignore
       .transform(str => (str ? new Date(str) : undefined)),
     heroImage: z.string().optional(),
   }),
