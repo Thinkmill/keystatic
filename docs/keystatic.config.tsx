@@ -121,6 +121,7 @@ export const componentBlocks = {
     label: 'Cloud image 2',
     schema: cloudImage2Schema,
     chromeless: true,
+    toolbar: null,
   }),
   tags: component({
     preview: props => {
