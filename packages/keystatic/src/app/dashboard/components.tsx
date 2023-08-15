@@ -2,7 +2,13 @@ import { PropsWithChildren, ReactElement } from 'react';
 
 import { Flex } from '@keystar/ui/layout';
 import { useLinkComponent } from '@keystar/ui/link';
-import { containerQueries, css, tokenSchema } from '@keystar/ui/style';
+import {
+  classNames,
+  containerQueries,
+  css,
+  tokenSchema,
+  transition,
+} from '@keystar/ui/style';
 import { Heading, Text } from '@keystar/ui/typography';
 
 export const DashboardSection = ({
@@ -65,41 +71,41 @@ export const DashboardCard = (
         <Heading elementType="h3" size="small" truncate>
           <Link
             href={props.href}
-            className={css({
-              color: tokenSchema.color.foreground.neutral,
-              outline: 'none',
-              textDecoration: 'underline',
-              textDecorationColor: 'transparent',
-              textDecorationThickness: tokenSchema.size.border.regular,
-              textUnderlineOffset: tokenSchema.size.border.medium,
+            className={classNames(
+              css({
+                color: tokenSchema.color.foreground.neutral,
+                outline: 'none',
 
-              '&:hover': {
-                color: tokenSchema.color.foreground.neutralEmphasis,
-                textDecorationColor: tokenSchema.color.foreground.neutral,
+                '&:hover': {
+                  color: tokenSchema.color.foreground.neutralEmphasis,
 
-                '::before': {
-                  borderColor: tokenSchema.color.border.emphasis,
+                  '::before': {
+                    backgroundColor: tokenSchema.color.alias.backgroundIdle,
+                    borderColor: tokenSchema.color.border.neutral,
+                  },
                 },
-              },
-              '&:active': {
-                '::before': {
-                  borderColor: tokenSchema.color.background.accentEmphasis,
+                '&:active': {
+                  '::before': {
+                    backgroundColor: tokenSchema.color.alias.backgroundHovered,
+                    borderColor: tokenSchema.color.alias.borderHovered,
+                  },
                 },
-              },
-              '&:focus-visible::before': {
-                outline: `${tokenSchema.size.alias.focusRing} solid ${tokenSchema.color.alias.focusRing}`,
-                outlineOffset: tokenSchema.size.alias.focusRingGap,
-              },
+                '&:focus-visible::before': {
+                  outline: `${tokenSchema.size.alias.focusRing} solid ${tokenSchema.color.alias.focusRing}`,
+                  outlineOffset: tokenSchema.size.alias.focusRingGap,
+                },
 
-              // fill the available space so that the card is clickable
-              '::before': {
-                border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
-                borderRadius: tokenSchema.size.radius.medium,
-                content: '""',
-                position: 'absolute',
-                inset: 0,
-              },
-            })}
+                // fill the available space so that the card is clickable
+                '::before': {
+                  border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
+                  borderRadius: tokenSchema.size.radius.medium,
+                  content: '""',
+                  position: 'absolute',
+                  inset: 0,
+                  transition: transition(['background-color', 'border-color']),
+                },
+              })
+            )}
           >
             {props.label}
           </Link>
