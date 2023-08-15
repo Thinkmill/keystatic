@@ -384,7 +384,6 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
                       }),
                       'ksv-list-view-item-draghandle-button'
                     )}
-                    style={!isFocusVisibleWithin ? { opacity: 0 } : {}}
                     ref={dragButtonRef}
                     draggable="true"
                   >
