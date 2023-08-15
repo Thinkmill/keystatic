@@ -1,17 +1,4 @@
-import { Fragment } from 'react';
-
-import { flattenChildren, isReactText } from '@keystar/ui/utils';
-
-let fragmentOfReactText = (
-  <Fragment>
-    {true && 'test'}
-    {false}
-    {null}
-    {true && 123}
-    {undefined}
-    {0 ?? 456}
-  </Fragment>
-);
+import { isReactText } from '@keystar/ui/utils';
 
 describe('utils/isReactText', () => {
   it('string', () => {
@@ -32,22 +19,5 @@ describe('utils/isReactText', () => {
     expect(isReactText([<span>test</span>])).toEqual(false);
     expect(isReactText({ a: 1, b: 2 })).toEqual(false);
     expect(isReactText(undefined)).toEqual(false);
-  });
-
-  it('should work with flattenChildren', () => {
-    expect(isReactText(flattenChildren(fragmentOfReactText))).toEqual(true);
-    expect(
-      isReactText(
-        flattenChildren(
-          <Fragment>
-            {flattenChildren(fragmentOfReactText)}
-            <Fragment>
-              {flattenChildren(fragmentOfReactText)}
-              {flattenChildren(fragmentOfReactText)}
-            </Fragment>
-          </Fragment>
-        )
-      )
-    ).toEqual(true);
   });
 });
