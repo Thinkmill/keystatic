@@ -1,11 +1,14 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { assert } from 'emery';
+import isHotkey from 'is-hotkey';
 import {
   FormEvent,
   Key,
   PropsWithChildren,
   ReactElement,
   ReactNode,
+  useCallback,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -172,7 +175,7 @@ function ItemPage(props: ItemPageProps) {
     }
   };
 
-  const onUpdate = async () => {
+  const onUpdate = useCallback(async () => {
     if (!clientSideValidateProp(schema, state, props.slugInfo)) {
       setForceValidation(true);
       return;
@@ -186,8 +189,33 @@ function ItemPage(props: ItemPageProps) {
         )}/item/${encodeURIComponent(slug)}`
       );
     }
-  };
+  }, [
+    collection,
+    collectionConfig,
+    itemSlug,
+    props.basePath,
+    props.slugInfo,
+    router,
+    schema,
+    state,
+    update,
+  ]);
   const formID = 'item-edit-form';
+
+  // allow shortcuts "cmd+s" and "ctrl+s" to save
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => {
+      if (updateResult.kind === 'loading') {
+        return;
+      }
+      if (isHotkey('mod+s', event)) {
+        event.preventDefault();
+        onUpdate();
+      }
+    };
+    document.addEventListener('keydown', listener);
+    return () => document.removeEventListener('keydown', listener);
+  }, [updateResult.kind, onUpdate]);
 
   return (
     <>
