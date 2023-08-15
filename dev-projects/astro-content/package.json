@@ -1,5 +1,5 @@
 {
-  "name": "astro-content",
+  "name": "@example/astro",
   "type": "module",
   "version": "0.0.2",
   "private": true,
