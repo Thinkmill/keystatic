@@ -262,11 +262,11 @@ export function useRowStyleProps(state: {
     },
 
     // interactions
-    '&[data-focus], &[data-interaction="hover"]': {
-      backgroundColor: tokenSchema.color.alias.backgroundHovered,
+    '&[data-interaction="hover"]': {
+      backgroundColor: tokenSchema.color.alias.backgroundIdle,
     },
     '&[data-interaction="press"]': {
-      backgroundColor: tokenSchema.color.alias.backgroundPressed,
+      backgroundColor: tokenSchema.color.alias.backgroundHovered,
     },
 
     // focus indicator
@@ -288,7 +288,7 @@ export function useRowStyleProps(state: {
       backgroundColor: tokenSchema.color.alias.backgroundSelected,
       // boxShadow: `0 0 0 ${tokenSchema.size.border.regular} ${tokenSchema.color.alias.focusRing}`,
 
-      '&[data-interaction="hover"], &[data-focus="visible"]': {
+      '&[data-interaction="hover"]': {
         backgroundColor: tokenSchema.color.alias.backgroundSelectedHovered,
       },
     },

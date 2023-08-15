@@ -1,8 +1,6 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import React, { Key, useEffect, useMemo, useRef, useState } from 'react';
 
-import { Badge } from '@keystar/ui/badge';
-import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
 import { ActionButton, Button } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
 import { alertCircleIcon } from '@keystar/ui/icon/icons/alertCircleIcon';
@@ -12,6 +10,7 @@ import { searchXIcon } from '@keystar/ui/icon/icons/searchXIcon';
 import { TextLink } from '@keystar/ui/link';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { SearchField } from '@keystar/ui/search-field';
+import { StatusLight } from '@keystar/ui/status-light';
 import {
   breakpointQueries,
   css,
@@ -27,6 +26,7 @@ import {
   Row,
   SortDescriptor,
 } from '@keystar/ui/table';
+import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../config';
 import { sortByDescriptor } from './collection-sort';
@@ -86,9 +86,9 @@ function CollectionPageHeader(props: {
 
   return (
     <PageHeader>
-      <Breadcrumbs size="medium" flex minWidth={0}>
-        <Item key="collection">{collectionLabel}</Item>
-      </Breadcrumbs>
+      <Heading elementType="h1" id="page-title" size="small" flex minWidth={0}>
+        {collectionLabel}
+      </Heading>
       <div
         role="search"
         style={{
@@ -292,6 +292,10 @@ function CollectionTable(
         [breakpointQueries.above.tablet]: {
           marginInline: `calc(${tokenSchema.size.space.xxlarge} - ${tokenSchema.size.space.medium})`,
         },
+
+        '[role=rowheader]': {
+          cursor: 'pointer',
+        },
       })}
     >
       <TableHeader
@@ -315,14 +319,12 @@ function CollectionTable(
         {item => (
           <Row key={item.name}>
             <Cell textValue={item.name}>
-              <TextLink
-                href={getItemPath(props.basePath, props.collection, item.name)}
-              >
-                {item.name}
-              </TextLink>
+              <Text weight="medium">{item.name}</Text>
             </Cell>
             <Cell textValue={item.status}>
-              <Badge tone={statusTones[item.status]}>{item.status}</Badge>
+              <StatusLight tone={statusTones[item.status]}>
+                {item.status}
+              </StatusLight>
             </Cell>
           </Row>
         )}
