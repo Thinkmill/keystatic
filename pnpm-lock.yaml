@@ -409,8 +409,8 @@ importers:
       '@astrojs/react': ^2.2.1
       '@braintree/sanitize-url': ^6.0.2
       '@hapi/iron': ^7.0.0
-      '@keystatic/astro': ^0.0.8
-      '@keystatic/core': ^0.0.115
+      '@keystatic/astro': ^0.0.9
+      '@keystatic/core': ^0.0.116
       '@types/react': ^18.2.8
       '@types/react-dom': ^18.0.11
       astro: ^2.10.5
@@ -462,8 +462,8 @@ importers:
       '@astrojs/react': ^2.2.1
       '@astrojs/sitemap': ^2.0.1
       '@astrojs/tailwind': ^4.0.0
-      '@keystatic/astro': ^0.0.8
-      '@keystatic/core': ^0.0.115
+      '@keystatic/astro': ^0.0.9
+      '@keystatic/core': ^0.0.116
       '@tailwindcss/typography': ^0.5.9
       '@types/react': ^18.2.8
       '@types/react-dom': ^18.0.11
@@ -489,7 +489,7 @@ importers:
 
   dev-projects/localization:
     specifiers:
-      '@keystatic/core': ^0.0.115
+      '@keystatic/core': ^0.0.116
       '@keystatic/next': ^0.0.11
       '@preconstruct/next': ^4.0.0
       '@types/node': 16.11.13
@@ -519,7 +519,7 @@ importers:
     specifiers:
       '@babel/runtime': ^7.18.3
       '@keystar/ui': ^0.2.0
-      '@keystatic/core': ^0.0.115
+      '@keystatic/core': ^0.0.116
       '@keystatic/next': ^0.0.11
       '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
@@ -550,7 +550,7 @@ importers:
 
   dev-projects/remix:
     specifiers:
-      '@keystatic/core': ^0.0.115
+      '@keystatic/core': ^0.0.116
       '@keystatic/remix': ^0.0.4
       '@remix-run/dev': ^1.18.1
       '@remix-run/node': ^1.18.1
@@ -585,7 +585,7 @@ importers:
       '@headlessui/react': ^1.7.11
       '@heroicons/react': ^2.0.16
       '@keystar/ui': ^0.2.0
-      '@keystatic/core': ^0.0.115
+      '@keystatic/core': ^0.0.116
       '@keystatic/next': ^0.0.11
       '@markdoc/markdoc': ^0.3.0
       '@sindresorhus/slugify': ^1.1.2
@@ -641,7 +641,7 @@ importers:
   packages/astro:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.115
+      '@keystatic/core': ^0.0.116
       '@types/cookie': ^0.5.1
       '@types/react': ^18.2.8
       '@types/set-cookie-parser': ^2.4.2
@@ -859,7 +859,7 @@ importers:
   packages/next:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.115
+      '@keystatic/core': ^0.0.116
       '@types/react': ^18.2.8
       chokidar: ^3.5.3
       next: ^13.4.8
@@ -880,7 +880,7 @@ importers:
   packages/remix:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.115
+      '@keystatic/core': ^0.0.116
       '@remix-run/react': ^1.18.1
       '@types/react': ^18.2.8
       react: ^18.2.0
@@ -898,8 +898,8 @@ importers:
     specifiers:
       '@astrojs/markdoc': ^0.4.4
       '@astrojs/react': ^2.2.1
-      '@keystatic/astro': ^0.0.8
-      '@keystatic/core': ^0.0.115
+      '@keystatic/astro': ^0.0.9
+      '@keystatic/core': ^0.0.116
       '@types/react': ^18.2.8
       '@types/react-dom': ^18.0.11
       astro: ^2.10.5
@@ -918,7 +918,7 @@ importers:
 
   templates/nextjs:
     specifiers:
-      '@keystatic/core': ^0.0.115
+      '@keystatic/core': ^0.0.116
       '@keystatic/next': ^0.0.11
       '@types/react': ^18.2.8
       next: ^13.4.8

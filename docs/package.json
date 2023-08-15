@@ -1,6 +1,6 @@
 {
   "name": "keystatic-docs",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "",
   "private": true,
   "scripts": {
@@ -15,7 +15,7 @@
     "@headlessui/react": "^1.7.11",
     "@heroicons/react": "^2.0.16",
     "@keystar/ui": "^0.2.0",
-    "@keystatic/core": "^0.0.115",
+    "@keystatic/core": "^0.0.116",
     "@keystatic/next": "^0.0.11",
     "@markdoc/markdoc": "^0.3.0",
     "@sindresorhus/slugify": "^1.1.2",
