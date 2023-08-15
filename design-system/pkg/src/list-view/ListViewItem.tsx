@@ -296,7 +296,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
             },
 
             // interactions
-            '&[data-focus], &[data-interaction="hover"]': {
+            '&[data-interaction="hover"]': {
               backgroundColor: tokenSchema.color.alias.backgroundHovered,
             },
             '&[data-interaction="press"]': {
