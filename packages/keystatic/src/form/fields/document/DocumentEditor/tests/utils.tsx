@@ -125,7 +125,23 @@ expect.extend({
 
 export const defaultDocumentFeatures = normaliseDocumentFeatures({
   dividers: true,
-  formatting: true,
+  formatting: {
+    alignment: true,
+    inlineMarks: {
+      bold: true,
+      code: true,
+      italic: true,
+      keyboard: true,
+      strikethrough: true,
+      subscript: true,
+      superscript: true,
+      underline: true,
+    },
+    listTypes: true,
+    headingLevels: true,
+    blockTypes: true,
+    softBreaks: true,
+  },
   images: true,
   layouts: [[1], [1, 1], [1, 1, 1], [1, 2, 1]],
   links: true,
