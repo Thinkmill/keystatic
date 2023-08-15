@@ -9,6 +9,10 @@ export function SingletonSection(props: { config: Config; basePath: string }) {
   let changed = useChanged();
   let singletons = keyedEntries(props.config.singletons ?? {});
 
+  if (singletons.length === 0) {
+    return null;
+  }
+
   return (
     <DashboardSection title="Singletons">
       <DashboardGrid>
