@@ -74,7 +74,7 @@ path: 'packages/design-system/*/docs/'
 ### Nested slug example
 
 {% aside icon="👉" %}
-  `path: 'content/posts/**/*'`
+  `path: 'content/posts/**'`
 {% /aside %}
 
 There may be situations where you need the `slug` of an entry to be following a multi-folder structure.
@@ -90,10 +90,10 @@ content
       └── post-1.mdoc
 ```
 
-You can enable this by using the `**/*` wildcard in your `path`: 
+You can enable this by using the `**` wildcard in your `path`: 
 
 ```
-path: 'content/posts/**/*'
+path: 'content/posts/**'
 ```
 
 Since Keystatic `slugs` can contain `/` characters, you construct a multi-folder structure with `slug` field values like: `en/post-1` and `fr/post-1`.
