@@ -1,13 +1,16 @@
 'use client';
-import { FieldPrimitive } from '@keystar/ui/field';
-import { DocumentEditor } from './DocumentEditor';
+
+import { Field, FieldProps } from '@keystar/ui/field';
+import { useState } from 'react';
+
 import {
   ComponentBlock,
   DocumentElement,
   FormFieldInputProps,
 } from '../../api';
+import { useEntryLayoutSplitPaneContext } from '../../../app/entry-form';
+import { DocumentEditor } from './DocumentEditor';
 import { DocumentFeatures } from './DocumentEditor/document-features';
-import { useState } from 'react';
 
 let i = 0;
 
@@ -23,6 +26,7 @@ export function DocumentFieldInput(
     documentFeatures: DocumentFeatures;
   }
 ) {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
   const [state, setState] = useState<{
     key: number;
     value: (typeof props)['value'];
@@ -35,18 +39,31 @@ export function DocumentFieldInput(
     setState({ key: newKey(), value: props.value });
   }
 
+  let fieldProps: FieldProps = {
+    label: props.label,
+    description: props.description,
+  };
+  if (entryLayoutPane === 'main') {
+    fieldProps = {
+      'aria-label': props.label,
+    };
+  }
+
   return (
-    <FieldPrimitive label={props.label} description={props.description}>
-      <DocumentEditor
-        key={state.key}
-        componentBlocks={props.componentBlocks}
-        documentFeatures={props.documentFeatures}
-        onChange={val => {
-          setState(state => ({ key: state.key, value: val as any }));
-          props.onChange(val as any);
-        }}
-        value={state.value as any}
-      />
-    </FieldPrimitive>
+    <Field {...fieldProps}>
+      {inputProps => (
+        <DocumentEditor
+          {...inputProps}
+          key={state.key}
+          componentBlocks={props.componentBlocks}
+          documentFeatures={props.documentFeatures}
+          onChange={val => {
+            setState(state => ({ key: state.key, value: val as any }));
+            props.onChange(val as any);
+          }}
+          value={state.value as any}
+        />
+      )}
+    </Field>
   );
 }

@@ -23,11 +23,11 @@ import {
 import { Editable, ReactEditor, Slate, useSlate, withReact } from 'slate-react';
 import { EditableProps } from 'slate-react/dist/components/editable';
 
-import { Box } from '@keystar/ui/layout';
 import { classNames, css, tokenSchema } from '@keystar/ui/style';
 
-import { DocumentFeatures } from './document-features';
+import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 import { ComponentBlock } from '../../../api';
+import { DocumentFeatures } from './document-features';
 import { wrapLink } from './link/link';
 import { clearFormatting, Mark, nodeTypeMatcher } from './utils';
 import { Toolbar } from './Toolbar';
@@ -54,6 +54,7 @@ import { withPasting } from './pasting';
 import { withShortcuts } from './shortcuts';
 import { withSoftBreaks } from './soft-breaks';
 import { getSelectedTableArea } from './table/with-table';
+
 // the docs site needs access to Editor and importing slate would use the version from the content field
 // so we're exporting it from here (note that this is not at all visible in the published version)
 export { Editor } from 'slate';
@@ -304,17 +305,27 @@ export function DocumentEditor({
   componentBlocks: Record<string, ComponentBlock>;
   documentFeatures: DocumentFeatures;
 } & Omit<EditableProps, 'value' | 'onChange'>) {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
   const editor = useMemo(
     () => createDocumentEditor(documentFeatures, componentBlocks),
     [documentFeatures, componentBlocks]
   );
 
   return (
-    <Box
-      backgroundColor="canvas"
-      border="neutral"
-      borderRadius="medium"
-      minWidth={0}
+    <div
+      data-layout={entryLayoutPane}
+      className={classNames(
+        css({
+          backgroundColor: tokenSchema.color.background.canvas,
+          minWidth: 0,
+
+          '&:not([data-layout="main"])': {
+            border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
+            borderRadius: tokenSchema.size.radius.medium,
+          },
+        }),
+        'keystar-document-editor'
+      )}
     >
       <DocumentEditorProvider
         componentBlocks={componentBlocks}
@@ -343,17 +354,13 @@ export function DocumentEditor({
           [documentFeatures, onChange]
         )}
 
-        <DocumentEditorEditable
-          id="document-editor-boundary"
-          {...props}
-          readOnly={onChange === undefined}
-        />
+        <DocumentEditorEditable {...props} readOnly={onChange === undefined} />
         {
           // for debugging
           false && <Debugger />
         }
       </DocumentEditorProvider>
-    </Box>
+    </div>
   );
 }
 
@@ -425,6 +432,7 @@ function getPrismTokenLength(token: Prism.Token | string): number {
 }
 
 export function DocumentEditorEditable(props: EditableProps) {
+  const entryLayoutPane = useEntryLayoutSplitPaneContext();
   const editor = useSlate();
   const { componentBlocks, documentFeatures } = useDocumentEditorConfig();
 
@@ -519,6 +527,7 @@ export function DocumentEditorEditable(props: EditableProps) {
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         {...props}
+        data-layout={entryLayoutPane}
         className={classNames(editableStyles, props.className)}
       />
     </ActiveBlockPopoverProvider>
@@ -558,10 +567,14 @@ let styles: any = {
   lineHeight: 1.4,
   minHeight: tokenSchema.size.scale[2000],
   minWidth: 0,
-  padding: tokenSchema.size.space.medium,
+  paddingTop: tokenSchema.size.space.medium,
   // antialiased editor text, to match the rest of the app
   MozOsxFontSmoothing: 'grayscale',
   WebkitFontSmoothing: 'antialiased',
+
+  '&:not([data-layout="main"])': {
+    padding: tokenSchema.size.space.medium,
+  },
 };
 
 let listDepth = 10;

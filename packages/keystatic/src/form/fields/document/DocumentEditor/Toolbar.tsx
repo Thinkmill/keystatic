@@ -18,12 +18,14 @@ import { subscriptIcon } from '@keystar/ui/icon/icons/subscriptIcon';
 import { superscriptIcon } from '@keystar/ui/icon/icons/superscriptIcon';
 import { typeIcon } from '@keystar/ui/icon/icons/typeIcon';
 import { underlineIcon } from '@keystar/ui/icon/icons/underlineIcon';
-import { Flex } from '@keystar/ui/layout';
+import { Box, Flex } from '@keystar/ui/layout';
 import { MenuTrigger, Menu } from '@keystar/ui/menu';
 import { Picker } from '@keystar/ui/picker';
 import { css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text, Kbd } from '@keystar/ui/typography';
+
+import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 
 import { TextAlignMenu } from './alignment';
 import { blockquoteButton } from './blockquote/blockquote-ui';
@@ -139,35 +141,59 @@ const ToolbarGroup = ({ children }: { children: ReactNode }) => {
 };
 
 const ToolbarContainer = ({ children }: { children: ReactNode }) => {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
   return (
-    <Flex
-      minWidth={0}
-      backgroundColor="canvas"
-      borderTopStartRadius="medium"
-      borderTopEndRadius="medium"
-      position="sticky"
-      zIndex={2}
-      insetTop={0}
-    >
-      {children}
-      <Flex
-        role="presentation" // dividing line
-        borderBottom="muted"
-        position="absolute"
-        insetX="medium"
-        insetBottom={0}
-      />
-    </Flex>
+    <>
+      <div
+        data-layout={entryLayoutPane}
+        className={css({
+          minWidth: 0,
+          backgroundColor: tokenSchema.color.background.canvas,
+          borderStartStartRadius: tokenSchema.size.radius.medium,
+          borderStartEndRadius: tokenSchema.size.radius.medium,
+          position: 'sticky',
+          zIndex: 2,
+          top: 0,
+
+          '&[data-layout="main"]': {
+            borderRadius: 0,
+            // borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
+            backdropFilter: 'blur(8px)',
+            backgroundColor: `color-mix(in srgb, transparent, ${tokenSchema.color.background.canvas} 90%)`,
+          },
+        })}
+      >
+        {children}
+        {entryLayoutPane !== 'main' && (
+          <Box
+            borderBottom="muted"
+            position="absolute"
+            insetX="medium"
+            insetBottom={0}
+          />
+        )}
+      </div>
+      {entryLayoutPane === 'main' && (
+        <Box
+          borderBottom="muted"
+          position="absolute"
+          insetX={0}
+          insetTop="size.element.large"
+        />
+      )}
+    </>
   );
 };
 
 const ToolbarScrollArea = (props: { children: ReactNode }) => {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
   return (
     <Flex
       // borderRadius="regular"
       // backgroundColor="surfaceSecondary"
-      padding="regular"
-      paddingEnd="medium"
+      data-layout={entryLayoutPane}
+      paddingY="regular"
+      paddingX="medium"
       gap="large"
       flex
       minWidth={0}
@@ -179,6 +205,11 @@ const ToolbarScrollArea = (props: { children: ReactNode }) => {
         /* for Chrome, Safari, and Opera */
         '&::-webkit-scrollbar': {
           display: 'none',
+        },
+
+        '&[data-layout="main"]': {
+          paddingInline: 0,
+          // marginInline: `calc(${tokenSchema.size.space.medium} * -1)`,
         },
       })}
       {...props}
