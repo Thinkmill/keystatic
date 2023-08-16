@@ -93,7 +93,7 @@ Let's create a new page called `src/pages/keystatic/[...params].astro`:
 
 The Keystatic Admin UI is built with React. So that we can import and mount this app here with React, let's create a new file outside of the pages directory.
 
-I'll put it in the project root, alongside our Keystatic config file.
+I will put it in the project root, alongside our Keystatic config file.
 
 ```ts
 // keystatic.page.ts
@@ -103,7 +103,7 @@ import keystaticConfig from './keystatic.config'
 export const Keystatic = makePage(keystaticConfig)
 ```
 
-Now, we can import that file in our `keystatic/[...params].astro` page, and mount the component on the clientside only:
+Now, we can import that file in our `keystatic/[...params].astro` page, and mount the component on the client side only:
 
 ```ts
 ---
@@ -122,7 +122,7 @@ npm run dev
 
 ### Visiting the Keystatic Admin UI
 
-Great! So now, we should be able to visit the `/keystatic` router in the browser.
+Great! So now, we should be able to visit the `/keystatic` route in the browser.
 
 Try it!
 
@@ -205,7 +205,7 @@ In our Keystatic config file, we've set the `path` property for our `posts` coll
 As a result, creating a new post from the Keystatic Admin UI should create a new `content` directory in the `src` directory, with the new post `.mdoc` file inside!
 {% /aside %}
 
-If everything worked correctly, you'll find your new post inside the `src/content/posts` directory:
+If everything worked correctly, you will find your new post inside the `src/content/posts` directory:
 
 ```bash
 src/
@@ -267,7 +267,7 @@ const posts = await getCollection('posts')
 
 ```
 
-Since we told Keystatic to manage `posts` in `src/content/posts`, they'll be available as Astro's content collections as the `posts` collection slug.
+Since we instructed Keystatic to manage `posts` in `src/content/posts`, they will be available as Astro's content collections as the `posts` collection slug.
 
 Pretty cool, eh?
 
@@ -289,7 +289,7 @@ const post = await getEntry('posts', 'my-first-post')
 
 ### Rendering document field content
 
-If you look at the output from our `post` entry from above, you'll notice that the `body` field – the `content` of our post – is displaying raw Markdoc.
+If you examine the output from our `post` entry from above, you will notice that the `body` field – which represents the `content` of our post – is displaying raw Markdown.
 
 But you probably want to render HTML instead on your page.
 
@@ -316,6 +316,6 @@ Sweet!
 
 ## Deploying Keystatic + Astro
 
-Because Keystatic needs to run serverside code and use Node.js APIs, you'll need to add an [Astro adapter](https://docs.astro.build/en/guides/server-side-rendering/#adding-an-adapter) to deploy your project.
+Because Keystatic needs to run serverside code and use Node.js APIs, you will need to add an [Astro adapter](https://docs.astro.build/en/guides/server-side-rendering/#adding-an-adapter) to deploy your project.
 
-You'll also probably want to [connect Keystatic to GitHub](/docs/connect-to-github) so you can manage content on the deployed instance of the project.
+You will also probably want to [connect Keystatic to GitHub](/docs/connect-to-github) so you can manage content on the deployed instance of the project.
