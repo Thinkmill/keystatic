@@ -8,95 +8,11 @@ Those are defined in the&nbsp;[Keystatic configuration](/docs/configuration).
 
 You get a lot of control and flexibility with *where* your content gets generated, both at the `collection` or `singleton` level, and at the `field` level for certain field types, like images.
 
-## Content path
+### Path configuration
 
-You can define *where* Keystatic should store collection entries and singletons via the `path` property in the collection/singleton top-level options.
+You can define _where_ Keystatic should store collection entries and singletons via the `path` property in the collection/singleton top-level options.
 
-```javascript
-// Keystatic config
-export default config({
-  collections: {
-    posts: collection({
-      label: 'Posts',
-      path: 'content/posts/*/',
-      // ...
-    })
-  },
-  singletons: {
-    settings: singleton({
-      label: 'Settings',
-      path: 'content/posts/',
-      // ...
-   })
-  }
-})
-
-```
-
-The optional trailing slash `/` on that path has an impact on the content structure - read below for more details on `collection paths` and `singleton paths`.
-
-### Path wildcard for collections
-
-The `path` property for `collections` must contain a `*` wildcard. 
-
-It represents the `slug` of an entry.
-
-This wildcard gives you flexibility and control over your where your content is being output.
-
-### Nested folder output example
-
-{% aside icon="👉" %}
-  `path: 'packages/design-system/*/docs/'`
-{% /aside %}
-
-Imagine a Design System inside a monorepo: 
-
-```sh
-root
-├── packages
-  ├── design-system
-    ├── button
-      └── src
-    ├── dropdown
-      └── src
-└── apps
-  └── docs(keystatic)
-```
-
-Your Keystatic site lives in `apps/docs`, but you want your documentation entries in `packages/design-system/{component-name}/docs/`, to collocate them with each component.
-
-The following path will let you do exactly that:
-
-```
-path: 'packages/design-system/*/docs/'
-```
-
-### Nested slug example
-
-{% aside icon="👉" %}
-  `path: 'content/posts/**'`
-{% /aside %}
-
-There may be situations where you need the `slug` of an entry to be following a multi-folder structure.
-
-Say you want the **same collection** to support this following tree structure:
-
-```sh
-content
-├── posts
-  ├── en  
-      └── post-1.mdoc
-  ├── fr  
-      └── post-1.mdoc
-```
-
-You can enable this by using the `**` wildcard in your `path`: 
-
-```
-path: 'content/posts/**'
-```
-
-Since Keystatic `slugs` can contain `/` characters, you construct a multi-folder structure with `slug` field values like: `en/post-1` and `fr/post-1`.
+We'll go over core concepts here, but check out the [Path configuration page](/docs/path-configuration) for more details and examples.
 
 ---
 

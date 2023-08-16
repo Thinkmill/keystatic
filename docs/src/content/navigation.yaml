@@ -54,6 +54,10 @@ navGroups:
         link:
           discriminant: page
           value: singletons
+      - label: Path configuration
+        link:
+          discriminant: page
+          value: path-configuration
       - label: Reader API
         link:
           discriminant: page
