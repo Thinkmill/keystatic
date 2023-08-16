@@ -20,7 +20,7 @@ module.exports = {
       // Discord server invite
       {
         source: '/chat',
-        destination: 'https://discord.gg/MZ3fcrQj',
+        destination: 'https://discord.gg/mudNPCMyCv',
         permanent: true,
       },
     ];
