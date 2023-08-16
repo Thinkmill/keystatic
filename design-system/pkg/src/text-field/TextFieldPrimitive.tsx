@@ -189,8 +189,8 @@ function useTextFieldStyles() {
     textOverflow: 'ellipsis',
     verticalAlign: 'top',
     width: '100%',
-    WebkitFontSmoothing: 'antialiased',
-    MozOsxFontSmoothing: 'grayscale',
+    MozOsxFontSmoothing: 'auto',
+    WebkitFontSmoothing: 'auto',
 
     '::placeholder': {
       color: tokenSchema.color.foreground.neutralTertiary,

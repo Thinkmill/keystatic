@@ -50,8 +50,8 @@ export function BreadcrumbItem(props: BreadcrumbItemProps) {
               fontSize: tokenSchema.typography.text.regular.size,
               fontFamily: tokenSchema.typography.fontFamily.base,
               fontWeight: tokenSchema.typography.fontWeight.medium,
-              WebkitFontSmoothing: 'antialiased',
-              MozOsxFontSmoothing: 'grayscale',
+              MozOsxFontSmoothing: 'auto',
+              WebkitFontSmoothing: 'auto',
 
               '&[data-size=small]': {
                 fontSize: tokenSchema.typography.text.small.size,
