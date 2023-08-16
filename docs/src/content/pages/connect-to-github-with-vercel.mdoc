@@ -17,7 +17,7 @@ To use it, you need:
 You *can* [do that manually](/docs/connect-to-github)… but we've created a little semi-automated onboarding process. It turns a lengthy manual setup into a series of… *button clicks* ✨
 {% /aside %}
 
-You'll be prompted to go through a few steps. You can read the **step by step walkthrough** below for details, but here's a visual representation of the *mostly automated* journey you'll be taken on:
+You will be prompted to go through a few steps. You can read the **step by step walkthrough** below for details, but here's a visual representation of the *mostly automated* journey you will be taken on:
 
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template0.png" /%}
@@ -29,7 +29,7 @@ To automate the creation of the GitHub repo and set it up with the GitHub App, w
 
 This lets us provide the *quickest pathway* to having a Keystatic project setup and deployed to start iterating. That said, **using Vercel is not a requirement** - you can host a Keystatic project somewhere else. Vercel just happens to help us “automate” the getting started story elegantly.
 
-We'll be adding more pathways to create a new project as we go, and based on the feedback we get.
+We will be adding more pathways to create a new project as we go, and based on the feedback we get.
 {% /aside %}
 
 ## Step by step walkthrough
@@ -44,12 +44,12 @@ Select one of the starter templates:
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template2.png" /%}
 
-You'll be prompted to tell us about yourself. This is optional, but it helps us understand *who* is using Keystatic and how we can make it better.
+You will be prompted to tell us about yourself. This is optional, but it helps us understand *who* is using Keystatic and how we can make it better.
 
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template3.png" /%}
 
-After that, you'll be taken to Vercel's project starter dashboard, where you'll be prompted to create a new GIT repo based on the template you've selected in the previous step:
+After that, you will be taken to Vercel's project starter dashboard, where you will be prompted to create a new GIT repo based on the template you've selected in the previous step:
 
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template4.png" /%}
@@ -66,12 +66,12 @@ Click Add. You may need to authenticate with GitHub if you have 2FA turned on:
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template6.png" /%}
 
-You'll be prompted to create a new GitHub App:
+You will be prompted to create a new GitHub App:
 
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template7.png" /%}
 
-When you do so, you'll be redirected back to the Vercel project starter, and you'll see your new project being deployed 🎉
+When you do so, you will be redirected back to the Vercel project starter, and you will see your new project being deployed 🎉
 
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template8.png" /%}
@@ -113,7 +113,7 @@ Move into your cloned repo, and run `npm install` to add the dependencies:
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template15.png" /%}
 
-If you try running the project with `npm run dev` and visit the `/keystatic` URL, you'll find out you're missing some required environment variables:
+If you try running the project with `npm run dev` and visit the `/keystatic` URL, you will find out you're missing some required environment variables:
 
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template16.png" /%}
@@ -127,7 +127,7 @@ Check this out:
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template17.png" /%}
 
-If you open up your local project with your code editor of choice and check the `.env` file, you'll see… it's empty:
+If you open up your local project with your code editor of choice and check the `.env` file, you will see… it's empty:
 
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template18.png" /%}
@@ -140,7 +140,7 @@ Copy the environment variables from the `Development` environment from Vercel:
 1. `vercel link` to link the project
 1. `vercel env pull` to pull the variables
 
-You'll end up with a series of variables starting with `VERCEL_*`, that you can safely delete.
+You will end up with a series of variables starting with `VERCEL_*`, that you can safely delete.
 {% /aside %}
 
 {% cloud-image
@@ -181,7 +181,7 @@ The `keystatic.tsx` file is where we define Keystatic's content schema. You can 
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template22.png" /%}
 
-It's set to generate content in `content/posts`, and if you look at the `schema` object, you'll see fields defined for a `title`, `slug`, `content`and `authors`:
+It's set to generate content in `content/posts`, and if you look at the `schema` object, you will see fields defined for a `title`, `slug`, `content`and `authors`:
 
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template23.png" /%}
@@ -200,7 +200,7 @@ Choose a new field name, type `fields.` and you should be presented with some ch
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template25.png" /%}
 
-Here I'll choose `checkbox`, but feel free to try something else! I'll add a required `label` too:
+Here I will choose `checkbox`, but feel free to try something else! I will add a required `label` too:
 
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template26.png" /%}
@@ -258,7 +258,7 @@ You can pull the `test` branch, or create and merge that new PR and pull from `m
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template35.png" /%}
 
-After pulling, you'll see the new `content/posts` folder in your local project:
+After pulling, you will see the new `content/posts` folder in your local project:
 
 {% cloud-image
    href="https://keystatic.io/images/keystatic-docs/automated-with-template36.png" /%}
