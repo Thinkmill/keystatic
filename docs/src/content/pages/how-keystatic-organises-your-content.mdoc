@@ -8,7 +8,7 @@ Those are defined in the&nbsp;[Keystatic configuration](/docs/configuration).
 
 You get a lot of control and flexibility with *where* your content gets generated, both at the `collection` or `singleton` level, and at the `field` level for certain field types, like images.
 
-## Collections & Singletons output
+## Content path
 
 You can define *where* Keystatic should store collection entries and singletons via the `path` property in the collection/singleton top-level options.
 
@@ -35,23 +35,74 @@ export default config({
 
 The optional trailing slash `/` on that path has an impact on the content structure - read below for more details on `collection paths` and `singleton paths`.
 
+### Path wildcard for collections
+
+The `path` property for `collections` must contain a `*` wildcard. 
+
+It represents the `slug` of an entry.
+
+This wildcard gives you flexibility and control over your where your content is being output.
+
+### Nested folder output example
+
+{% aside icon="👉" %}
+  `path: 'packages/design-system/*/docs/'`
+{% /aside %}
+
+Imagine a Design System inside a monorepo: 
+
+```sh
+root
+├── packages
+  ├── design-system
+    ├── button
+      └── src
+    ├── dropdown
+      └── src
+└── apps
+  └── docs(keystatic)
+```
+
+Your Keystatic site lives in `apps/docs`, but you want your documentation entries in `packages/design-system/{component-name}/docs/`, to collocate them with each component.
+
+The following path will let you do exactly that:
+
+```
+path: 'packages/design-system/*/docs/'
+```
+
+### Nested slug example
+
+{% aside icon="👉" %}
+  `path: 'content/posts/**'`
+{% /aside %}
+
+There may be situations where you need the `slug` of an entry to be following a multi-folder structure.
+
+Say you want the **same collection** to support this following tree structure:
+
+```sh
+content
+├── posts
+  ├── en  
+      └── post-1.mdoc
+  ├── fr  
+      └── post-1.mdoc
+```
+
+You can enable this by using the `**` wildcard in your `path`: 
+
+```
+path: 'content/posts/**'
+```
+
+Since Keystatic `slugs` can contain `/` characters, you construct a multi-folder structure with `slug` field values like: `en/post-1` and `fr/post-1`.
+
+---
+
 ## Collections
 
-The `path` property for collections is a string that contains a `*` wildcard representing the `slug` of an entry.
-
-If not specified, the default `path` value will be `{collection-name}/*/`.
-
-{% aside icon="⚡️" %}
-**Why a** `*` **symbol?**
-
-The `*` wildcard in the `path` is useful when you want to collocate Keystatic's output with your existing source code, that may be nested a few levels deep inside an ***entry*** you're writing content for.
-
-For example, you may be writing documentation for Design System components.
-
-Say you want Keystatic to output your documentation entries in `packages/design-system/{component-name}/docs/`.
-
-You can use `path: 'packages/design-system/*/docs/'` to do just that 👍
-{% /aside %}
+The default `path` value, if not specified, will be `{collection-name}/*/`.
 
 ### Collection paths ending with a trailing slash `/`
 
@@ -59,9 +110,9 @@ If the path ends with a trailing slash `/`, each entry will be created in its ow
 
 ```yaml
 collection-name
-  slug
-    index.yaml
-    other.mdoc
+└── slug
+    ├── index.yaml
+    └── other.mdoc
 ```
 
 Say you create two entries in the `posts` collection, where the `path` is set to `'content/posts/*/'`.
@@ -70,13 +121,13 @@ Since there is a trailing slash in the `path`, the generated output will look li
 
 ```yaml
 content
-  posts
-    my-first-post
-      index.yaml
-      other.mdoc
-    my-second-post
-      index.yaml
-      other.mdoc
+└── posts
+    ├── my-first-post
+        ├── index.yaml
+        ├── other.mdoc
+    └── my-second-post
+        ├── index.yaml
+        └── other.mdoc
 ```
 
 ### Collection paths ending without a trailing slash
@@ -85,9 +136,9 @@ If the path does not end with a trailing slash, entries' index files will be cre
 
 ```yaml
 collection-name
-  slug.yaml
-  slug
-    other.mdoc
+├── slug.yaml
+└── slug
+    └── other.mdoc
 ```
 
 Say you create two entries in the `posts` collection, where the `path` is set to `'content/posts/*'`.
@@ -96,13 +147,16 @@ Since there is no trailing slash in the `path`, the generated output will look l
 
 ```yaml
 content
-  my-first-post.yaml
-  my-first-post
-    other.mdoc
-  my-second-post.yaml
-  my-second-post
-    other.mdoc
+└── posts
+    ├── my-first-post.yaml
+    └── my-first-post
+        └── other.mdoc
+    ├── my-second-post.yaml
+    └── my-second-post
+        └── other.mdoc
 ```
+
+---
 
 ## Singletons
 
@@ -116,9 +170,9 @@ If the path ends with a trailing slash `/`, the singleton's content ill be creat
 
 ```yaml
 singleton-name
-  slug
-    index.yaml
-    other.mdoc
+└── slug
+    ├── index.yaml
+    └── other.mdoc
 
 ```
 
@@ -128,9 +182,9 @@ If the path does not end with a trailing slash, the singleton's index file will 
 
 ```yaml
 singleton-name
-  slug.yaml
-  slug
-    other.mdoc
+├── slug.yaml
+└── slug
+    └── other.mdoc
 
 ```
 
