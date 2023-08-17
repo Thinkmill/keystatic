@@ -176,6 +176,19 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
       />
     );
   },
+  'cloud-image-2': ({ src, alt, height, width }) => {
+    const imgMaxWidthPx = `${parseFloat(CONTENT_MAX_WIDTH_DESKTOP) * 16}`;
+
+    return (
+      <CloudImage
+        alt={alt}
+        src={src}
+        height={height}
+        width={width ?? imgMaxWidthPx}
+        className="rounded-lg my-2"
+      />
+    );
+  },
   tags: ({ tags }) => {
     return (
       <div className="flex gap-2">
