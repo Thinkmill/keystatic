@@ -1,8 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getDefaultSrcSet } from '../../utils';
-import { CONTENT_MAX_WIDTH_DESKTOP } from '../../constants';
 import { NotEditable, ObjectField, PreviewProps } from '@keystatic/core';
 import { TextField } from '@keystar/ui/text-field';
 import { ActionButton } from '@keystar/ui/button';
@@ -10,11 +8,14 @@ import { VStack, Flex } from '@keystar/ui/layout';
 import { Text } from '@keystar/ui/typography';
 import { Icon } from '@keystar/ui/icon';
 import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
+import { useConfig } from '../app/shell/context';
 
-export function CloudImage2Preview(
+export function CloudImagePreview(
   props: PreviewProps<
-    ObjectField<typeof import('../../../keystatic.config').cloudImage2Schema>
-  > & { onRemove(): void }
+    ObjectField<typeof import('./cloud-image-schema').cloudImageSchema>
+  > & {
+    onRemove(): void;
+  }
 ) {
   const src = props.fields.src.value;
   const alt = props.fields.alt.value;
@@ -34,25 +35,24 @@ export function CloudImage2Preview(
     }
   });
 
-  const onBrowse = () => {
-    window.open('https://keystatic.cloud/', '_blank');
-  };
+  const config = useConfig();
 
   const onPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
     const text = event.clipboardData.getData('text/plain');
     try {
-      const data = JSON.parse(text);
-      if (typeof data === 'object' && typeof data.src === 'string') {
+      const data: unknown = JSON.parse(text);
+      if (
+        typeof data === 'object' &&
+        data !== null &&
+        'src' in data &&
+        typeof data.src === 'string'
+      ) {
         event.preventDefault();
         props.onChange({
           src: data.src,
-          alt: typeof data.alt === 'string' ? data.alt || '' : '',
-          height: ['string', 'number'].includes(typeof data.height)
-            ? `${data.height}` || ''
-            : '',
-          width: ['string', 'number'].includes(typeof data.width)
-            ? `${data.width}` || ''
-            : '',
+          alt: 'alt' in data && typeof data.alt === 'string' ? data.alt : '',
+          height: 'height' in data ? getDimension(data.height) : '',
+          width: 'width' in data ? getDimension(data.width) : '',
         });
         return;
       }
@@ -87,12 +87,22 @@ export function CloudImage2Preview(
             onPaste={onPaste}
             flex="1"
           />
-          <div>
-            <ActionButton onPress={onBrowse}>
-              <Text>Browse</Text>
-              <Icon src={externalLinkIcon} />
-            </ActionButton>
-          </div>
+          {config.storage.kind === 'cloud' &&
+            (() => {
+              const [team, project] = config.storage.project.split('/');
+              return (
+                <div>
+                  <ActionButton
+                    href={`https://keystatic.cloud/teams/${team}/project/${project}/images`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    <Text>Browse</Text>
+                    <Icon src={externalLinkIcon} />
+                  </ActionButton>
+                </div>
+              );
+            })()}
           <div>
             <ActionButton onPress={props.onRemove}>Remove</ActionButton>
           </div>
@@ -173,4 +183,10 @@ function useImageDimensions(src: string) {
   }, [src]);
 
   return dimensions;
+}
+
+function getDimension(value: unknown) {
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number') return value.toString();
+  return '';
 }
