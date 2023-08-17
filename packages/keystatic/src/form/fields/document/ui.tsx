@@ -50,7 +50,10 @@ export function DocumentFieldInput(
   }
 
   return (
-    <Field {...fieldProps}>
+    <Field
+      height={entryLayoutPane === 'main' ? '100%' : undefined}
+      {...fieldProps}
+    >
       {inputProps => (
         <DocumentEditor
           {...inputProps}

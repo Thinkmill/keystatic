@@ -10,8 +10,6 @@ import { Kbd, Text } from '@keystar/ui/typography';
 
 import { useToolbarState } from '../toolbar-state';
 import { isElementActive } from '../utils';
-import { Box } from '@keystar/ui/layout';
-import { blockElementSpacing } from '../ui-utils';
 
 export const insertBlockquote = (editor: Editor) => {
   const isActive = isElementActive(editor, 'blockquote');
@@ -31,19 +29,7 @@ export const BlockquoteElement = ({
   attributes,
   children,
 }: RenderElementProps) => {
-  return (
-    <Box
-      UNSAFE_className={blockElementSpacing}
-      borderColor="neutral"
-      marginX={0}
-      paddingX="large"
-      borderStartStyle="solid"
-      borderStartWidth="large"
-      {...attributes}
-    >
-      {children}
-    </Box>
-  );
+  return <blockquote {...attributes}>{children}</blockquote>;
 };
 
 const BlockquoteButton = () => {

@@ -63,7 +63,7 @@ export function Toolbar({
     documentFeatures.formatting.listTypes.ordered;
 
   return (
-    <ToolbarContainer>
+    <ToolbarWrapper>
       <ToolbarScrollArea>
         {!!documentFeatures.formatting.headings.levels.length && (
           <HeadingMenu
@@ -131,7 +131,7 @@ export function Toolbar({
         );
       }, [viewState])}
       {!!hasBlockItems && <InsertBlockMenu />}
-    </ToolbarContainer>
+    </ToolbarWrapper>
   );
 }
 
@@ -139,48 +139,54 @@ export function Toolbar({
 const ToolbarGroup = ({ children }: { children: ReactNode }) => {
   return <Flex gap="regular">{children}</Flex>;
 };
-
+const RESPONSIVE_PADDING = {
+  mobile: 'medium',
+  tablet: 'xlarge',
+  desktop: 'xxlarge',
+};
 const ToolbarContainer = ({ children }: { children: ReactNode }) => {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
+  if (entryLayoutPane === 'main') {
+    return (
+      <Box
+        height="100%"
+        minHeight={0}
+        minWidth={0}
+        maxWidth="container.small"
+        marginX="auto"
+        paddingX={RESPONSIVE_PADDING}
+      >
+        {children}
+      </Box>
+    );
+  }
+  return <>{children}</>;
+};
+
+const ToolbarWrapper = ({ children }: { children: ReactNode }) => {
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
   return (
     <>
       <div
         data-layout={entryLayoutPane}
         className={css({
-          minWidth: 0,
-          backgroundColor: tokenSchema.color.background.canvas,
-          borderStartStartRadius: tokenSchema.size.radius.medium,
+          backdropFilter: 'blur(8px)',
+          backgroundClip: 'padding-box',
+          backgroundColor: `color-mix(in srgb, transparent, ${tokenSchema.color.background.canvas} 90%)`,
+          borderBottom: `${tokenSchema.size.border.regular} solid color-mix(in srgb, transparent, ${tokenSchema.color.foreground.neutral} 10%)`,
           borderStartEndRadius: tokenSchema.size.radius.medium,
+          borderStartStartRadius: tokenSchema.size.radius.medium,
+          display: 'flex',
+          minWidth: 0,
           position: 'sticky',
-          zIndex: 2,
           top: 0,
+          zIndex: 2,
 
-          '&[data-layout="main"]': {
-            borderRadius: 0,
-            // borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
-            backdropFilter: 'blur(8px)',
-            backgroundColor: `color-mix(in srgb, transparent, ${tokenSchema.color.background.canvas} 90%)`,
-          },
+          '&[data-layout="main"]': { borderRadius: 0 },
         })}
       >
-        {children}
-        {entryLayoutPane !== 'main' && (
-          <Box
-            borderBottom="muted"
-            position="absolute"
-            insetX="medium"
-            insetBottom={0}
-          />
-        )}
+        <ToolbarContainer>{children}</ToolbarContainer>
       </div>
-      {entryLayoutPane === 'main' && (
-        <Box
-          borderBottom="muted"
-          position="absolute"
-          insetX={0}
-          insetTop="size.element.large"
-        />
-      )}
     </>
   );
 };

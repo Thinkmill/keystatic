@@ -3,7 +3,6 @@ import { Editor } from 'slate';
 import { RenderElementProps, useSelected } from 'slate-react';
 
 import { ActionButton } from '@keystar/ui/button';
-import { Box } from '@keystar/ui/layout';
 import { css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text, Kbd } from '@keystar/ui/typography';
@@ -55,23 +54,18 @@ export const dividerButton = (
 export function DividerElement({ attributes, children }: RenderElementProps) {
   const selected = useSelected();
   return (
-    <Box
+    <div
       {...attributes}
-      paddingY="medium"
-      UNSAFE_className={css({
-        caretColor: 'transparent',
-      })}
+      style={{ display: 'contents', caretColor: 'transparent' }}
     >
       <hr
         className={css({
           backgroundColor: selected
             ? tokenSchema.color.alias.borderSelected
             : tokenSchema.color.alias.borderIdle,
-          border: 0,
-          height: 2,
         })}
       />
       {children}
-    </Box>
+    </div>
   );
 }

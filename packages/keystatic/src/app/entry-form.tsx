@@ -1,4 +1,4 @@
-import { Box, Grid } from '@keystar/ui/layout';
+import { Grid } from '@keystar/ui/layout';
 import {
   SplitView,
   SplitPanePrimary,
@@ -85,21 +85,12 @@ export function FormForEntry({
             <SplitPaneSecondary>
               <EntryLayoutSplitPaneContext.Provider value="main">
                 <ScrollView>
-                  <Box
-                    paddingX={RESPONSIVE_PADDING}
-                    paddingBottom={RESPONSIVE_PADDING}
-                    minHeight={0}
-                    minWidth={0}
-                    maxWidth="container.small"
-                    marginX="auto"
-                  >
-                    <AddToPathProvider part={contentField.key}>
-                      <InnerFormValueContentFromPreviewProps
-                        forceValidation={forceValidation}
-                        {...props.fields[contentField.key]}
-                      />
-                    </AddToPathProvider>
-                  </Box>
+                  <AddToPathProvider part={contentField.key}>
+                    <InnerFormValueContentFromPreviewProps
+                      forceValidation={forceValidation}
+                      {...props.fields[contentField.key]}
+                    />
+                  </AddToPathProvider>
                 </ScrollView>
               </EntryLayoutSplitPaneContext.Provider>
             </SplitPaneSecondary>
