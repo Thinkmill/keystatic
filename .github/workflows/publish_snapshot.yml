@@ -30,7 +30,7 @@ jobs:
           git config --global user.email 'automation+github@thinkmill.com.au'
           git commit -a -m 'rc'
 
-      - run: pnpm build
+      - run: pnpm build:packages
 
       - name: npm publish, git tag
         run: pnpm changeset publish --tag ${{ inputs.tag }}
