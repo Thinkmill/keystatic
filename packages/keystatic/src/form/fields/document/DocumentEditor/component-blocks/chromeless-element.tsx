@@ -27,20 +27,25 @@ export function ChromelessComponentBlockElement(props: {
   attributes: RenderElementProps['attributes'];
   element: Element;
 }) {
+  const hasToolbar = props.componentBlock.toolbar !== null;
   const ChromelessToolbar =
     props.componentBlock.toolbar ?? DefaultToolbarWithoutChrome;
 
   return (
     <div {...props.attributes} className={blockElementSpacing}>
-      <BlockPopoverTrigger element={props.element}>
+      {hasToolbar ? (
+        <BlockPopoverTrigger element={props.element}>
+          <div>{props.renderedBlock}</div>
+          <BlockPopover>
+            <ChromelessToolbar
+              onRemove={props.onRemove}
+              props={props.previewProps}
+            />
+          </BlockPopover>
+        </BlockPopoverTrigger>
+      ) : (
         <div>{props.renderedBlock}</div>
-        <BlockPopover>
-          <ChromelessToolbar
-            onRemove={props.onRemove}
-            props={props.previewProps}
-          />
-        </BlockPopover>
-      </BlockPopoverTrigger>
+      )}
     </div>
   );
 }
