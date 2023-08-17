@@ -193,7 +193,67 @@ Notice we also opt out of prerendering for those routes.
 
 We should be all set to use Keystatic now.
 
-### Creating a new post
+## Disabling indexing
+
+When using the `local` strategy, chances are you won't want to include these routes in the production build.
+
+### Adding redirects
+
+This can be achieved by levering `Astro.redirect`. Here is how to do it:
+
+```diff
+---
+// src/pages/keystatic/[...params].astro
+import { Keystatic } from '../../../keystatic.page'
+
+export const prerender = false
+
++ if (import.meta.env.MODE === 'production') {
++   return Astro.redirect('/')
++ }
+---
+
+<Keystatic client:only />
+
+```
+
+```jsx
+// src/pages/api/keystatic/[...params].ts
+import { makeHandler } from '@keystatic/astro/api'
+import keystaticConfig from '../../../../keystatic.config'
+
+export const all = makeHandler({
+  config: keystaticConfig,
+})
+
+export const prerender = false
+
++ if (import.meta.env.MODE === 'production') {
++   return Astro.redirect('/')
++ }
+```
+
+### Excluding routes from sitemap
+
+If you're using `@astrojs/sitemap`, you can exclude those routes as well:
+
+```diff
+// astro.config.mjs
+import { defineConfig } from 'astro/config'
+import sitemap from '@astrojs/sitemap';
+
+export default defineConfig({
+  integrations: [
++     sitemap({
++       filter: (page) => !page.includes("keystatic"),
++     });
+  ]
+})
+```
+
+---
+
+## Creating a new post
 
 Try and visit the `/keystatic` page in the browser one more time, and click on the “Posts” collection.
 
