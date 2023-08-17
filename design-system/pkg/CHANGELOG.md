@@ -1,5 +1,13 @@
 # @keystar/ui
 
+## 0.0.0-test-20230817012139
+
+### Patch Changes
+
+- 6895c566: - list-item + table-row: background change only on hover (not focus)
+  - allow shortcuts "cmd+s" and "ctrl+s" to save entry
+  - remove unused `flattenChildren` utility
+
 ## 0.2.0
 
 ### Minor Changes

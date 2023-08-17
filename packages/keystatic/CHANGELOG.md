@@ -1,5 +1,56 @@
 # @keystatic/core
 
+## 0.0.0-test-20230817012139
+
+### Patch Changes
+
+- 6895c566: - list-item + table-row: background change only on hover (not focus)
+  - allow shortcuts "cmd+s" and "ctrl+s" to save entry
+  - remove unused `flattenChildren` utility
+- ca6774b8: The `document` field defaults for formatting have changed to exclude
+  options that require custom Markdoc tags.
+
+  See https://keystatic.com/docs/fields/document#formatting-options for the new
+  defaults.
+
+  When updating, if you have configured a document field with shorthand for the
+  `formatting` config:
+
+  ```ts
+  fields.document({
+    // ...
+    formatting: true,
+  });
+  ```
+
+  To keep the same options you'll need to change you config to:
+
+  ```ts
+  fields.document({
+    // ...
+    formatting: {
+      alignment: true,
+      inlineMarks: {
+        bold: true,
+        code: true,
+        italic: true,
+        keyboard: true,
+        strikethrough: true,
+        subscript: true,
+        superscript: true,
+        underline: true,
+      },
+      listTypes: true,
+      headingLevels: true,
+      blockTypes: true,
+      softBreaks: true,
+    },
+  });
+  ```
+
+- Updated dependencies [6895c566]
+  - @keystar/ui@0.0.0-test-20230817012139
+
 ## 0.0.116
 
 ### Patch Changes
