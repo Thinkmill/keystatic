@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/astro",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -27,6 +27,9 @@
     "./internal/keystatic-api.js": "./internal/keystatic-api.js",
     "./internal/keystatic-astro-page.astro": "./internal/keystatic-astro-page.astro"
   },
+  "keywords": [
+    "astro-integration"
+  ],
   "main": "dist/keystatic-astro.cjs.js",
   "module": "dist/keystatic-astro.esm.js",
   "files": [
@@ -49,10 +52,10 @@
     "set-cookie-parser": "^2.5.1"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.0.115",
+    "@keystatic/core": "^0.0.116",
     "@types/cookie": "^0.5.1",
     "@types/set-cookie-parser": "^2.4.2",
-    "astro": "^2.9.6",
+    "astro": "^2.10.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

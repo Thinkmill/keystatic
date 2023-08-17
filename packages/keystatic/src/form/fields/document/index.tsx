@@ -124,7 +124,7 @@ export function normaliseDocumentFeatures(
   const formatting: FormattingConfig =
     config.formatting === true
       ? {
-          alignment: true,
+          // alignment: true, // not supported natively in markdown
           blockTypes: true,
           headingLevels: true,
           inlineMarks: true,
@@ -200,11 +200,11 @@ export function normaliseDocumentFeatures(
               bold: true,
               code: true,
               italic: true,
-              keyboard: true,
+              keyboard: false, // not supported natively in markdown
               strikethrough: true,
-              subscript: true,
-              superscript: true,
-              underline: true,
+              subscript: false, // not supported natively in markdown
+              superscript: false, // not supported natively in markdown
+              underline: false, // not supported natively in markdown
             }
           : {
               bold: !!formatting.inlineMarks?.bold,

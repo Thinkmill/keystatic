@@ -22,32 +22,58 @@ document: fields.document({
 
 The WYSIWYG toolbar can be customised to allow a range of formatting options. This is done via the `formatting` option on the `document` field.
 
-Setting `formatting: true` will enable all formatting options, but you can also specify only a specific subset of options you want to allow.
+Setting `formatting: true` will enable all the formatting options that are available in Markdown syntax, but you can also specify only a specific subset of options you want to allow.
+
+The editor features built-in support for some additional common formatting features that require custom Markdoc tags to render, including alignment, underline, subscript and superscript. These aren't included with the shorthand `formatting: true` option, but can be enabled by passing an object with the relevant options set to `true`.
+
+The formatting options enabled when using the shorthand are:
 
 ```ts
-document: fields.document({
-  label: 'Document',
+{
   formatting: {
     inlineMarks: {
       bold: true,
       italic: true,
-      underline: true,
-    }
+      strikethrough: true,
+      code: true,
+    },
     listTypes: {
       ordered: true,
       unordered: true,
-    }
+    },
+    headingLevels: [1, 2, 3, 4, 5, 6],
     blockTypes: {
-      blockquote: true
-      code: true 
-    }
-  }
-})
+      blockquote: true,
+      code: true,
+    },
+    softBreaks: true,
+  },
+}
+```
+
+The additional formatting options (not on by default) are:
+
+```ts
+{
+  formatting: {
+    // this is the same as providing `alignment: true`
+    alignment: {
+      center: true,
+      end: true,
+    }.
+    inlineMarks: {
+      keyboard: true,
+      subscript: true,
+      superscript: true,
+      underline: true,
+    },
+  },
+}
 ```
 
 ### Formatting options type signature
 
-The type signature for the full list of available formatting options is availble at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.document.DocumentFeaturesConfig](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.document.DocumentFeaturesConfig)
+The type signature for the full list of available formatting options is available at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.document.DocumentFeaturesConfig](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.document.DocumentFeaturesConfig)
 
 ---
 
@@ -105,9 +131,9 @@ content: fields.document({
   },
   dividers: true,
   formatting: {
-    headingLevels: true,
+    alignment: true,
     blockTypes: true,
-    listTypes: true,
+    headingLevels: true,
     inlineMarks: {
       code: true,
       bold: true,
@@ -115,6 +141,7 @@ content: fields.document({
       underline: true,
       strikethrough: true,
     },
+    listTypes: true,
   },
   tables: true,
 }),

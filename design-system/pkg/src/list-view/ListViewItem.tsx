@@ -296,7 +296,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
             },
 
             // interactions
-            '&[data-focus], &[data-interaction="hover"]': {
+            '&[data-interaction="hover"]': {
               backgroundColor: tokenSchema.color.alias.backgroundHovered,
             },
             '&[data-interaction="press"]': {
@@ -384,7 +384,6 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
                       }),
                       'ksv-list-view-item-draghandle-button'
                     )}
-                    style={!isFocusVisibleWithin ? { opacity: 0 } : {}}
                     ref={dragButtonRef}
                     draggable="true"
                   >

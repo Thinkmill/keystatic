@@ -6205,10 +6205,10 @@
     "emery": "^1.4.1",
     "facepaint": "^1.2.1",
     "lodash": "^4.17.21",
-    "react-keyed-flatten-children": "^1.3.0",
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
+    "@keystar/ui": "^0.2.0",
     "@keystar/ui-storybook": "^0.0.1",
     "@react-aria/landmark": "3.0.0-beta.2",
     "@svgr/core": "^6.5.1",

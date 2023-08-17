@@ -1,5 +1,14 @@
 # @keystatic/astro
 
+## 0.0.9
+
+### Patch Changes
+
+- 5c86514f: Change Astro integration to require hybrid mode
+- Updated dependencies [c43d7045]
+- Updated dependencies [21395048]
+  - @keystatic/core@0.0.116
+
 ## 0.0.8
 
 ### Patch Changes

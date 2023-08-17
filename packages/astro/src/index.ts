@@ -5,14 +5,9 @@ export default function keystatic(): AstroIntegration {
     name: 'keystatic',
     hooks: {
       'astro:config:setup': ({ injectRoute, updateConfig, config }) => {
-        if (config.output !== 'server') {
+        if (config.output !== 'hybrid') {
           throw new Error(
-            "Keystatic requires `output: 'server'` in your Astro config"
-          );
-        }
-        if (!config.adapter) {
-          throw new Error(
-            'Keystatic requires an `adapter` to be set in your Astro config'
+            "Keystatic requires `output: 'hybrid'` in your Astro config"
           );
         }
         const vite: ViteUserConfig = {
@@ -34,10 +29,12 @@ export default function keystatic(): AstroIntegration {
         injectRoute({
           entryPoint: '@keystatic/astro/internal/keystatic-astro-page.astro',
           pattern: '/keystatic/[...params]',
+          prerender: false,
         });
         injectRoute({
           entryPoint: '@keystatic/astro/internal/keystatic-api.js',
           pattern: '/api/keystatic/[...params]',
+          prerender: false,
         });
       },
     },
