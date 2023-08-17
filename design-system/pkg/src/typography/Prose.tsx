@@ -73,7 +73,7 @@ function useProseStyles(props: ProseProps) {
         // Elements
         // ---------------------------------------------------------------------
 
-        '& :is(blockquote, hr, p, ol, ul)': {
+        '& :is(blockquote, p, ol, ul)': {
           marginBlock: '1em',
 
           ':first-child': { marginTop: 0 },
@@ -88,7 +88,7 @@ function useProseStyles(props: ProseProps) {
           paddingInlineStart: '1em',
         },
         hr: {
-          // marginBlock: '1.5em',
+          marginBlock: '1.5em',
           backgroundColor: tokenSchema.color.alias.borderIdle,
           border: 0,
           height: tokenSchema.size.border.medium,
