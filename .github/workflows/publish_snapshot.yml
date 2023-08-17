@@ -17,7 +17,7 @@ jobs:
         with:
           persist-credentials: true # needed for git push
 
-      - uses: ./.github/actions/ci-setup
+      - uses: ./.github/actions/setup-deps
 
       - name: version packages
         run: pnpm changeset version --snapshot ${{ inputs.tag }}
