@@ -59,6 +59,7 @@ export const FieldPrimitive: ForwardRefExoticComponent<
       ref={forwardedRef}
       direction="column"
       gap="medium"
+      minWidth={0}
       UNSAFE_className={styleProps.className}
       UNSAFE_style={styleProps.style}
     >
