@@ -4,7 +4,41 @@ summary: >-
   Keystatic currently has two strategies for its content generation: github and
   local.
 ---
-Keystatic currently has two strategies for its content generation: `github` and `local`.
+Keystatic currently has two strategies for its content generation: `local` and `github`.
+
+## Local mode
+
+{% aside icon="⚡️" %}
+The `local` If you're a solo dev or a team that only wants to use Keystatic while running it locally, the `local` strategy might be **great** for you!
+
+The `local` mode is a stripped down *simpler* than the `github` strategy, but it's more limiting in its collaboration capabilities.
+
+
+
+You don't need a GitHub App to run that strategy. You don't need a GitHub account at all, actually. The content files are generated on inside your local project directly.
+{% /aside %}
+
+In your Keystatic config, you can set the `storage` strategy to `local` like so:
+
+```typescript
+// Keystatic config
+import { config } from '@keystatic/core'
+
+export default config({
+  storage: { kind: 'local' }
+})
+
+```
+
+That's it!
+
+You will notice there are no signs of GitHub-related UI elements in the Keystatic Admin UI:
+
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/storagestrategy6.png"
+   alt="Keystatic without git branch picker" /%}
+
+---
 
 ## GitHub strategy
 

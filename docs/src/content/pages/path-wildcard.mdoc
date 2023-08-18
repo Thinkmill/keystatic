@@ -1,40 +1,11 @@
 ---
-title: Path configuration
+title: Path wildcard
 summary: Granular control over where Keystatic stores content.
 ---
 
-You can define *where* Keystatic should store collection entries and singletons via the `path` property in the collection/singleton top-level options.
+The `path` wildcard for Keystatic [collections](/docs/collections) gives you flexibility and control over your where your content is being output.
 
-```javascript
-// Keystatic config
-export default config({
-  collections: {
-    posts: collection({
-      label: 'Posts',
-      path: 'content/posts/*/',
-      // ...
-    })
-  },
-  singletons: {
-    settings: singleton({
-      label: 'Settings',
-      path: 'content/posts/',
-      // ...
-   })
-  }
-})
-
-```
-
-The optional trailing slash `/` on that path has an impact on the content structure - read below for more details on `collection paths` and `singleton paths`.
-
-## Path wildcard for collections
-
-The `path` property for [collections](/docs/collections) must contain a `*` wildcard. 
-
-It represents the `slug` of an entry.
-
-This wildcard gives you flexibility and control over your where your content is being output.
+It's a glob pattern that lets you organise your content to support most scenarios.
 
 ## Nested folder output example
 

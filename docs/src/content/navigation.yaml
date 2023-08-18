@@ -9,10 +9,6 @@ navGroups:
         link:
           discriminant: page
           value: quick-start
-      - label: Connect to GitHub
-        link:
-          discriminant: page
-          value: connect-to-github
   - groupName: Integration guides
     items:
       - label: Astro
@@ -28,14 +24,14 @@ navGroups:
           discriminant: coming-soon
   - groupName: Core concepts
     items:
-      - label: Organised content
+      - label: Content organisation
         link:
           discriminant: page
           value: how-keystatic-organises-your-content
-      - label: Local vs. GitHub mode
+      - label: Connect to GitHub
         link:
           discriminant: page
-          value: local-vs-git-hub-storage-strategy
+          value: connect-to-github
   - groupName: Reference
     items:
       - label: Configuration
@@ -50,10 +46,10 @@ navGroups:
         link:
           discriminant: page
           value: singletons
-      - label: Path configuration
+      - label: Path wildcard
         link:
           discriminant: page
-          value: path-configuration
+          value: path-wildcard
       - label: Reader API
         link:
           discriminant: page

@@ -17,6 +17,11 @@ module.exports = {
         destination: '/docs/collections',
         permanent: true,
       },
+      {
+        source: '/docs/how-keystatic-organises-your-content',
+        destination: '/docs/content-organisation',
+        permanent: true,
+      },
       // Discord server invite
       {
         source: '/chat',
