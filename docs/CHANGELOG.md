@@ -1,5 +1,17 @@
 # keystatic-docs
 
+## 0.0.0-test-20230818050657
+
+### Patch Changes
+
+- Updated dependencies [03f0543c]
+- Updated dependencies [6895c566]
+- Updated dependencies [ca6774b8]
+- Updated dependencies [03f0543c]
+- Updated dependencies [7767c69a]
+  - @keystatic/core@0.0.0-test-20230818050657
+  - @keystar/ui@0.0.0-test-20230818050657
+
 ## 1.0.13
 
 ### Patch Changes
