@@ -582,7 +582,7 @@ let styles: any = {
     paddingTop: tokenSchema.size.space.medium,
     minHeight: 0,
     minWidth: 0,
-    maxWidth: tokenSchema.size.container.small,
+    maxWidth: 800,
     marginInline: 'auto',
 
     [breakpointQueries.above.mobile]: {

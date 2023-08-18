@@ -21,7 +21,7 @@ import { underlineIcon } from '@keystar/ui/icon/icons/underlineIcon';
 import { Box, Flex } from '@keystar/ui/layout';
 import { MenuTrigger, Menu } from '@keystar/ui/menu';
 import { Picker } from '@keystar/ui/picker';
-import { css, tokenSchema } from '@keystar/ui/style';
+import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text, Kbd } from '@keystar/ui/typography';
 
@@ -107,7 +107,10 @@ export function Toolbar({
             {documentFeatures.tables && tableButton}
           </ToolbarGroup>
         )}
+        {/* make sure elements fill space */}
+        <Box flex />
       </ToolbarScrollArea>
+
       {useMemo(() => {
         return (
           viewState && (
@@ -139,28 +142,33 @@ export function Toolbar({
 const ToolbarGroup = ({ children }: { children: ReactNode }) => {
   return <Flex gap="regular">{children}</Flex>;
 };
-const RESPONSIVE_PADDING = {
-  mobile: 'medium',
-  tablet: 'xlarge',
-  desktop: 'xxlarge',
-};
+
 const ToolbarContainer = ({ children }: { children: ReactNode }) => {
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
   if (entryLayoutPane === 'main') {
     return (
-      <Box
-        height="100%"
-        minHeight={0}
-        minWidth={0}
-        maxWidth="container.small"
-        marginX="auto"
-        paddingX={RESPONSIVE_PADDING}
+      <div
+        className={css({
+          boxSizing: 'border-box',
+          display: 'flex',
+          paddingInline: tokenSchema.size.space.medium,
+          minWidth: 0,
+          maxWidth: 800,
+          marginInline: 'auto',
+
+          [breakpointQueries.above.mobile]: {
+            paddingInline: tokenSchema.size.space.xlarge,
+          },
+          [breakpointQueries.above.tablet]: {
+            paddingInline: tokenSchema.size.space.xxlarge,
+          },
+        })}
       >
         {children}
-      </Box>
+      </div>
     );
   }
-  return <>{children}</>;
+  return <div className={css({ display: 'flex' })}>{children}</div>;
 };
 
 const ToolbarWrapper = ({ children }: { children: ReactNode }) => {
@@ -176,7 +184,6 @@ const ToolbarWrapper = ({ children }: { children: ReactNode }) => {
           borderBottom: `${tokenSchema.size.border.regular} solid color-mix(in srgb, transparent, ${tokenSchema.color.foreground.neutral} 10%)`,
           borderStartEndRadius: tokenSchema.size.radius.medium,
           borderStartStartRadius: tokenSchema.size.radius.medium,
-          display: 'flex',
           minWidth: 0,
           position: 'sticky',
           top: 0,
@@ -195,8 +202,6 @@ const ToolbarScrollArea = (props: { children: ReactNode }) => {
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
   return (
     <Flex
-      // borderRadius="regular"
-      // backgroundColor="surfaceSecondary"
       data-layout={entryLayoutPane}
       paddingY="regular"
       paddingX="medium"
@@ -215,7 +220,6 @@ const ToolbarScrollArea = (props: { children: ReactNode }) => {
 
         '&[data-layout="main"]': {
           paddingInline: 0,
-          // marginInline: `calc(${tokenSchema.size.space.medium} * -1)`,
         },
       })}
       {...props}
@@ -297,13 +301,17 @@ const HeadingMenu = ({
 };
 
 function InsertBlockMenu() {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
   const editor = useSlateStatic();
   const componentBlocks = useDocumentEditorConfig().componentBlocks;
 
   return (
     <MenuTrigger align="end">
       <TooltipTrigger>
-        <ActionButton marginY="regular" marginEnd="medium">
+        <ActionButton
+          marginY="regular"
+          marginEnd={entryLayoutPane === 'main' ? undefined : 'medium'}
+        >
           <Icon src={plusIcon} />
           <Icon src={chevronDownIcon} />
         </ActionButton>
