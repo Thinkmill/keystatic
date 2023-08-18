@@ -9,7 +9,15 @@ import { ReactElement, ReactNode } from 'react';
 
 import { BaseStyleProps } from '@keystar/ui/style';
 
-export type FieldRenderProp = (props: LabelAria['fieldProps']) => ReactElement;
+type FieldRenderInputProps = LabelAria['fieldProps'] & {
+  disabled?: boolean;
+  readOnly?: boolean;
+  'aria-required'?: boolean;
+  'aria-invalid'?: boolean;
+};
+export type FieldRenderProp = (
+  inputProps: FieldRenderInputProps
+) => ReactElement;
 
 export type FieldProps = {
   /**
