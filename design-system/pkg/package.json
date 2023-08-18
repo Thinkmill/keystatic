@@ -6201,10 +6201,8 @@
     "@react-types/shared": "^3.18.0",
     "@react-types/switch": "^3.3.1",
     "@react-types/tabs": "^3.1.5",
-    "dedent": "^0.7.0",
     "emery": "^1.4.1",
     "facepaint": "^1.2.1",
-    "lodash": "^4.17.21",
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
@@ -6218,9 +6216,7 @@
     "@testing-library/dom": "^8.20.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
-    "@types/dedent": "^0.7.0",
     "@types/facepaint": "^1.2.2",
-    "@types/lodash": "^4.14.191",
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.0.11",
     "@types/react-transition-group": "^4.4.5",
