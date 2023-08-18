@@ -1,5 +1,16 @@
 # localization
 
+## 0.0.0-test-20230818020356
+
+### Patch Changes
+
+- Updated dependencies [03f0543c]
+- Updated dependencies [6895c566]
+- Updated dependencies [ca6774b8]
+- Updated dependencies [03f0543c]
+- Updated dependencies [14d6d650]
+  - @keystatic/core@0.0.0-test-20230818020356
+
 ## 0.1.87
 
 ### Patch Changes

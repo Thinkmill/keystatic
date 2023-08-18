@@ -1,7 +1,7 @@
 {
   "name": "@example/astro",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.0-test-20230818020356",
   "private": true,
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
@@ -17,7 +17,7 @@
     "@astrojs/sitemap": "^2.0.1",
     "@astrojs/tailwind": "^4.0.0",
     "@keystatic/astro": "^0.0.9",
-    "@keystatic/core": "^0.0.116",
+    "@keystatic/core": "0.0.0-test-20230818020356",
     "@tailwindcss/typography": "^0.5.9",
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.0.11",
