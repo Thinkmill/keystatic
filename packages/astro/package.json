@@ -52,7 +52,7 @@
     "set-cookie-parser": "^2.5.1"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.0.116",
+    "@keystatic/core": "0.0.0-test-20230818052631",
     "@types/cookie": "^0.5.1",
     "@types/set-cookie-parser": "^2.4.2",
     "astro": "^2.10.5",
@@ -60,7 +60,7 @@
     "react-dom": "^18.2.0"
   },
   "peerDependencies": {
-    "@keystatic/core": "*",
+    "@keystatic/core": "0.0.0-test-20230818052631",
     "astro": "2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

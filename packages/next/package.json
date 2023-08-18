@@ -51,13 +51,13 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.0.116",
+    "@keystatic/core": "0.0.0-test-20230818052631",
     "next": "^13.4.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "peerDependencies": {
-    "@keystatic/core": "*",
+    "@keystatic/core": "0.0.0-test-20230818052631",
     "next": "13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
