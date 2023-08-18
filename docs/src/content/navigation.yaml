@@ -28,6 +28,10 @@ navGroups:
         link:
           discriminant: page
           value: content-organisation
+      - label: Path wildcard
+        link:
+          discriminant: page
+          value: path-wildcard
       - label: Local mode
         link:
           discriminant: page
@@ -50,10 +54,6 @@ navGroups:
         link:
           discriminant: page
           value: singletons
-      - label: Path wildcard
-        link:
-          discriminant: page
-          value: path-wildcard
       - label: Reader API
         link:
           discriminant: page
