@@ -9,6 +9,7 @@ import {
 import { __experimental_markdoc_field } from '@keystatic/core/form/fields/markdoc';
 import { CloudImagePreview } from './src/components/previews/CloudImagePreview';
 import { Config } from '@markdoc/markdoc';
+import { cloudImage } from '@keystatic/core/component-blocks';
 
 export const componentBlocks = {
   aside: component({
@@ -89,6 +90,7 @@ export const componentBlocks = {
     },
     chromeless: false,
   }),
+  'cloud-image-2': cloudImage({ label: 'Cloud image 2' }),
   tags: component({
     preview: props => {
       return (
