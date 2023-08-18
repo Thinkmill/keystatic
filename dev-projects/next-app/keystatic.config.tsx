@@ -232,6 +232,8 @@ export default config({
           label: 'Bio',
           images: true,
           formatting: true,
+          dividers: true,
+          links: true,
         }),
         notes: fields.document({
           label: 'Notes',
