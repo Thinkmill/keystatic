@@ -60,8 +60,8 @@ export function useTextStyles(
 // ----------------------------------------------------------------------------
 
 export const textOptimizationStyles = {
-  WebkitFontSmoothing: 'antialiased',
-  MozOsxFontSmoothing: 'grayscale',
+  MozOsxFontSmoothing: 'auto',
+  WebkitFontSmoothing: 'auto',
 } as const;
 
 const alignmentMap = {

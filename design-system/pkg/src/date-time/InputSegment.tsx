@@ -67,8 +67,8 @@ function EditableSegment({ segment, state }: InputSegmentProps) {
         fontWeight: tokenSchema.typography.fontWeight.regular,
         lineHeight: tokenSchema.typography.lineheight.small,
         whiteSpace: 'nowrap',
-        WebkitFontSmoothing: 'antialiased',
-        MozOsxFontSmoothing: 'grayscale',
+        MozOsxFontSmoothing: 'auto',
+        WebkitFontSmoothing: 'auto',
 
         '[dir=ltr] &': { textAlign: 'right' },
         '[dir=rtl] &': { textAlign: 'left' },

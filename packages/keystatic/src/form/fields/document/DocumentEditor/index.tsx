@@ -23,11 +23,17 @@ import {
 import { Editable, ReactEditor, Slate, useSlate, withReact } from 'slate-react';
 import { EditableProps } from 'slate-react/dist/components/editable';
 
-import { Box } from '@keystar/ui/layout';
-import { classNames, css, tokenSchema } from '@keystar/ui/style';
+import {
+  breakpointQueries,
+  classNames,
+  css,
+  tokenSchema,
+} from '@keystar/ui/style';
+import { Prose } from '@keystar/ui/typography';
 
-import { DocumentFeatures } from './document-features';
+import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 import { ComponentBlock } from '../../../api';
+import { DocumentFeatures } from './document-features';
 import { wrapLink } from './link/link';
 import { clearFormatting, Mark, nodeTypeMatcher } from './utils';
 import { Toolbar } from './Toolbar';
@@ -54,6 +60,7 @@ import { withPasting } from './pasting';
 import { withShortcuts } from './shortcuts';
 import { withSoftBreaks } from './soft-breaks';
 import { getSelectedTableArea } from './table/with-table';
+
 // the docs site needs access to Editor and importing slate would use the version from the content field
 // so we're exporting it from here (note that this is not at all visible in the published version)
 export { Editor } from 'slate';
@@ -304,17 +311,32 @@ export function DocumentEditor({
   componentBlocks: Record<string, ComponentBlock>;
   documentFeatures: DocumentFeatures;
 } & Omit<EditableProps, 'value' | 'onChange'>) {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
   const editor = useMemo(
     () => createDocumentEditor(documentFeatures, componentBlocks),
     [documentFeatures, componentBlocks]
   );
 
   return (
-    <Box
-      backgroundColor="canvas"
-      border="neutral"
-      borderRadius="medium"
-      minWidth={0}
+    <div
+      data-layout={entryLayoutPane}
+      className={classNames(
+        css({
+          backgroundColor: tokenSchema.color.background.canvas,
+          minWidth: 0,
+
+          '&[data-layout="main"]': {
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+          },
+          '&:not([data-layout="main"])': {
+            border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
+            borderRadius: tokenSchema.size.radius.medium,
+          },
+        }),
+        'keystar-document-editor'
+      )}
     >
       <DocumentEditorProvider
         componentBlocks={componentBlocks}
@@ -343,17 +365,13 @@ export function DocumentEditor({
           [documentFeatures, onChange]
         )}
 
-        <DocumentEditorEditable
-          id="document-editor-boundary"
-          {...props}
-          readOnly={onChange === undefined}
-        />
+        <DocumentEditorEditable {...props} readOnly={onChange === undefined} />
         {
           // for debugging
           false && <Debugger />
         }
       </DocumentEditorProvider>
-    </Box>
+    </div>
   );
 }
 
@@ -425,6 +443,7 @@ function getPrismTokenLength(token: Prism.Token | string): number {
 }
 
 export function DocumentEditorEditable(props: EditableProps) {
+  const entryLayoutPane = useEntryLayoutSplitPaneContext();
   const editor = useSlate();
   const { componentBlocks, documentFeatures } = useDocumentEditorConfig();
 
@@ -435,92 +454,95 @@ export function DocumentEditorEditable(props: EditableProps) {
 
   return (
     <ActiveBlockPopoverProvider editor={editor}>
-      <Editable
-        decorate={useCallback(
-          ([node, path]: NodeEntry<Node>) => {
-            let decorations: Range[] = [];
-            if (node.type === 'component-block') {
-              if (
-                node.children.length === 1 &&
-                Element.isElement(node.children[0]) &&
-                node.children[0].type === 'component-inline-prop' &&
-                node.children[0].propPath === undefined
-              ) {
-                return decorations;
-              }
-              node.children.forEach((child, index) => {
+      <Prose size={entryLayoutPane === 'main' ? 'medium' : 'regular'}>
+        <Editable
+          decorate={useCallback(
+            ([node, path]: NodeEntry<Node>) => {
+              let decorations: Range[] = [];
+              if (node.type === 'component-block') {
                 if (
-                  Node.string(child) === '' &&
-                  Element.isElement(child) &&
-                  (child.type === 'component-block-prop' ||
-                    child.type === 'component-inline-prop') &&
-                  child.propPath !== undefined
+                  node.children.length === 1 &&
+                  Element.isElement(node.children[0]) &&
+                  node.children[0].type === 'component-inline-prop' &&
+                  node.children[0].propPath === undefined
                 ) {
-                  const start = Editor.start(editor, [...path, index]);
-                  const placeholder = getPlaceholderTextForPropPath(
-                    child.propPath,
-                    componentBlocks[node.component].schema,
-                    node.props
-                  );
-                  if (placeholder) {
-                    decorations.push({
-                      placeholder,
-                      anchor: start,
-                      focus: start,
-                    });
-                  }
+                  return decorations;
                 }
-              });
-            }
-            if (
-              node.type === 'code' &&
-              node.children.length === 1 &&
-              node.children[0].type === undefined &&
-              node.language &&
-              node.language in Prism.languages
-            ) {
-              const textPath = [...path, 0];
-              const tokens = Prism.tokenize(
-                node.children[0].text,
-                Prism.languages[node.language]
-              );
-              function consumeTokens(
-                start: number,
-                tokens: (string | Prism.Token)[]
-              ) {
-                for (const token of tokens) {
-                  const length = getPrismTokenLength(token);
-                  const end = start + length;
-
-                  if (typeof token !== 'string') {
-                    decorations.push({
-                      ['prism_' + token.type]: true,
-                      anchor: { path: textPath, offset: start },
-                      focus: { path: textPath, offset: end },
-                    });
-                    consumeTokens(
-                      start,
-                      Array.isArray(token.content)
-                        ? token.content
-                        : [token.content]
+                node.children.forEach((child, index) => {
+                  if (
+                    Node.string(child) === '' &&
+                    Element.isElement(child) &&
+                    (child.type === 'component-block-prop' ||
+                      child.type === 'component-inline-prop') &&
+                    child.propPath !== undefined
+                  ) {
+                    const start = Editor.start(editor, [...path, index]);
+                    const placeholder = getPlaceholderTextForPropPath(
+                      child.propPath,
+                      componentBlocks[node.component].schema,
+                      node.props
                     );
+                    if (placeholder) {
+                      decorations.push({
+                        placeholder,
+                        anchor: start,
+                        focus: start,
+                      });
+                    }
                   }
-
-                  start = end;
-                }
+                });
               }
-              consumeTokens(0, tokens);
-            }
-            return decorations;
-          },
-          [editor, componentBlocks]
-        )}
-        onKeyDown={onKeyDown}
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        {...props}
-        className={classNames(editableStyles, props.className)}
-      />
+              if (
+                node.type === 'code' &&
+                node.children.length === 1 &&
+                node.children[0].type === undefined &&
+                node.language &&
+                node.language in Prism.languages
+              ) {
+                const textPath = [...path, 0];
+                const tokens = Prism.tokenize(
+                  node.children[0].text,
+                  Prism.languages[node.language]
+                );
+                function consumeTokens(
+                  start: number,
+                  tokens: (string | Prism.Token)[]
+                ) {
+                  for (const token of tokens) {
+                    const length = getPrismTokenLength(token);
+                    const end = start + length;
+
+                    if (typeof token !== 'string') {
+                      decorations.push({
+                        ['prism_' + token.type]: true,
+                        anchor: { path: textPath, offset: start },
+                        focus: { path: textPath, offset: end },
+                      });
+                      consumeTokens(
+                        start,
+                        Array.isArray(token.content)
+                          ? token.content
+                          : [token.content]
+                      );
+                    }
+
+                    start = end;
+                  }
+                }
+                consumeTokens(0, tokens);
+              }
+              return decorations;
+            },
+            [editor, componentBlocks]
+          )}
+          onKeyDown={onKeyDown}
+          renderElement={renderElement}
+          renderLeaf={renderLeaf}
+          {...props}
+          data-layout={entryLayoutPane}
+          className={classNames(editableStyles, props.className)}
+        />
+      </Prose>
     </ActiveBlockPopoverProvider>
   );
 }
@@ -546,37 +568,31 @@ function Debugger() {
   );
 }
 
-const orderedListStyles = ['lower-roman', 'decimal', 'lower-alpha'];
-const unorderedListStyles = ['square', 'disc', 'circle'];
-
 let styles: any = {
-  color: tokenSchema.color.foreground.neutral,
   flex: 1,
-  fontFamily: tokenSchema.typography.fontFamily.base,
-  fontSize: tokenSchema.typography.text.regular.size,
   height: 'auto',
-  lineHeight: 1.4,
   minHeight: tokenSchema.size.scale[2000],
   minWidth: 0,
   padding: tokenSchema.size.space.medium,
-  // antialiased editor text, to match the rest of the app
-  MozOsxFontSmoothing: 'grayscale',
-  WebkitFontSmoothing: 'antialiased',
+
+  '&[data-layout="main"]': {
+    boxSizing: 'border-box',
+    height: '100%',
+    padding: 0,
+    paddingTop: tokenSchema.size.space.medium,
+    minHeight: 0,
+    minWidth: 0,
+    maxWidth: 800,
+    marginInline: 'auto',
+
+    [breakpointQueries.above.mobile]: {
+      padding: tokenSchema.size.space.xlarge,
+    },
+    [breakpointQueries.above.tablet]: {
+      padding: tokenSchema.size.space.xxlarge,
+    },
+  },
 };
-
-let listDepth = 10;
-
-while (listDepth--) {
-  let arr = Array.from({ length: listDepth });
-  if (arr.length) {
-    styles[arr.map(() => `ol`).join(' ')] = {
-      listStyle: orderedListStyles[listDepth % 3],
-    };
-    styles[arr.map(() => `ul`).join(' ')] = {
-      listStyle: unorderedListStyles[listDepth % 3],
-    };
-  }
-}
 
 const editableStyles = css({
   ...styles,
