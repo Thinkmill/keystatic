@@ -1,7 +1,7 @@
-import { Box } from '@keystar/ui/layout';
 import { css, tokenSchema } from '@keystar/ui/style';
 import { ReactNode, useState } from 'react';
 import { RenderLeafProps } from 'slate-react';
+
 import { InsertMenu } from './insert-menu';
 
 function Placeholder({
@@ -76,22 +76,7 @@ const Leaf = ({ leaf, text, children, attributes }: RenderLeafProps) => {
   }
 
   if (code) {
-    children = (
-      <Box
-        elementType="code"
-        backgroundColor="accent"
-        paddingX="xsmall"
-        paddingY={2}
-        borderRadius="small"
-        UNSAFE_className={css({
-          color: tokenSchema.color.foreground.neutralEmphasis,
-          fontSize: '0.85em',
-          fontFamily: tokenSchema.typography.fontFamily.code,
-        })}
-      >
-        {children}
-      </Box>
-    );
+    children = <code>{children}</code>;
   }
   if (bold) {
     children = <strong>{children}</strong>;
