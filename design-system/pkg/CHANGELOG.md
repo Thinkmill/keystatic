@@ -1,5 +1,22 @@
 # @keystar/ui
 
+## 0.0.0-test-20230818045043
+
+### Patch Changes
+
+- 21987b13: Remove lodash
+- 6895c566: - list-item + table-row: background change only on hover (not focus)
+  - allow shortcuts "cmd+s" and "ctrl+s" to save entry
+  - remove unused `flattenChildren` utility
+- 7767c69a: Optimise the editor appearance when `entryLayout="content"` for a
+  more focused experience.
+
+  Component library:
+
+  - Update the antialiasing behaviour everywhere
+  - New `Prose` component from "@keystar/ui/typography" package.
+  - Improve `Field` implementation and types
+
 ## 0.2.0
 
 ### Minor Changes

@@ -1,5 +1,27 @@
 # @keystatic/test-next-app
 
+## 0.0.0-test-20230818045043
+
+### Patch Changes
+
+- 7767c69a: Optimise the editor appearance when `entryLayout="content"` for a
+  more focused experience.
+
+  Component library:
+
+  - Update the antialiasing behaviour everywhere
+  - New `Prose` component from "@keystar/ui/typography" package.
+  - Improve `Field` implementation and types
+
+- Updated dependencies [21987b13]
+- Updated dependencies [03f0543c]
+- Updated dependencies [6895c566]
+- Updated dependencies [ca6774b8]
+- Updated dependencies [03f0543c]
+- Updated dependencies [7767c69a]
+  - @keystar/ui@0.0.0-test-20230818045043
+  - @keystatic/core@0.0.0-test-20230818045043
+
 ## 0.0.88
 
 ### Patch Changes
