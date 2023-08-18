@@ -28,6 +28,10 @@ navGroups:
         link:
           discriminant: page
           value: content-organisation
+      - label: Local mode
+        link:
+          discriminant: page
+          value: local-mode
       - label: GitHub mode
         link:
           discriminant: page

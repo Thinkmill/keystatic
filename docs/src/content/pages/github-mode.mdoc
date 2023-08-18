@@ -4,26 +4,7 @@ summary: >-
   Walk-through guide of manually connecting your existing Keystatic project to
   GitHub.
 ---
-Most projects start their lifecycle with Keystatic in `local` storage mode:
-
-```ts
-// keystatic.config.ts
-export default config({
-   storage: { 
-      kind: 'local' 
-   }
-})
-```
-
-Content is stored on your local file system directly, and this is what makes the most sense when starting a project.
-
-{% aside icon="☝️"%}
-New projects started with the [Keystatic CLI](/docs/quick-start) will be running in `local` mode.
-{% /aside %}
-
-### GitHub collaboration
-
-Keystatic also has a `github` mode which unleashes enhanced collaboration capabilities.
+Keystatic's `github` mode unleashes enhanced collaboration capabilities.
 
 To use it, you'll need your project on an existing GitHub repository. Collaborators will need `write` access to this repository.
 
