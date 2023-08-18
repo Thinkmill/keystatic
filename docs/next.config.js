@@ -22,6 +22,11 @@ module.exports = {
         destination: '/docs/content-organisation',
         permanent: true,
       },
+      {
+        source: '/docs/connect-to-github',
+        destination: '/docs/github-mode',
+        permanent: true,
+      },
       // Discord server invite
       {
         source: '/chat',

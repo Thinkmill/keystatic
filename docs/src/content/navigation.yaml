@@ -28,10 +28,10 @@ navGroups:
         link:
           discriminant: page
           value: how-keystatic-organises-your-content
-      - label: Connect to GitHub
+      - label: GitHub mode
         link:
           discriminant: page
-          value: connect-to-github
+          value: github-mode
   - groupName: Reference
     items:
       - label: Configuration
