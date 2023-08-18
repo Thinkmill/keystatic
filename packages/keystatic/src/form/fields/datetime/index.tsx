@@ -7,7 +7,7 @@ import {
 } from '../utils';
 import { DatetimeFieldInput } from './ui';
 
-export function validateDateTime(
+export function validateDatetime(
   validation: { min?: string; max?: string; isRequired?: boolean } | undefined,
   value: string | null,
   label: string
@@ -87,7 +87,7 @@ export function datetime<IsRequired extends boolean | undefined>({
       return { value: value === null ? undefined : value };
     },
     validate(value) {
-      const message = validateDateTime(validation, value, label);
+      const message = validateDatetime(validation, value, label);
       if (message !== undefined) {
         throw new FieldDataError(message);
       }
