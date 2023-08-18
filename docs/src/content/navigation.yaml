@@ -27,7 +27,7 @@ navGroups:
       - label: Content organisation
         link:
           discriminant: page
-          value: how-keystatic-organises-your-content
+          value: content-organisation
       - label: GitHub mode
         link:
           discriminant: page
