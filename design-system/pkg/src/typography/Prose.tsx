@@ -73,7 +73,7 @@ function useProseStyles(props: ProseProps) {
         // Elements
         // ---------------------------------------------------------------------
 
-        '& :is(blockquote, p, ol, ul)': {
+        '& :is(blockquote, p, pre, ol, ul)': {
           marginBlock: '1em',
 
           ':first-child': { marginTop: 0 },
@@ -81,6 +81,9 @@ function useProseStyles(props: ProseProps) {
         },
         'ol ol, ul ul, ol ul, ul ol': {
           marginBlock: 0,
+        },
+        a: {
+          color: tokenSchema.color.foreground.accent,
         },
         blockquote: {
           borderInlineStart: `${tokenSchema.size.border.large} solid ${tokenSchema.color.border.neutral}`,
@@ -97,8 +100,32 @@ function useProseStyles(props: ProseProps) {
           height: 'auto',
           maxWidth: '100%',
         },
-        a: {
-          color: tokenSchema.color.foreground.accent,
+
+        // code block
+        pre: {
+          backgroundColor: tokenSchema.color.background.surface,
+          borderRadius: tokenSchema.size.radius.medium,
+          color: tokenSchema.color.foreground.neutralEmphasis,
+          fontFamily: tokenSchema.typography.fontFamily.code,
+          fontSize: '0.85em',
+          lineHeight: tokenSchema.typography.lineheight.medium,
+          minWidth: 0,
+          maxWidth: '100%',
+          overflow: 'auto',
+          padding: tokenSchema.size.space.medium,
+        },
+        'pre > code': {
+          fontFamily: 'inherit',
+        },
+        // inline code
+        '& :not(pre) > code': {
+          backgroundColor: tokenSchema.color.background.accent,
+          borderRadius: tokenSchema.size.radius.small,
+          color: tokenSchema.color.foreground.neutralEmphasis,
+          display: 'inline-block',
+          fontSize: '0.85em',
+          fontFamily: tokenSchema.typography.fontFamily.code,
+          paddingInline: tokenSchema.size.space.small,
         },
 
         // Headings
@@ -106,7 +133,7 @@ function useProseStyles(props: ProseProps) {
 
         'h1, h2, h3, h4, h5, h6': {
           color: tokenSchema.color.foreground.neutralEmphasis,
-          fontWeight: 600,
+          fontWeight: tokenSchema.typography.fontWeight.semibold,
           lineHeight: 1.25,
           marginTop: '1.5em',
           marginBottom: '0.67em',
@@ -116,18 +143,21 @@ function useProseStyles(props: ProseProps) {
         },
         h1: {
           fontSize: '2em',
+          fontWeight: tokenSchema.typography.fontWeight.bold,
         },
         h2: {
           fontSize: '1.5em',
         },
         h3: {
           fontSize: '1.25em',
+          fontWeight: tokenSchema.typography.fontWeight.bold,
         },
         h4: {
           fontSize: '1.1em',
         },
         h5: {
           fontSize: '1em',
+          fontWeight: tokenSchema.typography.fontWeight.bold,
         },
         h6: {
           fontSize: '0.9em',

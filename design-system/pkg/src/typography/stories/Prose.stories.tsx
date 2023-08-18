@@ -18,15 +18,10 @@ const htmlElements = `<h1>h1 Heading</h1>
 <h4>h4 Heading</h4>
 <h5>h5 Heading</h5>
 <h6>h6 Heading</h6>
+
 <h2>Horizontal Rules</h2>
 <hr>
 
-<h2>Typographic replacements</h2>
-<p>Enable typographer option to see result.</p>
-<p>© © ® ® ™ ™ (p) (P) ±</p>
-<p>test… test… test… test?.. test!..</p>
-<p>!!! ??? ,  – —</p>
-<p>“Smartypants, double quotes” and ‘single quotes’</p>
 <h2>Emphasis</h2>
 <p><strong>This is bold text</strong></p>
 <p><em>This is italic text</em></p>
@@ -42,6 +37,7 @@ const htmlElements = `<h1>h1 Heading</h1>
 </blockquote>
 </blockquote>
 </blockquote>
+
 <h2>Lists</h2>
 <p>Unordered</p>
 <ul>
@@ -91,12 +87,32 @@ Integer molestie lorem at massa
 <li>foo</li>
 <li>bar</li>
 </ol>
+
+<h2>Code</h2>
+<h3>Code block</h3>
+<pre>
+<code>var foo = function (bar) {
+  return bar++;
+};
+
+console.log(foo(5));</code>
+</pre>
+<h3>Inline code</h3>
+<p>We export a config object wrapped in the <code>config</code> function imported from <code>@keystatic/core</code>.</p>
+
 <h2>Links</h2>
-<p><a href="http://dev.nodeca.com">link text</a></p>
-<p><a href="http://nodeca.github.io/pica/demo/" title="title text!">link with title</a></p>
+<p>A paragraph that contains <a href="http://dev.nodeca.com">link text</a> within it.</p>
+
 <h2>Images</h2>
-<p><img src="https://octodex.github.com/images/minion.png" alt="Minion">
-<img src="https://octodex.github.com/images/stormtroopocat.jpg" alt="Stormtroopocat" title="The Stormtroopocat"></p>
-<p>Like links, Images also have a footnote style syntax</p>
-<p><img src="https://octodex.github.com/images/dojocat.jpg" alt="Alt text" title="The Dojocat"></p>
-<p>With a reference later in the document defining the URL location:</p>`;
+<p><img src="https://octodex.github.com/images/original.png" alt="Octocat" title="The Octocat"></p>
+
+<h2>TODO: "not-prose"</h2>
+<div class="not-prose">
+<h3>Heading 3</h3>
+<p>Some paragraph text</p>
+<ul>
+<li>list</li>
+<li>of</li>
+<li>things</li>
+</ul>
+</div>`;

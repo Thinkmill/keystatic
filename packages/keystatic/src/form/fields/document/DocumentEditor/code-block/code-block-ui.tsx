@@ -10,7 +10,6 @@ import { codeIcon } from '@keystar/ui/icon/icons/codeIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { Icon } from '@keystar/ui/icon';
 import { Flex } from '@keystar/ui/layout';
-import { css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Kbd, Text } from '@keystar/ui/typography';
 
@@ -102,25 +101,7 @@ export function CodeElement({
     <>
       <BlockWrapper>
         <BlockPopoverTrigger element={element}>
-          <pre
-            spellCheck="false"
-            className={css({
-              backgroundColor: tokenSchema.color.background.surface,
-              borderRadius: tokenSchema.size.radius.medium,
-              color: tokenSchema.color.foreground.neutralEmphasis,
-              fontFamily: tokenSchema.typography.fontFamily.code,
-              fontSize: '0.85em',
-              lineHeight: tokenSchema.typography.lineheight.medium,
-              maxWidth: '100%',
-              overflow: 'auto',
-              padding: tokenSchema.size.space.medium,
-
-              code: {
-                fontFamily: 'inherit',
-              },
-            })}
-            ref={triggerRef}
-          >
+          <pre spellCheck="false" ref={triggerRef}>
             <code {...attributes}>{children}</code>
           </pre>
           <BlockPopover>
