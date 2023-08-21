@@ -2,19 +2,23 @@
 
 import { useEffect, useState } from 'react';
 import { NotEditable, ObjectField, PreviewProps } from '@keystatic/core';
-import { TextField } from '@keystar/ui/text-field';
-import { ActionButton } from '@keystar/ui/button';
-import { VStack, Flex } from '@keystar/ui/layout';
-import { Text } from '@keystar/ui/typography';
+import { TextArea, TextField } from '@keystar/ui/text-field';
+import { ActionButton, Button, ButtonGroup } from '@keystar/ui/button';
+import { VStack, Flex, Box } from '@keystar/ui/layout';
+import { Heading, Text } from '@keystar/ui/typography';
 import { Icon } from '@keystar/ui/icon';
 import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
-import { useConfig } from '../app/shell/context';
+import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
+import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
+import { xIcon } from '@keystar/ui/icon/icons/xIcon';
+// import { useConfig } from '../app/shell/context';
 
-import { detect } from 'detect-browser';
+import { ClassList, css, tokenSchema } from '@keystar/ui/style';
+import { Dialog, DialogTrigger } from '@keystar/ui/dialog';
+import { Content, Header } from '@keystar/ui/slots';
+import { ProgressCircle } from '@keystar/ui/progress';
 
-const browser = detect();
-const metaSymbol = browser?.os === 'Mac OS' ? '⌘' : 'Ctrl';
-const isMobile = browser?.os === 'iOS' || browser?.os === 'Android OS';
+const classList = new ClassList('ImageURLField');
 
 type ImageData = {
   src: string;
@@ -39,12 +43,18 @@ function cleanImageData(
   };
 }
 
-function Placeholder({ onChange }: { onChange: (data: ImageData) => void }) {
-  const [isFocused, setIsFocused] = useState(false);
-  const [pastedData, setPastedData] = useState<ImageData>(cleanImageData());
-  const [status, setStatus] = useState('');
+type InsertStatus = '' | 'loading' | 'good' | 'error';
 
-  const config = useConfig();
+function InsertImageDialog({
+  onChange,
+  onClose,
+}: {
+  onChange: (data: ImageData) => void;
+  onClose: () => void;
+}) {
+  const [state, setState] = useState<ImageData>(cleanImageData());
+  const [status, setStatus] = useState<InsertStatus>('');
+  const imageLibraryURL = useImageLibraryURL();
 
   const onPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -57,14 +67,14 @@ function Placeholder({ onChange }: { onChange: (data: ImageData) => void }) {
         'src' in data &&
         typeof data.src === 'string'
       ) {
-        setPastedData(cleanImageData(data));
+        setState(cleanImageData(data));
         return;
       }
     } catch (err) {}
     const pattern = /^\s*!\[(.*)\]\(([a-z0-9_\-/:.]+)\)\s*$/;
     const match = text.match(pattern);
     if (match) {
-      setPastedData(
+      setState(
         cleanImageData({
           src: match[2],
           alt: match[1],
@@ -72,105 +82,182 @@ function Placeholder({ onChange }: { onChange: (data: ImageData) => void }) {
       );
       return;
     }
-    setPastedData(cleanImageData({ src: text }));
+    setState(cleanImageData({ src: text }));
   };
 
+  const src = state.src;
+
   useEffect(() => {
-    if (!pastedData || !pastedData.src) {
+    if (!src) {
       setStatus('');
       return;
     }
-    if (!isValidURL(pastedData.src)) {
-      setStatus('The pasted data is not a valid Image URL');
+    if (!isValidURL(src)) {
       return;
     }
+    setStatus('loading');
     const img = new Image();
-    setStatus('Checking pasted data...');
     img.onload = () => {
-      onChange({
-        ...pastedData,
+      setState(state => ({
+        ...state,
         width: img.width.toString(),
         height: img.height.toString(),
-      });
+      }));
+      setStatus('good');
     };
     img.onerror = () => {
-      setStatus('The pasted data is not a valid Image URL');
-      console.log('Invalid Image URL pasted:', pastedData);
+      setStatus('error');
     };
-    img.src = pastedData.src;
+    img.src = src;
     return () => {
       img.onload = null;
     };
-  }, [pastedData, onChange]);
+  }, [src]);
 
   return (
-    <NotEditable>
-      <VStack gap="regular">
-        <div style={{ position: 'relative' }}>
-          <input
-            type="text"
-            value=""
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            onClick={() => {
-              document.execCommand('paste');
-            }}
+    <Dialog>
+      <Heading>
+        <Flex alignItems="center" gap="regular">
+          Insert Cloud Image
+        </Flex>
+      </Heading>
+      <Header>
+        <Button
+          href={imageLibraryURL}
+          target="_blank"
+          rel="noreferrer"
+          prominence="low"
+          tone="accent"
+        >
+          <Text>Open Image Library</Text>
+          <Icon src={externalLinkIcon} />
+        </Button>
+      </Header>
+      <Content>
+        <Flex
+          elementType="form"
+          id="example-form"
+          onSubmit={e => {
+            e.preventDefault();
+            if (status !== 'good') return;
+            onChange(state);
+            close();
+          }}
+          direction="column"
+          gap="large"
+        >
+          <Box marginBottom="medium">
+            <Text>
+              Copy an Image URL from the Image Library and paste in the field
+              below to insert.
+            </Text>
+          </Box>
+          <TextField
+            label="Image URL"
+            autoFocus
             onPaste={onPaste}
-            style={{
-              position: 'absolute',
-              cursor: 'default',
-              fontSize: '16px',
-              border: 'none',
-              outline: isFocused ? '2px solid #30a46c' : 'none',
-              background: 'transparent',
-              padding: 0,
-              paddingLeft: '2%',
-              margin: 0,
-              opacity: 0,
-              color: 'transparent',
-              borderRadius: '6px',
-              width: '98%',
-              height: '100%',
-            }}
+            value={state.src}
+            UNSAFE_className={classList.declare('input')}
+            endElement={
+              status === 'loading' ? (
+                <div
+                  className={css({
+                    width: tokenSchema.size.element.regular,
+                    height: tokenSchema.size.element.regular,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  })}
+                >
+                  <ProgressCircle
+                    size="small"
+                    aria-label="Checking…"
+                    isIndeterminate
+                  />
+                </div>
+              ) : state.src ? (
+                <ActionButton
+                  prominence="low"
+                  onPress={() => setState(cleanImageData())}
+                >
+                  <Icon src={xIcon} />
+                </ActionButton>
+              ) : null
+            }
           />
-          {isFocused ? (
-            <Flex
-              backgroundColor="positive"
-              border="positive"
-              color="positive"
-              justifyContent="center"
-              borderRadius="regular"
-              padding="regular"
+          {status === 'good' ? (
+            <>
+              <TextArea label="Alt Text" value={state.alt} />
+              <Flex gap="regular">
+                <TextField
+                  label="Width"
+                  value={state.width}
+                  width="scale.1000"
+                />
+                <TextField
+                  label="Height"
+                  value={state.height}
+                  width="scale.1000"
+                />
+              </Flex>
+            </>
+          ) : null}
+        </Flex>
+      </Content>
+      <ButtonGroup>
+        <Button onPress={onClose}>Cancel</Button>
+        <Button
+          prominence="high"
+          type="submit"
+          form="example-form"
+          isDisabled={status !== 'good'}
+        >
+          Insert
+        </Button>
+      </ButtonGroup>
+    </Dialog>
+  );
+}
+
+function Placeholder({
+  onChange,
+  onRemove,
+}: {
+  onChange: (data: ImageData) => void;
+  onRemove: () => void;
+}) {
+  return (
+    <NotEditable>
+      <Flex gap="regular">
+        <Box flex="1">
+          <DialogTrigger>
+            <Button
+              prominence="low"
+              width="100%"
+              UNSAFE_className={css({
+                backgroundColor: tokenSchema.color.background.surface,
+                color: tokenSchema.color.foreground.neutralSecondary,
+                justifyContent: 'start',
+
+                ':hover': {
+                  backgroundColor:
+                    tokenSchema.color.background.surfaceSecondary,
+                  color: tokenSchema.color.foreground.neutral,
+                },
+              })}
             >
-              {isMobile ? 'Tap' : `Press ${metaSymbol} + V`} to paste an Image
-              URL
-            </Flex>
-          ) : (
-            <Flex
-              border="neutral"
-              color="neutral"
-              justifyContent="center"
-              borderRadius="regular"
-              padding="regular"
-            >
-              {isMobile ? 'Tap' : 'Click'} here to paste an Image URL
-            </Flex>
-          )}
-        </div>
-        {config.storage.kind === 'cloud' && (
-          <div>
-            <ActionButton
-              href={getProjectImagesURL(config.storage.project)}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              <Text>Open Cloud Images</Text>
-              <Icon src={externalLinkIcon} />
-            </ActionButton>
-          </div>
-        )}
-        <Flex justifyContent="center">{status}</Flex>
-      </VStack>
+              <Flex gap="regular" alignItems="center">
+                <Icon src={imageIcon} size="medium" />
+                <div>Click to add Cloud Image...</div>
+              </Flex>
+            </Button>
+            {close => <InsertImageDialog onChange={onChange} onClose={close} />}
+          </DialogTrigger>
+        </Box>
+        <Button prominence="low" tone="critical" onPress={onRemove}>
+          <Icon src={trash2Icon} />
+        </Button>
+      </Flex>
     </NotEditable>
   );
 }
@@ -188,7 +275,7 @@ export function CloudImagePreview(
   const dimensions = useImageDimensions(src);
 
   if (!props.fields.src.value) {
-    return <Placeholder onChange={props.onChange} />;
+    return <Placeholder onChange={props.onChange} onRemove={props.onRemove} />;
   }
 
   const clear = () => {
@@ -301,7 +388,9 @@ function getDimension(value: unknown) {
   return '';
 }
 
-function getProjectImagesURL(projectConfig: string) {
-  const [team, project] = projectConfig.split('/');
+function useImageLibraryURL() {
+  // const config = useConfig();
+  const [team, project] =
+    /* config.storage.project */ 'thinkmill-labs/keystatic-site'.split('/');
   return `https://keystatic.cloud/teams/${team}/project/${project}/images`;
 }
