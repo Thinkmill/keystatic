@@ -1,0 +1,25 @@
+---
+title: Local mode
+summary: >-
+  Store your content on your local file system.
+---
+Most projects start their lifecycle with Keystatic in `local` storage mode:
+
+```ts
+// keystatic.config.ts
+export default config({
+   storage: { 
+      kind: 'local' 
+   }
+})
+```
+
+Content is stored on your local file system directly, and this is what makes the most sense when starting a project.
+
+{% aside icon="☝️"%}
+New projects started with the [Keystatic CLI](/docs/quick-start) will be running in `local` mode.
+{% /aside %}
+
+### GitHub collaboration
+
+Keystatic also has a [github mode](/docs/github-mode) which unleashes enhanced collaboration capabilities.
