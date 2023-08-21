@@ -240,10 +240,7 @@ export default function Provider({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <UrqlProvider value={useMemo(() => createUrqlClient(config), [config])}>
           {children}
         </UrqlProvider>
