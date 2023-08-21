@@ -23,6 +23,11 @@ module.exports = {
         permanent: true,
       },
       {
+        source: '/docs/path-configuration',
+        destination: '/docs/path-wildcard',
+        permanent: true,
+      },
+      {
         source: '/docs/connect-to-github',
         destination: '/docs/github-mode',
         permanent: true,
