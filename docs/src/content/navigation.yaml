@@ -150,6 +150,10 @@ navGroups:
         link:
           discriminant: url
           value: https://github.com/Thinkmill/keystatic/discussions
+      - label: Discord
+        link:
+          discriminant: url
+          value: /chat
       - label: Twitter
         link:
           discriminant: url
