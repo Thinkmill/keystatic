@@ -10,9 +10,38 @@ You get a lot of control and flexibility with *where* your content gets generate
 
 ### Path configuration
 
-You can define _where_ Keystatic should store collection entries and singletons via the `path` property in the collection/singleton top-level options.
+You can define _where_ Keystatic should store collection entries and singletons via the `path` property in the collection/singleton top-level options:
 
-We will go over core concepts here, but check out the [Path configuration page](/docs/path-configuration) for more details and examples.
+```javascript
+// Keystatic config
+export default config({
+  collections: {
+    posts: collection({
+      label: 'Posts',
+      path: 'content/posts/*/',
+      // ...
+    })
+  },
+  singletons: {
+    settings: singleton({
+      label: 'Settings',
+      path: 'content/posts/',
+      // ...
+   })
+  }
+})
+
+```
+
+The optional trailing slash `/` on that path has an impact on the content structure - read below for more details on `collection paths` and `singleton paths`.
+
+{% aside icon="⚡️" %}
+`collections` require a `*` wildcard part of the path string. 
+
+This will be replaced by the slug of the entry.
+{% /aside %}
+
+We will go over core concepts here, but check out the [Path wildcard page](/docs/path-wildcard) for more details and advanced examples.
 
 ---
 
@@ -106,17 +135,11 @@ singleton-name
 
 ---
 
-## Individual fields output
+## Images output path
 
-Right now, only **images** allow you to decide *where* content should be generated, independently of the `collection/singleton` level `path` settings.
+You can decide where to store your images independently of the path configuration for a given collection or singleton.
 
-{% aside icon="⚡️" %}
-The reason for this is certain frameworks (like Next.js) need your images to be in a specific directory (like `/public`) to be easily accessible.
-
-Instead of generating **all** your content inside the `public` directory to satisfy this requirement, Keystatic lets you define a specific path for your images only.
-{% /aside %}
-
-Here's how you define where an image gets generated for a given `collection` or `singleton`:
+This is useful when you want to have your images in the `public` or `assets` directory, to comply to framework-specific conventions.
 
 ```javascript
 // In the context of a `posts` collection...
