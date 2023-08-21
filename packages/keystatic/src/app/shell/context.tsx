@@ -1,14 +1,8 @@
-import {
-  RefObject,
-  createContext,
-  useCallback,
-  useContext,
-  useState,
-} from 'react';
+import { breakpoints } from '@keystar/ui/style';
+import { useResizeObserver } from '@react-aria/utils';
+import { RefObject, createContext, useContext, useState } from 'react';
 
 import { Config } from '../../config';
-import { useResizeObserver } from '@react-aria/utils';
-import { breakpoints } from '@keystar/ui/style';
 
 // Config context
 // -----------------------------------------------------------------------------
@@ -73,7 +67,7 @@ export function useContentPanelQuery(options: QueryOptions) {
 export function useContentPanelState(ref: RefObject<HTMLElement>) {
   let [contentSize, setContentSize] = useState<ContentSize>('mobile');
 
-  const onResize = useCallback(() => {
+  const onResize = () => {
     setContentSize(size => {
       let contentPane = ref.current;
       if (!contentPane) {
@@ -90,7 +84,7 @@ export function useContentPanelState(ref: RefObject<HTMLElement>) {
       }
       return 'mobile';
     });
-  }, [ref]);
+  };
 
   useResizeObserver({ ref, onResize });
 
