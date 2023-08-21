@@ -13,13 +13,7 @@ export type PropsWithElementType<P = unknown> = P & {
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes
-type LegacyAttributes =
-  | 'background'
-  | 'bgColor'
-  | 'color'
-  | 'height'
-  | 'width'
-  | 'manifest';
+type LegacyAttributes = 'background' | 'bgColor' | 'color' | 'height' | 'width';
 
 export type CompWithAsProp<
   BaseProps,
