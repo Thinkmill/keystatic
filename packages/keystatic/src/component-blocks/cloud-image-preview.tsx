@@ -9,6 +9,7 @@ import { Heading, Text } from '@keystar/ui/typography';
 import { Icon } from '@keystar/ui/icon';
 import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
 import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
+import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { xIcon } from '@keystar/ui/icon/icons/xIcon';
 // import { useConfig } from '../app/shell/context';
@@ -17,6 +18,7 @@ import { ClassList, css, tokenSchema } from '@keystar/ui/style';
 import { Dialog, DialogTrigger } from '@keystar/ui/dialog';
 import { Content, Header } from '@keystar/ui/slots';
 import { ProgressCircle } from '@keystar/ui/progress';
+import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 
 const classList = new ClassList('ImageURLField');
 
@@ -352,10 +354,18 @@ function ImagePreview({
               )}
             </Box>
           </VStack>
-          <ActionButton>Edit</ActionButton>
-          <ActionButton onPress={onRemove}>
-            <Icon src={trash2Icon} />
-          </ActionButton>
+          <TooltipTrigger>
+            <ActionButton>
+              <Icon src={pencilIcon} />
+            </ActionButton>
+            <Tooltip>Edit Image</Tooltip>
+          </TooltipTrigger>
+          <TooltipTrigger>
+            <ActionButton onPress={onRemove}>
+              <Icon src={trash2Icon} />
+            </ActionButton>
+            <Tooltip>Remove Image</Tooltip>
+          </TooltipTrigger>
         </Flex>
       </VStack>
     </NotEditable>
@@ -369,11 +379,6 @@ export function CloudImagePreview(
     onRemove(): void;
   }
 ) {
-  const src = props.fields.src.value;
-  const alt = props.fields.alt.value;
-
-  const dimensions = useImageDimensions(src);
-
   if (!props.fields.src.value) {
     return <Placeholder onChange={props.onChange} onRemove={props.onRemove} />;
   }
@@ -398,27 +403,6 @@ function isValidURL(str: string) {
   } catch {
     return false;
   }
-}
-
-function useImageDimensions(src: string) {
-  const [dimensions, setDimensions] = useState<null | {
-    width: number;
-    height: number;
-  }>(null);
-
-  useEffect(() => {
-    const img = new Image();
-    img.onload = () => {
-      setDimensions({ width: img.width, height: img.height });
-    };
-    img.src = src;
-    return () => {
-      img.onload = null;
-      setDimensions(null);
-    };
-  }, [src]);
-
-  return dimensions;
 }
 
 function getDimension(value: unknown) {
