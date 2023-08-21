@@ -12,15 +12,13 @@ import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
 import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { xIcon } from '@keystar/ui/icon/icons/xIcon';
-// import { useConfig } from '../app/shell/context';
+import { useConfig } from '../app/shell/context';
 
-import { ClassList, css, tokenSchema } from '@keystar/ui/style';
+import { css, tokenSchema } from '@keystar/ui/style';
 import { Dialog, DialogTrigger } from '@keystar/ui/dialog';
 import { Content, Header } from '@keystar/ui/slots';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
-
-const classList = new ClassList('ImageURLField');
 
 type ImageData = {
   src: string;
@@ -50,13 +48,15 @@ function cleanImageData(
 type ImageStatus = '' | 'loading' | 'good' | 'error';
 
 function ImageDialog({
+  image,
   onChange,
   onClose,
 }: {
+  image?: ImageData;
   onChange: (data: ImageData) => void;
   onClose: () => void;
 }) {
-  const [state, setState] = useState<ImageData>(cleanImageData());
+  const [state, setState] = useState<ImageData>(cleanImageData(image));
   const [status, setStatus] = useState<ImageStatus>('');
   const [dimensions, setDimensions] = useState<ImageDimensions>(
     cleanImageData()
@@ -129,7 +129,7 @@ function ImageDialog({
     <Dialog>
       <Heading>
         <Flex alignItems="center" gap="regular">
-          Insert Cloud Image
+          {image ? 'Edit' : 'Insert'} Cloud Image
         </Flex>
       </Heading>
       <Header>
@@ -152,7 +152,7 @@ function ImageDialog({
             e.preventDefault();
             if (status !== 'good') return;
             onChange(state);
-            close();
+            onClose();
           }}
           direction="column"
           gap="large"
@@ -167,8 +167,11 @@ function ImageDialog({
               }
             }}
             value={state.src}
-            description="Copy an Image URL from the Image Library and paste in this field to insert it."
-            UNSAFE_className={classList.declare('input')}
+            description={
+              image
+                ? undefined
+                : 'Copy an Image URL from the Image Library and paste into this field to insert it.'
+            }
             endElement={
               status === 'loading' ? (
                 <div
@@ -251,7 +254,7 @@ function ImageDialog({
           form="example-form"
           isDisabled={status !== 'good'}
         >
-          Insert
+          {image ? 'Done' : 'Insert'}
         </Button>
       </ButtonGroup>
     </Dialog>
@@ -285,12 +288,10 @@ function Placeholder({
                 },
               })}
             >
-              <Flex gap="regular" alignItems="center">
-                <Icon src={imageIcon} size="medium" />
-                <div>Click to add Cloud Image...</div>
-              </Flex>
+              <Icon src={imageIcon} size="medium" />
+              <Text>Click to insert Cloud Image...</Text>
             </Button>
-            {close => <ImageDialog onChange={onChange} onClose={close} />}
+            {onClose => <ImageDialog onChange={onChange} onClose={onClose} />}
           </DialogTrigger>
         </Box>
         <Button prominence="low" tone="critical" onPress={onRemove}>
@@ -303,9 +304,11 @@ function Placeholder({
 
 function ImagePreview({
   image,
+  onChange,
   onRemove,
 }: {
   image: ImageData;
+  onChange: (data: ImageData) => void;
   onRemove: () => void;
 }) {
   return (
@@ -354,12 +357,18 @@ function ImagePreview({
               )}
             </Box>
           </VStack>
-          <TooltipTrigger>
+          <DialogTrigger>
             <ActionButton>
               <Icon src={pencilIcon} />
             </ActionButton>
-            <Tooltip>Edit Image</Tooltip>
-          </TooltipTrigger>
+            {onClose => (
+              <ImageDialog
+                image={image}
+                onChange={onChange}
+                onClose={onClose}
+              />
+            )}
+          </DialogTrigger>
           <TooltipTrigger>
             <ActionButton onPress={onRemove}>
               <Icon src={trash2Icon} />
@@ -391,6 +400,7 @@ export function CloudImagePreview(
         width: props.fields.width.value,
         height: props.fields.height.value,
       }}
+      onChange={props.onChange}
       onRemove={props.onRemove}
     />
   );
@@ -412,8 +422,8 @@ function getDimension(value: unknown) {
 }
 
 function useImageLibraryURL() {
-  // const config = useConfig();
-  const [team, project] =
-    /* config.storage.project */ 'thinkmill-labs/keystatic-site'.split('/');
+  const config = useConfig();
+  if (config.storage.kind !== 'cloud') return 'https://keystatic.cloud/';
+  const [team, project] = config.storage.project;
   return `https://keystatic.cloud/teams/${team}/project/${project}/images`;
 }
