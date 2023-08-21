@@ -5,7 +5,7 @@ import {
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
-import { useId } from '@keystar/ui/utils';
+import { useId, useIsMounted } from '@keystar/ui/utils';
 import { useLocale } from '@react-aria/i18n';
 import { filterDOMProps, useUpdateEffect } from '@react-aria/utils';
 import { clamp } from '@react-stately/utils';
@@ -65,13 +65,13 @@ export function SplitView(props: SplitViewProps) {
   } = props;
   const [startPane, endPane] = children;
 
+  const getIsMounted = useIsMounted();
   const id = useId(props.id);
   const { direction } = useLocale();
   const styleProps = useStyleProps(props);
 
   const [isReversed, setReversed] = useState(false);
   const [isDragging, setDragging] = useState(false);
-  // const [collapseRequested, setCollapseRequested] = useState(false);
   const [handleIsFocused, setHandleFocus] = useState(false);
   const [size, setSize] = useState(() => {
     let size = defaultSize;
@@ -281,7 +281,9 @@ export function SplitView(props: SplitViewProps) {
       value={{
         id,
         isCollapsed,
-        activity: isDragging
+        activity: !getIsMounted()
+          ? 'initializing'
+          : isDragging
           ? 'pointer'
           : handleIsFocused
           ? 'keyboard'
@@ -480,11 +482,12 @@ const SplitViewResizeHandle = forwardRef(function SplitViewResizeHandle(
             transitionDelay: tokenSchema.animation.duration.regular,
           },
         },
-        '&[data-split-view-activity]::after': {
-          backgroundColor: tokenSchema.color.background.accentEmphasis,
-          insetInline: `calc(${tokenSchema.size.border.regular} * -1)`,
-          opacity: 1,
-        },
+        '&[data-split-view-activity=pointer]::after, &[data-split-view-activity=keyboard]::after':
+          {
+            backgroundColor: tokenSchema.color.background.accentEmphasis,
+            insetInline: `calc(${tokenSchema.size.border.regular} * -1)`,
+            opacity: 1,
+          },
       })}
     />
   );
