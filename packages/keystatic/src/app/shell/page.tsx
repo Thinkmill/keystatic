@@ -13,7 +13,6 @@ import { css, tokenSchema, VoussoirTheme } from '@keystar/ui/style';
 import { MAIN_PANEL_ID } from './constants';
 import { ScrollView } from './primitives';
 import { useSidebar } from './sidebar';
-import { ContentPanelProvider, useContentPanelState } from './context';
 
 type PageContextValue = {
   containerWidth: keyof VoussoirTheme['size']['container'] | 'none';
@@ -26,27 +25,21 @@ export const PageRoot = ({
   children,
   containerWidth = 'medium',
 }: PropsWithChildren<Partial<PageContextValue>>) => {
-  let ref = useRef<HTMLDivElement>(null);
-  let context = useContentPanelState(ref);
-
   return (
-    <ContentPanelProvider value={context}>
-      <PageContext.Provider value={{ containerWidth }}>
-        <Flex
-          ref={ref}
-          elementType="main"
-          direction="column"
-          id={MAIN_PANEL_ID}
-          flex
-          height="100%"
-          // fix flexbox issues
-          minHeight={0}
-          minWidth={0}
-        >
-          {children}
-        </Flex>
-      </PageContext.Provider>
-    </ContentPanelProvider>
+    <PageContext.Provider value={{ containerWidth }}>
+      <Flex
+        elementType="main"
+        direction="column"
+        id={MAIN_PANEL_ID}
+        flex
+        height="100%"
+        // fix flexbox issues
+        minHeight={0}
+        minWidth={0}
+      >
+        {children}
+      </Flex>
+    </PageContext.Provider>
   );
 };
 
