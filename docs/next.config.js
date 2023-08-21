@@ -23,6 +23,11 @@ module.exports = {
         permanent: true,
       },
       {
+        source: '/docs/local-vs-git-hub-storage-strategy',
+        destination: '/docs/local-mode',
+        permanent: true,
+      },
+      {
         source: '/docs/path-configuration',
         destination: '/docs/path-wildcard',
         permanent: true,
