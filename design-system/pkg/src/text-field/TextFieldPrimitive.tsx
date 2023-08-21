@@ -213,6 +213,7 @@ function useTextFieldStyles() {
 
     '&[data-multiline]': {
       height: 'auto',
+      lineHeight: tokenSchema.typography.lineheight.medium,
       minHeight: tokenSchema.size.scale['700'],
       overflow: 'auto',
       paddingBlock: tokenSchema.size.space.regular,
