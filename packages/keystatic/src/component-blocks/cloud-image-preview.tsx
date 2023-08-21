@@ -27,6 +27,8 @@ type ImageData = {
   alt: string;
 };
 
+type ImageDimensions = Pick<ImageData, 'width' | 'height'>;
+
 function cleanImageData(
   data: {
     src: string;
@@ -43,9 +45,9 @@ function cleanImageData(
   };
 }
 
-type InsertStatus = '' | 'loading' | 'good' | 'error';
+type ImageStatus = '' | 'loading' | 'good' | 'error';
 
-function InsertImageDialog({
+function ImageDialog({
   onChange,
   onClose,
 }: {
@@ -53,7 +55,10 @@ function InsertImageDialog({
   onClose: () => void;
 }) {
   const [state, setState] = useState<ImageData>(cleanImageData());
-  const [status, setStatus] = useState<InsertStatus>('');
+  const [status, setStatus] = useState<ImageStatus>('');
+  const [dimensions, setDimensions] = useState<ImageDimensions>(
+    cleanImageData()
+  );
   const imageLibraryURL = useImageLibraryURL();
 
   const onPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
@@ -98,11 +103,15 @@ function InsertImageDialog({
     setStatus('loading');
     const img = new Image();
     img.onload = () => {
-      setState(state => ({
-        ...state,
+      const dimensions = {
         width: img.width.toString(),
         height: img.height.toString(),
+      };
+      setState(state => ({
+        ...state,
+        ...dimensions,
       }));
+      setDimensions(dimensions);
       setStatus('good');
     };
     img.onerror = () => {
@@ -146,17 +155,17 @@ function InsertImageDialog({
           direction="column"
           gap="large"
         >
-          <Box marginBottom="medium">
-            <Text>
-              Copy an Image URL from the Image Library and paste in the field
-              below to insert.
-            </Text>
-          </Box>
           <TextField
             label="Image URL"
             autoFocus
             onPaste={onPaste}
+            onKeyDown={e => {
+              if (e.code === 'Backspace' || e.code === 'Delete') {
+                setState(cleanImageData());
+              }
+            }}
             value={state.src}
+            description="Copy an Image URL from the Image Library and paste in this field to insert it."
             UNSAFE_className={classList.declare('input')}
             endElement={
               status === 'loading' ? (
@@ -187,18 +196,46 @@ function InsertImageDialog({
           />
           {status === 'good' ? (
             <>
-              <TextArea label="Alt Text" value={state.alt} />
-              <Flex gap="regular">
+              <TextArea
+                label="Alt Text"
+                value={state.alt}
+                onChange={alt => setState(state => ({ ...state, alt }))}
+              />
+              <Flex gap="regular" alignItems="end">
                 <TextField
                   label="Width"
                   value={state.width}
                   width="scale.1000"
+                  onChange={width => setState(state => ({ ...state, width }))}
                 />
                 <TextField
                   label="Height"
                   value={state.height}
                   width="scale.1000"
+                  onChange={height => setState(state => ({ ...state, height }))}
                 />
+                {dimensions &&
+                (`${dimensions.width}` !== state.width ||
+                  `${dimensions.height}` !== state.height) ? (
+                  <div>
+                    <ActionButton
+                      isDisabled={dimensions === null}
+                      alignSelf="start"
+                      onPress={() => {
+                        setState(state => ({
+                          ...state,
+                          height: dimensions.height,
+                          width: dimensions.width,
+                        }));
+                      }}
+                    >
+                      Set to{' '}
+                      {dimensions
+                        ? `${dimensions.width} x ${dimensions.height}`
+                        : null}
+                    </ActionButton>
+                  </div>
+                ) : null}
               </Flex>
             </>
           ) : null}
@@ -251,13 +288,76 @@ function Placeholder({
                 <div>Click to add Cloud Image...</div>
               </Flex>
             </Button>
-            {close => <InsertImageDialog onChange={onChange} onClose={close} />}
+            {close => <ImageDialog onChange={onChange} onClose={close} />}
           </DialogTrigger>
         </Box>
         <Button prominence="low" tone="critical" onPress={onRemove}>
           <Icon src={trash2Icon} />
         </Button>
       </Flex>
+    </NotEditable>
+  );
+}
+
+function ImagePreview({
+  image,
+  onRemove,
+}: {
+  image: ImageData;
+  onRemove: () => void;
+}) {
+  return (
+    <NotEditable>
+      <VStack
+        backgroundColor="surface"
+        borderRadius="medium"
+        border="neutral"
+        overflow="hidden"
+      >
+        <Flex justifyContent="center">
+          <img
+            alt={image.alt}
+            src={image.src}
+            className={css({
+              maxWidth: image.width,
+              maxHeight: image.height,
+            })}
+          />
+        </Flex>
+        <Flex padding="large" gap="medium" borderTop="neutral">
+          <VStack flex="1" gap="large" justifyContent="center">
+            <Box>
+              <Text
+                size="small"
+                weight="bold"
+                UNSAFE_className={css({
+                  fontFamily: tokenSchema.typography.fontFamily.code,
+                })}
+              >
+                W {image.width} x H {image.height}
+              </Text>
+            </Box>
+            <Box>
+              {image.alt ? (
+                <Text>{image.alt}</Text>
+              ) : (
+                <Text
+                  size="small"
+                  UNSAFE_className={css({
+                    fontFamily: tokenSchema.typography.fontFamily.code,
+                  })}
+                >
+                  {image.src}
+                </Text>
+              )}
+            </Box>
+          </VStack>
+          <ActionButton>Edit</ActionButton>
+          <ActionButton onPress={onRemove}>
+            <Icon src={trash2Icon} />
+          </ActionButton>
+        </Flex>
+      </VStack>
     </NotEditable>
   );
 }
@@ -278,77 +378,16 @@ export function CloudImagePreview(
     return <Placeholder onChange={props.onChange} onRemove={props.onRemove} />;
   }
 
-  const clear = () => {
-    props.onChange(cleanImageData());
-  };
-
   return (
-    <NotEditable>
-      <VStack
-        gap="medium"
-        border="neutral"
-        padding="medium"
-        borderRadius="regular"
-      >
-        <Flex gap="regular" alignItems="end">
-          <TextField
-            label="Cloud Image"
-            value={props.fields.src.value}
-            onChange={props.fields.src.onChange}
-            flex="1"
-          />
-          <div>
-            <ActionButton onPress={clear}>Change</ActionButton>
-          </div>
-          <div>
-            <ActionButton onPress={props.onRemove}>Remove</ActionButton>
-          </div>
-        </Flex>
-        <img alt={alt} src={isValidURL(src) ? src : ''} />
-        <Flex gap="regular" alignItems="end">
-          <TextField
-            label="Width"
-            value={props.fields.width.value}
-            onChange={props.fields.width.onChange}
-            width="scale.1200"
-          />
-          <TextField
-            label="Height"
-            value={props.fields.height.value}
-            onChange={props.fields.height.onChange}
-            width="scale.1200"
-          />
-          {dimensions &&
-          (`${dimensions.width}` !== props.fields.width.value ||
-            `${dimensions.height}` !== props.fields.height.value) ? (
-            <div>
-              <ActionButton
-                isDisabled={dimensions === null}
-                alignSelf="start"
-                onPress={() => {
-                  if (dimensions) {
-                    props.onChange({
-                      height: dimensions.height.toString(),
-                      width: dimensions.width.toString(),
-                    });
-                  }
-                }}
-              >
-                Set to{' '}
-                {dimensions
-                  ? `${dimensions.width} x ${dimensions.height}`
-                  : null}
-              </ActionButton>
-            </div>
-          ) : null}
-        </Flex>
-        <TextField
-          label="Alt text"
-          value={props.fields.alt.value}
-          onChange={props.fields.alt.onChange}
-        />
-      </VStack>
-    </NotEditable>
+    <ImagePreview
+      image={{
+        src: props.fields.src.value,
+        alt: props.fields.alt.value,
+        width: props.fields.width.value,
+        height: props.fields.height.value,
+      }}
+      onRemove={props.onRemove}
+    />
   );
 }
 
