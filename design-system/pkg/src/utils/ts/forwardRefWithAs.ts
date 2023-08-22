@@ -12,19 +12,26 @@ export type PropsWithElementType<P = unknown> = P & {
   elementType?: ElementType;
 };
 
+// https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes
+type LegacyAttributes = 'background' | 'bgColor' | 'color' | 'height' | 'width';
+
 export type CompWithAsProp<
   BaseProps,
   // this is unused for now but kept for future use
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   DefaultElementType extends HTMLTag
 > = (
-  props: BaseProps & {
-    // these types are less specific than they could be but for now
-    // typescript not being ridiculously slow is more important
-    // they could possibly get more specific later
-    elementType?: HTMLTag;
-    ref?: React.Ref<HTMLElement>;
-  } & Omit<AllHTMLAttributes<HTMLElement>, keyof BaseProps>
+  props: Omit<
+    AllHTMLAttributes<HTMLElement>,
+    keyof BaseProps | LegacyAttributes
+  > &
+    BaseProps & {
+      // these types are less specific than they could be but for now
+      // typescript not being ridiculously slow is more important
+      // they could possibly get more specific later
+      elementType?: HTMLTag;
+      ref?: React.Ref<HTMLElement>;
+    }
 ) => ReactElement | null;
 
 /**
