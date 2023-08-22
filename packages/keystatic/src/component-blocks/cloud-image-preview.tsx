@@ -133,19 +133,7 @@ function ImageDialog(props: {
 
   return (
     <Dialog>
-      <Heading>{image ? 'Edit' : 'Insert'} Cloud Image</Heading>
-      <Header>
-        <Button
-          href={imageLibraryURL}
-          target="_blank"
-          rel="noreferrer"
-          prominence="low"
-          tone="accent"
-        >
-          <Text>Open Image Library</Text>
-          <Icon src={externalLinkIcon} />
-        </Button>
-      </Header>
+      <Heading>Cloud image</Heading>
       <Content>
         <Flex
           elementType="form"
@@ -166,13 +154,24 @@ function ImageDialog(props: {
             onKeyDown={e => {
               if (e.code === 'Backspace' || e.code === 'Delete') {
                 setState(cleanImageData());
+              } else {
+                e.continuePropagation();
               }
             }}
             value={state.src}
             description={
-              image
-                ? undefined
-                : 'Copy an Image URL from the Image Library and paste into this field to insert it.'
+              <Text>
+                Copy an image URL from the{' '}
+                <TextLink
+                  prominence="high"
+                  href={imageLibraryURL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Image Library
+                </TextLink>{' '}
+                and paste it into this field.
+              </Text>
             }
             endElement={
               status === 'loading' ? (
@@ -189,12 +188,10 @@ function ImageDialog(props: {
                   />
                 </Flex>
               ) : state.src ? (
-                <ActionButton
-                  prominence="low"
+                <ClearButton
                   onPress={() => setState(cleanImageData())}
-                >
-                  <Icon src={xIcon} />
-                </ActionButton>
+                  preventFocus
+                />
               ) : null
             }
           />
