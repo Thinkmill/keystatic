@@ -17,16 +17,16 @@ import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
 import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { undo2Icon } from '@keystar/ui/icon/icons/undo2Icon';
-import { VStack, Flex, Box } from '@keystar/ui/layout';
+import { Flex, HStack, VStack } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
 import { NumberField } from '@keystar/ui/number-field';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { Content } from '@keystar/ui/slots';
-import { css, tokenSchema } from '@keystar/ui/style';
 import { TextArea, TextField } from '@keystar/ui/text-field';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { PartialRequired } from '@keystar/ui/types';
 import { Heading, Text } from '@keystar/ui/typography';
+import { useId } from '@keystar/ui/utils';
 
 import { useConfig } from '../app/shell/context';
 import { focusWithPreviousSelection } from '../form/fields/document/DocumentEditor/ui-utils';
@@ -65,7 +65,12 @@ function ImageDialog(props: {
   const [dimensions, setDimensions] = useState<ImageDimensions>(
     cleanImageData()
   );
+  const formId = useId();
   const imageLibraryURL = useImageLibraryURL();
+
+  const revertLabel = `Revert to original (${dimensions.width} × ${dimensions.height})`;
+  const dimensionsMatchOriginal =
+    dimensions.width === state.width && dimensions.height === state.height;
 
   const onPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -121,25 +126,20 @@ function ImageDialog(props: {
     };
   }, [state.src]);
 
-  const revertLabel = `Revert to original (${dimensions.width} × ${dimensions.height})`;
-  const dimensionsMatchOriginal =
-    dimensions.width === state.width && dimensions.height === state.height;
-
   return (
     <Dialog>
       <Heading>Cloud image</Heading>
       <Content>
-        <Flex
+        <VStack
           elementType="form"
-          id="example-form"
+          id={formId}
+          gap="xlarge"
           onSubmit={e => {
             e.preventDefault();
             if (status !== 'good') return;
             onChange(state);
             onClose();
           }}
-          direction="column"
-          gap="xlarge"
         >
           <TextField
             label="Image URL"
@@ -192,11 +192,11 @@ function ImageDialog(props: {
           {status === 'good' ? (
             <>
               <TextArea
-                label="Alt Text"
+                label="Alt text"
                 value={state.alt}
                 onChange={alt => setState(state => ({ ...state, alt }))}
               />
-              <Flex gap="regular" alignItems="end">
+              <HStack gap="regular" alignItems="end">
                 <NumberField
                   label="Width"
                   width="scale.1600"
@@ -227,17 +227,17 @@ function ImageDialog(props: {
                   </ActionButton>
                   <Tooltip>{revertLabel}</Tooltip>
                 </TooltipTrigger>
-              </Flex>
+              </HStack>
             </>
           ) : null}
-        </Flex>
+        </VStack>
       </Content>
       <ButtonGroup>
         <Button onPress={onCancel}>Cancel</Button>
         <Button
           prominence="high"
           type="submit"
-          form="example-form"
+          form={formId}
           isDisabled={status !== 'good'}
         >
           {image ? 'Done' : 'Insert'}
@@ -270,23 +270,17 @@ function Placeholder(props: {
 
   return (
     <NotEditable>
-      <div
-        data-selected={selected}
-        className={css({
-          alignItems: 'center',
-          backgroundColor: tokenSchema.color.alias.backgroundIdle,
-          borderRadius: tokenSchema.size.radius.regular,
-          color: tokenSchema.color.alias.foregroundIdle,
-          display: 'flex',
-          gap: tokenSchema.size.space.regular,
-          height: tokenSchema.size.element.large,
-          justifyContent: 'start',
-          paddingInline: tokenSchema.size.space.large,
-        })}
+      <Flex
+        alignItems="center"
+        backgroundColor="surface"
+        borderRadius="regular"
+        gap="regular"
+        height="element.large"
+        paddingX="large"
       >
         <Icon src={imageIcon} />
-        <Text>Awaiting configuration from Cloud images…</Text>
-      </div>
+        <Text>Cloud image, awaiting configuration…</Text>
+      </Flex>
       <DialogContainer onDismiss={closeAndCleanup}>
         {state.isOpen && (
           <ImageDialog
@@ -309,74 +303,75 @@ function ImagePreview({
   onChange: (data: ImageData) => void;
   onRemove: () => void;
 }) {
+  const selected = useSelected();
+  const maxHeight = 368; // size.scale.4600 — TODO: it'd be nice to get this from some token artefact
+  const maxWidth = 734; // roughly the max width that an editor container will allow
+
   return (
-    <NotEditable>
-      <VStack
-        backgroundColor="surface"
-        borderRadius="medium"
-        border="neutral"
-        overflow="hidden"
-      >
-        <Flex justifyContent="center">
-          <img
-            alt={image.alt}
-            src={image.src}
-            className={css({
-              maxWidth: image.width,
-              maxHeight: image.height,
-            })}
-          />
-        </Flex>
-        <Flex padding="large" gap="medium" borderTop="neutral">
-          <VStack flex="1" gap="large" justifyContent="center">
-            <Box>
-              <Text
-                size="small"
-                weight="bold"
-                UNSAFE_className={css({
-                  fontFamily: tokenSchema.typography.fontFamily.code,
-                })}
-              >
-                W {image.width} x H {image.height}
-              </Text>
-            </Box>
-            <Box>
+    <>
+      <NotEditable>
+        <VStack
+          backgroundColor={selected ? 'accent' : 'surface'}
+          borderRadius="medium"
+          border={selected ? 'color.alias.borderFocused' : 'neutral'}
+          overflow="hidden"
+        >
+          <Flex
+            backgroundColor="canvas"
+            justifyContent="center"
+            UNSAFE_style={{ maxHeight }}
+          >
+            <img
+              alt={image.alt}
+              src={imageWithTransforms({
+                source: image.src,
+                // 2x for retina etc.
+                height: maxHeight * 2,
+                width: maxWidth * 2,
+              })}
+              style={{ objectFit: 'contain' }}
+            />
+          </Flex>
+          <HStack
+            padding="large"
+            gap="xlarge"
+            borderTop={selected ? 'color.alias.borderFocused' : 'neutral'}
+          >
+            <VStack flex="1" gap="medium" justifyContent="center">
               {image.alt ? (
-                <Text>{image.alt}</Text>
+                <Text truncate={2}>{image.alt}</Text>
               ) : (
-                <Text
-                  size="small"
-                  UNSAFE_className={css({
-                    fontFamily: tokenSchema.typography.fontFamily.code,
-                  })}
-                >
-                  {image.src}
-                </Text>
+                <Text truncate>(missing alt text)</Text>
               )}
-            </Box>
-          </VStack>
-          <DialogTrigger>
-            <ActionButton>
-              <Icon src={pencilIcon} />
-            </ActionButton>
-            {onClose => (
-              <ImageDialog
-                image={image}
-                onChange={onChange}
-                onCancel={onClose}
-                onClose={onClose}
-              />
-            )}
-          </DialogTrigger>
-          <TooltipTrigger>
-            <ActionButton onPress={onRemove}>
-              <Icon src={trash2Icon} />
-            </ActionButton>
-            <Tooltip>Remove Image</Tooltip>
-          </TooltipTrigger>
-        </Flex>
-      </VStack>
-    </NotEditable>
+              <Text color="neutralTertiary" size="small">
+                {image.width} × {image.height}
+              </Text>
+            </VStack>
+            <HStack gap="regular">
+              <DialogTrigger>
+                <ActionButton>
+                  <Icon src={pencilIcon} />
+                </ActionButton>
+                {onClose => (
+                  <ImageDialog
+                    image={image}
+                    onChange={onChange}
+                    onCancel={onClose}
+                    onClose={onClose}
+                  />
+                )}
+              </DialogTrigger>
+              <TooltipTrigger>
+                <ActionButton onPress={onRemove}>
+                  <Icon src={trash2Icon} />
+                </ActionButton>
+                <Tooltip>Remove Image</Tooltip>
+              </TooltipTrigger>
+            </HStack>
+          </HStack>
+        </VStack>
+      </NotEditable>
+    </>
   );
 }
 
@@ -402,6 +397,29 @@ export function CloudImagePreview(
       onChange={props.onChange}
       onRemove={props.onRemove}
     />
+  );
+}
+
+// Utils
+// -----------------------------------------------------------------------------
+
+type TransformFit = 'contain' | 'cover' | 'crop' | 'scale-down';
+
+function imageWithTransforms(options: {
+  fit?: TransformFit;
+  source: string;
+  height: number;
+  width: number;
+}) {
+  let { fit = 'scale-down', source, height, width } = options;
+
+  return (
+    `${source}?` +
+    new URLSearchParams({
+      fit,
+      height: height.toString(),
+      width: width.toString(),
+    }).toString()
   );
 }
 
