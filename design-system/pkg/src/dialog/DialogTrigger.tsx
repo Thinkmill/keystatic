@@ -1,5 +1,6 @@
 import { PressResponder } from '@react-aria/interactions';
 import { useOverlayTrigger } from '@react-aria/overlays';
+import { mergeProps } from '@react-aria/utils';
 import {
   OverlayTriggerState,
   useOverlayTriggerState,
@@ -223,8 +224,7 @@ function DialogTriggerBase({
   return (
     <Fragment>
       <PressResponder
-        {...triggerProps}
-        onPress={state.toggle}
+        {...mergeProps(triggerProps, { onPress: state.open })}
         isPressed={state.isOpen && type !== 'modal' && type !== 'fullscreen'}
       >
         {trigger}

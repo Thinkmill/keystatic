@@ -1,16 +1,18 @@
-import { action, ArgTypes } from '@keystar/ui-storybook';
+import { cloneElement } from 'react';
 
-import { Item, Menu, MenuTrigger, Section } from '..';
+import { ActionButton } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
 import { alignCenterVerticalIcon } from '@keystar/ui/icon/icons/alignCenterVerticalIcon';
 import { alignStartVerticalIcon } from '@keystar/ui/icon/icons/alignStartVerticalIcon';
 import { alignEndVerticalIcon } from '@keystar/ui/icon/icons/alignEndVerticalIcon';
 import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';
 import { boldIcon } from '@keystar/ui/icon/icons/boldIcon';
 import { italicIcon } from '@keystar/ui/icon/icons/italicIcon';
-import { Icon } from '@keystar/ui/icon';
+import { action, ArgTypes } from '@keystar/ui-storybook';
+import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Kbd, Text } from '@keystar/ui/typography';
-import { ActionButton } from '@keystar/ui/button';
-import { cloneElement } from 'react';
+
+import { Item, Menu, MenuTrigger, Section } from '../index';
 
 let iconMap = {
   AlignHorizontalCenterIcon: alignCenterVerticalIcon,
@@ -108,6 +110,22 @@ export const Dynamic = () =>
 
 Dynamic.story = {
   name: 'dynamic',
+};
+
+export const WithTooltip = () => {
+  return (
+    <MenuTrigger>
+      <TooltipTrigger>
+        <ActionButton>Trigger</ActionButton>
+        <Tooltip>Tooltip content</Tooltip>
+      </TooltipTrigger>
+      <Menu>
+        <Item>One</Item>
+        <Item>Two</Item>
+        <Item>Three</Item>
+      </Menu>
+    </MenuTrigger>
+  );
 };
 
 export const SectionsStatic = () =>
