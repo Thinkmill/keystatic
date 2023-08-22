@@ -92,6 +92,10 @@ navGroups:
         link:
           discriminant: page
           value: fields/date
+      - label: Datetime
+        link:
+          discriminant: page
+          value: fields/datetime
       - label: Document
         link:
           discriminant: page

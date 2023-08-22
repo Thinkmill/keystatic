@@ -3,6 +3,7 @@ export { checkbox } from './checkbox';
 export { child } from './child';
 export { conditional } from './conditional';
 export { date } from './date';
+export { datetime } from './datetime';
 export { document } from './document';
 export { emptyDocument } from './emptyDocument';
 export { empty } from './empty';
