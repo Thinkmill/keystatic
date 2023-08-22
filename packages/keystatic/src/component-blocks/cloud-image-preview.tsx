@@ -16,13 +16,16 @@ import { Icon } from '@keystar/ui/icon';
 import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
 import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
+import { undo2Icon } from '@keystar/ui/icon/icons/undo2Icon';
 import { VStack, Flex, Box } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
+import { NumberField } from '@keystar/ui/number-field';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { Content } from '@keystar/ui/slots';
 import { css, tokenSchema } from '@keystar/ui/style';
 import { TextArea, TextField } from '@keystar/ui/text-field';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
+import { PartialRequired } from '@keystar/ui/types';
 import { Heading, Text } from '@keystar/ui/typography';
 
 import { useConfig } from '../app/shell/context';
@@ -30,26 +33,21 @@ import { focusWithPreviousSelection } from '../form/fields/document/DocumentEdit
 
 type ImageData = {
   src: string;
-  width: string;
-  height: string;
+  width?: number;
+  height?: number;
   alt: string;
 };
 
 type ImageDimensions = Pick<ImageData, 'width' | 'height'>;
 
 function cleanImageData(
-  data: {
-    src: string;
-    width?: string | number;
-    height?: string | number;
-    alt?: string | number;
-  } = { src: '' }
+  data: PartialRequired<ImageData, 'src'> = { src: '' }
 ): ImageData {
   return {
     src: data.src,
     alt: 'alt' in data && typeof data.alt === 'string' ? data.alt : '',
-    height: 'height' in data ? getDimension(data.height) : '',
-    width: 'width' in data ? getDimension(data.width) : '',
+    height: data.height ?? undefined,
+    width: data.width ?? undefined,
   };
 }
 
@@ -98,38 +96,34 @@ function ImageDialog(props: {
     setState(cleanImageData({ src: text }));
   };
 
-  const src = state.src;
-
   useEffect(() => {
-    if (!src) {
+    if (!state.src) {
       setStatus('');
       return;
     }
-    if (!isValidURL(src)) {
+    if (!isValidURL(state.src)) {
       return;
     }
     setStatus('loading');
     const img = new Image();
     img.onload = () => {
-      const dimensions = {
-        width: img.width.toString(),
-        height: img.height.toString(),
-      };
-      setState(state => ({
-        ...state,
-        ...dimensions,
-      }));
+      const dimensions = { width: img.width, height: img.height };
+      setState(state => ({ ...state, ...dimensions }));
       setDimensions(dimensions);
       setStatus('good');
     };
     img.onerror = () => {
       setStatus('error');
     };
-    img.src = src;
+    img.src = state.src;
     return () => {
       img.onload = null;
     };
-  }, [src]);
+  }, [state.src]);
+
+  const revertLabel = `Revert to original (${dimensions.width} × ${dimensions.height})`;
+  const dimensionsMatchOriginal =
+    dimensions.width === state.width && dimensions.height === state.height;
 
   return (
     <Dialog>
@@ -145,7 +139,7 @@ function ImageDialog(props: {
             onClose();
           }}
           direction="column"
-          gap="large"
+          gap="xlarge"
         >
           <TextField
             label="Image URL"
@@ -203,40 +197,36 @@ function ImageDialog(props: {
                 onChange={alt => setState(state => ({ ...state, alt }))}
               />
               <Flex gap="regular" alignItems="end">
-                <TextField
+                <NumberField
                   label="Width"
+                  width="scale.1600"
+                  formatOptions={{ maximumFractionDigits: 0 }}
                   value={state.width}
-                  width="scale.1000"
                   onChange={width => setState(state => ({ ...state, width }))}
                 />
-                <TextField
+                <NumberField
                   label="Height"
+                  width="scale.1600"
+                  formatOptions={{ maximumFractionDigits: 0 }}
                   value={state.height}
-                  width="scale.1000"
                   onChange={height => setState(state => ({ ...state, height }))}
                 />
-                {dimensions &&
-                (`${dimensions.width}` !== state.width ||
-                  `${dimensions.height}` !== state.height) ? (
-                  <div>
-                    <ActionButton
-                      isDisabled={dimensions === null}
-                      alignSelf="start"
-                      onPress={() => {
-                        setState(state => ({
-                          ...state,
-                          height: dimensions.height,
-                          width: dimensions.width,
-                        }));
-                      }}
-                    >
-                      Set to{' '}
-                      {dimensions
-                        ? `${dimensions.width} x ${dimensions.height}`
-                        : null}
-                    </ActionButton>
-                  </div>
-                ) : null}
+                <TooltipTrigger>
+                  <ActionButton
+                    aria-label={revertLabel}
+                    isDisabled={dimensionsMatchOriginal}
+                    onPress={() => {
+                      setState(state => ({
+                        ...state,
+                        height: dimensions.height,
+                        width: dimensions.width,
+                      }));
+                    }}
+                  >
+                    <Icon src={undo2Icon} />
+                  </ActionButton>
+                  <Tooltip>{revertLabel}</Tooltip>
+                </TooltipTrigger>
               </Flex>
             </>
           ) : null}
@@ -406,8 +396,8 @@ export function CloudImagePreview(
       image={{
         src: props.fields.src.value,
         alt: props.fields.alt.value,
-        width: props.fields.width.value,
-        height: props.fields.height.value,
+        width: props.fields.width.value ?? undefined,
+        height: props.fields.height.value ?? undefined,
       }}
       onChange={props.onChange}
       onRemove={props.onRemove}
@@ -422,12 +412,6 @@ function isValidURL(str: string) {
   } catch {
     return false;
   }
-}
-
-function getDimension(value: unknown) {
-  if (typeof value === 'string') return value;
-  if (typeof value === 'number') return value.toString();
-  return '';
 }
 
 function useImageLibraryURL() {
