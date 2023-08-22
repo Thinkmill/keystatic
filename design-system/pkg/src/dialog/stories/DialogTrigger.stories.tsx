@@ -5,8 +5,8 @@ import { useRef } from 'react';
 import { ActionButton, Button, ButtonGroup } from '@keystar/ui/button';
 import { Flex } from '@keystar/ui/layout';
 import { Content, Header } from '@keystar/ui/slots';
-import { Heading, Text } from '@keystar/ui/typography';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
+import { Heading, Text } from '@keystar/ui/typography';
 
 import { AlertDialog, Dialog, DialogTrigger, DialogTriggerProps } from '..';
 import { getParagraph } from './common';

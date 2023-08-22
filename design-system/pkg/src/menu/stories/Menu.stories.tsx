@@ -1,7 +1,7 @@
 import { cloneElement } from 'react';
 
-import { Icon } from '@keystar/ui/icon';
 import { ActionButton } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
 import { alignCenterVerticalIcon } from '@keystar/ui/icon/icons/alignCenterVerticalIcon';
 import { alignStartVerticalIcon } from '@keystar/ui/icon/icons/alignStartVerticalIcon';
 import { alignEndVerticalIcon } from '@keystar/ui/icon/icons/alignEndVerticalIcon';
@@ -9,8 +9,8 @@ import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';
 import { boldIcon } from '@keystar/ui/icon/icons/boldIcon';
 import { italicIcon } from '@keystar/ui/icon/icons/italicIcon';
 import { action, ArgTypes } from '@keystar/ui-storybook';
-import { Kbd, Text } from '@keystar/ui/typography';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
+import { Kbd, Text } from '@keystar/ui/typography';
 
 import { Item, Menu, MenuTrigger, Section } from '../index';
 
