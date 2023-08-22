@@ -1,24 +1,32 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSelected, useSlateStatic } from 'slate-react';
+import { useOverlayTriggerState } from '@react-stately/overlays';
+
+import {
+  ActionButton,
+  Button,
+  ButtonGroup,
+  ClearButton,
+} from '@keystar/ui/button';
 import { NotEditable, ObjectField, PreviewProps } from '@keystatic/core';
-import { TextArea, TextField } from '@keystar/ui/text-field';
-import { ActionButton, Button, ButtonGroup } from '@keystar/ui/button';
-import { VStack, Flex, Box } from '@keystar/ui/layout';
-import { Heading, Text } from '@keystar/ui/typography';
+import { Dialog, DialogContainer, DialogTrigger } from '@keystar/ui/dialog';
 import { Icon } from '@keystar/ui/icon';
-import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
 import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
 import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
-import { xIcon } from '@keystar/ui/icon/icons/xIcon';
-import { useConfig } from '../app/shell/context';
-
-import { css, tokenSchema } from '@keystar/ui/style';
-import { Dialog, DialogTrigger } from '@keystar/ui/dialog';
-import { Content, Header } from '@keystar/ui/slots';
+import { VStack, Flex, Box } from '@keystar/ui/layout';
+import { TextLink } from '@keystar/ui/link';
 import { ProgressCircle } from '@keystar/ui/progress';
+import { Content } from '@keystar/ui/slots';
+import { css, tokenSchema } from '@keystar/ui/style';
+import { TextArea, TextField } from '@keystar/ui/text-field';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
+import { Heading, Text } from '@keystar/ui/typography';
+
+import { useConfig } from '../app/shell/context';
+import { focusWithPreviousSelection } from '../form/fields/document/DocumentEditor/ui-utils';
 
 type ImageData = {
   src: string;
@@ -47,15 +55,13 @@ function cleanImageData(
 
 type ImageStatus = '' | 'loading' | 'good' | 'error';
 
-function ImageDialog({
-  image,
-  onChange,
-  onClose,
-}: {
+function ImageDialog(props: {
   image?: ImageData;
+  onCancel: () => void;
   onChange: (data: ImageData) => void;
   onClose: () => void;
 }) {
+  const { image, onCancel, onChange, onClose } = props;
   const [state, setState] = useState<ImageData>(cleanImageData(image));
   const [status, setStatus] = useState<ImageStatus>('');
   const [dimensions, setDimensions] = useState<ImageDimensions>(
@@ -240,7 +246,7 @@ function ImageDialog({
         </Flex>
       </Content>
       <ButtonGroup>
-        <Button onPress={onClose}>Cancel</Button>
+        <Button onPress={onCancel}>Cancel</Button>
         <Button
           prominence="high"
           type="submit"
@@ -254,44 +260,55 @@ function ImageDialog({
   );
 }
 
-function Placeholder({
-  onChange,
-  onRemove,
-}: {
+function Placeholder(props: {
   onChange: (data: ImageData) => void;
   onRemove: () => void;
 }) {
+  const editor = useSlateStatic();
+  const selected = useSelected();
+  const state = useOverlayTriggerState({ defaultOpen: false });
+
+  useEffect(() => {
+    if (selected) {
+      state.open();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected]);
+
+  const closeAndCleanup = () => {
+    state.close();
+    focusWithPreviousSelection(editor);
+    editor.deleteBackward('block');
+  };
+
   return (
     <NotEditable>
-      <Flex gap="regular">
-        <DialogTrigger>
-          <Button
-            prominence="low"
-            width="100%"
-            flex
-            UNSAFE_className={css({
-              backgroundColor: tokenSchema.color.background.surface,
-              color: tokenSchema.color.foreground.neutralSecondary,
-              justifyContent: 'start',
-
-              ':hover': {
-                backgroundColor: tokenSchema.color.background.surfaceSecondary,
-                color: tokenSchema.color.foreground.neutral,
-              },
-            })}
-          >
-            <Icon src={imageIcon} size="medium" />
-            <Text>Click to insert Cloud Image...</Text>
-          </Button>
-          {onClose => <ImageDialog onChange={onChange} onClose={onClose} />}
-        </DialogTrigger>
-        <TooltipTrigger>
-          <Button prominence="low" tone="critical" onPress={onRemove}>
-            <Icon src={trash2Icon} />
-          </Button>
-          <Tooltip>Remove Placeholder</Tooltip>
-        </TooltipTrigger>
-      </Flex>
+      <div
+        data-selected={selected}
+        className={css({
+          alignItems: 'center',
+          backgroundColor: tokenSchema.color.alias.backgroundIdle,
+          borderRadius: tokenSchema.size.radius.regular,
+          color: tokenSchema.color.alias.foregroundIdle,
+          display: 'flex',
+          gap: tokenSchema.size.space.regular,
+          height: tokenSchema.size.element.large,
+          justifyContent: 'start',
+          paddingInline: tokenSchema.size.space.large,
+        })}
+      >
+        <Icon src={imageIcon} />
+        <Text>Awaiting configuration from Cloud images…</Text>
+      </div>
+      <DialogContainer onDismiss={closeAndCleanup}>
+        {state.isOpen && (
+          <ImageDialog
+            onChange={props.onChange}
+            onCancel={closeAndCleanup}
+            onClose={state.close}
+          />
+        )}
+      </DialogContainer>
     </NotEditable>
   );
 }
@@ -359,6 +376,7 @@ function ImagePreview({
               <ImageDialog
                 image={image}
                 onChange={onChange}
+                onCancel={onClose}
                 onClose={onClose}
               />
             )}
