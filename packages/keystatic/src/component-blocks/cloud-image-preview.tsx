@@ -127,11 +127,7 @@ function ImageDialog({
 
   return (
     <Dialog>
-      <Heading>
-        <Flex alignItems="center" gap="regular">
-          {image ? 'Edit' : 'Insert'} Cloud Image
-        </Flex>
-      </Heading>
+      <Heading>{image ? 'Edit' : 'Insert'} Cloud Image</Heading>
       <Header>
         <Button
           href={imageLibraryURL}
@@ -174,21 +170,18 @@ function ImageDialog({
             }
             endElement={
               status === 'loading' ? (
-                <div
-                  className={css({
-                    width: tokenSchema.size.element.regular,
-                    height: tokenSchema.size.element.regular,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  })}
+                <Flex
+                  height="element.regular"
+                  width="element.regular"
+                  alignItems="center"
+                  justifyContent="center"
                 >
                   <ProgressCircle
                     size="small"
                     aria-label="Checking…"
                     isIndeterminate
                   />
-                </div>
+                </Flex>
               ) : state.src ? (
                 <ActionButton
                   prominence="low"
@@ -271,32 +264,33 @@ function Placeholder({
   return (
     <NotEditable>
       <Flex gap="regular">
-        <Box flex="1">
-          <DialogTrigger>
-            <Button
-              prominence="low"
-              width="100%"
-              UNSAFE_className={css({
-                backgroundColor: tokenSchema.color.background.surface,
-                color: tokenSchema.color.foreground.neutralSecondary,
-                justifyContent: 'start',
+        <DialogTrigger>
+          <Button
+            prominence="low"
+            width="100%"
+            flex
+            UNSAFE_className={css({
+              backgroundColor: tokenSchema.color.background.surface,
+              color: tokenSchema.color.foreground.neutralSecondary,
+              justifyContent: 'start',
 
-                ':hover': {
-                  backgroundColor:
-                    tokenSchema.color.background.surfaceSecondary,
-                  color: tokenSchema.color.foreground.neutral,
-                },
-              })}
-            >
-              <Icon src={imageIcon} size="medium" />
-              <Text>Click to insert Cloud Image...</Text>
-            </Button>
-            {onClose => <ImageDialog onChange={onChange} onClose={onClose} />}
-          </DialogTrigger>
-        </Box>
-        <Button prominence="low" tone="critical" onPress={onRemove}>
-          <Icon src={trash2Icon} />
-        </Button>
+              ':hover': {
+                backgroundColor: tokenSchema.color.background.surfaceSecondary,
+                color: tokenSchema.color.foreground.neutral,
+              },
+            })}
+          >
+            <Icon src={imageIcon} size="medium" />
+            <Text>Click to insert Cloud Image...</Text>
+          </Button>
+          {onClose => <ImageDialog onChange={onChange} onClose={onClose} />}
+        </DialogTrigger>
+        <TooltipTrigger>
+          <Button prominence="low" tone="critical" onPress={onRemove}>
+            <Icon src={trash2Icon} />
+          </Button>
+          <Tooltip>Remove Placeholder</Tooltip>
+        </TooltipTrigger>
       </Flex>
     </NotEditable>
   );
