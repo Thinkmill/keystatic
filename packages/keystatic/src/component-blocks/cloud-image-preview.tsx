@@ -348,9 +348,12 @@ function ImagePreview({
             </VStack>
             <HStack gap="regular">
               <DialogTrigger>
-                <ActionButton>
-                  <Icon src={pencilIcon} />
-                </ActionButton>
+                <TooltipTrigger>
+                  <ActionButton>
+                    <Icon src={pencilIcon} />
+                  </ActionButton>
+                  <Tooltip>Edit Image Options</Tooltip>
+                </TooltipTrigger>
                 {onClose => (
                   <ImageDialog
                     image={image}
