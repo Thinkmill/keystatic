@@ -5,6 +5,7 @@ import { useRef } from 'react';
 import { ActionButton, Button, ButtonGroup } from '@keystar/ui/button';
 import { Flex } from '@keystar/ui/layout';
 import { Content, Header } from '@keystar/ui/slots';
+import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Heading, Text } from '@keystar/ui/typography';
 
 import { AlertDialog, Dialog, DialogTrigger, DialogTriggerProps } from '..';
@@ -18,6 +19,23 @@ export const Default = () => render({});
 
 Default.story = {
   name: 'default',
+};
+
+export const WithTooltip = () => {
+  return (
+    <DialogTrigger>
+      <TooltipTrigger>
+        <ActionButton>Open dialog</ActionButton>
+        <Tooltip>Tooltip content</Tooltip>
+      </TooltipTrigger>
+      <Dialog>
+        <Heading>Dialog heading</Heading>
+        <Content>
+          <Text>Dialog content</Text>
+        </Content>
+      </Dialog>
+    </DialogTrigger>
+  );
 };
 
 export const TypePopover = () => renderPopover({ type: 'popover' });

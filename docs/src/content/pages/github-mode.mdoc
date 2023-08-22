@@ -1,0 +1,100 @@
+---
+title: GitHub mode
+summary: >-
+  Walk-through guide of manually connecting your existing Keystatic project to
+  GitHub.
+---
+Keystatic's `github` mode unleashes enhanced collaboration capabilities.
+
+To use it, you'll need your project on an existing GitHub repository. Collaborators will need `write` access to this repository.
+
+---
+
+## Setting up GitHub mode
+
+Start by changing the `storage` option in your Keystatic config to use the `github` kind. 
+
+You will need to specifiy a repo `owner` and `name`:
+
+```diff
+storage: {
+-  kind: 'local',
++  kind: 'github',
++  repo: {
++    owner: REPO_OWNER,
++    name: REPO_NAME
++  }   
+}
+```
+
+### Connecting with GitHub
+
+With `github` mode on, visit the `/keystatic` route. You will be prompted to login with GitHub.
+
+The first time you click this button will initiate the setup process:
+
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/keystatic-setup.png"
+   alt="Screenshot of Keystatic App setup"
+   height="1480"
+   width="1468" /%}
+
+If you happen to know the URL of your deployed project and/or the GitHub repo is owned by a GitHub organization, you can fill in those fields.
+
+Otherwise, leave them blank and click on "Create GitHub App".
+
+### Create  a custom GitHub App
+
+The next step will walk you through creating a GitHub App. Choose a name for your app, and proceed.
+
+### Grant repo access
+
+Next, you will need to grant this new GitHub App access to your GitHub repo:
+
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/keystatic-installed.png"
+   alt="Screenshot of successful Keystatic App installation"
+   height="666"
+   width="892" /%}
+
+{% cloud-image
+   href="https://keystatic.io/images/keystatic-docs/authorize-app.png"
+   alt="Screenshot of GitHub custom app authorization UI"
+   height="1902"
+   width="1348" /%}
+
+Finally, you will be taken back to your local Keystatic Admin UI... running in `github` mode!
+
+{% aside icon="👀"%}
+You can tell Keystatic runs in `github` mode by the extra UI around your GitHub repo, like a branch dropdown.
+{% /aside %}
+
+### New environment variables
+
+Behind the scenes, some environment variables were generated in a `.env` file on your project:
+
+```bash
+# Keystatic
+KEYSTATIC_GITHUB_CLIENT_ID=...
+KEYSTATIC_GITHUB_CLIENT_SECRET=...
+KEYSTATIC_SECRET=...
+NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=...
+```
+
+These variables are used to authenticate users with GitHub, based on their access to the GitHub repo in question.
+
+Next time someone with `write` access on the repo visits `/keystatic`, they will be able to login and access the Admin UI.
+
+---
+
+## Deploying Keystatic
+
+Coming soon 🚧
+
+{% aside icon="⚡️"%}
+The process of deploying Keystatic can vary based on where you're deploying, but here's the **TL;DR**:
+
+- Copy the Keystatic environment variables over to your deployed environment, 
+- Make sure the host can run Node.js for Keystatic's API routes.
+
+{% /aside %}

@@ -2,67 +2,61 @@
 title: Adding Keystatic to a Next.js project
 summary: Integrating Keystatic with an existing Next.js 13 project.
 ---
-This guide assumes you are trying to add Keystatic to an existing Next.js 13 project.
+This guide assumes you have an existing Next.js 13 project.
 
 ## Installing dependencies
 
-We're going to need to install a few packages to get Keystatic going.
-
-Let's install two packages from npm:
+Install two Keystatic packages:
 
 ```bash
 npm install @keystatic/core @keystatic/next
 ```
 
----
-
 ## Creating a Keystatic config file
 
-Keystatic needs a config file. This is where you can connect a project with a specific GitHub repository and define a content schema.
+A Keystatic config file is required to define your content schema. This file will also allow you to connect a project to a specific GitHub repository (if you decide to do so).
 
-Let's create a file called `keystatic.config.ts` (or `.js` if not using TypeScript) in the root of the project:
+Create a file called `keystatic.config.ts` in the root of the project and add the following code to define both your storage type (`local`) and a single content collection (`posts`):
 
 ```typescript
 // keystatic.config.ts
-import { config, fields, singleton } from '@keystatic/core'
+import { config, fields, collection } from '@keystatic/core';
 
 export default config({
   storage: {
     kind: 'local',
   },
-  singletons: {
-    homepage: singleton({
-      label: 'Homepage',
-      path: 'src/content/_homepage',
+  collections: {
+    posts: collection({
+      label: 'Posts',
+      slugField: 'title',
+      path: 'src/content/posts/*',
+      format: { contentField: 'content' },
       schema: {
-        headline: fields.text({ label: 'Headline' }),
+        title: fields.slug({ name: { label: 'Title' } }),
+        content: fields.document({
+          label: 'Content',
+          formatting: true,
+          dividers: true,
+          links: true,
+          images: true,
+        }),
       },
     }),
   },
-})
+});
 ```
 
-We export a config object wrapped in the `config` function imported from `@keystatic/core`.
-
-For now, we set the `storage` strategy to `local`, and we create a “homepage” `singleton` which contains one text field: `headline`.
-
-This is all Keystatic needs to start managing content, config wise.
-
-Now, we need to display the Keystatic Admin UI in our site!
+Keystatic is now configured to manage your content based on your schema.
 
 ---
 
-## Keystatic Admin UI pages
+## Setting up the Keystatic Admin UI
 
-The Keystatic Admin UI runs in NextJS' app directory.
-
-In your `src/app` directory, we want every route within the `/keystatic` segment to become a Keystatic Admin UI route.
-
-Create a `keystatic` folder in your `src/app` directory, and add the following files to help with our keystatic admin layout.
-
+First, create a `src/app/keystatic/keystatic.ts` file:
+  
 ```ts
 // src/app/keystatic/keystatic.ts
-
 "use client";
 
 import { makePage } from "@keystatic/next/ui/app";
@@ -71,12 +65,13 @@ import config from "../../keystatic.config";
 export default makePage(config);
 ```
 
-```jsx
-// src/app/keystatic/layout.tsx
+Next, create a layout file called `src/app/keystatic/layout.tsx`:
 
+```tsx
+// src/app/keystatic/layout.tsx
 import KeystaticApp from "./keystatic";
 
-export default function RootLayout() {
+export default function Layout() {
   return (
     <html>
       <head />
@@ -89,9 +84,7 @@ export default function RootLayout() {
 
 ```
 
-To ensure all routes in the keystatic segment work as expected, we can leverage Next.js' [Optional Catch-all Segments](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes#optional-catch-all-segments) to match file paths of any depth.
-
-Let's create a new folder called `[[...params]]`, and add a `page.tsx` file with the following:
+Next, create a page called `src/app/keystatic/[[...params]]/page.tsx`:
 
 ```jsx
 // src/app/keystatic/[[...params]]/page.tsx
@@ -102,134 +95,123 @@ export default function Page() {
 
 ```
 
-Before we can actually start reading and writing content via the Keystatic Admin UI, we need to create some `API routes` for Keystatic.
+Finally, create an API route called `src/app/api/keystatic/[...params]/route.ts`
 
-## Keystatic API Routes
-
-Create a new file at `app/api/keystatic/[...params]/route.ts`
-
-Once again, we use Next.js's dynamic route segments here.
-
-```jsx
+```tsx
 // src/app/api/keystatic/[...params]/route.ts
-
 import { makeRouteHandler } from '@keystatic/next/route-handler';
 import config from '../../../../../keystatic.config';
 
 export const { POST, GET } = makeRouteHandler({
   config,
 });
+
 ```
 
-We should be all set to go for our Keystatic Admin UI now.
+You can now launch the Keystatic Admin UI. Start the Astro dev server:
 
-Try and visit the `/keystatic` page in the browser one more time, and click on the “Homepage” singleton:
-
-{% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/astro-keystatic-homepage.png"
-   alt="Keystatic homepage singleton for Next.js demo" /%}
-
-It's working: our “Headline” text field is here.
-
-Go ahead and fill that field with something, and hit `Create`:
-
-{% cloud-image
-   href="https://keystatic.io/images/keystatic-docs/astro-keystatic-homepage-2.png"
-   alt="Keystatic homepage singleton for Next.js demo with headline" /%}
-
-Check your source code again. Notice anything?
-
-In our Keystatic config file, we have set the `storage` kind to `local`. For our `homepage` singleton, we set the `path` property to the following:
-
-```jsx
-path: 'src/content/_homepage',
+```bash
+npm run dev
 ```
 
-If you look in the `src` directory, a new `content` folder should have been created.
-
-Inside, you will find a `_homepage` directory.
-
-That directory contains an `index.yaml` file with… the `headline` text you've just created!
-
-Niiiice ✨
-
-Let's try display that on the frontend now.
+Visit `http://127.0.0.1:3000/keystatic` to see the Keystatic Admin UI running.
 
 ---
 
-## Displaying Keystatic content on the frontend
+## Creating a new post
 
-Keystatic comes with its own `reader` Node API to bring content to the front end. As it is a Node API it must be run server-side.
+{% aside icon="☝️" %}
+In our Keystatic config file, we've set the `path` property for our `posts` collection to `src/content/posts/*`.
 
-```jsx
-// 1. Create a reader
-const reader = createReader(process.cwd(), config);
+As a result, creating a new post from the Keystatic Admin UI should create a new `content` directory in the `src` directory, with the new post `.mdoc` file inside!
+{% /aside %}
 
-// 2. Read the "Homepage" singleton
-const homepageData = await reader.singletons.homepage.read();
+Go ahead — create a new post from the Admin UI, and hit save.
+
+You will find your new post inside the `src/content/posts` directory:
+
+```bash
+src
+└── content
+    └── posts
+        └── my-first-post.mdoc
 ```
 
-This `homepageData` will give us a JSON object with all the fields inside the `homepage` singleton.
+Navigate to that file in your code editor and verify that you can see the Markdown content you entered. For example:
 
-Actually, there is only one field for now.
+```markdown
+---
+title: My First Post
+---
 
-Where you call the `reader` API in your app will depend on whether you are building your site in Next.js' `pages` or `app` directory.
-
-### Data-fetching in the app directory
-
-When building pages in Next.js' `app` directory, getting the data from the `reader` API can be done directly in a server-component.
-
-```jsx
-// src/app/page.tsx
-import { createReader } from '@keystatic/core/reader';
-import config from '../../keystatic.config';
-
-// 1. Create a reader
-const reader = createReader(process.cwd(), config);
-
-export default async function Index() {
-  // 2. Read the "Homepage" singleton
-  const homepageData = await reader.singletons.homepage.read();
-
-  return (
-    <main>
-      <h1>{homepageData?.headline}</h1>
-    </main>
-  );
-}
-
+This is my very first post. I am **super** excited.
 ```
 
-### Data-fetching in the pages directory
+---
 
-When building pages in Next.js' `pages` directory, getting the data from the `reader` API must be done in the `getStaticProps` function for statically generated sites, or in `getServerSideProps` for apps running on a server.
+## Rendering Keystatic content
 
-```jsx
-// src/pages/index.tsx
+{% aside icon="💡" %}
+Keystatic provides a [Reader API](/docs/reader-api) to bring content to the front end. As it is a Node API it must be run server-side.
+{% /aside %}
+
+### Displaying a collection list
+
+The following example displays a list of each post title, with a link to an individual post page:
+
+```tsx
 import { createReader } from '@keystatic/core/reader';
-import config from '../../keystatic.config';
-import { InferGetStaticPropsType } from 'next';
+import keystaticConfig from '../../keystatic.config';
+
+import Link from 'next/link';
 
 // 1. Create a reader
-const reader = createReader(process.cwd(), config);
+const reader = createReader(process.cwd(), keystaticConfig);
 
-export async function getStaticProps() {
-  // 2. Read the "Homepage" singleton
-  const homepageData = await reader.singletons.homepage.read();
-
-  // 3. Return the homepage data as props
-  return {
-    props: { homepageData },
-  };
-}
-
-export default function Index({
-  homepageData,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+export default async function Page() {
+  
+  // 2. Read the "Posts" collection
+  const posts = await reader.collections.posts.all();
   return (
-    <main>
-      <h1>{homepageData?.headline}</h1>
-    </main>
+    <ul>
+      {posts.map(post => (
+        <li>
+          <Link href={`/posts/${post.slug}`}>{post.entry.title}</Link>
+        </li>
+      ))}
+    </ul>
   );
 }
 ```
+
+### Displaying a single collection entry
+
+To display content from an individual post, you can import and use Keystatic's `<DocumentRenderer />`:
+
+```tsx
+import { DocumentRenderer } from '@keystatic/core/renderer';
+
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+
+export default async function Post() {
+  const post = await reader.collections.posts.read('my-first-post');
+
+  return (
+    <>
+      <h1>{post.title}</h1>
+      <DocumentRenderer document={await post.content()} />
+    </>
+  );
+}
+```
+
+---
+
+## Deploying Keystatic + Next.js
+
+Because Keystatic needs to run serverside code and [Next.js API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes), you will need to ensure that your hosting provider supports Node.js.
+
+You will also probably want to [connect Keystatic to GitHub](/docs/github-mode) so you can manage content on the deployed instance of the project.
