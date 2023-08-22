@@ -37,6 +37,7 @@ import { useTree, TreeData } from './shell/data';
 import { PageRoot, PageHeader } from './shell/page';
 import { getCollectionPath, getEntriesInCollectionWithTreeKey } from './utils';
 import { notFound } from './not-found';
+import { Flex } from '@keystar/ui/layout';
 
 type CollectionPageProps = {
   collection: string;
@@ -263,6 +264,19 @@ function CollectionTable(
     return [...filteredItems].sort(sortByDescriptor(sortDescriptor));
   }, [filteredItems, sortDescriptor]);
 
+  const columns =
+    props.config.storage.kind === 'local'
+      ? [{ name: 'Name', key: 'name' }]
+      : [
+          { name: 'Name', key: 'name' },
+          {
+            name: 'Status',
+            key: 'status',
+            minWidth: 140,
+            width: '20%',
+          },
+        ];
+
   return (
     <TableView
       aria-labelledby="page-title"
@@ -298,17 +312,7 @@ function CollectionTable(
         },
       })}
     >
-      <TableHeader
-        columns={[
-          { name: 'Name', key: 'name' },
-          {
-            name: 'Status',
-            key: 'status',
-            minWidth: 140,
-            width: '20%',
-          },
-        ]}
-      >
+      <TableHeader columns={columns}>
         {({ name, key, ...options }) => (
           <Column key={key} isRowHeader allowsSorting {...options}>
             {name}
@@ -318,14 +322,24 @@ function CollectionTable(
       <TableBody items={sortedItems}>
         {item => (
           <Row key={item.name}>
-            <Cell textValue={item.name}>
-              <Text weight="medium">{item.name}</Text>
-            </Cell>
-            <Cell textValue={item.status}>
-              <StatusLight tone={statusTones[item.status]}>
-                {item.status}
-              </StatusLight>
-            </Cell>
+            {props.config.storage.kind === 'local' ? (
+              <Cell textValue={item.name}>
+                <Flex height="element.small" alignItems="center">
+                  <Text weight="medium">{item.name}</Text>
+                </Flex>
+              </Cell>
+            ) : (
+              <>
+                <Cell textValue={item.name}>
+                  <Text weight="medium">{item.name}</Text>
+                </Cell>
+                <Cell textValue={item.status}>
+                  <StatusLight tone={statusTones[item.status]}>
+                    {item.status}
+                  </StatusLight>
+                </Cell>
+              </>
+            )}
           </Row>
         )}
       </TableBody>
