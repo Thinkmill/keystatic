@@ -265,7 +265,7 @@ function Placeholder(props: {
   const closeAndCleanup = () => {
     state.close();
     focusWithPreviousSelection(editor);
-    editor.deleteBackward('block');
+    props.onRemove();
   };
 
   return (
@@ -277,9 +277,12 @@ function Placeholder(props: {
         gap="regular"
         height="element.large"
         paddingX="large"
+        onClick={() => {
+          if (!state.isOpen) state.open();
+        }}
       >
         <Icon src={imageIcon} />
-        <Text>Cloud image, awaiting configuration…</Text>
+        <Text>Cloud image{state.isOpen ? '' : ' (click to configure)'}</Text>
       </Flex>
       <DialogContainer onDismiss={closeAndCleanup}>
         {state.isOpen && (
@@ -338,11 +341,7 @@ function ImagePreview({
             borderTop={selected ? 'color.alias.borderFocused' : 'neutral'}
           >
             <VStack flex="1" gap="medium" justifyContent="center">
-              {image.alt ? (
-                <Text truncate={2}>{image.alt}</Text>
-              ) : (
-                <Text truncate>(missing alt text)</Text>
-              )}
+              {image.alt ? <Text truncate={2}>{image.alt}</Text> : null}
               <Text color="neutralTertiary" size="small">
                 {image.width} × {image.height}
               </Text>
