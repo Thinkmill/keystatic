@@ -1,3 +1,4 @@
+import { integer } from '../form/fields/integer';
 import { text } from '../form/fields/text';
 
 export const cloudImageSchema = {
@@ -12,10 +13,10 @@ export const cloudImageSchema = {
   alt: text({
     label: 'Alt text',
   }),
-  height: text({
+  height: integer({
     label: 'Height',
   }),
-  width: text({
+  width: integer({
     label: 'Width',
   }),
 };

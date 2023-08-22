@@ -183,7 +183,7 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
       <CloudImage
         alt={alt}
         src={src}
-        height={height}
+        height={height ?? undefined}
         width={width ?? imgMaxWidthPx}
         className="rounded-lg my-2"
       />
