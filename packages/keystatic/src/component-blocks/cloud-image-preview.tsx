@@ -1,67 +1,76 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSelected, useSlateStatic } from 'slate-react';
+import { useOverlayTriggerState } from '@react-stately/overlays';
+
+import {
+  ActionButton,
+  Button,
+  ButtonGroup,
+  ClearButton,
+} from '@keystar/ui/button';
 import { NotEditable, ObjectField, PreviewProps } from '@keystatic/core';
-import { TextArea, TextField } from '@keystar/ui/text-field';
-import { ActionButton, Button, ButtonGroup } from '@keystar/ui/button';
-import { VStack, Flex, Box } from '@keystar/ui/layout';
-import { Heading, Text } from '@keystar/ui/typography';
+import { Dialog, DialogContainer, DialogTrigger } from '@keystar/ui/dialog';
 import { Icon } from '@keystar/ui/icon';
-import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
 import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
 import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
-import { xIcon } from '@keystar/ui/icon/icons/xIcon';
-import { useConfig } from '../app/shell/context';
-
-import { css, tokenSchema } from '@keystar/ui/style';
-import { Dialog, DialogTrigger } from '@keystar/ui/dialog';
-import { Content, Header } from '@keystar/ui/slots';
+import { undo2Icon } from '@keystar/ui/icon/icons/undo2Icon';
+import { Flex, HStack, VStack } from '@keystar/ui/layout';
+import { TextLink } from '@keystar/ui/link';
+import { NumberField } from '@keystar/ui/number-field';
 import { ProgressCircle } from '@keystar/ui/progress';
+import { Content } from '@keystar/ui/slots';
+import { TextArea, TextField } from '@keystar/ui/text-field';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
+import { PartialRequired } from '@keystar/ui/types';
+import { Heading, Text } from '@keystar/ui/typography';
+import { useId } from '@keystar/ui/utils';
+
+import { useConfig } from '../app/shell/context';
+import { focusWithPreviousSelection } from '../form/fields/document/DocumentEditor/ui-utils';
 
 type ImageData = {
   src: string;
-  width: string;
-  height: string;
+  width?: number;
+  height?: number;
   alt: string;
 };
 
 type ImageDimensions = Pick<ImageData, 'width' | 'height'>;
 
 function cleanImageData(
-  data: {
-    src: string;
-    width?: string | number;
-    height?: string | number;
-    alt?: string | number;
-  } = { src: '' }
+  data: PartialRequired<ImageData, 'src'> = { src: '' }
 ): ImageData {
   return {
     src: data.src,
     alt: 'alt' in data && typeof data.alt === 'string' ? data.alt : '',
-    height: 'height' in data ? getDimension(data.height) : '',
-    width: 'width' in data ? getDimension(data.width) : '',
+    height: data.height ?? undefined,
+    width: data.width ?? undefined,
   };
 }
 
 type ImageStatus = '' | 'loading' | 'good' | 'error';
 
-function ImageDialog({
-  image,
-  onChange,
-  onClose,
-}: {
+function ImageDialog(props: {
   image?: ImageData;
+  onCancel: () => void;
   onChange: (data: ImageData) => void;
   onClose: () => void;
 }) {
+  const { image, onCancel, onChange, onClose } = props;
   const [state, setState] = useState<ImageData>(cleanImageData(image));
   const [status, setStatus] = useState<ImageStatus>('');
   const [dimensions, setDimensions] = useState<ImageDimensions>(
     cleanImageData()
   );
+  const formId = useId();
   const imageLibraryURL = useImageLibraryURL();
+
+  const revertLabel = `Revert to original (${dimensions.width} × ${dimensions.height})`;
+  const dimensionsMatchOriginal =
+    dimensions.width === state.width && dimensions.height === state.height;
 
   const onPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -92,66 +101,45 @@ function ImageDialog({
     setState(cleanImageData({ src: text }));
   };
 
-  const src = state.src;
-
   useEffect(() => {
-    if (!src) {
+    if (!state.src) {
       setStatus('');
       return;
     }
-    if (!isValidURL(src)) {
+    if (!isValidURL(state.src)) {
       return;
     }
     setStatus('loading');
     const img = new Image();
     img.onload = () => {
-      const dimensions = {
-        width: img.width.toString(),
-        height: img.height.toString(),
-      };
-      setState(state => ({
-        ...state,
-        ...dimensions,
-      }));
+      const dimensions = { width: img.width, height: img.height };
+      setState(state => ({ ...state, ...dimensions }));
       setDimensions(dimensions);
       setStatus('good');
     };
     img.onerror = () => {
       setStatus('error');
     };
-    img.src = src;
+    img.src = state.src;
     return () => {
       img.onload = null;
     };
-  }, [src]);
+  }, [state.src]);
 
   return (
     <Dialog>
-      <Heading>{image ? 'Edit' : 'Insert'} Cloud Image</Heading>
-      <Header>
-        <Button
-          href={imageLibraryURL}
-          target="_blank"
-          rel="noreferrer"
-          prominence="low"
-          tone="accent"
-        >
-          <Text>Open Image Library</Text>
-          <Icon src={externalLinkIcon} />
-        </Button>
-      </Header>
+      <Heading>Cloud image</Heading>
       <Content>
-        <Flex
+        <VStack
           elementType="form"
-          id="example-form"
+          id={formId}
+          gap="xlarge"
           onSubmit={e => {
             e.preventDefault();
             if (status !== 'good') return;
             onChange(state);
             onClose();
           }}
-          direction="column"
-          gap="large"
         >
           <TextField
             label="Image URL"
@@ -160,13 +148,24 @@ function ImageDialog({
             onKeyDown={e => {
               if (e.code === 'Backspace' || e.code === 'Delete') {
                 setState(cleanImageData());
+              } else {
+                e.continuePropagation();
               }
             }}
             value={state.src}
             description={
-              image
-                ? undefined
-                : 'Copy an Image URL from the Image Library and paste into this field to insert it.'
+              <Text>
+                Copy an image URL from the{' '}
+                <TextLink
+                  prominence="high"
+                  href={imageLibraryURL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Image Library
+                </TextLink>{' '}
+                and paste it into this field.
+              </Text>
             }
             endElement={
               status === 'loading' ? (
@@ -183,68 +182,62 @@ function ImageDialog({
                   />
                 </Flex>
               ) : state.src ? (
-                <ActionButton
-                  prominence="low"
+                <ClearButton
                   onPress={() => setState(cleanImageData())}
-                >
-                  <Icon src={xIcon} />
-                </ActionButton>
+                  preventFocus
+                />
               ) : null
             }
           />
           {status === 'good' ? (
             <>
               <TextArea
-                label="Alt Text"
+                label="Alt text"
                 value={state.alt}
                 onChange={alt => setState(state => ({ ...state, alt }))}
               />
-              <Flex gap="regular" alignItems="end">
-                <TextField
+              <HStack gap="regular" alignItems="end">
+                <NumberField
                   label="Width"
+                  width="scale.1600"
+                  formatOptions={{ maximumFractionDigits: 0 }}
                   value={state.width}
-                  width="scale.1000"
                   onChange={width => setState(state => ({ ...state, width }))}
                 />
-                <TextField
+                <NumberField
                   label="Height"
+                  width="scale.1600"
+                  formatOptions={{ maximumFractionDigits: 0 }}
                   value={state.height}
-                  width="scale.1000"
                   onChange={height => setState(state => ({ ...state, height }))}
                 />
-                {dimensions &&
-                (`${dimensions.width}` !== state.width ||
-                  `${dimensions.height}` !== state.height) ? (
-                  <div>
-                    <ActionButton
-                      isDisabled={dimensions === null}
-                      alignSelf="start"
-                      onPress={() => {
-                        setState(state => ({
-                          ...state,
-                          height: dimensions.height,
-                          width: dimensions.width,
-                        }));
-                      }}
-                    >
-                      Set to{' '}
-                      {dimensions
-                        ? `${dimensions.width} x ${dimensions.height}`
-                        : null}
-                    </ActionButton>
-                  </div>
-                ) : null}
-              </Flex>
+                <TooltipTrigger>
+                  <ActionButton
+                    aria-label={revertLabel}
+                    isDisabled={dimensionsMatchOriginal}
+                    onPress={() => {
+                      setState(state => ({
+                        ...state,
+                        height: dimensions.height,
+                        width: dimensions.width,
+                      }));
+                    }}
+                  >
+                    <Icon src={undo2Icon} />
+                  </ActionButton>
+                  <Tooltip>{revertLabel}</Tooltip>
+                </TooltipTrigger>
+              </HStack>
             </>
           ) : null}
-        </Flex>
+        </VStack>
       </Content>
       <ButtonGroup>
-        <Button onPress={onClose}>Cancel</Button>
+        <Button onPress={onCancel}>Cancel</Button>
         <Button
           prominence="high"
           type="submit"
-          form="example-form"
+          form={formId}
           isDisabled={status !== 'good'}
         >
           {image ? 'Done' : 'Insert'}
@@ -254,44 +247,49 @@ function ImageDialog({
   );
 }
 
-function Placeholder({
-  onChange,
-  onRemove,
-}: {
+function Placeholder(props: {
   onChange: (data: ImageData) => void;
   onRemove: () => void;
 }) {
+  const editor = useSlateStatic();
+  const selected = useSelected();
+  const state = useOverlayTriggerState({ defaultOpen: false });
+
+  useEffect(() => {
+    if (selected) {
+      state.open();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected]);
+
+  const closeAndCleanup = () => {
+    state.close();
+    focusWithPreviousSelection(editor);
+    editor.deleteBackward('block');
+  };
+
   return (
     <NotEditable>
-      <Flex gap="regular">
-        <DialogTrigger>
-          <Button
-            prominence="low"
-            width="100%"
-            flex
-            UNSAFE_className={css({
-              backgroundColor: tokenSchema.color.background.surface,
-              color: tokenSchema.color.foreground.neutralSecondary,
-              justifyContent: 'start',
-
-              ':hover': {
-                backgroundColor: tokenSchema.color.background.surfaceSecondary,
-                color: tokenSchema.color.foreground.neutral,
-              },
-            })}
-          >
-            <Icon src={imageIcon} size="medium" />
-            <Text>Click to insert Cloud Image...</Text>
-          </Button>
-          {onClose => <ImageDialog onChange={onChange} onClose={onClose} />}
-        </DialogTrigger>
-        <TooltipTrigger>
-          <Button prominence="low" tone="critical" onPress={onRemove}>
-            <Icon src={trash2Icon} />
-          </Button>
-          <Tooltip>Remove Placeholder</Tooltip>
-        </TooltipTrigger>
+      <Flex
+        alignItems="center"
+        backgroundColor="surface"
+        borderRadius="regular"
+        gap="regular"
+        height="element.large"
+        paddingX="large"
+      >
+        <Icon src={imageIcon} />
+        <Text>Cloud image, awaiting configuration…</Text>
       </Flex>
+      <DialogContainer onDismiss={closeAndCleanup}>
+        {state.isOpen && (
+          <ImageDialog
+            onChange={props.onChange}
+            onCancel={closeAndCleanup}
+            onClose={state.close}
+          />
+        )}
+      </DialogContainer>
     </NotEditable>
   );
 }
@@ -305,73 +303,75 @@ function ImagePreview({
   onChange: (data: ImageData) => void;
   onRemove: () => void;
 }) {
+  const selected = useSelected();
+  const maxHeight = 368; // size.scale.4600 — TODO: it'd be nice to get this from some token artefact
+  const maxWidth = 734; // roughly the max width that an editor container will allow
+
   return (
-    <NotEditable>
-      <VStack
-        backgroundColor="surface"
-        borderRadius="medium"
-        border="neutral"
-        overflow="hidden"
-      >
-        <Flex justifyContent="center">
-          <img
-            alt={image.alt}
-            src={image.src}
-            className={css({
-              maxWidth: image.width,
-              maxHeight: image.height,
-            })}
-          />
-        </Flex>
-        <Flex padding="large" gap="medium" borderTop="neutral">
-          <VStack flex="1" gap="large" justifyContent="center">
-            <Box>
-              <Text
-                size="small"
-                weight="bold"
-                UNSAFE_className={css({
-                  fontFamily: tokenSchema.typography.fontFamily.code,
-                })}
-              >
-                W {image.width} x H {image.height}
-              </Text>
-            </Box>
-            <Box>
+    <>
+      <NotEditable>
+        <VStack
+          backgroundColor={selected ? 'accent' : 'surface'}
+          borderRadius="medium"
+          border={selected ? 'color.alias.borderFocused' : 'neutral'}
+          overflow="hidden"
+        >
+          <Flex
+            backgroundColor="canvas"
+            justifyContent="center"
+            UNSAFE_style={{ maxHeight }}
+          >
+            <img
+              alt={image.alt}
+              src={imageWithTransforms({
+                source: image.src,
+                // 2x for retina etc.
+                height: maxHeight * 2,
+                width: maxWidth * 2,
+              })}
+              style={{ objectFit: 'contain' }}
+            />
+          </Flex>
+          <HStack
+            padding="large"
+            gap="xlarge"
+            borderTop={selected ? 'color.alias.borderFocused' : 'neutral'}
+          >
+            <VStack flex="1" gap="medium" justifyContent="center">
               {image.alt ? (
-                <Text>{image.alt}</Text>
+                <Text truncate={2}>{image.alt}</Text>
               ) : (
-                <Text
-                  size="small"
-                  UNSAFE_className={css({
-                    fontFamily: tokenSchema.typography.fontFamily.code,
-                  })}
-                >
-                  {image.src}
-                </Text>
+                <Text truncate>(missing alt text)</Text>
               )}
-            </Box>
-          </VStack>
-          <DialogTrigger>
-            <ActionButton>
-              <Icon src={pencilIcon} />
-            </ActionButton>
-            {onClose => (
-              <ImageDialog
-                image={image}
-                onChange={onChange}
-                onClose={onClose}
-              />
-            )}
-          </DialogTrigger>
-          <TooltipTrigger>
-            <ActionButton onPress={onRemove}>
-              <Icon src={trash2Icon} />
-            </ActionButton>
-            <Tooltip>Remove Image</Tooltip>
-          </TooltipTrigger>
-        </Flex>
-      </VStack>
-    </NotEditable>
+              <Text color="neutralTertiary" size="small">
+                {image.width} × {image.height}
+              </Text>
+            </VStack>
+            <HStack gap="regular">
+              <DialogTrigger>
+                <ActionButton>
+                  <Icon src={pencilIcon} />
+                </ActionButton>
+                {onClose => (
+                  <ImageDialog
+                    image={image}
+                    onChange={onChange}
+                    onCancel={onClose}
+                    onClose={onClose}
+                  />
+                )}
+              </DialogTrigger>
+              <TooltipTrigger>
+                <ActionButton onPress={onRemove}>
+                  <Icon src={trash2Icon} />
+                </ActionButton>
+                <Tooltip>Remove Image</Tooltip>
+              </TooltipTrigger>
+            </HStack>
+          </HStack>
+        </VStack>
+      </NotEditable>
+    </>
   );
 }
 
@@ -391,12 +391,35 @@ export function CloudImagePreview(
       image={{
         src: props.fields.src.value,
         alt: props.fields.alt.value,
-        width: props.fields.width.value,
-        height: props.fields.height.value,
+        width: props.fields.width.value ?? undefined,
+        height: props.fields.height.value ?? undefined,
       }}
       onChange={props.onChange}
       onRemove={props.onRemove}
     />
+  );
+}
+
+// Utils
+// -----------------------------------------------------------------------------
+
+type TransformFit = 'contain' | 'cover' | 'crop' | 'scale-down';
+
+function imageWithTransforms(options: {
+  fit?: TransformFit;
+  source: string;
+  height: number;
+  width: number;
+}) {
+  let { fit = 'scale-down', source, height, width } = options;
+
+  return (
+    `${source}?` +
+    new URLSearchParams({
+      fit,
+      height: height.toString(),
+      width: width.toString(),
+    }).toString()
   );
 }
 
@@ -407,12 +430,6 @@ function isValidURL(str: string) {
   } catch {
     return false;
   }
-}
-
-function getDimension(value: unknown) {
-  if (typeof value === 'string') return value;
-  if (typeof value === 'number') return value.toString();
-  return '';
 }
 
 function useImageLibraryURL() {
