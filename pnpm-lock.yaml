@@ -172,7 +172,7 @@ importers:
       '@emotion/css': ^11.9.0
       '@floating-ui/react': ^0.24.0
       '@internationalized/date': ^3.3.0
-      '@keystar/ui': ^0.2.0
+      '@keystar/ui': ^0.2.1
       '@keystar/ui-storybook': ^0.0.1
       '@react-aria/actiongroup': ^3.6.0
       '@react-aria/breadcrumbs': ^3.5.3
@@ -432,8 +432,8 @@ importers:
       '@astrojs/react': 2.2.1_lup3mrojszbe4cjr3p3v2c4u4i
       '@braintree/sanitize-url': 6.0.2
       '@hapi/iron': 7.0.1
-      '@keystatic/astro': link:../../packages/astro
-      '@keystatic/core': link:../../packages/keystatic
+      '@keystatic/astro': 0.0.9_lu6p2ml6srp6g3wik6itzdqfti
+      '@keystatic/core': 0.0.116_biqbaboplfbrettd7655fr4n2y
       '@types/react': 18.2.8
       '@types/react-dom': 18.0.11
       astro: 2.10.5
@@ -460,8 +460,8 @@ importers:
       '@astrojs/react': ^2.2.1
       '@astrojs/sitemap': ^2.0.1
       '@astrojs/tailwind': ^4.0.0
-      '@keystatic/astro': ^0.0.9
-      '@keystatic/core': ^0.0.116
+      '@keystatic/astro': ^1.0.0
+      '@keystatic/core': ^0.1.0
       '@tailwindcss/typography': ^0.5.9
       '@types/react': ^18.2.8
       '@types/react-dom': ^18.0.11
@@ -487,8 +487,8 @@ importers:
 
   dev-projects/localization:
     specifiers:
-      '@keystatic/core': ^0.0.116
-      '@keystatic/next': ^0.0.11
+      '@keystatic/core': ^0.1.0
+      '@keystatic/next': ^1.0.0
       '@preconstruct/next': ^4.0.0
       '@types/node': 16.11.13
       '@types/react': ^18.2.8
@@ -516,9 +516,9 @@ importers:
   dev-projects/next-app:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystar/ui': ^0.2.0
-      '@keystatic/core': ^0.0.116
-      '@keystatic/next': ^0.0.11
+      '@keystar/ui': ^0.2.1
+      '@keystatic/core': ^0.1.0
+      '@keystatic/next': ^1.0.0
       '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
       '@ts-gql/next': ^17.0.0
@@ -548,8 +548,8 @@ importers:
 
   dev-projects/remix:
     specifiers:
-      '@keystatic/core': ^0.0.116
-      '@keystatic/remix': ^0.0.4
+      '@keystatic/core': ^0.1.0
+      '@keystatic/remix': ^1.0.0
       '@remix-run/dev': ^1.18.1
       '@remix-run/node': ^1.18.1
       '@remix-run/react': ^1.18.1
@@ -582,9 +582,9 @@ importers:
       '@fontsource/inter': ^5.0.5
       '@headlessui/react': ^1.7.11
       '@heroicons/react': ^2.0.16
-      '@keystar/ui': ^0.2.0
-      '@keystatic/core': ^0.0.116
-      '@keystatic/next': ^0.0.11
+      '@keystar/ui': ^0.2.1
+      '@keystatic/core': ^0.1.0
+      '@keystatic/next': ^1.0.0
       '@markdoc/markdoc': ^0.3.0
       '@sindresorhus/slugify': ^1.1.2
       '@tailwindcss/forms': ^0.5.3
@@ -639,7 +639,7 @@ importers:
   packages/astro:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.116
+      '@keystatic/core': ^0.1.0
       '@types/cookie': ^0.5.1
       '@types/react': ^18.2.8
       '@types/set-cookie-parser': ^2.4.2
@@ -688,7 +688,7 @@ importers:
       '@floating-ui/react': ^0.24.0
       '@hapi/iron': ^7.0.0
       '@internationalized/string': ^3.1.1
-      '@keystar/ui': ^0.2.0
+      '@keystar/ui': ^0.2.1
       '@markdoc/markdoc': ^0.3.0
       '@react-aria/focus': ^3.13.0
       '@react-aria/i18n': ^3.8.0
@@ -857,7 +857,7 @@ importers:
   packages/next:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.116
+      '@keystatic/core': ^0.1.0
       '@types/react': ^18.2.8
       chokidar: ^3.5.3
       next: ^13.4.8
@@ -878,7 +878,7 @@ importers:
   packages/remix:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.0.116
+      '@keystatic/core': ^0.1.0
       '@remix-run/react': ^1.18.1
       '@types/react': ^18.2.8
       react: ^18.2.0
@@ -896,8 +896,8 @@ importers:
     specifiers:
       '@astrojs/markdoc': ^0.4.4
       '@astrojs/react': ^2.2.1
-      '@keystatic/astro': ^0.0.9
-      '@keystatic/core': ^0.0.116
+      '@keystatic/astro': ^1.0.0
+      '@keystatic/core': ^0.1.0
       '@types/react': ^18.2.8
       '@types/react-dom': ^18.0.11
       astro: ^2.10.5
@@ -916,8 +916,8 @@ importers:
 
   templates/nextjs:
     specifiers:
-      '@keystatic/core': ^0.0.116
-      '@keystatic/next': ^0.0.11
+      '@keystatic/core': ^0.1.0
+      '@keystatic/next': ^1.0.0
       '@types/react': ^18.2.8
       next: ^13.4.8
       react: ^18.2.0
@@ -5730,6 +5730,198 @@ packages:
 
   /@juggle/resize-observer/3.4.0:
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
+
+  /@keystar/ui/0.2.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-/jYibJyjMWvCPRIGtopZcF/QKTTneEyPemR9fMh8nvnovGLWEv+cALZoLZr4Do0AVGgTCmMM3BUgpQQmfltqWw==}
+    peerDependencies:
+      next: '13'
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    peerDependenciesMeta:
+      next:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@emotion/css': 11.10.6
+      '@floating-ui/react': 0.24.2_biqbaboplfbrettd7655fr4n2y
+      '@internationalized/date': 3.3.0
+      '@react-aria/actiongroup': 3.6.0_react@18.2.0
+      '@react-aria/breadcrumbs': 3.5.3_react@18.2.0
+      '@react-aria/button': 3.8.0_react@18.2.0
+      '@react-aria/checkbox': 3.9.2_react@18.2.0
+      '@react-aria/combobox': 3.6.2_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/datepicker': 3.4.0_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/dialog': 3.5.3_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/dnd': 3.3.0_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/focus': 3.13.0_react@18.2.0
+      '@react-aria/gridlist': 3.5.0_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/i18n': 3.8.0_react@18.2.0
+      '@react-aria/interactions': 3.16.0_react@18.2.0
+      '@react-aria/label': 3.6.0_react@18.2.0
+      '@react-aria/link': 3.5.2_react@18.2.0
+      '@react-aria/listbox': 3.10.0_react@18.2.0
+      '@react-aria/menu': 3.10.0_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/meter': 3.4.3_react@18.2.0
+      '@react-aria/numberfield': 3.6.0_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/overlays': 3.15.0_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/progress': 3.4.3_react@18.2.0
+      '@react-aria/radio': 3.6.2_react@18.2.0
+      '@react-aria/searchfield': 3.5.3_react@18.2.0
+      '@react-aria/select': 3.11.0_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/selection': 3.16.0_react@18.2.0
+      '@react-aria/separator': 3.3.3_react@18.2.0
+      '@react-aria/ssr': 3.7.0_react@18.2.0
+      '@react-aria/switch': 3.5.2_react@18.2.0
+      '@react-aria/table': 3.10.0_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/tabs': 3.6.1_react@18.2.0
+      '@react-aria/textfield': 3.10.0_react@18.2.0
+      '@react-aria/toast': 3.0.0-beta.2_react@18.2.0
+      '@react-aria/tooltip': 3.6.0_react@18.2.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
+      '@react-aria/virtualizer': 3.9.0_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/visually-hidden': 3.8.2_react@18.2.0
+      '@react-stately/checkbox': 3.4.3_react@18.2.0
+      '@react-stately/collections': 3.9.0_react@18.2.0
+      '@react-stately/combobox': 3.5.2_react@18.2.0
+      '@react-stately/data': 3.10.0_react@18.2.0
+      '@react-stately/datepicker': 3.5.0_react@18.2.0
+      '@react-stately/dnd': 3.2.2_react@18.2.0
+      '@react-stately/layout': 3.12.2_react@18.2.0
+      '@react-stately/list': 3.9.0_react@18.2.0
+      '@react-stately/menu': 3.5.3_react@18.2.0
+      '@react-stately/numberfield': 3.5.0_react@18.2.0
+      '@react-stately/overlays': 3.6.0_react@18.2.0
+      '@react-stately/radio': 3.8.2_react@18.2.0
+      '@react-stately/searchfield': 3.4.3_react@18.2.0
+      '@react-stately/select': 3.5.2_react@18.2.0
+      '@react-stately/table': 3.10.0_react@18.2.0
+      '@react-stately/tabs': 3.5.0_react@18.2.0
+      '@react-stately/toast': 3.0.0-beta.1_react@18.2.0
+      '@react-stately/toggle': 3.6.0_react@18.2.0
+      '@react-stately/tooltip': 3.4.2_react@18.2.0
+      '@react-stately/tree': 3.7.0_react@18.2.0
+      '@react-stately/utils': 3.7.0_react@18.2.0
+      '@react-stately/virtualizer': 3.6.0_react@18.2.0
+      '@react-types/actiongroup': 3.4.2_react@18.2.0
+      '@react-types/breadcrumbs': 3.6.0_react@18.2.0
+      '@react-types/button': 3.7.3_react@18.2.0
+      '@react-types/combobox': 3.6.2_react@18.2.0
+      '@react-types/datepicker': 3.4.0_react@18.2.0
+      '@react-types/grid': 3.1.8_react@18.2.0
+      '@react-types/menu': 3.9.2_react@18.2.0
+      '@react-types/numberfield': 3.4.2_react@18.2.0
+      '@react-types/overlays': 3.8.0_react@18.2.0
+      '@react-types/radio': 3.4.2_react@18.2.0
+      '@react-types/select': 3.8.1_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
+      '@react-types/switch': 3.3.2_react@18.2.0
+      '@react-types/tabs': 3.3.0_react@18.2.0
+      dedent: 0.7.0
+      emery: 1.4.1
+      facepaint: 1.2.1
+      lodash: 4.17.21
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-keyed-flatten-children: 1.3.0_react@18.2.0
+      react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
+    dev: false
+
+  /@keystatic/astro/0.0.9_lu6p2ml6srp6g3wik6itzdqfti:
+    resolution: {integrity: sha512-FN58JVom0usP6Mm/uB/VCv1EGs0knPPLxh+6oNuSY5AHpluQU1TxxLpOnS8M7uguwo/Jg47Hh86Qs+ycG93zbw==}
+    peerDependencies:
+      '@keystatic/core': '*'
+      astro: '2'
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@keystatic/core': 0.0.116_biqbaboplfbrettd7655fr4n2y
+      '@types/react': 18.2.20
+      astro: 2.10.5
+      cookie: 0.5.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-router-dom: 6.14.1_biqbaboplfbrettd7655fr4n2y
+      set-cookie-parser: 2.5.1
+    dev: false
+
+  /@keystatic/core/0.0.116_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-+FUsq/T0i2ExsPm7t1lKqNjJweizXp1kXXI8or8o6/H0NeuZYG3mXx6+tev5/BWESzOntJuc4NoAlCTQzYOwCw==}
+    peerDependencies:
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@braintree/sanitize-url': 6.0.2
+      '@emotion/css': 11.10.6
+      '@emotion/weak-memoize': 0.3.0
+      '@floating-ui/react': 0.24.2_biqbaboplfbrettd7655fr4n2y
+      '@hapi/iron': 7.0.1
+      '@internationalized/string': 3.1.1
+      '@keystar/ui': 0.2.0_biqbaboplfbrettd7655fr4n2y
+      '@markdoc/markdoc': 0.3.0_j3ahe22lw6ac2w6qvqp4kjqnqy
+      '@react-aria/focus': 3.13.0_react@18.2.0
+      '@react-aria/i18n': 3.8.0_react@18.2.0
+      '@react-aria/interactions': 3.16.0_react@18.2.0
+      '@react-aria/overlays': 3.15.0_biqbaboplfbrettd7655fr4n2y
+      '@react-aria/selection': 3.16.0_react@18.2.0
+      '@react-aria/utils': 3.18.0_react@18.2.0
+      '@react-aria/visually-hidden': 3.8.2_react@18.2.0
+      '@react-stately/collections': 3.9.0_react@18.2.0
+      '@react-stately/list': 3.9.0_react@18.2.0
+      '@react-stately/overlays': 3.6.0_react@18.2.0
+      '@react-stately/utils': 3.7.0_react@18.2.0
+      '@react-types/shared': 3.18.1_react@18.2.0
+      '@sindresorhus/slugify': 1.1.2
+      '@ts-gql/tag': 0.7.0_graphql@16.6.0
+      '@types/node': 16.11.13
+      '@types/react': 18.2.20
+      '@types/react-dom': 18.2.7
+      '@urql/core': 4.0.4_graphql@16.6.0
+      '@urql/exchange-auth': 2.1.0_graphql@16.6.0
+      '@urql/exchange-graphcache': 6.0.1_graphql@16.6.0
+      '@urql/exchange-persisted': 3.0.0_graphql@16.6.0
+      apply-ref: 1.0.0
+      cookie: 0.5.0
+      emery: 1.4.1
+      escape-string-regexp: 4.0.0
+      fast-deep-equal: 3.1.3
+      graphql: 16.6.0
+      ignore: 5.2.4
+      is-hotkey: 0.2.0
+      js-base64: 3.7.5
+      js-yaml: 4.1.0
+      lru-cache: 7.16.1
+      match-sorter: 6.3.1
+      mdast-util-from-markdown: 0.8.5
+      mdast-util-gfm-autolink-literal: 0.1.3
+      mdast-util-gfm-strikethrough: 0.2.3
+      micromark-extension-gfm-autolink-literal: 0.5.7
+      micromark-extension-gfm-strikethrough: 0.6.5
+      mime: 3.0.0
+      minimatch: 7.1.0
+      pretty-format: 29.5.0
+      prismjs: 1.29.0
+      prosemirror-commands: 1.5.2
+      prosemirror-history: 1.3.2
+      prosemirror-keymap: 1.2.2
+      prosemirror-model: 1.19.2
+      prosemirror-state: 1.4.3
+      prosemirror-transform: 1.7.3
+      prosemirror-view: 1.31.4
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      scroll-into-view-if-needed: 3.0.6
+      slate: 0.91.4
+      slate-history: 0.86.0_slate@0.91.4
+      slate-hyperscript: 0.77.0_slate@0.91.4
+      slate-react: 0.91.9_6tgy34rvmll7duwkm4ydcekf3u
+      urql: 4.0.0_onqnqwb3ubg5opvemcqf7c2qhy
+      zod: 3.21.4
+    transitivePeerDependencies:
+      - next
+      - supports-color
+    dev: false
 
   /@leichtgewicht/ip-codec/2.0.4:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
