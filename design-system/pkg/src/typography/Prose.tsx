@@ -74,20 +74,20 @@ function useProseStyles(props: ProseProps) {
         // ---------------------------------------------------------------------
 
         '& :is(blockquote, p, pre, ol, ul)': {
-          marginBlock: '1em',
+          marginBlock: '0.75em',
 
           ':first-child': { marginTop: 0 },
           ':last-child': { marginBottom: 0 },
         },
+        'ol, ul': {
+          paddingInlineStart: '1em',
+        },
         'ol ol, ul ul, ol ul, ul ol': {
           marginBlock: 0,
         },
-        a: {
-          color: tokenSchema.color.foreground.accent,
-        },
         blockquote: {
-          borderInlineStart: `${tokenSchema.size.border.large} solid ${tokenSchema.color.border.neutral}`,
-          marginInline: '1em',
+          borderInlineStart: `${tokenSchema.size.border.large} solid ${tokenSchema.color.foreground.neutral}`,
+          marginInline: 0,
           paddingInlineStart: '1em',
         },
         hr: {
@@ -96,9 +96,17 @@ function useProseStyles(props: ProseProps) {
           border: 0,
           height: tokenSchema.size.border.medium,
         },
+
+        // inline elements
         img: {
           height: 'auto',
           maxWidth: '100%',
+        },
+        strong: {
+          fontWeight: tokenSchema.typography.fontWeight.semibold,
+        },
+        a: {
+          color: tokenSchema.color.foreground.accent,
         },
 
         // code block
@@ -133,7 +141,6 @@ function useProseStyles(props: ProseProps) {
 
         'h1, h2, h3, h4, h5, h6': {
           color: tokenSchema.color.foreground.neutralEmphasis,
-          fontWeight: tokenSchema.typography.fontWeight.semibold,
           lineHeight: 1.25,
           marginTop: '1.5em',
           marginBottom: '0.67em',
@@ -147,6 +154,7 @@ function useProseStyles(props: ProseProps) {
         },
         h2: {
           fontSize: '1.5em',
+          fontWeight: tokenSchema.typography.fontWeight.bold,
         },
         h3: {
           fontSize: '1.25em',
@@ -154,13 +162,16 @@ function useProseStyles(props: ProseProps) {
         },
         h4: {
           fontSize: '1.1em',
+          fontWeight: tokenSchema.typography.fontWeight.semibold,
         },
         h5: {
           fontSize: '1em',
-          fontWeight: tokenSchema.typography.fontWeight.bold,
+          fontWeight: tokenSchema.typography.fontWeight.semibold,
         },
         h6: {
           fontSize: '0.9em',
+          fontWeight: tokenSchema.typography.fontWeight.semibold,
+          letterSpacing: '0.0125em',
         },
         ...getListStyles(),
       }),
