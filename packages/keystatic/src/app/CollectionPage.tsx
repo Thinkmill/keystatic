@@ -35,7 +35,11 @@ import { useRouter } from './router';
 import { EmptyState } from './shell/empty-state';
 import { useTree, TreeData } from './shell/data';
 import { PageRoot, PageHeader } from './shell/page';
-import { getCollectionPath, getEntriesInCollectionWithTreeKey } from './utils';
+import {
+  getCollectionPath,
+  getEntriesInCollectionWithTreeKey,
+  isLocalConfig,
+} from './utils';
 import { notFound } from './not-found';
 
 type CollectionPageProps = {
@@ -224,6 +228,7 @@ function CollectionTable(
 ) {
   let { searchTerm } = props;
 
+  let isLocalMode = isLocalConfig(props.config);
   let router = useRouter();
   let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: 'name',
@@ -263,13 +268,29 @@ function CollectionTable(
     return [...filteredItems].sort(sortByDescriptor(sortDescriptor));
   }, [filteredItems, sortDescriptor]);
 
+  const columns = useMemo(() => {
+    return isLocalMode
+      ? [{ name: 'Name', key: 'name' }]
+      : [
+          { name: 'Name', key: 'name' },
+          {
+            name: 'Status',
+            key: 'status',
+            minWidth: 140,
+            width: '20%',
+          },
+        ];
+  }, [isLocalMode]);
+
   return (
     <TableView
       aria-labelledby="page-title"
       selectionMode="none"
       onSortChange={setSortDescriptor}
       sortDescriptor={sortDescriptor}
+      density={isLocalMode ? 'spacious' : 'regular'}
       overflowMode="truncate"
+      prominence="low"
       onRowAction={key => {
         router.push(getItemPath(props.basePath, props.collection, key));
       }}
@@ -280,7 +301,6 @@ function CollectionTable(
           message={`No items matching "${searchTerm}" were found.`}
         />
       )}
-      prominence="low"
       flex
       marginTop={{ tablet: 'large' }}
       marginBottom={{ mobile: 'regular', tablet: 'xlarge' }}
@@ -298,17 +318,7 @@ function CollectionTable(
         },
       })}
     >
-      <TableHeader
-        columns={[
-          { name: 'Name', key: 'name' },
-          {
-            name: 'Status',
-            key: 'status',
-            minWidth: 140,
-            width: '20%',
-          },
-        ]}
-      >
+      <TableHeader columns={columns}>
         {({ name, key, ...options }) => (
           <Column key={key} isRowHeader allowsSorting {...options}>
             {name}
@@ -316,18 +326,26 @@ function CollectionTable(
         )}
       </TableHeader>
       <TableBody items={sortedItems}>
-        {item => (
-          <Row key={item.name}>
-            <Cell textValue={item.name}>
-              <Text weight="medium">{item.name}</Text>
-            </Cell>
-            <Cell textValue={item.status}>
-              <StatusLight tone={statusTones[item.status]}>
-                {item.status}
-              </StatusLight>
-            </Cell>
-          </Row>
-        )}
+        {item =>
+          isLocalMode ? (
+            <Row key={item.name}>
+              <Cell textValue={item.name}>
+                <Text weight="medium">{item.name}</Text>
+              </Cell>
+            </Row>
+          ) : (
+            <Row key={item.name}>
+              <Cell textValue={item.name}>
+                <Text weight="medium">{item.name}</Text>
+              </Cell>
+              <Cell textValue={item.status}>
+                <StatusLight tone={statusTones[item.status]}>
+                  {item.status}
+                </StatusLight>
+              </Cell>
+            </Row>
+          )
+        }
       </TableBody>
     </TableView>
   );

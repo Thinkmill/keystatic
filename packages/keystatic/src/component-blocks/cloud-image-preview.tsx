@@ -61,7 +61,7 @@ function ImageDialog(props: {
 }) {
   const { image, onCancel, onChange, onClose } = props;
   const [state, setState] = useState<ImageData>(cleanImageData(image));
-  const [status, setStatus] = useState<ImageStatus>('');
+  const [status, setStatus] = useState<ImageStatus>(image ? 'good' : '');
   const [dimensions, setDimensions] = useState<ImageDimensions>(
     cleanImageData()
   );
