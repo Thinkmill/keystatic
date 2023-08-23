@@ -82,7 +82,7 @@ function SidebarHeader() {
   let text = 'Keystatic';
 
   if (isCloudConfig(config)) {
-    text = config.storage.project;
+    text = config.cloud.project;
   }
   if (isGitHubConfig(config)) {
     text = serializeRepoConfig(config.storage.repo);

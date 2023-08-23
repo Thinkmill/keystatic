@@ -30,6 +30,7 @@ import { useId } from '@keystar/ui/utils';
 
 import { useConfig } from '../app/shell/context';
 import { focusWithPreviousSelection } from '../form/fields/document/DocumentEditor/ui-utils';
+import { getSplitCloudProject, isCloudConfig } from '../app/utils';
 
 type ImageData = {
   src: string;
@@ -437,7 +438,7 @@ function isValidURL(str: string) {
 
 function useImageLibraryURL() {
   const config = useConfig();
-  if (config.storage.kind !== 'cloud') return 'https://keystatic.cloud/';
-  const [team, project] = config.storage.project;
+  if (!isCloudConfig(config)) return 'https://keystatic.cloud/';
+  const { project, team } = getSplitCloudProject(config);
   return `https://keystatic.cloud/teams/${team}/project/${project}/images`;
 }

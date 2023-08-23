@@ -47,7 +47,22 @@ export function isLocalConfig(config: Config): config is LocalConfig {
 }
 
 export function isCloudConfig(config: Config): config is CloudConfig {
-  return config.storage.kind === 'cloud';
+  if (config.storage.kind !== 'cloud') return false;
+  if (!config.cloud?.project || !config.cloud.project.includes('/')) {
+    throw new Error(
+      `Keystatic is set to \`storage: { kind: 'cloud' }\` but \`cloud.project\` isn't set.
+config({
+  storage: { kind: 'cloud' },
+  cloud: { project: 'team/project' },
+})`
+    );
+  }
+  return true;
+}
+
+export function getSplitCloudProject(config: CloudConfig) {
+  const [team, project] = config.cloud.project.split('/');
+  return { team, project };
 }
 
 export function getRepoPath(config: { mainOwner: string; mainRepo: string }) {
@@ -165,7 +180,7 @@ export const KEYSTATIC_CLOUD_HEADERS = {
 const textEncoder = new TextEncoder();
 
 export async function redirectToCloudAuth(from: string, config: Config) {
-  if (config.storage.kind !== 'cloud') {
+  if (!isCloudConfig(config)) {
     throw new Error('Not a cloud config');
   }
   const code_verifier = fromUint8Array(
@@ -188,7 +203,7 @@ export async function redirectToCloudAuth(from: string, config: Config) {
   );
   const url = new URL(`${KEYSTATIC_CLOUD_API_URL}/oauth/authorize`);
   url.searchParams.set('state', state);
-  url.searchParams.set('client_id', config.storage.project);
+  url.searchParams.set('client_id', config.cloud.project);
   url.searchParams.set(
     'redirect_uri',
     `${window.location.origin}/keystatic/cloud/oauth/callback`

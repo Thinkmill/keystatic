@@ -4,7 +4,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { z } from 'zod';
 import { Config } from '../config';
 import { useRouter } from './router';
-import { KEYSTATIC_CLOUD_API_URL, KEYSTATIC_CLOUD_HEADERS } from './utils';
+import {
+  KEYSTATIC_CLOUD_API_URL,
+  KEYSTATIC_CLOUD_HEADERS,
+  isCloudConfig,
+} from './utils';
 
 const storedStateSchema = z.object({
   state: z.string(),
@@ -17,7 +21,7 @@ const tokenResponseSchema = z.object({
   expires_in: z.number(),
 });
 
-export function KeystaticCloudAuthCallback(props: { config: Config }) {
+export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
   const router = useRouter();
   const url = new URL(window.location.href);
   const code = url.searchParams.get('code');
@@ -37,14 +41,13 @@ export function KeystaticCloudAuthCallback(props: { config: Config }) {
   }, []);
   const [error, setError] = useState<null | Error>(null);
   useEffect(() => {
-    const { storage } = props.config;
-    if (code && state && storedState.success && storage.kind === 'cloud') {
+    if (code && state && storedState.success && isCloudConfig(config)) {
       (async () => {
         const res = await fetch(`${KEYSTATIC_CLOUD_API_URL}/oauth/token`, {
           method: 'POST',
           body: new URLSearchParams({
             code,
-            client_id: storage.project,
+            client_id: config.cloud.project,
             redirect_uri: `${window.location.origin}/keystatic/cloud/oauth/callback`,
             code_verifier: storedState.data.code_verifier,
             grant_type: 'authorization_code',
@@ -75,8 +78,8 @@ export function KeystaticCloudAuthCallback(props: { config: Config }) {
         setError(error);
       });
     }
-  }, [code, state, router, storedState, props.config]);
-  if (props.config.storage.kind !== 'cloud') {
+  }, [code, state, router, storedState, config]);
+  if (config.storage.kind !== 'cloud') {
     return <Text>Missing Keystatic Cloud config</Text>;
   }
   if (!code || !state) {

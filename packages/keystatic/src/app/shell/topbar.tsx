@@ -97,7 +97,7 @@ function CloudHeader({ config }: { config: CloudConfig }) {
         truncate
         isHidden={{ below: 'tablet' }}
       >
-        {config.storage.project}
+        {config.cloud.project}
       </Text>
       <Slash />
       <BranchPicker />

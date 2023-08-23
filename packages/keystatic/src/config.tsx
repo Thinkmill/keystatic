@@ -28,6 +28,7 @@ export type Singleton<Schema extends Record<string, ComponentSchema>> = {
 
 type CommonConfig = {
   locale?: Locale;
+  cloud?: { project: string };
 };
 
 export type GitHubConfig<
@@ -81,7 +82,8 @@ export type CloudConfig<
     [key: string]: Singleton<Record<string, ComponentSchema>>;
   }
 > = {
-  storage: { kind: 'cloud'; project: string };
+  storage: { kind: 'cloud' };
+  cloud: { project: string };
   collections?: Collections;
   singletons?: Singletons;
 } & CommonConfig;
@@ -104,7 +106,7 @@ export type Config<
         kind: 'github';
         repo: RepoConfig;
       }
-    | { kind: 'cloud'; project: string };
+    | { kind: 'cloud' };
   collections?: Collections;
   singletons?: Singletons;
 } & ({} extends Collections ? {} : { collections: Collections }) &
