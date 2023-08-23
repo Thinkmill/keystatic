@@ -265,7 +265,7 @@ function Placeholder(props: {
   const closeAndCleanup = () => {
     state.close();
     focusWithPreviousSelection(editor);
-    editor.deleteBackward('block');
+    props.onRemove();
   };
 
   return (
