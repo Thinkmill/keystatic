@@ -1,5 +1,81 @@
 # @keystatic/core
 
+## 0.1.0
+
+### Minor Changes
+
+- 1f96ff27: Move cloud `storage.project` to `cloud.project` option to allow it
+  to be referenced in local mode
+
+### Patch Changes
+
+- 03f0543c: Add experimental `cloudImage` component block
+- c24dc631: fix entry view content layout issues
+- 6895c566: - list-item + table-row: background change only on hover (not focus)
+  - allow shortcuts "cmd+s" and "ctrl+s" to save entry
+  - remove unused `flattenChildren` utility
+- 7310a672: Fixes and improvements to the cloud image block.
+- c5407cce: Add datetime field
+- ca6774b8: The `document` field defaults for formatting have changed to exclude
+  options that require custom Markdoc tags.
+
+  See https://keystatic.com/docs/fields/document#formatting-options for the new
+  defaults.
+
+  When updating, if you have configured a document field with shorthand for the
+  `formatting` config:
+
+  ```ts
+  fields.document({
+    // ...
+    formatting: true,
+  });
+  ```
+
+  To keep the same options you'll need to change you config to:
+
+  ```ts
+  fields.document({
+    // ...
+    formatting: {
+      alignment: true,
+      inlineMarks: {
+        bold: true,
+        code: true,
+        italic: true,
+        keyboard: true,
+        strikethrough: true,
+        subscript: true,
+        superscript: true,
+        underline: true,
+      },
+      listTypes: true,
+      headingLevels: true,
+      blockTypes: true,
+      softBreaks: true,
+    },
+  });
+  ```
+
+- 03f0543c: Allow `toolbar: null` to remove toolbar from chromeless component
+  blocks and add `onRemove` to component block previews.
+- 7767c69a: Optimise the editor appearance when `entryLayout="content"` for a
+  more focused experience.
+
+  Component library:
+
+  - Update the antialiasing behaviour everywhere
+  - New `Prose` component from "@keystar/ui/typography" package.
+  - Improve `Field` implementation and types
+
+- Updated dependencies [6d6226be]
+- Updated dependencies [1e96432c]
+- Updated dependencies [6895c566]
+- Updated dependencies [7ec4e84f]
+- Updated dependencies [ecd9213a]
+- Updated dependencies [7767c69a]
+  - @keystar/ui@0.2.1
+
 ## 0.0.116
 
 ### Patch Changes
