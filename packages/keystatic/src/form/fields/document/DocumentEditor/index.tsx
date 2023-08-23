@@ -30,8 +30,10 @@ import {
   tokenSchema,
 } from '@keystar/ui/style';
 import { Prose } from '@keystar/ui/typography';
+import { toDataAttributes } from '@keystar/ui/utils';
 
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
+import { useContentPanelSize } from '../../../../app/shell/context';
 import { ComponentBlock } from '../../../api';
 import { DocumentFeatures } from './document-features';
 import { wrapLink } from './link/link';
@@ -443,6 +445,7 @@ function getPrismTokenLength(token: Prism.Token | string): number {
 }
 
 export function DocumentEditorEditable(props: EditableProps) {
+  const containerSize = useContentPanelSize();
   const entryLayoutPane = useEntryLayoutSplitPaneContext();
   const editor = useSlate();
   const { componentBlocks, documentFeatures } = useDocumentEditorConfig();
@@ -456,6 +459,7 @@ export function DocumentEditorEditable(props: EditableProps) {
     <ActiveBlockPopoverProvider editor={editor}>
       <Prose size={entryLayoutPane === 'main' ? 'medium' : 'regular'}>
         <Editable
+          placeholder='Start writing or press "/" for commands...'
           decorate={useCallback(
             ([node, path]: NodeEntry<Node>) => {
               let decorations: Range[] = [];
@@ -539,7 +543,10 @@ export function DocumentEditorEditable(props: EditableProps) {
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           {...props}
-          data-layout={entryLayoutPane}
+          {...toDataAttributes({
+            container: containerSize,
+            layout: entryLayoutPane,
+          })}
           className={classNames(editableStyles, props.className)}
         />
       </Prose>
@@ -590,6 +597,10 @@ let styles: any = {
     },
     [breakpointQueries.above.tablet]: {
       padding: tokenSchema.size.space.xxlarge,
+    },
+
+    '&[data-container="wide"]': {
+      padding: tokenSchema.size.scale[600],
     },
   },
 };
