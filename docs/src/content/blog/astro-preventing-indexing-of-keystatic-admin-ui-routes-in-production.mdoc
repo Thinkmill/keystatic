@@ -1,0 +1,68 @@
+---
+title: 'Astro: Preventing Indexing of Keystatic Admin UI Routes in Production'
+draft: false
+publishedOn: '2023-08-23'
+authors:
+  - florian-lefebvre
+---
+
+When using the `local` strategy, chances are you don't want to include the `/keystatic` routes in the production build.
+
+Here's how you can prevent access to and indexing of those routes if you're using the Astro framework.
+
+## Adding redirects
+
+You can redirect visits to the `/keystatic` route in production with `Astro.redirect`:
+
+```diff
+---
+// src/pages/keystatic/[...params].astro
+import { Keystatic } from '../../../keystatic.page'
+
+export const prerender = false
+
++ if (import.meta.env.MODE === 'production') {
++   return Astro.redirect('/')
++ }
+---
+
+<Keystatic client:only />
+
+```
+
+You will need to do the same for the `api/keystatic` routes:
+
+```jsx
+// src/pages/api/keystatic/[...params].ts
+import { makeHandler } from '@keystatic/astro/api'
+import keystaticConfig from '../../../../keystatic.config'
+
+export const all = makeHandler({
+  config: keystaticConfig,
+})
+
+export const prerender = false
+
++ if (import.meta.env.MODE === 'production') {
++   return Astro.redirect('/')
++ }
+```
+
+## Excluding routes from sitemap
+
+If you're using `@astrojs/sitemap`, you can exclude those routes as well:
+
+```diff
+// astro.config.mjs
+import { defineConfig } from 'astro/config'
+import sitemap from '@astrojs/sitemap';
+
+export default defineConfig({
+  integrations: [
++     sitemap({
++       filter: (page) => !page.includes("keystatic"),
++     });
+  ]
+})
+```
+
