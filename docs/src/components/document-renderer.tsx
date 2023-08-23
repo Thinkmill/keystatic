@@ -20,6 +20,7 @@ import { ImageFieldDemo } from './fields/image';
 import { FileFieldDemo } from './fields/file';
 import { Embed, EmbedProps } from './embed';
 import Link from 'next/link';
+import { DatetimeFieldDemo } from './fields/datetime';
 
 const keystaticCodeTheme = JSON.parse(
   fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
@@ -183,7 +184,7 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
       <CloudImage
         alt={alt}
         src={src}
-        height={height}
+        height={height ?? undefined}
         width={width ?? imgMaxWidthPx}
         className="rounded-lg my-2"
       />
@@ -219,6 +220,8 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         return <IntegerFieldDemo />;
       case 'date':
         return <DateFieldDemo />;
+      case 'datetime':
+        return <DatetimeFieldDemo />;
       case 'slug':
         return <SlugFieldDemo />;
       case 'image':

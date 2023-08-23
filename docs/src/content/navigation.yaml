@@ -9,14 +9,6 @@ navGroups:
         link:
           discriminant: page
           value: quick-start
-      - label: Connect to GitHub
-        link:
-          discriminant: page
-          value: connect-to-github
-      - label: Connect to GitHub with Vercel
-        link:
-          discriminant: page
-          value: connect-to-github-with-vercel
   - groupName: Integration guides
     items:
       - label: Astro
@@ -32,14 +24,22 @@ navGroups:
           discriminant: coming-soon
   - groupName: Core concepts
     items:
-      - label: Organised content
+      - label: Content organisation
         link:
           discriminant: page
-          value: how-keystatic-organises-your-content
-      - label: Local vs. GitHub mode
+          value: content-organisation
+      - label: Path wildcard
         link:
           discriminant: page
-          value: local-vs-git-hub-storage-strategy
+          value: path-wildcard
+      - label: Local mode
+        link:
+          discriminant: page
+          value: local-mode
+      - label: GitHub mode
+        link:
+          discriminant: page
+          value: github-mode
   - groupName: Reference
     items:
       - label: Configuration
@@ -92,6 +92,10 @@ navGroups:
         link:
           discriminant: page
           value: fields/date
+      - label: Datetime
+        link:
+          discriminant: page
+          value: fields/datetime
       - label: Document
         link:
           discriminant: page
@@ -150,6 +154,10 @@ navGroups:
         link:
           discriminant: url
           value: https://github.com/Thinkmill/keystatic/discussions
+      - label: Discord
+        link:
+          discriminant: url
+          value: /chat
       - label: Twitter
         link:
           discriminant: url

@@ -56,7 +56,7 @@ export default async function Docs({ params }: DocsProps) {
         >
           {page.title}
         </h1>
-        <div className="flex flex-col gap-4 [&_a]:break-all">
+        <div className="flex flex-col gap-4 [&_a]:break-words">
           <DocumentRenderer slug={slug} document={await page.content()} />
         </div>
       </div>

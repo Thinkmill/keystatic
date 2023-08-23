@@ -19,6 +19,7 @@ export const Field = (props: InternalFieldProps) => {
     isReadOnly,
     isRequired,
     label,
+    ...otherProps
   } = props;
   let { labelProps, fieldProps, descriptionProps, errorMessageProps } =
     useField(props);
@@ -40,6 +41,7 @@ export const Field = (props: InternalFieldProps) => {
       descriptionProps={descriptionProps}
       errorMessage={errorMessage}
       errorMessageProps={errorMessageProps}
+      {...otherProps}
     >
       {children(renderProps)}
     </FieldPrimitive>

@@ -1,0 +1,63 @@
+---
+title: Path wildcard
+summary: Granular control over where Keystatic stores content.
+---
+
+The `path` wildcard for Keystatic [collections](/docs/collections) gives you flexibility and control over your where your content is being output.
+
+It's a glob pattern that lets you organise your content to support most scenarios.
+
+## Nested folder output example
+
+{% aside icon="👉" %}
+  `path: 'packages/design-system/*/docs/'`
+{% /aside %}
+
+Imagine a Design System inside a monorepo: 
+
+```sh
+root
+├── packages
+  ├── design-system
+    ├── button
+      └── src
+    ├── dropdown
+      └── src
+└── apps
+  └── docs(keystatic)
+```
+
+Your Keystatic site lives in `apps/docs`, but you want your documentation entries in `packages/design-system/{component-name}/docs/`, to collocate them with each component.
+
+The following path will let you do exactly that:
+
+```
+path: 'packages/design-system/*/docs/'
+```
+
+## Nested slug example
+
+{% aside icon="👉" %}
+  `path: 'content/posts/**'`
+{% /aside %}
+
+There may be situations where you need the `slug` of an entry to be following a multi-folder structure.
+
+Say you want the **same collection** to support this following tree structure:
+
+```sh
+content
+├── posts
+  ├── en  
+      └── post-1.mdoc
+  ├── fr  
+      └── post-1.mdoc
+```
+
+You can enable this by using the `**` wildcard in your `path`: 
+
+```
+path: 'content/posts/**'
+```
+
+Since Keystatic `slugs` can contain `/` characters, you construct a multi-folder structure with `slug` field values like: `en/post-1` and `fr/post-1`.

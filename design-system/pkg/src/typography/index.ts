@@ -7,6 +7,7 @@ export { Text, textClassList, useTextStyles, useTextContext } from './text';
 export { Emoji } from './Emoji';
 export { Kbd } from './Kbd';
 export { Numeral } from './Numeral';
+export { Prose } from './Prose';
 
 // types
 export type { EmojiProps } from './Emoji';

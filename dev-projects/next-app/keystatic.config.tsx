@@ -231,6 +231,12 @@ export default config({
         bio: fields.document({
           label: 'Bio',
           images: true,
+          formatting: true,
+          dividers: true,
+          links: true,
+        }),
+        notes: fields.document({
+          label: 'Notes',
           formatting: {
             inlineMarks: {
               bold: true,
