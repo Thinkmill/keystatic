@@ -19,7 +19,7 @@ export function focusWithPreviousSelection(editor: Editor) {
 }
 
 export const blockElementSpacing = css({
-  marginBlock: '1em',
+  marginBlock: '0.75em',
   '&:first-child': {
     marginBlockStart: 0,
   },
