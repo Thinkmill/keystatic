@@ -18,18 +18,12 @@ import {
   emptyImageData,
   parseImageData,
   useImageLibraryURL,
+  CloudImageProps,
 } from '../../../component-blocks/cloud-image-preview';
 import { isValidURL } from '../document/DocumentEditor/isValidURL';
 import { useEventCallback } from '../document/DocumentEditor/ui-utils';
 
-type ImageData = {
-  src: string;
-  width?: number;
-  height?: number;
-  alt: string;
-};
-
-type ImageDimensions = Pick<ImageData, 'width' | 'height'>;
+type ImageDimensions = Pick<CloudImageProps, 'width' | 'height'>;
 
 type ImageStatus = '' | 'loading' | 'good' | 'error';
 
@@ -54,11 +48,11 @@ function useImageDimensions(src: string) {
 }
 
 function ImageField(props: {
-  image: ImageData;
+  image: CloudImageProps;
   isRequired?: boolean;
   forceValidation?: boolean;
   autoFocus?: boolean;
-  onChange: (data: ImageData) => void;
+  onChange: (data: CloudImageProps) => void;
 }) {
   const { image, onChange } = props;
   const [status, setStatus] = useState<ImageStatus>(image.src ? 'good' : '');
