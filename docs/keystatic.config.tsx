@@ -231,6 +231,9 @@ export default config({
   storage: {
     kind: 'local',
   },
+  cloud: {
+    project: 'thinkmill-labs/keystatic-docs',
+  },
   collections: {
     // ------------------------------
     // Docs pages
@@ -358,6 +361,11 @@ export default config({
       path: 'src/content/pages/**',
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
+        summary: fields.text({
+          label: 'Summary',
+          description: 'The summary is used for the metadata description.',
+          multiline: true,
+        }),
         content: __experimental_markdoc_field({
           label: 'Content',
           config: markdocConfig,
