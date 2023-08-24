@@ -227,9 +227,11 @@ const markdocConfig: Config = {
   },
 };
 
+const shouldUseCloudStorage = process.env.NODE_ENV === 'production';
+
 export default config({
   storage: {
-    kind: 'local',
+    kind: shouldUseCloudStorage ? 'cloud' : 'local',
   },
   cloud: {
     project: 'thinkmill-labs/keystatic-docs',
