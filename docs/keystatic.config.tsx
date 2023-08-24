@@ -227,8 +227,11 @@ const markdocConfig: Config = {
   },
 };
 
-const shouldUseCloudStorage = process.env.NODE_ENV === 'production';
+const shouldUseCloudStorage = true; // process.env.NODE_ENV === 'production';
 const pathPrefix = shouldUseCloudStorage ? 'docs/' : '';
+export const readerPath = shouldUseCloudStorage
+  ? process.cwd().replace(/\/docs/, '')
+  : process.cwd();
 
 export default config({
   storage: {
