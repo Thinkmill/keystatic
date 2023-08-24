@@ -3,13 +3,17 @@ import { useHover } from '@react-aria/interactions';
 import { mergeProps } from '@react-aria/utils';
 import { Fragment } from 'react';
 
-import { classNames, css, tokenSchema } from '@keystar/ui/style';
+import {
+  classNames,
+  css,
+  toDataAttributes,
+  tokenSchema,
+} from '@keystar/ui/style';
 import {
   Text,
   useHeadingContext,
   useTextContext,
 } from '@keystar/ui/typography';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 import { TextLinkButtonProps } from './types';
 

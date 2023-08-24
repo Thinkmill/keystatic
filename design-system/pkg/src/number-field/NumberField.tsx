@@ -10,9 +10,13 @@ import {
 } from 'react';
 
 import { useProvider, useProviderProps } from '@keystar/ui/core';
-import { css, onlyStyleProps, tokenSchema } from '@keystar/ui/style';
+import {
+  css,
+  onlyStyleProps,
+  toDataAttributes,
+  tokenSchema,
+} from '@keystar/ui/style';
 import { TextFieldPrimitive } from '@keystar/ui/text-field';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 import { StepButton } from './StepButton';
 import { NumberFieldProps } from './types';

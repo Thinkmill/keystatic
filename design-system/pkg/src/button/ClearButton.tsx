@@ -9,11 +9,11 @@ import {
   classNames,
   css,
   FocusRing,
+  toDataAttributes,
   tokenSchema,
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
 import { PropsWithElementType } from '@keystar/ui/utils/ts';
 
 import { ButtonProps } from './types';

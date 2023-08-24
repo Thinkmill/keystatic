@@ -7,11 +7,11 @@ import {
   classNames,
   css,
   keyframes,
+  toDataAttributes,
   tokenSchema,
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 import { ProgressCircleProps } from './types';
 

@@ -8,8 +8,12 @@ import React, {
 
 import { useProviderProps } from '@keystar/ui/core';
 import { FieldPrimitive, validateFieldProps } from '@keystar/ui/field';
-import { classNames, css, tokenSchema } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
+import {
+  classNames,
+  css,
+  toDataAttributes,
+  tokenSchema,
+} from '@keystar/ui/style';
 
 import { RadioContext } from './context';
 import { RadioGroupProps } from './types';

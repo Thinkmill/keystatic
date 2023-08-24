@@ -3,9 +3,8 @@ import { DateFieldState, DateSegment } from '@react-stately/datepicker';
 import { DatePickerBase, DateValue } from '@react-types/datepicker';
 import React, { useRef } from 'react';
 
-import { css, tokenSchema } from '@keystar/ui/style';
+import { css, toDataAttributes, tokenSchema } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 interface InputSegmentProps extends DatePickerBase<DateValue> {
   segment: DateSegment;

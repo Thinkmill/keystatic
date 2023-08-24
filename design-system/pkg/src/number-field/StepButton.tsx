@@ -10,8 +10,13 @@ import { minusIcon } from '@keystar/ui/icon/icons/minusIcon';
 import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
 import { chevronUpIcon } from '@keystar/ui/icon/icons/chevronUpIcon';
 import { Icon } from '@keystar/ui/icon';
-import { classNames, css, tokenSchema, transition } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
+import {
+  classNames,
+  css,
+  toDataAttributes,
+  tokenSchema,
+  transition,
+} from '@keystar/ui/style';
 
 interface StepButtonProps extends AriaButtonProps {
   direction: 'up' | 'down';
