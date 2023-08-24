@@ -24,7 +24,6 @@ import { ProgressCircle } from '@keystar/ui/progress';
 import { Content } from '@keystar/ui/slots';
 import { TextArea, TextField } from '@keystar/ui/text-field';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
-import { PartialRequired } from '@keystar/ui/types';
 import { Heading, Text } from '@keystar/ui/typography';
 import { useId } from '@keystar/ui/utils';
 
@@ -32,7 +31,7 @@ import { useConfig } from '../app/shell/context';
 import { focusWithPreviousSelection } from '../form/fields/document/DocumentEditor/ui-utils';
 import { getSplitCloudProject, isCloudConfig } from '../app/utils';
 
-type ImageData = {
+export type ImageData = {
   src: string;
   width?: number;
   height?: number;
@@ -41,16 +40,43 @@ type ImageData = {
 
 type ImageDimensions = Pick<ImageData, 'width' | 'height'>;
 
-function cleanImageData(
-  data: PartialRequired<ImageData, 'src'> = { src: '' }
-): ImageData {
-  return {
-    src: data.src,
-    alt: 'alt' in data && typeof data.alt === 'string' ? data.alt : '',
-    height: data.height ?? undefined,
-    width: data.width ?? undefined,
-  };
+export function parseImageData(data: string): ImageData {
+  try {
+    const parsed: unknown = JSON.parse(data);
+    if (
+      typeof parsed === 'object' &&
+      parsed !== null &&
+      'src' in parsed &&
+      typeof parsed.src === 'string'
+    ) {
+      return {
+        src: parsed.src,
+        alt:
+          'alt' in parsed && typeof parsed.alt === 'string' ? parsed.alt : '',
+        height:
+          'height' in parsed &&
+          typeof parsed.height === 'number' &&
+          Number.isInteger(parsed.height)
+            ? parsed.height
+            : undefined,
+        width:
+          'width' in parsed &&
+          typeof parsed.width === 'number' &&
+          Number.isInteger(parsed.width)
+            ? parsed.width
+            : undefined,
+      };
+    }
+  } catch (err) {}
+  const pattern = /^\s*!\[(.*)\]\(([a-z0-9_\-/:.]+)\)\s*$/;
+  const match = data.match(pattern);
+  if (match) {
+    return { src: match[2], alt: match[1] };
+  }
+  return { src: data, alt: '' };
 }
+
+export const emptyImageData: ImageData = { src: '', alt: '' };
 
 type ImageStatus = '' | 'loading' | 'good' | 'error';
 
@@ -61,11 +87,9 @@ function ImageDialog(props: {
   onClose: () => void;
 }) {
   const { image, onCancel, onChange, onClose } = props;
-  const [state, setState] = useState<ImageData>(cleanImageData(image));
+  const [state, setState] = useState<ImageData>(emptyImageData);
   const [status, setStatus] = useState<ImageStatus>(image ? 'good' : '');
-  const [dimensions, setDimensions] = useState<ImageDimensions>(
-    cleanImageData()
-  );
+  const [dimensions, setDimensions] = useState<ImageDimensions>(emptyImageData);
   const formId = useId();
   const imageLibraryURL = useImageLibraryURL();
 
@@ -76,30 +100,7 @@ function ImageDialog(props: {
   const onPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
     event.preventDefault();
     const text = event.clipboardData.getData('text/plain');
-    try {
-      const data: any = JSON.parse(text);
-      if (
-        typeof data === 'object' &&
-        data !== null &&
-        'src' in data &&
-        typeof data.src === 'string'
-      ) {
-        setState(cleanImageData(data));
-        return;
-      }
-    } catch (err) {}
-    const pattern = /^\s*!\[(.*)\]\(([a-z0-9_\-/:.]+)\)\s*$/;
-    const match = text.match(pattern);
-    if (match) {
-      setState(
-        cleanImageData({
-          src: match[2],
-          alt: match[1],
-        })
-      );
-      return;
-    }
-    setState(cleanImageData({ src: text }));
+    setState(parseImageData(text));
   };
 
   useEffect(() => {
@@ -148,7 +149,7 @@ function ImageDialog(props: {
             onPaste={onPaste}
             onKeyDown={e => {
               if (e.code === 'Backspace' || e.code === 'Delete') {
-                setState(cleanImageData());
+                setState(emptyImageData);
               } else {
                 e.continuePropagation();
               }
@@ -184,7 +185,7 @@ function ImageDialog(props: {
                 </Flex>
               ) : state.src ? (
                 <ClearButton
-                  onPress={() => setState(cleanImageData())}
+                  onPress={() => setState(emptyImageData)}
                   preventFocus
                 />
               ) : null
@@ -436,7 +437,7 @@ function isValidURL(str: string) {
   }
 }
 
-function useImageLibraryURL() {
+export function useImageLibraryURL() {
   const config = useConfig();
   if (!isCloudConfig(config)) return 'https://keystatic.cloud/';
   const { project, team } = getSplitCloudProject(config);
