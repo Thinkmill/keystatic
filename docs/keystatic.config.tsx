@@ -235,7 +235,7 @@ export default config({
     kind: shouldUseCloudStorage ? 'cloud' : 'local',
   },
   cloud: {
-    project: 'thinkmill-labs/keystatic-docs',
+    project: 'thinkmill-labs/keystatic-site',
   },
   collections: {
     // ------------------------------
