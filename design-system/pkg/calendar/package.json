@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-calendar.cjs.js",
+  "module": "dist/keystar-ui-calendar.esm.js"
+}

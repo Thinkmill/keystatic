@@ -143,6 +143,11 @@
       "module": "./tooltip/dist/keystar-ui-tooltip.esm.js",
       "default": "./tooltip/dist/keystar-ui-tooltip.cjs.js"
     },
+    "./calendar": {
+      "types": "./calendar/dist/keystar-ui-calendar.cjs.js",
+      "module": "./calendar/dist/keystar-ui-calendar.esm.js",
+      "default": "./calendar/dist/keystar-ui-calendar.cjs.js"
+    },
     "./checkbox": {
       "types": "./checkbox/dist/keystar-ui-checkbox.cjs.js",
       "module": "./checkbox/dist/keystar-ui-checkbox.esm.js",
@@ -6133,6 +6138,7 @@
     "@react-aria/actiongroup": "^3.6.0",
     "@react-aria/breadcrumbs": "^3.5.3",
     "@react-aria/button": "^3.8.0",
+    "@react-aria/calendar": "^3.4.1",
     "@react-aria/checkbox": "^3.9.2",
     "@react-aria/combobox": "^3.6.2",
     "@react-aria/datepicker": "^3.4.0",
@@ -6165,6 +6171,7 @@
     "@react-aria/utils": "^3.18.0",
     "@react-aria/virtualizer": "^3.9.0",
     "@react-aria/visually-hidden": "^3.8.2",
+    "@react-stately/calendar": "^3.3.1",
     "@react-stately/checkbox": "^3.4.3",
     "@react-stately/collections": "^3.9.0",
     "@react-stately/combobox": "^3.5.2",
@@ -6190,6 +6197,7 @@
     "@react-types/actiongroup": "^3.3.5",
     "@react-types/breadcrumbs": "^3.6.0",
     "@react-types/button": "^3.7.4",
+    "@react-types/calendar": "^3.3.1",
     "@react-types/combobox": "^3.5.5",
     "@react-types/datepicker": "^3.4.0",
     "@react-types/grid": "^3.1.5",
