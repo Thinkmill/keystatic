@@ -31,16 +31,16 @@ import { useConfig } from '../app/shell/context';
 import { focusWithPreviousSelection } from '../form/fields/document/DocumentEditor/ui-utils';
 import { getSplitCloudProject, isCloudConfig } from '../app/utils';
 
-export type ImageData = {
+export type CloudImageProps = {
   src: string;
   width?: number;
   height?: number;
   alt: string;
 };
 
-type ImageDimensions = Pick<ImageData, 'width' | 'height'>;
+type ImageDimensions = Pick<CloudImageProps, 'width' | 'height'>;
 
-export function parseImageData(data: string): ImageData {
+export function parseImageData(data: string): CloudImageProps {
   try {
     const parsed: unknown = JSON.parse(data);
     if (
@@ -76,18 +76,18 @@ export function parseImageData(data: string): ImageData {
   return { src: data, alt: '' };
 }
 
-export const emptyImageData: ImageData = { src: '', alt: '' };
+export const emptyImageData: CloudImageProps = { src: '', alt: '' };
 
 type ImageStatus = '' | 'loading' | 'good' | 'error';
 
 function ImageDialog(props: {
-  image?: ImageData;
+  image?: CloudImageProps;
   onCancel: () => void;
-  onChange: (data: ImageData) => void;
+  onChange: (data: CloudImageProps) => void;
   onClose: () => void;
 }) {
   const { image, onCancel, onChange, onClose } = props;
-  const [state, setState] = useState<ImageData>(emptyImageData);
+  const [state, setState] = useState<CloudImageProps>(emptyImageData);
   const [status, setStatus] = useState<ImageStatus>(image ? 'good' : '');
   const [dimensions, setDimensions] = useState<ImageDimensions>(emptyImageData);
   const formId = useId();
@@ -250,7 +250,7 @@ function ImageDialog(props: {
 }
 
 function Placeholder(props: {
-  onChange: (data: ImageData) => void;
+  onChange: (data: CloudImageProps) => void;
   onRemove: () => void;
 }) {
   const editor = useSlateStatic();
@@ -301,8 +301,8 @@ function ImagePreview({
   onChange,
   onRemove,
 }: {
-  image: ImageData;
-  onChange: (data: ImageData) => void;
+  image: CloudImageProps;
+  onChange: (data: CloudImageProps) => void;
   onRemove: () => void;
 }) {
   const selected = useSelected();
