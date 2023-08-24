@@ -6,11 +6,11 @@ import {
   classNames,
   css,
   maybeTokenByKey,
+  toDataAttributes,
   tokenSchema,
   useStyleProps,
 } from '@keystar/ui/style';
 import { IconProps } from '@keystar/ui/types';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 export const Icon = (props: IconProps) => {
   props = useSlotProps(props, 'icon');

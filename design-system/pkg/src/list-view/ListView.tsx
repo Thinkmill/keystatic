@@ -22,10 +22,10 @@ import {
   FocusRing,
   classNames,
   css,
+  toDataAttributes,
   tokenSchema,
   useStyleProps,
 } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 import localizedMessages from './l10n.json';
 import { ListViewProvider, useListViewContext } from './context';

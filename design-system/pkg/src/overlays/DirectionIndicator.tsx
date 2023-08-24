@@ -1,5 +1,9 @@
-import { classNames, css, tokenSchema } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
+import {
+  classNames,
+  css,
+  toDataAttributes,
+  tokenSchema,
+} from '@keystar/ui/style';
 import { HTMLAttributes } from 'react';
 
 type DirectionIndicatorProps = {

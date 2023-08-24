@@ -32,12 +32,13 @@ import {
   FocusRing,
   classNames,
   css,
+  toDataAttributes,
   tokenSchema,
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
-import { toDataAttributes, isReactText } from '@keystar/ui/utils';
+import { isReactText } from '@keystar/ui/utils';
 
 import {
   TabsProps,

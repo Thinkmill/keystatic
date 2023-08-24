@@ -6,11 +6,11 @@ import {
   classNames,
   css,
   filterStyleProps,
+  toDataAttributes,
   tokenSchema,
   useStyleProps,
 } from '@keystar/ui/style';
 import { forwardRefWithAs } from '@keystar/ui/utils/ts';
-import { toDataAttributes } from '../utils';
 
 export type ProseProps = {
   /** The content to render. */

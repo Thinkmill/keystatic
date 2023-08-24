@@ -20,10 +20,11 @@ import {
   breakpointQueries,
   classNames,
   css,
+  toDataAttributes,
   tokenSchema,
   useStyleProps,
 } from '@keystar/ui/style';
-import { toDataAttributes, useHasChild } from '@keystar/ui/utils';
+import { useHasChild } from '@keystar/ui/utils';
 
 import localizedMessages from './l10n.json';
 import { DialogContext, DialogContextValue } from './context';
