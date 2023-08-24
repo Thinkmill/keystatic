@@ -20,8 +20,13 @@ import {
   useProviderProps,
 } from '@keystar/ui/core';
 import { useSlotProps } from '@keystar/ui/slots';
-import { classNames, css, tokenSchema, useStyleProps } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
+import {
+  classNames,
+  css,
+  toDataAttributes,
+  tokenSchema,
+  useStyleProps,
+} from '@keystar/ui/style';
 
 import { ButtonGroupProps } from './types';
 

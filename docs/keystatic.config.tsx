@@ -227,9 +227,15 @@ const markdocConfig: Config = {
   },
 };
 
+const shouldUseCloudStorage = process.env.NODE_ENV === 'production';
+const pathPrefix = shouldUseCloudStorage ? 'docs/' : '';
+
 export default config({
   storage: {
-    kind: 'local',
+    kind: shouldUseCloudStorage ? 'cloud' : 'local',
+  },
+  cloud: {
+    project: 'thinkmill-labs/keystatic-docs',
   },
   collections: {
     // ------------------------------
@@ -240,7 +246,7 @@ export default config({
       slugField: 'title',
       entryLayout: 'content',
       format: { contentField: 'content' },
-      path: 'src/content/pages/**',
+      path: `${pathPrefix}src/content/pages/**`,
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         summary: fields.text({
@@ -265,7 +271,7 @@ export default config({
     blog: collection({
       label: 'Blog posts',
       slugField: 'title',
-      path: 'src/content/blog/**',
+      path: `${pathPrefix}src/content/blog/**`,
       entryLayout: 'content',
       format: {
         contentField: 'content',
@@ -327,7 +333,7 @@ export default config({
     authors: collection({
       label: 'Authors',
       slugField: 'name',
-      path: 'src/content/authors/**',
+      path: `${pathPrefix}src/content/authors/**`,
       schema: {
         name: fields.slug({
           name: {
@@ -355,9 +361,14 @@ export default config({
       label: 'Pages with new editor',
       slugField: 'title',
       format: { contentField: 'content' },
-      path: 'src/content/pages/**',
+      path: `${pathPrefix}src/content/pages/**`,
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
+        summary: fields.text({
+          label: 'Summary',
+          description: 'The summary is used for the metadata description.',
+          multiline: true,
+        }),
         content: __experimental_markdoc_field({
           label: 'Content',
           config: markdocConfig,
@@ -371,7 +382,7 @@ export default config({
     // ------------------------------
     navigation: singleton({
       label: 'Navigation',
-      path: 'src/content/navigation',
+      path: `${pathPrefix}src/content/navigation`,
       schema: {
         navGroups: fields.array(
           fields.object({

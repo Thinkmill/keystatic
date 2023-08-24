@@ -32,9 +32,15 @@ import { chevronLeftIcon } from '@keystar/ui/icon/icons/chevronLeftIcon';
 import { chevronRightIcon } from '@keystar/ui/icon/icons/chevronRightIcon';
 import { dotIcon } from '@keystar/ui/icon/icons/dotIcon';
 import { SlotProvider } from '@keystar/ui/slots';
-import { classNames, css, tokenSchema, useStyleProps } from '@keystar/ui/style';
+import {
+  classNames,
+  css,
+  toDataAttributes,
+  tokenSchema,
+  useStyleProps,
+} from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
-import { isReactText, toDataAttributes } from '@keystar/ui/utils';
+import { isReactText } from '@keystar/ui/utils';
 
 import { TreeKeyboardDelegate } from './TreeKeyboardDelegate';
 import { NavTreeProps } from './types';

@@ -9,13 +9,12 @@ import { chevronRightIcon } from '@keystar/ui/icon/icons/chevronRightIcon';
 import { chevronLeftIcon } from '@keystar/ui/icon/icons/chevronLeftIcon';
 import {
   ClassList,
+  FocusRing,
   classNames,
   css,
-  FocusRing,
+  toDataAttributes,
   tokenSchema,
 } from '@keystar/ui/style';
-import {} from '@keystar/ui/typography';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 import { BreadcrumbItemProps } from './types';
 

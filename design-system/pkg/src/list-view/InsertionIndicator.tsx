@@ -3,8 +3,12 @@ import { ItemDropTarget } from '@react-types/shared';
 import { assert } from 'emery';
 import { useRef } from 'react';
 
-import { classNames, css, tokenSchema } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
+import {
+  classNames,
+  css,
+  toDataAttributes,
+  tokenSchema,
+} from '@keystar/ui/style';
 
 import { useListViewContext } from './context';
 

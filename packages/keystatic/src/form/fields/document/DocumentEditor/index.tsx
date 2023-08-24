@@ -27,10 +27,10 @@ import {
   breakpointQueries,
   classNames,
   css,
+  toDataAttributes,
   tokenSchema,
 } from '@keystar/ui/style';
 import { Prose } from '@keystar/ui/typography';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 import { useContentPanelSize } from '../../../../app/shell/context';

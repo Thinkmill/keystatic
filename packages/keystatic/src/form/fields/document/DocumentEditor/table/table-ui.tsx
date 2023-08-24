@@ -15,10 +15,9 @@ import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { Flex } from '@keystar/ui/layout';
 import { Item, Menu, MenuTrigger } from '@keystar/ui/menu';
-import { css, tokenSchema } from '@keystar/ui/style';
+import { css, toDataAttributes, tokenSchema } from '@keystar/ui/style';
 import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { Text } from '@keystar/ui/typography';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 import {
   BlockPopover,
@@ -443,12 +442,14 @@ function CellSelection(props: {
   const selectedCellsContext = useContext(SelectedCellsContext);
   const editor = useSlateStatic();
 
+  let { location, selected } = props;
+
   return (
     <div contentEditable={false}>
       <button
         tabIndex={-1}
         type="button"
-        {...toDataAttributes(props, new Set(['location', 'selected']))}
+        {...toDataAttributes({ location, selected })}
         className={css({
           background: tokenSchema.color.scale.slate3,
           border: `1px solid ${tokenSchema.color.alias.borderIdle}`,

@@ -8,11 +8,15 @@ import React, {
 
 import { useProviderProps } from '@keystar/ui/core';
 import { FieldPrimitive, validateFieldProps } from '@keystar/ui/field';
-import { classNames, css, tokenSchema } from '@keystar/ui/style';
+import {
+  classNames,
+  css,
+  toDataAttributes,
+  tokenSchema,
+} from '@keystar/ui/style';
 
 import { CheckboxGroupContext } from './context';
 import { CheckboxGroupProps } from './types';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 /**
  * A checkbox group allows users to select one or more items from a list of

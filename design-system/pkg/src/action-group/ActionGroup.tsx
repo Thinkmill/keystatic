@@ -38,10 +38,11 @@ import {
   BaseStyleProps,
   classNames,
   css,
+  toDataAttributes,
   tokenSchema,
   useStyleProps,
 } from '@keystar/ui/style';
-import { isReactText, toDataAttributes } from '@keystar/ui/utils';
+import { isReactText } from '@keystar/ui/utils';
 
 import { ActionGroupProps } from './types';
 
