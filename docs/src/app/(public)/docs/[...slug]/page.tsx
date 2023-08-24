@@ -1,13 +1,11 @@
-import { createReader } from '@keystatic/core/reader';
-import { TableOfContents } from '../../../../components/navigation/table-of-contents';
-import DocumentRenderer from '../../../../components/document-renderer';
-import keystaticConfig from '../../../../../keystatic.config';
 import { notFound } from 'next/navigation';
 import { Metadata, ResolvingMetadata } from 'next';
-import { H1_ID } from '../../../../constants';
 import slugify from '@sindresorhus/slugify';
 
-const reader = createReader(process.cwd(), keystaticConfig);
+import { TableOfContents } from '../../../../components/navigation/table-of-contents';
+import DocumentRenderer from '../../../../components/document-renderer';
+import { reader } from '../../../../utils/reader';
+import { H1_ID } from '../../../../constants';
 
 type DocsProps = {
   params: { slug: string[] };
