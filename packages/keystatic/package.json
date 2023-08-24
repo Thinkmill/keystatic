@@ -184,7 +184,7 @@
     "@react-stately/list": "^3.9.0",
     "@react-stately/overlays": "^3.6.0",
     "@react-stately/utils": "^3.7.0",
-    "@react-types/shared": "^3.18.0",
+    "@react-types/shared": "^3.19.0",
     "@sindresorhus/slugify": "^1.1.2",
     "@ts-gql/tag": "^0.7.0",
     "@types/node": "16.11.13",
