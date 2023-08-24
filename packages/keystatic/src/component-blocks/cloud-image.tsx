@@ -2,8 +2,6 @@ import { component } from '..';
 import { CloudImagePreview } from './cloud-image-preview';
 import { cloudImageSchema } from './cloud-image-schema';
 
-export type { CloudImageProps } from './cloud-image-preview';
-
 /** @deprecated Experimental */
 export function cloudImage(args: { label: string }) {
   return component({
