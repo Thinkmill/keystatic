@@ -14,11 +14,11 @@ import {
   breakpoints,
   classNames,
   css,
+  toDataAttributes,
   tokenSchema,
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 import { Blanket } from './Blanket';
 import { Overlay } from './Overlay';

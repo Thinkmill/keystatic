@@ -3,8 +3,12 @@ import { HTMLAttributes, ReactNode } from 'react';
 import { Icon } from '@keystar/ui/icon';
 import { checkIcon } from '@keystar/ui/icon/icons/checkIcon';
 import { ClearSlots, SlotProvider } from '@keystar/ui/slots';
-import { classNames, css, tokenSchema } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
+import {
+  classNames,
+  css,
+  toDataAttributes,
+  tokenSchema,
+} from '@keystar/ui/style';
 import { forwardRefWithAs } from '@keystar/ui/utils/ts';
 
 type ListItemProps = {

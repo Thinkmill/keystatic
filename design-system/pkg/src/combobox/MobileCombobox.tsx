@@ -27,22 +27,26 @@ import {
   FieldButtonProps,
   useFieldButton,
 } from '@keystar/ui/button';
+import { useProviderProps } from '@keystar/ui/core';
 import { FieldPrimitive } from '@keystar/ui/field';
 import { Icon } from '@keystar/ui/icon';
 import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
+import { Flex } from '@keystar/ui/layout';
 import { ListBoxBase, useListBoxLayout } from '@keystar/ui/listbox';
 import { Tray } from '@keystar/ui/overlays';
 import { ProgressCircle } from '@keystar/ui/progress';
-import { FocusRing, css, tokenSchema, transition } from '@keystar/ui/style';
+import {
+  FocusRing,
+  css,
+  toDataAttributes,
+  tokenSchema,
+  transition,
+} from '@keystar/ui/style';
 import { TextFieldPrimitive } from '@keystar/ui/text-field';
-
-import { useProviderProps } from '@keystar/ui/core';
+import { Text } from '@keystar/ui/typography';
 
 import localizedMessages from './l10n.json';
 import { ComboboxProps } from './types';
-import { Flex } from '@keystar/ui/layout';
-import { Text } from '@keystar/ui/typography';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 function MobileCombobox<T extends object>(
   props: ComboboxProps<T>,

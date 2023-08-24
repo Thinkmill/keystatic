@@ -3,11 +3,11 @@ import { Icon } from '@keystar/ui/icon';
 import {
   classNames,
   css,
+  toDataAttributes,
   tokenSchema,
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 import { TableProps } from './types';
 
@@ -75,13 +75,11 @@ export const SortIndicator = () => {
 // ----------------------------------------------------------------------------
 
 export function useTableStyleProps<T>(props: TableProps<T>) {
+  let { density, overflowMode, prominence } = props;
   let styleProps = useStyleProps(props);
 
   return {
-    ...toDataAttributes(
-      props,
-      new Set(['density', 'overflowMode', 'prominence'])
-    ),
+    ...toDataAttributes({ density, overflowMode, prominence }),
     className: classNames(
       styleProps.className,
       'ksv-table-view',

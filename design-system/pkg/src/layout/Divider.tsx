@@ -6,11 +6,11 @@ import {
   ClassList,
   classNames,
   css,
-  useStyleProps,
+  toDataAttributes,
   tokenSchema,
+  useStyleProps,
 } from '@keystar/ui/style';
 import { DividerProps } from '@keystar/ui/types';
-import { toDataAttributes } from '@keystar/ui/utils';
 import { forwardRefWithAs } from '@keystar/ui/utils/ts';
 
 export const dividerClassList = new ClassList('Divider');
