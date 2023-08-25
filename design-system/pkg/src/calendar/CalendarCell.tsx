@@ -13,9 +13,8 @@ import { mergeProps } from '@react-aria/utils';
 import { CalendarState, RangeCalendarState } from '@react-stately/calendar';
 import React, { useRef } from 'react';
 
-// import { classNames } from '@keystar/ui/style';
+import { css, toDataAttributes, tokenSchema } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 interface CalendarCellProps extends AriaCalendarCellProps {
   state: CalendarState | RangeCalendarState;
@@ -78,7 +77,8 @@ export function CalendarCell({
     isDisabled: isDisabled || isUnavailable || state.isReadOnly,
   });
 
-  let styleProps = useCellStyles({
+  let cellStyleProps = useCellStyles();
+  let dayStyleProps = useDayStyles({
     // Style disabled (i.e. out of min/max range), but selected dates as unavailable
     // since it is more clear than trying to dim the selection.
     isDisabled: isDisabled && !isInvalid,
@@ -98,16 +98,32 @@ export function CalendarCell({
   });
 
   return (
-    <td {...cellProps}>
+    <td {...cellStyleProps} {...cellProps}>
       <span
         ref={ref}
         {...mergeProps(buttonProps, hoverProps, focusProps)}
-        {...styleProps}
+        {...dayStyleProps}
       >
-        <Text>{formattedDate}</Text>
+        <Text align="center" color="inherit" trim={false} weight="inherit">
+          {formattedDate}
+        </Text>
       </span>
     </td>
   );
+}
+
+export function useCellStyles() {
+  let cellSize = `var(--calendar-cell-width, ${tokenSchema.size.element.regular})`;
+  let cellPadding = `var(--calendar-cell-padding, ${tokenSchema.size.space.xsmall})`;
+  return {
+    className: css({
+      height: cellSize,
+      padding: cellPadding,
+      position: 'relative',
+      textAlign: 'center',
+      width: cellSize,
+    }),
+  };
 }
 
 type CellStyleProps = {
@@ -127,25 +143,74 @@ type CellStyleProps = {
   isUnavailable: boolean;
 };
 
-function useCellStyles(props: CellStyleProps) {
-  let className = 'calendar-cell';
+function useDayStyles(props: CellStyleProps) {
+  let className = css({
+    alignItems: 'center',
+    borderRadius: tokenSchema.size.radius.full,
+    color: tokenSchema.color.foreground.neutral,
+    cursor: 'default',
+    display: 'flex',
+    inset: tokenSchema.size.space.xsmall,
+    justifyContent: 'center',
+    outline: 0,
+    position: 'absolute',
+
+    // Ephemeral states
+    // -------------------------------------------------------------------------
+
+    '&[data-hovered]': {
+      backgroundColor: tokenSchema.color.alias.backgroundHovered,
+      color: tokenSchema.color.alias.foregroundHovered,
+    },
+    '&[data-pressed]': {
+      backgroundColor: tokenSchema.color.alias.backgroundPressed,
+    },
+    '&[data-focused]': {
+      outline: `${tokenSchema.size.alias.focusRing} solid ${tokenSchema.color.alias.focusRing}`,
+      outlineOffset: tokenSchema.size.alias.focusRingGap,
+    },
+
+    // Date specific
+    // -------------------------------------------------------------------------
+
+    // dates from other months
+    '&[data-outside-month]': {
+      visibility: 'hidden',
+    },
+
+    // today's date
+    '&[data-today]': {
+      color: tokenSchema.color.foreground.accent,
+      fontWeight: tokenSchema.typography.fontWeight.semibold,
+
+      '::before': {
+        backgroundColor: 'currentColor',
+        borderRadius: tokenSchema.size.radius.full,
+        content: '""',
+        height: tokenSchema.size.border.medium,
+        marginInline: 'auto',
+        position: 'absolute',
+        top: `calc(50% + 1ch)`,
+        width: '2ch',
+      },
+    },
+
+    // Deterministic states
+    // -------------------------------------------------------------------------
+
+    '&[data-disabled]': {
+      color: tokenSchema.color.alias.foregroundDisabled,
+    },
+    '&[data-selected]': {
+      backgroundColor: tokenSchema.color.background.accentEmphasis,
+      color: tokenSchema.color.foreground.onEmphasis,
+    },
+  });
 
   return {
-    ...toDataAttributes({
-      isDisabled: props.isDisabled,
-      isFocused: props.isFocused,
-      isHovered: props.isHovered,
-      isInvalid: props.isInvalid,
-      isOutsideMonth: props.isOutsideMonth,
-      isPressed: props.isPressed,
-      isRangeEnd: props.isRangeEnd,
-      isRangeSelection: props.isRangeSelection,
-      isRangeStart: props.isRangeStart,
-      isSelected: props.isSelected,
-      isSelectionEnd: props.isSelectionEnd,
-      isSelectionStart: props.isSelectionStart,
-      isToday: props.isToday,
-      isUnavailable: props.isUnavailable,
+    ...toDataAttributes(props, {
+      omitFalsyValues: true,
+      trimBooleanKeys: true,
     }),
     className,
   };

@@ -10,7 +10,14 @@ import { ActionButton } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
 import { chevronLeftIcon } from '@keystar/ui/icon/icons/chevronLeftIcon';
 import { chevronRightIcon } from '@keystar/ui/icon/icons/chevronRightIcon';
-import { BaseStyleProps, useStyleProps } from '@keystar/ui/style';
+import {
+  BaseStyleProps,
+  classNames,
+  css,
+  tokenSchema,
+  useStyleProps,
+} from '@keystar/ui/style';
+import { Heading } from '@keystar/ui/typography';
 
 import { CalendarMonth } from './CalendarMonth';
 
@@ -37,7 +44,7 @@ export function CalendarBase<T extends CalendarState | RangeCalendarState>(
     calendarRef: ref,
     visibleMonths = 1,
   } = props;
-  let styleProps = useStyleProps(props);
+  let styleProps = useCalendarStyles(props);
   let { direction } = useLocale();
   let currentMonth = state.visibleRange.start;
   let monthDateFormatter = useDateFormatter({
@@ -57,30 +64,46 @@ export function CalendarBase<T extends CalendarState | RangeCalendarState>(
   for (let i = 0; i < visibleMonths; i++) {
     let d = currentMonth.add({ months: i });
     titles.push(
-      // monthHeader
-      <div key={i}>
+      <div key={i} {...styleProps.monthHeader}>
         {i === 0 && (
-          // prevMonth
-          <ActionButton {...prevButtonProps} prominence="low">
+          <ActionButton
+            {...prevButtonProps}
+            prominence="low"
+            gridArea="prev"
+            justifySelf="start"
+            UNSAFE_style={{ padding: 0 }}
+          >
             <Icon
               src={direction === 'rtl' ? chevronRightIcon : chevronLeftIcon}
+              size="medium"
             />
           </ActionButton>
         )}
-        {/* title */}
-        <h2
+
+        <Heading
+          gridArea="title"
+          elementType="h2"
+          size="small"
+          align="center"
           // We have a visually hidden heading describing the entire visible range,
           // and the calendar itself describes the individual month
           // so we don't need to repeat that here for screen reader users.
           aria-hidden
         >
           {monthDateFormatter.format(d.toDate(state.timeZone))}
-        </h2>
+        </Heading>
+
         {i === visibleMonths - 1 && (
-          // nextMonth
-          <ActionButton {...nextButtonProps} prominence="low">
+          <ActionButton
+            {...nextButtonProps}
+            prominence="low"
+            gridArea="next"
+            justifySelf="end"
+            UNSAFE_style={{ padding: 0 }}
+          >
             <Icon
               src={direction === 'rtl' ? chevronLeftIcon : chevronRightIcon}
+              size="medium"
             />
           </ActionButton>
         )}
@@ -93,7 +116,7 @@ export function CalendarBase<T extends CalendarState | RangeCalendarState>(
   }
 
   return (
-    <div {...styleProps} {...calendarProps} ref={ref}>
+    <div {...styleProps.root} {...calendarProps} ref={ref}>
       {/* Add a screen reader only description of the entire visible range rather than
        * a separate heading above each month grid. This is placed first in the DOM order
        * so that it is the first thing a touch screen reader user encounters.
@@ -102,10 +125,10 @@ export function CalendarBase<T extends CalendarState | RangeCalendarState>(
       <VisuallyHidden>
         <h2>{calendarProps['aria-label']}</h2>
       </VisuallyHidden>
-      {/* header */}
-      <div>{titles}</div>
-      {/* months */}
-      <div>{calendars}</div>
+
+      <div {...styleProps.titles}>{titles}</div>
+      <div {...styleProps.calendars}>{calendars}</div>
+
       {/* For touch screen readers, add a visually hidden next button after the month grid
        * so it's easy to navigate after reaching the end without going all the way
        * back to the start of the month. */}
@@ -119,4 +142,56 @@ export function CalendarBase<T extends CalendarState | RangeCalendarState>(
       </VisuallyHidden>
     </div>
   );
+}
+
+function useCalendarStyles<T extends CalendarState | RangeCalendarState>(
+  props: CalendarBaseProps<T>
+) {
+  let styleProps = useStyleProps(props);
+
+  let root = {
+    ...styleProps,
+    className: classNames(
+      css({
+        maxWidth: '100%',
+        overflow: 'auto',
+        '--calendar-cell-width': tokenSchema.size.element.regular,
+        '--calendar-cell-padding': tokenSchema.size.space.xsmall,
+        '--calendar-width':
+          'calc(var(--calendar-cell-width) * 7 + var(--calendar-cell-padding) * 12)',
+      }),
+      styleProps.className
+    ),
+  };
+  let titles = {
+    className: css({
+      boxSizing: 'border-box',
+      display: 'grid',
+      gap: tokenSchema.size.space.large,
+      gridAutoColumns: '1fr',
+      gridAutoFlow: 'column',
+      paddingInline: 'var(--calendar-cell-padding)',
+      width: '100%',
+    }),
+  };
+  let calendars = {
+    className: css({
+      display: 'grid',
+      gridAutoColumns: '1fr',
+      gridAutoFlow: 'column',
+      alignItems: 'start',
+      gap: tokenSchema.size.space.large,
+    }),
+  };
+  let monthHeader = {
+    className: css({
+      alignItems: 'center',
+      display: 'grid',
+      gridTemplateAreas: `"prev title next"`,
+      gridTemplateColumns: 'minmax(auto, 1fr) auto minmax(auto, 1fr)',
+      width: 'var(--calendar-width)',
+    }),
+  };
+
+  return { calendars, monthHeader, root, titles };
 }

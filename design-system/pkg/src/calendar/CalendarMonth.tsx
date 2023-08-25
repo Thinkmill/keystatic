@@ -10,11 +10,10 @@ import { CalendarPropsBase } from '@react-types/calendar';
 import { DOMProps } from '@react-types/shared';
 import React from 'react';
 
-// import { classNames } from '@keystar/ui/style';
+import { css } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
-// import { toDataAttributes } from '@keystar/ui/utils';
 
-import { CalendarCell } from './CalendarCell';
+import { CalendarCell, useCellStyles } from './CalendarCell';
 
 interface CalendarMonthProps extends CalendarPropsBase, DOMProps {
   state: CalendarState | RangeCalendarState;
@@ -33,14 +32,26 @@ export function CalendarMonth(props: CalendarMonthProps) {
 
   let { locale } = useLocale();
   let weeksInMonth = getWeeksInMonth(startDate, locale);
+  let cellStyleProps = useCellStyles();
 
   return (
-    <table {...gridProps}>
+    <table
+      className={css({
+        borderCollapse: 'collapse',
+        borderSpacing: 0,
+        tableLayout: 'fixed',
+        userSelect: 'none',
+        width: 'var(--calendar-width)',
+      })}
+      {...gridProps}
+    >
       <thead {...headerProps}>
         <tr>
           {weekDays.map((day, index) => (
-            <th key={index}>
-              <Text>{day}</Text>
+            <th key={index} {...cellStyleProps}>
+              <Text align="center" color="neutralTertiary" size="small">
+                {day}
+              </Text>
             </th>
           ))}
         </tr>
