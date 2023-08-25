@@ -279,9 +279,10 @@ function Placeholder(props: {
         gap="regular"
         height="element.large"
         paddingX="large"
+        onClick={() => state.open()}
       >
         <Icon src={imageIcon} />
-        <Text>Cloud image (click to configure)</Text>
+        <Text>Cloud image{state.isOpen ? '' : '(click to configure)'}</Text>
       </Flex>
       <DialogContainer onDismiss={closeAndCleanup}>
         {state.isOpen && (
