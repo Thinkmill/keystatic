@@ -73,10 +73,13 @@ export function HeaderNav({
               Blog
             </Link>
             <Link
-              className={cx(linkStylesShared, linkStylesIdle)}
-              href="https://keystatic.com/showcase"
-              target="_blank"
-              rel="noopener noreferrer"
+              className={cx(
+                linkStylesShared,
+                pathname?.startsWith('/showcase')
+                  ? linkStylesCurrent
+                  : linkStylesIdle
+              )}
+              href="/showcase"
             >
               Showcase
             </Link>

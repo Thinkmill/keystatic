@@ -1,0 +1,56 @@
+---
+title: Better Dev Screencasts
+type: production
+url: https://betterdevscreencasts.com
+repoUrl: https://github.com/simonswiss/better-dev
+summary: >-
+  A collection of resources to help developers create better screencasts, and
+  level-up their overall video content creation game.
+coverImage: >-
+  https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjJ8fGJsdXIlMjBhYnN0cmFjdHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60
+sortIndex: 50
+---
+Better Dev Screencasts was possibly the **very first Keystatic website in production**. In early 2023, Simon from the Thinkmill Labs team used this site to "dogfood" Keystatic as it was being developed.
+
+To this date, Keystatic powers the site's `posts` content types, which support custom components for YouTube videos and Tweet embeds.
+
+Missing image ../../assets/projects/better-dev-screencasts/admin-ui-screenshot.png
+
+## Keystatic config
+
+Here's what the config for the `posts` collection looks like in this project:
+
+```typescript
+posts: collection({
+  label: 'Posts',
+  path: 'content/posts/*',
+  slugField: 'title',
+  format: {
+    contentField: 'content',
+  },
+  entryLayout: 'content',
+  schema: {
+    title: fields.slug({ name: { label: 'Title' } }),
+    date: fields.date({ 
+      label: 'Date', 
+      validation: { isRequired: true } 
+    }),
+    excerpt: fields.text({ label: 'Excerpt' }),
+    coverImage: fields.image({
+      label: 'Cover image',
+      directory: 'public/images/posts',
+      publicPath: '/images/posts',
+    }),
+    content: fields.document({
+      label: 'Post copy',
+      layouts: [[1, 1]],
+      formatting: true,
+      dividers: true,
+      links: true,
+      componentBlocks,
+    }),
+  },
+}),
+```
+
+The API for the `componentBlocks` is slightly outdated and likely to change in the future, so we won't share the code snippet here —&nbsp;but you can find it on the project's [GitHub repo](https://github.com/simonswiss/better-dev/blob/main/component-blocks.tsx) which is public!

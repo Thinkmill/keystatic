@@ -5,6 +5,9 @@ module.exports = {
   experimental: {
     externalDir: true,
   },
+  images: {
+    remotePatterns: [{ hostname: 'images.unsplash.com' }],
+  },
   async redirects() {
     return [
       {

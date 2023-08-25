@@ -1,3 +1,3 @@
-export default function Docs() {
+export default async function Docs() {
   return null;
 }
