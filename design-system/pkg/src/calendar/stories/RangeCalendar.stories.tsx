@@ -2,13 +2,13 @@ import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
 
 import { action, Parameters, StoryObj } from '@keystar/ui-storybook';
 
-import { Calendar } from '../index';
+import { RangeCalendar } from '../index';
 
-type Story = StoryObj<typeof Calendar>;
+type Story = StoryObj<typeof RangeCalendar>;
 
 export default {
-  title: 'Components/Date and Time/Calendar',
-  component: Calendar,
+  title: 'Components/Date and Time/RangeCalendar',
+  component: RangeCalendar,
   args: {
     onChange: action('onChange'),
   },
@@ -45,42 +45,31 @@ export const Default: Story = render();
 
 export const DefaultValue: Story = {
   ...Default,
-  args: { defaultValue: new CalendarDate(2023, 8, 25) },
+  args: {
+    defaultValue: {
+      start: new CalendarDate(2023, 8, 5),
+      end: new CalendarDate(2023, 8, 10),
+    },
+  },
 };
 
 export const ControlledValue: Story = {
   ...Default,
-  args: { value: new CalendarDate(2023, 8, 26) },
+  args: {
+    value: {
+      start: new CalendarDate(2023, 8, 5),
+      end: new CalendarDate(2023, 8, 10),
+    },
+  },
 };
 
 export const OneWeek: Story = {
   ...Default,
   args: {
     minValue: today(getLocalTimeZone()),
-    maxValue: today(getLocalTimeZone()).add({ weeks: 2 }),
+    maxValue: today(getLocalTimeZone()).add({ weeks: 1 }),
   },
   name: 'minValue + maxValue',
-};
-
-export const DateUnavailable: Story = {
-  render: args => (
-    <Calendar
-      {...args}
-      defaultValue={today(getLocalTimeZone()).add({ days: 1 })}
-      isDateUnavailable={date => {
-        const now = today(getLocalTimeZone());
-        const disabledIntervals = [
-          [now.add({ days: 1 }), now.add({ weeks: 1 })],
-          [now.add({ weeks: 2 }), now.add({ weeks: 3 })],
-        ];
-        return disabledIntervals.some(
-          interval =>
-            date.compare(interval[0]) > 0 && date.compare(interval[1]) < 0
-        );
-      }}
-    />
-  ),
-  name: 'isDateUnavailable',
 };
 
 export const DefaultFocusedValue: Story = {
@@ -92,7 +81,7 @@ export const DefaultFocusedValue: Story = {
 function render(props = {}) {
   return {
     render: (args: Parameters) => (
-      <Calendar
+      <RangeCalendar
         {...args}
         onChange={action('change')}
         UNSAFE_className="custom-class-name"

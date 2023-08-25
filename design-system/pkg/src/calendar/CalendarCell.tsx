@@ -77,8 +77,7 @@ export function CalendarCell({
     isDisabled: isDisabled || isUnavailable || state.isReadOnly,
   });
 
-  let cellStyleProps = useCellStyles();
-  let dayStyleProps = useDayStyles({
+  let dayState = {
     // Style disabled (i.e. out of min/max range), but selected dates as unavailable
     // since it is more clear than trying to dim the selection.
     isDisabled: isDisabled && !isInvalid,
@@ -95,7 +94,9 @@ export function CalendarCell({
     isSelectionStart: isSelectionStart,
     isToday: isToday(props.date, state.timeZone),
     isUnavailable: isUnavailable || (isInvalid && isDisabled),
-  });
+  };
+  let cellStyleProps = useCellStyles(dayState);
+  let dayStyleProps = useDayStyles(dayState);
 
   return (
     <td {...cellStyleProps} {...cellProps}>
@@ -112,16 +113,32 @@ export function CalendarCell({
   );
 }
 
-export function useCellStyles() {
+export function useCellStyles(props: Partial<CellStyleProps> = {}) {
   let cellSize = `var(--calendar-cell-width, ${tokenSchema.size.element.regular})`;
   let cellPadding = `var(--calendar-cell-padding, ${tokenSchema.size.space.xsmall})`;
   return {
+    ...toDataAttributes(props, {
+      omitFalsyValues: true,
+      trimBooleanKeys: true,
+    }),
     className: css({
       height: cellSize,
       padding: cellPadding,
       position: 'relative',
       textAlign: 'center',
       width: cellSize,
+
+      '&[data-range-selection]:not([data-outside-month])': {
+        backgroundColor: tokenSchema.color.alias.backgroundSelected,
+      },
+      '&[data-selection-start], &[data-range-start]': {
+        borderStartStartRadius: tokenSchema.size.radius.full,
+        borderEndStartRadius: tokenSchema.size.radius.full,
+      },
+      '&[data-selection-end], &[data-range-end]': {
+        borderStartEndRadius: tokenSchema.size.radius.full,
+        borderEndEndRadius: tokenSchema.size.radius.full,
+      },
     }),
   };
 }
@@ -155,7 +172,7 @@ function useDayStyles(props: CellStyleProps) {
     outline: 0,
     position: 'absolute',
 
-    // Ephemeral states
+    // Interaction states
     // -------------------------------------------------------------------------
 
     '&[data-hovered]': {
@@ -170,20 +187,39 @@ function useDayStyles(props: CellStyleProps) {
       outlineOffset: tokenSchema.size.alias.focusRingGap,
     },
 
+    // Selection states
+    // -------------------------------------------------------------------------
+
+    '&[data-disabled]': {
+      color: tokenSchema.color.alias.foregroundDisabled,
+    },
+    '&[data-selected]:not([data-range-selection]), &[data-selection-start], &[data-selection-end]':
+      {
+        backgroundColor: tokenSchema.color.background.accentEmphasis,
+        color: tokenSchema.color.foreground.onEmphasis,
+      },
+    '&[data-range-selection]:not([data-selection-start], [data-selection-end])':
+      {
+        color: tokenSchema.color.foreground.accent,
+        '&[data-hovered]': {
+          backgroundColor: tokenSchema.color.alias.backgroundSelectedHovered,
+        },
+      },
+
     // Date specific
     // -------------------------------------------------------------------------
 
-    // dates from other months
+    // hide dates from other months
     '&[data-outside-month]': {
       visibility: 'hidden',
     },
 
-    // today's date
+    // today — indicated by a small underline beneath the date
     '&[data-today]': {
       color: tokenSchema.color.foreground.accent,
       fontWeight: tokenSchema.typography.fontWeight.semibold,
 
-      '::before': {
+      '&:not([data-unavailable])::before': {
         backgroundColor: 'currentColor',
         borderRadius: tokenSchema.size.radius.full,
         content: '""',
@@ -195,15 +231,19 @@ function useDayStyles(props: CellStyleProps) {
       },
     },
 
-    // Deterministic states
-    // -------------------------------------------------------------------------
-
-    '&[data-disabled]': {
-      color: tokenSchema.color.alias.foregroundDisabled,
-    },
-    '&[data-selected]': {
-      backgroundColor: tokenSchema.color.background.accentEmphasis,
-      color: tokenSchema.color.foreground.onEmphasis,
+    // unavailable — indicated by an angled strike-through over the date
+    '&[data-unavailable]': {
+      '::before': {
+        backgroundColor: 'currentColor',
+        borderRadius: tokenSchema.size.radius.full,
+        content: '""',
+        height: tokenSchema.size.border.medium,
+        marginInline: 'auto',
+        position: 'absolute',
+        top: '50%',
+        insetInline: tokenSchema.size.space.small,
+        transform: 'rotate(-16deg)',
+      },
     },
   });
 

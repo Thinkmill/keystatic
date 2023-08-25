@@ -153,8 +153,11 @@ function useCalendarStyles<T extends CalendarState | RangeCalendarState>(
     ...styleProps,
     className: classNames(
       css({
+        boxSizing: 'border-box',
         maxWidth: '100%',
         overflow: 'auto',
+        // make space for the focus ring, so it doesn't get cropped
+        padding: `calc(${tokenSchema.size.alias.focusRing} + ${tokenSchema.size.alias.focusRingGap})`,
         '--calendar-cell-width': tokenSchema.size.element.regular,
         '--calendar-cell-padding': tokenSchema.size.space.xsmall,
         '--calendar-width':
