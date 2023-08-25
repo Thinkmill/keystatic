@@ -1,10 +1,19 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Entry } from '@keystatic/core/reader';
 
 import { reader } from '../../../utils/reader';
+import keystaticConfig from '../../../../keystatic.config';
+import Button from '../../../components/button';
+
+type Project = {
+  slug: string;
+  entry: Entry<(typeof keystaticConfig)['collections']['projects']>;
+};
 
 export default async function Showcase() {
-  const projects = await reader.collections.projects.all();
+  const projects: Project[] = await reader.collections.projects.all();
 
   if (!projects) notFound();
 
@@ -12,43 +21,99 @@ export default async function Showcase() {
     return (a.entry.sortIndex as number) - (b.entry.sortIndex as number);
   });
 
+  const highlightedProjects = sortedProjects.splice(0, 2);
+
   return (
     <>
-      <div className="text-center">
+      <div className="mx-auto mt-16 max-w-2xl text-center">
         <h1 className="text-5xl font-extrabold">Built with Keystatic</h1>
-        <p className="mt-2 text-lg md:mt-4">
-          A collection of projects using Keystatic to manage parts of their
-          codebase.
-        </p>
+        <div className="mt-4 space-y-4 text-lg font-medium md:mt-6">
+          <p>
+            A collection of projects using Keystatic to manage parts of their
+            codebase.
+          </p>
+          <p>
+            Built something with Keystatic?{' '}
+            <Link
+              className="border-b-2 border-black hover:border-transparent"
+              href=""
+            >
+              Share your project
+            </Link>
+          </p>
+        </div>
       </div>
-      <ul className="grid gap-x-6 gap-y-16 py-8 sm:grid-cols-2 sm:py-12 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-12 lg:py-16 xl:gap-x-12 xl:gap-y-16">
+
+      {/* Highlighted projects */}
+      <ul className="mt-16 grid gap-6 sm:grid-cols-2">
+        {highlightedProjects.map(async ({ slug, entry }) => {
+          return <ProjectCard entry={entry} slug={slug} />;
+        })}
+      </ul>
+
+      <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {sortedProjects.map(async ({ slug, entry }) => {
-          return (
-            <li>
-              <div className="rounded-md bg-black/[0.03] p-3">
-                <div className="relative aspect-[16/10]">
-                  <Image
-                    src={entry.coverImage}
-                    layout="fill"
-                    alt=""
-                    className="absolute inset-0 w-full rounded-lg object-cover shadow-lg"
-                  />
-                </div>
-              </div>
-              <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1">
-                <h2 className="font-semibold group-hover:underline xl:text-lg">
-                  {entry.title}
-                </h2>
-                {/* <Badge type={entry.type} transition:name={`badge-${slug}`} /> */}
-              </div>
-              <p className="mt-1 text-slate-600">{entry.summary}</p>
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                {/* <ActionButtons data={data} slug={slug} body={body} /> */}
-              </div>
-            </li>
-          );
+          return <ProjectCard entry={entry} slug={slug} />;
         })}
       </ul>
     </>
+  );
+}
+
+function ProjectCard({ entry, slug }: Project) {
+  return (
+    <li className="relative flex flex-col overflow-hidden rounded-2xl border border-slate-50 bg-slate-50 p-8 @container">
+      <div className="flex-1">
+        <div className="flex items-start justify-between gap-x-4">
+          <h2 className="text-xl font-bold group-hover:underline @sm:text-2xl">
+            {entry.title}
+          </h2>
+          {entry.type === 'demo' && <DemoBadge />}
+        </div>
+        <p className="mt-6 text-sm text-slate-900">{entry.summary}</p>
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          {/* TODO: New button styles */}
+          <Button
+            impact="light"
+            href={`/showcase/${slug}`}
+            className="flex gap-2"
+          >
+            <span>Visit</span>
+            <span>&rarr;</span>
+          </Button>
+        </div>
+      </div>
+
+      <div className="relative aspect-[16/10] translate-x-12 translate-y-8">
+        <Image
+          src={entry.coverImage}
+          layout="fill"
+          alt=""
+          className="absolute inset-0 w-full rounded-tl-xl object-cover"
+        />
+      </div>
+    </li>
+  );
+}
+
+function DemoBadge() {
+  return (
+    <span className="mt-0.5 inline-flex items-center gap-2 rounded-full border border-amber-300 bg-amber-100 px-2 py-1 text-sm font-medium text-amber-800">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        className="h-4 w-4 text-amber-700"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
+        />
+      </svg>
+      Demo
+    </span>
   );
 }
