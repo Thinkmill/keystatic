@@ -415,7 +415,7 @@ function imageWithTransforms(options: {
 }) {
   let { fit = 'scale-down', source, height, width } = options;
 
-  if (!/https?:\/\/[^\.]+.keystatic.net/.test(source)) {
+  if (!/^https?:\/\/[^\.]+\.keystatic\.net/.test(source)) {
     return source;
   }
 
