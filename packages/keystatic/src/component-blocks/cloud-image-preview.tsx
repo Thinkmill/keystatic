@@ -279,9 +279,10 @@ function Placeholder(props: {
         gap="regular"
         height="element.large"
         paddingX="large"
+        onClick={() => state.open()}
       >
         <Icon src={imageIcon} />
-        <Text>Cloud image, awaiting configuration…</Text>
+        <Text>Cloud image{state.isOpen ? '' : '(click to configure)'}</Text>
       </Flex>
       <DialogContainer onDismiss={closeAndCleanup}>
         {state.isOpen && (
@@ -340,11 +341,7 @@ function ImagePreview({
             borderTop={selected ? 'color.alias.borderFocused' : 'neutral'}
           >
             <VStack flex="1" gap="medium" justifyContent="center">
-              {image.alt ? (
-                <Text truncate={2}>{image.alt}</Text>
-              ) : (
-                <Text truncate>(missing alt text)</Text>
-              )}
+              {image.alt ? <Text truncate={2}>{image.alt}</Text> : null}
               <Text color="neutralTertiary" size="small">
                 {image.width} × {image.height}
               </Text>
@@ -417,6 +414,10 @@ function imageWithTransforms(options: {
   width: number;
 }) {
   let { fit = 'scale-down', source, height, width } = options;
+
+  if (!/^https?:\/\/[^\.]+\.keystatic\.net/.test(source)) {
+    return source;
+  }
 
   return (
     `${source}?` +
