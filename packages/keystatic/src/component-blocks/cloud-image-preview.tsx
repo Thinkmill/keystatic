@@ -87,7 +87,7 @@ function ImageDialog(props: {
   onClose: () => void;
 }) {
   const { image, onCancel, onChange, onClose } = props;
-  const [state, setState] = useState<CloudImageProps>(emptyImageData);
+  const [state, setState] = useState<CloudImageProps>(image ?? emptyImageData);
   const [status, setStatus] = useState<ImageStatus>(image ? 'good' : '');
   const [dimensions, setDimensions] = useState<ImageDimensions>(emptyImageData);
   const formId = useId();
