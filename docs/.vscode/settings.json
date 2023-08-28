@@ -1,4 +1,21 @@
 {
   "typescript.tsdk": "../node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  // Tailwind Intellisense power-up
+  // Extend scope of supported attributes with `{anything}Classes`:
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "ngClass",
+    ".*Classes.*"
+  ],
+  // Regex black magic:
+  "tailwindCSS.experimental.classRegex": [
+    // tailwind-variants
+    ["tv\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    // CVA (with support for JSON)
+    ["cva(s*(\"[^\"]*\"|s*,s*|{(?:[^{}]|(?:{(?:[^{}]|(?:{[^{}]*}))*}))*}s*)*)"],
+    // `cx()` function from classnames / clsx
+    ["cx\\(([^)]*)\\)", "(?:\"|'|`)([^(?:\"|'|`)]*)(?:\"|'|`)"]
+  ]
 }

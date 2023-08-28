@@ -46,11 +46,11 @@ export function NavItem({
         <div
           className={cx(
             styleShared,
-            'inline-flex gap-1 items-baseline text-neutral-500'
+            'inline-flex items-baseline gap-1 text-neutral-500'
           )}
         >
           {label}
-          <div className="px-1 py-0.5 rounded bg-amber-100 text-amber-800 font-medium text-[0.625rem] leading-none uppercase self-start">
+          <div className="self-start rounded bg-amber-100 px-1 py-0.5 text-[0.625rem] font-medium uppercase leading-none text-amber-800">
             Soon
           </div>
         </div>
