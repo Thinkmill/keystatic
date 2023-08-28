@@ -162,7 +162,6 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         src={src}
         height={height ?? undefined}
         width={width ?? imgMaxWidthPx}
-        sizes={`(max-width: 375px) 375px, ${imgMaxWidthPx}px`}
         className="rounded-lg my-2"
       />
     );
