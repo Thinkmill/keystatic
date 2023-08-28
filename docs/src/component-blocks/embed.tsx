@@ -1,18 +1,12 @@
 import { fields, component, NotEditable } from '@keystatic/core';
 
-const codeFontFamily =
-  'ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace';
-
 export const embed = component({
   label: 'Embed',
   preview: props => (
-    <NotEditable
-      style={{
-        fontFamily: codeFontFamily,
-        fontSize: '0.8rem',
-      }}
-    >
-      {props.fields.embedCode.value || '(no embed code set)'}
+    <NotEditable>
+      <pre>
+        <code>{props.fields.embedCode.value || '(no embed code set)'}</code>
+      </pre>
     </NotEditable>
   ),
   schema: {

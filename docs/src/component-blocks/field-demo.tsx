@@ -4,7 +4,13 @@ export const fieldDemo = component({
   preview: props => {
     return (
       <NotEditable>
-        Field: {props.fields.field.value || '(none selected)'}
+        {props.fields.field.value ? (
+          <>
+            Field: <code>{props.fields.field.value}</code>
+          </>
+        ) : (
+          '(no field selected)'
+        )}
       </NotEditable>
     );
   },
