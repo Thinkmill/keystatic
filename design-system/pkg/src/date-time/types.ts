@@ -1,15 +1,17 @@
 import {
+  AriaDatePickerProps,
+  AriaDateRangePickerProps,
   DateValue,
   Granularity,
   MappedDateValue,
   MappedTimeValue,
   TimeValue,
 } from '@react-types/datepicker';
-import { FocusableProps, ValueBase } from '@react-types/shared';
+import { FocusableProps, RangeValue, ValueBase } from '@react-types/shared';
 
 import { FieldProps } from '@keystar/ui/field';
 
-export type DateFieldProps<T extends DateValue> = {
+type DateFieldBase<T extends DateValue> = {
   /** The minimum allowed date that a user may select. */
   minValue?: DateValue;
   /** The maximum allowed date that a user may select. */
@@ -27,7 +29,15 @@ export type DateFieldProps<T extends DateValue> = {
    * @default false
    */
   hideTimeZone?: boolean;
-} & FocusableProps &
+  /**
+   * Whether to always show leading zeros in the month, day, and hour fields.
+   * By default, this is determined by the user's locale.
+   */
+  shouldForceLeadingZeros?: boolean;
+};
+
+export type DateFieldProps<T extends DateValue> = DateFieldBase<T> &
+  FocusableProps &
   ValueBase<T | null, MappedDateValue<T>> &
   FieldProps;
 
@@ -38,7 +48,7 @@ export type TimeFieldProps<T extends TimeValue> = {
    * Determines the smallest unit that is displayed in the time picker.
    * @default 'minute'
    */
-  granularity?: 'hour' | 'minute' | 'second';
+  granularity?: Exclude<Granularity, 'day'>;
   /** Whether to hide the time zone abbreviation. */
   hideTimeZone?: boolean;
   /**
@@ -53,3 +63,26 @@ export type TimeFieldProps<T extends TimeValue> = {
 } & FocusableProps &
   ValueBase<T | null, MappedTimeValue<T>> &
   FieldProps;
+
+type DatePickerBase<T extends DateValue> = {
+  /**
+   * The maximum number of months to display at once in the calendar popover, if screen space permits.
+   * @default 1
+   */
+  maxVisibleMonths?: number;
+  /**
+   * Whether the calendar popover should automatically flip direction when space is limited.
+   * @default true
+   */
+  shouldFlip?: boolean;
+} & DateFieldBase<T> &
+  FocusableProps &
+  FieldProps;
+
+export type DatePickerProps<T extends DateValue> = DatePickerBase<T> &
+  AriaDatePickerProps<T> &
+  ValueBase<T | null, MappedDateValue<T>>;
+
+export type DateRangePickerProps<T extends DateValue> = DatePickerBase<T> &
+  AriaDateRangePickerProps<T> &
+  ValueBase<RangeValue<T> | null, RangeValue<MappedDateValue<T>>>;

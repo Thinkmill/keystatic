@@ -6141,7 +6141,7 @@
     "@react-aria/calendar": "^3.4.1",
     "@react-aria/checkbox": "^3.9.2",
     "@react-aria/combobox": "^3.6.2",
-    "@react-aria/datepicker": "^3.4.0",
+    "@react-aria/datepicker": "^3.6.0",
     "@react-aria/dialog": "^3.5.3",
     "@react-aria/dnd": "^3.3.0",
     "@react-aria/focus": "^3.13.0",

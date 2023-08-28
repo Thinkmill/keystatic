@@ -3,8 +3,16 @@ import { DateFieldState, DateSegment } from '@react-stately/datepicker';
 import { DatePickerBase, DateValue } from '@react-types/datepicker';
 import React, { useRef } from 'react';
 
-import { css, toDataAttributes, tokenSchema } from '@keystar/ui/style';
+import {
+  ClassList,
+  classNames,
+  css,
+  toDataAttributes,
+  tokenSchema,
+} from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
+
+const segmentClassList = new ClassList('InputSegment');
 
 interface InputSegmentProps extends DatePickerBase<DateValue> {
   segment: DateSegment;
@@ -29,11 +37,15 @@ function LiteralSegment({ segment }: { segment: DateSegment }) {
     <Text
       elementType="span"
       aria-hidden="true"
-      color="neutralTertiary"
       trim={false}
       UNSAFE_className={css({
+        color: tokenSchema.color.foreground.neutral,
         userSelect: 'none',
         whiteSpace: 'pre',
+
+        [`${segmentClassList.selector('editable')}[data-placeholder] ~ &`]: {
+          color: tokenSchema.color.foreground.neutralTertiary,
+        },
       })}
       data-testid={segment.type === 'literal' ? undefined : segment.type}
     >
@@ -45,50 +57,14 @@ function LiteralSegment({ segment }: { segment: DateSegment }) {
 function EditableSegment({ segment, state }: InputSegmentProps) {
   let ref = useRef<HTMLDivElement>(null);
   let { segmentProps } = useDateSegment(segment, state, ref);
+  let styleProps = useEditableSectionStyles(segment);
 
   return (
     <div
       {...segmentProps}
-      {...toDataAttributes({
-        placeholder: segment.isPlaceholder,
-        readonly: !segment.isEditable,
-      })}
+      {...styleProps}
+      style={{ ...styleProps.style, ...segmentProps.style }}
       ref={ref}
-      className={css({
-        borderRadius: tokenSchema.size.radius.small,
-        color: tokenSchema.color.foreground.neutral,
-        paddingInline: tokenSchema.size.space.xsmall,
-
-        // text styles
-        fontFamily: tokenSchema.typography.fontFamily.base,
-        fontSize: tokenSchema.typography.text.regular.size,
-        fontVariantNumeric: 'tabular-nums',
-        fontWeight: tokenSchema.typography.fontWeight.regular,
-        lineHeight: tokenSchema.typography.lineheight.small,
-        whiteSpace: 'nowrap',
-        MozOsxFontSmoothing: 'auto',
-        WebkitFontSmoothing: 'auto',
-
-        '[dir=ltr] &': { textAlign: 'right' },
-        '[dir=rtl] &': { textAlign: 'left' },
-
-        '&[data-placeholder=true]': {
-          color: tokenSchema.color.foreground.neutralTertiary,
-        },
-
-        '&:focus': {
-          backgroundColor: tokenSchema.color.background.accentEmphasis,
-          color: tokenSchema.color.foreground.onEmphasis,
-          outline: 'none',
-        },
-      })}
-      style={{
-        ...segmentProps.style,
-        minWidth:
-          segment.maxValue != null
-            ? String(segment.maxValue).length + 'ch'
-            : undefined,
-      }}
       data-testid={segment.type}
     >
       <span
@@ -114,4 +90,50 @@ function EditableSegment({ segment, state }: InputSegmentProps) {
       {!segment.isPlaceholder && segment.text}
     </div>
   );
+}
+
+function useEditableSectionStyles(segment: DateSegment) {
+  return {
+    ...toDataAttributes(
+      { placeholder: segment.isPlaceholder, readonly: !segment.isEditable },
+      { omitFalsyValues: true }
+    ),
+    className: classNames(
+      css({
+        borderRadius: tokenSchema.size.radius.small,
+        color: tokenSchema.color.foreground.neutral,
+        paddingInline: tokenSchema.size.space.xsmall,
+
+        // text styles
+        fontFamily: tokenSchema.typography.fontFamily.base,
+        fontSize: tokenSchema.typography.text.regular.size,
+        fontVariantNumeric: 'tabular-nums',
+        fontWeight: tokenSchema.typography.fontWeight.regular,
+        lineHeight: tokenSchema.typography.lineheight.small,
+        whiteSpace: 'nowrap',
+        MozOsxFontSmoothing: 'auto',
+        WebkitFontSmoothing: 'auto',
+
+        '[dir=ltr] &': { textAlign: 'right' },
+        '[dir=rtl] &': { textAlign: 'left' },
+
+        '&[data-placeholder]': {
+          color: tokenSchema.color.foreground.neutralTertiary,
+        },
+
+        '&:focus': {
+          backgroundColor: tokenSchema.color.background.accentEmphasis,
+          color: tokenSchema.color.foreground.onEmphasis,
+          outline: 'none',
+        },
+      }),
+      segmentClassList.declare('editable')
+    ),
+    style: {
+      minWidth:
+        segment.maxValue != null
+          ? String(segment.maxValue).length + 'ch'
+          : undefined,
+    },
+  };
 }

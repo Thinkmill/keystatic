@@ -1,4 +1,9 @@
-import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
+import {
+  CalendarDate,
+  getLocalTimeZone,
+  parseDate,
+  today,
+} from '@internationalized/date';
 
 import { action, Parameters, StoryObj } from '@keystar/ui-storybook';
 
@@ -45,12 +50,12 @@ export const Default: Story = render();
 
 export const DefaultValue: Story = {
   ...Default,
-  args: { defaultValue: new CalendarDate(2023, 8, 25) },
+  args: { defaultValue: parseDate('2023-08-25') },
 };
 
 export const ControlledValue: Story = {
   ...Default,
-  args: { value: new CalendarDate(2023, 8, 26) },
+  args: { value: parseDate('2023-08-26') },
 };
 
 export const OneWeek: Story = {

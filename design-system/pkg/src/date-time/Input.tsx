@@ -1,6 +1,6 @@
-import { mergeProps, mergeRefs } from '@react-aria/utils';
+import { mergeProps, useObjectRef } from '@react-aria/utils';
 import { useFocusRing } from '@react-aria/focus';
-import { ReactNode, forwardRef, useRef } from 'react';
+import { CSSProperties, DOMAttributes, ReactNode, forwardRef } from 'react';
 
 import {
   classNames,
@@ -14,28 +14,19 @@ type InputProps = {
   children?: ReactNode;
   className?: string;
   disableFocusRing?: boolean;
-  fieldProps?: any;
-  inputClassName?: string;
+  fieldProps?: DOMAttributes<HTMLElement>;
   isDisabled?: boolean;
-  style?: any;
+  style?: CSSProperties;
   validationState?: 'valid' | 'invalid';
 };
 
 export const Input = forwardRef<HTMLDivElement, InputProps>(function Input(
   props,
-  ref
+  forwardedRef
 ) {
-  let inputRef = useRef(null);
-  let {
-    children,
-    className,
-    disableFocusRing,
-    fieldProps,
-    inputClassName,
-    isDisabled,
-    style,
-    validationState,
-  } = props;
+  let inputRef = useObjectRef(forwardedRef);
+  let { children, disableFocusRing, fieldProps, isDisabled, validationState } =
+    props;
 
   let { focusProps, isFocusVisible, isFocused } = useFocusRing({
     isTextInput: true,
@@ -43,7 +34,7 @@ export const Input = forwardRef<HTMLDivElement, InputProps>(function Input(
   });
 
   let isInvalid = validationState === 'invalid' && !isDisabled;
-  let inputStyles = useInputStyles(inputClassName, {
+  let styleProps = useInputStyles(props, {
     isDisabled,
     isInvalid,
     isFocused,
@@ -54,24 +45,21 @@ export const Input = forwardRef<HTMLDivElement, InputProps>(function Input(
     <div
       role="presentation"
       {...mergeProps(fieldProps, focusProps)}
-      className={className}
-      style={style}
+      {...styleProps}
     >
-      <div role="presentation" {...inputStyles}>
-        <div
-          role="presentation"
-          className={css({
-            alignItems: 'center',
-            display: 'flex',
-            height: '100%',
-            overflowX: 'auto',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-          })}
-          ref={mergeRefs(ref, inputRef)}
-        >
-          {children}
-        </div>
+      <div
+        role="presentation"
+        className={css({
+          alignItems: 'center',
+          display: 'flex',
+          height: '100%',
+          overflowX: 'auto',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+        })}
+        ref={inputRef}
+      >
+        {children}
       </div>
     </div>
   );
@@ -79,18 +67,18 @@ export const Input = forwardRef<HTMLDivElement, InputProps>(function Input(
 
 type InputState = {
   isDisabled?: boolean;
-  isInvalid: boolean;
   isFocused: boolean;
   isFocusVisible: boolean;
+  isInvalid: boolean;
 };
-function useInputStyles(inputClassName: string | undefined, state: InputState) {
-  let { isDisabled, isInvalid, isFocused, isFocusVisible } = state;
+
+function useInputStyles(props: InputProps, state: InputState) {
   let className = classNames(
-    inputClassName,
     css({
       backgroundColor: tokenSchema.color.background.canvas,
       border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
       borderRadius: tokenSchema.size.radius.regular,
+      cursor: 'text',
       height: tokenSchema.size.element.regular,
       lineHeight: tokenSchema.typography.lineheight.small,
       outline: 0,
@@ -104,26 +92,29 @@ function useInputStyles(inputClassName: string | undefined, state: InputState) {
       minWidth: tokenSchema.size.scale[2000],
       width: '100%',
 
-      '&[data-invalid=true]': {
+      '&[data-invalid]': {
         borderColor: tokenSchema.color.alias.borderInvalid,
       },
-      '&[data-focus]': {
+      '&[data-focused]': {
         borderColor: tokenSchema.color.alias.borderFocused,
+      },
+      '&[data-focus-visible]': {
         boxShadow: `0 0 0 1px ${tokenSchema.color.alias.borderFocused}`,
       },
-      '&[data-disabled=true]': {
-        backgroundColor: tokenSchema.color.background.surfaceSecondary,
+      '&[data-disabled]': {
+        backgroundColor: tokenSchema.color.alias.backgroundDisabled,
         borderColor: 'transparent',
       },
-    })
+    }),
+    props.className
   );
 
   return {
-    ...toDataAttributes({
-      disabled: isDisabled || undefined,
-      invalid: isInvalid || undefined,
-      focus: isFocusVisible ? 'visible' : isFocused || undefined,
+    ...toDataAttributes(state, {
+      omitFalsyValues: true,
+      trimBooleanKeys: true,
     }),
     className,
+    style: props.style,
   };
 }

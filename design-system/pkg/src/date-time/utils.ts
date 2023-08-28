@@ -1,11 +1,9 @@
+import { useDisplayNames } from '@react-aria/datepicker';
 import { createFocusManager } from '@react-aria/focus';
 import { useDateFormatter } from '@react-aria/i18n';
-import { useDisplayNames } from '@react-aria/datepicker';
-import { useLayoutEffect } from '@react-aria/utils';
+import { useLayoutEffect, useObjectRef } from '@react-aria/utils';
 import { SpectrumDatePickerBase } from '@react-types/datepicker';
-import { Ref, useImperativeHandle, useMemo, useRef, useState } from 'react';
-
-import { useProvider } from '@keystar/ui/core';
+import { Ref, useImperativeHandle, useMemo, useState } from 'react';
 
 export function useFormatHelpText(
   props: Pick<SpectrumDatePickerBase, 'description' | 'showFormatHelpText'>
@@ -25,7 +23,6 @@ export function useFormatHelpText(
             return s.value;
           }
 
-          // @ts-expect-error - not sure what's going on here
           return displayNames.of(s.type);
         })
         .join(' ');
@@ -36,37 +33,39 @@ export function useFormatHelpText(
 }
 
 export function useVisibleMonths(maxVisibleMonths: number) {
-  let { scale } = useProvider();
-  let [visibleMonths, setVisibleMonths] = useState(getVisibleMonths(scale));
+  let [visibleMonths, setVisibleMonths] = useState(getVisibleMonths());
   useLayoutEffect(() => {
-    let onResize = () => setVisibleMonths(getVisibleMonths(scale));
+    let onResize = () => setVisibleMonths(getVisibleMonths());
     onResize();
 
     window.addEventListener('resize', onResize);
     return () => {
       window.removeEventListener('resize', onResize);
     };
-  }, [scale]);
+  }, []);
 
   return Math.max(1, Math.min(visibleMonths, maxVisibleMonths, 3));
 }
 
-function getVisibleMonths(scale: 'large' | 'medium') {
+// these calculations are brittle, they depend on styling decisions in both:
+// - the `CalendarBase` component, from "@keystar/ui/calendar"
+// - the `DatePickerPopover` component
+function getVisibleMonths() {
   if (typeof window === 'undefined') {
     return 1;
   }
-  let monthWidth = scale === 'large' ? 336 : 280;
-  let gap = scale === 'large' ? 30 : 24;
-  let popoverPadding = scale === 'large' ? 32 : 48;
+  let monthWidth = 248;
+  let gap = 16;
+  let dialogPadding = 20;
   return Math.floor(
-    (window.innerWidth - popoverPadding * 2) / (monthWidth + gap)
+    (window.innerWidth - dialogPadding * 2) / (monthWidth + gap)
   );
 }
 
 export function useFocusManagerRef(ref: Ref<HTMLDivElement>) {
-  let domRef = useRef<HTMLDivElement>(null);
-  // @ts-expect-error - useImperativeHandle wants all properties from `ref`, wtf???
-  useImperativeHandle(ref, () => ({
+  let domRef = useObjectRef<HTMLDivElement>(ref);
+  useImperativeHandle(domRef, () => ({
+    ...domRef.current,
     focus() {
       createFocusManager(domRef).focusFirst({ tabbable: true });
     },
