@@ -172,7 +172,7 @@ importers:
       '@emotion/css': ^11.9.0
       '@floating-ui/react': ^0.24.0
       '@internationalized/date': ^3.3.0
-      '@keystar/ui': ^0.2.1
+      '@keystar/ui': ^0.2.2
       '@keystar/ui-storybook': ^0.0.1
       '@react-aria/actiongroup': ^3.6.0
       '@react-aria/breadcrumbs': ^3.5.3
@@ -688,7 +688,7 @@ importers:
       '@floating-ui/react': ^0.24.0
       '@hapi/iron': ^7.0.0
       '@internationalized/string': ^3.1.1
-      '@keystar/ui': ^0.2.1
+      '@keystar/ui': ^0.2.2
       '@markdoc/markdoc': ^0.3.0
       '@react-aria/focus': ^3.13.0
       '@react-aria/i18n': ^3.8.0
@@ -5731,8 +5731,8 @@ packages:
   /@juggle/resize-observer/3.4.0:
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
 
-  /@keystar/ui/0.2.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-/jYibJyjMWvCPRIGtopZcF/QKTTneEyPemR9fMh8nvnovGLWEv+cALZoLZr4Do0AVGgTCmMM3BUgpQQmfltqWw==}
+  /@keystar/ui/0.2.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-EUWYU6a1Tf2AEQzyhDVfZarcfh5yjhCJPRUD5hBaHo9Q/g8mrA8V94u/8gWz4pWkPrXXCJuR/U2jd43uktuHTg==}
     peerDependencies:
       next: '13'
       react: ^18.2.0
@@ -5822,7 +5822,6 @@ packages:
       lodash: 4.17.21
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      react-keyed-flatten-children: 1.3.0_react@18.2.0
       react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
     dev: false
 
@@ -5858,7 +5857,7 @@ packages:
       '@floating-ui/react': 0.24.2_biqbaboplfbrettd7655fr4n2y
       '@hapi/iron': 7.0.1
       '@internationalized/string': 3.1.1
-      '@keystar/ui': 0.2.0_biqbaboplfbrettd7655fr4n2y
+      '@keystar/ui': 0.2.1_biqbaboplfbrettd7655fr4n2y
       '@markdoc/markdoc': 0.3.0_j3ahe22lw6ac2w6qvqp4kjqnqy
       '@react-aria/focus': 3.13.0_react@18.2.0
       '@react-aria/i18n': 3.8.0_react@18.2.0
