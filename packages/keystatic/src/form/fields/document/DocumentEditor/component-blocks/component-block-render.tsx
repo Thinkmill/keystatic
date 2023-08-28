@@ -74,6 +74,7 @@ export function ComponentBlockRender({
           overflow: 'hidden',
           width: 1,
           height: 1,
+          position: 'absolute',
         })}
       >
         {maybeChild}
