@@ -65,8 +65,8 @@ export default async function Docs({ params }: { params: { slug: string } }) {
           </Link>
         </div>
 
-        <div className="border-b-2 lg:mx-20">
-          <div className="relative mx-16 mt-20 aspect-[16/10] overflow-hidden rounded-t-2xl border-2 border-b-0">
+        <div className="border-b-2">
+          <div className="relative mt-20 aspect-[16/10] overflow-hidden rounded-t-2xl border-2 border-b-0 lg:mx-20">
             {/* Window buttons fake UI */}
             <div
               className="absolute left-4 top-4 z-10 flex gap-2"
@@ -84,9 +84,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
             />
           </div>
         </div>
-
-        {/* <Badge type={data.type} transition:name={`badge-${slug}`} /> */}
-        <div className="mt-16 flex justify-between gap-10">
+        <div className="mt-16 flex justify-between gap-10 lg:px-20">
           <p className="font-medium md:text-lg">{project.summary}</p>
           <div className="flex shrink-0 items-start gap-2">
             {project.repoUrl && (
