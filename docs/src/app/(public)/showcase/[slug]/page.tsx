@@ -31,8 +31,8 @@ export default async function Docs({ params }: { params: { slug: string } }) {
       : sortedProjects[0];
 
   return (
-    <>
-      <header className="mt-10">
+    <div className="py-10">
+      <header>
         <div className="flex items-center justify-between">
           {/* Previous project */}
 
@@ -55,7 +55,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
           </div>
           {/* Next project */}
           <Link
-            href={`/showcase/${previousProject.slug}`}
+            href={`/showcase/${nextProject.slug}`}
             className="group flex flex-col gap-6 rounded-md"
           >
             <span className="font-medium text-slate-600">Next &rarr;</span>
@@ -66,7 +66,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
         </div>
 
         <div className="border-b-2">
-          <div className="relative mt-20 aspect-[16/10] overflow-hidden rounded-t-2xl border-2 border-b-0 lg:mx-20">
+          <div className="relative mt-16 aspect-[16/10] overflow-hidden rounded-t-2xl border-2 border-b-0 lg:mx-20">
             {/* Window buttons fake UI */}
             <div
               className="absolute left-4 top-4 z-10 flex gap-2"
@@ -115,7 +115,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
           </main>
         </>
       )}
-    </>
+    </div>
   );
 }
 
