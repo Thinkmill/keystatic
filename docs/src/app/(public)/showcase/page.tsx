@@ -5,7 +5,9 @@ import type { Entry } from '@keystatic/core/reader';
 
 import { reader } from '../../../utils/reader';
 import keystaticConfig from '../../../../keystatic.config';
-import Button from '../../../components/button';
+import ActionButton from '../../../components/action-button';
+import { GlobeIcon } from '../../../components/icons/globe';
+import { GitHubOutlineIcon } from '../../../components/icons/github-outline-icon';
 
 type Project = {
   slug: string;
@@ -60,7 +62,7 @@ export default async function Showcase() {
   );
 }
 
-function ProjectCard({ entry, slug }: Project) {
+function ProjectCard({ entry }: Project) {
   return (
     <li className="relative flex flex-col overflow-hidden rounded-2xl border border-slate-50 bg-slate-50 p-8 @container">
       <div className="flex-1">
@@ -73,14 +75,16 @@ function ProjectCard({ entry, slug }: Project) {
         <p className="mt-6 text-sm text-slate-900">{entry.summary}</p>
         <div className="mt-6 flex flex-wrap items-center gap-2">
           {/* TODO: New button styles */}
-          <Button
+          <ActionButton href={entry.url ?? ''} icon={GlobeIcon}>
+            Visit
+          </ActionButton>
+          <ActionButton
             impact="light"
-            href={`/showcase/${slug}`}
-            className="flex gap-2"
+            href={entry.url ?? ''}
+            icon={GitHubOutlineIcon}
           >
-            <span>Visit</span>
-            <span>&rarr;</span>
-          </Button>
+            View on GitHub
+          </ActionButton>
         </div>
       </div>
 
