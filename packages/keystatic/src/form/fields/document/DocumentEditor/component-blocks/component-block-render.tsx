@@ -71,6 +71,9 @@ export function ComponentBlockRender({
         className={css({
           caretColor: 'transparent',
           '& ::selection': { backgroundColor: 'transparent' },
+          overflow: 'hidden',
+          width: 1,
+          height: 1,
         })}
       >
         {maybeChild}
