@@ -1,5 +1,5 @@
 import { Main } from '../../../components/main';
-import { DocsFooter } from '../../../components/footer';
+import Footer from '../../../components/footer';
 
 export const metadata = {
   title: {
@@ -14,15 +14,16 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="max-w-7xl min-h-screen mx-auto w-full">
-      {/** CONTENT */}
+    <>
+      <div className="mx-auto min-h-screen w-full max-w-7xl px-6">
+        {/** CONTENT */}
 
-      <Main className="flex gap-8">
-        {/** INNER CONTENT */}
-        <div className="flex-1">{children}</div>
-      </Main>
-
-      <DocsFooter />
-    </div>
+        <Main className="flex gap-8">
+          {/** INNER CONTENT */}
+          <div className="flex-1">{children}</div>
+        </Main>
+      </div>
+      <Footer />
+    </>
   );
 }

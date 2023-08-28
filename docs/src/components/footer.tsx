@@ -4,20 +4,20 @@ import { SocialLinks } from './navigation/social-links';
 
 export default function Footer() {
   return (
-    <footer className="bg-keystatic-gray-light pb-10">
+    <footer className="bg-keystatic-gray-light pb-20 pt-8">
       <div className="mx-auto max-w-7xl">
-        <div className="p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="flex flex-col items-center justify-between gap-2 px-6 py-4 md:flex-row md:gap-6">
           <KeystaticLogoLink />
           <SocialLinks />
         </div>
       </div>
 
-      <div className="mx-auto mt-2 flex max-w-7xl flex-col justify-between gap-y-4 gap-x-12 px-6 text-center md:flex-row">
-        <p className="leading-tight text-keystatic-gray-dark text-center md:text-left">
+      <div className="mx-auto flex max-w-7xl flex-col justify-between gap-x-12 gap-y-4 px-6 text-center md:flex-row">
+        <p className="text-center leading-tight text-keystatic-gray-dark md:text-left">
           <CopyrightPrivacyPolicyContent />
         </p>
 
-        <p className="leading-tight text-keystatic-gray-dark text-center md:text-right">
+        <p className="text-center leading-tight text-keystatic-gray-dark md:text-right">
           Made with <span className="text-[#ff3838]">❤️</span> in Australia by a
           team from 30 countries.
         </p>
@@ -28,10 +28,10 @@ export default function Footer() {
 
 export function DocsFooter() {
   return (
-    <footer className="py-4 mb-24">
-      <hr className="h-px my-8 border-keystatic-gray mb-8" />
+    <footer className="mb-24 py-4">
+      <hr className="my-8 mb-8 h-px border-keystatic-gray" />
 
-      <p className="leading-tight text-keystatic-gray-dark text-sm">
+      <p className="text-sm leading-tight text-keystatic-gray-dark">
         <CopyrightPrivacyPolicyContent />
       </p>
     </footer>

@@ -1,90 +1,82 @@
+import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Metadata, ResolvingMetadata } from 'next';
-import slugify from '@sindresorhus/slugify';
-
-import { TableOfContents } from '../../../../components/navigation/table-of-contents';
 import DocumentRenderer from '../../../../components/document-renderer';
 import { reader } from '../../../../utils/reader';
 import { H1_ID } from '../../../../constants';
 
-type DocsProps = {
-  params: { slug: string[] };
-};
+export default async function Docs({ params }: { params: { slug: string } }) {
+  const { slug } = params;
+  console.log({ slug });
+  const project = await reader.collections.projects.read(slug);
+  if (!project) notFound();
 
-export default async function Docs({ params }: DocsProps) {
-  const { slug: slugPath } = params;
-
-  const slug = slugPath.join('/');
-  const page = await reader.collections.pages.read(slug);
-
-  if (!page) notFound();
-
-  // Filter headings from the document content
-  const headingsFromContent = (await page.content())
-    .filter(child => child.type === 'heading')
-    .map(heading => ({
-      level: heading.level as number,
-      text: heading.children.find(child => child.text)?.text as string,
-    }))
-    .filter(heading => heading.text);
-
-  // Add slug
-  const headingsWithSlugs = headingsFromContent.map(({ level, text }) => {
-    return {
-      level,
-      text,
-      slug: `#${slugify(text)}`,
-    };
-  });
-
-  // Manually add the persistent #${H1_ID} heading, to send to TOCs
-  const overviewHeading = {
-    level: 1,
-    text: 'Overview',
-    slug: `#${H1_ID}`,
-  };
-  const headings = [overviewHeading, ...headingsWithSlugs];
+  const content = await project.content();
 
   return (
-    <div className="grid gap-6 grid-cols-[auto] md:grid-cols-[auto,12rem]">
-      <div>
-        <h1
-          id={H1_ID}
-          className="text-3xl font-extrabold mb-8 scroll-mt-[7rem]"
-        >
-          {page.title}
+    <div className="relative">
+      <header className="mx-auto max-w-5xl space-y-6 px-4 pb-12 pt-16 text-center sm:px-6 md:py-16 lg:space-y-8 lg:px-8 lg:pt-20 xl:pt-24">
+        {/* In prod, the "root" URL is `/showcase`
+          See https://github.com/Thinkmill/keystatic/blob/main/docs/vercel.json#L4-L7 */}
+        <Link href="/showcase" className="text-sm underline hover:no-underline">
+          &larr; All projects
+        </Link>
+        <h1 className="text-3xl font-extrabold sm:text-4xl md:text-5xl">
+          {project.title}
         </h1>
-        <div className="flex flex-col gap-4 [&_a]:break-words">
-          <DocumentRenderer slug={slug} document={await page.content()} />
+        <div className="mx-auto mt-6 w-full max-w-lg rounded-md bg-black/[0.03] p-4 lg:mt-8">
+          <div className="relative aspect-[16/10]">
+            <Image
+              src={project.coverImage}
+              alt=""
+              className="absolute inset-0 rounded-md object-cover shadow-lg"
+              width={373 * 3}
+              height={232 * 3}
+              loading="eager"
+            />
+          </div>
         </div>
-      </div>
-      <TableOfContents headings={headings} />
+        {/* <Badge type={data.type} transition:name={`badge-${slug}`} /> */}
+        <p className="mx-auto max-w-xl text-slate-600 md:text-lg">
+          {project.summary}
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {/* <ActionButtons data={data} slug={slug} /> */}
+        </div>
+      </header>
+
+      {content && (
+        <main className="bg-white py-12">
+          <div className="prose mx-auto px-4 lg:prose-lg sm:px-6 lg:px-8">
+            <DocumentRenderer document={content} slug={slug} />
+          </div>
+        </main>
+      )}
     </div>
   );
 }
 
 export async function generateStaticParams() {
-  const slugs = await reader.collections.pages.list();
+  const slugs = await reader.collections.projects.list();
 
   return slugs.map(slug => ({
-    slug: slug.split('/'),
+    slug: [slug],
   }));
 }
 
 export async function generateMetadata(
-  { params }: DocsProps,
+  { params }: { params: { slug: string } },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const slugPath = params.slug;
-  const slug = slugPath.join('/');
+  const slug = params.slug;
+  const project = await reader.collections.projects.read(slug);
 
-  const page = await reader.collections.pages.read(slug);
+  const parentTitle = (await parent).title ?? 'Showcase';
+  const title = project?.title ?? parentTitle;
 
-  const parentTitle = (await parent).title ?? 'Docs';
-  const title = page?.title ?? parentTitle;
-
-  const fallbackDescription = 'Documentation page for Keystatic.';
-  const description = page?.summary ? page.summary : fallbackDescription;
+  const fallbackDescription = 'A project built with Keystatic';
+  const description = project?.summary ? project.summary : fallbackDescription;
 
   const image = `/og?title=${title}`;
   const parentTwitterSite = (await parent).twitter?.site ?? '';
@@ -95,7 +87,7 @@ export async function generateMetadata(
     openGraph: {
       title,
       description,
-      url: `https://keystatic.com/docs/${slug}`,
+      url: `https://keystatic.com/showcase/${slug}`,
       type: 'website',
       images: [{ url: image }],
     },

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import type { Entry } from '@keystatic/core/reader';
+import type { EntryWithResolvedLinkedFiles } from '@keystatic/core/reader';
 
 import { reader } from '../../../utils/reader';
 import keystaticConfig from '../../../../keystatic.config';
@@ -11,11 +11,15 @@ import { GitHubOutlineIcon } from '../../../components/icons/github-outline-icon
 
 type Project = {
   slug: string;
-  entry: Entry<(typeof keystaticConfig)['collections']['projects']>;
+  entry: EntryWithResolvedLinkedFiles<
+    (typeof keystaticConfig)['collections']['projects']
+  >;
 };
 
 export default async function Showcase() {
-  const projects: Project[] = await reader.collections.projects.all();
+  const projects: Project[] = await reader.collections.projects.all({
+    resolveLinkedFiles: true,
+  });
 
   if (!projects) notFound();
 
@@ -26,8 +30,8 @@ export default async function Showcase() {
   const highlightedProjects = sortedProjects.splice(0, 2);
 
   return (
-    <>
-      <div className="mx-auto mt-16 max-w-2xl text-center">
+    <div className="mb-20 mt-16">
+      <div className="mx-auto max-w-2xl text-center">
         <h1 className="text-5xl font-extrabold">Built with Keystatic</h1>
         <div className="mt-4 space-y-4 text-lg font-medium md:mt-6">
           <p>
@@ -47,28 +51,31 @@ export default async function Showcase() {
       </div>
 
       {/* Highlighted projects */}
-      <ul className="mt-16 grid gap-6 sm:grid-cols-2">
+      <ul className="mt-16 grid gap-6 md:grid-cols-2">
         {highlightedProjects.map(async ({ slug, entry }) => {
           return <ProjectCard entry={entry} slug={slug} />;
         })}
       </ul>
 
+      {/* Rest of the projects */}
       <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {sortedProjects.map(async ({ slug, entry }) => {
           return <ProjectCard entry={entry} slug={slug} />;
         })}
       </ul>
-    </>
+    </div>
   );
 }
 
-function ProjectCard({ entry }: Project) {
+function ProjectCard({ entry, slug }: Project) {
   return (
     <li className="relative flex flex-col overflow-hidden rounded-2xl border border-slate-50 bg-slate-50 p-8 @container">
       <div className="flex-1">
         <div className="flex items-start justify-between gap-x-4">
           <h2 className="text-xl font-bold group-hover:underline @sm:text-2xl">
-            {entry.title}
+            <Link href={`/showcase/${slug}`} className="hover:underline">
+              {entry.title}
+            </Link>
           </h2>
           {entry.type === 'demo' && <DemoBadge />}
         </div>
