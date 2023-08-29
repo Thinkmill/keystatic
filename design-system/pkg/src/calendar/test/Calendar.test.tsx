@@ -86,7 +86,7 @@ describe('calendar/Calendar', () => {
     expect(grid).not.toHaveAttribute('aria-activedescendant');
   });
 
-  it('selects a date on keyDown Enter/Space', () => {
+  it('selects a date with the keyboard', () => {
     let onChange = jest.fn();
     let { getByLabelText, getByRole } = renderWithProvider(
       <Calendar
