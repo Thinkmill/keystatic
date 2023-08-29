@@ -1,4 +1,3 @@
-import { Box } from '@keystar/ui/layout';
 import {
   SplitView,
   SplitPanePrimary,
@@ -27,32 +26,24 @@ export const MainPanelLayout = (props: {
   let ref = useRef<HTMLDivElement>(null);
   let context = useContentPanelState(ref);
 
-  // no split view on small devices
-  if (isBelowDesktop) {
-    return (
-      <ContentPanelProvider value={context}>
-        <SidebarDialog hrefBase={basePath} config={config} />
-        <Box flex ref={ref}>
-          {children}
-        </Box>
-      </ContentPanelProvider>
-    );
-  }
-
   return (
     <ContentPanelProvider value={context}>
       <SplitView
         autoSaveId="keystatic-app-split-view"
-        isCollapsed={!sidebarState.isOpen}
+        isCollapsed={isBelowDesktop || !sidebarState.isOpen}
         onCollapseChange={sidebarState.toggle}
         defaultSize={260}
         minSize={180}
         maxSize={400}
         flex
       >
-        <SplitPanePrimary>
-          <SidebarPanel hrefBase={basePath} config={config} />
-        </SplitPanePrimary>
+        {isBelowDesktop ? (
+          <SidebarDialog hrefBase={basePath} config={config} />
+        ) : (
+          <SplitPanePrimary>
+            <SidebarPanel hrefBase={basePath} config={config} />
+          </SplitPanePrimary>
+        )}
         <SplitPaneSecondary ref={ref}>{children}</SplitPaneSecondary>
       </SplitView>
     </ContentPanelProvider>

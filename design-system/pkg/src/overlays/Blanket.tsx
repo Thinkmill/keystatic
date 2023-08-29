@@ -2,10 +2,10 @@ import {
   classNames,
   css,
   filterStyleProps,
+  toDataAttributes,
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 import { BlanketProps } from './types';
 

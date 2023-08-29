@@ -1,3 +1,5 @@
+'use client';
+
 export { css, keyframes, injectGlobal, cache } from '@emotion/css'; // simplify dependencies + ensure the same version of emotion is used
 
 export { transition } from './animation';
@@ -19,6 +21,7 @@ export {
 } from './resolvers';
 export { breakpoints, breakpointQueries, containerQueries } from './responsive';
 export { tokenSchema } from './tokens';
+export { toDataAttributes } from './toDataAttributes';
 export { useIsMobileDevice } from './useIsMobileDevice';
 export { useMediaQuery } from './useMediaQuery';
 export { useStyleProps } from './useStyleProps';

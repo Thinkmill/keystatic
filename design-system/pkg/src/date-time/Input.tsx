@@ -2,8 +2,12 @@ import { mergeProps, mergeRefs } from '@react-aria/utils';
 import { useFocusRing } from '@react-aria/focus';
 import { ReactNode, forwardRef, useRef } from 'react';
 
-import { classNames, css, tokenSchema } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
+import {
+  classNames,
+  css,
+  toDataAttributes,
+  tokenSchema,
+} from '@keystar/ui/style';
 
 type InputProps = {
   autoFocus?: boolean;

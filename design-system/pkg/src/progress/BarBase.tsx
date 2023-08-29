@@ -6,12 +6,12 @@ import {
   classNames,
   css,
   keyframes,
+  toDataAttributes,
   tokenSchema,
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 import { ProgressBarProps } from './types';
 

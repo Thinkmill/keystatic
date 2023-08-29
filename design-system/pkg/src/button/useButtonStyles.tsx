@@ -2,11 +2,11 @@ import {
   ClassList,
   classNames,
   css,
+  toDataAttributes,
   tokenSchema,
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 import { ButtonProps } from './types';
 

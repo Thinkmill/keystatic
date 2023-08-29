@@ -13,10 +13,10 @@ import {
   FocusRing,
   classNames,
   css,
+  toDataAttributes,
   tokenSchema,
   transition,
 } from '@keystar/ui/style';
-import { toDataAttributes } from '@keystar/ui/utils';
 
 import { TextFieldPrimitiveProps } from './types';
 
