@@ -8,15 +8,16 @@ import { HeadingContext } from './context';
 import { useHeadingStyles } from './useHeadingStyles';
 import { Truncate } from '../Truncate';
 import { useVisuallyHiddenRange } from '../useVisuallyHiddenRange';
+import { filterDOMProps } from '@react-aria/utils';
 
 const sizeToElement = { small: 'h4', regular: 'h3', medium: 'h2', large: 'h1' };
+const filterOptions = { propNames: new Set(['aria-hidden']) };
 
 /** A typographic device used to communicate levels of hierarchy between text. */
 export const Heading = forwardRefWithAs<HeadingProps, 'h3'>((props, ref) => {
   props = useSlotProps(props, 'heading');
   const {
     children,
-    id,
     size = 'regular',
     truncate,
     elementType: ElementType = sizeToElement[size],
@@ -35,7 +36,12 @@ export const Heading = forwardRefWithAs<HeadingProps, 'h3'>((props, ref) => {
 
   return (
     <HeadingContext.Provider value={headingContext}>
-      <ElementType ref={ref} id={id} {...styleProps} {...visuallyHiddenProps}>
+      <ElementType
+        ref={ref}
+        {...filterDOMProps(otherProps, filterOptions)}
+        {...styleProps}
+        {...visuallyHiddenProps}
+      >
         {content}
       </ElementType>
     </HeadingContext.Provider>
