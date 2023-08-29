@@ -129,6 +129,7 @@ const BlockPrimitive = forwardRef(function BlockPrimitive(
       className={css(blockElementSpacing, {
         position: 'relative',
         paddingInlineStart: tokenSchema.size.space.xlarge,
+        marginBottom: tokenSchema.size.space.xlarge,
 
         '::before': {
           display: 'block',
@@ -165,7 +166,7 @@ function DefaultToolbarWithChrome({
   return (
     <NotEditable>
       <Flex direction="column" gap="medium">
-        <Flex alignItems="center" gap="regular">
+        <Flex alignItems="center" gap="regular" style={{ userSelect: 'none' }}>
           <ActionButton onPress={() => onShowEditMode()}>
             {stringFormatter.format('edit')}
           </ActionButton>
