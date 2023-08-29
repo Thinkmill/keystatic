@@ -37,7 +37,7 @@ function Calendar<T extends DateValue>(
   });
 
   let domRef = useObjectRef(forwardedRef);
-  useImperativeHandle(domRef, () => ({
+  useImperativeHandle(forwardedRef, () => ({
     ...domRef.current,
     focus() {
       state.setFocused(true);

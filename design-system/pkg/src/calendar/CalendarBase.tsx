@@ -122,8 +122,8 @@ export function CalendarBase<T extends CalendarState | RangeCalendarState>(
        * so that it is the first thing a touch screen reader user encounters.
        * In addition, VoiceOver on iOS does not announce the aria-label of the grid
        * elements, so the aria-label of the Calendar is included here as well. */}
-      <VisuallyHidden>
-        <h2>{calendarProps['aria-label']}</h2>
+      <VisuallyHidden elementType="h2">
+        {calendarProps['aria-label']}
       </VisuallyHidden>
 
       <div {...styleProps.titles}>{titles}</div>

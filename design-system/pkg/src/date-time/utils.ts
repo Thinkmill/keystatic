@@ -64,7 +64,7 @@ function getVisibleMonths() {
 
 export function useFocusManagerRef(ref: Ref<HTMLDivElement>) {
   let domRef = useObjectRef<HTMLDivElement>(ref);
-  useImperativeHandle(domRef, () => ({
+  useImperativeHandle(ref, () => ({
     ...domRef.current,
     focus() {
       createFocusManager(domRef).focusFirst({ tabbable: true });
