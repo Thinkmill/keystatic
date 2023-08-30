@@ -51,7 +51,7 @@ export const Input = forwardRef<HTMLDivElement, InputProps>(function Input(
         role="presentation"
         className={css({
           alignItems: 'center',
-          display: 'flex',
+          display: 'inline-flex',
           height: '100%',
           overflowX: 'auto',
           scrollbarWidth: 'none',
