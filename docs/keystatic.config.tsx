@@ -75,8 +75,8 @@ const markdocConfig: Config = {
   },
 };
 
-// const shouldUseCloudStorage = true; // process.env.NODE_ENV === 'production';
-const shouldUseCloudStorage = process.env.NODE_ENV === 'production';
+// const shouldUseCloudStorage = process.env.NODE_ENV === 'production';
+const shouldUseCloudStorage = true;
 const pathPrefix = shouldUseCloudStorage ? 'docs/' : '';
 export const readerPath = shouldUseCloudStorage
   ? process.cwd().replace(/\/docs/, '')
@@ -87,7 +87,7 @@ export default config({
     kind: shouldUseCloudStorage ? 'cloud' : 'local',
   },
   cloud: {
-    project: 'thinkmill-labs/keystatic-site',
+    project: 'thinkmill-labs/keystatic-docs',
   },
   collections: {
     // ------------------------------
