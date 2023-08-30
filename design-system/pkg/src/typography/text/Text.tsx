@@ -12,6 +12,8 @@ import { Truncate } from '../Truncate';
 import { useHeadingContext } from '../heading';
 import { useVisuallyHiddenRange } from '../useVisuallyHiddenRange';
 
+const filterOptions = { propNames: new Set(['aria-hidden', 'role']) };
+
 export const Text = forwardRefWithAs<TextProps, 'span'>(
   (props, forwardedRef) => {
     props = useSlotProps(props, 'text');
@@ -58,7 +60,7 @@ export const Text = forwardRefWithAs<TextProps, 'span'>(
     const element = (
       <ElementType
         ref={forwardedRef}
-        {...filterDOMProps(otherProps, { propNames: new Set(['role']) })}
+        {...filterDOMProps(otherProps, filterOptions)}
         {...styleProps}
         {...visuallyHiddenProps}
       >
