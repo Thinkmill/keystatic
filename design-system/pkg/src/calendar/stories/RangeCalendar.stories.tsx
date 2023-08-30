@@ -6,7 +6,7 @@ import { RangeCalendar } from '../index';
 
 type Story = StoryObj<typeof RangeCalendar>;
 
-const todayDate = today(getLocalTimeZone());
+const dateToday = today(getLocalTimeZone());
 
 export default {
   title: 'Components/Date and Time/RangeCalendar',
@@ -68,8 +68,8 @@ export const ControlledValue: Story = {
 export const OneWeek: Story = {
   ...Default,
   args: {
-    minValue: todayDate,
-    maxValue: todayDate.add({ weeks: 1 }),
+    minValue: dateToday,
+    maxValue: dateToday.add({ weeks: 1 }),
   },
   name: 'minValue + maxValue',
 };
@@ -77,10 +77,10 @@ export const OneWeek: Story = {
 export const InvalidSelection: Story = {
   ...Default,
   args: {
-    minValue: todayDate,
+    minValue: dateToday,
     defaultValue: {
-      start: todayDate.subtract({ weeks: 2 }),
-      end: todayDate.subtract({ weeks: 1 }),
+      start: dateToday.subtract({ weeks: 2 }),
+      end: dateToday.subtract({ weeks: 1 }),
     },
   },
   name: 'Invalid selection',

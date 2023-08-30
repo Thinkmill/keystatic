@@ -8,7 +8,7 @@ import {
   forwardRef,
   ForwardedRef,
   ReactElement,
-  // useImperativeHandle,
+  useImperativeHandle,
   useMemo,
 } from 'react';
 
@@ -37,12 +37,12 @@ function RangeCalendar<T extends DateValue>(
   });
 
   let domRef = useObjectRef(forwardedRef);
-  // useImperativeHandle(domRef, () => ({
-  //   ...domRef.current,
-  //   focus() {
-  //     state.setFocused(true);
-  //   },
-  // }));
+  useImperativeHandle(forwardedRef, () => ({
+    ...domRef.current,
+    focus() {
+      state.setFocused(true);
+    },
+  }));
 
   let { calendarProps, prevButtonProps, nextButtonProps } = useRangeCalendar(
     props,

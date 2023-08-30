@@ -46,6 +46,9 @@ function DatePicker<T extends DateValue>(
   let triggerRef = useRef<HTMLDivElement>(null);
   let domRef = useFocusManagerRef(forwardedRef);
   let state = useDatePickerState(props);
+  if (props.errorMessage) {
+    state.validationState = 'invalid';
+  }
   let {
     buttonProps,
     calendarProps,
@@ -75,9 +78,6 @@ function DatePicker<T extends DateValue>(
   let description = useFormatHelpText(props);
   if (description && !props.description) {
     descriptionProps.id = undefined;
-  }
-  if (props.errorMessage) {
-    state.validationState = 'invalid';
   }
 
   let visibleMonths = useVisibleMonths(maxVisibleMonths);
@@ -144,8 +144,8 @@ function DatePicker<T extends DateValue>(
 // https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
 
 /**
- * DatePickers allow users to enter and edit date and time values using a keyboard.
- * Each part of a date value is displayed in an individually editable segment.
+ * DatePickers combine a DateField and a Calendar popover to allow users to
+ * enter or select a date and time value.
  */
 const _DatePicker: <T extends DateValue>(
   props: DatePickerProps<T> & { ref?: Ref<HTMLDivElement> }

@@ -42,6 +42,9 @@ function DateRangePicker<T extends DateValue>(
   let triggerRef = useRef<HTMLDivElement>(null);
   let domRef = useFocusManagerRef(forwardedRef);
   let state = useDateRangePickerState(props);
+  if (props.errorMessage) {
+    state.validationState = 'invalid';
+  }
   let {
     buttonProps,
     calendarProps,
@@ -72,9 +75,6 @@ function DateRangePicker<T extends DateValue>(
   let description = useFormatHelpText(props);
   if (description && !props.description) {
     descriptionProps.id = undefined;
-  }
-  if (props.errorMessage) {
-    state.validationState = 'invalid';
   }
 
   let visibleMonths = useVisibleMonths(maxVisibleMonths);
