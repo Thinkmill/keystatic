@@ -63,6 +63,9 @@ export function useActionButtonStyles(
         [actionButtonClassList.childSelector('text')]: {
           fontWeight: 'inherit',
           marginInline: tokenSchema.size.space.small,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
         },
 
         // FOCUS RING

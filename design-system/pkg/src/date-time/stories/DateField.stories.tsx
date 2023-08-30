@@ -161,6 +161,24 @@ Controls.argTypes = {
   hideTimeZone: {
     control: 'boolean',
   },
+  shouldForceLeadingZeros: {
+    control: 'boolean',
+  },
+  isDisabled: {
+    control: 'boolean',
+  },
+  isReadOnly: {
+    control: 'boolean',
+  },
+  isRequired: {
+    control: 'boolean',
+  },
+  description: {
+    control: 'text',
+  },
+  errorMessage: {
+    control: 'text',
+  },
 };
 
 function ControlledExample() {

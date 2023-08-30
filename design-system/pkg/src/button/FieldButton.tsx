@@ -46,11 +46,11 @@ export const FieldButton: ForwardRefExoticComponent<
         {...mergeProps(buttonProps, hoverProps)}
         ref={domRef}
         className={classNames(
-          styleProps.className,
           css({
             justifyContent: 'space-between',
             textAlign: 'start',
-          })
+          }),
+          styleProps.className
         )}
         style={{ ...styleProps.style, boxShadow: 'none' }}
       >

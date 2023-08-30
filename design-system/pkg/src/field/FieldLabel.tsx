@@ -37,6 +37,7 @@ export const FieldLabel = forwardRefWithAs<FieldLabelProps, 'label'>(
       size: 'regular',
       trim: true,
       weight: 'medium',
+      UNSAFE_className: css({ cursor: 'default' }),
     });
 
     return (

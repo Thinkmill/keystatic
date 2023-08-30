@@ -28,9 +28,15 @@ function DateField<T extends DateValue>(
     createCalendar,
   });
 
-  let inputRef = useRef(null);
-  let { labelProps, fieldProps, descriptionProps, errorMessageProps } =
-    useDateField(props, state, inputRef);
+  let fieldRef = useRef<HTMLDivElement>(null);
+  let inputRef = useRef<HTMLInputElement>(null);
+  let {
+    descriptionProps,
+    errorMessageProps,
+    fieldProps,
+    inputProps,
+    labelProps,
+  } = useDateField({ ...props, inputRef }, state, fieldRef);
 
   // Note: this description is intentionally not passed to useDatePicker.
   // The format help text is unnecessary for screen reader users because each segment already has a label.
@@ -47,13 +53,14 @@ function DateField<T extends DateValue>(
       {...props}
       ref={domRef}
       description={description}
+      labelElementType="span"
       labelProps={labelProps}
       descriptionProps={descriptionProps}
       errorMessageProps={errorMessageProps}
       // validationState={state.validationState}
     >
       <Input
-        ref={inputRef}
+        ref={fieldRef}
         fieldProps={fieldProps}
         isDisabled={isDisabled}
         autoFocus={autoFocus}
@@ -69,6 +76,7 @@ function DateField<T extends DateValue>(
             isRequired={isRequired}
           />
         ))}
+        <input {...inputProps} ref={inputRef} />
       </Input>
     </FieldPrimitive>
   );
