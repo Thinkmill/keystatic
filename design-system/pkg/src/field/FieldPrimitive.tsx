@@ -1,6 +1,7 @@
 import { Flex } from '@keystar/ui/layout';
 import { BaseStyleProps, useStyleProps } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
+import { HTMLTag } from '@keystar/ui/utils/ts';
 import {
   forwardRef,
   ForwardRefExoticComponent,
@@ -17,6 +18,7 @@ type FieldPrimitiveProps = {
   children: ReactElement;
   isRequired?: boolean;
   label?: ReactNode;
+  labelElementType?: HTMLTag;
   labelProps?: HTMLAttributes<HTMLElement>;
   description?: ReactNode;
   descriptionProps?: HTMLAttributes<HTMLElement>;
@@ -45,6 +47,7 @@ export const FieldPrimitive: ForwardRefExoticComponent<
     children,
     isRequired,
     label,
+    labelElementType,
     labelProps,
     description,
     descriptionProps,
@@ -65,6 +68,7 @@ export const FieldPrimitive: ForwardRefExoticComponent<
     >
       {label && (
         <FieldLabel
+          elementType={labelElementType}
           isRequired={isRequired}
           supplementRequiredState={supplementRequiredState}
           {...labelProps}

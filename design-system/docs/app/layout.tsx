@@ -26,7 +26,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <NextRootProvider fontClassName={inter.variable} locale="en-US">
+    <NextRootProvider fontClassName={inter.variable}>
       <head>{nextRootScript}</head>
       <body>
         <Layout navigation={await getNavigation()}>{children}</Layout>
