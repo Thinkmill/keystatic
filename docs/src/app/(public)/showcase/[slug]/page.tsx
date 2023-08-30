@@ -33,15 +33,17 @@ export default async function Docs({ params }: { params: { slug: string } }) {
   return (
     <div className="py-10">
       <header>
-        <div className="grid grid-cols-[1fr,auto,1fr] gap-12">
+        <div className="grid grid-cols-[1fr,auto,1fr] items-end gap-12">
           {/* Previous project */}
 
           <Link
             href={`/showcase/${previousProject.slug}`}
-            className="group flex flex-col gap-6 rounded-md"
+            className="group mb-2 flex flex-col gap-6"
           >
-            <span className="font-medium text-slate-600">&larr; Previous</span>
-            <span className="text-lg font-bold group-hover:underline">
+            <span className="font-medium leading-none text-slate-600">
+              &larr; Previous
+            </span>
+            <span className="text-lg font-bold leading-none group-hover:underline">
               {previousProject.entry.title}
             </span>
           </Link>
@@ -56,10 +58,12 @@ export default async function Docs({ params }: { params: { slug: string } }) {
           {/* Next project */}
           <Link
             href={`/showcase/${nextProject.slug}`}
-            className="group flex flex-col gap-6 justify-self-end rounded-md text-right"
+            className="group mb-2 flex flex-col gap-6 justify-self-end rounded-md text-right"
           >
-            <span className="font-medium text-slate-600">Next &rarr;</span>
-            <span className="text-lg font-bold group-hover:underline">
+            <span className="font-medium leading-none text-slate-600">
+              Next &rarr;
+            </span>
+            <span className="text-lg font-bold leading-none group-hover:underline">
               {nextProject.entry.title}
             </span>
           </Link>
@@ -84,9 +88,11 @@ export default async function Docs({ params }: { params: { slug: string } }) {
             />
           </div>
         </div>
-        <div className="mt-16 flex justify-between gap-10 lg:px-20">
-          <p className="font-medium md:text-lg">{project.summary}</p>
-          <div className="flex shrink-0 items-start gap-2">
+        <div className="mx-auto mt-16 max-w-2xl [text-wrap:balance]">
+          <p className="text-center font-medium md:text-lg">
+            {project.summary}
+          </p>
+          <div className="mt-10 flex items-center justify-center gap-2">
             {project.repoUrl && (
               <ActionButton
                 impact="light"
