@@ -33,7 +33,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
   return (
     <div className="py-10">
       <header>
-        <div className="flex items-center justify-between">
+        <div className="grid grid-cols-[1fr,auto,1fr] gap-12">
           {/* Previous project */}
 
           <Link
@@ -56,7 +56,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
           {/* Next project */}
           <Link
             href={`/showcase/${nextProject.slug}`}
-            className="group flex flex-col gap-6 rounded-md"
+            className="group flex flex-col gap-6 justify-self-end rounded-md text-right"
           >
             <span className="font-medium text-slate-600">Next &rarr;</span>
             <span className="text-lg font-bold group-hover:underline">
