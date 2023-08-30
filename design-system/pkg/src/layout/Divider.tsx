@@ -14,6 +14,7 @@ import { DividerProps } from '@keystar/ui/types';
 import { forwardRefWithAs } from '@keystar/ui/utils/ts';
 
 export const dividerClassList = new ClassList('Divider');
+const filterOptions = { propNames: new Set(['role']) };
 
 /**
  * Dividers bring clarity to a layout by grouping and dividing content in close proximity.
@@ -43,7 +44,7 @@ export const Divider = forwardRefWithAs<DividerProps, 'div'>(
         {...styleProps}
         {...separatorProps}
         {...toDataAttributes({ orientation, size })}
-        {...filterDOMProps(otherProps, { propNames: new Set(['role']) })}
+        {...filterDOMProps(otherProps, filterOptions)}
         ref={forwardedRef}
         className={classNames(
           dividerClassList.root(),
@@ -58,8 +59,8 @@ export const Divider = forwardRefWithAs<DividerProps, 'div'>(
             '&[data-size=medium]': { '--size': tokenSchema.size.border.medium },
             '&[data-size=large]': { '--size': tokenSchema.size.border.large },
 
-            '&[data-orientation=horizontal]': { blockSize: 'var(--size)' },
-            '&[data-orientation=vertical]': { blockSize: 'var(--size)' },
+            '&[data-orientation=horizontal]': { height: 'var(--size)' },
+            '&[data-orientation=vertical]': { width: 'var(--size)' },
           }),
           styleProps.className
         )}
