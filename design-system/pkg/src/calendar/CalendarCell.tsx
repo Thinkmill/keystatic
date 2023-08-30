@@ -176,6 +176,46 @@ function useDayStyles(props: CellStyleProps) {
     outline: 0,
     position: 'absolute',
 
+    // Date specific
+    // -------------------------------------------------------------------------
+
+    // hide dates from other months
+    '&[data-outside-month]': {
+      visibility: 'hidden',
+    },
+
+    // today — indicated by a small underline beneath the date
+    '&[data-today]': {
+      color: tokenSchema.color.foreground.accent,
+      fontWeight: tokenSchema.typography.fontWeight.semibold,
+
+      '&:not([data-unavailable])::before': {
+        backgroundColor: 'currentColor',
+        borderRadius: tokenSchema.size.radius.full,
+        content: '""',
+        height: tokenSchema.size.border.medium,
+        marginInline: 'auto',
+        position: 'absolute',
+        top: `calc(50% + 1ch)`,
+        width: '2ch',
+      },
+    },
+
+    // unavailable — indicated by an angled strike-through over the date
+    '&[data-unavailable]:not([data-selected])': {
+      '::before': {
+        backgroundColor: 'currentColor',
+        borderRadius: tokenSchema.size.radius.full,
+        content: '""',
+        height: tokenSchema.size.border.medium,
+        marginInline: 'auto',
+        position: 'absolute',
+        top: '50%',
+        insetInline: tokenSchema.size.space.small,
+        transform: 'rotate(-16deg)',
+      },
+    },
+
     // Interaction states
     // -------------------------------------------------------------------------
 
@@ -216,46 +256,6 @@ function useDayStyles(props: CellStyleProps) {
           color: tokenSchema.color.foreground.critical,
         },
       },
-
-    // Date specific
-    // -------------------------------------------------------------------------
-
-    // hide dates from other months
-    '&[data-outside-month]': {
-      visibility: 'hidden',
-    },
-
-    // today — indicated by a small underline beneath the date
-    '&[data-today]': {
-      color: tokenSchema.color.foreground.accent,
-      fontWeight: tokenSchema.typography.fontWeight.semibold,
-
-      '&:not([data-unavailable])::before': {
-        backgroundColor: 'currentColor',
-        borderRadius: tokenSchema.size.radius.full,
-        content: '""',
-        height: tokenSchema.size.border.medium,
-        marginInline: 'auto',
-        position: 'absolute',
-        top: `calc(50% + 1ch)`,
-        width: '2ch',
-      },
-    },
-
-    // unavailable — indicated by an angled strike-through over the date
-    '&[data-unavailable]:not([data-selected])': {
-      '::before': {
-        backgroundColor: 'currentColor',
-        borderRadius: tokenSchema.size.radius.full,
-        content: '""',
-        height: tokenSchema.size.border.medium,
-        marginInline: 'auto',
-        position: 'absolute',
-        top: '50%',
-        insetInline: tokenSchema.size.space.small,
-        transform: 'rotate(-16deg)',
-      },
-    },
   });
 
   return {

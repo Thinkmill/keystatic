@@ -3,9 +3,11 @@ import {
   CalendarDateTime,
   DateValue,
   getLocalTimeZone,
+  isWeekend,
   parseDate,
   today,
 } from '@internationalized/date';
+import { useLocale } from '@react-aria/i18n';
 import { Parameters, StoryObj, action } from '@keystar/ui-storybook';
 import React from 'react';
 
@@ -145,6 +147,17 @@ export const DateUnavailable: DateRangePickerStory = {
   },
   name: 'isDateUnavailable',
 };
+
+export const IsDateAvailableAllowsNonContiguousRanges = () => {
+  let { locale } = useLocale();
+  return render({
+    isDateUnavailable: (date: DateValue) => isWeekend(date, locale),
+    allowsNonContiguousRanges: true,
+  });
+};
+
+IsDateAvailableAllowsNonContiguousRanges.storyName =
+  'isDateAvailable, allowsNonContiguousRanges';
 
 export const AllEvents: DateRangePickerStory = {
   ...Default,
