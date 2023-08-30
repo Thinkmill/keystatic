@@ -153,31 +153,7 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
       </div>
     );
   },
-  'cloud-image': ({
-    href: src,
-    alt,
-    sizes,
-    height,
-    width,
-    srcSet,
-    caption,
-  }) => {
-    const imgMaxWidthPx = `${parseFloat(CONTENT_MAX_WIDTH_DESKTOP) * 16}`;
-
-    return (
-      <CloudImage
-        alt={alt}
-        src={src}
-        height={height}
-        width={width ?? imgMaxWidthPx}
-        srcSet={srcSet}
-        sizes={sizes || `(max-width: 375px) 375px, ${imgMaxWidthPx}px`}
-        className="rounded-lg my-2"
-        caption={caption}
-      />
-    );
-  },
-  'cloud-image-2': ({ src, alt, height, width }) => {
+  'cloud-image': ({ src, alt, height, width }) => {
     const imgMaxWidthPx = `${parseFloat(CONTENT_MAX_WIDTH_DESKTOP) * 16}`;
 
     return (
@@ -206,7 +182,7 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
       </div>
     );
   },
-  fieldDemo: ({ field }) => {
+  'field-demo': ({ field }) => {
     switch (field) {
       case 'text':
         return <TextFieldDemo />;

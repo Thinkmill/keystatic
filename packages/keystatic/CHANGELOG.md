@@ -1,5 +1,25 @@
 # @keystatic/core
 
+## 0.1.1
+
+### Patch Changes
+
+- be18ce6f: Add `fields.cloudImage` field
+- 87b6be2c: Refactor `MainPanelLayout` to improve UX.
+- 2549369d: Cloud Image Component Fixes
+- f7e0692e: Move `toDataAttributes` to "style" package:
+
+  - add tests
+  - improve API
+  - improve implementation
+
+- b2988cd5: Fix API route erroring with `storage: { kind: 'cloud' }`
+- 8cee0bb3: Export `CloudImageProps` type from the
+  `@keystatic/core/component-blocks` entrypoint
+- Updated dependencies [f7e0692e]
+- Updated dependencies [12f95d48]
+  - @keystar/ui@0.2.2
+
 ## 0.1.0
 
 ### Minor Changes

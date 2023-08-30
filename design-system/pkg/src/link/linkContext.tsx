@@ -1,4 +1,3 @@
-import dedent from 'dedent';
 import { assert } from 'emery';
 import {
   AnchorHTMLAttributes,
@@ -35,10 +34,9 @@ export const useLinkComponent = (ref: Ref<HTMLAnchorElement>) => {
 
   assert(
     !ref || '__forwardRef__' in linkComponent,
-    dedent`
-      You're passing a ref to a Keystar UI link, but your app is providing a custom link component to 'VoussoirProvider' that doesn't appear to support refs.
+    `You're passing a ref to a Keystar UI link, but your app is providing a custom link component to 'VoussoirProvider' that doesn't appear to support refs.
 
-      To fix this, you need to use Keystar UI's 'makeLinkComponent' helper function when creating your custom link component. This ensures that refs are forwarded correctly, and allows us to silence this error message.
+To fix this, you need to use Keystar UI's 'makeLinkComponent' helper function when creating your custom link component. This ensures that refs are forwarded correctly, and allows us to silence this error message.
     `
   );
 
