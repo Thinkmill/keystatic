@@ -11,6 +11,8 @@ import { Calendar } from '../index';
 
 type Story = StoryObj<typeof Calendar>;
 
+const todayDate = today(getLocalTimeZone());
+
 export default {
   title: 'Components/Date and Time/Calendar',
   component: Calendar,
@@ -61,8 +63,8 @@ export const ControlledValue: Story = {
 export const OneWeek: Story = {
   ...Default,
   args: {
-    minValue: today(getLocalTimeZone()),
-    maxValue: today(getLocalTimeZone()).add({ weeks: 2 }),
+    minValue: todayDate,
+    maxValue: todayDate.add({ weeks: 2 }),
   },
   name: 'minValue + maxValue',
 };
@@ -71,9 +73,9 @@ export const DateUnavailable: Story = {
   render: args => (
     <Calendar
       {...args}
-      defaultValue={today(getLocalTimeZone()).add({ days: 1 })}
+      defaultValue={todayDate.add({ days: 1 })}
       isDateUnavailable={date => {
-        const now = today(getLocalTimeZone());
+        const now = todayDate;
         const disabledIntervals = [
           [now.add({ days: 1 }), now.add({ weeks: 1 })],
           [now.add({ weeks: 2 }), now.add({ weeks: 3 })],
@@ -86,6 +88,15 @@ export const DateUnavailable: Story = {
     />
   ),
   name: 'isDateUnavailable',
+};
+
+export const InvalidSelection: Story = {
+  ...Default,
+  args: {
+    minValue: todayDate,
+    defaultValue: todayDate.subtract({ weeks: 1 }),
+  },
+  name: 'Invalid selection',
 };
 
 export const DefaultFocusedValue: Story = {

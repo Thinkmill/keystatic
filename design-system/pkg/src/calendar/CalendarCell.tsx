@@ -130,6 +130,10 @@ export function useCellStyles(props: Partial<CellStyleProps> = {}) {
 
       '&[data-range-selection]:not([data-outside-month])': {
         backgroundColor: tokenSchema.color.alias.backgroundSelected,
+        '&[data-invalid]': {
+          backgroundColor: tokenSchema.color.background.critical,
+          color: tokenSchema.color.foreground.critical,
+        },
       },
       '&[data-selection-start], &[data-range-start]': {
         borderStartStartRadius: tokenSchema.size.radius.full,
@@ -172,6 +176,47 @@ function useDayStyles(props: CellStyleProps) {
     outline: 0,
     position: 'absolute',
 
+    // Interaction states
+    // -------------------------------------------------------------------------
+
+    '&[data-hovered]': {
+      backgroundColor: tokenSchema.color.alias.backgroundHovered,
+      color: tokenSchema.color.alias.foregroundHovered,
+    },
+    '&[data-pressed]': {
+      backgroundColor: tokenSchema.color.alias.backgroundPressed,
+    },
+    '&[data-focused]': {
+      outline: `${tokenSchema.size.alias.focusRing} solid ${tokenSchema.color.alias.focusRing}`,
+      outlineOffset: tokenSchema.size.alias.focusRingGap,
+    },
+
+    // Selection states
+    // -------------------------------------------------------------------------
+
+    '&[data-disabled]': {
+      color: tokenSchema.color.alias.foregroundDisabled,
+    },
+    '&[data-selected]:not([data-range-selection], [data-disabled]), &[data-selection-start], &[data-selection-end]':
+      {
+        backgroundColor: tokenSchema.color.background.accentEmphasis,
+        color: tokenSchema.color.foreground.onEmphasis,
+
+        '&[data-invalid]': {
+          backgroundColor: tokenSchema.color.background.criticalEmphasis,
+        },
+      },
+    '&[data-range-selection]:not([data-selection-start], [data-selection-end])':
+      {
+        color: tokenSchema.color.foreground.accent,
+        '&[data-hovered]': {
+          backgroundColor: tokenSchema.color.alias.backgroundSelectedHovered,
+        },
+        '&[data-invalid]': {
+          color: tokenSchema.color.foreground.critical,
+        },
+      },
+
     // Date specific
     // -------------------------------------------------------------------------
 
@@ -198,7 +243,7 @@ function useDayStyles(props: CellStyleProps) {
     },
 
     // unavailable — indicated by an angled strike-through over the date
-    '&[data-unavailable]': {
+    '&[data-unavailable]:not([data-selected])': {
       '::before': {
         backgroundColor: 'currentColor',
         borderRadius: tokenSchema.size.radius.full,
@@ -211,40 +256,6 @@ function useDayStyles(props: CellStyleProps) {
         transform: 'rotate(-16deg)',
       },
     },
-
-    // Interaction states
-    // -------------------------------------------------------------------------
-
-    '&[data-hovered]': {
-      backgroundColor: tokenSchema.color.alias.backgroundHovered,
-      color: tokenSchema.color.alias.foregroundHovered,
-    },
-    '&[data-pressed]': {
-      backgroundColor: tokenSchema.color.alias.backgroundPressed,
-    },
-    '&[data-focused]': {
-      outline: `${tokenSchema.size.alias.focusRing} solid ${tokenSchema.color.alias.focusRing}`,
-      outlineOffset: tokenSchema.size.alias.focusRingGap,
-    },
-
-    // Selection states
-    // -------------------------------------------------------------------------
-
-    '&[data-disabled]': {
-      color: tokenSchema.color.alias.foregroundDisabled,
-    },
-    '&[data-selected]:not([data-range-selection]), &[data-selection-start], &[data-selection-end]':
-      {
-        backgroundColor: tokenSchema.color.background.accentEmphasis,
-        color: tokenSchema.color.foreground.onEmphasis,
-      },
-    '&[data-range-selection]:not([data-selection-start], [data-selection-end])':
-      {
-        color: tokenSchema.color.foreground.accent,
-        '&[data-hovered]': {
-          backgroundColor: tokenSchema.color.alias.backgroundSelectedHovered,
-        },
-      },
   });
 
   return {
