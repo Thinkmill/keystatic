@@ -246,8 +246,8 @@ return (
 will be submitted to the server as an
 [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) formatted string according to
 the granularity of the value. For example, if the date picker allows selecting
-only a date then a string such as `"2023-02-03"` will be submitted, and if it
-allows selecting a time then a string such as `"2023-02-03T08:45:00"` will be
+only a date then a string such as `"2023-04-14"` will be submitted, and if it
+allows selecting a time then a string such as `"2023-04-14T08:45:00"` will be
 submitted. See the [Value](#value) section above for more details about the
 supported value types.
 
@@ -413,7 +413,7 @@ elsewhere or implicit based on the usecase, it can be hidden using the
 return (
   <DatePicker
     label="Appointment time"
-    defaultValue={parseZonedDateTime('2022-11-07T10:45[America/Los_Angeles]')}
+    defaultValue={parseZonedDateTime('2023-04-14T10:45[America/Los_Angeles]')}
     hideTimeZone
   />
 );

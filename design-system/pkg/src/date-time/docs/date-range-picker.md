@@ -239,8 +239,8 @@ return (
 with HTML forms. The values will be submitted to the server as
 [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) formatted strings according
 to the granularity of the value. For example, if the date range picker allows
-selecting only dates then strings such as `"2023-02-03"` will be submitted, and
-if it allows selecting times then strings such as `"2023-02-03T08:45:00"` will
+selecting only dates then strings such as `"2023-04-14"` will be submitted, and
+if it allows selecting times then strings such as `"2023-04-14T08:45:00"` will
 be submitted. See the [Value](#value) section above for more details about the
 supported value types.
 
