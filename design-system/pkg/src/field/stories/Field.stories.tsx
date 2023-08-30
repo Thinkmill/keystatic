@@ -1,54 +1,84 @@
-import { ComponentMeta, ComponentStoryObj } from '@keystar/ui-storybook';
+import { StoryObj } from '@keystar/ui-storybook';
+import { ContextualHelp } from '@keystar/ui/contextual-help';
+import { Content } from '@keystar/ui/slots';
+import { Heading, Text } from '@keystar/ui/typography';
 
-import { Field } from '..';
+import { Field } from '../index';
 
-type FieldStory = ComponentStoryObj<typeof Field>;
-
-const argTypes = {
-  label: {
-    control: 'text',
-  },
-  description: {
-    control: 'text',
-  },
-  errorMessage: {
-    control: 'text',
-  },
-  isDisabled: {
-    control: 'boolean',
-    defaultValue: false,
-  },
-  isRequired: {
-    control: 'boolean',
-    defaultValue: true,
-  },
-  width: {
-    control: 'radio',
-    defaultValue: undefined,
-    options: ['100px', 'size.container.xsmall', undefined],
-  },
-};
+type FieldStory = StoryObj<typeof Field>;
 
 export default {
   title: 'Components/Field',
-  component: Field,
+  component: Field as any,
   args: {
     children: (props: any) => <input {...props} />,
-  },
-  argTypes: argTypes,
-} as ComponentMeta<typeof Field>;
-
-export let Default: FieldStory = {
-  args: {
     label: 'Label text',
-    description:
-      'Description text provides information to assist the user in completing a field.',
-    errorMessage:
-      'Error messages inform the user when the input does not meet validation criteria.',
+  },
+  argTypes: {
+    children: { table: { disable: true } },
+    contextualHelp: { table: { disable: true } },
+    label: {
+      control: 'text',
+    },
+    description: {
+      control: 'text',
+    },
+    errorMessage: {
+      control: 'text',
+    },
+    isDisabled: {
+      control: 'boolean',
+      defaultValue: false,
+    },
+    isRequired: {
+      control: 'boolean',
+      defaultValue: true,
+    },
+    width: {
+      control: 'radio',
+      defaultValue: undefined,
+      options: ['100px', 'size.container.xsmall', undefined],
+    },
   },
 };
 
-export let AriaLabel: FieldStory = {
+export const Default: FieldStory = {};
+
+export const Description: FieldStory = {
+  args: {
+    description:
+      'Description text provides information to assist the user in completing a field.',
+  },
+  name: 'description',
+};
+
+export const ErrorMessage: FieldStory = {
+  args: {
+    isRequired: true,
+    errorMessage:
+      'Error messages inform the user when the input does not meet validation criteria.',
+  },
+  name: 'errorMessage',
+};
+
+export const WithContextualHelp: FieldStory = {
+  args: {
+    contextualHelp: (
+      <ContextualHelp>
+        <Heading>Help title</Heading>
+        <Content>
+          <Text>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit
+            amet tristique risus. In sit amet suscipit lorem.
+          </Text>
+        </Content>
+      </ContextualHelp>
+    ),
+  },
+  name: 'contextualHelp',
+};
+
+export const AriaLabel: FieldStory = {
   args: {
     label: undefined,
     'aria-label': 'Hidden label',
@@ -58,6 +88,7 @@ export let AriaLabel: FieldStory = {
       control: { disable: true },
     },
   },
+  name: 'aria-label',
 };
 
 export const AriaDescribedBy = {
@@ -72,6 +103,7 @@ export const AriaDescribedBy = {
     },
     'aria-describedby': { control: { disable: true } },
   },
+  name: 'aria-describedby',
   decorators: [
     // @ts-ignore
     (Story, Context) => (
