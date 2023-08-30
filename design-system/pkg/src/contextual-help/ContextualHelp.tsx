@@ -18,10 +18,7 @@ import { classNames, css, tokenSchema } from '@keystar/ui/style';
 import localizedMessages from './l10n.json';
 import { ContextualHelpProps } from './types';
 
-/**
- * Contextual help shows a user extra information about the state of an adjacent
- * component, or a total view.
- */
+/** Contextual help shows a user extra information about an adjacent component. */
 export const ContextualHelp: ForwardRefExoticComponent<
   ContextualHelpProps & { ref?: Ref<HTMLButtonElement> }
 > = forwardRef(function ContextualHelp(
