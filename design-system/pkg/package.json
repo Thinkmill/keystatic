@@ -798,6 +798,11 @@
       "module": "./password-field/dist/keystar-ui-password-field.esm.js",
       "default": "./password-field/dist/keystar-ui-password-field.cjs.js"
     },
+    "./contextual-help": {
+      "types": "./contextual-help/dist/keystar-ui-contextual-help.cjs.js",
+      "module": "./contextual-help/dist/keystar-ui-contextual-help.esm.js",
+      "default": "./contextual-help/dist/keystar-ui-contextual-help.cjs.js"
+    },
     "./icon/icons/albumIcon": {
       "types": "./icon/icons/albumIcon/dist/keystar-ui-icon-icons-albumIcon.cjs.js",
       "module": "./icon/icons/albumIcon/dist/keystar-ui-icon-icons-albumIcon.esm.js",
