@@ -246,7 +246,8 @@ export default config({
 
           // This will be replaced with a cloudImage field soon...
           componentBlocks: {
-            image: cloudImage({ label: 'Image' }),
+            aside: componentBlocks['aside'],
+            'cloud-image': componentBlocks['cloud-image'],
             // image: component({
             //   label: 'Image',
             //   preview: () => null,
