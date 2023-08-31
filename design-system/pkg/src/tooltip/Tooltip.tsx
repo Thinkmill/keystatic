@@ -106,6 +106,10 @@ export const Tooltip: ForwardRefExoticComponent<
           backgroundColor: tokenSchema.color.background.inverse,
           color: tokenSchema.color.foreground.inverse,
           borderRadius: tokenSchema.size.radius.small,
+          maxWidth: tokenSchema.size.alias.singleLineWidth,
+          minHeight: tokenSchema.size.element.small,
+          paddingBlock: tokenSchema.size.space.regular,
+          paddingInline: tokenSchema.size.space.regular,
           opacity: 0,
           pointerEvents: 'none',
           transition: transition(['opacity', 'transform']),
@@ -163,10 +167,6 @@ export const Tooltip: ForwardRefExoticComponent<
           boxSizing: 'border-box',
           display: 'flex',
           gap: tokenSchema.size.space.small,
-          maxInlineSize: tokenSchema.size.alias.singleLineWidth,
-          minBlockSize: tokenSchema.size.element.small,
-          paddingBlock: tokenSchema.size.space.regular,
-          paddingInline: tokenSchema.size.space.regular,
         })}
       >
         <SlotProvider slots={slots}>
