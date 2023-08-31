@@ -1,10 +1,4 @@
-import {
-  config,
-  fields,
-  collection,
-  singleton,
-  component,
-} from '@keystatic/core';
+import { config, fields, collection, singleton } from '@keystatic/core';
 import { __experimental_markdoc_field } from '@keystatic/core/form/fields/markdoc';
 import { cloudImage } from '@keystatic/core/component-blocks';
 import { Config } from '@markdoc/markdoc';
