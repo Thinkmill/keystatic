@@ -1,6 +1,6 @@
 import { FormFieldStoredValue, SlugFormField } from '../../api';
 import slugify from '@sindresorhus/slugify';
-import { validateText } from '../text';
+import { validateText } from '../text/validateText';
 import { SlugFieldInput } from './ui';
 import { FieldDataError } from '../error';
 import { Glob } from '../../..';

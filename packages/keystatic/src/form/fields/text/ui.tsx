@@ -4,7 +4,7 @@ import { Glob } from '../../../config';
 import { ReadonlyPropPath } from '../document/DocumentEditor/component-blocks/utils';
 import { FormFieldInputProps } from '../../api';
 import { TextArea, TextField } from '@keystar/ui/text-field';
-import { validateText } from '.';
+import { validateText } from './validateText';
 
 export type SlugFieldInfo = {
   field: string;

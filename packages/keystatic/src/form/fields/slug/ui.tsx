@@ -5,7 +5,7 @@ import { TextField } from '@keystar/ui/text-field';
 import { useContext, useState } from 'react';
 import { FormFieldInputProps } from '../../api';
 import { SlugFieldContext, PathContext } from '../text/ui';
-import { validateText } from '../text';
+import { validateText } from '../text/validateText';
 
 const emptySet = new Set<string>();
 
