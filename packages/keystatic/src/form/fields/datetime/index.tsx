@@ -5,7 +5,7 @@ import {
   assertRequired,
   basicFormFieldWithSimpleReaderParse,
 } from '../utils';
-import { DatetimeFieldInput } from './ui';
+import { DatetimeFieldInput } from '#field-ui/datetime';
 import { validateDatetime } from './validateDatetime';
 
 export function datetime<IsRequired extends boolean | undefined>({

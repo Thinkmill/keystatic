@@ -1,7 +1,7 @@
 import { BasicFormField } from '../../api';
 import { FieldDataError } from '../error';
 import { basicFormFieldWithSimpleReaderParse } from '../utils';
-import { MultiselectFieldInput } from './ui';
+import { MultiselectFieldInput } from '#field-ui/multiselect';
 
 export function multiselect<Option extends { label: string; value: string }>({
   label,

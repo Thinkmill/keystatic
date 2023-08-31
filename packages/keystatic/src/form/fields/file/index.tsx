@@ -3,7 +3,7 @@ import { AssetFormField } from '../../api';
 import { FieldDataError } from '../error';
 import { getSrcPrefix } from '../image/getSrcPrefix';
 import { RequiredValidation, assertRequired } from '../utils';
-import { FileFieldInput } from './ui';
+import { FileFieldInput } from '#field-ui/file';
 
 export function file<IsRequired extends boolean | undefined>({
   label,
