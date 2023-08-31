@@ -212,7 +212,7 @@ export default config({
     projects: collection({
       label: 'Projects (Showcase)',
       slugField: 'title',
-      path: 'src/content/projects/*',
+      path: `${pathPrefix}src/content/projects/*`,
       format: { contentField: 'content' },
       entryLayout: 'content',
       schema: {
@@ -252,13 +252,14 @@ export default config({
 
           // This will be replaced with a cloudImage field soon...
           componentBlocks: {
-            image: component({
-              label: 'Image',
-              preview: () => null,
-              schema: {
-                image: fields.text({ label: 'Image' }),
-              },
-            }),
+            image: cloudImage({ label: 'Image' }),
+            // image: component({
+            //   label: 'Image',
+            //   preview: () => null,
+            //   schema: {
+            //     image: fields.text({ label: 'Image' }),
+            //   },
+            // }),
           },
         }),
       },
