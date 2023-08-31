@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.0-test-20230831044006
+
+### Patch Changes
+
+- 0e28b61d: Fix circular dependencies
+
 ## 0.1.2
 
 ### Patch Changes
