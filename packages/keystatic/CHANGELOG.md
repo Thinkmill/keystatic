@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.1.3
+
+### Patch Changes
+
+- dbd09f04: Fix circular dependencies
+
 ## 0.1.2
 
 ### Patch Changes
