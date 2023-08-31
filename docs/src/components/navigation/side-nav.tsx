@@ -5,10 +5,10 @@ import { ReactNode } from 'react';
 export function SideNav({ children }: { children: ReactNode }) {
   return (
     <>
-      <div className="fixed hidden lg:block z-20 w-60 h-screen pt-24 pl-6">
+      <div className="fixed z-20 hidden h-screen w-60 pl-6 pt-24 lg:block">
         <nav
           aria-label="Main navigation"
-          className="h-full py-10 px-6 pl-6 -ml-6 border-r border-keystatic-gray overflow-y-auto bg-white"
+          className="-ml-6 h-full overflow-y-auto border-r border-keystatic-gray bg-white px-6 py-10 pl-6"
         >
           {children}
         </nav>

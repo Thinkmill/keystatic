@@ -11,10 +11,10 @@ export default async function NotFound() {
   const navigationMap = await getNavigationMap();
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex min-h-screen flex-col">
       <HeaderNav navigationMap={navigationMap} ignoreDocNavStyles />
 
-      <Main className="mx-auto max-w-7xl px-6 pt-6 pb-12 flex flex-1 items-center w-full">
+      <Main className="mx-auto flex w-full max-w-7xl flex-1 items-center px-6 pb-12 pt-6">
         <PageNotFound />
       </Main>
 

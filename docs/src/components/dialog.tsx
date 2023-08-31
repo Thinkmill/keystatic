@@ -43,7 +43,7 @@ export default function Dialog({
             >
               <DialogHui.Panel className="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl">
                 {/* Close button */}
-                <div className="absolute top-0 right-0 pt-4 pr-4">
+                <div className="absolute right-0 top-0 pr-4 pt-4">
                   <button
                     type="button"
                     className="rounded-lg bg-keystatic-gray p-3 hover:bg-neutral-300 hover:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

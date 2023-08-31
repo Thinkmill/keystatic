@@ -166,14 +166,14 @@ function TemplateList() {
         />
       </svg>
 
-      <div className="mx-auto max-w-7xl pt-6 pb-12 overflow-y-auto lg:overflow-visible">
+      <div className="mx-auto max-w-7xl overflow-y-auto pb-12 pt-6 lg:overflow-visible">
         <ul
-          className="inline-flex gap-6 lg:gap-8 lg:grid lg:items-stretch lg:grid-cols-3 px-6"
+          className="inline-flex gap-6 px-6 lg:grid lg:grid-cols-3 lg:items-stretch lg:gap-8"
           role="list"
         >
           {templates.map(template => (
             <li key={template.id}>
-              <div className="min-w-[19rem] grid h-full grid-rows-[auto,1fr] overflow-hidden rounded-xl shadow-card bg-white">
+              <div className="grid h-full min-w-[19rem] grid-rows-[auto,1fr] overflow-hidden rounded-xl bg-white shadow-card">
                 <div
                   className={cx(
                     'px-6 pt-6',
@@ -193,7 +193,7 @@ function TemplateList() {
 
                 <div className="grid h-full grid-rows-[auto,1fr,auto] p-6">
                   <h3 className="text-xl font-semibold">{template.name}</h3>
-                  <p className="mt-2 text-md text-keystatic-gray-dark">
+                  <p className="text-md mt-2 text-keystatic-gray-dark">
                     {template.text}
                   </p>
 

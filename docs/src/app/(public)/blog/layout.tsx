@@ -34,7 +34,7 @@ export default async function RootLayout({
 }) {
   return (
     <>
-      <Main className="mx-auto w-full sm:max-w-xl flex flex-col flex-1 gap-4 px-6 pt-10 lg:pt-16 pb-16">
+      <Main className="mx-auto flex w-full flex-1 flex-col gap-4 px-6 pb-16 pt-10 sm:max-w-xl lg:pt-16">
         {children}
       </Main>
       <Footer />

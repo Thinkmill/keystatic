@@ -59,7 +59,7 @@ export function MobileNav({ navigationMap }: NavProps) {
       <Button
         onClick={openNav}
         impact="light"
-        className="px-3 pt-2 pb-2 lg:hidden"
+        className="px-3 pb-2 pt-2 lg:hidden"
         aria-label="Open menu"
         aria-expanded={navOpen}
         aria-haspopup="true"
@@ -72,7 +72,7 @@ export function MobileNav({ navigationMap }: NavProps) {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-6 h-6"
+            className="h-6 w-6"
             aria-hidden="true"
           >
             <path
@@ -88,7 +88,7 @@ export function MobileNav({ navigationMap }: NavProps) {
       {/** Blanket */}
       <div
         onClick={closeNav}
-        className={`fixed top-0 left-0 bottom-0 right-0 bg-neutral-800/[.6] z-30 transition-opacity duration-300 lg:hidden ${
+        className={`fixed bottom-0 left-0 right-0 top-0 z-30 bg-neutral-800/[.6] transition-opacity duration-300 lg:hidden ${
           navOpen
             ? 'visible opacity-100'
             : 'invisible opacity-0 lg:visible lg:opacity-100'
@@ -98,20 +98,20 @@ export function MobileNav({ navigationMap }: NavProps) {
       {/** Slideout menu */}
       <div
         onScroll={onScrollHandler}
-        className={`overflow-y-auto list-none fixed lg:hidden top-0 bg-white h-[100dvh] w-64 z-30 drop-shadow-2xl flex flex-col transition-[right] duration-300 ${
-          navOpen ? 'visible -right-0' : 'hidden -right-full'
+        className={`fixed top-0 z-30 flex h-[100dvh] w-64 list-none flex-col overflow-y-auto bg-white drop-shadow-2xl transition-[right] duration-300 lg:hidden ${
+          navOpen ? 'visible -right-0' : '-right-full hidden'
         }`}
       >
         <FocusLock disabled={!navOpen} returnFocus>
           {/* Sticky close */}
           <div
-            className={`sticky top-0 left-0 right-0 p-2 bg-white z-30 justify-end flex transition-shadow ${
+            className={`sticky left-0 right-0 top-0 z-30 flex justify-end bg-white p-2 transition-shadow ${
               scrollTop <= 0 ? 'shadow-none' : 'shadow-lg'
             }`}
           >
             <button
               type="button"
-              className="flex items-center justify-center rounded-lg h-10 w-10 hover:bg-keystatic-gray-light active:bg-keystatic-gray transition-colors"
+              className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-keystatic-gray-light active:bg-keystatic-gray"
               onClick={closeNav}
               tabIndex={navOpen ? 0 : -1}
             >
@@ -170,9 +170,9 @@ export function MobileNav({ navigationMap }: NavProps) {
               </NavGroup>
             ))}
 
-            <hr className="h-px my-3 mx-4 border-keystatic-gray" />
+            <hr className="mx-4 my-3 h-px border-keystatic-gray" />
 
-            <div className="flex flex-row items-center gap-4 justify-center px-4 pt-4 pb-10">
+            <div className="flex flex-row items-center justify-center gap-4 px-4 pb-10 pt-4">
               <SocialLinks tabIndex={navOpen ? 0 : -1} />
             </div>
           </div>

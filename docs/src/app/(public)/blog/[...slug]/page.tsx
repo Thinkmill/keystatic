@@ -43,7 +43,7 @@ export default async function BlogPost({ params }: BlogProps) {
       <p>
         <Link
           href="/blog"
-          className="underline hover:no-underline font-medium inline-flex gap-1 items-center"
+          className="inline-flex items-center gap-1 font-medium underline hover:no-underline"
         >
           <ArrowLeftIcon />
           All blog posts

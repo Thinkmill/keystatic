@@ -11,9 +11,9 @@ export default function Features() {
   return (
     <section className="relative bg-keystatic-gray-light">
       {/* swirly arrow */}
-      <div className="mx-auto max-w-7xl relative">
+      <div className="relative mx-auto max-w-7xl">
         <svg
-          className="-scale-x-1 md:scale-x-1 absolute -top-24 w-20 left-[4vw] md:left-auto md:right-2 xl:-right-6"
+          className="absolute -top-24 left-[4vw] w-20 -scale-x-1 md:left-auto md:right-2 md:scale-x-1 xl:-right-6"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 115 168"
@@ -28,16 +28,16 @@ export default function Features() {
 
       <ul
         tabIndex={0}
-        className="px-6 py-8 overflow-x-auto flex gap-4 md:gap-8"
+        className="flex gap-4 overflow-x-auto px-6 py-8 md:gap-8"
         role="list"
       >
         {features.map(feature => (
           <li
             key={feature}
-            className="flex items-center gap-2 bg-keystatic-gray rounded-lg py-3 px-4 md:py-4 md:px-6 shrink-0 first:ml-auto last:mr-auto"
+            className="flex shrink-0 items-center gap-2 rounded-lg bg-keystatic-gray px-4 py-3 first:ml-auto last:mr-auto md:px-6 md:py-4"
           >
             <StarIcon size="small" />
-            <span className="md:text-lg shrink-0">{feature}</span>
+            <span className="shrink-0 md:text-lg">{feature}</span>
           </li>
         ))}
       </ul>

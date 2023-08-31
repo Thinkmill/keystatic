@@ -10,7 +10,7 @@ const options = [
   { label: 'Product manager', value: 'product-manager' },
 ] as const;
 
-type Option = (typeof options)[number]['value'];
+type Option = typeof options[number]['value'];
 
 export const SelectFieldDemo = () => {
   const [value, setValue] = useState<Option>('designer');

@@ -6,10 +6,10 @@ import { H1_ID } from '../constants';
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-white">
-      <div className="mx-auto max-w-7xl pt-10 px-6 md:pb-10 lg:py-16 flex flex-col items-center gap-12 md:gap-16">
-        <div className="w-full max-w-2xl flex flex-col items-center gap-8 text-center">
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-12 px-6 pt-10 md:gap-16 md:pb-10 lg:py-16">
+        <div className="flex w-full max-w-2xl flex-col items-center gap-8 text-center">
           <h1
-            className="font-extrabold text-3xl sm:text-4xl md:text-5xl"
+            className="text-3xl font-extrabold sm:text-4xl md:text-5xl"
             id={H1_ID}
             aria-label="Content management for your code base"
           >
@@ -18,7 +18,7 @@ export default function Hero() {
             for your{' '}
             <span className="relative">
               <svg
-                className="absolute -right-3 -bottom-1.5 w-[110%]"
+                className="absolute -bottom-1.5 -right-3 w-[110%]"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 392 92"
@@ -40,7 +40,7 @@ export default function Hero() {
             workflows.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <Button className="" href="/docs">
               Read the docs
             </Button>
@@ -69,7 +69,7 @@ export default function Hero() {
                 clipRule="evenodd"
               />
             </svg>
-            <span className="font-medium text-sm">
+            <span className="text-sm font-medium">
               Keystatic is a{' '}
               <Link
                 href="https://thinkmill.com.au"
@@ -82,20 +82,20 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="relative w-full h-[100vw] md:h-[22vw] lg:h-[25vw] xl:h-[20rem]">
+        <div className="relative h-[100vw] w-full md:h-[22vw] lg:h-[25vw] xl:h-[20rem]">
           <img
             src="https://keystatic.io/images/keystatic-docs/hero-markdoc.png"
             alt="Content edited in a markdoc file, in a code editor"
             width={784}
             height={549}
-            className="absolute max-w-none w-[110vw] -right-[40%] -top-[5%] md:top-0 md:max-w-full md:w-2/3 md:-left-[5%]"
+            className="absolute -right-[40%] -top-[5%] w-[110vw] max-w-none md:-left-[5%] md:top-0 md:w-2/3 md:max-w-full"
           />
           <img
             src="https://keystatic.io/images/keystatic-docs/hero-editor-current.png"
             alt="Content edited in a WYSIWIG editor in Keystatic Admin UI"
             width={784}
             height={549}
-            className="absolute max-w-none w-[110vw] -right-[25%] -bottom-[5%] md:max-w-full md:w-2/3 md:-right-[5%] md:-top-[2.5rem]"
+            className="absolute -bottom-[5%] -right-[25%] w-[110vw] max-w-none md:-right-[5%] md:-top-[2.5rem] md:w-2/3 md:max-w-full"
           />
         </div>
       </div>

@@ -10,7 +10,7 @@ export function PageNotFound() {
   return (
     <div className="flex flex-col gap-8">
       <h1
-        className="font-extrabold text-3xl sm:text-4xl md:text-5xl"
+        className="text-3xl font-extrabold sm:text-4xl md:text-5xl"
         id={H1_ID}
       >
         404: Page not found <span aria-hidden="true">🕵️</span>
@@ -18,7 +18,7 @@ export function PageNotFound() {
 
       <p className="text-lg text-keystatic-gray-dark">
         Apologies, we couldn't find any page with the path{' '}
-        <span className="font-mono bg-keystatic-gray-light px-2 py-1 rounded border border-keystatic-gray text-black">
+        <span className="rounded border border-keystatic-gray bg-keystatic-gray-light px-2 py-1 font-mono text-black">
           {path}
         </span>
       </p>

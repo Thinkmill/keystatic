@@ -11,7 +11,7 @@ const options = [
   { label: 'Chess', value: 'chess' },
 ] as const;
 
-type Options = (typeof options)[number]['value'];
+type Options = typeof options[number]['value'];
 
 export const MultiselectFieldDemo = () => {
   const [value, setValue] = useState<readonly Options[]>([
