@@ -12,7 +12,7 @@ import { GitHubOutlineIcon } from '../../../components/icons/github-outline-icon
 type Project = {
   slug: string;
   entry: EntryWithResolvedLinkedFiles<
-    typeof keystaticConfig['collections']['projects']
+    (typeof keystaticConfig)['collections']['projects']
   >;
 };
 
