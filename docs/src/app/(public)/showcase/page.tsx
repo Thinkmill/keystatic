@@ -85,13 +85,15 @@ function ProjectCard({ entry, slug }: Project) {
           <ActionButton href={entry.url ?? ''} icon={GlobeIcon}>
             Visit
           </ActionButton>
-          <ActionButton
-            impact="light"
-            href={entry.url ?? ''}
-            icon={GitHubOutlineIcon}
-          >
-            View on GitHub
-          </ActionButton>
+          {entry.repoUrl && (
+            <ActionButton
+              impact="light"
+              href={entry.url ?? ''}
+              icon={GitHubOutlineIcon}
+            >
+              View on GitHub
+            </ActionButton>
+          )}
         </div>
       </div>
 
