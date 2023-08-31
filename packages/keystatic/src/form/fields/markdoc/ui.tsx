@@ -1,4 +1,3 @@
-'use client';
 import { FieldPrimitive } from '@keystar/ui/field';
 import { FormFieldInputProps } from '../../api';
 import { EditorState } from 'prosemirror-state';

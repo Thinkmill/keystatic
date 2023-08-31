@@ -1,4 +1,3 @@
-'use client';
 import { ButtonGroup, ActionButton, Button } from '@keystar/ui/button';
 import { FieldLabel, FieldMessage } from '@keystar/ui/field';
 import { Flex } from '@keystar/ui/layout';

@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 import { useSelected, useSlateStatic } from 'slate-react';
 import { useOverlayTriggerState } from '@react-stately/overlays';

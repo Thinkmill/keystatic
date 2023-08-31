@@ -1,5 +1,3 @@
-'use client';
-
 import { Picker, Item } from '@keystar/ui/picker';
 
 export function SelectFieldInput<Value extends string>(props: {

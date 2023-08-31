@@ -1,4 +1,3 @@
-'use client';
 import { Combobox, Item } from '@keystar/ui/combobox';
 import { filter } from 'minimatch';
 import { useReducer, useMemo, useState, useEffect } from 'react';

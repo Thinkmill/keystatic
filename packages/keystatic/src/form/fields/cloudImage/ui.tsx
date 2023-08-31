@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useId, useState } from 'react';
 
 import { ActionButton, ClearButton, ToggleButton } from '@keystar/ui/button';
