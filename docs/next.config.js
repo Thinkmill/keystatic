@@ -6,7 +6,7 @@ module.exports = {
     externalDir: true,
   },
   images: {
-    remotePatterns: [{ hostname: 'images.unsplash.com' }],
+    remotePatterns: [{ hostname: 'thinkmill-labs.keystatic.net' }],
   },
   async redirects() {
     return [

@@ -81,7 +81,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
               <div className="h-3 w-3 rounded-full bg-green-500" />
             </div>
             <Image
-              src={project.coverImage}
+              src={project.coverImage.src}
               layout="fill"
               alt=""
               className="absolute inset-0 object-cover"

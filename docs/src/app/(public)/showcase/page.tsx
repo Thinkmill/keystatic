@@ -97,7 +97,7 @@ function ProjectCard({ entry, slug }: Project) {
 
       <div className="relative aspect-[16/10] translate-x-12 translate-y-8">
         <Image
-          src={entry.coverImage}
+          src={entry.coverImage.src}
           layout="fill"
           alt=""
           className="absolute inset-0 w-full rounded-tl-xl object-cover"

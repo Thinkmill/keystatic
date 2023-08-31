@@ -230,8 +230,9 @@ export default config({
           multiline: true,
           description: 'This will be used on the homepage listing.',
         }),
-        // This will be replaced with a cloudImage field soon...
-        coverImage: fields.text({ label: 'Cover image' }),
+        coverImage: fields.cloudImage({
+          label: 'Cover image',
+        }),
         sortIndex: fields.integer({ label: 'Sort Index', defaultValue: 100 }),
         content: fields.document({
           label: 'Content',
@@ -239,22 +240,9 @@ export default config({
             'The long form copy for the project page. A link to a dedicated page will be available if this field is filled.',
           formatting: true,
           links: true,
-          // images: {
-          //   directory: 'src/assets/projects',
-          //   publicPath: '/images/projects',
-          // },
-
-          // This will be replaced with a cloudImage field soon...
           componentBlocks: {
             aside: componentBlocks['aside'],
             'cloud-image': componentBlocks['cloud-image'],
-            // image: component({
-            //   label: 'Image',
-            //   preview: () => null,
-            //   schema: {
-            //     image: fields.text({ label: 'Image' }),
-            //   },
-            // }),
           },
         }),
       },
