@@ -7,7 +7,7 @@ import {
   isNonChildFieldPreviewProps,
   InnerFormValueContentFromPreviewProps,
 } from '../../form-from-preview';
-import { AddToPathProvider } from '../text/ui';
+import { AddToPathProvider } from '../text/path-slug-context';
 import { useId } from 'react';
 import { Text } from '@keystar/ui/typography';
 

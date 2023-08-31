@@ -1,7 +1,7 @@
 'use client';
 import { NumberField } from '@keystar/ui/number-field';
 import { useReducer } from 'react';
-import { validateInteger } from '.';
+import { validateInteger } from './validateInteger';
 import { FormFieldInputProps } from '../../api';
 
 export function IntegerFieldInput(

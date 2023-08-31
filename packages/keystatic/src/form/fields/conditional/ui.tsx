@@ -11,7 +11,7 @@ import {
   isNonChildFieldPreviewProps,
   InnerFormValueContentFromPreviewProps,
 } from '../../form-from-preview';
-import { AddToPathProvider } from '../text/ui';
+import { AddToPathProvider } from '../text/path-slug-context';
 
 export function ConditionalFieldInput<
   DiscriminantField extends BasicFormField<string | boolean>,

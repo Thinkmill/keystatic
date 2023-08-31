@@ -1,6 +1,6 @@
 import { getSlugFromState } from '../app/utils';
 import { ComponentSchema } from './api';
-import { SlugFieldInfo } from './fields/text/ui';
+import { SlugFieldInfo } from './fields/text/path-slug-context';
 import { FieldDataError } from './fields/error';
 import { PropValidationError } from './parse-props';
 import { ReadonlyPropPath } from './fields/document/DocumentEditor/component-blocks/utils';

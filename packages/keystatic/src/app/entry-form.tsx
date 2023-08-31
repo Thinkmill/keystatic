@@ -8,11 +8,11 @@ import { createContext, useContext } from 'react';
 
 import { ReadonlyPropPath } from '../form/fields/document/DocumentEditor/component-blocks/utils';
 import {
-  PathContextProvider,
-  SlugFieldProvider,
   AddToPathProvider,
+  PathContextProvider,
   SlugFieldInfo,
-} from '../form/fields/text/ui';
+  SlugFieldProvider,
+} from '../form/fields/text/path-slug-context';
 import {
   NonChildFieldComponentSchema,
   InnerFormValueContentFromPreviewProps,
