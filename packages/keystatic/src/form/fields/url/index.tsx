@@ -1,4 +1,3 @@
-import { isValidURL } from '../document/DocumentEditor/isValidURL';
 import { BasicFormField } from '../../api';
 import { FieldDataError } from '../error';
 import {
@@ -7,20 +6,7 @@ import {
   basicFormFieldWithSimpleReaderParse,
 } from '../utils';
 import { UrlFieldInput } from './ui';
-
-export function validateUrl(
-  validation: { isRequired?: boolean } | undefined,
-  value: unknown,
-  label: string
-) {
-  if (value !== null && (typeof value !== 'string' || !isValidURL(value))) {
-    return `${label} is not a valid URL`;
-  }
-
-  if (validation?.isRequired && value === null) {
-    return `${label} is required`;
-  }
-}
+import { validateUrl } from './validateUrl';
 
 export function url<IsRequired extends boolean | undefined>({
   label,
