@@ -1,36 +1,18 @@
 import { Flex } from '@keystar/ui/layout';
-import { BaseStyleProps, useStyleProps } from '@keystar/ui/style';
+import { css, tokenSchema, useStyleProps } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
-import { HTMLTag } from '@keystar/ui/utils/ts';
 import {
   forwardRef,
   ForwardRefExoticComponent,
-  HTMLAttributes,
-  ReactElement,
-  ReactNode,
   Ref,
+  useId,
+  useMemo,
 } from 'react';
 
 import { FieldLabel } from './FieldLabel';
 import { FieldMessage } from './FieldMessage';
-
-type FieldPrimitiveProps = {
-  children: ReactElement;
-  isRequired?: boolean;
-  label?: ReactNode;
-  labelElementType?: HTMLTag;
-  labelProps?: HTMLAttributes<HTMLElement>;
-  description?: ReactNode;
-  descriptionProps?: HTMLAttributes<HTMLElement>;
-  errorMessage?: ReactNode;
-  errorMessageProps?: HTMLAttributes<HTMLElement>;
-  /**
-   * For controls that DO NOT use a semantic element for user input. In these
-   * cases the "required" state would not otherwise be announced to users of
-   * assistive technology.
-   */
-  supplementRequiredState?: boolean;
-} & BaseStyleProps;
+import { FieldPrimitiveProps } from './types';
+import { SlotProvider } from '../slots';
 
 /**
  * Provides the accessibility implementation for input fields. Fields accept
@@ -45,6 +27,7 @@ export const FieldPrimitive: ForwardRefExoticComponent<
 ) {
   const {
     children,
+    contextualHelp,
     isRequired,
     label,
     labelElementType,
@@ -56,6 +39,24 @@ export const FieldPrimitive: ForwardRefExoticComponent<
     supplementRequiredState,
   } = props;
   const styleProps = useStyleProps(props);
+  const contextualHelpId = useId();
+
+  const contextualHelpSlots = useMemo(() => {
+    return {
+      // match capsize styles from the label text. stops the contextual help button
+      // from pushing elements above/below it
+      button: {
+        UNSAFE_className: css({
+          marginBottom: tokenSchema.typography.text.regular.capheightTrim,
+          marginTop: tokenSchema.typography.text.regular.baselineTrim,
+        }),
+        id: contextualHelpId,
+        'aria-labelledby': labelProps?.id
+          ? `${labelProps.id} ${contextualHelpId}`
+          : undefined,
+      },
+    };
+  }, [contextualHelpId, labelProps?.id]);
 
   return (
     <Flex
@@ -66,16 +67,34 @@ export const FieldPrimitive: ForwardRefExoticComponent<
       UNSAFE_className={styleProps.className}
       UNSAFE_style={styleProps.style}
     >
-      {label && (
-        <FieldLabel
-          elementType={labelElementType}
-          isRequired={isRequired}
-          supplementRequiredState={supplementRequiredState}
-          {...labelProps}
-        >
-          {label}
-        </FieldLabel>
-      )}
+      {(() => {
+        if (!label) {
+          return null;
+        }
+        const labelUI = (
+          <FieldLabel
+            elementType={labelElementType}
+            isRequired={isRequired}
+            supplementRequiredState={supplementRequiredState}
+            {...labelProps}
+          >
+            {label}
+          </FieldLabel>
+        );
+
+        if (contextualHelp) {
+          return (
+            <Flex gap="small" alignItems="center">
+              {labelUI}
+              <SlotProvider slots={contextualHelpSlots}>
+                {contextualHelp}
+              </SlotProvider>
+            </Flex>
+          );
+        }
+
+        return labelUI;
+      })()}
 
       {description && (
         <Text {...descriptionProps} size="small" color="neutralSecondary">

@@ -1,6 +1,6 @@
 {
   "name": "@keystar/docs",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -19,7 +19,7 @@
     "@babel/core": "^7.18.5",
     "@babel/runtime": "^7.18.3",
     "@internationalized/date": "^3.4.0",
-    "@keystar/ui": "^0.2.0",
+    "@keystar/ui": "^0.3.0",
     "@markdoc/markdoc": "^0.3.0",
     "@react-aria/i18n": "^3.8.0",
     "@types/js-yaml": "^4.0.5",

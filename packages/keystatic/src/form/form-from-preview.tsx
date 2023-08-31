@@ -11,10 +11,10 @@ import {
 } from './api';
 import { ReadonlyPropPath } from './fields/document/DocumentEditor/component-blocks/utils';
 import {
-  PathContextProvider,
   SlugFieldInfo,
+  PathContextProvider,
   SlugFieldProvider,
-} from './fields/text/ui';
+} from './fields/text/path-slug-context';
 import { ObjectFieldInput } from './fields/object/ui';
 import { ConditionalFieldInput } from './fields/conditional/ui';
 import { ArrayFieldInput } from './fields/array/ui';

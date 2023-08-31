@@ -1,6 +1,6 @@
 {
   "name": "@keystar/ui",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "license": "MIT",
   "main": "",
   "module": "",
@@ -797,6 +797,11 @@
       "types": "./password-field/dist/keystar-ui-password-field.cjs.js",
       "module": "./password-field/dist/keystar-ui-password-field.esm.js",
       "default": "./password-field/dist/keystar-ui-password-field.cjs.js"
+    },
+    "./contextual-help": {
+      "types": "./contextual-help/dist/keystar-ui-contextual-help.cjs.js",
+      "module": "./contextual-help/dist/keystar-ui-contextual-help.esm.js",
+      "default": "./contextual-help/dist/keystar-ui-contextual-help.cjs.js"
     },
     "./icon/icons/albumIcon": {
       "types": "./icon/icons/albumIcon/dist/keystar-ui-icon-icons-albumIcon.cjs.js",
@@ -6214,7 +6219,7 @@
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
-    "@keystar/ui": "^0.2.2",
+    "@keystar/ui": "^0.3.0",
     "@keystar/ui-storybook": "^0.0.1",
     "@react-aria/landmark": "3.0.0-beta.2",
     "@svgr/core": "^6.5.1",
