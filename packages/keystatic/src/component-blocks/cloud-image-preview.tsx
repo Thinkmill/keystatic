@@ -10,7 +10,6 @@ import {
   ButtonGroup,
   ClearButton,
 } from '@keystar/ui/button';
-import { NotEditable, ObjectField, PreviewProps } from '@keystatic/core';
 import { Dialog, DialogContainer, DialogTrigger } from '@keystar/ui/dialog';
 import { Icon } from '@keystar/ui/icon';
 import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
@@ -30,6 +29,8 @@ import { useId } from '@keystar/ui/utils';
 import { useConfig } from '../app/shell/context';
 import { focusWithPreviousSelection } from '../form/fields/document/DocumentEditor/ui-utils';
 import { getSplitCloudProject, isCloudConfig } from '../app/utils';
+import { NotEditable } from '../form/fields/document/DocumentEditor/primitives';
+import { PreviewProps, ObjectField } from '..';
 
 export type CloudImageProps = {
   src: string;

@@ -1,5 +1,11 @@
 # @keystatic/astro
 
+## 1.0.1
+
+### Patch Changes
+
+- 36cb6803: Allow `astro@3` in `peerDependencies`
+
 ## 1.0.0
 
 ### Patch Changes

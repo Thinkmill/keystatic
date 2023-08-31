@@ -2,7 +2,7 @@
 import { TextField } from '@keystar/ui/text-field';
 import { useReducer } from 'react';
 import { FormFieldInputProps } from '../../api';
-import { validateUrl } from '.';
+import { validateUrl } from './validateUrl';
 
 export function UrlFieldInput(
   props: FormFieldInputProps<string | null> & {

@@ -1,5 +1,13 @@
 # @keystatic/templates-astro
 
+## 0.0.10
+
+### Patch Changes
+
+- 36cb6803: Upgrading template to Astro v3
+- Updated dependencies [36cb6803]
+  - @keystatic/astro@1.0.1
+
 ## 0.0.9
 
 ### Patch Changes

@@ -1,5 +1,32 @@
 # @keystar/ui
 
+## 0.3.0
+
+### Minor Changes
+
+- 7dafe782: Calendar widgets for date selection:
+
+  - New package "@keystar/ui/calendar" exposes new components, `Calendar` and
+    `RangeCalendar`
+  - Update to "@keystar/ui/date-time" exposes new components, `DatePicker` and
+    `DateRangePicker`
+
+  Related fixes and improvements:
+
+  - Truncate `ActionButton` label text
+  - Support "aria-hidden" on `Heading` and `Text` components
+
+### Patch Changes
+
+- 5f9dd460: Remove lodash and dedent
+- 083ee638: Revert adding `"use client"` to `@keystar/ui/style`
+- ba3e4a0b: fix vertical divider styles
+- 7ed2a7d8: New package "@keystar/ui/contextual-help" exposes `ContextualHelp`
+  component.
+
+  Support "contextualHelp" prop on field components, `Field` and
+  `FieldPrimitive`.
+
 ## 0.2.2
 
 ### Patch Changes
