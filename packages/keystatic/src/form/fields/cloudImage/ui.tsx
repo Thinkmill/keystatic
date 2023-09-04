@@ -2,9 +2,11 @@
 
 import { useEffect, useId, useState } from 'react';
 
-import { ActionButton, ClearButton } from '@keystar/ui/button';
+import { ActionButton, ClearButton, ToggleButton } from '@keystar/ui/button';
 import { ObjectField, PreviewProps } from '@keystatic/core';
 import { Icon } from '@keystar/ui/icon';
+import { link2Icon } from '@keystar/ui/icon/icons/link2Icon';
+import { link2OffIcon } from '@keystar/ui/icon/icons/link2OffIcon';
 import { undo2Icon } from '@keystar/ui/icon/icons/undo2Icon';
 import { Box, Flex, HStack, VStack } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
@@ -58,6 +60,7 @@ function ImageField(props: {
   const [status, setStatus] = useState<ImageStatus>(image.src ? 'good' : '');
   const imageLibraryURL = useImageLibraryURL();
   const dimensions = useImageDimensions(image.src);
+  const [constrainProportions, setConstrainProportions] = useState(true);
   const revertLabel = `Revert to original (${dimensions.width} × ${dimensions.height})`;
   const dimensionsMatchOriginal =
     dimensions.width === image.width && dimensions.height === image.height;
@@ -179,14 +182,47 @@ function ImageField(props: {
               width="scale.1600"
               formatOptions={{ maximumFractionDigits: 0 }}
               value={image.width}
-              onChange={width => props.onChange({ ...image, width })}
+              onChange={width => {
+                if (constrainProportions) {
+                  props.onChange({
+                    ...image,
+                    width,
+                    height: Math.round(width / getAspectRatio(image)),
+                  });
+                } else {
+                  props.onChange({ ...image, width });
+                }
+              }}
             />
+            <TooltipTrigger>
+              <ToggleButton
+                isSelected={constrainProportions}
+                aria-label="Constrain proportions"
+                prominence="low"
+                onPress={() => {
+                  setConstrainProportions(state => !state);
+                }}
+              >
+                <Icon src={constrainProportions ? link2Icon : link2OffIcon} />
+              </ToggleButton>
+              <Tooltip>Constrain proportions</Tooltip>
+            </TooltipTrigger>
             <NumberField
               label="Height"
               width="scale.1600"
               formatOptions={{ maximumFractionDigits: 0 }}
               value={image.height}
-              onChange={height => props.onChange({ ...image, height })}
+              onChange={height => {
+                if (constrainProportions) {
+                  props.onChange({
+                    ...image,
+                    height,
+                    width: Math.round(height * getAspectRatio(image)),
+                  });
+                } else {
+                  props.onChange({ ...image, height });
+                }
+              }}
             />
             <TooltipTrigger>
               <ActionButton
@@ -206,7 +242,7 @@ function ImageField(props: {
               >
                 <Icon src={undo2Icon} />
               </ActionButton>
-              <Tooltip>{revertLabel}</Tooltip>
+              <Tooltip maxWidth="100%">{revertLabel}</Tooltip>
             </TooltipTrigger>
           </HStack>
         </>
@@ -262,4 +298,9 @@ export function CloudImageFieldInput(
       />
     </Flex>
   );
+}
+
+function getAspectRatio(state: CloudImageProps) {
+  if (!state.width || !state.height) return 1;
+  return state.width / state.height;
 }
