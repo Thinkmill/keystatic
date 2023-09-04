@@ -5,7 +5,7 @@ import { TwitterIcon } from '../icons/twitter-icon';
 
 export function SocialLinks({ tabIndex }: { tabIndex?: number }) {
   const styles =
-    'shrink-0 rounded-lg p-3 hover:bg-keystatic-gray-light active:bg-keystatic-gray transition-colors';
+    'shrink-0 rounded-lg p-3 hover:bg-slate-3 active:bg-slate-5 transition-colors';
 
   return (
     <div className="flex gap-2">

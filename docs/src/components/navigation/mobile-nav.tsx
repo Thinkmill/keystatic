@@ -111,7 +111,7 @@ export function MobileNav({ navigationMap }: NavProps) {
           >
             <button
               type="button"
-              className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-keystatic-gray-light active:bg-keystatic-gray"
+              className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-slate-3 active:bg-slate-5"
               onClick={closeNav}
               tabIndex={navOpen ? 0 : -1}
             >
@@ -170,7 +170,7 @@ export function MobileNav({ navigationMap }: NavProps) {
               </NavGroup>
             ))}
 
-            <hr className="mx-4 my-3 h-px border-keystatic-gray" />
+            <hr className="mx-4 my-3 h-px border-slate-5" />
 
             <div className="flex flex-row items-center justify-center gap-4 px-4 pb-10 pt-4">
               <SocialLinks tabIndex={navOpen ? 0 : -1} />

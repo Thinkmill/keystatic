@@ -16,9 +16,9 @@ export function PageNotFound() {
         404: Page not found <span aria-hidden="true">🕵️</span>
       </h1>
 
-      <p className="text-lg text-keystatic-gray-dark">
+      <p className="text-lg text-slate-11">
         Apologies, we couldn't find any page with the path{' '}
-        <span className="rounded border border-keystatic-gray bg-keystatic-gray-light px-2 py-1 font-mono text-black">
+        <span className="rounded border border-slate-5 bg-slate-3 px-2 py-1 font-mono text-black">
           {path}
         </span>
       </p>

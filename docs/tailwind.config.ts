@@ -1,20 +1,31 @@
-const { MAIN_EL_MAX_WIDTH } = require('./src/constants');
-const defaultTheme = require('tailwindcss/defaultTheme');
-const plugin = require('tailwindcss/plugin');
+import type { Config } from 'tailwindcss';
+import defaultTheme from 'tailwindcss/defaultTheme';
+import plugin from 'tailwindcss/plugin';
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import { MAIN_EL_MAX_WIDTH } from './src/constants';
+
+export default {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        black: '#171717',
+        black: '#1E1E1E',
+        // Replace the Slate color palette with a custom one
+        slate: {
+          '1': 'white',
+          '2': '#FAFAFA',
+          '3': '#F5F5F5',
+          '4': '#EAEAEA',
+          '5': '#E1E1E1',
+          '6': '#CACACA',
+          '7': '#B3B3B3',
+          '8': '#8E8E8E',
+          '9': '#6E6E6E',
+          '10': '#4B4B4B',
+          '11': '#2C2C2C',
+          '12': '#1E1E1E',
+        },
         keystatic: {
-          gray: {
-            DEFAULT: '#E8E8E8',
-            light: '#F8F8F8',
-            dark: '#2e2e2e',
-          },
           highlight: '#F7DE5B',
           secondary: '#375CDC',
         },
@@ -50,4 +61,4 @@ module.exports = {
     }),
     require('@tailwindcss/container-queries'),
   ],
-};
+} satisfies Config;

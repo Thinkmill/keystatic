@@ -32,18 +32,14 @@ export function HeaderNav({
   const linkStylesShared =
     'shrink-0 px-4 rounded-md transition-colors h-10 flex items-center relative';
 
-  const linkStylesIdle =
-    'hover:bg-keystatic-gray-light active:bg-keystatic-gray font-medium';
+  const linkStylesIdle = 'hover:bg-slate-3 active:bg-slate-4 font-medium';
 
-  const linkStylesCurrent =
-    'bg-keystatic-gray hover:bg-keystatic-gray font-bold';
+  const linkStylesCurrent = 'bg-slate-4 hover:bg-slate-4 font-bold';
 
   return (
     <header
       className={`w-full bg-white ${
-        isDocsNav
-          ? 'z-20 lg:fixed lg:z-30 lg:border-b lg:border-keystatic-gray'
-          : ''
+        isDocsNav ? 'z-20 lg:fixed lg:z-30 lg:border-b lg:border-slate-5' : ''
       }`}
     >
       <div className="mx-auto max-w-7xl">

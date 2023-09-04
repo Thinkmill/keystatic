@@ -7,7 +7,7 @@ export function FieldDemoFrame({
   children: ReactNode;
 }): JSX.Element {
   return (
-    <div className="my-2 rounded-lg bg-keystatic-gray-light px-6 py-6">
+    <div className="my-2 rounded-lg bg-slate-3 px-6 py-6">
       <VoussoirProvider colorScheme="light" scale="medium">
         {children}
       </VoussoirProvider>

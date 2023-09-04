@@ -32,11 +32,11 @@ export function NavItem({
   }`;
 
   const styleIdle =
-    'font-medium text-neutral-600 hover:bg-keystatic-gray-light active:bg-keystatic-gray';
+    'font-medium text-neutral-600 hover:bg-slate-3 active:bg-slate-5';
 
-  const styleCurrent = `bg-keystatic-gray text-keystatic-gray-dark font-semibold ${
+  const styleCurrent = `bg-slate-4 text-slate-11 font-semibold ${
     level !== 'top'
-      ? 'before:block before:absolute before:inset-y-1 before:-inset-x-2 before:bg-keystatic-gray-dark before:w-1 before:rounded before:transition-all'
+      ? 'before:block before:absolute before:inset-y-1 before:-inset-x-2 before:bg-slate-11 before:w-1 before:rounded before:transition-all'
       : ''
   }`;
 

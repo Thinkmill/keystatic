@@ -54,7 +54,7 @@ export default function ThankYouPage() {
               <span className="relative">curious!</span>
             </span>
           </h1>
-          <p className="mt-8 text-lg text-keystatic-gray-dark">
+          <p className="mt-8 text-lg text-slate-11">
             We're looking forward to sharing updates with you in the coming
             weeks and months.
           </p>

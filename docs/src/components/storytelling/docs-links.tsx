@@ -37,7 +37,7 @@ export default function DocsLinks() {
     },
   ];
   return (
-    <section className="relative bg-keystatic-gray-light">
+    <section className="relative bg-slate-3">
       <div className="mx-auto max-w-4xl px-6 pt-6">
         <div className="text-center">
           <h2 className="text-3xl font-bold sm:text-4xl">
@@ -60,10 +60,10 @@ export default function DocsLinks() {
         >
           {items.map(item => (
             <li key={item.title} className="group relative">
-              <div className="h-full rounded-lg border border-keystatic-gray-dark/50 bg-white transition-all group-hover:border-keystatic-gray-dark group-hover:shadow-md">
+              <div className="h-full rounded-lg border border-slate-11/50 bg-white transition-all group-hover:border-slate-11 group-hover:shadow-md">
                 <div className="grid h-full grid-rows-[auto,1fr,auto] p-6">
                   <h3 className="text-xl font-semibold">{item.title}</h3>
-                  <p className="text-md mt-2 text-keystatic-gray-dark">
+                  <p className="text-md mt-2 text-slate-11">
                     {item.description}
                   </p>
                 </div>

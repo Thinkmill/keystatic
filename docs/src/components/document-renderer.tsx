@@ -72,7 +72,7 @@ const getRenderers = (
       </Heading>
     ),
     paragraph: ({ children, textAlign }) => (
-      <p className="text-md text-keystatic-gray-dark" style={{ textAlign }}>
+      <p className="text-md text-slate-11" style={{ textAlign }}>
         {children}
       </p>
     ),
@@ -95,7 +95,7 @@ const getRenderers = (
 
       return (
         <div
-          className="my-2 text-sm [&>pre]:whitespace-break-spaces [&>pre]:break-all [&>pre]:rounded-lg [&>pre]:border [&>pre]:border-keystatic-gray [&>pre]:bg-white [&>pre]:px-6 [&>pre]:py-4"
+          className="my-2 text-sm [&>pre]:whitespace-break-spaces [&>pre]:break-all [&>pre]:rounded-lg [&>pre]:border [&>pre]:border-slate-5 [&>pre]:bg-white [&>pre]:px-6 [&>pre]:py-4"
           dangerouslySetInnerHTML={{ __html: codeBlock }}
         />
       );
@@ -103,7 +103,7 @@ const getRenderers = (
     list: ({ type, children }) => {
       if (type === 'ordered') {
         return (
-          <ol className="mt-2 list-inside list-decimal text-keystatic-gray-dark">
+          <ol className="mt-2 list-inside list-decimal text-slate-11">
             {children.map((child, index) => (
               <li key={index} className="mb-2">
                 {child}
@@ -113,7 +113,7 @@ const getRenderers = (
         );
       }
       return (
-        <ul className="ml-4 mt-2 list-disc text-keystatic-gray-dark">
+        <ul className="ml-4 mt-2 list-disc text-slate-11">
           {children.map((child, index) => (
             <li key={index} className="mb-2">
               {child}
@@ -123,16 +123,13 @@ const getRenderers = (
       );
     },
     divider: () => {
-      return <hr className="peer my-8 border-keystatic-gray" />;
+      return <hr className="peer my-8 border-slate-5" />;
     },
     layout: ({ children }) => {
       return (
         <div className="my-2 grid grid-cols-1 gap-6 sm:grid-cols-2">
           {children.map((element, index) => (
-            <div
-              key={index}
-              className="rounded-lg bg-keystatic-gray-light p-4 text-sm"
-            >
+            <div key={index} className="rounded-lg bg-slate-3 p-4 text-sm">
               {element}
             </div>
           ))}
@@ -147,7 +144,7 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
 > = {
   aside: props => {
     return (
-      <div className="not-prose my-2 flex flex-col gap-4 rounded-lg bg-keystatic-gray-light px-4 py-6 sm:flex-row">
+      <div className="not-prose my-2 flex flex-col gap-4 rounded-lg bg-slate-3 px-4 py-6 sm:flex-row">
         <div className="flex h-6 items-center text-3xl">{props.icon}</div>
         <div className="flex flex-col gap-3">{props.content}</div>
       </div>

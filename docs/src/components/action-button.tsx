@@ -17,7 +17,7 @@ const baseClasses =
   'flex rounded-md px-3 py-2 text-center text-sm text-slate-900 font-medium leading-none border transition-colors gap-1 items-center';
 
 const impactClasses: Record<ButtonProps['impact'] & {}, string> = {
-  bold: 'bg-white border-slate-200 text-black hover:bg-slate-50',
+  bold: 'bg-white border-slate-5 text-black hover:bg-slate-2',
   light: 'bg-transparent border-transparent text-black hover:border-slate-200',
 };
 
@@ -37,7 +37,7 @@ export default function ActionButton({
       {...props}
       className={cx(baseClasses, impactClasses[impact], className)}
     >
-      {Icon && <Icon className="h-4 w-4" />}
+      {Icon && <Icon className="h-4 w-4 text-inherit" />}
       <span>{children}</span>
       {href.startsWith('http') && <ArrowTopRightIcon />}
     </Link>
@@ -46,7 +46,7 @@ export default function ActionButton({
       {...props}
       className={cx(baseClasses, impactClasses[impact], className)}
     >
-      {Icon && <Icon className="h-4 w-4" />}
+      {Icon && <Icon className="h-4 w-4 text-inherit" />}
       <span>{children}</span>
     </button>
   );

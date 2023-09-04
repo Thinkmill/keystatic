@@ -38,7 +38,8 @@ export default async function Showcase() {
             A collection of projects using Keystatic to manage parts of their
             codebase.
           </p>
-          <p>
+          {/* TODO: Work out how we want to collect the submissions first. */}
+          {/* <p>
             Built something with Keystatic?{' '}
             <Link
               className="border-b-2 border-black hover:border-transparent"
@@ -46,7 +47,7 @@ export default async function Showcase() {
             >
               Share your project
             </Link>
-          </p>
+          </p> */}
         </div>
       </div>
 
@@ -69,7 +70,7 @@ export default async function Showcase() {
 
 function ProjectCard({ entry, slug }: Project) {
   return (
-    <li className="relative flex flex-col overflow-hidden rounded-2xl border border-slate-50 bg-slate-50 p-8 @container">
+    <li className="relative flex flex-col overflow-hidden rounded-2xl border border-slate-3 bg-slate-3 p-8 @container">
       <div className="flex-1">
         <div className="flex items-start justify-between gap-x-4">
           <h2 className="text-xl font-bold group-hover:underline @sm:text-2xl">
@@ -79,7 +80,7 @@ function ProjectCard({ entry, slug }: Project) {
           </h2>
           {entry.type === 'demo' && <DemoBadge />}
         </div>
-        <p className="mt-6 text-sm text-slate-900">{entry.summary}</p>
+        <p className="mt-6 text-sm text-slate-11">{entry.summary}</p>
         <div className="mt-6 flex flex-wrap items-center gap-2">
           {/* TODO: New button styles */}
           <ActionButton href={entry.url ?? ''} icon={GlobeIcon}>
@@ -97,12 +98,16 @@ function ProjectCard({ entry, slug }: Project) {
         </div>
       </div>
 
-      <div className="relative aspect-[16/10] translate-x-12 translate-y-8">
+      <div className="relative aspect-[16/10] translate-x-12 translate-y-8 @sm:translate-y-20">
+        {/* Image stack effect on large cards */}
+        <div className="absolute -right-8 -top-5 hidden h-full w-full rounded-xl border border-slate-3 bg-white @sm:block" />
+        <div className="absolute -right-4 -top-2.5 hidden h-full w-full rounded-xl border border-slate-3 bg-white @sm:block" />
+
         <Image
           src={entry.coverImage.src}
           layout="fill"
           alt=""
-          className="absolute inset-0 w-full rounded-tl-xl object-cover"
+          className="absolute inset-0 w-full rounded-tl-xl object-cover @sm:border-l @sm:border-t @sm:border-slate-3"
         />
       </div>
     </li>

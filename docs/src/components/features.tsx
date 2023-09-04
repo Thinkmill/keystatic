@@ -9,7 +9,7 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="relative bg-keystatic-gray-light">
+    <section className="relative bg-slate-3">
       {/* swirly arrow */}
       <div className="relative mx-auto max-w-7xl">
         <svg
@@ -34,7 +34,7 @@ export default function Features() {
         {features.map(feature => (
           <li
             key={feature}
-            className="flex shrink-0 items-center gap-2 rounded-lg bg-keystatic-gray px-4 py-3 first:ml-auto last:mr-auto md:px-6 md:py-4"
+            className="flex shrink-0 items-center gap-2 rounded-lg bg-slate-5 px-4 py-3 first:ml-auto last:mr-auto md:px-6 md:py-4"
           >
             <StarIcon size="small" />
             <span className="shrink-0 md:text-lg">{feature}</span>

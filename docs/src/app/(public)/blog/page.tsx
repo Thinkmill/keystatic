@@ -47,7 +47,7 @@ export default async function Blog() {
           ({ slug, formattedDate, entry }, index) => (
             <li
               key={index}
-              className="flex flex-col gap-2 border-t border-keystatic-gray py-8"
+              className="flex flex-col gap-2 border-t border-slate-4 py-8"
             >
               <p className="text-sm text-neutral-500">{formattedDate}</p>
 

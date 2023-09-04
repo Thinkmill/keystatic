@@ -151,7 +151,7 @@ function TemplateList() {
   };
 
   return (
-    <section className="relative bg-keystatic-gray-light pb-6 sm:pb-12 lg:pb-16">
+    <section className="relative bg-slate-3 pb-6 sm:pb-12 lg:pb-16">
       <svg
         className="absolute inset-x-0 bottom-0"
         xmlns="http://www.w3.org/2000/svg"
@@ -177,9 +177,7 @@ function TemplateList() {
                 <div
                   className={cx(
                     'px-6 pt-6',
-                    template.id !== 'blank'
-                      ? 'border-b border-keystatic-gray'
-                      : ''
+                    template.id !== 'blank' ? 'border-b border-slate-5' : ''
                   )}
                 >
                   <CloudImage
@@ -193,9 +191,7 @@ function TemplateList() {
 
                 <div className="grid h-full grid-rows-[auto,1fr,auto] p-6">
                   <h3 className="text-xl font-semibold">{template.name}</h3>
-                  <p className="text-md mt-2 text-keystatic-gray-dark">
-                    {template.text}
-                  </p>
+                  <p className="text-md mt-2 text-slate-11">{template.text}</p>
 
                   <CtaButtons
                     template={template}
@@ -223,9 +219,7 @@ function TemplateList() {
         onClose={onClose}
         header={() => (
           <>
-            <p className="text-lg font-medium text-keystatic-gray-dark">
-              Get started
-            </p>
+            <p className="text-lg font-medium text-slate-11">Get started</p>
             <h2 className="mt-4 text-3xl font-bold sm:text-4xl sm:leading-tight">
               Create a new Keystatic project with the <br />
               <span className="text-yellow-500">
@@ -262,7 +256,7 @@ function TemplateList() {
             <h2 className="pr-8 text-3xl font-bold sm:text-4xl sm:leading-tight">
               Get notified of any updates about our launch.
             </h2>
-            <p className="mt-4 text-keystatic-gray-dark">
+            <p className="mt-4 text-slate-11">
               If you're interested in following along, there's a few ways you do
               that... No spam, just sharing the adventure!
             </p>

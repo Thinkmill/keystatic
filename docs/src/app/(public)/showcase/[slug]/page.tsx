@@ -40,7 +40,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
             href={`/showcase/${previousProject.slug}`}
             className="group mb-2 flex flex-col gap-6"
           >
-            <span className="font-medium leading-none text-slate-600">
+            <span className="font-medium leading-none text-slate-9">
               &larr; Previous
             </span>
             <span className="text-lg font-bold leading-none group-hover:underline">
@@ -49,7 +49,10 @@ export default async function Docs({ params }: { params: { slug: string } }) {
           </Link>
           {/* Current project */}
           <div className="col-span-2 row-start-1 text-center md:col-span-1 md:col-start-2">
-            <Link href="/showcase" className="font-medium hover:underline">
+            <Link
+              href="/showcase"
+              className="font-medium text-slate-11 hover:underline"
+            >
               Showcase
             </Link>
             <h1 className="mt-2 text-3xl font-extrabold leading-none sm:text-4xl md:mt-4 md:text-5xl lg:mt-6">
@@ -61,7 +64,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
             href={`/showcase/${nextProject.slug}`}
             className="group mb-2 flex flex-col gap-6 justify-self-end rounded-md text-right"
           >
-            <span className="font-medium leading-none text-slate-600">
+            <span className="font-medium leading-none text-slate-9">
               Next &rarr;
             </span>
             <span className="text-lg font-bold leading-none group-hover:underline">
@@ -70,11 +73,11 @@ export default async function Docs({ params }: { params: { slug: string } }) {
           </Link>
         </div>
 
-        <div className="border-b-2">
-          <div className="relative mt-8 aspect-[16/10.5] overflow-hidden rounded-t-2xl border-2 border-b-0 md:mt-16 lg:mx-20">
+        <div className="border-b-2 border-slate-5">
+          <div className="relative mt-8 aspect-[16/10.5] overflow-hidden rounded-t-2xl border-2 border-b-0 border-slate-5 md:mt-16 lg:mx-20">
             {/* Window buttons fake UI */}
             <div
-              className="absolute left-2 top-2 z-10 flex gap-2"
+              className="absolute left-2.5 top-2.5 z-10 flex gap-1.5"
               aria-hidden="true"
             >
               <div className="h-3 w-3 rounded-full bg-red-500" />
@@ -114,7 +117,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
 
       {content && (
         <>
-          <hr className="mx-auto mt-16 w-20" />
+          <hr className="mx-auto mt-16 w-20 border-slate-5" />
           <main className="bg-white py-12">
             <div className="prose mx-auto px-4 lg:prose-lg sm:px-6 lg:px-8">
               <DocumentRenderer document={content} slug={slug} />

@@ -32,7 +32,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
                 level > 2 ? 'pl-2 text-xs' : ''
               } ${
                 `#${activeHeading}` === slug
-                  ? 'text-keystatic-gray-dark'
+                  ? 'text-slate-11'
                   : 'text-neutral-500'
               }`}
               href={slug}
