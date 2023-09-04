@@ -21,7 +21,7 @@ export const metadata = {
     description: 'Content management for your codebase.',
     images: [
       {
-        url: 'https://keystatic.io/images/keystatic-docs/og-image.jpg',
+        url: 'https://thinkmill-labs.keystatic.net/keystatic-site/images/x93u9oqzdwlv/og-image',
         width: 1200,
         height: 630,
         alt: 'Keystatic cover image',
