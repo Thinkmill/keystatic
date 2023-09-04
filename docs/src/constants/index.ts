@@ -1,4 +1,3 @@
-export const KS_CLOUD_STORAGE_URL = 'https://keystatic.io/';
 export const DEFAULT_IMG_WIDTHS = [375, 960, 1280, 1920];
 
 export const MAIN_EL_MAX_WIDTH = '76.5rem'; // 1200px + 24px gutter (`px-6`) as rems

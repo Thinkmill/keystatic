@@ -84,14 +84,14 @@ export default function Hero() {
 
         <div className="relative h-[100vw] w-full md:h-[22vw] lg:h-[25vw] xl:h-[20rem]">
           <img
-            src="https://keystatic.io/images/keystatic-docs/hero-markdoc.png"
+            src="https://thinkmill-labs.keystatic.net/keystatic-site/images/fcatt0intfia/markdoc-file"
             alt="Content edited in a markdoc file, in a code editor"
             width={784}
             height={549}
             className="absolute -right-[40%] -top-[5%] w-[110vw] max-w-none md:-left-[5%] md:top-0 md:w-2/3 md:max-w-full"
           />
           <img
-            src="https://keystatic.io/images/keystatic-docs/hero-editor-current.png"
+            src="https://thinkmill-labs.keystatic.net/keystatic-site/images/mfw8urq41932/keystatic-editor"
             alt="Content edited in a WYSIWIG editor in Keystatic Admin UI"
             width={784}
             height={549}

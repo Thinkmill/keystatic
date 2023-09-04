@@ -10,7 +10,7 @@ export default async function RootLayout({
   const navigationMap = await getNavigationMap();
 
   return (
-    <div className="flex min-h-screen flex-col text-slate-12 antialiased">
+    <div className="flex min-h-screen flex-col text-slate-12">
       <HeaderNav navigationMap={navigationMap} />
       {children}
     </div>
