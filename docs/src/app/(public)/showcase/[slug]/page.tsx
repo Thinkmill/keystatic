@@ -33,7 +33,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
   return (
     <div className="py-10">
       <header>
-        <div className="grid grid-cols-[1fr,auto,1fr] items-end gap-12">
+        <div className="grid grid-cols-2 items-end gap-12 md:grid-cols-[1fr,auto,1fr]">
           {/* Previous project */}
 
           <Link
@@ -47,11 +47,12 @@ export default async function Docs({ params }: { params: { slug: string } }) {
               {previousProject.entry.title}
             </span>
           </Link>
-          <div className="text-center">
+          {/* Current project */}
+          <div className="col-span-2 row-start-1 text-center md:col-span-1 md:col-start-2">
             <Link href="/showcase" className="font-medium hover:underline">
               Showcase
             </Link>
-            <h1 className="mt-6 text-3xl font-extrabold sm:text-4xl md:text-5xl">
+            <h1 className="mt-2 text-3xl font-extrabold leading-none sm:text-4xl md:mt-4 md:text-5xl lg:mt-6">
               {project.title}
             </h1>
           </div>
@@ -70,7 +71,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
         </div>
 
         <div className="border-b-2">
-          <div className="relative mt-16 aspect-[16/10.5] overflow-hidden rounded-t-2xl border-2 border-b-0 lg:mx-20">
+          <div className="relative mt-8 aspect-[16/10.5] overflow-hidden rounded-t-2xl border-2 border-b-0 md:mt-16 lg:mx-20">
             {/* Window buttons fake UI */}
             <div
               className="absolute left-2 top-2 z-10 flex gap-2"
