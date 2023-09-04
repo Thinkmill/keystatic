@@ -1,17 +1,3 @@
 {
-  "installCommand": "cd .. && corepack pnpm install",
-  "rewrites": [
-    {
-      "source": "/showcase/:path*",
-      "destination": "https://uses.keystatic.com/:path*"
-    },
-    {
-      "source": "/projects/:path*",
-      "destination": "https://uses.keystatic.com/projects/:path*"
-    },
-    {
-      "source": "/_uses_assets/:filePath",
-      "destination": "https://uses.keystatic.com/_uses_assets/:filePath"
-    }
-  ]
+  "installCommand": "cd .. && corepack pnpm install"
 }
