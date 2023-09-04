@@ -70,10 +70,10 @@ export default async function Docs({ params }: { params: { slug: string } }) {
         </div>
 
         <div className="border-b-2">
-          <div className="relative mt-16 aspect-[16/10] overflow-hidden rounded-t-2xl border-2 border-b-0 lg:mx-20">
+          <div className="relative mt-16 aspect-[16/10.5] overflow-hidden rounded-t-2xl border-2 border-b-0 lg:mx-20">
             {/* Window buttons fake UI */}
             <div
-              className="absolute left-4 top-4 z-10 flex gap-2"
+              className="absolute left-2 top-2 z-10 flex gap-2"
               aria-hidden="true"
             >
               <div className="h-3 w-3 rounded-full bg-red-500" />
@@ -84,7 +84,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
               src={project.coverImage.src}
               layout="fill"
               alt=""
-              className="absolute inset-0 object-cover"
+              className="absolute inset-0 origin-bottom object-cover"
             />
           </div>
         </div>
