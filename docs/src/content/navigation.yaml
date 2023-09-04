@@ -40,6 +40,12 @@ navGroups:
         link:
           discriminant: page
           value: github-mode
+  - groupName: Recipes
+    items:
+      - label: 'Astro: Disable Admin UI Routes in Production'
+        link:
+          discriminant: page
+          value: recipes/astro-disable-admin-ui-in-production
   - groupName: Reference
     items:
       - label: Configuration
