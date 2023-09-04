@@ -88,7 +88,7 @@ export function MobileNav({ navigationMap }: NavProps) {
       {/** Blanket */}
       <div
         onClick={closeNav}
-        className={`fixed bottom-0 left-0 right-0 top-0 z-30 bg-neutral-800/[.6] transition-opacity duration-300 lg:hidden ${
+        className={`fixed bottom-0 left-0 right-0 top-0 z-30 bg-slate-11/[.6] transition-opacity duration-300 lg:hidden ${
           navOpen
             ? 'visible opacity-100'
             : 'invisible opacity-0 lg:visible lg:opacity-100'

@@ -80,9 +80,9 @@ export default async function Docs({ params }: { params: { slug: string } }) {
               className="absolute left-2.5 top-2.5 z-10 flex gap-1.5"
               aria-hidden="true"
             >
-              <div className="h-3 w-3 rounded-full bg-red-500" />
-              <div className="h-3 w-3 rounded-full bg-yellow-400" />
-              <div className="h-3 w-3 rounded-full bg-green-500" />
+              <div className="h-3 w-3 rounded-full bg-[#E54D2E]" />
+              <div className="h-3 w-3 rounded-full bg-[#FFB224]" />
+              <div className="h-3 w-3 rounded-full bg-[#30A46C]" />
             </div>
             <Image
               src={project.coverImage.src}

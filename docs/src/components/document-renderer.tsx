@@ -50,7 +50,7 @@ const getRenderers = (
   inline: {
     bold: ({ children }) => <strong>{children}</strong>,
     code: ({ children }) => (
-      <code className="rounded-md border border-neutral-200 bg-neutral-100 px-1 py-0.5 font-mono text-sm text-black">
+      <code className="rounded-md border border-slate-5 bg-slate-3 px-1 py-0.5 font-mono text-sm text-black">
         {children}
       </code>
     ),
@@ -72,7 +72,7 @@ const getRenderers = (
       </Heading>
     ),
     paragraph: ({ children, textAlign }) => (
-      <p className="text-md text-slate-11" style={{ textAlign }}>
+      <p className="text-md text-slate-12" style={{ textAlign }}>
         {children}
       </p>
     ),
@@ -219,10 +219,10 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
 const getTagClasses = (index: number) => {
   switch (index) {
     case 0:
-      return 'bg-indigo-100 text-indigo-800';
+      return 'bg-purple-2 text-purple-11 border border-purple-5';
     case 1:
-      return 'bg-amber-100 text-amber-800';
+      return 'bg-amber-2 text-amber-11 border border-amber-5';
     default:
-      return 'bg-fuchsia-100 text-fuchsia-800';
+      return 'bg-green-2 text-green-11 border border-green-5';
   }
 };

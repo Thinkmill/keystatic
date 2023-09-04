@@ -222,7 +222,7 @@ function TemplateList() {
             <p className="text-lg font-medium text-slate-11">Get started</p>
             <h2 className="mt-4 text-3xl font-bold sm:text-4xl sm:leading-tight">
               Create a new Keystatic project with the <br />
-              <span className="text-yellow-500">
+              <span className="text-keystatic-highlight">
                 {lastTemplate ? lastTemplate.label : templates[0].label}{' '}
                 Template.
               </span>
@@ -234,7 +234,7 @@ function TemplateList() {
           <div className="mt-6">
             <h3 className="text-2xl font-bold leading-7">
               Tell us a bit about yourself{' '}
-              <span className="text-lg font-normal text-gray-500">
+              <span className="text-lg font-normal text-slate-9">
                 (optional)
               </span>
             </h3>

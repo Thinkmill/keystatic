@@ -24,7 +24,7 @@ export default function GetNotifiedForm() {
       <div className="flex items-center gap-3">
         <input
           type="checkbox"
-          className="form-checkbox h-6 w-6 rounded-md border-2 border-black text-yellow-500"
+          className="form-checkbox h-6 w-6 rounded-md border-2 border-black text-keystatic-highlight"
           id="opt-in-updates"
           name="opt-in-updates"
         />
@@ -35,7 +35,7 @@ export default function GetNotifiedForm() {
       <div className="mt-8 flex items-center gap-3">
         <input
           type="checkbox"
-          className="form-checkbox h-6 w-6 rounded-md border-2 border-black text-yellow-500"
+          className="form-checkbox h-6 w-6 rounded-md border-2 border-black text-keystatic-highlight"
           id="opt-in-channel"
           name="opt-in-channel"
         />

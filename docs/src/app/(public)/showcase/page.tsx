@@ -116,14 +116,14 @@ function ProjectCard({ entry, slug }: Project) {
 
 function DemoBadge() {
   return (
-    <span className="mt-0.5 inline-flex items-center gap-2 rounded-full border border-amber-300 bg-amber-100 px-2 py-1 text-sm font-medium text-amber-800">
+    <span className="mt-0.5 inline-flex items-center gap-2 rounded-full border border-amber-5 bg-amber-2 px-2 py-1 text-sm font-medium text-amber-11">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         stroke-width="1.5"
         stroke="currentColor"
-        className="h-4 w-4 text-amber-700"
+        className="h-4 w-4"
       >
         <path
           stroke-linecap="round"

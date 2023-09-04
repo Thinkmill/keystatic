@@ -55,7 +55,7 @@ export default async function BlogPost({ params }: BlogProps) {
           {page.title}
         </h1>
 
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-slate-9">
           Published on {formattedDate} by{' '}
           {page.authors.map((author, index) => (
             <Fragment key={index}>

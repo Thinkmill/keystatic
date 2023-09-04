@@ -15,7 +15,7 @@ export function NavGroup({
     <div className="pb-6 lg:-ml-4">
       <h3
         id={id}
-        className={`mb-2 text-xs font-normal uppercase text-neutral-500 px-4${
+        className={`mb-2 text-xs font-normal uppercase text-slate-9 px-4${
           visuallyHideTitle ? ' sr-only' : ''
         }`}
       >

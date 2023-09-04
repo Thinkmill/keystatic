@@ -32,7 +32,7 @@ export function NavItem({
   }`;
 
   const styleIdle =
-    'font-medium text-neutral-600 hover:bg-slate-3 active:bg-slate-5';
+    'font-medium text-slate-10 hover:bg-slate-3 active:bg-slate-5';
 
   const styleCurrent = `bg-slate-4 text-slate-11 font-semibold ${
     level !== 'top'
@@ -46,11 +46,11 @@ export function NavItem({
         <div
           className={cx(
             styleShared,
-            'inline-flex items-baseline gap-1 text-neutral-500'
+            'inline-flex items-baseline gap-1 text-slate-9'
           )}
         >
           {label}
-          <div className="self-start rounded bg-amber-100 px-1 py-0.5 text-[0.625rem] font-medium uppercase leading-none text-amber-800">
+          <div className="self-start rounded-full border border-amber-5 bg-amber-2 px-1 py-0.5 text-[0.625rem] font-medium uppercase leading-none text-amber-11">
             Soon
           </div>
         </div>

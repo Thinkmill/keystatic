@@ -49,7 +49,7 @@ export default async function Blog() {
               key={index}
               className="flex flex-col gap-2 border-t border-slate-4 py-8"
             >
-              <p className="text-sm text-neutral-500">{formattedDate}</p>
+              <p className="text-sm text-slate-9">{formattedDate}</p>
 
               <div className="flex flex-col gap-6">
                 <Link href={`blog/${slug}`}>

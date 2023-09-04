@@ -32,7 +32,7 @@ export function CopyCommandButton() {
         {isCopied ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 shrink-0 text-green-800"
+            className="h-4 w-4 shrink-0 text-green-11"
             fill="none"
             shapeRendering="geometricPrecision"
             stroke="currentColor"
