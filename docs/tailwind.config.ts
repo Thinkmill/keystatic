@@ -11,6 +11,10 @@ export default {
       HEADS UP: We *intentionally* overwrite (instead of extending)
       the whole Tailwind colors to restrict the set of choices
       to the custom color palette with Keystar UI tokens.
+
+      Worth noting that the naming convention for shades is slightly
+      different from the typical Tailwind `-50` to `-950` scale.
+      We use a `1` to `12` scale, where `1` is the lightest.
     */
     colors: {
       transparent: 'transparent',
