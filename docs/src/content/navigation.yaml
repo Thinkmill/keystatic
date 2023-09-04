@@ -45,7 +45,7 @@ navGroups:
       - label: 'Astro: Disable Admin UI Routes in Production'
         link:
           discriminant: page
-          value: astro-disable-admin-ui-in-production
+          value: recipes/astro-disable-admin-ui-in-production
   - groupName: Reference
     items:
       - label: Configuration
