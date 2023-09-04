@@ -29,7 +29,7 @@ import {
 } from '../../form-from-preview';
 import { getInitialPropsValue } from '../../initial-values';
 import { useEventCallback } from '../document/DocumentEditor/ui-utils';
-import { SlugFieldInfo } from '../text/ui';
+import { SlugFieldInfo } from '../text/path-slug-context';
 import { ArrayField, ComponentSchema, GenericPreviewProps } from '../../api';
 
 export function ArrayFieldInput<Element extends ComponentSchema>(

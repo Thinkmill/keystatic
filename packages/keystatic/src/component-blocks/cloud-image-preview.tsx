@@ -9,11 +9,13 @@ import {
   Button,
   ButtonGroup,
   ClearButton,
+  ToggleButton,
 } from '@keystar/ui/button';
-import { NotEditable, ObjectField, PreviewProps } from '@keystatic/core';
 import { Dialog, DialogContainer, DialogTrigger } from '@keystar/ui/dialog';
 import { Icon } from '@keystar/ui/icon';
 import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
+import { link2Icon } from '@keystar/ui/icon/icons/link2Icon';
+import { link2OffIcon } from '@keystar/ui/icon/icons/link2OffIcon';
 import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { undo2Icon } from '@keystar/ui/icon/icons/undo2Icon';
@@ -30,6 +32,8 @@ import { useId } from '@keystar/ui/utils';
 import { useConfig } from '../app/shell/context';
 import { focusWithPreviousSelection } from '../form/fields/document/DocumentEditor/ui-utils';
 import { getSplitCloudProject, isCloudConfig } from '../app/utils';
+import { NotEditable } from '../form/fields/document/DocumentEditor/primitives';
+import { PreviewProps, ObjectField } from '..';
 
 export type CloudImageProps = {
   src: string;
@@ -89,6 +93,7 @@ function ImageDialog(props: {
   const { image, onCancel, onChange, onClose } = props;
   const [state, setState] = useState<CloudImageProps>(image ?? emptyImageData);
   const [status, setStatus] = useState<ImageStatus>(image ? 'good' : '');
+  const [constrainProportions, setConstrainProportions] = useState(true);
   const [dimensions, setDimensions] = useState<ImageDimensions>(emptyImageData);
   const formId = useId();
   const imageLibraryURL = useImageLibraryURL();
@@ -204,14 +209,49 @@ function ImageDialog(props: {
                   width="scale.1600"
                   formatOptions={{ maximumFractionDigits: 0 }}
                   value={state.width}
-                  onChange={width => setState(state => ({ ...state, width }))}
+                  onChange={width => {
+                    if (constrainProportions) {
+                      setState(state => ({
+                        ...state,
+                        width,
+                        height: Math.round(width / getAspectRatio(state)),
+                      }));
+                    } else {
+                      setState(state => ({ ...state, width }));
+                    }
+                  }}
                 />
+                <TooltipTrigger>
+                  <ToggleButton
+                    isSelected={constrainProportions}
+                    aria-label="Constrain proportions"
+                    prominence="low"
+                    onPress={() => {
+                      setConstrainProportions(state => !state);
+                    }}
+                  >
+                    <Icon
+                      src={constrainProportions ? link2Icon : link2OffIcon}
+                    />
+                  </ToggleButton>
+                  <Tooltip>Constrain proportions</Tooltip>
+                </TooltipTrigger>
                 <NumberField
                   label="Height"
                   width="scale.1600"
                   formatOptions={{ maximumFractionDigits: 0 }}
                   value={state.height}
-                  onChange={height => setState(state => ({ ...state, height }))}
+                  onChange={height => {
+                    if (constrainProportions) {
+                      setState(state => ({
+                        ...state,
+                        height,
+                        width: Math.round(height * getAspectRatio(state)),
+                      }));
+                    } else {
+                      setState(state => ({ ...state, height }));
+                    }
+                  }}
                 />
                 <TooltipTrigger>
                   <ActionButton
@@ -227,7 +267,7 @@ function ImageDialog(props: {
                   >
                     <Icon src={undo2Icon} />
                   </ActionButton>
-                  <Tooltip>{revertLabel}</Tooltip>
+                  <Tooltip maxWidth="100%">{revertLabel}</Tooltip>
                 </TooltipTrigger>
               </HStack>
             </>
@@ -443,4 +483,9 @@ export function useImageLibraryURL() {
   if (!isCloudConfig(config)) return 'https://keystatic.cloud/';
   const { project, team } = getSplitCloudProject(config);
   return `https://keystatic.cloud/teams/${team}/project/${project}/images`;
+}
+
+function getAspectRatio(state: CloudImageProps) {
+  if (!state.width || !state.height) return 1;
+  return state.width / state.height;
 }

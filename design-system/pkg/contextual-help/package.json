@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystar-ui-contextual-help.cjs.js",
+  "module": "dist/keystar-ui-contextual-help.esm.js"
+}

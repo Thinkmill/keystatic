@@ -1,5 +1,35 @@
 # @keystatic/core
 
+## 0.1.3
+
+### Patch Changes
+
+- dbd09f04: Fix circular dependencies
+
+## 0.1.2
+
+### Patch Changes
+
+- 92c80281: Shrink the size of hidden child nodes in the document field
+- 7dafe782: Calendar widgets for date selection:
+
+  - New package "@keystar/ui/calendar" exposes new components, `Calendar` and
+    `RangeCalendar`
+  - Update to "@keystar/ui/date-time" exposes new components, `DatePicker` and
+    `DateRangePicker`
+
+  Related fixes and improvements:
+
+  - Truncate `ActionButton` label text
+  - Support "aria-hidden" on `Heading` and `Text` components
+
+- Updated dependencies [5f9dd460]
+- Updated dependencies [083ee638]
+- Updated dependencies [ba3e4a0b]
+- Updated dependencies [7ed2a7d8]
+- Updated dependencies [7dafe782]
+  - @keystar/ui@0.3.0
+
 ## 0.1.1
 
 ### Patch Changes

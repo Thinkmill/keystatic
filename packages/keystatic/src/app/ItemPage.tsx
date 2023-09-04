@@ -33,7 +33,6 @@ import { Heading, Text } from '@keystar/ui/typography';
 import { Config } from '../config';
 import { createGetPreviewProps } from '../form/preview-props';
 import { fields } from '../form/api';
-import { SlugFieldInfo } from '../form/fields/text/ui';
 import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
 
@@ -64,6 +63,7 @@ import {
   isGitHubConfig,
 } from './utils';
 import { notFound } from './not-found';
+import { SlugFieldInfo } from '../form/fields/text/path-slug-context';
 
 type ItemPageProps = {
   collection: string;

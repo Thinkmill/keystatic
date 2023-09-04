@@ -1,40 +1,9 @@
 'use client';
-import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
-import { Glob } from '../../../config';
-import { ReadonlyPropPath } from '../document/DocumentEditor/component-blocks/utils';
+import { useContext, useState } from 'react';
 import { FormFieldInputProps } from '../../api';
 import { TextArea, TextField } from '@keystar/ui/text-field';
-import { validateText } from '.';
-
-export type SlugFieldInfo = {
-  field: string;
-  slugs: Set<string>;
-  glob: Glob;
-};
-
-export const SlugFieldContext = createContext<SlugFieldInfo | undefined>(
-  undefined
-);
-
-export const SlugFieldProvider = SlugFieldContext.Provider;
-
-export const PathContext = createContext<ReadonlyPropPath>([]);
-
-export const PathContextProvider = PathContext.Provider;
-
-export function AddToPathProvider(props: {
-  part: string | number;
-  children: ReactNode;
-}) {
-  const path = useContext(PathContext);
-  return (
-    <PathContext.Provider
-      value={useMemo(() => path.concat(props.part), [path, props.part])}
-    >
-      {props.children}
-    </PathContext.Provider>
-  );
-}
+import { validateText } from './validateText';
+import { PathContext, SlugFieldContext } from './path-slug-context';
 
 export function TextFieldInput(
   props: FormFieldInputProps<string> & {

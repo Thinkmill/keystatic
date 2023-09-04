@@ -1,5 +1,4 @@
 import { assertNever } from 'emery';
-import { get } from 'lodash';
 
 import { tokenSchema } from './tokens';
 import {
@@ -13,6 +12,20 @@ import {
 // Utils
 // ----------------------------------------------------------------------------
 
+function get(val: object, path: string) {
+  for (const part of path.split('.')) {
+    if (
+      typeof val !== 'object' ||
+      val === null ||
+      !Object.prototype.hasOwnProperty.call(val, part)
+    ) {
+      return;
+    }
+    val = (val as any)[part];
+  }
+  return val;
+}
+
 export function maybeTokenByKey<T = unknown>(path: string, keyOrValue: T): any {
   if (typeof keyOrValue !== 'string') {
     return keyOrValue;
@@ -21,7 +34,7 @@ export function maybeTokenByKey<T = unknown>(path: string, keyOrValue: T): any {
   // let folks go rouge, why not?
   path = keyOrValue.includes('.') ? keyOrValue : `${path}.${keyOrValue}`;
 
-  return get(tokenSchema, path, keyOrValue);
+  return get(tokenSchema, path) ?? keyOrValue;
 }
 export function resolvePropWithPath<P extends MaybeArray<CSSProp>>(
   prop: P,

@@ -2,7 +2,7 @@
 'use client';
 import { TextField } from '@keystar/ui/text-field';
 import { useReducer } from 'react';
-import { validateDatetime } from '.';
+import { validateDatetime } from './validateDatetime';
 import { FormFieldInputProps } from '../../api';
 
 export function DatetimeFieldInput(

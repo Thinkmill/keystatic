@@ -4,8 +4,8 @@ import { Flex, Box } from '@keystar/ui/layout';
 import { TextField } from '@keystar/ui/text-field';
 import { useContext, useState } from 'react';
 import { FormFieldInputProps } from '../../api';
-import { SlugFieldContext, PathContext } from '../text/ui';
-import { validateText } from '../text';
+import { SlugFieldContext, PathContext } from '../text/path-slug-context';
+import { validateText } from '../text/validateText';
 
 const emptySet = new Set<string>();
 
