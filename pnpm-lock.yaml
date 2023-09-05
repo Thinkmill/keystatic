@@ -585,6 +585,7 @@ importers:
       '@keystatic/next': ^1.0.0
       '@markdoc/markdoc': ^0.3.0
       '@sindresorhus/slugify': ^1.1.2
+      '@tailwindcss/container-queries': ^0.1.1
       '@tailwindcss/forms': ^0.5.3
       '@tailwindcss/typography': ^0.5.9
       '@types/cookie': ^0.5.1
@@ -613,6 +614,7 @@ importers:
       '@keystatic/next': link:../packages/next
       '@markdoc/markdoc': 0.3.2_gq4reeurwxuj4hvyerswzzqthy
       '@sindresorhus/slugify': 1.1.2
+      '@tailwindcss/container-queries': 0.1.1_tailwindcss@3.3.3
       '@tailwindcss/forms': 0.5.6_tailwindcss@3.3.3
       '@types/cookie': 0.5.2
       '@types/node': 16.11.13
@@ -7588,6 +7590,14 @@ packages:
     dependencies:
       defer-to-connect: 2.0.1
     dev: true
+
+  /@tailwindcss/container-queries/0.1.1_tailwindcss@3.3.3:
+    resolution: {integrity: sha512-p18dswChx6WnTSaJCSGx6lTmrGzNNvm2FtXmiO6AuA1V4U5REyoqwmT6kgAsIMdjo07QdAfYXHJ4hnMtfHzWgA==}
+    peerDependencies:
+      tailwindcss: '>=3.2.0'
+    dependencies:
+      tailwindcss: 3.3.3
+    dev: false
 
   /@tailwindcss/forms/0.5.6_tailwindcss@3.3.3:
     resolution: {integrity: sha512-Fw+2BJ0tmAwK/w01tEFL5TiaJBX1NLT1/YbWgvm7ws3Qcn11kiXxzNTEQDMs5V3mQemhB56l3u0i9dwdzSQldA==}

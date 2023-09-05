@@ -46,11 +46,11 @@ export default async function Docs({ params }: DocsProps) {
   const headings = [overviewHeading, ...headingsWithSlugs];
 
   return (
-    <div className="grid gap-6 grid-cols-[auto] md:grid-cols-[auto,12rem]">
+    <div className="grid grid-cols-[auto] gap-6 md:grid-cols-[auto,12rem]">
       <div>
         <h1
           id={H1_ID}
-          className="text-3xl font-extrabold mb-8 scroll-mt-[7rem]"
+          className="mb-8 scroll-mt-[7rem] text-3xl font-extrabold"
         >
           {page.title}
         </h1>

@@ -66,7 +66,7 @@ export default function SendMessageForm() {
       <div className="mt-8 flex items-center gap-3">
         <input
           type="checkbox"
-          className="form-input h-6 w-6 rounded-md border-2 border-black text-yellow-500"
+          className="form-input h-6 w-6 rounded-md border-2 border-black text-keystatic-highlight"
           id="opt-in-updates"
           name="opt-in-updates"
         />
@@ -77,7 +77,7 @@ export default function SendMessageForm() {
       <div className="mt-8 flex items-center gap-3">
         <input
           type="checkbox"
-          className="form-input h-6 w-6 rounded-md border-2 border-black text-yellow-500"
+          className="form-input h-6 w-6 rounded-md border-2 border-black text-keystatic-highlight"
           id="opt-in-channel"
           name="opt-in-channel"
         />

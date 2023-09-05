@@ -50,14 +50,14 @@ const getRenderers = (
   inline: {
     bold: ({ children }) => <strong>{children}</strong>,
     code: ({ children }) => (
-      <code className="font-mono bg-neutral-100 text-sm text-black px-1 py-0.5 rounded-md border border-neutral-200">
+      <code className="rounded-md border border-slate-5 bg-slate-3 px-1 py-0.5 font-mono text-sm text-black">
         {children}
       </code>
     ),
     link: ({ href, children }) => {
       return (
         <Link
-          className="cursor-pointer underline font-medium hover:no-underline"
+          className="cursor-pointer font-medium underline hover:no-underline"
           href={href}
         >
           {children}
@@ -72,7 +72,7 @@ const getRenderers = (
       </Heading>
     ),
     paragraph: ({ children, textAlign }) => (
-      <p className="text-md text-keystatic-gray-dark" style={{ textAlign }}>
+      <p className="text-md text-slate-12" style={{ textAlign }}>
         {children}
       </p>
     ),
@@ -95,7 +95,7 @@ const getRenderers = (
 
       return (
         <div
-          className="[&>pre]:whitespace-break-spaces [&>pre]:break-all [&>pre]:px-6 [&>pre]:py-4 [&>pre]:rounded-lg [&>pre]:border [&>pre]:border-keystatic-gray [&>pre]:bg-white text-sm my-2"
+          className="my-2 text-sm [&>pre]:whitespace-break-spaces [&>pre]:break-all [&>pre]:rounded-lg [&>pre]:border [&>pre]:border-slate-5 [&>pre]:bg-white [&>pre]:px-6 [&>pre]:py-4"
           dangerouslySetInnerHTML={{ __html: codeBlock }}
         />
       );
@@ -103,7 +103,7 @@ const getRenderers = (
     list: ({ type, children }) => {
       if (type === 'ordered') {
         return (
-          <ol className="text-keystatic-gray-dark list-decimal list-inside mt-2">
+          <ol className="mt-2 list-inside list-decimal text-slate-11">
             {children.map((child, index) => (
               <li key={index} className="mb-2">
                 {child}
@@ -113,7 +113,7 @@ const getRenderers = (
         );
       }
       return (
-        <ul className="text-keystatic-gray-dark list-disc ml-4 mt-2">
+        <ul className="ml-4 mt-2 list-disc text-slate-11">
           {children.map((child, index) => (
             <li key={index} className="mb-2">
               {child}
@@ -123,16 +123,13 @@ const getRenderers = (
       );
     },
     divider: () => {
-      return <hr className="border-keystatic-gray my-8 peer" />;
+      return <hr className="peer my-8 border-slate-5" />;
     },
     layout: ({ children }) => {
       return (
-        <div className="grid gap-6 my-2 grid-cols-1 sm:grid-cols-2">
+        <div className="my-2 grid grid-cols-1 gap-6 sm:grid-cols-2">
           {children.map((element, index) => (
-            <div
-              key={index}
-              className="rounded-lg bg-keystatic-gray-light p-4 text-sm"
-            >
+            <div key={index} className="rounded-lg bg-slate-3 p-4 text-sm">
               {element}
             </div>
           ))}
@@ -147,8 +144,8 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
 > = {
   aside: props => {
     return (
-      <div className="flex flex-col sm:flex-row gap-4 rounded-lg bg-keystatic-gray-light px-4 py-6 my-2">
-        <div className="flex text-3xl h-6 items-center">{props.icon}</div>
+      <div className="not-prose my-2 flex flex-col gap-4 rounded-lg bg-slate-3 px-4 py-6 sm:flex-row">
+        <div className="flex h-6 items-center text-3xl">{props.icon}</div>
         <div className="flex flex-col gap-3">{props.content}</div>
       </div>
     );
@@ -162,7 +159,7 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
         src={src}
         height={height ?? undefined}
         width={width ?? imgMaxWidthPx}
-        className="rounded-lg my-2"
+        className="my-2 rounded-lg"
       />
     );
   },
@@ -174,7 +171,7 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
             key={index}
             className={`${getTagClasses(
               index
-            )} rounded-full px-2 py-1 font-medium text-[0.6875rem] leading-none uppercase self-start inline`}
+            )} inline self-start rounded-full px-2 py-1 text-[0.6875rem] font-medium uppercase leading-none`}
           >
             {tag}
           </div>
@@ -222,10 +219,10 @@ const componentBlockRenderers: InferRenderersForComponentBlocks<
 const getTagClasses = (index: number) => {
   switch (index) {
     case 0:
-      return 'bg-indigo-100 text-indigo-800';
+      return 'bg-purple-2 text-purple-11 border border-purple-5';
     case 1:
-      return 'bg-amber-100 text-amber-800';
+      return 'bg-amber-2 text-amber-11 border border-amber-5';
     default:
-      return 'bg-fuchsia-100 text-fuchsia-800';
+      return 'bg-green-2 text-green-11 border border-green-5';
   }
 };

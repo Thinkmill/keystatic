@@ -29,9 +29,9 @@ export default async function Blog() {
 
   return (
     <>
-      <div className="sm:text-center mb-8">
+      <div className="mb-8 sm:text-center">
         <h1
-          className="font-extrabold text-3xl sm:text-4xl md:text-5xl mb-8"
+          className="mb-8 text-3xl font-extrabold sm:text-4xl md:text-5xl"
           id={H1_ID}
         >
           Blog
@@ -47,9 +47,9 @@ export default async function Blog() {
           ({ slug, formattedDate, entry }, index) => (
             <li
               key={index}
-              className="border-t border-keystatic-gray py-8 flex flex-col gap-2"
+              className="flex flex-col gap-2 border-t border-slate-4 py-8"
             >
-              <p className="text-sm text-neutral-500">{formattedDate}</p>
+              <p className="text-sm text-slate-9">{formattedDate}</p>
 
               <div className="flex flex-col gap-6">
                 <Link href={`blog/${slug}`}>
@@ -61,7 +61,7 @@ export default async function Blog() {
                 <p>
                   <Link
                     href={`blog/${slug}`}
-                    className="underline hover:no-underline font-medium inline-flex gap-1 items-center"
+                    className="inline-flex items-center gap-1 font-medium underline hover:no-underline"
                     tabIndex={-1}
                     aria-hidden
                   >

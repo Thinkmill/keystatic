@@ -31,10 +31,10 @@ export const metadata = {
 export default function ThankYouPage() {
   return (
     <>
-      <Main className="mx-auto max-w-7xl px-6 pt-6 pb-12 flex flex-1 items-center w-full">
+      <Main className="mx-auto flex w-full max-w-7xl flex-1 items-center px-6 pb-12 pt-6">
         <div className="max-w-xl">
           <h1
-            className="font-extrabold text-3xl sm:text-4xl md:text-5xl"
+            className="text-3xl font-extrabold sm:text-4xl md:text-5xl"
             id={H1_ID}
           >
             Thank you for being{' '}
@@ -54,7 +54,7 @@ export default function ThankYouPage() {
               <span className="relative">curious!</span>
             </span>
           </h1>
-          <p className="mt-8 text-lg text-keystatic-gray-dark">
+          <p className="mt-8 text-lg text-slate-11">
             We're looking forward to sharing updates with you in the coming
             weeks and months.
           </p>

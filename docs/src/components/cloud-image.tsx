@@ -32,9 +32,7 @@ export default function CloudImage({
         sizes={sizes}
         className={className}
       />
-      <figcaption className="text-sm text-neutral-500 mb-2">
-        {caption}
-      </figcaption>
+      <figcaption className="mb-2 text-sm text-slate-9">{caption}</figcaption>
     </figure>
   ) : (
     <img

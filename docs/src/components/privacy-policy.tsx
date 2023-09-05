@@ -2,9 +2,9 @@ import { H1_ID } from '../constants';
 
 export default function PrivacyPolicy() {
   return (
-    <div className="prose mx-auto max-w-screen-md px-6 py-10 lg:py-16 lg:prose-lg md:pb-24">
+    <div className="prose mx-auto max-w-screen-md px-6 py-10 lg:prose-lg md:pb-24 lg:py-16">
       <h1
-        className="font-extrabold text-3xl sm:text-4xl md:text-5xl"
+        className="text-3xl font-extrabold sm:text-4xl md:text-5xl"
         id={H1_ID}
       >
         Keystatic Privacy Policy

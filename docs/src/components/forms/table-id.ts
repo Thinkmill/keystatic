@@ -8,14 +8,6 @@ function check(value: string, name: string) {
   }
 }
 
-export const GET_ACCESS_TABLE_ID =
-  process.env.NEXT_PUBLIC_AIRTABLE_GET_ACCESS_TABLE_ID || 'NOT_SET';
-check(GET_ACCESS_TABLE_ID, 'GET_ACCESS');
-
-export const GET_NOTIFIED_TABLE_ID =
-  process.env.NEXT_PUBLIC_AIRTABLE_GET_NOTIFIED_TABLE_ID || 'NOT_SET';
-check(GET_NOTIFIED_TABLE_ID, 'GET_NOTIFIED');
-
 export const SEND_MESSAGE_TABLE_ID =
   process.env.NEXT_PUBLIC_AIRTABLE_SEND_MESSAGE_TABLE_ID || 'NOT_SET';
 check(SEND_MESSAGE_TABLE_ID, 'SEND_MESSAGE');

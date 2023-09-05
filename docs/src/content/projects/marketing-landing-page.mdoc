@@ -1,0 +1,76 @@
+---
+title: Marketing Landing Page
+type: demo
+url: https://keystatic-demo-landing-page.vercel.app
+repoUrl: https://github.com/Thinkmill/keystatic-demo-landing-page
+summary: >-
+  A marketing landing page demo site, built with Keystatic, Next.js and Tailwind
+  CSS.
+coverImage:
+  src: >-
+    https://thinkmill-labs.keystatic.net/keystatic-site/images/ehtghsxtm4ti/marketing-landing-page
+  alt: Screenshot of the Marketing Landing Page Keystatic demo template
+  height: 2072
+  width: 3200
+sortIndex: 100
+---
+The Marketing Landing Page demo was one of the first projects powered by Keystatic.
+
+Before the [Keystatic CLI](https://keystatic.com/docs/quick-start) was a thing (and became the recommended way to start new Keystatic projects), this was one of the "starter templates" for newcomers to Keystatic.
+
+## Singletons and Collections
+
+This templates demonstrates the use of both Keystatic content types: `singletons` and `collections`:
+
+Missing image ../../assets/projects/marketing-landing-page/dashboard.png
+
+## Keystatic config
+
+Here's what the config file looks like:
+
+```typescript
+import {
+  collection,
+  config,
+  fields,
+  singleton,
+} from "@keystatic/core";
+
+export default config({
+  storage: { kind: "local" },
+  singletons: {
+    landingPage: singleton({
+      label: "Landing Page",
+      path: "content/landing-page/",
+      schema: {
+        heroHeadline: fields.text({ label: "Hero headline" }),
+        heroIntroText: fields.text({
+          label: "Hero intro text",
+          multiline: true,
+        }),
+        footerHeadline: fields.text({ label: "Footer headline" }),
+        footerText: fields.text({ label: "Footer text", multiline: true }),
+      },
+    }),
+  },
+  collections: {
+    testimonials: collection({
+      path: "content/testimonials/*/",
+      label: "Testimonials",
+      slugField: "author",
+      schema: {
+        author: fields.slug({ name: { label: "Author" } }),
+        testimonial: fields.text({ label: "Testimonial", multiline: true }),
+        featured: fields.checkbox({ label: "Featured testimonial" }),
+        twitterHandle: fields.text({ label: "Twitter handle" }),
+        avatar: fields.image({
+          label: "Avatar",
+          directory: "public/images/testimonials",
+          validation: { isRequired: true },
+        }),
+      },
+    }),
+  },
+});
+
+```

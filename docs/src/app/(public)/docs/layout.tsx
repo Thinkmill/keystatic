@@ -20,7 +20,7 @@ export default async function RootLayout({
   const navigationMap = await getNavigationMap();
 
   return (
-    <div className="max-w-7xl min-h-screen mx-auto w-full">
+    <div className="mx-auto min-h-screen w-full max-w-7xl">
       <SideNav>
         {navigationMap?.map(({ groupName, items }) => (
           <NavGroup key={groupName} title={groupName}>
@@ -39,7 +39,7 @@ export default async function RootLayout({
       </SideNav>
 
       {/** CONTENT */}
-      <div className="px-6 flex-1 lg:pl-60 lg:pt-24">
+      <div className="flex-1 px-6 lg:pl-60 lg:pt-24">
         <div className="py-10 lg:pl-12">
           <Main className="flex gap-8">
             {/** INNER CONTENT */}

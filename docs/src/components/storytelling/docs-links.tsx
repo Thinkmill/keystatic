@@ -37,14 +37,14 @@ export default function DocsLinks() {
     },
   ];
   return (
-    <section className="relative bg-keystatic-gray-light">
-      <div className="max-w-4xl px-6 pt-6 mx-auto">
+    <section className="relative bg-slate-3">
+      <div className="mx-auto max-w-4xl px-6 pt-6">
         <div className="text-center">
           <h2 className="text-3xl font-bold sm:text-4xl">
             Want to learn more?
           </h2>
 
-          <p className="mt-4 sm:mt-6 text-lg">
+          <p className="mt-4 text-lg sm:mt-6">
             Those sections from the{' '}
             <Link href="/docs" className="underline">
               Keystatic docs
@@ -53,17 +53,17 @@ export default function DocsLinks() {
           </p>
         </div>
       </div>
-      <div className="mx-auto max-w-7xl pt-8 md:pt-12 pb-12 xl:pb-16 overflow-y-auto lg:overflow-visible">
+      <div className="mx-auto max-w-7xl overflow-y-auto pb-12 pt-8 md:pt-12 lg:overflow-visible xl:pb-16">
         <ul
-          className="px-6 gap-6 grid md:grid-cols-2 xl:gap-8 xl:grid-cols-3 items-stretch"
+          className="grid items-stretch gap-6 px-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-8"
           role="list"
         >
           {items.map(item => (
-            <li key={item.title} className="relative group">
-              <div className="h-full rounded-lg border border-keystatic-gray-dark/50 group-hover:border-keystatic-gray-dark transition-all group-hover:shadow-md bg-white">
+            <li key={item.title} className="group relative">
+              <div className="h-full rounded-lg border border-slate-11/50 bg-white transition-all group-hover:border-slate-11 group-hover:shadow-md">
                 <div className="grid h-full grid-rows-[auto,1fr,auto] p-6">
                   <h3 className="text-xl font-semibold">{item.title}</h3>
-                  <p className="mt-2 text-md text-keystatic-gray-dark">
+                  <p className="text-md mt-2 text-slate-11">
                     {item.description}
                   </p>
                 </div>

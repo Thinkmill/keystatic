@@ -30,26 +30,23 @@ export function HeaderNav({
   const isDocsNav = pathname?.startsWith('/docs') && !ignoreDocNavStyles;
 
   const linkStylesShared =
-    'shrink-0 px-3 rounded-lg transition-colors h-10 flex items-center font-semibold relative';
+    'shrink-0 px-4 rounded-md transition-colors h-10 flex items-center relative';
 
-  const linkStylesIdle =
-    'hover:bg-keystatic-gray-light active:bg-keystatic-gray';
+  const linkStylesIdle = 'hover:bg-slate-3 active:bg-slate-4 font-medium';
 
-  const linkStylesCurrent = 'bg-keystatic-gray hover:bg-keystatic-gray';
+  const linkStylesCurrent = 'bg-slate-4 hover:bg-slate-4 font-bold';
 
   return (
     <header
-      className={`bg-white w-full ${
-        isDocsNav
-          ? 'lg:border-b lg:border-keystatic-gray lg:fixed z-20 lg:z-30'
-          : ''
+      className={`w-full bg-white ${
+        isDocsNav ? 'z-20 lg:fixed lg:z-30 lg:border-b lg:border-slate-5' : ''
       }`}
     >
       <div className="mx-auto max-w-7xl">
-        <nav className="lg:h-24 py-6 px-6 flex flex-row items-center justify-between gap-6">
+        <nav className="flex flex-row items-center justify-between gap-6 px-6 py-6 lg:h-24">
           <KeystaticLogoLink />
 
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden items-center gap-2 lg:flex">
             <Link
               className={cx(
                 linkStylesShared,
@@ -73,10 +70,13 @@ export function HeaderNav({
               Blog
             </Link>
             <Link
-              className={cx(linkStylesShared, linkStylesIdle)}
-              href="https://keystatic.com/showcase"
-              target="_blank"
-              rel="noopener noreferrer"
+              className={cx(
+                linkStylesShared,
+                pathname?.startsWith('/showcase')
+                  ? linkStylesCurrent
+                  : linkStylesIdle
+              )}
+              href="/showcase"
             >
               Showcase
             </Link>

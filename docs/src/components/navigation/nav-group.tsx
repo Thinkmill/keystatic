@@ -12,10 +12,10 @@ export function NavGroup({
   const id = useId();
 
   return (
-    <div className="lg:-ml-4 pb-6">
+    <div className="pb-6 lg:-ml-4">
       <h3
         id={id}
-        className={`text-xs uppercase font-normal text-neutral-500 mb-2 px-4${
+        className={`mb-2 text-xs font-normal uppercase text-slate-9 px-4${
           visuallyHideTitle ? ' sr-only' : ''
         }`}
       >

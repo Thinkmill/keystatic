@@ -80,7 +80,7 @@ export default config({
     kind: shouldUseCloudStorage ? 'cloud' : 'local',
   },
   cloud: {
-    project: 'thinkmill-labs/keystatic-site',
+    project: 'thinkmill-labs/keystatic-docs',
   },
   collections: {
     // ------------------------------
@@ -194,6 +194,54 @@ export default config({
             'Optionally link the author name to e.g. their social media.',
           validation: {
             isRequired: false,
+          },
+        }),
+      },
+    }),
+
+    // ------------------------------
+    // Projects
+    // ------------------------------
+    projects: collection({
+      label: 'Projects (Showcase)',
+      slugField: 'title',
+      path: `${pathPrefix}src/content/projects/*`,
+      format: { contentField: 'content' },
+      entryLayout: 'content',
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        type: fields.select({
+          label: 'Type',
+          options: [
+            { label: 'Production', value: 'production' },
+            { label: 'Demo', value: 'demo' },
+          ],
+          defaultValue: 'demo',
+        }),
+        url: fields.url({ label: 'URL' }),
+        repoUrl: fields.url({
+          label: 'Repo URL',
+          description:
+            'Fill this only for pulic repos, where it makes sense to share.',
+        }),
+        summary: fields.text({
+          label: 'Summary',
+          multiline: true,
+          description: 'This will be used on the homepage listing.',
+        }),
+        coverImage: fields.cloudImage({
+          label: 'Cover image',
+        }),
+        sortIndex: fields.integer({ label: 'Sort Index', defaultValue: 100 }),
+        content: fields.document({
+          label: 'Content',
+          description:
+            'The long form copy for the project page. A link to a dedicated page will be available if this field is filled.',
+          formatting: true,
+          links: true,
+          componentBlocks: {
+            aside: componentBlocks['aside'],
+            'cloud-image': componentBlocks['cloud-image'],
           },
         }),
       },

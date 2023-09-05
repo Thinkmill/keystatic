@@ -1,0 +1,64 @@
+---
+title: Better Dev Screencasts
+type: production
+url: https://betterdevscreencasts.com
+repoUrl: https://github.com/simonswiss/better-dev
+summary: >-
+  A collection of resources to help developers create better screencasts, and
+  level-up their overall video content creation game.
+coverImage:
+  src: >-
+    https://thinkmill-labs.keystatic.net/keystatic-site/images/juuulzya7v6l/better-dev-screencasts
+  alt: Screenshot of the Better Dev Screencasts website
+sortIndex: 50
+---
+Better Dev Screencasts was possibly the **very first Keystatic website in production**. In early 2023, Simon from the Thinkmill Labs team used this site to "dogfood" Keystatic as it was being developed.
+
+To this date, Keystatic powers the site's `posts` content types, which support custom components for YouTube videos and Tweet embeds.
+
+{% cloud-image
+   src="https://thinkmill-labs.keystatic.net/keystatic-site/images/vey9evf79e61/better-dev-admin-ui"
+   alt="Screenshot of the Keystatic Admin UI for the Better Dev Screencasts website"
+   height=752
+   width=1200 /%}
+
+## Keystatic config
+
+Here's what the config for the `posts` collection looks like in this project:
+
+```typescript
+posts: collection({
+  label: 'Posts',
+  path: 'content/posts/*',
+  slugField: 'title',
+  format: {
+    contentField: 'content',
+  },
+  entryLayout: 'content',
+  schema: {
+    title: fields.slug({ name: { label: 'Title' } }),
+    date: fields.date({ 
+      label: 'Date', 
+      validation: { isRequired: true } 
+    }),
+    excerpt: fields.text({ label: 'Excerpt' }),
+    coverImage: fields.image({
+      label: 'Cover image',
+      directory: 'public/images/posts',
+      publicPath: '/images/posts',
+    }),
+    content: fields.document({
+      label: 'Post copy',
+      layouts: [[1, 1]],
+      formatting: true,
+      dividers: true,
+      links: true,
+      componentBlocks,
+    }),
+  },
+}),
+```
+
+{% aside icon="☝️" %}
+The API for the `componentBlocks` is slightly outdated and likely to change in the future, so we won't share the code snippet here —&nbsp;but you can find it on the project's [GitHub repo](https://github.com/simonswiss/better-dev/blob/main/component-blocks.tsx) which is public!
+{% /aside %}

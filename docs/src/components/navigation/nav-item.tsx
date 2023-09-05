@@ -32,11 +32,11 @@ export function NavItem({
   }`;
 
   const styleIdle =
-    'font-medium text-neutral-600 hover:bg-keystatic-gray-light active:bg-keystatic-gray';
+    'font-medium text-slate-10 hover:bg-slate-3 active:bg-slate-5';
 
-  const styleCurrent = `bg-keystatic-gray text-keystatic-gray-dark font-semibold ${
+  const styleCurrent = `bg-slate-4 text-slate-11 font-semibold ${
     level !== 'top'
-      ? 'before:block before:absolute before:inset-y-1 before:-inset-x-2 before:bg-keystatic-gray-dark before:w-1 before:rounded before:transition-all'
+      ? 'before:block before:absolute before:inset-y-1 before:-inset-x-2 before:bg-slate-11 before:w-1 before:rounded before:transition-all'
       : ''
   }`;
 
@@ -46,11 +46,11 @@ export function NavItem({
         <div
           className={cx(
             styleShared,
-            'inline-flex gap-1 items-baseline text-neutral-500'
+            'inline-flex items-baseline gap-1 text-slate-9'
           )}
         >
           {label}
-          <div className="px-1 py-0.5 rounded bg-amber-100 text-amber-800 font-medium text-[0.625rem] leading-none uppercase self-start">
+          <div className="self-start rounded-full border border-amber-5 bg-amber-2 px-1 py-0.5 text-[0.625rem] font-medium uppercase leading-none text-amber-11">
             Soon
           </div>
         </div>
