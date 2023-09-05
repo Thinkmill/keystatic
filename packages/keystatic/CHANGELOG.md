@@ -1,5 +1,16 @@
 # @keystatic/core
 
+## 0.1.4
+
+### Patch Changes
+
+- bcb3b8ec: Support constrained proportions on cloud image block and field.
+  Refactor `Tooltip` styles to allow consumer overrides via style props.
+- 43f0b61f: Fixed bundle size increase when using `@keystatic/core/reader` with
+  React server components
+- Updated dependencies [bcb3b8ec]
+  - @keystar/ui@0.3.1
+
 ## 0.1.3
 
 ### Patch Changes

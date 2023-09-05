@@ -1,4 +1,3 @@
-'use client';
 import { Item } from '@react-stately/collections';
 import { Combobox } from '@keystar/ui/combobox';
 import { useReducer, useMemo, useState, useEffect } from 'react';

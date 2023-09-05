@@ -1,4 +1,3 @@
-'use client';
 import { Ast, Node as MarkdocNode, NodeType } from '@markdoc/markdoc';
 import { Fragment, Mark, Node as ProseMirrorNode } from 'prosemirror-model';
 import { getEditorSchema } from '../schema';

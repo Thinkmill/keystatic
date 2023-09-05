@@ -1,8 +1,7 @@
-import { Checkbox } from '@keystar/ui/checkbox';
-import { Text } from '@keystar/ui/typography';
-import { BasicFormField } from '../api';
-import { FieldDataError } from './error';
-import { basicFormFieldWithSimpleReaderParse } from './utils';
+import { CheckboxFieldInput } from '#field-ui/checkbox';
+import { BasicFormField } from '../../api';
+import { FieldDataError } from '../error';
+import { basicFormFieldWithSimpleReaderParse } from '../utils';
 
 export function checkbox({
   label,
@@ -14,12 +13,13 @@ export function checkbox({
   description?: string;
 }): BasicFormField<boolean> {
   return basicFormFieldWithSimpleReaderParse({
-    Input({ value, onChange, autoFocus }) {
+    Input(props) {
       return (
-        <Checkbox isSelected={value} onChange={onChange} autoFocus={autoFocus}>
-          <Text>{label}</Text>
-          {description && <Text slot="description">{description}</Text>}
-        </Checkbox>
+        <CheckboxFieldInput
+          {...props}
+          label={label}
+          description={description}
+        />
       );
     },
     defaultValue() {
