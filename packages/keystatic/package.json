@@ -292,6 +292,10 @@
     "#component-block-primitives": {
       "react-server": "./src/form/fields/document/DocumentEditor/primitives/blank-for-react-server.tsx",
       "default": "./src/form/fields/document/DocumentEditor/primitives/index.tsx"
+    },
+    "#cloud-image-preview": {
+      "react-server": "./src/component-blocks/blank-for-react-server.tsx",
+      "default": "./src/component-blocks/cloud-image-preview.tsx"
     }
   }
 }
