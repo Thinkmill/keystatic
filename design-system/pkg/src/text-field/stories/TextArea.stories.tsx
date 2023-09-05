@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { action, Parameters } from '@keystar/ui-storybook';
 import { Grid } from '@keystar/ui/layout';
 
@@ -74,9 +74,9 @@ export const CustomWidth = render({
     'Error messages inform the user when the input does not meet validation criteria.',
 });
 
-interface Render extends Function {
+type Render = ((args: Parameters) => ReactNode) & {
   storyName?: string;
-}
+};
 
 function render(props = {}): Render {
   return function renderWithArgs(args: Parameters) {

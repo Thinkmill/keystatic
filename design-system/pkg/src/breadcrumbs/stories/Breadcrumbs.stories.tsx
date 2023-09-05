@@ -2,6 +2,7 @@ import { Box } from '@keystar/ui/layout';
 import { action } from '@keystar/ui-storybook';
 
 import { Breadcrumbs, BreadcrumbsProps, Item } from '..';
+import { ReactNode } from 'react';
 
 export default {
   title: 'Components/Breadcrumbs',
@@ -82,9 +83,9 @@ function renderBreadcrumbs(children: React.ReactNode) {
   );
 }
 
-interface Render extends Function {
+type Render = (() => ReactNode) & {
   storyName?: string;
-}
+};
 
 function render<T>(props: Partial<BreadcrumbsProps<T>> = {}): Render {
   return renderBreadcrumbs(
