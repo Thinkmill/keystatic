@@ -17,7 +17,10 @@ export default config({
           formatting: true,
           dividers: true,
           links: true,
-          images: true,
+          images: {
+            directory: 'src/assets/images/posts',
+            publicPath: '../../assets/images/posts/',
+          },
         }),
       },
     }),
