@@ -32,10 +32,10 @@ export function makePage(config: Config<any, any>) {
         href,
         params,
         push: async path => {
-          router.push(path, { forceOptimisticNavigation: true });
+          router.push(path);
         },
         replace: async path => {
-          router.replace(path, { forceOptimisticNavigation: true });
+          router.replace(path);
         },
       };
     }, [href, router, pathname]);
