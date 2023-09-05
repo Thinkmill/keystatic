@@ -6,7 +6,7 @@ import {
   BasicFormField,
   fields,
 } from '../../api';
-import { BlocksFieldInput } from './ui';
+import { BlocksFieldInput } from '#field-ui/blocks';
 
 export function blocks<Schemas extends Record<string, ComponentSchema>>(
   blocks: {

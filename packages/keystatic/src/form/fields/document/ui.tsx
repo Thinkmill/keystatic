@@ -1,5 +1,3 @@
-'use client';
-
 import { Field, FieldProps } from '@keystar/ui/field';
 import { useState } from 'react';
 

@@ -1,4 +1,3 @@
-'use client';
 import { Ast, Node as MarkdocNode, ValidateError } from '@markdoc/markdoc';
 import {
   Mark,

@@ -1,4 +1,3 @@
-'use client';
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { ActionButton, ButtonGroup, Button } from '@keystar/ui/button';
 import {

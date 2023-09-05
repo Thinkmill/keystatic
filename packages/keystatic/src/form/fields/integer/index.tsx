@@ -5,7 +5,7 @@ import {
   assertRequired,
   basicFormFieldWithSimpleReaderParse,
 } from '../utils';
-import { IntegerFieldInput } from './ui';
+import { IntegerFieldInput } from '#field-ui/integer';
 import { validateInteger } from './validateInteger';
 
 export function integer<IsRequired extends boolean | undefined>({

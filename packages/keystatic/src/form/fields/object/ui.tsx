@@ -1,4 +1,3 @@
-'use client';
 import { Flex } from '@keystar/ui/layout';
 import { assertNever } from 'emery';
 import { ComponentSchema, GenericPreviewProps, ObjectField } from '../../api';

@@ -5,7 +5,7 @@ import {
   assertRequired,
   basicFormFieldWithSimpleReaderParse,
 } from '../utils';
-import { RelationshipInput } from './ui';
+import { RelationshipInput } from '#field-ui/relationship';
 
 export function relationship<IsRequired extends boolean | undefined>({
   label,

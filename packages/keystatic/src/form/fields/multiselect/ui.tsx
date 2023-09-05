@@ -1,4 +1,3 @@
-'use client';
 import { Checkbox } from '@keystar/ui/checkbox';
 import { FieldLabel } from '@keystar/ui/field';
 import { Flex } from '@keystar/ui/layout';
