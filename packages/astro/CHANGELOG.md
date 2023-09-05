@@ -1,5 +1,11 @@
 # @keystatic/astro
 
+## 0.0.0-test-20230905063209
+
+### Patch Changes
+
+- 7901df76: Fix integration
+
 ## 1.0.1
 
 ### Patch Changes
