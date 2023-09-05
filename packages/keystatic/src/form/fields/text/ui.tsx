@@ -1,4 +1,3 @@
-'use client';
 import { useContext, useState } from 'react';
 import { FormFieldInputProps } from '../../api';
 import { TextArea, TextField } from '@keystar/ui/text-field';

@@ -1,40 +1,10 @@
 import { getSlugFromState } from '../app/utils';
 import { ComponentSchema } from './api';
 import { SlugFieldInfo } from './fields/text/path-slug-context';
-import { FieldDataError } from './fields/error';
 import { PropValidationError } from './parse-props';
 import { ReadonlyPropPath } from './fields/document/DocumentEditor/component-blocks/utils';
 import { validateArrayLength } from './validate-array-length';
-
-function flattenErrors(error: unknown): unknown[] {
-  if (error instanceof AggregateError) {
-    return error.errors.flatMap(flattenErrors);
-  }
-  return [error];
-}
-
-export function formatFormDataError(error: unknown) {
-  const flatErrors = flattenErrors(error);
-
-  return flatErrors
-    .map(error => {
-      if (error instanceof PropValidationError) {
-        const path = error.path.join('.');
-        return `${path}: ${
-          error.cause instanceof FieldDataError
-            ? error.cause.message
-            : `Unexpected error: ${error.cause}`
-        }`;
-      }
-      return `Unexpected error: ${error}`;
-    })
-    .join('\n');
-}
-
-export function toFormattedFormDataError(error: unknown) {
-  const formatted = formatFormDataError(error);
-  return new Error(`Field validation failed:\n` + formatted);
-}
+import { toFormattedFormDataError } from './error-formatting';
 
 export function clientSideValidateProp(
   schema: ComponentSchema,
@@ -50,7 +20,7 @@ export function clientSideValidateProp(
   }
 }
 
-export function validateValueWithSchema(
+function validateValueWithSchema(
   schema: ComponentSchema,
   value: any,
   slugField: SlugFieldInfo | undefined,

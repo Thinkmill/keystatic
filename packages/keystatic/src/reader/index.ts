@@ -25,8 +25,8 @@ import { loadDataFile } from '../app/required-files';
 import { getValueAtPropPath } from '../form/props-value';
 import { Dirent } from 'fs';
 import { ReadonlyPropPath } from '../form/fields/document/DocumentEditor/component-blocks/utils';
-import { formatFormDataError } from '../form/errors';
 import { cache } from '#react-cache-in-react-server';
+import { formatFormDataError } from '../form/error-formatting';
 
 type EntryReaderOpts = { resolveLinkedFiles?: boolean };
 

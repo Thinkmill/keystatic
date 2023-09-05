@@ -1,4 +1,3 @@
-'use client';
 import { ActionButton } from '@keystar/ui/button';
 import { Flex, Box } from '@keystar/ui/layout';
 import { TextField } from '@keystar/ui/text-field';

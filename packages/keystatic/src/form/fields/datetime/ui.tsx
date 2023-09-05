@@ -1,5 +1,5 @@
 //ui.tsx
-'use client';
+
 import { TextField } from '@keystar/ui/text-field';
 import { useReducer } from 'react';
 import { validateDatetime } from './validateDatetime';

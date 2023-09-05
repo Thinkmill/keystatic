@@ -1,7 +1,7 @@
 import { BasicFormField } from '../../api';
 import { FieldDataError } from '../error';
 import { basicFormFieldWithSimpleReaderParse } from '../utils';
-import { SelectFieldInput } from './ui';
+import { SelectFieldInput } from '#field-ui/select';
 
 export function select<Option extends { label: string; value: string }>({
   label,

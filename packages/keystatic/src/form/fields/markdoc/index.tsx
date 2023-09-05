@@ -4,14 +4,16 @@ import Markdoc, {
 } from '@markdoc/markdoc';
 
 import { ContentFormField } from '../../api';
-import { DocumentFieldInput } from './ui';
-import { EditorState } from 'prosemirror-state';
-import { createEditorState } from './editor/editor-state';
-import { EditorSchema, createEditorSchema } from './editor/schema';
-import { proseMirrorToMarkdoc } from './editor/markdoc/serialize';
-import { markdocToProseMirror } from './editor/markdoc/parse';
+import {
+  DocumentFieldInput,
+  getDefaultValue,
+  serializeFromEditorState,
+  createEditorSchema,
+  parseToEditorState,
+} from '#field-ui/markdoc';
+import type { EditorSchema } from './editor/schema';
+import type { EditorState } from 'prosemirror-state';
 
-const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
 
 /**
@@ -37,7 +39,7 @@ export function __experimental_markdoc_field({
     kind: 'form',
     formKind: 'content',
     defaultValue() {
-      return createEditorState(getSchema().nodes.doc.createAndFill()!);
+      return getDefaultValue(getSchema());
     },
     Input(props) {
       return (
@@ -50,19 +52,15 @@ export function __experimental_markdoc_field({
     },
 
     parse: (_, { content }) => {
-      const markdoc = textDecoder.decode(content);
-      const doc = markdocToProseMirror(Markdoc.parse(markdoc), getSchema());
-      return createEditorState(doc);
+      return parseToEditorState(content, getSchema());
     },
     contentExtension: '.mdoc',
     validate(value) {
       return value;
     },
     serialize(value) {
-      const markdocNode = proseMirrorToMarkdoc(value.doc);
-      const markdoc = Markdoc.format(markdocNode);
       return {
-        content: textEncoder.encode(Markdoc.format(Markdoc.parse(markdoc))),
+        content: serializeFromEditorState(value),
         external: new Map(),
         other: new Map(),
         value: undefined,

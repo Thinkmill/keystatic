@@ -3,7 +3,7 @@ import { ObjectField } from '../../api';
 import { integer } from '../integer';
 import { object } from '../object';
 import { text } from '../text';
-import { CloudImageFieldInput } from './ui';
+import { CloudImageFieldInput } from '#field-ui/cloudImage';
 
 export function cloudImage({
   label,

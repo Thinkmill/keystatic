@@ -2,7 +2,7 @@ import { Glob } from '../../../config';
 import { FormFieldStoredValue } from '../../..';
 import { SlugFormField } from '../../api';
 import { FieldDataError } from '../error';
-import { TextFieldInput } from './ui';
+import { TextFieldInput } from '#field-ui/text';
 import { validateText } from './validateText';
 
 function parseAsNormalField(value: FormFieldStoredValue) {

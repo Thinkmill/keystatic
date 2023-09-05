@@ -1,4 +1,3 @@
-'use client';
 import { TextField } from '@keystar/ui/text-field';
 import { useReducer } from 'react';
 import { validateDate } from './validateDate';
