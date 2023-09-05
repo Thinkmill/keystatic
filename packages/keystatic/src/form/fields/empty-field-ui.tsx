@@ -22,4 +22,5 @@ export let SlugFieldInput = empty,
   DateFieldInput = empty,
   CloudImageFieldInput = empty,
   BlocksFieldInput = empty,
-  DocumentFieldInput = empty;
+  DocumentFieldInput = empty,
+  CheckboxFieldInput = empty;
