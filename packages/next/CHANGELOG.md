@@ -1,5 +1,15 @@
 # @keystatic/next
 
+## 1.0.1
+
+### Patch Changes
+
+- a5e259b4: Remove unnecessary usage of internal `forceOptimisticNavigation`
+  Next.js option
+- Updated dependencies [bcb3b8ec]
+- Updated dependencies [43f0b61f]
+  - @keystatic/core@0.1.4
+
 ## 1.0.0
 
 ### Patch Changes
