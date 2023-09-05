@@ -5,7 +5,7 @@ import {
   assertRequired,
   basicFormFieldWithSimpleReaderParse,
 } from '../utils';
-import { UrlFieldInput } from './ui';
+import { UrlFieldInput } from '#field-ui/url';
 import { validateUrl } from './validateUrl';
 
 export function url<IsRequired extends boolean | undefined>({

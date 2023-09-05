@@ -4,7 +4,7 @@ export {
   BlockWrapper,
   NotEditable,
   ToolbarSeparator,
-} from './form/fields/document/DocumentEditor/primitives';
+} from '#component-block-primitives';
 export type {
   CloudConfig,
   Collection,

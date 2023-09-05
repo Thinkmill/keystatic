@@ -17,7 +17,7 @@ import {
   FormFieldStoredValue,
 } from '../../api';
 import { text } from '../text';
-import { DocumentFieldInput } from './ui';
+import { DocumentFieldInput } from '#field-ui/document';
 import { createDocumentEditorForNormalization } from './DocumentEditor/create-editor';
 import { object } from '../object';
 import { FieldDataError } from '../error';

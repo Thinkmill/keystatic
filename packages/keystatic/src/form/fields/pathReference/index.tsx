@@ -5,7 +5,7 @@ import {
   assertRequired,
   basicFormFieldWithSimpleReaderParse,
 } from '../utils';
-import { PathReferenceInput } from './ui';
+import { PathReferenceInput } from '#field-ui/pathReference';
 
 export function pathReference<IsRequired extends boolean | undefined>({
   label,

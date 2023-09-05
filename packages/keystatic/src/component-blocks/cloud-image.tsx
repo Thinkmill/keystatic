@@ -1,5 +1,5 @@
 import { component } from '..';
-import { CloudImagePreview } from './cloud-image-preview';
+import { CloudImagePreview } from '#cloud-image-preview';
 import { cloudImageSchema } from './cloud-image-schema';
 
 /** @deprecated Experimental */

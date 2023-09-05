@@ -284,6 +284,18 @@
     "#sha1": {
       "node": "./src/sha1/node.ts",
       "default": "./src/sha1/webcrypto.ts"
+    },
+    "#field-ui/*": {
+      "react-server": "./src/form/fields/empty-field-ui.tsx",
+      "default": "./src/form/fields/*/ui.tsx"
+    },
+    "#component-block-primitives": {
+      "react-server": "./src/form/fields/document/DocumentEditor/primitives/blank-for-react-server.tsx",
+      "default": "./src/form/fields/document/DocumentEditor/primitives/index.tsx"
+    },
+    "#cloud-image-preview": {
+      "react-server": "./src/component-blocks/blank-for-react-server.tsx",
+      "default": "./src/component-blocks/cloud-image-preview.tsx"
     }
   }
 }
