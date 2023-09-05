@@ -22,6 +22,11 @@ export default function keystatic(): AstroIntegration {
               },
             },
           ],
+          optimizeDeps: {
+            entries: [
+              require.resolve('@keystatic/astro/internal/for-optimize-deps'),
+            ],
+          },
         };
         updateConfig({
           vite,

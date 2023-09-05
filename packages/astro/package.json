@@ -25,7 +25,8 @@
     },
     "./package.json": "./package.json",
     "./internal/keystatic-api.js": "./internal/keystatic-api.js",
-    "./internal/keystatic-astro-page.astro": "./internal/keystatic-astro-page.astro"
+    "./internal/keystatic-astro-page.astro": "./internal/keystatic-astro-page.astro",
+    "./internal/for-optimize-deps": "./internal/for-optimize-deps.js"
   },
   "keywords": [
     "astro-integration"
@@ -74,7 +75,8 @@
     "exports": {
       "extra": {
         "./internal/keystatic-api.js": "./internal/keystatic-api.js",
-        "./internal/keystatic-astro-page.astro": "./internal/keystatic-astro-page.astro"
+        "./internal/keystatic-astro-page.astro": "./internal/keystatic-astro-page.astro",
+        "./internal/for-optimize-deps": "./internal/for-optimize-deps.js"
       }
     }
   }
