@@ -80,8 +80,8 @@ First, create a `keystatic.page.ts` file in the project root, alongside your Key
 Next, create a new page called `src/pages/keystatic/[...params].astro` that mounts the component on the client side only:
 
 ```ts
----
 // src/pages/keystatic/[...params].astro
+---
 import { Keystatic } from '../../../keystatic.page'
 export const prerender = false
 ---
@@ -89,7 +89,7 @@ export const prerender = false
 <Keystatic client:only />
 ```
 
-Finally, create a new file called `src/pages/api/keystatic/[...params].ts` that will create API routes for Keystatic’s Admin UI:
+Create a new file called `src/pages/api/keystatic/[...params].ts` that will create API routes for Keystatic’s Admin UI:
 
 ```ts
 // src/pages/api/keystatic/[...params].ts
@@ -102,6 +102,26 @@ export const all = makeHandler({
 
 export const prerender = false
 ```
+
+Go to your `package.json` and add `--host 127.0.0.1` to your "dev" script:
+```
+"dev": "astro dev --host 127.0.0.1"
+```
+
+Finally, go to `astro.config.mjs` in the project root and add `output: 'hybrid'` to `defineConfig` options. Your `astro.config.mjs` should look similar to this:
+```ts
+import { defineConfig } from 'astro/config';
+import react from '@astrojs/react';
+import markdoc from '@astrojs/markdoc';
+
+// https://astro.build/config
+export default defineConfig({
+  integrations: [react(), markdoc()],
+  output: 'hybrid',
+});
+
+```
+
 You can now launch the Keystatic Admin UI. Start the Astro dev server:
 
 ```bash
