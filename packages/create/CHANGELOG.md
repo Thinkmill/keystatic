@@ -1,5 +1,12 @@
 # @keystatic/create
 
+## 0.0.3
+
+### Patch Changes
+
+- 1caddb4b: Updated port number mentioned when using CLI to create a new
+  Keystatic project.
+
 ## 0.0.2
 
 ### Patch Changes
