@@ -60,7 +60,7 @@ export default function DocsLinks() {
         >
           {items.map(item => (
             <li key={item.title} className="group relative">
-              <div className="h-full rounded-lg border border-sand-6 bg-sand-5 transition-all group-hover:border-sand-12">
+              <div className="h-full rounded-lg border border-sand-6 bg-sand-5 transition-all group-hover:border-sand-12 group-hover:bg-sand-4">
                 <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 py-6">
                   <h3 className="text-lg font-semibold">{item.title}</h3>
                   <p className="mt-4 text-base">{item.description}</p>

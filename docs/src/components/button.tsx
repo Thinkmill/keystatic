@@ -16,7 +16,7 @@ const baseClasses =
 const impactClasses: Record<ButtonProps['impact'] & {}, string> = {
   bold: 'bg-blue-11 text-sand-1 hover:bg-blue-12 active:bg-blue-12/90 border-transparent',
   light:
-    'bg-transparent border-sand-12 text-sand-12 hover:bg-sand-11/10 active:bg-sand-11/20',
+    'bg-sand-1 border-sand-6 text-sand-12 hover:bg-sand-2 hover:border-sand-8 active:bg-sand-11/20',
 };
 
 // ----------
