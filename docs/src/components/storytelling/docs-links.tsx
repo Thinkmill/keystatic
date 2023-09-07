@@ -37,7 +37,7 @@ export default function DocsLinks() {
     },
   ];
   return (
-    <section className="relative bg-slate-3">
+    <section className="relative bg-sand-3">
       <div className="mx-auto max-w-4xl px-6 pt-6">
         <div className="text-center">
           <h2 className="text-3xl font-bold sm:text-4xl">

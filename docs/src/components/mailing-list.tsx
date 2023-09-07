@@ -4,7 +4,7 @@ import MailingListForm from './forms/mailing-list';
 
 export default function MailingList() {
   return (
-    <section id="mailing-list" className="relative bg-keystatic-highlight">
+    <section id="mailing-list" className="relative bg-sand-4">
       <div className="mx-auto max-w-5xl px-6 pb-16 pt-12 sm:pb-24 sm:pt-16 lg:pb-32 lg:pt-24">
         <div className="grid items-center justify-center gap-8 lg:grid-cols-2 lg:gap-16 xl:gap-32">
           <div className="text-center lg:text-left">

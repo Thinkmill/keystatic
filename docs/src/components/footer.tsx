@@ -4,7 +4,7 @@ import { SocialLinks } from './navigation/social-links';
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-2 pb-20 pt-8">
+    <footer className="bg-sand-7 pb-20 pt-8">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col items-center justify-between gap-2 px-6 py-4 md:flex-row md:gap-6">
           <KeystaticLogoLink />

@@ -16,7 +16,7 @@ export default function CallToAction() {
   };
 
   return (
-    <section className="relative bg-white">
+    <section className="relative bg-sand-5">
       <div className="mx-auto flex max-w-3xl flex-col items-center px-6 pb-16 pt-12 text-center md:pb-24 md:pt-16">
         <h2 className="mt-6 text-3xl font-bold sm:text-4xl">
           Tell us what you think
