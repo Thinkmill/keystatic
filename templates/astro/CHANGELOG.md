@@ -1,5 +1,12 @@
 # @keystatic/templates-astro
 
+## 0.0.12
+
+### Patch Changes
+
+- b16ef684: Replace manually created pages for Keystatic with Astro integration
+  that injects routes
+
 ## 0.0.11
 
 ### Patch Changes
