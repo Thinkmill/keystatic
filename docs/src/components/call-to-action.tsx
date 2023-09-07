@@ -17,11 +17,11 @@ export default function CallToAction() {
 
   return (
     <section className="relative bg-sand-5">
-      <div className="mx-auto flex max-w-3xl flex-col items-center px-6 pb-16 pt-12 text-center md:pb-24 md:pt-16">
-        <h2 className="mt-6 text-3xl font-bold sm:text-4xl">
+      <div className="mx-auto flex max-w-3xl flex-col items-center px-6 pb-16 pt-12 text-center md:pb-24 md:pt-24">
+        <h2 className="text-3xl font-semibold sm:text-4xl">
           Tell us what you think
         </h2>
-        <p className="mt-6">
+        <p className="mt-4 text-base">
           We're building Keystatic in the open as part of{' '}
           <a
             href="https://www.thinkmill.com.au/"
@@ -35,7 +35,7 @@ export default function CallToAction() {
           looking for, and what you'd like to see next is super helpful as we
           progress!
         </p>
-        <div className="mx-auto mt-10 flex max-w-sm flex-col justify-center gap-3 sm:max-w-none sm:flex-row">
+        <div className="mx-auto mt-10 flex max-w-sm flex-col justify-center gap-4 sm:max-w-none sm:flex-row">
           <Button
             href="https://github.com/Thinkmill/keystatic/discussions"
             target="_blank"

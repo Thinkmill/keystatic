@@ -6,10 +6,10 @@ import { H1_ID } from '../constants';
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-sand-5">
-      <div className="mx-auto flex max-w-7xl flex-col items-center gap-12 px-6 pt-10 md:gap-16 md:pb-10 lg:py-16">
-        <div className="flex w-full max-w-2xl flex-col items-center gap-8 text-center">
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-12 px-6 pt-10 md:gap-16  md:pb-10 lg:py-16">
+        <div className="flex w-full max-w-2xl flex-col items-center text-center">
           <h1
-            className="text-3xl font-extrabold sm:text-4xl md:text-5xl"
+            className="text-5xl font-semibold sm:text-4xl md:text-5xl"
             id={H1_ID}
             aria-label="Content management for your code base"
           >
@@ -18,14 +18,14 @@ export default function Hero() {
             for your Codebase
           </h1>
 
-          <p className="text-lg font-normal">
+          <p className="pt-6 text-lg font-normal">
             A new tool that makes Markdown, JSON and YAML content in your
             codebase editable by humans. Live edit content on GitHub or your
             local file system, without disrupting your existing code and
             workflows.
           </p>
 
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="flex flex-col gap-4 pt-10 sm:flex-row">
             <Button className="" href="/docs">
               Read the docs
             </Button>
@@ -33,7 +33,7 @@ export default function Hero() {
             <CopyCommandButton />
           </div>
 
-          <div className="inline-flex items-center gap-2 text-left">
+          <div className="inline-flex items-center gap-2 pt-10 text-left">
             <svg
               className="h-6 w-6 shrink-0"
               xmlns="http://www.w3.org/2000/svg"

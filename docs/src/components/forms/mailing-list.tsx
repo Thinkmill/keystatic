@@ -18,7 +18,10 @@ export default function MailingListForm() {
     <form className="mx-auto max-w-sm lg:max-w-none" onSubmit={handleSubmit}>
       <input type="hidden" name="form-type" value="mailing-list" />
       <div>
-        <label className="block font-medium" htmlFor="mailing-list-email">
+        <label
+          className="block text-sm font-medium"
+          htmlFor="mailing-list-email"
+        >
           Email
         </label>
         <input
@@ -26,7 +29,7 @@ export default function MailingListForm() {
           name="mailing-list-email"
           id="mailing-list-email"
           required
-          className="form-input mt-3 w-full rounded-lg border border-black p-3 leading-none"
+          className="form-input mt-2 w-full rounded-lg border border-sand-6 px-4 py-3 leading-none hover:border-sand-8"
         />
       </div>
       <Button

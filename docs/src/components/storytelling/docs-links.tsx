@@ -38,13 +38,13 @@ export default function DocsLinks() {
   ];
   return (
     <section className="relative bg-sand-3">
-      <div className="mx-auto max-w-4xl px-6 pt-6">
+      <div className="mx-auto max-w-4xl px-6 pt-12">
         <div className="text-center">
-          <h2 className="text-3xl font-bold sm:text-4xl">
+          <h2 className="text-3xl font-semibold sm:text-4xl">
             Want to learn more?
           </h2>
 
-          <p className="mt-4 text-lg sm:mt-6">
+          <p className="mt-4 text-base sm:mt-6">
             Those sections from the{' '}
             <Link href="/docs" className="underline">
               Keystatic docs
@@ -53,19 +53,17 @@ export default function DocsLinks() {
           </p>
         </div>
       </div>
-      <div className="mx-auto max-w-7xl overflow-y-auto pb-12 pt-8 md:pt-12 lg:overflow-visible xl:pb-16">
+      <div className="mx-auto max-w-5xl overflow-y-auto px-6 pb-12 pt-8 md:pt-12 lg:overflow-visible xl:pb-24">
         <ul
-          className="grid items-stretch gap-6 px-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-8"
+          className="grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3"
           role="list"
         >
           {items.map(item => (
             <li key={item.title} className="group relative">
-              <div className="h-full rounded-lg border border-slate-11/50 bg-white transition-all group-hover:border-slate-11 group-hover:shadow-md">
-                <div className="grid h-full grid-rows-[auto,1fr,auto] p-6">
-                  <h3 className="text-xl font-semibold">{item.title}</h3>
-                  <p className="text-md mt-2 text-slate-11">
-                    {item.description}
-                  </p>
+              <div className="h-full rounded-lg border border-sand-6 bg-sand-5 transition-all group-hover:border-sand-12">
+                <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 py-6">
+                  <h3 className="text-lg font-semibold">{item.title}</h3>
+                  <p className="mt-4 text-base">{item.description}</p>
                 </div>
               </div>
               <Link href={item.href} className="absolute inset-0" />

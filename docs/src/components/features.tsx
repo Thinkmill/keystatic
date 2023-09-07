@@ -2,8 +2,8 @@ import { CheckCircleIcon } from './icons/check-circle';
 
 const features = [
   'First-class CMS experience',
-  'TypeScript API',
   'Markdown & YAML/JSON based',
+  'TypeScript API',
   'No database',
 ];
 
@@ -12,7 +12,7 @@ export default function Features() {
     <section className="relative bg-sand-3">
       <ul
         tabIndex={0}
-        className="mx-auto grid max-w-2xl grid-cols-2 gap-6 overflow-x-auto py-12"
+        className="mx-auto grid max-w-2xl grid-cols-2 gap-6 overflow-x-auto pb-12 pt-24"
         role="list"
       >
         {features.map(feature => (
