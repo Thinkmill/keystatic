@@ -1,5 +1,14 @@
 # @keystatic/templates-astro
 
+## 0.0.0-test-20230907022505
+
+### Patch Changes
+
+- f47feaa7: Add support for Astro assets with image directory and publicPath in
+  Keystatic config
+- Updated dependencies [88053650]
+  - @keystatic/astro@0.0.0-test-20230907022505
+
 ## 0.0.10
 
 ### Patch Changes
