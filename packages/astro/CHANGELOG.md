@@ -1,5 +1,12 @@
 # @keystatic/astro
 
+## 1.0.2
+
+### Patch Changes
+
+- a754d573: Fix `@keystatic/astro/api` CommonJS output
+- e684e5ad: Fix `@keystatic/astro` integration
+
 ## 1.0.1
 
 ### Patch Changes
