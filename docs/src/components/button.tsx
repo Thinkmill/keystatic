@@ -11,12 +11,12 @@ type ButtonProps = {
 } & AllHTMLAttributes<HTMLButtonElement | HTMLAnchorElement>;
 
 const baseClasses =
-  'block rounded-lg px-5 py-3 text-center font-semibold leading-none border transition-colors';
+  'block rounded-lg px-4 py-3 text-center font-semibold leading-none border transition-colors';
 
 const impactClasses: Record<ButtonProps['impact'] & {}, string> = {
-  bold: 'bg-black text-white hover:bg-slate-11 border-transparent',
+  bold: 'bg-blue-11 text-sand-1 hover:bg-blue-12 active:bg-blue-12/90 border-transparent',
   light:
-    'bg-transparent border-black text-black hover:bg-slate-11/10 active:bg-slate-11/20',
+    'bg-transparent border-sand-12 text-sand-12 hover:bg-sand-11/10 active:bg-sand-11/20',
 };
 
 // ----------
@@ -51,7 +51,7 @@ function Spinner() {
   return (
     <div className="grid w-full place-items-center">
       <svg
-        className="-my-0.5 h-5 w-5 animate-spin text-white"
+        className="-my-0.5 h-5 w-5 animate-spin text-sand-1"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
