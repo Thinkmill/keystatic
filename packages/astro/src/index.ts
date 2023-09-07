@@ -29,10 +29,14 @@ export default function keystatic(): AstroIntegration {
             entries: ['keystatic.config.*', '.astro/keystatic-imports.js'],
           },
         };
+        const dotAstroDir = path.join(fileURLToPath(config.root), '.astro');
+        await fs.mkdir(dotAstroDir, { recursive: true });
         await fs.writeFile(
-          path.join(fileURLToPath(config.root), '.astro/keystatic-imports.js'),
-          `import '@keystatic/astro/api';
-import '@keystatic/astro/ui';`
+          path.join(dotAstroDir, 'keystatic-imports.js'),
+          `import "@keystatic/astro/ui";
+import "@keystatic/astro/api";
+import "@keystatic/core/ui";
+`
         );
         updateConfig({
           vite,
