@@ -5,7 +5,6 @@ import { useState } from 'react';
 import Dialog from './dialog';
 import Button from './button';
 import SendMessageForm from './forms/send-message';
-import { StarIcon } from './icons/star-icon';
 
 export default function CallToAction() {
   const [isOpen, setIsOpen] = useState(false);
