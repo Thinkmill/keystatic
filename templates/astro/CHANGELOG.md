@@ -1,5 +1,22 @@
 # @keystatic/templates-astro
 
+## 0.0.12
+
+### Patch Changes
+
+- b16ef684: Replace manually created pages for Keystatic with Astro integration
+  that injects routes
+
+## 0.0.11
+
+### Patch Changes
+
+- f47feaa7: Add support for Astro assets with image directory and publicPath in
+  Keystatic config
+- Updated dependencies [a754d573]
+- Updated dependencies [e684e5ad]
+  - @keystatic/astro@1.0.2
+
 ## 0.0.10
 
 ### Patch Changes

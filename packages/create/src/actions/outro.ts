@@ -14,7 +14,11 @@ export const outro = (ctx: Context) => {
       color.reset(
         `  ${ctx.packageManager === 'npm' ? 'npm run' : ctx.packageManager} dev`
       ),
-      color.reset(`  http://127.0.0.1:3000/keystatic`),
+      color.reset(
+        `  http://127.0.0.1:${
+          ctx.framework === 'Astro' ? '4321' : '3000'
+        }/keystatic`
+      ),
     ].join('\n'),
     'Next steps'
   );
