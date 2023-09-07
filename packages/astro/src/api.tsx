@@ -9,10 +9,15 @@ export function makeHandler(_config: APIRouteConfig) {
   const handler = makeGenericAPIRouteHandler(
     {
       ..._config,
-      clientId: _config.clientId ?? import.meta.env.KEYSTATIC_GITHUB_CLIENT_ID,
+      clientId:
+        _config.clientId ??
+        tryOrUndefined(() => import.meta.env.KEYSTATIC_GITHUB_CLIENT_ID),
       clientSecret:
-        _config.clientSecret ?? import.meta.env.KEYSTATIC_GITHUB_CLIENT_SECRET,
-      secret: _config.secret ?? import.meta.env.KEYSTATIC_SECRET,
+        _config.clientSecret ??
+        tryOrUndefined(() => import.meta.env.KEYSTATIC_GITHUB_CLIENT_SECRET),
+      secret:
+        _config.secret ??
+        tryOrUndefined(() => import.meta.env.KEYSTATIC_SECRET),
     },
     {
       slugEnvName: 'PUBLIC_KEYSTATIC_GITHUB_APP_SLUG',
@@ -77,4 +82,12 @@ export function makeHandler(_config: APIRouteConfig) {
       ),
     });
   };
+}
+
+function tryOrUndefined<T>(fn: () => T): T | undefined {
+  try {
+    return fn();
+  } catch {
+    return undefined;
+  }
 }
