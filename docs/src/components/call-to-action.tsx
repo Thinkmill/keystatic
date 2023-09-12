@@ -15,35 +15,37 @@ export default function CallToAction() {
   };
 
   return (
-    <section className="relative bg-sand-5">
-      <div className="mx-auto flex max-w-3xl flex-col items-center px-6 pb-16 pt-12 text-center md:pb-24 md:pt-24">
-        <h2 className="text-3xl font-semibold sm:text-4xl">
-          Tell us what you think
-        </h2>
-        <p className="mt-4 text-base">
-          We're building Keystatic in the open as part of{' '}
-          <a
-            href="https://www.thinkmill.com.au/"
-            target="_blank"
-            className="cursor-pointer underline hover:text-thinkmill-red"
-            aria-label={`${linkLabels.tmLabs} (Opens in new tab)`}
-          >
-            {linkLabels.tmLabs}
-          </a>{' '}
-          Research &amp; Development. Feedback on how we're going, what you're
-          looking for, and what you'd like to see next is super helpful as we
-          progress!
-        </p>
-        <div className="mx-auto mt-10 flex max-w-sm flex-col justify-center gap-4 sm:max-w-none sm:flex-row">
+    <section className="relative">
+      <div className="mx-auto grid grid-cols-6 gap-6 px-6 py-12 md:pl-3">
+        <div className="col-span-5 md:col-start-2">
+          <h2 className="text-3xl font-semibold">Tell us what you think</h2>
+          <p className="mt-4 text-base">
+            We're building Keystatic in the open as part of{' '}
+            <a
+              href="https://www.thinkmill.com.au/"
+              target="_blank"
+              className="cursor-pointer underline hover:text-thinkmill-red"
+              aria-label={`${linkLabels.tmLabs} (Opens in new tab)`}
+            >
+              {linkLabels.tmLabs}
+            </a>{' '}
+            Research &amp; Development. Feedback on how we're going, what you're
+            looking for, and what you'd like to see next is super helpful as we
+            progress!
+          </p>
           <Button
+            className="mt-6 inline-block w-auto"
             href="https://github.com/Thinkmill/keystatic/discussions"
             target="_blank"
             aria-label={`${linkLabels.ksDiscussions} (Opens in new tab)`}
           >
             {linkLabels.ksDiscussions}
           </Button>
-
-          <Button impact="light" onClick={() => setIsOpen(true)}>
+          <Button
+            className="mt-3 w-auto"
+            impact="light"
+            onClick={() => setIsOpen(true)}
+          >
             Send us a message
           </Button>
         </div>

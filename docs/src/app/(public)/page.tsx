@@ -15,8 +15,12 @@ export default function Homepage() {
         <Features />
         <CliVideo />
         <DocsLinks />
-        <MailingList />
-        <CallToAction />
+        <div className="bg-sand-2">
+          <div className="mx-auto grid max-w-5xl divide-y divide-sand-6 md:grid-cols-2 md:divide-x md:divide-y-0">
+            <MailingList />
+            <CallToAction />
+          </div>
+        </div>
       </Main>
       <Footer />
     </>
