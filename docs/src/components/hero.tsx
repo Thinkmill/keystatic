@@ -5,7 +5,7 @@ import { H1_ID } from '../constants';
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-sand-5">
+    <section className="relative overflow-hidden bg-sand-2">
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-12 px-6 pt-10 md:gap-16  md:pb-10 lg:py-16">
         <div className="flex w-full max-w-2xl flex-col items-center text-center">
           <h1

@@ -1,6 +1,6 @@
 export default function CliVideo() {
   return (
-    <section className="relative bg-sand-3">
+    <section className="relative bg-white">
       <div className="mx-auto max-w-4xl px-6 py-12 sm:pb-12">
         <div className="text-center">
           <h2 className="text-3xl font-semibold sm:text-4xl">

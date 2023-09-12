@@ -9,7 +9,7 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="relative bg-sand-3">
+    <section className="relative bg-white">
       <ul
         tabIndex={0}
         className="mx-auto grid max-w-2xl grid-cols-2 gap-6 overflow-x-auto pb-12 pt-24"
