@@ -4,6 +4,7 @@ export function CheckCircleIcon({
   ariaHidden?: boolean;
 }) {
   return (
+    // TODO: Create color prop for fill and stroke to be able to assign token colors on consumption.
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -13,10 +14,19 @@ export function CheckCircleIcon({
       viewBox="0 0 24 24"
       aria-hidden={ariaHidden}
     >
+      <circle
+        cx="12"
+        cy="12"
+        r="9"
+        stroke="#203c25"
+        strokeWidth="1.5"
+        fill="#b7dfba"
+      />
       <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"
+        stroke="#203c25"
+        strokeLinecap="square"
+        strokeWidth="1.5"
+        d="M9 12.75 11.25 15 15 9.75"
       />
     </svg>
   );

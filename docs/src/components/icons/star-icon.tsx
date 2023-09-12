@@ -1,5 +1,7 @@
 import { cx } from '../../utils';
 
+// TODO: Old design asset. Delete once confrimed it is not being referenced/imported anywhere
+
 type StarIconProps = {
   size: 'small' | 'large';
   ariaHidden?: boolean;
