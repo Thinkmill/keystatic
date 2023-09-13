@@ -14,9 +14,9 @@ const baseClasses =
   'block rounded-lg px-4 py-3 text-center font-semibold leading-none border transition-colors';
 
 const impactClasses: Record<ButtonProps['impact'] & {}, string> = {
-  bold: 'bg-blue-11 text-sand-1 hover:bg-blue-12 active:bg-blue-12/90 border-transparent',
+  bold: 'bg-indigo-9 text-white hover:bg-indigo-10 active:bg-indigo-11 border-transparent',
   light:
-    'bg-sand-1 border-sand-6 text-sand-12 hover:bg-sand-2 hover:border-sand-8 active:bg-sand-11/20',
+    'bg-white border-sand-7 text-sand-11 hover:bg-sand-2 hover:border-sand-8 active:bg-sand-10',
 };
 
 // ----------
