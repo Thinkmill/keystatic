@@ -38,8 +38,10 @@ export function HeaderNav({
 
   return (
     <header
-      className={`w-full bg-sand-2 ${
-        isDocsNav ? 'z-20 lg:fixed lg:z-30 lg:border-b lg:border-sand-5' : ''
+      className={`absolute top-0 z-20 w-full ${
+        isDocsNav
+          ? 'z-20 bg-white lg:fixed lg:z-30 lg:border-b lg:border-sand-5'
+          : ''
       }`}
     >
       <div className="mx-auto max-w-7xl">

@@ -5,8 +5,88 @@ import { H1_ID } from '../constants';
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-sand-2">
-      <div className="mx-auto flex max-w-7xl flex-col items-center gap-12 px-6 pt-10 md:gap-16  md:pb-10 lg:py-16">
+    <section className="relative overflow-hidden bg-sand-2 pt-24">
+      <svg
+        className="absolute left-0 top-0 z-0 min-h-full min-w-full"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 1440 1024"
+      >
+        <g clipPath="url(#hero-img-a)">
+          <path
+            stroke="url(#hero-img-b)"
+            strokeWidth="426"
+            d="M977-150 205 622v413"
+          />
+          <path
+            stroke="url(#hero-img-c)"
+            strokeWidth="426"
+            d="M1580-153 631 796v239"
+          />
+          <path
+            stroke="url(#hero-img-d)"
+            strokeWidth="426"
+            d="m869 256 464 464v315"
+          />
+          <path
+            stroke="url(#hero-img-e)"
+            stroke-linejoin="round"
+            strokeWidth="426"
+            d="m721 707 747-747"
+            opacity=".4"
+          />
+        </g>
+        <defs>
+          <linearGradient
+            id="hero-img-b"
+            x1="565"
+            x2="205"
+            y1="197.8"
+            y2="624.4"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#EDE9FE" />
+            <stop offset="1" stopColor="#FFE5E5" />
+          </linearGradient>
+          <linearGradient
+            id="hero-img-c"
+            x1="911"
+            x2="631"
+            y1="537.8"
+            y2="804.4"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#FFECBC" />
+            <stop offset="1" stopColor="#DDF3E4" />
+          </linearGradient>
+          <linearGradient
+            id="hero-img-d"
+            x1="920.1"
+            x2="1333.4"
+            y1="306.7"
+            y2="728.9"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#EDE9FE" />
+            <stop offset="1" stopColor="#D8F3F6" />
+          </linearGradient>
+          <linearGradient
+            id="hero-img-e"
+            x1="1001.4"
+            x2="721.4"
+            y1="448.9"
+            y2="715.6"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#FFECBC" />
+            <stop offset="1" stopColor="#DDF3E4" />
+          </linearGradient>
+          <clipPath id="hero-img-a">
+            <path fill="#fff" d="M0 0h1440v1024H0z" />
+          </clipPath>
+        </defs>
+      </svg>
+      <div className="relative mx-auto flex max-w-7xl flex-col items-center gap-12 px-6 pt-10  md:gap-16 md:pb-10 lg:py-16">
         <div className="flex w-full max-w-2xl flex-col items-center text-center">
           <h1
             className="text-5xl font-semibold sm:text-4xl md:text-5xl"
