@@ -1,17 +1,11 @@
 import { useEffect, useId, useState } from 'react';
 
-import { ActionButton, ClearButton, ToggleButton } from '@keystar/ui/button';
+import { ClearButton } from '@keystar/ui/button';
 import { ObjectField, PreviewProps } from '@keystatic/core';
-import { Icon } from '@keystar/ui/icon';
-import { link2Icon } from '@keystar/ui/icon/icons/link2Icon';
-import { link2OffIcon } from '@keystar/ui/icon/icons/link2OffIcon';
-import { undo2Icon } from '@keystar/ui/icon/icons/undo2Icon';
-import { Box, Flex, HStack, VStack } from '@keystar/ui/layout';
+import { Box, Flex, VStack } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
-import { NumberField } from '@keystar/ui/number-field';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { TextArea, TextField } from '@keystar/ui/text-field';
-import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text } from '@keystar/ui/typography';
 import { cloudImageSchema } from '../../../component-blocks/cloud-image-schema';
 import {
@@ -19,114 +13,12 @@ import {
   parseImageData,
   useImageLibraryURL,
   CloudImageProps,
+  ImageDimensionsInput,
 } from '../../../component-blocks/cloud-image-preview';
 import { isValidURL } from '../document/DocumentEditor/isValidURL';
 import { useEventCallback } from '../document/DocumentEditor/ui-utils';
 
-type ImageDimensions = Pick<CloudImageProps, 'width' | 'height'>;
-
 type ImageStatus = '' | 'loading' | 'good' | 'error';
-
-function useImageDimensions(src: string) {
-  const [dimensions, setDimensions] = useState<ImageDimensions>({});
-  useEffect(() => {
-    if (!src || !isValidURL(src)) {
-      setDimensions({});
-      return;
-    }
-    const img = new Image();
-    img.onload = () => {
-      setDimensions({ width: img.width, height: img.height });
-    };
-    img.src = src;
-    return () => {
-      img.onload = null;
-      img.onerror = null;
-    };
-  }, [src]);
-  return dimensions;
-}
-
-function ImageDimensionsInput(props: {
-  src: string;
-  image: ImageDimensions;
-  onChange: (image: ImageDimensions) => void;
-}) {
-  const dimensions = useImageDimensions(props.src);
-
-  const [constrainProportions, setConstrainProportions] = useState(true);
-  const revertLabel = `Revert to original (${dimensions.width} × ${dimensions.height})`;
-  const dimensionsMatchOriginal =
-    dimensions.width === props.image.width &&
-    dimensions.height === props.image.height;
-
-  return (
-    <HStack gap="regular" alignItems="end">
-      <NumberField
-        label="Width"
-        width="scale.1600"
-        formatOptions={{ maximumFractionDigits: 0 }}
-        value={props.image.width}
-        onChange={width => {
-          if (constrainProportions) {
-            props.onChange({
-              width,
-              height: Math.round(width / getAspectRatio(props.image)),
-            });
-          } else {
-            props.onChange({ width });
-          }
-        }}
-      />
-      <TooltipTrigger>
-        <ToggleButton
-          isSelected={constrainProportions}
-          aria-label="Constrain proportions"
-          prominence="low"
-          onPress={() => {
-            setConstrainProportions(state => !state);
-          }}
-        >
-          <Icon src={constrainProportions ? link2Icon : link2OffIcon} />
-        </ToggleButton>
-        <Tooltip>Constrain proportions</Tooltip>
-      </TooltipTrigger>
-      <NumberField
-        label="Height"
-        width="scale.1600"
-        formatOptions={{ maximumFractionDigits: 0 }}
-        value={props.image.height}
-        onChange={height => {
-          if (constrainProportions) {
-            props.onChange({
-              height,
-              width: Math.round(height * getAspectRatio(props.image)),
-            });
-          } else {
-            props.onChange({ height });
-          }
-        }}
-      />
-      <TooltipTrigger>
-        <ActionButton
-          aria-label={revertLabel}
-          isDisabled={
-            dimensionsMatchOriginal || !dimensions.width || !dimensions.height
-          }
-          onPress={() => {
-            props.onChange({
-              height: dimensions.height,
-              width: dimensions.width,
-            });
-          }}
-        >
-          <Icon src={undo2Icon} />
-        </ActionButton>
-        <Tooltip maxWidth="100%">{revertLabel}</Tooltip>
-      </TooltipTrigger>
-    </HStack>
-  );
-}
 
 function ImageField(props: {
   image: CloudImageProps;
@@ -310,9 +202,4 @@ export function CloudImageFieldInput(
       />
     </Flex>
   );
-}
-
-function getAspectRatio(state: ImageDimensions) {
-  if (!state.width || !state.height) return 1;
-  return state.width / state.height;
 }
