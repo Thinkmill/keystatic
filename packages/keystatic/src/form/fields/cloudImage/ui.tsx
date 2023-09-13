@@ -47,6 +47,87 @@ function useImageDimensions(src: string) {
   return dimensions;
 }
 
+function ImageDimensionsInput(props: {
+  src: string;
+  image: ImageDimensions;
+  onChange: (image: ImageDimensions) => void;
+}) {
+  const dimensions = useImageDimensions(props.src);
+
+  const [constrainProportions, setConstrainProportions] = useState(true);
+  const revertLabel = `Revert to original (${dimensions.width} × ${dimensions.height})`;
+  const dimensionsMatchOriginal =
+    dimensions.width === props.image.width &&
+    dimensions.height === props.image.height;
+
+  return (
+    <HStack gap="regular" alignItems="end">
+      <NumberField
+        label="Width"
+        width="scale.1600"
+        formatOptions={{ maximumFractionDigits: 0 }}
+        value={props.image.width}
+        onChange={width => {
+          if (constrainProportions) {
+            props.onChange({
+              width,
+              height: Math.round(width / getAspectRatio(props.image)),
+            });
+          } else {
+            props.onChange({ width });
+          }
+        }}
+      />
+      <TooltipTrigger>
+        <ToggleButton
+          isSelected={constrainProportions}
+          aria-label="Constrain proportions"
+          prominence="low"
+          onPress={() => {
+            setConstrainProportions(state => !state);
+          }}
+        >
+          <Icon src={constrainProportions ? link2Icon : link2OffIcon} />
+        </ToggleButton>
+        <Tooltip>Constrain proportions</Tooltip>
+      </TooltipTrigger>
+      <NumberField
+        label="Height"
+        width="scale.1600"
+        formatOptions={{ maximumFractionDigits: 0 }}
+        value={props.image.height}
+        onChange={height => {
+          if (constrainProportions) {
+            props.onChange({
+              height,
+              width: Math.round(height * getAspectRatio(props.image)),
+            });
+          } else {
+            props.onChange({ height });
+          }
+        }}
+      />
+      <TooltipTrigger>
+        <ActionButton
+          aria-label={revertLabel}
+          isDisabled={
+            dimensionsMatchOriginal || !dimensions.width || !dimensions.height
+          }
+          onPress={() => {
+            props.onChange({
+              height: dimensions.height,
+              width: dimensions.width,
+            });
+          }}
+        >
+          <Icon src={undo2Icon} />
+        </ActionButton>
+        <Tooltip maxWidth="100%">{revertLabel}</Tooltip>
+      </TooltipTrigger>
+    </HStack>
+  );
+}
+
 function ImageField(props: {
   image: CloudImageProps;
   isRequired?: boolean;
@@ -57,11 +138,6 @@ function ImageField(props: {
   const { image, onChange } = props;
   const [status, setStatus] = useState<ImageStatus>(image.src ? 'good' : '');
   const imageLibraryURL = useImageLibraryURL();
-  const dimensions = useImageDimensions(image.src);
-  const [constrainProportions, setConstrainProportions] = useState(true);
-  const revertLabel = `Revert to original (${dimensions.width} × ${dimensions.height})`;
-  const dimensionsMatchOriginal =
-    dimensions.width === image.width && dimensions.height === image.height;
 
   const [lastPastedUrl, setLastPastedUrl] = useState<string | null>(null);
 
@@ -174,75 +250,13 @@ function ImageField(props: {
             value={image.alt}
             onChange={alt => props.onChange({ ...image, alt })}
           />
-          <HStack gap="regular" alignItems="end">
-            <NumberField
-              label="Width"
-              width="scale.1600"
-              formatOptions={{ maximumFractionDigits: 0 }}
-              value={image.width}
-              onChange={width => {
-                if (constrainProportions) {
-                  props.onChange({
-                    ...image,
-                    width,
-                    height: Math.round(width / getAspectRatio(image)),
-                  });
-                } else {
-                  props.onChange({ ...image, width });
-                }
-              }}
-            />
-            <TooltipTrigger>
-              <ToggleButton
-                isSelected={constrainProportions}
-                aria-label="Constrain proportions"
-                prominence="low"
-                onPress={() => {
-                  setConstrainProportions(state => !state);
-                }}
-              >
-                <Icon src={constrainProportions ? link2Icon : link2OffIcon} />
-              </ToggleButton>
-              <Tooltip>Constrain proportions</Tooltip>
-            </TooltipTrigger>
-            <NumberField
-              label="Height"
-              width="scale.1600"
-              formatOptions={{ maximumFractionDigits: 0 }}
-              value={image.height}
-              onChange={height => {
-                if (constrainProportions) {
-                  props.onChange({
-                    ...image,
-                    height,
-                    width: Math.round(height * getAspectRatio(image)),
-                  });
-                } else {
-                  props.onChange({ ...image, height });
-                }
-              }}
-            />
-            <TooltipTrigger>
-              <ActionButton
-                aria-label={revertLabel}
-                isDisabled={
-                  dimensionsMatchOriginal ||
-                  !dimensions.width ||
-                  !dimensions.height
-                }
-                onPress={() => {
-                  props.onChange({
-                    ...image,
-                    height: dimensions.height,
-                    width: dimensions.width,
-                  });
-                }}
-              >
-                <Icon src={undo2Icon} />
-              </ActionButton>
-              <Tooltip maxWidth="100%">{revertLabel}</Tooltip>
-            </TooltipTrigger>
-          </HStack>
+          <ImageDimensionsInput
+            src={image.src}
+            image={image}
+            onChange={dimensions => {
+              onChange({ ...props.image, ...dimensions });
+            }}
+          />
         </>
       ) : null}
     </VStack>
@@ -298,7 +312,7 @@ export function CloudImageFieldInput(
   );
 }
 
-function getAspectRatio(state: CloudImageProps) {
+function getAspectRatio(state: ImageDimensions) {
   if (!state.width || !state.height) return 1;
   return state.width / state.height;
 }
