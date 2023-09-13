@@ -3,7 +3,7 @@ import { ArrowRightIcon } from '../icons/arrow-right';
 import { NextJSIcon } from '../icons/nextjs-icon';
 import { AstroIcon } from '../icons/astro-icon';
 import { KeystaticIcon } from '../icons/keystatic-icon';
-import { GithubIcon } from '../icons/github-icon';
+// import { GithubIcon } from '../icons/github-icon';
 
 export default function DocsLinks() {
   return (
@@ -558,7 +558,7 @@ export default function DocsLinks() {
                     </div>
                     <div className="h-[1px] w-full  bg-slate-12"></div>
                     <div className="h-8 w-8 flex-none transition-all group-hover:mr-10">
-                      {/* TODO make github icon re-sizable */}
+                      {/* TODO make GithubIcon component re-sizable and replace below svg */}
                       <svg
                         className="h-8 w-8"
                         xmlns="http://www.w3.org/2000/svg"
