@@ -8,8 +8,8 @@ import { GithubIcon } from '../icons/github-icon';
 export default function DocsLinks() {
   return (
     <section className="relative bg-white">
-      <div className="mx-auto max-w-4xl px-6 pt-12">
-        <div className="text-center">
+      <div className="mx-auto grid max-w-5xl grid-cols-12 gap-6 px-6 pt-12">
+        <div className="col-span-8">
           <h2 className="text-3xl font-semibold">Want to learn more?</h2>
 
           <p className="mt-4 text-base sm:mt-6">
