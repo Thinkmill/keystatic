@@ -3,7 +3,7 @@ export default function CliVideo() {
     <section className="relative bg-white">
       <div className="mx-auto max-w-4xl px-6 py-12 sm:pb-12">
         <div className="text-center">
-          <h2 className="text-3xl font-semibold sm:text-4xl">
+          <h2 className="text-3xl font-semibold">
             Two-way editing, effortlessly
           </h2>
 
