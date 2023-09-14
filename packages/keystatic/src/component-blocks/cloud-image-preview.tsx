@@ -29,9 +29,16 @@ import { useId } from '@keystar/ui/utils';
 
 import { useConfig } from '../app/shell/context';
 import { focusWithPreviousSelection } from '../form/fields/document/DocumentEditor/ui-utils';
-import { getSplitCloudProject, isCloudConfig } from '../app/utils';
+import {
+  KEYSTATIC_CLOUD_API_URL,
+  KEYSTATIC_CLOUD_HEADERS,
+  getSplitCloudProject,
+  isCloudConfig,
+} from '../app/utils';
 import { NotEditable } from '../form/fields/document/DocumentEditor/primitives';
-import { PreviewProps, ObjectField } from '..';
+import { PreviewProps, ObjectField, Config } from '..';
+import { z } from 'zod';
+import { getAuth } from '../app/auth';
 
 export type CloudImageProps = {
   src: string;
@@ -85,17 +92,67 @@ function useImageDimensions(src: string) {
       setDimensions({});
       return;
     }
-    const img = new Image();
-    img.onload = () => {
-      setDimensions({ width: img.width, height: img.height });
-    };
-    img.src = src;
+    let shouldSet = true;
+    loadImageDimensions(src).then(dimensions => {
+      if (shouldSet) setDimensions(dimensions);
+    });
     return () => {
-      img.onload = null;
-      img.onerror = null;
+      shouldSet = false;
     };
   }, [src]);
   return dimensions;
+}
+
+function loadImageDimensions(url: string) {
+  return new Promise<ImageDimensions>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      resolve({ width: img.width, height: img.height });
+    };
+    img.onerror = () => {
+      reject();
+    };
+    img.src = url;
+  });
+}
+
+const imageDataSchema = z.object({
+  src: z.string(),
+  alt: z.string(),
+  width: z.number(),
+  height: z.number(),
+});
+
+export async function loadImageData(
+  url: string,
+  config: Config
+): Promise<CloudImageProps> {
+  if (config.storage.kind === 'cloud') {
+    const auth = await getAuth(config);
+    if (auth) {
+      const res = await fetch(
+        `${KEYSTATIC_CLOUD_API_URL}/v1/image?${new URLSearchParams({ url })}`,
+        {
+          headers: {
+            Authorization: `Bearer ${auth!.accessToken}`,
+            ...KEYSTATIC_CLOUD_HEADERS,
+          },
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        const parsed = imageDataSchema.safeParse(data);
+        if (parsed.success) {
+          return parsed.data;
+        }
+      }
+    }
+  }
+  return loadImageDimensions(url).then(dimensions => ({
+    src: url,
+    alt: '',
+    ...dimensions,
+  }));
 }
 
 export function ImageDimensionsInput(props: {
@@ -200,6 +257,9 @@ function ImageDialog(props: {
     const text = event.clipboardData.getData('text/plain');
     setState(parseImageData(text));
   };
+  const config = useConfig();
+
+  const hasSetFields = !!(state.alt || state.width || state.height);
 
   useEffect(() => {
     if (!state.src) {
@@ -209,21 +269,20 @@ function ImageDialog(props: {
     if (!isValidURL(state.src)) {
       return;
     }
-    setStatus('loading');
-    const img = new Image();
-    img.onload = () => {
-      const dimensions = { width: img.width, height: img.height };
-      setState(state => ({ ...state, ...dimensions }));
+    if (hasSetFields) {
       setStatus('good');
-    };
-    img.onerror = () => {
-      setStatus('error');
-    };
-    img.src = state.src;
-    return () => {
-      img.onload = null;
-    };
-  }, [state.src]);
+      return;
+    }
+    setStatus('loading');
+    loadImageData(state.src, config)
+      .then(newData => {
+        setState(state => ({ ...state, ...newData }));
+        setStatus('good');
+      })
+      .catch(() => {
+        setStatus('error');
+      });
+  }, [config, hasSetFields, state.src]);
 
   return (
     <Dialog>

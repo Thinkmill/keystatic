@@ -14,9 +14,11 @@ import {
   useImageLibraryURL,
   CloudImageProps,
   ImageDimensionsInput,
+  loadImageData,
 } from '../../../component-blocks/cloud-image-preview';
 import { isValidURL } from '../document/DocumentEditor/isValidURL';
 import { useEventCallback } from '../document/DocumentEditor/ui-utils';
+import { useConfig } from '../../../app/shell/context';
 
 type ImageStatus = '' | 'loading' | 'good' | 'error';
 
@@ -31,43 +33,46 @@ function ImageField(props: {
   const [status, setStatus] = useState<ImageStatus>(image.src ? 'good' : '');
   const imageLibraryURL = useImageLibraryURL();
 
-  const [lastPastedUrl, setLastPastedUrl] = useState<string | null>(null);
-
   const onPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
     event.preventDefault();
     const text = event.clipboardData.getData('text/plain');
     const parsed = parseImageData(text);
-    setLastPastedUrl(parsed.src);
     props.onChange(parsed);
   };
 
-  const onLoad = useEventCallback((img: HTMLImageElement) => {
-    const dimensions = { width: img.width, height: img.height };
-    onChange({ ...image, ...dimensions });
+  const onLoad = useEventCallback(data => {
+    onChange(data);
     setStatus('good');
   });
-  const urlForAutoDimensions = lastPastedUrl === image.src ? lastPastedUrl : '';
+  const config = useConfig();
+
+  const hasSetFields = !!(
+    props.image.alt ||
+    props.image.width ||
+    props.image.height
+  );
 
   useEffect(() => {
-    if (!urlForAutoDimensions) return;
-    if (!isValidURL(urlForAutoDimensions)) {
+    if (!props.image.src) {
       setStatus('');
       return;
     }
+    if (!isValidURL(props.image.src)) {
+      return;
+    }
+    if (hasSetFields) {
+      setStatus('good');
+      return;
+    }
     setStatus('loading');
-    const img = new Image();
-    img.onload = () => onLoad(img);
-    img.onerror = () => {
-      setStatus('error');
-    };
-    img.src = urlForAutoDimensions;
-    return () => {
-      img.onload = null;
-      img.onerror = null;
-      setStatus('');
-    };
-  }, [urlForAutoDimensions, onLoad]);
-
+    loadImageData(props.image.src, config)
+      .then(newData => {
+        onLoad(newData);
+      })
+      .catch(() => {
+        setStatus('error');
+      });
+  }, [config, hasSetFields, onLoad, props.image.src]);
   const [blurred, setBlurred] = useState(false);
 
   const errorMessage =
