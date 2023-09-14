@@ -1,17 +1,11 @@
 import { useEffect, useId, useState } from 'react';
 
-import { ActionButton, ClearButton, ToggleButton } from '@keystar/ui/button';
+import { ClearButton } from '@keystar/ui/button';
 import { ObjectField, PreviewProps } from '@keystatic/core';
-import { Icon } from '@keystar/ui/icon';
-import { link2Icon } from '@keystar/ui/icon/icons/link2Icon';
-import { link2OffIcon } from '@keystar/ui/icon/icons/link2OffIcon';
-import { undo2Icon } from '@keystar/ui/icon/icons/undo2Icon';
-import { Box, Flex, HStack, VStack } from '@keystar/ui/layout';
+import { Box, Flex, VStack } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
-import { NumberField } from '@keystar/ui/number-field';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { TextArea, TextField } from '@keystar/ui/text-field';
-import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text } from '@keystar/ui/typography';
 import { cloudImageSchema } from '../../../component-blocks/cloud-image-schema';
 import {
@@ -19,33 +13,14 @@ import {
   parseImageData,
   useImageLibraryURL,
   CloudImageProps,
+  ImageDimensionsInput,
+  loadImageData,
 } from '../../../component-blocks/cloud-image-preview';
 import { isValidURL } from '../document/DocumentEditor/isValidURL';
 import { useEventCallback } from '../document/DocumentEditor/ui-utils';
-
-type ImageDimensions = Pick<CloudImageProps, 'width' | 'height'>;
+import { useConfig } from '../../../app/shell/context';
 
 type ImageStatus = '' | 'loading' | 'good' | 'error';
-
-function useImageDimensions(src: string) {
-  const [dimensions, setDimensions] = useState<ImageDimensions>({});
-  useEffect(() => {
-    if (!src || !isValidURL(src)) {
-      setDimensions({});
-      return;
-    }
-    const img = new Image();
-    img.onload = () => {
-      setDimensions({ width: img.width, height: img.height });
-    };
-    img.src = src;
-    return () => {
-      img.onload = null;
-      img.onerror = null;
-    };
-  }, [src]);
-  return dimensions;
-}
 
 function ImageField(props: {
   image: CloudImageProps;
@@ -57,49 +32,47 @@ function ImageField(props: {
   const { image, onChange } = props;
   const [status, setStatus] = useState<ImageStatus>(image.src ? 'good' : '');
   const imageLibraryURL = useImageLibraryURL();
-  const dimensions = useImageDimensions(image.src);
-  const [constrainProportions, setConstrainProportions] = useState(true);
-  const revertLabel = `Revert to original (${dimensions.width} × ${dimensions.height})`;
-  const dimensionsMatchOriginal =
-    dimensions.width === image.width && dimensions.height === image.height;
-
-  const [lastPastedUrl, setLastPastedUrl] = useState<string | null>(null);
 
   const onPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
     event.preventDefault();
     const text = event.clipboardData.getData('text/plain');
     const parsed = parseImageData(text);
-    setLastPastedUrl(parsed.src);
     props.onChange(parsed);
   };
 
-  const onLoad = useEventCallback((img: HTMLImageElement) => {
-    const dimensions = { width: img.width, height: img.height };
-    onChange({ ...image, ...dimensions });
+  const onLoad = useEventCallback(data => {
+    onChange(data);
     setStatus('good');
   });
-  const urlForAutoDimensions = lastPastedUrl === image.src ? lastPastedUrl : '';
+  const config = useConfig();
+
+  const hasSetFields = !!(
+    props.image.alt ||
+    props.image.width ||
+    props.image.height
+  );
 
   useEffect(() => {
-    if (!urlForAutoDimensions) return;
-    if (!isValidURL(urlForAutoDimensions)) {
+    if (!props.image.src) {
       setStatus('');
       return;
     }
+    if (!isValidURL(props.image.src)) {
+      return;
+    }
+    if (hasSetFields) {
+      setStatus('good');
+      return;
+    }
     setStatus('loading');
-    const img = new Image();
-    img.onload = () => onLoad(img);
-    img.onerror = () => {
-      setStatus('error');
-    };
-    img.src = urlForAutoDimensions;
-    return () => {
-      img.onload = null;
-      img.onerror = null;
-      setStatus('');
-    };
-  }, [urlForAutoDimensions, onLoad]);
-
+    loadImageData(props.image.src, config)
+      .then(newData => {
+        onLoad(newData);
+      })
+      .catch(() => {
+        setStatus('error');
+      });
+  }, [config, hasSetFields, onLoad, props.image.src]);
   const [blurred, setBlurred] = useState(false);
 
   const errorMessage =
@@ -174,75 +147,13 @@ function ImageField(props: {
             value={image.alt}
             onChange={alt => props.onChange({ ...image, alt })}
           />
-          <HStack gap="regular" alignItems="end">
-            <NumberField
-              label="Width"
-              width="scale.1600"
-              formatOptions={{ maximumFractionDigits: 0 }}
-              value={image.width}
-              onChange={width => {
-                if (constrainProportions) {
-                  props.onChange({
-                    ...image,
-                    width,
-                    height: Math.round(width / getAspectRatio(image)),
-                  });
-                } else {
-                  props.onChange({ ...image, width });
-                }
-              }}
-            />
-            <TooltipTrigger>
-              <ToggleButton
-                isSelected={constrainProportions}
-                aria-label="Constrain proportions"
-                prominence="low"
-                onPress={() => {
-                  setConstrainProportions(state => !state);
-                }}
-              >
-                <Icon src={constrainProportions ? link2Icon : link2OffIcon} />
-              </ToggleButton>
-              <Tooltip>Constrain proportions</Tooltip>
-            </TooltipTrigger>
-            <NumberField
-              label="Height"
-              width="scale.1600"
-              formatOptions={{ maximumFractionDigits: 0 }}
-              value={image.height}
-              onChange={height => {
-                if (constrainProportions) {
-                  props.onChange({
-                    ...image,
-                    height,
-                    width: Math.round(height * getAspectRatio(image)),
-                  });
-                } else {
-                  props.onChange({ ...image, height });
-                }
-              }}
-            />
-            <TooltipTrigger>
-              <ActionButton
-                aria-label={revertLabel}
-                isDisabled={
-                  dimensionsMatchOriginal ||
-                  !dimensions.width ||
-                  !dimensions.height
-                }
-                onPress={() => {
-                  props.onChange({
-                    ...image,
-                    height: dimensions.height,
-                    width: dimensions.width,
-                  });
-                }}
-              >
-                <Icon src={undo2Icon} />
-              </ActionButton>
-              <Tooltip maxWidth="100%">{revertLabel}</Tooltip>
-            </TooltipTrigger>
-          </HStack>
+          <ImageDimensionsInput
+            src={image.src}
+            image={image}
+            onChange={dimensions => {
+              onChange({ ...props.image, ...dimensions });
+            }}
+          />
         </>
       ) : null}
     </VStack>
@@ -296,9 +207,4 @@ export function CloudImageFieldInput(
       />
     </Flex>
   );
-}
-
-function getAspectRatio(state: CloudImageProps) {
-  if (!state.width || !state.height) return 1;
-  return state.width / state.height;
 }
