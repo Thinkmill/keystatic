@@ -11,7 +11,7 @@ export default function DocsLinks() {
       <div className="mx-auto grid max-w-5xl grid-cols-12 gap-6 px-6 pt-12">
         <div className="col-span-8">
           <h2 className="text-2xl font-medium">Want to learn more?</h2>
-          <p className="mt-4 text-base text-sand-11">
+          <p className="mt-4 text-base">
             Those sections from the{' '}
             <Link href="/docs" className="underline">
               Keystatic docs
