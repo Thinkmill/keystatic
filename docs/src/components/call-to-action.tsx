@@ -15,11 +15,79 @@ export default function CallToAction() {
   };
 
   return (
-    <section className="relative">
-      <div className="mx-auto grid grid-cols-6 gap-6 px-6 py-12 md:pl-3">
-        <div className="col-span-5 md:col-start-2">
-          <h2 className="text-3xl font-semibold">Tell us what you think</h2>
-          <p className="mt-4 text-base">
+    <section className="relative grid overflow-hidden bg-sand-2">
+      {/* Background svg */}
+      <svg
+        className="absolute left-0 top-0 z-0 min-h-full"
+        width="756"
+        height="637"
+        viewBox="0 0 756 637"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g clipPath="url(#clip0_1434_10414)">
+          <path
+            d="M-80 -360L997 717"
+            stroke="url(#paint0_linear_1434_10414)"
+            strokeWidth="226"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M-91.9999 -54.0001L181 219L499 219L997 717"
+            stroke="url(#paint1_linear_1434_10414)"
+            strokeWidth="226"
+          />
+          <path
+            opacity="0.4"
+            d="M-80 -360L997 717.001"
+            stroke="url(#paint2_linear_1434_10414)"
+            strokeWidth="224"
+            strokeLinejoin="round"
+          />
+        </g>
+        <defs>
+          <linearGradient
+            id="paint0_linear_1434_10414"
+            x1="-1.04043e+11"
+            y1="1.04043e+11"
+            x2="-1.04043e+11"
+            y2="1.04043e+11"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#E7F9FB" />
+            <stop offset="1" stopColor="#FEEEF8" />
+          </linearGradient>
+          <linearGradient
+            id="paint1_linear_1434_10414"
+            x1="167.812"
+            y1="205.973"
+            x2="636.388"
+            y2="674.549"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#FFFBD1" />
+            <stop offset="1" stopColor="#F5F2FF" />
+          </linearGradient>
+          <linearGradient
+            id="paint2_linear_1434_10414"
+            x1="189.917"
+            y1="-89.7194"
+            x2="538.438"
+            y2="258.801"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#E7F9FB" />
+            <stop offset="1" stopColor="#FEEEF8" />
+          </linearGradient>
+          <clipPath id="clip0_1434_10414">
+            <rect width="756" height="637" fill="white" />
+          </clipPath>
+        </defs>
+      </svg>
+      <div className="relative w-full max-w-lg px-6 py-16 md:pl-0">
+        <div className="px-16">
+          <h4 className="text-xl font-medium">Tell us what you think</h4>
+          <p className="mt-4 text-sm text-sand-11">
             We're building Keystatic in the open as part of{' '}
             <a
               href="https://www.thinkmill.com.au/"

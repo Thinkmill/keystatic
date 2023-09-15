@@ -15,7 +15,7 @@ export default function MailingListForm() {
     });
   }
   return (
-    <form className="mx-auto" onSubmit={handleSubmit}>
+    <form className="mx-auto mt-4" onSubmit={handleSubmit}>
       <input type="hidden" name="form-type" value="mailing-list" />
       <div>
         <label
