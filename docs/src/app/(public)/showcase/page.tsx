@@ -32,8 +32,10 @@ export default async function Showcase() {
   return (
     <div className="mb-20 mt-16 pt-24">
       <div className="mx-auto max-w-2xl text-center">
-        <h1 className="text-5xl font-extrabold">Built with Keystatic</h1>
-        <div className="mt-4 space-y-4 text-lg font-medium md:mt-6">
+        <h1 className="text-4xl font-medium md:text-5xl">
+          Built with Keystatic
+        </h1>
+        <div className="mt-6 space-y-4 text-lg">
           <p>
             A collection of projects using Keystatic to manage parts of their
             codebase.
@@ -70,18 +72,18 @@ export default async function Showcase() {
 
 function ProjectCard({ entry, slug }: Project) {
   return (
-    <li className="relative flex flex-col overflow-hidden rounded-2xl border border-slate-3 bg-slate-3 p-8 @container">
+    <li className="relative flex flex-col overflow-hidden rounded-lg border border-sand-6 bg-sand-2 p-8 @container">
       <div className="flex-1">
         <div className="flex items-start justify-between gap-x-4">
-          <h2 className="text-xl font-bold group-hover:underline @sm:text-2xl">
+          <h2 className="text-xl font-medium group-hover:underline @sm:text-2xl">
             <Link href={`/showcase/${slug}`} className="hover:underline">
               {entry.title}
             </Link>
           </h2>
           {entry.type === 'demo' && <DemoBadge />}
         </div>
-        <p className="mt-6 text-sm text-slate-11">{entry.summary}</p>
-        <div className="mt-6 flex flex-wrap items-center gap-2">
+        <p className="mt-4">{entry.summary}</p>
+        <div className="mt-8 flex flex-wrap items-center gap-2">
           {/* TODO: New button styles */}
           <ActionButton href={entry.url ?? ''} icon={GlobeIcon}>
             Visit
@@ -100,14 +102,14 @@ function ProjectCard({ entry, slug }: Project) {
 
       <div className="relative aspect-[16/10] translate-x-12 translate-y-8 @sm:translate-y-20">
         {/* Image stack effect on large cards */}
-        <div className="absolute -right-8 -top-5 hidden h-full w-full rounded-xl border border-slate-3 bg-white @sm:block" />
-        <div className="absolute -right-4 -top-2.5 hidden h-full w-full rounded-xl border border-slate-3 bg-white @sm:block" />
+        <div className="absolute -right-8 -top-5 hidden h-full w-full rounded-xl border border-sand-6 bg-white @sm:block" />
+        <div className="absolute -right-4 -top-2.5 hidden h-full w-full rounded-xl border border-sand-6 bg-white @sm:block" />
 
         <Image
           src={entry.coverImage.src}
           layout="fill"
           alt=""
-          className="absolute inset-0 w-full rounded-tl-xl object-cover @sm:border-l @sm:border-t @sm:border-slate-3"
+          className="absolute inset-0 w-full rounded-tl-xl object-cover @sm:border-l @sm:border-t @sm:border-sand-6"
         />
       </div>
     </li>
