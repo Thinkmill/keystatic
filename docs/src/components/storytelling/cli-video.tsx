@@ -3,12 +3,12 @@ export default function CliVideo() {
     <section className="relative bg-white">
       <div className="mx-auto grid max-w-5xl grid-cols-12 gap-6 px-6 py-12 sm:pb-12">
         <div className="col-start-1 col-end-5 py-8">
-          <h2 className="text-3xl font-semibold">
-            Two-way editing, effortlessly
+          <h2 className="text-2xl font-medium">
+            Two-way editing, effortlessly with the Keystatic CLI
           </h2>
-          <p className="mt-4 text-base sm:mt-6">
+          <p className="mt-4 text-base">
             Create a new Next.js or Astro project in seconds with the Keystatic
-            CLI:
+            CLI
           </p>
         </div>
         <div className="col-span-7 col-start-6">

@@ -89,7 +89,7 @@ export default function Hero() {
       <div className="relative mx-auto flex max-w-7xl flex-col items-center gap-12 px-6 pt-10  md:gap-16 md:pb-10 lg:py-16">
         <div className="flex w-full max-w-2xl flex-col items-center text-center">
           <h1
-            className="text-5xl font-semibold sm:text-4xl md:text-5xl"
+            className="text-5xl font-medium sm:text-4xl md:text-5xl"
             id={H1_ID}
             aria-label="Content management for your code base"
           >
@@ -98,7 +98,7 @@ export default function Hero() {
             for your Codebase
           </h1>
 
-          <p className="pt-6 text-lg font-normal">
+          <p className="pt-6 text-lg">
             A new tool that makes Markdown, JSON and YAML content in your
             codebase editable by humans. Live edit content on GitHub or your
             local file system, without disrupting your existing code and
@@ -153,14 +153,14 @@ export default function Hero() {
             alt="Content edited in a markdoc file, in a code editor"
             width={784}
             height={549}
-            className="absolute -right-[40%] -top-[5%] w-[110vw] max-w-none md:-left-[5%] md:top-0 md:w-2/3 md:max-w-full"
+            className="absolute -right-[40%] -top-[5%] w-[110vw] max-w-none md:-left-[5%] md:-top-[2.5rem] md:w-2/3 md:max-w-full"
           />
           <img
             src="https://keystatic.io/images/keystatic-docs/hero-editor-current.png"
             alt="Content edited in a WYSIWIG editor in Keystatic Admin UI"
             width={784}
             height={549}
-            className="absolute -bottom-[5%] -right-[25%] w-[110vw] max-w-none md:-right-[5%] md:-top-[2.5rem] md:w-2/3 md:max-w-full"
+            className="absolute -bottom-[5%] -right-[25%] w-[110vw] max-w-none md:-right-[5%] md:top-0 md:w-2/3 md:max-w-full"
           />
         </div>
       </div>
