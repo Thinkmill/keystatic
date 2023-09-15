@@ -10,18 +10,16 @@ export default function DocsLinks() {
     <section className="relative bg-white">
       <div className="mx-auto grid max-w-5xl grid-cols-12 gap-6 px-6 pt-12">
         <div className="col-span-8">
-          <h2 className="text-3xl font-semibold">Want to learn more?</h2>
-
-          <p className="mt-4 text-base sm:mt-6">
+          <h2 className="text-2xl font-medium">Want to learn more?</h2>
+          <p className="mt-4 text-base text-sand-11">
             Those sections from the{' '}
             <Link href="/docs" className="underline">
               Keystatic docs
             </Link>{' '}
-            are good places to start digging:
+            are good places to start digging.
           </p>
         </div>
       </div>
-
       <div className="mx-auto max-w-5xl overflow-y-auto px-6 pb-12 pt-8 md:pt-12 lg:overflow-visible xl:pb-24">
         <ul
           className="grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3"
@@ -32,24 +30,24 @@ export default function DocsLinks() {
           {/* -------------- */}
           <li key="Getting started" className="group relative">
             <div className="grid h-full grid-rows-1 overflow-hidden rounded-lg border border-sand-6 bg-sand-1 group-hover:border-sand-7">
-              <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 py-6">
-                <h3 className="text-lg font-semibold">Getting started</h3>
-                <p className="mt-4 text-sm">
+              <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 pb-3 pt-6">
+                <h3 className="text-xl font-medium">Getting started</h3>
+                <p className="mt-4 text-base">
                   Read about the various options to get started with Keystatic
                 </p>
-                <a
-                  href="/docs/introduction"
-                  className="mt-8 flex items-center gap-1 text-sm font-semibold"
+                <Link
+                  href={`/docs/introduction`}
+                  className="invisible mb-0 mt-5 inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12 group-hover:visible group-hover:mb-3 group-hover:mt-8"
+                  aria-hidden
                 >
-                  Read more <ArrowRightIcon />
-                </a>
+                  Read more
+                  <ArrowRightIcon />
+                </Link>
               </div>
-              <div className="relative h-44 overflow-hidden bg-sand-2 p-8">
+              <div className="relative h-[12.5rem] overflow-hidden bg-sand-2 p-8 transition-all duration-150 group-hover:h-44">
                 {/* Background svg */}
                 <svg
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                  width="324"
-                  height="184"
+                  className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2  -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
                   viewBox="0 0 324 184"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -178,29 +176,30 @@ export default function DocsLinks() {
                 </div>
               </div>
             </div>
-            {/* <Link href={item.href} className="absolute inset-0" /> */}
           </li>
           {/* -------------- */}
           {/* --- Item 2 --- */}
           {/* -------------- */}
           <li key="Framework guides" className="group relative">
             <div className="grid h-full grid-rows-1 overflow-hidden rounded-lg border border-sand-6 bg-sand-1 group-hover:border-sand-7">
-              <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 py-6">
-                <h3 className="text-lg font-semibold">Framework guides</h3>
-                <p className="mt-4 text-sm">
+              <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 pb-3 pt-6">
+                <h3 className="text-xl font-medium">Framework guides</h3>
+                <p className="mt-4 text-base">
                   Add Keystatic to an existing Astro or Next.js project
                 </p>
-                <a
-                  href="/docs/installation-astro"
-                  className="mt-8 flex items-center gap-1 text-sm font-semibold"
+                <Link
+                  href={`/docs/installation-astro`}
+                  className="invisible mb-0 mt-5 inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12 group-hover:visible group-hover:mb-3 group-hover:mt-8"
+                  aria-hidden
                 >
-                  Read more <ArrowRightIcon />
-                </a>
+                  Read more
+                  <ArrowRightIcon />
+                </Link>
               </div>
-              <div className="relative h-44 overflow-hidden bg-sand-2 px-8 py-2">
+              <div className="relative h-[12.5rem] overflow-hidden bg-sand-2 px-8 py-2 transition-all duration-150 group-hover:h-44">
                 {/* Background svg */}
                 <svg
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                  className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2  -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
                   width="324"
                   height="184"
                   viewBox="0 0 324 184"
@@ -414,29 +413,30 @@ export default function DocsLinks() {
                 </div>
               </div>
             </div>
-            {/* <Link href={item.href} className="absolute inset-0" /> */}
           </li>
           {/* -------------- */}
           {/* --- Item 3 --- */}
           {/* -------------- */}
           <li key="Connect to GitHub" className="group relative">
             <div className="grid h-full grid-rows-1 overflow-hidden rounded-lg border border-sand-6 bg-sand-1 group-hover:border-sand-7">
-              <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 py-6">
-                <h3 className="text-lg font-semibold">Connect to GitHub</h3>
-                <p className="mt-4 text-sm">
+              <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 pb-3 pt-6">
+                <h3 className="text-xl font-medium">Connect to GitHub</h3>
+                <p className="mt-4 text-base">
                   Learn more about connecting Keystatic to GitHub
                 </p>
-                <a
-                  href="docs/connect-to-github"
-                  className="mt-8 flex items-center gap-1 text-sm font-semibold"
+                <Link
+                  href={`docs/connect-to-github`}
+                  className="invisible mb-0 mt-5 inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12 group-hover:visible group-hover:mb-3 group-hover:mt-8"
+                  aria-hidden
                 >
-                  Read more <ArrowRightIcon />
-                </a>
+                  Read more
+                  <ArrowRightIcon />
+                </Link>
               </div>
-              <div className="relative h-44 overflow-hidden bg-sand-2 px-8">
+              <div className="relative h-[12.5rem] overflow-hidden bg-sand-2 px-8 transition-all duration-150 group-hover:h-44">
                 {/* Background svg */}
                 <svg
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                  className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2  -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
                   width="324"
                   height="184"
                   viewBox="0 0 324 184"
@@ -575,30 +575,31 @@ export default function DocsLinks() {
                 </div>
               </div>
             </div>
-            {/* <Link href={item.href} className="absolute inset-0" /> */}
           </li>
           {/* -------------- */}
           {/* --- Item 4 --- */}
           {/* -------------- */}
           <li key="Organised content" className="group relative">
             <div className="grid h-full grid-rows-1 overflow-hidden rounded-lg border border-sand-6 bg-sand-1 group-hover:border-sand-7">
-              <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 py-6">
-                <h3 className="text-lg font-semibold">Organised content</h3>
-                <p className="mt-4 text-sm">
+              <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 pb-3 pt-6">
+                <h3 className="text-xl font-medium">Organised content</h3>
+                <p className="mt-4 text-base">
                   Teach Keystatic how to find and organise the content in your
                   codebase
                 </p>
-                <a
-                  href="/docs/how-keystatic-organises-your-content"
-                  className="mt-8 flex items-center gap-1 text-sm font-semibold"
+                <Link
+                  href={`/docs/how-keystatic-organises-your-content`}
+                  className="invisible mb-0 mt-5 inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12 group-hover:visible group-hover:mb-3 group-hover:mt-8"
+                  aria-hidden
                 >
-                  Read more <ArrowRightIcon />
-                </a>
+                  Read more
+                  <ArrowRightIcon />
+                </Link>
               </div>
-              <div className="relative h-44 overflow-hidden bg-sand-2 px-8">
+              <div className="relative h-[12.5rem] overflow-hidden bg-sand-2 px-8 transition-all duration-150 group-hover:h-44">
                 {/* Background svg */}
                 <svg
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                  className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2  -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
                   width="324"
                   height="184"
                   viewBox="0 0 324 184"
@@ -696,29 +697,30 @@ export default function DocsLinks() {
                 </div>
               </div>
             </div>
-            {/* <Link href={item.href} className="absolute inset-0" /> */}
           </li>
           {/* -------------- */}
           {/* --- Item 5 --- */}
           {/* -------------- */}
           <li key="Content structures" className="group relative">
             <div className="grid h-full grid-rows-1 overflow-hidden rounded-lg border border-sand-6 bg-sand-1 group-hover:border-sand-7">
-              <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 py-6">
-                <h3 className="text-lg font-semibold">Content structures</h3>
-                <p className="mt-4 text-sm">
+              <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 pb-3 pt-6">
+                <h3 className="text-xl font-medium">Content structures</h3>
+                <p className="mt-4 text-base">
                   Setup Collections and Singletons to edit your content
                 </p>
-                <a
-                  href="/docs/collections"
-                  className="mt-8 flex items-center gap-1 text-sm font-semibold"
+                <Link
+                  href={`/docs/collections`}
+                  className="invisible mb-0 mt-5 inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12 group-hover:visible group-hover:mb-3 group-hover:mt-8"
+                  aria-hidden
                 >
-                  Read more <ArrowRightIcon />
-                </a>
+                  Read more
+                  <ArrowRightIcon />
+                </Link>
               </div>
-              <div className="relative flex h-44 items-center overflow-hidden bg-sand-2 px-8 py-2">
+              <div className="relative flex h-[12.5rem] items-center overflow-hidden bg-sand-2 px-8 py-2 transition-all duration-150 group-hover:h-44">
                 {/* Background svg */}
                 <svg
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                  className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2  -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
                   width="324"
                   height="184"
                   viewBox="0 0 324 184"
@@ -864,29 +866,30 @@ export default function DocsLinks() {
                 </div>
               </div>
             </div>
-            {/* <Link href={item.href} className="absolute inset-0" /> */}
           </li>
           {/* -------------- */}
           {/* --- Item 6 --- */}
           {/* -------------- */}
           <li key="Reader API" className="group relative">
             <div className="grid h-full grid-rows-1 overflow-hidden rounded-lg border border-sand-6 bg-sand-1 group-hover:border-sand-7">
-              <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 py-6">
-                <h3 className="text-lg font-semibold">Reader API</h3>
-                <p className="mt-4 text-sm">
+              <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 pb-3 pt-6">
+                <h3 className="text-xl font-medium">Reader API</h3>
+                <p className="mt-4 text-base">
                   Retrieve data from your project directory with the Reader API
                 </p>
-                <a
-                  href="docs/reader-api"
-                  className="mt-8 flex items-center gap-1 text-sm font-semibold"
+                <Link
+                  href={`docs/reader-api`}
+                  className="invisible mb-0 mt-5 inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12 group-hover:visible group-hover:mb-3 group-hover:mt-8"
+                  aria-hidden
                 >
-                  Read more <ArrowRightIcon />
-                </a>
+                  Read more
+                  <ArrowRightIcon />
+                </Link>
               </div>
-              <div className="relative flex h-44 items-center overflow-hidden bg-sand-2 px-8 py-2">
+              <div className="relative flex h-[12.5rem] items-center overflow-hidden bg-sand-2 px-8 py-2 transition-all duration-150 group-hover:h-44">
                 {/* Background svg */}
                 <svg
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                  className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2  -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
                   width="324"
                   height="184"
                   viewBox="0 0 324 184"
@@ -999,7 +1002,6 @@ export default function DocsLinks() {
                 </div>
               </div>
             </div>
-            {/* <Link href={item.href} className="absolute inset-0" /> */}
           </li>
         </ul>
       </div>
