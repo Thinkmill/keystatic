@@ -60,7 +60,8 @@ export function HeaderNav({
             >
               Docs
             </Link>
-            <Link
+            {/* CHECK: Remove Blog link completely? */}
+            {/* <Link
               className={cx(
                 linkStylesShared,
                 pathname?.startsWith('/blog')
@@ -70,7 +71,7 @@ export function HeaderNav({
               href="/blog"
             >
               Blog
-            </Link>
+            </Link> */}
             <Link
               className={cx(
                 linkStylesShared,

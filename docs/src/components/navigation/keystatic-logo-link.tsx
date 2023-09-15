@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export function KeystaticLogoLink() {
   return (
-    <Link href="/" aria-label="Keystatic" className="py-3">
+    <Link href="/" aria-label="Keystatic" className="py-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
