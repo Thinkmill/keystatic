@@ -4,13 +4,13 @@ export function CheckCircleIcon({
   ariaHidden?: boolean;
 }) {
   return (
-    // TODO: Create color prop for fill and stroke to be able to assign token colors on consumption.
+    // TODO: Create size and color prop for fill and stroke to be able to assign token colors on consumption.
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.5"
-      className="h-6 w-6"
+      className="h-6 w-6 shrink-0"
       viewBox="0 0 24 24"
       aria-hidden={ariaHidden}
     >
