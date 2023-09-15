@@ -30,11 +30,11 @@ export function HeaderNav({
   const isDocsNav = pathname?.startsWith('/docs') && !ignoreDocNavStyles;
 
   const linkStylesShared =
-    'shrink-0 px-4 rounded-md transition-colors h-10 flex items-center relative';
+    'shrink-0 px-4 rounded-md transition-colors h-10 flex items-center relative font-medium';
 
-  const linkStylesIdle = 'hover:bg-slate-3 active:bg-slate-4 font-medium';
+  const linkStylesIdle = 'hover:bg-slate-3 active:bg-slate-4';
 
-  const linkStylesCurrent = 'bg-slate-4 hover:bg-slate-4 font-bold';
+  const linkStylesCurrent = 'bg-slate-4 hover:bg-slate-4';
 
   return (
     <header
@@ -48,20 +48,21 @@ export function HeaderNav({
         <nav className="flex flex-row items-center justify-between gap-6 px-6 py-6 lg:h-24">
           <KeystaticLogoLink />
 
-          <div className="hidden items-center gap-2 lg:flex">
-            <Link
-              className={cx(
-                linkStylesShared,
-                pathname?.startsWith('/docs')
-                  ? linkStylesCurrent
-                  : linkStylesIdle
-              )}
-              href="/docs"
-            >
-              Docs
-            </Link>
-            {/* CHECK: Remove Blog link completely? */}
-            {/* <Link
+          <div className="hidden items-center gap-8 md:flex">
+            <div className="flex gap-4">
+              <Link
+                className={cx(
+                  linkStylesShared,
+                  pathname?.startsWith('/docs')
+                    ? linkStylesCurrent
+                    : linkStylesIdle
+                )}
+                href="/docs"
+              >
+                Docs
+              </Link>
+              {/* CHECK: Remove Blog link completely? And remove the page from the codebase?*/}
+              {/* <Link
               className={cx(
                 linkStylesShared,
                 pathname?.startsWith('/blog')
@@ -72,17 +73,18 @@ export function HeaderNav({
             >
               Blog
             </Link> */}
-            <Link
-              className={cx(
-                linkStylesShared,
-                pathname?.startsWith('/showcase')
-                  ? linkStylesCurrent
-                  : linkStylesIdle
-              )}
-              href="/showcase"
-            >
-              Showcase
-            </Link>
+              <Link
+                className={cx(
+                  linkStylesShared,
+                  pathname?.startsWith('/showcase')
+                    ? linkStylesCurrent
+                    : linkStylesIdle
+                )}
+                href="/showcase"
+              >
+                Showcase
+              </Link>
+            </div>
             <SocialLinks />
           </div>
 

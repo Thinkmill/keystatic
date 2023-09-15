@@ -59,7 +59,7 @@ export function MobileNav({ navigationMap }: NavProps) {
       <Button
         onClick={openNav}
         impact="light"
-        className="px-3 pb-2 pt-2 lg:hidden"
+        className="px-3 pb-2 pt-2 md:hidden"
         aria-label="Open menu"
         aria-expanded={navOpen}
         aria-haspopup="true"
