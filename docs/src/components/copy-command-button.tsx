@@ -26,7 +26,7 @@ export function CopyCommandButton() {
       onClick={handleCopyCommand}
       aria-label="Copy npm command for creating a Keystatic project"
     >
-      <div className="flex items-center gap-4 font-mono text-sm leading-none">
+      <div className="flex items-center gap-4 font-mono text-sm font-normal leading-none">
         {copyCommandText}
 
         {isCopied ? (
