@@ -292,6 +292,7 @@ export type ComponentBlock<
       chromeless?: false;
       toolbar?: (props: {
         props: Record<string, any>;
+        onShowEditMode(): void;
         onRemove(): void;
         isValid: boolean;
       }) => ReactElement;

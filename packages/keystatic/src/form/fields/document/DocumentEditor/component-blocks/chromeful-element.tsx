@@ -8,11 +8,12 @@ import {
   forwardRef,
   Ref,
   useId,
+  useCallback,
 } from 'react';
 import { RenderElementProps, useSelected } from 'slate-react';
 
 import { ActionButton, Button, ButtonGroup } from '@keystar/ui/button';
-import { Dialog, DialogTrigger } from '@keystar/ui/dialog';
+import { Dialog, DialogContainer } from '@keystar/ui/dialog';
 import { FieldMessage } from '@keystar/ui/field';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { Icon } from '@keystar/ui/icon';
@@ -20,7 +21,7 @@ import { Flex } from '@keystar/ui/layout';
 import { Content } from '@keystar/ui/slots';
 import { css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
-import { Text } from '@keystar/ui/typography';
+import { Heading, Text } from '@keystar/ui/typography';
 
 import l10nMessages from '../../../../../app/l10n/index.json';
 import {
@@ -67,6 +68,14 @@ export function ChromefulComponentBlockElement(props: {
     [props.componentBlock, props.elementProps]
   );
 
+  const [editMode, setEditMode] = useState(false);
+  const onCloseEditMode = useCallback(() => {
+    setEditMode(false);
+  }, []);
+  const onShowEditMode = useCallback(() => {
+    setEditMode(true);
+  }, []);
+
   const ChromefulToolbar =
     props.componentBlock.toolbar ?? DefaultToolbarWithChrome;
   return (
@@ -88,7 +97,24 @@ export function ChromefulComponentBlockElement(props: {
             isValid={isValid}
             onRemove={props.onRemove}
             props={props.previewProps}
+            onShowEditMode={onShowEditMode}
           />
+          <DialogContainer onDismiss={() => onCloseEditMode()}>
+            {(() => {
+              if (!editMode) {
+                return;
+              }
+              return (
+                <Dialog>
+                  <Heading>Edit {props.componentBlock.label}</Heading>
+                  <FormValue
+                    props={props.previewProps}
+                    onClose={onCloseEditMode}
+                  />
+                </Dialog>
+              );
+            })()}
+          </DialogContainer>
         </Fragment>
       </Flex>
     </BlockPrimitive>
@@ -140,10 +166,11 @@ const BlockPrimitive = forwardRef(function BlockPrimitive(
 });
 
 function DefaultToolbarWithChrome({
-  props,
+  onShowEditMode,
   onRemove,
   isValid,
 }: {
+  onShowEditMode(): void;
   onRemove(): void;
   props: any;
   isValid: boolean;
@@ -153,14 +180,9 @@ function DefaultToolbarWithChrome({
     <NotEditable>
       <Flex direction="column" gap="medium">
         <Flex alignItems="center" gap="regular" style={{ userSelect: 'none' }}>
-          <DialogTrigger>
-            <ActionButton>{stringFormatter.format('edit')}</ActionButton>
-            {close => (
-              <Dialog onDismiss={close}>
-                <FormValue props={props} onClose={close} />
-              </Dialog>
-            )}
-          </DialogTrigger>
+          <ActionButton onPress={() => onShowEditMode()}>
+            {stringFormatter.format('edit')}
+          </ActionButton>
           <TooltipTrigger>
             <ActionButton prominence="low" onPress={onRemove}>
               <Icon src={trash2Icon} />
@@ -188,8 +210,7 @@ function FormValue({
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const formId = useId();
   const [forceValidation, setForceValidation] = useState(false);
-  const val: unknown[] = previewPropsToValue(props as any);
-  const [state, setState] = useState(val);
+  const [state, setState] = useState(previewPropsToValue(props as any));
   const previewProps = useMemo(
     () => createGetPreviewProps(props.schema, setState, () => undefined),
     [props.schema]
