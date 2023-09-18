@@ -8,36 +8,33 @@ import { KeystaticIcon } from '../icons/keystatic-icon';
 export default function DocsLinks() {
   return (
     <section className="relative bg-white">
-      <div className="mx-auto grid max-w-5xl grid-cols-12 gap-6 px-6 pt-12">
-        <div className="col-span-8">
-          <h2 className="text-2xl font-medium">Want to learn more?</h2>
-          <p className="mt-4 text-base">
-            Those sections from the{' '}
-            <Link href="/docs" className="underline">
-              Keystatic docs
-            </Link>{' '}
-            are good places to start digging.
-          </p>
+      <div className="mx-auto flex max-w-5xl flex-col gap-10 px-6 pb-24 pt-12">
+        <div className="grid grid-cols-8 gap-6 md:grid-cols-12">
+          <div className="col-span-8 text-center sm:col-span-6 sm:col-start-2 md:col-span-8 md:text-left">
+            <h2 className="mb-4 text-2xl font-medium">Want to learn more?</h2>
+            <p>
+              Those sections from the{' '}
+              <Link href="/docs" className="underline">
+                Keystatic docs
+              </Link>{' '}
+              are good places to start digging.
+            </p>
+          </div>
         </div>
-      </div>
-      <div className="mx-auto max-w-5xl overflow-y-auto px-6 pb-12 pt-8 md:pt-12 lg:overflow-visible xl:pb-24">
-        <ul
-          className="grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3"
-          role="list"
-        >
+        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list">
           {/* -------------- */}
           {/* --- Item 1 --- */}
           {/* -------------- */}
           <li key="Getting started" className="group relative">
             <div className="grid h-full grid-rows-1 overflow-hidden rounded-lg border border-sand-6 bg-sand-1 group-hover:border-sand-7">
               <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 py-6">
-                <h3 className="text-xl font-medium">Getting started</h3>
-                <p className="mt-4 text-base">
+                <h3 className="mb-4 text-xl font-medium">Getting started</h3>
+                <p className="mb-8">
                   Read about the various options to get started with Keystatic
                 </p>
                 <Link
                   href={`/docs/introduction`}
-                  className="mt-8 inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12"
+                  className="inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12"
                   aria-hidden
                 >
                   Read more
@@ -47,7 +44,7 @@ export default function DocsLinks() {
               <div className="relative h-44 overflow-hidden bg-sand-2 p-8">
                 {/* Background svg */}
                 <svg
-                  className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2  -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
+                  className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
                   viewBox="0 0 324 184"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -183,13 +180,13 @@ export default function DocsLinks() {
           <li key="Framework guides" className="group relative">
             <div className="grid h-full grid-rows-1 overflow-hidden rounded-lg border border-sand-6 bg-sand-1 group-hover:border-sand-7">
               <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 py-6">
-                <h3 className="text-xl font-medium">Framework guides</h3>
-                <p className="mt-4 text-base">
+                <h3 className="mb-4 text-xl font-medium">Framework guides</h3>
+                <p className="mb-8">
                   Add Keystatic to an existing Astro or Next.js project
                 </p>
                 <Link
                   href={`/docs/installation-astro`}
-                  className="mt-8 inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12"
+                  className="inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12"
                   aria-hidden
                 >
                   Read more
@@ -199,7 +196,7 @@ export default function DocsLinks() {
               <div className="relative h-44 overflow-hidden bg-sand-2 px-8 py-2">
                 {/* Background svg */}
                 <svg
-                  className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2  -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
+                  className="absolute left-1/2 top-1/2 h-96 min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
                   width="324"
                   height="184"
                   viewBox="0 0 324 184"
@@ -420,13 +417,13 @@ export default function DocsLinks() {
           <li key="Connect to GitHub" className="group relative">
             <div className="grid h-full grid-rows-1 overflow-hidden rounded-lg border border-sand-6 bg-sand-1 group-hover:border-sand-7">
               <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 py-6">
-                <h3 className="text-xl font-medium">Connect to GitHub</h3>
-                <p className="mt-4 text-base">
+                <h3 className="mb-4 text-xl font-medium">Connect to GitHub</h3>
+                <p className="mb-8">
                   Learn more about connecting Keystatic to GitHub
                 </p>
                 <Link
                   href={`docs/connect-to-github`}
-                  className="mt-8 inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12"
+                  className="inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12"
                   aria-hidden
                 >
                   Read more
@@ -436,7 +433,7 @@ export default function DocsLinks() {
               <div className="relative h-44 overflow-hidden bg-sand-2 px-8">
                 {/* Background svg */}
                 <svg
-                  className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2  -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
+                  className="absolute left-1/2 top-1/2 h-96 min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
                   width="324"
                   height="184"
                   viewBox="0 0 324 184"
@@ -582,14 +579,14 @@ export default function DocsLinks() {
           <li key="Organised content" className="group relative">
             <div className="grid h-full grid-rows-1 overflow-hidden rounded-lg border border-sand-6 bg-sand-1 group-hover:border-sand-7">
               <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 py-6">
-                <h3 className="text-xl font-medium">Organised content</h3>
-                <p className="mt-4 text-base">
+                <h3 className="mb-4 text-xl font-medium">Organised content</h3>
+                <p className="mb-8">
                   Teach Keystatic how to find and organise the content in your
                   codebase
                 </p>
                 <Link
                   href={`/docs/how-keystatic-organises-your-content`}
-                  className="mt-8 inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12"
+                  className="inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12"
                   aria-hidden
                 >
                   Read more
@@ -599,7 +596,7 @@ export default function DocsLinks() {
               <div className="relative h-44 overflow-hidden bg-sand-2 px-8">
                 {/* Background svg */}
                 <svg
-                  className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2  -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
+                  className="absolute left-1/2 top-1/2 h-96 min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
                   width="324"
                   height="184"
                   viewBox="0 0 324 184"
@@ -704,13 +701,13 @@ export default function DocsLinks() {
           <li key="Content structures" className="group relative">
             <div className="grid h-full grid-rows-1 overflow-hidden rounded-lg border border-sand-6 bg-sand-1 group-hover:border-sand-7">
               <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 py-6">
-                <h3 className="text-xl font-medium">Content structures</h3>
-                <p className="mt-4 text-base">
+                <h3 className="mb-4 text-xl font-medium">Content structures</h3>
+                <p className="mb-8">
                   Setup Collections and Singletons to edit your content
                 </p>
                 <Link
                   href={`/docs/collections`}
-                  className="mt-8 inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12"
+                  className="inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12"
                   aria-hidden
                 >
                   Read more
@@ -720,7 +717,7 @@ export default function DocsLinks() {
               <div className="relative flex h-44 items-center overflow-hidden bg-sand-2 px-8 py-2">
                 {/* Background svg */}
                 <svg
-                  className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2  -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
+                  className="absolute left-1/2 top-1/2 h-96 min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
                   width="324"
                   height="184"
                   viewBox="0 0 324 184"
@@ -873,13 +870,13 @@ export default function DocsLinks() {
           <li key="Reader API" className="group relative">
             <div className="grid h-full grid-rows-1 overflow-hidden rounded-lg border border-sand-6 bg-sand-1 group-hover:border-sand-7">
               <div className="grid h-full grid-rows-[auto,1fr,auto] px-8 py-6">
-                <h3 className="text-xl font-medium">Reader API</h3>
-                <p className="mt-4 text-base">
+                <h3 className="mb-4 text-xl font-medium">Reader API</h3>
+                <p className="mb-8">
                   Retrieve data from your project directory with the Reader API
                 </p>
                 <Link
                   href={`docs/reader-api`}
-                  className="mt-8 inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12"
+                  className="inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12"
                   aria-hidden
                 >
                   Read more
@@ -889,7 +886,7 @@ export default function DocsLinks() {
               <div className="relative flex h-44 items-center overflow-hidden bg-sand-2 px-8 py-2">
                 {/* Background svg */}
                 <svg
-                  className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2  -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
+                  className="absolute left-1/2 top-1/2 h-96 min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
                   width="324"
                   height="184"
                   viewBox="0 0 324 184"
@@ -959,7 +956,8 @@ export default function DocsLinks() {
                   <div className="rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight tracking-tight transition-all duration-150 group-hover:bg-whiteAlpha-9 group-hover:text-sand-11">
                     <p>
                       <span className="text-sand-11">const</span> reader{' '}
-                      <span className="text-sand-11">=</span> createReader{'('}
+                      <span className="text-sand-11">=</span> createReader
+                      {'('}
                       process.cwd{'()'}, keystaticConfig{')'};
                     </p>
                   </div>
