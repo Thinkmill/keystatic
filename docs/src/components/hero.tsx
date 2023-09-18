@@ -90,34 +90,30 @@ export default function Hero() {
           </svg>
         </div>
       </div>
-      <div className="relative mx-auto mb-16 mt-24 grid max-w-5xl grid-cols-12 gap-6 px-6 pt-10">
-        <div className="col-span-12 flex flex-col items-center gap-10 text-center">
+      <div className="relative mx-auto mb-16 mt-24 grid max-w-5xl grid-cols-8 gap-6 px-6 pt-10 md:grid-cols-12">
+        <div className="col-span-8 flex flex-col items-center gap-10 text-center sm:col-span-6 sm:col-start-2 md:col-span-8 md:col-start-3">
           <div>
             <h1
               className="mb-6 text-4xl font-medium md:text-5xl"
               id={H1_ID}
               aria-label="Content management for your code base"
             >
-              Content Management
-              <br />
-              for your Codebase
+              Content Management for your Codebase
             </h1>
-            <p className="text-lg">
+            <p className="text-base md:text-lg">
               A new tool that makes Markdown, JSON and YAML content in your
               codebase editable by humans. Live edit content on GitHub or your
               local file system, without disrupting your existing code and
               workflows.
             </p>
           </div>
-
-          <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="flex flex-col justify-center gap-4 sm:flex-row sm:flex-wrap">
             <Button className="" href="/docs">
               Read the docs
             </Button>
 
             <CopyCommandButton />
           </div>
-
           <div className="inline-flex items-center gap-2 text-left">
             <svg
               className="h-6 w-6 shrink-0"
