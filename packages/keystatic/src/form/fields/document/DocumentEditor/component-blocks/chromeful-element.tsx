@@ -210,7 +210,7 @@ function FormValue({
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const formId = useId();
   const [forceValidation, setForceValidation] = useState(false);
-  const [state, setState] = useState(previewPropsToValue(props as any));
+  const [state, setState] = useState(() => previewPropsToValue(props));
   const previewProps = useMemo(
     () => createGetPreviewProps(props.schema, setState, () => undefined),
     [props.schema]
