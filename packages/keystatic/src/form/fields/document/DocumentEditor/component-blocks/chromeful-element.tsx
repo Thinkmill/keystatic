@@ -3,22 +3,25 @@ import {
   ReactNode,
   useMemo,
   useState,
-  useCallback,
   Fragment,
   PropsWithChildren,
   forwardRef,
   Ref,
+  useId,
+  useCallback,
 } from 'react';
 import { RenderElementProps, useSelected } from 'slate-react';
 
-import { ActionButton, Button } from '@keystar/ui/button';
+import { ActionButton, Button, ButtonGroup } from '@keystar/ui/button';
+import { Dialog, DialogContainer } from '@keystar/ui/dialog';
 import { FieldMessage } from '@keystar/ui/field';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { Icon } from '@keystar/ui/icon';
 import { Flex } from '@keystar/ui/layout';
+import { Content } from '@keystar/ui/slots';
 import { css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
-import { Text } from '@keystar/ui/typography';
+import { Heading, Text } from '@keystar/ui/typography';
 
 import l10nMessages from '../../../../../app/l10n/index.json';
 import {
@@ -33,6 +36,11 @@ import {
   FormValueContentFromPreviewProps,
   NonChildFieldComponentSchema,
 } from '../../../../form-from-preview';
+import {
+  previewPropsToValue,
+  setValueToPreviewProps,
+} from '../../../../get-value';
+import { createGetPreviewProps } from '../../../../preview-props';
 import { NotEditable } from '../primitives';
 import { blockElementSpacing } from '../ui-utils';
 
@@ -83,26 +91,31 @@ export function ChromefulComponentBlockElement(props: {
             {props.componentBlock.label}
           </Text>
         </NotEditable>
-        {editMode ? (
-          <Fragment>
-            <FormValue
-              isValid={isValid}
-              props={props.previewProps}
-              onClose={onCloseEditMode}
-            />
-            <div className={css({ display: 'none' })}>{props.children}</div>
-          </Fragment>
-        ) : (
-          <Fragment>
-            {props.renderedBlock}
-            <ChromefulToolbar
-              isValid={isValid}
-              onRemove={props.onRemove}
-              onShowEditMode={onShowEditMode}
-              props={props.previewProps}
-            />
-          </Fragment>
-        )}
+        <Fragment>
+          {props.renderedBlock}
+          <ChromefulToolbar
+            isValid={isValid}
+            onRemove={props.onRemove}
+            props={props.previewProps}
+            onShowEditMode={onShowEditMode}
+          />
+          <DialogContainer onDismiss={() => onCloseEditMode()}>
+            {(() => {
+              if (!editMode) {
+                return;
+              }
+              return (
+                <Dialog>
+                  <Heading>Edit {props.componentBlock.label}</Heading>
+                  <FormValue
+                    props={props.previewProps}
+                    onClose={onCloseEditMode}
+                  />
+                </Dialog>
+              );
+            })()}
+          </DialogContainer>
+        </Fragment>
       </Flex>
     </BlockPrimitive>
   );
@@ -190,38 +203,50 @@ function DefaultToolbarWithChrome({
 function FormValue({
   onClose,
   props,
-  isValid,
 }: {
   props: GenericPreviewProps<NonChildFieldComponentSchema, unknown>;
   onClose(): void;
-  isValid: boolean;
 }) {
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  const formId = useId();
   const [forceValidation, setForceValidation] = useState(false);
+  const [state, setState] = useState(() => previewPropsToValue(props));
+  const previewProps = useMemo(
+    () => createGetPreviewProps(props.schema, setState, () => undefined),
+    [props.schema]
+  )(state);
 
   return (
-    <Flex
-      direction="column"
-      gap="medium"
-      contentEditable={false}
-      UNSAFE_className={css({ whiteSpace: 'initial' })}
-    >
-      <FormValueContentFromPreviewProps
-        {...props}
-        forceValidation={forceValidation}
-      />
-      <Button
-        alignSelf="start"
-        tone="accent"
-        onPress={() => {
-          if (isValid) {
-            onClose();
-          } else {
-            setForceValidation(true);
-          }
-        }}
-      >
-        Done
-      </Button>
-    </Flex>
+    <>
+      <Content>
+        <Flex
+          id={formId}
+          elementType="form"
+          onSubmit={event => {
+            if (event.target !== event.currentTarget) return;
+            event.preventDefault();
+            if (!clientSideValidateProp(props.schema, state, undefined)) {
+              setForceValidation(true);
+            } else {
+              setValueToPreviewProps(state, props);
+              onClose();
+            }
+          }}
+          direction="column"
+          gap="xxlarge"
+        >
+          <FormValueContentFromPreviewProps
+            {...previewProps}
+            forceValidation={forceValidation}
+          />
+        </Flex>
+      </Content>
+      <ButtonGroup>
+        <Button onPress={onClose}>{stringFormatter.format('cancel')}</Button>
+        <Button form={formId} prominence="high" type="submit">
+          Done
+        </Button>
+      </ButtonGroup>
+    </>
   );
 }
