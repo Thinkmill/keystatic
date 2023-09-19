@@ -3,9 +3,9 @@
 import { useState } from 'react';
 
 import Dialog from './dialog';
-import Button from './button';
 import SendMessageForm from './forms/send-message';
 import { GithubIcon } from './icons/github-icon';
+import { PaperAirplaneIcon } from './icons/paper-airplane-icon';
 
 export default function CallToAction() {
   const [isOpen, setIsOpen] = useState(false);
@@ -104,39 +104,28 @@ export default function CallToAction() {
               helpful as we progress!
             </p>
           </div>
-          <ul className="list-none">
+          <ul className="flex list-none flex-col gap-1">
             <li>
               <a
                 href="https://github.com/Thinkmill/keystatic/discussions"
                 target="_blank"
                 aria-label={`${linkLabels.ksDiscussions} (Opens in new tab)`}
               >
-                <span className="flex flex-row items-center gap-4 text-sm font-semibold">
+                <span className="flex h-8 flex-row items-center gap-4 text-sm font-medium text-sand-11 transition-all duration-150 hover:gap-6 hover:text-sand-12">
                   <GithubIcon />
-                  {linkLabels.ksDiscussions}
+                  <span>{linkLabels.ksDiscussions}</span>
                 </span>
               </a>
             </li>
             <li>
-              <button onClick={() => setIsOpen(true)}>Send us a message</button>
+              <button onClick={() => setIsOpen(true)} className="block w-full">
+                <span className="flex h-8 flex-row items-center gap-4 text-sm font-medium text-sand-11 transition-all duration-150 hover:gap-6 hover:text-sand-12">
+                  <PaperAirplaneIcon />
+                  <span>Send us a message</span>
+                </span>
+              </button>
             </li>
           </ul>
-          {/* OLD */}
-          <Button
-            className="self-start"
-            href="https://github.com/Thinkmill/keystatic/discussions"
-            target="_blank"
-            aria-label={`${linkLabels.ksDiscussions} (Opens in new tab)`}
-          >
-            {linkLabels.ksDiscussions}
-          </Button>
-          <Button
-            className="mt-3 w-auto"
-            impact="light"
-            onClick={() => setIsOpen(true)}
-          >
-            Send us a message
-          </Button>
         </div>
       </div>
 
