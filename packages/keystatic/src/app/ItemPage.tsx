@@ -19,6 +19,7 @@ import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
 import { Button, ButtonGroup } from '@keystar/ui/button';
 import { AlertDialog, Dialog, DialogContainer } from '@keystar/ui/dialog';
 import { Icon } from '@keystar/ui/icon';
+import { copyIcon } from '@keystar/ui/icon/icons/copyIcon';
 import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
 import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
@@ -175,10 +176,25 @@ function ItemPage(props: ItemPageProps) {
     }
   };
 
+  const onDuplicate = async () => {
+    let hasUpdated = true;
+    if (hasChanged) {
+      hasUpdated = await onUpdate();
+    }
+
+    if (hasUpdated) {
+      router.push(
+        `${props.basePath}/collection/${encodeURIComponent(
+          collection
+        )}/create?duplicate=${slug}`
+      );
+    }
+  };
+
   const onUpdate = useCallback(async () => {
     if (!clientSideValidateProp(schema, state, props.slugInfo)) {
       setForceValidation(true);
-      return;
+      return false;
     }
     const slug = getSlugFromState(collectionConfig, state);
     const hasUpdated = await update();
@@ -189,6 +205,7 @@ function ItemPage(props: ItemPageProps) {
         )}/item/${encodeURIComponent(slug)}`
       );
     }
+    return hasUpdated;
   }, [
     collection,
     collectionConfig,
@@ -227,6 +244,7 @@ function ItemPage(props: ItemPageProps) {
             isLoading={updateResult.kind === 'loading'}
             hasChanged={hasChanged}
             onDelete={onDelete}
+            onDuplicate={onDuplicate}
             onReset={onReset}
             onView={onView}
           />
@@ -347,15 +365,25 @@ function HeaderActions(props: {
   hasChanged: boolean;
   isLoading: boolean;
   onDelete: () => void;
+  onDuplicate: () => void;
   onReset: () => void;
   onView: () => void;
 }) {
-  let { config, formID, hasChanged, isLoading, onDelete, onReset, onView } =
-    props;
+  let {
+    config,
+    formID,
+    hasChanged,
+    isLoading,
+    onDelete,
+    onDuplicate,
+    onReset,
+    onView,
+  } = props;
   const isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
   const isGithub = isGitHubConfig(config);
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const [deleteAlertIsOpen, setDeleteAlertOpen] = useState(false);
+  const [duplicateAlertIsOpen, setDuplicateAlertOpen] = useState(false);
 
   const menuActions = useMemo(() => {
     type ActionType = {
@@ -374,6 +402,11 @@ function HeaderActions(props: {
         key: 'delete',
         label: 'Delete entry…', // TODO: l10n
         icon: trash2Icon,
+      },
+      {
+        key: 'duplicate',
+        label: 'Duplicate entry…', // TODO: l10n
+        icon: copyIcon,
       },
     ];
     if (isGithub) {
@@ -436,6 +469,13 @@ function HeaderActions(props: {
             case 'delete':
               setDeleteAlertOpen(true);
               break;
+            case 'duplicate':
+              if (hasChanged) {
+                setDuplicateAlertOpen(true);
+              } else {
+                onDuplicate();
+              }
+              break;
             case 'view':
               onView();
               break;
@@ -468,6 +508,20 @@ function HeaderActions(props: {
             onPrimaryAction={onDelete}
           >
             Are you sure? This action cannot be undone.
+          </AlertDialog>
+        )}
+      </DialogContainer>
+      <DialogContainer onDismiss={() => setDuplicateAlertOpen(false)}>
+        {duplicateAlertIsOpen && (
+          <AlertDialog
+            title="Save and duplicate entry"
+            tone="neutral"
+            cancelLabel="Cancel"
+            primaryActionLabel="Save and duplicate"
+            autoFocusButton="primary"
+            onPrimaryAction={onDuplicate}
+          >
+            You have unsaved changes. Save this entry to duplicate it.
           </AlertDialog>
         )}
       </DialogContainer>
