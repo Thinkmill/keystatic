@@ -7,6 +7,7 @@ export function NextJSIcon({ ariaHidden = true }: { ariaHidden?: boolean }) {
 
   return (
     <svg
+      className="relative"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 32 32"

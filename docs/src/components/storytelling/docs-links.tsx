@@ -41,7 +41,7 @@ export default function DocsLinks() {
                   <ArrowRightIcon />
                 </Link>
               </div>
-              <div className="relative h-44 overflow-hidden bg-sand-2 p-8">
+              <div className="relative h-44 overflow-hidden bg-sand-2 px-8 py-4">
                 {/* Background svg */}
                 <svg
                   className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
@@ -103,7 +103,7 @@ export default function DocsLinks() {
                     </linearGradient>
                   </defs>
                 </svg>
-                <div className="relative h-20 overflow-hidden rounded-lg border border-sand-12 bg-whiteAlpha-12 transition-all duration-150 group-hover:h-32">
+                <div className="relative mt-8 h-20 overflow-hidden rounded-lg border border-sand-12 bg-whiteAlpha-12 transition-all duration-150 group-hover:mt-0 group-hover:h-36 ">
                   <div className="absolute left-0 right-0 top-0 flex gap-1.5 p-3">
                     <div className="h-2 w-2 rounded-full bg-sand-9"></div>
                     <div className="h-2 w-2 rounded-full bg-sand-9"></div>
@@ -673,23 +673,25 @@ export default function DocsLinks() {
                   </defs>
                 </svg>
                 <div className="relative flex h-full flex-col place-content-center gap-2 border-l border-sandAlpha-6 py-2">
-                  <div className="flex flex-row">
-                    <div className="peer order-2 w-48 rounded border border-sand-12 bg-whiteAlpha-9 px-2 py-1 font-mono text-xs leading-tight hover:bg-whiteAlpha-12">
+                  <div className="relative flex flex-row">
+                    <div className="peer order-2 w-full rounded border border-sand-12 bg-whiteAlpha-9 px-2 py-1 font-mono text-xs leading-tight hover:bg-whiteAlpha-12">
                       <p>collection-name</p>
                       <p>└── slug</p>
                       <p>&nbsp;&nbsp;&nbsp;&nbsp;├── index.yaml</p>
                       <p>&nbsp;&nbsp;&nbsp;&nbsp;└── other.mdoc</p>
                     </div>
-                    <div className="order-1 mt-2 h-[1px] w-6 flex-none bg-sandAlpha-6 transition-all duration-150 peer-hover:w-12 peer-hover:bg-gradient-to-l peer-hover:from-sand-12"></div>
+                    <div className="peer order-1 w-6 flex-none transition-all duration-150 hover:w-12 peer-hover:w-12 "></div>
+                    <div className="absolute left-0 top-2 h-[1px] w-6 bg-sandAlpha-6 transition-all duration-150 peer-hover:w-12 peer-hover:bg-gradient-to-l peer-hover:from-sand-12"></div>
                   </div>
-                  <div className="flex flex-row">
-                    <div className="peer order-2 w-48 rounded border border-sand-12 bg-whiteAlpha-9 px-2 py-1 font-mono text-xs leading-tight hover:bg-whiteAlpha-12">
+                  <div className="relative flex flex-row">
+                    <div className="peer order-2 w-full rounded border border-sand-12 bg-whiteAlpha-9 px-2 py-1 font-mono text-xs leading-tight hover:bg-whiteAlpha-12">
                       <p>singleton-name</p>
                       <p>└── slug</p>
                       <p>&nbsp;&nbsp;&nbsp;&nbsp;├── index.yaml</p>
                       <p>&nbsp;&nbsp;&nbsp;&nbsp;└── other.mdoc</p>
                     </div>
-                    <div className="order-1 mt-2 h-[1px] w-6 flex-none bg-sandAlpha-6 transition-all duration-150 peer-hover:w-12 peer-hover:bg-gradient-to-l peer-hover:from-sand-12"></div>
+                    <div className="peer order-1 w-6 flex-none transition-all duration-150 hover:w-12 peer-hover:w-12 "></div>
+                    <div className="absolute left-0 top-2 h-[1px] w-6 bg-sandAlpha-6 transition-all duration-150 peer-hover:w-12 peer-hover:bg-gradient-to-l peer-hover:from-sand-12"></div>
                   </div>
                 </div>
               </div>
@@ -830,8 +832,8 @@ export default function DocsLinks() {
                     </linearGradient>
                   </defs>
                 </svg>
-                <div className="relative flex flex-row items-center gap-2">
-                  <div className="flex flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight tracking-tight">
+                <div className="relative mx-auto flex w-full flex-row items-center gap-2">
+                  <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight tracking-tight">
                     <p>collections:</p>
                     <div className="flex w-full flex-col gap-1 rounded border border-dashed border-sand-7 bg-sand-3 px-2 py-1 font-mono text-xs leading-tight transition-all duration-200 ease-in-out group-hover:border-solid group-hover:border-sand-12">
                       <p className="text-sand-11 group-hover:text-sand-12">
@@ -848,7 +850,7 @@ export default function DocsLinks() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight tracking-tight">
+                  <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight tracking-tight">
                     <p>singletons:</p>
                     <div className="flex w-full flex-col gap-1 rounded border border-dashed border-sand-7 bg-sand-3 px-2 py-1 font-mono text-xs leading-tight transition-all duration-200 ease-in-out hover:border-solid hover:border-sand-12">
                       <p className="text-sand-11">settings:</p>
@@ -947,13 +949,13 @@ export default function DocsLinks() {
                     </linearGradient>
                   </defs>
                 </svg>
-                <div className="relative flex flex-col items-center">
+                <div className="relative flex w-full flex-col items-center">
                   <div className="relative h-8 w-8 flex-none rounded-full">
+                    <div className="absolute left-0 top-0 h-full w-full rounded-full bg-whiteAlpha-12 group-hover:visible group-hover:animate-ping"></div>
                     <NextJSIcon />
-                    <div className="invisible absolute left-0 top-0 h-full w-full rounded-full bg-whiteAlpha-11 group-hover:visible group-hover:animate-ping"></div>
                   </div>
                   <div className="mx-auto h-3 w-[1px] bg-sand-12"></div>
-                  <div className="rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight tracking-tight transition-all duration-150 group-hover:bg-whiteAlpha-9 group-hover:text-sand-11">
+                  <div className="min-h-[2.5rem] w-full rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight tracking-tight transition-all duration-150 group-hover:bg-whiteAlpha-9 group-hover:text-sand-11">
                     <p>
                       <span className="text-sand-11">const</span> reader{' '}
                       <span className="text-sand-11">=</span> createReader
@@ -991,7 +993,7 @@ export default function DocsLinks() {
                         d="M11.25 8.75V5.62a3.75 3.75 0 0 1 7.5 0v3.13M3.12 18.13h8.75a1.87 1.87 0 0 0 1.88-1.88v-5.63a1.87 1.87 0 0 0-1.88-1.87H3.13a1.88 1.88 0 0 0-1.88 1.88v5.62a1.87 1.87 0 0 0 1.88 1.88Z"
                       />
                     </svg>
-                    <p className="px-2 py-1 opacity-80 blur-sm transition-all delay-300 duration-200 ease-out group-hover:bg-white group-hover:opacity-100 group-hover:blur-none">
+                    <p className="min-h-[2.5rem] w-full px-2 py-1 align-baseline opacity-80 blur-sm transition-all delay-300 duration-200 ease-out group-hover:bg-white group-hover:opacity-100 group-hover:blur-none">
                       <span className="text-sand-11">const</span> slugs{' '}
                       <span className="text-sand-11">=</span> await
                       reader.collections.posts.list{'()'};
