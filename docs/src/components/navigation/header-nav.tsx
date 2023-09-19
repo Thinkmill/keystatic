@@ -61,18 +61,6 @@ export function HeaderNav({
               >
                 Docs
               </Link>
-              {/* CHECK: Remove Blog link completely? And remove the page from the codebase?*/}
-              {/* <Link
-              className={cx(
-                linkStylesShared,
-                pathname?.startsWith('/blog')
-                  ? linkStylesCurrent
-                  : linkStylesIdle
-              )}
-              href="/blog"
-            >
-              Blog
-            </Link> */}
               <Link
                 className={cx(
                   linkStylesShared,
