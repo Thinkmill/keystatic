@@ -32,7 +32,7 @@ export default function Hero() {
               />
               <path
                 stroke="url(#hero-img-e)"
-                stroke-linejoin="round"
+                strokeLinejoin="round"
                 strokeWidth="426"
                 d="m721 707 747-747"
                 opacity=".4"
