@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Dialog from './dialog';
 import Button from './button';
 import SendMessageForm from './forms/send-message';
+import { GithubIcon } from './icons/github-icon';
 
 export default function CallToAction() {
   const [isOpen, setIsOpen] = useState(false);
@@ -84,25 +85,45 @@ export default function CallToAction() {
           </clipPath>
         </defs>
       </svg>
-      <div className="relative w-full max-w-lg px-6 py-16 md:pl-0">
-        <div className="px-16">
-          <h4 className="text-xl font-medium">Tell us what you think</h4>
-          <p className="mt-4 text-sm text-sand-11">
-            We're building Keystatic in the open as part of{' '}
-            <a
-              href="https://www.thinkmill.com.au/"
-              target="_blank"
-              className="cursor-pointer underline hover:text-thinkmill-red"
-              aria-label={`${linkLabels.tmLabs} (Opens in new tab)`}
-            >
-              {linkLabels.tmLabs}
-            </a>{' '}
-            Research &amp; Development. Feedback on how we're going, what you're
-            looking for, and what you'd like to see next is super helpful as we
-            progress!
-          </p>
+      <div className="relative px-6 py-16 sm:max-w-lg sm:pl-3">
+        <div className="flex flex-col gap-6 px-8 lg:px-16">
+          <div className="flex flex-col gap-4">
+            <h4 className="text-xl font-medium">Tell us what you think</h4>
+            <p className="text-sm text-sand-11">
+              We're building Keystatic in the open as part of{' '}
+              <a
+                href="https://www.thinkmill.com.au/"
+                target="_blank"
+                className="cursor-pointer underline hover:text-thinkmill-red"
+                aria-label={`${linkLabels.tmLabs} (Opens in new tab)`}
+              >
+                {linkLabels.tmLabs}
+              </a>{' '}
+              Research &amp; Development. Feedback on how we're going, what
+              you're looking for, and what you'd like to see next is super
+              helpful as we progress!
+            </p>
+          </div>
+          <ul className="list-none">
+            <li>
+              <a
+                href="https://github.com/Thinkmill/keystatic/discussions"
+                target="_blank"
+                aria-label={`${linkLabels.ksDiscussions} (Opens in new tab)`}
+              >
+                <span className="flex flex-row items-center gap-4 text-sm font-semibold">
+                  <GithubIcon />
+                  {linkLabels.ksDiscussions}
+                </span>
+              </a>
+            </li>
+            <li>
+              <button onClick={() => setIsOpen(true)}>Send us a message</button>
+            </li>
+          </ul>
+          {/* OLD */}
           <Button
-            className="mt-6 inline-block w-auto"
+            className="self-start"
             href="https://github.com/Thinkmill/keystatic/discussions"
             target="_blank"
             aria-label={`${linkLabels.ksDiscussions} (Opens in new tab)`}

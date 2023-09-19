@@ -15,7 +15,7 @@ export default function Homepage() {
         <Features />
         <CliVideo />
         <DocsLinks />
-        <div className="relative grid auto-rows-fr grid-cols-2 justify-items-stretch">
+        <div className="grid sm:grid-cols-2">
           <MailingList />
           <CallToAction />
         </div>

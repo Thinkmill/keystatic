@@ -15,11 +15,11 @@ export default function MailingListForm() {
     });
   }
   return (
-    <form className="mx-auto mt-4" onSubmit={handleSubmit}>
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <input type="hidden" name="form-type" value="mailing-list" />
-      <div>
+      <div className="flex flex-col gap-1">
         <label
-          className="block text-sm font-medium"
+          className="block text-sm font-medium text-sand-11"
           htmlFor="mailing-list-email"
         >
           Email
@@ -29,10 +29,15 @@ export default function MailingListForm() {
           name="mailing-list-email"
           id="mailing-list-email"
           required
-          className="form-input mt-2 w-full rounded-lg border border-sand-6 bg-sand-1 px-4 py-3 leading-none hover:border-sand-8"
+          className="form-input h-8 w-full rounded-md border border-sand-6 bg-sand-1 px-3 py-0 text-sm leading-none hover:border-sand-8"
         />
       </div>
-      <Button className="mt-4 w-auto" type="submit" isLoading={isLoading}>
+      <Button
+        className="h-8 self-start rounded-md pb-0 pl-3 pr-3 pt-0 text-sm"
+        type="submit"
+        impact="light"
+        isLoading={isLoading}
+      >
         Send me updates
       </Button>
     </form>
