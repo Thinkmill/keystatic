@@ -13,7 +13,7 @@ export function NextJSIcon({ ariaHidden = true }: { ariaHidden?: boolean }) {
       viewBox="0 0 32 32"
       aria-hidden={ariaHidden}
     >
-      <g clip-path={`url(#${id1})`}>
+      <g clipPath={`url(#${id1})`}>
         <path
           fill="currentColor"
           d="M16 32a16 16 0 1 0 0-32 16 16 0 0 0 0 32Z"

@@ -5,13 +5,14 @@ import { cx } from '../utils';
 
 type ButtonProps = {
   impact?: 'bold' | 'light';
+  variant?: 'regular' | 'small';
   href?: string;
   isLoading?: boolean;
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
 } & AllHTMLAttributes<HTMLButtonElement | HTMLAnchorElement>;
 
 const baseClasses =
-  'block rounded-lg px-4 py-3 text-center font-semibold leading-none border transition-colors';
+  'block text-center font-semibold leading-none border transition-colors';
 
 const impactClasses: Record<ButtonProps['impact'] & {}, string> = {
   bold: 'bg-indigo-9 text-white hover:bg-indigo-10 active:bg-indigo-11 border-transparent',
@@ -19,10 +20,16 @@ const impactClasses: Record<ButtonProps['impact'] & {}, string> = {
     'bg-white border-sand-7 text-sand-11 hover:bg-sand-2 hover:border-sand-8 active:bg-sand-10',
 };
 
+const variantClasses: Record<ButtonProps['variant'] & {}, string> = {
+  regular: 'rounded-lg px-4 py-3',
+  small: 'rounded-md py-2 px-3 text-sm',
+};
+
 // ----------
 
 export default function Button({
   impact = 'bold',
+  variant = 'regular',
   href,
   isLoading = false,
   children,
@@ -33,14 +40,24 @@ export default function Button({
     <Link
       href={href}
       {...props}
-      className={cx(baseClasses, impactClasses[impact], className)}
+      className={cx(
+        baseClasses,
+        impactClasses[impact],
+        variantClasses[variant],
+        className
+      )}
     >
       {children}
     </Link>
   ) : (
     <button
       {...props}
-      className={cx(baseClasses, impactClasses[impact], className)}
+      className={cx(
+        baseClasses,
+        impactClasses[impact],
+        variantClasses[variant],
+        className
+      )}
     >
       {isLoading ? <Spinner /> : children}
     </button>

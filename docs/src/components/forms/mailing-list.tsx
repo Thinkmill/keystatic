@@ -33,9 +33,10 @@ export default function MailingListForm() {
         />
       </div>
       <Button
-        className="h-8 self-start rounded-md pb-0 pl-3 pr-3 pt-0 text-sm"
+        className="self-start"
         type="submit"
         impact="light"
+        variant="small"
         isLoading={isLoading}
       >
         Send me updates
