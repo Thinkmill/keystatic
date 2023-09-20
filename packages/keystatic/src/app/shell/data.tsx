@@ -34,6 +34,7 @@ import { isDefined } from 'emery';
 import { getAuth } from '../auth';
 import { ViewerContext, SidebarFooter_viewer } from './viewer-data';
 import { parseRepoConfig, serializeRepoConfig } from '../repo-config';
+import { z } from 'zod';
 
 export function fetchLocalTree(sha: string) {
   if (treeCache.has(sha)) {
@@ -98,6 +99,53 @@ export function LocalAppShellProvider(props: {
         </TreeContext.Provider>
       </ChangedContext.Provider>
     </SetTreeShaContext.Provider>
+  );
+}
+
+const cloudInfoSchema = z.object({
+  user: z.object({
+    name: z.string(),
+    email: z.string(),
+    avatarUrl: z.string().optional(),
+  }),
+  project: z.object({
+    name: z.string(),
+  }),
+  team: z.object({
+    name: z.string(),
+    slug: z.string(),
+    images: z.boolean(),
+  }),
+});
+
+const CloudInfo = createContext<null | z.infer<typeof cloudInfoSchema>>(null);
+
+export function useCloudInfo() {
+  return useContext(CloudInfo);
+}
+
+export function CloudInfoProvider(props: {
+  children: ReactNode;
+  config: Config;
+}) {
+  const data = useData(
+    useCallback(async () => {
+      if (!props.config.cloud?.project) throw new Error('no cloud project set');
+      const result = await fetch(`${KEYSTATIC_CLOUD_API_URL}/v1/info`, {
+        headers: {
+          ...KEYSTATIC_CLOUD_HEADERS,
+          Authorization: `Bearer ${await getAuth(props.config).then(
+            auth => auth?.accessToken
+          )}`,
+        },
+      }).then(x => x.json());
+      return cloudInfoSchema.parse(result);
+    }, [props.config])
+  );
+  return (
+    <CloudInfo.Provider value={data.kind === 'loaded' ? data.data : null}>
+      {props.children}
+    </CloudInfo.Provider>
   );
 }
 
