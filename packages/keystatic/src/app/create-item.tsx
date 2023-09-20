@@ -44,14 +44,11 @@ function CreateItemWrapper(props: {
   config: Config;
   basePath: string;
 }) {
-  const [duplicateSlug, setDuplicateSlug] = useState<string | null>(null);
-  useEffect(() => {
-    const url = new URL(window.location.href);
-    const duplicate = url.searchParams.get('duplicate');
-    if (duplicateSlug !== duplicate) {
-      setDuplicateSlug(() => duplicate);
-    }
-  }, [duplicateSlug]);
+  const router = useRouter();
+  const duplicateSlug = useMemo(() => {
+    const url = new URL(router.href, 'http://localhost');
+    return url.searchParams.get('duplicate');
+  }, [router.href]);
 
   const collectionConfig = props.config.collections?.[props.collection];
   if (!collectionConfig) notFound();
