@@ -19,7 +19,7 @@ import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
 import { Button, ButtonGroup } from '@keystar/ui/button';
 import { AlertDialog, Dialog, DialogContainer } from '@keystar/ui/dialog';
 import { Icon } from '@keystar/ui/icon';
-import { copyIcon } from '@keystar/ui/icon/icons/copyIcon';
+import { copyPlusIcon } from '@keystar/ui/icon/icons/copyPlusIcon';
 import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
 import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
@@ -406,7 +406,7 @@ function HeaderActions(props: {
       {
         key: 'duplicate',
         label: 'Duplicate entry…', // TODO: l10n
-        icon: copyIcon,
+        icon: copyPlusIcon,
       },
     ];
     if (isGithub) {
