@@ -42,6 +42,7 @@ import {
   isCloudConfig,
   isGitHubConfig,
   isLocalConfig,
+  redirectToCloudAuth,
 } from '../utils';
 
 import { ZapLogo } from './common';
@@ -50,6 +51,7 @@ import {
   BranchInfoContext,
   GitHubAppShellDataContext,
   useCloudInfo,
+  useRawCloudInfo,
 } from './data';
 import { useViewer } from './viewer-data';
 import { useThemeContext } from './theme';
@@ -168,6 +170,9 @@ function GithubHeader({ config }: { config: GitHubConfig }) {
 // -----------------------------------------------------------------------------
 
 function LocalHeader() {
+  const config = useConfig();
+  const rawCloudInfo = useRawCloudInfo();
+  const router = useRouter();
   return (
     <HeaderOuter>
       <BrandButton />
@@ -176,6 +181,30 @@ function LocalHeader() {
       </Text>
       <Box flex="1" />
       <ThemeMenu />
+      {rawCloudInfo ? (
+        rawCloudInfo === 'unauthorized' ? (
+          <ActionButton
+            onPress={() => {
+              redirectToCloudAuth(router.params.join('/'), config);
+            }}
+            prominence="low"
+          >
+            Sign in
+          </ActionButton>
+        ) : (
+          <UserMenu
+            user={
+              rawCloudInfo
+                ? {
+                    name: rawCloudInfo.user.name,
+                    login: rawCloudInfo.user.email,
+                    avatarUrl: rawCloudInfo.user.avatarUrl,
+                  }
+                : undefined
+            }
+          />
+        )
+      ) : null}
     </HeaderOuter>
   );
 }
@@ -299,7 +328,7 @@ function UserMenu({
         icon: logOutIcon,
       },
     ];
-    if (isCloudConfig(config)) {
+    if (config.cloud?.project) {
       items.unshift({
         id: 'manage',
         label: 'Account',
@@ -365,6 +394,7 @@ function UserMenu({
                     window.location.href = '/api/keystatic/github/logout';
                     break;
                   case 'cloud':
+                  case 'local':
                     localStorage.removeItem('keystatic-cloud-access-token');
                     window.location.reload();
                     break;
