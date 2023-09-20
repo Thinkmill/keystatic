@@ -37,7 +37,7 @@ import {
 import { NotEditable } from '../form/fields/document/DocumentEditor/primitives';
 import { PreviewProps, ObjectField, Config } from '..';
 import { z } from 'zod';
-import { getAuth } from '../app/auth';
+import { getCloudAuth } from '../app/auth';
 
 export type CloudImageProps = {
   src: string;
@@ -126,24 +126,22 @@ export async function loadImageData(
   url: string,
   config: Config
 ): Promise<CloudImageProps> {
-  if (config.storage.kind === 'cloud') {
-    const auth = await getAuth(config);
-    if (auth) {
-      const res = await fetch(
-        `${KEYSTATIC_CLOUD_API_URL}/v1/image?${new URLSearchParams({ url })}`,
-        {
-          headers: {
-            Authorization: `Bearer ${auth!.accessToken}`,
-            ...KEYSTATIC_CLOUD_HEADERS,
-          },
-        }
-      );
-      if (res.ok) {
-        const data = await res.json();
-        const parsed = imageDataSchema.safeParse(data);
-        if (parsed.success) {
-          return parsed.data;
-        }
+  const auth = getCloudAuth(config);
+  if (auth) {
+    const res = await fetch(
+      `${KEYSTATIC_CLOUD_API_URL}/v1/image?${new URLSearchParams({ url })}`,
+      {
+        headers: {
+          Authorization: `Bearer ${auth.accessToken}`,
+          ...KEYSTATIC_CLOUD_HEADERS,
+        },
+      }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      const parsed = imageDataSchema.safeParse(data);
+      if (parsed.success) {
+        return parsed.data;
       }
     }
   }

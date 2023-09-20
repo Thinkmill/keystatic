@@ -4,6 +4,7 @@ import { Config } from '../config';
 
 const storedTokenSchema = z.object({
   token: z.string(),
+  project: z.string(),
   validUntil: z.number().transform(val => new Date(val)),
 });
 
@@ -20,21 +21,30 @@ export function getSyncAuth(config: Config) {
     return { accessToken };
   }
   if (config.storage.kind === 'cloud') {
-    const unparsedTokenData = localStorage.getItem(
-      'keystatic-cloud-access-token'
-    );
-    let tokenData;
-    try {
-      tokenData = storedTokenSchema.parse(JSON.parse(unparsedTokenData!));
-    } catch (err) {
-      return null;
-    }
-    if (!tokenData || tokenData.validUntil < new Date()) {
-      return null;
-    }
-    return { accessToken: tokenData.token };
+    return getCloudAuth(config);
   }
   return null;
+}
+
+export function getCloudAuth(config: Config) {
+  if (!config.cloud?.project) return null;
+  const unparsedTokenData = localStorage.getItem(
+    'keystatic-cloud-access-token'
+  );
+  let tokenData;
+  try {
+    tokenData = storedTokenSchema.parse(JSON.parse(unparsedTokenData!));
+  } catch (err) {
+    return null;
+  }
+  if (
+    !tokenData ||
+    tokenData.validUntil < new Date() ||
+    tokenData.project !== config.cloud.project
+  ) {
+    return null;
+  }
+  return { accessToken: tokenData.token };
 }
 
 export async function getAuth(config: Config) {

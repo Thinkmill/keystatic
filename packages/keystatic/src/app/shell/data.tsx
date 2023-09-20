@@ -31,7 +31,7 @@ import {
 } from '../utils';
 import LRU from 'lru-cache';
 import { isDefined } from 'emery';
-import { getAuth } from '../auth';
+import { getAuth, getCloudAuth } from '../auth';
 import { ViewerContext, SidebarFooter_viewer } from './viewer-data';
 import { parseRepoConfig, serializeRepoConfig } from '../repo-config';
 import { z } from 'zod';
@@ -118,9 +118,16 @@ const cloudInfoSchema = z.object({
   }),
 });
 
-const CloudInfo = createContext<null | z.infer<typeof cloudInfoSchema>>(null);
+const CloudInfo = createContext<
+  null | z.infer<typeof cloudInfoSchema> | 'unauthorized'
+>(null);
 
 export function useCloudInfo() {
+  const context = useContext(CloudInfo);
+  return context === 'unauthorized' ? null : context;
+}
+
+export function useRawCloudInfo() {
   return useContext(CloudInfo);
 }
 
@@ -131,15 +138,18 @@ export function CloudInfoProvider(props: {
   const data = useData(
     useCallback(async () => {
       if (!props.config.cloud?.project) throw new Error('no cloud project set');
-      const result = await fetch(`${KEYSTATIC_CLOUD_API_URL}/v1/info`, {
+      const token = getCloudAuth(props.config)?.accessToken;
+      if (!token) {
+        return 'unauthorized' as const;
+      }
+      const res = await fetch(`${KEYSTATIC_CLOUD_API_URL}/v1/info`, {
         headers: {
           ...KEYSTATIC_CLOUD_HEADERS,
-          Authorization: `Bearer ${await getAuth(props.config).then(
-            auth => auth?.accessToken
-          )}`,
+          Authorization: `Bearer ${token}`,
         },
-      }).then(x => x.json());
-      return cloudInfoSchema.parse(result);
+      });
+      if (res.status === 401) return 'unauthorized' as const;
+      return cloudInfoSchema.parse(await res.json());
     }, [props.config])
   );
   return (
