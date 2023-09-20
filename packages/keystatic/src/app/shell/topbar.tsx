@@ -46,7 +46,11 @@ import {
 
 import { ZapLogo } from './common';
 import { useAppState, useConfig } from './context';
-import { BranchInfoContext, GitHubAppShellDataContext } from './data';
+import {
+  BranchInfoContext,
+  GitHubAppShellDataContext,
+  useCloudInfo,
+} from './data';
 import { useViewer } from './viewer-data';
 import { useThemeContext } from './theme';
 import { serializeRepoConfig } from '../repo-config';
@@ -87,6 +91,7 @@ export const SidebarHeader = () => {
 // -----------------------------------------------------------------------------
 
 function CloudHeader({ config }: { config: CloudConfig }) {
+  const cloudInfo = useCloudInfo();
   return (
     <HeaderOuter>
       <BrandButton />
@@ -104,7 +109,17 @@ function CloudHeader({ config }: { config: CloudConfig }) {
       <GitMenu />
       <Box flex="1" />
       <ThemeMenu />
-      {/* <UserMenu /> */}
+      <UserMenu
+        user={
+          cloudInfo
+            ? {
+                name: cloudInfo.user.name,
+                login: cloudInfo.user.email,
+                avatarUrl: cloudInfo.user.avatarUrl,
+              }
+            : undefined
+        }
+      />
     </HeaderOuter>
   );
 }
@@ -113,6 +128,7 @@ function CloudHeader({ config }: { config: CloudConfig }) {
 // -----------------------------------------------------------------------------
 
 function GithubHeader({ config }: { config: GitHubConfig }) {
+  const user = useViewer();
   return (
     <HeaderOuter>
       <BrandButton />
@@ -133,7 +149,17 @@ function GithubHeader({ config }: { config: GitHubConfig }) {
       <GitMenu />
       <Box flex="1" />
       <ThemeMenu />
-      <UserMenu />
+      <UserMenu
+        user={
+          user
+            ? {
+                login: user.login,
+                name: user.name ?? user.login,
+                avatarUrl: user.avatarUrl,
+              }
+            : undefined
+        }
+      />
     </HeaderOuter>
   );
 }
@@ -259,8 +285,11 @@ function ThemeMenu() {
 // User controls
 // -----------------------------------------------------------------------------
 
-function UserMenu() {
-  let user = useViewer();
+function UserMenu({
+  user,
+}: {
+  user: { name: string; avatarUrl?: string; login: string } | undefined;
+}) {
   let config = useConfig();
   const menuItems = useMemo(() => {
     let items = [
@@ -273,7 +302,7 @@ function UserMenu() {
     if (isCloudConfig(config)) {
       items.unshift({
         id: 'manage',
-        label: 'Manage account',
+        label: 'Account',
         icon: userIcon,
       });
     }
@@ -315,7 +344,7 @@ function UserMenu() {
           />
           <Flex direction="column" gap="small">
             <Text size="small" weight="semibold" color="neutralEmphasis">
-              {user.name ?? user.login}
+              {user.name}
             </Text>
             <Text size="small" color="neutralTertiary">
               {user.login}

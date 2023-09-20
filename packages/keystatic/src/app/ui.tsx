@@ -33,6 +33,7 @@ import { AppSlugProvider } from './onboarding/install-app';
 import { useRouter, Router, RouterProvider } from './router';
 import { isCloudConfig, isGitHubConfig, redirectToCloudAuth } from './utils';
 import {
+  CloudInfoProvider,
   GitHubAppShellDataContext,
   GitHubAppShellDataProvider,
 } from './shell/data';
@@ -107,11 +108,17 @@ function PageInner({ config }: { config: Config }) {
     return <KeystaticCloudAuthCallback config={config} />;
   }
   let wrapper: (element: ReactElement) => ReactElement = x => x;
+  if (isCloudConfig(config)) {
+    wrapper = element => (
+      <CloudInfoProvider config={config}>{element}</CloudInfoProvider>
+    );
+  }
   if (isGitHubConfig(config) || isCloudConfig(config)) {
+    const origWrapper = wrapper;
     wrapper = element => (
       <AuthWrapper config={config}>
         <GitHubAppShellDataProvider config={config}>
-          {element}
+          {origWrapper(element)}
         </GitHubAppShellDataProvider>
       </AuthWrapper>
     );
