@@ -1,5 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Button } from '@keystar/ui/button';
 import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
@@ -26,7 +26,7 @@ import {
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
-import { PageRoot, PageHeader } from './shell/page';
+import { PageRoot, PageHeader, PageBody } from './shell/page';
 import { useBaseCommit, useTree } from './shell/data';
 import { TreeNode } from './trees';
 import { useSlugsInCollection } from './useSlugsInCollection';
@@ -34,13 +34,121 @@ import { ForkRepoDialog } from './fork-repo';
 import { useUpsertItem } from './updating';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { notFound } from './not-found';
+import { useItemData } from './useItemData';
+import { mergeDataStates } from './useData';
 
 const emptyMap = new Map<string, TreeNode>();
 
-export function CreateItem(props: {
+function CreateItemWrapper(props: {
   collection: string;
   config: Config;
   basePath: string;
+}) {
+  const [duplicateSlug, setDuplicateSlug] = useState<string | null>(null);
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const duplicate = url.searchParams.get('duplicate');
+    if (duplicateSlug !== duplicate) {
+      setDuplicateSlug(() => duplicate);
+    }
+  }, [duplicateSlug]);
+
+  const collectionConfig = props.config.collections?.[props.collection];
+  if (!collectionConfig) notFound();
+  const slugsArr = useSlugsInCollection(props.collection);
+  const format = useMemo(
+    () => getCollectionFormat(props.config, props.collection),
+    [props.config, props.collection]
+  );
+
+  const slug = useMemo(() => {
+    if (duplicateSlug) {
+      const slugs = new Set(slugsArr);
+      slugs.delete(duplicateSlug);
+      return {
+        field: collectionConfig.slugField,
+        slugs,
+        glob: getSlugGlobForCollection(props.config, props.collection),
+        slug: duplicateSlug,
+      };
+    }
+  }, [
+    slugsArr,
+    duplicateSlug,
+    collectionConfig.slugField,
+    props.collection,
+    props.config,
+  ]);
+
+  const itemData = useItemData({
+    config: props.config,
+    dirpath: getCollectionItemPath(
+      props.config,
+      props.collection,
+      duplicateSlug ?? ''
+    ),
+    schema: collectionConfig.schema,
+    format,
+    slug,
+  });
+
+  const { current: tree } = useTree();
+  const combined = useMemo(
+    () => mergeDataStates({ item: itemData, tree }),
+    [itemData, tree]
+  );
+
+  if (duplicateSlug && combined.kind === 'error') {
+    return (
+      <PageBody>
+        <Notice tone="critical">{combined.error.message}</Notice>
+      </PageBody>
+    );
+  }
+  if (duplicateSlug && combined.kind === 'loading') {
+    return (
+      <Flex alignItems="center" justifyContent="center" minHeight="scale.3000">
+        <ProgressCircle
+          aria-label="Loading Item"
+          isIndeterminate
+          size="large"
+        />
+      </Flex>
+    );
+  }
+  if (
+    duplicateSlug &&
+    combined.kind === 'loaded' &&
+    combined.data.item === 'not-found'
+  ) {
+    return (
+      <PageBody>
+        <Notice tone="caution">Entry not found.</Notice>
+      </PageBody>
+    );
+  }
+
+  return (
+    <CreateItem
+      collection={props.collection}
+      config={props.config}
+      basePath={props.basePath}
+      initialState={
+        duplicateSlug &&
+        combined.kind === 'loaded' &&
+        combined.data.item !== 'not-found'
+          ? combined.data.item.initialState
+          : undefined
+      }
+    />
+  );
+}
+
+function CreateItem(props: {
+  collection: string;
+  config: Config;
+  basePath: string;
+  initialState?: Record<string, unknown>;
 }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
@@ -52,6 +160,23 @@ export function CreateItem(props: {
     [collectionConfig.schema]
   );
   const [state, setState] = useState(() => getInitialPropsValue(schema));
+
+  useEffect(() => {
+    if (props.initialState) {
+      setState({
+        ...props.initialState,
+        [collectionConfig.slugField]: {
+          name:
+            (props.initialState[collectionConfig.slugField] as any).name +
+            ' - Copy',
+          slug:
+            (props.initialState[collectionConfig.slugField] as any).slug +
+            '-copy',
+        },
+      });
+    }
+  }, [props.initialState, collectionConfig.slugField]);
+
   const previewProps = useMemo(
     () => createGetPreviewProps(schema, setState, () => undefined),
     [schema]
@@ -243,3 +368,5 @@ export function CreateItem(props: {
     </>
   );
 }
+
+export { CreateItemWrapper as CreateItem };
