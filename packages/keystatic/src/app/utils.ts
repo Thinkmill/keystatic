@@ -60,7 +60,8 @@ config({
   return true;
 }
 
-export function getSplitCloudProject(config: CloudConfig) {
+export function getSplitCloudProject(config: Config) {
+  if (!config.cloud?.project) return undefined;
   const [team, project] = config.cloud.project.split('/');
   return { team, project };
 }

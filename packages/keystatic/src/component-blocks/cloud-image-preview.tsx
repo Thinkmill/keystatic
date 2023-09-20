@@ -33,7 +33,6 @@ import {
   KEYSTATIC_CLOUD_API_URL,
   KEYSTATIC_CLOUD_HEADERS,
   getSplitCloudProject,
-  isCloudConfig,
 } from '../app/utils';
 import { NotEditable } from '../form/fields/document/DocumentEditor/primitives';
 import { PreviewProps, ObjectField, Config } from '..';
@@ -571,9 +570,9 @@ function isValidURL(str: string) {
 
 export function useImageLibraryURL() {
   const config = useConfig();
-  if (!isCloudConfig(config)) return 'https://keystatic.cloud/';
-  const { project, team } = getSplitCloudProject(config);
-  return `https://keystatic.cloud/teams/${team}/project/${project}/images`;
+  const split = getSplitCloudProject(config);
+  if (!split) return 'https://keystatic.cloud/';
+  return `https://keystatic.cloud/teams/${split.team}/project/${split.project}/images`;
 }
 
 function getAspectRatio(state: ImageDimensions) {
