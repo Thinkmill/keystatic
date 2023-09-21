@@ -26,7 +26,7 @@ import {
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
-import { PageRoot, PageHeader } from './shell/page';
+import { PageRoot, PageHeader, PageBody } from './shell/page';
 import { useBaseCommit, useTree } from './shell/data';
 import { TreeNode } from './trees';
 import { useSlugsInCollection } from './useSlugsInCollection';
@@ -34,13 +34,141 @@ import { ForkRepoDialog } from './fork-repo';
 import { useUpsertItem } from './updating';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { notFound } from './not-found';
+import { useItemData } from './useItemData';
 
 const emptyMap = new Map<string, TreeNode>();
 
-export function CreateItem(props: {
+function CreateItemWrapper(props: {
   collection: string;
   config: Config;
   basePath: string;
+}) {
+  const router = useRouter();
+  const duplicateSlug = useMemo(() => {
+    const url = new URL(router.href, 'http://localhost');
+    return url.searchParams.get('duplicate');
+  }, [router.href]);
+
+  const collectionConfig = props.config.collections?.[props.collection];
+  if (!collectionConfig) notFound();
+  const slugsArr = useSlugsInCollection(props.collection);
+  const format = useMemo(
+    () => getCollectionFormat(props.config, props.collection),
+    [props.config, props.collection]
+  );
+
+  const slug = useMemo(() => {
+    if (duplicateSlug) {
+      const slugs = new Set(slugsArr);
+      slugs.delete(duplicateSlug);
+      return {
+        field: collectionConfig.slugField,
+        slugs,
+        glob: getSlugGlobForCollection(props.config, props.collection),
+        slug: duplicateSlug,
+      };
+    }
+  }, [
+    slugsArr,
+    duplicateSlug,
+    collectionConfig.slugField,
+    props.collection,
+    props.config,
+  ]);
+
+  const itemData = useItemData({
+    config: props.config,
+    dirpath: getCollectionItemPath(
+      props.config,
+      props.collection,
+      duplicateSlug ?? ''
+    ),
+    schema: collectionConfig.schema,
+    format,
+    slug,
+  });
+
+  const duplicateInitalState =
+    duplicateSlug && itemData.kind === 'loaded' && itemData.data !== 'not-found'
+      ? itemData.data.initialState
+      : undefined;
+
+  const duplicateInitalStateWithUpdatedSlug = useMemo(() => {
+    if (duplicateInitalState) {
+      let slugFieldValue = duplicateInitalState[collectionConfig.slugField];
+      // we'll make a best effort to add something to the slug after duplicated so it's different
+      // but if it fails a user can change it before creating
+      // (e.g. potentially it's not just a text field so appending -copy might not work)
+      try {
+        const slugFieldSchema =
+          collectionConfig.schema[collectionConfig.slugField];
+        if (
+          slugFieldSchema.kind !== 'form' ||
+          slugFieldSchema.formKind !== 'slug'
+        ) {
+          throw new Error('not slug field');
+        }
+        const serialized = slugFieldSchema.serializeWithSlug(slugFieldValue);
+        slugFieldValue = slugFieldSchema.parse(serialized.value, {
+          slug: `${serialized.slug}-copy`,
+        });
+      } catch {}
+      return {
+        ...duplicateInitalState,
+        [collectionConfig.slugField]: slugFieldValue,
+      };
+    }
+  }, [
+    collectionConfig.schema,
+    collectionConfig.slugField,
+    duplicateInitalState,
+  ]);
+
+  if (duplicateSlug && itemData.kind === 'error') {
+    return (
+      <PageBody>
+        <Notice tone="critical">{itemData.error.message}</Notice>
+      </PageBody>
+    );
+  }
+  if (duplicateSlug && itemData.kind === 'loading') {
+    return (
+      <Flex alignItems="center" justifyContent="center" minHeight="scale.3000">
+        <ProgressCircle
+          aria-label="Loading Item"
+          isIndeterminate
+          size="large"
+        />
+      </Flex>
+    );
+  }
+  if (
+    duplicateSlug &&
+    itemData.kind === 'loaded' &&
+    itemData.data === 'not-found'
+  ) {
+    return (
+      <PageBody>
+        <Notice tone="caution">Entry not found.</Notice>
+      </PageBody>
+    );
+  }
+
+  return (
+    <CreateItem
+      collection={props.collection}
+      config={props.config}
+      basePath={props.basePath}
+      initialState={duplicateInitalStateWithUpdatedSlug}
+    />
+  );
+}
+
+function CreateItem(props: {
+  collection: string;
+  config: Config;
+  basePath: string;
+  initialState?: Record<string, unknown>;
 }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
@@ -51,7 +179,10 @@ export function CreateItem(props: {
     () => fields.object(collectionConfig.schema),
     [collectionConfig.schema]
   );
-  const [state, setState] = useState(() => getInitialPropsValue(schema));
+  const [state, setState] = useState(
+    () => props.initialState ?? getInitialPropsValue(schema)
+  );
+
   const previewProps = useMemo(
     () => createGetPreviewProps(schema, setState, () => undefined),
     [schema]
@@ -243,3 +374,5 @@ export function CreateItem(props: {
     </>
   );
 }
+
+export { CreateItemWrapper as CreateItem };
