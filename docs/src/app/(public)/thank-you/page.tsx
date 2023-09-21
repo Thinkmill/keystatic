@@ -31,30 +31,12 @@ export const metadata = {
 export default function ThankYouPage() {
   return (
     <>
-      <Main className="mx-auto flex w-full max-w-7xl flex-1 items-center px-6 pb-12 pt-6">
-        <div className="max-w-xl">
-          <h1
-            className="text-3xl font-extrabold sm:text-4xl md:text-5xl"
-            id={H1_ID}
-          >
-            Thank you for being{' '}
-            <span className="relative inline-block">
-              <svg
-                className="absolute -right-1 bottom-0 w-full"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 410 101"
-                aria-hidden="true"
-              >
-                <path
-                  fill="#F7DE5B"
-                  d="m5.158.403 96.893 5.068 105.224 9.473 103.466 9.547 98.65 4.995-22.978 8.574 14.51 10.25 2.849 8.767-15.582 5.694 8.105 5.662 8.106 5.661-15.474 5.69 11.444 9.797 3.915 10.861-97.861-3.907-104.581-8.007-122.06-5.809-79.73-11.36L13.65 63.35 1.33 53.62l5.972-10.128-4.696-7.611 17.604-.658L7.903 20.749l5.786-11.577-8.53-8.77Z"
-                />
-              </svg>
-              <span className="relative">curious!</span>
-            </span>
+      <Main className="mx-auto flex w-full max-w-7xl flex-1 items-center px-6 pb-24 pt-24">
+        <div className="flex max-w-xl flex-col gap-6 pt-10">
+          <h1 className="text-5xl font-medium" id={H1_ID}>
+            Thank you for being curious!
           </h1>
-          <p className="mt-8 text-lg text-slate-11">
+          <p className="text-lg">
             We're looking forward to sharing updates with you in the coming
             weeks and months.
           </p>

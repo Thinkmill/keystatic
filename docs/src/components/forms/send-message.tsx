@@ -17,76 +17,77 @@ export default function SendMessageForm() {
   }
 
   return (
-    <form className="mt-6" onSubmit={handleSubmit}>
+    <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
       <input type="hidden" name="form-type" value="send-message" />
-      <div className="grid grid-cols-2 gap-6">
-        <div>
-          <label className="block font-medium" htmlFor="name">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-2">
+          <label className="block text-sm font-medium" htmlFor="name">
             Name
           </label>
           <input
             type="text"
             id="name"
             name="name"
-            className="form-input mt-3 w-full rounded-lg border border-black p-3 leading-none"
+            className="form-input h-10 w-full rounded-lg border border-black px-4 py-2 leading-none"
           />
         </div>
-        <div>
-          <label className="block font-medium" htmlFor="email">
+        <div className="flex flex-col gap-2">
+          <label className="block text-sm font-medium" htmlFor="email">
             Email
           </label>
           <input
             type="email"
             id="email"
             name="email"
-            className="form-input mt-3 w-full rounded-lg border border-black p-3 leading-none"
+            className="form-input h-10 w-full rounded-lg border border-black px-4 py-2 leading-none"
           />
         </div>
       </div>
-      <div className="mt-6">
-        <label className="block font-medium" htmlFor="message">
+      <div className="flex flex-col gap-2">
+        <label className="block text-sm font-medium" htmlFor="message">
           Message
         </label>
         <textarea
           id="message"
           name="message"
           rows={8}
-          className="form-textarea mt-3 w-full rounded-lg border border-black p-3 leading-none"
+          className="form-textarea w-full rounded-lg border border-black px-4 py-2 leading-none"
         />
       </div>
 
-      <hr className="mt-10 border-dashed border-t-black" />
+      <hr className="border-dashed border-t-black" />
 
-      <p className="mt-10">
+      <p className="text-sm">
         We're building Keystatic in the open over the coming weeks and months.
         If you're interested in following along, there's a few ways you do
         that... No spam, just sharing the adventure!
       </p>
-
-      <div className="mt-8 flex items-center gap-3">
-        <input
-          type="checkbox"
-          className="form-input h-6 w-6 rounded-md border-2 border-black text-keystatic-highlight"
-          id="opt-in-updates"
-          name="opt-in-updates"
-        />
-        <label htmlFor="opt-in-updates">
-          I want to receive updates about our launch
-        </label>
-      </div>
-      <div className="mt-8 flex items-center gap-3">
-        <input
-          type="checkbox"
-          className="form-input h-6 w-6 rounded-md border-2 border-black text-keystatic-highlight"
-          id="opt-in-channel"
-          name="opt-in-channel"
-        />
-        <label htmlFor="opt-in-channel">
-          I want to receive an invite to our early access channel
-        </label>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-3">
+          <input
+            type="checkbox"
+            className="form-input h-6 w-6 rounded-md border-2 border-black p-1 text-iris-11"
+            id="opt-in-updates"
+            name="opt-in-updates"
+          />
+          <label htmlFor="opt-in-updates" className="text-sm">
+            I want to receive updates about our launch
+          </label>
+        </div>
+        <div className="flex items-center gap-3">
+          <input
+            type="checkbox"
+            className="form-input h-6 w-6 rounded-md border-2 border-black p-1 text-iris-11"
+            id="opt-in-channel"
+            name="opt-in-channel"
+          />
+          <label htmlFor="opt-in-channel" className="text-sm">
+            I want to receive an invite to our early access channel
+          </label>
+        </div>
       </div>
       <Button
-        className="mt-10 flex w-full items-center justify-center gap-2"
+        className="flex flex-row justify-center gap-2 text-center sm:w-fit"
         type="submit"
         isLoading={isLoading}
       >
