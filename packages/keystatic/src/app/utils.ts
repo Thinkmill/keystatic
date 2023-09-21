@@ -181,7 +181,7 @@ export const KEYSTATIC_CLOUD_HEADERS = {
 const textEncoder = new TextEncoder();
 
 export async function redirectToCloudAuth(from: string, config: Config) {
-  if (!isCloudConfig(config)) {
+  if (!config.cloud?.project) {
     throw new Error('Not a cloud config');
   }
   const code_verifier = fromUint8Array(
