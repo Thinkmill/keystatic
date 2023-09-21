@@ -72,7 +72,7 @@ const docs = [
       </svg>
     ),
     content: (
-      <div className="relative flex h-full items-center py-4">
+      <div className="relative flex h-full items-center px-8 py-4">
         <div className="relative h-20 w-full overflow-hidden rounded-lg border border-sand-12 bg-whiteAlpha-12 transition-all duration-150 group-hover:h-full">
           <div className="absolute left-0 right-0 top-0 flex gap-1.5 p-3">
             <div className="h-2 w-2 rounded-full bg-sand-9" />
@@ -243,8 +243,8 @@ const docs = [
           />
         </svg>
         {/* content */}
-        <div className="relative flex h-full items-center py-2">
-          <div className="relative flex flex-col gap-2 font-mono text-xs">
+        <div className="relative flex h-full items-center px-8 py-2">
+          <div className="relative mx-auto flex flex-col gap-2 font-mono text-xs">
             <div className="flex h-16 flex-row items-center gap-5 overflow-hidden rounded-lg border border-sand-12 bg-whiteAlpha-9 px-4 py-2 transition-all duration-150 ease-out hover:h-[5.5rem] hover:bg-whiteAlpha-12">
               <div className="h-8 w-8 flex-none">
                 <AstroIcon />
@@ -274,7 +274,7 @@ const docs = [
     link: 'docs/connect-to-github',
     bgSVG: (
       <svg
-        className="absolute left-1/2 top-1/2 h-96 min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
+        className="absolute left-1/2 top-1/2 h-96 w-full -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out group-hover:scale-125"
         width="324"
         height="184"
         viewBox="0 0 324 184"
@@ -388,16 +388,16 @@ const docs = [
       </svg>
     ),
     content: (
-      <div className="absolute left-1/2 top-1/2 h-auto -translate-x-1/2 -translate-y-1/2 overflow-hidden">
-        <div className="relative m-auto flex h-48 w-48 flex-row items-center gap-4 rounded-full p-2">
-          <div className="absolute left-0 top-0 h-full w-full rounded-full p-14">
-            <div className="hidden h-full w-full rounded-full border border-sandAlpha-6 group-hover:block group-hover:animate-ping" />
-          </div>
-          <div className="h-8 w-8 flex-none transition-all group-hover:ml-10">
+      <div className="relative flex h-full w-full flex-col items-center py-[4.5rem]">
+        <span className="absolute left-1/2 top-1/2 -ml-10 -mt-10 flex h-20 w-20">
+          <span className="invisible absolute inline-flex h-full w-full animate-pulse rounded-full border border-sand-12/40 group-hover:visible group-hover:animate-ping" />
+        </span>
+        <div className="relative flex w-1/2 flex-row items-center gap-4 transition-all group-hover:w-24">
+          <div className="h-8 w-8 flex-none">
             <KeystaticIcon />
           </div>
-          <div className="h-[1px] w-full  bg-slate-12" />
-          <div className="h-8 w-8 flex-none transition-all group-hover:mr-10">
+          <div className="h-[1px] w-full bg-slate-12 transition-all group-hover:w-0" />
+          <div className="h-8 w-8 flex-none">
             {/* TODO make GithubIcon component re-sizable and replace below svg */}
             <svg
               className="h-8 w-8"
@@ -500,26 +500,28 @@ const docs = [
       </svg>
     ),
     content: (
-      <div className="relative flex h-full flex-col place-content-center gap-2 border-l border-sandAlpha-6 py-2">
-        <div className="relative flex flex-row">
-          <div className="peer order-2 w-full rounded border border-sand-12 bg-whiteAlpha-9 px-2 py-1 font-mono text-xs leading-tight hover:bg-whiteAlpha-12">
-            <p>collection-name</p>
-            <p>└── slug</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;├── index.yaml</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;└── other.mdoc</p>
+      <div className="relative h-full px-8">
+        <div className="flex h-full flex-col place-content-center gap-2 border-l border-sandAlpha-6 py-2">
+          <div className="relative flex flex-row">
+            <div className="peer order-2 w-full rounded border border-sand-12 bg-whiteAlpha-9 px-2 py-1 font-mono text-xs leading-tight hover:bg-whiteAlpha-12">
+              <p>collection-name</p>
+              <p>└── slug</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;├── index.yaml</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;└── other.mdoc</p>
+            </div>
+            <div className="peer z-10 order-1 h-full w-6 flex-none transition-all duration-150 hover:w-12 peer-hover:w-12 " />
+            <div className="absolute left-0 top-2 h-[1px] w-6 bg-sandAlpha-6 transition-all duration-150 peer-hover:w-12 peer-hover:bg-gradient-to-l peer-hover:from-sand-12" />
           </div>
-          <div className="peer z-10 order-1 h-full w-6 flex-none transition-all duration-150 hover:w-12 peer-hover:w-12 " />
-          <div className="absolute left-0 top-2 h-[1px] w-6 bg-sandAlpha-6 transition-all duration-150 peer-hover:w-12 peer-hover:bg-gradient-to-l peer-hover:from-sand-12" />
-        </div>
-        <div className="relative flex flex-row">
-          <div className="peer order-2 w-full rounded border border-sand-12 bg-whiteAlpha-9 px-2 py-1 font-mono text-xs leading-tight hover:bg-whiteAlpha-12">
-            <p>singleton-name</p>
-            <p>└── slug</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;├── index.yaml</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;└── other.mdoc</p>
+          <div className="relative flex flex-row">
+            <div className="peer order-2 w-full rounded border border-sand-12 bg-whiteAlpha-9 px-2 py-1 font-mono text-xs leading-tight hover:bg-whiteAlpha-12">
+              <p>singleton-name</p>
+              <p>└── slug</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;├── index.yaml</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;└── other.mdoc</p>
+            </div>
+            <div className="peer z-10 order-1 w-6 flex-none transition-all duration-150 hover:w-12 peer-hover:w-12 " />
+            <div className="absolute left-0 top-2 h-[1px] w-6 bg-sandAlpha-6 transition-all duration-150 peer-hover:w-12 peer-hover:bg-gradient-to-l peer-hover:from-sand-12" />
           </div>
-          <div className="peer z-10 order-1 w-6 flex-none transition-all duration-150 hover:w-12 peer-hover:w-12 " />
-          <div className="absolute left-0 top-2 h-[1px] w-6 bg-sandAlpha-6 transition-all duration-150 peer-hover:w-12 peer-hover:bg-gradient-to-l peer-hover:from-sand-12" />
         </div>
       </div>
     ),
@@ -645,7 +647,7 @@ const docs = [
       </svg>
     ),
     content: (
-      <div className="relative flex h-full items-center py-2">
+      <div className="relative flex h-full items-center px-8 py-2">
         <div className="flex w-full flex-row items-center gap-2">
           <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight tracking-tight">
             <p>collections:</p>
@@ -750,10 +752,10 @@ const docs = [
       </svg>
     ),
     content: (
-      <div className="relative flex h-full items-center py-2 font-mono text-xs leading-tight tracking-tight">
+      <div className="relative flex h-full items-center px-8 py-2 font-mono text-xs leading-tight tracking-tight">
         <div className="flex w-full flex-col items-center">
           <div className="relative h-8 w-8 flex-none rounded-full">
-            <div className="absolute left-0 top-0 h-full w-full rounded-full bg-whiteAlpha-12 group-hover:animate-ping" />
+            <span className="invisible absolute inline-flex h-full w-full animate-pulse rounded-full bg-sandAlpha-8 group-hover:visible group-hover:animate-ping" />
             <NextJSIcon />
           </div>
           <div className="h-3 w-[1px] bg-sand-12" />
@@ -838,9 +840,9 @@ export default function DocsLinks() {
                     <ArrowRightIcon />
                   </Link>
                 </div>
-                <div className="relative h-44 overflow-hidden bg-sand-2 px-8">
+                <div className="relative h-44 w-full overflow-hidden bg-sand-2">
                   {doc.bgSVG}
-                  <div className="absolute left-0 top-0 h-full w-full bg-pattern-texture opacity-80 mix-blend-soft-light" />
+                  <div className="absolute left-0 top-0 h-full w-full bg-pattern-texture opacity-80 mix-blend-soft-light transition-all duration-500 ease-out group-hover:scale-125" />
                   {doc.content}
                 </div>
               </div>
