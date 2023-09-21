@@ -246,6 +246,16 @@ export default {
       fontFamily: {
         sans: ['var(--font-inter)', ...defaultTheme.fontFamily.sans],
       },
+      backgroundImage: {
+        'pattern-texture': "url('../app/texture.png')",
+        /* 
+          Pattern texture. Used to apply texture over svg pattern artwork. Apply below classes to the svg's sibling element:
+            -
+            <svg…</svg>
+            <div className="absolute left-0 top-0 h-full w-full bg-pattern-texture opacity-80 mix-blend-soft-light" />
+            -
+        */
+      },
       maxWidth: {
         '7xl': MAIN_EL_MAX_WIDTH,
       },
