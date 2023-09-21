@@ -8,7 +8,7 @@ export default function CliVideo() {
           </h2>
           <p>
             Create a new Next.js or Astro project in seconds with the Keystatic
-            CLI
+            CLI.
           </p>
         </div>
         <div className="col-span-8 sm:col-span-6 sm:col-start-2 md:col-span-7 md:col-start-6">
