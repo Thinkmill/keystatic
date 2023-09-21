@@ -30,7 +30,7 @@ export default async function Showcase() {
   const highlightedProjects = sortedProjects.splice(0, 2);
 
   return (
-    <div className="mb-20 mt-16 pt-24">
+    <div className="mb-20 mt-24 pt-10">
       <div className="mx-auto max-w-2xl text-center">
         <h1 className="text-4xl font-medium md:text-5xl">
           Built with Keystatic

@@ -31,7 +31,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
       : sortedProjects[0];
 
   return (
-    <div className="py-10">
+    <div className="py-10 pt-24">
       <header>
         <div className="grid grid-cols-2 items-end gap-12 md:grid-cols-[1fr,auto,1fr]">
           {/* Previous project */}
@@ -40,10 +40,10 @@ export default async function Docs({ params }: { params: { slug: string } }) {
             href={`/showcase/${previousProject.slug}`}
             className="group mb-2 flex flex-col gap-6"
           >
-            <span className="font-medium leading-none text-slate-9">
+            <span className="font-medium leading-none text-sand-9">
               &larr; Previous
             </span>
-            <span className="text-lg font-bold leading-none group-hover:underline">
+            <span className="text-lg font-medium leading-none group-hover:underline">
               {previousProject.entry.title}
             </span>
           </Link>
@@ -51,11 +51,11 @@ export default async function Docs({ params }: { params: { slug: string } }) {
           <div className="col-span-2 row-start-1 text-center md:col-span-1 md:col-start-2">
             <Link
               href="/showcase"
-              className="font-medium text-slate-11 hover:underline"
+              className="font-medium text-sand-11 hover:underline"
             >
               Showcase
             </Link>
-            <h1 className="mt-2 text-3xl font-extrabold leading-none sm:text-4xl md:mt-4 md:text-5xl lg:mt-6">
+            <h1 className="mt-2 text-3xl font-medium leading-none sm:text-4xl md:mt-4 md:text-5xl lg:mt-6">
               {project.title}
             </h1>
           </div>
@@ -64,17 +64,17 @@ export default async function Docs({ params }: { params: { slug: string } }) {
             href={`/showcase/${nextProject.slug}`}
             className="group mb-2 flex flex-col gap-6 justify-self-end rounded-md text-right"
           >
-            <span className="font-medium leading-none text-slate-9">
+            <span className="font-medium leading-none text-sand-9">
               Next &rarr;
             </span>
-            <span className="text-lg font-bold leading-none group-hover:underline">
+            <span className="text-lg font-medium leading-none group-hover:underline">
               {nextProject.entry.title}
             </span>
           </Link>
         </div>
 
-        <div className="border-b-2 border-slate-5">
-          <div className="relative mt-8 aspect-[16/10.5] overflow-hidden rounded-t-2xl border-2 border-b-0 border-slate-5 md:mt-16 lg:mx-20">
+        <div className="border-b-2 border-sand-5">
+          <div className="relative mt-8 aspect-[16/10.5] overflow-hidden rounded-t-2xl border-2 border-b-0 border-sand-5 md:mt-16 lg:mx-20">
             {/* Window buttons fake UI */}
             <div
               className="absolute left-2.5 top-2.5 z-10 flex gap-1.5"
@@ -93,9 +93,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
           </div>
         </div>
         <div className="mx-auto mt-16 max-w-2xl [text-wrap:balance]">
-          <p className="text-center font-medium md:text-lg">
-            {project.summary}
-          </p>
+          <p className="text-center md:text-lg">{project.summary}</p>
           <div className="mt-10 flex items-center justify-center gap-2">
             {project.repoUrl && (
               <ActionButton
@@ -117,7 +115,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
 
       {content && (
         <>
-          <hr className="mx-auto mt-16 w-20 border-slate-5" />
+          <hr className="mx-auto mt-16 w-20 border-sand-5" />
           <main className="bg-white py-12">
             <div className="prose mx-auto px-4 lg:prose-lg sm:px-6 lg:px-8">
               <DocumentRenderer document={content} slug={slug} />
