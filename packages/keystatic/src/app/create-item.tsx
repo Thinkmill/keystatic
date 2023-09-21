@@ -1,5 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Button } from '@keystar/ui/button';
 import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
@@ -35,7 +35,6 @@ import { useUpsertItem } from './updating';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { notFound } from './not-found';
 import { useItemData } from './useItemData';
-import { mergeDataStates } from './useData';
 
 const emptyMap = new Map<string, TreeNode>();
 
@@ -89,20 +88,50 @@ function CreateItemWrapper(props: {
     slug,
   });
 
-  const { current: tree } = useTree();
-  const combined = useMemo(
-    () => mergeDataStates({ item: itemData, tree }),
-    [itemData, tree]
-  );
+  const duplicateInitalState =
+    duplicateSlug && itemData.kind === 'loaded' && itemData.data !== 'not-found'
+      ? itemData.data.initialState
+      : undefined;
 
-  if (duplicateSlug && combined.kind === 'error') {
+  const duplicateInitalStateWithUpdatedSlug = useMemo(() => {
+    if (duplicateInitalState) {
+      let slugFieldValue = duplicateInitalState[collectionConfig.slugField];
+      // we'll make a best effort to add something to the slug after duplicated so it's different
+      // but if it fails a user can change it before creating
+      // (e.g. potentially it's not just a text field so appending -copy might not work)
+      try {
+        const slugFieldSchema =
+          collectionConfig.schema[collectionConfig.slugField];
+        if (
+          slugFieldSchema.kind !== 'form' ||
+          slugFieldSchema.formKind !== 'slug'
+        ) {
+          throw new Error('not slug field');
+        }
+        const serialized = slugFieldSchema.serializeWithSlug(slugFieldValue);
+        slugFieldValue = slugFieldSchema.parse(serialized.value, {
+          slug: `${serialized.slug}-copy`,
+        });
+      } catch {}
+      return {
+        ...duplicateInitalState,
+        [collectionConfig.slugField]: slugFieldValue,
+      };
+    }
+  }, [
+    collectionConfig.schema,
+    collectionConfig.slugField,
+    duplicateInitalState,
+  ]);
+
+  if (duplicateSlug && itemData.kind === 'error') {
     return (
       <PageBody>
-        <Notice tone="critical">{combined.error.message}</Notice>
+        <Notice tone="critical">{itemData.error.message}</Notice>
       </PageBody>
     );
   }
-  if (duplicateSlug && combined.kind === 'loading') {
+  if (duplicateSlug && itemData.kind === 'loading') {
     return (
       <Flex alignItems="center" justifyContent="center" minHeight="scale.3000">
         <ProgressCircle
@@ -115,8 +144,8 @@ function CreateItemWrapper(props: {
   }
   if (
     duplicateSlug &&
-    combined.kind === 'loaded' &&
-    combined.data.item === 'not-found'
+    itemData.kind === 'loaded' &&
+    itemData.data === 'not-found'
   ) {
     return (
       <PageBody>
@@ -130,13 +159,7 @@ function CreateItemWrapper(props: {
       collection={props.collection}
       config={props.config}
       basePath={props.basePath}
-      initialState={
-        duplicateSlug &&
-        combined.kind === 'loaded' &&
-        combined.data.item !== 'not-found'
-          ? combined.data.item.initialState
-          : undefined
-      }
+      initialState={duplicateInitalStateWithUpdatedSlug}
     />
   );
 }
@@ -156,23 +179,9 @@ function CreateItem(props: {
     () => fields.object(collectionConfig.schema),
     [collectionConfig.schema]
   );
-  const [state, setState] = useState(() => getInitialPropsValue(schema));
-
-  useEffect(() => {
-    if (props.initialState) {
-      setState({
-        ...props.initialState,
-        [collectionConfig.slugField]: {
-          name:
-            (props.initialState[collectionConfig.slugField] as any).name +
-            ' - Copy',
-          slug:
-            (props.initialState[collectionConfig.slugField] as any).slug +
-            '-copy',
-        },
-      });
-    }
-  }, [props.initialState, collectionConfig.slugField]);
+  const [state, setState] = useState(
+    () => props.initialState ?? getInitialPropsValue(schema)
+  );
 
   const previewProps = useMemo(
     () => createGetPreviewProps(schema, setState, () => undefined),
