@@ -126,7 +126,7 @@ export async function GET(req: NextRequest) {
             opacity: 0.8,
             backgroundImage: `url(../texture.png)`,
           }}
-        ></div>
+        />
         <div
           style={{
             position: 'relative',
