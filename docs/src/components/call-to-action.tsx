@@ -19,77 +19,78 @@ export default function CallToAction() {
     <section className="relative grid overflow-hidden bg-sand-2">
       {/* Background svg */}
       <svg
-        className="absolute left-0 top-0 z-0 min-h-full"
+        className="absolute left-0 top-0 z-0 min-h-full opacity-80"
         width="756"
         height="637"
         viewBox="0 0 756 637"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <g clipPath="url(#clip0_1434_10414)">
+        <g clipPath="url(#clip0_1540_2892)">
           <path
             d="M-80 -360L997 717"
-            stroke="url(#paint0_linear_1434_10414)"
+            stroke="url(#paint0_linear_1540_2892)"
             strokeWidth="226"
             strokeLinejoin="round"
           />
           <path
             d="M-91.9999 -54.0001L181 219L499 219L997 717"
-            stroke="url(#paint1_linear_1434_10414)"
+            stroke="url(#paint1_linear_1540_2892)"
             strokeWidth="226"
           />
           <path
             opacity="0.4"
             d="M-80 -360L997 717.001"
-            stroke="url(#paint2_linear_1434_10414)"
+            stroke="url(#paint2_linear_1540_2892)"
             strokeWidth="224"
             strokeLinejoin="round"
           />
         </g>
         <defs>
           <linearGradient
-            id="paint0_linear_1434_10414"
+            id="paint0_linear_1540_2892"
             x1="-1.04043e+11"
             y1="1.04043e+11"
             x2="-1.04043e+11"
             y2="1.04043e+11"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#E7F9FB" />
-            <stop offset="1" stopColor="#FEEEF8" />
+            <stop stopColor="#AADEE6" />
+            <stop offset="1" stopColor="#F3C6E2" />
           </linearGradient>
           <linearGradient
-            id="paint1_linear_1434_10414"
+            id="paint1_linear_1540_2892"
             x1="167.812"
             y1="205.973"
             x2="636.388"
             y2="674.549"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#FFFBD1" />
-            <stop offset="1" stopColor="#F5F2FF" />
+            <stop stopColor="#FFF8BB" />
+            <stop offset="1" stopColor="#D7CFF9" />
           </linearGradient>
           <linearGradient
-            id="paint2_linear_1434_10414"
+            id="paint2_linear_1540_2892"
             x1="189.917"
             y1="-89.7194"
             x2="538.438"
             y2="258.801"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#E7F9FB" />
-            <stop offset="1" stopColor="#FEEEF8" />
+            <stop stopColor="#AADEE6" />
+            <stop offset="1" stopColor="#F3C6E2" />
           </linearGradient>
-          <clipPath id="clip0_1434_10414">
+          <clipPath id="clip0_1540_2892">
             <rect width="756" height="637" fill="white" />
           </clipPath>
         </defs>
       </svg>
+      <div className="absolute left-0 top-0 h-full w-full bg-pattern-texture opacity-80 mix-blend-soft-light" />
       <div className="relative px-6 py-16 sm:max-w-lg sm:pl-3">
         <div className="flex flex-col gap-6 px-8 lg:px-16">
           <div className="flex flex-col gap-4">
             <h4 className="text-xl font-medium">Tell us what you think</h4>
-            <p className="text-sm text-sand-11">
+            <p className="text-sm text-sand-12">
               We're building Keystatic in the open as part of{' '}
               <a
                 href="https://www.thinkmill.com.au/"
@@ -111,7 +112,7 @@ export default function CallToAction() {
                 target="_blank"
                 aria-label={`${linkLabels.ksDiscussions} (Opens in new tab)`}
               >
-                <span className="flex h-8 flex-row items-center gap-4 text-sm font-medium text-sand-11 transition-all duration-150 hover:gap-6 hover:text-sand-12">
+                <span className="flex h-8 flex-row items-center gap-4 text-sm font-medium text-sand-12 transition-all duration-150 hover:gap-6 hover:text-black">
                   <GithubIcon />
                   <span>{linkLabels.ksDiscussions}</span>
                 </span>
@@ -119,7 +120,7 @@ export default function CallToAction() {
             </li>
             <li>
               <button onClick={() => setIsOpen(true)} className="block w-full">
-                <span className="flex h-8 flex-row items-center gap-4 text-sm font-medium text-sand-11 transition-all duration-150 hover:gap-6 hover:text-sand-12">
+                <span className="flex h-8 flex-row items-center gap-4 text-sm font-medium text-sand-12 transition-all duration-150 hover:gap-6 hover:text-black">
                   <PaperAirplaneIcon />
                   <span>Send us a message</span>
                 </span>
@@ -134,19 +135,15 @@ export default function CallToAction() {
         onClose={() => setIsOpen(false)}
         header={() => (
           <>
-            <h2 className="pr-8 text-3xl font-bold sm:text-4xl sm:leading-tight">
-              Send us a message
-            </h2>
-            <p className="mt-4 text-slate-11">Tell us what you think below.</p>
+            <div className="flex flex-col gap-4">
+              <h2 className="pr-8 text-3xl font-medium">Send us a message</h2>
+              <p>Tell us what you think below.</p>
+            </div>
           </>
         )}
       >
-        <div className="mt-6">
-          <h3 className="text-2xl font-bold leading-7">
-            Tell us a bit about yourself
-          </h3>
-          <SendMessageForm />
-        </div>
+        <h3 className="text-2xl font-medium">Tell us a bit about yourself</h3>
+        <SendMessageForm />
       </Dialog>
     </section>
   );

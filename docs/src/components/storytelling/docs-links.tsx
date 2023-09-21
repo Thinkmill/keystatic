@@ -72,68 +72,70 @@ const docs = [
       </svg>
     ),
     content: (
-      <div className="relative mt-8 h-20 overflow-hidden rounded-lg border border-sand-12 bg-whiteAlpha-12 transition-all duration-150 group-hover:mt-0 group-hover:h-36 ">
-        <div className="absolute left-0 right-0 top-0 flex gap-1.5 p-3">
-          <div className="h-2 w-2 rounded-full bg-sand-9" />
-          <div className="h-2 w-2 rounded-full bg-sand-9" />
-          <div className="h-2 w-2 rounded-full bg-sand-9" />
-        </div>
-        <div className="relative h-full overflow-auto pt-8">
-          <div className="h-full overflow-auto overscroll-auto px-3 pb-3 font-mono text-xs">
-            <p>
-              <span className="text-sand-9">&gt;_</span>
-              <span className="text-sand-11"> npm</span>
-              <span> create @keystatic@latest</span>
-              <span className="inline animate-pulse text-sand-9 group-hover:hidden">
-                █
-              </span>
-            </p>
-            <div className="hidden group-hover:inline-block ">
+      <div className="relative flex h-full items-center py-4">
+        <div className="relative h-20 w-full overflow-hidden rounded-lg border border-sand-12 bg-whiteAlpha-12 transition-all duration-150 group-hover:h-full">
+          <div className="absolute left-0 right-0 top-0 flex gap-1.5 p-3">
+            <div className="h-2 w-2 rounded-full bg-sand-9" />
+            <div className="h-2 w-2 rounded-full bg-sand-9" />
+            <div className="h-2 w-2 rounded-full bg-sand-9" />
+          </div>
+          <div className="h-full overflow-auto pt-8">
+            <div className="h-full overflow-auto overscroll-auto px-3 pb-3 font-mono text-xs">
               <p>
-                <span className="text-sand-9">==&gt;</span>
-                <span> Keystatic - let’s get you setup</span>
-              </p>
-              <p>
-                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---+</span>
-              </p>
-              <p>
-                <span>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;|
+                <span className="text-sand-9">&gt;_</span>
+                <span className="text-sand-11"> npm</span>
+                <span> create @keystatic@latest</span>
+                <span className="inline animate-pulse text-sand-9 group-hover:hidden">
+                  █
                 </span>
               </p>
-              <p>
-                <span>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---+
-                </span>
-              </p>
-              <p>
-                <span>
-                  &nbsp;&nbsp;&nbsp;&nbsp;+---&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/
-                </span>
-              </p>
-              <p>
-                <span>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;/
-                </span>
-              </p>
-              <p>
-                <span>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---+
-                </span>
-              </p>
-              <p>
-                <span className="text-sand-9">==&gt;</span>
-                <span> Pick a framework to use with Keystatic</span>
-              </p>
-              <p>
-                <span className="text-sand-9">-</span>
-                <span> Next.js</span>
-              </p>
-              <p>
-                <span className="text-sand-9">-</span>
-                <span> Astro</span>
-                <span className="animate-pulse text-sand-9">█</span>
-              </p>
+              <div className="hidden group-hover:inline-block ">
+                <p>
+                  <span className="text-sand-9">==&gt;</span>
+                  <span> Keystatic - let’s get you setup</span>
+                </p>
+                <p>
+                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---+</span>
+                </p>
+                <p>
+                  <span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;|
+                  </span>
+                </p>
+                <p>
+                  <span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---+
+                  </span>
+                </p>
+                <p>
+                  <span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;+---&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/
+                  </span>
+                </p>
+                <p>
+                  <span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;/
+                  </span>
+                </p>
+                <p>
+                  <span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---+
+                  </span>
+                </p>
+                <p>
+                  <span className="text-sand-9">==&gt;</span>
+                  <span> Pick a framework to use with Keystatic</span>
+                </p>
+                <p>
+                  <span className="text-sand-9">-</span>
+                  <span> Next.js</span>
+                </p>
+                <p>
+                  <span className="text-sand-9">-</span>
+                  <span> Astro</span>
+                  <span className="animate-pulse text-sand-9">█</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -225,140 +227,42 @@ const docs = [
     ),
     content: (
       <>
-        {/* Background grid */}
-        <div className="absolute left-1/2 top-1/2 ml-[1px] mt-[1px] grid h-auto w-[336px] -translate-x-1/2 -translate-y-1/2 grid-cols-7">
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="relative -m-[0.5px] h-12 w-12 border-b border-r border-sandAlpha-6 [&>*]:bg-sandAlpha-6 [&>*]:hover:bg-sandAlpha-8">
-            <div className="absolute left-1/2 top-1/2 h-full w-[1px] -translate-x-1/2 -translate-y-1/2 transition duration-500 ease-in-out" />
-            <div className="absolute left-1/2 top-1/2 h-[1px] w-full -translate-x-1/2 -translate-y-1/2" />
-          </div>
-        </div>
-        {/* Cards */}
-        <div className="grid h-full content-center gap-2 p-2">
-          <div className="relative flex h-auto flex-row items-center gap-5 overflow-hidden rounded-lg border border-sand-12 bg-whiteAlpha-9 px-4 py-2 font-mono text-xs transition-all duration-150 ease-out hover:bg-whiteAlpha-12 hover:py-5">
-            <div className="h-8 w-8 flex-none">
-              <AstroIcon />
+        {/* grid svg */}
+        <svg
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 fill-sandAlpha-6"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          width="641"
+          height="257"
+          viewBox="0 0 641 257"
+        >
+          <path
+            fillRule="evenodd"
+            d="M0 0h641v257H0V0Zm640 1h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0h-15v15h15V1Zm-16 0H97v15h15V1ZM96 1H81v15h15V1ZM80 1H65v15h15V1ZM64 1H49v15h15V1ZM48 1H33v15h15V1ZM32 1H17v15h15V1ZM16 1H1v15h15V1ZM1 32V17h15v15H1Zm16 0V17h15v15H17Zm16 0V17h15v15H33Zm16 0V17h15v15H49Zm16 0V17h15v15H65Zm16 0V17h15v15H81Zm16 0V17h15v15H97Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm16 0V17h15v15h-15Zm15 1h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0h-15v15h15V33Zm-16 0H97v15h15V33Zm-16 0H81v15h15V33Zm-16 0H65v15h15V33Zm-16 0H49v15h15V33Zm-16 0H33v15h15V33Zm-16 0H17v15h15V33Zm-16 0H1v15h15V33ZM1 64V49h15v15H1Zm16 0V49h15v15H17Zm16 0V49h15v15H33Zm16 0V49h15v15H49Zm16 0V49h15v15H65Zm16 0V49h15v15H81Zm16 0V49h15v15H97Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm16 0V49h15v15h-15Zm15 1h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0h-15v15h15V65Zm-16 0H97v15h15V65Zm-16 0H81v15h15V65Zm-16 0H65v15h15V65Zm-16 0H49v15h15V65Zm-16 0H33v15h15V65Zm-16 0H17v15h15V65Zm-16 0H1v15h15V65ZM1 96V81h15v15H1Zm16 0V81h15v15H17Zm16 0V81h15v15H33Zm16 0V81h15v15H49Zm16 0V81h15v15H65Zm16 0V81h15v15H81Zm16 0V81h15v15H97Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm16 0V81h15v15h-15Zm15 1h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0h-15v15h15V97Zm-16 0H97v15h15V97Zm-16 0H81v15h15V97Zm-16 0H65v15h15V97Zm-16 0H49v15h15V97Zm-16 0H33v15h15V97Zm-16 0H17v15h15V97Zm-16 0H1v15h15V97ZM1 128v-15h15v15H1Zm16 0v-15h15v15H17Zm16 0v-15h15v15H33Zm16 0v-15h15v15H49Zm16 0v-15h15v15H65Zm16 0v-15h15v15H81Zm16 0v-15h15v15H97Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm15 1h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0h-15v15h15v-15Zm-16 0H97v15h15v-15Zm-16 0H81v15h15v-15Zm-16 0H65v15h15v-15Zm-16 0H49v15h15v-15Zm-16 0H33v15h15v-15Zm-16 0H17v15h15v-15Zm-16 0H1v15h15v-15ZM1 160v-15h15v15H1Zm16 0v-15h15v15H17Zm16 0v-15h15v15H33Zm16 0v-15h15v15H49Zm16 0v-15h15v15H65Zm16 0v-15h15v15H81Zm16 0v-15h15v15H97Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15Zm16 0v-15h15v15h-15ZM1 161v15h15v-15H1Zm16 0v15h15v-15H17Zm16 0v15h15v-15H33Zm16 0v15h15v-15H49Zm16 0v15h15v-15H65Zm16 0v15h15v-15H81Zm16 0v15h15v-15H97Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm16 0v15h15v-15h-15Zm15 80v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15H97v-15h15Zm-16 0v15H81v-15h15Zm-16 0v15H65v-15h15Zm-16 0v15H49v-15h15Zm-16 0v15H33v-15h15Zm-16 0v15H17v-15h15Zm-16 0v15H1v-15h15Zm-15-1h15v-15H1v15Zm16 0h15v-15H17v15Zm16 0h15v-15H33v15Zm16 0h15v-15H49v15Zm16 0h15v-15H65v15Zm16 0h15v-15H81v15Zm16 0h15v-15H97v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm15-31v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15H97v-15h15Zm-16 0v15H81v-15h15Zm-16 0v15H65v-15h15Zm-16 0v15H49v-15h15Zm-16 0v15H33v-15h15Zm-16 0v15H17v-15h15Zm-16 0v15H1v-15h15Zm-15-1h15v-15H1v15Zm16 0h15v-15H17v15Zm16 0h15v-15H33v15Zm16 0h15v-15H49v15Zm16 0h15v-15H65v15Zm16 0h15v-15H81v15Zm16 0h15v-15H97v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm16 0h15v-15h-15v15Zm15-31v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15h-15v-15h15Zm-16 0v15H97v-15h15Zm-16 0v15H81v-15h15Zm-16 0v15H65v-15h15Zm-16 0v15H49v-15h15Zm-16 0v15H33v-15h15Zm-16 0v15H17v-15h15Zm-16 0v15H1v-15h15Z"
+            clipRule="evenodd"
+          />
+        </svg>
+        {/* content */}
+        <div className="relative flex h-full items-center py-2">
+          <div className="relative flex flex-col gap-2 font-mono text-xs">
+            <div className="flex h-16 flex-row items-center gap-5 overflow-hidden rounded-lg border border-sand-12 bg-whiteAlpha-9 px-4 py-2 transition-all duration-150 ease-out hover:h-[5.5rem] hover:bg-whiteAlpha-12">
+              <div className="h-8 w-8 flex-none">
+                <AstroIcon />
+              </div>
+              <p>
+                <span className="text-sand-11">npm</span> install
+                @keystatic/core @keystatic/astro
+              </p>
             </div>
-            <p>
-              <span className="text-sand-11">npm</span> install @keystatic/core
-              @keystatic/astro
-            </p>
-          </div>
-          <div className="relative flex h-auto flex-row items-center gap-5 overflow-hidden rounded-lg border border-sand-12 bg-whiteAlpha-9 px-4 py-2 font-mono text-xs transition-all duration-200 ease-out hover:bg-whiteAlpha-12 hover:py-5">
-            <div className="h-8 w-8 flex-none">
-              <NextJSIcon />
+            <div className="flex h-16 flex-row items-center gap-5 overflow-hidden rounded-lg border border-sand-12 bg-whiteAlpha-9 px-4 py-2 transition-all duration-150 ease-out hover:h-[5.5rem] hover:bg-whiteAlpha-12">
+              <div className="h-8 w-8 flex-none">
+                <NextJSIcon />
+              </div>
+              <p>
+                <span className="text-sand-11">npm</span> install
+                @keystatic/core @keystatic/next
+              </p>
             </div>
-            <p>
-              <span className="text-sand-11">npm</span> install @keystatic/core
-              @keystatic/next
-            </p>
           </div>
         </div>
       </>
@@ -604,7 +508,7 @@ const docs = [
             <p>&nbsp;&nbsp;&nbsp;&nbsp;├── index.yaml</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;└── other.mdoc</p>
           </div>
-          <div className="peer order-1 w-6 flex-none transition-all duration-150 hover:w-12 peer-hover:w-12 " />
+          <div className="peer z-10 order-1 h-full w-6 flex-none transition-all duration-150 hover:w-12 peer-hover:w-12 " />
           <div className="absolute left-0 top-2 h-[1px] w-6 bg-sandAlpha-6 transition-all duration-150 peer-hover:w-12 peer-hover:bg-gradient-to-l peer-hover:from-sand-12" />
         </div>
         <div className="relative flex flex-row">
@@ -614,7 +518,7 @@ const docs = [
             <p>&nbsp;&nbsp;&nbsp;&nbsp;├── index.yaml</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;└── other.mdoc</p>
           </div>
-          <div className="peer order-1 w-6 flex-none transition-all duration-150 hover:w-12 peer-hover:w-12 " />
+          <div className="peer z-10 order-1 w-6 flex-none transition-all duration-150 hover:w-12 peer-hover:w-12 " />
           <div className="absolute left-0 top-2 h-[1px] w-6 bg-sandAlpha-6 transition-all duration-150 peer-hover:w-12 peer-hover:bg-gradient-to-l peer-hover:from-sand-12" />
         </div>
       </div>
@@ -741,33 +645,35 @@ const docs = [
       </svg>
     ),
     content: (
-      <div className="relative mx-auto flex w-full flex-row items-center gap-2">
-        <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight tracking-tight">
-          <p>collections:</p>
-          <div className="flex w-full flex-col gap-1 rounded border border-dashed border-sand-7 bg-sand-3 px-2 py-1 font-mono text-xs leading-tight transition-all duration-200 ease-in-out group-hover:border-solid group-hover:border-sand-12">
-            <p className="text-sand-11 group-hover:text-sand-12">
-              testimonials:
-            </p>
-            <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight transition-all ease-in-out hover:bg-transparent">
-              <p>label:</p>
-            </div>
-            <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight transition-all ease-in-out hover:bg-transparent">
-              <p>slugField:</p>
-            </div>
-            <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight transition-all ease-in-out hover:bg-transparent">
-              <p>schema:</p>
+      <div className="relative flex h-full items-center py-2">
+        <div className="flex w-full flex-row items-center gap-2">
+          <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight tracking-tight">
+            <p>collections:</p>
+            <div className="flex w-full flex-col gap-1 rounded border border-dashed border-sand-7 bg-sand-3 px-2 py-1 font-mono text-xs leading-tight transition-all duration-200 ease-in-out group-hover:border-solid group-hover:border-sand-12">
+              <p className="text-sand-11 group-hover:text-sand-12">
+                testimonials:
+              </p>
+              <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight transition-all ease-in-out hover:bg-transparent">
+                <p>label:</p>
+              </div>
+              <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight transition-all ease-in-out hover:bg-transparent">
+                <p>slugField:</p>
+              </div>
+              <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight transition-all ease-in-out hover:bg-transparent">
+                <p>schema:</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight tracking-tight">
-          <p>singletons:</p>
-          <div className="flex w-full flex-col gap-1 rounded border border-dashed border-sand-7 bg-sand-3 px-2 py-1 font-mono text-xs leading-tight transition-all duration-200 ease-in-out hover:border-solid hover:border-sand-12">
-            <p className="text-sand-11">settings:</p>
-            <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight transition-all ease-in-out hover:bg-transparent">
-              <p>label:</p>
-            </div>
-            <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight transition-all ease-in-out hover:bg-transparent">
-              <p>schema:</p>
+          <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight tracking-tight">
+            <p>singletons:</p>
+            <div className="flex w-full flex-col gap-1 rounded border border-dashed border-sand-7 bg-sand-3 px-2 py-1 font-mono text-xs leading-tight transition-all duration-200 ease-in-out hover:border-solid hover:border-sand-12">
+              <p className="text-sand-11">settings:</p>
+              <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight transition-all ease-in-out hover:bg-transparent">
+                <p>label:</p>
+              </div>
+              <div className="flex w-full flex-col gap-1 rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight transition-all ease-in-out hover:bg-transparent">
+                <p>schema:</p>
+              </div>
             </div>
           </div>
         </div>
@@ -844,55 +750,57 @@ const docs = [
       </svg>
     ),
     content: (
-      <div className="relative flex w-full flex-col items-center">
-        <div className="relative h-8 w-8 flex-none rounded-full">
-          <div className="absolute left-0 top-0 h-full w-full rounded-full bg-whiteAlpha-12 group-hover:visible group-hover:animate-ping" />
-          <NextJSIcon />
-        </div>
-        <div className="mx-auto h-3 w-[1px] bg-sand-12" />
-        <div className="min-h-[2.5rem] w-full rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 font-mono text-xs leading-tight tracking-tight transition-all duration-150 group-hover:bg-whiteAlpha-9 group-hover:text-sand-11">
-          <p>
-            <span className="text-sand-11">const</span> reader{' '}
-            <span className="text-sand-11">=</span> createReader
-            {'('}
-            process.cwd{'()'}, keystaticConfig{')'};
-          </p>
-        </div>
-        <div className="mx-auto h-3 w-[1px] bg-sandAlpha-8 group-hover:bg-sand-12" />
-        <div className="relative w-full overflow-hidden rounded border border-sandAlpha-8 bg-whiteAlpha-9 font-mono text-xs leading-tight tracking-tight transition-all delay-75 group-hover:border-sand-12 group-hover:bg-whiteAlpha-12">
-          <svg
-            className="visible absolute left-1/2 top-1/2 h-5 w-5 -translate-x-[10px] -translate-y-[10px] scale-100 delay-200 group-hover:invisible group-hover:scale-150"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 20 20"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="1.25"
-              d="M13.75 8.75V5.62a3.75 3.75 0 0 0-7.5 0v3.13m-.62 9.38h8.75a1.87 1.87 0 0 0 1.87-1.88v-5.63a1.88 1.88 0 0 0-1.87-1.87H5.63a1.87 1.87 0 0 0-1.88 1.88v5.62a1.87 1.87 0 0 0 1.88 1.88Z"
-            />
-          </svg>
-          <svg
-            className="invisible absolute left-1/2 top-1/2 h-5 w-5 -translate-x-[8px] -translate-y-[10px] scale-100 transition-all delay-200 duration-75 ease-in group-hover:visible group-hover:scale-150"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 20 20"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="1.25"
-              d="M11.25 8.75V5.62a3.75 3.75 0 0 1 7.5 0v3.13M3.12 18.13h8.75a1.87 1.87 0 0 0 1.88-1.88v-5.63a1.87 1.87 0 0 0-1.88-1.87H3.13a1.88 1.88 0 0 0-1.88 1.88v5.62a1.87 1.87 0 0 0 1.88 1.88Z"
-            />
-          </svg>
-          <p className="min-h-[2.5rem] w-full px-2 py-1 align-baseline opacity-80 blur-sm transition-all delay-300 duration-200 ease-out group-hover:bg-white group-hover:opacity-100 group-hover:blur-none">
-            <span className="text-sand-11">const</span> slugs{' '}
-            <span className="text-sand-11">=</span> await
-            reader.collections.posts.list{'()'};
-          </p>
+      <div className="relative flex h-full items-center py-2 font-mono text-xs leading-tight tracking-tight">
+        <div className="flex w-full flex-col items-center">
+          <div className="relative h-8 w-8 flex-none rounded-full">
+            <div className="absolute left-0 top-0 h-full w-full rounded-full bg-whiteAlpha-12 group-hover:animate-ping" />
+            <NextJSIcon />
+          </div>
+          <div className="h-3 w-[1px] bg-sand-12" />
+          <div className="min-h-[2.5rem] w-full rounded border border-sand-12 bg-whiteAlpha-12 px-2 py-1 transition-all duration-150 group-hover:bg-whiteAlpha-9 group-hover:text-sand-11">
+            <p>
+              <span className="text-sand-11">const</span> reader{' '}
+              <span className="text-sand-11">=</span> createReader
+              {'('}
+              process.cwd{'()'}, keystaticConfig{')'};
+            </p>
+          </div>
+          <div className="h-3 w-[1px] bg-sandAlpha-8 group-hover:bg-sand-12" />
+          <div className="relative w-full overflow-hidden rounded border border-sandAlpha-8 bg-whiteAlpha-9 transition-all delay-75 group-hover:border-sand-12 group-hover:bg-whiteAlpha-12">
+            <svg
+              className="visible absolute left-1/2 top-1/2 h-5 w-5 -translate-x-[10px] -translate-y-[10px] scale-100 delay-200 group-hover:invisible group-hover:scale-150"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.25"
+                d="M13.75 8.75V5.62a3.75 3.75 0 0 0-7.5 0v3.13m-.62 9.38h8.75a1.87 1.87 0 0 0 1.87-1.88v-5.63a1.88 1.88 0 0 0-1.87-1.87H5.63a1.87 1.87 0 0 0-1.88 1.88v5.62a1.87 1.87 0 0 0 1.88 1.88Z"
+              />
+            </svg>
+            <svg
+              className="invisible absolute left-1/2 top-1/2 h-5 w-5 -translate-x-[8px] -translate-y-[10px] scale-100 transition-all delay-200 duration-75 ease-in group-hover:visible group-hover:scale-150"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.25"
+                d="M11.25 8.75V5.62a3.75 3.75 0 0 1 7.5 0v3.13M3.12 18.13h8.75a1.87 1.87 0 0 0 1.88-1.88v-5.63a1.87 1.87 0 0 0-1.88-1.87H3.13a1.88 1.88 0 0 0-1.88 1.88v5.62a1.87 1.87 0 0 0 1.88 1.88Z"
+              />
+            </svg>
+            <p className="min-h-[2.5rem] w-full px-2 py-1 opacity-80 blur-sm transition-all delay-300 duration-200 ease-out group-hover:bg-white group-hover:opacity-100 group-hover:blur-none">
+              <span className="text-sand-11">const</span> slugs{' '}
+              <span className="text-sand-11">=</span> await
+              reader.collections.posts.list{'()'};
+            </p>
+          </div>
         </div>
       </div>
     ),
@@ -925,14 +833,14 @@ export default function DocsLinks() {
                   <Link
                     href={doc.link}
                     className="inline-flex items-center gap-1 font-medium text-iris-11 transition-all duration-150 hover:gap-2 hover:text-iris-12"
-                    aria-hidden
                   >
                     Read more
                     <ArrowRightIcon />
                   </Link>
                 </div>
-                <div className="relative h-44 overflow-hidden bg-sand-2 px-8 py-4">
+                <div className="relative h-44 overflow-hidden bg-sand-2 px-8">
                   {doc.bgSVG}
+                  <div className="absolute left-0 top-0 h-full w-full bg-pattern-texture opacity-80 mix-blend-soft-light" />
                   {doc.content}
                 </div>
               </div>

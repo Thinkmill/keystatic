@@ -9,7 +9,7 @@ export default function MailingList() {
         <div className="flex flex-col gap-6 px-8 lg:px-16">
           <div className="flex flex-col gap-4">
             <h4 className="text-xl font-medium">Get Keystatic updates</h4>
-            <p className="text-sm text-sand-11">
+            <p className="text-sm text-sand-12">
               Be the first to get updates as we work on and ship new features,
               as well as early invites to a community space we're setting up
               soon.
