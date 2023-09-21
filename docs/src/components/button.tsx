@@ -12,10 +12,10 @@ type ButtonProps = {
 } & AllHTMLAttributes<HTMLButtonElement | HTMLAnchorElement>;
 
 const baseClasses =
-  'block text-center font-semibold leading-none border transition-colors';
+  'block text-center font-medium leading-none border transition-colors';
 
 const impactClasses: Record<ButtonProps['impact'] & {}, string> = {
-  bold: 'bg-indigo-9 text-white hover:bg-indigo-10 active:bg-indigo-11 border-transparent',
+  bold: 'bg-iris-9 text-white hover:bg-iris-10 active:bg-iris-11 border-transparent',
   light:
     'bg-white border-sand-7 text-sand-11 hover:bg-sand-2 hover:border-sand-8 active:bg-sand-10',
 };
