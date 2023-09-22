@@ -151,3 +151,29 @@ coverImage: fields.image({
 ```
 
 Regardless of where the `posts` entries are created, the `coverImage` image will be generated in `public/images/posts/{post-slug}`.
+
+---
+
+## Path prefix
+
+If you're in a monorepo, you can use the `storage.pathPrefix` option to scope Keystatic to a specific directory instead of adding a prefix to every `path` option.
+
+For example, this config will look for posts in `somewhere/my-site/content/posts`:
+
+```js
+export default config({
+  storage: {
+    kind: 'github',
+    repo: 'my-org/my-repo',
+    pathPrefix: 'somewhere/my-site'
+  },
+  collections: {
+    posts: collection({
+      label: 'Posts',
+      path: 'content/posts/*/',
+      // ...
+    })
+  },
+})
+```
+
