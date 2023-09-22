@@ -31,9 +31,10 @@ import {
 } from '../utils';
 import LRU from 'lru-cache';
 import { isDefined } from 'emery';
-import { getAuth } from '../auth';
+import { getAuth, getCloudAuth } from '../auth';
 import { ViewerContext, SidebarFooter_viewer } from './viewer-data';
 import { parseRepoConfig, serializeRepoConfig } from '../repo-config';
+import { z } from 'zod';
 
 export function fetchLocalTree(sha: string) {
   if (treeCache.has(sha)) {
@@ -98,6 +99,63 @@ export function LocalAppShellProvider(props: {
         </TreeContext.Provider>
       </ChangedContext.Provider>
     </SetTreeShaContext.Provider>
+  );
+}
+
+const cloudInfoSchema = z.object({
+  user: z.object({
+    name: z.string(),
+    email: z.string(),
+    avatarUrl: z.string().optional(),
+  }),
+  project: z.object({
+    name: z.string(),
+  }),
+  team: z.object({
+    name: z.string(),
+    slug: z.string(),
+    images: z.boolean(),
+  }),
+});
+
+const CloudInfo = createContext<
+  null | z.infer<typeof cloudInfoSchema> | 'unauthorized'
+>(null);
+
+export function useCloudInfo() {
+  const context = useContext(CloudInfo);
+  return context === 'unauthorized' ? null : context;
+}
+
+export function useRawCloudInfo() {
+  return useContext(CloudInfo);
+}
+
+export function CloudInfoProvider(props: {
+  children: ReactNode;
+  config: Config;
+}) {
+  const data = useData(
+    useCallback(async () => {
+      if (!props.config.cloud?.project) throw new Error('no cloud project set');
+      const token = getCloudAuth(props.config)?.accessToken;
+      if (!token) {
+        return 'unauthorized' as const;
+      }
+      const res = await fetch(`${KEYSTATIC_CLOUD_API_URL}/v1/info`, {
+        headers: {
+          ...KEYSTATIC_CLOUD_HEADERS,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 401) return 'unauthorized' as const;
+      return cloudInfoSchema.parse(await res.json());
+    }, [props.config])
+  );
+  return (
+    <CloudInfo.Provider value={data.kind === 'loaded' ? data.data : null}>
+      {props.children}
+    </CloudInfo.Provider>
   );
 }
 

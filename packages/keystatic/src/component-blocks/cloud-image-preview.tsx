@@ -29,9 +29,15 @@ import { useId } from '@keystar/ui/utils';
 
 import { useConfig } from '../app/shell/context';
 import { focusWithPreviousSelection } from '../form/fields/document/DocumentEditor/ui-utils';
-import { getSplitCloudProject, isCloudConfig } from '../app/utils';
+import {
+  KEYSTATIC_CLOUD_API_URL,
+  KEYSTATIC_CLOUD_HEADERS,
+  getSplitCloudProject,
+} from '../app/utils';
 import { NotEditable } from '../form/fields/document/DocumentEditor/primitives';
-import { PreviewProps, ObjectField } from '..';
+import { PreviewProps, ObjectField, Config } from '..';
+import { z } from 'zod';
+import { getCloudAuth } from '../app/auth';
 
 export type CloudImageProps = {
   src: string;
@@ -78,6 +84,155 @@ export function parseImageData(data: string): CloudImageProps {
   return { src: data, alt: '' };
 }
 
+function useImageDimensions(src: string) {
+  const [dimensions, setDimensions] = useState<ImageDimensions>({});
+  useEffect(() => {
+    if (!src || !isValidURL(src)) {
+      setDimensions({});
+      return;
+    }
+    let shouldSet = true;
+    loadImageDimensions(src).then(dimensions => {
+      if (shouldSet) setDimensions(dimensions);
+    });
+    return () => {
+      shouldSet = false;
+    };
+  }, [src]);
+  return dimensions;
+}
+
+function loadImageDimensions(url: string) {
+  return new Promise<ImageDimensions>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      resolve({ width: img.width, height: img.height });
+    };
+    img.onerror = () => {
+      reject();
+    };
+    img.src = url;
+  });
+}
+
+const imageDataSchema = z.object({
+  src: z.string(),
+  alt: z.string(),
+  width: z.number(),
+  height: z.number(),
+});
+
+export async function loadImageData(
+  url: string,
+  config: Config
+): Promise<CloudImageProps> {
+  const auth = getCloudAuth(config);
+  if (auth) {
+    const res = await fetch(
+      `${KEYSTATIC_CLOUD_API_URL}/v1/image?${new URLSearchParams({ url })}`,
+      {
+        headers: {
+          Authorization: `Bearer ${auth.accessToken}`,
+          ...KEYSTATIC_CLOUD_HEADERS,
+        },
+      }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      const parsed = imageDataSchema.safeParse(data);
+      if (parsed.success) {
+        return parsed.data;
+      }
+    }
+  }
+  return loadImageDimensions(url).then(dimensions => ({
+    src: url,
+    alt: '',
+    ...dimensions,
+  }));
+}
+
+export function ImageDimensionsInput(props: {
+  src: string;
+  image: ImageDimensions;
+  onChange: (image: ImageDimensions) => void;
+}) {
+  const dimensions = useImageDimensions(props.src);
+
+  const [constrainProportions, setConstrainProportions] = useState(true);
+  const revertLabel = `Revert to original (${dimensions.width} × ${dimensions.height})`;
+  const dimensionsMatchOriginal =
+    dimensions.width === props.image.width &&
+    dimensions.height === props.image.height;
+
+  return (
+    <HStack gap="regular" alignItems="end">
+      <NumberField
+        label="Width"
+        width="scale.1600"
+        formatOptions={{ maximumFractionDigits: 0 }}
+        value={props.image.width}
+        onChange={width => {
+          if (constrainProportions) {
+            props.onChange({
+              width,
+              height: Math.round(width / getAspectRatio(props.image)),
+            });
+          } else {
+            props.onChange({ width });
+          }
+        }}
+      />
+      <TooltipTrigger>
+        <ToggleButton
+          isSelected={constrainProportions}
+          aria-label="Constrain proportions"
+          prominence="low"
+          onPress={() => {
+            setConstrainProportions(state => !state);
+          }}
+        >
+          <Icon src={constrainProportions ? link2Icon : link2OffIcon} />
+        </ToggleButton>
+        <Tooltip>Constrain proportions</Tooltip>
+      </TooltipTrigger>
+      <NumberField
+        label="Height"
+        width="scale.1600"
+        formatOptions={{ maximumFractionDigits: 0 }}
+        value={props.image.height}
+        onChange={height => {
+          if (constrainProportions) {
+            props.onChange({
+              height,
+              width: Math.round(height * getAspectRatio(props.image)),
+            });
+          } else {
+            props.onChange({ height });
+          }
+        }}
+      />
+      <TooltipTrigger>
+        <ActionButton
+          aria-label={revertLabel}
+          isDisabled={
+            dimensionsMatchOriginal || !dimensions.width || !dimensions.height
+          }
+          onPress={() => {
+            props.onChange({
+              height: dimensions.height,
+              width: dimensions.width,
+            });
+          }}
+        >
+          <Icon src={undo2Icon} />
+        </ActionButton>
+        <Tooltip maxWidth="100%">{revertLabel}</Tooltip>
+      </TooltipTrigger>
+    </HStack>
+  );
+}
+
 export const emptyImageData: CloudImageProps = { src: '', alt: '' };
 
 type ImageStatus = '' | 'loading' | 'good' | 'error';
@@ -91,20 +246,17 @@ function ImageDialog(props: {
   const { image, onCancel, onChange, onClose } = props;
   const [state, setState] = useState<CloudImageProps>(image ?? emptyImageData);
   const [status, setStatus] = useState<ImageStatus>(image ? 'good' : '');
-  const [constrainProportions, setConstrainProportions] = useState(true);
-  const [dimensions, setDimensions] = useState<ImageDimensions>(emptyImageData);
   const formId = useId();
   const imageLibraryURL = useImageLibraryURL();
-
-  const revertLabel = `Revert to original (${dimensions.width} × ${dimensions.height})`;
-  const dimensionsMatchOriginal =
-    dimensions.width === state.width && dimensions.height === state.height;
 
   const onPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
     event.preventDefault();
     const text = event.clipboardData.getData('text/plain');
     setState(parseImageData(text));
   };
+  const config = useConfig();
+
+  const hasSetFields = !!(state.alt || state.width || state.height);
 
   useEffect(() => {
     if (!state.src) {
@@ -114,22 +266,20 @@ function ImageDialog(props: {
     if (!isValidURL(state.src)) {
       return;
     }
-    setStatus('loading');
-    const img = new Image();
-    img.onload = () => {
-      const dimensions = { width: img.width, height: img.height };
-      setState(state => ({ ...state, ...dimensions }));
-      setDimensions(dimensions);
+    if (hasSetFields) {
       setStatus('good');
-    };
-    img.onerror = () => {
-      setStatus('error');
-    };
-    img.src = state.src;
-    return () => {
-      img.onload = null;
-    };
-  }, [state.src]);
+      return;
+    }
+    setStatus('loading');
+    loadImageData(state.src, config)
+      .then(newData => {
+        setState(state => ({ ...state, ...newData }));
+        setStatus('good');
+      })
+      .catch(() => {
+        setStatus('error');
+      });
+  }, [config, hasSetFields, state.src]);
 
   return (
     <Dialog>
@@ -201,73 +351,13 @@ function ImageDialog(props: {
                 value={state.alt}
                 onChange={alt => setState(state => ({ ...state, alt }))}
               />
-              <HStack gap="regular" alignItems="end">
-                <NumberField
-                  label="Width"
-                  width="scale.1600"
-                  formatOptions={{ maximumFractionDigits: 0 }}
-                  value={state.width}
-                  onChange={width => {
-                    if (constrainProportions) {
-                      setState(state => ({
-                        ...state,
-                        width,
-                        height: Math.round(width / getAspectRatio(state)),
-                      }));
-                    } else {
-                      setState(state => ({ ...state, width }));
-                    }
-                  }}
-                />
-                <TooltipTrigger>
-                  <ToggleButton
-                    isSelected={constrainProportions}
-                    aria-label="Constrain proportions"
-                    prominence="low"
-                    onPress={() => {
-                      setConstrainProportions(state => !state);
-                    }}
-                  >
-                    <Icon
-                      src={constrainProportions ? link2Icon : link2OffIcon}
-                    />
-                  </ToggleButton>
-                  <Tooltip>Constrain proportions</Tooltip>
-                </TooltipTrigger>
-                <NumberField
-                  label="Height"
-                  width="scale.1600"
-                  formatOptions={{ maximumFractionDigits: 0 }}
-                  value={state.height}
-                  onChange={height => {
-                    if (constrainProportions) {
-                      setState(state => ({
-                        ...state,
-                        height,
-                        width: Math.round(height * getAspectRatio(state)),
-                      }));
-                    } else {
-                      setState(state => ({ ...state, height }));
-                    }
-                  }}
-                />
-                <TooltipTrigger>
-                  <ActionButton
-                    aria-label={revertLabel}
-                    isDisabled={dimensionsMatchOriginal}
-                    onPress={() => {
-                      setState(state => ({
-                        ...state,
-                        height: dimensions.height,
-                        width: dimensions.width,
-                      }));
-                    }}
-                  >
-                    <Icon src={undo2Icon} />
-                  </ActionButton>
-                  <Tooltip maxWidth="100%">{revertLabel}</Tooltip>
-                </TooltipTrigger>
-              </HStack>
+              <ImageDimensionsInput
+                src={state.src}
+                image={state}
+                onChange={dimensions => {
+                  setState(state => ({ ...state, ...dimensions }));
+                }}
+              />
             </>
           ) : null}
         </VStack>
@@ -478,12 +568,12 @@ function isValidURL(str: string) {
 
 export function useImageLibraryURL() {
   const config = useConfig();
-  if (!isCloudConfig(config)) return 'https://keystatic.cloud/';
-  const { project, team } = getSplitCloudProject(config);
-  return `https://keystatic.cloud/teams/${team}/project/${project}/images`;
+  const split = getSplitCloudProject(config);
+  if (!split) return 'https://keystatic.cloud/';
+  return `https://keystatic.cloud/teams/${split.team}/project/${split.project}/images`;
 }
 
-function getAspectRatio(state: CloudImageProps) {
+function getAspectRatio(state: ImageDimensions) {
   if (!state.width || !state.height) return 1;
   return state.width / state.height;
 }

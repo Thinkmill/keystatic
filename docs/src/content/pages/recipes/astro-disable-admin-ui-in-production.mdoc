@@ -35,20 +35,29 @@ export const prerender = false
 
 You will need to do the same for the `api/keystatic` routes:
 
-```jsx
+```diff
 // src/pages/api/keystatic/[...params].ts
 import { makeHandler } from '@keystatic/astro/api'
 import keystaticConfig from '../../../../keystatic.config'
++ import { APIContext } from 'astro'
 
-export const all = makeHandler({
-  config: keystaticConfig,
-})
+- export const all = makeHandler({
+-  config: keystaticConfig,
+- })
+
++ export const all = ({ ...params }: APIContext) => {
++  if (import.meta.env.MODE === 'production') {
++    return params.redirect('/', 307)
++  }
+
++  return makeHandler({
++    config: keystaticConfig,
++  })(params)
++}
+
 
 export const prerender = false
 
-+ if (import.meta.env.MODE === 'production') {
-+   return Astro.redirect('/')
-+ }
 ```
 
 ## Excluding routes from sitemap

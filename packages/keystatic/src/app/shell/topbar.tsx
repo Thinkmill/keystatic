@@ -42,11 +42,17 @@ import {
   isCloudConfig,
   isGitHubConfig,
   isLocalConfig,
+  redirectToCloudAuth,
 } from '../utils';
 
 import { ZapLogo } from './common';
 import { useAppState, useConfig } from './context';
-import { BranchInfoContext, GitHubAppShellDataContext } from './data';
+import {
+  BranchInfoContext,
+  GitHubAppShellDataContext,
+  useCloudInfo,
+  useRawCloudInfo,
+} from './data';
 import { useViewer } from './viewer-data';
 import { useThemeContext } from './theme';
 import { serializeRepoConfig } from '../repo-config';
@@ -87,6 +93,7 @@ export const SidebarHeader = () => {
 // -----------------------------------------------------------------------------
 
 function CloudHeader({ config }: { config: CloudConfig }) {
+  const cloudInfo = useCloudInfo();
   return (
     <HeaderOuter>
       <BrandButton />
@@ -104,7 +111,17 @@ function CloudHeader({ config }: { config: CloudConfig }) {
       <GitMenu />
       <Box flex="1" />
       <ThemeMenu />
-      {/* <UserMenu /> */}
+      <UserMenu
+        user={
+          cloudInfo
+            ? {
+                name: cloudInfo.user.name,
+                login: cloudInfo.user.email,
+                avatarUrl: cloudInfo.user.avatarUrl,
+              }
+            : undefined
+        }
+      />
     </HeaderOuter>
   );
 }
@@ -113,6 +130,7 @@ function CloudHeader({ config }: { config: CloudConfig }) {
 // -----------------------------------------------------------------------------
 
 function GithubHeader({ config }: { config: GitHubConfig }) {
+  const user = useViewer();
   return (
     <HeaderOuter>
       <BrandButton />
@@ -133,7 +151,17 @@ function GithubHeader({ config }: { config: GitHubConfig }) {
       <GitMenu />
       <Box flex="1" />
       <ThemeMenu />
-      <UserMenu />
+      <UserMenu
+        user={
+          user
+            ? {
+                login: user.login,
+                name: user.name ?? user.login,
+                avatarUrl: user.avatarUrl,
+              }
+            : undefined
+        }
+      />
     </HeaderOuter>
   );
 }
@@ -142,6 +170,9 @@ function GithubHeader({ config }: { config: GitHubConfig }) {
 // -----------------------------------------------------------------------------
 
 function LocalHeader() {
+  const config = useConfig();
+  const rawCloudInfo = useRawCloudInfo();
+  const router = useRouter();
   return (
     <HeaderOuter>
       <BrandButton />
@@ -150,6 +181,30 @@ function LocalHeader() {
       </Text>
       <Box flex="1" />
       <ThemeMenu />
+      {rawCloudInfo ? (
+        rawCloudInfo === 'unauthorized' ? (
+          <ActionButton
+            onPress={() => {
+              redirectToCloudAuth(router.params.join('/'), config);
+            }}
+            prominence="low"
+          >
+            Sign in
+          </ActionButton>
+        ) : (
+          <UserMenu
+            user={
+              rawCloudInfo
+                ? {
+                    name: rawCloudInfo.user.name,
+                    login: rawCloudInfo.user.email,
+                    avatarUrl: rawCloudInfo.user.avatarUrl,
+                  }
+                : undefined
+            }
+          />
+        )
+      ) : null}
     </HeaderOuter>
   );
 }
@@ -259,8 +314,11 @@ function ThemeMenu() {
 // User controls
 // -----------------------------------------------------------------------------
 
-function UserMenu() {
-  let user = useViewer();
+function UserMenu({
+  user,
+}: {
+  user: { name: string; avatarUrl?: string; login: string } | undefined;
+}) {
   let config = useConfig();
   const menuItems = useMemo(() => {
     let items = [
@@ -270,10 +328,10 @@ function UserMenu() {
         icon: logOutIcon,
       },
     ];
-    if (isCloudConfig(config)) {
+    if (config.cloud?.project) {
       items.unshift({
         id: 'manage',
-        label: 'Manage account',
+        label: 'Account',
         icon: userIcon,
       });
     }
@@ -315,7 +373,7 @@ function UserMenu() {
           />
           <Flex direction="column" gap="small">
             <Text size="small" weight="semibold" color="neutralEmphasis">
-              {user.name ?? user.login}
+              {user.name}
             </Text>
             <Text size="small" color="neutralTertiary">
               {user.login}
@@ -336,6 +394,7 @@ function UserMenu() {
                     window.location.href = '/api/keystatic/github/logout';
                     break;
                   case 'cloud':
+                  case 'local':
                     localStorage.removeItem('keystatic-cloud-access-token');
                     window.location.reload();
                     break;

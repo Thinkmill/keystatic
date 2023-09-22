@@ -31,8 +31,14 @@ import { KeystaticSetup } from './onboarding/setup';
 import { RepoNotFound } from './onboarding/repo-not-found';
 import { AppSlugProvider } from './onboarding/install-app';
 import { useRouter, Router, RouterProvider } from './router';
-import { isCloudConfig, isGitHubConfig, redirectToCloudAuth } from './utils';
 import {
+  isCloudConfig,
+  isGitHubConfig,
+  isLocalConfig,
+  redirectToCloudAuth,
+} from './utils';
+import {
+  CloudInfoProvider,
   GitHubAppShellDataContext,
   GitHubAppShellDataProvider,
 } from './shell/data';
@@ -100,18 +106,24 @@ function PageInner({ config }: { config: Config }) {
   let branch = null,
     parsedParams,
     basePath: string;
-  if (
-    config.storage.kind === 'cloud' &&
-    params.join('/') === 'cloud/oauth/callback'
-  ) {
+  if (params.join('/') === 'cloud/oauth/callback') {
     return <KeystaticCloudAuthCallback config={config} />;
   }
   let wrapper: (element: ReactElement) => ReactElement = x => x;
+  if (
+    isCloudConfig(config) ||
+    (isLocalConfig(config) && config.cloud?.project)
+  ) {
+    wrapper = element => (
+      <CloudInfoProvider config={config}>{element}</CloudInfoProvider>
+    );
+  }
   if (isGitHubConfig(config) || isCloudConfig(config)) {
+    const origWrapper = wrapper;
     wrapper = element => (
       <AuthWrapper config={config}>
         <GitHubAppShellDataProvider config={config}>
-          {element}
+          {origWrapper(element)}
         </GitHubAppShellDataProvider>
       </AuthWrapper>
     );
