@@ -139,3 +139,10 @@ export type FormatInfo = {
     | undefined;
   dataLocation: 'index' | 'outer';
 };
+
+export function getPathPrefix(storage: Config['storage']) {
+  if (storage.kind === 'local' || !storage.pathPrefix) {
+    return undefined;
+  }
+  return fixPath(storage.pathPrefix) + '/';
+}
