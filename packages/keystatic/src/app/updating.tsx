@@ -384,11 +384,12 @@ export function useDeleteItem(args: {
           return false;
         }
         setState({ kind: 'loading' });
+        const deletions = args.initialFiles.map(
+          x => getPathPrefix(args.storage) + x
+        );
         const updatedTree = await updateTreeWithChanges(unscopedTree, {
           additions: [],
-          deletions: args.initialFiles.map(
-            x => getPathPrefix(args.storage) + x
-          ),
+          deletions,
         });
         await hydrateTreeCacheWithEntries(updatedTree.entries);
         if (args.storage.kind === 'github' || args.storage.kind === 'cloud') {
@@ -403,7 +404,7 @@ export function useDeleteItem(args: {
               message: { headline: `Delete ${args.basePath}` },
               expectedHeadOid: baseCommit,
               fileChanges: {
-                deletions: args.initialFiles.map(path => ({ path })),
+                deletions: deletions.map(path => ({ path })),
               },
             },
           });
@@ -421,7 +422,7 @@ export function useDeleteItem(args: {
             },
             body: JSON.stringify({
               additions: [],
-              deletions: args.initialFiles.map(path => ({ path })),
+              deletions: deletions.map(path => ({ path })),
             }),
           });
           if (!res.ok) {
