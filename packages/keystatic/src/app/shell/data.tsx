@@ -12,7 +12,7 @@ import {
   useState,
 } from 'react';
 import { CombinedError, useQuery, UseQueryState } from 'urql';
-import { getSingletonPath } from '../path-utils';
+import { fixPath, getSingletonPath } from '../path-utils';
 import {
   getTreeNodeAtPath,
   treeEntriesToTreeNodes,
@@ -20,7 +20,13 @@ import {
   TreeNode,
   treeSha,
 } from '../trees';
-import { DataState, LOADING, mergeDataStates, useData } from '../useData';
+import {
+  DataState,
+  LOADING,
+  mapDataState,
+  mergeDataStates,
+  useData,
+} from '../useData';
 import {
   getEntriesInCollectionWithTreeKey,
   isGitHubConfig,
@@ -199,6 +205,35 @@ export function GitHubAppShellDataProvider(props: {
 
 const writePermissions = new Set(['WRITE', 'ADMIN', 'MAINTAIN']);
 
+function scopeEntries(
+  tree: {
+    entries: Map<string, TreeEntry>;
+    tree: Map<string, TreeNode>;
+  },
+  config: Config
+): {
+  entries: Map<string, TreeEntry>;
+  tree: Map<string, TreeNode>;
+} {
+  if (config.storage.kind === 'local' || !config.storage.pathPrefix) {
+    return tree;
+  }
+  const fixedPath = fixPath(config.storage.pathPrefix);
+  const newEntries = [];
+  for (const entry of tree.entries.values()) {
+    if (entry.path.startsWith(fixedPath) && entry.path !== fixedPath) {
+      newEntries.push({
+        ...entry,
+        path: entry.path.slice(fixedPath.length + 1),
+      });
+    }
+  }
+  return {
+    entries: new Map(newEntries.map(entry => [entry.path, entry])),
+    tree: treeEntriesToTreeNodes(newEntries),
+  };
+}
+
 export function GitHubAppShellProvider(props: {
   currentBranch: string;
   config: Config;
@@ -246,19 +281,26 @@ export function GitHubAppShellProvider(props: {
     props.config
   );
 
-  const allTreeData = useMemo(
-    () => ({
-      default: defaultBranchTree,
-      current: currentBranchTree,
-      merged: mergeDataStates({
-        default: defaultBranchTree,
-        current: currentBranchTree,
-      }),
-    }),
-    [currentBranchTree, defaultBranchTree]
-  );
+  const allTreeData = useMemo(() => {
+    const scopedDefault = mapDataState(defaultBranchTree, tree =>
+      scopeEntries(tree, props.config)
+    );
+    const scopedCurrent = mapDataState(defaultBranchTree, tree =>
+      scopeEntries(tree, props.config)
+    );
+    return {
+      scoped: {
+        default: scopedDefault,
+        current: scopedCurrent,
+        merged: mergeDataStates({
+          default: scopedDefault,
+          current: scopedCurrent,
+        }),
+      },
+    };
+  }, [currentBranchTree, defaultBranchTree, props.config]);
   const changedData = useMemo(() => {
-    if (allTreeData.merged.kind !== 'loaded') {
+    if (allTreeData.scoped.merged.kind !== 'loaded') {
       return {
         collections: new Map<
           string,
@@ -272,7 +314,7 @@ export function GitHubAppShellProvider(props: {
         singletons: new Set<string>(),
       };
     }
-    return getChangedData(props.config, allTreeData.merged.data);
+    return getChangedData(props.config, allTreeData.scoped.merged.data);
   }, [allTreeData, props.config]);
 
   useEffect(() => {
@@ -351,7 +393,7 @@ export function GitHubAppShellProvider(props: {
         <BranchInfoContext.Provider value={branchInfo}>
           <BaseInfoContext.Provider value={baseInfo}>
             <ChangedContext.Provider value={changedData}>
-              <TreeContext.Provider value={allTreeData}>
+              <TreeContext.Provider value={allTreeData.scoped}>
                 {props.children}
               </TreeContext.Provider>
             </ChangedContext.Provider>

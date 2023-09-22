@@ -71,6 +71,16 @@ export function useData<T>(
   return stateToReturn;
 }
 
+export function mapDataState<Input, Output>(
+  state: DataState<Input>,
+  func: (data: Input) => Output
+): DataState<Output> {
+  if (state.kind === 'error' || state.kind === 'loading') {
+    return state;
+  }
+  return { kind: 'loaded', data: func(state.data) };
+}
+
 export function mergeDataStates<T extends Record<string, unknown>>(input: {
   [K in keyof T]: DataState<T[K]>;
 }): DataState<T> {
