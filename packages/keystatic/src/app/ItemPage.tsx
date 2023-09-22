@@ -44,17 +44,10 @@ import l10nMessages from './l10n/index.json';
 import { getDataFileExtension, getSlugGlobForCollection } from './path-utils';
 import { useRouter } from './router';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
-import {
-  useBaseCommit,
-  useTree,
-  useRepositoryId,
-  useBranchInfo,
-} from './shell/data';
-import { TreeNode } from './trees';
+import { useBaseCommit, useRepositoryId, useBranchInfo } from './shell/data';
 import { useDeleteItem, useUpsertItem } from './updating';
 import { useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
-import { mergeDataStates } from './useData';
 import { useSlugsInCollection } from './useSlugsInCollection';
 import {
   getCollectionFormat,
@@ -73,7 +66,6 @@ type ItemPageProps = {
   initialState: Record<string, unknown>;
   itemSlug: string;
   localTreeKey: string;
-  currentTree: Map<string, TreeNode>;
   basePath: string;
   slugInfo: SlugFieldInfo;
 };
@@ -86,7 +78,6 @@ function ItemPage(props: ItemPageProps) {
     initialFiles,
     initialState,
     localTreeKey,
-    currentTree,
   } = props;
   const router = useRouter();
   const [forceValidation, setForceValidation] = useState(false);
@@ -140,7 +131,6 @@ function ItemPage(props: ItemPageProps) {
     basePath: futureBasePath,
     format: formatInfo,
     currentLocalTreeKey: localTreeKey,
-    currentTree,
     slug: { field: collectionConfig.slugField, value: slug },
   });
   const update = useEventCallback(_update);
@@ -148,7 +138,6 @@ function ItemPage(props: ItemPageProps) {
     initialFiles,
     storage: config.storage,
     basePath: currentBasePath,
-    currentTree,
   });
 
   const onReset = () => {
@@ -631,22 +620,17 @@ function ItemPageWrapper(props: {
     format,
     slug: slugInfo,
   });
-  const { current: tree } = useTree();
-  const combined = useMemo(
-    () => mergeDataStates({ item: itemData, tree }),
-    [itemData, tree]
-  );
 
-  if (combined.kind === 'error') {
+  if (itemData.kind === 'error') {
     return (
       <ItemPageShell {...props}>
         <PageBody>
-          <Notice tone="critical">{combined.error.message}</Notice>
+          <Notice tone="critical">{itemData.error.message}</Notice>
         </PageBody>
       </ItemPageShell>
     );
   }
-  if (combined.kind === 'loading') {
+  if (itemData.kind === 'loading') {
     return (
       <ItemPageShell {...props}>
         <Flex
@@ -664,7 +648,7 @@ function ItemPageWrapper(props: {
     );
   }
 
-  if (combined.data.item === 'not-found') {
+  if (itemData.data === 'not-found') {
     return (
       <ItemPageShell {...props}>
         <PageBody>
@@ -679,10 +663,9 @@ function ItemPageWrapper(props: {
       basePath={props.basePath}
       config={props.config}
       itemSlug={props.itemSlug}
-      initialState={combined.data.item.initialState}
-      initialFiles={combined.data.item.initialFiles}
-      localTreeKey={combined.data.item.localTreeKey}
-      currentTree={combined.data.tree.tree}
+      initialState={itemData.data.initialState}
+      initialFiles={itemData.data.initialFiles}
+      localTreeKey={itemData.data.localTreeKey}
       slugInfo={slugInfo}
     />
   );

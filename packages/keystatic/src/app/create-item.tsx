@@ -27,16 +27,13 @@ import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
 import { PageRoot, PageHeader, PageBody } from './shell/page';
-import { useBaseCommit, useTree } from './shell/data';
-import { TreeNode } from './trees';
+import { useBaseCommit } from './shell/data';
 import { useSlugsInCollection } from './useSlugsInCollection';
 import { ForkRepoDialog } from './fork-repo';
 import { useUpsertItem } from './updating';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { notFound } from './not-found';
 import { useItemData } from './useItemData';
-
-const emptyMap = new Map<string, TreeNode>();
 
 function CreateItemWrapper(props: {
   collection: string;
@@ -190,8 +187,6 @@ function CreateItem(props: {
 
   const baseCommit = useBaseCommit();
 
-  const tree = useTree();
-
   const slug = getSlugFromState(collectionConfig, state);
 
   const formatInfo = getCollectionFormat(props.config, props.collection);
@@ -203,8 +198,6 @@ function CreateItem(props: {
     schema: collectionConfig.schema,
     format: formatInfo,
     currentLocalTreeKey: undefined,
-    currentTree:
-      tree.current.kind === 'loaded' ? tree.current.data.tree : emptyMap,
     slug: { field: collectionConfig.slugField, value: slug },
   });
   const createItem = useEventCallback(_createItem);

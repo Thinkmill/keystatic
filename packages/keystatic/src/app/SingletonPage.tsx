@@ -19,9 +19,7 @@ import { getSingletonFormat, getSingletonPath, isGitHubConfig } from './utils';
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
-import { useBaseCommit, useTree } from './shell/data';
-import { TreeNode } from './trees';
-import { mergeDataStates } from './useData';
+import { useBaseCommit } from './shell/data';
 import { useHasChanged } from './useHasChanged';
 import { useItemData } from './useItemData';
 import { useUpsertItem } from './updating';
@@ -37,7 +35,6 @@ type SingletonPageProps = {
   initialState: Record<string, unknown> | null;
   initialFiles: string[];
   localTreeKey: string | undefined;
-  currentTree: Map<string, TreeNode>;
 };
 
 function SingletonPage({
@@ -46,7 +43,6 @@ function SingletonPage({
   initialState,
   localTreeKey,
   config,
-  currentTree,
 }: SingletonPageProps) {
   const [forceValidation, setForceValidation] = useState(false);
   const singletonConfig = config.singletons![singleton]!;
@@ -103,7 +99,6 @@ function SingletonPage({
     basePath: singletonPath,
     format: formatInfo,
     currentLocalTreeKey: localTreeKey,
-    currentTree,
     slug: undefined,
   });
   const update = useEventCallback(_update);
@@ -251,25 +246,20 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     format,
     slug: undefined,
   });
-  const { current: tree } = useTree();
-  const combined = useMemo(
-    () => mergeDataStates({ tree, item: itemData }),
-    [itemData, tree]
-  );
-  if (combined.kind === 'error') {
+  if (itemData.kind === 'error') {
     return (
       <PageRoot>
         {header}
         <PageBody>
           <Notice margin="xxlarge" tone="critical">
-            {combined.error.message}
+            {itemData.error.message}
           </Notice>
         </PageBody>
       </PageRoot>
     );
   }
 
-  if (combined.kind === 'loading') {
+  if (itemData.kind === 'loading') {
     return (
       <PageRoot>
         {header}
@@ -295,21 +285,14 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
       singleton={props.singleton}
       config={props.config}
       initialState={
-        combined.data.item === 'not-found'
-          ? null
-          : combined.data.item.initialState
+        itemData.data === 'not-found' ? null : itemData.data.initialState
       }
       initialFiles={
-        combined.data.item === 'not-found'
-          ? []
-          : combined.data.item.initialFiles
+        itemData.data === 'not-found' ? [] : itemData.data.initialFiles
       }
       localTreeKey={
-        combined.data.item === 'not-found'
-          ? undefined
-          : combined.data.item.localTreeKey
+        itemData.data === 'not-found' ? undefined : itemData.data.localTreeKey
       }
-      currentTree={combined.data.tree.tree}
     />
   );
 }

@@ -13,13 +13,13 @@ import {
   RepoWithWriteAccessContext,
   useBaseCommit,
   useSetTreeSha,
+  useTree,
 } from './shell/data';
 import { hydrateBlobCache } from './useItemData';
 import { FormatInfo, getEntryDataFilepath } from './path-utils';
 import {
   getTreeNodeAtPath,
   TreeEntry,
-  TreeNode,
   treeSha,
   updateTreeWithChanges,
 } from './trees';
@@ -110,7 +110,6 @@ export function useUpsertItem(args: {
   schema: Record<string, ComponentSchema>;
   config: Config;
   format: FormatInfo;
-  currentTree: Map<string, TreeNode>;
   currentLocalTreeKey: string | undefined;
   basePath: string;
   slug: { value: string; field: string } | undefined;
@@ -131,11 +130,15 @@ export function useUpsertItem(args: {
   const [, mutate] = useMutation(createCommitMutation);
   const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
   const appSlug = useContext(AppSlugContext);
+  const treeData = useTree().current;
 
   return [
     state,
     async (override?: { sha: string; branch: string }): Promise<boolean> => {
       try {
+        const currentTree =
+          treeData.kind === 'loaded' ? treeData.data.tree : undefined;
+        if (!currentTree) return false;
         if (
           repoWithWriteAccess === null &&
           args.config.storage.kind === 'github' &&
@@ -174,14 +177,14 @@ export function useUpsertItem(args: {
 
         additions = additions.filter(addition => {
           const sha = additionPathToSha.get(addition.path)!;
-          const existing = getTreeNodeAtPath(args.currentTree, addition.path);
+          const existing = getTreeNodeAtPath(currentTree, addition.path);
           return existing?.entry.sha !== sha;
         });
 
         const deletions: { path: string }[] = [...filesToDelete].map(path => ({
           path,
         }));
-        const updatedTree = await updateTreeWithChanges(args.currentTree, {
+        const updatedTree = await updateTreeWithChanges(currentTree, {
           additions,
           deletions: [...filesToDelete],
         });
@@ -331,7 +334,6 @@ const createCommitMutation = gql`
 export function useDeleteItem(args: {
   basePath: string;
   initialFiles: string[];
-  currentTree: Map<string, TreeNode>;
   storage: Config['storage'];
 }) {
   const [state, setState] = useState<
@@ -350,11 +352,15 @@ export function useDeleteItem(args: {
   const setTreeSha = useSetTreeSha();
   const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
   const appSlug = useContext(AppSlugContext);
+  const treeData = useTree().current;
 
   return [
     state,
     async () => {
       try {
+        const currentTree =
+          treeData.kind === 'loaded' ? treeData.data.tree : undefined;
+        if (!currentTree) return false;
         if (
           repoWithWriteAccess === null &&
           args.storage.kind === 'github' &&
@@ -364,7 +370,7 @@ export function useDeleteItem(args: {
           return false;
         }
         setState({ kind: 'loading' });
-        const updatedTree = await updateTreeWithChanges(args.currentTree, {
+        const updatedTree = await updateTreeWithChanges(currentTree, {
           additions: [],
           deletions: args.initialFiles,
         });
