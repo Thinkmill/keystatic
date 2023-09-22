@@ -5,24 +5,31 @@ import { cx } from '../utils';
 
 type ButtonProps = {
   impact?: 'bold' | 'light';
+  variant?: 'regular' | 'small';
   href?: string;
   isLoading?: boolean;
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
 } & AllHTMLAttributes<HTMLButtonElement | HTMLAnchorElement>;
 
 const baseClasses =
-  'block rounded-lg px-5 py-3 text-center font-semibold leading-none border transition-colors';
+  'block text-center font-medium leading-none border transition-colors';
 
 const impactClasses: Record<ButtonProps['impact'] & {}, string> = {
-  bold: 'bg-black text-white hover:bg-slate-11 border-transparent',
+  bold: 'bg-iris-9 text-white hover:bg-iris-10 active:bg-iris-11 border-transparent',
   light:
-    'bg-transparent border-black text-black hover:bg-slate-11/10 active:bg-slate-11/20',
+    'bg-white border-sand-7 text-sand-11 hover:bg-sand-2 hover:border-sand-8 active:bg-sand-10',
+};
+
+const variantClasses: Record<ButtonProps['variant'] & {}, string> = {
+  regular: 'rounded-lg px-4 py-3',
+  small: 'rounded-md py-2 px-3 text-sm',
 };
 
 // ----------
 
 export default function Button({
   impact = 'bold',
+  variant = 'regular',
   href,
   isLoading = false,
   children,
@@ -33,14 +40,24 @@ export default function Button({
     <Link
       href={href}
       {...props}
-      className={cx(baseClasses, impactClasses[impact], className)}
+      className={cx(
+        baseClasses,
+        impactClasses[impact],
+        variantClasses[variant],
+        className
+      )}
     >
       {children}
     </Link>
   ) : (
     <button
       {...props}
-      className={cx(baseClasses, impactClasses[impact], className)}
+      className={cx(
+        baseClasses,
+        impactClasses[impact],
+        variantClasses[variant],
+        className
+      )}
     >
       {isLoading ? <Spinner /> : children}
     </button>
@@ -51,7 +68,7 @@ function Spinner() {
   return (
     <div className="grid w-full place-items-center">
       <svg
-        className="-my-0.5 h-5 w-5 animate-spin text-white"
+        className="-my-0.5 h-5 w-5 animate-spin text-sand-1"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

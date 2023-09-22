@@ -1,43 +1,43 @@
-import { StarIcon } from './icons/star-icon';
+import { CheckCircleIcon } from './icons/check-circle';
 
 const features = [
-  'First-class CMS experience',
-  'TypeScript API',
-  'Markdown & YAML/JSON based',
-  'No database',
+  {
+    label: 'First-class CMS experience',
+    bgColor: 'bg-pink-2',
+    textColor: 'text-pink-9',
+  },
+  {
+    label: 'Markdown & YAML/JSON based',
+    bgColor: 'bg-yellow-2',
+    textColor: 'text-yellow-9',
+  },
+  {
+    label: 'TypeScript API',
+    bgColor: 'bg-green-2',
+    textColor: 'text-green-9',
+  },
+  {
+    label: 'No database',
+    bgColor: 'bg-cyan-2',
+    textColor: 'text-cyan-9',
+  },
 ];
 
 export default function Features() {
   return (
-    <section className="relative bg-slate-3">
-      {/* swirly arrow */}
-      <div className="relative mx-auto max-w-7xl">
-        <svg
-          className="absolute -top-24 left-[4vw] w-20 -scale-x-1 md:left-auto md:right-2 md:scale-x-1 xl:-right-6"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 115 168"
-          aria-hidden="true"
-        >
-          <path
-            fill="#000"
-            d="M41.66 166.893c3.254-1.781 3.82-2.765 2.688-4.78-1.18-2.25-2.406-3-8.727-5.578-3.02-1.218-5.52-2.437-5.52-2.671.047-.469 6.605-4.5 25.522-15.654 30.334-17.857 39.816-25.45 49.299-39.604 6.132-9.046 9.623-17.529 10.001-24.137.33-4.968-.378-8.39-2.548-12.795-2.075-4.125-7.406-9.562-12.029-12.186l-3.114-1.781.66-2.39c3.208-12.14-1.698-28.59-11.51-38.714-5.426-5.577-10.662-7.78-14.2-5.999-.85.469-1.604 1.078-1.746 1.453-.141.375 1.132 2.297 2.972 4.546C85.957 21.554 90.486 29.57 89.92 35.85c-.283 2.906-1.887 7.124-3.633 9.561-.896 1.266-1.274 1.406-3.444 1.406-6.227 0-15.756 2.438-22.502 5.718-4.057 2.016-5.614 3.094-8.539 6-2.878 2.812-3.774 4.03-4.434 6.045-2.878 8.765 5 18.888 13.87 17.67 2.924-.375 7.217-2.484 12.218-5.859 5.52-3.796 10.19-8.108 15.001-13.92 2.218-2.671 4.199-4.874 4.435-4.874.802 0 6.133 3.843 7.737 5.624 2.972 3.281 3.774 5.343 3.774 9.843 0 3.515-.189 4.452-1.699 8.108-3.538 8.436-7.595 13.826-16.983 22.403-7.972 7.218-13.256 11.202-23.54 17.529-15.05 9.28-49.11 28.355-50.667 28.355-.66 0 .613-3.187 4.104-10.405 2.972-6.233 3.821-8.436 4.01-10.639.283-2.718.236-2.765-1.18-3.515-.801-.422-1.886-.75-2.405-.75-1.415 0-4.293 2.765-7.076 6.796C3.73 138.491.522 146.74.097 154.004c-.471 7.827.236 8.39 14.483 10.405 10.71 1.547 21.748 3.234 23.588 3.562.755.141 2.029-.234 3.491-1.078Zm16.37-95.518c-2.218-1.874-2.077-3.983.565-6.467 3.444-3.328 10.096-6.328 15.993-7.312 2.736-.422 3.019-.422 3.774.469.802.984.707 1.078-3.067 4.405C63.501 72.828 61.19 74 58.03 71.375Z"
-          />
-        </svg>
-      </div>
-
+    <section className="relative bg-white">
       <ul
         tabIndex={0}
-        className="flex gap-4 overflow-x-auto px-6 py-8 md:gap-8"
+        className="mx-auto flex max-w-5xl flex-wrap justify-center gap-4 px-6 pb-12 pt-24 sm:gap-x-6"
         role="list"
       >
         {features.map(feature => (
           <li
-            key={feature}
-            className="flex shrink-0 items-center gap-2 rounded-lg bg-slate-5 px-4 py-3 first:ml-auto last:mr-auto md:px-6 md:py-4"
+            key={feature.label}
+            className={`flex items-center gap-2 rounded-full ${feature.bgColor} p-2 pr-4 ${feature.textColor}`}
           >
-            <StarIcon size="small" />
-            <span className="shrink-0 md:text-lg">{feature}</span>
+            <CheckCircleIcon />
+            <span className="text-sand-12">{feature.label}</span>
           </li>
         ))}
       </ul>

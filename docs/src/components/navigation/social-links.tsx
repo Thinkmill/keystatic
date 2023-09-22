@@ -23,7 +23,7 @@ export function SocialLinks({ tabIndex }: { tabIndex?: number }) {
         className={styles}
         tabIndex={tabIndex}
       >
-        <span className="sr-only">Keystatic on Twitter</span>
+        <span className="sr-only">Keystatic on X (Twitter)</span>
         <TwitterIcon />
       </Link>
 

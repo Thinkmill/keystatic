@@ -39,7 +39,7 @@ export default async function RootLayout({
       </SideNav>
 
       {/** CONTENT */}
-      <div className="flex-1 px-6 lg:pl-60 lg:pt-24">
+      <div className="flex-1 px-6 pt-24 lg:pl-60">
         <div className="py-10 lg:pl-12">
           <Main className="flex gap-8">
             {/** INNER CONTENT */}

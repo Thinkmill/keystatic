@@ -29,7 +29,7 @@ export default async function Blog() {
 
   return (
     <>
-      <div className="mb-8 sm:text-center">
+      <div className="mb-8 pt-24 sm:text-center">
         <h1
           className="mb-8 text-3xl font-extrabold sm:text-4xl md:text-5xl"
           id={H1_ID}

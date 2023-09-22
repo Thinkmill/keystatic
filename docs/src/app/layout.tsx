@@ -21,11 +21,11 @@ export const metadata = {
     description: 'Content management for your codebase.',
     images: [
       {
-        url: 'https://thinkmill-labs.keystatic.net/keystatic-site/images/x93u9oqzdwlv/og-image',
+        url: 'https://thinkmill-labs.keystatic.net/keystatic-site/images/lok6jo6bsuca/og-image',
         width: 1200,
         height: 630,
         alt: 'Keystatic cover image',
-        type: 'image/jpeg',
+        type: 'image/png',
       },
     ],
     siteName: 'Keystatic',

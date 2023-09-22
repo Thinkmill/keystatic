@@ -5,68 +5,133 @@ import { H1_ID } from '../constants';
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-white">
-      <div className="mx-auto flex max-w-7xl flex-col items-center gap-12 px-6 pt-10 md:gap-16 md:pb-10 lg:py-16">
-        <div className="flex w-full max-w-2xl flex-col items-center gap-8 text-center">
-          <h1
-            className="text-3xl font-extrabold sm:text-4xl md:text-5xl"
-            id={H1_ID}
-            aria-label="Content management for your code base"
+    <section className="relative overflow-hidden">
+      <div className="absolute left-0 top-0 z-0 h-full w-full pb-24">
+        <div className="relative h-full w-full overflow-hidden bg-sand-2">
+          <div className="absolute left-0 top-0 h-full w-full bg-pattern-texture opacity-80 mix-blend-overlay" />
+          <svg
+            className="min-h-full min-w-full"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 1440 1024"
           >
-            Content Management
-            <br />
-            for your{' '}
-            <span className="relative">
-              <svg
-                className="absolute -bottom-1.5 -right-3 w-[110%]"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 392 92"
-                aria-hidden="true"
+            <g clipPath="url(#hero-img-a)">
+              <path
+                stroke="url(#hero-img-b)"
+                strokeWidth="426"
+                d="M977-150 205 622v413"
+              />
+              <path
+                stroke="url(#hero-img-c)"
+                strokeWidth="426"
+                d="M1580-153 631 796v239"
+              />
+              <path
+                stroke="url(#hero-img-d)"
+                strokeWidth="426"
+                d="m869 256 464 464v315"
+              />
+              <path
+                stroke="url(#hero-img-e)"
+                strokeLinejoin="round"
+                strokeWidth="426"
+                d="m721 707 747-747"
+                opacity=".4"
+              />
+            </g>
+            <defs>
+              <linearGradient
+                id="hero-img-b"
+                x1="565"
+                x2="205"
+                y1="197.8"
+                y2="624.4"
+                gradientUnits="userSpaceOnUse"
               >
-                <path
-                  fill="#F7DE5B"
-                  d="m4.239.201 92.684 2.883 100.722 7.097 99.043 7.211 94.363 2.77-21.813 9.088 14.042 9.919 2.873 8.7-14.795 6.043 7.844 5.477 7.843 5.476-14.691 6.037 11.104 9.535 3.927 10.77-93.59-1.7-100.082-5.647-116.75-3.055-76.39-9.559 12.857-8.312-11.94-9.45 5.534-10.258-4.618-7.502 16.812-1.055L7.21 20.478l5.332-11.703L4.239.201Z"
-                />
-              </svg>
-              <span className="relative">Codebase</span>
-            </span>
-          </h1>
-
-          <p className="text-lg font-normal">
-            A new tool that makes Markdown, JSON and YAML content in your
-            codebase editable by humans. Live edit content on GitHub or your
-            local file system, without disrupting your existing code and
-            workflows.
-          </p>
-
-          <div className="flex flex-col gap-3 sm:flex-row">
+                <stop stopColor="#E4DEFC" />
+                <stop offset="1" stopColor="#FDD8D3" />
+              </linearGradient>
+              <linearGradient
+                id="hero-img-c"
+                x1="911"
+                x2="631"
+                y1="537.8"
+                y2="804.4"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stopColor="#FFE0A1" />
+                <stop offset="1" stopColor="#CEEBCF" />
+              </linearGradient>
+              <linearGradient
+                id="hero-img-d"
+                x1="920.1"
+                x2="1333.4"
+                y1="306.7"
+                y2="728.9"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stopColor="#E4DEFC" />
+                <stop offset="1" stopColor="#C4EAEF" />
+              </linearGradient>
+              <linearGradient
+                id="hero-img-e"
+                x1="1001.4"
+                x2="721.4"
+                y1="448.9"
+                y2="715.6"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stopColor="#FFE0A1" />
+                <stop offset="1" stopColor="#CEEBCF" />
+              </linearGradient>
+              <clipPath id="hero-img-a">
+                <path fill="#fff" d="M0 0h1440v1024H0z" />
+              </clipPath>
+            </defs>
+          </svg>
+        </div>
+      </div>
+      <div className="relative mx-auto mb-16 mt-24 grid max-w-5xl grid-cols-8 gap-6 px-6 pt-10 md:grid-cols-12">
+        <div className="col-span-8 flex flex-col items-center gap-10 text-center sm:col-span-6 sm:col-start-2 md:col-span-8 md:col-start-3">
+          <div>
+            <h1
+              className="mb-6 text-4xl font-medium md:text-5xl"
+              id={H1_ID}
+              aria-label="Content management for your code base"
+            >
+              Content Management for your Codebase
+            </h1>
+            <p className="text-base md:text-lg">
+              A new tool that makes Markdown, JSON and YAML content in your
+              codebase editable by humans. Live edit content on GitHub or your
+              local file system, without disrupting your existing code and
+              workflows.
+            </p>
+          </div>
+          <div className="flex flex-col justify-center gap-4 sm:flex-row sm:flex-wrap">
             <Button className="" href="/docs">
               Read the docs
             </Button>
 
             <CopyCommandButton />
           </div>
-
           <div className="inline-flex items-center gap-2 text-left">
             <svg
               className="h-6 w-6 shrink-0"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
-              viewBox="0 0 24 24"
+              viewBox="0 0 32 32"
               aria-hidden="true"
             >
               <path
                 fill="#ED0000"
                 fillRule="evenodd"
-                d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12Z"
+                d="M16 32a16 16 0 1 0 0-32 16 16 0 0 0 0 32Z"
                 clipRule="evenodd"
               />
               <path
                 fill="#fff"
-                fillRule="evenodd"
-                d="M8.22 13.514c0 .58.194.813.702.813.132 0 .274-.02.356-.05v.904c-.173.051-.437.092-.65.092-1.088 0-1.566-.458-1.566-1.586v-2.755h-.864v-.884h.864v-1.29H8.22v1.29h1.006v.884H8.22v2.582Zm6.16-2.653c.377-.59.875-.935 1.658-.935 1.097 0 1.768.712 1.768 2.104v3.182h-1.159v-3.07c0-.915-.355-1.28-.935-1.28-.68 0-1.087.579-1.087 1.565v2.785h-1.16V12.02c0-.732-.324-1.159-.924-1.159-.691 0-1.088.59-1.088 1.586v2.765h-1.159v-5.164h1.108v.62h.02c.367-.498.824-.742 1.434-.742.712 0 1.26.325 1.525.935Z"
-                clipRule="evenodd"
+                d="M8.4 10.75h1.59v1.96h1.68v1.28H9.99v4.5c0 .3.05.54.14.7.09.15.2.25.35.31a1.86 1.86 0 0 0 .82.05l.23-.04.29 1.32c-.1.03-.23.07-.4.1a3.13 3.13 0 0 1-1.8-.16c-.37-.15-.66-.4-.89-.72a2.13 2.13 0 0 1-.33-1.23v-4.83H7.2V12.7h1.2v-1.96ZM13.68 12.71v8.18h1.6v-5.04a2 2 0 0 1 .22-.98c.16-.28.36-.5.61-.65.26-.16.54-.24.84-.24.44 0 .8.13 1.08.4s.42.63.42 1.07v5.44h1.58v-5.21c0-.5.15-.9.44-1.22.28-.32.69-.48 1.2-.48.42 0 .78.12 1.09.37.3.25.45.65.45 1.2v5.34h1.6v-5.48c0-.94-.24-1.64-.72-2.1a2.47 2.47 0 0 0-1.81-.7c-.6 0-1.1.13-1.53.39-.42.26-.73.6-.93 1.04h-.08c-.18-.45-.46-.8-.83-1.05a2.36 2.36 0 0 0-1.37-.39c-.54 0-1 .13-1.4.39-.38.25-.66.6-.83 1.05h-.1v-1.33h-1.53Z"
               />
             </svg>
             <span className="text-sm font-medium">
@@ -81,38 +146,33 @@ export default function Hero() {
             </span>
           </div>
         </div>
-
-        <div className="relative h-[100vw] w-full md:h-[22vw] lg:h-[25vw] xl:h-[20rem]">
-          <img
-            src="https://keystatic.io/images/keystatic-docs/hero-markdoc.png"
-            alt="Content edited in a markdoc file, in a code editor"
-            width={784}
-            height={549}
-            className="absolute -right-[40%] -top-[5%] w-[110vw] max-w-none md:-left-[5%] md:top-0 md:w-2/3 md:max-w-full"
-          />
-          <img
-            src="https://keystatic.io/images/keystatic-docs/hero-editor-current.png"
-            alt="Content edited in a WYSIWIG editor in Keystatic Admin UI"
-            width={784}
-            height={549}
-            className="absolute -bottom-[5%] -right-[25%] w-[110vw] max-w-none md:-right-[5%] md:-top-[2.5rem] md:w-2/3 md:max-w-full"
-          />
+      </div>
+      <div className="relative max-w-5xl px-6 md:mx-auto">
+        <div className="relative h-[75vh] max-h-[36rem] min-h-[28rem] sm:max-h-[42rem] md:aspect-[16/7] md:h-auto md:max-h-none md:min-h-0">
+          <div className="absolute left-0 top-0 grid h-full w-full grid-cols-8 gap-6 md:grid-cols-12">
+            <div className="col-span-6 col-start-2 min-w-[40rem] overflow-hidden rounded-lg border border-sand-6 bg-sand-1 sm:col-start-3 sm:min-w-[48rem] md:col-span-8 md:mb-12 md:min-w-0">
+              <img
+                src="https://thinkmill-labs.keystatic.net/keystatic-site/images/fibyg87jdi7p/hero-markdoc-file"
+                alt="Content edited in a markdoc file, in a code editor"
+                width={884}
+                height={619}
+                className="w-full"
+              />
+            </div>
+          </div>
+          <div className="absolute left-0 top-0 grid h-full w-full grid-cols-8 gap-6 md:grid-cols-12">
+            <div className="col-span-6 col-start-1 mt-52 min-w-[40rem] overflow-hidden rounded-lg border border-sand-6 bg-sand-1 sm:col-start-2 sm:min-w-[48rem] md:col-span-8 md:col-start-5 md:mt-12 md:min-w-0">
+              <img
+                src="https://thinkmill-labs.keystatic.net/keystatic-site/images/b1q36g2ftnju/hero-keystatic-editor"
+                alt="Content edited in a WYSIWIG editor in Keystatic Admin UI"
+                width={784}
+                height={549}
+                className="w-full"
+              />
+            </div>
+          </div>
         </div>
       </div>
-
-      <svg
-        className="absolute bottom-0"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 -256 1440 40"
-        aria-hidden="true"
-      >
-        <path
-          className="fill-slate-3"
-          fill="currentColor"
-          d="M1029.52 29.363c12.63-.533 27.09-1.599 32.33-2.398 4.92-.8 15.08-1.732 22.16-1.998 7.08-.267 15.09-1.2 17.55-2.132 5.85-2.131 41.25-5.595 43.41-4.13.61.534 9.23.4 19.09-.133 25.24-1.465 128.68-1.998 147.15-.799 8.31.666 32.02 1.066 52.34 1.066 20.31 0 41.86.533 48.33 1.199 38.17 4.53 88.05 5.195 105.29 1.465 7.08-1.465 17.54-2.93 23.7-3.463 9.24-.533 11.7-1.466 12.93-4.396.92-2.265-.61-4.796-4.31-7.06-3.39-2.132-6.77-7.061-7.7-11.724-1.23-4.662-3.69-8.259-6.15-8.659-2.47-.4-4-3.73-4.31-9.724-1.23-25.178-2.47-31.972-5.85-34.902-2.46-1.998-3.39-5.196-1.85-9.059 1.23-3.996.62-6.527-1.85-7.993-4.61-2.264-4.31-9.325.31-11.723 1.54-.932 2.16-1.998 1.23-2.397-4-1.732 1.85-7.194 9.85-8.926 11.4-2.797 20.32-11.456 17.86-17.717-1.23-3.863-.62-5.728 3.69-7.727 3.08-1.465 3.7-2.531 1.85-2.531-5.54 0-4.31-8.659.93-10.657 2.77-.932 3.69-2.265 2.46-2.797-1.23-.533-1.54-5.729-.31-11.457 1.23-5.728 2.46-13.055 3.08-16.385.92-3.33-.62-7.993-3.08-10.657-2.77-2.531-4.31-5.196-4-5.862.31-.666-.31-2.131-1.54-3.33-3.39-3.464-4.62-5.728-6.16-11.989-.92-3.331-2.77-6.661-4.62-7.594-2.15-1.065-1.54-3.063 1.54-6.261 5.24-5.461 2.16-7.593-10.77-7.593-4.62 0-8.93-.666-9.55-1.332-.61-.932-11.39-1.066-33.24-.266-31.71 1.065-62.5.266-83.12-2.265-5.85-.666-20.63-2.531-32.33-4.13-12.01-1.465-27.09-3.064-33.86-3.33-6.47-.4-14.78-1.465-18.47-2.531-9.86-2.664-19.71-3.73-46.18-4.796-53.26-2.131-86.82-4.129-100.06-5.994-7.69-1.066-23.7-2.132-35.4-2.265-18.16-.133-23.7.4-35.4 3.33-7.7 1.865-21.55 3.997-30.79 4.663-25.55 1.998-162.854.266-189.33-2.398-8.62-.799-34.48-1.465-58.492-1.199-23.705.133-79.427.133-123.451.133-74.808-.266-81.581-.4-95.435-3.064-13.545-2.531-21.858-2.93-84.352-3.33-52.644-.4-74.809 0-92.357 1.465-20.318 1.732-55.722 2.398-123.142 2.132-11.083-.134-33.557 1.065-49.873 2.531-16.316 1.465-40.021 2.664-52.643 2.664-28.939 0-70.191 3.33-86.508 6.927-12.314 2.798-14.161 2.798-61.879 1.332-64.957-2.131-109.596 0-146.847 7.061-32.632 6.127-43.407 9.857-48.025 16.518-5.234 7.46-4.926 24.778.615 32.638 3.695 5.062 4.003 8.792 1.848 15.985-2.463 8.792-1.847 17.185 1.847 24.378.615 1.599 4.618 4.397 8.62 5.995 4.002 1.732 8.004 4.529 8.927 6.394 2.156 3.864-7.388 15.72-24.32 30.24-9.544 7.993-11.083 10.39-9.852 15.586 1.232 3.863.308 6.927-2.462 8.526-3.694 2.398-7.697 28.241-4.31 28.241.923 0 1.847 1.066 2.155 2.398.615 2.664 3.694 10.124 5.849 14.654.924 2.131 3.386 2.93 9.851 2.93 14.47 0 22.166 1.466 22.166 4.263 0 1.332 3.386 4.663 7.696 7.327 5.542 3.73 6.773 5.462 4.31 7.327-1.539 1.332-4.618 2.398-6.773 2.398-6.772 0 4.926 2.53 22.474 4.795 21.242 2.798 58.492 3.33 58.492.8 0-1.066 1.54-1.333 3.695-.667C-21.804 6.05 16.678 6.716 98.26 7.25c43.099.267 68.651 1.865 81.581 4.796 3.079.666 11.391 1.465 18.78 1.865 7.388.266 21.857 1.865 31.709 3.33 10.159 1.599 20.934 2.531 24.013 1.998 3.078-.4 5.541-.133 5.541.533 0 1.732 21.858 1.732 26.783.133 2.155-.932 4.31-.799 5.542 0 1.231.933 4.618.667 10.159-.932 12.622-3.597 68.96-5.595 86.815-3.197 7.697 1.066 15.085 2.398 16.932 2.93 1.54.533 13.854 1.333 26.784 1.866 13.238.532 29.246 1.731 35.403 2.664 6.465.932 17.24 1.465 24.321 1.066 8.62-.267 14.161.133 17.24 1.598 4.002 1.599 8.312 1.732 24.32.8 10.775-.667 46.794-1.6 79.735-1.999 32.94-.533 67.42-1.066 76.656-1.332 8.928-.266 20.011.133 24.628.666 14.778 2.132 41.253 2.798 132.686 3.33 80.658.4 108.673.933 147.771 2.532 5.851.266 21.241 0 33.861-.533Z"
-        />
-      </svg>
     </section>
   );
 }

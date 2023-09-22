@@ -15,8 +15,10 @@ export default function Homepage() {
         <Features />
         <CliVideo />
         <DocsLinks />
-        <MailingList />
-        <CallToAction />
+        <div className="grid sm:grid-cols-2">
+          <MailingList />
+          <CallToAction />
+        </div>
       </Main>
       <Footer />
     </>
