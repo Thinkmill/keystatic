@@ -8,7 +8,7 @@ export default function Hero() {
     <section className="relative overflow-hidden">
       <div className="absolute left-0 top-0 z-0 h-full w-full pb-24">
         <div className="relative h-full w-full overflow-hidden bg-sand-2">
-          <div className="absolute left-0 top-0 h-full w-full bg-pattern-texture opacity-80 mix-blend-soft-light" />
+          <div className="absolute left-0 top-0 h-full w-full bg-pattern-texture opacity-80 mix-blend-overlay" />
           <svg
             className="min-h-full min-w-full"
             xmlns="http://www.w3.org/2000/svg"

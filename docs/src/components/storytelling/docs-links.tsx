@@ -388,7 +388,7 @@ const docs = [
       </svg>
     ),
     content: (
-      <div className="relative flex h-full w-full flex-col items-center py-[4.5rem]">
+      <div className="relative flex h-full w-full flex-col items-center justify-center">
         <span className="absolute left-1/2 top-1/2 -ml-10 -mt-10 flex h-20 w-20">
           <span className="invisible absolute inline-flex h-full w-full animate-pulse rounded-full border border-sand-12/40 group-hover:visible group-hover:animate-ping" />
         </span>
@@ -842,7 +842,6 @@ export default function DocsLinks() {
                 </div>
                 <div className="relative h-44 w-full overflow-hidden bg-sand-2">
                   {doc.bgSVG}
-                  <div className="absolute left-0 top-0 h-full w-full bg-pattern-texture opacity-80 mix-blend-soft-light transition-all duration-500 ease-out group-hover:scale-125" />
                   {doc.content}
                 </div>
               </div>

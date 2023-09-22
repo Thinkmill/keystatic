@@ -85,7 +85,7 @@ export default function CallToAction() {
           </clipPath>
         </defs>
       </svg>
-      <div className="absolute left-0 top-0 h-full w-full bg-pattern-texture opacity-80 mix-blend-soft-light" />
+      <div className="absolute left-0 top-0 h-full w-full bg-pattern-texture opacity-80 mix-blend-overlay" />
       <div className="relative px-6 py-16 sm:max-w-lg sm:pl-3">
         <div className="flex flex-col gap-6 px-8 lg:px-16">
           <div className="flex flex-col gap-4">
