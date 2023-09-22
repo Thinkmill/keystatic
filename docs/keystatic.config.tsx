@@ -70,15 +70,11 @@ const markdocConfig: Config = {
 };
 
 const shouldUseCloudStorage = process.env.NODE_ENV === 'production';
-const pathPrefix = shouldUseCloudStorage ? 'docs/' : '';
-export const readerPath = shouldUseCloudStorage
-  ? process.cwd().replace(/\/docs/, '')
-  : process.cwd();
 
 export default config({
-  storage: {
-    kind: shouldUseCloudStorage ? 'cloud' : 'local',
-  },
+  storage: shouldUseCloudStorage
+    ? { kind: 'cloud', pathPrefix: 'docs' }
+    : { kind: 'local' },
   cloud: {
     project: 'thinkmill-labs/keystatic-site',
   },
@@ -91,7 +87,7 @@ export default config({
       slugField: 'title',
       entryLayout: 'content',
       format: { contentField: 'content' },
-      path: `${pathPrefix}src/content/pages/**`,
+      path: 'src/content/pages/**',
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         summary: fields.text({
@@ -116,7 +112,7 @@ export default config({
     blog: collection({
       label: 'Blog posts',
       slugField: 'title',
-      path: `${pathPrefix}src/content/blog/**`,
+      path: 'src/content/blog/**',
       entryLayout: 'content',
       format: {
         contentField: 'content',
@@ -178,7 +174,7 @@ export default config({
     authors: collection({
       label: 'Authors',
       slugField: 'name',
-      path: `${pathPrefix}src/content/authors/**`,
+      path: 'src/content/authors/**',
       schema: {
         name: fields.slug({
           name: {
@@ -205,7 +201,7 @@ export default config({
     projects: collection({
       label: 'Projects (Showcase)',
       slugField: 'title',
-      path: `${pathPrefix}src/content/projects/*`,
+      path: 'src/content/projects/*',
       format: { contentField: 'content' },
       entryLayout: 'content',
       schema: {
@@ -254,7 +250,7 @@ export default config({
       label: 'Pages with new editor',
       slugField: 'title',
       format: { contentField: 'content' },
-      path: `${pathPrefix}src/content/pages/**`,
+      path: 'src/content/pages/**',
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         summary: fields.text({
@@ -275,7 +271,7 @@ export default config({
     // ------------------------------
     navigation: singleton({
       label: 'Navigation',
-      path: `${pathPrefix}src/content/navigation`,
+      path: 'src/content/navigation',
       schema: {
         navGroups: fields.array(
           fields.object({
