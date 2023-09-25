@@ -1,5 +1,18 @@
 # @keystatic/core
 
+## 0.1.5
+
+### Patch Changes
+
+- e36b026d: Add `storage.pathPrefix` option
+- 9411896b: Add link to cloud images on dashboard
+- 303e845d: Remove unused dependencies
+- 183e1293: Added an option to duplicate an existing entry in a collection
+- a05fc4cb: Allow pasting more variations of cloud image urls in
+  `fields.cloudImage` and `cloudImage` component block
+- df4f06ae: Editor: fields editing in a modal instead of in-document
+- b5eb69d1: Show logged in user in header in cloud mode
+
 ## 0.1.4
 
 ### Patch Changes
