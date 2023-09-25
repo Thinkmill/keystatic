@@ -20,7 +20,13 @@ import {
   TreeNode,
   treeSha,
 } from '../trees';
-import { DataState, LOADING, mergeDataStates, useData } from '../useData';
+import {
+  DataState,
+  LOADING,
+  mapDataState,
+  mergeDataStates,
+  useData,
+} from '../useData';
 import {
   getEntriesInCollectionWithTreeKey,
   isGitHubConfig,
@@ -35,6 +41,7 @@ import { getAuth, getCloudAuth } from '../auth';
 import { ViewerContext, SidebarFooter_viewer } from './viewer-data';
 import { parseRepoConfig, serializeRepoConfig } from '../repo-config';
 import { z } from 'zod';
+import { scopeEntriesWithPathPrefix } from './path-prefix';
 
 export function fetchLocalTree(sha: string) {
   if (treeCache.has(sha)) {
@@ -67,14 +74,17 @@ export function LocalAppShellProvider(props: {
 
   const allTreeData = useMemo(
     () => ({
-      default: tree,
-      current: tree,
-      merged: mergeDataStates({ default: tree, current: tree }),
+      unscopedDefault: tree,
+      scoped: {
+        default: tree,
+        current: tree,
+        merged: mergeDataStates({ default: tree, current: tree }),
+      },
     }),
     [tree]
   );
   const changedData = useMemo(() => {
-    if (allTreeData.merged.kind !== 'loaded') {
+    if (allTreeData.scoped.merged.kind !== 'loaded') {
       return {
         collections: new Map<
           string,
@@ -88,7 +98,7 @@ export function LocalAppShellProvider(props: {
         singletons: new Set<string>(),
       };
     }
-    return getChangedData(props.config, allTreeData.merged.data);
+    return getChangedData(props.config, allTreeData.scoped.merged.data);
   }, [allTreeData, props.config]);
 
   return (
@@ -246,19 +256,27 @@ export function GitHubAppShellProvider(props: {
     props.config
   );
 
-  const allTreeData = useMemo(
-    () => ({
-      default: defaultBranchTree,
-      current: currentBranchTree,
-      merged: mergeDataStates({
-        default: defaultBranchTree,
-        current: currentBranchTree,
-      }),
-    }),
-    [currentBranchTree, defaultBranchTree]
-  );
+  const allTreeData = useMemo(() => {
+    const scopedDefault = mapDataState(defaultBranchTree, tree =>
+      scopeEntriesWithPathPrefix(tree, props.config)
+    );
+    const scopedCurrent = mapDataState(currentBranchTree, tree =>
+      scopeEntriesWithPathPrefix(tree, props.config)
+    );
+    return {
+      unscopedDefault: currentBranchTree,
+      scoped: {
+        default: scopedDefault,
+        current: scopedCurrent,
+        merged: mergeDataStates({
+          default: scopedDefault,
+          current: scopedCurrent,
+        }),
+      },
+    };
+  }, [currentBranchTree, defaultBranchTree, props.config]);
   const changedData = useMemo(() => {
-    if (allTreeData.merged.kind !== 'loaded') {
+    if (allTreeData.scoped.merged.kind !== 'loaded') {
       return {
         collections: new Map<
           string,
@@ -272,7 +290,7 @@ export function GitHubAppShellProvider(props: {
         singletons: new Set<string>(),
       };
     }
-    return getChangedData(props.config, allTreeData.merged.data);
+    return getChangedData(props.config, allTreeData.scoped.merged.data);
   }, [allTreeData, props.config]);
 
   useEffect(() => {
@@ -389,22 +407,32 @@ export type TreeData = {
 };
 
 type AllTreeData = {
-  current: DataState<TreeData>;
-  default: DataState<TreeData>;
-  merged: DataState<{
-    current: TreeData;
-    default: TreeData;
-  }>;
+  unscopedDefault: DataState<TreeData>;
+  scoped: {
+    current: DataState<TreeData>;
+    default: DataState<TreeData>;
+    merged: DataState<{
+      current: TreeData;
+      default: TreeData;
+    }>;
+  };
 };
 
 const TreeContext = createContext<AllTreeData>({
-  current: { kind: 'loading' },
-  default: { kind: 'loading' },
-  merged: { kind: 'loading' },
+  unscopedDefault: { kind: 'loading' },
+  scoped: {
+    current: { kind: 'loading' },
+    default: { kind: 'loading' },
+    merged: { kind: 'loading' },
+  },
 });
 
 export function useTree() {
-  return useContext(TreeContext);
+  return useContext(TreeContext).scoped;
+}
+
+export function useCurrentUnscopedTree() {
+  return useContext(TreeContext).unscopedDefault;
 }
 
 export function useChanged() {

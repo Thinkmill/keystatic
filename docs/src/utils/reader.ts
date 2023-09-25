@@ -1,7 +1,7 @@
 import { createReader } from '@keystatic/core/reader';
-import keystaticConfig, { readerPath } from '../../keystatic.config';
+import keystaticConfig from '../../keystatic.config';
 
-export const reader = createReader(readerPath, keystaticConfig);
+export const reader = createReader(process.cwd(), keystaticConfig);
 
 export async function getNavigationMap() {
   const navigation = await reader.singletons.navigation.read();

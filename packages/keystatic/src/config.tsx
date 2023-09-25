@@ -46,6 +46,7 @@ export type GitHubConfig<
   storage: {
     kind: 'github';
     repo: RepoConfig;
+    pathPrefix?: string;
   };
   collections?: Collections;
   singletons?: Singletons;
@@ -82,7 +83,7 @@ export type CloudConfig<
     [key: string]: Singleton<Record<string, ComponentSchema>>;
   }
 > = {
-  storage: { kind: 'cloud' };
+  storage: { kind: 'cloud'; pathPrefix?: string };
   cloud: { project: string };
   collections?: Collections;
   singletons?: Singletons;
@@ -105,8 +106,9 @@ export type Config<
     | {
         kind: 'github';
         repo: RepoConfig;
+        pathPrefix?: string;
       }
-    | { kind: 'cloud' };
+    | { kind: 'cloud'; pathPrefix?: string };
   collections?: Collections;
   singletons?: Singletons;
 } & ({} extends Collections ? {} : { collections: Collections }) &

@@ -12,14 +12,14 @@ import {
   hydrateTreeCacheWithEntries,
   RepoWithWriteAccessContext,
   useBaseCommit,
+  useCurrentUnscopedTree,
   useSetTreeSha,
 } from './shell/data';
 import { hydrateBlobCache } from './useItemData';
-import { FormatInfo, getEntryDataFilepath } from './path-utils';
+import { FormatInfo, getEntryDataFilepath, getPathPrefix } from './path-utils';
 import {
   getTreeNodeAtPath,
   TreeEntry,
-  TreeNode,
   treeSha,
   updateTreeWithChanges,
 } from './trees';
@@ -28,6 +28,7 @@ import { getDirectoriesForTreeKey, getTreeKey } from './tree-key';
 import { AppSlugContext } from './onboarding/install-app';
 import { createUrqlClient } from './provider';
 import { serializeProps } from '../form/serialize-props';
+import { scopeEntriesWithPathPrefix } from './shell/path-prefix';
 
 const textEncoder = new TextEncoder();
 
@@ -110,7 +111,6 @@ export function useUpsertItem(args: {
   schema: Record<string, ComponentSchema>;
   config: Config;
   format: FormatInfo;
-  currentTree: Map<string, TreeNode>;
   currentLocalTreeKey: string | undefined;
   basePath: string;
   slug: { value: string; field: string } | undefined;
@@ -131,11 +131,17 @@ export function useUpsertItem(args: {
   const [, mutate] = useMutation(createCommitMutation);
   const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
   const appSlug = useContext(AppSlugContext);
+  const unscopedTreeData = useCurrentUnscopedTree();
 
   return [
     state,
     async (override?: { sha: string; branch: string }): Promise<boolean> => {
       try {
+        const unscopedTree =
+          unscopedTreeData.kind === 'loaded'
+            ? unscopedTreeData.data.tree
+            : undefined;
+        if (!unscopedTree) return false;
         if (
           repoWithWriteAccess === null &&
           args.config.storage.kind === 'github' &&
@@ -146,6 +152,7 @@ export function useUpsertItem(args: {
         }
         setState({ kind: 'loading' });
 
+        const pathPrefix = getPathPrefix(args.config.storage) ?? '';
         let additions = serializeEntryToFiles({
           basePath: args.basePath,
           config: args.config,
@@ -153,7 +160,10 @@ export function useUpsertItem(args: {
           format: args.format,
           state: args.state,
           slug: args.slug,
-        });
+        }).map(addition => ({
+          ...addition,
+          path: pathPrefix + addition.path,
+        }));
 
         const additionPathToSha = new Map(
           await Promise.all(
@@ -167,21 +177,23 @@ export function useUpsertItem(args: {
           )
         );
 
-        const filesToDelete = new Set(args.initialFiles);
+        const filesToDelete = new Set(
+          args.initialFiles?.map(x => pathPrefix + x)
+        );
         for (const file of additions) {
           filesToDelete.delete(file.path);
         }
 
         additions = additions.filter(addition => {
           const sha = additionPathToSha.get(addition.path)!;
-          const existing = getTreeNodeAtPath(args.currentTree, addition.path);
+          const existing = getTreeNodeAtPath(unscopedTree, addition.path);
           return existing?.entry.sha !== sha;
         });
 
         const deletions: { path: string }[] = [...filesToDelete].map(path => ({
           path,
         }));
-        const updatedTree = await updateTreeWithChanges(args.currentTree, {
+        const updatedTree = await updateTreeWithChanges(unscopedTree, {
           additions,
           deletions: [...filesToDelete],
         });
@@ -236,8 +248,11 @@ export function useUpsertItem(args: {
                 throw new Error('Branch not found');
               }
 
-              const tree = await fetchGitHubTreeData(
-                refData.data.repository.ref.target.oid,
+              const tree = scopeEntriesWithPathPrefix(
+                await fetchGitHubTreeData(
+                  refData.data.repository.ref.target.oid,
+                  args.config
+                ),
                 args.config
               );
               const treeKey = getTreeKey(
@@ -331,7 +346,6 @@ const createCommitMutation = gql`
 export function useDeleteItem(args: {
   basePath: string;
   initialFiles: string[];
-  currentTree: Map<string, TreeNode>;
   storage: Config['storage'];
 }) {
   const [state, setState] = useState<
@@ -350,11 +364,17 @@ export function useDeleteItem(args: {
   const setTreeSha = useSetTreeSha();
   const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
   const appSlug = useContext(AppSlugContext);
+  const unscopedTreeData = useCurrentUnscopedTree();
 
   return [
     state,
     async () => {
       try {
+        const unscopedTree =
+          unscopedTreeData.kind === 'loaded'
+            ? unscopedTreeData.data.tree
+            : undefined;
+        if (!unscopedTree) return false;
         if (
           repoWithWriteAccess === null &&
           args.storage.kind === 'github' &&
@@ -364,9 +384,12 @@ export function useDeleteItem(args: {
           return false;
         }
         setState({ kind: 'loading' });
-        const updatedTree = await updateTreeWithChanges(args.currentTree, {
+        const deletions = args.initialFiles.map(
+          x => getPathPrefix(args.storage) + x
+        );
+        const updatedTree = await updateTreeWithChanges(unscopedTree, {
           additions: [],
-          deletions: args.initialFiles,
+          deletions,
         });
         await hydrateTreeCacheWithEntries(updatedTree.entries);
         if (args.storage.kind === 'github' || args.storage.kind === 'cloud') {
@@ -381,7 +404,7 @@ export function useDeleteItem(args: {
               message: { headline: `Delete ${args.basePath}` },
               expectedHeadOid: baseCommit,
               fileChanges: {
-                deletions: args.initialFiles.map(path => ({ path })),
+                deletions: deletions.map(path => ({ path })),
               },
             },
           });
@@ -399,7 +422,7 @@ export function useDeleteItem(args: {
             },
             body: JSON.stringify({
               additions: [],
-              deletions: args.initialFiles.map(path => ({ path })),
+              deletions: deletions.map(path => ({ path })),
             }),
           });
           if (!res.ok) {
