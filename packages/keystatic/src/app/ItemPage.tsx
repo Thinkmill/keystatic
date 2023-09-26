@@ -27,7 +27,12 @@ import { Box, Flex } from '@keystar/ui/layout';
 import { Notice } from '@keystar/ui/notice';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { Content } from '@keystar/ui/slots';
-import { breakpointQueries, useMediaQuery } from '@keystar/ui/style';
+import {
+  breakpointQueries,
+  css,
+  tokenSchema,
+  useMediaQuery,
+} from '@keystar/ui/style';
 import { TextField } from '@keystar/ui/text-field';
 import { Heading, Text } from '@keystar/ui/typography';
 
@@ -50,6 +55,7 @@ import { useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
 import { useSlugsInCollection } from './useSlugsInCollection';
 import {
+  getBranchPrefix,
   getCollectionFormat,
   getCollectionItemPath,
   getRepoUrl,
@@ -58,6 +64,7 @@ import {
 } from './utils';
 import { notFound } from './not-found';
 import { SlugFieldInfo } from '../form/fields/text/path-slug-context';
+import { useConfig } from './shell/context';
 
 type ItemPageProps = {
   collection: string;
@@ -529,6 +536,28 @@ export function CreateBranchDuringUpdateDialog(props: {
   const [branchName, setBranchName] = useState('');
   const [{ error, fetching, data }, createBranch] = useCreateBranchMutation();
   const isLoading = fetching || !!data?.createRef?.__typename;
+
+  const config = useConfig();
+  const branchPrefix = getBranchPrefix(config);
+  const propsForBranchPrefix = branchPrefix
+    ? {
+        UNSAFE_className: css({
+          '& input': {
+            paddingInlineStart: tokenSchema.size.space.xsmall,
+          },
+        }),
+        startElement: (
+          <Flex
+            alignItems="center"
+            paddingStart="regular"
+            justifyContent="center"
+            pointerEvents="none"
+          >
+            <Text color="neutralSecondary">{branchPrefix}</Text>
+          </Flex>
+        ),
+      }
+    : {};
   return (
     <Dialog>
       <form
@@ -536,12 +565,13 @@ export function CreateBranchDuringUpdateDialog(props: {
         onSubmit={async event => {
           if (event.target !== event.currentTarget) return;
           event.preventDefault();
-          const name = `refs/heads/${branchName}`;
+          const fullBranchName = (branchPrefix ?? '') + branchName;
+          const name = `refs/heads/${fullBranchName}`;
           const result = await createBranch({
             input: { name, oid: props.branchOid, repositoryId },
           });
           if (result.data?.createRef?.__typename) {
-            props.onCreate(branchName);
+            props.onCreate(fullBranchName);
           }
         }}
       >
@@ -555,6 +585,7 @@ export function CreateBranchDuringUpdateDialog(props: {
               description={props.reason}
               autoFocus
               errorMessage={error?.message}
+              {...propsForBranchPrefix}
             />
           </Flex>
         </Content>

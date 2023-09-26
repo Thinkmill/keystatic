@@ -31,6 +31,16 @@ type CommonConfig = {
   cloud?: { project: string };
 };
 
+type CommonRemoteStorageConfig = {
+  pathPrefix?: string;
+  branchPrefix?: string;
+};
+
+type GitHubStorageConfig = {
+  kind: 'github';
+  repo: RepoConfig;
+} & CommonRemoteStorageConfig;
+
 export type GitHubConfig<
   Collections extends {
     [key: string]: Collection<Record<string, ComponentSchema>, string>;
@@ -43,14 +53,12 @@ export type GitHubConfig<
     [key: string]: Singleton<Record<string, ComponentSchema>>;
   }
 > = {
-  storage: {
-    kind: 'github';
-    repo: RepoConfig;
-    pathPrefix?: string;
-  };
+  storage: GitHubStorageConfig;
   collections?: Collections;
   singletons?: Singletons;
 } & CommonConfig;
+
+type LocalStorageConfig = { kind: 'local' };
 
 export type LocalConfig<
   Collections extends {
@@ -64,12 +72,12 @@ export type LocalConfig<
     [key: string]: Singleton<Record<string, ComponentSchema>>;
   }
 > = {
-  storage: {
-    kind: 'local';
-  };
+  storage: LocalStorageConfig;
   collections?: Collections;
   singletons?: Singletons;
 } & CommonConfig;
+
+type CloudStorageConfig = { kind: 'cloud' } & CommonRemoteStorageConfig;
 
 export type CloudConfig<
   Collections extends {
@@ -83,7 +91,7 @@ export type CloudConfig<
     [key: string]: Singleton<Record<string, ComponentSchema>>;
   }
 > = {
-  storage: { kind: 'cloud'; pathPrefix?: string };
+  storage: CloudStorageConfig;
   cloud: { project: string };
   collections?: Collections;
   singletons?: Singletons;
@@ -101,14 +109,7 @@ export type Config<
     [key: string]: Singleton<Record<string, ComponentSchema>>;
   }
 > = {
-  storage:
-    | { kind: 'local' }
-    | {
-        kind: 'github';
-        repo: RepoConfig;
-        pathPrefix?: string;
-      }
-    | { kind: 'cloud'; pathPrefix?: string };
+  storage: LocalStorageConfig | GitHubStorageConfig | CloudStorageConfig;
   collections?: Collections;
   singletons?: Singletons;
 } & ({} extends Collections ? {} : { collections: Collections }) &
