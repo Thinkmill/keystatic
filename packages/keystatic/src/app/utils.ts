@@ -27,6 +27,12 @@ export function pluralize(
   return inclusive ? `${count} ${variant}` : variant;
 }
 
+export function getBranchPrefix(config: Config) {
+  return config.storage.kind !== 'local'
+    ? config.storage.branchPrefix
+    : undefined;
+}
+
 export function arrayOf<T>(arr: readonly (T | null)[]): T[] {
   return arr.filter(isDefined);
 }
