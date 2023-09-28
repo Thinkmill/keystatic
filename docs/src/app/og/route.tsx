@@ -29,104 +29,10 @@ export async function GET(req: NextRequest) {
           display: 'flex',
           height: '100%',
           width: '100%',
-          backgroundColor: '#F9F9F8',
+          backgroundImage:
+            'url(https://thinkmill-labs.keystatic.net/keystatic-site/images/km9uvzfb8fqo/og-image-bg?format=png&width=1200)',
         }}
       >
-        <svg
-          style={{ position: 'absolute', bottom: 0, right: 0 }}
-          width="1200"
-          height="630"
-          viewBox="0 0 1200 630"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g clipPath="url(#clip0_2_444)">
-            <path
-              d="M1302.32 -20.5L707.929 573.895L478.324 803.5"
-              stroke="url(#paint0_linear_2_444)"
-              strokeWidth="277.643"
-            />
-            <path
-              d="M1603.04 69.2222L985.572 686.688V834.185"
-              stroke="url(#paint1_linear_2_444)"
-              strokeWidth="277.643"
-            />
-            <path
-              d="M1137.41 335.296L1439.63 637.522V863.106"
-              stroke="url(#paint2_linear_2_444)"
-              strokeWidth="277.643"
-            />
-            <path
-              opacity="0.4"
-              d="M1043.41 628.846L1529.29 142.971"
-              stroke="url(#paint3_linear_2_444)"
-              strokeWidth="277.643"
-              strokeLinejoin="round"
-            />
-          </g>
-          <defs>
-            <linearGradient
-              id="paint0_linear_2_444"
-              x1="942.19"
-              y1="297.699"
-              x2="707.929"
-              y2="575.341"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#E4DEFC" />
-              <stop offset="1" stopColor="#FDD8D3" />
-            </linearGradient>
-            <linearGradient
-              id="paint1_linear_2_444"
-              x1="1167.77"
-              y1="518.945"
-              x2="985.572"
-              y2="692.472"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#FFE0A1" />
-              <stop offset="1" stopColor="#CEEBCF" />
-            </linearGradient>
-            <linearGradient
-              id="paint2_linear_2_444"
-              x1="1170.67"
-              y1="368.556"
-              x2="1439.63"
-              y2="643.305"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#E4DEFC" />
-              <stop offset="1" stopColor="#C4EAEF" />
-            </linearGradient>
-            <linearGradient
-              id="paint3_linear_2_444"
-              x1="1225.62"
-              y1="461.103"
-              x2="1043.41"
-              y2="634.63"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#FFE0A1" />
-              <stop offset="1" stopColor="#CEEBCF" />
-            </linearGradient>
-            <clipPath id="clip0_2_444">
-              <rect width="1200" height="630" fill="white" />
-            </clipPath>
-          </defs>
-        </svg>
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            display: 'flex',
-            height: '100%',
-            width: '100%',
-            mixBlendMode: 'soft-light',
-            opacity: 0.8,
-            backgroundImage: `url(../texture.png)`,
-          }}
-        />
         <div
           style={{
             position: 'relative',
