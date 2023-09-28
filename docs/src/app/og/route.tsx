@@ -30,11 +30,7 @@ export async function GET(req: NextRequest) {
           height: '100%',
           width: '100%',
           backgroundImage:
-            'url(https://thinkmill-labs.keystatic.net/keystatic-site/images/km9uvzfb8fqo/og-image-bg)',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
-          backgroundSize: 'cover',
-          backgroundColor: '#F9F9F8',
+            'url(https://thinkmill-labs.keystatic.net/keystatic-site/images/km9uvzfb8fqo/og-image-bg?format=png&width=1200)',
         }}
       >
         <div
