@@ -4,7 +4,6 @@ import isHotkey from 'is-hotkey';
 import {
   FormEvent,
   Key,
-  PropsWithChildren,
   ReactElement,
   ReactNode,
   useCallback,
@@ -46,14 +45,13 @@ import { useCreateBranchMutation } from './branch-selection';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { ForkRepoDialog } from './fork-repo';
 import l10nMessages from './l10n/index.json';
-import { getDataFileExtension, getSlugGlobForCollection } from './path-utils';
+import { getDataFileExtension } from './path-utils';
 import { useRouter } from './router';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
 import { useBaseCommit, useRepositoryId, useBranchInfo } from './shell/data';
 import { useDeleteItem, useUpsertItem } from './updating';
 import { useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
-import { useSlugsInCollection } from './useSlugsInCollection';
 import {
   getBranchPrefix,
   getCollectionFormat,
@@ -63,8 +61,8 @@ import {
   isGitHubConfig,
 } from './utils';
 import { notFound } from './not-found';
-import { SlugFieldInfo } from '../form/fields/text/path-slug-context';
 import { useConfig } from './shell/context';
+import { useSlugFieldInfo } from './slugs';
 
 type ItemPageProps = {
   collection: string;
@@ -74,7 +72,6 @@ type ItemPageProps = {
   itemSlug: string;
   localTreeKey: string;
   basePath: string;
-  slugInfo: SlugFieldInfo;
 };
 
 function ItemPage(props: ItemPageProps) {
@@ -187,8 +184,10 @@ function ItemPage(props: ItemPageProps) {
     }
   };
 
+  const slugInfo = useSlugFieldInfo(collection, itemSlug);
+
   const onUpdate = useCallback(async () => {
-    if (!clientSideValidateProp(schema, state, props.slugInfo)) {
+    if (!clientSideValidateProp(schema, state, slugInfo)) {
       setForceValidation(true);
       return false;
     }
@@ -207,9 +206,9 @@ function ItemPage(props: ItemPageProps) {
     collectionConfig,
     itemSlug,
     props.basePath,
-    props.slugInfo,
     router,
     schema,
+    slugInfo,
     state,
     update,
   ]);
@@ -270,7 +269,7 @@ function ItemPage(props: ItemPageProps) {
             forceValidation={forceValidation}
             entryLayout={collectionConfig.entryLayout}
             formatInfo={formatInfo}
-            slugField={props.slugInfo}
+            slugField={slugInfo}
           />
         </Box>
         <DialogContainer
@@ -609,12 +608,14 @@ export function CreateBranchDuringUpdateDialog(props: {
   );
 }
 
-function ItemPageWrapper(props: {
+type ItemPageWrapperProps = {
   collection: string;
   itemSlug: string;
   config: Config;
   basePath: string;
-}) {
+};
+
+function ItemPageWrapper(props: ItemPageWrapperProps) {
   const collectionConfig = props.config.collections?.[props.collection];
   if (!collectionConfig) notFound();
   const format = useMemo(
@@ -622,24 +623,9 @@ function ItemPageWrapper(props: {
     [props.config, props.collection]
   );
 
-  const allSlugs = useSlugsInCollection(props.collection);
-
   const slugInfo = useMemo(() => {
-    const slugs = new Set(allSlugs);
-    slugs.delete(props.itemSlug);
-    return {
-      slug: props.itemSlug,
-      field: collectionConfig.slugField,
-      slugs,
-      glob: getSlugGlobForCollection(props.config, props.collection),
-    };
-  }, [
-    allSlugs,
-    collectionConfig.slugField,
-    props.collection,
-    props.config,
-    props.itemSlug,
-  ]);
+    return { slug: props.itemSlug, field: collectionConfig.slugField };
+  }, [collectionConfig.slugField, props.itemSlug]);
   const itemData = useItemData({
     config: props.config,
     dirpath: getCollectionItemPath(
@@ -697,24 +683,15 @@ function ItemPageWrapper(props: {
       initialState={itemData.data.initialState}
       initialFiles={itemData.data.initialFiles}
       localTreeKey={itemData.data.localTreeKey}
-      slugInfo={slugInfo}
     />
   );
 }
 
 const ItemPageShell = (
-  props: PropsWithChildren<
-    Omit<
-      ItemPageProps,
-      | 'initialFiles'
-      | 'initialState'
-      | 'localTreeKey'
-      | 'currentTree'
-      | 'slugInfo'
-    > & {
-      headerActions?: ReactNode;
-    }
-  >
+  props: ItemPageWrapperProps & {
+    children: ReactNode;
+    headerActions?: ReactNode;
+  }
 ) => {
   const router = useRouter();
   const collectionConfig = props.config.collections![props.collection]!;

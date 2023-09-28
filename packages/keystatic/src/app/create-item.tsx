@@ -19,7 +19,6 @@ import {
   getCollectionFormat,
   getCollectionItemPath,
   getSlugFromState,
-  getSlugGlobForCollection,
   isGitHubConfig,
 } from './utils';
 
@@ -28,12 +27,12 @@ import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
 import { PageRoot, PageHeader, PageBody } from './shell/page';
 import { useBaseCommit } from './shell/data';
-import { useSlugsInCollection } from './useSlugsInCollection';
 import { ForkRepoDialog } from './fork-repo';
 import { useUpsertItem } from './updating';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { notFound } from './not-found';
 import { useItemData } from './useItemData';
+import { useSlugFieldInfo } from './slugs';
 
 function CreateItemWrapper(props: {
   collection: string;
@@ -48,7 +47,6 @@ function CreateItemWrapper(props: {
 
   const collectionConfig = props.config.collections?.[props.collection];
   if (!collectionConfig) notFound();
-  const slugsArr = useSlugsInCollection(props.collection);
   const format = useMemo(
     () => getCollectionFormat(props.config, props.collection),
     [props.config, props.collection]
@@ -56,22 +54,9 @@ function CreateItemWrapper(props: {
 
   const slug = useMemo(() => {
     if (duplicateSlug) {
-      const slugs = new Set(slugsArr);
-      slugs.delete(duplicateSlug);
-      return {
-        field: collectionConfig.slugField,
-        slugs,
-        glob: getSlugGlobForCollection(props.config, props.collection),
-        slug: duplicateSlug,
-      };
+      return { field: collectionConfig.slugField, slug: duplicateSlug };
     }
-  }, [
-    slugsArr,
-    duplicateSlug,
-    collectionConfig.slugField,
-    props.collection,
-    props.config,
-  ]);
+  }, [duplicateSlug, collectionConfig.slugField]);
 
   const itemData = useItemData({
     config: props.config,
@@ -206,28 +191,11 @@ function CreateItem(props: {
     props.collection
   )}`;
 
-  const slugsArr = useSlugsInCollection(props.collection);
   const currentSlug =
     createResult.kind === 'updated' || createResult.kind === 'loading'
       ? slug
       : undefined;
-  const slugInfo = useMemo(() => {
-    const slugs = new Set(slugsArr);
-    if (currentSlug) {
-      slugs.delete(currentSlug);
-    }
-    return {
-      field: collectionConfig.slugField,
-      slugs,
-      glob: getSlugGlobForCollection(props.config, props.collection),
-    };
-  }, [
-    slugsArr,
-    currentSlug,
-    collectionConfig.slugField,
-    props.config,
-    props.collection,
-  ]);
+  const slugInfo = useSlugFieldInfo(props.collection, currentSlug);
 
   const onCreate = async () => {
     if (!clientSideValidateProp(schema, state, slugInfo)) {

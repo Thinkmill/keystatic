@@ -1,7 +1,6 @@
 import LRUCache from 'lru-cache';
 import { useCallback, useMemo } from 'react';
 import { Config } from '../config';
-import { SlugFieldInfo } from '../form/fields/text/path-slug-context';
 import { ComponentSchema, fields } from '..';
 import { parseProps } from '../form/parse-props';
 import { getAuth } from './auth';
@@ -130,7 +129,7 @@ type UseItemDataArgs = {
   schema: Record<string, ComponentSchema>;
   dirpath: string;
   format: FormatInfo;
-  slug: ({ slug: string } & SlugFieldInfo) | undefined;
+  slug: { slug: string; field: string } | undefined;
 };
 
 function getAllFilesInTree(tree: Map<string, TreeNode>): TreeEntry[] {
