@@ -49,8 +49,12 @@ import { getDataFileExtension } from './path-utils';
 import { useRouter } from './router';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
 import { useBaseCommit, useRepositoryId, useBranchInfo } from './shell/data';
-import { useDeleteItem, useUpsertItem } from './updating';
-import { useItemData } from './useItemData';
+import {
+  serializeEntryToFiles,
+  useDeleteItem,
+  useUpsertItem,
+} from './updating';
+import { parseEntry, useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
 import {
   getBranchPrefix,
@@ -63,6 +67,9 @@ import {
 import { notFound } from './not-found';
 import { useConfig } from './shell/context';
 import { useSlugFieldInfo } from './slugs';
+import { z } from 'zod';
+import { UseStore, createStore, get, set } from 'idb-keyval';
+import { useData } from './useData';
 
 type ItemPageProps = {
   collection: string;
@@ -72,7 +79,25 @@ type ItemPageProps = {
   itemSlug: string;
   localTreeKey: string;
   basePath: string;
+  draftInitialState: Record<string, unknown> | undefined;
 };
+
+let store: UseStore;
+
+function getStore() {
+  if (!store) {
+    store = createStore('keystatic', 'items');
+  }
+  return store;
+}
+
+const storedValSchema = z.object({
+  version: z.literal(1),
+  savedAt: z.date(),
+  slug: z.string(),
+  beforeTreeKey: z.string(),
+  files: z.map(z.string(), z.instanceof(Uint8Array)),
+});
 
 function ItemPage(props: ItemPageProps) {
   const {
@@ -82,6 +107,7 @@ function ItemPage(props: ItemPageProps) {
     initialFiles,
     initialState,
     localTreeKey,
+    draftInitialState,
   } = props;
   const router = useRouter();
   const [forceValidation, setForceValidation] = useState(false);
@@ -92,7 +118,7 @@ function ItemPage(props: ItemPageProps) {
   );
 
   const [{ state, localTreeKey: localTreeKeyInState }, setState] = useState({
-    state: initialState,
+    state: draftInitialState ?? initialState,
     localTreeKey,
   });
   if (localTreeKeyInState !== localTreeKey) {
@@ -137,6 +163,37 @@ function ItemPage(props: ItemPageProps) {
     currentLocalTreeKey: localTreeKey,
     slug: { field: collectionConfig.slugField, value: slug },
   });
+
+  useEffect(() => {
+    const serialized = serializeEntryToFiles({
+      basePath: futureBasePath,
+      config,
+      format: formatInfo,
+      schema: collectionConfig.schema,
+      slug: { field: collectionConfig.slugField, value: slug },
+      state,
+    });
+    const files = new Map(serialized.map(x => [x.path, x.contents]));
+    const data: z.infer<typeof storedValSchema> = {
+      beforeTreeKey: localTreeKey,
+      slug,
+      files,
+      savedAt: new Date(),
+      version: 1,
+    };
+    set(['collection', collection, props.itemSlug], data, getStore());
+  }, [
+    collection,
+    collectionConfig.schema,
+    collectionConfig.slugField,
+    config,
+    formatInfo,
+    futureBasePath,
+    localTreeKey,
+    props.itemSlug,
+    slug,
+    state,
+  ]);
   const update = useEventCallback(_update);
   const [deleteResult, deleteItem, resetDeleteItem] = useDeleteItem({
     initialFiles,
@@ -626,13 +683,44 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
   const slugInfo = useMemo(() => {
     return { slug: props.itemSlug, field: collectionConfig.slugField };
   }, [collectionConfig.slugField, props.itemSlug]);
+  const dirpath = getCollectionItemPath(
+    props.config,
+    props.collection,
+    props.itemSlug
+  );
+
+  const draftData = useData(
+    useCallback(async () => {
+      const raw = await get(
+        ['collection', props.collection, props.itemSlug],
+        getStore()
+      );
+      const stored = storedValSchema.parse(raw);
+      const parsed = parseEntry(
+        {
+          config: props.config,
+          dirpath,
+          format,
+          schema: collectionConfig.schema,
+          slug: { field: collectionConfig.slugField, slug: stored.slug },
+        },
+        stored.files
+      );
+      return parsed;
+    }, [
+      collectionConfig.schema,
+      collectionConfig.slugField,
+      dirpath,
+      format,
+      props.collection,
+      props.config,
+      props.itemSlug,
+    ])
+  );
+
   const itemData = useItemData({
     config: props.config,
-    dirpath: getCollectionItemPath(
-      props.config,
-      props.collection,
-      props.itemSlug
-    ),
+    dirpath,
     schema: collectionConfig.schema,
     format,
     slug: slugInfo,
@@ -647,7 +735,7 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
       </ItemPageShell>
     );
   }
-  if (itemData.kind === 'loading') {
+  if (itemData.kind === 'loading' || draftData.kind === 'loading') {
     return (
       <ItemPageShell {...props}>
         <Flex
@@ -674,6 +762,7 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
       </ItemPageShell>
     );
   }
+  const loadedDraft = draftData.kind === 'loaded' ? draftData.data : undefined;
   return (
     <ItemPage
       collection={props.collection}
@@ -682,6 +771,7 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
       itemSlug={props.itemSlug}
       initialState={itemData.data.initialState}
       initialFiles={itemData.data.initialFiles}
+      draftInitialState={loadedDraft?.initialState}
       localTreeKey={itemData.data.localTreeKey}
     />
   );
