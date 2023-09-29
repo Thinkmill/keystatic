@@ -88,6 +88,7 @@ export default config({
       entryLayout: 'content',
       format: { contentField: 'content' },
       path: 'src/content/pages/**',
+      previewUrl: '/docs/{slug}',
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         summary: fields.text({
@@ -117,6 +118,7 @@ export default config({
       format: {
         contentField: 'content',
       },
+      previewUrl: '/blog/{slug}',
       schema: {
         title: fields.slug({
           name: {

@@ -14,6 +14,7 @@ export type Collection<
   path?: `${string}/${Glob}` | `${string}/${Glob}/${string}`;
   entryLayout?: EntryLayout;
   format?: Format;
+  previewUrl?: `${string}{slug}${string}`;
   slugField: SlugField;
   schema: Schema;
 };
@@ -23,6 +24,7 @@ export type Singleton<Schema extends Record<string, ComponentSchema>> = {
   path?: string;
   entryLayout?: EntryLayout;
   format?: Format;
+  previewUrl?: string;
   schema: Schema;
 };
 

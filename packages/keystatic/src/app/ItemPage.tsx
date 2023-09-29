@@ -1,5 +1,4 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { assert } from 'emery';
 import isHotkey from 'is-hotkey';
 import {
   FormEvent,
@@ -62,6 +61,7 @@ import {
   getCollectionItemPath,
   getRepoUrl,
   getSlugFromState,
+  isCloudConfig,
   isGitHubConfig,
 } from './utils';
 import { notFound } from './not-found';
@@ -75,6 +75,7 @@ import {
   setDraft,
   showDraftRestoredToast,
 } from './persistence';
+import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
 
 type ItemPageProps = {
   collection: string;
@@ -213,7 +214,6 @@ function ItemPage(props: ItemPageProps) {
     setState({ state: initialState, localTreeKey });
   };
   const onView = () => {
-    assert(isGitHubConfig(config));
     let filePath =
       formatInfo.dataLocation === 'index'
         ? `/tree/${branchInfo.currentBranch}/${currentBasePath}`
@@ -226,6 +226,15 @@ function ItemPage(props: ItemPageProps) {
       'noopener,noreferrer'
     );
   };
+  const onPreview = collectionConfig.previewUrl
+    ? () => {
+        window.open(
+          collectionConfig.previewUrl!.replace('{slug}', props.itemSlug),
+          '_blank',
+          'noopener,noreferrer'
+        );
+      }
+    : undefined;
   const onDelete = async () => {
     if (await deleteItem()) {
       router.push(
@@ -307,6 +316,7 @@ function ItemPage(props: ItemPageProps) {
             onDuplicate={onDuplicate}
             onReset={onReset}
             onView={onView}
+            onPreview={onPreview}
           />
         }
         {...props}
@@ -428,6 +438,7 @@ function HeaderActions(props: {
   onDuplicate: () => void;
   onReset: () => void;
   onView: () => void;
+  onPreview?: () => void;
 }) {
   let {
     config,
@@ -438,13 +449,14 @@ function HeaderActions(props: {
     onDuplicate,
     onReset,
     onView,
+    onPreview,
   } = props;
   const isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
-  const isGithub = isGitHubConfig(config);
+  const isGithub = isGitHubConfig(config) || isCloudConfig(config);
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const [deleteAlertIsOpen, setDeleteAlertOpen] = useState(false);
   const [duplicateAlertIsOpen, setDuplicateAlertOpen] = useState(false);
-
+  const hasPreview = !!onPreview;
   const menuActions = useMemo(() => {
     type ActionType = {
       icon: ReactElement;
@@ -469,16 +481,23 @@ function HeaderActions(props: {
         icon: copyPlusIcon,
       },
     ];
+    if (hasPreview) {
+      items.push({
+        key: 'preview',
+        label: 'Preview',
+        icon: externalLinkIcon,
+      });
+    }
     if (isGithub) {
       items.push({
         key: 'view',
         label: 'View on GitHub',
-        icon: externalLinkIcon,
+        icon: githubIcon,
       });
     }
 
     return items;
-  }, [isGithub]);
+  }, [isGithub, hasPreview]);
 
   const indicatorElement = (() => {
     if (isLoading) {
@@ -535,6 +554,9 @@ function HeaderActions(props: {
               } else {
                 onDuplicate();
               }
+              break;
+            case 'preview':
+              onPreview?.();
               break;
             case 'view':
               onView();
