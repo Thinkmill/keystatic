@@ -68,8 +68,13 @@ import { notFound } from './not-found';
 import { useConfig } from './shell/context';
 import { useSlugFieldInfo } from './slugs';
 import { z } from 'zod';
-import { UseStore, createStore, get, set } from 'idb-keyval';
 import { useData } from './useData';
+import {
+  delDraft,
+  getDraft,
+  setDraft,
+  showDraftRestoredToast,
+} from './persistence';
 
 type ItemPageProps = {
   collection: string;
@@ -79,17 +84,10 @@ type ItemPageProps = {
   itemSlug: string;
   localTreeKey: string;
   basePath: string;
-  draftInitialState: Record<string, unknown> | undefined;
+  draft:
+    | { state: Record<string, unknown>; savedAt: Date; treeKey: string }
+    | undefined;
 };
-
-let store: UseStore;
-
-function getStore() {
-  if (!store) {
-    store = createStore('keystatic', 'items');
-  }
-  return store;
-}
 
 const storedValSchema = z.object({
   version: z.literal(1),
@@ -107,7 +105,7 @@ function ItemPage(props: ItemPageProps) {
     initialFiles,
     initialState,
     localTreeKey,
-    draftInitialState,
+    draft,
   } = props;
   const router = useRouter();
   const [forceValidation, setForceValidation] = useState(false);
@@ -118,9 +116,15 @@ function ItemPage(props: ItemPageProps) {
   );
 
   const [{ state, localTreeKey: localTreeKeyInState }, setState] = useState({
-    state: draftInitialState ?? initialState,
+    state: draft?.state ?? initialState,
     localTreeKey,
   });
+  useEffect(() => {
+    if (draft && state === draft.state) {
+      showDraftRestoredToast(draft.savedAt, localTreeKey !== draft.treeKey);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft]);
   if (localTreeKeyInState !== localTreeKey) {
     setState({ state: initialState, localTreeKey });
   }
@@ -165,23 +169,28 @@ function ItemPage(props: ItemPageProps) {
   });
 
   useEffect(() => {
-    const serialized = serializeEntryToFiles({
-      basePath: futureBasePath,
-      config,
-      format: formatInfo,
-      schema: collectionConfig.schema,
-      slug: { field: collectionConfig.slugField, value: slug },
-      state,
-    });
-    const files = new Map(serialized.map(x => [x.path, x.contents]));
-    const data: z.infer<typeof storedValSchema> = {
-      beforeTreeKey: localTreeKey,
-      slug,
-      files,
-      savedAt: new Date(),
-      version: 1,
-    };
-    set(['collection', collection, props.itemSlug], data, getStore());
+    const key = ['collection', collection, props.itemSlug] as const;
+    if (hasChanged) {
+      const serialized = serializeEntryToFiles({
+        basePath: futureBasePath,
+        config,
+        format: formatInfo,
+        schema: collectionConfig.schema,
+        slug: { field: collectionConfig.slugField, value: slug },
+        state,
+      });
+      const files = new Map(serialized.map(x => [x.path, x.contents]));
+      const data: z.infer<typeof storedValSchema> = {
+        beforeTreeKey: localTreeKey,
+        slug,
+        files,
+        savedAt: new Date(),
+        version: 1,
+      };
+      setDraft(key, data);
+    } else {
+      delDraft(key);
+    }
   }, [
     collection,
     collectionConfig.schema,
@@ -193,6 +202,7 @@ function ItemPage(props: ItemPageProps) {
     props.itemSlug,
     slug,
     state,
+    hasChanged,
   ]);
   const update = useEventCallback(_update);
   const [deleteResult, deleteItem, resetDeleteItem] = useDeleteItem({
@@ -683,34 +693,37 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
   const slugInfo = useMemo(() => {
     return { slug: props.itemSlug, field: collectionConfig.slugField };
   }, [collectionConfig.slugField, props.itemSlug]);
-  const dirpath = getCollectionItemPath(
-    props.config,
-    props.collection,
-    props.itemSlug
-  );
 
   const draftData = useData(
     useCallback(async () => {
-      const raw = await get(
-        ['collection', props.collection, props.itemSlug],
-        getStore()
-      );
+      const raw = await getDraft([
+        'collection',
+        props.collection,
+        props.itemSlug,
+      ]);
+      if (!raw) throw new Error('No draft found');
       const stored = storedValSchema.parse(raw);
       const parsed = parseEntry(
         {
           config: props.config,
-          dirpath,
+          dirpath: getCollectionItemPath(
+            props.config,
+            props.collection,
+            stored.slug
+          ),
           format,
           schema: collectionConfig.schema,
           slug: { field: collectionConfig.slugField, slug: stored.slug },
         },
         stored.files
       );
-      return parsed;
+      return {
+        state: parsed.initialState,
+        savedAt: stored.savedAt,
+        treeKey: stored.beforeTreeKey,
+      };
     }, [
-      collectionConfig.schema,
-      collectionConfig.slugField,
-      dirpath,
+      collectionConfig,
       format,
       props.collection,
       props.config,
@@ -720,7 +733,11 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
 
   const itemData = useItemData({
     config: props.config,
-    dirpath,
+    dirpath: getCollectionItemPath(
+      props.config,
+      props.collection,
+      props.itemSlug
+    ),
     schema: collectionConfig.schema,
     format,
     slug: slugInfo,
@@ -771,7 +788,7 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
       itemSlug={props.itemSlug}
       initialState={itemData.data.initialState}
       initialFiles={itemData.data.initialFiles}
-      draftInitialState={loadedDraft?.initialState}
+      draft={loadedDraft}
       localTreeKey={itemData.data.localTreeKey}
     />
   );
