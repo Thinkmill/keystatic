@@ -3,15 +3,6 @@ import Iron from '@hapi/iron';
 import z from 'zod';
 import fs from 'fs/promises';
 import { randomBytes } from 'node:crypto';
-import { GraphQLFormattedError } from 'graphql';
-import { print } from 'graphql/language/printer';
-import {
-  BaseOperations,
-  gql,
-  OperationData,
-  OperationVariables,
-  TypedDocumentNode,
-} from '@ts-gql/tag/no-transform';
 import { Config } from '..';
 import { getAllowedDirectories, readToDirEntries } from './read-local';
 import { blobSha } from './trees-server-side';
@@ -173,21 +164,6 @@ export function makeGenericAPIRouteHandler(
     if (joined === 'github/oauth/callback') {
       return githubOauthCallback(req, config);
     }
-    // TODO: this is the last usage of KEYSTATIC_URL, it should go away ideally
-    if (
-      joined === 'from-template-deploy' &&
-      process.env.KEYSTATIC_URL !== undefined
-    ) {
-      let url: URL | undefined;
-      try {
-        url = new URL(process.env.KEYSTATIC_URL);
-      } catch {}
-      if (url) {
-        return redirect(
-          `${process.env.KEYSTATIC_URL}/keystatic/from-template-deploy`
-        );
-      }
-    }
     if (joined === 'github/login') {
       return githubLogin(req, config);
     }
@@ -262,149 +238,6 @@ async function githubOauthCallback(
     return { status: 401, body: 'Authorization failed' };
   }
 
-  if (cookies['ks-template']) {
-    const [owner, repo] = cookies['ks-template'].split('/');
-
-    const fetchGraphQL = async <
-      TTypedDocumentNode extends TypedDocumentNode<BaseOperations>
-    >(
-      operation: TTypedDocumentNode,
-      ...variables:
-        | [OperationVariables<TTypedDocumentNode>]
-        | ({} extends OperationVariables<TTypedDocumentNode> ? [] : never)
-    ): Promise<{
-      data: OperationData<TTypedDocumentNode>;
-      errors?: GraphQLFormattedError[];
-    }> => {
-      const res = await fetch('https://api.github.com/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${tokenDataParseResult.data.access_token}`,
-        },
-        body: JSON.stringify({
-          query: print(operation),
-          variables: variables[0],
-        }),
-      });
-      if (!res.ok) {
-        console.error(res);
-        throw new Error('Bad response from GitHub');
-      }
-      return res.json();
-    };
-    if (owner && repo) {
-      const gqlRes = await fetchGraphQL(
-        gql`
-          query RepoForUpdating($owner: String!, $name: String!) {
-            repository(owner: $owner, name: $name) {
-              id
-              defaultBranchRef {
-                id
-                name
-                target {
-                  id
-                  oid
-                  __typename
-                  ... on Commit {
-                    id
-                    tree {
-                      id
-                      entries {
-                        name
-                        object {
-                          id
-                          __typename
-                          ... on Blob {
-                            text
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        ` as import('../../__generated__/ts-gql/RepoForUpdating').type,
-        { name: repo, owner }
-      );
-      const { data, errors } = gqlRes;
-      if (
-        (errors && 'type' in errors[0] && errors[0].type === 'NOT_FOUND') ||
-        data?.repository === null
-      ) {
-        return { status: 404, body: 'Not Found' };
-      }
-      if (errors?.length) {
-        console.log(gqlRes);
-        return {
-          status: 500,
-          body: 'An error occurred while fetching the repository',
-        };
-      }
-      const defaultBranchName = data.repository.defaultBranchRef?.name;
-      const defaultBranchSha = data.repository.defaultBranchRef?.target?.oid;
-      const configFile =
-        data.repository.defaultBranchRef?.target?.__typename === 'Commit'
-          ? data.repository.defaultBranchRef.target.tree?.entries?.find(
-              (
-                x
-              ): x is typeof x & {
-                object: { __typename: 'Blob'; text: string };
-              } =>
-                (x.name === 'keystatic.ts' ||
-                  x.name === 'keystatic.tsx' ||
-                  x.name === 'keystatic.config.ts' ||
-                  x.name === 'keystatic.config.tsx') &&
-                x.object?.__typename === 'Blob' &&
-                x.object.text !== null
-            )
-          : undefined;
-      if (defaultBranchName && defaultBranchSha && configFile) {
-        const configFileText = configFile.object.text
-          .replace(
-            'process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_OWNER!',
-            `"${owner}"`
-          )
-          .replace(
-            'process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_SLUG!',
-            `"${repo}"`
-          );
-        if (configFileText !== configFile.object.text) {
-          await fetchGraphQL(
-            gql`
-              mutation CreateCommitToUpdateRepo(
-                $input: CreateCommitOnBranchInput!
-              ) {
-                createCommitOnBranch(input: $input) {
-                  __typename
-                }
-              }
-            ` as import('../../__generated__/ts-gql/CreateCommitToUpdateRepo').type,
-            {
-              input: {
-                branch: { id: data.repository.defaultBranchRef.id },
-                expectedHeadOid: defaultBranchSha,
-                message: { headline: 'Update Keystatic repo config' },
-                fileChanges: {
-                  additions: [
-                    {
-                      contents: Buffer.from(configFileText, 'utf-8').toString(
-                        'base64'
-                      ),
-                      path: configFile.name,
-                    },
-                  ],
-                },
-              },
-            }
-          );
-        }
-      }
-    }
-  }
-
   const headers = await getTokenCookies(tokenDataParseResult.data, config);
   if (state === 'close') {
     return {
@@ -450,16 +283,6 @@ async function getTokenCookies(
           path: '/',
         }
       ),
-    ],
-    [
-      'Set-Cookie',
-      cookie.serialize('ks-template', '', {
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 0,
-        expires: new Date(),
-        path: '/',
-      }),
     ],
   ];
   return headers;

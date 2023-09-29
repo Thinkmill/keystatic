@@ -25,7 +25,6 @@ import { AppShell } from './shell';
 import { PageBody, PageRoot } from './shell/page';
 import { EmptyState } from './shell/empty-state';
 import { SingletonPage } from './SingletonPage';
-import { FromTemplateDeploy } from './onboarding/from-template-deploy';
 import { CreatedGitHubApp } from './onboarding/created-github-app';
 import { KeystaticSetup } from './onboarding/setup';
 import { RepoNotFound } from './onboarding/repo-not-found';
@@ -134,9 +133,6 @@ function PageInner({ config }: { config: Config }) {
       if (params[0] === 'setup') return <KeystaticSetup config={config} />;
       if (params[0] === 'repo-not-found') {
         return <RepoNotFound config={config} />;
-      }
-      if (params[0] === 'from-template-deploy') {
-        return <FromTemplateDeploy config={config} />;
       }
       if (params[0] === 'created-github-app') {
         return <CreatedGitHubApp config={config} />;
