@@ -174,7 +174,7 @@ function ItemPage(props: ItemPageProps) {
       const serialized = serializeEntryToFiles({
         basePath: futureBasePath,
         config,
-        format: formatInfo,
+        format: getCollectionFormat(config, collection),
         schema: collectionConfig.schema,
         slug: { field: collectionConfig.slugField, value: slug },
         state,
@@ -193,10 +193,8 @@ function ItemPage(props: ItemPageProps) {
     }
   }, [
     collection,
-    collectionConfig.schema,
-    collectionConfig.slugField,
+    collectionConfig,
     config,
-    formatInfo,
     futureBasePath,
     localTreeKey,
     props.itemSlug,

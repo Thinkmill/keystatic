@@ -1,5 +1,5 @@
 import { useRouter } from './router';
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Badge } from '@keystar/ui/badge';
 import { Button, ButtonGroup } from '@keystar/ui/button';
@@ -21,13 +21,21 @@ import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
 import { useBaseCommit } from './shell/data';
 import { useHasChanged } from './useHasChanged';
-import { useItemData } from './useItemData';
-import { useUpsertItem } from './updating';
+import { parseEntry, useItemData } from './useItemData';
+import { serializeEntryToFiles, useUpsertItem } from './updating';
 import { Icon } from '@keystar/ui/icon';
 import { refreshCwIcon } from '@keystar/ui/icon/icons/refreshCwIcon';
 import { ForkRepoDialog } from './fork-repo';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { notFound } from './not-found';
+import {
+  delDraft,
+  getDraft,
+  setDraft,
+  showDraftRestoredToast,
+} from './persistence';
+import { z } from 'zod';
+import { useData } from './useData';
 
 type SingletonPageProps = {
   singleton: string;
@@ -35,6 +43,13 @@ type SingletonPageProps = {
   initialState: Record<string, unknown> | null;
   initialFiles: string[];
   localTreeKey: string | undefined;
+  draft:
+    | {
+        state: Record<string, unknown>;
+        savedAt: Date;
+        treeKey: string | undefined;
+      }
+    | undefined;
 };
 
 function SingletonPage({
@@ -43,6 +58,7 @@ function SingletonPage({
   initialState,
   localTreeKey,
   config,
+  draft,
 }: SingletonPageProps) {
   const [forceValidation, setForceValidation] = useState(false);
   const singletonConfig = config.singletons![singleton]!;
@@ -58,9 +74,17 @@ function SingletonPage({
     () => ({
       localTreeKey: localTreeKey,
       state:
-        initialState === null ? getInitialPropsValue(schema) : initialState,
+        draft?.state ??
+        (initialState === null ? getInitialPropsValue(schema) : initialState),
     })
   );
+  useEffect(() => {
+    if (draft && state === draft.state) {
+      showDraftRestoredToast(draft.savedAt, localTreeKey !== draft.treeKey);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft]);
+
   if (localTreeKeyInState !== localTreeKey) {
     setState({
       localTreeKey: localTreeKey,
@@ -73,6 +97,38 @@ function SingletonPage({
   const hasChanged =
     useHasChanged({ initialState, state, schema, slugField: undefined }) ||
     isCreating;
+
+  useEffect(() => {
+    const key = ['singleton', singleton] as const;
+    if (hasChanged) {
+      const serialized = serializeEntryToFiles({
+        basePath: singletonPath,
+        config,
+        format: getSingletonFormat(config, singleton),
+        schema: singletonConfig.schema,
+        slug: undefined,
+        state,
+      });
+      const files = new Map(serialized.map(x => [x.path, x.contents]));
+      const data: z.infer<typeof storedValSchema> = {
+        beforeTreeKey: localTreeKey,
+        files,
+        savedAt: new Date(),
+        version: 1,
+      };
+      setDraft(key, data);
+    } else {
+      delDraft(key);
+    }
+  }, [
+    config,
+    localTreeKey,
+    state,
+    hasChanged,
+    singleton,
+    singletonPath,
+    singletonConfig,
+  ]);
 
   const previewProps = useMemo(
     () =>
@@ -225,6 +281,13 @@ function SingletonPage({
   );
 }
 
+const storedValSchema = z.object({
+  version: z.literal(1),
+  savedAt: z.date(),
+  beforeTreeKey: z.string().optional(),
+  files: z.map(z.string(), z.instanceof(Uint8Array)),
+});
+
 function SingletonPageWrapper(props: { singleton: string; config: Config }) {
   const singletonConfig = props.config.singletons?.[props.singleton];
   if (!singletonConfig) notFound();
@@ -239,10 +302,36 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     () => getSingletonFormat(props.config, props.singleton),
     [props.config, props.singleton]
   );
+
+  const dirpath = getSingletonPath(props.config, props.singleton);
+
+  const draftData = useData(
+    useCallback(async () => {
+      const raw = await getDraft(['singleton', props.singleton]);
+      if (!raw) throw new Error('No draft found');
+      const stored = storedValSchema.parse(raw);
+      const parsed = parseEntry(
+        {
+          config: props.config,
+          dirpath,
+          format,
+          schema: singletonConfig.schema,
+          slug: undefined,
+        },
+        stored.files
+      );
+      return {
+        state: parsed.initialState,
+        savedAt: stored.savedAt,
+        treeKey: stored.beforeTreeKey,
+      };
+    }, [dirpath, format, props.config, props.singleton, singletonConfig.schema])
+  );
+
   const itemData = useItemData({
     config: props.config,
-    dirpath: getSingletonPath(props.config, props.singleton),
-    schema: props.config.singletons![props.singleton]!.schema,
+    dirpath,
+    schema: singletonConfig.schema,
     format,
     slug: undefined,
   });
@@ -259,7 +348,7 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     );
   }
 
-  if (itemData.kind === 'loading') {
+  if (itemData.kind === 'loading' || draftData.kind === 'loading') {
     return (
       <PageRoot>
         {header}
@@ -293,6 +382,7 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
       localTreeKey={
         itemData.data === 'not-found' ? undefined : itemData.data.localTreeKey
       }
+      draft={draftData.kind === 'loaded' ? draftData.data : undefined}
     />
   );
 }
