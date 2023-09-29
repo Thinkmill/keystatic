@@ -2,7 +2,7 @@ import { useRouter } from './router';
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Badge } from '@keystar/ui/badge';
-import { Button, ButtonGroup } from '@keystar/ui/button';
+import { Button } from '@keystar/ui/button';
 import { DialogContainer } from '@keystar/ui/dialog';
 import { Flex } from '@keystar/ui/layout';
 import { Notice } from '@keystar/ui/notice';
@@ -15,16 +15,22 @@ import { fields } from '../form/api';
 import { clientSideValidateProp } from '../form/errors';
 import { getInitialPropsValue } from '../form/initial-values';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
-import { getSingletonFormat, getSingletonPath, isGitHubConfig } from './utils';
+import {
+  getDataFileExtension,
+  getRepoUrl,
+  getSingletonFormat,
+  getSingletonPath,
+  isCloudConfig,
+  isGitHubConfig,
+} from './utils';
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
-import { useBaseCommit } from './shell/data';
+import { useBaseCommit, useBranchInfo } from './shell/data';
 import { useHasChanged } from './useHasChanged';
 import { parseEntry, useItemData } from './useItemData';
 import { serializeEntryToFiles, useUpsertItem } from './updating';
 import { Icon } from '@keystar/ui/icon';
-import { refreshCwIcon } from '@keystar/ui/icon/icons/refreshCwIcon';
 import { ForkRepoDialog } from './fork-repo';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { notFound } from './not-found';
@@ -36,6 +42,11 @@ import {
 } from './persistence';
 import { z } from 'zod';
 import { useData } from './useData';
+import { ActionGroup, Item } from '@keystar/ui/action-group';
+import { useMediaQuery, breakpointQueries } from '@keystar/ui/style';
+import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
+import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
+import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
 
 type SingletonPageProps = {
   singleton: string;
@@ -167,10 +178,67 @@ function SingletonPage({
   };
   const formID = 'singleton-form';
 
+  const onReset = () =>
+    setState({
+      localTreeKey: localTreeKey,
+      state:
+        initialState === null ? getInitialPropsValue(schema) : initialState,
+    });
+
+  const isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
+
+  const onPreview = () => {
+    window.open(singletonConfig.previewUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const branchInfo = useBranchInfo();
+
+  const onView = () => {
+    let filePath =
+      formatInfo.dataLocation === 'index'
+        ? `/tree/${branchInfo.currentBranch}/${singletonPath}`
+        : `/blob/${
+            branchInfo.currentBranch
+          }/${singletonPath}${getDataFileExtension(formatInfo)}`;
+    window.open(
+      `${getRepoUrl(branchInfo)}${filePath}`,
+      '_blank',
+      'noopener,noreferrer'
+    );
+  };
+
+  const isGitHub = isGitHubConfig(config) || isCloudConfig(config);
+
+  const singletonExists = !!initialState;
+  const menuActions = useMemo(() => {
+    const actions = [
+      {
+        key: 'reset',
+        label: 'Reset',
+        icon: historyIcon,
+      },
+    ];
+    if (singletonConfig.previewUrl) {
+      actions.push({
+        key: 'preview',
+        label: 'Preview',
+        icon: externalLinkIcon,
+      });
+    }
+    if (isGitHub && singletonExists) {
+      actions.push({
+        key: 'view',
+        label: 'View on GitHub',
+        icon: githubIcon,
+      });
+    }
+    return actions;
+  }, [isGitHub, singletonConfig.previewUrl, singletonExists]);
+
   return (
     <PageRoot containerWidth={containerWidthForEntryLayout(singletonConfig)}>
       <PageHeader>
-        <Flex alignItems="center" gap="regular">
+        <Flex flex alignItems="center" gap="regular">
           <Heading elementType="h1" id="page-title" size="small">
             {singletonConfig.label}
           </Heading>
@@ -185,34 +253,43 @@ function SingletonPage({
             hasChanged && <Badge tone="pending">Unsaved</Badge>
           )}
         </Flex>
-
-        <ButtonGroup marginStart="auto">
-          <Button
-            aria-label="Reset"
-            // prominence="low"
-            isDisabled={updateResult.kind === 'loading' || !hasChanged}
-            onPress={() => {
-              setState({
-                localTreeKey: localTreeKey,
-                state:
-                  initialState === null
-                    ? getInitialPropsValue(schema)
-                    : initialState,
-              });
-            }}
-          >
-            <Icon isHidden={{ above: 'mobile' }} src={refreshCwIcon} />
-            <Text isHidden={{ below: 'tablet' }}>Reset</Text>
-          </Button>
-          <Button
-            form={formID}
-            isDisabled={updateResult.kind === 'loading'}
-            prominence="high"
-            type="submit"
-          >
-            {isCreating ? 'Create' : 'Save'}
-          </Button>
-        </ButtonGroup>
+        <ActionGroup
+          buttonLabelBehavior="hide"
+          overflowMode="collapse"
+          prominence="low"
+          density="compact"
+          maxWidth={isBelowTablet ? 'element.regular' : undefined} // force switch to action menu on small devices
+          items={menuActions}
+          disabledKeys={hasChanged ? [] : ['reset']}
+          onAction={key => {
+            switch (key) {
+              case 'reset':
+                onReset();
+                break;
+              case 'preview':
+                onPreview?.();
+                break;
+              case 'view':
+                onView();
+                break;
+            }
+          }}
+        >
+          {item => (
+            <Item key={item.key} textValue={item.label}>
+              <Icon src={item.icon} />
+              <Text>{item.label}</Text>
+            </Item>
+          )}
+        </ActionGroup>
+        <Button
+          form={formID}
+          isDisabled={updateResult.kind === 'loading'}
+          prominence="high"
+          type="submit"
+        >
+          {isCreating ? 'Create' : 'Save'}
+        </Button>
       </PageHeader>
       <Flex
         elementType="form"
