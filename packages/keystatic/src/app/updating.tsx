@@ -53,7 +53,7 @@ function combineFrontmatterAndContents(
   return array;
 }
 
-function serializeEntryToFiles(args: {
+export function serializeEntryToFiles(args: {
   basePath: string;
   config: Config;
   schema: Record<string, ComponentSchema>;

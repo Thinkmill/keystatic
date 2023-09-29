@@ -20,7 +20,10 @@ import {
 import { toFormattedFormDataError } from '../form/error-formatting';
 import { serializeRepoConfig } from './repo-config';
 
-function parseEntry(args: UseItemDataArgs, files: Map<string, Uint8Array>) {
+export function parseEntry(
+  args: UseItemDataArgs,
+  files: Map<string, Uint8Array>
+) {
   const dataFilepath = getEntryDataFilepath(args.dirpath, args.format);
   const data = files.get(dataFilepath);
   if (!data) {
