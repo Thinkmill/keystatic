@@ -1,5 +1,5 @@
 import isEqual from 'fast-deep-equal';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { ComponentSchema, ObjectField } from '../form/api';
 import { getSlugFromState } from './utils';
 import { serializeProps } from '../form/serialize-props';
@@ -10,40 +10,29 @@ export function useHasChanged(args: {
   schema: ObjectField<Record<string, ComponentSchema>>;
   slugField: string | undefined;
 }) {
+  const serialize = useCallback(
+    (state: unknown) => {
+      const slug = args.slugField
+        ? getSlugFromState(
+            { schema: args.schema.fields, slugField: args.slugField },
+            state as Record<string, unknown>
+          )
+        : undefined;
+      return {
+        slug,
+        state: serializeProps(state, args.schema, args.slugField, slug, true),
+      };
+    },
+    [args.schema, args.slugField]
+  );
   const initialFilesForUpdate = useMemo(
-    () =>
-      args.initialState === null
-        ? null
-        : serializeProps(
-            args.initialState,
-            args.schema,
-            args.slugField,
-            args.slugField
-              ? getSlugFromState(
-                  { schema: args.schema.fields, slugField: args.slugField },
-                  args.initialState as Record<string, unknown>
-                )
-              : undefined,
-            true
-          ),
-    [args.initialState, args.schema, args.slugField]
+    () => (args.initialState === null ? null : serialize(args.initialState)),
+    [args.initialState, serialize]
   );
 
   const filesForUpdate = useMemo(
-    () =>
-      serializeProps(
-        args.state,
-        args.schema,
-        args.slugField,
-        args.slugField
-          ? getSlugFromState(
-              { schema: args.schema.fields, slugField: args.slugField },
-              args.state as Record<string, unknown>
-            )
-          : undefined,
-        true
-      ),
-    [args.state, args.schema, args.slugField]
+    () => serialize(args.state),
+    [serialize, args.state]
   );
 
   return useMemo(() => {
