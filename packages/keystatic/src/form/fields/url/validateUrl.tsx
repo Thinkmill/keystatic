@@ -5,11 +5,14 @@ export function validateUrl(
   value: unknown,
   label: string
 ) {
-  if (value !== null && (typeof value !== 'string' || !isValidURL(value))) {
-    return `${label} is not a valid URL`;
-  }
-
   if (validation?.isRequired && value === null) {
     return `${label} is required`;
+  }
+
+  if (
+    (validation?.isRequired === true || value.length > 0) &&
+    (value === null || typeof value !== 'string' || !isValidURL(value))
+  ) {
+    return `${label} is not a valid URL`;
   }
 }
