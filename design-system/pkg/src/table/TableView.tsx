@@ -13,9 +13,11 @@ import {
   useTableSelectionCheckbox,
 } from '@react-aria/table';
 import { mergeProps } from '@react-aria/utils';
+import { VisuallyHidden } from '@react-aria/visually-hidden';
 import { TableState, useTableState } from '@react-stately/table';
 
 import { Checkbox } from '@keystar/ui/checkbox';
+import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
@@ -49,21 +51,37 @@ export function TableView<T extends object>(props: TableProps<T>) {
       <TableHead>
         {collection.headerRows.map(headerRow => (
           <TableHeaderRow key={headerRow.key} item={headerRow} state={state}>
-            {[...headerRow.childNodes].map(column =>
-              column.props.isSelectionCell ? (
-                <TableSelectAllCell
-                  key={column.key}
-                  column={column}
-                  state={state}
-                />
-              ) : (
+            {[...headerRow.childNodes].map(column => {
+              if (column.props.hideHeader) {
+                return (
+                  <TooltipTrigger placement="top" trigger="focus">
+                    <TableColumnHeader
+                      key={column.key}
+                      column={column}
+                      state={state}
+                    />
+                    <Tooltip>{column.rendered}</Tooltip>
+                  </TooltipTrigger>
+                );
+              }
+              if (column.props.isSelectionCell) {
+                return (
+                  <TableSelectAllCell
+                    key={column.key}
+                    column={column}
+                    state={state}
+                  />
+                );
+              }
+
+              return (
                 <TableColumnHeader
                   key={column.key}
                   column={column}
                   state={state}
                 />
-              )
-            )}
+              );
+            })}
           </TableHeaderRow>
         ))}
       </TableHead>
@@ -174,7 +192,9 @@ function TableColumnHeader<T>({
         <SortIndicator />
       )}
 
-      {isReactText(column.rendered) ? (
+      {columnProps.hideHeader ? (
+        <VisuallyHidden>{column.rendered}</VisuallyHidden>
+      ) : isReactText(column.rendered) ? (
         <Text color="inherit" weight="semibold" truncate>
           {column.rendered}
         </Text>
