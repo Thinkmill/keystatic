@@ -53,6 +53,43 @@ StaticContents.story = {
   name: 'static contents',
 };
 
+export const HiddenHeader = (args: ArgTypes) => (
+  <TableView
+    aria-label="TableView with hidden header"
+    width="scale.3400"
+    // height="scale.2400"
+    {...args}
+  >
+    <TableHeader>
+      <Column key="foo">Foo</Column>
+      <Column key="bar">Bar</Column>
+      <Column key="baz" hideHeader>
+        Actions
+      </Column>
+    </TableHeader>
+    <TableBody>
+      <Row>
+        <Cell>One</Cell>
+        <Cell>Two</Cell>
+        <Cell>
+          <button>Three</button>
+        </Cell>
+      </Row>
+      <Row>
+        <Cell>Four</Cell>
+        <Cell>Five</Cell>
+        <Cell>
+          <button>Six</button>
+        </Cell>
+      </Row>
+    </TableBody>
+  </TableView>
+);
+
+HiddenHeader.story = {
+  name: 'hidden header',
+};
+
 export const Selection = (args: ArgTypes) => (
   <TableView
     aria-label="TableView with selection"
