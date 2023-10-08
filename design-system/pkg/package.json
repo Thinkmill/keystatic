@@ -1,6 +1,6 @@
 {
   "name": "@keystar/ui",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "MIT",
   "main": "",
   "module": "",
@@ -6219,7 +6219,7 @@
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
-    "@keystar/ui": "^0.3.1",
+    "@keystar/ui": "^0.3.2",
     "@keystar/ui-storybook": "^0.0.1",
     "@react-aria/landmark": "3.0.0-beta.2",
     "@svgr/core": "^6.5.1",

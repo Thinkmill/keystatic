@@ -1,5 +1,13 @@
 # @voussoir/docs
 
+## 0.0.20
+
+### Patch Changes
+
+- b9ca5380: Support "hideHeader" prop on table `Column` components.
+- Updated dependencies [b9ca5380]
+  - @keystar/ui@0.3.2
+
 ## 0.0.19
 
 ### Patch Changes
