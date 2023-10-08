@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.3.2
+
+### Patch Changes
+
+- b9ca5380: Support "hideHeader" prop on table `Column` components.
+
 ## 0.3.1
 
 ### Patch Changes
