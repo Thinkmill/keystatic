@@ -385,7 +385,7 @@ export function useDeleteItem(args: {
         }
         setState({ kind: 'loading' });
         const deletions = args.initialFiles.map(
-          x => getPathPrefix(args.storage) + x
+          x => (getPathPrefix(args.storage) ?? '') + x
         );
         const updatedTree = await updateTreeWithChanges(unscopedTree, {
           additions: [],
