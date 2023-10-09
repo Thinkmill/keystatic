@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.0.0-test-20231009043222
+
+### Patch Changes
+
+- b54f0e71: Fix `fields.url` always being required
+
 ## 0.1.6
 
 ### Patch Changes
