@@ -1,7 +1,6 @@
 import cookie from 'cookie';
-import Iron from '@hapi/iron';
+import * as Iron from 'iron-webcrypto';
 import z from 'zod';
-import { randomBytes } from 'node:crypto';
 import { Config } from '..';
 import {
   KeystaticResponse,
@@ -9,6 +8,8 @@ import {
   redirect,
 } from './internal-utils';
 import { handleGitHubAppCreation, localModeApiHandler } from './api-node';
+import { webcrypto } from '#webcrypto';
+import { bytesToHex } from '../hex';
 
 export type APIRouteConfig = {
   /** @default process.env.KEYSTATIC_GITHUB_CLIENT_ID */
@@ -249,7 +250,7 @@ async function getTokenCookies(
       'Set-Cookie',
       cookie.serialize(
         'keystatic-gh-refresh-token',
-        await Iron.seal(tokenData.refresh_token, config.secret, {
+        await Iron.seal(webcrypto, tokenData.refresh_token, config.secret, {
           ...Iron.defaults,
           ttl: tokenData.refresh_token_expires_in * 1000,
         }),
@@ -279,6 +280,7 @@ async function getRefreshToken(
   let refreshToken;
   try {
     refreshToken = await Iron.unseal(
+      webcrypto,
       refreshTokenCookie,
       config.secret,
       Iron.defaults
@@ -351,7 +353,7 @@ async function githubLogin(
     typeof rawFrom === 'string' && keystaticRouteRegex.test(rawFrom)
       ? rawFrom
       : '/';
-  const state = randomBytes(10).toString('hex');
+  const state = bytesToHex(webcrypto.getRandomValues(new Uint8Array(10)));
   const url = new URL('https://github.com/login/oauth/authorize');
   url.searchParams.set('client_id', config.clientId);
   url.searchParams.set(
