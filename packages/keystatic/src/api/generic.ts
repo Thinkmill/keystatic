@@ -7,7 +7,7 @@ import {
   KeystaticRequest,
   redirect,
 } from './internal-utils';
-import { handleGitHubAppCreation, localModeApiHandler } from './api-node';
+import { handleGitHubAppCreation, localModeApiHandler } from '#api-handler';
 import { webcrypto } from '#webcrypto';
 import { bytesToHex } from '../hex';
 

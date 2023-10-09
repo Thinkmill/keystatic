@@ -288,6 +288,10 @@
       "node": "./src/api/webcrypto/node.ts",
       "default": "./src/api/webcrypto/default.ts"
     },
+    "#api-handler": {
+      "node": "./src/api/api-node.ts",
+      "default": "./src/api/api-noop.ts"
+    },
     "#field-ui/*": {
       "react-server": "./src/form/fields/empty-field-ui.tsx",
       "default": "./src/form/fields/*/ui.tsx"
