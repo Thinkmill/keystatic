@@ -13,7 +13,6 @@
     "@astrojs/node": "^6.0.0",
     "@astrojs/react": "^3.0.0",
     "@braintree/sanitize-url": "^6.0.2",
-    "@hapi/iron": "^7.0.0",
     "@keystatic/astro": "^1.0.0",
     "@keystatic/core": "^0.1.2",
     "@types/react": "^18.2.8",
