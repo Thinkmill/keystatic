@@ -10,7 +10,7 @@ import { validateUrl } from './validateUrl';
 
 export function url<IsRequired extends boolean | undefined>({
   label,
-  defaultValue = '',
+  defaultValue,
   validation,
   description,
 }: {
@@ -34,7 +34,7 @@ export function url<IsRequired extends boolean | undefined>({
       );
     },
     defaultValue() {
-      return defaultValue ?? null;
+      return defaultValue || null;
     },
     parse(value) {
       if (value === undefined) {
@@ -43,7 +43,7 @@ export function url<IsRequired extends boolean | undefined>({
       if (typeof value !== 'string') {
         throw new FieldDataError('Must be a string');
       }
-      return value;
+      return value === '' ? null : value;
     },
     validate(value) {
       const message = validateUrl(validation, value, label);
