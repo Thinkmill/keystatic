@@ -81,7 +81,7 @@ importers:
       '@babel/core': ^7.18.5
       '@babel/runtime': ^7.18.3
       '@internationalized/date': ^3.4.0
-      '@keystar/ui': ^0.3.0
+      '@keystar/ui': ^0.3.2
       '@markdoc/markdoc': ^0.3.0
       '@preconstruct/next': ^4.0.0
       '@react-aria/i18n': ^3.8.0
@@ -172,7 +172,7 @@ importers:
       '@emotion/css': ^11.9.0
       '@floating-ui/react': ^0.24.0
       '@internationalized/date': ^3.4.0
-      '@keystar/ui': ^0.3.1
+      '@keystar/ui': ^0.3.2
       '@keystar/ui-storybook': ^0.0.1
       '@react-aria/actiongroup': ^3.6.0
       '@react-aria/breadcrumbs': ^3.5.3
@@ -688,7 +688,7 @@ importers:
       '@floating-ui/react': ^0.24.0
       '@hapi/iron': ^7.0.0
       '@internationalized/string': ^3.1.1
-      '@keystar/ui': ^0.3.1
+      '@keystar/ui': ^0.3.2
       '@markdoc/markdoc': ^0.3.0
       '@react-aria/focus': ^3.13.0
       '@react-aria/i18n': ^3.8.0
