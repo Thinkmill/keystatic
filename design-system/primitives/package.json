@@ -21,6 +21,6 @@
     "prettier": "^2.7.1",
     "style-dictionary": "^3.8.0",
     "tsx": "^3.8.0",
-    "typescript": "^5.1.3"
+    "typescript": "^5.2.2"
   }
 }

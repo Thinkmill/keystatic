@@ -57,7 +57,7 @@
     "playroom": "^0.28.0",
     "storybook": "^7.0.22",
     "storybook-dark-mode": "^3.0.0",
-    "typescript": "^5.1.3",
+    "typescript": "^5.2.2",
     "webpack": "^5.73.0"
   }
 }
