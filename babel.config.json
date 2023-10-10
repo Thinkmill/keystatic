@@ -17,5 +17,8 @@
     "@babel/preset-typescript",
     ["@babel/preset-react", { "runtime": "automatic" }]
   ],
-  "plugins": ["@babel/plugin-transform-runtime"]
+  "plugins": [
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-proposal-explicit-resource-management"
+  ]
 }
