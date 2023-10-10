@@ -16,7 +16,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@babel/core": "^7.18.5",
+    "@babel/core": "^7.23.0",
     "@babel/runtime": "^7.18.3",
     "@internationalized/date": "^3.4.0",
     "@keystar/ui": "^0.3.2",
