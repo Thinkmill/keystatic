@@ -404,7 +404,6 @@ importers:
       '@astrojs/node': ^6.0.0
       '@astrojs/react': ^3.0.0
       '@braintree/sanitize-url': ^6.0.2
-      '@hapi/iron': ^7.0.0
       '@keystatic/astro': ^1.0.0
       '@keystatic/core': ^0.1.2
       '@types/react': ^18.2.8
@@ -429,7 +428,6 @@ importers:
       '@astrojs/node': 6.0.0_astro@3.0.8
       '@astrojs/react': 3.0.0_zkisbtryv3xtasf42ecsrjh3ky
       '@braintree/sanitize-url': 6.0.4
-      '@hapi/iron': 7.0.1
       '@keystatic/astro': link:../../packages/astro
       '@keystatic/core': link:../../packages/keystatic
       '@types/react': 18.2.21
@@ -580,9 +578,9 @@ importers:
       '@fontsource/inter': ^5.0.5
       '@headlessui/react': ^1.7.11
       '@heroicons/react': ^2.0.16
-      '@keystar/ui': ^0.3.0
-      '@keystatic/core': ^0.1.2
-      '@keystatic/next': ^1.0.0
+      '@keystar/ui': ^0.3.2
+      '@keystatic/core': ^0.1.6
+      '@keystatic/next': ^1.0.1
       '@markdoc/markdoc': ^0.3.0
       '@sindresorhus/slugify': ^1.1.2
       '@tailwindcss/container-queries': ^0.1.1
@@ -686,7 +684,6 @@ importers:
       '@emotion/css': ^11.9.0
       '@emotion/weak-memoize': ^0.3.0
       '@floating-ui/react': ^0.24.0
-      '@hapi/iron': ^7.0.0
       '@internationalized/string': ^3.1.1
       '@keystar/ui': ^0.3.2
       '@markdoc/markdoc': ^0.3.0
@@ -729,6 +726,7 @@ importers:
       graphql: ^16.6.0
       idb-keyval: ^6.2.1
       ignore: ^5.2.4
+      iron-webcrypto: ^0.10.1
       is-hotkey: ^0.2.0
       jest-diff: ^29.0.1
       js-base64: ^3.7.5
@@ -771,7 +769,6 @@ importers:
       '@emotion/css': 11.11.2
       '@emotion/weak-memoize': 0.3.1
       '@floating-ui/react': 0.24.8_biqbaboplfbrettd7655fr4n2y
-      '@hapi/iron': 7.0.1
       '@internationalized/string': 3.1.1
       '@keystar/ui': link:../../design-system/pkg
       '@markdoc/markdoc': 0.3.2_gq4reeurwxuj4hvyerswzzqthy
@@ -803,6 +800,7 @@ importers:
       graphql: 16.8.0
       idb-keyval: 6.2.1
       ignore: 5.2.4
+      iron-webcrypto: 0.10.1
       is-hotkey: 0.2.0
       js-base64: 3.7.5
       js-yaml: 4.1.0
@@ -3625,43 +3623,6 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.8.0
-
-  /@hapi/b64/6.0.1:
-    resolution: {integrity: sha512-ZvjX4JQReUmBheeCq+S9YavcnMMHWqx3S0jHNXWIM1kQDxB9cyfSycpVvjfrKcIS8Mh5N3hmu/YKo4Iag9g2Kw==}
-    dependencies:
-      '@hapi/hoek': 11.0.2
-    dev: false
-
-  /@hapi/boom/10.0.1:
-    resolution: {integrity: sha512-ERcCZaEjdH3OgSJlyjVk8pHIFeus91CjKP3v+MpgBNp5IvGzP2l/bRiD78nqYcKPaZdbKkK5vDBVPd2ohHBlsA==}
-    dependencies:
-      '@hapi/hoek': 11.0.2
-    dev: false
-
-  /@hapi/bourne/3.0.0:
-    resolution: {integrity: sha512-Waj1cwPXJDucOib4a3bAISsKJVb15MKi9IvmTI/7ssVEm6sywXGjVJDhl6/umt1pK1ZS7PacXU3A1PmFKHEZ2w==}
-    dev: false
-
-  /@hapi/cryptiles/6.0.1:
-    resolution: {integrity: sha512-9GM9ECEHfR8lk5ASOKG4+4ZsEzFqLfhiryIJ2ISePVB92OHLp/yne4m+zn7z9dgvM98TLpiFebjDFQ0UHcqxXQ==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@hapi/boom': 10.0.1
-    dev: false
-
-  /@hapi/hoek/11.0.2:
-    resolution: {integrity: sha512-aKmlCO57XFZ26wso4rJsW4oTUnrgTFw2jh3io7CAtO9w4UltBNwRXvXIVzzyfkaaLRo3nluP/19msA8vDUUuKw==}
-    dev: false
-
-  /@hapi/iron/7.0.1:
-    resolution: {integrity: sha512-tEZnrOujKpS6jLKliyWBl3A9PaE+ppuL/+gkbyPPDb/l2KSKQyH4lhMkVb+sBhwN+qaxxlig01JRqB8dk/mPxQ==}
-    dependencies:
-      '@hapi/b64': 6.0.1
-      '@hapi/boom': 10.0.1
-      '@hapi/bourne': 3.0.0
-      '@hapi/cryptiles': 6.0.1
-      '@hapi/hoek': 11.0.2
-    dev: false
 
   /@headlessui/react/1.7.17_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-4am+tzvkqDSSgiwrsEpGWqgGo9dz8qU5M3znCkC4PgkpY4HcCZzEDEvozltGGGHIKl9jbXbZPSH5TWn4sWJdow==}
@@ -13936,6 +13897,10 @@ packages:
     resolution: {integrity: sha512-LlbxQ7xKzfBusov6UMi4MFpEg0m+mAm9xyNGEduwXMEDuf4WfzB/RZwMVYEd7IKGvh4IUkEXYxtAVu9T3OelJQ==}
     engines: {node: '>= 10'}
     dev: true
+
+  /iron-webcrypto/0.10.1:
+    resolution: {integrity: sha512-QGOS8MRMnj/UiOa+aMIgfyHcvkhqNUsUxb1XzskENvbo+rEfp6TOwqd1KPuDzXC4OnGHcMSVxDGRoilqB8ViqA==}
+    dev: false
 
   /is-absolute/1.0.0:
     resolution: {integrity: sha512-dOWoqflvcydARa360Gvv18DZ/gRuHKi2NU/wU5X1ZFzdYfH29nkiNZsF3mp4OJ3H4yo9Mx8A/uAGNzpzPN3yBA==}

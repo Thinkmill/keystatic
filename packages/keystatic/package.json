@@ -169,7 +169,6 @@
     "@emotion/css": "^11.9.0",
     "@emotion/weak-memoize": "^0.3.0",
     "@floating-ui/react": "^0.24.0",
-    "@hapi/iron": "^7.0.0",
     "@internationalized/string": "^3.1.1",
     "@keystar/ui": "^0.3.2",
     "@markdoc/markdoc": "^0.3.0",
@@ -201,6 +200,7 @@
     "graphql": "^16.6.0",
     "idb-keyval": "^6.2.1",
     "ignore": "^5.2.4",
+    "iron-webcrypto": "^0.10.1",
     "is-hotkey": "^0.2.0",
     "js-base64": "^3.7.5",
     "js-yaml": "^4.1.0",
@@ -283,6 +283,14 @@
     "#sha1": {
       "node": "./src/sha1/node.ts",
       "default": "./src/sha1/webcrypto.ts"
+    },
+    "#webcrypto": {
+      "node": "./src/api/webcrypto/node.ts",
+      "default": "./src/api/webcrypto/default.ts"
+    },
+    "#api-handler": {
+      "node": "./src/api/api-node.ts",
+      "default": "./src/api/api-noop.ts"
     },
     "#field-ui/*": {
       "react-server": "./src/form/fields/empty-field-ui.tsx",

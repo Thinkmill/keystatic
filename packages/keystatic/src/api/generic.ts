@@ -1,12 +1,15 @@
 import cookie from 'cookie';
-import Iron from '@hapi/iron';
+import * as Iron from 'iron-webcrypto';
 import z from 'zod';
-import fs from 'fs/promises';
-import { randomBytes } from 'node:crypto';
 import { Config } from '..';
-import { getAllowedDirectories, readToDirEntries } from './read-local';
-import { blobSha } from './trees-server-side';
-import path from 'path';
+import {
+  KeystaticResponse,
+  KeystaticRequest,
+  redirect,
+} from './internal-utils';
+import { handleGitHubAppCreation, localModeApiHandler } from '#api-handler';
+import { webcrypto } from '#webcrypto';
+import { bytesToHex } from '../hex';
 
 export type APIRouteConfig = {
   /** @default process.env.KEYSTATIC_GITHUB_CLIENT_ID */
@@ -26,30 +29,8 @@ type InnerAPIRouteConfig = {
   config: Config;
 };
 
-type KeystaticRequest = {
-  headers: { get(name: string): string | null };
-  method: string;
-  url: string;
-  json: () => Promise<any>;
-};
-
-type KeystaticResponse = ResponseInit & {
-  body: Uint8Array | string | null;
-};
-
 const keystaticRouteRegex =
   /^branch\/[^]+(\/collection\/[^/]+(|\/(create|item\/[^/]+))|\/singleton\/[^/]+)?$/;
-
-function redirect(
-  to: string,
-  initialHeaders?: [string, string][]
-): KeystaticResponse {
-  return {
-    body: null,
-    status: 307,
-    headers: [...(initialHeaders ?? []), ['Location', to]],
-  };
-}
 
 const keyToEnvVar = {
   clientId: 'KEYSTATIC_GITHUB_CLIENT_ID',
@@ -57,20 +38,29 @@ const keyToEnvVar = {
   secret: 'KEYSTATIC_SECRET',
 };
 
+function tryOrUndefined<T>(fn: () => T) {
+  try {
+    return fn();
+  } catch {
+    return undefined;
+  }
+}
+
 export function makeGenericAPIRouteHandler(
   _config: APIRouteConfig,
   options?: { slugEnvName?: string }
 ) {
   const _config2: APIRouteConfig = {
-    clientId: _config.clientId ?? process.env.KEYSTATIC_GITHUB_CLIENT_ID,
+    clientId:
+      _config.clientId ??
+      tryOrUndefined(() => process.env.KEYSTATIC_GITHUB_CLIENT_ID),
     clientSecret:
-      _config.clientSecret ?? process.env.KEYSTATIC_GITHUB_CLIENT_SECRET,
-    secret: _config.secret ?? process.env.KEYSTATIC_SECRET,
+      _config.clientSecret ??
+      tryOrUndefined(() => process.env.KEYSTATIC_GITHUB_CLIENT_SECRET),
+    secret:
+      _config.secret ?? tryOrUndefined(() => process.env.KEYSTATIC_SECRET),
     config: _config.config,
   };
-  const baseDirectory = path.resolve(
-    _config.localBaseDirectory ?? process.cwd()
-  );
 
   const getParams = (req: KeystaticRequest) => {
     let url;
@@ -93,21 +83,13 @@ export function makeGenericAPIRouteHandler(
   };
 
   if (_config2.config.storage.kind === 'local') {
-    return async function keystaticAPIRoute(
-      req: KeystaticRequest
-    ): Promise<KeystaticResponse> {
+    const handler = localModeApiHandler(
+      _config2.config,
+      _config.localBaseDirectory
+    );
+    return (req: KeystaticRequest) => {
       const params = getParams(req);
-      const joined = params.join('/');
-      if (req.method === 'GET' && joined === 'tree') {
-        return tree(req, _config2.config, baseDirectory);
-      }
-      if (req.method === 'GET' && params[0] === 'blob') {
-        return blob(req, _config2.config, params, baseDirectory);
-      }
-      if (req.method === 'POST' && joined === 'update') {
-        return update(req, _config2.config, baseDirectory);
-      }
-      return { status: 404, body: 'Not Found' };
+      return handler(req, params);
     };
   }
   if (_config2.config.storage.kind === 'cloud') {
@@ -268,7 +250,7 @@ async function getTokenCookies(
       'Set-Cookie',
       cookie.serialize(
         'keystatic-gh-refresh-token',
-        await Iron.seal(tokenData.refresh_token, config.secret, {
+        await Iron.seal(webcrypto, tokenData.refresh_token, config.secret, {
           ...Iron.defaults,
           ttl: tokenData.refresh_token_expires_in * 1000,
         }),
@@ -298,6 +280,7 @@ async function getRefreshToken(
   let refreshToken;
   try {
     refreshToken = await Iron.unseal(
+      webcrypto,
       refreshTokenCookie,
       config.secret,
       Iron.defaults
@@ -359,6 +342,7 @@ async function githubRepoNotFound(
   }
   return githubLogin(req, config);
 }
+
 async function githubLogin(
   req: KeystaticRequest,
   config: InnerAPIRouteConfig
@@ -369,7 +353,7 @@ async function githubLogin(
     typeof rawFrom === 'string' && keystaticRouteRegex.test(rawFrom)
       ? rawFrom
       : '/';
-  const state = randomBytes(10).toString('hex');
+  const state = bytesToHex(webcrypto.getRandomValues(new Uint8Array(10)));
   const url = new URL('https://github.com/login/oauth/authorize');
   url.searchParams.set('client_id', config.clientId);
   url.searchParams.set(
@@ -396,12 +380,6 @@ async function githubLogin(
   ]);
 }
 
-const ghAppSchema = z.object({
-  slug: z.string(),
-  client_id: z.string(),
-  client_secret: z.string(),
-});
-
 async function createdGithubApp(
   req: KeystaticRequest,
   slugEnvVarName: string | undefined
@@ -409,161 +387,7 @@ async function createdGithubApp(
   if (process.env.NODE_ENV !== 'development') {
     return { status: 400, body: 'App setup only allowed in development' };
   }
-  const searchParams = new URL(req.url, 'https://localhost').searchParams;
-  const code = searchParams.get('code');
-  if (typeof code !== 'string' || !/^[a-zA-Z0-9]+$/.test(code)) {
-    return { status: 400, body: 'Bad Request' };
-  }
-  const ghAppRes = await fetch(
-    `https://api.github.com/app-manifests/${code}/conversions`,
-    {
-      method: 'POST',
-      headers: { Accept: 'application/json' },
-    }
-  );
-  if (!ghAppRes.ok) {
-    console.log(ghAppRes);
-    return {
-      status: 500,
-      body: 'An error occurred while creating the GitHub App',
-    };
-  }
-  const ghAppDataRaw = await ghAppRes.json();
-
-  const ghAppDataResult = ghAppSchema.safeParse(ghAppDataRaw);
-
-  if (!ghAppDataResult.success) {
-    console.log(ghAppDataRaw);
-    return {
-      status: 500,
-      body: 'An unexpected response was received from GitHub',
-    };
-  }
-  const toAddToEnv = `# Keystatic
-KEYSTATIC_GITHUB_CLIENT_ID=${ghAppDataResult.data.client_id}
-KEYSTATIC_GITHUB_CLIENT_SECRET=${ghAppDataResult.data.client_secret}
-KEYSTATIC_SECRET=${randomBytes(40).toString('hex')}
-${slugEnvVarName ? `${slugEnvVarName}=${ghAppDataResult.data.slug}\n` : ''}`;
-
-  let prevEnv: string | undefined;
-  try {
-    prevEnv = await fs.readFile('.env', 'utf-8');
-  } catch (err) {
-    if ((err as any).code !== 'ENOENT') throw err;
-  }
-  const newEnv = prevEnv ? `${prevEnv}\n\n${toAddToEnv}` : toAddToEnv;
-  await fs.writeFile('.env', newEnv);
-  await wait(200);
-  return redirect(
-    '/keystatic/created-github-app?slug=' + ghAppDataResult.data.slug
-  );
-}
-
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-async function tree(
-  req: KeystaticRequest,
-  config: Config,
-  baseDirectory: string
-): Promise<KeystaticResponse> {
-  if (req.headers.get('no-cors') !== '1') {
-    return { status: 400, body: 'Bad Request' };
-  }
-  return {
-    status: 200,
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(await readToDirEntries(baseDirectory)),
-  };
-}
-
-function getIsPathValid(config: Config) {
-  const allowedDirectories = getAllowedDirectories(config);
-  return (filepath: string) =>
-    !filepath.includes('\\') &&
-    filepath.split('/').every(x => x !== '.' && x !== '..') &&
-    allowedDirectories.some(x => filepath.startsWith(x));
-}
-
-async function blob(
-  req: KeystaticRequest,
-  config: Config,
-  params: string[],
-  baseDirectory: string
-): Promise<KeystaticResponse> {
-  if (req.headers.get('no-cors') !== '1') {
-    return { status: 400, body: 'Bad Request' };
-  }
-
-  const expectedSha = params[1];
-  const filepath = params.slice(2).join('/');
-  const isFilepathValid = getIsPathValid(config);
-  if (!isFilepathValid(filepath)) {
-    return { status: 400, body: 'Bad Request' };
-  }
-
-  let contents;
-  try {
-    contents = await fs.readFile(path.join(baseDirectory, filepath));
-  } catch (err) {
-    if ((err as any).code === 'ENOENT') {
-      return { status: 404, body: 'Not Found' };
-    }
-    throw err;
-  }
-  const sha = await blobSha(contents);
-
-  if (sha !== expectedSha) {
-    return { status: 404, body: 'Not Found' };
-  }
-  return { status: 200, body: contents };
-}
-
-async function update(
-  req: KeystaticRequest,
-  config: Config,
-  baseDirectory: string
-): Promise<KeystaticResponse> {
-  if (
-    req.headers.get('no-cors') !== '1' ||
-    req.headers.get('content-type') !== 'application/json'
-  ) {
-    return { status: 400, body: 'Bad Request' };
-  }
-  const isFilepathValid = getIsPathValid(config);
-
-  const updates = z
-    .object({
-      additions: z.array(
-        z.object({
-          path: z.string().refine(isFilepathValid),
-          contents: z.string().transform(x => Buffer.from(x, 'base64')),
-        })
-      ),
-      deletions: z.array(
-        z.object({ path: z.string().refine(isFilepathValid) })
-      ),
-    })
-    .safeParse(await req.json());
-  if (!updates.success) {
-    return { status: 400, body: 'Bad data' };
-  }
-  for (const addition of updates.data.additions) {
-    await fs.mkdir(path.dirname(path.join(baseDirectory, addition.path)), {
-      recursive: true,
-    });
-    await fs.writeFile(
-      path.join(baseDirectory, addition.path),
-      addition.contents
-    );
-  }
-  for (const deletion of updates.data.deletions) {
-    await fs.rm(path.join(baseDirectory, deletion.path), { force: true });
-  }
-  return {
-    status: 200,
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(await readToDirEntries(baseDirectory)),
-  };
+  return handleGitHubAppCreation(req, slugEnvVarName);
 }
 
 function immediatelyExpiringCookie(name: string) {
