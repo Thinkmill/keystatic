@@ -16,7 +16,7 @@ export interface LinkComponentProps
 
 export const makeLinkComponent = (
   render: ForwardRefRenderFunction<HTMLAnchorElement, LinkComponentProps>
-) => ({ __forwardRef__: forwardRef(render) } as const);
+) => ({ __forwardRef__: forwardRef(render) }) as const;
 
 export type LinkComponent =
   | ReturnType<typeof makeLinkComponent>

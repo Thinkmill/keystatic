@@ -64,7 +64,7 @@ export function Checkbox(props: CheckboxProps) {
       ({
         text: { color: 'inherit' },
         description: { color: 'neutralTertiary' },
-      } as const),
+      }) as const,
     []
   );
 

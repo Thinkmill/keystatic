@@ -61,7 +61,7 @@ export const Switch: ForwardRefExoticComponent<SwitchProps> = forwardRef(
         ({
           text: { color: 'inherit' },
           description: { color: 'neutralTertiary' },
-        } as const),
+        }) as const,
       []
     );
 

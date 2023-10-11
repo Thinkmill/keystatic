@@ -15,7 +15,7 @@ export type TableProps<T> = {
   /** The elements that make up the table. Includes the TableHeader, TableBody, Columns, and Rows. */
   children: [
     ReactElement<TableHeaderProps<T>>,
-    ReactElement<TableBodyProps<T>>
+    ReactElement<TableBodyProps<T>>,
   ];
   /** A list of row keys to disable. */
   disabledKeys?: Iterable<Key>;

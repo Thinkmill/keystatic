@@ -73,7 +73,7 @@ export const Tooltip: ForwardRefExoticComponent<
         icon: { size: 'small', color: 'inherit' },
         text: { size: 'small', color: 'inherit' },
         kbd: { size: 'small', color: 'inherit' },
-      } as const),
+      }) as const,
     []
   );
 

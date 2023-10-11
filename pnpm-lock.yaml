@@ -35,7 +35,7 @@ importers:
       jest: ^29.0.1
       jest-environment-jsdom: ^29.0.1
       npm-run-all: ^4.1.5
-      prettier: ^2.7.1
+      prettier: ^3.0.3
       prettier-plugin-packagejson: ^2.2.18
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -72,8 +72,8 @@ importers:
       jest: 29.6.4_@types+node@16.11.13
       jest-environment-jsdom: 29.6.4
       npm-run-all: 4.1.5
-      prettier: 2.8.8
-      prettier-plugin-packagejson: 2.4.5_prettier@2.8.8
+      prettier: 3.0.3
+      prettier-plugin-packagejson: 2.4.5_prettier@3.0.3
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       typescript: 5.2.2
@@ -383,7 +383,7 @@ importers:
       fast-glob: ^3.2.12
       json5: ^2.2.1
       lodash: ^4.17.21
-      prettier: ^2.7.1
+      prettier: ^3.0.3
       style-dictionary: ^3.8.0
       tsx: ^3.8.0
       typescript: ^5.2.2
@@ -396,7 +396,7 @@ importers:
       fast-glob: 3.3.1
       json5: 2.2.3
       lodash: 4.17.21
-      prettier: 2.8.8
+      prettier: 3.0.3
       style-dictionary: 3.8.0
       tsx: 3.12.8
       typescript: 5.2.2
@@ -597,7 +597,7 @@ importers:
       date-fns: ^2.28.0
       next: ^13.5.3
       postcss: ^8.4.21
-      prettier: ^2.7.1
+      prettier: ^3.0.3
       prettier-plugin-tailwindcss: ^0.2.2
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -632,8 +632,8 @@ importers:
       '@tailwindcss/typography': 0.5.9_tailwindcss@3.3.3
       autoprefixer: 10.4.15_postcss@8.4.29
       postcss: 8.4.29
-      prettier: 2.8.8
-      prettier-plugin-tailwindcss: 0.2.8_prettier@2.8.8
+      prettier: 3.0.3
+      prettier-plugin-tailwindcss: 0.2.8_prettier@3.0.3
       tailwindcss: 3.3.3
 
   packages/astro:
@@ -17695,7 +17695,7 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
-  /prettier-plugin-packagejson/2.4.5_prettier@2.8.8:
+  /prettier-plugin-packagejson/2.4.5_prettier@3.0.3:
     resolution: {integrity: sha512-glG71jE1gO3y5+JNAhC8X+4yrlN28rub6Aj461SKbaPie9RgMiHKcInH2Moi2VGOfkTXaEHBhg4uVMBqa+kBUA==}
     peerDependencies:
       prettier: '>= 1.16.0'
@@ -17703,12 +17703,12 @@ packages:
       prettier:
         optional: true
     dependencies:
-      prettier: 2.8.8
+      prettier: 3.0.3
       sort-package-json: 2.5.1
       synckit: 0.8.5
     dev: false
 
-  /prettier-plugin-tailwindcss/0.2.8_prettier@2.8.8:
+  /prettier-plugin-tailwindcss/0.2.8_prettier@3.0.3:
     resolution: {integrity: sha512-KgPcEnJeIijlMjsA6WwYgRs5rh3/q76oInqtMXBA/EMcamrcYJpyhtRhyX1ayT9hnHlHTuO8sIifHF10WuSDKg==}
     engines: {node: '>=12.17.0'}
     peerDependencies:
@@ -17757,12 +17757,17 @@ packages:
       prettier-plugin-twig-melody:
         optional: true
     dependencies:
-      prettier: 2.8.8
+      prettier: 3.0.3
     dev: true
 
   /prettier/2.8.8:
     resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
     engines: {node: '>=10.13.0'}
+    hasBin: true
+
+  /prettier/3.0.3:
+    resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==}
+    engines: {node: '>=14'}
     hasBin: true
 
   /pretty-error/4.0.0:

@@ -65,7 +65,7 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
     () =>
       ({
         text: { color: 'inherit' },
-      } as const),
+      }) as const,
     []
   );
 
