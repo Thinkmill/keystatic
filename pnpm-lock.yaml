@@ -377,6 +377,7 @@ importers:
     specifiers:
       '@capsizecss/core': ^3.1.1
       '@capsizecss/metrics': ^1.2.0
+      '@prettier/sync': ^0.3.0
       '@types/lodash': ^4.14.191
       color2k: ^2.0.2
       emery: ^1.4.1
@@ -387,6 +388,8 @@ importers:
       style-dictionary: ^3.8.0
       tsx: ^3.8.0
       typescript: ^5.2.2
+    dependencies:
+      '@prettier/sync': 0.3.0_prettier@3.0.3
     devDependencies:
       '@capsizecss/core': 3.1.1
       '@capsizecss/metrics': 1.2.0
@@ -4359,6 +4362,14 @@ packages:
 
   /@preconstruct/next/4.0.0:
     resolution: {integrity: sha512-vSrc8wFQgBErU7dKTKSQtr/DLWPHcN9jMoiWOAQodB1+B4Kpqqry6QhGYoRm0DQU5gNL+Rcp+Xb350O1E/gjsg==}
+
+  /@prettier/sync/0.3.0_prettier@3.0.3:
+    resolution: {integrity: sha512-3dcmCyAxIcxy036h1I7MQU/uEEBq8oLwf1CE3xeze+MPlgkdlb/+w6rGR/1dhp6Hqi17fRS6nvwnOzkESxEkOw==}
+    peerDependencies:
+      prettier: ^3.0.0
+    dependencies:
+      prettier: 3.0.3
+    dev: false
 
   /@radix-ui/number/1.0.1:
     resolution: {integrity: sha512-T5gIdVO2mmPW3NNhjNgEP3cqMXjXL9UbO0BzWcXfvdBs+BohbQxvd/K5hSVKmn9/lbTdsQVKbUcP5WLCwvUbBg==}

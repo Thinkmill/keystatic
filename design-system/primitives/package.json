@@ -22,5 +22,8 @@
     "style-dictionary": "^3.8.0",
     "tsx": "^3.8.0",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@prettier/sync": "^0.3.0"
   }
 }
