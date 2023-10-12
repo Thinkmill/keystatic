@@ -8,6 +8,7 @@ import {
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
+import { CSSProperties } from 'react';
 
 import { TableProps } from './types';
 
@@ -97,7 +98,7 @@ export function useTableStyleProps<T>(props: TableProps<T>) {
 // Row group (head/body/foot)
 // ----------------------------------------------------------------------------
 
-export function useHeadStyleProps() {
+export function useHeadStyleProps({ style }: { style?: CSSProperties }) {
   return {
     className: css({
       display: 'flex',
@@ -107,9 +108,10 @@ export function useHeadStyleProps() {
         borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
       },
     }),
+    style,
   };
 }
-export function useBodyStyleProps() {
+export function useBodyStyleProps({ style }: { style?: CSSProperties }) {
   return {
     className: css({
       display: 'flex',
@@ -122,6 +124,7 @@ export function useBodyStyleProps() {
         borderRadius: tokenSchema.size.radius.medium,
       },
     }),
+    style,
   };
 }
 
@@ -229,12 +232,18 @@ export function useSelectionCellStyleProps() {
 // Row body
 // ----------------------------------------------------------------------------
 
-export function useRowStyleProps(state: {
-  isFocusVisible: boolean;
-  isFocusWithin: boolean;
-  isPressed: boolean;
-  isHovered: boolean;
-}) {
+export function useRowStyleProps(
+  props: {
+    style?: CSSProperties;
+  },
+  state: {
+    isFocusVisible: boolean;
+    isFocusWithin: boolean;
+    isPressed: boolean;
+    isHovered: boolean;
+  }
+) {
+  let { style } = props;
   let calculatedRadius = `calc(${tokenSchema.size.radius.medium} - ${tokenSchema.size.border.regular})`;
 
   const className = css({
@@ -306,16 +315,17 @@ export function useRowStyleProps(state: {
         : undefined,
     }),
     className,
+    style,
   };
 }
 
 // Row header
 // ----------------------------------------------------------------------------
 
-export function useRowHeaderStyleProps() {
+export function useRowHeaderStyleProps({ style }: { style?: CSSProperties }) {
   const className = css({
     display: 'flex',
   });
 
-  return { className };
+  return { className, style };
 }
