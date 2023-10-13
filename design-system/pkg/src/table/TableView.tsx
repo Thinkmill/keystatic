@@ -1,9 +1,11 @@
 import {
   CSSProperties,
+  ForwardedRef,
   HTMLAttributes,
   ReactElement,
   ReactNode,
   createContext,
+  forwardRef,
   useCallback,
   useContext,
   useMemo,
@@ -54,6 +56,7 @@ import {
   useBodyStyleProps,
   useCellStyleProps,
   useHeadStyleProps,
+  useHeaderWrapperStyleProps,
   useRowHeaderStyleProps,
   useRowStyleProps,
   useSelectionCellStyleProps,
@@ -64,12 +67,12 @@ import { ColumnProps, TableProps } from './types';
 // Constants
 
 const DEFAULT_HEADER_HEIGHT = 34;
-const DEFAULT_HIDE_HEADER_CELL_WIDTH = 38;
-const SELECTION_CELL_DEFAULT_WIDTH = 38;
+const DEFAULT_HIDE_HEADER_CELL_WIDTH = 34;
+const SELECTION_CELL_DEFAULT_WIDTH = 34;
 const ROW_HEIGHTS = {
-  compact: 32,
-  regular: 40,
-  spacious: 48,
+  compact: 26,
+  regular: 34,
+  spacious: 42,
 } as const;
 
 // Context
@@ -314,11 +317,7 @@ export function TableView<T extends object>(props: TableProps<T>) {
   }, [state, tableLayout]);
 
   let { gridProps } = useTable(
-    {
-      ...props,
-      isVirtualized: true,
-      layout,
-    },
+    { ...props, isVirtualized: true, layout },
     state,
     domRef
   );
@@ -374,6 +373,10 @@ function TableVirtualizer<T extends object>(props: TableVirtualizerProps<T>) {
     domRef,
     bodyRef,
     headerRef,
+    onSelectionChange: UNUSED_onSelectionChange,
+    onSortChange: UNUSED_onSortChange,
+    overflowMode: UNUSED_overflowMode,
+    sortDescriptor: UNUSED_sortDescriptor,
     // onVisibleRectChange: onVisibleRectChangeProp,
     // isFocusVisible,
     // isVirtualDragging,
@@ -431,29 +434,26 @@ function TableVirtualizer<T extends object>(props: TableVirtualizerProps<T>) {
     }
   }, [bodyRef, headerRef]);
 
+  let bodyStyleProps = useBodyStyleProps({ style: { flex: 1 } });
+
   return (
     <FocusScope>
       <div {...mergedProps} {...styleProps} ref={domRef}>
-        <div
+        <TableHeaderWrapper
           ref={headerRef}
-          role="presentation"
-          className={'Table-headWrapper'}
           style={{
             height: headerHeight,
-            overflow: 'hidden',
-            position: 'relative',
             willChange: virtualizerState.isScrolling
               ? 'scroll-position'
               : undefined,
           }}
         >
           {headerView}
-        </div>
+        </TableHeaderWrapper>
         <ScrollView
           {...scrollViewProps}
+          {...bodyStyleProps}
           role="presentation"
-          className={'Table-body'}
-          style={{ flex: 1 }}
           innerStyle={{ overflow: 'visible' }}
           ref={bodyRef}
           contentSize={virtualizerState.contentSize}
@@ -481,16 +481,27 @@ function TableHead({ children, style }: HTMLAttributes<HTMLElement>) {
     </div>
   );
 }
-function TableBody({ children, style }: HTMLAttributes<HTMLElement>) {
+function TableBody(props: HTMLAttributes<HTMLElement>) {
   let { rowGroupProps } = useTableRowGroup();
-  let styleProps = useBodyStyleProps({ style });
+
+  return <div {...rowGroupProps} {...props} />;
+}
+
+const TableHeaderWrapper = forwardRef(function TableHeaderWrapper(
+  props: {
+    children: ReactNode;
+    style: CSSProperties;
+  },
+  ref: ForwardedRef<HTMLDivElement>
+) {
+  let styleProps = useHeaderWrapperStyleProps(props);
 
   return (
-    <div {...rowGroupProps} {...styleProps}>
-      {children}
+    <div ref={ref} role="presentation" {...styleProps}>
+      {props.children}
     </div>
   );
-}
+});
 
 function TableHeaderRow(props: {
   children: ReactNode;

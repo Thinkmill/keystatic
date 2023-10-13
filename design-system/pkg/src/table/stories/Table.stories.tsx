@@ -1,5 +1,6 @@
 import { action, ArgTypes } from '@keystar/ui-storybook';
 import { tokenSchema } from '@keystar/ui/style';
+import { Text } from '@keystar/ui/typography';
 import { Key, useMemo, useState } from 'react';
 
 import {
@@ -25,7 +26,7 @@ export default {
 export const StaticContents = (args: ArgTypes) => (
   <TableView
     aria-label="TableView with static contents"
-    width="scale.3400"
+    // width="scale.3400"
     // height="scale.2400"
     {...args}
   >
@@ -63,7 +64,7 @@ export const HiddenHeader = (args: ArgTypes) => (
     <TableHeader>
       <Column key="foo">Foo</Column>
       <Column key="bar">Bar</Column>
-      <Column key="baz" hideHeader>
+      <Column key="baz" hideHeader width={100}>
         Actions
       </Column>
     </TableHeader>
@@ -93,7 +94,7 @@ HiddenHeader.story = {
 export const Selection = (args: ArgTypes) => (
   <TableView
     aria-label="TableView with selection"
-    width="scale.3400"
+    // width="scale.3400"
     // height="scale.2400"
     onSelectionChange={onSelectionChange}
     {...args}
@@ -160,13 +161,22 @@ export const TableProps = (args: ArgTypes) => (
   </TableView>
 );
 
+const scaleKeys = Object.keys(tokenSchema.size.scale)
+  .filter(key => Number(key) >= 2000)
+  .map(key => `scale.${key}`);
+
 TableProps.args = {
-  overflowMode: 'wrap',
+  prominence: 'default',
+  overflowMode: 'truncate',
   density: 'regular',
-  height: 'scale.2400',
+  height: undefined,
   width: 'scale.6000',
 };
 TableProps.argTypes = {
+  prominence: {
+    control: 'inline-radio',
+    options: ['default', 'low'],
+  },
   overflowMode: {
     control: 'inline-radio',
     options: ['truncate', 'wrap'],
@@ -177,21 +187,17 @@ TableProps.argTypes = {
   },
   height: {
     control: 'select',
-    options: Object.keys(tokenSchema.size.scale)
-      .filter(key => Number(key) >= 2000)
-      .map(key => `scale.${key}`),
+    options: [undefined, ...scaleKeys],
   },
   width: {
     control: 'select',
-    options: Object.keys(tokenSchema.size.scale)
-      .filter(key => Number(key) >= 2000)
-      .map(key => `scale.${key}`),
+    options: [undefined, ...scaleKeys],
   },
 };
 
 export const DynamicContents = () => {
   let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: 'id',
+    column: 'name',
     direction: 'ascending',
   });
 
@@ -236,21 +242,17 @@ export const DynamicContents = () => {
     >
       <TableHeader
         columns={[
-          { name: 'ID', key: 'id', width: 55 },
+          // { name: 'ID', key: 'id', width: 55 },
           { name: 'Name', key: 'name' },
           { name: 'Type', key: 'type' },
-          { name: 'HP', key: 'health', width: 60 },
-          { name: 'ATK', key: 'attack', width: 60 },
-          { name: 'DEF', key: 'defense', width: 60 },
+          { name: 'HP', key: 'health', width: 80, align: 'end' as const },
+          { name: 'ATK', key: 'attack', width: 80, align: 'end' as const },
+          { name: 'DEF', key: 'defense', width: 80, align: 'end' as const },
         ]}
       >
-        {column => (
-          <Column
-            allowsSorting={column.key !== 'type'}
-            width={column.width}
-            align={column.width === 60 ? 'end' : undefined}
-          >
-            {column.name}
+        {({ name, key, ...column }) => (
+          <Column allowsSorting={key !== 'type'} {...column}>
+            {name}
           </Column>
         )}
       </TableHeader>
@@ -274,7 +276,11 @@ export const DynamicContents = () => {
               //   );
               // }
 
-              return <Cell>{value}</Cell>;
+              return (
+                <Cell>
+                  <Text overflow="nowrap">{value}</Text>
+                </Cell>
+              );
             }}
           </Row>
         )}

@@ -8,7 +8,7 @@ import {
   transition,
   useStyleProps,
 } from '@keystar/ui/style';
-import { CSSProperties } from 'react';
+import { CSSProperties, HTMLAttributes } from 'react';
 
 import { TableProps } from './types';
 
@@ -16,19 +16,35 @@ import { TableProps } from './types';
 // UTILS
 // ============================================================================
 
-function getStyleFromColumn(props: CellProps) {
-  const { maxWidth, minWidth, width } = props;
+// function getStyleFromColumn(props: CellProps) {
+//   const { maxWidth, minWidth, width } = props;
 
-  if (width) {
-    return { flex: '0 0 auto', width, maxWidth, minWidth };
-  }
+//   if (width) {
+//     return { flex: '0 0 auto', width, maxWidth, minWidth };
+//   }
 
-  return { maxWidth, minWidth };
-}
+//   return { maxWidth, minWidth };
+// }
 
 // ============================================================================
 // COMPONENTS
 // ============================================================================
+
+export const CellContents = (props: HTMLAttributes<HTMLDivElement>) => {
+  return (
+    <div
+      className={css({
+        flex: 1,
+
+        // align with checkboxes
+        '.ksv-table-view[data-overflow-mode="wrap"] &': {
+          paddingTop: `calc((${tokenSchema.size.element.xsmall} - ${tokenSchema.typography.text.regular.capheight}) / 2)`,
+        },
+      })}
+      {...props}
+    />
+  );
+};
 
 export const SortIndicator = () => {
   // fix alignment: reduce the space the icon takes up, w/o affecting the icon layout itself
@@ -87,8 +103,12 @@ export function useTableStyleProps<T>(props: TableProps<T>) {
       css({
         display: 'flex',
         flexDirection: 'column',
+        isolation: 'isolate',
         minHeight: 0,
         minWidth: 0,
+        outline: 'none',
+        position: 'relative',
+        userSelect: 'none',
       })
     ),
     style: styleProps.style,
@@ -98,9 +118,30 @@ export function useTableStyleProps<T>(props: TableProps<T>) {
 // Row group (head/body/foot)
 // ----------------------------------------------------------------------------
 
-export function useHeadStyleProps({ style }: { style?: CSSProperties }) {
+export function useHeaderWrapperStyleProps({
+  style,
+}: {
+  style?: CSSProperties;
+} = {}) {
   return {
     className: css({
+      overflow: 'hidden',
+      position: 'relative',
+      boxSizing: 'content-box',
+      flex: 'none',
+      // keep aligned with the border of the body
+      borderLeft: `${tokenSchema.size.border.regular} solid transparent`,
+      borderRight: `${tokenSchema.size.border.regular} solid transparent`,
+      // marginBottom: `calc(${tokenSchema.size.border.regular} * -1)`,
+      // paddingBottom: tokenSchema.size.border.regular,
+    }),
+    style,
+  };
+}
+export function useHeadStyleProps({ style }: { style?: CSSProperties } = {}) {
+  return {
+    className: css({
+      boxSizing: 'border-box',
       display: 'flex',
       flexDirection: 'column',
 
@@ -111,13 +152,9 @@ export function useHeadStyleProps({ style }: { style?: CSSProperties }) {
     style,
   };
 }
-export function useBodyStyleProps({ style }: { style?: CSSProperties }) {
+export function useBodyStyleProps({ style }: { style?: CSSProperties } = {}) {
   return {
     className: css({
-      display: 'flex',
-      flexDirection: 'column',
-      overflow: 'auto',
-
       '.ksv-table-view:not([data-prominence="low"]) &': {
         backgroundColor: tokenSchema.color.background.canvas,
         border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
@@ -137,11 +174,27 @@ const commonCellStyles = {
   cursor: 'default',
   display: 'flex',
   flex: 1,
+  height: '100%',
   justifyContent: 'flex-start',
   minWidth: 0,
   outline: 0,
   paddingInline: tokenSchema.size.space.medium,
   position: 'relative',
+
+  // Density
+  paddingBlock: tokenSchema.size.space.medium,
+  '.ksv-table-view[data-density="compact"] &:not([role="columnheader"])': {
+    paddingBlock: tokenSchema.size.space.regular,
+  },
+  '.ksv-table-view[data-density="spacious"] &:not([role="columnheader"])': {
+    paddingBlock: tokenSchema.size.space.large,
+  },
+
+  // wrapping text shouldn't be centered
+  alignItems: 'center',
+  '.ksv-table-view[data-overflow-mode="wrap"] &:not([role="columnheader"])': {
+    alignItems: 'initial',
+  },
 } as const;
 
 type CellProps = {
@@ -161,24 +214,11 @@ export function useCellStyleProps(
       // Alignment
       '&[data-align="end"]': {
         justifyContent: 'flex-end',
+        textAlign: 'end',
       },
       '&[data-align="center"]': {
         justifyContent: 'center',
-      },
-
-      // wrapping text shouldn't be centered
-      alignItems: 'center',
-      '.ksv-table-view[data-overflow-mode="wrap"] &': {
-        alignItems: 'initial',
-      },
-
-      // Density
-      paddingBlock: tokenSchema.size.space.medium,
-      '.ksv-table-view[data-density="compact"] &': {
-        paddingBlock: tokenSchema.size.space.regular,
-      },
-      '.ksv-table-view[data-density="spacious"] &': {
-        paddingBlock: tokenSchema.size.space.large,
+        textAlign: 'center',
       },
 
       // focus ring
@@ -214,7 +254,7 @@ export function useCellStyleProps(
       align: props?.align,
     }),
     className,
-    style: getStyleFromColumn(props),
+    // style: getStyleFromColumn(props),
   };
 }
 
