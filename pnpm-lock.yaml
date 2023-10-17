@@ -601,7 +601,7 @@ importers:
       next: ^13.5.3
       postcss: ^8.4.21
       prettier: ^3.0.3
-      prettier-plugin-tailwindcss: ^0.2.2
+      prettier-plugin-tailwindcss: ^0.5.6
       react: ^18.2.0
       react-dom: ^18.2.0
       react-focus-lock: ^2.9.4
@@ -636,7 +636,7 @@ importers:
       autoprefixer: 10.4.15_postcss@8.4.29
       postcss: 8.4.29
       prettier: 3.0.3
-      prettier-plugin-tailwindcss: 0.2.8_prettier@3.0.3
+      prettier-plugin-tailwindcss: 0.5.6_prettier@3.0.3
       tailwindcss: 3.3.3
 
   packages/astro:
@@ -17719,20 +17719,21 @@ packages:
       synckit: 0.8.5
     dev: false
 
-  /prettier-plugin-tailwindcss/0.2.8_prettier@3.0.3:
-    resolution: {integrity: sha512-KgPcEnJeIijlMjsA6WwYgRs5rh3/q76oInqtMXBA/EMcamrcYJpyhtRhyX1ayT9hnHlHTuO8sIifHF10WuSDKg==}
-    engines: {node: '>=12.17.0'}
+  /prettier-plugin-tailwindcss/0.5.6_prettier@3.0.3:
+    resolution: {integrity: sha512-2Xgb+GQlkPAUCFi3sV+NOYcSI5XgduvDBL2Zt/hwJudeKXkyvRS65c38SB0yb9UB40+1rL83I6m0RtlOQ8eHdg==}
+    engines: {node: '>=14.21.3'}
     peerDependencies:
       '@ianvs/prettier-plugin-sort-imports': '*'
       '@prettier/plugin-pug': '*'
       '@shopify/prettier-plugin-liquid': '*'
       '@shufo/prettier-plugin-blade': '*'
       '@trivago/prettier-plugin-sort-imports': '*'
-      prettier: '>=2.2.0'
+      prettier: ^3.0
       prettier-plugin-astro: '*'
       prettier-plugin-css-order: '*'
       prettier-plugin-import-sort: '*'
       prettier-plugin-jsdoc: '*'
+      prettier-plugin-marko: '*'
       prettier-plugin-organize-attributes: '*'
       prettier-plugin-organize-imports: '*'
       prettier-plugin-style-order: '*'
@@ -17756,6 +17757,8 @@ packages:
       prettier-plugin-import-sort:
         optional: true
       prettier-plugin-jsdoc:
+        optional: true
+      prettier-plugin-marko:
         optional: true
       prettier-plugin-organize-attributes:
         optional: true
