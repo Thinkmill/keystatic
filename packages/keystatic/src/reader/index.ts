@@ -32,18 +32,18 @@ type EntryReaderOpts = { resolveLinkedFiles?: boolean };
 
 type ValueForReadingWithMode<
   Schema extends ComponentSchema,
-  ResolveLinkedFiles extends boolean | undefined
+  ResolveLinkedFiles extends boolean | undefined,
 > = ResolveLinkedFiles extends true
   ? ValueForReadingDeep<Schema>
   : ValueForReading<Schema>;
 
 type OptionalChain<
   T extends {} | undefined,
-  Key extends keyof (T & {})
+  Key extends keyof (T & {}),
 > = T extends {} ? T[Key] : undefined;
 
 export type Entry<
-  CollectionOrSingleton extends Collection<any, any> | Singleton<any>
+  CollectionOrSingleton extends Collection<any, any> | Singleton<any>,
 > = CollectionOrSingleton extends Collection<infer Schema, infer SlugField>
   ? CollectionEntry<Schema, SlugField>
   : CollectionOrSingleton extends Singleton<infer Schema>
@@ -51,7 +51,7 @@ export type Entry<
   : never;
 
 export type EntryWithResolvedLinkedFiles<
-  CollectionOrSingleton extends Collection<any, any> | Singleton<any>
+  CollectionOrSingleton extends Collection<any, any> | Singleton<any>,
 > = CollectionOrSingleton extends Collection<infer Schema, infer SlugField>
   ? CollectionEntryWithResolvedLinkedFiles<Schema, SlugField>
   : CollectionOrSingleton extends Singleton<infer Schema>
@@ -60,7 +60,7 @@ export type EntryWithResolvedLinkedFiles<
 
 type CollectionEntryWithResolvedLinkedFiles<
   Schema extends Record<string, ComponentSchema>,
-  SlugField extends string
+  SlugField extends string,
 > = {
   [Key in keyof Schema]: SlugField extends Key
     ? Schema[Key] extends SlugFormField<
@@ -76,7 +76,7 @@ type CollectionEntryWithResolvedLinkedFiles<
 
 type CollectionEntry<
   Schema extends Record<string, ComponentSchema>,
-  SlugField extends string
+  SlugField extends string,
 > = {
   [Key in keyof Schema]: SlugField extends Key
     ? Schema[Key] extends SlugFormField<
@@ -91,7 +91,7 @@ type CollectionEntry<
 };
 
 type SingletonEntryWithResolvedLinkedFiles<
-  Schema extends Record<string, ComponentSchema>
+  Schema extends Record<string, ComponentSchema>,
 > = ValueForReadingDeep<ObjectField<Schema>>;
 
 type SingletonEntry<Schema extends Record<string, ComponentSchema>> =
@@ -99,7 +99,7 @@ type SingletonEntry<Schema extends Record<string, ComponentSchema>> =
 
 type CollectionReader<
   Schema extends Record<string, ComponentSchema>,
-  SlugField extends string
+  SlugField extends string,
 > = {
   read: <Opts extends [opts?: EntryReaderOpts]>(
     slug: string,
@@ -455,7 +455,7 @@ export type Reader<
   },
   Singletons extends {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
-  }
+  },
 > = {
   collections: {
     [Key in keyof Collections]: CollectionReader<
@@ -476,7 +476,7 @@ export function createReader<
   },
   Singletons extends {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
-  }
+  },
 >(
   repoPath: string,
   config: Config<Collections, Singletons>
