@@ -26,7 +26,7 @@ export type VoussoirTheme = typeof tokenSchema;
 type ColorAliases = `color.alias.${keyof VoussoirTheme['color']['alias']}`;
 type KeysStartingWith<
   Keys,
-  Prefix extends string
+  Prefix extends string,
 > = Keys extends `${Prefix}${string}` ? Keys : never;
 
 type BackgroundAliases = KeysStartingWith<

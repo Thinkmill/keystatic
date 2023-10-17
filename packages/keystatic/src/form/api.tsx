@@ -29,7 +29,7 @@ export type FormFieldStoredValue = JsonValueWithoutNull | undefined;
 export type BasicFormField<
   ParsedValue extends {} | null,
   ValidatedValue extends ParsedValue = ParsedValue,
-  ReaderValue = ValidatedValue
+  ReaderValue = ValidatedValue,
 > = {
   kind: 'form';
   formKind?: undefined;
@@ -51,7 +51,7 @@ export type SlugFormField<
   ParsedValue extends {} | null,
   ValidatedValue extends ParsedValue,
   ReaderValue,
-  ReaderValueAsSlugField
+  ReaderValueAsSlugField,
 > = {
   kind: 'form';
   formKind: 'slug';
@@ -86,7 +86,7 @@ export type SlugFormField<
 export type AssetFormField<
   ParsedValue extends {} | null,
   ValidatedValue extends ParsedValue,
-  ReaderValue
+  ReaderValue,
 > = {
   kind: 'form';
   formKind: 'asset';
@@ -127,7 +127,7 @@ export type AssetFormField<
 export type ContentFormField<
   ParsedValue extends {} | null,
   ValidatedValue extends ParsedValue,
-  ReaderValue
+  ReaderValue,
 > = {
   kind: 'form';
   formKind: 'content';
@@ -171,7 +171,7 @@ export type ContentFormField<
 export type FormField<
   ParsedValue extends {} | null,
   ValidatedValue extends ParsedValue,
-  ReaderValue
+  ReaderValue,
 > =
   | BasicFormField<ParsedValue, ValidatedValue, ReaderValue>
   | SlugFormField<ParsedValue, ValidatedValue, ReaderValue, any>
@@ -219,7 +219,7 @@ export interface ObjectField<
   Fields extends Record<string, ComponentSchema> = Record<
     string,
     ComponentSchema
-  >
+  >,
 > extends ObjectFieldOptions {
   kind: 'object';
   fields: Fields;
@@ -232,7 +232,7 @@ export type ConditionalField<
     [Key in `${ReturnType<
       DiscriminantField['defaultValue']
     >}`]: ComponentSchema;
-  }
+  },
 > = {
   kind: 'conditional';
   discriminant: DiscriminantField;
@@ -275,7 +275,7 @@ export type ComponentBlock<
   Fields extends Record<string, ComponentSchema> = Record<
     string,
     ComponentSchema
-  >
+  >,
 > = {
   preview: (props: any) => ReactElement | null;
   schema: Fields;
@@ -312,7 +312,7 @@ type FormFieldPreviewProps<Schema extends FormField<any, any, any>> = {
 
 type ObjectFieldPreviewProps<
   Schema extends ObjectField<any>,
-  ChildFieldElement
+  ChildFieldElement,
 > = {
   readonly fields: {
     readonly [Key in keyof Schema['fields']]: GenericPreviewProps<
@@ -330,7 +330,7 @@ type ObjectFieldPreviewProps<
 
 type ConditionalFieldPreviewProps<
   Schema extends ConditionalField<BasicFormField<string | boolean>, any>,
-  ChildFieldElement
+  ChildFieldElement,
 > = {
   readonly [Key in keyof Schema['values']]: {
     readonly discriminant: DiscriminantStringToDiscriminantValue<
@@ -338,7 +338,7 @@ type ConditionalFieldPreviewProps<
       Key
     >;
     onChange<
-      Discriminant extends ReturnType<Schema['discriminant']['defaultValue']>
+      Discriminant extends ReturnType<Schema['discriminant']['defaultValue']>,
     >(
       discriminant: Discriminant,
       value?: InitialOrUpdateValueFromComponentPropField<
@@ -355,7 +355,7 @@ type ConditionalFieldPreviewProps<
 
 type ArrayFieldPreviewProps<
   Schema extends ArrayField<ComponentSchema>,
-  ChildFieldElement
+  ChildFieldElement,
 > = {
   readonly elements: readonly (GenericPreviewProps<
     Schema['element'],
@@ -374,7 +374,7 @@ type ArrayFieldPreviewProps<
 
 export type GenericPreviewProps<
   Schema extends ComponentSchema,
-  ChildFieldElement
+  ChildFieldElement,
 > = Schema extends ChildField
   ? ChildFieldPreviewProps<Schema, ChildFieldElement>
   : Schema extends FormField<any, any, any>
@@ -393,7 +393,7 @@ export type PreviewProps<Schema extends ComponentSchema> = GenericPreviewProps<
 >;
 
 export type InitialOrUpdateValueFromComponentPropField<
-  Schema extends ComponentSchema
+  Schema extends ComponentSchema,
 > = Schema extends ChildField
   ? undefined
   : Schema extends FormField<infer ParsedValue, any, any>
@@ -425,7 +425,7 @@ export type InitialOrUpdateValueFromComponentPropField<
 
 type DiscriminantStringToDiscriminantValue<
   DiscriminantField extends FormField<any, any, any>,
-  DiscriminantString extends PropertyKey
+  DiscriminantString extends PropertyKey,
 > = ReturnType<DiscriminantField['defaultValue']> extends boolean
   ? 'true' extends DiscriminantString
     ? true
@@ -440,7 +440,7 @@ export type PreviewPropsForToolbar<Schema extends ComponentSchema> =
 export function component<
   Schema extends {
     [Key in any]: ComponentSchema;
-  }
+  },
 >(
   options: {
     /** The preview component shown in the editor */
@@ -554,7 +554,7 @@ export type ValueForReadingDeep<Schema extends ComponentSchema> =
     : never;
 
 export type InferRenderersForComponentBlocks<
-  ComponentBlocks extends Record<string, ComponentBlock<any>>
+  ComponentBlocks extends Record<string, ComponentBlock<any>>,
 > = {
   [Key in keyof ComponentBlocks]: Comp<
     ValueForReading<ObjectField<ComponentBlocks[Key]['schema']>>

@@ -9,23 +9,22 @@ import { validateTextFieldProps } from './validateTextFieldProps';
 /** Text fields allow users to input text with a keyboard. */
 export const TextField: ForwardRefExoticComponent<
   TextFieldProps & { ref?: Ref<HTMLInputElement> }
-> = forwardRef<HTMLInputElement, TextFieldProps>(function TextField(
-  props,
-  forwardedRef
-) {
-  props = validateTextFieldProps(props);
-  let domRef = useObjectRef(forwardedRef);
-  let { labelProps, inputProps, descriptionProps, errorMessageProps } =
-    useTextField(props, domRef);
+> = forwardRef<HTMLInputElement, TextFieldProps>(
+  function TextField(props, forwardedRef) {
+    props = validateTextFieldProps(props);
+    let domRef = useObjectRef(forwardedRef);
+    let { labelProps, inputProps, descriptionProps, errorMessageProps } =
+      useTextField(props, domRef);
 
-  return (
-    <TextFieldPrimitive
-      ref={domRef}
-      {...props}
-      labelProps={labelProps}
-      inputProps={inputProps}
-      descriptionProps={descriptionProps}
-      errorMessageProps={errorMessageProps}
-    />
-  );
-});
+    return (
+      <TextFieldPrimitive
+        ref={domRef}
+        {...props}
+        labelProps={labelProps}
+        inputProps={inputProps}
+        descriptionProps={descriptionProps}
+        errorMessageProps={errorMessageProps}
+      />
+    );
+  }
+);

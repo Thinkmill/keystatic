@@ -20,50 +20,54 @@ type InputProps = {
   validationState?: 'valid' | 'invalid';
 };
 
-export const Input = forwardRef<HTMLDivElement, InputProps>(function Input(
-  props,
-  forwardedRef
-) {
-  let inputRef = useObjectRef(forwardedRef);
-  let { children, disableFocusRing, fieldProps, isDisabled, validationState } =
-    props;
+export const Input = forwardRef<HTMLDivElement, InputProps>(
+  function Input(props, forwardedRef) {
+    let inputRef = useObjectRef(forwardedRef);
+    let {
+      children,
+      disableFocusRing,
+      fieldProps,
+      isDisabled,
+      validationState,
+    } = props;
 
-  let { focusProps, isFocusVisible, isFocused } = useFocusRing({
-    isTextInput: true,
-    within: true,
-  });
+    let { focusProps, isFocusVisible, isFocused } = useFocusRing({
+      isTextInput: true,
+      within: true,
+    });
 
-  let isInvalid = validationState === 'invalid' && !isDisabled;
-  let styleProps = useInputStyles(props, {
-    isDisabled,
-    isInvalid,
-    isFocused,
-    isFocusVisible: isFocusVisible && !disableFocusRing,
-  });
+    let isInvalid = validationState === 'invalid' && !isDisabled;
+    let styleProps = useInputStyles(props, {
+      isDisabled,
+      isInvalid,
+      isFocused,
+      isFocusVisible: isFocusVisible && !disableFocusRing,
+    });
 
-  return (
-    <div
-      role="presentation"
-      {...mergeProps(fieldProps, focusProps)}
-      {...styleProps}
-    >
+    return (
       <div
         role="presentation"
-        className={css({
-          alignItems: 'center',
-          display: 'inline-flex',
-          height: '100%',
-          overflowX: 'auto',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-        })}
-        ref={inputRef}
+        {...mergeProps(fieldProps, focusProps)}
+        {...styleProps}
       >
-        {children}
+        <div
+          role="presentation"
+          className={css({
+            alignItems: 'center',
+            display: 'inline-flex',
+            height: '100%',
+            overflowX: 'auto',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+          })}
+          ref={inputRef}
+        >
+          {children}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 type InputState = {
   isDisabled?: boolean;

@@ -11,7 +11,7 @@ import { useId } from 'react';
 import { Text } from '@keystar/ui/typography';
 
 export function ObjectFieldInput<
-  Fields extends Record<string, ComponentSchema>
+  Fields extends Record<string, ComponentSchema>,
 >({
   schema,
   autoFocus,

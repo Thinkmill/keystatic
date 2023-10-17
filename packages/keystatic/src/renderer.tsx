@@ -342,7 +342,7 @@ export type DocumentRendererProps<
   ComponentBlocks extends Record<string, Component<any>> = Record<
     string,
     Component<any>
-  >
+  >,
 > = {
   document: Element[];
   renderers?: {
@@ -353,7 +353,7 @@ export type DocumentRendererProps<
 };
 
 export function DocumentRenderer<
-  ComponentBlocks extends Record<string, Component<any>>
+  ComponentBlocks extends Record<string, Component<any>>,
 >(props: DocumentRendererProps<ComponentBlocks>) {
   const renderers = {
     inline: { ...defaultRenderers.inline, ...props.renderers?.inline },

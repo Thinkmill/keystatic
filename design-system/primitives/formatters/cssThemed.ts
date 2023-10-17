@@ -1,4 +1,4 @@
-import { format } from 'prettier';
+import { format } from '@prettier/sync';
 import StyleDictionary from 'style-dictionary';
 import type { FormatterArguments } from 'style-dictionary/types/Format';
 import type { LineFormatting } from 'style-dictionary/types/FormatHelpers';

@@ -57,7 +57,7 @@ export const Badge: ForwardRefExoticComponent<
       ({
         icon: { color: fg },
         text: { trim: false, color: fg, weight: 'medium' },
-      } as const),
+      }) as const,
     [fg]
   );
 

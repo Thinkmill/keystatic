@@ -411,7 +411,9 @@ export function withComponentBlocks(
           }
           const nodesWithin: [
             number,
-            Element & { type: 'component-block-prop' | 'component-inline-prop' }
+            Element & {
+              type: 'component-block-prop' | 'component-inline-prop';
+            },
           ][] = [];
           for (const [idx, childNode] of node.children.entries()) {
             if (

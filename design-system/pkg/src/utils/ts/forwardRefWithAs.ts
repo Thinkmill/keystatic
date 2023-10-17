@@ -19,7 +19,7 @@ export type CompWithAsProp<
   BaseProps,
   // this is unused for now but kept for future use
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  DefaultElementType extends HTMLTag
+  DefaultElementType extends HTMLTag,
 > = (
   props: Omit<
     AllHTMLAttributes<HTMLElement>,

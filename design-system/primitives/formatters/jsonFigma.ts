@@ -1,6 +1,6 @@
 // credit: https://github.com/primer/primitives/blob/main/src/formats/jsonFigma.ts
 import StyleDictionary from 'style-dictionary';
-import { format } from 'prettier';
+import { format } from '@prettier/sync';
 import type { FormatterArguments } from 'style-dictionary/types/Format';
 
 import { transformNamePathToFigma } from '../transformers/namePathToFigma';

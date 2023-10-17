@@ -19,7 +19,7 @@ export function ConditionalFieldInput<
     [Key in `${ReturnType<
       DiscriminantField['defaultValue']
     >}`]: ComponentSchema;
-  }
+  },
 >({
   schema,
   autoFocus,

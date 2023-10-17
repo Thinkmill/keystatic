@@ -86,7 +86,7 @@ export function Notice(props: NoticeProps) {
           size: 'small',
         },
         text: { color: coercedTone, weight: 'medium' },
-      } as const),
+      }) as const,
     [
       coercedTone,
       contentId,

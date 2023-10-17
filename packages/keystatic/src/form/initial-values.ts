@@ -31,7 +31,7 @@ export function getNewArrayElementKey() {
 }
 
 export const getInitialPropsValue = _getInitialPropsValue as <
-  Schema extends ComponentSchema
+  Schema extends ComponentSchema,
 >(
   schema: Schema
 ) => ParsedValueForComponentSchema<Schema>;
