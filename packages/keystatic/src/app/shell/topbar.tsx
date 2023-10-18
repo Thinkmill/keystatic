@@ -15,7 +15,6 @@ import { Avatar } from '@keystar/ui/avatar';
 import { ActionButton, Button } from '@keystar/ui/button';
 import { AlertDialog, DialogContainer } from '@keystar/ui/dialog';
 import { Icon } from '@keystar/ui/icon';
-import { listTodoIcon } from '@keystar/ui/icon/icons/listTodoIcon';
 import { logOutIcon } from '@keystar/ui/icon/icons/logOutIcon';
 import { gitPullRequestIcon } from '@keystar/ui/icon/icons/gitPullRequestIcon';
 import { gitBranchPlusIcon } from '@keystar/ui/icon/icons/gitBranchPlusIcon';
@@ -471,26 +470,26 @@ function GitMenu() {
     ];
 
     if (!isDefaultBranch) {
-      prSection.push({
-        key: 'create-pull-request',
-        icon: gitPullRequestIcon,
-        label: stringFormatter.format('createPullRequest'),
-      });
-      if (!data.hasPullRequests) {
+      if (data.pullRequestNumber === undefined) {
+        prSection.push({
+          key: 'create-pull-request',
+          icon: gitPullRequestIcon,
+          label: stringFormatter.format('createPullRequest'),
+        });
+      } else {
+        prSection.push({
+          key: 'view-pull-request',
+          icon: gitPullRequestIcon,
+          label: `Pull Request #${data.pullRequestNumber}`,
+        });
+      }
+      if (data.pullRequestNumber === undefined) {
         branchSection.push({
           key: 'delete-branch',
           icon: trash2Icon,
           label: stringFormatter.format('deleteBranch'),
         });
       }
-    }
-
-    if (data.hasPullRequests) {
-      prSection.push({
-        key: 'related-pull-requests',
-        icon: listTodoIcon,
-        label: stringFormatter.format('viewPullRequests'),
-      });
     }
     if (fork) {
       repoSection.push({
@@ -527,7 +526,7 @@ function GitMenu() {
     fork,
     data.currentBranch,
     data.defaultBranch,
-    data.hasPullRequests,
+    data.pullRequestNumber,
     stringFormatter,
   ]);
   const router = useRouter();
@@ -547,16 +546,10 @@ function GitMenu() {
               toggleDeleteBranchDialog();
               break;
             }
-            case 'related-pull-requests':
-              let query = [
-                ['is', 'pr'],
-                ['is', 'open'],
-                ['head', data.currentBranch],
-              ]
-                .map(([key, value]) => encodeURIComponent(`${key}:${value}`))
-                .join('+');
-
-              openBlankTargetSafely(`${repoURL}/pulls?q=${query}`);
+            case 'view-pull-request':
+              openBlankTargetSafely(
+                `${repoURL}/pull/${data.pullRequestNumber}`
+              );
               break;
             case 'create-pull-request':
               openBlankTargetSafely(

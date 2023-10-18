@@ -64,13 +64,21 @@ export function BranchSection(props: { config: Config }) {
           )}
         </DialogTrigger>
 
-        {!isDefaultBranch && (
+        {!isDefaultBranch && branchInfo.pullRequestNumber === undefined ? (
           <ActionButton
             href={`${repoURL}/pull/new/${branchInfo.currentBranch}`}
             target="_blank"
           >
             <Icon src={gitPullRequestIcon} />
             <Text>{localizedString.format('createPullRequest')}</Text>
+          </ActionButton>
+        ) : (
+          <ActionButton
+            href={`${repoURL}/pull/${branchInfo.pullRequestNumber}`}
+            target="_blank"
+          >
+            <Icon src={gitPullRequestIcon} />
+            <Text>Pull request #{branchInfo.pullRequestNumber}</Text>
           </ActionButton>
         )}
       </Flex>

@@ -323,6 +323,8 @@ export function GitHubAppShellProvider(props: {
     }),
     [baseCommit, repo?.id]
   );
+  const pullRequestNumber =
+    currentBranchRef?.associatedPullRequests.nodes?.[0]?.number;
   const branchInfo = useMemo(
     () => ({
       defaultBranch: repo?.defaultBranchRef?.name ?? '',
@@ -330,7 +332,7 @@ export function GitHubAppShellProvider(props: {
       baseCommit: baseCommit || '',
       repositoryId: repo?.id ?? '',
       allBranches: repo?.refs?.nodes?.map(x => x?.name).filter(isDefined) ?? [],
-      hasPullRequests: !!currentBranchRef?.associatedPullRequests.totalCount,
+      pullRequestNumber,
       branchNameToId: new Map(
         repo?.refs?.nodes?.filter(isDefined).map(x => [x.name, x.id])
       ),
@@ -348,7 +350,7 @@ export function GitHubAppShellProvider(props: {
       repo?.refs?.nodes,
       props.currentBranch,
       baseCommit,
-      currentBranchRef?.associatedPullRequests.totalCount,
+      pullRequestNumber,
       data?.repository?.owner.login,
       data?.repository?.name,
     ]
@@ -462,8 +464,11 @@ export const Ref_base = gql`
         }
       }
     }
-    associatedPullRequests(states: [OPEN]) {
-      totalCount
+    associatedPullRequests(states: [OPEN], first: 1) {
+      nodes {
+        id
+        number
+      }
     }
   }
 ` as import('../../../__generated__/ts-gql/Ref_base').type;
@@ -605,7 +610,7 @@ export const BranchInfoContext = createContext<{
   allBranches: string[];
   branchNameToId: Map<string, string>;
   defaultBranch: string;
-  hasPullRequests: boolean;
+  pullRequestNumber: number | undefined;
   branchNameToBaseCommit: Map<string, string>;
   mainOwner: string;
   mainRepo: string;
@@ -613,7 +618,7 @@ export const BranchInfoContext = createContext<{
   currentBranch: '',
   allBranches: [],
   defaultBranch: '',
-  hasPullRequests: false,
+  pullRequestNumber: undefined,
   branchNameToId: new Map(),
   branchNameToBaseCommit: new Map(),
   mainOwner: '',
