@@ -168,7 +168,9 @@ function fromMarkdocNode(
     const children: Descendant[] = [
       {
         type: 'list-item-content',
-        children: inlineFromMarkdoc([node.children[0]]),
+        children: node.children.length
+          ? inlineFromMarkdoc([node.children[0]])
+          : [{ text: '' }],
       },
     ];
     if (node.children[1]?.type === 'list') {
