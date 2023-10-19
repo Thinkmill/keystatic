@@ -416,3 +416,29 @@ test('array parsing', () => {
     </editor>
   `);
 });
+
+test('empty list item', () => {
+  const markdoc = `- a
+- `;
+  expect(fromMarkdoc(markdoc)).toMatchInlineSnapshot(`
+    <editor>
+      <unordered-list>
+        <list-item>
+          <list-item-content>
+            <text>
+              a
+            </text>
+          </list-item-content>
+        </list-item>
+        <list-item>
+          <list-item-content>
+            <text />
+          </list-item-content>
+        </list-item>
+      </unordered-list>
+      <paragraph>
+        <text />
+      </paragraph>
+    </editor>
+    `);
+});
