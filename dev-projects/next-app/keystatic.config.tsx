@@ -13,8 +13,10 @@ const description = 'Some description';
 
 export default config({
   storage: {
-    kind: 'github',
-    repo: 'Thinkmill/keystatic-test-repo',
+    kind: 'cloud',
+  },
+  cloud: {
+    project: 'thinkmill-labs/keystatic-test-repo',
   },
   // storage: {
   //   kind: 'local',
