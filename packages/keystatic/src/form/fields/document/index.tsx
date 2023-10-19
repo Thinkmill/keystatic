@@ -22,6 +22,7 @@ import { createDocumentEditorForNormalization } from './DocumentEditor/create-ed
 import { object } from '../object';
 import { FieldDataError } from '../error';
 import { basicFormFieldWithSimpleReaderParse } from '../utils';
+import { fixPath } from '../../../app/path-utils';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -324,7 +325,7 @@ export function document({
       ),
       ...(typeof documentFeatures.images === 'object' &&
       typeof documentFeatures.images.directory === 'string'
-        ? [documentFeatures.images.directory]
+        ? [fixPath(documentFeatures.images.directory)]
         : []),
     ],
     serialize(value, opts) {
