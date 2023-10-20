@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { Config } from '../config';
 import { useRouter } from './router';
 import { KEYSTATIC_CLOUD_API_URL, KEYSTATIC_CLOUD_HEADERS } from './utils';
+import { Flex } from '@keystar/ui/layout';
 
 const storedStateSchema = z.object({
   state: z.string(),
@@ -91,8 +92,12 @@ export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
     return <Text>{error.message}</Text>;
   }
   return (
-    <div>
-      <ProgressCircle isIndeterminate aria-label="Authenticating" />
-    </div>
+    <Flex justifyContent="center" alignItems="center" height="100vh">
+      <ProgressCircle
+        size="large"
+        isIndeterminate
+        aria-label="Authenticating"
+      />
+    </Flex>
   );
 }
