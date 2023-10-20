@@ -188,7 +188,11 @@ function SingletonPage({
   const isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
 
   const onPreview = () => {
-    window.open(singletonConfig.previewUrl, '_blank', 'noopener,noreferrer');
+    window.open(
+      singletonConfig.previewUrl?.replace('{branch}', branchInfo.currentBranch),
+      '_blank',
+      'noopener,noreferrer'
+    );
   };
 
   const branchInfo = useBranchInfo();
