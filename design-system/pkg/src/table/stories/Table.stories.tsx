@@ -64,7 +64,7 @@ export const HiddenHeader = (args: ArgTypes) => (
     <TableHeader>
       <Column key="foo">Foo</Column>
       <Column key="bar">Bar</Column>
-      <Column key="baz" hideHeader width={100}>
+      <Column key="baz" hideHeader>
         Actions
       </Column>
     </TableHeader>
@@ -243,11 +243,11 @@ export const DynamicContents = () => {
       <TableHeader
         columns={[
           // { name: 'ID', key: 'id', width: 55 },
-          { name: 'Name', key: 'name' },
+          { name: 'Name', key: 'name', width: '50%' },
           { name: 'Type', key: 'type' },
-          { name: 'HP', key: 'health', width: 80, align: 'end' as const },
-          { name: 'ATK', key: 'attack', width: 80, align: 'end' as const },
-          { name: 'DEF', key: 'defense', width: 80, align: 'end' as const },
+          { name: 'HP', key: 'health', align: 'end' as const },
+          { name: 'ATK', key: 'attack', align: 'end' as const },
+          { name: 'DEF', key: 'defense', align: 'end' as const },
         ]}
       >
         {({ name, key, ...column }) => (
@@ -293,15 +293,36 @@ DynamicContents.story = {
   name: 'dynamic contents',
 };
 
+export const ManyCells = () => {
+  return (
+    <TableView
+      aria-label="TableView with many cells"
+      width="scale.6000"
+      height="scale.3600"
+    >
+      <TableHeader columns={manyColumns}>
+        {column => <Column minWidth={100}>{column.name}</Column>}
+      </TableHeader>
+      <TableBody items={manyRows}>
+        {item => <Row key={item.foo}>{key => <Cell>{item[key]}</Cell>}</Row>}
+      </TableBody>
+    </TableView>
+  );
+};
+
+ManyCells.story = {
+  name: 'many cells',
+};
+
 // Data
 // ----------------------------------------------------------------------------
 
-let manyColumns = [];
+let manyColumns: any[] = [];
 for (let i = 0; i < 100; i++) {
   manyColumns.push({ name: 'Column ' + i, key: 'C' + i });
 }
 
-let manyRows = [];
+let manyRows: any[] = [];
 for (let i = 0; i < 1000; i++) {
   let row = { key: 'R' + i };
   for (let j = 0; j < 100; j++) {
