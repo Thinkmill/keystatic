@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.3.3
+
+### Patch Changes
+
+- e8492482: Virtualized table view.
+
 ## 0.3.2
 
 ### Patch Changes

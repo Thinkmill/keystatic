@@ -1,5 +1,26 @@
 # @keystatic/core
 
+## 0.1.7
+
+### Patch Changes
+
+- e8492482: Virtualized table view.
+- e8748091: Fix "Invalid directory in content field serialization" error when
+  using a path with a trailing slash in `images.directory` in `fields.document`
+- cf66c21b: Add `createGitHubReader` at `@keystatic/core/reader/github`
+- 633b9c84: Allow `{branch}` replacement in `previewUrl` option
+- 5399756e: Fix parsing empty list items breaking the document editor
+- cad4cb33: Center loading indicator on Keystatic Cloud auth callback page
+- 633b9c84: `{slug}` is no longer required in `previewUrl` in collections
+- ee1cf9bd: Support non-Node.js runtimes such as Cloudflare Workers in the API
+  route
+- 19010641: Update dependencies to fix double fetching in cloud mode
+- b54f0e71: Fix `fields.url` always being required
+- d5775591: Link to specific open pull request instead of search page of open
+  pull requests
+- Updated dependencies [e8492482]
+  - @keystar/ui@0.3.3
+
 ## 0.1.6
 
 ### Patch Changes
