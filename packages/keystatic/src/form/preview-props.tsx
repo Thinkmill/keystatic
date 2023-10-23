@@ -27,7 +27,7 @@ function castToMemoizedInfoForSchema<
         >
       ) => void
     ) => unknown;
-  }
+  },
 >(val: T): T {
   return val;
 }
@@ -51,7 +51,7 @@ function getOrInsert<K, V>(
 
 export function createGetPreviewProps<
   Schema extends ComponentSchema,
-  ChildFieldElement
+  ChildFieldElement,
 >(
   rootSchema: Schema,
   rootOnChange: (

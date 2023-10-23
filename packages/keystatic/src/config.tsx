@@ -8,13 +8,13 @@ export type EntryLayout = 'content' | 'form';
 export type Glob = '*' | '**';
 export type Collection<
   Schema extends Record<string, ComponentSchema>,
-  SlugField extends string
+  SlugField extends string,
 > = {
   label: string;
   path?: `${string}/${Glob}` | `${string}/${Glob}/${string}`;
   entryLayout?: EntryLayout;
   format?: Format;
-  previewUrl?: `${string}{slug}${string}`;
+  previewUrl?: string;
   slugField: SlugField;
   schema: Schema;
 };
@@ -53,7 +53,7 @@ export type GitHubConfig<
     [key: string]: Singleton<Record<string, ComponentSchema>>;
   } = {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
-  }
+  },
 > = {
   storage: GitHubStorageConfig;
   collections?: Collections;
@@ -72,7 +72,7 @@ export type LocalConfig<
     [key: string]: Singleton<Record<string, ComponentSchema>>;
   } = {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
-  }
+  },
 > = {
   storage: LocalStorageConfig;
   collections?: Collections;
@@ -91,7 +91,7 @@ export type CloudConfig<
     [key: string]: Singleton<Record<string, ComponentSchema>>;
   } = {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
-  }
+  },
 > = {
   storage: CloudStorageConfig;
   cloud: { project: string };
@@ -109,7 +109,7 @@ export type Config<
     [key: string]: Singleton<Record<string, ComponentSchema>>;
   } = {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
-  }
+  },
 > = {
   storage: LocalStorageConfig | GitHubStorageConfig | CloudStorageConfig;
   collections?: Collections;
@@ -124,7 +124,7 @@ export function config<
   },
   Singletons extends {
     [key: string]: Singleton<Record<string, ComponentSchema>>;
-  }
+  },
 >(config: Config<Collections, Singletons>) {
   return config;
 }
@@ -135,7 +135,7 @@ export function collection<
     [K in keyof Schema]: Schema[K] extends SlugFormField<any, any, any, any>
       ? K
       : never;
-  }[keyof Schema]
+  }[keyof Schema],
 >(
   collection: Collection<Schema, SlugField & string>
 ): Collection<Schema, SlugField & string> {

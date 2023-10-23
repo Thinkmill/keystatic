@@ -24,24 +24,23 @@ export const documentElementClasses = (args: {
  * Deactivate auto-enlargement of small text in Safari. Remove the default touch
  * highlight in Safari. Reset the body element to sane defaults.
  */
-const documentReset = (background: StrictBackground = 'canvas') =>
-  css`
+const documentReset = (background: StrictBackground = 'canvas') => css`
+  html& {
+    scroll-behavior: smooth;
+    text-size-adjust: none;
+    -webkit-tap-highlight-color: #0000;
+  }
+  @media (prefers-reduced-motion: reduce) {
     html& {
-      scroll-behavior: smooth;
-      text-size-adjust: none;
-      -webkit-tap-highlight-color: #0000;
+      scroll-behavior: auto;
     }
-    @media (prefers-reduced-motion: reduce) {
-      html& {
-        scroll-behavior: auto;
-      }
-    }
+  }
 
-    html& body {
-      background-color: ${tokenSchema.color.background[background]};
-      margin: 0;
-    }
-  `;
+  html& body {
+    background-color: ${tokenSchema.color.background[background]};
+    margin: 0;
+  }
+`;
 
 function flatString(str: string) {
   return str.replace(/\n|\s{2,}/g, '');

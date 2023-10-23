@@ -42,7 +42,7 @@ const insideOfLayouts = [...paragraphLike, 'component-block'] as const;
 function blockContainer(args: {
   allowedChildren: readonly [
     TypesWhichHaveNoExtraRequiredProps,
-    ...Block['type'][]
+    ...Block['type'][],
   ];
   invalidPositionHandleMode: 'unwrap' | 'move';
 }): BlockContainerSchema {

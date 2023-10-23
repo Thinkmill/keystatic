@@ -62,7 +62,7 @@ export const NavList: ForwardRefExoticComponent<
           size: 'medium',
           UNSAFE_className: dividerStyles,
         },
-      } as const),
+      }) as const,
     [dividerStyles]
   );
 

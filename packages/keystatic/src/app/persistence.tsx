@@ -23,7 +23,7 @@ function formatTimeAgo(
 
   for (const [name, amount] of Object.entries(units) as [
     keyof typeof units,
-    number
+    number,
   ][]) {
     if (Math.abs(duration) < amount) {
       return formatter.format(Math.round(duration), name);

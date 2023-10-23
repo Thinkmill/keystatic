@@ -49,7 +49,7 @@ export function Radio(props: RadioProps) {
       ({
         text: { color: 'inherit' },
         description: { color: 'neutralTertiary' },
-      } as const),
+      }) as const,
     []
   );
 

@@ -229,7 +229,9 @@ function ItemPage(props: ItemPageProps) {
   const onPreview = collectionConfig.previewUrl
     ? () => {
         window.open(
-          collectionConfig.previewUrl!.replace('{slug}', props.itemSlug),
+          collectionConfig
+            .previewUrl!.replace('{slug}', props.itemSlug)
+            .replace('{branch}', branchInfo.currentBranch),
           '_blank',
           'noopener,noreferrer'
         );

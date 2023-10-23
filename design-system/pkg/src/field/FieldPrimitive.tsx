@@ -21,92 +21,91 @@ import { SlotProvider } from '../slots';
  */
 export const FieldPrimitive: ForwardRefExoticComponent<
   FieldPrimitiveProps & { ref?: Ref<HTMLDivElement> }
-> = forwardRef<HTMLDivElement, FieldPrimitiveProps>(function FieldPrimitive(
-  props,
-  forwardedRef
-) {
-  const {
-    children,
-    contextualHelp,
-    isRequired,
-    label,
-    labelElementType,
-    labelProps,
-    description,
-    descriptionProps,
-    errorMessage,
-    errorMessageProps,
-    supplementRequiredState,
-  } = props;
-  const styleProps = useStyleProps(props);
-  const contextualHelpId = useId();
+> = forwardRef<HTMLDivElement, FieldPrimitiveProps>(
+  function FieldPrimitive(props, forwardedRef) {
+    const {
+      children,
+      contextualHelp,
+      isRequired,
+      label,
+      labelElementType,
+      labelProps,
+      description,
+      descriptionProps,
+      errorMessage,
+      errorMessageProps,
+      supplementRequiredState,
+    } = props;
+    const styleProps = useStyleProps(props);
+    const contextualHelpId = useId();
 
-  const contextualHelpSlots = useMemo(() => {
-    return {
-      // match capsize styles from the label text. stops the contextual help button
-      // from pushing elements above/below it
-      button: {
-        UNSAFE_className: css({
-          marginBottom: tokenSchema.typography.text.regular.capheightTrim,
-          marginTop: tokenSchema.typography.text.regular.baselineTrim,
-        }),
-        id: contextualHelpId,
-        'aria-labelledby': labelProps?.id
-          ? `${labelProps.id} ${contextualHelpId}`
-          : undefined,
-      },
-    };
-  }, [contextualHelpId, labelProps?.id]);
+    const contextualHelpSlots = useMemo(() => {
+      return {
+        // match capsize styles from the label text. stops the contextual help button
+        // from pushing elements above/below it
+        button: {
+          UNSAFE_className: css({
+            marginBottom: tokenSchema.typography.text.regular.capheightTrim,
+            marginTop: tokenSchema.typography.text.regular.baselineTrim,
+          }),
+          id: contextualHelpId,
+          'aria-labelledby': labelProps?.id
+            ? `${labelProps.id} ${contextualHelpId}`
+            : undefined,
+        },
+      };
+    }, [contextualHelpId, labelProps?.id]);
 
-  return (
-    <Flex
-      ref={forwardedRef}
-      direction="column"
-      gap="medium"
-      minWidth={0}
-      UNSAFE_className={styleProps.className}
-      UNSAFE_style={styleProps.style}
-    >
-      {(() => {
-        if (!label) {
-          return null;
-        }
-        const labelUI = (
-          <FieldLabel
-            elementType={labelElementType}
-            isRequired={isRequired}
-            supplementRequiredState={supplementRequiredState}
-            {...labelProps}
-          >
-            {label}
-          </FieldLabel>
-        );
-
-        if (contextualHelp) {
-          return (
-            <Flex gap="small" alignItems="center">
-              {labelUI}
-              <SlotProvider slots={contextualHelpSlots}>
-                {contextualHelp}
-              </SlotProvider>
-            </Flex>
+    return (
+      <Flex
+        ref={forwardedRef}
+        direction="column"
+        gap="medium"
+        minWidth={0}
+        UNSAFE_className={styleProps.className}
+        UNSAFE_style={styleProps.style}
+      >
+        {(() => {
+          if (!label) {
+            return null;
+          }
+          const labelUI = (
+            <FieldLabel
+              elementType={labelElementType}
+              isRequired={isRequired}
+              supplementRequiredState={supplementRequiredState}
+              {...labelProps}
+            >
+              {label}
+            </FieldLabel>
           );
-        }
 
-        return labelUI;
-      })()}
+          if (contextualHelp) {
+            return (
+              <Flex gap="small" alignItems="center">
+                {labelUI}
+                <SlotProvider slots={contextualHelpSlots}>
+                  {contextualHelp}
+                </SlotProvider>
+              </Flex>
+            );
+          }
 
-      {description && (
-        <Text {...descriptionProps} size="small" color="neutralSecondary">
-          {description}
-        </Text>
-      )}
+          return labelUI;
+        })()}
 
-      {children}
+        {description && (
+          <Text {...descriptionProps} size="small" color="neutralSecondary">
+            {description}
+          </Text>
+        )}
 
-      {errorMessage && (
-        <FieldMessage {...errorMessageProps}>{errorMessage}</FieldMessage>
-      )}
-    </Flex>
-  );
-});
+        {children}
+
+        {errorMessage && (
+          <FieldMessage {...errorMessageProps}>{errorMessage}</FieldMessage>
+        )}
+      </Flex>
+    );
+  }
+);

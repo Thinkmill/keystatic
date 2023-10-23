@@ -18,9 +18,12 @@
     "fast-glob": "^3.2.12",
     "json5": "^2.2.1",
     "lodash": "^4.17.21",
-    "prettier": "^2.7.1",
+    "prettier": "^3.0.3",
     "style-dictionary": "^3.8.0",
     "tsx": "^3.8.0",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@prettier/sync": "^0.3.0"
   }
 }

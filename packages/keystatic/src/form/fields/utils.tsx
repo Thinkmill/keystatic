@@ -21,7 +21,7 @@ export function assertRequired<T, IsRequired extends boolean | undefined>(
 
 export function basicFormFieldWithSimpleReaderParse<
   ParsedValue extends {} | null,
-  ValidatedValue extends ParsedValue
+  ValidatedValue extends ParsedValue,
 >(config: {
   Input(props: FormFieldInputProps<ParsedValue>): ReactElement | null;
   defaultValue(): ParsedValue;

@@ -6,7 +6,7 @@ export function conditional<
     [Key in `${ReturnType<
       DiscriminantField['defaultValue']
     >}`]: ComponentSchema;
-  }
+  },
 >(
   discriminant: DiscriminantField,
   values: ConditionalValues

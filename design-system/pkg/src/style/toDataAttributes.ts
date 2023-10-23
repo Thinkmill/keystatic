@@ -2,7 +2,7 @@
 export function toDataAttributes<
   T extends {
     [key: string]: string | number | boolean | null | undefined;
-  }
+  },
 >(
   data: T,
   options: {

@@ -15,7 +15,6 @@ import {
 import {
   Provider as UrqlProvider,
   createClient,
-  dedupExchange,
   fetchExchange,
   Client,
 } from 'urql';
@@ -48,7 +47,6 @@ export function createUrqlClient(config: Config): Client {
         : `${KEYSTATIC_CLOUD_API_URL}/v1/github/graphql`,
     requestPolicy: 'cache-and-network',
     exchanges: [
-      dedupExchange,
       authExchange(async utils => {
         let authState = await getAuth(config);
         return {

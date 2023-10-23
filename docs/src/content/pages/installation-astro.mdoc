@@ -26,9 +26,29 @@ You will also need two Keystatic packages:
 npm install @keystatic/core @keystatic/astro
 ```
 
-## Creating a Keystatic config file
+## Updating the Astro config
 
-A Keystatic config file is required to define your content schema. This file will also allow you to connect a project to a specific GitHub repository (if you decide to do so).
+Add the `keystatic` integration in your `astro.config.mjs` file and set the `output` mode to `hybrid`:
+
+```diff
+// astro.config.mjs
+import { defineConfig } from 'astro/config'
+
+import react from '@astrojs/react'
+import markdoc from '@astrojs/markdoc'
++ import keystatic from '@keystatic/astro'
+
+// https://astro.build/config
+export default defineConfig({
+-  integrations: [react(), markdoc()],
++  integrations: [react(), markdoc(), keystatic()],
++  output: 'hybrid',
+})
+```
+
+---
+
+## Creating a Keystatic config file
 
 Create a file called `keystatic.config.ts` in the root of the project and add the following code to define both your storage type (`local`) and a single content collection (`posts`):
 
@@ -63,63 +83,11 @@ export default config({
 
 Keystatic is now configured to manage your content based on your schema.
 
----
-
-## Setting up the Keystatic Admin UI
-
-First, create a `keystatic.page.ts` file in the project root, alongside your Keystatic config file:
-  
-```ts
-  // keystatic.page.ts
-  import { makePage } from '@keystatic/astro/ui'
-  import keystaticConfig from './keystatic.config'
-
-  export const Keystatic = makePage(keystaticConfig)
-  ```
-
-Next, create a new page called `src/pages/keystatic/[...params].astro` that mounts the component on the client side only:
-
-```ts
-// src/pages/keystatic/[...params].astro
----
-import { Keystatic } from '../../../keystatic.page'
-export const prerender = false
----
-
-<Keystatic client:only />
-```
-
-Create a new file called `src/pages/api/keystatic/[...params].ts` that will create API routes for Keystatic’s Admin UI:
-
-```ts
-// src/pages/api/keystatic/[...params].ts
-import { makeHandler } from '@keystatic/astro/api'
-import keystaticConfig from '../../../../keystatic.config'
-
-export const all = makeHandler({
-  config: keystaticConfig,
-})
-
-export const prerender = false
-```
+## Running Keystatic
 
 Go to your `package.json` and add `--host 127.0.0.1` to your "dev" script:
 ```
 "dev": "astro dev --host 127.0.0.1"
-```
-
-Finally, go to `astro.config.mjs` in the project root and add `output: 'hybrid'` to `defineConfig` options. Your `astro.config.mjs` should look similar to this:
-```ts
-import { defineConfig } from 'astro/config';
-import react from '@astrojs/react';
-import markdoc from '@astrojs/markdoc';
-
-// https://astro.build/config
-export default defineConfig({
-  integrations: [react(), markdoc()],
-  output: 'hybrid',
-});
-
 ```
 
 You can now launch the Keystatic Admin UI. Start the Astro dev server:
