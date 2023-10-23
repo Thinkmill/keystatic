@@ -46,6 +46,7 @@ import { ColumnSize } from '@react-types/table';
 
 import { Checkbox } from '@keystar/ui/checkbox';
 import { ProgressCircle } from '@keystar/ui/progress';
+import { SlotProvider } from '@keystar/ui/slots';
 import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
@@ -618,11 +619,13 @@ function TableCell<T>({
 
   return (
     <div {...mergeProps(gridCellProps, focusProps)} {...styleProps} ref={ref}>
-      {isReactText(cell.rendered) ? (
-        <Text truncate={overflowMode === 'truncate'}>{cell.rendered}</Text>
-      ) : (
-        cell.rendered
-      )}
+      <SlotProvider slots={{ text: { truncate: overflowMode === 'truncate' } }}>
+        {isReactText(cell.rendered) ? (
+          <Text>{cell.rendered}</Text>
+        ) : (
+          cell.rendered
+        )}
+      </SlotProvider>
     </div>
   );
 }

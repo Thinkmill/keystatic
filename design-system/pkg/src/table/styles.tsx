@@ -193,7 +193,7 @@ const commonCellStyles = {
   // wrapping text shouldn't be centered
   alignItems: 'center',
   '.ksv-table-view[data-overflow-mode="wrap"] &:not([role="columnheader"])': {
-    alignItems: 'initial',
+    alignItems: 'start',
   },
 } as const;
 
