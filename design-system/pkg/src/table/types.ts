@@ -1,9 +1,5 @@
-import {
-  CollectionChildren,
-  DOMProps,
-  MultipleSelection,
-  Sortable,
-} from '@react-types/shared';
+import { CollectionChildren, DOMProps } from '@react-types/shared';
+import { TableProps as _TableProps } from '@react-types/table';
 import { Key, ReactElement, ReactNode } from 'react';
 
 import { BaseStyleProps } from '@keystar/ui/style';
@@ -12,13 +8,6 @@ type ColumnElement<T> = ReactElement<ColumnProps<T>>;
 type ColumnRenderer<T> = (item: T) => ColumnElement<T>;
 
 export type TableProps<T> = {
-  /** The elements that make up the table. Includes the TableHeader, TableBody, Columns, and Rows. */
-  children: [
-    ReactElement<TableHeaderProps<T>>,
-    ReactElement<TableBodyProps<T>>,
-  ];
-  /** A list of row keys to disable. */
-  disabledKeys?: Iterable<Key>;
   /**
    * Sets the amount of vertical padding within each cell.
    * @default 'regular'
@@ -38,10 +27,9 @@ export type TableProps<T> = {
   prominence?: 'default' | 'low';
   /** What should render when there is no content to display. */
   renderEmptyState?: () => JSX.Element;
-} & BaseStyleProps &
-  DOMProps &
-  MultipleSelection &
-  Sortable;
+} & _TableProps<T> &
+  BaseStyleProps &
+  DOMProps;
 
 export interface ColumnProps<T> {
   /** Static child columns or content to render as the column header. */

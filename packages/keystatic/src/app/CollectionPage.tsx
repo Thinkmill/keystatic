@@ -288,7 +288,7 @@ function CollectionTable(
       selectionMode="none"
       onSortChange={setSortDescriptor}
       sortDescriptor={sortDescriptor}
-      density={isLocalMode ? 'spacious' : 'regular'}
+      density="spacious"
       overflowMode="truncate"
       prominence="low"
       onRowAction={key => {
