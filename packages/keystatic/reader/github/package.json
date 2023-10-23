@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystatic-core-reader-github.cjs.js",
+  "module": "dist/keystatic-core-reader-github.esm.js"
+}

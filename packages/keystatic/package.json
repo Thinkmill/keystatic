@@ -110,6 +110,23 @@
       "module": "./reader/dist/keystatic-core-reader.esm.js",
       "default": "./reader/dist/keystatic-core-reader.cjs.js"
     },
+    "./reader/github": {
+      "types": "./reader/github/dist/keystatic-core-reader-github.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./reader/github/dist/keystatic-core-reader-github.node.react-server.esm.js",
+          "default": "./reader/github/dist/keystatic-core-reader-github.node.react-server.cjs.js"
+        },
+        "module": "./reader/github/dist/keystatic-core-reader-github.node.esm.js",
+        "default": "./reader/github/dist/keystatic-core-reader-github.node.cjs.js"
+      },
+      "react-server": {
+        "module": "./reader/github/dist/keystatic-core-reader-github.react-server.esm.js",
+        "default": "./reader/github/dist/keystatic-core-reader-github.react-server.cjs.js"
+      },
+      "module": "./reader/github/dist/keystatic-core-reader-github.esm.js",
+      "default": "./reader/github/dist/keystatic-core-reader-github.cjs.js"
+    },
     "./component-blocks": {
       "types": "./component-blocks/dist/keystatic-core-component-blocks.cjs.js",
       "node": {
@@ -261,6 +278,7 @@
       "api/generic.ts",
       "api/utils.ts",
       "reader/index.ts",
+      "reader/github.ts",
       "renderer.tsx",
       "ui.tsx",
       "form/fields/markdoc/index.tsx",
