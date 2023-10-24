@@ -49,8 +49,18 @@ export function Toolbar({
   documentFeatures: DocumentFeatures;
   viewState?: { expanded: boolean; toggle: () => void };
 }) {
-  const blockComponent = useDocumentEditorConfig().componentBlocks;
-  const hasBlockItems = Object.keys(blockComponent).length;
+  const componentBlocks = useDocumentEditorConfig().componentBlocks;
+  let hasComponentBlocksForInsertMenu = false,
+    hasComponentBlocksForToolbar = false;
+  for (const componentBlock of Object.values(componentBlocks)) {
+    if (componentBlock.toolbarIcon) {
+      hasComponentBlocksForToolbar = true;
+    }
+    if (!componentBlock.toolbarIcon) {
+      hasComponentBlocksForInsertMenu = true;
+    }
+  }
+
   const hasMarks = Object.values(documentFeatures.formatting.inlineMarks).some(
     x => x
   );
@@ -93,7 +103,8 @@ export function Toolbar({
           documentFeatures.formatting.blockTypes.blockquote ||
           documentFeatures.tables ||
           !!documentFeatures.layouts.length ||
-          documentFeatures.formatting.blockTypes.code) && (
+          documentFeatures.formatting.blockTypes.code ||
+          hasComponentBlocksForToolbar) && (
           <ToolbarGroup>
             {documentFeatures.dividers && dividerButton}
             {documentFeatures.links && linkButton}
@@ -105,6 +116,7 @@ export function Toolbar({
             )}
             {documentFeatures.formatting.blockTypes.code && codeButton}
             {documentFeatures.tables && tableButton}
+            {hasComponentBlocksForInsertMenu && insertBlocksInToolbar}
           </ToolbarGroup>
         )}
         {/* make sure elements fill space */}
@@ -133,7 +145,7 @@ export function Toolbar({
           )
         );
       }, [viewState])}
-      {!!hasBlockItems && <InsertBlockMenu />}
+      {!!hasComponentBlocksForInsertMenu && <InsertBlockMenu />}
     </ToolbarWrapper>
   );
 }
@@ -300,6 +312,32 @@ const HeadingMenu = ({
   );
 };
 
+const insertBlocksInToolbar = <InsertBlocksInToolbar />;
+
+function InsertBlocksInToolbar() {
+  const editor = useSlateStatic();
+  const componentBlocks = useDocumentEditorConfig().componentBlocks;
+
+  return Object.entries(componentBlocks)
+    .filter(([, val]) => val.toolbarIcon)
+    .map(([key, item]) => {
+      return (
+        <TooltipTrigger>
+          <ActionButton
+            prominence="low"
+            onPress={() => {
+              insertComponentBlock(editor, componentBlocks, key);
+              ReactEditor.focus(editor);
+            }}
+          >
+            <Icon src={item.toolbarIcon!} />
+          </ActionButton>
+          <Tooltip>{item.label}</Tooltip>
+        </TooltipTrigger>
+      );
+    });
+}
+
 function InsertBlockMenu() {
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
   const editor = useSlateStatic();
@@ -324,7 +362,9 @@ function InsertBlockMenu() {
         onAction={key => {
           insertComponentBlock(editor, componentBlocks, key as string);
         }}
-        items={Object.entries(componentBlocks)}
+        items={Object.entries(componentBlocks).filter(
+          ([, val]) => !val.toolbarIcon
+        )}
       >
         {([key, item]) => <Item key={key}>{item.label}</Item>}
       </Menu>
