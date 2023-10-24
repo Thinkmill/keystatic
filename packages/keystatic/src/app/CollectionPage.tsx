@@ -1,4 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import isHotkey from 'is-hotkey';
 import React, { Key, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ActionButton, Button } from '@keystar/ui/button';
@@ -87,6 +88,25 @@ function CollectionPageHeader(props: {
   useEffect(() => {
     setSearchVisible(isAboveMobile);
   }, [isAboveMobile]);
+
+  // entries are presented in a virtualized table view, so we replace the
+  // default (e.g. ctrl+f) browser search behaviour
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => {
+      // bail if the search field is already focused; let users invoke the
+      // browser search if they need to
+      if (document.activeElement === searchRef.current) {
+        return;
+      }
+
+      if (isHotkey('mod+f', event)) {
+        event.preventDefault();
+        searchRef.current?.select();
+      }
+    };
+    document.addEventListener('keydown', listener);
+    return () => document.removeEventListener('keydown', listener);
+  }, []);
 
   return (
     <PageHeader>

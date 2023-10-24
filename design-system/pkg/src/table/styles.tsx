@@ -130,10 +130,10 @@ export function useHeaderWrapperStyleProps({
       boxSizing: 'content-box',
       flex: 'none',
       // keep aligned with the border of the body
-      borderLeft: `${tokenSchema.size.border.regular} solid transparent`,
-      borderRight: `${tokenSchema.size.border.regular} solid transparent`,
-      // marginBottom: `calc(${tokenSchema.size.border.regular} * -1)`,
-      // paddingBottom: tokenSchema.size.border.regular,
+      '.ksv-table-view:not([data-prominence="low"]) &': {
+        borderLeft: `${tokenSchema.size.border.regular} solid transparent`,
+        borderRight: `${tokenSchema.size.border.regular} solid transparent`,
+      },
     }),
     style,
   };
@@ -144,10 +144,6 @@ export function useHeadStyleProps({ style }: { style?: CSSProperties } = {}) {
       boxSizing: 'border-box',
       display: 'flex',
       flexDirection: 'column',
-
-      '.ksv-table-view[data-prominence="low"] &': {
-        borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
-      },
     }),
     style,
   };
@@ -155,10 +151,15 @@ export function useHeadStyleProps({ style }: { style?: CSSProperties } = {}) {
 export function useBodyStyleProps({ style }: { style?: CSSProperties } = {}) {
   return {
     className: css({
+      '.ksv-table-view[data-prominence="low"] &': {
+        borderBlock: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
+      },
       '.ksv-table-view:not([data-prominence="low"]) &': {
         backgroundColor: tokenSchema.color.background.canvas,
         border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
         borderRadius: tokenSchema.size.radius.medium,
+        /* Fix scrollbars on iOS with sticky row headers */
+        transform: 'translate3d(0, 0, 0)',
       },
     }),
     style,
@@ -173,7 +174,6 @@ const commonCellStyles = {
   boxSizing: 'border-box',
   cursor: 'default',
   display: 'flex',
-  flex: 1,
   height: '100%',
   justifyContent: 'flex-start',
   minWidth: 0,
@@ -208,45 +208,48 @@ export function useCellStyleProps(
   props: CellProps,
   state?: { isFocusVisible: boolean }
 ) {
-  const className = css([
-    commonCellStyles,
-    {
-      // Alignment
-      '&[data-align="end"]': {
-        justifyContent: 'flex-end',
-        textAlign: 'end',
-      },
-      '&[data-align="center"]': {
-        justifyContent: 'center',
-        textAlign: 'center',
-      },
+  const className = classNames(
+    'ksv-table-view-cell',
+    css([
+      commonCellStyles,
+      {
+        // Alignment
+        '&[data-align="end"]': {
+          justifyContent: 'flex-end',
+          textAlign: 'end',
+        },
+        '&[data-align="center"]': {
+          justifyContent: 'center',
+          textAlign: 'center',
+        },
 
-      // focus ring
-      '&[data-focus="visible"]::after': {
-        borderRadius: tokenSchema.size.radius.small,
-        boxShadow: `inset 0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
-        content: '""',
-        inset: 0,
-        position: 'absolute',
-        transition: transition(['box-shadow', 'margin'], {
-          easing: 'easeOut',
-        }),
-      },
+        // focus ring
+        '&[data-focus="visible"]::after': {
+          borderRadius: tokenSchema.size.radius.small,
+          boxShadow: `inset 0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
+          content: '""',
+          inset: 0,
+          position: 'absolute',
+          transition: transition(['box-shadow', 'margin'], {
+            easing: 'easeOut',
+          }),
+        },
 
-      // HEADERS
-      '&[role="columnheader"]': {
-        color: tokenSchema.color.foreground.neutralSecondary,
+        // HEADERS
+        '&[role="columnheader"]': {
+          color: tokenSchema.color.foreground.neutralSecondary,
 
-        ['&[aria-sort]']: {
-          cursor: 'default',
+          ['&[aria-sort]']: {
+            cursor: 'default',
 
-          '&:hover, &[data-focus="visible"]': {
-            color: tokenSchema.color.foreground.neutralEmphasis,
+            '&:hover, &[data-focus="visible"]': {
+              color: tokenSchema.color.foreground.neutralEmphasis,
+            },
           },
         },
       },
-    },
-  ]);
+    ])
+  );
 
   return {
     ...toDataAttributes({
@@ -260,12 +263,15 @@ export function useCellStyleProps(
 
 export function useSelectionCellStyleProps() {
   return {
-    className: css(commonCellStyles, {
-      alignItems: 'center',
-      flex: '0 0 auto',
-      paddingInlineStart: tokenSchema.size.space.medium,
-      width: 'auto',
-    }),
+    className: classNames(
+      'ksv-table-view-cell',
+      css(commonCellStyles, {
+        alignItems: 'center',
+        flex: '0 0 auto',
+        paddingInlineStart: tokenSchema.size.space.medium,
+        width: 'auto',
+      })
+    ),
   };
 }
 
@@ -292,8 +298,10 @@ export function useRowStyleProps(
     position: 'relative',
     outline: 0,
 
+    // separators
     '&:not(:last-child)': {
-      borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
+      backgroundColor: tokenSchema.color.border.muted,
+      paddingBottom: 1,
     },
 
     // prominence
@@ -308,14 +316,6 @@ export function useRowStyleProps(
       },
     },
 
-    // interactions
-    '&[data-interaction="hover"]': {
-      backgroundColor: tokenSchema.color.alias.backgroundIdle,
-    },
-    '&[data-interaction="press"]': {
-      backgroundColor: tokenSchema.color.alias.backgroundHovered,
-    },
-
     // focus indicator
     '&[data-focus="visible"]': {
       '&::before': {
@@ -327,17 +327,25 @@ export function useRowStyleProps(
         marginInlineEnd: `calc(${tokenSchema.size.space.small} * -1)`,
         position: 'sticky',
         width: tokenSchema.size.space.small,
+        zIndex: 4,
       },
     },
 
-    // selected
-    '&[aria-selected="true"]': {
-      backgroundColor: tokenSchema.color.alias.backgroundSelected,
-      // boxShadow: `0 0 0 ${tokenSchema.size.border.regular} ${tokenSchema.color.alias.focusRing}`,
+    // interactions
+    '&[data-interaction="hover"] .ksv-table-view-cell': {
+      backgroundColor: tokenSchema.color.scale.slate2,
+    },
+    '&[data-interaction="press"] .ksv-table-view-cell': {
+      backgroundColor: tokenSchema.color.scale.slate3,
+      // backgroundColor: tokenSchema.color.alias.backgroundPressed,
+    },
 
-      '&[data-interaction="hover"]': {
-        backgroundColor: tokenSchema.color.alias.backgroundSelectedHovered,
-      },
+    // selected
+    '&[aria-selected="true"] .ksv-table-view-cell': {
+      backgroundColor: tokenSchema.color.alias.backgroundSelected,
+    },
+    '&[aria-selected="true"][data-interaction="hover"] .ksv-table-view-cell': {
+      backgroundColor: tokenSchema.color.alias.backgroundSelectedHovered,
     },
   });
 
@@ -354,7 +362,7 @@ export function useRowStyleProps(
         ? 'hover'
         : undefined,
     }),
-    className,
+    className: classNames(className, 'ksv-table-view-row'),
     style,
   };
 }
