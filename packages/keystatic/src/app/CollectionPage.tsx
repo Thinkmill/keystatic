@@ -89,10 +89,16 @@ function CollectionPageHeader(props: {
     setSearchVisible(isAboveMobile);
   }, [isAboveMobile]);
 
-  // the entries are presented in a virtualized table view, so we have to
-  // replace the default (e.g. ctrl+f) browser search behaviour
+  // entries are presented in a virtualized table view, so we replace the
+  // default (e.g. ctrl+f) browser search behaviour
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
+      // bail if the search field is already focused; let users invoke the
+      // browser search if they need to
+      if (document.activeElement === searchRef.current) {
+        return;
+      }
+
       if (isHotkey('mod+f', event)) {
         event.preventDefault();
         searchRef.current?.select();
