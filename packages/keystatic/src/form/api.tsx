@@ -280,6 +280,7 @@ export type ComponentBlock<
   preview: (props: any) => ReactElement | null;
   schema: Fields;
   label: string;
+  toolbarIcon?: ReactElement;
 } & (
   | {
       chromeless: true;
@@ -451,6 +452,8 @@ export function component<
     schema: Schema;
     /** The label to show in the insert menu and chrome around the block if chromeless is false */
     label: string;
+    /** An icon to show in the toolbar for this component block. Component blocks with `toolbarIcon` are shown in the toolbar directly instead of the insert menu */
+    toolbarIcon?: ReactElement;
   } & (
     | {
         chromeless: true;
