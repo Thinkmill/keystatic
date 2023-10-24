@@ -2,6 +2,7 @@ import {
   CSSProperties,
   ForwardedRef,
   HTMLAttributes,
+  Key,
   ReactElement,
   ReactNode,
   createContext,
@@ -14,7 +15,7 @@ import {
 
 import { FocusScope, useFocusRing } from '@react-aria/focus';
 import { useLocale, useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useHover } from '@react-aria/interactions';
+import { useHover, usePress } from '@react-aria/interactions';
 import {
   useTable,
   useTableCell,
@@ -47,6 +48,7 @@ import { ColumnSize } from '@react-types/table';
 import { Checkbox } from '@keystar/ui/checkbox';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { SlotProvider } from '@keystar/ui/slots';
+import { classNames, css, tokenSchema } from '@keystar/ui/style';
 import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
@@ -172,7 +174,10 @@ export function TableView<T extends object>(props: TableProps<T>) {
         layoutInfo={reusableView.layoutInfo!}
         virtualizer={reusableView.virtualizer}
         parent={parent?.layoutInfo!}
-        className={'Table-cellWrapper'}
+        className={classNames(
+          css({ backgroundColor: tokenSchema.color.background.canvas }),
+          'ksv-table-view-cell-wrapper'
+        )}
       >
         {reusableView.rendered}
       </VirtualizerItem>
@@ -195,7 +200,6 @@ export function TableView<T extends object>(props: TableProps<T>) {
         return <TableCell cell={item} overflowMode={overflowMode} />;
       }
       case 'placeholder':
-        // TODO: move to react-aria?
         return (
           <div
             role="gridcell"
@@ -208,7 +212,6 @@ export function TableView<T extends object>(props: TableProps<T>) {
           return <TableSelectAllCell column={item} />;
         }
 
-        // TODO: consider this case, what if we have hidden headers and a empty table
         if (item.props.hideHeader) {
           return (
             <TooltipTrigger placement="top" trigger="focus">
@@ -330,14 +333,11 @@ export function TableView<T extends object>(props: TableProps<T>) {
       <TableVirtualizer
         layout={layout}
         collection={state.collection}
-        // focusedKey={focusedKey}
         renderView={renderView}
         renderWrapper={renderWrapper}
-        // onVisibleRectChange={onVisibleRectChange}
         bodyRef={bodyRef}
         domRef={domRef}
         headerRef={headerRef}
-        // isFocusVisible={isFocusVisible}
         {...gridProps}
         {...props}
       />
@@ -374,18 +374,22 @@ function TableVirtualizer<T extends object>(props: TableVirtualizerProps<T>) {
     domRef,
     bodyRef,
     headerRef,
+    disallowEmptySelection: UNUSED_disallowEmptySelection,
+    onRowAction: UNUSED_onRowAction,
     onSelectionChange: UNUSED_onSelectionChange,
     onSortChange: UNUSED_onSortChange,
     overflowMode: UNUSED_overflowMode,
+    renderEmptyState: UNUSED_renderEmptyState,
+    selectedKeys: UNUSED_selectedKeys,
     sortDescriptor: UNUSED_sortDescriptor,
-    // onVisibleRectChange: onVisibleRectChangeProp,
-    // isFocusVisible,
-    // isVirtualDragging,
-    // isRootDropTarget,
     selectionMode,
     ...otherProps
   } = props;
+
   let { direction } = useLocale();
+  let loadingState = collection.body.props.loadingState;
+  let isLoading = loadingState === 'loading' || loadingState === 'loadingMore';
+  let onLoadMore = collection.body.props.onLoadMore;
 
   let virtualizerState = useVirtualizerState<object, ReactNode, ReactNode>({
     layout,
@@ -400,24 +404,51 @@ function TableVirtualizer<T extends object>(props: TableVirtualizerProps<T>) {
       }
     },
   });
-
-  let state = useTableState({
-    ...props,
-    showSelectionCheckboxes: selectionMode === 'multiple',
-  });
-
-  let { gridProps } = useTable(
-    {
-      ...props,
-      isVirtualized: true,
-      layout,
-    },
-    state,
-    domRef
-  );
   let styleProps = useTableStyleProps(props);
+
+  // Sync the scroll position from the table body to the header container.
+  let syncScroll = useCallback(() => {
+    let bodyEl = bodyRef.current;
+    let headerEl = headerRef.current;
+    if (bodyEl && headerEl) {
+      headerEl.scrollLeft = bodyEl.scrollLeft;
+    }
+  }, [bodyRef, headerRef]);
+
+  let scrollToItem = useCallback(
+    (key: Key) => {
+      let item = collection.getItem(key);
+      let column = collection.columns[0];
+      let virtualizer = virtualizerState.virtualizer;
+
+      virtualizer.scrollToItem(key, {
+        duration: 0,
+        // Prevent scrolling to the top when clicking on column headers.
+        shouldScrollY: item?.type !== 'column',
+        // Offset scroll position by width of selection cell
+        // (which is sticky and will overlap the cell we're scrolling to).
+        offsetX:
+          column.props.isSelectionCell || column.props.isDragButtonCell
+            ? layout.getColumnWidth(column.key)
+            : 0,
+      });
+
+      // Sync the scroll positions of the column headers and the body so scrollIntoViewport can
+      // properly decide if the column is outside the viewport or not
+      syncScroll();
+    },
+    [collection, layout, syncScroll, virtualizerState.virtualizer]
+  );
+  let memoedVirtualizerProps = useMemo(
+    () => ({
+      scrollToItem,
+      isLoading,
+      onLoadMore,
+    }),
+    [scrollToItem, isLoading, onLoadMore]
+  );
   let { virtualizerProps, scrollViewProps } = useVirtualizer(
-    gridProps,
+    memoedVirtualizerProps,
     virtualizerState,
     domRef
   );
@@ -425,15 +456,6 @@ function TableVirtualizer<T extends object>(props: TableVirtualizerProps<T>) {
 
   const [headerView, bodyView] = virtualizerState.visibleViews;
   let headerHeight = layout.getLayoutInfo('header')?.rect.height || 0;
-
-  // Sync the scroll position from the table body to the header container.
-  let onScroll = useCallback(() => {
-    let bodyEl = bodyRef.current;
-    let headerEl = headerRef.current;
-    if (bodyEl && headerEl) {
-      headerEl.scrollLeft = bodyEl.scrollLeft;
-    }
-  }, [bodyRef, headerRef]);
 
   let bodyStyleProps = useBodyStyleProps({ style: { flex: 1 } });
 
@@ -460,7 +482,7 @@ function TableVirtualizer<T extends object>(props: TableVirtualizerProps<T>) {
           contentSize={virtualizerState.contentSize}
           onScrollStart={virtualizerState.startScrolling}
           onScrollEnd={virtualizerState.endScrolling}
-          onScroll={onScroll}
+          onScroll={syncScroll}
         >
           {bodyView}
         </ScrollView>
@@ -511,7 +533,11 @@ function TableHeaderRow(props: {
 }) {
   let ref = useRef<HTMLDivElement>(null);
   let { state } = useTableContext();
-  let { rowProps } = useTableHeaderRow({ node: props.item }, state, ref);
+  let { rowProps } = useTableHeaderRow(
+    { node: props.item, isVirtualized: true },
+    state,
+    ref
+  );
   let styleProps = useRowHeaderStyleProps(props);
 
   return (
@@ -525,7 +551,7 @@ function TableColumnHeader<T>({ column }: { column: any }) {
   let ref = useRef<HTMLDivElement>(null);
   let { state } = useTableContext();
   let { columnHeaderProps } = useTableColumnHeader(
-    { node: column },
+    { node: column, isVirtualized: true },
     state,
     ref
   );
@@ -576,13 +602,19 @@ function TableRow({
   let allowsInteraction =
     state.selectionManager.selectionMode !== 'none' || hasAction;
   let isDisabled = !allowsInteraction || state.disabledKeys.has(item.key);
-  let { rowProps, isPressed } = useTableRow({ node: item }, state, ref);
+
+  let { rowProps } = useTableRow(
+    { node: item, isVirtualized: true },
+    state,
+    ref
+  );
   // The row should show the focus background style when any cell inside it is focused.
   // If the row itself is focused, then it should have a blue focus indicator on the left.
   let { isFocusVisible: isFocusWithin, focusProps: focusWithinProps } =
     useFocusRing({ within: true });
   let { isFocusVisible, focusProps } = useFocusRing();
   let { hoverProps, isHovered } = useHover({ isDisabled });
+  let { pressProps, isPressed } = usePress({ isDisabled });
   let styleProps = useRowStyleProps(
     { style },
     {
@@ -595,7 +627,13 @@ function TableRow({
 
   return (
     <div
-      {...mergeProps(rowProps, focusWithinProps, focusProps, hoverProps)}
+      {...mergeProps(
+        rowProps,
+        focusWithinProps,
+        focusProps,
+        hoverProps,
+        pressProps
+      )}
       {...styleProps}
       ref={ref}
     >
@@ -613,7 +651,11 @@ function TableCell<T>({
 }) {
   let ref = useRef<HTMLDivElement>(null);
   let { state } = useTableContext();
-  let { gridCellProps } = useTableCell({ node: cell }, state, ref);
+  let { gridCellProps } = useTableCell(
+    { node: cell, isVirtualized: true },
+    state,
+    ref
+  );
   let { isFocusVisible, focusProps } = useFocusRing();
   let styleProps = useCellStyleProps(cell.column.props, { isFocusVisible });
 
@@ -633,7 +675,11 @@ function TableCell<T>({
 function TableCheckboxCell({ cell }: { cell: any }) {
   let ref = useRef<HTMLDivElement>(null);
   let { state } = useTableContext();
-  let { gridCellProps } = useTableCell({ node: cell }, state, ref);
+  let { gridCellProps } = useTableCell(
+    { node: cell, isVirtualized: true },
+    state,
+    ref
+  );
   let { checkboxProps } = useTableSelectionCheckbox(
     { key: cell.parentKey },
     state
@@ -651,7 +697,7 @@ function TableSelectAllCell({ column }: { column: any }) {
   let ref = useRef<HTMLDivElement>(null);
   let { state } = useTableContext();
   let { columnHeaderProps } = useTableColumnHeader(
-    { node: column },
+    { node: column, isVirtualized: true },
     state,
     ref
   );
