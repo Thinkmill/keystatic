@@ -1,5 +1,5 @@
 import { component } from '..';
-import { CloudImagePreview } from '#cloud-image-preview';
+import { CloudImagePreview, cloudImageToolbarIcon } from '#cloud-image-preview';
 import { cloudImageSchema } from './cloud-image-schema';
 
 /** @deprecated Experimental */
@@ -10,5 +10,6 @@ export function cloudImage(args: { label: string }) {
     preview: CloudImagePreview,
     chromeless: true,
     toolbar: null,
+    toolbarIcon: cloudImageToolbarIcon,
   });
 }

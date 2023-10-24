@@ -577,3 +577,5 @@ function getAspectRatio(state: ImageDimensions) {
   if (!state.width || !state.height) return 1;
   return state.width / state.height;
 }
+
+export const cloudImageToolbarIcon = imageIcon;
