@@ -56,7 +56,7 @@ export default async function Docs({ params }: DocsProps) {
           {page.title}
         </h1>
         <div className="flex flex-col gap-4 [&_a]:break-words">
-          <DocumentRenderer slug={slug} document={await page.content()} />
+          <DocumentRenderer document={await page.content()} />
         </div>
       </div>
       <div className="sticky top-10 hidden w-[12rem] self-start md:block lg:top-32">

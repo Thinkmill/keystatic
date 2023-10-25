@@ -118,7 +118,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
           <hr className="mx-auto mt-16 w-20 border-sand-5" />
           <main className="bg-white py-12">
             <div className="prose mx-auto px-4 lg:prose-lg sm:px-6 lg:px-8">
-              <DocumentRenderer document={content} slug={slug} />
+              <DocumentRenderer document={content} />
             </div>
           </main>
         </>

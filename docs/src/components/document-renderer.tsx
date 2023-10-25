@@ -21,27 +21,29 @@ import { Embed, EmbedProps } from './embed';
 import Link from 'next/link';
 import { DatetimeFieldDemo } from './fields/datetime';
 import keystaticCodeTheme from '../styles/keystatic-theme.json';
+import { draftMode } from 'next/headers';
 
 export default async function DocumentRenderer({
-  slug,
   document,
-}: DocumentRendererProps & { slug: string }) {
-  const highlighter = await shiki.getHighlighter({
-    theme: keystaticCodeTheme as any,
-  });
+}: DocumentRendererProps) {
+  const { isEnabled } = draftMode();
+  const highlighter = isEnabled
+    ? undefined
+    : await shiki.getHighlighter({
+        theme: keystaticCodeTheme as any,
+      });
 
   return (
     <KeystaticRenderer
       document={document}
-      renderers={getRenderers(slug, highlighter)}
+      renderers={getRenderers(highlighter)}
       componentBlocks={componentBlockRenderers}
     />
   );
 }
 
 const getRenderers = (
-  slug: string,
-  highlighter: shiki.Highlighter
+  highlighter: shiki.Highlighter | undefined
 ): DocumentRendererProps['renderers'] => ({
   inline: {
     bold: ({ children }) => <strong>{children}</strong>,
@@ -74,7 +76,13 @@ const getRenderers = (
     ),
     code: ({ children, language }) => {
       let codeBlock = children;
-
+      if (!highlighter) {
+        return (
+          <div className="my-2 text-sm [&>pre]:whitespace-break-spaces [&>pre]:break-all [&>pre]:rounded-lg [&>pre]:border [&>pre]:border-slate-5 [&>pre]:bg-white [&>pre]:px-6 [&>pre]:py-4">
+            <pre>{codeBlock}</pre>
+          </div>
+        );
+      }
       try {
         const tokens = highlighter.codeToThemedTokens(children, language);
         codeBlock = shiki.renderToHtml(tokens, {

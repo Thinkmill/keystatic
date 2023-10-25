@@ -78,7 +78,7 @@ export default async function BlogPost({ params }: BlogProps) {
       </div>
 
       <div className="flex flex-col gap-4">
-        <DocumentRenderer slug={slug} document={await page.content()} />
+        <DocumentRenderer document={await page.content()} />
       </div>
     </div>
   );
