@@ -38,6 +38,8 @@ Follow [@thekeystatic](https://twitter.com/thekeystatic) on Twitter, and
 [subscribe to our mailing list](https://keystatic.com/#mailing-list) for
 updates.
 
+Changes and releases are documented in [our changelog](https://github.com/Thinkmill/keystatic/blob/main/docs/CHANGELOG.md).
+
 Feedback on how we're going, what you're looking for, and what you'd like to see
 next is super helpful as we progress!
 [Join the discussion on GitHub](https://github.com/Thinkmill/keystatic/discussions)
