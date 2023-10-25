@@ -21,7 +21,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
   const { activeHeading } = useHeadingObserver(slugs);
 
   return (
-    <div className="sticky top-10 hidden w-[12rem] self-start md:block lg:top-32">
+    <>
       <h2 className="text-xs uppercase text-slate-9">On this page</h2>
 
       <ul className="mt-4 flex flex-col gap-3">
@@ -40,7 +40,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 }
 

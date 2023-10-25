@@ -59,7 +59,7 @@ export default async function Docs({ params }: DocsProps) {
           <DocumentRenderer slug={slug} document={await page.content()} />
         </div>
       </div>
-      <div>
+      <div className="sticky top-10 hidden w-[12rem] self-start md:block lg:top-32">
         <TableOfContents headings={headings} />
         <EditOnGitHub slug={slug} />
       </div>
