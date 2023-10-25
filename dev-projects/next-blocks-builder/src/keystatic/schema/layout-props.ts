@@ -6,21 +6,21 @@ const surfaceOptions = [
   { label: 'Black', value: 'black' },
   { label: 'Off-Black', value: 'off-black' },
   { label: 'Splash', value: 'splash' },
-];
+] as const;
 
 const paddingOptions = [
   { label: 'Large', value: 'large' },
   { label: 'Medium', value: 'medium' },
   { label: 'Small', value: 'small' },
   { label: 'None', value: 'none' },
-];
+] as const;
 
 const containerWidthOptions = [
   { label: 'Full', value: 'full' },
   { label: 'Large', value: 'large' },
   { label: 'Medium', value: 'medium' },
   { label: 'Narrow', value: 'narrow' },
-];
+] as const;
 
 export type Surface = (typeof surfaceOptions)[number]['value'];
 export type Padding = (typeof paddingOptions)[number]['value'];
