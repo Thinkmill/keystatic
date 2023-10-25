@@ -43,7 +43,12 @@ document: fields.document({
   formatting: true,
   componentBlocks: {
     sectionContainer: component({
-      preview: () => null,
+      // A preview is needed to show the child field
+      preview: ({fields}) => (
+        <div style={{ padding: '1rem 0' /* styling is up to you */ }}>
+          {fields.children.element}
+        </div>
+      ),
       label: 'Section Container',
       schema: {
         content: fields.child({
