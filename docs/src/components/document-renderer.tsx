@@ -8,7 +8,6 @@ import { InferRenderersForComponentBlocks } from '@keystatic/core';
 import { componentBlocks } from '../../keystatic.config';
 import { CONTENT_MAX_WIDTH_DESKTOP } from '../constants';
 import CloudImage from './cloud-image';
-import fs from 'fs';
 import { TextFieldDemo } from './fields/text';
 import { URLFieldDemo } from './fields/url';
 import { SelectFieldDemo } from './fields/select';
@@ -21,17 +20,14 @@ import { FileFieldDemo } from './fields/file';
 import { Embed, EmbedProps } from './embed';
 import Link from 'next/link';
 import { DatetimeFieldDemo } from './fields/datetime';
-
-const keystaticCodeTheme = JSON.parse(
-  fs.readFileSync('./src/styles/keystatic-theme.json', 'utf-8')
-);
+import keystaticCodeTheme from '../styles/keystatic-theme.json';
 
 export default async function DocumentRenderer({
   slug,
   document,
 }: DocumentRendererProps & { slug: string }) {
   const highlighter = await shiki.getHighlighter({
-    theme: keystaticCodeTheme,
+    theme: keystaticCodeTheme as any,
   });
 
   return (
