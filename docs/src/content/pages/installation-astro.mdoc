@@ -142,6 +142,7 @@ Keystatic provides its own [Reader API](/docs/reader-api) to pull data from the 
 The following example displays a list of each post title, with a link to an individual post page:
 
 ```tsx
+// src/pages/posts/index.astro
 ---
 import { getCollection } from 'astro:content'
 
@@ -161,6 +162,7 @@ const posts = await getCollection('posts')
 To display content from an individual post, you can import and use Astro's `<Content />` component to [render your content to HTML](https://docs.astro.build/en/guides/content-collections/#rendering-content-to-html):
 
 ```tsx
+// src/pages/posts/my-post.astro
 ---
 import { getEntry } from 'astro:content'
 
