@@ -1,0 +1,98 @@
+---
+title: ''
+---
+This is the page builder.
+
+{% section surface="dark" %}
+{% testimonial testimonial="anthony" /%}
+{% /section %}
+
+{% section surface="light" %}
+{% testimonial testimonial="anthony" /%}
+{% /section %}
+
+{% section surface="light-subtle" %}
+{% testimonial testimonial="anthony" /%}
+{% /section %}
+
+{% section surface="splash" %}
+{% testimonial testimonial="anthony" /%}
+{% /section %}
+
+Let's add a two-column component block below here:
+
+{% twoColumns surface="dark" %}
+{% component-block-prop propPath=["left"] %}
+{% testimonial testimonial="simon" /%}
+{% /component-block-prop %}
+
+{% component-block-prop propPath=["right"] %}
+## Some content on the right
+
+This is just some free-form text stuff. **With** *formatting*.
+{% /component-block-prop %}
+{% /twoColumns %}
+
+{% twoColumns surface="splash" %}
+{% component-block-prop propPath=["left"] %}
+## A heading on the left
+
+This is just some stuff. **With** *formatting*.
+{% /component-block-prop %}
+
+{% component-block-prop propPath=["right"] %}
+{% testimonial testimonial="anthony" /%}
+{% /component-block-prop %}
+{% /twoColumns %}
+
+{% twoColumns surface="light-subtle" %}
+{% component-block-prop propPath=["left"] %}
+{% testimonial testimonial="anthony" /%}
+{% /component-block-prop %}
+
+{% component-block-prop propPath=["right"] %}
+## Let's add a heading.
+
+### And one more.
+
+This is just some stuff. **With** *formatting*.
+{% /component-block-prop %}
+{% /twoColumns %}
+
+{% twoColumns surface="light" %}
+{% component-block-prop propPath=["left"] %}
+{% testimonial testimonial="anthony" /%}
+{% /component-block-prop %}
+
+{% component-block-prop propPath=["right"] %}
+## Let's add a heading.
+
+### And one more.
+
+This is just some stuff. **With** *formatting*.
+{% /component-block-prop %}
+{% /twoColumns %}
+
+{% twoColumns surface="splash" %}
+{% component-block-prop propPath=["left"] %}
+{% testimonial testimonial="anthony" /%}
+{% /component-block-prop %}
+
+{% component-block-prop propPath=["right"] %}
+## Let's add a heading.
+
+### And one more.
+
+This is just some stuff. **With** *formatting*.
+{% /component-block-prop %}
+{% /twoColumns %}
+
+{% twoColumns surface="light" %}
+{% component-block-prop propPath=["left"] %}
+{% simpleText /%}
+{% /component-block-prop %}
+
+{% component-block-prop propPath=["right"] %}
+{% testimonial testimonial="simon" /%}
+{% /component-block-prop %}
+{% /twoColumns %}
