@@ -17,12 +17,12 @@ export default async function BlogPost({ params }: BlogProps) {
   const slug = slugPath.join('/');
 
   // Reads the content data for this blog post
-  const blogData = await reader.collections.blog.read(slug);
+  const blogData = await reader().collections.blog.read(slug);
 
   if (!blogData) notFound();
 
   // Gets all the authors data
-  const authorData = await reader.collections.authors.all();
+  const authorData = await reader().collections.authors.all();
 
   /**
    * Combines the blog post data with the matched author data
@@ -85,7 +85,7 @@ export default async function BlogPost({ params }: BlogProps) {
 }
 
 export async function generateStaticParams() {
-  const slugs = await reader.collections.blog.list();
+  const slugs = await reader().collections.blog.list();
 
   return slugs.map(slug => ({
     slug: slug.split('/'),
@@ -99,7 +99,7 @@ export async function generateMetadata(
   const slugPath = params.slug;
   const slug = slugPath.join('/');
 
-  const page = await reader.collections.blog.read(slug);
+  const page = await reader().collections.blog.read(slug);
 
   const parentTitle = (await parent).title ?? 'Blog';
   const title = page?.title ?? parentTitle;
