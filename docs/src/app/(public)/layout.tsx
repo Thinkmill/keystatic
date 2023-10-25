@@ -18,7 +18,7 @@ export default async function RootLayout({
       {isEnabled && (
         <div className="fixed bottom-0 right-0 border-2">
           Draft mode ({cookies().get('ks-branch')?.value}){' '}
-          <form action="/preview/end">
+          <form method="POST" action="/preview/end">
             <button>End preview</button>
           </form>
         </div>
