@@ -136,7 +136,7 @@ function ImageLibraryButton() {
   }
 
   return (
-    <ActionButton href={imageLibraryUrl} prominence="low">
+    <ActionButton prominence="low" href={imageLibraryUrl} target="_blank">
       <Icon src={imageIcon} />
       <Text visuallyHidden={{ below: 'tablet' }}>Image library</Text>
     </ActionButton>
