@@ -17,7 +17,7 @@ type Project = {
 };
 
 export default async function Showcase() {
-  const projects: Project[] = await reader.collections.projects.all({
+  const projects: Project[] = await reader().collections.projects.all({
     resolveLinkedFiles: true,
   });
 

@@ -71,6 +71,12 @@ const markdocConfig: Config = {
 
 const shouldUseCloudStorage = process.env.NODE_ENV === 'production';
 
+function makePreviewUrl(previewUrl: string) {
+  return shouldUseCloudStorage
+    ? `/preview/start?branch={branch}&to=${previewUrl}`
+    : previewUrl;
+}
+
 export default config({
   storage: shouldUseCloudStorage
     ? { kind: 'cloud', pathPrefix: 'docs' }
@@ -88,7 +94,7 @@ export default config({
       entryLayout: 'content',
       format: { contentField: 'content' },
       path: 'src/content/pages/**',
-      previewUrl: '/docs/{slug}',
+      previewUrl: makePreviewUrl('/docs/{slug}'),
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         summary: fields.text({
@@ -118,7 +124,7 @@ export default config({
       format: {
         contentField: 'content',
       },
-      previewUrl: '/blog/{slug}',
+      previewUrl: makePreviewUrl('/blog/{slug}'),
       schema: {
         title: fields.slug({
           name: {

@@ -7,7 +7,7 @@ import { ArrowRightIcon } from '../../../components/icons/arrow-right';
 import { H1_ID } from '../../../constants';
 
 export default async function Blog() {
-  const blogPosts = await reader.collections.blog.all();
+  const blogPosts = await reader().collections.blog.all();
 
   if (!blogPosts) notFound();
 
