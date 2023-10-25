@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { cookies, draftMode } from 'next/headers';
 
-export function POST(req: Request) {
+export function GET(req: Request) {
   if (req.headers.get('origin') !== new URL(req.url).origin) {
     return new Response('Invalid origin', { status: 400 });
   }
