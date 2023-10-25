@@ -1,20 +1,20 @@
-import { SurfaceContainer, SurfaceProps } from './SurfaceContainer';
+import { Container, type LayoutProps } from './Container';
 
 export function TwoColumns({
   left,
   right,
-  surface,
+  layoutProps,
 }: {
   left: React.ReactNode;
   right: React.ReactNode;
-  surface: SurfaceProps;
+  layoutProps: LayoutProps;
 }) {
   return (
-    <SurfaceContainer surface={surface}>
+    <Container layoutProps={layoutProps}>
       <div className="flex gap-12 justify-between items-center">
         <div className="flex-1">{left}</div>
         <div className="flex-1">{right}</div>
       </div>
-    </SurfaceContainer>
+    </Container>
   );
 }
