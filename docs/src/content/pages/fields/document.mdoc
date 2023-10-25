@@ -105,6 +105,27 @@ document: fields.document({
 }),
 ```
 
+You can nest component blocks within each other by using the [Child field](/docs/fields/child) with the `componentBlocks` property set to `'inherit'`:
+
+```ts
+document: fields.document({
+  label: 'Document',
+  formatting: true,
+  componentBlocks: {
+    sectionContainer: component({
+      preview: () => null,
+      label: 'Section Container',
+      schema: {
+        content: fields.child({
+          kind: 'block',
+          componentBlocks: 'inherit'
+          placeholder: 'Add component blocks here...',
+        }),
+      },
+    }),
+  },
+}),
+```
 ---
 
 ## Other configuration options
