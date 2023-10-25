@@ -16,35 +16,40 @@ export async function Testimonial({
     throw new Error(`Testimonial not found: ${testimonialSlug}`);
   }
   return (
-    <figure className="not-prose flex place-items-center gap-12">
+    <figure className="not-prose flex flex-col @5xl:flex-row gap-4 @5xl:gap-8 text-left items-start">
+      {testimonial.avatar && (
+        <Image
+          className="h-20 w-20 @5xl:h-24 @5xl:w-24 @7xl:h-32 @7xl:w-32 rounded-lg object-cover @5xl:mb-4"
+          src={testimonial.avatar}
+          alt=""
+          width={96}
+          height={96}
+        />
+      )}
       <div
         className={cx(
-          'group-data-[surface=dark]/surface:text-transparent group-data-[surface=dark]/surface:bg-gradient-to-br group-data-[surface=dark]/surface:from-lime-400 group-data-[surface=dark]/surface:to-emerald-400 group-data-[surface=dark]/surface:bg-clip-text',
-          'group-data-[surface=dark-subtle]/surface:text-white',
-          'group-data-[surface=light]/surface:text-black',
-          'group-data-[surface=light-subtle]/surface:text-slate-700',
-          'surface-'
+          /*
+            Surface-aware color classes (see `addVariants` plugin in tailwind config!)
+          */
+          // White
+          'surface-white:text-black',
+          // Off-white
+          'surface-off-white:text-slate-700',
+          // Black
+          'surface-black:text-transparent surface-black:bg-gradient-to-br surface-black:from-lime-400 surface-black:to-emerald-400 surface-black:bg-clip-text',
+          // Off-black
+          'surface-off-black:text-slate-300',
+          // Splash
+          'surface-splash:text-green-900'
         )}
       >
-        {testimonial.avatar && (
-          <Image
-            className="h-64 w-auto rounded mb-4"
-            src={testimonial.avatar}
-            alt=""
-            width={320}
-            height={180}
-          />
-        )}
         <blockquote
-          className={cx(
-            'text-2xl font-normal font-serif italic md:text-2xl lg:text-3xl lg:leading-[130%] max-w-xl'
-          )}
+          className={cx('text-2xl font-serif italic @5xl:text-3xl max-w-xl')}
         >
           {testimonial.quote}
         </blockquote>
         <p className="mt-2">~ {testimonial.name}</p>
       </div>
-      <div className="absolute right-4 top-0 h-12 w-12 -translate-y-1/2 lg:right-20" />
     </figure>
   );
 }

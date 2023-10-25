@@ -17,7 +17,7 @@ export default async function Page({ params }: { params: { page: string[] } }) {
   return (
     <main>
       <h1 className="text-xl font-medium">Keystatic page builder test</h1>
-      <div className="py-12">
+      <div className="py-12 prose max-w-none text-center">
         <PageBuilder
           document={page.content}
           renderers={{

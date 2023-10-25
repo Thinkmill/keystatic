@@ -11,6 +11,7 @@
   "dependencies": {
     "@keystatic/core": "^0.1.6",
     "@keystatic/next": "^1.0.1",
+    "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/typography": "^0.5.9",
     "next": "^13.5.3",
     "react": "^18.2.0",

@@ -11,7 +11,7 @@ export function TwoColumns({
 }) {
   return (
     <Container layoutProps={layoutProps}>
-      <div className="flex gap-12 justify-between items-center">
+      <div className="flex gap-12 justify-between items-start">
         <div className="flex-1">{left}</div>
         <div className="flex-1">{right}</div>
       </div>

@@ -553,6 +553,7 @@ importers:
     specifiers:
       '@keystatic/core': ^0.1.6
       '@keystatic/next': ^1.0.1
+      '@tailwindcss/container-queries': ^0.1.1
       '@tailwindcss/typography': ^0.5.9
       '@types/node': 16.11.13
       '@types/react': ^18.2.8
@@ -569,6 +570,7 @@ importers:
     dependencies:
       '@keystatic/core': link:../../packages/keystatic
       '@keystatic/next': link:../../packages/next
+      '@tailwindcss/container-queries': 0.1.1_tailwindcss@3.3.3
       '@tailwindcss/typography': 0.5.10_tailwindcss@3.3.3
       next: 13.5.6_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0

@@ -36,8 +36,16 @@ const paddingBottomClasses: Record<LayoutProps['paddingBottom'], string> = {
 
 const containerWidthClasses: Record<LayoutProps['containerWidth'], string> = {
   full: 'max-w-none',
-  narrow: 'max-w-3xl',
-  normal: 'max-w-7xl',
+  large: 'max-w-big',
+  medium: 'max-w-6xl',
+  narrow: 'max-w-4xl',
+};
+
+const innerContainerClasses: Record<LayoutProps['containerWidth'], string> = {
+  full: 'max-w-big mx-auto',
+  large: 'px-20',
+  medium: 'px-16',
+  narrow: 'px-10',
 };
 
 // ----------------------------------
@@ -49,8 +57,9 @@ export function Container({
     surface = 'white',
     paddingTop = 'large',
     paddingBottom = 'large',
-    containerWidth = 'normal',
+    containerWidth = 'medium',
   },
+  children,
   ...rest
 }: ContainerProps) {
   return (
@@ -61,14 +70,17 @@ export function Container({
       }
       {...rest}
       className={cx(
-        'group/surface p-12',
-        'prose max-w-none surface-inverse:prose-invert',
+        '@container', // Container queries!
+        'surface-inverse:prose-invert',
+        'mx-auto',
         surfaceClasses[surface],
         paddingTopClasses[paddingTop],
         paddingBottomClasses[paddingBottom],
         containerWidthClasses[containerWidth],
         className
       )}
-    />
+    >
+      <div className={innerContainerClasses[containerWidth]}>{children}</div>
+    </section>
   );
 }

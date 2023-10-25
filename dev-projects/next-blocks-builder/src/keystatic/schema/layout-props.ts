@@ -2,7 +2,7 @@ import { fields } from '@keystatic/core';
 
 export type Surface = 'white' | 'off-white' | 'black' | 'off-black' | 'splash';
 export type Padding = 'large' | 'medium' | 'small' | 'none';
-export type ContainerWidth = 'full' | 'narrow' | 'normal';
+export type ContainerWidth = 'full' | 'large' | 'medium' | 'narrow';
 
 export type LayoutProps = {
   surface: Surface;
@@ -52,10 +52,11 @@ export const containerWidth = fields.select({
   label: 'Container width',
   options: [
     { label: 'Full', value: 'full' },
+    { label: 'Large', value: 'large' },
+    { label: 'Medium', value: 'medium' },
     { label: 'Narrow', value: 'narrow' },
-    { label: 'Normal', value: 'normal' },
   ],
-  defaultValue: 'normal',
+  defaultValue: 'medium',
 });
 
 // Grouped in an object field
