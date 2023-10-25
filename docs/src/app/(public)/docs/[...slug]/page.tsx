@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { Metadata, ResolvingMetadata } from 'next';
 import slugify from '@sindresorhus/slugify';
 
+import { EditOnGitHub } from '../../../../components/navigation/edit-on-github';
 import { TableOfContents } from '../../../../components/navigation/table-of-contents';
 import DocumentRenderer from '../../../../components/document-renderer';
 import { reader } from '../../../../utils/reader';
@@ -58,7 +59,10 @@ export default async function Docs({ params }: DocsProps) {
           <DocumentRenderer slug={slug} document={await page.content()} />
         </div>
       </div>
-      <TableOfContents headings={headings} />
+      <div>
+        <TableOfContents headings={headings} />
+        <EditOnGitHub slug={slug} />
+      </div>
     </div>
   );
 }
