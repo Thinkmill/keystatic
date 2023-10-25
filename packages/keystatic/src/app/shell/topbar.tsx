@@ -20,6 +20,7 @@ import { gitPullRequestIcon } from '@keystar/ui/icon/icons/gitPullRequestIcon';
 import { gitBranchPlusIcon } from '@keystar/ui/icon/icons/gitBranchPlusIcon';
 import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
 import { gitForkIcon } from '@keystar/ui/icon/icons/gitForkIcon';
+import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
 import { monitorIcon } from '@keystar/ui/icon/icons/monitorIcon';
 import { moonIcon } from '@keystar/ui/icon/icons/moonIcon';
 import { sunIcon } from '@keystar/ui/icon/icons/sunIcon';
@@ -55,6 +56,7 @@ import {
 import { useViewer } from './viewer-data';
 import { useThemeContext } from './theme';
 import { serializeRepoConfig } from '../repo-config';
+import { useImageLibraryURL } from '../../component-blocks/cloud-image-preview';
 
 export const TopBar = () => {
   let config = useConfig();
@@ -109,6 +111,7 @@ function CloudHeader({ config }: { config: CloudConfig }) {
       <BranchPicker />
       <GitMenu />
       <Box flex="1" />
+      <ImageLibraryButton />
       <ThemeMenu />
       <UserMenu
         user={
@@ -122,6 +125,21 @@ function CloudHeader({ config }: { config: CloudConfig }) {
         }
       />
     </HeaderOuter>
+  );
+}
+
+function ImageLibraryButton() {
+  const cloudInfo = useCloudInfo();
+  const imageLibraryUrl = useImageLibraryURL();
+  if (!cloudInfo?.team.images) {
+    return null;
+  }
+
+  return (
+    <ActionButton href={imageLibraryUrl} prominence="low">
+      <Icon src={imageIcon} />
+      <Text visuallyHidden={{ below: 'tablet' }}>Image library</Text>
+    </ActionButton>
   );
 }
 
