@@ -17,6 +17,7 @@ export const reader = cache(() => {
         repo: 'Thinkmill/keystatic',
         pathPrefix: 'docs',
         ref: branch,
+        token: process.env.PREVIEW_GITHUB_TOKEN,
       });
     }
   }
