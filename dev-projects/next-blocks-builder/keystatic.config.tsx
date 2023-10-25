@@ -1,6 +1,7 @@
 import { config, fields, collection, component } from '@keystatic/core';
 import { DocumentRenderer } from '@keystatic/core/renderer';
 
+// Minimal componentBlock styling via surface colors
 const surfaceColorLookup = {
   light: '#eeeeee',
   'light-subtle': '#bbbbbb',
@@ -23,6 +24,8 @@ const surface = fields.select({
   ],
   defaultValue: 'light',
 });
+
+// Below would be a more comprehensive set of shared layout props
 
 // const sharedLayoutProps = fields.object({
 // paddingTop: fields.select({
@@ -56,7 +59,7 @@ const surface = fields.select({
 // });
 
 // ------------------------------
-// Testimonial
+// Testimonial component block
 // ------------------------------
 const testimonial = component({
   label: 'Testimonial',
@@ -80,7 +83,7 @@ const testimonial = component({
 });
 
 // ------------------------------
-// Section
+// Section component block (wrapper for other components)
 // ------------------------------
 const section = component({
   label: 'Section',
@@ -158,22 +161,8 @@ const twoColumns = component({
   },
 });
 
-const inlineChild = component({
-  label: 'Inline child',
-  schema: {
-    child: fields.child({
-      kind: 'inline',
-      placeholder: 'inline string',
-      formatting: {
-        inlineMarks: 'inherit',
-      },
-    }),
-  },
-  preview: () => <div>Inline child</div>,
-});
-
 // ----------------------------------
-// Simple text
+// Simple text (nested document field — doesn't work yet)
 // ----------------------------------
 const simpleText = component({
   label: 'Simple text',
@@ -210,24 +199,7 @@ export default config({
             testimonial,
             twoColumns,
             simpleText,
-            inlineChild,
           },
-        }),
-      },
-    }),
-    posts: collection({
-      label: 'Posts',
-      slugField: 'title',
-      path: 'src/content/posts/*',
-      format: { contentField: 'content' },
-      schema: {
-        title: fields.slug({ name: { label: 'Title' } }),
-        content: fields.document({
-          label: 'Content',
-          formatting: true,
-          dividers: true,
-          links: true,
-          images: true,
         }),
       },
     }),
