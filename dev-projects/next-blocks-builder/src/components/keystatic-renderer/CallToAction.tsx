@@ -1,8 +1,8 @@
-import { cx } from '@/utils';
 import { InferRenderersForComponentBlocks } from '@keystatic/core';
 
+import { cx } from '../../utils';
+import { callToAction } from '../../keystatic/schema/component-blocks';
 import { Container } from './Container';
-import { callToAction } from '@/keystatic/schema/component-blocks';
 
 type CallToActionProps = InferRenderersForComponentBlocks<{
   callToAction: typeof callToAction;

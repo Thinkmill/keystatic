@@ -1,6 +1,5 @@
-import { cx } from '@/utils';
-
-import type { LayoutProps } from '@/keystatic/schema/layout-props';
+import { cx } from '../../utils';
+import type { LayoutProps } from '../../keystatic/schema/layout-props';
 
 export type { LayoutProps };
 

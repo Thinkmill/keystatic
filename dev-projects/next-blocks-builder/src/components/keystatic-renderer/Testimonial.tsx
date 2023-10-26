@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
-import { cx } from '@/utils';
-import { reader } from '@/keystatic/reader';
+import { cx } from '../../utils';
+import { reader } from '../../keystatic/reader';
 
 type Testimonial = string;
 

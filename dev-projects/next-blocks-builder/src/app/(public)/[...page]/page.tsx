@@ -1,14 +1,15 @@
 import { notFound } from 'next/navigation';
-import { reader } from '@/keystatic/reader';
 import { DocumentRenderer as PageBuilder } from '@keystatic/core/renderer';
 
-import { Heading } from '@/components/keystatic-renderer/Heading';
-import { Testimonial } from '@/components/keystatic-renderer/Testimonial';
-import { CallToAction } from '@/components/keystatic-renderer/CallToAction';
-import { Container } from '@/components/keystatic-renderer/Container';
-import { TwoColumns } from '@/components/keystatic-renderer/TwoColumns';
-import { DataDump } from '@/components/DataDump';
-// import { SimpleText } from '@/components/keystatic-renderer/SimpleText';
+import { reader } from '../../../keystatic/reader';
+
+import { Heading } from '../../../components/keystatic-renderer/Heading';
+import { Testimonial } from '../../../components/keystatic-renderer/Testimonial';
+import { CallToAction } from '../../../components/keystatic-renderer/CallToAction';
+import { Container } from '../../../components/keystatic-renderer/Container';
+import { TwoColumns } from '../../../components/keystatic-renderer/TwoColumns';
+import { DataDump } from '../../../components/DataDump';
+// import { SimpleText } from '../../../components/keystatic-renderer/SimpleText';
 
 export default async function Page({ params }: { params: { page: string[] } }) {
   const pageSlug = params.page ? params.page.join('/') : 'homepage';

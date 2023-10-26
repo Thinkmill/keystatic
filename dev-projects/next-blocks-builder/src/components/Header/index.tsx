@@ -1,4 +1,4 @@
-import { reader } from '@/keystatic/reader';
+import { reader } from '../../keystatic/reader';
 import { HeaderLink } from './HeaderLink';
 
 export async function Header() {

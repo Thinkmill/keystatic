@@ -3,7 +3,7 @@ import { DocumentRenderer } from '@keystatic/core/renderer';
 
 import { layoutProps } from './layout-props';
 
-import type { Surface } from '@/keystatic/schema/layout-props';
+import type { Surface } from '../../keystatic/schema/layout-props';
 
 // Color lookup to visually "annotate" the Admin UI about the surface
 const surfaceColorLookup: Record<Surface, string> = {

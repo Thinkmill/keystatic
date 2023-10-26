@@ -6,7 +6,7 @@ import {
   simpleText,
   testimonial,
   twoColumns,
-} from '@/keystatic/schema/component-blocks';
+} from './src/keystatic/schema/component-blocks';
 
 // ----------------------------------
 // Keystatic config

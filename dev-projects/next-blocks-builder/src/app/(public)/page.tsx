@@ -1,5 +1,4 @@
-import { reader } from '@/keystatic/reader';
-import Link from 'next/link';
+import { reader } from '../../keystatic/reader';
 
 export default async function Homepage() {
   const pages = await reader.collections.pages.all();
