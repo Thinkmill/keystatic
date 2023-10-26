@@ -71,7 +71,7 @@ export function getInitialPropsValueFromInitializer(
     case 'form':
       return initializer === undefined ? schema.defaultValue() : initializer;
     case 'child':
-      return null;
+      return initializer ?? null;
     case 'conditional': {
       const defaultValue =
         initializer === undefined
@@ -115,7 +115,7 @@ export function updateValue(
     case 'form':
       return updater;
     case 'child':
-      return null;
+      return updater;
     case 'conditional': {
       return {
         discriminant: updater.discriminant,

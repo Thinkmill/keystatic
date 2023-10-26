@@ -62,8 +62,8 @@ const valueToUpdaters: {
     Extract<ComponentSchema, { kind: Kind }>
   >;
 } = {
-  child() {
-    return undefined;
+  child(value) {
+    return value ?? undefined;
   },
   form(value) {
     return value;
