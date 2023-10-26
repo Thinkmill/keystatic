@@ -1,5 +1,5 @@
 import { reader } from '@/keystatic/reader';
-import Link from 'next/link';
+import { HeaderLink } from './HeaderLink';
 
 export async function Header() {
   const pages = await reader.collections.pages.all();
@@ -12,16 +12,15 @@ export async function Header() {
         using nestable <code>componentBlocks</code>, to create a "page builder"
         experience.
       </p>
-      <ul className="mt-10 flex flex-wrap gap-4">
-        {pages.map(page => (
-          <li
-            key={page.slug}
-            className="bg-slate-200 px-4 py-0.5 rounded-md text-slate-800 hover:bg-cyan-200 hover:text-cyan-900"
-          >
-            <Link href={page.slug}>{page.entry.title}</Link>
-          </li>
-        ))}
-      </ul>
+      <nav>
+        <ul className="mt-10 flex flex-wrap gap-4">
+          {pages.map(page => (
+            <li key={page.slug}>
+              <HeaderLink slug={page.slug} title={page.entry.title} />
+            </li>
+          ))}
+        </ul>
+      </nav>
     </header>
   );
 }
