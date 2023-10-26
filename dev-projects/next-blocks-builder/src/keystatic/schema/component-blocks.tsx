@@ -38,7 +38,6 @@ export const container = component({
           borderBottom: `dashed 2px ${
             surfaceColorLookup[fields.layoutProps.fields.surface.value]
           }`,
-          position: 'relative',
         }}
       >
         {fields.children.element}
@@ -63,7 +62,6 @@ export const twoColumns = component({
         borderBottom: `dashed 2px ${
           surfaceColorLookup[props.fields.layoutProps.fields.surface.value]
         }`,
-        position: 'relative',
       }}
     >
       <div style={{ flex: 1, padding: '1rem' }}>
@@ -126,4 +124,32 @@ export const simpleText = component({
       formatting: true,
     }),
   },
+});
+
+// ----------------------------------
+// Call to action
+// ----------------------------------
+export const callToAction = component({
+  label: 'Call to action',
+  schema: {
+    text: fields.text({ label: 'CTA Text', multiline: true }),
+    buttonText: fields.text({ label: 'Button text' }),
+    buttonHref: fields.text({ label: 'Button link path' }),
+    layoutProps,
+  },
+  preview: ({ fields }) => (
+    <div
+      style={{
+        padding: '1rem 0',
+        borderTop: `dashed 2px ${
+          surfaceColorLookup[fields.layoutProps.fields.surface.value]
+        }`,
+        borderBottom: `dashed 2px ${
+          surfaceColorLookup[fields.layoutProps.fields.surface.value]
+        }`,
+      }}
+    >
+      <p>{fields.text.value}</p>
+    </div>
+  ),
 });

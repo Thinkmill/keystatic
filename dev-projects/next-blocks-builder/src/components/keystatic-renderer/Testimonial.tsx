@@ -36,11 +36,11 @@ export async function Testimonial({
           // Off-white
           'surface-off-white:text-slate-700',
           // Black
-          'surface-black:text-transparent surface-black:bg-gradient-to-br surface-black:from-lime-400 surface-black:to-emerald-400 surface-black:bg-clip-text',
+          'surface-black:text-transparent surface-black:bg-gradient-to-r surface-black:from-cyan-300 surface-black:to-sky-500 surface-black:bg-clip-text',
           // Off-black
           'surface-off-black:text-slate-300',
           // Splash
-          'surface-splash:text-green-900'
+          'surface-splash:text-cyan-900'
         )}
       >
         <blockquote

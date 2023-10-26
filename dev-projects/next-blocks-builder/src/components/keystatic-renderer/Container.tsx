@@ -12,12 +12,19 @@ type ContainerProps = {
 // ----------------------------------
 // Style lookups
 // ----------------------------------
+const marginTopClasses: Record<LayoutProps['marginTop'], string> = {
+  large: 'mt-24 md:mt-32 lg:mt-40',
+  medium: 'mt-16 md:mt-20 lg:mt-24',
+  small: 'mt-8 md:mt-12 lg:mt-16',
+  none: '',
+};
+
 const surfaceClasses: Record<LayoutProps['surface'], string> = {
   white: 'bg-white',
   'off-white': 'bg-slate-200',
   black: 'bg-black',
   'off-black': 'bg-slate-900',
-  splash: 'bg-gradient-to-br from-lime-400 to-emerald-400',
+  splash: 'bg-gradient-to-br from-cyan-400 to-sky-400',
 };
 
 const paddingTopClasses: Record<LayoutProps['paddingTop'], string> = {
@@ -34,15 +41,22 @@ const paddingBottomClasses: Record<LayoutProps['paddingBottom'], string> = {
   none: '',
 };
 
+// width: 100vw;
+//   position: relative;
+//   left: 50%;
+//   right: 50%;
+//   margin-left: -50vw;
+//   margin-right: -50vw;
+
 const containerWidthClasses: Record<LayoutProps['containerWidth'], string> = {
-  full: 'max-w-none',
-  large: 'max-w-big',
-  medium: 'max-w-6xl',
-  narrow: 'max-w-4xl',
+  full: 'max-w-none w-[100vw] relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]',
+  large: 'max-w-big rounded-xl',
+  medium: 'max-w-6xl rounded-xl',
+  narrow: 'max-w-4xl rounded-xl',
 };
 
 const innerContainerClasses: Record<LayoutProps['containerWidth'], string> = {
-  full: 'max-w-big mx-auto',
+  full: 'max-w-big mx-auto px-6',
   large: 'px-20',
   medium: 'px-16',
   narrow: 'px-10',
@@ -54,6 +68,7 @@ const innerContainerClasses: Record<LayoutProps['containerWidth'], string> = {
 export function Container({
   className = '',
   layoutProps: {
+    marginTop = 'none',
     surface = 'white',
     paddingTop = 'large',
     paddingBottom = 'large',
@@ -71,8 +86,9 @@ export function Container({
       {...rest}
       className={cx(
         '@container', // Container queries!
-        'surface-inverse:prose-invert',
+        'prose surface-inverse:prose-invert',
         'mx-auto',
+        marginTopClasses[marginTop],
         surfaceClasses[surface],
         paddingTopClasses[paddingTop],
         paddingBottomClasses[paddingBottom],

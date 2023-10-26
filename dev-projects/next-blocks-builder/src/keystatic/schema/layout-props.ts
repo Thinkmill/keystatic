@@ -8,7 +8,7 @@ const surfaceOptions = [
   { label: 'Splash', value: 'splash' },
 ] as const;
 
-const paddingOptions = [
+const spacingOptions = [
   { label: 'Large', value: 'large' },
   { label: 'Medium', value: 'medium' },
   { label: 'Small', value: 'small' },
@@ -23,19 +23,26 @@ const containerWidthOptions = [
 ] as const;
 
 export type Surface = (typeof surfaceOptions)[number]['value'];
-export type Padding = (typeof paddingOptions)[number]['value'];
+export type Spacing = (typeof spacingOptions)[number]['value'];
 export type ContainerWidth = (typeof containerWidthOptions)[number]['value'];
 
 export type LayoutProps = {
+  marginTop: Spacing;
   surface: Surface;
-  paddingTop: Padding;
-  paddingBottom: Padding;
+  paddingTop: Spacing;
+  paddingBottom: Spacing;
   containerWidth: ContainerWidth;
 };
 
 // ----------------------------------
 // Shared layout props for all "blocks"
 // ----------------------------------
+export const marginTop = fields.select({
+  label: 'Margin top',
+  options: spacingOptions,
+  defaultValue: 'none',
+});
+
 export const surface = fields.select({
   label: 'Surface (background color)',
   options: surfaceOptions,
@@ -44,13 +51,13 @@ export const surface = fields.select({
 
 export const paddingTop = fields.select({
   label: 'Padding top',
-  options: paddingOptions,
+  options: spacingOptions,
   defaultValue: 'medium',
 });
 
 export const paddingBottom = fields.select({
   label: 'Padding bottom',
-  options: paddingOptions,
+  options: spacingOptions,
   defaultValue: 'medium',
 });
 
@@ -62,6 +69,7 @@ export const containerWidth = fields.select({
 
 // Grouped in an object field
 export const layoutProps = fields.object({
+  marginTop,
   surface,
   paddingTop,
   paddingBottom,

@@ -1,10 +1,11 @@
 import { config, fields, collection } from '@keystatic/core';
 
 import {
+  callToAction,
   container,
-  twoColumns,
   simpleText,
   testimonial,
+  twoColumns,
 } from '@/keystatic/schema/component-blocks';
 
 // ----------------------------------
@@ -32,6 +33,7 @@ export default config({
             testimonial,
             twoColumns,
             simpleText,
+            callToAction,
           },
         }),
       },

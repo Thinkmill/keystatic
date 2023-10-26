@@ -7,5 +7,5 @@ type ValidHeading = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
 export function Heading({ level, children }: HeadingProps) {
   const Tag: ValidHeading = `h${level}`;
-  return <Tag>{children}</Tag>;
+  return <Tag className="first:mt-0">{children}</Tag>;
 }
