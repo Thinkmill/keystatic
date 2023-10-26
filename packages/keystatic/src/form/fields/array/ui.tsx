@@ -23,7 +23,6 @@ import { useId, Key, useMemo, useState, useCallback } from 'react';
 import { getSlugFromState } from '../../../app/utils';
 import { clientSideValidateProp } from '../../errors';
 import {
-  NonChildFieldComponentSchema,
   FormValueContentFromPreviewProps,
   ExtraFieldInputProps,
 } from '../../form-from-preview';
@@ -430,7 +429,7 @@ function move<T>(
 }
 
 function ArrayFieldItemModalContent(props: {
-  schema: NonChildFieldComponentSchema;
+  schema: ComponentSchema;
   value: unknown;
   onChange: (cb: (value: unknown) => unknown) => void;
   slugField: SlugFieldInfo | undefined;

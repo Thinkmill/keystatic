@@ -32,10 +32,7 @@ import {
   GenericPreviewProps,
 } from '../../../../api';
 import { clientSideValidateProp } from '../../../../errors';
-import {
-  FormValueContentFromPreviewProps,
-  NonChildFieldComponentSchema,
-} from '../../../../form-from-preview';
+import { FormValueContentFromPreviewProps } from '../../../../form-from-preview';
 import {
   previewPropsToValue,
   setValueToPreviewProps,
@@ -204,7 +201,7 @@ function FormValue({
   onClose,
   props,
 }: {
-  props: GenericPreviewProps<NonChildFieldComponentSchema, unknown>;
+  props: GenericPreviewProps<ComponentSchema, unknown>;
   onClose(): void;
 }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);

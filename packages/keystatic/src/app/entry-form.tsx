@@ -14,7 +14,6 @@ import {
   SlugFieldProvider,
 } from '../form/fields/text/path-slug-context';
 import {
-  NonChildFieldComponentSchema,
   InnerFormValueContentFromPreviewProps,
   FormValueContentFromPreviewProps,
 } from '../form/form-from-preview';
@@ -53,7 +52,7 @@ export function FormForEntry({
   forceValidation,
   slugField,
   entryLayout,
-  previewProps: _previewProps,
+  previewProps: props,
 }: {
   previewProps: GenericPreviewProps<
     ObjectField<Record<string, ComponentSchema>>,
@@ -65,10 +64,6 @@ export function FormForEntry({
   slugField: SlugFieldInfo | undefined;
 }) {
   const isAboveMobile = useContentPanelQuery({ above: 'mobile' });
-  const props = _previewProps as GenericPreviewProps<
-    ObjectField<Record<string, NonChildFieldComponentSchema>>,
-    unknown
-  >;
 
   if (entryLayout === 'content' && formatInfo.contentField && isAboveMobile) {
     const { contentField } = formatInfo;
