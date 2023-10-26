@@ -17,31 +17,35 @@ export default async function Page({ params }: { params: { page: string[] } }) {
   });
   if (!page) notFound();
   return (
-    <main>
-      <div className="max-w-big mx-auto py-12">
-        <h1 className="px-6 text-2xl lg:text-4xl font-extrabold">
-          {page.title}
-        </h1>
-      </div>
-      <div className="prose max-w-big mx-auto px-6">
-        <PageBuilder
-          document={page.content}
-          renderers={{
-            block: {
-              heading: props => <Heading {...props} />,
-              paragraph: props => <p className="first:mt-0" {...props} />,
-            },
-          }}
-          componentBlocks={{
-            section: props => <Container {...props} />,
-            testimonial: props => <Testimonial {...props} />,
-            twoColumns: props => <TwoColumns {...props} />,
-            callToAction: props => <CallToAction {...props} />,
-            // simpleText: props => <SimpleText {...props} />,
-          }}
-        />
-      </div>
-      <DataDump data={page} />
-    </main>
+    <>
+      <main>
+        <div className="max-w-big mx-auto py-12">
+          <h1 className="px-6 text-2xl lg:text-4xl font-extrabold">
+            {page.title}
+          </h1>
+        </div>
+        <div className="prose max-w-big mx-auto px-6">
+          <PageBuilder
+            document={page.content}
+            renderers={{
+              block: {
+                heading: props => <Heading {...props} />,
+                paragraph: props => <p className="first:mt-0" {...props} />,
+              },
+            }}
+            componentBlocks={{
+              section: props => <Container {...props} />,
+              testimonial: props => <Testimonial {...props} />,
+              twoColumns: props => <TwoColumns {...props} />,
+              callToAction: props => <CallToAction {...props} />,
+              // simpleText: props => <SimpleText {...props} />,
+            }}
+          />
+        </div>
+      </main>
+      <footer>
+        <DataDump data={page} />
+      </footer>
+    </>
   );
 }
