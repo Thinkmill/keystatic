@@ -63,18 +63,9 @@ function inlineContainer(args: {
   };
 }
 
-// a user land version of https://github.com/microsoft/TypeScript/issues/47920
-function satisfies<Base>() {
-  return function <Specific extends Base>(value: Specific) {
-    return value;
-  };
-}
-
 type EditorSchema = typeof editorSchema;
 
-export const editorSchema = satisfies<
-  Record<Block['type'] | 'editor', BlockContainerSchema | InlineContainerSchema>
->()({
+export const editorSchema = {
   editor: blockContainer({
     allowedChildren: [...insideOfLayouts, 'layout'],
     invalidPositionHandleMode: 'move',
@@ -103,7 +94,7 @@ export const editorSchema = satisfies<
     invalidPositionHandleMode: 'unwrap',
   }),
   'component-block-prop': blockContainer({
-    allowedChildren: [...paragraphLike, 'component-block'],
+    allowedChildren: insideOfLayouts,
     invalidPositionHandleMode: 'unwrap',
   }),
   'ordered-list': blockContainer({
@@ -140,7 +131,10 @@ export const editorSchema = satisfies<
     invalidPositionHandleMode: 'move',
     allowedChildren: ['table-row'],
   }),
-});
+} satisfies Record<
+  Block['type'] | 'editor',
+  BlockContainerSchema | InlineContainerSchema
+>;
 
 type InlineContainingType = {
   [Key in keyof EditorSchema]: {

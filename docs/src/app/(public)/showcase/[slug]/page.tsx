@@ -11,12 +11,12 @@ import { GitHubOutlineIcon } from '../../../../components/icons/github-outline-i
 
 export default async function Docs({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  const project = await reader.collections.projects.read(slug);
+  const project = await reader().collections.projects.read(slug);
   if (!project) notFound();
   const content = await project.content();
 
   // Project navigation
-  const allProjects = await reader.collections.projects.all();
+  const allProjects = await reader().collections.projects.all();
   const sortedProjects = allProjects.sort(
     (a, b) => (a.entry.sortIndex as number) - (b.entry.sortIndex as number)
   );
@@ -118,7 +118,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
           <hr className="mx-auto mt-16 w-20 border-sand-5" />
           <main className="bg-white py-12">
             <div className="prose mx-auto px-4 lg:prose-lg sm:px-6 lg:px-8">
-              <DocumentRenderer document={content} slug={slug} />
+              <DocumentRenderer document={content} />
             </div>
           </main>
         </>
@@ -128,7 +128,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
 }
 
 export async function generateStaticParams() {
-  const slugs = await reader.collections.projects.list();
+  const slugs = await reader().collections.projects.list();
 
   return slugs.map(slug => ({
     slug,
@@ -140,7 +140,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const slug = params.slug;
-  const project = await reader.collections.projects.read(slug);
+  const project = await reader().collections.projects.read(slug);
 
   const parentTitle = (await parent).title ?? 'Showcase';
   const title = project?.title ?? parentTitle;
