@@ -213,6 +213,14 @@ export const LoadingState = () => {
   );
 };
 
+export const CustomMenuWidths = () => (
+  <Flex gap="large" direction="column">
+    {render({ label: 'value < control width', menuWidth: 100 })}
+    {render({ label: 'value > control width', menuWidth: 300 })}
+    {render({ label: 'align = end', menuWidth: 300, align: 'end' })}
+  </Flex>
+);
+
 function render<T>(props: Partial<ComboboxProps<T>>) {
   return (
     <Combobox label="Combobox" {...defaultActions} {...props}>
