@@ -72,10 +72,12 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
   let {
+    align = 'start',
     menuTrigger = 'input',
     shouldFlip = true,
     direction = 'bottom',
     loadingState,
+    menuWidth: menuWidthProp,
     onLoadMore,
   } = props;
 
@@ -115,7 +117,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
     state
   );
 
-  // Measure the width of the inputfield and the button to inform the width of the menu (below).
+  // Measure the width of the input and the button to inform the width of the menu (below).
   let [menuWidth, setMenuWidth] = useState<number>();
   let { scale } = useProvider();
 
@@ -123,7 +125,8 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
     if (buttonRef.current && inputRef.current) {
       let buttonWidth = buttonRef.current.offsetWidth;
       let inputWidth = inputRef.current.offsetWidth;
-      setMenuWidth(buttonWidth + inputWidth);
+
+      setMenuWidth(inputWidth + buttonWidth);
     }
   }, [buttonRef, inputRef, setMenuWidth]);
 
@@ -136,7 +139,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
 
   let style = {
     width: menuWidth,
-    minWidth: menuWidth,
+    minWidth: menuWidthProp ?? menuWidth,
   };
 
   return (
@@ -164,9 +167,9 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
         state={state}
         UNSAFE_style={style}
         ref={popoverRef}
-        triggerRef={buttonRef}
+        triggerRef={align === 'end' ? buttonRef : inputRef}
         scrollRef={listBoxRef}
-        placement={`${direction} end`}
+        placement={`${direction} ${align}`}
         hideArrow
         isNonModal
         shouldFlip={shouldFlip}
