@@ -45,10 +45,8 @@ export default config({
       schema: {
         name: fields.slug({ name: { label: 'Name' } }),
         quote: fields.text({ label: 'Quote', multiline: true }),
-        avatar: fields.image({
-          label: 'Avatar',
-          directory: 'public/images/testimonials',
-          publicPath: '/images/testimonials/',
+        image: fields.url({
+          label: 'Image',
         }),
       },
     }),

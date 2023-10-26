@@ -17,10 +17,10 @@ export async function Testimonial({
   }
   return (
     <figure className="not-prose flex flex-col @5xl:flex-row gap-4 @5xl:gap-8 text-left items-start">
-      {testimonial.avatar && (
+      {testimonial.image && (
         <Image
-          className="h-20 w-20 @5xl:h-24 @5xl:w-24 @7xl:h-32 @7xl:w-32 rounded-lg object-cover @5xl:mb-4"
-          src={testimonial.avatar}
+          className="shrink-0 h-20 w-20 @5xl:h-24 @5xl:w-24 @7xl:h-32 @7xl:w-32 rounded-lg object-cover @5xl:mb-4"
+          src={testimonial.image}
           alt=""
           width={96}
           height={96}
