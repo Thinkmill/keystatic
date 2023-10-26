@@ -800,7 +800,7 @@ const docs = [
             <p className="min-h-[2.5rem] w-full px-2 py-1 opacity-80 blur-sm transition-all delay-300 duration-200 ease-out group-hover:bg-white group-hover:opacity-100 group-hover:blur-none">
               <span className="text-sand-11">const</span> slugs{' '}
               <span className="text-sand-11">=</span> await
-              reader.collections.posts.list{'()'};
+              reader().collections.posts.list{'()'};
             </p>
           </div>
         </div>
