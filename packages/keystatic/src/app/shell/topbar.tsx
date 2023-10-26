@@ -197,6 +197,7 @@ function LocalHeader() {
         Keystatic
       </Text>
       <Box flex="1" />
+      <ImageLibraryButton />
       <ThemeMenu />
       {rawCloudInfo ? (
         rawCloudInfo === 'unauthorized' ? (
