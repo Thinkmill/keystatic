@@ -1,4 +1,8 @@
 name: Simon
 quote: I have never played that much basketball in my entire life. I am bruised!
-image: >-
-  https://images.unsplash.com/photo-1525909002-1b05e0c869d8?auto=format&fit=crop&q=60&w=800&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTcyfHxhYnN0cmFjdCUyMGFydHxlbnwwfHwwfHx8MA%3D%3D
+image:
+  src: >-
+    https://thinkmill-labs.keystatic.net/ovnxxvauaqcj/images/vnr5wsnn1k5e/devrel-with-corgis
+  alt: Illustration of a smiling devrel surrounded by corgis in his office
+  height: 912
+  width: 940

@@ -51,7 +51,7 @@ export default config({
       schema: {
         name: fields.slug({ name: { label: 'Name' } }),
         quote: fields.text({ label: 'Quote', multiline: true }),
-        image: fields.url({
+        image: fields.cloudImage({
           label: 'Image',
         }),
       },
