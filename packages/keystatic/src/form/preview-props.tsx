@@ -6,6 +6,7 @@ import {
   ObjectField,
   GenericPreviewProps,
   BasicFormField,
+  ChildField,
 } from './api';
 import {
   getKeysForArrayValue,
@@ -49,6 +50,29 @@ function getOrInsert<K, V>(
   return map.get(key)!;
 }
 
+export type ChildFieldData = {
+  value: unknown;
+  onChange: (cb: unknown) => void;
+};
+
+const childFieldData = new WeakMap<{}, ChildFieldData>();
+
+function storeChildFieldData(value: ChildFieldData) {
+  let key = {};
+  childFieldData.set(key, value);
+  return key;
+}
+
+export function getChildFieldData(
+  props: GenericPreviewProps<ChildField, unknown>
+) {
+  const val = childFieldData.get((props as any)._);
+  if (!val) {
+    throw new Error('expected child field data to exist');
+  }
+  return val;
+}
+
 export function createGetPreviewProps<
   Schema extends ComponentSchema,
   ChildFieldElement,
@@ -88,7 +112,9 @@ export function createGetPreviewProps<
         },
       };
     },
-    child() {},
+    child(schema, onChange) {
+      return (newVal: unknown) => onChange(() => newVal as any);
+    },
     conditional(schema, onChange) {
       return {
         onChange: (discriminant: string | boolean, value?: unknown) =>
@@ -150,7 +176,11 @@ export function createGetPreviewProps<
       };
     },
     child(schema, value, onChange, path) {
-      return { element: getChildFieldElement(path), schema: schema };
+      return {
+        element: getChildFieldElement(path),
+        schema: schema,
+        _: storeChildFieldData({ value, onChange }),
+      };
     },
     object(schema, value, memoized, path, getInnerProp) {
       const fields: Record<

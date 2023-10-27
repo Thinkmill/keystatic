@@ -4,6 +4,7 @@ import { DocumentFeatures } from '../document-features';
 import { DocumentFeaturesForNormalization } from '../document-features-normalization';
 import { Mark } from '../utils';
 import { ComponentSchema, ChildField } from '../../../../api';
+import { Descendant, Element } from 'slate';
 
 export type DocumentFeaturesForChildField =
   | {
@@ -273,4 +274,14 @@ export function getPlaceholderTextForPropPath(
     return field.options.placeholder;
   }
   return '';
+}
+
+export function cloneDescendent(node: Descendant): Descendant {
+  if (Element.isElement(node)) {
+    return {
+      ...node,
+      children: node.children.map(cloneDescendent),
+    };
+  }
+  return { ...node };
 }

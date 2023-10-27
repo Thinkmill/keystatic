@@ -1,5 +1,13 @@
 import { assert } from 'emery';
-import { Editor, Element, Path, Transforms, Node, PathRef } from 'slate';
+import {
+  Editor,
+  Element,
+  Path,
+  Transforms,
+  Node,
+  PathRef,
+  Descendant,
+} from 'slate';
 
 import { areArraysEqual } from '../document-features-normalization';
 import { ChildField, ComponentBlock, ComponentSchema } from '../../../../api';
@@ -7,23 +15,37 @@ import {
   getInitialPropsValue,
   getKeysForArrayValue,
 } from '../../../../initial-values';
-import { ReadonlyPropPath } from './utils';
+import { ReadonlyPropPath, cloneDescendent } from './utils';
+import { transformProps } from '../../../../props-value';
 
 export function updateComponentBlockElementProps(
   editor: Editor,
   componentBlock: ComponentBlock,
   prevProps: Record<string, unknown>,
-  newProps: Record<string, unknown>,
+  _newProps: Record<string, unknown>,
   basePath: Path,
   setElement: (partialElement: { props: Record<string, unknown> }) => void
 ) {
   Editor.withoutNormalizing(editor, () => {
-    setElement({ props: newProps });
+    const propPathsWithNodesToReplace = new Map<string, Descendant[]>();
+    const schema = { kind: 'object' as const, fields: componentBlock.schema };
+    const newProps = transformProps(schema, _newProps, {
+      child(schema, value, path) {
+        if (schema.options.kind === 'block' && value) {
+          propPathsWithNodesToReplace.set(
+            JSON.stringify(path),
+            (value as any as Descendant[]).map(cloneDescendent)
+          );
+        }
+        return value;
+      },
+    });
+    setElement({ props: newProps as Record<string, unknown> });
 
     const childPropPaths = findChildPropPathsWithPrevious(
       newProps,
       prevProps,
-      { kind: 'object', fields: componentBlock.schema },
+      schema,
       [],
       [],
       []
@@ -147,6 +169,23 @@ export function updateComponentBlockElementProps(
       }
 
       break;
+    }
+    for (const [propPath, val] of propPathsWithNodesToReplace) {
+      const idx = propPathsToExpectedIndexes.get(propPath);
+      if (idx !== undefined) {
+        Transforms.removeNodes(editor, {
+          at: [...basePath, idx],
+        });
+        Transforms.insertNodes(
+          editor,
+          {
+            type: 'component-block-prop',
+            propPath: JSON.parse(propPath),
+            children: val,
+          },
+          { at: [...basePath, idx] }
+        );
+      }
     }
   });
 }

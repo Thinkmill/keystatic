@@ -10,15 +10,12 @@ import {
 import { ObjectFieldInput } from './fields/object/ui';
 import { ConditionalFieldInput } from './fields/conditional/ui';
 import { ArrayFieldInput } from './fields/array/ui';
+import { ChildFieldInput } from './fields/document/DocumentEditor/component-blocks/child-field-input';
 
 export type ExtraFieldInputProps = {
   autoFocus: boolean;
   forceValidation: boolean;
 };
-
-function ChildFieldInput() {
-  return null;
-}
 
 function getInputComponent(schema: ComponentSchema): any {
   if (schema.kind === 'object') {

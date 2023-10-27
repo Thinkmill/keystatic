@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
-import { Editor, Transforms } from 'slate';
+import { Descendant, Editor, Transforms } from 'slate';
 
 import {
   insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading,
@@ -16,6 +16,8 @@ import { ChromelessComponentBlockElement } from './chromeless-element';
 import { useDocumentEditorConfig } from '../toolbar-state';
 import { getInitialPropsValue } from '../../../../initial-values';
 import { findChildPropPaths } from './child-prop-paths';
+import { transformProps } from '../../../../props-value';
+import { cloneDescendent } from './utils';
 
 export { withComponentBlocks } from './with-component-blocks';
 
@@ -119,6 +121,32 @@ export const ComponentBlocksElement = ({
     );
   }, [componentBlock, onPropsChange]);
 
+  const propsWithChildFields = useMemo(() => {
+    if (!componentBlock) return;
+    const blockChildrenByPath = new Map<string, Descendant[]>();
+    for (const child of currentElement.children) {
+      if (child.type === 'component-block-prop' && child.propPath) {
+        blockChildrenByPath.set(JSON.stringify(child.propPath), child.children);
+      }
+    }
+    return transformProps(
+      { kind: 'object', fields: componentBlock.schema },
+      currentElement.props,
+      {
+        child(schema, value, propPath) {
+          if (schema.options.kind === 'block') {
+            const key = JSON.stringify(propPath);
+            const children = blockChildrenByPath.get(key);
+            if (children) {
+              return children.map(cloneDescendent) as any;
+            }
+          }
+          return value;
+        },
+      }
+    );
+  }, [componentBlock, currentElement]);
+
   if (!componentBlock) {
     return (
       <div style={{ border: 'red 4px solid', padding: 8 }}>
@@ -136,7 +164,11 @@ Content:`}
     );
   }
 
-  const toolbarPreviewProps = getToolbarPreviewProps(currentElement.props);
+  console.log(propsWithChildFields);
+
+  const toolbarPreviewProps = getToolbarPreviewProps(
+    propsWithChildFields as any
+  );
 
   const renderedBlock = (
     <ComponentBlockRender

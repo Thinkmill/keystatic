@@ -107,7 +107,7 @@ export function setValueToPreviewProps<Schema extends ComponentSchema>(
 ) {
   if (isKind(props, 'child')) {
     // child fields can't be updated through preview props, so we don't do anything here
-    return;
+    return props;
   }
   if (
     isKind(props, 'form') ||

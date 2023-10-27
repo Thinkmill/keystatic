@@ -176,7 +176,11 @@ function DefaultToolbarWithChrome({
   return (
     <NotEditable>
       <Flex direction="column" gap="medium">
-        <Flex alignItems="center" gap="regular" style={{ userSelect: 'none' }}>
+        <Flex
+          alignItems="center"
+          gap="regular"
+          UNSAFE_style={{ userSelect: 'none' }}
+        >
           <ActionButton onPress={() => onShowEditMode()}>
             {stringFormatter.format('edit')}
           </ActionButton>
