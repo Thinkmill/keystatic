@@ -6,6 +6,7 @@ import { useDocumentEditorConfig } from '../toolbar-state';
 import { DocumentEditor } from '..';
 import { useMemo, useState } from 'react';
 import { getWholeDocumentFeaturesForChildField } from './utils';
+import { ResetEntryLayoutContext } from '../../../../../app/entry-form';
 
 const emptyObj = {};
 
@@ -40,25 +41,27 @@ function InnerChildFieldInput(props: {
     setState({ key: newKey(), value: props.value });
   }
   return (
-    <Field label={props.schema.options.placeholder}>
-      {inputProps => (
-        <DocumentEditor
-          {...inputProps}
-          key={state.key}
-          componentBlocks={
-            props.schema.options.componentBlocks === 'inherit'
-              ? outerConfig.componentBlocks
-              : emptyObj
-          }
-          documentFeatures={documentFeatures}
-          onChange={val => {
-            setState(state => ({ key: state.key, value: val as any }));
-            props.onChange(val as any);
-          }}
-          value={state.value as any}
-        />
-      )}
-    </Field>
+    <ResetEntryLayoutContext>
+      <Field label={props.schema.options.placeholder}>
+        {inputProps => (
+          <DocumentEditor
+            {...inputProps}
+            key={state.key}
+            componentBlocks={
+              props.schema.options.componentBlocks === 'inherit'
+                ? outerConfig.componentBlocks
+                : emptyObj
+            }
+            documentFeatures={documentFeatures}
+            onChange={val => {
+              setState(state => ({ key: state.key, value: val as any }));
+              props.onChange(val as any);
+            }}
+            value={state.value as any}
+          />
+        )}
+      </Field>
+    </ResetEntryLayoutContext>
   );
 }
 
@@ -66,7 +69,6 @@ export function ChildFieldInput(
   props: GenericPreviewProps<ChildField, unknown>
 ) {
   const data = getChildFieldData(props);
-  console.log(data, props.schema);
   if (props.schema.options.kind === 'block' && data.value) {
     return (
       <InnerChildFieldInput

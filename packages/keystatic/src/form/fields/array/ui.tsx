@@ -88,7 +88,6 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
     );
     return { slugs, field: slugField, glob: '*' as const };
   }, [modalStateIndex, props, modalState.state]);
-
   return (
     <Flex
       elementType="section"
@@ -124,6 +123,7 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
         {...props}
         labelId={labelId}
         onOpenItem={idx => {
+          console.log(previewPropsToValue(props.elements[idx]));
           setModalState({
             state: 'open',
             value: previewPropsToValue(props.elements[idx]),

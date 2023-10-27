@@ -4,7 +4,7 @@ import {
   SplitPanePrimary,
   SplitPaneSecondary,
 } from '@keystar/ui/split-view';
-import { createContext, useContext } from 'react';
+import { ReactNode, createContext, useContext } from 'react';
 
 import { ReadonlyPropPath } from '../form/fields/document/DocumentEditor/component-blocks/utils';
 import {
@@ -45,6 +45,14 @@ export function containerWidthForEntryLayout(
 const EntryLayoutSplitPaneContext = createContext<'main' | 'side' | null>(null);
 export function useEntryLayoutSplitPaneContext() {
   return useContext(EntryLayoutSplitPaneContext);
+}
+
+export function ResetEntryLayoutContext(props: { children: ReactNode }) {
+  return (
+    <EntryLayoutSplitPaneContext.Provider value={null}>
+      {props.children}
+    </EntryLayoutSplitPaneContext.Provider>
+  );
 }
 
 export function FormForEntry({

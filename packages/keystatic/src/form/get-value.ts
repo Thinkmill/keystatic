@@ -7,6 +7,7 @@ import {
   ParsedValueForComponentSchema,
 } from './api';
 import { getKeysForArrayValue, setKeysForArrayValue } from './initial-values';
+import { getChildFieldData } from './preview-props';
 
 const previewPropsToValueConverter: {
   [Kind in ComponentSchema['kind']]: (
@@ -16,8 +17,9 @@ const previewPropsToValueConverter: {
     >
   ) => ParsedValueForComponentSchema<Extract<ComponentSchema, { kind: Kind }>>;
 } = {
-  child() {
-    return null;
+  child(props) {
+    const childFieldData = getChildFieldData(props);
+    return childFieldData.value as any;
   },
   form(props) {
     return props.value;
@@ -106,8 +108,9 @@ export function setValueToPreviewProps<Schema extends ComponentSchema>(
   props: GenericPreviewProps<ComponentSchema, unknown>
 ) {
   if (isKind(props, 'child')) {
-    // child fields can't be updated through preview props, so we don't do anything here
-    return props;
+    const { onChange } = getChildFieldData(props);
+    onChange(value);
+    return;
   }
   if (
     isKind(props, 'form') ||

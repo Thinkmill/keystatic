@@ -30,7 +30,7 @@ const componentBlocks = {
       links: fields.array(
         fields.object({
           heading: fields.text({ label: 'Heading' }),
-          content: fields.child({ kind: 'inline', placeholder: 'Content...' }),
+          content: fields.child({ kind: 'block', placeholder: 'Content...' }),
           href: fields.text({ label: 'Link' }),
         }),
         {

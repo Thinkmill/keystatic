@@ -129,6 +129,7 @@ export const ComponentBlocksElement = ({
         blockChildrenByPath.set(JSON.stringify(child.propPath), child.children);
       }
     }
+    if (!blockChildrenByPath.size) return currentElement.props;
     return transformProps(
       { kind: 'object', fields: componentBlock.schema },
       currentElement.props,
@@ -163,8 +164,6 @@ Content:`}
       </div>
     );
   }
-
-  console.log(propsWithChildFields);
 
   const toolbarPreviewProps = getToolbarPreviewProps(
     propsWithChildFields as any

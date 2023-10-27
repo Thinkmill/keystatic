@@ -73,7 +73,12 @@ export function getInitialPropsValueFromInitializer(
     case 'form':
       return initializer === undefined ? schema.defaultValue() : initializer;
     case 'child':
-      return initializer ?? null;
+      return (
+        initializer ??
+        (schema.options.kind === 'block'
+          ? [{ type: 'paragraph', children: [{ text: '' }] }]
+          : null)
+      );
     case 'conditional': {
       const defaultValue =
         initializer === undefined

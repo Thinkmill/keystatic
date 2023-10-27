@@ -36,6 +36,7 @@ import { FormValueContentFromPreviewProps } from '../../../../form-from-preview'
 import {
   previewPropsToValue,
   setValueToPreviewProps,
+  valueToUpdater,
 } from '../../../../get-value';
 import { createGetPreviewProps } from '../../../../preview-props';
 import { NotEditable } from '../primitives';
@@ -229,6 +230,7 @@ function FormValue({
             if (!clientSideValidateProp(props.schema, state, undefined)) {
               setForceValidation(true);
             } else {
+              console.log(valueToUpdater(state, props.schema));
               setValueToPreviewProps(state, props);
               onClose();
             }
