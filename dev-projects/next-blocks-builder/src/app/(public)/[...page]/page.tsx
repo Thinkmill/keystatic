@@ -13,7 +13,7 @@ import { DataDump } from '../../../components/DataDump';
 
 export async function generateStaticParams() {
   const pages = await reader.collections.pages.list();
-  return pages.map(page => ({ page }));
+  return pages.map(page => ({ page: page.split('/') }));
 }
 
 export default async function Page({ params }: { params: { page: string[] } }) {
