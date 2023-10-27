@@ -1,0 +1,47 @@
+---
+title: Demo Two
+---
+{% twoColumns
+   layoutProps={marginTop: "none", surface: "off-white", paddingTop: "large", paddingBottom: "large", containerWidth: "full"} %}
+{% component-block-prop propPath=["left"] %}
+# The best thing you'll see all day.
+
+We're pretty stoked with our new product. And we think you will like it too!
+{% /component-block-prop %}
+
+{% component-block-prop propPath=["right"] %}
+{% testimonial testimonial="t-rex" /%}
+{% /component-block-prop %}
+{% /twoColumns %}
+
+{% callToAction
+   text="Ready to embark on a wild journey?"
+   buttonText="Heck yeah!"
+   buttonHref="/"
+   layoutProps={marginTop: "none", surface: "white", paddingTop: "medium", paddingBottom: "medium", containerWidth: "medium"} /%}
+
+{% twoColumns
+   layoutProps={marginTop: "none", surface: "splash", paddingTop: "small", paddingBottom: "small", containerWidth: "narrow"} %}
+{% component-block-prop propPath=["left"] %}
+## Here's another two-column layout.
+
+This time, it has a narrow container width, small vertical padding and a splash surface.
+{% /component-block-prop %}
+
+{% component-block-prop propPath=["right"] %}
+{% testimonial testimonial="simon" /%}
+{% /component-block-prop %}
+{% /twoColumns %}
+
+{% twoColumns
+   layoutProps={marginTop: "medium", surface: "off-black", paddingTop: "medium", paddingBottom: "medium", containerWidth: "medium"} %}
+{% component-block-prop propPath=["left"] %}
+## You get the idea
+{% /component-block-prop %}
+
+{% component-block-prop propPath=["right"] %}
+We can go on **all day**.
+
+Change surfaces, spacing, container width. Noice!
+{% /component-block-prop %}
+{% /twoColumns %}

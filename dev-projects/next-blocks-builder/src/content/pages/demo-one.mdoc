@@ -1,0 +1,86 @@
+---
+title: Page builder demo
+---
+## Layout props — examples
+
+### Full-width off-white
+
+{% twoColumns
+   layoutProps={marginTop: "none", surface: "off-white", paddingTop: "medium", paddingBottom: "medium", containerWidth: "full"} %}
+{% component-block-prop propPath=["left"] %}
+{% testimonial testimonial="anthony" /%}
+{% /component-block-prop %}
+
+{% component-block-prop propPath=["right"] %}
+{% testimonial testimonial="simon" /%}
+{% /component-block-prop %}
+{% /twoColumns %}
+
+### Large off-black
+
+{% twoColumns
+   layoutProps={marginTop: "none", surface: "off-black", paddingTop: "medium", paddingBottom: "medium", containerWidth: "large"} %}
+{% component-block-prop propPath=["left"] %}
+{% testimonial testimonial="t-rex" /%}
+{% /component-block-prop %}
+
+{% component-block-prop propPath=["right"] %}
+{% testimonial testimonial="bobby" /%}
+{% /component-block-prop %}
+{% /twoColumns %}
+
+### Medium splash
+
+{% twoColumns
+   layoutProps={marginTop: "none", surface: "splash", paddingTop: "medium", paddingBottom: "medium", containerWidth: "medium"} %}
+{% component-block-prop propPath=["left"] %}
+{% testimonial testimonial="anthony" /%}
+{% /component-block-prop %}
+
+{% component-block-prop propPath=["right"] %}
+{% testimonial testimonial="t-rex" /%}
+{% /component-block-prop %}
+{% /twoColumns %}
+
+### Narrow black
+
+{% twoColumns
+   layoutProps={marginTop: "none", surface: "black", paddingTop: "medium", paddingBottom: "medium", containerWidth: "narrow"} %}
+{% component-block-prop propPath=["left"] %}
+{% testimonial testimonial="bobby" /%}
+{% /component-block-prop %}
+
+{% component-block-prop propPath=["right"] %}
+{% testimonial testimonial="simon" /%}
+{% /component-block-prop %}
+{% /twoColumns %}
+
+{% callToAction
+   text="Take the first step towards a better future, today."
+   buttonText="Sign up now"
+   buttonHref="#"
+   layoutProps={marginTop: "medium", surface: "off-white", paddingTop: "medium", paddingBottom: "medium", containerWidth: "medium"} /%}
+
+{% callToAction
+   text="Take the first step towards a better future, today."
+   buttonText="Sign up now"
+   buttonHref="#"
+   layoutProps={marginTop: "medium", surface: "splash", paddingTop: "medium", paddingBottom: "medium", containerWidth: "medium"} /%}
+
+{% callToAction
+   text="Take the first step towards a better future, today."
+   buttonText="Sign up now"
+   buttonHref="#"
+   layoutProps={marginTop: "medium", surface: "off-black", paddingTop: "medium", paddingBottom: "medium", containerWidth: "medium"} /%}
+
+{% callToAction
+   text="Take the first step towards a better future, today."
+   buttonText="Sign up now"
+   buttonHref="#"
+   layoutProps={marginTop: "medium", surface: "white", paddingTop: "medium", paddingBottom: "medium", containerWidth: "medium"} /%}
+
+{% callToAction
+   text="Take the first step towards a better future, today."
+   buttonText="Sign up now"
+   buttonHref="#"
+   layoutProps={marginTop: "medium", surface: "black", paddingTop: "medium", paddingBottom: "medium", containerWidth: "medium"} /%}

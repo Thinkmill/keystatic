@@ -180,6 +180,7 @@ const ComboboxButton = React.forwardRef(function ComboboxButton(
             id={valueId}
             color={isPlaceholder ? 'neutralSecondary' : undefined}
             trim={false}
+            truncate
           >
             {children}
           </Text>

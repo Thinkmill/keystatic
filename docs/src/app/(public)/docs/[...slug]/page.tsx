@@ -16,7 +16,7 @@ export default async function Docs({ params }: DocsProps) {
   const { slug: slugPath } = params;
 
   const slug = slugPath.join('/');
-  const page = await reader.collections.pages.read(slug);
+  const page = await reader().collections.pages.read(slug);
 
   if (!page) notFound();
 
@@ -56,7 +56,7 @@ export default async function Docs({ params }: DocsProps) {
           {page.title}
         </h1>
         <div className="flex flex-col gap-4 [&_a]:break-words">
-          <DocumentRenderer slug={slug} document={await page.content()} />
+          <DocumentRenderer document={await page.content()} />
         </div>
       </div>
       <div className="sticky top-10 hidden w-[12rem] self-start md:block lg:top-32">
@@ -68,7 +68,7 @@ export default async function Docs({ params }: DocsProps) {
 }
 
 export async function generateStaticParams() {
-  const slugs = await reader.collections.pages.list();
+  const slugs = await reader().collections.pages.list();
 
   return slugs.map(slug => ({
     slug: slug.split('/'),
@@ -82,7 +82,7 @@ export async function generateMetadata(
   const slugPath = params.slug;
   const slug = slugPath.join('/');
 
-  const page = await reader.collections.pages.read(slug);
+  const page = await reader().collections.pages.read(slug);
 
   const parentTitle = (await parent).title ?? 'Docs';
   const title = page?.title ?? parentTitle;
