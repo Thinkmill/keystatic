@@ -322,7 +322,7 @@ function InsertBlocksInToolbar() {
     .filter(([, val]) => val.toolbarIcon)
     .map(([key, item]) => {
       return (
-        <TooltipTrigger>
+        <TooltipTrigger key={key}>
           <ActionButton
             prominence="low"
             onPress={() => {
