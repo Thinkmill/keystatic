@@ -11,9 +11,15 @@ import {
 // ----------------------------------
 // Keystatic config
 // ----------------------------------
+
+const shouldUseCloudStorage = process.env.NODE_ENV === 'production';
+
 export default config({
-  storage: {
-    kind: 'local',
+  storage: shouldUseCloudStorage
+    ? { kind: 'cloud', pathPrefix: 'dev-projects/next-blocks-builder' }
+    : { kind: 'local' },
+  cloud: {
+    project: 'thinkmill-labs/next-blocks-builder',
   },
   collections: {
     // "Page builder" collection using component blocks

@@ -11,6 +11,11 @@ import { TwoColumns } from '../../../components/keystatic-renderer/TwoColumns';
 import { DataDump } from '../../../components/DataDump';
 // import { SimpleText } from '../../../components/keystatic-renderer/SimpleText';
 
+export async function generateStaticParams() {
+  const pages = await reader.collections.pages.list();
+  return pages.map(page => ({ page: page.split('/') }));
+}
+
 export default async function Page({ params }: { params: { page: string[] } }) {
   const pageSlug = params.page ? params.page.join('/') : 'homepage';
   const page = await reader.collections.pages.read(pageSlug, {
