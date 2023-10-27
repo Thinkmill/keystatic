@@ -551,7 +551,7 @@ importers:
 
   dev-projects/next-blocks-builder:
     specifiers:
-      '@keystatic/core': ^0.1.6
+      '@keystatic/core': ^0.1.7
       '@keystatic/next': ^1.0.1
       '@tailwindcss/container-queries': ^0.1.1
       '@tailwindcss/typography': ^0.5.9
