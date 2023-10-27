@@ -249,6 +249,7 @@ test('preview props api', () => {
         schema: componentBlocks.complex.schema.object,
         fields: {
           block: {
+            ...{ _: {} },
             element: React.createElement(ChildFieldEditable, {
               path: ['object', 'block'],
             }),
@@ -280,6 +281,7 @@ test('preview props api', () => {
             },
           },
           inline: {
+            ...{ _: {} },
             element: React.createElement(ChildFieldEditable, {
               path: ['object', 'inline'],
             }),
@@ -397,6 +399,7 @@ test('preview props conditional change', () => {
     discriminant: true,
     onChange: expect.any(Function) as any,
     value: {
+      ...{ _: {} },
       element: React.createElement(ChildFieldEditable, {
         path: ['object', 'conditional', 'value'],
       }),
