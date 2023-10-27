@@ -15,7 +15,7 @@ export async function Testimonial({
   testimonial: string;
 }) {
   const testimonial: Testimonial =
-    await reader.collections.testimonials.read(testimonialSlug);
+    await reader.collections.testimonials.readOrThrow(testimonialSlug);
   if (!testimonial) {
     throw new Error(`Testimonial not found: ${testimonialSlug}`);
   }
