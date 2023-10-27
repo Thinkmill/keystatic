@@ -50,6 +50,10 @@ export default config({
       path: 'src/content/testimonials/*',
       schema: {
         name: fields.slug({ name: { label: 'Name' } }),
+        description: fields.text({
+          label: 'Description',
+          description: 'Job role, context info, ...',
+        }),
         quote: fields.text({ label: 'Quote', multiline: true }),
         image: fields.cloudImage({
           label: 'Image',

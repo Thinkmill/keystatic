@@ -53,7 +53,10 @@ export async function Testimonial({
         >
           {testimonial.quote}
         </blockquote>
-        <p className="mt-2">~ {testimonial.name}</p>
+        <p className="mt-4">
+          <span className="font-semibold">{testimonial.name}</span>
+          {testimonial.description ? `, ${testimonial.description}` : ''}
+        </p>
       </div>
     </figure>
   );
