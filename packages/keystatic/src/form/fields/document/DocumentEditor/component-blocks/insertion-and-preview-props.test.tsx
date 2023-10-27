@@ -123,7 +123,16 @@ test('inserting a complex component block', () => {
         props={
           {
             "object": {
-              "block": null,
+              "block": [
+                {
+                  "children": [
+                    {
+                      "text": "",
+                    },
+                  ],
+                  "type": "paragraph",
+                },
+              ],
               "conditional": {
                 "discriminant": false,
                 "value": null,
@@ -315,7 +324,16 @@ test('preview props conditional change', () => {
               "block": null,
               "conditional": {
                 "discriminant": true,
-                "value": null,
+                "value": [
+                  {
+                    "children": [
+                      {
+                        "text": "",
+                      },
+                    ],
+                    "type": "paragraph",
+                  },
+                ],
               },
               "conditionalSelect": {
                 "discriminant": "a",
