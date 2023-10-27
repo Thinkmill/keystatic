@@ -59,3 +59,28 @@ return (
   </div>
 );
 ```
+
+## Client-side routing
+
+The provider component accepts an optional `router` prop. This enables Keystar
+components that render links to perform client side navigation using your
+application or framework's client side router.
+
+```jsx
+import { VoussoirProvider } from '@keystar/ui/core';
+
+function App() {
+  let navigate = useNavigateFromYourRouter();
+
+  return <VoussoirProvider router={{ navigate }}>{/* ... */}</VoussoirProvider>;
+}
+```
+
+Note that external links to different origins will not trigger client side
+routing, and will use native browser navigation. Additionally, if the link has a
+[target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)
+other than `"\_self"`, uses the
+[download](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download)
+attribute, or the user presses modifier keys such as `Command` or `Alt` to
+change the default behavior, browser native navigation will occur instead of
+client side routing.

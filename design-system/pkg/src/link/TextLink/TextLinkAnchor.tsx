@@ -2,8 +2,6 @@ import { useLink } from '@react-aria/link';
 import { mergeProps, useObjectRef } from '@react-aria/utils';
 import { forwardRef } from 'react';
 
-import { useLinkComponent } from '../linkContext';
-
 import { useTextLink } from './useTextLink';
 import { TextLinkAnchorProps } from './types';
 
@@ -24,14 +22,13 @@ export const TextLinkAnchor = forwardRef<
     ...otherProps
   } = props;
 
-  const LinkComponent = useLinkComponent(forwardedRef);
   const domRef = useObjectRef(forwardedRef);
   const { Wrapper, ...styleProps } = useTextLink(props);
   const { linkProps } = useLink(otherProps, domRef);
 
   return (
     <Wrapper>
-      <LinkComponent
+      <a
         ref={domRef}
         download={download}
         href={href}
@@ -43,7 +40,7 @@ export const TextLinkAnchor = forwardRef<
         {...mergeProps(linkProps, styleProps)}
       >
         {children}
-      </LinkComponent>
+      </a>
     </Wrapper>
   );
 });

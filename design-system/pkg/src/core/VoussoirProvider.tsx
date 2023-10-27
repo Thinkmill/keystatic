@@ -1,9 +1,8 @@
 import { HTMLAttributes, useContext } from 'react';
 import { I18nProvider, useLocale } from '@react-aria/i18n';
 import { ModalProvider, useModalProvider } from '@react-aria/overlays';
-import { filterDOMProps } from '@react-aria/utils';
+import { RouterProvider, filterDOMProps } from '@react-aria/utils';
 
-import { DefaultLinkComponent, LinkComponentContext } from '@keystar/ui/link';
 import {
   BreakpointProvider,
   useMatchedBreakpoints,
@@ -34,7 +33,7 @@ export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
       isRequired,
       isReadOnly,
       locale = prevContext ? prevLocale : undefined,
-      linkComponent = DefaultLinkComponent,
+      router,
       scale = prevContext ? prevContext.scale : autoScale,
       ...otherProps
     } = props;
@@ -82,15 +81,15 @@ export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
       );
     }
 
+    if (router) {
+      contents = <RouterProvider {...router}>{contents}</RouterProvider>;
+    }
+
     return (
       <Context.Provider value={context}>
         <BreakpointProvider value={matchedBreakpoints}>
           <I18nProvider locale={locale}>
-            <ModalProvider>
-              <LinkComponentContext.Provider value={linkComponent}>
-                {contents}
-              </LinkComponentContext.Provider>
-            </ModalProvider>
+            <ModalProvider>{contents}</ModalProvider>
           </I18nProvider>
         </BreakpointProvider>
       </Context.Provider>

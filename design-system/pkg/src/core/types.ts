@@ -1,7 +1,6 @@
 import { DOMProps } from '@react-types/shared';
 import { ReactNode } from 'react';
 
-import { LinkComponent } from '@keystar/ui/link';
 import { RootStyleProps, VoussoirTheme } from '@keystar/ui/style';
 import { ColorScheme, Emphasis, ScaleScheme } from '@keystar/ui/types';
 
@@ -16,6 +15,10 @@ type VoussoirContextProps = {
   isReadOnly?: boolean;
   // /** Whether descendants should be displayed with the validation state style. */
   // validationState?: ValidationState;
+};
+
+type Router = {
+  navigate: (path: string) => void;
 };
 
 export type VoussoirProviderProps = {
@@ -36,16 +39,16 @@ export type VoussoirProviderProps = {
    * @default 'en-US'
    */
   locale?: string;
-  /**
-   * Customise links across your application. For client-side routing,
-   * analytics, etc.
-   */
-  linkComponent?: LinkComponent;
 
   /**
    * The background color of the body element. This will only have an effect if the `VoussoirProvider` is rendered as the `html` element.
    */
   bodyBackground?: keyof VoussoirTheme['color']['background'];
+  /**
+   * Provide a client side router to all nested Keystar links to enable client
+   * side navigation.
+   */
+  router?: Router;
 } & VoussoirContextProps &
   DOMProps &
   RootStyleProps;
