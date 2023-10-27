@@ -1,0 +1,31 @@
+{
+  "name": "@example/next-block-builder",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@keystatic/core": "^0.1.6",
+    "@keystatic/next": "^1.0.1",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/typography": "^0.5.9",
+    "next": "^13.5.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "16.11.13",
+    "@types/react": "^18.2.8",
+    "@types/react-dom": "^18.0.11",
+    "autoprefixer": "^10.4.13",
+    "eslint": "^8.18.0",
+    "eslint-config-next": "^12.1.6",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.2.2"
+  }
+}
