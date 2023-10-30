@@ -28,6 +28,8 @@ export default config({
       path: 'src/content/pages/**',
       slugField: 'title',
       format: { contentField: 'content' },
+      entryLayout: 'content',
+      previewUrl: `/{slug}`,
       schema: {
         title: fields.slug({ name: { label: 'Page title' } }),
         content: fields.document({
