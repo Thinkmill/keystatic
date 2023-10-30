@@ -79,48 +79,6 @@ export const ComponentBlocksElement = ({
     | ComponentBlock
     | undefined;
 
-  const elementToGetPathRef = useRef({ __elementToGetPath, currentElement });
-
-  useEffect(() => {
-    elementToGetPathRef.current = { __elementToGetPath, currentElement };
-  });
-
-  const onRemove = useEventCallback(() => {
-    const path = ReactEditor.findPath(editor, __elementToGetPath);
-    Transforms.removeNodes(editor, { at: path });
-  });
-
-  const onPropsChange = useCallback(
-    (cb: (prevProps: Record<string, unknown>) => Record<string, unknown>) => {
-      const prevProps = elementToGetPathRef.current.currentElement.props;
-      updateComponentBlockElementProps(
-        editor,
-        componentBlock!,
-        prevProps,
-        cb(prevProps),
-        ReactEditor.findPath(
-          editor,
-          elementToGetPathRef.current.__elementToGetPath
-        ),
-        setElement
-      );
-    },
-    [setElement, componentBlock, editor]
-  );
-
-  const getToolbarPreviewProps = useMemo(() => {
-    if (!componentBlock) {
-      return () => {
-        throw new Error('expected component block to exist when called');
-      };
-    }
-    return createGetPreviewProps(
-      { kind: 'object', fields: componentBlock.schema },
-      onPropsChange,
-      () => undefined
-    );
-  }, [componentBlock, onPropsChange]);
-
   const propsWithChildFields = useMemo(() => {
     if (!componentBlock) return;
     const blockChildrenByPath = new Map<string, Descendant[]>();
@@ -145,8 +103,62 @@ export const ComponentBlocksElement = ({
           return value;
         },
       }
-    );
+    ) as Record<string, unknown>;
   }, [componentBlock, currentElement]);
+
+  const elementToGetPathRef = useRef({
+    __elementToGetPath,
+    currentElement,
+    propsWithChildFields,
+  });
+
+  useEffect(() => {
+    elementToGetPathRef.current = {
+      __elementToGetPath,
+      currentElement,
+      propsWithChildFields,
+    };
+  });
+
+  const onRemove = useEventCallback(() => {
+    const path = ReactEditor.findPath(editor, __elementToGetPath);
+    Transforms.removeNodes(editor, { at: path });
+  });
+
+  const onPropsChange = useCallback(
+    (
+      cb: (prevProps: Record<string, unknown>) => Record<string, unknown>,
+      ignoreChildFields: boolean
+    ) => {
+      const prevProps = elementToGetPathRef.current.propsWithChildFields!;
+      updateComponentBlockElementProps(
+        editor,
+        componentBlock!,
+        prevProps,
+        cb(prevProps),
+        ReactEditor.findPath(
+          editor,
+          elementToGetPathRef.current.__elementToGetPath
+        ),
+        setElement,
+        ignoreChildFields
+      );
+    },
+    [setElement, componentBlock, editor]
+  );
+
+  const getToolbarPreviewProps = useMemo(() => {
+    if (!componentBlock) {
+      return () => {
+        throw new Error('expected component block to exist when called');
+      };
+    }
+    return createGetPreviewProps(
+      { kind: 'object', fields: componentBlock.schema },
+      cb => onPropsChange(cb, false),
+      () => undefined
+    );
+  }, [componentBlock, onPropsChange]);
 
   if (!componentBlock) {
     return (

@@ -16,7 +16,7 @@ import {
   getKeysForArrayValue,
 } from '../../../../initial-values';
 import { ReadonlyPropPath, cloneDescendent } from './utils';
-import { transformProps } from '../../../../props-value';
+import { getValueAtPropPath, transformProps } from '../../../../props-value';
 
 export function updateComponentBlockElementProps(
   editor: Editor,
@@ -24,20 +24,27 @@ export function updateComponentBlockElementProps(
   prevProps: Record<string, unknown>,
   _newProps: Record<string, unknown>,
   basePath: Path,
-  setElement: (partialElement: { props: Record<string, unknown> }) => void
+  setElement: (partialElement: { props: Record<string, unknown> }) => void,
+  ignoreChildFields: boolean
 ) {
   Editor.withoutNormalizing(editor, () => {
     const propPathsWithNodesToReplace = new Map<string, Descendant[]>();
     const schema = { kind: 'object' as const, fields: componentBlock.schema };
     const newProps = transformProps(schema, _newProps, {
       child(schema, value, path) {
-        if (schema.options.kind === 'block' && value) {
+        if (!ignoreChildFields && schema.options.kind === 'block' && value) {
+          try {
+            let prevVal = getValueAtPropPath(prevProps, path);
+            if (prevVal === value) {
+              return null;
+            }
+          } catch {}
           propPathsWithNodesToReplace.set(
             JSON.stringify(path),
             (value as any as Descendant[]).map(cloneDescendent)
           );
         }
-        return value;
+        return null;
       },
     });
     setElement({ props: newProps as Record<string, unknown> });

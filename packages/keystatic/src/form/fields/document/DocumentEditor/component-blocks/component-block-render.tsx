@@ -28,7 +28,8 @@ export function ComponentBlockRender({
 }: {
   element: Element & { type: 'component-block' };
   onChange: (
-    cb: (props: Record<string, unknown>) => Record<string, unknown>
+    cb: (props: Record<string, unknown>) => Record<string, unknown>,
+    ignoreChildFields: boolean
   ) => void;
   onRemove: () => void;
   componentBlock: ComponentBlock;
@@ -37,7 +38,7 @@ export function ComponentBlockRender({
   const getPreviewProps = useMemo(() => {
     return createGetPreviewProps(
       { kind: 'object', fields: componentBlock.schema },
-      onChange,
+      cb => onChange(cb, true),
       path => <ChildFieldEditable path={path} />
     );
   }, [onChange, componentBlock]);
