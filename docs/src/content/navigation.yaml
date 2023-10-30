@@ -40,6 +40,10 @@ navGroups:
         link:
           discriminant: page
           value: github-mode
+      - label: Keystatic Cloud
+        link:
+          discriminant: page
+          value: cloud
   - groupName: Recipes
     items:
       - label: 'Astro: Disable Admin UI Routes in Production'
