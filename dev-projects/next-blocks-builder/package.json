@@ -13,7 +13,7 @@
     "@keystatic/next": "^1.0.1",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/typography": "^0.5.9",
-    "next": "^13.5.3",
+    "next": "^14.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
