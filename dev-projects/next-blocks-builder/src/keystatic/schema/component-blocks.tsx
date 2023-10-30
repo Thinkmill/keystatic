@@ -112,7 +112,7 @@ export const testimonial = component({
 });
 
 // ----------------------------------
-// Simple text (waiting for the option to show chidlren in the modal)
+// Simple text (waiting for the option to show children in the modal)
 // ----------------------------------
 export const simpleText = component({
   label: 'Simple text',
