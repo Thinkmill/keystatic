@@ -91,7 +91,7 @@ function ProjectCard({ entry, slug }: Project) {
           {entry.repoUrl && (
             <ActionButton
               impact="light"
-              href={entry.url ?? ''}
+              href={entry.repoUrl}
               icon={GitHubOutlineIcon}
             >
               View on GitHub
