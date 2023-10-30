@@ -27,6 +27,17 @@ storage: {
 }
 ```
 
+
+You can also define the `repo` as a string with the `owner/name` format: 
+
+```ts 
+storage: {
+   kind: 'github',
+   repo: `${REPO_OWNER}/${REPO_NAME}`
+}
+```
+
+
 ### Connecting with GitHub
 
 With `github` mode on, visit the `/keystatic` route. You will be prompted to login with GitHub.
@@ -84,6 +95,20 @@ NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=...
 These variables are used to authenticate users with GitHub, based on their access to the GitHub repo in question.
 
 Next time someone with `write` access on the repo visits `/keystatic`, they will be able to login and access the Admin UI.
+
+## Branch prefix
+
+The `branchPrefix` option lets you scope out what GitHub branches Keystatic should interact with:
+
+```diff
+storage: {
+   kind: 'github',
+   repo: 'Thinkmill/keystatic',
++  branchPrefix: 'my-prefix/'
+}
+```
+
+Keystatic will only list branches starting with `my-prefix/` in the Admin UI, and will only let you create new branches with that prefix.
 
 ---
 

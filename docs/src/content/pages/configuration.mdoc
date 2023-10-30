@@ -17,22 +17,63 @@ export default config({
 
 ## Configuration options
 
-Keystatic's `config` requires at minimum a `storage` strategy.
+### Storage
 
-It can also define `collections` and `singletons`:
+The Keystatic config requires at minimum a `storage` strategy. It's `kind` can be set to: 
+
+-  [local](/docs/local-mode) to store and read files directly from your local file system
+- [github](/docs/github-mode) to connect to a GitHub repository and read/write files to it
+- `cloud` to benefit from [Keystatic Cloud](https://keystatic.cloud)'s authentication and image hosting features
 
 ```typescript
 // keystatic.config.ts
 import { config } from '@keystatic/core'
 
 export default config({
-  // Required
-  storage: {
-    kind: 'local'
+  storage: { kind: 'local' }
+})
+```
+
+### Branch prefix
+
+If you're using the `github` or `cloud` storage kind, you can optionally set a `branchPrefix` to scope out what branches Keystatic should interact with:
+
+```ts
+// keystatic.config.ts
+import { config } from '@keystatic/core'
+
+export default config({
+  storage: { 
+    kind: 'github',
+    repo: 'Thinkmill/keystatic',
+    branchPrefix: 'my-prefix/'
+  }
+})
+```
+
+Keystatic will only list branches starting with my-prefix/ in the Admin UI, and will only let you create new branches with that prefix.
+
+---
+
+### Collections and singletons
+
+The Keystatic config can also define `collections` and `singletons`:
+
+```typescript
+// keystatic.config.ts
+import { config } from '@keystatic/core'
+
+export default config({
+  storage: { kind: 'local' } // required
+
+  collections: {
+    // posts...
+    // testimonials...
   },
-  // Optional
-  collections: {},
-  singletons: {}
+  singletons: {
+    // settings...
+    // contactPage...
+  }
 })
 ```
 
