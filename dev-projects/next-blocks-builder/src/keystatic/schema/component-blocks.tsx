@@ -1,5 +1,4 @@
-import { fields, component } from '@keystatic/core';
-import { DocumentRenderer } from '@keystatic/core/renderer';
+import { fields, component, NotEditable } from '@keystatic/core';
 
 import { layoutProps } from './layout-props';
 
@@ -95,11 +94,11 @@ export const twoColumns = component({
 export const testimonial = component({
   label: 'Testimonial',
   preview: props => (
-    <div>
+    <NotEditable>
       {props.fields.testimonial.value
         ? `Selected: ${props.fields.testimonial.value}`
         : 'Please select a testimonial'}
-    </div>
+    </NotEditable>
   ),
   schema: {
     testimonial: fields.relationship({
@@ -113,15 +112,17 @@ export const testimonial = component({
 });
 
 // ----------------------------------
-// Simple text (nested document field — doesn't work yet)
+// Simple text (waiting for the option to show chidlren in the modal)
 // ----------------------------------
 export const simpleText = component({
   label: 'Simple text',
-  preview: props => <DocumentRenderer document={props.fields.content.value} />,
+  preview: props => <div style={{ border: '1px solid #eee', borderRadius: 6, padding: '10px 6px' }}>{props.fields.content.element}</div>,
+  chromeless: true,
   schema: {
-    content: fields.document({
-      label: 'Simple text',
-      formatting: true,
+    content: fields.child({
+      kind: 'block',
+      placeholder: 'Simple text',
+      formatting: 'inherit',
     }),
   },
 });
@@ -138,7 +139,7 @@ export const callToAction = component({
     layoutProps,
   },
   preview: ({ fields }) => (
-    <div
+    <NotEditable
       style={{
         padding: '1rem 0',
         borderTop: `dashed 2px ${
@@ -150,6 +151,6 @@ export const callToAction = component({
       }}
     >
       <p>{fields.text.value}</p>
-    </div>
+    </NotEditable>
   ),
 });
