@@ -45,7 +45,6 @@ import { KeystaticCloudAuthCallback } from './cloud-auth-callback';
 import { getAuth } from './auth';
 import { assertValidRepoConfig } from './repo-config';
 import { NotFoundBoundary, notFound } from './not-found';
-import { DefaultLinkComponent, LinkComponentContext } from '@keystar/ui/link';
 
 function parseParamsWithoutBranch(params: string[]) {
   if (params.length === 0) {
@@ -234,18 +233,16 @@ function AuthWrapper(props: {
     if (props.config.storage.kind === 'github') {
       return (
         <Flex justifyContent="center" alignItems="center" height="100vh">
-          <LinkComponentContext.Provider value={DefaultLinkComponent}>
-            <Button
-              href={`/api/keystatic/github/login${
-                router.params.length
-                  ? `?${new URLSearchParams({ from: router.params.join('/') })}`
-                  : ''
-              }`}
-            >
-              <Icon src={githubIcon} />
-              <Text>Log in with GitHub</Text>
-            </Button>
-          </LinkComponentContext.Provider>
+          <Button
+            href={`/api/keystatic/github/login${
+              router.params.length
+                ? `?${new URLSearchParams({ from: router.params.join('/') })}`
+                : ''
+            }`}
+          >
+            <Icon src={githubIcon} />
+            <Text>Log in with GitHub</Text>
+          </Button>
         </Flex>
       );
     }
@@ -269,6 +266,7 @@ function AuthWrapper(props: {
 export function Keystatic(props: {
   config: Config;
   router: Router;
+  /** @deprecated This functionality is now abstracted from the `router` prop. */
   link: (
     props: { href: string } & AnchorHTMLAttributes<HTMLAnchorElement> &
       RefAttributes<HTMLAnchorElement>
@@ -292,7 +290,7 @@ export function Keystatic(props: {
   return (
     <AppSlugProvider value={props.appSlug}>
       <RouterProvider router={props.router}>
-        <Provider config={props.config} Link={props.link}>
+        <Provider config={props.config}>
           <PageInner config={props.config} />
         </Provider>
       </RouterProvider>
