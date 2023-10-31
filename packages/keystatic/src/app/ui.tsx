@@ -239,6 +239,9 @@ function AuthWrapper(props: {
                 ? `?${new URLSearchParams({ from: router.params.join('/') })}`
                 : ''
             }`}
+            // even though we'll never be in an iframe, so this isn't really distinct from _self
+            // it makes react-aria avoid using client-side routing which we need here
+            target="_top"
           >
             <Icon src={githubIcon} />
             <Text>Log in with GitHub</Text>
