@@ -2,4 +2,4 @@
 '@keystatic/core': patch
 ---
 
-Fix links around inline code being discarded
+Fix links and other formatting around inline code being discarded in the document editor
