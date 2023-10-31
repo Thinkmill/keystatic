@@ -17,7 +17,7 @@ function newKey() {
 }
 
 function InnerChildFieldInput(props: {
-  schema: ChildField & { options: { kind: 'block' } };
+  schema: ChildField & { options: { kind: 'block'; editIn: 'modal' | 'both' } };
   value: unknown;
   onChange: (value: unknown) => void;
 }) {
@@ -42,7 +42,7 @@ function InnerChildFieldInput(props: {
   }
   return (
     <ResetEntryLayoutContext>
-      <Field label={props.schema.options.placeholder}>
+      <Field label={props.schema.options.label}>
         {inputProps => (
           <DocumentEditor
             {...inputProps}
@@ -69,10 +69,19 @@ export function ChildFieldInput(
   props: GenericPreviewProps<ChildField, unknown>
 ) {
   const data = getChildFieldData(props);
-  if (props.schema.options.kind === 'block' && data.value) {
+  if (
+    props.schema.options.kind === 'block' &&
+    (props.schema.options.editIn === 'both' ||
+      props.schema.options.editIn === 'modal') &&
+    data.value
+  ) {
     return (
       <InnerChildFieldInput
-        schema={props.schema as ChildField & { options: { kind: 'block' } }}
+        schema={
+          props.schema as ChildField & {
+            options: { kind: 'block'; editIn: 'modal' | 'both' };
+          }
+        }
         {...data}
       />
     );

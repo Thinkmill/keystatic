@@ -270,7 +270,11 @@ export function getPlaceholderTextForPropPath(
   formProps: Record<string, any>
 ): string {
   const field = getSchemaAtPropPath(propPath, formProps, fields);
-  if (field?.kind === 'child') {
+  if (
+    field?.kind === 'child' &&
+    ((field.options.kind === 'block' && field.options.editIn !== 'modal') ||
+      field.options.kind === 'inline')
+  ) {
     return field.options.placeholder;
   }
   return '';
