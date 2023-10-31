@@ -185,12 +185,37 @@ return (
 );
 ```
 
+### Links
+
+By default, interacting with an item in a menu triggers `onAction` and
+optionally `onSelectionChange` depending on the `selectionMode`. Alternatively,
+items may be links to another page or website. This can be achieved by passing
+the `href` prop to the `<Item>` component. Link items in a menu are not
+selectable.
+
+```jsx {% live=true %}
+<MenuTrigger>
+  <ActionButton>Monorepo tools</ActionButton>
+  <Menu>
+    <Item href="https://github.com/changesets/changesets" target="_blank">
+      Changesets
+    </Item>
+    <Item href="https://github.com/Thinkmill/manypkg" target="_blank">
+      Manypkg
+    </Item>
+    <Item href="https://github.com/preconstruct/preconstruct" target="_blank">
+      Preconstruct
+    </Item>
+  </Menu>
+</MenuTrigger>
+```
+
 ### Slots
 
 Icons, keyboard shortcuts and descriptions can be added as `children` of an
-item, to better communicate the effect of each option's selection. If a
-description is added, the prop `slot="description"` must be used to distinguish
-it from the primary `<Text>` label.
+item, to better communicate the effect of each option. If a description is
+added, the prop `slot="description"` must be used to distinguish it from the
+`<Text>` label.
 
 ```jsx {% live=true %}
 <MenuTrigger>
