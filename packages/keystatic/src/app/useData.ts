@@ -20,6 +20,14 @@ export function useData<T>(
   const result = useMemo(() => {
     try {
       const result = func();
+      // this avoids unhandled promise rejections
+      // we actually handle the result in an effect
+      if (isThenable(result)) {
+        result.then(
+          () => {},
+          () => {}
+        );
+      }
       return { kind: 'result' as const, result };
     } catch (error) {
       return { kind: 'error' as const, error: error as Error };

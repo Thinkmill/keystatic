@@ -1,26 +1,31 @@
 import Image from 'next/image';
+import { Entry } from '@keystatic/core/reader';
 
 import { cx } from '../../utils';
 import { reader } from '../../keystatic/reader';
+import keystaticConfig from '../../../keystatic.config';
 
-type Testimonial = string;
+type Testimonial = Entry<
+  (typeof keystaticConfig)['collections']['testimonials']
+>;
 
 export async function Testimonial({
   testimonial: testimonialSlug,
 }: {
-  testimonial: Testimonial;
+  testimonial: string;
 }) {
-  const testimonial =
-    await reader.collections.testimonials.read(testimonialSlug);
+  const testimonial: Testimonial =
+    await reader.collections.testimonials.readOrThrow(testimonialSlug);
   if (!testimonial) {
     throw new Error(`Testimonial not found: ${testimonialSlug}`);
   }
+
   return (
     <figure className="not-prose flex flex-col @5xl:flex-row gap-4 @5xl:gap-8 text-left items-start">
       {testimonial.image && (
         <Image
           className="shrink-0 h-20 w-20 @5xl:h-24 @5xl:w-24 @7xl:h-32 @7xl:w-32 rounded-lg object-cover @5xl:mb-4"
-          src={testimonial.image}
+          src={testimonial.image.src}
           alt=""
           width={96}
           height={96}
@@ -48,7 +53,10 @@ export async function Testimonial({
         >
           {testimonial.quote}
         </blockquote>
-        <p className="mt-2">~ {testimonial.name}</p>
+        <p className="mt-4">
+          <span className="font-semibold">{testimonial.name}</span>
+          {testimonial.description ? `, ${testimonial.description}` : ''}
+        </p>
       </div>
     </figure>
   );

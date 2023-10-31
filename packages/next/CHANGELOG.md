@@ -1,5 +1,16 @@
 # @keystatic/next
 
+## 1.0.2
+
+### Patch Changes
+
+- 5d683b0d: Allow next@14 in `peerDependencies`
+- Updated dependencies [221cb5d5]
+- Updated dependencies [e8ef9436]
+- Updated dependencies [be0eaddc]
+- Updated dependencies [4875c21f]
+  - @keystatic/core@0.1.8
+
 ## 1.0.1
 
 ### Patch Changes

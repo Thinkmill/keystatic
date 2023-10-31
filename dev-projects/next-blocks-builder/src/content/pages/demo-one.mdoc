@@ -3,6 +3,13 @@ title: Page builder demo
 ---
 ## Layout props — examples
 
+{% container
+   layoutProps={marginTop: "none", surface: "white", paddingTop: "medium", paddingBottom: "medium", containerWidth: "medium"} %}
+{% simpleText %}
+Some formatted text
+{% /simpleText %}
+{% /container %}
+
 ### Full-width off-white
 
 {% twoColumns
@@ -21,11 +28,11 @@ title: Page builder demo
 {% twoColumns
    layoutProps={marginTop: "none", surface: "off-black", paddingTop: "medium", paddingBottom: "medium", containerWidth: "large"} %}
 {% component-block-prop propPath=["left"] %}
-{% testimonial testimonial="anthony" /%}
+{% testimonial testimonial="t-rex" /%}
 {% /component-block-prop %}
 
 {% component-block-prop propPath=["right"] %}
-{% testimonial testimonial="simon" /%}
+{% testimonial testimonial="bobby" /%}
 {% /component-block-prop %}
 {% /twoColumns %}
 
@@ -38,7 +45,7 @@ title: Page builder demo
 {% /component-block-prop %}
 
 {% component-block-prop propPath=["right"] %}
-{% testimonial testimonial="simon" /%}
+{% testimonial testimonial="t-rex" /%}
 {% /component-block-prop %}
 {% /twoColumns %}
 
@@ -47,7 +54,7 @@ title: Page builder demo
 {% twoColumns
    layoutProps={marginTop: "none", surface: "black", paddingTop: "medium", paddingBottom: "medium", containerWidth: "narrow"} %}
 {% component-block-prop propPath=["left"] %}
-{% testimonial testimonial="anthony" /%}
+{% testimonial testimonial="bobby" /%}
 {% /component-block-prop %}
 
 {% component-block-prop propPath=["right"] %}
