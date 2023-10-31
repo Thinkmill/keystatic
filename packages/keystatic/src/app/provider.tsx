@@ -2,16 +2,9 @@ import {
   ClientSideOnlyDocumentElement,
   VoussoirProvider,
 } from '@keystar/ui/core';
-import { makeLinkComponent } from '@keystar/ui/link';
 import { injectGlobal } from '@keystar/ui/style';
 import { Toaster } from '@keystar/ui/toast';
-import {
-  AnchorHTMLAttributes,
-  ForwardedRef,
-  ReactNode,
-  RefAttributes,
-  useMemo,
-} from 'react';
+import { useMemo } from 'react';
 import {
   Provider as UrqlProvider,
   createClient,
@@ -31,6 +24,7 @@ import {
 import { Config } from '../config';
 import { ThemeProvider, useTheme } from './shell/theme';
 import { parseRepoConfig } from './repo-config';
+import { useRouter } from './router';
 
 // NOTE: scroll behaviour is handled by shell components
 injectGlobal({ body: { overflow: 'hidden' } });
@@ -182,56 +176,21 @@ export function createUrqlClient(config: Config): Client {
 
 export default function Provider({
   children,
-  Link,
   config,
 }: {
   children: JSX.Element;
-  Link: (
-    props: { href: string } & AnchorHTMLAttributes<HTMLAnchorElement> &
-      RefAttributes<HTMLAnchorElement>
-  ) => ReactNode;
   config: Config;
 }) {
   const themeContext = useTheme();
-  const UniversalLink = useMemo(
-    () =>
-      makeLinkComponent(
-        (
-          { href, onClick, rel, ...props },
-          ref: ForwardedRef<HTMLAnchorElement>
-        ) => {
-          const shouldUseNext = href[0] === '/';
-
-          return shouldUseNext ? (
-            <Link href={href} ref={ref} {...props} />
-          ) : (
-            <a
-              ref={ref}
-              href={href}
-              rel={rel || 'noreferrer noopener'}
-              onClick={event => {
-                if (href === '' || href === '#') {
-                  event.preventDefault();
-                }
-
-                if (typeof onClick === 'function') {
-                  onClick(event);
-                }
-              }}
-              {...props}
-            />
-          );
-        }
-      ),
-    [Link]
-  );
+  const { push: navigate } = useRouter();
+  const voussoirRouter = useMemo(() => ({ navigate }), [navigate]);
 
   return (
     <ThemeProvider value={themeContext}>
       <VoussoirProvider
-        linkComponent={UniversalLink}
         locale={config.locale || 'en-US'}
         colorScheme={themeContext.theme}
+        router={voussoirRouter}
       >
         <ClientSideOnlyDocumentElement />
         <link
