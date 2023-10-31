@@ -442,3 +442,27 @@ test('empty list item', () => {
     </editor>
     `);
 });
+
+test('link in code', () => {
+  const markdoc = `asdasdasd [\`something\`](https://keystatic.com)`;
+  expect(fromMarkdoc(markdoc)).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text>
+          asdasdasd 
+        </text>
+        <link
+          @@isInline={true}
+          href="https://keystatic.com"
+        >
+          <text
+            code={true}
+          >
+            something
+          </text>
+        </link>
+        <text />
+      </paragraph>
+    </editor>
+  `);
+});
