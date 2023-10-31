@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { VoussoirProvider } from '@keystar/ui/core';
+import { KeystarProvider } from '@keystar/ui/core';
 
 export function FieldDemoFrame({
   children,
@@ -8,9 +8,9 @@ export function FieldDemoFrame({
 }): JSX.Element {
   return (
     <div className="my-2 rounded-lg bg-slate-3 px-6 py-6">
-      <VoussoirProvider colorScheme="light" scale="medium">
+      <KeystarProvider colorScheme="light" scale="medium">
         {children}
-      </VoussoirProvider>
+      </KeystarProvider>
     </div>
   );
 }

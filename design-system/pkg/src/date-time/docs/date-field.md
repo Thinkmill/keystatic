@@ -201,12 +201,12 @@ calendar. Dates emitted from `onChange` are in the Gregorian calendar.
 let [date, setDate] = React.useState(null);
 
 return (
-  <VoussoirProvider locale="hi-IN-u-ca-indian">
+  <KeystarProvider locale="hi-IN-u-ca-indian">
     <Grid gap="large">
       <DateField label="Date" value={date} onChange={setDate} />
       <Text>Selected date: {date?.toString()}</Text>
     </Grid>
-  </VoussoirProvider>
+  </KeystarProvider>
 );
 ```
 

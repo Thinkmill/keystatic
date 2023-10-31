@@ -7,7 +7,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Editor } from '../index';
 import { GapCursor } from '../gapcursor/gapcursor';
-import { VoussoirProvider } from '@keystar/ui/core';
+import { KeystarProvider } from '@keystar/ui/core';
 import { createRef } from 'react';
 import { plugins, format, NewPlugin } from 'pretty-format';
 import { EditorView } from 'prosemirror-view';
@@ -506,7 +506,7 @@ export function renderEditor(editorState: EditorStateDescription): {
   const viewRef = createRef<{ view: EditorView | null }>();
   const user = userEvent.setup();
   const getElement = () => (
-    <VoussoirProvider>
+    <KeystarProvider>
       <Editor
         value={editorState.get()}
         ref={viewRef}
@@ -515,7 +515,7 @@ export function renderEditor(editorState: EditorStateDescription): {
           rendered.rerender(getElement());
         }}
       />
-    </VoussoirProvider>
+    </KeystarProvider>
   );
   const rendered = render(getElement());
 

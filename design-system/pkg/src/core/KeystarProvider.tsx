@@ -13,11 +13,11 @@ import { forwardRefWithAs } from '@keystar/ui/utils/ts';
 import { Context, useProvider } from './context';
 import { documentElementClasses } from './globals';
 import { useScale } from './mediaQueries';
-import { VoussoirProviderProps } from './types';
+import { KeystarProviderProps } from './types';
 
-/** Consolidates core functionality and dependencies of the Voussoir component library. */
-export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
-  function VoussoirProvider(props, forwardedRef) {
+/** Consolidates core functionality and dependencies of the Keystar component library. */
+export const KeystarProvider = forwardRefWithAs<KeystarProviderProps, 'div'>(
+  function KeystarProvider(props, forwardedRef) {
     let prevContext = useContext(Context);
     let prevColorScheme = prevContext && prevContext.colorScheme;
 
@@ -98,7 +98,7 @@ export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
 );
 
 const ProviderWrapper = forwardRefWithAs<
-  VoussoirProviderProps & HTMLAttributes<HTMLElement>,
+  KeystarProviderProps & HTMLAttributes<HTMLElement>,
   'div'
 >(function ProviderWrapper(props, forwardedRef) {
   let { children, style } = props;

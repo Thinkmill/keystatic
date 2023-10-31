@@ -25,7 +25,7 @@ return (
     >
       Dark mode
     </Switch>
-    <VoussoirProvider colorScheme={colorScheme}>
+    <KeystarProvider colorScheme={colorScheme}>
       <Grid
         gap="xlarge"
         backgroundColor="canvas"
@@ -55,7 +55,7 @@ return (
           <Button prominence="low">Secondary</Button>
         </ButtonGroup>
       </Grid>
-    </VoussoirProvider>
+    </KeystarProvider>
   </div>
 );
 ```
@@ -67,12 +67,12 @@ components that render links to perform client side navigation using your
 application or framework's client side router.
 
 ```jsx
-import { VoussoirProvider } from '@keystar/ui/core';
+import { KeystarProvider } from '@keystar/ui/core';
 
 function App() {
   let navigate = useNavigateFromYourRouter();
 
-  return <VoussoirProvider router={{ navigate }}>{/* ... */}</VoussoirProvider>;
+  return <KeystarProvider router={{ navigate }}>{/* ... */}</KeystarProvider>;
 }
 ```
 

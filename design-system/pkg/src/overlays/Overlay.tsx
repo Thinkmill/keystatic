@@ -2,7 +2,7 @@ import { ForwardedRef, forwardRef, useCallback, useState } from 'react';
 import { Overlay as ReactAriaOverlay } from '@react-aria/overlays';
 import { OverlayProps } from '@react-types/overlays';
 
-import { VoussoirProvider } from '@keystar/ui/core';
+import { KeystarProvider } from '@keystar/ui/core';
 
 import { OpenTransition } from './OpenTransition';
 
@@ -49,7 +49,7 @@ export const Overlay = forwardRef(function Overlay(
 
   return (
     <ReactAriaOverlay portalContainer={container}>
-      <VoussoirProvider
+      <KeystarProvider
         ref={forwardedRef}
         // ensure children
         UNSAFE_style={{ background: 'transparent', isolation: 'isolate' }}
@@ -69,7 +69,7 @@ export const Overlay = forwardRef(function Overlay(
         >
           {children}
         </OpenTransition>
-      </VoussoirProvider>
+      </KeystarProvider>
     </ReactAriaOverlay>
   );
 });

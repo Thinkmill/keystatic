@@ -6,7 +6,7 @@ import { getQueryParams } from '@storybook/client-api';
 
 import {
   ClientSideOnlyDocumentElement,
-  VoussoirProvider,
+  KeystarProvider,
 } from '@keystar/ui/core';
 
 const providerValuesFromUrl = Object.entries(getQueryParams()).reduce(
@@ -42,7 +42,7 @@ function ProviderUpdater(props) {
   const Wrapper = props.options.mainElement == null ? 'main' : Fragment;
 
   return (
-    <VoussoirProvider
+    <KeystarProvider
       colorScheme={useDarkMode() ? 'dark' : 'light'}
       locale={localeValue}
     >
@@ -52,7 +52,7 @@ function ProviderUpdater(props) {
       />
       <ClientSideOnlyDocumentElement />
       <Wrapper>{storyReady && props.children}</Wrapper>
-    </VoussoirProvider>
+    </KeystarProvider>
   );
 }
 

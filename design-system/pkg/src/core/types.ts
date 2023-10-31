@@ -21,7 +21,7 @@ type Router = {
   navigate: (path: string) => void;
 };
 
-export type VoussoirProviderProps = {
+export type KeystarProviderProps = {
   /** The content of the Provider. */
   children: ReactNode;
   /**
@@ -41,7 +41,7 @@ export type VoussoirProviderProps = {
   locale?: string;
 
   /**
-   * The background color of the body element. This will only have an effect if the `VoussoirProvider` is rendered as the `html` element.
+   * The background color of the body element. This will only have an effect if the `KeystarProvider` is rendered as the `html` element.
    */
   bodyBackground?: keyof VoussoirTheme['color']['background'];
   /**
@@ -53,7 +53,7 @@ export type VoussoirProviderProps = {
   DOMProps &
   RootStyleProps;
 
-export type VoussoirProviderContext = {
+export type KeystarProviderContext = {
   /**
    * The package version number of the nearest parent Provider.
    */

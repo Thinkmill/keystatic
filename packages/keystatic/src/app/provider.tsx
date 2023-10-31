@@ -1,6 +1,6 @@
 import {
   ClientSideOnlyDocumentElement,
-  VoussoirProvider,
+  KeystarProvider,
 } from '@keystar/ui/core';
 import { injectGlobal } from '@keystar/ui/style';
 import { Toaster } from '@keystar/ui/toast';
@@ -183,14 +183,14 @@ export default function Provider({
 }) {
   const themeContext = useTheme();
   const { push: navigate } = useRouter();
-  const voussoirRouter = useMemo(() => ({ navigate }), [navigate]);
+  const keystarRouter = useMemo(() => ({ navigate }), [navigate]);
 
   return (
     <ThemeProvider value={themeContext}>
-      <VoussoirProvider
+      <KeystarProvider
         locale={config.locale || 'en-US'}
         colorScheme={themeContext.theme}
-        router={voussoirRouter}
+        router={keystarRouter}
       >
         <ClientSideOnlyDocumentElement />
         <link
@@ -201,7 +201,7 @@ export default function Provider({
           {children}
         </UrqlProvider>
         <Toaster />
-      </VoussoirProvider>
+      </KeystarProvider>
     </ThemeProvider>
   );
 }

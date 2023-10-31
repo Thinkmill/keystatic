@@ -205,12 +205,12 @@ Indian calendar. Dates emitted from `onChange` are in the Gregorian calendar.
 let [date, setDate] = React.useState(null);
 
 return (
-  <VoussoirProvider locale="hi-IN-u-ca-indian">
+  <KeystarProvider locale="hi-IN-u-ca-indian">
     <VStack gap="large">
       <DatePicker label="Date" value={date} onChange={setDate} />
       <Text>Selected date: {date?.toString()}</Text>
     </VStack>
-  </VoussoirProvider>
+  </KeystarProvider>
 );
 ```
 

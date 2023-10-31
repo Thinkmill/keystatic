@@ -1,7 +1,7 @@
 'use client';
 
 import { cache } from '@keystar/ui/style';
-import { VoussoirProvider } from '@keystar/ui/core';
+import { KeystarProvider } from '@keystar/ui/core';
 import { useRouter, useServerInsertedHTML } from 'next/navigation';
 import { ReactNode, useMemo, useRef } from 'react';
 
@@ -63,7 +63,7 @@ function InnerProvider(props: NextRootProviderProps) {
   }, [navigate]);
 
   return (
-    <VoussoirProvider
+    <KeystarProvider
       {...props}
       UNSAFE_className={props.fontClassName}
       colorScheme={colorScheme}
