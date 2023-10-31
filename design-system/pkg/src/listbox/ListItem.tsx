@@ -62,10 +62,10 @@ export const ListItem = forwardRefWithAs<ListItemProps, 'div'>(
       position: 'relative',
       paddingInline: tokenSchema.size.space.small,
 
-      // indicate when external link
-      // '&[href^=http]': {
-      //   cursor: 'pointer',
-      // },
+      // indicate when external link? e.g. `&[href^=http]`
+      'a&': {
+        cursor: 'pointer',
+      },
 
       '& .list-item-text': {
         marginBlock: `calc((${tokenSchema.size.icon.regular} - ${tokenSchema.typography.text.regular.capheight}) / 2)`,

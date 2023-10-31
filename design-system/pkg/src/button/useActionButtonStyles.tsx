@@ -59,6 +59,11 @@ export function useActionButtonStyles(
         transitionTimingFunction: 'ease-out',
         userSelect: 'none',
 
+        // indicate when external link? e.g. `&[href^=http]`
+        'a&': {
+          cursor: 'pointer',
+        },
+
         // CONTENTS
         [actionButtonClassList.childSelector('text')]: {
           fontWeight: 'inherit',
