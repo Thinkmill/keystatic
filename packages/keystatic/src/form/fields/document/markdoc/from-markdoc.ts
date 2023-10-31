@@ -31,9 +31,9 @@ function inlineNodeFromMarkdoc(node: Node): Descendant | Descendant[] {
     );
   }
   if (node.type === 'code') {
-    return addMarkToChildren('code', () => [
-      { text: node.attributes.content, code: true },
-    ]);
+    return addMarkToChildren('code', () =>
+      getInlineNodes(node.attributes.content)
+    );
   }
   if (node.type === 'em') {
     return addMarkToChildren('italic', () =>

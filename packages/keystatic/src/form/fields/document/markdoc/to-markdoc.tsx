@@ -41,14 +41,14 @@ function toMarkdocInline(node: Descendant): Node | Node[] {
   if (node.type !== undefined) {
     throw new Error(`unexpected inline node type: ${node.type}`);
   }
-  if (node.code) {
-    return new Ast.Node('code', { content: node.text }, []);
-  }
   const marks = (
-    Object.keys(node).filter(mark => mark !== 'text') as Mark[]
+    Object.keys(node).filter(
+      mark => mark !== 'text' && mark !== 'code'
+    ) as Mark[]
   ).sort();
-
-  let markdocNode = new Ast.Node('text', { content: node.text });
+  let markdocNode = node.code
+    ? new Ast.Node('code', { content: node.text }, [])
+    : new Ast.Node('text', { content: node.text });
   for (const mark of marks) {
     const config = markToMarkdoc[mark];
     if (config) {
