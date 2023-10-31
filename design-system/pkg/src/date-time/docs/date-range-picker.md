@@ -224,12 +224,12 @@ Indian calendar. Dates emitted from `onChange` are in the Gregorian calendar.
 let [range, setRange] = React.useState(null);
 
 return (
-  <VoussoirProvider locale="hi-IN-u-ca-indian">
+  <KeystarProvider locale="hi-IN-u-ca-indian">
     <VStack gap="large">
       <DateRangePicker label="Date range" value={range} onChange={setRange} />
       <Text>Selected range: {range?.toString()}</Text>
     </VStack>
-  </VoussoirProvider>
+  </KeystarProvider>
 );
 ```
 

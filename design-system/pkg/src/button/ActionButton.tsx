@@ -1,10 +1,10 @@
 import { useButton } from '@react-aria/button';
 import { useHover } from '@react-aria/interactions';
+import { useLink } from '@react-aria/link';
 import { filterDOMProps, mergeProps, useObjectRef } from '@react-aria/utils';
 import { ForwardedRef, forwardRef, useMemo } from 'react';
 
 import { useProviderProps } from '@keystar/ui/core';
-import { useLinkComponent } from '@keystar/ui/link';
 import { SlotProvider, SlotContextType, useSlotProps } from '@keystar/ui/slots';
 import { FocusRing } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
@@ -74,19 +74,19 @@ const LinkButton = forwardRef(function LinkActionButton(
     ...otherProps
   } = props;
 
-  const LinkComponent = useLinkComponent(forwardedRef);
   const domRef = useObjectRef(forwardedRef);
   const { buttonProps, isPressed } = useButton(
     { elementType: 'a', ...props },
     domRef
   );
+  const { linkProps } = useLink(otherProps, domRef);
   const { hoverProps, isHovered } = useHover({ isDisabled });
   const styleProps = useActionButtonStyles(props, { isHovered, isPressed });
 
   return (
-    <LinkComponent
+    <a
       {...filterDOMProps(otherProps)}
-      {...mergeProps(buttonProps, hoverProps, styleProps)}
+      {...mergeProps(buttonProps, linkProps, hoverProps, styleProps)}
       ref={domRef}
       download={download}
       href={href}
@@ -97,7 +97,7 @@ const LinkButton = forwardRef(function LinkActionButton(
       target={target}
     >
       {children}
-    </LinkComponent>
+    </a>
   );
 });
 

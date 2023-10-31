@@ -1,12 +1,17 @@
 'use client';
 import { useLocale } from '@react-aria/i18n';
-import { HTMLAttributes, ReactNode, Fragment, useCallback } from 'react';
+import {
+  AnchorHTMLAttributes,
+  HTMLAttributes,
+  ReactNode,
+  Fragment,
+  useCallback,
+} from 'react';
 
 import { Icon } from '@keystar/ui/icon';
 import { chevronLeftIcon } from '@keystar/ui/icon/icons/chevronLeftIcon';
 import { chevronRightIcon } from '@keystar/ui/icon/icons/chevronRightIcon';
 import { Box, Flex } from '@keystar/ui/layout';
-import { LinkComponentProps } from '@keystar/ui/link';
 import { css, tokenSchema } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
@@ -135,7 +140,8 @@ const HeadingList = () => {
   return <Box elementType="ul">{headings.map(headingMap)}</Box>;
 };
 
-type HeadingItemProps = LinkComponentProps & Pick<HeadingEntry, 'id' | 'level'>;
+type HeadingItemProps = AnchorHTMLAttributes<HTMLAnchorElement> &
+  Pick<HeadingEntry, 'id' | 'level'>;
 const HeadingItem = ({
   // id,
   href,

@@ -57,7 +57,10 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
         transitionTimingFunction: 'ease-out',
         userSelect: 'none',
 
-        'a&': { cursor: 'pointer' },
+        // indicate when external link? e.g. `&[href^=http]`
+        'a&': {
+          cursor: 'pointer',
+        },
 
         '&:disabled, &[aria-disabled]': {
           cursor: 'default',

@@ -173,18 +173,18 @@ function Tab<T>(props: TabProps<T>) {
   let { key, rendered } = item;
 
   let tabContext = useTabContext<T>();
-  let ref = useRef<HTMLDivElement>(null);
+  let ref = useRef<any>(null); // HTMLAnchorElement | HTMLDivElement
   let { tabProps, isDisabled } = useTab({ key }, state, ref);
 
   let { pressProps, isPressed } = usePress({ ...otherProps, isDisabled });
   let { hoverProps, isHovered } = useHover({ ...otherProps, isDisabled });
-  let domProps = filterDOMProps(item.props);
-  delete domProps.id;
+
+  let ElementType: React.ElementType = item.props.href ? 'a' : 'div';
 
   return (
     <FocusRing>
-      <div
-        {...mergeProps(tabProps, hoverProps, pressProps, domProps)}
+      <ElementType
+        {...mergeProps(tabProps, hoverProps, pressProps)}
         {...toDataAttributes({
           interaction: isPressed ? 'press' : isHovered ? 'hover' : undefined,
           orientation: tabContext.tabProps.orientation,
@@ -328,7 +328,7 @@ function Tab<T>(props: TabProps<T>) {
         >
           {isReactText(rendered) ? <Text>{rendered}</Text> : rendered}
         </SlotProvider>
-      </div>
+      </ElementType>
     </FocusRing>
   );
 }
@@ -663,11 +663,7 @@ function TabPicker<T>(props: TabPickerProps<T>) {
     visible,
   } = props;
 
-  let items = [...state.collection].map(item => ({
-    rendered: item.rendered,
-    textValue: item.textValue,
-    id: item.key,
-  }));
+  let items = [...state.collection];
 
   let pickerProps = {
     'aria-labelledby': ariaLabeledBy,
@@ -697,7 +693,7 @@ function TabPicker<T>(props: TabPickerProps<T>) {
         marginBottom="xsmall"
         UNSAFE_className={classNames('ksv-tabs-picker')}
       >
-        {item => <Item textValue={item.textValue}>{item.rendered}</Item>}
+        {item => <Item {...item.props}>{item.rendered}</Item>}
       </Picker>
     </div>
   );

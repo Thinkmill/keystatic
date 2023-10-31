@@ -5,7 +5,7 @@ export type MenuContextValue = {
   autoFocus?: boolean | FocusStrategy;
   closeOnSelect?: boolean;
   onClose?: () => void;
-  ref?: MutableRefObject<HTMLUListElement | null>;
+  ref?: MutableRefObject<HTMLDivElement | null>;
   shouldFocusWrap?: boolean;
 } & HTMLAttributes<HTMLElement>;
 

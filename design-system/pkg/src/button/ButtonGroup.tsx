@@ -15,7 +15,7 @@ import {
 } from 'react';
 
 import {
-  VoussoirProvider,
+  KeystarProvider,
   useProvider,
   useProviderProps,
 } from '@keystar/ui/core';
@@ -149,7 +149,7 @@ export const ButtonGroup: ForwardRefExoticComponent<
         })
       )}
     >
-      <VoussoirProvider isDisabled={isDisabled}>{children}</VoussoirProvider>
+      <KeystarProvider isDisabled={isDisabled}>{children}</KeystarProvider>
     </div>
   );
 });
