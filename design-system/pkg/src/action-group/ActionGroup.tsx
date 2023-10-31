@@ -26,7 +26,7 @@ import {
 } from 'react';
 
 import { ActionButton } from '@keystar/ui/button';
-import { VoussoirProvider, useProviderProps } from '@keystar/ui/core';
+import { KeystarProvider, useProviderProps } from '@keystar/ui/core';
 import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
 import { moreHorizontalIcon } from '@keystar/ui/icon/icons/moreHorizontalIcon';
 import { Icon } from '@keystar/ui/icon';
@@ -344,7 +344,7 @@ function ActionGroup<T extends object>(
             otherProps.UNSAFE_className
           )}
         >
-          <VoussoirProvider {...providerProps}>
+          <KeystarProvider {...providerProps}>
             {children.map(item => (
               <ActionGroupItem
                 key={item.key}
@@ -358,7 +358,7 @@ function ActionGroup<T extends object>(
               />
             ))}
             {menuItem}
-          </VoussoirProvider>
+          </KeystarProvider>
         </div>
       </div>
     </FocusScope>

@@ -9,7 +9,7 @@ import { createDocumentEditor, DocumentEditorEditable } from '..';
 import { ComponentBlock } from '../../../../api';
 import { DocumentFeatures } from '../document-features';
 import { createToolbarState, ToolbarStateProvider } from '../toolbar-state';
-import { VoussoirProvider } from '@keystar/ui/core';
+import { KeystarProvider } from '@keystar/ui/core';
 import { normaliseDocumentFeatures } from '../..';
 
 export { __jsx as jsx } from './jsx/namespace';
@@ -159,7 +159,7 @@ function EditorComp({
 }) {
   const [val, setVal] = useState(editor.children);
   return (
-    <VoussoirProvider>
+    <KeystarProvider>
       <Slate editor={editor} value={val} onChange={setVal}>
         <ToolbarStateProvider
           componentBlocks={componentBlocks}
@@ -172,7 +172,7 @@ function EditorComp({
           />
         </ToolbarStateProvider>
       </Slate>
-    </VoussoirProvider>
+    </KeystarProvider>
   );
 }
 

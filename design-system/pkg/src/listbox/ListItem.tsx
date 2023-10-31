@@ -57,9 +57,15 @@ export const ListItem = forwardRefWithAs<ListItemProps, 'div'>(
     let rootClassname = css({
       cursor: 'default',
       color: tokenSchema.color.alias.foregroundIdle,
+      display: 'block',
       outline: 0,
       position: 'relative',
       paddingInline: tokenSchema.size.space.small,
+
+      // indicate when external link? e.g. `&[href^=http]`
+      'a&': {
+        cursor: 'pointer',
+      },
 
       '& .list-item-text': {
         marginBlock: `calc((${tokenSchema.size.icon.regular} - ${tokenSchema.typography.text.regular.capheight}) / 2)`,

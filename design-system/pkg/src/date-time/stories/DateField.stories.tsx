@@ -10,7 +10,7 @@ import {
   toZoned,
 } from '@internationalized/date';
 import { useLocale } from '@react-aria/i18n';
-import { VoussoirProvider } from '@keystar/ui/core';
+import { KeystarProvider } from '@keystar/ui/core';
 import { Flex } from '@keystar/ui/layout';
 import { Item, Picker, Section } from '@keystar/ui/picker';
 import { ArgTypes, action } from '@keystar/ui-storybook';
@@ -319,7 +319,7 @@ function Example<T extends DateValue>(props: DateFieldProps<T>) {
           </Section>
         </Picker>
       </Flex>
-      <VoussoirProvider
+      <KeystarProvider
         locale={
           (locale || defaultLocale) +
           (calendar && calendar !== preferredCalendars[0]?.key
@@ -328,7 +328,7 @@ function Example<T extends DateValue>(props: DateFieldProps<T>) {
         }
       >
         <DateField {...props} />
-      </VoussoirProvider>
+      </KeystarProvider>
     </Flex>
   );
 }

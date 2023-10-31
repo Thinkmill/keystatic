@@ -112,6 +112,25 @@ Dynamic.story = {
   name: 'dynamic',
 };
 
+export const Links = () => {
+  return (
+    <MenuTrigger>
+      <ActionButton>Trigger</ActionButton>
+      <Menu>
+        <Item href="https://apple.com/" target="_blank">
+          Apple
+        </Item>
+        <Item href="https://google.com/" target="_blank">
+          Google
+        </Item>
+        <Item href="https://microsoft.com/" target="_blank">
+          Microsoft
+        </Item>
+      </Menu>
+    </MenuTrigger>
+  );
+};
+
 export const WithTooltip = () => {
   return (
     <MenuTrigger>

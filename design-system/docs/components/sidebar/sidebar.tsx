@@ -4,7 +4,6 @@ import { Button } from '@keystar/ui/button';
 import { menuIcon } from '@keystar/ui/icon/icons/menuIcon';
 import { Icon } from '@keystar/ui/icon';
 import { Box, Divider } from '@keystar/ui/layout';
-import { useLinkComponent } from '@keystar/ui/link';
 import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
@@ -92,8 +91,6 @@ function SidebarHeader({
   // onLayout: (rect: DOMRect) => void;
   onMenuPress: () => void;
 }) {
-  const Link = useLinkComponent(null);
-
   const menuLabel = 'Open navigation panel';
   const linkClass = css({
     alignItems: 'baseline',
@@ -125,11 +122,10 @@ function SidebarHeader({
         })}
       >
         <Box flex>
-          <Link href="/" title="/ˈvuːswɑː/" className={linkClass}>
+          <a href="/" className={linkClass}>
             <Text visuallyHidden>Home</Text>
-            <VMark />
-            <span aria-hidden>OUSSOIR</span>
-          </Link>
+            <span aria-hidden>KeystarUI</span>
+          </a>
         </Box>
 
         <ColorSchemeMenu />
@@ -152,26 +148,3 @@ function SidebarHeader({
     </Box>
   );
 }
-
-const VMark = () => {
-  const size = tokenSchema.size.icon.regular;
-  const cls = css({ height: size, width: size });
-
-  return (
-    <svg viewBox="0 0 48 48" fill="currentColor" className={cls}>
-      <path d="M3.58 7.169C2.793 4.599 4.716 2 7.404 2h33.124c2.708 0 4.633 2.633 3.812 5.213L32.725 43.716a4 4 0 0 1-3.811 2.787H18.556a4 4 0 0 1-3.825-2.831L3.579 7.169Z" />
-    </svg>
-  );
-};
-
-// Hand drawn!
-// <svg x="0" y="0" version="1.1" viewBox="0 0 10 10">
-//   <path
-//     d="M1,1 L3.5,9 h3 L9,1 Z"
-//     fill="currentColor"
-//     stroke="currentColor"
-//     strokeLinecap="round"
-//     strokeLinejoin="round"
-//     strokeWidth="2"
-//   />
-// </svg>
