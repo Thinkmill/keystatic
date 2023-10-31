@@ -2,7 +2,7 @@
 '@example/next-block-builder': patch
 '@keystar/docs': patch
 '@keystatic/core': patch
-'@keystar/ui': patch
+'@keystar/ui': minor
 'keystatic-docs': patch
 ---
 
