@@ -82,7 +82,7 @@ importers:
     specifiers:
       '@babel/core': ^7.23.0
       '@babel/runtime': ^7.18.3
-      '@internationalized/date': ^3.4.0
+      '@internationalized/date': ^3.5.0
       '@keystar/ui': ^0.3.2
       '@markdoc/markdoc': ^0.3.0
       '@preconstruct/next': ^4.0.0
@@ -124,7 +124,7 @@ importers:
     dependencies:
       '@babel/core': 7.23.0
       '@babel/runtime': 7.22.15
-      '@internationalized/date': 3.4.0
+      '@internationalized/date': 3.5.0
       '@keystar/ui': link:../pkg
       '@markdoc/markdoc': 0.3.2_gq4reeurwxuj4hvyerswzzqthy
       '@react-aria/i18n': 3.8.1_react@18.2.0
@@ -173,7 +173,7 @@ importers:
       '@babel/runtime': ^7.18.3
       '@emotion/css': ^11.9.0
       '@floating-ui/react': ^0.24.0
-      '@internationalized/date': ^3.4.0
+      '@internationalized/date': ^3.5.0
       '@keystar/ui': ^0.3.4
       '@keystar/ui-storybook': ^0.0.1
       '@react-aria/actiongroup': ^3.6.4
@@ -275,7 +275,7 @@ importers:
       '@babel/runtime': 7.22.15
       '@emotion/css': 11.11.2
       '@floating-ui/react': 0.24.8_biqbaboplfbrettd7655fr4n2y
-      '@internationalized/date': 3.4.0
+      '@internationalized/date': 3.5.0
       '@react-aria/actiongroup': 3.6.4_biqbaboplfbrettd7655fr4n2y
       '@react-aria/breadcrumbs': 3.5.7_react@18.2.0
       '@react-aria/button': 3.8.4_react@18.2.0
@@ -3783,12 +3783,6 @@ packages:
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
 
-  /@internationalized/date/3.4.0:
-    resolution: {integrity: sha512-QUDSGCsvrEVITVf+kv9VSAraAmCgjQmU5CiXtesUBBhBe374NmnEIIaOFBZ72t29dfGMBP0zF+v6toVnbcc6jg==}
-    dependencies:
-      '@swc/helpers': 0.5.1
-    dev: false
-
   /@internationalized/date/3.5.0:
     resolution: {integrity: sha512-nw0Q+oRkizBWMioseI8+2TeUPEyopJVz5YxoYVzR0W1v+2YytiYah7s/ot35F149q/xAg4F1gT/6eTd+tsUpFQ==}
     dependencies:
@@ -5204,7 +5198,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@internationalized/date': 3.4.0
+      '@internationalized/date': 3.5.0
       '@internationalized/message': 3.1.1
       '@internationalized/number': 3.2.1
       '@internationalized/string': 3.1.1
