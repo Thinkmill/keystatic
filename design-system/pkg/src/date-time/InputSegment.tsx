@@ -127,7 +127,7 @@ function useEditableSectionStyles(segment: DateSegment) {
           outline: 'none',
         },
       }),
-      segmentClassList.get('editable')
+      segmentClassList.element('editable')
     ),
     style: {
       minWidth:

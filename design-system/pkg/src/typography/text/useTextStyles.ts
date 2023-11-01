@@ -55,7 +55,7 @@ export function useTextStyles(
     UNSAFE_className: [
       css(styles),
       UNSAFE_className,
-      textClassList.get('root'),
+      textClassList.element('root'),
     ],
   });
 }

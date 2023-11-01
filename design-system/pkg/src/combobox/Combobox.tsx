@@ -298,7 +298,7 @@ const ComboboxInput = React.forwardRef(function ComboboxInput(
         <TextFieldPrimitive
           inputProps={{
             ...inputProps,
-            className: comboboxClassList.get('input'),
+            className: comboboxClassList.element('input'),
           }}
           ref={inputRef}
           isDisabled={isDisabled}

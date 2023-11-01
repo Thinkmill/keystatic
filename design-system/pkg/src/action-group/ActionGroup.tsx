@@ -293,7 +293,7 @@ function ActionGroup<T extends object>(
 
               '--action-item-gap': tokenSchema.size.space.regular,
 
-              [`& > ${actionButtonClassList.selector('root')}`]: {
+              [actionButtonClassList.selector('root', 'child')]: {
                 margin: `calc(var(--action-item-gap) / 2)`,
               },
 
@@ -304,7 +304,7 @@ function ActionGroup<T extends object>(
 
               // justified
               '&[data-justified]': {
-                [`& > ${actionButtonClassList.selector('root')}`]: {
+                [actionButtonClassList.selector('root', 'child')]: {
                   flexGrow: 1,
                 },
               },
@@ -314,7 +314,7 @@ function ActionGroup<T extends object>(
                 '--action-item-gap': 0,
                 // gap: 0,
 
-                [`& > ${actionButtonClassList.selector('root')}`]: {
+                [actionButtonClassList.selector('root', 'child')]: {
                   borderRadius: 0,
 
                   '&:first-of-type': {

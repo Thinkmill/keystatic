@@ -36,7 +36,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
     }),
     style: styleProps.style,
     className: classNames(
-      buttonClassList.get('root'),
+      buttonClassList.element('root'),
       css({
         alignItems: 'center',
         borderRadius: tokenSchema.size.radius.regular,

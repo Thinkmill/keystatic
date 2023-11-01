@@ -53,7 +53,7 @@ export function Notice(props: NoticeProps) {
   const { children, tone = 'neutral', ...otherProps } = props;
   const ref = useRef<HTMLElement | null>(null);
   const styleProps = useStyleProps(otherProps);
-  const headingClassName = noticeClassList.get('heading');
+  const headingClassName = noticeClassList.element('heading');
   const headingId = useSlotId();
   const contentId = useSlotId();
   const hasHeading = useHasChild(noticeClassList.selector('heading'), ref);

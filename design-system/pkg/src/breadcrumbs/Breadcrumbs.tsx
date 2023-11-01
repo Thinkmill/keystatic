@@ -206,7 +206,7 @@ function Breadcrumbs<T>(
       <li
         key={index}
         className={classNames(
-          breadcrumbsClassList.get('item'),
+          breadcrumbsClassList.element('item'),
           css({
             alignItems: 'center',
             display: 'inline-flex',
@@ -235,14 +235,14 @@ function Breadcrumbs<T>(
       {...styleProps}
       ref={domRef}
       className={classNames(
-        breadcrumbsClassList.get('root'),
+        breadcrumbsClassList.element('root'),
         styleProps.className
       )}
     >
       <ul
         ref={listRef}
         className={classNames(
-          breadcrumbsClassList.get('list'),
+          breadcrumbsClassList.element('list'),
           css({
             display: 'flex',
             height: tokenSchema.size.element.regular,

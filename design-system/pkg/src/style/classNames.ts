@@ -45,23 +45,23 @@ export class ClassList<ElementName extends string> {
     );
   }
 
-  get(element: ElementName | 'root') {
-    if (element === 'root') {
+  element(name: ElementName | 'root') {
+    if (name === 'root') {
       return this.root;
     }
 
-    let className = this.elements.get(element);
+    let className = this.elements.get(name);
 
     assert(
       !!className,
-      `Element "${element}" not found in "${this.componentName}" class list. All elements must be defined when the ClassList is instantiated.`
+      `Element "${name}" not found in "${this.componentName}" class list. All elements must be defined when the ClassList is instantiated.`
     );
 
     return className;
   }
 
   selector(element: ElementName | 'root', combinator?: CssCombinator) {
-    let className = this.get(element);
+    let className = this.element(element);
 
     if (!combinator) {
       return safeClassName(className);

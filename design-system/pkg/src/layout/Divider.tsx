@@ -47,7 +47,7 @@ export const Divider = forwardRefWithAs<DividerProps, 'div'>(
         {...filterDOMProps(otherProps, filterOptions)}
         ref={forwardedRef}
         className={classNames(
-          dividerClassList.get('root'),
+          dividerClassList.element('root'),
           css({
             alignSelf: 'stretch',
             backgroundColor: tokenSchema.color.border.neutral,

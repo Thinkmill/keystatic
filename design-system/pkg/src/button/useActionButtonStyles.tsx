@@ -40,7 +40,7 @@ export function useActionButtonStyles(
     }),
     style: styleProps.style,
     className: classNames(
-      actionButtonClassList.get('root'),
+      actionButtonClassList.element('root'),
       css({
         alignItems: 'center',
         borderColor: 'transparent',

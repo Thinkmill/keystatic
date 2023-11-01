@@ -63,7 +63,7 @@ export const PasswordField: ForwardRefExoticComponent<
       ref={inputRef}
       inputProps={{
         ...inputProps,
-        className: classList.get('input'),
+        className: classList.element('input'),
       }}
       isDisabled={isDisabled}
       isReadOnly={isReadOnly}
