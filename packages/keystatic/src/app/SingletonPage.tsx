@@ -1,5 +1,12 @@
 import { useRouter } from './router';
-import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  FormEvent,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import { Badge } from '@keystar/ui/badge';
 import { Button } from '@keystar/ui/button';
@@ -187,57 +194,64 @@ function SingletonPage({
 
   const isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
 
-  const onPreview = () => {
-    window.open(
-      singletonConfig.previewUrl?.replace('{branch}', branchInfo.currentBranch),
-      '_blank',
-      'noopener,noreferrer'
-    );
-  };
-
   const branchInfo = useBranchInfo();
-
-  const onView = () => {
-    let filePath =
-      formatInfo.dataLocation === 'index'
-        ? `/tree/${branchInfo.currentBranch}/${singletonPath}`
-        : `/blob/${
-            branchInfo.currentBranch
-          }/${singletonPath}${getDataFileExtension(formatInfo)}`;
-    window.open(
-      `${getRepoUrl(branchInfo)}${filePath}`,
-      '_blank',
-      'noopener,noreferrer'
+  const previewHref = useMemo(() => {
+    if (!singletonConfig.previewUrl) return undefined;
+    return singletonConfig.previewUrl.replace(
+      '{branch}',
+      branchInfo.currentBranch
     );
-  };
-
+  }, [branchInfo.currentBranch, singletonConfig.previewUrl]);
   const isGitHub = isGitHubConfig(config) || isCloudConfig(config);
-
   const singletonExists = !!initialState;
+  const viewHref =
+    isGitHub && singletonExists
+      ? `${getRepoUrl(branchInfo)}${
+          formatInfo.dataLocation === 'index'
+            ? `/tree/${branchInfo.currentBranch}/${singletonPath}`
+            : `/blob/${
+                branchInfo.currentBranch
+              }/${singletonPath}${getDataFileExtension(formatInfo)}`
+        }`
+      : undefined;
+
   const menuActions = useMemo(() => {
-    const actions = [
+    const actions: {
+      key: string;
+      label: string;
+      icon: ReactElement;
+      href?: string;
+      target?: string;
+      rel?: string;
+    }[] = [
       {
         key: 'reset',
         label: 'Reset',
         icon: historyIcon,
       },
     ];
-    if (singletonConfig.previewUrl) {
+    if (previewHref) {
       actions.push({
         key: 'preview',
         label: 'Preview',
         icon: externalLinkIcon,
+        href: previewHref,
+        target: '_blank',
+        rel: 'noopener noreferrer',
       });
     }
-    if (isGitHub && singletonExists) {
+    if (viewHref) {
       actions.push({
         key: 'view',
         label: 'View on GitHub',
         icon: githubIcon,
+        href: viewHref,
+        target: '_blank',
+        rel: 'noopener noreferrer',
       });
     }
     return actions;
-  }, [isGitHub, singletonConfig.previewUrl, singletonExists]);
+  }, [previewHref, viewHref]);
 
   return (
     <PageRoot containerWidth={containerWidthForEntryLayout(singletonConfig)}>
@@ -270,17 +284,17 @@ function SingletonPage({
               case 'reset':
                 onReset();
                 break;
-              case 'preview':
-                onPreview?.();
-                break;
-              case 'view':
-                onView();
-                break;
             }
           }}
         >
           {item => (
-            <Item key={item.key} textValue={item.label}>
+            <Item
+              key={item.key}
+              textValue={item.label}
+              href={item.href}
+              target={item.target}
+              rel={item.rel}
+            >
               <Icon src={item.icon} />
               <Text>{item.label}</Text>
             </Item>
