@@ -87,6 +87,24 @@ ProminenceLow.story = {
   name: 'prominence=low',
 };
 
+export const Links = () => (
+  <ActionGroup>
+    <Item href="https://apple.com/" target="_blank">
+      Apple
+    </Item>
+    <Item href="https://google.com/" target="_blank">
+      Google
+    </Item>
+    <Item href="https://microsoft.com/" target="_blank">
+      Microsoft
+    </Item>
+  </ActionGroup>
+);
+
+Links.story = {
+  name: 'links',
+};
+
 export const DisabledGroup = () =>
   render({ isDisabled: true, defaultSelectedKeys: ['1'] }, editItems);
 
@@ -266,6 +284,26 @@ export const OverflowModeCollapse = () => (
 
 OverflowModeCollapse.story = {
   name: 'overflowMode: collapse',
+};
+
+export const CollapseWithLinks = () => (
+  <Resize>
+    <ActionGroup overflowMode="collapse">
+      <Item href="https://apple.com/" target="_blank">
+        Apple
+      </Item>
+      <Item href="https://google.com/" target="_blank">
+        Google
+      </Item>
+      <Item href="https://microsoft.com/" target="_blank">
+        Microsoft
+      </Item>
+    </ActionGroup>
+  </Resize>
+);
+
+CollapseWithLinks.story = {
+  name: 'overflowMode: collapse + links',
 };
 
 export const ButtonLabelBehaviorHide = () => (
