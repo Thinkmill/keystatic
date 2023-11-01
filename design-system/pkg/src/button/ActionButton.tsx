@@ -130,8 +130,8 @@ const BaseButton = forwardRef(function BaseActionButton(
 // Utils
 // -----------------------------------------------------------------------------
 
-let iconClassName = actionButtonClassList.declare('icon');
-let textClassName = actionButtonClassList.declare('text');
+let iconClassName = actionButtonClassList.get('icon');
+let textClassName = actionButtonClassList.get('text');
 
 export const useActionButtonChildren = (
   props: CommonActionButtonProps,

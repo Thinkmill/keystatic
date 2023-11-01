@@ -12,7 +12,7 @@ import {
 } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
-const segmentClassList = new ClassList('InputSegment');
+const segmentClassList = new ClassList('InputSegment', ['editable'] as const);
 
 interface InputSegmentProps extends DatePickerBase<DateValue> {
   segment: DateSegment;
@@ -127,7 +127,7 @@ function useEditableSectionStyles(segment: DateSegment) {
           outline: 'none',
         },
       }),
-      segmentClassList.declare('editable')
+      segmentClassList.get('editable')
     ),
     style: {
       minWidth:

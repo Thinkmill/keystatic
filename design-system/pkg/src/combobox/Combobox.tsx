@@ -47,7 +47,7 @@ import localizedMessages from './l10n.json';
 import { MobileCombobox } from './MobileCombobox';
 import { ComboboxProps } from './types';
 
-const comboboxClassList = new ClassList('Combobox');
+const comboboxClassList = new ClassList('Combobox', ['input'] as const);
 
 function Combobox<T extends object>(
   props: ComboboxProps<T>,
@@ -298,7 +298,7 @@ const ComboboxInput = React.forwardRef(function ComboboxInput(
         <TextFieldPrimitive
           inputProps={{
             ...inputProps,
-            className: comboboxClassList.declare('input'),
+            className: comboboxClassList.get('input'),
           }}
           ref={inputRef}
           isDisabled={isDisabled}

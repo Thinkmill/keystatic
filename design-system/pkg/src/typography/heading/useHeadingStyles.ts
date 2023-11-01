@@ -28,7 +28,11 @@ export function useHeadingStyles({
 
   return useStyleProps({
     ...otherProps,
-    UNSAFE_className: [css(styles), UNSAFE_className, headingClasses.root()],
+    UNSAFE_className: [
+      css(styles),
+      UNSAFE_className,
+      headingClasses.get('root'),
+    ],
   });
 }
 

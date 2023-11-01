@@ -20,7 +20,7 @@ import { PasswordFieldProps } from './types';
 import { usePasswordField } from './usePasswordField';
 import { usePasswordFieldState } from './usePasswordFieldState';
 
-const classList = new ClassList('PasswordField');
+const classList = new ClassList('PasswordField', ['input'] as const);
 
 /**
  * Password fields are text fields for entering secure text.
@@ -63,7 +63,7 @@ export const PasswordField: ForwardRefExoticComponent<
       ref={inputRef}
       inputProps={{
         ...inputProps,
-        className: classList.declare('input'),
+        className: classList.get('input'),
       }}
       isDisabled={isDisabled}
       isReadOnly={isReadOnly}
