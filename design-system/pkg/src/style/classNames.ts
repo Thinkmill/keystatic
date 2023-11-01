@@ -1,5 +1,5 @@
 import { cx, ClassNamesArg } from '@emotion/css';
-import { warning } from 'emery';
+import { assert } from 'emery';
 
 export const classNamePrefix = 'ksv';
 export const resetClassName = voussoirClassName('reset');
@@ -23,36 +23,54 @@ export function classNames(...inputs: ClassNamesArg[]) {
 }
 
 /**
- * A thin wrapper around Map to manage component class names. Keys are prefixed
- * with the component name and Voussoir's prefix.
+ * A ClassList organises component class names with appropriate prefixes,
+ * offering strongly-typed methods for declaration in JSX and styles.
  */
-export class ClassList extends Map {
-  prefix: string;
+export class ClassList<T extends readonly string[], K extends T[number]> {
+  /** The root class name. */
+  public readonly root: string;
+  /** The list of class names. */
+  elements: Map<K, string>;
 
-  constructor(componentName: string) {
-    super();
-    this.prefix = voussoirClassName(componentName);
+  constructor(componentName: string, elements: T = [] as unknown as T) {
+    this.root = voussoirClassName(componentName);
+    this.elements = new Map(
+      elements.map(element => [element as K, `${this.root}-${element}`])
+    );
   }
 
-  root() {
-    return this.prefix;
-  }
-
-  declare(element: string) {
-    if (!this.has(element)) {
-      this.set(element, `${this.prefix}-${element}`);
+  get(element: K | 'root') {
+    if (element === 'root') {
+      return this.root;
     }
 
-    return this.get(element);
+    let className = this.elements.get(element);
+
+    assert(!!className, `Class name for ${element} not found.`);
+
+    return className;
   }
 
-  selector(element: string) {
-    warning(this.has(element), `ClassList: "${element}" is not declared.`);
+  selector(element: K | 'root', combinator?: CssCombinator) {
+    let className = this.get(element);
 
-    return `.${this.get(element)}`.replace(/:/g, '\\:');
-  }
+    if (!combinator) {
+      return safeClassName(className);
+    }
 
-  childSelector(element: string) {
-    return `& ${this.selector(element)}`;
+    return combinators[combinator] + safeClassName(className);
   }
 }
+
+function safeClassName(className: string) {
+  return `.${className.replace(/:/g, '\\:')}`;
+}
+
+type CssCombinator = keyof typeof combinators;
+
+const combinators = {
+  descendant: '& ',
+  child: '& > ',
+  sibling: '& ~ ',
+  'adjacent-sibling': '& + ',
+} as const;
