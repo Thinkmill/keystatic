@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ComingSoonBadge, NewBadge } from './badges';
 import { cx } from '../../utils';
 
 type NavItemProps = {
@@ -12,6 +13,7 @@ type NavItemProps = {
   title?: string;
   tabIndex?: number;
   comingSoon?: boolean;
+  isNew?: boolean;
   currentPage?: boolean;
 };
 
@@ -22,6 +24,7 @@ export function NavItem({
   title,
   tabIndex,
   comingSoon,
+  isNew,
   currentPage,
 }: NavItemProps) {
   const pathname = usePathname();
@@ -46,26 +49,26 @@ export function NavItem({
         <div
           className={cx(
             styleShared,
-            'inline-flex items-baseline gap-1 text-slate-9'
+            'inline-flex items-center gap-1 text-slate-9'
           )}
         >
-          {label}
-          <div className="self-start rounded-full border border-amber-5 bg-amber-2 px-1 py-0.5 text-[0.625rem] font-medium uppercase leading-none text-amber-11">
-            Soon
-          </div>
+          <span>{label}</span>
+          <ComingSoonBadge />
         </div>
       ) : (
         <Link href={href} legacyBehavior>
           <a
             className={cx(
               styleShared,
-              isCurrentPage ? styleCurrent : styleIdle
+              isCurrentPage ? styleCurrent : styleIdle,
+              isNew ? 'flex items-center gap-1' : ''
             )}
             href={href}
             title={title}
             tabIndex={tabIndex}
           >
             {label}
+            {isNew && <NewBadge />}
           </a>
         </Link>
       )}
