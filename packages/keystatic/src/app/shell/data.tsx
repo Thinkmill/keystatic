@@ -320,8 +320,9 @@ export function GitHubAppShellProvider(props: {
     () => ({
       baseCommit: baseCommit || '',
       repositoryId: repo?.id ?? '',
+      isPrivate: repo?.isPrivate ?? true,
     }),
-    [baseCommit, repo?.id]
+    [baseCommit, repo?.id, repo?.isPrivate]
   );
   const pullRequestNumber =
     currentBranchRef?.associatedPullRequests.nodes?.[0]?.number;
@@ -386,7 +387,11 @@ export const AppShellErrorContext = createContext<CombinedError | undefined>(
   undefined
 );
 
-const BaseInfoContext = createContext({ baseCommit: '', repositoryId: '' });
+const BaseInfoContext = createContext({
+  baseCommit: '',
+  repositoryId: '',
+  isPrivate: true,
+});
 
 const ChangedContext = createContext<{
   collections: Map<
@@ -445,6 +450,10 @@ export function useBaseCommit() {
   return useContext(BaseInfoContext).baseCommit;
 }
 
+export function useIsRepoPrivate() {
+  return useContext(BaseInfoContext).isPrivate;
+}
+
 export function useRepositoryId() {
   return useContext(BaseInfoContext).repositoryId;
 }
@@ -476,6 +485,7 @@ export const Ref_base = gql`
 const BaseRepo = gql`
   fragment Repo_base on Repository {
     id
+    isPrivate
     owner {
       id
       login
