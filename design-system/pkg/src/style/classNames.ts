@@ -26,32 +26,41 @@ export function classNames(...inputs: ClassNamesArg[]) {
  * A ClassList organises component class names with appropriate prefixes,
  * offering strongly-typed methods for declaration in JSX and styles.
  */
-export class ClassList<T extends readonly string[], K extends T[number]> {
+export class ClassList<ElementName extends string> {
+  /** The component name for this class list. */
+  componentName: string;
   /** The root class name. */
-  public readonly root: string;
-  /** The list of class names. */
-  elements: Map<K, string>;
+  root: string;
+  /** The list of element class names. */
+  elements: Map<ElementName, string>;
 
-  constructor(componentName: string, elements: T = [] as unknown as T) {
+  constructor(
+    componentName: string,
+    elements: ReadonlyArray<ElementName> = []
+  ) {
+    this.componentName = componentName;
     this.root = voussoirClassName(componentName);
     this.elements = new Map(
-      elements.map(element => [element as K, `${this.root}-${element}`])
+      elements.map(element => [element, `${this.root}-${element}`])
     );
   }
 
-  get(element: K | 'root') {
+  get(element: ElementName | 'root') {
     if (element === 'root') {
       return this.root;
     }
 
     let className = this.elements.get(element);
 
-    assert(!!className, `Class name for ${element} not found.`);
+    assert(
+      !!className,
+      `Element "${element}" not found in "${this.componentName}" class list. All elements must be defined when the ClassList is instantiated.`
+    );
 
     return className;
   }
 
-  selector(element: K | 'root', combinator?: CssCombinator) {
+  selector(element: ElementName | 'root', combinator?: CssCombinator) {
     let className = this.get(element);
 
     if (!combinator) {

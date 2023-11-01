@@ -23,7 +23,7 @@ export const breadcrumbsClassList = new ClassList('Breadcrumbs', [
   'link',
   'list',
   'separator',
-] as const);
+]);
 
 export function BreadcrumbItem(props: BreadcrumbItemProps) {
   let { children, isCurrent, isDisabled, size = 'regular' } = props;

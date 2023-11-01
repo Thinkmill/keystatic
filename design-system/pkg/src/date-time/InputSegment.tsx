@@ -12,7 +12,7 @@ import {
 } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
-const segmentClassList = new ClassList('InputSegment', ['editable'] as const);
+const segmentClassList = new ClassList('InputSegment', ['editable']);
 
 interface InputSegmentProps extends DatePickerBase<DateValue> {
   segment: DateSegment;

@@ -16,10 +16,7 @@ type ButtonState = {
   isSelected?: boolean;
 };
 
-export const buttonClassList = new ClassList('Button', [
-  'icon',
-  'text',
-] as const);
+export const buttonClassList = new ClassList('Button', ['icon', 'text']);
 
 export function useButtonStyles(props: ButtonProps, state: ButtonState) {
   const {

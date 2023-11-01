@@ -20,7 +20,7 @@ import { PasswordFieldProps } from './types';
 import { usePasswordField } from './usePasswordField';
 import { usePasswordFieldState } from './usePasswordFieldState';
 
-const classList = new ClassList('PasswordField', ['input'] as const);
+const classList = new ClassList('PasswordField', ['input']);
 
 /**
  * Password fields are text fields for entering secure text.

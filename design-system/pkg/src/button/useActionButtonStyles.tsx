@@ -19,7 +19,7 @@ type ButtonState = {
 export const actionButtonClassList = new ClassList('ActionButton', [
   'icon',
   'text',
-] as const);
+]);
 
 export function useActionButtonStyles(
   props: ActionButtonProps,

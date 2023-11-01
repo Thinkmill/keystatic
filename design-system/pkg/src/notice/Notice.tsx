@@ -18,7 +18,7 @@ import {
 } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
-export const noticeClassList = new ClassList('Notice', ['heading'] as const);
+export const noticeClassList = new ClassList('Notice', ['heading']);
 
 const toneToIcon = {
   caution: alertTriangleIcon,

@@ -47,7 +47,7 @@ import localizedMessages from './l10n.json';
 import { MobileCombobox } from './MobileCombobox';
 import { ComboboxProps } from './types';
 
-const comboboxClassList = new ClassList('Combobox', ['input'] as const);
+const comboboxClassList = new ClassList('Combobox', ['input']);
 
 function Combobox<T extends object>(
   props: ComboboxProps<T>,
