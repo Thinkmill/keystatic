@@ -2,6 +2,188 @@
 title: Adding Keystatic to a Remix project
 summary: Integrating Keystatic with an existing Remix v2 project.
 ---
-{% aside icon="👀" %}
-Coming soon!
+
+{% aside icon="☝️" %}
+This guide assumes you have an existing Remix project.
 {% /aside %}
+
+If you don't have an existing Remix project, you can create a new one with the following command:
+
+```bash
+npx create-remix@latest
+```
+
+## Installing dependencies
+
+Add Keystatic's `core` and `remix` packages:
+
+```bash
+npm install @keystatic/core @keystatic/remix
+```
+
+---
+{% aside icon="👇" %}
+BELOW THIS IS THE ASTRO GUIDE - USED TO MODIFY THE COPY WHILE KEEPING A CONSISTENT FORMAT
+{% /aside %}
+
+---
+
+## Updating the Astro config
+
+Add the `keystatic` integration in your `astro.config.mjs` file and set the `output` mode to `hybrid`:
+
+```diff
+// astro.config.mjs
+import { defineConfig } from 'astro/config'
+
+import react from '@astrojs/react'
+import markdoc from '@astrojs/markdoc'
++ import keystatic from '@keystatic/astro'
+
+// https://astro.build/config
+export default defineConfig({
+-  integrations: [react(), markdoc()],
++  integrations: [react(), markdoc(), keystatic()],
++  output: 'hybrid',
+})
+```
+
+---
+
+## Creating a Keystatic config file
+
+Create a file called `keystatic.config.ts` in the root of the project and add the following code to define both your storage type (`local`) and a single content collection (`posts`):
+
+```ts
+// keystatic.config.ts
+import { config, fields, collection } from '@keystatic/core';
+
+export default config({
+  storage: {
+    kind: 'local',
+  },
+  collections: {
+    posts: collection({
+      label: 'Posts',
+      slugField: 'title',
+      path: 'src/content/posts/*',
+      format: { contentField: 'content' },
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        content: fields.document({
+          label: 'Content',
+          formatting: true,
+          dividers: true,
+          links: true,
+          images: true,
+        }),
+      },
+    }),
+  },
+});
+```
+
+Keystatic is now configured to manage your content based on your schema.
+
+## Running Keystatic
+
+Go to your `package.json` and add `--host 127.0.0.1` to your "dev" script:
+```
+"dev": "astro dev --host 127.0.0.1"
+```
+
+You can now launch the Keystatic Admin UI. Start the Astro dev server:
+
+```bash
+npm run dev
+```
+
+Visit `http://127.0.0.1:4321/keystatic` to see the Keystatic Admin UI running.
+
+---
+
+## Creating a new post
+
+{% aside icon="☝️" %}
+In our Keystatic config file, we've set the `path` property for our `posts` collection to `src/content/posts/*`.
+
+As a result, creating a new post from the Keystatic Admin UI should create a new `content` directory in the `src` directory, with the new post `.mdoc` file inside!
+{% /aside %}
+
+Go ahead — create a new post from the Admin UI, and hit save.
+
+You will find your new post inside the `src/content/posts` directory:
+
+```bash
+src
+└── content
+    └── posts
+        └── my-first-post.mdoc
+```
+
+Navigate to that file in your code editor and verify that you can see the Markdown content you entered. For example:
+
+```markdown
+---
+title: My First Post
+---
+
+This is my very first post. I am **super** excited.
+```
+
+---
+
+## Rendering Keystatic content
+
+{% aside icon="💡" %}
+Keystatic provides its own [Reader API](/docs/reader-api) to pull data from the file system into your frontend. This guide leverages [Astro's built-in content collections](https://docs.astro.build/en/guides/content-collections/) instead.
+{% /aside %}
+
+### Displaying a collection list
+
+The following example displays a list of each post title, with a link to an individual post page:
+
+```tsx
+// src/pages/posts/index.astro
+---
+import { getCollection } from 'astro:content'
+
+const posts = await getCollection('posts')
+---
+<ul>
+  {posts.map(post => (
+    <li>
+      <a href={`/posts/${post.slug}`}>{post.data.title}</a>
+    </li>
+  ))}
+</ul>
+```
+
+### Displaying a single collection entry
+
+To display content from an individual post, you can import and use Astro's `<Content />` component to [render your content to HTML](https://docs.astro.build/en/guides/content-collections/#rendering-content-to-html):
+
+```tsx
+// src/pages/posts/my-post.astro
+---
+import { getEntry } from 'astro:content'
+
+const post = await getEntry('posts', 'my-first-post')
+const { Content } = await post.render()
+---
+
+<main>
+  <h1>{post.data.title}</h1>
+  <Content />
+</main>
+```
+
+If you want to generate pages for all entries of a collection, [this Astro guide](https://docs.astro.build/en/tutorials/add-content-collections/#generate-pages-from-a-collection) will help.
+
+---
+
+## Deploying Keystatic + Astro
+
+Because Keystatic needs to run serverside code and use Node.js APIs, you will need to add an [Astro adapter](https://docs.astro.build/en/guides/server-side-rendering/#adding-an-adapter) to deploy your project.
+
+You will also probably want to [connect Keystatic to GitHub](/docs/github-mode) so you can manage content on the deployed instance of the project.
