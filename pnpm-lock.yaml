@@ -586,6 +586,39 @@ importers:
       tailwindcss: 3.3.3
       typescript: 5.2.2
 
+  dev-projects/next-pages:
+    specifiers:
+      '@babel/runtime': ^7.18.3
+      '@keystar/ui': ^0.4.0
+      '@keystatic/core': ^0.1.9
+      '@keystatic/next': ^1.0.0
+      '@preconstruct/next': ^4.0.0
+      '@ts-gql/compiler': ^0.16.1
+      '@ts-gql/next': ^17.0.0
+      '@types/react': ^18.2.8
+      graphql: ^16.6.0
+      next: ^14.0.0
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      tsx: ^3.8.0
+      typescript: ^5.2.2
+    dependencies:
+      '@babel/runtime': 7.22.15
+      '@keystar/ui': link:../../design-system/pkg
+      '@keystatic/core': link:../../packages/keystatic
+      '@keystatic/next': link:../../packages/next
+      '@preconstruct/next': 4.0.0
+      '@types/react': 18.2.21
+      graphql: 16.8.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    devDependencies:
+      '@ts-gql/compiler': 0.16.3_graphql@16.8.0
+      '@ts-gql/next': 17.0.0_2kdlnmp65mtvbfn3itipvni6ey
+      next: 14.0.0_biqbaboplfbrettd7655fr4n2y
+      tsx: 3.12.8
+      typescript: 5.2.2
+
   dev-projects/remix:
     specifiers:
       '@keystatic/core': ^0.1.0
