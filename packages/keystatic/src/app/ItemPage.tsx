@@ -44,7 +44,7 @@ import { useCreateBranchMutation } from './branch-selection';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { ForkRepoDialog } from './fork-repo';
 import l10nMessages from './l10n/index.json';
-import { getDataFileExtension } from './path-utils';
+import { getDataFileExtension, getPathPrefix } from './path-utils';
 import { useRouter } from './router';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
 import { useBaseCommit, useRepositoryId, useBranchInfo } from './shell/data';
@@ -61,7 +61,6 @@ import {
   getCollectionItemPath,
   getRepoUrl,
   getSlugFromState,
-  isCloudConfig,
   isGitHubConfig,
 } from './utils';
 import { notFound } from './not-found';
@@ -213,30 +212,25 @@ function ItemPage(props: ItemPageProps) {
   const onReset = () => {
     setState({ state: initialState, localTreeKey });
   };
-  const onView = () => {
-    let filePath =
-      formatInfo.dataLocation === 'index'
-        ? `/tree/${branchInfo.currentBranch}/${currentBasePath}`
-        : `/blob/${
-            branchInfo.currentBranch
-          }/${currentBasePath}${getDataFileExtension(formatInfo)}`;
-    window.open(
-      `${getRepoUrl(branchInfo)}${filePath}`,
-      '_blank',
-      'noopener,noreferrer'
-    );
-  };
-  const onPreview = collectionConfig.previewUrl
-    ? () => {
-        window.open(
-          collectionConfig
-            .previewUrl!.replace('{slug}', props.itemSlug)
-            .replace('{branch}', branchInfo.currentBranch),
-          '_blank',
-          'noopener,noreferrer'
-        );
-      }
-    : undefined;
+  const viewHref =
+    config.storage.kind !== 'local'
+      ? `${getRepoUrl(branchInfo)}${
+          formatInfo.dataLocation === 'index'
+            ? `/tree/${branchInfo.currentBranch}/${getPathPrefix(
+                config.storage
+              )}${currentBasePath}`
+            : `/blob/${branchInfo.currentBranch}/${getPathPrefix(
+                config.storage
+              )}${currentBasePath}${getDataFileExtension(formatInfo)}`
+        }`
+      : undefined;
+  const previewHref = useMemo(() => {
+    return collectionConfig.previewUrl
+      ? collectionConfig
+          .previewUrl!.replace('{slug}', props.itemSlug)
+          .replace('{branch}', branchInfo.currentBranch)
+      : undefined;
+  }, [branchInfo.currentBranch, collectionConfig.previewUrl, props.itemSlug]);
   const onDelete = async () => {
     if (await deleteItem()) {
       router.push(
@@ -310,15 +304,14 @@ function ItemPage(props: ItemPageProps) {
       <ItemPageShell
         headerActions={
           <HeaderActions
-            config={config}
             formID={formID}
             isLoading={updateResult.kind === 'loading'}
             hasChanged={hasChanged}
             onDelete={onDelete}
             onDuplicate={onDuplicate}
             onReset={onReset}
-            onView={onView}
-            onPreview={onPreview}
+            viewHref={viewHref}
+            previewHref={previewHref}
           />
         }
         {...props}
@@ -432,39 +425,38 @@ function ItemPage(props: ItemPageProps) {
 }
 
 function HeaderActions(props: {
-  config: Config;
   formID: string;
   hasChanged: boolean;
   isLoading: boolean;
   onDelete: () => void;
   onDuplicate: () => void;
   onReset: () => void;
-  onView: () => void;
-  onPreview?: () => void;
+  previewHref?: string;
+  viewHref?: string;
 }) {
   let {
-    config,
     formID,
     hasChanged,
     isLoading,
     onDelete,
     onDuplicate,
     onReset,
-    onView,
-    onPreview,
+    previewHref,
+    viewHref,
   } = props;
   const isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
-  const isGithub = isGitHubConfig(config) || isCloudConfig(config);
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const [deleteAlertIsOpen, setDeleteAlertOpen] = useState(false);
   const [duplicateAlertIsOpen, setDuplicateAlertOpen] = useState(false);
-  const hasPreview = !!onPreview;
   const menuActions = useMemo(() => {
     type ActionType = {
       icon: ReactElement;
       isDisabled?: boolean;
       key: Key;
       label: string;
+      href?: string;
+      target?: string;
+      rel?: string;
     };
     let items: ActionType[] = [
       {
@@ -483,23 +475,29 @@ function HeaderActions(props: {
         icon: copyPlusIcon,
       },
     ];
-    if (hasPreview) {
+    if (previewHref) {
       items.push({
         key: 'preview',
         label: 'Preview',
         icon: externalLinkIcon,
+        href: previewHref,
+        target: '_blank',
+        rel: 'noopener noreferrer',
       });
     }
-    if (isGithub) {
+    if (viewHref) {
       items.push({
         key: 'view',
         label: 'View on GitHub',
         icon: githubIcon,
+        href: viewHref,
+        target: '_blank',
+        rel: 'noopener noreferrer',
       });
     }
 
     return items;
-  }, [isGithub, hasPreview]);
+  }, [previewHref, viewHref]);
 
   const indicatorElement = (() => {
     if (isLoading) {
@@ -557,17 +555,17 @@ function HeaderActions(props: {
                 onDuplicate();
               }
               break;
-            case 'preview':
-              onPreview?.();
-              break;
-            case 'view':
-              onView();
-              break;
           }
         }}
       >
         {item => (
-          <Item key={item.key} textValue={item.label}>
+          <Item
+            key={item.key}
+            textValue={item.label}
+            href={item.href}
+            target={item.target}
+            rel={item.rel}
+          >
             <Icon src={item.icon} />
             <Text>{item.label}</Text>
           </Item>
