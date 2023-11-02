@@ -1,6 +1,6 @@
 {
   "name": "@example/next-app",
-  "version": "0.0.90",
+  "version": "0.0.91",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@keystar/ui": "^0.3.0",
-    "@keystatic/core": "^0.1.2",
+    "@keystar/ui": "^0.4.0",
+    "@keystatic/core": "^0.1.9",
     "@keystatic/next": "^1.0.0",
     "@preconstruct/next": "^4.0.0",
     "@types/react": "^18.2.8",

@@ -83,7 +83,7 @@ importers:
       '@babel/core': ^7.23.0
       '@babel/runtime': ^7.18.3
       '@internationalized/date': ^3.5.0
-      '@keystar/ui': ^0.3.2
+      '@keystar/ui': ^0.4.0
       '@markdoc/markdoc': ^0.3.0
       '@preconstruct/next': ^4.0.0
       '@react-aria/i18n': ^3.8.0
@@ -174,7 +174,7 @@ importers:
       '@emotion/css': ^11.9.0
       '@floating-ui/react': ^0.24.0
       '@internationalized/date': ^3.5.0
-      '@keystar/ui': ^0.3.4
+      '@keystar/ui': ^0.4.0
       '@keystar/ui-storybook': ^0.0.1
       '@react-aria/actiongroup': ^3.6.4
       '@react-aria/breadcrumbs': ^3.5.7
@@ -519,8 +519,8 @@ importers:
   dev-projects/next-app:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystar/ui': ^0.3.0
-      '@keystatic/core': ^0.1.2
+      '@keystar/ui': ^0.4.0
+      '@keystatic/core': ^0.1.9
       '@keystatic/next': ^1.0.0
       '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
@@ -551,7 +551,7 @@ importers:
 
   dev-projects/next-blocks-builder:
     specifiers:
-      '@keystatic/core': ^0.1.7
+      '@keystatic/core': ^0.1.9
       '@keystatic/next': ^1.0.1
       '@tailwindcss/container-queries': ^0.1.1
       '@tailwindcss/typography': ^0.5.9
@@ -622,8 +622,8 @@ importers:
       '@fontsource/inter': ^5.0.5
       '@headlessui/react': ^1.7.11
       '@heroicons/react': ^2.0.16
-      '@keystar/ui': ^0.3.2
-      '@keystatic/core': ^0.1.6
+      '@keystar/ui': ^0.4.0
+      '@keystatic/core': ^0.1.9
       '@keystatic/next': ^1.0.1
       '@markdoc/markdoc': ^0.3.0
       '@sindresorhus/slugify': ^1.1.2
@@ -729,7 +729,7 @@ importers:
       '@emotion/weak-memoize': ^0.3.0
       '@floating-ui/react': ^0.24.0
       '@internationalized/string': ^3.1.1
-      '@keystar/ui': ^0.3.4
+      '@keystar/ui': ^0.4.0
       '@markdoc/markdoc': ^0.3.0
       '@react-aria/focus': ^3.14.3
       '@react-aria/i18n': ^3.8.0
@@ -918,7 +918,7 @@ importers:
   packages/remix:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.1.0
+      '@keystatic/core': ^0.1.9
       '@remix-run/react': ^1.18.1
       '@types/react': ^18.2.8
       react: ^18.2.0

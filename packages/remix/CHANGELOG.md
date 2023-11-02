@@ -1,5 +1,16 @@
 # @keystatic/remix
 
+## 1.0.1
+
+### Patch Changes
+
+- 889c7b0f: Allow `@remix-run/react@2` in `peerDependencies`
+- Updated dependencies [bd20acb0]
+- Updated dependencies [be85e097]
+- Updated dependencies [e3d6fd29]
+- Updated dependencies [be5d3646]
+  - @keystatic/core@0.1.9
+
 ## 1.0.0
 
 ### Patch Changes
