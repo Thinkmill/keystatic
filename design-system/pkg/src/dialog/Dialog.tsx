@@ -360,7 +360,7 @@ function getButtonGroupStyles() {
     minWidth: 0,
     marginInlineStart: tokenSchema.size.space.regular,
 
-    [`.${dialogClassList.element(
+    [`${dialogClassList.selector(
       'root'
     )}:not([data-size=fullscreen]) &[data-has-footer=false]`]: {
       gridArea:
@@ -368,7 +368,7 @@ function getButtonGroupStyles() {
     },
 
     // correct consumer error; hide the button group when the dialog is dismissable
-    [`.${dialogClassList.element('root')}[data-dismissable] &`]: {
+    [`${dialogClassList.selector('root')}[data-dismissable] &`]: {
       display: 'none',
     },
   });
