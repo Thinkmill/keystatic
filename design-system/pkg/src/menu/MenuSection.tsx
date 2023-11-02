@@ -6,7 +6,7 @@ import { Node } from '@react-types/shared';
 import { Fragment, Key } from 'react';
 
 import { Divider } from '@keystar/ui/layout';
-import { classNames, css, tokenSchema } from '@keystar/ui/style';
+import { css, tokenSchema } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
 import { MenuItem } from './MenuItem';
@@ -48,7 +48,7 @@ export function MenuSection<T>(props: MenuSectionProps<T>) {
             {item.rendered}
           </Text>
         )}
-        <div {...groupProps} className={classNames('ksv-menu-section')}>
+        <div {...groupProps}>
           {[...getChildNodes(item, state.collection)].map(node => {
             let item = (
               <MenuItem

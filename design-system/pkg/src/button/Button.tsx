@@ -133,13 +133,13 @@ export const useButtonChildren = (props: CommonButtonProps) => {
   const slots = useMemo(() => {
     return {
       icon: {
-        UNSAFE_className: buttonClassList.declare('icon'),
+        UNSAFE_className: buttonClassList.element('icon'),
       },
       text: {
         color: 'inherit',
         overflow: 'unset',
         trim: false,
-        UNSAFE_className: buttonClassList.declare('text'),
+        UNSAFE_className: buttonClassList.element('text'),
       },
     } as const;
   }, []);

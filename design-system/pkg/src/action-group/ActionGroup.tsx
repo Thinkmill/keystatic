@@ -25,7 +25,7 @@ import {
   RefObject,
 } from 'react';
 
-import { ActionButton } from '@keystar/ui/button';
+import { ActionButton, actionButtonClassList } from '@keystar/ui/button';
 import { KeystarProvider, useProviderProps } from '@keystar/ui/core';
 import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
 import { moreHorizontalIcon } from '@keystar/ui/icon/icons/moreHorizontalIcon';
@@ -267,7 +267,6 @@ function ActionGroup<T extends object>(
         {...styleProps}
         style={style}
         className={classNames(
-          'ksv-action-group',
           css({ display: 'flex', maxWidth: '100%' }),
           styleProps.className
         )}
@@ -293,7 +292,7 @@ function ActionGroup<T extends object>(
 
               '--action-item-gap': tokenSchema.size.space.regular,
 
-              '& > button': {
+              [actionButtonClassList.selector('root', 'child')]: {
                 margin: `calc(var(--action-item-gap) / 2)`,
               },
 
@@ -304,7 +303,7 @@ function ActionGroup<T extends object>(
 
               // justified
               '&[data-justified]': {
-                '& > button': {
+                [actionButtonClassList.selector('root', 'child')]: {
                   flexGrow: 1,
                 },
               },
@@ -314,7 +313,7 @@ function ActionGroup<T extends object>(
                 '--action-item-gap': 0,
                 // gap: 0,
 
-                '& > button': {
+                [actionButtonClassList.selector('root', 'child')]: {
                   borderRadius: 0,
 
                   '&:first-of-type': {
@@ -436,6 +435,7 @@ function ActionGroupItem<T>({
           }}
         >
           <ActionButton
+            {...item.props}
             prominence={prominence}
             ref={ref}
             UNSAFE_className={classNames(
@@ -603,7 +603,11 @@ function ActionGroupMenu<T>({
         onSelectionChange={keys => state.selectionManager.setSelectedKeys(keys)}
         onAction={onAction}
       >
-        {node => <Item textValue={node.textValue}>{node.rendered}</Item>}
+        {node => (
+          <Item {...node.props} textValue={node.textValue}>
+            {node.rendered}
+          </Item>
+        )}
       </Menu>
     </MenuTrigger>
   );

@@ -22,7 +22,7 @@ export function Article(props: { children: ReactNode }) {
   );
 }
 
-export const listCounter = 'ksv-ol-counter';
+export const listCounter = 'ol-counter';
 type ListType = 'ul' | 'ol';
 const ListContext = createContext<ListType>('ul');
 function getList(type: ListType) {
