@@ -31,7 +31,7 @@ function Menu<T extends object>(
       {...menuProps}
       {...styleProps}
       ref={domRef}
-      className={classNames('ksv-menu', listStyles, styleProps.className)}
+      className={classNames(listStyles, styleProps.className)}
       data-selection={state.selectionManager.selectionMode}
     >
       {[...state.collection].map(item => {

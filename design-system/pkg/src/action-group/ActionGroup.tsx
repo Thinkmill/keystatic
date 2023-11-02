@@ -267,7 +267,6 @@ function ActionGroup<T extends object>(
         {...styleProps}
         style={style}
         className={classNames(
-          'ksv-action-group',
           css({ display: 'flex', maxWidth: '100%' }),
           styleProps.className
         )}

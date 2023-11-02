@@ -4,7 +4,7 @@ import { useMemo, useState, useContext } from 'react';
 import { useMutation } from 'urql';
 
 import { Button, ButtonGroup } from '@keystar/ui/button';
-import { Combobox, Item } from '@keystar/ui/combobox';
+import { Combobox, Item, comboboxClassList } from '@keystar/ui/combobox';
 import { Dialog } from '@keystar/ui/dialog';
 import { gitBranchIcon } from '@keystar/ui/icon/icons/gitBranchIcon';
 import { Icon } from '@keystar/ui/icon';
@@ -82,7 +82,10 @@ export function BranchPicker() {
       menuTrigger="focus"
       menuWidth={232}
       UNSAFE_className={css({
-        '.ksv-mobile-combobox': { minWidth: 100, width: 'auto' },
+        [comboboxClassList.selector('mobile-trigger')]: {
+          minWidth: 100,
+          width: 'auto',
+        },
       })}
       // TODO: find a better heuristic. approximate width based on the branch
       // length @ ~7px per character, plus 64px to account for the button width
