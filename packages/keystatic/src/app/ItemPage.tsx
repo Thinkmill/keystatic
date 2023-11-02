@@ -44,7 +44,7 @@ import { useCreateBranchMutation } from './branch-selection';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { ForkRepoDialog } from './fork-repo';
 import l10nMessages from './l10n/index.json';
-import { getDataFileExtension } from './path-utils';
+import { getDataFileExtension, getPathPrefix } from './path-utils';
 import { useRouter } from './router';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
 import { useBaseCommit, useRepositoryId, useBranchInfo } from './shell/data';
@@ -216,10 +216,12 @@ function ItemPage(props: ItemPageProps) {
     config.storage.kind !== 'local'
       ? `${getRepoUrl(branchInfo)}${
           formatInfo.dataLocation === 'index'
-            ? `/tree/${branchInfo.currentBranch}/${currentBasePath}`
-            : `/blob/${
-                branchInfo.currentBranch
-              }/${currentBasePath}${getDataFileExtension(formatInfo)}`
+            ? `/tree/${branchInfo.currentBranch}/${getPathPrefix(
+                config.storage
+              )}${currentBasePath}`
+            : `/blob/${branchInfo.currentBranch}/${getPathPrefix(
+                config.storage
+              )}${currentBasePath}${getDataFileExtension(formatInfo)}`
         }`
       : undefined;
   const previewHref = useMemo(() => {

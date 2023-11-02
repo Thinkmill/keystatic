@@ -24,6 +24,7 @@ import { getInitialPropsValue } from '../form/initial-values';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
 import {
   getDataFileExtension,
+  getPathPrefix,
   getRepoUrl,
   getSingletonFormat,
   getSingletonPath,
@@ -208,8 +209,10 @@ function SingletonPage({
     isGitHub && singletonExists
       ? `${getRepoUrl(branchInfo)}${
           formatInfo.dataLocation === 'index'
-            ? `/tree/${branchInfo.currentBranch}/${singletonPath}`
-            : `/blob/${
+            ? `/tree/${branchInfo.currentBranch}/${getPathPrefix(
+                config.storage
+              )}${singletonPath}`
+            : `/blob/${getPathPrefix(config.storage)}${
                 branchInfo.currentBranch
               }/${singletonPath}${getDataFileExtension(formatInfo)}`
         }`
