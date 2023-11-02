@@ -47,6 +47,7 @@ import { Text } from '@keystar/ui/typography';
 
 import localizedMessages from './l10n.json';
 import { ComboboxProps } from './types';
+import { comboboxClassList } from './class-list';
 
 function MobileCombobox<T extends object>(
   props: ComboboxProps<T>,
@@ -172,7 +173,7 @@ const ComboboxButton = React.forwardRef(function ComboboxButton(
         {...mergeProps(hoverProps, buttonProps)}
         aria-haspopup="dialog"
         ref={domRef}
-        UNSAFE_className="ksv-mobile-combobox"
+        UNSAFE_className={comboboxClassList.element('mobile-trigger')}
         UNSAFE_style={{ ...style, outline: 'none' }}
       >
         <Flex alignItems="center" paddingX="medium" flex>
@@ -200,7 +201,7 @@ const ComboboxButton = React.forwardRef(function ComboboxButton(
             borderEndStartRadius: 0,
             borderStartStartRadius: 0,
 
-            '.ksv-mobile-combobox[data-focus] &': {
+            [`${comboboxClassList.selector('mobile-trigger')}[data-focus] &`]: {
               borderColor: tokenSchema.color.alias.borderFocused,
             },
           })}
@@ -254,10 +255,12 @@ const InputStateIndicator = (props: CosmeticProps) => {
         '&[data-validation=invalid]': {
           borderColor: tokenSchema.color.alias.borderInvalid,
         },
-        '.ksv-mobile-combobox[data-focus] &': {
+        [`${comboboxClassList.selector('mobile-trigger')}[data-focus] &`]: {
           borderColor: tokenSchema.color.alias.borderFocused,
         },
-        '.ksv-mobile-combobox[data-focus]:not([data-readonly]) &': {
+        [`${comboboxClassList.selector(
+          'mobile-trigger'
+        )}[data-focus]:not([data-readonly]) &`]: {
           boxShadow: `0 0 0 1px ${tokenSchema.color.alias.borderFocused}`,
         },
         '&[data-disabled=true]': {

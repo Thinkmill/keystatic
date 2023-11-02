@@ -18,7 +18,12 @@ import {
 
 import { BreadcrumbItemProps } from './types';
 
-export const breadcrumbsClassList = new ClassList('Breadcrumbs');
+export const breadcrumbsClassList = new ClassList('Breadcrumbs', [
+  'item',
+  'link',
+  'list',
+  'separator',
+]);
 
 export function BreadcrumbItem(props: BreadcrumbItemProps) {
   let { children, isCurrent, isDisabled, size = 'regular' } = props;
@@ -42,7 +47,7 @@ export function BreadcrumbItem(props: BreadcrumbItemProps) {
           })}
           ref={ref}
           className={classNames(
-            breadcrumbsClassList.declare('link'),
+            breadcrumbsClassList.element('link'),
             css({
               color: tokenSchema.color.foreground.neutral,
               cursor: 'default',
@@ -98,7 +103,7 @@ export function BreadcrumbItem(props: BreadcrumbItemProps) {
             isDisabled ? 'color.alias.foregroundDisabled' : 'neutralSecondary'
           }
           marginX="small"
-          UNSAFE_className={breadcrumbsClassList.declare('separator')}
+          UNSAFE_className={breadcrumbsClassList.element('separator')}
         />
       )}
     </Fragment>
