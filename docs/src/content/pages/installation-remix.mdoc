@@ -21,19 +21,6 @@ Add Keystatic's `core` and `remix` packages:
 npm install @keystatic/core @keystatic/remix
 ```
 
-## Updating the Remix config
-Add the following Node browser polyfills to your `remix.config.js` file:
-
-```ts
-// remix.config.js
-export default {
-  // ...
-  browserNodeBuiltinsPolyfill: {
-    modules: { 'fs/promises': true, path: true },
-  },
-}
-```
-
 ## Creating a Keystatic config file
 
 Create a file called `keystatic.config.ts` in the root of the project and add the following code to define both your storage type (`local`) and a single content collection (`posts`):
@@ -157,11 +144,10 @@ import { json } from '@remix-run/node'
 
 import keystaticConfig from '../../keystatic.config'
 
-// 1. Create a reader
-const reader = createReader(process.cwd(), keystaticConfig)
-
-// 2. Read the "Posts" collection
 export async function loader() {
+  // 1. Create a reader
+  const reader = createReader(process.cwd(), keystaticConfig)
+  // 2. Read the "Posts" collection
   const posts = await reader.collections.posts.all()
   return json({ posts })
 }
@@ -194,9 +180,8 @@ import { useLoaderData } from '@remix-run/react'
 
 import keystaticConfig from '../../keystatic.config'
 
-const reader = createReader(process.cwd(), keystaticConfig)
-
 export async function loader({ params }: LoaderFunctionArgs) {
+  const reader = createReader(process.cwd(), keystaticConfig)
   const slug = params.slug
   if (!slug) throw json('Not Found', { status: 404 })
   const post = await reader.collections.posts.read(
