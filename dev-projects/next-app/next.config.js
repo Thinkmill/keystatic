@@ -27,7 +27,6 @@ const nextConfig = {
     ignoreBuildErrors: true,
     tsconfigPath: './tsconfig-for-next/tsconfig.json',
   },
-  experimental: { appDir: true },
   reactStrictMode: false,
   async redirects() {
     return [
