@@ -52,7 +52,11 @@ export function useTextStyles(
 
   return useStyleProps({
     ...otherProps,
-    UNSAFE_className: [css(styles), UNSAFE_className, textClassList.root()],
+    UNSAFE_className: [
+      css(styles),
+      UNSAFE_className,
+      textClassList.element('root'),
+    ],
   });
 }
 

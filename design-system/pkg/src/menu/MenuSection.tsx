@@ -6,7 +6,7 @@ import { Node } from '@react-types/shared';
 import { Fragment, Key } from 'react';
 
 import { Divider } from '@keystar/ui/layout';
-import { classNames, css, tokenSchema } from '@keystar/ui/style';
+import { css, tokenSchema } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
 import { MenuItem } from './MenuItem';
@@ -25,16 +25,14 @@ export function MenuSection<T>(props: MenuSectionProps<T>) {
     'aria-label': item['aria-label'],
   });
 
-  let { separatorProps } = useSeparator({
-    elementType: 'li',
-  });
+  let { separatorProps } = useSeparator({});
 
   return (
     <Fragment>
       {item.key !== state.collection.getFirstKey() && (
-        <Divider {...separatorProps} elementType="li" marginY="small" />
+        <Divider {...separatorProps} marginY="small" />
       )}
-      <li {...itemProps}>
+      <div {...itemProps}>
         {item.rendered && (
           <Text
             casing="uppercase"
@@ -50,7 +48,7 @@ export function MenuSection<T>(props: MenuSectionProps<T>) {
             {item.rendered}
           </Text>
         )}
-        <ul {...groupProps} className={classNames('ksv-menu-section')}>
+        <div {...groupProps}>
           {[...getChildNodes(item, state.collection)].map(node => {
             let item = (
               <MenuItem
@@ -67,8 +65,8 @@ export function MenuSection<T>(props: MenuSectionProps<T>) {
 
             return item;
           })}
-        </ul>
-      </li>
+        </div>
+      </div>
     </Fragment>
   );
 }

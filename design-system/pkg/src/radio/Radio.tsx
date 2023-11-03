@@ -3,9 +3,11 @@ import { HTMLAttributes, useMemo, useRef } from 'react';
 
 import { SlotProvider } from '@keystar/ui/slots';
 import {
+  ClassList,
   FocusRing,
   classNames,
   css,
+  resetClassName,
   tokenSchema,
   transition,
   useStyleProps,
@@ -15,6 +17,8 @@ import { isReactText } from '@keystar/ui/utils';
 
 import { useRadioProvider } from './context';
 import { RadioProps } from './types';
+
+const radioClassList = new ClassList('Radio', ['indicator']);
 
 export function Radio(props: RadioProps) {
   let { children, autoFocus, ...otherProps } = props;
@@ -102,7 +106,7 @@ const Indicator = (props: IndicatorProps) => {
           width: sizeToken,
 
           // indicator icons
-          '.ksv-radio-indicator': {
+          [radioClassList.selector('indicator')]: {
             opacity: 0,
             transform: `scale(0) translate3d(0, 0, 0)`,
             transition: transition(['opacity', 'transform']),
@@ -157,7 +161,7 @@ const Indicator = (props: IndicatorProps) => {
               borderWidth: `calc(${sizeToken} / 2)`,
             },
 
-            '.ksv-radio-indicator': {
+            [radioClassList.selector('indicator')]: {
               opacity: 1,
               transform: `scale(1)`,
             },
@@ -175,9 +179,9 @@ const Indicator = (props: IndicatorProps) => {
       )}
     >
       {/* firefox has issues when transform combined with transition on SVG; circumvent with this wrapper */}
-      <span className="ksv-radio-indicator">
+      <span className={radioClassList.element('indicator')}>
         <svg
-          className="ksv:reset"
+          className={resetClassName}
           fill="currentColor"
           height={12}
           viewBox="0 0 24 24"

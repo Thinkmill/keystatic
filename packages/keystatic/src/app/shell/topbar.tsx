@@ -1,7 +1,6 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { Section, Item } from '@react-stately/collections';
 import { gql } from '@ts-gql/tag/no-transform';
-import { assert } from 'emery';
 import {
   ReactElement,
   ReactNode,
@@ -57,6 +56,17 @@ import { useViewer } from './viewer-data';
 import { useThemeContext } from './theme';
 import { serializeRepoConfig } from '../repo-config';
 import { useImageLibraryURL } from '../../component-blocks/cloud-image-preview';
+
+type GitItem = {
+  icon: ReactElement;
+  label: string;
+  description?: string;
+  key: string;
+  href?: string;
+  target?: string;
+  rel?: string;
+};
+type GitSection = { key: string; label: string; children: GitItem[] };
 
 export const TopBar = () => {
   let config = useConfig();
@@ -339,18 +349,21 @@ function UserMenu({
 }) {
   let config = useConfig();
   const menuItems = useMemo(() => {
-    let items = [
+    let items: GitItem[] = [
       {
-        id: 'logout',
+        key: 'logout',
         label: 'Log out',
         icon: logOutIcon,
       },
     ];
     if (config.cloud?.project) {
       items.unshift({
-        id: 'manage',
+        key: 'manage',
         label: 'Account',
         icon: userIcon,
+        href: 'https://keystatic.cloud/account',
+        target: '_blank',
+        rel: 'noopener noreferrer',
       });
     }
     return items;
@@ -403,9 +416,6 @@ function UserMenu({
           minWidth="scale.2400"
           onAction={key => {
             switch (key) {
-              case 'manage':
-                openBlankTargetSafely('https://keystatic.cloud/account');
-                break;
               case 'logout':
                 switch (config.storage.kind) {
                   case 'github':
@@ -421,7 +431,13 @@ function UserMenu({
           }}
         >
           {item => (
-            <Item textValue={item.label}>
+            <Item
+              key={item.key}
+              textValue={item.label}
+              href={item.href}
+              rel={item.rel}
+              target={item.target}
+            >
               <Icon src={item.icon} />
               <Text>{item.label}</Text>
             </Item>
@@ -456,19 +472,13 @@ function GitMenu() {
     ` as import('../../../__generated__/ts-gql/DeleteBranch').type
   );
 
+  const repoURL = getRepoUrl(data);
   const appShellData = useContext(GitHubAppShellDataContext);
   const fork =
     appShellData?.data?.repository &&
     'forks' in appShellData.data.repository &&
     appShellData.data.repository.forks.nodes?.[0];
 
-  type GitItem = {
-    icon: ReactElement;
-    label: string;
-    description?: string;
-    key: string;
-  };
-  type GitSection = { key: string; label: string; children: GitItem[] };
   const gitMenuItems = useMemo(() => {
     let isDefaultBranch = data.currentBranch === data.defaultBranch;
     let items: GitSection[] = [];
@@ -484,6 +494,9 @@ function GitMenu() {
       {
         key: 'repo',
         icon: githubIcon,
+        href: repoURL,
+        target: '_blank',
+        rel: 'noopener noreferrer',
         label: 'Github repo', // TODO: l10n
       },
     ];
@@ -493,12 +506,18 @@ function GitMenu() {
         prSection.push({
           key: 'create-pull-request',
           icon: gitPullRequestIcon,
+          href: `${repoURL}/pull/new/${data.currentBranch}`,
+          target: '_blank',
+          rel: 'noopener noreferrer',
           label: stringFormatter.format('createPullRequest'),
         });
       } else {
         prSection.push({
           key: 'view-pull-request',
           icon: gitPullRequestIcon,
+          href: `${repoURL}/pull/${data.pullRequestNumber}`,
+          target: '_blank',
+          rel: 'noopener noreferrer',
           label: `Pull Request #${data.pullRequestNumber}`,
         });
       }
@@ -514,6 +533,9 @@ function GitMenu() {
       repoSection.push({
         key: 'fork',
         icon: gitForkIcon,
+        href: `https://github.com/${fork.owner.login}/${fork.name}`,
+        target: '_blank',
+        rel: 'noopener noreferrer',
         label: 'View fork', // TODO: l10n
       });
     }
@@ -546,6 +568,7 @@ function GitMenu() {
     data.currentBranch,
     data.defaultBranch,
     data.pullRequestNumber,
+    repoURL,
     stringFormatter,
   ]);
   const router = useRouter();
@@ -556,7 +579,6 @@ function GitMenu() {
         prominence="low"
         items={gitMenuItems}
         onAction={key => {
-          let repoURL = getRepoUrl(data);
           switch (key) {
             case 'new-branch':
               toggleNewBranchDialog();
@@ -565,31 +587,19 @@ function GitMenu() {
               toggleDeleteBranchDialog();
               break;
             }
-            case 'view-pull-request':
-              openBlankTargetSafely(
-                `${repoURL}/pull/${data.pullRequestNumber}`
-              );
-              break;
-            case 'create-pull-request':
-              openBlankTargetSafely(
-                `${repoURL}/pull/new/${data.currentBranch}`
-              );
-              break;
-            case 'repo':
-              openBlankTargetSafely(repoURL);
-              break;
-            case 'fork':
-              assert(!!fork);
-              openBlankTargetSafely(
-                `https://github.com/${fork.owner.login}/${fork.name}`
-              );
           }
         }}
       >
         {item => (
           <Section key={item.key} items={item.children} aria-label={item.label}>
             {item => (
-              <Item key={item.key} textValue={item.label}>
+              <Item
+                key={item.key}
+                textValue={item.label}
+                href={item.href}
+                rel={item.rel}
+                target={item.target}
+              >
                 <Icon src={item.icon} />
                 <Text>{item.label}</Text>
               </Item>
@@ -642,12 +652,4 @@ function GitMenu() {
       </DialogContainer>
     </>
   );
-}
-
-// ============================================================================
-// Utils
-// ============================================================================
-
-function openBlankTargetSafely(url: string) {
-  window.open(url, '_blank', 'noopener,noreferrer');
 }

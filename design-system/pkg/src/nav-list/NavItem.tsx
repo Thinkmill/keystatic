@@ -1,8 +1,8 @@
-import { filterDOMProps } from '@react-aria/utils';
+import { filterDOMProps, useObjectRef } from '@react-aria/utils';
+import { useLink } from '@react-aria/link';
 import { DOMProps } from '@react-types/shared';
 import { forwardRef, ReactNode, useMemo } from 'react';
 
-import { useLinkComponent } from '@keystar/ui/link';
 import { SlotProvider } from '@keystar/ui/slots';
 import {
   FocusRing,
@@ -42,8 +42,9 @@ export const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(
       href,
       ...otherProps
     } = props;
-    const LinkComponent = useLinkComponent(forwardedRef);
     const styles = useStyles();
+    const domRef = useObjectRef(forwardedRef);
+    const { linkProps } = useLink(props, domRef);
 
     const slots = useMemo(
       () => ({
@@ -55,10 +56,12 @@ export const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(
     return (
       <li>
         <FocusRing>
-          <LinkComponent
+          <a
+            ref={domRef}
             aria-current={ariaCurrent}
             href={href}
             className={classNames(styles.anchor)}
+            {...linkProps}
             {...filterDOMProps(otherProps)}
           >
             <div className={classNames(styles.content)}>
@@ -66,7 +69,7 @@ export const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(
                 {isReactText(children) ? <Text>{children}</Text> : children}
               </SlotProvider>
             </div>
-          </LinkComponent>
+          </a>
         </FocusRing>
       </li>
     );

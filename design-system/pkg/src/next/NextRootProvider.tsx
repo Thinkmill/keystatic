@@ -1,10 +1,10 @@
 'use client';
 
 import { cache } from '@keystar/ui/style';
-import { VoussoirProvider } from '@keystar/ui/core';
-import { useServerInsertedHTML } from 'next/navigation';
-import { ReactNode, useRef } from 'react';
-import { UniversalNextLink } from './UniversalNextLink';
+import { KeystarProvider } from '@keystar/ui/core';
+import { useRouter, useServerInsertedHTML } from 'next/navigation';
+import { ReactNode, useMemo, useRef } from 'react';
+
 import { ColorSchemeProvider, useRootColorScheme } from './useRootColorScheme';
 
 cache.compat = true;
@@ -57,13 +57,18 @@ function InnerProvider(props: NextRootProviderProps) {
     );
   });
 
+  const { push: navigate } = useRouter();
+  const router = useMemo(() => {
+    return { navigate };
+  }, [navigate]);
+
   return (
-    <VoussoirProvider
+    <KeystarProvider
       {...props}
       UNSAFE_className={props.fontClassName}
       colorScheme={colorScheme}
       elementType="html"
-      linkComponent={UniversalNextLink}
+      router={router}
     />
   );
 }

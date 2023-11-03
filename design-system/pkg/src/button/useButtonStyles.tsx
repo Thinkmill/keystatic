@@ -16,7 +16,7 @@ type ButtonState = {
   isSelected?: boolean;
 };
 
-export const buttonClassList = new ClassList('Button');
+export const buttonClassList = new ClassList('Button', ['icon', 'text']);
 
 export function useButtonStyles(props: ButtonProps, state: ButtonState) {
   const {
@@ -36,7 +36,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
     }),
     style: styleProps.style,
     className: classNames(
-      buttonClassList.root(),
+      buttonClassList.element('root'),
       css({
         alignItems: 'center',
         borderRadius: tokenSchema.size.radius.regular,
@@ -57,20 +57,23 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
         transitionTimingFunction: 'ease-out',
         userSelect: 'none',
 
-        'a&': { cursor: 'pointer' },
+        // indicate when external link? e.g. `&[href^=http]`
+        'a&': {
+          cursor: 'pointer',
+        },
 
         '&:disabled, &[aria-disabled]': {
           cursor: 'default',
         },
 
         // inherit text styles from parent
-        [buttonClassList.childSelector('text')]: {
+        [buttonClassList.selector('text', 'descendant')]: {
           fontSize: 'inherit',
           fontWeight: 'inherit',
         },
         // special size for button icons. otherwise they appear too "thin"
         // beside the bold text
-        [buttonClassList.childSelector('icon')]: {
+        [buttonClassList.selector('icon', 'descendant')]: {
           height: tokenSchema.size.scale[225],
           width: tokenSchema.size.scale[225],
         },

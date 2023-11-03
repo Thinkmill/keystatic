@@ -22,7 +22,6 @@ type MenuItemProps<T> = {
 /** @private */
 export function MenuItem<T>(props: MenuItemProps<T>) {
   let { item, state, isVirtualized, onAction } = props;
-
   let { onClose, closeOnSelect } = useMenuContext();
 
   let { rendered, key } = item;
@@ -60,7 +59,7 @@ export function MenuItem<T>(props: MenuItemProps<T>) {
   return (
     <ListItem
       {...mergeProps(menuItemProps, { role }, hoverProps, focusProps)}
-      elementType="li"
+      elementType={item.props.href ? 'a' : 'div'}
       descriptionProps={descriptionProps}
       keyboardShortcutProps={keyboardShortcutProps}
       labelProps={labelProps}

@@ -30,7 +30,6 @@ import { ListBoxBase, listStyles, useListBoxLayout } from '@keystar/ui/listbox';
 import { Popover } from '@keystar/ui/overlays';
 import { ProgressCircle } from '@keystar/ui/progress';
 import {
-  ClassList,
   FocusRing,
   css,
   tokenSchema,
@@ -42,12 +41,10 @@ import {
 } from '@keystar/ui/text-field';
 import { Text } from '@keystar/ui/typography';
 
+import { comboboxClassList } from './class-list';
 import localizedMessages from './l10n.json';
-
 import { MobileCombobox } from './MobileCombobox';
 import { ComboboxProps } from './types';
-
-const comboboxClassList = new ClassList('Combobox');
 
 function Combobox<T extends object>(
   props: ComboboxProps<T>,
@@ -298,7 +295,7 @@ const ComboboxInput = React.forwardRef(function ComboboxInput(
         <TextFieldPrimitive
           inputProps={{
             ...inputProps,
-            className: comboboxClassList.declare('input'),
+            className: comboboxClassList.element('input'),
           }}
           ref={inputRef}
           isDisabled={isDisabled}

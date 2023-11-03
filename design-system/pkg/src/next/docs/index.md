@@ -12,8 +12,8 @@ category: Introduction
 
 The `NextRootProvider` exported from `@keystar/ui/next` should be rendered as
 the `html` element in your root `layout` file to make server rendering styles
-work properly. If you need another `VoussoirProvider` in your tree, you should
-use the normal `VoussoirProvider` exported from `@keystar/ui/core`.
+work properly. If you need another `KeystarProvider` in your tree, you should
+use the normal `KeystarProvider` exported from `@keystar/ui/core`.
 
 ## `nextRootScript`
 

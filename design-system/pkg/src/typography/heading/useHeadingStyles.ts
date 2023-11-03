@@ -4,7 +4,7 @@ import { HeadingProps, PartialRequired } from '@keystar/ui/types';
 import { getTrimStyles } from '../getTrimStyles';
 import { textOptimizationStyles } from '../text/useTextStyles';
 
-export const headingClasses = new ClassList('Heading');
+export const headingClassList = new ClassList('Heading');
 
 export function useHeadingStyles({
   align,
@@ -28,7 +28,11 @@ export function useHeadingStyles({
 
   return useStyleProps({
     ...otherProps,
-    UNSAFE_className: [css(styles), UNSAFE_className, headingClasses.root()],
+    UNSAFE_className: [
+      css(styles),
+      UNSAFE_className,
+      headingClassList.element('root'),
+    ],
   });
 }
 

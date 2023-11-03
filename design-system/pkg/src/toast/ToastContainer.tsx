@@ -3,7 +3,7 @@ import { useToastRegion } from '@react-aria/toast';
 import React, { ReactElement, useRef } from 'react';
 import ReactDOM from 'react-dom';
 
-import { VoussoirProvider } from '@keystar/ui/core';
+import { KeystarProvider } from '@keystar/ui/core';
 import {
   FocusRing,
   useIsMobileDevice,
@@ -26,7 +26,7 @@ export function ToastContainer(props: ToastContainerProps): ReactElement {
   let { regionProps } = useToastRegion(props, state, ref);
 
   let contents = (
-    <VoussoirProvider UNSAFE_style={{ background: 'transparent' }}>
+    <KeystarProvider UNSAFE_style={{ background: 'transparent' }}>
       <FocusRing>
         <div
           {...regionProps}
@@ -92,7 +92,7 @@ export function ToastContainer(props: ToastContainerProps): ReactElement {
           {children}
         </div>
       </FocusRing>
-    </VoussoirProvider>
+    </KeystarProvider>
   );
 
   return ReactDOM.createPortal(contents, document.body);

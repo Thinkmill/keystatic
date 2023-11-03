@@ -17,6 +17,7 @@ import { Icon } from '@keystar/ui/icon';
 import { Grid } from '@keystar/ui/layout';
 import { SlotProvider } from '@keystar/ui/slots';
 import {
+  ClassList,
   breakpointQueries,
   classNames,
   css,
@@ -30,14 +31,14 @@ import localizedMessages from './l10n.json';
 import { DialogContext, DialogContextValue } from './context';
 import { DialogProps, DialogSize, DialogType } from './types';
 
-const slotClassNames = {
-  root: 'ksv-dialog-root',
-  grid: 'ksv-dialog-grid',
-  heading: 'ksv-dialog-heading',
-  header: 'ksv-dialog-header',
-  footer: 'ksv-dialog-footer',
-  buttonGroup: 'ksv-dialog-button-group',
-};
+const dialogClassList = new ClassList('Dialog', [
+  'root',
+  'grid',
+  'heading',
+  'header',
+  'footer',
+  'button-group',
+]);
 
 /**
  * Dialogs are windows containing contextual information, tasks, or workflows
@@ -70,17 +71,20 @@ export const Dialog: ForwardRefExoticComponent<
   // analyse children to determine grid areas. need a unique identifier for each slot.
   // const headingSize = type === 'popover' ? 'small' : 'regular';
   const headingSize = 'regular';
-  let hasHeading = useHasChild(`.${slotClassNames.heading}`, gridRef);
-  let hasHeader = useHasChild(`.${slotClassNames.header}`, gridRef);
-  let hasFooter = useHasChild(`.${slotClassNames.footer}`, gridRef);
-  let hasButtonGroup = useHasChild(`.${slotClassNames.buttonGroup}`, gridRef);
+  let hasHeading = useHasChild(dialogClassList.selector('heading'), gridRef);
+  let hasHeader = useHasChild(dialogClassList.selector('header'), gridRef);
+  let hasFooter = useHasChild(dialogClassList.selector('footer'), gridRef);
+  let hasButtonGroup = useHasChild(
+    dialogClassList.selector('button-group'),
+    gridRef
+  );
 
   let slots = useMemo(
     () => ({
       heading: {
         ...toDataAttributes({ hasHeader }),
         UNSAFE_className: classNames(
-          slotClassNames.heading,
+          dialogClassList.element('heading'),
           getHeadingStyles()
         ),
         elementType: 'h2' as const,
@@ -89,7 +93,10 @@ export const Dialog: ForwardRefExoticComponent<
       },
       header: {
         // ...toDataAttributes({ hasHeading }),
-        UNSAFE_className: classNames(slotClassNames.header, getHeaderStyles()),
+        UNSAFE_className: classNames(
+          dialogClassList.element('header'),
+          getHeaderStyles()
+        ),
       },
       content: {
         ...toDataAttributes({
@@ -99,12 +106,15 @@ export const Dialog: ForwardRefExoticComponent<
         UNSAFE_className: getContentStyles(),
       },
       footer: {
-        UNSAFE_className: classNames(slotClassNames.footer, getFooterStyles()),
+        UNSAFE_className: classNames(
+          dialogClassList.element('footer'),
+          getFooterStyles()
+        ),
       },
       buttonGroup: {
         ...toDataAttributes({ hasFooter }),
         UNSAFE_className: classNames(
-          slotClassNames.buttonGroup,
+          dialogClassList.element('button-group'),
           getButtonGroupStyles()
         ),
         align: 'end',
@@ -173,7 +183,7 @@ function useDialogStyleProps(props: DialogProps, sizeVariant: SizeVariant) {
     ...toDataAttributes({ size: sizeVariant }),
     ...styleProps,
     className: classNames(
-      slotClassNames.root,
+      dialogClassList.element('root'),
       css({
         display: 'flex',
         maxHeight: 'inherit',
@@ -230,7 +240,7 @@ function useGridStyleProps({
         "footer footer footer footer"`,
 
       // slot styles
-      [`.${slotClassNames.buttonGroup}`]: {
+      [dialogClassList.selector('button-group')]: {
         display: 'none',
       },
     },
@@ -263,7 +273,7 @@ function useGridStyleProps({
   });
   return {
     ...toDataAttributes({ dismissable: isDismissable || undefined, size }),
-    UNSAFE_className: classNames(slotClassNames.grid, gridStyles),
+    UNSAFE_className: classNames(dialogClassList.element('grid'), gridStyles),
   };
 }
 
@@ -350,14 +360,15 @@ function getButtonGroupStyles() {
     minWidth: 0,
     marginInlineStart: tokenSchema.size.space.regular,
 
-    [`.${slotClassNames.root}:not([data-size=fullscreen]) &[data-has-footer=false]`]:
-      {
-        gridArea:
-          'footer-start / footer-start / buttonGroup-end / buttonGroup-end',
-      },
+    [`${dialogClassList.selector(
+      'root'
+    )}:not([data-size=fullscreen]) &[data-has-footer=false]`]: {
+      gridArea:
+        'footer-start / footer-start / buttonGroup-end / buttonGroup-end',
+    },
 
     // correct consumer error; hide the button group when the dialog is dismissable
-    [`.${slotClassNames.root}[data-dismissable] &`]: {
+    [`${dialogClassList.selector('root')}[data-dismissable] &`]: {
       display: 'none',
     },
   });

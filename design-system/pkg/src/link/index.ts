@@ -1,14 +1,8 @@
 'use client';
 
-export {
-  DefaultLinkComponent,
-  LinkComponentContext,
-  makeLinkComponent,
-  useLinkComponent,
-} from './linkContext';
+// re-export from @react-aria for convenience
+export { useLink } from '@react-aria/link';
+
 export { TextLink } from './TextLink';
 
-// types
-
-export type { LinkComponent, LinkComponentProps } from './linkContext';
 export type { TextLinkProps } from './TextLink';
