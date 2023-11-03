@@ -1,7 +1,8 @@
 import { cx, ClassNamesArg } from '@emotion/css';
+import { TOKEN_PREFIX } from '@keystar/ui/primitives';
 import { assert } from 'emery';
 
-export const classNamePrefix = 'ksv';
+export const classNamePrefix = TOKEN_PREFIX;
 export const resetClassName = voussoirClassName('reset');
 export function voussoirClassName(className: string) {
   return `${classNamePrefix}:${className}`;
