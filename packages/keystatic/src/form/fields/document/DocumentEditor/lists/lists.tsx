@@ -167,7 +167,7 @@ export function unnestList(editor: Editor) {
   return false;
 }
 
-export const listCounter = 'ksv-ol-counter';
+export const listCounter = 'ol-counter';
 type ListType = 'ul' | 'ol';
 const ListContext = createContext<ListType>('ul');
 export const ListElement = forwardRef(function ListElement(

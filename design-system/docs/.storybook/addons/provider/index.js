@@ -33,7 +33,7 @@ function ProviderUpdater(props) {
     };
 
     channel.on('provider/updated', providerUpdate);
-    channel.emit('ksv/ready-for-update');
+    channel.emit('keystar-storybook/ready-for-update');
     return () => {
       channel.removeListener('provider/updated', providerUpdate);
     };
