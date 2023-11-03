@@ -379,6 +379,7 @@ importers:
     specifiers:
       '@capsizecss/core': ^3.1.1
       '@capsizecss/metrics': ^1.2.0
+      '@keystar/ui': ^0.4.0
       '@prettier/sync': ^0.3.0
       '@types/lodash': ^4.14.191
       color2k: ^2.0.2
@@ -395,6 +396,7 @@ importers:
     devDependencies:
       '@capsizecss/core': 3.1.1
       '@capsizecss/metrics': 1.2.0
+      '@keystar/ui': link:../pkg
       '@types/lodash': 4.14.197
       color2k: 2.0.2
       emery: 1.4.2
