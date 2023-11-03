@@ -41,7 +41,9 @@ function _getInitialPropsValue(schema: ComponentSchema): unknown {
     case 'form':
       return schema.defaultValue();
     case 'child':
-      return null;
+      return schema.options.kind === 'block'
+        ? [{ type: 'paragraph', children: [{ text: '' }] }]
+        : null;
     case 'conditional': {
       const defaultValue = schema.discriminant.defaultValue();
       return {
@@ -71,7 +73,12 @@ export function getInitialPropsValueFromInitializer(
     case 'form':
       return initializer === undefined ? schema.defaultValue() : initializer;
     case 'child':
-      return null;
+      return (
+        initializer ??
+        (schema.options.kind === 'block'
+          ? [{ type: 'paragraph', children: [{ text: '' }] }]
+          : null)
+      );
     case 'conditional': {
       const defaultValue =
         initializer === undefined
@@ -115,7 +122,7 @@ export function updateValue(
     case 'form':
       return updater;
     case 'child':
-      return null;
+      return updater;
     case 'conditional': {
       return {
         discriminant: updater.discriminant,

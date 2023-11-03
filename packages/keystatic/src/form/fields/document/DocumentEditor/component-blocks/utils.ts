@@ -4,6 +4,7 @@ import { DocumentFeatures } from '../document-features';
 import { DocumentFeaturesForNormalization } from '../document-features-normalization';
 import { Mark } from '../utils';
 import { ComponentSchema, ChildField } from '../../../../api';
+import { Descendant, Element } from 'slate';
 
 export type DocumentFeaturesForChildField =
   | {
@@ -21,6 +22,68 @@ export type DocumentFeaturesForChildField =
       componentBlocks: boolean;
       documentFeatures: DocumentFeaturesForNormalization;
     };
+
+export function getWholeDocumentFeaturesForChildField(
+  editorDocumentFeatures: DocumentFeatures,
+  options: ChildField['options'] & { kind: 'block' }
+): DocumentFeatures {
+  const inlineMarksFromOptions = options.formatting?.inlineMarks;
+
+  const inlineMarks = Object.fromEntries(
+    Object.keys(editorDocumentFeatures.formatting.inlineMarks).map(_mark => {
+      const mark = _mark as Mark;
+      return [
+        mark,
+        inlineMarksFromOptions === 'inherit' ||
+        inlineMarksFromOptions?.[mark] === 'inherit'
+          ? editorDocumentFeatures.formatting.inlineMarks[mark]
+          : false,
+      ];
+    })
+  ) as Record<Mark, boolean>;
+  const headingLevels = options.formatting?.headingLevels;
+  return {
+    formatting: {
+      inlineMarks,
+      softBreaks:
+        options.formatting?.softBreaks === 'inherit' &&
+        editorDocumentFeatures.formatting.softBreaks,
+      alignment: {
+        center:
+          editorDocumentFeatures.formatting.alignment.center &&
+          options.formatting?.alignment === 'inherit',
+        end:
+          editorDocumentFeatures.formatting.alignment.end &&
+          options.formatting?.alignment === 'inherit',
+      },
+      blockTypes:
+        options.formatting?.blockTypes === 'inherit'
+          ? editorDocumentFeatures.formatting.blockTypes
+          : { blockquote: false, code: false },
+      headings:
+        headingLevels === 'inherit'
+          ? editorDocumentFeatures.formatting.headings
+          : {
+              levels: headingLevels
+                ? editorDocumentFeatures.formatting.headings.levels.filter(
+                    level => headingLevels.includes(level)
+                  )
+                : [],
+              schema: editorDocumentFeatures.formatting.headings.schema,
+            },
+      listTypes:
+        options.formatting?.listTypes === 'inherit'
+          ? editorDocumentFeatures.formatting.listTypes
+          : { ordered: false, unordered: false },
+    },
+    dividers:
+      options.dividers === 'inherit' ? editorDocumentFeatures.dividers : false,
+    images: options.images === 'inherit' && editorDocumentFeatures.images,
+    layouts: [],
+    links: options.links === 'inherit' && editorDocumentFeatures.links,
+    tables: options.tables === 'inherit' && editorDocumentFeatures.tables,
+  };
+}
 
 export function getDocumentFeaturesForChildField(
   editorDocumentFeatures: DocumentFeatures,
@@ -207,8 +270,22 @@ export function getPlaceholderTextForPropPath(
   formProps: Record<string, any>
 ): string {
   const field = getSchemaAtPropPath(propPath, formProps, fields);
-  if (field?.kind === 'child') {
+  if (
+    field?.kind === 'child' &&
+    ((field.options.kind === 'block' && field.options.editIn !== 'modal') ||
+      field.options.kind === 'inline')
+  ) {
     return field.options.placeholder;
   }
   return '';
+}
+
+export function cloneDescendent(node: Descendant): Descendant {
+  if (Element.isElement(node)) {
+    return {
+      ...node,
+      children: node.children.map(cloneDescendent),
+    };
+  }
+  return { ...node };
 }

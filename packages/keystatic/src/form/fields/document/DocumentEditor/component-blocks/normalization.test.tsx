@@ -413,7 +413,16 @@ test('prop with wrong type for a given prop path', () => {
         component="withChildElements"
         props={
           {
-            "block": null,
+            "block": [
+              {
+                "children": [
+                  {
+                    "text": "",
+                  },
+                ],
+                "type": "paragraph",
+              },
+            ],
             "inline": null,
             "prop": "",
           }

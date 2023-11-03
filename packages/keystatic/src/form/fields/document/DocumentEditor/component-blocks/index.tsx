@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
-import { Editor, Transforms } from 'slate';
+import { Descendant, Editor, Transforms } from 'slate';
 
 import {
   insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading,
@@ -16,6 +16,8 @@ import { ChromelessComponentBlockElement } from './chromeless-element';
 import { useDocumentEditorConfig } from '../toolbar-state';
 import { getInitialPropsValue } from '../../../../initial-values';
 import { findChildPropPaths } from './child-prop-paths';
+import { transformProps } from '../../../../props-value';
+import { cloneDescendent } from './utils';
 
 export { withComponentBlocks } from './with-component-blocks';
 
@@ -77,10 +79,45 @@ export const ComponentBlocksElement = ({
     | ComponentBlock
     | undefined;
 
-  const elementToGetPathRef = useRef({ __elementToGetPath, currentElement });
+  const propsWithChildFields = useMemo(() => {
+    if (!componentBlock) return;
+    const blockChildrenByPath = new Map<string, Descendant[]>();
+    for (const child of currentElement.children) {
+      if (child.type === 'component-block-prop' && child.propPath) {
+        blockChildrenByPath.set(JSON.stringify(child.propPath), child.children);
+      }
+    }
+    if (!blockChildrenByPath.size) return currentElement.props;
+    return transformProps(
+      { kind: 'object', fields: componentBlock.schema },
+      currentElement.props,
+      {
+        child(schema, value, propPath) {
+          if (schema.options.kind === 'block') {
+            const key = JSON.stringify(propPath);
+            const children = blockChildrenByPath.get(key);
+            if (children) {
+              return children.map(cloneDescendent) as any;
+            }
+          }
+          return value;
+        },
+      }
+    ) as Record<string, unknown>;
+  }, [componentBlock, currentElement]);
+
+  const elementToGetPathRef = useRef({
+    __elementToGetPath,
+    currentElement,
+    propsWithChildFields,
+  });
 
   useEffect(() => {
-    elementToGetPathRef.current = { __elementToGetPath, currentElement };
+    elementToGetPathRef.current = {
+      __elementToGetPath,
+      currentElement,
+      propsWithChildFields,
+    };
   });
 
   const onRemove = useEventCallback(() => {
@@ -89,8 +126,11 @@ export const ComponentBlocksElement = ({
   });
 
   const onPropsChange = useCallback(
-    (cb: (prevProps: Record<string, unknown>) => Record<string, unknown>) => {
-      const prevProps = elementToGetPathRef.current.currentElement.props;
+    (
+      cb: (prevProps: Record<string, unknown>) => Record<string, unknown>,
+      ignoreChildFields: boolean
+    ) => {
+      const prevProps = elementToGetPathRef.current.propsWithChildFields!;
       updateComponentBlockElementProps(
         editor,
         componentBlock!,
@@ -100,7 +140,8 @@ export const ComponentBlocksElement = ({
           editor,
           elementToGetPathRef.current.__elementToGetPath
         ),
-        setElement
+        setElement,
+        ignoreChildFields
       );
     },
     [setElement, componentBlock, editor]
@@ -114,7 +155,7 @@ export const ComponentBlocksElement = ({
     }
     return createGetPreviewProps(
       { kind: 'object', fields: componentBlock.schema },
-      onPropsChange,
+      cb => onPropsChange(cb, false),
       () => undefined
     );
   }, [componentBlock, onPropsChange]);
@@ -136,7 +177,9 @@ Content:`}
     );
   }
 
-  const toolbarPreviewProps = getToolbarPreviewProps(currentElement.props);
+  const toolbarPreviewProps = getToolbarPreviewProps(
+    propsWithChildFields as any
+  );
 
   const renderedBlock = (
     <ComponentBlockRender

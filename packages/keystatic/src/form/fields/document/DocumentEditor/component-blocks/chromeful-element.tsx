@@ -32,13 +32,11 @@ import {
   GenericPreviewProps,
 } from '../../../../api';
 import { clientSideValidateProp } from '../../../../errors';
-import {
-  FormValueContentFromPreviewProps,
-  NonChildFieldComponentSchema,
-} from '../../../../form-from-preview';
+import { FormValueContentFromPreviewProps } from '../../../../form-from-preview';
 import {
   previewPropsToValue,
   setValueToPreviewProps,
+  valueToUpdater,
 } from '../../../../get-value';
 import { createGetPreviewProps } from '../../../../preview-props';
 import { NotEditable } from '../primitives';
@@ -179,7 +177,11 @@ function DefaultToolbarWithChrome({
   return (
     <NotEditable>
       <Flex direction="column" gap="medium">
-        <Flex alignItems="center" gap="regular" style={{ userSelect: 'none' }}>
+        <Flex
+          alignItems="center"
+          gap="regular"
+          UNSAFE_style={{ userSelect: 'none' }}
+        >
           <ActionButton onPress={() => onShowEditMode()}>
             {stringFormatter.format('edit')}
           </ActionButton>
@@ -204,7 +206,7 @@ function FormValue({
   onClose,
   props,
 }: {
-  props: GenericPreviewProps<NonChildFieldComponentSchema, unknown>;
+  props: GenericPreviewProps<ComponentSchema, unknown>;
   onClose(): void;
 }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
@@ -228,6 +230,7 @@ function FormValue({
             if (!clientSideValidateProp(props.schema, state, undefined)) {
               setForceValidation(true);
             } else {
+              console.log(valueToUpdater(state, props.schema));
               setValueToPreviewProps(state, props);
               onClose();
             }

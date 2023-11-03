@@ -24,16 +24,15 @@ type BlockFormattingConfig = {
 export type ChildField = {
   kind: 'child';
   options:
-    | {
+    | ({
         kind: 'block';
-        placeholder: string;
         formatting?: BlockFormattingConfig;
         dividers?: 'inherit';
         links?: 'inherit';
         images?: 'inherit';
         tables?: 'inherit';
         componentBlocks?: 'inherit';
-      }
+      } & BlockEditingOptions)
     | {
         kind: 'inline';
         placeholder: string;
@@ -45,18 +44,22 @@ export type ChildField = {
       };
 };
 
+type BlockEditingOptions =
+  | { editIn?: 'preview'; placeholder: string }
+  | { editIn: 'modal'; label: string }
+  | { editIn: 'both'; label: string; placeholder: string };
+
 export function child(
   options:
-    | {
+    | ({
         kind: 'block';
-        placeholder: string;
         formatting?: BlockFormattingConfig | 'inherit';
         dividers?: 'inherit';
         links?: 'inherit';
         images?: 'inherit';
         tables?: 'inherit';
         componentBlocks?: 'inherit';
-      }
+      } & BlockEditingOptions)
     | {
         kind: 'inline';
         placeholder: string;
@@ -74,8 +77,7 @@ export function child(
     options:
       options.kind === 'block'
         ? {
-            kind: 'block',
-            placeholder: options.placeholder,
+            ...options,
             dividers: options.dividers,
             formatting:
               options.formatting === 'inherit'
