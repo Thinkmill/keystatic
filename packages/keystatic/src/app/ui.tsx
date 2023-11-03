@@ -1,8 +1,6 @@
 import {
-  AnchorHTMLAttributes,
   ReactElement,
   ReactNode,
-  RefAttributes,
   useContext,
   useEffect,
   useState,
@@ -29,7 +27,7 @@ import { CreatedGitHubApp } from './onboarding/created-github-app';
 import { KeystaticSetup } from './onboarding/setup';
 import { RepoNotFound } from './onboarding/repo-not-found';
 import { AppSlugProvider } from './onboarding/install-app';
-import { useRouter, Router, RouterProvider } from './router';
+import { useRouter, RouterProvider } from './router';
 import {
   isCloudConfig,
   isGitHubConfig,
@@ -266,19 +264,7 @@ function AuthWrapper(props: {
   return null;
 }
 
-export function Keystatic(props: {
-  config: Config;
-  router: Router;
-  /** @deprecated This functionality is now abstracted from the `router` prop. */
-  link: (
-    props: { href: string } & AnchorHTMLAttributes<HTMLAnchorElement> &
-      RefAttributes<HTMLAnchorElement>
-  ) => ReactNode;
-  appSlug?: { envName: string; value: string | undefined };
-}) {
-  if (props.config.storage.kind === 'github') {
-    assertValidRepoConfig(props.config.storage.repo);
-  }
+function RedirectToLoopback(props: { children: ReactNode }) {
   useEffect(() => {
     if (window.location.hostname === 'localhost') {
       window.location.href = window.location.href.replace(
@@ -290,13 +276,37 @@ export function Keystatic(props: {
   if (window.location.hostname === 'localhost') {
     return null;
   }
+  return props.children;
+}
+
+export function Keystatic(props: {
+  config: Config;
+  appSlug?: { envName: string; value: string | undefined };
+}) {
+  if (props.config.storage.kind === 'github') {
+    assertValidRepoConfig(props.config.storage.repo);
+  }
+
   return (
-    <AppSlugProvider value={props.appSlug}>
-      <RouterProvider router={props.router}>
-        <Provider config={props.config}>
-          <PageInner config={props.config} />
-        </Provider>
-      </RouterProvider>
-    </AppSlugProvider>
+    <ClientOnly>
+      <RedirectToLoopback>
+        <AppSlugProvider value={props.appSlug}>
+          <RouterProvider>
+            <Provider config={props.config}>
+              <PageInner config={props.config} />
+            </Provider>
+          </RouterProvider>
+        </AppSlugProvider>
+      </RedirectToLoopback>
+    </ClientOnly>
   );
+}
+
+function ClientOnly(props: { children: ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  if (!mounted) return null;
+  return props.children;
 }
