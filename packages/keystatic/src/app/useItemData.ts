@@ -287,7 +287,7 @@ async function fetchGitHubBlob(
     return fetch(
       `https://raw.githubusercontent.com/${serializeRepoConfig(
         repo
-      )}/${commitSha}/${getPathPrefix(config.storage)}${filepath}`
+      )}/${commitSha}/${getPathPrefix(config.storage) ?? ''}${filepath}`
     );
   }
   const auth = await getAuth(config);
