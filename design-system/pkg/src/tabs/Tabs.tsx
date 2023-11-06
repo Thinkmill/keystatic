@@ -29,6 +29,7 @@ import { useProvider, useProviderProps } from '@keystar/ui/core';
 import { Item, Picker, PickerProps } from '@keystar/ui/picker';
 import { SlotProvider } from '@keystar/ui/slots';
 import {
+  ClassList,
   FocusRing,
   classNames,
   css,
@@ -47,6 +48,17 @@ import {
   TabProminence,
 } from './types';
 import { TabContext, useTabContext } from './context';
+
+export const tabsClassList = new ClassList('Tabs', [
+  'collapseWrapper',
+  'indicator',
+  'list',
+  'panel',
+  'picker',
+  'tab',
+  'tab-icon',
+  'tab-label',
+]);
 
 function Tabs<T extends object>(
   props: TabsProps<T>,
@@ -150,7 +162,7 @@ function Tabs<T extends object>(
               flexDirection: 'column',
             },
           }),
-          'ksv-tabs',
+          tabsClassList.element('root'),
           styleProps.className
         )}
       >
@@ -301,18 +313,13 @@ function Tab<T>(props: TabProps<T>) {
               cursor: 'default',
             },
           }),
-          'ksv-tabs-tab'
+          tabsClassList.element('tab')
         )}
       >
         <SlotProvider
           slots={{
             icon: {
-              UNSAFE_className: classNames(
-                css({
-                  /* TODO */
-                }),
-                'ksv-tabs-tab-icon'
-              ),
+              UNSAFE_className: tabsClassList.element('tab-icon'),
             },
             text: {
               UNSAFE_className: classNames(
@@ -321,7 +328,7 @@ function Tab<T>(props: TabProps<T>) {
                   fontSize: 'inherit',
                   fontWeight: 'inherit',
                 }),
-                'ksv-tabs-tab-label'
+                tabsClassList.element('tab-label')
               ),
             },
           }}
@@ -444,7 +451,7 @@ function SelectionIndicator(props: SelectionIndicatorProps) {
             backgroundColor: tokenSchema.color.alias.foregroundDisabled,
           },
         }),
-        'ksv-tabs-indicator'
+        tabsClassList.element('indicator')
       )}
       role="presentation"
       style={style}
@@ -533,7 +540,7 @@ export function TabList<T extends object>(props: TabListProps<T>) {
             flexDirection: 'column',
           },
         }),
-        'ksv-tab-list',
+        tabsClassList.element('list'),
         orientation === 'vertical' && styleProps.className
       )}
     >
@@ -561,7 +568,7 @@ export function TabList<T extends object>(props: TabListProps<T>) {
             display: 'flex',
             position: 'relative',
           }),
-          'ksv-tabs-collapseWrapper',
+          tabsClassList.element('collapseWrapper'),
           styleProps.className
         )}
       >
@@ -633,7 +640,7 @@ function TabPanel<T>(props: TabPanelsProps<T>) {
               outline: 'none',
             },
           }),
-          'ksv-tabs-panel',
+          tabsClassList.element('panel'),
           styleProps.className
         )}
       >
@@ -691,7 +698,7 @@ function TabPicker<T>(props: TabPickerProps<T>) {
         disabledKeys={state.disabledKeys}
         onSelectionChange={state.setSelectedKey}
         marginBottom="xsmall"
-        UNSAFE_className={classNames('ksv-tabs-picker')}
+        UNSAFE_className={tabsClassList.element('picker')}
       >
         {item => <Item {...item.props}>{item.rendered}</Item>}
       </Picker>

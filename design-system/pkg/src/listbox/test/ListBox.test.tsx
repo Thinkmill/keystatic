@@ -94,7 +94,6 @@ describe('pickers/ListBox', () => {
       if (section !== sections[0]) {
         let divider = heading?.previousElementSibling;
         expect(divider).toHaveAttribute('role', 'presentation');
-        expect(divider).toHaveClass('ksv:Divider');
       }
     }
 

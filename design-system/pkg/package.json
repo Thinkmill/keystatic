@@ -193,6 +193,11 @@
       "module": "./list-view/dist/keystar-ui-list-view.esm.js",
       "default": "./list-view/dist/keystar-ui-list-view.cjs.js"
     },
+    "./primitives": {
+      "types": "./primitives/dist/keystar-ui-primitives.cjs.js",
+      "module": "./primitives/dist/keystar-ui-primitives.esm.js",
+      "default": "./primitives/dist/keystar-ui-primitives.cjs.js"
+    },
     "./split-view": {
       "types": "./split-view/dist/keystar-ui-split-view.cjs.js",
       "module": "./split-view/dist/keystar-ui-split-view.esm.js",
