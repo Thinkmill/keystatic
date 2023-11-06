@@ -27,8 +27,9 @@ import {
   useStyleProps,
 } from '@keystar/ui/style';
 
-import localizedMessages from './l10n.json';
+import { listViewClassList } from './class-list';
 import { ListViewProvider, useListViewContext } from './context';
+import localizedMessages from './l10n.json';
 import { DragPreview as DragPreviewElement } from './DragPreview';
 import InsertionIndicator from './InsertionIndicator';
 import { ListViewItem } from './ListViewItem';
@@ -237,6 +238,7 @@ function ListView<T extends object>(
             focusedKey={focusedKey}
             scrollDirection="vertical"
             className={classNames(
+              listViewClassList.element('root'),
               css({
                 backgroundColor: tokenSchema.color.background.canvas,
                 border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
@@ -258,7 +260,6 @@ function ListView<T extends object>(
                   boxShadow: `inset 0 0 0 1px ${tokenSchema.color.alias.focusRing}`,
                 },
               }),
-              'ksv-list-view',
               styleProps.className
             )}
             layout={layout}
@@ -368,7 +369,7 @@ function CenteredWrapper({ children }: PropsWithChildren) {
       aria-rowindex={state.collection.size + 1}
       data-has-items={state.collection.size > 0}
       className={classNames(
-        'ksv-list-view-centered-wrapper',
+        listViewClassList.element('centered-wrapper'),
         css({
           display: 'flex',
           justifyContent: 'center',
