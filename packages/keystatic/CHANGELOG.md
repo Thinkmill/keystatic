@@ -1,5 +1,19 @@
 # @keystatic/core
 
+## 0.2.0
+
+### Minor Changes
+
+- b768f147: Update router integration between `@keystatic/core` and framework
+  integration packages to improve performance
+
+### Patch Changes
+
+- 32d22480: Fix loading entries failing for public repositories when not using a
+  `pathPrefix`
+- Updated dependencies [cd03b1cd]
+  - @keystar/ui@0.4.1
+
 ## 0.1.9
 
 ### Patch Changes
