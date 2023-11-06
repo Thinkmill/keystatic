@@ -1,0 +1,41 @@
+---
+title: Using in a monorepo
+---
+To use Keystatic in a monorepo there are just a few things you need to be aware of.
+
+## Schema path
+
+The `path` in your schema should be relative to the root of your app rather than the root of the repo. Your post collection should look like this:
+
+```diff
+const posts = collection({
+  label: 'Posts',
+  slugField: 'title',
+- path: 'apps/docs/content/posts/*',
++ path: 'content/posts/*',
+  format: { data: 'json' },
+  schema: {
+  title: fields.slug({ name: { label: 'Title' } }),
+    content: fields.document({
+      label: 'Content',
+    }),
+  },
+});
+```
+
+## Storage mode
+
+When using Keystatic in [GitHub](/docs/github-mode) or [Cloud](/docs/cloud) mode, you will need to specify the path prefix:
+
+```javascript
+const storage: Config["storage"] =
+  process.env.NODE_ENV === "production"
+    ? {
+        kind: "github",
+        pathPrefix: "apps/docs",
+        repo: "thinkmill/keystatic",
+      }
+    : {
+        kind: "local",
+      };
+```

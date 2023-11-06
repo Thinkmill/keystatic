@@ -44,6 +44,10 @@ navGroups:
         link:
           discriminant: page
           value: cloud
+      - label: Using in a monorepo
+        link:
+          discriminant: page
+          value: using-in-a-monorepo
   - groupName: Recipes
     items:
       - label: 'Astro: Disable Admin UI Routes in Production'
