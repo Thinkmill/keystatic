@@ -23,13 +23,13 @@ export function ColorSchemeMenu() {
   let { colorScheme, setColorScheme } = useRootColorScheme();
   let hideWhenLight = css({
     [`.${SCHEME_LIGHT} &`]: { display: 'none' },
-    [`${SCHEME_AUTO} &`]: {
+    [`.${SCHEME_AUTO} &`]: {
       '@media (prefers-color-scheme: light)': { display: 'none' },
     },
   });
   let hideWhenDark = css({
     [`.${SCHEME_DARK} &`]: { display: 'none' },
-    [`${SCHEME_AUTO} &`]: {
+    [`.${SCHEME_AUTO} &`]: {
       '@media (prefers-color-scheme: dark)': { display: 'none' },
     },
   });
