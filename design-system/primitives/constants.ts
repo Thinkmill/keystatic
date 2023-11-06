@@ -7,12 +7,8 @@ import {
 
 export { TOKEN_PREFIX } from '@keystar/ui/primitives';
 
-export const SELECTOR_DEFAULT = selector(THEME_DEFAULT);
+export const SELECTOR_DEFAULT = `.${THEME_DEFAULT}`;
 
-export const SELECTOR_AUTO = selector(SCHEME_AUTO);
-export const SELECTOR_LIGHT = selector(SCHEME_LIGHT);
-export const SELECTOR_DARK = selector(SCHEME_DARK);
-
-function selector(className: string) {
-  return `.${className}`;
-}
+export const SELECTOR_AUTO = `.${SCHEME_AUTO}`;
+export const SELECTOR_LIGHT = `.${SCHEME_LIGHT}`;
+export const SELECTOR_DARK = `.${SCHEME_DARK}`;
