@@ -1,5 +1,18 @@
 # @keystatic/remix
 
+## 2.0.0
+
+### Major Changes
+
+- b768f147: Update router integration between `@keystatic/core` and framework
+  integration packages to improve performance
+
+### Patch Changes
+
+- Updated dependencies [b768f147]
+- Updated dependencies [32d22480]
+  - @keystatic/core@0.2.0
+
 ## 1.0.1
 
 ### Patch Changes

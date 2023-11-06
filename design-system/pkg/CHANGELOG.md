@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.4.1
+
+### Patch Changes
+
+- cd03b1cd: Fix `next` peer dependency being pinned to an exact version
+
 ## 0.4.0
 
 ### Minor Changes
