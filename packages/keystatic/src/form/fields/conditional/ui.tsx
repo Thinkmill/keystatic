@@ -8,7 +8,6 @@ import {
 } from '../../api';
 import {
   ExtraFieldInputProps,
-  isNonChildFieldPreviewProps,
   InnerFormValueContentFromPreviewProps,
 } from '../../form-from-preview';
 import { AddToPathProvider } from '../text/path-slug-context';
@@ -50,14 +49,12 @@ export function ConditionalFieldInput<
         ),
         [autoFocus, schemaDiscriminant, discriminant, onChange, forceValidation]
       )}
-      {isNonChildFieldPreviewProps(value) && (
-        <AddToPathProvider part="value">
-          <InnerFormValueContentFromPreviewProps
-            forceValidation={forceValidation}
-            {...value}
-          />
-        </AddToPathProvider>
-      )}
+      <AddToPathProvider part="value">
+        <InnerFormValueContentFromPreviewProps
+          forceValidation={forceValidation}
+          {...value}
+        />
+      </AddToPathProvider>
     </Flex>
   );
 }

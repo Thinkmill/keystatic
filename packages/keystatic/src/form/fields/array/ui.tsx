@@ -23,7 +23,6 @@ import { useId, Key, useMemo, useState, useCallback } from 'react';
 import { getSlugFromState } from '../../../app/utils';
 import { clientSideValidateProp } from '../../errors';
 import {
-  NonChildFieldComponentSchema,
   FormValueContentFromPreviewProps,
   ExtraFieldInputProps,
 } from '../../form-from-preview';
@@ -89,7 +88,6 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
     );
     return { slugs, field: slugField, glob: '*' as const };
   }, [modalStateIndex, props, modalState.state]);
-
   return (
     <Flex
       elementType="section"
@@ -125,6 +123,7 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
         {...props}
         labelId={labelId}
         onOpenItem={idx => {
+          console.log(previewPropsToValue(props.elements[idx]));
           setModalState({
             state: 'open',
             value: previewPropsToValue(props.elements[idx]),
@@ -430,7 +429,7 @@ function move<T>(
 }
 
 function ArrayFieldItemModalContent(props: {
-  schema: NonChildFieldComponentSchema;
+  schema: ComponentSchema;
   value: unknown;
   onChange: (cb: (value: unknown) => unknown) => void;
   slugField: SlugFieldInfo | undefined;

@@ -174,7 +174,7 @@ importers:
       '@emotion/css': ^11.9.0
       '@floating-ui/react': ^0.24.0
       '@internationalized/date': ^3.5.0
-      '@keystar/ui': ^0.4.0
+      '@keystar/ui': ^0.4.1
       '@keystar/ui-storybook': ^0.0.1
       '@react-aria/actiongroup': ^3.6.4
       '@react-aria/breadcrumbs': ^3.5.7
@@ -379,6 +379,7 @@ importers:
     specifiers:
       '@capsizecss/core': ^3.1.1
       '@capsizecss/metrics': ^1.2.0
+      '@keystar/ui': ^0.4.0
       '@prettier/sync': ^0.3.0
       '@types/lodash': ^4.14.191
       color2k: ^2.0.2
@@ -395,6 +396,7 @@ importers:
     devDependencies:
       '@capsizecss/core': 3.1.1
       '@capsizecss/metrics': 1.2.0
+      '@keystar/ui': link:../pkg
       '@types/lodash': 4.14.197
       color2k: 2.0.2
       emery: 1.4.2
@@ -411,8 +413,8 @@ importers:
       '@astrojs/node': ^6.0.0
       '@astrojs/react': ^3.0.0
       '@braintree/sanitize-url': ^6.0.2
-      '@keystatic/astro': ^1.0.0
-      '@keystatic/core': ^0.1.2
+      '@keystatic/astro': ^2.0.0
+      '@keystatic/core': ^0.2.0
       '@types/react': ^18.2.8
       '@types/react-dom': ^18.0.11
       astro: ^3.0.3
@@ -463,8 +465,8 @@ importers:
       '@astrojs/react': ^3.0.0
       '@astrojs/sitemap': ^3.0.0
       '@astrojs/tailwind': ^5.0.0
-      '@keystatic/astro': ^1.0.2
-      '@keystatic/core': ^0.1.4
+      '@keystatic/astro': ^2.0.0
+      '@keystatic/core': ^0.2.0
       '@tailwindcss/typography': ^0.5.9
       '@types/react': ^18.2.8
       '@types/react-dom': ^18.0.11
@@ -490,8 +492,8 @@ importers:
 
   dev-projects/localization:
     specifiers:
-      '@keystatic/core': ^0.1.0
-      '@keystatic/next': ^1.0.0
+      '@keystatic/core': ^0.2.0
+      '@keystatic/next': ^2.0.0
       '@preconstruct/next': ^4.0.0
       '@types/node': 16.11.13
       '@types/react': ^18.2.8
@@ -519,9 +521,9 @@ importers:
   dev-projects/next-app:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystar/ui': ^0.4.0
-      '@keystatic/core': ^0.1.9
-      '@keystatic/next': ^1.0.0
+      '@keystar/ui': ^0.4.1
+      '@keystatic/core': ^0.2.0
+      '@keystatic/next': ^2.0.0
       '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
       '@ts-gql/next': ^17.0.0
@@ -551,8 +553,8 @@ importers:
 
   dev-projects/next-blocks-builder:
     specifiers:
-      '@keystatic/core': ^0.1.9
-      '@keystatic/next': ^1.0.1
+      '@keystatic/core': ^0.2.0
+      '@keystatic/next': ^2.0.0
       '@tailwindcss/container-queries': ^0.1.1
       '@tailwindcss/typography': ^0.5.9
       '@types/node': 16.11.13
@@ -589,9 +591,9 @@ importers:
   dev-projects/next-pages:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystar/ui': ^0.4.0
-      '@keystatic/core': ^0.1.9
-      '@keystatic/next': ^1.0.0
+      '@keystar/ui': ^0.4.1
+      '@keystatic/core': ^0.2.0
+      '@keystatic/next': ^2.0.0
       '@preconstruct/next': ^4.0.0
       '@ts-gql/compiler': ^0.16.1
       '@ts-gql/next': ^17.0.0
@@ -621,8 +623,8 @@ importers:
 
   dev-projects/remix:
     specifiers:
-      '@keystatic/core': ^0.1.0
-      '@keystatic/remix': ^1.0.0
+      '@keystatic/core': ^0.2.0
+      '@keystatic/remix': ^2.0.0
       '@remix-run/dev': ^1.18.1
       '@remix-run/node': ^1.18.1
       '@remix-run/react': ^1.18.1
@@ -655,9 +657,9 @@ importers:
       '@fontsource/inter': ^5.0.5
       '@headlessui/react': ^1.7.11
       '@heroicons/react': ^2.0.16
-      '@keystar/ui': ^0.4.0
-      '@keystatic/core': ^0.1.9
-      '@keystatic/next': ^1.0.1
+      '@keystar/ui': ^0.4.1
+      '@keystatic/core': ^0.2.0
+      '@keystatic/next': ^2.0.0
       '@markdoc/markdoc': ^0.3.0
       '@sindresorhus/slugify': ^1.1.2
       '@tailwindcss/container-queries': ^0.1.1
@@ -714,7 +716,7 @@ importers:
   packages/astro:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.1.2
+      '@keystatic/core': ^0.2.0
       '@types/cookie': ^0.5.1
       '@types/react': ^18.2.8
       '@types/set-cookie-parser': ^2.4.2
@@ -722,13 +724,11 @@ importers:
       cookie: ^0.5.0
       react: ^18.2.0
       react-dom: ^18.2.0
-      react-router-dom: ^6.8.1
       set-cookie-parser: ^2.5.1
     dependencies:
       '@babel/runtime': 7.22.15
       '@types/react': 18.2.21
       cookie: 0.5.0
-      react-router-dom: 6.15.0_biqbaboplfbrettd7655fr4n2y
       set-cookie-parser: 2.6.0
     devDependencies:
       '@keystatic/core': link:../keystatic
@@ -762,7 +762,7 @@ importers:
       '@emotion/weak-memoize': ^0.3.0
       '@floating-ui/react': ^0.24.0
       '@internationalized/string': ^3.1.1
-      '@keystar/ui': ^0.4.0
+      '@keystar/ui': ^0.4.1
       '@markdoc/markdoc': ^0.3.0
       '@react-aria/focus': ^3.14.3
       '@react-aria/i18n': ^3.8.0
@@ -930,7 +930,7 @@ importers:
   packages/next:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.1.8
+      '@keystatic/core': ^0.2.0
       '@types/react': ^18.2.8
       chokidar: ^3.5.3
       next: ^14.0.0
@@ -951,7 +951,7 @@ importers:
   packages/remix:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.1.9
+      '@keystatic/core': ^0.2.0
       '@remix-run/react': ^1.18.1
       '@types/react': ^18.2.8
       react: ^18.2.0
@@ -969,8 +969,8 @@ importers:
     specifiers:
       '@astrojs/markdoc': ^0.5.0
       '@astrojs/react': ^3.0.0
-      '@keystatic/astro': ^1.0.2
-      '@keystatic/core': ^0.1.2
+      '@keystatic/astro': ^2.0.0
+      '@keystatic/core': ^0.2.0
       '@types/react': ^18.2.8
       '@types/react-dom': ^18.0.11
       astro: ^3.0.3
@@ -989,8 +989,8 @@ importers:
 
   templates/nextjs:
     specifiers:
-      '@keystatic/core': ^0.1.0
-      '@keystatic/next': ^1.0.0
+      '@keystatic/core': ^0.2.0
+      '@keystatic/next': ^2.0.0
       '@types/react': ^18.2.8
       next: ^14.0.0
       react: ^18.2.0
@@ -6415,11 +6415,6 @@ packages:
   /@remix-run/router/1.7.2:
     resolution: {integrity: sha512-7Lcn7IqGMV+vizMPoEl5F0XDshcdDYtMI6uJLQdQz5CfZAwy3vvGKYSUk789qndt5dEC4HfSjviSYlSoHGL2+A==}
     engines: {node: '>=14'}
-
-  /@remix-run/router/1.8.0:
-    resolution: {integrity: sha512-mrfKqIHnSZRyIzBcanNJmVQELTnX+qagEDlcKO90RgRBVOZGSGvZKeDihTRfWcqoDn5N/NkUcwWTccnpN18Tfg==}
-    engines: {node: '>=14.0.0'}
-    dev: false
 
   /@remix-run/serve/1.19.3:
     resolution: {integrity: sha512-RUVEy7EBYvHO1hIuyVQJyIYZeFfXecC+Uaw6GvZscLywIGnhcAj+5dpeK6HVayNuV4kKLvBp0F4ZGHbwW1oWaA==}
@@ -18446,19 +18441,6 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       react-router: 6.14.2_react@18.2.0
 
-  /react-router-dom/6.15.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-aR42t0fs7brintwBGAv2+mGlCtgtFQeOzK0BM1/OiqEzRejOZtpMZepvgkscpMUnKb8YO84G7s3LsHnnDNonbQ==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      react: '>=16.8'
-      react-dom: '>=16.8'
-    dependencies:
-      '@remix-run/router': 1.8.0
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      react-router: 6.15.0_react@18.2.0
-    dev: false
-
   /react-router/6.14.2_react@18.2.0:
     resolution: {integrity: sha512-09Zss2dE2z+T1D03IheqAFtK4UzQyX8nFPWx6jkwdYzGLXd5ie06A6ezS2fO6zJfEb/SpG6UocN2O1hfD+2urQ==}
     engines: {node: '>=14'}
@@ -18467,16 +18449,6 @@ packages:
     dependencies:
       '@remix-run/router': 1.7.2
       react: 18.2.0
-
-  /react-router/6.15.0_react@18.2.0:
-    resolution: {integrity: sha512-NIytlzvzLwJkCQj2HLefmeakxxWHWAP+02EGqWEZy+DgfHHKQMUoBBjUQLOtFInBMhWtb3hiUy6MfFgwLjXhqg==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      react: '>=16.8'
-    dependencies:
-      '@remix-run/router': 1.8.0
-      react: 18.2.0
-    dev: false
 
   /react-style-singleton/2.2.1_gq4reeurwxuj4hvyerswzzqthy:
     resolution: {integrity: sha512-ZWj0fHEMyWkHzKYUr2Bs/4zU6XLmq9HsgBURm7g5pAVfyn49DgUiNgY2d4lXRlYSiCif9YBGpQleewkcqddc7g==}

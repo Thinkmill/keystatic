@@ -42,7 +42,6 @@ function useProseStyles(props: ProseProps) {
     ...styleProps,
     ...toDataAttributes({ size }),
     className: classNames(
-      'ksv:Prose',
       css({
         color: tokenSchema.color.foreground.neutral,
         fontFamily: tokenSchema.typography.fontFamily.base,

@@ -1,3 +1,5 @@
+import { SCHEME_AUTO, SCHEME_DARK, SCHEME_LIGHT } from '@keystar/ui/primitives';
+
 const script = `
 let classList = document.documentElement.classList;
 let storedPreference = localStorage.getItem('keystatic-root-color-scheme');
@@ -5,13 +7,13 @@ let schemeClasses = [...classList].filter((name) => name.includes('scheme'));
 
 if (storedPreference === 'dark') {
   classList.remove(schemeClasses);
-  classList.add('ksv-scheme--dark');
+  classList.add('${SCHEME_DARK}');
 } else if (storedPreference === 'light') {
   classList.remove(schemeClasses);
-  classList.add('ksv-scheme--light');
+  classList.add('${SCHEME_LIGHT}');
 } else {
   classList.remove(schemeClasses);
-  classList.add('ksv-scheme--auto');
+  classList.add('${SCHEME_AUTO}');
 }
 `.replace(/\n|\s{2,}/g, '');
 

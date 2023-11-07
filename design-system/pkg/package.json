@@ -1,6 +1,6 @@
 {
   "name": "@keystar/ui",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "license": "MIT",
   "main": "",
   "module": "",
@@ -192,6 +192,11 @@
       "types": "./list-view/dist/keystar-ui-list-view.cjs.js",
       "module": "./list-view/dist/keystar-ui-list-view.esm.js",
       "default": "./list-view/dist/keystar-ui-list-view.cjs.js"
+    },
+    "./primitives": {
+      "types": "./primitives/dist/keystar-ui-primitives.cjs.js",
+      "module": "./primitives/dist/keystar-ui-primitives.esm.js",
+      "default": "./primitives/dist/keystar-ui-primitives.cjs.js"
     },
     "./split-view": {
       "types": "./split-view/dist/keystar-ui-split-view.cjs.js",
@@ -6220,7 +6225,7 @@
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
-    "@keystar/ui": "^0.4.0",
+    "@keystar/ui": "^0.4.1",
     "@keystar/ui-storybook": "^0.0.1",
     "@react-aria/landmark": "3.0.0-beta.2",
     "@svgr/core": "^6.5.1",
@@ -6241,7 +6246,7 @@
     "tsx": "^3.8.0"
   },
   "peerDependencies": {
-    "next": "14.0.0",
+    "next": "13 || 14",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

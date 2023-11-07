@@ -40,9 +40,12 @@ function ProviderFieldSetter({ api }) {
     let storySwapped = () => {
       channel.emit('provider/updated', values);
     };
-    channel.on('ksv/ready-for-update', storySwapped);
+    channel.on('keystar-storybook/ready-for-update', storySwapped);
     return () => {
-      channel.removeListener('ksv/ready-for-update', storySwapped);
+      channel.removeListener(
+        'keystar-storybook/ready-for-update',
+        storySwapped
+      );
     };
   });
 

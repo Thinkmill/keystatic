@@ -123,7 +123,16 @@ test('inserting a complex component block', () => {
         props={
           {
             "object": {
-              "block": null,
+              "block": [
+                {
+                  "children": [
+                    {
+                      "text": "",
+                    },
+                  ],
+                  "type": "paragraph",
+                },
+              ],
               "conditional": {
                 "discriminant": false,
                 "value": null,
@@ -240,6 +249,7 @@ test('preview props api', () => {
         schema: componentBlocks.complex.schema.object,
         fields: {
           block: {
+            ...{ _: {} },
             element: React.createElement(ChildFieldEditable, {
               path: ['object', 'block'],
             }),
@@ -271,6 +281,7 @@ test('preview props api', () => {
             },
           },
           inline: {
+            ...{ _: {} },
             element: React.createElement(ChildFieldEditable, {
               path: ['object', 'inline'],
             }),
@@ -315,7 +326,16 @@ test('preview props conditional change', () => {
               "block": null,
               "conditional": {
                 "discriminant": true,
-                "value": null,
+                "value": [
+                  {
+                    "children": [
+                      {
+                        "text": "",
+                      },
+                    ],
+                    "type": "paragraph",
+                  },
+                ],
               },
               "conditionalSelect": {
                 "discriminant": "a",
@@ -379,6 +399,7 @@ test('preview props conditional change', () => {
     discriminant: true,
     onChange: expect.any(Function) as any,
     value: {
+      ...{ _: {} },
       element: React.createElement(ChildFieldEditable, {
         path: ['object', 'conditional', 'value'],
       }),

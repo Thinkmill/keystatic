@@ -1,6 +1,7 @@
 import { filterDOMProps } from '@react-aria/utils';
 import React, { SVGProps } from 'react';
 
+import { TOKEN_PREFIX } from '@keystar/ui/primitives';
 import { useSlotProps } from '@keystar/ui/slots';
 import {
   classNames,
@@ -12,6 +13,8 @@ import {
 } from '@keystar/ui/style';
 import { IconProps } from '@keystar/ui/types';
 
+const STROKE_VAR = `--${TOKEN_PREFIX}-icon-stroke`;
+
 export const Icon = (props: IconProps) => {
   props = useSlotProps(props, 'icon');
   const { strokeScaling, size, color, ...otherProps } = props;
@@ -19,7 +22,7 @@ export const Icon = (props: IconProps) => {
 
   const iconClassName = css({
     fill: 'none',
-    stroke: 'var(--ksv-icon-stroke)',
+    stroke: `var(${STROKE_VAR})`,
     flexShrink: 0,
     height: tokenSchema.size.icon.regular,
     width: tokenSchema.size.icon.regular,
@@ -54,7 +57,7 @@ export const Icon = (props: IconProps) => {
     role: 'img',
     className: classNames(iconClassName, styleProps.className),
     style: {
-      '--ksv-icon-stroke': stroke,
+      [STROKE_VAR]: stroke,
       ...styleProps.style,
     },
   });

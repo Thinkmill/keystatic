@@ -16,9 +16,11 @@ import { Text } from '@keystar/ui/typography';
 
 import { Item, ListView } from '..';
 
-const parameters = {
+let getAllowedDropOperationsAction = action('getAllowedDropOperationsAction');
+
+export default {
+  title: 'Components/ListView',
   args: {
-    isQuiet: false,
     density: 'regular',
     selectionMode: 'multiple',
     selectionStyle: 'checkbox',
@@ -26,40 +28,22 @@ const parameters = {
   },
   argTypes: {
     selectionMode: {
-      control: {
-        type: 'radio',
-        options: ['none', 'single', 'multiple'],
-      },
+      control: 'radio',
+      options: ['none', 'single', 'multiple'],
     },
     selectionStyle: {
-      control: {
-        type: 'radio',
-        options: ['checkbox', 'highlight'],
-      },
-    },
-    isQuiet: {
-      control: { type: 'boolean' },
+      control: 'radio',
+      options: ['checkbox', 'highlight'],
     },
     density: {
-      control: {
-        type: 'select',
-        options: ['compact', 'regular', 'spacious'],
-      },
+      control: 'select',
+      options: ['compact', 'regular', 'spacious'],
     },
     overflowMode: {
-      control: {
-        type: 'radio',
-        options: ['truncate', 'wrap'],
-      },
+      control: 'radio',
+      options: ['truncate', 'wrap'],
     },
   },
-};
-
-let getAllowedDropOperationsAction = action('getAllowedDropOperationsAction');
-
-export default {
-  title: 'Components/ListView',
-  parameters,
 };
 
 export const Default = (args: any) => (
@@ -84,7 +68,6 @@ export const Actions = (args: any) => (
     width="alias.singleLineWidth"
     aria-label="list view actions example"
     onAction={action('onAction')}
-    onSelectionChange={action('onSelectionChange')}
     {...args}
   >
     <Item key="design-systems">Design Systems</Item>
@@ -106,7 +89,6 @@ export const DynamicItems = (args: any) => (
     height="alias.singleLineWidth"
     onAction={action('onAction')}
     {...args}
-    selectionMode="none"
   >
     {(item: any) => (
       <Item key={item.key} textValue={item.name}>
@@ -129,8 +111,8 @@ export const DynamicItems = (args: any) => (
   </ListView>
 );
 
-DynamicItems.story = {
-  name: 'dynamic items',
+DynamicItems.args = {
+  selectionMode: 'none',
 };
 
 export const EmptyList = (args: any) => (
@@ -405,7 +387,6 @@ function AsyncList(props: any) {
 
   return (
     <ListView
-      selectionMode="multiple"
       aria-label="example async loading list"
       width="alias.singleLineWidth"
       height="alias.singleLineWidth"
@@ -500,7 +481,6 @@ function ReorderExample(props: any) {
   return (
     <ListView
       aria-label="reorderable list view"
-      selectionMode="multiple"
       width="alias.singleLineWidth"
       height="100%"
       items={list.items}

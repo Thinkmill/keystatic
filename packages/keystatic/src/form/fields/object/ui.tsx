@@ -3,7 +3,6 @@ import { assertNever } from 'emery';
 import { ComponentSchema, GenericPreviewProps, ObjectField } from '../../api';
 import {
   ExtraFieldInputProps,
-  isNonChildFieldPreviewProps,
   InnerFormValueContentFromPreviewProps,
 } from '../../form-from-preview';
 import { AddToPathProvider } from '../text/path-slug-context';
@@ -23,18 +22,15 @@ export function ObjectFieldInput<
     : undefined;
   const inner = (
     <Flex gap="xlarge" direction="column">
-      {Object.entries(fields).map(
-        ([key, propVal]) =>
-          isNonChildFieldPreviewProps(propVal) && (
-            <AddToPathProvider key={key} part={key}>
-              <InnerFormValueContentFromPreviewProps
-                forceValidation={forceValidation}
-                autoFocus={key === firstFocusable}
-                {...propVal}
-              />
-            </AddToPathProvider>
-          )
-      )}
+      {Object.entries(fields).map(([key, propVal]) => (
+        <AddToPathProvider key={key} part={key}>
+          <InnerFormValueContentFromPreviewProps
+            forceValidation={forceValidation}
+            autoFocus={key === firstFocusable}
+            {...propVal}
+          />
+        </AddToPathProvider>
+      ))}
     </Flex>
   );
   const id = useId();
