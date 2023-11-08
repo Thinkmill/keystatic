@@ -6,6 +6,7 @@ import {
   useMediaQuery,
 } from '@keystar/ui/style';
 
+import { serializeRepoConfig } from '../repo-config';
 import { useConfig } from './context';
 
 export function useBrand() {
@@ -14,7 +15,7 @@ export function useBrand() {
   let prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
 
   let brandMark = <ZapLogo />;
-  let brandName = config.cloud ? config.cloud.project : 'Keystatic';
+  let brandName = 'Keystatic';
 
   if (config.ui?.brand?.mark) {
     let BrandMark = config.ui.brand.mark;
@@ -22,6 +23,13 @@ export function useBrand() {
       colorScheme === 'auto' ? (prefersDark ? 'dark' : 'light') : colorScheme;
 
     brandMark = <BrandMark colorScheme={resolvedColorScheme} />;
+  }
+
+  if ('repo' in config.storage) {
+    brandName = serializeRepoConfig(config.storage.repo);
+  }
+  if (config.cloud) {
+    brandName = config.cloud.project;
   }
   if (config.ui?.brand?.name) {
     brandName = config.ui.brand.name;
