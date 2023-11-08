@@ -21,18 +21,18 @@ import {
 import { Text } from '@keystar/ui/typography';
 import { usePrevious } from '@keystar/ui/utils';
 
+import { typedKeys } from 'emery';
+
 import { Config } from '../../config';
 
 import l10nMessages from '../l10n/index.json';
 import { useRouter } from '../router';
-import { isCloudConfig, isGitHubConfig, pluralize } from '../utils';
+import { pluralize } from '../utils';
 
 import { useChanged } from './data';
 import { SIDE_PANEL_ID } from './constants';
-import { ZapLogo } from './common';
+import { useBrand } from './common';
 import { useConfig } from './context';
-import { serializeRepoConfig } from '../repo-config';
-import { typedKeys } from 'emery';
 
 const SidebarContext = createContext<OverlayTriggerState | null>(null);
 export function useSidebar() {
@@ -78,15 +78,7 @@ export function SidebarPanel(props: { hrefBase: string; config: Config }) {
 }
 
 function SidebarHeader() {
-  let config = useConfig();
-  let text = 'Keystatic';
-
-  if (isCloudConfig(config)) {
-    text = config.cloud.project;
-  }
-  if (isGitHubConfig(config)) {
-    text = serializeRepoConfig(config.storage.repo);
-  }
+  let { brandMark, brandName } = useBrand();
 
   return (
     <Flex
@@ -95,10 +87,20 @@ function SidebarHeader() {
       gap="regular"
       height="element.large"
       paddingX="xlarge"
+      UNSAFE_className={css({
+        // let consumers use "currentColor" in SVG for their brand mark
+        color: tokenSchema.color.foreground.neutralEmphasis,
+
+        // ensure that the brand mark doesn't get squashed
+        '& :first-child': {
+          flexShrink: 0,
+        },
+      })}
     >
-      <ZapLogo />
-      <Text color="neutralEmphasis" weight="semibold">
-        {text}
+      {brandMark}
+
+      <Text color="inherit" weight="medium" truncate>
+        {brandName}
       </Text>
     </Flex>
   );

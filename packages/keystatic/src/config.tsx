@@ -1,6 +1,12 @@
+import { ColorScheme } from '@keystar/ui/types';
+import { ReactElement } from 'react';
+
 import { ComponentSchema, SlugFormField } from './form/api';
 import type { Locale } from './app/l10n/locales';
 import { RepoConfig } from './app/repo-config';
+
+// Common
+// ----------------------------------------------------------------------------
 
 export type DataFormat = 'json' | 'yaml';
 export type Format = DataFormat | { data?: DataFormat; contentField?: string };
@@ -31,12 +37,29 @@ export type Singleton<Schema extends Record<string, ComponentSchema>> = {
 type CommonConfig = {
   locale?: Locale;
   cloud?: { project: string };
+  ui?: UserInterface;
 };
 
 type CommonRemoteStorageConfig = {
   pathPrefix?: string;
   branchPrefix?: string;
 };
+
+// Interface
+// ----------------------------------------------------------------------------
+
+type BrandMark = (props: {
+  colorScheme: Exclude<ColorScheme, 'auto'>; // we resolve "auto" to "light" or "dark" on the client
+}) => ReactElement;
+type UserInterface = {
+  brand?: {
+    mark?: BrandMark;
+    name: string;
+  };
+};
+
+// Storage
+// ----------------------------------------------------------------------------
 
 type GitHubStorageConfig = {
   kind: 'github';
@@ -117,6 +140,10 @@ export type Config<
 } & ({} extends Collections ? {} : { collections: Collections }) &
   ({} extends Singletons ? {} : { singletons: Singletons }) &
   CommonConfig;
+
+// ============================================================================
+// Functions
+// ============================================================================
 
 export function config<
   Collections extends {
