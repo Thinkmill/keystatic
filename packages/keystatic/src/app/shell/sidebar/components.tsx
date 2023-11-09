@@ -49,6 +49,8 @@ import {
 import { useViewer } from '../viewer-data';
 import { useThemeContext } from '../theme';
 import { useImageLibraryURL } from '../../../component-blocks/cloud-image-preview';
+import { clearObjectCache } from '../../object-cache';
+import { clearDrafts } from '../../persistence';
 
 type MenuItem = {
   icon: ReactElement;
@@ -194,7 +196,8 @@ export function UserMenu(user: {
         <Menu
           items={menuItems}
           minWidth="scale.2400"
-          onAction={key => {
+          onAction={async key => {
+            await Promise.all([clearObjectCache(), clearDrafts()]);
             switch (key) {
               case 'logout':
                 switch (config.storage.kind) {
