@@ -94,6 +94,11 @@ navGroups:
           discriminant: page
           value: entry-layout
         isNew: false
+      - label: User interface
+        link:
+          discriminant: page
+          value: user-interface
+        isNew: false
   - groupName: Fields API
     items:
       - label: Array
