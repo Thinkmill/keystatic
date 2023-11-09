@@ -52,17 +52,19 @@ type BrandMark = (props: {
   colorScheme: Exclude<ColorScheme, 'auto'>; // we resolve "auto" to "light" or "dark" on the client
 }) => ReactElement;
 export const NAVIGATION_DIVIDER_KEY = '---';
-type UserInterface<
-  Collections,
-  Singletons,
-  K = keyof Collections | keyof Singletons | typeof NAVIGATION_DIVIDER_KEY,
-> = {
+type UserInterface<Collections, Singletons> = {
   brand?: {
     mark?: BrandMark;
     name: string;
   };
-  navigation?: K[] | { [section: string]: K[] };
+  navigation?: Navigation<
+    | (keyof Collections & string)
+    | (keyof Singletons & string)
+    | typeof NAVIGATION_DIVIDER_KEY
+  >;
 };
+
+type Navigation<K> = K[] | { [section: string]: K[] };
 
 // Storage
 // ----------------------------------------------------------------------------
