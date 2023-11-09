@@ -295,7 +295,7 @@ export default config({
     // For testing purposes only
     // ------------------------------
     pagesWithMarkdocField: collection({
-      label: 'Pages with new editor',
+      label: 'ProseMirror editor',
       slugField: 'title',
       format: { contentField: 'content' },
       path: 'src/content/pages/**',
