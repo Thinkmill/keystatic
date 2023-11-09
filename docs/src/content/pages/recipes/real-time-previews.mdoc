@@ -114,15 +114,54 @@ collections: {
 },
 ```
 
-This essentially prefixes the front-end route for a post entry with the `/preview/start` route we created earlier.
+This prefixes the front-end route for a post entry with the `/preview/start` route we created earlier.
 
 ---
 
-{% aside %}
-TODO:
+## Updating the Keystatic Reader
 
-- [ ] Create a reader with the `createGitHubReader` function — that will read directly from GitHub instead of from the file system.
-- [ ] Create a Renderer using the data returned from the `GitHubReader`
-- [ ] Update the usage of the reader from `await reader.${...}` to `await reader().${...}`
-- [ ] Update the `DocumentRenderer` — no slug needed, just the content
-{% /aside %}
+The `reader` you're currently using from the Keystatic Reader API needs to be updated. If draft mode is turned on, it should read from GitHub directly, using Keystatic's GitHub reader.
+
+Since there is a little bit of setup involved, it makes sense to create reusable _draft-mode-aware_ reader:
+
+```ts
+// src/utils/reader.ts
+import { createReader } from '@keystatic/core/reader';
+import { createGitHubReader } from '@keystatic/core/reader/github';
+import keystaticConfig from '../../keystatic.config';
+
+import { cache } from 'react';
+import { cookies, draftMode } from 'next/headers';
+
+export const reader = cache(() => {
+  let isDraftModeEnabled = false;
+  // draftMode throws in e.g. generateStaticParams
+  try {
+    isDraftModeEnabled = draftMode().isEnabled;
+  } catch {}
+
+  if (isDraftModeEnabled) {
+    const branch = cookies().get('ks-branch')?.value;
+
+    if (branch) {
+      return createGitHubReader(keystaticConfig, {
+        // Replace the below with your repo org an name
+        repo: 'REPO_ORG/REPO_NAME',
+        ref: branch,
+        token: process.env.PREVIEW_GITHUB_TOKEN,
+      });
+    }
+  }
+  // If draft mode is off, use the regular reader
+  return createReader(process.cwd(), keystaticConfig);
+});
+```
+
+## Updating existing uses of the reader
+
+The new `reader` is a function, so you'll need to update all your existing use cases to call the `reader()` function:
+
+```diff
+- const posts = await reader.collections.posts.all();
++ const posts = await reader().collections.posts.all();
+```
