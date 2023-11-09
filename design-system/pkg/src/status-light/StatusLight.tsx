@@ -10,9 +10,10 @@ import {
 
 import {
   BaseStyleProps,
-  useStyleProps,
-  tokenSchema,
+  classNames,
   css,
+  tokenSchema,
+  useStyleProps,
 } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
@@ -64,47 +65,50 @@ export const StatusLight: ForwardRefExoticComponent<
 
   return (
     <div
-      {...filterDOMProps(props)}
+      {...filterDOMProps(props, { labelable: true })}
       {...styleProps}
       ref={forwardedRef}
       data-tone={tone}
-      className={css({
-        alignItems: 'center',
-        color: tokenSchema.color.foreground.neutral,
-        display: 'flex',
-        gap: tokenSchema.size.space.regular,
-        height: tokenSchema.size.element.small,
+      className={classNames(
+        css({
+          alignItems: 'center',
+          color: tokenSchema.color.foreground.neutral,
+          display: 'flex',
+          gap: tokenSchema.size.space.regular,
+          height: tokenSchema.size.element.small,
 
-        // indicator
-        '&::before': {
-          content: '""',
-          backgroundColor: tokenSchema.color.foreground.neutralTertiary,
-          borderRadius: tokenSchema.size.radius.full,
-          height: tokenSchema.size.scale[100],
-          width: tokenSchema.size.scale[100],
-        },
+          // indicator
+          '&::before': {
+            content: '""',
+            backgroundColor: tokenSchema.color.foreground.neutralTertiary,
+            borderRadius: tokenSchema.size.radius.full,
+            height: tokenSchema.size.scale[100],
+            width: tokenSchema.size.scale[100],
+          },
 
-        // special case for neutral
-        '&[data-tone=neutral]': {
-          color: tokenSchema.color.foreground.neutralSecondary,
-        },
+          // special case for neutral
+          '&[data-tone=neutral]': {
+            color: tokenSchema.color.foreground.neutralSecondary,
+          },
 
-        '&[data-tone=accent]::before': {
-          backgroundColor: tokenSchema.color.background.accentEmphasis,
-        },
-        '&[data-tone=caution]::before': {
-          backgroundColor: tokenSchema.color.background.cautionEmphasis,
-        },
-        '&[data-tone=critical]::before': {
-          backgroundColor: tokenSchema.color.background.criticalEmphasis,
-        },
-        '&[data-tone=pending]::before': {
-          backgroundColor: tokenSchema.color.background.pendingEmphasis,
-        },
-        '&[data-tone=positive]::before': {
-          backgroundColor: tokenSchema.color.background.positiveEmphasis,
-        },
-      })}
+          '&[data-tone=accent]::before': {
+            backgroundColor: tokenSchema.color.background.accentEmphasis,
+          },
+          '&[data-tone=caution]::before': {
+            backgroundColor: tokenSchema.color.background.cautionEmphasis,
+          },
+          '&[data-tone=critical]::before': {
+            backgroundColor: tokenSchema.color.background.criticalEmphasis,
+          },
+          '&[data-tone=pending]::before': {
+            backgroundColor: tokenSchema.color.background.pendingEmphasis,
+          },
+          '&[data-tone=positive]::before': {
+            backgroundColor: tokenSchema.color.background.positiveEmphasis,
+          },
+        }),
+        styleProps.className
+      )}
     >
       {isReactText(children) ? (
         <Text color="inherit">{children}</Text>
