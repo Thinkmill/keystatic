@@ -1,18 +1,19 @@
 ---
 title: Real-time previews with Next.js' draft mode
 summary: >-
-  This recipe shows you how to prevent access to (and indexing of) `/keystatic`
-  routes in production if you're using the Astro framework.
+  This recipe shows you how to create immediate previews of your Keystatic content with Next.js' draft mode feature.
 ---
-One of the downsides of building static sites is that you typically need to wait for deploy previews before you can see your content changes.
+One of the downsides of building static sites with content files is the delay occuring between saving changes and seeing them on the website. 
 
-This recipe shows you how to create immediate previews of your GitHub content with Keystatic and Next.js' [draft mode](https://nextjs.org/docs/app/building-your-application/configuring/draft-mode) feature.
+You typically need to open a PR and wait for deploy previews.
+
+This recipe shows you how to create *immediate* previews of your Keystatic content with Next.js' [draft mode](https://nextjs.org/docs/app/building-your-application/configuring/draft-mode) feature.
 
 {% aside icon="☝️" %}
 This recipe assumes you've got an existing Keystatic site, that:
 
-1. it uses the [Reader API](/docs/reader-api) to retrive content
-1. it is running in [github mode](/docs/github-mode) or [cloud mode](/docs/cloud)
+1. uses the [Reader API](/docs/reader-api) to retrive content
+1. is connected to a GitHub repo, running in [github mode](/docs/github-mode) or [cloud mode](/docs/cloud)
 {% /aside %}
 
 ---
