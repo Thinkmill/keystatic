@@ -1,19 +1,18 @@
 ---
-title: "Real-time previews with Next.js' draft mode"
+title: Real-time previews with Next.js' draft mode
 summary: >-
   This recipe shows you how to prevent access to (and indexing of) `/keystatic`
   routes in production if you're using the Astro framework.
 ---
-
 One of the downsides of building static sites is that you typically need to wait for deploy previews before you can see your content changes.
 
 This recipe shows you how to create immediate previews of your GitHub content with Keystatic and Next.js' [draft mode](https://nextjs.org/docs/app/building-your-application/configuring/draft-mode) feature.
 
 {% aside icon="☝️" %}
-This recipe assumes you've got an existing Keystatic site, that: 
+This recipe assumes you've got an existing Keystatic site, that:
 
 1. it uses the [Reader API](/docs/reader-api) to retrive content
-2. it is running in [github mode](/docs/github-mode) or [cloud mode](/docs/cloud)
+1. it is running in [github mode](/docs/github-mode) or [cloud mode](/docs/cloud)
 {% /aside %}
 
 ---
@@ -98,7 +97,7 @@ export default async function RootLayout() {
 
 ## Adding a Preview URL key to collections or singletons
 
-The draft mode opt-in will happen from the Keystatic Admin UI. 
+The draft mode opt-in will happen from the Keystatic Admin UI.
 
 In the Keystatic config, collections and singletons can have a `previewUrl` key. This will generate an Admin UI link to the content preview, in draft mode:
 
@@ -122,7 +121,11 @@ This prefixes the front-end route for a post entry with the `/preview/start` rou
 
 The `reader` you're currently using from the Keystatic Reader API needs to be updated. If draft mode is turned on, it should read from GitHub directly, using Keystatic's GitHub reader.
 
-Since there is a little bit of setup involved, it makes sense to create reusable _draft-mode-aware_ reader:
+Since there is a little bit of setup involved, it makes sense to create reusable *draft-mode-aware* reader.
+
+{% aside icon="⚠️" %}
+Make sure you replace the `repo: 'REPO_ORG/REPO_NAME'` line in the code snippet below with your own repo org and name!
+{% /aside %}
 
 ```ts
 // src/utils/reader.ts
@@ -165,3 +168,19 @@ The new `reader` is a function, so you'll need to update all your existing use c
 - const posts = await reader.collections.posts.all();
 + const posts = await reader().collections.posts.all();
 ```
+
+---
+
+## Testing the preview
+
+In the Keystatic Admin UI, create a new post and save it in a new branch.
+
+Next to the `Save` button, you will find a preview icon.
+
+{% cloud-image
+   src="https://thinkmill-labs.keystatic.net/keystatic-site/images/q1xcdf0hg7ph/preview-button"
+   alt="Keystatic Admin UI's preview button"
+   height=368
+   width=680 /%}
+
+Click on it and you should see the post you just created!
