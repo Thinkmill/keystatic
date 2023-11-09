@@ -16,10 +16,113 @@ This recipe assumes you've got an existing Keystatic site, that:
 2. it is running in [github mode](/docs/github-mode) or [cloud mode](/docs/cloud)
 {% /aside %}
 
+---
+
+## Creating "start" and "end" preview routes
+
+Create an `app/preview/start/route.tsx` file that will enable draft mode when accessed:
+
+```tsx
+import { redirect } from 'next/navigation';
+import { draftMode, cookies } from 'next/headers';
+
+export const runtime = 'edge';
+
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const params = url.searchParams;
+  const branch = params.get('branch');
+  const to = params.get('to');
+  if (!branch || !to) {
+    return new Response('Missing branch or to params', { status: 400 });
+  }
+  draftMode().enable();
+  cookies().set('ks-branch', branch);
+  const toUrl = new URL(to, url.origin);
+  toUrl.protocol = url.protocol;
+  toUrl.host = url.host;
+  redirect(toUrl.toString());
+}
+```
+
+Next, create an `app/preview/end/route.tsx` file used to disable draft mode:
+
+```tsx
+import { cookies, draftMode } from 'next/headers';
+
+export function POST(req: Request) {
+  if (req.headers.get('origin') !== new URL(req.url).origin) {
+    return new Response('Invalid origin', { status: 400 });
+  }
+  const referrer = req.headers.get('Referer');
+  if (!referrer) {
+    return new Response('Missing Referer', { status: 400 });
+  }
+  draftMode().disable();
+  cookies().delete('ks-branch');
+  return Response.redirect(referrer, 303);
+}
+```
+
+## Adding a "stop draft mode" button in the front-end
+
+Add the following to your main layout component to allow editors to opt out of draft mode:
+
+```diff
++ import { cookies, draftMode } from 'next/headers';
+
+export default async function RootLayout() {
+
++  const { isEnabled } = draftMode();
+
+  return (
+    <div>
+      {children}
+
++      {isEnabled && (
++        <div>
++          Draft mode ({cookies().get('ks-branch')?.value}){' '}
++          <form method="POST" action="/preview/end">
++            <button>End preview</button>
++          </form>
++        </div>
++      )}
+
+    </div>
+  );
+}
+
+```
+
+---
+
+## Adding a Preview URL key to collections or singletons
+
+The draft mode opt-in will happen from the Keystatic Admin UI. 
+
+In the Keystatic config, collections and singletons can have a `previewUrl` key. This will generate an Admin UI link to the content preview, in draft mode:
+
+```diff
+collections: {
+  posts: collection({
+    label: 'Posts',
+    slugField: 'title',
+    path: `content/posts/*`,
++   previewUrl: `/preview/start?branch={branch}&to=/posts/{slug}`,
+    schema: { //... }
+  }),
+},
+```
+
+This essentially prefixes the front-end route for a post entry with the `/preview/start` route we created earlier.
+
+---
+
+{% aside %}
 TODO:
 
-- [ ] Create `preview/start` and `preview/end` routes in Next.js — start will enable draftMode, end will disabled it.
 - [ ] Create a reader with the `createGitHubReader` function — that will read directly from GitHub instead of from the file system.
 - [ ] Create a Renderer using the data returned from the `GitHubReader`
 - [ ] Update the usage of the reader from `await reader.${...}` to `await reader().${...}`
 - [ ] Update the `DocumentRenderer` — no slug needed, just the content
+{% /aside %}
