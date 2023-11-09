@@ -1,5 +1,16 @@
 # @keystatic/core
 
+## 0.2.1
+
+### Patch Changes
+
+- 9854c6b1: Support `ui.navigation` config.
+- 0229959f: Replace hard-coded class names with `ClassList` instances.
+- 454f25c9: New config `ui` supports branding options.
+- Updated dependencies [9854c6b1]
+- Updated dependencies [0229959f]
+  - @keystar/ui@0.4.2
+
 ## 0.2.0
 
 ### Minor Changes

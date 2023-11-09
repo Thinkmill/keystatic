@@ -1,5 +1,14 @@
 # @voussoir/docs
 
+## 0.0.22
+
+### Patch Changes
+
+- 0229959f: Replace hard-coded class names with `ClassList` instances.
+- Updated dependencies [9854c6b1]
+- Updated dependencies [0229959f]
+  - @keystar/ui@0.4.2
+
 ## 0.0.21
 
 ### Patch Changes
