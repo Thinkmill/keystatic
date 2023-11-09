@@ -16,72 +16,10 @@ This recipe assumes you've got an existing Keystatic site, that:
 2. it is running in [github mode](/docs/github-mode) or [cloud mode](/docs/cloud)
 {% /aside %}
 
-When using the `local` strategy, you may want to disable access to the `/keystatic` routes in production.
+TODO:
 
-Here's how you can prevent access to (and indexing of) those routes if you're using the Astro framework.
-
-## Adding redirects
-
-You can redirect visits to the `/keystatic` route in production with `Astro.redirect`:
-
-```diff
----
-// src/pages/keystatic/[...params].astro
-import { Keystatic } from '../../../keystatic.page'
-
-export const prerender = false
-
-+ if (import.meta.env.MODE === 'production') {
-+   return Astro.redirect('/')
-+ }
----
-
-<Keystatic client:only />
-
-```
-
-You will need to do the same for the `api/keystatic` routes:
-
-```diff
-// src/pages/api/keystatic/[...params].ts
-import { makeHandler } from '@keystatic/astro/api'
-import keystaticConfig from '../../../../keystatic.config'
-+ import { APIContext } from 'astro'
-
-- export const all = makeHandler({
--  config: keystaticConfig,
-- })
-
-+ export const all = ({ ...params }: APIContext) => {
-+  if (import.meta.env.MODE === 'production') {
-+    return params.redirect('/', 307)
-+  }
-
-+  return makeHandler({
-+    config: keystaticConfig,
-+  })(params)
-+}
-
-
-export const prerender = false
-
-```
-
-## Excluding routes from sitemap
-
-If you're using `@astrojs/sitemap`, you can exclude those routes as well:
-
-```diff
-// astro.config.mjs
-import { defineConfig } from 'astro/config'
-import sitemap from '@astrojs/sitemap';
-
-export default defineConfig({
-  integrations: [
-+     sitemap({
-+       filter: (page) => !page.includes("keystatic"),
-+     });
-  ]
-})
-```
-
+- [ ] Create `preview/start` and `preview/end` routes in Next.js — start will enable draftMode, end will disabled it.
+- [ ] Create a reader with the `createGitHubReader` function — that will read directly from GitHub instead of from the file system.
+- [ ] Create a Renderer using the data returned from the `GitHubReader`
+- [ ] Update the usage of the reader from `await reader.${...}` to `await reader().${...}`
+- [ ] Update the `DocumentRenderer` — no slug needed, just the content
