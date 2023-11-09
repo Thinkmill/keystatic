@@ -1,0 +1,100 @@
+---
+title: User interface
+summary: >-
+  Configure parts of the Admin UI to improve the experience of your content editors.
+---
+Configure parts of the Admin UI to improve the experience of your content editors. Making the interface familiar to your editors will help them get started quickly and feel at home.
+
+## Example
+
+Out-of-the box Keystatic will default the brand name depending on the storage mode used. You can override this by providing a `brand` object in the `ui` key of your config.
+
+```jsx
+// keystatic.config.ts
+import { config } from '@keystatic/core'
+
+export default config({
+  ...
+  ui: {
+    brand: { name: 'Your brand' },
+  },
+})
+```
+
+## Brand
+
+In the example above we've set the brand `name`, which will be used in the Admin UI as the title of the app. You can also set the brand `mark` using a React component to render your logo or anything you like.
+
+We recommend a maximum height of `24px` so the element fits well with the rest of the UI.
+
+{% aside icon="🎨" %}
+The component has a single prop `colorScheme` which is either `light` or `dark` depending on the user's preference. You can use this to render a different asset or apply a different style.
+{% /aside %}
+
+```tsx
+// keystatic.config.ts
+import { config } from '@keystatic/core'
+
+export default config({
+  ...
+  ui: {
+    brand: {
+      name: 'Your brand',
+      mark: ({ colorScheme }) => {
+        let path = colorScheme === 'dark'
+          ? '//your-brand.com/path/to/dark-logo.png'
+          : '//your-brand.com/path/to/light-logo.png';
+        
+        return <img src={path} height={24} />
+      },
+    },
+  },
+})
+```
+
+When using inline SVGs you can employ `"currentColor"` for `fill` and `stroke` values to inherit the foreground color. This is what we do for the Keystatic instance of this docs website.
+
+## Navigation
+
+Out-of-the box Keystatic will separate navigation into two groups: `Collections` and `Singletons`. You can override this by providing a `navigation` object in the `ui` key of your config, organising your content into a simple list or any number of groups.
+
+```jsx
+// keystatic.config.ts
+import { config } from '@keystatic/core'
+
+export default config({
+  ...
+  ui: {
+    navigation: {
+      'Content': ['pages', 'posts'],
+      'Settings': ['site', 'seo'],
+    },
+  },
+})
+```
+
+Use the special `"---"` key to insert a separator between items.
+
+```jsx
+// keystatic.config.ts
+import { config } from '@keystatic/core'
+
+export default config({
+  ...
+  ui: {
+    navigation: [
+      'pages',
+      'posts',
+      '---',
+      'site',
+      'seo',
+    ],
+  },
+})
+```
+
+The "Dashboard" item will always be first in the navigation list.
+
+## Type signature
+
+Find the latest version of the `UserInterface` type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.UserInterface](https://docsmill.dev/npm/@keystatic/core@latest#/.UserInterface)
