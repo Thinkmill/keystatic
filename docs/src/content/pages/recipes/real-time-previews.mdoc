@@ -1,0 +1,87 @@
+---
+title: "Real-time previews with Next.js' draft mode"
+summary: >-
+  This recipe shows you how to prevent access to (and indexing of) `/keystatic`
+  routes in production if you're using the Astro framework.
+---
+
+One of the downsides of building static sites is that you typically need to wait for deploy previews before you can see your content changes.
+
+This recipe shows you how to create immediate previews of your GitHub content with Keystatic and Next.js' [draft mode](https://nextjs.org/docs/app/building-your-application/configuring/draft-mode) feature.
+
+{% aside icon="☝️" %}
+This recipe assumes you've got an existing Keystatic site, that: 
+
+1. it uses the [Reader API](/docs/reader-api) to retrive content
+2. it is running in [github mode](/docs/github-mode) or [cloud mode](/docs/cloud)
+{% /aside %}
+
+When using the `local` strategy, you may want to disable access to the `/keystatic` routes in production.
+
+Here's how you can prevent access to (and indexing of) those routes if you're using the Astro framework.
+
+## Adding redirects
+
+You can redirect visits to the `/keystatic` route in production with `Astro.redirect`:
+
+```diff
+---
+// src/pages/keystatic/[...params].astro
+import { Keystatic } from '../../../keystatic.page'
+
+export const prerender = false
+
++ if (import.meta.env.MODE === 'production') {
++   return Astro.redirect('/')
++ }
+---
+
+<Keystatic client:only />
+
+```
+
+You will need to do the same for the `api/keystatic` routes:
+
+```diff
+// src/pages/api/keystatic/[...params].ts
+import { makeHandler } from '@keystatic/astro/api'
+import keystaticConfig from '../../../../keystatic.config'
++ import { APIContext } from 'astro'
+
+- export const all = makeHandler({
+-  config: keystaticConfig,
+- })
+
++ export const all = ({ ...params }: APIContext) => {
++  if (import.meta.env.MODE === 'production') {
++    return params.redirect('/', 307)
++  }
+
++  return makeHandler({
++    config: keystaticConfig,
++  })(params)
++}
+
+
+export const prerender = false
+
+```
+
+## Excluding routes from sitemap
+
+If you're using `@astrojs/sitemap`, you can exclude those routes as well:
+
+```diff
+// astro.config.mjs
+import { defineConfig } from 'astro/config'
+import sitemap from '@astrojs/sitemap';
+
+export default defineConfig({
+  integrations: [
++     sitemap({
++       filter: (page) => !page.includes("keystatic"),
++     });
+  ]
+})
+```
+
