@@ -34,10 +34,10 @@ export type Singleton<Schema extends Record<string, ComponentSchema>> = {
   schema: Schema;
 };
 
-type CommonConfig = {
+type CommonConfig<Collections, Singletons> = {
   locale?: Locale;
   cloud?: { project: string };
-  ui?: UserInterface;
+  ui?: UserInterface<Collections, Singletons>;
 };
 
 type CommonRemoteStorageConfig = {
@@ -51,12 +51,20 @@ type CommonRemoteStorageConfig = {
 type BrandMark = (props: {
   colorScheme: Exclude<ColorScheme, 'auto'>; // we resolve "auto" to "light" or "dark" on the client
 }) => ReactElement;
-type UserInterface = {
+export const NAVIGATION_DIVIDER_KEY = '---';
+type UserInterface<Collections, Singletons> = {
   brand?: {
     mark?: BrandMark;
     name: string;
   };
+  navigation?: Navigation<
+    | (keyof Collections & string)
+    | (keyof Singletons & string)
+    | typeof NAVIGATION_DIVIDER_KEY
+  >;
 };
+
+type Navigation<K> = K[] | { [section: string]: K[] };
 
 // Storage
 // ----------------------------------------------------------------------------
@@ -81,7 +89,7 @@ export type GitHubConfig<
   storage: GitHubStorageConfig;
   collections?: Collections;
   singletons?: Singletons;
-} & CommonConfig;
+} & CommonConfig<Collections, Singletons>;
 
 type LocalStorageConfig = { kind: 'local' };
 
@@ -100,7 +108,7 @@ export type LocalConfig<
   storage: LocalStorageConfig;
   collections?: Collections;
   singletons?: Singletons;
-} & CommonConfig;
+} & CommonConfig<Collections, Singletons>;
 
 type CloudStorageConfig = { kind: 'cloud' } & CommonRemoteStorageConfig;
 
@@ -120,7 +128,7 @@ export type CloudConfig<
   cloud: { project: string };
   collections?: Collections;
   singletons?: Singletons;
-} & CommonConfig;
+} & CommonConfig<Collections, Singletons>;
 
 export type Config<
   Collections extends {
@@ -139,7 +147,7 @@ export type Config<
   singletons?: Singletons;
 } & ({} extends Collections ? {} : { collections: Collections }) &
   ({} extends Singletons ? {} : { singletons: Singletons }) &
-  CommonConfig;
+  CommonConfig<Collections, Singletons>;
 
 // ============================================================================
 // Functions
