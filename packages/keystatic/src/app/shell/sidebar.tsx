@@ -5,12 +5,19 @@ import {
   OverlayTriggerState,
   useOverlayTriggerState,
 } from '@react-stately/overlays';
-import { createContext, ReactNode, useContext, useRef } from 'react';
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useRef,
+} from 'react';
 
 import { Badge } from '@keystar/ui/badge';
-import { Box, Flex } from '@keystar/ui/layout';
-import { Blanket } from '@keystar/ui/overlays';
+import { Divider, Flex } from '@keystar/ui/layout';
 import { NavList, NavItem, NavGroup } from '@keystar/ui/nav-list';
+import { Blanket } from '@keystar/ui/overlays';
+import { StatusLight } from '@keystar/ui/status-light';
 import {
   breakpoints,
   css,
@@ -23,16 +30,16 @@ import { usePrevious } from '@keystar/ui/utils';
 
 import { typedKeys } from 'emery';
 
-import { Config } from '../../config';
+import { Config, NAVIGATION_DIVIDER_KEY } from '../../config';
 
 import l10nMessages from '../l10n/index.json';
 import { useRouter } from '../router';
 import { pluralize } from '../utils';
 
-import { useChanged } from './data';
-import { SIDE_PANEL_ID } from './constants';
 import { useBrand } from './common';
-import { useConfig } from './context';
+import { SIDE_PANEL_ID } from './constants';
+import { useAppState, useConfig } from './context';
+import { useChanged } from './data';
 
 const SidebarContext = createContext<OverlayTriggerState | null>(null);
 export function useSidebar() {
@@ -181,22 +188,9 @@ export function SidebarDialog(props: { hrefBase: string; config: Config }) {
 }
 
 export function SidebarNav(props: { hrefBase: string; config: Config }) {
-  let config = useConfig();
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
-  const router = useRouter();
-  const isCurrent = (href: string, { exact = false } = {}) => {
-    if (exact) {
-      return href === router.href ? 'page' : undefined;
-    }
-    return href === router.href || router.href.startsWith(`${href}/`)
-      ? 'page'
-      : undefined;
-  };
-
-  const collectionsArray = Object.entries(config.collections || {});
-  const singletonsArray = Object.entries(config.singletons || {});
-
-  const changedData = useChanged();
+  const navItems = useNavItems();
+  const isCurrent = useIsCurrent();
 
   return (
     <div
@@ -216,66 +210,161 @@ export function SidebarNav(props: { hrefBase: string; config: Config }) {
           {stringFormatter.format('dashboard')}
         </NavItem>
 
-        {collectionsArray.length !== 0 && (
-          <NavGroup title={stringFormatter.format('collections')}>
-            {collectionsArray.map(([key, collection]) => {
-              const href = `${props.hrefBase}/collection/${encodeURIComponent(
-                key
-              )}`;
-              const changes = changedData.collections.get(key);
-              const allChangesCount = changes
-                ? changes.changed.size +
-                  changes.added.size +
-                  changes.removed.size
-                : 0;
-              return (
-                <NavItem key={key} href={href} aria-current={isCurrent(href)}>
-                  <Text truncate title={collection.label}>
-                    {collection.label}
-                  </Text>
-                  {!!allChangesCount && (
-                    <Badge tone="accent" marginStart="auto">
-                      <Text>{allChangesCount}</Text>
-                      <Text visuallyHidden>
-                        {pluralize(allChangesCount, {
-                          singular: 'change',
-                          plural: 'changes',
-                          inclusive: false,
-                        })}
-                      </Text>
-                    </Badge>
-                  )}
-                </NavItem>
-              );
-            })}
-          </NavGroup>
-        )}
-        {singletonsArray.length !== 0 && (
-          <NavGroup title={stringFormatter.format('singletons')}>
-            {singletonsArray.map(([key, collection]) => {
-              const href = `${props.hrefBase}/singleton/${key}`;
-              return (
-                <NavItem key={key} href={href} aria-current={isCurrent(href)}>
-                  <Text truncate title={collection.label}>
-                    {collection.label}
-                  </Text>
-                  {changedData.singletons.has(key) && (
-                    <Box
-                      backgroundColor="accentEmphasis"
-                      height="scale.75"
-                      width="scale.75"
-                      borderRadius="full"
-                      marginStart="auto"
-                    >
-                      <Text visuallyHidden>Changed</Text>
-                    </Box>
-                  )}
-                </NavItem>
-              );
-            })}
-          </NavGroup>
-        )}
+        {navItems.map(item => renderItemOrGroup(item, isCurrent))}
       </NavList>
     </div>
   );
+}
+
+// Utils
+// ----------------------------------------------------------------------------
+
+function useIsCurrent() {
+  const router = useRouter();
+  return useCallback(
+    (href: string, { exact = false } = {}) => {
+      if (exact) {
+        return href === router.href ? 'page' : undefined;
+      }
+      return href === router.href || router.href.startsWith(`${href}/`)
+        ? 'page'
+        : undefined;
+    },
+    [router.href]
+  );
+}
+
+// Renderers
+// ----------------------------------------------------------------------------
+
+function renderItemOrGroup(
+  itemOrGroup: ItemOrGroup,
+  isCurrent: ReturnType<typeof useIsCurrent>
+) {
+  if ('isDivider' in itemOrGroup) {
+    return <Divider />;
+  }
+
+  if ('children' in itemOrGroup) {
+    return (
+      <NavGroup title={itemOrGroup.title}>
+        {itemOrGroup.children.map(child => renderItemOrGroup(child, isCurrent))}
+      </NavGroup>
+    );
+  }
+
+  let changeElement = (() => {
+    if (!itemOrGroup.changed) {
+      return null;
+    }
+
+    return typeof itemOrGroup.changed === 'number' ? (
+      <Badge tone="accent" marginStart="auto">
+        <Text>{itemOrGroup.changed}</Text>
+        <Text visuallyHidden>
+          {pluralize(itemOrGroup.changed, {
+            singular: 'change',
+            plural: 'changes',
+            inclusive: false,
+          })}
+        </Text>
+      </Badge>
+    ) : (
+      <StatusLight tone="accent" marginStart="auto" aria-label="Changed" />
+    );
+  })();
+
+  return (
+    <NavItem
+      key={itemOrGroup.key}
+      href={itemOrGroup.href}
+      aria-current={isCurrent(itemOrGroup.href)}
+    >
+      <Text truncate title={itemOrGroup.label}>
+        {itemOrGroup.label}
+      </Text>
+      {changeElement}
+    </NavItem>
+  );
+}
+
+// Data transformation
+// ----------------------------------------------------------------------------
+
+type ItemData = {
+  key: string;
+  href: string;
+  label: string;
+  changed: number | boolean;
+};
+type ItemDivider = { isDivider: true };
+type Item = ItemData | ItemDivider;
+type ItemOrGroup = Item | { title: string; children: Item[] };
+
+function useNavItems() {
+  let { basePath } = useAppState();
+  let config = useConfig();
+  let stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  let changeMap = useChanged();
+
+  const collectionKeys = Object.keys(config.collections || {});
+  const singletonKeys = Object.keys(config.singletons || {});
+  const items = config.ui?.navigation || {
+    ...(!!collectionKeys.length && {
+      [stringFormatter.format('collections')]: collectionKeys,
+    }),
+    ...(!!singletonKeys.length && {
+      [stringFormatter.format('singletons')]: singletonKeys,
+    }),
+  };
+  const options = { basePath, changeMap, config };
+
+  if (Array.isArray(items)) {
+    return items.map(key => populateItemData(key, options));
+  }
+
+  return Object.entries(items).map(([section, keys]) => ({
+    title: section,
+    children: keys.map(key => populateItemData(key, options)),
+  }));
+}
+
+function populateItemData(
+  key: string,
+  options: {
+    basePath: string;
+    changeMap: ReturnType<typeof useChanged>;
+    config: Config;
+  }
+): Item {
+  let { basePath, changeMap, config } = options;
+
+  // divider
+  if (key === NAVIGATION_DIVIDER_KEY) {
+    return { isDivider: true };
+  }
+
+  // collection
+  if (config.collections && key in config.collections) {
+    const href = `${basePath}/collection/${encodeURIComponent(key)}`;
+    const changes = changeMap.collections.get(key);
+    const changed = changes
+      ? changes.changed.size + changes.added.size + changes.removed.size
+      : 0;
+
+    const label = config.collections[key].label;
+
+    return { key, href, label, changed };
+  }
+
+  // singleton
+  if (config.singletons && key in config.singletons) {
+    const href = `${basePath}/singleton/${encodeURIComponent(key)}`;
+    const changed = changeMap.singletons.has(key);
+    const label = config.singletons[key].label;
+
+    return { key, href, label, changed };
+  }
+
+  throw new Error(`Unknown navigation key: "${key}".`);
 }
