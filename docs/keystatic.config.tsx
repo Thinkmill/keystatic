@@ -84,12 +84,52 @@ export default config({
   cloud: {
     project: 'thinkmill-labs/keystatic-site',
   },
+  ui: {
+    brand: {
+      mark: () => {
+        let id = 'brand-mark-gradient';
+        let size = 24;
+        return (
+          <svg
+            width={size}
+            height={size}
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M18 8L14 24L12 32L30 14L18 8Z" fill="currentColor" />
+            <path d="M2 18L20 0L18 8L2 18Z" fill="currentColor" />
+            <path d="M18 8L2 18L14 24L18 8Z" fill={`url(#${id})`} />
+            <defs>
+              <linearGradient
+                id={id}
+                x1="2"
+                y1="18"
+                x2="20"
+                y2="14"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stop-color="currentColor" stop-opacity="0.2" />
+                <stop offset="1" stop-color="currentColor" />
+              </linearGradient>
+            </defs>
+          </svg>
+        );
+      },
+      name: 'Keystatic Docs',
+    },
+    navigation: {
+      Pages: ['pages', 'blog', 'projects'],
+      Config: ['authors', 'navigation'],
+      Experimental: ['pagesWithMarkdocField'],
+    },
+  },
   collections: {
     // ------------------------------
     // Docs pages
     // ------------------------------
     pages: collection({
-      label: 'Docs pages',
+      label: 'Documentation',
       slugField: 'title',
       entryLayout: 'content',
       format: { contentField: 'content' },
@@ -117,7 +157,7 @@ export default config({
     // Blog posts
     // ------------------------------
     blog: collection({
-      label: 'Blog posts',
+      label: 'Blog',
       slugField: 'title',
       path: 'src/content/blog/**',
       entryLayout: 'content',
@@ -207,7 +247,7 @@ export default config({
     // Projects
     // ------------------------------
     projects: collection({
-      label: 'Projects (Showcase)',
+      label: 'Showcase',
       slugField: 'title',
       path: 'src/content/projects/*',
       format: { contentField: 'content' },
