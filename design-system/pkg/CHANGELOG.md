@@ -1,5 +1,12 @@
 # @keystar/ui
 
+## 0.4.2
+
+### Patch Changes
+
+- 9854c6b1: Fix for `StatusLight` passing attributes through to DOM element.
+- 0229959f: Replace hard-coded class names with `ClassList` instances.
+
 ## 0.4.1
 
 ### Patch Changes
