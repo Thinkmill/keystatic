@@ -236,18 +236,18 @@ function useIsCurrent() {
 
 // Renderers
 // ----------------------------------------------------------------------------
-
+let dividerCount = 0;
 function renderItemOrGroup(
   itemOrGroup: ItemOrGroup,
   isCurrent: ReturnType<typeof useIsCurrent>
 ) {
   if ('isDivider' in itemOrGroup) {
-    return <Divider />;
+    return <Divider key={dividerCount++} />;
   }
 
   if ('children' in itemOrGroup) {
     return (
-      <NavGroup title={itemOrGroup.title}>
+      <NavGroup key={itemOrGroup.title} title={itemOrGroup.title}>
         {itemOrGroup.children.map(child => renderItemOrGroup(child, isCurrent))}
       </NavGroup>
     );

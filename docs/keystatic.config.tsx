@@ -109,8 +109,8 @@ export default config({
                 y2="14"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="currentColor" stop-opacity="0.2" />
-                <stop offset="1" stop-color="currentColor" />
+                <stop stopColor="currentColor" stopOpacity="0.2" />
+                <stop offset="1" stopColor="currentColor" />
               </linearGradient>
             </defs>
           </svg>
