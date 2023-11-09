@@ -80,6 +80,10 @@ navGroups:
         link:
           discriminant: page
           value: entry-layout
+      - label: User interface
+        link:
+          discriminant: page
+          value: user-interface
   - groupName: Fields API
     items:
       - label: Array
