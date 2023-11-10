@@ -86,36 +86,6 @@ export default config({
   },
   ui: {
     brand: {
-      mark: () => {
-        let id = 'brand-mark-gradient';
-        let size = 24;
-        return (
-          <svg
-            width={size}
-            height={size}
-            viewBox="0 0 32 32"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M18 8L14 24L12 32L30 14L18 8Z" fill="currentColor" />
-            <path d="M2 18L20 0L18 8L2 18Z" fill="currentColor" />
-            <path d="M18 8L2 18L14 24L18 8Z" fill={`url(#${id})`} />
-            <defs>
-              <linearGradient
-                id={id}
-                x1="2"
-                y1="18"
-                x2="20"
-                y2="14"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="currentColor" stopOpacity="0.2" />
-                <stop offset="1" stopColor="currentColor" />
-              </linearGradient>
-            </defs>
-          </svg>
-        );
-      },
       name: 'Keystatic Docs',
     },
     navigation: {
