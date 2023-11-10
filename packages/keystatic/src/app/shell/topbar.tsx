@@ -53,6 +53,7 @@ import {
 import { useViewer } from './viewer-data';
 import { useThemeContext } from './theme';
 import { useImageLibraryURL } from '../../component-blocks/cloud-image-preview';
+import { BatchCommits } from './BatchCommits';
 
 type GitItem = {
   icon: ReactElement;
@@ -90,6 +91,7 @@ function CloudHeader() {
     <HeaderOuter>
       <BrandButton />
       <BranchPicker />
+      <BatchCommits />
       <GitMenu />
       <Box flex="1" />
       <ImageLibraryButton />
@@ -134,6 +136,7 @@ function GithubHeader() {
       <BrandButton />
       <BranchPicker />
       <GitMenu />
+      <BatchCommits />
       <Box flex="1" />
       <ThemeMenu />
       <UserMenu
