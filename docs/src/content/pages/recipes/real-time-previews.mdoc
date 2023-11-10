@@ -26,8 +26,6 @@ Create an `app/preview/start/route.tsx` file that will enable draft mode when ac
 import { redirect } from 'next/navigation';
 import { draftMode, cookies } from 'next/headers';
 
-export const runtime = 'edge';
-
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const params = url.searchParams;
