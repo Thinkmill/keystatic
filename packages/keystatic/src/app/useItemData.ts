@@ -26,6 +26,21 @@ import {
 import { toFormattedFormDataError } from '../form/error-formatting';
 import { serializeRepoConfig } from './repo-config';
 
+class TrackedMap<K, V> extends Map<K, V> {
+  #onGet: (key: K) => void;
+  constructor(
+    onGet: (key: K) => void,
+    entries?: readonly (readonly [K, V])[] | null
+  ) {
+    super(entries);
+    this.#onGet = onGet;
+  }
+  get(key: K) {
+    this.#onGet(key);
+    return super.get(key);
+  }
+}
+
 export function parseEntry(
   args: UseItemDataArgs,
   files: Map<string, Uint8Array>
@@ -43,8 +58,14 @@ export function parseEntry(
       extraFakeFile.contents
     );
   }
+  const usedFiles = new Set([dataFilepath]);
   const rootSchema = fields.object(args.schema);
   let initialState;
+
+  const getFile = (filepath: string) => {
+    usedFiles.add(filepath);
+    return filesWithFakeFile.get(filepath);
+  };
   try {
     initialState = parseProps(
       rootSchema,
@@ -65,7 +86,7 @@ export function parseEntry(
             slug: args.slug?.slug,
           });
           const asset = filepath
-            ? filesWithFakeFile.get(
+            ? getFile(
                 `${
                   schema.directory
                     ? `${schema.directory}${
@@ -85,10 +106,15 @@ export function parseEntry(
             '/'
           )}`;
           const mainFilepath = rootPath + schema.contentExtension;
-          const mainContents = filesWithFakeFile.get(mainFilepath);
+          const mainContents = getFile(mainFilepath);
 
-          const otherFiles = new Map<string, Uint8Array>();
-          const otherDirectories = new Map<string, Map<string, Uint8Array>>();
+          const otherFiles = new TrackedMap<string, Uint8Array>(key => {
+            usedFiles.add(`${rootPath}/${key}`);
+          });
+          const otherDirectories = new Map<
+            string,
+            TrackedMap<string, Uint8Array>
+          >();
 
           for (const [filename] of filesWithFakeFile) {
             if (filename.startsWith(rootPath + '/')) {
@@ -97,7 +123,9 @@ export function parseEntry(
             }
           }
           for (const dir of schema.directories ?? []) {
-            const dirFiles = new Map<string, Uint8Array>();
+            const dirFiles = new TrackedMap<string, Uint8Array>(relativePath =>
+              usedFiles.add(start + relativePath)
+            );
             const start = `${dir}${
               args.slug?.slug === undefined ? '' : `/${args.slug?.slug}`
             }/`;
@@ -128,9 +156,11 @@ export function parseEntry(
     throw toFormattedFormDataError(err);
   }
 
-  const initialFiles = [...files.keys()];
+  if (extraFakeFile) {
+    usedFiles.delete(`${args.dirpath}/${extraFakeFile.path}`);
+  }
 
-  return { initialState, initialFiles };
+  return { initialState, initialFiles: [...usedFiles] };
 }
 
 type UseItemDataArgs = {
