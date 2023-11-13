@@ -62,6 +62,7 @@ type UserInterface<Collections, Singletons> = {
     | (keyof Singletons & string)
     | typeof NAVIGATION_DIVIDER_KEY
   >;
+  hideBranchesManagement?: boolean
 };
 
 type Navigation<K> = K[] | { [section: string]: K[] };
