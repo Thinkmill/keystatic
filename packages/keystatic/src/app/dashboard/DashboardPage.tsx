@@ -7,13 +7,14 @@ import { tokenSchema } from '@keystar/ui/style';
 import { Heading } from '@keystar/ui/typography';
 
 import { Config } from '../../config';
+
 import l10nMessages from '../l10n/index.json';
+import { useCloudInfo } from '../shell/data';
 import { PageBody, PageHeader, PageRoot } from '../shell/page';
 import { useViewer } from '../shell/viewer-data';
+
 import { BranchSection } from './BranchSection';
-import { CollectionSection } from './CollectionSection';
-import { SingletonSection } from './SingletonSection';
-import { useCloudInfo } from '../shell/data';
+import { DashboardCards } from './DashboardCards';
 
 export function DashboardPage(props: { config: Config; basePath: string }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
@@ -36,8 +37,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
           {user && <UserInfo user={user} manageAccount={!!cloudInfo} />}
 
           <BranchSection config={props.config} />
-          <CollectionSection basePath={props.basePath} config={props.config} />
-          <SingletonSection basePath={props.basePath} config={props.config} />
+          <DashboardCards />
         </Flex>
       </PageBody>
     </PageRoot>
