@@ -31,6 +31,8 @@ export const DashboardSection = ({
   );
 };
 
+export const FILL_COLS = 'fill';
+
 export const DashboardGrid = (props: PropsWithChildren) => {
   return (
     <div
@@ -38,12 +40,13 @@ export const DashboardGrid = (props: PropsWithChildren) => {
         display: 'grid',
         gap: tokenSchema.size.space.large,
         gridAutoRows: tokenSchema.size.element.xlarge,
+        gridTemplateColumns: `[${FILL_COLS}-start] 1fr [${FILL_COLS}-end]`,
 
         [containerQueries.above.mobile]: {
-          gridTemplateColumns: '1fr 1fr',
+          gridTemplateColumns: `[${FILL_COLS}-start] 1fr 1fr [${FILL_COLS}-end]`,
         },
         [containerQueries.above.tablet]: {
-          gridTemplateColumns: '1fr 1fr 1fr',
+          gridTemplateColumns: `[${FILL_COLS}-start] 1fr 1fr 1fr [${FILL_COLS}-end]`,
         },
       })}
       {...props}
