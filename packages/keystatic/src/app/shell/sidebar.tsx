@@ -5,6 +5,7 @@ import {
   OverlayTriggerState,
   useOverlayTriggerState,
 } from '@react-stately/overlays';
+import { typedKeys } from 'emery';
 import {
   ReactNode,
   createContext,
@@ -28,18 +29,15 @@ import {
 import { Text } from '@keystar/ui/typography';
 import { usePrevious } from '@keystar/ui/utils';
 
-import { typedKeys } from 'emery';
-
-import { Config, NAVIGATION_DIVIDER_KEY } from '../../config';
+import { Config } from '../../config';
 
 import l10nMessages from '../l10n/index.json';
 import { useRouter } from '../router';
+import { ItemOrGroup, useNavItems } from '../useNavItems';
 import { pluralize } from '../utils';
 
 import { useBrand } from './common';
 import { SIDE_PANEL_ID } from './constants';
-import { useAppState, useConfig } from './context';
-import { useChanged } from './data';
 
 const SidebarContext = createContext<OverlayTriggerState | null>(null);
 export function useSidebar() {
@@ -286,85 +284,4 @@ function renderItemOrGroup(
       {changeElement}
     </NavItem>
   );
-}
-
-// Data transformation
-// ----------------------------------------------------------------------------
-
-type ItemData = {
-  key: string;
-  href: string;
-  label: string;
-  changed: number | boolean;
-};
-type ItemDivider = { isDivider: true };
-type Item = ItemData | ItemDivider;
-type ItemOrGroup = Item | { title: string; children: Item[] };
-
-function useNavItems() {
-  let { basePath } = useAppState();
-  let config = useConfig();
-  let stringFormatter = useLocalizedStringFormatter(l10nMessages);
-  let changeMap = useChanged();
-
-  const collectionKeys = Object.keys(config.collections || {});
-  const singletonKeys = Object.keys(config.singletons || {});
-  const items = config.ui?.navigation || {
-    ...(!!collectionKeys.length && {
-      [stringFormatter.format('collections')]: collectionKeys,
-    }),
-    ...(!!singletonKeys.length && {
-      [stringFormatter.format('singletons')]: singletonKeys,
-    }),
-  };
-  const options = { basePath, changeMap, config };
-
-  if (Array.isArray(items)) {
-    return items.map(key => populateItemData(key, options));
-  }
-
-  return Object.entries(items).map(([section, keys]) => ({
-    title: section,
-    children: keys.map(key => populateItemData(key, options)),
-  }));
-}
-
-function populateItemData(
-  key: string,
-  options: {
-    basePath: string;
-    changeMap: ReturnType<typeof useChanged>;
-    config: Config;
-  }
-): Item {
-  let { basePath, changeMap, config } = options;
-
-  // divider
-  if (key === NAVIGATION_DIVIDER_KEY) {
-    return { isDivider: true };
-  }
-
-  // collection
-  if (config.collections && key in config.collections) {
-    const href = `${basePath}/collection/${encodeURIComponent(key)}`;
-    const changes = changeMap.collections.get(key);
-    const changed = changes
-      ? changes.changed.size + changes.added.size + changes.removed.size
-      : 0;
-
-    const label = config.collections[key].label;
-
-    return { key, href, label, changed };
-  }
-
-  // singleton
-  if (config.singletons && key in config.singletons) {
-    const href = `${basePath}/singleton/${encodeURIComponent(key)}`;
-    const changed = changeMap.singletons.has(key);
-    const label = config.singletons[key].label;
-
-    return { key, href, label, changed };
-  }
-
-  throw new Error(`Unknown navigation key: "${key}".`);
 }
