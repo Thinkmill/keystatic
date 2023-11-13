@@ -37,7 +37,7 @@ export type Singleton<Schema extends Record<string, ComponentSchema>> = {
 type CommonConfig<Collections, Singletons> = {
   locale?: Locale;
   cloud?: { project: string };
-  ui?: UserInterface<Collections, Singletons>;
+  ui?: UserInterfaceConfig<Collections, Singletons>;
 };
 
 type CommonRemoteStorageConfig = {
@@ -52,7 +52,7 @@ type BrandMark = (props: {
   colorScheme: Exclude<ColorScheme, 'auto'>; // we resolve "auto" to "light" or "dark" on the client
 }) => ReactElement;
 export const NAVIGATION_DIVIDER_KEY = '---';
-type UserInterface<Collections, Singletons> = {
+type UserInterfaceConfig<Collections, Singletons> = {
   brand?: {
     mark?: BrandMark;
     name: string;
