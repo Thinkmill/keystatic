@@ -35,8 +35,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
       <PageBody isScrollable>
         <Flex direction="column" gap="xxlarge">
           {user && <UserInfo user={user} manageAccount={!!cloudInfo} />}
-
-          <BranchSection config={props.config} />
+          {!props.config.ui?.hideBranchesManagement && <BranchSection config={props.config} />}
           <DashboardCards />
         </Flex>
       </PageBody>

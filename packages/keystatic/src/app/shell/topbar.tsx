@@ -101,12 +101,13 @@ export const SidebarHeader = () => {
 // -----------------------------------------------------------------------------
 
 function CloudHeader() {
+  const config = useConfig();
   const cloudInfo = useCloudInfo();
   return (
     <HeaderOuter>
       <BrandButton />
-      <BranchPicker />
-      <GitMenu />
+      {!config.ui?.hideBranchesManagement && <BranchPicker />}
+      {!config.ui?.hideBranchesManagement && <GitMenu />}
       <Box flex="1" />
       <ImageLibraryButton />
       <ThemeMenu />
@@ -144,12 +145,13 @@ function ImageLibraryButton() {
 // -----------------------------------------------------------------------------
 
 function GithubHeader() {
+  const config = useConfig();
   const user = useViewer();
   return (
     <HeaderOuter>
       <BrandButton />
-      <BranchPicker />
-      <GitMenu />
+      {!config.ui?.hideBranchesManagement && <BranchPicker />}
+      {!config.ui?.hideBranchesManagement && <GitMenu />}
       <Box flex="1" />
       <ThemeMenu />
       <UserMenu
