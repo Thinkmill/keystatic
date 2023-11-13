@@ -30,12 +30,7 @@ const popoverComponents: Record<string, NodePopoverRenderer> = {
           onChange={val => {
             dispatchCommand((state, dispatch) => {
               if (dispatch) {
-                dispatch(
-                  state.tr.setNodeMarkup(props.pos, undefined, {
-                    ...props.node.attrs,
-                    language: val,
-                  })
-                );
+                dispatch(state.tr.setNodeAttribute(props.pos, 'language', val));
               }
               return true;
             });
