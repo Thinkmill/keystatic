@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.2.2
+
+### Patch Changes
+
+- b9f0758f: Observe nav config as dashboard cards.
+- f3cc119c: Fix deleting files inside an entry directory that aren't associated
+  with the entry when updating or deleting the entry
+
 ## 0.2.1
 
 ### Patch Changes
