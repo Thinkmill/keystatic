@@ -22,6 +22,7 @@ import { Config } from '@markdoc/markdoc';
 import { attributeSchema } from './attributes/schema';
 import { independentForGapCursor } from './gapcursor/gapcursor';
 import { ReplaceAroundStep } from 'prosemirror-transform';
+import { WithReactNodeViewSpec } from './react-node-views';
 
 const blockElementSpacing = css({
   marginBlock: '1em',
@@ -102,7 +103,9 @@ const liDOM: DOMOutputSpec = [
   0,
 ];
 
-export type EditorNodeSpec = NodeSpec & WithInsertMenuNodeSpec;
+export type EditorNodeSpec = NodeSpec &
+  WithInsertMenuNodeSpec &
+  WithReactNodeViewSpec;
 
 const inlineContent = `(text | (text hard_break) | attribute)*`;
 
@@ -254,6 +257,27 @@ const nodeSpecs = {
     parseDOM: [{ tag: 'blockquote' }],
     toDOM() {
       return blockquoteDOM;
+    },
+    reactNodeView: {
+      component(props) {
+        return (
+          <blockquote
+            className={`${classes.blockParent} ${css({
+              marginInline: 0,
+              paddingInline: tokenSchema.size.space.large,
+              borderInlineStartStyle: 'solid',
+              borderInlineStartWidth: tokenSchema.size.border.large,
+              borderColor: tokenSchema.color.alias.borderIdle,
+              [`&.${classes.nodeInSelection}, &.${classes.nodeSelection}`]: {
+                borderColor: tokenSchema.color.alias.borderSelected,
+              },
+            })}`}
+          >
+            {props.children}
+          </blockquote>
+        );
+      },
+      rendersOwnContent: false,
     },
     insertMenu: {
       label: 'Blockquote',

@@ -14,6 +14,7 @@ import { gapCursor } from './gapcursor';
 import { attributes } from './attributes';
 import { dropCursor } from './dropcursor';
 import { codeBlockSyntaxHighlighting } from './code-block-highlighting';
+import { reactNodeViews } from './react-node-views';
 
 export function createEditorState(
   doc: Node,
@@ -36,6 +37,7 @@ export function createEditorState(
       keymap(keymapForSchema(schema)),
       markdocClipboard(),
       nodeInSelectionDecorations(),
+      reactNodeViews(doc.type.schema),
       autocompleteDecoration(),
       codeBlockSyntaxHighlighting(),
     ],
