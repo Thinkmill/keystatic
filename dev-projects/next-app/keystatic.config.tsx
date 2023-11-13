@@ -16,6 +16,11 @@ export default config({
     kind: 'github',
     repo: 'Thinkmill/keystatic-test-repo',
   },
+  ui: {
+    brand: {
+      name: 'Dev: Next.js (app)',
+    },
+  },
   // storage: {
   //   kind: 'local',
   // },
