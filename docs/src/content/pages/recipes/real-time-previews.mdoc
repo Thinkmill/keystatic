@@ -122,9 +122,16 @@ The `reader` you're currently using from the Keystatic Reader API needs to be up
 
 Since there is a little bit of setup involved, it makes sense to create reusable *draft-mode-aware* reader.
 
-{% aside icon="⚠️" %}
+{% aside icon="☝️" %}
 Make sure you replace the `repo: 'REPO_ORG/REPO_NAME'` line in the code snippet below with your own repo org and name!
 {% /aside %}
+
+{% aside icon="⚠️" %}
+If you didn't setup a GitHub app (you are using [Keystatic cloud](/docs/cloud)), you'll also need to replace the `token` line with a personal access token.
+
+Live previews may still work without a valid `token`, as long as your GitHub repo is public and you haven't reached GitHub's rate limit.
+{% /aside %}
+
 
 ```ts
 // src/utils/reader.ts
@@ -150,7 +157,8 @@ export const reader = cache(() => {
         // Replace the below with your repo org an name
         repo: 'REPO_ORG/REPO_NAME',
         ref: branch,
-        token: process.env.PREVIEW_GITHUB_TOKEN,
+        // Assuming an existing GitHub app
+        token: cookies().get('keystatic-gh-access-token')?.value,
       });
     }
   }
