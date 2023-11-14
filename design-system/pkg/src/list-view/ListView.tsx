@@ -12,6 +12,7 @@ import React, {
   PropsWithChildren,
   ReactElement,
   RefObject,
+  useEffect,
   useMemo,
   useRef,
 } from 'react';
@@ -90,20 +91,25 @@ function ListView<T extends object>(
     dragAndDropHooks,
     ...otherProps
   } = props;
-  const isListDraggable = !!dragAndDropHooks?.useDraggableCollectionState;
-  const isListDroppable = !!dragAndDropHooks?.useDroppableCollectionState;
+
+  let isListDraggable = !!dragAndDropHooks?.useDraggableCollectionState;
+  let isListDroppable = !!dragAndDropHooks?.useDroppableCollectionState;
+
   let dragHooksProvided = useRef(isListDraggable);
   let dropHooksProvided = useRef(isListDroppable);
-  if (dragHooksProvided.current !== isListDraggable) {
-    console.warn(
-      'Drag hooks were provided during one render, but not another. This should be avoided as it may produce unexpected behavior.'
-    );
-  }
-  if (dropHooksProvided.current !== isListDroppable) {
-    console.warn(
-      'Drop hooks were provided during one render, but not another. This should be avoided as it may produce unexpected behavior.'
-    );
-  }
+
+  useEffect(() => {
+    if (dragHooksProvided.current !== isListDraggable) {
+      console.warn(
+        'Drag hooks were provided during one render, but not another. This should be avoided as it may produce unexpected behavior.'
+      );
+    }
+    if (dropHooksProvided.current !== isListDroppable) {
+      console.warn(
+        'Drop hooks were provided during one render, but not another. This should be avoided as it may produce unexpected behavior.'
+      );
+    }
+  }, [isListDraggable, isListDroppable]);
 
   let domRef = useObjectRef(ref);
   let state = useListState({
