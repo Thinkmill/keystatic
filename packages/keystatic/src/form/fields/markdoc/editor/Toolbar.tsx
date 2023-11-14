@@ -31,7 +31,8 @@ import {
   useEditorState,
 } from './editor-view';
 import { toggleList } from './lists';
-import { insertNode, toggleCodeBlock } from './commands/misc';
+import { insertNode, insertTable, toggleCodeBlock } from './commands/misc';
+import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
 
 function EditorToolbarButton(props: {
   children: ReactNode;
@@ -76,7 +77,8 @@ function EditorToolbarButton(props: {
 // );
 
 export function Toolbar() {
-  const { nodes } = useEditorSchema();
+  const schema = useEditorSchema();
+  const { nodes } = schema;
   return (
     <ToolbarContainer>
       <ToolbarScrollArea>
@@ -134,6 +136,17 @@ export function Toolbar() {
             <Tooltip>
               <Text>Code block</Text>
               <Kbd>```</Kbd>
+            </Tooltip>
+          </TooltipTrigger>
+          <TooltipTrigger>
+            <EditorToolbarButton
+              aria-label="Table"
+              command={insertTable(schema)}
+            >
+              <Icon src={tableIcon} />
+            </EditorToolbarButton>
+            <Tooltip>
+              <Text>Table</Text>
             </Tooltip>
           </TooltipTrigger>
         </ToolbarGroup>

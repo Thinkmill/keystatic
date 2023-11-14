@@ -1,6 +1,7 @@
 import { EditorState, Selection } from 'prosemirror-state';
 import { history } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
+import { tableEditing } from 'prosemirror-tables';
 import { inputRules } from './inputrules/inputrules';
 import { Mark, Node } from 'prosemirror-model';
 import { getEditorSchema } from './schema';
@@ -39,6 +40,7 @@ export function createEditorState(
       nodeInSelectionDecorations(),
       reactNodeViews(doc.type.schema),
       autocompleteDecoration(),
+      tableEditing(),
       codeBlockSyntaxHighlighting(),
     ],
     doc,
