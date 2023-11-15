@@ -101,7 +101,8 @@ export const Dialog: ForwardRefExoticComponent<
       content: {
         ...toDataAttributes({
           hasHeader: hasHeader || hasHeading || undefined,
-          hasFooter: hasFooter || hasButtonGroup || undefined,
+          hasFooter:
+            hasFooter || (hasButtonGroup && type !== 'fullscreen') || undefined,
         }),
         UNSAFE_className: getContentStyles(),
       },
@@ -120,7 +121,15 @@ export const Dialog: ForwardRefExoticComponent<
         align: 'end',
       },
     }),
-    [hasButtonGroup, hasFooter, hasHeader, hasHeading, headingSize, titleProps]
+    [
+      hasButtonGroup,
+      hasFooter,
+      hasHeader,
+      hasHeading,
+      headingSize,
+      titleProps,
+      type,
+    ]
   );
 
   const sizeVariant = getSizeVariant(type, size);
@@ -223,6 +232,8 @@ function useGridStyleProps({
   isDismissable?: boolean;
   size: SizeVariant;
 }) {
+  // NOTE: it's very tempting to use "gap" here but don't! It stops the grid
+  // areas from collapsing, even when hidden or omitted.
   let gridStyles = css({
     display: 'grid',
     padding: tokenSchema.size.space.xxlarge,
@@ -247,7 +258,7 @@ function useGridStyleProps({
 
     // MOBILE SPECIFIC
     [breakpointQueries.below.tablet]: {
-      padding: tokenSchema.size.space.large,
+      padding: tokenSchema.size.space.xlarge,
       gridTemplateRows: 'auto auto 1fr auto',
       gridTemplateAreas: `"heading heading heading"
       "header header header"
@@ -284,6 +295,11 @@ function getHeadingStyles() {
   return css({
     alignSelf: 'center',
     gridArea: 'heading',
+    paddingBottom: tokenSchema.size.space.large,
+
+    [breakpointQueries.above.mobile]: {
+      paddingBottom: tokenSchema.size.space.xlarge,
+    },
 
     '&[data-has-header=false]': {
       gridArea: 'heading-start / heading-start / header-end / header-end',
@@ -299,12 +315,11 @@ function getHeaderStyles() {
     gridArea: 'header',
     minWidth: 'fit-content',
     outline: 0,
+    paddingBottom: tokenSchema.size.space.large,
 
-    [breakpointQueries.below.tablet]: {
-      paddingTop: tokenSchema.size.space.regular,
-    },
     [breakpointQueries.above.mobile]: {
       justifyContent: 'flex-end',
+      paddingBottom: tokenSchema.size.space.xlarge,
     },
   });
 }
@@ -312,45 +327,15 @@ function getHeaderStyles() {
 function getContentStyles() {
   return css({
     gridArea: 'content',
-    overflow: 'auto',
+    overflowX: 'hidden',
+    overflowY: 'auto',
     WebkitOverflowScrolling: 'touch',
 
-    // naive scroll indicators
-    background: [
-      // masks
-      `linear-gradient(${tokenSchema.color.background.surface}, transparent) center top`,
-      `linear-gradient(transparent, ${tokenSchema.color.background.surface}) center bottom`,
-      // dividers
-      `linear-gradient(${tokenSchema.color.border.neutral}, ${tokenSchema.color.border.neutral}) center top`,
-      `linear-gradient(${tokenSchema.color.border.neutral}, ${tokenSchema.color.border.neutral}) center bottom`,
-    ].join(', '),
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: `100% ${tokenSchema.size.element.regular}, 100% ${tokenSchema.size.element.regular}, 100% ${tokenSchema.size.border.regular}, 100% ${tokenSchema.size.border.regular}`,
-    backgroundAttachment: 'local, local, scroll, scroll',
-
-    // NOTE: focus rings are clipped by overflow: auto
-    padding: tokenSchema.size.alias.focusRing,
-    margin: `calc(${tokenSchema.size.alias.focusRing} * -1)`,
-
-    /**
-     * FIXME: content that wouldn't otherwise be scrollable is introducing
-     * scrollbars because of the baseline trim of capsize text. only relevant if
-     * that text element is last, but it could be wrapped any number of ways so
-     * there isn't a selector that safely targets only the offending node.
-     *
-     * This is a shitty ~solution~ because it adds padding regardless of whether
-     * or not there's trimmed text node that would require it.
-     */
-    marginBlockEnd: tokenSchema.typography.text.regular.baselineTrim,
-    paddingBlockEnd: `calc(${tokenSchema.typography.text.regular.baselineTrim} * -1)`,
-    paddingBlockStart: `calc(${tokenSchema.typography.text.regular.capheightTrim} * -0.1)`, // capsize ascender clipping issue
-
-    '&[data-has-header]': {
-      marginBlockStart: tokenSchema.size.space.xlarge,
-    },
-    '&[data-has-footer]': {
-      marginBlockEnd: tokenSchema.size.space.xlarge,
-    },
+    // fixes two issues:
+    // - focus rings get clipped by overflow: auto
+    // - trimmed text (capsize) creates unwanted scrollbars
+    padding: tokenSchema.size.space.regular,
+    margin: `calc(${tokenSchema.size.space.regular} * -1)`,
   });
 }
 
@@ -359,6 +344,10 @@ function getButtonGroupStyles() {
     gridArea: 'buttonGroup',
     minWidth: 0,
     marginInlineStart: tokenSchema.size.space.regular,
+    paddingTop: tokenSchema.size.space.large,
+    [breakpointQueries.above.mobile]: {
+      paddingTop: tokenSchema.size.space.xlarge,
+    },
 
     [`${dialogClassList.selector(
       'root'
@@ -381,5 +370,9 @@ function getFooterStyles() {
     flexWrap: 'wrap',
     gridArea: 'footer',
     minWidth: 0,
+    paddingTop: tokenSchema.size.space.large,
+    [breakpointQueries.above.mobile]: {
+      paddingTop: tokenSchema.size.space.xlarge,
+    },
   });
 }
