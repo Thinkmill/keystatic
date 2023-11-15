@@ -18,7 +18,7 @@ import {
 } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
-export const noticeClassList = new ClassList('Notice');
+export const noticeClassList = new ClassList('Notice', ['heading']);
 
 const toneToIcon = {
   caution: alertTriangleIcon,
@@ -53,7 +53,7 @@ export function Notice(props: NoticeProps) {
   const { children, tone = 'neutral', ...otherProps } = props;
   const ref = useRef<HTMLElement | null>(null);
   const styleProps = useStyleProps(otherProps);
-  const headingClassName = noticeClassList.declare('heading');
+  const headingClassName = noticeClassList.element('heading');
   const headingId = useSlotId();
   const contentId = useSlotId();
   const hasHeading = useHasChild(noticeClassList.selector('heading'), ref);

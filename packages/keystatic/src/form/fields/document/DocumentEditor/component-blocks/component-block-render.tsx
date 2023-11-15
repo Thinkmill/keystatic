@@ -3,7 +3,7 @@ import React, { useContext, useMemo, ReactElement } from 'react';
 import { Element } from 'slate';
 import { ComponentBlock } from '../../../../api';
 import { createGetPreviewProps } from '../../../../preview-props';
-import { ReadonlyPropPath } from './utils';
+import { ReadonlyPropPath, getSchemaAtPropPath } from './utils';
 import { getKeysForArrayValue } from '../../../../initial-values';
 
 export const ChildrenByPathContext = React.createContext<
@@ -28,7 +28,8 @@ export function ComponentBlockRender({
 }: {
   element: Element & { type: 'component-block' };
   onChange: (
-    cb: (props: Record<string, unknown>) => Record<string, unknown>
+    cb: (props: Record<string, unknown>) => Record<string, unknown>,
+    ignoreChildFields: boolean
   ) => void;
   onRemove: () => void;
   componentBlock: ComponentBlock;
@@ -37,7 +38,7 @@ export function ComponentBlockRender({
   const getPreviewProps = useMemo(() => {
     return createGetPreviewProps(
       { kind: 'object', fields: componentBlock.schema },
-      onChange,
+      cb => onChange(cb, true),
       path => <ChildFieldEditable path={path} />
     );
   }, [onChange, componentBlock]);
@@ -46,11 +47,25 @@ export function ComponentBlockRender({
 
   const childrenByPath: Record<string, ReactElement> = {};
   let maybeChild: ReactElement | undefined;
+  let extraChildren: ReactElement[] = [];
   children.forEach((child: ReactElement) => {
     const propPath = child.props.children.props.element.propPath;
     if (propPath === undefined) {
       maybeChild = child;
     } else {
+      const schema = getSchemaAtPropPath(
+        propPath,
+        element.props,
+        componentBlock.schema
+      );
+      if (
+        schema?.kind === 'child' &&
+        schema.options.kind === 'block' &&
+        schema.options.editIn === 'modal'
+      ) {
+        extraChildren.push(child);
+        return;
+      }
       childrenByPath[
         JSON.stringify(propPathWithIndiciesToKeys(propPath, element.props))
       ] = child;
@@ -78,6 +93,7 @@ export function ComponentBlockRender({
         })}
       >
         {maybeChild}
+        {extraChildren}
       </span>
     </ChildrenByPathContext.Provider>
   );

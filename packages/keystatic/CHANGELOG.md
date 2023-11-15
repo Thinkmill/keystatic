@@ -1,5 +1,82 @@
 # @keystatic/core
 
+## 0.2.2
+
+### Patch Changes
+
+- b9f0758f: Observe nav config as dashboard cards.
+- f3cc119c: Fix deleting files inside an entry directory that aren't associated
+  with the entry when updating or deleting the entry
+
+## 0.2.1
+
+### Patch Changes
+
+- 9854c6b1: Support `ui.navigation` config.
+- 0229959f: Replace hard-coded class names with `ClassList` instances.
+- 454f25c9: New config `ui` supports branding options.
+- Updated dependencies [9854c6b1]
+- Updated dependencies [0229959f]
+  - @keystar/ui@0.4.2
+
+## 0.2.0
+
+### Minor Changes
+
+- b768f147: Update router integration between `@keystatic/core` and framework
+  integration packages to improve performance
+
+### Patch Changes
+
+- 32d22480: Fix loading entries failing for public repositories when not using a
+  `pathPrefix`
+- Updated dependencies [cd03b1cd]
+  - @keystar/ui@0.4.1
+
+## 0.1.9
+
+### Patch Changes
+
+- bd20acb0: Improve performance of loading entries in public repositories
+- be85e097: Introduce
+  [client-side routing](https://react-spectrum.adobe.com/react-aria/routing.html)
+  concept from react-aria:
+
+  - Include `RouterProvider` with `KeystarProvider` (renamed from
+    "VoussoirProvider"), conditionally when _new_ `router` prop is provided.
+    This new router behaviour makes `linkComponent` and friends unnecessary;
+    they have been removed.
+  - Re-export `useLink` from
+    [react-aria](https://react-spectrum.adobe.com/react-aria/useLink.html),
+    which manages router behaviour on click (among other things), for use
+    outside of the component library. Internally we reference "@react-aria/link"
+    directly.
+  - Replace instances of link component references with appropriate alternative.
+  - Support link props e.g. "href", "target" etc. on `Menu` items.
+  - Consolidate cursor behaviour: `ActionButton`, `Button`, and (Menu) `Item`
+    will now use "pointer" for anchors.
+
+  Supporting/related changes:
+
+  - Update react-aria dependencies to latest: "@react-aria/\*",
+    "@react-stately/\*", "@react-types/\*", "@internationalized/\*".
+  - Remove linking behaviour from storybook. Might revisit later, but for now it
+    added unnecessary complexity.
+
+  App changes:
+
+  - Deprecate `link` prop on `Keystatic` component. We can now abstract that
+    behaviour from the existing `router` prop.
+  - Refactor topbar menu items to use link API; mostly to confirm expected
+    behaviour.
+
+- e3d6fd29: Fix links and other formatting around inline code being discarded in
+  the document editor
+- be5d3646: Fix unhandled promise rejection error
+- Updated dependencies [be85e097]
+- Updated dependencies [9eaefd73]
+  - @keystar/ui@0.4.0
+
 ## 0.1.8
 
 ### Patch Changes

@@ -7,6 +7,8 @@ import { sunIcon } from '@keystar/ui/icon/icons/sunIcon';
 import { Icon } from '@keystar/ui/icon';
 import { MenuTrigger, Menu, Item } from '@keystar/ui/menu';
 import { useRootColorScheme } from '@keystar/ui/next';
+
+import { SCHEME_AUTO, SCHEME_DARK, SCHEME_LIGHT } from '@keystar/ui/primitives';
 import { css } from '@keystar/ui/style';
 import { ColorScheme } from '@keystar/ui/types';
 import { Text } from '@keystar/ui/typography';
@@ -20,14 +22,14 @@ const items = [
 export function ColorSchemeMenu() {
   let { colorScheme, setColorScheme } = useRootColorScheme();
   let hideWhenLight = css({
-    '.ksv-scheme--light &': { display: 'none' },
-    '.ksv-scheme--auto &': {
+    [`.${SCHEME_LIGHT} &`]: { display: 'none' },
+    [`.${SCHEME_AUTO} &`]: {
       '@media (prefers-color-scheme: light)': { display: 'none' },
     },
   });
   let hideWhenDark = css({
-    '.ksv-scheme--dark &': { display: 'none' },
-    '.ksv-scheme--auto &': {
+    [`.${SCHEME_DARK} &`]: { display: 'none' },
+    [`.${SCHEME_AUTO} &`]: {
       '@media (prefers-color-scheme: dark)': { display: 'none' },
     },
   });

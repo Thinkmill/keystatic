@@ -1,9 +1,8 @@
 import { HTMLAttributes, useContext } from 'react';
 import { I18nProvider, useLocale } from '@react-aria/i18n';
 import { ModalProvider, useModalProvider } from '@react-aria/overlays';
-import { filterDOMProps } from '@react-aria/utils';
+import { RouterProvider, filterDOMProps } from '@react-aria/utils';
 
-import { DefaultLinkComponent, LinkComponentContext } from '@keystar/ui/link';
 import {
   BreakpointProvider,
   useMatchedBreakpoints,
@@ -14,11 +13,11 @@ import { forwardRefWithAs } from '@keystar/ui/utils/ts';
 import { Context, useProvider } from './context';
 import { documentElementClasses } from './globals';
 import { useScale } from './mediaQueries';
-import { VoussoirProviderProps } from './types';
+import { KeystarProviderProps } from './types';
 
-/** Consolidates core functionality and dependencies of the Voussoir component library. */
-export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
-  function VoussoirProvider(props, forwardedRef) {
+/** Consolidates core functionality and dependencies of the Keystar component library. */
+export const KeystarProvider = forwardRefWithAs<KeystarProviderProps, 'div'>(
+  function KeystarProvider(props, forwardedRef) {
     let prevContext = useContext(Context);
     let prevColorScheme = prevContext && prevContext.colorScheme;
 
@@ -34,7 +33,7 @@ export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
       isRequired,
       isReadOnly,
       locale = prevContext ? prevLocale : undefined,
-      linkComponent = DefaultLinkComponent,
+      router,
       scale = prevContext ? prevContext.scale : autoScale,
       ...otherProps
     } = props;
@@ -82,15 +81,15 @@ export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
       );
     }
 
+    if (router) {
+      contents = <RouterProvider {...router}>{contents}</RouterProvider>;
+    }
+
     return (
       <Context.Provider value={context}>
         <BreakpointProvider value={matchedBreakpoints}>
           <I18nProvider locale={locale}>
-            <ModalProvider>
-              <LinkComponentContext.Provider value={linkComponent}>
-                {contents}
-              </LinkComponentContext.Provider>
-            </ModalProvider>
+            <ModalProvider>{contents}</ModalProvider>
           </I18nProvider>
         </BreakpointProvider>
       </Context.Provider>
@@ -99,7 +98,7 @@ export const VoussoirProvider = forwardRefWithAs<VoussoirProviderProps, 'div'>(
 );
 
 const ProviderWrapper = forwardRefWithAs<
-  VoussoirProviderProps & HTMLAttributes<HTMLElement>,
+  KeystarProviderProps & HTMLAttributes<HTMLElement>,
   'div'
 >(function ProviderWrapper(props, forwardedRef) {
   let { children, style } = props;

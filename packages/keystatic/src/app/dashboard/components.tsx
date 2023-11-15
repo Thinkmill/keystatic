@@ -1,7 +1,7 @@
-import { PropsWithChildren, ReactElement } from 'react';
+import { PropsWithChildren, ReactElement, useRef } from 'react';
 
 import { Flex } from '@keystar/ui/layout';
-import { useLinkComponent } from '@keystar/ui/link';
+import { useLink } from '@keystar/ui/link';
 import {
   classNames,
   containerQueries,
@@ -31,6 +31,8 @@ export const DashboardSection = ({
   );
 };
 
+export const FILL_COLS = 'fill';
+
 export const DashboardGrid = (props: PropsWithChildren) => {
   return (
     <div
@@ -38,12 +40,13 @@ export const DashboardGrid = (props: PropsWithChildren) => {
         display: 'grid',
         gap: tokenSchema.size.space.large,
         gridAutoRows: tokenSchema.size.element.xlarge,
+        gridTemplateColumns: `[${FILL_COLS}-start] 1fr [${FILL_COLS}-end]`,
 
         [containerQueries.above.mobile]: {
-          gridTemplateColumns: '1fr 1fr',
+          gridTemplateColumns: `[${FILL_COLS}-start] 1fr 1fr [${FILL_COLS}-end]`,
         },
         [containerQueries.above.tablet]: {
-          gridTemplateColumns: '1fr 1fr 1fr',
+          gridTemplateColumns: `[${FILL_COLS}-start] 1fr 1fr 1fr [${FILL_COLS}-end]`,
         },
       })}
       {...props}
@@ -58,8 +61,8 @@ export const DashboardCard = (
     label: string;
   }>
 ) => {
-  let Link = useLinkComponent(null);
-
+  const ref = useRef<HTMLAnchorElement>(null);
+  const { linkProps } = useLink(props, ref);
   return (
     <Flex
       alignItems="center"
@@ -69,8 +72,10 @@ export const DashboardCard = (
     >
       <Flex direction="column" gap="medium" flex>
         <Heading elementType="h3" size="small" truncate>
-          <Link
+          <a
+            ref={ref}
             href={props.href}
+            {...linkProps}
             className={classNames(
               css({
                 color: tokenSchema.color.foreground.neutral,
@@ -108,7 +113,7 @@ export const DashboardCard = (
             )}
           >
             {props.label}
-          </Link>
+          </a>
         </Heading>
         {props.children}
       </Flex>

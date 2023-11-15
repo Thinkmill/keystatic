@@ -1,9 +1,15 @@
 import {
+  THEME_DEFAULT,
+  SCHEME_AUTO,
+  SCHEME_DARK,
+  SCHEME_LIGHT,
+} from '@keystar/ui/primitives';
+import {
+  VoussoirTheme,
   css,
   injectGlobal,
   resetClassName,
   tokenSchema,
-  VoussoirTheme,
 } from '@keystar/ui/style';
 
 import { cssCustomProperties } from './cssCustomProperties';
@@ -11,13 +17,18 @@ import { ColorScheme } from '@keystar/ui/types';
 
 type StrictBackground = keyof VoussoirTheme['color']['background'];
 
+const schemes = {
+  auto: SCHEME_AUTO,
+  light: SCHEME_LIGHT,
+  dark: SCHEME_DARK,
+};
+
 export const documentElementClasses = (args: {
   bodyBackground?: StrictBackground;
   colorScheme?: ColorScheme;
 }) => {
-  return `${documentReset(args.bodyBackground)} ksv-theme ksv-scheme--${
-    args.colorScheme
-  }`;
+  const scheme = schemes[args.colorScheme || 'auto'];
+  return `${documentReset(args.bodyBackground)} ${THEME_DEFAULT} ${scheme}`;
 };
 
 /**

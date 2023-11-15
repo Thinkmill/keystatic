@@ -1,8 +1,6 @@
 import {
-  AnchorHTMLAttributes,
   ReactElement,
   ReactNode,
-  RefAttributes,
   useContext,
   useEffect,
   useState,
@@ -29,7 +27,7 @@ import { CreatedGitHubApp } from './onboarding/created-github-app';
 import { KeystaticSetup } from './onboarding/setup';
 import { RepoNotFound } from './onboarding/repo-not-found';
 import { AppSlugProvider } from './onboarding/install-app';
-import { useRouter, Router, RouterProvider } from './router';
+import { useRouter, RouterProvider } from './router';
 import {
   isCloudConfig,
   isGitHubConfig,
@@ -45,7 +43,6 @@ import { KeystaticCloudAuthCallback } from './cloud-auth-callback';
 import { getAuth } from './auth';
 import { assertValidRepoConfig } from './repo-config';
 import { NotFoundBoundary, notFound } from './not-found';
-import { DefaultLinkComponent, LinkComponentContext } from '@keystar/ui/link';
 
 function parseParamsWithoutBranch(params: string[]) {
   if (params.length === 0) {
@@ -234,18 +231,19 @@ function AuthWrapper(props: {
     if (props.config.storage.kind === 'github') {
       return (
         <Flex justifyContent="center" alignItems="center" height="100vh">
-          <LinkComponentContext.Provider value={DefaultLinkComponent}>
-            <Button
-              href={`/api/keystatic/github/login${
-                router.params.length
-                  ? `?${new URLSearchParams({ from: router.params.join('/') })}`
-                  : ''
-              }`}
-            >
-              <Icon src={githubIcon} />
-              <Text>Log in with GitHub</Text>
-            </Button>
-          </LinkComponentContext.Provider>
+          <Button
+            href={`/api/keystatic/github/login${
+              router.params.length
+                ? `?${new URLSearchParams({ from: router.params.join('/') })}`
+                : ''
+            }`}
+            // even though we'll never be in an iframe, so this isn't really distinct from _self
+            // it makes react-aria avoid using client-side routing which we need here
+            target="_top"
+          >
+            <Icon src={githubIcon} />
+            <Text>Log in with GitHub</Text>
+          </Button>
         </Flex>
       );
     }
@@ -266,18 +264,7 @@ function AuthWrapper(props: {
   return null;
 }
 
-export function Keystatic(props: {
-  config: Config;
-  router: Router;
-  link: (
-    props: { href: string } & AnchorHTMLAttributes<HTMLAnchorElement> &
-      RefAttributes<HTMLAnchorElement>
-  ) => ReactNode;
-  appSlug?: { envName: string; value: string | undefined };
-}) {
-  if (props.config.storage.kind === 'github') {
-    assertValidRepoConfig(props.config.storage.repo);
-  }
+function RedirectToLoopback(props: { children: ReactNode }) {
   useEffect(() => {
     if (window.location.hostname === 'localhost') {
       window.location.href = window.location.href.replace(
@@ -289,13 +276,37 @@ export function Keystatic(props: {
   if (window.location.hostname === 'localhost') {
     return null;
   }
+  return props.children;
+}
+
+export function Keystatic(props: {
+  config: Config;
+  appSlug?: { envName: string; value: string | undefined };
+}) {
+  if (props.config.storage.kind === 'github') {
+    assertValidRepoConfig(props.config.storage.repo);
+  }
+
   return (
-    <AppSlugProvider value={props.appSlug}>
-      <RouterProvider router={props.router}>
-        <Provider config={props.config} Link={props.link}>
-          <PageInner config={props.config} />
-        </Provider>
-      </RouterProvider>
-    </AppSlugProvider>
+    <ClientOnly>
+      <RedirectToLoopback>
+        <AppSlugProvider value={props.appSlug}>
+          <RouterProvider>
+            <Provider config={props.config}>
+              <PageInner config={props.config} />
+            </Provider>
+          </RouterProvider>
+        </AppSlugProvider>
+      </RedirectToLoopback>
+    </ClientOnly>
   );
+}
+
+function ClientOnly(props: { children: ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  if (!mounted) return null;
+  return props.children;
 }

@@ -1,7 +1,8 @@
 import { cx, ClassNamesArg } from '@emotion/css';
-import { warning } from 'emery';
+import { TOKEN_PREFIX } from '@keystar/ui/primitives';
+import { assert } from 'emery';
 
-export const classNamePrefix = 'ksv';
+export const classNamePrefix = TOKEN_PREFIX;
 export const resetClassName = voussoirClassName('reset');
 export function voussoirClassName(className: string) {
   return `${classNamePrefix}:${className}`;
@@ -23,36 +24,65 @@ export function classNames(...inputs: ClassNamesArg[]) {
 }
 
 /**
- * A thin wrapper around Map to manage component class names. Keys are prefixed
- * with the component name and Voussoir's prefix.
+ * A ClassList organises component class names with appropriate prefixes,
+ * offering strongly-typed methods for declaration in JSX and styles.
  */
-export class ClassList extends Map {
-  prefix: string;
+export class ClassList<ElementName extends 'root' | (string & {})> {
+  /** The component name for this class list. */
+  #componentName: string;
+  /** The root class name. */
+  #root: string;
+  /** The list of element class names. */
+  #elements: Map<ElementName, string>;
 
-  constructor(componentName: string) {
-    super();
-    this.prefix = voussoirClassName(componentName);
+  constructor(
+    componentName: string,
+    elements: ReadonlyArray<ElementName> = []
+  ) {
+    this.#componentName = componentName;
+    this.#root = voussoirClassName(componentName);
+    this.#elements = new Map(
+      elements.map(element => [element, `${this.#root}-${element}`])
+    );
   }
 
-  root() {
-    return this.prefix;
-  }
-
-  declare(element: string) {
-    if (!this.has(element)) {
-      this.set(element, `${this.prefix}-${element}`);
+  element(name: ElementName | 'root') {
+    if (name === 'root') {
+      return this.#root;
     }
 
-    return this.get(element);
+    let className = this.#elements.get(name);
+
+    assert(
+      !!className,
+      `Element "${name}" not found in "${
+        this.#componentName
+      }" class list. All elements must be defined when the ClassList is instantiated.`
+    );
+
+    return className;
   }
 
-  selector(element: string) {
-    warning(this.has(element), `ClassList: "${element}" is not declared.`);
+  selector(element: ElementName | 'root', combinator?: CssCombinator) {
+    let className = this.element(element);
 
-    return `.${this.get(element)}`.replace(/:/g, '\\:');
-  }
+    if (!combinator) {
+      return safeClassName(className);
+    }
 
-  childSelector(element: string) {
-    return `& ${this.selector(element)}`;
+    return combinators[combinator] + safeClassName(className);
   }
 }
+
+function safeClassName(className: string) {
+  return `.${className.replace(/:/g, '\\:')}`;
+}
+
+type CssCombinator = keyof typeof combinators;
+
+const combinators = {
+  descendant: '& ',
+  child: '& > ',
+  sibling: '& ~ ',
+  'adjacent-sibling': '& + ',
+} as const;

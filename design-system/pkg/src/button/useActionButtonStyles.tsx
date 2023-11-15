@@ -16,7 +16,10 @@ type ButtonState = {
   isSelected?: boolean;
 };
 
-export const actionButtonClassList = new ClassList('ActionButton');
+export const actionButtonClassList = new ClassList('ActionButton', [
+  'icon',
+  'text',
+]);
 
 export function useActionButtonStyles(
   props: ActionButtonProps,
@@ -37,7 +40,7 @@ export function useActionButtonStyles(
     }),
     style: styleProps.style,
     className: classNames(
-      actionButtonClassList.root(),
+      actionButtonClassList.element('root'),
       css({
         alignItems: 'center',
         borderColor: 'transparent',
@@ -59,8 +62,13 @@ export function useActionButtonStyles(
         transitionTimingFunction: 'ease-out',
         userSelect: 'none',
 
+        // indicate when external link? e.g. `&[href^=http]`
+        'a&': {
+          cursor: 'pointer',
+        },
+
         // CONTENTS
-        [actionButtonClassList.childSelector('text')]: {
+        [actionButtonClassList.selector('text', 'descendant')]: {
           fontWeight: 'inherit',
           marginInline: tokenSchema.size.space.small,
           overflow: 'hidden',

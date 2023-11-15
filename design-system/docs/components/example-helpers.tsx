@@ -34,7 +34,7 @@ type PlaceholderProps = {
   shape?: 'square' | 'round';
 } & FlexStyleProps;
 
-export const placeholderCounter = 'ksv-placeholder-counter';
+export const placeholderCounter = 'placeholder-counter';
 
 export const Placeholder = ({
   children,

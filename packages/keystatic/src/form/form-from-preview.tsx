@@ -1,14 +1,6 @@
 import { MemoExoticComponent, ReactElement, memo } from 'react';
 
-import {
-  ArrayField,
-  BasicFormField,
-  ComponentSchema,
-  ConditionalField,
-  FormField,
-  GenericPreviewProps,
-  ObjectField,
-} from './api';
+import { ComponentSchema, GenericPreviewProps } from './api';
 import { ReadonlyPropPath } from './fields/document/DocumentEditor/component-blocks/utils';
 import {
   SlugFieldInfo,
@@ -18,26 +10,14 @@ import {
 import { ObjectFieldInput } from './fields/object/ui';
 import { ConditionalFieldInput } from './fields/conditional/ui';
 import { ArrayFieldInput } from './fields/array/ui';
+import { ChildFieldInput } from './fields/document/DocumentEditor/component-blocks/child-field-input';
 
 export type ExtraFieldInputProps = {
   autoFocus: boolean;
   forceValidation: boolean;
 };
 
-export type NonChildFieldComponentSchema =
-  | FormField<any, any, any>
-  | ObjectField
-  | ConditionalField<BasicFormField<any>, { [key: string]: ComponentSchema }>
-  | ArrayField<ComponentSchema>;
-
-export function isNonChildFieldPreviewProps(
-  props: GenericPreviewProps<ComponentSchema, unknown>
-): props is GenericPreviewProps<NonChildFieldComponentSchema, unknown> &
-  GenericPreviewProps<ComponentSchema, unknown> {
-  return props.schema.kind !== 'child';
-}
-
-function getInputComponent(schema: NonChildFieldComponentSchema): any {
+function getInputComponent(schema: ComponentSchema): any {
   if (schema.kind === 'object') {
     return schema.Input ?? ObjectFieldInput;
   }
@@ -47,12 +27,15 @@ function getInputComponent(schema: NonChildFieldComponentSchema): any {
   if (schema.kind === 'array') {
     return schema.Input ?? ArrayFieldInput;
   }
+  if (schema.kind === 'child') {
+    return ChildFieldInput;
+  }
   return schema.Input;
 }
 
 export const InnerFormValueContentFromPreviewProps: MemoExoticComponent<
   (
-    props: GenericPreviewProps<NonChildFieldComponentSchema, unknown> & {
+    props: GenericPreviewProps<ComponentSchema, unknown> & {
       autoFocus?: boolean;
       forceValidation?: boolean;
     }
@@ -71,7 +54,7 @@ export const InnerFormValueContentFromPreviewProps: MemoExoticComponent<
 const emptyArray: ReadonlyPropPath = [];
 export const FormValueContentFromPreviewProps: MemoExoticComponent<
   (
-    props: GenericPreviewProps<NonChildFieldComponentSchema, unknown> & {
+    props: GenericPreviewProps<ComponentSchema, unknown> & {
       autoFocus?: boolean;
       forceValidation?: boolean;
       slugField?: SlugFieldInfo;

@@ -1,6 +1,6 @@
 {
   "name": "@keystar/primitives",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "description": "Typography, size, and color primitives for the Keystar design system",
   "license": "MIT",
@@ -12,6 +12,7 @@
   "devDependencies": {
     "@capsizecss/core": "^3.1.1",
     "@capsizecss/metrics": "^1.2.0",
+    "@keystar/ui": "^0.4.2",
     "@types/lodash": "^4.14.191",
     "color2k": "^2.0.2",
     "emery": "^1.4.1",

@@ -96,13 +96,13 @@ export function createGitHubReader<
     collections: Object.fromEntries(
       Object.keys(config.collections || {}).map(key => [
         key,
-        collectionReader(key, config, fs),
+        collectionReader(key, config as Config, fs),
       ])
     ) as any,
     singletons: Object.fromEntries(
       Object.keys(config.singletons || {}).map(key => [
         key,
-        singletonReader(key, config, fs),
+        singletonReader(key, config as Config, fs),
       ])
     ) as any,
     config,

@@ -46,6 +46,10 @@ navGroups:
           value: cloud
   - groupName: Recipes
     items:
+      - label: "Real-time previews with Next.js' draft mode"
+        link:
+          discriminant: page
+          value: recipes/real-time-previews
       - label: 'Astro: Disable Admin UI Routes in Production'
         link:
           discriminant: page
@@ -76,6 +80,10 @@ navGroups:
         link:
           discriminant: page
           value: entry-layout
+      - label: User interface
+        link:
+          discriminant: page
+          value: user-interface
   - groupName: Fields API
     items:
       - label: Array

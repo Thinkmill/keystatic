@@ -56,6 +56,7 @@ import { isReactText } from '@keystar/ui/utils';
 import localizedMessages from './l10n.json';
 import {
   SortIndicator,
+  tableViewClassList,
   useBodyStyleProps,
   useCellStyleProps,
   useHeadStyleProps,
@@ -175,8 +176,8 @@ export function TableView<T extends object>(props: TableProps<T>) {
         virtualizer={reusableView.virtualizer}
         parent={parent?.layoutInfo!}
         className={classNames(
-          css({ backgroundColor: tokenSchema.color.background.canvas }),
-          'ksv-table-view-cell-wrapper'
+          tableViewClassList.element('cell-wrapper'),
+          css({ backgroundColor: tokenSchema.color.background.canvas })
         )}
       >
         {reusableView.rendered}

@@ -7,6 +7,7 @@ import { checkIcon } from '@keystar/ui/icon/icons/checkIcon';
 import { minusIcon } from '@keystar/ui/icon/icons/minusIcon';
 import { SlotProvider } from '@keystar/ui/slots';
 import {
+  ClassList,
   FocusRing,
   classNames,
   css,
@@ -19,6 +20,8 @@ import { isReactText } from '@keystar/ui/utils';
 
 import { CheckboxProps } from './types';
 import { CheckboxGroupContext } from './context';
+
+const checkboxClassList = new ClassList('Checkbox', ['indicator']);
 
 export function Checkbox(props: CheckboxProps) {
   let {
@@ -125,7 +128,7 @@ const Indicator = (props: IndicatorProps) => {
           width: sizeToken,
 
           // indicator icons
-          '.ksv-checkbox-indicator': {
+          [checkboxClassList.selector('indicator')]: {
             opacity: 0,
             transform: `scale(0) translate3d(0, 0, 0)`,
             transition: transition(['opacity', 'transform']),
@@ -179,7 +182,7 @@ const Indicator = (props: IndicatorProps) => {
                 borderWidth: `calc(${sizeToken} / 2)`,
               },
 
-              '.ksv-checkbox-indicator': {
+              [checkboxClassList.selector('indicator')]: {
                 opacity: 1,
                 transform: `scale(1)`,
               },
@@ -200,7 +203,7 @@ const Indicator = (props: IndicatorProps) => {
       )}
     >
       {/* firefox has issues when transform combined with transition on SVG; circumvent with this wrapper */}
-      <span className="ksv-checkbox-indicator">
+      <span className={checkboxClassList.element('indicator')}>
         <Icon
           size="small"
           src={isIndeterminate ? minusIcon : checkIcon}

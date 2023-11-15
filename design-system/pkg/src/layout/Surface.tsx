@@ -1,6 +1,7 @@
 import { DOMProps } from '@react-types/shared';
 import { createContext, ReactNode, useContext } from 'react';
 
+import { TOKEN_PREFIX } from '@keystar/ui/primitives';
 import {
   BoxStyleProps,
   classNames,
@@ -50,7 +51,7 @@ export const Surface = forwardRefWithAs<SurfaceProps, 'div'>(
     } = props;
     const contextLevel = useContext(SurfaceContext);
     const level = overrideLevel ?? contextLevel;
-    const levelClassName = `ksv--surface-${levels[level]}`;
+    const levelClassName = `${TOKEN_PREFIX}--surface-${levels[level]}`;
     const value = Math.max(0, Math.min(level + 1, MAX_LEVEL));
     const styleProps = useStyleProps(otherProps);
 

@@ -4,7 +4,7 @@ import {
   SplitPanePrimary,
   SplitPaneSecondary,
 } from '@keystar/ui/split-view';
-import { createContext, useContext } from 'react';
+import { ReactNode, createContext, useContext } from 'react';
 
 import { ReadonlyPropPath } from '../form/fields/document/DocumentEditor/component-blocks/utils';
 import {
@@ -14,7 +14,6 @@ import {
   SlugFieldProvider,
 } from '../form/fields/text/path-slug-context';
 import {
-  NonChildFieldComponentSchema,
   InnerFormValueContentFromPreviewProps,
   FormValueContentFromPreviewProps,
 } from '../form/form-from-preview';
@@ -48,12 +47,20 @@ export function useEntryLayoutSplitPaneContext() {
   return useContext(EntryLayoutSplitPaneContext);
 }
 
+export function ResetEntryLayoutContext(props: { children: ReactNode }) {
+  return (
+    <EntryLayoutSplitPaneContext.Provider value={null}>
+      {props.children}
+    </EntryLayoutSplitPaneContext.Provider>
+  );
+}
+
 export function FormForEntry({
   formatInfo,
   forceValidation,
   slugField,
   entryLayout,
-  previewProps: _previewProps,
+  previewProps: props,
 }: {
   previewProps: GenericPreviewProps<
     ObjectField<Record<string, ComponentSchema>>,
@@ -65,10 +72,6 @@ export function FormForEntry({
   slugField: SlugFieldInfo | undefined;
 }) {
   const isAboveMobile = useContentPanelQuery({ above: 'mobile' });
-  const props = _previewProps as GenericPreviewProps<
-    ObjectField<Record<string, NonChildFieldComponentSchema>>,
-    unknown
-  >;
 
   if (entryLayout === 'content' && formatInfo.contentField && isAboveMobile) {
     const { contentField } = formatInfo;

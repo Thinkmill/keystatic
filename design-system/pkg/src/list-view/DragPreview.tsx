@@ -11,6 +11,7 @@ import {
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
+import { listViewItemClassList } from './class-list';
 import type { ListViewProps } from './types';
 
 interface DragPreviewProps<T> {
@@ -70,7 +71,7 @@ export function DragPreview(props: DragPreviewProps<unknown>) {
       )}
     >
       <Grid
-        UNSAFE_className={'ksv-list-view-item-grid'}
+        UNSAFE_className={listViewItemClassList.element('grid')}
         columns="auto auto 1fr auto"
         rows="1fr auto"
         areas={[
@@ -86,7 +87,7 @@ export function DragPreview(props: DragPreviewProps<unknown>) {
               flexGrow: 1,
               truncate: true,
               weight: 'medium',
-              UNSAFE_className: 'ksv-list-view-item-content',
+              UNSAFE_className: listViewItemClassList.element('content'),
             },
             description: {
               color: 'neutralSecondary',
@@ -95,7 +96,7 @@ export function DragPreview(props: DragPreviewProps<unknown>) {
               flexGrow: 1,
               marginTop: 'small',
               truncate: true,
-              UNSAFE_className: 'ksv-list-view-item-description',
+              UNSAFE_className: listViewItemClassList.element('description'),
             },
             image: {
               borderRadius: 'xsmall',
@@ -104,19 +105,19 @@ export function DragPreview(props: DragPreviewProps<unknown>) {
               overflow: 'hidden',
               height:
                 density === 'compact' ? 'element.small' : 'element.regular',
-              UNSAFE_className: 'ksv-list-view-item-thumbnail',
+              UNSAFE_className: listViewItemClassList.element('thumbnail'),
             },
             button: {
               isHidden: true,
-              UNSAFE_className: 'ksv-list-view-item-actions',
+              UNSAFE_className: listViewItemClassList.element('actions'),
             },
             actionGroup: {
               isHidden: true,
-              UNSAFE_className: 'ksv-list-view-item-actions',
+              UNSAFE_className: listViewItemClassList.element('actions'),
             },
             actionMenu: {
               isHidden: true,
-              UNSAFE_className: 'ksv-list-view-item-actionmenu',
+              UNSAFE_className: listViewItemClassList.element('actionmenu'),
             },
           }}
         >
@@ -134,7 +135,7 @@ export function DragPreview(props: DragPreviewProps<unknown>) {
               gridArea="badge"
               minWidth="element.small"
               padding="small"
-              UNSAFE_className="ksv-list-view-item-badge"
+              UNSAFE_className={listViewItemClassList.element('badge')}
             >
               <Text align="center" color="inverse" size="small" weight="medium">
                 {itemCount}

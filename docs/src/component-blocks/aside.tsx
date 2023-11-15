@@ -8,6 +8,8 @@ export const schema = {
   }),
   content: fields.child({
     kind: 'block',
+    editIn: 'both',
+    label: 'Content',
     placeholder: 'Aside...',
     formatting: {
       inlineMarks: 'inherit',

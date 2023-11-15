@@ -1,7 +1,14 @@
-export const TOKEN_PREFIX = 'ksv';
+import {
+  THEME_DEFAULT,
+  SCHEME_AUTO,
+  SCHEME_LIGHT,
+  SCHEME_DARK,
+} from '@keystar/ui/primitives';
 
-export const SELECTOR_DEFAULT = `.${TOKEN_PREFIX}-theme`;
+export { TOKEN_PREFIX } from '@keystar/ui/primitives';
 
-export const SELECTOR_AUTO = `.${TOKEN_PREFIX}-scheme--auto`;
-export const SELECTOR_LIGHT = `.${TOKEN_PREFIX}-scheme--light`;
-export const SELECTOR_DARK = `.${TOKEN_PREFIX}-scheme--dark`;
+export const SELECTOR_DEFAULT = `.${THEME_DEFAULT}`;
+
+export const SELECTOR_AUTO = `.${SCHEME_AUTO}`;
+export const SELECTOR_LIGHT = `.${SCHEME_LIGHT}`;
+export const SELECTOR_DARK = `.${SCHEME_DARK}`;

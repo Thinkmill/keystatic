@@ -19,7 +19,7 @@ import { assert } from 'emery';
 import React, { useRef } from 'react';
 
 import { Checkbox } from '@keystar/ui/checkbox';
-import { VoussoirProvider } from '@keystar/ui/core';
+import { KeystarProvider } from '@keystar/ui/core';
 import { Icon } from '@keystar/ui/icon';
 import { chevronLeftIcon } from '@keystar/ui/icon/icons/chevronLeftIcon';
 import { chevronRightIcon } from '@keystar/ui/icon/icons/chevronRightIcon';
@@ -37,6 +37,7 @@ import {
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
+import { listViewClassList, listViewItemClassList } from './class-list';
 import { useListViewContext } from './context';
 
 interface ListViewItemProps<T> {
@@ -148,13 +149,15 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
       src={direction === 'ltr' ? chevronRightIcon : chevronLeftIcon}
       aria-hidden="true"
       UNSAFE_className={classNames(
-        'ksv-list-view-item-parent-indicator',
+        listViewItemClassList.element('parent-indicator'),
         css({
           display: 'none',
           gridArea: 'chevron',
           marginInlineStart: tokenSchema.size.space.regular,
 
-          '.ksv-list-view[data-child-nodes=true] &': {
+          [`${listViewItemClassList.selector(
+            'root'
+          )}[data-child-nodes=true] &`]: {
             display: 'inline-block',
             visibility: 'hidden',
           },
@@ -215,7 +218,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
     item.rendered
   );
   if (isDisabled) {
-    content = <VoussoirProvider isDisabled>{content}</VoussoirProvider>;
+    content = <KeystarProvider isDisabled>{content}</KeystarProvider>;
   }
 
   return (
@@ -223,6 +226,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
       {...mergedProps}
       {...toDataAttributes({ 'flush-last': isFlushWithContainerBottom })}
       className={classNames(
+        listViewItemClassList.element('row'),
         css({
           cursor: 'default',
           outline: 0,
@@ -241,19 +245,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
             position: 'absolute',
             zIndex: 3,
           },
-
-          // selected
-          '.ksv-list-view-item-row[aria-selected="true"] &': {
-            backgroundColor: tokenSchema.color.alias.backgroundSelected,
-            // boxShadow: `0 0 0 ${tokenSchema.size.border.regular} ${tokenSchema.color.alias.focusRing}`,
-
-            '&[data-interaction="hover"], &[data-focus="visible"]': {
-              backgroundColor:
-                tokenSchema.color.alias.backgroundSelectedHovered,
-            },
-          },
-        }),
-        'ksv-list-view-item-row'
+        })
       )}
       ref={rowRef}
     >
@@ -272,7 +264,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
           interaction: isPressed ? 'press' : isHovered ? 'hover' : undefined,
         })}
         className={classNames(
-          'ksv-list-view-item',
+          listViewItemClassList.element('root'),
           css({
             display: 'grid',
             paddingInline: tokenSchema.size.space.medium,
@@ -282,11 +274,14 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
             // density
             minHeight: tokenSchema.size.element.medium,
             paddingBlock: tokenSchema.size.space.medium,
-            '.ksv-list-view[data-density="compact"] &': {
-              minHeight: tokenSchema.size.element.regular,
-              paddingBlock: tokenSchema.size.space.regular,
-            },
-            '.ksv-list-view[data-density="spacious"] &': {
+            [`${listViewClassList.selector('root')}[data-density="compact"] &`]:
+              {
+                minHeight: tokenSchema.size.element.regular,
+                paddingBlock: tokenSchema.size.space.regular,
+              },
+            [`${listViewClassList.selector(
+              'root'
+            )}[data-density="spacious"] &`]: {
               minHeight: tokenSchema.size.element.large,
               paddingBlock: tokenSchema.size.space.large,
             },
@@ -320,7 +315,9 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
             },
 
             // selected
-            '.ksv-list-view-item-row[aria-selected="true"] &': {
+            [`${listViewItemClassList.selector(
+              'row'
+            )}[aria-selected="true"] &`]: {
               backgroundColor: tokenSchema.color.alias.backgroundSelected,
               // boxShadow: `0 0 0 ${tokenSchema.size.border.regular} ${tokenSchema.color.alias.focusRing}`,
 
@@ -329,13 +326,12 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
                   tokenSchema.color.alias.backgroundSelectedHovered,
               },
             },
-          }),
-          'ksv-list-view-item'
+          })
         )}
         {...gridCellProps}
       >
         <Grid
-          UNSAFE_className={'ksv-list-view-item-grid'}
+          UNSAFE_className={listViewItemClassList.element('grid')}
           // minmax supports `ActionGroup` buttonLabelBehavior="collapse"
           columns="auto auto auto 1fr minmax(0px, auto) auto auto"
           rows="1fr auto"
@@ -354,8 +350,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
                   display: 'flex',
                   justifyContent: 'center',
                   width: tokenSchema.size.element.small,
-                }),
-                'ksv-list-view-item-draghandle-container'
+                })
               )}
             >
               {!isDisabled && (
@@ -363,6 +358,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
                   <div
                     {...(buttonProps as React.HTMLAttributes<HTMLElement>)}
                     className={classNames(
+                      listViewItemClassList.element('draghandle'),
                       css({
                         outline: 0,
                         position: 'relative',
@@ -382,8 +378,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
                           boxShadow: `0 0 0 ${tokenSchema.size.alias.focusRing} ${tokenSchema.color.alias.focusRing}`,
                           margin: `calc(${tokenSchema.size.alias.focusRingGap} * -1)`,
                         },
-                      }),
-                      'ksv-list-view-item-draghandle-button'
+                      })
                     )}
                     ref={dragButtonRef}
                     draggable="true"
@@ -413,10 +408,10 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
               <Checkbox
                 {...checkboxProps}
                 UNSAFE_className={classNames(
+                  listViewItemClassList.element('checkbox'),
                   css({
                     paddingInlineEnd: tokenSchema.size.space.regular,
-                  }),
-                  'ksv-list-view-item-checkbox'
+                  })
                 )}
               />
             </Flex>
@@ -431,7 +426,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
                 flexGrow: 1,
                 truncate: overflowMode === 'truncate',
                 weight: 'medium',
-                UNSAFE_className: 'ksv-list-view-item-content',
+                UNSAFE_className: listViewItemClassList.element('content'),
               },
               description: {
                 color: isDisabled
@@ -442,7 +437,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
                 flexGrow: 1,
                 marginTop: 'regular',
                 truncate: overflowMode === 'truncate',
-                UNSAFE_className: 'ksv-list-view-item-description',
+                UNSAFE_className: listViewItemClassList.element('description'),
                 ...descriptionProps,
               },
               image: {
@@ -452,21 +447,21 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
                 overflow: 'hidden',
                 height:
                   density === 'compact' ? 'element.small' : 'element.regular',
-                UNSAFE_className: 'ksv-list-view-item-thumbnail',
+                UNSAFE_className: listViewItemClassList.element('thumbnail'),
               },
               button: {
-                UNSAFE_className: 'ksv-list-view-item-actions',
+                UNSAFE_className: listViewItemClassList.element('actions'),
                 prominence: 'low',
                 gridArea: 'actions',
               },
               actionGroup: {
-                UNSAFE_className: 'ksv-list-view-item-actions',
+                UNSAFE_className: listViewItemClassList.element('actions'),
                 prominence: 'low',
                 gridArea: 'actions',
                 density: 'compact',
               },
               actionMenu: {
-                UNSAFE_className: 'ksv-list-view-item-actionmenu',
+                UNSAFE_className: listViewItemClassList.element('actionmenu'),
                 prominence: 'low',
                 gridArea: 'actionmenu',
               },

@@ -1,7 +1,6 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { Section, Item } from '@react-stately/collections';
 import { gql } from '@ts-gql/tag/no-transform';
-import { assert } from 'emery';
 import {
   ReactElement,
   ReactNode,
@@ -12,7 +11,7 @@ import {
 import { useMutation } from 'urql';
 
 import { Avatar } from '@keystar/ui/avatar';
-import { ActionButton, Button } from '@keystar/ui/button';
+import { ActionButton } from '@keystar/ui/button';
 import { AlertDialog, DialogContainer } from '@keystar/ui/dialog';
 import { Icon } from '@keystar/ui/icon';
 import { logOutIcon } from '@keystar/ui/icon/icons/logOutIcon';
@@ -32,8 +31,6 @@ import { css, tokenSchema, useMediaQuery } from '@keystar/ui/style';
 import { ColorScheme } from '@keystar/ui/types';
 import { Text } from '@keystar/ui/typography';
 
-import { CloudConfig, GitHubConfig } from '../../config';
-
 import { BranchPicker, CreateBranchDialog } from '../branch-selection';
 import { useRouter } from '../router';
 import l10nMessages from '../l10n/index.json';
@@ -45,7 +42,7 @@ import {
   redirectToCloudAuth,
 } from '../utils';
 
-import { ZapLogo } from './common';
+import { useBrand } from './common';
 import { useAppState, useConfig } from './context';
 import {
   BranchInfoContext,
@@ -55,17 +52,27 @@ import {
 } from './data';
 import { useViewer } from './viewer-data';
 import { useThemeContext } from './theme';
-import { serializeRepoConfig } from '../repo-config';
 import { useImageLibraryURL } from '../../component-blocks/cloud-image-preview';
+
+type GitItem = {
+  icon: ReactElement;
+  label: string;
+  description?: string;
+  key: string;
+  href?: string;
+  target?: string;
+  rel?: string;
+};
+type GitSection = { key: string; label: string; children: GitItem[] };
 
 export const TopBar = () => {
   let config = useConfig();
 
   if (isCloudConfig(config)) {
-    return <CloudHeader config={config} />;
+    return <CloudHeader />;
   }
   if (isGitHubConfig(config)) {
-    return <GithubHeader config={config} />;
+    return <GithubHeader />;
   }
   if (isLocalConfig(config)) {
     return <LocalHeader />;
@@ -78,10 +85,10 @@ export const SidebarHeader = () => {
   let config = useConfig();
 
   if (isCloudConfig(config)) {
-    return <CloudHeader config={config} />;
+    return <CloudHeader />;
   }
   if (isGitHubConfig(config)) {
-    return <GithubHeader config={config} />;
+    return <GithubHeader />;
   }
   if (isLocalConfig(config)) {
     return <LocalHeader />;
@@ -93,21 +100,11 @@ export const SidebarHeader = () => {
 // Cloud
 // -----------------------------------------------------------------------------
 
-function CloudHeader({ config }: { config: CloudConfig }) {
+function CloudHeader() {
   const cloudInfo = useCloudInfo();
   return (
     <HeaderOuter>
       <BrandButton />
-      <Text
-        color="neutralEmphasis"
-        weight="semibold"
-        marginX="regular"
-        truncate
-        isHidden={{ below: 'tablet' }}
-      >
-        {config.cloud.project}
-      </Text>
-      <Slash />
       <BranchPicker />
       <GitMenu />
       <Box flex="1" />
@@ -146,24 +143,11 @@ function ImageLibraryButton() {
 // Github
 // -----------------------------------------------------------------------------
 
-function GithubHeader({ config }: { config: GitHubConfig }) {
+function GithubHeader() {
   const user = useViewer();
   return (
     <HeaderOuter>
       <BrandButton />
-      <Button
-        href={`https://github.com/${serializeRepoConfig(config.storage.repo)}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        prominence="low"
-        isHidden={{ below: 'tablet' }}
-        UNSAFE_className={css({
-          paddingInline: tokenSchema.size.space.regular,
-        })}
-      >
-        {serializeRepoConfig(config.storage.repo)}
-      </Button>
-      <Slash />
       <BranchPicker />
       <GitMenu />
       <Box flex="1" />
@@ -193,9 +177,6 @@ function LocalHeader() {
   return (
     <HeaderOuter>
       <BrandButton />
-      <Text color="neutralEmphasis" weight="semibold">
-        Keystatic
-      </Text>
       <Box flex="1" />
       <ImageLibraryButton />
       <ThemeMenu />
@@ -233,32 +214,27 @@ function LocalHeader() {
 
 function BrandButton() {
   let { basePath } = useAppState();
+  let { brandMark, brandName } = useBrand();
+
   return (
-    <Button
+    <ActionButton
       aria-label="dashboard"
       prominence="low"
       href={basePath}
       UNSAFE_style={{
         marginInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
-        padding: 0,
       }}
     >
-      <ZapLogo />
-    </Button>
-  );
-}
+      {brandMark}
 
-function Slash() {
-  return (
-    <Text
-      aria-hidden
-      color="neutralTertiary"
-      role="presentation"
-      isHidden={{ below: 'tablet' }}
-      UNSAFE_className={css({ userSelect: 'none' })}
-    >
-      /
-    </Text>
+      <Text
+        color="neutralEmphasis"
+        weight="medium"
+        visuallyHidden={{ below: 'desktop' }}
+      >
+        {brandName}
+      </Text>
+    </ActionButton>
   );
 }
 
@@ -339,18 +315,21 @@ function UserMenu({
 }) {
   let config = useConfig();
   const menuItems = useMemo(() => {
-    let items = [
+    let items: GitItem[] = [
       {
-        id: 'logout',
+        key: 'logout',
         label: 'Log out',
         icon: logOutIcon,
       },
     ];
     if (config.cloud?.project) {
       items.unshift({
-        id: 'manage',
+        key: 'manage',
         label: 'Account',
         icon: userIcon,
+        href: 'https://keystatic.cloud/account',
+        target: '_blank',
+        rel: 'noopener noreferrer',
       });
     }
     return items;
@@ -403,9 +382,6 @@ function UserMenu({
           minWidth="scale.2400"
           onAction={key => {
             switch (key) {
-              case 'manage':
-                openBlankTargetSafely('https://keystatic.cloud/account');
-                break;
               case 'logout':
                 switch (config.storage.kind) {
                   case 'github':
@@ -421,7 +397,13 @@ function UserMenu({
           }}
         >
           {item => (
-            <Item textValue={item.label}>
+            <Item
+              key={item.key}
+              textValue={item.label}
+              href={item.href}
+              rel={item.rel}
+              target={item.target}
+            >
               <Icon src={item.icon} />
               <Text>{item.label}</Text>
             </Item>
@@ -456,19 +438,13 @@ function GitMenu() {
     ` as import('../../../__generated__/ts-gql/DeleteBranch').type
   );
 
+  const repoURL = getRepoUrl(data);
   const appShellData = useContext(GitHubAppShellDataContext);
   const fork =
     appShellData?.data?.repository &&
     'forks' in appShellData.data.repository &&
     appShellData.data.repository.forks.nodes?.[0];
 
-  type GitItem = {
-    icon: ReactElement;
-    label: string;
-    description?: string;
-    key: string;
-  };
-  type GitSection = { key: string; label: string; children: GitItem[] };
   const gitMenuItems = useMemo(() => {
     let isDefaultBranch = data.currentBranch === data.defaultBranch;
     let items: GitSection[] = [];
@@ -484,6 +460,9 @@ function GitMenu() {
       {
         key: 'repo',
         icon: githubIcon,
+        href: repoURL,
+        target: '_blank',
+        rel: 'noopener noreferrer',
         label: 'Github repo', // TODO: l10n
       },
     ];
@@ -493,12 +472,18 @@ function GitMenu() {
         prSection.push({
           key: 'create-pull-request',
           icon: gitPullRequestIcon,
+          href: `${repoURL}/pull/new/${data.currentBranch}`,
+          target: '_blank',
+          rel: 'noopener noreferrer',
           label: stringFormatter.format('createPullRequest'),
         });
       } else {
         prSection.push({
           key: 'view-pull-request',
           icon: gitPullRequestIcon,
+          href: `${repoURL}/pull/${data.pullRequestNumber}`,
+          target: '_blank',
+          rel: 'noopener noreferrer',
           label: `Pull Request #${data.pullRequestNumber}`,
         });
       }
@@ -514,6 +499,9 @@ function GitMenu() {
       repoSection.push({
         key: 'fork',
         icon: gitForkIcon,
+        href: `https://github.com/${fork.owner.login}/${fork.name}`,
+        target: '_blank',
+        rel: 'noopener noreferrer',
         label: 'View fork', // TODO: l10n
       });
     }
@@ -546,6 +534,7 @@ function GitMenu() {
     data.currentBranch,
     data.defaultBranch,
     data.pullRequestNumber,
+    repoURL,
     stringFormatter,
   ]);
   const router = useRouter();
@@ -556,7 +545,6 @@ function GitMenu() {
         prominence="low"
         items={gitMenuItems}
         onAction={key => {
-          let repoURL = getRepoUrl(data);
           switch (key) {
             case 'new-branch':
               toggleNewBranchDialog();
@@ -565,31 +553,19 @@ function GitMenu() {
               toggleDeleteBranchDialog();
               break;
             }
-            case 'view-pull-request':
-              openBlankTargetSafely(
-                `${repoURL}/pull/${data.pullRequestNumber}`
-              );
-              break;
-            case 'create-pull-request':
-              openBlankTargetSafely(
-                `${repoURL}/pull/new/${data.currentBranch}`
-              );
-              break;
-            case 'repo':
-              openBlankTargetSafely(repoURL);
-              break;
-            case 'fork':
-              assert(!!fork);
-              openBlankTargetSafely(
-                `https://github.com/${fork.owner.login}/${fork.name}`
-              );
           }
         }}
       >
         {item => (
           <Section key={item.key} items={item.children} aria-label={item.label}>
             {item => (
-              <Item key={item.key} textValue={item.label}>
+              <Item
+                key={item.key}
+                textValue={item.label}
+                href={item.href}
+                rel={item.rel}
+                target={item.target}
+              >
                 <Icon src={item.icon} />
                 <Text>{item.label}</Text>
               </Item>
@@ -642,12 +618,4 @@ function GitMenu() {
       </DialogContainer>
     </>
   );
-}
-
-// ============================================================================
-// Utils
-// ============================================================================
-
-function openBlankTargetSafely(url: string) {
-  window.open(url, '_blank', 'noopener,noreferrer');
 }

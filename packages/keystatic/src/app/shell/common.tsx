@@ -1,6 +1,44 @@
-import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
+import { useProvider } from '@keystar/ui/core';
+import {
+  breakpointQueries,
+  css,
+  tokenSchema,
+  useMediaQuery,
+} from '@keystar/ui/style';
 
-export function ZapLogo() {
+import { serializeRepoConfig } from '../repo-config';
+import { useConfig } from './context';
+
+export function useBrand() {
+  let { colorScheme } = useProvider();
+  let config = useConfig();
+  let prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
+
+  let brandMark = <ZapLogo />;
+  let brandName = 'Keystatic';
+
+  if (config.ui?.brand?.mark) {
+    let BrandMark = config.ui.brand.mark;
+    let resolvedColorScheme =
+      colorScheme === 'auto' ? (prefersDark ? 'dark' : 'light') : colorScheme;
+
+    brandMark = <BrandMark colorScheme={resolvedColorScheme} />;
+  }
+
+  if ('repo' in config.storage) {
+    brandName = serializeRepoConfig(config.storage.repo);
+  }
+  if (config.cloud) {
+    brandName = config.cloud.project;
+  }
+  if (config.ui?.brand?.name) {
+    brandName = config.ui.brand.name;
+  }
+
+  return { brandMark, brandName };
+}
+
+function ZapLogo() {
   return (
     <svg
       viewBox="0 0 24 24"

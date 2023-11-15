@@ -1,6 +1,7 @@
 import { arrowUpIcon } from '@keystar/ui/icon/icons/arrowUpIcon';
 import { Icon } from '@keystar/ui/icon';
 import {
+  ClassList,
   classNames,
   css,
   toDataAttributes,
@@ -11,6 +12,12 @@ import {
 import { CSSProperties, HTMLAttributes } from 'react';
 
 import { TableProps } from './types';
+
+export const tableViewClassList = new ClassList('TableView', [
+  'cell',
+  'cell-wrapper',
+  'row',
+]);
 
 // ============================================================================
 // UTILS
@@ -37,9 +44,10 @@ export const CellContents = (props: HTMLAttributes<HTMLDivElement>) => {
         flex: 1,
 
         // align with checkboxes
-        '.ksv-table-view[data-overflow-mode="wrap"] &': {
-          paddingTop: `calc((${tokenSchema.size.element.xsmall} - ${tokenSchema.typography.text.regular.capheight}) / 2)`,
-        },
+        [`${tableViewClassList.selector('root')}[data-overflow-mode="wrap"] &`]:
+          {
+            paddingTop: `calc((${tokenSchema.size.element.xsmall} - ${tokenSchema.typography.text.regular.capheight}) / 2)`,
+          },
       })}
       {...props}
     />
@@ -98,8 +106,8 @@ export function useTableStyleProps<T>(props: TableProps<T>) {
   return {
     ...toDataAttributes({ density, overflowMode, prominence }),
     className: classNames(
+      tableViewClassList.element('root'),
       styleProps.className,
-      'ksv-table-view',
       css({
         display: 'flex',
         flexDirection: 'column',
@@ -130,10 +138,11 @@ export function useHeaderWrapperStyleProps({
       boxSizing: 'content-box',
       flex: 'none',
       // keep aligned with the border of the body
-      '.ksv-table-view:not([data-prominence="low"]) &': {
-        borderLeft: `${tokenSchema.size.border.regular} solid transparent`,
-        borderRight: `${tokenSchema.size.border.regular} solid transparent`,
-      },
+      [`${tableViewClassList.selector('root')}:not([data-prominence="low"]) &`]:
+        {
+          borderLeft: `${tokenSchema.size.border.regular} solid transparent`,
+          borderRight: `${tokenSchema.size.border.regular} solid transparent`,
+        },
     }),
     style,
   };
@@ -151,16 +160,17 @@ export function useHeadStyleProps({ style }: { style?: CSSProperties } = {}) {
 export function useBodyStyleProps({ style }: { style?: CSSProperties } = {}) {
   return {
     className: css({
-      '.ksv-table-view[data-prominence="low"] &': {
+      [`${tableViewClassList.selector('root')}[data-prominence="low"] &`]: {
         borderBlock: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
       },
-      '.ksv-table-view:not([data-prominence="low"]) &': {
-        backgroundColor: tokenSchema.color.background.canvas,
-        border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
-        borderRadius: tokenSchema.size.radius.medium,
-        /* Fix scrollbars on iOS with sticky row headers */
-        transform: 'translate3d(0, 0, 0)',
-      },
+      [`${tableViewClassList.selector('root')}:not([data-prominence="low"]) &`]:
+        {
+          backgroundColor: tokenSchema.color.background.canvas,
+          border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.muted}`,
+          borderRadius: tokenSchema.size.radius.medium,
+          /* Fix scrollbars on iOS with sticky row headers */
+          transform: 'translate3d(0, 0, 0)',
+        },
     }),
     style,
   };
@@ -183,16 +193,22 @@ const commonCellStyles = {
 
   // Density
   paddingBlock: tokenSchema.size.space.medium,
-  '.ksv-table-view[data-density="compact"] &:not([role="columnheader"])': {
+  [`${tableViewClassList.selector(
+    'root'
+  )}[data-density="compact"] &:not([role="columnheader"])`]: {
     paddingBlock: tokenSchema.size.space.regular,
   },
-  '.ksv-table-view[data-density="spacious"] &:not([role="columnheader"])': {
+  [`${tableViewClassList.selector(
+    'root'
+  )}[data-density="spacious"] &:not([role="columnheader"])`]: {
     paddingBlock: tokenSchema.size.space.large,
   },
 
   // wrapping text shouldn't be centered
   alignItems: 'center',
-  '.ksv-table-view[data-overflow-mode="wrap"] &:not([role="columnheader"])': {
+  [`${tableViewClassList.selector(
+    'root'
+  )}[data-overflow-mode="wrap"] &:not([role="columnheader"])`]: {
     alignItems: 'start',
   },
 } as const;
@@ -209,7 +225,7 @@ export function useCellStyleProps(
   state?: { isFocusVisible: boolean }
 ) {
   const className = classNames(
-    'ksv-table-view-cell',
+    tableViewClassList.element('cell'),
     css([
       commonCellStyles,
       {
@@ -264,7 +280,7 @@ export function useCellStyleProps(
 export function useSelectionCellStyleProps() {
   return {
     className: classNames(
-      'ksv-table-view-cell',
+      tableViewClassList.element('cell'),
       css(commonCellStyles, {
         alignItems: 'center',
         flex: '0 0 auto',
@@ -305,7 +321,7 @@ export function useRowStyleProps(
     },
 
     // prominence
-    '.ksv-table-view:not([data-prominence="low"]) &': {
+    [`${tableViewClassList.selector('root')}:not([data-prominence="low"]) &`]: {
       '&:first-child': {
         borderStartStartRadius: calculatedRadius,
         borderStartEndRadius: calculatedRadius,
@@ -332,19 +348,21 @@ export function useRowStyleProps(
     },
 
     // interactions
-    '&[data-interaction="hover"] .ksv-table-view-cell': {
+    [`&[data-interaction="hover"] ${tableViewClassList.selector('cell')}`]: {
       backgroundColor: tokenSchema.color.scale.slate2,
     },
-    '&[data-interaction="press"] .ksv-table-view-cell': {
+    [`&[data-interaction="press"] ${tableViewClassList.selector('cell')}`]: {
       backgroundColor: tokenSchema.color.scale.slate3,
       // backgroundColor: tokenSchema.color.alias.backgroundPressed,
     },
 
     // selected
-    '&[aria-selected="true"] .ksv-table-view-cell': {
+    [`&[aria-selected="true"] ${tableViewClassList.selector('cell')}`]: {
       backgroundColor: tokenSchema.color.alias.backgroundSelected,
     },
-    '&[aria-selected="true"][data-interaction="hover"] .ksv-table-view-cell': {
+    [`&[aria-selected="true"][data-interaction="hover"] ${tableViewClassList.selector(
+      'cell'
+    )}`]: {
       backgroundColor: tokenSchema.color.alias.backgroundSelectedHovered,
     },
   });
@@ -362,7 +380,7 @@ export function useRowStyleProps(
         ? 'hover'
         : undefined,
     }),
-    className: classNames(className, 'ksv-table-view-row'),
+    className: classNames(tableViewClassList.element('row'), className),
     style,
   };
 }

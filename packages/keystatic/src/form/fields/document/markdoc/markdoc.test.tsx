@@ -442,3 +442,59 @@ test('empty list item', () => {
     </editor>
     `);
 });
+
+test('link in code', () => {
+  const markdoc = `asdasdasd [\`something\`](https://keystatic.com)`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text>
+          asdasdasd 
+        </text>
+        <link
+          @@isInline={true}
+          href="https://keystatic.com"
+        >
+          <text
+            code={true}
+          >
+            something
+          </text>
+        </link>
+        <text />
+      </paragraph>
+    </editor>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "asdasdasd [\`something\`](https://keystatic.com)
+    "
+  `);
+});
+
+test('code and bold', () => {
+  const markdoc = `fgdsihjnegrkdfmsjknefrds **\`a\`** fgbdv`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text>
+          fgdsihjnegrkdfmsjknefrds 
+        </text>
+        <text
+          bold={true}
+          code={true}
+        >
+          a
+        </text>
+        <text>
+           fgbdv
+        </text>
+      </paragraph>
+    </editor>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "fgdsihjnegrkdfmsjknefrds **\`a\`** fgbdv
+    "
+  `);
+});
