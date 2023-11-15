@@ -30,7 +30,7 @@ type ReactNodeViewProps = {
 
 type ReactNodeViewSpec = {
   component: (props: ReactNodeViewProps) => ReactNode;
-  rendersOwnContent: boolean;
+  rendersOwnContent?: boolean;
 };
 
 export type WithReactNodeViewSpec = {

@@ -16,6 +16,7 @@ import { attributes } from './attributes';
 import { dropCursor } from './dropcursor';
 import { codeBlockSyntaxHighlighting } from './code-block-highlighting';
 import { reactNodeViews } from './react-node-views';
+import { tableCellMenuPlugin } from './popovers/table';
 
 export function createEditorState(
   doc: Node,
@@ -41,6 +42,7 @@ export function createEditorState(
       reactNodeViews(doc.type.schema),
       autocompleteDecoration(),
       tableEditing(),
+      tableCellMenuPlugin(),
       codeBlockSyntaxHighlighting(),
     ],
     doc,
