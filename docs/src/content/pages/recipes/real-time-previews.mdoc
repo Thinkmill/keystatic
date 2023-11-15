@@ -10,8 +10,9 @@ You typically need to open a PR and wait for deploy previews.
 This recipe shows you how to create *immediate* previews of your Keystatic content with Next.js' [draft mode](https://nextjs.org/docs/app/building-your-application/configuring/draft-mode) feature.
 
 {% aside icon="☝️" %}
-This recipe assumes you've got an existing Keystatic site, that:
+This recipe assumes you've got an existing Next.js and Keystatic site, that:
 
+1. uses the Next.js [App router](https://nextjs.org/docs/app)
 1. uses the [Reader API](/docs/reader-api) to retrieve content
 1. is connected to a GitHub repo, running in [github mode](/docs/github-mode) or [cloud mode](/docs/cloud)
 {% /aside %}
@@ -122,9 +123,16 @@ The `reader` you're currently using from the Keystatic Reader API needs to be up
 
 Since there is a little bit of setup involved, it makes sense to create reusable *draft-mode-aware* reader.
 
-{% aside icon="⚠️" %}
+{% aside icon="☝️" %}
 Make sure you replace the `repo: 'REPO_ORG/REPO_NAME'` line in the code snippet below with your own repo org and name!
 {% /aside %}
+
+{% aside icon="⚠️" %}
+If you didn't setup a GitHub app (you are using [Keystatic cloud](/docs/cloud)), you'll also need to replace the `token` line with a personal access token.
+
+Live previews may still work without a valid `token`, as long as your GitHub repo is public and you haven't reached GitHub's rate limit.
+{% /aside %}
+
 
 ```ts
 // src/utils/reader.ts
@@ -150,7 +158,8 @@ export const reader = cache(() => {
         // Replace the below with your repo org an name
         repo: 'REPO_ORG/REPO_NAME',
         ref: branch,
-        token: process.env.PREVIEW_GITHUB_TOKEN,
+        // Assuming an existing GitHub app
+        token: cookies().get('keystatic-gh-access-token')?.value,
       });
     }
   }
