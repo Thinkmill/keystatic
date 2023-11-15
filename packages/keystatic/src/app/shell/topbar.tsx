@@ -81,22 +81,6 @@ export const TopBar = () => {
   throw new Error('Unknown config type.');
 };
 
-export const SidebarHeader = () => {
-  let config = useConfig();
-
-  if (isCloudConfig(config)) {
-    return <CloudHeader />;
-  }
-  if (isGitHubConfig(config)) {
-    return <GithubHeader />;
-  }
-  if (isLocalConfig(config)) {
-    return <LocalHeader />;
-  }
-
-  throw new Error('Unknown config type.');
-};
-
 // Cloud
 // -----------------------------------------------------------------------------
 

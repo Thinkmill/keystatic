@@ -268,7 +268,12 @@ function renderItemOrGroup(
         </Text>
       </Badge>
     ) : (
-      <StatusLight tone="accent" marginStart="auto" aria-label="Changed" />
+      <StatusLight
+        tone="accent"
+        marginStart="auto"
+        aria-label="Changed"
+        role="status"
+      />
     );
   })();
 
