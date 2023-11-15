@@ -1,13 +1,20 @@
 ---
 title: Real-time previews with Next.js' draft mode
 summary: >-
-  This recipe shows you how to create immediate previews of your Keystatic content with Next.js' draft mode feature.
+  This recipe shows you how to create immediate previews of your Keystatic
+  content with Next.js' draft mode feature.
 ---
-One of the downsides of building static sites with content files is the delay occuring between saving changes and seeing them on the website. 
+One of the downsides of building static sites with content files is the delay occuring between saving changes and seeing them on the website.
 
 You typically need to open a PR and wait for deploy previews.
 
 This recipe shows you how to create *immediate* previews of your Keystatic content with Next.js' [draft mode](https://nextjs.org/docs/app/building-your-application/configuring/draft-mode) feature.
+
+{% aside icon="🎬" %}
+Scroll to the bottom of this page for a [video walk-through](#screencast-walk-through) of the feature!
+{% /aside %}
+
+---
 
 {% aside icon="☝️" %}
 This recipe assumes you've got an existing Next.js and Keystatic site, that:
@@ -133,7 +140,6 @@ If you didn't setup a GitHub app (you are using [Keystatic cloud](/docs/cloud)),
 Live previews may still work without a valid `token`, as long as your GitHub repo is public and you haven't reached GitHub's rate limit.
 {% /aside %}
 
-
 ```ts
 // src/utils/reader.ts
 import { createReader } from '@keystatic/core/reader';
@@ -192,3 +198,13 @@ Next to the `Save` button, you will find a preview icon.
    width=680 /%}
 
 Click on it and you should see the post you just created!
+
+---
+
+## Screencast walk-through
+
+Here's a 2-minute video walk-through of the feature, as implemented on this website!
+
+{% embed
+   mediaType="video"
+   embedCode="<iframe src=\"https://www.youtube.com/embed/QuoADtLQVCE?si=WfaZm6GYs9zdsjbo\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>" /%}
