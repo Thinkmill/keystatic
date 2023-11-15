@@ -9,6 +9,7 @@ import {
   Node,
   Slice,
   Fragment,
+  AttributeSpec,
 } from 'prosemirror-model';
 import { classes, markdocIdentifierPattern, nodeWithBorder } from './utils';
 import {
@@ -115,6 +116,36 @@ const cellAttrs: Record<string, AttributeSpec> = {
   colspan: { default: 1 },
   rowspan: { default: 1 },
 };
+
+const tableCellClass = css({
+  borderInlineEnd: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+  borderBottom: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+  margin: 0,
+  padding: tokenSchema.size.space.regular,
+  fontWeight: 'inherit',
+  boxSizing: 'border-box',
+  textAlign: 'start',
+  verticalAlign: 'top',
+  position: 'relative',
+  '&.selectedCell': {
+    backgroundColor: tokenSchema.color.alias.backgroundSelected,
+    '& *::selection': {
+      backgroundColor: 'transparent',
+    },
+  },
+  '&.selectedCell::after': {
+    border: `1px solid ${tokenSchema.color.alias.borderSelected}`,
+    position: 'absolute',
+    top: -1,
+    left: -1,
+    content: '""',
+    height: '100%',
+    width: '100%',
+  },
+});
+const tableHeaderClass = css(tableCellClass, {
+  backgroundColor: tokenSchema.color.scale.slate3,
+});
 
 const nodeSpecs = {
   doc: {
@@ -415,61 +446,30 @@ const nodeSpecs = {
   table_row: {
     content: '(table_cell | table_header)*',
     tableRole: 'row',
+    allowGapCursor: false,
     parseDOM: [{ tag: 'tr' }],
     toDOM() {
       return ['tr', 0];
     },
   },
   table_cell: {
-    content: 'inline*',
+    content: 'block+',
     tableRole: 'cell',
     isolating: true,
     attrs: cellAttrs,
     parseDOM: [{ tag: 'td' }],
     toDOM() {
-      return [
-        'td',
-        {
-          class: css({
-            borderInlineEnd: `1px solid ${tokenSchema.color.alias.borderIdle}`,
-            borderBottom: `1px solid ${tokenSchema.color.alias.borderIdle}`,
-            backgroundColor: tokenSchema.color.scale.slate3,
-            margin: 0,
-            padding: tokenSchema.size.space.regular,
-            fontWeight: 'inherit',
-            boxSizing: 'border-box',
-            textAlign: 'start',
-            verticalAlign: 'top',
-            position: 'relative',
-            '&.selectedCell': {
-              backgroundColor: tokenSchema.color.alias.backgroundSelected,
-              '& *::selection': {
-                backgroundColor: 'transparent',
-              },
-            },
-            '&.selectedCell::after': {
-              border: `1px solid ${tokenSchema.color.alias.borderSelected}`,
-              position: 'absolute',
-              top: -1,
-              left: -1,
-              content: '""',
-              height: '100%',
-              width: '100%',
-            },
-          }),
-        },
-        0,
-      ];
+      return ['td', { class: tableCellClass }, 0];
     },
   },
   table_header: {
-    content: 'inline*',
+    content: 'block+',
     tableRole: 'header_cell',
     attrs: cellAttrs,
     isolating: true,
     parseDOM: [{ tag: 'th' }],
     toDOM() {
-      return ['th', {}, 0];
+      return ['th', { class: tableHeaderClass }, 0];
     },
   },
   ...attributeSchema,
