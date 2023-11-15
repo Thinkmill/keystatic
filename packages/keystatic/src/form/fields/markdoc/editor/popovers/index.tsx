@@ -9,10 +9,9 @@ import { Flex } from '@keystar/ui/layout';
 import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { useEditorDispatchCommand, useEditorSchema } from '../editor-view';
 import { LinkToolbar } from './link-toolbar';
-import { ToolbarSeparator } from '../primitives';
 import { CodeBlockLanguageCombobox } from './code-block-language';
 import { useEditorReferenceElement } from './reference';
-import { EditorPopover } from '../new-primitives';
+import { EditorPopover, EditorToolbarSeparator } from '../new-primitives';
 import { sheetIcon } from '@keystar/ui/icon/icons/sheetIcon';
 import { toggleHeader } from 'prosemirror-tables';
 
@@ -38,7 +37,7 @@ const popoverComponents: Record<string, NodePopoverRenderer> = {
             });
           }}
         />
-        <ToolbarSeparator />
+        <EditorToolbarSeparator />
         <TooltipTrigger>
           <ActionButton
             prominence="low"
@@ -81,7 +80,7 @@ const popoverComponents: Record<string, NodePopoverRenderer> = {
           </ActionButton>
           <Tooltip>Header row</Tooltip>
         </TooltipTrigger>
-        <ToolbarSeparator />
+        <EditorToolbarSeparator />
         <TooltipTrigger>
           <ActionButton
             prominence="low"
