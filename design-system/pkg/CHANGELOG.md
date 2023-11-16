@@ -1,5 +1,14 @@
 # @keystar/ui
 
+## 0.4.3
+
+### Patch Changes
+
+- a3f86e8f: New component `DropZone` and companion `FileTrigger` from
+  "@keystar/ui/drag-and-drop" package.
+- 2b4f24b8: Changes to `Checkbox`, `Radio`, and `Dialog` resolve overflow issues
+  within dialogs. Updated "@react-[aria|stately]/virtualizer" to latest.
+
 ## 0.4.2
 
 ### Patch Changes

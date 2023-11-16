@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/core",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -187,7 +187,7 @@
     "@emotion/weak-memoize": "^0.3.0",
     "@floating-ui/react": "^0.24.0",
     "@internationalized/string": "^3.1.1",
-    "@keystar/ui": "^0.4.2",
+    "@keystar/ui": "^0.4.3",
     "@markdoc/markdoc": "^0.3.0",
     "@react-aria/focus": "^3.14.3",
     "@react-aria/i18n": "^3.8.0",
