@@ -162,6 +162,7 @@ return (
       </VStack>
     </DropZone>
     <ListView
+      aria-label="files"
       items={files}
       minHeight="element.large"
       renderEmptyState={() => (
