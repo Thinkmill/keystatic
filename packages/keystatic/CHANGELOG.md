@@ -1,5 +1,15 @@
 # @keystatic/core
 
+## 0.2.3
+
+### Patch Changes
+
+- 2b4f24b8: Prepare the dialog interface for batch commits. The invoking element
+  has been omitted from the UI until we're ready to implement.
+- Updated dependencies [a3f86e8f]
+- Updated dependencies [2b4f24b8]
+  - @keystar/ui@0.4.3
+
 ## 0.2.2
 
 ### Patch Changes
