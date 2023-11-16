@@ -1,4 +1,4 @@
-import { Ast, Node as MarkdocNode, ValidateError } from '@markdoc/markdoc';
+import { Node as MarkdocNode, ValidateError } from '@markdoc/markdoc';
 import {
   Mark,
   MarkType,
@@ -175,7 +175,7 @@ function parseAnnotations(node: MarkdocNode): ProseMirrorNode[] {
 
 const wrapInParagraph =
   (schema: EditorSchema) => (children: ProseMirrorNode[]) => {
-    if (children?.[0].isInline) {
+    if (children[0]?.isInline) {
       return [schema.nodes.paragraph.createAndFill({}, children)!];
     }
     return children;
@@ -285,12 +285,13 @@ function markdocNodeToProseMirrorNode(
     return schema.schema.text(node.attributes.content, getState().marks);
   }
   if (node.type === 'item') {
-    if (node.children[0]?.type === 'inline') {
-      node = new Ast.Node('item', node.attributes, [
-        new Ast.Node('paragraph', {}, node.children),
-      ]);
-    }
-    return createAndFill(node, schema.nodes.list_item, {});
+    return createAndFill(
+      node,
+      schema.nodes.list_item,
+      {},
+      undefined,
+      wrapInParagraph(schema)
+    );
   }
   if (node.type === 'list') {
     return createAndFill(
