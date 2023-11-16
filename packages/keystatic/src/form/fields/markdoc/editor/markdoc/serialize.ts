@@ -69,6 +69,29 @@ export function proseMirrorToMarkdoc(node: ProseMirrorNode): MarkdocNode {
   if (node.type === schema.nodes.divider) {
     return new Ast.Node('hr');
   }
+  if (node.type === schema.nodes.table) {
+    const rows = blocks(node.content);
+    const head = new Ast.Node('thead', {}, []);
+    if (rows[0].children[0].type === 'th') {
+      head.children.push(rows.shift()!);
+    }
+    const body = new Ast.Node('tbody', {}, rows);
+    return new Ast.Node(
+      'tag',
+      {},
+      [new Ast.Node('table', {}, [head, body])],
+      'table'
+    );
+  }
+  if (node.type === schema.nodes.table_row) {
+    return new Ast.Node('tr', {}, blocks(node.content));
+  }
+  if (node.type === schema.nodes.table_header) {
+    return new Ast.Node('th', {}, blocks(node.content));
+  }
+  if (node.type === schema.nodes.table_cell) {
+    return new Ast.Node('td', {}, blocks(node.content));
+  }
   if (node.type === schema.nodes.heading) {
     return new Ast.Node(
       'heading',
