@@ -1,5 +1,16 @@
 # @keystatic/test-next-app
 
+## 0.0.93
+
+### Patch Changes
+
+- 2b4f24b8: Update UI brand config.
+- Updated dependencies [2b4f24b8]
+- Updated dependencies [a3f86e8f]
+- Updated dependencies [2b4f24b8]
+  - @keystatic/core@0.2.3
+  - @keystar/ui@0.4.3
+
 ## 0.0.92
 
 ### Patch Changes
