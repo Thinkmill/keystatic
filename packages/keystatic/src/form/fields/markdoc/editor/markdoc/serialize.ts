@@ -112,7 +112,14 @@ export function proseMirrorToMarkdoc(node: ProseMirrorNode): MarkdocNode {
     );
   }
   if (node.type === schema.nodes.list_item) {
-    return new Ast.Node('item', {}, blocks(node.content));
+    let listItemContent = blocks(node.content);
+    if (
+      listItemContent.length === 1 &&
+      listItemContent[0].type === 'paragraph'
+    ) {
+      listItemContent = listItemContent[0].children;
+    }
+    return new Ast.Node('item', {}, listItemContent);
   }
   if (node.type === schema.nodes.ordered_list) {
     return new Ast.Node('list', { ordered: true }, blocks(node.content));
