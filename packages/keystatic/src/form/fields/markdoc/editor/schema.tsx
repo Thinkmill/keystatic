@@ -9,6 +9,7 @@ import {
   Node,
   Slice,
   Fragment,
+  AttributeSpec,
 } from 'prosemirror-model';
 import { classes, markdocIdentifierPattern, nodeWithBorder } from './utils';
 import {
@@ -16,12 +17,13 @@ import {
   WithInsertMenuNodeSpec,
 } from './autocomplete/insert-menu';
 import { setBlockType, wrapIn } from 'prosemirror-commands';
-import { insertNode } from './commands/misc';
+import { insertNode, insertTable } from './commands/misc';
 import { toggleList } from './lists';
 import { Config } from '@markdoc/markdoc';
 import { attributeSchema } from './attributes/schema';
 import { independentForGapCursor } from './gapcursor/gapcursor';
 import { ReplaceAroundStep } from 'prosemirror-transform';
+import { WithReactNodeViewSpec } from './react-node-views';
 
 const blockElementSpacing = css({
   marginBlock: '1em',
@@ -102,11 +104,48 @@ const liDOM: DOMOutputSpec = [
   0,
 ];
 
-export type EditorNodeSpec = NodeSpec & WithInsertMenuNodeSpec;
+export type EditorNodeSpec = NodeSpec &
+  WithInsertMenuNodeSpec &
+  WithReactNodeViewSpec;
 
 const inlineContent = `(text | (text hard_break) | attribute)*`;
 
 const levels = [1, 2, 3, 4, 5, 6];
+
+const cellAttrs: Record<string, AttributeSpec> = {
+  colspan: { default: 1 },
+  rowspan: { default: 1 },
+};
+
+const tableCellClass = css({
+  borderInlineEnd: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+  borderBottom: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+  margin: 0,
+  padding: tokenSchema.size.space.regular,
+  fontWeight: 'inherit',
+  boxSizing: 'border-box',
+  textAlign: 'start',
+  verticalAlign: 'top',
+  position: 'relative',
+  '&.selectedCell': {
+    backgroundColor: tokenSchema.color.alias.backgroundSelected,
+    '& *::selection': {
+      backgroundColor: 'transparent',
+    },
+  },
+  '&.selectedCell::after': {
+    border: `1px solid ${tokenSchema.color.alias.borderSelected}`,
+    position: 'absolute',
+    top: -1,
+    left: -1,
+    content: '""',
+    height: '100%',
+    width: '100%',
+  },
+});
+const tableHeaderClass = css(tableCellClass, {
+  backgroundColor: tokenSchema.color.scale.slate3,
+});
 
 const nodeSpecs = {
   doc: {
@@ -255,6 +294,27 @@ const nodeSpecs = {
     toDOM() {
       return blockquoteDOM;
     },
+    reactNodeView: {
+      component(props) {
+        return (
+          <blockquote
+            className={`${classes.blockParent} ${css({
+              marginInline: 0,
+              paddingInline: tokenSchema.size.space.large,
+              borderInlineStartStyle: 'solid',
+              borderInlineStartWidth: tokenSchema.size.border.large,
+              borderColor: tokenSchema.color.alias.borderIdle,
+              [`&.${classes.nodeInSelection}, &.${classes.nodeSelection}`]: {
+                borderColor: tokenSchema.color.alias.borderSelected,
+              },
+            })}`}
+          >
+            {props.children}
+          </blockquote>
+        );
+      },
+      rendersOwnContent: false,
+    },
     insertMenu: {
       label: 'Blockquote',
       command: wrapIn,
@@ -349,6 +409,68 @@ const nodeSpecs = {
       label: 'Heading ' + level,
       command: type => setBlockType(type, { level }),
     })),
+  },
+  table: {
+    content: 'table_row+',
+    insertMenu: {
+      label: 'Table',
+      command(_, schema) {
+        return insertTable(schema);
+      },
+    },
+    tableRole: 'table',
+    isolating: true,
+    group: 'block',
+    parseDOM: [{ tag: 'table' }],
+    toDOM() {
+      return [
+        'table',
+        {
+          class: css({
+            width: '100%',
+            tableLayout: 'fixed',
+            position: 'relative',
+            borderSpacing: 0,
+            borderInlineStart: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+            borderTop: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+
+            '&:has(.selectedCell) *::selection': {
+              backgroundColor: 'transparent',
+            },
+          }),
+        },
+        ['tbody', 0],
+      ];
+    },
+  },
+  table_row: {
+    content: '(table_cell | table_header)*',
+    tableRole: 'row',
+    allowGapCursor: false,
+    parseDOM: [{ tag: 'tr' }],
+    toDOM() {
+      return ['tr', 0];
+    },
+  },
+  table_cell: {
+    content: 'block+',
+    tableRole: 'cell',
+    isolating: true,
+    attrs: cellAttrs,
+    parseDOM: [{ tag: 'td' }],
+    toDOM() {
+      return ['td', { class: tableCellClass }, 0];
+    },
+  },
+  table_header: {
+    content: 'block+',
+    tableRole: 'header_cell',
+    attrs: cellAttrs,
+    isolating: true,
+    parseDOM: [{ tag: 'th' }],
+    toDOM() {
+      return ['th', { class: tableHeaderClass }, 0];
+    },
   },
   ...attributeSchema,
 } satisfies Record<string, EditorNodeSpec>;
@@ -463,6 +585,15 @@ export function createEditorSchema(markdocConfig: Config) {
   const nodes = schema.nodes as EditorSchema['nodes'];
   const marks = schema.marks as EditorSchema['marks'];
 
+  const editorSchema: EditorSchema = {
+    schema,
+    marks,
+    nodes,
+    markdocConfig,
+    insertMenuItems: [],
+  };
+  schemaToEditorSchema.set(schema, editorSchema);
+
   const insertMenuItems: Omit<InsertMenuItem, 'id'>[] = [];
   for (const node of Object.values(schema.nodes)) {
     const insertMenuSpec = (node.spec as EditorNodeSpec).insertMenu;
@@ -471,13 +602,13 @@ export function createEditorSchema(markdocConfig: Config) {
         for (const item of insertMenuSpec) {
           insertMenuItems.push({
             label: item.label,
-            command: item.command(node),
+            command: item.command(node, editorSchema),
           });
         }
       } else {
         insertMenuItems.push({
           label: insertMenuSpec.label,
-          command: insertMenuSpec.command(node),
+          command: insertMenuSpec.command(node, editorSchema),
         });
       }
     }
@@ -554,16 +685,9 @@ export function createEditorSchema(markdocConfig: Config) {
       },
     });
   }
-  const editorSchema: EditorSchema = {
-    schema,
-    marks,
-    nodes,
-    markdocConfig,
-    insertMenuItems: insertMenuItems
-      .sort((a, b) => a.label.localeCompare(b.label))
-      .map((item, i) => ({ ...item, id: i.toString() })),
-  };
-  schemaToEditorSchema.set(schema, editorSchema);
+  editorSchema.insertMenuItems = insertMenuItems
+    .sort((a, b) => a.label.localeCompare(b.label))
+    .map((item, i) => ({ ...item, id: i.toString() }));
 
   return editorSchema;
 }

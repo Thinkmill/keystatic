@@ -1,6 +1,7 @@
 import { EditorState, Selection } from 'prosemirror-state';
 import { history } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
+import { tableEditing } from 'prosemirror-tables';
 import { inputRules } from './inputrules/inputrules';
 import { Mark, Node } from 'prosemirror-model';
 import { getEditorSchema } from './schema';
@@ -14,6 +15,8 @@ import { gapCursor } from './gapcursor';
 import { attributes } from './attributes';
 import { dropCursor } from './dropcursor';
 import { codeBlockSyntaxHighlighting } from './code-block-highlighting';
+import { reactNodeViews } from './react-node-views';
+import { tableCellMenuPlugin } from './popovers/table';
 
 export function createEditorState(
   doc: Node,
@@ -36,7 +39,10 @@ export function createEditorState(
       keymap(keymapForSchema(schema)),
       markdocClipboard(),
       nodeInSelectionDecorations(),
+      reactNodeViews(doc.type.schema),
       autocompleteDecoration(),
+      tableEditing(),
+      tableCellMenuPlugin(),
       codeBlockSyntaxHighlighting(),
     ],
     doc,

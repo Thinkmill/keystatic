@@ -7,12 +7,13 @@ import { Icon } from '@keystar/ui/icon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { Flex } from '@keystar/ui/layout';
 import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
-import { useEditorDispatchCommand } from '../editor-view';
+import { useEditorDispatchCommand, useEditorSchema } from '../editor-view';
 import { LinkToolbar } from './link-toolbar';
-import { ToolbarSeparator } from '../primitives';
 import { CodeBlockLanguageCombobox } from './code-block-language';
 import { useEditorReferenceElement } from './reference';
-import { EditorPopover } from '../new-primitives';
+import { EditorPopover, EditorToolbarSeparator } from '../new-primitives';
+import { sheetIcon } from '@keystar/ui/icon/icons/sheetIcon';
+import { toggleHeader } from 'prosemirror-tables';
 
 type NodePopoverRenderer = (props: {
   node: Node;
@@ -30,18 +31,56 @@ const popoverComponents: Record<string, NodePopoverRenderer> = {
           onChange={val => {
             dispatchCommand((state, dispatch) => {
               if (dispatch) {
-                dispatch(
-                  state.tr.setNodeMarkup(props.pos, undefined, {
-                    ...props.node.attrs,
-                    language: val,
-                  })
-                );
+                dispatch(state.tr.setNodeAttribute(props.pos, 'language', val));
               }
               return true;
             });
           }}
         />
-        <ToolbarSeparator />
+        <EditorToolbarSeparator />
+        <TooltipTrigger>
+          <ActionButton
+            prominence="low"
+            onPress={() => {
+              dispatchCommand((state, dispatch) => {
+                if (dispatch) {
+                  dispatch(
+                    state.tr.delete(props.pos, props.pos + props.node.nodeSize)
+                  );
+                }
+                return true;
+              });
+            }}
+          >
+            <Icon src={trash2Icon} />
+          </ActionButton>
+          <Tooltip tone="critical">Remove</Tooltip>
+        </TooltipTrigger>
+      </Flex>
+    );
+  },
+  table: function TablePopover(props) {
+    const dispatchCommand = useEditorDispatchCommand();
+    const schema = useEditorSchema();
+
+    return (
+      <Flex gap="regular" padding="regular">
+        <TooltipTrigger>
+          <ActionButton
+            prominence="low"
+            isSelected={
+              props.node.firstChild?.firstChild?.type ===
+              schema.nodes.table_header
+            }
+            onPress={() => {
+              dispatchCommand(toggleHeader('row'));
+            }}
+          >
+            <Icon src={sheetIcon} />
+          </ActionButton>
+          <Tooltip>Header row</Tooltip>
+        </TooltipTrigger>
+        <EditorToolbarSeparator />
         <TooltipTrigger>
           <ActionButton
             prominence="low"
@@ -174,7 +213,7 @@ function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
     state.selection.$from.sharedDepth(state.selection.to)
   );
   const $pos = state.doc.resolve(commonAncestorPos);
-  for (let i = $pos.depth; i > 0; i++) {
+  for (let i = $pos.depth; i > 0; i--) {
     const node = $pos.node(i);
     if (!node) break;
     const renderer = popoverComponents[node.type.name];

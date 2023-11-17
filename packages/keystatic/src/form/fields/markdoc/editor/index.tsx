@@ -9,6 +9,8 @@ import { prosemirrorStyles } from './utils';
 import { EditorPopoverDecoration } from './popovers';
 import { ProseMirrorEditable, ProseMirrorEditor } from './editor-view';
 import { AutocompleteDecoration } from './autocomplete/decoration';
+import { NodeViews } from './react-node-views';
+import { CellMenuPortal } from './popovers/table';
 
 const orderedListStyles = ['lower-roman', 'decimal', 'lower-alpha'];
 const unorderedListStyles = ['square', 'disc', 'circle'];
@@ -65,6 +67,8 @@ export const Editor = forwardRef(function Editor(
         <Toolbar />
         <ProseMirrorEditable className={editableStyles} />
       </Box>
+      <NodeViews state={props.value} />
+      <CellMenuPortal />
       <EditorPopoverDecoration state={props.value} />
       <AutocompleteDecoration />
     </ProseMirrorEditor>

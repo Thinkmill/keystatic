@@ -71,12 +71,6 @@ export function useEditorView(
   const mountRef = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef<EditorView | null>(null);
   const onEditorStateChange = useEventCallback(_onEditorStateChange);
-  // TODO: don't have this useRef
-  // preview props should allow updater functions
-  const stateRef = useRef(state);
-  useLayoutEffect(() => {
-    stateRef.current = state;
-  });
   useLayoutEffect(() => {
     if (mountRef.current === null) {
       return;
@@ -84,10 +78,10 @@ export function useEditorView(
     const view = new EditorView(
       { mount: mountRef.current },
       {
-        state: stateRef.current,
+        state: state,
         dispatchTransaction(tr) {
-          const newEditorState = stateRef.current.apply(tr);
-          stateRef.current = newEditorState;
+          const newEditorState = view.state.apply(tr);
+          view.updateState(newEditorState);
           onEditorStateChange(newEditorState);
         },
       }
@@ -97,6 +91,7 @@ export function useEditorView(
       view.destroy();
       viewRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mountRef, onEditorStateChange]);
   useLayoutEffect(() => {
     viewRef.current?.updateState(state);
