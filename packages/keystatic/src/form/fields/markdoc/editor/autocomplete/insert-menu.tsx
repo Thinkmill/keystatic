@@ -18,11 +18,12 @@ import { Item } from '../new-primitives';
 import { InputRule } from '../inputrules/inputrules';
 import { useEditorKeydownListener } from '../keydown';
 import { EditorAutocomplete } from './autocomplete';
+import { EditorSchema } from '../schema';
 
 export type InsertMenuItemSpec = {
   label: string;
   description?: string;
-  command: (type: NodeType) => Command;
+  command: (type: NodeType, schema: EditorSchema) => Command;
 };
 
 export type WithInsertMenuNodeSpec = {

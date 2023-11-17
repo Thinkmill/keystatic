@@ -1,4 +1,4 @@
-import { Ast, Node as MarkdocNode, ValidateError } from '@markdoc/markdoc';
+import { Node as MarkdocNode, ValidateError } from '@markdoc/markdoc';
 import {
   Mark,
   MarkType,
@@ -69,9 +69,13 @@ function createAndFill(
   markdocNode: MarkdocNode,
   nodeType: NodeType,
   attrs: Record<string, any>,
-  extraChildren?: ProseMirrorNode[]
+  extraChildren?: ProseMirrorNode[],
+  mapChildren?: (children: ProseMirrorNode[]) => ProseMirrorNode[]
 ) {
-  const children = childrenToProseMirrorNodes(markdocNode.children);
+  let children = childrenToProseMirrorNodes(markdocNode.children);
+  if (mapChildren) {
+    children = mapChildren(children);
+  }
   const node = nodeType.createAndFill(
     attrs,
     extraChildren ? [...children, ...extraChildren] : children
@@ -168,6 +172,14 @@ function parseAnnotations(node: MarkdocNode): ProseMirrorNode[] {
     return schema.nodes.attribute.createChecked({ name: x.name }, [val]);
   });
 }
+
+const wrapInParagraph =
+  (schema: EditorSchema) => (children: ProseMirrorNode[]) => {
+    if (children[0]?.isInline) {
+      return [schema.nodes.paragraph.createAndFill({}, children)!];
+    }
+    return children;
+  };
 
 function markdocNodeToProseMirrorNode(
   node: MarkdocNode
@@ -273,12 +285,13 @@ function markdocNodeToProseMirrorNode(
     return schema.schema.text(node.attributes.content, getState().marks);
   }
   if (node.type === 'item') {
-    if (node.children[0]?.type === 'inline') {
-      node = new Ast.Node('item', node.attributes, [
-        new Ast.Node('paragraph', {}, node.children),
-      ]);
-    }
-    return createAndFill(node, schema.nodes.list_item, {});
+    return createAndFill(
+      node,
+      schema.nodes.list_item,
+      {},
+      undefined,
+      wrapInParagraph(schema)
+    );
   }
   if (node.type === 'list') {
     return createAndFill(
@@ -289,7 +302,37 @@ function markdocNodeToProseMirrorNode(
       {}
     );
   }
+  if (node.type === 'table') {
+    return createAndFill(node, schema.nodes.table, {});
+  }
+  if (node.type === 'tbody' || node.type === 'thead') {
+    return childrenToProseMirrorNodes(node.children);
+  }
+  if (node.type === 'tr') {
+    return createAndFill(node, schema.nodes.table_row, {});
+  }
+  if (node.type === 'th') {
+    return createAndFill(
+      node,
+      schema.nodes.table_header,
+      {},
+      undefined,
+      wrapInParagraph(schema)
+    );
+  }
+  if (node.type === 'td') {
+    return createAndFill(
+      node,
+      schema.nodes.table_cell,
+      {},
+      undefined,
+      wrapInParagraph(schema)
+    );
+  }
   if (node.type === 'tag' && node.tag) {
+    if (node.tag === 'table') {
+      return markdocNodeToProseMirrorNode(node.children[0]);
+    }
     const children = childrenToProseMirrorNodes(node.children);
     const tagChildren = [
       schema.nodes.tag_attributes.createChecked(null, parseAnnotations(node)),

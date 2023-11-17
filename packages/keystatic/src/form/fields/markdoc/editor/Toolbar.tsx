@@ -31,7 +31,9 @@ import {
   useEditorState,
 } from './editor-view';
 import { toggleList } from './lists';
-import { insertNode, toggleCodeBlock } from './commands/misc';
+import { insertNode, insertTable, toggleCodeBlock } from './commands/misc';
+import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
+import { EditorSchema } from './schema';
 
 function EditorToolbarButton(props: {
   children: ReactNode;
@@ -76,7 +78,8 @@ function EditorToolbarButton(props: {
 // );
 
 export function Toolbar() {
-  const { nodes } = useEditorSchema();
+  const schema = useEditorSchema();
+  const { nodes } = schema;
   return (
     <ToolbarContainer>
       <ToolbarScrollArea>
@@ -134,6 +137,17 @@ export function Toolbar() {
             <Tooltip>
               <Text>Code block</Text>
               <Kbd>```</Kbd>
+            </Tooltip>
+          </TooltipTrigger>
+          <TooltipTrigger>
+            <EditorToolbarButton
+              aria-label="Table"
+              command={insertTable(schema)}
+            >
+              <Icon src={tableIcon} />
+            </EditorToolbarButton>
+            <Tooltip>
+              <Text>Table</Text>
             </Tooltip>
           </TooltipTrigger>
         </ToolbarGroup>
@@ -454,14 +468,17 @@ function useMemoStringified<T>(value: T): T {
   return useMemo(() => value, [JSON.stringify(value)]);
 }
 
-// function canInsert(state: EditorState, nodeType: NodeType) {
-//   let $from = state.selection.$from;
-//   for (let d = $from.depth; d >= 0; d--) {
-//     let index = $from.index(d);
-//     if ($from.node(d).canReplaceWith(index, index, nodeType)) return true;
-//   }
-//   return false;
-// }
+function getActiveListType(state: EditorState, schema: EditorSchema) {
+  const sharedDepth = state.selection.$from.sharedDepth(state.selection.to);
+  for (let i = sharedDepth; i > 0; i--) {
+    const node = state.selection.$from.node(i);
+    if (node.type === schema.nodes.ordered_list) {
+      return 'ordered' as const;
+    } else if (node.type === schema.nodes.unordered_list) {
+      return 'unordered' as const;
+    }
+  }
+}
 
 function ListButtons() {
   const state = useEditorState();
@@ -473,6 +490,7 @@ function ListButtons() {
   const canWrapInUnorderedList =
     !!schema.nodes.unordered_list &&
     toggleList(schema.nodes.unordered_list)(state);
+  const activeListType = getActiveListType(state, schema);
 
   return useMemo(() => {
     return (
@@ -484,17 +502,15 @@ function ListButtons() {
         density="compact"
         prominence="low"
         disabledKeys={[
-          canWrapInOrderedList && 'ordered',
-          canWrapInUnorderedList && 'unordered',
+          !canWrapInOrderedList && 'ordered',
+          !canWrapInUnorderedList && 'unordered',
         ].filter(removeFalse)}
         summaryIcon={<Icon src={listIcon} />}
-        selectedKeys={[]}
-        // selectedKeys={selectedKeys}
+        selectedKeys={activeListType ? [activeListType] : []}
         onAction={key => {
           const format = key as 'ordered' | 'unordered';
           const type = schema.nodes[`${format}_list`];
           if (type) {
-            console.log('yes');
             dispatchCommand(toggleList(type));
           }
         }}
@@ -522,7 +538,13 @@ function ListButtons() {
         )}
       </ActionGroup>
     );
-  }, [canWrapInOrderedList, canWrapInUnorderedList, dispatchCommand, schema]);
+  }, [
+    activeListType,
+    canWrapInOrderedList,
+    canWrapInUnorderedList,
+    dispatchCommand,
+    schema.nodes,
+  ]);
 }
 
 function removeFalse<T>(val: T): val is Exclude<T, false> {
