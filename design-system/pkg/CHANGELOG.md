@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.4.4
+
+### Patch Changes
+
+- 0673fb03: Fix field types.
+
 ## 0.4.3
 
 ### Patch Changes
