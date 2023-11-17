@@ -15,16 +15,40 @@ import {
   Selection,
 } from 'prosemirror-state';
 
+function findParentList(range: NodeRange, listItemType: NodeType) {
+  for (let d = range.depth; d > 0; d--) {
+    let parent = range.$from.node(d);
+    if (parent.type.contentMatch.defaultType === listItemType) {
+      return { node: parent, pos: range.$from.before(d) };
+    }
+  }
+}
+
 export function toggleList(
   listType: NodeType,
   attrs: Attrs | null = null
 ): Command {
+  const listItemType = listType.contentMatch.defaultType!;
   return function (state: EditorState, dispatch?: (tr: Transaction) => void) {
     let { $from, $to } = state.selection;
     let range = $from.blockRange($to),
       doJoin = false,
       outerRange = range;
     if (!range) return false;
+    const parentList = findParentList(range, listItemType);
+    if (parentList?.node.type == listType) {
+      return liftListItem(listItemType)(state, dispatch);
+    }
+    if (parentList && parentList.node.type !== listType) {
+      if (dispatch) {
+        dispatch(
+          state.tr
+            .setNodeMarkup(parentList.pos, listType, attrs)
+            .scrollIntoView()
+        );
+      }
+      return true;
+    }
     // This is at the top of an existing list item
     if (
       range.depth >= 2 &&
