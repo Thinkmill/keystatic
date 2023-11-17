@@ -468,15 +468,6 @@ function useMemoStringified<T>(value: T): T {
   return useMemo(() => value, [JSON.stringify(value)]);
 }
 
-// function canInsert(state: EditorState, nodeType: NodeType) {
-//   let $from = state.selection.$from;
-//   for (let d = $from.depth; d >= 0; d--) {
-//     let index = $from.index(d);
-//     if ($from.node(d).canReplaceWith(index, index, nodeType)) return true;
-//   }
-//   return false;
-// }
-
 function getActiveListType(state: EditorState, schema: EditorSchema) {
   const sharedDepth = state.selection.$from.sharedDepth(state.selection.to);
   for (let i = sharedDepth; i > 0; i--) {
