@@ -17,6 +17,7 @@ import { dropCursor } from './dropcursor';
 import { codeBlockSyntaxHighlighting } from './code-block-highlighting';
 import { reactNodeViews } from './react-node-views';
 import { tableCellMenuPlugin } from './popovers/table';
+import { pasteLinks } from './links';
 
 export function createEditorState(
   doc: Node,
@@ -28,6 +29,7 @@ export function createEditorState(
     selection,
     storedMarks,
     plugins: [
+      pasteLinks(schema),
       keydownHandler(),
       history(),
       dropCursor(),
