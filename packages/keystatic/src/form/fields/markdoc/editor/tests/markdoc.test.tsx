@@ -138,3 +138,83 @@ test('inline code', () => {
     </doc>
   `);
 });
+
+test('empty list item', () => {
+  const markdoc = `- a
+- `;
+  expect(fromMarkdoc(markdoc)).toMatchInlineSnapshot(`
+<doc>
+  <unordered_list>
+    <list_item>
+      <paragraph>
+        <text>
+          <cursor />
+          a
+        </text>
+      </paragraph>
+    </list_item>
+    <list_item>
+      <paragraph />
+    </list_item>
+  </unordered_list>
+</doc>
+`);
+});
+
+test('link in code', () => {
+  const markdoc = `asdasdasd [\`something\`](https://keystatic.com)`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+<doc>
+  <paragraph>
+    <text>
+      <cursor />
+      asdasdasd 
+    </text>
+    <text
+      code={true}
+      link={
+        {
+          "href": "https://keystatic.com",
+          "title": "",
+        }
+      }
+    >
+      something
+    </text>
+  </paragraph>
+</doc>
+`);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "asdasdasd [\`something\`](https://keystatic.com)
+    "
+  `);
+});
+
+test('code and bold', () => {
+  const markdoc = `fgdsihjnegrkdfmsjknefrds **\`a\`** fgbdv`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+<doc>
+  <paragraph>
+    <text>
+      <cursor />
+      fgdsihjnegrkdfmsjknefrds 
+    </text>
+    <text
+      bold={true}
+      code={true}
+    >
+      a
+    </text>
+    <text>
+       fgbdv
+    </text>
+  </paragraph>
+</doc>
+`);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "fgdsihjnegrkdfmsjknefrds **\`a\`** fgbdv
+    "
+  `);
+});
