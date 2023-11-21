@@ -1,7 +1,10 @@
+import { Icon } from '@keystar/ui/icon';
+import { Text } from '@keystar/ui/typography';
 import { matchSorter } from 'match-sorter';
 import { NodeType } from 'prosemirror-model';
 import { Command, EditorState } from 'prosemirror-state';
 import { useMemo } from 'react';
+
 import { weakMemoize } from '../utils';
 import {
   addAutocompleteDecoration,
@@ -23,6 +26,7 @@ import { EditorSchema } from '../schema';
 export type InsertMenuItemSpec = {
   label: string;
   description?: string;
+  icon?: React.ReactElement;
   command: (type: NodeType, schema: EditorSchema) => Command;
 };
 
@@ -34,6 +38,7 @@ export type InsertMenuItem = {
   id: string;
   label: string;
   description?: string;
+  icon?: React.ReactElement;
   forToolbar?: true;
   command: Command;
 };
@@ -75,7 +80,9 @@ function wrapInsertMenuCommand(command: Command): Command {
 function childRenderer(item: InsertMenuItem) {
   return (
     <Item key={item.id} textValue={item.label}>
-      {item.label}
+      <Text>{item.label}</Text>
+      {item.description && <Text slot="description">{item.description}</Text>}
+      {item.icon && <Icon src={item.icon} />}
     </Item>
   );
 }

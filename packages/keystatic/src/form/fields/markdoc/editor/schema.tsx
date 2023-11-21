@@ -1,4 +1,17 @@
 import { css, tokenSchema } from '@keystar/ui/style';
+import { fileCodeIcon } from '@keystar/ui/icon/icons/fileCodeIcon';
+import { heading1Icon } from '@keystar/ui/icon/icons/heading1Icon';
+import { heading2Icon } from '@keystar/ui/icon/icons/heading2Icon';
+import { heading3Icon } from '@keystar/ui/icon/icons/heading3Icon';
+import { heading4Icon } from '@keystar/ui/icon/icons/heading4Icon';
+import { heading5Icon } from '@keystar/ui/icon/icons/heading5Icon';
+import { heading6Icon } from '@keystar/ui/icon/icons/heading6Icon';
+// import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
+import { listIcon } from '@keystar/ui/icon/icons/listIcon';
+import { listOrderedIcon } from '@keystar/ui/icon/icons/listOrderedIcon';
+import { quoteIcon } from '@keystar/ui/icon/icons/quoteIcon';
+import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
+import { separatorHorizontalIcon } from '@keystar/ui/icon/icons/separatorHorizontalIcon';
 import {
   DOMOutputSpec,
   NodeSpec,
@@ -111,6 +124,14 @@ export type EditorNodeSpec = NodeSpec &
 const inlineContent = `(text | (text hard_break) | attribute)*`;
 
 const levels = [1, 2, 3, 4, 5, 6];
+const levelsMeta = [
+  { description: 'Use this for a top level heading', icon: heading1Icon },
+  { description: 'Use this for key sections', icon: heading2Icon },
+  { description: 'Use this for sub-sections', icon: heading3Icon },
+  { description: 'Use this for deep headings', icon: heading4Icon },
+  { description: 'Use this for grouping list items', icon: heading5Icon },
+  { description: 'Use this for low-level headings', icon: heading6Icon },
+];
 
 const cellAttrs: Record<string, AttributeSpec> = {
   colspan: { default: 1 },
@@ -317,6 +338,8 @@ const nodeSpecs = {
     },
     insertMenu: {
       label: 'Blockquote',
+      description: 'Insert a quote or citation',
+      icon: quoteIcon,
       command: wrapIn,
     },
   },
@@ -328,6 +351,8 @@ const nodeSpecs = {
     },
     insertMenu: {
       label: 'Divider',
+      description: 'A horizontal line to separate content',
+      icon: separatorHorizontalIcon,
       command: insertNode,
     },
   },
@@ -341,6 +366,8 @@ const nodeSpecs = {
     },
     insertMenu: {
       label: 'Code block',
+      description: 'Display code with syntax highlighting',
+      icon: fileCodeIcon,
       command: setBlockType,
     },
     marks: '',
@@ -367,6 +394,8 @@ const nodeSpecs = {
     },
     insertMenu: {
       label: 'Bullet list',
+      description: 'Insert an unordered list',
+      icon: listIcon,
       command: toggleList,
     },
   },
@@ -379,6 +408,8 @@ const nodeSpecs = {
     },
     insertMenu: {
       label: 'Ordered list',
+      description: 'Insert an ordered list',
+      icon: listOrderedIcon,
       command: toggleList,
     },
   },
@@ -405,7 +436,8 @@ const nodeSpecs = {
     toDOM(node) {
       return ['h' + node.attrs.level, 0];
     },
-    insertMenu: levels.map(level => ({
+    insertMenu: levels.map((level, index) => ({
+      ...levelsMeta[index],
       label: 'Heading ' + level,
       command: type => setBlockType(type, { level }),
     })),
@@ -414,6 +446,8 @@ const nodeSpecs = {
     content: 'table_row+',
     insertMenu: {
       label: 'Table',
+      description: 'Insert a table',
+      icon: tableIcon,
       command(_, schema) {
         return insertTable(schema);
       },
@@ -602,12 +636,16 @@ export function createEditorSchema(markdocConfig: Config) {
         for (const item of insertMenuSpec) {
           insertMenuItems.push({
             label: item.label,
+            description: item.description,
+            icon: item.icon,
             command: item.command(node, editorSchema),
           });
         }
       } else {
         insertMenuItems.push({
           label: insertMenuSpec.label,
+          description: insertMenuSpec.description,
+          icon: insertMenuSpec.icon,
           command: insertMenuSpec.command(node, editorSchema),
         });
       }
@@ -685,6 +723,7 @@ export function createEditorSchema(markdocConfig: Config) {
       },
     });
   }
+  // TODO: keep "bullet list" and "ordered list" together
   editorSchema.insertMenuItems = insertMenuItems
     .sort((a, b) => a.label.localeCompare(b.label))
     .map((item, i) => ({ ...item, id: i.toString() }));
