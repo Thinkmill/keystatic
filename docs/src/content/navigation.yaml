@@ -102,7 +102,7 @@ navGroups:
         link:
           discriminant: page
           value: user-interface
-        isNew: false
+        isNew: true
   - groupName: Fields API
     items:
       - label: Array
