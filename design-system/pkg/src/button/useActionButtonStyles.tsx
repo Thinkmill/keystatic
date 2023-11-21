@@ -58,7 +58,7 @@ export function useActionButtonStyles(
         paddingInline: tokenSchema.size.space.regular,
         position: 'relative',
         transitionDuration: '130ms',
-        transitionProperty: 'background, border-color, box-shadow, color, ',
+        transitionProperty: 'background, border-color, box-shadow, color',
         transitionTimingFunction: 'ease-out',
         userSelect: 'none',
 
