@@ -84,9 +84,16 @@ export const ProgressCircle = forwardRef(function ProgressCircle(
       }}
     >
       <svg
+        {...toDataAttributes({ indeterminate: isIndeterminate ?? undefined })}
         role="presentation"
         tabIndex={-1}
-        className={css({ height: 'var(--diameter)', width: 'var(--diameter)' })}
+        className={css({
+          height: 'var(--diameter)',
+          width: 'var(--diameter)',
+          '&[data-indeterminate]': {
+            animation: `${rotateAnimation} ${tokenSchema.animation.duration.xlong} linear infinite`,
+          },
+        })}
       >
         {/* track */}
         <circle
@@ -103,19 +110,18 @@ export const ProgressCircle = forwardRef(function ProgressCircle(
             strokeDasharray: 'var(--circumference)',
             strokeLinecap: 'round',
 
-            transition: transition('stroke-dashoffset', {
-              duration: 'regular',
-            }),
-            transform: 'rotate(-90deg)',
-            transformOrigin: '50% 50%',
-
+            '&:not([data-indeterminate])': {
+              strokeDashoffset: `calc(var(--circumference) - var(--percent) * var(--circumference))`,
+              transition: transition('stroke-dashoffset', {
+                duration: 'regular',
+              }),
+              transform: 'rotate(-90deg)',
+              transformOrigin: 'center',
+            },
             '&[data-indeterminate]': {
-              animation: `${indeterminateAnimation} ${tokenSchema.animation.duration.xlong} ${tokenSchema.animation.easing.easeInOut} infinite`,
+              animation: `${dashAnimation} ${tokenSchema.animation.duration.xlong} ${tokenSchema.animation.easing.easeInOut} infinite`,
             },
           })}
-          style={{
-            strokeDashoffset: `calc(var(--circumference) - var(--percent) * var(--circumference))`,
-          }}
         />
       </svg>
     </div>
@@ -138,13 +144,19 @@ function circle(styles: Parameters<typeof css>[0]) {
   ]);
 }
 
-const indeterminateAnimation = keyframes({
+const rotateAnimation = keyframes({
   from: {
     transform: 'rotate(0deg)',
-    strokeDashoffset: 'var(--circumference)',
   },
   to: {
     transform: 'rotate(360deg)',
-    strokeDashoffset: 'calc(var(--circumference) * -1)',
+  },
+});
+const dashAnimation = keyframes({
+  from: {
+    strokeDashoffset: 'calc(var(--circumference) * 1.25)',
+  },
+  to: {
+    strokeDashoffset: 'calc(var(--circumference) * -0.75)',
   },
 });

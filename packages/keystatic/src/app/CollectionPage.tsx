@@ -34,7 +34,7 @@ import { sortByDescriptor } from './collection-sort';
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
 import { EmptyState } from './shell/empty-state';
-import { useTree, TreeData } from './shell/data';
+import { useTree, TreeData, useBranchInfo } from './shell/data';
 import { PageRoot, PageHeader } from './shell/page';
 import {
   getCollectionPath,
@@ -248,12 +248,14 @@ function CollectionTable(
 ) {
   let { searchTerm } = props;
 
+  let { currentBranch, defaultBranch } = useBranchInfo();
   let isLocalMode = isLocalConfig(props.config);
   let router = useRouter();
   let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: 'name',
     direction: 'ascending',
   });
+  let hideStatusColumn = isLocalMode || currentBranch === defaultBranch;
 
   const entriesWithStatus = useMemo(() => {
     const defaultEntries = new Map(
@@ -289,7 +291,7 @@ function CollectionTable(
   }, [filteredItems, sortDescriptor]);
 
   const columns = useMemo(() => {
-    return isLocalMode
+    return hideStatusColumn
       ? [{ name: 'Name', key: 'name' }]
       : [
           { name: 'Name', key: 'name' },
@@ -300,7 +302,7 @@ function CollectionTable(
             width: '20%',
           },
         ];
-  }, [isLocalMode]);
+  }, [hideStatusColumn]);
 
   return (
     <TableView
@@ -347,7 +349,7 @@ function CollectionTable(
       </TableHeader>
       <TableBody items={sortedItems}>
         {item =>
-          isLocalMode ? (
+          hideStatusColumn ? (
             <Row key={item.name}>
               <Cell textValue={item.name}>
                 <Text weight="medium">{item.name}</Text>
