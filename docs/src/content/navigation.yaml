@@ -45,15 +45,15 @@ navGroups:
           discriminant: page
           value: local-mode
         isNew: false
-      - label: GitHub mode
-        link:
-          discriminant: page
-          value: github-mode
-        isNew: false
       - label: Keystatic Cloud
         link:
           discriminant: page
           value: cloud
+        isNew: true
+      - label: GitHub mode
+        link:
+          discriminant: page
+          value: github-mode
         isNew: false
   - groupName: Recipes
     items:
@@ -102,7 +102,7 @@ navGroups:
         link:
           discriminant: page
           value: user-interface
-        isNew: false
+        isNew: true
   - groupName: Fields API
     items:
       - label: Array
@@ -125,6 +125,11 @@ navGroups:
           discriminant: page
           value: fields/child
         isNew: false
+      - label: Cloud Image
+        link:
+          discriminant: page
+          value: fields/cloud-image
+        isNew: true
       - label: Conditional
         link:
           discriminant: page
