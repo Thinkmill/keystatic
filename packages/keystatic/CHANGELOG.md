@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.2.4
+
+### Patch Changes
+
+- 0de2f090: Add support for tables in `fields.markdoc`
+- Updated dependencies [0673fb03]
+  - @keystar/ui@0.4.4
+
 ## 0.2.3
 
 ### Patch Changes

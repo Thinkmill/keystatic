@@ -1,10 +1,5 @@
 import { LabelAria } from '@react-aria/label';
-import {
-  AriaLabelingProps,
-  DOMProps,
-  InputBase,
-  Validation,
-} from '@react-types/shared';
+import { AriaLabelingProps, DOMProps, InputBase } from '@react-types/shared';
 import { HTMLAttributes, ReactElement, ReactNode } from 'react';
 
 import { BaseStyleProps } from '@keystar/ui/style';
@@ -33,10 +28,11 @@ export type FieldProps = {
    * criteria.
    */
   errorMessage?: ReactNode;
+  /** Whether user input is required on the input before form submission. */
+  isRequired?: boolean;
   /** Concisely label the field. */
   label?: ReactNode;
 } & InputBase &
-  Pick<Validation, 'isRequired'> &
   AriaLabelingProps &
   BaseStyleProps &
   DOMProps;
