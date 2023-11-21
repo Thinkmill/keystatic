@@ -45,15 +45,15 @@ navGroups:
           discriminant: page
           value: local-mode
         isNew: false
-      - label: GitHub mode
-        link:
-          discriminant: page
-          value: github-mode
-        isNew: false
       - label: Keystatic Cloud
         link:
           discriminant: page
           value: cloud
+        isNew: true
+      - label: GitHub mode
+        link:
+          discriminant: page
+          value: github-mode
         isNew: false
   - groupName: Recipes
     items:
