@@ -2,6 +2,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { renderEditor, jsx } from '../utils';
+import { plainTextDataTransfer } from './utils';
 
 test('pasting a url on some text wraps the text with a link', async () => {
   const { user, state } = renderEditor(
@@ -15,7 +16,7 @@ test('pasting a url on some text wraps the text with a link', async () => {
       </paragraph>
     </doc>
   );
-  await user.paste('https://keystonejs.com');
+  await user.paste(plainTextDataTransfer('https://keystonejs.com'));
   expect(state()).toMatchInlineSnapshot(`
 <doc>
   <paragraph>
@@ -61,7 +62,7 @@ test('pasting a url on a selection spanning multiple blocks replaces the selecti
       </paragraph>
     </doc>
   );
-  await user.paste('https://keystonejs.com');
+  await user.paste(plainTextDataTransfer('https://keystonejs.com'));
   expect(state()).toMatchInlineSnapshot(`
     <doc>
       <paragraph>
@@ -111,7 +112,7 @@ test('pasting a url on a selection with a link inside replaces the selection wit
       </paragraph>
     </doc>
   );
-  await user.paste('https://keystonejs.com');
+  await user.paste(plainTextDataTransfer('https://keystonejs.com'));
   expect(state()).toMatchInlineSnapshot(`
     <doc>
       <paragraph>

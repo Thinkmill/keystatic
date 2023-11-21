@@ -30,19 +30,23 @@ export function pasteLinks(schema: EditorSchema) {
       transformPasted(slice) {
         if (
           slice.content.childCount === 1 &&
-          slice.content.firstChild?.text !== undefined &&
-          urlPattern.test(slice.content.firstChild.text) &&
-          isValidURL(slice.content.firstChild.text) &&
-          slice.content.firstChild.marks.length === 0
+          slice.content.firstChild?.type === schema.nodes.paragraph &&
+          slice.content.firstChild.firstChild?.text !== undefined &&
+          urlPattern.test(slice.content.firstChild.firstChild.text) &&
+          isValidURL(slice.content.firstChild.firstChild.text) &&
+          slice.content.firstChild.firstChild.marks.length === 0
         ) {
           return Slice.maxOpen(
             Fragment.from(
-              schema.schema.text(slice.content.firstChild.text, [
-                schema.marks.link.create({
-                  href: slice.content.firstChild.text,
-                  title: '',
-                }),
-              ])
+              schema.nodes.paragraph.createChecked(
+                null,
+                schema.schema.text(slice.content.firstChild.firstChild.text, [
+                  schema.marks.link.create({
+                    href: slice.content.firstChild.firstChild.text,
+                    title: '',
+                  }),
+                ])
+              )
             )
           );
         }
@@ -73,6 +77,7 @@ export function pasteLinks(schema: EditorSchema) {
           view.dispatch(tr);
           return true;
         }
+        return false;
       },
     },
   });

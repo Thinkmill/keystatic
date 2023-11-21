@@ -16,3 +16,9 @@ export async function htmlToEditor(html: string) {
   await user.paste(dataTransfer);
   return state();
 }
+
+export function plainTextDataTransfer(data: string) {
+  const dt = new MyDataTransfer();
+  dt.setData('text/plain', data);
+  return dt;
+}
