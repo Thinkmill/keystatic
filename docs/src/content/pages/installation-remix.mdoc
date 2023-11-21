@@ -1,0 +1,216 @@
+---
+title: Adding Keystatic to a Remix project
+summary: Integrating Keystatic with an existing Remix v2 project.
+---
+
+{% aside icon="☝️" %}
+This guide assumes you have an existing Remix project.
+{% /aside %}
+
+If you don't have an existing Remix project, you can create a new one with the following command:
+
+```bash
+npx create-remix@latest
+```
+
+## Installing dependencies
+
+Add Keystatic's `core` and `remix` packages:
+
+```bash
+npm install @keystatic/core @keystatic/remix
+```
+
+## Creating a Keystatic config file
+
+Create a file called `keystatic.config.ts` in the root of the project and add the following code to define both your storage type (`local`) and a single content collection (`posts`):
+
+```ts
+// keystatic.config.ts
+import { config, fields, collection } from '@keystatic/core';
+
+export default config({
+  storage: {
+    kind: 'local',
+  },
+  collections: {
+    posts: collection({
+      label: 'Posts',
+      slugField: 'title',
+      path: 'app/content/posts/*',
+      format: { contentField: 'content' },
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        content: fields.document({
+          label: 'Content',
+          formatting: true,
+          dividers: true,
+          links: true,
+          images: true,
+        }),
+      },
+    }),
+  },
+});
+```
+
+Keystatic is now configured to manage your content based on your schema.
+
+---
+
+
+## Setting up the Keystatic Admin UI
+
+Create an `app/routes/keystatic.$.tsx` file that will host all Admin UI routes:
+
+```ts
+// app/routes/keystatic.$.tsx
+import { makePage } from '@keystatic/remix/ui';
+import config from '../../keystatic.config';
+
+export default makePage(config);
+```
+
+Next, create an `app/routes/api.keystatic.$.tsx` file that will handle API routes for Keystatic’s Admin UI:
+
+```ts
+// app/routes/api.keystatic.$.tsx
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { handleLoader } from '@keystatic/remix/api';
+import config from '../../keystatic.config';
+
+export const loader: LoaderFunction = args => handleLoader({ config }, args);
+export const action: ActionFunction = args => handleLoader({ config }, args);
+```
+
+## Running Keystatic
+
+You can now launch the Keystatic Admin UI. Start the Remix dev server:
+
+```bash
+npm run dev
+```
+
+Visit the `/keystatic` using `localhost` or `127.0.0.1` in your browser to see the Keystatic Admin UI running.
+
+---
+
+## Creating a new post
+
+{% aside icon="☝️" %}
+In our Keystatic config file, we've set the `path` property for our `posts` collection to `app/content/posts/*`.
+
+As a result, creating a new post from the Keystatic Admin UI should create a new `content` directory in the `app` directory, with the new post `.mdoc` file inside!
+{% /aside %}
+
+Go ahead — create a new post from the Admin UI, and hit save.
+
+You will find your new post inside the `app/content/posts` directory:
+
+```bash
+app
+└── content
+    └── posts
+        └── my-first-post.mdoc
+```
+
+Navigate to that file in your code editor and verify that you can see the Markdown content you entered. For example:
+
+```markdown
+---
+title: My First Post
+---
+
+This is my very first post. I am **super** excited.
+```
+
+---
+
+## Rendering Keystatic content
+
+{% aside icon="💡" %}
+Keystatic provides a [Reader API](/docs/reader-api) to bring content to the front end. As it is a Node API it must be run server-side.
+{% /aside %}
+
+### Displaying a collection list
+
+The following example displays a list of each post title, with a link to an individual post page:
+
+```tsx
+// app/routes/posts._index.tsx
+import { createReader } from '@keystatic/core/reader'
+import { Link, useLoaderData } from '@remix-run/react'
+import { json } from '@remix-run/node'
+
+import keystaticConfig from '../../keystatic.config'
+
+export async function loader() {
+  // 1. Create a reader
+  const reader = createReader(process.cwd(), keystaticConfig)
+  // 2. Read the "Posts" collection
+  const posts = await reader.collections.posts.all()
+  return json({ posts })
+}
+
+export default function Page() {
+  const { posts } = useLoaderData<typeof loader>()
+
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.slug}>
+          <Link to={`/posts/${post.slug}`}>{post.entry.title}</Link>
+        </li>
+      ))}
+    </ul>
+  )
+}
+```
+
+### Displaying a single collection entry
+
+To display content from an individual post, you can import and use Keystatic's `<DocumentRenderer />`:
+
+```tsx
+// app/routes/posts.$slug.tsx
+import { createReader } from '@keystatic/core/reader'
+import { DocumentRenderer } from '@keystatic/core/renderer'
+import { type LoaderFunctionArgs, json } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
+
+import keystaticConfig from '../../keystatic.config'
+
+export async function loader({ params }: LoaderFunctionArgs) {
+  const reader = createReader(process.cwd(), keystaticConfig)
+  const slug = params.slug
+  if (!slug) throw json('Not Found', { status: 404 })
+  const post = await reader.collections.posts.read(
+    slug, 
+    // Retrieve the content data directly, instead
+    // of getting an async `content()` function
+    { resolveLinkedFiles: true }
+  )
+  if (!post) throw json('Not Found', { status: 404 })
+  return json({ post })
+}
+
+export default function Post() {
+  const { post } = useLoaderData<typeof loader>()
+  return (
+    <>
+      <h1>{post.title}</h1>
+      <DocumentRenderer document={post.content} />
+    </>
+  )
+}
+```
+
+---
+
+## Deploying Keystatic + Remix
+
+{% aside icon="🚀" %}
+Coming soon!
+{% /aside %}
+
+You will also probably want to [connect Keystatic to GitHub](/docs/github-mode) so you can manage content on the deployed instance of the project.

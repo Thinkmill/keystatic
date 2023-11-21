@@ -320,6 +320,11 @@ export default config({
                     'coming-soon': fields.empty(),
                   }
                 ),
+                isNew: fields.checkbox({
+                  label: 'Is new?',
+                  description: 'Show a "new" badge next to this item',
+                  defaultValue: false,
+                }),
               }),
               {
                 label: 'Navigation items',
