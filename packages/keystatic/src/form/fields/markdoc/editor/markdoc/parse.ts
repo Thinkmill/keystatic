@@ -175,10 +175,12 @@ function parseAnnotations(node: MarkdocNode): ProseMirrorNode[] {
 
 const wrapInParagraph =
   (schema: EditorSchema) => (children: ProseMirrorNode[]) => {
-    if (children[0]?.isInline) {
-      return [schema.nodes.paragraph.createAndFill({}, children)!];
-    }
-    return children;
+    return children.map(x => {
+      if (x.isInline) {
+        return schema.nodes.paragraph.createAndFill({}, [x])!;
+      }
+      return x;
+    });
   };
 
 function markdocNodeToProseMirrorNode(
@@ -365,6 +367,13 @@ function markdocNodeToProseMirrorNode(
       });
     }
     return pmNode;
+  }
+  if (node.type === 'image') {
+    return schema.schema.text(
+      `![${node.attributes.alt || ''}](${node.attributes.src || ''}${
+        node.attributes.title?.length ? ` "${node.attributes.title}"` : ''
+      })`
+    );
   }
 
   error({

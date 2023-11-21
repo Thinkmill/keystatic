@@ -1,8 +1,8 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { Node } from 'slate';
 import { renderEditor, jsx } from '../utils';
+import { plainTextDataTransfer } from './utils';
 
 async function deserializeMarkdown(markdown: string) {
   const { user, state } = renderEditor(
@@ -12,7 +12,7 @@ async function deserializeMarkdown(markdown: string) {
       </paragraph>
     </doc>
   );
-  await user.paste(markdown);
+  await user.paste(plainTextDataTransfer(markdown));
   return state();
 }
 
@@ -116,11 +116,13 @@ there is a break before this
           Heading 6
         </text>
       </heading>
-      <code>
+      <code_block
+        language="plain"
+      >
         <text>
           some code
         </text>
-      </code>
+      </code_block>
       <blockquote>
         <paragraph>
           <text>
@@ -157,75 +159,71 @@ there is a break before this
         </text>
       </paragraph>
       <paragraph>
-        <text />
-        <link
-          @@isInline={true}
-          href="https://keystonejs.com"
+        <text
+          link={
+            {
+              "href": "https://keystonejs.com",
+              "title": "",
+            }
+          }
         >
-          <text>
-            A link
-          </text>
-        </link>
-        <text />
+          A link
+        </text>
       </paragraph>
       <paragraph>
         <text>
           ![An image](https://keystonejs.com/image.png)
         </text>
       </paragraph>
-      <divider
-        @@isVoid={true}
-      >
-        <text />
-      </divider>
-      <unordered-list>
-        <list-item>
-          <list-item-content>
+      <divider />
+      <unordered_list>
+        <list_item>
+          <paragraph>
             <text>
               unordered list
             </text>
-          </list-item-content>
-        </list-item>
-        <list-item>
-          <list-item-content>
+          </paragraph>
+        </list_item>
+        <list_item>
+          <paragraph>
             <text>
               item
             </text>
-          </list-item-content>
-        </list-item>
-        <list-item>
-          <list-item-content>
+          </paragraph>
+        </list_item>
+        <list_item>
+          <paragraph>
             <text>
               nested item
             </text>
-          </list-item-content>
-        </list-item>
-      </unordered-list>
-      <ordered-list>
-        <list-item>
-          <list-item-content>
+          </paragraph>
+        </list_item>
+      </unordered_list>
+      <ordered_list>
+        <list_item>
+          <paragraph>
             <text>
               ordered list
             </text>
-          </list-item-content>
-        </list-item>
-        <list-item>
-          <list-item-content>
+          </paragraph>
+        </list_item>
+        <list_item>
+          <paragraph>
             <text>
               item
             </text>
-          </list-item-content>
-          <ordered-list>
-            <list-item>
-              <list-item-content>
+          </paragraph>
+          <ordered_list>
+            <list_item>
+              <paragraph>
                 <text>
                   nested item
                 </text>
-              </list-item-content>
-            </list-item>
-          </ordered-list>
-        </list-item>
-      </ordered-list>
+              </paragraph>
+            </list_item>
+          </ordered_list>
+        </list_item>
+      </ordered_list>
       <paragraph>
         <text>
           &lt;h1&gt;this should just be plain text with the html tags&lt;/h1&gt;
@@ -239,27 +237,27 @@ there is a break before this
       <paragraph>
         <text>
           some text 
-    there is a break before this
+        </text>
+        <hard_break />
+        <text>
+          there is a break before this
+        </text>
+      </paragraph>
+      <paragraph>
+        <text
+          link={
+            {
+              "href": "http://keystonejs.com/link-reference",
+              "title": "",
+            }
+          }
+        >
+          Link reference
         </text>
       </paragraph>
       <paragraph>
         <text>
-          [Link reference][1]
-        </text>
-      </paragraph>
-      <paragraph>
-        <text>
-          ![Image reference][2]
-        </text>
-      </paragraph>
-      <paragraph>
-        <text>
-          [1]: http://keystonejs.com/link-reference
-        </text>
-      </paragraph>
-      <paragraph>
-        <text>
-          [2]: http://keystonejs.com/image-reference
+          ![Image reference](http://keystonejs.com/image-reference)
           <cursor />
         </text>
       </paragraph>
@@ -270,13 +268,7 @@ there is a break before this
 test('a mark stays in the same block', async () => {
   expect(await deserializeMarkdown(`__some bold content__`))
     .toMatchInlineSnapshot(`
-    <editor
-      marks={
-        {
-          "bold": true,
-        }
-      }
-    >
+    <doc>
       <paragraph>
         <text
           bold={true}
@@ -292,52 +284,48 @@ test('a mark stays in the same block', async () => {
 test('a link stays in the same block', async () => {
   expect(await deserializeMarkdown(`[link](https://keystonejs.com)`))
     .toMatchInlineSnapshot(`
-    <doc>
-      <paragraph>
-        <text />
-        <link
-          @@isInline={true}
-          href="https://keystonejs.com"
-        >
-          <text>
-            link
-          </text>
-        </link>
-        <text>
-          <cursor />
-        </text>
-      </paragraph>
-    </doc>
-  `);
-});
-
-test('a link nested inside bold', () => {
-  expect(
-    deserializeMarkdown(`__content [link](https://keystonejs.com) content__`)
-  ).toMatchInlineSnapshot(`
-    <editor
-      marks={
+<doc>
+  <paragraph>
+    <text
+      link={
         {
-          "bold": true,
+          "href": "https://keystonejs.com",
+          "title": "",
         }
       }
     >
+      link
+      <cursor />
+    </text>
+  </paragraph>
+</doc>
+`);
+});
+
+test('a link nested inside bold', async () => {
+  expect(
+    await deserializeMarkdown(
+      `__content[link](https://keystonejs.com) content__`
+    )
+  ).toMatchInlineSnapshot(`
+    <doc>
       <paragraph>
         <text
           bold={true}
         >
-          content 
+          content
         </text>
-        <link
-          @@isInline={true}
-          href="https://keystonejs.com"
+        <text
+          bold={true}
+          link={
+            {
+              "href": "https://keystonejs.com",
+              "title": "",
+            }
+          }
         >
-          <text
-            bold={true}
-          >
-            link
-          </text>
-        </link>
+          link
+        </text>
         <text
           bold={true}
         >
@@ -351,44 +339,38 @@ test('a link nested inside bold', () => {
 
 // this is written like this rather than a snapshot because the snapshot
 // formatting creates html escapes(which is nice for the formatting)
-// this test shows ensures that the snapshot formatting is not buggy
+// this test shows that the snapshot formatting is not buggy
 // and we're not showing html escapes to users or something
 test('html in inline content is just written', async () => {
   const input = `a<code>blah</code>b`;
-  expect((await deserializeMarkdown(input)).get().doc.textContent).toEqual(
-    input
-  );
+  const fromEditor = (await deserializeMarkdown(input)).get().doc.textContent;
+  expect(fromEditor).toBe(input);
 });
 
 test('html in complex inline content', async () => {
   expect(
     await deserializeMarkdown(
-      `__content [link<code>blah</code>](https://keystonejs.com) content__`
+      `__content[link<code>blah</code>](https://keystonejs.com) content__`
     )
   ).toMatchInlineSnapshot(`
-    <editor
-      marks={
-        {
-          "bold": true,
-        }
-      }
-    >
+    <doc>
       <paragraph>
         <text
           bold={true}
         >
-          content 
+          content
         </text>
-        <link
-          @@isInline={true}
-          href="https://keystonejs.com"
+        <text
+          bold={true}
+          link={
+            {
+              "href": "https://keystonejs.com",
+              "title": "",
+            }
+          }
         >
-          <text
-            bold={true}
-          >
-            link&lt;code&gt;blah&lt;/code&gt;
-          </text>
-        </link>
+          link&lt;code&gt;blah&lt;/code&gt;
+        </text>
         <text
           bold={true}
         >
@@ -400,34 +382,6 @@ test('html in complex inline content', async () => {
   `);
 });
 
-// the difference between a delightful "oh, nice! the editor did the formatting i wanted"
-// and "UGH!! the editor just removed some of the content i wanted" can be really subtle
-// and while we want the delightful experiences, avoiding the bad experiences is _more important_
-
-// so even though we could parse link references & definitions in some cases we don't because it feels a bit too magical
-// also note that so the workaround of "paste into some plain text place, copy it from there"
-// like html pasting doesn't exist here since this is parsing _from_ plain text
-// so erring on the side of "don't be too smart" is better
-test('link and image references and images are left alone', () => {
-  const input = `[Link reference][1]
-
-![Image reference][2]
-
-![Image](http://keystonejs.com/image)
-
-[1]: http://keystonejs.com/link-reference
-
-[2]: http://keystonejs.com/image-reference`;
-
-  expect(
-    deserializeMarkdown(input)
-      .children.map(node => Node.string(node))
-      .join('\n\n')
-  ).toEqual(input);
-});
-
-// ideally, we would probably convert the mark here, but like the comment on the previous test says,
-// it being not perfect is fine, as long as it doesn't make things _worse_
 test('marks in image tags are converted', async () => {
   const input = `![Image **blah**](https://keystonejs.com/image)`;
 
