@@ -1,0 +1,38 @@
+---
+title: Cloud Image field
+summary: The cloud image field is used to work with Keystatic Cloud Images.
+---
+The `cloudImage` field is used to work in conjunction with [Keystatic Cloud](/docs/cloud)'s [Image Library](/docs/cloud#cloud-images).
+
+Instead of storing the image itself, the field stores a reference to the image in the cloud.
+
+{% cloud-image
+   src="https://thinkmill-labs.keystatic.net/keystatic-site/images/lut0do0vglkz/cleanshot-2023-11-21-at-17-08-40-2x"
+   alt="Screenshot of the Cloud Image field modal UI"
+   height=952
+   width=1420 /%}
+
+## Returned value
+
+The returned value for this field is an object with the following properties:
+
+- **`src`**: the URL of the image
+- **`alt`**: the default alt text as set in the Image Library
+- **`height`**: the height of the image
+- **`width`**: the width of the image
+
+## Example usage
+
+```typescript
+avatar: fields.cloudImage({
+  label: 'Avatar',
+  description: 'The avatar for this user',
+  validation: {
+    isRequired: true
+  }
+})
+```
+
+## Type signature
+
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.cloudImage](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.cloudImage)

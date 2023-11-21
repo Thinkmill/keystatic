@@ -125,6 +125,11 @@ navGroups:
           discriminant: page
           value: fields/child
         isNew: false
+      - label: Cloud Image
+        link:
+          discriminant: page
+          value: fields/cloud-image
+        isNew: true
       - label: Conditional
         link:
           discriminant: page
