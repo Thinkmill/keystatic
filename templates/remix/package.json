@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev --manual",
+    "dev": "PORT=2222 remix dev --manual",
     "start": "remix-serve ./build/index.js",
     "typecheck": "tsc"
   },
@@ -14,7 +14,7 @@
     "@keystatic/remix": "^2.0.0",
     "@remix-run/css-bundle": "^2.3.0",
     "@remix-run/node": "^2.3.0",
-    "@remix-run/react": "^1.18.1",
+    "@remix-run/react": "^2.3.0",
     "@remix-run/serve": "^2.3.0",
     "isbot": "^3.6.8",
     "react": "^18.2.0",
