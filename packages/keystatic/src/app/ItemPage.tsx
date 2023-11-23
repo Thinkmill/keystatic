@@ -40,7 +40,10 @@ import { fields } from '../form/api';
 import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
 
-import { useCreateBranchMutation } from './branch-selection';
+import {
+  prettyErrorForCreateBranchMutation,
+  useCreateBranchMutation,
+} from './branch-selection';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { ForkRepoDialog } from './fork-repo';
 import l10nMessages from './l10n/index.json';
@@ -644,6 +647,7 @@ export function CreateBranchDuringUpdateDialog(props: {
         ),
       }
     : {};
+
   return (
     <Dialog>
       <form
@@ -670,7 +674,7 @@ export function CreateBranchDuringUpdateDialog(props: {
               label="Branch name"
               description={props.reason}
               autoFocus
-              errorMessage={error?.message}
+              errorMessage={prettyErrorForCreateBranchMutation(error)}
               {...propsForBranchPrefix}
             />
           </Flex>
