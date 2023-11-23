@@ -19,17 +19,22 @@ const textEncoder = new TextEncoder();
 
 export function parseToEditorState(
   content: Uint8Array | undefined,
-  schema: EditorSchema
+  schema: EditorSchema,
+  files: ReadonlyMap<string, Uint8Array>
 ) {
   const markdoc = textDecoder.decode(content);
-  const doc = markdocToProseMirror(Markdoc.parse(markdoc), schema);
+  const doc = markdocToProseMirror(Markdoc.parse(markdoc), schema, files);
   return createEditorState(doc);
 }
 
 export function serializeFromEditorState(value: EditorState) {
-  const markdocNode = proseMirrorToMarkdoc(value.doc);
+  const extraFiles = new Map<string, Uint8Array>();
+  const markdocNode = proseMirrorToMarkdoc(value.doc, extraFiles);
   const markdoc = Markdoc.format(markdocNode);
-  return textEncoder.encode(Markdoc.format(Markdoc.parse(markdoc)));
+  return {
+    content: textEncoder.encode(Markdoc.format(Markdoc.parse(markdoc))),
+    other: extraFiles,
+  };
 }
 export function DocumentFieldInput(
   props: FormFieldInputProps<EditorState> & {

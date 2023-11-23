@@ -6,9 +6,15 @@ import {
   Node as ProseMirrorNode,
 } from 'prosemirror-model';
 import { EditorSchema } from '../schema';
+import { fromUint8Array } from 'js-base64';
 
 let state:
-  | { schema: EditorSchema; errors: ValidateError[]; marks: readonly Mark[] }
+  | {
+      schema: EditorSchema;
+      errors: ValidateError[];
+      marks: readonly Mark[];
+      files: ReadonlyMap<string, Uint8Array>;
+    }
   | undefined;
 function getState(): typeof state & {} {
   if (!state) {
@@ -104,12 +110,14 @@ function addMark(node: MarkdocNode, mark: Mark | MarkType | undefined) {
 
 export function markdocToProseMirror(
   node: MarkdocNode,
-  schema: EditorSchema
+  schema: EditorSchema,
+  files: ReadonlyMap<string, Uint8Array> | undefined
 ): ProseMirrorNode {
   state = {
     schema,
     errors: [],
     marks: [],
+    files: files ?? new Map(),
   };
   try {
     let pmNode = markdocNodeToProseMirrorNode(node);
@@ -369,6 +377,17 @@ function markdocNodeToProseMirrorNode(
     return pmNode;
   }
   if (node.type === 'image') {
+    const fileContents = getState().files.get(node.attributes.src);
+    if (fileContents) {
+      return schema.nodes.image.createChecked({
+        src: `data:application/octet-stream;base64,${fromUint8Array(
+          fileContents
+        )}`,
+        alt: node.attributes.alt,
+        title: node.attributes.title,
+        filename: node.attributes.src,
+      });
+    }
     return schema.schema.text(
       `![${node.attributes.alt || ''}](${node.attributes.src || ''}${
         node.attributes.title?.length ? ` "${node.attributes.title}"` : ''

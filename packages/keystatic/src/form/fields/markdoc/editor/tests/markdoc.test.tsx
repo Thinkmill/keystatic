@@ -11,12 +11,16 @@ const schema = createEditorSchema({});
 
 function toMarkdoc(node: EditorStateDescription) {
   return Markdoc.format(
-    Markdoc.parse(Markdoc.format(proseMirrorToMarkdoc(node.get().doc)))
+    Markdoc.parse(
+      Markdoc.format(proseMirrorToMarkdoc(node.get().doc, undefined))
+    )
   );
 }
 
 function fromMarkdoc(markdoc: string) {
-  return toEditorState(markdocToProseMirror(Markdoc.parse(markdoc), schema));
+  return toEditorState(
+    markdocToProseMirror(Markdoc.parse(markdoc), schema, undefined)
+  );
 }
 
 test('basic', () => {
