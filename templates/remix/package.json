@@ -1,18 +1,18 @@
 {
-  "name": "@keystatic/remix-test-app",
-  "version": "0.0.81",
+  "name": "@keystatic/templates-remix",
   "type": "module",
-  "private": true,
-  "sideEffects": false,
+  "version": "0.0.1",
+  "license": "MIT",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev --manual",
+    "dev": "PORT=2222 remix dev --manual",
     "start": "remix-serve ./build/index.js",
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@keystatic/core": "^0.2.0",
+    "@keystatic/core": "^0.2.4",
     "@keystatic/remix": "^2.0.0",
+    "@remix-run/css-bundle": "^2.3.0",
     "@remix-run/node": "^2.3.0",
     "@remix-run/react": "^2.3.0",
     "@remix-run/serve": "^2.3.0",
@@ -22,12 +22,13 @@
   },
   "devDependencies": {
     "@remix-run/dev": "^2.3.0",
+    "@remix-run/eslint-config": "^2.3.0",
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.0.11",
     "eslint": "^8.18.0",
     "typescript": "^5.2.2"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=18.0.0"
   }
 }

@@ -248,7 +248,7 @@ function PopoverInner(props: {
       <EditorPopover
         reference={reference}
         placement="bottom"
-        adaptToViewport="stretch"
+        adaptToViewport="stick"
         minWidth="element.medium"
       >
         {props.decoration.kind === 'node' ? (
