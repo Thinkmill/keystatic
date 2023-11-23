@@ -9,36 +9,32 @@ import { useIsInDocumentEditor } from '../document/DocumentEditor';
 import { useState, useEffect, useReducer, useId } from 'react';
 import { FormFieldInputProps } from '../../api';
 
-export function getUploadedFile(
+export function getUploadedFileObject(
   accept: string
-): Promise<{ content: Uint8Array; filename: string } | undefined> {
+): Promise<File | undefined> {
   return new Promise(resolve => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = accept;
     let didChange = false;
     input.onchange = () => {
+      console.log('changed');
       didChange = true;
       const file = input.files?.[0];
       if (file) {
-        file.arrayBuffer().then(buffer => {
-          resolve({
-            content: new Uint8Array(buffer),
-            filename: file.name,
-          });
-        });
+        resolve(file);
       }
     };
     const cancelDetector = () => {
       window.removeEventListener('focus', cancelDetector);
-      setTimeout(() => {
-        if (input.files?.length === 0 && !didChange) {
-          resolve(undefined);
-        }
-      }, 500);
-      if ([...document.body.childNodes].includes(input)) {
-        document.body.removeChild(input);
-      }
+      // setTimeout(() => {
+      //   if (input.files?.length === 0 && !didChange) {
+      //     resolve(undefined);
+      //   }
+      // }, 500);
+      // if ([...document.body.childNodes].includes(input)) {
+      //   document.body.removeChild(input);
+      // }
     };
     input.addEventListener('click', () => {
       window.addEventListener('focus', cancelDetector, true);
@@ -46,6 +42,17 @@ export function getUploadedFile(
     document.body.appendChild(input);
     input.click();
   });
+}
+
+export async function getUploadedFile(
+  accept: string
+): Promise<{ content: Uint8Array; filename: string } | undefined> {
+  const file = await getUploadedFileObject(accept);
+  if (!file) return undefined;
+  return {
+    content: new Uint8Array(await file.arrayBuffer()),
+    filename: file.name,
+  };
 }
 
 export function getUploadedImage(): Promise<

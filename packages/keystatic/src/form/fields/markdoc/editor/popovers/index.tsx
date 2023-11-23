@@ -1,5 +1,5 @@
 import { Mark, MarkType, Node, ResolvedPos } from 'prosemirror-model';
-import { EditorState, TextSelection } from 'prosemirror-state';
+import { EditorState, NodeSelection, TextSelection } from 'prosemirror-state';
 import { toggleHeader } from 'prosemirror-tables';
 import { ReactElement, useMemo } from 'react';
 import { Rect } from '@floating-ui/react';
@@ -18,6 +18,7 @@ import { CodeBlockLanguageCombobox } from './code-block-language';
 import { LinkToolbar } from './link-toolbar';
 import { useEditorReferenceElement } from './reference';
 import { getContent, getToolbar, useEditorContext } from '../context';
+import { ImagePopover } from './images';
 
 type NodePopoverRenderer = (props: {
   node: Node;
@@ -63,6 +64,7 @@ const popoverComponents: Record<string, NodePopoverRenderer> = {
       </Flex>
     );
   },
+  image: ImagePopover,
   table: function TablePopover(props) {
     const dispatchCommand = useEditorDispatchCommand();
     const schema = useEditorSchema();
@@ -182,14 +184,14 @@ const LinkPopover: MarkPopoverRenderer = props => {
 
 type PopoverDecoration =
   | {
-      adaptToBoundary?: EditorPopoverProps['adaptToBoundary'];
+      adaptToBoundary: EditorPopoverProps['adaptToBoundary'] & {};
       kind: 'node';
       component: NodePopoverRenderer;
       node: Node;
       pos: number;
     }
   | {
-      adaptToBoundary?: EditorPopoverProps['adaptToBoundary'];
+      adaptToBoundary: EditorPopoverProps['adaptToBoundary'] & {};
       kind: 'mark';
       component: MarkPopoverRenderer;
       mark: Mark;
@@ -216,20 +218,35 @@ function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
       };
     }
   }
-  const commonAncestorPos = state.selection.$from.start(
-    state.selection.$from.sharedDepth(state.selection.to)
-  );
-  const $pos = state.doc.resolve(commonAncestorPos);
-  for (let i = $pos.depth; i > 0; i--) {
-    const node = $pos.node(i);
-    if (!node) break;
-    const renderer = popoverComponents[node.type.name];
-    if (renderer !== undefined) {
+
+  if (state.selection instanceof NodeSelection) {
+    const node = state.selection.node;
+    const component = popoverComponents[node.type.name];
+    if (component !== undefined) {
       return {
         adaptToBoundary: 'stick',
         kind: 'node',
         node,
-        component: renderer,
+        component,
+        pos: state.selection.from,
+      };
+    }
+  }
+  const commonAncestorPos = state.selection.$from.start(
+    state.selection.$from.sharedDepth(state.selection.to)
+  );
+  const $pos = state.doc.resolve(commonAncestorPos);
+
+  for (let i = $pos.depth; i > 0; i--) {
+    const node = $pos.node(i);
+    if (!node) break;
+    const component = popoverComponents[node.type.name];
+    if (component !== undefined) {
+      return {
+        adaptToBoundary: 'stick',
+        kind: 'node',
+        node,
+        component,
         pos: $pos.start(i) - 1,
       };
     }

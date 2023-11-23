@@ -1,4 +1,4 @@
-import { css, tokenSchema } from '@keystar/ui/style';
+import { css, tokenSchema, transition } from '@keystar/ui/style';
 import { fileCodeIcon } from '@keystar/ui/icon/icons/fileCodeIcon';
 import { heading1Icon } from '@keystar/ui/icon/icons/heading1Icon';
 import { heading2Icon } from '@keystar/ui/icon/icons/heading2Icon';
@@ -121,7 +121,7 @@ export type EditorNodeSpec = NodeSpec &
   WithInsertMenuNodeSpec &
   WithReactNodeViewSpec;
 
-const inlineContent = `(text | (text hard_break) | attribute)*`;
+const inlineContent = `(text | image | (text hard_break) | attribute)*`;
 
 const levels = [1, 2, 3, 4, 5, 6];
 const levelsMeta = [
@@ -505,6 +505,59 @@ const nodeSpecs = {
     toDOM() {
       return ['th', { class: tableHeaderClass }, 0];
     },
+  },
+  image: {
+    content: '',
+    group: 'inline',
+    inline: true,
+    attrs: {
+      src: {},
+      filename: {},
+      alt: { default: '' },
+      title: { default: '' },
+    },
+    toDOM(node) {
+      return [
+        'img',
+        {
+          src: node.attrs.src,
+          alt: node.attrs.alt,
+          title: node.attrs.title,
+          'data-filename': node.attrs.filename,
+          class: css({
+            boxSizing: 'border-box',
+            borderRadius: tokenSchema.size.radius.regular,
+            display: 'inline-block',
+            maxHeight: tokenSchema.size.scale[3600],
+            maxWidth: '100%',
+            transition: transition('box-shadow'),
+            [`&.${classes.nodeSelection},&.${classes.nodeInSelection}`]: {
+              outline: 0,
+              boxShadow: `0 0 0 ${tokenSchema.size.border.regular} ${tokenSchema.color.alias.borderSelected}`,
+            },
+            '&::selection': {
+              backgroundColor: 'transparent',
+            },
+          }),
+        },
+      ];
+    },
+    parseDOM: [
+      {
+        tag: 'img[src][data-filename]',
+        getAttrs(node) {
+          if (typeof node === 'string') return false;
+          const src = node.getAttribute('src');
+          const filename = node.getAttribute('data-filename');
+          if (!src?.startsWith('data:') || !filename) return false;
+          return {
+            src,
+            alt: node.getAttribute('alt') ?? '',
+            title: node.getAttribute('title') ?? '',
+          };
+        },
+      },
+    ],
   },
   ...attributeSchema,
 } satisfies Record<string, EditorNodeSpec>;

@@ -35,8 +35,9 @@ import {
 import { toggleList } from './lists';
 import { insertNode, insertTable, toggleCodeBlock } from './commands/misc';
 import { EditorSchema } from './schema';
+import { ImageToolbarButton } from './images';
 
-function EditorToolbarButton(props: {
+export function EditorToolbarButton(props: {
   children: ReactNode;
   'aria-label': string;
   isSelected?: (editorState: EditorState) => boolean;
@@ -151,6 +152,7 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
               <Text>Table</Text>
             </Tooltip>
           </TooltipTrigger>
+          <ImageToolbarButton />
         </ToolbarGroup>
       </ToolbarScrollArea>
       <InsertBlockMenu />

@@ -18,6 +18,7 @@ import { codeBlockSyntaxHighlighting } from './code-block-highlighting';
 import { reactNodeViews } from './react-node-views';
 import { tableCellMenuPlugin } from './popovers/table';
 import { pasteLinks } from './links';
+import { imageDropPlugin } from './images';
 
 export function createEditorState(
   doc: Node,
@@ -30,6 +31,7 @@ export function createEditorState(
     storedMarks,
     plugins: [
       pasteLinks(schema),
+      imageDropPlugin(schema),
       keydownHandler(),
       history(),
       dropCursor(),
