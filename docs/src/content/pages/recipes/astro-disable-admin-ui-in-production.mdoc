@@ -4,7 +4,6 @@ summary: >-
   This recipe shows you how to prevent access to (and indexing of) `/keystatic`
   routes in production if you're using the Astro framework.
 ---
-
 {% aside icon="🙏" %}
 This is a community contribution from [Florian Lefebvre](https://florian-lefebvre.dev) — thank you Florian!
 {% /aside %}
@@ -13,48 +12,79 @@ When using the `local` strategy, you may want to disable access to the `/keystat
 
 Here's how you can prevent access to (and indexing of) those routes if you're using the Astro framework.
 
-## Adding redirects
+## Switch to manual configuration
 
-You can redirect visits to the `/keystatic` route in production with `Astro.redirect`:
+If you've followed the Astro integration guide, you'll first need to switch to a manual configuration by removing the `keystatic()` integration in your `astro.config.mjs` file.
 
 ```diff
+// astro.config.mjs
+import { defineConfig } from 'astro/config'
+
+import react from '@astrojs/react'
+import markdoc from '@astrojs/markdoc'
+- import keystatic from '@keystatic/astro'
+
+// https://astro.build/config
+export default defineConfig({
+-  integrations: [react(), markdoc(), keystatic()],
++  integrations: [react(), markdoc()],
+   output: 'hybrid',
+})
+
+```
+
+Next, create a `keystatic.page.ts` file in the project root, alongside your Keystatic config file:
+
+```typescript
+// keystatic.page.ts
+import { makePage } from '@keystatic/astro/ui'
+import keystaticConfig from './keystatic.config'
+
+export const Keystatic = makePage(keystaticConfig)
+
+```
+
+## Adding redirects
+
+You can redirect visits to the `/keystatic` route in production with `Astro.redirect` by creating a new file called `src/pages/keystatic/[...params].ts`
+
+```tsx
 ---
 // src/pages/keystatic/[...params].astro
 import { Keystatic } from '../../../keystatic.page'
 
 export const prerender = false
 
-+ if (import.meta.env.MODE === 'production') {
-+   return Astro.redirect('/')
-+ }
+if (import.meta.env.MODE === 'production') {
+   return Astro.redirect('/')
+}
 ---
 
 <Keystatic client:only />
 
 ```
 
-You will need to do the same for the `api/keystatic` routes:
+Lastly, create a new file called `src/pages/api/keystatic/[...params].ts` which will redirect the API routes for Keystatic’s Admin UI:
 
-```diff
+```tsx
 // src/pages/api/keystatic/[...params].ts
 import { makeHandler } from '@keystatic/astro/api'
 import keystaticConfig from '../../../../keystatic.config'
-+ import { APIContext } from 'astro'
+import { APIContext } from 'astro'
 
-- export const all = makeHandler({
--  config: keystaticConfig,
-- })
+export const all = makeHandler({
+  config: keystaticConfig,
+})
 
-+ export const all = ({ ...params }: APIContext) => {
-+  if (import.meta.env.MODE === 'production') {
-+    return params.redirect('/', 307)
-+  }
+export const all = ({ ...params }: APIContext) => {
+  if (import.meta.env.MODE === 'production') {
+    return params.redirect('/', 307)
+  }
 
-+  return makeHandler({
-+    config: keystaticConfig,
-+  })(params)
-+}
-
+  return makeHandler({
+    config: keystaticConfig,
+  })(params)
+}
 
 export const prerender = false
 
@@ -77,4 +107,3 @@ export default defineConfig({
   ]
 })
 ```
-
