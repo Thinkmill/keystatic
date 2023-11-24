@@ -164,7 +164,7 @@ export default async function Resources() {
 }
 
 function Video({ videoId, title, description, thumbnail }: VideoProps) {
-  const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+  const videoUrl = `https://www.youtube.com/watch?v=${videoId}&list=PLYyvXL46d-pzqwOKdofd5aKiqPTAN3ql6`;
   return (
     <li>
       <Link
