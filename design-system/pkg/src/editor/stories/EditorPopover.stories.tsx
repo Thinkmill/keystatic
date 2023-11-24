@@ -11,7 +11,7 @@ import { listIcon } from '@keystar/ui/icon/icons/listIcon';
 import { listOrderedIcon } from '@keystar/ui/icon/icons/listOrderedIcon';
 import { Box, Divider, Flex } from '@keystar/ui/layout';
 import { Heading, Text } from '@keystar/ui/typography';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { EditorPopover, EditorPopoverRef } from '..';
 
@@ -39,45 +39,48 @@ export const Default = () => {
   );
 };
 
-Default.story = {
-  name: 'default',
-};
-
-export const Refs = () => {
-  let floating = useRef<EditorPopoverRef | null>(null);
+export const ScrollBoundary = () => {
   let [isOpen, setOpen] = useState(false);
+  let [scrollRef, setScrollRef] = useState<HTMLElement | null>(null);
   let [triggerRef, setTriggerRef] = useState<HTMLElement | null>(null);
 
+  useLayoutEffect(() => {
+    if (triggerRef) {
+      triggerRef.scrollIntoView({ block: 'center' });
+    }
+  }, [triggerRef]);
+
   return (
-    <Flex gap="large">
+    <Box
+      ref={setScrollRef}
+      backgroundColor="surface"
+      height="scale.2400"
+      width="scale.2400"
+      overflow="hidden scroll"
+      position="relative"
+    >
+      <div style={{ height: 300 }} />
       <ActionButton onPress={() => setOpen(bool => !bool)} ref={setTriggerRef}>
         Press me
       </ActionButton>
-      {isOpen && (
-        <ActionButton
-          onPress={() => {
-            console.log(floating.current);
-          }}
+      <div style={{ height: 300 }} />
+      {isOpen && triggerRef && scrollRef && (
+        <EditorPopover
+          reference={triggerRef}
+          boundary={scrollRef}
+          placement="top"
+          // portal={false}
         >
-          Log ref data
-        </ActionButton>
-      )}
-      {isOpen && triggerRef && (
-        <EditorPopover ref={floating} reference={triggerRef}>
           <Box padding="regular">
             <Text>Popover content</Text>
           </Box>
         </EditorPopover>
       )}
-    </Flex>
+    </Box>
   );
 };
 
-Refs.story = {
-  name: 'refs',
-};
-
-export const Sticky = () => {
+export const AdaptToBoundaryStick = () => {
   let [isOpen, setOpen] = useState(false);
   let [triggerRef, setTriggerRef] = useState<HTMLImageElement | null>(null);
 
@@ -139,7 +142,7 @@ export const Sticky = () => {
         pudding.
       </Text>
       {triggerRef && isOpen && (
-        <EditorPopover adaptToViewport="stick" reference={triggerRef}>
+        <EditorPopover adaptToBoundary="stick" reference={triggerRef}>
           <Box padding="regular" maxWidth="container.xsmall">
             <Text>
               This popover will overlap the target, staying in view when the
@@ -152,8 +155,59 @@ export const Sticky = () => {
   );
 };
 
-Sticky.story = {
-  name: 'sticky',
+export const AdaptToBoundaryStretch = () => {
+  let [isOpen, setOpen] = useState(false);
+  let [triggerRef, setTriggerRef] = useState<HTMLElement | null>(null);
+
+  useLayoutEffect(() => {
+    if (triggerRef) {
+      triggerRef.scrollIntoView({ block: 'center' });
+    }
+  }, [triggerRef]);
+
+  return (
+    <>
+      <div style={{ height: 500 }} />
+      <ActionButton onPress={() => setOpen(bool => !bool)} ref={setTriggerRef}>
+        Press me
+      </ActionButton>
+      <div style={{ height: 500 }} />
+      {isOpen && triggerRef && (
+        <EditorPopover
+          reference={triggerRef}
+          placement="bottom-start"
+          adaptToBoundary="stretch"
+          minHeight="alias.singleLineWidth"
+          maxWidth="alias.singleLineWidth"
+        >
+          <Flex
+            direction="column"
+            gap="large"
+            padding="medium"
+            overflow="hidden auto"
+            maxHeight="inherit"
+          >
+            <Text>Sesame snaps</Text>
+            <Text>Soufflé cupcake</Text>
+            <Text>Cupcake tiramisu</Text>
+            <Text>Danish bear claw powder</Text>
+            <Text>Dessert gummi bears</Text>
+            <Text>Cookie shortbread</Text>
+            <Text>Lemon drops muffin</Text>
+            <Text>Tiramisu apple pie</Text>
+            <Text>Gummi bears</Text>
+            <Text>Cupcake tart oat cake</Text>
+            <Text>Macaroon apple pie</Text>
+            <Text>Biscuit dragée</Text>
+            <Text>Sesame snaps</Text>
+            <Text>Carrot cake powder</Text>
+            <Text>Cookie cotton candy</Text>
+            <Text>Sweet gummi bears</Text>
+          </Flex>
+        </EditorPopover>
+      )}
+    </>
+  );
 };
 
 export const Range = () => {
@@ -231,9 +285,38 @@ export const Range = () => {
   );
 };
 
-Range.story = {
-  name: 'range',
+export const Refs = () => {
+  let floating = useRef<EditorPopoverRef | null>(null);
+  let [isOpen, setOpen] = useState(false);
+  let [triggerRef, setTriggerRef] = useState<HTMLElement | null>(null);
+
+  return (
+    <Flex gap="large">
+      <ActionButton onPress={() => setOpen(bool => !bool)} ref={setTriggerRef}>
+        Press me
+      </ActionButton>
+      {isOpen && (
+        <ActionButton
+          onPress={() => {
+            console.log(floating.current);
+          }}
+        >
+          Log ref data
+        </ActionButton>
+      )}
+      {isOpen && triggerRef && (
+        <EditorPopover ref={floating} reference={triggerRef}>
+          <Box padding="regular">
+            <Text>Popover content</Text>
+          </Box>
+        </EditorPopover>
+      )}
+    </Flex>
+  );
 };
+
+// Utils
+// ----------------------------------------------------------------------------
 
 function useRangeFromDocumentSelection() {
   const [range, setRange] = useState<Range | null>(null);
