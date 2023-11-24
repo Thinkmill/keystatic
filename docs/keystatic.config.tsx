@@ -319,7 +319,14 @@ export default config({
               }),
             }),
             // TODO:
-            article: fields.object({}),
+            article: fields.object({
+              url: fields.url({ label: 'Article URL' }),
+              authorName: fields.text({ label: 'Author name' }),
+              description: fields.text({
+                label: 'Article description',
+                multiline: true,
+              }),
+            }),
           }
         ),
         sortIndex: fields.integer({

@@ -42,6 +42,17 @@ export default async function Resources() {
       ...resource.entry.type.value,
     }));
 
+  const sortedArticles = resources
+    .filter(resource => resource.entry.type.discriminant === 'article')
+    .sort((a, b) => {
+      return (a.entry.sortIndex as number) - (b.entry.sortIndex as number);
+    })
+    .map(resource => ({
+      title: resource.entry.title,
+      sortIndex: resource.entry.sortIndex,
+      ...resource.entry.type.value,
+    }));
+
   return (
     <div className="mt-24 pt-10">
       <header className="mx-auto max-w-2xl text-center">
@@ -55,10 +66,17 @@ export default async function Resources() {
       </header>
 
       <div className="mt-12 divide-y divide-slate-5">
-        <ResourceSection
-          title="Videos"
-          introText=" The Thinkmill YouTube channel has a growing collection of screencasts and live streams about Keystatic."
-        >
+        <ResourceSection title="YouTube Videos">
+          <p>
+            The{' '}
+            <Link
+              href="https://youtube.com/@thinkmill"
+              className="underline hover:no-underline"
+            >
+              Thinkmill channel
+            </Link>{' '}
+            has a growing collection of content about Keystatic.
+          </p>
           <ResourceGrid>
             {sortedVideos.map(video => (
               <YouTubeResource
@@ -78,10 +96,8 @@ export default async function Resources() {
             <ArrowRightIcon />
           </Button>
         </ResourceSection>
-        <ResourceSection
-          title="Talks"
-          introText="Recorded Keystatic talks from local meetups and conferences."
-        >
+        <ResourceSection title="Talks">
+          <p>Recorded Keystatic talks from local meetups and conferences.</p>
           <ResourceGrid>
             {sortedTalks.map(video => (
               <YouTubeResource
@@ -89,6 +105,23 @@ export default async function Resources() {
                 title={video.title}
                 description={video.description as string}
               />
+            ))}
+          </ResourceGrid>
+        </ResourceSection>
+        <ResourceSection title="Articles">
+          <ResourceGrid>
+            {sortedArticles.map(article => (
+              <li className="mb-4 mr-4">
+                <h3 className="text-xl font-medium">
+                  <Link href={article.url} className="hover:underline">
+                    {article.title}
+                  </Link>
+                </h3>
+                <p className="mt-1 text-sm text-slate-10">
+                  by {article.authorName}
+                </p>
+                <p className="mt-4">{article.description}</p>
+              </li>
             ))}
           </ResourceGrid>
         </ResourceSection>
@@ -157,16 +190,15 @@ function ResourceGrid({ children }: ResourceGridProps) {
 }
 
 type ResourceSectionProps = {
-  title?: string;
+  title?: string | React.ReactNode;
   introText?: string;
   children: React.ReactNode;
 };
 
-function ResourceSection({ title, introText, children }: ResourceSectionProps) {
+function ResourceSection({ title, children }: ResourceSectionProps) {
   return (
     <section className="py-16">
       {title && <h2 className="mb-4 text-2xl font-medium">{title}</h2>}
-      {introText && <p className="max-w-lg">{introText}</p>}
       {children}
     </section>
   );
