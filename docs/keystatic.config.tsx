@@ -280,9 +280,7 @@ export default config({
             defaultValue: 'youtube-video',
           }),
           {
-            // "none" condition
             none: fields.empty(),
-            // "youtube-video" condition
             'youtube-video': fields.object({
               videoId: fields.text({
                 label: 'Video ID',
