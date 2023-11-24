@@ -16,10 +16,7 @@ export default async function RootLayout({
   return (
     <>
       <div className="mx-auto min-h-screen w-full max-w-7xl px-6">
-        {/** CONTENT */}
-
         <Main className="flex gap-8">
-          {/** INNER CONTENT */}
           <div className="flex-1">{children}</div>
         </Main>
       </div>
