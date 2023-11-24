@@ -6,6 +6,28 @@ export const metadata = {
     template: '%s - Resources | Keystatic',
     default: 'Resources',
   },
+  description:
+    'A collection of videos, talks, articles and other resources to help you learn Keystatic and dig deeper.',
+  openGraph: {
+    title: 'Resources',
+    description:
+      'A collection of videos, talks, articles and other resources to help you learn Keystatic and dig deeper.',
+    images: [
+      {
+        url: '/og?title=Resources',
+      },
+    ],
+    siteName: 'Keystatic',
+    type: 'website',
+    url: 'https://keystatic.com/resources',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Resources',
+    description:
+      'A collection of videos, talks, articles and other resources to help you learn Keystatic and dig deeper.',
+    site: '@thekeystatic',
+  },
 };
 
 export default async function RootLayout({
