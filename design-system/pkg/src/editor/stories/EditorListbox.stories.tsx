@@ -1,5 +1,5 @@
 import { action } from '@keystar/ui-storybook';
-import { Key, ReactElement, useEffect, useRef, useState } from 'react';
+import { Key, ReactElement, useEffect, useRef } from 'react';
 
 import { Icon } from '@keystar/ui/icon';
 import { fileCodeIcon } from '@keystar/ui/icon/icons/fileCodeIcon';
@@ -15,10 +15,9 @@ import { listOrderedIcon } from '@keystar/ui/icon/icons/listOrderedIcon';
 import { quoteIcon } from '@keystar/ui/icon/icons/quoteIcon';
 import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
 import { separatorHorizontalIcon } from '@keystar/ui/icon/icons/separatorHorizontalIcon';
-import { Box } from '@keystar/ui/layout';
 import { Kbd, KbdProps, Text } from '@keystar/ui/typography';
 
-import { EditorListbox, EditorPopover, Item, Section } from '..';
+import { EditorListbox, Item, Section } from '..';
 
 type KbdOption = 'alt' | 'meta' | 'shift';
 type KbdOptions = KbdOption[];
@@ -107,49 +106,6 @@ export const ComplexItems = () => {
 
 ComplexItems.story = {
   name: 'complex items',
-};
-
-export const WithinPopover = () => {
-  let listenerRef = useListenerRef();
-  let [triggerRef, setTriggerRef] = useState<HTMLElement | null>(null);
-
-  return (
-    <>
-      <Box
-        paddingX="medium"
-        ref={setTriggerRef}
-        UNSAFE_style={{
-          marginBottom: 600,
-          marginTop: 600,
-          marginInlineStart: 300,
-        }}
-      >
-        <Text color="accent" weight="medium">
-          /insert-menu
-        </Text>
-      </Box>
-      {triggerRef && (
-        <EditorPopover
-          reference={triggerRef}
-          placement="bottom-start"
-          adaptToViewport="stretch"
-          minHeight="alias.singleLineWidth"
-        >
-          <EditorListbox
-            aria-label="popover example"
-            items={complexItems[0].children}
-            children={childRenderer}
-            listenerRef={listenerRef}
-            UNSAFE_style={{ width: 320 }}
-          />
-        </EditorPopover>
-      )}
-    </>
-  );
-};
-
-WithinPopover.story = {
-  name: 'within popover',
 };
 
 // Utils
