@@ -1,6 +1,6 @@
 import { EditorView } from 'prosemirror-view';
 import { EditorState } from 'prosemirror-state';
-import { Ref, forwardRef } from 'react';
+import { Ref, forwardRef, useId, useMemo } from 'react';
 import { Box } from '@keystar/ui/layout';
 import { css } from '@emotion/css';
 import { tokenSchema } from '@keystar/ui/style';
@@ -11,6 +11,12 @@ import { ProseMirrorEditable, ProseMirrorEditor } from './editor-view';
 import { AutocompleteDecoration } from './autocomplete/decoration';
 import { NodeViews } from './react-node-views';
 import { CellMenuPortal } from './popovers/table';
+import {
+  EditorContextProvider,
+  getContentId,
+  getRootId,
+  getToolbarId,
+} from './context';
 
 const orderedListStyles = ['lower-roman', 'decimal', 'lower-alpha'];
 const unorderedListStyles = ['square', 'disc', 'circle'];
@@ -55,22 +61,36 @@ export const Editor = forwardRef(function Editor(
   },
   ref: Ref<{ view: EditorView | null }>
 ) {
+  const id = useId();
+  const editorContext = useMemo(() => ({ id }), [id]);
   return (
-    <ProseMirrorEditor value={props.value} onChange={props.onChange} ref={ref}>
-      <Box
-        backgroundColor="canvas"
-        border="neutral"
-        borderRadius="medium"
-        minWidth={0}
-        UNSAFE_className={prosemirrorStyles}
+    <EditorContextProvider value={editorContext}>
+      <ProseMirrorEditor
+        value={props.value}
+        onChange={props.onChange}
+        ref={ref}
       >
-        <Toolbar />
-        <ProseMirrorEditable className={editableStyles} />
-      </Box>
-      <NodeViews state={props.value} />
-      <CellMenuPortal />
-      <EditorPopoverDecoration state={props.value} />
-      <AutocompleteDecoration />
-    </ProseMirrorEditor>
+        <Box
+          id={getRootId(id)}
+          data-keystatic-editor="root"
+          backgroundColor="canvas"
+          border="neutral"
+          borderRadius="medium"
+          minWidth={0}
+          UNSAFE_className={prosemirrorStyles}
+        >
+          <Toolbar id={getToolbarId(id)} data-keystatic-editor="toolbar" />
+          <ProseMirrorEditable
+            id={getContentId(id)}
+            data-keystatic-editor="content"
+            className={editableStyles}
+          />
+        </Box>
+        <NodeViews state={props.value} />
+        <CellMenuPortal />
+        <EditorPopoverDecoration state={props.value} />
+        <AutocompleteDecoration />
+      </ProseMirrorEditor>
+    </EditorContextProvider>
   );
 });
