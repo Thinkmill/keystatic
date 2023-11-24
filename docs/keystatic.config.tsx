@@ -89,7 +89,7 @@ export default config({
       name: 'Keystatic Docs',
     },
     navigation: {
-      Pages: ['pages', 'blog', 'projects'],
+      Pages: ['pages', 'blog', 'projects', 'resources'],
       Config: ['authors', 'navigation'],
       Experimental: ['pagesWithMarkdocField'],
     },
@@ -257,6 +257,76 @@ export default config({
             aside: componentBlocks['aside'],
             'cloud-image': componentBlocks['cloud-image'],
           },
+        }),
+      },
+    }),
+
+    // ------------------------------
+    // Resources
+    // ------------------------------
+    resources: collection({
+      label: 'Resources',
+      path: 'src/content/resources/*',
+      slugField: 'title',
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        type: fields.conditional(
+          fields.select({
+            label: 'Resource type',
+            options: [
+              { label: 'YouTube video', value: 'youtube-video' },
+              { label: 'Talk', value: 'talk' },
+              { label: 'Article', value: 'article' },
+            ],
+            defaultValue: 'youtube-video',
+          }),
+          {
+            // "none" condition
+            none: fields.empty(),
+            // "youtube-video" condition
+            'youtube-video': fields.object({
+              videoId: fields.text({
+                label: 'Video ID',
+                description: 'The ID of the video (not the URL!)',
+                validation: { length: { min: 1 } },
+              }),
+              thumbnail: fields.object({
+                asset: fields.cloudImage({
+                  label: 'Video thumbnail',
+                  description: 'A 16/9 thumbnail image for the video.',
+                }),
+              }),
+              description: fields.text({
+                label: 'Video description',
+                multiline: true,
+              }),
+            }),
+            talk: fields.object({
+              videoId: fields.text({
+                label: 'Video ID',
+                description: 'The ID of the video (not the URL!)',
+                validation: { length: { min: 1 } },
+              }),
+              thumbnail: fields.object({
+                asset: fields.cloudImage({
+                  label: 'Video thumbnail',
+                  description: 'A 16/9 thumbnail image for the video.',
+                }),
+              }),
+              description: fields.text({
+                label: 'Video description',
+                multiline: true,
+              }),
+            }),
+            // TODO:
+            article: fields.object({}),
+          }
+        ),
+        sortIndex: fields.integer({
+          label: 'Sort index',
+          description:
+            'A number value to sort items (low to high) on the front end.',
+          defaultValue: 10,
         }),
       },
     }),
