@@ -15,20 +15,14 @@ type ResourceEntry = Entry<
 type VideoProps = {
   title: ResourceEntry['title'];
 } & Omit<
-  Extract<
-    Entry<(typeof keystaticConfig)['collections']['resources']>['type'],
-    { discriminant: 'youtube-video' }
-  >['value'],
+  Extract<ResourceEntry['type'], { discriminant: 'youtube-video' }>['value'],
   'kind'
 >;
 
 type ArticleProps = {
   title: ResourceEntry['title'];
 } & Omit<
-  Extract<
-    Entry<(typeof keystaticConfig)['collections']['resources']>['type'],
-    { discriminant: 'article' }
-  >['value'],
+  Extract<ResourceEntry['type'], { discriminant: 'article' }>['value'],
   'kind'
 >;
 
