@@ -5,10 +5,35 @@ import { notFound } from 'next/navigation';
 import { ArrowRightIcon } from '../../../components/icons/arrow-right';
 import { reader } from '../../../utils/reader';
 import Button from '../../../components/button';
+import { Entry } from '@keystatic/core/reader';
+import keystaticConfig from '../../../../keystatic.config';
+
+type ResourceEntry = Entry<
+  (typeof keystaticConfig)['collections']['resources']
+>;
+
+type VideoProps = {
+  title: ResourceEntry['title'];
+} & Omit<
+  Extract<
+    Entry<(typeof keystaticConfig)['collections']['resources']>['type'],
+    { discriminant: 'youtube-video' }
+  >['value'],
+  'kind'
+>;
+
+type ArticleProps = {
+  title: ResourceEntry['title'];
+} & Omit<
+  Extract<
+    Entry<(typeof keystaticConfig)['collections']['resources']>['type'],
+    { discriminant: 'article' }
+  >['value'],
+  'kind'
+>;
 
 export default async function Resources() {
   const resources = await reader().collections.resources.all();
-
   if (!resources) notFound();
 
   const sortedVideos = resources
@@ -24,7 +49,7 @@ export default async function Resources() {
       title: resource.entry.title,
       sortIndex: resource.entry.sortIndex,
       ...resource.entry.type.value,
-    }));
+    })) as VideoProps[];
 
   const sortedTalks = resources
     .filter(
@@ -39,7 +64,7 @@ export default async function Resources() {
       title: resource.entry.title,
       sortIndex: resource.entry.sortIndex,
       ...resource.entry.type.value,
-    }));
+    })) as VideoProps[];
 
   const sortedArticles = resources
     .filter(resource => resource.entry.type.discriminant === 'article')
@@ -50,7 +75,7 @@ export default async function Resources() {
       title: resource.entry.title,
       sortIndex: resource.entry.sortIndex,
       ...resource.entry.type.value,
-    }));
+    })) as ArticleProps[];
 
   return (
     <div className="mt-24 pt-10">
@@ -65,7 +90,7 @@ export default async function Resources() {
       </header>
 
       <div className="mt-12 divide-y divide-slate-5">
-        <ResourceSection title="YouTube Videos">
+        <Section title="YouTube Videos">
           <p>
             The{' '}
             <Link
@@ -78,10 +103,11 @@ export default async function Resources() {
           </p>
           <ResourceGrid>
             {sortedVideos.map(video => (
-              <YouTubeResource
-                videoId={video.videoId}
+              <Video
                 title={video.title}
+                videoId={video.videoId}
                 description={video.description}
+                thumbnail={video.thumbnail}
               />
             ))}
           </ResourceGrid>
@@ -94,20 +120,21 @@ export default async function Resources() {
             <span>Watch more videos</span>
             <ArrowRightIcon />
           </Button>
-        </ResourceSection>
-        <ResourceSection title="Talks">
+        </Section>
+        <Section title="Talks">
           <p>Recorded Keystatic talks from local meetups and conferences.</p>
           <ResourceGrid>
             {sortedTalks.map(video => (
-              <YouTubeResource
-                videoId={video.videoId as string}
+              <Video
+                videoId={video.videoId}
                 title={video.title}
-                description={video.description as string}
+                description={video.description}
+                thumbnail={video.thumbnail}
               />
             ))}
           </ResourceGrid>
-        </ResourceSection>
-        <ResourceSection title="Articles">
+        </Section>
+        <Section title="Articles">
           <ResourceGrid>
             {sortedArticles.map(article => (
               <li className="mb-4 mr-4">
@@ -119,13 +146,15 @@ export default async function Resources() {
                 <p className="mt-1 text-sm text-slate-10">
                   by {article.authorName}
                 </p>
-                <p className="mt-4">{article.description}</p>
+                {article.description && (
+                  <p className="mt-4">{article.description}</p>
+                )}
               </li>
             ))}
           </ResourceGrid>
-        </ResourceSection>
+        </Section>
 
-        <ResourceSection>
+        <Section>
           <div className="inline-flex flex-col gap-4 rounded-lg bg-slate-3 px-4 py-6 sm:flex-row">
             <div className="flex h-6 items-center text-3xl">⏳</div>
             <div className="flex flex-col gap-3">
@@ -134,25 +163,14 @@ export default async function Resources() {
               </p>
             </div>
           </div>
-        </ResourceSection>
+        </Section>
       </div>
     </div>
   );
 }
 
-type YouTubeResourceProps = {
-  videoId: string;
-  title: string;
-  description: string;
-};
-
-function YouTubeResource({
-  videoId,
-  title,
-  description,
-}: YouTubeResourceProps) {
+function Video({ videoId, title, description, thumbnail }: VideoProps) {
   const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-  const videoThumbnailUrl = `https://i3.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
   return (
     <li>
       <Link
@@ -161,8 +179,8 @@ function YouTubeResource({
       >
         <Image
           fill
-          src={videoThumbnailUrl}
-          alt=""
+          src={thumbnail.src}
+          alt={thumbnail.alt || ''}
           className="h-full-w-full absolute inset-0 rounded-lg shadow-md transition-shadow group-hover:shadow-sm"
         />
       </Link>
@@ -176,25 +194,22 @@ function YouTubeResource({
   );
 }
 
-type ResourceGridProps = {
-  children: React.ReactNode;
-};
-
-function ResourceGrid({ children }: ResourceGridProps) {
+function ResourceGrid(props: React.ComponentProps<'ul'>) {
   return (
-    <ul className="mt-8 grid items-start gap-x-6 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
-      {children}
-    </ul>
+    <ul
+      className="mt-8 grid items-start gap-x-6 gap-y-10 md:grid-cols-2 lg:grid-cols-3"
+      {...props}
+    />
   );
 }
 
-type ResourceSectionProps = {
+type SectionProps = {
   title?: string | React.ReactNode;
   introText?: string;
   children: React.ReactNode;
 };
 
-function ResourceSection({ title, children }: ResourceSectionProps) {
+function Section({ title, children }: SectionProps) {
   return (
     <section className="py-16">
       {title && <h2 className="mb-4 text-2xl font-medium">{title}</h2>}

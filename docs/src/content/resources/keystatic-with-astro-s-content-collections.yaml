@@ -4,12 +4,11 @@ type:
   value:
     videoId: 6l2YWCyPsWk
     thumbnail:
-      asset:
-        src: >-
-          https://thinkmill-labs.keystatic.net/keystatic-site/images/ewuee6ly46km/tm-keystatic
-        alt: YouTube video thumbnnail
-        height: 900
-        width: 1600
+      src: >-
+        https://thinkmill-labs.keystatic.net/keystatic-site/images/ewuee6ly46km/tm-keystatic
+      alt: YouTube video thumbnnail
+      height: 900
+      width: 1600
     kind: screencast
     description: >-
       An early-days experimental walk-through of using Keystatic with Astro's

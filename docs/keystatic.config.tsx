@@ -289,11 +289,9 @@ export default config({
                 description: 'The ID of the video (not the URL!)',
                 validation: { length: { min: 1 } },
               }),
-              thumbnail: fields.object({
-                asset: fields.cloudImage({
-                  label: 'Video thumbnail',
-                  description: 'A 16/9 thumbnail image for the video.',
-                }),
+              thumbnail: fields.cloudImage({
+                label: 'Video thumbnail',
+                description: 'A 16/9 thumbnail image for the video.',
               }),
               kind: fields.select({
                 label: 'Video kind',
@@ -306,11 +304,18 @@ export default config({
               description: fields.text({
                 label: 'Video description',
                 multiline: true,
+                validation: { length: { min: 1 } },
               }),
             }),
             article: fields.object({
-              url: fields.url({ label: 'Article URL' }),
-              authorName: fields.text({ label: 'Author name' }),
+              url: fields.url({
+                label: 'Article URL',
+                validation: { isRequired: true },
+              }),
+              authorName: fields.text({
+                label: 'Author name',
+                validation: { length: { min: 1 } },
+              }),
               description: fields.text({
                 label: 'Article description',
                 multiline: true,

@@ -4,12 +4,11 @@ type:
   value:
     videoId: evO_uz5Ahek
     thumbnail:
-      asset:
-        src: >-
-          https://thinkmill-labs.keystatic.net/keystatic-site/images/w5e53g9h00e0/meet-keystatic-by-jed-watson
-        alt: YouTube video thumbnail
-        height: 720
-        width: 1280
+      src: >-
+        https://thinkmill-labs.keystatic.net/keystatic-site/images/w5e53g9h00e0/meet-keystatic-by-jed-watson
+      alt: YouTube video thumbnail
+      height: 720
+      width: 1280
     kind: talk
     description:
       'Jed Watson introduces Keystatic at the React Sydney meetup in '

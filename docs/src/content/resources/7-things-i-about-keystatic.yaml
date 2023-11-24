@@ -4,12 +4,11 @@ type:
   value:
     videoId: rUO7VdR9NPY
     thumbnail:
-      asset:
-        src: >-
-          https://thinkmill-labs.keystatic.net/keystatic-site/images/nxq56kug7dua/7-things-about-keystatic
-        alt: YouTube video thumbnail
-        height: 720
-        width: 1280
+      src: >-
+        https://thinkmill-labs.keystatic.net/keystatic-site/images/nxq56kug7dua/7-things-about-keystatic
+      alt: YouTube video thumbnail
+      height: 720
+      width: 1280
     kind: talk
     description: >-
       Simon Vrachliotis talking at SydJS about the little things he loves about
