@@ -3,29 +3,29 @@ import Footer from '../../../components/footer';
 
 export const metadata = {
   title: {
-    template: '%s - Showcase | Keystatic',
-    default: 'Showcase',
+    template: '%s - Resources | Keystatic',
+    default: 'Resources',
   },
   description:
-    'A collection of projects using Keystatic to manage parts of their codebase.',
+    'A collection of videos, talks, articles and other resources to help you learn Keystatic and dig deeper.',
   openGraph: {
-    title: 'Showcase',
+    title: 'Resources',
     description:
-      'A collection of projects using Keystatic to manage parts of their codebase.',
+      'A collection of videos, talks, articles and other resources to help you learn Keystatic and dig deeper.',
     images: [
       {
-        url: '/og?title=Showcase',
+        url: '/og?title=Resources',
       },
     ],
     siteName: 'Keystatic',
     type: 'website',
-    url: 'https://keystatic.com/showcase',
+    url: 'https://keystatic.com/resources',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Showcase',
+    title: 'Resources',
     description:
-      'A collection of projects using Keystatic to manage parts of their codebase.',
+      'A collection of videos, talks, articles and other resources to help you learn Keystatic and dig deeper.',
     site: '@thekeystatic',
   },
 };
@@ -38,10 +38,7 @@ export default async function RootLayout({
   return (
     <>
       <div className="mx-auto min-h-screen w-full max-w-7xl px-6">
-        {/** CONTENT */}
-
         <Main className="flex gap-8">
-          {/** INNER CONTENT */}
           <div className="flex-1">{children}</div>
         </Main>
       </div>
