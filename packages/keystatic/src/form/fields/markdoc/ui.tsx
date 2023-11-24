@@ -1,4 +1,4 @@
-import { FieldPrimitive } from '@keystar/ui/field';
+import { Field, FieldProps } from '@keystar/ui/field';
 import { FormFieldInputProps } from '../../api';
 import { EditorState } from 'prosemirror-state';
 import { Editor } from './editor';
@@ -7,6 +7,7 @@ import { EditorSchema } from './editor/schema';
 import { markdocToProseMirror } from './editor/markdoc/parse';
 import Markdoc from '@markdoc/markdoc';
 import { proseMirrorToMarkdoc } from './editor/markdoc/serialize';
+import { useEntryLayoutSplitPaneContext } from '../../../app/entry-form';
 
 export { createEditorSchema } from './editor/schema';
 
@@ -42,9 +43,26 @@ export function DocumentFieldInput(
     description: string | undefined;
   }
 ) {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
+
+  let fieldProps: FieldProps = {
+    label: props.label,
+    description: props.description,
+  };
+  if (entryLayoutPane === 'main') {
+    fieldProps = {
+      'aria-label': props.label,
+    };
+  }
+
   return (
-    <FieldPrimitive label={props.label} description={props.description}>
-      <Editor value={props.value} onChange={props.onChange} />
-    </FieldPrimitive>
+    <Field
+      height={entryLayoutPane === 'main' ? '100%' : undefined}
+      {...fieldProps}
+    >
+      {inputProps => (
+        <Editor {...inputProps} value={props.value} onChange={props.onChange} />
+      )}
+    </Field>
   );
 }
