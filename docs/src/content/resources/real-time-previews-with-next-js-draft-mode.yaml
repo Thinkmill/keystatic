@@ -12,6 +12,7 @@ type:
           video
         height: 900
         width: 1600
+    kind: screencast
     description: >-
       A 2-minute walk-through of how to set up real-time content previews,
       leveraging Next.js' draft mode feature.

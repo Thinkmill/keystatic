@@ -1,27 +1,22 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import type { EntryWithResolvedLinkedFiles } from '@keystatic/core/reader';
 
 import { ArrowRightIcon } from '../../../components/icons/arrow-right';
 import { reader } from '../../../utils/reader';
-import keystaticConfig from '../../../../keystatic.config';
 import Button from '../../../components/button';
 
-type Resource = {
-  slug: string;
-  entry: EntryWithResolvedLinkedFiles<
-    (typeof keystaticConfig)['collections']['resources']
-  >;
-};
-
 export default async function Resources() {
-  const resources: Resource[] = await reader().collections.resources.all();
+  const resources = await reader().collections.resources.all();
 
   if (!resources) notFound();
 
   const sortedVideos = resources
-    .filter(resource => resource.entry.type.discriminant === 'youtube-video')
+    .filter(
+      resource =>
+        resource.entry.type.discriminant === 'youtube-video' &&
+        resource.entry.type.value.kind === 'screencast'
+    )
     .sort((a, b) => {
       return (a.entry.sortIndex as number) - (b.entry.sortIndex as number);
     })
@@ -32,7 +27,11 @@ export default async function Resources() {
     }));
 
   const sortedTalks = resources
-    .filter(resource => resource.entry.type.discriminant === 'talk')
+    .filter(
+      resource =>
+        resource.entry.type.discriminant === 'youtube-video' &&
+        resource.entry.type.value.kind === 'talk'
+    )
     .sort((a, b) => {
       return (a.entry.sortIndex as number) - (b.entry.sortIndex as number);
     })
@@ -80,9 +79,9 @@ export default async function Resources() {
           <ResourceGrid>
             {sortedVideos.map(video => (
               <YouTubeResource
-                videoId={video.videoId as string}
+                videoId={video.videoId}
                 title={video.title}
-                description={video.description as string}
+                description={video.description}
               />
             ))}
           </ResourceGrid>

@@ -275,7 +275,6 @@ export default config({
             label: 'Resource type',
             options: [
               { label: 'YouTube video', value: 'youtube-video' },
-              { label: 'Talk', value: 'talk' },
               { label: 'Article', value: 'article' },
             ],
             defaultValue: 'youtube-video',
@@ -296,29 +295,19 @@ export default config({
                   description: 'A 16/9 thumbnail image for the video.',
                 }),
               }),
-              description: fields.text({
-                label: 'Video description',
-                multiline: true,
-              }),
-            }),
-            talk: fields.object({
-              videoId: fields.text({
-                label: 'Video ID',
-                description: 'The ID of the video (not the URL!)',
-                validation: { length: { min: 1 } },
-              }),
-              thumbnail: fields.object({
-                asset: fields.cloudImage({
-                  label: 'Video thumbnail',
-                  description: 'A 16/9 thumbnail image for the video.',
-                }),
+              kind: fields.select({
+                label: 'Video kind',
+                options: [
+                  { label: 'Talk', value: 'talk' },
+                  { label: 'Screencast', value: 'screencast' },
+                ],
+                defaultValue: 'screencast',
               }),
               description: fields.text({
                 label: 'Video description',
                 multiline: true,
               }),
             }),
-            // TODO:
             article: fields.object({
               url: fields.url({ label: 'Article URL' }),
               authorName: fields.text({ label: 'Author name' }),

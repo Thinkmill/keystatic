@@ -10,6 +10,7 @@ type:
         alt: YouTube video thumbnnail
         height: 900
         width: 1600
+    kind: screencast
     description: >-
       An early-days experimental walk-through of using Keystatic with Astro's
       content collections.

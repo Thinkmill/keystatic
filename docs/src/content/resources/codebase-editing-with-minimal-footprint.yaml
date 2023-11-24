@@ -10,6 +10,7 @@ type:
         alt: YouTube video thumbnail
         height: 900
         width: 1600
+    kind: screencast
     description: >-
       An example of how lightweight Keystatic can be to make a specific part of
       your codebase editable via an auto-generated Admin UI.

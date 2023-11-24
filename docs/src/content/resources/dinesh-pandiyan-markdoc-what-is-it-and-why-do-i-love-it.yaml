@@ -1,6 +1,6 @@
 title: 'Dinesh Pandiyan - Markdoc: What is it and why do I love it?'
 type:
-  discriminant: talk
+  discriminant: youtube-video
   value:
     videoId: XIw-0fCpP_4
     thumbnail:
@@ -10,6 +10,7 @@ type:
         alt: YouTube video thumbnail
         height: 720
         width: 1280
+    kind: talk
     description: >-
       Dinesh walks SydJS through the progression from HTML to Markdown to MDX to
       Markdoc.

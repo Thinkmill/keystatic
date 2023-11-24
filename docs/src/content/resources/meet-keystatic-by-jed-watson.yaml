@@ -1,6 +1,6 @@
 title: Meet Keystatic by Jed Watson
 type:
-  discriminant: talk
+  discriminant: youtube-video
   value:
     videoId: evO_uz5Ahek
     thumbnail:
@@ -10,5 +10,7 @@ type:
         alt: YouTube video thumbnail
         height: 720
         width: 1280
-    description: 'Jed Watson introduces Keystatic at the React Sydney meetup in '
+    kind: talk
+    description:
+      'Jed Watson introduces Keystatic at the React Sydney meetup in '
 sortIndex: 10
