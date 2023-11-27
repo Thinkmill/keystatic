@@ -67,11 +67,11 @@ Each Keystatic Cloud project can have its own Image Library, where you can uploa
 When using Keystatic Cloude image URLs, you can pass the following optional query parameters to drastically improve the performance of your images:
 
 - **`fit`** — how the image should be resized to fit the dimensions you specify. Possible values are `scale-down`, `contain`, `cover` and `crop`.
-- **`format`** — the image format to use. Possible values are `png`, `avif`, `webp` and `jpeg`. 
+- **`format (f)`** — the image format to use. Possible values are `png`, `avif`, `webp` and `jpeg`. 
   If no format is provided, Keystatic Cloud will auto-detect browser capabilities and serve the most optimal format.
-- **`quality`** — the quality of the image. A number between `1` and `100`.
-- **`height`** — the height of the image. A number between `1` and `10240`.
-- **`width`** — the width of the image. A number between `1` and `10240`.
+- **`quality (q)`** — the quality of the image. A number between `1` and `100`.
+- **`height (h)`** — the height of the image. A number between `1` and `10240`.
+- **`width (w)`** — the width of the image. A number between `1` and `10240`.
 
 You can provide one or both of height and width, which will have a different effect based on the fit.
 
