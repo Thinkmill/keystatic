@@ -309,7 +309,7 @@ test('editor equality mismatch', () => {
         </paragraph>
       </doc>
     )
-  ).toThrowError();
+  ).toThrow();
 });
 
 test('editor equality mismatch with only a different selection', () => {
@@ -335,7 +335,7 @@ test('editor equality mismatch with only a different selection', () => {
         </paragraph>
       </doc>
     )
-  ).toThrowError();
+  ).toThrow();
 });
 
 test('cursor in the middle of text', () => {

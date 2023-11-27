@@ -1,7 +1,8 @@
 import { setBlockType, toggleMark, wrapIn } from 'prosemirror-commands';
 import { MarkType, NodeType } from 'prosemirror-model';
 import { Command, EditorState, TextSelection } from 'prosemirror-state';
-import { ReactElement, ReactNode, useMemo } from 'react';
+import { HTMLAttributes, ReactElement, ReactNode, useMemo } from 'react';
+import { filterDOMProps } from '@react-aria/utils';
 
 import { ActionGroup, Item } from '@keystar/ui/action-group';
 import { ActionButton } from '@keystar/ui/button';
@@ -17,6 +18,7 @@ import { plusIcon } from '@keystar/ui/icon/icons/plusIcon';
 import { quoteIcon } from '@keystar/ui/icon/icons/quoteIcon';
 import { removeFormattingIcon } from '@keystar/ui/icon/icons/removeFormattingIcon';
 import { strikethroughIcon } from '@keystar/ui/icon/icons/strikethroughIcon';
+import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
 import { typeIcon } from '@keystar/ui/icon/icons/typeIcon';
 import { Flex } from '@keystar/ui/layout';
 import { MenuTrigger, Menu } from '@keystar/ui/menu';
@@ -32,7 +34,6 @@ import {
 } from './editor-view';
 import { toggleList } from './lists';
 import { insertNode, insertTable, toggleCodeBlock } from './commands/misc';
-import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
 import { EditorSchema } from './schema';
 
 function EditorToolbarButton(props: {
@@ -77,11 +78,11 @@ function EditorToolbarButton(props: {
 //   </TooltipTrigger>
 // );
 
-export function Toolbar() {
+export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
   const schema = useEditorSchema();
   const { nodes } = schema;
   return (
-    <ToolbarContainer>
+    <ToolbarContainer {...props}>
       <ToolbarScrollArea>
         <HeadingMenu headingType={nodes.heading} />
         <InlineMarks />
@@ -162,16 +163,21 @@ const ToolbarGroup = ({ children }: { children: ReactNode }) => {
   return <Flex gap="regular">{children}</Flex>;
 };
 
-const ToolbarContainer = ({ children }: { children: ReactNode }) => {
+const ToolbarContainer = ({
+  children,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) => {
   return (
     <Flex
-      minWidth={0}
+      {...filterDOMProps(props, { labelable: true })}
+      // styles
       backgroundColor="canvas"
-      borderTopStartRadius="medium"
       borderTopEndRadius="medium"
+      borderTopStartRadius="medium"
+      insetTop={0}
+      minWidth={0}
       position="sticky"
       zIndex={2}
-      insetTop={0}
     >
       {children}
       <Flex
