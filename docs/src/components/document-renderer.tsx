@@ -87,6 +87,19 @@ const getRenderers = (
         const tokens = highlighter.codeToThemedTokens(children, language);
         codeBlock = shiki.renderToHtml(tokens, {
           elements: {
+            // Exclude diff indicators ("+" & "-") from selection; makes it easier to copy/paste.
+            token({ style, children, token }) {
+              let content = `${children}`;
+              let firstChar = token.content[0];
+              let isDiff = token.explanation?.some(e =>
+                e.scopes.some(s => s.scopeName.includes('diff'))
+              );
+              if (isDiff && (firstChar === '+' || firstChar === '-')) {
+                let diffIndicator = `<span class="absolute select-none">${firstChar}</span>`;
+                content = `${diffIndicator} ${content.slice(1)}`;
+              }
+              return `<span style="${style}">${content}</span>`;
+            },
             // Override shiki's <pre> so its default background color doesn't get applied
             pre({ children }) {
               return `<pre tabIndex="0">${children}</pre>`;
