@@ -66,8 +66,8 @@ describe('search-field/SearchField', () => {
 
     await userEvent.click(getByRole('button', { hidden: true }));
     expect(field).toHaveValue('');
-    expect(onClear).toBeCalledTimes(1);
-    expect(onChange).toBeCalledTimes(1);
+    expect(onClear).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledTimes(1);
   });
 
   // FIXME: can't get this test to work
@@ -95,12 +95,12 @@ describe('search-field/SearchField', () => {
     const field = getByRole('searchbox');
 
     await userEvent.type(field, '{enter}');
-    expect(onSubmit).toBeCalledTimes(1);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit).toHaveBeenLastCalledWith(inputText);
 
     await userEvent.clear(field);
     await userEvent.keyboard('{enter}');
-    expect(onSubmit).toBeCalledTimes(2);
+    expect(onSubmit).toHaveBeenCalledTimes(2);
     expect(onSubmit).toHaveBeenLastCalledWith('');
   });
 });

@@ -90,7 +90,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -129,7 +129,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -162,7 +162,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -195,7 +195,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -228,7 +228,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -261,7 +261,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -289,7 +289,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).not.toBeCalled();
+      expect(onOpenChange).not.toHaveBeenCalled();
 
       let picker = getByLabelText('Select an option…');
       expect(picker).toHaveAttribute('aria-expanded', 'true');
@@ -318,7 +318,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).not.toBeCalled();
+      expect(onOpenChange).not.toHaveBeenCalled();
 
       let picker = getByLabelText('Select an option…');
       expect(picker).toHaveAttribute('aria-expanded', 'true');
@@ -353,7 +353,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -364,7 +364,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
 
       // run restore focus rAF
@@ -390,7 +390,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -401,7 +401,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });
 
@@ -423,7 +423,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -434,7 +434,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
 
       // run restore focus rAF
@@ -460,7 +460,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -474,7 +474,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
 
       expect(document.activeElement).toBe(picker);
@@ -500,7 +500,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -511,7 +511,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
 
       expect(document.activeElement).toBe(getByTestId('after-input'));
@@ -537,7 +537,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -555,7 +555,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
 
       expect(document.activeElement).toBe(getByTestId('before-input'));
@@ -581,7 +581,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
 
@@ -599,7 +599,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
 
       // run restore focus rAF
@@ -621,7 +621,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).not.toBeCalled();
+      expect(onOpenChange).not.toHaveBeenCalled();
 
       let picker = getByLabelText('Select an option…');
       expect(picker).toHaveAttribute('aria-expanded', 'true');
@@ -632,7 +632,7 @@ describe('picker/Picker', () => {
       act(() => jest.runAllTimers());
 
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });
 
@@ -649,7 +649,7 @@ describe('picker/Picker', () => {
       act(() => jest.runAllTimers());
 
       expect(getByRole('listbox')).toBeVisible();
-      expect(onOpenChange).not.toBeCalled();
+      expect(onOpenChange).not.toHaveBeenCalled();
 
       let picker = getByLabelText('Select an option…');
       expect(picker).toHaveAttribute('aria-expanded', 'true');
@@ -665,7 +665,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });
   });
@@ -1805,7 +1805,7 @@ describe('picker/Picker', () => {
 
       expect(queryByRole('listbox')).toBeNull();
 
-      expect(onOpenChange).toBeCalledTimes(0);
+      expect(onOpenChange).toHaveBeenCalledTimes(0);
 
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(document.activeElement).not.toBe(picker);
@@ -1830,7 +1830,7 @@ describe('picker/Picker', () => {
 
       expect(queryByRole('listbox')).toBeNull();
 
-      expect(onOpenChange).toBeCalledTimes(0);
+      expect(onOpenChange).toHaveBeenCalledTimes(0);
 
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(document.activeElement).not.toBe(picker);
