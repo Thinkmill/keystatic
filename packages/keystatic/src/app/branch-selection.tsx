@@ -4,7 +4,7 @@ import { useMemo, useState, useContext } from 'react';
 import { CombinedError, useMutation } from 'urql';
 
 import { Button, ButtonGroup } from '@keystar/ui/button';
-import { Combobox, Item, comboboxClassList } from '@keystar/ui/combobox';
+import { Combobox, Item } from '@keystar/ui/combobox';
 import { Dialog } from '@keystar/ui/dialog';
 import { gitBranchIcon } from '@keystar/ui/icon/icons/gitBranchIcon';
 import { Icon } from '@keystar/ui/icon';
@@ -12,7 +12,7 @@ import { Flex, Grid } from '@keystar/ui/layout';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { Radio, RadioGroup } from '@keystar/ui/radio';
 import { Content, Footer } from '@keystar/ui/slots';
-import { css, tokenSchema, useIsMobileDevice } from '@keystar/ui/style';
+import { css, tokenSchema } from '@keystar/ui/style';
 import { TextField } from '@keystar/ui/text-field';
 import { Heading, Text } from '@keystar/ui/typography';
 
@@ -26,7 +26,6 @@ export function BranchPicker() {
   const { allBranches, currentBranch, defaultBranch } =
     useContext(BranchInfoContext);
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
-  const isMobile = useIsMobileDevice();
   const router = useRouter();
   const config = useConfig();
   const branchPrefix = getBranchPrefix(config);
@@ -78,21 +77,8 @@ export function BranchPicker() {
           );
         }
       }}
-      // styles
       menuTrigger="focus"
-      menuWidth={232}
-      UNSAFE_className={css({
-        [comboboxClassList.selector('mobile-trigger')]: {
-          minWidth: 100,
-          width: 'auto',
-        },
-      })}
-      // TODO: find a better heuristic. approximate width based on the branch
-      // length @ ~7px per character, plus 64px to account for the button width
-      // and input padding.
-      UNSAFE_style={
-        isMobile ? undefined : { width: currentBranch.length * 7 + 64 }
-      }
+      flex
     >
       {item => (
         <Item key={item.id} textValue={item.name}>
