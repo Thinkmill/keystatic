@@ -5,7 +5,10 @@ import { tableEditing } from 'prosemirror-tables';
 import { inputRules } from './inputrules/inputrules';
 import { Mark, Node } from 'prosemirror-model';
 import { getEditorSchema } from './schema';
-import { inputRulesForSchema } from './inputrules/rules';
+import {
+  enterInputRulesForSchema,
+  inputRulesForSchema,
+} from './inputrules/rules';
 import { keymapForSchema } from './commands/keymap';
 import { markdocClipboard } from './markdoc/clipboard';
 import { nodeInSelectionDecorations } from './node-in-selection';
@@ -37,6 +40,7 @@ export function createEditorState(
       dropCursor(),
       inputRules({
         rules: inputRulesForSchema(schema),
+        enterRules: enterInputRulesForSchema(schema),
       }),
       attributes(),
       gapCursor(),

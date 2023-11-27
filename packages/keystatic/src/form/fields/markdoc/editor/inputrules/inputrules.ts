@@ -26,13 +26,25 @@ const MAX_MATCH = 500;
 /// Create an input rules plugin. When enabled, it will cause text
 /// input that matches any of the given rules to trigger the rule's
 /// action.
-export function inputRules({ rules }: { rules: readonly InputRule[] }) {
+export function inputRules({
+  rules,
+  enterRules,
+}: {
+  rules: readonly InputRule[];
+  enterRules: readonly InputRule[];
+}) {
   return new Plugin({
     props: {
       handleTextInput(view) {
         setTimeout(() => {
           run(view, rules);
         });
+        return false;
+      },
+      handleKeyDown(view, event) {
+        if (event.key === 'Enter') {
+          return run(view, enterRules);
+        }
         return false;
       },
       handleDOMEvents: {
@@ -74,11 +86,12 @@ function getMatch(
 function run(view: EditorView, rules: readonly InputRule[]) {
   const state = view.state;
   if (view.composing || !(state.selection instanceof TextSelection)) {
-    return;
+    return false;
   }
   const { $cursor } = state.selection;
-  if (!$cursor) return;
+  if (!$cursor) return false;
   const tr = getMatch(state, $cursor.pos, $cursor.pos, rules);
-  if (!tr) return;
+  if (!tr) return false;
   view.dispatch(closeHistory(tr));
+  return true;
 }
