@@ -7,7 +7,6 @@ const config = {
   transform: {
     '^.+\\.[tj]sx?$': ['babel-jest', { rootMode: 'upward' }],
   },
-  prettierPath: null,
 };
 
 module.exports = config;

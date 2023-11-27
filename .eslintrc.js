@@ -37,6 +37,7 @@ module.exports = {
     'jest/valid-title': OFF,
     'jest/no-try-expect': OFF,
     'jest/no-disabled-tests': ERROR,
+    'jest/no-alias-methods': ERROR,
     'jsx-quotes': ERROR,
     'no-trailing-spaces': ERROR,
     'no-undef': ERROR,

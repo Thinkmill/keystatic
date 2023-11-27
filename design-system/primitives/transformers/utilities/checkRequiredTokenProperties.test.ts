@@ -10,7 +10,7 @@ describe('Utilities: checkRequiredTokenProperties', () => {
         },
         requiredProps
       )
-    ).toThrowError();
+    ).toThrow();
   });
 
   it('it does NOT throws if properties are present', () => {
@@ -23,6 +23,6 @@ describe('Utilities: checkRequiredTokenProperties', () => {
         },
         requiredProps
       )
-    ).not.toThrowError();
+    ).not.toThrow();
   });
 });

@@ -64,6 +64,6 @@ describe('navigation/TextLink', () => {
 
     fireEvent.click(getByRole('link'));
 
-    expect(onPress).toBeCalledTimes(1);
+    expect(onPress).toHaveBeenCalledTimes(1);
   });
 });
