@@ -16,29 +16,12 @@ export function getUploadedFileObject(
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = accept;
-    let didChange = false;
     input.onchange = () => {
-      console.log('changed');
-      didChange = true;
       const file = input.files?.[0];
       if (file) {
         resolve(file);
       }
     };
-    const cancelDetector = () => {
-      window.removeEventListener('focus', cancelDetector);
-      // setTimeout(() => {
-      //   if (input.files?.length === 0 && !didChange) {
-      //     resolve(undefined);
-      //   }
-      // }, 500);
-      // if ([...document.body.childNodes].includes(input)) {
-      //   document.body.removeChild(input);
-      // }
-    };
-    input.addEventListener('click', () => {
-      window.addEventListener('focus', cancelDetector, true);
-    });
     document.body.appendChild(input);
     input.click();
   });
