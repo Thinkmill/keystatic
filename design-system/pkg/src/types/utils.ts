@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 /**
  * From T, pick a set of properties whose keys are required. All other
  * properties are made optional.
@@ -21,3 +23,13 @@ export type Conditional<T> = T | false | null | undefined;
  * Support conditional children, where `React.ReactNode` is too loose.
  */
 export type ChildrenOf<Child> = Child | Conditional<Child>[];
+
+/** Support traditional children, or a render function. */
+export type WithRenderProps<T> = {
+  /**
+   * The children of the component. A function may be provided to alter the
+   * children based on component state.
+   */
+  children?: ReactNode | RenderProp<T>;
+};
+export type RenderProp<T> = (values: T) => ReactNode;

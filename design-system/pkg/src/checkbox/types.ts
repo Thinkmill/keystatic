@@ -4,7 +4,6 @@ import {
   InputBase,
   FocusableProps,
   Orientation,
-  Validation,
 } from '@react-types/shared';
 import { ReactNode } from 'react';
 
@@ -20,6 +19,8 @@ export type ToggleProps = {
    * Whether the element should be selected (uncontrolled).
    */
   defaultSelected?: boolean;
+  /** Whether user input is required on the input before form submission. */
+  isRequired?: boolean;
   /**
    * Whether the element should be selected (controlled).
    */
@@ -37,7 +38,6 @@ export type ToggleProps = {
    */
   name?: string;
 } & InputBase &
-  Pick<Validation, 'isRequired'> &
   FocusableProps;
 
 export type CheckboxProps = {

@@ -1,4 +1,17 @@
-import { css, tokenSchema } from '@keystar/ui/style';
+import { css, tokenSchema, transition } from '@keystar/ui/style';
+import { fileCodeIcon } from '@keystar/ui/icon/icons/fileCodeIcon';
+import { heading1Icon } from '@keystar/ui/icon/icons/heading1Icon';
+import { heading2Icon } from '@keystar/ui/icon/icons/heading2Icon';
+import { heading3Icon } from '@keystar/ui/icon/icons/heading3Icon';
+import { heading4Icon } from '@keystar/ui/icon/icons/heading4Icon';
+import { heading5Icon } from '@keystar/ui/icon/icons/heading5Icon';
+import { heading6Icon } from '@keystar/ui/icon/icons/heading6Icon';
+// import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
+import { listIcon } from '@keystar/ui/icon/icons/listIcon';
+import { listOrderedIcon } from '@keystar/ui/icon/icons/listOrderedIcon';
+import { quoteIcon } from '@keystar/ui/icon/icons/quoteIcon';
+import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
+import { separatorHorizontalIcon } from '@keystar/ui/icon/icons/separatorHorizontalIcon';
 import {
   DOMOutputSpec,
   NodeSpec,
@@ -9,6 +22,7 @@ import {
   Node,
   Slice,
   Fragment,
+  AttributeSpec,
 } from 'prosemirror-model';
 import { classes, markdocIdentifierPattern, nodeWithBorder } from './utils';
 import {
@@ -16,12 +30,13 @@ import {
   WithInsertMenuNodeSpec,
 } from './autocomplete/insert-menu';
 import { setBlockType, wrapIn } from 'prosemirror-commands';
-import { insertNode } from './commands/misc';
+import { insertNode, insertTable } from './commands/misc';
 import { toggleList } from './lists';
 import { Config } from '@markdoc/markdoc';
 import { attributeSchema } from './attributes/schema';
 import { independentForGapCursor } from './gapcursor/gapcursor';
 import { ReplaceAroundStep } from 'prosemirror-transform';
+import { WithReactNodeViewSpec } from './react-node-views';
 
 const blockElementSpacing = css({
   marginBlock: '1em',
@@ -102,11 +117,56 @@ const liDOM: DOMOutputSpec = [
   0,
 ];
 
-export type EditorNodeSpec = NodeSpec & WithInsertMenuNodeSpec;
+export type EditorNodeSpec = NodeSpec &
+  WithInsertMenuNodeSpec &
+  WithReactNodeViewSpec;
 
-const inlineContent = `(text | (text hard_break) | attribute)*`;
+const inlineContent = `(text | image | (text hard_break) | attribute)*`;
 
 const levels = [1, 2, 3, 4, 5, 6];
+const levelsMeta = [
+  { description: 'Use this for a top level heading', icon: heading1Icon },
+  { description: 'Use this for key sections', icon: heading2Icon },
+  { description: 'Use this for sub-sections', icon: heading3Icon },
+  { description: 'Use this for deep headings', icon: heading4Icon },
+  { description: 'Use this for grouping list items', icon: heading5Icon },
+  { description: 'Use this for low-level headings', icon: heading6Icon },
+];
+
+const cellAttrs: Record<string, AttributeSpec> = {
+  colspan: { default: 1 },
+  rowspan: { default: 1 },
+};
+
+const tableCellClass = css({
+  borderInlineEnd: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+  borderBottom: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+  margin: 0,
+  padding: tokenSchema.size.space.regular,
+  fontWeight: 'inherit',
+  boxSizing: 'border-box',
+  textAlign: 'start',
+  verticalAlign: 'top',
+  position: 'relative',
+  '&.selectedCell': {
+    backgroundColor: tokenSchema.color.alias.backgroundSelected,
+    '& *::selection': {
+      backgroundColor: 'transparent',
+    },
+  },
+  '&.selectedCell::after': {
+    border: `1px solid ${tokenSchema.color.alias.borderSelected}`,
+    position: 'absolute',
+    top: -1,
+    left: -1,
+    content: '""',
+    height: '100%',
+    width: '100%',
+  },
+});
+const tableHeaderClass = css(tableCellClass, {
+  backgroundColor: tokenSchema.color.scale.slate3,
+});
 
 const nodeSpecs = {
   doc: {
@@ -255,8 +315,31 @@ const nodeSpecs = {
     toDOM() {
       return blockquoteDOM;
     },
+    reactNodeView: {
+      component(props) {
+        return (
+          <blockquote
+            className={`${classes.blockParent} ${css({
+              marginInline: 0,
+              paddingInline: tokenSchema.size.space.large,
+              borderInlineStartStyle: 'solid',
+              borderInlineStartWidth: tokenSchema.size.border.large,
+              borderColor: tokenSchema.color.alias.borderIdle,
+              [`&.${classes.nodeInSelection}, &.${classes.nodeSelection}`]: {
+                borderColor: tokenSchema.color.alias.borderSelected,
+              },
+            })}`}
+          >
+            {props.children}
+          </blockquote>
+        );
+      },
+      rendersOwnContent: false,
+    },
     insertMenu: {
       label: 'Blockquote',
+      description: 'Insert a quote or citation',
+      icon: quoteIcon,
       command: wrapIn,
     },
   },
@@ -268,6 +351,8 @@ const nodeSpecs = {
     },
     insertMenu: {
       label: 'Divider',
+      description: 'A horizontal line to separate content',
+      icon: separatorHorizontalIcon,
       command: insertNode,
     },
   },
@@ -281,6 +366,8 @@ const nodeSpecs = {
     },
     insertMenu: {
       label: 'Code block',
+      description: 'Display code with syntax highlighting',
+      icon: fileCodeIcon,
       command: setBlockType,
     },
     marks: '',
@@ -307,6 +394,8 @@ const nodeSpecs = {
     },
     insertMenu: {
       label: 'Bullet list',
+      description: 'Insert an unordered list',
+      icon: listIcon,
       command: toggleList,
     },
   },
@@ -319,6 +408,8 @@ const nodeSpecs = {
     },
     insertMenu: {
       label: 'Ordered list',
+      description: 'Insert an ordered list',
+      icon: listOrderedIcon,
       command: toggleList,
     },
   },
@@ -345,10 +436,128 @@ const nodeSpecs = {
     toDOM(node) {
       return ['h' + node.attrs.level, 0];
     },
-    insertMenu: levels.map(level => ({
+    insertMenu: levels.map((level, index) => ({
+      ...levelsMeta[index],
       label: 'Heading ' + level,
       command: type => setBlockType(type, { level }),
     })),
+  },
+  table: {
+    content: 'table_row+',
+    insertMenu: {
+      label: 'Table',
+      description: 'Insert a table',
+      icon: tableIcon,
+      command(_, schema) {
+        return insertTable(schema);
+      },
+    },
+    tableRole: 'table',
+    isolating: true,
+    group: 'block',
+    parseDOM: [{ tag: 'table' }],
+    toDOM() {
+      return [
+        'table',
+        {
+          class: css({
+            width: '100%',
+            tableLayout: 'fixed',
+            position: 'relative',
+            borderSpacing: 0,
+            borderInlineStart: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+            borderTop: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+
+            '&:has(.selectedCell) *::selection': {
+              backgroundColor: 'transparent',
+            },
+          }),
+        },
+        ['tbody', 0],
+      ];
+    },
+  },
+  table_row: {
+    content: '(table_cell | table_header)*',
+    tableRole: 'row',
+    allowGapCursor: false,
+    parseDOM: [{ tag: 'tr' }],
+    toDOM() {
+      return ['tr', 0];
+    },
+  },
+  table_cell: {
+    content: 'block+',
+    tableRole: 'cell',
+    isolating: true,
+    attrs: cellAttrs,
+    parseDOM: [{ tag: 'td' }],
+    toDOM() {
+      return ['td', { class: tableCellClass }, 0];
+    },
+  },
+  table_header: {
+    content: 'block+',
+    tableRole: 'header_cell',
+    attrs: cellAttrs,
+    isolating: true,
+    parseDOM: [{ tag: 'th' }],
+    toDOM() {
+      return ['th', { class: tableHeaderClass }, 0];
+    },
+  },
+  image: {
+    content: '',
+    group: 'inline',
+    inline: true,
+    attrs: {
+      src: {},
+      filename: {},
+      alt: { default: '' },
+      title: { default: '' },
+    },
+    toDOM(node) {
+      return [
+        'img',
+        {
+          src: node.attrs.src,
+          alt: node.attrs.alt,
+          title: node.attrs.title,
+          'data-filename': node.attrs.filename,
+          class: css({
+            boxSizing: 'border-box',
+            borderRadius: tokenSchema.size.radius.regular,
+            display: 'inline-block',
+            maxHeight: tokenSchema.size.scale[3600],
+            maxWidth: '100%',
+            transition: transition('box-shadow'),
+            [`&.${classes.nodeSelection},&.${classes.nodeInSelection}`]: {
+              outline: 0,
+              boxShadow: `0 0 0 ${tokenSchema.size.border.regular} ${tokenSchema.color.alias.borderSelected}`,
+            },
+            '&::selection': {
+              backgroundColor: 'transparent',
+            },
+          }),
+        },
+      ];
+    },
+    parseDOM: [
+      {
+        tag: 'img[src][data-filename]',
+        getAttrs(node) {
+          if (typeof node === 'string') return false;
+          const src = node.getAttribute('src');
+          const filename = node.getAttribute('data-filename');
+          if (!src?.startsWith('data:') || !filename) return false;
+          return {
+            src,
+            alt: node.getAttribute('alt') ?? '',
+            title: node.getAttribute('title') ?? '',
+          };
+        },
+      },
+    ],
   },
   ...attributeSchema,
 } satisfies Record<string, EditorNodeSpec>;
@@ -463,6 +672,15 @@ export function createEditorSchema(markdocConfig: Config) {
   const nodes = schema.nodes as EditorSchema['nodes'];
   const marks = schema.marks as EditorSchema['marks'];
 
+  const editorSchema: EditorSchema = {
+    schema,
+    marks,
+    nodes,
+    markdocConfig,
+    insertMenuItems: [],
+  };
+  schemaToEditorSchema.set(schema, editorSchema);
+
   const insertMenuItems: Omit<InsertMenuItem, 'id'>[] = [];
   for (const node of Object.values(schema.nodes)) {
     const insertMenuSpec = (node.spec as EditorNodeSpec).insertMenu;
@@ -471,13 +689,17 @@ export function createEditorSchema(markdocConfig: Config) {
         for (const item of insertMenuSpec) {
           insertMenuItems.push({
             label: item.label,
-            command: item.command(node),
+            description: item.description,
+            icon: item.icon,
+            command: item.command(node, editorSchema),
           });
         }
       } else {
         insertMenuItems.push({
           label: insertMenuSpec.label,
-          command: insertMenuSpec.command(node),
+          description: insertMenuSpec.description,
+          icon: insertMenuSpec.icon,
+          command: insertMenuSpec.command(node, editorSchema),
         });
       }
     }
@@ -554,16 +776,10 @@ export function createEditorSchema(markdocConfig: Config) {
       },
     });
   }
-  const editorSchema: EditorSchema = {
-    schema,
-    marks,
-    nodes,
-    markdocConfig,
-    insertMenuItems: insertMenuItems
-      .sort((a, b) => a.label.localeCompare(b.label))
-      .map((item, i) => ({ ...item, id: i.toString() })),
-  };
-  schemaToEditorSchema.set(schema, editorSchema);
+  // TODO: keep "bullet list" and "ordered list" together
+  editorSchema.insertMenuItems = insertMenuItems
+    .sort((a, b) => a.label.localeCompare(b.label))
+    .map((item, i) => ({ ...item, id: i.toString() }));
 
   return editorSchema;
 }

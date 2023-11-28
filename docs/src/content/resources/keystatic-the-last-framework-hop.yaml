@@ -1,0 +1,10 @@
+title: 'Keystatic: The Last Framework Hop'
+type:
+  discriminant: article
+  value:
+    url: https://nibras.co/articles/keystatic-the-last-framework-hop
+    authorName: Griko Nibras
+    description: >-
+      Griko writes about his experience using Keystatic to rebuild the last
+      iteration of their personal website.
+sortIndex: 10

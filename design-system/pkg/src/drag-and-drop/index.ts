@@ -1,7 +1,18 @@
-export type { DragAndDropOptions, DragAndDropHooks } from './types';
-export { useDragAndDrop } from './useDragAndDrop';
+export { DropZone, dropZoneClassList } from './DropZone';
+export type { DropZoneProps } from './DropZone';
 
-export { DIRECTORY_DRAG_TYPE } from '@react-aria/dnd';
+export { FileTrigger } from './FileTrigger';
+export type { FileTriggerProps } from './FileTrigger';
+
+export { useDragAndDrop } from './useDragAndDrop';
+export type { DragAndDropOptions, DragAndDropHooks } from './types';
+
+export {
+  DIRECTORY_DRAG_TYPE,
+  isTextDropItem,
+  isFileDropItem,
+  isDirectoryDropItem,
+} from '@react-aria/dnd';
 
 export type {
   DirectoryDropItem,

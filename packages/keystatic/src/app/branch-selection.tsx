@@ -1,10 +1,10 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { gql } from '@ts-gql/tag/no-transform';
 import { useMemo, useState, useContext } from 'react';
-import { useMutation } from 'urql';
+import { CombinedError, useMutation } from 'urql';
 
 import { Button, ButtonGroup } from '@keystar/ui/button';
-import { Combobox, Item, comboboxClassList } from '@keystar/ui/combobox';
+import { Combobox, Item } from '@keystar/ui/combobox';
 import { Dialog } from '@keystar/ui/dialog';
 import { gitBranchIcon } from '@keystar/ui/icon/icons/gitBranchIcon';
 import { Icon } from '@keystar/ui/icon';
@@ -12,7 +12,7 @@ import { Flex, Grid } from '@keystar/ui/layout';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { Radio, RadioGroup } from '@keystar/ui/radio';
 import { Content, Footer } from '@keystar/ui/slots';
-import { css, tokenSchema, useIsMobileDevice } from '@keystar/ui/style';
+import { css, tokenSchema } from '@keystar/ui/style';
 import { TextField } from '@keystar/ui/text-field';
 import { Heading, Text } from '@keystar/ui/typography';
 
@@ -26,7 +26,6 @@ export function BranchPicker() {
   const { allBranches, currentBranch, defaultBranch } =
     useContext(BranchInfoContext);
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
-  const isMobile = useIsMobileDevice();
   const router = useRouter();
   const config = useConfig();
   const branchPrefix = getBranchPrefix(config);
@@ -78,21 +77,8 @@ export function BranchPicker() {
           );
         }
       }}
-      // styles
       menuTrigger="focus"
-      menuWidth={232}
-      UNSAFE_className={css({
-        [comboboxClassList.selector('mobile-trigger')]: {
-          minWidth: 100,
-          width: 'auto',
-        },
-      })}
-      // TODO: find a better heuristic. approximate width based on the branch
-      // length @ ~7px per character, plus 64px to account for the button width
-      // and input padding.
-      UNSAFE_style={
-        isMobile ? undefined : { width: currentBranch.length * 7 + 64 }
-      }
+      flex
     >
       {item => (
         <Item key={item.id} textValue={item.name}>
@@ -175,7 +161,7 @@ export function CreateBranchDialog(props: {
               label={stringFormatter.format('branchName')}
               // description="Your new branch will be based on the currently checked out branch, which is the default branch for this repository."
               autoFocus
-              errorMessage={error?.message}
+              errorMessage={prettyErrorForCreateBranchMutation(error)}
               {...propsForBranchPrefix}
             />
           ) : (
@@ -185,7 +171,7 @@ export function CreateBranchDialog(props: {
                 value={branchName}
                 onChange={setBranchName}
                 autoFocus
-                errorMessage={error?.message}
+                errorMessage={prettyErrorForCreateBranchMutation(error)}
                 {...propsForBranchPrefix}
               />
               <RadioGroup
@@ -245,6 +231,52 @@ export function CreateBranchDialog(props: {
 
 // Data
 // -----------------------------------------------------------------------------
+
+// https://git-scm.com/docs/git-check-ref-format
+const invalidAnywhere = [' ', '~', '^', ':', '*', '?', '[', '..', '@{', '\\'];
+const invalidStart = ['.', '/'];
+const invalidEnd = ['.', '/', '.lock'];
+
+export function prettyErrorForCreateBranchMutation(error?: CombinedError) {
+  if (!error) {
+    return undefined;
+  }
+
+  if (error.message.includes('is not a valid ref name')) {
+    let refnameMatch = error.message.match(/"([^"]+)"/);
+    let branchname = refnameMatch
+      ? refnameMatch[1].replace('refs/heads/', '')
+      : '';
+
+    // start rules
+    for (let char of invalidStart) {
+      if (branchname.startsWith(char)) {
+        return `Cannot start with "${char}"`;
+      }
+    }
+
+    // end rules
+    for (let char of invalidEnd) {
+      if (branchname.endsWith(char)) {
+        return `Cannot end with "${char}"`;
+      }
+    }
+
+    // anywhere rules
+    let invalidMatches = invalidAnywhere.filter(c => branchname.includes(c));
+    if (invalidMatches.length > 0) {
+      let options = { style: 'long', type: 'conjunction' } as const;
+      let formatter = new Intl.ListFormat('en-US', options);
+      let list = invalidMatches.map(char => `"${char}"`);
+      return `Some characters are not allowed: ${formatter.format(list)}`;
+    }
+
+    // unknown
+    return 'Invalid branch name';
+  }
+
+  return error.message;
+}
 
 export function useCreateBranchMutation() {
   return useMutation(

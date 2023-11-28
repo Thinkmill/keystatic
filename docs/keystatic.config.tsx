@@ -89,7 +89,7 @@ export default config({
       name: 'Keystatic Docs',
     },
     navigation: {
-      Pages: ['pages', 'blog', 'projects'],
+      Pages: ['pages', 'blog', 'projects', 'resources'],
       Config: ['authors', 'navigation'],
       Experimental: ['pagesWithMarkdocField'],
     },
@@ -262,6 +262,74 @@ export default config({
     }),
 
     // ------------------------------
+    // Resources
+    // ------------------------------
+    resources: collection({
+      label: 'Resources',
+      path: 'src/content/resources/*',
+      slugField: 'title',
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        type: fields.conditional(
+          fields.select({
+            label: 'Resource type',
+            options: [
+              { label: 'YouTube video', value: 'youtube-video' },
+              { label: 'Article', value: 'article' },
+            ],
+            defaultValue: 'youtube-video',
+          }),
+          {
+            'youtube-video': fields.object({
+              videoId: fields.text({
+                label: 'Video ID',
+                description: 'The ID of the video (not the URL!)',
+                validation: { length: { min: 1 } },
+              }),
+              thumbnail: fields.cloudImage({
+                label: 'Video thumbnail',
+                description: 'A 16/9 thumbnail image for the video.',
+              }),
+              kind: fields.select({
+                label: 'Video kind',
+                options: [
+                  { label: 'Talk', value: 'talk' },
+                  { label: 'Screencast', value: 'screencast' },
+                ],
+                defaultValue: 'screencast',
+              }),
+              description: fields.text({
+                label: 'Video description',
+                multiline: true,
+                validation: { length: { min: 1 } },
+              }),
+            }),
+            article: fields.object({
+              url: fields.url({
+                label: 'Article URL',
+                validation: { isRequired: true },
+              }),
+              authorName: fields.text({
+                label: 'Author name',
+                validation: { length: { min: 1 } },
+              }),
+              description: fields.text({
+                label: 'Article description',
+                multiline: true,
+              }),
+            }),
+          }
+        ),
+        sortIndex: fields.integer({
+          label: 'Sort index',
+          description:
+            'A number value to sort items (low to high) on the front end.',
+          defaultValue: 10,
+        }),
+      },
+    }),
+
+    // ------------------------------
     // For testing purposes only
     // ------------------------------
     pagesWithMarkdocField: collection({
@@ -269,6 +337,7 @@ export default config({
       slugField: 'title',
       format: { contentField: 'content' },
       path: 'src/content/pages/**',
+      entryLayout: 'content',
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         summary: fields.text({
@@ -320,6 +389,11 @@ export default config({
                     'coming-soon': fields.empty(),
                   }
                 ),
+                isNew: fields.checkbox({
+                  label: 'Is new?',
+                  description: 'Show a "new" badge next to this item',
+                  defaultValue: false,
+                }),
               }),
               {
                 label: 'Navigation items',

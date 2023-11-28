@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import {
   addAutocompleteDecoration,
   removeAutocompleteDecoration,
+  removeAutocompleteDecorationAndContent,
   wrapCommandAfterRemovingAutocompleteDecoration,
 } from '../autocomplete/decoration';
 import {
@@ -11,7 +12,7 @@ import {
   useEditorState,
   useEditorDispatchCommand,
 } from '../editor-view';
-import { Item } from '../new-primitives';
+import { Item } from '../autocomplete/EditorListbox';
 import { InputRule } from '../inputrules/inputrules';
 import { useEditorKeydownListener } from '../keydown';
 import { EditorAutocomplete } from '../autocomplete/autocomplete';
@@ -140,7 +141,9 @@ function NewAttributeMenu(props: { query: string; from: number; to: number }) {
       items={options}
       children={childRenderer}
       onEscape={() => {
-        viewRef.current?.dispatch(removeAutocompleteDecoration(editorState.tr));
+        const tr = removeAutocompleteDecorationAndContent(editorState);
+        if (!tr) return;
+        viewRef.current?.dispatch(tr);
       }}
       onAction={key => {
         const option = options.find(option => option.name === key);

@@ -1,7 +1,10 @@
+import { Icon } from '@keystar/ui/icon';
+import { Text } from '@keystar/ui/typography';
 import { matchSorter } from 'match-sorter';
 import { NodeType } from 'prosemirror-model';
 import { Command, EditorState } from 'prosemirror-state';
 import { useMemo } from 'react';
+
 import { weakMemoize } from '../utils';
 import {
   addAutocompleteDecoration,
@@ -14,15 +17,17 @@ import {
   useEditorState,
   useEditorDispatchCommand,
 } from '../editor-view';
-import { Item } from '../new-primitives';
+import { Item } from './EditorListbox';
 import { InputRule } from '../inputrules/inputrules';
 import { useEditorKeydownListener } from '../keydown';
 import { EditorAutocomplete } from './autocomplete';
+import { EditorSchema } from '../schema';
 
 export type InsertMenuItemSpec = {
   label: string;
   description?: string;
-  command: (type: NodeType) => Command;
+  icon?: React.ReactElement;
+  command: (type: NodeType, schema: EditorSchema) => Command;
 };
 
 export type WithInsertMenuNodeSpec = {
@@ -33,6 +38,7 @@ export type InsertMenuItem = {
   id: string;
   label: string;
   description?: string;
+  icon?: React.ReactElement;
   forToolbar?: true;
   command: Command;
 };
@@ -74,7 +80,9 @@ function wrapInsertMenuCommand(command: Command): Command {
 function childRenderer(item: InsertMenuItem) {
   return (
     <Item key={item.id} textValue={item.label}>
-      {item.label}
+      <Text>{item.label}</Text>
+      {item.description && <Text slot="description">{item.description}</Text>}
+      {item.icon && <Icon src={item.icon} />}
     </Item>
   );
 }
@@ -112,7 +120,9 @@ function InsertMenu(props: { query: string; from: number; to: number }) {
       items={options}
       children={childRenderer}
       onEscape={() => {
-        viewRef.current?.dispatch(removeAutocompleteDecoration(editorState.tr));
+        const tr = removeAutocompleteDecorationAndContent(editorState);
+        if (!tr) return;
+        viewRef.current?.dispatch(tr);
       }}
       onAction={key => {
         const option = options.find(option => option.id === key);

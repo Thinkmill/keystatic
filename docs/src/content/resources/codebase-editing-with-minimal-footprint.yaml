@@ -1,0 +1,16 @@
+title: 'Codebase Editing With Minimal Footprint '
+type:
+  discriminant: youtube-video
+  value:
+    videoId: K_-yTaBWzbA
+    thumbnail:
+      src: >-
+        https://thinkmill-labs.keystatic.net/keystatic-site/images/inru19y6a8qq/keystatic-with-minimal-footprint
+      alt: YouTube video thumbnail
+      height: 900
+      width: 1600
+    kind: screencast
+    description: >-
+      An example of how lightweight Keystatic can be to make a specific part of
+      your codebase editable via an auto-generated Admin UI.
+sortIndex: 15

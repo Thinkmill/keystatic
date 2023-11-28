@@ -1,4 +1,4 @@
-import { Ast, Node as MarkdocNode, ValidateError } from '@markdoc/markdoc';
+import { Node as MarkdocNode, ValidateError } from '@markdoc/markdoc';
 import {
   Mark,
   MarkType,
@@ -6,9 +6,15 @@ import {
   Node as ProseMirrorNode,
 } from 'prosemirror-model';
 import { EditorSchema } from '../schema';
+import { fromUint8Array } from 'js-base64';
 
 let state:
-  | { schema: EditorSchema; errors: ValidateError[]; marks: readonly Mark[] }
+  | {
+      schema: EditorSchema;
+      errors: ValidateError[];
+      marks: readonly Mark[];
+      files: ReadonlyMap<string, Uint8Array>;
+    }
   | undefined;
 function getState(): typeof state & {} {
   if (!state) {
@@ -69,9 +75,13 @@ function createAndFill(
   markdocNode: MarkdocNode,
   nodeType: NodeType,
   attrs: Record<string, any>,
-  extraChildren?: ProseMirrorNode[]
+  extraChildren?: ProseMirrorNode[],
+  mapChildren?: (children: ProseMirrorNode[]) => ProseMirrorNode[]
 ) {
-  const children = childrenToProseMirrorNodes(markdocNode.children);
+  let children = childrenToProseMirrorNodes(markdocNode.children);
+  if (mapChildren) {
+    children = mapChildren(children);
+  }
   const node = nodeType.createAndFill(
     attrs,
     extraChildren ? [...children, ...extraChildren] : children
@@ -100,12 +110,14 @@ function addMark(node: MarkdocNode, mark: Mark | MarkType | undefined) {
 
 export function markdocToProseMirror(
   node: MarkdocNode,
-  schema: EditorSchema
+  schema: EditorSchema,
+  files: ReadonlyMap<string, Uint8Array> | undefined
 ): ProseMirrorNode {
   state = {
     schema,
     errors: [],
     marks: [],
+    files: files ?? new Map(),
   };
   try {
     let pmNode = markdocNodeToProseMirrorNode(node);
@@ -168,6 +180,16 @@ function parseAnnotations(node: MarkdocNode): ProseMirrorNode[] {
     return schema.nodes.attribute.createChecked({ name: x.name }, [val]);
   });
 }
+
+const wrapInParagraph =
+  (schema: EditorSchema) => (children: ProseMirrorNode[]) => {
+    return children.map(x => {
+      if (x.isInline) {
+        return schema.nodes.paragraph.createAndFill({}, [x])!;
+      }
+      return x;
+    });
+  };
 
 function markdocNodeToProseMirrorNode(
   node: MarkdocNode
@@ -273,12 +295,13 @@ function markdocNodeToProseMirrorNode(
     return schema.schema.text(node.attributes.content, getState().marks);
   }
   if (node.type === 'item') {
-    if (node.children[0]?.type === 'inline') {
-      node = new Ast.Node('item', node.attributes, [
-        new Ast.Node('paragraph', {}, node.children),
-      ]);
-    }
-    return createAndFill(node, schema.nodes.list_item, {});
+    return createAndFill(
+      node,
+      schema.nodes.list_item,
+      {},
+      undefined,
+      wrapInParagraph(schema)
+    );
   }
   if (node.type === 'list') {
     return createAndFill(
@@ -289,7 +312,37 @@ function markdocNodeToProseMirrorNode(
       {}
     );
   }
+  if (node.type === 'table') {
+    return createAndFill(node, schema.nodes.table, {});
+  }
+  if (node.type === 'tbody' || node.type === 'thead') {
+    return childrenToProseMirrorNodes(node.children);
+  }
+  if (node.type === 'tr') {
+    return createAndFill(node, schema.nodes.table_row, {});
+  }
+  if (node.type === 'th') {
+    return createAndFill(
+      node,
+      schema.nodes.table_header,
+      {},
+      undefined,
+      wrapInParagraph(schema)
+    );
+  }
+  if (node.type === 'td') {
+    return createAndFill(
+      node,
+      schema.nodes.table_cell,
+      {},
+      undefined,
+      wrapInParagraph(schema)
+    );
+  }
   if (node.type === 'tag' && node.tag) {
+    if (node.tag === 'table') {
+      return markdocNodeToProseMirrorNode(node.children[0]);
+    }
     const children = childrenToProseMirrorNodes(node.children);
     const tagChildren = [
       schema.nodes.tag_attributes.createChecked(null, parseAnnotations(node)),
@@ -322,6 +375,24 @@ function markdocNodeToProseMirrorNode(
       });
     }
     return pmNode;
+  }
+  if (node.type === 'image') {
+    const fileContents = getState().files.get(node.attributes.src);
+    if (fileContents) {
+      return schema.nodes.image.createChecked({
+        src: `data:application/octet-stream;base64,${fromUint8Array(
+          fileContents
+        )}`,
+        alt: node.attributes.alt,
+        title: node.attributes.title,
+        filename: node.attributes.src,
+      });
+    }
+    return schema.schema.text(
+      `![${node.attributes.alt || ''}](${node.attributes.src || ''}${
+        node.attributes.title?.length ? ` "${node.attributes.title}"` : ''
+      })`
+    );
   }
 
   error({

@@ -1,5 +1,23 @@
 # @keystatic/core
 
+## 0.2.4
+
+### Patch Changes
+
+- 0de2f090: Add support for tables in `fields.markdoc`
+- Updated dependencies [0673fb03]
+  - @keystar/ui@0.4.4
+
+## 0.2.3
+
+### Patch Changes
+
+- 2b4f24b8: Prepare the dialog interface for batch commits. The invoking element
+  has been omitted from the UI until we're ready to implement.
+- Updated dependencies [a3f86e8f]
+- Updated dependencies [2b4f24b8]
+  - @keystar/ui@0.4.3
+
 ## 0.2.2
 
 ### Patch Changes

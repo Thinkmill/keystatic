@@ -2,6 +2,12 @@ import { log, outro as outroPrompt, note } from '@clack/prompts';
 import color from 'picocolors';
 import { Context } from '..';
 
+const devServerPortLookup: Record<Context['framework'], string> = {
+  'Next.js': '3000',
+  Astro: '4321',
+  Remix: '2222',
+};
+
 export const outro = (ctx: Context) => {
   log.message('Your project is ready!');
 
@@ -15,9 +21,7 @@ export const outro = (ctx: Context) => {
         `  ${ctx.packageManager === 'npm' ? 'npm run' : ctx.packageManager} dev`
       ),
       color.reset(
-        `  http://127.0.0.1:${
-          ctx.framework === 'Astro' ? '4321' : '3000'
-        }/keystatic`
+        `  http://127.0.0.1:${devServerPortLookup[ctx.framework]}/keystatic`
       ),
     ].join('\n'),
     'Next steps'

@@ -23,6 +23,7 @@ export function DateFieldInput(
       autoFocus={props.autoFocus}
       value={props.value === null ? '' : props.value}
       onBlur={onBlur}
+      isRequired={props.validation?.isRequired}
       errorMessage={
         blurred || props.forceValidation
           ? validateDate(props.validation, props.value, props.label)

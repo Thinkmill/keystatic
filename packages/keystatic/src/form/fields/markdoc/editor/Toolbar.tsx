@@ -1,7 +1,7 @@
 import { setBlockType, toggleMark, wrapIn } from 'prosemirror-commands';
 import { MarkType, NodeType } from 'prosemirror-model';
 import { Command, EditorState, TextSelection } from 'prosemirror-state';
-import { ReactElement, ReactNode, useMemo } from 'react';
+import { HTMLAttributes, ReactElement, ReactNode, useMemo } from 'react';
 
 import { ActionGroup, Item } from '@keystar/ui/action-group';
 import { ActionButton } from '@keystar/ui/button';
@@ -17,11 +17,12 @@ import { plusIcon } from '@keystar/ui/icon/icons/plusIcon';
 import { quoteIcon } from '@keystar/ui/icon/icons/quoteIcon';
 import { removeFormattingIcon } from '@keystar/ui/icon/icons/removeFormattingIcon';
 import { strikethroughIcon } from '@keystar/ui/icon/icons/strikethroughIcon';
+import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
 import { typeIcon } from '@keystar/ui/icon/icons/typeIcon';
 import { Flex } from '@keystar/ui/layout';
 import { MenuTrigger, Menu } from '@keystar/ui/menu';
 import { Picker } from '@keystar/ui/picker';
-import { css, tokenSchema } from '@keystar/ui/style';
+import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text, Kbd } from '@keystar/ui/typography';
 
@@ -31,9 +32,12 @@ import {
   useEditorState,
 } from './editor-view';
 import { toggleList } from './lists';
-import { insertNode, toggleCodeBlock } from './commands/misc';
+import { insertNode, insertTable, toggleCodeBlock } from './commands/misc';
+import { EditorSchema } from './schema';
+import { ImageToolbarButton } from './images';
+import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 
-function EditorToolbarButton(props: {
+export function EditorToolbarButton(props: {
   children: ReactNode;
   'aria-label': string;
   isSelected?: (editorState: EditorState) => boolean;
@@ -75,10 +79,11 @@ function EditorToolbarButton(props: {
 //   </TooltipTrigger>
 // );
 
-export function Toolbar() {
-  const { nodes } = useEditorSchema();
+export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
+  const schema = useEditorSchema();
+  const { nodes } = schema;
   return (
-    <ToolbarContainer>
+    <ToolbarWrapper {...props}>
       <ToolbarScrollArea>
         <HeadingMenu headingType={nodes.heading} />
         <InlineMarks />
@@ -136,10 +141,22 @@ export function Toolbar() {
               <Kbd>```</Kbd>
             </Tooltip>
           </TooltipTrigger>
+          <TooltipTrigger>
+            <EditorToolbarButton
+              aria-label="Table"
+              command={insertTable(schema)}
+            >
+              <Icon src={tableIcon} />
+            </EditorToolbarButton>
+            <Tooltip>
+              <Text>Table</Text>
+            </Tooltip>
+          </TooltipTrigger>
+          <ImageToolbarButton />
         </ToolbarGroup>
       </ToolbarScrollArea>
       <InsertBlockMenu />
-    </ToolbarContainer>
+    </ToolbarWrapper>
   );
 }
 
@@ -149,35 +166,66 @@ const ToolbarGroup = ({ children }: { children: ReactNode }) => {
 };
 
 const ToolbarContainer = ({ children }: { children: ReactNode }) => {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
+  if (entryLayoutPane === 'main') {
+    return (
+      <div
+        className={css({
+          boxSizing: 'border-box',
+          display: 'flex',
+          paddingInline: tokenSchema.size.space.medium,
+          minWidth: 0,
+          maxWidth: 800,
+          marginInline: 'auto',
+
+          [breakpointQueries.above.mobile]: {
+            paddingInline: tokenSchema.size.space.xlarge,
+          },
+          [breakpointQueries.above.tablet]: {
+            paddingInline: tokenSchema.size.space.xxlarge,
+          },
+        })}
+      >
+        {children}
+      </div>
+    );
+  }
+  return <div className={css({ display: 'flex' })}>{children}</div>;
+};
+
+const ToolbarWrapper = (props: HTMLAttributes<HTMLDivElement>) => {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
   return (
-    <Flex
-      minWidth={0}
-      backgroundColor="canvas"
-      borderTopStartRadius="medium"
-      borderTopEndRadius="medium"
-      position="sticky"
-      zIndex={2}
-      insetTop={0}
+    <div
+      {...props}
+      data-layout={entryLayoutPane}
+      className={css({
+        backdropFilter: 'blur(8px)',
+        backgroundClip: 'padding-box',
+        backgroundColor: `color-mix(in srgb, transparent, ${tokenSchema.color.background.canvas} 90%)`,
+        borderBottom: `${tokenSchema.size.border.regular} solid color-mix(in srgb, transparent, ${tokenSchema.color.foreground.neutral} 10%)`,
+        borderStartEndRadius: tokenSchema.size.radius.medium,
+        borderStartStartRadius: tokenSchema.size.radius.medium,
+        minWidth: 0,
+        position: 'sticky',
+        top: 0,
+        zIndex: 2,
+
+        '&[data-layout="main"]': { borderRadius: 0 },
+      })}
     >
-      {children}
-      <Flex
-        role="presentation" // dividing line
-        borderBottom="muted"
-        position="absolute"
-        insetX="medium"
-        insetBottom={0}
-      />
-    </Flex>
+      <ToolbarContainer>{props.children}</ToolbarContainer>
+    </div>
   );
 };
 
 const ToolbarScrollArea = (props: { children: ReactNode }) => {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
   return (
     <Flex
-      // borderRadius="regular"
-      // backgroundColor="surfaceSecondary"
-      padding="regular"
-      paddingEnd="medium"
+      data-layout={entryLayoutPane}
+      paddingY="regular"
+      paddingX="medium"
       gap="large"
       flex
       minWidth={0}
@@ -190,12 +238,15 @@ const ToolbarScrollArea = (props: { children: ReactNode }) => {
         '&::-webkit-scrollbar': {
           display: 'none',
         },
+
+        '&[data-layout="main"]': {
+          paddingInline: 0,
+        },
       })}
       {...props}
     />
   );
 };
-
 type HeadingState = 'normal' | 1 | 2 | 3 | 4 | 5 | 6;
 const headingMenuVals = new Map<string | number, HeadingState>([
   ['normal', 'normal'],
@@ -288,6 +339,8 @@ const HeadingMenu = (props: { headingType: NodeType }) => {
 };
 
 function InsertBlockMenu() {
+  const entryLayoutPane = useEntryLayoutSplitPaneContext();
+
   const commandDispatch = useEditorDispatchCommand();
   const schema = useEditorSchema();
 
@@ -302,7 +355,10 @@ function InsertBlockMenu() {
   return (
     <MenuTrigger align="end">
       <TooltipTrigger>
-        <ActionButton marginY="regular" marginEnd="medium">
+        <ActionButton
+          marginY="regular"
+          marginEnd={entryLayoutPane === 'main' ? undefined : 'medium'}
+        >
           <Icon src={plusIcon} />
           <Icon src={chevronDownIcon} />
         </ActionButton>
@@ -454,14 +510,17 @@ function useMemoStringified<T>(value: T): T {
   return useMemo(() => value, [JSON.stringify(value)]);
 }
 
-// function canInsert(state: EditorState, nodeType: NodeType) {
-//   let $from = state.selection.$from;
-//   for (let d = $from.depth; d >= 0; d--) {
-//     let index = $from.index(d);
-//     if ($from.node(d).canReplaceWith(index, index, nodeType)) return true;
-//   }
-//   return false;
-// }
+function getActiveListType(state: EditorState, schema: EditorSchema) {
+  const sharedDepth = state.selection.$from.sharedDepth(state.selection.to);
+  for (let i = sharedDepth; i > 0; i--) {
+    const node = state.selection.$from.node(i);
+    if (node.type === schema.nodes.ordered_list) {
+      return 'ordered' as const;
+    } else if (node.type === schema.nodes.unordered_list) {
+      return 'unordered' as const;
+    }
+  }
+}
 
 function ListButtons() {
   const state = useEditorState();
@@ -473,6 +532,7 @@ function ListButtons() {
   const canWrapInUnorderedList =
     !!schema.nodes.unordered_list &&
     toggleList(schema.nodes.unordered_list)(state);
+  const activeListType = getActiveListType(state, schema);
 
   return useMemo(() => {
     return (
@@ -484,17 +544,15 @@ function ListButtons() {
         density="compact"
         prominence="low"
         disabledKeys={[
-          canWrapInOrderedList && 'ordered',
-          canWrapInUnorderedList && 'unordered',
+          !canWrapInOrderedList && 'ordered',
+          !canWrapInUnorderedList && 'unordered',
         ].filter(removeFalse)}
         summaryIcon={<Icon src={listIcon} />}
-        selectedKeys={[]}
-        // selectedKeys={selectedKeys}
+        selectedKeys={activeListType ? [activeListType] : []}
         onAction={key => {
           const format = key as 'ordered' | 'unordered';
           const type = schema.nodes[`${format}_list`];
           if (type) {
-            console.log('yes');
             dispatchCommand(toggleList(type));
           }
         }}
@@ -522,7 +580,13 @@ function ListButtons() {
         )}
       </ActionGroup>
     );
-  }, [canWrapInOrderedList, canWrapInUnorderedList, dispatchCommand, schema]);
+  }, [
+    activeListType,
+    canWrapInOrderedList,
+    canWrapInUnorderedList,
+    dispatchCommand,
+    schema.nodes,
+  ]);
 }
 
 function removeFalse<T>(val: T): val is Exclude<T, false> {
