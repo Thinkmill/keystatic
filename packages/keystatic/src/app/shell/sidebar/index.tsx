@@ -15,7 +15,7 @@ import {
 } from 'react';
 
 import { Badge } from '@keystar/ui/badge';
-import { Divider, Flex } from '@keystar/ui/layout';
+import { Divider, ScrollView, HStack, VStack } from '@keystar/ui/layout';
 import { NavList, NavItem, NavGroup } from '@keystar/ui/nav-list';
 import { Blanket } from '@keystar/ui/overlays';
 import { StatusLight } from '@keystar/ui/status-light';
@@ -29,15 +29,16 @@ import {
 import { Text } from '@keystar/ui/typography';
 import { usePrevious } from '@keystar/ui/utils';
 
-import { Config } from '../../config';
+import l10nMessages from '../../l10n/index.json';
+import { useRouter } from '../../router';
+import { ItemOrGroup, useNavItems } from '../../useNavItems';
+import { isLocalConfig, pluralize } from '../../utils';
 
-import l10nMessages from '../l10n/index.json';
-import { useRouter } from '../router';
-import { ItemOrGroup, useNavItems } from '../useNavItems';
-import { pluralize } from '../utils';
-
-import { useBrand } from './common';
-import { SIDE_PANEL_ID } from './constants';
+import { useBrand } from '../common';
+import { SIDE_PANEL_ID } from '../constants';
+import { GitMenu, ThemeMenu, UserActions } from './components';
+import { BranchPicker } from '../../branch-selection';
+import { useAppState, useConfig } from '../context';
 
 const SidebarContext = createContext<OverlayTriggerState | null>(null);
 export function useSidebar() {
@@ -74,44 +75,89 @@ export function SidebarProvider(props: { children: ReactNode }) {
   );
 }
 
-export function SidebarPanel(props: { hrefBase: string; config: Config }) {
+export function SidebarPanel() {
   return (
-    <Flex backgroundColor="surface" direction="column" height="100%">
-      <SidebarNav {...props} />
-    </Flex>
+    <VStack backgroundColor="surface" height="100%">
+      <SidebarHeader />
+      <SidebarGitActions />
+      <SidebarNav />
+      <SidebarFooter />
+    </VStack>
   );
 }
 
 function SidebarHeader() {
+  let isLocalNoCloud = useIsLocalNoCloud();
   let { brandMark, brandName } = useBrand();
 
   return (
-    <Flex
+    <HStack
       alignItems="center"
-      borderBottom="muted"
       gap="regular"
-      height="element.large"
-      paddingX="xlarge"
-      UNSAFE_className={css({
-        // let consumers use "currentColor" in SVG for their brand mark
-        color: tokenSchema.color.foreground.neutralEmphasis,
-
-        // ensure that the brand mark doesn't get squashed
-        '& :first-child': {
-          flexShrink: 0,
-        },
-      })}
+      paddingY="regular"
+      paddingX="medium"
+      height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
     >
-      {brandMark}
+      <HStack
+        flex
+        alignItems="center"
+        gap="regular"
+        UNSAFE_className={css({
+          // let consumers use "currentColor" in SVG for their brand mark
+          color: tokenSchema.color.foreground.neutralEmphasis,
 
-      <Text color="inherit" weight="medium" truncate>
-        {brandName}
-      </Text>
-    </Flex>
+          // ensure that the brand mark doesn't get squashed
+          '& :first-child': {
+            flexShrink: 0,
+          },
+        })}
+      >
+        {brandMark}
+
+        <Text color="inherit" weight="medium" truncate>
+          {brandName}
+        </Text>
+      </HStack>
+      {isLocalNoCloud && <ThemeMenu />}
+    </HStack>
   );
 }
 
-export function SidebarDialog(props: { hrefBase: string; config: Config }) {
+// when local mode w/o cloud there's no user actions, so we hide the footer and
+// move the theme menu to the header
+function SidebarFooter() {
+  let isLocalNoCloud = useIsLocalNoCloud();
+  if (isLocalNoCloud) {
+    return null;
+  }
+  return (
+    <HStack
+      alignItems="center"
+      paddingY="regular"
+      paddingX="medium"
+      gap="regular"
+    >
+      <UserActions />
+      <ThemeMenu />
+    </HStack>
+  );
+}
+
+// no git actions in local mode
+function SidebarGitActions() {
+  let config = useConfig();
+  if (isLocalConfig(config)) {
+    return null;
+  }
+  return (
+    <HStack gap="regular" paddingY="regular" paddingX="medium">
+      <BranchPicker />
+      <GitMenu />
+    </HStack>
+  );
+}
+
+export function SidebarDialog() {
   const state = useSidebar();
   const router = useRouter();
 
@@ -178,44 +224,44 @@ export function SidebarDialog(props: { hrefBase: string; config: Config }) {
         })}
       >
         <SidebarHeader />
-        <SidebarNav {...props} />
+        <SidebarGitActions />
+        <SidebarNav />
+        <SidebarFooter />
         <DismissButton onDismiss={state.close} />
       </div>
     </>
   );
 }
 
-export function SidebarNav(props: { hrefBase: string; config: Config }) {
+export function SidebarNav() {
+  const { basePath } = useAppState();
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const navItems = useNavItems();
   const isCurrent = useIsCurrent();
 
   return (
-    <div
-      className={css({
-        flex: 1,
-        overflowY: 'auto',
-        paddingBlock: tokenSchema.size.space.large,
-        paddingInlineEnd: tokenSchema.size.space.large,
-        WebkitOverflowScrolling: 'touch',
-      })}
-    >
+    <ScrollView flex paddingY="large" paddingEnd="medium">
       <NavList>
         <NavItem
-          href={props.hrefBase}
-          aria-current={isCurrent(props.hrefBase, { exact: true })}
+          href={basePath}
+          aria-current={isCurrent(basePath, { exact: true })}
         >
           {stringFormatter.format('dashboard')}
         </NavItem>
 
         {navItems.map(item => renderItemOrGroup(item, isCurrent))}
       </NavList>
-    </div>
+    </ScrollView>
   );
 }
 
 // Utils
 // ----------------------------------------------------------------------------
+
+function useIsLocalNoCloud() {
+  const config = useConfig();
+  return isLocalConfig(config) && !config.cloud;
+}
 
 function useIsCurrent() {
   const router = useRouter();
