@@ -8,8 +8,10 @@ import {
 } from '@react-types/shared';
 import { Key, RefObject, useEffect, useRef } from 'react';
 
+import { HStack } from '@keystar/ui/layout';
 import { ListBoxBase, listStyles, useListBoxLayout } from '@keystar/ui/listbox';
 import { BaseStyleProps } from '@keystar/ui/style';
+import { Text } from '@keystar/ui/typography';
 
 export { Item, Section } from '@keystar/ui/listbox';
 
@@ -72,6 +74,7 @@ export function useEditorListbox<T extends object>(
     listbox: (
       <ListBoxBase
         ref={listboxRef}
+        renderEmptyState={renderEmptyState}
         layout={layout}
         state={state}
         autoFocus="first"
@@ -95,4 +98,19 @@ export function EditorListbox<T extends object>(props: EditorListboxProps<T>) {
   }, [keydownListener, props.listenerRef]);
 
   return listbox;
+}
+
+function renderEmptyState() {
+  return (
+    <HStack
+      alignItems="center"
+      gap="regular"
+      height="element.regular"
+      paddingX="medium"
+    >
+      <Text color="neutralSecondary" weight="medium">
+        No results…
+      </Text>
+    </HStack>
+  );
 }
