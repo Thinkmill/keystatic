@@ -120,7 +120,9 @@ function InsertMenu(props: { query: string; from: number; to: number }) {
       items={options}
       children={childRenderer}
       onEscape={() => {
-        viewRef.current?.dispatch(removeAutocompleteDecoration(editorState.tr));
+        const tr = removeAutocompleteDecorationAndContent(editorState);
+        if (!tr) return;
+        viewRef.current?.dispatch(tr);
       }}
       onAction={key => {
         const option = options.find(option => option.id === key);
