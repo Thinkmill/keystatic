@@ -226,7 +226,6 @@ test('link, block and text as siblings', async () => {
   `);
 });
 
-// TODO: there should be spaces before and after the inline code
 test('inline code bit', async () => {
   expect(
     await htmlToEditor(`<span>before<span> </span><code>Code</code><span> </span>end</span><div></div>
