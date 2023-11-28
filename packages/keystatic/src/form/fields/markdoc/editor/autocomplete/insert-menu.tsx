@@ -17,7 +17,7 @@ import {
   useEditorState,
   useEditorDispatchCommand,
 } from '../editor-view';
-import { Item } from '../new-primitives';
+import { Item } from './EditorListbox';
 import { InputRule } from '../inputrules/inputrules';
 import { useEditorKeydownListener } from '../keydown';
 import { EditorAutocomplete } from './autocomplete';

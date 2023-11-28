@@ -2,7 +2,6 @@ import { setBlockType, toggleMark, wrapIn } from 'prosemirror-commands';
 import { MarkType, NodeType } from 'prosemirror-model';
 import { Command, EditorState, TextSelection } from 'prosemirror-state';
 import { HTMLAttributes, ReactElement, ReactNode, useMemo } from 'react';
-import { filterDOMProps } from '@react-aria/utils';
 
 import { ActionGroup, Item } from '@keystar/ui/action-group';
 import { ActionButton } from '@keystar/ui/button';
@@ -23,7 +22,7 @@ import { typeIcon } from '@keystar/ui/icon/icons/typeIcon';
 import { Flex } from '@keystar/ui/layout';
 import { MenuTrigger, Menu } from '@keystar/ui/menu';
 import { Picker } from '@keystar/ui/picker';
-import { css, tokenSchema } from '@keystar/ui/style';
+import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text, Kbd } from '@keystar/ui/typography';
 
@@ -35,8 +34,10 @@ import {
 import { toggleList } from './lists';
 import { insertNode, insertTable, toggleCodeBlock } from './commands/misc';
 import { EditorSchema } from './schema';
+import { ImageToolbarButton } from './images';
+import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 
-function EditorToolbarButton(props: {
+export function EditorToolbarButton(props: {
   children: ReactNode;
   'aria-label': string;
   isSelected?: (editorState: EditorState) => boolean;
@@ -82,7 +83,7 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
   const schema = useEditorSchema();
   const { nodes } = schema;
   return (
-    <ToolbarContainer {...props}>
+    <ToolbarWrapper {...props}>
       <ToolbarScrollArea>
         <HeadingMenu headingType={nodes.heading} />
         <InlineMarks />
@@ -151,10 +152,11 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
               <Text>Table</Text>
             </Tooltip>
           </TooltipTrigger>
+          <ImageToolbarButton />
         </ToolbarGroup>
       </ToolbarScrollArea>
       <InsertBlockMenu />
-    </ToolbarContainer>
+    </ToolbarWrapper>
   );
 }
 
@@ -163,41 +165,67 @@ const ToolbarGroup = ({ children }: { children: ReactNode }) => {
   return <Flex gap="regular">{children}</Flex>;
 };
 
-const ToolbarContainer = ({
-  children,
-  ...props
-}: HTMLAttributes<HTMLDivElement>) => {
+const ToolbarContainer = ({ children }: { children: ReactNode }) => {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
+  if (entryLayoutPane === 'main') {
+    return (
+      <div
+        className={css({
+          boxSizing: 'border-box',
+          display: 'flex',
+          paddingInline: tokenSchema.size.space.medium,
+          minWidth: 0,
+          maxWidth: 800,
+          marginInline: 'auto',
+
+          [breakpointQueries.above.mobile]: {
+            paddingInline: tokenSchema.size.space.xlarge,
+          },
+          [breakpointQueries.above.tablet]: {
+            paddingInline: tokenSchema.size.space.xxlarge,
+          },
+        })}
+      >
+        {children}
+      </div>
+    );
+  }
+  return <div className={css({ display: 'flex' })}>{children}</div>;
+};
+
+const ToolbarWrapper = (props: HTMLAttributes<HTMLDivElement>) => {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
   return (
-    <Flex
-      {...filterDOMProps(props, { labelable: true })}
-      // styles
-      backgroundColor="canvas"
-      borderTopEndRadius="medium"
-      borderTopStartRadius="medium"
-      insetTop={0}
-      minWidth={0}
-      position="sticky"
-      zIndex={2}
+    <div
+      {...props}
+      data-layout={entryLayoutPane}
+      className={css({
+        backdropFilter: 'blur(8px)',
+        backgroundClip: 'padding-box',
+        backgroundColor: `color-mix(in srgb, transparent, ${tokenSchema.color.background.canvas} 90%)`,
+        borderBottom: `${tokenSchema.size.border.regular} solid color-mix(in srgb, transparent, ${tokenSchema.color.foreground.neutral} 10%)`,
+        borderStartEndRadius: tokenSchema.size.radius.medium,
+        borderStartStartRadius: tokenSchema.size.radius.medium,
+        minWidth: 0,
+        position: 'sticky',
+        top: 0,
+        zIndex: 2,
+
+        '&[data-layout="main"]': { borderRadius: 0 },
+      })}
     >
-      {children}
-      <Flex
-        role="presentation" // dividing line
-        borderBottom="muted"
-        position="absolute"
-        insetX="medium"
-        insetBottom={0}
-      />
-    </Flex>
+      <ToolbarContainer>{props.children}</ToolbarContainer>
+    </div>
   );
 };
 
 const ToolbarScrollArea = (props: { children: ReactNode }) => {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
   return (
     <Flex
-      // borderRadius="regular"
-      // backgroundColor="surfaceSecondary"
-      padding="regular"
-      paddingEnd="medium"
+      data-layout={entryLayoutPane}
+      paddingY="regular"
+      paddingX="medium"
       gap="large"
       flex
       minWidth={0}
@@ -210,12 +238,15 @@ const ToolbarScrollArea = (props: { children: ReactNode }) => {
         '&::-webkit-scrollbar': {
           display: 'none',
         },
+
+        '&[data-layout="main"]': {
+          paddingInline: 0,
+        },
       })}
       {...props}
     />
   );
 };
-
 type HeadingState = 'normal' | 1 | 2 | 3 | 4 | 5 | 6;
 const headingMenuVals = new Map<string | number, HeadingState>([
   ['normal', 'normal'],
@@ -308,6 +339,8 @@ const HeadingMenu = (props: { headingType: NodeType }) => {
 };
 
 function InsertBlockMenu() {
+  const entryLayoutPane = useEntryLayoutSplitPaneContext();
+
   const commandDispatch = useEditorDispatchCommand();
   const schema = useEditorSchema();
 
@@ -322,7 +355,10 @@ function InsertBlockMenu() {
   return (
     <MenuTrigger align="end">
       <TooltipTrigger>
-        <ActionButton marginY="regular" marginEnd="medium">
+        <ActionButton
+          marginY="regular"
+          marginEnd={entryLayoutPane === 'main' ? undefined : 'medium'}
+        >
           <Icon src={plusIcon} />
           <Icon src={chevronDownIcon} />
         </ActionButton>
