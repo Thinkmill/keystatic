@@ -23,6 +23,7 @@ export function UrlFieldInput(
         props.onChange((val === '' ? null : val) as any);
       }}
       onBlur={onBlur}
+      isRequired={props.validation?.isRequired}
       errorMessage={
         props.forceValidation || blurred
           ? validateUrl(props.validation, props.value, props.label)

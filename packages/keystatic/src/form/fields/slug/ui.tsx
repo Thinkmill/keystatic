@@ -89,6 +89,7 @@ export function SlugFieldInput(
           }}
           onBlur={() => setBlurredSlug(true)}
           errorMessage={slugErrorMessage}
+          isRequired
         />
         <Flex gap="regular" direction="column">
           <ActionButton

@@ -16,6 +16,7 @@ export function IntegerFieldInput(
     <NumberField
       label={props.label}
       description={props.description}
+      isRequired={props.validation?.isRequired}
       errorMessage={
         props.forceValidation || blurred
           ? validateInteger(props.validation, props.value, props.label)

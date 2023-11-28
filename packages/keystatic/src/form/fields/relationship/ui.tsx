@@ -46,6 +46,7 @@ export function RelationshipInput(
       onBlur={onBlur}
       autoFocus={props.autoFocus}
       defaultItems={options}
+      isRequired={props.validation?.isRequired}
       errorMessage={errorMessage}
       width="auto"
     >
