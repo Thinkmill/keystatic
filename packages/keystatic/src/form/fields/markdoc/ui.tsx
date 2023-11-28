@@ -47,11 +47,13 @@ export function DocumentFieldInput(
 
   let fieldProps: FieldProps = {
     label: props.label,
+    labelElementType: 'span', // the editor element isn't an input, so we need to use a span for the label
     description: props.description,
   };
   if (entryLayoutPane === 'main') {
     fieldProps = {
       'aria-label': props.label,
+      // `aria-description` is still in W3C Editor's Draft for ARIA 1.3.
     };
   }
 

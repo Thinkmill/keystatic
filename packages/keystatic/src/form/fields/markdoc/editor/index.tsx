@@ -120,6 +120,9 @@ export const Editor = forwardRef(function Editor(
         >
           <Toolbar id={getToolbarId(id)} data-keystatic-editor="toolbar" />
           <ProseMirrorEditable
+            {...props}
+            role="textbox"
+            aria-multiline="true"
             id={getContentId(id)}
             data-keystatic-editor="content"
             className={editableStyles}
@@ -127,7 +130,6 @@ export const Editor = forwardRef(function Editor(
               layout: entryLayoutPane,
               container: containerSize,
             })}
-            {...props}
           />
         </Box>
         <NodeViews state={value} />
