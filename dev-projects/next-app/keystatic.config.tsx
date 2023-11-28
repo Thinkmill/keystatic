@@ -343,14 +343,46 @@ export default config({
         }),
         file: fields.file({ label: 'File', description }),
         image: fields.image({ label: 'Image', description }),
-        object: fields.object(
+        object: fields.object({
+          a: fields.text({ label: 'Object.A' }),
+          b: fields.text({ label: 'Object.B' }),
+        }),
+        objectLayout: fields.object(
           {
-            a: fields.text({ label: 'A' }),
-            b: fields.text({ label: 'B' }),
+            a: fields.text({ label: 'ObjectLayout.A' }),
+            b: fields.text({ label: 'ObjectLayout.B' }),
+          },
+          { layout: [6, 6] }
+        ),
+        address: fields.object(
+          {
+            street1: fields.text({ label: 'Address line 1' }),
+            street2: fields.text({ label: 'Address line 2' }),
+            city: fields.text({
+              label: 'City',
+              validation: { length: { min: 1 } },
+            }),
+            state: fields.select({
+              label: 'State',
+              options: [
+                { value: 'nsw', label: 'New South Wales' },
+                { value: 'vic', label: 'Victoria' },
+                { value: 'qld', label: 'Queensland' },
+                { value: 'sa', label: 'South Australia' },
+                { value: 'wa', label: 'Western Australia' },
+                { value: 'tas', label: 'Tasmania' },
+                { value: 'nt', label: 'Northern Territory' },
+                { value: 'act', label: 'Australian Capital Territory' },
+              ],
+              defaultValue: 'nsw',
+            }),
+            postcode: fields.text({ label: 'Postcode' }),
+            country: fields.text({ label: 'Country' }),
           },
           {
-            label: 'Object',
+            label: 'Address',
             description,
+            layout: [12, 12, 6, 3, 3, 12],
           }
         ),
         pathReference: fields.pathReference({
