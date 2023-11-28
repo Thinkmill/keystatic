@@ -51,6 +51,7 @@ export function PathReferenceInput(
         }
       }}
       onBlur={onBlur}
+      isRequired={props.validation?.isRequired}
       errorMessage={errorMessage}
       autoFocus={props.autoFocus}
       defaultItems={options}

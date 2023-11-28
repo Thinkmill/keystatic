@@ -1,9 +1,11 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { PressProps } from '@react-aria/interactions';
 import { Section, Item } from '@react-stately/collections';
 import { gql } from '@ts-gql/tag/no-transform';
 import {
+  ForwardedRef,
   ReactElement,
-  ReactNode,
+  forwardRef,
   useContext,
   useMemo,
   useReducer,
@@ -25,36 +27,30 @@ import { moonIcon } from '@keystar/ui/icon/icons/moonIcon';
 import { sunIcon } from '@keystar/ui/icon/icons/sunIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { userIcon } from '@keystar/ui/icon/icons/userIcon';
-import { Box, Flex } from '@keystar/ui/layout';
+import { Flex } from '@keystar/ui/layout';
 import { ActionMenu, Menu, MenuTrigger } from '@keystar/ui/menu';
-import { css, tokenSchema, useMediaQuery } from '@keystar/ui/style';
+import { ClearSlots } from '@keystar/ui/slots';
+import { css, useMediaQuery } from '@keystar/ui/style';
 import { ColorScheme } from '@keystar/ui/types';
 import { Text } from '@keystar/ui/typography';
 
-import { BranchPicker, CreateBranchDialog } from '../branch-selection';
-import { useRouter } from '../router';
-import l10nMessages from '../l10n/index.json';
-import {
-  getRepoUrl,
-  isCloudConfig,
-  isGitHubConfig,
-  isLocalConfig,
-  redirectToCloudAuth,
-} from '../utils';
+import { CreateBranchDialog } from '../../branch-selection';
+import { useRouter } from '../../router';
+import l10nMessages from '../../l10n/index.json';
+import { getRepoUrl, isGitHubConfig, redirectToCloudAuth } from '../../utils';
 
-import { useBrand } from './common';
-import { useAppState, useConfig } from './context';
+import { useConfig } from '../context';
 import {
   BranchInfoContext,
   GitHubAppShellDataContext,
   useCloudInfo,
   useRawCloudInfo,
-} from './data';
-import { useViewer } from './viewer-data';
-import { useThemeContext } from './theme';
-import { useImageLibraryURL } from '../../component-blocks/cloud-image-preview';
+} from '../data';
+import { useViewer } from '../viewer-data';
+import { useThemeContext } from '../theme';
+import { useImageLibraryURL } from '../../../component-blocks/cloud-image-preview';
 
-type GitItem = {
+type MenuItem = {
   icon: ReactElement;
   label: string;
   description?: string;
@@ -63,182 +59,7 @@ type GitItem = {
   target?: string;
   rel?: string;
 };
-type GitSection = { key: string; label: string; children: GitItem[] };
-
-export const TopBar = () => {
-  let config = useConfig();
-
-  if (isCloudConfig(config)) {
-    return <CloudHeader />;
-  }
-  if (isGitHubConfig(config)) {
-    return <GithubHeader />;
-  }
-  if (isLocalConfig(config)) {
-    return <LocalHeader />;
-  }
-
-  throw new Error('Unknown config type.');
-};
-
-// Cloud
-// -----------------------------------------------------------------------------
-
-function CloudHeader() {
-  const cloudInfo = useCloudInfo();
-  return (
-    <HeaderOuter>
-      <BrandButton />
-      <BranchPicker />
-      <GitMenu />
-      <Box flex="1" />
-      <ImageLibraryButton />
-      <ThemeMenu />
-      <UserMenu
-        user={
-          cloudInfo
-            ? {
-                name: cloudInfo.user.name,
-                login: cloudInfo.user.email,
-                avatarUrl: cloudInfo.user.avatarUrl,
-              }
-            : undefined
-        }
-      />
-    </HeaderOuter>
-  );
-}
-
-function ImageLibraryButton() {
-  const cloudInfo = useCloudInfo();
-  const imageLibraryUrl = useImageLibraryURL();
-  if (!cloudInfo?.team.images) {
-    return null;
-  }
-
-  return (
-    <ActionButton prominence="low" href={imageLibraryUrl} target="_blank">
-      <Icon src={imageIcon} />
-      <Text visuallyHidden={{ below: 'tablet' }}>Image library</Text>
-    </ActionButton>
-  );
-}
-
-// Github
-// -----------------------------------------------------------------------------
-
-function GithubHeader() {
-  const user = useViewer();
-  return (
-    <HeaderOuter>
-      <BrandButton />
-      <BranchPicker />
-      <GitMenu />
-      <Box flex="1" />
-      <ThemeMenu />
-      <UserMenu
-        user={
-          user
-            ? {
-                login: user.login,
-                name: user.name ?? user.login,
-                avatarUrl: user.avatarUrl,
-              }
-            : undefined
-        }
-      />
-    </HeaderOuter>
-  );
-}
-
-// Local
-// -----------------------------------------------------------------------------
-
-function LocalHeader() {
-  const config = useConfig();
-  const rawCloudInfo = useRawCloudInfo();
-  const router = useRouter();
-  return (
-    <HeaderOuter>
-      <BrandButton />
-      <Box flex="1" />
-      <ImageLibraryButton />
-      <ThemeMenu />
-      {rawCloudInfo ? (
-        rawCloudInfo === 'unauthorized' ? (
-          <ActionButton
-            onPress={() => {
-              redirectToCloudAuth(router.params.join('/'), config);
-            }}
-            prominence="low"
-          >
-            Sign in
-          </ActionButton>
-        ) : (
-          <UserMenu
-            user={
-              rawCloudInfo
-                ? {
-                    name: rawCloudInfo.user.name,
-                    login: rawCloudInfo.user.email,
-                    avatarUrl: rawCloudInfo.user.avatarUrl,
-                  }
-                : undefined
-            }
-          />
-        )
-      ) : null}
-    </HeaderOuter>
-  );
-}
-
-// =============================================================================
-// Misc.
-// =============================================================================
-
-function BrandButton() {
-  let { basePath } = useAppState();
-  let { brandMark, brandName } = useBrand();
-
-  return (
-    <ActionButton
-      aria-label="dashboard"
-      prominence="low"
-      href={basePath}
-      UNSAFE_style={{
-        marginInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
-      }}
-    >
-      {brandMark}
-
-      <Text
-        color="neutralEmphasis"
-        weight="medium"
-        visuallyHidden={{ below: 'desktop' }}
-      >
-        {brandName}
-      </Text>
-    </ActionButton>
-  );
-}
-
-function HeaderOuter({ children }: { children: ReactNode }) {
-  return (
-    <Flex
-      elementType="header"
-      // styles
-      alignItems="center"
-      borderBottom="muted"
-      flexShrink={0}
-      gap="small"
-      height={{ mobile: 'element.large', tablet: 'scale.700' }}
-      paddingX={{ mobile: 'medium', tablet: 'xlarge' }}
-      paddingEnd={{ desktop: 'xxlarge' }}
-    >
-      {children}
-    </Flex>
-  );
-}
+type MenuSection = { key: string; label: string; children: MenuItem[] };
 
 // Theme controls
 // -----------------------------------------------------------------------------
@@ -254,7 +75,7 @@ const themeItems = Object.entries(THEME_MODE).map(([id, { icon, label }]) => ({
   label,
 }));
 
-function ThemeMenu() {
+export function ThemeMenu() {
   let { theme, setTheme } = useThemeContext();
   let matchesDark = useMediaQuery('(prefers-color-scheme: dark)');
   let icon = THEME_MODE[theme].icon;
@@ -263,12 +84,8 @@ function ThemeMenu() {
   }
 
   return (
-    <MenuTrigger>
-      <ActionButton
-        aria-label="Theme"
-        prominence="low"
-        UNSAFE_className={css({ borderRadius: '50%', padding: 0 })}
-      >
+    <MenuTrigger align="end">
+      <ActionButton aria-label="theme" prominence="low">
         <Icon src={icon} />
       </ActionButton>
       <Menu
@@ -292,14 +109,48 @@ function ThemeMenu() {
 // User controls
 // -----------------------------------------------------------------------------
 
-function UserMenu({
-  user,
-}: {
-  user: { name: string; avatarUrl?: string; login: string } | undefined;
+type UserData = {
+  name: string;
+  avatarUrl?: string;
+  login: string;
+};
+
+export function UserActions() {
+  let config = useConfig();
+  let userData = useUserData();
+  let router = useRouter();
+
+  if (!userData) {
+    return null;
+  }
+
+  if (userData === 'unauthorized') {
+    return (
+      <ActionButton
+        onPress={() => {
+          redirectToCloudAuth(router.params.join('/'), config);
+        }}
+        flex
+      >
+        Sign into Cloud
+      </ActionButton>
+    );
+  }
+
+  return <UserMenu {...userData} />;
+}
+
+export function UserMenu(user: {
+  name: string;
+  avatarUrl?: string;
+  login: string;
 }) {
   let config = useConfig();
+  const cloudInfo = useCloudInfo();
+  const imageLibraryUrl = useImageLibraryURL();
+
   const menuItems = useMemo(() => {
-    let items: GitItem[] = [
+    let items: MenuItem[] = [
       {
         key: 'logout',
         label: 'Log out',
@@ -316,8 +167,18 @@ function UserMenu({
         rel: 'noopener noreferrer',
       });
     }
+    if (cloudInfo?.team.images) {
+      items.unshift({
+        key: 'image-library',
+        label: 'Image library',
+        icon: imageIcon,
+        href: imageLibraryUrl,
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      });
+    }
     return items;
-  }, [config]);
+  }, [cloudInfo, config, imageLibraryUrl]);
 
   if (!user) {
     return null;
@@ -325,42 +186,8 @@ function UserMenu({
 
   return (
     <MenuTrigger>
-      <ActionButton
-        aria-label="User menu"
-        prominence="low"
-        UNSAFE_className={css({ borderRadius: '50%', padding: 0 })}
-      >
-        <Avatar
-          src={user.avatarUrl}
-          name={user.name ?? undefined}
-          size="small"
-        />
-      </ActionButton>
+      <UserDetailsButton {...user} />
       <>
-        <Flex
-          borderBottom="muted"
-          gap="regular"
-          marginX="regular"
-          paddingY="regular"
-          paddingEnd="xxlarge"
-          alignItems="center"
-          UNSAFE_className={css({ userSelect: 'none' })}
-          aria-hidden
-        >
-          <Avatar
-            src={user.avatarUrl}
-            name={user.name ?? undefined}
-            size="small"
-          />
-          <Flex direction="column" gap="small">
-            <Text size="small" weight="semibold" color="neutralEmphasis">
-              {user.name}
-            </Text>
-            <Text size="small" color="neutralTertiary">
-              {user.login}
-            </Text>
-          </Flex>
-        </Flex>
         <Menu
           items={menuItems}
           minWidth="scale.2400"
@@ -398,10 +225,43 @@ function UserMenu({
   );
 }
 
+const UserDetailsButton = forwardRef(function UserDetailsButton(
+  props: UserData & PressProps,
+  ref: ForwardedRef<HTMLButtonElement>
+) {
+  let { avatarUrl, login, name, ...otherProps } = props;
+  return (
+    <ActionButton
+      {...otherProps}
+      ref={ref}
+      aria-label="User menu"
+      prominence="low"
+      flexGrow={1}
+      UNSAFE_className={css({ justifyContent: 'start', textAlign: 'start' })}
+    >
+      <Flex alignItems="center" gap="regular">
+        <Avatar src={avatarUrl} name={name ?? undefined} size="small" />
+        <ClearSlots>
+          <Flex direction="column" gap="small">
+            <Text size="small" weight="semibold" color="neutralEmphasis">
+              {name}
+            </Text>
+            {name === login ? null : (
+              <Text size="small" color="neutralTertiary">
+                {login}
+              </Text>
+            )}
+          </Flex>
+        </ClearSlots>
+      </Flex>
+    </ActionButton>
+  );
+});
+
 // Git controls
 // -----------------------------------------------------------------------------
 
-function GitMenu() {
+export function GitMenu() {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const data = useContext(BranchInfoContext);
   const [newBranchDialogVisible, toggleNewBranchDialog] = useReducer(
@@ -419,7 +279,7 @@ function GitMenu() {
           __typename
         }
       }
-    ` as import('../../../__generated__/ts-gql/DeleteBranch').type
+    ` as import('../../../../__generated__/ts-gql/DeleteBranch').type
   );
 
   const repoURL = getRepoUrl(data);
@@ -431,16 +291,16 @@ function GitMenu() {
 
   const gitMenuItems = useMemo(() => {
     let isDefaultBranch = data.currentBranch === data.defaultBranch;
-    let items: GitSection[] = [];
-    let branchSection: GitItem[] = [
+    let items: MenuSection[] = [];
+    let branchSection: MenuItem[] = [
       {
         key: 'new-branch',
         icon: gitBranchPlusIcon,
         label: stringFormatter.format('newBranch'),
       },
     ];
-    let prSection: GitItem[] = [];
-    let repoSection: GitItem[] = [
+    let prSection: MenuItem[] = [];
+    let repoSection: MenuItem[] = [
       {
         key: 'repo',
         icon: githubIcon,
@@ -526,7 +386,7 @@ function GitMenu() {
     <>
       <ActionMenu
         aria-label="git actions"
-        prominence="low"
+        align="end"
         items={gitMenuItems}
         onAction={key => {
           switch (key) {
@@ -602,4 +462,35 @@ function GitMenu() {
       </DialogContainer>
     </>
   );
+}
+
+// Utils
+// -----------------------------------------------------------------------------
+
+function useUserData(): UserData | 'unauthorized' | undefined {
+  const config = useConfig();
+  const user = useViewer();
+  const rawCloudInfo = useRawCloudInfo();
+
+  if (rawCloudInfo) {
+    if (rawCloudInfo === 'unauthorized') {
+      return rawCloudInfo;
+    }
+
+    return {
+      avatarUrl: rawCloudInfo.user.avatarUrl,
+      login: rawCloudInfo.user.email,
+      name: rawCloudInfo.user.name,
+    };
+  }
+
+  if (isGitHubConfig(config) && user) {
+    return {
+      avatarUrl: user.avatarUrl,
+      login: user.login,
+      name: user.name ?? user.login,
+    };
+  }
+
+  return undefined;
 }

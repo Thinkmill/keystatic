@@ -94,7 +94,11 @@ export function ImageFieldInput(
       gap="medium"
       role="group"
     >
-      <FieldLabel id={labelId} elementType="span">
+      <FieldLabel
+        id={labelId}
+        elementType="span"
+        isRequired={props.validation?.isRequired}
+      >
         {props.label}
       </FieldLabel>
       {props.description && (

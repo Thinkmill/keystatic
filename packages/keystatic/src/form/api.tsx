@@ -213,6 +213,13 @@ export type ArrayField<ElementField extends ComponentSchema> = {
 export type ObjectFieldOptions = {
   label?: string;
   description?: string;
+  /**
+   * Define the number of columns each field should span. The grid layout
+   * supports 12 possible columns.
+   * @example [6, 6] - "one row, equal columns"
+   * @example [12, 8, 4] - "one field in the first row, two fields in the second row"
+   */
+  layout?: number[];
 };
 
 export interface ObjectField<
