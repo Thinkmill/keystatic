@@ -25,7 +25,7 @@ export type ProseProps = {
 /** A typographic component that adds styles for rendering remote HTML content. */
 export const Prose = forwardRefWithAs<ProseProps, 'div'>((props, ref) => {
   const { children, elementType: ElementType = 'div', ...otherProps } = props;
-  const styleProps = useProseStyles(otherProps);
+  const styleProps = useProseStyleProps(otherProps);
 
   return (
     <ElementType ref={ref} {...filterStyleProps(otherProps)} {...styleProps}>
@@ -34,7 +34,7 @@ export const Prose = forwardRefWithAs<ProseProps, 'div'>((props, ref) => {
   );
 });
 
-function useProseStyles(props: ProseProps) {
+export function useProseStyleProps(props: ProseProps) {
   const { size = 'medium', ...otherProps } = props;
   const styleProps = useStyleProps(otherProps);
 
@@ -120,6 +120,7 @@ function useProseStyles(props: ProseProps) {
           maxWidth: '100%',
           overflow: 'auto',
           padding: tokenSchema.size.space.medium,
+          whiteSpace: 'pre-wrap',
         },
         'pre > code': {
           fontFamily: 'inherit',
@@ -138,7 +139,7 @@ function useProseStyles(props: ProseProps) {
         // Headings
         // ---------------------------------------------------------------------
 
-        'h1, h2, h3, h4, h5, h6': {
+        '& :is(h1, h2, h3, h4, h5, h6)': {
           color: tokenSchema.color.foreground.neutralEmphasis,
           lineHeight: 1.25,
           marginTop: '1.5em',
