@@ -11,6 +11,8 @@ import { Key, RefObject, useEffect, useRef } from 'react';
 import { ListBoxBase, listStyles, useListBoxLayout } from '@keystar/ui/listbox';
 import { BaseStyleProps } from '@keystar/ui/style';
 
+export { Item, Section } from '@keystar/ui/listbox';
+
 export type EditorListboxProps<T> = {
   listenerRef: RefObject<HTMLElement>;
   scrollRef?: RefObject<HTMLElement>;

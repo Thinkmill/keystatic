@@ -397,6 +397,10 @@ export declare namespace jsx {
       cursor: { children?: undefined; marks?: Marks };
       gap_cursor: { children?: undefined; marks?: Marks };
       node_selection: { children: EditorStateDescription; marks?: Marks };
+      table: { children?: NodeChildren };
+      table_row: { children?: NodeChildren };
+      table_cell: { children?: NodeChildren };
+      table_header: { children?: NodeChildren };
     };
     type Element = EditorStateDescription;
     interface ElementAttributesProperty {

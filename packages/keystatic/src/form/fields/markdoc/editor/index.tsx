@@ -3,7 +3,11 @@ import { EditorState } from 'prosemirror-state';
 import { Ref, forwardRef, useId, useMemo } from 'react';
 import { Box } from '@keystar/ui/layout';
 import { css } from '@emotion/css';
-import { tokenSchema } from '@keystar/ui/style';
+import {
+  breakpointQueries,
+  toDataAttributes,
+  tokenSchema,
+} from '@keystar/ui/style';
 import { Toolbar } from './Toolbar';
 import { prosemirrorStyles } from './utils';
 import { EditorPopoverDecoration } from './popovers';
@@ -17,6 +21,8 @@ import {
   getRootId,
   getToolbarId,
 } from './context';
+import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
+import { useContentPanelSize } from '../../../../app/shell/context';
 
 const orderedListStyles = ['lower-roman', 'decimal', 'lower-alpha'];
 const unorderedListStyles = ['square', 'disc', 'circle'];
@@ -52,43 +58,81 @@ const editableStyles = css({
     color: tokenSchema.color.foreground.accent,
   },
   color: tokenSchema.color.foreground.neutral,
+  '&[data-layout="main"]': {
+    boxSizing: 'border-box',
+    height: '100%',
+    padding: 0,
+    paddingTop: tokenSchema.size.space.medium,
+    minHeight: 0,
+    minWidth: 0,
+    maxWidth: 800,
+    marginInline: 'auto',
+
+    [breakpointQueries.above.mobile]: {
+      padding: tokenSchema.size.space.xlarge,
+    },
+    [breakpointQueries.above.tablet]: {
+      padding: tokenSchema.size.space.xxlarge,
+    },
+
+    '&[data-container="wide"]': {
+      padding: tokenSchema.size.scale[600],
+    },
+  },
 });
 
 export const Editor = forwardRef(function Editor(
-  props: {
+  {
+    value,
+    onChange,
+    ...props
+  }: {
     value: EditorState;
     onChange: (state: EditorState) => void;
   },
   ref: Ref<{ view: EditorView | null }>
 ) {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
+  const containerSize = useContentPanelSize();
+
   const id = useId();
   const editorContext = useMemo(() => ({ id }), [id]);
   return (
     <EditorContextProvider value={editorContext}>
-      <ProseMirrorEditor
-        value={props.value}
-        onChange={props.onChange}
-        ref={ref}
-      >
+      <ProseMirrorEditor value={value} onChange={onChange} ref={ref}>
         <Box
           id={getRootId(id)}
           data-keystatic-editor="root"
+          data-layout={entryLayoutPane}
           backgroundColor="canvas"
-          border="neutral"
-          borderRadius="medium"
           minWidth={0}
-          UNSAFE_className={prosemirrorStyles}
+          UNSAFE_className={css(prosemirrorStyles, {
+            '&[data-layout="main"]': {
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+            },
+            '&:not([data-layout="main"])': {
+              border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
+              borderRadius: tokenSchema.size.radius.medium,
+            },
+          })}
         >
           <Toolbar id={getToolbarId(id)} data-keystatic-editor="toolbar" />
           <ProseMirrorEditable
             id={getContentId(id)}
             data-keystatic-editor="content"
             className={editableStyles}
+            {...toDataAttributes({
+              layout: entryLayoutPane,
+              container: containerSize,
+            })}
+            {...props}
           />
         </Box>
-        <NodeViews state={props.value} />
+        <NodeViews state={value} />
         <CellMenuPortal />
-        <EditorPopoverDecoration state={props.value} />
+        <EditorPopoverDecoration state={value} />
         <AutocompleteDecoration />
       </ProseMirrorEditor>
     </EditorContextProvider>

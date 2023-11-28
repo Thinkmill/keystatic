@@ -11,11 +11,7 @@ const basicDoc = (
   </doc>
 );
 
-for (const type of [
-  ' ',
-  // TODO: make enter work
-  // '{Enter}'
-] as const) {
+for (const type of [' ', '{Enter}'] as const) {
   test(`inserting a code block with a shortcut ending with a ${type}`, async () => {
     const { state, user } = renderEditor(basicDoc);
     await user.keyboard(`\`\`\`${type}some content`);

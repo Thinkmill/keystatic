@@ -51,8 +51,8 @@ export function __experimental_markdoc_field({
       );
     },
 
-    parse: (_, { content }) => {
-      return parseToEditorState(content, getSchema());
+    parse: (_, { content, other }) => {
+      return parseToEditorState(content, getSchema(), other);
     },
     contentExtension: '.mdoc',
     validate(value) {
@@ -60,9 +60,8 @@ export function __experimental_markdoc_field({
     },
     serialize(value) {
       return {
-        content: serializeFromEditorState(value),
+        ...serializeFromEditorState(value),
         external: new Map(),
-        other: new Map(),
         value: undefined,
       };
     },

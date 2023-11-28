@@ -337,6 +337,7 @@ export default config({
       slugField: 'title',
       format: { contentField: 'content' },
       path: 'src/content/pages/**',
+      entryLayout: 'content',
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         summary: fields.text({

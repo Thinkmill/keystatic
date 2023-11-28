@@ -5,7 +5,7 @@ import { EditorPopover } from '@keystar/ui/editor';
 import { useEditorViewRef } from '../editor-view';
 import { useEditorKeydownListener } from '../keydown';
 import { useEditorReferenceElement } from '../popovers/reference';
-import { EditorListboxProps, useEditorListbox } from '../new-primitives';
+import { EditorListboxProps, useEditorListbox } from './EditorListbox';
 import { useBoundaryRect } from '../popovers';
 
 export function EditorAutocomplete<Item extends object>(
