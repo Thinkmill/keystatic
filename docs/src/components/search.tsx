@@ -32,10 +32,15 @@ function Result({ result, isActive }) {
   }
 
   return (
-    <Link href={routePath} className={`block p-6 ${isActive && 'bg-iris-3'}`}>
-      <h3 className="text-xl font-medium">{data.meta.title}</h3>
+    <Link
+      href={routePath}
+      className={`block px-6 py-4 ${isActive && 'bg-iris-3'}`}
+    >
+      <h3 className="text-lg font-medium">{data.meta.title}: </h3>
       <p
-        className="mt-2 [&_mark]:rounded [&_mark]:bg-iris-6 [&_mark]:px-1"
+        className={`mt-1 text-slate-11 [&_mark]:rounded [&_mark]:px-1 ${
+          isActive ? '[&_mark]:bg-iris-5' : '[&_mark]:bg-iris-4'
+        }`}
         dangerouslySetInnerHTML={{ __html: data.excerpt }}
       />
     </Link>
@@ -65,6 +70,9 @@ export function Search() {
           window.pagefind = { search: () => ({ results: [] }) };
         }
       }
+      // Customise search options
+      await window.pagefind.options({ excerptLength: 15 });
+      console.log(window.pagefind.options);
     }
     loadPagefind();
   }, []);
@@ -153,7 +161,7 @@ export function Search() {
           >
             <Combobox
               as="div"
-              className="relative mx-auto max-w-xl divide-y divide-slate-5 overflow-hidden rounded-lg bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all"
+              className="relative mx-auto max-w-2xl divide-y divide-slate-5 overflow-hidden rounded-lg bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all"
               onChange={handleSelect}
             >
               <div className="flex items-center gap-2 px-4">
