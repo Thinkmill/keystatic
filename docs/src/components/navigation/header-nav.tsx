@@ -50,7 +50,7 @@ export function HeaderNav({
       <div className="mx-auto max-w-7xl">
         <nav className="flex h-24 flex-row items-center justify-between gap-6 px-6 py-6">
           <KeystaticLogoLink />
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 lg:gap-8">
             <Search />
             <div className="hidden items-center gap-8 lg:flex">
               <div className="flex gap-4">
