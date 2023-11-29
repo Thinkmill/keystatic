@@ -49,6 +49,12 @@ export function useProseStyleProps(props: ProseProps) {
         maxWidth: '100%',
         minHeight: 0,
         minWidth: 0,
+        position: 'relative',
+        overflowWrap: 'break-word',
+        whiteSpace: 'break-spaces',
+
+        fontVariantLigatures: 'none',
+        fontFeatureSettings: '"liga" 0', // the above doesn't seem to work in Edge
         MozOsxFontSmoothing: 'auto',
         WebkitFontSmoothing: 'auto',
 

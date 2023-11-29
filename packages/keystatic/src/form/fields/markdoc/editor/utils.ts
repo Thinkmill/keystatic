@@ -35,23 +35,6 @@ export const nodeWithBorder = css({
 });
 
 export const prosemirrorStyles = css`
-  .ProseMirror {
-    position: relative;
-  }
-
-  .ProseMirror {
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    white-space: break-spaces;
-    -webkit-font-variant-ligatures: none;
-    font-variant-ligatures: none;
-    font-feature-settings: 'liga' 0; /* the above doesn't seem to work in Edge */
-  }
-
-  .ProseMirror pre {
-    white-space: pre-wrap;
-  }
-
   .ProseMirror li {
     position: relative;
   }
