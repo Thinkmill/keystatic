@@ -131,7 +131,10 @@ export function Search() {
       <Transition.Root
         show={isOpen}
         as={Fragment}
-        afterLeave={() => setQuery('')}
+        afterLeave={() => {
+          setResults([]);
+          setQuery('');
+        }}
       >
         <Dialog
           className="fixed inset-0 z-30 mt-12 overflow-y-auto p-4 px-6"
