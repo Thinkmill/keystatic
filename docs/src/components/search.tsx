@@ -33,7 +33,10 @@ function Result({ result, isActive }) {
       className={`block p-6 ${isActive && 'bg-iris-3'}`}
     >
       <h3 className="text-xl font-medium">{data.meta.title}</h3>
-      <p className="mt-2" dangerouslySetInnerHTML={{ __html: data.excerpt }} />
+      <p
+        className="mt-2 [&_mark]:rounded [&_mark]:bg-iris-6 [&_mark]:px-1"
+        dangerouslySetInnerHTML={{ __html: data.excerpt }}
+      />
     </Link>
   );
 }
@@ -52,9 +55,7 @@ export function Search() {
         try {
           window.pagefind = await import(
             // @ts-expect-error pagefind.js generated after build
-            process.env.NODE_ENV === 'development'
-              ? '/pagefind/pagefind.js'
-              : /* webpackIgnore: true */ './app/(public)/pagefind/pagefind.js'
+            /* webpackIgnore: true */ './app/(public)/pagefind/pagefind.js'
           );
         } catch (e) {
           window.pagefind = { search: () => ({ results: [] }) };
@@ -87,7 +88,7 @@ export function Search() {
     const query = e.target.value;
     setQuery(query);
     if (window.pagefind) {
-      const search = await window.pagefind.search(query);
+      const search = await window.pagefind.debouncedSearch(query);
       setResults(search.results);
     }
   }
