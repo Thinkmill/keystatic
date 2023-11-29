@@ -7,6 +7,10 @@ import { useState, useEffect, Fragment, useCallback } from 'react';
 import { Combobox, Dialog, Transition } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
+import Button from './button';
+import { linkStylesShared, linkStylesIdle } from './navigation/header-nav';
+import { cx } from '../utils';
+
 function getRoutePathFromData(route: string): string {
   const url = new RegExp('/server/app/(.*?).html');
   const strippedUrl = url.exec(route);
@@ -119,13 +123,15 @@ export function Search() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 rounded-lg border border-sand-7 bg-white/10 px-3 py-2 leading-none backdrop-blur hover:bg-slate-12/5"
+        className={cx(
+          'flex items-center gap-2',
+          linkStylesShared,
+          linkStylesIdle
+        )}
+        title="⌘K"
       >
-        <MagnifyingGlassIcon className="h-6 w-6" />
-        <span className="hidden font-medium sm:block">Search...</span>
-        <span className="hidden pr-1 tracking-widest text-slate-9 sm:block">
-          ⌘K
-        </span>
+        <MagnifyingGlassIcon className="h-5 w-5" />
+        <span className="hidden sm:block">Search</span>
       </button>
 
       <Transition.Root
