@@ -84,6 +84,9 @@ export function useProseStyleProps(props: ProseProps) {
         'ol ol, ul ul, ol ul, ul ol': {
           marginBlock: 0,
         },
+        'li :is(blockquote, p, pre, ol, ul)': {
+          marginBottom: 0,
+        },
         blockquote: {
           borderInlineStart: `${tokenSchema.size.border.large} solid ${tokenSchema.color.foreground.neutral}`,
           marginInline: 0,
