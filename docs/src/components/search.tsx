@@ -2,10 +2,16 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter, usePathName } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useState, useEffect, Fragment, useCallback } from 'react';
 import { Combobox, Dialog, Transition } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
+
+function getRoutePathFromData(route: string): string {
+  const url = new RegExp('/server/app/(.*?).html');
+  const strippedUrl = url.exec(route);
+  return strippedUrl ? `/${strippedUrl[1]}` : null;
+}
 
 function Result({ result, isActive }) {
   const [data, setData] = useState(null);
@@ -20,18 +26,13 @@ function Result({ result, isActive }) {
 
   if (!data) return null;
 
-  const url = new RegExp('/server/app/(.*?).html');
-  const strippedUrl = url.exec(data.raw_url);
-
-  if (!strippedUrl) {
+  const routePath = getRoutePathFromData(data.raw_url);
+  if (!routePath) {
     return null;
   }
 
   return (
-    <Link
-      href={strippedUrl[1]}
-      className={`block p-6 ${isActive && 'bg-iris-3'}`}
-    >
+    <Link href={routePath} className={`block p-6 ${isActive && 'bg-iris-3'}`}>
       <h3 className="text-xl font-medium">{data.meta.title}</h3>
       <p
         className="mt-2 [&_mark]:rounded [&_mark]:bg-iris-6 [&_mark]:px-1"
@@ -54,8 +55,11 @@ export function Search() {
       if (typeof window.pagefind === 'undefined') {
         try {
           window.pagefind = await import(
-            // @ts-expect-error pagefind.js generated after build
-            /* webpackIgnore: true */ './app/(public)/pagefind/pagefind.js'
+            // See the `pagefind:local` npm script to "hack" the pagefind content for local dev.
+            process.env.NODE_ENV === 'development'
+              ? '/pagefind/pagefind.js'
+              : // @ts-expect-error pagefind.js generated after build
+                /* webpackIgnore: true */ './app/(public)/pagefind/pagefind.js'
           );
         } catch (e) {
           window.pagefind = { search: () => ({ results: [] }) };
@@ -79,25 +83,28 @@ export function Search() {
     };
   }, [isOpen]);
 
-  // Close modal when user clicks on a search result
-  const pathname = usePathName;
+  // Close modal when user clicks on a search result (when route changes)
+  const pathname = usePathname();
   const closeModal = useCallback(() => setIsOpen(false), []);
-  useEffect(() => closeModal(), [closeModal, pathname]);
+  useEffect(() => {
+    closeModal();
+  }, [closeModal, pathname]);
 
   async function handleSearch(e) {
     const query = e.target.value;
     setQuery(query);
     if (window.pagefind) {
       const search = await window.pagefind.debouncedSearch(query);
-      setResults(search.results);
+      setResults(search?.results ?? []);
     }
   }
 
   async function handleSelect(selection) {
     const data = await selection.data();
-    const url = new RegExp('/server/app/(.*?).html');
-    const strippedUrl = url.exec(data.raw_url);
-    router.push(`/${strippedUrl[1]}`);
+    const routePath = getRoutePathFromData(data.raw_url);
+    if (routePath) {
+      router.push(routePath);
+    }
     setIsOpen(false);
   }
 
