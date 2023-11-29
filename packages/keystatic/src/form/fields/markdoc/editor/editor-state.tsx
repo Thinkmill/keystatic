@@ -22,6 +22,7 @@ import { reactNodeViews } from './react-node-views';
 import { tableCellMenuPlugin } from './popovers/table';
 import { pasteLinks } from './links';
 import { imageDropPlugin } from './images';
+import { tokenSchema } from '@keystar/ui/style';
 
 export function createEditorState(
   doc: Node,
@@ -37,7 +38,10 @@ export function createEditorState(
       imageDropPlugin(schema),
       keydownHandler(),
       history(),
-      dropCursor(),
+      dropCursor({
+        color: tokenSchema.color.alias.borderSelected,
+        width: 2,
+      }),
       inputRules({
         rules: inputRulesForSchema(schema),
         enterRules: enterInputRulesForSchema(schema),

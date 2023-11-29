@@ -64,7 +64,6 @@ const dividerDOM: DOMOutputSpec = [
     class: css({
       cursor: 'pointer',
       [`&.${classes.nodeInSelection}, &.${classes.nodeSelection}`]: {
-        outline: 0,
         backgroundColor: tokenSchema.color.alias.borderSelected,
       },
     }),
@@ -280,25 +279,6 @@ const nodeSpecs = {
     toDOM() {
       return blockquoteDOM;
     },
-    reactNodeView: {
-      component(props) {
-        return (
-          <blockquote
-            className={classNames(
-              classes.blockParent,
-              css({
-                [`.${classes.nodeInSelection} &, &.${classes.nodeSelection}`]: {
-                  borderColor: tokenSchema.color.alias.borderSelected,
-                },
-              })
-            )}
-          >
-            {props.children}
-          </blockquote>
-        );
-      },
-      rendersOwnContent: false,
-    },
     insertMenu: {
       label: 'Blockquote',
       description: 'Insert a quote or citation',
@@ -484,6 +464,12 @@ const nodeSpecs = {
       alt: { default: '' },
       title: { default: '' },
     },
+    // insertMenu: {
+    //   label: 'Image',
+    //   description: 'Insert an image',
+    //   icon: imageIcon,
+    //   command: () => {},
+    // },
     toDOM(node) {
       return [
         'img',
@@ -499,10 +485,6 @@ const nodeSpecs = {
             maxHeight: tokenSchema.size.scale[3600],
             maxWidth: '100%',
             transition: transition('box-shadow'),
-            [`&.${classes.nodeSelection},&.${classes.nodeInSelection}`]: {
-              outline: 0,
-              boxShadow: `0 0 0 ${tokenSchema.size.border.regular} ${tokenSchema.color.alias.borderSelected}`,
-            },
             '&::selection': {
               backgroundColor: 'transparent',
             },

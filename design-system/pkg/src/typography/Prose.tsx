@@ -78,7 +78,7 @@ export function useProseStyleProps(props: ProseProps) {
         // Elements
         // ---------------------------------------------------------------------
 
-        '& :is(blockquote, p, pre, ol, ul)': {
+        '& :is(blockquote, p, pre, ol, ul, table)': {
           marginBlock: '0.75em',
 
           ':first-child': { marginTop: 0 },
@@ -90,7 +90,7 @@ export function useProseStyleProps(props: ProseProps) {
         'ol ol, ul ul, ol ul, ul ol': {
           marginBlock: 0,
         },
-        'li :is(blockquote, p, pre, ol, ul)': {
+        'li :is(blockquote, p, pre, ol, ul, table)': {
           marginBottom: 0,
         },
         blockquote: {
@@ -99,10 +99,11 @@ export function useProseStyleProps(props: ProseProps) {
           paddingInlineStart: '1em',
         },
         hr: {
-          marginBlock: '1.5em',
           backgroundColor: tokenSchema.color.alias.borderIdle,
           border: 0,
+          borderRadius: tokenSchema.size.border.medium,
           height: tokenSchema.size.border.medium,
+          marginBlock: '1.5em',
         },
 
         // inline elements

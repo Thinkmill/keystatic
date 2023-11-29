@@ -1,4 +1,4 @@
-import { css, tokenSchema } from '@keystar/ui/style';
+import { css, injectGlobal, tokenSchema } from '@keystar/ui/style';
 import { useRef, useCallback, useEffect } from 'react';
 
 export const classes = {
@@ -34,11 +34,64 @@ export const nodeWithBorder = css({
   },
 });
 
+let maskColor = tokenSchema.color.background.canvas;
+let borderColor = tokenSchema.color.alias.borderSelected;
+let borderSize = tokenSchema.size.border.medium;
+let circleSize = tokenSchema.size.space.regular;
+injectGlobal({
+  '.prosemirror-dropcursor-block': {
+    '&::before, &::after': {
+      backgroundColor: maskColor,
+      border: `${borderSize} solid ${borderColor}`,
+      borderRadius: '50%',
+      content: '" "',
+      height: circleSize,
+      position: 'absolute',
+      width: circleSize,
+      top: `calc(${circleSize} / -2 - ${borderSize} / 2)`,
+    },
+
+    '&::before': { left: `calc(${circleSize} * -1)` },
+    '&::after': { right: `calc(${circleSize} * -1)` },
+  },
+});
+
+// void elements cannot have pseudo-elements so we need to style them differently
+const voidElements = [
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
+];
+
 export const prosemirrorStyles = css`
-  .ProseMirror li {
+  /* Provide our own selection indicator */
+  .ProseMirror-selectednode {
     position: relative;
   }
-
+  .ProseMirror-selectednode::after {
+    background-color: ${tokenSchema.color.alias.backgroundSelected};
+    border-radius: ${tokenSchema.size.radius.small};
+    content: '';
+    inset: calc(${tokenSchema.size.alias.focusRingGap} * -1);
+    pointer-events: none;
+    position: absolute;
+  }
+  .ProseMirror-selectednode:is(${voidElements.join(', ')}) {
+    outline: ${tokenSchema.size.alias.focusRing} solid
+      ${tokenSchema.color.border.accent};
+    outline-offset: ${tokenSchema.size.alias.focusRingGap};
+  }
   .ProseMirror-hideselection *::selection {
     background: transparent;
   }
@@ -49,40 +102,19 @@ export const prosemirrorStyles = css`
     caret-color: transparent;
   }
 
-  .ProseMirror-selectednode {
-    outline: 2px solid #8cf;
-  }
-
-  /* Make sure li selections wrap around markers */
-
-  li.ProseMirror-selectednode {
-    outline: none;
-  }
-
-  li.ProseMirror-selectednode:after {
-    content: '';
-    position: absolute;
-    left: -32px;
-    right: -2px;
-    top: -2px;
-    bottom: -2px;
-    border: 2px solid #8cf;
-    pointer-events: none;
-  }
-
   /* Protect against generic img rules */
-
   img.ProseMirror-separator {
     display: inline !important;
     border: none !important;
     margin: 0 !important;
   }
+
+  /* Provide an indicator for focusing places that don't allow regular selection */
   .ProseMirror-gapcursor {
     display: none;
     pointer-events: none;
     position: absolute;
   }
-
   .ProseMirror-gapcursor:after {
     content: '';
     display: block;
