@@ -139,7 +139,7 @@ export function Search() {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-slate-12 bg-opacity-75 transition-opacity" />
+            <Dialog.Overlay className="fixed inset-0 bg-slate-12 bg-opacity-75 backdrop-blur-[2px] transition-opacity" />
           </Transition.Child>
 
           <Transition.Child
