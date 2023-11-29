@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
+    "postbuild": "pagefind --site .next --output-path .next/static/chunks/app/\\(public\\)/pagefind",
     "start": "next start"
   },
   "keywords": [],
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
     "autoprefixer": "^10.4.13",
+    "pagefind": "^1.0.4",
     "postcss": "^8.4.21",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.6",

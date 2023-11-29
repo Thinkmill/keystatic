@@ -10,7 +10,6 @@ export default async function RootLayout({
 }) {
   const navigationMap = await getNavigationMap();
   const { isEnabled } = draftMode();
-
   return (
     <div className="flex min-h-screen flex-col text-sand-12">
       <HeaderNav navigationMap={navigationMap} />
