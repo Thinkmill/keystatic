@@ -112,11 +112,13 @@ export function Search() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 rounded-md border border-slate-11/10 bg-white/10 px-3 py-2 backdrop-blur hover:bg-white/20"
+        className="flex items-center gap-2 rounded-lg border border-sand-7 bg-white/10 px-3 py-2 leading-none backdrop-blur hover:bg-slate-12/5"
       >
-        <MagnifyingGlassIcon className="h-5 w-5" />
+        <MagnifyingGlassIcon className="h-6 w-6" />
         <span className="hidden font-medium sm:block">Search...</span>
-        <span className="pr-1 tracking-widest text-slate-9">⌘K</span>
+        <span className="hidden pr-1 tracking-widest text-slate-9 sm:block">
+          ⌘K
+        </span>
       </button>
 
       <Transition.Root
