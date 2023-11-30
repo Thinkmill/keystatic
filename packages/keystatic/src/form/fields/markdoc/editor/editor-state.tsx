@@ -1,28 +1,31 @@
-import { EditorState, Selection } from 'prosemirror-state';
 import { history } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
-import { tableEditing } from 'prosemirror-tables';
-import { inputRules } from './inputrules/inputrules';
 import { Mark, Node } from 'prosemirror-model';
-import { getEditorSchema } from './schema';
+import { EditorState, Selection } from 'prosemirror-state';
+import { tableEditing } from 'prosemirror-tables';
+
+import { tokenSchema } from '@keystar/ui/style';
+
+import { attributes } from './attributes';
+import { autocompleteDecoration } from './autocomplete/decoration';
+import { codeBlockSyntaxHighlighting } from './code-block-highlighting';
+import { keymapForSchema } from './commands/keymap';
+import { dropCursor } from './dropcursor';
+import { gapCursor } from './gapcursor';
+import { imageDropPlugin } from './images';
+import { inputRules } from './inputrules/inputrules';
 import {
   enterInputRulesForSchema,
   inputRulesForSchema,
 } from './inputrules/rules';
-import { keymapForSchema } from './commands/keymap';
+import { keydownHandler } from './keydown';
+import { pasteLinks } from './links';
 import { markdocClipboard } from './markdoc/clipboard';
 import { nodeInSelectionDecorations } from './node-in-selection';
-import { autocompleteDecoration } from './autocomplete/decoration';
-import { keydownHandler } from './keydown';
-import { gapCursor } from './gapcursor';
-import { attributes } from './attributes';
-import { dropCursor } from './dropcursor';
-import { codeBlockSyntaxHighlighting } from './code-block-highlighting';
-import { reactNodeViews } from './react-node-views';
+import { placeholderPlugin } from './placeholder';
 import { tableCellMenuPlugin } from './popovers/table';
-import { pasteLinks } from './links';
-import { imageDropPlugin } from './images';
-import { tokenSchema } from '@keystar/ui/style';
+import { reactNodeViews } from './react-node-views';
+import { getEditorSchema } from './schema';
 
 export function createEditorState(
   doc: Node,
@@ -51,6 +54,7 @@ export function createEditorState(
       keymap(keymapForSchema(schema)),
       markdocClipboard(),
       nodeInSelectionDecorations(),
+      placeholderPlugin('Start writing or press "/" for commands…'),
       reactNodeViews(doc.type.schema),
       autocompleteDecoration(),
       tableEditing(),

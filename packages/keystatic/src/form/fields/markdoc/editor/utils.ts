@@ -2,10 +2,12 @@ import { css, injectGlobal, tokenSchema } from '@keystar/ui/style';
 import { useRef, useCallback, useEffect } from 'react';
 
 export const classes = {
-  nodeInSelection: 'ProseMirror-nodeInSelection',
-  nodeSelection: 'ProseMirror-selectednode',
   blockParent: 'ProseMirror-blockParent',
   focused: 'ProseMirror-focused',
+  hideselection: 'ProseMirror-hideselection',
+  nodeInSelection: 'ProseMirror-nodeInSelection',
+  nodeSelection: 'ProseMirror-selectednode',
+  placeholder: 'ProseMirror-placeholder',
 };
 
 export const markdocIdentifierPattern = /^[a-zA-Z][-_a-zA-Z0-9]*$/;
@@ -76,10 +78,10 @@ const voidElements = [
 
 export const prosemirrorStyles = css`
   /* Provide our own selection indicator */
-  .ProseMirror-selectednode {
+  .${classes.nodeSelection} {
     position: relative;
   }
-  .ProseMirror-selectednode::after {
+  .${classes.nodeSelection}::after {
     background-color: ${tokenSchema.color.alias.backgroundSelected};
     border-radius: ${tokenSchema.size.radius.small};
     content: '';
@@ -87,19 +89,25 @@ export const prosemirrorStyles = css`
     pointer-events: none;
     position: absolute;
   }
-  .ProseMirror-selectednode:is(${voidElements.join(', ')}) {
+  .${classes.nodeSelection}:is(${voidElements.join(', ')}) {
     outline: ${tokenSchema.size.alias.focusRing} solid
       ${tokenSchema.color.border.accent};
     outline-offset: ${tokenSchema.size.alias.focusRingGap};
   }
-  .ProseMirror-hideselection *::selection {
+  .${classes.hideselection} *::selection {
     background: transparent;
   }
-  .ProseMirror-hideselection *::-moz-selection {
+  .${classes.hideselection} *::-moz-selection {
     background: transparent;
   }
-  .ProseMirror-hideselection {
+  .${classes.hideselection} {
     caret-color: transparent;
+  }
+
+  /* Style the placeholder element */
+  .${classes.placeholder} {
+    color: ${tokenSchema.color.foreground.neutralTertiary};
+    pointer-events: none;
   }
 
   /* Protect against generic img rules */
