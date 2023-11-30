@@ -103,6 +103,8 @@ export const Editor = forwardRef(function Editor(
           <ProseMirrorEditable
             {...props}
             {...styleProps}
+            role="textbox"
+            aria-multiline="true"
             id={getContentId(id)}
             data-keystatic-editor="content"
           />
