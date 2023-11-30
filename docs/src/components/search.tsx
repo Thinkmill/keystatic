@@ -16,7 +16,7 @@ function getRoutePathFromData(route: string): string {
   return strippedUrl ? `/${strippedUrl[1]}` : null;
 }
 
-function Result({ result, isActive }) {
+function Result({ result }) {
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -191,12 +191,10 @@ export function Search() {
                         key={result.id}
                         value={result}
                         className={({ active }) =>
-                          `${active ? '-mx-4 bg-slate-3 px-4' : undefined}`
+                          `${active ? '-mx-4 bg-slate-3 px-4' : ''}`
                         }
                       >
-                        {({ active }) => (
-                          <Result result={result} isActive={active} />
-                        )}
+                        <Result result={result} />
                       </Combobox.Option>
                     ))}
                   </Combobox.Options>
