@@ -92,7 +92,7 @@ navGroups:
         link:
           discriminant: page
           value: reader-api
-        isNew: false
+        isNew: true
       - label: Format options
         link:
           discriminant: page
