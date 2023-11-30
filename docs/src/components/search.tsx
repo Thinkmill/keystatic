@@ -7,7 +7,6 @@ import { useState, useEffect, Fragment, useCallback } from 'react';
 import { Combobox, Dialog, Transition } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
-import Button from './button';
 import { linkStylesShared, linkStylesIdle } from './navigation/header-nav';
 import { cx } from '../utils';
 
@@ -36,15 +35,10 @@ function Result({ result, isActive }) {
   }
 
   return (
-    <Link
-      href={routePath}
-      className={`block px-6 py-4 ${isActive && 'bg-iris-3'}`}
-    >
-      <h3 className="text-lg font-medium">{data.meta.title}: </h3>
+    <Link href={routePath} className="block py-4">
+      <h3 className="text-base font-medium">{data.meta.title}: </h3>
       <p
-        className={`mt-1 text-slate-11 [&_mark]:rounded [&_mark]:px-1 ${
-          isActive ? '[&_mark]:bg-iris-5' : '[&_mark]:bg-iris-4'
-        }`}
+        className="[&_mark]:text-inherit mt-1.5 text-sm text-slate-9 [&_mark]:bg-transparent [&_mark]:px-1 [&_mark]:font-medium"
         dangerouslySetInnerHTML={{ __html: data.excerpt }}
       />
     </Link>
@@ -121,6 +115,7 @@ export function Search() {
 
   return (
     <>
+      {/* Toggle */}
       <button
         onClick={() => setIsOpen(true)}
         className={cx(
@@ -134,6 +129,7 @@ export function Search() {
         <span className="hidden sm:block">Search</span>
       </button>
 
+      {/* Modal */}
       <Transition.Root
         show={isOpen}
         as={Fragment}
@@ -172,35 +168,43 @@ export function Search() {
               className="relative mx-auto max-w-2xl divide-y divide-slate-5 overflow-hidden rounded-lg bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all"
               onChange={handleSelect}
             >
-              <div className="flex items-center gap-2 px-4">
+              <div className="flex items-center gap-2 px-6 py-4">
                 <MagnifyingGlassIcon
-                  className="text-gray-500 pointer-events-none h-6 w-6"
+                  className="pointer-events-none h-6 w-6 text-slate-9"
                   aria-hidden="true"
                 />
                 <Combobox.Input
-                  className="h-12 w-full border-0 bg-transparent text-slate-11 placeholder-slate-9 focus:outline-none"
-                  placeholder="Search..."
+                  className="w-full border-0 bg-transparent text-lg font-medium placeholder-slate-9 focus:outline-none"
+                  placeholder="Search&hellip;"
                   onChange={e => handleSearch(e)}
                 />
               </div>
 
               {results.length > 0 && (
-                <Combobox.Options
-                  static
-                  className="max-h-[40rem] divide-y divide-slate-5 overflow-y-auto"
-                >
-                  {results.map(result => (
-                    <Combobox.Option key={result.id} value={result}>
-                      {({ active }) => (
-                        <Result result={result} isActive={active} />
-                      )}
-                    </Combobox.Option>
-                  ))}
-                </Combobox.Options>
+                <div className="p-2">
+                  <Combobox.Options
+                    static
+                    className="max-h-[40rem] divide-y divide-slate-3 overflow-y-auto px-4"
+                  >
+                    {results.map(result => (
+                      <Combobox.Option
+                        key={result.id}
+                        value={result}
+                        className={({ active }) =>
+                          `${active ? '-mx-4 bg-slate-3 px-4' : undefined}`
+                        }
+                      >
+                        {({ active }) => (
+                          <Result result={result} isActive={active} />
+                        )}
+                      </Combobox.Option>
+                    ))}
+                  </Combobox.Options>
+                </div>
               )}
 
               {query !== '' && results.length === 0 && (
-                <p className="text-gray-500 p-6">No results found.</p>
+                <p className="text-gray-500 p-6">No results for "{query}"</p>
               )}
             </Combobox>
           </Transition.Child>
