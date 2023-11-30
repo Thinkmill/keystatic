@@ -24,7 +24,6 @@ import { quoteIcon } from '@keystar/ui/icon/icons/quoteIcon';
 import { removeFormattingIcon } from '@keystar/ui/icon/icons/removeFormattingIcon';
 import { strikethroughIcon } from '@keystar/ui/icon/icons/strikethroughIcon';
 import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
-import { HStack } from '@keystar/ui/layout';
 import { MenuTrigger, Menu } from '@keystar/ui/menu';
 import { Picker, Item } from '@keystar/ui/picker';
 import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
@@ -89,6 +88,7 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
               <ToolbarButton
                 aria-label="Divider"
                 command={insertNode(nodes.divider)}
+                isSelected={typeInSelection(nodes.divider)}
               >
                 <Icon src={minusIcon} />
               </ToolbarButton>
@@ -101,6 +101,7 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
               <ToolbarButton
                 aria-label="Quote"
                 command={wrapIn(nodes.blockquote)}
+                isSelected={typeInSelection(nodes.blockquote)}
               >
                 <Icon src={quoteIcon} />
               </ToolbarButton>
@@ -113,22 +114,7 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
               <ToolbarButton
                 aria-label="Code block"
                 command={toggleCodeBlock(nodes.code_block, nodes.paragraph)}
-                isSelected={(state: EditorState) => {
-                  let hasCodeBlock = false;
-                  for (const range of state.selection.ranges) {
-                    state.doc.nodesBetween(
-                      range.$from.pos,
-                      range.$to.pos,
-                      node => {
-                        if (node.type === nodes.code_block) {
-                          hasCodeBlock = true;
-                        }
-                      }
-                    );
-                    if (hasCodeBlock) break;
-                  }
-                  return hasCodeBlock;
-                }}
+                isSelected={typeInSelection(nodes.code_block)}
               >
                 <Icon src={codeIcon} />
               </ToolbarButton>
@@ -157,30 +143,36 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
 
 const ToolbarContainer = ({ children }: { children: ReactNode }) => {
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
-  if (entryLayoutPane === 'main') {
-    return (
-      <div
-        className={css({
-          boxSizing: 'border-box',
-          display: 'flex',
-          paddingInline: tokenSchema.size.space.medium,
-          minWidth: 0,
-          maxWidth: 800,
-          marginInline: 'auto',
+  return (
+    <div
+      data-layout={entryLayoutPane}
+      className={css({
+        alignItems: 'center',
+        boxSizing: 'border-box',
+        display: 'flex',
+        height: tokenSchema.size.element.medium,
 
+        [breakpointQueries.above.mobile]: {
+          height: tokenSchema.size.element.large,
+        },
+
+        '&[data-layout="main"]': {
+          marginInline: 'auto',
+          maxWidth: 800,
+          minWidth: 0,
+          paddingInline: tokenSchema.size.space.medium,
           [breakpointQueries.above.mobile]: {
             paddingInline: tokenSchema.size.space.xlarge,
           },
           [breakpointQueries.above.tablet]: {
             paddingInline: tokenSchema.size.space.xxlarge,
           },
-        })}
-      >
-        {children}
-      </div>
-    );
-  }
-  return <div className={css({ display: 'flex' })}>{children}</div>;
+        },
+      })}
+    >
+      {children}
+    </div>
+  );
 };
 
 const ToolbarWrapper = (props: HTMLAttributes<HTMLDivElement>) => {
@@ -212,22 +204,25 @@ const ToolbarWrapper = (props: HTMLAttributes<HTMLDivElement>) => {
 const ToolbarScrollArea = (props: { children: ReactNode }) => {
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
   return (
-    <HStack
+    <div
       data-layout={entryLayoutPane}
-      alignItems="center"
-      flex
-      minWidth={0}
-      paddingX="medium"
-      gap="regular"
-      UNSAFE_className={css({
-        msOverflowStyle: 'none' /* for Internet Explorer, Edge */,
-        scrollbarWidth: 'none' /* for Firefox */,
+      className={css({
+        alignItems: 'center',
+        display: 'flex',
+        flex: 1,
+        gap: tokenSchema.size.space.regular,
+        paddingInline: tokenSchema.size.space.medium,
+        minWidth: 0,
         overflowX: 'auto',
 
-        /* for Chrome, Safari, and Opera */
-        '&::-webkit-scrollbar': {
-          display: 'none',
-        },
+        // avoid cropping focus rings
+        marginBlock: `calc(${tokenSchema.size.alias.focusRing} * -1)`,
+        paddingBlock: tokenSchema.size.alias.focusRing,
+
+        // hide scrollbars
+        msOverflowStyle: 'none', // for Internet Explorer, Edge
+        scrollbarWidth: 'none', // for Firefox
+        '&::-webkit-scrollbar': { display: 'none' }, // for Chrome, Safari, and Opera
 
         '&[data-layout="main"]': {
           paddingInline: 0,
@@ -334,23 +329,23 @@ function InsertBlockMenu() {
   const commandDispatch = useEditorDispatchCommand();
   const schema = useEditorSchema();
 
-  // const items = useMemo(
-  //   () => schema.insertMenuItems.filter(x => x.forToolbar),
-  //   [schema.insertMenuItems]
-  // );
   const items = useMemo(
-    () => schema.insertMenuItems.filter(x => !!x.command),
+    () => schema.insertMenuItems.filter(x => x.forToolbar),
     [schema.insertMenuItems]
   );
   const idToItem = useMemo(
     () => new Map(items.map(item => [item.id, item])),
     [items]
   );
+
+  if (items.length === 0) {
+    return null;
+  }
+
   return (
     <MenuTrigger align="end">
       <TooltipTrigger>
         <ActionButton
-          marginY="regular"
           marginEnd={entryLayoutPane === 'main' ? undefined : 'medium'}
         >
           <Icon src={plusIcon} />
@@ -594,5 +589,20 @@ function removeAllMarks(): Command {
       dispatch(state.tr.removeMark(state.selection.from, state.selection.to));
     }
     return true;
+  };
+}
+
+function typeInSelection(type: NodeType) {
+  return (state: EditorState) => {
+    let hasBlock = false;
+    for (const range of state.selection.ranges) {
+      state.doc.nodesBetween(range.$from.pos, range.$to.pos, node => {
+        if (node.type === type) {
+          hasBlock = true;
+        }
+      });
+      if (hasBlock) break;
+    }
+    return hasBlock;
   };
 }
