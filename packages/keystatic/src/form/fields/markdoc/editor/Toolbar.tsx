@@ -41,6 +41,7 @@ import { insertNode, insertTable, toggleCodeBlock } from './commands/misc';
 import { EditorSchema } from './schema';
 import { ImageToolbarButton } from './images';
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
+import { itemRenderer } from './autocomplete/insert-menu';
 
 export function ToolbarButton(props: {
   children: ReactNode;
@@ -148,6 +149,7 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
           </EditorToolbarGroup>
         </EditorToolbar>
       </ToolbarScrollArea>
+
       <InsertBlockMenu />
     </ToolbarWrapper>
   );
@@ -332,8 +334,12 @@ function InsertBlockMenu() {
   const commandDispatch = useEditorDispatchCommand();
   const schema = useEditorSchema();
 
+  // const items = useMemo(
+  //   () => schema.insertMenuItems.filter(x => x.forToolbar),
+  //   [schema.insertMenuItems]
+  // );
   const items = useMemo(
-    () => schema.insertMenuItems.filter(x => x.forToolbar),
+    () => schema.insertMenuItems.filter(x => !!x.command),
     [schema.insertMenuItems]
   );
   const idToItem = useMemo(
@@ -364,11 +370,7 @@ function InsertBlockMenu() {
         }}
         items={items}
       >
-        {item => (
-          <Item key={item.id} textValue={item.label}>
-            {item.label}
-          </Item>
-        )}
+        {itemRenderer}
       </Menu>
     </MenuTrigger>
   );
