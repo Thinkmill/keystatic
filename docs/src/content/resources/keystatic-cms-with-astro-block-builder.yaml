@@ -11,6 +11,6 @@ type:
       width: 1280
     kind: screencast
     description: >-
-      Learn how to create robust content management system with block editing in
+      Watch Ted Martin walk you through creating a block editing experience with
       Astro and Keystatic.
 sortIndex: 20
