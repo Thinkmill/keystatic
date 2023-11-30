@@ -44,10 +44,38 @@ export const Default = () => {
 };
 Default.storyName = 'default';
 
+function multiSelect<T>(key: T) {
+  return (previous: T[]) => {
+    if (previous.includes(key)) {
+      return previous.filter(existingKey => existingKey !== key);
+    } else {
+      return previous.concat(key);
+    }
+  };
+}
+function singleSelect<T>(key: T) {
+  return (previous: T | null) => {
+    if (previous === key) {
+      return null;
+    } else {
+      return key;
+    }
+  };
+}
+
 export const Groups = () => {
+  let [inlineMarks, setInlineMarks] = useState<Key[]>([]);
+  let [list, setList] = useState<Key | null>(null);
+  let [code, setCode] = useState<Key | null>(null);
+
   return (
     <EditorToolbar aria-label="Formatting options">
-      <EditorToolbarGroup selectionMode="multiple" aria-label="Text formatting">
+      <EditorToolbarGroup
+        selectionMode="multiple"
+        aria-label="Text formatting"
+        value={inlineMarks}
+        onChange={key => setInlineMarks(multiSelect(key))}
+      >
         <EditorToolbarItem value="bold" aria-label="bold">
           <Icon src={boldIcon} />
         </EditorToolbarItem>
@@ -67,7 +95,12 @@ export const Groups = () => {
 
       <EditorToolbarSeparator />
 
-      <EditorToolbarGroup selectionMode="single" aria-label="Lists">
+      <EditorToolbarGroup
+        selectionMode="single"
+        aria-label="Lists"
+        value={list}
+        onChange={key => setList(singleSelect(key))}
+      >
         <EditorToolbarItem value="bulleted" aria-label="bulleted list">
           <Icon src={listIcon} />
         </EditorToolbarItem>
@@ -84,7 +117,12 @@ export const Groups = () => {
 
       <EditorToolbarSeparator />
 
-      <EditorToolbarGroup selectionMode="single" aria-label="Code formatting">
+      <EditorToolbarGroup
+        selectionMode="single"
+        aria-label="Code formatting"
+        value={code}
+        onChange={key => setCode(singleSelect(key))}
+      >
         <EditorToolbarItem value="code" aria-label="Code">
           <Icon src={code2Icon} />
         </EditorToolbarItem>
@@ -98,31 +136,24 @@ export const Groups = () => {
 Groups.storyName = 'groups';
 
 export const FocusStops = () => {
-  let [disabledKeys, setDisabledKeys] = useState<Iterable<Key>>();
+  let [disabledButton, setDisabledButton] = useState(false);
   return (
     <Flex direction="column" gap="large" alignItems="start">
-      <button
-        onClick={() =>
-          setDisabledKeys(v => (v ? undefined : ['strikethrough']))
-        }
-      >
-        before
-      </button>
+      <button onClick={() => setDisabledButton(bool => !!bool)}>before</button>
       <EditorToolbar aria-label="Formatting options">
-        <EditorToolbarGroup
-          disabledKeys={disabledKeys}
-          selectionMode="multiple"
-          aria-label="Text formatting"
-        >
-          <EditorToolbarItem value="bold" aria-label="bold">
+        <EditorToolbarGroup aria-label="Text formatting">
+          <EditorToolbarButton aria-label="bold">
             <Icon src={boldIcon} />
-          </EditorToolbarItem>
-          <EditorToolbarItem value="italic" aria-label="italic">
+          </EditorToolbarButton>
+          <EditorToolbarButton aria-label="italic">
             <Icon src={italicIcon} />
-          </EditorToolbarItem>
-          <EditorToolbarItem value="strikethrough" aria-label="strikethrough">
+          </EditorToolbarButton>
+          <EditorToolbarButton
+            aria-label="strikethrough"
+            isDisabled={disabledButton}
+          >
             <Icon src={strikethroughIcon} />
-          </EditorToolbarItem>
+          </EditorToolbarButton>
         </EditorToolbarGroup>
 
         <EditorToolbarSeparator />
@@ -140,29 +171,29 @@ FocusStops.storyName = 'focus stops';
 export const Tooltips = () => {
   return (
     <EditorToolbar aria-label="Formatting options">
-      <EditorToolbarGroup selectionMode="multiple" aria-label="Text formatting">
+      <EditorToolbarGroup aria-label="Text formatting">
         <TooltipTrigger>
-          <EditorToolbarItem value="bold" aria-label="bold">
+          <EditorToolbarButton aria-label="bold">
             <Icon src={boldIcon} />
-          </EditorToolbarItem>
+          </EditorToolbarButton>
           <Tooltip>
             <Text>Bold</Text>
             <Kbd meta>B</Kbd>
           </Tooltip>
         </TooltipTrigger>
         <TooltipTrigger>
-          <EditorToolbarItem value="italic" aria-label="italic">
+          <EditorToolbarButton aria-label="italic">
             <Icon src={italicIcon} />
-          </EditorToolbarItem>
+          </EditorToolbarButton>
           <Tooltip>
             <Text>Italic</Text>
             <Kbd meta>I</Kbd>
           </Tooltip>
         </TooltipTrigger>
         <TooltipTrigger>
-          <EditorToolbarItem value="strikethrough" aria-label="strikethrough">
+          <EditorToolbarButton aria-label="strikethrough">
             <Icon src={strikethroughIcon} />
-          </EditorToolbarItem>
+          </EditorToolbarButton>
           <Tooltip>Strikethrough</Tooltip>
         </TooltipTrigger>
       </EditorToolbarGroup>
@@ -181,11 +212,11 @@ export const Tooltips = () => {
 
       <EditorToolbarSeparator />
 
-      <EditorToolbarGroup selectionMode="single" aria-label="Lists">
+      <EditorToolbarGroup aria-label="Lists">
         <TooltipTrigger>
-          <EditorToolbarItem value="bulleted" aria-label="bulleted list">
+          <EditorToolbarButton aria-label="bulleted list">
             <Icon src={listIcon} />
-          </EditorToolbarItem>
+          </EditorToolbarButton>
           <Tooltip>
             <Text>Bulleted list</Text>
             <Kbd meta shift>
@@ -194,9 +225,9 @@ export const Tooltips = () => {
           </Tooltip>
         </TooltipTrigger>
         <TooltipTrigger>
-          <EditorToolbarItem value="numbered" aria-label="numbered list">
+          <EditorToolbarButton aria-label="numbered list">
             <Icon src={listOrderedIcon} />
-          </EditorToolbarItem>
+          </EditorToolbarButton>
           <Tooltip>
             <Text>Numbered list</Text>
             <Kbd meta shift>
