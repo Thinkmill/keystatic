@@ -1,13 +1,15 @@
+import { Fragment, Slice } from 'prosemirror-model';
+import { Plugin } from 'prosemirror-state';
+import { dropPoint } from 'prosemirror-transform';
+
 import { Icon } from '@keystar/ui/icon';
+import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text } from '@keystar/ui/typography';
-import { EditorToolbarButton } from './Toolbar';
+
 import { getUploadedFileObject } from '../../image/ui';
-import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
-import { Plugin } from 'prosemirror-state';
 import { EditorSchema } from './schema';
-import { dropPoint } from 'prosemirror-transform';
-import { Fragment, Slice } from 'prosemirror-model';
+import { ToolbarButton } from './Toolbar';
 
 export function readFileAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -79,7 +81,7 @@ export function imageDropPlugin(schema: EditorSchema) {
 export function ImageToolbarButton() {
   return (
     <TooltipTrigger>
-      <EditorToolbarButton
+      <ToolbarButton
         aria-label="Image"
         command={(_, dispatch, view) => {
           if (dispatch && view) {
@@ -101,7 +103,7 @@ export function ImageToolbarButton() {
         }}
       >
         <Icon src={imageIcon} />
-      </EditorToolbarButton>
+      </ToolbarButton>
       <Tooltip>
         <Text>Image</Text>
       </Tooltip>

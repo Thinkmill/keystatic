@@ -8,14 +8,7 @@ import {
   DOMAttributes,
   ValueBase,
 } from '@react-types/shared';
-import { assertNever } from 'emery';
-
-import {
-  ActionButton,
-  ToggleButton,
-  ToggleButtonProps,
-} from '@keystar/ui/button';
-import { Divider, Flex } from '@keystar/ui/layout';
+import { assert, assertNever } from 'emery';
 import {
   Dispatch,
   Key,
@@ -28,9 +21,23 @@ import {
   useContext,
   useEffect,
   useId,
+  useMemo,
   useRef,
   useState,
 } from 'react';
+
+import {
+  ActionButton,
+  ToggleButton,
+  ToggleButtonProps,
+} from '@keystar/ui/button';
+import {
+  BaseStyleProps,
+  css,
+  onlyStyleProps,
+  tokenSchema,
+} from '@keystar/ui/style';
+import { Divider, HStack } from '@keystar/ui/layout';
 
 type EditorToolbarState = {
   /** The value of the last focused node. */
@@ -52,7 +59,7 @@ function useToolbarContext() {
   return context;
 }
 
-type EditorToolbarProps = PropsWithChildren<{}> & AriaLabelingProps;
+type EditorToolbarProps = PropsWithChildren<BaseStyleProps> & AriaLabelingProps;
 export function EditorToolbar(props: EditorToolbarProps) {
   let { children } = props;
   let ref = useRef<HTMLDivElement>(null);
@@ -61,9 +68,9 @@ export function EditorToolbar(props: EditorToolbarProps) {
   return (
     <EditorToolbarContext.Provider value={{ state }}>
       <FocusScope>
-        <Flex gap="regular" ref={ref} {...toolbarProps}>
+        <HStack alignItems="center" gap="regular" ref={ref} {...toolbarProps}>
           {children}
-        </Flex>
+        </HStack>
       </FocusScope>
     </EditorToolbarContext.Provider>
   );
@@ -75,11 +82,13 @@ export function EditorToolbar(props: EditorToolbarProps) {
 
 type GroupSelectionType =
   | {
+      disabledKeys?: Iterable<Key>;
       selectionMode: 'single';
       selectedValue: Key | null;
       setSelectedValue: (value: Key | null) => void;
     }
   | {
+      disabledKeys?: Iterable<Key>;
       selectionMode: 'multiple';
       selectedValue: Key[];
       setSelectedValue: (value: Key[]) => void;
@@ -87,24 +96,34 @@ type GroupSelectionType =
 const GroupSelectionContext = createContext<GroupSelectionType | null>(null);
 function useGroupSelectionContext() {
   let context = useContext(GroupSelectionContext);
-  if (context == null) {
-    throw new Error('useGroupSelectionContext must be used within a group');
-  }
-  return context;
+
+  assert(
+    context !== null,
+    'useGroupSelectionContext must be used within a group'
+  );
+
+  let disabledKeys = useSetFromIterable(context.disabledKeys);
+
+  return { ...context, disabledKeys };
 }
 function useSelectionItem(props: EditorToolbarItemProps): {
+  isDisabled: boolean;
   isSelected: boolean;
   buttonProps: PressProps & DOMAttributes;
 } {
-  let { isDisabled, value } = props;
+  let { value } = props;
   let context = useGroupSelectionContext();
 
   if (context.selectionMode === 'single') {
-    let { selectedValue, setSelectedValue } = context;
+    let { disabledKeys, selectedValue, setSelectedValue } = context;
+    let isDisabled = disabledKeys.has(value);
     let isSelected = selectedValue === value;
+
     return {
+      isDisabled,
       isSelected,
       buttonProps: {
+        role: 'radio' as const,
         'aria-checked': isSelected,
         onPress: () => {
           if (isDisabled) {
@@ -117,17 +136,20 @@ function useSelectionItem(props: EditorToolbarItemProps): {
             setSelectedValue(value);
           }
         },
-        role: 'radio' as const,
       },
     };
   }
   if (context.selectionMode === 'multiple') {
-    let { selectedValue, setSelectedValue } = context;
+    let { disabledKeys, selectedValue, setSelectedValue } = context;
+    let isDisabled = disabledKeys.has(value);
     let isSelected = selectedValue.includes(value);
+
     return {
+      isDisabled,
       isSelected,
       buttonProps: {
-        'aria-pressed': isSelected,
+        role: 'checkbox' as const,
+        'aria-checked': isSelected,
         onPress: () => {
           if (isDisabled) {
             return;
@@ -152,8 +174,15 @@ type EditorToolbarGroupProps = AriaLabelingProps & {
   /** The contents of the group. */
   children?: ReactNode;
 } & (
-    | ({ selectionMode: 'multiple' } & ValueBase<Key[]>)
-    | ({ selectionMode: 'single' } & ValueBase<Key | null>)
+    | ({
+        selectionMode: 'multiple';
+        disabledKeys?: Iterable<Key>;
+        // onValueChange?: (value: Key) => void;
+      } & ValueBase<Key[]>)
+    | ({
+        selectionMode: 'single';
+        disabledKeys?: Iterable<Key>;
+      } & ValueBase<Key | null>)
     | { selectionMode?: 'none' }
   );
 export function EditorToolbarGroup(props: EditorToolbarGroupProps) {
@@ -165,9 +194,9 @@ export function EditorToolbarGroup(props: EditorToolbarGroupProps) {
   }
 
   return (
-    <Flex gap="xsmall" role="group" {...filterDOMPropsWithLabelWarning(props)}>
+    <HStack gap="xsmall" role="group" {...filterPropsWithLabelWarning(props)}>
       {props.children}
-    </Flex>
+    </HStack>
   );
 }
 /** @private SINGLE selection */
@@ -181,6 +210,7 @@ function EditorSingleSelectionGroup(
   );
 
   let context = {
+    disabledKeys: props.disabledKeys,
     selectionMode: props.selectionMode,
     selectedValue,
     setSelectedValue,
@@ -188,13 +218,13 @@ function EditorSingleSelectionGroup(
 
   return (
     <GroupSelectionContext.Provider value={context}>
-      <Flex
+      <HStack
         gap="xsmall"
         role="radiogroup"
-        {...filterDOMPropsWithLabelWarning(props)}
+        {...filterPropsWithLabelWarning(props)}
       >
         {props.children}
-      </Flex>
+      </HStack>
     </GroupSelectionContext.Provider>
   );
 }
@@ -209,6 +239,7 @@ function EditorMultipleSelectionGroup(
   );
 
   let context = {
+    disabledKeys: props.disabledKeys,
     selectionMode: props.selectionMode,
     selectedValue,
     setSelectedValue,
@@ -216,13 +247,9 @@ function EditorMultipleSelectionGroup(
 
   return (
     <GroupSelectionContext.Provider value={context}>
-      <Flex
-        gap="xsmall"
-        role="group"
-        {...filterDOMPropsWithLabelWarning(props)}
-      >
+      <HStack gap="xsmall" role="group" {...filterPropsWithLabelWarning(props)}>
         {props.children}
-      </Flex>
+      </HStack>
     </GroupSelectionContext.Provider>
   );
 }
@@ -234,17 +261,15 @@ function EditorMultipleSelectionGroup(
 type EditorToolbarItemProps = {
   /** The contents of the item. */
   children?: ReactNode;
-  /** Whether the item is disabled. */
-  isDisabled?: boolean;
   /** The value of the item. */
   value: Key;
 };
 
 /** A toolbar item may be a checkbox/radio/toggle button, depending on context. */
 export function EditorToolbarItem(props: EditorToolbarItemProps) {
-  let { children, isDisabled, ...otherProps } = props;
-  let { itemProps } = useToolbarItem(props);
-  let { isSelected, buttonProps } = useSelectionItem(props);
+  let { children, ...otherProps } = props;
+  let { isDisabled, isSelected, buttonProps } = useSelectionItem(props);
+  let { itemProps } = useToolbarItem({ ...props, isDisabled });
 
   return (
     // Use a PressResponder to send DOM props through, allow overriding things
@@ -274,14 +299,22 @@ export function EditorToolbarButton(props: EditorToolbarButtonProps) {
 }
 
 export function EditorToolbarSeparator() {
-  return <Divider orientation="vertical" flexShrink={0} />;
+  return (
+    <Divider
+      orientation="vertical"
+      flexShrink={0}
+      UNSAFE_className={css({
+        backgroundColor: tokenSchema.color.border.muted,
+      })}
+    />
+  );
 }
 
 // =============================================================================
 // Utils
 // =============================================================================
 
-function filterDOMPropsWithLabelWarning<P extends AriaLabelingProps>(props: P) {
+function filterPropsWithLabelWarning<P extends AriaLabelingProps>(props: P) {
   let { 'aria-labelledby': ariaLabelledby, 'aria-label': ariaLabel } = props;
 
   if (!ariaLabelledby && !ariaLabel) {
@@ -290,7 +323,10 @@ function filterDOMPropsWithLabelWarning<P extends AriaLabelingProps>(props: P) {
     );
   }
 
-  return filterDOMProps(props, { labelable: true });
+  return {
+    ...onlyStyleProps(props),
+    ...filterDOMProps(props, { labelable: true }),
+  };
 }
 
 function useToolbarItem<P extends { isDisabled?: boolean }>(props: P) {
@@ -379,7 +415,7 @@ function useToolbar(props: EditorToolbarProps, ref: RefObject<HTMLElement>) {
 
   return {
     toolbarProps: {
-      ...filterDOMPropsWithLabelWarning(props),
+      ...filterPropsWithLabelWarning(props),
       onKeyDown,
       role: 'toolbar',
       'aria-orientation': 'horizontal' as const,
@@ -389,4 +425,11 @@ function useToolbar(props: EditorToolbarProps, ref: RefObject<HTMLElement>) {
       setLastFocusedId,
     },
   };
+}
+
+function useSetFromIterable<T>(value?: Iterable<T> | null) {
+  return useMemo(
+    () => (value == null ? new Set<Key>() : new Set(value)),
+    [value]
+  );
 }

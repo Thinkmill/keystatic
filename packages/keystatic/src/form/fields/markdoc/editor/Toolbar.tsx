@@ -3,8 +3,13 @@ import { MarkType, NodeType } from 'prosemirror-model';
 import { Command, EditorState, TextSelection } from 'prosemirror-state';
 import { HTMLAttributes, ReactElement, ReactNode, useMemo } from 'react';
 
-import { ActionGroup, Item } from '@keystar/ui/action-group';
 import { ActionButton } from '@keystar/ui/button';
+import {
+  EditorToolbarButton,
+  EditorToolbarGroup,
+  EditorToolbarItem,
+  EditorToolbar,
+} from '@keystar/ui/editor';
 import { Icon } from '@keystar/ui/icon';
 import { boldIcon } from '@keystar/ui/icon/icons/boldIcon';
 import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
@@ -18,10 +23,8 @@ import { quoteIcon } from '@keystar/ui/icon/icons/quoteIcon';
 import { removeFormattingIcon } from '@keystar/ui/icon/icons/removeFormattingIcon';
 import { strikethroughIcon } from '@keystar/ui/icon/icons/strikethroughIcon';
 import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
-import { typeIcon } from '@keystar/ui/icon/icons/typeIcon';
-import { Flex } from '@keystar/ui/layout';
 import { MenuTrigger, Menu } from '@keystar/ui/menu';
-import { Picker } from '@keystar/ui/picker';
+import { Picker, Item } from '@keystar/ui/picker';
 import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text, Kbd } from '@keystar/ui/typography';
@@ -37,7 +40,7 @@ import { EditorSchema } from './schema';
 import { ImageToolbarButton } from './images';
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 
-export function EditorToolbarButton(props: {
+export function ToolbarButton(props: {
   children: ReactNode;
   'aria-label': string;
   isSelected?: (editorState: EditorState) => boolean;
@@ -50,34 +53,21 @@ export function EditorToolbarButton(props: {
   const isDisabled = !props.command(state) || props.isDisabled?.(state);
   return useMemo(
     () => (
-      <ActionButton
-        prominence="low"
+      <EditorToolbarButton
         isSelected={isSelected}
         isDisabled={isDisabled}
         onPress={() => {
           runCommand(props.command);
         }}
         aria-label={props['aria-label']}
-        aria-pressed={isSelected}
+        // aria-pressed={isSelected}
       >
         {props.children}
-      </ActionButton>
+      </EditorToolbarButton>
     ),
     [isDisabled, isSelected, props, runCommand]
   );
 }
-
-// export const tableButton = (
-//   <TooltipTrigger>
-//     <EditorToolbarButton command={() => {}}>
-//       <Icon src={tableIcon} />
-//     </EditorToolbarButton>
-//     <TableButton />
-//     <Tooltip>
-//       <Text>Table</Text>
-//     </Tooltip>
-//   </TooltipTrigger>
-// );
 
 export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
   const schema = useEditorSchema();
@@ -88,33 +78,33 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
         <HeadingMenu headingType={nodes.heading} />
         <InlineMarks />
         <ListButtons />
-        <ToolbarGroup>
+        <EditorToolbarGroup aria-label="Blocks">
           <TooltipTrigger>
-            <EditorToolbarButton
+            <ToolbarButton
               command={insertNode(nodes.divider)}
               aria-label="Divider"
             >
               <Icon src={minusIcon} />
-            </EditorToolbarButton>
+            </ToolbarButton>
             <Tooltip>
               <Text>Divider</Text>
               <Kbd>---</Kbd>
             </Tooltip>
           </TooltipTrigger>
           <TooltipTrigger>
-            <EditorToolbarButton
+            <ToolbarButton
               aria-label="Quote"
               command={wrapIn(nodes.blockquote)}
             >
               <Icon src={quoteIcon} />
-            </EditorToolbarButton>
+            </ToolbarButton>
             <Tooltip>
               <Text>Quote</Text>
               <Kbd>{'>⎵'}</Kbd>
             </Tooltip>
           </TooltipTrigger>
           <TooltipTrigger>
-            <EditorToolbarButton
+            <ToolbarButton
               aria-label="Code block"
               command={toggleCodeBlock(nodes.code_block, nodes.paragraph)}
               isSelected={(state: EditorState) => {
@@ -135,35 +125,27 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
               }}
             >
               <Icon src={codeIcon} />
-            </EditorToolbarButton>
+            </ToolbarButton>
             <Tooltip>
               <Text>Code block</Text>
               <Kbd>```</Kbd>
             </Tooltip>
           </TooltipTrigger>
           <TooltipTrigger>
-            <EditorToolbarButton
-              aria-label="Table"
-              command={insertTable(schema)}
-            >
+            <ToolbarButton aria-label="Table" command={insertTable(schema)}>
               <Icon src={tableIcon} />
-            </EditorToolbarButton>
+            </ToolbarButton>
             <Tooltip>
               <Text>Table</Text>
             </Tooltip>
           </TooltipTrigger>
           <ImageToolbarButton />
-        </ToolbarGroup>
+        </EditorToolbarGroup>
       </ToolbarScrollArea>
       <InsertBlockMenu />
     </ToolbarWrapper>
   );
 }
-
-/** Group buttons together that don't fit into an `ActionGroup` semantically. */
-const ToolbarGroup = ({ children }: { children: ReactNode }) => {
-  return <Flex gap="regular">{children}</Flex>;
-};
 
 const ToolbarContainer = ({ children }: { children: ReactNode }) => {
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
@@ -222,17 +204,16 @@ const ToolbarWrapper = (props: HTMLAttributes<HTMLDivElement>) => {
 const ToolbarScrollArea = (props: { children: ReactNode }) => {
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
   return (
-    <Flex
+    <EditorToolbar
+      aria-label="Formatting options"
       data-layout={entryLayoutPane}
-      paddingY="regular"
-      paddingX="medium"
-      gap="large"
       flex
       minWidth={0}
       UNSAFE_className={css({
         msOverflowStyle: 'none' /* for Internet Explorer, Edge */,
         scrollbarWidth: 'none' /* for Firefox */,
         overflowX: 'auto',
+        paddingInline: tokenSchema.size.space.medium,
 
         /* for Chrome, Safari, and Opera */
         '&::-webkit-scrollbar': {
@@ -404,6 +385,7 @@ const isMarkActive = (markType: MarkType) => (state: EditorState) => {
 function InlineMarks() {
   const state = useEditorState();
   const schema = useEditorSchema();
+  const runCommand = useEditorDispatchCommand();
   const inlineMarks = useMemo(() => {
     const marks: {
       key: string;
@@ -457,54 +439,57 @@ function InlineMarks() {
       key: 'clearFormatting',
       label: 'Clear formatting',
       icon: removeFormattingIcon,
-      command: () => false,
+      command: removeAllMarks(),
       isSelected: () => false,
     });
     return marks;
-  }, [schema]);
+  }, [schema.marks]);
   const selectedKeys = useMemoStringified(
     inlineMarks.filter(val => val.isSelected(state)).map(val => val.key)
   );
   const disabledKeys = useMemoStringified(
     inlineMarks.filter(val => !val.command(state)).map(val => val.key)
   );
-  const runCommand = useEditorDispatchCommand();
+
   return useMemo(() => {
     return (
-      <ActionGroup
-        UNSAFE_className={css({
-          minWidth: `calc(${tokenSchema.size.element.medium} * 4)`,
-        })}
-        prominence="low"
-        density="compact"
-        buttonLabelBehavior="hide"
-        overflowMode="collapse"
-        summaryIcon={<Icon src={typeIcon} />}
-        items={inlineMarks}
-        selectionMode="multiple"
-        selectedKeys={selectedKeys}
-        disabledKeys={disabledKeys}
-        onAction={key => {
-          const command = inlineMarks.find(mark => mark.key === key)?.command;
-          if (command) {
-            runCommand(command);
+      <EditorToolbarGroup
+        aria-label="Text formatting"
+        value={selectedKeys}
+        onChange={keys => {
+          const key = getKeyByDifference(keys, selectedKeys);
+          const mark = inlineMarks.find(mark => mark.key === key);
+          if (mark) {
+            runCommand(mark.command);
           }
         }}
+        disabledKeys={disabledKeys}
+        selectionMode="multiple"
       >
-        {item => {
-          return (
-            <Item key={item.key} textValue={item.label}>
-              <Text>{item.label}</Text>
-              {'shortcut' in item && <Kbd meta>{item.shortcut}</Kbd>}
-              <Icon src={item.icon} />
-            </Item>
-          );
-        }}
-      </ActionGroup>
+        {inlineMarks.map(mark => (
+          <TooltipTrigger key={mark.key}>
+            <EditorToolbarItem value={mark.key} aria-label={mark.label}>
+              <Icon src={mark.icon} />
+            </EditorToolbarItem>
+            <Tooltip>
+              <Text>{mark.label}</Text>
+              {'shortcut' in mark && <Kbd meta>{mark.shortcut}</Kbd>}
+            </Tooltip>
+          </TooltipTrigger>
+        ))}
+      </EditorToolbarGroup>
     );
   }, [disabledKeys, inlineMarks, runCommand, selectedKeys]);
 }
 
+// TODO: this seems costly. maybe refactor `ToolbarGroup` to pass just the
+// changed key, not the whole array
+function getKeyByDifference<T>(a: T[], b: T[]) {
+  return difference(a, b)[0] ?? difference(b, a)[0];
+}
+function difference<T>(a: T[], b: T[]) {
+  return a.filter(x => !b.includes(x));
+}
 function useMemoStringified<T>(value: T): T {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   return useMemo(() => value, [JSON.stringify(value)]);
@@ -515,9 +500,9 @@ function getActiveListType(state: EditorState, schema: EditorSchema) {
   for (let i = sharedDepth; i > 0; i--) {
     const node = state.selection.$from.node(i);
     if (node.type === schema.nodes.ordered_list) {
-      return 'ordered' as const;
+      return 'ordered_list' as const;
     } else if (node.type === schema.nodes.unordered_list) {
-      return 'unordered' as const;
+      return 'unordered_list' as const;
     }
   }
 }
@@ -534,61 +519,82 @@ function ListButtons() {
     toggleList(schema.nodes.unordered_list)(state);
   const activeListType = getActiveListType(state, schema);
 
+  const items = useMemo(() => {
+    return [
+      !!schema.nodes.unordered_list && {
+        label: 'Bullet list',
+        key: 'unordered_list',
+        shortcut: '-',
+        icon: listIcon,
+      },
+      !!schema.nodes.ordered_list && {
+        label: 'Numbered list',
+        key: 'ordered_list',
+        shortcut: '1.',
+        icon: listOrderedIcon,
+      },
+    ].filter(removeFalse);
+  }, [schema.nodes.unordered_list, schema.nodes.ordered_list]);
+
+  const disabledKeys = useMemo(() => {
+    return [
+      !canWrapInOrderedList && 'ordered_list',
+      !canWrapInUnorderedList && 'unordered_list',
+    ].filter(removeFalse);
+  }, [canWrapInOrderedList, canWrapInUnorderedList]);
+
   return useMemo(() => {
+    if (items.length === 0) {
+      return null;
+    }
+
     return (
-      <ActionGroup
-        flexShrink={0}
+      <EditorToolbarGroup
         aria-label="Lists"
-        selectionMode="single"
-        buttonLabelBehavior="hide"
-        density="compact"
-        prominence="low"
-        disabledKeys={[
-          !canWrapInOrderedList && 'ordered',
-          !canWrapInUnorderedList && 'unordered',
-        ].filter(removeFalse)}
-        summaryIcon={<Icon src={listIcon} />}
-        selectedKeys={activeListType ? [activeListType] : []}
-        onAction={key => {
-          const format = key as 'ordered' | 'unordered';
-          const type = schema.nodes[`${format}_list`];
+        value={activeListType}
+        onChange={key => {
+          const format = (key ? key : activeListType) as
+            | 'ordered_list'
+            | 'unordered_list';
+          console.log('format', format);
+          const type = schema.nodes[format];
           if (type) {
             dispatchCommand(toggleList(type));
           }
         }}
-        items={[
-          !!schema.nodes.unordered_list && {
-            label: 'Bullet List',
-            key: 'unordered',
-            shortcut: '-',
-            icon: listIcon,
-          },
-          !!schema.nodes.unordered_list && {
-            label: 'Numbered List',
-            key: 'ordered',
-            shortcut: '1.',
-            icon: listOrderedIcon,
-          },
-        ].filter(removeFalse)}
+        disabledKeys={disabledKeys}
+        selectionMode="single"
       >
-        {item => (
-          <Item textValue={`${item.label} (${item.shortcut})`}>
-            <Icon src={item.icon} />
-            <Text>{item.label}</Text>
-            <Kbd>{item.shortcut}</Kbd>
-          </Item>
-        )}
-      </ActionGroup>
+        {items.map(item => (
+          <TooltipTrigger key={item.key}>
+            <EditorToolbarItem value={item.key} aria-label={item.label}>
+              <Icon src={item.icon} />
+            </EditorToolbarItem>
+            <Tooltip>
+              <Text>{item.label}</Text>
+              <Kbd meta>{item.shortcut}</Kbd>
+            </Tooltip>
+          </TooltipTrigger>
+        ))}
+      </EditorToolbarGroup>
     );
-  }, [
-    activeListType,
-    canWrapInOrderedList,
-    canWrapInUnorderedList,
-    dispatchCommand,
-    schema.nodes,
-  ]);
+  }, [activeListType, disabledKeys, dispatchCommand, items, schema.nodes]);
 }
 
 function removeFalse<T>(val: T): val is Exclude<T, false> {
   return val !== false;
+}
+
+function removeAllMarks(): Command {
+  return (state, dispatch) => {
+    if (state.selection.empty) {
+      return false;
+    }
+
+    if (dispatch) {
+      // TODO: extend the range to include the whole mark on either side of the selection
+      dispatch(state.tr.removeMark(state.selection.from, state.selection.to));
+    }
+    return true;
+  };
 }

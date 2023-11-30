@@ -299,6 +299,12 @@ export default config({
         logo: fields.image({ label: 'Logo' }),
       },
     }),
+    markdoc: singleton({
+      label: 'Markdoc',
+      schema: {
+        markdoc: __experimental_markdoc_field({ label: 'Markdoc', config: {} }),
+      },
+    }),
     fields: singleton({
       label: 'All Fields',
       schema: {
