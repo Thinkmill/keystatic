@@ -23,6 +23,13 @@ export type NavProps = {
   }[];
 };
 
+export const linkStylesShared =
+  'shrink-0 px-4 rounded-md transition-colors h-10 flex items-center relative font-medium';
+
+export const linkStylesIdle = 'hover:bg-slate-3 active:bg-slate-4';
+
+export const linkStylesCurrent = 'bg-slate-4 hover:bg-slate-4';
+
 export function HeaderNav({
   navigationMap,
   ignoreDocNavStyles = false,
@@ -31,13 +38,6 @@ export function HeaderNav({
 
   /** Different style for HeaderNav under /docs or if explicitly passed in to ignore (like in the not-found.tsx) */
   const isDocsNav = pathname?.startsWith('/docs') && !ignoreDocNavStyles;
-
-  const linkStylesShared =
-    'shrink-0 px-4 rounded-md transition-colors h-10 flex items-center relative font-medium';
-
-  const linkStylesIdle = 'hover:bg-slate-3 active:bg-slate-4';
-
-  const linkStylesCurrent = 'bg-slate-4 hover:bg-slate-4';
 
   return (
     <header
