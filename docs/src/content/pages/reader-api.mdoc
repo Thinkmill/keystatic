@@ -30,9 +30,9 @@ Here's an example:
 const reader = createReader(process.cwd(), keystaticConfig);
 ```
 
-The `reader` will now give you access to the following **async** functions:
+---
 
-## For collections
+## Reading from collections
 
 You can get an **array of slugs** for a given collection with:
 
@@ -61,40 +61,13 @@ const entries = await reader.collections.{collectionName}.all();
 const posts = await reader.collections.blog.all();
 ```
 
-### Filtering based on a field's value
+---
 
-A common use case is to filter the entries based on a field's value before rendering them in the UI. You can use Keystatic's reader functions along with standard JS array methods like `.filter()` and `.sort()` to achieve this pattern.
-
-Let's say you're building a list page for blog posts, and you only want to display published posts. The collection schema for each entry defines a `draft` checkbox field, indicating a not-to-be-published post:
-
-```typescript
-// keystatic.config.ts
-blog: collection({
-  // ...
-  schema: {
-    // ...
-    draft: fields.checkbox({
-      label: 'Convert to draft',
-      description: 'Prevent publishing of this post. This can be changed later.',
-      defaultValue: false,
-    }),
-  },
-}),
-```
-
-Then before rendering the data, you can read and filter the entries to only render published posts (`draft === false`) like so:
-
-```typescript
-// blog.ts
-const posts = await reader.collections.blog.all();
-const publishedPosts = posts.filter(post => !post.entry.draft);
-```
-
-## For singletons
+## Reading from singletons
 
 You can get the data for a specific singleton with:
 
-```javascript
+```ts
 const data = await reader.singletons.{singletonName}.read();
 
 // Example
@@ -110,13 +83,60 @@ Good places to use the Reader API are:
 - The `loader()` function in **Remix**
 - React**Server Components**
 
-## The Document field's structured data
+---
 
-If you retrieve content from a `document` field in Keystatic, you will get a JSON object with structured data.
+## Data from linked files
 
-It can be a lot of work to turn this data object as HTML to render it on a page.
+If your collection or singleton contains a `document` field, that field will be returned as an asynchronous function that you'll need to call to get the data:
+
+```ts
+// The `posts` collection has a `document` field named `content`
+const post = await reader.collections.posts.read(slug);
+
+// Get the content data
+const content = await post.content()
+```
+
+If you'd rather get the `document` field data immediately, you can pass `resolvedLinkedFiles: true` as an option when reading the entry:
+
+```ts
+await reader.collections.posts.read(slug, { resolvedLinkedFiles: true });
+```
+---
+
+## Using TypeScript
+
+The Reader API exports an `Entry` type, which is useful when you need to define what props a UI component should receive:
+
+```ts
+import { Entry } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+type MovieProps = Entry<typeof keystaticConfig['collections']['movies']>
+
+export function Movie(props: MovieProps) {
+  // ...
+}
+```
+
+If your data was read using the `resolvedLinkedFiles` option, you can use the `EntryWithResolvedLinkedFiles` type instead:
+
+```ts
+import { EntryWithResolvedLinkedFiles } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+type MovieProps = EntryWithResolvedLinkedFiles<typeof keystaticConfig['collections']['movies']>
+```
+
+---
+
+## Rendering content from the document field
+
+The `document` field returns a JSON object with complex structured data. It can be a lot of work to turn this data object as HTML to render it on a page.
 
 Luckily, Keystatic also provides a `DocumentRenderer` that does all the heavy lifting for you, and is highly customisable.
+
+---
 
 ## Type signature
 
