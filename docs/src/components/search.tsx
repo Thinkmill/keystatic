@@ -38,7 +38,7 @@ function Result({ result }) {
     <Link href={routePath} className="block py-4">
       <h3 className="text-base font-medium">{data.meta.title}: </h3>
       <p
-        className="[&_mark]:text-inherit mt-1.5 text-sm text-slate-9 [&_mark]:bg-transparent [&_mark]:px-1 [&_mark]:font-medium"
+        className="[&_mark]:text-inherit mt-1.5 text-sm text-slate-9 [&_mark]:bg-transparent [&_mark]:font-medium"
         dangerouslySetInnerHTML={{ __html: data.excerpt }}
       />
     </Link>
