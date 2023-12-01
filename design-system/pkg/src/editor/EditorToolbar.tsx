@@ -117,6 +117,7 @@ function useSelectionItem(props: EditorToolbarItemProps): {
       isDisabled,
       isSelected,
       buttonProps: {
+        ...filterDOMProps(props, { labelable: true }),
         role: 'radio' as const,
         'aria-checked': isSelected,
         onPress: () => {
@@ -137,6 +138,7 @@ function useSelectionItem(props: EditorToolbarItemProps): {
       isDisabled,
       isSelected,
       buttonProps: {
+        ...filterDOMProps(props, { labelable: true }),
         role: 'checkbox' as const,
         'aria-checked': isSelected,
         onPress: () => {
@@ -232,25 +234,23 @@ type EditorToolbarItemProps = {
   children?: ReactNode;
   /** The value of the item. */
   value: Key;
-};
+} & AriaLabelingProps;
 
 /** A toolbar item may be a checkbox/radio/toggle button, depending on context. */
 export function EditorToolbarItem(props: EditorToolbarItemProps) {
-  let { children, ...otherProps } = props;
   let { isDisabled, isSelected, buttonProps } = useSelectionItem(props);
   let { itemProps } = useToolbarItem({ ...props, isDisabled });
 
+  // Use a PressResponder to send DOM props through, allow overriding things
+  // like role and tabIndex.
   return (
-    // Use a PressResponder to send DOM props through, allow overriding things
-    // like role and tabIndex.
     <PressResponder {...mergeProps(buttonProps, itemProps)}>
       <ActionButton
         prominence="low"
         isDisabled={isDisabled}
         isSelected={isSelected}
-        {...otherProps}
       >
-        {children}
+        {props.children}
       </ActionButton>
     </PressResponder>
   );
