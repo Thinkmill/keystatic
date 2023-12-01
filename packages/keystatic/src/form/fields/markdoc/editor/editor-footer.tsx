@@ -170,7 +170,10 @@ function MarkdownDialog() {
             <code>{`- Red\n- Green\n- Blue`}</code>
           </pre>
 
-          <p>To order your list, precede each line with a number.</p>
+          <p>
+            Create an ordered (numbered) list by preceding each line with a
+            number.
+          </p>
           <pre>
             <code>{`1. Red\n1. Green\n1. Blue`}</code>
           </pre>
@@ -198,7 +201,7 @@ function MarkdownDialog() {
             backticks <kbd>{'```'}</kbd>.
           </p>
           <pre>
-            <code>{`Keystatic project expects an exported config.
+            <code>{`Keystatic projects expect an exported config:
 
 \`\`\`
 import { config } from '@keystatic/core'
