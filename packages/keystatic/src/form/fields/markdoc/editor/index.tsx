@@ -25,6 +25,7 @@ import {
 } from './context';
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 import { useContentPanelSize } from '../../../../app/shell/context';
+import { EditorFooter } from './editor-footer';
 
 const contentStyles = css({
   flex: 1,
@@ -108,6 +109,7 @@ export const Editor = forwardRef(function Editor(
             id={getContentId(id)}
             data-keystatic-editor="content"
           />
+          <EditorFooter />
         </Box>
         <NodeViews state={value} />
         <CellMenuPortal />
