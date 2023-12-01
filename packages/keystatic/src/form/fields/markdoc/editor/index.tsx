@@ -2,12 +2,14 @@ import { EditorView } from 'prosemirror-view';
 import { EditorState } from 'prosemirror-state';
 import { Ref, forwardRef, useId, useMemo } from 'react';
 import { Box } from '@keystar/ui/layout';
-import { css } from '@emotion/css';
+import { useProseStyleProps } from '@keystar/ui/typography';
 import {
   breakpointQueries,
+  css,
   toDataAttributes,
   tokenSchema,
 } from '@keystar/ui/style';
+
 import { Toolbar } from './Toolbar';
 import { prosemirrorStyles } from './utils';
 import { EditorPopoverDecoration } from './popovers';
@@ -24,40 +26,14 @@ import {
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 import { useContentPanelSize } from '../../../../app/shell/context';
 
-const orderedListStyles = ['lower-roman', 'decimal', 'lower-alpha'];
-const unorderedListStyles = ['square', 'disc', 'circle'];
-
-let styles: any = {};
-
-let listDepth = 10;
-
-while (listDepth--) {
-  let arr = Array.from({ length: listDepth });
-  if (arr.length) {
-    styles[arr.map(() => `ol`).join(' ')] = {
-      listStyle: orderedListStyles[listDepth % 3],
-    };
-    styles[arr.map(() => `ul`).join(' ')] = {
-      listStyle: unorderedListStyles[listDepth % 3],
-    };
-  }
-}
-
-const editableStyles = css({
-  ...styles,
-  outline: 0,
+const contentStyles = css({
   flex: 1,
-  minHeight: tokenSchema.size.scale[2000],
-  padding: tokenSchema.size.space.medium,
   height: 'auto',
+  minHeight: tokenSchema.size.scale[2000],
   minWidth: 0,
-  fontFamily: tokenSchema.typography.fontFamily.base,
-  fontSize: tokenSchema.typography.text.regular.size,
-  lineHeight: 1.4,
-  a: {
-    color: tokenSchema.color.foreground.accent,
-  },
-  color: tokenSchema.color.foreground.neutral,
+  outline: 0,
+  padding: tokenSchema.size.space.medium,
+
   '&[data-layout="main"]': {
     boxSizing: 'border-box',
     height: '100%',
@@ -94,6 +70,11 @@ export const Editor = forwardRef(function Editor(
 ) {
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
   const containerSize = useContentPanelSize();
+  const styleProps = useProseStyleProps({
+    size: entryLayoutPane === 'main' ? 'medium' : 'regular',
+    UNSAFE_className: contentStyles,
+    ...toDataAttributes({ layout: entryLayoutPane, container: containerSize }),
+  });
 
   const id = useId();
   const editorContext = useMemo(() => ({ id }), [id]);
@@ -121,15 +102,11 @@ export const Editor = forwardRef(function Editor(
           <Toolbar id={getToolbarId(id)} data-keystatic-editor="toolbar" />
           <ProseMirrorEditable
             {...props}
+            {...styleProps}
             role="textbox"
             aria-multiline="true"
             id={getContentId(id)}
             data-keystatic-editor="content"
-            className={editableStyles}
-            {...toDataAttributes({
-              layout: entryLayoutPane,
-              container: containerSize,
-            })}
           />
         </Box>
         <NodeViews state={value} />

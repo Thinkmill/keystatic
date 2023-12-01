@@ -1,4 +1,4 @@
-import { css, tokenSchema, transition } from '@keystar/ui/style';
+import { classNames, css, tokenSchema, transition } from '@keystar/ui/style';
 import { fileCodeIcon } from '@keystar/ui/icon/icons/fileCodeIcon';
 import { heading1Icon } from '@keystar/ui/icon/icons/heading1Icon';
 import { heading2Icon } from '@keystar/ui/icon/icons/heading2Icon';
@@ -46,16 +46,14 @@ const paragraphDOM: DOMOutputSpec = ['p', { class: blockElementSpacing }, 0];
 const blockquoteDOM: DOMOutputSpec = [
   'blockquote',
   {
-    class: `${classes.blockParent} ${css({
-      marginInline: 0,
-      paddingInline: tokenSchema.size.space.large,
-      borderInlineStartStyle: 'solid',
-      borderInlineStartWidth: tokenSchema.size.border.large,
-      borderColor: tokenSchema.color.alias.borderIdle,
-      [`&.${classes.nodeInSelection}, &.${classes.nodeSelection}`]: {
-        borderColor: tokenSchema.color.alias.borderSelected,
-      },
-    })}`,
+    class: classNames(
+      classes.blockParent,
+      css({
+        [`&.${classes.nodeInSelection}, &.${classes.nodeSelection}`]: {
+          borderColor: tokenSchema.color.alias.borderSelected,
+        },
+      })
+    ),
   },
   0,
 ];
@@ -64,58 +62,23 @@ const dividerDOM: DOMOutputSpec = [
   {
     contenteditable: 'false',
     class: css({
-      marginBlock: '1em',
-      backgroundColor: tokenSchema.color.border.neutral,
+      cursor: 'pointer',
       [`&.${classes.nodeInSelection}, &.${classes.nodeSelection}`]: {
-        outline: 0,
         backgroundColor: tokenSchema.color.alias.borderSelected,
       },
-      border: 0,
-      height: tokenSchema.size.border.large,
-      padding: 0,
-      cursor: 'pointer',
     }),
   },
 ];
 const codeDOM: DOMOutputSpec = [
   'pre',
-  {
-    spellcheck: 'false',
-    class: css({
-      backgroundColor: tokenSchema.color.background.surface,
-      borderRadius: tokenSchema.size.radius.medium,
-      color: tokenSchema.color.foreground.neutralEmphasis,
-      fontFamily: tokenSchema.typography.fontFamily.code,
-      fontSize: '0.85em',
-      lineHeight: tokenSchema.typography.lineheight.medium,
-      maxWidth: '100%',
-      overflow: 'auto',
-      padding: tokenSchema.size.space.medium,
-      code: {
-        fontFamily: 'inherit',
-      },
-    }),
-  },
-  ['code', { class: css({ display: 'block', width: '100%' }) }, 0],
+  { spellcheck: 'false' },
+  ['code', {}, 0],
 ];
 const hardBreakDOM: DOMOutputSpec = ['br'];
 
-const listClass = `${blockElementSpacing} ${css({
-  paddingInlineStart: tokenSchema.size.space.medium,
-})}`;
-const olDOM: DOMOutputSpec = ['ol', { class: listClass }, 0];
-const ulDOM: DOMOutputSpec = ['ul', { class: listClass }, 0];
-const liDOM: DOMOutputSpec = [
-  'li',
-  {
-    class: css({
-      'p,ul,ol': {
-        marginBlock: 0,
-      },
-    }),
-  },
-  0,
-];
+const olDOM: DOMOutputSpec = ['ol', {}, 0];
+const ulDOM: DOMOutputSpec = ['ul', {}, 0];
+const liDOM: DOMOutputSpec = ['li', {}, 0];
 
 export type EditorNodeSpec = NodeSpec &
   WithInsertMenuNodeSpec &
@@ -139,15 +102,15 @@ const cellAttrs: Record<string, AttributeSpec> = {
 };
 
 const tableCellClass = css({
-  borderInlineEnd: `1px solid ${tokenSchema.color.alias.borderIdle}`,
   borderBottom: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+  borderInlineEnd: `1px solid ${tokenSchema.color.alias.borderIdle}`,
+  boxSizing: 'border-box',
   margin: 0,
   padding: tokenSchema.size.space.regular,
-  fontWeight: 'inherit',
-  boxSizing: 'border-box',
+  position: 'relative',
   textAlign: 'start',
   verticalAlign: 'top',
-  position: 'relative',
+
   '&.selectedCell': {
     backgroundColor: tokenSchema.color.alias.backgroundSelected,
     '& *::selection': {
@@ -166,6 +129,7 @@ const tableCellClass = css({
 });
 const tableHeaderClass = css(tableCellClass, {
   backgroundColor: tokenSchema.color.scale.slate3,
+  fontWeight: tokenSchema.typography.fontWeight.semibold,
 });
 
 const nodeSpecs = {
@@ -315,27 +279,6 @@ const nodeSpecs = {
     toDOM() {
       return blockquoteDOM;
     },
-    reactNodeView: {
-      component(props) {
-        return (
-          <blockquote
-            className={`${classes.blockParent} ${css({
-              marginInline: 0,
-              paddingInline: tokenSchema.size.space.large,
-              borderInlineStartStyle: 'solid',
-              borderInlineStartWidth: tokenSchema.size.border.large,
-              borderColor: tokenSchema.color.alias.borderIdle,
-              [`&.${classes.nodeInSelection}, &.${classes.nodeSelection}`]: {
-                borderColor: tokenSchema.color.alias.borderSelected,
-              },
-            })}`}
-          >
-            {props.children}
-          </blockquote>
-        );
-      },
-      rendersOwnContent: false,
-    },
     insertMenu: {
       label: 'Blockquote',
       description: 'Insert a quote or citation',
@@ -471,6 +414,11 @@ const nodeSpecs = {
             '&:has(.selectedCell) *::selection': {
               backgroundColor: 'transparent',
             },
+
+            // stop content from bouncing around when widgets are added
+            '.ProseMirror-widget + *': {
+              marginTop: 0,
+            },
           }),
         },
         ['tbody', 0],
@@ -516,6 +464,12 @@ const nodeSpecs = {
       alt: { default: '' },
       title: { default: '' },
     },
+    // insertMenu: {
+    //   label: 'Image',
+    //   description: 'Insert an image',
+    //   icon: imageIcon,
+    //   command: () => {},
+    // },
     toDOM(node) {
       return [
         'img',
@@ -531,10 +485,6 @@ const nodeSpecs = {
             maxHeight: tokenSchema.size.scale[3600],
             maxWidth: '100%',
             transition: transition('box-shadow'),
-            [`&.${classes.nodeSelection},&.${classes.nodeInSelection}`]: {
-              outline: 0,
-              boxShadow: `0 0 0 ${tokenSchema.size.border.regular} ${tokenSchema.color.alias.borderSelected}`,
-            },
             '&::selection': {
               backgroundColor: 'transparent',
             },

@@ -25,7 +25,7 @@ export type ProseProps = {
 /** A typographic component that adds styles for rendering remote HTML content. */
 export const Prose = forwardRefWithAs<ProseProps, 'div'>((props, ref) => {
   const { children, elementType: ElementType = 'div', ...otherProps } = props;
-  const styleProps = useProseStyles(otherProps);
+  const styleProps = useProseStyleProps(otherProps);
 
   return (
     <ElementType ref={ref} {...filterStyleProps(otherProps)} {...styleProps}>
@@ -34,7 +34,7 @@ export const Prose = forwardRefWithAs<ProseProps, 'div'>((props, ref) => {
   );
 });
 
-function useProseStyles(props: ProseProps) {
+export function useProseStyleProps(props: ProseProps) {
   const { size = 'medium', ...otherProps } = props;
   const styleProps = useStyleProps(otherProps);
 
@@ -49,6 +49,12 @@ function useProseStyles(props: ProseProps) {
         maxWidth: '100%',
         minHeight: 0,
         minWidth: 0,
+        position: 'relative',
+        overflowWrap: 'break-word',
+        whiteSpace: 'break-spaces',
+
+        fontVariantLigatures: 'none',
+        fontFeatureSettings: '"liga" 0', // the above doesn't seem to work in Edge
         MozOsxFontSmoothing: 'auto',
         WebkitFontSmoothing: 'auto',
 
@@ -72,7 +78,7 @@ function useProseStyles(props: ProseProps) {
         // Elements
         // ---------------------------------------------------------------------
 
-        '& :is(blockquote, p, pre, ol, ul)': {
+        '& :is(blockquote, p, pre, ol, ul, table)': {
           marginBlock: '0.75em',
 
           ':first-child': { marginTop: 0 },
@@ -84,16 +90,20 @@ function useProseStyles(props: ProseProps) {
         'ol ol, ul ul, ol ul, ul ol': {
           marginBlock: 0,
         },
+        'li :is(blockquote, p, pre, ol, ul, table)': {
+          marginBottom: 0,
+        },
         blockquote: {
           borderInlineStart: `${tokenSchema.size.border.large} solid ${tokenSchema.color.foreground.neutral}`,
           marginInline: 0,
           paddingInlineStart: '1em',
         },
         hr: {
-          marginBlock: '1.5em',
           backgroundColor: tokenSchema.color.alias.borderIdle,
           border: 0,
+          borderRadius: tokenSchema.size.border.medium,
           height: tokenSchema.size.border.medium,
+          marginBlock: '1.5em',
         },
 
         // inline elements
@@ -120,6 +130,7 @@ function useProseStyles(props: ProseProps) {
           maxWidth: '100%',
           overflow: 'auto',
           padding: tokenSchema.size.space.medium,
+          whiteSpace: 'pre-wrap',
         },
         'pre > code': {
           fontFamily: 'inherit',
@@ -138,7 +149,7 @@ function useProseStyles(props: ProseProps) {
         // Headings
         // ---------------------------------------------------------------------
 
-        'h1, h2, h3, h4, h5, h6': {
+        '& :is(h1, h2, h3, h4, h5, h6)': {
           color: tokenSchema.color.foreground.neutralEmphasis,
           lineHeight: 1.25,
           marginTop: '1.5em',

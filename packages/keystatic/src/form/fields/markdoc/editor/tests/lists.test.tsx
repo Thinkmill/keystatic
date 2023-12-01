@@ -185,7 +185,7 @@ test('toggle list on empty line', async () => {
     </doc>
   );
 
-  await user.click(rendered.getByLabelText('Numbered List'));
+  await user.click(rendered.getByLabelText('Numbered list'));
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
@@ -214,7 +214,7 @@ test('toggle list on line with text', async () => {
     </doc>
   );
 
-  await user.click(rendered.getByLabelText('Numbered List'));
+  await user.click(rendered.getByLabelText('Numbered list'));
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
@@ -247,7 +247,7 @@ test('toggle list on line with text with marks', async () => {
     </doc>
   );
 
-  await user.click(rendered.getByLabelText('Numbered List'));
+  await user.click(rendered.getByLabelText('Numbered list'));
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
@@ -294,7 +294,7 @@ test('toggle list on list with text with marks', async () => {
     </doc>
   );
 
-  await user.click(rendered.getByLabelText('Numbered List'));
+  await user.click(rendered.getByLabelText('Numbered list'));
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
@@ -335,7 +335,7 @@ test('toggle ordered_list inside of ordered_list', async () => {
     </doc>
   );
 
-  await user.click(rendered.getByLabelText('Numbered List'));
+  await user.click(rendered.getByLabelText('Numbered list'));
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
@@ -377,7 +377,7 @@ test('toggle ordered_list inside of multi-item ordered_list', async () => {
     </doc>
   );
 
-  await user.click(rendered.getByLabelText('Numbered List'));
+  await user.click(rendered.getByLabelText('Numbered list'));
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
@@ -437,7 +437,7 @@ test('toggle unordered_list inside of single item in multi-item ordered_list', a
     </doc>
   );
 
-  await user.click(rendered.getByLabelText('Bullet List'));
+  await user.click(rendered.getByLabelText('Bullet list'));
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
@@ -500,7 +500,7 @@ test('toggle unordered_list for all items in multi-item ordered_list', async () 
     </doc>
   );
 
-  await user.click(rendered.getByLabelText('Bullet List'));
+  await user.click(rendered.getByLabelText('Bullet list'));
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
@@ -776,7 +776,7 @@ test('changing the type of a nested list', async () => {
       <paragraph />
     </doc>
   );
-  await user.click(rendered.getByLabelText('Numbered List'));
+  await user.click(rendered.getByLabelText('Numbered list'));
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
@@ -834,7 +834,7 @@ test('changing the type of a nested list to something which it is nested inside'
       <paragraph />
     </doc>
   );
-  await user.click(rendered.getByLabelText('Numbered List'));
+  await user.click(rendered.getByLabelText('Numbered list'));
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
@@ -962,7 +962,7 @@ test.skip('toggling unordered_list in a nested unordered_list moves the list ite
       <paragraph />
     </doc>
   );
-  await user.click(rendered.getByLabelText('Bullet List'));
+  await user.click(rendered.getByLabelText('Bullet list'));
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
