@@ -585,7 +585,6 @@ function removeAllMarks(): Command {
     }
 
     if (dispatch) {
-      // TODO: extend the range to include the whole mark on either side of the selection
       dispatch(state.tr.removeMark(state.selection.from, state.selection.to));
     }
     return true;
