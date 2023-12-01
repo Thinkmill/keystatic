@@ -11,7 +11,7 @@ import { listOrderedIcon } from '@keystar/ui/icon/icons/listOrderedIcon';
 import { Flex } from '@keystar/ui/layout';
 import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { Kbd, Text } from '@keystar/ui/typography';
-import { useState } from 'react';
+import { Key, useState } from 'react';
 
 import {
   EditorToolbar,
@@ -26,28 +26,134 @@ export default {
 };
 
 export const Default = () => {
-  let [visible, setVisible] = useState(true);
+  return (
+    <EditorToolbar aria-label="Formatting options">
+      <EditorToolbarGroup aria-label="Text formatting">
+        <EditorToolbarButton aria-label="bold">
+          <Icon src={boldIcon} />
+        </EditorToolbarButton>
+        <EditorToolbarButton aria-label="italic">
+          <Icon src={italicIcon} />
+        </EditorToolbarButton>
+        <EditorToolbarButton aria-label="strikethrough">
+          <Icon src={strikethroughIcon} />
+        </EditorToolbarButton>
+      </EditorToolbarGroup>
+    </EditorToolbar>
+  );
+};
+Default.storyName = 'default';
+
+function multiSelect<T>(key: T) {
+  return (previous: T[]) => {
+    if (previous.includes(key)) {
+      return previous.filter(existingKey => existingKey !== key);
+    } else {
+      return previous.concat(key);
+    }
+  };
+}
+function singleSelect<T>(key: T) {
+  return (previous: T | null) => {
+    if (previous === key) {
+      return null;
+    } else {
+      return key;
+    }
+  };
+}
+
+export const Groups = () => {
+  let [inlineMarks, setInlineMarks] = useState<Key[]>([]);
+  let [list, setList] = useState<Key | null>(null);
+  let [code, setCode] = useState<Key | null>(null);
+
+  return (
+    <EditorToolbar aria-label="Formatting options">
+      <EditorToolbarGroup
+        selectionMode="multiple"
+        aria-label="Text formatting"
+        value={inlineMarks}
+        onChange={key => setInlineMarks(multiSelect(key))}
+      >
+        <EditorToolbarItem value="bold" aria-label="bold">
+          <Icon src={boldIcon} />
+        </EditorToolbarItem>
+        <EditorToolbarItem value="italic" aria-label="italic">
+          <Icon src={italicIcon} />
+        </EditorToolbarItem>
+        <EditorToolbarItem value="strikethrough" aria-label="strikethrough">
+          <Icon src={strikethroughIcon} />
+        </EditorToolbarItem>
+      </EditorToolbarGroup>
+
+      <EditorToolbarSeparator />
+
+      <EditorToolbarButton aria-label="link">
+        <Icon src={linkIcon} />
+      </EditorToolbarButton>
+
+      <EditorToolbarSeparator />
+
+      <EditorToolbarGroup
+        selectionMode="single"
+        aria-label="Lists"
+        value={list}
+        onChange={key => setList(singleSelect(key))}
+      >
+        <EditorToolbarItem value="bulleted" aria-label="bulleted list">
+          <Icon src={listIcon} />
+        </EditorToolbarItem>
+        <EditorToolbarItem value="numbered" aria-label="numbered list">
+          <Icon src={listOrderedIcon} />
+        </EditorToolbarItem>
+      </EditorToolbarGroup>
+
+      <EditorToolbarSeparator />
+
+      <EditorToolbarButton aria-label="Blockquote">
+        <Icon src={indentIcon} />
+      </EditorToolbarButton>
+
+      <EditorToolbarSeparator />
+
+      <EditorToolbarGroup
+        selectionMode="single"
+        aria-label="Code formatting"
+        value={code}
+        onChange={key => setCode(singleSelect(key))}
+      >
+        <EditorToolbarItem value="code" aria-label="Code">
+          <Icon src={code2Icon} />
+        </EditorToolbarItem>
+        <EditorToolbarItem value="code-block" aria-label="Code block">
+          <Icon src={fileCodeIcon} />
+        </EditorToolbarItem>
+      </EditorToolbarGroup>
+    </EditorToolbar>
+  );
+};
+Groups.storyName = 'groups';
+
+export const FocusStops = () => {
+  let [disabledButton, setDisabledButton] = useState(false);
   return (
     <Flex direction="column" gap="large" alignItems="start">
-      <button onClick={() => setVisible(b => !b)}>before</button>
+      <button onClick={() => setDisabledButton(bool => !!bool)}>before</button>
       <EditorToolbar aria-label="Formatting options">
-        <EditorToolbarGroup
-          selectionMode="multiple"
-          aria-label="Text formatting"
-        >
-          <EditorToolbarItem value="bold" aria-label="bold">
+        <EditorToolbarGroup aria-label="Text formatting">
+          <EditorToolbarButton aria-label="bold">
             <Icon src={boldIcon} />
-          </EditorToolbarItem>
-          <EditorToolbarItem value="italic" aria-label="italic">
+          </EditorToolbarButton>
+          <EditorToolbarButton aria-label="italic">
             <Icon src={italicIcon} />
-          </EditorToolbarItem>
-          <EditorToolbarItem
-            value="strikethrough"
+          </EditorToolbarButton>
+          <EditorToolbarButton
             aria-label="strikethrough"
-            isDisabled={visible}
+            isDisabled={disabledButton}
           >
             <Icon src={strikethroughIcon} />
-          </EditorToolbarItem>
+          </EditorToolbarButton>
         </EditorToolbarGroup>
 
         <EditorToolbarSeparator />
@@ -55,154 +161,108 @@ export const Default = () => {
         <EditorToolbarButton aria-label="link">
           <Icon src={linkIcon} />
         </EditorToolbarButton>
-
-        <EditorToolbarSeparator />
-
-        <EditorToolbarGroup selectionMode="single" aria-label="Lists">
-          <EditorToolbarItem value="bulleted" aria-label="bulleted list">
-            <Icon src={listIcon} />
-          </EditorToolbarItem>
-          <EditorToolbarItem value="numbered" aria-label="numbered list">
-            <Icon src={listOrderedIcon} />
-          </EditorToolbarItem>
-        </EditorToolbarGroup>
-
-        <EditorToolbarSeparator />
-
-        <EditorToolbarButton aria-label="Blockquote">
-          <Icon src={indentIcon} />
-        </EditorToolbarButton>
-
-        <EditorToolbarSeparator />
-
-        <EditorToolbarGroup selectionMode="single" aria-label="Code formatting">
-          <EditorToolbarItem value="code" aria-label="Code">
-            <Icon src={code2Icon} />
-          </EditorToolbarItem>
-          <EditorToolbarItem value="code-block" aria-label="Code block">
-            <Icon src={fileCodeIcon} />
-          </EditorToolbarItem>
-        </EditorToolbarGroup>
       </EditorToolbar>
       <button>after</button>
     </Flex>
   );
 };
-
-Default.story = {
-  name: 'default',
-};
+FocusStops.storyName = 'focus stops';
 
 export const Tooltips = () => {
-  let [visible, setVisible] = useState(true);
   return (
-    <Flex direction="column" gap="large" alignItems="start">
-      <button onClick={() => setVisible(b => !b)}>before</button>
-      <EditorToolbar aria-label="Formatting options">
-        <EditorToolbarGroup
-          selectionMode="multiple"
-          aria-label="Text formatting"
-        >
-          <TooltipTrigger>
-            <EditorToolbarItem value="bold" aria-label="bold">
-              <Icon src={boldIcon} />
-            </EditorToolbarItem>
-            <Tooltip>
-              <Text>Bold</Text>
-              <Kbd meta>B</Kbd>
-            </Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <EditorToolbarItem value="italic" aria-label="italic">
-              <Icon src={italicIcon} />
-            </EditorToolbarItem>
-            <Tooltip>
-              <Text>Italic</Text>
-              <Kbd meta>I</Kbd>
-            </Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <EditorToolbarItem
-              value="strikethrough"
-              aria-label="strikethrough"
-              isDisabled={visible}
-            >
-              <Icon src={strikethroughIcon} />
-            </EditorToolbarItem>
-            <Tooltip>Strikethrough</Tooltip>
-          </TooltipTrigger>
-        </EditorToolbarGroup>
-
-        <EditorToolbarSeparator />
-
+    <EditorToolbar aria-label="Formatting options">
+      <EditorToolbarGroup aria-label="Text formatting">
         <TooltipTrigger>
-          <EditorToolbarButton aria-label="link">
-            <Icon src={linkIcon} />
+          <EditorToolbarButton aria-label="bold">
+            <Icon src={boldIcon} />
           </EditorToolbarButton>
           <Tooltip>
-            <Text>Link</Text>
-            <Kbd meta>K</Kbd>
+            <Text>Bold</Text>
+            <Kbd meta>B</Kbd>
           </Tooltip>
         </TooltipTrigger>
-
-        <EditorToolbarSeparator />
-
-        <EditorToolbarGroup selectionMode="single" aria-label="Lists">
-          <TooltipTrigger>
-            <EditorToolbarItem value="bulleted" aria-label="bulleted list">
-              <Icon src={listIcon} />
-            </EditorToolbarItem>
-            <Tooltip>
-              <Text>Bulleted list</Text>
-              <Kbd meta shift>
-                8
-              </Kbd>
-            </Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <EditorToolbarItem value="numbered" aria-label="numbered list">
-              <Icon src={listOrderedIcon} />
-            </EditorToolbarItem>
-            <Tooltip>
-              <Text>Numbered list</Text>
-              <Kbd meta shift>
-                7
-              </Kbd>
-            </Tooltip>
-          </TooltipTrigger>
-        </EditorToolbarGroup>
-
-        <EditorToolbarSeparator />
-
         <TooltipTrigger>
-          <EditorToolbarButton aria-label="Blockquote">
-            <Icon src={indentIcon} />
+          <EditorToolbarButton aria-label="italic">
+            <Icon src={italicIcon} />
           </EditorToolbarButton>
-          <Tooltip>Blockquote</Tooltip>
+          <Tooltip>
+            <Text>Italic</Text>
+            <Kbd meta>I</Kbd>
+          </Tooltip>
         </TooltipTrigger>
+        <TooltipTrigger>
+          <EditorToolbarButton aria-label="strikethrough">
+            <Icon src={strikethroughIcon} />
+          </EditorToolbarButton>
+          <Tooltip>Strikethrough</Tooltip>
+        </TooltipTrigger>
+      </EditorToolbarGroup>
 
-        <EditorToolbarSeparator />
+      <EditorToolbarSeparator />
 
-        <EditorToolbarGroup selectionMode="single" aria-label="Code formatting">
-          <TooltipTrigger>
-            <EditorToolbarItem value="code" aria-label="Code">
-              <Icon src={code2Icon} />
-            </EditorToolbarItem>
-            <Tooltip>Code</Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <EditorToolbarItem value="code-block" aria-label="Code block">
-              <Icon src={fileCodeIcon} />
-            </EditorToolbarItem>
-            <Tooltip>Code block</Tooltip>
-          </TooltipTrigger>
-        </EditorToolbarGroup>
-      </EditorToolbar>
-      <button>after</button>
-    </Flex>
+      <TooltipTrigger>
+        <EditorToolbarButton aria-label="link">
+          <Icon src={linkIcon} />
+        </EditorToolbarButton>
+        <Tooltip>
+          <Text>Link</Text>
+          <Kbd meta>K</Kbd>
+        </Tooltip>
+      </TooltipTrigger>
+
+      <EditorToolbarSeparator />
+
+      <EditorToolbarGroup aria-label="Lists">
+        <TooltipTrigger>
+          <EditorToolbarButton aria-label="bulleted list">
+            <Icon src={listIcon} />
+          </EditorToolbarButton>
+          <Tooltip>
+            <Text>Bulleted list</Text>
+            <Kbd meta shift>
+              8
+            </Kbd>
+          </Tooltip>
+        </TooltipTrigger>
+        <TooltipTrigger>
+          <EditorToolbarButton aria-label="numbered list">
+            <Icon src={listOrderedIcon} />
+          </EditorToolbarButton>
+          <Tooltip>
+            <Text>Numbered list</Text>
+            <Kbd meta shift>
+              7
+            </Kbd>
+          </Tooltip>
+        </TooltipTrigger>
+      </EditorToolbarGroup>
+
+      <EditorToolbarSeparator />
+
+      <TooltipTrigger>
+        <EditorToolbarButton aria-label="Blockquote" isDisabled>
+          <Icon src={indentIcon} />
+        </EditorToolbarButton>
+        <Tooltip>Blockquote</Tooltip>
+      </TooltipTrigger>
+
+      <EditorToolbarSeparator />
+
+      <EditorToolbarGroup aria-label="Code formatting">
+        <TooltipTrigger>
+          <EditorToolbarButton aria-label="Code" isSelected={false}>
+            <Icon src={code2Icon} />
+          </EditorToolbarButton>
+          <Tooltip>Code</Tooltip>
+        </TooltipTrigger>
+        <TooltipTrigger>
+          <EditorToolbarButton aria-label="Code block">
+            <Icon src={fileCodeIcon} />
+          </EditorToolbarButton>
+          <Tooltip>Code block</Tooltip>
+        </TooltipTrigger>
+      </EditorToolbarGroup>
+    </EditorToolbar>
   );
 };
-
-Tooltips.story = {
-  name: 'tooltips',
-};
+Tooltips.storyName = 'tooltips';
