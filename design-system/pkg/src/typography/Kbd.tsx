@@ -13,6 +13,7 @@ import { DOMProps } from '@react-types/shared';
 
 import { useSlotProps } from '@keystar/ui/slots';
 import { BaseStyleProps, css } from '@keystar/ui/style';
+import { TextProps } from '@keystar/ui/types';
 
 import { useTextStyles } from './text';
 
@@ -50,7 +51,8 @@ export type KbdProps = {
    * @default 'kbd'
    */
   slot?: string;
-} & DOMProps &
+} & Pick<TextProps, 'trim'> &
+  DOMProps &
   BaseStyleProps;
 
 /** Represents text that specifies a keyboard command. */
