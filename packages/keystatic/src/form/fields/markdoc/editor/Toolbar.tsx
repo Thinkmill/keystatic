@@ -1,10 +1,16 @@
 import { setBlockType, toggleMark, wrapIn } from 'prosemirror-commands';
 import { MarkType, NodeType } from 'prosemirror-model';
 import { Command, EditorState, TextSelection } from 'prosemirror-state';
-import { ReactElement, ReactNode, useMemo } from 'react';
+import { HTMLAttributes, ReactElement, ReactNode, useMemo } from 'react';
 
-import { ActionGroup, Item } from '@keystar/ui/action-group';
 import { ActionButton } from '@keystar/ui/button';
+import {
+  EditorToolbar,
+  EditorToolbarButton,
+  EditorToolbarGroup,
+  EditorToolbarItem,
+  EditorToolbarSeparator,
+} from '@keystar/ui/editor';
 import { Icon } from '@keystar/ui/icon';
 import { boldIcon } from '@keystar/ui/icon/icons/boldIcon';
 import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
@@ -17,11 +23,10 @@ import { plusIcon } from '@keystar/ui/icon/icons/plusIcon';
 import { quoteIcon } from '@keystar/ui/icon/icons/quoteIcon';
 import { removeFormattingIcon } from '@keystar/ui/icon/icons/removeFormattingIcon';
 import { strikethroughIcon } from '@keystar/ui/icon/icons/strikethroughIcon';
-import { typeIcon } from '@keystar/ui/icon/icons/typeIcon';
-import { Flex } from '@keystar/ui/layout';
+import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
 import { MenuTrigger, Menu } from '@keystar/ui/menu';
-import { Picker } from '@keystar/ui/picker';
-import { css, tokenSchema } from '@keystar/ui/style';
+import { Picker, Item } from '@keystar/ui/picker';
+import { breakpointQueries, css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text, Kbd } from '@keystar/ui/typography';
 
@@ -32,10 +37,12 @@ import {
 } from './editor-view';
 import { toggleList } from './lists';
 import { insertNode, insertTable, toggleCodeBlock } from './commands/misc';
-import { tableIcon } from '@keystar/ui/icon/icons/tableIcon';
 import { EditorSchema } from './schema';
+import { ImageToolbarButton } from './images';
+import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
+import { itemRenderer } from './autocomplete/insert-menu';
 
-function EditorToolbarButton(props: {
+export function ToolbarButton(props: {
   children: ReactNode;
   'aria-label': string;
   isSelected?: (editorState: EditorState) => boolean;
@@ -44,172 +51,187 @@ function EditorToolbarButton(props: {
 }) {
   const state = useEditorState();
   const runCommand = useEditorDispatchCommand();
-  const isSelected = props.isSelected?.(state);
+  const isSelected = !!props.isSelected?.(state); // no `undefined` — stop "uncontrolled" state taking over
   const isDisabled = !props.command(state) || props.isDisabled?.(state);
   return useMemo(
     () => (
-      <ActionButton
-        prominence="low"
+      <EditorToolbarButton
+        aria-label={props['aria-label']}
         isSelected={isSelected}
         isDisabled={isDisabled}
         onPress={() => {
           runCommand(props.command);
         }}
-        aria-label={props['aria-label']}
-        aria-pressed={isSelected}
       >
         {props.children}
-      </ActionButton>
+      </EditorToolbarButton>
     ),
     [isDisabled, isSelected, props, runCommand]
   );
 }
 
-// export const tableButton = (
-//   <TooltipTrigger>
-//     <EditorToolbarButton command={() => {}}>
-//       <Icon src={tableIcon} />
-//     </EditorToolbarButton>
-//     <TableButton />
-//     <Tooltip>
-//       <Text>Table</Text>
-//     </Tooltip>
-//   </TooltipTrigger>
-// );
-
-export function Toolbar() {
+export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
   const schema = useEditorSchema();
   const { nodes } = schema;
   return (
-    <ToolbarContainer>
+    <ToolbarWrapper {...props}>
       <ToolbarScrollArea>
         <HeadingMenu headingType={nodes.heading} />
-        <InlineMarks />
-        <ListButtons />
-        <ToolbarGroup>
-          <TooltipTrigger>
-            <EditorToolbarButton
-              command={insertNode(nodes.divider)}
-              aria-label="Divider"
-            >
-              <Icon src={minusIcon} />
-            </EditorToolbarButton>
-            <Tooltip>
-              <Text>Divider</Text>
-              <Kbd>---</Kbd>
-            </Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <EditorToolbarButton
-              aria-label="Quote"
-              command={wrapIn(nodes.blockquote)}
-            >
-              <Icon src={quoteIcon} />
-            </EditorToolbarButton>
-            <Tooltip>
-              <Text>Quote</Text>
-              <Kbd>{'>⎵'}</Kbd>
-            </Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <EditorToolbarButton
-              aria-label="Code block"
-              command={toggleCodeBlock(nodes.code_block, nodes.paragraph)}
-              isSelected={(state: EditorState) => {
-                let hasCodeBlock = false;
-                for (const range of state.selection.ranges) {
-                  state.doc.nodesBetween(
-                    range.$from.pos,
-                    range.$to.pos,
-                    node => {
-                      if (node.type === nodes.code_block) {
-                        hasCodeBlock = true;
-                      }
-                    }
-                  );
-                  if (hasCodeBlock) break;
-                }
-                return hasCodeBlock;
-              }}
-            >
-              <Icon src={codeIcon} />
-            </EditorToolbarButton>
-            <Tooltip>
-              <Text>Code block</Text>
-              <Kbd>```</Kbd>
-            </Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <EditorToolbarButton
-              aria-label="Table"
-              command={insertTable(schema)}
-            >
-              <Icon src={tableIcon} />
-            </EditorToolbarButton>
-            <Tooltip>
-              <Text>Table</Text>
-            </Tooltip>
-          </TooltipTrigger>
-        </ToolbarGroup>
+        <EditorToolbar aria-label="Formatting options">
+          <EditorToolbarSeparator />
+          <InlineMarks />
+          <EditorToolbarSeparator />
+          <ListButtons />
+          <EditorToolbarSeparator />
+          <EditorToolbarGroup aria-label="Blocks">
+            <TooltipTrigger>
+              <ToolbarButton
+                aria-label="Divider"
+                command={insertNode(nodes.divider)}
+                isSelected={typeInSelection(nodes.divider)}
+              >
+                <Icon src={minusIcon} />
+              </ToolbarButton>
+              <Tooltip>
+                <Text>Divider</Text>
+                <Kbd>---</Kbd>
+              </Tooltip>
+            </TooltipTrigger>
+            <TooltipTrigger>
+              <ToolbarButton
+                aria-label="Quote"
+                command={wrapIn(nodes.blockquote)}
+                isSelected={typeInSelection(nodes.blockquote)}
+              >
+                <Icon src={quoteIcon} />
+              </ToolbarButton>
+              <Tooltip>
+                <Text>Quote</Text>
+                <Kbd>{'>⎵'}</Kbd>
+              </Tooltip>
+            </TooltipTrigger>
+            <TooltipTrigger>
+              <ToolbarButton
+                aria-label="Code block"
+                command={toggleCodeBlock(nodes.code_block, nodes.paragraph)}
+                isSelected={typeInSelection(nodes.code_block)}
+              >
+                <Icon src={codeIcon} />
+              </ToolbarButton>
+              <Tooltip>
+                <Text>Code block</Text>
+                <Kbd>```</Kbd>
+              </Tooltip>
+            </TooltipTrigger>
+            <TooltipTrigger>
+              <ToolbarButton aria-label="Table" command={insertTable(schema)}>
+                <Icon src={tableIcon} />
+              </ToolbarButton>
+              <Tooltip>
+                <Text>Table</Text>
+              </Tooltip>
+            </TooltipTrigger>
+            <ImageToolbarButton />
+          </EditorToolbarGroup>
+        </EditorToolbar>
       </ToolbarScrollArea>
+
       <InsertBlockMenu />
-    </ToolbarContainer>
+    </ToolbarWrapper>
   );
 }
 
-/** Group buttons together that don't fit into an `ActionGroup` semantically. */
-const ToolbarGroup = ({ children }: { children: ReactNode }) => {
-  return <Flex gap="regular">{children}</Flex>;
-};
-
 const ToolbarContainer = ({ children }: { children: ReactNode }) => {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
   return (
-    <Flex
-      minWidth={0}
-      backgroundColor="canvas"
-      borderTopStartRadius="medium"
-      borderTopEndRadius="medium"
-      position="sticky"
-      zIndex={2}
-      insetTop={0}
+    <div
+      data-layout={entryLayoutPane}
+      className={css({
+        alignItems: 'center',
+        boxSizing: 'border-box',
+        display: 'flex',
+        height: tokenSchema.size.element.medium,
+
+        [breakpointQueries.above.mobile]: {
+          height: tokenSchema.size.element.large,
+        },
+
+        '&[data-layout="main"]': {
+          marginInline: 'auto',
+          maxWidth: 800,
+          minWidth: 0,
+          paddingInline: tokenSchema.size.space.medium,
+          [breakpointQueries.above.mobile]: {
+            paddingInline: tokenSchema.size.space.xlarge,
+          },
+          [breakpointQueries.above.tablet]: {
+            paddingInline: tokenSchema.size.space.xxlarge,
+          },
+        },
+      })}
     >
       {children}
-      <Flex
-        role="presentation" // dividing line
-        borderBottom="muted"
-        position="absolute"
-        insetX="medium"
-        insetBottom={0}
-      />
-    </Flex>
+    </div>
+  );
+};
+
+const ToolbarWrapper = (props: HTMLAttributes<HTMLDivElement>) => {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
+  return (
+    <div
+      {...props}
+      data-layout={entryLayoutPane}
+      className={css({
+        backdropFilter: 'blur(8px)',
+        backgroundClip: 'padding-box',
+        backgroundColor: `color-mix(in srgb, transparent, ${tokenSchema.color.background.canvas} 90%)`,
+        borderBottom: `${tokenSchema.size.border.regular} solid color-mix(in srgb, transparent, ${tokenSchema.color.foreground.neutral} 10%)`,
+        borderStartEndRadius: tokenSchema.size.radius.medium,
+        borderStartStartRadius: tokenSchema.size.radius.medium,
+        minWidth: 0,
+        position: 'sticky',
+        top: 0,
+        zIndex: 2,
+
+        '&[data-layout="main"]': { borderRadius: 0 },
+      })}
+    >
+      <ToolbarContainer>{props.children}</ToolbarContainer>
+    </div>
   );
 };
 
 const ToolbarScrollArea = (props: { children: ReactNode }) => {
+  let entryLayoutPane = useEntryLayoutSplitPaneContext();
   return (
-    <Flex
-      // borderRadius="regular"
-      // backgroundColor="surfaceSecondary"
-      padding="regular"
-      paddingEnd="medium"
-      gap="large"
-      flex
-      minWidth={0}
-      UNSAFE_className={css({
-        msOverflowStyle: 'none' /* for Internet Explorer, Edge */,
-        scrollbarWidth: 'none' /* for Firefox */,
+    <div
+      data-layout={entryLayoutPane}
+      className={css({
+        alignItems: 'center',
+        display: 'flex',
+        flex: 1,
+        gap: tokenSchema.size.space.regular,
+        paddingInline: tokenSchema.size.space.medium,
+        minWidth: 0,
         overflowX: 'auto',
 
-        /* for Chrome, Safari, and Opera */
-        '&::-webkit-scrollbar': {
-          display: 'none',
+        // avoid cropping focus rings
+        marginBlock: `calc(${tokenSchema.size.alias.focusRing} * -1)`,
+        paddingBlock: tokenSchema.size.alias.focusRing,
+
+        // hide scrollbars
+        msOverflowStyle: 'none', // for Internet Explorer, Edge
+        scrollbarWidth: 'none', // for Firefox
+        '&::-webkit-scrollbar': { display: 'none' }, // for Chrome, Safari, and Opera
+
+        '&[data-layout="main"]': {
+          paddingInline: 0,
         },
       })}
       {...props}
     />
   );
 };
-
 type HeadingState = 'normal' | 1 | 2 | 3 | 4 | 5 | 6;
 const headingMenuVals = new Map<string | number, HeadingState>([
   ['normal', 'normal'],
@@ -302,6 +324,8 @@ const HeadingMenu = (props: { headingType: NodeType }) => {
 };
 
 function InsertBlockMenu() {
+  const entryLayoutPane = useEntryLayoutSplitPaneContext();
+
   const commandDispatch = useEditorDispatchCommand();
   const schema = useEditorSchema();
 
@@ -313,10 +337,17 @@ function InsertBlockMenu() {
     () => new Map(items.map(item => [item.id, item])),
     [items]
   );
+
+  if (items.length === 0) {
+    return null;
+  }
+
   return (
     <MenuTrigger align="end">
       <TooltipTrigger>
-        <ActionButton marginY="regular" marginEnd="medium">
+        <ActionButton
+          marginEnd={entryLayoutPane === 'main' ? undefined : 'medium'}
+        >
           <Icon src={plusIcon} />
           <Icon src={chevronDownIcon} />
         </ActionButton>
@@ -334,11 +365,7 @@ function InsertBlockMenu() {
         }}
         items={items}
       >
-        {item => (
-          <Item key={item.id} textValue={item.label}>
-            {item.label}
-          </Item>
-        )}
+        {itemRenderer}
       </Menu>
     </MenuTrigger>
   );
@@ -362,6 +389,7 @@ const isMarkActive = (markType: MarkType) => (state: EditorState) => {
 function InlineMarks() {
   const state = useEditorState();
   const schema = useEditorSchema();
+  const runCommand = useEditorDispatchCommand();
   const inlineMarks = useMemo(() => {
     const marks: {
       key: string;
@@ -415,50 +443,44 @@ function InlineMarks() {
       key: 'clearFormatting',
       label: 'Clear formatting',
       icon: removeFormattingIcon,
-      command: () => false,
+      command: removeAllMarks(),
       isSelected: () => false,
     });
     return marks;
-  }, [schema]);
+  }, [schema.marks]);
   const selectedKeys = useMemoStringified(
     inlineMarks.filter(val => val.isSelected(state)).map(val => val.key)
   );
   const disabledKeys = useMemoStringified(
     inlineMarks.filter(val => !val.command(state)).map(val => val.key)
   );
-  const runCommand = useEditorDispatchCommand();
+
   return useMemo(() => {
     return (
-      <ActionGroup
-        UNSAFE_className={css({
-          minWidth: `calc(${tokenSchema.size.element.medium} * 4)`,
-        })}
-        prominence="low"
-        density="compact"
-        buttonLabelBehavior="hide"
-        overflowMode="collapse"
-        summaryIcon={<Icon src={typeIcon} />}
-        items={inlineMarks}
-        selectionMode="multiple"
-        selectedKeys={selectedKeys}
-        disabledKeys={disabledKeys}
-        onAction={key => {
-          const command = inlineMarks.find(mark => mark.key === key)?.command;
-          if (command) {
-            runCommand(command);
+      <EditorToolbarGroup
+        aria-label="Text formatting"
+        value={selectedKeys}
+        onChange={key => {
+          const mark = inlineMarks.find(mark => mark.key === key);
+          if (mark) {
+            runCommand(mark.command);
           }
         }}
+        disabledKeys={disabledKeys}
+        selectionMode="multiple"
       >
-        {item => {
-          return (
-            <Item key={item.key} textValue={item.label}>
-              <Text>{item.label}</Text>
-              {'shortcut' in item && <Kbd meta>{item.shortcut}</Kbd>}
-              <Icon src={item.icon} />
-            </Item>
-          );
-        }}
-      </ActionGroup>
+        {inlineMarks.map(mark => (
+          <TooltipTrigger key={mark.key}>
+            <EditorToolbarItem value={mark.key} aria-label={mark.label}>
+              <Icon src={mark.icon} />
+            </EditorToolbarItem>
+            <Tooltip>
+              <Text>{mark.label}</Text>
+              {'shortcut' in mark && <Kbd meta>{mark.shortcut}</Kbd>}
+            </Tooltip>
+          </TooltipTrigger>
+        ))}
+      </EditorToolbarGroup>
     );
   }, [disabledKeys, inlineMarks, runCommand, selectedKeys]);
 }
@@ -473,11 +495,12 @@ function getActiveListType(state: EditorState, schema: EditorSchema) {
   for (let i = sharedDepth; i > 0; i--) {
     const node = state.selection.$from.node(i);
     if (node.type === schema.nodes.ordered_list) {
-      return 'ordered' as const;
+      return 'ordered_list' as const;
     } else if (node.type === schema.nodes.unordered_list) {
-      return 'unordered' as const;
+      return 'unordered_list' as const;
     }
   }
+  return null;
 }
 
 function ListButtons() {
@@ -492,61 +515,93 @@ function ListButtons() {
     toggleList(schema.nodes.unordered_list)(state);
   const activeListType = getActiveListType(state, schema);
 
+  const items = useMemo(() => {
+    return [
+      !!schema.nodes.unordered_list && {
+        label: 'Bullet list',
+        key: 'unordered_list',
+        shortcut: '-',
+        icon: listIcon,
+      },
+      !!schema.nodes.ordered_list && {
+        label: 'Numbered list',
+        key: 'ordered_list',
+        shortcut: '1.',
+        icon: listOrderedIcon,
+      },
+    ].filter(removeFalse);
+  }, [schema.nodes.unordered_list, schema.nodes.ordered_list]);
+
+  const disabledKeys = useMemo(() => {
+    return [
+      !canWrapInOrderedList && 'ordered_list',
+      !canWrapInUnorderedList && 'unordered_list',
+    ].filter(removeFalse);
+  }, [canWrapInOrderedList, canWrapInUnorderedList]);
+
   return useMemo(() => {
+    if (items.length === 0) {
+      return null;
+    }
+
     return (
-      <ActionGroup
-        flexShrink={0}
+      <EditorToolbarGroup
         aria-label="Lists"
-        selectionMode="single"
-        buttonLabelBehavior="hide"
-        density="compact"
-        prominence="low"
-        disabledKeys={[
-          !canWrapInOrderedList && 'ordered',
-          !canWrapInUnorderedList && 'unordered',
-        ].filter(removeFalse)}
-        summaryIcon={<Icon src={listIcon} />}
-        selectedKeys={activeListType ? [activeListType] : []}
-        onAction={key => {
-          const format = key as 'ordered' | 'unordered';
-          const type = schema.nodes[`${format}_list`];
+        value={activeListType}
+        onChange={key => {
+          const format = key as 'ordered_list' | 'unordered_list';
+          const type = schema.nodes[format];
           if (type) {
             dispatchCommand(toggleList(type));
           }
         }}
-        items={[
-          !!schema.nodes.unordered_list && {
-            label: 'Bullet List',
-            key: 'unordered',
-            shortcut: '-',
-            icon: listIcon,
-          },
-          !!schema.nodes.unordered_list && {
-            label: 'Numbered List',
-            key: 'ordered',
-            shortcut: '1.',
-            icon: listOrderedIcon,
-          },
-        ].filter(removeFalse)}
+        disabledKeys={disabledKeys}
+        selectionMode="single"
       >
-        {item => (
-          <Item textValue={`${item.label} (${item.shortcut})`}>
-            <Icon src={item.icon} />
-            <Text>{item.label}</Text>
-            <Kbd>{item.shortcut}</Kbd>
-          </Item>
-        )}
-      </ActionGroup>
+        {items.map(item => (
+          <TooltipTrigger key={item.key}>
+            <EditorToolbarItem value={item.key} aria-label={item.label}>
+              <Icon src={item.icon} />
+            </EditorToolbarItem>
+            <Tooltip>
+              <Text>{item.label}</Text>
+              <Kbd meta>{item.shortcut}</Kbd>
+            </Tooltip>
+          </TooltipTrigger>
+        ))}
+      </EditorToolbarGroup>
     );
-  }, [
-    activeListType,
-    canWrapInOrderedList,
-    canWrapInUnorderedList,
-    dispatchCommand,
-    schema.nodes,
-  ]);
+  }, [activeListType, disabledKeys, dispatchCommand, items, schema.nodes]);
 }
 
 function removeFalse<T>(val: T): val is Exclude<T, false> {
   return val !== false;
+}
+
+function removeAllMarks(): Command {
+  return (state, dispatch) => {
+    if (state.selection.empty) {
+      return false;
+    }
+
+    if (dispatch) {
+      dispatch(state.tr.removeMark(state.selection.from, state.selection.to));
+    }
+    return true;
+  };
+}
+
+function typeInSelection(type: NodeType) {
+  return (state: EditorState) => {
+    let hasBlock = false;
+    for (const range of state.selection.ranges) {
+      state.doc.nodesBetween(range.$from.pos, range.$to.pos, node => {
+        if (node.type === type) {
+          hasBlock = true;
+        }
+      });
+      if (hasBlock) break;
+    }
+    return hasBlock;
+  };
 }

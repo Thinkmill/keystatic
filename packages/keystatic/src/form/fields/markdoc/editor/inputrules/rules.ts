@@ -107,6 +107,17 @@ export function inputRulesForSchema({ nodes, marks }: EditorSchema) {
   return rules;
 }
 
+export function enterInputRulesForSchema({ nodes }: EditorSchema) {
+  const rules: InputRule[] = [];
+  rules.push({
+    pattern: /^```(\w+)?$/,
+    handler: textblockTypeInputRuleHandler(nodes.code_block, match => ({
+      language: match[1] ?? 'plain',
+    })),
+  });
+  return rules;
+}
+
 function allowsMarkType(
   doc: Node,
   start: number,

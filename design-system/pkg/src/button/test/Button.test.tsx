@@ -23,7 +23,7 @@ describe('button/Button', () => {
 
     await userEvent.click(button);
 
-    expect(onPress).toBeCalledTimes(1);
+    expect(onPress).toHaveBeenCalledTimes(1);
   });
 });
 

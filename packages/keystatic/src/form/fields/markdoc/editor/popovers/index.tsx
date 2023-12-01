@@ -1,19 +1,24 @@
 import { Mark, MarkType, Node, ResolvedPos } from 'prosemirror-model';
-import { EditorState, TextSelection } from 'prosemirror-state';
+import { EditorState, NodeSelection, TextSelection } from 'prosemirror-state';
+import { toggleHeader } from 'prosemirror-tables';
 import { ReactElement, useMemo } from 'react';
-import { EditorSchema, getEditorSchema } from '../schema';
+import { Rect } from '@floating-ui/react';
+
 import { ActionButton } from '@keystar/ui/button';
+import { EditorPopover, EditorPopoverProps } from '@keystar/ui/editor';
 import { Icon } from '@keystar/ui/icon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
-import { Flex } from '@keystar/ui/layout';
+import { Divider, Flex } from '@keystar/ui/layout';
 import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
-import { useEditorDispatchCommand, useEditorSchema } from '../editor-view';
-import { LinkToolbar } from './link-toolbar';
-import { CodeBlockLanguageCombobox } from './code-block-language';
-import { useEditorReferenceElement } from './reference';
-import { EditorPopover, EditorToolbarSeparator } from '../new-primitives';
 import { sheetIcon } from '@keystar/ui/icon/icons/sheetIcon';
-import { toggleHeader } from 'prosemirror-tables';
+
+import { useEditorDispatchCommand, useEditorSchema } from '../editor-view';
+import { EditorSchema, getEditorSchema } from '../schema';
+import { CodeBlockLanguageCombobox } from './code-block-language';
+import { LinkToolbar } from './link-toolbar';
+import { useEditorReferenceElement } from './reference';
+import { getContent, getToolbar, useEditorContext } from '../context';
+import { ImagePopover } from './images';
 
 type NodePopoverRenderer = (props: {
   node: Node;
@@ -37,7 +42,7 @@ const popoverComponents: Record<string, NodePopoverRenderer> = {
             });
           }}
         />
-        <EditorToolbarSeparator />
+        <Divider orientation="vertical" />
         <TooltipTrigger>
           <ActionButton
             prominence="low"
@@ -59,6 +64,7 @@ const popoverComponents: Record<string, NodePopoverRenderer> = {
       </Flex>
     );
   },
+  image: ImagePopover,
   table: function TablePopover(props) {
     const dispatchCommand = useEditorDispatchCommand();
     const schema = useEditorSchema();
@@ -80,7 +86,7 @@ const popoverComponents: Record<string, NodePopoverRenderer> = {
           </ActionButton>
           <Tooltip>Header row</Tooltip>
         </TooltipTrigger>
-        <EditorToolbarSeparator />
+        <Divider orientation="vertical" />
         <TooltipTrigger>
           <ActionButton
             prominence="low"
@@ -178,12 +184,14 @@ const LinkPopover: MarkPopoverRenderer = props => {
 
 type PopoverDecoration =
   | {
+      adaptToBoundary: EditorPopoverProps['adaptToBoundary'] & {};
       kind: 'node';
       component: NodePopoverRenderer;
       node: Node;
       pos: number;
     }
   | {
+      adaptToBoundary: EditorPopoverProps['adaptToBoundary'] & {};
       kind: 'mark';
       component: MarkPopoverRenderer;
       mark: Mark;
@@ -201,6 +209,7 @@ function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
       linkAroundFrom.to === linkAroundTo.to
     ) {
       return {
+        adaptToBoundary: 'flip',
         kind: 'mark',
         component: LinkPopover,
         mark: linkAroundFrom.mark,
@@ -209,19 +218,35 @@ function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
       };
     }
   }
+
+  if (state.selection instanceof NodeSelection) {
+    const node = state.selection.node;
+    const component = popoverComponents[node.type.name];
+    if (component !== undefined) {
+      return {
+        adaptToBoundary: 'stick',
+        kind: 'node',
+        node,
+        component,
+        pos: state.selection.from,
+      };
+    }
+  }
   const commonAncestorPos = state.selection.$from.start(
     state.selection.$from.sharedDepth(state.selection.to)
   );
   const $pos = state.doc.resolve(commonAncestorPos);
+
   for (let i = $pos.depth; i > 0; i--) {
     const node = $pos.node(i);
     if (!node) break;
-    const renderer = popoverComponents[node.type.name];
-    if (renderer !== undefined) {
+    const component = popoverComponents[node.type.name];
+    if (component !== undefined) {
       return {
+        adaptToBoundary: 'stick',
         kind: 'node',
         node,
-        component: renderer,
+        component,
         pos: $pos.start(i) - 1,
       };
     }
@@ -242,14 +267,18 @@ function PopoverInner(props: {
     props.decoration.kind === 'node'
       ? props.decoration.pos + props.decoration.node.nodeSize
       : props.decoration.to;
+
   const reference = useEditorReferenceElement(from, to);
+  const boundary = useBoundaryRect();
+
   return (
     reference && (
       <EditorPopover
-        reference={reference}
-        placement="bottom"
-        adaptToViewport="stick"
+        adaptToBoundary={props.decoration.adaptToBoundary}
+        boundary={boundary}
         minWidth="element.medium"
+        placement="bottom"
+        reference={reference}
       >
         {props.decoration.kind === 'node' ? (
           <props.decoration.component
@@ -274,4 +303,38 @@ export function EditorPopoverDecoration(props: { state: EditorState }) {
   );
   if (!popoverDecoration) return null;
   return <PopoverInner decoration={popoverDecoration} state={props.state} />;
+}
+
+export function useBoundaryRect(): Rect | undefined {
+  let { id } = useEditorContext();
+
+  let element = getContent(id);
+  if (!element) {
+    return undefined;
+  }
+
+  let scrollParent = getNearestScrollParent(element);
+  if (!scrollParent) {
+    return undefined;
+  }
+
+  let toolbar = getToolbar(id);
+  let offset = toolbar?.offsetHeight ?? 0;
+  let rect = scrollParent.getBoundingClientRect();
+  return {
+    x: rect.x,
+    y: rect.y + offset,
+    width: rect.width,
+    height: rect.height - offset,
+  };
+}
+
+function getNearestScrollParent(element: Element | null): Element | null {
+  if (!element) {
+    return null;
+  }
+  if (element.scrollHeight > element.clientHeight) {
+    return element;
+  }
+  return getNearestScrollParent(element.parentElement);
 }

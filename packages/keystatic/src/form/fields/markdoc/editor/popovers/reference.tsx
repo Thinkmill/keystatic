@@ -1,4 +1,4 @@
-import { ReferenceElement } from '@floating-ui/react';
+import { ReferenceElement, VirtualElement } from '@floating-ui/react';
 import { useLayoutEffect, useState } from 'react';
 import { useEditorViewInEffect } from '../editor-view';
 import { EditorView } from 'prosemirror-view';
@@ -12,7 +12,7 @@ function getReferenceElementForRange(
   if (nodeAtFrom !== null && to === from + nodeAtFrom.nodeSize) {
     const node = view.nodeDOM(from);
     if (node instanceof Element) {
-      return node;
+      return virtualElement(node, view);
     }
   }
   const fromDom = view.domAtPos(from);
@@ -20,7 +20,7 @@ function getReferenceElementForRange(
   const range = document.createRange();
   range.setStart(fromDom.node, fromDom.offset);
   range.setEnd(toDom.node, toDom.offset);
-  return range;
+  return virtualElement(range, view);
 }
 
 export function useEditorReferenceElement(
@@ -39,4 +39,15 @@ export function useEditorReferenceElement(
     setReferenceElement(getReferenceElementForRange(view, from, to));
   }, [getEditorView, from, to]);
   return referenceElement;
+}
+
+/**
+ * Normalize API for node, range, etc. and include `contextElement` to ensure
+ * clipping and position update detection works as expected.
+ * @see https://floating-ui.com/docs/virtual-elements
+ */
+function virtualElement(el: VirtualElement, view: EditorView) {
+  const contextElement = view.dom;
+  const getBoundingClientRect = () => el.getBoundingClientRect();
+  return { contextElement, getBoundingClientRect };
 }

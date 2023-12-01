@@ -111,25 +111,25 @@ If not specified, the default `path` value for singletons will be `{singleton-na
 
 ### Singleton paths ending with a trailing slash `/`
 
-If the path ends with a trailing slash `/`, the singleton's content will be created in its own directory named after the slug:
+If the path ends with a trailing slash `/`, the singleton's content will be created **inside a directory** named after the singleton:
 
 ```yaml
 singleton-name
-└── slug
-    ├── index.yaml
-    └── other.mdoc
+├── index.yaml
+└── other.mdoc
 
 ```
 
 ### Singleton paths ending without a trailing slash
 
-If the path does not end with a trailing slash, the singleton's index file will be created immediately inside the singleton directory:
+If the path does not end with a trailing slash, the content will be stored **in a file** named after the singleton. 
+
+Additional document fields will be stored inside a directory with the same name:
 
 ```yaml
+singleton-name.yaml
 singleton-name
-├── slug.yaml
-└── slug
-    └── other.mdoc
+└── other.mdoc
 
 ```
 

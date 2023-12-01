@@ -17,7 +17,7 @@ import {
   useEditorState,
   useEditorDispatchCommand,
 } from '../editor-view';
-import { Item } from '../new-primitives';
+import { Item } from './EditorListbox';
 import { InputRule } from '../inputrules/inputrules';
 import { useEditorKeydownListener } from '../keydown';
 import { EditorAutocomplete } from './autocomplete';
@@ -77,7 +77,7 @@ function wrapInsertMenuCommand(command: Command): Command {
   };
 }
 
-function childRenderer(item: InsertMenuItem) {
+export function itemRenderer(item: InsertMenuItem) {
   return (
     <Item key={item.id} textValue={item.label}>
       <Text>{item.label}</Text>
@@ -118,9 +118,11 @@ function InsertMenu(props: { query: string; from: number; to: number }) {
       to={props.to}
       aria-label="Insert menu"
       items={options}
-      children={childRenderer}
+      children={itemRenderer}
       onEscape={() => {
-        viewRef.current?.dispatch(removeAutocompleteDecoration(editorState.tr));
+        const tr = removeAutocompleteDecorationAndContent(editorState);
+        if (!tr) return;
+        viewRef.current?.dispatch(tr);
       }}
       onAction={key => {
         const option = options.find(option => option.id === key);

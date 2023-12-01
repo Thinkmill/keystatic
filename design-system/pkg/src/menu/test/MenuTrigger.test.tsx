@@ -73,7 +73,7 @@ describe('menu/MenuTrigger', () => {
     let tree = renderComponent(triggerProps, menuProps);
     let triggerButton = tree.getByRole('button');
 
-    expect(onOpenChange).toBeCalledTimes(0);
+    expect(onOpenChange).toHaveBeenCalledTimes(0);
 
     triggerEvent(triggerButton);
     act(() => {
@@ -94,7 +94,7 @@ describe('menu/MenuTrigger', () => {
     expect(triggerButton).toHaveAttribute('aria-expanded', 'true');
     expect(triggerButton).toHaveAttribute('aria-controls', menu.id);
 
-    expect(onOpenChange).toBeCalledTimes(1);
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
 
     triggerEvent(triggerButton, menu);
     act(() => {
@@ -103,7 +103,7 @@ describe('menu/MenuTrigger', () => {
     expect(menu).not.toBeInTheDocument();
 
     expect(triggerButton).toHaveAttribute('aria-expanded', 'false');
-    expect(onOpenChange).toBeCalledTimes(2);
+    expect(onOpenChange).toHaveBeenCalledTimes(2);
   }
 
   it('has default behavior (button renders, menu is closed)', function () {
@@ -154,7 +154,7 @@ describe('menu/MenuTrigger', () => {
     act(() => {
       jest.runAllTimers();
     });
-    expect(onOpenChange).toBeCalledTimes(0);
+    expect(onOpenChange).toHaveBeenCalledTimes(0);
 
     let menu = tree.getByRole('menu');
     expect(menu).toBeTruthy();
@@ -167,7 +167,7 @@ describe('menu/MenuTrigger', () => {
 
     menu = tree.getByRole('menu');
     expect(menu).toBeTruthy();
-    expect(onOpenChange).toBeCalledTimes(1);
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
   });
 
   it('supports `defaultOpen` (uncontrolled) ', function () {
@@ -175,7 +175,7 @@ describe('menu/MenuTrigger', () => {
     act(() => {
       jest.runAllTimers();
     });
-    expect(onOpenChange).toBeCalledTimes(0);
+    expect(onOpenChange).toHaveBeenCalledTimes(0);
 
     let menu = tree.getByRole('menu');
     expect(menu).toBeTruthy();
@@ -187,7 +187,7 @@ describe('menu/MenuTrigger', () => {
     });
 
     expect(menu).not.toBeInTheDocument();
-    expect(onOpenChange).toBeCalledTimes(1);
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
   });
 
   it('does not trigger on disabled button', function () {
@@ -199,7 +199,7 @@ describe('menu/MenuTrigger', () => {
     });
     let menu = tree.queryByRole('menu');
     expect(menu).toBeNull();
-    expect(onOpenChange).toBeCalledTimes(0);
+    expect(onOpenChange).toHaveBeenCalledTimes(0);
   });
 
   describe('default focus behavior', function () {
@@ -393,7 +393,7 @@ describe('menu/MenuTrigger', () => {
         { onOpenChange, closeOnSelect: false },
         { selectionMode: 'single', onSelectionChange }
       );
-      expect(onOpenChange).toBeCalledTimes(0);
+      expect(onOpenChange).toHaveBeenCalledTimes(0);
       let button = tree.getByRole('button');
       firePress(button);
       act(() => {
@@ -402,19 +402,19 @@ describe('menu/MenuTrigger', () => {
 
       let menu = tree.getByRole('menu');
       expect(menu).toBeTruthy();
-      expect(onOpenChange).toBeCalledTimes(1);
-      expect(onSelectionChange).toBeCalledTimes(0);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(0);
 
       let menuItem1 = within(menu).getByText('Foo');
       expect(menuItem1).toBeTruthy();
       firePress(menuItem1);
 
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
 
       expect(menu).toBeInTheDocument();
 
       expect(button).toHaveAttribute('aria-expanded', 'true');
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
     });
 
     it("doesn't closes menu on item selection via ENTER press if closeOnSelect=false", function () {
@@ -422,7 +422,7 @@ describe('menu/MenuTrigger', () => {
         { onOpenChange, closeOnSelect: false },
         { selectionMode: 'single', onSelectionChange }
       );
-      expect(onOpenChange).toBeCalledTimes(0);
+      expect(onOpenChange).toHaveBeenCalledTimes(0);
       let button = tree.getByRole('button');
       firePress(button);
       act(() => {
@@ -431,8 +431,8 @@ describe('menu/MenuTrigger', () => {
 
       let menu = tree.getByRole('menu');
       expect(menu).toBeTruthy();
-      expect(onOpenChange).toBeCalledTimes(1);
-      expect(onSelectionChange).toBeCalledTimes(0);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(0);
 
       let menuItem1 = within(menu).getByText('Foo');
       expect(menuItem1).toBeTruthy();
@@ -441,10 +441,10 @@ describe('menu/MenuTrigger', () => {
       act(() => {
         jest.runAllTimers();
       });
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(menu).toBeInTheDocument();
       expect(button).toHaveAttribute('aria-expanded', 'true');
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
     });
 
     it("doesn't close menu on item selection via mouse with multiple selection", function () {
@@ -525,7 +525,7 @@ describe('menu/MenuTrigger', () => {
 
     it('closes the menu when blurring the menu', function () {
       tree = renderComponent({ onOpenChange });
-      expect(onOpenChange).toBeCalledTimes(0);
+      expect(onOpenChange).toHaveBeenCalledTimes(0);
       let button = tree.getByRole('button');
       firePress(button);
       act(() => {
@@ -534,7 +534,7 @@ describe('menu/MenuTrigger', () => {
 
       let menu = tree.getByRole('menu');
       expect(menu).toBeTruthy();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(button).toHaveAttribute('aria-expanded', 'true');
 
       act(() => {
@@ -545,7 +545,7 @@ describe('menu/MenuTrigger', () => {
       });
       expect(menu).not.toBeInTheDocument();
       expect(button).toHaveAttribute('aria-expanded', 'false');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
     });
 
     it.each`
@@ -601,7 +601,7 @@ describe('menu/MenuTrigger', () => {
 
       let menu = tree.getByRole('menu');
       expect(menu).toBeTruthy();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(button).toHaveAttribute('aria-expanded', 'true');
 
       fireEvent.keyDown(document.activeElement!, { key: 'Tab' });
@@ -613,7 +613,7 @@ describe('menu/MenuTrigger', () => {
 
       expect(menu).not.toBeInTheDocument();
       expect(button).toHaveAttribute('aria-expanded', 'false');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
     });
 
     it('should have a hidden dismiss button for screen readers', function () {
@@ -638,7 +638,7 @@ describe('menu/MenuTrigger', () => {
 
       let menu = getByRole('menu');
       expect(menu).toBeTruthy();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(button).toHaveAttribute('aria-expanded', 'true');
 
       let buttons = getAllByLabelText('Dismiss');
@@ -657,7 +657,7 @@ describe('menu/MenuTrigger', () => {
 
       expect(menu).not.toBeInTheDocument();
       expect(button).toHaveAttribute('aria-expanded', 'false');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(document.activeElement).toBe(button);
     });
 
@@ -799,7 +799,7 @@ describe('menu/MenuTrigger', () => {
         fireTouch(button);
         setTimeout(
           () => {
-            expect(getMenuOrThrow).toThrowError(ERROR_MENU_NOT_FOUND);
+            expect(getMenuOrThrow).toThrow(ERROR_MENU_NOT_FOUND);
           },
           0,
           tree,
@@ -817,7 +817,7 @@ describe('menu/MenuTrigger', () => {
         fireTouch(button);
         setTimeout(
           () => {
-            expect(getMenuOrThrow).toThrowError(ERROR_MENU_NOT_FOUND);
+            expect(getMenuOrThrow).toThrow(ERROR_MENU_NOT_FOUND);
           },
           DEFAULT_LONG_PRESS_TIME / 2,
           tree,
@@ -834,7 +834,7 @@ describe('menu/MenuTrigger', () => {
         fireTouch(button);
         setTimeout(
           () => {
-            expect(getMenuOrThrow).toThrowError(ERROR_MENU_NOT_FOUND);
+            expect(getMenuOrThrow).toThrow(ERROR_MENU_NOT_FOUND);
           },
           0,
           tree,
@@ -851,7 +851,7 @@ describe('menu/MenuTrigger', () => {
         fireTouch(button);
         setTimeout(
           () => {
-            expect(getMenuOrThrow).toThrowError(ERROR_MENU_NOT_FOUND);
+            expect(getMenuOrThrow).toThrow(ERROR_MENU_NOT_FOUND);
           },
           0,
           tree,

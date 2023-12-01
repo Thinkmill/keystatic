@@ -1,0 +1,10 @@
+title: Using Keystatic as a CMS
+type:
+  discriminant: article
+  value:
+    url: https://www.lukebennett.com.au/posts/using-keystatic-as-a-cms
+    authorName: Luke Bennett
+    description: >-
+      An honest and candid writeup about using Keystatic as a CMS, despite the
+      bias of being a Thinkmill employee.
+sortIndex: 20

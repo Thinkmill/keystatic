@@ -1,13 +1,17 @@
-import { Flex } from '@keystar/ui/layout';
-import { assertNever } from 'emery';
+import { assert, assertNever } from 'emery';
+import { useId } from 'react';
+
+import { Grid } from '@keystar/ui/layout';
+import { containerQueries, css } from '@keystar/ui/style';
+import { Text } from '@keystar/ui/typography';
+
 import { ComponentSchema, GenericPreviewProps, ObjectField } from '../../api';
 import {
   ExtraFieldInputProps,
   InnerFormValueContentFromPreviewProps,
 } from '../../form-from-preview';
 import { AddToPathProvider } from '../text/path-slug-context';
-import { useId } from 'react';
-import { Text } from '@keystar/ui/typography';
+import { FIELD_GRID_COLUMNS, FieldContextProvider } from '../context';
 
 export function ObjectFieldInput<
   Fields extends Record<string, ComponentSchema>,
@@ -17,21 +21,43 @@ export function ObjectFieldInput<
   fields,
   forceValidation,
 }: GenericPreviewProps<ObjectField<Fields>, unknown> & ExtraFieldInputProps) {
+  validateLayout(schema);
+
   const firstFocusable = autoFocus
     ? findFocusableObjectFieldKey(schema)
     : undefined;
   const inner = (
-    <Flex gap="xlarge" direction="column">
-      {Object.entries(fields).map(([key, propVal]) => (
-        <AddToPathProvider key={key} part={key}>
-          <InnerFormValueContentFromPreviewProps
-            forceValidation={forceValidation}
-            autoFocus={key === firstFocusable}
-            {...propVal}
-          />
-        </AddToPathProvider>
-      ))}
-    </Flex>
+    <Grid
+      columns={`repeat(${FIELD_GRID_COLUMNS}, minmax(auto, 1fr))`}
+      columnGap="medium"
+      rowGap="xlarge"
+    >
+      {Object.entries(fields).map(([key, propVal], index) => {
+        let span = schema.layout?.[index] ?? FIELD_GRID_COLUMNS;
+        return (
+          <FieldContextProvider key={key} value={{ span }}>
+            <div
+              className={css({
+                gridColumn: `span ${span}`,
+
+                [containerQueries.below.tablet]: {
+                  gridColumn: `span ${FIELD_GRID_COLUMNS}`,
+                },
+              })}
+            >
+              <AddToPathProvider part={key}>
+                <InnerFormValueContentFromPreviewProps
+                  forceValidation={forceValidation}
+                  autoFocus={key === firstFocusable}
+                  marginBottom="xlarge"
+                  {...propVal}
+                />
+              </AddToPathProvider>
+            </div>
+          </FieldContextProvider>
+        );
+      })}
+    </Grid>
   );
   const id = useId();
 
@@ -42,15 +68,19 @@ export function ObjectFieldInput<
   const labelId = `${id}-label`;
   const descriptionId = `${id}-description`;
   return (
-    <Flex
+    <Grid
       role="group"
       gap="medium"
-      marginY="large"
+      marginY="xlarge"
       aria-labelledby={labelId}
       aria-describedby={schema.description ? descriptionId : undefined}
-      direction="column"
     >
-      <Text color="neutral" size="medium" weight="medium" id={labelId}>
+      <Text
+        color="neutralEmphasis"
+        size="medium"
+        weight="semibold"
+        id={labelId}
+      >
         {schema.label}
       </Text>
       {!!schema.description && (
@@ -58,8 +88,34 @@ export function ObjectFieldInput<
           {schema.description}
         </Text>
       )}
+      <div />
       {inner}
-    </Flex>
+    </Grid>
+  );
+}
+
+function validateLayout<Fields extends Record<string, ComponentSchema>>(
+  schema: ObjectField<Fields>
+): void {
+  if (!schema.layout) {
+    return;
+  }
+
+  assert(
+    schema.layout.length === Object.keys(schema.fields).length,
+    'A column "span" is required for every field in the layout'
+  );
+  assert(
+    schema.layout.every(span => span > 0),
+    'The layout must not contain empty columns'
+  );
+  assert(
+    schema.layout.every(span => span <= 12),
+    'Fields may not span more than 12 columns'
+  );
+  assert(
+    schema.layout.reduce((acc, cur) => acc + cur, 0) % 12 === 0,
+    'The layout must span exactly 12 columns'
   );
 }
 

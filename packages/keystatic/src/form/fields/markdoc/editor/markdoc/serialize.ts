@@ -1,23 +1,48 @@
 import { Ast, Node as MarkdocNode, NodeType } from '@markdoc/markdoc';
 import { Fragment, Mark, Node as ProseMirrorNode } from 'prosemirror-model';
 import { getEditorSchema } from '../schema';
+import { toUint8Array } from 'js-base64';
 
-function blocks(fragment: Fragment): MarkdocNode[] {
+function _blocks(
+  fragment: Fragment,
+  extraFiles: Map<string, Uint8Array> | undefined
+): MarkdocNode[] {
   const children: MarkdocNode[] = [];
   fragment.forEach(child => {
-    children.push(proseMirrorToMarkdoc(child));
+    children.push(proseMirrorToMarkdoc(child, extraFiles));
   });
   return children;
 }
 
-function inline(fragment: Fragment): MarkdocNode[] {
-  return [new Ast.Node('inline', {}, textblockChildren(fragment))];
+function _inline(
+  fragment: Fragment,
+  extraFiles: Map<string, Uint8Array> | undefined
+): MarkdocNode[] {
+  return [new Ast.Node('inline', {}, textblockChildren(fragment, extraFiles))];
 }
 
 // TODO: this should handle marks spanning over multiple text nodes properly
-function textblockChildren(fragment: Fragment): MarkdocNode[] {
+function textblockChildren(
+  fragment: Fragment,
+  extraFiles: Map<string, Uint8Array> | undefined
+): MarkdocNode[] {
   const children: MarkdocNode[] = [];
   fragment.forEach(child => {
+    if (child.type === child.type.schema.nodes.image) {
+      if (extraFiles) {
+        const src = toUint8Array(
+          child.attrs.src.replace(/^data:[a-z/-]+;base64,/, '')
+        );
+        extraFiles.set(child.attrs.filename, src);
+      }
+      children.push(
+        new Ast.Node('image', {
+          src: child.attrs.filename,
+          alt: child.attrs.alt,
+          title: child.attrs.title,
+        })
+      );
+    }
     if (child.text !== undefined) {
       const textNode = new Ast.Node('text', { content: child.text }, []);
       let node = textNode;
@@ -52,10 +77,16 @@ function textblockChildren(fragment: Fragment): MarkdocNode[] {
       children.push(node);
     }
   });
+
   return children;
 }
 
-export function proseMirrorToMarkdoc(node: ProseMirrorNode): MarkdocNode {
+export function proseMirrorToMarkdoc(
+  node: ProseMirrorNode,
+  extraFiles: Map<string, Uint8Array> | undefined
+): MarkdocNode {
+  const blocks = (fragment: Fragment) => _blocks(fragment, extraFiles);
+  const inline = (fragment: Fragment) => _inline(fragment, extraFiles);
   const schema = getEditorSchema(node.type.schema);
   if (node.type === schema.nodes.doc) {
     return new Ast.Node('document', {}, blocks(node.content));

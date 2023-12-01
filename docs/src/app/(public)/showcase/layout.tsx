@@ -6,6 +6,28 @@ export const metadata = {
     template: '%s - Showcase | Keystatic',
     default: 'Showcase',
   },
+  description:
+    'A collection of projects using Keystatic to manage parts of their codebase.',
+  openGraph: {
+    title: 'Showcase',
+    description:
+      'A collection of projects using Keystatic to manage parts of their codebase.',
+    images: [
+      {
+        url: '/og?title=Showcase',
+      },
+    ],
+    siteName: 'Keystatic',
+    type: 'website',
+    url: 'https://keystatic.com/showcase',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Showcase',
+    description:
+      'A collection of projects using Keystatic to manage parts of their codebase.',
+    site: '@thekeystatic',
+  },
 };
 
 export default async function RootLayout({

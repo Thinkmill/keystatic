@@ -11,6 +11,11 @@ navGroups:
           discriminant: page
           value: quick-start
         isNew: false
+      - label: Resources
+        link:
+          discriminant: url
+          value: /resources
+        isNew: true
   - groupName: Integration guides
     items:
       - label: Astro
@@ -87,7 +92,7 @@ navGroups:
         link:
           discriminant: page
           value: reader-api
-        isNew: false
+        isNew: true
       - label: Format options
         link:
           discriminant: page

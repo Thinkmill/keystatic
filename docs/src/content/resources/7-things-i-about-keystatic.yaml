@@ -1,0 +1,16 @@
+title: 7 Things I ❤️ About Keystatic
+type:
+  discriminant: youtube-video
+  value:
+    videoId: rUO7VdR9NPY
+    thumbnail:
+      src: >-
+        https://thinkmill-labs.keystatic.net/keystatic-site/images/nxq56kug7dua/7-things-about-keystatic
+      alt: YouTube video thumbnail
+      height: 720
+      width: 1280
+    kind: talk
+    description: >-
+      Simon Vrachliotis talking at SydJS about the little things he loves about
+      working with Keystatic.
+sortIndex: 15

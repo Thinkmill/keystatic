@@ -25,6 +25,7 @@ export function TextFieldInput(
       value={props.value}
       onChange={props.onChange}
       onBlur={() => setBlurred(true)}
+      isRequired={props.min > 0}
       errorMessage={
         props.forceValidation || blurred
           ? validateText(

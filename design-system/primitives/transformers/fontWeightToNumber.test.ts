@@ -73,7 +73,7 @@ describe('Transformer: fontWeightToNumbers', () => {
         }),
         {}
       )
-    ).toThrowError();
+    ).toThrow();
 
     expect(() =>
       fontWeightToNumber.transformer(
@@ -82,7 +82,7 @@ describe('Transformer: fontWeightToNumbers', () => {
         }),
         {}
       )
-    ).toThrowError();
+    ).toThrow();
 
     expect(() =>
       fontWeightToNumber.transformer(
@@ -91,7 +91,7 @@ describe('Transformer: fontWeightToNumbers', () => {
         }),
         {}
       )
-    ).toThrowError();
+    ).toThrow();
 
     expect(() =>
       fontWeightToNumber.transformer(
@@ -100,7 +100,7 @@ describe('Transformer: fontWeightToNumbers', () => {
         }),
         {}
       )
-    ).toThrowError();
+    ).toThrow();
 
     expect(() =>
       fontWeightToNumber.transformer(
@@ -109,7 +109,7 @@ describe('Transformer: fontWeightToNumbers', () => {
         }),
         {}
       )
-    ).toThrowError();
+    ).toThrow();
 
     expect(() =>
       fontWeightToNumber.transformer(
@@ -120,6 +120,6 @@ describe('Transformer: fontWeightToNumbers', () => {
         }),
         {}
       )
-    ).toThrowError();
+    ).toThrow();
   });
 });
