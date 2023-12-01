@@ -1,4 +1,6 @@
 // https://github.com/ProseMirror/prosemirror-gapcursor/blob/bbbee7d483754310f63f3b18d81f5a1da1250234/src/index.ts
+import { selectAll } from 'prosemirror-commands';
+import { undo, redo } from 'prosemirror-history';
 import { keydownHandler, keymap } from 'prosemirror-keymap';
 import {
   NodeSelection,
@@ -7,14 +9,14 @@ import {
   Transaction,
   AllSelection,
 } from 'prosemirror-state';
+import { StepMap } from 'prosemirror-transform';
 import { EditorView, NodeViewConstructor } from 'prosemirror-view';
 
 import { css, tokenSchema } from '@keystar/ui/style';
-import { undo, redo } from 'prosemirror-history';
-import { StepMap } from 'prosemirror-transform';
+
+import { classes, nodeWithBorder } from '../utils';
+
 import { getAttributeType } from './schema';
-import { selectAll } from 'prosemirror-commands';
-import { nodeWithBorder } from '../utils';
 
 export function attributes(): Plugin {
   return new Plugin({
@@ -138,10 +140,10 @@ const attributeNodeView: NodeViewConstructor = (node, outerView, getPos) => {
   return {
     dom,
     selectNode() {
-      dom.classList.add('ProseMirror-selectednode');
+      dom.classList.add(classes.nodeSelection);
     },
     deselectNode() {
-      dom.classList.remove('ProseMirror-selectednode');
+      dom.classList.remove(classes.nodeSelection);
     },
     update(newNode) {
       if (!node.sameMarkup(newNode)) return false;
