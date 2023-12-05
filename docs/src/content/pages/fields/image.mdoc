@@ -15,7 +15,7 @@ For a cloud-based alternative, see the [Cloud image field](/docs/fields/cloud-im
 
 ## Image storage options
 
-The default behaviour of the image field is to create a directory matching the entry `slug`, and creating an image named after the image field.
+The default behaviour of the image field is to create a directory matching the entry `slug`, and place an image named after the `image` field inside.
 
 Take the following configuration:
 
@@ -28,7 +28,7 @@ authors: collection({
 })
 ```
 
-If you create an author entry with the `john-doe` slug, and upload a `jpg` image in the `avatar` field, the following image will be stored:
+Creating a `john-doe` author and uploading a `jpg` image for the `avatar` will generate the following:
 
 ```sh
 authors
@@ -43,11 +43,14 @@ The value stored in the `john-doe.yaml` file for the `avatar` will be:
 avatar: avatar.jpg
 ```
 
-This is workable, but quite often you'll want to configure _where_ the image is stored, and _how_ the reference path to the image is constructed.
+This is workable, but quite often you'll want to configure: 
+
+- _where_ the image is stored
+- _how_ the reference path to the image is constructed
 
 ### Directory
 
-You can specify a `directory` from your project tree to store the image in.
+You can specify a `directory` from your project tree.
 
 Say you want to output images in the `public` directory:
 
@@ -58,7 +61,7 @@ avatar: fields.image({
 })
 ```
 
-Upload a `jpg` image on a the `john-doe` entry would now output the following:
+Uploading a `jpg` image on the `john-doe` entry would now output the following:
 
 ```sh
 authors
@@ -70,13 +73,14 @@ public
             └── avatar.jpg
 ```
 
-The value stored in the `john-doe` file will still be... 
+{% aside icon="☝️" %}
+The value stored in the `john-doe` file will still be: 
 
-```yaml
-avatar: avatar.jpg
-``` 
+`avatar: avatar.jpg` 
 
 ...so chances are you'll also want to configure the `publicPath` option.
+
+{% /aside %}
 
 ### Public path
 
@@ -92,7 +96,7 @@ avatar: fields.image({
 
 The entry slug and image field name will be composed with this `publicPath`. 
 
-Here's how the `avatar` field would be stored with our `john-doe` example:
+Here's how the `avatar` field would now be stored with our `john-doe` example:
 
 ```yaml
 avatar: /images/avatars/john-doe/avatar.jpg
