@@ -169,7 +169,7 @@ navGroups:
         link:
           discriminant: page
           value: fields/image
-        isNew: false
+        isNew: true
       - label: Integer
         link:
           discriminant: page

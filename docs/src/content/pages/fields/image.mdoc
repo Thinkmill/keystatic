@@ -2,29 +2,115 @@
 title: Image field
 summary: The image field is used to store an image.
 ---
+
+The `image` field is used to store an image. In the Admin UI it renders an image picker component:
+
 {% field-demo field="image" /%}
 
-The `image` field is used to store an image. In the Admin UI it renders an image picker component.
+Images will be stored on your local file system or GitHub repository. 
 
-In [local storage mode](/docs/local-mode), the file will be saved in your repository. In [github storage mode](/docs/github-mode), the file will be committed into the repository.
+For a cloud-based alternative, see the [Cloud image field](/docs/fields/cloud-image) designed for [Keystatic Cloud](/docs/cloud).
 
-## Storage options
+---
 
-You can optionally specify a `directory` from your project tree to store the image in. This is useful when you want your images in a `public` or `static` directory, to adhere to conventions for a specific framework.
+## Image storage options
 
-There's also an optional `publicPath` that lets you define how the image path should be retrieved when reading the value of the field.
+The default behaviour of the image field is to create a directory matching the entry `slug`, and place an image named after the `image` field inside.
 
-## Example usage
+Take the following configuration:
 
 ```typescript
-avatar: fields.image({
-  label: 'Avatar',
-  description: 'The avatar for this user',
-  // This will output the images in the "public" directory
-  directory: 'public/images/avatars',
-  publicPath: '/images/avatars/'
+authors: collection({
+  schema: {
+    // ...
+    avatar: fields.image({ label: 'Avatar' })
+  }
 })
 ```
+
+Creating a `john-doe` author and uploading a `jpg` image for the `avatar` will generate the following:
+
+```sh
+authors
+├── john-doe
+    └── avatar.jpg
+└── john-doe.yaml
+```
+
+The value stored in the `john-doe.yaml` file for the `avatar` will be:
+
+```yaml
+avatar: avatar.jpg
+```
+
+This is workable, but quite often you'll want to configure: 
+
+- _where_ the image is stored
+- _how_ the reference path to the image is constructed
+
+### Directory
+
+You can specify a `directory` from your project tree.
+
+Say you want to output images in the `public` directory:
+
+```diff
+avatar: fields.image({
+  label: 'Avatar',
++ directory: 'public/images/avatars',
+})
+```
+
+Uploading a `jpg` image on the `john-doe` entry would now output the following:
+
+```sh
+authors
+└── john-doe.yaml
+public
+└── images
+    └── avatars
+        └── john-doe
+            └── avatar.jpg
+```
+
+{% aside icon="☝️" %}
+The value stored in the `john-doe` file will still be: 
+
+`avatar: avatar.jpg` 
+
+...so chances are you'll also want to configure the `publicPath` option.
+
+{% /aside %}
+
+### Public path
+
+The `publicPath` option lets you control how the path to the image (as you'd use in the front end) is constructed:
+
+```diff
+avatar: fields.image({
+  label: 'Avatar',
+  directory: 'public/images/avatars',
++ publicPath: '/images/avatars/'
+})
+```
+
+The entry slug and image field name will be composed with this `publicPath`. 
+
+Here's how the `avatar` field would now be stored with our `john-doe` example:
+
+```yaml
+avatar: /images/avatars/john-doe/avatar.jpg
+``` 
+
+---
+
+## Screencast walk-through
+
+This segment of the [Keystatic Mini-Course on YouTube](https://www.youtube.com/playlist?list=PLHrxuCR-0CcSmkyLcmdV7Ruql8DTm644k) may help understand how the image field works:
+
+{% embed
+   mediaType="video"
+   embedCode="<iframe src=\"https://www.youtube.com/embed/yg4cJiecOhA?si=mDDK52Nlhg4v1v9x\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>" /%}
 
 ## Type signature
 
