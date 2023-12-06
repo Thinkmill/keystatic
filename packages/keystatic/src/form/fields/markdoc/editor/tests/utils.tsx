@@ -95,7 +95,7 @@ function getSelectionInfoFromNode(node: Node) {
   return node.attrs.info as SelectionInfo;
 }
 
-const defaultEditorSchema = createEditorSchema({});
+const defaultEditorSchema = createEditorSchema({}, {});
 
 const defaultSchema = defaultEditorSchema.schema;
 

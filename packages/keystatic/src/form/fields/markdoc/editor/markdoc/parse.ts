@@ -7,6 +7,8 @@ import {
 } from 'prosemirror-model';
 import { EditorSchema } from '../schema';
 import { fromUint8Array } from 'js-base64';
+import { ComponentSchema } from '../../../../api';
+import { transformProps } from '../../../../props-value';
 
 let state:
   | {
@@ -14,6 +16,8 @@ let state:
       errors: ValidateError[];
       marks: readonly Mark[];
       files: ReadonlyMap<string, Uint8Array>;
+      otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
+      slug: string | undefined;
     }
   | undefined;
 function getState(): typeof state & {} {
@@ -42,10 +46,13 @@ function withMark<T>(mark: Mark, fn: () => T): T {
   }
 }
 
-function childrenToProseMirrorNodes(nodes: MarkdocNode[]) {
+function childrenToProseMirrorNodes(
+  nodes: MarkdocNode[],
+  parentType: NodeType | undefined
+) {
   const children: ProseMirrorNode[] = [];
   for (const node of nodes) {
-    const pmNode = markdocNodeToProseMirrorNode(node);
+    const pmNode = markdocNodeToProseMirrorNode(node, parentType);
     if (pmNode) {
       if (Array.isArray(pmNode)) {
         children.push(...pmNode);
@@ -57,7 +64,7 @@ function childrenToProseMirrorNodes(nodes: MarkdocNode[]) {
   return children;
 }
 
-function notAllowed(node: MarkdocNode) {
+function notAllowed(node: MarkdocNode, parentType: NodeType | undefined) {
   error({
     error: {
       id: 'unspecified-type',
@@ -68,7 +75,7 @@ function notAllowed(node: MarkdocNode) {
     type: node.type,
     location: node.location,
   });
-  return childrenToProseMirrorNodes(node.children);
+  return childrenToProseMirrorNodes(node.children, parentType);
 }
 
 function createAndFill(
@@ -78,7 +85,7 @@ function createAndFill(
   extraChildren?: ProseMirrorNode[],
   mapChildren?: (children: ProseMirrorNode[]) => ProseMirrorNode[]
 ) {
-  let children = childrenToProseMirrorNodes(markdocNode.children);
+  let children = childrenToProseMirrorNodes(markdocNode.children, nodeType);
   if (mapChildren) {
     children = mapChildren(children);
   }
@@ -101,26 +108,34 @@ function createAndFill(
   return node;
 }
 
-function addMark(node: MarkdocNode, mark: Mark | MarkType | undefined) {
-  if (!mark) return notAllowed(node);
+function addMark(
+  node: MarkdocNode,
+  mark: Mark | MarkType | undefined,
+  parentType: NodeType | undefined
+) {
+  if (!mark) return notAllowed(node, parentType);
   return withMark(mark instanceof MarkType ? mark.create() : mark, () =>
-    childrenToProseMirrorNodes(node.children)
+    childrenToProseMirrorNodes(node.children, parentType)
   );
 }
 
 export function markdocToProseMirror(
   node: MarkdocNode,
   schema: EditorSchema,
-  files: ReadonlyMap<string, Uint8Array> | undefined
+  files: ReadonlyMap<string, Uint8Array> | undefined,
+  otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>> | undefined,
+  slug: string | undefined
 ): ProseMirrorNode {
   state = {
     schema,
     errors: [],
     marks: [],
     files: files ?? new Map(),
+    otherFiles: otherFiles ?? new Map(),
+    slug,
   };
   try {
-    let pmNode = markdocNodeToProseMirrorNode(node);
+    let pmNode = markdocNodeToProseMirrorNode(node, undefined);
     if (state.errors.length) {
       throw new Error(
         state.errors.map(e => e.lines[0] + ':' + e.error.message).join('\n')
@@ -192,7 +207,8 @@ const wrapInParagraph =
   };
 
 function markdocNodeToProseMirrorNode(
-  node: MarkdocNode
+  node: MarkdocNode,
+  parentType: NodeType | undefined
 ): ProseMirrorNode | ProseMirrorNode[] | null {
   if (node.errors.length) {
     for (const err of node.errors) {
@@ -220,10 +236,10 @@ function markdocNodeToProseMirrorNode(
   }
   const schema = getSchema();
   if (node.type === 'inline') {
-    return childrenToProseMirrorNodes(node.children);
+    return childrenToProseMirrorNodes(node.children, parentType);
   }
   if (node.type === 'em') {
-    return addMark(node, schema.marks.italic);
+    return addMark(node, schema.marks.italic, parentType);
   }
   if (node.type === 'code') {
     return schema.schema.text(node.attributes.content, [
@@ -232,16 +248,16 @@ function markdocNodeToProseMirrorNode(
     ]);
   }
   if (node.type === 's') {
-    return addMark(node, schema.marks.strikethrough);
+    return addMark(node, schema.marks.strikethrough, parentType);
   }
   if (node.type === 'strong') {
-    return addMark(node, schema.marks.bold);
+    return addMark(node, schema.marks.bold, parentType);
   }
   if (node.type === 'softbreak') {
     return schema.schema.text('\n');
   }
   if (node.type === 'hardbreak') {
-    if (!schema.nodes.hard_break) return notAllowed(node);
+    if (!schema.nodes.hard_break) return notAllowed(node, parentType);
     return schema.nodes.hard_break.create();
   }
   if (node.type === 'blockquote') {
@@ -288,7 +304,8 @@ function markdocNodeToProseMirrorNode(
   if (node.type === 'link') {
     return addMark(
       node,
-      schema.marks.link?.create({ href: node.attributes.href })
+      schema.marks.link?.create({ href: node.attributes.href }),
+      parentType
     );
   }
   if (node.type === 'text') {
@@ -316,7 +333,7 @@ function markdocNodeToProseMirrorNode(
     return createAndFill(node, schema.nodes.table, {});
   }
   if (node.type === 'tbody' || node.type === 'thead') {
-    return childrenToProseMirrorNodes(node.children);
+    return childrenToProseMirrorNodes(node.children, parentType);
   }
   if (node.type === 'tr') {
     return createAndFill(node, schema.nodes.table_row, {});
@@ -341,9 +358,44 @@ function markdocNodeToProseMirrorNode(
   }
   if (node.type === 'tag' && node.tag) {
     if (node.tag === 'table') {
-      return markdocNodeToProseMirrorNode(node.children[0]);
+      return markdocNodeToProseMirrorNode(node.children[0], parentType);
     }
-    const children = childrenToProseMirrorNodes(node.children);
+    const children = childrenToProseMirrorNodes(node.children, parentType);
+
+    const componentConfig = schema.components[node.tag];
+    if (componentConfig) {
+      const nodeType = schema.schema.nodes[node.tag];
+      // TODO: validation and handling of e.g. image fields
+      const state = getState();
+      const pmNode = nodeType.createChecked(
+        {
+          props: deserializeProps(
+            { kind: 'object', fields: componentConfig.schema },
+            node.attributes,
+            state.files,
+            state.otherFiles,
+            state.slug
+          ),
+        },
+        children
+      );
+      if (!pmNode) {
+        error({
+          error: {
+            id: 'unexpected-children',
+            level: 'critical',
+            message: `${node.type} has unexpected children`,
+          },
+          lines: node.lines,
+          type: node.type,
+          location: node.location,
+        });
+      }
+      if (componentConfig.kind === 'inline' && !parentType?.isTextblock) {
+        return schema.nodes.paragraph.createAndFill({}, pmNode)!;
+      }
+      return pmNode;
+    }
     const tagChildren = [
       schema.nodes.tag_attributes.createChecked(null, parseAnnotations(node)),
       ...Object.entries(node.slots).map(
@@ -351,7 +403,7 @@ function markdocNodeToProseMirrorNode(
           console.log(slotContent),
           schema.nodes.tag_slot.createChecked(
             { name: slotName },
-            childrenToProseMirrorNodes([slotContent])
+            childrenToProseMirrorNodes([slotContent], schema.nodes.tag_slot)
           )
         )
       ),
@@ -406,4 +458,36 @@ function markdocNodeToProseMirrorNode(
     location: node.location,
   });
   return null;
+}
+
+function deserializeProps(
+  schema: ComponentSchema,
+  value: unknown,
+  files: ReadonlyMap<string, Uint8Array>,
+  otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>,
+  slug: string | undefined
+) {
+  return transformProps(schema, value, {
+    form: (schema, value) => {
+      if (schema.formKind === 'asset') {
+        const filename = schema.filename(value, {
+          slug,
+          suggestedFilenamePrefix: undefined,
+        });
+        return schema.parse(value, {
+          asset: filename
+            ? schema.directory
+              ? otherFiles.get(schema.directory)?.get(filename)
+              : files.get(filename)
+            : undefined,
+          slug,
+        });
+      }
+
+      if (schema.formKind === 'content') {
+        throw new Error('Not implemented');
+      }
+      return schema.parse(value, undefined);
+    },
+  });
 }

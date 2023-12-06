@@ -24,7 +24,11 @@ export function markdocClipboard() {
           return Markdoc.format(
             proseMirrorToMarkdoc(
               view.state.doc.type.create({}, content.content),
-              undefined
+              {
+                otherFiles: new Map(),
+                extraFiles: new Map(),
+                schema: getEditorSchema(view.state.schema),
+              }
             )
           );
         } catch (err) {
@@ -38,6 +42,8 @@ export function markdocClipboard() {
             markdocToProseMirror(
               Markdoc.parse(text),
               getEditorSchema(view.state.schema),
+              undefined,
+              undefined,
               undefined
             ).content
           );

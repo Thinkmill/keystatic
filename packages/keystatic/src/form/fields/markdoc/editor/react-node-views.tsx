@@ -26,6 +26,7 @@ type ReactNodeViewProps = {
   isNodeCompletelyWithinSelection: boolean;
   node: Node;
   children: ReactNode;
+  pos: number;
 };
 
 type ReactNodeViewSpec = {
@@ -61,10 +62,12 @@ const NodeViewWrapper = memo(function NodeViewWrapper(props: {
   component: (props: ReactNodeViewProps) => ReactElement | null;
   hasNodeSelection: boolean;
   isNodeCompletelyWithinSelection: boolean;
+  pos: number;
 }) {
   return (
     <props.component
       node={props.node}
+      pos={props.pos}
       hasNodeSelection={props.hasNodeSelection}
       isNodeCompletelyWithinSelection={props.isNodeCompletelyWithinSelection}
       children={
@@ -100,6 +103,7 @@ export function NodeViews(props: { state: EditorState }): ReactElement | null {
             node={node}
             contentDOM={contentDOM}
             component={nodeViewSpec.component as any}
+            pos={pos}
           />,
           dom,
           key
@@ -118,7 +122,7 @@ function createNodeView(type: NodeType): NodeViewInfo {
   return {
     key: (i++).toString(),
     type,
-    dom: document.createElement('div'),
+    dom: document.createElement(type.isInline ? 'span' : 'div'),
     contentDOM:
       reactNodeViewSpec?.rendersOwnContent || type.isLeaf
         ? undefined

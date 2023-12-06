@@ -1,40 +1,45 @@
 import { Ast, Node as MarkdocNode, NodeType } from '@markdoc/markdoc';
 import { Fragment, Mark, Node as ProseMirrorNode } from 'prosemirror-model';
-import { getEditorSchema } from '../schema';
+import { EditorSchema, getEditorSchema } from '../schema';
 import { toUint8Array } from 'js-base64';
+
+type DocumentSerializationState = {
+  schema: EditorSchema;
+  extraFiles: Map<string, Uint8Array>;
+  otherFiles: Map<string, Map<string, Uint8Array>>;
+};
 
 function _blocks(
   fragment: Fragment,
-  extraFiles: Map<string, Uint8Array> | undefined
+  state: DocumentSerializationState
 ): MarkdocNode[] {
   const children: MarkdocNode[] = [];
   fragment.forEach(child => {
-    children.push(proseMirrorToMarkdoc(child, extraFiles));
+    children.push(proseMirrorToMarkdoc(child, state));
   });
   return children;
 }
 
 function _inline(
   fragment: Fragment,
-  extraFiles: Map<string, Uint8Array> | undefined
+  state: DocumentSerializationState
 ): MarkdocNode[] {
-  return [new Ast.Node('inline', {}, textblockChildren(fragment, extraFiles))];
+  return [new Ast.Node('inline', {}, textblockChildren(fragment, state))];
 }
 
 // TODO: this should handle marks spanning over multiple text nodes properly
 function textblockChildren(
   fragment: Fragment,
-  extraFiles: Map<string, Uint8Array> | undefined
+  state: DocumentSerializationState
 ): MarkdocNode[] {
   const children: MarkdocNode[] = [];
   fragment.forEach(child => {
     if (child.type === child.type.schema.nodes.image) {
-      if (extraFiles) {
-        const src = toUint8Array(
-          child.attrs.src.replace(/^data:[a-z/-]+;base64,/, '')
-        );
-        extraFiles.set(child.attrs.filename, src);
-      }
+      const src = toUint8Array(
+        child.attrs.src.replace(/^data:[a-z/-]+;base64,/, '')
+      );
+      state.extraFiles.set(child.attrs.filename, src);
+
       children.push(
         new Ast.Node('image', {
           src: child.attrs.filename,
@@ -42,6 +47,13 @@ function textblockChildren(
           title: child.attrs.title,
         })
       );
+    }
+    const componentConfig = state.schema.components[child.type.name];
+    if (componentConfig?.kind === 'inline') {
+      const tag = new Ast.Node('tag', child.attrs.props, [], child.type.name);
+      tag.inline = true;
+      children.push(tag);
+      return;
     }
     if (child.text !== undefined) {
       const textNode = new Ast.Node('text', { content: child.text }, []);
@@ -83,10 +95,10 @@ function textblockChildren(
 
 export function proseMirrorToMarkdoc(
   node: ProseMirrorNode,
-  extraFiles: Map<string, Uint8Array> | undefined
+  state: DocumentSerializationState
 ): MarkdocNode {
-  const blocks = (fragment: Fragment) => _blocks(fragment, extraFiles);
-  const inline = (fragment: Fragment) => _inline(fragment, extraFiles);
+  const blocks = (fragment: Fragment) => _blocks(fragment, state);
+  const inline = (fragment: Fragment) => _inline(fragment, state);
   const schema = getEditorSchema(node.type.schema);
   if (node.type === schema.nodes.doc) {
     return new Ast.Node('document', {}, blocks(node.content));
@@ -157,6 +169,15 @@ export function proseMirrorToMarkdoc(
   }
   if (node.type === schema.nodes.unordered_list) {
     return new Ast.Node('list', { ordered: false }, blocks(node.content));
+  }
+
+  const name = node.type.name;
+  const componentConfig = schema.components[name];
+  if (componentConfig) {
+    const children =
+      componentConfig.kind === 'wrapper' ? blocks(node.content) : [];
+    // TODO: handling of e.g. image fields
+    return new Ast.Node('tag', node.attrs.props, children, name);
   }
 
   return new Ast.Node('paragraph', {}, inline(node.content));

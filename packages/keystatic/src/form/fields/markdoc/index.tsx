@@ -13,6 +13,7 @@ import {
 } from '#field-ui/markdoc';
 import type { EditorSchema } from './editor/schema';
 import type { EditorState } from 'prosemirror-state';
+import { ContentComponent } from '../../../content-components';
 
 const textDecoder = new TextDecoder();
 
@@ -23,15 +24,17 @@ export function __experimental_markdoc_field({
   label,
   description,
   config,
+  components = {},
 }: {
   label: string;
   description?: string;
   config: MarkdocConfig;
+  components?: Record<string, ContentComponent>;
 }): __experimental_markdoc_field.Field {
   let schema: undefined | EditorSchema;
   let getSchema = () => {
     if (!schema) {
-      schema = createEditorSchema(config);
+      schema = createEditorSchema(config, components);
     }
     return schema;
   };
@@ -51,8 +54,8 @@ export function __experimental_markdoc_field({
       );
     },
 
-    parse: (_, { content, other }) => {
-      return parseToEditorState(content, getSchema(), other);
+    parse: (_, { content, other, external, slug }) => {
+      return parseToEditorState(content, getSchema(), other, external, slug);
     },
     contentExtension: '.mdoc',
     validate(value) {
@@ -61,7 +64,6 @@ export function __experimental_markdoc_field({
     serialize(value) {
       return {
         ...serializeFromEditorState(value),
-        external: new Map(),
         value: undefined,
       };
     },

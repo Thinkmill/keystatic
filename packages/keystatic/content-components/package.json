@@ -1,0 +1,4 @@
+{
+  "main": "dist/keystatic-core-content-components.cjs.js",
+  "module": "dist/keystatic-core-content-components.esm.js"
+}

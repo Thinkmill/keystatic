@@ -7,19 +7,31 @@ import { proseMirrorToMarkdoc } from '../markdoc/serialize';
 import Markdoc from '@markdoc/markdoc';
 import { createEditorSchema } from '../schema';
 
-const schema = createEditorSchema({});
+const schema = createEditorSchema({}, {});
 
 function toMarkdoc(node: EditorStateDescription) {
   return Markdoc.format(
     Markdoc.parse(
-      Markdoc.format(proseMirrorToMarkdoc(node.get().doc, undefined))
+      Markdoc.format(
+        proseMirrorToMarkdoc(node.get().doc, {
+          extraFiles: new Map(),
+          otherFiles: new Map(),
+          schema,
+        })
+      )
     )
   );
 }
 
 function fromMarkdoc(markdoc: string) {
   return toEditorState(
-    markdocToProseMirror(Markdoc.parse(markdoc), schema, undefined)
+    markdocToProseMirror(
+      Markdoc.parse(markdoc),
+      schema,
+      undefined,
+      undefined,
+      undefined
+    )
   );
 }
 

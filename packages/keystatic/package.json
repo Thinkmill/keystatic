@@ -176,6 +176,23 @@
       "import": "./reader/github/dist/keystatic-core-reader-github.cjs.mjs",
       "default": "./reader/github/dist/keystatic-core-reader-github.cjs.js"
     },
+    "./content-components": {
+      "types": "./content-components/dist/keystatic-core-content-components.cjs.js",
+      "node": {
+        "react-server": {
+          "module": "./content-components/dist/keystatic-core-content-components.node.react-server.esm.js",
+          "default": "./content-components/dist/keystatic-core-content-components.node.react-server.cjs.js"
+        },
+        "module": "./content-components/dist/keystatic-core-content-components.node.esm.js",
+        "default": "./content-components/dist/keystatic-core-content-components.node.cjs.js"
+      },
+      "react-server": {
+        "module": "./content-components/dist/keystatic-core-content-components.react-server.esm.js",
+        "default": "./content-components/dist/keystatic-core-content-components.react-server.cjs.js"
+      },
+      "module": "./content-components/dist/keystatic-core-content-components.esm.js",
+      "default": "./content-components/dist/keystatic-core-content-components.cjs.js"
+    },
     "./component-blocks": {
       "types": {
         "import": "./component-blocks/dist/keystatic-core-component-blocks.cjs.mjs",
@@ -235,7 +252,8 @@
     "renderer",
     "ui",
     "form",
-    "component-blocks"
+    "component-blocks",
+    "content-components"
   ],
   "scripts": {
     "setup": "ts-gql build && tsx scripts/l10n.ts && tsx scripts/build-prism.ts",
@@ -346,7 +364,8 @@
       "renderer.tsx",
       "ui.tsx",
       "form/fields/markdoc/index.tsx",
-      "component-blocks/index.tsx"
+      "component-blocks/index.tsx",
+      "content-components.ts"
     ]
   },
   "ts-gql": {

@@ -1,7 +1,7 @@
 import { Mark, MarkType, Node, ResolvedPos } from 'prosemirror-model';
 import { EditorState, NodeSelection, TextSelection } from 'prosemirror-state';
 import { toggleHeader } from 'prosemirror-tables';
-import { ReactElement, useMemo } from 'react';
+import { ReactElement, useMemo, useState } from 'react';
 import { Rect } from '@floating-ui/react';
 
 import { ActionButton } from '@keystar/ui/button';
@@ -19,6 +19,10 @@ import { LinkToolbar } from './link-toolbar';
 import { useEditorReferenceElement } from './reference';
 import { getContent, getToolbar, useEditorContext } from '../context';
 import { ImagePopover } from './images';
+import { Dialog, DialogContainer } from '@keystar/ui/dialog';
+import { FormValue } from '../FormValue';
+import { Heading } from '@keystar/ui/typography';
+import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 
 type NodePopoverRenderer = (props: {
   node: Node;
@@ -198,6 +202,82 @@ type PopoverDecoration =
       from: number;
       to: number;
     };
+
+function InlineComponentPopover(props: {
+  node: Node;
+  state: EditorState;
+  pos: number;
+}) {
+  const schema = getEditorSchema(props.state.schema);
+  const componentConfig = schema.components[props.node.type.name];
+  const runCommand = useEditorDispatchCommand();
+  const [isOpen, setIsOpen] = useState(false);
+  const componentSchema = useMemo(
+    () => ({ kind: 'object' as const, fields: componentConfig.schema }),
+    [componentConfig.schema]
+  );
+  return (
+    <>
+      <Flex gap="regular" padding="regular">
+        <TooltipTrigger>
+          <ActionButton
+            prominence="low"
+            onPress={() => {
+              setIsOpen(true);
+            }}
+          >
+            <Icon src={pencilIcon} />
+          </ActionButton>
+          <Tooltip>Edit</Tooltip>
+        </TooltipTrigger>
+        <TooltipTrigger>
+          <ActionButton
+            prominence="low"
+            onPress={() => {
+              runCommand((state, dispatch) => {
+                if (dispatch) {
+                  dispatch(
+                    state.tr.delete(props.pos, props.pos + props.node.nodeSize)
+                  );
+                }
+                return true;
+              });
+            }}
+          >
+            <Icon src={trash2Icon} />
+          </ActionButton>
+          <Tooltip tone="critical">Remove</Tooltip>
+        </TooltipTrigger>
+      </Flex>
+      <DialogContainer
+        onDismiss={() => {
+          setIsOpen(false);
+        }}
+      >
+        {isOpen && (
+          <Dialog>
+            <Heading>Edit {props.node.type.name}</Heading>
+            <FormValue
+              schema={componentSchema}
+              value={props.node.attrs.props}
+              onSave={value => {
+                runCommand((state, dispatch) => {
+                  if (dispatch) {
+                    dispatch(
+                      state.tr.setNodeAttribute(props.pos, 'props', value)
+                    );
+                  }
+                  return true;
+                });
+              }}
+            />
+          </Dialog>
+        )}
+      </DialogContainer>
+    </>
+  );
+}
+
 function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
   if (state.selection instanceof TextSelection) {
     const schema = getEditorSchema(state.schema);
@@ -219,8 +299,19 @@ function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
     }
   }
 
+  const editorSchema = getEditorSchema(state.schema);
+
   if (state.selection instanceof NodeSelection) {
     const node = state.selection.node;
+    if (editorSchema.components[node.type.name]?.kind === 'inline') {
+      return {
+        adaptToBoundary: 'stick',
+        kind: 'node',
+        node,
+        component: InlineComponentPopover,
+        pos: state.selection.from,
+      };
+    }
     const component = popoverComponents[node.type.name];
     if (component !== undefined) {
       return {
@@ -232,6 +323,7 @@ function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
       };
     }
   }
+
   const commonAncestorPos = state.selection.$from.start(
     state.selection.$from.sharedDepth(state.selection.to)
   );

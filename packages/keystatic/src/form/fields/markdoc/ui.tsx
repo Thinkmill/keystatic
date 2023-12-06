@@ -3,7 +3,7 @@ import { FormFieldInputProps } from '../../api';
 import { EditorState } from 'prosemirror-state';
 import { Editor } from './editor';
 import { createEditorState } from './editor/editor-state';
-import { EditorSchema } from './editor/schema';
+import { EditorSchema, getEditorSchema } from './editor/schema';
 import { markdocToProseMirror } from './editor/markdoc/parse';
 import Markdoc from '@markdoc/markdoc';
 import { proseMirrorToMarkdoc } from './editor/markdoc/serialize';
@@ -21,20 +21,34 @@ const textEncoder = new TextEncoder();
 export function parseToEditorState(
   content: Uint8Array | undefined,
   schema: EditorSchema,
-  files: ReadonlyMap<string, Uint8Array>
+  files: ReadonlyMap<string, Uint8Array>,
+  otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>,
+  slug: string | undefined
 ) {
   const markdoc = textDecoder.decode(content);
-  const doc = markdocToProseMirror(Markdoc.parse(markdoc), schema, files);
+  const doc = markdocToProseMirror(
+    Markdoc.parse(markdoc),
+    schema,
+    files,
+    otherFiles,
+    slug
+  );
   return createEditorState(doc);
 }
 
 export function serializeFromEditorState(value: EditorState) {
-  const extraFiles = new Map<string, Uint8Array>();
-  const markdocNode = proseMirrorToMarkdoc(value.doc, extraFiles);
+  const other = new Map<string, Uint8Array>();
+  const external = new Map<string, Map<string, Uint8Array>>();
+  const markdocNode = proseMirrorToMarkdoc(value.doc, {
+    extraFiles: other,
+    otherFiles: external,
+    schema: getEditorSchema(value.schema),
+  });
   const markdoc = Markdoc.format(markdocNode);
   return {
     content: textEncoder.encode(Markdoc.format(Markdoc.parse(markdoc))),
-    other: extraFiles,
+    other,
+    external,
   };
 }
 export function DocumentFieldInput(
