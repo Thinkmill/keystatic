@@ -38,8 +38,9 @@ node_modules/
 # Next.js build output
 .next
 
-# Preconstruct build output
-dist
+# # Preconstruct build output
+design-system/**/**/dist
+packages/astro/**/dist
 
 # Docs
 design-system/docs/generated
