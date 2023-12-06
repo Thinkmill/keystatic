@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import {
   ComponentSchema,
   ObjectField,
@@ -6,18 +6,33 @@ import {
 } from './form/api';
 
 type WrapperComponentConfig<Schema extends Record<string, ComponentSchema>> = {
+  label: string;
+  description?: string;
+  icon?: ReactElement;
   schema: Schema;
-  preview?: (
-    props: ParsedValueForComponentSchema<ObjectField<Schema>> & {
-      children: ReactNode;
+  content: string;
+} & (
+  | {
+      ContentView?: (props: {
+        value: ParsedValueForComponentSchema<ObjectField<Schema>>;
+        children: ReactNode;
+      }) => ReactNode;
     }
-  ) => ReactNode;
-};
+  | {
+      NodeView?: (props: {
+        value: ParsedValueForComponentSchema<ObjectField<Schema>>;
+        onChange(
+          value: ParsedValueForComponentSchema<ObjectField<Schema>>
+        ): void;
+        onRemove(): void;
+        isSelected: boolean;
+        children: ReactNode;
+      }) => ReactNode;
+    }
+);
 
 type WrapperComponent<Schema extends Record<string, ComponentSchema>> =
-  WrapperComponentConfig<Schema> & {
-    kind: 'wrapper';
-  };
+  WrapperComponentConfig<Schema> & { kind: 'wrapper' };
 
 export function wrapper<Schema extends Record<string, ComponentSchema>>(
   config: WrapperComponentConfig<Schema>
@@ -26,16 +41,30 @@ export function wrapper<Schema extends Record<string, ComponentSchema>>(
 }
 
 type BlockComponentConfig<Schema extends Record<string, ComponentSchema>> = {
+  label: string;
+  description?: string;
+  icon?: ReactElement;
   schema: Schema;
-  preview?: (
-    props: ParsedValueForComponentSchema<ObjectField<Schema>>
-  ) => ReactNode;
-};
+} & (
+  | {
+      ContentView?: (props: {
+        value: ParsedValueForComponentSchema<ObjectField<Schema>>;
+      }) => ReactNode;
+    }
+  | {
+      NodeView?: (props: {
+        value: ParsedValueForComponentSchema<ObjectField<Schema>>;
+        onChange(
+          value: ParsedValueForComponentSchema<ObjectField<Schema>>
+        ): void;
+        onRemove(): void;
+        isSelected: boolean;
+      }) => ReactNode;
+    }
+);
 
 type BlockComponent<Schema extends Record<string, ComponentSchema>> =
-  BlockComponentConfig<Schema> & {
-    kind: 'block';
-  };
+  BlockComponentConfig<Schema> & { kind: 'block' };
 
 export function block<Schema extends Record<string, ComponentSchema>>(
   config: BlockComponentConfig<Schema>
@@ -44,16 +73,20 @@ export function block<Schema extends Record<string, ComponentSchema>>(
 }
 
 type InlineComponentConfig<Schema extends Record<string, ComponentSchema>> = {
+  label: string;
+  description?: string;
+  icon?: ReactElement;
   schema: Schema;
-  preview?: (
-    props: ParsedValueForComponentSchema<ObjectField<Schema>>
-  ) => ReactNode;
+  NodeView?: (props: {
+    value: ParsedValueForComponentSchema<ObjectField<Schema>>;
+    onChange(value: ParsedValueForComponentSchema<ObjectField<Schema>>): void;
+    onRemove(): void;
+    isSelected: boolean;
+  }) => ReactNode;
 };
 
 type InlineComponent<Schema extends Record<string, ComponentSchema>> =
-  InlineComponentConfig<Schema> & {
-    kind: 'inline';
-  };
+  InlineComponentConfig<Schema> & { kind: 'inline' };
 
 export function inline<Schema extends Record<string, ComponentSchema>>(
   config: InlineComponentConfig<Schema>
@@ -61,7 +94,48 @@ export function inline<Schema extends Record<string, ComponentSchema>>(
   return { kind: 'inline', ...config };
 }
 
+type Thing<T, Schema extends Record<string, ComponentSchema>> =
+  | T
+  | ((props: {
+      value: ParsedValueForComponentSchema<ObjectField<Schema>>;
+      isSelected: boolean;
+    }) => T);
+
+type MarkComponentConfig<Schema extends Record<string, ComponentSchema>> = {
+  label: string;
+  icon: ReactElement;
+  schema: Schema;
+  tag?:
+    | 'span'
+    | 'strong'
+    | 'em'
+    | 'u'
+    | 'del'
+    | 'code'
+    | 'a'
+    | 'sub'
+    | 'sup'
+    | 'kbd'
+    | 'abbr'
+    | 'mark'
+    | 's'
+    | 'small'
+    | 'big';
+  style?: Thing<{ [key: string]: string }, Schema>;
+  className?: Thing<string, Schema>;
+};
+
+type MarkComponent<Schema extends Record<string, ComponentSchema>> =
+  MarkComponentConfig<Schema> & { kind: 'mark' };
+
+export function mark<Schema extends Record<string, ComponentSchema>>(
+  config: MarkComponentConfig<Schema>
+): MarkComponent<Schema> {
+  return { kind: 'mark', ...config };
+}
+
 export type ContentComponent =
   | WrapperComponent<Record<string, ComponentSchema>>
   | BlockComponent<Record<string, ComponentSchema>>
-  | InlineComponent<Record<string, ComponentSchema>>;
+  | InlineComponent<Record<string, ComponentSchema>>
+  | MarkComponent<Record<string, ComponentSchema>>;

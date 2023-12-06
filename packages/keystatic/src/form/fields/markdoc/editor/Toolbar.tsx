@@ -458,6 +458,17 @@ function InlineMarks() {
       });
     }
 
+    for (const [name, componentConfig] of Object.entries(schema.components)) {
+      if (componentConfig.kind !== 'mark') continue;
+      marks.push({
+        key: name,
+        label: componentConfig.label,
+        icon: componentConfig.icon,
+        command: toggleMark(schema.schema.marks[name]),
+        isSelected: isMarkActive(schema.schema.marks[name]),
+      });
+    }
+
     marks.push({
       key: 'clearFormatting',
       label: 'Clear formatting',
@@ -466,7 +477,7 @@ function InlineMarks() {
       isSelected: () => false,
     });
     return marks;
-  }, [schema.marks]);
+  }, [schema]);
   const selectedKeys = useMemoStringified(
     inlineMarks.filter(val => val.isSelected(state)).map(val => val.key)
   );

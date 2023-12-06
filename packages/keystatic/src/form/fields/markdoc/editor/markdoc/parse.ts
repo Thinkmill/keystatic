@@ -364,6 +364,9 @@ function markdocNodeToProseMirrorNode(
 
     const componentConfig = schema.components[node.tag];
     if (componentConfig) {
+      if (componentConfig.kind === 'mark') {
+        return addMark(node, schema.schema.marks[node.tag], parentType);
+      }
       const nodeType = schema.schema.nodes[node.tag];
       // TODO: validation and handling of e.g. image fields
       const state = getState();

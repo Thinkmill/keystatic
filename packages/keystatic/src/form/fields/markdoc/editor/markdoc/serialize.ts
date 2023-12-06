@@ -65,6 +65,12 @@ function textblockChildren(
           linkMark = mark;
           continue;
         }
+        const componentConfig = schema.components[mark.type.name];
+        if (componentConfig) {
+          node = new Ast.Node('tag', mark.attrs.props, [node], mark.type.name);
+          node.inline = true;
+          continue;
+        }
         let type: NodeType | undefined;
         if (mark.type === schema.marks.bold) {
           type = 'strong';

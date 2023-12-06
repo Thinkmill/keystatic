@@ -630,8 +630,8 @@ export function createEditorSchema(
   const nodeSpecsWithCustomNodes = {
     ...nodeSpecs,
     ...Object.fromEntries(
-      Object.entries(components).map(([name, component]) => {
-        let spec: EditorNodeSpec;
+      Object.entries(components).flatMap(([name, component]) => {
+        let spec: EditorNodeSpec | undefined;
         const schema = {
           kind: 'object' as const,
           fields: component.schema,
@@ -741,19 +741,91 @@ export function createEditorSchema(
             group: 'block',
             content: 'block+',
             defining: true,
+            attrs: { props: { default: getInitialPropsValue(schema) } },
             reactNodeView: {
-              component(props) {
+              component: function Block(props) {
+                const [isOpen, setIsOpen] = useState(false);
+                const runCommand = useEditorDispatchCommand();
                 return (
-                  <div
-                    className={`${classes.blockParent} ${css({
-                      marginBlock: '1em',
-                    })}`}
-                  >
-                    {props.children}
-                  </div>
+                  <>
+                    <Box
+                      data-component={name}
+                      data-props={JSON.stringify(props.node.attrs.props)}
+                      className={`${classes.blockParent} ${css({
+                        marginBlock: '1em',
+                      })}`}
+                      border={
+                        props.hasNodeSelection
+                          ? 'color.alias.borderSelected'
+                          : 'color.alias.borderIdle'
+                      }
+                      borderRadius="regular"
+                    >
+                      <Flex
+                        justifyContent="space-between"
+                        borderBottom={
+                          props.hasNodeSelection
+                            ? 'color.alias.borderSelected'
+                            : 'color.alias.borderIdle'
+                        }
+                      >
+                        {name}
+                        {!!Object.keys(component.schema).length && (
+                          <Button
+                            prominence="low"
+                            onPress={() => {
+                              setIsOpen(true);
+                            }}
+                          >
+                            Edit
+                          </Button>
+                        )}
+                      </Flex>
+                      {props.children}
+                    </Box>
+                    <DialogContainer
+                      onDismiss={() => {
+                        setIsOpen(false);
+                      }}
+                    >
+                      {isOpen && (
+                        <Dialog>
+                          <Heading>Edit {name}</Heading>
+                          <FormValue
+                            schema={schema}
+                            value={props.node.attrs.props}
+                            onSave={value => {
+                              runCommand((state, dispatch) => {
+                                if (dispatch) {
+                                  dispatch(
+                                    state.tr.setNodeAttribute(
+                                      props.pos,
+                                      'props',
+                                      value
+                                    )
+                                  );
+                                }
+                                return true;
+                              });
+                            }}
+                          />
+                        </Dialog>
+                      )}
+                    </DialogContainer>
+                  </>
                 );
               },
               rendersOwnContent: false,
+            },
+            toDOM(node) {
+              return [
+                'div',
+                {
+                  'data-component': name,
+                  'data-props': JSON.stringify(node.attrs.props),
+                },
+                0,
+              ];
             },
             insertMenu: {
               label: name,
@@ -761,7 +833,7 @@ export function createEditorSchema(
               forToolbar: true,
             },
           };
-        } else {
+        } else if (component.kind === 'inline') {
           spec = {
             group: 'inline inline_component',
             inline: true,
@@ -816,13 +888,67 @@ export function createEditorSchema(
             },
           };
         }
-        return [name, spec];
+        if (spec) {
+          return [[name, spec]];
+        }
+        return [];
+      })
+    ),
+  };
+  const markSpecsWithCustomMarks = {
+    ...markSpecs,
+    ...Object.fromEntries(
+      Object.entries(components).flatMap(([name, component]) => {
+        if (component.kind !== 'mark') return [];
+        const schema = {
+          kind: 'object' as const,
+          fields: component.schema,
+        };
+        const tag = component.tag ?? 'span';
+        const className =
+          typeof component.className === 'function'
+            ? component.className
+            : () => component.className;
+        const style =
+          typeof component.style === 'function'
+            ? component.style
+            : () => component.style;
+
+        const spec: MarkSpec = {
+          attrs: { props: { default: getInitialPropsValue(schema) } },
+          toDOM(mark) {
+            return [
+              tag,
+              {
+                'data-component': name,
+                'data-props': JSON.stringify(mark.attrs.props),
+                class: className(mark.attrs.props),
+                style: style(mark.attrs.props),
+              },
+            ];
+          },
+          parseDOM: [
+            {
+              tag: `${tag}[data-component="${name}"]`,
+              getAttrs(node) {
+                if (typeof node === 'string') return false;
+                const props = node.getAttribute('data-props');
+                if (!props) return false;
+                return {
+                  props: JSON.parse(props),
+                };
+              },
+            },
+          ],
+        };
+
+        return [[name, spec]];
       })
     ),
   };
   const schema = new Schema({
     nodes: nodeSpecsWithCustomNodes,
-    marks: markSpecs,
+    marks: markSpecsWithCustomMarks,
   });
 
   const nodes = schema.nodes as EditorSchema['nodes'];
