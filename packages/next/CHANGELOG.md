@@ -1,5 +1,13 @@
 # @keystatic/next
 
+## 2.0.1
+
+### Patch Changes
+
+- d76af081: Fix default exports in Node ESM
+- Updated dependencies [d76af081]
+  - @keystatic/core@0.2.6
+
 ## 2.0.0
 
 ### Major Changes

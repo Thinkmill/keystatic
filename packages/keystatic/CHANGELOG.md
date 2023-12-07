@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.2.6
+
+### Patch Changes
+
+- d76af081: Fix default exports in Node ESM
+- Updated dependencies [d76af081]
+  - @keystar/ui@0.4.6
+
 ## 0.2.5
 
 ### Patch Changes
