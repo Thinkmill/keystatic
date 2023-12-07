@@ -9,18 +9,30 @@
   },
   "exports": {
     "./ui": {
-      "types": "./ui/dist/keystatic-astro-ui.cjs.js",
+      "types": {
+        "import": "./ui/dist/keystatic-astro-ui.cjs.mjs",
+        "default": "./ui/dist/keystatic-astro-ui.cjs.js"
+      },
       "module": "./ui/dist/keystatic-astro-ui.esm.js",
+      "import": "./ui/dist/keystatic-astro-ui.cjs.mjs",
       "default": "./ui/dist/keystatic-astro-ui.cjs.js"
     },
     "./api": {
-      "types": "./api/dist/keystatic-astro-api.cjs.js",
+      "types": {
+        "import": "./api/dist/keystatic-astro-api.cjs.mjs",
+        "default": "./api/dist/keystatic-astro-api.cjs.js"
+      },
       "module": "./api/dist/keystatic-astro-api.esm.js",
+      "import": "./api/dist/keystatic-astro-api.cjs.mjs",
       "default": "./api/dist/keystatic-astro-api.cjs.js"
     },
     ".": {
-      "types": "./dist/keystatic-astro.cjs.js",
+      "types": {
+        "import": "./dist/keystatic-astro.cjs.mjs",
+        "default": "./dist/keystatic-astro.cjs.js"
+      },
       "module": "./dist/keystatic-astro.esm.js",
+      "import": "./dist/keystatic-astro.cjs.mjs",
       "default": "./dist/keystatic-astro.cjs.js"
     },
     "./package.json": "./package.json",
