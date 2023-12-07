@@ -1,5 +1,37 @@
 # @keystatic/core
 
+## 0.2.5
+
+### Patch Changes
+
+- 13206393: Minor a11y fixes/improvements for document + markdoc editors.
+- 0ca7f47a: Markdoc editor popover improvements:
+
+  - boundary respected by popovers
+  - popovers tethered to reference regardless of type (node/range/virtual) +
+    better perf
+
+- 7a98fd68: Support "layout" prop on `fields.object()`. Add required indicators
+  to fields, where appropriate.
+- 56b6b121: Refactor the markdoc editor toolbar; move all formatting options
+  under a single tab-stop.
+- 3288c624: Replace explicit node styles with inherited styling from "prose"
+  wrapper, where appropriate, in the markdoc editor.
+- bd28cfd4: Collection table: hide "status" column for default branch.
+- e32ff596: ProseMirror editor: support and populate "description" + "icon" on
+  insert menu items.
+- 16bd7064: Improve error message for branch creation name validation.
+- e1c9e0cf: ProseMirror editor improvements
+- 267845b1: Merge topbar UI into sidebar; reclaim vertical real estate.
+- Updated dependencies [0ca7f47a]
+- Updated dependencies [13206393]
+- Updated dependencies [56b6b121]
+- Updated dependencies [bd28cfd4]
+- Updated dependencies [0e81263b]
+- Updated dependencies [267845b1]
+- Updated dependencies [3288c624]
+  - @keystar/ui@0.4.5
+
 ## 0.2.4
 
 ### Patch Changes
