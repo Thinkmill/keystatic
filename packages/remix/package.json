@@ -9,13 +9,21 @@
   },
   "exports": {
     "./ui": {
-      "types": "./ui/dist/keystatic-remix-ui.cjs.js",
+      "types": {
+        "import": "./ui/dist/keystatic-remix-ui.cjs.mjs",
+        "default": "./ui/dist/keystatic-remix-ui.cjs.js"
+      },
       "module": "./ui/dist/keystatic-remix-ui.esm.js",
+      "import": "./ui/dist/keystatic-remix-ui.cjs.mjs",
       "default": "./ui/dist/keystatic-remix-ui.cjs.js"
     },
     "./api": {
-      "types": "./api/dist/keystatic-remix-api.cjs.js",
+      "types": {
+        "import": "./api/dist/keystatic-remix-api.cjs.mjs",
+        "default": "./api/dist/keystatic-remix-api.cjs.js"
+      },
       "module": "./api/dist/keystatic-remix-api.esm.js",
+      "import": "./api/dist/keystatic-remix-api.cjs.mjs",
       "default": "./api/dist/keystatic-remix-api.cjs.js"
     },
     "./package.json": "./package.json"

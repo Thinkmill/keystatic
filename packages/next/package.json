@@ -9,28 +9,48 @@
   },
   "exports": {
     "./api": {
-      "types": "./api/dist/keystatic-next-api.cjs.js",
+      "types": {
+        "import": "./api/dist/keystatic-next-api.cjs.mjs",
+        "default": "./api/dist/keystatic-next-api.cjs.js"
+      },
       "module": "./api/dist/keystatic-next-api.esm.js",
+      "import": "./api/dist/keystatic-next-api.cjs.mjs",
       "default": "./api/dist/keystatic-next-api.cjs.js"
     },
     "./ui/app": {
-      "types": "./ui/app/dist/keystatic-next-ui-app.cjs.js",
+      "types": {
+        "import": "./ui/app/dist/keystatic-next-ui-app.cjs.mjs",
+        "default": "./ui/app/dist/keystatic-next-ui-app.cjs.js"
+      },
       "module": "./ui/app/dist/keystatic-next-ui-app.esm.js",
+      "import": "./ui/app/dist/keystatic-next-ui-app.cjs.mjs",
       "default": "./ui/app/dist/keystatic-next-ui-app.cjs.js"
     },
     "./ui/pages": {
-      "types": "./ui/pages/dist/keystatic-next-ui-pages.cjs.js",
+      "types": {
+        "import": "./ui/pages/dist/keystatic-next-ui-pages.cjs.mjs",
+        "default": "./ui/pages/dist/keystatic-next-ui-pages.cjs.js"
+      },
       "module": "./ui/pages/dist/keystatic-next-ui-pages.esm.js",
+      "import": "./ui/pages/dist/keystatic-next-ui-pages.cjs.mjs",
       "default": "./ui/pages/dist/keystatic-next-ui-pages.cjs.js"
     },
     "./route-handler": {
-      "types": "./route-handler/dist/keystatic-next-route-handler.cjs.js",
+      "types": {
+        "import": "./route-handler/dist/keystatic-next-route-handler.cjs.mjs",
+        "default": "./route-handler/dist/keystatic-next-route-handler.cjs.js"
+      },
       "module": "./route-handler/dist/keystatic-next-route-handler.esm.js",
+      "import": "./route-handler/dist/keystatic-next-route-handler.cjs.mjs",
       "default": "./route-handler/dist/keystatic-next-route-handler.cjs.js"
     },
     "./reader-refresh": {
-      "types": "./reader-refresh/dist/keystatic-next-reader-refresh.cjs.js",
+      "types": {
+        "import": "./reader-refresh/dist/keystatic-next-reader-refresh.cjs.mjs",
+        "default": "./reader-refresh/dist/keystatic-next-reader-refresh.cjs.js"
+      },
       "module": "./reader-refresh/dist/keystatic-next-reader-refresh.esm.js",
+      "import": "./reader-refresh/dist/keystatic-next-reader-refresh.cjs.mjs",
       "default": "./reader-refresh/dist/keystatic-next-reader-refresh.cjs.js"
     },
     "./package.json": "./package.json"

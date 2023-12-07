@@ -9,156 +9,219 @@
   },
   "exports": {
     "./ui": {
-      "types": "./ui/dist/keystatic-core-ui.cjs.js",
+      "types": {
+        "import": "./ui/dist/keystatic-core-ui.cjs.mjs",
+        "default": "./ui/dist/keystatic-core-ui.cjs.js"
+      },
       "node": {
         "react-server": {
           "module": "./ui/dist/keystatic-core-ui.node.react-server.esm.js",
+          "import": "./ui/dist/keystatic-core-ui.node.react-server.cjs.mjs",
           "default": "./ui/dist/keystatic-core-ui.node.react-server.cjs.js"
         },
         "module": "./ui/dist/keystatic-core-ui.node.esm.js",
+        "import": "./ui/dist/keystatic-core-ui.node.cjs.mjs",
         "default": "./ui/dist/keystatic-core-ui.node.cjs.js"
       },
       "react-server": {
         "module": "./ui/dist/keystatic-core-ui.react-server.esm.js",
+        "import": "./ui/dist/keystatic-core-ui.react-server.cjs.mjs",
         "default": "./ui/dist/keystatic-core-ui.react-server.cjs.js"
       },
       "module": "./ui/dist/keystatic-core-ui.esm.js",
+      "import": "./ui/dist/keystatic-core-ui.cjs.mjs",
       "default": "./ui/dist/keystatic-core-ui.cjs.js"
     },
     ".": {
-      "types": "./dist/keystatic-core.cjs.js",
+      "types": {
+        "import": "./dist/keystatic-core.cjs.mjs",
+        "default": "./dist/keystatic-core.cjs.js"
+      },
       "node": {
         "react-server": {
           "module": "./dist/keystatic-core.node.react-server.esm.js",
+          "import": "./dist/keystatic-core.node.react-server.cjs.mjs",
           "default": "./dist/keystatic-core.node.react-server.cjs.js"
         },
         "module": "./dist/keystatic-core.node.esm.js",
+        "import": "./dist/keystatic-core.node.cjs.mjs",
         "default": "./dist/keystatic-core.node.cjs.js"
       },
       "react-server": {
         "module": "./dist/keystatic-core.react-server.esm.js",
+        "import": "./dist/keystatic-core.react-server.cjs.mjs",
         "default": "./dist/keystatic-core.react-server.cjs.js"
       },
       "module": "./dist/keystatic-core.esm.js",
+      "import": "./dist/keystatic-core.cjs.mjs",
       "default": "./dist/keystatic-core.cjs.js"
     },
     "./api/utils": {
-      "types": "./api/utils/dist/keystatic-core-api-utils.cjs.js",
+      "types": {
+        "import": "./api/utils/dist/keystatic-core-api-utils.cjs.mjs",
+        "default": "./api/utils/dist/keystatic-core-api-utils.cjs.js"
+      },
       "node": {
         "react-server": {
           "module": "./api/utils/dist/keystatic-core-api-utils.node.react-server.esm.js",
+          "import": "./api/utils/dist/keystatic-core-api-utils.node.react-server.cjs.mjs",
           "default": "./api/utils/dist/keystatic-core-api-utils.node.react-server.cjs.js"
         },
         "module": "./api/utils/dist/keystatic-core-api-utils.node.esm.js",
+        "import": "./api/utils/dist/keystatic-core-api-utils.node.cjs.mjs",
         "default": "./api/utils/dist/keystatic-core-api-utils.node.cjs.js"
       },
       "react-server": {
         "module": "./api/utils/dist/keystatic-core-api-utils.react-server.esm.js",
+        "import": "./api/utils/dist/keystatic-core-api-utils.react-server.cjs.mjs",
         "default": "./api/utils/dist/keystatic-core-api-utils.react-server.cjs.js"
       },
       "module": "./api/utils/dist/keystatic-core-api-utils.esm.js",
+      "import": "./api/utils/dist/keystatic-core-api-utils.cjs.mjs",
       "default": "./api/utils/dist/keystatic-core-api-utils.cjs.js"
     },
     "./renderer": {
-      "types": "./renderer/dist/keystatic-core-renderer.cjs.js",
+      "types": {
+        "import": "./renderer/dist/keystatic-core-renderer.cjs.mjs",
+        "default": "./renderer/dist/keystatic-core-renderer.cjs.js"
+      },
       "node": {
         "react-server": {
           "module": "./renderer/dist/keystatic-core-renderer.node.react-server.esm.js",
+          "import": "./renderer/dist/keystatic-core-renderer.node.react-server.cjs.mjs",
           "default": "./renderer/dist/keystatic-core-renderer.node.react-server.cjs.js"
         },
         "module": "./renderer/dist/keystatic-core-renderer.node.esm.js",
+        "import": "./renderer/dist/keystatic-core-renderer.node.cjs.mjs",
         "default": "./renderer/dist/keystatic-core-renderer.node.cjs.js"
       },
       "react-server": {
         "module": "./renderer/dist/keystatic-core-renderer.react-server.esm.js",
+        "import": "./renderer/dist/keystatic-core-renderer.react-server.cjs.mjs",
         "default": "./renderer/dist/keystatic-core-renderer.react-server.cjs.js"
       },
       "module": "./renderer/dist/keystatic-core-renderer.esm.js",
+      "import": "./renderer/dist/keystatic-core-renderer.cjs.mjs",
       "default": "./renderer/dist/keystatic-core-renderer.cjs.js"
     },
     "./api/generic": {
-      "types": "./api/generic/dist/keystatic-core-api-generic.cjs.js",
+      "types": {
+        "import": "./api/generic/dist/keystatic-core-api-generic.cjs.mjs",
+        "default": "./api/generic/dist/keystatic-core-api-generic.cjs.js"
+      },
       "node": {
         "react-server": {
           "module": "./api/generic/dist/keystatic-core-api-generic.node.react-server.esm.js",
+          "import": "./api/generic/dist/keystatic-core-api-generic.node.react-server.cjs.mjs",
           "default": "./api/generic/dist/keystatic-core-api-generic.node.react-server.cjs.js"
         },
         "module": "./api/generic/dist/keystatic-core-api-generic.node.esm.js",
+        "import": "./api/generic/dist/keystatic-core-api-generic.node.cjs.mjs",
         "default": "./api/generic/dist/keystatic-core-api-generic.node.cjs.js"
       },
       "react-server": {
         "module": "./api/generic/dist/keystatic-core-api-generic.react-server.esm.js",
+        "import": "./api/generic/dist/keystatic-core-api-generic.react-server.cjs.mjs",
         "default": "./api/generic/dist/keystatic-core-api-generic.react-server.cjs.js"
       },
       "module": "./api/generic/dist/keystatic-core-api-generic.esm.js",
+      "import": "./api/generic/dist/keystatic-core-api-generic.cjs.mjs",
       "default": "./api/generic/dist/keystatic-core-api-generic.cjs.js"
     },
     "./reader": {
-      "types": "./reader/dist/keystatic-core-reader.cjs.js",
+      "types": {
+        "import": "./reader/dist/keystatic-core-reader.cjs.mjs",
+        "default": "./reader/dist/keystatic-core-reader.cjs.js"
+      },
       "node": {
         "react-server": {
           "module": "./reader/dist/keystatic-core-reader.node.react-server.esm.js",
+          "import": "./reader/dist/keystatic-core-reader.node.react-server.cjs.mjs",
           "default": "./reader/dist/keystatic-core-reader.node.react-server.cjs.js"
         },
         "module": "./reader/dist/keystatic-core-reader.node.esm.js",
+        "import": "./reader/dist/keystatic-core-reader.node.cjs.mjs",
         "default": "./reader/dist/keystatic-core-reader.node.cjs.js"
       },
       "react-server": {
         "module": "./reader/dist/keystatic-core-reader.react-server.esm.js",
+        "import": "./reader/dist/keystatic-core-reader.react-server.cjs.mjs",
         "default": "./reader/dist/keystatic-core-reader.react-server.cjs.js"
       },
       "module": "./reader/dist/keystatic-core-reader.esm.js",
+      "import": "./reader/dist/keystatic-core-reader.cjs.mjs",
       "default": "./reader/dist/keystatic-core-reader.cjs.js"
     },
     "./reader/github": {
-      "types": "./reader/github/dist/keystatic-core-reader-github.cjs.js",
+      "types": {
+        "import": "./reader/github/dist/keystatic-core-reader-github.cjs.mjs",
+        "default": "./reader/github/dist/keystatic-core-reader-github.cjs.js"
+      },
       "node": {
         "react-server": {
           "module": "./reader/github/dist/keystatic-core-reader-github.node.react-server.esm.js",
+          "import": "./reader/github/dist/keystatic-core-reader-github.node.react-server.cjs.mjs",
           "default": "./reader/github/dist/keystatic-core-reader-github.node.react-server.cjs.js"
         },
         "module": "./reader/github/dist/keystatic-core-reader-github.node.esm.js",
+        "import": "./reader/github/dist/keystatic-core-reader-github.node.cjs.mjs",
         "default": "./reader/github/dist/keystatic-core-reader-github.node.cjs.js"
       },
       "react-server": {
         "module": "./reader/github/dist/keystatic-core-reader-github.react-server.esm.js",
+        "import": "./reader/github/dist/keystatic-core-reader-github.react-server.cjs.mjs",
         "default": "./reader/github/dist/keystatic-core-reader-github.react-server.cjs.js"
       },
       "module": "./reader/github/dist/keystatic-core-reader-github.esm.js",
+      "import": "./reader/github/dist/keystatic-core-reader-github.cjs.mjs",
       "default": "./reader/github/dist/keystatic-core-reader-github.cjs.js"
     },
     "./component-blocks": {
-      "types": "./component-blocks/dist/keystatic-core-component-blocks.cjs.js",
+      "types": {
+        "import": "./component-blocks/dist/keystatic-core-component-blocks.cjs.mjs",
+        "default": "./component-blocks/dist/keystatic-core-component-blocks.cjs.js"
+      },
       "node": {
         "react-server": {
           "module": "./component-blocks/dist/keystatic-core-component-blocks.node.react-server.esm.js",
+          "import": "./component-blocks/dist/keystatic-core-component-blocks.node.react-server.cjs.mjs",
           "default": "./component-blocks/dist/keystatic-core-component-blocks.node.react-server.cjs.js"
         },
         "module": "./component-blocks/dist/keystatic-core-component-blocks.node.esm.js",
+        "import": "./component-blocks/dist/keystatic-core-component-blocks.node.cjs.mjs",
         "default": "./component-blocks/dist/keystatic-core-component-blocks.node.cjs.js"
       },
       "react-server": {
         "module": "./component-blocks/dist/keystatic-core-component-blocks.react-server.esm.js",
+        "import": "./component-blocks/dist/keystatic-core-component-blocks.react-server.cjs.mjs",
         "default": "./component-blocks/dist/keystatic-core-component-blocks.react-server.cjs.js"
       },
       "module": "./component-blocks/dist/keystatic-core-component-blocks.esm.js",
+      "import": "./component-blocks/dist/keystatic-core-component-blocks.cjs.mjs",
       "default": "./component-blocks/dist/keystatic-core-component-blocks.cjs.js"
     },
     "./form/fields/markdoc": {
-      "types": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.cjs.js",
+      "types": {
+        "import": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.cjs.mjs",
+        "default": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.cjs.js"
+      },
       "node": {
         "react-server": {
           "module": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.node.react-server.esm.js",
+          "import": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.node.react-server.cjs.mjs",
           "default": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.node.react-server.cjs.js"
         },
         "module": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.node.esm.js",
+        "import": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.node.cjs.mjs",
         "default": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.node.cjs.js"
       },
       "react-server": {
         "module": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.react-server.esm.js",
+        "import": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.react-server.cjs.mjs",
         "default": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.react-server.cjs.js"
       },
       "module": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.esm.js",
+      "import": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.cjs.mjs",
       "default": "./form/fields/markdoc/dist/keystatic-core-form-fields-markdoc.cjs.js"
     },
     "./package.json": "./package.json"

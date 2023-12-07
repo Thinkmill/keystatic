@@ -17,8 +17,12 @@
   "module": "dist/keystatic-create.esm.js",
   "exports": {
     ".": {
-      "types": "./dist/keystatic-create.cjs.js",
+      "types": {
+        "import": "./dist/keystatic-create.cjs.mjs",
+        "default": "./dist/keystatic-create.cjs.js"
+      },
       "module": "./dist/keystatic-create.esm.js",
+      "import": "./dist/keystatic-create.cjs.mjs",
       "default": "./dist/keystatic-create.cjs.js"
     },
     "./package.json": "./package.json"
