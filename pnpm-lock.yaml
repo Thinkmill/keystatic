@@ -174,7 +174,7 @@ importers:
       '@emotion/css': ^11.9.0
       '@floating-ui/react': ^0.24.0
       '@internationalized/date': ^3.5.0
-      '@keystar/ui': ^0.4.5
+      '@keystar/ui': ^0.4.6
       '@keystar/ui-storybook': ^0.0.1
       '@react-aria/actiongroup': ^3.6.4
       '@react-aria/breadcrumbs': ^3.5.7
@@ -718,7 +718,7 @@ importers:
   packages/astro:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.2.5
+      '@keystatic/core': ^0.2.6
       '@types/cookie': ^0.5.1
       '@types/react': ^18.2.8
       '@types/set-cookie-parser': ^2.4.2
@@ -764,7 +764,7 @@ importers:
       '@emotion/weak-memoize': ^0.3.0
       '@floating-ui/react': ^0.24.0
       '@internationalized/string': ^3.1.1
-      '@keystar/ui': ^0.4.5
+      '@keystar/ui': ^0.4.6
       '@markdoc/markdoc': ^0.3.0
       '@react-aria/focus': ^3.14.3
       '@react-aria/i18n': ^3.8.0
@@ -934,7 +934,7 @@ importers:
   packages/next:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.2.0
+      '@keystatic/core': ^0.2.6
       '@types/react': ^18.2.8
       chokidar: ^3.5.3
       next: ^14.0.0
@@ -955,7 +955,7 @@ importers:
   packages/remix:
     specifiers:
       '@babel/runtime': ^7.18.3
-      '@keystatic/core': ^0.2.5
+      '@keystatic/core': ^0.2.6
       '@remix-run/react': ^2.3.0
       '@types/react': ^18.2.8
       react: ^18.2.0

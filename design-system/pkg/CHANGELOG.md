@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.4.6
+
+### Patch Changes
+
+- d76af081: Fix default exports in Node ESM
+
 ## 0.4.5
 
 ### Patch Changes
