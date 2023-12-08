@@ -119,9 +119,11 @@ export function getCustomNodeSpecs(
             ];
           },
           insertMenu: {
-            label: name,
+            label: component.label,
             command: insertNode,
             forToolbar: true,
+            description: component.description,
+            icon: component.icon,
           },
         };
       } else if (component.kind === 'wrapper') {
@@ -231,9 +233,11 @@ export function getCustomNodeSpecs(
             },
           ],
           insertMenu: {
-            label: name,
+            label: component.label,
             command: insertNode,
             forToolbar: true,
+            description: component.description,
+            icon: component.icon,
           },
         };
       } else if (component.kind === 'inline') {
@@ -285,9 +289,11 @@ export function getCustomNodeSpecs(
             rendersOwnContent: false,
           },
           insertMenu: {
-            label: name,
+            label: component.label,
             command: insertNode,
             forToolbar: true,
+            description: component.description,
+            icon: component.icon,
           },
         };
       }
