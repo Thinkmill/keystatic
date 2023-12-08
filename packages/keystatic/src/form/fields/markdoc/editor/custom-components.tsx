@@ -99,8 +99,9 @@ export function getCustomNodeSpecs(
             {
               tag: `div[data-component="${name}"]`,
               getAttrs(node) {
+                console.log(node);
                 if (typeof node === 'string') return false;
-                const props = node.getAttribute('data-props');
+                const props = node.dataset.props;
                 if (!props) return false;
                 return {
                   props: JSON.parse(props),
@@ -215,6 +216,20 @@ export function getCustomNodeSpecs(
               0,
             ];
           },
+          parseDOM: [
+            {
+              tag: `div[data-component="${name}"]`,
+              getAttrs(node) {
+                console.log(node);
+                if (typeof node === 'string') return false;
+                const props = node.dataset.props;
+                if (!props) return false;
+                return {
+                  props: JSON.parse(props),
+                };
+              },
+            },
+          ],
           insertMenu: {
             label: name,
             command: insertNode,
