@@ -1,7 +1,14 @@
 import { config, fields, collection, singleton } from '@keystatic/core';
 import { __experimental_markdoc_field } from '@keystatic/core/form/fields/markdoc';
 import { cloudImage } from '@keystatic/core/component-blocks';
+import {
+  block,
+  inline,
+  mark,
+  wrapper,
+} from '@keystatic/core/content-components';
 import { Config } from '@markdoc/markdoc';
+import { highlighterIcon } from '@keystar/ui/icon/icons/highlighterIcon';
 
 import { aside, embed, fieldDemo, tags } from './src/component-blocks';
 
@@ -368,6 +375,30 @@ export default config({
         content: __experimental_markdoc_field({
           label: 'Content',
           config: markdocConfig,
+          components: {
+            something: block({
+              label: 'Something',
+              schema: {
+                text: fields.text({ label: 'Text' }),
+              },
+            }),
+            'inline-thing': inline({
+              label: 'Inline thing',
+              schema: {
+                something: fields.text({ label: 'Something' }),
+              },
+            }),
+            highlight: mark({
+              label: 'Highlight',
+              icon: highlighterIcon,
+              schema: {},
+              tag: 'mark',
+            }),
+            wrapper: wrapper({
+              label: 'Wrapper',
+              schema: {},
+            }),
+          },
         }),
       },
     }),
