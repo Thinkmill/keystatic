@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/templates-astro",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "license": "MIT",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
@@ -10,13 +10,13 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/markdoc": "^0.5.0",
-    "@astrojs/react": "^3.0.0",
-    "@keystatic/astro": "^2.0.0",
-    "@keystatic/core": "^0.2.0",
+    "@astrojs/markdoc": "^0.8.0",
+    "@astrojs/react": "^3.0.7",
+    "@keystatic/astro": "^2.0.1",
+    "@keystatic/core": "^0.2.5",
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.0.11",
-    "astro": "^3.0.3",
+    "astro": "^4.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }

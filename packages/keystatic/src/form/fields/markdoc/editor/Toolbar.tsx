@@ -1,6 +1,7 @@
 import { setBlockType, toggleMark, wrapIn } from 'prosemirror-commands';
 import { MarkType, NodeType } from 'prosemirror-model';
 import { Command, EditorState, TextSelection } from 'prosemirror-state';
+import { liftTarget } from 'prosemirror-transform';
 import { HTMLAttributes, ReactElement, ReactNode, useMemo } from 'react';
 
 import { ActionButton } from '@keystar/ui/button';
@@ -100,7 +101,25 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
             <TooltipTrigger>
               <ToolbarButton
                 aria-label="Quote"
-                command={wrapIn(nodes.blockquote)}
+                command={(state, dispatch) => {
+                  const hasQuote = typeInSelection(nodes.blockquote)(state);
+                  if (hasQuote) {
+                    const { $from, $to } = state.selection;
+                    const range = $from.blockRange(
+                      $to,
+                      node => node.type === nodes.blockquote
+                    );
+                    if (!range) return false;
+                    const target = liftTarget(range);
+                    if (target === null) return false;
+                    if (dispatch) {
+                      dispatch(state.tr.lift(range, target).scrollIntoView());
+                    }
+                    return true;
+                  } else {
+                    return wrapIn(nodes.blockquote)(state, dispatch);
+                  }
+                }}
                 isSelected={typeInSelection(nodes.blockquote)}
               >
                 <Icon src={quoteIcon} />

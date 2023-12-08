@@ -275,11 +275,13 @@ export default config({
             label: 'Resource type',
             options: [
               { label: 'YouTube video', value: 'youtube-video' },
+              { label: 'YouTube playlist', value: 'youtube-playlist' },
               { label: 'Article', value: 'article' },
             ],
             defaultValue: 'youtube-video',
           }),
           {
+            // Single videos
             'youtube-video': fields.object({
               videoId: fields.text({
                 label: 'Video ID',
@@ -304,6 +306,24 @@ export default config({
                 validation: { length: { min: 1 } },
               }),
             }),
+            // Playlists
+            'youtube-playlist': fields.object({
+              playlistId: fields.text({
+                label: 'Playlist ID',
+                description: 'The ID of the playlist (not the URL!)',
+                validation: { length: { min: 1 } },
+              }),
+              thumbnail: fields.cloudImage({
+                label: 'Video thumbnail',
+                description: 'A 16/9 thumbnail image for the video.',
+              }),
+              description: fields.text({
+                label: 'Playlist description',
+                multiline: true,
+                validation: { length: { min: 1 } },
+              }),
+            }),
+            // Articles
             article: fields.object({
               url: fields.url({
                 label: 'Article URL',
