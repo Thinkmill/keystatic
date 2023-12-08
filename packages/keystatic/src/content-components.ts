@@ -10,7 +10,6 @@ type WrapperComponentConfig<Schema extends Record<string, ComponentSchema>> = {
   description?: string;
   icon?: ReactElement;
   schema: Schema;
-  content: string;
 } & (
   | {
       ContentView?: (props: {
