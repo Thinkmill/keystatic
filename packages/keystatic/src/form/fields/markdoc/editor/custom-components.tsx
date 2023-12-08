@@ -47,7 +47,14 @@ export function getCustomNodeSpecs(
                     }
                     borderRadius="regular"
                   >
-                    <Flex justifyContent="space-between">
+                    <Flex
+                      justifyContent="space-between"
+                      borderBottom={
+                        props.hasNodeSelection
+                          ? 'color.alias.borderSelected'
+                          : 'color.alias.borderIdle'
+                      }
+                    >
                       {name}
                       {!!Object.keys(component.schema).length && (
                         <Button
@@ -60,6 +67,9 @@ export function getCustomNodeSpecs(
                         </Button>
                       )}
                     </Flex>
+                    {'ContentView' in component && component.ContentView && (
+                      <component.ContentView value={props.node.attrs.props} />
+                    )}
                   </Box>
                   <DialogContainer
                     onDismiss={() => {
@@ -172,7 +182,13 @@ export function getCustomNodeSpecs(
                         </Button>
                       )}
                     </Flex>
-                    {props.children}
+                    {'ContentView' in component && component.ContentView ? (
+                      <component.ContentView value={props.node.attrs.props}>
+                        {props.children}
+                      </component.ContentView>
+                    ) : (
+                      props.children
+                    )}
                   </Box>
                   <DialogContainer
                     onDismiss={() => {
