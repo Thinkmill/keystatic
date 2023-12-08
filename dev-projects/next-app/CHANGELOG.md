@@ -1,5 +1,30 @@
 # @keystatic/test-next-app
 
+## 0.0.94
+
+### Patch Changes
+
+- 7a98fd68: Update "@example/next-app" config; introduce object layouts.
+- Updated dependencies [13206393]
+- Updated dependencies [0ca7f47a]
+- Updated dependencies [0ca7f47a]
+- Updated dependencies [7a98fd68]
+- Updated dependencies [13206393]
+- Updated dependencies [56b6b121]
+- Updated dependencies [56b6b121]
+- Updated dependencies [bd28cfd4]
+- Updated dependencies [0e81263b]
+- Updated dependencies [267845b1]
+- Updated dependencies [3288c624]
+- Updated dependencies [bd28cfd4]
+- Updated dependencies [e32ff596]
+- Updated dependencies [3288c624]
+- Updated dependencies [16bd7064]
+- Updated dependencies [e1c9e0cf]
+- Updated dependencies [267845b1]
+  - @keystatic/core@0.2.5
+  - @keystar/ui@0.4.5
+
 ## 0.0.93
 
 ### Patch Changes
