@@ -77,7 +77,7 @@ function wrapInsertMenuCommand(command: Command): Command {
   };
 }
 
-function childRenderer(item: InsertMenuItem) {
+export function itemRenderer(item: InsertMenuItem) {
   return (
     <Item key={item.id} textValue={item.label}>
       <Text>{item.label}</Text>
@@ -118,7 +118,7 @@ function InsertMenu(props: { query: string; from: number; to: number }) {
       to={props.to}
       aria-label="Insert menu"
       items={options}
-      children={childRenderer}
+      children={itemRenderer}
       onEscape={() => {
         const tr = removeAutocompleteDecorationAndContent(editorState);
         if (!tr) return;

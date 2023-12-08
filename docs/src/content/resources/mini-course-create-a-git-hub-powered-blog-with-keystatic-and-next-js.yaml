@@ -1,0 +1,15 @@
+title: 'Mini Course: Create a GitHub-Powered Blog With Keystatic and Next.js'
+type:
+  discriminant: youtube-playlist
+  value:
+    playlistId: PLHrxuCR-0CcSmkyLcmdV7Ruql8DTm644k
+    thumbnail:
+      src: >-
+        https://thinkmill-labs.keystatic.net/keystatic-site/images/tqo28xdnifzt/playlist-thumbnail
+      alt: Thumbnail of YouTube Playlist
+      height: 900
+      width: 1600
+    description: >-
+      In this mini-course, you'll create a simple blog from scratch with
+      Keystatic and Next.js 14.
+sortIndex: 0

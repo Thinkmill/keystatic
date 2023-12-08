@@ -92,7 +92,7 @@ navGroups:
         link:
           discriminant: page
           value: reader-api
-        isNew: false
+        isNew: true
       - label: Format options
         link:
           discriminant: page
@@ -169,7 +169,7 @@ navGroups:
         link:
           discriminant: page
           value: fields/image
-        isNew: false
+        isNew: true
       - label: Integer
         link:
           discriminant: page
