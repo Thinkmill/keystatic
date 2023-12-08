@@ -155,6 +155,7 @@ export function getCustomNodeSpecs(
                           ? 'color.alias.borderSelected'
                           : 'color.alias.borderIdle'
                       }
+                      contentEditable={false}
                     >
                       {name}
                       {!!Object.keys(component.schema).length && (
