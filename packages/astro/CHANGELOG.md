@@ -1,5 +1,11 @@
 # @keystatic/astro
 
+## 0.0.0-test-20231208045819
+
+### Patch Changes
+
+- 8cc8b9da: Fix build error
+
 ## 2.0.2
 
 ### Patch Changes
