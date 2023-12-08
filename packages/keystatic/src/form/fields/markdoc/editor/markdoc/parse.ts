@@ -198,12 +198,23 @@ function parseAnnotations(node: MarkdocNode): ProseMirrorNode[] {
 
 const wrapInParagraph =
   (schema: EditorSchema) => (children: ProseMirrorNode[]) => {
-    return children.map(x => {
-      if (x.isInline) {
-        return schema.nodes.paragraph.createAndFill({}, [x])!;
+    const newChildren: ProseMirrorNode[] = [];
+    let inlineQueue: ProseMirrorNode[] = [];
+    for (const child of children) {
+      if (child.isInline) {
+        inlineQueue.push(child);
+        continue;
       }
-      return x;
-    });
+      if (inlineQueue.length) {
+        newChildren.push(schema.nodes.paragraph.createChecked({}, inlineQueue));
+        inlineQueue = [];
+      }
+      newChildren.push(child);
+    }
+    if (inlineQueue.length) {
+      newChildren.push(schema.nodes.paragraph.createChecked({}, inlineQueue));
+    }
+    return newChildren;
   };
 
 function markdocNodeToProseMirrorNode(

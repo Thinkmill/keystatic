@@ -86,7 +86,7 @@ export type EditorNodeSpec = NodeSpec &
   WithInsertMenuNodeSpec &
   WithReactNodeViewSpec;
 
-const inlineContent = `(text | image | inline_component | (text hard_break) | attribute)*`;
+const inlineContent = `(text | inline_component | (text hard_break) | attribute)*`;
 
 const levels = [1, 2, 3, 4, 5, 6];
 const levelsMeta = [
@@ -458,7 +458,7 @@ const nodeSpecs = {
   },
   image: {
     content: '',
-    group: 'inline',
+    group: 'inline inline_component',
     inline: true,
     attrs: {
       src: {},
