@@ -7,7 +7,6 @@ import {
   mark,
   wrapper,
 } from '@keystatic/core/content-components';
-import { Config } from '@markdoc/markdoc';
 import { highlighterIcon } from '@keystar/ui/icon/icons/highlighterIcon';
 
 import { aside, embed, fieldDemo, tags } from './src/component-blocks';
@@ -27,55 +26,6 @@ const formatting = {
   listTypes: true,
   inlineMarks: true,
 } as const;
-
-const markdocConfig: Config = {
-  tags: {
-    aside: {
-      render: 'Aside',
-      attributes: {
-        icon: {
-          type: String,
-          required: true,
-        },
-      },
-    },
-    'cloud-image': {
-      render: 'CloudImage',
-      attributes: {
-        href: {
-          type: String,
-          required: true,
-        },
-        alt: {
-          type: String,
-        },
-      },
-    },
-    tags: {
-      render: 'Tags',
-      attributes: {
-        tags: {
-          type: Array,
-          validate(value) {
-            if (
-              !Array.isArray(value) ||
-              value.some(v => typeof v !== 'string')
-            ) {
-              return [
-                {
-                  message: 'tags must be text',
-                  id: 'tags-text',
-                  level: 'critical',
-                },
-              ];
-            }
-            return [];
-          },
-        },
-      },
-    },
-  },
-};
 
 const shouldUseCloudStorage = process.env.NODE_ENV === 'production';
 
@@ -375,7 +325,6 @@ export default config({
         }),
         content: __experimental_markdoc_field({
           label: 'Content',
-          config: markdocConfig,
           components: {
             tags: block({
               label: 'Tags',
