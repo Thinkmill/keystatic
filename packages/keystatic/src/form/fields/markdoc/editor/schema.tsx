@@ -671,7 +671,9 @@ export function createEditorSchema(
       }
     }
   }
-  for (const [tagName, tagConfig] of Object.entries(markdocConfig.tags ?? {})) {
+  for (const [tagName, tagConfig] of Object.entries(
+    markdocConfig?.tags ?? {}
+  )) {
     const attributes: Node[] = [];
     for (const [attrName, attrConfig] of Object.entries(
       tagConfig.attributes ?? {}

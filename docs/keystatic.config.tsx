@@ -1,5 +1,8 @@
 import { config, fields, collection, singleton } from '@keystatic/core';
-import { __experimental_markdoc_field } from '@keystatic/core/form/fields/markdoc';
+import {
+  __experimental_markdoc_field,
+  __experimental_markdoc_field_cloudImageBlock,
+} from '@keystatic/core/form/fields/markdoc';
 import { cloudImage } from '@keystatic/core/component-blocks';
 import {
   block,
@@ -414,7 +417,7 @@ export default config({
                 );
               },
             }),
-            Aside: wrapper({
+            aside: wrapper({
               label: 'Aside',
               schema: {
                 icon: fields.text({
@@ -435,6 +438,9 @@ export default config({
               schema: {
                 text: fields.text({ label: 'Text' }),
               },
+            }),
+            'cloud-image': __experimental_markdoc_field_cloudImageBlock({
+              label: 'Cloud Image',
             }),
             'inline-thing': inline({
               label: 'Inline thing',

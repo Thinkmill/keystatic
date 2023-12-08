@@ -3,8 +3,8 @@ import { Button } from '@keystar/ui/button';
 import { DialogContainer, Dialog } from '@keystar/ui/dialog';
 import { Box, Flex } from '@keystar/ui/layout';
 import { Heading } from '@keystar/ui/typography';
-import { MarkSpec } from 'prosemirror-model';
-import { useState } from 'react';
+import { MarkSpec, Node } from 'prosemirror-model';
+import { ReactNode, useMemo, useState } from 'react';
 import { getInitialPropsValue } from '../../../initial-values';
 import { FormValue } from './FormValue';
 import { insertNode } from './commands/misc';
@@ -12,6 +12,95 @@ import { useEditorDispatchCommand } from './editor-view';
 import { EditorNodeSpec } from './schema';
 import { classes } from './utils';
 import { ContentComponent } from '../../../../content-components';
+
+function BlockDataWrapper(props: { node: Node; children: ReactNode }) {
+  return (
+    <div
+      data-component={props.node.type.name}
+      data-props={JSON.stringify(props.node.attrs.props)}
+    >
+      {props.children}
+    </div>
+  );
+}
+
+function BlockWrapper(props: {
+  node: Node;
+  hasNodeSelection: boolean;
+  component: ContentComponent;
+  children: ReactNode;
+  pos: number;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const runCommand = useEditorDispatchCommand();
+  const schema = useMemo(
+    () => ({ kind: 'object' as const, fields: props.component.schema }),
+    [props.component.schema]
+  );
+  return (
+    <>
+      <Box
+        className={`${classes.blockParent} ${css({
+          marginBlock: '1em',
+        })}`}
+        border={
+          props.hasNodeSelection
+            ? 'color.alias.borderSelected'
+            : 'color.alias.borderIdle'
+        }
+        borderRadius="regular"
+      >
+        <Flex
+          justifyContent="space-between"
+          borderBottom={
+            props.hasNodeSelection
+              ? 'color.alias.borderSelected'
+              : 'color.alias.borderIdle'
+          }
+          contentEditable={false}
+        >
+          {props.component.label}
+          {!!Object.keys(props.component.schema).length && (
+            <Button
+              prominence="low"
+              onPress={() => {
+                setIsOpen(true);
+              }}
+            >
+              Edit
+            </Button>
+          )}
+        </Flex>
+        {props.children}
+      </Box>
+      <DialogContainer
+        onDismiss={() => {
+          setIsOpen(false);
+        }}
+      >
+        {isOpen && (
+          <Dialog>
+            <Heading>Edit {props.component.label}</Heading>
+            <FormValue
+              schema={schema}
+              value={props.node.attrs.props}
+              onSave={value => {
+                runCommand((state, dispatch) => {
+                  if (dispatch) {
+                    dispatch(
+                      state.tr.setNodeAttribute(props.pos, 'props', value)
+                    );
+                  }
+                  return true;
+                });
+              }}
+            />
+          </Dialog>
+        )}
+      </DialogContainer>
+    </>
+  );
+}
 
 export function getCustomNodeSpecs(
   components: Record<string, ContentComponent>
@@ -30,77 +119,60 @@ export function getCustomNodeSpecs(
           attrs: { props: { default: getInitialPropsValue(schema) } },
           reactNodeView: {
             component: function Block(props) {
-              const [isOpen, setIsOpen] = useState(false);
               const runCommand = useEditorDispatchCommand();
               return (
-                <>
-                  <Box
-                    data-component={name}
-                    data-props={JSON.stringify(props.node.attrs.props)}
-                    className={`${classes.blockParent} ${css({
-                      marginBlock: '1em',
-                    })}`}
-                    border={
-                      props.hasNodeSelection
-                        ? 'color.alias.borderSelected'
-                        : 'color.alias.borderIdle'
-                    }
-                    borderRadius="regular"
-                  >
-                    <Flex
-                      justifyContent="space-between"
-                      borderBottom={
-                        props.hasNodeSelection
-                          ? 'color.alias.borderSelected'
-                          : 'color.alias.borderIdle'
+                <BlockDataWrapper node={props.node}>
+                  {'NodeView' in component && component.NodeView ? (
+                    <component.NodeView
+                      isSelected={
+                        props.hasNodeSelection ||
+                        props.isNodeCompletelyWithinSelection
                       }
+                      onRemove={() => {
+                        runCommand((state, dispatch) => {
+                          if (dispatch) {
+                            dispatch(
+                              state.tr.delete(
+                                props.pos,
+                                props.pos + props.node.nodeSize
+                              )
+                            );
+                          }
+                          return true;
+                        });
+                      }}
+                      onChange={value => {
+                        runCommand((state, dispatch) => {
+                          if (dispatch) {
+                            dispatch(
+                              state.tr.setNodeAttribute(
+                                props.pos,
+                                'props',
+                                value
+                              )
+                            );
+                          }
+                          return true;
+                        });
+                      }}
+                      value={props.node.attrs.props}
+                    />
+                  ) : (
+                    <BlockWrapper
+                      node={props.node}
+                      hasNodeSelection={
+                        props.hasNodeSelection ||
+                        props.isNodeCompletelyWithinSelection
+                      }
+                      component={component}
+                      pos={props.pos}
                     >
-                      {name}
-                      {!!Object.keys(component.schema).length && (
-                        <Button
-                          prominence="low"
-                          onPress={() => {
-                            setIsOpen(true);
-                          }}
-                        >
-                          Edit
-                        </Button>
+                      {'ContentView' in component && component.ContentView && (
+                        <component.ContentView value={props.node.attrs.props} />
                       )}
-                    </Flex>
-                    {'ContentView' in component && component.ContentView && (
-                      <component.ContentView value={props.node.attrs.props} />
-                    )}
-                  </Box>
-                  <DialogContainer
-                    onDismiss={() => {
-                      setIsOpen(false);
-                    }}
-                  >
-                    {isOpen && (
-                      <Dialog>
-                        <Heading>Edit {name}</Heading>
-                        <FormValue
-                          schema={schema}
-                          value={props.node.attrs.props}
-                          onSave={value => {
-                            runCommand((state, dispatch) => {
-                              if (dispatch) {
-                                dispatch(
-                                  state.tr.setNodeAttribute(
-                                    props.pos,
-                                    'props',
-                                    value
-                                  )
-                                );
-                              }
-                              return true;
-                            });
-                          }}
-                        />
-                      </Dialog>
-                    )}
-                  </DialogContainer>
-                </>
+                    </BlockWrapper>
+                  )}
+                </BlockDataWrapper>
               );
             },
             rendersOwnContent: false,
@@ -144,82 +216,66 @@ export function getCustomNodeSpecs(
           attrs: { props: { default: getInitialPropsValue(schema) } },
           reactNodeView: {
             component: function Block(props) {
-              const [isOpen, setIsOpen] = useState(false);
               const runCommand = useEditorDispatchCommand();
               return (
-                <>
-                  <Box
-                    data-component={name}
-                    data-props={JSON.stringify(props.node.attrs.props)}
-                    className={`${classes.blockParent} ${css({
-                      marginBlock: '1em',
-                    })}`}
-                    border={
-                      props.hasNodeSelection
-                        ? 'color.alias.borderSelected'
-                        : 'color.alias.borderIdle'
-                    }
-                    borderRadius="regular"
-                  >
-                    <Flex
-                      justifyContent="space-between"
-                      borderBottom={
-                        props.hasNodeSelection
-                          ? 'color.alias.borderSelected'
-                          : 'color.alias.borderIdle'
+                <BlockDataWrapper node={props.node}>
+                  {'NodeView' in component && component.NodeView ? (
+                    <component.NodeView
+                      isSelected={
+                        props.hasNodeSelection ||
+                        props.isNodeCompletelyWithinSelection
                       }
-                      contentEditable={false}
+                      onRemove={() => {
+                        runCommand((state, dispatch) => {
+                          if (dispatch) {
+                            dispatch(
+                              state.tr.delete(
+                                props.pos,
+                                props.pos + props.node.nodeSize
+                              )
+                            );
+                          }
+                          return true;
+                        });
+                      }}
+                      onChange={value => {
+                        runCommand((state, dispatch) => {
+                          if (dispatch) {
+                            dispatch(
+                              state.tr.setNodeAttribute(
+                                props.pos,
+                                'props',
+                                value
+                              )
+                            );
+                          }
+                          return true;
+                        });
+                      }}
+                      value={props.node.attrs.props}
                     >
-                      {name}
-                      {!!Object.keys(component.schema).length && (
-                        <Button
-                          prominence="low"
-                          onPress={() => {
-                            setIsOpen(true);
-                          }}
-                        >
-                          Edit
-                        </Button>
+                      {props.children}
+                    </component.NodeView>
+                  ) : (
+                    <BlockWrapper
+                      node={props.node}
+                      hasNodeSelection={
+                        props.hasNodeSelection ||
+                        props.isNodeCompletelyWithinSelection
+                      }
+                      component={component}
+                      pos={props.pos}
+                    >
+                      {'ContentView' in component && component.ContentView ? (
+                        <component.ContentView value={props.node.attrs.props}>
+                          {props.children}
+                        </component.ContentView>
+                      ) : (
+                        props.children
                       )}
-                    </Flex>
-                    {'ContentView' in component && component.ContentView ? (
-                      <component.ContentView value={props.node.attrs.props}>
-                        {props.children}
-                      </component.ContentView>
-                    ) : (
-                      props.children
-                    )}
-                  </Box>
-                  <DialogContainer
-                    onDismiss={() => {
-                      setIsOpen(false);
-                    }}
-                  >
-                    {isOpen && (
-                      <Dialog>
-                        <Heading>Edit {name}</Heading>
-                        <FormValue
-                          schema={schema}
-                          value={props.node.attrs.props}
-                          onSave={value => {
-                            runCommand((state, dispatch) => {
-                              if (dispatch) {
-                                dispatch(
-                                  state.tr.setNodeAttribute(
-                                    props.pos,
-                                    'props',
-                                    value
-                                  )
-                                );
-                              }
-                              return true;
-                            });
-                          }}
-                        />
-                      </Dialog>
-                    )}
-                  </DialogContainer>
-                </>
+                    </BlockWrapper>
+                  )}
+                </BlockDataWrapper>
               );
             },
             rendersOwnContent: false,

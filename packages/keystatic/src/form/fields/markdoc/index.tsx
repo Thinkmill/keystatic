@@ -13,7 +13,12 @@ import {
 } from '#field-ui/markdoc';
 import type { EditorSchema } from './editor/schema';
 import type { EditorState } from 'prosemirror-state';
-import { ContentComponent } from '../../../content-components';
+import { ContentComponent, block } from '../../../content-components';
+import { cloudImageSchema } from '../../../component-blocks/cloud-image-schema';
+import {
+  CloudImagePreviewForNewEditor,
+  cloudImageToolbarIcon,
+} from '#cloud-image-preview';
 
 const textDecoder = new TextDecoder();
 
@@ -74,6 +79,17 @@ export function __experimental_markdoc_field({
       },
     },
   };
+}
+
+export function __experimental_markdoc_field_cloudImageBlock(args: {
+  label: string;
+}) {
+  return block({
+    label: args.label,
+    schema: cloudImageSchema,
+    NodeView: CloudImagePreviewForNewEditor,
+    icon: cloudImageToolbarIcon,
+  });
 }
 
 export declare namespace __experimental_markdoc_field {
