@@ -365,7 +365,6 @@ function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
       ) {
         continue;
       }
-      console.log(name);
       const mark = schema.schema.marks[name];
       const aroundFrom = markAround(state.selection.$from, mark);
       const aroundTo = markAround(state.selection.$to, mark);
