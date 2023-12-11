@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.2.7
+
+### Patch Changes
+
+- 904158b0: Fix marks with leading and trailing spaces
+- Updated dependencies [90fd3809]
+  - @keystar/ui@0.4.7
+
 ## 0.2.6
 
 ### Patch Changes
