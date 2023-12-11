@@ -12,6 +12,8 @@ import { useEditorDispatchCommand } from './editor-view';
 import { EditorNodeSpec } from './schema';
 import { classes } from './utils';
 import { ContentComponent } from '../../../../content-components';
+import { NodeSelection } from 'prosemirror-state';
+import { tokenSchema } from '@keystar/ui/style';
 
 function BlockDataWrapper(props: { node: Node; children: ReactNode }) {
   return (
@@ -40,8 +42,21 @@ function BlockWrapper(props: {
   return (
     <>
       <Box
-        className={`${classes.blockParent} ${css({
+        UNSAFE_className={`${classes.blockParent} ${css({
           marginBlock: '1em',
+          position: 'relative',
+          ...(props.hasNodeSelection
+            ? {
+                '&::after': {
+                  backgroundColor: tokenSchema.color.alias.backgroundSelected,
+                  borderRadius: tokenSchema.size.radius.regular,
+                  content: "''",
+                  inset: 0,
+                  pointerEvents: 'none',
+                  position: 'absolute',
+                },
+              }
+            : {}),
         })}`}
         border={
           props.hasNodeSelection
@@ -51,7 +66,6 @@ function BlockWrapper(props: {
         borderRadius="regular"
       >
         <Flex
-          justifyContent="space-between"
           borderBottom={
             props.hasNodeSelection
               ? 'color.alias.borderSelected'
@@ -59,7 +73,25 @@ function BlockWrapper(props: {
           }
           contentEditable={false}
         >
-          {props.component.label}
+          <Box
+            flex={1}
+            // this onClick is on a div because it's purely for mouse usage
+            // the node can be selected with a keyboard via arrow keys
+            onClick={() => {
+              runCommand((state, dispatch) => {
+                if (dispatch) {
+                  dispatch(
+                    state.tr.setSelection(
+                      NodeSelection.create(state.doc, props.pos)
+                    )
+                  );
+                }
+                return true;
+              });
+            }}
+          >
+            {props.component.label}
+          </Box>
           {!!Object.keys(props.component.schema).length && (
             <Button
               prominence="low"
