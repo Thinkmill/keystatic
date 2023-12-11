@@ -10,7 +10,6 @@ import { InputRule } from './inputrules';
 import { shortcuts, simpleMarkShortcuts } from './shortcuts';
 import { MarkType, Node } from 'prosemirror-model';
 import { insertMenuInputRule } from '../autocomplete/insert-menu';
-import { attributeMenuInputRule } from '../attributes/new-attribute';
 
 const textShortcutRules = Object.entries(shortcuts).map(
   ([shortcut, replacement]): InputRule => ({
@@ -103,7 +102,6 @@ export function inputRulesForSchema({ nodes, marks }: EditorSchema) {
   });
 
   rules.push(insertMenuInputRule);
-  rules.push(attributeMenuInputRule);
   return rules;
 }
 

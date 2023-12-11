@@ -82,17 +82,13 @@ function createAndFill(
   markdocNode: MarkdocNode,
   nodeType: NodeType,
   attrs: Record<string, any>,
-  extraChildren?: ProseMirrorNode[],
   mapChildren?: (children: ProseMirrorNode[]) => ProseMirrorNode[]
 ) {
   let children = childrenToProseMirrorNodes(markdocNode.children, nodeType);
   if (mapChildren) {
     children = mapChildren(children);
   }
-  const node = nodeType.createAndFill(
-    attrs,
-    extraChildren ? [...children, ...extraChildren] : children
-  );
+  const node = nodeType.createAndFill(attrs, children);
   if (!node) {
     error({
       error: {
@@ -148,52 +144,6 @@ export function markdocToProseMirror(
   } finally {
     state = undefined;
   }
-}
-
-function parseAnnotations(node: MarkdocNode): ProseMirrorNode[] {
-  const schema = getSchema();
-  return node.annotations.map((x): ProseMirrorNode => {
-    if (x.type === 'id') {
-      return schema.nodes.attribute.createChecked({ name: 'id' }, [
-        schema.nodes.attribute_string.createChecked(null, [
-          schema.schema.text(x.name),
-        ]),
-      ]);
-    }
-    if (x.type === 'class') {
-      return schema.nodes.attribute.createChecked({ name: 'class' }, [
-        schema.nodes.attribute_string.createChecked(null, [
-          schema.schema.text(x.name),
-        ]),
-      ]);
-    }
-    let val: undefined | ProseMirrorNode;
-    if (typeof x.value === 'string') {
-      val = schema.nodes.attribute_string.createChecked(null, [
-        schema.schema.text(x.value),
-      ]);
-    }
-    if (x.value === true) {
-      val = schema.nodes.attribute_true.createChecked();
-    }
-    if (x.value === false) {
-      val = schema.nodes.attribute_false.createChecked();
-    }
-    if (val === undefined) {
-      error({
-        error: {
-          id: 'unimplemented-annotation',
-          level: 'critical',
-          message: `currently, only string and boolean annotations are implemented (got ${x.value})`,
-        },
-        lines: node.lines,
-        type: node.type,
-        location: node.location,
-      });
-      return schema.nodes.attribute.createAndFill({ name: x.name })!;
-    }
-    return schema.nodes.attribute.createChecked({ name: x.name }, [val]);
-  });
 }
 
 const wrapInParagraph =
@@ -275,22 +225,12 @@ function markdocNodeToProseMirrorNode(
     return createAndFill(node, schema.nodes.blockquote, {});
   }
   if (node.type === 'heading') {
-    return createAndFill(
-      node,
-      schema.nodes.heading,
-      {
-        level: node.attributes.level,
-      },
-      parseAnnotations(node)
-    );
+    return createAndFill(node, schema.nodes.heading, {
+      level: node.attributes.level,
+    });
   }
   if (node.type === 'paragraph') {
-    return createAndFill(
-      node,
-      schema.nodes.paragraph,
-      {},
-      parseAnnotations(node)
-    );
+    return createAndFill(node, schema.nodes.paragraph, {});
   }
   if (node.type === 'comment') {
     return [];
@@ -327,7 +267,6 @@ function markdocNodeToProseMirrorNode(
       node,
       schema.nodes.list_item,
       {},
-      undefined,
       wrapInParagraph(schema)
     );
   }
@@ -354,7 +293,6 @@ function markdocNodeToProseMirrorNode(
       node,
       schema.nodes.table_header,
       {},
-      undefined,
       wrapInParagraph(schema)
     );
   }
@@ -363,7 +301,6 @@ function markdocNodeToProseMirrorNode(
       node,
       schema.nodes.table_cell,
       {},
-      undefined,
       wrapInParagraph(schema)
     );
   }
@@ -410,37 +347,7 @@ function markdocNodeToProseMirrorNode(
       }
       return pmNode;
     }
-    const tagChildren = [
-      schema.nodes.tag_attributes.createChecked(null, parseAnnotations(node)),
-      ...Object.entries(node.slots).map(
-        ([slotName, slotContent]) => (
-          console.log(slotContent),
-          schema.nodes.tag_slot.createChecked(
-            { name: slotName },
-            childrenToProseMirrorNodes([slotContent], schema.nodes.tag_slot)
-          )
-        )
-      ),
-      ...children,
-    ];
-
-    const pmNode = schema.nodes.tag.createChecked(
-      { name: node.tag },
-      tagChildren
-    );
-    if (!pmNode) {
-      error({
-        error: {
-          id: 'unexpected-children',
-          level: 'critical',
-          message: `${node.type} has unexpected children`,
-        },
-        lines: node.lines,
-        type: node.type,
-        location: node.location,
-      });
-    }
-    return pmNode;
+    return schema.nodes.paragraph.createChecked({}, children);
   }
   if (node.type === 'image') {
     const fileContents = getState().files.get(node.attributes.src);

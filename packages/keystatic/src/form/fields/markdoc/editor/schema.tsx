@@ -19,12 +19,9 @@ import {
   Schema,
   NodeType,
   MarkType,
-  Node,
-  Slice,
-  Fragment,
   AttributeSpec,
 } from 'prosemirror-model';
-import { classes, markdocIdentifierPattern, nodeWithBorder } from './utils';
+import { classes } from './utils';
 import {
   InsertMenuItem,
   WithInsertMenuNodeSpec,
@@ -33,9 +30,7 @@ import { setBlockType, wrapIn } from 'prosemirror-commands';
 import { insertNode, insertTable } from './commands/misc';
 import { toggleList } from './lists';
 import { Config } from '@markdoc/markdoc';
-import { attributeSchema } from './attributes/schema';
 import { independentForGapCursor } from './gapcursor/gapcursor';
-import { ReplaceAroundStep } from 'prosemirror-transform';
 import { WithReactNodeViewSpec } from './react-node-views';
 import { ContentComponent } from '../../../../content-components';
 import { getCustomMarkSpecs, getCustomNodeSpecs } from './custom-components';
@@ -148,130 +143,6 @@ const nodeSpecs = {
   },
   text: {
     group: 'inline',
-  },
-  tag_attributes: {
-    content: 'attribute*',
-    selectable: false,
-    defining: true,
-    parseDOM: [{ tag: '[data-markdoc-attributes]' }],
-    toDOM() {
-      return [
-        'div',
-        {
-          'data-markdoc-attributes': '1',
-          class: css({
-            display: 'block',
-            backgroundColor: tokenSchema.color.background.surface,
-            paddingInline: 0,
-            borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
-          }),
-        },
-        [
-          'span',
-          {
-            'data-tag-name': 'true',
-            class: css({
-              '::before': {
-                display: 'inline-block',
-                width: 'auto',
-                content: 'var(--tag-name)',
-                verticalAlign: 'top',
-                backgroundColor: tokenSchema.color.background.surfaceTertiary,
-                paddingInline: tokenSchema.size.space.small,
-                borderRight: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
-                borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
-                borderEndEndRadius: tokenSchema.size.radius.small,
-                [`.${classes.nodeSelection} > > &`]: {
-                  borderColor: tokenSchema.color.alias.borderSelected,
-                },
-              },
-            }),
-          },
-        ],
-        [
-          'span',
-          {
-            class: css({
-              display: 'inline-block',
-              padding: tokenSchema.size.space.small,
-            }),
-          },
-          0,
-        ],
-      ];
-    },
-  },
-  tag_slot: {
-    attrs: {
-      name: { default: 'children' },
-    },
-    content: 'block+',
-    defining: true,
-    toDOM(node) {
-      if (node.attrs.name === 'children') {
-        return [
-          'div',
-          { class: css({ borderTop: '2px solid green', paddingInline: -2 }) },
-          0,
-        ];
-      }
-      return [
-        'div',
-        {
-          'data-slot': node.attrs.name,
-          class: css({
-            borderTop: '2px solid green',
-            paddingInline: -2,
-            '::before': {
-              content: `attr(data-slot)`,
-              display: 'inline-block',
-            },
-          }),
-        },
-        0,
-      ];
-    },
-  },
-  tag: {
-    attrs: {
-      name: {},
-    },
-    group: 'block',
-    defining: true,
-    [independentForGapCursor]: true,
-    content: 'tag_attributes tag_slot* block*',
-    parseDOM: [
-      {
-        tag: '[data-markdoc-tag]',
-        getAttrs(node) {
-          if (typeof node === 'string') return false;
-          let name = node.getAttribute('data-markdoc-tag');
-          if (name === null || !markdocIdentifierPattern.test(name)) {
-            return false;
-          }
-          return { name };
-        },
-      },
-    ],
-    toDOM(node) {
-      const element = document.createElement('div');
-      element.dataset.markdocTag = node.attrs.name;
-      element.style.setProperty('--tag-name', JSON.stringify(node.attrs.name));
-      element.classList.add(
-        css({
-          marginBlock: '1em',
-          overflow: 'hidden',
-          '& > *': {
-            paddingInline: tokenSchema.size.space.small,
-          },
-        })
-      );
-      element.classList.add(nodeWithBorder);
-      return {
-        dom: element,
-        contentDOM: element,
-      };
-    },
   },
   blockquote: {
     content: 'block+',
@@ -511,7 +382,6 @@ const nodeSpecs = {
       },
     ],
   },
-  ...attributeSchema,
 } satisfies Record<string, EditorNodeSpec>;
 
 const italicDOM: DOMOutputSpec = ['em', 0];
@@ -671,80 +541,7 @@ export function createEditorSchema(
       }
     }
   }
-  for (const [tagName, tagConfig] of Object.entries(
-    markdocConfig?.tags ?? {}
-  )) {
-    const attributes: Node[] = [];
-    for (const [attrName, attrConfig] of Object.entries(
-      tagConfig.attributes ?? {}
-    )) {
-      if (attrConfig.required && attrConfig.default === undefined) {
-        attributes.push(nodes.attribute.createAndFill({ name: attrName })!);
-      }
-    }
-    const tag_attributes = nodes.tag_attributes.createChecked(null, attributes);
-    const tagChildren = [tag_attributes];
-    for (const [slotName, slotConfig] of Object.entries(
-      tagConfig.slots ?? {}
-    )) {
-      if (slotConfig.required) {
-        tagChildren.push(nodes.tag_slot.createAndFill({ name: slotName })!);
-      }
-    }
-    const tag = nodes.tag.createChecked({ name: tagName }, tagChildren);
 
-    const slice = new Slice(Fragment.fromArray([tag]), 0, 0);
-    const childrenMatch = nodes.tag.contentMatch.edge(0).next;
-    insertMenuItems.push({
-      label: tagName,
-      forToolbar: true,
-      command: (state, dispatch) => {
-        const { $from, $to } = state.selection;
-        const blockRange = $from.blockRange($to);
-        if (!blockRange) return false;
-        if (
-          blockRange.$from
-            .node(-1)
-            .contentMatchAt(blockRange.$from.index(-1))
-            .matchType(nodes.tag) === null
-        ) {
-          return false;
-        }
-
-        let shouldKeepContent = !tagConfig.selfClosing;
-
-        if (shouldKeepContent) {
-          for (let i = blockRange.startIndex; i < blockRange.endIndex; i++) {
-            const node = blockRange.parent.child(i);
-            if (childrenMatch.matchType(node.type) === null) {
-              shouldKeepContent = false;
-              break;
-            }
-          }
-        }
-
-        if (dispatch) {
-          const { tr } = state;
-          if (shouldKeepContent) {
-            tr.step(
-              new ReplaceAroundStep(
-                blockRange.start,
-                blockRange.end,
-                blockRange.start,
-                blockRange.end,
-                slice,
-                tag.nodeSize - 1
-              )
-            );
-          } else {
-            tr.replaceRange(blockRange.start, blockRange.end, slice);
-          }
-          dispatch(tr);
-        }
-        return true;
-      },
-    });
-  }
   // TODO: keep "bullet list" and "ordered list" together
   editorSchema.insertMenuItems = insertMenuItems
     .sort((a, b) => a.label.localeCompare(b.label))
