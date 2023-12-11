@@ -97,7 +97,6 @@ type Thing<T, Schema extends Record<string, ComponentSchema>> =
   | T
   | ((props: {
       value: ParsedValueForComponentSchema<ObjectField<Schema>>;
-      isSelected: boolean;
     }) => T);
 
 type MarkComponentConfig<Schema extends Record<string, ComponentSchema>> = {

@@ -256,7 +256,7 @@ function InlineComponentPopover(props: {
       >
         {isOpen && (
           <Dialog>
-            <Heading>Edit {props.node.type.name}</Heading>
+            <Heading>Edit {componentConfig.label}</Heading>
             <FormValue
               schema={componentSchema}
               value={props.node.attrs.props}
@@ -278,9 +278,112 @@ function InlineComponentPopover(props: {
   );
 }
 
+const CustomMarkPopover: MarkPopoverRenderer = props => {
+  const schema = getEditorSchema(props.state.schema);
+  const componentConfig = schema.components[props.mark.type.name];
+  const runCommand = useEditorDispatchCommand();
+  const [isOpen, setIsOpen] = useState(false);
+  const componentSchema = useMemo(
+    () => ({ kind: 'object' as const, fields: componentConfig.schema }),
+    [componentConfig.schema]
+  );
+  return (
+    <>
+      <Flex gap="regular" padding="regular">
+        <TooltipTrigger>
+          <ActionButton
+            prominence="low"
+            onPress={() => {
+              setIsOpen(true);
+            }}
+          >
+            <Icon src={pencilIcon} />
+          </ActionButton>
+          <Tooltip>Edit</Tooltip>
+        </TooltipTrigger>
+        <TooltipTrigger>
+          <ActionButton
+            prominence="low"
+            onPress={() => {
+              runCommand((state, dispatch) => {
+                if (dispatch) {
+                  dispatch(
+                    state.tr.removeMark(props.from, props.to, props.mark.type)
+                  );
+                }
+                return true;
+              });
+            }}
+          >
+            <Icon src={trash2Icon} />
+          </ActionButton>
+          <Tooltip tone="critical">Remove</Tooltip>
+        </TooltipTrigger>
+      </Flex>
+      <DialogContainer
+        onDismiss={() => {
+          setIsOpen(false);
+        }}
+      >
+        {isOpen && (
+          <Dialog>
+            <Heading>Edit {componentConfig.label}</Heading>
+            <FormValue
+              schema={componentSchema}
+              value={props.mark.attrs.props}
+              onSave={value => {
+                runCommand((state, dispatch) => {
+                  if (dispatch) {
+                    dispatch(
+                      state.tr
+                        .removeMark(props.from, props.to, props.mark.type)
+                        .addMark(
+                          props.from,
+                          props.to,
+                          props.mark.type.create({ props: value })
+                        )
+                    );
+                  }
+                  return true;
+                });
+              }}
+            />
+          </Dialog>
+        )}
+      </DialogContainer>
+    </>
+  );
+};
+
 function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
   if (state.selection instanceof TextSelection) {
     const schema = getEditorSchema(state.schema);
+    for (const [name, componentConfig] of Object.entries(schema.components)) {
+      if (
+        componentConfig.kind !== 'mark' ||
+        !Object.keys(componentConfig.schema).length
+      ) {
+        continue;
+      }
+      console.log(name);
+      const mark = schema.schema.marks[name];
+      const aroundFrom = markAround(state.selection.$from, mark);
+      const aroundTo = markAround(state.selection.$to, mark);
+      if (
+        aroundFrom &&
+        aroundFrom.from === aroundTo?.from &&
+        aroundFrom.to === aroundTo.to
+      ) {
+        return {
+          adaptToBoundary: 'flip',
+          kind: 'mark',
+          component: CustomMarkPopover,
+          mark: aroundFrom.mark,
+          from: aroundFrom.from,
+          to: aroundFrom.to,
+        };
+      }
+    }
     const linkAroundFrom = markAround(state.selection.$from, schema.marks.link);
     const linkAroundTo = markAround(state.selection.$to, schema.marks.link);
     if (

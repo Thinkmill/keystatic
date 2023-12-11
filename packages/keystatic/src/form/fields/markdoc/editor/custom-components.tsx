@@ -400,15 +400,21 @@ export function getCustomMarkSpecs(
       const spec: MarkSpec = {
         attrs: { props: { default: getInitialPropsValue(schema) } },
         toDOM(mark) {
-          return [
-            tag,
-            {
-              'data-component': name,
-              'data-props': JSON.stringify(mark.attrs.props),
-              class: className(mark.attrs.props),
-              style: style(mark.attrs.props),
-            },
-          ];
+          const element = document.createElement(tag);
+          element.setAttribute('data-component', name);
+          element.setAttribute('data-props', JSON.stringify(mark.attrs.props));
+          const computedClassName = className({ value: mark.attrs.props });
+          if (computedClassName) {
+            // TODO: this cast shouldn't be necessary
+            element.className = computedClassName as string;
+          }
+          Object.assign(
+            element.style,
+            style({
+              value: mark.attrs.props,
+            })
+          );
+          return element;
         },
         parseDOM: [
           {

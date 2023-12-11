@@ -451,7 +451,22 @@ export default config({
             highlight: mark({
               label: 'Highlight',
               icon: highlighterIcon,
-              schema: {},
+              schema: {
+                color: fields.select({
+                  label: 'Color',
+                  options: [
+                    { label: 'Yellow', value: 'yellow' },
+                    { label: 'Green', value: 'lightgreen' },
+                    { label: 'Blue', value: 'lightblue' },
+                  ],
+                  defaultValue: 'yellow',
+                }),
+              },
+              style({ value }) {
+                return {
+                  backgroundColor: value.color,
+                };
+              },
               tag: 'mark',
             }),
             wrapper: wrapper({
