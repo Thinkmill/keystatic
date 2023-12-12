@@ -198,6 +198,7 @@ function CreateItem(props: {
   const slugInfo = useSlugFieldInfo(props.collection, currentSlug);
 
   const onCreate = async () => {
+    if (createResult.kind === 'loading') return;
     if (!clientSideValidateProp(schema, state, slugInfo)) {
       setForceValidation(true);
       return;

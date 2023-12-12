@@ -177,7 +177,9 @@ function SingletonPage({
     slug: undefined,
   });
   const update = useEventCallback(_update);
+
   const onCreate = async () => {
+    if (updateResult.kind === 'loading' || !hasChanged) return;
     if (!clientSideValidateProp(schema, state, undefined)) {
       setForceValidation(true);
       return;
