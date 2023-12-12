@@ -57,7 +57,7 @@ function BlockWrapper(props: {
                 },
               }
             : {}),
-        })}`}
+        })}${props.hasNodeSelection ? ` ${classes.hideselection}` : ''}`}
         border={
           props.hasNodeSelection
             ? 'color.alias.borderSelected'
