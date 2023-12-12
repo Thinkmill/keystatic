@@ -203,6 +203,7 @@ function markdocNodeToProseMirrorNode(
     return addMark(node, schema.marks.italic, parentType);
   }
   if (node.type === 'code') {
+    if (!schema.marks.code) return notAllowed(node, parentType);
     return schema.schema.text(node.attributes.content, [
       ...getState().marks,
       schema.marks.code.create(),
@@ -222,9 +223,11 @@ function markdocNodeToProseMirrorNode(
     return schema.nodes.hard_break.create();
   }
   if (node.type === 'blockquote') {
+    if (!schema.nodes.blockquote) return notAllowed(node, parentType);
     return createAndFill(node, schema.nodes.blockquote, {});
   }
   if (node.type === 'heading') {
+    if (!schema.nodes.heading) return notAllowed(node, parentType);
     return createAndFill(node, schema.nodes.heading, {
       level: node.attributes.level,
     });
@@ -239,6 +242,7 @@ function markdocNodeToProseMirrorNode(
     return createAndFill(node, schema.nodes.doc, {});
   }
   if (node.type === 'fence') {
+    if (!schema.nodes.code_block) return notAllowed(node, parentType);
     return schema.nodes.code_block.createAndFill(
       {
         language:
@@ -250,6 +254,7 @@ function markdocNodeToProseMirrorNode(
     );
   }
   if (node.type === 'hr') {
+    if (!schema.nodes.divider) return notAllowed(node, parentType);
     return createAndFill(node, schema.nodes.divider, {});
   }
   if (node.type === 'link') {
@@ -263,6 +268,7 @@ function markdocNodeToProseMirrorNode(
     return schema.schema.text(node.attributes.content, getState().marks);
   }
   if (node.type === 'item') {
+    if (!schema.nodes.list_item) return notAllowed(node, parentType);
     return createAndFill(
       node,
       schema.nodes.list_item,
@@ -271,24 +277,25 @@ function markdocNodeToProseMirrorNode(
     );
   }
   if (node.type === 'list') {
-    return createAndFill(
-      node,
-      node.attributes.ordered
-        ? schema.nodes.ordered_list
-        : schema.nodes.unordered_list,
-      {}
-    );
+    const listType = node.attributes.ordered
+      ? schema.nodes.ordered_list
+      : schema.nodes.unordered_list;
+    if (!listType) return notAllowed(node, parentType);
+    return createAndFill(node, listType, {});
   }
   if (node.type === 'table') {
+    if (!schema.nodes.table) return notAllowed(node, parentType);
     return createAndFill(node, schema.nodes.table, {});
   }
   if (node.type === 'tbody' || node.type === 'thead') {
     return childrenToProseMirrorNodes(node.children, parentType);
   }
   if (node.type === 'tr') {
+    if (!schema.nodes.table_row) return notAllowed(node, parentType);
     return createAndFill(node, schema.nodes.table_row, {});
   }
   if (node.type === 'th') {
+    if (!schema.nodes.table_header) return notAllowed(node, parentType);
     return createAndFill(
       node,
       schema.nodes.table_header,
@@ -297,6 +304,7 @@ function markdocNodeToProseMirrorNode(
     );
   }
   if (node.type === 'td') {
+    if (!schema.nodes.table_cell) return notAllowed(node, parentType);
     return createAndFill(
       node,
       schema.nodes.table_cell,
@@ -351,7 +359,7 @@ function markdocNodeToProseMirrorNode(
   }
   if (node.type === 'image') {
     const fileContents = getState().files.get(node.attributes.src);
-    if (fileContents) {
+    if (fileContents && schema.nodes.image) {
       return schema.nodes.image.createChecked({
         src: `data:application/octet-stream;base64,${fromUint8Array(
           fileContents

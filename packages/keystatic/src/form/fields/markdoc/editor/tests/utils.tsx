@@ -12,6 +12,7 @@ import { createRef } from 'react';
 import { plugins, format, NewPlugin } from 'pretty-format';
 import { EditorView } from 'prosemirror-view';
 import { editorStateToReactNode } from './editor-state-to-react-element';
+import { editorOptionsToConfig } from '../../config';
 
 // this polyfill is because jsdom doesn't have it and @floating-ui/react uses it
 globalThis.ResizeObserver = ResizeObserver;
@@ -95,7 +96,7 @@ function getSelectionInfoFromNode(node: Node) {
   return node.attrs.info as SelectionInfo;
 }
 
-const defaultEditorSchema = createEditorSchema({}, {});
+const defaultEditorSchema = createEditorSchema(editorOptionsToConfig({}), {});
 
 const defaultSchema = defaultEditorSchema.schema;
 

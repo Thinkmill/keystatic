@@ -23,6 +23,8 @@ export function readFileAsDataUrl(file: File): Promise<string> {
 }
 
 export function imageDropPlugin(schema: EditorSchema) {
+  if (!schema.nodes.image) return new Plugin({});
+  const imageType = schema.nodes.image;
   return new Plugin({
     props: {
       handleDrop(view, event) {
@@ -42,7 +44,7 @@ export function imageDropPlugin(schema: EditorSchema) {
               const src = await readFileAsDataUrl(file);
               const slice = Slice.maxOpen(
                 Fragment.from(
-                  schema.nodes.image.createChecked({
+                  imageType.createChecked({
                     src,
                     filename: file.name,
                   })
@@ -64,7 +66,7 @@ export function imageDropPlugin(schema: EditorSchema) {
               const src = await readFileAsDataUrl(file);
               view.dispatch(
                 view.state.tr.replaceSelectionWith(
-                  schema.nodes.image.createChecked({
+                  imageType.createChecked({
                     src,
                     filename: file.name,
                   })

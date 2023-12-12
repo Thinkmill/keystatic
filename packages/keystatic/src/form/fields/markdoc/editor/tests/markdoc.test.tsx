@@ -6,8 +6,9 @@ import { markdocToProseMirror } from '../markdoc/parse';
 import { proseMirrorToMarkdoc } from '../markdoc/serialize';
 import Markdoc from '@markdoc/markdoc';
 import { createEditorSchema } from '../schema';
+import { editorOptionsToConfig } from '../../config';
 
-const schema = createEditorSchema({}, {});
+const schema = createEditorSchema(editorOptionsToConfig({}), {});
 
 function toMarkdoc(node: EditorStateDescription) {
   return Markdoc.format(

@@ -383,21 +383,26 @@ function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
         };
       }
     }
-    const linkAroundFrom = markAround(state.selection.$from, schema.marks.link);
-    const linkAroundTo = markAround(state.selection.$to, schema.marks.link);
-    if (
-      linkAroundFrom &&
-      linkAroundFrom.from === linkAroundTo?.from &&
-      linkAroundFrom.to === linkAroundTo.to
-    ) {
-      return {
-        adaptToBoundary: 'flip',
-        kind: 'mark',
-        component: LinkPopover,
-        mark: linkAroundFrom.mark,
-        from: linkAroundFrom.from,
-        to: linkAroundFrom.to,
-      };
+    if (schema.marks.link) {
+      const linkAroundFrom = markAround(
+        state.selection.$from,
+        schema.marks.link
+      );
+      const linkAroundTo = markAround(state.selection.$to, schema.marks.link);
+      if (
+        linkAroundFrom &&
+        linkAroundFrom.from === linkAroundTo?.from &&
+        linkAroundFrom.to === linkAroundTo.to
+      ) {
+        return {
+          adaptToBoundary: 'flip',
+          kind: 'mark',
+          component: LinkPopover,
+          mark: linkAroundFrom.mark,
+          from: linkAroundFrom.from,
+          to: linkAroundFrom.to,
+        };
+      }
     }
   }
 

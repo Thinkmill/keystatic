@@ -29,11 +29,11 @@ import {
 import { setBlockType, wrapIn } from 'prosemirror-commands';
 import { insertNode, insertTable } from './commands/misc';
 import { toggleList } from './lists';
-import { Config } from '@markdoc/markdoc';
 import { independentForGapCursor } from './gapcursor/gapcursor';
 import { WithReactNodeViewSpec } from './react-node-views';
 import { ContentComponent } from '../../../../content-components';
 import { getCustomMarkSpecs, getCustomNodeSpecs } from './custom-components';
+import { EditorConfig } from '../config';
 
 const blockElementSpacing = css({
   marginBlock: '1em',
@@ -81,7 +81,7 @@ export type EditorNodeSpec = NodeSpec &
   WithInsertMenuNodeSpec &
   WithReactNodeViewSpec;
 
-const inlineContent = `(text | inline_component | (text hard_break) | attribute)*`;
+const inlineContent = `(text | inline_component | (text hard_break))*`;
 
 const levels = [1, 2, 3, 4, 5, 6];
 const levelsMeta = [
@@ -264,9 +264,7 @@ const nodeSpecs = {
       label: 'Table',
       description: 'Insert a table',
       icon: tableIcon,
-      command(_, schema) {
-        return insertTable(schema);
-      },
+      command: insertTable,
     },
     tableRole: 'table',
     isolating: true,
@@ -475,29 +473,97 @@ const markSpecs = {
 
 export type EditorSchema = {
   schema: Schema;
-  nodes: {
+  nodes: Partial<{
     [_ in keyof typeof nodeSpecs]: NodeType;
-  };
-  marks: {
+  }> & { paragraph: {}; doc: {}; text: {} };
+  marks: Partial<{
     [_ in keyof typeof markSpecs]: MarkType;
-  };
-  markdocConfig: Config | undefined;
+  }>;
+  config: EditorConfig;
   components: Record<string, ContentComponent>;
   insertMenuItems: InsertMenuItem[];
 };
 
 export function createEditorSchema(
-  markdocConfig: Config,
+  config: EditorConfig,
   components: Record<string, ContentComponent>
 ) {
-  const nodeSpecsWithCustomNodes = {
-    ...nodeSpecs,
+  const nodeSpecsWithCustomNodes: Record<string, EditorNodeSpec> = {
+    doc: nodeSpecs.doc,
+    paragraph: nodeSpecs.paragraph,
+    text: nodeSpecs.text,
+    hard_break: nodeSpecs.hard_break,
     ...getCustomNodeSpecs(components),
   };
+  if (config.blockquote) {
+    nodeSpecsWithCustomNodes.blockquote = nodeSpecs.blockquote;
+  }
+  if (config.divider) {
+    nodeSpecsWithCustomNodes.divider = nodeSpecs.divider;
+  }
+  if (config.codeBlock) {
+    nodeSpecsWithCustomNodes.code_block = nodeSpecs.code_block;
+  }
+  if (config.orderedList) {
+    nodeSpecsWithCustomNodes.ordered_list = nodeSpecs.ordered_list;
+  }
+  if (config.unorderedList) {
+    nodeSpecsWithCustomNodes.unordered_list = nodeSpecs.unordered_list;
+  }
+  if (config.orderedList || config.unorderedList) {
+    nodeSpecsWithCustomNodes.list_item = nodeSpecs.list_item;
+  }
+  if (config.heading.levels.length) {
+    nodeSpecsWithCustomNodes.heading = {
+      attrs: {
+        level: { default: config.heading.levels[0] },
+      },
+      content: inlineContent,
+      group: 'block',
+      parseDOM: config.heading.levels.map(level => ({
+        tag: 'h' + level,
+        attrs: { level },
+      })),
+      defining: true,
+      toDOM(node) {
+        return ['h' + node.attrs.level, 0];
+      },
+      insertMenu: config.heading.levels.map((level, index) => ({
+        ...levelsMeta[index],
+        label: 'Heading ' + level,
+        command: type => setBlockType(type, { level }),
+      })),
+    };
+  }
+  if (config.table) {
+    nodeSpecsWithCustomNodes.table = nodeSpecs.table;
+    nodeSpecsWithCustomNodes.table_row = nodeSpecs.table_row;
+    nodeSpecsWithCustomNodes.table_cell = nodeSpecs.table_cell;
+    nodeSpecsWithCustomNodes.table_header = nodeSpecs.table_header;
+  }
+  if (config.image) {
+    nodeSpecsWithCustomNodes.image = nodeSpecs.image;
+  }
+
   const markSpecsWithCustomMarks = {
-    ...markSpecs,
     ...getCustomMarkSpecs(components),
   };
+  if (config.link) {
+    markSpecsWithCustomMarks.link = markSpecs.link;
+  }
+  if (config.italic) {
+    markSpecsWithCustomMarks.italic = markSpecs.italic;
+  }
+  if (config.bold) {
+    markSpecsWithCustomMarks.bold = markSpecs.bold;
+  }
+  if (config.strikethrough) {
+    markSpecsWithCustomMarks.strikethrough = markSpecs.strikethrough;
+  }
+  if (config.code) {
+    markSpecsWithCustomMarks.code = markSpecs.code;
+  }
+
   const schema = new Schema({
     nodes: nodeSpecsWithCustomNodes,
     marks: markSpecsWithCustomMarks,
@@ -510,7 +576,7 @@ export function createEditorSchema(
     schema,
     marks,
     nodes,
-    markdocConfig,
+    config,
     components,
     insertMenuItems: [],
   };

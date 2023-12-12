@@ -1,7 +1,4 @@
-import Markdoc, {
-  Config as MarkdocConfig,
-  Node as MarkdocNode,
-} from '@markdoc/markdoc';
+import Markdoc, { Node as MarkdocNode } from '@markdoc/markdoc';
 
 import { ContentFormField } from '../../api';
 import {
@@ -19,6 +16,7 @@ import {
   CloudImagePreviewForNewEditor,
   cloudImageToolbarIcon,
 } from '#cloud-image-preview';
+import { EditorOptions, editorOptionsToConfig } from './config';
 
 const textDecoder = new TextDecoder();
 
@@ -28,18 +26,18 @@ const textDecoder = new TextDecoder();
 export function __experimental_markdoc_field({
   label,
   description,
-  config,
+  options = {},
   components = {},
 }: {
   label: string;
   description?: string;
-  config: MarkdocConfig;
+  options?: EditorOptions;
   components?: Record<string, ContentComponent>;
 }): __experimental_markdoc_field.Field {
   let schema: undefined | EditorSchema;
   let getSchema = () => {
     if (!schema) {
-      schema = createEditorSchema(config, components);
+      schema = createEditorSchema(editorOptionsToConfig(options), components);
     }
     return schema;
   };
