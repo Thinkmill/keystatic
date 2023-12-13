@@ -72,8 +72,9 @@ function getStore() {
 }
 
 type Key =
-  | readonly ['collection', string, string]
-  | readonly ['singleton', string];
+  | readonly ['collection', collection: string, slug: string]
+  | readonly ['collection-create', collection: string, duplicateSlug?: string]
+  | readonly ['singleton', singleton: string];
 
 // the as anys are because the indexeddb types dont't accept readonly arrays
 

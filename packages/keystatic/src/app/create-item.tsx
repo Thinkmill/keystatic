@@ -1,5 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Button } from '@keystar/ui/button';
 import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
@@ -28,11 +28,23 @@ import { useRouter } from './router';
 import { PageRoot, PageHeader, PageBody } from './shell/page';
 import { useBaseCommit } from './shell/data';
 import { ForkRepoDialog } from './fork-repo';
-import { useUpsertItem } from './updating';
+import { serializeEntryToFiles, useUpsertItem } from './updating';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { notFound } from './not-found';
-import { useItemData } from './useItemData';
+import { parseEntry, useItemData } from './useItemData';
 import { useSlugFieldInfo } from './slugs';
+import { z } from 'zod';
+import {
+  delDraft,
+  getDraft,
+  setDraft,
+  showDraftRestoredToast,
+} from './persistence';
+import { useHasChanged } from './useHasChanged';
+import { useData } from './useData';
+import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
+import { Icon } from '@keystar/ui/icon';
+import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
 
 function CreateItemWrapper(props: {
   collection: string;
@@ -50,6 +62,39 @@ function CreateItemWrapper(props: {
   const format = useMemo(
     () => getCollectionFormat(props.config, props.collection),
     [props.config, props.collection]
+  );
+
+  const draftData = useData(
+    useCallback(async () => {
+      const raw = await getDraft([
+        'collection-create',
+        props.collection,
+        ...(duplicateSlug ? ([duplicateSlug] as const) : ([] as const)),
+      ]);
+      if (!raw) throw new Error('No draft found');
+      const stored = storedValSchema.parse(raw);
+      const parsed = parseEntry(
+        {
+          config: props.config,
+          dirpath: getCollectionItemPath(
+            props.config,
+            props.collection,
+            stored.slug
+          ),
+          format,
+          schema: collectionConfig.schema,
+          slug: { field: collectionConfig.slugField, slug: stored.slug },
+        },
+        stored.files
+      );
+      return { state: parsed.initialState, savedAt: stored.savedAt };
+    }, [
+      collectionConfig,
+      duplicateSlug,
+      format,
+      props.collection,
+      props.config,
+    ])
   );
 
   const slug = useMemo(() => {
@@ -113,7 +158,10 @@ function CreateItemWrapper(props: {
       </PageBody>
     );
   }
-  if (duplicateSlug && itemData.kind === 'loading') {
+  if (
+    (duplicateSlug && itemData.kind === 'loading') ||
+    draftData.kind === 'loading'
+  ) {
     return (
       <Flex alignItems="center" justifyContent="center" minHeight="scale.3000">
         <ProgressCircle
@@ -141,16 +189,27 @@ function CreateItemWrapper(props: {
       collection={props.collection}
       config={props.config}
       basePath={props.basePath}
+      draft={draftData.kind === 'loaded' ? draftData.data : undefined}
+      duplicateSlug={duplicateSlug}
       initialState={duplicateInitalStateWithUpdatedSlug}
     />
   );
 }
 
+const storedValSchema = z.object({
+  version: z.literal(1),
+  savedAt: z.date(),
+  slug: z.string(),
+  files: z.map(z.string(), z.instanceof(Uint8Array)),
+});
+
 function CreateItem(props: {
   collection: string;
   config: Config;
   basePath: string;
-  initialState?: Record<string, unknown>;
+  duplicateSlug: string | null;
+  draft: { state: Record<string, unknown>; savedAt: Date } | undefined;
+  initialState: Record<string, unknown> | undefined;
 }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
@@ -161,9 +220,17 @@ function CreateItem(props: {
     () => fields.object(collectionConfig.schema),
     [collectionConfig.schema]
   );
-  const [state, setState] = useState(
-    () => props.initialState ?? getInitialPropsValue(schema)
-  );
+  const initialState = useMemo(() => {
+    return props.initialState ?? getInitialPropsValue(schema);
+  }, [props.initialState, schema]);
+  const [state, setState] = useState(props.draft?.state ?? initialState);
+
+  useEffect(() => {
+    if (props.draft && state === props.draft.state) {
+      showDraftRestoredToast(props.draft.savedAt, false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.draft]);
 
   const previewProps = useMemo(
     () => createGetPreviewProps(schema, setState, () => undefined),
@@ -175,9 +242,11 @@ function CreateItem(props: {
   const slug = getSlugFromState(collectionConfig, state);
 
   const formatInfo = getCollectionFormat(props.config, props.collection);
+
+  const basePath = getCollectionItemPath(props.config, props.collection, slug);
   const [createResult, _createItem, resetCreateItemState] = useUpsertItem({
     state,
-    basePath: getCollectionItemPath(props.config, props.collection, slug),
+    basePath,
     initialFiles: undefined,
     config: props.config,
     schema: collectionConfig.schema,
@@ -186,6 +255,53 @@ function CreateItem(props: {
     slug: { field: collectionConfig.slugField, value: slug },
   });
   const createItem = useEventCallback(_createItem);
+
+  const hasChanged = useHasChanged({
+    initialState,
+    schema,
+    state,
+    slugField: collectionConfig.slugField,
+  });
+
+  useEffect(() => {
+    const key = [
+      'collection-create',
+      props.collection,
+      ...(props.duplicateSlug
+        ? ([props.duplicateSlug] as const)
+        : ([] as const)),
+    ] as const;
+    if (hasChanged) {
+      const serialized = serializeEntryToFiles({
+        basePath,
+        config: props.config,
+        format: formatInfo,
+        schema: collectionConfig.schema,
+        slug: { field: collectionConfig.slugField, value: slug },
+        state,
+      });
+      const files = new Map(serialized.map(x => [x.path, x.contents]));
+      const data: z.infer<typeof storedValSchema> = {
+        slug,
+        files,
+        savedAt: new Date(),
+        version: 1,
+      };
+      setDraft(key, data);
+    } else {
+      delDraft(key);
+    }
+  }, [
+    collectionConfig,
+    slug,
+    state,
+    hasChanged,
+    props.duplicateSlug,
+    props.collection,
+    props.config,
+    basePath,
+    formatInfo,
+  ]);
 
   let collectionPath = `${props.basePath}/collection/${encodeURIComponent(
     props.collection
@@ -241,6 +357,19 @@ function CreateItem(props: {
               size="small"
             />
           )}
+          <TooltipTrigger>
+            <Button
+              prominence="low"
+              aria-label="Reset"
+              onPress={() => {
+                setState(initialState);
+                setForceValidation(false);
+              }}
+            >
+              <Icon src={historyIcon} />
+            </Button>
+            <Tooltip>Reset</Tooltip>
+          </TooltipTrigger>
           <Button
             isDisabled={isLoading}
             prominence="high"
