@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.2.8
+
+### Patch Changes
+
+- e956e366: Persist draft state of entry creation in browser storage
+- b2794230: Fix race condition when trying to save an entry when it's already
+  being saved
+
 ## 0.2.7
 
 ### Patch Changes
