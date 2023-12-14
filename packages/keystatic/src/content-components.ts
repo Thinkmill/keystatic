@@ -10,6 +10,7 @@ type WrapperComponentConfig<Schema extends Record<string, ComponentSchema>> = {
   description?: string;
   icon?: ReactElement;
   schema: Schema;
+  forSpecificLocations?: boolean;
 } & (
   | {
       ContentView?: (props: {
@@ -44,6 +45,7 @@ type BlockComponentConfig<Schema extends Record<string, ComponentSchema>> = {
   description?: string;
   icon?: ReactElement;
   schema: Schema;
+  forSpecificLocations?: boolean;
 } & (
   | {
       ContentView?: (props: {

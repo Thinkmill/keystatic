@@ -152,7 +152,9 @@ export function getCustomNodeSpecs(
       };
       if (component.kind === 'block') {
         spec = {
-          group: `block ${componentNames.get(name)}`,
+          group: `${
+            component.forSpecificLocations ? '' : 'block '
+          }${componentNames.get(name)}`,
           defining: true,
           attrs: { props: { default: getInitialPropsValue(schema) } },
           reactNodeView: {
@@ -237,17 +239,21 @@ export function getCustomNodeSpecs(
               },
             ];
           },
-          insertMenu: {
-            label: component.label,
-            command: insertNode,
-            forToolbar: true,
-            description: component.description,
-            icon: component.icon,
-          },
+          insertMenu: component.forSpecificLocations
+            ? undefined
+            : {
+                label: component.label,
+                command: insertNode,
+                forToolbar: true,
+                description: component.description,
+                icon: component.icon,
+              },
         };
       } else if (component.kind === 'wrapper') {
         spec = {
-          group: `block ${componentNames.get(name)}`,
+          group: `${
+            component.forSpecificLocations ? '' : 'block '
+          }${componentNames.get(name)}`,
           content: 'block+',
           defining: true,
           attrs: { props: { default: getInitialPropsValue(schema) } },
@@ -340,13 +346,15 @@ export function getCustomNodeSpecs(
               },
             },
           ],
-          insertMenu: {
-            label: component.label,
-            command: insertNode,
-            forToolbar: true,
-            description: component.description,
-            icon: component.icon,
-          },
+          insertMenu: component.forSpecificLocations
+            ? undefined
+            : {
+                label: component.label,
+                command: insertNode,
+                forToolbar: true,
+                description: component.description,
+                icon: component.icon,
+              },
         };
       } else if (component.kind === 'inline') {
         spec = {
@@ -410,7 +418,9 @@ export function getCustomNodeSpecs(
           label: components[x].label,
         }));
         spec = {
-          group: `block ${componentNames.get(name)}`,
+          group: `${
+            component.forSpecificLocations ? '' : 'block '
+          }${componentNames.get(name)}`,
           content: `(${component.children
             .map(x => componentNames.get(x))
             .join(' | ')}){${component.validation.children.min},${
@@ -554,13 +564,15 @@ export function getCustomNodeSpecs(
               },
             },
           ],
-          insertMenu: {
-            label: component.label,
-            command: insertNode,
-            forToolbar: true,
-            description: component.description,
-            icon: component.icon,
-          },
+          insertMenu: component.forSpecificLocations
+            ? undefined
+            : {
+                label: component.label,
+                command: insertNode,
+                forToolbar: true,
+                description: component.description,
+                icon: component.icon,
+              },
         };
       }
       if (spec) {

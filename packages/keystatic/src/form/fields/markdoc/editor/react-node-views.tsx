@@ -6,7 +6,7 @@ import {
   PluginKey,
 } from 'prosemirror-state';
 import { NodeView } from 'prosemirror-view';
-import { ReactElement, ReactNode, memo } from 'react';
+import { ReactElement, ReactNode, memo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useEditorViewRef } from './editor-view';
 import { css } from '@keystar/ui/style';
@@ -44,16 +44,19 @@ function NodeViewContentDOM(props: { node: HTMLElement }) {
   return (
     <span
       className={displayContentsClassName}
-      ref={element => {
-        if (!element) return;
-        element.appendChild(props.node);
+      ref={useCallback(
+        (element: HTMLSpanElement | null) => {
+          if (!element) return;
+          element.appendChild(props.node);
 
-        const view = viewRef.current;
-        if (!view) return;
-        if (view.hasFocus()) {
-          view.focus();
-        }
-      }}
+          const view = viewRef.current;
+          if (!view) return;
+          if (view.hasFocus()) {
+            view.focus();
+          }
+        },
+        [props.node, viewRef]
+      )}
     />
   );
 }

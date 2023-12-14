@@ -495,6 +495,7 @@ export default config({
             }),
             'grid-item': wrapper({
               label: 'Grid item',
+              forSpecificLocations: true,
               schema: {},
             }),
           },
