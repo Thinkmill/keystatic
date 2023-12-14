@@ -211,10 +211,10 @@ function SingletonPage({
     isGitHub && singletonExists
       ? `${getRepoUrl(branchInfo)}${
           formatInfo.dataLocation === 'index'
-            ? `/tree/${branchInfo.currentBranch}/${getPathPrefix(
-                config.storage
-              )}${singletonPath}`
-            : `/blob/${getPathPrefix(config.storage)}${
+            ? `/tree/${branchInfo.currentBranch}/${
+                getPathPrefix(config.storage) ?? ''
+              }${singletonPath}`
+            : `/blob/${getPathPrefix(config.storage) ?? ''}${
                 branchInfo.currentBranch
               }/${singletonPath}${getDataFileExtension(formatInfo)}`
         }`
