@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.2.9
+
+### Patch Changes
+
+- 415eda28: Fix view on GitHub links
+
 ## 0.2.8
 
 ### Patch Changes
