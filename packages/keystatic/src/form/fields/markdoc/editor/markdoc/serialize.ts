@@ -181,7 +181,9 @@ export function proseMirrorToMarkdoc(
   const componentConfig = schema.components[name];
   if (componentConfig) {
     const children =
-      componentConfig.kind === 'wrapper' ? blocks(node.content) : [];
+      componentConfig.kind === 'wrapper' || componentConfig.kind === 'repeating'
+        ? blocks(node.content)
+        : [];
     // TODO: handling of e.g. image fields
     return new Ast.Node('tag', node.attrs.props, children, name);
   }

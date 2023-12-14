@@ -132,8 +132,40 @@ export function mark<Schema extends Record<string, ComponentSchema>>(
   return { kind: 'mark', ...config };
 }
 
+type RepeatingComponentConfig<Schema extends Record<string, ComponentSchema>> =
+  WrapperComponentConfig<Schema> & {
+    children: string | string[];
+    validation?: { children?: { min?: number; max?: number } };
+  };
+
+type RepeatingComponent<Schema extends Record<string, ComponentSchema>> =
+  WrapperComponentConfig<Schema> & {
+    kind: 'repeating';
+    children: string[];
+    validation: { children: { min: number; max: number } };
+  };
+
+export function repeating<Schema extends Record<string, ComponentSchema>>(
+  config: RepeatingComponentConfig<Schema>
+): RepeatingComponent<Schema> {
+  return {
+    kind: 'repeating',
+    ...config,
+    children: Array.isArray(config.children)
+      ? config.children
+      : [config.children],
+    validation: {
+      children: {
+        min: config.validation?.children?.min ?? 0,
+        max: config.validation?.children?.max ?? Infinity,
+      },
+    },
+  };
+}
+
 export type ContentComponent =
   | WrapperComponent<Record<string, ComponentSchema>>
   | BlockComponent<Record<string, ComponentSchema>>
+  | RepeatingComponent<Record<string, ComponentSchema>>
   | InlineComponent<Record<string, ComponentSchema>>
   | MarkComponent<Record<string, ComponentSchema>>;

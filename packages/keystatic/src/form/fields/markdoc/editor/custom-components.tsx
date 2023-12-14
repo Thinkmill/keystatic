@@ -14,6 +14,7 @@ import { classes } from './utils';
 import { ContentComponent } from '../../../../content-components';
 import { NodeSelection } from 'prosemirror-state';
 import { tokenSchema } from '@keystar/ui/style';
+import { Item, Menu, MenuTrigger } from '@keystar/ui/menu';
 
 function BlockDataWrapper(props: { node: Node; children: ReactNode }) {
   return (
@@ -32,6 +33,7 @@ function BlockWrapper(props: {
   component: ContentComponent;
   children: ReactNode;
   pos: number;
+  toolbar?: ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const runCommand = useEditorDispatchCommand();
@@ -92,6 +94,7 @@ function BlockWrapper(props: {
           >
             {props.component.label}
           </Box>
+          {props.toolbar}
           {!!Object.keys(props.component.schema).length && (
             <Button
               prominence="low"
@@ -137,6 +140,9 @@ function BlockWrapper(props: {
 export function getCustomNodeSpecs(
   components: Record<string, ContentComponent>
 ) {
+  const componentNames = new Map(
+    Object.keys(components).map((name, i) => [name, `component${i}`])
+  );
   return Object.fromEntries(
     Object.entries(components).flatMap(([name, component]) => {
       let spec: EditorNodeSpec | undefined;
@@ -146,7 +152,7 @@ export function getCustomNodeSpecs(
       };
       if (component.kind === 'block') {
         spec = {
-          group: 'block',
+          group: `block ${componentNames.get(name)}`,
           defining: true,
           attrs: { props: { default: getInitialPropsValue(schema) } },
           reactNodeView: {
@@ -213,7 +219,6 @@ export function getCustomNodeSpecs(
             {
               tag: `div[data-component="${name}"]`,
               getAttrs(node) {
-                console.log(node);
                 if (typeof node === 'string') return false;
                 const props = node.dataset.props;
                 if (!props) return false;
@@ -242,7 +247,7 @@ export function getCustomNodeSpecs(
         };
       } else if (component.kind === 'wrapper') {
         spec = {
-          group: 'block',
+          group: `block ${componentNames.get(name)}`,
           content: 'block+',
           defining: true,
           attrs: { props: { default: getInitialPropsValue(schema) } },
@@ -326,7 +331,6 @@ export function getCustomNodeSpecs(
             {
               tag: `div[data-component="${name}"]`,
               getAttrs(node) {
-                console.log(node);
                 if (typeof node === 'string') return false;
                 const props = node.dataset.props;
                 if (!props) return false;
@@ -392,6 +396,164 @@ export function getCustomNodeSpecs(
             },
             rendersOwnContent: false,
           },
+          insertMenu: {
+            label: component.label,
+            command: insertNode,
+            forToolbar: true,
+            description: component.description,
+            icon: component.icon,
+          },
+        };
+      } else if (component.kind === 'repeating') {
+        const items = component.children.map(x => ({
+          key: x,
+          label: components[x].label,
+        }));
+        spec = {
+          group: `block ${componentNames.get(name)}`,
+          content: `(${component.children
+            .map(x => componentNames.get(x))
+            .join(' | ')}){${component.validation.children.min},${
+            component.validation.children.max === Infinity
+              ? ''
+              : component.validation.children.max
+          }}`,
+          defining: true,
+          attrs: { props: { default: getInitialPropsValue(schema) } },
+          reactNodeView: {
+            component: function Block(props) {
+              const runCommand = useEditorDispatchCommand();
+              return (
+                <BlockDataWrapper node={props.node}>
+                  {'NodeView' in component && component.NodeView ? (
+                    <component.NodeView
+                      isSelected={
+                        props.hasNodeSelection ||
+                        props.isNodeCompletelyWithinSelection
+                      }
+                      onRemove={() => {
+                        runCommand((state, dispatch) => {
+                          if (dispatch) {
+                            dispatch(
+                              state.tr.delete(
+                                props.pos,
+                                props.pos + props.node.nodeSize
+                              )
+                            );
+                          }
+                          return true;
+                        });
+                      }}
+                      onChange={value => {
+                        runCommand((state, dispatch) => {
+                          if (dispatch) {
+                            dispatch(
+                              state.tr.setNodeAttribute(
+                                props.pos,
+                                'props',
+                                value
+                              )
+                            );
+                          }
+                          return true;
+                        });
+                      }}
+                      value={props.node.attrs.props}
+                    >
+                      {props.children}
+                    </component.NodeView>
+                  ) : (
+                    <BlockWrapper
+                      node={props.node}
+                      hasNodeSelection={
+                        props.hasNodeSelection ||
+                        props.isNodeCompletelyWithinSelection
+                      }
+                      component={component}
+                      pos={props.pos}
+                      toolbar={
+                        component.children.length === 1 ? (
+                          <Button
+                            onPress={() => {
+                              runCommand((state, dispatch) => {
+                                if (dispatch) {
+                                  dispatch(
+                                    state.tr.insert(
+                                      props.pos + props.node.nodeSize - 1,
+                                      state.schema.nodes[
+                                        component.children[0]
+                                      ].createAndFill()!
+                                    )
+                                  );
+                                }
+                                return true;
+                              });
+                            }}
+                          >
+                            Insert
+                          </Button>
+                        ) : (
+                          <MenuTrigger>
+                            <Button>Insert</Button>
+                            <Menu
+                              onAction={key => {
+                                runCommand((state, dispatch) => {
+                                  if (dispatch) {
+                                    dispatch(
+                                      state.tr.insert(
+                                        props.pos + props.node.nodeSize - 1,
+                                        state.schema.nodes[key].createAndFill()!
+                                      )
+                                    );
+                                  }
+                                  return true;
+                                });
+                              }}
+                              items={items}
+                            >
+                              {item => <Item key={item.key}>{item.label}</Item>}
+                            </Menu>
+                          </MenuTrigger>
+                        )
+                      }
+                    >
+                      {'ContentView' in component && component.ContentView ? (
+                        <component.ContentView value={props.node.attrs.props}>
+                          {props.children}
+                        </component.ContentView>
+                      ) : (
+                        props.children
+                      )}
+                    </BlockWrapper>
+                  )}
+                </BlockDataWrapper>
+              );
+            },
+            rendersOwnContent: false,
+          },
+          toDOM(node) {
+            return [
+              'div',
+              {
+                'data-component': name,
+                'data-props': JSON.stringify(node.attrs.props),
+              },
+              0,
+            ];
+          },
+          parseDOM: [
+            {
+              tag: `div[data-component="${name}"]`,
+              getAttrs(node) {
+                if (typeof node === 'string') return false;
+                const props = node.dataset.props;
+                if (!props) return false;
+                return {
+                  props: JSON.parse(props),
+                };
+              },
+            },
+          ],
           insertMenu: {
             label: component.label,
             command: insertNode,

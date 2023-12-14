@@ -316,7 +316,6 @@ function markdocNodeToProseMirrorNode(
     if (node.tag === 'table') {
       return markdocNodeToProseMirrorNode(node.children[0], parentType);
     }
-    const children = childrenToProseMirrorNodes(node.children, parentType);
 
     const componentConfig = schema.components[node.tag];
     if (componentConfig) {
@@ -326,7 +325,9 @@ function markdocNodeToProseMirrorNode(
       const nodeType = schema.schema.nodes[node.tag];
       // TODO: validation and handling of e.g. image fields
       const state = getState();
-      const pmNode = nodeType.createChecked(
+      const children = childrenToProseMirrorNodes(node.children, nodeType);
+
+      const pmNode = nodeType.createAndFill(
         {
           props: deserializeProps(
             { kind: 'object', fields: componentConfig.schema },

@@ -9,6 +9,7 @@ import { NodeView } from 'prosemirror-view';
 import { ReactElement, ReactNode, memo } from 'react';
 import { createPortal } from 'react-dom';
 import { useEditorViewRef } from './editor-view';
+import { css } from '@keystar/ui/style';
 
 type NodeViewInfo = {
   key: string;
@@ -42,6 +43,7 @@ function NodeViewContentDOM(props: { node: HTMLElement }) {
   const viewRef = useEditorViewRef();
   return (
     <span
+      className={displayContentsClassName}
       ref={element => {
         if (!element) return;
         element.appendChild(props.node);
@@ -117,6 +119,14 @@ function getReactNodeViewSpec(type: NodeType): ReactNodeViewSpec | undefined {
   return type.spec.reactNodeView as ReactNodeViewSpec | undefined;
 }
 
+const displayContentsClassName = css({ display: 'contents' });
+
+function elementWithDisplayContents(tag: keyof HTMLElementTagNameMap) {
+  const element = document.createElement(tag);
+  element.classList.add(displayContentsClassName);
+  return element;
+}
+
 function createNodeView(type: NodeType): NodeViewInfo {
   const reactNodeViewSpec = getReactNodeViewSpec(type);
   return {
@@ -126,7 +136,7 @@ function createNodeView(type: NodeType): NodeViewInfo {
     contentDOM:
       reactNodeViewSpec?.rendersOwnContent || type.isLeaf
         ? undefined
-        : document.createElement(type.inlineContent ? 'div' : 'span'),
+        : elementWithDisplayContents(type.inlineContent ? 'div' : 'span'),
   };
 }
 

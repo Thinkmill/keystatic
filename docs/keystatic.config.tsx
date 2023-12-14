@@ -8,6 +8,7 @@ import {
   block,
   inline,
   mark,
+  repeating,
   wrapper,
 } from '@keystatic/core/content-components';
 import { highlighterIcon } from '@keystar/ui/icon/icons/highlighterIcon';
@@ -471,6 +472,29 @@ export default config({
             }),
             wrapper: wrapper({
               label: 'Wrapper',
+              schema: {},
+            }),
+            grid: repeating({
+              label: 'Grid',
+              children: 'grid-item',
+              schema: {},
+              ContentView(props) {
+                return (
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '1em',
+                    }}
+                  >
+                    {props.children}
+                  </div>
+                );
+              },
+              validation: { children: { min: 1 } },
+            }),
+            'grid-item': wrapper({
+              label: 'Grid item',
               schema: {},
             }),
           },
