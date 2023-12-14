@@ -219,12 +219,12 @@ function ItemPage(props: ItemPageProps) {
     config.storage.kind !== 'local'
       ? `${getRepoUrl(branchInfo)}${
           formatInfo.dataLocation === 'index'
-            ? `/tree/${branchInfo.currentBranch}/${getPathPrefix(
-                config.storage
-              )}${currentBasePath}`
-            : `/blob/${branchInfo.currentBranch}/${getPathPrefix(
-                config.storage
-              )}${currentBasePath}${getDataFileExtension(formatInfo)}`
+            ? `/tree/${branchInfo.currentBranch}/${
+                getPathPrefix(config.storage) ?? ''
+              }${currentBasePath}`
+            : `/blob/${branchInfo.currentBranch}/${
+                getPathPrefix(config.storage) ?? ''
+              }${currentBasePath}${getDataFileExtension(formatInfo)}`
         }`
       : undefined;
   const previewHref = useMemo(() => {
