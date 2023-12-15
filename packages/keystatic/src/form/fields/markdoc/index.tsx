@@ -17,6 +17,9 @@ import {
   cloudImageToolbarIcon,
 } from '#cloud-image-preview';
 import { EditorOptions, editorOptionsToConfig } from './config';
+import { collectDirectoriesUsedInSchema } from '../../../app/tree-key';
+import { object } from '../object';
+import { fixPath } from '../../../app/path-utils';
 
 const textDecoder = new TextDecoder();
 
@@ -35,9 +38,10 @@ export function __experimental_markdoc_field({
   components?: Record<string, ContentComponent>;
 }): __experimental_markdoc_field.Field {
   let schema: undefined | EditorSchema;
+  const config = editorOptionsToConfig(options);
   let getSchema = () => {
     if (!schema) {
-      schema = createEditorSchema(editorOptionsToConfig(options), components);
+      schema = createEditorSchema(config, components);
     }
     return schema;
   };
@@ -64,6 +68,22 @@ export function __experimental_markdoc_field({
     validate(value) {
       return value;
     },
+    directories: [
+      ...collectDirectoriesUsedInSchema(
+        object(
+          Object.fromEntries(
+            Object.entries(components).map(([name, component]) => [
+              name,
+              object(component.schema),
+            ])
+          )
+        )
+      ),
+      ...(typeof config.image === 'object' &&
+      typeof config.image.directory === 'string'
+        ? [fixPath(config.image.directory)]
+        : []),
+    ],
     serialize(value) {
       return {
         ...serializeFromEditorState(value),

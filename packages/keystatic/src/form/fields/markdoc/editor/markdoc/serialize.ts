@@ -2,11 +2,14 @@ import { Ast, Node as MarkdocNode, NodeType } from '@markdoc/markdoc';
 import { Fragment, Mark, Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorSchema, getEditorSchema } from '../schema';
 import { toUint8Array } from 'js-base64';
+import { getSrcPrefixForImageBlock } from '../images';
+import { fixPath } from '../../../../../app/path-utils';
 
 type DocumentSerializationState = {
   schema: EditorSchema;
   extraFiles: Map<string, Uint8Array>;
   otherFiles: Map<string, Map<string, Uint8Array>>;
+  slug: string | undefined;
 };
 
 function _blocks(
@@ -38,11 +41,27 @@ function textblockChildren(
       const src = toUint8Array(
         child.attrs.src.replace(/^data:[a-z/-]+;base64,/, '')
       );
-      state.extraFiles.set(child.attrs.filename, src);
+
+      if (
+        typeof state.schema.config.image === 'object' &&
+        typeof state.schema.config.image.directory === 'string'
+      ) {
+        const parent = fixPath(state.schema.config.image.directory);
+        if (!state.otherFiles.has(parent)) {
+          state.otherFiles.set(parent, new Map());
+        }
+        state.otherFiles.get(parent)!.set(child.attrs.filename, src);
+      } else {
+        state.extraFiles.set(child.attrs.filename, src);
+      }
 
       children.push(
         new Ast.Node('image', {
-          src: child.attrs.filename,
+          src: encodeURI(
+            `${getSrcPrefixForImageBlock(state.schema.config, state.slug)}${
+              child.attrs.filename
+            }`
+          ),
           alt: child.attrs.alt,
           title: child.attrs.title,
         })

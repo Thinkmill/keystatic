@@ -9,6 +9,8 @@ import { EditorSchema } from '../schema';
 import { fromUint8Array } from 'js-base64';
 import { ComponentSchema } from '../../../../api';
 import { transformProps } from '../../../../props-value';
+import { fixPath } from '../../../../../app/path-utils';
+import { getSrcPrefixForImageBlock } from '../images';
 
 let state:
   | {
@@ -356,15 +358,21 @@ function markdocNodeToProseMirrorNode(
       }
       return pmNode;
     }
-    return schema.nodes.paragraph.createChecked({}, children);
+    return notAllowed(node, parentType);
   }
   if (node.type === 'image') {
-    const fileContents = getState().files.get(node.attributes.src);
-    if (fileContents && schema.nodes.image) {
+    const prefix = getSrcPrefixForImageBlock(schema.config, getState().slug);
+    const filename = (node.attributes.src as string).slice(prefix.length);
+    const content = (
+      typeof schema.config.image === 'object' &&
+      typeof schema.config.image.directory === 'string'
+        ? getState().otherFiles.get(fixPath(schema.config.image.directory))
+        : getState().files
+    )?.get(filename);
+
+    if (content && schema.nodes.image) {
       return schema.nodes.image.createChecked({
-        src: `data:application/octet-stream;base64,${fromUint8Array(
-          fileContents
-        )}`,
+        src: `data:application/octet-stream;base64,${fromUint8Array(content)}`,
         alt: node.attributes.alt,
         title: node.attributes.title,
         filename: node.attributes.src,
