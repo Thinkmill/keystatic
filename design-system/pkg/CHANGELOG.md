@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.4.7
+
+### Patch Changes
+
+- 90fd3809: Filter out DOM props TableVirtualizer
+
 ## 0.4.6
 
 ### Patch Changes

@@ -46,16 +46,27 @@ function toMarkdocInline(node: Descendant): Node | Node[] {
       mark => mark !== 'text' && mark !== 'code'
     ) as Mark[]
   ).sort();
-  let markdocNode = node.code
-    ? new Ast.Node('code', { content: node.text }, [])
-    : new Ast.Node('text', { content: node.text });
+  const leadingWhitespace = /^\s+/.exec(node.text)?.[0];
+  const trailingWhitespace = /\s+$/.exec(node.text)?.[0];
+
+  let children = node.code
+    ? [new Ast.Node('code', { content: node.text.trim() }, [])]
+    : [new Ast.Node('text', { content: node.text.trim() })];
   for (const mark of marks) {
     const config = markToMarkdoc[mark];
     if (config) {
-      markdocNode = new Ast.Node(config.type, {}, [markdocNode], config.tag);
+      children = [new Ast.Node(config.type, {}, children, config.tag)];
     }
   }
-  return markdocNode;
+
+  if (leadingWhitespace?.length) {
+    children.unshift(new Ast.Node('text', { content: leadingWhitespace }, []));
+  }
+  if (trailingWhitespace?.length) {
+    children.push(new Ast.Node('text', { content: trailingWhitespace }, []));
+  }
+
+  return children;
 }
 
 export function toMarkdocDocument(

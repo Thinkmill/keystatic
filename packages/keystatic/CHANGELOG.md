@@ -1,5 +1,27 @@
 # @keystatic/core
 
+## 0.2.9
+
+### Patch Changes
+
+- 415eda28: Fix view on GitHub links
+
+## 0.2.8
+
+### Patch Changes
+
+- e956e366: Persist draft state of entry creation in browser storage
+- b2794230: Fix race condition when trying to save an entry when it's already
+  being saved
+
+## 0.2.7
+
+### Patch Changes
+
+- 904158b0: Fix marks with leading and trailing spaces
+- Updated dependencies [90fd3809]
+  - @keystar/ui@0.4.7
+
 ## 0.2.6
 
 ### Patch Changes

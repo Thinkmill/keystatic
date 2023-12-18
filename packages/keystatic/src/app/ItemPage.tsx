@@ -219,12 +219,12 @@ function ItemPage(props: ItemPageProps) {
     config.storage.kind !== 'local'
       ? `${getRepoUrl(branchInfo)}${
           formatInfo.dataLocation === 'index'
-            ? `/tree/${branchInfo.currentBranch}/${getPathPrefix(
-                config.storage
-              )}${currentBasePath}`
-            : `/blob/${branchInfo.currentBranch}/${getPathPrefix(
-                config.storage
-              )}${currentBasePath}${getDataFileExtension(formatInfo)}`
+            ? `/tree/${branchInfo.currentBranch}/${
+                getPathPrefix(config.storage) ?? ''
+              }${currentBasePath}`
+            : `/blob/${branchInfo.currentBranch}/${
+                getPathPrefix(config.storage) ?? ''
+              }${currentBasePath}${getDataFileExtension(formatInfo)}`
         }`
       : undefined;
   const previewHref = useMemo(() => {
@@ -259,7 +259,10 @@ function ItemPage(props: ItemPageProps) {
 
   const slugInfo = useSlugFieldInfo(collection, itemSlug);
 
+  const isSavingDisabled = updateResult.kind === 'loading' || !hasChanged;
+
   const onUpdate = useCallback(async () => {
+    if (isSavingDisabled) return false;
     if (!clientSideValidateProp(schema, state, slugInfo)) {
       setForceValidation(true);
       return false;
@@ -277,6 +280,7 @@ function ItemPage(props: ItemPageProps) {
   }, [
     collection,
     collectionConfig,
+    isSavingDisabled,
     itemSlug,
     props.basePath,
     router,

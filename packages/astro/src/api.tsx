@@ -11,13 +11,19 @@ export function makeHandler(_config: APIRouteConfig) {
       ..._config,
       clientId:
         _config.clientId ??
-        tryOrUndefined(() => import.meta.env.KEYSTATIC_GITHUB_CLIENT_ID),
+        tryOrUndefined(() => {
+          return import.meta.env.KEYSTATIC_GITHUB_CLIENT_ID;
+        }),
       clientSecret:
         _config.clientSecret ??
-        tryOrUndefined(() => import.meta.env.KEYSTATIC_GITHUB_CLIENT_SECRET),
+        tryOrUndefined(() => {
+          return import.meta.env.KEYSTATIC_GITHUB_CLIENT_SECRET;
+        }),
       secret:
         _config.secret ??
-        tryOrUndefined(() => import.meta.env.KEYSTATIC_SECRET),
+        tryOrUndefined(() => {
+          return import.meta.env.KEYSTATIC_SECRET;
+        }),
     },
     {
       slugEnvName: 'PUBLIC_KEYSTATIC_GITHUB_APP_SLUG',

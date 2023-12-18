@@ -177,7 +177,9 @@ function SingletonPage({
     slug: undefined,
   });
   const update = useEventCallback(_update);
+
   const onCreate = async () => {
+    if (updateResult.kind === 'loading' || !hasChanged) return;
     if (!clientSideValidateProp(schema, state, undefined)) {
       setForceValidation(true);
       return;
@@ -209,10 +211,10 @@ function SingletonPage({
     isGitHub && singletonExists
       ? `${getRepoUrl(branchInfo)}${
           formatInfo.dataLocation === 'index'
-            ? `/tree/${branchInfo.currentBranch}/${getPathPrefix(
-                config.storage
-              )}${singletonPath}`
-            : `/blob/${getPathPrefix(config.storage)}${
+            ? `/tree/${branchInfo.currentBranch}/${
+                getPathPrefix(config.storage) ?? ''
+              }${singletonPath}`
+            : `/blob/${getPathPrefix(config.storage) ?? ''}${
                 branchInfo.currentBranch
               }/${singletonPath}${getDataFileExtension(formatInfo)}`
         }`

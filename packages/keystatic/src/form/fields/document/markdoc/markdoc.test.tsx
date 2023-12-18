@@ -498,3 +498,34 @@ test('code and bold', () => {
     "
   `);
 });
+
+test('italic in bold', () => {
+  const markdoc = `**a *b* c**`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text
+          bold={true}
+        >
+          a 
+        </text>
+        <text
+          bold={true}
+          italic={true}
+        >
+          b
+        </text>
+        <text
+          bold={true}
+        >
+           c
+        </text>
+      </paragraph>
+    </editor>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "**a** ***b*** **c**
+    "
+  `);
+});
