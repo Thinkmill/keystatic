@@ -128,7 +128,10 @@ export function UserActions() {
     return (
       <ActionButton
         onPress={() => {
-          redirectToCloudAuth(router.params.join('/'), config);
+          redirectToCloudAuth(
+            router.params.map(encodeURIComponent).join('/'),
+            config
+          );
         }}
         flex
       >

@@ -234,7 +234,9 @@ function AuthWrapper(props: {
           <Button
             href={`/api/keystatic/github/login${
               router.params.length
-                ? `?${new URLSearchParams({ from: router.params.join('/') })}`
+                ? `?${new URLSearchParams({
+                    from: router.params.map(encodeURIComponent).join('/'),
+                  })}`
                 : ''
             }`}
             // even though we'll never be in an iframe, so this isn't really distinct from _self
@@ -252,7 +254,10 @@ function AuthWrapper(props: {
         <Flex justifyContent="center" alignItems="center" height="100vh">
           <Button
             onPress={() => {
-              redirectToCloudAuth(router.params.join('/'), props.config);
+              redirectToCloudAuth(
+                router.params.map(encodeURIComponent).join('/'),
+                props.config
+              );
             }}
           >
             <Text>Log in with Keystatic Cloud</Text>
