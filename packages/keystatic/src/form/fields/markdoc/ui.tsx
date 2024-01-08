@@ -36,13 +36,17 @@ export function parseToEditorState(
   return createEditorState(doc);
 }
 
-export function serializeFromEditorState(value: EditorState) {
+export function serializeFromEditorState(
+  value: EditorState,
+  slug: string | undefined
+) {
   const other = new Map<string, Uint8Array>();
   const external = new Map<string, Map<string, Uint8Array>>();
   const markdocNode = proseMirrorToMarkdoc(value.doc, {
     extraFiles: other,
     otherFiles: external,
     schema: getEditorSchema(value.schema),
+    slug,
   });
   const markdoc = Markdoc.format(markdocNode);
   return {

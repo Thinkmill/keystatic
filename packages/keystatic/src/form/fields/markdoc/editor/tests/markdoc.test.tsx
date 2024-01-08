@@ -18,6 +18,7 @@ function toMarkdoc(node: EditorStateDescription) {
           extraFiles: new Map(),
           otherFiles: new Map(),
           schema,
+          slug: undefined,
         })
       )
     )

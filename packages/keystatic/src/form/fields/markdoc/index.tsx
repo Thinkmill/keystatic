@@ -84,9 +84,9 @@ export function __experimental_markdoc_field({
         ? [fixPath(config.image.directory)]
         : []),
     ],
-    serialize(value) {
+    serialize(value, { slug }) {
       return {
-        ...serializeFromEditorState(value),
+        ...serializeFromEditorState(value, slug),
         value: undefined,
       };
     },

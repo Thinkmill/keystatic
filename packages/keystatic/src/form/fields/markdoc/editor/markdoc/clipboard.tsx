@@ -28,6 +28,7 @@ export function markdocClipboard() {
                 otherFiles: new Map(),
                 extraFiles: new Map(),
                 schema: getEditorSchema(view.state.schema),
+                slug: undefined,
               }
             )
           );
