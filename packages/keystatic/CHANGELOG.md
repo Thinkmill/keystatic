@@ -1,5 +1,16 @@
 # @keystatic/core
 
+## 0.2.10
+
+### Patch Changes
+
+- bebaa922: Fix `fields.integer` allowing any number
+- 4aa8fefe: Fix url encoding breaking on auth redirects
+- 52a018f6: Fix drafts on item creation not being deleted after the item is
+  created
+- Updated dependencies [bebaa922]
+  - @keystar/ui@0.4.8
+
 ## 0.2.9
 
 ### Patch Changes
