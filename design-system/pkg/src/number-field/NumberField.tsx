@@ -55,6 +55,7 @@ export const NumberField: ForwardRefExoticComponent<
       {...onlyStyleProps(props)}
       label={label}
       description={description}
+      errorMessage={props.errorMessage}
       descriptionProps={descriptionProps}
       errorMessageProps={errorMessageProps}
       labelProps={labelProps}
