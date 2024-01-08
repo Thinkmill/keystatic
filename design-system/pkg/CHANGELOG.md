@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.4.8
+
+### Patch Changes
+
+- bebaa922: Fix `NumberField` not showing error messages
+
 ## 0.4.7
 
 ### Patch Changes
