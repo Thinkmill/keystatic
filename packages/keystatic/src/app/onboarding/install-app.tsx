@@ -4,22 +4,49 @@ import { Notice } from '@keystar/ui/notice';
 import { TextField } from '@keystar/ui/text-field';
 import { Text } from '@keystar/ui/typography';
 import { useRouter } from '../router';
-import { GitHubConfig } from '../../config';
-import { createContext, useContext } from 'react';
+import { Config, GitHubConfig } from '../../config';
+import { ReactNode, createContext, useCallback, useContext } from 'react';
 import { parseRepoConfig } from '../repo-config';
+import { ProgressCircle } from '@keystar/ui/progress';
+import { useData } from '../useData';
+import { getAuth } from '../auth';
 
-export const AppSlugContext = createContext<
-  { envName: string; value: string | undefined } | undefined
->(undefined);
+export const AppSlugContext = createContext<string | undefined>(undefined);
 
-export const AppSlugProvider = AppSlugContext.Provider;
+export function AppSlugProvider(props: {
+  children: ReactNode;
+  config: Config;
+  value: string | undefined;
+}) {
+  const appSlug = props.value;
+  const appSlugFromAPI = useData(
+    useCallback(async () => {
+      if (appSlug || props.config.storage.kind !== 'github') return;
+      const auth = await getAuth(props.config);
+      if (!auth) return;
+      return fetch('')
+        .then(res => res.json())
+        .then((json): string | undefined => json.slug);
+    }, [appSlug, props.config])
+  );
+  return (
+    <AppSlugContext.Provider
+      value={
+        appSlug ??
+        (appSlugFromAPI.kind === 'loaded' ? appSlugFromAPI.data : undefined)
+      }
+    >
+      {props.children}
+    </AppSlugContext.Provider>
+  );
+}
 
 export function InstallGitHubApp(props: { config: GitHubConfig }) {
   const router = useRouter();
   const appSlugFromContext = useContext(AppSlugContext);
   const appSlug =
     new URL(router.href, 'https://example.com').searchParams.get('slug') ??
-    appSlugFromContext?.value;
+    appSlugFromContext;
   const parsedRepo = parseRepoConfig(props.config.storage.repo);
   return (
     <Flex direction="column" gap="regular">
@@ -45,18 +72,12 @@ export function InstallGitHubApp(props: { config: GitHubConfig }) {
         >
           Install GitHub App
         </Button>
-      ) : (
+      ) : appSlugFromContext ? (
         <Notice tone="caution">
-          {appSlugFromContext ? (
-            <Text>
-              The <code>{appSlugFromContext.envName}</code> environment variable
-              wasn't provided so we can't link to the GitHub app installation
-              page. You should find the App on GitHub and add the repo yourself.
-            </Text>
-          ) : (
-            <Text>Find the App on GitHub and add the repo.</Text>
-          )}
+          <Text>Find the App on GitHub and add the repo.</Text>
         </Notice>
+      ) : (
+        <ProgressCircle />
       )}
     </Flex>
   );

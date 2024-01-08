@@ -130,7 +130,6 @@ export function useUpsertItem(args: {
   const setTreeSha = useSetTreeSha();
   const [, mutate] = useMutation(createCommitMutation);
   const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
-  const appSlug = useContext(AppSlugContext);
   const unscopedTreeData = useCurrentUnscopedTree();
 
   return [
@@ -144,8 +143,7 @@ export function useUpsertItem(args: {
         if (!unscopedTree) return false;
         if (
           repoWithWriteAccess === null &&
-          args.config.storage.kind === 'github' &&
-          appSlug?.value
+          args.config.storage.kind === 'github'
         ) {
           setState({ kind: 'needs-fork' });
           return false;
@@ -363,7 +361,6 @@ export function useDeleteItem(args: {
   const [, mutate] = useMutation(createCommitMutation);
   const setTreeSha = useSetTreeSha();
   const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
-  const appSlug = useContext(AppSlugContext);
   const unscopedTreeData = useCurrentUnscopedTree();
 
   return [
@@ -375,11 +372,7 @@ export function useDeleteItem(args: {
             ? unscopedTreeData.data.tree
             : undefined;
         if (!unscopedTree) return false;
-        if (
-          repoWithWriteAccess === null &&
-          args.storage.kind === 'github' &&
-          appSlug?.value
-        ) {
+        if (repoWithWriteAccess === null && args.storage.kind === 'github') {
           setState({ kind: 'needs-fork' });
           return false;
         }

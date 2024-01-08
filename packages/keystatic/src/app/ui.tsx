@@ -281,7 +281,12 @@ function RedirectToLoopback(props: { children: ReactNode }) {
 
 export function Keystatic(props: {
   config: Config;
-  appSlug?: { envName: string; value: string | undefined };
+  appSlug?: {
+    // this is no longer technically necessary, but it's left here
+    // to avoid a breaking change for the integration packages
+    envName: string;
+    value: string | undefined;
+  };
 }) {
   if (props.config.storage.kind === 'github') {
     assertValidRepoConfig(props.config.storage.repo);
@@ -290,7 +295,7 @@ export function Keystatic(props: {
   return (
     <ClientOnly>
       <RedirectToLoopback>
-        <AppSlugProvider value={props.appSlug}>
+        <AppSlugProvider config={props.config} value={props.appSlug?.value}>
           <RouterProvider>
             <Provider config={props.config}>
               <PageInner config={props.config} />

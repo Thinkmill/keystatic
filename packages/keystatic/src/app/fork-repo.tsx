@@ -106,7 +106,7 @@ export function ForkRepoDialog(props: {
                 </TextLink>
                 . Then, come back to this page and{' '}
                 <TextLink
-                  href={`https://github.com/apps/${appSlug?.value}/installations/new?state=close`}
+                  href={`https://github.com/apps/${appSlug}/installations/new?state=close`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
