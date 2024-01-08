@@ -5,9 +5,9 @@ export function validateInteger(
 ) {
   if (
     value !== null &&
-    (typeof value !== 'number' || !Number.isFinite(value))
+    (typeof value !== 'number' || !Number.isInteger(value))
   ) {
-    return `${label} is not a valid whole number`;
+    return `${label} must be a whole number`;
   }
 
   if (validation?.isRequired && value === null) {
