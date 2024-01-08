@@ -262,6 +262,8 @@ function CreateItem(props: {
     state,
     slugField: collectionConfig.slugField,
   });
+  const hasCreated =
+    createResult.kind === 'updated' || createResult.kind === 'loading';
 
   useEffect(() => {
     const key = [
@@ -271,7 +273,7 @@ function CreateItem(props: {
         ? ([props.duplicateSlug] as const)
         : ([] as const)),
     ] as const;
-    if (hasChanged) {
+    if (hasChanged && !hasCreated) {
       const serialized = serializeEntryToFiles({
         basePath,
         config: props.config,
@@ -301,6 +303,7 @@ function CreateItem(props: {
     props.config,
     basePath,
     formatInfo,
+    hasCreated,
   ]);
 
   let collectionPath = `${props.basePath}/collection/${encodeURIComponent(
