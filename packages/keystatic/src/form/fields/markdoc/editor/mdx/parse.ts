@@ -11,7 +11,8 @@ import { transformProps } from '../../../../props-value';
 import { fixPath } from '../../../../../app/path-utils';
 import { getSrcPrefixForImageBlock } from '../images';
 import { Nodes, PhrasingContent } from 'mdast';
-import 'mdast-util-mdx';
+import { MdxJsxAttributeValueExpression } from 'mdast-util-mdx';
+import { assert } from 'emery';
 
 let state:
   | {
@@ -159,6 +160,58 @@ const wrapInParagraph =
     return newChildren;
   };
 
+type Program = (MdxJsxAttributeValueExpression['data'] & {})['estree'] & {};
+function programToValue(program: Program) {
+  assert(program.body.length === 1);
+  const statement = program.body[0];
+  assert(statement.type === 'ExpressionStatement');
+  return expressionToValue(statement.expression);
+}
+
+type Expression = (Program['body'][number] & {
+  type: 'ExpressionStatement';
+})['expression'];
+
+function expressionToValue(expression: Expression): unknown {
+  if (expression.type === 'Literal') {
+    const val = expression.value;
+    assert(
+      typeof val === 'string' ||
+        typeof val === 'number' ||
+        typeof val === 'boolean' ||
+        val === null
+    );
+    return val;
+  }
+  if (expression.type === 'ArrayExpression') {
+    return expression.elements.map(value => {
+      assert(value !== null && value.type !== 'SpreadElement');
+      return value;
+    });
+  }
+  if (expression.type === 'ObjectExpression') {
+    return Object.fromEntries(
+      expression.properties.map(property => {
+        assert(
+          property.type === 'Property' &&
+            !property.computed &&
+            property.kind === 'init'
+        );
+        const key = property.key;
+        const name =
+          key.type === 'Identifier'
+            ? key.name
+            : key.type === 'Literal'
+            ? key.value
+            : undefined;
+        assert(typeof name === 'string');
+        return [name, expressionToValue(property.value as Expression)];
+      })
+    );
+  }
+  throw new Error(`Unexpected expression type ${expression.type}`);
+}
+
 function markdocNodeToProseMirrorNode(
   node: Nodes,
   parentType: NodeType | undefined
@@ -283,7 +336,7 @@ function markdocNodeToProseMirrorNode(
             attributes[attribute.name] =
               typeof attribute.value === 'string'
                 ? attribute.value
-                : JSON.parse(attribute.value.value);
+                : programToValue(attribute.value.data!.estree!);
           } catch {
             error(`${node.type} has unexpected attributes`);
           }
@@ -339,7 +392,6 @@ function markdocNodeToProseMirrorNode(
       })`
     );
   }
-  console.log(node);
   error(`Unhandled type ${node.type}`);
   return null;
 }
