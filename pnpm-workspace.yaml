@@ -8,3 +8,4 @@ packages:
   - 'keystatic'
   - 'packages/*'
   - 'templates/*'
+  - 'tests'
