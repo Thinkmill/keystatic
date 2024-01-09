@@ -2,6 +2,7 @@ import { config, fields, collection, singleton } from '@keystatic/core';
 import {
   __experimental_markdoc_field,
   __experimental_markdoc_field_cloudImageBlock,
+  __experimental_mdx_field,
 } from '@keystatic/core/form/fields/markdoc';
 import { cloudImage } from '@keystatic/core/component-blocks';
 import {
@@ -53,7 +54,7 @@ export default config({
     navigation: {
       Pages: ['pages', 'blog', 'projects', 'resources'],
       Config: ['authors', 'navigation'],
-      Experimental: ['pagesWithMarkdocField'],
+      Experimental: ['pagesWithMarkdocField', 'pagesMDX'],
     },
   },
   collections: {
@@ -81,6 +82,171 @@ export default config({
           links: true,
           componentBlocks,
           formatting,
+        }),
+      },
+    }),
+    pagesMDX: collection({
+      label: 'Documentation MDX',
+      slugField: 'title',
+      entryLayout: 'content',
+      format: { contentField: 'content' },
+      path: 'src/content/mdx/**',
+      previewUrl: makePreviewUrl('/docs/{slug}'),
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        summary: fields.text({
+          label: 'Summary',
+          description: 'The summary is used for the metadata description.',
+          multiline: true,
+        }),
+        content: __experimental_mdx_field({
+          label: 'Content',
+          components: {
+            Tags: block({
+              label: 'Tags',
+              schema: {
+                tags: fields.multiselect({
+                  label: 'Project tags',
+                  options: [
+                    { label: 'Local', value: 'Local' },
+                    { label: 'Github', value: 'github' },
+                    { label: 'New project', value: 'New project' },
+                    { label: 'Existing project', value: 'Existing project' },
+                    { label: 'Astro', value: 'Astro' },
+                    { label: 'Next.js', value: 'Next.js' },
+                  ],
+                }),
+              },
+              ContentView({ value }) {
+                return (
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    {value.tags.map(tag => (
+                      <span
+                        style={{
+                          border: 'solid 1px #ddd',
+                          padding: '0.25rem 0.5rem',
+                          borderRadius: '20px',
+                          fontSize: '11px',
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                );
+              },
+            }),
+            Embed: block({
+              label: 'Embed',
+              schema: {
+                mediaType: fields.select({
+                  label: 'Media type',
+                  options: [
+                    { label: 'Video', value: 'video' },
+                    { label: 'Tweet', value: 'tweet' },
+                  ],
+                  defaultValue: 'video',
+                }),
+                embedCode: fields.text({
+                  label: 'Embed code',
+                  multiline: true,
+                }),
+              },
+              ContentView({ value }) {
+                return (
+                  <pre>
+                    <code>{value.embedCode || '(no embed code set)'}</code>
+                  </pre>
+                );
+              },
+            }),
+            FieldDemo: block({
+              label: 'Field demo',
+              schema: {
+                field: fields.select({
+                  label: 'Field',
+                  defaultValue: 'text',
+                  options: [
+                    { label: 'Date', value: 'date' },
+                    { label: 'Datetime', value: 'datetime' },
+                    { label: 'File', value: 'file' },
+                    { label: 'Image', value: 'image' },
+                    { label: 'Integer', value: 'integer' },
+                    { label: 'Multiselect', value: 'multiselect' },
+                    { label: 'Select', value: 'select' },
+                    { label: 'Slug', value: 'slug' },
+                    { label: 'Text', value: 'text' },
+                    { label: 'URL', value: 'url' },
+                  ],
+                }),
+              },
+              ContentView({ value }) {
+                return value.field ? (
+                  <>
+                    Field: <code>{value.field}</code>
+                  </>
+                ) : (
+                  '(no field selected)'
+                );
+              },
+            }),
+            Aside: wrapper({
+              label: 'Aside',
+              schema: {
+                icon: fields.text({
+                  label: 'Emoji icon...',
+                }),
+              },
+              ContentView({ value, children }) {
+                return (
+                  <Flex gap="medium">
+                    <span contentEditable={false}>{value.icon}</span>
+                    <div>{children}</div>
+                  </Flex>
+                );
+              },
+            }),
+            Something: block({
+              label: 'Something',
+              schema: {
+                text: fields.text({ label: 'Text' }),
+              },
+            }),
+            CloudImage: __experimental_markdoc_field_cloudImageBlock({
+              label: 'Cloud Image',
+            }),
+            InlineThing: inline({
+              label: 'Inline thing',
+              schema: {
+                something: fields.text({ label: 'Something' }),
+              },
+            }),
+            Highlight: mark({
+              label: 'Highlight',
+              icon: highlighterIcon,
+              schema: {
+                color: fields.select({
+                  label: 'Color',
+                  options: [
+                    { label: 'Yellow', value: 'yellow' },
+                    { label: 'Green', value: 'lightgreen' },
+                    { label: 'Blue', value: 'lightblue' },
+                  ],
+                  defaultValue: 'yellow',
+                }),
+              },
+              style({ value }) {
+                return {
+                  backgroundColor: value.color,
+                };
+              },
+              tag: 'mark',
+            }),
+            Wrapper: wrapper({
+              label: 'Wrapper',
+              schema: {},
+            }),
+          },
         }),
       },
     }),

@@ -27,4 +27,6 @@ export let SlugFieldInput = empty,
   createEditorSchema = empty,
   getDefaultValue = empty,
   parseToEditorState = empty,
-  serializeFromEditorState = empty;
+  serializeFromEditorState = empty,
+  parseToEditorStateMDX = empty,
+  serializeFromEditorStateMDX = empty;
