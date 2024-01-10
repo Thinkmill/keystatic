@@ -562,6 +562,7 @@ export function CloudImagePreviewForNewEditor(props: {
   if (!props.value.src) {
     return (
       <Placeholder
+        // @ts-ignore
         onChange={props.onChange}
         onRemove={props.onRemove}
         selected={props.isSelected}
@@ -577,6 +578,7 @@ export function CloudImagePreviewForNewEditor(props: {
         width: props.value.width ?? undefined,
         height: props.value.height ?? undefined,
       }}
+      // @ts-ignore
       onChange={props.onChange}
       onRemove={props.onRemove}
       selected={props.isSelected}

@@ -78,12 +78,12 @@ type InlineComponentConfig<Schema extends Record<string, ComponentSchema>> = {
   description?: string;
   icon?: ReactElement;
   schema: Schema;
-  NodeView?: (props: {
+  NodeView?(props: {
     value: ParsedValueForComponentSchema<ObjectField<Schema>>;
     onChange(value: ParsedValueForComponentSchema<ObjectField<Schema>>): void;
     onRemove(): void;
     isSelected: boolean;
-  }) => ReactNode;
+  }): ReactNode;
 };
 
 type InlineComponent<Schema extends Record<string, ComponentSchema>> =
@@ -97,9 +97,12 @@ export function inline<Schema extends Record<string, ComponentSchema>>(
 
 type Thing<T, Schema extends Record<string, ComponentSchema>> =
   | T
-  | ((props: {
-      value: ParsedValueForComponentSchema<ObjectField<Schema>>;
-    }) => T);
+  // this is so that it's bivariant
+  | {
+      method(props: {
+        value: ParsedValueForComponentSchema<ObjectField<Schema>>;
+      }): T;
+    }['method'];
 
 type MarkComponentConfig<Schema extends Record<string, ComponentSchema>> = {
   label: string;
