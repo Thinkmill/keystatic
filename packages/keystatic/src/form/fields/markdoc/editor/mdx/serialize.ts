@@ -12,6 +12,7 @@ import {
   Root,
 } from 'mdast';
 import { MdxJsxAttribute } from 'mdast-util-mdx';
+import { internalToSerialized } from '../props-serialization';
 
 type DocumentSerializationState = {
   schema: EditorSchema;
@@ -113,7 +114,13 @@ function textblockChildren(
           node = {
             type: 'mdxJsxTextElement',
             name: mark.type.name,
-            attributes: propsToAttributes(mark.attrs.props),
+            attributes: propsToAttributes(
+              internalToSerialized(
+                componentConfig.schema,
+                mark.attrs.props,
+                state
+              )
+            ),
             children: [node],
           };
           continue;
@@ -252,11 +259,13 @@ function proseMirrorToMDX(
       componentConfig.kind === 'wrapper' || componentConfig.kind === 'repeating'
         ? blocks(node.content)
         : [];
-    // TODO: handling of e.g. image fields
+
     return {
       type: 'mdxJsxFlowElement',
       name,
-      attributes: propsToAttributes(node.attrs.props),
+      attributes: propsToAttributes(
+        internalToSerialized(componentConfig.schema, node.attrs.props, state)
+      ),
       children,
     };
   }

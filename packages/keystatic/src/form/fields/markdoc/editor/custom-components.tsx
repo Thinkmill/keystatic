@@ -15,6 +15,7 @@ import { ContentComponent } from '../../../../content-components';
 import { NodeSelection } from 'prosemirror-state';
 import { tokenSchema } from '@keystar/ui/style';
 import { Item, Menu, MenuTrigger } from '@keystar/ui/menu';
+import { deserializeValue, toSerialized } from './props-serialization';
 
 function BlockDataWrapper(props: { node: Node; children: ReactNode }) {
   return (
@@ -26,6 +27,11 @@ function BlockDataWrapper(props: { node: Node; children: ReactNode }) {
     </div>
   );
 }
+
+const useDeserializedValue: typeof deserializeValue =
+  function useDeserializedValue(value, schema): Record<string, unknown> {
+    return useMemo(() => deserializeValue(value, schema), [schema, value]);
+  };
 
 function BlockWrapper(props: {
   node: Node;
@@ -41,6 +47,8 @@ function BlockWrapper(props: {
     () => ({ kind: 'object' as const, fields: props.component.schema }),
     [props.component.schema]
   );
+
+  const value = useDeserializedValue(props.node.attrs.props, schema);
   return (
     <>
       <Box
@@ -118,12 +126,16 @@ function BlockWrapper(props: {
             <Heading>Edit {props.component.label}</Heading>
             <FormValue
               schema={schema}
-              value={props.node.attrs.props}
+              value={value}
               onSave={value => {
                 runCommand((state, dispatch) => {
                   if (dispatch) {
                     dispatch(
-                      state.tr.setNodeAttribute(props.pos, 'props', value)
+                      state.tr.setNodeAttribute(
+                        props.pos,
+                        'props',
+                        toSerialized(value, schema.fields)
+                      )
                     );
                   }
                   return true;
@@ -160,6 +172,10 @@ export function getCustomNodeSpecs(
           reactNodeView: {
             component: function Block(props) {
               const runCommand = useEditorDispatchCommand();
+              const value = useDeserializedValue(
+                props.node.attrs.props,
+                schema
+              );
               return (
                 <BlockDataWrapper node={props.node}>
                   {'NodeView' in component && component.NodeView ? (
@@ -188,14 +204,14 @@ export function getCustomNodeSpecs(
                               state.tr.setNodeAttribute(
                                 props.pos,
                                 'props',
-                                value
+                                toSerialized(value, schema.fields)
                               )
                             );
                           }
                           return true;
                         });
                       }}
-                      value={props.node.attrs.props}
+                      value={value}
                     />
                   ) : (
                     <BlockWrapper
@@ -208,7 +224,7 @@ export function getCustomNodeSpecs(
                       pos={props.pos}
                     >
                       {'ContentView' in component && component.ContentView && (
-                        <component.ContentView value={props.node.attrs.props} />
+                        <component.ContentView value={value} />
                       )}
                     </BlockWrapper>
                   )}
@@ -260,6 +276,10 @@ export function getCustomNodeSpecs(
           reactNodeView: {
             component: function Block(props) {
               const runCommand = useEditorDispatchCommand();
+              const value = useDeserializedValue(
+                props.node.attrs.props,
+                schema
+              );
               return (
                 <BlockDataWrapper node={props.node}>
                   {'NodeView' in component && component.NodeView ? (
@@ -288,14 +308,14 @@ export function getCustomNodeSpecs(
                               state.tr.setNodeAttribute(
                                 props.pos,
                                 'props',
-                                value
+                                toSerialized(value, schema.fields)
                               )
                             );
                           }
                           return true;
                         });
                       }}
-                      value={props.node.attrs.props}
+                      value={value}
                     >
                       {props.children}
                     </component.NodeView>
@@ -310,7 +330,7 @@ export function getCustomNodeSpecs(
                       pos={props.pos}
                     >
                       {'ContentView' in component && component.ContentView ? (
-                        <component.ContentView value={props.node.attrs.props}>
+                        <component.ContentView value={value}>
                           {props.children}
                         </component.ContentView>
                       ) : (
@@ -433,6 +453,10 @@ export function getCustomNodeSpecs(
           reactNodeView: {
             component: function Block(props) {
               const runCommand = useEditorDispatchCommand();
+              const value = useDeserializedValue(
+                props.node.attrs.props,
+                schema
+              );
               return (
                 <BlockDataWrapper node={props.node}>
                   {'NodeView' in component && component.NodeView ? (
@@ -461,14 +485,14 @@ export function getCustomNodeSpecs(
                               state.tr.setNodeAttribute(
                                 props.pos,
                                 'props',
-                                value
+                                toSerialized(value, schema.fields)
                               )
                             );
                           }
                           return true;
                         });
                       }}
-                      value={props.node.attrs.props}
+                      value={value}
                     >
                       {props.children}
                     </component.NodeView>
@@ -528,7 +552,7 @@ export function getCustomNodeSpecs(
                       }
                     >
                       {'ContentView' in component && component.ContentView ? (
-                        <component.ContentView value={props.node.attrs.props}>
+                        <component.ContentView value={value}>
                           {props.children}
                         </component.ContentView>
                       ) : (
@@ -558,9 +582,7 @@ export function getCustomNodeSpecs(
                 if (typeof node === 'string') return false;
                 const props = node.dataset.props;
                 if (!props) return false;
-                return {
-                  props: JSON.parse(props),
-                };
+                return { props: JSON.parse(props) };
               },
             },
           ],

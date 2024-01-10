@@ -6,13 +6,12 @@ import {
 } from 'prosemirror-model';
 import { EditorSchema } from '../schema';
 import { fromUint8Array } from 'js-base64';
-import { ComponentSchema } from '../../../../api';
-import { transformProps } from '../../../../props-value';
 import { fixPath } from '../../../../../app/path-utils';
 import { getSrcPrefixForImageBlock } from '../images';
 import { Nodes, PhrasingContent } from 'mdast';
 import { MdxJsxAttributeValueExpression } from 'mdast-util-mdx';
 import { assert } from 'emery';
+import { deserializeProps, toSerialized } from '../props-serialization';
 
 let state:
   | {
@@ -344,17 +343,17 @@ function markdocNodeToProseMirrorNode(
         }
         error(`${node.type} has unexpected attributes`);
       }
-      node.attributes.map(x => x.value);
+      const deserialized = deserializeProps(
+        { kind: 'object', fields: componentConfig.schema },
+        attributes,
+        state.files,
+        state.otherFiles,
+        state.slug
+      );
 
       const pmNode = nodeType.createAndFill(
         {
-          props: deserializeProps(
-            { kind: 'object', fields: componentConfig.schema },
-            attributes,
-            state.files,
-            state.otherFiles,
-            state.slug
-          ),
+          props: toSerialized(deserialized, componentConfig.schema),
         },
         children
       );
@@ -394,36 +393,4 @@ function markdocNodeToProseMirrorNode(
   }
   error(`Unhandled type ${node.type}`);
   return null;
-}
-
-function deserializeProps(
-  schema: ComponentSchema,
-  value: unknown,
-  files: ReadonlyMap<string, Uint8Array>,
-  otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>,
-  slug: string | undefined
-) {
-  return transformProps(schema, value, {
-    form: (schema, value) => {
-      if (schema.formKind === 'asset') {
-        const filename = schema.filename(value, {
-          slug,
-          suggestedFilenamePrefix: undefined,
-        });
-        return schema.parse(value, {
-          asset: filename
-            ? schema.directory
-              ? otherFiles.get(schema.directory)?.get(filename)
-              : files.get(filename)
-            : undefined,
-          slug,
-        });
-      }
-
-      if (schema.formKind === 'content') {
-        throw new Error('Not implemented');
-      }
-      return schema.parse(value, undefined);
-    },
-  });
 }

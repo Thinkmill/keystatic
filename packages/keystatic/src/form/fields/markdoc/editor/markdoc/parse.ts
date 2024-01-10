@@ -7,10 +7,9 @@ import {
 } from 'prosemirror-model';
 import { EditorSchema } from '../schema';
 import { fromUint8Array } from 'js-base64';
-import { ComponentSchema } from '../../../../api';
-import { transformProps } from '../../../../props-value';
 import { fixPath } from '../../../../../app/path-utils';
 import { getSrcPrefixForImageBlock } from '../images';
+import { deserializeProps, toSerialized } from '../props-serialization';
 
 let state:
   | {
@@ -325,19 +324,19 @@ function markdocNodeToProseMirrorNode(
         return addMark(node, schema.schema.marks[node.tag], parentType);
       }
       const nodeType = schema.schema.nodes[node.tag];
-      // TODO: validation and handling of e.g. image fields
       const state = getState();
       const children = childrenToProseMirrorNodes(node.children, nodeType);
+      const deserialized = deserializeProps(
+        { kind: 'object', fields: componentConfig.schema },
+        node.attributes,
+        state.files,
+        state.otherFiles,
+        state.slug
+      );
 
       const pmNode = nodeType.createAndFill(
         {
-          props: deserializeProps(
-            { kind: 'object', fields: componentConfig.schema },
-            node.attributes,
-            state.files,
-            state.otherFiles,
-            state.slug
-          ),
+          props: toSerialized(deserialized, componentConfig.schema),
         },
         children
       );
@@ -396,36 +395,4 @@ function markdocNodeToProseMirrorNode(
     location: node.location,
   });
   return null;
-}
-
-function deserializeProps(
-  schema: ComponentSchema,
-  value: unknown,
-  files: ReadonlyMap<string, Uint8Array>,
-  otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>,
-  slug: string | undefined
-) {
-  return transformProps(schema, value, {
-    form: (schema, value) => {
-      if (schema.formKind === 'asset') {
-        const filename = schema.filename(value, {
-          slug,
-          suggestedFilenamePrefix: undefined,
-        });
-        return schema.parse(value, {
-          asset: filename
-            ? schema.directory
-              ? otherFiles.get(schema.directory)?.get(filename)
-              : files.get(filename)
-            : undefined,
-          slug,
-        });
-      }
-
-      if (schema.formKind === 'content') {
-        throw new Error('Not implemented');
-      }
-      return schema.parse(value, undefined);
-    },
-  });
 }

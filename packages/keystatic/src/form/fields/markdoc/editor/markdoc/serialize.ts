@@ -4,6 +4,7 @@ import { EditorSchema, getEditorSchema } from '../schema';
 import { toUint8Array } from 'js-base64';
 import { getSrcPrefixForImageBlock } from '../images';
 import { fixPath } from '../../../../../app/path-utils';
+import { internalToSerialized } from '../props-serialization';
 
 type DocumentSerializationState = {
   schema: EditorSchema;
@@ -69,7 +70,12 @@ function textblockChildren(
     }
     const componentConfig = state.schema.components[child.type.name];
     if (componentConfig?.kind === 'inline') {
-      const tag = new Ast.Node('tag', child.attrs.props, [], child.type.name);
+      const tag = new Ast.Node(
+        'tag',
+        internalToSerialized(componentConfig.schema, child.attrs.props, state),
+        [],
+        child.type.name
+      );
       tag.inline = true;
       children.push(tag);
       return;
@@ -86,7 +92,16 @@ function textblockChildren(
         }
         const componentConfig = schema.components[mark.type.name];
         if (componentConfig) {
-          node = new Ast.Node('tag', mark.attrs.props, [node], mark.type.name);
+          node = new Ast.Node(
+            'tag',
+            internalToSerialized(
+              componentConfig.schema,
+              mark.attrs.props,
+              state
+            ),
+            [node],
+            mark.type.name
+          );
           node.inline = true;
           continue;
         }
@@ -203,8 +218,12 @@ export function proseMirrorToMarkdoc(
       componentConfig.kind === 'wrapper' || componentConfig.kind === 'repeating'
         ? blocks(node.content)
         : [];
-    // TODO: handling of e.g. image fields
-    return new Ast.Node('tag', node.attrs.props, children, name);
+    return new Ast.Node(
+      'tag',
+      internalToSerialized(componentConfig.schema, node.attrs.props, state),
+      children,
+      name
+    );
   }
 
   return new Ast.Node('paragraph', {}, inline(node.content));
