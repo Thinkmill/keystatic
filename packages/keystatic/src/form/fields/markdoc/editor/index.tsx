@@ -34,7 +34,7 @@ const contentStyles = css({
   outline: 0,
   padding: tokenSchema.size.space.medium,
 
-  '&[data-layout="main"]': {
+  '[data-layout="main"] > &': {
     boxSizing: 'border-box',
     height: '100%',
     padding: 0,
