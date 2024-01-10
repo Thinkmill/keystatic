@@ -15,7 +15,7 @@ import { ContentComponent } from '../../../../content-components';
 import { NodeSelection } from 'prosemirror-state';
 import { tokenSchema } from '@keystar/ui/style';
 import { Item, Menu, MenuTrigger } from '@keystar/ui/menu';
-import { deserializeValue, toSerialized } from './props-serialization';
+import { toSerialized, useDeserializedValue } from './props-serialization';
 
 function BlockDataWrapper(props: { node: Node; children: ReactNode }) {
   return (
@@ -27,11 +27,6 @@ function BlockDataWrapper(props: { node: Node; children: ReactNode }) {
     </div>
   );
 }
-
-const useDeserializedValue: typeof deserializeValue =
-  function useDeserializedValue(value, schema): Record<string, unknown> {
-    return useMemo(() => deserializeValue(value, schema), [schema, value]);
-  };
 
 function BlockWrapper(props: {
   node: Node;
@@ -48,7 +43,10 @@ function BlockWrapper(props: {
     [props.component.schema]
   );
 
-  const value = useDeserializedValue(props.node.attrs.props, schema);
+  const value = useDeserializedValue(
+    props.node.attrs.props,
+    props.component.schema
+  );
   return (
     <>
       <Box
@@ -168,13 +166,20 @@ export function getCustomNodeSpecs(
             component.forSpecificLocations ? '' : 'block '
           }${componentNames.get(name)}`,
           defining: true,
-          attrs: { props: { default: getInitialPropsValue(schema) } },
+          attrs: {
+            props: {
+              default: toSerialized(
+                getInitialPropsValue(schema),
+                schema.fields
+              ),
+            },
+          },
           reactNodeView: {
             component: function Block(props) {
               const runCommand = useEditorDispatchCommand();
               const value = useDeserializedValue(
                 props.node.attrs.props,
-                schema
+                component.schema
               );
               return (
                 <BlockDataWrapper node={props.node}>
@@ -272,13 +277,20 @@ export function getCustomNodeSpecs(
           }${componentNames.get(name)}`,
           content: 'block+',
           defining: true,
-          attrs: { props: { default: getInitialPropsValue(schema) } },
+          attrs: {
+            props: {
+              default: toSerialized(
+                getInitialPropsValue(schema),
+                schema.fields
+              ),
+            },
+          },
           reactNodeView: {
             component: function Block(props) {
               const runCommand = useEditorDispatchCommand();
               const value = useDeserializedValue(
                 props.node.attrs.props,
-                schema
+                component.schema
               );
               return (
                 <BlockDataWrapper node={props.node}>
@@ -380,7 +392,14 @@ export function getCustomNodeSpecs(
         spec = {
           group: 'inline inline_component',
           inline: true,
-          attrs: { props: { default: getInitialPropsValue(schema) } },
+          attrs: {
+            props: {
+              default: toSerialized(
+                getInitialPropsValue(schema),
+                schema.fields
+              ),
+            },
+          },
           toDOM: node => [
             'span',
             {
@@ -449,13 +468,20 @@ export function getCustomNodeSpecs(
               : component.validation.children.max
           }}`,
           defining: true,
-          attrs: { props: { default: getInitialPropsValue(schema) } },
+          attrs: {
+            props: {
+              default: toSerialized(
+                getInitialPropsValue(schema),
+                schema.fields
+              ),
+            },
+          },
           reactNodeView: {
             component: function Block(props) {
               const runCommand = useEditorDispatchCommand();
               const value = useDeserializedValue(
                 props.node.attrs.props,
-                schema
+                component.schema
               );
               return (
                 <BlockDataWrapper node={props.node}>
@@ -626,7 +652,11 @@ export function getCustomMarkSpecs(
           : () => component.style;
 
       const spec: MarkSpec = {
-        attrs: { props: { default: getInitialPropsValue(schema) } },
+        attrs: {
+          props: {
+            default: toSerialized(getInitialPropsValue(schema), schema.fields),
+          },
+        },
         toDOM(mark) {
           const element = document.createElement(tag);
           element.setAttribute('data-component', name);

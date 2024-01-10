@@ -176,23 +176,50 @@ export function proseMirrorToMarkdoc(
     return new Ast.Node('td', {}, blocks(node.content));
   }
   if (node.type === schema.nodes.heading) {
-    return new Ast.Node(
+    const extra = internalToSerialized(
+      schema.config.heading.schema,
+      node.attrs.props,
+      state
+    );
+    const markdocNode = new Ast.Node(
       'heading',
-      { level: node.attrs.level },
+      { level: node.attrs.level, ...extra },
       inline(node.content)
     );
+    for (const [key, value] of Object.entries(extra)) {
+      markdocNode.annotations.push({
+        name: key,
+        value,
+        type: 'attribute',
+      });
+    }
+    return markdocNode;
   }
   if (node.type === schema.nodes.code_block) {
-    return new Ast.Node(
+    const extra = internalToSerialized(
+      schema.config.codeBlock!.schema,
+      node.attrs.props,
+      state
+    );
+    const markdocNode = new Ast.Node(
       'fence',
       typeof node.attrs.language === 'string' && node.attrs.language !== 'plain'
         ? {
             language: node.attrs.language,
             content: node.textBetween(0, node.content.size) + '\n',
+            ...extra,
           }
-        : { content: node.textBetween(0, node.content.size) + '\n' },
+        : { content: node.textBetween(0, node.content.size) + '\n', ...extra },
       inline(node.content)
     );
+    for (const [key, value] of Object.entries(extra)) {
+      markdocNode.annotations.push({
+        name: key,
+        value,
+        type: 'attribute',
+      });
+    }
+    return markdocNode;
   }
   if (node.type === schema.nodes.list_item) {
     let listItemContent = blocks(node.content);

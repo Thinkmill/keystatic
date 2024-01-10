@@ -23,6 +23,8 @@ import { Dialog, DialogContainer } from '@keystar/ui/dialog';
 import { FormValue } from '../FormValue';
 import { Heading } from '@keystar/ui/typography';
 import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
+import { ComponentSchema } from '../../../../api';
+import { toSerialized, useDeserializedValue } from '../props-serialization';
 
 type NodePopoverRenderer = (props: {
   node: Node;
@@ -30,9 +32,79 @@ type NodePopoverRenderer = (props: {
   pos: number;
 }) => ReactElement | null;
 
-const popoverComponents: Record<string, NodePopoverRenderer> = {
+function ExtraAttributesMenuItem(props: {
+  schema: Record<string, ComponentSchema>;
+  name: string;
+  serialized: any;
+  pos: number;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const componentSchema = useMemo(
+    () => ({ kind: 'object' as const, fields: props.schema }),
+    [props.schema]
+  );
+  const value = useDeserializedValue(props.serialized, props.schema);
+  const runCommand = useEditorDispatchCommand();
+  return (
+    <>
+      <TooltipTrigger>
+        <ActionButton
+          prominence="low"
+          onPress={() => {
+            setIsOpen(true);
+          }}
+        >
+          <Icon src={pencilIcon} />
+        </ActionButton>
+        <Tooltip>Edit</Tooltip>
+      </TooltipTrigger>
+      <DialogContainer
+        onDismiss={() => {
+          setIsOpen(false);
+        }}
+      >
+        {isOpen && (
+          <Dialog>
+            <Heading>Edit {props.name}</Heading>
+            <FormValue
+              schema={componentSchema}
+              value={value}
+              onSave={value => {
+                runCommand((state, dispatch) => {
+                  if (dispatch) {
+                    dispatch(
+                      state.tr.setNodeAttribute(
+                        props.pos,
+                        'props',
+                        toSerialized(value, props.schema)
+                      )
+                    );
+                  }
+                  return true;
+                });
+              }}
+            />
+          </Dialog>
+        )}
+      </DialogContainer>
+    </>
+  );
+}
+
+function withShouldUse(
+  val: NodePopoverRenderer,
+  shouldShow: (schema: EditorSchema) => boolean
+): NodePopoverRenderer & { shouldShow(schema: EditorSchema): boolean } {
+  return Object.assign(val, { shouldShow });
+}
+
+const popoverComponents: Record<
+  string,
+  NodePopoverRenderer & { shouldShow?(schema: EditorSchema): boolean }
+> = {
   code_block: function CodeBlockPopover(props) {
     const dispatchCommand = useEditorDispatchCommand();
+    const schema = useEditorSchema();
     return (
       <Flex gap="regular" padding="regular">
         <CodeBlockLanguageCombobox
@@ -46,6 +118,14 @@ const popoverComponents: Record<string, NodePopoverRenderer> = {
             });
           }}
         />
+        {!!Object.keys(schema.config.codeBlock!.schema).length && (
+          <ExtraAttributesMenuItem
+            name="Code Block"
+            schema={schema.config.codeBlock!.schema}
+            pos={props.pos}
+            serialized={props.node.attrs.props}
+          />
+        )}
         <Divider orientation="vertical" />
         <TooltipTrigger>
           <ActionButton
@@ -112,6 +192,45 @@ const popoverComponents: Record<string, NodePopoverRenderer> = {
       </Flex>
     );
   },
+  heading: withShouldUse(
+    function HeadingPopover(props) {
+      const dispatchCommand = useEditorDispatchCommand();
+      const schema = useEditorSchema();
+      return (
+        <Flex gap="regular" padding="regular">
+          <ExtraAttributesMenuItem
+            name="Heading"
+            schema={schema.config.heading.schema}
+            pos={props.pos}
+            serialized={props.node.attrs.props}
+          />
+          <Divider orientation="vertical" />
+          <TooltipTrigger>
+            <ActionButton
+              prominence="low"
+              onPress={() => {
+                dispatchCommand((state, dispatch) => {
+                  if (dispatch) {
+                    dispatch(
+                      state.tr.delete(
+                        props.pos,
+                        props.pos + props.node.nodeSize
+                      )
+                    );
+                  }
+                  return true;
+                });
+              }}
+            >
+              <Icon src={trash2Icon} />
+            </ActionButton>
+            <Tooltip tone="critical">Remove</Tooltip>
+          </TooltipTrigger>
+        </Flex>
+      );
+    },
+    schema => !!Object.keys(schema.config.heading.schema).length
+  ),
 } satisfies Partial<Record<keyof EditorSchema['nodes'], NodePopoverRenderer>>;
 
 function markAround($pos: ResolvedPos, markType: MarkType) {
@@ -216,6 +335,10 @@ function InlineComponentPopover(props: {
     () => ({ kind: 'object' as const, fields: componentConfig.schema }),
     [componentConfig.schema]
   );
+  const value = useDeserializedValue(
+    props.node.attrs.props,
+    componentConfig.schema
+  );
   return (
     <>
       <Flex gap="regular" padding="regular">
@@ -259,12 +382,16 @@ function InlineComponentPopover(props: {
             <Heading>Edit {componentConfig.label}</Heading>
             <FormValue
               schema={componentSchema}
-              value={props.node.attrs.props}
+              value={value}
               onSave={value => {
                 runCommand((state, dispatch) => {
                   if (dispatch) {
                     dispatch(
-                      state.tr.setNodeAttribute(props.pos, 'props', value)
+                      state.tr.setNodeAttribute(
+                        props.pos,
+                        'props',
+                        toSerialized(value, componentSchema.fields)
+                      )
                     );
                   }
                   return true;
@@ -420,7 +547,10 @@ function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
       };
     }
     const component = popoverComponents[node.type.name];
-    if (component !== undefined) {
+    if (
+      component !== undefined &&
+      (!component.shouldShow || component.shouldShow(editorSchema))
+    ) {
       return {
         adaptToBoundary: 'stick',
         kind: 'node',
@@ -440,7 +570,10 @@ function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
     const node = $pos.node(i);
     if (!node) break;
     const component = popoverComponents[node.type.name];
-    if (component !== undefined) {
+    if (
+      component !== undefined &&
+      (!component.shouldShow || component.shouldShow(editorSchema))
+    ) {
       return {
         adaptToBoundary: 'stick',
         kind: 'node',

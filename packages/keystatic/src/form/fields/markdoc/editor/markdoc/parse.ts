@@ -11,21 +11,21 @@ import { fixPath } from '../../../../../app/path-utils';
 import { getSrcPrefixForImageBlock } from '../images';
 import { deserializeProps, toSerialized } from '../props-serialization';
 
-let state:
+let _state:
   | {
       schema: EditorSchema;
       errors: ValidateError[];
       marks: readonly Mark[];
-      files: ReadonlyMap<string, Uint8Array>;
+      extraFiles: ReadonlyMap<string, Uint8Array>;
       otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
       slug: string | undefined;
     }
   | undefined;
-function getState(): typeof state & {} {
-  if (!state) {
+function getState(): typeof _state & {} {
+  if (!_state) {
     throw new Error('state not set');
   }
-  return state;
+  return _state;
 }
 
 function getSchema() {
@@ -123,19 +123,19 @@ export function markdocToProseMirror(
   otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>> | undefined,
   slug: string | undefined
 ): ProseMirrorNode {
-  state = {
+  _state = {
     schema,
     errors: [],
     marks: [],
-    files: files ?? new Map(),
+    extraFiles: files ?? new Map(),
     otherFiles: otherFiles ?? new Map(),
     slug,
   };
   try {
     let pmNode = markdocNodeToProseMirrorNode(node, undefined);
-    if (state.errors.length) {
+    if (_state.errors.length) {
       throw new Error(
-        state.errors.map(e => e.lines[0] + ':' + e.error.message).join('\n')
+        _state.errors.map(e => e.lines[0] + ':' + e.error.message).join('\n')
       );
     }
     if (!(pmNode instanceof ProseMirrorNode)) {
@@ -143,7 +143,7 @@ export function markdocToProseMirror(
     }
     return pmNode;
   } finally {
-    state = undefined;
+    _state = undefined;
   }
 }
 
@@ -229,8 +229,12 @@ function markdocNodeToProseMirrorNode(
   }
   if (node.type === 'heading') {
     if (!schema.nodes.heading) return notAllowed(node, parentType);
+    const { level, ...attrs } = node.attributes;
+    const state = getState();
+    const fields = state.schema.config.heading.schema;
     return createAndFill(node, schema.nodes.heading, {
       level: node.attributes.level,
+      props: toSerialized(deserializeProps(fields, attrs, state), fields),
     });
   }
   if (node.type === 'paragraph') {
@@ -244,14 +248,19 @@ function markdocNodeToProseMirrorNode(
   }
   if (node.type === 'fence') {
     if (!schema.nodes.code_block) return notAllowed(node, parentType);
+    const { language, ...attrs } = node.attributes;
+    const state = getState();
+    const fields = state.schema.config.codeBlock!.schema;
+    const content = node.attributes.content.slice(0, -1);
     return schema.nodes.code_block.createAndFill(
       {
         language:
           typeof node.attributes.language === 'string'
             ? node.attributes.language
             : 'plain',
+        props: toSerialized(deserializeProps(fields, attrs, state), fields),
       },
-      schema.schema.text(node.attributes.content.slice(0, -1))
+      content ? schema.schema.text(content) : undefined
     );
   }
   if (node.type === 'hr') {
@@ -327,11 +336,9 @@ function markdocNodeToProseMirrorNode(
       const state = getState();
       const children = childrenToProseMirrorNodes(node.children, nodeType);
       const deserialized = deserializeProps(
-        { kind: 'object', fields: componentConfig.schema },
+        componentConfig.schema,
         node.attributes,
-        state.files,
-        state.otherFiles,
-        state.slug
+        state
       );
 
       const pmNode = nodeType.createAndFill(
@@ -366,7 +373,7 @@ function markdocNodeToProseMirrorNode(
       typeof schema.config.image === 'object' &&
       typeof schema.config.image.directory === 'string'
         ? getState().otherFiles.get(fixPath(schema.config.image.directory))
-        : getState().files
+        : getState().extraFiles
     )?.get(filename);
 
     if (content && schema.nodes.image) {

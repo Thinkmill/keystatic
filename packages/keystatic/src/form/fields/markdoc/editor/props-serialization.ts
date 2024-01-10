@@ -2,28 +2,31 @@ import { fromUint8Array, toUint8Array } from 'js-base64';
 import { ComponentSchema } from '../../../api';
 import { transformProps } from '../../../props-value';
 import { serializeProps } from '../../../serialize-props';
+import { useMemo } from 'react';
 
 export function deserializeProps(
-  schema: ComponentSchema,
+  fields: Record<string, ComponentSchema>,
   value: unknown,
-  files: ReadonlyMap<string, Uint8Array>,
-  otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>,
-  slug: string | undefined
+  state: {
+    slug: string | undefined;
+    extraFiles: ReadonlyMap<string, Uint8Array>;
+    otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
+  }
 ) {
-  return transformProps(schema, value, {
+  return transformProps({ kind: 'object', fields }, value, {
     form: (schema, value) => {
       if (schema.formKind === 'asset') {
         const filename = schema.filename(value, {
-          slug,
+          slug: state.slug,
           suggestedFilenamePrefix: undefined,
         });
         return schema.parse(value, {
           asset: filename
             ? schema.directory
-              ? otherFiles.get(schema.directory)?.get(filename)
-              : files.get(filename)
+              ? state.otherFiles.get(schema.directory)?.get(filename)
+              : state.extraFiles.get(filename)
             : undefined,
-          slug,
+          slug: state.slug,
         });
       }
 
@@ -64,7 +67,7 @@ export function deserializeValue(
       contents: string;
     }[];
   },
-  schema: ComponentSchema
+  schema: Record<string, ComponentSchema>
 ) {
   const files = new Map<string, Uint8Array>();
   const extraFiles = new Map<string, Map<string, Uint8Array>>();
@@ -80,13 +83,11 @@ export function deserializeValue(
     }
   }
 
-  return deserializeProps(
-    schema,
-    value.value,
-    files,
-    extraFiles,
-    undefined
-  ) as Record<string, unknown>;
+  return deserializeProps(schema, value.value, {
+    slug: undefined,
+    extraFiles: files,
+    otherFiles: extraFiles,
+  }) as Record<string, unknown>;
 }
 
 export function internalToSerialized(
@@ -105,11 +106,10 @@ export function internalToSerialized(
     otherFiles: Map<string, Map<string, Uint8Array>>;
   }
 ): Record<string, unknown> {
-  const schema = { kind: 'object' as const, fields };
-  const deserialized = deserializeValue(value, schema);
+  const deserialized = deserializeValue(value, fields);
   const serialized = serializeProps(
     deserialized,
-    schema,
+    { kind: 'object', fields },
     undefined,
     state.slug,
     false
@@ -126,3 +126,8 @@ export function internalToSerialized(
   }
   return serialized.value as Record<string, unknown>;
 }
+
+export const useDeserializedValue: typeof deserializeValue =
+  function useDeserializedValue(value, schema): Record<string, unknown> {
+    return useMemo(() => deserializeValue(value, schema), [schema, value]);
+  };

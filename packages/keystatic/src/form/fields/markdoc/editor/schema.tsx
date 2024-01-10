@@ -34,6 +34,8 @@ import { WithReactNodeViewSpec } from './react-node-views';
 import { ContentComponent } from '../../../../content-components';
 import { getCustomMarkSpecs, getCustomNodeSpecs } from './custom-components';
 import { EditorConfig } from '../config';
+import { toSerialized } from './props-serialization';
+import { getInitialPropsValue } from '../../../initial-values';
 
 const blockElementSpacing = css({
   marginBlock: '1em',
@@ -83,7 +85,6 @@ export type EditorNodeSpec = NodeSpec &
 
 const inlineContent = `(text | inline_component | (text hard_break))*`;
 
-const levels = [1, 2, 3, 4, 5, 6];
 const levelsMeta = [
   { description: 'Use this for a top level heading', icon: heading1Icon },
   { description: 'Use this for key sections', icon: heading2Icon },
@@ -237,26 +238,6 @@ const nodeSpecs = {
     toDOM() {
       return hardBreakDOM;
     },
-  },
-  heading: {
-    attrs: {
-      level: { default: levels[0] },
-    },
-    content: inlineContent,
-    group: 'block',
-    parseDOM: levels.map(level => ({
-      tag: 'h' + level,
-      attrs: { level },
-    })),
-    defining: true,
-    toDOM(node) {
-      return ['h' + node.attrs.level, 0];
-    },
-    insertMenu: levels.map((level, index) => ({
-      ...levelsMeta[index],
-      label: 'Heading ' + level,
-      command: type => setBlockType(type, { level }),
-    })),
   },
   table: {
     content: 'table_row+',
@@ -475,7 +456,7 @@ export type EditorSchema = {
   schema: Schema;
   nodes: Partial<{
     [_ in keyof typeof nodeSpecs]: NodeType;
-  }> & { paragraph: {}; doc: {}; text: {} };
+  }> & { paragraph: {}; doc: {}; text: {}; heading: NodeType };
   marks: Partial<{
     [_ in keyof typeof markSpecs]: MarkType;
   }>;
@@ -502,7 +483,21 @@ export function createEditorSchema(
     nodeSpecsWithCustomNodes.divider = nodeSpecs.divider;
   }
   if (config.codeBlock) {
-    nodeSpecsWithCustomNodes.code_block = nodeSpecs.code_block;
+    nodeSpecsWithCustomNodes.code_block = {
+      ...nodeSpecs.code_block,
+      attrs: {
+        ...nodeSpecs.code_block.attrs,
+        props: {
+          default: toSerialized(
+            getInitialPropsValue({
+              kind: 'object',
+              fields: config.heading.schema,
+            }),
+            config.heading.schema
+          ),
+        },
+      },
+    };
   }
   if (config.orderedList) {
     nodeSpecsWithCustomNodes.ordered_list = nodeSpecs.ordered_list;
@@ -517,6 +512,15 @@ export function createEditorSchema(
     nodeSpecsWithCustomNodes.heading = {
       attrs: {
         level: { default: config.heading.levels[0] },
+        props: {
+          default: toSerialized(
+            getInitialPropsValue({
+              kind: 'object',
+              fields: config.heading.schema,
+            }),
+            config.heading.schema
+          ),
+        },
       },
       content: inlineContent,
       group: 'block',
