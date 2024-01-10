@@ -8,14 +8,14 @@ import { markdocToProseMirror } from './editor/markdoc/parse';
 import Markdoc from '@markdoc/markdoc';
 import { proseMirrorToMarkdoc } from './editor/markdoc/serialize';
 import { useEntryLayoutSplitPaneContext } from '../../../app/entry-form';
-import { fromMarkdown } from 'mdast-util-from-markdown';
-import { toMarkdown } from 'mdast-util-to-markdown';
-import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm';
-import { mdxFromMarkdown, mdxToMarkdown } from 'mdast-util-mdx';
-import { gfm } from 'micromark-extension-gfm';
-import { mdxjs } from 'micromark-extension-mdxjs';
-import { mdxToProseMirror } from './editor/mdx/parse';
-import { proseMirrorToMDXRoot } from './editor/mdx/serialize';
+// import { fromMarkdown } from 'mdast-util-from-markdown';
+// import { toMarkdown } from 'mdast-util-to-markdown';
+// import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm';
+// import { mdxFromMarkdown, mdxToMarkdown } from 'mdast-util-mdx';
+// import { gfm } from 'micromark-extension-gfm';
+// import { mdxjs } from 'micromark-extension-mdxjs';
+// import { mdxToProseMirror } from './editor/mdx/parse';
+// import { proseMirrorToMDXRoot } from './editor/mdx/serialize';
 
 export { createEditorSchema } from './editor/schema';
 
@@ -64,44 +64,44 @@ export function serializeFromEditorState(
   };
 }
 
-export function parseToEditorStateMDX(
-  content: Uint8Array | undefined,
-  schema: EditorSchema,
-  files: ReadonlyMap<string, Uint8Array>,
-  otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>,
-  slug: string | undefined
-) {
-  const mdx = textDecoder.decode(content);
-  const root = fromMarkdown(mdx, {
-    extensions: [mdxjs()],
-    mdastExtensions: [mdxFromMarkdown()],
-  });
-  const doc = mdxToProseMirror(root, schema, files, otherFiles, slug);
-  return createEditorState(doc);
-}
+// export function parseToEditorStateMDX(
+//   content: Uint8Array | undefined,
+//   schema: EditorSchema,
+//   files: ReadonlyMap<string, Uint8Array>,
+//   otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>,
+//   slug: string | undefined
+// ) {
+//   const mdx = textDecoder.decode(content);
+//   const root = fromMarkdown(mdx, {
+//     extensions: [mdxjs(), gfm()],
+//     mdastExtensions: [mdxFromMarkdown(), gfmFromMarkdown()],
+//   });
+//   const doc = mdxToProseMirror(root, schema, files, otherFiles, slug);
+//   return createEditorState(doc);
+// }
 
-export function serializeFromEditorStateMDX(
-  value: EditorState,
-  slug: string | undefined
-) {
-  const other = new Map<string, Uint8Array>();
-  const external = new Map<string, Map<string, Uint8Array>>();
-  const mdxNode = proseMirrorToMDXRoot(value.doc, {
-    extraFiles: other,
-    otherFiles: external,
-    schema: getEditorSchema(value.schema),
-    slug,
-  });
-  const mdx = toMarkdown(mdxNode, {
-    extensions: [gfmToMarkdown(), mdxToMarkdown()],
-    rule: '-',
-  });
-  return {
-    content: textEncoder.encode(mdx),
-    other,
-    external,
-  };
-}
+// export function serializeFromEditorStateMDX(
+//   value: EditorState,
+//   slug: string | undefined
+// ) {
+//   const other = new Map<string, Uint8Array>();
+//   const external = new Map<string, Map<string, Uint8Array>>();
+//   const mdxNode = proseMirrorToMDXRoot(value.doc, {
+//     extraFiles: other,
+//     otherFiles: external,
+//     schema: getEditorSchema(value.schema),
+//     slug,
+//   });
+//   const mdx = toMarkdown(mdxNode, {
+//     extensions: [gfmToMarkdown(), mdxToMarkdown()],
+//     rule: '-',
+//   });
+//   return {
+//     content: textEncoder.encode(mdx),
+//     other,
+//     external,
+//   };
+// }
 
 export function DocumentFieldInput(
   props: FormFieldInputProps<EditorState> & {

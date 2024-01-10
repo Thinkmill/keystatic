@@ -1,8 +1,11 @@
-import { fromMarkdown } from 'mdast-util-from-markdown';
-import { gfmAutolinkLiteralFromMarkdown } from 'mdast-util-gfm-autolink-literal';
-import { gfmAutolinkLiteral } from 'micromark-extension-gfm-autolink-literal';
-import { gfmStrikethroughFromMarkdown } from 'mdast-util-gfm-strikethrough';
-import { gfmStrikethrough } from 'micromark-extension-gfm-strikethrough';
+import mdASTUtilFromMarkdown from 'mdast-util-from-markdown';
+// @ts-ignore
+import autoLinkLiteralFromMarkdownExtension from 'mdast-util-gfm-autolink-literal/from-markdown';
+// @ts-ignore
+import autoLinkLiteralMarkdownSyntax from 'micromark-extension-gfm-autolink-literal';
+// @ts-ignore
+import gfmStrikethroughFromMarkdownExtension from 'mdast-util-gfm-strikethrough/from-markdown';
+import gfmStrikethroughMarkdownSyntax from 'micromark-extension-gfm-strikethrough';
 import { Block } from '../editor';
 import {
   getInlineNodes,
@@ -13,14 +16,14 @@ import {
 
 const markdownConfig = {
   mdastExtensions: [
-    gfmAutolinkLiteralFromMarkdown(),
-    gfmStrikethroughFromMarkdown(),
+    autoLinkLiteralFromMarkdownExtension,
+    gfmStrikethroughFromMarkdownExtension,
   ],
-  extensions: [gfmAutolinkLiteral(), gfmStrikethrough()],
+  extensions: [autoLinkLiteralMarkdownSyntax, gfmStrikethroughMarkdownSyntax()],
 };
 
 export function deserializeMarkdown(markdown: string) {
-  const root = fromMarkdown(markdown, markdownConfig);
+  const root = mdASTUtilFromMarkdown(markdown, markdownConfig);
   let nodes = root.children;
   if (nodes.length === 1 && nodes[0].type === 'paragraph') {
     nodes = nodes[0].children;
@@ -28,7 +31,7 @@ export function deserializeMarkdown(markdown: string) {
   return deserializeChildren(nodes, markdown);
 }
 
-type MDNode = ReturnType<typeof fromMarkdown>['children'][number];
+type MDNode = ReturnType<typeof mdASTUtilFromMarkdown>['children'][number];
 
 function deserializeChildren(nodes: MDNode[], input: string) {
   const outputNodes: (InlineFromExternalPaste | Block)[] = [];
