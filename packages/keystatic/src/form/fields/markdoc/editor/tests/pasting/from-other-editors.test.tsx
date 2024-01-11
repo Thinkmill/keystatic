@@ -11,6 +11,12 @@ test('confluence', async () => {
     <doc>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 1
@@ -18,6 +24,12 @@ test('confluence', async () => {
       </heading>
       <heading
         level={2}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 2
@@ -25,6 +37,12 @@ test('confluence', async () => {
       </heading>
       <heading
         level={3}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 3
@@ -32,6 +50,12 @@ test('confluence', async () => {
       </heading>
       <heading
         level={4}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 4
@@ -39,6 +63,12 @@ test('confluence', async () => {
       </heading>
       <heading
         level={5}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 5
@@ -46,6 +76,12 @@ test('confluence', async () => {
       </heading>
       <heading
         level={6}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 6
@@ -53,6 +89,12 @@ test('confluence', async () => {
       </heading>
       <code_block
         language=""
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           some code
@@ -190,6 +232,12 @@ test('confluence', async () => {
       </paragraph>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           heading align center
@@ -197,6 +245,12 @@ test('confluence', async () => {
       </heading>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           heading align end
@@ -251,6 +305,12 @@ there is a break before this</p>
     <doc>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 1
@@ -258,6 +318,12 @@ there is a break before this</p>
       </heading>
       <heading
         level={2}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 2
@@ -265,6 +331,12 @@ there is a break before this</p>
       </heading>
       <heading
         level={3}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 3
@@ -272,6 +344,12 @@ there is a break before this</p>
       </heading>
       <code_block
         language=""
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           some code
@@ -404,6 +482,12 @@ test('dropbox paper', async () => {
     <doc>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 1
@@ -411,6 +495,12 @@ test('dropbox paper', async () => {
       </heading>
       <heading
         level={2}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 2
@@ -562,6 +652,12 @@ test('google docs', async () => {
     <doc>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 1
@@ -569,6 +665,12 @@ test('google docs', async () => {
       </heading>
       <heading
         level={2}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 2
@@ -576,6 +678,12 @@ test('google docs', async () => {
       </heading>
       <heading
         level={3}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 3
@@ -583,6 +691,12 @@ test('google docs', async () => {
       </heading>
       <heading
         level={4}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 4
@@ -590,6 +704,12 @@ test('google docs', async () => {
       </heading>
       <heading
         level={5}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 5
@@ -597,6 +717,12 @@ test('google docs', async () => {
       </heading>
       <heading
         level={6}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 6
@@ -722,6 +848,12 @@ test('google docs', async () => {
       </paragraph>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           heading align center
@@ -729,6 +861,12 @@ test('google docs', async () => {
       </heading>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           heading align end

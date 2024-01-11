@@ -76,6 +76,12 @@ there is a break before this
     <doc>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 1
@@ -83,6 +89,12 @@ there is a break before this
       </heading>
       <heading
         level={2}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 2
@@ -90,6 +102,12 @@ there is a break before this
       </heading>
       <heading
         level={3}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 3
@@ -97,6 +115,12 @@ there is a break before this
       </heading>
       <heading
         level={4}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 4
@@ -104,6 +128,12 @@ there is a break before this
       </heading>
       <heading
         level={5}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 5
@@ -111,6 +141,12 @@ there is a break before this
       </heading>
       <heading
         level={6}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading 6
@@ -118,6 +154,12 @@ there is a break before this
       </heading>
       <code_block
         language="plain"
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           some code
@@ -284,22 +326,22 @@ test('a mark stays in the same block', async () => {
 test('a link stays in the same block', async () => {
   expect(await deserializeMarkdown(`[link](https://keystonejs.com)`))
     .toMatchInlineSnapshot(`
-<doc>
-  <paragraph>
-    <text
-      link={
-        {
-          "href": "https://keystonejs.com",
-          "title": "",
-        }
-      }
-    >
-      link
-      <cursor />
-    </text>
-  </paragraph>
-</doc>
-`);
+    <doc>
+      <paragraph>
+        <text
+          link={
+            {
+              "href": "https://keystonejs.com",
+              "title": "",
+            }
+          }
+        >
+          link
+          <cursor />
+        </text>
+      </paragraph>
+    </doc>
+  `);
 });
 
 test('a link nested inside bold', async () => {

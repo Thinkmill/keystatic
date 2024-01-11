@@ -141,6 +141,12 @@ test('inline code', () => {
       </paragraph>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Heading
