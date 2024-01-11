@@ -8,7 +8,7 @@ import { block, repeating, wrapper } from '@keystatic/core/content-components';
 import { isNonEmptyArray } from 'emery/guards';
 
 import { Flex } from '@keystar/ui/layout';
-import Markdoc, { Node, ValidateError } from '@markdoc/markdoc';
+import Markdoc, { Config, Node, ValidateError, nodes } from '@markdoc/markdoc';
 import { assert } from 'emery/assertions';
 
 const components = {
@@ -145,48 +145,60 @@ const components = {
   }),
 };
 
-const markdocConfig = createMarkdocConfig({
-  components,
-  render: {
-    tags: {
-      tags: 'Tags',
-      'cloud-image': 'CloudImage',
-      embed: 'Embed',
-      'field-demo': 'FieldDemo',
-      aside: 'Aside',
-      layout: 'Layout',
-      'layout-area': 'LayoutArea',
+const markdocConfig: Config = {
+  tags: createMarkdocConfig({
+    components,
+    render: {
+      tags: {
+        tags: 'Tags',
+        'cloud-image': 'CloudImage',
+        embed: 'Embed',
+        'field-demo': 'FieldDemo',
+        aside: 'Aside',
+        layout: 'Layout',
+        'layout-area': 'LayoutArea',
+      },
     },
-    nodes: {
-      document: 'Fragment',
-      link: 'Link',
-      heading: 'Heading',
-      paragraph: 'Paragraph',
-      fence: 'CodeBlock',
-      item: 'ListItem',
-      hr: 'Divider',
+  }).tags,
+  nodes: {
+    document: { ...nodes.document, render: 'Fragment' },
+    link: { ...nodes.link, render: 'Link' },
+    heading: {
+      children: ['inline'],
+      render: 'Heading',
+      attributes: {
+        level: { type: Number, required: true },
+      },
     },
-  },
-});
-delete markdocConfig.nodes!.heading!.transform;
-markdocConfig.nodes!.heading!.attributes!.level = { type: Number };
-delete markdocConfig.nodes!.fence!.transform;
-markdocConfig.nodes!.fence!.attributes!.language = { type: String };
-markdocConfig.nodes!.code = {
-  render: 'Code',
-  attributes: {
-    content: { type: String, required: true },
+    paragraph: { ...nodes.paragraph, render: 'Paragraph' },
+    fence: {
+      render: 'CodeBlock',
+      attributes: {
+        content: { type: String, required: true },
+        language: { type: String },
+        process: { type: Boolean, render: false, default: true },
+      },
+    },
+    item: { ...nodes.item, render: 'ListItem' },
+    hr: { ...nodes.hr, render: 'Divider' },
+    code: {
+      render: 'Code',
+      attributes: {
+        content: { type: String, required: true },
+      },
+    },
+    list: {
+      render: 'List',
+      children: ['item'],
+      attributes: {
+        ordered: { type: Boolean, required: true },
+        start: { type: Number },
+        marker: { type: String, render: false },
+      },
+    },
   },
 };
-markdocConfig.nodes!.list = {
-  render: 'List',
-  children: ['item'],
-  attributes: {
-    ordered: { type: Boolean, required: true },
-    start: { type: Number },
-    marker: { type: String, render: false },
-  },
-};
+
 class MarkdocFailure extends Error {
   constructor(errors: [ValidateError, ...ValidateError[]]) {
     super();
