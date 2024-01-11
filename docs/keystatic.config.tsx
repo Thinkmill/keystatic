@@ -2,34 +2,222 @@ import { config, fields, collection, singleton } from '@keystatic/core';
 import {
   __experimental_markdoc_field,
   __experimental_markdoc_field_cloudImageBlock,
+  createMarkdocConfig,
 } from '@keystatic/core/form/fields/markdoc';
-import { cloudImage } from '@keystatic/core/component-blocks';
-import {
-  block,
-  inline,
-  mark,
-  repeating,
-  wrapper,
-} from '@keystatic/core/content-components';
-import { highlighterIcon } from '@keystar/ui/icon/icons/highlighterIcon';
+import { block, repeating, wrapper } from '@keystatic/core/content-components';
+import { isNonEmptyArray } from 'emery/guards';
 
-import { aside, embed, fieldDemo, tags } from './src/component-blocks';
 import { Flex } from '@keystar/ui/layout';
+import Markdoc, { Node, ValidateError } from '@markdoc/markdoc';
+import { assert } from 'emery/assertions';
 
-export const componentBlocks = {
-  aside,
-  'cloud-image': cloudImage({ label: 'Cloud Image' }),
-  tags,
-  'field-demo': fieldDemo,
-  embed,
+const components = {
+  tags: block({
+    label: 'Tags',
+    schema: {
+      tags: fields.multiselect({
+        label: 'Project tags',
+        options: [
+          { label: 'Local', value: 'Local' },
+          { label: 'Github', value: 'github' },
+          { label: 'New project', value: 'New project' },
+          { label: 'Existing project', value: 'Existing project' },
+          { label: 'Astro', value: 'Astro' },
+          { label: 'Next.js', value: 'Next.js' },
+        ],
+      }),
+    },
+    ContentView({ value }) {
+      return (
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          {value.tags.map(tag => (
+            <span
+              style={{
+                border: 'solid 1px #ddd',
+                padding: '0.25rem 0.5rem',
+                borderRadius: '20px',
+                fontSize: '11px',
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      );
+    },
+  }),
+  embed: block({
+    label: 'Embed',
+    schema: {
+      mediaType: fields.select({
+        label: 'Media type',
+        options: [
+          { label: 'Video', value: 'video' },
+          { label: 'Tweet', value: 'tweet' },
+        ],
+        defaultValue: 'video',
+      }),
+      embedCode: fields.text({
+        label: 'Embed code',
+        multiline: true,
+      }),
+    },
+    ContentView({ value }) {
+      return (
+        <pre>
+          <code>{value.embedCode || '(no embed code set)'}</code>
+        </pre>
+      );
+    },
+  }),
+  'field-demo': block({
+    label: 'Field demo',
+    schema: {
+      field: fields.select({
+        label: 'Field',
+        defaultValue: 'text',
+        options: [
+          { label: 'Date', value: 'date' },
+          { label: 'Datetime', value: 'datetime' },
+          { label: 'File', value: 'file' },
+          { label: 'Image', value: 'image' },
+          { label: 'Integer', value: 'integer' },
+          { label: 'Multiselect', value: 'multiselect' },
+          { label: 'Select', value: 'select' },
+          { label: 'Slug', value: 'slug' },
+          { label: 'Text', value: 'text' },
+          { label: 'URL', value: 'url' },
+        ],
+      }),
+    },
+    ContentView({ value }) {
+      return value.field ? (
+        <>
+          Field: <code>{value.field}</code>
+        </>
+      ) : (
+        '(no field selected)'
+      );
+    },
+  }),
+  aside: wrapper({
+    label: 'Aside',
+    schema: {
+      icon: fields.text({
+        label: 'Emoji icon...',
+      }),
+    },
+    ContentView({ value, children }) {
+      return (
+        <Flex gap="medium">
+          <span contentEditable={false}>{value.icon}</span>
+          <div>{children}</div>
+        </Flex>
+      );
+    },
+  }),
+  'cloud-image': __experimental_markdoc_field_cloudImageBlock({
+    label: 'Cloud Image',
+  }),
+  layout: repeating({
+    children: 'layout-area',
+    label: 'Layout',
+    schema: {},
+    validation: { children: { min: 2, max: 2 } },
+    ContentView(props) {
+      return (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '1rem',
+          }}
+        >
+          {props.children}
+        </div>
+      );
+    },
+  }),
+  'layout-area': wrapper({
+    label: 'Layout area',
+    schema: {},
+    forSpecificLocations: true,
+  }),
 };
 
-const formatting = {
-  headingLevels: [2, 3],
-  blockTypes: true,
-  listTypes: true,
-  inlineMarks: true,
-} as const;
+const markdocConfig = createMarkdocConfig({
+  components,
+  render: {
+    tags: {
+      tags: 'Tags',
+      'cloud-image': 'CloudImage',
+      embed: 'Embed',
+      'field-demo': 'FieldDemo',
+      aside: 'Aside',
+      layout: 'Layout',
+      'layout-area': 'LayoutArea',
+    },
+    nodes: {
+      document: 'Fragment',
+      link: 'Link',
+      heading: 'Heading',
+      paragraph: 'Paragraph',
+      fence: 'CodeBlock',
+      item: 'ListItem',
+      hr: 'Divider',
+    },
+  },
+});
+delete markdocConfig.nodes!.heading!.transform;
+markdocConfig.nodes!.heading!.attributes!.level = { type: Number };
+delete markdocConfig.nodes!.fence!.transform;
+markdocConfig.nodes!.fence!.attributes!.language = { type: String };
+markdocConfig.nodes!.code = {
+  render: 'Code',
+  attributes: {
+    content: { type: String, required: true },
+  },
+};
+markdocConfig.nodes!.list = {
+  render: 'List',
+  children: ['item'],
+  attributes: {
+    ordered: { type: Boolean, required: true },
+    start: { type: Number },
+    marker: { type: String, render: false },
+  },
+};
+class MarkdocFailure extends Error {
+  constructor(errors: [ValidateError, ...ValidateError[]]) {
+    super();
+    this.name = 'MarkdocValidationFailure';
+    this.message =
+      `Errors in ${errors[0].location?.file}:\n` +
+      errors
+        .map(error => {
+          const location = error.error.location || error.location;
+          return `${errors[0].location?.file}:${
+            // the +1 is because location.start.line is 0-based
+            // but tools generally use 1-based line numbers
+            location?.start.line ? location.start.line + 1 : '(unknown line)'
+          }${
+            location?.start.character ? `:${location.start.character}` : ''
+          }: ${error.error.message}`;
+        })
+        .join('\n');
+  }
+}
+
+export function transformMarkdoc(node: Node) {
+  const errors = Markdoc.validate(node, markdocConfig);
+  if (isNonEmptyArray(errors)) {
+    throw new MarkdocFailure(errors);
+  }
+  const renderableNode = Markdoc.transform(node, markdocConfig);
+
+  assert(renderableNode !== null && typeof renderableNode !== 'string');
+  return renderableNode;
+}
 
 const shouldUseCloudStorage = process.env.NODE_ENV === 'production';
 
@@ -53,7 +241,6 @@ export default config({
     navigation: {
       Pages: ['pages', 'blog', 'projects', 'resources'],
       Config: ['authors', 'navigation'],
-      Experimental: ['pagesWithMarkdocField'],
     },
   },
   collections: {
@@ -74,13 +261,9 @@ export default config({
           description: 'The summary is used for the metadata description.',
           multiline: true,
         }),
-        content: fields.document({
+        content: __experimental_markdoc_field({
           label: 'Content',
-          dividers: true,
-          layouts: [[1, 1]],
-          links: true,
-          componentBlocks,
-          formatting,
+          components,
         }),
       },
     }),
@@ -124,14 +307,9 @@ export default config({
             'The summary is displayed on the blog list page and also the metadata description.',
           multiline: true,
         }),
-        content: fields.document({
+        content: __experimental_markdoc_field({
           label: 'Content',
-          links: true,
-          layouts: [[1, 1]],
-          dividers: true,
-          tables: true,
-          componentBlocks,
-          formatting,
+          components,
         }),
         authors: fields.array(
           fields.relationship({
@@ -209,15 +387,13 @@ export default config({
           label: 'Cover image',
         }),
         sortIndex: fields.integer({ label: 'Sort Index', defaultValue: 100 }),
-        content: fields.document({
+        content: __experimental_markdoc_field({
           label: 'Content',
           description:
             'The long form copy for the project page. A link to a dedicated page will be available if this field is filled.',
-          formatting: true,
-          links: true,
-          componentBlocks: {
-            aside: componentBlocks['aside'],
-            'cloud-image': componentBlocks['cloud-image'],
+          components: {
+            aside: components['aside'],
+            'cloud-image': components['cloud-image'],
           },
         }),
       },
@@ -307,198 +483,6 @@ export default config({
           description:
             'A number value to sort items (low to high) on the front end.',
           defaultValue: 10,
-        }),
-      },
-    }),
-
-    // ------------------------------
-    // For testing purposes only
-    // ------------------------------
-    pagesWithMarkdocField: collection({
-      label: 'ProseMirror editor',
-      slugField: 'title',
-      format: { contentField: 'content' },
-      path: 'src/content/pages/**',
-      entryLayout: 'content',
-      schema: {
-        title: fields.slug({ name: { label: 'Title' } }),
-        summary: fields.text({
-          label: 'Summary',
-          description: 'The summary is used for the metadata description.',
-          multiline: true,
-        }),
-        content: __experimental_markdoc_field({
-          label: 'Content',
-          components: {
-            tags: block({
-              label: 'Tags',
-              schema: {
-                tags: fields.multiselect({
-                  label: 'Project tags',
-                  options: [
-                    { label: 'Local', value: 'Local' },
-                    { label: 'Github', value: 'github' },
-                    { label: 'New project', value: 'New project' },
-                    { label: 'Existing project', value: 'Existing project' },
-                    { label: 'Astro', value: 'Astro' },
-                    { label: 'Next.js', value: 'Next.js' },
-                  ],
-                }),
-              },
-              ContentView({ value }) {
-                return (
-                  <div style={{ display: 'flex', gap: '1rem' }}>
-                    {value.tags.map(tag => (
-                      <span
-                        style={{
-                          border: 'solid 1px #ddd',
-                          padding: '0.25rem 0.5rem',
-                          borderRadius: '20px',
-                          fontSize: '11px',
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                );
-              },
-            }),
-            embed: block({
-              label: 'Embed',
-              schema: {
-                mediaType: fields.select({
-                  label: 'Media type',
-                  options: [
-                    { label: 'Video', value: 'video' },
-                    { label: 'Tweet', value: 'tweet' },
-                  ],
-                  defaultValue: 'video',
-                }),
-                embedCode: fields.text({
-                  label: 'Embed code',
-                  multiline: true,
-                }),
-              },
-              ContentView({ value }) {
-                return (
-                  <pre>
-                    <code>{value.embedCode || '(no embed code set)'}</code>
-                  </pre>
-                );
-              },
-            }),
-            'field-demo': block({
-              label: 'Field demo',
-              schema: {
-                field: fields.select({
-                  label: 'Field',
-                  defaultValue: 'text',
-                  options: [
-                    { label: 'Date', value: 'date' },
-                    { label: 'Datetime', value: 'datetime' },
-                    { label: 'File', value: 'file' },
-                    { label: 'Image', value: 'image' },
-                    { label: 'Integer', value: 'integer' },
-                    { label: 'Multiselect', value: 'multiselect' },
-                    { label: 'Select', value: 'select' },
-                    { label: 'Slug', value: 'slug' },
-                    { label: 'Text', value: 'text' },
-                    { label: 'URL', value: 'url' },
-                  ],
-                }),
-              },
-              ContentView({ value }) {
-                return value.field ? (
-                  <>
-                    Field: <code>{value.field}</code>
-                  </>
-                ) : (
-                  '(no field selected)'
-                );
-              },
-            }),
-            aside: wrapper({
-              label: 'Aside',
-              schema: {
-                icon: fields.text({
-                  label: 'Emoji icon...',
-                }),
-              },
-              ContentView({ value, children }) {
-                return (
-                  <Flex gap="medium">
-                    <span contentEditable={false}>{value.icon}</span>
-                    <div>{children}</div>
-                  </Flex>
-                );
-              },
-            }),
-            something: block({
-              label: 'Something',
-              schema: {
-                text: fields.text({ label: 'Text' }),
-              },
-            }),
-            'cloud-image': __experimental_markdoc_field_cloudImageBlock({
-              label: 'Cloud Image',
-            }),
-            'inline-thing': inline({
-              label: 'Inline thing',
-              schema: {
-                something: fields.text({ label: 'Something' }),
-              },
-            }),
-            highlight: mark({
-              label: 'Highlight',
-              icon: highlighterIcon,
-              schema: {
-                color: fields.select({
-                  label: 'Color',
-                  options: [
-                    { label: 'Yellow', value: 'yellow' },
-                    { label: 'Green', value: 'lightgreen' },
-                    { label: 'Blue', value: 'lightblue' },
-                  ],
-                  defaultValue: 'yellow',
-                }),
-              },
-              style({ value }) {
-                return {
-                  backgroundColor: value.color,
-                };
-              },
-              tag: 'mark',
-            }),
-            wrapper: wrapper({
-              label: 'Wrapper',
-              schema: {},
-            }),
-            grid: repeating({
-              label: 'Grid',
-              children: 'grid-item',
-              schema: {},
-              ContentView(props) {
-                return (
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr',
-                      gap: '1em',
-                    }}
-                  >
-                    {props.children}
-                  </div>
-                );
-              },
-              validation: { children: { min: 1 } },
-            }),
-            'grid-item': wrapper({
-              label: 'Grid item',
-              forSpecificLocations: true,
-              schema: {},
-            }),
-          },
         }),
       },
     }),

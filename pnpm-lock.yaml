@@ -672,6 +672,7 @@ importers:
       autoprefixer: ^10.4.13
       cookie: ^0.5.0
       date-fns: ^2.28.0
+      emery: ^1.4.1
       next: ^14.0.0
       pagefind: ^1.0.4
       postcss: ^8.4.21
@@ -700,6 +701,7 @@ importers:
       '@vercel/analytics': 0.1.11_react@18.2.0
       cookie: 0.5.0
       date-fns: 2.30.0
+      emery: 1.4.2
       next: 14.0.0_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0

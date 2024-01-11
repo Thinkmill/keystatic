@@ -3,11 +3,11 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Metadata, ResolvingMetadata } from 'next';
 
-import DocumentRenderer from '../../../../components/document-renderer';
 import { reader } from '../../../../utils/reader';
 import ActionButton from '../../../../components/action-button';
 import { GlobeIcon } from '../../../../components/icons/globe';
 import { GitHubOutlineIcon } from '../../../../components/icons/github-outline-icon';
+import { MarkdocRenderer } from '../../../../components/markdoc-renderer';
 
 export default async function Docs({ params }: { params: { slug: string } }) {
   const { slug } = params;
@@ -118,7 +118,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
           <hr className="mx-auto mt-16 w-20 border-sand-5" />
           <main className="bg-white py-12">
             <div className="prose mx-auto px-4 lg:prose-lg sm:px-6 lg:px-8">
-              <DocumentRenderer document={content} />
+              <MarkdocRenderer node={content.node} />
             </div>
           </main>
         </>

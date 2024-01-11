@@ -29,6 +29,7 @@
     "@vercel/analytics": "^0.1.8",
     "cookie": "^0.5.0",
     "date-fns": "^2.28.0",
+    "emery": "^1.4.1",
     "next": "^14.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
