@@ -532,7 +532,9 @@ export function getCustomNodeSpecs(
                       component={component}
                       pos={props.pos}
                       toolbar={
-                        component.children.length === 1 ? (
+                        props.node.contentMatchAt(props.node.childCount)
+                          .defaultType &&
+                        (component.children.length === 1 ? (
                           <Button
                             onPress={() => {
                               runCommand((state, dispatch) => {
@@ -574,7 +576,7 @@ export function getCustomNodeSpecs(
                               {item => <Item key={item.key}>{item.label}</Item>}
                             </Menu>
                           </MenuTrigger>
-                        )
+                        ))
                       }
                     >
                       {'ContentView' in component && component.ContentView ? (
