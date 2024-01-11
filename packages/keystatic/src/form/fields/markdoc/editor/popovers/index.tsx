@@ -12,7 +12,11 @@ import { Divider, Flex } from '@keystar/ui/layout';
 import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { sheetIcon } from '@keystar/ui/icon/icons/sheetIcon';
 
-import { useEditorDispatchCommand, useEditorSchema } from '../editor-view';
+import {
+  useEditorDispatchCommand,
+  useEditorSchema,
+  useEditorViewRef,
+} from '../editor-view';
 import { EditorSchema, getEditorSchema } from '../schema';
 import { CodeBlockLanguageCombobox } from './code-block-language';
 import { LinkToolbar } from './link-toolbar';
@@ -339,6 +343,34 @@ function InlineComponentPopover(props: {
     props.node.attrs.props,
     componentConfig.schema
   );
+  const editorViewRef = useEditorViewRef();
+  if (componentConfig.kind === 'inline' && componentConfig.ToolbarView) {
+    return (
+      <componentConfig.ToolbarView
+        value={value}
+        onChange={value => {
+          const view = editorViewRef.current!;
+          view.dispatch(
+            view.state.tr.setNodeAttribute(
+              props.pos,
+              'props',
+              toSerialized(value, componentSchema.fields)
+            )
+          );
+        }}
+        onRemove={() => {
+          runCommand((state, dispatch) => {
+            if (dispatch) {
+              dispatch(
+                state.tr.delete(props.pos, props.pos + props.node.nodeSize)
+              );
+            }
+            return true;
+          });
+        }}
+      />
+    );
+  }
   return (
     <>
       <Flex gap="regular" padding="regular">
