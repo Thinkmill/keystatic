@@ -4,14 +4,40 @@ import {
   __experimental_markdoc_field_cloudImageBlock,
   createMarkdocConfig,
 } from '@keystatic/core/form/fields/markdoc';
-import { block, repeating, wrapper } from '@keystatic/core/content-components';
+import {
+  block,
+  inline,
+  repeating,
+  wrapper,
+} from '@keystatic/core/content-components';
 import { isNonEmptyArray } from 'emery/guards';
 
 import { Flex } from '@keystar/ui/layout';
 import Markdoc, { Config, Node, ValidateError, nodes } from '@markdoc/markdoc';
 import { assert } from 'emery/assertions';
+import { StatusNodeView, StatusToolbarView } from './status';
 
 const components = {
+  status: inline({
+    label: 'Status',
+    schema: {
+      label: fields.text({ label: 'Label' }),
+      color: fields.select({
+        label: 'Color',
+        options: [
+          { label: 'Gray', value: 'gray' },
+          { label: 'Purple', value: 'purple' },
+          { label: 'Blue', value: 'blue' },
+          { label: 'Red', value: 'red' },
+          { label: 'Yellow', value: 'yellow' },
+          { label: 'Green', value: 'green' },
+        ] as const,
+        defaultValue: 'gray',
+      }),
+    },
+    NodeView: StatusNodeView,
+    ToolbarView: StatusToolbarView,
+  }),
   tags: block({
     label: 'Tags',
     schema: {
