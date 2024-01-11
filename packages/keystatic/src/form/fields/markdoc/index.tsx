@@ -25,6 +25,8 @@ import { fixPath } from '../../../app/path-utils';
 
 const textDecoder = new TextDecoder();
 
+export { createMarkdocConfig } from './markdoc-config';
+
 /**
  * @deprecated This is experimental and buggy, use at your own risk.
  */
@@ -95,14 +97,18 @@ export function __experimental_markdoc_field({
     reader: {
       parse: (_, { content }) => {
         const text = textDecoder.decode(content);
-        return { ast: Markdoc.parse(text) };
+        return { node: Markdoc.parse(text) };
       },
     },
   };
 }
 
 export declare namespace __experimental_markdoc_field {
-  type Field = ContentFormField<EditorState, EditorState, { ast: MarkdocNode }>;
+  type Field = ContentFormField<
+    EditorState,
+    EditorState,
+    { node: MarkdocNode }
+  >;
 }
 
 // /**
