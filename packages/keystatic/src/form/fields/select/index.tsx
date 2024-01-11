@@ -3,7 +3,7 @@ import { FieldDataError } from '../error';
 import { basicFormFieldWithSimpleReaderParse } from '../utils';
 import { SelectFieldInput } from '#field-ui/select';
 
-export function select<Option extends { label: string; value: string }>({
+export function select<const Option extends { label: string; value: string }>({
   label,
   options,
   defaultValue,
