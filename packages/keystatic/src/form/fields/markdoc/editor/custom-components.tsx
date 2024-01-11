@@ -421,10 +421,60 @@ export function getCustomNodeSpecs(
             },
           ],
           reactNodeView: {
-            component(props) {
+            component: function Inline(props) {
+              const value = useDeserializedValue(
+                props.node.attrs.props,
+                component.schema
+              );
+              const runCommand = useEditorDispatchCommand();
+              if (component.NodeView) {
+                return (
+                  <span
+                    contentEditable={false}
+                    data-props={JSON.stringify(props.node.attrs.props)}
+                    data-component={name}
+                  >
+                    <component.NodeView
+                      value={value}
+                      onChange={value => {
+                        runCommand((state, dispatch) => {
+                          if (dispatch) {
+                            dispatch(
+                              state.tr.setNodeAttribute(
+                                props.pos,
+                                'props',
+                                toSerialized(value, schema.fields)
+                              )
+                            );
+                          }
+                          return true;
+                        });
+                      }}
+                      isSelected={
+                        props.hasNodeSelection ||
+                        props.isNodeCompletelyWithinSelection
+                      }
+                      onRemove={() => {
+                        runCommand((state, dispatch) => {
+                          if (dispatch) {
+                            dispatch(
+                              state.tr.delete(
+                                props.pos,
+                                props.pos + props.node.nodeSize
+                              )
+                            );
+                          }
+                          return true;
+                        });
+                      }}
+                    />
+                  </span>
+                );
+              }
               return (
                 <Box
                   elementType="span"
+                  contentEditable={false}
                   border={
                     props.hasNodeSelection
                       ? 'color.alias.borderSelected'

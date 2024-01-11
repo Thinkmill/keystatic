@@ -84,6 +84,11 @@ type InlineComponentConfig<Schema extends Record<string, ComponentSchema>> = {
     onRemove(): void;
     isSelected: boolean;
   }): ReactNode;
+  ToolbarView?(props: {
+    value: ParsedValueForComponentSchema<ObjectField<Schema>>;
+    onChange(value: ParsedValueForComponentSchema<ObjectField<Schema>>): void;
+    onRemove(): void;
+  }): ReactNode;
 };
 
 type InlineComponent<Schema extends Record<string, ComponentSchema>> =
