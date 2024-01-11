@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.2.11
+
+### Patch Changes
+
+- ba4822c6: Fix `min` and `max` being required on `validation` in
+  `fields.integer` when it is provided
+- c9711cf3: Update configuration for custom components in experimental new
+  editor
+
 ## 0.2.10
 
 ### Patch Changes
