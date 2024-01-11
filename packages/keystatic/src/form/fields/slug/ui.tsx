@@ -58,6 +58,7 @@ export function SlugFieldInput(
         description={props.args.name.description}
         autoFocus={props.autoFocus}
         value={props.value.name}
+        isRequired={!!props.args.name.validation?.length?.min}
         onChange={name => {
           props.onChange({
             name,
