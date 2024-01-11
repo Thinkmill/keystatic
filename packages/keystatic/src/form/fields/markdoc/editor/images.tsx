@@ -10,6 +10,18 @@ import { Text } from '@keystar/ui/typography';
 import { getUploadedFileObject } from '../../image/ui';
 import { EditorSchema } from './schema';
 import { ToolbarButton } from './Toolbar';
+import { EditorConfig } from '../config';
+import { getSrcPrefix } from '../../image/getSrcPrefix';
+
+export function getSrcPrefixForImageBlock(
+  config: EditorConfig,
+  slug: string | undefined
+) {
+  return getSrcPrefix(
+    typeof config.image === 'object' ? config.image.publicPath : undefined,
+    slug
+  );
+}
 
 export function readFileAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -23,6 +35,8 @@ export function readFileAsDataUrl(file: File): Promise<string> {
 }
 
 export function imageDropPlugin(schema: EditorSchema) {
+  if (!schema.nodes.image) return new Plugin({});
+  const imageType = schema.nodes.image;
   return new Plugin({
     props: {
       handleDrop(view, event) {
@@ -42,7 +56,7 @@ export function imageDropPlugin(schema: EditorSchema) {
               const src = await readFileAsDataUrl(file);
               const slice = Slice.maxOpen(
                 Fragment.from(
-                  schema.nodes.image.createChecked({
+                  imageType.createChecked({
                     src,
                     filename: file.name,
                   })
@@ -64,7 +78,7 @@ export function imageDropPlugin(schema: EditorSchema) {
               const src = await readFileAsDataUrl(file);
               view.dispatch(
                 view.state.tr.replaceSelectionWith(
-                  schema.nodes.image.createChecked({
+                  imageType.createChecked({
                     src,
                     filename: file.name,
                   })

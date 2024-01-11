@@ -35,7 +35,12 @@ import {
   getSplitCloudProject,
 } from '../app/utils';
 import { NotEditable } from '../form/fields/document/DocumentEditor/primitives';
-import { PreviewProps, ObjectField, Config } from '..';
+import {
+  PreviewProps,
+  ObjectField,
+  Config,
+  ParsedValueForComponentSchema,
+} from '..';
 import { z } from 'zod';
 import { getCloudAuth } from '../app/auth';
 
@@ -380,21 +385,19 @@ function ImageDialog(props: {
 function Placeholder(props: {
   onChange: (data: CloudImageProps) => void;
   onRemove: () => void;
+  selected: boolean;
 }) {
-  const editor = useSlateStatic();
-  const selected = useSelected();
   const state = useOverlayTriggerState({ defaultOpen: false });
 
   useEffect(() => {
-    if (selected) {
+    if (props.selected) {
       state.open();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected]);
+  }, [props.selected]);
 
   const closeAndCleanup = () => {
     state.close();
-    focusWithPreviousSelection(editor);
     props.onRemove();
   };
 
@@ -429,12 +432,13 @@ function ImagePreview({
   image,
   onChange,
   onRemove,
+  selected,
 }: {
   image: CloudImageProps;
   onChange: (data: CloudImageProps) => void;
   onRemove: () => void;
+  selected: boolean;
 }) {
-  const selected = useSelected();
   const maxHeight = 368; // size.scale.4600 — TODO: it'd be nice to get this from some token artefact
   const maxWidth = 734; // roughly the max width that an editor container will allow
 
@@ -512,8 +516,20 @@ export function CloudImagePreview(
     onRemove(): void;
   }
 ) {
+  const selected = useSelected();
+  const editor = useSlateStatic();
+
   if (!props.fields.src.value) {
-    return <Placeholder onChange={props.onChange} onRemove={props.onRemove} />;
+    return (
+      <Placeholder
+        onChange={props.onChange}
+        onRemove={() => {
+          focusWithPreviousSelection(editor);
+          props.onRemove();
+        }}
+        selected={selected}
+      />
+    );
   }
 
   return (
@@ -526,6 +542,46 @@ export function CloudImagePreview(
       }}
       onChange={props.onChange}
       onRemove={props.onRemove}
+      selected={selected}
+    />
+  );
+}
+
+export function CloudImagePreviewForNewEditor(props: {
+  onRemove: () => void;
+  onChange: (
+    data: ParsedValueForComponentSchema<
+      ObjectField<typeof import('./cloud-image-schema').cloudImageSchema>
+    >
+  ) => void;
+  value: ParsedValueForComponentSchema<
+    ObjectField<typeof import('./cloud-image-schema').cloudImageSchema>
+  >;
+  isSelected: boolean;
+}) {
+  if (!props.value.src) {
+    return (
+      <Placeholder
+        // @ts-ignore
+        onChange={props.onChange}
+        onRemove={props.onRemove}
+        selected={props.isSelected}
+      />
+    );
+  }
+
+  return (
+    <ImagePreview
+      image={{
+        src: props.value.src,
+        alt: props.value.alt,
+        width: props.value.width ?? undefined,
+        height: props.value.height ?? undefined,
+      }}
+      // @ts-ignore
+      onChange={props.onChange}
+      onRemove={props.onRemove}
+      selected={props.isSelected}
     />
   );
 }

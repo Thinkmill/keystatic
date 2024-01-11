@@ -86,6 +86,12 @@ test('a link around blocks turn into links around text', async () => {
       </paragraph>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           some heading
@@ -136,6 +142,12 @@ test('marks around blocks turn into marks around text', async () => {
       </paragraph>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text
           italic={true}
@@ -211,6 +223,12 @@ test('link, block and text as siblings', async () => {
       </paragraph>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           a

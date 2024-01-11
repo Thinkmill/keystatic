@@ -72,6 +72,12 @@ test('inserting a break at the end of the heading exits the heading', async () =
     <doc>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Some heading
@@ -101,6 +107,12 @@ test('inserting a break in the middle of the heading splits the text and does no
     <doc>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Some 
@@ -108,6 +120,12 @@ test('inserting a break in the middle of the heading splits the text and does no
       </heading>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           <cursor />
@@ -136,6 +154,12 @@ test('inserting a break at the start of the heading inserts a paragraph above th
       <paragraph />
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           <cursor />

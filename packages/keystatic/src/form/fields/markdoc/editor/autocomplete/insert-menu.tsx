@@ -28,6 +28,7 @@ export type InsertMenuItemSpec = {
   description?: string;
   icon?: React.ReactElement;
   command: (type: NodeType, schema: EditorSchema) => Command;
+  forToolbar?: true;
 };
 
 export type WithInsertMenuNodeSpec = {

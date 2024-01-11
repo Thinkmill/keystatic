@@ -6,7 +6,6 @@ import { tableEditing } from 'prosemirror-tables';
 
 import { tokenSchema } from '@keystar/ui/style';
 
-import { attributes } from './attributes';
 import { autocompleteDecoration } from './autocomplete/decoration';
 import { codeBlockSyntaxHighlighting } from './code-block-highlighting';
 import { keymapForSchema } from './commands/keymap';
@@ -49,7 +48,6 @@ export function createEditorState(
         rules: inputRulesForSchema(schema),
         enterRules: enterInputRulesForSchema(schema),
       }),
-      attributes(),
       gapCursor(),
       keymap(keymapForSchema(schema)),
       markdocClipboard(),

@@ -67,7 +67,7 @@ const selectParentSelectableNode: Command = (state, dispatch) => {
   return true;
 };
 
-export function keymapForSchema({ nodes, marks }: EditorSchema) {
+export function keymapForSchema({ nodes, marks, config }: EditorSchema) {
   const bindings: Record<string, Command> = {};
   const add = (key: string, command: Command) => {
     if (bindings[key]) {
@@ -158,8 +158,10 @@ export function keymapForSchema({ nodes, marks }: EditorSchema) {
     add('Shift-Ctrl-9', toggleList(nodes.ordered_list));
   }
   add('Shift-Ctrl-0', setBlockType(nodes.paragraph));
-  for (const level of [1, 2, 3, 4, 5, 6]) {
-    add(`Shift-Ctrl-${level}`, setBlockType(nodes.heading, { level }));
+  if (nodes.heading) {
+    for (const level of config.heading.levels) {
+      add(`Shift-Ctrl-${level}`, setBlockType(nodes.heading, { level }));
+    }
   }
 
   return bindings;

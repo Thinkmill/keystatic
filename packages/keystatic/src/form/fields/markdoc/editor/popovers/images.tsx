@@ -13,8 +13,6 @@ import { useMemo, useState } from 'react';
 import { clientSideValidateProp } from '../../../../errors';
 import { FormValueContentFromPreviewProps } from '../../../../form-from-preview';
 import { createGetPreviewProps } from '../../../../preview-props';
-import { text } from '../../../text';
-import { object } from '../../../object';
 import l10nMessages from '../../../../../app/l10n/index.json';
 import { Icon } from '@keystar/ui/icon';
 import { editIcon } from '@keystar/ui/icon/icons/editIcon';
@@ -23,14 +21,9 @@ import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { getUploadedFileObject } from '../../../image/ui';
 import { EditorState, NodeSelection } from 'prosemirror-state';
-import { useEditorDispatchCommand } from '../editor-view';
+import { useEditorDispatchCommand, useEditorSchema } from '../editor-view';
 import { Node } from 'prosemirror-model';
 import { readFileAsDataUrl } from '../images';
-
-const imagesSchema = object({
-  alt: text({ label: 'Alt text' }),
-  title: text({ label: 'Title' }),
-});
 
 export function ImagePopover(props: {
   node: Node;
@@ -137,10 +130,15 @@ function ImageDialog(props: {
   filename: string;
   onSubmit: (value: { alt: string; filename: string; title: string }) => void;
 }) {
+  const schema = useEditorSchema();
   const [state, setState] = useState({ alt: props.alt, title: props.title });
+  const imagesSchema = useMemo(
+    () => ({ kind: 'object' as const, fields: schema.config.image!.schema }),
+    [schema.config.image]
+  );
   const previewProps = useMemo(
     () => createGetPreviewProps(imagesSchema, setState, () => undefined),
-    []
+    [imagesSchema]
   )(state);
 
   const [filenameWithoutExtension, filenameExtension] = splitFilename(
