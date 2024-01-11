@@ -144,7 +144,7 @@ export default config({
                     { value: 'caution', label: 'Caution' },
                     { value: 'positive', label: 'Positive' },
                     { value: 'critical', label: 'Critical' },
-                  ] as const,
+                  ],
                   defaultValue: 'info',
                 }),
                 content: fields.child({

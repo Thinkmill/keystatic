@@ -37,7 +37,7 @@ const objectProp = fields.object({
         { label: 'A', value: 'a' },
         { label: 'B', value: 'b' },
       ],
-    } as const),
+    }),
     {
       a: fields.text({ label: 'A in Conditional Select' }),
       b: fields.text({ label: 'B in Conditional Select', defaultValue: 'B' }),
