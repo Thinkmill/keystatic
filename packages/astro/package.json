@@ -7,34 +7,11 @@
     "url": "https://github.com/Thinkmill/keystatic/",
     "directory": "packages/astro"
   },
+  "type": "module",
   "exports": {
-    "./ui": {
-      "types": {
-        "import": "./ui/dist/keystatic-astro-ui.cjs.mjs",
-        "default": "./ui/dist/keystatic-astro-ui.cjs.js"
-      },
-      "module": "./ui/dist/keystatic-astro-ui.esm.js",
-      "import": "./ui/dist/keystatic-astro-ui.cjs.mjs",
-      "default": "./ui/dist/keystatic-astro-ui.cjs.js"
-    },
-    "./api": {
-      "types": {
-        "import": "./api/dist/keystatic-astro-api.cjs.mjs",
-        "default": "./api/dist/keystatic-astro-api.cjs.js"
-      },
-      "module": "./api/dist/keystatic-astro-api.esm.js",
-      "import": "./api/dist/keystatic-astro-api.cjs.mjs",
-      "default": "./api/dist/keystatic-astro-api.cjs.js"
-    },
-    ".": {
-      "types": {
-        "import": "./dist/keystatic-astro.cjs.mjs",
-        "default": "./dist/keystatic-astro.cjs.js"
-      },
-      "module": "./dist/keystatic-astro.esm.js",
-      "import": "./dist/keystatic-astro.cjs.mjs",
-      "default": "./dist/keystatic-astro.cjs.js"
-    },
+    "./ui": "./dist/keystatic-astro-ui.js",
+    "./api": "./dist/keystatic-astro-api.js",
+    ".": "./dist/keystatic-astro.js",
     "./package.json": "./package.json",
     "./internal/keystatic-api.js": "./internal/keystatic-api.js",
     "./internal/keystatic-astro-page.astro": "./internal/keystatic-astro-page.astro"
@@ -42,13 +19,8 @@
   "keywords": [
     "astro-integration"
   ],
-  "main": "dist/keystatic-astro.cjs.js",
-  "module": "dist/keystatic-astro.esm.js",
   "files": [
-    "dist",
-    "api",
-    "ui",
-    "internal"
+    "dist"
   ],
   "scripts": {
     "setup": "ts-gql build && tsx scripts/l10n.ts",

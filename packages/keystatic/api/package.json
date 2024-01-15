@@ -1,4 +1,0 @@
-{
-  "main": "dist/keystatic-api.cjs.js",
-  "module": "dist/keystatic-api.esm.js"
-}

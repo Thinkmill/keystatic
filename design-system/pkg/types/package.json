@@ -1,4 +1,0 @@
-{
-  "main": "dist/keystar-ui-types.cjs.js",
-  "module": "dist/keystar-ui-types.esm.js"
-}

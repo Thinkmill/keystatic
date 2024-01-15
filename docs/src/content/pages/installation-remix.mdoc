@@ -83,6 +83,18 @@ export const loader: LoaderFunction = args => handleLoader({ config }, args);
 export const action: ActionFunction = args => handleLoader({ config }, args);
 ```
 
+## Configuring remix.config.js
+
+Because Keystatic only provides an ESM build, `serverDependenciesToBundle` needs to be configured in `remix.config.js`.
+
+```js
+/** @type {import('@remix-run/dev').AppConfig} */
+export default {
+  ignoredRouteFiles: ['**/.*'],
+  serverDependenciesToBundle: [/^@keystatic\//, 'minimatch'],
+};
+```
+
 ## Running Keystatic
 
 You can now launch the Keystatic Admin UI. Start the Remix dev server:

@@ -1,4 +1,4 @@
-import { Node, Ast, NodeType } from '@markdoc/markdoc';
+import Markdoc, { Node, NodeType } from '@markdoc/markdoc';
 import { ReadonlyPropPath } from '../DocumentEditor/component-blocks/utils';
 import { getValueAtPropPath } from '../../../props-value';
 import { areArraysEqual } from '../DocumentEditor/document-features-normalization';
@@ -14,6 +14,8 @@ import { Descendant } from 'slate';
 import { fixPath } from '../../../../app/path-utils';
 import { getSrcPrefixForImageBlock } from '../DocumentEditor/component-blocks/document-field';
 import { serializeProps } from '../../../serialize-props';
+
+const { Ast } = Markdoc;
 
 function toInline(nodes: Descendant[]): Node {
   return new Ast.Node('inline', {}, nodes.flatMap(toMarkdocInline));
