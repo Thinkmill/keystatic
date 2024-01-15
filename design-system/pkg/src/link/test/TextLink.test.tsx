@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom/jest-globals';
 import { expect, describe, it, jest } from '@jest/globals';
 
 import { fireEvent, render } from '@testing-library/react';

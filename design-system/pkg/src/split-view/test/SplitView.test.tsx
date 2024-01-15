@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom/jest-globals';
 import userEvent from '@testing-library/user-event';
 import { expect, it, describe, jest } from '@jest/globals';
 

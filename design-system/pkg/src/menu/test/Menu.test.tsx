@@ -1,5 +1,3 @@
-import '@testing-library/jest-dom/jest-globals';
-
 import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';
 import { Icon } from '@keystar/ui/icon';
 import { act, fireEvent, firePress, KEYS, render, within } from '#test-utils';

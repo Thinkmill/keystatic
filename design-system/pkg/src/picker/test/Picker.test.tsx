@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom/jest-globals';
 import {
   afterAll,
   afterEach,

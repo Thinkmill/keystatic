@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom/jest-globals';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import {
@@ -279,7 +278,7 @@ describe('drag-and-drop/DropZone', () => {
         });
         const item = onDrop.mock.calls[0][0].items[0];
 
-        expect(item.kind === 'text' && item.getText('text/plain')).toBe(
+        expect(item.kind === 'text' && (await item.getText('text/plain'))).toBe(
           'hello world'
         );
 
@@ -348,7 +347,7 @@ describe('drag-and-drop/DropZone', () => {
 
         expect(onDrop).toHaveBeenCalledTimes(1);
         const item = onDrop.mock.calls[0][0].items[0];
-        expect(item.kind === 'text' && item.getText('text/plain')).toBe(
+        expect(item.kind === 'text' && (await item.getText('text/plain'))).toBe(
           'hello world'
         );
 
@@ -403,7 +402,7 @@ describe('drag-and-drop/DropZone', () => {
       });
 
       const item = onDrop.mock.calls[0][0].items[0];
-      expect(item.kind === 'text' && item.getText('text/plain')).toBe(
+      expect(item.kind === 'text' && (await item.getText('text/plain'))).toBe(
         'hello world'
       );
     });

@@ -1,5 +1,4 @@
 import React from 'react';
-import '@testing-library/jest-dom/jest-globals';
 import { jest, it, describe, expect, afterEach } from '@jest/globals';
 import { renderWithProvider } from '#test-utils';
 import userEvent from '@testing-library/user-event';

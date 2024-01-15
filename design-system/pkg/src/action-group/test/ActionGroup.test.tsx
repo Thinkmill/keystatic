@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom/jest-globals';
 import { renderWithProvider } from '#test-utils';
 
 import { ActionGroup, Item } from '..';

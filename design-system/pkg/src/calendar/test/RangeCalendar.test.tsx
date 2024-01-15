@@ -1,5 +1,4 @@
 import { CalendarDate } from '@internationalized/date';
-import '@testing-library/jest-dom/jest-globals';
 import {
   afterEach,
   beforeAll,

@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom/jest-globals';
 import { jest, expect, it, describe } from '@jest/globals';
 
 import { Text } from '@keystar/ui/typography';
