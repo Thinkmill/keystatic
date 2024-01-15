@@ -5,6 +5,7 @@ import {
   updateTreeWithChanges,
 } from './trees';
 import { webcrypto } from 'node:crypto';
+import { expect, test } from '@jest/globals';
 
 // node only started setting the web crypto api globally in newer versions
 if (!globalThis.crypto) {

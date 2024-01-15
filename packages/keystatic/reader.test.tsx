@@ -2,6 +2,7 @@
 import path from 'path';
 import { component, fields, collection, config } from './src';
 import { EntryWithResolvedLinkedFiles, createReader } from './src/reader';
+import { expect, test } from '@jest/globals';
 
 const localConfig = config({
   storage: {

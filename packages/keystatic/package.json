@@ -333,6 +333,8 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@jest/expect": "^29.7.0",
+    "@jest/globals": "^29.7.0",
     "@testing-library/user-event": "^14.4.3",
     "@ts-gql/compiler": "^0.16.1",
     "@ts-gql/eslint-plugin": "^0.8.5",

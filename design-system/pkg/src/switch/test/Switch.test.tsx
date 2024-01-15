@@ -1,5 +1,6 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/jest-globals';
 import userEvent from '@testing-library/user-event';
+import { jest, describe, afterEach, expect, it } from '@jest/globals';
 
 import { renderWithProvider } from '#test-utils';
 

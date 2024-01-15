@@ -13,6 +13,7 @@ import { plugins, format, NewPlugin } from 'pretty-format';
 import { EditorView } from 'prosemirror-view';
 import { editorStateToReactNode } from './editor-state-to-react-element';
 import { editorOptionsToConfig } from '../../config';
+import { expect } from '@jest/globals';
 
 // this polyfill is because jsdom doesn't have it and @floating-ui/react uses it
 globalThis.ResizeObserver = ResizeObserver;

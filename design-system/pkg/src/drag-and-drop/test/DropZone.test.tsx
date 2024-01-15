@@ -1,6 +1,15 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/jest-globals';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  expect,
+  jest,
+  describe,
+  it,
+} from '@jest/globals';
 
 import {
   ClipboardEvent,
@@ -20,6 +29,7 @@ import { Text } from '@keystar/ui/typography';
 
 import { DropZone, FileTrigger, dropZoneClassList } from '../index';
 import { Draggable } from './examples';
+import { DropEvent } from '@react-types/shared';
 
 describe('drag-and-drop/DropZone', () => {
   let user: ReturnType<typeof userEvent.setup>;
@@ -154,7 +164,7 @@ describe('drag-and-drop/DropZone', () => {
     let onDragEnd = jest.fn();
     let onDropEnter = jest.fn();
     let onDropMove = jest.fn();
-    let onDrop = jest.fn();
+    let onDrop = jest.fn<(event: DropEvent) => void>();
 
     describe('via mouse', function () {
       it('should support data attribute drop-target', async () => {
@@ -267,10 +277,11 @@ describe('drag-and-drop/DropZone', () => {
             },
           ],
         });
+        const item = onDrop.mock.calls[0][0].items[0];
 
-        expect(
-          await onDrop.mock.calls[0][0].items[0].getText('text/plain')
-        ).toBe('hello world');
+        expect(item.kind === 'text' && item.getText('text/plain')).toBe(
+          'hello world'
+        );
 
         fireEvent(
           draggable,
@@ -336,9 +347,10 @@ describe('drag-and-drop/DropZone', () => {
         fireEvent.keyUp(dropzone, { key: 'Enter' });
 
         expect(onDrop).toHaveBeenCalledTimes(1);
-        expect(
-          await onDrop.mock.calls[0][0].items[0].getText('text/plain')
-        ).toBe('hello world');
+        const item = onDrop.mock.calls[0][0].items[0];
+        expect(item.kind === 'text' && item.getText('text/plain')).toBe(
+          'hello world'
+        );
 
         expect(onDragEnd).toHaveBeenCalledTimes(1);
         expect(onDragEnd).toHaveBeenCalledWith({
@@ -355,7 +367,7 @@ describe('drag-and-drop/DropZone', () => {
 
   describe('useClipboard', () => {
     it('should be able to paste items into the dropzone', async () => {
-      let onDrop = jest.fn();
+      let onDrop = jest.fn<(event: DropEvent) => void>();
 
       let tree = render(
         <>
@@ -390,7 +402,8 @@ describe('drag-and-drop/DropZone', () => {
         items: expect.any(Array),
       });
 
-      expect(await onDrop.mock.calls[0][0].items[0].getText('text/plain')).toBe(
+      const item = onDrop.mock.calls[0][0].items[0];
+      expect(item.kind === 'text' && item.getText('text/plain')).toBe(
         'hello world'
       );
     });

@@ -1,3 +1,4 @@
+import { expect, describe, it } from '@jest/globals';
 import { isReactText } from '@keystar/ui/utils';
 
 describe('utils/isReactText', () => {

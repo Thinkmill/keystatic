@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { expect, test, describe } from '@jest/globals';
 import { shortcuts } from '../inputrules/shortcuts';
 import { jsx, redo, renderEditor, undo } from './utils';
 

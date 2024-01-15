@@ -7,6 +7,7 @@ const config = {
   transform: {
     '^.+\\.[tj]sx?$': ['babel-jest', { rootMode: 'upward' }],
   },
+  injectGlobals: false,
 };
 
 module.exports = config;

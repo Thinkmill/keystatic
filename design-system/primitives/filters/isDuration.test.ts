@@ -1,4 +1,5 @@
 import StyleDictionary from 'style-dictionary';
+import { expect, it, describe } from '@jest/globals';
 
 import { isDuration } from './isDuration';
 

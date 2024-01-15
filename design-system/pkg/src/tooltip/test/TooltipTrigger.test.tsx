@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/jest-globals';
 import {
   act,
   fireEvent,
@@ -7,6 +7,16 @@ import {
   RenderOptions,
 } from '@testing-library/react';
 import { createRef, ReactElement } from 'react';
+import {
+  expect,
+  it,
+  describe,
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  jest,
+} from '@jest/globals';
 
 import { Button } from '@keystar/ui/button';
 import { TestProvider } from '@keystar/ui/core';

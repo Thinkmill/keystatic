@@ -2,7 +2,8 @@ import {
   OverlayTriggerProps,
   useOverlayTriggerState,
 } from '@react-stately/overlays';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/jest-globals';
+import { expect, it, describe, jest } from '@jest/globals';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { TestProvider } from '@keystar/ui/core';
 

@@ -11129,6 +11129,7 @@
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@keystar/ui": "^0.4.8",
     "@keystar/ui-storybook": "^0.0.1",
     "@react-aria/landmark": "3.0.0-beta.2",

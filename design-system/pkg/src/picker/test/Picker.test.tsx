@@ -1,4 +1,14 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/jest-globals';
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  expect,
+  jest,
+  describe,
+  it,
+} from '@jest/globals';
 import userEvent from '@testing-library/user-event';
 
 import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';
@@ -14,11 +24,12 @@ import {
 } from '#test-utils';
 
 import { Item, Picker, Section } from '..';
+import { FormEvent } from 'react';
 
 // NOTE: skipped tests due to `userEvent.tab()` not working as expected
 describe('picker/Picker', () => {
-  let offsetWidth: jest.SpyInstance<number>,
-    offsetHeight: jest.SpyInstance<number>;
+  let offsetWidth: jest.SpiedGetter<number>,
+    offsetHeight: jest.SpiedGetter<number>;
   let onSelectionChange = jest.fn();
 
   beforeAll(function () {
@@ -1838,7 +1849,7 @@ describe('picker/Picker', () => {
   });
 
   describe('focus', function () {
-    let focusSpies: Record<string, jest.SpyInstance>;
+    let focusSpies: Record<string, jest.SpiedFunction<() => void>>;
 
     beforeEach(() => {
       focusSpies = {
@@ -1995,7 +2006,7 @@ describe('picker/Picker', () => {
   describe('form', function () {
     it('Should submit empty option by default', function () {
       let value;
-      let onSubmit = jest.fn(e => {
+      let onSubmit = jest.fn((e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         let formData = new FormData(e.currentTarget);
         value = Object.fromEntries(formData).picker;
@@ -2019,7 +2030,7 @@ describe('picker/Picker', () => {
 
     it('Should submit default option', function () {
       let value;
-      let onSubmit = jest.fn(e => {
+      let onSubmit = jest.fn((e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         let formData = new FormData(e.currentTarget);
         value = Object.fromEntries(formData).picker;
