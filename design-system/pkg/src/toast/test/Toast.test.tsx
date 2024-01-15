@@ -1,4 +1,11 @@
-import '@testing-library/jest-dom';
+import {
+  expect,
+  it,
+  describe,
+  afterEach,
+  beforeEach,
+  jest,
+} from '@jest/globals';
 import { ReactNode, useState } from 'react';
 
 import { Button } from '@keystar/ui/button';

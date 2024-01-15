@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { expect, test } from '@jest/globals';
 import { EditorStateDescription, jsx, toEditorState } from './utils';
 import { markdocToProseMirror } from '../markdoc/parse';
 import { proseMirrorToMarkdoc } from '../markdoc/serialize';

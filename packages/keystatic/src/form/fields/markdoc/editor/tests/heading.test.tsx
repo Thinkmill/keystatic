@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { expect, test } from '@jest/globals';
 import { jsx, renderEditor, undo } from './utils';
 
 for (const level of [1, 2, 3, 4, 5, 6]) {

@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { expect, test } from '@jest/globals';
 import { jsx, makeEditor } from './tests/utils';
 
 test('multiple elements in the wrong position have their order maintained', () => {

@@ -1,5 +1,6 @@
 /** @jest-environment jsdom */
 
+import { expect, test } from '@jest/globals';
 import { htmlToEditor } from './utils';
 
 test("whitespace between blocks isn't removed", async () => {

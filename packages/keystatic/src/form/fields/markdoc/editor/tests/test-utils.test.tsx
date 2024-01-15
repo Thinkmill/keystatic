@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { expect, test } from '@jest/globals';
 import { jsx, renderEditor } from './utils';
 
 test('basic cursor snapshot', () => {

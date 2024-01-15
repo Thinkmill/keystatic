@@ -1,5 +1,6 @@
 import { act, fireEvent } from '@testing-library/react';
 import { pointerKey } from '@testing-library/user-event';
+import { afterAll, beforeAll, jest } from '@jest/globals';
 
 export const KEYS = {
   ArrowLeft: { key: 'ArrowLeft', code: 37, charCode: 37 },

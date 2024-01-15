@@ -1,4 +1,5 @@
 import { filterStyleProps } from '@keystar/ui/style';
+import { expect, describe, it } from '@jest/globals';
 
 describe('style/filterStyleProps', function () {
   it('should omit style props', function () {

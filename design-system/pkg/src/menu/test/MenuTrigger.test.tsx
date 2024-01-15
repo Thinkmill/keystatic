@@ -1,4 +1,12 @@
-import '@testing-library/jest-dom';
+import {
+  jest,
+  describe,
+  it,
+  expect,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from '@jest/globals';
 import {
   RenderResult,
   act,
@@ -35,8 +43,8 @@ let withSection = [
 ];
 
 describe('menu/MenuTrigger', () => {
-  let offsetWidth: jest.SpyInstance<number>,
-    offsetHeight: jest.SpyInstance<number>;
+  let offsetWidth: jest.SpiedGetter<number>,
+    offsetHeight: jest.SpiedGetter<number>;
   let onOpenChange = jest.fn();
   let onSelect = jest.fn();
   let onSelectionChange = jest.fn();
@@ -455,14 +463,13 @@ describe('menu/MenuTrigger', () => {
       expect(menu).toBeTruthy();
     });
 
-    it.each`
-      name                        | menuProps
-      ${'selectionMode=single'}   | ${{ selectionMode: 'single' }}
-      ${'selectionMode=multiple'} | ${{ selectionMode: 'multiple' }}
-      ${'selectionMode=none'}     | ${{ selectionMode: 'none' }}
-    `(
-      'closes on menu item selection if toggled by mouse click, when $name',
-      function ({ menuProps }) {
+    it.each([
+      [{ selectionMode: 'single' as const }],
+      [{ selectionMode: 'multiple' as const }],
+      [{ selectionMode: 'none' as const }],
+    ])(
+      'closes on menu item selection if toggled by mouse click, when %p',
+      function (menuProps) {
         let closeOnSelect = menuProps.selectionMode === 'multiple' || undefined;
         tree = renderComponent({ closeOnSelect }, menuProps);
         openAndTriggerMenuItem(tree, menuProps.selectionMode, item =>
@@ -475,14 +482,13 @@ describe('menu/MenuTrigger', () => {
       }
     );
 
-    it.each`
-      name                        | menuProps
-      ${'selectionMode=single'}   | ${{ selectionMode: 'single' }}
-      ${'selectionMode=multiple'} | ${{ selectionMode: 'multiple' }}
-      ${'selectionMode=none'}     | ${{ selectionMode: 'none' }}
-    `(
-      'closes on menu item selection if toggled by ENTER key, when $name',
-      function ({ menuProps }) {
+    it.each([
+      [{ selectionMode: 'single' as const }],
+      [{ selectionMode: 'multiple' as const }],
+      [{ selectionMode: 'none' as const }],
+    ])(
+      'closes on menu item selection if toggled by ENTER key, when %p',
+      function (menuProps) {
         tree = renderComponent({}, menuProps);
         openAndTriggerMenuItem(tree, menuProps.selectionMode, item =>
           fireEvent.keyDown(item, KEYS.Enter)
@@ -494,13 +500,12 @@ describe('menu/MenuTrigger', () => {
       }
     );
 
-    it.each`
-      name                        | menuProps
-      ${'selectionMode=single'}   | ${{ selectionMode: 'single' }}
-      ${'selectionMode=multiple'} | ${{ selectionMode: 'multiple' }}
-    `(
+    it.each([
+      [{ selectionMode: 'single' as const }],
+      [{ selectionMode: 'multiple' as const }],
+    ])(
       "doesn't close on menu item selection if toggled by SPACE key, when $name",
-      function ({ menuProps }) {
+      function (menuProps) {
         tree = renderComponent({}, menuProps);
         openAndTriggerMenuItem(tree, menuProps.selectionMode, item =>
           fireEvent.keyDown(item, KEYS.Space)
@@ -548,28 +553,24 @@ describe('menu/MenuTrigger', () => {
       expect(onOpenChange).toHaveBeenCalledTimes(2);
     });
 
-    it.each`
-      name                        | menuProps
-      ${'selectionMode=single'}   | ${{ selectionMode: 'single' }}
-      ${'selectionMode=multiple'} | ${{ selectionMode: 'multiple' }}
-      ${'selectionMode=none'}     | ${{ selectionMode: 'none' }}
-    `(
-      'ignores repeating keyboard events, when $name',
-      function ({ menuProps }) {
-        tree = renderComponent({}, menuProps);
-        openAndTriggerMenuItem(tree, menuProps.selectionMode, item =>
-          fireEvent.keyDown(item, {
-            key: 'Enter',
-            code: 13,
-            charCode: 13,
-            repeat: true,
-          })
-        );
+    it.each([
+      [{ selectionMode: 'single' as const }],
+      [{ selectionMode: 'multiple' as const }],
+      [{ selectionMode: 'none' as const }],
+    ])('ignores repeating keyboard events, when %p', function (menuProps) {
+      tree = renderComponent({}, menuProps);
+      openAndTriggerMenuItem(tree, menuProps.selectionMode, item =>
+        fireEvent.keyDown(item, {
+          key: 'Enter',
+          code: 13,
+          charCode: 13,
+          repeat: true,
+        })
+      );
 
-        let menu = tree.queryByRole('menu');
-        expect(menu).toBeTruthy();
-      }
-    );
+      let menu = tree.queryByRole('menu');
+      expect(menu).toBeTruthy();
+    });
 
     it('tabs to the next element after the trigger and closes the menu', function () {
       tree = renderWithProvider(

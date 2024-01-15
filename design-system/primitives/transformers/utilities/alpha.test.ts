@@ -1,4 +1,5 @@
 import { alpha } from './alpha';
+import { expect, it, describe } from '@jest/globals';
 
 describe('Utilities: alpha', () => {
   it('it transforms `hex3`', () => {

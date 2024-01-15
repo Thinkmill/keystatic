@@ -1,9 +1,17 @@
 import { CalendarDate } from '@internationalized/date';
-import '@testing-library/jest-dom';
+import {
+  afterEach,
+  beforeAll,
+  expect,
+  jest,
+  describe,
+  it,
+} from '@jest/globals';
 
 import { act, fireEvent, renderWithProvider } from '#test-utils';
 
 import { RangeCalendar } from '../index';
+import { RangeValue } from '@react-types/shared';
 
 describe('calendar/RangeCalendar', () => {
   // let user = userEvent.setup();
@@ -209,7 +217,7 @@ describe('calendar/RangeCalendar', () => {
   // TODO: selects a range with the keyboard
 
   it('selects a range by clicking with the mouse', () => {
-    let onChange = jest.fn();
+    let onChange = jest.fn<(value: RangeValue<CalendarDate>) => void>();
     let { getAllByLabelText, getByText } = renderWithProvider(
       <RangeCalendar
         defaultValue={{
@@ -246,7 +254,7 @@ describe('calendar/RangeCalendar', () => {
     expect(end).toEqual(new CalendarDate(2019, 6, 17));
   });
   it('selects a range by dragging with the mouse', () => {
-    let onChange = jest.fn();
+    let onChange = jest.fn<(value: RangeValue<CalendarDate>) => void>();
     let { getAllByLabelText, getByText } = renderWithProvider(
       <RangeCalendar
         defaultValue={{
