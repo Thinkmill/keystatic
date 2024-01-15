@@ -1,4 +1,0 @@
-{
-  "main": "dist/keystar-ui-field.cjs.js",
-  "module": "dist/keystar-ui-field.esm.js"
-}

@@ -1,5 +1,5 @@
 // credit: https://github.com/primer/primitives/blob/main/src/parsers/w3cJsonParser.ts
-import { parse as json5Parse } from 'json5';
+import json5 from 'json5';
 import type StyleDictionary from 'style-dictionary';
 
 /**
@@ -18,7 +18,7 @@ export const w3cJsonParser: StyleDictionary.Parser = {
         .replace(/["|']?\$?type["|']?:/g, '"$type":')
         .replace(/["|']?\$?extensions["|']?:/g, '"$extensions":');
       //
-      return json5Parse(contents);
+      return json5.parse(contents);
     } catch (e) {
       throw new Error(`Invalid json5 file "${filePath}".`);
     }

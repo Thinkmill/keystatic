@@ -1,4 +1,0 @@
-{
-  "main": "dist/keystar-ui-nav-list.cjs.js",
-  "module": "dist/keystar-ui-nav-list.esm.js"
-}

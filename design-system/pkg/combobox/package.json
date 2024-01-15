@@ -1,4 +1,0 @@
-{
-  "main": "dist/keystar-ui-combobox.cjs.js",
-  "module": "dist/keystar-ui-combobox.esm.js"
-}

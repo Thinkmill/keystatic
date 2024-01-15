@@ -1,5 +1,7 @@
 import { Children, ReactNode } from 'react';
-import Transition, { TransitionProps } from 'react-transition-group/Transition';
+import _Transition, {
+  TransitionProps,
+} from 'react-transition-group/Transition';
 
 import { cloneValidElement } from '@keystar/ui/utils';
 
@@ -7,6 +9,8 @@ export type OpenTransitionProps = Omit<TransitionProps, 'children'> & {
   children: ReactNode;
 };
 
+const Transition: typeof _Transition =
+  (_Transition as any).default || _Transition;
 export function OpenTransition(props: OpenTransitionProps) {
   const { children } = props;
   return (
