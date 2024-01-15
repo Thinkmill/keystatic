@@ -13,7 +13,7 @@ importers:
       '@changesets/changelog-github': ^0.4.5
       '@changesets/cli': ^2.23.0
       '@manypkg/cli': ^0.19.1
-      '@preconstruct/cli': ^2.8.2
+      '@preconstruct/cli': ^2.8.3
       '@testing-library/dom': ^8.20.0
       '@testing-library/jest-dom': ^6.2.0
       '@testing-library/react': ^13.4.0
@@ -48,7 +48,7 @@ importers:
       '@changesets/changelog-github': 0.4.8
       '@changesets/cli': 2.26.2
       '@manypkg/cli': 0.19.2
-      '@preconstruct/cli': 2.8.2
+      '@preconstruct/cli': 2.8.3
       '@testing-library/dom': 8.20.1
       '@testing-library/jest-dom': 6.2.0_jest@30.0.0-alpha.2
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
@@ -1089,7 +1089,7 @@ packages:
       '@babel/generator': 7.23.5
       '@babel/parser': 7.23.5
       '@babel/runtime': 7.22.15
-      '@babel/traverse': 7.23.0
+      '@babel/traverse': 7.23.5
       '@babel/types': 7.23.5
       babel-preset-fbjs: 3.4.0_@babel+core@7.23.5
       chalk: 4.1.2
@@ -5824,8 +5824,8 @@ packages:
       webpack: 5.88.2_esbuild@0.14.54
     dev: true
 
-  /@preconstruct/cli/2.8.2:
-    resolution: {integrity: sha512-/nra7Arq622kVCfvQi4nhrZN+0m1OVq0PAuUcMLKNUR8O/JHOmesultWpeTGB17HzYEx8qYWO11QaTF7oz1yAQ==}
+  /@preconstruct/cli/2.8.3:
+    resolution: {integrity: sha512-4PNEPcp8REUdqZIjtpXF1fqECuHt+pIS6k0PluSRcgX0KwPtfSw407Y2B/ItndgtRD3rKHXI6cKkwh/6Mc4TXg==}
     hasBin: true
     dependencies:
       '@babel/code-frame': 7.23.5
@@ -14363,7 +14363,7 @@ packages:
     resolution: {integrity: sha512-YNF+mZ/Wu2FU/gvmzuWtYc8rloubL7wfXCTgouFrnjGVXPA/EeYYA7pupXWrb3Iv1cTBeSSxxJIbK23l4MRNqg==}
     engines: {node: '>=8.3.0'}
     dependencies:
-      '@babel/traverse': 7.23.0
+      '@babel/traverse': 7.23.5
       '@babel/types': 7.23.5
       c8: 7.14.0
     transitivePeerDependencies:

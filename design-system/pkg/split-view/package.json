@@ -1,4 +1,0 @@
-{
-  "main": "dist/keystar-ui-split-view.cjs.js",
-  "module": "dist/keystar-ui-split-view.esm.js"
-}

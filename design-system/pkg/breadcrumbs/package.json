@@ -1,4 +1,0 @@
-{
-  "main": "dist/keystar-ui-breadcrumbs.cjs.js",
-  "module": "dist/keystar-ui-breadcrumbs.esm.js"
-}

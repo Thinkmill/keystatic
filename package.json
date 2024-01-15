@@ -50,7 +50,7 @@
     "@changesets/changelog-github": "^0.4.5",
     "@changesets/cli": "^2.23.0",
     "@manypkg/cli": "^0.19.1",
-    "@preconstruct/cli": "^2.8.2",
+    "@preconstruct/cli": "^2.8.3",
     "@testing-library/dom": "^8.20.0",
     "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^13.4.0",
@@ -85,7 +85,9 @@
       "importConditionDefaultExport": "default"
     },
     "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
-      "importsConditions": true
+      "importsConditions": true,
+      "typeModule": true,
+      "distInRoot": true
     }
   }
 }

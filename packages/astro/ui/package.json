@@ -1,4 +1,0 @@
-{
-  "main": "dist/keystatic-astro-ui.cjs.js",
-  "module": "dist/keystatic-astro-ui.esm.js"
-}

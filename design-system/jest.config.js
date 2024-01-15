@@ -7,6 +7,7 @@ const config = {
   transform: {
     '^.+\\.[tj]sx?$': ['babel-jest', { rootMode: 'upward' }],
   },
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
 };
 
 module.exports = config;

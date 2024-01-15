@@ -1,4 +1,0 @@
-{
-  "main": "dist/keystar-ui-switch.cjs.js",
-  "module": "dist/keystar-ui-switch.esm.js"
-}

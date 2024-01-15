@@ -1,4 +1,0 @@
-{
-  "main": "dist/keystar-ui-checkbox.cjs.js",
-  "module": "dist/keystar-ui-checkbox.esm.js"
-}
