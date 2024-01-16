@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/core",
-  "version": "0.2.9",
+  "version": "0.2.11",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -176,6 +176,30 @@
       "import": "./reader/github/dist/keystatic-core-reader-github.cjs.mjs",
       "default": "./reader/github/dist/keystatic-core-reader-github.cjs.js"
     },
+    "./content-components": {
+      "types": {
+        "import": "./content-components/dist/keystatic-core-content-components.cjs.mjs",
+        "default": "./content-components/dist/keystatic-core-content-components.cjs.js"
+      },
+      "node": {
+        "react-server": {
+          "module": "./content-components/dist/keystatic-core-content-components.node.react-server.esm.js",
+          "import": "./content-components/dist/keystatic-core-content-components.node.react-server.cjs.mjs",
+          "default": "./content-components/dist/keystatic-core-content-components.node.react-server.cjs.js"
+        },
+        "module": "./content-components/dist/keystatic-core-content-components.node.esm.js",
+        "import": "./content-components/dist/keystatic-core-content-components.node.cjs.mjs",
+        "default": "./content-components/dist/keystatic-core-content-components.node.cjs.js"
+      },
+      "react-server": {
+        "module": "./content-components/dist/keystatic-core-content-components.react-server.esm.js",
+        "import": "./content-components/dist/keystatic-core-content-components.react-server.cjs.mjs",
+        "default": "./content-components/dist/keystatic-core-content-components.react-server.cjs.js"
+      },
+      "module": "./content-components/dist/keystatic-core-content-components.esm.js",
+      "import": "./content-components/dist/keystatic-core-content-components.cjs.mjs",
+      "default": "./content-components/dist/keystatic-core-content-components.cjs.js"
+    },
     "./component-blocks": {
       "types": {
         "import": "./component-blocks/dist/keystatic-core-component-blocks.cjs.mjs",
@@ -235,7 +259,8 @@
     "renderer",
     "ui",
     "form",
-    "component-blocks"
+    "component-blocks",
+    "content-components"
   ],
   "scripts": {
     "setup": "ts-gql build && tsx scripts/l10n.ts && tsx scripts/build-prism.ts",
@@ -250,7 +275,7 @@
     "@emotion/weak-memoize": "^0.3.0",
     "@floating-ui/react": "^0.24.0",
     "@internationalized/string": "^3.1.1",
-    "@keystar/ui": "^0.4.7",
+    "@keystar/ui": "^0.4.8",
     "@markdoc/markdoc": "^0.3.0",
     "@react-aria/focus": "^3.14.3",
     "@react-aria/i18n": "^3.8.0",
@@ -308,6 +333,8 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@jest/expect": "^29.7.0",
+    "@jest/globals": "^29.7.0",
     "@testing-library/user-event": "^14.4.3",
     "@ts-gql/compiler": "^0.16.1",
     "@ts-gql/eslint-plugin": "^0.8.5",
@@ -346,7 +373,8 @@
       "renderer.tsx",
       "ui.tsx",
       "form/fields/markdoc/index.tsx",
-      "component-blocks/index.tsx"
+      "component-blocks/index.tsx",
+      "content-components.ts"
     ]
   },
   "ts-gql": {

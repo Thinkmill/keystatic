@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom/jest-globals';
+
 const prevConsoleError = console.error;
 
 console.error = function (...args: unknown[]) {

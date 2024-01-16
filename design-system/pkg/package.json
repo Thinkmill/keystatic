@@ -1,6 +1,6 @@
 {
   "name": "@keystar/ui",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "license": "MIT",
   "main": "",
   "module": "",
@@ -11125,11 +11125,11 @@
     "@react-types/table": "^3.9.0",
     "@react-types/tabs": "^3.3.3",
     "emery": "^1.4.1",
-    "facepaint": "^1.2.1",
-    "react-transition-group": "^4.4.5"
+    "facepaint": "^1.2.1"
   },
   "devDependencies": {
-    "@keystar/ui": "^0.4.7",
+    "@jest/globals": "^29.7.0",
+    "@keystar/ui": "^0.4.8",
     "@keystar/ui-storybook": "^0.0.1",
     "@react-aria/landmark": "3.0.0-beta.2",
     "@svgr/core": "^6.5.1",
@@ -11142,7 +11142,6 @@
     "@types/facepaint": "^1.2.2",
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.0.11",
-    "@types/react-transition-group": "^4.4.5",
     "lucide-static": "^0.252.0",
     "next": "^14.0.0",
     "react": "^18.2.0",

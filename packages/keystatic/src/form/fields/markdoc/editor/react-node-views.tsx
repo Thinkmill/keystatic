@@ -6,9 +6,10 @@ import {
   PluginKey,
 } from 'prosemirror-state';
 import { NodeView } from 'prosemirror-view';
-import { ReactElement, ReactNode, memo } from 'react';
+import { ReactElement, ReactNode, memo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useEditorViewRef } from './editor-view';
+import { css } from '@keystar/ui/style';
 
 type NodeViewInfo = {
   key: string;
@@ -26,6 +27,7 @@ type ReactNodeViewProps = {
   isNodeCompletelyWithinSelection: boolean;
   node: Node;
   children: ReactNode;
+  pos: number;
 };
 
 type ReactNodeViewSpec = {
@@ -41,16 +43,20 @@ function NodeViewContentDOM(props: { node: HTMLElement }) {
   const viewRef = useEditorViewRef();
   return (
     <span
-      ref={element => {
-        if (!element) return;
-        element.appendChild(props.node);
+      className={displayContentsClassName}
+      ref={useCallback(
+        (element: HTMLSpanElement | null) => {
+          if (!element) return;
+          element.appendChild(props.node);
 
-        const view = viewRef.current;
-        if (!view) return;
-        if (view.hasFocus()) {
-          view.focus();
-        }
-      }}
+          const view = viewRef.current;
+          if (!view) return;
+          if (view.hasFocus()) {
+            view.focus();
+          }
+        },
+        [props.node, viewRef]
+      )}
     />
   );
 }
@@ -61,10 +67,12 @@ const NodeViewWrapper = memo(function NodeViewWrapper(props: {
   component: (props: ReactNodeViewProps) => ReactElement | null;
   hasNodeSelection: boolean;
   isNodeCompletelyWithinSelection: boolean;
+  pos: number;
 }) {
   return (
     <props.component
       node={props.node}
+      pos={props.pos}
       hasNodeSelection={props.hasNodeSelection}
       isNodeCompletelyWithinSelection={props.isNodeCompletelyWithinSelection}
       children={
@@ -100,6 +108,7 @@ export function NodeViews(props: { state: EditorState }): ReactElement | null {
             node={node}
             contentDOM={contentDOM}
             component={nodeViewSpec.component as any}
+            pos={pos}
           />,
           dom,
           key
@@ -113,16 +122,24 @@ function getReactNodeViewSpec(type: NodeType): ReactNodeViewSpec | undefined {
   return type.spec.reactNodeView as ReactNodeViewSpec | undefined;
 }
 
+const displayContentsClassName = css({ display: 'contents' });
+
+function elementWithDisplayContents(tag: keyof HTMLElementTagNameMap) {
+  const element = document.createElement(tag);
+  element.classList.add(displayContentsClassName);
+  return element;
+}
+
 function createNodeView(type: NodeType): NodeViewInfo {
   const reactNodeViewSpec = getReactNodeViewSpec(type);
   return {
     key: (i++).toString(),
     type,
-    dom: document.createElement('div'),
+    dom: document.createElement(type.isInline ? 'span' : 'div'),
     contentDOM:
       reactNodeViewSpec?.rendersOwnContent || type.isLeaf
         ? undefined
-        : document.createElement(type.inlineContent ? 'div' : 'span'),
+        : elementWithDisplayContents(type.inlineContent ? 'div' : 'span'),
   };
 }
 

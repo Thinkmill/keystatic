@@ -77,7 +77,7 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
   return (
     <ToolbarWrapper {...props}>
       <ToolbarScrollArea>
-        <HeadingMenu headingType={nodes.heading} />
+        {nodes.heading && <HeadingMenu headingType={nodes.heading} />}
         <EditorToolbar aria-label="Formatting options">
           <EditorToolbarSeparator />
           <InlineMarks />
@@ -85,71 +85,82 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
           <ListButtons />
           <EditorToolbarSeparator />
           <EditorToolbarGroup aria-label="Blocks">
-            <TooltipTrigger>
-              <ToolbarButton
-                aria-label="Divider"
-                command={insertNode(nodes.divider)}
-                isSelected={typeInSelection(nodes.divider)}
-              >
-                <Icon src={minusIcon} />
-              </ToolbarButton>
-              <Tooltip>
-                <Text>Divider</Text>
-                <Kbd>---</Kbd>
-              </Tooltip>
-            </TooltipTrigger>
-            <TooltipTrigger>
-              <ToolbarButton
-                aria-label="Quote"
-                command={(state, dispatch) => {
-                  const hasQuote = typeInSelection(nodes.blockquote)(state);
-                  if (hasQuote) {
-                    const { $from, $to } = state.selection;
-                    const range = $from.blockRange(
-                      $to,
-                      node => node.type === nodes.blockquote
-                    );
-                    if (!range) return false;
-                    const target = liftTarget(range);
-                    if (target === null) return false;
-                    if (dispatch) {
-                      dispatch(state.tr.lift(range, target).scrollIntoView());
+            {nodes.divider && (
+              <TooltipTrigger>
+                <ToolbarButton
+                  aria-label="Divider"
+                  command={insertNode(nodes.divider)}
+                  isSelected={typeInSelection(nodes.divider)}
+                >
+                  <Icon src={minusIcon} />
+                </ToolbarButton>
+                <Tooltip>
+                  <Text>Divider</Text>
+                  <Kbd>---</Kbd>
+                </Tooltip>
+              </TooltipTrigger>
+            )}
+            {nodes.blockquote && (
+              <TooltipTrigger>
+                <ToolbarButton
+                  aria-label="Quote"
+                  command={(state, dispatch) => {
+                    const hasQuote = typeInSelection(nodes.blockquote!)(state);
+                    if (hasQuote) {
+                      const { $from, $to } = state.selection;
+                      const range = $from.blockRange(
+                        $to,
+                        node => node.type === nodes.blockquote
+                      );
+                      if (!range) return false;
+                      const target = liftTarget(range);
+                      if (target === null) return false;
+                      if (dispatch) {
+                        dispatch(state.tr.lift(range, target).scrollIntoView());
+                      }
+                      return true;
+                    } else {
+                      return wrapIn(nodes.blockquote!)(state, dispatch);
                     }
-                    return true;
-                  } else {
-                    return wrapIn(nodes.blockquote)(state, dispatch);
-                  }
-                }}
-                isSelected={typeInSelection(nodes.blockquote)}
-              >
-                <Icon src={quoteIcon} />
-              </ToolbarButton>
-              <Tooltip>
-                <Text>Quote</Text>
-                <Kbd>{'>⎵'}</Kbd>
-              </Tooltip>
-            </TooltipTrigger>
-            <TooltipTrigger>
-              <ToolbarButton
-                aria-label="Code block"
-                command={toggleCodeBlock(nodes.code_block, nodes.paragraph)}
-                isSelected={typeInSelection(nodes.code_block)}
-              >
-                <Icon src={codeIcon} />
-              </ToolbarButton>
-              <Tooltip>
-                <Text>Code block</Text>
-                <Kbd>```</Kbd>
-              </Tooltip>
-            </TooltipTrigger>
-            <TooltipTrigger>
-              <ToolbarButton aria-label="Table" command={insertTable(schema)}>
-                <Icon src={tableIcon} />
-              </ToolbarButton>
-              <Tooltip>
-                <Text>Table</Text>
-              </Tooltip>
-            </TooltipTrigger>
+                  }}
+                  isSelected={typeInSelection(nodes.blockquote)}
+                >
+                  <Icon src={quoteIcon} />
+                </ToolbarButton>
+                <Tooltip>
+                  <Text>Quote</Text>
+                  <Kbd>{'>⎵'}</Kbd>
+                </Tooltip>
+              </TooltipTrigger>
+            )}
+            {nodes.code_block && (
+              <TooltipTrigger>
+                <ToolbarButton
+                  aria-label="Code block"
+                  command={toggleCodeBlock(nodes.code_block, nodes.paragraph)}
+                  isSelected={typeInSelection(nodes.code_block)}
+                >
+                  <Icon src={codeIcon} />
+                </ToolbarButton>
+                <Tooltip>
+                  <Text>Code block</Text>
+                  <Kbd>```</Kbd>
+                </Tooltip>
+              </TooltipTrigger>
+            )}
+            {nodes.table && (
+              <TooltipTrigger>
+                <ToolbarButton
+                  aria-label="Table"
+                  command={insertTable(nodes.table)}
+                >
+                  <Icon src={tableIcon} />
+                </ToolbarButton>
+                <Tooltip>
+                  <Text>Table</Text>
+                </Tooltip>
+              </TooltipTrigger>
+            )}
             <ImageToolbarButton />
           </EditorToolbarGroup>
         </EditorToolbar>
@@ -296,14 +307,14 @@ function getHeadingMenuState(
 }
 
 const HeadingMenu = (props: { headingType: NodeType }) => {
-  const { nodes } = useEditorSchema();
+  const { nodes, config } = useEditorSchema();
   const items = useMemo(() => {
     let resolvedItems: HeadingItem[] = [{ name: 'Paragraph', id: 'normal' }];
-    [1, 2, 3, 4, 5, 6].forEach(level => {
+    config.heading.levels.forEach(level => {
       resolvedItems.push({ name: `Heading ${level}`, id: level.toString() });
     });
     return resolvedItems;
-  }, []);
+  }, [config.heading.levels]);
   const state = useEditorState();
   const menuState = getHeadingMenuState(
     state,
@@ -458,6 +469,17 @@ function InlineMarks() {
       });
     }
 
+    for (const [name, componentConfig] of Object.entries(schema.components)) {
+      if (componentConfig.kind !== 'mark') continue;
+      marks.push({
+        key: name,
+        label: componentConfig.label,
+        icon: componentConfig.icon,
+        command: toggleMark(schema.schema.marks[name]),
+        isSelected: isMarkActive(schema.schema.marks[name]),
+      });
+    }
+
     marks.push({
       key: 'clearFormatting',
       label: 'Clear formatting',
@@ -466,7 +488,7 @@ function InlineMarks() {
       isSelected: () => false,
     });
     return marks;
-  }, [schema.marks]);
+  }, [schema]);
   const selectedKeys = useMemoStringified(
     inlineMarks.filter(val => val.isSelected(state)).map(val => val.key)
   );

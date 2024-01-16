@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import { expect, describe, it } from '@jest/globals';
 import { createRef, ForwardedRef, forwardRef, useRef } from 'react';
 
 import { renderWithProvider } from '#test-utils';

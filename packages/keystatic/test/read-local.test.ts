@@ -2,6 +2,7 @@
 import { TreeEntry } from '../src/app/trees';
 import { readToDirEntries } from '../src/api/read-local';
 import { testdir } from './test-utils';
+import { expect, test } from '@jest/globals';
 
 function short(output: TreeEntry[]) {
   const obj = Object.fromEntries(output.map(o => [o.path, o.type]));

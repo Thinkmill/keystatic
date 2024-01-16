@@ -12,6 +12,8 @@ import { createToolbarState, ToolbarStateProvider } from '../toolbar-state';
 import { KeystarProvider } from '@keystar/ui/core';
 import { normaliseDocumentFeatures } from '../..';
 
+import { expect } from '@jest/globals';
+
 export { __jsx as jsx } from './jsx/namespace';
 
 let oldConsoleError = console.error;
@@ -54,16 +56,14 @@ function formatEditor(editor: Node) {
   });
 }
 
-declare global {
-  namespace jest {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    interface Matchers<R, T> {
-      toEqualEditor(
-        expected: [T] extends [Editor]
-          ? Editor
-          : 'toEqualEditor only accepts an Editor'
-      ): CustomMatcherResult;
-    }
+declare module '@jest/expect' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  export interface Matchers<R extends void | Promise<void>, T> {
+    toEqualEditor(
+      expected: [T] extends [Editor]
+        ? Editor
+        : 'toEqualEditor only accepts an Editor'
+    ): R;
   }
 }
 

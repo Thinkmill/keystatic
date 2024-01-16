@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { expect, test } from '@jest/globals';
 import { jsx, renderEditor, undo } from './utils';
 
 for (const level of [1, 2, 3, 4, 5, 6]) {
@@ -72,6 +73,12 @@ test('inserting a break at the end of the heading exits the heading', async () =
     <doc>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Some heading
@@ -101,6 +108,12 @@ test('inserting a break in the middle of the heading splits the text and does no
     <doc>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           Some 
@@ -108,6 +121,12 @@ test('inserting a break in the middle of the heading splits the text and does no
       </heading>
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           <cursor />
@@ -136,6 +155,12 @@ test('inserting a break at the start of the heading inserts a paragraph above th
       <paragraph />
       <heading
         level={1}
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           <cursor />

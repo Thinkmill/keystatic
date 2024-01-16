@@ -296,11 +296,14 @@ export function GitHubAppShellProvider(props: {
   useEffect(() => {
     if (error?.response?.status === 401) {
       if (isGitHubConfig(props.config)) {
-        window.location.href = `/api/keystatic/github/login?from=${router.params.join(
-          '/'
-        )}`;
+        window.location.href = `/api/keystatic/github/login?from=${router.params
+          .map(encodeURIComponent)
+          .join('/')}`;
       } else {
-        redirectToCloudAuth(router.params.join('/'), props.config);
+        redirectToCloudAuth(
+          router.params.map(encodeURIComponent).join('/'),
+          props.config
+        );
       }
     }
     if (
@@ -311,9 +314,9 @@ export function GitHubAppShellProvider(props: {
           (err?.originalError as any)?.type === 'FORBIDDEN'
       )
     ) {
-      window.location.href = `/api/keystatic/github/repo-not-found?from=${router.params.join(
-        '/'
-      )}`;
+      window.location.href = `/api/keystatic/github/repo-not-found?from=${router.params
+        .map(encodeURIComponent)
+        .join('/')}`;
     }
   }, [error, router, repo?.id, props.config]);
   const baseInfo = useMemo(

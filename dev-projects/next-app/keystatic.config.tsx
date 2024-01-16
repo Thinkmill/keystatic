@@ -144,7 +144,7 @@ export default config({
                     { value: 'caution', label: 'Caution' },
                     { value: 'positive', label: 'Positive' },
                     { value: 'critical', label: 'Critical' },
-                  ] as const,
+                  ],
                   defaultValue: 'info',
                 }),
                 content: fields.child({
@@ -302,7 +302,7 @@ export default config({
     markdoc: singleton({
       label: 'Markdoc',
       schema: {
-        markdoc: __experimental_markdoc_field({ label: 'Markdoc', config: {} }),
+        markdoc: __experimental_markdoc_field({ label: 'Markdoc' }),
       },
     }),
     fields: singleton({
@@ -400,7 +400,7 @@ export default config({
           description,
           collection: 'posts',
         }),
-        markdoc: __experimental_markdoc_field({ label: 'Markdoc', config: {} }),
+        markdoc: __experimental_markdoc_field({ label: 'Markdoc' }),
       },
     }),
   },

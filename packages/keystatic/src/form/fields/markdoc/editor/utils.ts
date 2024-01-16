@@ -10,8 +10,6 @@ export const classes = {
   placeholder: 'ProseMirror-placeholder',
 };
 
-export const markdocIdentifierPattern = /^[a-zA-Z][-_a-zA-Z0-9]*$/;
-
 export function weakMemoize<Arg extends object, Return>(
   func: (arg: Arg) => Return
 ): (arg: Arg) => Return {
@@ -25,16 +23,6 @@ export function weakMemoize<Arg extends object, Return>(
     return result;
   };
 }
-
-export const nodeWithBorder = css({
-  border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
-  borderRadius: tokenSchema.size.radius.regular,
-  [`&.${classes.nodeInSelection}, &.${classes.nodeSelection}`]: {
-    borderColor: tokenSchema.color.alias.borderSelected,
-    outline: 'none !important',
-    boxShadow: `0 0 0 1px ${tokenSchema.color.alias.borderSelected}`,
-  },
-});
 
 let maskColor = tokenSchema.color.background.canvas;
 let borderColor = tokenSchema.color.alias.borderSelected;

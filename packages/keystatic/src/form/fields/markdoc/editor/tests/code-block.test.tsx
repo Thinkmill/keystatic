@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { expect, test } from '@jest/globals';
 import { jsx, renderEditor } from './utils';
 
 const basicDoc = (
@@ -75,6 +76,12 @@ test('enter inserts a new line', async () => {
     <doc>
       <code_block
         language="plain"
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           asdkjnajsndakjndkjnaksdjnasdasdasd
@@ -104,6 +111,12 @@ test('insertBreak when at end with \n as last character just adds a new line', a
     <doc>
       <code_block
         language="plain"
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           asdkjnajsndakjndkjnaksdjn
@@ -136,6 +149,12 @@ test('shift+enter in the middle of a code block splits it', async () => {
     <doc>
       <code_block
         language="plain"
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           some text
@@ -143,6 +162,12 @@ test('shift+enter in the middle of a code block splits it', async () => {
       </code_block>
       <code_block
         language="plain"
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           <cursor />
@@ -173,6 +198,12 @@ test('shift+enter at the end of a code block inserts a paragraph after', async (
     <doc>
       <code_block
         language="plain"
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           some textmore text
@@ -206,6 +237,12 @@ test('shift+enter at the start of a code block inserts a paragraph before', asyn
       <paragraph />
       <code_block
         language="plain"
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           <cursor />
@@ -275,6 +312,12 @@ test('clicking on the code block button converts the current nodes to code block
     <doc>
       <code_block
         language=""
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           blah
@@ -283,6 +326,12 @@ test('clicking on the code block button converts the current nodes to code block
       </code_block>
       <code_block
         language=""
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           more
@@ -290,6 +339,12 @@ test('clicking on the code block button converts the current nodes to code block
       </code_block>
       <code_block
         language=""
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           more

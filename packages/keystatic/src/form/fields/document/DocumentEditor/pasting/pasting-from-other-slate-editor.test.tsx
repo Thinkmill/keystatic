@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { createEditor, Editor } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
 import { render } from '@testing-library/react';
+import { expect, test } from '@jest/globals';
 import { makeEditor } from '../tests/utils';
 import { MyDataTransfer } from './data-transfer';
 

@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { expect, test } from '@jest/globals';
 import { nestList, toggleList } from './lists';
 import { jsx, makeEditor } from '../tests/utils';
 

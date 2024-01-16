@@ -31,7 +31,7 @@ const localeCollections = Object.fromEntries(
             { value: 'collection-item', label: 'Collection item' },
             { value: 'singleton', label: 'Singleton' },
             { value: 'auth', label: 'Authentication' },
-          ] as const,
+          ],
           defaultValue: 'global',
         }),
       },

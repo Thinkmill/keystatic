@@ -19,12 +19,9 @@ import {
   Schema,
   NodeType,
   MarkType,
-  Node,
-  Slice,
-  Fragment,
   AttributeSpec,
 } from 'prosemirror-model';
-import { classes, markdocIdentifierPattern, nodeWithBorder } from './utils';
+import { classes } from './utils';
 import {
   InsertMenuItem,
   WithInsertMenuNodeSpec,
@@ -32,11 +29,13 @@ import {
 import { setBlockType, wrapIn } from 'prosemirror-commands';
 import { insertNode, insertTable } from './commands/misc';
 import { toggleList } from './lists';
-import { Config } from '@markdoc/markdoc';
-import { attributeSchema } from './attributes/schema';
 import { independentForGapCursor } from './gapcursor/gapcursor';
-import { ReplaceAroundStep } from 'prosemirror-transform';
 import { WithReactNodeViewSpec } from './react-node-views';
+import { ContentComponent } from '../../../../content-components';
+import { getCustomMarkSpecs, getCustomNodeSpecs } from './custom-components';
+import { EditorConfig } from '../config';
+import { toSerialized } from './props-serialization';
+import { getInitialPropsValue } from '../../../initial-values';
 
 const blockElementSpacing = css({
   marginBlock: '1em',
@@ -84,9 +83,8 @@ export type EditorNodeSpec = NodeSpec &
   WithInsertMenuNodeSpec &
   WithReactNodeViewSpec;
 
-const inlineContent = `(text | image | (text hard_break) | attribute)*`;
+const inlineContent = `(text | inline_component | (text hard_break))*`;
 
-const levels = [1, 2, 3, 4, 5, 6];
 const levelsMeta = [
   { description: 'Use this for a top level heading', icon: heading1Icon },
   { description: 'Use this for key sections', icon: heading2Icon },
@@ -146,130 +144,6 @@ const nodeSpecs = {
   },
   text: {
     group: 'inline',
-  },
-  tag_attributes: {
-    content: 'attribute*',
-    selectable: false,
-    defining: true,
-    parseDOM: [{ tag: '[data-markdoc-attributes]' }],
-    toDOM() {
-      return [
-        'div',
-        {
-          'data-markdoc-attributes': '1',
-          class: css({
-            display: 'block',
-            backgroundColor: tokenSchema.color.background.surface,
-            paddingInline: 0,
-            borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
-          }),
-        },
-        [
-          'span',
-          {
-            'data-tag-name': 'true',
-            class: css({
-              '::before': {
-                display: 'inline-block',
-                width: 'auto',
-                content: 'var(--tag-name)',
-                verticalAlign: 'top',
-                backgroundColor: tokenSchema.color.background.surfaceTertiary,
-                paddingInline: tokenSchema.size.space.small,
-                borderRight: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
-                borderBottom: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
-                borderEndEndRadius: tokenSchema.size.radius.small,
-                [`.${classes.nodeSelection} > > &`]: {
-                  borderColor: tokenSchema.color.alias.borderSelected,
-                },
-              },
-            }),
-          },
-        ],
-        [
-          'span',
-          {
-            class: css({
-              display: 'inline-block',
-              padding: tokenSchema.size.space.small,
-            }),
-          },
-          0,
-        ],
-      ];
-    },
-  },
-  tag_slot: {
-    attrs: {
-      name: { default: 'children' },
-    },
-    content: 'block+',
-    defining: true,
-    toDOM(node) {
-      if (node.attrs.name === 'children') {
-        return [
-          'div',
-          { class: css({ borderTop: '2px solid green', paddingInline: -2 }) },
-          0,
-        ];
-      }
-      return [
-        'div',
-        {
-          'data-slot': node.attrs.name,
-          class: css({
-            borderTop: '2px solid green',
-            paddingInline: -2,
-            '::before': {
-              content: `attr(data-slot)`,
-              display: 'inline-block',
-            },
-          }),
-        },
-        0,
-      ];
-    },
-  },
-  tag: {
-    attrs: {
-      name: {},
-    },
-    group: 'block',
-    defining: true,
-    [independentForGapCursor]: true,
-    content: 'tag_attributes tag_slot* block*',
-    parseDOM: [
-      {
-        tag: '[data-markdoc-tag]',
-        getAttrs(node) {
-          if (typeof node === 'string') return false;
-          let name = node.getAttribute('data-markdoc-tag');
-          if (name === null || !markdocIdentifierPattern.test(name)) {
-            return false;
-          }
-          return { name };
-        },
-      },
-    ],
-    toDOM(node) {
-      const element = document.createElement('div');
-      element.dataset.markdocTag = node.attrs.name;
-      element.style.setProperty('--tag-name', JSON.stringify(node.attrs.name));
-      element.classList.add(
-        css({
-          marginBlock: '1em',
-          overflow: 'hidden',
-          '& > *': {
-            paddingInline: tokenSchema.size.space.small,
-          },
-        })
-      );
-      element.classList.add(nodeWithBorder);
-      return {
-        dom: element,
-        contentDOM: element,
-      };
-    },
   },
   blockquote: {
     content: 'block+',
@@ -365,35 +239,13 @@ const nodeSpecs = {
       return hardBreakDOM;
     },
   },
-  heading: {
-    attrs: {
-      level: { default: levels[0] },
-    },
-    content: inlineContent,
-    group: 'block',
-    parseDOM: levels.map(level => ({
-      tag: 'h' + level,
-      attrs: { level },
-    })),
-    defining: true,
-    toDOM(node) {
-      return ['h' + node.attrs.level, 0];
-    },
-    insertMenu: levels.map((level, index) => ({
-      ...levelsMeta[index],
-      label: 'Heading ' + level,
-      command: type => setBlockType(type, { level }),
-    })),
-  },
   table: {
     content: 'table_row+',
     insertMenu: {
       label: 'Table',
       description: 'Insert a table',
       icon: tableIcon,
-      command(_, schema) {
-        return insertTable(schema);
-      },
+      command: insertTable,
     },
     tableRole: 'table',
     isolating: true,
@@ -456,7 +308,7 @@ const nodeSpecs = {
   },
   image: {
     content: '',
-    group: 'inline',
+    group: 'inline inline_component',
     inline: true,
     attrs: {
       src: {},
@@ -509,7 +361,6 @@ const nodeSpecs = {
       },
     ],
   },
-  ...attributeSchema,
 } satisfies Record<string, EditorNodeSpec>;
 
 const italicDOM: DOMOutputSpec = ['em', 0];
@@ -603,20 +454,123 @@ const markSpecs = {
 
 export type EditorSchema = {
   schema: Schema;
-  nodes: {
+  nodes: Partial<{
     [_ in keyof typeof nodeSpecs]: NodeType;
-  };
-  marks: {
+  }> & { paragraph: {}; doc: {}; text: {}; heading: NodeType };
+  marks: Partial<{
     [_ in keyof typeof markSpecs]: MarkType;
-  };
-  markdocConfig: Config | undefined;
+  }>;
+  config: EditorConfig;
+  components: Record<string, ContentComponent>;
   insertMenuItems: InsertMenuItem[];
 };
 
-export function createEditorSchema(markdocConfig: Config) {
+export function createEditorSchema(
+  config: EditorConfig,
+  components: Record<string, ContentComponent>
+) {
+  const nodeSpecsWithCustomNodes: Record<string, EditorNodeSpec> = {
+    doc: nodeSpecs.doc,
+    paragraph: nodeSpecs.paragraph,
+    text: nodeSpecs.text,
+    hard_break: nodeSpecs.hard_break,
+    ...getCustomNodeSpecs(components),
+  };
+  if (config.blockquote) {
+    nodeSpecsWithCustomNodes.blockquote = nodeSpecs.blockquote;
+  }
+  if (config.divider) {
+    nodeSpecsWithCustomNodes.divider = nodeSpecs.divider;
+  }
+  if (config.codeBlock) {
+    nodeSpecsWithCustomNodes.code_block = {
+      ...nodeSpecs.code_block,
+      attrs: {
+        ...nodeSpecs.code_block.attrs,
+        props: {
+          default: toSerialized(
+            getInitialPropsValue({
+              kind: 'object',
+              fields: config.heading.schema,
+            }),
+            config.heading.schema
+          ),
+        },
+      },
+    };
+  }
+  if (config.orderedList) {
+    nodeSpecsWithCustomNodes.ordered_list = nodeSpecs.ordered_list;
+  }
+  if (config.unorderedList) {
+    nodeSpecsWithCustomNodes.unordered_list = nodeSpecs.unordered_list;
+  }
+  if (config.orderedList || config.unorderedList) {
+    nodeSpecsWithCustomNodes.list_item = nodeSpecs.list_item;
+  }
+  if (config.heading.levels.length) {
+    nodeSpecsWithCustomNodes.heading = {
+      attrs: {
+        level: { default: config.heading.levels[0] },
+        props: {
+          default: toSerialized(
+            getInitialPropsValue({
+              kind: 'object',
+              fields: config.heading.schema,
+            }),
+            config.heading.schema
+          ),
+        },
+      },
+      content: inlineContent,
+      group: 'block',
+      parseDOM: config.heading.levels.map(level => ({
+        tag: 'h' + level,
+        attrs: { level },
+      })),
+      defining: true,
+      toDOM(node) {
+        return ['h' + node.attrs.level, 0];
+      },
+      insertMenu: config.heading.levels.map((level, index) => ({
+        ...levelsMeta[index],
+        label: 'Heading ' + level,
+        command: type => setBlockType(type, { level }),
+      })),
+    };
+  }
+  if (config.table) {
+    nodeSpecsWithCustomNodes.table = nodeSpecs.table;
+    nodeSpecsWithCustomNodes.table_row = nodeSpecs.table_row;
+    nodeSpecsWithCustomNodes.table_cell = nodeSpecs.table_cell;
+    nodeSpecsWithCustomNodes.table_header = nodeSpecs.table_header;
+  }
+  if (config.image) {
+    nodeSpecsWithCustomNodes.image = nodeSpecs.image;
+  }
+
+  const markSpecsWithCustomMarks = {
+    ...getCustomMarkSpecs(components),
+  };
+  if (config.link) {
+    markSpecsWithCustomMarks.link = markSpecs.link;
+  }
+  if (config.italic) {
+    markSpecsWithCustomMarks.italic = markSpecs.italic;
+  }
+  if (config.bold) {
+    markSpecsWithCustomMarks.bold = markSpecs.bold;
+  }
+  if (config.strikethrough) {
+    markSpecsWithCustomMarks.strikethrough = markSpecs.strikethrough;
+  }
+  if (config.code) {
+    markSpecsWithCustomMarks.code = markSpecs.code;
+  }
+
   const schema = new Schema({
-    nodes: nodeSpecs,
-    marks: markSpecs,
+    nodes: nodeSpecsWithCustomNodes,
+    marks: markSpecsWithCustomMarks,
   });
 
   const nodes = schema.nodes as EditorSchema['nodes'];
@@ -626,7 +580,8 @@ export function createEditorSchema(markdocConfig: Config) {
     schema,
     marks,
     nodes,
-    markdocConfig,
+    config,
+    components,
     insertMenuItems: [],
   };
   schemaToEditorSchema.set(schema, editorSchema);
@@ -642,6 +597,7 @@ export function createEditorSchema(markdocConfig: Config) {
             description: item.description,
             icon: item.icon,
             command: item.command(node, editorSchema),
+            forToolbar: item.forToolbar,
           });
         }
       } else {
@@ -650,82 +606,12 @@ export function createEditorSchema(markdocConfig: Config) {
           description: insertMenuSpec.description,
           icon: insertMenuSpec.icon,
           command: insertMenuSpec.command(node, editorSchema),
+          forToolbar: insertMenuSpec.forToolbar,
         });
       }
     }
   }
-  for (const [tagName, tagConfig] of Object.entries(markdocConfig.tags ?? {})) {
-    const attributes: Node[] = [];
-    for (const [attrName, attrConfig] of Object.entries(
-      tagConfig.attributes ?? {}
-    )) {
-      if (attrConfig.required && attrConfig.default === undefined) {
-        attributes.push(nodes.attribute.createAndFill({ name: attrName })!);
-      }
-    }
-    const tag_attributes = nodes.tag_attributes.createChecked(null, attributes);
-    const tagChildren = [tag_attributes];
-    for (const [slotName, slotConfig] of Object.entries(
-      tagConfig.slots ?? {}
-    )) {
-      if (slotConfig.required) {
-        tagChildren.push(nodes.tag_slot.createAndFill({ name: slotName })!);
-      }
-    }
-    const tag = nodes.tag.createChecked({ name: tagName }, tagChildren);
 
-    const slice = new Slice(Fragment.fromArray([tag]), 0, 0);
-    const childrenMatch = nodes.tag.contentMatch.edge(0).next;
-    insertMenuItems.push({
-      label: tagName,
-      forToolbar: true,
-      command: (state, dispatch) => {
-        const { $from, $to } = state.selection;
-        const blockRange = $from.blockRange($to);
-        if (!blockRange) return false;
-        if (
-          blockRange.$from
-            .node(-1)
-            .contentMatchAt(blockRange.$from.index(-1))
-            .matchType(nodes.tag) === null
-        ) {
-          return false;
-        }
-
-        let shouldKeepContent = !tagConfig.selfClosing;
-
-        if (shouldKeepContent) {
-          for (let i = blockRange.startIndex; i < blockRange.endIndex; i++) {
-            const node = blockRange.parent.child(i);
-            if (childrenMatch.matchType(node.type) === null) {
-              shouldKeepContent = false;
-              break;
-            }
-          }
-        }
-
-        if (dispatch) {
-          const { tr } = state;
-          if (shouldKeepContent) {
-            tr.step(
-              new ReplaceAroundStep(
-                blockRange.start,
-                blockRange.end,
-                blockRange.start,
-                blockRange.end,
-                slice,
-                tag.nodeSize - 1
-              )
-            );
-          } else {
-            tr.replaceRange(blockRange.start, blockRange.end, slice);
-          }
-          dispatch(tr);
-        }
-        return true;
-      },
-    });
-  }
   // TODO: keep "bullet list" and "ordered list" together
   editorSchema.insertMenuItems = insertMenuItems
     .sort((a, b) => a.label.localeCompare(b.label))

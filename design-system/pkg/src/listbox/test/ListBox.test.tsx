@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom';
 import {
   act,
   fireEvent,
@@ -6,7 +5,16 @@ import {
   RenderOptions,
   within,
 } from '@testing-library/react';
-import { ReactElement } from 'react';
+import { Key, ReactElement } from 'react';
+import {
+  jest,
+  expect,
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  it,
+} from '@jest/globals';
 
 import { TestProvider } from '@keystar/ui/core';
 import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';
@@ -15,7 +23,7 @@ import { Text } from '@keystar/ui/typography';
 
 import { Item, ListBox, Section } from '..';
 
-type NumberSpy = jest.SpyInstance<number, unknown[]>;
+type NumberSpy = jest.SpiedGetter<number>;
 type MaybeElement = HTMLElement | null;
 
 let sectionItemData = [
@@ -47,7 +55,7 @@ function renderComponent(props = {}) {
 
 describe('pickers/ListBox', () => {
   let offsetWidth: NumberSpy, offsetHeight: NumberSpy, scrollHeight: NumberSpy;
-  let onSelectionChange = jest.fn();
+  let onSelectionChange = jest.fn<(keys: Set<Key>) => void>();
 
   beforeAll(function () {
     offsetWidth = jest

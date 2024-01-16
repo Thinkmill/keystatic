@@ -1,7 +1,7 @@
-import '@testing-library/jest-dom';
 import { renderWithProvider } from '#test-utils';
 
 import { ActionGroup, Item } from '..';
+import { expect, describe, it } from '@jest/globals';
 
 describe('action-group/ActionGroup', () => {
   it('renders', () => {
