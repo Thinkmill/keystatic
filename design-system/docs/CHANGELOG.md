@@ -1,5 +1,13 @@
 # @voussoir/docs
 
+## 0.0.0-test-20240116013622
+
+### Patch Changes
+
+- Updated dependencies [05a71cde]
+- Updated dependencies [b76bb1ec]
+  - @keystar/ui@0.0.0-test-20240116013622
+
 ## 0.0.22
 
 ### Patch Changes

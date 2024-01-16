@@ -1,7 +1,7 @@
 {
   "name": "@keystatic/templates-remix",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.0-test-20240116013622",
   "license": "MIT",
   "scripts": {
     "build": "remix build",
@@ -10,8 +10,8 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@keystatic/core": "^0.2.5",
-    "@keystatic/remix": "^2.1.0",
+    "@keystatic/core": "0.0.0-test-20240116013622",
+    "@keystatic/remix": "0.0.0-test-20240116013622",
     "@remix-run/css-bundle": "^2.3.0",
     "@remix-run/node": "^2.3.0",
     "@remix-run/react": "^2.3.0",

@@ -1,5 +1,19 @@
 # @keystatic/next
 
+## 0.0.0-test-20240116013622
+
+### Major Changes
+
+- b76bb1ec: Switch build to ESM-only
+
+### Patch Changes
+
+- Updated dependencies [4053f41c]
+- Updated dependencies [b76bb1ec]
+- Updated dependencies [22dc4030]
+- Updated dependencies [6986f36b]
+  - @keystatic/core@0.0.0-test-20240116013622
+
 ## 2.0.1
 
 ### Patch Changes

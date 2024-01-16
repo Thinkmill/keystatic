@@ -1,5 +1,15 @@
 # @keystar/ui
 
+## 0.0.0-test-20240116013622
+
+### Minor Changes
+
+- b76bb1ec: Switch build to ESM-only
+
+### Patch Changes
+
+- 05a71cde: Remove `react-transition-group`
+
 ## 0.4.8
 
 ### Patch Changes
