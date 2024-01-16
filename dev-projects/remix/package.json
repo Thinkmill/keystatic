@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/remix-test-app",
-  "version": "0.1.0",
+  "version": "0.0.0-test-20240116000936",
   "type": "module",
   "private": true,
   "sideEffects": false,
@@ -11,8 +11,8 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@keystatic/core": "^0.2.5",
-    "@keystatic/remix": "^2.1.0",
+    "@keystatic/core": "0.0.0-test-20240116000936",
+    "@keystatic/remix": "0.0.0-test-20240116000936",
     "@remix-run/node": "^2.3.0",
     "@remix-run/react": "^2.3.0",
     "@remix-run/serve": "^2.3.0",

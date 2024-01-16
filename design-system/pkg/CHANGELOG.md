@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.0.0-test-20240116000936
+
+### Minor Changes
+
+- b7fc29dc: Switch build to ESM-only
+
 ## 0.4.8
 
 ### Patch Changes

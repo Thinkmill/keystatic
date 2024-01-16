@@ -1,5 +1,19 @@
 # @keystatic/astro
 
+## 0.0.0-test-20240116000936
+
+### Major Changes
+
+- b7fc29dc: Switch build to ESM-only
+
+### Patch Changes
+
+- Updated dependencies [4053f41c]
+- Updated dependencies [b7fc29dc]
+- Updated dependencies [22dc4030]
+- Updated dependencies [6986f36b]
+  - @keystatic/core@0.0.0-test-20240116000936
+
 ## 2.0.3
 
 ### Patch Changes
