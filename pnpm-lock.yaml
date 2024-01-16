@@ -259,14 +259,12 @@ importers:
       '@types/facepaint': ^1.2.2
       '@types/react': ^18.2.8
       '@types/react-dom': ^18.0.11
-      '@types/react-transition-group': ^4.4.5
       emery: ^1.4.1
       facepaint: ^1.2.1
       lucide-static: ^0.252.0
       next: ^14.0.0
       react: ^18.2.0
       react-dom: ^18.2.0
-      react-transition-group: ^4.4.5
       tsx: ^3.8.0
     dependencies:
       '@babel/runtime': 7.22.15
@@ -350,7 +348,6 @@ importers:
       '@react-types/tabs': 3.3.3_react@18.2.0
       emery: 1.4.2
       facepaint: 1.2.1
-      react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
     devDependencies:
       '@jest/globals': 29.7.0
       '@keystar/ui': 'link:'
@@ -366,7 +363,6 @@ importers:
       '@types/facepaint': 1.2.2
       '@types/react': 18.2.21
       '@types/react-dom': 18.2.7
-      '@types/react-transition-group': 4.4.6
       lucide-static: 0.252.0
       next: 14.0.0_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
@@ -10185,12 +10181,6 @@ packages:
     dependencies:
       '@types/react': 18.2.21
 
-  /@types/react-transition-group/4.4.6:
-    resolution: {integrity: sha512-VnCdSxfcm08KjsJVQcfBmhEQAPnLB8G08hAxn39azX1qYBQ/5RVQuoHuKIcfKOdncuaUvEpFKFzEvbtIMsfVew==}
-    dependencies:
-      '@types/react': 18.2.21
-    dev: true
-
   /@types/react/16.14.46:
     resolution: {integrity: sha512-Am4pyXMrr6cWWw/TN3oqHtEZl0j+G6Up/O8m65+xF/3ZaUgkv1GAtTPWw4yNRmH0HJXmur6xKCKoMo3rBGynuw==}
     dependencies:
@@ -13123,13 +13113,6 @@ packages:
     dependencies:
       utila: 0.4.0
     dev: true
-
-  /dom-helpers/5.2.1:
-    resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
-    dependencies:
-      '@babel/runtime': 7.22.15
-      csstype: 3.1.2
-    dev: false
 
   /dom-serializer/1.4.1:
     resolution: {integrity: sha512-VHwB3KfrcOOkelEG2ZOfxqLZdfkil8PtJi4P8N2MMXucZq2yLp75ClViUlOVwyoHEDjYU433Aq+5zWP61+RGag==}
@@ -20869,20 +20852,6 @@ packages:
       react: 18.2.0
       tslib: 2.6.2
     dev: true
-
-  /react-transition-group/4.4.5_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
-    peerDependencies:
-      react: '>=16.6.0'
-      react-dom: '>=16.6.0'
-    dependencies:
-      '@babel/runtime': 7.22.15
-      dom-helpers: 5.2.1
-      loose-envify: 1.4.0
-      prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
 
   /react-universal-interface/0.6.2_react@18.2.0+tslib@2.6.2:
     resolution: {integrity: sha512-dg8yXdcQmvgR13RIlZbTRQOoUrDciFVoSBZILwjE2LFISxZZ8loVJKAkuzswl5js8BHda79bIb2b84ehU8IjXw==}

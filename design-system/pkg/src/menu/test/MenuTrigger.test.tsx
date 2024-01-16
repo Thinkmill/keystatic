@@ -20,6 +20,7 @@ import {
   renderWithProvider,
   within,
   KEYS,
+  waitFor,
 } from '#test-utils';
 
 import {
@@ -903,7 +904,7 @@ describe('menu/MenuTrigger', () => {
       return menu;
     }
 
-    it('should focus the selected item on menu open', function () {
+    it('should focus the selected item on menu open', async function () {
       let tree = renderComponent(
         { trigger: 'longPress' },
         { selectedKeys: ['Bar'] }
@@ -918,7 +919,10 @@ describe('menu/MenuTrigger', () => {
         fireTouch(button);
         jest.runAllTimers();
       });
-      expect(menu).not.toBeInTheDocument();
+
+      await waitFor(() => {
+        expect(menu).not.toBeInTheDocument();
+      });
 
       // Opening menu via Alt+ArrowUp still autofocuses the selected item
       fireEvent.keyDown(button, { key: 'ArrowUp', altKey: true });
@@ -928,7 +932,9 @@ describe('menu/MenuTrigger', () => {
         fireTouch(button);
         jest.runAllTimers();
       });
-      expect(menu).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(menu).not.toBeInTheDocument();
+      });
 
       // Opening menu via Alt+ArrowDown still autofocuses the selected item
       fireEvent.keyDown(button, { key: 'ArrowDown', altKey: true });
@@ -938,7 +944,9 @@ describe('menu/MenuTrigger', () => {
         fireTouch(button);
         jest.runAllTimers();
       });
-      expect(menu).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(menu).not.toBeInTheDocument();
+      });
     });
 
     it('should focus the last item on Alt+ArrowUp if no selectedKeys specified', function () {
