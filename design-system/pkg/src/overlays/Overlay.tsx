@@ -1,4 +1,10 @@
-import { ForwardedRef, forwardRef, useLayoutEffect, useState } from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Overlay as ReactAriaOverlay } from '@react-aria/overlays';
 import { OverlayProps } from '@react-types/overlays';
 
@@ -24,20 +30,35 @@ export const Overlay = forwardRef(function Overlay(
     setIsOpenState('mounting');
   }
 
+  const hasCalledCompletedCallback = useRef(false);
+
   useLayoutEffect(() => {
+    if (!hasCalledCompletedCallback.current && isOpen === isOpenState) {
+      hasCalledCompletedCallback.current = true;
+      if (isOpen) {
+        props.onEntered?.();
+      } else {
+        props.onExited?.();
+      }
+    }
     if (isOpen === isOpenState) return;
+    hasCalledCompletedCallback.current = false;
     if (isOpen) {
+      props.onEntering?.();
       if (nodeRef.current) {
         forceReflow(nodeRef.current);
       }
       setIsOpenState(true);
+      props.onEntering?.();
     } else {
+      props.onExit?.();
+      props.onExiting?.();
       const id = setTimeout(() => {
         setIsOpenState(false);
       }, 320);
       return () => clearTimeout(id);
     }
-  }, [isOpen, isOpenState, nodeRef]);
+  }, [isOpen, isOpenState, nodeRef, props]);
 
   // NOTE: wait for the exit animation to complete before unmounting content.
   if (!isOpenState) {
