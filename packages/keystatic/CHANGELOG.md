@@ -1,5 +1,17 @@
 # @keystatic/core
 
+## 0.2.12
+
+### Patch Changes
+
+- 4053f41c: Improve type inference for `fields.select` and `fields.multiselect`
+- 22dc4030: Implement `NodeView` and `ToolbarView` for inline components in the
+  new editor
+- 6986f36b: Show name fields in slug fields as required if the min length is
+  greater than 0
+- Updated dependencies [05a71cde]
+  - @keystar/ui@0.4.9
+
 ## 0.2.11
 
 ### Patch Changes

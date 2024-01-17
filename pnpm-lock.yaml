@@ -171,7 +171,7 @@ importers:
       '@floating-ui/react': ^0.24.0
       '@internationalized/date': ^3.5.0
       '@jest/globals': ^29.7.0
-      '@keystar/ui': ^0.4.8
+      '@keystar/ui': ^0.4.9
       '@keystar/ui-storybook': ^0.0.1
       '@react-aria/actiongroup': ^3.6.4
       '@react-aria/breadcrumbs': ^3.5.7
@@ -764,7 +764,7 @@ importers:
       '@internationalized/string': ^3.1.1
       '@jest/expect': ^29.7.0
       '@jest/globals': ^29.7.0
-      '@keystar/ui': ^0.4.8
+      '@keystar/ui': ^0.4.9
       '@markdoc/markdoc': ^0.3.0
       '@react-aria/focus': ^3.14.3
       '@react-aria/i18n': ^3.8.0
