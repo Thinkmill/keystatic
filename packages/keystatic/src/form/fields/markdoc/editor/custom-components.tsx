@@ -33,7 +33,7 @@ function BlockWrapper(props: {
   hasNodeSelection: boolean;
   component: ContentComponent;
   children: ReactNode;
-  pos: number;
+  getPos: () => number | undefined;
   toolbar?: ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -90,7 +90,7 @@ function BlockWrapper(props: {
                 if (dispatch) {
                   dispatch(
                     state.tr.setSelection(
-                      NodeSelection.create(state.doc, props.pos)
+                      NodeSelection.create(state.doc, props.getPos()!)
                     )
                   );
                 }
@@ -130,7 +130,7 @@ function BlockWrapper(props: {
                   if (dispatch) {
                     dispatch(
                       state.tr.setNodeAttribute(
-                        props.pos,
+                        props.getPos()!,
                         'props',
                         toSerialized(value, schema.fields)
                       )
@@ -192,11 +192,9 @@ export function getCustomNodeSpecs(
                       onRemove={() => {
                         runCommand((state, dispatch) => {
                           if (dispatch) {
+                            const pos = props.getPos()!;
                             dispatch(
-                              state.tr.delete(
-                                props.pos,
-                                props.pos + props.node.nodeSize
-                              )
+                              state.tr.delete(pos, pos + props.node.nodeSize)
                             );
                           }
                           return true;
@@ -207,7 +205,7 @@ export function getCustomNodeSpecs(
                           if (dispatch) {
                             dispatch(
                               state.tr.setNodeAttribute(
-                                props.pos,
+                                props.getPos()!,
                                 'props',
                                 toSerialized(value, schema.fields)
                               )
@@ -226,7 +224,7 @@ export function getCustomNodeSpecs(
                         props.isNodeCompletelyWithinSelection
                       }
                       component={component}
-                      pos={props.pos}
+                      getPos={props.getPos}
                     >
                       {'ContentView' in component && component.ContentView && (
                         <component.ContentView value={value} />
@@ -303,11 +301,9 @@ export function getCustomNodeSpecs(
                       onRemove={() => {
                         runCommand((state, dispatch) => {
                           if (dispatch) {
+                            const pos = props.getPos()!;
                             dispatch(
-                              state.tr.delete(
-                                props.pos,
-                                props.pos + props.node.nodeSize
-                              )
+                              state.tr.delete(pos, pos + props.node.nodeSize)
                             );
                           }
                           return true;
@@ -318,7 +314,7 @@ export function getCustomNodeSpecs(
                           if (dispatch) {
                             dispatch(
                               state.tr.setNodeAttribute(
-                                props.pos,
+                                props.getPos()!,
                                 'props',
                                 toSerialized(value, schema.fields)
                               )
@@ -339,7 +335,7 @@ export function getCustomNodeSpecs(
                         props.isNodeCompletelyWithinSelection
                       }
                       component={component}
-                      pos={props.pos}
+                      getPos={props.getPos}
                     >
                       {'ContentView' in component && component.ContentView ? (
                         <component.ContentView value={value}>
@@ -441,7 +437,7 @@ export function getCustomNodeSpecs(
                           if (dispatch) {
                             dispatch(
                               state.tr.setNodeAttribute(
-                                props.pos,
+                                props.getPos()!,
                                 'props',
                                 toSerialized(value, schema.fields)
                               )
@@ -457,11 +453,9 @@ export function getCustomNodeSpecs(
                       onRemove={() => {
                         runCommand((state, dispatch) => {
                           if (dispatch) {
+                            const pos = props.getPos()!;
                             dispatch(
-                              state.tr.delete(
-                                props.pos,
-                                props.pos + props.node.nodeSize
-                              )
+                              state.tr.delete(pos, pos + props.node.nodeSize)
                             );
                           }
                           return true;
@@ -544,11 +538,9 @@ export function getCustomNodeSpecs(
                       onRemove={() => {
                         runCommand((state, dispatch) => {
                           if (dispatch) {
+                            const pos = props.getPos()!;
                             dispatch(
-                              state.tr.delete(
-                                props.pos,
-                                props.pos + props.node.nodeSize
-                              )
+                              state.tr.delete(pos, pos + props.node.nodeSize)
                             );
                           }
                           return true;
@@ -559,7 +551,7 @@ export function getCustomNodeSpecs(
                           if (dispatch) {
                             dispatch(
                               state.tr.setNodeAttribute(
-                                props.pos,
+                                props.getPos()!,
                                 'props',
                                 toSerialized(value, schema.fields)
                               )
@@ -580,7 +572,7 @@ export function getCustomNodeSpecs(
                         props.isNodeCompletelyWithinSelection
                       }
                       component={component}
-                      pos={props.pos}
+                      getPos={props.getPos}
                       toolbar={
                         props.node.contentMatchAt(props.node.childCount)
                           .defaultType &&
@@ -591,7 +583,7 @@ export function getCustomNodeSpecs(
                                 if (dispatch) {
                                   dispatch(
                                     state.tr.insert(
-                                      props.pos + props.node.nodeSize - 1,
+                                      props.getPos()! + props.node.nodeSize - 1,
                                       state.schema.nodes[
                                         component.children[0]
                                       ].createAndFill()!
@@ -613,7 +605,9 @@ export function getCustomNodeSpecs(
                                   if (dispatch) {
                                     dispatch(
                                       state.tr.insert(
-                                        props.pos + props.node.nodeSize - 1,
+                                        props.getPos()! +
+                                          props.node.nodeSize -
+                                          1,
                                         state.schema.nodes[key].createAndFill()!
                                       )
                                     );
