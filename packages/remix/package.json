@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/remix",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "@types/react": "^18.2.8"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.2.6",
+    "@keystatic/core": "^0.3.0",
     "@remix-run/react": "^2.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
