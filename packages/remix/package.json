@@ -7,29 +7,12 @@
     "url": "https://github.com/Thinkmill/keystatic/",
     "directory": "packages/remix"
   },
+  "type": "module",
   "exports": {
-    "./ui": {
-      "types": {
-        "import": "./ui/dist/keystatic-remix-ui.cjs.mjs",
-        "default": "./ui/dist/keystatic-remix-ui.cjs.js"
-      },
-      "module": "./ui/dist/keystatic-remix-ui.esm.js",
-      "import": "./ui/dist/keystatic-remix-ui.cjs.mjs",
-      "default": "./ui/dist/keystatic-remix-ui.cjs.js"
-    },
-    "./api": {
-      "types": {
-        "import": "./api/dist/keystatic-remix-api.cjs.mjs",
-        "default": "./api/dist/keystatic-remix-api.cjs.js"
-      },
-      "module": "./api/dist/keystatic-remix-api.esm.js",
-      "import": "./api/dist/keystatic-remix-api.cjs.mjs",
-      "default": "./api/dist/keystatic-remix-api.cjs.js"
-    },
+    "./ui": "./dist/keystatic-remix-ui.js",
+    "./api": "./dist/keystatic-remix-api.js",
     "./package.json": "./package.json"
   },
-  "main": "dist/keystatic.cjs.js",
-  "module": "dist/keystatic.esm.js",
   "files": [
     "dist",
     "api",

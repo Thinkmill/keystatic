@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "imports": {
+    "#dir": {
+      "import": "./import.ts",
+      "default": "./default.ts"
+    }
+  }
+}
