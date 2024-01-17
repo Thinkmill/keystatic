@@ -18,7 +18,6 @@ import {
   useEditorViewRef,
 } from '../editor-view';
 import { EditorSchema, getEditorSchema } from '../schema';
-import { CodeBlockLanguageCombobox } from './code-block-language';
 import { LinkToolbar } from './link-toolbar';
 import { useEditorReferenceElement } from './reference';
 import { getContent, getToolbar, useEditorContext } from '../context';
@@ -29,6 +28,7 @@ import { Heading } from '@keystar/ui/typography';
 import { pencilIcon } from '@keystar/ui/icon/icons/pencilIcon';
 import { ComponentSchema } from '../../../../api';
 import { toSerialized, useDeserializedValue } from '../props-serialization';
+import { TextField } from '@keystar/ui/text-field';
 
 type NodePopoverRenderer = (props: {
   node: Node;
@@ -109,17 +109,17 @@ const popoverComponents: Record<
   code_block: function CodeBlockPopover(props) {
     const dispatchCommand = useEditorDispatchCommand();
     const schema = useEditorSchema();
+    const viewRef = useEditorViewRef();
     return (
       <Flex gap="regular" padding="regular">
-        <CodeBlockLanguageCombobox
+        <TextField
+          aria-label="Code block language"
           value={props.node.attrs.language}
           onChange={val => {
-            dispatchCommand((state, dispatch) => {
-              if (dispatch) {
-                dispatch(state.tr.setNodeAttribute(props.pos, 'language', val));
-              }
-              return true;
-            });
+            const view = viewRef.current!;
+            view.dispatch(
+              view.state.tr.setNodeAttribute(props.pos, 'language', val)
+            );
           }}
         />
         {!!Object.keys(schema.config.codeBlock!.schema).length && (
