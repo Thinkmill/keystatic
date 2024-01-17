@@ -6,14 +6,14 @@ summary: >-
 ---
 [Keystatic Cloud](https://keystatic.cloud) is a service provided by [Thinkmill](https://thinkmill.com.au).
 
-Cloud simplifies authentication (GitHub) with your projects. No need to deal with environment variables and a custom GitHub app.
+Cloud simplifies authentication (GitHub) with your projects. No need to deal with environment variables and a custom GitHub app
 
 Keystatic Cloud also offers opt-in products such as **Cloud Images** — an image storage, optimisation and delivery service.
 
 ---
 
 {% aside icon="👀" %}
-Keystatic Cloud — [Cloud Images](#cloud-images) in particular — is currently at the "internal preview" stage. 
+Keystatic Cloud — [Cloud Images](#cloud-images) in particular — is currently at the "internal preview" stage.
 
 If you're interested in using it, please [get in touch with the Thinkmill team](https://thinkmill.com.au/contact).
 
@@ -30,15 +30,15 @@ It skips the more complicated process of [setting up GitHub mode](/docs/github-m
 
 You'll need to [create a Keystatic Cloud account](https://keystatic.cloud) to start using this service.
 
-You can setup multiple projects in your Keystatic Cloud account — where each project is connected to a specific GitHub repository.
+You can setup multiple projects in your Keystatic Cloud account —&nbsp;where each project is connected to a specific GitHub repository.
 
 ### Configuring your project
 
-In your Keystatic config, you'll need to set the `storage` option to `cloud`. 
+In your Keystatic config, you'll need to set the `storage` option to `cloud`.
 
 You'll also need to add the `cloud.project` property with the name of the team and project from your Keystatic Cloud account:
 
-```ts 
+```ts
 import { config } from '@keystatic/core'
 
 export default config({
@@ -66,16 +66,16 @@ Each Keystatic Cloud project can have its own Image Library, where you can uploa
 
 When using Keystatic Cloude image URLs, you can pass the following optional query parameters to drastically improve the performance of your images:
 
-- **`fit`** — how the image should be resized to fit the dimensions you specify. Possible values are `scale-down`, `contain`, `cover` and `crop`.
-- **`format (f)`** — the image format to use. Possible values are `png`, `avif`, `webp` and `jpeg`. 
+- **`fit`** —&nbsp;how the image should be resized to fit the dimensions you specify. Possible values are `scale-down`, `contain`, `cover` and `crop`.
+- **`format (f)`** —&nbsp;the image format to use. Possible values are `png`, `avif`, `webp` and `jpeg`.
   If no format is provided, Keystatic Cloud will auto-detect browser capabilities and serve the most optimal format.
-- **`quality (q)`** — the quality of the image. A number between `1` and `100`.
-- **`height (h)`** — the height of the image. A number between `1` and `10240`.
-- **`width (w)`** — the width of the image. A number between `1` and `10240`.
+- **`quality (q)`** —&nbsp;the quality of the image. A number between `1` and `100`.
+- **`height (h)`** —&nbsp;the height of the image. A number between `1` and `10240`.
+- **`width (w)`** —&nbsp;the width of the image. A number between `1` and `10240`.
 
 You can provide one or both of height and width, which will have a different effect based on the fit.
 
-Here's an example URL with image transform query parameters: 
+Here's an example URL with image transform query parameters:
 
 ```
 https://[IMAGE_URL]?width=240&height=480&fit=crop
@@ -83,7 +83,7 @@ https://[IMAGE_URL]?width=240&height=480&fit=crop
 
 ### Cloud image field
 
-Keystatic provides a [`cloudImage` field](/docs/fields/cloud-image), which can be used instead of the [regular image field](/docs/fields/image) if Keystatic is running in cloud mode, and the Image Library is enabled for the project.
+Keystatic provides a [`cloudImage`](/docs/fields/cloud-image)[ field](/docs/fields/cloud-image), which can be used instead of the [regular image field](/docs/fields/image) if Keystatic is running in cloud mode, and the Image Library is enabled for the project.
 
 ### Cloud image component block (experimental)
 
