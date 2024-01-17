@@ -1,5 +1,17 @@
 # @keystatic/core
 
+## 0.3.0
+
+### Minor Changes
+
+- f4aaa8e3: Switch build to ESM-only
+
+### Patch Changes
+
+- 0b2432ed: Cache repository directory structure and files in browser storage
+- Updated dependencies [f4aaa8e3]
+  - @keystar/ui@0.5.0
+
 ## 0.2.12
 
 ### Patch Changes

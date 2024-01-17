@@ -1,5 +1,17 @@
 # @keystatic/remix
 
+## 3.0.0
+
+### Major Changes
+
+- f4aaa8e3: Switch build to ESM-only
+
+### Patch Changes
+
+- Updated dependencies [0b2432ed]
+- Updated dependencies [f4aaa8e3]
+  - @keystatic/core@0.3.0
+
 ## 2.1.1
 
 ### Patch Changes

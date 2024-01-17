@@ -1,5 +1,15 @@
 # @keystatic/templates-remix
 
+## 0.0.3
+
+### Patch Changes
+
+- f4aaa8e3: Updates to support Keystatic switching to a ESM-only build
+- Updated dependencies [0b2432ed]
+- Updated dependencies [f4aaa8e3]
+  - @keystatic/core@0.3.0
+  - @keystatic/remix@3.0.0
+
 ## 0.0.2
 
 ### Patch Changes
