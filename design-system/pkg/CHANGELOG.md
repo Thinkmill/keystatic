@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.4.9
+
+### Patch Changes
+
+- 05a71cde: Remove `react-transition-group`
+
 ## 0.4.8
 
 ### Patch Changes
