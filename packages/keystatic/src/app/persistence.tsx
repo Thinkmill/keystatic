@@ -1,7 +1,7 @@
 import { toastQueue } from '@keystar/ui/toast';
 import { Text } from '@keystar/ui/typography';
 import { useLocale } from '@react-aria/i18n';
-import { UseStore, createStore, del, get, set } from 'idb-keyval';
+import { UseStore, clear, createStore, del, get, set } from 'idb-keyval';
 import { useState, useMemo } from 'react';
 
 const units = {
@@ -88,4 +88,8 @@ export function delDraft(key: Key) {
 
 export function getDraft(key: Key): Promise<unknown> {
   return get(key as any, getStore());
+}
+
+export async function clearDrafts() {
+  await clear(getStore());
 }

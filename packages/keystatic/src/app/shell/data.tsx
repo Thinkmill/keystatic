@@ -19,6 +19,7 @@ import {
   TreeEntry,
   TreeNode,
   treeSha,
+  treeToEntries,
 } from '../trees';
 import {
   DataState,
@@ -42,6 +43,11 @@ import { ViewerContext, SidebarFooter_viewer } from './viewer-data';
 import { parseRepoConfig, serializeRepoConfig } from '../repo-config';
 import { z } from 'zod';
 import { scopeEntriesWithPathPrefix } from './path-prefix';
+import {
+  garbageCollectGitObjects,
+  getTreeFromPersistedCache,
+  setTreeToPersistedCache,
+} from '../object-cache';
 
 export function fetchLocalTree(sha: string) {
   if (treeCache.has(sha)) {
@@ -242,6 +248,19 @@ export function GitHubAppShellProvider(props: {
     (x): x is typeof x & { target: { __typename: 'Commit' } } =>
       x?.name === props.currentBranch
   );
+
+  useEffect(() => {
+    if (repo?.refs?.nodes) {
+      garbageCollectGitObjects(
+        repo.refs.nodes
+          .map(x =>
+            x?.target?.__typename === 'Commit' ? x.target.tree.oid : undefined
+          )
+          .filter(isDefined)
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [repo?.id]);
 
   const defaultBranchTreeSha = defaultBranchRef?.target.tree.oid ?? null;
   const currentBranchTreeSha = currentBranchRef?.target.tree.oid ?? null;
@@ -578,10 +597,31 @@ export async function hydrateTreeCacheWithEntries(entries: TreeEntry[]) {
 export function fetchGitHubTreeData(sha: string, config: Config) {
   const cached = treeCache.get(sha);
   if (cached) return cached;
-  const promise = getAuth(config)
-    .then(auth => {
-      if (!auth) throw new Error('Not authorized');
-      return fetch(
+  const cachedFromPersisted = getTreeFromPersistedCache(sha);
+  if (cachedFromPersisted && !(cachedFromPersisted instanceof Promise)) {
+    const entries = treeToEntries(cachedFromPersisted.children!);
+    const result = {
+      entries: new Map(entries.map(entry => [entry.path, entry])),
+      tree: cachedFromPersisted.children!,
+    };
+    treeCache.set(sha, result);
+    return result;
+  }
+  const promise = (async () => {
+    const cached = await cachedFromPersisted;
+    if (cached) {
+      const entries = treeToEntries(cached.children!);
+      const result = {
+        entries: new Map(entries.map(entry => [entry.path, entry])),
+        tree: cached.children!,
+      };
+      treeCache.set(sha, result);
+      return result;
+    }
+    const auth = await getAuth(config);
+    if (!auth) throw new Error('Not authorized');
+    const { tree }: { tree: (TreeEntry & { url: string; size?: number })[] } =
+      await fetch(
         config.storage.kind === 'github'
           ? `https://api.github.com/repos/${serializeRepoConfig(
               config.storage.repo
@@ -594,12 +634,10 @@ export function fetchGitHubTreeData(sha: string, config: Config) {
           },
         }
       ).then(x => x.json());
-    })
-    .then((res: { tree: (TreeEntry & { url: string })[] }) =>
-      hydrateTreeCacheWithEntries(
-        res.tree.map(({ url, ...rest }) => rest as TreeEntry)
-      )
-    );
+    const treeEntries = tree.map(({ url, size, ...rest }) => rest as TreeEntry);
+    await setTreeToPersistedCache(sha, treeEntriesToTreeNodes(treeEntries));
+    return hydrateTreeCacheWithEntries(treeEntries);
+  })();
   treeCache.set(sha, promise);
   return promise;
 }
