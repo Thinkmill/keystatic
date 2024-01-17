@@ -7,6 +7,7 @@ import { URLFieldDemo } from './fields/url';
 import { SelectFieldDemo } from './fields/select';
 import { MultiselectFieldDemo } from './fields/multiselect';
 import { IntegerFieldDemo } from './fields/integer';
+import { NumberFieldDemo } from './fields/number';
 import { DateFieldDemo } from './fields/date';
 import { SlugFieldDemo } from './fields/slug';
 import { ImageFieldDemo } from './fields/image';
@@ -197,6 +198,8 @@ const getRenderers = (highlighter: shiki.Highlighter | undefined) => ({
         return <MultiselectFieldDemo />;
       case 'integer':
         return <IntegerFieldDemo />;
+      case 'number':
+        return <NumberFieldDemo />;
       case 'date':
         return <DateFieldDemo />;
       case 'datetime':

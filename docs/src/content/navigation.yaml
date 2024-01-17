@@ -180,6 +180,11 @@ navGroups:
           discriminant: page
           value: fields/multiselect
         isNew: false
+      - label: Number
+        link:
+          discriminant: page
+          value: fields/number
+        isNew: true
       - label: Object
         link:
           discriminant: page
