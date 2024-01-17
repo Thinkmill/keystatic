@@ -6,7 +6,7 @@ import { heading3Icon } from '@keystar/ui/icon/icons/heading3Icon';
 import { heading4Icon } from '@keystar/ui/icon/icons/heading4Icon';
 import { heading5Icon } from '@keystar/ui/icon/icons/heading5Icon';
 import { heading6Icon } from '@keystar/ui/icon/icons/heading6Icon';
-// import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
+import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
 import { listIcon } from '@keystar/ui/icon/icons/listIcon';
 import { listOrderedIcon } from '@keystar/ui/icon/icons/listOrderedIcon';
 import { quoteIcon } from '@keystar/ui/icon/icons/quoteIcon';
@@ -36,6 +36,8 @@ import { getCustomMarkSpecs, getCustomNodeSpecs } from './custom-components';
 import { EditorConfig } from '../config';
 import { toSerialized } from './props-serialization';
 import { getInitialPropsValue } from '../../../initial-values';
+import { getUploadedFileObject } from '../../image/ui';
+import { readFileAsDataUrl } from './images';
 
 const blockElementSpacing = css({
   marginBlock: '1em',
@@ -316,12 +318,31 @@ const nodeSpecs = {
       alt: { default: '' },
       title: { default: '' },
     },
-    // insertMenu: {
-    //   label: 'Image',
-    //   description: 'Insert an image',
-    //   icon: imageIcon,
-    //   command: () => {},
-    // },
+    insertMenu: {
+      label: 'Image',
+      description: 'Insert an image',
+      icon: imageIcon,
+      command: nodeType => {
+        return (state, dispatch, view) => {
+          if (dispatch && view) {
+            (async () => {
+              const file = await getUploadedFileObject('image/*');
+              if (!file) return;
+              const src = await readFileAsDataUrl(file);
+              view.dispatch(
+                view.state.tr.replaceSelectionWith(
+                  nodeType.createChecked({
+                    src,
+                    filename: file.name,
+                  })
+                )
+              );
+            })();
+          }
+          return true;
+        };
+      },
+    },
     toDOM(node) {
       return [
         'img',
