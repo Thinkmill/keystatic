@@ -154,7 +154,7 @@ there is a break before this
         </text>
       </heading>
       <code_block
-        language="plain"
+        language=""
         props={
           {
             "extraFiles": [],

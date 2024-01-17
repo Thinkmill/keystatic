@@ -257,7 +257,7 @@ function markdocNodeToProseMirrorNode(
         language:
           typeof node.attributes.language === 'string'
             ? node.attributes.language
-            : 'plain',
+            : '',
         props: toSerialized(deserializeProps(fields, attrs, state), fields),
       },
       content ? schema.schema.text(content) : undefined
