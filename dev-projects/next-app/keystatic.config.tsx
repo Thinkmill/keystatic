@@ -6,7 +6,11 @@ import {
   component,
   NotEditable,
 } from '@keystatic/core';
-import { __experimental_markdoc_field } from '@keystatic/core/form/fields/markdoc';
+import {
+  __experimental_markdoc_field,
+  __experimental_mdx_field,
+} from '@keystatic/core/form/fields/markdoc';
+import { block } from '@keystatic/core/content-components';
 import { NoteToolbar, Note } from './note';
 
 const description = 'Some description';
@@ -287,6 +291,24 @@ export default config({
           formatting: true,
           dividers: true,
           links: true,
+        }),
+      },
+    }),
+    mdx: collection({
+      label: 'MDX',
+      path: 'mdx/**',
+      slugField: 'title',
+      format: { contentField: 'content' },
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        content: __experimental_mdx_field({
+          label: 'Content',
+          components: {
+            Something: block({
+              label: 'Something',
+              schema: {},
+            }),
+          },
         }),
       },
     }),
