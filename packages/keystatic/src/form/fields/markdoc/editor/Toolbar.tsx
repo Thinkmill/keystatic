@@ -2,7 +2,13 @@ import { setBlockType, toggleMark, wrapIn } from 'prosemirror-commands';
 import { MarkType, NodeType } from 'prosemirror-model';
 import { Command, EditorState, TextSelection } from 'prosemirror-state';
 import { liftTarget } from 'prosemirror-transform';
-import { HTMLAttributes, ReactElement, ReactNode, useMemo } from 'react';
+import {
+  HTMLAttributes,
+  ReactElement,
+  ReactNode,
+  useMemo,
+  useState,
+} from 'react';
 
 import { ActionButton } from '@keystar/ui/button';
 import {
@@ -35,6 +41,7 @@ import {
   useEditorDispatchCommand,
   useEditorSchema,
   useEditorState,
+  useEditorViewRef,
 } from './editor-view';
 import { toggleList } from './lists';
 import { insertNode, insertTable, toggleCodeBlock } from './commands/misc';
@@ -42,6 +49,11 @@ import { EditorSchema } from './schema';
 import { ImageToolbarButton } from './images';
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 import { itemRenderer } from './autocomplete/insert-menu';
+import { LinkDialog } from './popovers/link-toolbar';
+import { DialogContainer } from '@keystar/ui/dialog';
+import { linkIcon } from '@keystar/ui/icon/icons/linkIcon';
+import { markAround } from './popovers';
+import { useEditorKeydownListener } from './keydown';
 
 export function ToolbarButton(props: {
   children: ReactNode;
@@ -71,9 +83,84 @@ export function ToolbarButton(props: {
   );
 }
 
+function LinkButton(props: { link: MarkType }) {
+  const [text, setText] = useState<null | string>(null);
+  const runCommand = useEditorDispatchCommand();
+  const viewRef = useEditorViewRef();
+  useEditorKeydownListener(event => {
+    if (event.metaKey && (event.key === 'k' || event.key === 'K')) {
+      const { state } = viewRef.current!;
+      if (!isMarkActive(props.link)(state)) {
+        event.preventDefault();
+        setText(
+          state.doc.textBetween(state.selection.from, state.selection.to)
+        );
+        return true;
+      }
+    }
+    return false;
+  });
+  return (
+    <>
+      <TooltipTrigger>
+        <ToolbarButton
+          aria-label="Divider"
+          command={(state, dispatch) => {
+            const aroundFrom = markAround(state.selection.$from, props.link);
+            const aroundTo = markAround(state.selection.$to, props.link);
+
+            if (aroundFrom && aroundFrom.mark === aroundTo?.mark) {
+              if (dispatch) {
+                dispatch(
+                  state.tr.removeMark(aroundFrom.from, aroundTo.to, props.link)
+                );
+              }
+              return true;
+            }
+            if (state.selection.empty) {
+              return false;
+            }
+            if (dispatch) {
+              const text = state.doc.textBetween(
+                state.selection.from,
+                state.selection.to
+              );
+              setText(text);
+            }
+            return true;
+          }}
+          isSelected={isMarkActive(props.link)}
+        >
+          <Icon src={linkIcon} />
+        </ToolbarButton>
+        <Tooltip>
+          <Text>Link</Text>
+          <Kbd meta>K</Kbd>
+        </Tooltip>
+      </TooltipTrigger>
+      <DialogContainer
+        onDismiss={() => {
+          setText(null);
+        }}
+      >
+        {text && (
+          <LinkDialog
+            href=""
+            text={text}
+            onSubmit={attrs => {
+              setText(null);
+              runCommand(toggleMark(props.link, attrs));
+            }}
+          />
+        )}
+      </DialogContainer>
+    </>
+  );
+}
+
 export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
   const schema = useEditorSchema();
-  const { nodes } = schema;
+  const { nodes, marks } = schema;
   return (
     <ToolbarWrapper {...props}>
       <ToolbarScrollArea>
@@ -100,6 +187,7 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
                 </Tooltip>
               </TooltipTrigger>
             )}
+            {marks.link && <LinkButton link={marks.link} />}
             {nodes.blockquote && (
               <TooltipTrigger>
                 <ToolbarButton
