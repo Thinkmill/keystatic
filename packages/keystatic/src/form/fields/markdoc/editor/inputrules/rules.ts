@@ -43,7 +43,7 @@ export function inputRulesForSchema({ nodes, marks, config }: EditorSchema) {
     rules.push({
       pattern: /^```(\w+)?\s$/,
       handler: textblockTypeInputRuleHandler(nodes.code_block, match => ({
-        language: match[1] ?? 'plain',
+        language: match[1] ?? '',
       })),
     });
   }
@@ -126,7 +126,7 @@ export function enterInputRulesForSchema({ nodes }: EditorSchema) {
     rules.push({
       pattern: /^```(\w+)?$/,
       handler: textblockTypeInputRuleHandler(nodes.code_block, match => ({
-        language: match[1] ?? 'plain',
+        language: match[1] ?? '',
       })),
     });
   }
