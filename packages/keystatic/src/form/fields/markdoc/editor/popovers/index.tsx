@@ -237,7 +237,7 @@ const popoverComponents: Record<
   ),
 } satisfies Partial<Record<keyof EditorSchema['nodes'], NodePopoverRenderer>>;
 
-function markAround($pos: ResolvedPos, markType: MarkType) {
+export function markAround($pos: ResolvedPos, markType: MarkType) {
   const { parent, parentOffset } = $pos;
   const start = parent.childAfter(parentOffset);
   if (!start.node) return null;
@@ -278,6 +278,7 @@ const LinkPopover: MarkPopoverRenderer = props => {
   }
   return (
     <LinkToolbar
+      text={props.state.doc.textBetween(props.from, props.to)}
       href={href}
       onUnlink={() => {
         dispatchCommand((state, dispatch) => {
