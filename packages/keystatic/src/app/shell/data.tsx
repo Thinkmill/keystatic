@@ -1,5 +1,4 @@
-import { OperationData, OperationVariables, FragmentData } from '@ts-gql/tag';
-import { gql } from '@ts-gql/tag/no-transform';
+import { ResultOf, VariablesOf, readFragment } from 'gql.tada';
 import { useRouter } from '../router';
 import { Config, LocalConfig } from '../../config';
 import {
@@ -48,6 +47,7 @@ import {
   getTreeFromPersistedCache,
   setTreeToPersistedCache,
 } from '../object-cache';
+import { graphql } from '../../graphql';
 
 export function fetchLocalTree(sha: string) {
   if (treeCache.has(sha)) {
@@ -176,8 +176,8 @@ export function CloudInfoProvider(props: {
 }
 
 export const GitHubAppShellDataContext = createContext<null | UseQueryState<
-  OperationData<typeof GitHubAppShellQuery | typeof CloudAppShellQuery>,
-  OperationVariables<typeof GitHubAppShellQuery | typeof CloudAppShellQuery>
+  ResultOf<typeof GitHubAppShellQuery | typeof CloudAppShellQuery>,
+  VariablesOf<typeof GitHubAppShellQuery | typeof CloudAppShellQuery>
 >>(null);
 
 export function GitHubAppShellDataProvider(props: {
@@ -189,8 +189,8 @@ export function GitHubAppShellDataProvider(props: {
       ? parseRepoConfig(props.config.storage.repo)
       : { name: 'repo-name', owner: 'repo-owner' };
   const [state] = useQuery<
-    OperationData<typeof GitHubAppShellQuery | typeof CloudAppShellQuery>,
-    OperationVariables<typeof GitHubAppShellQuery | typeof CloudAppShellQuery>
+    ResultOf<typeof GitHubAppShellQuery | typeof CloudAppShellQuery>,
+    VariablesOf<typeof GitHubAppShellQuery | typeof CloudAppShellQuery>
   >({
     query:
       props.config.storage.kind === 'github'
@@ -202,7 +202,8 @@ export function GitHubAppShellDataProvider(props: {
   const [cursorState, setCursorState] = useState<string | null>(null);
 
   const [moreRefsState] = useQuery({
-    query: gql`
+    query: graphql(
+      `
       query FetchMoreRefs($owner: String!, $name: String!, $after: String) {
         repository(owner: $owner, name: $name) {
           __typename
@@ -219,12 +220,16 @@ export function GitHubAppShellDataProvider(props: {
           }
         }
       }
-      ${Ref_base}
-    ` as import('../../../__generated__/ts-gql/FetchMoreRefs').type,
-    pause: !state.data?.repository?.refs?.pageInfo.hasNextPage,
+      
+    ` as const,
+      [Ref_base]
+    ),
+    pause: !(state.data?.repository as any)?.refs?.pageInfo.hasNextPage,
     variables: {
       ...repo,
-      after: cursorState ?? state.data?.repository?.refs?.pageInfo.endCursor,
+      after:
+        cursorState ??
+        (state.data?.repository as any)?.refs?.pageInfo.endCursor,
     },
   });
 
@@ -259,12 +264,8 @@ export function GitHubAppShellProvider(props: {
 }) {
   const router = useRouter();
   const { data, error } = useContext(GitHubAppShellDataContext)!;
-  let repo:
-    | FragmentData<typeof Repo_ghDirect>
-    | FragmentData<typeof Repo_primary>
-    | FragmentData<typeof BaseRepo>
-    | undefined
-    | null = data?.repository;
+  let repo;
+  repo = data?.repository;
 
   if (
     repo &&
@@ -276,31 +277,50 @@ export function GitHubAppShellProvider(props: {
     repo = repo.forks?.nodes?.[0] ?? repo;
   }
 
-  const defaultBranchRef = repo?.refs?.nodes?.find(
-    (x): x is typeof x & { target: { __typename: 'Commit' } } =>
-      x?.name === repo?.defaultBranchRef?.name
-  );
+  const baseRepo = repo ? readFragment(BaseRepo, repo) : null;
 
-  const currentBranchRef = repo?.refs?.nodes?.find(
-    (x): x is typeof x & { target: { __typename: 'Commit' } } =>
-      x?.name === props.currentBranch
+  let defaultBranchRef;
+  defaultBranchRef = baseRepo?.refs?.nodes?.find(
+    x =>
+      x && readFragment(Ref_base, x).name === baseRepo?.defaultBranchRef?.name
   );
+  defaultBranchRef = defaultBranchRef
+    ? readFragment(Ref_base, defaultBranchRef)
+    : undefined;
+
+  let currentBranchRef;
+  currentBranchRef = baseRepo?.refs?.nodes?.find(
+    x => x && readFragment(Ref_base, x).name === props.currentBranch
+  );
+  currentBranchRef = currentBranchRef
+    ? readFragment(Ref_base, currentBranchRef)
+    : undefined;
 
   useEffect(() => {
-    if (repo?.refs?.nodes) {
+    if (baseRepo?.refs?.nodes) {
       garbageCollectGitObjects(
-        repo.refs.nodes
-          .map(x =>
-            x?.target?.__typename === 'Commit' ? x.target.tree.oid : undefined
-          )
+        baseRepo.refs.nodes
+          .map(x => {
+            if (!x) return;
+            const ref = readFragment(Ref_base, x);
+            return ref?.target?.__typename === 'Commit'
+              ? ref.target.tree.oid
+              : undefined;
+          })
           .filter(isDefined)
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [repo?.id]);
+  }, [baseRepo?.id]);
 
-  const defaultBranchTreeSha = defaultBranchRef?.target.tree.oid ?? null;
-  const currentBranchTreeSha = currentBranchRef?.target.tree.oid ?? null;
+  const defaultBranchTreeSha =
+    defaultBranchRef?.target?.__typename === 'Commit'
+      ? defaultBranchRef?.target?.tree?.oid ?? null
+      : null;
+  const currentBranchTreeSha =
+    currentBranchRef?.target?.__typename === 'Commit'
+      ? currentBranchRef?.target?.tree?.oid ?? null
+      : null;
   const baseCommit = currentBranchRef?.target?.oid ?? null;
 
   const defaultBranchTree = useGitHubTreeData(
@@ -363,7 +383,7 @@ export function GitHubAppShellProvider(props: {
       }
     }
     if (
-      !repo?.id &&
+      !baseRepo?.id &&
       error?.graphQLErrors.some(
         err =>
           (err?.originalError as any)?.type === 'NOT_FOUND' ||
@@ -374,56 +394,53 @@ export function GitHubAppShellProvider(props: {
         .map(encodeURIComponent)
         .join('/')}`;
     }
-  }, [error, router, repo?.id, props.config]);
+  }, [error, router, baseRepo?.id, props.config]);
   const baseInfo = useMemo(
     () => ({
       baseCommit: baseCommit || '',
-      repositoryId: repo?.id ?? '',
-      isPrivate: repo?.isPrivate ?? true,
+      repositoryId: baseRepo?.id ?? '',
+      isPrivate: baseRepo?.isPrivate ?? true,
     }),
-    [baseCommit, repo?.id, repo?.isPrivate]
+    [baseCommit, baseRepo?.id, baseRepo?.isPrivate]
   );
   const pullRequestNumber =
     currentBranchRef?.associatedPullRequests.nodes?.[0]?.number;
   const branchInfo = useMemo(
     () => ({
-      defaultBranch: repo?.defaultBranchRef?.name ?? '',
+      defaultBranch: baseRepo?.defaultBranchRef?.name ?? '',
       currentBranch: props.currentBranch,
       baseCommit: baseCommit || '',
-      repositoryId: repo?.id ?? '',
-      allBranches: repo?.refs?.nodes?.map(x => x?.name).filter(isDefined) ?? [],
+      repositoryId: baseRepo?.id ?? '',
+      allBranches:
+        baseRepo?.refs?.nodes?.map((x: any) => x?.name).filter(isDefined) ?? [],
       pullRequestNumber,
       branchNameToId: new Map(
-        repo?.refs?.nodes?.filter(isDefined).map(x => [x.name, x.id])
+        baseRepo?.refs?.nodes?.filter(isDefined).map(x => {
+          const ref = readFragment(Ref_base, x);
+          return [ref.name, ref.id];
+        })
       ),
       branchNameToBaseCommit: new Map(
-        repo?.refs?.nodes?.flatMap(x =>
-          x?.target ? [[x.name, x.target.oid]] : []
-        )
+        baseRepo?.refs?.nodes?.flatMap(x => {
+          if (!x) return [];
+          const ref = readFragment(Ref_base, x);
+          return ref?.target ? [[ref.name, ref.target.oid]] : [];
+        })
       ),
-      mainOwner: data?.repository?.owner.login ?? '',
-      mainRepo: data?.repository?.name ?? '',
+      mainOwner: baseRepo?.owner.login ?? '',
+      mainRepo: baseRepo?.name ?? '',
     }),
-    [
-      repo?.defaultBranchRef?.name,
-      repo?.id,
-      repo?.refs?.nodes,
-      props.currentBranch,
-      baseCommit,
-      pullRequestNumber,
-      data?.repository?.owner.login,
-      data?.repository?.name,
-    ]
+    [baseRepo, props.currentBranch, baseCommit, pullRequestNumber]
   );
   return (
     <RepoWithWriteAccessContext.Provider
       value={
-        repo &&
+        baseRepo &&
         (props.config.storage.kind === 'cloud' ||
-          ('viewerPermission' in repo &&
-            repo?.viewerPermission &&
-            writePermissions.has(repo.viewerPermission)))
-          ? { name: repo.name, owner: repo.owner.login }
+          ('viewerPermission' in baseRepo &&
+            baseRepo?.viewerPermission &&
+            writePermissions.has(baseRepo.viewerPermission as any)))
+          ? { name: baseRepo.name, owner: baseRepo.owner.login }
           : null
       }
     >
@@ -517,7 +534,7 @@ export function useRepositoryId() {
   return useContext(BaseInfoContext).repositoryId;
 }
 
-export const Ref_base = gql`
+export const Ref_base = graphql(`
   fragment Ref_base on Ref {
     id
     name
@@ -539,81 +556,71 @@ export const Ref_base = gql`
       }
     }
   }
-` as import('../../../__generated__/ts-gql/Ref_base').type;
+`);
 
-const BaseRepo = gql`
-  fragment Repo_base on Repository {
-    id
-    isPrivate
-    owner {
+export const BaseRepo = graphql(
+  `
+    fragment Repo_base on Repository {
       id
-      login
-    }
-    name
-    defaultBranchRef {
-      id
+      isPrivate
+      owner {
+        id
+        login
+      }
       name
-    }
-    refs(refPrefix: "refs/heads/", first: 100) {
-      nodes {
-        ...Ref_base
+      defaultBranchRef {
+        id
+        name
+      }
+      refs(refPrefix: "refs/heads/", first: 100) {
+        nodes {
+          ...Ref_base
+        }
       }
       pageInfo {
         hasNextPage
         endCursor
       }
     }
-  }
-  ${Ref_base}
-` as import('../../../__generated__/ts-gql/Repo_base').type;
+  ` as const,
+  [Ref_base]
+);
 
-export const CloudAppShellQuery = gql`
-  query CloudAppShell($name: String!, $owner: String!) {
-    repository(owner: $owner, name: $name) {
-      id
-      ...Repo_base
-    }
-  }
-  ${BaseRepo}
-` as import('../../../__generated__/ts-gql/CloudAppShell').type;
-
-const Repo_ghDirect = gql`
-  fragment Repo_ghDirect on Repository {
-    id
-    ...Repo_base
-    viewerPermission
-  }
-  ${BaseRepo}
-` as import('../../../__generated__/ts-gql/Repo_ghDirect').type;
-
-const Repo_primary = gql`
-  fragment Repo_primary on Repository {
-    id
-    ...Repo_ghDirect
-    forks(affiliations: [OWNER], first: 1) {
-      nodes {
-        ...Repo_ghDirect
+export const CloudAppShellQuery = graphql(
+  `
+    query CloudAppShell($name: String!, $owner: String!) {
+      repository(owner: $owner, name: $name) {
+        id
+        ...Repo_base
       }
     }
-  }
-  ${Repo_ghDirect}
-` as import('../../../__generated__/ts-gql/Repo_primary').type;
+  ` as const,
+  [BaseRepo]
+);
 
-export const GitHubAppShellQuery = gql`
-  query GitHubAppShell($name: String!, $owner: String!) {
-    repository(owner: $owner, name: $name) {
-      id
-      ...Repo_primary
+export const GitHubAppShellQuery = graphql(
+  `
+    query GitHubAppShell($name: String!, $owner: String!) {
+      repository(owner: $owner, name: $name) {
+        id
+        ...Repo_base
+        viewerPermission
+        forks(affiliations: [OWNER], first: 1) {
+          nodes {
+            ...Repo_base
+            viewerPermission
+          }
+        }
+      }
+      viewer {
+        ...SidebarFooter_viewer
+      }
     }
-    viewer {
-      ...SidebarFooter_viewer
-    }
-  }
-  ${Repo_primary}
-  ${SidebarFooter_viewer}
-` as import('../../../__generated__/ts-gql/GitHubAppShell').type;
+  ` as const,
+  [BaseRepo, SidebarFooter_viewer]
+);
 
-export type AppShellData = OperationData<typeof GitHubAppShellQuery>;
+export type AppShellData = ResultOf<typeof GitHubAppShellQuery>;
 
 const treeCache = new LRU<
   string,

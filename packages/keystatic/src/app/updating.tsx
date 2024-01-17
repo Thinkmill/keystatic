@@ -1,4 +1,3 @@
-import { gql } from '@ts-gql/tag/no-transform';
 import { assert } from 'emery';
 import { useContext, useState } from 'react';
 
@@ -29,6 +28,7 @@ import { AppSlugContext } from './onboarding/install-app';
 import { createUrqlClient } from './provider';
 import { serializeProps } from '../form/serialize-props';
 import { scopeEntriesWithPathPrefix } from './shell/path-prefix';
+import { graphql } from '../graphql';
 
 const textEncoder = new TextEncoder();
 
@@ -323,7 +323,7 @@ export function useUpsertItem(args: {
   ] as const;
 }
 
-const createCommitMutation = gql`
+const createCommitMutation = graphql(`
   mutation CreateCommit($input: CreateCommitOnBranchInput!) {
     createCommitOnBranch(input: $input) {
       ref {
@@ -341,7 +341,7 @@ const createCommitMutation = gql`
       }
     }
   }
-` as import('../../__generated__/ts-gql/CreateCommit').type;
+`);
 
 export function useDeleteItem(args: {
   basePath: string;
@@ -444,7 +444,7 @@ export function useDeleteItem(args: {
   ] as const;
 }
 
-const FetchRef = gql`
+const FetchRef = graphql(`
   query FetchRef($owner: String!, $name: String!, $ref: String!) {
     repository(owner: $owner, name: $name) {
       id
@@ -457,4 +457,4 @@ const FetchRef = gql`
       }
     }
   }
-` as import('../../__generated__/ts-gql/FetchRef').type;
+`);

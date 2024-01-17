@@ -44,8 +44,8 @@ export function ForkRepoDialog(props: {
             )
             .toPromise();
           if (
-            res.data?.repository?.forks.nodes?.some(
-              x =>
+            (res as any).data?.repository?.forks.nodes?.some(
+              (x: any) =>
                 x?.viewerPermission === 'ADMIN' ||
                 x?.viewerPermission === 'WRITE' ||
                 x?.viewerPermission === 'MAINTAIN'

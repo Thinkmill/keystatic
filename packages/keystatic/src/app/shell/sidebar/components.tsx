@@ -1,7 +1,6 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { PressProps } from '@react-aria/interactions';
 import { Section, Item } from '@react-stately/collections';
-import { gql } from '@ts-gql/tag/no-transform';
 import {
   ForwardedRef,
   ReactElement,
@@ -41,6 +40,7 @@ import { getRepoUrl, isGitHubConfig, redirectToCloudAuth } from '../../utils';
 
 import { useConfig } from '../context';
 import {
+  BaseRepo,
   BranchInfoContext,
   GitHubAppShellDataContext,
   useCloudInfo,
@@ -51,6 +51,8 @@ import { useThemeContext } from '../theme';
 import { useImageLibraryURL } from '../../../component-blocks/cloud-image-preview';
 import { clearObjectCache } from '../../object-cache';
 import { clearDrafts } from '../../persistence';
+import { graphql } from '../../../graphql';
+import { readFragment } from 'gql.tada';
 
 type MenuItem = {
   icon: ReactElement;
@@ -279,13 +281,13 @@ export function GitMenu() {
     false
   );
   const [, deleteBranch] = useMutation(
-    gql`
+    graphql(`
       mutation DeleteBranch($refId: ID!) {
         deleteRef(input: { refId: $refId }) {
           __typename
         }
       }
-    ` as import('../../../../__generated__/ts-gql/DeleteBranch').type
+    `)
   );
 
   const repoURL = getRepoUrl(data);
@@ -293,7 +295,8 @@ export function GitMenu() {
   const fork =
     appShellData?.data?.repository &&
     'forks' in appShellData.data.repository &&
-    appShellData.data.repository.forks.nodes?.[0];
+    appShellData.data.repository.forks.nodes?.[0] &&
+    readFragment(BaseRepo, appShellData.data.repository.forks.nodes[0]);
 
   const gitMenuItems = useMemo(() => {
     let isDefaultBranch = data.currentBranch === data.defaultBranch;

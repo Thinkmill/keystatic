@@ -21,6 +21,7 @@ import { useRouter } from './router';
 import { BranchInfoContext, Ref_base, useRepositoryId } from './shell/data';
 import { useConfig } from './shell/context';
 import { getBranchPrefix } from './utils';
+import { graphql } from '../graphql';
 
 export function BranchPicker() {
   const { allBranches, currentBranch, defaultBranch } =
@@ -280,16 +281,18 @@ export function prettyErrorForCreateBranchMutation(error?: CombinedError) {
 
 export function useCreateBranchMutation() {
   return useMutation(
-    gql`
-      mutation CreateBranch($input: CreateRefInput!) {
-        createRef(input: $input) {
-          __typename
-          ref {
-            ...Ref_base
+    graphql(
+      `
+        mutation CreateBranch($input: CreateRefInput!) {
+          createRef(input: $input) {
+            __typename
+            ref {
+              ...Ref_base
+            }
           }
         }
-      }
-      ${Ref_base}
-    ` as import('../../__generated__/ts-gql/CreateBranch').type
+      `,
+      [Ref_base]
+    )
   );
 }

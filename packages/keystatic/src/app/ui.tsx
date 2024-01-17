@@ -35,6 +35,7 @@ import {
   redirectToCloudAuth,
 } from './utils';
 import {
+  BaseRepo,
   CloudInfoProvider,
   GitHubAppShellDataContext,
   GitHubAppShellDataProvider,
@@ -43,6 +44,7 @@ import { KeystaticCloudAuthCallback } from './cloud-auth-callback';
 import { getAuth } from './auth';
 import { assertValidRepoConfig } from './repo-config';
 import { NotFoundBoundary, notFound } from './not-found';
+import { readFragment } from 'gql.tada';
 
 function parseParamsWithoutBranch(params: string[]) {
   if (params.length === 0) {
@@ -77,21 +79,23 @@ function RedirectToBranch(props: { config: Config }) {
         redirectToCloudAuth('', props.config);
       }
     }
-    if (data?.repository?.defaultBranchRef) {
-      push(
-        `/keystatic/branch/${encodeURIComponent(
-          data.repository.defaultBranchRef.name
-        )}`
-      );
-    }
-    if (
-      (props.config.storage.kind === 'github' &&
-        !data?.repository?.id &&
-        (error?.graphQLErrors?.[0]?.originalError as any)?.type ===
-          'NOT_FOUND') ||
-      (error?.graphQLErrors?.[0]?.originalError as any)?.type === 'FORBIDDEN'
-    ) {
-      window.location.href = '/api/keystatic/github/repo-not-found';
+    if (data?.repository) {
+      const repo = readFragment(BaseRepo, data.repository);
+
+      if (repo.defaultBranchRef) {
+        push(
+          `/keystatic/branch/${encodeURIComponent(repo.defaultBranchRef.name)}`
+        );
+      }
+      if (
+        (props.config.storage.kind === 'github' &&
+          !repo &&
+          (error?.graphQLErrors?.[0]?.originalError as any)?.type ===
+            'NOT_FOUND') ||
+        (error?.graphQLErrors?.[0]?.originalError as any)?.type === 'FORBIDDEN'
+      ) {
+        window.location.href = '/api/keystatic/github/repo-not-found';
+      }
     }
   }, [data, error, push, props.config]);
   return null;

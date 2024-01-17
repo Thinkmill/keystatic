@@ -756,6 +756,7 @@ importers:
 
   packages/keystatic:
     specifiers:
+      '@0no-co/graphqlsp': ^1.0.2
       '@babel/runtime': ^7.18.3
       '@braintree/sanitize-url': ^6.0.2
       '@emotion/css': ^11.9.0
@@ -803,6 +804,7 @@ importers:
       eslint: ^8.18.0
       fast-deep-equal: ^3.1.3
       fast-glob: ^3.2.12
+      gql.tada: ^1.0.1
       graphql: ^16.6.0
       idb-keyval: ^6.2.1
       ignore: ^5.2.4
@@ -884,6 +886,7 @@ importers:
       emery: 1.4.2
       escape-string-regexp: 4.0.0
       fast-deep-equal: 3.1.3
+      gql.tada: 1.0.1_graphql@16.8.0
       graphql: 16.8.0
       idb-keyval: 6.2.1
       ignore: 5.2.4
@@ -919,6 +922,7 @@ importers:
       urql: 4.0.5_7ydmg4ky5cpt4mzloff6pvn2pa
       zod: 3.22.2
     devDependencies:
+      '@0no-co/graphqlsp': 1.0.2
       '@jest/expect': 29.7.0
       '@jest/globals': 29.7.0
       '@testing-library/user-event': 14.4.3
@@ -1071,6 +1075,14 @@ packages:
     dependencies:
       graphql: 16.8.0
     dev: false
+
+  /@0no-co/graphqlsp/1.0.2:
+    resolution: {integrity: sha512-fUrhTBWiSCvpGERwJep498Ws+wWzo7XmsUg+OWE1EgtDazfAMcNMyzWi+13T5aEPyY7Khl1YRupINh7XWTjFNw==}
+    dependencies:
+      node-fetch: 2.7.0
+    transitivePeerDependencies:
+      - encoding
+    dev: true
 
   /@aashutoshrathi/word-wrap/1.2.6:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
@@ -15341,6 +15353,14 @@ packages:
       p-cancelable: 1.1.0
       to-readable-stream: 1.0.0
       url-parse-lax: 3.0.0
+    dev: false
+
+  /gql.tada/1.0.1_graphql@16.8.0:
+    resolution: {integrity: sha512-OZ6+O3eIOwGG4xXpoVKK1TWMEitFWK5QLd4sUMrPZMlLJdd7zGD6hE3YkM6AatriJYX45wE0QD4SYHOVn9ySXA==}
+    dependencies:
+      '@0no-co/graphql.web': 1.0.4_graphql@16.8.0
+    transitivePeerDependencies:
+      - graphql
     dev: false
 
   /graceful-fs/4.2.11:

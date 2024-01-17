@@ -14,7 +14,12 @@ import {
 import { cacheExchange } from '@urql/exchange-graphcache';
 import { authExchange } from '@urql/exchange-auth';
 import { getAuth, getSyncAuth } from './auth';
-import { CloudAppShellQuery, GitHubAppShellQuery } from './shell/data';
+import {
+  BaseRepo,
+  CloudAppShellQuery,
+  GitHubAppShellQuery,
+  Ref_base,
+} from './shell/data';
 import { persistedExchange } from '@urql/exchange-persisted';
 import { relayPagination } from '@urql/exchange-graphcache/extras';
 
@@ -27,6 +32,7 @@ import { Config } from '../config';
 import { ThemeProvider, useTheme } from './shell/theme';
 import { parseRepoConfig } from './repo-config';
 import { useRouter } from './router';
+import { readFragment } from 'gql.tada';
 
 // NOTE: scroll behaviour is handled by shell components
 injectGlobal({ body: { overflow: 'hidden' } });
@@ -103,8 +109,10 @@ export function createUrqlClient(config: Config): Client {
                   variables: repo,
                 },
                 data => {
+                  if (!data?.repository) return data;
+                  const repo = readFragment(BaseRepo, data.repository);
                   if (
-                    data?.repository?.refs?.nodes &&
+                    repo?.refs?.nodes &&
                     result.createRef &&
                     typeof result.createRef === 'object' &&
                     'ref' in result.createRef
@@ -114,11 +122,8 @@ export function createUrqlClient(config: Config): Client {
                       repository: {
                         ...data.repository,
                         refs: {
-                          ...data.repository.refs,
-                          nodes: [
-                            ...data.repository.refs.nodes,
-                            result.createRef.ref,
-                          ],
+                          ...repo.refs,
+                          nodes: [...repo.refs!.nodes!, result.createRef.ref],
                         },
                       },
                     };
@@ -137,8 +142,10 @@ export function createUrqlClient(config: Config): Client {
                   variables: repo,
                 },
                 data => {
+                  if (!data?.repository) return data;
+                  const repo = readFragment(BaseRepo, data.repository);
                   if (
-                    data?.repository?.refs?.nodes &&
+                    repo.refs?.nodes &&
                     result.deleteRef &&
                     typeof result.deleteRef === 'object' &&
                     '__typename' in result.deleteRef &&
@@ -151,11 +158,11 @@ export function createUrqlClient(config: Config): Client {
                     return {
                       ...data,
                       repository: {
-                        ...data.repository,
+                        ...repo,
                         refs: {
-                          ...data.repository.refs,
-                          nodes: data.repository.refs.nodes.filter(
-                            x => x?.id !== refId
+                          ...repo.refs,
+                          nodes: repo.refs.nodes.filter(
+                            x => !x || readFragment(Ref_base, x).id !== refId
                           ),
                         },
                       },

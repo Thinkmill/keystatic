@@ -1,7 +1,8 @@
-import { FragmentData, gql } from '@ts-gql/tag/no-transform';
+import { FragmentOf, readFragment } from 'gql.tada';
+import { graphql } from '../../graphql';
 import { createContext, useContext } from 'react';
 
-export const SidebarFooter_viewer = gql`
+export const SidebarFooter_viewer = graphql(`
   fragment SidebarFooter_viewer on User {
     id
     name
@@ -9,12 +10,14 @@ export const SidebarFooter_viewer = gql`
     avatarUrl
     databaseId
   }
-` as import('../../../__generated__/ts-gql/SidebarFooter_viewer').type;
+`);
 
 export const ViewerContext = createContext<
-  FragmentData<typeof SidebarFooter_viewer> | undefined
+  FragmentOf<typeof SidebarFooter_viewer> | undefined
 >(undefined);
 
 export function useViewer() {
-  return useContext(ViewerContext);
+  const val = useContext(ViewerContext);
+  if (!val) return;
+  return readFragment(SidebarFooter_viewer, val);
 }

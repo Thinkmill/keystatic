@@ -145,6 +145,7 @@
     "emery": "^1.4.1",
     "escape-string-regexp": "^4.0.0",
     "fast-deep-equal": "^3.1.3",
+    "gql.tada": "^1.0.1",
     "graphql": "^16.6.0",
     "idb-keyval": "^6.2.1",
     "ignore": "^5.2.4",
@@ -181,6 +182,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@0no-co/graphqlsp": "^1.0.2",
     "@jest/expect": "^29.7.0",
     "@jest/globals": "^29.7.0",
     "@testing-library/user-event": "^14.4.3",
