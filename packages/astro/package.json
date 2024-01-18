@@ -20,7 +20,8 @@
     "astro-integration"
   ],
   "files": [
-    "dist"
+    "dist",
+    "internal"
   ],
   "scripts": {
     "setup": "ts-gql build && tsx scripts/l10n.ts",
