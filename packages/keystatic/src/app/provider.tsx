@@ -16,6 +16,8 @@ import { authExchange } from '@urql/exchange-auth';
 import { getAuth, getSyncAuth } from './auth';
 import { CloudAppShellQuery, GitHubAppShellQuery } from './shell/data';
 import { persistedExchange } from '@urql/exchange-persisted';
+import { relayPagination } from '@urql/exchange-graphcache/extras';
+
 import {
   KEYSTATIC_CLOUD_API_URL,
   KEYSTATIC_CLOUD_HEADERS,
@@ -84,6 +86,11 @@ export function createUrqlClient(config: Config): Client {
         };
       }),
       cacheExchange({
+        resolvers: {
+          Repository: {
+            refs: relayPagination(),
+          },
+        },
         updates: {
           Mutation: {
             createRef(result, args, cache, _info) {

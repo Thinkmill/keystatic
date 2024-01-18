@@ -184,6 +184,10 @@ export function GitHubAppShellDataProvider(props: {
   config: Config;
   children: ReactNode;
 }) {
+  const repo =
+    props.config.storage.kind === 'github'
+      ? parseRepoConfig(props.config.storage.repo)
+      : { name: 'repo-name', owner: 'repo-owner' };
   const [state] = useQuery<
     OperationData<typeof GitHubAppShellQuery | typeof CloudAppShellQuery>,
     OperationVariables<typeof GitHubAppShellQuery | typeof CloudAppShellQuery>
@@ -192,14 +196,47 @@ export function GitHubAppShellDataProvider(props: {
       props.config.storage.kind === 'github'
         ? GitHubAppShellQuery
         : CloudAppShellQuery,
-    variables:
-      props.config.storage.kind === 'github'
-        ? parseRepoConfig(props.config.storage.repo)
-        : {
-            name: 'repo-name',
-            owner: 'repo-owner',
-          },
+    variables: repo,
   });
+
+  const [cursorState, setCursorState] = useState<string | null>(null);
+
+  const [moreRefsState] = useQuery({
+    query: gql`
+      query FetchMoreRefs($owner: String!, $name: String!, $after: String) {
+        repository(owner: $owner, name: $name) {
+          __typename
+          id
+          refs(refPrefix: "refs/heads/", first: 100, after: $after) {
+            __typename
+            nodes {
+              ...Ref_base
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+          }
+        }
+      }
+      ${Ref_base}
+    ` as import('../../../__generated__/ts-gql/FetchMoreRefs').type,
+    pause: !state.data?.repository?.refs?.pageInfo.hasNextPage,
+    variables: {
+      ...repo,
+      after: cursorState ?? state.data?.repository?.refs?.pageInfo.endCursor,
+    },
+  });
+
+  const pageInfo = moreRefsState.data?.repository?.refs?.pageInfo;
+  if (
+    pageInfo?.hasNextPage &&
+    pageInfo.endCursor !== cursorState &&
+    pageInfo.endCursor
+  ) {
+    setCursorState(pageInfo.endCursor);
+  }
+
   return (
     <GitHubAppShellDataContext.Provider value={state}>
       <ViewerContext.Provider
@@ -520,6 +557,10 @@ const BaseRepo = gql`
     refs(refPrefix: "refs/heads/", first: 100) {
       nodes {
         ...Ref_base
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
       }
     }
   }
