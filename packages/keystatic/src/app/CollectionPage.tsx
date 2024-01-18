@@ -1,5 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import isHotkey from 'is-hotkey';
+import { isHotkey } from 'is-hotkey';
 import React, { Key, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ActionButton, Button } from '@keystar/ui/button';
