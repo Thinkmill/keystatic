@@ -330,7 +330,7 @@ function markdocNodeToProseMirrorNode(
       for (const attribute of node.attributes) {
         if (attribute.type === 'mdxJsxAttribute') {
           if (attribute.value == null) {
-            error(`${node.type} has unexpected attributes`);
+            attributes[attribute.name] = true;
             continue;
           }
           try {

@@ -12,8 +12,17 @@ import { fromMarkdown } from 'mdast-util-from-markdown';
 import { mdxjs } from 'micromark-extension-mdxjs';
 import { mdxToProseMirror } from '../mdx/parse';
 import { expect, test } from '@jest/globals';
+import { block } from '../../../../../content-components';
+import { fields } from '../../../../..';
 
-const schema = createEditorSchema(editorOptionsToConfig({}), {});
+const schema = createEditorSchema(editorOptionsToConfig({}), {
+  Something: block({
+    label: 'Something',
+    schema: {
+      bool: fields.checkbox({ label: 'Bool' }),
+    },
+  }),
+});
 
 function toMDX(node: EditorStateDescription) {
   const other = new Map<string, Uint8Array>();
@@ -332,6 +341,31 @@ something
     "\`\`\`js blah
     something
     \`\`\`
+    "
+  `);
+});
+
+test('boolean shorthand', () => {
+  const mdx = `<Something bool />`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <node_selection>
+        <Something
+          props={
+            {
+              "extraFiles": [],
+              "value": {
+                "bool": true,
+              },
+            }
+          }
+        />
+      </node_selection>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "<Something bool />
     "
   `);
 });

@@ -44,7 +44,9 @@ function propsToAttributes(props: Record<string, unknown>): MdxJsxAttribute[] {
     type: 'mdxJsxAttribute',
     name: key,
     value:
-      typeof value === 'string'
+      value === true
+        ? null
+        : typeof value === 'string'
         ? value
         : {
             type: 'mdxJsxAttributeValueExpression',
