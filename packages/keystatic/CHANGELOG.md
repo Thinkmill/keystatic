@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.3.2
+
+### Patch Changes
+
+- 98130aab: Fix Keystatic breaking when a repo has over 100 branches
+
 ## 0.3.1
 
 ### Patch Changes
