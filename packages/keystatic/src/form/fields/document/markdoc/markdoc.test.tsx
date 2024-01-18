@@ -530,3 +530,31 @@ test('italic in bold', () => {
     "
   `);
 });
+
+test('code and spaces', () => {
+  const markdoc = `\`a\` \`b\``;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text
+          code={true}
+        >
+          a
+        </text>
+        <text>
+           
+        </text>
+        <text
+          code={true}
+        >
+          b
+        </text>
+      </paragraph>
+    </editor>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "\`a\` \`b\`
+    "
+  `);
+});

@@ -61,11 +61,17 @@ function toMarkdocInline(node: Descendant): Node | Node[] {
     }
   }
 
-  if (leadingWhitespace?.length) {
+  if (/^\s+$/.test(node.text)) {
     children.unshift(new Ast.Node('text', { content: leadingWhitespace }, []));
-  }
-  if (trailingWhitespace?.length) {
-    children.push(new Ast.Node('text', { content: trailingWhitespace }, []));
+  } else {
+    if (leadingWhitespace?.length) {
+      children.unshift(
+        new Ast.Node('text', { content: leadingWhitespace }, [])
+      );
+    }
+    if (trailingWhitespace?.length) {
+      children.push(new Ast.Node('text', { content: trailingWhitespace }, []));
+    }
   }
 
   return children;
