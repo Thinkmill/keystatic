@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.3.1
+
+### Patch Changes
+
+- 73d10904: Fix document field duplicating whitespace in some cases
+- 09f24103: Update `is-hotkey` import
+
 ## 0.3.0
 
 ### Minor Changes
