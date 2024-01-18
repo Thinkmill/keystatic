@@ -1,5 +1,13 @@
 # @keystatic/astro
 
+## 3.0.1
+
+### Patch Changes
+
+- 17ef271b: Fix `internal` files not being published
+- Updated dependencies [1b6200a2]
+  - @keystatic/core@0.3.3
+
 ## 3.0.0
 
 ### Major Changes
