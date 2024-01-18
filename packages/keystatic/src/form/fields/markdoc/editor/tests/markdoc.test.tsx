@@ -31,7 +31,7 @@ function fromMarkdoc(markdoc: string) {
     markdocToProseMirror(
       Markdoc.parse(markdoc),
       schema,
-      undefined,
+      new Map([['something something.png', new Uint8Array([])]]),
       undefined,
       undefined
     )
@@ -296,5 +296,26 @@ test('link in paragraph', () => {
         </text>
       </paragraph>
     </doc>
+  `);
+});
+
+test('image with space in src', () => {
+  const markdoc = `![something](something%20something.png)`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <image
+          alt="something"
+          filename="something something.png"
+          src="data:application/octet-stream;base64,"
+          title=""
+        />
+      </paragraph>
+    </doc>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "![something](something%20something.png)
+    "
   `);
 });

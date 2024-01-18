@@ -330,7 +330,7 @@ function markdocNodeToProseMirrorNode(
       for (const attribute of node.attributes) {
         if (attribute.type === 'mdxJsxAttribute') {
           if (attribute.value == null) {
-            error(`${node.type} has unexpected attributes`);
+            attributes[attribute.name] = true;
             continue;
           }
           try {
@@ -369,7 +369,9 @@ function markdocNodeToProseMirrorNode(
   }
   if (node.type === 'image') {
     const prefix = getSrcPrefixForImageBlock(schema.config, getState().slug);
-    const filename = node.url.slice(prefix.length);
+    const fullFilename = decodeURI(node.url);
+    const filename = fullFilename.slice(prefix.length);
+    console.log(filename, getState().extraFiles);
     const content = (
       typeof schema.config.image === 'object' &&
       typeof schema.config.image.directory === 'string'
@@ -382,7 +384,7 @@ function markdocNodeToProseMirrorNode(
         src: `data:application/octet-stream;base64,${fromUint8Array(content)}`,
         alt: node.alt,
         title: node.title,
-        filename: node.url,
+        filename,
       });
     }
     return schema.schema.text(
