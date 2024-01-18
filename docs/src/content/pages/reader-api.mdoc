@@ -12,10 +12,6 @@ The code can only run on the server, and not in the browser.
 
 ## Usage
 
-{% aside icon="⚠️" %}
-There is currently no support for creating readers for `cloud` storage.
-{% /aside %}
-
 ### Local Directory
 To read from local storage, import the `createReader` function, as well as your Keystatic config file:
 
@@ -53,7 +49,7 @@ You can then create a new `reader` by calling `createGithubReader` and passing i
 ```javascript
 const reader = createGitHubReader(keystaticConfig, {
     repo: 'Thinkmill/keystatic-data',
-    token: process.env.GITHUB_PAT, // or a hardcoded string
+    token: process.env.GITHUB_PAT,
 });
 ```
 
