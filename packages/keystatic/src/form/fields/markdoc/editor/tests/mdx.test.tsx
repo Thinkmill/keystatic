@@ -44,7 +44,9 @@ function fromMDX(mdx: string) {
     extensions: [mdxjs()],
     mdastExtensions: [mdxFromMarkdown()],
   });
-  const files = new Map<string, Uint8Array>();
+  const files = new Map<string, Uint8Array>([
+    ['something something.png', new Uint8Array([])],
+  ]);
   const otherFiles = new Map<string, Map<string, Uint8Array>>();
   const doc = mdxToProseMirror(root, schema, files, otherFiles, undefined);
   return toEditorState(doc);
@@ -366,6 +368,27 @@ test('boolean shorthand', () => {
   `);
   expect(toMDX(editor)).toMatchInlineSnapshot(`
     "<Something bool />
+    "
+  `);
+});
+
+test('image with space in src', () => {
+  const mdx = `![something](something%20something.png)`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <image
+          alt="something"
+          filename="something something.png"
+          src="data:application/octet-stream;base64,"
+          title={null}
+        />
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "![something](something%20something.png)
     "
   `);
 });

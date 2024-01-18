@@ -368,7 +368,8 @@ function markdocNodeToProseMirrorNode(
   }
   if (node.type === 'image') {
     const prefix = getSrcPrefixForImageBlock(schema.config, getState().slug);
-    const filename = (node.attributes.src as string).slice(prefix.length);
+    const fullFilename = decodeURIComponent(node.attributes.src);
+    const filename = fullFilename.slice(prefix.length);
     const content = (
       typeof schema.config.image === 'object' &&
       typeof schema.config.image.directory === 'string'
@@ -381,7 +382,7 @@ function markdocNodeToProseMirrorNode(
         src: `data:application/octet-stream;base64,${fromUint8Array(content)}`,
         alt: node.attributes.alt,
         title: node.attributes.title,
-        filename: node.attributes.src,
+        filename,
       });
     }
     return schema.schema.text(
