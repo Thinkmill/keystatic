@@ -1,5 +1,13 @@
 # @keystatic/astro
 
+## 3.0.2
+
+### Patch Changes
+
+- 3e4f6f4c: Fix build errors
+- Updated dependencies [8320c683]
+  - @keystatic/core@0.3.4
+
 ## 3.0.1
 
 ### Patch Changes
