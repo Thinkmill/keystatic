@@ -44,7 +44,7 @@ export const Overlay = forwardRef(function Overlay(
     if (isOpen === isOpenState) return;
     hasCalledCompletedCallback.current = false;
     if (isOpen) {
-      props.onEntering?.();
+      props.onEnter?.();
       if (nodeRef.current) {
         forceReflow(nodeRef.current);
       }
