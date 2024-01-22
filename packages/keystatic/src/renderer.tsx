@@ -22,7 +22,7 @@ type Text = {
   [key: string]: unknown;
 };
 
-type Component<Props> = (props: Props) => ReactElement | null;
+type Component<Props> = (props: Props) => ReactNode;
 
 type OnlyChildrenComponent =
   | Component<{ children: ReactNode }>
