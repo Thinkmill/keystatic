@@ -1,5 +1,15 @@
 # @example/next-pages
 
+## 0.0.94
+
+### Patch Changes
+
+- Updated dependencies [ad59430d]
+- Updated dependencies [53d8fcc7]
+- Updated dependencies [b3071c88]
+  - @keystar/ui@0.6.0
+  - @keystatic/core@0.3.5
+
 ## 0.0.93
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @keystatic/core
 
+## 0.3.5
+
+### Patch Changes
+
+- 53d8fcc7: Update icons
+- b3071c88: Fix array field parsing in the mdx field
+- Updated dependencies [ad59430d]
+- Updated dependencies [53d8fcc7]
+  - @keystar/ui@0.6.0
+
 ## 0.3.4
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @keystar/ui
 
+## 0.6.0
+
+### Minor Changes
+
+- 53d8fcc7: Update icons
+
+### Patch Changes
+
+- ad59430d: Fix `onEnter` callback in overlays
+
 ## 0.5.0
 
 ### Minor Changes
