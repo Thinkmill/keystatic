@@ -8,7 +8,7 @@ export const chevronLeftSquareIcon = (
     width="1em"
     height="1em"
   >
-    <rect width={18} height={18} x={3} y={3} rx={2} ry={2} />
+    <rect width={18} height={18} x={3} y={3} rx={2} />
     <path d="m14 16-4-4 4-4" />
   </svg>
 );

@@ -9,6 +9,6 @@ export const copyrightIcon = (
     height="1em"
   >
     <circle cx={12} cy={12} r={10} />
-    <path d="M15 9.354a4 4 0 1 0 0 5.292" />
+    <path d="M14.83 14.83a4 4 0 1 1 0-5.66" />
   </svg>
 );

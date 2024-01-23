@@ -8,7 +8,7 @@ export const panelLeftOpenIcon = (
     width="1em"
     height="1em"
   >
-    <rect width={18} height={18} x={3} y={3} rx={2} ry={2} />
+    <rect width={18} height={18} x={3} y={3} rx={2} />
     <path d="M9 3v18M14 9l3 3-3 3" />
   </svg>
 );

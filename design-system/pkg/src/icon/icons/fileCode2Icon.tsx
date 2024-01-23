@@ -8,7 +8,7 @@ export const fileCode2Icon = (
     width="1em"
     height="1em"
   >
-    <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" />
-    <path d="M14 2v6h6M9 18l3-3-3-3M5 12l-3 3 3 3" />
+    <path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4" />
+    <path d="M14 2v4a2 2 0 0 0 2 2h4M5 12l-3 3 3 3M9 18l3-3-3-3" />
   </svg>
 );
