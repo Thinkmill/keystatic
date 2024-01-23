@@ -22,6 +22,16 @@ const schema = createEditorSchema(editorOptionsToConfig({}), {
       bool: fields.checkbox({ label: 'Bool' }),
     },
   }),
+  Another: block({
+    label: 'Another',
+    schema: {
+      array: fields.array(
+        fields.object({
+          blah: fields.text({ label: 'Blah' }),
+        })
+      ),
+    },
+  }),
 });
 
 function toMDX(node: EditorStateDescription) {
@@ -389,6 +399,38 @@ test('image with space in src', () => {
   `);
   expect(toMDX(editor)).toMatchInlineSnapshot(`
     "![something](something%20something.png)
+    "
+  `);
+});
+
+test('array in component', () => {
+  const mdx = `<Another array={[{blah:'A'},{blah:'B'}]} />`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <node_selection>
+        <Another
+          props={
+            {
+              "extraFiles": [],
+              "value": {
+                "array": [
+                  {
+                    "blah": "A",
+                  },
+                  {
+                    "blah": "B",
+                  },
+                ],
+              },
+            }
+          }
+        />
+      </node_selection>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "<Another array={[{"blah":"A"},{"blah":"B"}]} />
     "
   `);
 });

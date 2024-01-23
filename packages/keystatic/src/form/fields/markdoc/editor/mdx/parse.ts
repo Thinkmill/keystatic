@@ -185,7 +185,7 @@ function expressionToValue(expression: Expression): unknown {
   if (expression.type === 'ArrayExpression') {
     return expression.elements.map(value => {
       assert(value !== null && value.type !== 'SpreadElement');
-      return value;
+      return expressionToValue(value as Expression);
     });
   }
   if (expression.type === 'ObjectExpression') {
@@ -371,7 +371,6 @@ function markdocNodeToProseMirrorNode(
     const prefix = getSrcPrefixForImageBlock(schema.config, getState().slug);
     const fullFilename = decodeURI(node.url);
     const filename = fullFilename.slice(prefix.length);
-    console.log(filename, getState().extraFiles);
     const content = (
       typeof schema.config.image === 'object' &&
       typeof schema.config.image.directory === 'string'
