@@ -8,8 +8,28 @@ import { proseMirrorToMarkdoc } from '../markdoc/serialize';
 import Markdoc from '@markdoc/markdoc';
 import { createEditorSchema } from '../schema';
 import { editorOptionsToConfig } from '../../config';
+import { mark } from '../../../../../content-components';
+import { fields } from '../../../../..';
 
-const schema = createEditorSchema(editorOptionsToConfig({}), {});
+const schema = createEditorSchema(editorOptionsToConfig({}), {
+  highlight: mark({
+    label: 'Highlight',
+    icon: undefined!,
+    className: 'highlight',
+    schema: {
+      variant: fields.select({
+        label: 'Variant',
+        options: [
+          { value: 'default', label: 'Default' },
+          { value: 'success', label: 'Success' },
+          { value: 'warning', label: 'Warning' },
+          { value: 'danger', label: 'Danger' },
+        ],
+        defaultValue: 'default',
+      }),
+    },
+  }),
+});
 
 function toMarkdoc(node: EditorStateDescription) {
   return Markdoc.format(
@@ -316,6 +336,36 @@ test('image with space in src', () => {
   `);
   expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
     "![something](something%20something.png)
+    "
+  `);
+});
+
+test('mark', () => {
+  const markdoc = `{% highlight variant="success" %}some text{% /highlight %}`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text
+          highlight={
+            {
+              "props": {
+                "extraFiles": [],
+                "value": {
+                  "variant": "success",
+                },
+              },
+            }
+          }
+        >
+          <cursor />
+          some text
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "{% highlight variant="success" %}some text{% /highlight %}
     "
   `);
 });

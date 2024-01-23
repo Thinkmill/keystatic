@@ -12,7 +12,7 @@ import { fromMarkdown } from 'mdast-util-from-markdown';
 import { mdxjs } from 'micromark-extension-mdxjs';
 import { mdxToProseMirror } from '../mdx/parse';
 import { expect, test } from '@jest/globals';
-import { block } from '../../../../../content-components';
+import { block, mark } from '../../../../../content-components';
 import { fields } from '../../../../..';
 
 const schema = createEditorSchema(editorOptionsToConfig({}), {
@@ -30,6 +30,23 @@ const schema = createEditorSchema(editorOptionsToConfig({}), {
           blah: fields.text({ label: 'Blah' }),
         })
       ),
+    },
+  }),
+  Highlight: mark({
+    label: 'Highlight',
+    icon: undefined!,
+    className: 'highlight',
+    schema: {
+      variant: fields.select({
+        label: 'Variant',
+        options: [
+          { value: 'default', label: 'Default' },
+          { value: 'success', label: 'Success' },
+          { value: 'warning', label: 'Warning' },
+          { value: 'danger', label: 'Danger' },
+        ],
+        defaultValue: 'default',
+      }),
     },
   }),
 });
@@ -431,6 +448,36 @@ test('array in component', () => {
   `);
   expect(toMDX(editor)).toMatchInlineSnapshot(`
     "<Another array={[{"blah":"A"},{"blah":"B"}]} />
+    "
+  `);
+});
+
+test('mark', () => {
+  const mdx = `<Highlight variant="success">something</Highlight>`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text
+          Highlight={
+            {
+              "props": {
+                "extraFiles": [],
+                "value": {
+                  "variant": "success",
+                },
+              },
+            }
+          }
+        >
+          <cursor />
+          something
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "<Highlight variant="success">something</Highlight>
     "
   `);
 });
