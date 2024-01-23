@@ -63,7 +63,7 @@ export const Icon = (props: IconProps) => {
       role="img"
       className={classNames(iconClassName, styleProps.className)}
       style={{
-        [STROKE_VAR]: stroke,
+        [STROKE_VAR as any]: stroke,
         ...styleProps.style,
       }}
       height="1em"

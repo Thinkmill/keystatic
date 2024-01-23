@@ -42,16 +42,20 @@ async function writeIcons() {
           expandProps: false,
           template: function (variables, context) {
             return context.tpl`
-            export const ${name} = ${{
-              type: 'JSXFragment',
-              openingFragment: {
-                type: 'JSXOpeningFragment',
-              },
-              closingFragment: {
-                type: 'JSXClosingFragment',
-              },
-              children: variables.jsx.children,
-            }}
+            export const ${name} = ${
+              variables.jsx.children.length === 1
+                ? variables.jsx.children[0]
+                : {
+                    type: 'JSXFragment',
+                    openingFragment: {
+                      type: 'JSXOpeningFragment',
+                    },
+                    closingFragment: {
+                      type: 'JSXClosingFragment',
+                    },
+                    children: variables.jsx.children,
+                  }
+            }
             `;
           },
           plugins: [

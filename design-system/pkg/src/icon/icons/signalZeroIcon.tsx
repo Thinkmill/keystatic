@@ -1,5 +1,1 @@
-export const signalZeroIcon = (
-  <>
-    <path d="M2 20h.01" />
-  </>
-);
+export const signalZeroIcon = <path d="M2 20h.01" />;

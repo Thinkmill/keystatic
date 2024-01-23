@@ -1,5 +1,1 @@
-export const minusIcon = (
-  <>
-    <path d="M5 12h14" />
-  </>
-);
+export const minusIcon = <path d="M5 12h14" />;
