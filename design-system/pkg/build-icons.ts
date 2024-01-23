@@ -41,18 +41,21 @@ async function writeIcons() {
           typescript: true,
           expandProps: false,
           template: function (variables, context) {
-            variables.jsx.openingElement.attributes =
-              variables.jsx.openingElement.attributes.filter(
-                attr =>
-                  attr.type !== 'JSXAttribute' ||
-                  (attr.name.name !== 'width' &&
-                    attr.name.name !== 'height' &&
-                    attr.name.name !== 'stroke' &&
-                    attr.name.name !== 'fill' &&
-                    attr.name.name !== 'className')
-              );
             return context.tpl`
-            export const ${name} = ${variables.jsx};
+            export const ${name} = ${
+              variables.jsx.children.length === 1
+                ? variables.jsx.children[0]
+                : {
+                    type: 'JSXFragment',
+                    openingFragment: {
+                      type: 'JSXOpeningFragment',
+                    },
+                    closingFragment: {
+                      type: 'JSXClosingFragment',
+                    },
+                    children: variables.jsx.children,
+                  }
+            }
             `;
           },
           plugins: [
