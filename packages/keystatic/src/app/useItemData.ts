@@ -341,7 +341,7 @@ async function fetchGitHubBlob(
   );
 }
 
-function fetchBlob(
+export function fetchBlob(
   config: Config,
   oid: string,
   filepath: string,

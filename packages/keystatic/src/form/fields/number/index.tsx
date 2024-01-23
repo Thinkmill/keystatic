@@ -30,6 +30,7 @@ export function number<IsRequired extends boolean | undefined>({
   number | (IsRequired extends true ? never : null)
 > {
   return basicFormFieldWithSimpleReaderParse({
+    label,
     Input(props) {
       return (
         <NumberFieldInput

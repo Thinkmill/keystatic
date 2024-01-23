@@ -48,6 +48,7 @@ export function text({
   return {
     kind: 'form',
     formKind: 'slug',
+    label,
     Input(props) {
       return (
         <TextFieldInput

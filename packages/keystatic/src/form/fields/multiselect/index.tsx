@@ -21,6 +21,7 @@ export function multiselect<
   const valuesToOption = new Map(options.map(x => [x.value, x]));
   const field: BasicFormField<readonly Option['value'][]> =
     basicFormFieldWithSimpleReaderParse({
+      label,
       Input(props) {
         return (
           <MultiselectFieldInput

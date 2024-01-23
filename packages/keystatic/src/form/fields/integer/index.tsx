@@ -23,6 +23,7 @@ export function integer<IsRequired extends boolean | undefined>({
   number | (IsRequired extends true ? never : null)
 > {
   return basicFormFieldWithSimpleReaderParse({
+    label,
     Input(props) {
       return (
         <IntegerFieldInput
