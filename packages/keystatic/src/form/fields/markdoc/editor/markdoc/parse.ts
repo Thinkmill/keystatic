@@ -329,22 +329,26 @@ function markdocNodeToProseMirrorNode(
 
     const componentConfig = schema.components[node.tag];
     if (componentConfig) {
-      if (componentConfig.kind === 'mark') {
-        return addMark(node, schema.schema.marks[node.tag], parentType);
-      }
-      const nodeType = schema.schema.nodes[node.tag];
       const state = getState();
-      const children = childrenToProseMirrorNodes(node.children, nodeType);
       const deserialized = deserializeProps(
         componentConfig.schema,
         node.attributes,
         state
       );
+      if (componentConfig.kind === 'mark') {
+        return addMark(
+          node,
+          schema.schema.marks[node.tag].create({
+            props: toSerialized(deserialized, componentConfig.schema),
+          }),
+          parentType
+        );
+      }
+      const nodeType = schema.schema.nodes[node.tag];
+      const children = childrenToProseMirrorNodes(node.children, nodeType);
 
       const pmNode = nodeType.createAndFill(
-        {
-          props: toSerialized(deserialized, componentConfig.schema),
-        },
+        { props: toSerialized(deserialized, componentConfig.schema) },
         children
       );
       if (!pmNode) {

@@ -316,16 +316,7 @@ function markdocNodeToProseMirrorNode(
     }
     const componentConfig = schema.components[node.name];
     if (componentConfig) {
-      if (componentConfig.kind === 'mark') {
-        if (node.type === 'mdxJsxFlowElement') {
-          return notAllowed(node, parentType);
-        }
-        return addMark(node, schema.schema.marks[node.name], parentType);
-      }
-      const nodeType = schema.schema.nodes[node.name];
-      // TODO: validation and handling of e.g. image fields
       const state = getState();
-      const children = childrenToProseMirrorNodes(node.children, nodeType);
       const attributes: Record<string, unknown> = {};
       for (const attribute of node.attributes) {
         if (attribute.type === 'mdxJsxAttribute') {
@@ -351,11 +342,23 @@ function markdocNodeToProseMirrorNode(
         state
       );
 
+      if (componentConfig.kind === 'mark') {
+        if (node.type === 'mdxJsxFlowElement') {
+          return notAllowed(node, parentType);
+        }
+        return addMark(
+          node,
+          schema.schema.marks[node.name].create({
+            props: toSerialized(deserialized, componentConfig.schema),
+          }),
+          parentType
+        );
+      }
+      const nodeType = schema.schema.nodes[node.name];
+
       const pmNode = nodeType.createAndFill(
-        {
-          props: toSerialized(deserialized, componentConfig.schema),
-        },
-        children
+        { props: toSerialized(deserialized, componentConfig.schema) },
+        childrenToProseMirrorNodes(node.children, nodeType)
       );
       if (!pmNode) {
         error(`${node.type} has unexpected children`);
