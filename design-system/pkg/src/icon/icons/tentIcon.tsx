@@ -8,6 +8,6 @@ export const tentIcon = (
     width="1em"
     height="1em"
   >
-    <path d="M19 20 10 4M5 20l9-16M3 20h18M12 15l-3 5M12 15l3 5" />
+    <path d="M3.5 21 14 3M20.5 21 10 3M15.5 21 12 15l-3.5 6M2 21h20" />
   </svg>
 );

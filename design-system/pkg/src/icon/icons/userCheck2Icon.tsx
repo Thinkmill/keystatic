@@ -8,8 +8,8 @@ export const userCheck2Icon = (
     width="1em"
     height="1em"
   >
-    <path d="M14 19a6 6 0 0 0-12 0" />
-    <circle cx={8} cy={9} r={4} />
-    <path d="m16 11 2 2 4-4" />
+    <path d="M2 21a8 8 0 0 1 13.292-6" />
+    <circle cx={10} cy={8} r={5} />
+    <path d="m16 19 2 2 4-4" />
   </svg>
 );

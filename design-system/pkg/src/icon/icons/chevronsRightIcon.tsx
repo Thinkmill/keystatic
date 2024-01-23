@@ -8,6 +8,6 @@ export const chevronsRightIcon = (
     width="1em"
     height="1em"
   >
-    <path d="m13 17 5-5-5-5M6 17l5-5-5-5" />
+    <path d="m6 17 5-5-5-5M13 17l5-5-5-5" />
   </svg>
 );

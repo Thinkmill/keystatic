@@ -8,6 +8,6 @@ export const plusIcon = (
     width="1em"
     height="1em"
   >
-    <path d="M12 5v14M5 12h14" />
+    <path d="M5 12h14M12 5v14" />
   </svg>
 );

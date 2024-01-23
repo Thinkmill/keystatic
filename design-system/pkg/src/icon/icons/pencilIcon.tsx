@@ -8,6 +8,6 @@ export const pencilIcon = (
     width="1em"
     height="1em"
   >
-    <path d="m18 2 4 4M7.5 20.5 19 9l-4-4L3.5 16.5 2 22z" />
+    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5ZM15 5l4 4" />
   </svg>
 );

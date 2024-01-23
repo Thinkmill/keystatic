@@ -261,7 +261,7 @@ importers:
       '@types/react-dom': ^18.0.11
       emery: ^1.4.1
       facepaint: ^1.2.1
-      lucide-static: ^0.252.0
+      lucide-static: ^0.314.0
       next: ^14.0.0
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -363,7 +363,7 @@ importers:
       '@types/facepaint': 1.2.2
       '@types/react': 18.2.21
       '@types/react-dom': 18.2.7
-      lucide-static: 0.252.0
+      lucide-static: 0.314.0
       next: 14.0.0_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -17495,8 +17495,8 @@ packages:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
 
-  /lucide-static/0.252.0:
-    resolution: {integrity: sha512-nbfKHRns53Sk1NI2nSaR4WihfEgsjb6M+6yGA5Lfu8R7a1TM62sat4vIjWIQDy6Js3//7SakoOFFp4ThGcbusA==}
+  /lucide-static/0.314.0:
+    resolution: {integrity: sha512-Eqb7KkjgH/mOqdv3s0/8WZlNPjzn/Tw989FaJtIQqugBB5IGm0VIoywpQBHpJjwTLCu+QK0l6GzktKxCZD1EHQ==}
     dev: true
 
   /lz-string/1.5.0:
