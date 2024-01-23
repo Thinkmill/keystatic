@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.3.6
+
+### Patch Changes
+
+- 67fe5f11: Fix parsing attributes on marks in the new editor
+
 ## 0.3.5
 
 ### Patch Changes
