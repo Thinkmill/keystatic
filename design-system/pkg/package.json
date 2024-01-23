@@ -320,7 +320,6 @@
     "./icon/icons/clock1Icon": "./dist/keystar-ui-icon-icons-clock1Icon.js",
     "./icon/icons/clock2Icon": "./dist/keystar-ui-icon-icons-clock2Icon.js",
     "./icon/icons/clock3Icon": "./dist/keystar-ui-icon-icons-clock3Icon.js",
-    "./icon/icons/clock4Icon": "./dist/keystar-ui-icon-icons-clock4Icon.js",
     "./icon/icons/clock5Icon": "./dist/keystar-ui-icon-icons-clock5Icon.js",
     "./icon/icons/clock6Icon": "./dist/keystar-ui-icon-icons-clock6Icon.js",
     "./icon/icons/clock7Icon": "./dist/keystar-ui-icon-icons-clock7Icon.js",

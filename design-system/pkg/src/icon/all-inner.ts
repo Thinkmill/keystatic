@@ -354,7 +354,6 @@ export { clock12Icon } from './icons/clock12Icon';
 export { clock1Icon } from './icons/clock1Icon';
 export { clock2Icon } from './icons/clock2Icon';
 export { clock3Icon } from './icons/clock3Icon';
-export { clock4Icon } from './icons/clock4Icon';
 export { clock5Icon } from './icons/clock5Icon';
 export { clock6Icon } from './icons/clock6Icon';
 export { clock7Icon } from './icons/clock7Icon';
