@@ -153,6 +153,7 @@
     "is-hotkey": "^0.2.0",
     "js-base64": "^3.7.5",
     "js-yaml": "^4.1.0",
+    "lib0": "^0.2.88",
     "lru-cache": "^7.14.1",
     "match-sorter": "^6.3.1",
     "mdast-util-from-markdown": "^2.0.0",
@@ -166,6 +167,7 @@
     "micromark-extension-gfm-strikethrough": "^2.0.0",
     "micromark-extension-mdxjs": "^3.0.0",
     "minimatch": "^9.0.3",
+    "partysocket": "^0.0.22",
     "prosemirror-commands": "^1.5.1",
     "prosemirror-history": "^1.3.0",
     "prosemirror-keymap": "^1.2.1",
@@ -180,6 +182,9 @@
     "slate-react": "^0.91.9",
     "unist-util-visit": "^5.0.0",
     "urql": "^4.0.0",
+    "y-prosemirror": "^1.2.2",
+    "y-protocols": "^1.0.6",
+    "yjs": "^13.6.11",
     "zod": "^3.20.2"
   },
   "devDependencies": {

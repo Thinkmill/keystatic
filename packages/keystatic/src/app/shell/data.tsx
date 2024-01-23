@@ -48,6 +48,7 @@ import {
   getTreeFromPersistedCache,
   setTreeToPersistedCache,
 } from '../object-cache';
+import { CollabProvider } from './collab';
 
 export function fetchLocalTree(sha: string) {
   if (treeCache.has(sha)) {
@@ -131,6 +132,7 @@ const cloudInfoSchema = z.object({
     name: z.string(),
     slug: z.string(),
     images: z.boolean(),
+    multiplayer: z.boolean(),
   }),
 });
 
@@ -432,7 +434,13 @@ export function GitHubAppShellProvider(props: {
           <BaseInfoContext.Provider value={baseInfo}>
             <ChangedContext.Provider value={changedData}>
               <TreeContext.Provider value={allTreeData}>
-                {props.children}
+                {props.config.storage.kind === 'cloud' ? (
+                  <CollabProvider config={props.config}>
+                    {props.children}
+                  </CollabProvider>
+                ) : (
+                  props.children
+                )}
               </TreeContext.Provider>
             </ChangedContext.Provider>
           </BaseInfoContext.Provider>

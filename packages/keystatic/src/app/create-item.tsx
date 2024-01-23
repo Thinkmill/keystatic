@@ -12,7 +12,6 @@ import { toastQueue } from '@keystar/ui/toast';
 import { Config } from '../config';
 import { fields } from '../form/api';
 import { getInitialPropsValue } from '../form/initial-values';
-import { createGetPreviewProps } from '../form/preview-props';
 import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
 import {
@@ -26,7 +25,7 @@ import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
 import { PageRoot, PageHeader, PageBody } from './shell/page';
-import { useBaseCommit } from './shell/data';
+import { useBaseCommit, useBranchInfo } from './shell/data';
 import { ForkRepoDialog } from './fork-repo';
 import { serializeEntryToFiles, useUpsertItem } from './updating';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
@@ -41,10 +40,18 @@ import {
   showDraftRestoredToast,
 } from './persistence';
 import { useHasChanged } from './useHasChanged';
-import { useData } from './useData';
+import { LOADING, useData } from './useData';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Icon } from '@keystar/ui/icon';
 import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
+import * as Y from 'yjs';
+import { getYjsValFromParsedValue } from '../form/props-value';
+import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
+import { useYjs, useYjsIfAvailable } from './shell/collab';
+import { PresenceAvatars } from './presence';
+import { useConfig } from './shell/context';
+import { createGetPreviewProps } from '../form/preview-props';
+import { useYJsValue } from './useYJsValue';
 
 function CreateItemWrapper(props: {
   collection: string;
@@ -161,6 +168,43 @@ function CreateItemWrapper(props: {
     duplicateInitalState,
   ]);
 
+  const branchInfo = useBranchInfo();
+  const yjsInfo = useYjsIfAvailable();
+  const key = `${branchInfo.currentBranch}/${props.collection}/create${
+    duplicateSlug?.length ? `?duplicate=${duplicateSlug}` : ''
+  }`;
+
+  const mapData = useData(
+    useCallback(async () => {
+      if (!yjsInfo) return;
+      if (yjsInfo === 'loading') return LOADING;
+      await yjsInfo.doc.whenSynced;
+      if (isFromTemplate && !duplicateInitalState) return LOADING;
+      let doc = yjsInfo.data.get(key);
+      if (doc instanceof Y.Doc) {
+        const promise = doc.whenLoaded;
+        doc.load();
+        await promise;
+      } else {
+        doc = new Y.Doc();
+        yjsInfo.data.set(key, doc);
+      }
+      const data = doc.getMap('data');
+      if (!data.size) {
+        doc.transact(() => {
+          for (const [key, value] of Object.entries(collectionConfig.schema)) {
+            const val = getYjsValFromParsedValue(
+              value,
+              duplicateInitalState?.[key] ?? getInitialPropsValue(value)
+            );
+            data.set(key, val);
+          }
+        });
+      }
+      return data;
+    }, [collectionConfig, duplicateInitalState, isFromTemplate, key, yjsInfo])
+  );
+
   if (isFromTemplate && itemData.kind === 'error') {
     return (
       <PageBody>
@@ -168,9 +212,18 @@ function CreateItemWrapper(props: {
       </PageBody>
     );
   }
+  if (mapData.kind === 'error') {
+    console.log(mapData.error);
+    return (
+      <PageBody>
+        <Notice tone="critical">{mapData.error.message}</Notice>
+      </PageBody>
+    );
+  }
   if (
     (isFromTemplate && itemData.kind === 'loading') ||
-    draftData.kind === 'loading'
+    draftData.kind === 'loading' ||
+    mapData.kind === 'loading'
   ) {
     return (
       <Flex alignItems="center" justifyContent="center" minHeight="scale.3000">
@@ -194,14 +247,26 @@ function CreateItemWrapper(props: {
     );
   }
 
+  if (!mapData.data) {
+    return (
+      <CreateItemLocal
+        collection={props.collection}
+        config={props.config}
+        basePath={props.basePath}
+        draft={draftData.kind === 'loaded' ? draftData.data : undefined}
+        duplicateSlug={duplicateSlug}
+        initialState={duplicateInitalStateWithUpdatedSlug}
+      />
+    );
+  }
   return (
-    <CreateItem
+    <CreateItemCollab
       collection={props.collection}
       config={props.config}
       basePath={props.basePath}
-      draft={draftData.kind === 'loaded' ? draftData.data : undefined}
       duplicateSlug={duplicateSlug}
       initialState={duplicateInitalStateWithUpdatedSlug}
+      map={mapData.data}
     />
   );
 }
@@ -213,7 +278,7 @@ const storedValSchema = z.object({
   files: z.map(z.string(), z.instanceof(Uint8Array)),
 });
 
-function CreateItem(props: {
+function CreateItemLocal(props: {
   collection: string;
   config: Config;
   basePath: string;
@@ -221,11 +286,8 @@ function CreateItem(props: {
   draft: { state: Record<string, unknown>; savedAt: Date } | undefined;
   initialState: Record<string, unknown> | undefined;
 }) {
-  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
-  const router = useRouter();
   const collectionConfig = props.config.collections?.[props.collection];
   if (!collectionConfig) notFound();
-  const [forceValidation, setForceValidation] = useState(false);
   const schema = useMemo(
     () => fields.object(collectionConfig.schema),
     [collectionConfig.schema]
@@ -235,19 +297,17 @@ function CreateItem(props: {
   }, [props.initialState, schema]);
   const [state, setState] = useState(props.draft?.state ?? initialState);
 
+  const previewProps = useMemo(
+    () => createGetPreviewProps(schema, setState, () => undefined),
+    [schema]
+  )(state);
+
   useEffect(() => {
     if (props.draft && state === props.draft.state) {
       showDraftRestoredToast(props.draft.savedAt, false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.draft]);
-
-  const previewProps = useMemo(
-    () => createGetPreviewProps(schema, setState, () => undefined),
-    [schema]
-  )(state);
-
-  const baseCommit = useBaseCommit();
 
   const slug = getSlugFromState(collectionConfig, state);
 
@@ -315,25 +375,136 @@ function CreateItem(props: {
     formatInfo,
     hasCreated,
   ]);
+  return (
+    <CreateItemInner
+      basePath={props.basePath}
+      collection={props.collection}
+      createResult={createResult}
+      createItem={createItem}
+      resetCreateItemState={resetCreateItemState}
+      state={state}
+      slug={slug}
+      previewProps={previewProps}
+      onReset={() => {
+        setState(initialState);
+      }}
+    />
+  );
+}
+
+function CreateItemCollab(props: {
+  collection: string;
+  config: Config;
+  basePath: string;
+  duplicateSlug: string | null;
+  initialState: Record<string, unknown> | undefined;
+  map: Y.Map<unknown>;
+}) {
+  const collectionConfig = props.config.collections?.[props.collection];
+  if (!collectionConfig) notFound();
+  const schema = useMemo(
+    () => fields.object(collectionConfig.schema),
+    [collectionConfig.schema]
+  );
+  const yjsInfo = useYjs();
+  const state = useYJsValue(schema, props.map) as Record<string, unknown>;
+  const previewProps = useMemo(
+    () =>
+      createGetPreviewPropsFromY(schema as any, props.map, yjsInfo.awareness),
+    [props.map, schema, yjsInfo.awareness]
+  )(state);
+
+  const slug = getSlugFromState(collectionConfig, state);
+
+  const formatInfo = getCollectionFormat(props.config, props.collection);
+
+  const basePath = getCollectionItemPath(props.config, props.collection, slug);
+  const [createResult, _createItem, resetCreateItemState] = useUpsertItem({
+    state,
+    basePath,
+    initialFiles: undefined,
+    config: props.config,
+    schema: collectionConfig.schema,
+    format: formatInfo,
+    currentLocalTreeKey: undefined,
+    slug: { field: collectionConfig.slugField, value: slug },
+  });
+  const createItem = useEventCallback(_createItem);
+
+  return (
+    <CreateItemInner
+      basePath={props.basePath}
+      collection={props.collection}
+      createResult={createResult}
+      createItem={createItem}
+      resetCreateItemState={resetCreateItemState}
+      state={state}
+      slug={slug}
+      previewProps={previewProps}
+      onReset={async () => {
+        props.map.doc!.transact(() => {
+          for (const [key, value] of Object.entries(collectionConfig.schema)) {
+            const val = getYjsValFromParsedValue(
+              value,
+              props.initialState?.[key] ?? getInitialPropsValue(value)
+            );
+            props.map.set(key, val);
+          }
+        });
+        await props.map.doc?.whenSynced;
+        // TODO: fix the need for this
+        window.location.reload();
+      }}
+    />
+  );
+}
+
+function CreateItemInner(props: {
+  basePath: string;
+  collection: string;
+  createResult: ReturnType<typeof useUpsertItem>[0];
+  createItem: ReturnType<typeof useUpsertItem>[1];
+  resetCreateItemState: ReturnType<typeof useUpsertItem>[2];
+  state: Record<string, unknown>;
+  slug: string;
+  previewProps: ReturnType<typeof createGetPreviewPropsFromY>;
+  onReset: () => void;
+}) {
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  const router = useRouter();
+  const config = useConfig();
+  const collectionConfig = config.collections![props.collection];
+
+  const schema = useMemo(
+    () => fields.object(collectionConfig.schema),
+    [collectionConfig]
+  );
+
+  const [forceValidation, setForceValidation] = useState(false);
+  const formatInfo = getCollectionFormat(config, props.collection);
+
+  const baseCommit = useBaseCommit();
 
   let collectionPath = `${props.basePath}/collection/${encodeURIComponent(
     props.collection
   )}`;
 
+  const { createResult } = props;
+
   const currentSlug =
     createResult.kind === 'updated' || createResult.kind === 'loading'
-      ? slug
+      ? props.slug
       : undefined;
   const slugInfo = useSlugFieldInfo(props.collection, currentSlug);
 
   const onCreate = async () => {
     if (createResult.kind === 'loading') return;
-    if (!clientSideValidateProp(schema, state, slugInfo)) {
+    if (!clientSideValidateProp(schema, props.state, slugInfo)) {
       setForceValidation(true);
       return;
     }
-    if (await createItem()) {
-      const slug = getSlugFromState(collectionConfig, state);
+    if (await props.createItem()) {
+      const slug = getSlugFromState(collectionConfig, props.state);
       router.push(`${collectionPath}/item/${encodeURIComponent(slug)}`);
       toastQueue.positive('Entry created', { timeout: 5000 }); // TODO: l10n
     }
@@ -363,6 +534,7 @@ function CreateItem(props: {
             <Item key="collection">{collectionConfig.label}</Item>
             <Item key="current">{stringFormatter.format('add')}</Item>
           </Breadcrumbs>
+          <PresenceAvatars />
           {isLoading && (
             <ProgressCircle
               aria-label="Creating entry"
@@ -375,7 +547,7 @@ function CreateItem(props: {
               prominence="low"
               aria-label="Reset"
               onPress={() => {
-                setState(initialState);
+                props.onReset();
                 setForceValidation(false);
               }}
             >
@@ -411,7 +583,7 @@ function CreateItem(props: {
             <Notice tone="critical">{createResult.error.message}</Notice>
           )}
           <FormForEntry
-            previewProps={previewProps}
+            previewProps={props.previewProps}
             forceValidation={forceValidation}
             entryLayout={collectionConfig.entryLayout}
             formatInfo={formatInfo}
@@ -425,7 +597,7 @@ function CreateItem(props: {
         // wouldn't work since this doesn't open on click but after doing a
         // network request and it failing and manually wiring about a popover
         // and modal would be a pain
-        onDismiss={resetCreateItemState}
+        onDismiss={props.resetCreateItemState}
       >
         {createResult.kind === 'needs-new-branch' && (
           <CreateBranchDuringUpdateDialog
@@ -436,8 +608,10 @@ function CreateItem(props: {
                   newBranch
                 )}/collection/${encodeURIComponent(props.collection)}/create`
               );
-              if (await createItem({ branch: newBranch, sha: baseCommit })) {
-                const slug = getSlugFromState(collectionConfig, state);
+              if (
+                await props.createItem({ branch: newBranch, sha: baseCommit })
+              ) {
+                const slug = getSlugFromState(collectionConfig, props.state);
 
                 router.push(
                   `/keystatic/branch/${encodeURIComponent(
@@ -449,7 +623,7 @@ function CreateItem(props: {
               }
             }}
             reason={createResult.reason}
-            onDismiss={resetCreateItemState}
+            onDismiss={props.resetCreateItemState}
           />
         )}
       </DialogContainer>
@@ -458,20 +632,20 @@ function CreateItem(props: {
         // wouldn't work since this doesn't open on click but after doing a
         // network request and it failing and manually wiring about a popover
         // and modal would be a pain
-        onDismiss={resetCreateItemState}
+        onDismiss={props.resetCreateItemState}
       >
-        {createResult.kind === 'needs-fork' && isGitHubConfig(props.config) && (
+        {createResult.kind === 'needs-fork' && isGitHubConfig(config) && (
           <ForkRepoDialog
             onCreate={async () => {
-              if (await createItem()) {
-                const slug = getSlugFromState(collectionConfig, state);
+              if (await props.createItem()) {
+                const slug = getSlugFromState(collectionConfig, props.state);
                 router.push(
                   `${collectionPath}/item/${encodeURIComponent(slug)}`
                 );
               }
             }}
-            onDismiss={resetCreateItemState}
-            config={props.config}
+            onDismiss={props.resetCreateItemState}
+            config={config}
           />
         )}
       </DialogContainer>

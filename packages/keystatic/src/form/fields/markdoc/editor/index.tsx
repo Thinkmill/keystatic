@@ -1,6 +1,6 @@
 import { EditorView } from 'prosemirror-view';
 import { EditorState } from 'prosemirror-state';
-import { Ref, forwardRef, useId, useMemo } from 'react';
+import { Ref, forwardRef, useId, useMemo, useState } from 'react';
 import { Box } from '@keystar/ui/layout';
 import { useProseStyleProps } from '@keystar/ui/typography';
 import {
@@ -25,6 +25,7 @@ import {
 } from './context';
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 import { useContentPanelSize } from '../../../../app/shell/context';
+import { yCursorPluginKey } from 'y-prosemirror';
 
 const contentStyles = css({
   flex: 1,
@@ -59,8 +60,8 @@ const contentStyles = css({
 
 export const Editor = forwardRef(function Editor(
   {
-    value,
-    onChange,
+    value: _value,
+    onChange: _onChange,
     ...props
   }: {
     value: EditorState;
@@ -68,6 +69,8 @@ export const Editor = forwardRef(function Editor(
   },
   ref: Ref<{ view: EditorView | null }>
 ) {
+  const [valueWhileInCollab, setValueWhileInCollab] =
+    useState<EditorState>(_value);
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
   const containerSize = useContentPanelSize();
   const styleProps = useProseStyleProps({
@@ -75,6 +78,14 @@ export const Editor = forwardRef(function Editor(
     UNSAFE_className: contentStyles,
     ...toDataAttributes({ layout: entryLayoutPane, container: containerSize }),
   });
+  let value, onChange;
+  if (yCursorPluginKey.getState(_value)) {
+    value = valueWhileInCollab ?? _value;
+    onChange = setValueWhileInCollab;
+  } else {
+    value = _value;
+    onChange = _onChange;
+  }
 
   const id = useId();
   const editorContext = useMemo(() => ({ id }), [id]);

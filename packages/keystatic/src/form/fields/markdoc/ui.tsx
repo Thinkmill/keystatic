@@ -14,8 +14,11 @@ import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm';
 import { mdxFromMarkdown, mdxToMarkdown } from 'mdast-util-mdx';
 import { gfm } from 'micromark-extension-gfm';
 import { mdxjs } from 'micromark-extension-mdxjs';
+import * as Y from 'yjs';
 import { mdxToProseMirror } from './editor/mdx/parse';
 import { proseMirrorToMDXRoot } from './editor/mdx/serialize';
+import { yXmlFragmentToProsemirror } from 'y-prosemirror';
+import { Awareness } from 'y-protocols/awareness';
 
 export { createEditorSchema } from './editor/schema';
 
@@ -132,5 +135,19 @@ export function DocumentFieldInput(
         <Editor {...inputProps} value={props.value} onChange={props.onChange} />
       )}
     </Field>
+  );
+}
+
+export function createEditorStateFromYJS(
+  schema: EditorSchema,
+  yXmlFragment: Y.XmlFragment,
+  awareness: Awareness
+) {
+  return createEditorState(
+    yXmlFragmentToProsemirror(schema.schema, yXmlFragment),
+    undefined,
+    undefined,
+    yXmlFragment,
+    awareness
   );
 }
