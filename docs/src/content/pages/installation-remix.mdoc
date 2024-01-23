@@ -83,17 +83,37 @@ export const loader: LoaderFunction = args => handleLoader({ config }, args);
 export const action: ActionFunction = args => handleLoader({ config }, args);
 ```
 
-## Configuring remix.config.js
+## Configuring server dependencies
 
-Because Keystatic only provides an ESM build, `serverDependenciesToBundle` needs to be configured in `remix.config.js`.
+Because Keystatic only provides an ESM build, server dependencies need to be configured.
 
-```js
+### Traditional Remix
+
+If you're using the traditional (non-Vite) version of Remix, you can configure server dependencies in your `remix.config.js` file:
+
+```diff
 /** @type {import('@remix-run/dev').AppConfig} */
 export default {
   ignoredRouteFiles: ['**/.*'],
-  serverDependenciesToBundle: [/^@keystatic\//, 'minimatch'],
++ serverDependenciesToBundle: [/^@keystatic\//, 'minimatch'],
 };
 ```
+
+### Remix + Vite
+
+If you're using [Remix + Vite](https://remix.run/docs/en/main/future/vite#migrating), you need to configure the `ssr.noExternal` option in the Vite config instead:
+
+```diff
+// vite.config.js
+export default defineConfig({
+  plugins: [remix()],
++ ssr: {
++   noExternal: [/^@keystatic\//, 'minimatch'],
++ },
+})
+```
+
+---
 
 ## Running Keystatic
 
@@ -104,6 +124,12 @@ npm run dev
 ```
 
 Visit the `/keystatic` using `localhost` or `127.0.0.1` in your browser to see the Keystatic Admin UI running.
+
+{% aside icon="👀" %}
+If the Keystatic Admin UI is completely unstyled, it may be due to a conflict with a browser extension. 
+
+[Grammarly](https://www.grammarly.com/browser/chrome), for example, can cause this problem. Try disabling browser extensions to see if that resolves the issue.
+{% /aside %}
 
 ---
 
