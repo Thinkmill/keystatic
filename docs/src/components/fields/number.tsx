@@ -16,8 +16,7 @@ export const NumberFieldDemo = () => {
         forceValidation={false}
         description="The cost of the item, in steps of 0.02"
         step={0.02}
-        hideStepper={false}
-        validation={{ min: 0, max: 150.5, validateStep: true }}
+        validation={{ min: 0, max: 150.5, step: true }}
         value={value}
       />
     </FieldDemoFrame>
