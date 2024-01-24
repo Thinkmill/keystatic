@@ -1,4 +1,5 @@
 date: bad
 integer: something
+number: notanumber
 text: 1
 anotherText: valid

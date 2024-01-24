@@ -82,6 +82,7 @@ const components = {
           { label: 'File', value: 'file' },
           { label: 'Image', value: 'image' },
           { label: 'Integer', value: 'integer' },
+          { label: 'Number', value: 'number' },
           { label: 'Multiselect', value: 'multiselect' },
           { label: 'Select', value: 'select' },
           { label: 'Slug', value: 'slug' },

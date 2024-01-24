@@ -335,7 +335,14 @@ export default config({
           name: { label: 'Title', description },
           slug: { description },
         }),
-        integer: fields.integer({ label: 'Number', description }),
+        integer: fields.integer({ label: 'Integer', description }),
+        number: fields.number({ label: 'Number', description }),
+        numberWithSteps: fields.number({
+          label: 'Number with steps',
+          description,
+          step: 0.02,
+          validation: { step: true },
+        }),
         checkbox: fields.checkbox({ label: 'Checkbox', description }),
         select: fields.select({
           label: 'Select',
