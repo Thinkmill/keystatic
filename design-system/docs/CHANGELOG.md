@@ -1,5 +1,12 @@
 # @voussoir/docs
 
+## 0.0.25
+
+### Patch Changes
+
+- Updated dependencies [dad16ba6]
+  - @keystar/ui@0.7.0
+
 ## 0.0.24
 
 ### Patch Changes

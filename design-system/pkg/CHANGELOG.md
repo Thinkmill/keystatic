@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.7.0
+
+### Minor Changes
+
+- dad16ba6: Reduce size of icons
+
 ## 0.6.0
 
 ### Minor Changes

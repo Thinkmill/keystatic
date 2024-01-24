@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.3.7
+
+### Patch Changes
+
+- 0ea27bed: Add number field
+- 178fd9f6: Add `columns` option to collections
+- Updated dependencies [dad16ba6]
+  - @keystar/ui@0.7.0
+
 ## 0.3.6
 
 ### Patch Changes
