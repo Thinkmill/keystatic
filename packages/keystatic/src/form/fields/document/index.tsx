@@ -117,6 +117,7 @@ const emptyTitleField: BasicFormField<string> =
     serialize(value) {
       return { value };
     },
+    label: 'Title',
   });
 
 export function normaliseDocumentFeatures(

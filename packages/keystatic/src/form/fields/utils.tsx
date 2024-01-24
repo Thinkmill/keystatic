@@ -32,6 +32,7 @@ export function basicFormFieldWithSimpleReaderParse<
    */
   serialize(value: ParsedValue): { value: FormFieldStoredValue };
   validate(value: ParsedValue): ValidatedValue;
+  label: string;
 }): BasicFormField<ParsedValue, ValidatedValue, ValidatedValue> {
   return {
     kind: 'form',
@@ -45,5 +46,6 @@ export function basicFormFieldWithSimpleReaderParse<
         return config.validate(config.parse(value));
       },
     },
+    label: config.label,
   };
 }

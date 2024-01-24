@@ -13,6 +13,7 @@ export function checkbox({
   description?: string;
 }): BasicFormField<boolean> {
   return basicFormFieldWithSimpleReaderParse({
+    label,
     Input(props) {
       return (
         <CheckboxFieldInput

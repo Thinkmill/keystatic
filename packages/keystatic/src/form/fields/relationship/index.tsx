@@ -22,6 +22,7 @@ export function relationship<IsRequired extends boolean | undefined>({
   string | (IsRequired extends true ? never : null)
 > {
   return basicFormFieldWithSimpleReaderParse({
+    label,
     Input(props) {
       return (
         <RelationshipInput
