@@ -1,7 +1,5 @@
 ---
-'@example/next-app': minor
-'@keystatic/core': minor
-'keystatic-docs': minor
+'@keystatic/core': patch
 ---
 
-feat(@keystatic/core): Add number field
+Add number field
