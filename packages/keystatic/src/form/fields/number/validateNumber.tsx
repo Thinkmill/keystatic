@@ -1,15 +1,19 @@
 import Decimal from 'decimal.js';
 
 export function validateNumber(
-  validation: { min?: number; max?: number; isRequired?: boolean, validateStep?: boolean } | undefined,
+  validation:
+    | {
+        min?: number;
+        max?: number;
+        isRequired?: boolean;
+        validateStep?: boolean;
+      }
+    | undefined,
   value: unknown,
   step: number | undefined,
   label: string
 ) {
-  if (
-    value !== null &&
-    (typeof value !== 'number')
-  ) {
+  if (value !== null && typeof value !== 'number') {
     return `${label} must be a number`;
   }
 
@@ -24,7 +28,11 @@ export function validateNumber(
     if (validation?.max !== undefined && value > validation.max) {
       return `${label} must be at most ${validation.max}`;
     }
-    if (step !== undefined && validation?.validateStep !== undefined && new Decimal(value).mod(new Decimal(step)).toNumber() !== 0) {
+    if (
+      step !== undefined &&
+      validation?.validateStep !== undefined &&
+      new Decimal(value).mod(new Decimal(step)).toNumber() !== 0
+    ) {
       return `${label} must be a multiple of ${step}`;
     }
   }

@@ -8,9 +8,8 @@ export function NumberFieldInput(
     label: string;
     description: string | undefined;
     step: number | undefined;
-    hideStepper: boolean | undefined;
     validation:
-      | { isRequired?: boolean; min?: number; max?: number, validateStep?: boolean }
+      | { isRequired?: boolean; min?: number; max?: number; step?: boolean }
       | undefined;
   }
 ) {
@@ -23,12 +22,16 @@ export function NumberFieldInput(
       isRequired={props.validation?.isRequired}
       errorMessage={
         props.forceValidation || blurred
-          ? validateNumber(props.validation, props.value, props.step, props.label)
+          ? validateNumber(
+              props.validation,
+              props.value,
+              props.step,
+              props.label
+            )
           : undefined
       }
       onBlur={onBlur}
       autoFocus={props.autoFocus}
-      hideStepper={props.hideStepper}
       step={props.step}
       value={props.value === null ? undefined : props.value}
       onChange={val => {

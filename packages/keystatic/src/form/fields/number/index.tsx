@@ -12,14 +12,18 @@ export function number<IsRequired extends boolean | undefined>({
   label,
   defaultValue,
   step,
-  hideStepper,
   validation,
   description,
 }: {
   label: string;
   defaultValue?: number;
   step?: number;
-  validation?: { isRequired?: IsRequired; min?: number; max?: number, step?: boolean };
+  validation?: {
+    isRequired?: IsRequired;
+    min?: number;
+    max?: number;
+    step?: boolean;
+  };
   description?: string;
 } & RequiredValidation<IsRequired>): BasicFormField<
   number | null,
@@ -33,7 +37,6 @@ export function number<IsRequired extends boolean | undefined>({
           description={description}
           validation={validation}
           step={step}
-          hideStepper={hideStepper}
           {...props}
         />
       );

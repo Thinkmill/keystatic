@@ -17,8 +17,8 @@ const description = 'Some description';
 
 export default config({
   storage: {
-    kind: 'local',
-    //repo: 'Thinkmill/keystatic-test-repo',
+    kind: 'github',
+    repo: 'Thinkmill/keystatic-test-repo',
   },
   ui: {
     brand: {
@@ -337,7 +337,12 @@ export default config({
         }),
         integer: fields.integer({ label: 'Integer', description }),
         number: fields.number({ label: 'Number', description }),
-        numberWithSteps: fields.number({ label: 'Number with steps', description, step: 0.02, validation: { validateStep: true } }),
+        numberWithSteps: fields.number({
+          label: 'Number with steps',
+          description,
+          step: 0.02,
+          validation: { step: true },
+        }),
         checkbox: fields.checkbox({ label: 'Checkbox', description }),
         select: fields.select({
           label: 'Select',
