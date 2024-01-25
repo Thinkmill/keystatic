@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.3.8
+
+### Patch Changes
+
+- e0e571f5: Add `parseSlugForSort` option to collections
+
 ## 0.3.7
 
 ### Patch Changes
