@@ -419,7 +419,7 @@ function CollectionTable(
         other: Record<string, unknown> | undefined
       ) => {
         if (sortDescriptor.column === SLUG) {
-          return row.name;
+          return collection.parseSlugForSort?.(row.name) ?? row.name;
         }
         if (sortDescriptor.column === STATUS) {
           return row.status;
@@ -434,6 +434,7 @@ function CollectionTable(
       );
     });
   }, [
+    collection,
     filteredItems,
     mainFiles,
     sortDescriptor.column,
