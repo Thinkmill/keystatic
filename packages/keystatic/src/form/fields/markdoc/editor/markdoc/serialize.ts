@@ -40,6 +40,10 @@ function textblockChildren(
 ): MarkdocNode[] {
   const children: MarkdocNode[] = [];
   fragment.forEach(child => {
+    if (child.type === child.type.schema.nodes.hard_break) {
+      children.push(new Ast.Node('hardbreak'));
+      return;
+    }
     if (child.type === child.type.schema.nodes.image) {
       const src = toUint8Array(
         child.attrs.src.replace(/^data:[a-z/-]+;base64,/, '')

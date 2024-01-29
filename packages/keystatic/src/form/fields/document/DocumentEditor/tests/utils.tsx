@@ -1,6 +1,6 @@
 import { act, render } from '@testing-library/react';
 import { diff } from 'jest-diff';
-import prettyFormat, { plugins, Plugin } from 'pretty-format';
+import { plugins, Plugin, format } from 'pretty-format';
 import { ReactElement, createElement, MutableRefObject, useState } from 'react';
 import { Editor, Node, Path, Text, Range } from 'slate';
 import { Slate } from 'slate-react';
@@ -51,7 +51,7 @@ console.error = (...stuff: any[]) => {
 };
 
 function formatEditor(editor: Node) {
-  return prettyFormat(editor, {
+  return format(editor, {
     plugins: [plugins.ReactElement, editorSerializer as Plugin],
   });
 }
