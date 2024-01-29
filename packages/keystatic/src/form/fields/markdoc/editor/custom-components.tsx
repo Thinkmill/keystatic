@@ -69,20 +69,31 @@ function BlockWrapper(props: {
         border={
           props.hasNodeSelection
             ? 'color.alias.borderSelected'
-            : 'color.alias.borderIdle'
+            : 'color.alias.borderDisabled'
         }
         borderRadius="regular"
       >
         <Flex
-          borderBottom={
+          backgroundColor={
             props.hasNodeSelection
-              ? 'color.alias.borderSelected'
-              : 'color.alias.borderIdle'
+              ? 'color.alias.backgroundSelected'
+              : 'color.alias.backgroundIdle'
           }
           contentEditable={false}
+          alignItems="center"
         >
           <Box
             flex={1}
+            paddingX="regular"
+            paddingY="small"
+            UNSAFE_className={css({
+              color: props.hasNodeSelection
+                ? tokenSchema.color.foreground.accent
+                : tokenSchema.color.foreground.neutralTertiary,
+              textTransform: 'uppercase',
+              fontWeight: tokenSchema.typography.fontWeight.semibold,
+              fontSize: '0.9rem',
+            })}
             // this onClick is on a div because it's purely for mouse usage
             // the node can be selected with a keyboard via arrow keys
             onClick={() => {
@@ -107,12 +118,15 @@ function BlockWrapper(props: {
               onPress={() => {
                 setIsOpen(true);
               }}
+              UNSAFE_className={css({
+                borderBottomRightRadius: 0,
+              })}
             >
               Edit
             </Button>
           )}
         </Flex>
-        {props.children}
+        <Box padding="regular">{props.children}</Box>
       </Box>
       <DialogContainer
         onDismiss={() => {
