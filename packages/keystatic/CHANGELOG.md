@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.3.10
+
+### Patch Changes
+
+- 8b2822c9: Add more specific error when fetching a blob fails
+
 ## 0.3.9
 
 ### Patch Changes
