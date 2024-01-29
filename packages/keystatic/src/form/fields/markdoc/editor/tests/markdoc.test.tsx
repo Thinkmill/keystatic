@@ -369,3 +369,53 @@ test('mark', () => {
     "
   `);
 });
+
+test('hard break with two spaces', () => {
+  const markdoc = `something  
+something else`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text>
+          <cursor />
+          something
+        </text>
+        <hard_break />
+        <text>
+          something else
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "something\\
+    something else
+    "
+  `);
+});
+
+test('hard break with escape', () => {
+  const markdoc = `something\\
+something else`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text>
+          <cursor />
+          something
+        </text>
+        <hard_break />
+        <text>
+          something else
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "something\\
+    something else
+    "
+  `);
+});
