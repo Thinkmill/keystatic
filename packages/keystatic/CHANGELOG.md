@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.3.9
+
+### Patch Changes
+
+- b9e14f39: Fix hard breaks not being serialised in the editors
+
 ## 0.3.8
 
 ### Patch Changes
