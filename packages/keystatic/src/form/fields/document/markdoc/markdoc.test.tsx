@@ -48,7 +48,8 @@ function toMarkdoc(node: Node) {
 
 function fromMarkdoc(markdoc: string) {
   return makeEditor(
-    <editor>{_fromMarkdoc(Markdoc.parse(markdoc), componentBlocks)}</editor>
+    <editor>{_fromMarkdoc(Markdoc.parse(markdoc), componentBlocks)}</editor>,
+    { normalization: 'normalize' }
   );
 }
 
@@ -555,6 +556,48 @@ test('code and spaces', () => {
   `);
   expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
     "\`a\` \`b\`
+    "
+  `);
+});
+
+test('hard break with two spaces', () => {
+  const markdoc = `something  
+something else`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text>
+          something
+    something else
+        </text>
+      </paragraph>
+    </editor>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "something\\
+    something else
+    "
+  `);
+});
+
+test('hard break with escape', () => {
+  const markdoc = `something\\
+something else`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text>
+          something
+    something else
+        </text>
+      </paragraph>
+    </editor>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "something\\
+    something else
     "
   `);
 });

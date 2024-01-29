@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/core",
-  "version": "0.3.6",
+  "version": "0.3.10",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -117,7 +117,7 @@
     "@emotion/weak-memoize": "^0.3.0",
     "@floating-ui/react": "^0.24.0",
     "@internationalized/string": "^3.1.1",
-    "@keystar/ui": "^0.6.0",
+    "@keystar/ui": "^0.7.0",
     "@markdoc/markdoc": "^0.3.0",
     "@react-aria/focus": "^3.14.3",
     "@react-aria/i18n": "^3.8.0",
@@ -142,6 +142,7 @@
     "@urql/exchange-graphcache": "^6.3.3",
     "@urql/exchange-persisted": "^4.1.0",
     "cookie": "^0.5.0",
+    "decimal.js": "^10.4.3",
     "emery": "^1.4.1",
     "escape-string-regexp": "^4.0.0",
     "fast-deep-equal": "^3.1.3",

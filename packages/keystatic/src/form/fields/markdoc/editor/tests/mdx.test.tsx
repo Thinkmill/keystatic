@@ -481,3 +481,53 @@ test('mark', () => {
     "
   `);
 });
+
+test('hard break with two spaces', () => {
+  const mdx = `something  
+something else`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text>
+          <cursor />
+          something
+        </text>
+        <hard_break />
+        <text>
+          something else
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "something\\
+    something else
+    "
+  `);
+});
+
+test('hard break with escape', () => {
+  const mdx = `something\\
+something else`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text>
+          <cursor />
+          something
+        </text>
+        <hard_break />
+        <text>
+          something else
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "something\\
+    something else
+    "
+  `);
+});

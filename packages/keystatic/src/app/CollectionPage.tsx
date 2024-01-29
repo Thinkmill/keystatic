@@ -1,6 +1,13 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { isHotkey } from 'is-hotkey';
-import React, { Key, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  Key,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { ActionButton, Button } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
@@ -8,10 +15,12 @@ import { alertCircleIcon } from '@keystar/ui/icon/icons/alertCircleIcon';
 import { listXIcon } from '@keystar/ui/icon/icons/listXIcon';
 import { searchIcon } from '@keystar/ui/icon/icons/searchIcon';
 import { searchXIcon } from '@keystar/ui/icon/icons/searchXIcon';
+import { diffIcon } from '@keystar/ui/icon/icons/diffIcon';
+import { plusSquareIcon } from '@keystar/ui/icon/icons/plusSquareIcon';
+import { dotSquareIcon } from '@keystar/ui/icon/icons/dotSquareIcon';
 import { TextLink } from '@keystar/ui/link';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { SearchField } from '@keystar/ui/search-field';
-import { StatusLight } from '@keystar/ui/status-light';
 import {
   breakpointQueries,
   css,
@@ -30,18 +39,32 @@ import {
 import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../config';
-import { sortByDescriptor } from './collection-sort';
+import { sortBy } from './collection-sort';
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
 import { EmptyState } from './shell/empty-state';
-import { useTree, TreeData, useBranchInfo } from './shell/data';
+import {
+  useTree,
+  TreeData,
+  useBranchInfo,
+  useBaseCommit,
+  useIsRepoPrivate,
+} from './shell/data';
 import { PageRoot, PageHeader } from './shell/page';
 import {
+  getCollectionFormat,
+  getCollectionItemPath,
   getCollectionPath,
   getEntriesInCollectionWithTreeKey,
+  getEntryDataFilepath,
+  getSlugGlobForCollection,
   isLocalConfig,
 } from './utils';
 import { notFound } from './not-found';
+import { fetchBlob } from './useItemData';
+import { loadDataFile } from './required-files';
+import { parseProps } from '../form/parse-props';
+import { useData } from './useData';
 
 type CollectionPageProps = {
   collection: string;
@@ -238,6 +261,9 @@ function CollectionPageContent(props: CollectionPageContentProps) {
   return <CollectionTable {...props} trees={trees.merged.data} />;
 }
 
+const SLUG = '@@slug';
+const STATUS = '@@status';
+
 function CollectionTable(
   props: CollectionPageContentProps & {
     trees: {
@@ -252,10 +278,16 @@ function CollectionTable(
   let isLocalMode = isLocalConfig(props.config);
   let router = useRouter();
   let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: 'name',
+    column: SLUG,
     direction: 'ascending',
   });
   let hideStatusColumn = isLocalMode || currentBranch === defaultBranch;
+
+  const branchInfo = useBranchInfo();
+  const isRepoPrivate = useIsRepoPrivate();
+  const baseCommit = useBaseCommit();
+
+  const collection = props.config.collections![props.collection]!;
 
   const entriesWithStatus = useMemo(() => {
     const defaultEntries = new Map(
@@ -277,33 +309,166 @@ function CollectionTable(
             ? 'Unchanged'
             : 'Changed'
           : 'Added',
-      } as const;
+        sha: entry.sha,
+      };
     });
   }, [props.collection, props.config, props.trees]);
 
+  const mainFiles = useData(
+    useCallback(async () => {
+      if (!collection.columns?.length) return undefined;
+      const formatInfo = getCollectionFormat(props.config, props.collection);
+      const entries = await Promise.all(
+        entriesWithStatus.map(async entry => {
+          return [
+            entry.name,
+            await fetchBlob(
+              props.config,
+              entry.sha,
+              getEntryDataFilepath(
+                getCollectionItemPath(
+                  props.config,
+                  props.collection,
+                  entry.name
+                ),
+                formatInfo
+              ),
+              baseCommit,
+              isRepoPrivate,
+              { owner: branchInfo.mainOwner, name: branchInfo.mainRepo }
+            ),
+          ] as const;
+        })
+      );
+      const glob = getSlugGlobForCollection(props.config, props.collection);
+      const rootSchema = { kind: 'object' as const, fields: collection.schema };
+      return new Map(
+        entries.map(([slug, dataFile]) => {
+          const { loaded } = loadDataFile(dataFile, formatInfo);
+          const validated = parseProps(
+            rootSchema,
+            loaded,
+            [],
+            [],
+            (schema, value, path) => {
+              if (schema.formKind === 'asset') {
+                return schema.reader.parse(value);
+              }
+              if (schema.formKind === 'content') {
+                return;
+              }
+              if (path.length === 1 && slug !== undefined) {
+                if (path[0] === collection.slugField) {
+                  if (schema.formKind !== 'slug') {
+                    throw new Error(
+                      `Slug field ${collection.slugField} is not a slug field`
+                    );
+                  }
+                  return schema.reader.parseWithSlug(value, {
+                    slug,
+                    glob,
+                  });
+                }
+              }
+              return schema.reader.parse(value);
+            },
+            true
+          );
+          return [slug, validated as Record<string, unknown>] as const;
+        })
+      );
+    }, [
+      baseCommit,
+      branchInfo.mainOwner,
+      branchInfo.mainRepo,
+      collection,
+      entriesWithStatus,
+      isRepoPrivate,
+      props.collection,
+      props.config,
+    ])
+  );
+
+  const entriesWithData = useMemo((): {
+    name: string;
+    status: string;
+    sha: string;
+    data?: Record<string, unknown>;
+  }[] => {
+    if (mainFiles.kind !== 'loaded' || !mainFiles.data) {
+      return entriesWithStatus;
+    }
+    const { data } = mainFiles;
+    return entriesWithStatus.map(entry => {
+      return {
+        ...entry,
+        data: data.get(entry.name),
+      };
+    });
+  }, [entriesWithStatus, mainFiles]);
+
   const filteredItems = useMemo(() => {
-    return entriesWithStatus.filter(item =>
+    return entriesWithData.filter(item =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [entriesWithStatus, searchTerm]);
+  }, [entriesWithData, searchTerm]);
   const sortedItems = useMemo(() => {
-    return [...filteredItems].sort(sortByDescriptor(sortDescriptor));
-  }, [filteredItems, sortDescriptor]);
+    return [...filteredItems].sort((a, b) => {
+      const readCol = (
+        row: typeof a,
+        other: Record<string, unknown> | undefined
+      ) => {
+        if (sortDescriptor.column === SLUG) {
+          return collection.parseSlugForSort?.(row.name) ?? row.name;
+        }
+        if (sortDescriptor.column === STATUS) {
+          return row.status;
+        }
+        return other?.[sortDescriptor.column!] ?? row.name;
+      };
+      const other = mainFiles.kind === 'loaded' ? mainFiles.data : undefined;
+      return sortBy(
+        sortDescriptor.direction!,
+        readCol(a, other?.get(a.name)),
+        readCol(b, other?.get(b.name))
+      );
+    });
+  }, [
+    collection,
+    filteredItems,
+    mainFiles,
+    sortDescriptor.column,
+    sortDescriptor.direction,
+  ]);
 
   const columns = useMemo(() => {
+    if (collection.columns?.length) {
+      return [
+        ...(hideStatusColumn
+          ? []
+          : [{ name: 'Status', key: STATUS, minWidth: 32, width: 32 }]),
+        {
+          name: 'Slug',
+          key: SLUG,
+        },
+        ...collection.columns.map(column => {
+          const schema = collection.schema[column];
+          return {
+            name: ('label' in schema && schema.label) || column,
+            key: column,
+          };
+        }),
+      ];
+    }
     return hideStatusColumn
-      ? [{ name: 'Name', key: 'name' }]
+      ? [{ name: 'Name', key: SLUG }]
       : [
-          { name: 'Name', key: 'name' },
-          {
-            name: 'Status',
-            key: 'status',
-            minWidth: 140,
-            width: '20%',
-          },
+          { name: 'Status', key: STATUS, minWidth: 32, width: 32 },
+          { name: 'Name', key: SLUG },
         ];
-  }, [hideStatusColumn]);
+  }, [collection, hideStatusColumn]);
 
+  console.log(columns);
   return (
     <TableView
       aria-labelledby="page-title"
@@ -341,33 +506,68 @@ function CollectionTable(
       })}
     >
       <TableHeader columns={columns}>
-        {({ name, key, ...options }) => (
-          <Column key={key} isRowHeader allowsSorting {...options}>
-            {name}
-          </Column>
-        )}
-      </TableHeader>
-      <TableBody items={sortedItems}>
-        {item =>
-          hideStatusColumn ? (
-            <Row key={item.name}>
-              <Cell textValue={item.name}>
-                <Text weight="medium">{item.name}</Text>
-              </Cell>
-            </Row>
+        {({ name, key, ...options }) =>
+          key === STATUS ? (
+            <Column key={key} isRowHeader allowsSorting {...options}>
+              <Icon aria-label="Status" src={diffIcon} />
+            </Column>
           ) : (
-            <Row key={item.name}>
-              <Cell textValue={item.name}>
-                <Text weight="medium">{item.name}</Text>
-              </Cell>
-              <Cell textValue={item.status}>
-                <StatusLight tone={statusTones[item.status]}>
-                  {item.status}
-                </StatusLight>
-              </Cell>
-            </Row>
+            <Column key={key} isRowHeader allowsSorting {...options}>
+              {name}
+            </Column>
           )
         }
+      </TableHeader>
+      <TableBody items={sortedItems}>
+        {item => {
+          const statusCell = (
+            <Cell key={STATUS + item.name} textValue={item.status}>
+              {item.status === 'Added' ? (
+                <Icon color="positive" src={plusSquareIcon} />
+              ) : item.status === 'Changed' ? (
+                <Icon color="accent" src={dotSquareIcon} />
+              ) : null}
+            </Cell>
+          );
+          const nameCell = (
+            <Cell key={SLUG + item.name} textValue={item.name as string}>
+              <Text weight="medium">{item.name as string}</Text>
+            </Cell>
+          );
+          if (collection.columns?.length) {
+            return (
+              <Row key={item.name}>
+                {[
+                  ...(hideStatusColumn ? [] : [statusCell]),
+                  nameCell,
+                  ...collection.columns.map(column => {
+                    let val;
+                    val = item.data?.[column];
+
+                    if (val == null) {
+                      val = undefined;
+                    } else {
+                      val = val + '';
+                    }
+                    return (
+                      <Cell key={column + item.name} textValue={val}>
+                        <Text weight="medium">{val}</Text>
+                      </Cell>
+                    );
+                  }),
+                ]}
+              </Row>
+            );
+          }
+          return hideStatusColumn ? (
+            <Row key={item.name}>{nameCell}</Row>
+          ) : (
+            <Row key={item.name}>
+              {statusCell}
+              {nameCell}
+            </Row>
+          );
+        }}
       </TableBody>
     </TableView>
   );
@@ -391,9 +591,3 @@ export function useDebouncedValue<T>(value: T, delay = 300): T {
 
   return debouncedValue;
 }
-
-const statusTones = {
-  Added: 'positive',
-  Changed: 'accent',
-  Unchanged: 'neutral',
-} as const;

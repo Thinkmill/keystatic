@@ -141,6 +141,7 @@ test('array', () => {
               "defaultValue": [Function],
               "formKind": "slug",
               "kind": "form",
+              "label": "Heading",
               "parse": [Function],
               "reader": {
                 "parse": [Function],
@@ -154,6 +155,7 @@ test('array', () => {
               "Input": [Function],
               "defaultValue": [Function],
               "kind": "form",
+              "label": "Link",
               "parse": [Function],
               "reader": {
                 "parse": [Function],

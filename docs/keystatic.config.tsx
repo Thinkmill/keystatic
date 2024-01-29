@@ -82,6 +82,7 @@ const components = {
           { label: 'File', value: 'file' },
           { label: 'Image', value: 'image' },
           { label: 'Integer', value: 'integer' },
+          { label: 'Number', value: 'number' },
           { label: 'Multiselect', value: 'multiselect' },
           { label: 'Select', value: 'select' },
           { label: 'Slug', value: 'slug' },
@@ -266,6 +267,7 @@ export default config({
       format: { contentField: 'content' },
       path: 'src/content/pages/**',
       previewUrl: makePreviewUrl('/docs/{slug}'),
+      columns: ['title'],
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         summary: fields.text({
@@ -292,6 +294,7 @@ export default config({
         contentField: 'content',
       },
       previewUrl: makePreviewUrl('/blog/{slug}'),
+      columns: ['title', 'publishedOn'],
       schema: {
         title: fields.slug({
           name: {
@@ -345,6 +348,7 @@ export default config({
       label: 'Authors',
       slugField: 'name',
       path: 'src/content/authors/**',
+      columns: ['name', 'link'],
       schema: {
         name: fields.slug({
           name: {
@@ -374,6 +378,7 @@ export default config({
       path: 'src/content/projects/*',
       format: { contentField: 'content' },
       entryLayout: 'content',
+      columns: ['title', 'type', 'url', 'repoUrl', 'sortIndex'],
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         type: fields.select({

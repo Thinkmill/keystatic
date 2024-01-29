@@ -62,6 +62,7 @@ const localConfig = config({
         slug: fields.text({ label: 'Slug' }),
         date: fields.date({ label: 'Date' }),
         integer: fields.integer({ label: 'Integer' }),
+        number: fields.number({ label: 'Number' }),
         text: fields.text({ label: 'Text' }),
         anotherText: fields.text({ label: 'Another Text' }),
       },
@@ -297,6 +298,7 @@ test('errors', async () => {
     [Error: Invalid data for "invalid" in collection "other":
     date: Date is not a valid date
     integer: Must be a number
+    number: Must be a number
     text: Must be a string]
   `);
 });

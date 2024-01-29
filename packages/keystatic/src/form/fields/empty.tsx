@@ -18,5 +18,6 @@ export function empty(): BasicFormField<null> {
     validate(value) {
       return value;
     },
+    label: 'Empty',
   });
 }

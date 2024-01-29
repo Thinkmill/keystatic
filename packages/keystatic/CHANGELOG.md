@@ -1,5 +1,32 @@
 # @keystatic/core
 
+## 0.3.10
+
+### Patch Changes
+
+- 8b2822c9: Add more specific error when fetching a blob fails
+
+## 0.3.9
+
+### Patch Changes
+
+- b9e14f39: Fix hard breaks not being serialised in the editors
+
+## 0.3.8
+
+### Patch Changes
+
+- e0e571f5: Add `parseSlugForSort` option to collections
+
+## 0.3.7
+
+### Patch Changes
+
+- 0ea27bed: Add number field
+- 178fd9f6: Add `columns` option to collections
+- Updated dependencies [dad16ba6]
+  - @keystar/ui@0.7.0
+
 ## 0.3.6
 
 ### Patch Changes

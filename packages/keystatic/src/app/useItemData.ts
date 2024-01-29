@@ -341,7 +341,7 @@ async function fetchGitHubBlob(
   );
 }
 
-function fetchBlob(
+export function fetchBlob(
   config: Config,
   oid: string,
   filepath: string,
@@ -367,7 +367,16 @@ function fetchBlob(
           })
         : fetchGitHubBlob(config, oid, filepath, commitSha, isRepoPrivate, repo)
     )
-      .then(x => x.arrayBuffer())
+      .then(async x => {
+        if (!x.ok) {
+          throw new Error(
+            `Could not fetch blob ${oid} (${filepath}): ${
+              x.status
+            }\n${await x.text()}`
+          );
+        }
+        return x.arrayBuffer();
+      })
       .then(x => {
         const array = new Uint8Array(x);
         blobCache.set(oid, array);
@@ -376,7 +385,6 @@ function fetchBlob(
         }
         return array;
       })
-
       .catch(err => {
         blobCache.delete(oid);
         throw err;

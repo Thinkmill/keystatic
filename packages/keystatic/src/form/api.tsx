@@ -45,6 +45,7 @@ export type BasicFormField<
   reader: {
     parse(value: FormFieldStoredValue): ReaderValue;
   };
+  label?: string;
 };
 
 export type SlugFormField<
@@ -81,6 +82,7 @@ export type SlugFormField<
       }
     ): ReaderValueAsSlugField;
   };
+  label?: string;
 };
 
 export type AssetFormField<
@@ -122,6 +124,7 @@ export type AssetFormField<
   reader: {
     parse(value: FormFieldStoredValue): ReaderValue;
   };
+  label?: string;
 };
 
 export type ContentFormField<

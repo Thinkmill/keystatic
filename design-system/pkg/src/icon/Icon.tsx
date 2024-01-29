@@ -49,16 +49,26 @@ export const Icon = (props: IconProps) => {
   const styleProps = useStyleProps(otherProps) as SVGProps<SVGSVGElement>;
   const hasAriaLabel = 'aria-label' in props && !!props['aria-label'];
 
-  return React.cloneElement(props.src as React.ReactSVGElement, {
-    ...toDataAttributes({ strokeScaling, size }),
-    ...filterDOMProps(otherProps, { labelable: true }),
-    'aria-hidden': !hasAriaLabel,
-    focusable: 'false',
-    role: 'img',
-    className: classNames(iconClassName, styleProps.className),
-    style: {
-      [STROKE_VAR]: stroke,
-      ...styleProps.style,
-    },
-  });
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...toDataAttributes({ strokeScaling, size })}
+      {...filterDOMProps(otherProps, { labelable: true })}
+      aria-hidden={!hasAriaLabel}
+      focusable="false"
+      role="img"
+      className={classNames(iconClassName, styleProps.className)}
+      style={{
+        [STROKE_VAR as any]: stroke,
+        ...styleProps.style,
+      }}
+      height="1em"
+    >
+      {props.src}
+    </svg>
+  );
 };

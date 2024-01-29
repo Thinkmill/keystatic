@@ -48,6 +48,25 @@ function toMarkdocInline(node: Descendant): Node | Node[] {
       mark => mark !== 'text' && mark !== 'code'
     ) as Mark[]
   ).sort();
+  const splitByNewLines = node.text.split(/\n/);
+  if (splitByNewLines.length > 1) {
+    return splitByNewLines.flatMap((x, i) => {
+      if (i === 0) {
+        return toMarkdocInline({
+          ...node,
+          text: x,
+        });
+      }
+      const inner = toMarkdocInline({
+        ...node,
+        text: x,
+      });
+      return [
+        new Ast.Node('hardbreak'),
+        ...(Array.isArray(inner) ? inner : [inner]),
+      ];
+    });
+  }
   const leadingWhitespace = /^\s+/.exec(node.text)?.[0];
   const trailingWhitespace = /\s+$/.exec(node.text)?.[0];
 
