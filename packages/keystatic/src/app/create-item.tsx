@@ -101,22 +101,32 @@ function CreateItemWrapper(props: {
     if (duplicateSlug) {
       return { field: collectionConfig.slugField, slug: duplicateSlug };
     }
-  }, [duplicateSlug, collectionConfig.slugField]);
+    if (collectionConfig.template) {
+      return { field: collectionConfig.slugField, slug: '' };
+    }
+  }, [duplicateSlug, collectionConfig]);
+
+  const isFromTemplate = !!duplicateSlug || !!collectionConfig.template;
 
   const itemData = useItemData({
     config: props.config,
-    dirpath: getCollectionItemPath(
-      props.config,
-      props.collection,
-      duplicateSlug ?? ''
-    ),
+    dirpath:
+      collectionConfig.template && !duplicateSlug
+        ? collectionConfig.template
+        : getCollectionItemPath(
+            props.config,
+            props.collection,
+            duplicateSlug ?? ''
+          ),
     schema: collectionConfig.schema,
     format,
     slug,
   });
 
   const duplicateInitalState =
-    duplicateSlug && itemData.kind === 'loaded' && itemData.data !== 'not-found'
+    isFromTemplate &&
+    itemData.kind === 'loaded' &&
+    itemData.data !== 'not-found'
       ? itemData.data.initialState
       : undefined;
 
@@ -137,7 +147,7 @@ function CreateItemWrapper(props: {
         }
         const serialized = slugFieldSchema.serializeWithSlug(slugFieldValue);
         slugFieldValue = slugFieldSchema.parse(serialized.value, {
-          slug: `${serialized.slug}-copy`,
+          slug: serialized.slug ? `${serialized.slug}-copy` : '',
         });
       } catch {}
       return {
@@ -151,7 +161,7 @@ function CreateItemWrapper(props: {
     duplicateInitalState,
   ]);
 
-  if (duplicateSlug && itemData.kind === 'error') {
+  if (isFromTemplate && itemData.kind === 'error') {
     return (
       <PageBody>
         <Notice tone="critical">{itemData.error.message}</Notice>
@@ -159,7 +169,7 @@ function CreateItemWrapper(props: {
     );
   }
   if (
-    (duplicateSlug && itemData.kind === 'loading') ||
+    (isFromTemplate && itemData.kind === 'loading') ||
     draftData.kind === 'loading'
   ) {
     return (
@@ -173,7 +183,7 @@ function CreateItemWrapper(props: {
     );
   }
   if (
-    duplicateSlug &&
+    isFromTemplate &&
     itemData.kind === 'loaded' &&
     itemData.data === 'not-found'
   ) {

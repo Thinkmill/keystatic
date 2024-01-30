@@ -120,6 +120,9 @@ export function getAllowedDirectories(config: Config) {
         { data: 'yaml', contentField: undefined, dataLocation: 'index' }
       )
     );
+    if (collectionConfig.template) {
+      allowedDirectories.push(collectionConfig.template);
+    }
   }
   for (const [singleton, singletonConfig] of Object.entries(
     config.singletons ?? {}
