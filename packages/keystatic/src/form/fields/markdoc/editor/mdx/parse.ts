@@ -8,7 +8,8 @@ import { EditorSchema } from '../schema';
 import { fromUint8Array } from 'js-base64';
 import { fixPath } from '../../../../../app/path-utils';
 import { getSrcPrefixForImageBlock } from '../images';
-import { Nodes, PhrasingContent } from 'mdast';
+import { Nodes, PhrasingContent, Definition } from 'mdast';
+import { visit } from 'unist-util-visit';
 import { MdxJsxAttributeValueExpression } from 'mdast-util-mdx';
 import { assert } from 'emery';
 import { deserializeProps, toSerialized } from '../props-serialization';
@@ -21,6 +22,7 @@ let state:
       extraFiles: ReadonlyMap<string, Uint8Array>;
       otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
       slug: string | undefined;
+      definitions: Map<string, Definition>;
     }
   | undefined;
 function getState(): typeof state & {} {
@@ -123,7 +125,20 @@ export function mdxToProseMirror(
     extraFiles: files ?? new Map(),
     otherFiles: otherFiles ?? new Map(),
     slug,
+    definitions: new Map(),
   };
+  visit(node, node => {
+    if (node.type === 'definition') {
+      const id = String(node.identifier).toUpperCase();
+
+      // Mimick CM behavior of link definitions.
+      // See: <https://github.com/syntax-tree/mdast-util-definitions/blob/9032189/lib/index.js#L20-L21>.
+      if (!getState().definitions.has(id)) {
+        getState().definitions.set(id, node);
+      }
+    }
+  });
+  console.log(getState().definitions);
   try {
     let pmNode = markdocNodeToProseMirrorNode(node, undefined);
     if (state.errors.length) {
@@ -274,6 +289,18 @@ function markdocNodeToProseMirrorNode(
       parentType
     );
   }
+  if (node.type === 'linkReference') {
+    const data = getState().definitions.get(node.identifier.toUpperCase());
+    if (!data) {
+      error(`Could not find definition for ${node.identifier}`);
+      return childrenToProseMirrorNodes(node.children, parentType);
+    }
+    return addMark(
+      node,
+      schema.marks.link?.create({ href: data.url }),
+      parentType
+    );
+  }
   if (node.type === 'text') {
     return schema.schema.text(node.value, getState().marks);
   }
@@ -370,9 +397,21 @@ function markdocNodeToProseMirrorNode(
     }
     return notAllowed(node, parentType);
   }
-  if (node.type === 'image') {
+  if (node.type === 'image' || node.type === 'imageReference') {
+    const data =
+      node.type === 'image'
+        ? node
+        : getState().definitions.get(node.identifier.toUpperCase());
+    if (!data) {
+      error(
+        `Could not find definition for ${
+          (node as typeof node & { type: 'imageReference' }).identifier
+        }`
+      );
+      return null;
+    }
     const prefix = getSrcPrefixForImageBlock(schema.config, getState().slug);
-    const fullFilename = decodeURI(node.url);
+    const fullFilename = decodeURI(data.url);
     const filename = fullFilename.slice(prefix.length);
     const content = (
       typeof schema.config.image === 'object' &&
@@ -385,16 +424,17 @@ function markdocNodeToProseMirrorNode(
       return schema.nodes.image.createChecked({
         src: `data:application/octet-stream;base64,${fromUint8Array(content)}`,
         alt: node.alt,
-        title: node.title,
+        title: data.title,
         filename,
       });
     }
     return schema.schema.text(
-      `![${node.alt || ''}](${node.url || ''}${
-        node.title ? ` "${node.title}"` : ''
+      `![${node.alt || ''}](${data.url || ''}${
+        data.title ? ` "${data.title}"` : ''
       })`
     );
   }
+  if (node.type === 'definition') return [];
   error(`Unhandled type ${node.type}`);
   return null;
 }

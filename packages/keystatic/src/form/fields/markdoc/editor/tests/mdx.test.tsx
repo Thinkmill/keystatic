@@ -531,3 +531,32 @@ something else`;
     "
   `);
 });
+
+test('link reference', () => {
+  const mdx = `[a][b]
+  
+[b]: https://keystatic.com
+`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text
+          link={
+            {
+              "href": "https://keystatic.com",
+              "title": "",
+            }
+          }
+        >
+          <cursor />
+          a
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "[a](https://keystatic.com)
+    "
+  `);
+});
