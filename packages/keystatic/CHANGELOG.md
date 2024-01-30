@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.3.11
+
+### Patch Changes
+
+- 5e30128f: Add `template` option to collections
+- c3bb3d12: Tweak Markdoc Editor Component UI
+
 ## 0.3.10
 
 ### Patch Changes
