@@ -848,6 +848,7 @@ importers:
       slate-react: ^0.91.9
       tsx: ^3.8.0
       typescript: ^5.2.2
+      unist-util-visit: ^5.0.0
       urql: ^4.0.0
       zod: ^3.20.2
     dependencies:
@@ -918,6 +919,7 @@ importers:
       slate: 0.91.4
       slate-history: 0.86.0_slate@0.91.4
       slate-react: 0.91.11_6tgy34rvmll7duwkm4ydcekf3u
+      unist-util-visit: 5.0.0
       urql: 4.0.5_7ydmg4ky5cpt4mzloff6pvn2pa
       zod: 3.22.2
     devDependencies:
