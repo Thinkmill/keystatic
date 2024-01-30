@@ -2,7 +2,6 @@ import { Mark, MarkType, Node, ResolvedPos } from 'prosemirror-model';
 import { EditorState, NodeSelection, TextSelection } from 'prosemirror-state';
 import { toggleHeader } from 'prosemirror-tables';
 import { ReactElement, useMemo, useState } from 'react';
-import { Rect } from '@floating-ui/react';
 
 import { ActionButton } from '@keystar/ui/button';
 import { EditorPopover, EditorPopoverProps } from '@keystar/ui/editor';
@@ -20,7 +19,6 @@ import {
 import { EditorSchema, getEditorSchema } from '../schema';
 import { LinkToolbar } from './link-toolbar';
 import { useEditorReferenceElement } from './reference';
-import { getContent, getToolbar, useEditorContext } from '../context';
 import { ImagePopover } from './images';
 import { Dialog, DialogContainer } from '@keystar/ui/dialog';
 import { FormValue } from '../FormValue';
@@ -634,15 +632,14 @@ function PopoverInner(props: {
       : props.decoration.to;
 
   const reference = useEditorReferenceElement(from, to);
-  const boundary = useBoundaryRect();
 
   return (
     reference && (
       <EditorPopover
         adaptToBoundary={props.decoration.adaptToBoundary}
-        boundary={boundary}
         minWidth="element.medium"
         placement="bottom"
+        portal={false}
         reference={reference}
       >
         {props.decoration.kind === 'node' ? (
@@ -668,38 +665,4 @@ export function EditorPopoverDecoration(props: { state: EditorState }) {
   );
   if (!popoverDecoration) return null;
   return <PopoverInner decoration={popoverDecoration} state={props.state} />;
-}
-
-export function useBoundaryRect(): Rect | undefined {
-  let { id } = useEditorContext();
-
-  let element = getContent(id);
-  if (!element) {
-    return undefined;
-  }
-
-  let scrollParent = getNearestScrollParent(element);
-  if (!scrollParent) {
-    return undefined;
-  }
-
-  let toolbar = getToolbar(id);
-  let offset = toolbar?.offsetHeight ?? 0;
-  let rect = scrollParent.getBoundingClientRect();
-  return {
-    x: rect.x,
-    y: rect.y + offset,
-    width: rect.width,
-    height: rect.height - offset,
-  };
-}
-
-function getNearestScrollParent(element: Element | null): Element | null {
-  if (!element) {
-    return null;
-  }
-  if (element.scrollHeight > element.clientHeight) {
-    return element;
-  }
-  return getNearestScrollParent(element.parentElement);
 }
