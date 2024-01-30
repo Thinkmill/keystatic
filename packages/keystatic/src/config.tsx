@@ -22,6 +22,7 @@ export type Collection<
   format?: Format;
   previewUrl?: string;
   columns?: string[];
+  template?: string;
   parseSlugForSort?: (slug: string) => string | number;
   slugField: SlugField;
   schema: Schema;
