@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.3.12
+
+### Patch Changes
+
+- d4c1c8bb: Support parsing link/image references in the mdx field
+- f89d2503: Fix popovers in new editor
+
 ## 0.3.11
 
 ### Patch Changes
