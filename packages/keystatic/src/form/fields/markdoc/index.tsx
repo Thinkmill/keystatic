@@ -9,6 +9,7 @@ import {
   parseToEditorState,
   parseToEditorStateMDX,
   serializeFromEditorStateMDX,
+  createEditorStateFromYJS,
 } from '#field-ui/markdoc';
 import type { EditorSchema } from './editor/schema';
 import type { EditorState } from 'prosemirror-state';
@@ -22,6 +23,8 @@ import { EditorOptions, editorOptionsToConfig } from './config';
 import { collectDirectoriesUsedInSchema } from '../../../app/tree-key';
 import { object } from '../object';
 import { fixPath } from '../../../app/path-utils';
+import { XmlFragment } from 'yjs';
+import { prosemirrorToYXmlFragment } from 'y-prosemirror';
 
 const textDecoder = new TextDecoder();
 
@@ -98,6 +101,18 @@ export function __experimental_markdoc_field({
       parse: (_, { content }) => {
         const text = textDecoder.decode(content);
         return { node: Markdoc.parse(text) };
+      },
+    },
+    collaboration: {
+      toYjs(value) {
+        return prosemirrorToYXmlFragment(value.doc);
+      },
+      fromYjs(yjsValue, awareness) {
+        return createEditorStateFromYJS(
+          getSchema(),
+          yjsValue as XmlFragment,
+          awareness
+        );
       },
     },
   };

@@ -18,6 +18,7 @@ import {
   joinBackward,
 } from 'prosemirror-commands';
 import { undo, redo } from 'prosemirror-history';
+import { undo as yUndo, redo as yRedo } from 'y-prosemirror';
 import {
   toggleList,
   splitListItem,
@@ -67,7 +68,10 @@ const selectParentSelectableNode: Command = (state, dispatch) => {
   return true;
 };
 
-export function keymapForSchema({ nodes, marks, config }: EditorSchema) {
+export function keymapForSchema(
+  { nodes, marks, config }: EditorSchema,
+  isCollab: boolean
+) {
   const bindings: Record<string, Command> = {};
   const add = (key: string, command: Command) => {
     if (bindings[key]) {
@@ -119,10 +123,10 @@ export function keymapForSchema({ nodes, marks, config }: EditorSchema) {
     add('Ctrl-e', selectTextblockEnd);
   }
 
-  add('Mod-z', undo);
-  add('Shift-Mod-z', redo);
+  add('Mod-z', isCollab ? yUndo : undo);
+  add('Shift-Mod-z', isCollab ? yRedo : redo);
   if (mac) {
-    add('Mod-y', redo);
+    add('Mod-y', isCollab ? yRedo : redo);
   }
   const modiferEnterKeys = ['Mod-Enter', 'Shift-Enter'];
   if (mac) {

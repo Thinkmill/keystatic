@@ -49,12 +49,17 @@ import {
   showDraftRestoredToast,
 } from './persistence';
 import { z } from 'zod';
-import { useData } from './useData';
+import { LOADING, useData } from './useData';
 import { ActionGroup, Item } from '@keystar/ui/action-group';
 import { useMediaQuery, breakpointQueries } from '@keystar/ui/style';
 import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
 import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
 import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
+import { getYjsValFromParsedValue } from '../form/props-value';
+import * as Y from 'yjs';
+import { useYjs, useYjsIfAvailable } from './shell/collab';
+import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
+import { useYJsValue } from './useYJsValue';
 
 type SingletonPageProps = {
   singleton: string;
@@ -62,32 +67,252 @@ type SingletonPageProps = {
   initialState: Record<string, unknown> | null;
   initialFiles: string[];
   localTreeKey: string | undefined;
-  draft:
-    | {
-        state: Record<string, unknown>;
-        savedAt: Date;
-        treeKey: string | undefined;
-      }
-    | undefined;
 };
 
-function SingletonPage({
-  singleton,
-  initialFiles,
-  initialState,
-  localTreeKey,
-  config,
-  draft,
-}: SingletonPageProps) {
+function SingletonPageInner(
+  props: SingletonPageProps & {
+    updateResult: ReturnType<typeof useUpsertItem>[0];
+    onUpdate: ReturnType<typeof useUpsertItem>[1];
+    onResetUpdateItem: ReturnType<typeof useUpsertItem>[2];
+    hasChanged: boolean;
+    state: Record<string, unknown>;
+    onReset: () => void;
+    previewProps: ReturnType<ReturnType<typeof createGetPreviewProps>>;
+  }
+) {
+  const isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
+  const singletonConfig = props.config.singletons![props.singleton]!;
+  const branchInfo = useBranchInfo();
   const [forceValidation, setForceValidation] = useState(false);
+
+  const schema = useMemo(
+    () => fields.object(singletonConfig.schema),
+    [singletonConfig.schema]
+  );
+
+  const router = useRouter();
+
+  const previewHref = useMemo(() => {
+    if (!singletonConfig.previewUrl) return undefined;
+    return singletonConfig.previewUrl.replace(
+      '{branch}',
+      branchInfo.currentBranch
+    );
+  }, [branchInfo.currentBranch, singletonConfig.previewUrl]);
+  const isGitHub = isGitHubConfig(props.config) || isCloudConfig(props.config);
+  const formatInfo = getSingletonFormat(props.config, props.singleton);
+  const singletonExists = !!props.initialState;
+  const singletonPath = getSingletonPath(props.config, props.singleton);
+
+  const viewHref =
+    isGitHub && singletonExists
+      ? `${getRepoUrl(branchInfo)}${
+          formatInfo.dataLocation === 'index'
+            ? `/tree/${branchInfo.currentBranch}/${
+                getPathPrefix(props.config.storage) ?? ''
+              }${singletonPath}`
+            : `/blob/${getPathPrefix(props.config.storage) ?? ''}${
+                branchInfo.currentBranch
+              }/${singletonPath}${getDataFileExtension(formatInfo)}`
+        }`
+      : undefined;
+
+  const menuActions = useMemo(() => {
+    const actions: {
+      key: string;
+      label: string;
+      icon: ReactElement;
+      href?: string;
+      target?: string;
+      rel?: string;
+    }[] = [
+      {
+        key: 'reset',
+        label: 'Reset',
+        icon: historyIcon,
+      },
+    ];
+    if (previewHref) {
+      actions.push({
+        key: 'preview',
+        label: 'Preview',
+        icon: externalLinkIcon,
+        href: previewHref,
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      });
+    }
+    if (viewHref) {
+      actions.push({
+        key: 'view',
+        label: 'View on GitHub',
+        icon: githubIcon,
+        href: viewHref,
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      });
+    }
+    return actions;
+  }, [previewHref, viewHref]);
+
+  const formID = 'singleton-form';
+
+  const baseCommit = useBaseCommit();
+
+  const isCreating = props.initialState === null;
+
+  const onCreate = async () => {
+    if (props.updateResult.kind === 'loading' || !props.hasChanged) return;
+    if (!clientSideValidateProp(schema, props.state, undefined)) {
+      setForceValidation(true);
+      return;
+    }
+    await props.onUpdate();
+  };
+
+  return (
+    <PageRoot containerWidth={containerWidthForEntryLayout(singletonConfig)}>
+      <PageHeader>
+        <Flex flex alignItems="center" gap="regular">
+          <Heading elementType="h1" id="page-title" size="small">
+            {singletonConfig.label}
+          </Heading>
+          {props.updateResult.kind === 'loading' ? (
+            <ProgressCircle
+              aria-label={`Updating ${singletonConfig.label}`}
+              isIndeterminate
+              size="small"
+              alignSelf="center"
+            />
+          ) : (
+            props.hasChanged && <Badge tone="pending">Unsaved</Badge>
+          )}
+        </Flex>
+        <ActionGroup
+          buttonLabelBehavior="hide"
+          overflowMode="collapse"
+          prominence="low"
+          density="compact"
+          maxWidth={isBelowTablet ? 'element.regular' : undefined} // force switch to action menu on small devices
+          items={menuActions}
+          disabledKeys={props.hasChanged ? [] : ['reset']}
+          onAction={key => {
+            switch (key) {
+              case 'reset':
+                props.onReset();
+                break;
+            }
+          }}
+        >
+          {item => (
+            <Item
+              key={item.key}
+              textValue={item.label}
+              href={item.href}
+              target={item.target}
+              rel={item.rel}
+            >
+              <Icon src={item.icon} />
+              <Text>{item.label}</Text>
+            </Item>
+          )}
+        </ActionGroup>
+        <Button
+          form={formID}
+          isDisabled={props.updateResult.kind === 'loading'}
+          prominence="high"
+          type="submit"
+        >
+          {isCreating ? 'Create' : 'Save'}
+        </Button>
+      </PageHeader>
+      <Flex
+        elementType="form"
+        id={formID}
+        onSubmit={(event: FormEvent) => {
+          if (event.target !== event.currentTarget) return;
+          event.preventDefault();
+          onCreate();
+        }}
+        direction="column"
+        gap="xxlarge"
+        height="100%"
+        minHeight={0}
+        minWidth={0}
+      >
+        {props.updateResult.kind === 'error' && (
+          <Notice tone="critical">{props.updateResult.error.message}</Notice>
+        )}
+        <FormForEntry
+          previewProps={props.previewProps as any}
+          forceValidation={forceValidation}
+          entryLayout={singletonConfig.entryLayout}
+          formatInfo={formatInfo}
+          slugField={undefined}
+        />
+        <DialogContainer
+          // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since
+          // this doesn't open on click but after doing a network request and it failing and manually wiring about a popover and modal would be a pain
+          onDismiss={props.onResetUpdateItem}
+        >
+          {props.updateResult.kind === 'needs-new-branch' && (
+            <CreateBranchDuringUpdateDialog
+              branchOid={baseCommit}
+              onCreate={async newBranch => {
+                router.push(
+                  `/keystatic/branch/${encodeURIComponent(
+                    newBranch
+                  )}/singleton/${encodeURIComponent(props.singleton)}`
+                );
+                props.onUpdate({ branch: newBranch, sha: baseCommit });
+              }}
+              reason={props.updateResult.reason}
+              onDismiss={props.onResetUpdateItem}
+            />
+          )}
+        </DialogContainer>
+        <DialogContainer
+          // ideally this would be a popover on desktop but using a DialogTrigger
+          // wouldn't work since this doesn't open on click but after doing a
+          // network request and it failing and manually wiring about a popover
+          // and modal would be a pain
+          onDismiss={props.onResetUpdateItem}
+        >
+          {props.updateResult.kind === 'needs-fork' &&
+            isGitHubConfig(props.config) && (
+              <ForkRepoDialog
+                onCreate={async () => {
+                  props.onUpdate();
+                }}
+                onDismiss={props.onResetUpdateItem}
+                config={props.config}
+              />
+            )}
+        </DialogContainer>
+      </Flex>
+    </PageRoot>
+  );
+}
+
+function LocalSingletonPage(
+  props: SingletonPageProps & {
+    draft:
+      | {
+          state: Record<string, unknown>;
+          savedAt: Date;
+          treeKey: string | undefined;
+        }
+      | undefined;
+  }
+) {
+  const { singleton, initialFiles, initialState, localTreeKey, config, draft } =
+    props;
   const singletonConfig = config.singletons![singleton]!;
   const schema = useMemo(
     () => fields.object(singletonConfig.schema),
     [singletonConfig.schema]
   );
   const singletonPath = getSingletonPath(config, singleton);
-
-  const router = useRouter();
 
   const [{ state, localTreeKey: localTreeKeyInState }, setState] = useState(
     () => ({
@@ -164,7 +389,6 @@ function SingletonPage({
     [schema]
   )(state as Record<string, unknown>);
 
-  const baseCommit = useBaseCommit();
   const formatInfo = getSingletonFormat(config, singleton);
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
     state,
@@ -178,206 +402,90 @@ function SingletonPage({
   });
   const update = useEventCallback(_update);
 
-  const onCreate = async () => {
-    if (updateResult.kind === 'loading' || !hasChanged) return;
-    if (!clientSideValidateProp(schema, state, undefined)) {
-      setForceValidation(true);
-      return;
-    }
-    await update();
-  };
-  const formID = 'singleton-form';
-
   const onReset = () =>
     setState({
       localTreeKey: localTreeKey,
       state:
         initialState === null ? getInitialPropsValue(schema) : initialState,
     });
-
-  const isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
-
-  const branchInfo = useBranchInfo();
-  const previewHref = useMemo(() => {
-    if (!singletonConfig.previewUrl) return undefined;
-    return singletonConfig.previewUrl.replace(
-      '{branch}',
-      branchInfo.currentBranch
-    );
-  }, [branchInfo.currentBranch, singletonConfig.previewUrl]);
-  const isGitHub = isGitHubConfig(config) || isCloudConfig(config);
-  const singletonExists = !!initialState;
-  const viewHref =
-    isGitHub && singletonExists
-      ? `${getRepoUrl(branchInfo)}${
-          formatInfo.dataLocation === 'index'
-            ? `/tree/${branchInfo.currentBranch}/${
-                getPathPrefix(config.storage) ?? ''
-              }${singletonPath}`
-            : `/blob/${getPathPrefix(config.storage) ?? ''}${
-                branchInfo.currentBranch
-              }/${singletonPath}${getDataFileExtension(formatInfo)}`
-        }`
-      : undefined;
-
-  const menuActions = useMemo(() => {
-    const actions: {
-      key: string;
-      label: string;
-      icon: ReactElement;
-      href?: string;
-      target?: string;
-      rel?: string;
-    }[] = [
-      {
-        key: 'reset',
-        label: 'Reset',
-        icon: historyIcon,
-      },
-    ];
-    if (previewHref) {
-      actions.push({
-        key: 'preview',
-        label: 'Preview',
-        icon: externalLinkIcon,
-        href: previewHref,
-        target: '_blank',
-        rel: 'noopener noreferrer',
-      });
-    }
-    if (viewHref) {
-      actions.push({
-        key: 'view',
-        label: 'View on GitHub',
-        icon: githubIcon,
-        href: viewHref,
-        target: '_blank',
-        rel: 'noopener noreferrer',
-      });
-    }
-    return actions;
-  }, [previewHref, viewHref]);
-
   return (
-    <PageRoot containerWidth={containerWidthForEntryLayout(singletonConfig)}>
-      <PageHeader>
-        <Flex flex alignItems="center" gap="regular">
-          <Heading elementType="h1" id="page-title" size="small">
-            {singletonConfig.label}
-          </Heading>
-          {updateResult.kind === 'loading' ? (
-            <ProgressCircle
-              aria-label={`Updating ${singletonConfig.label}`}
-              isIndeterminate
-              size="small"
-              alignSelf="center"
-            />
-          ) : (
-            hasChanged && <Badge tone="pending">Unsaved</Badge>
-          )}
-        </Flex>
-        <ActionGroup
-          buttonLabelBehavior="hide"
-          overflowMode="collapse"
-          prominence="low"
-          density="compact"
-          maxWidth={isBelowTablet ? 'element.regular' : undefined} // force switch to action menu on small devices
-          items={menuActions}
-          disabledKeys={hasChanged ? [] : ['reset']}
-          onAction={key => {
-            switch (key) {
-              case 'reset':
-                onReset();
-                break;
-            }
-          }}
-        >
-          {item => (
-            <Item
-              key={item.key}
-              textValue={item.label}
-              href={item.href}
-              target={item.target}
-              rel={item.rel}
-            >
-              <Icon src={item.icon} />
-              <Text>{item.label}</Text>
-            </Item>
-          )}
-        </ActionGroup>
-        <Button
-          form={formID}
-          isDisabled={updateResult.kind === 'loading'}
-          prominence="high"
-          type="submit"
-        >
-          {isCreating ? 'Create' : 'Save'}
-        </Button>
-      </PageHeader>
-      <Flex
-        elementType="form"
-        id={formID}
-        onSubmit={(event: FormEvent) => {
-          if (event.target !== event.currentTarget) return;
-          event.preventDefault();
-          onCreate();
-        }}
-        direction="column"
-        gap="xxlarge"
-        height="100%"
-        minHeight={0}
-        minWidth={0}
-      >
-        {updateResult.kind === 'error' && (
-          <Notice tone="critical">{updateResult.error.message}</Notice>
-        )}
-        <FormForEntry
-          previewProps={previewProps}
-          forceValidation={forceValidation}
-          entryLayout={singletonConfig.entryLayout}
-          formatInfo={formatInfo}
-          slugField={undefined}
-        />
-        <DialogContainer
-          // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since
-          // this doesn't open on click but after doing a network request and it failing and manually wiring about a popover and modal would be a pain
-          onDismiss={resetUpdateItem}
-        >
-          {updateResult.kind === 'needs-new-branch' && (
-            <CreateBranchDuringUpdateDialog
-              branchOid={baseCommit}
-              onCreate={async newBranch => {
-                router.push(
-                  `/keystatic/branch/${encodeURIComponent(
-                    newBranch
-                  )}/singleton/${encodeURIComponent(singleton)}`
-                );
-                update({ branch: newBranch, sha: baseCommit });
-              }}
-              reason={updateResult.reason}
-              onDismiss={resetUpdateItem}
-            />
-          )}
-        </DialogContainer>
-        <DialogContainer
-          // ideally this would be a popover on desktop but using a DialogTrigger
-          // wouldn't work since this doesn't open on click but after doing a
-          // network request and it failing and manually wiring about a popover
-          // and modal would be a pain
-          onDismiss={resetUpdateItem}
-        >
-          {updateResult.kind === 'needs-fork' && isGitHubConfig(config) && (
-            <ForkRepoDialog
-              onCreate={async () => {
-                update();
-              }}
-              onDismiss={resetUpdateItem}
-              config={config}
-            />
-          )}
-        </DialogContainer>
-      </Flex>
-    </PageRoot>
+    <SingletonPageInner
+      {...props}
+      hasChanged={hasChanged}
+      onReset={onReset}
+      onUpdate={update}
+      onResetUpdateItem={resetUpdateItem}
+      updateResult={updateResult}
+      state={state}
+      previewProps={previewProps}
+    />
+  );
+}
+
+function CollabSingletonPage(
+  props: SingletonPageProps & {
+    map: Y.Map<unknown>;
+  }
+) {
+  const { singleton, initialFiles, initialState, localTreeKey, config } = props;
+  const singletonConfig = config.singletons![singleton]!;
+  const schema = useMemo(
+    () => fields.object(singletonConfig.schema),
+    [singletonConfig.schema]
+  );
+  const singletonPath = getSingletonPath(config, singleton);
+
+  const yjsInfo = useYjs();
+  const state = useYJsValue(schema, props.map) as Record<string, unknown>;
+  const previewProps = useMemo(
+    () =>
+      createGetPreviewPropsFromY(schema as any, props.map, yjsInfo.awareness),
+    [props.map, schema, yjsInfo.awareness]
+  )(state);
+
+  const isCreating = initialState === null;
+  const hasChanged =
+    useHasChanged({ initialState, state, schema, slugField: undefined }) ||
+    isCreating;
+
+  const formatInfo = getSingletonFormat(config, singleton);
+  const [updateResult, _update, resetUpdateItem] = useUpsertItem({
+    state,
+    initialFiles,
+    config,
+    schema: singletonConfig.schema,
+    basePath: singletonPath,
+    format: formatInfo,
+    currentLocalTreeKey: localTreeKey,
+    slug: undefined,
+  });
+  const update = useEventCallback(_update);
+
+  const onReset = async () => {
+    props.map.doc!.transact(() => {
+      for (const [key, value] of Object.entries(singletonConfig.schema)) {
+        const val = getYjsValFromParsedValue(
+          value,
+          props.initialState?.[key] ?? getInitialPropsValue(value)
+        );
+        props.map.set(key, val);
+      }
+    });
+    await props.map.doc?.whenSynced;
+    // TODO: fix the need for this
+    window.location.reload();
+  };
+  return (
+    <SingletonPageInner
+      {...props}
+      hasChanged={hasChanged}
+      onReset={onReset}
+      onUpdate={update}
+      onResetUpdateItem={resetUpdateItem}
+      updateResult={updateResult}
+      state={state}
+      previewProps={previewProps}
+    />
   );
 }
 
@@ -435,6 +543,44 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     format,
     slug: undefined,
   });
+  const branchInfo = useBranchInfo();
+
+  const key = `${branchInfo.currentBranch}/${props.singleton}`;
+
+  const yjsInfo = useYjsIfAvailable();
+
+  const mapData = useData(
+    useCallback(async () => {
+      if (!yjsInfo) return;
+      if (yjsInfo === 'loading') return LOADING;
+      await yjsInfo.doc.whenSynced;
+      if (itemData.kind !== 'loaded') return LOADING;
+      let doc = yjsInfo.data.get(key);
+      if (doc instanceof Y.Doc) {
+        const promise = doc.whenLoaded;
+        doc.load();
+        await promise;
+      } else {
+        doc = new Y.Doc();
+        yjsInfo.data.set(key, doc);
+      }
+      const data = doc.getMap('data');
+      if (!data.size) {
+        doc.transact(() => {
+          for (const [key, value] of Object.entries(singletonConfig.schema)) {
+            const val = getYjsValFromParsedValue(
+              value,
+              itemData.data === 'not-found'
+                ? getInitialPropsValue(value)
+                : itemData.data.initialState[key]
+            );
+            data.set(key, val);
+          }
+        });
+      }
+      return data;
+    }, [singletonConfig, itemData, key, yjsInfo])
+  );
   if (itemData.kind === 'error') {
     return (
       <PageRoot>
@@ -448,7 +594,24 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     );
   }
 
-  if (itemData.kind === 'loading' || draftData.kind === 'loading') {
+  if (mapData.kind === 'error') {
+    return (
+      <PageRoot>
+        {header}
+        <PageBody>
+          <Notice margin="xxlarge" tone="critical">
+            {mapData.error.message}
+          </Notice>
+        </PageBody>
+      </PageRoot>
+    );
+  }
+
+  if (
+    itemData.kind === 'loading' ||
+    draftData.kind === 'loading' ||
+    mapData.kind === 'loading'
+  ) {
     return (
       <PageRoot>
         {header}
@@ -469,8 +632,27 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     );
   }
 
+  if (mapData.data) {
+    return (
+      <CollabSingletonPage
+        singleton={props.singleton}
+        config={props.config}
+        initialState={
+          itemData.data === 'not-found' ? null : itemData.data.initialState
+        }
+        initialFiles={
+          itemData.data === 'not-found' ? [] : itemData.data.initialFiles
+        }
+        localTreeKey={
+          itemData.data === 'not-found' ? undefined : itemData.data.localTreeKey
+        }
+        map={mapData.data}
+      />
+    );
+  }
+
   return (
-    <SingletonPage
+    <LocalSingletonPage
       singleton={props.singleton}
       config={props.config}
       initialState={

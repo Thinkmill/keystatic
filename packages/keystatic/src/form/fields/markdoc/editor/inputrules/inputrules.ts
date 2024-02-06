@@ -1,6 +1,7 @@
 // https://github.com/ProseMirror/prosemirror-inputrules/blob/47dff8a7316e5cf86343e37fd97588a30345bc0a/src/inputrules.ts
 // modified to add as a separate transaction with closeHistory so that undo and redo just works correctly
 import { closeHistory } from 'prosemirror-history';
+import { yUndoPluginKey } from 'y-prosemirror';
 import {
   Plugin,
   Transaction,
@@ -8,6 +9,7 @@ import {
   TextSelection,
 } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
+import { UndoManager } from 'yjs';
 
 export type InputRuleHandler = (
   state: EditorState,
@@ -92,6 +94,12 @@ function run(view: EditorView, rules: readonly InputRule[]) {
   if (!$cursor) return false;
   const tr = getMatch(state, $cursor.pos, $cursor.pos, rules);
   if (!tr) return false;
-  view.dispatch(closeHistory(tr));
+  const yUndoPluginState = yUndoPluginKey.getState(view.state);
+  if (yUndoPluginState) {
+    const undoManager: UndoManager = yUndoPluginState.undoManager;
+    undoManager.stopCapturing();
+  } else {
+    view.dispatch(closeHistory(tr));
+  }
   return true;
 }

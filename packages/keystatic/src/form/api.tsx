@@ -2,6 +2,7 @@ import { ReactElement, ReactNode } from 'react';
 import { Glob } from '../config';
 
 import { ChildField } from './fields/child';
+import { Awareness } from 'y-protocols/awareness';
 
 export type FormFieldInputProps<Value> = {
   value: Value;
@@ -168,6 +169,10 @@ export type ContentFormField<
         content: Uint8Array | undefined;
       }
     ): ReaderValue;
+  };
+  collaboration?: {
+    toYjs: (value: ParsedValue) => unknown;
+    fromYjs: (yjsValue: unknown, awareness: Awareness) => ParsedValue;
   };
 };
 

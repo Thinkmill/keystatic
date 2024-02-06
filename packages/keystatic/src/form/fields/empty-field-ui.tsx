@@ -30,4 +30,5 @@ export let SlugFieldInput = empty,
   parseToEditorState = empty,
   serializeFromEditorState = empty,
   parseToEditorStateMDX = empty,
-  serializeFromEditorStateMDX = empty;
+  serializeFromEditorStateMDX = empty,
+  createEditorStateFromYJS = empty;
