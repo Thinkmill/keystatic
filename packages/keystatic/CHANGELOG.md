@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.3.13
+
+### Patch Changes
+
+- d97d0749: Add experimental multiplayer support
+
 ## 0.3.12
 
 ### Patch Changes
