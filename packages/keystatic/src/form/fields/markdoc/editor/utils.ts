@@ -133,15 +133,6 @@ export const prosemirrorStyles = css`
   .ProseMirror > .ProseMirror-yjs-cursor:first-child {
     margin-top: 16px;
   }
-  .ProseMirror p:first-child,
-  .ProseMirror h1:first-child,
-  .ProseMirror h2:first-child,
-  .ProseMirror h3:first-child,
-  .ProseMirror h4:first-child,
-  .ProseMirror h5:first-child,
-  .ProseMirror h6:first-child {
-    margin-top: 16px;
-  }
   /* This gives the remote user caret. The colors are automatically overwritten*/
   .ProseMirror-yjs-cursor {
     position: relative;
