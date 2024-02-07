@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.3.14
+
+### Patch Changes
+
+- a78be90b: Fix table cell contents jumping around in the new editor
+
 ## 0.3.13
 
 ### Patch Changes
