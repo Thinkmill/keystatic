@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.3.15
+
+### Patch Changes
+
+- 976d93cd: Persist collaboration state in IDB and optimistically connect to
+  multiplayer websocket
+
 ## 0.3.14
 
 ### Patch Changes
