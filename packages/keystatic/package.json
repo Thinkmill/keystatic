@@ -182,6 +182,7 @@
     "slate-react": "^0.91.9",
     "unist-util-visit": "^5.0.0",
     "urql": "^4.0.0",
+    "y-indexeddb": "^9.0.12",
     "y-prosemirror": "^1.2.2",
     "y-protocols": "^1.0.6",
     "yjs": "^13.6.11",
