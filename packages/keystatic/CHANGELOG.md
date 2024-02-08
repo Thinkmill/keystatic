@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.3.16
+
+### Patch Changes
+
+- a416aca6: Fix collaboration persistence
+
 ## 0.3.15
 
 ### Patch Changes
