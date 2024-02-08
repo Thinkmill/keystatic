@@ -852,6 +852,7 @@ importers:
       typescript: ^5.2.2
       unist-util-visit: ^5.0.0
       urql: ^4.0.0
+      y-indexeddb: ^9.0.12
       y-prosemirror: ^1.2.2
       y-protocols: ^1.0.6
       yjs: ^13.6.11
@@ -928,6 +929,7 @@ importers:
       slate-react: 0.91.11_6tgy34rvmll7duwkm4ydcekf3u
       unist-util-visit: 5.0.0
       urql: 4.0.5_7ydmg4ky5cpt4mzloff6pvn2pa
+      y-indexeddb: 9.0.12_yjs@13.6.11
       y-prosemirror: 1.2.2_6ropjcw4ol3immmzwswcphujnq
       y-protocols: 1.0.6_yjs@13.6.11
       yjs: 13.6.11
@@ -24220,6 +24222,16 @@ packages:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
     dev: true
+
+  /y-indexeddb/9.0.12_yjs@13.6.11:
+    resolution: {integrity: sha512-9oCFRSPPzBK7/w5vOkJBaVCQZKHXB/v6SIT+WYhnJxlEC61juqG0hBrAf+y3gmSMLFLwICNH9nQ53uscuse6Hg==}
+    engines: {node: '>=16.0.0', npm: '>=8.0.0'}
+    peerDependencies:
+      yjs: ^13.0.0
+    dependencies:
+      lib0: 0.2.88
+      yjs: 13.6.11
+    dev: false
 
   /y-prosemirror/1.2.2_6ropjcw4ol3immmzwswcphujnq:
     resolution: {integrity: sha512-hHdnIAhfa8mIoLWtTkMDb6RBzN3lye1QVkaZwVm58sledAA1zTl+yyEtgkrY/sdH6SaQL0rsLj61zHjgr5D0HQ==}

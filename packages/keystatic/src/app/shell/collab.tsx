@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { Awareness } from 'y-protocols/awareness';
 import * as Y from 'yjs';
+import { IndexeddbPersistence } from 'y-indexeddb';
 
 import { WebsocketProvider } from './websocket-provider';
 import { getAuth } from '../auth';
@@ -22,6 +23,7 @@ const YjsContext = createContext<
       data: Y.Map<Y.Doc>;
       awareness: Awareness;
       provider: WebsocketProvider;
+      idb: IndexeddbPersistence;
     }
   | 'loading'
   | null
@@ -113,16 +115,28 @@ export function CollabProvider(props: { children: ReactNode; config: Config }) {
   const branchInfo = useBranchInfo();
   const router = useRouter();
   const cloudInfo = useCloudInfo();
+  const project = props.config.cloud?.project;
+  const key = `ks-multiplayer-${project}`;
+  const isMultiplayerEnabled =
+    cloudInfo === null
+      ? localStorage.getItem(key) === 'true'
+      : cloudInfo.team.multiplayer;
   const yJsInfo = useMemo(() => {
-    if (!cloudInfo?.team.multiplayer) return;
+    // we'll optimistically connect to the websocket if multiplayer was enabled last time
+
+    if (!isMultiplayerEnabled) {
+      return;
+    }
+
     const doc = new Y.Doc();
     const data = doc.getMap<Y.Doc>('data');
     const awareness = new Awareness(doc);
+    const idb = new IndexeddbPersistence(`keystatic-${project}`, doc);
     const provider = new WebsocketProvider({
       doc,
       url: true
-        ? `wss://live.keystatic.cloud/${props.config.cloud?.project}`
-        : `ws://localhost:8787/${props.config.cloud?.project}`,
+        ? `wss://live.keystatic.cloud/${project}`
+        : `ws://localhost:8787/${project}`,
       WebSocketPolyfill: class extends ReconnectingWebSocket {
         constructor(url: string) {
           super(url);
@@ -144,8 +158,8 @@ export function CollabProvider(props: { children: ReactNode; config: Config }) {
       authToken: async () =>
         getAuth(props.config).then(auth => auth?.accessToken ?? ''),
     });
-    return { doc, awareness, provider, data };
-  }, [cloudInfo?.team.multiplayer, props.config]);
+    return { doc, awareness, provider, data, idb };
+  }, [isMultiplayerEnabled, project, props.config]);
 
   useEffect(() => {
     yJsInfo?.awareness.setLocalStateField('branch', branchInfo.currentBranch);
@@ -164,6 +178,16 @@ export function CollabProvider(props: { children: ReactNode; config: Config }) {
       };
     }
   }, [yJsInfo, hasRepo]);
+
+  useEffect(() => {
+    if (cloudInfo === null) return;
+    const key = `ks-multiplayer-${project}`;
+    if (cloudInfo.team.multiplayer) {
+      localStorage.setItem(key, 'true');
+    } else {
+      localStorage.removeItem(key);
+    }
+  }, [cloudInfo, project]);
 
   return (
     <YjsContext.Provider
