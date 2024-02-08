@@ -7,7 +7,10 @@ import {
 } from 'react';
 import { Awareness } from 'y-protocols/awareness';
 import * as Y from 'yjs';
-import { IndexeddbPersistence } from 'y-indexeddb';
+import {
+  createIndexedDBProvider,
+  IndexedDBProvider,
+} from '@toeverything/y-indexeddb';
 
 import { WebsocketProvider } from './websocket-provider';
 import { getAuth } from '../auth';
@@ -23,7 +26,7 @@ const YjsContext = createContext<
       data: Y.Map<Y.Doc>;
       awareness: Awareness;
       provider: WebsocketProvider;
-      idb: IndexeddbPersistence;
+      idb: IndexedDBProvider;
     }
   | 'loading'
   | null
@@ -131,7 +134,7 @@ export function CollabProvider(props: { children: ReactNode; config: Config }) {
     const doc = new Y.Doc();
     const data = doc.getMap<Y.Doc>('data');
     const awareness = new Awareness(doc);
-    const idb = new IndexeddbPersistence(`keystatic-${project}`, doc);
+    const idb = createIndexedDBProvider(doc, `keystatic-2-${project}`);
     const provider = new WebsocketProvider({
       doc,
       url: true
@@ -172,9 +175,25 @@ export function CollabProvider(props: { children: ReactNode; config: Config }) {
   const hasRepo = branchInfo.currentBranch;
   useEffect(() => {
     if (hasRepo && yJsInfo) {
-      yJsInfo.provider.connect();
+      yJsInfo.idb.connect();
+      let didConnectToWS = false;
+      const remove = yJsInfo.idb.subscribeStatusChange(() => {
+        if (
+          yJsInfo.idb.status.type === 'synced' ||
+          yJsInfo.idb.status.type === 'error'
+        ) {
+          remove();
+          yJsInfo.provider.connect();
+          didConnectToWS = true;
+        }
+      });
       return () => {
-        yJsInfo.provider.disconnect();
+        yJsInfo.idb.disconnect();
+        if (didConnectToWS) {
+          yJsInfo.provider.disconnect();
+        } else {
+          remove();
+        }
       };
     }
   }, [yJsInfo, hasRepo]);
