@@ -419,3 +419,28 @@ something else`;
     "
   `);
 });
+
+test('two hard breaks', () => {
+  const editor = fromMarkdoc('something\\\n\\\nThe');
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text>
+          <cursor />
+          something
+        </text>
+        <hard_break />
+        <hard_break />
+        <text>
+          The
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "something\\
+    \\
+    The
+    "
+  `);
+});
