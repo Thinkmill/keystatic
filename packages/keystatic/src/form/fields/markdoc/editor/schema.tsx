@@ -85,7 +85,7 @@ export type EditorNodeSpec = NodeSpec &
   WithInsertMenuNodeSpec &
   WithReactNodeViewSpec;
 
-const inlineContent = `(text | inline_component | (text hard_break))*`;
+const inlineContent = `(text | inline_component | hard_break)*`;
 
 const levelsMeta = [
   { description: 'Use this for a top level heading', icon: heading1Icon },

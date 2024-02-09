@@ -560,3 +560,28 @@ test('link reference', () => {
     "
   `);
 });
+
+test('two hard breaks', () => {
+  const editor = fromMDX('something\\\n\\\nThe');
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text>
+          <cursor />
+          something
+        </text>
+        <hard_break />
+        <hard_break />
+        <text>
+          The
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "something\\
+    \\
+    The
+    "
+  `);
+});
