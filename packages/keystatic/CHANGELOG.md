@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.3.17
+
+### Patch Changes
+
+- bd21c93b: Fix having multiple hard breaks together in the new editor breaking
+  parsing
+
 ## 0.3.16
 
 ### Patch Changes
