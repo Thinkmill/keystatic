@@ -1,0 +1,210 @@
+---
+title: Real-time previews with Next.js' draft mode
+summary: >-
+  This recipe shows you how to create immediate previews of your Keystatic
+  content with Next.js' draft mode feature.
+---
+One of the downsides of building static sites with content files is the delay occuring between saving changes and seeing them on the website.
+
+You typically need to open a PR and wait for deploy previews.
+
+This recipe shows you how to create *immediate* previews of your Keystatic content with Next.js' [draft mode](https://nextjs.org/docs/app/building-your-application/configuring/draft-mode) feature.
+
+{% aside icon="🎬" %}
+Scroll to the bottom of this page for a [video walk-through](#screencast-walk-through) of the feature!
+{% /aside %}
+
+---
+
+{% aside icon="☝️" %}
+This recipe assumes you've got an existing Next.js and Keystatic site, that:
+
+1. uses the Next.js [App router](https://nextjs.org/docs/app)
+1. uses the [Reader API](/docs/reader-api) to retrieve content
+1. is connected to a GitHub repo, running in [github mode](/docs/github-mode) or [cloud mode](/docs/cloud)
+{% /aside %}
+
+---
+
+## Creating "start" and "end" preview routes
+
+Create an `app/preview/start/route.tsx` file that will enable draft mode when accessed:
+
+```tsx
+import { redirect } from 'next/navigation';
+import { draftMode, cookies } from 'next/headers';
+
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const params = url.searchParams;
+  const branch = params.get('branch');
+  const to = params.get('to');
+  if (!branch || !to) {
+    return new Response('Missing branch or to params', { status: 400 });
+  }
+  draftMode().enable();
+  cookies().set('ks-branch', branch);
+  const toUrl = new URL(to, url.origin);
+  toUrl.protocol = url.protocol;
+  toUrl.host = url.host;
+  redirect(toUrl.toString());
+}
+```
+
+Next, create an `app/preview/end/route.tsx` file used to disable draft mode:
+
+```tsx
+import { cookies, draftMode } from 'next/headers';
+
+export function POST(req: Request) {
+  if (req.headers.get('origin') !== new URL(req.url).origin) {
+    return new Response('Invalid origin', { status: 400 });
+  }
+  const referrer = req.headers.get('Referer');
+  if (!referrer) {
+    return new Response('Missing Referer', { status: 400 });
+  }
+  draftMode().disable();
+  cookies().delete('ks-branch');
+  return Response.redirect(referrer, 303);
+}
+```
+
+## Adding a "stop draft mode" button in the front-end
+
+Add the following to your main layout component to allow editors to opt out of draft mode:
+
+```diff
++ import { cookies, draftMode } from 'next/headers';
+
+export default async function RootLayout() {
+
++  const { isEnabled } = draftMode();
+
+  return (
+    <div>
+      {children}
+
++      {isEnabled && (
++        <div>
++          Draft mode ({cookies().get('ks-branch')?.value}){' '}
++          <form method="POST" action="/preview/end">
++            <button>End preview</button>
++          </form>
++        </div>
++      )}
+
+    </div>
+  );
+}
+
+```
+
+---
+
+## Adding a Preview URL key to collections or singletons
+
+The draft mode opt-in will happen from the Keystatic Admin UI.
+
+In the Keystatic config, collections and singletons can have a `previewUrl` key. This will generate an Admin UI link to the content preview, in draft mode:
+
+```diff
+collections: {
+  posts: collection({
+    label: 'Posts',
+    slugField: 'title',
+    path: `content/posts/*`,
++   previewUrl: `/preview/start?branch={branch}&to=/posts/{slug}`,
+    schema: { //... }
+  }),
+},
+```
+
+This prefixes the front-end route for a post entry with the `/preview/start` route we created earlier.
+
+---
+
+## Updating the Keystatic Reader
+
+The `reader` you're currently using from the Keystatic Reader API needs to be updated. If draft mode is turned on, it should read from GitHub directly, using Keystatic's GitHub reader.
+
+Since there is a little bit of setup involved, it makes sense to create reusable *draft-mode-aware* reader.
+
+{% aside icon="☝️" %}
+Make sure you replace the `repo: 'REPO_ORG/REPO_NAME'` line in the code snippet below with your own repo org and name!
+{% /aside %}
+
+{% aside icon="⚠️" %}
+If you didn't setup a GitHub app (you are using [Keystatic cloud](/docs/cloud)), you'll also need to replace the `token` line with a personal access token.
+
+Live previews may still work without a valid `token`, as long as your GitHub repo is public and you haven't reached GitHub's rate limit.
+{% /aside %}
+
+```ts
+// src/utils/reader.ts
+import { createReader } from '@keystatic/core/reader';
+import { createGitHubReader } from '@keystatic/core/reader/github';
+import keystaticConfig from '../../keystatic.config';
+
+import { cache } from 'react';
+import { cookies, draftMode } from 'next/headers';
+
+export const reader = cache(() => {
+  let isDraftModeEnabled = false;
+  // draftMode throws in e.g. generateStaticParams
+  try {
+    isDraftModeEnabled = draftMode().isEnabled;
+  } catch {}
+
+  if (isDraftModeEnabled) {
+    const branch = cookies().get('ks-branch')?.value;
+
+    if (branch) {
+      return createGitHubReader(keystaticConfig, {
+        // Replace the below with your repo org an name
+        repo: 'REPO_ORG/REPO_NAME',
+        ref: branch,
+        // Assuming an existing GitHub app
+        token: cookies().get('keystatic-gh-access-token')?.value,
+      });
+    }
+  }
+  // If draft mode is off, use the regular reader
+  return createReader(process.cwd(), keystaticConfig);
+});
+```
+
+## Updating existing uses of the reader
+
+The new `reader` is a function, so you'll need to update all your existing use cases to call the `reader()` function:
+
+```diff
+- const posts = await reader.collections.posts.all();
++ const posts = await reader().collections.posts.all();
+```
+
+---
+
+## Testing the preview
+
+In the Keystatic Admin UI, create a new post and save it in a new branch.
+
+Next to the `Save` button, you will find a preview icon.
+
+{% cloud-image
+   src="https://thinkmill-labs.keystatic.net/keystatic-site/images/q1xcdf0hg7ph/preview-button"
+   alt="Keystatic Admin UI's preview button"
+   height=368
+   width=680 /%}
+
+Click on it and you should see the post you just created!
+
+---
+
+## Screencast walk-through
+
+Here's a 2-minute video walk-through of the feature, as implemented on this website!
+
+{% embed
+   mediaType="video"
+   embedCode="<iframe src=\"https://www.youtube.com/embed/QuoADtLQVCE?si=WfaZm6GYs9zdsjbo\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>" /%}

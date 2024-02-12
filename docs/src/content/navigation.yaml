@@ -5,174 +5,240 @@ navGroups:
         link:
           discriminant: page
           value: introduction
+        isNew: false
       - label: Quick start
         link:
           discriminant: page
           value: quick-start
+        isNew: false
+      - label: Resources
+        link:
+          discriminant: url
+          value: /resources
+        isNew: true
   - groupName: Integration guides
     items:
       - label: Astro
         link:
           discriminant: page
           value: installation-astro
+        isNew: false
       - label: Next.js
         link:
           discriminant: page
           value: installation-next-js
+        isNew: false
       - label: Remix
         link:
-          discriminant: coming-soon
+          discriminant: page
+          value: installation-remix
+        isNew: true
   - groupName: Core concepts
     items:
       - label: Content organisation
         link:
           discriminant: page
           value: content-organisation
+        isNew: false
       - label: Path wildcard
         link:
           discriminant: page
           value: path-wildcard
+        isNew: false
       - label: Local mode
         link:
           discriminant: page
           value: local-mode
-      - label: GitHub mode
-        link:
-          discriminant: page
-          value: github-mode
+        isNew: false
       - label: Keystatic Cloud
         link:
           discriminant: page
           value: cloud
+        isNew: true
       - label: Using in a monorepo
         link:
           discriminant: page
           value: using-in-a-monorepo
+        isNew: true
+      - label: GitHub mode
+        link:
+          discriminant: page
+          value: github-mode
+        isNew: false
   - groupName: Recipes
     items:
+      - label: "Real-time previews with Next.js' draft mode"
+        link:
+          discriminant: page
+          value: recipes/real-time-previews
       - label: 'Astro: Disable Admin UI Routes in Production'
         link:
           discriminant: page
           value: recipes/astro-disable-admin-ui-in-production
+        isNew: false
   - groupName: Reference
     items:
       - label: Configuration
         link:
           discriminant: page
           value: configuration
+        isNew: false
       - label: Collections
         link:
           discriminant: page
           value: collections
+        isNew: false
       - label: Singletons
         link:
           discriminant: page
           value: singletons
+        isNew: false
       - label: Reader API
         link:
           discriminant: page
           value: reader-api
+        isNew: true
       - label: Format options
         link:
           discriminant: page
           value: format-options
+        isNew: false
       - label: Entry Layout
         link:
           discriminant: page
           value: entry-layout
+        isNew: false
+      - label: User interface
+        link:
+          discriminant: page
+          value: user-interface
+        isNew: true
   - groupName: Fields API
     items:
       - label: Array
         link:
           discriminant: page
           value: fields/array
+        isNew: false
       - label: Blocks
         link:
           discriminant: page
           value: fields/blocks
+        isNew: false
       - label: Checkbox
         link:
           discriminant: page
           value: fields/checkbox
+        isNew: false
       - label: Child
         link:
           discriminant: page
           value: fields/child
+        isNew: false
+      - label: Cloud Image
+        link:
+          discriminant: page
+          value: fields/cloud-image
+        isNew: true
       - label: Conditional
         link:
           discriminant: page
           value: fields/conditional
+        isNew: false
       - label: Date
         link:
           discriminant: page
           value: fields/date
+        isNew: false
       - label: Datetime
         link:
           discriminant: page
           value: fields/datetime
+        isNew: false
       - label: Document
         link:
           discriminant: page
           value: fields/document
+        isNew: false
       - label: Empty
         link:
           discriminant: page
           value: fields/empty
+        isNew: false
       - label: File
         link:
           discriminant: page
           value: fields/file
+        isNew: false
       - label: Image
         link:
           discriminant: page
           value: fields/image
+        isNew: true
       - label: Integer
         link:
           discriminant: page
           value: fields/integer
+        isNew: false
       - label: Multiselect
         link:
           discriminant: page
           value: fields/multiselect
+        isNew: false
+      - label: Number
+        link:
+          discriminant: page
+          value: fields/number
+        isNew: true
       - label: Object
         link:
           discriminant: page
           value: fields/object
+        isNew: false
       - label: Path Reference
         link:
           discriminant: page
           value: fields/path-reference
+        isNew: false
       - label: Relationship
         link:
           discriminant: page
           value: fields/relationship
+        isNew: false
       - label: Select
         link:
           discriminant: page
           value: fields/select
+        isNew: false
       - label: Slug
         link:
           discriminant: page
           value: fields/slug
+        isNew: false
       - label: Text
         link:
           discriminant: page
           value: fields/text
+        isNew: false
       - label: URL
         link:
           discriminant: page
           value: fields/url
+        isNew: false
   - groupName: Community
     items:
       - label: GitHub Discussions
         link:
           discriminant: url
           value: https://github.com/Thinkmill/keystatic/discussions
+        isNew: false
       - label: Discord
         link:
           discriminant: url
           value: /chat
+        isNew: false
       - label: Twitter
         link:
           discriminant: url
           value: https://twitter.com/thekeystatic
+        isNew: false

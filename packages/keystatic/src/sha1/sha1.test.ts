@@ -1,4 +1,5 @@
 /** @jest-environment node */
+import { expect, test } from '@jest/globals';
 import { sha1 as sha1Node } from './node';
 import { sha1 as sha1Webcrypto } from './webcrypto';
 import { webcrypto } from 'crypto';

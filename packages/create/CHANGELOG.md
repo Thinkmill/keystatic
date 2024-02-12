@@ -1,5 +1,11 @@
 # @keystatic/create
 
+## 0.0.4
+
+### Patch Changes
+
+- d76af081: Fix default exports in Node ESM
+
 ## 0.0.3
 
 ### Patch Changes

@@ -3,7 +3,9 @@ import { FieldDataError } from '../error';
 import { basicFormFieldWithSimpleReaderParse } from '../utils';
 import { MultiselectFieldInput } from '#field-ui/multiselect';
 
-export function multiselect<Option extends { label: string; value: string }>({
+export function multiselect<
+  const Option extends { label: string; value: string },
+>({
   label,
   options,
   defaultValue = [],
@@ -19,6 +21,7 @@ export function multiselect<Option extends { label: string; value: string }>({
   const valuesToOption = new Map(options.map(x => [x.value, x]));
   const field: BasicFormField<readonly Option['value'][]> =
     basicFormFieldWithSimpleReaderParse({
+      label,
       Input(props) {
         return (
           <MultiselectFieldInput

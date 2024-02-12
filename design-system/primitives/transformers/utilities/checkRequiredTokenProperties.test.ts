@@ -1,4 +1,5 @@
 import { checkRequiredTokenProperties } from './checkRequiredTokenProperties';
+import { expect, it, describe } from '@jest/globals';
 
 describe('Utilities: checkRequiredTokenProperties', () => {
   it('it throws if property is missing', () => {
@@ -10,7 +11,7 @@ describe('Utilities: checkRequiredTokenProperties', () => {
         },
         requiredProps
       )
-    ).toThrowError();
+    ).toThrow();
   });
 
   it('it does NOT throws if properties are present', () => {
@@ -23,6 +24,6 @@ describe('Utilities: checkRequiredTokenProperties', () => {
         },
         requiredProps
       )
-    ).not.toThrowError();
+    ).not.toThrow();
   });
 });

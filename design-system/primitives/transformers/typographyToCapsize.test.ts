@@ -2,6 +2,7 @@ import StyleDictionary from 'style-dictionary';
 
 import { typographyToCapsize } from './typographyToCapsize';
 import { getMockToken } from '../test-utilities';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Transformer: typographyToCapsize', () => {
   const tokens = [

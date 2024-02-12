@@ -23,7 +23,13 @@ export function markdocClipboard() {
         try {
           return Markdoc.format(
             proseMirrorToMarkdoc(
-              view.state.doc.type.create({}, content.content)
+              view.state.doc.type.create({}, content.content),
+              {
+                otherFiles: new Map(),
+                extraFiles: new Map(),
+                schema: getEditorSchema(view.state.schema),
+                slug: undefined,
+              }
             )
           );
         } catch (err) {
@@ -36,7 +42,10 @@ export function markdocClipboard() {
           return Slice.maxOpen(
             markdocToProseMirror(
               Markdoc.parse(text),
-              getEditorSchema(view.state.schema)
+              getEditorSchema(view.state.schema),
+              undefined,
+              undefined,
+              undefined
             ).content
           );
         } catch (err) {

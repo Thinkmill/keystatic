@@ -1,12 +1,11 @@
-import {
-  EditorListboxProps,
-  EditorPopover,
-  useEditorListbox,
-} from '../new-primitives';
 import { useMemo } from 'react';
+
+import { EditorPopover } from '@keystar/ui/editor';
+
 import { useEditorViewRef } from '../editor-view';
 import { useEditorKeydownListener } from '../keydown';
 import { useEditorReferenceElement } from '../popovers/reference';
+import { EditorListboxProps, useEditorListbox } from './EditorListbox';
 
 export function EditorAutocomplete<Item extends object>(
   props: Omit<EditorListboxProps<Item>, 'listenerRef'> & {
@@ -32,13 +31,15 @@ export function EditorAutocomplete<Item extends object>(
     keydownListener(event);
     return event.defaultPrevented;
   });
+
   return (
     referenceElement && (
       <EditorPopover
-        reference={referenceElement}
-        placement="bottom-start"
-        adaptToViewport="stretch"
+        adaptToBoundary="stretch"
+        portal={false}
         minWidth="element.medium"
+        placement="bottom-start"
+        reference={referenceElement}
       >
         {listbox}
       </EditorPopover>

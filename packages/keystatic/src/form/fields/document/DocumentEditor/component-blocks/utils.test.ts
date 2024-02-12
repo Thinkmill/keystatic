@@ -1,6 +1,7 @@
 import '../tests/utils';
 import { fields } from '../../../../api';
 import { getAncestorSchemas, getSchemaAtPropPath } from './utils';
+import { expect, test } from '@jest/globals';
 
 const blockChild = fields.child({ kind: 'block', placeholder: '' });
 const blockChild2 = fields.child({ kind: 'block', placeholder: '' });

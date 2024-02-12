@@ -1,5 +1,43 @@
 # keystatic-docs
 
+## 1.0.21
+
+### Patch Changes
+
+- Updated dependencies [0ea27bed]
+- Updated dependencies [178fd9f6]
+- Updated dependencies [dad16ba6]
+  - @keystatic/core@0.3.7
+  - @keystar/ui@0.7.0
+
+## 1.0.20
+
+### Patch Changes
+
+- Updated dependencies [ad59430d]
+- Updated dependencies [53d8fcc7]
+- Updated dependencies [b3071c88]
+  - @keystar/ui@0.6.0
+  - @keystatic/core@0.3.5
+
+## 1.0.19
+
+### Patch Changes
+
+- e2f22039: feat(docs): Add GitHub reader docs
+- Updated dependencies [98130aab]
+  - @keystatic/core@0.3.2
+
+## 1.0.18
+
+### Patch Changes
+
+- Updated dependencies [0b2432ed]
+- Updated dependencies [f4aaa8e3]
+  - @keystatic/core@0.3.0
+  - @keystatic/next@3.0.0
+  - @keystar/ui@0.5.0
+
 ## 1.0.17
 
 ### Patch Changes

@@ -9,6 +9,7 @@ import {
   useRef,
 } from 'react';
 
+import { TOKEN_PREFIX } from '@keystar/ui/primitives';
 import {
   classNames,
   css,
@@ -51,6 +52,8 @@ export const Modal: ForwardRefExoticComponent<
   );
 });
 
+const MAX_HEIGHT_VAR = `--${TOKEN_PREFIX}-visual-viewport-height`;
+
 const ModalWrapper = forwardRef(function ModalWrapper(
   props: ModalWrapperProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
@@ -88,23 +91,24 @@ const ModalWrapper = forwardRef(function ModalWrapper(
           width: '100vw',
           zIndex: 2, // above blanket
         })}
-        style={{ height: viewport.height }}
+        style={{
+          // @ts-ignore
+          [MAX_HEIGHT_VAR]: `${viewport.height}px`,
+          height: `var(${MAX_HEIGHT_VAR})`,
+        }}
       >
         <div
           {...modalProps}
           {...toDataAttributes({ open: isOpen, type })}
+          {...styleProps}
           ref={domRef}
-          style={Object.assign(
-            {},
-            { maxHeight: `calc(${viewport.height}px * 0.9)` },
-            styleProps.style
-          )}
           className={classNames(
             styleProps.className,
             css({
               backgroundColor: tokenSchema.color.background.surface, // TODO: component token?
               borderRadius: tokenSchema.size.radius.large, // TODO: component token?
               boxShadow: `${tokenSchema.size.shadow.large} ${tokenSchema.color.shadow.emphasis}`,
+              maxHeight: `calc(var(${MAX_HEIGHT_VAR}) * 0.9)`,
               maxWidth: '90vw',
               opacity: 0,
               outline: 0,

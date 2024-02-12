@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import { expect, describe, it, jest } from '@jest/globals';
 
 import { fireEvent, render } from '@testing-library/react';
 
@@ -64,6 +64,6 @@ describe('navigation/TextLink', () => {
 
     fireEvent.click(getByRole('link'));
 
-    expect(onPress).toBeCalledTimes(1);
+    expect(onPress).toHaveBeenCalledTimes(1);
   });
 });

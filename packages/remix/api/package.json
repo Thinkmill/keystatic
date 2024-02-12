@@ -1,4 +1,0 @@
-{
-  "main": "dist/keystatic-remix-api.cjs.js",
-  "module": "dist/keystatic-remix-api.esm.js"
-}

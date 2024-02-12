@@ -1,28 +1,17 @@
 {
   "name": "@keystatic/astro",
-  "version": "2.0.0",
+  "version": "3.0.2",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/Thinkmill/keystatic/",
     "directory": "packages/astro"
   },
+  "type": "module",
   "exports": {
-    "./ui": {
-      "types": "./ui/dist/keystatic-astro-ui.cjs.js",
-      "module": "./ui/dist/keystatic-astro-ui.esm.js",
-      "default": "./ui/dist/keystatic-astro-ui.cjs.js"
-    },
-    "./api": {
-      "types": "./api/dist/keystatic-astro-api.cjs.js",
-      "module": "./api/dist/keystatic-astro-api.esm.js",
-      "default": "./api/dist/keystatic-astro-api.cjs.js"
-    },
-    ".": {
-      "types": "./dist/keystatic-astro.cjs.js",
-      "module": "./dist/keystatic-astro.esm.js",
-      "default": "./dist/keystatic-astro.cjs.js"
-    },
+    "./ui": "./dist/keystatic-astro-ui.js",
+    "./api": "./dist/keystatic-astro-api.js",
+    ".": "./dist/keystatic-astro.js",
     "./package.json": "./package.json",
     "./internal/keystatic-api.js": "./internal/keystatic-api.js",
     "./internal/keystatic-astro-page.astro": "./internal/keystatic-astro-page.astro"
@@ -30,12 +19,8 @@
   "keywords": [
     "astro-integration"
   ],
-  "main": "dist/keystatic-astro.cjs.js",
-  "module": "dist/keystatic-astro.esm.js",
   "files": [
     "dist",
-    "api",
-    "ui",
     "internal"
   ],
   "scripts": {
@@ -51,16 +36,16 @@
     "set-cookie-parser": "^2.5.1"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.2.0",
+    "@keystatic/core": "^0.3.4",
     "@types/cookie": "^0.5.1",
     "@types/set-cookie-parser": "^2.4.2",
-    "astro": "^3.0.3",
+    "astro": "^4.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "peerDependencies": {
     "@keystatic/core": "*",
-    "astro": "2 || 3",
+    "astro": "2 || 3 || 4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

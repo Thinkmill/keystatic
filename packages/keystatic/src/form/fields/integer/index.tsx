@@ -16,13 +16,14 @@ export function integer<IsRequired extends boolean | undefined>({
 }: {
   label: string;
   defaultValue?: number;
-  validation?: { isRequired?: IsRequired; min: number; max: number };
+  validation?: { isRequired?: IsRequired; min?: number; max?: number };
   description?: string;
 } & RequiredValidation<IsRequired>): BasicFormField<
   number | null,
   number | (IsRequired extends true ? never : null)
 > {
   return basicFormFieldWithSimpleReaderParse({
+    label,
     Input(props) {
       return (
         <IntegerFieldInput

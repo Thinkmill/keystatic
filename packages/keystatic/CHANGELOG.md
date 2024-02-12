@@ -1,5 +1,262 @@
 # @keystatic/core
 
+## 0.3.17
+
+### Patch Changes
+
+- bd21c93b: Fix having multiple hard breaks together in the new editor breaking
+  parsing
+
+## 0.3.16
+
+### Patch Changes
+
+- a416aca6: Fix collaboration persistence
+
+## 0.3.15
+
+### Patch Changes
+
+- 976d93cd: Persist collaboration state in IDB and optimistically connect to
+  multiplayer websocket
+
+## 0.3.14
+
+### Patch Changes
+
+- a78be90b: Fix table cell contents jumping around in the new editor
+
+## 0.3.13
+
+### Patch Changes
+
+- d97d0749: Add experimental multiplayer support
+
+## 0.3.12
+
+### Patch Changes
+
+- d4c1c8bb: Support parsing link/image references in the mdx field
+- f89d2503: Fix popovers in new editor
+
+## 0.3.11
+
+### Patch Changes
+
+- 5e30128f: Add `template` option to collections
+- c3bb3d12: Tweak Markdoc Editor Component UI
+
+## 0.3.10
+
+### Patch Changes
+
+- 8b2822c9: Add more specific error when fetching a blob fails
+
+## 0.3.9
+
+### Patch Changes
+
+- b9e14f39: Fix hard breaks not being serialised in the editors
+
+## 0.3.8
+
+### Patch Changes
+
+- e0e571f5: Add `parseSlugForSort` option to collections
+
+## 0.3.7
+
+### Patch Changes
+
+- 0ea27bed: Add number field
+- 178fd9f6: Add `columns` option to collections
+- Updated dependencies [dad16ba6]
+  - @keystar/ui@0.7.0
+
+## 0.3.6
+
+### Patch Changes
+
+- 67fe5f11: Fix parsing attributes on marks in the new editor
+
+## 0.3.5
+
+### Patch Changes
+
+- 53d8fcc7: Update icons
+- b3071c88: Fix array field parsing in the mdx field
+- Updated dependencies [ad59430d]
+- Updated dependencies [53d8fcc7]
+  - @keystar/ui@0.6.0
+
+## 0.3.4
+
+### Patch Changes
+
+- 8320c683: Fix `@markdoc/markdoc` import
+
+## 0.3.3
+
+### Patch Changes
+
+- 1b6200a2: MDX serialisation fixes
+
+## 0.3.2
+
+### Patch Changes
+
+- 98130aab: Fix Keystatic breaking when a repo has over 100 branches
+
+## 0.3.1
+
+### Patch Changes
+
+- 73d10904: Fix document field duplicating whitespace in some cases
+- 09f24103: Update `is-hotkey` import
+
+## 0.3.0
+
+### Minor Changes
+
+- f4aaa8e3: Switch build to ESM-only
+
+### Patch Changes
+
+- 0b2432ed: Cache repository directory structure and files in browser storage
+- Updated dependencies [f4aaa8e3]
+  - @keystar/ui@0.5.0
+
+## 0.2.12
+
+### Patch Changes
+
+- 4053f41c: Improve type inference for `fields.select` and `fields.multiselect`
+- 22dc4030: Implement `NodeView` and `ToolbarView` for inline components in the
+  new editor
+- 6986f36b: Show name fields in slug fields as required if the min length is
+  greater than 0
+- Updated dependencies [05a71cde]
+  - @keystar/ui@0.4.9
+
+## 0.2.11
+
+### Patch Changes
+
+- ba4822c6: Fix `min` and `max` being required on `validation` in
+  `fields.integer` when it is provided
+- c9711cf3: Update configuration for custom components in experimental new
+  editor
+
+## 0.2.10
+
+### Patch Changes
+
+- bebaa922: Fix `fields.integer` allowing any number
+- 4aa8fefe: Fix url encoding breaking on auth redirects
+- 52a018f6: Fix drafts on item creation not being deleted after the item is
+  created
+- Updated dependencies [bebaa922]
+  - @keystar/ui@0.4.8
+
+## 0.2.9
+
+### Patch Changes
+
+- 415eda28: Fix view on GitHub links
+
+## 0.2.8
+
+### Patch Changes
+
+- e956e366: Persist draft state of entry creation in browser storage
+- b2794230: Fix race condition when trying to save an entry when it's already
+  being saved
+
+## 0.2.7
+
+### Patch Changes
+
+- 904158b0: Fix marks with leading and trailing spaces
+- Updated dependencies [90fd3809]
+  - @keystar/ui@0.4.7
+
+## 0.2.6
+
+### Patch Changes
+
+- d76af081: Fix default exports in Node ESM
+- Updated dependencies [d76af081]
+  - @keystar/ui@0.4.6
+
+## 0.2.5
+
+### Patch Changes
+
+- 13206393: Minor a11y fixes/improvements for document + markdoc editors.
+- 0ca7f47a: Markdoc editor popover improvements:
+
+  - boundary respected by popovers
+  - popovers tethered to reference regardless of type (node/range/virtual) +
+    better perf
+
+- 7a98fd68: Support "layout" prop on `fields.object()`. Add required indicators
+  to fields, where appropriate.
+- 56b6b121: Refactor the markdoc editor toolbar; move all formatting options
+  under a single tab-stop.
+- 3288c624: Replace explicit node styles with inherited styling from "prose"
+  wrapper, where appropriate, in the markdoc editor.
+- bd28cfd4: Collection table: hide "status" column for default branch.
+- e32ff596: ProseMirror editor: support and populate "description" + "icon" on
+  insert menu items.
+- 16bd7064: Improve error message for branch creation name validation.
+- e1c9e0cf: ProseMirror editor improvements
+- 267845b1: Merge topbar UI into sidebar; reclaim vertical real estate.
+- Updated dependencies [0ca7f47a]
+- Updated dependencies [13206393]
+- Updated dependencies [56b6b121]
+- Updated dependencies [bd28cfd4]
+- Updated dependencies [0e81263b]
+- Updated dependencies [267845b1]
+- Updated dependencies [3288c624]
+  - @keystar/ui@0.4.5
+
+## 0.2.4
+
+### Patch Changes
+
+- 0de2f090: Add support for tables in `fields.markdoc`
+- Updated dependencies [0673fb03]
+  - @keystar/ui@0.4.4
+
+## 0.2.3
+
+### Patch Changes
+
+- 2b4f24b8: Prepare the dialog interface for batch commits. The invoking element
+  has been omitted from the UI until we're ready to implement.
+- Updated dependencies [a3f86e8f]
+- Updated dependencies [2b4f24b8]
+  - @keystar/ui@0.4.3
+
+## 0.2.2
+
+### Patch Changes
+
+- b9f0758f: Observe nav config as dashboard cards.
+- f3cc119c: Fix deleting files inside an entry directory that aren't associated
+  with the entry when updating or deleting the entry
+
+## 0.2.1
+
+### Patch Changes
+
+- 9854c6b1: Support `ui.navigation` config.
+- 0229959f: Replace hard-coded class names with `ClassList` instances.
+- 454f25c9: New config `ui` supports branding options.
+- Updated dependencies [9854c6b1]
+- Updated dependencies [0229959f]
+  - @keystar/ui@0.4.2
+
 ## 0.2.0
 
 ### Minor Changes

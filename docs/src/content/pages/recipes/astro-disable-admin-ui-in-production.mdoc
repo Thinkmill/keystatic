@@ -2,79 +2,62 @@
 title: 'Astro: Disable Admin UI Routes in Production'
 summary: >-
   This recipe shows you how to prevent access to (and indexing of) `/keystatic`
-  routes in production if you're using the Astro framework.
+  routes in production when using the Astro framework.
 ---
-
 {% aside icon="🙏" %}
 This is a community contribution from [Florian Lefebvre](https://florian-lefebvre.dev) — thank you Florian!
 {% /aside %}
 
 When using the `local` strategy, you may want to disable access to the `/keystatic` routes in production.
 
-Here's how you can prevent access to (and indexing of) those routes if you're using the Astro framework.
+Here's how you can prevent access to (and indexing of) those routes when using the Astro framework.
 
-## Adding redirects
+## Conditionally render the Astro plugin
 
-You can redirect visits to the `/keystatic` route in production with `Astro.redirect`:
-
-```diff
----
-// src/pages/keystatic/[...params].astro
-import { Keystatic } from '../../../keystatic.page'
-
-export const prerender = false
-
-+ if (import.meta.env.MODE === 'production') {
-+   return Astro.redirect('/')
-+ }
----
-
-<Keystatic client:only />
-
-```
-
-You will need to do the same for the `api/keystatic` routes:
-
-```diff
-// src/pages/api/keystatic/[...params].ts
-import { makeHandler } from '@keystatic/astro/api'
-import keystaticConfig from '../../../../keystatic.config'
-+ import { APIContext } from 'astro'
-
-- export const all = makeHandler({
--  config: keystaticConfig,
-- })
-
-+ export const all = ({ ...params }: APIContext) => {
-+  if (import.meta.env.MODE === 'production') {
-+    return params.redirect('/', 307)
-+  }
-
-+  return makeHandler({
-+    config: keystaticConfig,
-+  })(params)
-+}
-
-
-export const prerender = false
-
-```
-
-## Excluding routes from sitemap
-
-If you're using `@astrojs/sitemap`, you can exclude those routes as well:
+If you've followed the [Astro integration guide](/docs/installation-astro), you should have a `keystatic` integration in your `astro.config.mjs` file. Now, we'll introduce a condition in the configuration file which will enable us to use an environment variable to determine when Keystatic should be mounted.
 
 ```diff
 // astro.config.mjs
 import { defineConfig } from 'astro/config'
-import sitemap from '@astrojs/sitemap';
 
+import react from '@astrojs/react'
+import markdoc from '@astrojs/markdoc'
+import keystatic from '@keystatic/astro'
+
+// https://astro.build/config
 export default defineConfig({
-  integrations: [
-+     sitemap({
-+       filter: (page) => !page.includes("keystatic"),
-+     });
-  ]
+-  integrations: [react(), markdoc(), keystatic()],
++  integrations: [react(), markdoc(), ...(process.env.SKIP_KEYSTATIC ? [] : [keystatic()])],
+   output: 'hybrid',
 })
+
 ```
 
+The condition above will not mount Keystatic if `SKIP_KEYSTATIC=true` is present in your environment variables. If `SKIP_KEYSTATIC` is not defined or set to false, Keystatic will be mounted.
+
+## Adding environment variables
+
+We won't cover every host here but you can check out [Astro's deploy guides](https://docs.astro.build/en/guides/deploy/) for a more exhaustive list.
+
+### Vercel
+
+If you're deploying your Astro project with Vercel, you can add environment variables in your project's settings.
+
+- Navigate to Project -> Settings -> Environment variables. 
+- In the 'Key' field, type `SKIP_KEYSTATIC` and in the 'Value' field, type `true`.
+- Click 'Save'
+
+Check out [Vercel's official docs](https://vercel.com/docs/projects/environment-variables) for further details.
+
+### Netlify
+If you're deploying your Astro project with Netlify, you can add environment variables in your site's configuration page. 
+
+- Navigate to Site -> Site configuration -> Environment variables. 
+- Add a new variable by clicking 'Add a variable' and 'Add a single variable'. 
+- Set the 'Key' as `SKIP_KEYSTATIC` and the 'Value' as `true`.
+- Click 'Save variable'
+
+Refer to [Netlify's official docs](https://docs.netlify.com/environment-variables/get-started/#site-environment-variables) for additional guidance.
+
+## Re-deploy
+Re-deploy your project for your changes to take effect. Keystatic routes will no longer deploy to production (routes won't be indexed or added to sitemaps) and you can still run Keystatic on your local machine. 

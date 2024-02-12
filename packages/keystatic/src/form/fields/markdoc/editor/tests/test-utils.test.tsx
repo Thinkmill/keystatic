@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { expect, test } from '@jest/globals';
 import { jsx, renderEditor } from './utils';
 
 test('basic cursor snapshot', () => {
@@ -309,7 +310,7 @@ test('editor equality mismatch', () => {
         </paragraph>
       </doc>
     )
-  ).toThrowError();
+  ).toThrow();
 });
 
 test('editor equality mismatch with only a different selection', () => {
@@ -335,7 +336,7 @@ test('editor equality mismatch with only a different selection', () => {
         </paragraph>
       </doc>
     )
-  ).toThrowError();
+  ).toThrow();
 });
 
 test('cursor in the middle of text', () => {

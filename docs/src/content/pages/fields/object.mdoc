@@ -43,6 +43,45 @@ snapshot: fields.object({
 })
 ```
 
+## Patterns
+
+### Field goups
+
+You can group fields together by providing a second "options" argument to `fields.object()`, which accepts a `label` and `description`. This is similar to a `<fieldset>` in HTML.
+
+```typescript
+address: fields.object({
+  street: fields.text({ label: 'Street' }),
+  city: fields.text({ label: 'City' }),
+  state: fields.text({ label: 'State' }),
+  postcode: fields.text({ label: 'Postcode' }),
+  country: fields.text({ label: 'Country' }),
+},
+{
+  label: 'Address',
+  description: 'The address of the user',
+})
+```
+
+### Layout
+
+The options argument also accepts a `layout` property, which can be used to define the number of columns each field should span. The grid layout supports 12 possible columns.
+
+```typescript
+address: fields.object({
+  street: fields.text({ label: 'Street' }),
+  city: fields.text({ label: 'City' }),
+  state: fields.text({ label: 'State' }),
+  postcode: fields.text({ label: 'Postcode' }),
+  country: fields.text({ label: 'Country' }),
+},
+{
+  label: 'Address',
+  description: 'The address of the user',
+  layout: [12, 6, 3, 3, 12],
+})
+```
+
 ## Type signature
 
 Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.object](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.object)

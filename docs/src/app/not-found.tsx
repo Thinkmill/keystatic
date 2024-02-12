@@ -14,7 +14,10 @@ export default async function NotFound() {
     <div className="flex min-h-screen flex-col">
       <HeaderNav navigationMap={navigationMap} ignoreDocNavStyles />
 
-      <Main className="mx-auto flex w-full max-w-7xl flex-1 items-center px-6 pb-12 pt-6">
+      <Main
+        className="mx-auto flex w-full max-w-7xl flex-1 items-center px-6 pb-12 pt-6"
+        data-pagefind-ignore
+      >
         <PageNotFound />
       </Main>
 

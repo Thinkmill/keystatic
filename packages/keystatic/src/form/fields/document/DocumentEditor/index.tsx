@@ -7,7 +7,7 @@ import {
   useMemo,
   createContext,
 } from 'react';
-import isHotkey from 'is-hotkey';
+import { isHotkey } from 'is-hotkey';
 import {
   Editor,
   Node,

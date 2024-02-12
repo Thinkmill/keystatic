@@ -19,6 +19,7 @@ import {
   TreeEntry,
   TreeNode,
   treeSha,
+  treeToEntries,
 } from '../trees';
 import {
   DataState,
@@ -42,6 +43,12 @@ import { ViewerContext, SidebarFooter_viewer } from './viewer-data';
 import { parseRepoConfig, serializeRepoConfig } from '../repo-config';
 import { z } from 'zod';
 import { scopeEntriesWithPathPrefix } from './path-prefix';
+import {
+  garbageCollectGitObjects,
+  getTreeFromPersistedCache,
+  setTreeToPersistedCache,
+} from '../object-cache';
+import { CollabProvider } from './collab';
 
 export function fetchLocalTree(sha: string) {
   if (treeCache.has(sha)) {
@@ -125,6 +132,7 @@ const cloudInfoSchema = z.object({
     name: z.string(),
     slug: z.string(),
     images: z.boolean(),
+    multiplayer: z.boolean(),
   }),
 });
 
@@ -178,6 +186,10 @@ export function GitHubAppShellDataProvider(props: {
   config: Config;
   children: ReactNode;
 }) {
+  const repo =
+    props.config.storage.kind === 'github'
+      ? parseRepoConfig(props.config.storage.repo)
+      : { name: 'repo-name', owner: 'repo-owner' };
   const [state] = useQuery<
     OperationData<typeof GitHubAppShellQuery | typeof CloudAppShellQuery>,
     OperationVariables<typeof GitHubAppShellQuery | typeof CloudAppShellQuery>
@@ -186,14 +198,47 @@ export function GitHubAppShellDataProvider(props: {
       props.config.storage.kind === 'github'
         ? GitHubAppShellQuery
         : CloudAppShellQuery,
-    variables:
-      props.config.storage.kind === 'github'
-        ? parseRepoConfig(props.config.storage.repo)
-        : {
-            name: 'repo-name',
-            owner: 'repo-owner',
-          },
+    variables: repo,
   });
+
+  const [cursorState, setCursorState] = useState<string | null>(null);
+
+  const [moreRefsState] = useQuery({
+    query: gql`
+      query FetchMoreRefs($owner: String!, $name: String!, $after: String) {
+        repository(owner: $owner, name: $name) {
+          __typename
+          id
+          refs(refPrefix: "refs/heads/", first: 100, after: $after) {
+            __typename
+            nodes {
+              ...Ref_base
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+          }
+        }
+      }
+      ${Ref_base}
+    ` as import('../../../__generated__/ts-gql/FetchMoreRefs').type,
+    pause: !state.data?.repository?.refs?.pageInfo.hasNextPage,
+    variables: {
+      ...repo,
+      after: cursorState ?? state.data?.repository?.refs?.pageInfo.endCursor,
+    },
+  });
+
+  const pageInfo = moreRefsState.data?.repository?.refs?.pageInfo;
+  if (
+    pageInfo?.hasNextPage &&
+    pageInfo.endCursor !== cursorState &&
+    pageInfo.endCursor
+  ) {
+    setCursorState(pageInfo.endCursor);
+  }
+
   return (
     <GitHubAppShellDataContext.Provider value={state}>
       <ViewerContext.Provider
@@ -242,6 +287,19 @@ export function GitHubAppShellProvider(props: {
     (x): x is typeof x & { target: { __typename: 'Commit' } } =>
       x?.name === props.currentBranch
   );
+
+  useEffect(() => {
+    if (repo?.refs?.nodes) {
+      garbageCollectGitObjects(
+        repo.refs.nodes
+          .map(x =>
+            x?.target?.__typename === 'Commit' ? x.target.tree.oid : undefined
+          )
+          .filter(isDefined)
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [repo?.id]);
 
   const defaultBranchTreeSha = defaultBranchRef?.target.tree.oid ?? null;
   const currentBranchTreeSha = currentBranchRef?.target.tree.oid ?? null;
@@ -296,11 +354,14 @@ export function GitHubAppShellProvider(props: {
   useEffect(() => {
     if (error?.response?.status === 401) {
       if (isGitHubConfig(props.config)) {
-        window.location.href = `/api/keystatic/github/login?from=${router.params.join(
-          '/'
-        )}`;
+        window.location.href = `/api/keystatic/github/login?from=${router.params
+          .map(encodeURIComponent)
+          .join('/')}`;
       } else {
-        redirectToCloudAuth(router.params.join('/'), props.config);
+        redirectToCloudAuth(
+          router.params.map(encodeURIComponent).join('/'),
+          props.config
+        );
       }
     }
     if (
@@ -311,9 +372,9 @@ export function GitHubAppShellProvider(props: {
           (err?.originalError as any)?.type === 'FORBIDDEN'
       )
     ) {
-      window.location.href = `/api/keystatic/github/repo-not-found?from=${router.params.join(
-        '/'
-      )}`;
+      window.location.href = `/api/keystatic/github/repo-not-found?from=${router.params
+        .map(encodeURIComponent)
+        .join('/')}`;
     }
   }, [error, router, repo?.id, props.config]);
   const baseInfo = useMemo(
@@ -373,7 +434,13 @@ export function GitHubAppShellProvider(props: {
           <BaseInfoContext.Provider value={baseInfo}>
             <ChangedContext.Provider value={changedData}>
               <TreeContext.Provider value={allTreeData}>
-                {props.children}
+                {props.config.storage.kind === 'cloud' ? (
+                  <CollabProvider config={props.config}>
+                    {props.children}
+                  </CollabProvider>
+                ) : (
+                  props.children
+                )}
               </TreeContext.Provider>
             </ChangedContext.Provider>
           </BaseInfoContext.Provider>
@@ -499,6 +566,10 @@ const BaseRepo = gql`
       nodes {
         ...Ref_base
       }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
   ${Ref_base}
@@ -575,10 +646,31 @@ export async function hydrateTreeCacheWithEntries(entries: TreeEntry[]) {
 export function fetchGitHubTreeData(sha: string, config: Config) {
   const cached = treeCache.get(sha);
   if (cached) return cached;
-  const promise = getAuth(config)
-    .then(auth => {
-      if (!auth) throw new Error('Not authorized');
-      return fetch(
+  const cachedFromPersisted = getTreeFromPersistedCache(sha);
+  if (cachedFromPersisted && !(cachedFromPersisted instanceof Promise)) {
+    const entries = treeToEntries(cachedFromPersisted.children!);
+    const result = {
+      entries: new Map(entries.map(entry => [entry.path, entry])),
+      tree: cachedFromPersisted.children!,
+    };
+    treeCache.set(sha, result);
+    return result;
+  }
+  const promise = (async () => {
+    const cached = await cachedFromPersisted;
+    if (cached) {
+      const entries = treeToEntries(cached.children!);
+      const result = {
+        entries: new Map(entries.map(entry => [entry.path, entry])),
+        tree: cached.children!,
+      };
+      treeCache.set(sha, result);
+      return result;
+    }
+    const auth = await getAuth(config);
+    if (!auth) throw new Error('Not authorized');
+    const { tree }: { tree: (TreeEntry & { url: string; size?: number })[] } =
+      await fetch(
         config.storage.kind === 'github'
           ? `https://api.github.com/repos/${serializeRepoConfig(
               config.storage.repo
@@ -591,12 +683,10 @@ export function fetchGitHubTreeData(sha: string, config: Config) {
           },
         }
       ).then(x => x.json());
-    })
-    .then((res: { tree: (TreeEntry & { url: string })[] }) =>
-      hydrateTreeCacheWithEntries(
-        res.tree.map(({ url, ...rest }) => rest as TreeEntry)
-      )
-    );
+    const treeEntries = tree.map(({ url, size, ...rest }) => rest as TreeEntry);
+    await setTreeToPersistedCache(sha, treeEntriesToTreeNodes(treeEntries));
+    return hydrateTreeCacheWithEntries(treeEntries);
+  })();
   treeCache.set(sha, promise);
   return promise;
 }

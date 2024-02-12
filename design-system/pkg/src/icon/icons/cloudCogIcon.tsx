@@ -1,15 +1,6 @@
 export const cloudCogIcon = (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    width="1em"
-    height="1em"
-  >
-    <path d="M20 16.2A4.5 4.5 0 0 0 17.5 8h-1.8A7 7 0 1 0 4 14.9" />
+  <>
     <circle cx={12} cy={17} r={3} />
-    <path d="M12 13v1M12 20v1M16 17h-1M9 17H8M15 14l-.88.88M9.88 19.12 9 20M15 20l-.88-.88M9.88 14.88 9 14" />
-  </svg>
+    <path d="M4.2 15.1A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.2M15.7 18.4l-.9-.3M9.2 15.9l-.9-.3M10.6 20.7l.3-.9M13.1 14.2l.3-.9M13.6 20.7l-.4-1M10.8 14.3l-.4-1M8.3 18.6l1-.4M14.7 15.8l1-.4" />
+  </>
 );

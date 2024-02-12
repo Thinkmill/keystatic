@@ -1,7 +1,7 @@
 import { toastQueue } from '@keystar/ui/toast';
 import { Text } from '@keystar/ui/typography';
 import { useLocale } from '@react-aria/i18n';
-import { UseStore, createStore, del, get, set } from 'idb-keyval';
+import { UseStore, clear, createStore, del, get, set } from 'idb-keyval';
 import { useState, useMemo } from 'react';
 
 const units = {
@@ -72,8 +72,9 @@ function getStore() {
 }
 
 type Key =
-  | readonly ['collection', string, string]
-  | readonly ['singleton', string];
+  | readonly ['collection', collection: string, slug: string]
+  | readonly ['collection-create', collection: string, duplicateSlug?: string]
+  | readonly ['singleton', singleton: string];
 
 // the as anys are because the indexeddb types dont't accept readonly arrays
 
@@ -87,4 +88,8 @@ export function delDraft(key: Key) {
 
 export function getDraft(key: Key): Promise<unknown> {
   return get(key as any, getStore());
+}
+
+export async function clearDrafts() {
+  await clear(getStore());
 }

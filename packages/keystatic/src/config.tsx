@@ -1,6 +1,12 @@
-import { ComponentSchema, SlugFormField } from './form/api';
+import { ColorScheme } from '@keystar/ui/types';
+import { ReactElement } from 'react';
+
+import { ComponentSchema, FormField, SlugFormField } from './form/api';
 import type { Locale } from './app/l10n/locales';
 import { RepoConfig } from './app/repo-config';
+
+// Common
+// ----------------------------------------------------------------------------
 
 export type DataFormat = 'json' | 'yaml';
 export type Format = DataFormat | { data?: DataFormat; contentField?: string };
@@ -15,6 +21,9 @@ export type Collection<
   entryLayout?: EntryLayout;
   format?: Format;
   previewUrl?: string;
+  columns?: string[];
+  template?: string;
+  parseSlugForSort?: (slug: string) => string | number;
   slugField: SlugField;
   schema: Schema;
 };
@@ -28,15 +37,40 @@ export type Singleton<Schema extends Record<string, ComponentSchema>> = {
   schema: Schema;
 };
 
-type CommonConfig = {
+type CommonConfig<Collections, Singletons> = {
   locale?: Locale;
   cloud?: { project: string };
+  ui?: UserInterface<Collections, Singletons>;
 };
 
 type CommonRemoteStorageConfig = {
   pathPrefix?: string;
   branchPrefix?: string;
 };
+
+// Interface
+// ----------------------------------------------------------------------------
+
+type BrandMark = (props: {
+  colorScheme: Exclude<ColorScheme, 'auto'>; // we resolve "auto" to "light" or "dark" on the client
+}) => ReactElement;
+export const NAVIGATION_DIVIDER_KEY = '---';
+type UserInterface<Collections, Singletons> = {
+  brand?: {
+    mark?: BrandMark;
+    name: string;
+  };
+  navigation?: Navigation<
+    | (keyof Collections & string)
+    | (keyof Singletons & string)
+    | typeof NAVIGATION_DIVIDER_KEY
+  >;
+};
+
+type Navigation<K> = K[] | { [section: string]: K[] };
+
+// Storage
+// ----------------------------------------------------------------------------
 
 type GitHubStorageConfig = {
   kind: 'github';
@@ -58,7 +92,7 @@ export type GitHubConfig<
   storage: GitHubStorageConfig;
   collections?: Collections;
   singletons?: Singletons;
-} & CommonConfig;
+} & CommonConfig<Collections, Singletons>;
 
 type LocalStorageConfig = { kind: 'local' };
 
@@ -77,7 +111,7 @@ export type LocalConfig<
   storage: LocalStorageConfig;
   collections?: Collections;
   singletons?: Singletons;
-} & CommonConfig;
+} & CommonConfig<Collections, Singletons>;
 
 type CloudStorageConfig = { kind: 'cloud' } & CommonRemoteStorageConfig;
 
@@ -97,7 +131,7 @@ export type CloudConfig<
   cloud: { project: string };
   collections?: Collections;
   singletons?: Singletons;
-} & CommonConfig;
+} & CommonConfig<Collections, Singletons>;
 
 export type Config<
   Collections extends {
@@ -116,7 +150,11 @@ export type Config<
   singletons?: Singletons;
 } & ({} extends Collections ? {} : { collections: Collections }) &
   ({} extends Singletons ? {} : { singletons: Singletons }) &
-  CommonConfig;
+  CommonConfig<Collections, Singletons>;
+
+// ============================================================================
+// Functions
+// ============================================================================
 
 export function config<
   Collections extends {
@@ -137,7 +175,19 @@ export function collection<
       : never;
   }[keyof Schema],
 >(
-  collection: Collection<Schema, SlugField & string>
+  collection: Collection<Schema, SlugField & string> & {
+    columns?: {
+      [K in keyof Schema]: Schema[K] extends
+        | FormField<
+            any,
+            any,
+            string | number | boolean | Date | null | undefined
+          >
+        | SlugFormField<any, any, any, string>
+        ? K & string
+        : never;
+    }[keyof Schema][];
+  }
 ): Collection<Schema, SlugField & string> {
   return collection;
 }

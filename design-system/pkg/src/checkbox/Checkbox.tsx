@@ -85,7 +85,7 @@ export function Checkbox(props: CheckboxProps) {
             css({
               position: 'absolute',
               zIndex: 1,
-              inset: `calc(${tokenSchema.size.space.regular} * -1)`, // expand hit area
+              inset: 0,
               opacity: 0.0001,
             })
           )}

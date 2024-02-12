@@ -43,3 +43,19 @@ export function toggleCodeBlock(
     return true;
   };
 }
+
+export function insertTable(tableType: NodeType): Command {
+  const rowType = tableType.contentMatch.defaultType!;
+  const cellType = rowType.contentMatch.defaultType!;
+  return (state, dispatch) => {
+    const cell = cellType.createAndFill()!;
+    const row = rowType.create(undefined, [cell, cell, cell]);
+    dispatch?.(
+      state.tr.replaceSelectionWith(
+        tableType.create(undefined, [row, row, row])
+      )
+    );
+
+    return true;
+  };
+}

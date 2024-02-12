@@ -1,4 +1,12 @@
-import '@testing-library/jest-dom';
+import {
+  expect,
+  describe,
+  it,
+  jest,
+  beforeAll,
+  afterAll,
+  afterEach,
+} from '@jest/globals';
 
 import { Button } from '@keystar/ui/button';
 import {
@@ -12,9 +20,9 @@ import {
 import { ListView, Item } from '..';
 
 describe('list-view/ListView', () => {
-  let offsetWidth: jest.SpyInstance<number>,
-    offsetHeight: jest.SpyInstance<number>,
-    scrollHeight: jest.SpyInstance<number>;
+  let offsetWidth: jest.SpiedGetter<number>,
+    offsetHeight: jest.SpiedGetter<number>,
+    scrollHeight: jest.SpiedGetter<number>;
   let items = [
     { key: 'foo', label: 'Foo' },
     { key: 'bar', label: 'Bar' },

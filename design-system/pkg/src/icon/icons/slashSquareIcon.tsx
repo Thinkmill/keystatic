@@ -1,0 +1,6 @@
+export const slashSquareIcon = (
+  <>
+    <rect width={18} height={18} x={3} y={3} rx={2} />
+    <path d="m9 15 6-6" />
+  </>
+);

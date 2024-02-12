@@ -1,5 +1,6 @@
 /** @jest-environment node */
 import { ComponentSchema, fields } from '../../../..';
+import { expect, test } from '@jest/globals';
 import { findSingleChildField } from './find-children';
 
 test('one child field', () => {
@@ -140,6 +141,7 @@ test('array', () => {
               "defaultValue": [Function],
               "formKind": "slug",
               "kind": "form",
+              "label": "Heading",
               "parse": [Function],
               "reader": {
                 "parse": [Function],
@@ -153,6 +155,7 @@ test('array', () => {
               "Input": [Function],
               "defaultValue": [Function],
               "kind": "form",
+              "label": "Link",
               "parse": [Function],
               "reader": {
                 "parse": [Function],

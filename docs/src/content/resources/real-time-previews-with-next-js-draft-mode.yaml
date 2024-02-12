@@ -1,0 +1,17 @@
+title: Real-time previews with Next.js' draft mode
+type:
+  discriminant: youtube-video
+  value:
+    videoId: QuoADtLQVCE
+    thumbnail:
+      src: >-
+        https://thinkmill-labs.keystatic.net/keystatic-site/images/j8wdve6gqm87/live-previews
+      alt: >-
+        YouTube thumbnail for Real-time previews with Next.js' draft mode video
+      height: 900
+      width: 1600
+    kind: screencast
+    description: >-
+      A 2-minute walk-through of how to set up real-time content previews,
+      leveraging Next.js' draft mode feature.
+sortIndex: 5

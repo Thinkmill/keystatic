@@ -1,5 +1,5 @@
-import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
+import { jest, describe, afterEach, expect, it } from '@jest/globals';
 
 import { renderWithProvider } from '#test-utils';
 
@@ -28,10 +28,10 @@ describe('switch/Switch', () => {
 
     await user.click(checkbox);
     expect(checkbox.checked).toBeTruthy();
-    expect(onChangeSpy).toBeCalledWith(true);
+    expect(onChangeSpy).toHaveBeenCalledWith(true);
 
     await user.click(checkbox);
-    expect(onChangeSpy).toBeCalledWith(false);
+    expect(onChangeSpy).toHaveBeenCalledWith(false);
   });
 
   it('can be default checked (uncontrolled)', async () => {
@@ -49,7 +49,7 @@ describe('switch/Switch', () => {
 
     await user.click(checkbox);
     expect(checkbox.checked).toBeFalsy();
-    expect(onChangeSpy).toBeCalledWith(false);
+    expect(onChangeSpy).toHaveBeenCalledWith(false);
   });
 
   it('can be controlled', async () => {
@@ -64,7 +64,7 @@ describe('switch/Switch', () => {
 
     await user.click(checkbox);
     expect(checkbox.checked).toBeTruthy();
-    expect(onChangeSpy).toBeCalledWith(false);
+    expect(onChangeSpy).toHaveBeenCalledWith(false);
 
     rerender(<Switch children={children} isSelected={false} />);
     expect(checkbox.checked).toBeFalsy();

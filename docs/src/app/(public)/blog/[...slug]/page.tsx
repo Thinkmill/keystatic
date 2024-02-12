@@ -1,4 +1,3 @@
-import DocumentRenderer from '../../../../components/document-renderer';
 import { notFound } from 'next/navigation';
 import { reader } from '../../../../utils/reader';
 import Link from 'next/link';
@@ -7,6 +6,7 @@ import { ArrowLeftIcon } from '../../../../components/icons/arrow-left';
 import { Fragment } from 'react';
 import { Metadata, ResolvingMetadata } from 'next';
 import { H1_ID } from '../../../../constants';
+import { MarkdocRenderer } from '../../../../components/markdoc-renderer';
 
 type BlogProps = {
   params: { slug: string[] };
@@ -78,7 +78,7 @@ export default async function BlogPost({ params }: BlogProps) {
       </div>
 
       <div className="flex flex-col gap-4">
-        <DocumentRenderer document={await page.content()} />
+        <MarkdocRenderer node={(await page.content()).node} />
       </div>
     </div>
   );

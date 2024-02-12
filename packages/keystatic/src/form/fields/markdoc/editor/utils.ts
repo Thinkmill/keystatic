@@ -1,14 +1,14 @@
-import { css, tokenSchema } from '@keystar/ui/style';
+import { css, injectGlobal, tokenSchema } from '@keystar/ui/style';
 import { useRef, useCallback, useEffect } from 'react';
 
 export const classes = {
-  nodeInSelection: 'ProseMirror-nodeInSelection',
-  nodeSelection: 'ProseMirror-selectednode',
   blockParent: 'ProseMirror-blockParent',
   focused: 'ProseMirror-focused',
+  hideselection: 'ProseMirror-hideselection',
+  nodeInSelection: 'ProseMirror-nodeInSelection',
+  nodeSelection: 'ProseMirror-selectednode',
+  placeholder: 'ProseMirror-placeholder',
 };
-
-export const markdocIdentifierPattern = /^[a-zA-Z][-_a-zA-Z0-9]*$/;
 
 export function weakMemoize<Arg extends object, Return>(
   func: (arg: Arg) => Return
@@ -24,82 +24,93 @@ export function weakMemoize<Arg extends object, Return>(
   };
 }
 
-export const nodeWithBorder = css({
-  border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
-  borderRadius: tokenSchema.size.radius.regular,
-  [`&.${classes.nodeInSelection}, &.${classes.nodeSelection}`]: {
-    borderColor: tokenSchema.color.alias.borderSelected,
-    outline: 'none !important',
-    boxShadow: `0 0 0 1px ${tokenSchema.color.alias.borderSelected}`,
+let maskColor = tokenSchema.color.background.canvas;
+let borderColor = tokenSchema.color.alias.borderSelected;
+let borderSize = tokenSchema.size.border.medium;
+let circleSize = tokenSchema.size.space.regular;
+injectGlobal({
+  '.prosemirror-dropcursor-block': {
+    '&::before, &::after': {
+      backgroundColor: maskColor,
+      border: `${borderSize} solid ${borderColor}`,
+      borderRadius: '50%',
+      content: '" "',
+      height: circleSize,
+      position: 'absolute',
+      width: circleSize,
+      top: `calc(${circleSize} / -2 - ${borderSize} / 2)`,
+    },
+
+    '&::before': { left: `calc(${circleSize} * -1)` },
+    '&::after': { right: `calc(${circleSize} * -1)` },
   },
 });
 
+// void elements cannot have pseudo-elements so we need to style them differently
+const voidElements = [
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
+];
+
 export const prosemirrorStyles = css`
-  .ProseMirror {
+  /* Provide our own selection indicator */
+  .${classes.nodeSelection} {
     position: relative;
   }
-
-  .ProseMirror {
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    white-space: break-spaces;
-    -webkit-font-variant-ligatures: none;
-    font-variant-ligatures: none;
-    font-feature-settings: 'liga' 0; /* the above doesn't seem to work in Edge */
+  .${classes.nodeSelection}::after {
+    background-color: ${tokenSchema.color.alias.backgroundSelected};
+    border-radius: ${tokenSchema.size.radius.small};
+    content: '';
+    inset: calc(${tokenSchema.size.alias.focusRingGap} * -1);
+    pointer-events: none;
+    position: absolute;
   }
-
-  .ProseMirror pre {
-    white-space: pre-wrap;
+  .${classes.nodeSelection}:is(${voidElements.join(', ')}) {
+    outline: ${tokenSchema.size.alias.focusRing} solid
+      ${tokenSchema.color.border.accent};
+    outline-offset: ${tokenSchema.size.alias.focusRingGap};
   }
-
-  .ProseMirror li {
-    position: relative;
-  }
-
-  .ProseMirror-hideselection *::selection {
+  .${classes.hideselection} *::selection {
     background: transparent;
   }
-  .ProseMirror-hideselection *::-moz-selection {
+  .${classes.hideselection} *::-moz-selection {
     background: transparent;
   }
-  .ProseMirror-hideselection {
+  .${classes.hideselection} {
     caret-color: transparent;
   }
 
-  .ProseMirror-selectednode {
-    outline: 2px solid #8cf;
-  }
-
-  /* Make sure li selections wrap around markers */
-
-  li.ProseMirror-selectednode {
-    outline: none;
-  }
-
-  li.ProseMirror-selectednode:after {
-    content: '';
-    position: absolute;
-    left: -32px;
-    right: -2px;
-    top: -2px;
-    bottom: -2px;
-    border: 2px solid #8cf;
+  /* Style the placeholder element */
+  .${classes.placeholder} {
+    color: ${tokenSchema.color.foreground.neutralTertiary};
     pointer-events: none;
   }
 
   /* Protect against generic img rules */
-
   img.ProseMirror-separator {
     display: inline !important;
     border: none !important;
     margin: 0 !important;
   }
+
+  /* Provide an indicator for focusing places that don't allow regular selection */
   .ProseMirror-gapcursor {
     display: none;
     pointer-events: none;
     position: absolute;
   }
-
   .ProseMirror-gapcursor:after {
     content: '';
     display: block;
@@ -118,6 +129,37 @@ export const prosemirrorStyles = css`
 
   .ProseMirror-focused .ProseMirror-gapcursor {
     display: block;
+  }
+  .ProseMirror > .ProseMirror-yjs-cursor:first-child {
+    margin-top: 16px;
+  }
+  /* This gives the remote user caret. The colors are automatically overwritten*/
+  .ProseMirror-yjs-cursor {
+    position: relative;
+    margin-left: -1px;
+    margin-right: -1px;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-color: orange;
+    word-break: normal;
+    pointer-events: none;
+  }
+  /* This renders the username above the caret */
+  .ProseMirror-yjs-cursor > div {
+    position: absolute;
+    top: -1.05em;
+    left: -1px;
+    font-size: 13px;
+    background-color: rgb(250, 129, 0);
+    font-family: ${tokenSchema.typography.fontFamily.base};
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    user-select: none;
+    color: white;
+    padding-left: 2px;
+    padding-right: 2px;
+    white-space: nowrap;
   }
 `;
 

@@ -1,4 +1,6 @@
 import { act, fireEvent } from '@testing-library/react';
+import { pointerKey } from '@testing-library/user-event';
+import { afterAll, beforeAll, jest } from '@jest/globals';
 
 export const KEYS = {
   ArrowLeft: { key: 'ArrowLeft', code: 37, charCode: 37 },
@@ -42,6 +44,22 @@ export function fireLongPress(
 
 // Polyfills
 // -----------------------------------------------------------------------------
+
+export let pointerMap: pointerKey[] = [
+  {
+    name: 'MouseLeft',
+    pointerType: 'mouse',
+    button: 'primary',
+    height: 1,
+    width: 1,
+    pressure: 0.5,
+  },
+  { name: 'MouseRight', pointerType: 'mouse', button: 'secondary' },
+  { name: 'MouseMiddle', pointerType: 'mouse', button: 'auxiliary' },
+  { name: 'TouchA', pointerType: 'touch', height: 1, width: 1 },
+  { name: 'TouchB', pointerType: 'touch' },
+  { name: 'TouchC', pointerType: 'touch' },
+] as unknown as pointerKey[];
 
 export function installPointerEvent() {
   beforeAll(() => {

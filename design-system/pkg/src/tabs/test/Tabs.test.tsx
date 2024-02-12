@@ -1,5 +1,13 @@
-import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
+import {
+  expect,
+  it,
+  describe,
+  afterAll,
+  afterEach,
+  beforeAll,
+  jest,
+} from '@jest/globals';
 
 import {
   act,
@@ -235,7 +243,7 @@ describe('tabs/Tabs', function () {
     expect(tabpanel).toHaveAttribute('aria-labelledby', secondItem.id);
     expect(tabpanel).toHaveAttribute('role', 'tabpanel');
     expect(tabpanel).toHaveTextContent(defaultItems[1].children);
-    expect(onSelectionChange).toBeCalledTimes(1);
+    expect(onSelectionChange).toHaveBeenCalledTimes(1);
   });
 
   it('should focus the selected tab when tabbing in for the first time', async function () {
@@ -277,7 +285,7 @@ describe('tabs/Tabs', function () {
     });
     fireEvent.keyDown(tabs[1], { key: 'ArrowRight' });
     fireEvent.keyUp(tabs[1], { key: 'ArrowRight' });
-    expect(onSelectionChange).toBeCalledWith(defaultItems[2].name);
+    expect(onSelectionChange).toHaveBeenCalledWith(defaultItems[2].name);
   });
 
   it('disabled tabs cannot be pressed', async function () {
@@ -293,7 +301,7 @@ describe('tabs/Tabs', function () {
       expect(document.activeElement).toBe(tabs[0]);
     });
     userEvent.click(tabs[1]);
-    expect(onSelectionChange).not.toBeCalled();
+    expect(onSelectionChange).not.toHaveBeenCalled();
   });
 
   it('finds the first non-disabled tab if the currently selected one is removed', async function () {
@@ -310,7 +318,7 @@ describe('tabs/Tabs', function () {
     });
     fireEvent.keyDown(tabs[1], { key: 'ArrowRight' });
     fireEvent.keyUp(tabs[1], { key: 'ArrowRight' });
-    expect(onSelectionChange).toBeCalledWith(defaultItems[2].name);
+    expect(onSelectionChange).toHaveBeenCalledWith(defaultItems[2].name);
 
     rerender(
       <Tabs
@@ -335,7 +343,7 @@ describe('tabs/Tabs', function () {
         </TabPanels>
       </Tabs>
     );
-    expect(onSelectionChange).toBeCalledWith(defaultItems[1].name);
+    expect(onSelectionChange).toHaveBeenCalledWith(defaultItems[1].name);
   });
 
   it('selects first tab if all tabs are disabled', async function () {
@@ -349,7 +357,7 @@ describe('tabs/Tabs', function () {
     let tabs = getAllByRole('tab');
     let tabpanel = getByRole('tabpanel');
     expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
-    expect(onSelectionChange).toBeCalledWith(defaultItems[0].name);
+    expect(onSelectionChange).toHaveBeenCalledWith(defaultItems[0].name);
     await waitFor(() => {
       expect(document.activeElement).toBe(tabpanel);
     });
@@ -453,7 +461,7 @@ describe('tabs/Tabs', function () {
     expect(firstItem).toHaveAttribute('aria-selected', 'true');
 
     firePress(firstItem);
-    expect(onSelectionChange).toBeCalledTimes(1);
+    expect(onSelectionChange).toHaveBeenCalledTimes(1);
     expect(onSelectionChange).toHaveBeenCalledWith(defaultItems[0].name);
   });
 

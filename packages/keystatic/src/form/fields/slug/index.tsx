@@ -109,6 +109,7 @@ export function slug(args: {
   return {
     kind: 'form',
     formKind: 'slug',
+    label: args.name.label,
     Input(props) {
       return (
         <SlugFieldInput

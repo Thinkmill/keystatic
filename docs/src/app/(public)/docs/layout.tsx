@@ -24,7 +24,7 @@ export default async function RootLayout({
       <SideNav>
         {navigationMap?.map(({ groupName, items }) => (
           <NavGroup key={groupName} title={groupName}>
-            {items.map(({ label, href, title, comingSoon }) => (
+            {items.map(({ label, href, title, comingSoon, isNew }) => (
               <NavItem
                 key={href}
                 label={label}
@@ -32,6 +32,7 @@ export default async function RootLayout({
                 title={title}
                 level="sub"
                 comingSoon={comingSoon}
+                isNew={isNew}
               />
             ))}
           </NavGroup>

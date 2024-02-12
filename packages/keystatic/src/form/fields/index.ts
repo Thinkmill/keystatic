@@ -10,6 +10,7 @@ export { empty } from './empty';
 export { image } from './image';
 export { file } from './file';
 export { integer } from './integer';
+export { number } from './number';
 export { multiselect } from './multiselect';
 export { object } from './object';
 export { pathReference } from './pathReference';

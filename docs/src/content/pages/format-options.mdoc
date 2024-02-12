@@ -59,13 +59,13 @@ Who's with me?
 
 ## Example with JSON data
 
-We can specifically ask for `JSON` data instead of `YAML` with the `format.data` option in our `blog` collection:
+We can specifically ask for `json` data instead of `yaml` with the `format.data` option in our `blog` collection:
 
 ```diff
 blog: collection({
   label: 'Blog',
   slugField: 'title',
-+ format: { data: 'JSON' },
++ format: { data: 'json' },
   schema: { //... }
 })
 ```

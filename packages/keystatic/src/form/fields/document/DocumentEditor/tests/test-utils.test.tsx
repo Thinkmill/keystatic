@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { expect, test } from '@jest/globals';
 import { Editor } from 'slate';
 import { jsx, makeEditor } from './utils';
 
@@ -72,7 +73,7 @@ test('editor equality mismatch', () => {
         </editor>
       )
     )
-  ).toThrowError();
+  ).toThrow();
 });
 
 test('cursor in the middle of text', () => {
@@ -330,7 +331,7 @@ test('marks that conflict with .marks', () => {
         </paragraph>
       </editor>
     )
-  ).toThrowError();
+  ).toThrow();
 });
 
 test('differing current marks', () => {

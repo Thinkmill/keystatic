@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom';
 import {
   act,
   fireEvent,
@@ -6,7 +5,16 @@ import {
   RenderOptions,
   within,
 } from '@testing-library/react';
-import { ReactElement } from 'react';
+import { Key, ReactElement } from 'react';
+import {
+  jest,
+  expect,
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  it,
+} from '@jest/globals';
 
 import { TestProvider } from '@keystar/ui/core';
 import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';
@@ -15,7 +23,7 @@ import { Text } from '@keystar/ui/typography';
 
 import { Item, ListBox, Section } from '..';
 
-type NumberSpy = jest.SpyInstance<number, unknown[]>;
+type NumberSpy = jest.SpiedGetter<number>;
 type MaybeElement = HTMLElement | null;
 
 let sectionItemData = [
@@ -47,7 +55,7 @@ function renderComponent(props = {}) {
 
 describe('pickers/ListBox', () => {
   let offsetWidth: NumberSpy, offsetHeight: NumberSpy, scrollHeight: NumberSpy;
-  let onSelectionChange = jest.fn();
+  let onSelectionChange = jest.fn<(keys: Set<Key>) => void>();
 
   beforeAll(function () {
     offsetWidth = jest
@@ -181,7 +189,7 @@ describe('pickers/ListBox', () => {
       let checkmarks = tree.getAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(1);
 
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bleh')).toBeTruthy();
     });
 
@@ -220,7 +228,7 @@ describe('pickers/ListBox', () => {
       let checkmarks = tree.getAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(1);
 
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bleh')).toBeTruthy();
     });
 
@@ -244,7 +252,7 @@ describe('pickers/ListBox', () => {
       expect(checkmarks.length).toBe(1);
 
       // Verify onSelectionChange is called
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bleh')).toBeTruthy();
     });
 
@@ -268,7 +276,7 @@ describe('pickers/ListBox', () => {
       expect(checkmarks.length).toBe(1);
 
       // Verify onSelectionChange is called
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bleh')).toBeTruthy();
     });
 
@@ -321,7 +329,7 @@ describe('pickers/ListBox', () => {
       checkmarks = tree.getAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(2);
 
-      expect(onSelectionChange).toBeCalledTimes(2);
+      expect(onSelectionChange).toHaveBeenCalledTimes(2);
       expect(onSelectionChange.mock.calls[0][0].has('Blah')).toBeTruthy();
       expect(onSelectionChange.mock.calls[1][0].has('Bar')).toBeTruthy();
     });
@@ -365,7 +373,7 @@ describe('pickers/ListBox', () => {
       checkmarks = tree.getAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(3);
 
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bleh')).toBeTruthy();
       expect(onSelectionChange.mock.calls[0][0].has('Foo')).toBeTruthy();
       expect(onSelectionChange.mock.calls[0][0].has('Bar')).toBeTruthy();
@@ -412,7 +420,7 @@ describe('pickers/ListBox', () => {
       checkmarks = tree.getAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(2);
 
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bleh')).toBeTruthy();
     });
 
@@ -456,7 +464,7 @@ describe('pickers/ListBox', () => {
       checkmarks = tree.getAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(1);
 
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bar')).toBeTruthy();
     });
 
@@ -482,7 +490,7 @@ describe('pickers/ListBox', () => {
       let checkmarks = tree.getAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(2);
 
-      expect(onSelectionChange).toBeCalledTimes(0);
+      expect(onSelectionChange).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -510,7 +518,7 @@ describe('pickers/ListBox', () => {
       // Make sure nothing is still checked
       checkmarks = tree.queryAllByRole('img');
       expect(checkmarks.length).toBe(0);
-      expect(onSelectionChange).toBeCalledTimes(0);
+      expect(onSelectionChange).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -598,7 +606,7 @@ describe('pickers/ListBox', () => {
       expect(checkmarks.length).toBe(0);
 
       // Verify onSelectionChange was not called
-      expect(onSelectionChange).toBeCalledTimes(0);
+      expect(onSelectionChange).toHaveBeenCalledTimes(0);
 
       // Continue the search
       fireEvent.keyDown(listbox, { key: 'B' });
@@ -630,7 +638,7 @@ describe('pickers/ListBox', () => {
       expect(checkmarks.length).toBe(1);
 
       // Verify onSelectionChange is called
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Foo Bar')).toBeTruthy();
     });
 

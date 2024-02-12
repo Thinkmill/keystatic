@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { expect, test } from '@jest/globals';
 import { jsx, makeEditor } from '../DocumentEditor/tests/utils';
 import { component, fields } from '../../../api';
 import { fromMarkdoc as _fromMarkdoc } from './from-markdoc';
@@ -47,7 +48,8 @@ function toMarkdoc(node: Node) {
 
 function fromMarkdoc(markdoc: string) {
   return makeEditor(
-    <editor>{_fromMarkdoc(Markdoc.parse(markdoc), componentBlocks)}</editor>
+    <editor>{_fromMarkdoc(Markdoc.parse(markdoc), componentBlocks)}</editor>,
+    { normalization: 'normalize' }
   );
 }
 
@@ -495,6 +497,107 @@ test('code and bold', () => {
   `);
   expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
     "fgdsihjnegrkdfmsjknefrds **\`a\`** fgbdv
+    "
+  `);
+});
+
+test('italic in bold', () => {
+  const markdoc = `**a *b* c**`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text
+          bold={true}
+        >
+          a 
+        </text>
+        <text
+          bold={true}
+          italic={true}
+        >
+          b
+        </text>
+        <text
+          bold={true}
+        >
+           c
+        </text>
+      </paragraph>
+    </editor>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "**a** ***b*** **c**
+    "
+  `);
+});
+
+test('code and spaces', () => {
+  const markdoc = `\`a\` \`b\``;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text
+          code={true}
+        >
+          a
+        </text>
+        <text>
+           
+        </text>
+        <text
+          code={true}
+        >
+          b
+        </text>
+      </paragraph>
+    </editor>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "\`a\` \`b\`
+    "
+  `);
+});
+
+test('hard break with two spaces', () => {
+  const markdoc = `something  
+something else`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text>
+          something
+    something else
+        </text>
+      </paragraph>
+    </editor>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "something\\
+    something else
+    "
+  `);
+});
+
+test('hard break with escape', () => {
+  const markdoc = `something\\
+something else`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <editor>
+      <paragraph>
+        <text>
+          something
+    something else
+        </text>
+      </paragraph>
+    </editor>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "something\\
+    something else
     "
   `);
 });

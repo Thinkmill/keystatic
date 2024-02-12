@@ -1,0 +1,16 @@
+title: Keystatic CMS with Astro - Block Builder
+type:
+  discriminant: youtube-video
+  value:
+    videoId: LPLZ3eoh8fQ
+    thumbnail:
+      src: >-
+        https://thinkmill-labs.keystatic.net/keystatic-site/images/dj1ixjuh219r/ted-martin
+      alt: Thumbnail for YouTube video
+      height: 720
+      width: 1280
+    kind: screencast
+    description: >-
+      Watch Ted Martin walk you through creating a block editing experience with
+      Astro and Keystatic.
+sortIndex: 20

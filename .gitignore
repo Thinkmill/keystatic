@@ -46,6 +46,9 @@ design-system/docs/generated
 design-system/docs/public/playroom
 design-system/docs/public/storybook
 
+# pagefind
+docs/public/pagefind
+
 # Test coverage
 coverage
 

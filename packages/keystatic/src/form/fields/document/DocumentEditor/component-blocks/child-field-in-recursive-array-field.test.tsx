@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { test } from '@jest/globals';
 import React, { ReactElement } from 'react';
 import { jsx, makeEditor } from '../tests/utils';
 import {

@@ -1,5 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import isHotkey from 'is-hotkey';
+import { isHotkey } from 'is-hotkey';
 import {
   FormEvent,
   Key,
@@ -40,7 +40,10 @@ import { fields } from '../form/api';
 import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
 
-import { useCreateBranchMutation } from './branch-selection';
+import {
+  prettyErrorForCreateBranchMutation,
+  useCreateBranchMutation,
+} from './branch-selection';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { ForkRepoDialog } from './fork-repo';
 import l10nMessages from './l10n/index.json';
@@ -67,7 +70,7 @@ import { notFound } from './not-found';
 import { useConfig } from './shell/context';
 import { useSlugFieldInfo } from './slugs';
 import { z } from 'zod';
-import { useData } from './useData';
+import { LOADING, useData } from './useData';
 import {
   delDraft,
   getDraft,
@@ -75,6 +78,11 @@ import {
   showDraftRestoredToast,
 } from './persistence';
 import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
+import { useYjs, useYjsIfAvailable } from './shell/collab';
+import * as Y from 'yjs';
+import { getYjsValFromParsedValue } from '../form/props-value';
+import { useYJsValue } from './useYJsValue';
+import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
 
 type ItemPageProps = {
   collection: string;
@@ -84,9 +92,6 @@ type ItemPageProps = {
   itemSlug: string;
   localTreeKey: string;
   basePath: string;
-  draft:
-    | { state: Record<string, unknown>; savedAt: Date; treeKey: string }
-    | undefined;
 };
 
 const storedValSchema = z.object({
@@ -97,18 +102,268 @@ const storedValSchema = z.object({
   files: z.map(z.string(), z.instanceof(Uint8Array)),
 });
 
-function ItemPage(props: ItemPageProps) {
+function ItemPageInner(
+  props: ItemPageProps & {
+    onUpdate: (options?: { branch: string; sha: string }) => Promise<boolean>;
+    onReset: () => void;
+    updateResult: ReturnType<typeof useUpsertItem>[0];
+    onResetUpdateItem: () => void;
+    previewProps: ReturnType<ReturnType<typeof createGetPreviewProps>>;
+    hasChanged: boolean;
+    state: Record<string, unknown>;
+  }
+) {
   const {
     collection,
     config,
     itemSlug,
+    updateResult,
+    onUpdate: parentOnUpdate,
+  } = props;
+  const collectionConfig = props.config.collections![collection]!;
+
+  const schema = useMemo(
+    () => fields.object(collectionConfig.schema),
+    [collectionConfig.schema]
+  );
+  const router = useRouter();
+  const baseCommit = useBaseCommit();
+  const currentBasePath = getCollectionItemPath(config, collection, itemSlug);
+  const formatInfo = getCollectionFormat(config, collection);
+  const branchInfo = useBranchInfo();
+  const [forceValidation, setForceValidation] = useState(false);
+  const previewHref = useMemo(() => {
+    return collectionConfig.previewUrl
+      ? collectionConfig
+          .previewUrl!.replace('{slug}', props.itemSlug)
+          .replace('{branch}', branchInfo.currentBranch)
+      : undefined;
+  }, [branchInfo.currentBranch, collectionConfig.previewUrl, props.itemSlug]);
+  const onDelete = async () => {
+    // TODO: delete multiplayer draft
+    if (await deleteItem()) {
+      router.push(
+        `${props.basePath}/collection/${encodeURIComponent(collection)}`
+      );
+    }
+  };
+
+  const slugInfo = useSlugFieldInfo(collection, itemSlug);
+
+  const [deleteResult, deleteItem, resetDeleteItem] = useDeleteItem({
+    initialFiles: props.initialFiles,
+    storage: config.storage,
+    basePath: currentBasePath,
+  });
+
+  const onDuplicate = () => {
+    router.push(
+      `${props.basePath}/collection/${encodeURIComponent(
+        collection
+      )}/create?duplicate=${itemSlug}`
+    );
+  };
+  const isSavingDisabled = updateResult.kind === 'loading' || !props.hasChanged;
+
+  const onUpdate = useCallback(async () => {
+    if (isSavingDisabled) return false;
+    if (!clientSideValidateProp(schema, props.state, slugInfo)) {
+      setForceValidation(true);
+      return false;
+    }
+    const slug = getSlugFromState(collectionConfig, props.state);
+    const hasUpdated = await parentOnUpdate();
+    if (hasUpdated && slug !== itemSlug) {
+      router.replace(
+        `${props.basePath}/collection/${encodeURIComponent(
+          collection
+        )}/item/${encodeURIComponent(slug)}`
+      );
+    }
+    return hasUpdated;
+  }, [
+    collection,
+    collectionConfig,
+    isSavingDisabled,
+    itemSlug,
+    parentOnUpdate,
+    props.basePath,
+    props.state,
+    router,
+    schema,
+    slugInfo,
+  ]);
+
+  const viewHref =
+    config.storage.kind !== 'local'
+      ? `${getRepoUrl(branchInfo)}${
+          formatInfo.dataLocation === 'index'
+            ? `/tree/${branchInfo.currentBranch}/${
+                getPathPrefix(config.storage) ?? ''
+              }${currentBasePath}`
+            : `/blob/${branchInfo.currentBranch}/${
+                getPathPrefix(config.storage) ?? ''
+              }${currentBasePath}${getDataFileExtension(formatInfo)}`
+        }`
+      : undefined;
+
+  const formID = 'item-edit-form';
+
+  // allow shortcuts "cmd+s" and "ctrl+s" to save
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => {
+      if (updateResult.kind === 'loading') {
+        return;
+      }
+      if (isHotkey('mod+s', event)) {
+        event.preventDefault();
+        onUpdate();
+      }
+    };
+    document.addEventListener('keydown', listener);
+    return () => document.removeEventListener('keydown', listener);
+  }, [updateResult.kind, onUpdate]);
+
+  return (
+    <>
+      <ItemPageShell
+        headerActions={
+          <HeaderActions
+            formID={formID}
+            isLoading={updateResult.kind === 'loading'}
+            hasChanged={props.hasChanged}
+            onDelete={onDelete}
+            onDuplicate={onDuplicate}
+            onReset={props.onReset}
+            viewHref={viewHref}
+            previewHref={previewHref}
+          />
+        }
+        {...props}
+      >
+        {updateResult.kind === 'error' && (
+          <Notice tone="critical">{updateResult.error.message}</Notice>
+        )}
+        {deleteResult.kind === 'error' && (
+          <Notice tone="critical">{deleteResult.error.message}</Notice>
+        )}
+        <Box
+          id={formID}
+          height="100%"
+          minHeight={0}
+          minWidth={0}
+          elementType="form"
+          onSubmit={(event: FormEvent) => {
+            if (event.target !== event.currentTarget) return;
+            event.preventDefault();
+            onUpdate();
+          }}
+        >
+          <FormForEntry
+            previewProps={props.previewProps as any}
+            forceValidation={forceValidation}
+            entryLayout={collectionConfig.entryLayout}
+            formatInfo={formatInfo}
+            slugField={slugInfo}
+          />
+        </Box>
+        <DialogContainer
+          // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since
+          // this doesn't open on click but after doing a network request and it failing and manually wiring about a popover and modal would be a pain
+          onDismiss={props.onResetUpdateItem}
+        >
+          {updateResult.kind === 'needs-new-branch' && (
+            <CreateBranchDuringUpdateDialog
+              branchOid={baseCommit}
+              onCreate={async newBranch => {
+                const itemBasePath = `/keystatic/branch/${encodeURIComponent(
+                  newBranch
+                )}/collection/${encodeURIComponent(collection)}/item/`;
+                router.push(itemBasePath + encodeURIComponent(itemSlug));
+                const slug = getSlugFromState(collectionConfig, props.state);
+
+                const hasUpdated = await parentOnUpdate({
+                  branch: newBranch,
+                  sha: baseCommit,
+                });
+                if (hasUpdated && slug !== itemSlug) {
+                  router.replace(itemBasePath + encodeURIComponent(slug));
+                }
+              }}
+              reason={updateResult.reason}
+              onDismiss={props.onResetUpdateItem}
+            />
+          )}
+        </DialogContainer>
+        <DialogContainer
+          // ideally this would be a popover on desktop but using a DialogTrigger
+          // wouldn't work since this doesn't open on click but after doing a
+          // network request and it failing and manually wiring about a popover
+          // and modal would be a pain
+          onDismiss={props.onResetUpdateItem}
+        >
+          {updateResult.kind === 'needs-fork' &&
+            isGitHubConfig(props.config) && (
+              <ForkRepoDialog
+                onCreate={async () => {
+                  const slug = getSlugFromState(collectionConfig, props.state);
+                  const hasUpdated = await props.onUpdate();
+                  if (hasUpdated && slug !== itemSlug) {
+                    router.replace(
+                      `${props.basePath}/collection/${encodeURIComponent(
+                        collection
+                      )}/item/${encodeURIComponent(slug)}`
+                    );
+                  }
+                }}
+                onDismiss={props.onResetUpdateItem}
+                config={props.config}
+              />
+            )}
+        </DialogContainer>
+        <DialogContainer
+          // ideally this would be a popover on desktop but using a DialogTrigger
+          // wouldn't work since this doesn't open on click but after doing a
+          // network request and it failing and manually wiring about a popover
+          // and modal would be a pain
+          onDismiss={resetDeleteItem}
+        >
+          {deleteResult.kind === 'needs-fork' &&
+            isGitHubConfig(props.config) && (
+              <ForkRepoDialog
+                onCreate={async () => {
+                  await deleteItem();
+                  router.push(
+                    `${props.basePath}/collection/${encodeURIComponent(
+                      collection
+                    )}`
+                  );
+                }}
+                onDismiss={resetDeleteItem}
+                config={props.config}
+              />
+            )}
+        </DialogContainer>
+      </ItemPageShell>
+    </>
+  );
+}
+
+function LocalItemPage(
+  props: ItemPageProps & {
+    draft:
+      | { state: Record<string, unknown>; savedAt: Date; treeKey: string }
+      | undefined;
+  }
+) {
+  const {
+    collection,
+    config,
     initialFiles,
     initialState,
     localTreeKey,
     draft,
   } = props;
-  const router = useRouter();
-  const [forceValidation, setForceValidation] = useState(false);
   const collectionConfig = config.collections![collection]!;
   const schema = useMemo(
     () => fields.object(collectionConfig.schema),
@@ -151,12 +406,9 @@ function ItemPage(props: ItemPageProps) {
     slugField: collectionConfig.slugField,
   });
 
-  const baseCommit = useBaseCommit();
   const slug = getSlugFromState(collectionConfig, state);
   const formatInfo = getCollectionFormat(config, collection);
-  const currentBasePath = getCollectionItemPath(config, collection, itemSlug);
   const futureBasePath = getCollectionItemPath(config, collection, slug);
-  const branchInfo = useBranchInfo();
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
     state,
     initialFiles,
@@ -203,224 +455,87 @@ function ItemPage(props: ItemPageProps) {
     hasChanged,
   ]);
   const update = useEventCallback(_update);
-  const [deleteResult, deleteItem, resetDeleteItem] = useDeleteItem({
-    initialFiles,
-    storage: config.storage,
-    basePath: currentBasePath,
-  });
 
   const onReset = () => {
     setState({ state: initialState, localTreeKey });
   };
-  const viewHref =
-    config.storage.kind !== 'local'
-      ? `${getRepoUrl(branchInfo)}${
-          formatInfo.dataLocation === 'index'
-            ? `/tree/${branchInfo.currentBranch}/${getPathPrefix(
-                config.storage
-              )}${currentBasePath}`
-            : `/blob/${branchInfo.currentBranch}/${getPathPrefix(
-                config.storage
-              )}${currentBasePath}${getDataFileExtension(formatInfo)}`
-        }`
-      : undefined;
-  const previewHref = useMemo(() => {
-    return collectionConfig.previewUrl
-      ? collectionConfig
-          .previewUrl!.replace('{slug}', props.itemSlug)
-          .replace('{branch}', branchInfo.currentBranch)
-      : undefined;
-  }, [branchInfo.currentBranch, collectionConfig.previewUrl, props.itemSlug]);
-  const onDelete = async () => {
-    if (await deleteItem()) {
-      router.push(
-        `${props.basePath}/collection/${encodeURIComponent(collection)}`
-      );
-    }
-  };
-
-  const onDuplicate = async () => {
-    let hasUpdated = true;
-    if (hasChanged) {
-      hasUpdated = await onUpdate();
-    }
-
-    if (hasUpdated) {
-      router.push(
-        `${props.basePath}/collection/${encodeURIComponent(
-          collection
-        )}/create?duplicate=${slug}`
-      );
-    }
-  };
-
-  const slugInfo = useSlugFieldInfo(collection, itemSlug);
-
-  const onUpdate = useCallback(async () => {
-    if (!clientSideValidateProp(schema, state, slugInfo)) {
-      setForceValidation(true);
-      return false;
-    }
-    const slug = getSlugFromState(collectionConfig, state);
-    const hasUpdated = await update();
-    if (hasUpdated && slug !== itemSlug) {
-      router.replace(
-        `${props.basePath}/collection/${encodeURIComponent(
-          collection
-        )}/item/${encodeURIComponent(slug)}`
-      );
-    }
-    return hasUpdated;
-  }, [
-    collection,
-    collectionConfig,
-    itemSlug,
-    props.basePath,
-    router,
-    schema,
-    slugInfo,
-    state,
-    update,
-  ]);
-  const formID = 'item-edit-form';
-
-  // allow shortcuts "cmd+s" and "ctrl+s" to save
-  useEffect(() => {
-    const listener = (event: KeyboardEvent) => {
-      if (updateResult.kind === 'loading') {
-        return;
-      }
-      if (isHotkey('mod+s', event)) {
-        event.preventDefault();
-        onUpdate();
-      }
-    };
-    document.addEventListener('keydown', listener);
-    return () => document.removeEventListener('keydown', listener);
-  }, [updateResult.kind, onUpdate]);
-
   return (
-    <>
-      <ItemPageShell
-        headerActions={
-          <HeaderActions
-            formID={formID}
-            isLoading={updateResult.kind === 'loading'}
-            hasChanged={hasChanged}
-            onDelete={onDelete}
-            onDuplicate={onDuplicate}
-            onReset={onReset}
-            viewHref={viewHref}
-            previewHref={previewHref}
-          />
-        }
-        {...props}
-      >
-        {updateResult.kind === 'error' && (
-          <Notice tone="critical">{updateResult.error.message}</Notice>
-        )}
-        {deleteResult.kind === 'error' && (
-          <Notice tone="critical">{deleteResult.error.message}</Notice>
-        )}
-        <Box
-          id={formID}
-          height="100%"
-          minHeight={0}
-          minWidth={0}
-          elementType="form"
-          onSubmit={(event: FormEvent) => {
-            if (event.target !== event.currentTarget) return;
-            event.preventDefault();
-            onUpdate();
-          }}
-        >
-          <FormForEntry
-            previewProps={previewProps}
-            forceValidation={forceValidation}
-            entryLayout={collectionConfig.entryLayout}
-            formatInfo={formatInfo}
-            slugField={slugInfo}
-          />
-        </Box>
-        <DialogContainer
-          // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since
-          // this doesn't open on click but after doing a network request and it failing and manually wiring about a popover and modal would be a pain
-          onDismiss={resetUpdateItem}
-        >
-          {updateResult.kind === 'needs-new-branch' && (
-            <CreateBranchDuringUpdateDialog
-              branchOid={baseCommit}
-              onCreate={async newBranch => {
-                const itemBasePath = `/keystatic/branch/${encodeURIComponent(
-                  newBranch
-                )}/collection/${encodeURIComponent(collection)}/item/`;
-                router.push(itemBasePath + encodeURIComponent(itemSlug));
-                const slug = getSlugFromState(collectionConfig, state);
+    <ItemPageInner
+      {...props}
+      onUpdate={update}
+      onReset={onReset}
+      updateResult={updateResult}
+      onResetUpdateItem={resetUpdateItem}
+      previewProps={previewProps}
+      state={state}
+      hasChanged={hasChanged}
+    />
+  );
+}
 
-                const hasUpdated = await update({
-                  branch: newBranch,
-                  sha: baseCommit,
-                });
-                if (hasUpdated && slug !== itemSlug) {
-                  router.replace(itemBasePath + encodeURIComponent(slug));
-                }
-              }}
-              reason={updateResult.reason}
-              onDismiss={resetUpdateItem}
-            />
-          )}
-        </DialogContainer>
-        <DialogContainer
-          // ideally this would be a popover on desktop but using a DialogTrigger
-          // wouldn't work since this doesn't open on click but after doing a
-          // network request and it failing and manually wiring about a popover
-          // and modal would be a pain
-          onDismiss={resetUpdateItem}
-        >
-          {updateResult.kind === 'needs-fork' &&
-            isGitHubConfig(props.config) && (
-              <ForkRepoDialog
-                onCreate={async () => {
-                  const slug = getSlugFromState(collectionConfig, state);
-                  const hasUpdated = await update();
-                  if (hasUpdated && slug !== itemSlug) {
-                    router.replace(
-                      `${props.basePath}/collection/${encodeURIComponent(
-                        collection
-                      )}/item/${encodeURIComponent(slug)}`
-                    );
-                  }
-                }}
-                onDismiss={resetUpdateItem}
-                config={props.config}
-              />
-            )}
-        </DialogContainer>
-        <DialogContainer
-          // ideally this would be a popover on desktop but using a DialogTrigger
-          // wouldn't work since this doesn't open on click but after doing a
-          // network request and it failing and manually wiring about a popover
-          // and modal would be a pain
-          onDismiss={resetDeleteItem}
-        >
-          {deleteResult.kind === 'needs-fork' &&
-            isGitHubConfig(props.config) && (
-              <ForkRepoDialog
-                onCreate={async () => {
-                  await deleteItem();
-                  router.push(
-                    `${props.basePath}/collection/${encodeURIComponent(
-                      collection
-                    )}`
-                  );
-                }}
-                onDismiss={resetDeleteItem}
-                config={props.config}
-              />
-            )}
-        </DialogContainer>
-      </ItemPageShell>
-    </>
+function CollabItemPage(props: ItemPageProps & { map: Y.Map<any> }) {
+  const { collection, config, initialFiles, initialState, localTreeKey } =
+    props;
+  const collectionConfig = config.collections![collection]!;
+  const schema = useMemo(
+    () => fields.object(collectionConfig.schema),
+    [collectionConfig.schema]
+  );
+  const yjsInfo = useYjs();
+  const state = useYJsValue(schema, props.map) as Record<string, unknown>;
+  const previewProps = useMemo(
+    () =>
+      createGetPreviewPropsFromY(schema as any, props.map, yjsInfo.awareness),
+    [props.map, schema, yjsInfo.awareness]
+  )(state);
+
+  const slug = getSlugFromState(collectionConfig, state);
+
+  const formatInfo = getCollectionFormat(props.config, props.collection);
+
+  const hasChanged = useHasChanged({
+    initialState,
+    schema,
+    state,
+    slugField: collectionConfig.slugField,
+  });
+
+  const futureBasePath = getCollectionItemPath(config, collection, slug);
+  const [updateResult, _update, resetUpdateItem] = useUpsertItem({
+    state,
+    initialFiles,
+    config,
+    schema: collectionConfig.schema,
+    basePath: futureBasePath,
+    format: formatInfo,
+    currentLocalTreeKey: localTreeKey,
+    slug: { field: collectionConfig.slugField, value: slug },
+  });
+
+  const update = useEventCallback(_update);
+
+  const onReset = async () => {
+    props.map.doc!.transact(() => {
+      for (const [key, value] of Object.entries(collectionConfig.schema)) {
+        const val = getYjsValFromParsedValue(value, props.initialState[key]);
+        props.map.set(key, val);
+      }
+    });
+    await props.map.doc?.whenSynced;
+    // TODO: fix the need for this
+    window.location.reload();
+  };
+  return (
+    <ItemPageInner
+      {...props}
+      onUpdate={update}
+      onReset={onReset}
+      updateResult={updateResult}
+      onResetUpdateItem={resetUpdateItem}
+      previewProps={previewProps}
+      state={state}
+      hasChanged={hasChanged}
+    />
   );
 }
 
@@ -644,6 +759,7 @@ export function CreateBranchDuringUpdateDialog(props: {
         ),
       }
     : {};
+
   return (
     <Dialog>
       <form
@@ -670,7 +786,7 @@ export function CreateBranchDuringUpdateDialog(props: {
               label="Branch name"
               description={props.reason}
               autoFocus
-              errorMessage={error?.message}
+              errorMessage={prettyErrorForCreateBranchMutation(error)}
               {...propsForBranchPrefix}
             />
           </Flex>
@@ -763,6 +879,44 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
     slug: slugInfo,
   });
 
+  const branchInfo = useBranchInfo();
+
+  const key = `${branchInfo.currentBranch}/${props.collection}/item/${props.itemSlug}`;
+
+  const yjsInfo = useYjsIfAvailable();
+
+  const mapData = useData(
+    useCallback(async () => {
+      if (!yjsInfo) return;
+      if (yjsInfo === 'loading') return LOADING;
+      await yjsInfo.doc.whenSynced;
+      if (itemData.kind !== 'loaded') return LOADING;
+      if (itemData.data === 'not-found') return;
+      let doc = yjsInfo.data.get(key);
+      if (doc instanceof Y.Doc) {
+        const promise = doc.whenLoaded;
+        doc.load();
+        await promise;
+      } else {
+        doc = new Y.Doc();
+        yjsInfo.data.set(key, doc);
+      }
+      const data = doc.getMap('data');
+      if (!data.size) {
+        const {
+          data: { initialState },
+        } = itemData;
+        doc.transact(() => {
+          for (const [key, value] of Object.entries(collectionConfig.schema)) {
+            const val = getYjsValFromParsedValue(value, initialState[key]);
+            data.set(key, val);
+          }
+        });
+      }
+      return data;
+    }, [collectionConfig, itemData, key, yjsInfo])
+  );
+
   if (itemData.kind === 'error') {
     return (
       <ItemPageShell {...props}>
@@ -772,7 +926,20 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
       </ItemPageShell>
     );
   }
-  if (itemData.kind === 'loading' || draftData.kind === 'loading') {
+  if (mapData.kind === 'error') {
+    return (
+      <ItemPageShell {...props}>
+        <PageBody>
+          <Notice tone="critical">{mapData.error.message}</Notice>
+        </PageBody>
+      </ItemPageShell>
+    );
+  }
+  if (
+    itemData.kind === 'loading' ||
+    draftData.kind === 'loading' ||
+    mapData.kind === 'loading'
+  ) {
     return (
       <ItemPageShell {...props}>
         <Flex
@@ -800,8 +967,22 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
     );
   }
   const loadedDraft = draftData.kind === 'loaded' ? draftData.data : undefined;
+  if (mapData.data) {
+    return (
+      <CollabItemPage
+        collection={props.collection}
+        basePath={props.basePath}
+        config={props.config}
+        itemSlug={props.itemSlug}
+        initialState={itemData.data.initialState}
+        initialFiles={itemData.data.initialFiles}
+        localTreeKey={itemData.data.localTreeKey}
+        map={mapData.data}
+      />
+    );
+  }
   return (
-    <ItemPage
+    <LocalItemPage
       collection={props.collection}
       basePath={props.basePath}
       config={props.config}

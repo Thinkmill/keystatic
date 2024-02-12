@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 
 import { alertCircleIcon } from '@keystar/ui/icon/icons/alertCircleIcon';
-import { Flex } from '@keystar/ui/layout';
 
 import { Config } from '../../config';
 
@@ -14,7 +13,6 @@ import {
   LocalAppShellProvider,
 } from './data';
 import { SidebarProvider } from './sidebar';
-import { TopBar } from './topbar';
 import { MainPanelLayout } from './panels';
 import { EmptyState } from './empty-state';
 
@@ -47,12 +45,7 @@ export const AppShell = (props: {
     <ConfigContext.Provider value={props.config}>
       <AppStateContext.Provider value={{ basePath: props.basePath }}>
         <SidebarProvider>
-          <Flex direction="column" height="100vh">
-            <TopBar />
-            <MainPanelLayout basePath={props.basePath} config={props.config}>
-              {content}
-            </MainPanelLayout>
-          </Flex>
+          <MainPanelLayout>{content}</MainPanelLayout>
         </SidebarProvider>
       </AppStateContext.Provider>
     </ConfigContext.Provider>

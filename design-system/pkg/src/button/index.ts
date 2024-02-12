@@ -6,7 +6,9 @@ export { ActionButton } from './ActionButton';
 export { ClearButton } from './ClearButton';
 export { FieldButton, useFieldButton } from './FieldButton';
 export { ToggleButton } from './ToggleButton';
+
 export { actionButtonClassList } from './useActionButtonStyles';
+export { buttonClassList } from './useButtonStyles';
 
 export type {
   ActionButtonProps,

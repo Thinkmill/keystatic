@@ -1,16 +1,23 @@
-import '@testing-library/jest-dom';
-
 import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';
 import { Icon } from '@keystar/ui/icon';
 import { act, fireEvent, firePress, KEYS, render, within } from '#test-utils';
 import { Kbd, Text } from '@keystar/ui/typography';
+import {
+  expect,
+  it,
+  describe,
+  jest,
+  afterAll,
+  afterEach,
+  beforeAll,
+} from '@jest/globals';
 
 import { Item, Menu, MenuProps, Section } from '..';
 
 describe('menu/Menu', () => {
-  let offsetWidth: jest.SpyInstance<number>,
-    offsetHeight: jest.SpyInstance<number>;
-  let onSelectionChange = jest.fn();
+  let offsetWidth: jest.SpiedGetter<number>,
+    offsetHeight: jest.SpiedGetter<number>;
+  let onSelectionChange = jest.fn<(val: any) => void>();
 
   beforeAll(function () {
     offsetWidth = jest
@@ -20,7 +27,7 @@ describe('menu/Menu', () => {
       .spyOn(window.HTMLElement.prototype, 'offsetHeight', 'get')
       .mockImplementation(() => 1000);
     window.HTMLElement.prototype.scrollIntoView = jest.fn();
-    jest.spyOn(window, 'requestAnimationFrame').mockImplementation();
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 1);
     jest.useFakeTimers();
   });
 
@@ -137,7 +144,7 @@ describe('menu/Menu', () => {
       let checkmarks = tree.getAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(1);
 
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bleh')).toBeTruthy();
     });
     it('supports `selectedKeys` (controlled)', () => {
@@ -175,7 +182,7 @@ describe('menu/Menu', () => {
       let checkmarks = tree.getAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(1);
 
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bleh')).toBeTruthy();
     });
 
@@ -202,7 +209,7 @@ describe('menu/Menu', () => {
       expect(checkmarks.length).toBe(1);
 
       // Verify onSelectionChange is called
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bleh')).toBeTruthy();
     });
 
@@ -228,7 +235,7 @@ describe('menu/Menu', () => {
       expect(checkmarks.length).toBe(1);
 
       // Verify onSelectionChange is called
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bleh')).toBeTruthy();
     });
 
@@ -252,7 +259,7 @@ describe('menu/Menu', () => {
       expect(checkmarks.length).toBe(0);
 
       // Verify onSelectionChange is not called
-      expect(onSelectionChange).toBeCalledTimes(0);
+      expect(onSelectionChange).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -288,7 +295,7 @@ describe('menu/Menu', () => {
       checkmarks = tree.getAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(2);
 
-      expect(onSelectionChange).toBeCalledTimes(2);
+      expect(onSelectionChange).toHaveBeenCalledTimes(2);
       expect(onSelectionChange.mock.calls[0][0].has('Blah')).toBeTruthy();
       expect(onSelectionChange.mock.calls[1][0].has('Bar')).toBeTruthy();
     });
@@ -333,7 +340,7 @@ describe('menu/Menu', () => {
       checkmarks = tree.getAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(3);
 
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bleh')).toBeTruthy();
       expect(onSelectionChange.mock.calls[0][0].has('Foo')).toBeTruthy();
       expect(onSelectionChange.mock.calls[0][0].has('Bar')).toBeTruthy();
@@ -379,7 +386,7 @@ describe('menu/Menu', () => {
       checkmarks = tree.getAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(2);
 
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bleh')).toBeTruthy();
     });
 
@@ -422,7 +429,7 @@ describe('menu/Menu', () => {
       checkmarks = tree.getAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(1);
 
-      expect(onSelectionChange).toBeCalledTimes(1);
+      expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bar')).toBeTruthy();
     });
 
@@ -447,7 +454,7 @@ describe('menu/Menu', () => {
       let checkmarks = tree.getAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(2);
 
-      expect(onSelectionChange).toBeCalledTimes(0);
+      expect(onSelectionChange).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -475,7 +482,7 @@ describe('menu/Menu', () => {
       // Make sure nothing is still checked
       checkmarks = tree.queryAllByRole('img', { hidden: true });
       expect(checkmarks.length).toBe(0);
-      expect(onSelectionChange).toBeCalledTimes(0);
+      expect(onSelectionChange).toHaveBeenCalledTimes(0);
     });
   });
 

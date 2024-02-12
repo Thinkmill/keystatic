@@ -8,6 +8,7 @@ export const frameworkChoice = async (ctx: Context) => {
     options: [
       { value: 'Next.js', label: 'Next.js' },
       { value: 'Astro', label: 'Astro' },
+      { value: 'Remix', label: 'Remix' },
     ],
   });
 

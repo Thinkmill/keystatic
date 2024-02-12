@@ -37,7 +37,6 @@ export type TreeEntry = {
   mode: string;
   type: string;
   sha: string;
-  size?: number;
 };
 
 type TreeChanges = Map<string, NodeChanges>;
@@ -154,13 +153,7 @@ export async function createBlobNodeEntry(
   contents: Uint8Array | { byteLength: number; sha: string }
 ): Promise<TreeEntry> {
   const sha = 'sha' in contents ? contents.sha : await blobSha(contents);
-  return {
-    path,
-    mode: '100644',
-    type: 'blob',
-    sha,
-    size: contents.byteLength,
-  };
+  return { path, mode: '100644', type: 'blob', sha };
 }
 
 export async function updateTreeWithChanges(
@@ -175,7 +168,7 @@ export async function updateTreeWithChanges(
   };
 }
 
-function treeToEntries(tree: Map<string, TreeNode>): TreeEntry[] {
+export function treeToEntries(tree: Map<string, TreeNode>): TreeEntry[] {
   return [...tree.values()].flatMap(x =>
     x.children ? [x.entry, ...treeToEntries(x.children)] : [x.entry]
   );

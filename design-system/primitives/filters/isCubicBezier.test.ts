@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import StyleDictionary from 'style-dictionary';
 
 import { isCubicBezier } from './isCubicBezier';

@@ -1,4 +1,13 @@
-import '@testing-library/jest-dom';
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  expect,
+  jest,
+  describe,
+  it,
+} from '@jest/globals';
 import userEvent from '@testing-library/user-event';
 
 import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';
@@ -14,11 +23,12 @@ import {
 } from '#test-utils';
 
 import { Item, Picker, Section } from '..';
+import { FormEvent } from 'react';
 
 // NOTE: skipped tests due to `userEvent.tab()` not working as expected
 describe('picker/Picker', () => {
-  let offsetWidth: jest.SpyInstance<number>,
-    offsetHeight: jest.SpyInstance<number>;
+  let offsetWidth: jest.SpiedGetter<number>,
+    offsetHeight: jest.SpiedGetter<number>;
   let onSelectionChange = jest.fn();
 
   beforeAll(function () {
@@ -90,7 +100,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -129,7 +139,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -162,7 +172,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -195,7 +205,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -228,7 +238,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -261,7 +271,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -289,7 +299,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).not.toBeCalled();
+      expect(onOpenChange).not.toHaveBeenCalled();
 
       let picker = getByLabelText('Select an option…');
       expect(picker).toHaveAttribute('aria-expanded', 'true');
@@ -318,7 +328,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).not.toBeCalled();
+      expect(onOpenChange).not.toHaveBeenCalled();
 
       let picker = getByLabelText('Select an option…');
       expect(picker).toHaveAttribute('aria-expanded', 'true');
@@ -353,7 +363,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -364,7 +374,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
 
       // run restore focus rAF
@@ -390,7 +400,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -401,7 +411,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });
 
@@ -423,7 +433,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -434,7 +444,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
 
       // run restore focus rAF
@@ -460,7 +470,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -474,7 +484,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
 
       expect(document.activeElement).toBe(picker);
@@ -500,7 +510,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -511,7 +521,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
 
       expect(document.activeElement).toBe(getByTestId('after-input'));
@@ -537,7 +547,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
@@ -555,7 +565,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
 
       expect(document.activeElement).toBe(getByTestId('before-input'));
@@ -581,7 +591,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(picker).toHaveAttribute('aria-expanded', 'true');
       expect(picker).toHaveAttribute('aria-controls', listbox.id);
 
@@ -599,7 +609,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(2);
+      expect(onOpenChange).toHaveBeenCalledTimes(2);
       expect(onOpenChange).toHaveBeenCalledWith(false);
 
       // run restore focus rAF
@@ -621,7 +631,7 @@ describe('picker/Picker', () => {
 
       let listbox = getByRole('listbox');
       expect(listbox).toBeVisible();
-      expect(onOpenChange).not.toBeCalled();
+      expect(onOpenChange).not.toHaveBeenCalled();
 
       let picker = getByLabelText('Select an option…');
       expect(picker).toHaveAttribute('aria-expanded', 'true');
@@ -632,7 +642,7 @@ describe('picker/Picker', () => {
       act(() => jest.runAllTimers());
 
       expect(listbox).toBeVisible();
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });
 
@@ -649,7 +659,7 @@ describe('picker/Picker', () => {
       act(() => jest.runAllTimers());
 
       expect(getByRole('listbox')).toBeVisible();
-      expect(onOpenChange).not.toBeCalled();
+      expect(onOpenChange).not.toHaveBeenCalled();
 
       let picker = getByLabelText('Select an option…');
       expect(picker).toHaveAttribute('aria-expanded', 'true');
@@ -665,7 +675,7 @@ describe('picker/Picker', () => {
       expect(listbox).not.toBeInTheDocument();
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(picker).not.toHaveAttribute('aria-controls');
-      expect(onOpenChange).toBeCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });
   });
@@ -1805,7 +1815,7 @@ describe('picker/Picker', () => {
 
       expect(queryByRole('listbox')).toBeNull();
 
-      expect(onOpenChange).toBeCalledTimes(0);
+      expect(onOpenChange).toHaveBeenCalledTimes(0);
 
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(document.activeElement).not.toBe(picker);
@@ -1830,7 +1840,7 @@ describe('picker/Picker', () => {
 
       expect(queryByRole('listbox')).toBeNull();
 
-      expect(onOpenChange).toBeCalledTimes(0);
+      expect(onOpenChange).toHaveBeenCalledTimes(0);
 
       expect(picker).toHaveAttribute('aria-expanded', 'false');
       expect(document.activeElement).not.toBe(picker);
@@ -1838,7 +1848,7 @@ describe('picker/Picker', () => {
   });
 
   describe('focus', function () {
-    let focusSpies: Record<string, jest.SpyInstance>;
+    let focusSpies: Record<string, jest.SpiedFunction<() => void>>;
 
     beforeEach(() => {
       focusSpies = {
@@ -1995,7 +2005,7 @@ describe('picker/Picker', () => {
   describe('form', function () {
     it('Should submit empty option by default', function () {
       let value;
-      let onSubmit = jest.fn(e => {
+      let onSubmit = jest.fn((e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         let formData = new FormData(e.currentTarget);
         value = Object.fromEntries(formData).picker;
@@ -2019,7 +2029,7 @@ describe('picker/Picker', () => {
 
     it('Should submit default option', function () {
       let value;
-      let onSubmit = jest.fn(e => {
+      let onSubmit = jest.fn((e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         let formData = new FormData(e.currentTarget);
         value = Object.fromEntries(formData).picker;

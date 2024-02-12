@@ -1,4 +1,5 @@
 import { getMockToken } from '../test-utilities';
+import { describe, expect, it } from '@jest/globals';
 import { fontWeightToNumber } from './fontWeightToNumber';
 
 describe('Transformer: fontWeightToNumbers', () => {
@@ -73,7 +74,7 @@ describe('Transformer: fontWeightToNumbers', () => {
         }),
         {}
       )
-    ).toThrowError();
+    ).toThrow();
 
     expect(() =>
       fontWeightToNumber.transformer(
@@ -82,7 +83,7 @@ describe('Transformer: fontWeightToNumbers', () => {
         }),
         {}
       )
-    ).toThrowError();
+    ).toThrow();
 
     expect(() =>
       fontWeightToNumber.transformer(
@@ -91,7 +92,7 @@ describe('Transformer: fontWeightToNumbers', () => {
         }),
         {}
       )
-    ).toThrowError();
+    ).toThrow();
 
     expect(() =>
       fontWeightToNumber.transformer(
@@ -100,7 +101,7 @@ describe('Transformer: fontWeightToNumbers', () => {
         }),
         {}
       )
-    ).toThrowError();
+    ).toThrow();
 
     expect(() =>
       fontWeightToNumber.transformer(
@@ -109,7 +110,7 @@ describe('Transformer: fontWeightToNumbers', () => {
         }),
         {}
       )
-    ).toThrowError();
+    ).toThrow();
 
     expect(() =>
       fontWeightToNumber.transformer(
@@ -120,6 +121,6 @@ describe('Transformer: fontWeightToNumbers', () => {
         }),
         {}
       )
-    ).toThrowError();
+    ).toThrow();
   });
 });

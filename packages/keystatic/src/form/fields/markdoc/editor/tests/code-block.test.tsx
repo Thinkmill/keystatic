@@ -1,6 +1,7 @@
 /** @jest-environment jsdom */
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { expect, test } from '@jest/globals';
 import { jsx, renderEditor } from './utils';
 
 const basicDoc = (
@@ -11,17 +12,13 @@ const basicDoc = (
   </doc>
 );
 
-for (const type of [
-  ' ',
-  // TODO: make enter work
-  // '{Enter}'
-] as const) {
+for (const type of [' ', '{Enter}'] as const) {
   test(`inserting a code block with a shortcut ending with a ${type}`, async () => {
     const { state, user } = renderEditor(basicDoc);
     await user.keyboard(`\`\`\`${type}some content`);
     expect(state()).toEqual(
       <doc>
-        <code_block language="plain">
+        <code_block language="">
           <text>
             some content
             <cursor />
@@ -64,7 +61,7 @@ for (const type of [
 test('enter inserts a new line', async () => {
   const { user, state } = renderEditor(
     <doc>
-      <code_block language="plain">
+      <code_block language="">
         <text>
           {'asdkjnajsndakjndkjnaksdjnasdasdasd'}
           <cursor />
@@ -78,7 +75,13 @@ test('enter inserts a new line', async () => {
   expect(state()).toMatchInlineSnapshot(`
     <doc>
       <code_block
-        language="plain"
+        language=""
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           asdkjnajsndakjndkjnaksdjnasdasdasd
@@ -93,7 +96,7 @@ test('enter inserts a new line', async () => {
 test('insertBreak when at end with \n as last character just adds a new line', async () => {
   const { user, state } = renderEditor(
     <doc>
-      <code_block language="plain">
+      <code_block language="">
         <text>
           {'asdkjnajsndakjndkjnaksdjn\nasdasdasd\n'}
           <cursor />
@@ -107,7 +110,13 @@ test('insertBreak when at end with \n as last character just adds a new line', a
   expect(state()).toMatchInlineSnapshot(`
     <doc>
       <code_block
-        language="plain"
+        language=""
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           asdkjnajsndakjndkjnaksdjn
@@ -124,7 +133,7 @@ test('insertBreak when at end with \n as last character just adds a new line', a
 test('shift+enter in the middle of a code block splits it', async () => {
   const { state, user } = renderEditor(
     <doc>
-      <code_block language="plain">
+      <code_block language="">
         <text>
           some text
           <cursor />
@@ -139,14 +148,26 @@ test('shift+enter in the middle of a code block splits it', async () => {
   expect(state()).toMatchInlineSnapshot(`
     <doc>
       <code_block
-        language="plain"
+        language=""
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           some text
         </text>
       </code_block>
       <code_block
-        language="plain"
+        language=""
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           <cursor />
@@ -161,7 +182,7 @@ test('shift+enter in the middle of a code block splits it', async () => {
 test('shift+enter at the end of a code block inserts a paragraph after', async () => {
   const { state, user } = renderEditor(
     <doc>
-      <code_block language="plain">
+      <code_block language="">
         <text>
           some text
           {'more text\n'}
@@ -176,7 +197,13 @@ test('shift+enter at the end of a code block inserts a paragraph after', async (
   expect(state()).toMatchInlineSnapshot(`
     <doc>
       <code_block
-        language="plain"
+        language=""
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           some textmore text
@@ -193,7 +220,7 @@ test('shift+enter at the end of a code block inserts a paragraph after', async (
 test('shift+enter at the start of a code block inserts a paragraph before', async () => {
   const { state, user } = renderEditor(
     <doc>
-      <code_block language="plain">
+      <code_block language="">
         <text>
           <cursor />
           some text
@@ -209,7 +236,13 @@ test('shift+enter at the start of a code block inserts a paragraph before', asyn
     <doc>
       <paragraph />
       <code_block
-        language="plain"
+        language=""
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           <cursor />
@@ -241,7 +274,7 @@ test('code block button is enabled and not pressed when in paragraph', () => {
       <paragraph>
         <cursor />
       </paragraph>
-      <code_block language="plain" />
+      <code_block language="" />
     </doc>
   );
 
@@ -279,6 +312,12 @@ test('clicking on the code block button converts the current nodes to code block
     <doc>
       <code_block
         language=""
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           blah
@@ -287,6 +326,12 @@ test('clicking on the code block button converts the current nodes to code block
       </code_block>
       <code_block
         language=""
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           more
@@ -294,6 +339,12 @@ test('clicking on the code block button converts the current nodes to code block
       </code_block>
       <code_block
         language=""
+        props={
+          {
+            "extraFiles": [],
+            "value": {},
+          }
+        }
       >
         <text>
           more
@@ -308,7 +359,7 @@ test('clicking the code block button while the selection is contains code blocks
   const content = (Type: 'code_block' | 'paragraph') => {
     const stuff =
       Type === 'code_block' ? (
-        <Type language="plain">
+        <Type language="">
           <text>something</text>
         </Type>
       ) : (
@@ -356,7 +407,7 @@ test('clicking the code block while the selection is within a code block convert
   const content = (Type: 'code_block' | 'paragraph') => (
     <doc>
       {Type === 'code_block' ? (
-        <Type language="plain">
+        <Type language="">
           <text>
             some
             <cursor />

@@ -2,6 +2,7 @@ import { ReactElement, ReactNode } from 'react';
 import { Glob } from '../config';
 
 import { ChildField } from './fields/child';
+import { Awareness } from 'y-protocols/awareness';
 
 export type FormFieldInputProps<Value> = {
   value: Value;
@@ -45,6 +46,7 @@ export type BasicFormField<
   reader: {
     parse(value: FormFieldStoredValue): ReaderValue;
   };
+  label?: string;
 };
 
 export type SlugFormField<
@@ -81,6 +83,7 @@ export type SlugFormField<
       }
     ): ReaderValueAsSlugField;
   };
+  label?: string;
 };
 
 export type AssetFormField<
@@ -122,6 +125,7 @@ export type AssetFormField<
   reader: {
     parse(value: FormFieldStoredValue): ReaderValue;
   };
+  label?: string;
 };
 
 export type ContentFormField<
@@ -165,6 +169,10 @@ export type ContentFormField<
         content: Uint8Array | undefined;
       }
     ): ReaderValue;
+  };
+  collaboration?: {
+    toYjs: (value: ParsedValue) => unknown;
+    fromYjs: (yjsValue: unknown, awareness: Awareness) => ParsedValue;
   };
 };
 
@@ -213,6 +221,13 @@ export type ArrayField<ElementField extends ComponentSchema> = {
 export type ObjectFieldOptions = {
   label?: string;
   description?: string;
+  /**
+   * Define the number of columns each field should span. The grid layout
+   * supports 12 possible columns.
+   * @example [6, 6] - "one row, equal columns"
+   * @example [12, 8, 4] - "one field in the first row, two fields in the second row"
+   */
+  layout?: number[];
 };
 
 export interface ObjectField<

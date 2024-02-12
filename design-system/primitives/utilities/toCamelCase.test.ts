@@ -1,4 +1,5 @@
 import { toCamelCase } from './toCamelCase';
+import { expect, it, describe } from '@jest/globals';
 
 describe('Utilities: toCamelCase', () => {
   it('it transforms all lowercase word', () => {

@@ -1,12 +1,14 @@
 {
   "name": "keystatic-docs",
-  "version": "1.0.17",
+  "version": "1.0.21",
   "description": "",
   "private": true,
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "postbuild": "pagefind --site .next --output-path .next/static/chunks/app/\\(public\\)/pagefind",
+    "start": "next start",
+    "pagefind:local": "npm run build && cp -r .next/static/chunks/app/\\(public\\)/pagefind public/pagefind/"
   },
   "keywords": [],
   "author": "",
@@ -14,9 +16,9 @@
     "@fontsource/inter": "^5.0.5",
     "@headlessui/react": "^1.7.11",
     "@heroicons/react": "^2.0.16",
-    "@keystar/ui": "^0.4.1",
-    "@keystatic/core": "^0.2.0",
-    "@keystatic/next": "^2.0.0",
+    "@keystar/ui": "^0.7.0",
+    "@keystatic/core": "^0.3.7",
+    "@keystatic/next": "^3.0.0",
     "@markdoc/markdoc": "^0.3.0",
     "@sindresorhus/slugify": "^1.1.2",
     "@tailwindcss/container-queries": "^0.1.1",
@@ -27,6 +29,7 @@
     "@vercel/analytics": "^0.1.8",
     "cookie": "^0.5.0",
     "date-fns": "^2.28.0",
+    "emery": "^1.4.1",
     "next": "^14.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -37,6 +40,7 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
     "autoprefixer": "^10.4.13",
+    "pagefind": "^1.0.4",
     "postcss": "^8.4.21",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.6",

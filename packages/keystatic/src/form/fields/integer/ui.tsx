@@ -7,7 +7,9 @@ export function IntegerFieldInput(
   props: FormFieldInputProps<number | null> & {
     label: string;
     description: string | undefined;
-    validation: { isRequired?: boolean; min: number; max: number } | undefined;
+    validation:
+      | { isRequired?: boolean; min?: number; max?: number }
+      | undefined;
   }
 ) {
   const [blurred, onBlur] = useReducer(() => true, false);
@@ -16,6 +18,7 @@ export function IntegerFieldInput(
     <NumberField
       label={props.label}
       description={props.description}
+      isRequired={props.validation?.isRequired}
       errorMessage={
         props.forceValidation || blurred
           ? validateInteger(props.validation, props.value, props.label)

@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { getMockToken } from '../test-utilities';
 import { isDeprecated } from './isDeprecated';
 

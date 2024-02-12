@@ -1,0 +1,126 @@
+import { Fragment, Slice } from 'prosemirror-model';
+import { Plugin } from 'prosemirror-state';
+import { dropPoint } from 'prosemirror-transform';
+
+import { Icon } from '@keystar/ui/icon';
+import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
+import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
+import { Text } from '@keystar/ui/typography';
+
+import { getUploadedFileObject } from '../../image/ui';
+import { EditorSchema } from './schema';
+import { ToolbarButton } from './Toolbar';
+import { EditorConfig } from '../config';
+import { getSrcPrefix } from '../../image/getSrcPrefix';
+
+export function getSrcPrefixForImageBlock(
+  config: EditorConfig,
+  slug: string | undefined
+) {
+  return getSrcPrefix(
+    typeof config.image === 'object' ? config.image.publicPath : undefined,
+    slug
+  );
+}
+
+export function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = evt => {
+      resolve(evt.target!.result! as string);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+export function imageDropPlugin(schema: EditorSchema) {
+  if (!schema.nodes.image) return new Plugin({});
+  const imageType = schema.nodes.image;
+  return new Plugin({
+    props: {
+      handleDrop(view, event) {
+        if (event.dataTransfer?.files.length) {
+          const file = event.dataTransfer.files[0];
+
+          if (file.type.startsWith('image/')) {
+            let eventPos = view.posAtCoords({
+              left: event.clientX,
+              top: event.clientY,
+            });
+            if (!eventPos) return;
+
+            let $mouse = view.state.doc.resolve(eventPos.pos);
+
+            (async () => {
+              const src = await readFileAsDataUrl(file);
+              const slice = Slice.maxOpen(
+                Fragment.from(
+                  imageType.createChecked({
+                    src,
+                    filename: file.name,
+                  })
+                )
+              );
+              const pos = dropPoint(view.state.doc, $mouse.pos, slice);
+              if (pos === null) return false;
+              view.dispatch(view.state.tr.replace(pos, pos, slice));
+            })();
+            return true;
+          }
+        }
+      },
+      handlePaste(view, event) {
+        if (event.clipboardData?.files.length) {
+          const file = event.clipboardData.files[0];
+          if (file.type.startsWith('image/')) {
+            (async () => {
+              const src = await readFileAsDataUrl(file);
+              view.dispatch(
+                view.state.tr.replaceSelectionWith(
+                  imageType.createChecked({
+                    src,
+                    filename: file.name,
+                  })
+                )
+              );
+            })();
+            return true;
+          }
+        }
+      },
+    },
+  });
+}
+export function ImageToolbarButton() {
+  return (
+    <TooltipTrigger>
+      <ToolbarButton
+        aria-label="Image"
+        command={(_, dispatch, view) => {
+          if (dispatch && view) {
+            (async () => {
+              const file = await getUploadedFileObject('image/*');
+              if (!file) return;
+              const src = await readFileAsDataUrl(file);
+              view.dispatch(
+                view.state.tr.replaceSelectionWith(
+                  view.state.schema.nodes.image.createChecked({
+                    src,
+                    filename: file.name,
+                  })
+                )
+              );
+            })();
+          }
+          return true;
+        }}
+      >
+        <Icon src={imageIcon} />
+      </ToolbarButton>
+      <Tooltip>
+        <Text>Image</Text>
+      </Tooltip>
+    </TooltipTrigger>
+  );
+}

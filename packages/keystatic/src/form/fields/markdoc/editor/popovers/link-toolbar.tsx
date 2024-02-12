@@ -19,6 +19,7 @@ import { isValidURL } from '../../../document/DocumentEditor/isValidURL';
 import localizedMessages from '../../../../../app/l10n/index.json';
 
 export function LinkToolbar(props: {
+  text: string;
   href: string;
   onHrefChange: (href: string) => void;
   onUnlink: () => void;
@@ -60,7 +61,7 @@ export function LinkToolbar(props: {
       >
         {dialogOpen && (
           <LinkDialog
-            text=""
+            text={props.text}
             href={props.href}
             onSubmit={({ href }) => {
               props.onHrefChange(href);
@@ -72,7 +73,7 @@ export function LinkToolbar(props: {
   );
 }
 
-function LinkDialog({
+export function LinkDialog({
   onSubmit,
   ...props
 }: {

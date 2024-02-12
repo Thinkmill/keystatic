@@ -1,4 +1,0 @@
-{
-  "main": "dist/keystatic-core-form-fields-markdoc.cjs.js",
-  "module": "dist/keystatic-core-form-fields-markdoc.esm.js"
-}

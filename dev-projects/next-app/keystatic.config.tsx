@@ -6,7 +6,11 @@ import {
   component,
   NotEditable,
 } from '@keystatic/core';
-import { __experimental_markdoc_field } from '@keystatic/core/form/fields/markdoc';
+import {
+  __experimental_markdoc_field,
+  __experimental_mdx_field,
+} from '@keystatic/core/form/fields/markdoc';
+import { block } from '@keystatic/core/content-components';
 import { NoteToolbar, Note } from './note';
 
 const description = 'Some description';
@@ -15,6 +19,11 @@ export default config({
   storage: {
     kind: 'github',
     repo: 'Thinkmill/keystatic-test-repo',
+  },
+  ui: {
+    brand: {
+      name: 'Dev: Next.js (app)',
+    },
   },
   // storage: {
   //   kind: 'local',
@@ -139,7 +148,7 @@ export default config({
                     { value: 'caution', label: 'Caution' },
                     { value: 'positive', label: 'Positive' },
                     { value: 'critical', label: 'Critical' },
-                  ] as const,
+                  ],
                   defaultValue: 'info',
                 }),
                 content: fields.child({
@@ -285,6 +294,24 @@ export default config({
         }),
       },
     }),
+    mdx: collection({
+      label: 'MDX',
+      path: 'mdx/**',
+      slugField: 'title',
+      format: { contentField: 'content' },
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        content: __experimental_mdx_field({
+          label: 'Content',
+          components: {
+            Something: block({
+              label: 'Something',
+              schema: {},
+            }),
+          },
+        }),
+      },
+    }),
   },
   singletons: {
     settings: singleton({
@@ -292,6 +319,12 @@ export default config({
       schema: {
         something: fields.checkbox({ label: 'Something' }),
         logo: fields.image({ label: 'Logo' }),
+      },
+    }),
+    markdoc: singleton({
+      label: 'Markdoc',
+      schema: {
+        markdoc: __experimental_markdoc_field({ label: 'Markdoc' }),
       },
     }),
     fields: singleton({
@@ -302,7 +335,14 @@ export default config({
           name: { label: 'Title', description },
           slug: { description },
         }),
-        integer: fields.integer({ label: 'Number', description }),
+        integer: fields.integer({ label: 'Integer', description }),
+        number: fields.number({ label: 'Number', description }),
+        numberWithSteps: fields.number({
+          label: 'Number with steps',
+          description,
+          step: 0.02,
+          validation: { step: true },
+        }),
         checkbox: fields.checkbox({ label: 'Checkbox', description }),
         select: fields.select({
           label: 'Select',
@@ -338,14 +378,46 @@ export default config({
         }),
         file: fields.file({ label: 'File', description }),
         image: fields.image({ label: 'Image', description }),
-        object: fields.object(
+        object: fields.object({
+          a: fields.text({ label: 'Object.A' }),
+          b: fields.text({ label: 'Object.B' }),
+        }),
+        objectLayout: fields.object(
           {
-            a: fields.text({ label: 'A' }),
-            b: fields.text({ label: 'B' }),
+            a: fields.text({ label: 'ObjectLayout.A' }),
+            b: fields.text({ label: 'ObjectLayout.B' }),
+          },
+          { layout: [6, 6] }
+        ),
+        address: fields.object(
+          {
+            street1: fields.text({ label: 'Address line 1' }),
+            street2: fields.text({ label: 'Address line 2' }),
+            city: fields.text({
+              label: 'City',
+              validation: { length: { min: 1 } },
+            }),
+            state: fields.select({
+              label: 'State',
+              options: [
+                { value: 'nsw', label: 'New South Wales' },
+                { value: 'vic', label: 'Victoria' },
+                { value: 'qld', label: 'Queensland' },
+                { value: 'sa', label: 'South Australia' },
+                { value: 'wa', label: 'Western Australia' },
+                { value: 'tas', label: 'Tasmania' },
+                { value: 'nt', label: 'Northern Territory' },
+                { value: 'act', label: 'Australian Capital Territory' },
+              ],
+              defaultValue: 'nsw',
+            }),
+            postcode: fields.text({ label: 'Postcode' }),
+            country: fields.text({ label: 'Country' }),
           },
           {
-            label: 'Object',
+            label: 'Address',
             description,
+            layout: [12, 12, 6, 3, 3, 12],
           }
         ),
         pathReference: fields.pathReference({
@@ -357,7 +429,7 @@ export default config({
           description,
           collection: 'posts',
         }),
-        markdoc: __experimental_markdoc_field({ label: 'Markdoc', config: {} }),
+        markdoc: __experimental_markdoc_field({ label: 'Markdoc' }),
       },
     }),
   },
