@@ -302,7 +302,7 @@ export class WebsocketProvider {
           this.subdocs.delete(subdoc.guid);
         });
         loaded.forEach(subdoc => {
-          if (this.ws) {
+          this.waitForConnection(() => {
             // always send sync step 1 when connected
             const encoder = encoding.createEncoder();
             encoding.writeVarUint(encoder, messageSubDocSync);
@@ -311,9 +311,7 @@ export class WebsocketProvider {
             this.send(encoding.toUint8Array(encoder), () => {
               subdoc.on('update', this.#getSubDocUpdateHandler(subdoc));
             });
-          } else {
-            console.log('todo handle ydoc load when not connected');
-          }
+          }, 1000);
         });
       }
     );
@@ -383,9 +381,8 @@ export class WebsocketProvider {
     if (ws?.readyState === 1) {
       callback(ws);
     } else {
-      var that = this;
       setTimeout(() => {
-        that.waitForConnection(callback, interval);
+        this.waitForConnection(callback, interval);
       }, interval);
     }
   };

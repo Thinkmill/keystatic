@@ -241,9 +241,7 @@ function makePreviewUrl(previewUrl: string) {
 }
 
 export default config({
-  storage: shouldUseCloudStorage
-    ? { kind: 'cloud', pathPrefix: 'docs' }
-    : { kind: 'local' },
+  storage: true ? { kind: 'cloud', pathPrefix: 'docs' } : { kind: 'local' },
   cloud: {
     project: 'thinkmill-labs/keystatic-site',
   },
