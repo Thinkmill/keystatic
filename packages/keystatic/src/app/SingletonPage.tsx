@@ -461,7 +461,7 @@ function CollabSingletonPage(
   });
   const update = useEventCallback(_update);
 
-  const onReset = async () => {
+  const onReset = () => {
     props.map.doc!.transact(() => {
       for (const [key, value] of Object.entries(singletonConfig.schema)) {
         const val = getYjsValFromParsedValue(
@@ -471,9 +471,6 @@ function CollabSingletonPage(
         props.map.set(key, val);
       }
     });
-    await props.map.doc?.whenSynced;
-    // TODO: fix the need for this
-    window.location.reload();
   };
   return (
     <SingletonPageInner
