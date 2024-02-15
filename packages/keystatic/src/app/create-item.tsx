@@ -441,7 +441,7 @@ function CreateItemCollab(props: {
       state={state}
       slug={slug}
       previewProps={previewProps}
-      onReset={async () => {
+      onReset={() => {
         props.map.doc!.transact(() => {
           for (const [key, value] of Object.entries(collectionConfig.schema)) {
             const val = getYjsValFromParsedValue(
@@ -451,9 +451,6 @@ function CreateItemCollab(props: {
             props.map.set(key, val);
           }
         });
-        await props.map.doc?.whenSynced;
-        // TODO: fix the need for this
-        window.location.reload();
       }}
     />
   );

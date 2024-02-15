@@ -468,7 +468,6 @@ function CollectionTable(
         ];
   }, [collection, hideStatusColumn]);
 
-  console.log(columns);
   return (
     <TableView
       aria-labelledby="page-title"

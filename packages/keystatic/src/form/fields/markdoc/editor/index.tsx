@@ -25,7 +25,8 @@ import {
 } from './context';
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 import { useContentPanelSize } from '../../../../app/shell/context';
-import { yCursorPluginKey } from 'y-prosemirror';
+import { yCursorPluginKey, ySyncPluginKey } from 'y-prosemirror';
+import * as Y from 'yjs';
 
 const contentStyles = css({
   flex: 1,
@@ -71,6 +72,13 @@ export const Editor = forwardRef(function Editor(
 ) {
   const [valueWhileInCollab, setValueWhileInCollab] =
     useState<EditorState>(_value);
+  if ('yjs' in _onChange) {
+    const yjsFragment: Y.XmlFragment | undefined =
+      ySyncPluginKey.getState(valueWhileInCollab)?.type;
+    if (yjsFragment !== (_onChange as any).yjs()) {
+      setValueWhileInCollab(_value);
+    }
+  }
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
   const containerSize = useContentPanelSize();
   const styleProps = useProseStyleProps({

@@ -514,16 +514,13 @@ function CollabItemPage(props: ItemPageProps & { map: Y.Map<any> }) {
 
   const update = useEventCallback(_update);
 
-  const onReset = async () => {
+  const onReset = () => {
     props.map.doc!.transact(() => {
       for (const [key, value] of Object.entries(collectionConfig.schema)) {
         const val = getYjsValFromParsedValue(value, props.initialState[key]);
         props.map.set(key, val);
       }
     });
-    await props.map.doc?.whenSynced;
-    // TODO: fix the need for this
-    window.location.reload();
   };
   return (
     <ItemPageInner
