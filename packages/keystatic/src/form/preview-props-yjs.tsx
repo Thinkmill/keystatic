@@ -11,6 +11,13 @@ import * as Y from 'yjs';
 import { parsedValToYjs, yjsToVal } from './props-value';
 import { ReactElement } from 'react';
 import { Awareness } from 'y-protocols/awareness';
+import {
+  getInitialPropsValueFromInitializer,
+  getKeysForArrayValue,
+  getNewArrayElementKey,
+  setKeysForArrayValue,
+  updateValue,
+} from './initial-values';
 
 export type ComponentSchemaWithoutChildField =
   | FormField<any, any, any>
@@ -39,37 +46,6 @@ type ArrayFieldInComponentSchema = {
   };
   Input?(props: unknown): ReactElement | null;
 };
-
-const arrayValuesToElementKeys = new WeakMap<
-  readonly unknown[],
-  readonly string[]
->();
-
-let counter = 0;
-
-export function getKeysForArrayValue(value: readonly unknown[]) {
-  if (!arrayValuesToElementKeys.has(value)) {
-    if (value === undefined) {
-      debugger;
-    }
-    arrayValuesToElementKeys.set(
-      value,
-      Array.from({ length: value.length }, getNewArrayElementKey)
-    );
-  }
-  return arrayValuesToElementKeys.get(value)!;
-}
-
-export function setKeysForArrayValue(
-  value: readonly unknown[],
-  elementIds: readonly string[]
-) {
-  arrayValuesToElementKeys.set(value, elementIds);
-}
-
-export function getNewArrayElementKey() {
-  return (counter++).toString();
-}
 
 function castToMemoizedInfoForSchema<
   T extends {
@@ -101,6 +77,24 @@ function getOrInsert<K, V>(
   return map.get(key)!;
 }
 
+function findSingleReorderedElement(
+  oldKeys: readonly string[],
+  newKeys: readonly string[]
+) {
+  if (oldKeys.length !== newKeys.length) return;
+  const sortedOldKeys = [...oldKeys].sort();
+  const sortedNewKeys = [...newKeys].sort();
+  if (sortedOldKeys.join() !== sortedNewKeys.join()) return;
+  let reorderedKey;
+  for (let i = 0; i < oldKeys.length; i++) {
+    if (oldKeys[i] !== newKeys[i]) {
+      if (reorderedKey === newKeys[i]) continue;
+      if (reorderedKey !== undefined) return;
+      reorderedKey = oldKeys[i];
+    }
+  }
+  return reorderedKey;
+}
 export function createGetPreviewPropsFromY<
   Schema extends ObjectField<Record<string, ComponentSchemaWithoutChildField>>,
 >(
@@ -134,25 +128,118 @@ export function createGetPreviewPropsFromY<
         onChange(
           updater: readonly { key: string | undefined; value?: unknown }[]
         ) {
-          const oldKeys = getKeysForArrayValue(
-            yjsToVal(schema, awareness, yMap) as readonly unknown[]
-          );
-          const newValue = [
-            ...(yjsToVal(schema, awareness, yMap) as readonly unknown[]),
-          ];
-          for (const { key, value } of updater) {
-            if (key === undefined) {
-              newValue.push(value);
-            } else {
-              const index = oldKeys.indexOf(key);
-              if (value === undefined) {
-                newValue.splice(index, 1);
-              } else {
-                newValue[index] = value;
+          const yArr = onChange.yjs();
+          const oldVal = yjsToVal(
+            schema,
+            awareness,
+            yArr
+          ) as readonly unknown[];
+          const oldKeys = getKeysForArrayValue(yArr);
+
+          const uniqueKeys = new Set();
+          for (const x of updater) {
+            if (x.key !== undefined) {
+              if (uniqueKeys.has(x.key)) {
+                throw new Error('Array elements must have unique keys');
               }
+              uniqueKeys.add(x.key);
             }
           }
-          onChange(() => newValue);
+          const newKeys = updater.map(x => {
+            if (x.key !== undefined) return x.key;
+            let elementKey = getNewArrayElementKey();
+            // just in case someone gives a key that is above our counter
+            while (uniqueKeys.has(elementKey)) {
+              elementKey = getNewArrayElementKey();
+            }
+            uniqueKeys.add(elementKey);
+            return elementKey;
+          });
+          setKeysForArrayValue(yArr, newKeys);
+          // optimise for the case where a single element has been re-ordered (drag and drop)
+          const reorderedKey = findSingleReorderedElement(oldKeys, newKeys);
+          if (reorderedKey !== undefined) {
+            const oldIndex = oldKeys.indexOf(reorderedKey);
+            const newIndex = newKeys.indexOf(reorderedKey);
+            let val = yArr.get(oldIndex);
+            if (val instanceof Y.AbstractType) {
+              val = val.clone();
+            }
+            yArr.delete(oldIndex);
+            yArr.insert(newIndex, [val]);
+            for (const [idx, { value }] of updater.entries()) {
+              const oldIndex = oldKeys.indexOf(newKeys[idx]);
+              const newVal = updateValue(
+                schema.element,
+                oldVal[oldIndex],
+                value
+              );
+              if (newVal !== oldVal) {
+                yArr.delete(oldIndex);
+                yArr.insert(idx, [parsedValToYjs(schema.element, newVal)]);
+              }
+            }
+            return;
+          }
+
+          // optimise only updating values + added new elements at the end
+          const oldKeysJoined = oldKeys.join();
+          const newKeysJoined = newKeys.slice(0, oldKeys.length).join();
+
+          if (oldKeysJoined === newKeysJoined) {
+            for (const [idx, { value }] of updater.entries()) {
+              const oldIndex = oldKeys.indexOf(newKeys[idx]);
+              const newVal = updateValue(
+                schema.element,
+                oldVal[oldIndex],
+                value
+              );
+              if (newVal !== oldVal) {
+                yArr.delete(oldIndex);
+                yArr.insert(idx, [parsedValToYjs(schema.element, newVal)]);
+              }
+            }
+            const valsToInsert: unknown[] = [];
+            for (const { value } of updater.slice(oldKeys.length)) {
+              valsToInsert.push(
+                parsedValToYjs(
+                  schema.element,
+                  getInitialPropsValueFromInitializer(schema.element, value)
+                )
+              );
+            }
+            if (valsToInsert.length) {
+              yArr.insert(oldKeys.length, valsToInsert);
+            }
+            return;
+          }
+          // for anything else, just replace the whole array
+
+          const newVals = updater.map((x, i) => {
+            const key = newKeys[i];
+            const oldIndex = oldKeys.indexOf(key);
+            if (oldIndex !== -1) {
+              const oldElement = yArr.get(oldIndex);
+              if (x.value === undefined) {
+                if (oldElement instanceof Y.AbstractType) {
+                  return oldElement.clone();
+                }
+                return oldElement;
+              }
+              const newVal = updateValue(
+                schema.element,
+                oldVal[oldIndex],
+                x.value
+              );
+              return parsedValToYjs(schema.element, newVal);
+            }
+            return parsedValToYjs(
+              schema.element,
+              getInitialPropsValueFromInitializer(schema.element, x.value)
+            );
+          });
+          yArr.delete(0, yArr.length);
+          yArr.insert(0, newVals);
         },
       };
     },
@@ -161,7 +248,24 @@ export function createGetPreviewPropsFromY<
         onChange: (discriminant: string | boolean, value?: unknown) => {
           stateUpdater.yjs().set('discriminant', discriminant);
           if (value !== undefined) {
-            stateUpdater.yjs().set('value', value);
+            const old = yjsToVal(
+              schema,
+              awareness,
+              stateUpdater.yjs().get('value')
+            );
+            stateUpdater
+              .yjs()
+              .set(
+                'value',
+                parsedValToYjs(
+                  schema,
+                  updateValue(
+                    schema.values[discriminant.toString()],
+                    old,
+                    value
+                  )
+                )
+              );
           }
         },
         onChangeForValue: Object.assign(
@@ -185,18 +289,26 @@ export function createGetPreviewPropsFromY<
       return {
         onChange: (updater: Record<string, unknown>) => {
           for (const [key, val] of Object.entries(updater)) {
+            const oldVal = yjsToVal(
+              schema.fields[key],
+              awareness,
+              stateUpdater.yjs().get(key)
+            );
             stateUpdater
               .yjs()
-              .set(key, parsedValToYjs(schema.fields[key], val));
+              .set(
+                key,
+                parsedValToYjs(
+                  schema.fields[key],
+                  updateValue(schema.fields[key], oldVal, val)
+                )
+              );
           }
         },
         innerOnChanges: Object.fromEntries(
           Object.entries(schema.fields).map(([key, val]) => {
             let func = Object.assign(
               (newVal: unknown) => {
-                if (typeof stateUpdater.yjs !== 'function') {
-                  debugger;
-                }
                 stateUpdater.yjs().set(key, parsedValToYjs(val, newVal));
               },
               {
@@ -290,7 +402,8 @@ export function createGetPreviewPropsFromY<
               },
               {
                 yjs() {
-                  // TODO: this i is wrong
+                  const keys = getKeysForArrayValue(memoized.rawOnChange.yjs());
+                  const i = keys.indexOf(key);
                   return memoized.rawOnChange.yjs().get(i);
                 },
               }

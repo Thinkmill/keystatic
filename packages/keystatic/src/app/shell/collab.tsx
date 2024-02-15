@@ -114,6 +114,8 @@ export function useYjsIfAvailable() {
   return useContext(YjsContext);
 }
 
+const enableMessageLogging = false;
+
 export function CollabProvider(props: { children: ReactNode; config: Config }) {
   const branchInfo = useBranchInfo();
   const router = useRouter();
@@ -145,13 +147,13 @@ export function CollabProvider(props: { children: ReactNode; config: Config }) {
           super(url);
 
           this.addEventListener('message', event => {
-            if (event.data instanceof ArrayBuffer) {
+            if (event.data instanceof ArrayBuffer && enableMessageLogging) {
               console.log('recv', decodeMessage(new Uint8Array(event.data)));
             }
           });
         }
         send(data: string | ArrayBuffer | Blob | ArrayBufferView) {
-          if (data instanceof Uint8Array) {
+          if (data instanceof Uint8Array && enableMessageLogging) {
             console.log('send', decodeSentMessage(data));
           }
           super.send(data);
