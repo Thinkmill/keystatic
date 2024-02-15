@@ -391,14 +391,15 @@ export function createGetPreviewPropsFromY<
           const element = getOrInsert(memoized.inner, key, () => {
             const onChange = Object.assign(
               (val: (val: unknown) => unknown) => {
-                memoized.rawOnChange(prev => {
-                  const keys = getKeysForArrayValue(prev as readonly unknown[]);
-                  const index = keys.indexOf(key);
-                  const newValue = [...(prev as readonly unknown[])];
-                  newValue[index] = val(newValue[index]);
-                  setKeysForArrayValue(newValue, keys);
-                  return newValue;
-                });
+                const yArr = memoized.rawOnChange.yjs();
+
+                const keys = getKeysForArrayValue(yArr);
+                const index = keys.indexOf(key);
+                const newVal = val(
+                  yjsToVal(schema, awareness, yArr.get(index))
+                );
+                yArr.delete(index);
+                yArr.insert(index, [parsedValToYjs(schema.element, newVal)]);
               },
               {
                 yjs() {
