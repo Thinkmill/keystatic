@@ -11,15 +11,11 @@ import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Heading, Text } from '@keystar/ui/typography';
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 
-import {
-  previewPropsToValue,
-  valueToUpdater,
-  setValueToPreviewProps,
-} from '../../get-value';
+import { previewPropsToValue, valueToUpdater } from '../../get-value';
 import { createGetPreviewProps } from '../../preview-props';
 
 import l10nMessages from '../../../app/l10n/index.json';
-import { useId, Key, useMemo, useState, useCallback } from 'react';
+import { useId, Key, useMemo, useState } from 'react';
 import { getSlugFromState } from '../../../app/utils';
 import { clientSideValidateProp } from '../../errors';
 import {
@@ -28,7 +24,6 @@ import {
 } from '../../form-from-preview';
 import { getInitialPropsValue } from '../../initial-values';
 import { useEventCallback } from '../document/DocumentEditor/ui-utils';
-import { SlugFieldInfo } from '../text/path-slug-context';
 import { ArrayField, ComponentSchema, GenericPreviewProps } from '../../api';
 
 export function ArrayFieldInput<Element extends ComponentSchema>(
@@ -40,54 +35,11 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
 
   const [modalState, setModalState] = useState<
-    | {
-        state: 'open';
-        value: unknown;
-        forceValidation: boolean;
-        index: number | undefined;
-      }
-    | { state: 'closed' }
+    { state: 'edit'; index: number } | { state: 'new' } | { state: 'closed' }
   >({ state: 'closed' });
-  const onModalChange = useCallback(
-    (cb: (value: unknown) => unknown) => {
-      setModalState(state => {
-        if (state.state === 'open') {
-          return {
-            state: 'open',
-            forceValidation: state.forceValidation,
-            value: cb(state.value),
-            index: state.index,
-          };
-        }
-        return state;
-      });
-    },
-    [setModalState]
-  );
+
   const formId = useId();
 
-  const modalStateIndex =
-    modalState.state === 'open' ? modalState.index : undefined;
-  const slugInfo = useMemo(() => {
-    if (
-      props.schema.slugField === undefined ||
-      modalState.state !== 'open' ||
-      props.schema.element.kind !== 'object'
-    ) {
-      return;
-    }
-    const val: unknown[] = previewPropsToValue(props as any);
-    const schema = props.schema.element.fields;
-    const slugField = props.schema.slugField;
-    const slugs = new Set(
-      val
-        .filter((x, i) => i !== modalStateIndex)
-        .map(x =>
-          getSlugFromState({ schema, slugField }, x as Record<string, unknown>)
-        )
-    );
-    return { slugs, field: slugField, glob: '*' as const };
-  }, [modalStateIndex, props, modalState.state]);
   return (
     <Flex
       elementType="section"
@@ -109,10 +61,7 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
         autoFocus={props.autoFocus}
         onPress={() => {
           setModalState({
-            state: 'open',
-            value: getInitialPropsValue(props.schema.element),
-            forceValidation: false,
-            index: undefined,
+            state: 'new',
           });
         }}
         alignSelf="start"
@@ -123,13 +72,7 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
         {...props}
         labelId={labelId}
         onOpenItem={idx => {
-          console.log(previewPropsToValue(props.elements[idx]));
-          setModalState({
-            state: 'open',
-            value: previewPropsToValue(props.elements[idx]),
-            forceValidation: false,
-            index: idx,
-          });
+          setModalState({ state: 'edit', index: idx });
         }}
       />
       <ArrayFieldValidationMessages {...props} />
@@ -140,80 +83,33 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
         }}
       >
         {(() => {
-          if (
-            modalState.state !== 'open' ||
-            props.schema.element.kind === 'child'
-          ) {
-            return;
+          if (props.schema.element.kind === 'child') return;
+          if (modalState.state === 'new') {
+            return (
+              <ArrayFieldAddItemModalContent
+                formId={formId}
+                onClose={() => {
+                  setModalState({ state: 'closed' });
+                }}
+                previewProps={props}
+              />
+            );
           }
+          if (modalState.state !== 'edit') return;
           return (
             <Dialog>
               <Heading>Edit item</Heading>
-              <Content>
-                <Flex
-                  id={formId}
-                  elementType="form"
-                  onSubmit={event => {
-                    if (event.target !== event.currentTarget) return;
-                    event.preventDefault();
-                    if (modalState.state !== 'open') return;
-                    if (
-                      !clientSideValidateProp(
-                        props.schema.element,
-                        modalState.value,
-                        undefined
-                      )
-                    ) {
-                      setModalState(state => ({
-                        ...state,
-                        forceValidation: true,
-                      }));
-                      return;
-                    }
-                    if (modalState.index === undefined) {
-                      props.onChange([
-                        ...props.elements.map(x => ({
-                          key: x.key,
-                        })),
-                        {
-                          key: undefined,
-                          value: valueToUpdater(
-                            modalState.value,
-                            props.schema.element
-                          ),
-                        },
-                      ]);
-                    } else {
-                      setValueToPreviewProps(
-                        modalState.value,
-                        props.elements[modalState.index]
-                      );
-                    }
-                    setModalState({ state: 'closed' });
-                  }}
-                  direction="column"
-                  gap="xxlarge"
-                >
-                  <ArrayFieldItemModalContent
-                    onChange={onModalChange}
-                    schema={props.schema.element as any}
-                    value={modalState.value}
-                    slugField={slugInfo}
-                  />
-                </Flex>
-              </Content>
+              <ArrayEditItemModalContent
+                formId={formId}
+                modalStateIndex={modalState.index}
+                onClose={() => {
+                  setModalState({ state: 'closed' });
+                }}
+                previewProps={props}
+              />
               <ButtonGroup>
-                <Button
-                  onPress={() => {
-                    setModalState({ state: 'closed' });
-                  }}
-                >
-                  {stringFormatter.format('cancel')}
-                </Button>
                 <Button form={formId} prominence="high" type="submit">
-                  {modalState.index === undefined
-                    ? stringFormatter.format('add')
-                    : 'Done'}
+                  Done
                 </Button>
               </ButtonGroup>
             </Dialog>
@@ -221,6 +117,151 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
         })()}
       </DialogContainer>
     </Flex>
+  );
+}
+
+function ArrayFieldAddItemModalContent(props: {
+  previewProps: GenericPreviewProps<ArrayField<ComponentSchema>, unknown>;
+  formId: string;
+  onClose: () => void;
+}) {
+  const [forceValidation, setForceValidation] = useState(false);
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  const slugInfo = useMemo(() => {
+    if (
+      props.previewProps.schema.slugField === undefined ||
+      props.previewProps.schema.element.kind !== 'object'
+    ) {
+      return;
+    }
+    const val: unknown[] = previewPropsToValue(props.previewProps as any);
+    const schema = props.previewProps.schema.element.fields;
+    const slugField = props.previewProps.schema.slugField;
+    const slugs = new Set(
+      val.map(x =>
+        getSlugFromState({ schema, slugField }, x as Record<string, unknown>)
+      )
+    );
+    return { slugs, field: slugField, glob: '*' as const };
+  }, [props.previewProps]);
+
+  const [value, setValue] = useState(() =>
+    getInitialPropsValue(props.previewProps.schema.element)
+  );
+
+  const previewProps = useMemo(
+    () =>
+      createGetPreviewProps(
+        props.previewProps.schema.element,
+        setValue,
+        () => undefined
+      ),
+    [props.previewProps.schema.element, setValue]
+  )(value);
+  return (
+    <Dialog>
+      <Heading>Add item</Heading>
+      <Content>
+        <Flex
+          id={props.formId}
+          elementType="form"
+          onSubmit={event => {
+            if (event.target !== event.currentTarget) return;
+            event.preventDefault();
+            if (
+              !clientSideValidateProp(
+                props.previewProps.schema.element,
+                value,
+                undefined
+              )
+            ) {
+              setForceValidation(true);
+              return;
+            }
+            props.previewProps.onChange([
+              ...props.previewProps.elements.map(x => ({
+                key: x.key,
+              })),
+              {
+                key: undefined,
+                value: valueToUpdater(value, props.previewProps.schema.element),
+              },
+            ]);
+            props.onClose();
+          }}
+          direction="column"
+          gap="xxlarge"
+        >
+          <FormValueContentFromPreviewProps
+            slugField={slugInfo}
+            autoFocus
+            {...previewProps}
+            forceValidation={forceValidation}
+          />
+        </Flex>
+      </Content>
+      <ButtonGroup>
+        <Button
+          onPress={() => {
+            props.onClose();
+          }}
+        >
+          {stringFormatter.format('cancel')}
+        </Button>
+        <Button form={props.formId} prominence="high" type="submit">
+          {stringFormatter.format('add')}
+        </Button>
+      </ButtonGroup>
+    </Dialog>
+  );
+}
+
+function ArrayEditItemModalContent(props: {
+  formId: string;
+  onClose: () => void;
+  previewProps: GenericPreviewProps<ArrayField<ComponentSchema>, unknown>;
+  modalStateIndex: number;
+}) {
+  const slugInfo = useMemo(() => {
+    if (
+      props.previewProps.schema.slugField === undefined ||
+      props.previewProps.schema.element.kind !== 'object'
+    ) {
+      return;
+    }
+    const val: unknown[] = previewPropsToValue(props.previewProps as any);
+    const schema = props.previewProps.schema.element.fields;
+    const slugField = props.previewProps.schema.slugField;
+    const slugs = new Set(
+      val
+        .filter((x, i) => i !== props.modalStateIndex)
+        .map(x =>
+          getSlugFromState({ schema, slugField }, x as Record<string, unknown>)
+        )
+    );
+    return { slugs, field: slugField, glob: '*' as const };
+  }, [props.previewProps, props.modalStateIndex]);
+
+  return (
+    <Content>
+      <Flex
+        id={props.formId}
+        elementType="form"
+        onSubmit={event => {
+          if (event.target !== event.currentTarget) return;
+          event.preventDefault();
+          props.onClose();
+        }}
+        direction="column"
+        gap="xxlarge"
+      >
+        <FormValueContentFromPreviewProps
+          slugField={slugInfo}
+          autoFocus
+          {...props.previewProps.elements[props.modalStateIndex]}
+        />
+      </Flex>
+    </Content>
   );
 }
 
@@ -426,23 +467,4 @@ function move<T>(
   }
 
   return copy;
-}
-
-function ArrayFieldItemModalContent(props: {
-  schema: ComponentSchema;
-  value: unknown;
-  onChange: (cb: (value: unknown) => unknown) => void;
-  slugField: SlugFieldInfo | undefined;
-}) {
-  const previewProps = useMemo(
-    () => createGetPreviewProps(props.schema, props.onChange, () => undefined),
-    [props.schema, props.onChange]
-  )(props.value);
-  return (
-    <FormValueContentFromPreviewProps
-      slugField={props.slugField}
-      autoFocus
-      {...previewProps}
-    />
-  );
 }

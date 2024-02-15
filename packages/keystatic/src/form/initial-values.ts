@@ -84,6 +84,9 @@ export function getInitialPropsValueFromInitializer(
         initializer === undefined
           ? schema.discriminant.defaultValue()
           : initializer.discriminant;
+      if (defaultValue === undefined) {
+        debugger;
+      }
       return {
         discriminant: defaultValue,
         value: getInitialPropsValueFromInitializer(

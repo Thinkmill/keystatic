@@ -16,40 +16,35 @@ import {
   ComponentSchema,
   ConditionalField,
   GenericPreviewProps,
-  ParsedValueForComponentSchema,
 } from '../../api';
 import { clientSideValidateProp } from '../../errors';
 import {
   ExtraFieldInputProps,
   FormValueContentFromPreviewProps,
 } from '../../form-from-preview';
-import {
-  previewPropsToValue,
-  valueToUpdater,
-  setValueToPreviewProps,
-} from '../../get-value';
-import { getInitialPropsValue } from '../../initial-values';
+import { valueToUpdater } from '../../get-value';
 import { ArrayFieldListView, ArrayFieldValidationMessages } from '../array/ui';
 import l10nMessages from '../../../app/l10n/index.json';
 import { createGetPreviewProps } from '../../preview-props';
 import { Item } from '@react-stately/collections';
 import { MenuTrigger, Menu } from '@keystar/ui/menu';
+import { getInitialPropsValue } from '../../initial-values';
 
-export function BlocksFieldInput<Key extends string>(
-  props: GenericPreviewProps<
-    ArrayField<
-      ConditionalField<
-        BasicFormField<Key> & {
-          options: readonly { label: string; value: Key }[];
-        },
-        {
-          [_ in `${Key}`]: ComponentSchema;
-        }
-      >
-    >,
-    unknown
-  > &
-    ExtraFieldInputProps
+type BlocksPreviewProps = GenericPreviewProps<
+  ArrayField<
+    ConditionalField<
+      BasicFormField<string> & {
+        options: readonly { label: string; value: string | boolean }[];
+      },
+      {
+        [_ in string]: ComponentSchema;
+      }
+    >
+  >,
+  unknown
+>;
+export function BlocksFieldInput(
+  props: BlocksPreviewProps & ExtraFieldInputProps
 ) {
   const labelId = useId();
   const descriptionId = useId();
@@ -57,12 +52,8 @@ export function BlocksFieldInput<Key extends string>(
 
   const [modalState, setModalState] = useState<
     | { kind: 'closed' }
-    | { kind: 'new'; initial: { discriminant: Key; value: unknown } }
-    | {
-        kind: 'edit';
-        idx: number;
-        initial: { discriminant: Key; value: unknown };
-      }
+    | { kind: 'new'; discriminant: string | boolean }
+    | { kind: 'edit'; idx: number }
   >({ kind: 'closed' });
 
   const dismiss = () => {
@@ -92,21 +83,18 @@ export function BlocksFieldInput<Key extends string>(
         <ActionButton alignSelf="start">Add</ActionButton>
         <Menu
           items={props.schema.element.discriminant.options}
-          onAction={key => {
-            if (typeof key !== 'string') return;
-            const discriminant = key as Key;
+          onAction={discriminant => {
+            const val = props.schema.element.discriminant.options.find(
+              x => x.value.toString() === discriminant.toString()
+            )?.value;
+            if (val === undefined) return;
             setModalState({
               kind: 'new',
-              initial: {
-                discriminant,
-                value: getInitialPropsValue(
-                  props.schema.element.values[`${discriminant as Key}`]
-                ),
-              },
+              discriminant: val,
             });
           }}
         >
-          {item => <Item key={item.value}>{item.label}</Item>}
+          {item => <Item key={item.value.toString()}>{item.label}</Item>}
         </Menu>
       </MenuTrigger>
       <ArrayFieldListView
@@ -116,7 +104,6 @@ export function BlocksFieldInput<Key extends string>(
           setModalState({
             kind: 'edit',
             idx,
-            initial: previewPropsToValue(props.elements[idx] as any),
           });
         }}
       />
@@ -127,11 +114,39 @@ export function BlocksFieldInput<Key extends string>(
           if (modalState.kind === 'closed') {
             return null;
           }
-          const discriminant = modalState.initial.discriminant as `${Key}`;
+          if (modalState.kind === 'edit') {
+            const idx = modalState.idx;
+            const previewProps = props.elements[idx].value;
+            const { discriminant } = props.elements[idx];
+            return (
+              <Dialog>
+                <Heading>
+                  Edit{' '}
+                  {
+                    props.schema.element.discriminant.options.find(
+                      x => x.value === discriminant
+                    )?.label
+                  }
+                </Heading>
+                <BlocksEditItemModalContent
+                  formId={formId}
+                  onClose={dismiss}
+                  previewProps={previewProps}
+                  modalStateIndex={idx}
+                />
+                <ButtonGroup>
+                  <Button form={formId} prominence="high" type="submit">
+                    Done
+                  </Button>
+                </ButtonGroup>
+              </Dialog>
+            );
+          }
+          const discriminant = modalState.discriminant;
           return (
             <Dialog>
               <Heading>
-                {modalState.kind === 'edit' ? 'Edit' : 'Add'}{' '}
+                Add
                 {
                   props.schema.element.discriminant.options.find(
                     x => x.value === discriminant
@@ -139,30 +154,10 @@ export function BlocksFieldInput<Key extends string>(
                 }
               </Heading>
               <Content>
-                <ItemForm
-                  id={formId}
-                  schema={props.schema.element.values[discriminant]}
-                  initialValue={modalState.initial.value}
-                  onSubmit={val => {
-                    dismiss();
-                    if (modalState.kind === 'new') {
-                      props.onChange([
-                        ...props.elements.map(x => ({ key: x.key })),
-                        {
-                          key: undefined,
-                          value: valueToUpdater(
-                            { value: val, discriminant },
-                            props.schema.element
-                          ),
-                        },
-                      ]);
-                      return;
-                    }
-                    setValueToPreviewProps(
-                      val,
-                      props.elements[modalState.idx].value
-                    );
-                  }}
+                <BlocksAddItemModalContent
+                  discriminant={discriminant}
+                  formId={formId}
+                  previewProps={props}
                 />
               </Content>
               <ButtonGroup>
@@ -170,7 +165,7 @@ export function BlocksFieldInput<Key extends string>(
                   {stringFormatter.format('cancel')}
                 </Button>
                 <Button form={formId} prominence="high" type="submit">
-                  Done
+                  {stringFormatter.format('add')}
                 </Button>
               </ButtonGroup>
             </Dialog>
@@ -181,32 +176,68 @@ export function BlocksFieldInput<Key extends string>(
   );
 }
 
-function ItemForm<Schema extends ComponentSchema>(props: {
-  schema: ComponentSchema;
-  initialValue: ParsedValueForComponentSchema<Schema>;
-  onSubmit: (value: unknown) => void;
-  id: string;
+function BlocksEditItemModalContent(props: {
+  formId: string;
+  onClose: () => void;
+  previewProps: GenericPreviewProps<ComponentSchema, unknown>;
+  modalStateIndex: number;
 }) {
-  const [value, setValue] = useState(props.initialValue);
+  return (
+    <Content>
+      <Flex
+        id={props.formId}
+        elementType="form"
+        onSubmit={event => {
+          if (event.target !== event.currentTarget) return;
+          event.preventDefault();
+          props.onClose();
+        }}
+        direction="column"
+        gap="xxlarge"
+      >
+        <FormValueContentFromPreviewProps autoFocus {...props.previewProps} />
+      </Flex>
+    </Content>
+  );
+}
+
+function BlocksAddItemModalContent(props: {
+  previewProps: BlocksPreviewProps;
+  discriminant: string | boolean;
+  formId: string;
+}) {
+  const schema =
+    props.previewProps.schema.element.values[props.discriminant.toString()];
+  console.log(schema);
+  const [value, setValue] = useState(() => getInitialPropsValue(schema));
   const [forceValidation, setForceValidation] = useState(false);
   const previewProps = useMemo(
-    () => createGetPreviewProps(props.schema, setValue as any, () => undefined),
-    [props.schema, setValue]
+    () => createGetPreviewProps(schema, setValue as any, () => undefined),
+    [schema, setValue]
   )(value);
   const { dismiss } = useDialogContainer();
 
   return (
     <Flex
-      id={props.id}
+      id={props.formId}
       elementType="form"
       onSubmit={event => {
         if (event.target !== event.currentTarget) return;
         event.preventDefault();
-        if (!clientSideValidateProp(props.schema, value, undefined)) {
+        if (!clientSideValidateProp(schema, value, undefined)) {
           setForceValidation(true);
           return;
         }
-        props.onSubmit(value);
+        props.previewProps.onChange([
+          ...props.previewProps.elements.map(x => ({ key: x.key })),
+          {
+            key: undefined,
+            value: valueToUpdater(
+              { value, discriminant: props.discriminant },
+              props.previewProps.schema.element
+            ),
+          },
+        ]);
         dismiss();
       }}
       direction="column"
