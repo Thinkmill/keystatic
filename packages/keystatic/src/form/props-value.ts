@@ -340,9 +340,13 @@ export function yjsToVal(
     );
   }
   if (schema.kind === 'array') {
-    return (yjsValue as Y.Array<unknown>).map(val =>
-      yjsToVal(schema.element, awareness, val)
-    );
+    const yArr = yjsValue as Y.Array<unknown>;
+    if (!yArr) {
+      debugger;
+    }
+    const val = yArr.map(val => yjsToVal(schema.element, awareness, val));
+    setKeysForArrayValue(val, getKeysForArrayValue(yArr));
+    return val;
   }
   if (schema.kind === 'conditional') {
     const yjsMap = yjsValue as Y.Map<unknown>;
