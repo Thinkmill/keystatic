@@ -183,8 +183,10 @@ export function getEntriesInCollectionWithTreeKey(
 
 export const KEYSTATIC_CLOUD_API_URL = 'https://api.keystatic.cloud';
 
+export const PKG_VERSION = pkgJson.version;
+
 export const KEYSTATIC_CLOUD_HEADERS = {
-  'x-keystatic-version': pkgJson.version,
+  'x-keystatic-version': PKG_VERSION,
 };
 
 const textEncoder = new TextEncoder();

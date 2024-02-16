@@ -19,6 +19,7 @@ import { useBranchInfo, useCloudInfo } from './data';
 import { Config } from '../..';
 import ReconnectingWebSocket from 'partysocket/ws';
 import * as decoding from 'lib0/decoding';
+import { PKG_VERSION } from '../utils';
 
 const YjsContext = createContext<
   | {
@@ -140,7 +141,7 @@ export function CollabProvider(props: { children: ReactNode; config: Config }) {
     const provider = new WebsocketProvider({
       doc,
       url: true
-        ? `wss://live.keystatic.cloud/${project}`
+        ? `wss://live.keystatic.cloud/${project}?v=${PKG_VERSION}`
         : `ws://localhost:8787/${project}`,
       WebSocketPolyfill: class extends ReconnectingWebSocket {
         constructor(url: string) {
