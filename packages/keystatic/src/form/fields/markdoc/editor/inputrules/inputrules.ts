@@ -98,6 +98,7 @@ function run(view: EditorView, rules: readonly InputRule[]) {
   if (yUndoPluginState) {
     const undoManager: UndoManager = yUndoPluginState.undoManager;
     undoManager.stopCapturing();
+    view.dispatch(tr);
   } else {
     view.dispatch(closeHistory(tr));
   }
