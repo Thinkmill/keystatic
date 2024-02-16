@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.3.18
+
+### Patch Changes
+
+- 805a3c8d: Make editing an entry within an `array` or `blocks` field
+  immediately update the value in the parent form rather than after clicking
+  done
+
 ## 0.3.17
 
 ### Patch Changes
