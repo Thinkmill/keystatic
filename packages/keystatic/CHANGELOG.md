@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.3.19
+
+### Patch Changes
+
+- 3f3c91c9: Fix markdown shortcuts and insert menu in the new editor when using
+  multiplayer
+
 ## 0.3.18
 
 ### Patch Changes
