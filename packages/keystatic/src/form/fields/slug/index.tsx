@@ -37,12 +37,13 @@ function parseAsSlugField(value: FormFieldStoredValue, slug: string) {
   return { name: value, slug };
 }
 
-export function slug(args: {
+export function slug(_args: {
   name: {
     label: string;
     defaultValue?: string;
     description?: string;
     validation?: {
+      isRequired?: boolean;
       length?: {
         min?: number;
         max?: number;
@@ -66,6 +67,21 @@ export function slug(args: {
   { name: string; slug: string },
   string
 > {
+  const args = {
+    ..._args,
+    name: {
+      ..._args.name,
+      validation: {
+        length: {
+          min: Math.max(
+            _args.name.validation?.isRequired ? 1 : 0,
+            _args.name.validation?.length?.min ?? 0
+          ),
+          max: _args.name.validation?.length?.max,
+        },
+      },
+    },
+  };
   const naiveGenerateSlug: (name: string) => string =
     args.slug?.generate || slugify;
   const defaultValue = {
