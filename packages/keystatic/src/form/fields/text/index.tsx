@@ -20,7 +20,7 @@ const emptySet = new Set<string>();
 export function text({
   label,
   defaultValue = '',
-  validation: { length: { max = Infinity, min = 0 } = {} } = {},
+  validation: { length: { max = Infinity, min = 0 } = {}, isRequired } = {},
   description,
   multiline = false,
 }: {
@@ -28,6 +28,7 @@ export function text({
   defaultValue?: string | (() => string);
   description?: string;
   validation?: {
+    isRequired?: boolean;
     length?: {
       min?: number;
       max?: number;
@@ -35,6 +36,7 @@ export function text({
   };
   multiline?: boolean;
 }): SlugFormField<string, string, string, null> {
+  min = Math.max(isRequired ? 1 : 0, min);
   function validate(
     value: string,
     slugField: { slugs: Set<string>; glob: Glob } | undefined
