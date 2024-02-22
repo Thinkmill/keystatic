@@ -15,7 +15,7 @@ navGroups:
         link:
           discriminant: url
           value: /resources
-        isNew: true
+        isNew: false
   - groupName: Integration guides
     items:
       - label: Astro
@@ -32,7 +32,7 @@ navGroups:
         link:
           discriminant: page
           value: installation-remix
-        isNew: true
+        isNew: false
   - groupName: Core concepts
     items:
       - label: Content organisation
@@ -92,7 +92,7 @@ navGroups:
         link:
           discriminant: page
           value: reader-api
-        isNew: true
+        isNew: false
       - label: Format options
         link:
           discriminant: page
@@ -107,7 +107,7 @@ navGroups:
         link:
           discriminant: page
           value: user-interface
-        isNew: true
+        isNew: false
   - groupName: Fields API
     items:
       - label: Array
@@ -134,7 +134,7 @@ navGroups:
         link:
           discriminant: page
           value: fields/cloud-image
-        isNew: true
+        isNew: false
       - label: Conditional
         link:
           discriminant: page
@@ -169,7 +169,7 @@ navGroups:
         link:
           discriminant: page
           value: fields/image
-        isNew: true
+        isNew: false
       - label: Integer
         link:
           discriminant: page
@@ -184,7 +184,7 @@ navGroups:
         link:
           discriminant: page
           value: fields/number
-        isNew: true
+        isNew: false
       - label: Object
         link:
           discriminant: page
