@@ -51,13 +51,23 @@ export function date<IsRequired extends boolean | undefined>({
       if (value === undefined) {
         return null;
       }
+      if (value instanceof Date) {
+        const year = value.getUTCFullYear();
+        const month = String(value.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(value.getUTCDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
       if (typeof value !== 'string') {
         throw new FieldDataError('Must be a string');
       }
       return value;
     },
     serialize(value) {
-      return { value: value === null ? undefined : value };
+      if (value === null) return { value: undefined };
+      const date = new Date(value);
+      date.toISOString = () => value;
+      date.toString = () => value;
+      return { value: date };
     },
     validate(value) {
       const message = validateDate(validation, value, label);
