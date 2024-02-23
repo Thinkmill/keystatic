@@ -1,6 +1,6 @@
 import { assert } from 'emery';
 import { load } from 'js-yaml';
-import { AssetFormField, ContentFormField, JsonValue } from '../form/api';
+import { AssetFormField, ContentFormField, JsonYamlValue } from '../form/api';
 import { ReadonlyPropPath } from '../form/fields/document/DocumentEditor/component-blocks/utils';
 import { FormatInfo } from './path-utils';
 
@@ -30,7 +30,7 @@ export function loadDataFile(
   data: Uint8Array,
   formatInfo: FormatInfo
 ): {
-  loaded: JsonValue;
+  loaded: JsonYamlValue;
   extraFakeFile?: {
     path: string;
     contents: Uint8Array;

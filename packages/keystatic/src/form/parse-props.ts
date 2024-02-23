@@ -1,7 +1,7 @@
 import { assertNever } from 'emery';
 import { ComponentSchema } from './api';
 import { ReadonlyPropPath } from './fields/document/DocumentEditor/component-blocks/utils';
-import { FormField, FormFieldStoredValue, JsonValue } from '..';
+import { FormField, FormFieldStoredValue, JsonYamlValue } from '..';
 import { FieldDataError } from './fields/error';
 import { validateArrayLength } from './validate-array-length';
 import { getInitialPropsValue } from './initial-values';
@@ -19,7 +19,7 @@ export class PropValidationError extends Error {
 }
 
 function toFormFieldStoredValue(
-  val: JsonValue | undefined
+  val: JsonYamlValue | undefined
 ): FormFieldStoredValue {
   if (val === null) {
     return undefined;
@@ -31,7 +31,7 @@ const isArray: (val: unknown) => val is readonly unknown[] = Array.isArray;
 
 export function parseProps(
   schema: ComponentSchema,
-  _value: JsonValue | undefined,
+  _value: JsonYamlValue | undefined,
   path: ReadonlyPropPath,
   pathWithArrayFieldSlugs: readonly string[],
   parseFormField: (
@@ -59,7 +59,12 @@ export function parseProps(
       return getInitialPropsValue(schema);
     }
     try {
-      if (typeof value !== 'object' || value === null || isArray(value)) {
+      if (
+        typeof value !== 'object' ||
+        value === null ||
+        isArray(value) ||
+        value instanceof Date
+      ) {
         throw new FieldDataError('Must be an object');
       }
       for (const key of Object.keys(value)) {
@@ -100,7 +105,12 @@ export function parseProps(
       value = {};
     }
     try {
-      if (typeof value !== 'object' || value === null || isArray(value)) {
+      if (
+        typeof value !== 'object' ||
+        value === null ||
+        isArray(value) ||
+        value instanceof Date
+      ) {
         throw new FieldDataError('Must be an object');
       }
       const allowedKeysSet = new Set(Object.keys(schema.fields));
@@ -163,7 +173,8 @@ export function parseProps(
             schema.slugField &&
             typeof innerVal === 'object' &&
             innerVal !== null &&
-            !isArray(innerVal)
+            !isArray(innerVal) &&
+            !(innerVal instanceof Date)
           ) {
             if (schema.element.kind !== 'object') {
               throw new Error(

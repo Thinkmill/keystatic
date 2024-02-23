@@ -15,17 +15,18 @@ export type FormFieldInputProps<Value> = {
   forceValidation: boolean;
 };
 
-export type JsonValue =
+export type JsonYamlValue =
   | string
   | number
   | boolean
   | null
-  | readonly JsonValue[]
-  | { [key: string]: JsonValue };
+  | Date
+  | readonly JsonYamlValue[]
+  | { [key: string]: JsonYamlValue };
 
-type JsonValueWithoutNull = JsonValue & {};
+type JsonYamlValueWithoutNull = JsonYamlValue & {};
 
-export type FormFieldStoredValue = JsonValueWithoutNull | undefined;
+export type FormFieldStoredValue = JsonYamlValueWithoutNull | undefined;
 
 export type BasicFormField<
   ParsedValue extends {} | null,
