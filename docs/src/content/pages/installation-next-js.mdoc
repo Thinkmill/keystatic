@@ -168,8 +168,9 @@ Keystatic provides a [Reader API](/docs/reader-api) to bring content to the fron
 The following example displays a list of each post title, with a link to an individual post page:
 
 ```tsx
+// src/app/posts/page.tsx
 import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
+import keystaticConfig from '../../../keystatic.config';
 
 import Link from 'next/link';
 
