@@ -55,6 +55,11 @@ navGroups:
           discriminant: page
           value: cloud
         isNew: true
+      - label: Using in a monorepo
+        link:
+          discriminant: page
+          value: using-in-a-monorepo
+        isNew: true
       - label: GitHub mode
         link:
           discriminant: page
