@@ -1,0 +1,248 @@
+---
+title: Content components
+summary: >-
+  Content components are a new-generation of rich-text building blocks that can be used with the (currently experimental) Markdoc and MDX fields.
+---
+
+Content components are a new-generation of rich-text building blocks that can be used with the (currently experimental) [Markdoc](/docs/fields/markdoc) and [MDX](/docs/fields/mdx) fields.
+
+You can define content components by passing a `components` object to the Markdoc or MDX field:
+
+```tsx
+// Inside a collection/singleton...
+schema: {
+  // ...
+  richText: __experimental_mdx_field({
+    label: 'Rich text',
+    components: { 
+      // Content components here
+    }
+  })
+}
+```
+
+There are 5 types of content components, listed below. 
+
+Refer to the [Type signature](#type-signature) to learn how to create `ContentView` component previews, restrict component usage with `forSpecificLocations`, and more.
+
+---
+
+## Wrapper
+
+{% aside icon="☝️" %}
+A `wrapper` component has an opening and closing tag, with `children` content wrapped inside.
+{% /aside %}
+
+The `children` content can be freeform rich text, or a combination of other content components.
+
+### Example: Testimonial
+
+```tsx
+Testimonial: {
+  label: 'Testimonial',
+  schema: {
+    author: fields.text({ label: 'Author' }),
+    role: fields.text({ label: 'Role' }),
+  }
+}
+```
+
+The example above will add a 'Testimonial' dropdown to the rich text editor. The output for a Testimonial will look like this (using the MDX field):
+
+```mdx
+<Testimonial author="Jina Dawkins" role="Head of Product Design">
+  
+  I've been very impressed with the work done by the team in such a short period of time. I'm really proud of everyone's effort and dedication!
+
+</Testimonial>
+```
+
+### Example: Multi-variant Container
+
+```tsx
+Container: wrapper({
+  label: 'Container',
+  schema: {
+    crop: fields.select({
+      label: 'Crop',
+      description: 'Max width container and options',
+      options: [
+        {label: 'normal', value: 'normal'},
+        {label: 'narrow', value: 'narrow'},
+        {label: 'narrower', value: 'narrower'},
+        {label: 'bleed', value: 'bleed'},
+        {label: 'boxed', value: 'boxed'},
+        {label: 'narrow-boxed', value: 'narrow-boxed'},
+      ],
+      defaultValue: 'normal'
+    }),
+  }
+})
+```
+
+This `Container` component can contain rich text as `children`, but also a `Testimonial` component or any other existing content component:
+
+```mdx
+<Container crop="narrow">
+  <Testimonial author="Jina Dawkins" role="Head of Product Design">
+    
+    I've been very impressed with the work done by the team in such a short period of time. I'm really proud of everyone's effort and dedication!
+
+  </Testimonial>
+</Container>
+```
+
+---
+
+## Block
+
+{% aside icon="☝️" %}
+A `block` component has a self-closing tag, and therefore no `children`.
+{% /aside %}
+
+### Example
+
+```tsx
+Playlist: {
+  label: 'Playlist',
+  schema: {
+    id: fields.text({ label: 'Playlist ID' }),
+  }
+}
+```
+
+The MDX output for an `PlayList` will look like this:
+
+```mdx
+<PlayList id="5f8a3b3e3f3e4d001f3e4d00" />
+```
+
+---
+
+## Inline
+
+An `inline` component is just like a `block` component, but it will sit inline within a paragraph or other text content.
+
+### Example
+
+```tsx
+StatusBadge: {
+  label: 'StatusBadge',
+  schema: {
+    status: fields.select({
+      label: 'Status',
+      options: [
+        {label: 'To do', value: 'todo'},
+        {label: 'In Progress', value: 'in-progress'},
+        {label: 'Ready for review', value: 'ready-for-review'},
+        {label: 'Done', value: 'done'},
+      ],
+      defaultValue: 'todo'
+    }),
+  }
+}
+```
+
+The MDX output for a `StatusBadge` will look like this:
+
+```mdx
+This task is currently <StatusBadge status="in-progress" /> but has no blocker on the rest of the team.
+```
+
+---
+
+## Mark
+
+{% aside icon="☝️" %}
+The `mark` component lets you highlight text with the html `<mark>` tag.
+{% /aside %}
+
+You can select text in the rich text editor and apply a `mark` component to it, just like you would apply bold or italic formatting.
+
+### Example
+
+```tsx
+Highlight: mark({
+  label: 'Highlight',
+  schema: {
+    variant: fields.select({
+      label: 'Variant',
+      options: [
+        {label: 'Fluro', value: 'fluro'},
+        {label: 'Minimal', value: 'minimal'},
+        {label: 'Brutalist', value: 'brutalist'},
+      ],
+      defaultValue: 'fluro'
+    }),
+  }
+})
+```
+
+The selected text will be wrapped in a `Highlight` component:
+
+```mdx
+This is a <Highlight variant="fluro">highlighted</Highlight> word.
+```
+
+---
+
+## Repeating
+
+{% aside icon="☝️" %}
+The `repeating` component sets a "0 to many" list of explicitely defined components.
+{% /aside %}
+
+Use this to achieve the pattern of parent/child component composition, where children are responsible for their own data/props:
+
+```mdx
+<Parent>
+  <Child title="Repeating" data={} />
+  <Child title="List" data={} />
+  <Child title="Of" data={} />
+  <Child title="Things" data={} />
+</Parent>
+```
+
+The `repeating` components takes a `children` array, where you can define which components are allowed to be inserted.
+
+### Example
+
+```tsx
+TestimonialGrid: repeating({
+  label: 'Testimonial Grid',
+  
+  // Only allow Testimonial components
+  children: ['Testimonial'],
+  schema: {
+    columns: fields.integer({
+      label: 'Columns',
+      validation: {
+        min: 1,
+        max: 6
+    })
+  }
+}),
+```
+
+The MDX output for this `TestimonialGrid` will look like this:
+
+```mdx
+<TestimonialGrid columns={2}>
+  <Testimonial author="Jina Dawkins" role="Head of Product Design">
+  
+    I've been very impressed with the work done by the team in such a short period of time. I'm really proud of everyone's effort and dedication!
+
+  </Testimonial>
+  <Testimonial author="Leesa Edwards" role="CMO">
+  
+    The team makes my job easy. I'm just here to amplify the amazing work everyone here is doing!
+
+  </Testimonial>
+</TestimonialGrid>
+```
+
+---
+
+## Type signature
+
+Find the latest version of the `content-components` type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/content-components](https://docsmill.dev/npm/@keystatic/core@latest#/content-components)

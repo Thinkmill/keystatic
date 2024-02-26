@@ -541,10 +541,14 @@ export default config({
                     'coming-soon': fields.empty(),
                   }
                 ),
-                isNew: fields.checkbox({
-                  label: 'Is new?',
-                  description: 'Show a "new" badge next to this item',
-                  defaultValue: false,
+                status: fields.select({
+                  label: 'Status',
+                  options: [
+                    { label: 'Default', value: 'default' },
+                    { label: 'New', value: 'new' },
+                    { label: 'Experimental', value: 'experimental' },
+                  ],
+                  defaultValue: 'default',
                 }),
               }),
               {
