@@ -62,7 +62,7 @@ navGroups:
         isNew: false
   - groupName: Recipes
     items:
-      - label: "Real-time previews with Next.js' draft mode"
+      - label: "Real-Time Previews With Next.js' Draft Mode"
         link:
           discriminant: page
           value: recipes/real-time-previews
@@ -108,6 +108,11 @@ navGroups:
           discriminant: page
           value: user-interface
         isNew: false
+      - label: Content components
+        link:
+          discriminant: page
+          value: content-components
+        isNew: true
   - groupName: Fields API
     items:
       - label: Array
