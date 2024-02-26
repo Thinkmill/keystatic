@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ComingSoonBadge, NewBadge } from './badges';
+import { ComingSoonBadge, NewBadge, type BadgeStatus } from './badges';
 import { cx } from '../../utils';
 
 type NavItemProps = {
@@ -13,7 +13,7 @@ type NavItemProps = {
   title?: string;
   tabIndex?: number;
   comingSoon?: boolean;
-  isNew?: boolean;
+  status?: BadgeStatus;
   currentPage?: boolean;
 };
 
@@ -24,7 +24,7 @@ export function NavItem({
   title,
   tabIndex,
   comingSoon,
-  isNew,
+  status,
   currentPage,
 }: NavItemProps) {
   const pathname = usePathname();
@@ -42,6 +42,8 @@ export function NavItem({
       ? 'before:block before:absolute before:inset-y-1 before:-inset-x-2 before:bg-slate-11 before:w-1 before:rounded before:transition-all'
       : ''
   }`;
+
+  const hasStatusBadge = status !== 'default';
 
   return (
     <li className="relative" aria-current={isCurrentPage ? 'page' : false}>
@@ -61,14 +63,15 @@ export function NavItem({
             className={cx(
               styleShared,
               isCurrentPage ? styleCurrent : styleIdle,
-              isNew ? 'flex items-center gap-1' : ''
+              hasStatusBadge ? 'flex items-center gap-1' : ''
             )}
             href={href}
             title={title}
             tabIndex={tabIndex}
           >
             {label}
-            {isNew && <NewBadge />}
+            {status === 'new' && <NewBadge />}
+            {status === 'experimental' && <ComingSoonBadge />}
           </a>
         </Link>
       )}

@@ -32,7 +32,7 @@ export async function getNavigationMap() {
 
   const navigationMap = navigation?.navGroups.map(({ groupName, items }) => ({
     groupName,
-    items: items.map(({ label, link, isNew }) => {
+    items: items.map(({ label, link, status }) => {
       const { discriminant, value } = link;
       const page = discriminant === 'page' && value ? pagesBySlug[value] : null;
       const url = discriminant === 'url' ? value : `/docs/${page?.slug}`;
@@ -42,7 +42,7 @@ export async function getNavigationMap() {
         href: url || '',
         title: page?.entry.title,
         comingSoon: discriminant === 'coming-soon',
-        isNew,
+        status,
       };
     }),
   }));
