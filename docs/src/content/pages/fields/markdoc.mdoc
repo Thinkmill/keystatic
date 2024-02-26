@@ -3,9 +3,45 @@ title: Markdoc field
 summary: Experimental WYSIWYG editor for Markdoc
 ---
 
-{% aside icon="☝️" %}
-Documentation for the Markdoc field coming soon.
-{% /aside%}
+{% aside icon="🧪" %}
+The `markdoc` field is currently experimental — please keep this in mind when using it.
+{% /aside %}
+
+The `markdoc` is an evolution of the `document` field using a new editor. It looks and feels similar to the `document` field, but has extended capabilities.
+
+## Example usage
+
+```tsx
+// Keystatic config
+import { __experimental_markdoc_field } from '@keystatic/core/form/fields/markdoc'
+
+// Inside a collection...
+schema: {
+ richText: __experimental_markdoc_field({
+  label: 'Rich text'
+ })
+}
+```
+
+Keystatic will store content and retrieve it for you using the [Reader API](/docs/reader-api), but you are responsible for rendering the Markdoc content. 
+
+You can use community tools or build your own.
+
+## Content components
+
+The `markdoc` field uses the new-generation and more capable [content components](/docs/content-components):
+
+```diff
+richText: __experimental_markdoc_field({
+ label: 'Rich text',
++ components: {
++  // Add custom components here
++ } 
+})
+```
+Checkout the [content components](/docs/content-components) docs to learn how to create advanced editing experiences with the `markdoc` field.
+
+---
 
 ## Type signature
 

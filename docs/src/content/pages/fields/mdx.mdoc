@@ -3,9 +3,94 @@ title: MDX field
 summary: Experimental WYSIWYG editor for MDX
 ---
 
-{% aside icon="☝️" %}
-Documentation for the MDX field coming soon.
-{% /aside%}
+{% aside icon="🧪" %}
+The `mdx` field is currently experimental — please keep this in mind when using it.
+{% /aside %}
+
+The `mdx` field reads and writes content in MDX.
+
+## Example usage
+
+```tsx
+// Keystatic config
+import { __experimental_mdx_field } from '@keystatic/core/form/fields/markdoc'
+
+// Inside a collection...
+schema: {
+ richText: __experimental_mdx_field({
+  label: 'Rich text'
+ })
+}
+```
+
+Keystatic will store content and retrieve it for you using the [Reader API](/docs/reader-api), but you are responsible for rendering the MDX content. 
+
+You can use community tools or build your own.
+
+## Content components
+
+The `mdx` field uses the new-generation and more capable [content components](/docs/content-components):
+
+```diff
+richText: __experimental_mdx_field({
+ label: 'Rich text',
++ components: {
++  // Add custom components here
++ } 
+})
+```
+Checkout the [content components](/docs/content-components) docs to learn how to create advanced editing experiences with the `mdx` field.
+
+---
+
+## MDX limitations in Keystatic
+
+### No import statements
+
+Keystatic statically analyzses the MDX content. This means you cannot have `import` statements inside the MDX file.
+
+This won't work:
+
+```mdx
+---
+title: My first post
+date: 2024-02-17
+---
+
+import { Card } from '../components/Card'
+
+# Hello, world!
+
+<Card title="This week's update" />
+```
+
+Remove the import from the MDX file. Instead, pass the components you want to import to the component responsible for rendering the MDX content:
+
+```tsx
+import { Card } from '../components/Card'
+
+<MdxRenderer components={{ Card }} />
+```
+
+### No HTML tags
+
+HTML tags in MDX are not supported by Keystatic. Replace them with their Markdown equivalent. 
+
+For example...
+
+```diff
+- Learn more on the <a href="https://keystatic.com">Keystatic website</a>.
++ Learn more on the [Keystatic website](https://keystatic.com).
+```
+
+...or 
+
+```diff
+- <blockquote>Wow, this is pretty cool!</blockquote>
++ > Wow, this is pretty cool!
+```
+
+---
 
 ## Type signature
 
