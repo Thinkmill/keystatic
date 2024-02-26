@@ -1,31 +1,31 @@
 import { cx } from '../../utils';
 
+export type BadgeStatus = 'experimental' | 'new' | 'default';
+type StyledStatuses = Exclude<BadgeStatus, 'default'>;
+
+const badgeClasses: Record<StyledStatuses, string> = {
+  experimental: 'border-amber-5 bg-amber-2 text-amber-11',
+  new: 'border-purple-5 bg-purple-2 text-purple-11',
+};
+
 const sharedBadgeClasses = cx(
   'rounded-full border px-1 py-0.5 text-[0.625rem] font-medium uppercase leading-none'
 );
 
-export function ComingSoonBadge() {
+function Badge({ variant, label }: { variant: BadgeStatus; label: string }) {
   return (
     <span
       className={cx(
         sharedBadgeClasses,
-        'border-amber-5 bg-amber-2 text-amber-11'
+        variant !== 'default' ? badgeClasses[variant] : ''
       )}
     >
-      Soon
+      {label}
     </span>
   );
 }
 
-export function NewBadge() {
-  return (
-    <span
-      className={cx(
-        sharedBadgeClasses,
-        'border-purple-5 bg-purple-2 text-purple-11'
-      )}
-    >
-      New
-    </span>
-  );
-}
+export const NewBadge = () => <Badge variant="new" label="New" />;
+export const ComingSoonBadge = () => (
+  <Badge variant="experimental" label="Soon" />
+);
