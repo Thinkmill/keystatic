@@ -6,9 +6,9 @@ export default function keystatic(): AstroIntegration {
     name: 'keystatic',
     hooks: {
       'astro:config:setup': ({ injectRoute, updateConfig, config }) => {
-        if (config.output !== 'hybrid') {
+        if (config.output === 'static') {
           throw new Error(
-            "Keystatic requires `output: 'hybrid'` in your Astro config"
+            "Keystatic requires `output: 'hybrid'` or `output: 'server'` in your Astro config"
           );
         }
 
