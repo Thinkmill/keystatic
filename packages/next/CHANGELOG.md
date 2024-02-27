@@ -1,5 +1,13 @@
 # @keystatic/next
 
+## 4.0.0
+
+### Patch Changes
+
+- Updated dependencies [e3947052]
+- Updated dependencies [ee3f2038]
+  - @keystatic/core@0.4.0
+
 ## 3.0.0
 
 ### Major Changes

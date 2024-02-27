@@ -1,7 +1,7 @@
 {
   "name": "@example/astro",
   "type": "module",
-  "version": "0.0.82",
+  "version": "0.0.83",
   "private": true,
   "scripts": {
     "dev": "astro dev",
@@ -13,8 +13,8 @@
     "@astrojs/node": "^7.0.0",
     "@astrojs/react": "^3.0.7",
     "@braintree/sanitize-url": "^6.0.2",
-    "@keystatic/astro": "^3.0.0",
-    "@keystatic/core": "^0.3.0",
+    "@keystatic/astro": "^4.0.0",
+    "@keystatic/core": "^0.4.0",
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.0.11",
     "astro": "^4.0.3",
