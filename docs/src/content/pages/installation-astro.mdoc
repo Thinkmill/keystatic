@@ -3,7 +3,7 @@ title: Adding Keystatic to an Astro project
 summary: Integrating Keystatic with an existing Astro v2 project.
 ---
 {% aside icon="☝️" %}
-This guide assumes you have an existing Astro project with [SSR and output: 'hybrid' configured](https://docs.astro.build/en/guides/server-side-rendering/#enabling-ssr-in-your-project).
+This guide assumes you have an existing Astro project with [SSR and output: 'hybrid' (or 'server') configured](https://docs.astro.build/en/guides/server-side-rendering/#enabling-ssr-in-your-project).
 {% /aside %}
 
 If you don't have an existing Astro project, you can create a new one with the following command:
@@ -85,11 +85,6 @@ Keystatic is now configured to manage your content based on your schema.
 
 ## Running Keystatic
 
-Go to your `package.json` and add `--host 127.0.0.1` to your "dev" script:
-```
-"dev": "astro dev --host 127.0.0.1"
-```
-
 You can now launch the Keystatic Admin UI. Start the Astro dev server:
 
 ```bash
@@ -97,6 +92,15 @@ npm run dev
 ```
 
 Visit `http://127.0.0.1:4321/keystatic` to see the Keystatic Admin UI running.
+
+{% aside icon="💡" %}
+Keystatic used to require updating your `dev` script. It's now managed by the integration, feel free to simplify it!
+
+```diff
+- "dev": "astro dev --host 127.0.0.1"
++ "dev": "astro dev"
+```
+{% /aside %}
 
 ---
 

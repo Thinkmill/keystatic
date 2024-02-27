@@ -3,7 +3,7 @@
   "version": "0.0.15",
   "license": "MIT",
   "scripts": {
-    "dev": "astro dev --host 127.0.0.1",
+    "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
