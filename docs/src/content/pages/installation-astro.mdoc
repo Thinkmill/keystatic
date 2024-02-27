@@ -85,11 +85,6 @@ Keystatic is now configured to manage your content based on your schema.
 
 ## Running Keystatic
 
-Go to your `package.json` and add `--host 127.0.0.1` to your "dev" script:
-```
-"dev": "astro dev --host 127.0.0.1"
-```
-
 You can now launch the Keystatic Admin UI. Start the Astro dev server:
 
 ```bash
@@ -97,6 +92,15 @@ npm run dev
 ```
 
 Visit `http://127.0.0.1:4321/keystatic` to see the Keystatic Admin UI running.
+
+{% aside icon="💡" %}
+Keystatic used to require updating your `dev` script. It's now managed by the integration, feel free to simplify it!
+
+```diff
+- "dev": "astro dev --host 127.0.0.1"
++ "dev": "astro dev"
+```
+{% /aside %}
 
 ---
 
