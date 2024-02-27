@@ -21,7 +21,7 @@ schema: {
 }
 ```
 
-There are 5 types of content components, listed below. 
+There are 5 types of content components, listed below.
 
 Refer to the [Type signature](#type-signature) to learn how to create `ContentView` component previews, restrict component usage with `forSpecificLocations`, and more.
 
@@ -38,13 +38,15 @@ The `children` content can be freeform rich text, or a combination of other cont
 ### Example: Testimonial
 
 ```tsx
-Testimonial: {
+import { wrapper } from '@keystatic/core/content-components'
+
+Testimonial: wrapper({
   label: 'Testimonial',
   schema: {
     author: fields.text({ label: 'Author' }),
     role: fields.text({ label: 'Role' }),
   }
-}
+})
 ```
 
 The example above will add a 'Testimonial' dropdown to the rich text editor. The output for a Testimonial will look like this (using the MDX field):
@@ -60,6 +62,8 @@ The example above will add a 'Testimonial' dropdown to the rich text editor. The
 ### Example: Multi-variant Container
 
 ```tsx
+import { wrapper } from '@keystatic/core/content-components'
+
 Container: wrapper({
   label: 'Container',
   schema: {
@@ -103,12 +107,14 @@ A `block` component has a self-closing tag, and therefore no `children`.
 ### Example
 
 ```tsx
-Playlist: {
+import { block } from '@keystatic/core/content-components'
+
+Playlist: block({
   label: 'Playlist',
   schema: {
     id: fields.text({ label: 'Playlist ID' }),
   }
-}
+})
 ```
 
 The MDX output for an `PlayList` will look like this:
@@ -126,7 +132,9 @@ An `inline` component is just like a `block` component, but it will sit inline w
 ### Example
 
 ```tsx
-StatusBadge: {
+import { inline } from '@keystatic/core/content-components'
+
+StatusBadge: inline({
   label: 'StatusBadge',
   schema: {
     status: fields.select({
@@ -140,7 +148,7 @@ StatusBadge: {
       defaultValue: 'todo'
     }),
   }
-}
+})
 ```
 
 The MDX output for a `StatusBadge` will look like this:
@@ -162,6 +170,8 @@ You can select text in the rich text editor and apply a `mark` component to it, 
 ### Example
 
 ```tsx
+import { mark } from '@keystatic/core/content-components'
+
 Highlight: mark({
   label: 'Highlight',
   schema: {
@@ -208,6 +218,8 @@ The `repeating` components takes a `children` array, where you can define which 
 ### Example
 
 ```tsx
+import { repeating } from '@keystatic/core/content-components'
+
 TestimonialGrid: repeating({
   label: 'Testimonial Grid',
   
