@@ -11,11 +11,8 @@ export default function keystatic(): AstroIntegration {
             "Keystatic requires `output: 'hybrid'` or `output: 'server'` in your Astro config"
           );
         }
-
         updateConfig({
-          server: {
-            host: '127.0.0.1',
-          },
+          server: config.server.host ? {} : { host: '127.0.0.1' },
           vite: {
             plugins: [
               {
