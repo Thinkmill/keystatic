@@ -1,5 +1,14 @@
 # @example/next-block-builder
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [e3947052]
+- Updated dependencies [ee3f2038]
+  - @keystatic/core@0.4.0
+  - @keystatic/next@4.0.0
+
 ## 0.1.3
 
 ### Patch Changes

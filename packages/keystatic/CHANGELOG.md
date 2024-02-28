@@ -1,5 +1,17 @@
 # @keystatic/core
 
+## 0.4.0
+
+### Minor Changes
+
+- ee3f2038: `fields.date` and `fields.datetime` are now output as dates instead
+  of strings in YAML
+
+### Patch Changes
+
+- e3947052: Add `validation.isRequired` to `fields.text` and `name` on
+  `fields.slug`
+
 ## 0.3.19
 
 ### Patch Changes
