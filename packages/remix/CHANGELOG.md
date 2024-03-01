@@ -1,5 +1,12 @@
 # @keystatic/remix
 
+## 5.0.0
+
+### Patch Changes
+
+- Updated dependencies [8ad803c5]
+  - @keystatic/core@0.5.0
+
 ## 4.0.0
 
 ### Patch Changes

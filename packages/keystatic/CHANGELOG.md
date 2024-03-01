@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.5.0
+
+### Minor Changes
+
+- 8ad803c5: Stabilise `markdoc` and `mdx` fields
+
 ## 0.4.0
 
 ### Minor Changes
