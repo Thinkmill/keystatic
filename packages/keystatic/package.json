@@ -90,15 +90,6 @@
       "react-server": "./dist/keystatic-core-component-blocks.react-server.js",
       "default": "./dist/keystatic-core-component-blocks.js"
     },
-    "./form/fields/markdoc": {
-      "types": "./dist/keystatic-core-form-fields-markdoc.js",
-      "node": {
-        "react-server": "./dist/keystatic-core-form-fields-markdoc.node.react-server.js",
-        "default": "./dist/keystatic-core-form-fields-markdoc.node.js"
-      },
-      "react-server": "./dist/keystatic-core-form-fields-markdoc.react-server.js",
-      "default": "./dist/keystatic-core-form-fields-markdoc.js"
-    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -228,7 +219,6 @@
       "reader/github.ts",
       "renderer.tsx",
       "ui.tsx",
-      "form/fields/markdoc/index.tsx",
       "component-blocks/index.tsx",
       "content-components.ts"
     ]

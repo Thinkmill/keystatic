@@ -6,10 +6,6 @@ import {
   component,
   NotEditable,
 } from '@keystatic/core';
-import {
-  __experimental_markdoc_field,
-  __experimental_mdx_field,
-} from '@keystatic/core/form/fields/markdoc';
 import { block } from '@keystatic/core/content-components';
 import { NoteToolbar, Note } from './note';
 
@@ -301,7 +297,7 @@ export default config({
       format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
-        content: __experimental_mdx_field({
+        content: fields.mdx({
           label: 'Content',
           components: {
             Something: block({
@@ -324,7 +320,7 @@ export default config({
     markdoc: singleton({
       label: 'Markdoc',
       schema: {
-        markdoc: __experimental_markdoc_field({ label: 'Markdoc' }),
+        markdoc: fields.markdoc({ label: 'Markdoc' }),
       },
     }),
     fields: singleton({
@@ -429,7 +425,7 @@ export default config({
           description,
           collection: 'posts',
         }),
-        markdoc: __experimental_markdoc_field({ label: 'Markdoc' }),
+        markdoc: fields.markdoc({ label: 'Markdoc' }),
       },
     }),
   },

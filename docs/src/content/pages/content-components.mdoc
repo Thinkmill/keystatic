@@ -1,10 +1,10 @@
 ---
 title: Content components
 summary: >-
-  Content components are a new-generation of rich-text building blocks that can be used with the (currently experimental) Markdoc and MDX fields.
+  Content components are a new-generation of rich-text building blocks that can be used with the Markdoc and MDX fields.
 ---
 
-Content components are a new-generation of rich-text building blocks that can be used with the (currently experimental) [Markdoc](/docs/fields/markdoc) and [MDX](/docs/fields/mdx) fields.
+Content components are a new-generation of rich-text building blocks that can be used with the [Markdoc](/docs/fields/markdoc) and [MDX](/docs/fields/mdx) fields.
 
 You can define content components by passing a `components` object to the Markdoc or MDX field:
 
@@ -12,7 +12,7 @@ You can define content components by passing a `components` object to the Markdo
 // Inside a collection/singleton...
 schema: {
   // ...
-  richText: __experimental_mdx_field({
+  richText: fields.mdx({
     label: 'Rich text',
     components: { 
       // Content components here
@@ -162,7 +162,7 @@ This task is currently <StatusBadge status="in-progress" /> but has no blocker o
 ## Mark
 
 {% aside icon="☝️" %}
-The `mark` component lets you highlight text with the html `<mark>` tag.
+The `mark` component lets you highlight text
 {% /aside %}
 
 You can select text in the rich text editor and apply a `mark` component to it, just like you would apply bold or italic formatting.

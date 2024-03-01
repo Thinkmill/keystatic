@@ -4,6 +4,11 @@ import {
   ObjectField,
   ParsedValueForComponentSchema,
 } from './form/api';
+import {
+  CloudImagePreviewForNewEditor,
+  cloudImageToolbarIcon,
+} from '#cloud-image-preview';
+import { cloudImageSchema } from './component-blocks/cloud-image-schema';
 
 type WrapperComponentConfig<Schema extends Record<string, ComponentSchema>> = {
   label: string;
@@ -179,3 +184,12 @@ export type ContentComponent =
   | RepeatingComponent<Record<string, ComponentSchema>>
   | InlineComponent<Record<string, ComponentSchema>>
   | MarkComponent<Record<string, ComponentSchema>>;
+
+export function cloudImage(args: { label: string }) {
+  return block({
+    label: args.label,
+    schema: cloudImageSchema,
+    NodeView: CloudImagePreviewForNewEditor,
+    icon: cloudImageToolbarIcon,
+  });
+}
