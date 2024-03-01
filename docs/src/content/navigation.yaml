@@ -153,12 +153,10 @@ navGroups:
         link:
           discriminant: page
           value: fields/markdoc
-        status: experimental
       - label: MDX
         link:
           discriminant: page
           value: fields/mdx
-        status: experimental
       - label: Multiselect
         link:
           discriminant: page

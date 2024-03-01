@@ -1,11 +1,7 @@
 ---
 title: Markdoc field
-summary: Experimental WYSIWYG editor for Markdoc
+summary: WYSIWYG editor for Markdoc
 ---
-
-{% aside icon="🧪" %}
-The `markdoc` field is currently experimental — please keep this in mind when using it.
-{% /aside %}
 
 The `markdoc` is an evolution of the `document` field using a new editor. It looks and feels similar to the `document` field, but has extended capabilities.
 
@@ -13,11 +9,11 @@ The `markdoc` is an evolution of the `document` field using a new editor. It loo
 
 ```tsx
 // Keystatic config
-import { __experimental_markdoc_field } from '@keystatic/core/form/fields/markdoc'
+import { fields } from '@keystatic/core'
 
 // Inside a collection...
 schema: {
- richText: __experimental_markdoc_field({
+ richText: fields.markdoc({
   label: 'Rich text'
  })
 }
@@ -32,7 +28,7 @@ You can use community tools or build your own.
 The `markdoc` field uses the new-generation and more capable [content components](/docs/content-components):
 
 ```diff
-richText: __experimental_markdoc_field({
+richText: fields.markdoc({
  label: 'Rich text',
 + components: {
 +  // Add custom components here
@@ -45,4 +41,4 @@ Checkout the [content components](/docs/content-components) docs to learn how to
 
 ## Type signature
 
-Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/form/fields/markdoc.__experimental_markdoc_field](https://docsmill.dev/npm/@keystatic/core@latest#/form/fields/markdoc.__experimental_markdoc_field)
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core#/.fields.markdoc](https://docsmill.dev/npm/@keystatic/core#/.fields.markdoc)

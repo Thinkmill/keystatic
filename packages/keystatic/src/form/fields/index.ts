@@ -21,3 +21,4 @@ export { text } from './text';
 export { url } from './url';
 export { blocks } from './blocks';
 export { cloudImage } from './cloudImage';
+export { mdx, markdoc } from './markdoc';

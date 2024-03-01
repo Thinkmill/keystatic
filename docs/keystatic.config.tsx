@@ -1,10 +1,10 @@
 import { config, fields, collection, singleton } from '@keystatic/core';
 import {
-  __experimental_markdoc_field,
-  __experimental_markdoc_field_cloudImageBlock,
-  createMarkdocConfig,
-} from '@keystatic/core/form/fields/markdoc';
-import { block, repeating, wrapper } from '@keystatic/core/content-components';
+  block,
+  cloudImage,
+  repeating,
+  wrapper,
+} from '@keystatic/core/content-components';
 import { isNonEmptyArray } from 'emery/guards';
 
 import { Flex } from '@keystar/ui/layout';
@@ -117,7 +117,7 @@ const components = {
       );
     },
   }),
-  'cloud-image': __experimental_markdoc_field_cloudImageBlock({
+  'cloud-image': cloudImage({
     label: 'Cloud Image',
   }),
   layout: repeating({
@@ -147,7 +147,7 @@ const components = {
 };
 
 const markdocConfig: Config = {
-  tags: createMarkdocConfig({
+  tags: fields.markdoc.createMarkdocConfig({
     components,
     render: {
       tags: {
@@ -275,7 +275,7 @@ export default config({
           description: 'The summary is used for the metadata description.',
           multiline: true,
         }),
-        content: __experimental_markdoc_field({
+        content: fields.markdoc({
           label: 'Content',
           components,
         }),
@@ -322,7 +322,7 @@ export default config({
             'The summary is displayed on the blog list page and also the metadata description.',
           multiline: true,
         }),
-        content: __experimental_markdoc_field({
+        content: fields.markdoc({
           label: 'Content',
           components,
         }),
@@ -404,7 +404,7 @@ export default config({
           label: 'Cover image',
         }),
         sortIndex: fields.integer({ label: 'Sort Index', defaultValue: 100 }),
-        content: __experimental_markdoc_field({
+        content: fields.markdoc({
           label: 'Content',
           description:
             'The long form copy for the project page. A link to a dedicated page will be available if this field is filled.',

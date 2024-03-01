@@ -13,12 +13,7 @@ import {
 } from '#field-ui/markdoc';
 import type { EditorSchema } from './editor/schema';
 import type { EditorState } from 'prosemirror-state';
-import { ContentComponent, block } from '../../../content-components';
-import { cloudImageSchema } from '../../../component-blocks/cloud-image-schema';
-import {
-  CloudImagePreviewForNewEditor,
-  cloudImageToolbarIcon,
-} from '#cloud-image-preview';
+import { ContentComponent } from '../../../content-components';
 import {
   MDXEditorOptions,
   MarkdocEditorOptions,
@@ -29,15 +24,11 @@ import { object } from '../object';
 import { fixPath } from '../../../app/path-utils';
 import { XmlFragment } from 'yjs';
 import { prosemirrorToYXmlFragment } from 'y-prosemirror';
+import { createMarkdocConfig } from './markdoc-config';
 
 const textDecoder = new TextDecoder();
 
-export { createMarkdocConfig } from './markdoc-config';
-
-/**
- * @deprecated This is experimental and buggy, use at your own risk.
- */
-export function __experimental_markdoc_field({
+export function markdoc({
   label,
   description,
   options = {},
@@ -47,7 +38,7 @@ export function __experimental_markdoc_field({
   description?: string;
   options?: MarkdocEditorOptions;
   components?: Record<string, ContentComponent>;
-}): __experimental_markdoc_field.Field {
+}): markdoc.Field {
   let schema: undefined | EditorSchema;
   const config = editorOptionsToConfig(options);
   let getSchema = () => {
@@ -122,7 +113,9 @@ export function __experimental_markdoc_field({
   };
 }
 
-export declare namespace __experimental_markdoc_field {
+markdoc.createMarkdocConfig = createMarkdocConfig;
+
+export declare namespace markdoc {
   type Field = ContentFormField<
     EditorState,
     EditorState,
@@ -130,10 +123,7 @@ export declare namespace __experimental_markdoc_field {
   >;
 }
 
-/**
- * @deprecated This is experimental and buggy, use at your own risk.
- */
-export function __experimental_mdx_field({
+export function mdx({
   label,
   description,
   options = {},
@@ -143,7 +133,7 @@ export function __experimental_mdx_field({
   description?: string;
   options?: MDXEditorOptions;
   components?: Record<string, ContentComponent>;
-}): __experimental_mdx_field.Field {
+}): mdx.Field {
   let schema: undefined | EditorSchema;
   const config = editorOptionsToConfig(options);
   let getSchema = () => {
@@ -206,17 +196,6 @@ export function __experimental_mdx_field({
   };
 }
 
-export declare namespace __experimental_mdx_field {
+export declare namespace mdx {
   type Field = ContentFormField<EditorState, EditorState, string>;
-}
-
-export function __experimental_markdoc_field_cloudImageBlock(args: {
-  label: string;
-}) {
-  return block({
-    label: args.label,
-    schema: cloudImageSchema,
-    NodeView: CloudImagePreviewForNewEditor,
-    icon: cloudImageToolbarIcon,
-  });
 }

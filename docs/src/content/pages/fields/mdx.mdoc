@@ -1,11 +1,7 @@
 ---
 title: MDX field
-summary: Experimental WYSIWYG editor for MDX
+summary: WYSIWYG editor for MDX
 ---
-
-{% aside icon="🧪" %}
-The `mdx` field is currently experimental — please keep this in mind when using it.
-{% /aside %}
 
 The `mdx` field reads and writes content in MDX.
 
@@ -13,11 +9,11 @@ The `mdx` field reads and writes content in MDX.
 
 ```tsx
 // Keystatic config
-import { __experimental_mdx_field } from '@keystatic/core/form/fields/markdoc'
+import { fields } from '@keystatic/core'
 
 // Inside a collection...
 schema: {
- richText: __experimental_mdx_field({
+ richText: fields.mdx({
   label: 'Rich text'
  })
 }
@@ -32,7 +28,7 @@ You can use community tools or build your own.
 The `mdx` field uses the new-generation and more capable [content components](/docs/content-components):
 
 ```diff
-richText: __experimental_mdx_field({
+richText: fields.mdx({
  label: 'Rich text',
 + components: {
 +  // Add custom components here
@@ -94,4 +90,4 @@ For example...
 
 ## Type signature
 
-Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/form/fields/markdoc.__experimental_mdx_field](https://docsmill.dev/npm/@keystatic/core@latest#/form/fields/markdoc.__experimental_mdx_field)
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core#/.fields.mdx](https://docsmill.dev/npm/@keystatic/core#/.fields.mdx)
