@@ -66,7 +66,7 @@ export type EditorConfig = {
   codeBlock: { schema: Record<string, ComponentSchema> } | undefined;
 };
 
-export type EditorOptions = {
+export type MarkdocEditorOptions = {
   bold?: boolean;
   italic?: boolean;
   strikethrough?: boolean;
@@ -89,6 +89,30 @@ export type EditorOptions = {
   divider?: boolean;
   codeBlock?: boolean | { schema: Record<string, ComponentSchema> };
 };
+
+export type MDXEditorOptions = {
+  bold?: boolean;
+  italic?: boolean;
+  strikethrough?: boolean;
+  code?: boolean;
+  heading?: HeadingLevels;
+  blockquote?: boolean;
+  orderedList?: boolean;
+  unorderedList?: boolean;
+  table?: boolean;
+  link?: boolean;
+  image?:
+    | boolean
+    | {
+        directory?: string;
+        publicPath?: string;
+        schema?: { alt?: BasicStringFormField; title?: BasicStringFormField };
+      };
+  divider?: boolean;
+  codeBlock?: boolean;
+};
+
+type EditorOptions = MarkdocEditorOptions | MDXEditorOptions;
 
 export function editorOptionsToConfig(options: EditorOptions): EditorConfig {
   return {

@@ -19,7 +19,11 @@ import {
   CloudImagePreviewForNewEditor,
   cloudImageToolbarIcon,
 } from '#cloud-image-preview';
-import { EditorOptions, editorOptionsToConfig } from './config';
+import {
+  MDXEditorOptions,
+  MarkdocEditorOptions,
+  editorOptionsToConfig,
+} from './config';
 import { collectDirectoriesUsedInSchema } from '../../../app/tree-key';
 import { object } from '../object';
 import { fixPath } from '../../../app/path-utils';
@@ -41,7 +45,7 @@ export function __experimental_markdoc_field({
 }: {
   label: string;
   description?: string;
-  options?: EditorOptions;
+  options?: MarkdocEditorOptions;
   components?: Record<string, ContentComponent>;
 }): __experimental_markdoc_field.Field {
   let schema: undefined | EditorSchema;
@@ -137,7 +141,7 @@ export function __experimental_mdx_field({
 }: {
   label: string;
   description?: string;
-  options?: EditorOptions;
+  options?: MDXEditorOptions;
   components?: Record<string, ContentComponent>;
 }): __experimental_mdx_field.Field {
   let schema: undefined | EditorSchema;

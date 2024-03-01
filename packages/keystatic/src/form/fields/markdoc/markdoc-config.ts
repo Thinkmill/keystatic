@@ -1,5 +1,5 @@
 import Markdoc, { Config, NodeType, SchemaAttribute } from '@markdoc/markdoc';
-import { EditorOptions, editorOptionsToConfig } from './config';
+import { MarkdocEditorOptions, editorOptionsToConfig } from './config';
 import { ComponentSchema } from '../../api';
 import { ContentComponent } from '../../../content-components';
 
@@ -87,7 +87,7 @@ const { nodes } = Markdoc;
 export function createMarkdocConfig<
   Components extends Record<string, ContentComponent>,
 >(opts: {
-  options?: EditorOptions;
+  options?: MarkdocEditorOptions;
   components?: Components;
   render?: {
     tags?: { [_ in keyof Components]?: string };
