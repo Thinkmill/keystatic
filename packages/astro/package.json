@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/astro",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
     "set-cookie-parser": "^2.5.1"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.4.0",
+    "@keystatic/core": "^0.5.0",
     "@types/cookie": "^0.5.1",
     "@types/set-cookie-parser": "^2.4.2",
     "astro": "^4.0.3",
