@@ -137,6 +137,10 @@ navGroups:
         link:
           discriminant: page
           value: fields/empty
+      - label: Empty Document
+        link:
+          discriminant: page
+          value: fields/empty-document
       - label: File
         link:
           discriminant: page
