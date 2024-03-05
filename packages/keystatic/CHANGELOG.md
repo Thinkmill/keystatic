@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.5.1
+
+### Patch Changes
+
+- 3cfb555d: Fix `Duplicate use of selection JSON ID` error with hot module
+  reloading
+
 ## 0.5.0
 
 ### Minor Changes
