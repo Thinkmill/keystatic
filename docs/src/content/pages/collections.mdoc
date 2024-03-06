@@ -33,7 +33,9 @@ export default config({
 
 ## Slug field
 
-Use the `slugField` option to define what field in your collection `schema` should be used as the slug for each item. It's recommended to combine it with the [slug field](/docs/fields/slug) to let users customise and regenerate each slug in the Admin UI.
+Use the `slugField` option to define what field in your collection `schema` should be used as the slug for each item. 
+
+It's recommended to combine it with the [slug field](/docs/fields/slug) to let users customise and regenerate each slug in the Admin UI.
 
 ```typescript
 testimonials: collection({
@@ -58,9 +60,25 @@ testimonials: collection({
 }),
 ```
 
+
 By default, Keystatic will store entries at the root of your project, in a directory that matches the collection key.
 
 You can learn more about the `path` option on the [Content organisation page](/docs/content-organisation).
+
+## Columns
+
+By default, only the `slug` of each entry is displayed in the collection list. 
+
+You can show additional fields by passing a `columns` option, which is an array of field keys:
+
+```diff
+testimonials: collection({
+  label: 'Testimonials',
++ columns: ['title', 'publishedOn'] 
+})
+```
+
+---
 
 ## Type signature
 
