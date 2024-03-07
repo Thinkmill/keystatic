@@ -156,6 +156,22 @@ export function makeGenericAPIRouteHandler(
       return githubRepoNotFound(req, config);
     }
     if (joined === 'github/logout') {
+      const cookies = cookie.parse(req.headers.get('cookie') ?? '');
+      const access_token = cookies['keystatic-gh-access-token'];
+      if (access_token) {
+        await fetch(
+          `https://api.github.com/applications/${config.clientId}/token`,
+          {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Basic ${btoa(
+                config.clientId + ':' + config.clientSecret
+              )}`,
+            },
+            body: JSON.stringify({ access_token }),
+          }
+        );
+      }
       return redirect('/keystatic', [
         ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-access-token')],
         ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')],

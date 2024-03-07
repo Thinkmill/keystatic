@@ -37,7 +37,13 @@ import { Text } from '@keystar/ui/typography';
 import { CreateBranchDialog } from '../../branch-selection';
 import { useRouter } from '../../router';
 import l10nMessages from '../../l10n/index.json';
-import { getRepoUrl, isGitHubConfig, redirectToCloudAuth } from '../../utils';
+import {
+  KEYSTATIC_CLOUD_API_URL,
+  KEYSTATIC_CLOUD_HEADERS,
+  getRepoUrl,
+  isGitHubConfig,
+  redirectToCloudAuth,
+} from '../../utils';
 
 import { useConfig } from '../context';
 import {
@@ -51,6 +57,7 @@ import { useThemeContext } from '../theme';
 import { useImageLibraryURL } from '../../../component-blocks/cloud-image-preview';
 import { clearObjectCache } from '../../object-cache';
 import { clearDrafts } from '../../persistence';
+import { getCloudAuth } from '../../auth';
 
 type MenuItem = {
   icon: ReactElement;
@@ -201,14 +208,27 @@ export function UserMenu(user: {
             switch (key) {
               case 'logout':
                 switch (config.storage.kind) {
-                  case 'github':
+                  case 'github': {
                     window.location.href = '/api/keystatic/github/logout';
                     break;
+                  }
                   case 'cloud':
-                  case 'local':
+                  case 'local': {
+                    const token = getCloudAuth(config)?.accessToken;
+                    if (token) {
+                      await fetch(`${KEYSTATIC_CLOUD_API_URL}/oauth/revoke`, {
+                        method: 'POST',
+                        body: new URLSearchParams({ token }).toString(),
+                        headers: {
+                          'Content-Type': 'application/x-www-form-urlencoded',
+                          ...KEYSTATIC_CLOUD_HEADERS,
+                        },
+                      });
+                    }
                     localStorage.removeItem('keystatic-cloud-access-token');
                     window.location.reload();
                     break;
+                  }
                 }
             }
           }}
