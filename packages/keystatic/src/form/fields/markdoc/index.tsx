@@ -43,7 +43,7 @@ export function markdoc({
   const config = editorOptionsToConfig(options);
   let getSchema = () => {
     if (!schema) {
-      schema = createEditorSchema(config, components);
+      schema = createEditorSchema(config, components, false);
     }
     return schema;
   };
@@ -138,7 +138,7 @@ export function mdx({
   const config = editorOptionsToConfig(options);
   let getSchema = () => {
     if (!schema) {
-      schema = createEditorSchema(config, components);
+      schema = createEditorSchema(config, components, true);
     }
     return schema;
   };

@@ -219,7 +219,7 @@ function proseMirrorToMDX(
           children: mapContent(row, cell => {
             return {
               type: 'tableCell',
-              children: inline(cell.content),
+              children: inline(cell.content.child(0).content),
             };
           }),
         };

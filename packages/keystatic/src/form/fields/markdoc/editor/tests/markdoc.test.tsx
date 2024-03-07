@@ -11,25 +11,29 @@ import { editorOptionsToConfig } from '../../config';
 import { mark } from '../../../../../content-components';
 import { fields } from '../../../../..';
 
-const schema = createEditorSchema(editorOptionsToConfig({}), {
-  highlight: mark({
-    label: 'Highlight',
-    icon: undefined!,
-    className: 'highlight',
-    schema: {
-      variant: fields.select({
-        label: 'Variant',
-        options: [
-          { value: 'default', label: 'Default' },
-          { value: 'success', label: 'Success' },
-          { value: 'warning', label: 'Warning' },
-          { value: 'danger', label: 'Danger' },
-        ],
-        defaultValue: 'default',
-      }),
-    },
-  }),
-});
+const schema = createEditorSchema(
+  editorOptionsToConfig({}),
+  {
+    highlight: mark({
+      label: 'Highlight',
+      icon: undefined!,
+      className: 'highlight',
+      schema: {
+        variant: fields.select({
+          label: 'Variant',
+          options: [
+            { value: 'default', label: 'Default' },
+            { value: 'success', label: 'Success' },
+            { value: 'warning', label: 'Warning' },
+            { value: 'danger', label: 'Danger' },
+          ],
+          defaultValue: 'default',
+        }),
+      },
+    }),
+  },
+  false
+);
 
 function toMarkdoc(node: EditorStateDescription) {
   return Markdoc.format(
