@@ -4,7 +4,7 @@
 import { EditorStateDescription, jsx, toEditorState } from './utils';
 import { createEditorSchema } from '../schema';
 import { editorOptionsToConfig } from '../../config';
-import { gfmToMarkdown } from 'mdast-util-gfm';
+import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm';
 import { mdxFromMarkdown, mdxToMarkdown } from 'mdast-util-mdx';
 import { toMarkdown } from 'mdast-util-to-markdown';
 import { proseMirrorToMDXRoot } from '../mdx/serialize';
@@ -14,42 +14,47 @@ import { mdxToProseMirror } from '../mdx/parse';
 import { expect, test } from '@jest/globals';
 import { block, mark } from '../../../../../content-components';
 import { fields } from '../../../../..';
+import { gfm } from 'micromark-extension-gfm';
 
-const schema = createEditorSchema(editorOptionsToConfig({}), {
-  Something: block({
-    label: 'Something',
-    schema: {
-      bool: fields.checkbox({ label: 'Bool' }),
-    },
-  }),
-  Another: block({
-    label: 'Another',
-    schema: {
-      array: fields.array(
-        fields.object({
-          blah: fields.text({ label: 'Blah' }),
-        })
-      ),
-    },
-  }),
-  Highlight: mark({
-    label: 'Highlight',
-    icon: undefined!,
-    className: 'highlight',
-    schema: {
-      variant: fields.select({
-        label: 'Variant',
-        options: [
-          { value: 'default', label: 'Default' },
-          { value: 'success', label: 'Success' },
-          { value: 'warning', label: 'Warning' },
-          { value: 'danger', label: 'Danger' },
-        ],
-        defaultValue: 'default',
-      }),
-    },
-  }),
-});
+const schema = createEditorSchema(
+  editorOptionsToConfig({}),
+  {
+    Something: block({
+      label: 'Something',
+      schema: {
+        bool: fields.checkbox({ label: 'Bool' }),
+      },
+    }),
+    Another: block({
+      label: 'Another',
+      schema: {
+        array: fields.array(
+          fields.object({
+            blah: fields.text({ label: 'Blah' }),
+          })
+        ),
+      },
+    }),
+    Highlight: mark({
+      label: 'Highlight',
+      icon: undefined!,
+      className: 'highlight',
+      schema: {
+        variant: fields.select({
+          label: 'Variant',
+          options: [
+            { value: 'default', label: 'Default' },
+            { value: 'success', label: 'Success' },
+            { value: 'warning', label: 'Warning' },
+            { value: 'danger', label: 'Danger' },
+          ],
+          defaultValue: 'default',
+        }),
+      },
+    }),
+  },
+  true
+);
 
 function toMDX(node: EditorStateDescription) {
   const other = new Map<string, Uint8Array>();
@@ -68,8 +73,8 @@ function toMDX(node: EditorStateDescription) {
 
 function fromMDX(mdx: string) {
   const root = fromMarkdown(mdx, {
-    extensions: [mdxjs()],
-    mdastExtensions: [mdxFromMarkdown()],
+    extensions: [mdxjs(), gfm()],
+    mdastExtensions: [mdxFromMarkdown(), gfmFromMarkdown()],
   });
   const files = new Map<string, Uint8Array>([
     ['something something.png', new Uint8Array([])],
@@ -582,6 +587,143 @@ test('two hard breaks', () => {
     "something\\
     \\
     The
+    "
+  `);
+});
+
+test('table', () => {
+  const editor = fromMDX(`
+a
+
+| a | b | c |
+| - | - | - |
+| d | e | f |
+| g | h | i |
+
+b
+`);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text>
+          <cursor />
+          a
+        </text>
+      </paragraph>
+      <table>
+        <table_row>
+          <table_cell
+            colspan={1}
+            rowspan={1}
+          >
+            <paragraph>
+              <text>
+                a
+              </text>
+            </paragraph>
+          </table_cell>
+          <table_cell
+            colspan={1}
+            rowspan={1}
+          >
+            <paragraph>
+              <text>
+                b
+              </text>
+            </paragraph>
+          </table_cell>
+          <table_cell
+            colspan={1}
+            rowspan={1}
+          >
+            <paragraph>
+              <text>
+                c
+              </text>
+            </paragraph>
+          </table_cell>
+        </table_row>
+        <table_row>
+          <table_cell
+            colspan={1}
+            rowspan={1}
+          >
+            <paragraph>
+              <text>
+                d
+              </text>
+            </paragraph>
+          </table_cell>
+          <table_cell
+            colspan={1}
+            rowspan={1}
+          >
+            <paragraph>
+              <text>
+                e
+              </text>
+            </paragraph>
+          </table_cell>
+          <table_cell
+            colspan={1}
+            rowspan={1}
+          >
+            <paragraph>
+              <text>
+                f
+              </text>
+            </paragraph>
+          </table_cell>
+        </table_row>
+        <table_row>
+          <table_cell
+            colspan={1}
+            rowspan={1}
+          >
+            <paragraph>
+              <text>
+                g
+              </text>
+            </paragraph>
+          </table_cell>
+          <table_cell
+            colspan={1}
+            rowspan={1}
+          >
+            <paragraph>
+              <text>
+                h
+              </text>
+            </paragraph>
+          </table_cell>
+          <table_cell
+            colspan={1}
+            rowspan={1}
+          >
+            <paragraph>
+              <text>
+                i
+              </text>
+            </paragraph>
+          </table_cell>
+        </table_row>
+      </table>
+      <paragraph>
+        <text>
+          b
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "a
+
+    | a | b | c |
+    | - | - | - |
+    | d | e | f |
+    | g | h | i |
+
+    b
     "
   `);
 });

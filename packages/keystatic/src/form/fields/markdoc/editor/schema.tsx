@@ -488,7 +488,8 @@ export type EditorSchema = {
 
 export function createEditorSchema(
   config: EditorConfig,
-  components: Record<string, ContentComponent>
+  components: Record<string, ContentComponent>,
+  isMDX: boolean
 ) {
   const nodeSpecsWithCustomNodes: Record<string, EditorNodeSpec> = {
     doc: nodeSpecs.doc,
@@ -563,7 +564,14 @@ export function createEditorSchema(
   if (config.table) {
     nodeSpecsWithCustomNodes.table = nodeSpecs.table;
     nodeSpecsWithCustomNodes.table_row = nodeSpecs.table_row;
-    nodeSpecsWithCustomNodes.table_cell = nodeSpecs.table_cell;
+    if (isMDX) {
+      nodeSpecsWithCustomNodes.table_cell = {
+        ...nodeSpecs.table_cell,
+        content: 'paragraph',
+      };
+    } else {
+      nodeSpecsWithCustomNodes.table_cell = nodeSpecs.table_cell;
+    }
     nodeSpecsWithCustomNodes.table_header = nodeSpecs.table_header;
   }
   if (config.image) {

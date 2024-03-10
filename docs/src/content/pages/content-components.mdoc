@@ -234,6 +234,13 @@ TestimonialGrid: repeating({
     })
   }
 }),
+Testimonial: wrapper({
+  label: 'Testimonial',
+  schema: {
+    author: fields.text({ label: 'Author' }),
+    role: fields.text({ label: 'Role' }),
+  }
+})
 ```
 
 The MDX output for this `TestimonialGrid` will look like this:

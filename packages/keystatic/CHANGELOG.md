@@ -1,5 +1,19 @@
 # @keystatic/core
 
+## 0.5.2
+
+### Patch Changes
+
+- 621d32fe: Fix tables in `fields.mdx`
+- 51fbc953: Revoke GitHub or Keystatic Cloud tokens on sign out
+
+## 0.5.1
+
+### Patch Changes
+
+- 3cfb555d: Fix `Duplicate use of selection JSON ID` error with hot module
+  reloading
+
 ## 0.5.0
 
 ### Minor Changes
