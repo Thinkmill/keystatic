@@ -20,8 +20,8 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@ts-gql/compiler": "^0.16.1",
-    "@ts-gql/next": "^17.0.0",
+    "@ts-gql/compiler": "^0.16.7",
+    "@ts-gql/next": "^17.0.1",
     "next": "^14.0.0",
     "tsx": "^3.8.0",
     "typescript": "^5.2.2"
