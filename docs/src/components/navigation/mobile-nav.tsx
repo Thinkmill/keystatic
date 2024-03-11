@@ -149,7 +149,14 @@ export function MobileNav({ navigationMap }: NavProps) {
               <NavItem
                 level="top"
                 label="Showcase"
-                href="https://keystatic.com/showcase"
+                href="/showcase"
+                tabIndex={navOpen ? 0 : -1}
+              />
+
+              <NavItem
+                level="top"
+                label="Resources"
+                href="/resources"
                 tabIndex={navOpen ? 0 : -1}
               />
             </NavGroup>
