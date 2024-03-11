@@ -77,6 +77,17 @@ export function HeaderNav({
                 >
                   Showcase
                 </Link>
+                <Link
+                  className={cx(
+                    linkStylesShared,
+                    pathname?.startsWith('/resources')
+                      ? linkStylesCurrent
+                      : linkStylesIdle
+                  )}
+                  href="/resources"
+                >
+                  Resources
+                </Link>
               </div>
               <SocialLinks />
             </div>
