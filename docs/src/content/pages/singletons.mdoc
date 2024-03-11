@@ -7,7 +7,7 @@ summary: >-
 ---
 When you want a “one-of-a-kind” data entry, such as a “Settings” page or maybe a very specific set of fields for the “Homepage” of a website, you will want to use a `singleton`.
 
-## Example singleton
+## Example
 
 Here's how you'd define a `settings` singleton:
 
@@ -26,21 +26,45 @@ export default config({
 });
 ```
 
-## Path configuration
+---
 
-You can use the `path` option to specify *where* to store any given singleton:
+## Options
 
-```diff
-settings: singleton({
-  label: 'Settings',
-+ path: 'custom/content/path/settings'
-  schema: {}
-}),
+### Entry layout
+
+`entryLayout` — change the layout of the Admin UI for the singleton data entry.
+
+Learn more on the [Entry Layout](/docs/entry-layout) page.
+
+### Format
+
+`format` — provides options around the data format of your singleton. 
+
+Learn more on the [Format Options](/docs/format-options) page.
+
+### Label 
+
+`label` — defines the name of the singleton. This is used in the Admin UI.
+
+### Path
+
+`path` — allows you to you specify *where* to store the singleton data:
+
+```tsx
+path: 'custom/content/path/settings'
 ```
 
-By default, Keystatic will store a singleton at the root of your project, in a directory that matches the singleton key.
+Learn more about the `path` option on the [Content Organisation](/docs/content-organisation) page.
 
-You can learn more about the `path` option on the [Content organisation page](/docs/content-organisation).
+### Preview URL
+
+`previewURL` — used to configure [Real-time Previews](/docs/recipes/real-time-previews) of your content.
+
+### Schema 
+
+`schema` — defines the fields that the singleton should have.
+
+---
 
 ## Type signature
 
