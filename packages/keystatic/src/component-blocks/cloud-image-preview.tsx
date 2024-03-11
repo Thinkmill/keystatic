@@ -43,7 +43,7 @@ import {
 } from '..';
 import { z } from 'zod';
 import { getCloudAuth } from '../app/auth';
-import { getUploadedFileObject } from '#field-ui/image';
+import { getUploadedFileObject } from '../form/fields/image/ui';
 import { toastQueue } from '@keystar/ui/toast';
 
 export type CloudImageProps = {
