@@ -9,10 +9,10 @@ navGroups:
         link:
           discriminant: page
           value: quick-start
-      - label: Resources
+      - label: Keystatic Cloud
         link:
-          discriminant: url
-          value: /resources
+          discriminant: page
+          value: cloud
   - groupName: Integration guides
     items:
       - label: Astro
@@ -41,10 +41,6 @@ navGroups:
         link:
           discriminant: page
           value: local-mode
-      - label: Keystatic Cloud
-        link:
-          discriminant: page
-          value: cloud
       - label: GitHub mode
         link:
           discriminant: page
