@@ -43,6 +43,8 @@ import {
 } from '..';
 import { z } from 'zod';
 import { getCloudAuth } from '../app/auth';
+import { getUploadedFileObject } from '#field-ui/image';
+import { toastQueue } from '@keystar/ui/toast';
 
 export type CloudImageProps = {
   src: string;
@@ -50,6 +52,69 @@ export type CloudImageProps = {
   height?: number;
   alt: string;
 };
+
+function slugify(input: string) {
+  let slug = input.toLowerCase().trim();
+
+  // remove accents from charaters
+  slug = slug.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  // replace invalid chars with spaces
+  slug = slug.replace(/[^a-z0-9\s-]/g, ' ').trim();
+  // replace multiple spaces or hyphens with a single hyphen
+  slug = slug.replace(/[\s-]+/g, '-');
+
+  return slug;
+}
+
+const imageUploadResponse = z.object({
+  src: z.string(),
+  width: z.number(),
+  height: z.number(),
+});
+
+async function uploadImage(file: File, config: Config) {
+  if (file.size > 10_000_000) {
+    throw new Error('Images must be smaller than 10MB');
+  }
+  const auth = getCloudAuth(config);
+  if (!auth) {
+    throw new Error('You must be signed in to upload images');
+  }
+  const filenameMatch = /(.+)\.(png|jpe?g|gif|webp)$/.exec(file.name);
+  if (!filenameMatch) {
+    throw new Error(
+      'Invalid image type, only PNG, JPEG, GIF, and WebP are supported'
+    );
+  }
+  const filename = slugify(filenameMatch[1]);
+  const ext = filenameMatch[2];
+  const filenameWithExt = `${filename}.${ext}`;
+
+  const newFile = new File([file], filenameWithExt, {
+    type: `image/${filenameWithExt === 'jpg' ? 'jpeg' : filenameWithExt}`,
+  });
+
+  const formData = new FormData();
+  formData.set('image', newFile, filenameWithExt);
+
+  const res = await fetch(`${KEYSTATIC_CLOUD_API_URL}/v1/image`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${auth.accessToken}`,
+      ...KEYSTATIC_CLOUD_HEADERS,
+    },
+    body: formData,
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to upload image: ${await res.text()}`);
+  }
+  const data = await res.json();
+  const parsedData = imageUploadResponse.safeParse(data);
+  if (!parsedData.success) {
+    throw new Error('Unexpected response from cloud');
+  }
+  return parsedData.data;
+}
 
 type ImageDimensions = Pick<CloudImageProps, 'width' | 'height'>;
 
@@ -242,6 +307,38 @@ export const emptyImageData: CloudImageProps = { src: '', alt: '' };
 
 type ImageStatus = '' | 'loading' | 'good' | 'error';
 
+export function UploadImageButton(props: {
+  onUploaded: (data: CloudImageProps) => void;
+}) {
+  const config = useConfig();
+  const [isUploading, setIsUploading] = useState(false);
+  return (
+    <Button
+      isDisabled={isUploading}
+      onPress={async () => {
+        setIsUploading(true);
+        const img = await getUploadedFileObject(
+          'image/jpeg,image/png,image/gif,image/webp,.jpg,.jpeg,.png,.gif,.webp'
+        );
+        if (!img) return;
+        try {
+          const result = await uploadImage(img, config);
+          props.onUploaded({
+            ...result,
+            alt: '',
+          });
+        } catch (err) {
+          toastQueue.critical((err as any).message);
+        }
+        setIsUploading(false);
+      }}
+    >
+      <Text>Upload Image </Text>
+      {isUploading && <ProgressCircle size="small" isIndeterminate />}
+    </Button>
+  );
+}
+
 function ImageDialog(props: {
   image?: CloudImageProps;
   onCancel: () => void;
@@ -301,54 +398,62 @@ function ImageDialog(props: {
             onClose();
           }}
         >
-          <TextField
-            label="Image URL"
-            autoFocus
-            onPaste={onPaste}
-            onKeyDown={e => {
-              if (e.code === 'Backspace' || e.code === 'Delete') {
-                setState(emptyImageData);
-              } else {
-                e.continuePropagation();
+          <HStack alignItems="end" gap="medium">
+            <TextField
+              label="Image URL"
+              flex
+              autoFocus
+              onPaste={onPaste}
+              onKeyDown={e => {
+                if (e.code === 'Backspace' || e.code === 'Delete') {
+                  setState(emptyImageData);
+                } else {
+                  e.continuePropagation();
+                }
+              }}
+              value={state.src}
+              description={
+                <Text>
+                  Copy an image URL from the{' '}
+                  <TextLink
+                    prominence="high"
+                    href={imageLibraryURL}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Image Library
+                  </TextLink>{' '}
+                  and paste it into this field.
+                </Text>
               }
-            }}
-            value={state.src}
-            description={
-              <Text>
-                Copy an image URL from the{' '}
-                <TextLink
-                  prominence="high"
-                  href={imageLibraryURL}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Image Library
-                </TextLink>{' '}
-                and paste it into this field.
-              </Text>
-            }
-            endElement={
-              status === 'loading' ? (
-                <Flex
-                  height="element.regular"
-                  width="element.regular"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <ProgressCircle
-                    size="small"
-                    aria-label="Checking…"
-                    isIndeterminate
+              endElement={
+                status === 'loading' ? (
+                  <Flex
+                    height="element.regular"
+                    width="element.regular"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <ProgressCircle
+                      size="small"
+                      aria-label="Checking…"
+                      isIndeterminate
+                    />
+                  </Flex>
+                ) : state.src ? (
+                  <ClearButton
+                    onPress={() => setState(emptyImageData)}
+                    preventFocus
                   />
-                </Flex>
-              ) : state.src ? (
-                <ClearButton
-                  onPress={() => setState(emptyImageData)}
-                  preventFocus
-                />
-              ) : null
-            }
-          />
+                ) : null
+              }
+            />
+            <UploadImageButton
+              onUploaded={data => {
+                setState(data);
+              }}
+            />
+          </HStack>
           {status === 'good' ? (
             <>
               <TextArea

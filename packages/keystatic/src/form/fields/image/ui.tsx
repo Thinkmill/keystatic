@@ -15,6 +15,7 @@ export function getUploadedFileObject(
   return new Promise(resolve => {
     const input = document.createElement('input');
     input.type = 'file';
+    input.style.display = 'none';
     input.accept = accept;
     input.onchange = () => {
       const file = input.files?.[0];
