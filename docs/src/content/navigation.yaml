@@ -45,11 +45,30 @@ navGroups:
         link:
           discriminant: page
           value: cloud
-        status: new
       - label: GitHub mode
         link:
           discriminant: page
           value: github-mode
+      - label: Reader API
+        link:
+          discriminant: page
+          value: reader-api
+      - label: Format options
+        link:
+          discriminant: page
+          value: format-options
+      - label: Entry Layout
+        link:
+          discriminant: page
+          value: entry-layout
+      - label: User interface
+        link:
+          discriminant: page
+          value: user-interface
+      - label: Content components
+        link:
+          discriminant: page
+          value: content-components
   - groupName: Recipes
     items:
       - label: "Real-Time Previews With Next.js' Draft Mode"
@@ -74,27 +93,6 @@ navGroups:
         link:
           discriminant: page
           value: singletons
-      - label: Reader API
-        link:
-          discriminant: page
-          value: reader-api
-      - label: Format options
-        link:
-          discriminant: page
-          value: format-options
-      - label: Entry Layout
-        link:
-          discriminant: page
-          value: entry-layout
-      - label: User interface
-        link:
-          discriminant: page
-          value: user-interface
-      - label: Content components
-        link:
-          discriminant: page
-          value: content-components
-        status: new
   - groupName: Fields API
     items:
       - label: Array
