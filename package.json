@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
-  "packageManager": "pnpm@7.33.3",
+  "packageManager": "pnpm@8.15.4",
   "engines": {
-    "pnpm": "7.33.3"
+    "pnpm": "8.15.4"
   },
   "scripts": {
     "build:docs": "pnpm --filter=keystatic-docs build",
