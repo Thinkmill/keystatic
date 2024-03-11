@@ -117,6 +117,7 @@ export default async function Resources() {
           <ResourceGrid>
             {sortedPlaylists.map(video => (
               <Video
+                key={video.title}
                 title={video.title}
                 playlistId={video.playlistId}
                 description={video.description}
@@ -125,6 +126,7 @@ export default async function Resources() {
             ))}
             {sortedVideos.map(video => (
               <Video
+                key={video.title}
                 title={video.title}
                 videoId={video.videoId}
                 description={video.description}
