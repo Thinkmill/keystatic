@@ -100,9 +100,12 @@ export default function CallToAction() {
               >
                 {linkLabels.tmLabs}
               </a>{' '}
-              Research &amp; Development. Feedback on how we're going, what
-              you're looking for, and what you'd like to see next is super
-              helpful as we progress!
+              Research &amp; Development.
+            </p>
+
+            <p className="text-sm text-sand-12">
+              Feedback on how we're going, what you're looking for, and what
+              you'd like to see next is super helpful as we progress!
             </p>
           </div>
           <ul className="flex list-none flex-col gap-1">
