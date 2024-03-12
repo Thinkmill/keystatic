@@ -1,0 +1,21 @@
+---
+title: Empty Document field
+summary: The empty document field is used to force Markdoc formats for entries without a real document field.
+---
+The `emptyDocument` is a mechanism to trigger a collection or singleton to output `.mdoc` files even if there is no real `document` field in the schema.
+
+Use this in conjunction with the [`format.contentField`](/docs/format-options#example-with-single-file-output) option.
+
+## Usage example
+
+```typescript
+schema: {
+  // Other fields (but no `document`)...
+  fakeDocument: fields.emptyDocument()
+},
+format: {
+  contentField: 'fakeDocument'
+}
+```
+
+Instead of generating `.yaml` or `.json` files, the collection or singleton will output `.mdoc` files with frontmatter data and an empty content body.

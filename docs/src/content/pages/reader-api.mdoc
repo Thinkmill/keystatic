@@ -7,7 +7,7 @@ The Reader API is a Node.js API that lets you *read* Keystatic content from a st
 The storage can be any local directory / GitHub repository, and does not need to be the same as the one defined in the Keystatic config.
 
 {% aside icon="⚠️" %}
-The code can only run on the server, and not in the browser.
+The reader API code is meant to run on the server, and not in the browser. Be sure to use it accordingly.
 {% /aside %}
 
 ## Usage
@@ -158,6 +158,16 @@ type MovieProps = EntryWithResolvedLinkedFiles<typeof keystaticConfig['collectio
 The `document` field returns a JSON object with complex structured data. It can be a lot of work to turn this data object as HTML to render it on a page.
 
 Luckily, Keystatic also provides a `DocumentRenderer` that does all the heavy lifting for you, and is highly customisable.
+
+---
+
+## Screencast walk-through
+
+This segment of the [Keystatic Mini-Course on YouTube](https://www.youtube.com/playlist?list=PLHrxuCR-0CcSmkyLcmdV7Ruql8DTm644k) may help understand how the Reader API works:
+
+{% embed
+   mediaType="video"
+   embedCode="<iframe src=\"https://www.youtube.com/embed/8831JbFOCN4?si=mDDK52Nlhg4v1v9x\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>" /%}
 
 ---
 

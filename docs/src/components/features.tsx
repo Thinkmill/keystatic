@@ -21,6 +21,11 @@ const features = [
     bgColor: 'bg-cyan-2',
     textColor: 'text-cyan-9',
   },
+  {
+    label: 'Markdoc & MDX support',
+    bgColor: 'bg-violet-2',
+    textColor: 'text-violet-9',
+  },
 ];
 
 export default function Features() {
@@ -28,7 +33,7 @@ export default function Features() {
     <section className="relative bg-white">
       <ul
         tabIndex={0}
-        className="mx-auto flex max-w-5xl flex-wrap justify-center gap-4 px-6 pb-12 pt-24 sm:gap-x-6"
+        className="mx-auto flex max-w-4xl flex-wrap justify-center gap-4 px-6 pb-12 pt-24 sm:gap-x-6"
         role="list"
       >
         {features.map(feature => (

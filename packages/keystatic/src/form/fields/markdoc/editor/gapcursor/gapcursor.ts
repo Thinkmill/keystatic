@@ -106,7 +106,11 @@ export class GapCursor extends Selection {
 GapCursor.prototype.visible = false;
 (GapCursor as any).findFrom = GapCursor.findGapCursorFrom;
 
-Selection.jsonID('ksgapcursor', GapCursor);
+// this will often error because of hot module reloading
+// we can just ignore it
+try {
+  Selection.jsonID('ksgapcursor', GapCursor);
+} catch {}
 
 class GapBookmark {
   constructor(readonly pos: number) {}

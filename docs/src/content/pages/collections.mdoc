@@ -8,7 +8,7 @@ Think of a `collection` as anything you'd want multiple instances of. A series o
 
 Collections are defined within the `collections` key of the Keystatic `config`. Each collection has its own key and is wrapped in a `collection()` function.
 
-## Example collection
+## Example
 
 Here's how you'd define a `testimonial` collection, where each entry has an `author` and a `quote` fields:
 
@@ -31,9 +31,67 @@ export default config({
 });
 ```
 
-## Slug field
+---
 
-Use the `slugField` option to define what field in your collection `schema` should be used as the slug for each item. It's recommended to combine it with the [slug field](/docs/fields/slug) to let users customise and regenerate each slug in the Admin UI.
+## Options
+
+### Columns
+
+`columns` — show additional fields in the collection list view. 
+
+By default, only the `slug` of each entry is displayed in the collection list. 
+
+You can show additional fields by passing a `columns` option, which is an array of field keys:
+
+```ts
+columns: ['title', 'publishedOn'] 
+```
+
+### Label 
+
+`label` — defines the name of the collection. This is used in the Admin UI to label the collection.
+
+### Entry layout
+
+`entryLayout` — change the layout of the Admin UI for a collection entry. 
+
+Learn more on the [Entry Layout](/docs/entry-layout) page.
+
+### Format
+
+`format` — provides options around the data format of your collection entries. 
+
+Learn more on the [Format Options](/docs/format-options) page.
+
+### Path
+
+`path` — allows you to you specify *where* to store entries for any given collection:
+
+```tsx
+path: 'custom/content/path/testimonials/*'
+```
+
+By default, Keystatic will store entries at the root of your project, in a directory that matches the collection key.
+
+You can learn more about the `path` option on the [Content organisation page](/docs/content-organisation).
+
+### Parse slug for sort 
+
+`parseSlugForSort` — a function to transform the `slug` of each entry into a value to be used for sorting the collection list view.
+
+### Preview URL
+
+`previewURL` — used to configure [Real-time Previews](/docs/recipes/real-time-previews) of your content.
+
+### Schema 
+
+`schema` — defines the fields that each entry in the collection should have.
+
+### Slug field
+
+`slugField` — defines what field in your collection `schema` should be used as the slug for each item. 
+
+It's recommended to combine it with the [slug field](/docs/fields/slug) to let users customise and regenerate each slug in the Admin UI.
 
 ```typescript
 testimonials: collection({
@@ -45,22 +103,11 @@ testimonials: collection({
 }),
 ```
 
-## Path configuration
+### Template
 
-You can use the `path` option to specify *where* to store entries for any given collection:
+`template` — the path to a content file (existing collection entry or "template") to use as a starting point for new entries.
 
-```diff
-testimonials: collection({
-  label: 'Testimonials',
-  // ...
-+ path: 'custom/content/path/testimonials/*'
-  schema: {}
-}),
-```
-
-By default, Keystatic will store entries at the root of your project, in a directory that matches the collection key.
-
-You can learn more about the `path` option on the [Content organisation page](/docs/content-organisation).
+---
 
 ## Type signature
 

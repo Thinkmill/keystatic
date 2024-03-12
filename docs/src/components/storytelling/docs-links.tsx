@@ -507,7 +507,7 @@ const docs = [
               <p>collection-name</p>
               <p>└── slug</p>
               <p>&nbsp;&nbsp;&nbsp;&nbsp;├── index.yaml</p>
-              <p>&nbsp;&nbsp;&nbsp;&nbsp;└── other.mdoc</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;└── other.mdx</p>
             </div>
             <div className="peer z-10 order-1 h-full w-6 flex-none transition-all duration-150 hover:w-12 peer-hover:w-12 " />
             <div className="absolute left-0 top-2 h-[1px] w-6 bg-sandAlpha-6 transition-all duration-150 peer-hover:w-12 peer-hover:bg-gradient-to-l peer-hover:from-sand-12" />
@@ -515,9 +515,8 @@ const docs = [
           <div className="relative flex flex-row">
             <div className="peer order-2 w-full rounded border border-sand-12 bg-whiteAlpha-9 px-2 py-1 font-mono text-xs leading-tight hover:bg-whiteAlpha-12">
               <p>singleton-name</p>
-              <p>└── slug</p>
-              <p>&nbsp;&nbsp;&nbsp;&nbsp;├── index.yaml</p>
-              <p>&nbsp;&nbsp;&nbsp;&nbsp;└── other.mdoc</p>
+              <p>├── index.json</p>
+              <p>└── other.mdoc</p>
             </div>
             <div className="peer z-10 order-1 w-6 flex-none transition-all duration-150 hover:w-12 peer-hover:w-12 " />
             <div className="absolute left-0 top-2 h-[1px] w-6 bg-sandAlpha-6 transition-all duration-150 peer-hover:w-12 peer-hover:bg-gradient-to-l peer-hover:from-sand-12" />

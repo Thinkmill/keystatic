@@ -102,10 +102,9 @@ export default function Hero() {
               Content Management for your Codebase
             </h1>
             <p className="text-base md:text-lg">
-              A new tool that makes Markdown, JSON and YAML content in your
-              codebase editable by humans. Live edit content on GitHub or your
-              local file system, without disrupting your existing code and
-              workflows.
+              A tool that makes Markdown, JSON and YAML content in your codebase
+              editable by humans. Live edit content on GitHub or your local file
+              system, without disrupting your existing code and workflows.
             </p>
           </div>
           <div className="flex flex-col justify-center gap-4 sm:flex-row sm:flex-wrap">
