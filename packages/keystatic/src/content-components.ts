@@ -1,14 +1,18 @@
 import { ReactElement, ReactNode } from 'react';
 import {
+  BasicFormField,
   ComponentSchema,
   ObjectField,
   ParsedValueForComponentSchema,
+  SlugFormField,
 } from './form/api';
 import {
   CloudImagePreviewForNewEditor,
   cloudImageToolbarIcon,
+  handleFile,
 } from '#cloud-image-preview';
 import { cloudImageSchema } from './component-blocks/cloud-image-schema';
+import { Config } from '.';
 
 type WrapperComponentConfig<Schema extends Record<string, ComponentSchema>> = {
   label: string;
@@ -70,7 +74,15 @@ type BlockComponentConfig<Schema extends Record<string, ComponentSchema>> = {
 );
 
 type BlockComponent<Schema extends Record<string, ComponentSchema>> =
-  BlockComponentConfig<Schema> & { kind: 'block' };
+  BlockComponentConfig<Schema> & {
+    kind: 'block';
+    // this is here instead of BlockComponentConfig so it's a little hidden
+    // since it shouldn't be used often
+    handleFile?: (
+      file: File,
+      config: Config
+    ) => false | Promise<ParsedValueForComponentSchema<ObjectField<Schema>>>;
+  };
 
 export function block<Schema extends Record<string, ComponentSchema>>(
   config: BlockComponentConfig<Schema>
@@ -185,11 +197,18 @@ export type ContentComponent =
   | InlineComponent<Record<string, ComponentSchema>>
   | MarkComponent<Record<string, ComponentSchema>>;
 
-export function cloudImage(args: { label: string }) {
-  return block({
+export function cloudImage(args: { label: string }): BlockComponent<{
+  src: SlugFormField<string, string, string, null>;
+  alt: SlugFormField<string, string, string, null>;
+  height: BasicFormField<number | null>;
+  width: BasicFormField<number | null>;
+}> {
+  return {
+    kind: 'block',
     label: args.label,
     schema: cloudImageSchema,
     NodeView: CloudImagePreviewForNewEditor,
     icon: cloudImageToolbarIcon,
-  });
+    handleFile: handleFile,
+  };
 }

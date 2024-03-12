@@ -12,6 +12,7 @@ import { EditorSchema } from './schema';
 import { ToolbarButton } from './Toolbar';
 import { EditorConfig } from '../config';
 import { getSrcPrefix } from '../../image/getSrcPrefix';
+import { toSerialized } from './props-serialization';
 
 export function getSrcPrefixForImageBlock(
   config: EditorConfig,
@@ -42,16 +43,39 @@ export function imageDropPlugin(schema: EditorSchema) {
       handleDrop(view, event) {
         if (event.dataTransfer?.files.length) {
           const file = event.dataTransfer.files[0];
-
+          let eventPos = view.posAtCoords({
+            left: event.clientX,
+            top: event.clientY,
+          });
+          if (!eventPos) return;
+          let $mouse = view.state.doc.resolve(eventPos.pos);
+          for (const [name, component] of Object.entries(schema.components)) {
+            if (component.kind !== 'block' || !component.handleFile) continue;
+            const result = component.handleFile(
+              file,
+              (view.props as any).config
+            );
+            if (!result) continue;
+            (async () => {
+              const value = await result;
+              const slice = Slice.maxOpen(
+                Fragment.from(
+                  schema.schema.nodes[name].createChecked({
+                    props: toSerialized(value, component.schema),
+                  })
+                )
+              );
+              const pos = dropPoint(
+                view.state.doc,
+                view.state.selection.from,
+                slice
+              );
+              if (pos === null) return;
+              view.dispatch(view.state.tr.replace(pos, pos, slice));
+            })();
+            return true;
+          }
           if (file.type.startsWith('image/')) {
-            let eventPos = view.posAtCoords({
-              left: event.clientX,
-              top: event.clientY,
-            });
-            if (!eventPos) return;
-
-            let $mouse = view.state.doc.resolve(eventPos.pos);
-
             (async () => {
               const src = await readFileAsDataUrl(file);
               const slice = Slice.maxOpen(
@@ -73,6 +97,25 @@ export function imageDropPlugin(schema: EditorSchema) {
       handlePaste(view, event) {
         if (event.clipboardData?.files.length) {
           const file = event.clipboardData.files[0];
+          for (const [name, component] of Object.entries(schema.components)) {
+            if (component.kind !== 'block' || !component.handleFile) continue;
+            const result = component.handleFile(
+              file,
+              (view.props as any).config
+            );
+            if (!result) continue;
+            (async () => {
+              const value = await result;
+              view.dispatch(
+                view.state.tr.replaceSelectionWith(
+                  schema.schema.nodes[name].createChecked({
+                    props: toSerialized(value, component.schema),
+                  })
+                )
+              );
+            })();
+            return true;
+          }
           if (file.type.startsWith('image/')) {
             (async () => {
               const src = await readFileAsDataUrl(file);
