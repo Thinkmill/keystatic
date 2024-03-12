@@ -1,8 +1,9 @@
 import { fromUint8Array, toUint8Array } from 'js-base64';
 import { ComponentSchema } from '../../../api';
-import { transformProps } from '../../../props-value';
 import { serializeProps } from '../../../serialize-props';
 import { useMemo } from 'react';
+import { parseProps } from '../../../parse-props';
+import { formatFormDataError } from '../../../error-formatting';
 
 export function deserializeProps(
   fields: Record<string, ComponentSchema>,
@@ -13,29 +14,38 @@ export function deserializeProps(
     otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
   }
 ) {
-  return transformProps({ kind: 'object', fields }, value, {
-    form: (schema, value) => {
-      if (schema.formKind === 'asset') {
-        const filename = schema.filename(value, {
-          slug: state.slug,
-          suggestedFilenamePrefix: undefined,
-        });
-        return schema.parse(value, {
-          asset: filename
-            ? schema.directory
-              ? state.otherFiles.get(schema.directory)?.get(filename)
-              : state.extraFiles.get(filename)
-            : undefined,
-          slug: state.slug,
-        });
-      }
+  try {
+    return parseProps(
+      { kind: 'object', fields },
+      value as any,
+      [],
+      [],
+      (schema, value) => {
+        if (schema.formKind === 'asset') {
+          const filename = schema.filename(value, {
+            slug: state.slug,
+            suggestedFilenamePrefix: undefined,
+          });
+          return schema.parse(value, {
+            asset: filename
+              ? schema.directory
+                ? state.otherFiles.get(schema.directory)?.get(filename)
+                : state.extraFiles.get(filename)
+              : undefined,
+            slug: state.slug,
+          });
+        }
 
-      if (schema.formKind === 'content') {
-        throw new Error('Not implemented');
-      }
-      return schema.parse(value, undefined);
-    },
-  });
+        if (schema.formKind === 'content') {
+          throw new Error('Not implemented');
+        }
+        return schema.parse(value, undefined);
+      },
+      false
+    );
+  } catch (err) {
+    throw new Error(formatFormDataError(err));
+  }
 }
 
 export function toSerialized(

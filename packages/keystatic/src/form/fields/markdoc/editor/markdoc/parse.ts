@@ -248,10 +248,10 @@ function markdocNodeToProseMirrorNode(
   }
   if (node.type === 'fence') {
     if (!schema.nodes.code_block) return notAllowed(node, parentType);
-    const { language, ...attrs } = node.attributes;
+    let { language, content, ...attrs } = node.attributes;
     const state = getState();
     const fields = state.schema.config.codeBlock!.schema;
-    const content = node.attributes.content.slice(0, -1);
+    content = content.slice(0, -1);
     return schema.nodes.code_block.createAndFill(
       {
         language:
