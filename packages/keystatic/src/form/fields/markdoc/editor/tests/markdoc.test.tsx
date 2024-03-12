@@ -8,7 +8,7 @@ import { proseMirrorToMarkdoc } from '../markdoc/serialize';
 import Markdoc from '@markdoc/markdoc';
 import { createEditorSchema } from '../schema';
 import { editorOptionsToConfig } from '../../config';
-import { mark } from '../../../../../content-components';
+import { block, mark } from '../../../../../content-components';
 import { fields } from '../../../../..';
 
 const schema = createEditorSchema(
@@ -29,6 +29,12 @@ const schema = createEditorSchema(
           ],
           defaultValue: 'default',
         }),
+      },
+    }),
+    'with-array': block({
+      label: 'With array',
+      schema: {
+        array: fields.array(fields.text({ label: 'Text' })),
       },
     }),
   },
@@ -445,6 +451,30 @@ test('two hard breaks', () => {
     "something\\
     \\
     The
+    "
+  `);
+});
+
+test('add missing array field', () => {
+  const editor = fromMarkdoc('{% with-array /%}');
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <node_selection>
+        <with-array
+          props={
+            {
+              "extraFiles": [],
+              "value": {
+                "array": [],
+              },
+            }
+          }
+        />
+      </node_selection>
+    </doc>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "{% with-array array=[] /%}
     "
   `);
 });
