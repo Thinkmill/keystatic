@@ -126,8 +126,8 @@ importers:
         specifier: ^0.7.0
         version: link:../pkg
       '@markdoc/markdoc':
-        specifier: ^0.3.0
-        version: 0.3.2(@types/react@18.2.21)(react@18.2.0)
+        specifier: ^0.4.0
+        version: 0.4.0(@types/react@18.2.21)(react@18.2.0)
       '@react-aria/i18n':
         specifier: ^3.8.0
         version: 3.8.1(react@18.2.0)
@@ -957,8 +957,8 @@ importers:
         specifier: ^5.0.0
         version: link:../packages/next
       '@markdoc/markdoc':
-        specifier: ^0.3.0
-        version: 0.3.2(@types/react@18.2.21)(react@18.2.0)
+        specifier: ^0.4.0
+        version: 0.4.0(@types/react@18.2.21)(react@18.2.0)
       '@sindresorhus/slugify':
         specifier: ^1.1.2
         version: 1.1.2
@@ -1109,8 +1109,8 @@ importers:
         specifier: ^0.7.0
         version: link:../../design-system/pkg
       '@markdoc/markdoc':
-        specifier: ^0.3.0
-        version: 0.3.2(@types/react@18.2.21)(react@18.2.0)
+        specifier: ^0.4.0
+        version: 0.4.0(@types/react@18.2.21)(react@18.2.0)
       '@react-aria/focus':
         specifier: ^3.14.3
         version: 3.14.3(react@18.2.0)
@@ -5784,8 +5784,8 @@ packages:
       read-yaml-file: 1.1.0
     dev: false
 
-  /@markdoc/markdoc@0.3.2(@types/react@18.2.21)(react@18.2.0):
-    resolution: {integrity: sha512-D0SaanaSkTIARvQu+zQqPEpKcvYUBR/mfac9e8JzS89P7eXhiNWPonUN7avRS1saZHpIQWIRote97qT+jGk5Gw==}
+  /@markdoc/markdoc@0.3.5(@types/react@18.2.21)(react@18.2.0):
+    resolution: {integrity: sha512-Z3agu2wnodoOYd5kzKbtwZduSfX19Kbsg/FlK0TeMn29cTTEEVPJtjfgKSMTN/Wq+kUQXnPtOEhHRgke5d/Xiw==}
     engines: {node: '>=14.7.0'}
     peerDependencies:
       '@types/react': '*'
@@ -5802,8 +5802,8 @@ packages:
       '@types/markdown-it': 12.2.3
     dev: false
 
-  /@markdoc/markdoc@0.3.5(@types/react@18.2.21)(react@18.2.0):
-    resolution: {integrity: sha512-Z3agu2wnodoOYd5kzKbtwZduSfX19Kbsg/FlK0TeMn29cTTEEVPJtjfgKSMTN/Wq+kUQXnPtOEhHRgke5d/Xiw==}
+  /@markdoc/markdoc@0.4.0(@types/react@18.2.21)(react@18.2.0):
+    resolution: {integrity: sha512-fSh4P3Y4E7oaKYc2oNzSIJVPDto7SMzAuQN1Iyx53UxzleA6QzRdNWRxmiPqtVDaDi5dELd2yICoG91csrGrAw==}
     engines: {node: '>=14.7.0'}
     peerDependencies:
       '@types/react': '*'

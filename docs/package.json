@@ -19,7 +19,7 @@
     "@keystar/ui": "^0.7.0",
     "@keystatic/core": "^0.5.0",
     "@keystatic/next": "^5.0.0",
-    "@markdoc/markdoc": "^0.3.0",
+    "@markdoc/markdoc": "^0.4.0",
     "@sindresorhus/slugify": "^1.1.2",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/forms": "^0.5.3",

@@ -20,7 +20,7 @@
     "@babel/runtime": "^7.18.3",
     "@internationalized/date": "^3.5.0",
     "@keystar/ui": "^0.7.0",
-    "@markdoc/markdoc": "^0.3.0",
+    "@markdoc/markdoc": "^0.4.0",
     "@react-aria/i18n": "^3.8.0",
     "@types/js-yaml": "^4.0.5",
     "clipboard-copy": "^4.0.1",
