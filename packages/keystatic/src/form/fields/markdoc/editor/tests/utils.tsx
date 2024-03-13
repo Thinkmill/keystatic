@@ -14,6 +14,8 @@ import { EditorView } from 'prosemirror-view';
 import { editorStateToReactNode } from './editor-state-to-react-element';
 import { editorOptionsToConfig } from '../../config';
 import { expect } from '@jest/globals';
+import { ConfigContext } from '../../../../../app/shell/context';
+import { config } from '../../../../..';
 
 // this polyfill is because jsdom doesn't have it and @floating-ui/react uses it
 globalThis.ResizeObserver = ResizeObserver;
@@ -508,6 +510,8 @@ export async function redo(user: ReturnType<(typeof userEvent)['setup']>) {
   await user.keyboard('{Control>}{Shift>}z{/Control}{/Shift}');
 }
 
+const _config = config({ storage: { kind: 'cloud' } });
+
 export function renderEditor(editorState: EditorStateDescription): {
   rendered: ReturnType<typeof render>;
   user: ReturnType<(typeof userEvent)['setup']>;
@@ -516,16 +520,18 @@ export function renderEditor(editorState: EditorStateDescription): {
   const viewRef = createRef<{ view: EditorView | null }>();
   const user = userEvent.setup();
   const getElement = () => (
-    <KeystarProvider>
-      <Editor
-        value={editorState.get()}
-        ref={viewRef}
-        onChange={state => {
-          editorState = new RealEditorStateDescription(state);
-          rendered.rerender(getElement());
-        }}
-      />
-    </KeystarProvider>
+    <ConfigContext.Provider value={_config}>
+      <KeystarProvider>
+        <Editor
+          value={editorState.get()}
+          ref={viewRef}
+          onChange={state => {
+            editorState = new RealEditorStateDescription(state);
+            rendered.rerender(getElement());
+          }}
+        />
+      </KeystarProvider>
+    </ConfigContext.Provider>
   );
   const rendered = render(getElement());
 

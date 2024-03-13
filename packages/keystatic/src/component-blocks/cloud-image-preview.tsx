@@ -72,7 +72,7 @@ const imageUploadResponse = z.object({
   height: z.number(),
 });
 
-async function uploadImage(file: File, config: Config) {
+function uploadImage(file: File, config: Config) {
   if (file.size > 10_000_000) {
     throw new Error('Images must be smaller than 10MB');
   }
@@ -96,24 +96,25 @@ async function uploadImage(file: File, config: Config) {
 
   const formData = new FormData();
   formData.set('image', newFile, filenameWithExt);
-
-  const res = await fetch(`${KEYSTATIC_CLOUD_API_URL}/v1/image`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${auth.accessToken}`,
-      ...KEYSTATIC_CLOUD_HEADERS,
-    },
-    body: formData,
-  });
-  if (!res.ok) {
-    throw new Error(`Failed to upload image: ${await res.text()}`);
-  }
-  const data = await res.json();
-  const parsedData = imageUploadResponse.safeParse(data);
-  if (!parsedData.success) {
-    throw new Error('Unexpected response from cloud');
-  }
-  return parsedData.data;
+  return (async () => {
+    const res = await fetch(`${KEYSTATIC_CLOUD_API_URL}/v1/image`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${auth.accessToken}`,
+        ...KEYSTATIC_CLOUD_HEADERS,
+      },
+      body: formData,
+    });
+    if (!res.ok) {
+      throw new Error(`Failed to upload image: ${await res.text()}`);
+    }
+    const data = await res.json();
+    const parsedData = imageUploadResponse.safeParse(data);
+    if (!parsedData.success) {
+      throw new Error('Unexpected response from cloud');
+    }
+    return parsedData.data;
+  })();
 }
 
 type ImageDimensions = Pick<CloudImageProps, 'width' | 'height'>;
@@ -312,6 +313,7 @@ export function UploadImageButton(props: {
 }) {
   const config = useConfig();
   const [isUploading, setIsUploading] = useState(false);
+  if (!config.cloud?.project) return null;
   return (
     <Button
       isDisabled={isUploading}
@@ -650,6 +652,23 @@ export function CloudImagePreview(
       selected={selected}
     />
   );
+}
+
+export function handleFile(file: File, config: Config) {
+  try {
+    const result = uploadImage(file, config);
+    toastQueue.info('Uploading image…');
+    return result.then(data => {
+      toastQueue.positive('Image uploaded');
+      return {
+        ...data,
+        alt: '',
+      };
+    });
+  } catch (err) {
+    toastQueue.critical((err as any).message);
+    return false;
+  }
 }
 
 export function CloudImagePreviewForNewEditor(props: {

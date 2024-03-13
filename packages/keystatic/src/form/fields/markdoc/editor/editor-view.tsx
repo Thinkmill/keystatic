@@ -14,6 +14,7 @@ import React, {
 } from 'react';
 import { useEventCallback } from './utils';
 import { EditorView } from 'prosemirror-view';
+import { useConfig } from '../../../../app/shell/context';
 
 const EditorStateContext = React.createContext<EditorState | null>(null);
 
@@ -70,6 +71,7 @@ export function useEditorView(
 ) {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef<EditorView | null>(null);
+  const config = useConfig();
   const onEditorStateChange = useEventCallback(_onEditorStateChange);
   useLayoutEffect(() => {
     if (mountRef.current === null) {
@@ -79,6 +81,7 @@ export function useEditorView(
       { mount: mountRef.current },
       {
         state: state,
+        ...{ config },
         dispatchTransaction(tr) {
           const newEditorState = view.state.apply(tr);
           view.updateState(newEditorState);
@@ -92,7 +95,7 @@ export function useEditorView(
       viewRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mountRef, onEditorStateChange]);
+  }, [mountRef, onEditorStateChange, config]);
   useLayoutEffect(() => {
     viewRef.current?.updateState(state);
   }, [state]);
