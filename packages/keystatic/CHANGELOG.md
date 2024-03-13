@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.5.3
+
+### Patch Changes
+
+- 68680678: Allow uploading images to Keystatic Cloud from within Keystatic's UI
+- e5de1f2b: Fix new editor not adding new fields in a content component schema
+  that are missing in content
+
 ## 0.5.2
 
 ### Patch Changes
