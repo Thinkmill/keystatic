@@ -15,7 +15,11 @@ import { ContentComponent } from '../../../../content-components';
 import { NodeSelection } from 'prosemirror-state';
 import { tokenSchema } from '@keystar/ui/style';
 import { Item, Menu, MenuTrigger } from '@keystar/ui/menu';
-import { toSerialized, useDeserializedValue } from './props-serialization';
+import {
+  deserializeValue,
+  toSerialized,
+  useDeserializedValue,
+} from './props-serialization';
 import { fromUint8Array, toUint8Array } from 'js-base64';
 
 function serializeProps(props: {
@@ -649,7 +653,7 @@ export function getCustomNodeSpecs(
               'div',
               {
                 'data-component': name,
-                'data-props': JSON.stringify(node.attrs.props),
+                'data-props': serializeProps(node.attrs.props),
               },
               0,
             ];
@@ -690,14 +694,6 @@ export function getCustomMarkSpecs(
         fields: component.schema,
       };
       const tag = component.tag ?? 'span';
-      const className =
-        typeof component.className === 'function'
-          ? component.className
-          : () => component.className;
-      const style =
-        typeof component.style === 'function'
-          ? component.style
-          : () => component.style;
 
       const spec: MarkSpec = {
         attrs: {
@@ -708,18 +704,32 @@ export function getCustomMarkSpecs(
         toDOM(mark) {
           const element = document.createElement(tag);
           element.setAttribute('data-component', name);
-          element.setAttribute('data-props', JSON.stringify(mark.attrs.props));
-          const computedClassName = className({ value: mark.attrs.props });
-          if (computedClassName) {
-            // TODO: this cast shouldn't be necessary
-            element.className = computedClassName as string;
+          element.setAttribute('data-props', serializeProps(mark.attrs.props));
+          let deserialized: any;
+          let getDeserialized = () => {
+            if (!deserialized) {
+              deserialized = deserializeValue(
+                mark.attrs.props,
+                component.schema
+              );
+            }
+            return deserialized;
+          };
+          if (typeof component.className === 'function') {
+            element.className = component.className({
+              value: getDeserialized(),
+            });
+          } else if (typeof component.className === 'string') {
+            element.className = component.className;
           }
-          Object.assign(
-            element.style,
-            style({
-              value: mark.attrs.props,
-            })
-          );
+          if (typeof component.style === 'function') {
+            Object.assign(
+              element.style,
+              component.style({ value: getDeserialized() })
+            );
+          } else if (component.style) {
+            Object.assign(element.style, component.style);
+          }
           return element;
         },
         parseDOM: [
