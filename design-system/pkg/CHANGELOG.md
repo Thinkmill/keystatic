@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.7.1
+
+### Patch Changes
+
+- b3501e95: Performance improvements in the new editor
+
 ## 0.7.0
 
 ### Minor Changes

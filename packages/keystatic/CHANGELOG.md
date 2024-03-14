@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.5.4
+
+### Patch Changes
+
+- 5d72b839: Update Markdoc
+- b3501e95: Performance improvements in the new editor
+- Updated dependencies [b3501e95]
+  - @keystar/ui@0.7.1
+
 ## 0.5.3
 
 ### Patch Changes
