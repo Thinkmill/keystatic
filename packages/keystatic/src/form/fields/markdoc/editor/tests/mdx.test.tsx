@@ -12,7 +12,7 @@ import { fromMarkdown } from 'mdast-util-from-markdown';
 import { mdxjs } from 'micromark-extension-mdxjs';
 import { mdxToProseMirror } from '../mdx/parse';
 import { expect, test } from '@jest/globals';
-import { block, mark } from '../../../../../content-components';
+import { block, inline, mark } from '../../../../../content-components';
 import { fields } from '../../../../..';
 import { gfm } from 'micromark-extension-gfm';
 
@@ -50,6 +50,12 @@ const schema = createEditorSchema(
           ],
           defaultValue: 'default',
         }),
+      },
+    }),
+    InlineThing: inline({
+      label: 'Inline Thing',
+      schema: {
+        something: fields.text({ label: 'Something' }),
       },
     }),
   },
@@ -483,6 +489,38 @@ test('mark', () => {
   `);
   expect(toMDX(editor)).toMatchInlineSnapshot(`
     "<Highlight variant="success">something</Highlight>
+    "
+  `);
+});
+
+test('inline', () => {
+  const mdx = `wertgrfdsc<InlineThing something="adkjsakjndnajksdnjk" />asdfasdf`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text>
+          <cursor />
+          wertgrfdsc
+        </text>
+        <InlineThing
+          props={
+            {
+              "extraFiles": [],
+              "value": {
+                "something": "adkjsakjndnajksdnjk",
+              },
+            }
+          }
+        />
+        <text>
+          asdfasdf
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "wertgrfdsc<InlineThing something="adkjsakjndnajksdnjk" />asdfasdf
     "
   `);
 });

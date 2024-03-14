@@ -8,7 +8,7 @@ import { proseMirrorToMarkdoc } from '../markdoc/serialize';
 import Markdoc from '@markdoc/markdoc';
 import { createEditorSchema } from '../schema';
 import { editorOptionsToConfig } from '../../config';
-import { block, mark } from '../../../../../content-components';
+import { block, inline, mark } from '../../../../../content-components';
 import { fields } from '../../../../..';
 
 const schema = createEditorSchema(
@@ -35,6 +35,12 @@ const schema = createEditorSchema(
       label: 'With array',
       schema: {
         array: fields.array(fields.text({ label: 'Text' })),
+      },
+    }),
+    'inline-thing': inline({
+      label: 'Inline Thing',
+      schema: {
+        something: fields.text({ label: 'Something' }),
       },
     }),
   },
@@ -451,6 +457,38 @@ test('two hard breaks', () => {
     "something\\
     \\
     The
+    "
+  `);
+});
+
+test('inline', () => {
+  const markdoc = `wertgrfdsc{% inline-thing something="adkjsakjndnajksdnjk" /%}sfasdf`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text>
+          <cursor />
+          wertgrfdsc
+        </text>
+        <inline-thing
+          props={
+            {
+              "extraFiles": [],
+              "value": {
+                "something": "adkjsakjndnajksdnjk",
+              },
+            }
+          }
+        />
+        <text>
+          sfasdf
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "wertgrfdsc{% inline-thing something="adkjsakjndnajksdnjk" /%}sfasdf
     "
   `);
 });
