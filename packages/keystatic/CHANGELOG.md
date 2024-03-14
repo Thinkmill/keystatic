@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.5.5
+
+### Patch Changes
+
+- c77a22af: Fix `inline` component serialisation in `fields.mdx`
+- 289dd8f4: Fix multiplayer when an asset like an image that's larger than 1MB
+  is in an entry
+
 ## 0.5.4
 
 ### Patch Changes
