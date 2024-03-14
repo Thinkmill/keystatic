@@ -97,7 +97,9 @@ function textblockChildren(
       children.push({
         type: 'mdxJsxTextElement',
         name: child.type.name,
-        attributes: propsToAttributes(child.attrs.props),
+        attributes: propsToAttributes(
+          internalToSerialized(componentConfig.schema, child.attrs.props, state)
+        ),
         children: [],
       });
       return;
