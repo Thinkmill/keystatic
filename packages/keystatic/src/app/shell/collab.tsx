@@ -20,6 +20,7 @@ import { Config } from '../..';
 import ReconnectingWebSocket from 'partysocket/ws';
 import * as decoding from 'lib0/decoding';
 import { PKG_VERSION } from '../utils';
+import { createEncoder, toUint8Array, writeVarUint } from 'lib0/encoding.js';
 
 const YjsContext = createContext<
   | {
@@ -37,6 +38,7 @@ const messageSync = 0;
 const messageAwareness = 1;
 const messageAuth = 2;
 const messageSyncSubdoc = 4;
+const messageChunkStart = 5;
 
 function decodeSentMessage(message: Uint8Array) {
   const decoder = decoding.createDecoder(message);
@@ -140,9 +142,7 @@ export function CollabProvider(props: { children: ReactNode; config: Config }) {
     const idb = createIndexedDBProvider(doc, `keystatic-2-${project}`);
     const provider = new WebsocketProvider({
       doc,
-      url: true
-        ? `wss://live.keystatic.cloud/${project}?v=${PKG_VERSION}`
-        : `ws://localhost:8787/${project}`,
+      url: `wss://live.keystatic.cloud/${project}?v=${PKG_VERSION}`,
       WebSocketPolyfill: class extends ReconnectingWebSocket {
         constructor(url: string) {
           super(url);
@@ -157,6 +157,22 @@ export function CollabProvider(props: { children: ReactNode; config: Config }) {
           if (data instanceof Uint8Array && enableMessageLogging) {
             console.log('send', decodeSentMessage(data));
           }
+          const CHUNK_MAX_SIZE = 1_000_000;
+
+          if (data instanceof Uint8Array && data.byteLength > CHUNK_MAX_SIZE) {
+            const chunks = Math.ceil(data.byteLength / CHUNK_MAX_SIZE);
+            const encoder = createEncoder();
+            writeVarUint(encoder, messageChunkStart);
+            writeVarUint(encoder, chunks);
+            super.send(toUint8Array(encoder));
+            for (let i = 0; i < chunks; i++) {
+              const start = i * CHUNK_MAX_SIZE;
+              const end = Math.min((i + 1) * CHUNK_MAX_SIZE, data.byteLength);
+              super.send(data.slice(start, end));
+            }
+            return;
+          }
+
           super.send(data);
         }
       } as any,
