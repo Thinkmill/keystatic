@@ -24,17 +24,6 @@ export function getSrcPrefixForImageBlock(
   );
 }
 
-export function readFileAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = evt => {
-      resolve(evt.target!.result! as string);
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
 export function imageDropPlugin(schema: EditorSchema) {
   if (!schema.nodes.image) return new Plugin({});
   const imageType = schema.nodes.image;
@@ -77,11 +66,10 @@ export function imageDropPlugin(schema: EditorSchema) {
           }
           if (file.type.startsWith('image/')) {
             (async () => {
-              const src = await readFileAsDataUrl(file);
               const slice = Slice.maxOpen(
                 Fragment.from(
                   imageType.createChecked({
-                    src,
+                    src: new Uint8Array(await file.arrayBuffer()),
                     filename: file.name,
                   })
                 )
@@ -118,11 +106,10 @@ export function imageDropPlugin(schema: EditorSchema) {
           }
           if (file.type.startsWith('image/')) {
             (async () => {
-              const src = await readFileAsDataUrl(file);
               view.dispatch(
                 view.state.tr.replaceSelectionWith(
                   imageType.createChecked({
-                    src,
+                    src: new Uint8Array(await file.arrayBuffer()),
                     filename: file.name,
                   })
                 )
@@ -145,11 +132,10 @@ export function ImageToolbarButton() {
             (async () => {
               const file = await getUploadedFileObject('image/*');
               if (!file) return;
-              const src = await readFileAsDataUrl(file);
               view.dispatch(
                 view.state.tr.replaceSelectionWith(
                   view.state.schema.nodes.image.createChecked({
-                    src,
+                    src: new Uint8Array(await file.arrayBuffer()),
                     filename: file.name,
                   })
                 )

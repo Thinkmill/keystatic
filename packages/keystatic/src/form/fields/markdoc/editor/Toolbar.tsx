@@ -6,6 +6,7 @@ import {
   HTMLAttributes,
   ReactElement,
   ReactNode,
+  memo,
   useMemo,
   useState,
 } from 'react';
@@ -100,65 +101,74 @@ function LinkButton(props: { link: MarkType }) {
     }
     return false;
   });
-  return (
-    <>
-      <TooltipTrigger>
-        <ToolbarButton
-          aria-label="Divider"
-          command={(state, dispatch) => {
-            const aroundFrom = markAround(state.selection.$from, props.link);
-            const aroundTo = markAround(state.selection.$to, props.link);
+  return useMemo(
+    () => (
+      <>
+        <TooltipTrigger>
+          <ToolbarButton
+            aria-label="Divider"
+            command={(state, dispatch) => {
+              const aroundFrom = markAround(state.selection.$from, props.link);
+              const aroundTo = markAround(state.selection.$to, props.link);
 
-            if (aroundFrom && aroundFrom.mark === aroundTo?.mark) {
+              if (aroundFrom && aroundFrom.mark === aroundTo?.mark) {
+                if (dispatch) {
+                  dispatch(
+                    state.tr.removeMark(
+                      aroundFrom.from,
+                      aroundTo.to,
+                      props.link
+                    )
+                  );
+                }
+                return true;
+              }
+              if (state.selection.empty) {
+                return false;
+              }
               if (dispatch) {
-                dispatch(
-                  state.tr.removeMark(aroundFrom.from, aroundTo.to, props.link)
+                const text = state.doc.textBetween(
+                  state.selection.from,
+                  state.selection.to
                 );
+                setText(text);
               }
               return true;
-            }
-            if (state.selection.empty) {
-              return false;
-            }
-            if (dispatch) {
-              const text = state.doc.textBetween(
-                state.selection.from,
-                state.selection.to
-              );
-              setText(text);
-            }
-            return true;
-          }}
-          isSelected={isMarkActive(props.link)}
-        >
-          <Icon src={linkIcon} />
-        </ToolbarButton>
-        <Tooltip>
-          <Text>Link</Text>
-          <Kbd meta>K</Kbd>
-        </Tooltip>
-      </TooltipTrigger>
-      <DialogContainer
-        onDismiss={() => {
-          setText(null);
-        }}
-      >
-        {text && (
-          <LinkDialog
-            href=""
-            text={text}
-            onSubmit={attrs => {
-              setText(null);
-              runCommand(toggleMark(props.link, attrs));
             }}
-          />
-        )}
-      </DialogContainer>
-    </>
+            isSelected={isMarkActive(props.link)}
+          >
+            <Icon src={linkIcon} />
+          </ToolbarButton>
+          <Tooltip>
+            <Text>Link</Text>
+            <Kbd meta>K</Kbd>
+          </Tooltip>
+        </TooltipTrigger>
+        <DialogContainer
+          onDismiss={() => {
+            setText(null);
+          }}
+        >
+          {text && (
+            <LinkDialog
+              href=""
+              text={text}
+              onSubmit={attrs => {
+                setText(null);
+                runCommand(toggleMark(props.link, attrs));
+              }}
+            />
+          )}
+        </DialogContainer>
+      </>
+    ),
+    [props.link, runCommand, text]
   );
 }
 
-export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
+export const Toolbar = memo(function Toolbar(
+  props: HTMLAttributes<HTMLDivElement>
+) {
   const schema = useEditorSchema();
   const { nodes, marks } = schema;
   return (
@@ -257,7 +267,7 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
       <InsertBlockMenu />
     </ToolbarWrapper>
   );
-}
+});
 
 const ToolbarContainer = ({ children }: { children: ReactNode }) => {
   let entryLayoutPane = useEntryLayoutSplitPaneContext();

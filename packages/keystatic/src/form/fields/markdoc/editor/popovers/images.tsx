@@ -23,7 +23,6 @@ import { getUploadedFileObject } from '../../../image/ui';
 import { EditorState, NodeSelection } from 'prosemirror-state';
 import { useEditorDispatchCommand, useEditorSchema } from '../editor-view';
 import { Node } from 'prosemirror-model';
-import { readFileAsDataUrl } from '../images';
 
 export function ImagePopover(props: {
   node: Node;
@@ -49,7 +48,7 @@ export function ImagePopover(props: {
               onPress={async () => {
                 const file = await getUploadedFileObject('image/*');
                 if (!file) return;
-                const src = await readFileAsDataUrl(file);
+                const src = new Uint8Array(await file.arrayBuffer());
                 runCommand((state, dispatch) => {
                   if (dispatch) {
                     const { tr } = state;

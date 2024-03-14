@@ -5,7 +5,7 @@ import {
   Plugin,
   PluginKey,
 } from 'prosemirror-state';
-import { NodeView } from 'prosemirror-view';
+import { NodeView, NodeViewConstructor } from 'prosemirror-view';
 import {
   ReactElement,
   ReactNode,
@@ -48,6 +48,7 @@ type ReactNodeViewSpec = {
 };
 
 export type WithReactNodeViewSpec = {
+  nodeView?: NodeViewConstructor;
   reactNodeView?: ReactNodeViewSpec;
 };
 
@@ -152,7 +153,7 @@ const reactNodeViewKey = new PluginKey<ReactNodeViewsState>('reactNodeViews');
 export function reactNodeViews(schema: Schema) {
   const nodes = new Set<NodeType>();
   for (const nodeType of Object.values(schema.nodes)) {
-    if (nodeType.spec.reactNodeView) {
+    if (nodeType.spec.reactNodeView || nodeType.spec.nodeView) {
       nodes.add(nodeType);
     }
   }
@@ -178,10 +179,12 @@ export function reactNodeViews(schema: Schema) {
     },
     props: {
       nodeViews: Object.fromEntries(
-        [...nodes].map(node => [
-          node.name,
+        [...nodes].map(type => [
+          type.name,
           (node, view, getPos): NodeView => {
-            const { type } = node;
+            if (type.spec.nodeView) {
+              return type.spec.nodeView(node, view, getPos);
+            }
             const reactNodeViewSpec = getReactNodeViewSpec(type);
 
             const dom = document.createElement(type.isInline ? 'span' : 'div');

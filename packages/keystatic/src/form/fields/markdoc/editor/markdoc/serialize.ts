@@ -1,7 +1,6 @@
 import Markdoc, { Node as MarkdocNode, NodeType } from '@markdoc/markdoc';
 import { Fragment, Mark, Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorSchema, getEditorSchema } from '../schema';
-import { toUint8Array } from 'js-base64';
 import { getSrcPrefixForImageBlock } from '../images';
 import { fixPath } from '../../../../../app/path-utils';
 import { internalToSerialized } from '../props-serialization';
@@ -45,9 +44,7 @@ function textblockChildren(
       return;
     }
     if (child.type === child.type.schema.nodes.image) {
-      const src = toUint8Array(
-        child.attrs.src.replace(/^data:[a-z/-]+;base64,/, '')
-      );
+      const src = child.attrs.src;
 
       if (
         typeof state.schema.config.image === 'object' &&
