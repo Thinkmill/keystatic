@@ -40,9 +40,7 @@ type EditorToolbarState = {
   /** Sets the last focused node. */
   setLastFocusedId: Dispatch<SetStateAction<Key | null>>;
 };
-type EditorToolbarContextType = {
-  state: EditorToolbarState;
-};
+type EditorToolbarContextType = EditorToolbarState;
 const EditorToolbarContext = createContext<EditorToolbarContextType | null>(
   null
 );
@@ -51,7 +49,7 @@ function useToolbarContext() {
   if (context == null) {
     throw new Error('useToolbarContext must be used within a EditorToolbar');
   }
-  return context;
+  return { state: context };
 }
 
 type EditorToolbarProps = PropsWithChildren<BaseStyleProps> & AriaLabelingProps;
@@ -61,7 +59,7 @@ export function EditorToolbar(props: EditorToolbarProps) {
   let { state, toolbarProps } = useToolbar(props, ref);
 
   return (
-    <EditorToolbarContext.Provider value={{ state }}>
+    <EditorToolbarContext.Provider value={state}>
       <FocusScope>
         <HStack alignItems="center" gap="regular" ref={ref} {...toolbarProps}>
           {children}
@@ -393,10 +391,13 @@ function useToolbar(props: EditorToolbarProps, ref: RefObject<HTMLElement>) {
       role: 'toolbar',
       'aria-orientation': 'horizontal' as const,
     },
-    state: {
-      lastFocusedId,
-      setLastFocusedId,
-    },
+    state: useMemo(
+      () => ({
+        lastFocusedId,
+        setLastFocusedId,
+      }),
+      [lastFocusedId]
+    ),
   };
 }
 

@@ -1,4 +1,3 @@
-import { fromUint8Array, toUint8Array } from 'js-base64';
 import { ComponentSchema } from '../../../api';
 import { serializeProps } from '../../../serialize-props';
 import { useMemo } from 'react';
@@ -63,7 +62,7 @@ export function toSerialized(
     value: serialized.value,
     extraFiles: serialized.extraFiles.map(x => ({
       ...x,
-      contents: fromUint8Array(x.contents),
+      contents: x.contents,
     })),
   };
 }
@@ -74,7 +73,7 @@ export function deserializeValue(
     extraFiles: {
       path: string;
       parent: string | undefined;
-      contents: string;
+      contents: Uint8Array;
     }[];
   },
   schema: Record<string, ComponentSchema>
@@ -87,9 +86,9 @@ export function deserializeValue(
       if (!extraFiles.has(file.parent)) {
         extraFiles.set(file.parent, new Map());
       }
-      extraFiles.get(file.parent)!.set(file.path, toUint8Array(file.contents));
+      extraFiles.get(file.parent)!.set(file.path, file.contents);
     } else {
-      files.set(file.path, toUint8Array(file.contents));
+      files.set(file.path, file.contents);
     }
   }
 
@@ -107,7 +106,7 @@ export function internalToSerialized(
     extraFiles: {
       path: string;
       parent: string | undefined;
-      contents: string;
+      contents: Uint8Array;
     }[];
   },
   state: {

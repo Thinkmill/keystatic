@@ -6,7 +6,6 @@ import {
   Node as ProseMirrorNode,
 } from 'prosemirror-model';
 import { EditorSchema } from '../schema';
-import { fromUint8Array } from 'js-base64';
 import { fixPath } from '../../../../../app/path-utils';
 import { getSrcPrefixForImageBlock } from '../images';
 import { deserializeProps, toSerialized } from '../props-serialization';
@@ -383,7 +382,7 @@ function markdocNodeToProseMirrorNode(
 
     if (content && schema.nodes.image) {
       return schema.nodes.image.createChecked({
-        src: `data:application/octet-stream;base64,${fromUint8Array(content)}`,
+        src: content,
         alt: node.attributes.alt,
         title: node.attributes.title,
         filename,

@@ -37,7 +37,7 @@ import { EditorConfig } from '../config';
 import { toSerialized } from './props-serialization';
 import { getInitialPropsValue } from '../../../initial-values';
 import { getUploadedFileObject } from '../../image/ui';
-import { readFileAsDataUrl } from './images';
+import { fromUint8Array, toUint8Array } from 'js-base64';
 
 const blockElementSpacing = css({
   marginBlock: '1em',
@@ -328,11 +328,10 @@ const nodeSpecs = {
             (async () => {
               const file = await getUploadedFileObject('image/*');
               if (!file) return;
-              const src = await readFileAsDataUrl(file);
               view.dispatch(
                 view.state.tr.replaceSelectionWith(
                   nodeType.createChecked({
-                    src,
+                    src: new Uint8Array(await file.arrayBuffer()),
                     filename: file.name,
                   })
                 )
@@ -343,25 +342,43 @@ const nodeSpecs = {
         };
       },
     },
+    nodeView(node) {
+      const blob = new Blob([node.attrs.src]);
+      const dom = document.createElement('img');
+      dom.src = URL.createObjectURL(blob);
+      dom.alt = node.attrs.alt;
+      dom.title = node.attrs.title;
+      dom.dataset.filename = node.attrs.filename;
+      dom.classList.add(
+        css({
+          boxSizing: 'border-box',
+          borderRadius: tokenSchema.size.radius.regular,
+          display: 'inline-block',
+          maxHeight: tokenSchema.size.scale[3600],
+          maxWidth: '100%',
+          transition: transition('box-shadow'),
+          '&::selection': {
+            backgroundColor: 'transparent',
+          },
+        })
+      );
+      return {
+        dom,
+        destroy() {
+          URL.revokeObjectURL(dom.src);
+        },
+      };
+    },
     toDOM(node) {
       return [
         'img',
         {
-          src: node.attrs.src,
+          src: `data:application/octet-stream;base64,${fromUint8Array(
+            node.attrs.src
+          )}`,
           alt: node.attrs.alt,
           title: node.attrs.title,
           'data-filename': node.attrs.filename,
-          class: css({
-            boxSizing: 'border-box',
-            borderRadius: tokenSchema.size.radius.regular,
-            display: 'inline-block',
-            maxHeight: tokenSchema.size.scale[3600],
-            maxWidth: '100%',
-            transition: transition('box-shadow'),
-            '&::selection': {
-              backgroundColor: 'transparent',
-            },
-          }),
         },
       ];
     },
@@ -373,8 +390,12 @@ const nodeSpecs = {
           const src = node.getAttribute('src');
           const filename = node.getAttribute('data-filename');
           if (!src?.startsWith('data:') || !filename) return false;
+          const srcAsUint8Array = toUint8Array(
+            src.replace(/^data:[a-z/-]+;base64,/, '')
+          );
           return {
-            src,
+            src: srcAsUint8Array,
+            filename,
             alt: node.getAttribute('alt') ?? '',
             title: node.getAttribute('title') ?? '',
           };

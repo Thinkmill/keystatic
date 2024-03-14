@@ -1,6 +1,5 @@
 import { Fragment, Mark, Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorSchema, getEditorSchema } from '../schema';
-import { toUint8Array } from 'js-base64';
 import { getSrcPrefixForImageBlock } from '../images';
 import { fixPath } from '../../../../../app/path-utils';
 import {
@@ -67,9 +66,7 @@ function textblockChildren(
       return;
     }
     if (child.type === child.type.schema.nodes.image) {
-      const src = toUint8Array(
-        child.attrs.src.replace(/^data:[a-z/-]+;base64,/, '')
-      );
+      const { src, filename } = child.attrs;
 
       if (
         typeof state.schema.config.image === 'object' &&
@@ -79,9 +76,9 @@ function textblockChildren(
         if (!state.otherFiles.has(parent)) {
           state.otherFiles.set(parent, new Map());
         }
-        state.otherFiles.get(parent)!.set(child.attrs.filename, src);
+        state.otherFiles.get(parent)!.set(filename, src);
       } else {
-        state.extraFiles.set(child.attrs.filename, src);
+        state.extraFiles.set(filename, src);
       }
 
       children.push({

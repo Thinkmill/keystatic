@@ -338,7 +338,7 @@ test('image with space in src', () => {
         <image
           alt="something"
           filename="something something.png"
-          src="data:application/octet-stream;base64,"
+          src={Uint8Array []}
           title=""
         />
       </paragraph>
