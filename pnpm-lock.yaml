@@ -125,6 +125,12 @@ importers:
       '@keystar/ui':
         specifier: workspace:^
         version: link:../pkg
+      '@keystatic/core':
+        specifier: workspace:^
+        version: link:../../packages/keystatic
+      '@keystatic/next':
+        specifier: workspace:^
+        version: link:../../packages/next
       '@markdoc/markdoc':
         specifier: ^0.4.0
         version: 0.4.0(@types/react@18.2.21)(react@18.2.0)
