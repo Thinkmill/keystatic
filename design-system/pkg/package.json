@@ -1552,8 +1552,8 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@keystar/ui": "^0.7.1",
-    "@keystar/ui-storybook": "^0.0.1",
+    "@keystar/ui": "workspace:^",
+    "@keystar/ui-storybook": "workspace:^",
     "@react-aria/landmark": "3.0.0-beta.2",
     "@svgr/core": "^6.5.1",
     "@svgr/plugin-jsx": "^6.5.1",

@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@keystatic/core": "^0.5.0",
-    "@keystatic/next": "^5.0.0",
+    "@keystatic/core": "workspace:^",
+    "@keystatic/next": "workspace:^",
     "@preconstruct/next": "^4.0.0",
     "@types/node": "16.11.13",
     "@types/react": "^18.2.8",

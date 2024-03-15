@@ -8,8 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "@keystatic/core": "^0.5.0",
-    "@keystatic/next": "^5.0.0",
+    "@keystatic/core": "workspace:^",
+    "@keystatic/next": "workspace:^",
     "next": "^14.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
