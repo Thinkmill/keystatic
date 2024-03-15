@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.5.6
+
+### Patch Changes
+
+- c619ef2e: Fix DOM error when deleting wrapper components in some cases in the
+  new editor
+
 ## 0.5.5
 
 ### Patch Changes
