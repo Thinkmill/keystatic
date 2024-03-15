@@ -10,8 +10,8 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@keystatic/core": "^0.5.0",
-    "@keystatic/remix": "^5.0.0",
+    "@keystatic/core": "workspace:^",
+    "@keystatic/remix": "workspace:^",
     "@remix-run/css-bundle": "^2.3.0",
     "@remix-run/node": "^2.3.0",
     "@remix-run/react": "^2.3.0",
