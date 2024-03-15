@@ -2,10 +2,14 @@ import { Metadata } from 'next';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { DocPage } from '../../components/doc-page';
-import { extractFrontmatter } from '../../utils/frontmatter';
-import { transformMarkdoc } from '../../utils/markdoc';
-import { getDocEntries, projectDir, readDocFile } from '../../utils/packages';
+import { DocPage } from '../../../components/doc-page';
+import { extractFrontmatter } from '../../../utils/frontmatter';
+import { transformMarkdoc } from '../../../utils/markdoc';
+import {
+  getDocEntries,
+  projectDir,
+  readDocFile,
+} from '../../../utils/packages';
 
 const docsDir = 'docs/content';
 

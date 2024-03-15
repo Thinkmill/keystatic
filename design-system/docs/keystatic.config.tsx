@@ -1,4 +1,5 @@
 import { collection, config, fields } from '@keystatic/core';
+import { categories } from './utils/frontmatter';
 
 export default config({
   storage: { kind: process.env.NODE_ENV === 'production' ? 'cloud' : 'local' },
@@ -14,6 +15,15 @@ export default config({
       format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
+        description: fields.text({ label: 'Description', multiline: true }),
+        category: fields.select({
+          label: 'Category',
+          options: categories.map(category => ({
+            label: category,
+            value: category,
+          })),
+          defaultValue: 'Introduction',
+        }),
         content: fields.markdoc({
           label: 'Content',
           options: {
@@ -34,6 +44,7 @@ export default config({
       format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
+        description: fields.text({ label: 'Description', multiline: true }),
         content: fields.markdoc({
           label: 'Content',
           options: {

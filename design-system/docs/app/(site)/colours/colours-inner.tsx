@@ -5,7 +5,7 @@ import { Box, BoxProps, Grid, Flex, repeat } from '@keystar/ui/layout';
 import { ColorForeground, tokenSchema } from '@keystar/ui/style';
 import { Heading, Text } from '@keystar/ui/typography';
 
-import { DocsContent } from '../../components/content';
+import { DocsContent } from '../../../components/content';
 
 export function Colours(): JSX.Element {
   const colors = [

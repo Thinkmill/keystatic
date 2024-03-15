@@ -1,8 +1,11 @@
 import { Metadata } from 'next';
-import { DocPage } from '../../../../components/doc-page';
-import { extractFrontmatter } from '../../../../utils/frontmatter';
-import { transformMarkdoc } from '../../../../utils/markdoc';
-import { getAllPackageDocSlugs, readDocFile } from '../../../../utils/packages';
+import { DocPage } from '../../../../../components/doc-page';
+import { extractFrontmatter } from '../../../../../utils/frontmatter';
+import { transformMarkdoc } from '../../../../../utils/markdoc';
+import {
+  getAllPackageDocSlugs,
+  readDocFile,
+} from '../../../../../utils/packages';
 
 export async function generateStaticParams() {
   const slugs = await getAllPackageDocSlugs();

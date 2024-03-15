@@ -1,6 +1,6 @@
 import { Heading, Text } from '@keystar/ui/typography';
 import { Metadata } from 'next';
-import { DocsContent } from '../components/content';
+import { DocsContent } from '../../components/content';
 import { makePageTitle } from './utils';
 
 export const metadata: Metadata = {
