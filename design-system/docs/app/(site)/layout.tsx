@@ -2,8 +2,8 @@ import { NextRootProvider, nextRootScript } from '@keystar/ui/next';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
-import { Layout } from '../components/layout';
-import { getNavigation } from '../utils/packages';
+import { Layout } from '../../components/layout';
+import { getNavigation } from '../../utils/packages';
 import { basePageTitle } from './utils';
 
 const inter = Inter({
