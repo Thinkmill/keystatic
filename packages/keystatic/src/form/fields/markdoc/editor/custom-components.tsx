@@ -116,6 +116,7 @@ function BlockWrapper(props: {
           }
           contentEditable={false}
           alignItems="center"
+          data-ignore-content=""
         >
           <Box
             flex={1}

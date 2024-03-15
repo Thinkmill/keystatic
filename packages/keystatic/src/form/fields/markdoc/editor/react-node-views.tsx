@@ -195,8 +195,19 @@ export function reactNodeViews(schema: Schema) {
                     type.inlineContent ? 'div' : 'span'
                   );
 
+            const inner = elementWithDisplayContents(
+              type.inlineContent ? 'div' : 'span'
+            );
+            dom.appendChild(inner);
+
             const key = `${i++}`;
-            const info: NodeViewInfo = { contentDOM, dom, getPos, key, node };
+            const info: NodeViewInfo = {
+              contentDOM,
+              dom: inner,
+              getPos,
+              key,
+              node,
+            };
             const pluginState = reactNodeViewKey.getState(view.state)!;
             pluginState.nodeViews.set(key, info);
 

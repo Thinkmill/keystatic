@@ -139,7 +139,7 @@ const nodeSpecs = {
   paragraph: {
     content: inlineContent,
     group: 'block',
-    parseDOM: [{ tag: 'p' }],
+    parseDOM: [{ tag: 'p' }, { tag: '[data-ignore-content]', ignore: true }],
     toDOM() {
       return paragraphDOM;
     },
