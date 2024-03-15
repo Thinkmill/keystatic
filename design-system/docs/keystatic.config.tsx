@@ -1,5 +1,5 @@
 import { collection, config, fields } from '@keystatic/core';
-import { categories } from './utils/frontmatter';
+import { categories } from './utils/categories';
 
 export default config({
   storage: { kind: process.env.NODE_ENV === 'production' ? 'cloud' : 'local' },

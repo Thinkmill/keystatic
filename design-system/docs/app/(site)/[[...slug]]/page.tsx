@@ -1,27 +1,19 @@
 import { Metadata } from 'next';
-import fs from 'node:fs/promises';
-import path from 'node:path';
 
+import { notFound } from 'next/navigation';
 import { DocPage } from '../../../components/doc-page';
-import { extractFrontmatter } from '../../../utils/frontmatter';
 import { transformMarkdoc } from '../../../utils/markdoc';
-import {
-  getDocEntries,
-  projectDir,
-  readDocFile,
-} from '../../../utils/packages';
-
-const docsDir = 'docs/content';
+import { reader } from '../../../utils/packages';
 
 export async function generateStaticParams() {
-  const resolvedDocsDir = path.join(projectDir, docsDir);
-  const rootEntries = await fs.readdir(resolvedDocsDir, {
-    withFileTypes: true,
+  const entries = await reader.collections.otherDocs.list();
+
+  return entries.map(slug => {
+    const split = slug.split('/');
+    return {
+      slug: split[split.length - 1] === 'index' ? split.slice(0, -1) : split,
+    };
   });
-  const allEntries = await getDocEntries(rootEntries, resolvedDocsDir, []);
-  return allEntries.map(slug => ({
-    slug: slug[slug.length - 1] === 'index' ? slug.slice(0, -1) : slug,
-  }));
 }
 
 export async function generateMetadata({
@@ -29,24 +21,34 @@ export async function generateMetadata({
 }: {
   params: { slug?: string[] };
 }): Promise<Metadata> {
-  const { content: rawDocContent, path } = await readDocFile(
-    docsDir,
-    (params.slug ?? []).join('/')
-  );
-
-  const frontmatter = extractFrontmatter(path, rawDocContent);
-  return { title: frontmatter.title };
+  const slug = (params.slug ?? ['index']).join('/');
+  let entry = await reader.collections.otherDocs.read(slug);
+  if (!entry && slug !== 'index') {
+    entry = await reader.collections.otherDocs.read(slug + '/index');
+  }
+  if (!entry) notFound();
+  return { title: entry.title };
 }
 
 export default async function Page(props: { params: { slug?: string[] } }) {
-  const { content: rawDocContent, path } = await readDocFile(
-    docsDir,
-    (props.params.slug ?? []).join('/')
+  const slug = (props.params.slug ?? ['index']).join('/');
+  let entry = await reader.collections.otherDocs.read(slug, {
+    resolveLinkedFiles: true,
+  });
+  if (!entry && slug !== 'index') {
+    entry = await reader.collections.otherDocs.read(slug + '/index', {
+      resolveLinkedFiles: true,
+    });
+  }
+  if (!entry) notFound();
+
+  const content = transformMarkdoc(slug, entry?.content.node);
+
+  return (
+    <DocPage
+      content={content}
+      title={entry.title}
+      description={entry.description}
+    />
   );
-
-  const frontmatter = extractFrontmatter(path, rawDocContent);
-
-  const content = transformMarkdoc(path, rawDocContent);
-
-  return <DocPage content={content} {...frontmatter} />;
 }
