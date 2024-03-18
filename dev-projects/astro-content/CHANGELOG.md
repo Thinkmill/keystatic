@@ -1,5 +1,13 @@
 # astro-content
 
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [c519f119]
+  - @keystatic/core@0.5.7
+  - @keystatic/astro@5.0.0
+
 ## 0.0.8
 
 ### Patch Changes
