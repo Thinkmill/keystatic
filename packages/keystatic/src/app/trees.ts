@@ -11,7 +11,7 @@ type Changes = {
 
 const textEncoder = new TextEncoder();
 
-const blobShaCache = new WeakMap<Uint8Array, string>();
+const blobShaCache = new WeakMap<Uint8Array, string | Promise<string>>();
 
 export async function blobSha(contents: Uint8Array) {
   const cached = blobShaCache.get(contents);
@@ -20,9 +20,10 @@ export async function blobSha(contents: Uint8Array) {
   const array = new Uint8Array(blobPrefix.byteLength + contents.byteLength);
   array.set(blobPrefix, 0);
   array.set(contents, blobPrefix.byteLength);
-  const digest = await sha1(array);
-  blobShaCache.set(contents, digest);
-  return digest;
+  const digestPromise = sha1(array);
+  blobShaCache.set(contents, digestPromise);
+  digestPromise.then(digest => blobShaCache.set(contents, digest));
+  return digestPromise;
 }
 
 export type TreeNode = { entry: TreeEntry; children?: Map<string, TreeNode> };
