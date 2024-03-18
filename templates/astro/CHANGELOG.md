@@ -1,5 +1,13 @@
 # @keystatic/templates-astro
 
+## 0.0.19
+
+### Patch Changes
+
+- Updated dependencies [c519f119]
+  - @keystatic/core@0.5.7
+  - @keystatic/astro@5.0.0
+
 ## 0.0.18
 
 ### Patch Changes

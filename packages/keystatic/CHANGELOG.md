@@ -1,5 +1,12 @@
 # @keystatic/core
 
+## 0.5.7
+
+### Patch Changes
+
+- c519f119: Fix very slow editing when replacing one large file with another
+  large file of the same size
+
 ## 0.5.6
 
 ### Patch Changes
