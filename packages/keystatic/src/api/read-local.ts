@@ -5,7 +5,7 @@ import {
   getSingletonFormat,
   getSingletonPath,
 } from '../app/path-utils';
-import { updateTreeWithChanges, blobSha } from './trees-server-side';
+import { updateTreeWithChanges, blobSha } from '../app/trees';
 import { Config } from '../config';
 import { getDirectoriesForTreeKey } from '../app/tree-key';
 import { fields } from '../form/api';

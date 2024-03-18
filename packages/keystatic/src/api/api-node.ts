@@ -8,7 +8,7 @@ import {
   redirect,
 } from './internal-utils';
 import { readToDirEntries, getAllowedDirectories } from './read-local';
-import { blobSha } from './trees-server-side';
+import { blobSha } from '../app/trees';
 import { randomBytes } from 'node:crypto';
 
 // this should be trivially dead code eliminated

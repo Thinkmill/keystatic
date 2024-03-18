@@ -11,12 +11,18 @@ type Changes = {
 
 const textEncoder = new TextEncoder();
 
-export function blobSha(contents: Uint8Array) {
+const blobShaCache = new WeakMap<Uint8Array, string>();
+
+export async function blobSha(contents: Uint8Array) {
+  const cached = blobShaCache.get(contents);
+  if (cached !== undefined) return cached;
   const blobPrefix = textEncoder.encode('blob ' + contents.length + '\0');
   const array = new Uint8Array(blobPrefix.byteLength + contents.byteLength);
   array.set(blobPrefix, 0);
   array.set(contents, blobPrefix.byteLength);
-  return sha1(array);
+  const digest = await sha1(array);
+  blobShaCache.set(contents, digest);
+  return digest;
 }
 
 export type TreeNode = { entry: TreeEntry; children?: Map<string, TreeNode> };
@@ -47,6 +53,7 @@ type NodeChanges =
   | TreeChanges;
 
 function getNodeAtPath(tree: TreeChanges, path: string): TreeChanges {
+  if (path === '') return tree;
   let node = tree;
   for (const part of path.split('/')) {
     if (!node.has(part)) {
@@ -64,6 +71,7 @@ function getFilename(path: string) {
 }
 
 function getDirname(path: string) {
+  if (!path.includes('/')) return '';
   return path.replace(/\/[^/]+$/, '');
 }
 
@@ -148,7 +156,7 @@ async function createTreeNodeEntry(
   };
 }
 
-export async function createBlobNodeEntry(
+async function createBlobNodeEntry(
   path: string,
   contents: Uint8Array | { byteLength: number; sha: string }
 ): Promise<TreeEntry> {
