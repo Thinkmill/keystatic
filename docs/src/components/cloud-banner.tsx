@@ -8,7 +8,7 @@ export function CloudBanner() {
     >
       <div className="absolute inset-0 bg-pattern-texture opacity-50 transition duration-150 group-hover:opacity-90" />
       <span className="relative mx-auto block max-w-5xl px-6 py-6 md:py-10">
-        <span className="flex items-center justify-center gap-4 text-pretty text-center text-base text-white md:text-lg">
+        <span className="flex items-center justify-center gap-4 text-pretty text-center text-base text-white">
           <span>
             Simplify GitHub authentication, optimise images and more with{' '}
             <span className="underline">Keystatic Cloud</span>
