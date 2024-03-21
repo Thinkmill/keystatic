@@ -1,5 +1,6 @@
 import Hero from '../../components/hero';
 import CliVideo from '../../components/storytelling/cli-video';
+import { CloudBanner } from '../../components/cloud-banner';
 import DocsLinks from '../../components/storytelling/docs-links';
 import MailingList from '../../components/mailing-list';
 import CallToAction from '../../components/call-to-action';
@@ -14,6 +15,7 @@ export default function Homepage() {
         <Hero />
         <Features />
         <CliVideo />
+        <CloudBanner />
         <DocsLinks />
         <div className="grid sm:grid-cols-2">
           <MailingList />
