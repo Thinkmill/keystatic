@@ -4,7 +4,7 @@ import { sha1 } from '#sha1';
 type Changes = {
   additions: {
     path: string;
-    contents: Uint8Array | { byteLength: number; sha: string };
+    contents: Uint8Array | { sha: string };
   }[];
   deletions: string[];
 };
@@ -47,11 +47,7 @@ export type TreeEntry = {
 };
 
 type TreeChanges = Map<string, NodeChanges>;
-type NodeChanges =
-  | Uint8Array
-  | { byteLength: number; sha: string }
-  | 'delete'
-  | TreeChanges;
+type NodeChanges = Uint8Array | { sha: string } | 'delete' | TreeChanges;
 
 function getNodeAtPath(tree: TreeChanges, path: string): TreeChanges {
   if (path === '') return tree;
@@ -71,12 +67,12 @@ function getFilename(path: string) {
   return path.replace(/.*\//, '');
 }
 
-function getDirname(path: string) {
+export function getDirname(path: string) {
   if (!path.includes('/')) return '';
   return path.replace(/\/[^/]+$/, '');
 }
 
-export function toTreeChanges(changes: Changes) {
+export function toTreeChanges(changes: Changes): TreeChanges {
   const changesRoot = new Map();
   for (const deletion of changes.deletions) {
     const parentTree = getNodeAtPath(changesRoot, getDirname(deletion));
@@ -144,7 +140,7 @@ function hexToBytes(str: string) {
   return bytes;
 }
 
-async function createTreeNodeEntry(
+export async function createTreeNodeEntry(
   path: string,
   children: Map<string, TreeNode>
 ): Promise<TreeEntry> {
@@ -159,7 +155,7 @@ async function createTreeNodeEntry(
 
 async function createBlobNodeEntry(
   path: string,
-  contents: Uint8Array | { byteLength: number; sha: string }
+  contents: Uint8Array | { sha: string }
 ): Promise<TreeEntry> {
   const sha = 'sha' in contents ? contents.sha : await blobSha(contents);
   return { path, mode: '100644', type: 'blob', sha };
@@ -168,10 +164,15 @@ async function createBlobNodeEntry(
 export async function updateTreeWithChanges(
   tree: Map<string, TreeNode>,
   changes: Changes
-): Promise<{ entries: TreeEntry[]; sha: string }> {
+): Promise<{
+  tree: Map<string, TreeNode>;
+  entries: TreeEntry[];
+  sha: string;
+}> {
   const newTree =
     (await updateTree(tree, toTreeChanges(changes), [])) ?? new Map();
   return {
+    tree: newTree,
     entries: treeToEntries(newTree),
     sha: await treeSha(newTree ?? new Map()),
   };
@@ -224,6 +225,44 @@ async function updateTree(
   if (newTree.size === 0) {
     return undefined;
   }
+  return newTree;
+}
+
+export async function replaceEntryAtPathInTree(
+  tree: Map<string, TreeNode>,
+  newEntry: TreeNode,
+  parentPath: string
+): Promise<Map<string, TreeNode>> {
+  const newTree = new Map(tree);
+  if (!parentPath) {
+    newTree.set(newEntry.entry.path, newEntry);
+    return newTree;
+  }
+  const [firstPartOfTree, restOfPath] = parentPath.split('/', 1);
+  const parent = newTree.get(firstPartOfTree);
+  if (!parent || !parent.children) {
+    const innerEntry = await replaceEntryAtPathInTree(
+      new Map(),
+      newEntry,
+      restOfPath
+    );
+    const entry = await createTreeNodeEntry(firstPartOfTree, innerEntry);
+    newTree.set(firstPartOfTree, {
+      entry,
+      children: innerEntry,
+    });
+    return newTree;
+  }
+  const newChildren = await replaceEntryAtPathInTree(
+    parent.children,
+    newEntry,
+    restOfPath
+  );
+  const entry = await createTreeNodeEntry(firstPartOfTree, newChildren);
+  newTree.set(firstPartOfTree, {
+    entry,
+    children: newChildren,
+  });
   return newTree;
 }
 

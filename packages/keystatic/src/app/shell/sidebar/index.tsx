@@ -40,6 +40,7 @@ import { SIDE_PANEL_ID } from '../constants';
 import { GitMenu, ThemeMenu, UserActions } from './components';
 import { BranchPicker } from '../../branch-selection';
 import { useAppState, useConfig } from '../context';
+import { BatchCommits } from '../BatchCommits';
 
 const SidebarContext = createContext<OverlayTriggerState | null>(null);
 export function useSidebar() {
@@ -80,6 +81,7 @@ export function SidebarPanel() {
   return (
     <VStack backgroundColor="surface" height="100%">
       <SidebarHeader />
+      <BatchCommits />
       <SidebarGitActions />
       <SidebarNav />
       <SidebarFooter />
@@ -226,6 +228,7 @@ export function SidebarDialog() {
       >
         <SidebarHeader />
         <SidebarGitActions />
+        <BatchCommits />
         <SidebarNav />
         <SidebarFooter />
         <DismissButton onDismiss={state.close} />

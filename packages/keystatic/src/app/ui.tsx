@@ -43,6 +43,7 @@ import { KeystaticCloudAuthCallback } from './cloud-auth-callback';
 import { getAuth } from './auth';
 import { assertValidRepoConfig } from './repo-config';
 import { NotFoundBoundary, notFound } from './not-found';
+import { ExtraRootsProvider } from './object-store';
 
 function parseParamsWithoutBranch(params: string[]) {
   if (params.length === 0) {
@@ -296,11 +297,13 @@ export function Keystatic(props: {
     <ClientOnly>
       <RedirectToLoopback>
         <AppSlugProvider value={props.appSlug}>
-          <RouterProvider>
-            <Provider config={props.config}>
-              <PageInner config={props.config} />
-            </Provider>
-          </RouterProvider>
+          <ExtraRootsProvider config={props.config}>
+            <RouterProvider>
+              <Provider config={props.config}>
+                <PageInner config={props.config} />
+              </Provider>
+            </RouterProvider>
+          </ExtraRootsProvider>
         </AppSlugProvider>
       </RedirectToLoopback>
     </ClientOnly>

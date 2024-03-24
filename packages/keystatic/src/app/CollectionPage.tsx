@@ -58,7 +58,6 @@ import {
   getEntriesInCollectionWithTreeKey,
   getEntryDataFilepath,
   getSlugGlobForCollection,
-  isLocalConfig,
 } from './utils';
 import { notFound } from './not-found';
 import { fetchBlob } from './useItemData';
@@ -285,21 +284,18 @@ const STATUS = '@@status';
 function CollectionTable(
   props: CollectionPageContentProps & {
     trees: {
-      default: TreeData;
+      committed: TreeData;
       current: TreeData;
     };
   }
 ) {
   let { searchTerm } = props;
 
-  let { currentBranch, defaultBranch } = useBranchInfo();
-  let isLocalMode = isLocalConfig(props.config);
   let router = useRouter();
   let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: SLUG,
     direction: 'ascending',
   });
-  let hideStatusColumn = isLocalMode || currentBranch === defaultBranch;
 
   const branchInfo = useBranchInfo();
   const isRepoPrivate = useIsRepoPrivate();
@@ -312,7 +308,7 @@ function CollectionTable(
       getEntriesInCollectionWithTreeKey(
         props.config,
         props.collection,
-        props.trees.default.tree
+        props.trees.committed.tree
       ).map(x => [x.slug, x.key])
     );
     return getEntriesInCollectionWithTreeKey(
@@ -462,9 +458,7 @@ function CollectionTable(
   const columns = useMemo(() => {
     if (collection.columns?.length) {
       return [
-        ...(hideStatusColumn
-          ? []
-          : [{ name: 'Status', key: STATUS, minWidth: 32, width: 32 }]),
+        { name: 'Status', key: STATUS, minWidth: 32, width: 32 },
         {
           name: 'Slug',
           key: SLUG,
@@ -478,13 +472,11 @@ function CollectionTable(
         }),
       ];
     }
-    return hideStatusColumn
-      ? [{ name: 'Name', key: SLUG }]
-      : [
-          { name: 'Status', key: STATUS, minWidth: 32, width: 32 },
-          { name: 'Name', key: SLUG },
-        ];
-  }, [collection, hideStatusColumn]);
+    return [
+      { name: 'Status', key: STATUS, minWidth: 32, width: 32 },
+      { name: 'Name', key: SLUG },
+    ];
+  }, [collection]);
 
   return (
     <TableView
@@ -555,7 +547,7 @@ function CollectionTable(
             return (
               <Row key={item.name}>
                 {[
-                  ...(hideStatusColumn ? [] : [statusCell]),
+                  statusCell,
                   nameCell,
                   ...collection.columns.map(column => {
                     let val;
@@ -576,9 +568,7 @@ function CollectionTable(
               </Row>
             );
           }
-          return hideStatusColumn ? (
-            <Row key={item.name}>{nameCell}</Row>
-          ) : (
+          return (
             <Row key={item.name}>
               {statusCell}
               {nameCell}

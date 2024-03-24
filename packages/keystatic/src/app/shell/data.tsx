@@ -47,7 +47,8 @@ import {
   garbageCollectGitObjects,
   getTreeFromPersistedCache,
   setTreeToPersistedCache,
-} from '../object-cache';
+  useExtraRoots,
+} from '../object-store';
 import { CollabProvider } from './collab';
 
 export function fetchLocalTree(sha: string) {
@@ -75,21 +76,50 @@ export function LocalAppShellProvider(props: {
 }) {
   const [currentTreeSha, setCurrentTreeSha] = useState<string>('initial');
 
+  const localTree = useLocalTreeData('');
   const tree = useData(
     useCallback(() => fetchLocalTree(currentTreeSha), [currentTreeSha])
   );
 
-  const allTreeData = useMemo(
-    () => ({
-      unscopedDefault: tree,
+  const allTreeData = useMemo((): AllTreeData => {
+    const mappedLocal = mapDataState(localTree, tree =>
+      tree
+        ? {
+            tree: tree.children!,
+            entries: new Map(
+              treeToEntries(tree.children!).map(x => [x.path, x])
+            ),
+          }
+        : undefined
+    );
+    const trees = {
+      current:
+        mappedLocal.kind === 'loaded' && !mappedLocal.data
+          ? tree
+          : (mappedLocal as DataState<{
+              tree: Map<string, TreeNode>;
+              entries: Map<string, TreeEntry>;
+            }>),
+      committed: tree,
+    };
+
+    return {
+      unscoped: trees,
       scoped: {
-        default: tree,
-        current: tree,
-        merged: mergeDataStates({ default: tree, current: tree }),
+        ...trees,
+        merged: mergeDataStates({
+          current:
+            mappedLocal.kind === 'loaded' && !mappedLocal.data
+              ? tree
+              : (mappedLocal as DataState<{
+                  tree: Map<string, TreeNode>;
+                  entries: Map<string, TreeEntry>;
+                }>),
+          committed: tree,
+        }),
       },
-    }),
-    [tree]
-  );
+    };
+  }, [localTree, tree]);
   const changedData = useMemo(() => {
     if (allTreeData.scoped.merged.kind !== 'loaded') {
       return {
@@ -255,6 +285,17 @@ export function GitHubAppShellDataProvider(props: {
 
 const writePermissions = new Set(['WRITE', 'ADMIN', 'MAINTAIN']);
 
+function useLocalTreeData(branch: string | undefined) {
+  const { roots } = useExtraRoots();
+  const sha = branch !== undefined ? roots.get(branch)?.sha : undefined;
+  return useData(
+    useCallback(() => {
+      if (!sha) return undefined;
+      return getTreeFromPersistedCache(sha);
+    }, [sha])
+  );
+}
+
 export function GitHubAppShellProvider(props: {
   currentBranch: string;
   config: Config;
@@ -279,11 +320,6 @@ export function GitHubAppShellProvider(props: {
     repo = repo.forks?.nodes?.[0] ?? repo;
   }
 
-  const defaultBranchRef = repo?.refs?.nodes?.find(
-    (x): x is typeof x & { target: { __typename: 'Commit' } } =>
-      x?.name === repo?.defaultBranchRef?.name
-  );
-
   const currentBranchRef = repo?.refs?.nodes?.find(
     (x): x is typeof x & { target: { __typename: 'Commit' } } =>
       x?.name === props.currentBranch
@@ -292,6 +328,7 @@ export function GitHubAppShellProvider(props: {
   useEffect(() => {
     if (repo?.refs?.nodes) {
       garbageCollectGitObjects(
+        props.config,
         repo.refs.nodes
           .map(x =>
             x?.target?.__typename === 'Commit' ? x.target.tree.oid : undefined
@@ -300,40 +337,63 @@ export function GitHubAppShellProvider(props: {
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [repo?.id]);
+  }, [repo?.id, props.config]);
 
-  const defaultBranchTreeSha = defaultBranchRef?.target.tree.oid ?? null;
   const currentBranchTreeSha = currentBranchRef?.target.tree.oid ?? null;
   const baseCommit = currentBranchRef?.target?.oid ?? null;
 
-  const defaultBranchTree = useGitHubTreeData(
-    defaultBranchTreeSha,
-    props.config
-  );
+  const localTree = useLocalTreeData(props.currentBranch);
   const currentBranchTree = useGitHubTreeData(
     currentBranchTreeSha,
     props.config
   );
 
-  const allTreeData = useMemo(() => {
-    const scopedDefault = mapDataState(defaultBranchTree, tree =>
+  const allTreeData = useMemo((): AllTreeData => {
+    const scopedCommitted = mapDataState(currentBranchTree, tree =>
       scopeEntriesWithPathPrefix(tree, props.config)
     );
-    const scopedCurrent = mapDataState(currentBranchTree, tree =>
-      scopeEntriesWithPathPrefix(tree, props.config)
+    const _unscopedCurrent = mapDataState(localTree, tree =>
+      tree
+        ? {
+            tree: tree.children!,
+            entries: new Map(
+              treeToEntries(tree.children!).map(x => [x.path, x])
+            ),
+          }
+        : undefined
     );
+    const _scopedCurrent = mapDataState(_unscopedCurrent, tree =>
+      tree ? scopeEntriesWithPathPrefix(tree, props.config) : undefined
+    );
+    const scopedCurrent =
+      _scopedCurrent.kind === 'loaded' && !_scopedCurrent.data
+        ? scopedCommitted
+        : (_scopedCurrent as DataState<{
+            entries: Map<string, TreeEntry>;
+            tree: Map<string, TreeNode>;
+          }>);
+    const unscopedCurrent =
+      _unscopedCurrent.kind === 'loaded' && !_unscopedCurrent.data
+        ? currentBranchTree
+        : (_unscopedCurrent as DataState<{
+            entries: Map<string, TreeEntry>;
+            tree: Map<string, TreeNode>;
+          }>);
     return {
-      unscopedDefault: currentBranchTree,
+      unscoped: {
+        current: unscopedCurrent,
+        committed: currentBranchTree,
+      },
       scoped: {
-        default: scopedDefault,
+        committed: scopedCommitted,
         current: scopedCurrent,
         merged: mergeDataStates({
-          default: scopedDefault,
+          committed: scopedCommitted,
           current: scopedCurrent,
         }),
       },
     };
-  }, [currentBranchTree, defaultBranchTree, props.config]);
+  }, [currentBranchTree, localTree, props.config]);
   const changedData = useMemo(() => {
     if (allTreeData.scoped.merged.kind !== 'loaded') {
       return {
@@ -471,22 +531,28 @@ export type TreeData = {
 };
 
 type AllTreeData = {
-  unscopedDefault: DataState<TreeData>;
+  unscoped: {
+    current: DataState<TreeData>;
+    committed: DataState<TreeData>;
+  };
   scoped: {
     current: DataState<TreeData>;
-    default: DataState<TreeData>;
+    committed: DataState<TreeData>;
     merged: DataState<{
       current: TreeData;
-      default: TreeData;
+      committed: TreeData;
     }>;
   };
 };
 
 const TreeContext = createContext<AllTreeData>({
-  unscopedDefault: { kind: 'loading' },
+  unscoped: {
+    current: { kind: 'loading' },
+    committed: { kind: 'loading' },
+  },
   scoped: {
     current: { kind: 'loading' },
-    default: { kind: 'loading' },
+    committed: { kind: 'loading' },
     merged: { kind: 'loading' },
   },
 });
@@ -496,7 +562,7 @@ export function useTree() {
 }
 
 export function useCurrentUnscopedTree() {
-  return useContext(TreeContext).unscopedDefault;
+  return useContext(TreeContext).unscoped.current;
 }
 
 export function useChanged() {
@@ -712,9 +778,12 @@ export function useBranchInfo() {
   return useContext(BranchInfoContext);
 }
 
-function getChangedData(
+export function getChangedData(
   config: Config,
-  trees: { current: TreeData; default: TreeData }
+  trees: {
+    current: { tree: Map<string, TreeNode> };
+    committed: { tree: Map<string, TreeNode> };
+  }
 ) {
   return {
     collections: new Map(
@@ -730,7 +799,7 @@ function getChangedData(
           getEntriesInCollectionWithTreeKey(
             config,
             collection,
-            trees.default.tree
+            trees.committed.tree
           ).map(x => [x.slug, x.key])
         );
 
@@ -760,7 +829,7 @@ function getChangedData(
         const singletonPath = getSingletonPath(config, singleton);
         return (
           getTreeNodeAtPath(trees.current.tree, singletonPath)?.entry.sha !==
-          getTreeNodeAtPath(trees.default.tree, singletonPath)?.entry.sha
+          getTreeNodeAtPath(trees.committed.tree, singletonPath)?.entry.sha
         );
       })
     ),
