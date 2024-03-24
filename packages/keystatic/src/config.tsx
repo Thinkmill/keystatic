@@ -43,9 +43,15 @@ type CommonConfig<Collections, Singletons> = {
   ui?: UserInterface<Collections, Singletons>;
 };
 
+type CommitMessageConfig = {
+  update: (options: { path: string }) => string;
+  delete: (options: { path: string }) => string;
+}
+
 type CommonRemoteStorageConfig = {
   pathPrefix?: string;
   branchPrefix?: string;
+  commitMessages: CommitMessageConfig;
 };
 
 // Interface

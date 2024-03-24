@@ -208,12 +208,15 @@ export function useUpsertItem(args: {
               repoWithWriteAccess!.name
             }`,
           };
+          const message = args.config.storage.commitMessages?.update
+            ? args.config.storage.commitMessages.update({ path: args.basePath })
+            : `Update ${args.basePath}`;
           const runMutation = (expectedHeadOid: string) =>
             mutate({
               input: {
                 branch,
                 expectedHeadOid,
-                message: { headline: `Update ${args.basePath}` },
+                message: { headline: message },
                 fileChanges: {
                   additions: additions.map(addition => ({
                     ...addition,
@@ -393,6 +396,9 @@ export function useDeleteItem(args: {
         });
         await hydrateTreeCacheWithEntries(updatedTree.entries);
         if (args.storage.kind === 'github' || args.storage.kind === 'cloud') {
+          const message = args.storage.commitMessages?.delete
+            ? args.storage.commitMessages.delete({ path: args.basePath })
+            : `Delete ${args.basePath}`;
           const { error } = await mutate({
             input: {
               branch: {
@@ -401,7 +407,7 @@ export function useDeleteItem(args: {
                 }`,
                 branchName: branchInfo.currentBranch,
               },
-              message: { headline: `Delete ${args.basePath}` },
+              message: { headline: message },
               expectedHeadOid: baseCommit,
               fileChanges: {
                 deletions: deletions.map(path => ({ path })),
