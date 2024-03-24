@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.5.8
+
+### Patch Changes
+
+- 4d1cee00: Add `extension` option to `fields.markdoc` and `fields.mdx`
+
 ## 0.5.7
 
 ### Patch Changes
