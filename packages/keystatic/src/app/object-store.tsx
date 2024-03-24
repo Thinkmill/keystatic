@@ -9,8 +9,12 @@ import {
   get,
   clear,
 } from 'idb-keyval';
-import { TreeNode } from './trees';
+import { TreeNode, getTreeNodeAtPath, updateTreeWithChanges } from './trees';
 import * as s from 'superstruct';
+import { ReactNode, createContext, useContext, useMemo, useState } from 'react';
+import { serializeRepoConfig } from './repo-config';
+import { Config } from '..';
+import { hydrateBlobCache } from './useItemData';
 
 type StoredTreeEntry = {
   path: string;
@@ -125,7 +129,101 @@ export function getTreeFromPersistedCache(sha: string) {
   return stored.then(stored => constructTreeFromStoredTrees(sha, stored));
 }
 
-export async function garbageCollectGitObjects(roots: string[]) {
+const extraRootsSchema = s.record(
+  s.string(),
+  s.object({
+    sha: s.string(),
+    updatedAt: s.coerce(s.date(), s.string(), x => new Date(x)),
+  })
+);
+
+const ExtraRootsContext = createContext<{
+  roots: Map<string, { sha: string; updatedAt: Date }>;
+  set: (branch: string, sha: string) => void;
+  remove: (branch: string) => void;
+}>({
+  roots: new Map(),
+  remove: () => {},
+  set: () => {},
+});
+
+export function useExtraRoots() {
+  return useContext(ExtraRootsContext);
+}
+
+function getExtraRootsKey(config: Config) {
+  return `ks-roots-${
+    config.storage.kind === 'local'
+      ? 'local'
+      : config.storage.kind === 'github'
+      ? serializeRepoConfig(config.storage.repo)
+      : config.cloud?.project || 'cloud'
+  }`;
+}
+
+export function ExtraRootsProvider(props: {
+  children: ReactNode;
+  config: Config;
+}) {
+  const [roots, setRoots] = useState<
+    Map<string, { sha: string; updatedAt: Date }>
+  >(() => getExtraRoots(props.config));
+
+  const context = useMemo(() => {
+    const setVal = (map: Map<string, { sha: string; updatedAt: Date }>) => {
+      setRoots(map);
+      localStorage.setItem(
+        getExtraRootsKey(props.config),
+        JSON.stringify(
+          Object.fromEntries(
+            [...map].map(([k, v]) => [
+              k,
+              { sha: v.sha, updatedAt: v.updatedAt.toISOString() },
+            ])
+          )
+        )
+      );
+    };
+    return {
+      roots,
+      set: (branch: string, sha: string) => {
+        setVal(new Map(roots).set(branch, { sha, updatedAt: new Date() }));
+      },
+      remove: (branch: string) => {
+        const newRoots = new Map(roots);
+        newRoots.delete(branch);
+        setVal(newRoots);
+      },
+    };
+  }, [props.config, roots]);
+  return (
+    <ExtraRootsContext.Provider value={context}>
+      {props.children}
+    </ExtraRootsContext.Provider>
+  );
+}
+export function getExtraRoots(
+  config: Config
+): Map<string, { sha: string; updatedAt: Date }> {
+  const val = localStorage.getItem(getExtraRootsKey(config));
+  if (!val) return new Map();
+  try {
+    const parsed = JSON.parse(val);
+    const result = extraRootsSchema.create(parsed);
+    return new Map(Object.entries(result));
+  } catch {
+    return new Map();
+  }
+}
+
+export async function garbageCollectGitObjects(
+  config: Config,
+  _roots: string[]
+) {
+  const roots = [
+    ..._roots,
+    ...[...getExtraRoots(config).values()].map(x => x.sha),
+  ];
   const treesToDelete = new Map<string, StoredTreeEntry[]>();
   const invalidTrees: IDBValidKey[] = [];
   for (const [sha, tree] of await getStoredTrees()) {
@@ -176,6 +274,11 @@ export function setTreeToPersistedCache(
 ) {
   const allTrees: [string, StoredTreeEntry[]][] = [];
   collectTrees(sha, children, allTrees);
+  if (_storedTreeCache) {
+    for (const [key, value] of allTrees) {
+      _storedTreeCache.set(key, value);
+    }
+  }
   return setMany(allTrees, getTreeStore());
 }
 
@@ -198,6 +301,40 @@ function collectTrees(
   allTrees.push([sha, entries]);
 }
 
-export async function clearObjectCache() {
+export async function clearObjectStore(config: Config) {
+  localStorage.removeItem(getExtraRootsKey(config));
   await Promise.all([clear(getBlobStore()), clear(getTreeStore())]);
+}
+
+export async function writeChangesToLocalObjectStore(opts: {
+  additions: { path: string; contents: Uint8Array }[];
+  initialFiles: string[];
+  unscopedTree: Map<string, TreeNode>;
+}) {
+  const additionPathToSha = new Map(
+    await Promise.all(
+      opts.additions.map(
+        async addition =>
+          [addition.path, await hydrateBlobCache(addition.contents)] as const
+      )
+    )
+  );
+
+  const filesToDelete = new Set(opts.initialFiles);
+  for (const file of opts.additions) {
+    filesToDelete.delete(file.path);
+  }
+
+  const additions = opts.additions.filter(addition => {
+    const sha = additionPathToSha.get(addition.path)!;
+    const existing = getTreeNodeAtPath(opts.unscopedTree, addition.path);
+    return existing?.entry.sha !== sha;
+  });
+
+  const updatedTree = await updateTreeWithChanges(opts.unscopedTree, {
+    additions,
+    deletions: [...filesToDelete],
+  });
+  await setTreeToPersistedCache(updatedTree.sha, updatedTree.tree);
+  return updatedTree.sha;
 }

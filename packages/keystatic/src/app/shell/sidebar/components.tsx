@@ -55,7 +55,7 @@ import {
 import { useViewer } from '../viewer-data';
 import { useThemeContext } from '../theme';
 import { useImageLibraryURL } from '../../../component-blocks/cloud-image-preview';
-import { clearObjectCache } from '../../object-cache';
+import { clearObjectStore } from '../../object-store';
 import { clearDrafts } from '../../persistence';
 import { getCloudAuth } from '../../auth';
 
@@ -208,7 +208,7 @@ export function UserMenu(user: {
           items={menuItems}
           minWidth="scale.2400"
           onAction={async key => {
-            await Promise.all([clearObjectCache(), clearDrafts()]);
+            await Promise.all([clearObjectStore(config), clearDrafts()]);
             switch (key) {
               case 'logout':
                 switch (config.storage.kind) {

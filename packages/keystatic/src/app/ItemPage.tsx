@@ -1,19 +1,16 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { isHotkey } from 'is-hotkey';
 import {
-  FormEvent,
   Key,
   ReactElement,
   ReactNode,
   Suspense,
+  startTransition,
   useCallback,
-  useDeferredValue,
   useEffect,
   useMemo,
   useState,
 } from 'react';
 import * as Y from 'yjs';
-import * as s from 'superstruct';
 
 import { ActionGroup, Item } from '@keystar/ui/action-group';
 import { Badge } from '@keystar/ui/badge';
@@ -40,7 +37,6 @@ import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../config';
 import { ComponentSchema, GenericPreviewProps } from '../form/api';
-import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
 import { getYjsValFromParsedValue } from '../form/yjs-props-value';
 
@@ -49,7 +45,6 @@ import {
   useCreateBranchMutation,
 } from './branch-selection';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
-import { ForkRepoDialog } from './fork-repo';
 import l10nMessages from './l10n/index.json';
 import { NotFoundBoundary, notFound } from './not-found';
 import { getDataFileExtension, getPathPrefix } from './path-utils';
@@ -57,18 +52,17 @@ import { useRouter } from './router';
 import { HeaderBreadcrumbs } from './shell/HeaderBreadcrumbs';
 import { useYjsIfAvailable } from './shell/collab';
 import { useConfig } from './shell/context';
-import { useBaseCommit, useRepositoryId, useBranchInfo } from './shell/data';
+import {
+  useRepositoryId,
+  useBranchInfo,
+  useCurrentUnscopedTree,
+} from './shell/data';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
 import { useSlugFieldInfo } from './slugs';
-import { delDraft, getDraft, setDraft } from './persistence';
 import { PresenceAvatars } from './presence';
-import {
-  serializeEntryToFiles,
-  useDeleteItem,
-  useUpsertItem,
-} from './updating';
+import { serializeEntryToFiles } from './updating';
+import { useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
-import { parseEntry, useItemData } from './useItemData';
 import {
   getBranchPrefix,
   getCollection,
@@ -76,83 +70,78 @@ import {
   getCollectionItemPath,
   getRepoUrl,
   getSlugFromState,
-  isGitHubConfig,
-  useShowRestoredDraftMessage,
 } from './utils';
 import { DataState, LOADING, useData, suspendOnData } from './useData';
 import { useYJsValue } from './useYJsValue';
+import { getInitialPropsValue } from '../form/initial-values';
+import {
+  useExtraRoots,
+  setTreeToPersistedCache,
+  writeChangesToLocalObjectStore,
+} from './object-store';
 import {
   useCollection,
   usePreviewProps,
   usePreviewPropsFromY,
 } from './preview-props';
 import { ErrorBoundary } from './error-boundary';
+import { updateTreeWithChanges } from './trees';
 
 type ItemPageProps = {
   collection: string;
   config: Config;
   initialFiles: string[];
   initialState: Record<string, unknown>;
+  committedState: Record<string, unknown> | null;
   itemSlug: string;
   localTreeKey: string;
   basePath: string;
 };
 
-const storedValSchema = s.type({
-  version: s.literal(1),
-  savedAt: s.date(),
-  slug: s.string(),
-  beforeTreeKey: s.string(),
-  files: s.map(s.string(), s.instance(Uint8Array)),
-});
-
 function ItemPageInner(
   props: ItemPageProps & {
-    onUpdate: (options?: { branch: string; sha: string }) => Promise<boolean>;
     onReset: () => void;
-    updateResult: ReturnType<typeof useUpsertItem>[0];
-    onResetUpdateItem: () => void;
     previewProps: GenericPreviewProps<ComponentSchema, undefined>;
     hasChanged: boolean;
     state: Record<string, unknown>;
   }
 ) {
-  const {
-    collection,
-    config,
-    itemSlug,
-    updateResult,
-    onUpdate: parentOnUpdate,
-  } = props;
-  const { collectionConfig, schema } = useCollection(collection);
+  const { collection, config, itemSlug } = props;
+  const { collectionConfig } = useCollection(collection);
 
   const router = useRouter();
-  const baseCommit = useBaseCommit();
   const currentBasePath = getCollectionItemPath(config, collection, itemSlug);
   const formatInfo = getCollectionFormat(config, collection);
+  const extraRoots = useExtraRoots();
+  const unscopedTree = useCurrentUnscopedTree();
+  const currentUnscopedTree =
+    unscopedTree.kind === 'loaded' ? unscopedTree.data : null;
   const branchInfo = useBranchInfo();
-  const [forceValidation, setForceValidation] = useState(false);
   const previewHref = collectionConfig.previewUrl
     ? collectionConfig.previewUrl
         .replace('{slug}', props.itemSlug)
         .replace('{branch}', branchInfo.currentBranch)
     : undefined;
-  const { push, replace } = router;
 
-  const slugInfo = useSlugFieldInfo(collection, itemSlug);
-
-  const [deleteResult, deleteItem, resetDeleteItem] = useDeleteItem({
-    initialFiles: props.initialFiles,
-    storage: config.storage,
-    basePath: currentBasePath,
-  });
-
+  const { push } = router;
   const onDelete = useEventCallback(async () => {
-    // TODO: delete multiplayer draft
-    if (await deleteItem()) {
-      push(`${props.basePath}/collection/${encodeURIComponent(collection)}`);
+    if (currentUnscopedTree) {
+      // TODO: delete multiplayer draft
+      const newTree = await updateTreeWithChanges(currentUnscopedTree.tree, {
+        deletions: props.initialFiles.map(
+          x => (getPathPrefix(props.config.storage) ?? '') + x
+        ),
+        additions: [],
+      });
+      await setTreeToPersistedCache(newTree.sha, newTree.tree);
+      extraRoots.set(branchInfo.currentBranch, newTree.sha);
+      router.push(
+        `${props.basePath}/collection/${encodeURIComponent(collection)}`
+      );
     }
   });
+
+  const slugInfo = useSlugFieldInfo(collection, itemSlug);
 
   const onDuplicate = () => {
     push(
@@ -161,25 +150,6 @@ function ItemPageInner(
       )}/create?duplicate=${itemSlug}`
     );
   };
-  const isSavingDisabled = updateResult.kind === 'loading' || !props.hasChanged;
-
-  const onUpdate = useEventCallback(async () => {
-    if (isSavingDisabled) return false;
-    if (!clientSideValidateProp(schema, props.state, slugInfo)) {
-      setForceValidation(true);
-      return false;
-    }
-    const slug = getSlugFromState(collectionConfig, props.state);
-    const hasUpdated = await parentOnUpdate();
-    if (hasUpdated && slug !== itemSlug) {
-      replace(
-        `${props.basePath}/collection/${encodeURIComponent(
-          collection
-        )}/item/${encodeURIComponent(slug)}`
-      );
-    }
-    return hasUpdated;
-  });
 
   const viewHref =
     config.storage.kind !== 'local'
@@ -194,30 +164,11 @@ function ItemPageInner(
         }`
       : undefined;
 
-  const formID = 'item-edit-form';
-
-  // allow shortcuts "cmd+s" and "ctrl+s" to save
-  useEffect(() => {
-    const listener = (event: KeyboardEvent) => {
-      if (updateResult.kind === 'loading') {
-        return;
-      }
-      if (isHotkey('mod+s', event)) {
-        event.preventDefault();
-        onUpdate();
-      }
-    };
-    document.addEventListener('keydown', listener);
-    return () => document.removeEventListener('keydown', listener);
-  }, [updateResult.kind, onUpdate]);
-
   return (
     <>
       <ItemPageShell
         headerActions={
           <HeaderActions
-            formID={formID}
-            isLoading={updateResult.kind === 'loading'}
             hasChanged={props.hasChanged}
             onDelete={onDelete}
             onDuplicate={onDuplicate}
@@ -228,138 +179,28 @@ function ItemPageInner(
         }
         {...props}
       >
-        {updateResult.kind === 'error' && (
-          <Notice tone="critical">{updateResult.error.message}</Notice>
-        )}
-        {deleteResult.kind === 'error' && (
-          <Notice tone="critical">{deleteResult.error.message}</Notice>
-        )}
-        <Box
-          id={formID}
-          height="100%"
-          minHeight={0}
-          minWidth={0}
-          elementType="form"
-          onSubmit={(event: FormEvent) => {
-            if (event.target !== event.currentTarget) return;
-            event.preventDefault();
-            onUpdate();
-          }}
-        >
+        <Box height="100%" minHeight={0} minWidth={0}>
           <FormForEntry
             previewProps={props.previewProps as any}
-            forceValidation={forceValidation}
+            forceValidation
             entryLayout={collectionConfig.entryLayout}
             formatInfo={formatInfo}
             slugField={slugInfo}
           />
         </Box>
-        <DialogContainer
-          // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since
-          // this doesn't open on click but after doing a network request and it failing and manually wiring about a popover and modal would be a pain
-          onDismiss={props.onResetUpdateItem}
-        >
-          {updateResult.kind === 'needs-new-branch' && (
-            <CreateBranchDuringUpdateDialog
-              branchOid={baseCommit}
-              onCreate={async newBranch => {
-                const itemBasePath = `/keystatic/branch/${encodeURIComponent(
-                  newBranch
-                )}/collection/${encodeURIComponent(collection)}/item/`;
-                router.push(itemBasePath + encodeURIComponent(itemSlug));
-                const slug = getSlugFromState(collectionConfig, props.state);
-
-                const hasUpdated = await parentOnUpdate({
-                  branch: newBranch,
-                  sha: baseCommit,
-                });
-                if (hasUpdated && slug !== itemSlug) {
-                  router.replace(itemBasePath + encodeURIComponent(slug));
-                }
-              }}
-              reason={updateResult.reason}
-              onDismiss={props.onResetUpdateItem}
-            />
-          )}
-        </DialogContainer>
-        <DialogContainer
-          // ideally this would be a popover on desktop but using a DialogTrigger
-          // wouldn't work since this doesn't open on click but after doing a
-          // network request and it failing and manually wiring about a popover
-          // and modal would be a pain
-          onDismiss={props.onResetUpdateItem}
-        >
-          {updateResult.kind === 'needs-fork' &&
-            isGitHubConfig(props.config) && (
-              <ForkRepoDialog
-                onCreate={async () => {
-                  const slug = getSlugFromState(collectionConfig, props.state);
-                  const hasUpdated = await props.onUpdate();
-                  if (hasUpdated && slug !== itemSlug) {
-                    router.replace(
-                      `${props.basePath}/collection/${encodeURIComponent(
-                        collection
-                      )}/item/${encodeURIComponent(slug)}`
-                    );
-                  }
-                }}
-                onDismiss={props.onResetUpdateItem}
-                config={props.config}
-              />
-            )}
-        </DialogContainer>
-        <DialogContainer
-          // ideally this would be a popover on desktop but using a DialogTrigger
-          // wouldn't work since this doesn't open on click but after doing a
-          // network request and it failing and manually wiring about a popover
-          // and modal would be a pain
-          onDismiss={resetDeleteItem}
-        >
-          {deleteResult.kind === 'needs-fork' &&
-            isGitHubConfig(props.config) && (
-              <ForkRepoDialog
-                onCreate={async () => {
-                  await deleteItem();
-                  router.push(
-                    `${props.basePath}/collection/${encodeURIComponent(
-                      collection
-                    )}`
-                  );
-                }}
-                onDismiss={resetDeleteItem}
-                config={props.config}
-              />
-            )}
-        </DialogContainer>
       </ItemPageShell>
     </>
   );
 }
 
-function LocalItemPage(
-  props: ItemPageProps & {
-    draft:
-      | { state: Record<string, unknown>; savedAt: Date; treeKey: string }
-      | undefined;
-  }
-) {
-  const {
-    collection,
-    config,
-    initialFiles,
-    initialState,
-    localTreeKey,
-    draft,
-  } = props;
+function LocalItemPage(props: ItemPageProps) {
+  const { collection, config, initialState, localTreeKey } = props;
   const { collectionConfig, schema } = useCollection(collection);
 
   const [{ state, localTreeKey: localTreeKeyInState }, setState] = useState({
-    state: draft?.state ?? initialState,
+    state: initialState,
     localTreeKey,
   });
-
-  useShowRestoredDraftMessage(draft, state, localTreeKey);
-
   if (localTreeKeyInState !== localTreeKey) {
     setState({ state: initialState, localTreeKey });
   }
@@ -379,49 +220,63 @@ function LocalItemPage(
   const previewProps = usePreviewProps(schema, onPreviewPropsChange, state);
 
   const hasChanged = useHasChanged({
-    initialState,
+    initialState: props.committedState,
     schema,
-    state,
+    state: props.initialState,
     slugField: collectionConfig.slugField,
   });
 
   const slug = getSlugFromState(collectionConfig, state);
-  const formatInfo = getCollectionFormat(config, collection);
   const futureBasePath = getCollectionItemPath(config, collection, slug);
-  const [updateResult, _update, resetUpdateItem] = useUpsertItem({
-    state,
-    initialFiles,
-    config,
-    schema: collectionConfig.schema,
-    basePath: futureBasePath,
-    format: formatInfo,
-    currentLocalTreeKey: localTreeKey,
-    slug: { field: collectionConfig.slugField, value: slug },
-  });
+
+  const unscopedTreeData = useCurrentUnscopedTree();
+  const branchInfo = useBranchInfo();
+  const extraRoots = useExtraRoots();
+  const { replace } = useRouter();
 
   useEffect(() => {
-    const key = ['collection', collection, props.itemSlug] as const;
-    if (hasChanged) {
-      const serialized = serializeEntryToFiles({
-        basePath: futureBasePath,
-        config,
-        format: getCollectionFormat(config, collection),
-        schema: collectionConfig.schema,
-        slug: { field: collectionConfig.slugField, value: slug },
-        state,
+    if (unscopedTreeData.kind !== 'loaded') return;
+    const unscopedTree = unscopedTreeData.data.tree;
+    const pathPrefix = getPathPrefix(config.storage) ?? '';
+    let additions = serializeEntryToFiles({
+      basePath: futureBasePath,
+      config,
+      format: getCollectionFormat(config, collection),
+      schema: collectionConfig.schema,
+      slug: { field: collectionConfig.slugField, value: slug },
+      state,
+    }).map(addition => ({
+      ...addition,
+      path: pathPrefix + addition.path,
+    }));
+
+    let shouldSet = true;
+
+    (async () => {
+      const newTreeSha = await writeChangesToLocalObjectStore({
+        additions,
+        initialFiles: props.initialFiles.map(x => pathPrefix + x),
+        unscopedTree,
       });
-      const files = new Map(serialized.map(x => [x.path, x.contents]));
-      const data: s.Infer<typeof storedValSchema> = {
-        beforeTreeKey: localTreeKey,
-        slug,
-        files,
-        savedAt: new Date(),
-        version: 1,
-      };
-      setDraft(key, data);
-    } else {
-      delDraft(key);
-    }
+      if (
+        shouldSet &&
+        newTreeSha !== extraRoots.roots.get(branchInfo.currentBranch)?.sha
+      ) {
+        startTransition(() => {
+          extraRoots.set(branchInfo.currentBranch, newTreeSha);
+          if (slug !== props.itemSlug) {
+            replace(
+              `${props.basePath}/collection/${encodeURIComponent(
+                collection
+              )}/item/${encodeURIComponent(slug)}`
+            );
+          }
+        });
+      }
+    })();
+    return () => {
+      shouldSet = false;
+    };
   }, [
     collection,
     collectionConfig,
@@ -432,19 +287,24 @@ function LocalItemPage(
     slug,
     state,
     hasChanged,
+    props.initialFiles,
+    unscopedTreeData,
+    extraRoots,
+    branchInfo.currentBranch,
+    props.basePath,
+    replace,
   ]);
-  const update = useEventCallback(_update);
 
   const onReset = () => {
-    setState({ state: initialState, localTreeKey });
+    setState({
+      state: props.committedState ?? getInitialPropsValue(schema),
+      localTreeKey,
+    });
   };
   return (
     <ItemPageInner
       {...props}
-      onUpdate={update}
       onReset={onReset}
-      updateResult={updateResult}
-      onResetUpdateItem={resetUpdateItem}
       previewProps={previewProps}
       state={state}
       hasChanged={hasChanged}
@@ -453,16 +313,11 @@ function LocalItemPage(
 }
 
 function CollabItemPage(props: ItemPageProps & { map: Y.Map<any> }) {
-  const { collection, config, initialFiles, initialState, localTreeKey } =
-    props;
+  const { collection, initialState } = props;
   const { collectionConfig, schema } = useCollection(collection);
   const state = useYJsValue(schema, props.map) as Record<string, unknown>;
 
   const previewProps = usePreviewPropsFromY(schema, props.map, state);
-
-  const slug = getSlugFromState(collectionConfig, state);
-
-  const formatInfo = getCollectionFormat(props.config, props.collection);
 
   const hasChanged = useHasChanged({
     initialState,
@@ -471,24 +326,15 @@ function CollabItemPage(props: ItemPageProps & { map: Y.Map<any> }) {
     slugField: collectionConfig.slugField,
   });
 
-  const futureBasePath = getCollectionItemPath(config, collection, slug);
-  const [updateResult, _update, resetUpdateItem] = useUpsertItem({
-    state,
-    initialFiles,
-    config,
-    schema: collectionConfig.schema,
-    basePath: futureBasePath,
-    format: formatInfo,
-    currentLocalTreeKey: localTreeKey,
-    slug: { field: collectionConfig.slugField, value: slug },
-  });
-
-  const update = useEventCallback(_update);
-
   const onReset = () => {
     props.map.doc?.transact(() => {
       for (const [key, value] of Object.entries(collectionConfig.schema)) {
-        const val = getYjsValFromParsedValue(value, props.initialState[key]);
+        const val = getYjsValFromParsedValue(
+          value,
+          props.committedState === null
+            ? getInitialPropsValue(value)
+            : props.committedState[key]
+        );
         props.map.set(key, val);
       }
     });
@@ -496,10 +342,7 @@ function CollabItemPage(props: ItemPageProps & { map: Y.Map<any> }) {
   return (
     <ItemPageInner
       {...props}
-      onUpdate={update}
       onReset={onReset}
-      updateResult={updateResult}
-      onResetUpdateItem={resetUpdateItem}
       previewProps={previewProps}
       state={state}
       hasChanged={hasChanged}
@@ -508,27 +351,16 @@ function CollabItemPage(props: ItemPageProps & { map: Y.Map<any> }) {
 }
 
 function HeaderActions(props: {
-  formID: string;
   hasChanged: boolean;
-  isLoading: boolean;
   onDelete: () => void;
   onDuplicate: () => void;
   onReset: () => void;
   previewHref?: string;
   viewHref?: string;
 }) {
-  let {
-    formID,
-    hasChanged,
-    isLoading,
-    onDelete,
-    onDuplicate,
-    onReset,
-    previewHref,
-    viewHref,
-  } = props;
+  let { hasChanged, onDelete, onDuplicate, onReset, previewHref, viewHref } =
+    props;
   const isBelowDesktop = useMediaQuery(breakpointQueries.below.desktop);
-  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const [deleteAlertIsOpen, setDeleteAlertOpen] = useState(false);
   const [duplicateAlertIsOpen, setDuplicateAlertOpen] = useState(false);
   const menuActions = useMemo(() => {
@@ -583,17 +415,6 @@ function HeaderActions(props: {
   }, [previewHref, viewHref]);
 
   const indicatorElement = (() => {
-    if (isLoading) {
-      return (
-        <ProgressCircle
-          aria-label="Saving changes"
-          isIndeterminate
-          size="small"
-          alignSelf="center"
-        />
-      );
-    }
-
     if (hasChanged) {
       return isBelowDesktop ? (
         <Box
@@ -655,14 +476,6 @@ function HeaderActions(props: {
           </Item>
         )}
       </ActionGroup>
-      <Button
-        form={formID}
-        isDisabled={isLoading}
-        prominence="high"
-        type="submit"
-      >
-        {stringFormatter.format('save')}
-      </Button>
       <DialogContainer onDismiss={() => setDeleteAlertOpen(false)}>
         {deleteAlertIsOpen && (
           <AlertDialog
@@ -799,40 +612,7 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
     return { slug: props.itemSlug, field: collectionConfig.slugField };
   }, [collectionConfig.slugField, props.itemSlug]);
 
-  const draftData = useData(
-    useCallback(async () => {
-      try {
-        const raw = await getDraft([
-          'collection',
-          props.collection,
-          props.itemSlug,
-        ]);
-        if (!raw) throw new Error('No draft found');
-        const stored = storedValSchema.create(raw);
-        const parsed = parseEntry(
-          {
-            config: props.config,
-            dirpath: getCollectionItemPath(
-              props.config,
-              props.collection,
-              stored.slug
-            ),
-            format: getCollectionFormat(props.config, props.collection),
-            schema: collectionConfig.schema,
-            slug: { field: collectionConfig.slugField, slug: stored.slug },
-          },
-          stored.files
-        );
-        return {
-          state: parsed.initialState,
-          savedAt: stored.savedAt,
-          treeKey: stored.beforeTreeKey,
-        };
-      } catch {}
-    }, [collectionConfig, props.collection, props.config, props.itemSlug])
-  );
-
-  const itemData = useItemData({
+  const itemDataConfig = {
     config: props.config,
     dirpath: getCollectionItemPath(
       props.config,
@@ -842,7 +622,9 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
     schema: collectionConfig.schema,
     format,
     slug: slugInfo,
-  });
+  };
+  const itemData = useItemData(itemDataConfig);
+  const committedItemData = useItemData(itemDataConfig, 'committed');
 
   const branchInfo = useBranchInfo();
 
@@ -914,7 +696,7 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
         >
           <ItemPageWrapper
             mapData={mapData}
-            draftData={draftData}
+            committedItemData={committedItemData}
             itemData={itemData}
             {...props}
           />
@@ -926,11 +708,16 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
 
 function ItemPageWrapper(
   props: ItemPageWrapperProps & {
-    draftData: DataState<
-      { state: any; savedAt: Date; treeKey: string } | undefined
-    >;
     mapData: DataState<Y.Map<any> | undefined>;
     itemData: DataState<
+      | 'not-found'
+      | {
+          initialState: Record<string, unknown>;
+          initialFiles: string[];
+          localTreeKey: string;
+        }
+    >;
+    committedItemData: DataState<
       | 'not-found'
       | {
           initialState: Record<string, unknown>;
@@ -941,10 +728,10 @@ function ItemPageWrapper(
   }
 ) {
   const collectionConfig = getCollection(props.config, props.collection);
-  const deferredDraftData = useDeferredValue(props.draftData);
   const itemData = suspendOnData(props.itemData);
   if (itemData === 'not-found') notFound();
   const mapData = suspendOnData(props.mapData);
+  const committedData = suspendOnData(props.committedItemData);
 
   useMemo(() => {
     if (!mapData || mapData.size) {
@@ -960,7 +747,9 @@ function ItemPageWrapper(
     });
   }, [collectionConfig.schema, itemData, mapData]);
 
-  const loadedDraft = suspendOnData(deferredDraftData);
+  const committedState =
+    committedData === 'not-found' ? null : committedData.initialState;
+
   if (mapData) {
     return (
       <CollabItemPage
@@ -971,6 +760,7 @@ function ItemPageWrapper(
         initialState={itemData.initialState}
         initialFiles={itemData.initialFiles}
         localTreeKey={itemData.localTreeKey}
+        committedState={committedState}
         map={mapData}
       />
     );
@@ -983,8 +773,8 @@ function ItemPageWrapper(
       itemSlug={props.itemSlug}
       initialState={itemData.initialState}
       initialFiles={itemData.initialFiles}
-      draft={loadedDraft}
-      localTreeKey={itemData.localTreeKey}
+      localTreeKey={props.itemSlug}
+      committedState={committedState}
     />
   );
 }

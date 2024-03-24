@@ -29,6 +29,7 @@ import { createUrqlClient } from './provider';
 import { serializeProps } from '../form/serialize-props';
 import { scopeEntriesWithPathPrefix } from './shell/path-prefix';
 import { base64Encode } from '#base64';
+import { useConfig } from './shell/context';
 
 const textEncoder = new TextEncoder();
 
@@ -105,6 +106,171 @@ export function serializeEntryToFiles(args: {
       contents: file.contents,
     })),
   ];
+}
+
+export function useCommit() {
+  const [state, setState] = useState<
+    | { kind: 'idle' }
+    | { kind: 'updated' }
+    | { kind: 'loading' }
+    | { kind: 'needs-fork' }
+    | { kind: 'error'; error: Error }
+    | { kind: 'needs-new-branch'; reason: string }
+  >({
+    kind: 'idle',
+  });
+  const config = useConfig();
+  const baseCommit = useBaseCommit();
+  const branchInfo = useContext(BranchInfoContext);
+  const setTreeSha = useSetTreeSha();
+  const [, mutate] = useMutation(createCommitMutation);
+  const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
+  const appSlug = useContext(AppSlugContext);
+  const unscopedTreeData = useCurrentUnscopedTree();
+
+  return [
+    state,
+    async (
+      opts: {
+        additions: { path: string; contents: Uint8Array }[];
+        deletions: string[];
+        commitMessage: string;
+      },
+      override?: { sha: string; branch: string }
+    ): Promise<boolean> => {
+      try {
+        const unscopedTree =
+          unscopedTreeData.kind === 'loaded'
+            ? unscopedTreeData.data.tree
+            : undefined;
+        if (!unscopedTree) return false;
+        if (
+          repoWithWriteAccess === null &&
+          config.storage.kind === 'github' &&
+          appSlug?.value
+        ) {
+          setState({ kind: 'needs-fork' });
+          return false;
+        }
+        setState({ kind: 'loading' });
+
+        const deletions: { path: string }[] = [...opts.deletions].map(path => ({
+          path,
+        }));
+        if (
+          config.storage.kind === 'github' ||
+          config.storage.kind === 'cloud'
+        ) {
+          const branch = {
+            branchName: override?.branch ?? branchInfo.currentBranch,
+            repositoryNameWithOwner: `${repoWithWriteAccess!.owner}/${
+              repoWithWriteAccess!.name
+            }`,
+          };
+          const runMutation = (expectedHeadOid: string) =>
+            mutate({
+              input: {
+                branch,
+                expectedHeadOid,
+                message: { headline: opts.commitMessage },
+                fileChanges: {
+                  additions: opts.additions.map(addition => ({
+                    ...addition,
+                    contents: base64UrlEncode(addition.contents),
+                  })),
+                  deletions,
+                },
+              },
+            });
+          let result = await runMutation(override?.sha ?? baseCommit);
+          // const gqlError = result.error?.graphQLErrors[0]?.originalError;
+          // if (gqlError && 'type' in gqlError) {
+          //   if (gqlError.type === 'BRANCH_PROTECTION_RULE_VIOLATION') {
+          //     setState({
+          //       kind: 'needs-new-branch',
+          //       reason:
+          //         'Changes must be made via pull request to this branch. Create a new branch to save changes.',
+          //     });
+          //     return false;
+          //   }
+          //   if (gqlError.type === 'STALE_DATA') {
+          //     // we don't want this to go into the cache yet
+          //     // so we create a new client just for this
+          //     const refData = await createUrqlClient(config)
+          //       .query(FetchRef, {
+          //         owner: repoWithWriteAccess!.owner,
+          //         name: repoWithWriteAccess!.name,
+          //         ref: `refs/heads/${branchInfo.currentBranch}`,
+          //       })
+          //       .toPromise();
+          //     if (!refData.data?.repository?.ref?.target) {
+          //       throw new Error('Branch not found');
+          //     }
+
+          //     const tree = scopeEntriesWithPathPrefix(
+          //       await fetchGitHubTreeData(
+          //         refData.data.repository.ref.target.oid,
+          //         config
+          //       ),
+          //       config
+          //     );
+          //     if (treeKey === args.currentLocalTreeKey) {
+          //       result = await runMutation(
+          //         refData.data.repository.ref.target.oid
+          //       );
+          //     } else {
+          //       setState({
+          //         kind: 'needs-new-branch',
+          //         reason:
+          //           'This entry has been updated since it was opened. Create a new branch to save changes.',
+          //       });
+          //       return false;
+          //     }
+          //   }
+          // }
+
+          if (result.error) {
+            throw result.error;
+          }
+          const target = result.data?.createCommitOnBranch?.ref?.target;
+          if (target) {
+            setState({ kind: 'updated' });
+            return true;
+          }
+          throw new Error('Failed to update');
+        } else {
+          const res = await fetch('/api/keystatic/update', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'no-cors': '1',
+            },
+            body: JSON.stringify({
+              additions: opts.additions.map(addition => ({
+                ...addition,
+                contents: base64UrlEncode(addition.contents),
+              })),
+              deletions,
+            }),
+          });
+          if (!res.ok) {
+            throw new Error(await res.text());
+          }
+          const newTree: TreeEntry[] = await res.json();
+          const { tree } = await hydrateTreeCacheWithEntries(newTree);
+          setTreeSha(await treeSha(tree));
+          setState({ kind: 'updated' });
+          return true;
+        }
+      } catch (err) {
+        setState({ kind: 'error', error: err as Error });
+        return false;
+      }
+    },
+    () => {
+      setState({ kind: 'idle' });
+    },
+  ] as const;
 }
 
 export function useUpsertItem(args: {
@@ -325,7 +491,7 @@ export function useUpsertItem(args: {
   ] as const;
 }
 
-const createCommitMutation = gql`
+export const createCommitMutation = gql`
   mutation CreateCommit($input: CreateCommitOnBranchInput!) {
     createCommitOnBranch(input: $input) {
       ref {
@@ -446,7 +612,7 @@ export function useDeleteItem(args: {
   ] as const;
 }
 
-const FetchRef = gql`
+export const FetchRef = gql`
   query FetchRef($owner: String!, $name: String!, $ref: String!) {
     repository(owner: $owner, name: $name) {
       id

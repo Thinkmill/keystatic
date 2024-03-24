@@ -32,7 +32,7 @@ import { serializeRepoConfig } from './repo-config';
 import {
   getBlobFromPersistedCache,
   setBlobToPersistedCache,
-} from './object-cache';
+} from './object-store';
 
 class TrackedMap<K, V> extends Map<K, V> {
   #onGet: (key: K) => void;
@@ -47,6 +47,58 @@ class TrackedMap<K, V> extends Map<K, V> {
     this.#onGet(key);
     return super.get(key);
   }
+}
+
+export function loadItemData(
+  args: UseItemDataArgs,
+  tree: Map<string, TreeNode>,
+  baseCommit: string,
+  branchInfo: { mainOwner: string; mainRepo: string },
+  locationsForTreeKey: string[],
+  isRepoPrivate: boolean,
+  localTreeKey: string
+) {
+  const allBlobs = locationsForTreeKey
+    .flatMap(dir => {
+      const node = getTreeNodeAtPath(tree, dir);
+      if (!node) return [];
+      return node.children ? getAllFilesInTree(node.children) : [node.entry];
+    })
+    .map(entry => {
+      const blob = fetchBlob(
+        args.config,
+        entry.sha,
+        entry.path,
+        baseCommit,
+        isRepoPrivate,
+        { owner: branchInfo.mainOwner, name: branchInfo.mainRepo }
+      );
+      if (blob instanceof Uint8Array) {
+        return [entry.path, blob] as const;
+      }
+      return blob.then(blob => [entry.path, blob] as const);
+    });
+
+  if (
+    allBlobs.every((x): x is readonly [string, Uint8Array] => Array.isArray(x))
+  ) {
+    const { initialFiles, initialState } = parseEntry(args, new Map(allBlobs));
+
+    return {
+      initialState,
+      initialFiles,
+      localTreeKey,
+    };
+  }
+
+  return Promise.all(allBlobs).then(async data => {
+    const { initialState, initialFiles } = parseEntry(args, new Map(data));
+    return {
+      initialState,
+      initialFiles,
+      localTreeKey,
+    };
+  });
 }
 
 export function parseEntry(
@@ -200,8 +252,11 @@ function getAllFilesInTree(tree: Map<string, TreeNode>): TreeEntry[] {
   );
 }
 
-export function useItemData(args: UseItemDataArgs) {
-  const { current: currentBranch } = useTree();
+export function useItemData(
+  args: UseItemDataArgs,
+  branch: 'current' | 'committed' = 'current'
+) {
+  const { [branch]: currentBranch } = useTree();
   const baseCommit = useBaseCommit();
   const isRepoPrivate = useIsRepoPrivate();
   const branchInfo = useBranchInfo();
@@ -227,7 +282,6 @@ export function useItemData(args: UseItemDataArgs) {
     // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localTreeKey, locationsForTreeKey]);
-
   const hasLoaded = currentBranch.kind === 'loaded';
 
   return useData(
@@ -254,54 +308,16 @@ export function useItemData(args: UseItemDataArgs) {
         schema: args.schema,
         slug: args.slug,
       };
-      const allBlobs = locationsForTreeKey
-        .flatMap(dir => {
-          const node = getTreeNodeAtPath(tree, dir);
-          if (!node) return [];
-          return node.children
-            ? getAllFilesInTree(node.children)
-            : [node.entry];
-        })
-        .map(entry => {
-          const blob = fetchBlob(
-            args.config,
-            entry.sha,
-            entry.path,
-            baseCommit,
-            isRepoPrivate,
-            { owner: branchInfo.mainOwner, name: branchInfo.mainRepo }
-          );
-          if (blob instanceof Uint8Array) {
-            return [entry.path, blob] as const;
-          }
-          return blob.then(blob => [entry.path, blob] as const);
-        });
 
-      if (
-        allBlobs.every((x): x is readonly [string, Uint8Array] =>
-          Array.isArray(x)
-        )
-      ) {
-        const { initialFiles, initialState } = parseEntry(
-          _args,
-          new Map(allBlobs)
-        );
-
-        return {
-          initialState,
-          initialFiles,
-          localTreeKey,
-        };
-      }
-
-      return Promise.all(allBlobs).then(async data => {
-        const { initialState, initialFiles } = parseEntry(_args, new Map(data));
-        return {
-          initialState,
-          initialFiles,
-          localTreeKey,
-        };
-      });
+      return loadItemData(
+        _args,
+        tree,
+        baseCommit,
+        { mainOwner: branchInfo.mainOwner, mainRepo: branchInfo.mainRepo },
+        locationsForTreeKey,
+        isRepoPrivate,
+        localTreeKey
+      );
     }, [
       hasLoaded,
       tree,
@@ -373,12 +389,10 @@ export function fetchBlob(
 
   const promise = (async () => {
     const isLocal = config.storage.kind === 'local';
-    if (!isLocal) {
-      const stored = await getBlobFromPersistedCache(oid);
-      if (stored) {
-        blobCache.set(oid, stored);
-        return stored;
-      }
+    const stored = await getBlobFromPersistedCache(oid);
+    if (stored) {
+      blobCache.set(oid, stored);
+      return stored;
     }
     return (
       isLocal
