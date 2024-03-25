@@ -23,6 +23,22 @@ Keystatic will store content and retrieve it for you using the [Reader API](/doc
 
 You can use community tools or build your own.
 
+---
+
+## Use .md files instead of .mdoc
+
+The `extension` lets you you to use `.md` files instead of `.mdoc` for Markdoc collections or singletons:
+
+```diff
+content: fields.markdoc({
+  label: 'Content',
++  extension: 'md',
+  // ...
+})
+```
+
+---
+
 ## Content components
 
 The `markdoc` field uses the new-generation and more capable [content components](/docs/content-components):
