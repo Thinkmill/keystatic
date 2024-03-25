@@ -1,5 +1,13 @@
 # @example/next-pages
 
+## 0.0.101
+
+### Patch Changes
+
+- Updated dependencies [847b9163]
+  - @keystatic/core@0.5.9
+  - @keystatic/next@5.0.0
+
 ## 0.0.100
 
 ### Patch Changes

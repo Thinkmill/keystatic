@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.5.9
+
+### Patch Changes
+
+- 847b9163: Allow missing frontmatter
+
 ## 0.5.8
 
 ### Patch Changes
