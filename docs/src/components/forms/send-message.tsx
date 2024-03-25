@@ -1,24 +1,19 @@
 import { ArrowSmallRightIcon } from '@heroicons/react/24/solid';
 
 import Button from '../button';
-import { useFormSubmission } from '../../hooks/useFormSubmission';
-import { SEND_MESSAGE_TABLE_ID } from './table-id';
+import { useState } from 'react';
 
 export default function SendMessageForm() {
-  const { sendForm, isLoading } = useFormSubmission();
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    sendForm({
-      tableId: SEND_MESSAGE_TABLE_ID,
-      form,
-    });
-  }
-
+  const [isLoading, setIsLoading] = useState(false);
   return (
-    <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
-      <input type="hidden" name="form-type" value="send-message" />
+    <form
+      className="flex flex-col gap-8"
+      method="POST"
+      action="https://forms.keystatic.cloud/contact"
+      onSubmit={() => {
+        setIsLoading(true);
+      }}
+    >
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-2">
           <label className="block text-sm font-medium" htmlFor="name">
@@ -64,25 +59,9 @@ export default function SendMessageForm() {
       </p>
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            className="form-input h-6 w-6 rounded-md border-2 border-black p-1 text-iris-11"
-            id="opt-in-updates"
-            name="opt-in-updates"
-          />
+          <input type="checkbox" id="opt-in-updates" name="optedInToUpdates" />
           <label htmlFor="opt-in-updates" className="text-sm">
             I want to receive updates about our launch
-          </label>
-        </div>
-        <div className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            className="form-input h-6 w-6 rounded-md border-2 border-black p-1 text-iris-11"
-            id="opt-in-channel"
-            name="opt-in-channel"
-          />
-          <label htmlFor="opt-in-channel" className="text-sm">
-            I want to receive an invite to our early access channel
           </label>
         </div>
       </div>
