@@ -31,14 +31,14 @@ const reader = createReader(process.cwd(), keystaticConfig);
 
 ### GitHub Repository
 
-To read from GitHub, import the `createGithubReader` function, as well as your Keystatic config file:
+To read from GitHub, import the `createGitHubReader` function, as well as your Keystatic config file:
 
 ```javascript
-import { createGithubReader } from '@keystatic/core/reader/github';
+import { createGitHubReader } from '@keystatic/core/reader/github';
 import keystaticConfig from 'relative/path/to/your/keystatic.config';
 ```
 
-You can then create a new `reader` by calling `createGithubReader` and passing it the following arguments:
+You can then create a new `reader` by calling `createGitHubReader` and passing it the following arguments:
 
 1. The Keystatic config
 2. An options object containing:
