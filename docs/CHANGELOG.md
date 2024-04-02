@@ -1,5 +1,13 @@
 # keystatic-docs
 
+## 1.0.28
+
+### Patch Changes
+
+- Updated dependencies [e1ebbdae]
+  - @keystatic/core@0.5.10
+  - @keystatic/next@5.0.0
+
 ## 1.0.27
 
 ### Patch Changes
