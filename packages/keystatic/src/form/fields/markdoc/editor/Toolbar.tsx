@@ -110,13 +110,15 @@ function LinkButton(props: { link: MarkType }) {
             command={(state, dispatch) => {
               const aroundFrom = markAround(state.selection.$from, props.link);
               const aroundTo = markAround(state.selection.$to, props.link);
-
-              if (aroundFrom && aroundFrom.mark === aroundTo?.mark) {
+              if (
+                aroundFrom &&
+                (!aroundTo || aroundFrom.mark === aroundTo?.mark)
+              ) {
                 if (dispatch) {
                   dispatch(
                     state.tr.removeMark(
                       aroundFrom.from,
-                      aroundTo.to,
+                      aroundTo?.to ?? aroundFrom.to,
                       props.link
                     )
                   );
