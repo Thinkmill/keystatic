@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.5.10
+
+### Patch Changes
+
+- e1ebbdae: Fix link button in editor toolbar opening modal when unlinking
+
 ## 0.5.9
 
 ### Patch Changes

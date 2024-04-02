@@ -1,5 +1,13 @@
 # @voussoir/docs
 
+## 0.0.30
+
+### Patch Changes
+
+- Updated dependencies [e1ebbdae]
+  - @keystatic/core@0.5.10
+  - @keystatic/next@5.0.0
+
 ## 0.0.29
 
 ### Patch Changes
