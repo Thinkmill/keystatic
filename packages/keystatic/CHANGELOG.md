@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.5.11
+
+### Patch Changes
+
+- dbb9d3cb: Updates lru-cache to latest version
+
 ## 0.5.10
 
 ### Patch Changes
