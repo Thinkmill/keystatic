@@ -36,7 +36,7 @@ import {
   MaybePromise,
   redirectToCloudAuth,
 } from '../utils';
-import LRU from 'lru-cache';
+import { LRUCache as LRU } from 'lru-cache';
 import { isDefined } from 'emery';
 import { getAuth, getCloudAuth } from '../auth';
 import { ViewerContext, SidebarFooter_viewer } from './viewer-data';
