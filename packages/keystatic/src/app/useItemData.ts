@@ -1,4 +1,4 @@
-import LRUCache from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 import { useCallback, useMemo } from 'react';
 import { Config } from '../config';
 import { ComponentSchema, fields } from '..';
