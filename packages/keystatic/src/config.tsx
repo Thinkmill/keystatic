@@ -46,12 +46,12 @@ type CommonConfig<Collections, Singletons> = {
 type CommitMessageConfig = {
   update: (options: { path: string }) => string;
   delete: (options: { path: string }) => string;
-}
+};
 
 type CommonRemoteStorageConfig = {
   pathPrefix?: string;
   branchPrefix?: string;
-  commitMessages: CommitMessageConfig;
+  commitMessages?: CommitMessageConfig;
 };
 
 // Interface
