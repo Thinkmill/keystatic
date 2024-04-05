@@ -43,7 +43,6 @@ export default async function Page(props: { params: { slug: string[] } }) {
     ...props.params.slug.slice(1),
   ];
   const slug = slugWithDocsBitAdded.join('/');
-  console.log(props.params);
   let entry = await reader.collections.packageDocs.read(slug, {
     resolveLinkedFiles: true,
   });
