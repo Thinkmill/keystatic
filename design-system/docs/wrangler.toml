@@ -1,8 +1,4 @@
 name = "keystar-ui"
 pages_build_output_dir = ".vercel/output/static"
-compatibility_date = "2024-02-19"
-compatibility_flags = ["nodejs_compat"]
-
-[env.production]
-compatibility_date = "2024-02-19"
+compatibility_date = "2024-04-05"
 compatibility_flags = ["nodejs_compat"]
