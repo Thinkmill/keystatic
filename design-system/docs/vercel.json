@@ -1,4 +1,4 @@
 {
   "installCommand": "exit 0",
-  "buildCommand": "mv app/api/keystatic/[...params]/route.ts app/api/keystatic/[...params]/_route.ts && pnpm next build && mv app/api/keystatic/[...params]/_route.ts app/api/keystatic/[...params]/route.ts"
+  "buildCommand": "mv app/api/keystatic/[...params]/route.ts app/api/keystatic/[...params]/_route.ts && pnpm build:docs && mv app/api/keystatic/[...params]/_route.ts app/api/keystatic/[...params]/route.ts"
 }
