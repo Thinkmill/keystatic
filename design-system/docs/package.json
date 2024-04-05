@@ -34,7 +34,8 @@
     "prism-react-renderer": "^1.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tsx": "^3.8.0"
+    "tsx": "^3.8.0",
+    "vercel": "^33.6.3"
   },
   "devDependencies": {
     "@preconstruct/next": "^4.0.0",
