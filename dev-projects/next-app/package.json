@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
+    "@cloudflare/next-on-pages": "^1.11.0",
     "@keystar/ui": "workspace:^",
     "@keystatic/core": "workspace:^",
     "@keystatic/next": "workspace:^",
@@ -17,7 +18,8 @@
     "@types/react": "^18.2.8",
     "graphql": "^16.6.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "vercel": "^33.6.3"
   },
   "devDependencies": {
     "@ts-gql/compiler": "^0.16.7",
