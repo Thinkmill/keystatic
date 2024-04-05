@@ -1,9 +1,11 @@
 import {
   ReactNode,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
+  useSyncExternalStore,
 } from 'react';
 import { Awareness } from 'y-protocols/awareness';
 import * as Y from 'yjs';
@@ -119,6 +121,19 @@ export function useYjsIfAvailable() {
 
 const enableMessageLogging = false;
 
+const emptyMap = new Map();
+const AwarenessContext =
+  createContext<Map<number, Record<string, any>>>(emptyMap);
+
+export function useAwarenessStates() {
+  return useContext(AwarenessContext);
+}
+
+const currentAwarenesses = new WeakMap<
+  Awareness,
+  Map<number, Record<string, any>>
+>();
+
 export function CollabProvider(props: { children: ReactNode; config: Config }) {
   const branchInfo = useBranchInfo();
   const router = useRouter();
@@ -227,17 +242,42 @@ export function CollabProvider(props: { children: ReactNode; config: Config }) {
     }
   }, [cloudInfo, project]);
 
+  const awarenessStates = useSyncExternalStore(
+    useCallback(
+      onStoreChange => {
+        const awareness = yJsInfo?.awareness;
+        if (!awareness) return () => {};
+        const fn = () => {
+          currentAwarenesses.set(awareness, new Map(awareness.getStates()));
+          onStoreChange();
+        };
+        awareness.on('change', fn);
+        return () => {
+          currentAwarenesses.set(awareness, new Map(awareness.getStates()));
+          awareness.off('change', fn);
+        };
+      },
+      [yJsInfo]
+    ),
+    () => {
+      if (!yJsInfo?.awareness) return emptyMap;
+      return currentAwarenesses.get(yJsInfo.awareness) ?? emptyMap;
+    }
+  );
+
   return (
-    <YjsContext.Provider
-      value={
-        yJsInfo === undefined
-          ? cloudInfo === undefined
-            ? 'loading'
-            : null
-          : yJsInfo
-      }
-    >
-      {props.children}
-    </YjsContext.Provider>
+    <AwarenessContext.Provider value={awarenessStates ?? emptyMap}>
+      <YjsContext.Provider
+        value={
+          yJsInfo === undefined
+            ? cloudInfo === undefined
+              ? 'loading'
+              : null
+            : yJsInfo
+        }
+      >
+        {props.children}
+      </YjsContext.Provider>
+    </AwarenessContext.Provider>
   );
 }

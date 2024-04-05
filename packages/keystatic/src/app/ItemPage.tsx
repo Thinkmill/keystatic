@@ -83,6 +83,7 @@ import * as Y from 'yjs';
 import { getYjsValFromParsedValue } from '../form/props-value';
 import { useYJsValue } from './useYJsValue';
 import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
+import { PresenceAvatars } from './presence';
 
 type ItemPageProps = {
   collection: string;
@@ -643,6 +644,7 @@ function HeaderActions(props: {
 
   return (
     <>
+      <PresenceAvatars />
       {indicatorElement}
       <ActionGroup
         buttonLabelBehavior="hide"
