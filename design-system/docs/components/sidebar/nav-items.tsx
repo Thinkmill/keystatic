@@ -30,7 +30,7 @@ export const NavItems = ({ items }: { items: SidebarItem[] }) => {
         </NavItem>
         <NavItem href="https://github.com/thinkmill/keystatic">
           <Icon src={githubIcon} />
-          <Text>Keystar UI on GitHub</Text>
+          <Text>KeystarUI on GitHub</Text>
         </NavItem>
       </NavGroup>
     </NavList>
