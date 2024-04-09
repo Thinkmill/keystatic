@@ -278,27 +278,23 @@ function ArrayEditItemModalContent(props: {
 export function useArrayFieldValidationMessage<Element extends ComponentSchema>(
   props: GenericPreviewProps<ArrayField<Element>, unknown> &
     ExtraFieldInputProps
-): string | null {
+) {
   const { elements, forceValidation, schema } = props;
   const minLength = schema.validation?.length?.min;
   const maxLength = schema.validation?.length?.max;
 
   return useMemo(() => {
-    if (!forceValidation) {
-      return null;
+    if (forceValidation) {
+      if (minLength && elements.length < minLength) {
+        return `Must have at least ${pluralize(minLength, {
+          singular: 'item',
+        })}.`;
+      } else if (maxLength && elements.length > maxLength) {
+        return `Must have at most ${pluralize(maxLength, {
+          singular: 'item',
+        })}.`;
+      }
     }
-
-    if (minLength && elements.length < minLength) {
-      return `Must have at least ${pluralize(minLength, {
-        singular: 'item',
-      })}.`;
-    } else if (maxLength && elements.length > maxLength) {
-      return `Must have at most ${pluralize(maxLength, {
-        singular: 'item',
-      })}.`;
-    }
-
-    return null;
   }, [elements.length, forceValidation, maxLength, minLength]);
 }
 
