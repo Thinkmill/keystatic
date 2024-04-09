@@ -91,7 +91,7 @@ objects. Which format you use will depend on what information you need to store.
   in the past, or future events where an exact time is needed, regardless of
   time zone.
 - `parseAbsoluteToLocal` – This function parses an absolute date and time into
-  the current user's local time zone. It is a shortcut for `parseAbsolute`, and
+  the current user’s local time zone. It is a shortcut for `parseAbsolute`, and
   accepts the same formats.
 
 ```jsx {% live=true %}
@@ -110,7 +110,7 @@ object. The above example is always displayed in Australian Eastern Standard
 Time because the `Australia/Sydney` time zone identifier is provided.
 [@internationalized/date](https://react-spectrum.adobe.com/internationalized/date/)
 includes functions for converting dates between time zones, or parsing a date
-directly into a specific time zone or the user's local time zone, as shown
+directly into a specific time zone or the user’s local time zone, as shown
 below.
 
 ```jsx {% live=true %}
@@ -127,10 +127,10 @@ return (
 ### Granularity
 
 The `granularity` prop allows you to control the smallest unit that is displayed
-by a `DatePicker`. By default, `CalendarDate` values are displayed with "day"
+by a `DatePicker`. By default, `CalendarDate` values are displayed with “day”
 granularity (year, month, and day), and `CalendarDateTime` and `ZonedDateTime`
-values are displayed with "minute" granularity. More granular time values can be
-displayed by setting the granularity prop to "second".
+values are displayed with “minute” granularity. More granular time values can be
+displayed by setting the granularity prop to “second”.
 
 In addition, when a value with a time is provided but you wish to only display
 the date, you can set the granularity to `"day"`. This has no effect on the
@@ -186,7 +186,7 @@ return (
 
 DatePicker supports selecting dates in many calendar systems used around the
 world, including Gregorian, Hebrew, Indian, Islamic, Buddhist, and more. Dates
-are automatically displayed in the appropriate calendar system for the user's
+are automatically displayed in the appropriate calendar system for the user’s
 locale. The calendar system can be overridden using the
 [Unicode calendar locale extension](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/calendar#adding_a_calendar_in_the_locale_string),
 passed to the `Provider` component.
@@ -218,7 +218,7 @@ return (
 
 `DatePicker` accepts an `onChange` prop which is triggered whenever the date is
 edited by the user. The example below uses `onChange` to update a separate
-element with a formatted version of the date in the user's locale and local time
+element with a formatted version of the date in the user’s locale and local time
 zone. This is done by converting the date to a native JavaScript `Date` object
 to pass to the formatter.
 
@@ -269,7 +269,7 @@ later.
 
 ### Read only
 
-The `isReadOnly` prop makes the field's value immutable. Unlike `isDisabled`,
+The `isReadOnly` prop makes the field’s value immutable. Unlike `isDisabled`,
 the field remains focusable.
 
 ```jsx {% live=true %}
@@ -290,7 +290,7 @@ requirements for correctly filling out the field.
 
 #### Help text
 
-`DatePicker` also supports displaying the expected date format for the user's
+`DatePicker` also supports displaying the expected date format for the user’s
 locale automatically using the `showFormatHelpText` prop.
 
 ```jsx {% live=true %}
@@ -422,7 +422,7 @@ return (
 ### Hour cycle
 
 By default, `DatePicker` displays times in either 12 or 24 hour hour format
-depending on the user's locale. However, this can be overridden using the
+depending on the user’s locale. However, this can be overridden using the
 `hourCycle` prop if needed for a specific usecase. This example forces the
 `DatePicker` to use 24-hour time, regardless of the locale.
 

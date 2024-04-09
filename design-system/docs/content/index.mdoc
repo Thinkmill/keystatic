@@ -1,88 +1,51 @@
 ---
-title: Meet Keystar UI
+title: Quality components, with opinions.
 description:
-  Keystar UI is a design system created by Thinkmill to help us build
-  high-quality interfaces for KeystoneJS and Keystatic.
+  Keystar is an open-source component library created by Thinkmill, to help us build
+  high-quality interfaces for Keystatic and KeystoneJS.
 ---
 
-## Roadmap
+## Core values
 
-Expression of interest for packages and components, legend:
+### Accessible
 
-- 🌱 — Intend to build (yet to begin)
-- 🔮 — Considering (needs more input)
-- 🚧 — Under construction
-- 🌳 — Healthy maintenance
-- 👻 — Deprecated
+Keystar prioritizes accessibility, ensuring all components are fully compatible with screen readers and navigable via keyboard.
 
-### Layout
+### Responsive
 
-- 🔮 — AspectRatio
-- 🚧 — Box
-- 🌱 — Card
-- 🚧 — Container
-- 🌱 — Divider
-- 🚧 — Flex
-- 🚧 — Grid
+Keystar components accommodate mouse, touch, and keyboard interactions. They incorporate responsive design to guarantee an optimal experience across all devices.
 
-### Typography
+### Adaptive
 
-- 🚧 — Heading
-- 🚧 — Text
-- 🌱 — Truncate
-- 🔮 — Kbd
+Keystar supports light and dark color schemes. Automatically adjusting to the user’s system settings, the color scheme will transition when appropriate for comfortable viewing.
 
-### Interactions
+### Inclusive
 
-- 🚧 — Button (ActionButton?, ClearButton?, CloseButton?, InputButton?,
-  ToggleButton?)
-- 🌱 — SegmentedControl
-- 🌱 — Switch
+Keystar’s components are engineered to cater to a diverse global audience, including right-to-left language display, date and number formatting, and more.
 
-### Feedback
 
-- 🚧 — Alert (Notice?)
-- 🌱 — Badge (Chip/Tag? Can be interactive)
-- 🔮 — ProgressBar
-- 🔮 — Skeleton
-- 🌱 — Toast
+## Design decisions
 
-### Collections
+In many respects Keystar is a typical component library experience. It is a collection of React components that are designed to be used in a variety of applications.
 
-- 🌱 — Combobox
-- 🌱 — Picker (select)
-- 🌱 — Menu
-- 🌱 — Table
+However there are some key design decisions that set Keystar apart from other component libraries.
 
-### Form
+### Opinionated
 
-- 🌱 — Field + (FieldLabel, FieldDescription, FieldMessage)
-- 🌱 — NumberInput
-- 🌱 — TextInput
-- 🌱 — TextArea
-- 🌱 — Checkbox
-- 🌱 — CheckboxGroup
-- 🌱 — Radio
-- 🌱 — RadioGroup
-- 🔮 — Slider
+Keystar is designed to be used in conjunction with [Keystatic](https://keystatic.com/) and [KeystoneJS](https://keystonejs.com/), so its components may not be as flexible or customisable as other component libraries. This is a trade-off that allows us to provide a more consistent and integrated experience.
 
-### Media
+### Bundled styles
 
-- 🔮 — Avatar
-- 🚧 — Icon
-- 🌱 — Image
-- 🔮 — Pictogram/Symbol (for list adornment/identification; mustn't overlap with
-  icons semantic)
+Keystar [styles](/package/style) are powered by [Emotion](https://emotion.sh/), a popular CSS-in-JS library. This allows us to ship consistent and maintainable styles, along with the components themselves.
 
-### Navigation
+Styles, _including resets_, are only provided to KeystarUI components. We do this to avoid polluting the global CSS scope, so third-party and consumer styles aren’t unexpectedly affected by our styling opinions (and vice versa).
 
-- 🔮 — Accordion
-- 🔮 — Breadcrumbs
-- 🚧 — Link
-- 🌱 — Tabs
+### Typographic rhythm
 
-### Overlays
+Keystar’s [typography](/package/typography/concepts) components implement [Capsize](https://seek-oss.github.io/capsize/), a tool that calculates the optimal values to trim the space above and below text while we wait for [leading-trim](https://medium.com/microsoft-design/leading-trim-the-future-of-digital-typesetting-d082d84b202) to be widely supported in browsers.
 
-- 🌱 — Dialog + (AlertDialog)
-- 🌱 — Popover
-- 🌱 — Tooltip
+This makes the sizing and layout of text as predictable as every other element on the screen, which ensures a consistent typographic rhythm across the application.
+
+### Under the hood
+
+Keystar is built on top of [React Aria](https://react-spectrum.adobe.com/react-aria/index.html), a powerful set of components and hooks designed to facilitate the development of accessible and user-friendly interfaces using React. Developed by Adobe, react-aria leverages the latest web technologies and best practices to deliver a seamless user experience across various devices and platforms.

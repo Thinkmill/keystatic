@@ -18,9 +18,9 @@ category: Forms
 
 Switches are best used for communicating activation (e.g. on/off states), while
 [checkboxes](/package/checkbox) are best used for communicating selection (e.g.
-multiple table rows). Switches, unlike checkboxes, can't have an error state.
+multiple table rows). Switches, unlike checkboxes, can’t have an error state.
 
-If a visible label isn't specified, an `aria-label` must be provided to the
+If a visible label isn’t specified, an `aria-label` must be provided to the
 switch for accessibility. If the field is labeled by a separate element, an
 `aria-labelledby` prop must be provided using the id of the labeling element
 instead.
@@ -72,7 +72,7 @@ and communicate that an action may become available later.
 ### Prominence
 
 Low prominence switches are for instances with secondary or tertiary controls,
-which shouldn't distract focus from the primary content.
+which shouldn’t distract focus from the primary content.
 
 ```jsx {% live=true %}
 <Switch prominence="low" defaultSelected>
@@ -83,7 +83,7 @@ which shouldn't distract focus from the primary content.
 ### Size
 
 Small toggles are often used in condensed spaces and appear inline with other
-components or content. They can be used in conjunction with "low" prominence to
+components or content. They can be used in conjunction with “low” prominence to
 further reduce their visual impact within an interface.
 
 ```jsx {% live=true %}
@@ -99,7 +99,7 @@ further reduce their visual impact within an interface.
 A switch allows the user to choose between two mutually exclusive options.
 Toggling the value should produce an _immediate_ result; `Switch` is
 innapropriate within a form context where submission is a separate event. For
-example, if the user must click a "Submit", "Next", or "Okay" button to apply
+example, if the user must click a “Submit”, “Next”, or “Okay” button to apply
 changes, use a [checkbox](/package/checkbox).
 
 Each switch should be considered a solitary, standalone option. For multiple,

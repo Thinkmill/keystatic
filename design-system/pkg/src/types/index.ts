@@ -9,8 +9,10 @@ export type { HeadingProps, TextProps } from './typography';
 export type {
   ChildrenOf,
   Conditional,
+  MaybeArray,
   Never,
-  PartialRequired,
+  PickRequired,
+  ReactText,
   RenderProp,
   WithRenderProps,
 } from './utils';

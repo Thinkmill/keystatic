@@ -13,6 +13,10 @@ export function useHasChild(query: string, ref: React.RefObject<HTMLElement>) {
   return hasChild;
 }
 
+/**
+ * Clone a React element, with optional props. If the value is
+ * not a valid React element, return null.
+ */
 export function cloneValidElement<Props>(
   child: React.ReactElement<Props> | React.ReactNode,
   props?: Partial<Props> & React.Attributes

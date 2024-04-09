@@ -5,7 +5,7 @@ import {
   tokenSchema,
   useStyleProps,
 } from '@keystar/ui/style';
-import { PartialRequired, TextProps } from '@keystar/ui/types';
+import { PickRequired, TextProps } from '@keystar/ui/types';
 
 import { useTextContext } from './context';
 import { getTrimStyles } from '../getTrimStyles';
@@ -13,7 +13,7 @@ import { getTrimStyles } from '../getTrimStyles';
 export const textClassList = new ClassList('Text');
 
 export function useTextStyles(
-  props: PartialRequired<TextProps, 'color' | 'size' | 'weight'>
+  props: PickRequired<TextProps, 'color' | 'size' | 'weight'>
 ) {
   const prevContext = useTextContext();
   const {

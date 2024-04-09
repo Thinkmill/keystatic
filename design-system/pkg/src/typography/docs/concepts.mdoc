@@ -1,9 +1,6 @@
 ---
 title: Typography
-description:
-  Typography is an important part of the design system—type could account for
-  85-90% of any given screen. Use Keystar UI's typographic patterns, guidelines,
-  and components to create an accessible and effective content hierarchy.
+description: Typography is an important part of the design system. Use KeystarUI’s typographic patterns, guidelines, and components to create an accessible and effective content hierarchy.
 category: Concepts
 ---
 
@@ -11,23 +8,23 @@ category: Concepts
 
 ### Styling
 
-Styles, _including resets_, are **only** provided to Keystar UI components. We
+Styles, _including resets_, are **only** provided to KeystarUI components. We
 do this to avoid polluting the global CSS scope, so third-party and consumer
-styles aren't unexpectedly affected by our styling opinions (and vice versa).
+styles aren’t unexpectedly affected by our styling opinions (and vice versa).
 
 These styling decisions are especially important when considering how
 [spacing](#spacing) behaves between typographic elements.
 
 ```jsx {% live=true %}
 <>
-  <Text>Text component</Text>
+  <Text elementType="p">Text component</Text>
   <p>Paragraph element</p>
 </>
 ```
 
 ### Primitives
 
-Voussour exports two typographic primitives [Text](/package/typography/text) and
+KeystarUI exports two typographic primitives [Text](/package/typography/text) and
 [Heading](/package/typography/heading), which should be used in most cases when
 rendering text elements in an interface.
 
@@ -50,7 +47,7 @@ Do NOT use underline for emphasis. Underline text is reserved for
 
 ```jsx {% live=true %}
 <Text>
-  I <em>love</em> building interfaces with Keystar UI.
+  I <em>love</em> building interfaces with KeystarUI.
 </Text>
 ```
 
@@ -99,7 +96,7 @@ application.
 
 ### Spacing
 
-Voussour's typographic primitives implement
+KeystarUI’s typographic primitives implement
 [Capsize](https://seek-oss.github.io/capsize/), letting us control leading-trim.
 
 ```jsx {% live=true %}
@@ -112,7 +109,7 @@ Voussour's typographic primitives implement
 </>
 ```
 
-You’ll notice that there's no space between the elements by default, which is
+You’ll notice that there’s no space between the elements by default, which is
 intentional! Spacing between elements should be owned by layout primitives, like
 [Flex](/package/layout/flex) and [Grid](/package/layout/grid), ensuring the
 system is composable while keeping white space predictable.
@@ -136,22 +133,10 @@ number of lines.
 ```jsx {% live=true %}
 <Grid gap="large">
   <Heading truncate>
-    A voussoir (/vuˈswɑːr/) is a wedge-shaped element, typically a stone, which
-    is used in building an arch or vault. Although each unit in an arch or vault
-    is a voussoir, two units are of distinct functional importance: the keystone
-    and the springer. The keystone is the centre stone or masonry unit at the
-    apex of an arch. The springer is the lowest voussoir on each side, located
-    where the curve of the arch springs from the vertical support or abutment of
-    the wall or pier.
+    A flat-file CMS is a file-based content management system (CMS) that stores data in text files and folders rather than a database. Keystatic is a tool that makes Markdown, JSON and YAML content in your codebase editable by humans.
   </Heading>
-  <Text truncate={3}>
-    A voussoir (/vuˈswɑːr/) is a wedge-shaped element, typically a stone, which
-    is used in building an arch or vault. Although each unit in an arch or vault
-    is a voussoir, two units are of distinct functional importance: the keystone
-    and the springer. The keystone is the centre stone or masonry unit at the
-    apex of an arch. The springer is the lowest voussoir on each side, located
-    where the curve of the arch springs from the vertical support or abutment of
-    the wall or pier.
+  <Text truncate={2}>
+    A flat-file CMS is a file-based content management system (CMS) that stores data in text files and folders rather than a database. Keystatic is a tool that makes Markdown, JSON and YAML content in your codebase editable by humans.
   </Text>
 </Grid>
 ```
@@ -166,7 +151,7 @@ content via some interaction.
 Allow text to wrap when the user needs to see the full text to understand what
 is expected. Note that some languages have longer line lengths.
 
-Don't truncate text in UI controls like buttons and menus, where it will impede
+Don’t truncate text in UI controls like buttons and menus, where it will impede
 users' understanding of what is expected. Note that touch devices won’t have
 tooltips on hover.
 
@@ -176,8 +161,6 @@ The `title` attribute is populated automatically when `children` is a string. If
 `children` contains elements or components use the `title` prop to manually set
 the title attribute.
 
-<!-- prettier is fighting itself -->
-<!-- prettier-ignore -->
 ```jsx {% live=true %}
 <Flex direction="column" gap="large" width="scale.3000">
   <Text truncate>
@@ -185,7 +168,7 @@ the title attribute.
     is a string.
   </Text>
   <Text truncate>
-    This example contains <strong>complex children</strong>, but doesn't set a
+    This example contains <strong>complex children</strong>, but doesn’t set a
     title.
   </Text>
   <Text

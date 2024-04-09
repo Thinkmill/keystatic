@@ -3,6 +3,7 @@ export const categories = [
   'Concepts',
   'Layout',
   'Typography',
+  'Buttons',
   'Forms',
   'Date and time',
   'Navigation',

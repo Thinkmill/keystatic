@@ -1,0 +1,42 @@
+---
+title: Stacks
+description: Stacks are a simple way to lay out elements in a single direction.
+category: Layout
+---
+
+## Related
+
+- [Concepts](/package/layout/concepts) — The patterns and opinions behind layout
+  primitives.
+- [Flex](/package/layout/flex) — For responsive and/or granular layout requirements.
+- [Grid](/package/layout/grid) — For two-dimensional layout requirements.
+
+## Components
+
+The `VStack` and `HStack` are exposed as a convenient way to create a column or row of elements that’s easy parse at a glance.
+
+The props `direction`, `inline`, and `wrap` are not available on stack components.
+
+### Vertical stack
+
+The `VStack` is a thin wrapper around the `Flex` component, where the `direction` prop is set to `"column"`.
+
+```jsx {% live=true %}
+<Flex direction="column" gap="medium">
+  <Placeholder height="element.large" />
+  <Placeholder height="element.large" />
+  <Placeholder height="element.large" />
+</Flex>
+```
+
+### Horiztonal stack
+
+The `HStack` is a thin wrapper around the `Flex` component, where the `direction` prop is set to `"row"`.
+
+```jsx {% live=true %}
+<Flex gap="medium" height="element.large">
+  <Placeholder width="element.large" />
+  <Placeholder width="element.large" />
+  <Placeholder width="element.large" />
+</Flex>
+```

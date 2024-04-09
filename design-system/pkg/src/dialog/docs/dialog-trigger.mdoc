@@ -2,7 +2,7 @@
 title: DialogTrigger
 description:
   Serves as a wrapper around a dialog and its associated trigger, linking the
-  dialog's open state with the trigger's press state. Additionally, it allows
+  dialog’s open state with the trigger’s press state. Additionally, it allows
   you to customize the type and positioning of the dialog.
 category: Overlays
 ---
@@ -39,7 +39,7 @@ events.
 
 If your dialog has buttons within it that should close the dialog when pressed,
 you must wrap the dialog in a function in order to propagate the close function
-to the dialog's children. **TODO: explain/link info about render functions.**
+to the dialog’s children. **TODO: explain/link info about render functions.**
 Dialogs that do not contain such interactive elements can simply provide the
 dialog component as is to the `DialogTrigger` as its second child.
 
@@ -67,7 +67,7 @@ dialog component as is to the `DialogTrigger` as its second child.
 
 ### Type
 
-By providing a `type` prop, you can specify the "type" of dialog that is
+By providing a `type` prop, you can specify the “type” of dialog that is
 rendered by your `DialogTrigger`. Note that pressing the Esc key will close the
 dialog regardless of its type.
 
@@ -75,10 +75,10 @@ dialog regardless of its type.
 
 Modal dialogs include a blanket that blocks access to the underlying interface
 until the dialog is closed. Sizing options can be found on the
-[Dialog page](/package/dialog#size). Focus is "trapped" inside the dialog until
-it's closed.
+[Dialog page](/package/dialog#size). Focus is “trapped” inside the dialog until
+it’s closed.
 
-The term "modal" is sometimes used interchangeably with "dialog", but this is a
+The term “modal” is sometimes used interchangeably with “dialog”, but this is a
 misnomer. A dialog is considered modal if it
 [blocks interaction](https://en.wikipedia.org/wiki/Modal_window) with the rest
 of the application.
@@ -91,7 +91,7 @@ of the application.
       <Heading>Unlinking email</Heading>
       <Content>
         <Text>
-          This will unlink your email from your profile "TestUser". Are you
+          This will unlink your email from your profile “TestUser”. Are you
           sure?
         </Text>
       </Content>
@@ -129,7 +129,7 @@ by default. See the [mobile type](#mobile-type) prop for more information.
 
 Tray dialogs are typically used to portray information on mobile devices or
 smaller screens. They should only ever be displayed on devices with small
-screens, for interfaces where popovers wouldn't be appropriate.
+screens, for interfaces where popovers wouldn’t be appropriate.
 
 ```jsx {% live=true %}
 <DialogTrigger type="tray">
@@ -145,7 +145,7 @@ screens, for interfaces where popovers wouldn't be appropriate.
 
 #### Fullscreen
 
-Fullscreen dialogs are a fullscreen variant of the "modal" dialog, only
+Fullscreen dialogs are a fullscreen variant of the “modal” dialog, only
 revealing a small portion of the page behind the blanket. Use this variant for
 more complex workflows that do not fit in the available modal dialog sizes. This
 variant does not support `isDismissible`.
@@ -201,7 +201,7 @@ mobile.
 
 ### Placement
 
-The popover's placement with respect to its anchor element can be adjusted using
+The popover’s placement with respect to its anchor element can be adjusted using
 the `placement` prop.
 
 ```jsx {% live=true %}
@@ -221,7 +221,7 @@ the `placement` prop.
 
 ### Dismissable
 
-If your `"modal"` dialog doesn't require the user to make a confirmation, you
+If your `"modal"` dialog doesn’t require the user to make a confirmation, you
 can set `isDismissable` on the `DialogTrigger`. In addition to the added close
 button, users can press the blanket to dismiss the dialog.
 
@@ -239,7 +239,7 @@ button, users can press the blanket to dismiss the dialog.
 
 ### Offset and cross offset
 
-The popover dialog's offset with respect to its anchor element can be adjusted
+The popover dialog’s offset with respect to its anchor element can be adjusted
 using the `offset` and `crossOffset` props. The `offset` prop controls the
 spacing applied along the main axis between the element and its anchor element
 whereas the `crossOffset` prop handles the spacing applied along the cross axis.
