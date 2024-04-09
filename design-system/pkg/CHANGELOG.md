@@ -1,5 +1,72 @@
 # @keystar/ui
 
+## 0.7.1
+
+### Patch Changes
+
+- b3501e95: Performance improvements in the new editor
+
+## 0.7.0
+
+### Minor Changes
+
+- dad16ba6: Reduce size of icons
+
+## 0.6.0
+
+### Minor Changes
+
+- 53d8fcc7: Update icons
+
+### Patch Changes
+
+- ad59430d: Fix `onEnter` callback in overlays
+
+## 0.5.0
+
+### Minor Changes
+
+- f4aaa8e3: Switch build to ESM-only
+
+## 0.4.9
+
+### Patch Changes
+
+- 05a71cde: Remove `react-transition-group`
+
+## 0.4.8
+
+### Patch Changes
+
+- bebaa922: Fix `NumberField` not showing error messages
+
+## 0.4.7
+
+### Patch Changes
+
+- 90fd3809: Filter out DOM props TableVirtualizer
+
+## 0.4.6
+
+### Patch Changes
+
+- d76af081: Fix default exports in Node ESM
+
+## 0.4.5
+
+### Patch Changes
+
+- 0ca7f47a: Support "boundary" + "portal" props on `EditorPopover` component.
+  Simulate clipping for portal'd popovers.
+- 13206393: Support "labelElementType" on `Field` component.
+- 56b6b121: Remove support for "uncontrolled state" in `EditorToolbar*`
+  components.
+- bd28cfd4: Fix `transitionProperty` typo in `ActionButton` styles.
+- 0e81263b: Refactor `ProgressCircle` — split animation properties across
+  elements to fix transform-origin issue in safari.
+- 267845b1: New `ScrollView` component from "@keystar/ui/layout" package.
+- 3288c624: Expose `useProseStyleProps` from "@keystar/ui/typography" package.
+
 ## 0.4.4
 
 ### Patch Changes

@@ -2,6 +2,7 @@ import { ReactElement, ReactNode } from 'react';
 import { Glob } from '../config';
 
 import { ChildField } from './fields/child';
+import { Awareness } from 'y-protocols/awareness';
 
 export type FormFieldInputProps<Value> = {
   value: Value;
@@ -14,17 +15,18 @@ export type FormFieldInputProps<Value> = {
   forceValidation: boolean;
 };
 
-export type JsonValue =
+export type JsonYamlValue =
   | string
   | number
   | boolean
   | null
-  | readonly JsonValue[]
-  | { [key: string]: JsonValue };
+  | Date
+  | readonly JsonYamlValue[]
+  | { [key: string]: JsonYamlValue };
 
-type JsonValueWithoutNull = JsonValue & {};
+type JsonYamlValueWithoutNull = JsonYamlValue & {};
 
-export type FormFieldStoredValue = JsonValueWithoutNull | undefined;
+export type FormFieldStoredValue = JsonYamlValueWithoutNull | undefined;
 
 export type BasicFormField<
   ParsedValue extends {} | null,
@@ -45,6 +47,7 @@ export type BasicFormField<
   reader: {
     parse(value: FormFieldStoredValue): ReaderValue;
   };
+  label?: string;
 };
 
 export type SlugFormField<
@@ -81,6 +84,7 @@ export type SlugFormField<
       }
     ): ReaderValueAsSlugField;
   };
+  label?: string;
 };
 
 export type AssetFormField<
@@ -122,6 +126,7 @@ export type AssetFormField<
   reader: {
     parse(value: FormFieldStoredValue): ReaderValue;
   };
+  label?: string;
 };
 
 export type ContentFormField<
@@ -165,6 +170,10 @@ export type ContentFormField<
         content: Uint8Array | undefined;
       }
     ): ReaderValue;
+  };
+  collaboration?: {
+    toYjs: (value: ParsedValue) => unknown;
+    fromYjs: (yjsValue: unknown, awareness: Awareness) => ParsedValue;
   };
 };
 

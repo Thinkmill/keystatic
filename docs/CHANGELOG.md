@@ -1,5 +1,130 @@
 # keystatic-docs
 
+## 1.0.29
+
+### Patch Changes
+
+- Updated dependencies [dbb9d3cb]
+  - @keystatic/core@0.5.11
+  - @keystatic/next@5.0.0
+
+## 1.0.28
+
+### Patch Changes
+
+- Updated dependencies [e1ebbdae]
+  - @keystatic/core@0.5.10
+  - @keystatic/next@5.0.0
+
+## 1.0.27
+
+### Patch Changes
+
+- Updated dependencies [847b9163]
+  - @keystatic/core@0.5.9
+  - @keystatic/next@5.0.0
+
+## 1.0.26
+
+### Patch Changes
+
+- Updated dependencies [4d1cee00]
+  - @keystatic/core@0.5.8
+  - @keystatic/next@5.0.0
+
+## 1.0.25
+
+### Patch Changes
+
+- Updated dependencies [c519f119]
+  - @keystatic/core@0.5.7
+  - @keystatic/next@5.0.0
+
+## 1.0.24
+
+### Patch Changes
+
+- Updated dependencies [c619ef2e]
+  - @keystatic/core@0.5.6
+  - @keystatic/next@5.0.0
+
+## 1.0.23
+
+### Patch Changes
+
+- Updated dependencies [8ad803c5]
+  - @keystatic/core@0.5.0
+  - @keystatic/next@5.0.0
+
+## 1.0.22
+
+### Patch Changes
+
+- 6a60ab3c: Updates the Astro integration to manage the custom `127.0.0.1` host
+  and enables usage with `output: 'server'`
+
+  Keystatic used to require updating your `dev` script. It's now managed by the
+  integration, feel free to simplify it!
+
+  ```diff
+  - "dev": "astro dev --host 127.0.0.1"
+  + "dev": "astro dev"
+  ```
+
+  Moreover, Keystatic now lets you go full SSR! The following Astro config is
+  now supported
+
+  ```mjs
+  // astro.config.mjs
+
+  export default defineConfig({
+    output: 'server',
+  });
+  ```
+
+- Updated dependencies [e3947052]
+- Updated dependencies [ee3f2038]
+  - @keystatic/core@0.4.0
+  - @keystatic/next@4.0.0
+
+## 1.0.21
+
+### Patch Changes
+
+- Updated dependencies [0ea27bed]
+- Updated dependencies [178fd9f6]
+- Updated dependencies [dad16ba6]
+  - @keystatic/core@0.3.7
+  - @keystar/ui@0.7.0
+
+## 1.0.20
+
+### Patch Changes
+
+- Updated dependencies [ad59430d]
+- Updated dependencies [53d8fcc7]
+- Updated dependencies [b3071c88]
+  - @keystar/ui@0.6.0
+  - @keystatic/core@0.3.5
+
+## 1.0.19
+
+### Patch Changes
+
+- e2f22039: feat(docs): Add GitHub reader docs
+- Updated dependencies [98130aab]
+  - @keystatic/core@0.3.2
+
+## 1.0.18
+
+### Patch Changes
+
+- Updated dependencies [0b2432ed]
+- Updated dependencies [f4aaa8e3]
+  - @keystatic/core@0.3.0
+  - @keystatic/next@3.0.0
+  - @keystar/ui@0.5.0
+
 ## 1.0.17
 
 ### Patch Changes

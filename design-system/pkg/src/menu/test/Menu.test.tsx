@@ -1,16 +1,23 @@
-import '@testing-library/jest-dom';
-
 import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';
 import { Icon } from '@keystar/ui/icon';
 import { act, fireEvent, firePress, KEYS, render, within } from '#test-utils';
 import { Kbd, Text } from '@keystar/ui/typography';
+import {
+  expect,
+  it,
+  describe,
+  jest,
+  afterAll,
+  afterEach,
+  beforeAll,
+} from '@jest/globals';
 
 import { Item, Menu, MenuProps, Section } from '..';
 
 describe('menu/Menu', () => {
-  let offsetWidth: jest.SpyInstance<number>,
-    offsetHeight: jest.SpyInstance<number>;
-  let onSelectionChange = jest.fn();
+  let offsetWidth: jest.SpiedGetter<number>,
+    offsetHeight: jest.SpiedGetter<number>;
+  let onSelectionChange = jest.fn<(val: any) => void>();
 
   beforeAll(function () {
     offsetWidth = jest
@@ -20,7 +27,7 @@ describe('menu/Menu', () => {
       .spyOn(window.HTMLElement.prototype, 'offsetHeight', 'get')
       .mockImplementation(() => 1000);
     window.HTMLElement.prototype.scrollIntoView = jest.fn();
-    jest.spyOn(window, 'requestAnimationFrame').mockImplementation();
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 1);
     jest.useFakeTimers();
   });
 

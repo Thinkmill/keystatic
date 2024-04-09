@@ -1,5 +1,79 @@
 # @example/next-block-builder
 
+## 0.1.11
+
+### Patch Changes
+
+- Updated dependencies [dbb9d3cb]
+  - @keystatic/core@0.5.11
+  - @keystatic/next@5.0.0
+
+## 0.1.10
+
+### Patch Changes
+
+- Updated dependencies [e1ebbdae]
+  - @keystatic/core@0.5.10
+  - @keystatic/next@5.0.0
+
+## 0.1.9
+
+### Patch Changes
+
+- Updated dependencies [847b9163]
+  - @keystatic/core@0.5.9
+  - @keystatic/next@5.0.0
+
+## 0.1.8
+
+### Patch Changes
+
+- Updated dependencies [4d1cee00]
+  - @keystatic/core@0.5.8
+  - @keystatic/next@5.0.0
+
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies [c519f119]
+  - @keystatic/core@0.5.7
+  - @keystatic/next@5.0.0
+
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [c619ef2e]
+  - @keystatic/core@0.5.6
+  - @keystatic/next@5.0.0
+
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [8ad803c5]
+  - @keystatic/core@0.5.0
+  - @keystatic/next@5.0.0
+
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [e3947052]
+- Updated dependencies [ee3f2038]
+  - @keystatic/core@0.4.0
+  - @keystatic/next@4.0.0
+
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [0b2432ed]
+- Updated dependencies [f4aaa8e3]
+  - @keystatic/core@0.3.0
+  - @keystatic/next@3.0.0
+
 ## 0.1.2
 
 ### Patch Changes

@@ -1,15 +1,16 @@
 import { assertNever } from 'emery';
 
 import { ComponentSchema, ParsedValueForComponentSchema } from './api';
+import type * as Y from 'yjs';
 
 const arrayValuesToElementKeys = new WeakMap<
-  readonly unknown[],
+  readonly unknown[] | Y.Array<any>,
   readonly string[]
 >();
 
 let counter = 0;
 
-export function getKeysForArrayValue(value: readonly unknown[]) {
+export function getKeysForArrayValue(value: readonly unknown[] | Y.Array<any>) {
   if (!arrayValuesToElementKeys.has(value)) {
     arrayValuesToElementKeys.set(
       value,
@@ -20,7 +21,7 @@ export function getKeysForArrayValue(value: readonly unknown[]) {
 }
 
 export function setKeysForArrayValue(
-  value: readonly unknown[],
+  value: readonly unknown[] | Y.Array<any>,
   elementIds: readonly string[]
 ) {
   arrayValuesToElementKeys.set(value, elementIds);
@@ -84,6 +85,9 @@ export function getInitialPropsValueFromInitializer(
         initializer === undefined
           ? schema.discriminant.defaultValue()
           : initializer.discriminant;
+      if (defaultValue === undefined) {
+        debugger;
+      }
       return {
         discriminant: defaultValue,
         value: getInitialPropsValueFromInitializer(

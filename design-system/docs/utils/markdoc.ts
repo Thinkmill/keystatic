@@ -1,4 +1,4 @@
-import Markdoc, { Tag, ValidateError } from '@markdoc/markdoc';
+import Markdoc, { Node, Tag, ValidateError } from '@markdoc/markdoc';
 import { isNonEmptyArray } from 'emery/guards';
 import { assert } from 'emery/assertions';
 import { markdocConfig } from '../markdoc';
@@ -29,9 +29,8 @@ class MarkdocFailure extends Error {
 
 export function transformMarkdoc(
   errorReportingFilepath: string,
-  content: string
+  node: Node
 ): Tag {
-  const node = Markdoc.parse(content, errorReportingFilepath);
   const errors = Markdoc.validate(node, markdocConfig);
   if (isNonEmptyArray(errors)) {
     throw new MarkdocFailure(errors, errorReportingFilepath);

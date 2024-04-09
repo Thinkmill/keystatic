@@ -13,7 +13,7 @@ import { Icon } from '@keystar/ui/icon';
 import { gitBranchIcon } from '@keystar/ui/icon/icons/gitBranchIcon';
 import { minusSquareIcon } from '@keystar/ui/icon/icons/minusSquareIcon';
 import { plusSquareIcon } from '@keystar/ui/icon/icons/plusSquareIcon';
-import { squareDotIcon } from '@keystar/ui/icon/icons/squareDotIcon';
+import { dotSquareIcon } from '@keystar/ui/icon/icons/dotSquareIcon';
 import { undoIcon } from '@keystar/ui/icon/icons/undoIcon';
 import { HStack, VStack } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
@@ -44,7 +44,7 @@ const typeMap = {
     tone: 'positive',
   },
   changed: {
-    icon: squareDotIcon,
+    icon: dotSquareIcon,
     tone: 'accent',
   },
   removed: {

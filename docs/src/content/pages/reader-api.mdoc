@@ -1,33 +1,56 @@
 ---
 title: Reader API
 summary: >-
-  The Reader API is a Node.js API that lets you read Keystatic content from your
-  file system.
+  The Reader API is a Node.js API that lets you read Keystatic content from a storage of your own choice.
 ---
-The Reader API is a Node.js API that lets you *read* Keystatic content from your file system.
+The Reader API is a Node.js API that lets you *read* Keystatic content from a storage of your own choice.
+The storage can be any local directory / GitHub repository, and does not need to be the same as the one defined in the Keystatic config.
 
 {% aside icon="⚠️" %}
-The code can only run on the server, and not in the browser.
+The reader API code is meant to run on the server, and not in the browser. Be sure to use it accordingly.
 {% /aside %}
 
 ## Usage
 
-First, import the `createReader` function, as well as your Keystatic config file:
+### Local Directory
+To read from local storage, import the `createReader` function, as well as your Keystatic config file:
 
 ```javascript
 import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
+import keystaticConfig from 'relative/path/to/your/keystatic.config';
 ```
 
 You can then create a new `reader` by calling `createReader` and passing it two arguments:
 
-1. Path to the root of your repository
-1. The Keystatic config
-
-Here's an example:
+1. Path to the root of your content repository
+2. The Keystatic config
 
 ```javascript
 const reader = createReader(process.cwd(), keystaticConfig);
+```
+
+### GitHub Repository
+
+To read from GitHub, import the `createGitHubReader` function, as well as your Keystatic config file:
+
+```javascript
+import { createGitHubReader } from '@keystatic/core/reader/github';
+import keystaticConfig from 'relative/path/to/your/keystatic.config';
+```
+
+You can then create a new `reader` by calling `createGitHubReader` and passing it the following arguments:
+
+1. The Keystatic config
+2. An options object containing:
+    - `repo`: The name of the content repository on GitHub (e.g. `Thinkmill/keystatic-data`)
+    - `token`: The Personal Access Token that allows read access to the repository. This is different from your GitHub App Client ID / Secret in `.env`.
+       For information on how to generate PATs, see [GitHub's documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+
+```javascript
+const reader = createGitHubReader(keystaticConfig, {
+    repo: 'Thinkmill/keystatic-data',
+    token: process.env.GITHUB_PAT,
+});
 ```
 
 ---
@@ -135,6 +158,16 @@ type MovieProps = EntryWithResolvedLinkedFiles<typeof keystaticConfig['collectio
 The `document` field returns a JSON object with complex structured data. It can be a lot of work to turn this data object as HTML to render it on a page.
 
 Luckily, Keystatic also provides a `DocumentRenderer` that does all the heavy lifting for you, and is highly customisable.
+
+---
+
+## Screencast walk-through
+
+This segment of the [Keystatic Mini-Course on YouTube](https://www.youtube.com/playlist?list=PLHrxuCR-0CcSmkyLcmdV7Ruql8DTm644k) may help understand how the Reader API works:
+
+{% embed
+   mediaType="video"
+   embedCode="<iframe src=\"https://www.youtube.com/embed/8831JbFOCN4?si=mDDK52Nlhg4v1v9x\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>" /%}
 
 ---
 

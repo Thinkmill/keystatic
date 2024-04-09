@@ -1,7 +1,7 @@
 import { ColorScheme } from '@keystar/ui/types';
 import { ReactElement } from 'react';
 
-import { ComponentSchema, SlugFormField } from './form/api';
+import { ComponentSchema, FormField, SlugFormField } from './form/api';
 import type { Locale } from './app/l10n/locales';
 import { RepoConfig } from './app/repo-config';
 
@@ -21,6 +21,9 @@ export type Collection<
   entryLayout?: EntryLayout;
   format?: Format;
   previewUrl?: string;
+  columns?: string[];
+  template?: string;
+  parseSlugForSort?: (slug: string) => string | number;
   slugField: SlugField;
   schema: Schema;
 };
@@ -172,7 +175,19 @@ export function collection<
       : never;
   }[keyof Schema],
 >(
-  collection: Collection<Schema, SlugField & string>
+  collection: Collection<Schema, SlugField & string> & {
+    columns?: {
+      [K in keyof Schema]: Schema[K] extends
+        | FormField<
+            any,
+            any,
+            string | number | boolean | Date | null | undefined
+          >
+        | SlugFormField<any, any, any, string>
+        ? K & string
+        : never;
+    }[keyof Schema][];
+  }
 ): Collection<Schema, SlugField & string> {
   return collection;
 }

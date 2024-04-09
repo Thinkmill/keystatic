@@ -1,7 +1,7 @@
 import { CalendarDate, CalendarDateTime } from '@internationalized/date';
-import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
+import { afterEach, expect, jest, describe, it } from '@jest/globals';
 
 import {
   act,

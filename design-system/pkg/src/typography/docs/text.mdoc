@@ -1,0 +1,466 @@
+---
+title: Text
+description: Constrained, purposeful text styles as a component.
+category: Typography
+---
+
+## Example
+
+```jsx {% live=true %}
+<Text>Text</Text>
+```
+
+## Related
+
+- [Heading](/package/typography/heading) — For titles.
+
+## Props
+
+### Alignment
+
+The horizontal alignment of content inside the text element.
+
+Element placement should be handled by layout primitives, like
+[Flex](/package/layout/flex) and [Grid](/package/layout/grid). Alignment should
+be employed sparingly.
+
+The `align` prop is only supported on top-level components, and will be ignored
+on nested components (descendants of another `Text` component).
+
+#### Logical alignment
+
+Use
+[logical values](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/CSS_Grid_Logical_Values_and_Writing_Modes#logical_values_for_alignment)
+of `"start"` and `"end"` in most cases, since they respond to locale direction.
+
+```jsx {% live=true %}
+<Flex direction="column" gap="small">
+  <Text align="start">Start (default)</Text>
+  <Text align="center">Center</Text>
+  <Text align="end">End</Text>
+</Flex>
+```
+
+Avoid center-aligned text _when you expect it to wrap_. The starting edge moves
+around making it harder to read, especially for those with
+[cognitive disabilities or dyslexia](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align#accessibility_concerns).
+
+#### Forced alignment
+
+Only use special values `"FORCE_left"` and `"FORCE_right"` in rare cases where
+locale direction should be ignored, such as
+[numeric text within a tabular container](/package/typography/text#tabular-numbers).
+
+```jsx {% live=true %}
+<Flex direction="column" gap="small">
+  <Text align="FORCE_left">Left</Text>
+  <Text align="FORCE_right">Right</Text>
+</Flex>
+```
+
+### Casing
+
+How to transform the `casing` of the element’s contents, if at all.
+
+#### Capitalize
+
+Use with caution, typically on a single word. Title case shouldn’t apply to
+articles (a, an, the) and most prepositions (in, on, for, etc), but the
+`"capitalize"` text transform doesn’t discriminate. Consider an alternative JS
+solution for complex requirements.
+
+```jsx {% live=true %}
+<Text casing="capitalize">The five boxing wizards jump quickly.</Text>
+```
+
+#### Lowercase
+
+Text in strictly `"lowercase"` should rarely be required, and has mostly been
+included for completeness.
+
+```jsx {% live=true %}
+<Text casing="lowercase">The five boxing wizards jump quickly.</Text>
+```
+
+#### Uppercase
+
+Reserve `"uppercase"` for short title content. Large blocks of uppercase text
+present
+[accessibility concerns](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform#accessibility_concerns),
+which should be avoided.
+
+```jsx {% live=true %}
+<Text casing="uppercase">The five boxing wizards jump quickly.</Text>
+```
+
+### Color
+
+Color can be used to express emotion and tone, as well as place emphasis and
+create associations. The use of `color` in the system should correlate with the
+tone of voice being used.
+
+#### Neutral colors
+
+Use neutral colors to convey information without attracting too much attention.
+
+```jsx {% live=true %}
+<Flex direction="column" gap="large">
+  <Flex direction="column" gap="regular">
+    <Text color="neutralEmphasis" weight="bold">
+      Neutral Emphasis
+    </Text>
+    <Text>
+      Use to emphasize a text that is more important than nearby text.
+    </Text>
+  </Flex>
+  <Flex direction="column" gap="regular">
+    <Text color="neutral" weight="bold">
+      Neutral (default)
+    </Text>
+    <Text>Use for most body copy.</Text>
+  </Flex>
+  <Flex direction="column" gap="regular">
+    <Text color="neutralSecondary" weight="bold">
+      Neutral Secondary
+    </Text>
+    <Text>
+      Use to de-emphasize some text that is less important than other nearby
+      text.
+    </Text>
+  </Flex>
+  <Flex direction="column" gap="regular">
+    <Text color="neutralTertiary" weight="bold">
+      Neutral Tertiary
+    </Text>
+    <Text>
+      Use to de-emphasize a piece of text that is significantly less important.
+    </Text>
+  </Flex>
+</Flex>
+```
+
+#### Functional colors
+
+Functional colors are associated with specific app behaviours.
+
+```jsx {% live=true %}
+<Flex direction="column" gap="large">
+  <Flex direction="column" gap="regular">
+    <Text color="highlight" weight="bold">
+      Highlight
+    </Text>
+    <Text>
+      Bring the user’s attention to something without implying intent.
+    </Text>
+  </Flex>
+  <Flex direction="column" gap="regular">
+    <Text color="pending" weight="bold">
+      Pending
+    </Text>
+    <Text>Something has changed, but hasn’t yet been confirmed.</Text>
+  </Flex>
+  <Flex direction="column" gap="regular">
+    <Text color="accent" weight="bold">
+      Accent
+    </Text>
+    <Text>
+      The accent color is typically reserved for interactive elements.
+    </Text>
+  </Flex>
+</Flex>
+```
+
+#### Semantic colors
+
+Use semantic colors to clearly and predictably communicate status-based
+information to the user.
+
+```jsx {% live=true %}
+<Flex direction="column" gap="large">
+  <Flex direction="column" gap="regular">
+    <Text color="positive" weight="bold">
+      Positive
+    </Text>
+    <Text>
+      Let the user know about something good. Think “completed task”,
+      “increasing value”, “upward trend” etc.
+    </Text>
+  </Flex>
+  <Flex direction="column" gap="regular">
+    <Text color="caution" weight="bold">
+      Caution
+    </Text>
+    <Text>Something that needs attention, but is low urgency.</Text>
+  </Flex>
+  <Flex direction="column" gap="regular">
+    <Text color="critical" weight="bold">
+      Critical
+    </Text>
+    <Text>
+      Super important; the user needs to see this. Think “error message”,
+      “delete item”, “downward trend” etc.
+    </Text>
+  </Flex>
+</Flex>
+```
+
+### Overflow
+
+How to handle white space and line breaks when the element’s text would
+otherwise `overflow` its content box.
+
+You may also [truncate](#truncate) text, which is a related but separate
+concern.
+
+#### Break word
+
+The `"breakword"` behaviour is employed as the _default_ for safety. Allowing
+content to overflow its container should be a deliberate decision. This helps to
+avoid an unusually long string of text causing layout problems.
+
+```jsx {% live=true %}
+<Box border="neutral" padding="medium" borderRadius="small" width="scale.3000">
+  <Text overflow="breakword">
+    While <em>pneumonoultramicroscopicsilicovolcanoconiosis</em> is an actual
+    medical term, most people will never hear a doctor (attempt to) say this
+    absurdly long word.
+  </Text>
+</Box>
+```
+
+#### No wrap
+
+Prevent the text from wrapping onto multiple lines. Only use `"nowrap"` when you
+expect the content to be extremely short, and may otherwise be “squashed” by
+surrounding elements.
+
+```jsx {% live=true %}
+<Box border="neutral" padding="medium" borderRadius="small" width="scale.3000">
+  <Text overflow="nowrap">
+    While <em>pneumonoultramicroscopicsilicovolcanoconiosis</em> is an actual
+    medical term, most people will never hear a doctor (attempt to) say this
+    absurdly long word.
+  </Text>
+</Box>
+```
+
+#### Unset
+
+When overflow is `"unset"` the browser will break lines according to normal line
+breaking rules. Words or unbroken strings (like URLs) will not break, even if
+they overflow the container.
+
+```jsx {% live=true %}
+<Box border="neutral" padding="medium" borderRadius="small" width="scale.3000">
+  <Text overflow="unset">
+    While <em>pneumonoultramicroscopicsilicovolcanoconiosis</em> is an actual
+    medical term, most people will never hear a doctor (attempt to) say this
+    absurdly long word.
+  </Text>
+</Box>
+```
+
+### Size
+
+The `size` of text should correlate with the importance of the content, and its
+position in the information hierarchy.
+
+Font sizes will responsively adjust depending on the device. Learn about
+[platform scales](/package/typography/concepts#truncating-cropping-text) in the
+typographic concepts guide.
+
+#### Small {% #size-small %}
+
+Only use `"small"` text for secondary content, like image captions and tooltips.
+
+```jsx {% live=true %}
+<Text size="small">Small — The five boxing wizards jump quickly.</Text>
+```
+
+#### Regular {% #size-regular %}
+
+Use `"regular"` size text for UI controls and short messages.
+
+As the default value it should typically be omitted, and is only included for
+illustrative purposes in the example below.
+
+```jsx {% live=true %}
+<Text size="regular">Regular — The five boxing wizards jump quickly.</Text>
+```
+
+#### Medium {% #size-medium %}
+
+Consider `"medium"` text for long-form content, especially where users must
+concentrate on editing the text.
+
+```jsx {% live=true %}
+<Text size="medium">Medium — The five boxing wizards jump quickly.</Text>
+```
+
+#### Large {% #size-large %}
+
+The `"large"` size should typically be reserved for cases that are heading
+adjacent, like summary content following a title.
+
+```jsx {% live=true %}
+<Text size="large">Large — The five boxing wizards jump quickly.</Text>
+```
+
+### Truncate
+
+Limit the contents of the element to the specified number of lines, or provide a
+shorthand boolean to conveniently express a single line.
+
+Only `truncate` user-generated content that may not fit within a particular
+layout. Learn more about
+[how and when to truncate text](/package/typography/concepts#truncating-cropping-text)
+in the typographic concepts guide.
+
+```jsx {% live=true %}
+<Text truncate>
+  A voussoir (/vuˈswɑːr/) is a wedge-shaped element, typically a stone, which is
+  used in building an arch or vault. Although each unit in an arch or vault is a
+  voussoir, two units are of distinct functional importance: the keystone and
+  the springer. The keystone is the centre stone or masonry unit at the apex of
+  an arch. The springer is the lowest voussoir on each side, located where the
+  curve of the arch springs from the vertical support or abutment of the wall or
+  pier.
+</Text>
+```
+
+### Variant
+
+A subset of values available on the CSS
+[font-variant-numeric](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-numeric)
+property, which enable additional glyphs for numbers.
+
+#### Diagonal fractions
+
+Use `"diagonal-fractions"` to display fractions in a smaller format where the
+numerator (top number) and denominator (bottom number) are divided by a diagonal
+slash.
+
+```jsx {% live=true %}
+<Text variant="diagonal-fractions">1/2 3/4 5/6</Text>
+```
+
+#### Ordinal
+
+Use `"ordinal"` to enable special glyphs for ordinal markers.
+
+```jsx {% live=true %}
+<Text variant="ordinal">1st 2nd 3rd 4th</Text>
+```
+
+#### Slashed zero
+
+Use `"slashed-zero"` when a clear distinction between O and 0 is needed.
+
+```jsx {% live=true %}
+<Grid gap="large">
+  <Text variant="slashed-zero">012</Text>
+  <Text variant="tabular-nums">OQR</Text>
+</Grid>
+```
+
+#### Tabular numbers
+
+Use `"tabular-nums"` when numbers should have uniform widths, for clean
+formatting in tabular data contexts.
+
+[Right align](#alignment) numbers when they're in tabular data contexts. This
+keeps the decimal in the same place and makes numerical data easier to read and
+compare.
+
+```jsx {% live=true %}
+<Grid gap="regular" width="scale.3000">
+  <Box border="neutral" padding="medium" borderRadius="small">
+    <Text align="FORCE_right" variant="tabular-nums">
+      12121.21
+    </Text>
+  </Box>
+  <Box border="neutral" padding="medium" borderRadius="small">
+    <Text align="FORCE_right" variant="tabular-nums">
+      90909.09
+    </Text>
+  </Box>
+</Grid>
+```
+
+### Visually hidden
+
+Text content can be visually hidden and made accessible to assistive
+technologies using the `visuallyHidden` prop.
+
+```jsx {% live=true %}
+<Flex gap="small" alignItems="center">
+  <Icon color="critical" src={alertCircleIcon} />
+  <Text color="critical">
+    <Text visuallyHidden>Danger: </Text>This action is not reversible.
+  </Text>
+</Flex>
+```
+
+### Weight
+
+The `weight` determines how “bold” or “light” the text will appear.
+
+#### Regular {% #weight-regular %}
+
+Use the `"regular"` weight for most body copy.
+
+As the default value it should typically be omitted, and is only included for
+illustrative purposes in the example below.
+
+```jsx {% live=true %}
+<Text weight="regular">Regular — The five boxing wizards jump quickly.</Text>
+```
+
+#### Medium {% #weight-medium %}
+
+The `"medium"` weight is most commonly used for interactive elements.
+
+```jsx {% live=true %}
+<Text weight="medium">Medium — The five boxing wizards jump quickly.</Text>
+```
+
+#### Semi Bold {% #weight-semibold %}
+
+The `"semibold"` weight should only be used to indicate that an interactive
+element is “selected”, distinguishing it from its nearby counterparts.
+
+```jsx {% live=true %}
+<Text weight="semibold">Semibold — The five boxing wizards jump quickly.</Text>
+```
+
+#### Bold {% #weight-bold %}
+
+Reserve `"bold"` text for titles and emphasis. Use sparingly to avoid diluting
+its impact.
+
+```jsx {% live=true %}
+<Text weight="bold">Bold — The five boxing wizards jump quickly.</Text>
+```
+
+## Patterns
+
+### Line height
+
+The `line-height` of each a `Text` element is baked into its [size](#size) and
+unfortunately can’t be changed. Attempting to force the line-height of a text
+element manually will result in unexpected side-effects.
+
+Learn about [spacing](/package/typography/concepts#spacing) in the typographic
+concepts guide.
+
+### Line length
+
+Wide lines of text are difficult to read and make it harder for people to focus.
+While variable screen sizes make it difficult, aim for around 60 and no more
+than 80 characters per line including spacing.
+
+### Numerical data
+
+Use [tabular numbers](#tabular-numbers) for numerical data. In tables, numbers
+should be [right aligned](#forced-alignment) to make numerical data easier to
+read and compare. This applies to things like time stamps, currency values, etc.

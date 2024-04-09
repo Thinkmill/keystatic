@@ -1,0 +1,105 @@
+---
+title: SearchField
+description:
+  Search fields are text fields, specifically designed for search behaviour.
+category: Forms
+---
+
+## Example
+
+```jsx {% live=true %}
+<SearchField label="Search" />
+```
+
+## Related
+
+- [TextField](/package/text-field) — Use for typical text input.
+
+## Props
+
+### Label
+
+Every search field must have a label.
+
+```jsx {% live=true %}
+<SearchField label="Search" />
+```
+
+If you do not provide a visible label, you must specify an `aria-label` or
+`aria-labelledby` attribute for accessibility.
+
+```jsx {% live=true %}
+<SearchField aria-label="Search" />
+```
+
+### Description
+
+The `description` communicates a hint or helpful information, such as specific
+requirements for correctly filling out the field.
+
+```jsx {% live=true %}
+<SearchField label="Search" description="Find items by name or related tags." />
+```
+
+### Error message
+
+The `errorMessage` communicates validation errors when field requirements aren’t
+met. Prompting the user to adjust their input.
+
+```jsx {% live=true %}
+<SearchField
+  label="Search"
+  isRequired
+  errorMessage="A search term is required to see results."
+  value=""
+/>
+```
+
+### Disabled
+
+A search field can be disabled by setting the `isDisabled` prop. This can be
+used to maintain layout continuity and communicate that a field may become
+available later.
+
+```jsx {% live=true %}
+<SearchField label="Search" isDisabled value="Jane Smith" />
+```
+
+### Read only
+
+The `isReadOnly` prop makes a field’s text content immutable. Unlike
+`isDisabled`, the field remains focusable and the contents can still be copied.
+
+```jsx {% live=true %}
+<SearchField label="Search" isReadOnly value="Jane Smith" />
+```
+
+## Patterns
+
+### Event handlers
+
+The search field supports common handlers, like `onChange`, but also exposes:
+
+- `onSubmit` — called when the value is submitted by pressing the `Enter` key,
+  or “Submit” equivalent on a software keyboard.
+- `onClear` — called when the value is cleared by pressing the `Esc` key, or the
+  clear button.
+
+```jsx {% live=true %}
+let [currentText, setCurrentText] = React.useState('');
+let [submittedText, setSubmittedText] = React.useState('');
+
+return (
+  <div>
+    <SearchField
+      onClear={() => setCurrentText('')}
+      onChange={setCurrentText}
+      onSubmit={setSubmittedText}
+      label="Your text"
+      value={currentText}
+    />
+    <pre>Current: {currentText}</pre>
+    <pre>Submitted: {submittedText}</pre>
+  </div>
+);
+```

@@ -1,7 +1,15 @@
 import { setBlockType, toggleMark, wrapIn } from 'prosemirror-commands';
 import { MarkType, NodeType } from 'prosemirror-model';
 import { Command, EditorState, TextSelection } from 'prosemirror-state';
-import { HTMLAttributes, ReactElement, ReactNode, useMemo } from 'react';
+import { liftTarget } from 'prosemirror-transform';
+import {
+  HTMLAttributes,
+  ReactElement,
+  ReactNode,
+  memo,
+  useMemo,
+  useState,
+} from 'react';
 
 import { ActionButton } from '@keystar/ui/button';
 import {
@@ -34,6 +42,7 @@ import {
   useEditorDispatchCommand,
   useEditorSchema,
   useEditorState,
+  useEditorViewRef,
 } from './editor-view';
 import { toggleList } from './lists';
 import { insertNode, insertTable, toggleCodeBlock } from './commands/misc';
@@ -41,6 +50,11 @@ import { EditorSchema } from './schema';
 import { ImageToolbarButton } from './images';
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 import { itemRenderer } from './autocomplete/insert-menu';
+import { LinkDialog } from './popovers/link-toolbar';
+import { DialogContainer } from '@keystar/ui/dialog';
+import { linkIcon } from '@keystar/ui/icon/icons/linkIcon';
+import { markAround } from './popovers';
+import { useEditorKeydownListener } from './keydown';
 
 export function ToolbarButton(props: {
   children: ReactNode;
@@ -70,13 +84,99 @@ export function ToolbarButton(props: {
   );
 }
 
-export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
+function LinkButton(props: { link: MarkType }) {
+  const [text, setText] = useState<null | string>(null);
+  const runCommand = useEditorDispatchCommand();
+  const viewRef = useEditorViewRef();
+  useEditorKeydownListener(event => {
+    if (event.metaKey && (event.key === 'k' || event.key === 'K')) {
+      const { state } = viewRef.current!;
+      if (!isMarkActive(props.link)(state)) {
+        event.preventDefault();
+        setText(
+          state.doc.textBetween(state.selection.from, state.selection.to)
+        );
+        return true;
+      }
+    }
+    return false;
+  });
+  return useMemo(
+    () => (
+      <>
+        <TooltipTrigger>
+          <ToolbarButton
+            aria-label="Divider"
+            command={(state, dispatch) => {
+              const aroundFrom = markAround(state.selection.$from, props.link);
+              const aroundTo = markAround(state.selection.$to, props.link);
+              if (
+                aroundFrom &&
+                (!aroundTo || aroundFrom.mark === aroundTo?.mark)
+              ) {
+                if (dispatch) {
+                  dispatch(
+                    state.tr.removeMark(
+                      aroundFrom.from,
+                      aroundTo?.to ?? aroundFrom.to,
+                      props.link
+                    )
+                  );
+                }
+                return true;
+              }
+              if (state.selection.empty) {
+                return false;
+              }
+              if (dispatch) {
+                const text = state.doc.textBetween(
+                  state.selection.from,
+                  state.selection.to
+                );
+                setText(text);
+              }
+              return true;
+            }}
+            isSelected={isMarkActive(props.link)}
+          >
+            <Icon src={linkIcon} />
+          </ToolbarButton>
+          <Tooltip>
+            <Text>Link</Text>
+            <Kbd meta>K</Kbd>
+          </Tooltip>
+        </TooltipTrigger>
+        <DialogContainer
+          onDismiss={() => {
+            setText(null);
+          }}
+        >
+          {text && (
+            <LinkDialog
+              href=""
+              text={text}
+              onSubmit={attrs => {
+                setText(null);
+                runCommand(toggleMark(props.link, attrs));
+              }}
+            />
+          )}
+        </DialogContainer>
+      </>
+    ),
+    [props.link, runCommand, text]
+  );
+}
+
+export const Toolbar = memo(function Toolbar(
+  props: HTMLAttributes<HTMLDivElement>
+) {
   const schema = useEditorSchema();
-  const { nodes } = schema;
+  const { nodes, marks } = schema;
   return (
     <ToolbarWrapper {...props}>
       <ToolbarScrollArea>
-        <HeadingMenu headingType={nodes.heading} />
+        {nodes.heading && <HeadingMenu headingType={nodes.heading} />}
         <EditorToolbar aria-label="Formatting options">
           <EditorToolbarSeparator />
           <InlineMarks />
@@ -84,53 +184,83 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
           <ListButtons />
           <EditorToolbarSeparator />
           <EditorToolbarGroup aria-label="Blocks">
-            <TooltipTrigger>
-              <ToolbarButton
-                aria-label="Divider"
-                command={insertNode(nodes.divider)}
-                isSelected={typeInSelection(nodes.divider)}
-              >
-                <Icon src={minusIcon} />
-              </ToolbarButton>
-              <Tooltip>
-                <Text>Divider</Text>
-                <Kbd>---</Kbd>
-              </Tooltip>
-            </TooltipTrigger>
-            <TooltipTrigger>
-              <ToolbarButton
-                aria-label="Quote"
-                command={wrapIn(nodes.blockquote)}
-                isSelected={typeInSelection(nodes.blockquote)}
-              >
-                <Icon src={quoteIcon} />
-              </ToolbarButton>
-              <Tooltip>
-                <Text>Quote</Text>
-                <Kbd>{'>⎵'}</Kbd>
-              </Tooltip>
-            </TooltipTrigger>
-            <TooltipTrigger>
-              <ToolbarButton
-                aria-label="Code block"
-                command={toggleCodeBlock(nodes.code_block, nodes.paragraph)}
-                isSelected={typeInSelection(nodes.code_block)}
-              >
-                <Icon src={codeIcon} />
-              </ToolbarButton>
-              <Tooltip>
-                <Text>Code block</Text>
-                <Kbd>```</Kbd>
-              </Tooltip>
-            </TooltipTrigger>
-            <TooltipTrigger>
-              <ToolbarButton aria-label="Table" command={insertTable(schema)}>
-                <Icon src={tableIcon} />
-              </ToolbarButton>
-              <Tooltip>
-                <Text>Table</Text>
-              </Tooltip>
-            </TooltipTrigger>
+            {nodes.divider && (
+              <TooltipTrigger>
+                <ToolbarButton
+                  aria-label="Divider"
+                  command={insertNode(nodes.divider)}
+                  isSelected={typeInSelection(nodes.divider)}
+                >
+                  <Icon src={minusIcon} />
+                </ToolbarButton>
+                <Tooltip>
+                  <Text>Divider</Text>
+                  <Kbd>---</Kbd>
+                </Tooltip>
+              </TooltipTrigger>
+            )}
+            {marks.link && <LinkButton link={marks.link} />}
+            {nodes.blockquote && (
+              <TooltipTrigger>
+                <ToolbarButton
+                  aria-label="Quote"
+                  command={(state, dispatch) => {
+                    const hasQuote = typeInSelection(nodes.blockquote!)(state);
+                    if (hasQuote) {
+                      const { $from, $to } = state.selection;
+                      const range = $from.blockRange(
+                        $to,
+                        node => node.type === nodes.blockquote
+                      );
+                      if (!range) return false;
+                      const target = liftTarget(range);
+                      if (target === null) return false;
+                      if (dispatch) {
+                        dispatch(state.tr.lift(range, target).scrollIntoView());
+                      }
+                      return true;
+                    } else {
+                      return wrapIn(nodes.blockquote!)(state, dispatch);
+                    }
+                  }}
+                  isSelected={typeInSelection(nodes.blockquote)}
+                >
+                  <Icon src={quoteIcon} />
+                </ToolbarButton>
+                <Tooltip>
+                  <Text>Quote</Text>
+                  <Kbd>{'>⎵'}</Kbd>
+                </Tooltip>
+              </TooltipTrigger>
+            )}
+            {nodes.code_block && (
+              <TooltipTrigger>
+                <ToolbarButton
+                  aria-label="Code block"
+                  command={toggleCodeBlock(nodes.code_block, nodes.paragraph)}
+                  isSelected={typeInSelection(nodes.code_block)}
+                >
+                  <Icon src={codeIcon} />
+                </ToolbarButton>
+                <Tooltip>
+                  <Text>Code block</Text>
+                  <Kbd>```</Kbd>
+                </Tooltip>
+              </TooltipTrigger>
+            )}
+            {nodes.table && (
+              <TooltipTrigger>
+                <ToolbarButton
+                  aria-label="Table"
+                  command={insertTable(nodes.table)}
+                >
+                  <Icon src={tableIcon} />
+                </ToolbarButton>
+                <Tooltip>
+                  <Text>Table</Text>
+                </Tooltip>
+              </TooltipTrigger>
+            )}
             <ImageToolbarButton />
           </EditorToolbarGroup>
         </EditorToolbar>
@@ -139,7 +269,7 @@ export function Toolbar(props: HTMLAttributes<HTMLDivElement>) {
       <InsertBlockMenu />
     </ToolbarWrapper>
   );
-}
+});
 
 const ToolbarContainer = ({ children }: { children: ReactNode }) => {
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
@@ -277,14 +407,14 @@ function getHeadingMenuState(
 }
 
 const HeadingMenu = (props: { headingType: NodeType }) => {
-  const { nodes } = useEditorSchema();
+  const { nodes, config } = useEditorSchema();
   const items = useMemo(() => {
     let resolvedItems: HeadingItem[] = [{ name: 'Paragraph', id: 'normal' }];
-    [1, 2, 3, 4, 5, 6].forEach(level => {
+    config.heading.levels.forEach(level => {
       resolvedItems.push({ name: `Heading ${level}`, id: level.toString() });
     });
     return resolvedItems;
-  }, []);
+  }, [config.heading.levels]);
   const state = useEditorState();
   const menuState = getHeadingMenuState(
     state,
@@ -439,6 +569,17 @@ function InlineMarks() {
       });
     }
 
+    for (const [name, componentConfig] of Object.entries(schema.components)) {
+      if (componentConfig.kind !== 'mark') continue;
+      marks.push({
+        key: name,
+        label: componentConfig.label,
+        icon: componentConfig.icon,
+        command: toggleMark(schema.schema.marks[name]),
+        isSelected: isMarkActive(schema.schema.marks[name]),
+      });
+    }
+
     marks.push({
       key: 'clearFormatting',
       label: 'Clear formatting',
@@ -447,7 +588,7 @@ function InlineMarks() {
       isSelected: () => false,
     });
     return marks;
-  }, [schema.marks]);
+  }, [schema]);
   const selectedKeys = useMemoStringified(
     inlineMarks.filter(val => val.isSelected(state)).map(val => val.key)
   );

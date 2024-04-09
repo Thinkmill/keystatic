@@ -47,7 +47,17 @@ export default config({
           formatting: true,
           dividers: true,
           links: true,
-          images: true,
+          images: {
+            directory: 'public/site/images',
+            publicPath: '/site/images',
+            schema: {
+              title: fields.text({
+                label: 'Caption',
+                description:
+                  'The text to display under the image in a caption.',
+              }),
+            },
+          },
         }),
       },
     }),
@@ -68,7 +78,7 @@ First, create a `src/app/keystatic/keystatic.ts` file:
 "use client";
 
 import { makePage } from "@keystatic/next/ui/app";
-import config from "../../keystatic.config";
+import config from "../../../keystatic.config";
 
 export default makePage(config);
 ```
@@ -81,12 +91,7 @@ import KeystaticApp from "./keystatic";
 
 export default function Layout() {
   return (
-    <html>
-      <head />
-      <body>
-        <KeystaticApp />
-      </body>
-    </html>
+    <KeystaticApp />
   );
 }
 
@@ -168,8 +173,9 @@ Keystatic provides a [Reader API](/docs/reader-api) to bring content to the fron
 The following example displays a list of each post title, with a link to an individual post page:
 
 ```tsx
+// src/app/posts/page.tsx
 import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
+import keystaticConfig from '../../../keystatic.config';
 
 import Link from 'next/link';
 
@@ -197,21 +203,25 @@ export default async function Page() {
 To display content from an individual post, you can import and use Keystatic's `<DocumentRenderer />`:
 
 ```tsx
-import { DocumentRenderer } from '@keystatic/core/renderer';
+// src/app/posts/[slug]/page.tsx
+import { DocumentRenderer } from "@keystatic/core/renderer";
+import { createReader } from "@keystatic/core/reader";
 
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
+import keystaticConfig from "../../../../keystatic.config";
 
 const reader = createReader(process.cwd(), keystaticConfig);
 
-export default async function Post() {
-  const post = await reader.collections.posts.read('my-first-post');
-
-  return (
+export default async function Post({ params }: { params: { slug: string } }) {
+  const post = await reader.collections.posts.read(params.slug);
+  return post ? (
     <>
       <h1>{post.title}</h1>
       <DocumentRenderer document={await post.content()} />
+      <hr />
+      <a href={`/posts`}>Back to Posts</a>
     </>
+  ) : (
+    <div>No Post Found</div>
   );
 }
 ```

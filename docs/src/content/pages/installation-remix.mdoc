@@ -83,6 +83,38 @@ export const loader: LoaderFunction = args => handleLoader({ config }, args);
 export const action: ActionFunction = args => handleLoader({ config }, args);
 ```
 
+## Configuring server dependencies
+
+Because Keystatic only provides an ESM build, server dependencies need to be configured.
+
+### Traditional Remix
+
+If you're using the traditional (non-Vite) version of Remix, you can configure server dependencies in your `remix.config.js` file:
+
+```diff
+/** @type {import('@remix-run/dev').AppConfig} */
+export default {
+  ignoredRouteFiles: ['**/.*'],
++ serverDependenciesToBundle: [/^@keystatic\//, 'minimatch'],
+};
+```
+
+### Remix + Vite
+
+If you're using [Remix + Vite](https://remix.run/docs/en/main/future/vite#migrating), you need to configure the `ssr.noExternal` option in the Vite config instead:
+
+```diff
+// vite.config.js
+export default defineConfig({
+  plugins: [remix()],
++ ssr: {
++   noExternal: [/^@keystatic\//, 'minimatch'],
++ },
+})
+```
+
+---
+
 ## Running Keystatic
 
 You can now launch the Keystatic Admin UI. Start the Remix dev server:

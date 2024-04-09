@@ -69,7 +69,7 @@ export function Search() {
         }
       }
       // Customise search options
-      await window.pagefind.options({ excerptLength: 15 });
+      await window.pagefind.options?.({ excerptLength: 15 });
     }
     loadPagefind();
   }, []);

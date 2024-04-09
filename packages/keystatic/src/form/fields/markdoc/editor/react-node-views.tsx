@@ -5,19 +5,32 @@ import {
   Plugin,
   PluginKey,
 } from 'prosemirror-state';
-import { NodeView } from 'prosemirror-view';
-import { ReactElement, ReactNode, memo } from 'react';
+import { NodeView, NodeViewConstructor } from 'prosemirror-view';
+import {
+  ReactElement,
+  ReactNode,
+  memo,
+  useCallback,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { useEditorViewRef } from './editor-view';
+import { css } from '@keystar/ui/style';
 
 type NodeViewInfo = {
   key: string;
-  type: NodeType;
+  node: Node;
   dom: HTMLElement;
   contentDOM: HTMLElement | undefined;
+  getPos: () => number | undefined;
 };
 
-type ReactNodeViewsState = Map<number, NodeViewInfo>;
+type ReactNodeViewsState = {
+  nodeViews: Map<string, NodeViewInfo>;
+  callbacks: Set<() => void>;
+  register: (callback: () => void) => () => void;
+};
 
 let i = 0;
 
@@ -26,6 +39,7 @@ type ReactNodeViewProps = {
   isNodeCompletelyWithinSelection: boolean;
   node: Node;
   children: ReactNode;
+  getPos: () => number | undefined;
 };
 
 type ReactNodeViewSpec = {
@@ -34,6 +48,7 @@ type ReactNodeViewSpec = {
 };
 
 export type WithReactNodeViewSpec = {
+  nodeView?: NodeViewConstructor;
   reactNodeView?: ReactNodeViewSpec;
 };
 
@@ -41,16 +56,20 @@ function NodeViewContentDOM(props: { node: HTMLElement }) {
   const viewRef = useEditorViewRef();
   return (
     <span
-      ref={element => {
-        if (!element) return;
-        element.appendChild(props.node);
+      className={displayContentsClassName}
+      ref={useCallback(
+        (element: HTMLSpanElement | null) => {
+          if (!element) return;
+          element.appendChild(props.node);
 
-        const view = viewRef.current;
-        if (!view) return;
-        if (view.hasFocus()) {
-          view.focus();
-        }
-      }}
+          const view = viewRef.current;
+          if (!view) return;
+          if (view.hasFocus()) {
+            view.focus();
+          }
+        },
+        [props.node, viewRef]
+      )}
     />
   );
 }
@@ -61,10 +80,12 @@ const NodeViewWrapper = memo(function NodeViewWrapper(props: {
   component: (props: ReactNodeViewProps) => ReactElement | null;
   hasNodeSelection: boolean;
   isNodeCompletelyWithinSelection: boolean;
+  getPos: () => number | undefined;
 }) {
   return (
     <props.component
       node={props.node}
+      getPos={props.getPos}
       hasNodeSelection={props.hasNodeSelection}
       isNodeCompletelyWithinSelection={props.isNodeCompletelyWithinSelection}
       children={
@@ -75,8 +96,13 @@ const NodeViewWrapper = memo(function NodeViewWrapper(props: {
 });
 
 export function NodeViews(props: { state: EditorState }): ReactElement | null {
-  const pluginState = reactNodeViewKey.getState(props.state);
-  if (!pluginState) return null;
+  const pluginState = reactNodeViewKey.getState(props.state)!;
+  const [nodeViews, setNodeViews] = useState(pluginState.nodeViews);
+  useLayoutEffect(() => {
+    return pluginState.register(() => {
+      setNodeViews(pluginState.nodeViews);
+    });
+  });
   const nodeSelectionPos =
     props.state.selection instanceof NodeSelection
       ? props.state.selection.from
@@ -86,11 +112,11 @@ export function NodeViews(props: { state: EditorState }): ReactElement | null {
 
   return (
     <>
-      {[...pluginState].map(([pos, { key, contentDOM, dom, type }]) => {
-        const node = props.state.doc.nodeAt(pos);
-        if (node?.type !== type) return null;
+      {[...nodeViews].map(([key, { contentDOM, dom, node, getPos }]) => {
         const nodeViewSpec = getReactNodeViewSpec(node.type);
         if (!nodeViewSpec) return null;
+        const pos = getPos();
+        if (pos === undefined) return null;
         return createPortal(
           <NodeViewWrapper
             hasNodeSelection={nodeSelectionPos === pos}
@@ -100,6 +126,7 @@ export function NodeViews(props: { state: EditorState }): ReactElement | null {
             node={node}
             contentDOM={contentDOM}
             component={nodeViewSpec.component as any}
+            getPos={getPos}
           />,
           dom,
           key
@@ -113,17 +140,12 @@ function getReactNodeViewSpec(type: NodeType): ReactNodeViewSpec | undefined {
   return type.spec.reactNodeView as ReactNodeViewSpec | undefined;
 }
 
-function createNodeView(type: NodeType): NodeViewInfo {
-  const reactNodeViewSpec = getReactNodeViewSpec(type);
-  return {
-    key: (i++).toString(),
-    type,
-    dom: document.createElement('div'),
-    contentDOM:
-      reactNodeViewSpec?.rendersOwnContent || type.isLeaf
-        ? undefined
-        : document.createElement(type.inlineContent ? 'div' : 'span'),
-  };
+const displayContentsClassName = css({ display: 'contents' });
+
+function elementWithDisplayContents(tag: keyof HTMLElementTagNameMap) {
+  const element = document.createElement(tag);
+  element.classList.add(displayContentsClassName);
+  return element;
 }
 
 const reactNodeViewKey = new PluginKey<ReactNodeViewsState>('reactNodeViews');
@@ -131,62 +153,91 @@ const reactNodeViewKey = new PluginKey<ReactNodeViewsState>('reactNodeViews');
 export function reactNodeViews(schema: Schema) {
   const nodes = new Set<NodeType>();
   for (const nodeType of Object.values(schema.nodes)) {
-    if (nodeType.spec.reactNodeView) {
+    if (nodeType.spec.reactNodeView || nodeType.spec.nodeView) {
       nodes.add(nodeType);
     }
   }
-  const plugin: Plugin<ReactNodeViewsState> = new Plugin<ReactNodeViewsState>({
+  const plugin = new Plugin<ReactNodeViewsState>({
     key: reactNodeViewKey,
     state: {
-      init(config, state) {
-        const pluginState: ReactNodeViewsState = new Map();
-        state.doc.descendants((node, pos) => {
-          if (nodes.has(node.type)) {
-            pluginState.set(pos, createNodeView(node.type));
-          }
-        });
-        return pluginState;
+      init() {
+        const callbacks = new Set<() => void>();
+        return {
+          nodeViews: new Map(),
+          callbacks,
+          register: callback => {
+            callbacks.add(callback);
+            return () => {
+              callbacks.delete(callback);
+            };
+          },
+        };
       },
-      apply(tr, oldPluginState, oldState, newState) {
-        const mappedState: ReactNodeViewsState = new Map();
-        for (const [position, val] of oldPluginState) {
-          const mapped = tr.mapping.mapResult(position);
-          if (mapped.deleted || mappedState.has(mapped.pos)) continue;
-          const node = newState.doc.nodeAt(mapped.pos);
-          if (!node || node.type !== val.type) continue;
-          mappedState.set(mapped.pos, val);
-        }
-        const newPluginState: ReactNodeViewsState = new Map();
-        newState.doc.descendants((node, pos) => {
-          if (nodes.has(node.type)) {
-            const key = mappedState.get(pos);
-            newPluginState.set(pos, key ?? createNodeView(node.type));
-          }
-        });
-        return newPluginState;
+      apply(tr, pluginState) {
+        return pluginState;
       },
     },
     props: {
       nodeViews: Object.fromEntries(
-        [...nodes].map(node => [
-          node.name,
+        [...nodes].map(type => [
+          type.name,
           (node, view, getPos): NodeView => {
-            const nodeView = plugin.getState(view.state)!.get(getPos()!);
-            const contentDOM = nodeView!.contentDOM;
-            return {
-              dom: nodeView!.dom,
+            if (type.spec.nodeView) {
+              return type.spec.nodeView(node, view, getPos);
+            }
+            const reactNodeViewSpec = getReactNodeViewSpec(type);
+
+            const dom = document.createElement(type.isInline ? 'span' : 'div');
+            const contentDOM =
+              reactNodeViewSpec?.rendersOwnContent || type.isLeaf
+                ? undefined
+                : elementWithDisplayContents(
+                    type.inlineContent ? 'div' : 'span'
+                  );
+
+            const inner = elementWithDisplayContents(
+              type.inlineContent ? 'div' : 'span'
+            );
+            dom.appendChild(inner);
+
+            const key = `${i++}`;
+            const info: NodeViewInfo = {
               contentDOM,
+              dom: inner,
+              getPos,
+              key,
+              node,
+            };
+            const pluginState = reactNodeViewKey.getState(view.state)!;
+            pluginState.nodeViews.set(key, info);
+
+            const cb = () => {
+              for (const callback of pluginState.callbacks) {
+                callback();
+              }
+            };
+            cb();
+
+            return {
+              dom,
+              contentDOM,
+              destroy() {
+                pluginState.nodeViews.delete(key);
+                cb();
+              },
               ignoreMutation(mutation) {
                 return !contentDOM?.contains(mutation.target);
               },
               deselectNode() {},
               selectNode() {},
-              update() {
-                const pos = getPos();
-                const newNodeView = plugin
-                  .getState(view.state)
-                  ?.get(pos as number);
-                return nodeView === newNodeView;
+              update(node) {
+                if (node.type !== type) return false;
+                pluginState.nodeViews.set(key, {
+                  ...info,
+                  node,
+                });
+                cb();
+                return true;
               },
             };
           },

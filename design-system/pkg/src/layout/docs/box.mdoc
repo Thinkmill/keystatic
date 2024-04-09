@@ -1,0 +1,111 @@
+---
+title: Box
+description: Box is a general purpose low-level primitive with no specific semantics that can be used for layout and styling. All other layout primitives extend the Box primitive.
+category: Layout
+---
+
+## Example
+
+Use the `Box` layout primitive to access Keystar design tokens.
+
+```jsx {% live=true %}
+<Box
+  backgroundColor="accent"
+  border="accent"
+  borderRadius="small"
+  padding="large"
+>
+  <Text>Box example</Text>
+</Box>
+```
+
+### Element type
+
+By default, `Box` renders a div element. You can customise this using the
+`elementType` prop. Non-style props will be forwarded to the underlying element.
+
+```jsx
+<Box elementType="section" id="element-type-example">
+  ...
+</Box>
+```
+
+## Props
+
+The `Box` accepts all the [base style props](/package/style#reference), as well as the following:
+
+### Border
+
+| Name           | Description                                                                                                                                                                                                                                 |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `border`       | Shorthand for the element's border on all four sides. It sets the values of border-width, border-style, and border-color. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border).                                               |
+| `borderTop`    | Shorthand for the top border. It sets the values of border-width, border-style, and border-color. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-top).                                                                   |
+| `borderBottom` | Shorthand for the bottom border. It sets the values of border-width, border-style, and border-color. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-bottom).                                                             |
+| `borderStart`  | Shorthand for the border on the logical start side, depending on the layout direction. It sets the values of border-width, border-style, and border-color. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-inline-start). |
+| `borderEnd`    | Shorthand for the border on the logical end side, depending on the layout direction. It sets the values of border-width, border-style, and border-color. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-inline-end).     |
+
+### Border color
+
+| Name               | Description                                                                                                                                                                  |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `borderColor`      | The color of the element's border on all four sides. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-color).                                               |
+| `borderTopColor`   | The color of the top border. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-top-color).                                                                   |
+| `borderBottomColor`| The color of the bottom border. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-bottom-color).                                                             |
+| `borderStartColor` | The color of the border on the logical start side, depending on the layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-inline-start-color). |
+| `borderEndColor`   | The color of the border on the logical end side, depending on the layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-inline-end-color).     |
+
+### Border style
+
+| Name               | Description                                                                                                                                                                  |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `borderStyle`      | The style of the element's border on all four sides. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-style).                                               |
+| `borderTopStyle`   | The style of the top border. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-top-style).                                                                   |
+| `borderBottomStyle`| The style of the bottom border. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-bottom-style).                                                             |
+| `borderStartStyle` | The style of the border on the logical start side, depending on the layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-inline-start-style). |
+| `borderEndStyle`   | The style of the border on the logical end side, depending on the layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-inline-end-style).     |
+
+### Border width
+
+| Name               | Description                                                                                                                                                                  |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `borderWidth`      | The width of the element's border on all four sides. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-width).                                               |
+| `borderTopWidth`   | The width of the top border. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-top-width).                                                                   |
+| `borderBottomWidth`| The width of the bottom border. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-bottom-width).                                                             |
+| `borderStartWidth` | The width of the border on the logical start side, depending on the layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-inline-start-width). |
+| `borderEndWidth`   | The width of the border on the logical end side, depending on the layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-inline-end-width).     |
+
+### Border radius
+
+| Name                      | Description                                                                                                                                                                           |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `borderRadius`            | The border radius on all four sides of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-radius).                                                        |
+| `borderTopStartRadius`    | The border radius for the top start corner of the element, depending on the layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-start-start-radius).  |
+| `borderTopEndRadius`      | The border radius for the top end corner of the element, depending on the layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-start-end-radius).      |
+| `borderBottomStartRadius` | The border radius for the bottom start corner of the element, depending on the layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-end-start-radius). |
+| `borderBottomEndRadius`   | The border radius for the bottom end corner of the element, depending on the layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-end-end-radius).     |
+
+
+### Padding
+
+| Name            | Description                                                                                                                                                    |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `padding`       | Sets the padding on all four sides of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/padding).                                        |
+| `paddingX`      | Sets the padding on the left and right sides of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/padding-inline-start).                 |
+| `paddingY`      | Sets the padding on the top and bottom sides of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/padding-inline-end).                   |
+| `paddingTop`    | Sets the padding on the top side of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/padding-top).                                      |
+| `paddingBottom` | Sets the padding on the bottom side of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/padding-bottom).                                |
+| `paddingStart`  | Sets the padding on the logical start side of the element, depending on layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/padding). |
+| `paddingEnd`    | Sets the padding on the logical end side of the element, depending on layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/padding).   |
+
+### Other
+
+| Name            | Description                                                                                                                                                                                                                                 |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `backgroundColor`| The background color for the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/background-color).                                                                                                                        |
+| `boxShadow`     | Adds shadow effects around an element's frame. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow).                                                                                                                      |
+| `cursor`        | The type of mouse cursor, if any, to show when the mouse pointer is over an element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor)                                                                                     |
+| `opacity`       | The opacity of an element. Opacity is the degree to which content behind an element is hidden, and is the opposite of transparency. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/opacity)                                     |
+| `overflow`      | Specify what to do when the element's content is too long to fit its size. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow).                                                                                            |
+| `pointerEvents` | Sets under what circumstances (if any) a particular element can become the target of pointer events. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events).                                                            |
+| `userSelect`    | Controls whether the user can select text. This doesn't have any effect on content loaded as part of a browser's user interface (its chrome), except in textboxes. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/user-select). |
+

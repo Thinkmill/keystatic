@@ -26,7 +26,7 @@ import {
   useTableSelectAllCheckbox,
   useTableSelectionCheckbox,
 } from '@react-aria/table';
-import { mergeProps } from '@react-aria/utils';
+import { filterDOMProps, mergeProps } from '@react-aria/utils';
 import {
   layoutInfoToStyle,
   ScrollView,
@@ -453,7 +453,7 @@ function TableVirtualizer<T extends object>(props: TableVirtualizerProps<T>) {
     virtualizerState,
     domRef
   );
-  let mergedProps = mergeProps(otherProps, virtualizerProps);
+  let mergedProps = mergeProps(filterDOMProps(otherProps), virtualizerProps);
 
   const [headerView, bodyView] = virtualizerState.visibleViews;
   let headerHeight = layout.getLayoutInfo('header')?.rect.height || 0;

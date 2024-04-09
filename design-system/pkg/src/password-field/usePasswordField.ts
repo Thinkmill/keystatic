@@ -1,10 +1,10 @@
-import { useMessageFormatter } from '@react-aria/i18n';
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useTextField } from '@react-aria/textfield';
 import { useId } from '@react-aria/utils';
 import { AriaButtonProps } from '@react-types/button';
 import { RefObject } from 'react';
 
-import localizedMessages from './l10n.json';
+import localizedMessages from './l10n';
 import {
   PasswordFieldAria,
   PasswordFieldProps,
@@ -55,12 +55,10 @@ export function usePasswordField(
       props.label != null ? labelProps.id : props['aria-labelledby'];
   }
 
-  // NOTE: would prefer `useLocalizedStringFormatter` from
-  // @react-aria/i18n, but it is not working with variables
-  let formatMessage = useMessageFormatter(localizedMessages);
+  let formatter = useLocalizedStringFormatter(localizedMessages);
   let revealButtonId = useId();
   let revealButtonProps: AriaButtonProps = {
-    'aria-label': formatMessage('show', { fieldLabel }).trim(),
+    'aria-label': formatter.format('show', { fieldLabel }).trim(),
     id: ariaLabelledby ? revealButtonId : undefined,
     'aria-labelledby': ariaLabelledby
       ? `${revealButtonId} ${ariaLabelledby}`

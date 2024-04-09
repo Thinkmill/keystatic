@@ -1,5 +1,5 @@
 import { ClassList, css, tokenSchema, useStyleProps } from '@keystar/ui/style';
-import { HeadingProps, PartialRequired } from '@keystar/ui/types';
+import { HeadingProps, PickRequired } from '@keystar/ui/types';
 
 import { getTrimStyles } from '../getTrimStyles';
 import { textOptimizationStyles } from '../text/useTextStyles';
@@ -11,7 +11,7 @@ export function useHeadingStyles({
   size,
   UNSAFE_className,
   ...otherProps
-}: PartialRequired<HeadingProps, 'size'>) {
+}: PickRequired<HeadingProps, 'size'>) {
   const fontDefinition = tokenSchema.typography.heading[size];
   const trimStyles = getTrimStyles(fontDefinition);
   const styles = [

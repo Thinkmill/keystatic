@@ -1,5 +1,79 @@
 # localization
 
+## 0.1.98
+
+### Patch Changes
+
+- Updated dependencies [dbb9d3cb]
+  - @keystatic/core@0.5.11
+  - @keystatic/next@5.0.0
+
+## 0.1.97
+
+### Patch Changes
+
+- Updated dependencies [e1ebbdae]
+  - @keystatic/core@0.5.10
+  - @keystatic/next@5.0.0
+
+## 0.1.96
+
+### Patch Changes
+
+- Updated dependencies [847b9163]
+  - @keystatic/core@0.5.9
+  - @keystatic/next@5.0.0
+
+## 0.1.95
+
+### Patch Changes
+
+- Updated dependencies [4d1cee00]
+  - @keystatic/core@0.5.8
+  - @keystatic/next@5.0.0
+
+## 0.1.94
+
+### Patch Changes
+
+- Updated dependencies [c519f119]
+  - @keystatic/core@0.5.7
+  - @keystatic/next@5.0.0
+
+## 0.1.93
+
+### Patch Changes
+
+- Updated dependencies [c619ef2e]
+  - @keystatic/core@0.5.6
+  - @keystatic/next@5.0.0
+
+## 0.1.92
+
+### Patch Changes
+
+- Updated dependencies [8ad803c5]
+  - @keystatic/core@0.5.0
+  - @keystatic/next@5.0.0
+
+## 0.1.91
+
+### Patch Changes
+
+- Updated dependencies [e3947052]
+- Updated dependencies [ee3f2038]
+  - @keystatic/core@0.4.0
+  - @keystatic/next@4.0.0
+
+## 0.1.90
+
+### Patch Changes
+
+- Updated dependencies [0b2432ed]
+- Updated dependencies [f4aaa8e3]
+  - @keystatic/core@0.3.0
+  - @keystatic/next@3.0.0
+
 ## 0.1.89
 
 ### Patch Changes

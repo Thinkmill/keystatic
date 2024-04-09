@@ -4,9 +4,11 @@ summary: >-
   The `format` option lets you configure Keystatic's output files. Choose
   between JSON, YAML or Markdoc.
 ---
-Keystatic is capable to store your data in multiple formats: `YAML`, `JSON` and `Markdoc`.
+Keystatic is capable to store your data in multiple formats: YAML, JSON, Markdoc and MDX.
 
-By default, entries will be stored in a `YAML` file, with the exception of `document` fields, which will generate a sperate `.mdoc` file.
+By default, entries will be stored in a YAML file. 
+
+If the collection contains a `document`, `markdoc` or `mdx` field, a separate `.mdoc` or `.mdx` file will be generated for the content of those fields.
 
 The name and directory structure of entries is also affected by the `path` settings on a given collection or singleton. See the [Content organisation page](/docs/content-organisation) for more details.
 
@@ -59,13 +61,13 @@ Who's with me?
 
 ## Example with JSON data
 
-We can specifically ask for `JSON` data instead of `YAML` with the `format.data` option in our `blog` collection:
+We can specifically ask for `json` data instead of `yaml` with the `format.data` option in our `blog` collection:
 
 ```diff
 blog: collection({
   label: 'Blog',
   slugField: 'title',
-+ format: { data: 'JSON' },
++ format: { data: 'json' },
   schema: { //... }
 })
 ```
@@ -150,6 +152,6 @@ I say we pack our swimmers and towels and head to the beach.
 Who's with me?
 ```
 
-## **Type signature**
+## Type signature
 
 Find the latest version of the `Format` type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.Format](https://docsmill.dev/npm/@keystatic/core@latest#/.Format)

@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import { describe, it, expect } from '@jest/globals';
 
 import { render } from '#test-utils';
 

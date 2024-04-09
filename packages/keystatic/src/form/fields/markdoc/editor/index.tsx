@@ -1,6 +1,6 @@
 import { EditorView } from 'prosemirror-view';
 import { EditorState } from 'prosemirror-state';
-import { Ref, forwardRef, useId, useMemo } from 'react';
+import { Ref, forwardRef, useId, useMemo, useState } from 'react';
 import { Box } from '@keystar/ui/layout';
 import { useProseStyleProps } from '@keystar/ui/typography';
 import {
@@ -26,6 +26,8 @@ import {
 import { useEntryLayoutSplitPaneContext } from '../../../../app/entry-form';
 import { useContentPanelSize } from '../../../../app/shell/context';
 import { EditorFooter } from './editor-footer';
+import { yCursorPluginKey, ySyncPluginKey } from 'y-prosemirror';
+import * as Y from 'yjs';
 
 const contentStyles = css({
   flex: 1,
@@ -35,7 +37,7 @@ const contentStyles = css({
   outline: 0,
   padding: tokenSchema.size.space.medium,
 
-  '&[data-layout="main"]': {
+  '[data-layout="main"] > div > &': {
     boxSizing: 'border-box',
     height: '100%',
     padding: 0,
@@ -60,8 +62,8 @@ const contentStyles = css({
 
 export const Editor = forwardRef(function Editor(
   {
-    value,
-    onChange,
+    value: _value,
+    onChange: _onChange,
     ...props
   }: {
     value: EditorState;
@@ -69,6 +71,15 @@ export const Editor = forwardRef(function Editor(
   },
   ref: Ref<{ view: EditorView | null }>
 ) {
+  const [valueWhileInCollab, setValueWhileInCollab] =
+    useState<EditorState>(_value);
+  if ('yjs' in _onChange) {
+    const yjsFragment: Y.XmlFragment | undefined =
+      ySyncPluginKey.getState(valueWhileInCollab)?.type;
+    if (yjsFragment !== (_onChange as any).yjs()) {
+      setValueWhileInCollab(_value);
+    }
+  }
   let entryLayoutPane = useEntryLayoutSplitPaneContext();
   const containerSize = useContentPanelSize();
   const styleProps = useProseStyleProps({
@@ -76,6 +87,14 @@ export const Editor = forwardRef(function Editor(
     UNSAFE_className: contentStyles,
     ...toDataAttributes({ layout: entryLayoutPane, container: containerSize }),
   });
+  let value, onChange;
+  if (yCursorPluginKey.getState(_value)) {
+    value = valueWhileInCollab ?? _value;
+    onChange = setValueWhileInCollab;
+  } else {
+    value = _value;
+    onChange = _onChange;
+  }
 
   const id = useId();
   const editorContext = useMemo(() => ({ id }), [id]);

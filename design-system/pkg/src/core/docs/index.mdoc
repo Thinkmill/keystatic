@@ -1,0 +1,108 @@
+---
+title: Core
+description: The core package includes a range of functions, hooks and components that form the foundation of how the component library works.
+category: Introduction
+---
+
+## Provider
+
+The `KeystarProvider` provides the necessary contexts for all components.
+
+It should be placed at the root of your application, but may be nested when required. For [Next.js applications](/package/next) use the tailor-made `NextRootProvider` instead.
+
+### Color scheme
+
+Control your application’s color scheme with the `colorScheme` prop. The default is `"auto"` which will use the user’s system preference.
+
+```jsx {% live=true %}
+const [colorScheme, toggleScheme] = React.useReducer(
+  s => (s === 'dark' ? 'light' : 'dark'),
+  'light'
+);
+
+return (
+  <div>
+    <Switch
+      isSelected={colorScheme === 'dark'}
+      onChange={toggleScheme}
+      marginBottom="large"
+    >
+      Dark mode
+    </Switch>
+    <KeystarProvider colorScheme={colorScheme}>
+      <VStack
+        gap="xlarge"
+        backgroundColor="canvas"
+        padding="large"
+        borderTop="muted"
+        UNSAFE_style={{
+          marginInline: `calc(${tokenSchema.size.space.large} * -1)`,
+          marginBottom: `calc(${tokenSchema.size.space.large} * -1)`,
+        }}
+      >
+        <Flex wrap gap="medium" alignItems="end">
+          <Picker label="Picker">
+            <Item key="first">First</Item>
+            <Item key="second">Second</Item>
+            <Item key="third">Third</Item>
+          </Picker>
+          <TextField
+            label="Text"
+            minWidth="alias.singleLineWidth"
+            isRequired
+            flex
+          />
+          <ActionButton>Action</ActionButton>
+        </Flex>
+        <ButtonGroup>
+          <Button prominence="high">Primary</Button>
+          <Button prominence="low">Secondary</Button>
+        </ButtonGroup>
+      </VStack>
+    </KeystarProvider>
+  </div>
+);
+```
+
+### Locale
+
+Control your application’s language preferences with the `locale` prop, which accepts a [BCP 47](https://www.ietf.org/rfc/bcp/bcp47.txt) language code. The example below sets the locale to `"pt-BR"` for Brazilian Portuguese.
+
+```tsx
+<KeystarProvider locale="pt-BR">
+  {/* ... */}
+</KeystarProvider>
+```
+
+### Client-side routing
+
+The provider component accepts an optional `router` prop, which enables Keystar
+components that render links to perform client-side navigation using your
+application or framework’s client-side router.
+
+```jsx
+import { KeystarProvider } from '@keystar/ui/core';
+import { useNavigate } from 'react-router-dom';
+
+export function App() {
+  let navigate = useNavigate();
+  let router = useMemo(() => ({ navigate }), [navigate]);
+
+  return (
+    <KeystarProvider router={router}>
+      {/* ... */}
+    </KeystarProvider>
+  );
+}
+```
+
+**NOTE:** external links to different origins will not trigger client-side
+routing, and will use native browser navigation.
+
+Additionally, if the link has a
+[target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)
+other than `"\_self"`, uses the
+[download](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download)
+attribute, or the user presses modifier keys such as `Command` or `Alt` to
+change the default behavior, browser native navigation will occur instead of
+client-side routing.

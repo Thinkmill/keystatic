@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { cx } from '../../utils';
 
 import { Search } from '../../components/search';
+import { type BadgeStatus } from './badges';
 
 export type NavProps = {
   ignoreDocNavStyles?: boolean;
@@ -18,7 +19,7 @@ export type NavProps = {
       href: string;
       title: string | undefined;
       comingSoon?: boolean;
-      isNew?: boolean;
+      status?: BadgeStatus;
     }[];
   }[];
 };
@@ -75,6 +76,17 @@ export function HeaderNav({
                   href="/showcase"
                 >
                   Showcase
+                </Link>
+                <Link
+                  className={cx(
+                    linkStylesShared,
+                    pathname?.startsWith('/resources')
+                      ? linkStylesCurrent
+                      : linkStylesIdle
+                  )}
+                  href="/resources"
+                >
+                  Resources
                 </Link>
               </div>
               <SocialLinks />

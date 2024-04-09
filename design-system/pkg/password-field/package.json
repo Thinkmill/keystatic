@@ -1,4 +1,0 @@
-{
-  "main": "dist/keystar-ui-password-field.cjs.js",
-  "module": "dist/keystar-ui-password-field.esm.js"
-}

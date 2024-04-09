@@ -25,6 +25,8 @@ function rangeHasLink(
 }
 
 export function pasteLinks(schema: EditorSchema) {
+  if (!schema.marks.link) return new Plugin({});
+  const linkType = schema.marks.link;
   return new Plugin({
     props: {
       transformPasted(slice) {
@@ -41,7 +43,7 @@ export function pasteLinks(schema: EditorSchema) {
               schema.nodes.paragraph.createChecked(
                 null,
                 schema.schema.text(slice.content.firstChild.firstChild.text, [
-                  schema.marks.link.create({
+                  linkType.create({
                     href: slice.content.firstChild.firstChild.text,
                     title: '',
                   }),
@@ -72,7 +74,7 @@ export function pasteLinks(schema: EditorSchema) {
           tr.addMark(
             view.state.selection.from,
             view.state.selection.to,
-            view.state.schema.marks.link.create({ href: plain, title: '' })
+            linkType.create({ href: plain, title: '' })
           );
           view.dispatch(tr);
           return true;

@@ -1,4 +1,5 @@
 import { getMockToken } from '../test-utilities';
+import { describe, expect, it } from '@jest/globals';
 import { namePathToFigma } from './namePathToFigma';
 
 describe('Transformer: namePathToFigma', () => {

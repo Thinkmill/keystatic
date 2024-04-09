@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
-  "packageManager": "pnpm@7.33.3",
+  "packageManager": "pnpm@8.15.4",
   "engines": {
-    "pnpm": "7.33.3"
+    "pnpm": "8.15.4"
   },
   "scripts": {
     "build:docs": "pnpm --filter=keystatic-docs build",
@@ -36,7 +36,7 @@
     "test": "pnpm run test:unit",
     "test-strict": "cross-env STRICT_MODE=1 pnpm run test",
     "test:coverage": "jest ---coverage",
-    "test:unit": "jest",
+    "test:unit": "NODE_OPTIONS=--experimental-vm-modules jest",
     "validate": "npm-run-all --parallel check:*",
     "version-packages": "changeset version && pnpm i --frozen-lockfile=false && pnpm run format \"**/CHANGELOG.md\""
   },
@@ -49,16 +49,14 @@
     "@babel/preset-typescript": "^7.23.0",
     "@changesets/changelog-github": "^0.4.5",
     "@changesets/cli": "^2.23.0",
-    "@manypkg/cli": "^0.19.1",
-    "@preconstruct/cli": "^2.8.0",
+    "@manypkg/cli": "^0.21.3",
+    "@preconstruct/cli": "^2.8.3",
     "@testing-library/dom": "^8.20.0",
-    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/eslint": "^8.4.3",
-    "@types/jest": "^29.0.0",
     "@types/node": "16.11.13",
-    "@types/testing-library__jest-dom": "^5.14.5",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "cross-env": "^7.0.3",
@@ -78,14 +76,24 @@
     "react-dom": "^18.2.0",
     "typescript": "^5.2.2"
   },
+  "manypkg": {
+    "ignoredRules": [
+      "INVALID_DEV_AND_PEER_DEPENDENCY_RELATIONSHIP"
+    ],
+    "workspaceProtocol": "require"
+  },
   "preconstruct": {
     "packages": [
       "design-system/pkg",
       "packages/*"
     ],
-    "exports": true,
+    "exports": {
+      "importConditionDefaultExport": "default"
+    },
     "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
-      "importsConditions": true
+      "importsConditions": true,
+      "typeModule": true,
+      "distInRoot": true
     }
   }
 }

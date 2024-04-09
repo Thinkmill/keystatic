@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import { beforeEach, expect, describe, it, jest } from '@jest/globals';
 
 import { Breadcrumbs, Item } from '..';
 import { renderWithProvider, within } from '#test-utils';

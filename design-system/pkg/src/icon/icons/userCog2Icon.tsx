@@ -1,16 +1,8 @@
 export const userCog2Icon = (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    width="1em"
-    height="1em"
-  >
-    <path d="M14 19a6 6 0 0 0-12 0" />
-    <circle cx={8} cy={9} r={4} />
-    <circle cx={19} cy={11} r={2} />
-    <path d="M19 8v1M19 13v1M21.6 9.5l-.87.5M17.27 12l-.87.5M21.6 12.5l-.87-.5M17.27 10l-.87-.5" />
-  </svg>
+  <>
+    <path d="M2 21a8 8 0 0 1 10.434-7.62" />
+    <circle cx={10} cy={8} r={5} />
+    <circle cx={18} cy={18} r={3} />
+    <path d="m19.5 14.3-.4.9M16.9 20.8l-.4.9M21.7 19.5l-.9-.4M15.2 16.9l-.9-.4M21.7 16.5l-.9.4M15.2 19.1l-.9.4M19.5 21.7l-.4-.9M16.9 15.2l-.4-.9" />
+  </>
 );

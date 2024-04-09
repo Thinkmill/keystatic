@@ -1,6 +1,6 @@
 import { act, render } from '@testing-library/react';
 import { diff } from 'jest-diff';
-import prettyFormat, { plugins, Plugin } from 'pretty-format';
+import { plugins, Plugin, format } from 'pretty-format';
 import { ReactElement, createElement, MutableRefObject, useState } from 'react';
 import { Editor, Node, Path, Text, Range } from 'slate';
 import { Slate } from 'slate-react';
@@ -11,6 +11,8 @@ import { DocumentFeatures } from '../document-features';
 import { createToolbarState, ToolbarStateProvider } from '../toolbar-state';
 import { KeystarProvider } from '@keystar/ui/core';
 import { normaliseDocumentFeatures } from '../..';
+
+import { expect } from '@jest/globals';
 
 export { __jsx as jsx } from './jsx/namespace';
 
@@ -49,21 +51,19 @@ console.error = (...stuff: any[]) => {
 };
 
 function formatEditor(editor: Node) {
-  return prettyFormat(editor, {
+  return format(editor, {
     plugins: [plugins.ReactElement, editorSerializer as Plugin],
   });
 }
 
-declare global {
-  namespace jest {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    interface Matchers<R, T> {
-      toEqualEditor(
-        expected: [T] extends [Editor]
-          ? Editor
-          : 'toEqualEditor only accepts an Editor'
-      ): CustomMatcherResult;
-    }
+declare module '@jest/expect' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  export interface Matchers<R extends void | Promise<void>, T> {
+    toEqualEditor(
+      expected: [T] extends [Editor]
+        ? Editor
+        : 'toEqualEditor only accepts an Editor'
+    ): R;
   }
 }
 

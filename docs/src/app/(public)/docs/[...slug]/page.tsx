@@ -4,13 +4,25 @@ import slugify from '@sindresorhus/slugify';
 
 import { EditOnGitHub } from '../../../../components/navigation/edit-on-github';
 import { TableOfContents } from '../../../../components/navigation/table-of-contents';
-import DocumentRenderer from '../../../../components/document-renderer';
 import { reader } from '../../../../utils/reader';
 import { H1_ID } from '../../../../constants';
+import { MarkdocRenderer } from '../../../../components/markdoc-renderer';
+import { RenderableTreeNode, Tag } from '@markdoc/markdoc';
+import { transformMarkdoc } from '../../../../../keystatic.config';
 
 type DocsProps = {
   params: { slug: string[] };
 };
+
+function stringifyDocContent(node: RenderableTreeNode): string {
+  if (typeof node === 'string') {
+    return node;
+  }
+  if (node === null || !Tag.isTag(node)) {
+    return '';
+  }
+  return node.children.map(stringifyDocContent).join('');
+}
 
 export default async function Docs({ params }: DocsProps) {
   const { slug: slugPath } = params;
@@ -21,11 +33,15 @@ export default async function Docs({ params }: DocsProps) {
   if (!page) notFound();
 
   // Filter headings from the document content
-  const headingsFromContent = (await page.content())
-    .filter(child => child.type === 'heading')
+  const headingsFromContent = (
+    transformMarkdoc((await page.content()).node) as Tag
+  ).children
+    .filter(
+      (child): child is Tag => Tag.isTag(child) && child.name === 'Heading'
+    )
     .map(heading => ({
-      level: heading.level as number,
-      text: heading.children.find(child => child.text)?.text as string,
+      level: heading.attributes.level as number,
+      text: stringifyDocContent(heading),
     }))
     .filter(heading => heading.text);
 
@@ -56,7 +72,7 @@ export default async function Docs({ params }: DocsProps) {
           {page.title}
         </h1>
         <div className="flex flex-col gap-4 [&_a]:break-words">
-          <DocumentRenderer document={await page.content()} />
+          <MarkdocRenderer node={(await page.content()).node} />
         </div>
       </div>
       <div className="sticky top-10 hidden w-[12rem] self-start md:block lg:top-32">

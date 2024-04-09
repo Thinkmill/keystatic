@@ -1,27 +1,18 @@
 {
   "name": "@keystatic/remix",
-  "version": "2.0.0",
+  "version": "5.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/Thinkmill/keystatic/",
     "directory": "packages/remix"
   },
+  "type": "module",
   "exports": {
-    "./ui": {
-      "types": "./ui/dist/keystatic-remix-ui.cjs.js",
-      "module": "./ui/dist/keystatic-remix-ui.esm.js",
-      "default": "./ui/dist/keystatic-remix-ui.cjs.js"
-    },
-    "./api": {
-      "types": "./api/dist/keystatic-remix-api.cjs.js",
-      "module": "./api/dist/keystatic-remix-api.esm.js",
-      "default": "./api/dist/keystatic-remix-api.cjs.js"
-    },
+    "./ui": "./dist/keystatic-remix-ui.js",
+    "./api": "./dist/keystatic-remix-api.js",
     "./package.json": "./package.json"
   },
-  "main": "dist/keystatic.cjs.js",
-  "module": "dist/keystatic.esm.js",
   "files": [
     "dist",
     "api",
@@ -36,7 +27,7 @@
     "@types/react": "^18.2.8"
   },
   "devDependencies": {
-    "@keystatic/core": "^0.2.0",
+    "@keystatic/core": "workspace:^",
     "@remix-run/react": "^2.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

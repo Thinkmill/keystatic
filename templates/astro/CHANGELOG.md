@@ -1,5 +1,121 @@
 # @keystatic/templates-astro
 
+## 0.0.23
+
+### Patch Changes
+
+- Updated dependencies [dbb9d3cb]
+  - @keystatic/core@0.5.11
+  - @keystatic/astro@5.0.0
+
+## 0.0.22
+
+### Patch Changes
+
+- Updated dependencies [e1ebbdae]
+  - @keystatic/core@0.5.10
+  - @keystatic/astro@5.0.0
+
+## 0.0.21
+
+### Patch Changes
+
+- Updated dependencies [847b9163]
+  - @keystatic/core@0.5.9
+  - @keystatic/astro@5.0.0
+
+## 0.0.20
+
+### Patch Changes
+
+- Updated dependencies [4d1cee00]
+  - @keystatic/core@0.5.8
+  - @keystatic/astro@5.0.0
+
+## 0.0.19
+
+### Patch Changes
+
+- Updated dependencies [c519f119]
+  - @keystatic/core@0.5.7
+  - @keystatic/astro@5.0.0
+
+## 0.0.18
+
+### Patch Changes
+
+- Updated dependencies [c619ef2e]
+  - @keystatic/core@0.5.6
+  - @keystatic/astro@5.0.0
+
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies [8ad803c5]
+  - @keystatic/core@0.5.0
+  - @keystatic/astro@5.0.0
+
+## 0.0.16
+
+### Patch Changes
+
+- 6a60ab3c: Updates the Astro integration to manage the custom `127.0.0.1` host
+  and enables usage with `output: 'server'`
+
+  Keystatic used to require updating your `dev` script. It's now managed by the
+  integration, feel free to simplify it!
+
+  ```diff
+  - "dev": "astro dev --host 127.0.0.1"
+  + "dev": "astro dev"
+  ```
+
+  Moreover, Keystatic now lets you go full SSR! The following Astro config is
+  now supported
+
+  ```mjs
+  // astro.config.mjs
+
+  export default defineConfig({
+    output: 'server',
+  });
+  ```
+
+- Updated dependencies [6a60ab3c]
+- Updated dependencies [e3947052]
+- Updated dependencies [ee3f2038]
+  - @keystatic/astro@4.0.0
+  - @keystatic/core@0.4.0
+
+## 0.0.15
+
+### Patch Changes
+
+- Updated dependencies [0b2432ed]
+- Updated dependencies [f4aaa8e3]
+  - @keystatic/core@0.3.0
+  - @keystatic/astro@3.0.0
+
+## 0.0.14
+
+### Patch Changes
+
+- d584b3f0: Support astro@4
+- Updated dependencies [13206393]
+- Updated dependencies [0ca7f47a]
+- Updated dependencies [7a98fd68]
+- Updated dependencies [56b6b121]
+- Updated dependencies [3288c624]
+- Updated dependencies [bd28cfd4]
+- Updated dependencies [e32ff596]
+- Updated dependencies [d584b3f0]
+- Updated dependencies [16bd7064]
+- Updated dependencies [e1c9e0cf]
+- Updated dependencies [267845b1]
+  - @keystatic/core@0.2.5
+  - @keystatic/astro@2.0.1
+
 ## 0.0.13
 
 ### Patch Changes

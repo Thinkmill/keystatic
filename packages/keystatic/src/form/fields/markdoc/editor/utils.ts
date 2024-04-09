@@ -10,8 +10,6 @@ export const classes = {
   placeholder: 'ProseMirror-placeholder',
 };
 
-export const markdocIdentifierPattern = /^[a-zA-Z][-_a-zA-Z0-9]*$/;
-
 export function weakMemoize<Arg extends object, Return>(
   func: (arg: Arg) => Return
 ): (arg: Arg) => Return {
@@ -25,16 +23,6 @@ export function weakMemoize<Arg extends object, Return>(
     return result;
   };
 }
-
-export const nodeWithBorder = css({
-  border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.alias.borderIdle}`,
-  borderRadius: tokenSchema.size.radius.regular,
-  [`&.${classes.nodeInSelection}, &.${classes.nodeSelection}`]: {
-    borderColor: tokenSchema.color.alias.borderSelected,
-    outline: 'none !important',
-    boxShadow: `0 0 0 1px ${tokenSchema.color.alias.borderSelected}`,
-  },
-});
 
 let maskColor = tokenSchema.color.background.canvas;
 let borderColor = tokenSchema.color.alias.borderSelected;
@@ -141,6 +129,37 @@ export const prosemirrorStyles = css`
 
   .ProseMirror-focused .ProseMirror-gapcursor {
     display: block;
+  }
+  .ProseMirror > .ProseMirror-yjs-cursor:first-child {
+    margin-top: 16px;
+  }
+  /* This gives the remote user caret. The colors are automatically overwritten*/
+  .ProseMirror-yjs-cursor {
+    position: relative;
+    margin-left: -1px;
+    margin-right: -1px;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-color: orange;
+    word-break: normal;
+    pointer-events: none;
+  }
+  /* This renders the username above the caret */
+  .ProseMirror-yjs-cursor > div {
+    position: absolute;
+    top: -1.05em;
+    left: -1px;
+    font-size: 13px;
+    background-color: rgb(250, 129, 0);
+    font-family: ${tokenSchema.typography.fontFamily.base};
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    user-select: none;
+    color: white;
+    padding-left: 2px;
+    padding-right: 2px;
+    white-space: nowrap;
   }
 `;
 

@@ -19,6 +19,13 @@ type VideoProps = {
   'kind'
 >;
 
+type PlaylistProps = {
+  title: ResourceEntry['title'];
+} & Extract<
+  ResourceEntry['type'],
+  { discriminant: 'youtube-playlist' }
+>['value'];
+
 type ArticleProps = {
   title: ResourceEntry['title'];
 } & Omit<
@@ -29,6 +36,18 @@ type ArticleProps = {
 export default async function Resources() {
   const resources = await reader().collections.resources.all();
   if (!resources) notFound();
+
+  // Preparing sorted data
+  const sortedPlaylists = resources
+    .filter(resource => resource.entry.type.discriminant === 'youtube-playlist')
+    .sort((a, b) => {
+      return (a.entry.sortIndex as number) - (b.entry.sortIndex as number);
+    })
+    .map(resource => ({
+      title: resource.entry.title,
+      sortIndex: resource.entry.sortIndex,
+      ...resource.entry.type.value,
+    })) as PlaylistProps[];
 
   const sortedVideos = resources
     .filter(
@@ -96,8 +115,18 @@ export default async function Resources() {
             has a growing collection of content about Keystatic.
           </p>
           <ResourceGrid>
+            {sortedPlaylists.map(video => (
+              <Video
+                key={video.title}
+                title={video.title}
+                playlistId={video.playlistId}
+                description={video.description}
+                thumbnail={video.thumbnail}
+              />
+            ))}
             {sortedVideos.map(video => (
               <Video
+                key={video.title}
                 title={video.title}
                 videoId={video.videoId}
                 description={video.description}
@@ -120,8 +149,8 @@ export default async function Resources() {
           <ResourceGrid>
             {sortedTalks.map(video => (
               <Video
-                videoId={video.videoId}
                 title={video.title}
+                videoId={video.videoId}
                 description={video.description}
                 thumbnail={video.thumbnail}
               />
@@ -163,8 +192,20 @@ export default async function Resources() {
   );
 }
 
-function Video({ videoId, title, description, thumbnail }: VideoProps) {
-  const videoUrl = `https://www.youtube.com/watch?v=${videoId}&list=PLYyvXL46d-pzqwOKdofd5aKiqPTAN3ql6`;
+function Video({
+  title,
+  description,
+  thumbnail,
+  ...props
+}: VideoProps | PlaylistProps) {
+  let videoUrl = '';
+
+  if ('videoId' in props) {
+    // Single video URL with Thinkmill's Keystatic playlist parameter
+    videoUrl = `https://www.youtube.com/watch?v=${props.videoId}&list=PLYyvXL46d-pzqwOKdofd5aKiqPTAN3ql6`;
+  } else {
+    videoUrl = `https://www.youtube.com/playlist?list=${props.playlistId}`;
+  }
   return (
     <li>
       <Link

@@ -5,7 +5,7 @@ import {
   getSingletonFormat,
   getSingletonPath,
 } from '../app/path-utils';
-import { updateTreeWithChanges, blobSha } from './trees-server-side';
+import { updateTreeWithChanges, blobSha } from '../app/trees';
 import { Config } from '../config';
 import { getDirectoriesForTreeKey } from '../app/tree-key';
 import { fields } from '../form/api';
@@ -120,6 +120,9 @@ export function getAllowedDirectories(config: Config) {
         { data: 'yaml', contentField: undefined, dataLocation: 'index' }
       )
     );
+    if (collectionConfig.template) {
+      allowedDirectories.push(collectionConfig.template);
+    }
   }
   for (const [singleton, singletonConfig] of Object.entries(
     config.singletons ?? {}

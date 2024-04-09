@@ -98,7 +98,7 @@ export function getEntriesInCollectionWithTreeKey(
   config: Config,
   collection: string,
   rootTree: Map<string, TreeNode>
-): { key: string; slug: string }[] {
+): { key: string; slug: string; sha: string }[] {
   const collectionConfig = config.collections![collection];
   const schema = object(collectionConfig.schema);
   const formatInfo = getCollectionFormat(config, collection);
@@ -107,7 +107,7 @@ export function getEntriesInCollectionWithTreeKey(
   const collectionPath = getCollectionPath(config, collection);
   const directory: Map<string, TreeNode> =
     getTreeNodeAtPath(rootTree, collectionPath)?.children ?? new Map();
-  const entries: { key: string; slug: string }[] = [];
+  const entries: { key: string; slug: string; sha: string }[] = [];
   const directoriesUsedInSchema = [...collectDirectoriesUsedInSchema(schema)];
   const suffix = getCollectionItemSlugSuffix(config, collection);
   const possibleEntries = new Map(directory);
@@ -140,6 +140,7 @@ export function getEntriesInCollectionWithTreeKey(
           rootTree
         ),
         slug: key,
+        sha: actualEntry.children.get('index' + extension)!.entry.sha,
       });
     } else {
       if (suffix) {
@@ -158,6 +159,7 @@ export function getEntriesInCollectionWithTreeKey(
             rootTree
           ),
           slug: key,
+          sha: newEntry.entry.sha,
         });
       }
       if (entry.children || !key.endsWith(extension)) continue;
@@ -172,6 +174,7 @@ export function getEntriesInCollectionWithTreeKey(
           rootTree
         ),
         slug,
+        sha: entry.entry.sha,
       });
     }
   }
@@ -180,8 +183,10 @@ export function getEntriesInCollectionWithTreeKey(
 
 export const KEYSTATIC_CLOUD_API_URL = 'https://api.keystatic.cloud';
 
+export const PKG_VERSION = pkgJson.version;
+
 export const KEYSTATIC_CLOUD_HEADERS = {
-  'x-keystatic-version': pkgJson.version,
+  'x-keystatic-version': PKG_VERSION,
 };
 
 const textEncoder = new TextEncoder();

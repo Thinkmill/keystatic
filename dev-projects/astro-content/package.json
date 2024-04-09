@@ -1,29 +1,29 @@
 {
   "name": "@example/astro-content",
   "type": "module",
-  "version": "0.0.4",
+  "version": "0.0.13",
   "private": true,
   "scripts": {
-    "dev": "astro dev --host 127.0.0.1",
+    "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/markdoc": "^0.5.0",
-    "@astrojs/node": "^6.0.0",
-    "@astrojs/react": "^3.0.0",
-    "@astrojs/sitemap": "^3.0.0",
-    "@astrojs/tailwind": "^5.0.0",
-    "@keystatic/astro": "^2.0.0",
-    "@keystatic/core": "^0.2.0",
+    "@astrojs/markdoc": "^0.8.0",
+    "@astrojs/node": "^7.0.0",
+    "@astrojs/react": "^3.0.7",
+    "@astrojs/sitemap": "^3.0.3",
+    "@astrojs/tailwind": "^5.0.3",
+    "@keystatic/astro": "workspace:^",
+    "@keystatic/core": "workspace:^",
     "@tailwindcss/typography": "^0.5.9",
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.0.11",
-    "astro": "^3.0.3",
+    "astro": "^4.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwindcss": "^3.3.3"
+    "tailwindcss": "^3.4.1"
   }
 }

@@ -1,0 +1,78 @@
+---
+title: Next.js
+description: Utilities for integrating KeystarUI with Next.js applications.
+category: Introduction
+---
+
+## Router
+
+Please note that the `@keystar/ui/next` package only works with the Next.js
+["app" router](https://nextjs.org/docs/app). It does not work with the “pages”
+router. We apologise for any inconvenience.
+
+## Provider
+
+The `NextRootProvider` should be rendered as the `html` element in your root
+`layout` file to make server rendering styles work properly. The provider
+handles [SSR style injection](https://emotion.sh/docs/ssr) using Emotion’s `cache` API.
+
+If you need another provider in your React tree use the standard `KeystarProvider`,
+which is exported from the [core package](/package/core).
+
+```tsx
+// app/layout.tsx
+import { NextRootProvider } from '@keystar/ui/next';
+
+export default function Layout(props) {
+  return (
+    <NextRootProvider>
+      <body>{props.children}</body>
+    </NextRootProvider>
+  );
+}
+```
+
+### Font
+
+Keystar uses the open-source [Inter](https://rsms.me/inter/) font family for
+both headings and body text. Next.js applications must provide the
+`fontClassName` prop to ensure that the font is optimised correctly.
+
+```tsx
+import { NextRootProvider } from '@keystar/ui/next';
+import { Inter } from 'next/font/google';
+
+// define your font preferences
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+export default function Layout(props) {
+  return (
+    <NextRootProvider fontClassName={inter.variable}>
+      <body>{props.children}</body>
+    </NextRootProvider>
+  );
+}
+```
+
+## Script
+
+Use the `nextRootScript` to make sure that the color scheme is correct before the main
+client-side JavaScript loads. The script checks for preferences in `localStorage` and
+adjusts the document’s `classList` accordingly.
+
+```tsx
+import { NextRootProvider, nextRootScript } from '@keystar/ui/next';
+
+export default function Layout() {
+  return (
+    <NextRootProvider>
+      <head>{nextRootScript}</head>
+      <body>…</body>
+    </NextRootProvider>
+  );
+}
+```

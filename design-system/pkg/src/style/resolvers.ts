@@ -1,3 +1,4 @@
+import { MaybeArray } from '@keystar/ui/types';
 import { assertNever } from 'emery';
 
 import { tokenSchema } from './tokens';
@@ -5,7 +6,6 @@ import {
   CSSProp,
   DimensionKey,
   LooseSizeDimension,
-  MaybeArray,
   StyleResolver,
 } from './types';
 

@@ -26,6 +26,7 @@ export function image<IsRequired extends boolean | undefined>({
   return {
     kind: 'form',
     formKind: 'asset',
+    label,
     Input(props) {
       return (
         <ImageFieldInput

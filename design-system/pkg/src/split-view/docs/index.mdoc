@@ -1,0 +1,154 @@
+---
+title: SplitView
+description:
+  A split view is two sections or “panes”, including a moveable separator
+  between them that allows users to change the relative size of the panes.
+category: Layout
+---
+
+## Example
+
+```jsx {% live=true %}
+<SplitView
+  minSize={100}
+  maxSize={400}
+  defaultSize={200}
+  height="element.xlarge"
+>
+  <SplitPanePrimary>
+    <Text>Primary</Text>
+  </SplitPanePrimary>
+  <SplitPaneSecondary paddingX="regular">
+    <Text>Secondary</Text>
+  </SplitPaneSecondary>
+</SplitView>
+```
+
+## Patterns
+
+### Primary and Secondary
+
+The term “primary” does not describe the importance or purpose of content inside
+the pane. In this context, primary indicates which pane the resize handle
+controls, while the secondary pane fills the remaining space.
+
+```jsx {% live=true %}
+<SplitView
+  minSize={100}
+  maxSize={400}
+  defaultSize={200}
+  height="element.xlarge"
+>
+  <SplitPaneSecondary>
+    <Text>Secondary</Text>
+  </SplitPaneSecondary>
+  <SplitPanePrimary paddingX="regular">
+    <Text>Primary</Text>
+  </SplitPanePrimary>
+</SplitView>
+```
+
+### Snap regions
+
+When dragging, the resize handle will snap to the [default size](#default-size)
+while in close proximity. Mouse users may double click the resize handle to
+return to the default size.
+
+The primary pane enters a _soft collapse_ state when dragged smaller than half
+the min size. The [collapse state](#collapse) is committed when the drag handle
+is released.
+
+Keyboard use allows 10 steps (`ArrowLeft` and `ArrowRight`) between the
+[min](#min-size) and [max](#max-size) size, with `Home` and `End` shortcuts
+respectively.
+
+## Props
+
+### Auto save
+
+With the `autoSaveId` prop, provide a unique ID to auto-save the primary pane
+size via `localStorage`.
+
+### Default size
+
+Use the `defaultSize` prop to set the default size of the primary pane, in
+pixels.
+
+### Min size
+
+Use the `minSize` prop to set the minimum size of the primary pane, in pixels.
+
+### Max size
+
+Use the `maxSize` prop to set the maximum size of the primary pane, in pixels.
+
+## Events
+
+### Resize
+
+The `onResize` callback is called when the user resizes the primary pane. A
+resize event occurs when the user releases the drag handle, or is using the
+[keyboard](#snap-regions) to resize.
+
+```jsx {% live=true %}
+const DEFAULT_SIZE = 200;
+const [size, setSize] = React.useState(DEFAULT_SIZE);
+
+return (
+  <SplitView
+    defaultSize={DEFAULT_SIZE}
+    minSize={100}
+    maxSize={400}
+    height="element.xlarge"
+    onResize={setSize}
+  >
+    <SplitPanePrimary>
+      <Text>
+        Primary: <code>{size}px</code>
+      </Text>
+    </SplitPanePrimary>
+    <SplitPaneSecondary paddingX="regular">
+      <Text>Secondary</Text>
+    </SplitPaneSecondary>
+  </SplitView>
+);
+```
+
+### Collapse
+
+A split view is considered collapsible if a `boolean` value is provided to the
+`isCollapsed` prop.
+
+The `onCollapseChange` callback is called when the user collapses or expands the
+primary pane. A _collapse_ event is triggered when the primary pane is dragged
+beyond half its minimum size, or the user presses the `Enter` key while the
+resize handle is focused.
+
+```jsx {% live=true %}
+let [isCollapsed, setCollapsed] = React.useState(false);
+
+return (
+  <SplitView
+    defaultSize={200}
+    minSize={100}
+    maxSize={400}
+    height="element.xlarge"
+    onCollapseChange={setCollapsed}
+    isCollapsed={isCollapsed}
+  >
+    <SplitPanePrimary>
+      <Text overflow="nowrap">Primary</Text>
+    </SplitPanePrimary>
+    <SplitPaneSecondary paddingX={isCollapsed ? undefined : 'regular'}>
+      <ActionButton onPress={() => setCollapsed(b => !b)}>
+        {isCollapsed ? 'Expand' : 'Collapse'}
+      </ActionButton>
+    </SplitPaneSecondary>
+  </SplitView>
+);
+```
+
+Because we visually hide the resize handle (unless focused) to complete the
+collapsed appearance, an _expand_ event will only occur when the user presses
+the `Enter` key on a collapsed resize handle—**you must** implement an
+alternative “expand” interaction for pointer users.

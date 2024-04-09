@@ -6,7 +6,6 @@ import { useEditorViewRef } from '../editor-view';
 import { useEditorKeydownListener } from '../keydown';
 import { useEditorReferenceElement } from '../popovers/reference';
 import { EditorListboxProps, useEditorListbox } from './EditorListbox';
-import { useBoundaryRect } from '../popovers';
 
 export function EditorAutocomplete<Item extends object>(
   props: Omit<EditorListboxProps<Item>, 'listenerRef'> & {
@@ -14,7 +13,6 @@ export function EditorAutocomplete<Item extends object>(
     to: number;
   }
 ) {
-  const boundary = useBoundaryRect();
   const viewRef = useEditorViewRef();
   const referenceElement = useEditorReferenceElement(props.from, props.to);
   const listenerRef = useMemo(() => {
@@ -38,7 +36,7 @@ export function EditorAutocomplete<Item extends object>(
     referenceElement && (
       <EditorPopover
         adaptToBoundary="stretch"
-        boundary={boundary}
+        portal={false}
         minWidth="element.medium"
         placement="bottom-start"
         reference={referenceElement}

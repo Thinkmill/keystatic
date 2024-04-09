@@ -11,12 +11,19 @@ type Changes = {
 
 const textEncoder = new TextEncoder();
 
-export function blobSha(contents: Uint8Array) {
+const blobShaCache = new WeakMap<Uint8Array, string | Promise<string>>();
+
+export async function blobSha(contents: Uint8Array) {
+  const cached = blobShaCache.get(contents);
+  if (cached !== undefined) return cached;
   const blobPrefix = textEncoder.encode('blob ' + contents.length + '\0');
   const array = new Uint8Array(blobPrefix.byteLength + contents.byteLength);
   array.set(blobPrefix, 0);
   array.set(contents, blobPrefix.byteLength);
-  return sha1(array);
+  const digestPromise = sha1(array);
+  blobShaCache.set(contents, digestPromise);
+  digestPromise.then(digest => blobShaCache.set(contents, digest));
+  return digestPromise;
 }
 
 export type TreeNode = { entry: TreeEntry; children?: Map<string, TreeNode> };
@@ -37,7 +44,6 @@ export type TreeEntry = {
   mode: string;
   type: string;
   sha: string;
-  size?: number;
 };
 
 type TreeChanges = Map<string, NodeChanges>;
@@ -48,6 +54,7 @@ type NodeChanges =
   | TreeChanges;
 
 function getNodeAtPath(tree: TreeChanges, path: string): TreeChanges {
+  if (path === '') return tree;
   let node = tree;
   for (const part of path.split('/')) {
     if (!node.has(part)) {
@@ -65,6 +72,7 @@ function getFilename(path: string) {
 }
 
 function getDirname(path: string) {
+  if (!path.includes('/')) return '';
   return path.replace(/\/[^/]+$/, '');
 }
 
@@ -149,18 +157,12 @@ async function createTreeNodeEntry(
   };
 }
 
-export async function createBlobNodeEntry(
+async function createBlobNodeEntry(
   path: string,
   contents: Uint8Array | { byteLength: number; sha: string }
 ): Promise<TreeEntry> {
   const sha = 'sha' in contents ? contents.sha : await blobSha(contents);
-  return {
-    path,
-    mode: '100644',
-    type: 'blob',
-    sha,
-    size: contents.byteLength,
-  };
+  return { path, mode: '100644', type: 'blob', sha };
 }
 
 export async function updateTreeWithChanges(
@@ -175,7 +177,7 @@ export async function updateTreeWithChanges(
   };
 }
 
-function treeToEntries(tree: Map<string, TreeNode>): TreeEntry[] {
+export function treeToEntries(tree: Map<string, TreeNode>): TreeEntry[] {
   return [...tree.values()].flatMap(x =>
     x.children ? [x.entry, ...treeToEntries(x.children)] : [x.entry]
   );

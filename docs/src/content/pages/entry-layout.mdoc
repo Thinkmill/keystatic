@@ -6,10 +6,10 @@ summary: >-
 ---
 Collections and singletons both have an `entryLayout` option, which can be set to either `"form"` (default) or `"content"`.
 
-While the default `"form"` layout stacks every field on top of each other, the `"content"` layout will give more prominence to a selected `document` filed and move all the other fields into a sidebar.
+While the default `"form"` layout stacks every field on top of each other, the `"content"` layout will give more prominence to a selected `document`, `markdoc` or `mdx` filed and move all the other fields into a sidebar.
 
 {% aside icon="✋" %}
-**Note:** Setting the `entryLayout` will only take effect if `format.contentField` is referencing a `document` field for the collection or entry.
+**Note:** Setting the `entryLayout` will only take effect if `format.contentField` is referencing a `document`, `markdoc` or `mdx` field for the collection or entry.
 {% /aside %}
 
 See the [Format options](/docs/format-options) page for more details.
@@ -38,6 +38,18 @@ With the above config, the `blog` entry layout will put the `body` field front a
 
 You can think about&nbsp;`entryLayout: "content"`&nbsp;as the "focus" copywriting mode!
 
-## **Type signature**
+---
+
+## Screencast walk-through
+
+This segment of the [Keystatic Mini-Course on YouTube](https://www.youtube.com/playlist?list=PLHrxuCR-0CcSmkyLcmdV7Ruql8DTm644k) may help understand how the entry layout works:
+
+{% embed
+   mediaType="video"
+   embedCode="<iframe src=\"https://www.youtube.com/embed/7Ex24wna6L4?si=mDDK52Nlhg4v1v9x\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>" /%}
+
+---
+
+## Type signature
 
 Find the latest version of the `entryLayout`&nbsp;type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.EntryLayout](https://docsmill.dev/npm/@keystatic/core@latest#/.EntryLayout)

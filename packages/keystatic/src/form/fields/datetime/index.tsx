@@ -23,6 +23,7 @@ export function datetime<IsRequired extends boolean | undefined>({
   string | (IsRequired extends true ? never : null)
 > {
   return basicFormFieldWithSimpleReaderParse({
+    label,
     Input(props) {
       return (
         <DatetimeFieldInput
@@ -50,13 +51,20 @@ export function datetime<IsRequired extends boolean | undefined>({
       if (value === undefined) {
         return null;
       }
+      if (value instanceof Date) {
+        return value.toISOString().slice(0, -8);
+      }
       if (typeof value !== 'string') {
-        throw new FieldDataError('Must be a string');
+        throw new FieldDataError('Must be a string or date');
       }
       return value;
     },
     serialize(value) {
-      return { value: value === null ? undefined : value };
+      if (value === null) return { value: undefined };
+      const date = new Date(value + 'Z');
+      date.toJSON = () => date.toISOString().slice(0, -8);
+      date.toString = () => date.toISOString().slice(0, -8);
+      return { value: date };
     },
     validate(value) {
       const message = validateDatetime(validation, value, label);

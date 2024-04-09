@@ -1,4 +1,4 @@
-import LRUCache from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 import { useCallback, useMemo } from 'react';
 import { Config } from '../config';
 import { ComponentSchema, fields } from '..';
@@ -18,13 +18,16 @@ import {
   FormatInfo,
   getEntryDataFilepath,
   getPathPrefix,
-  isGitHubConfig,
   KEYSTATIC_CLOUD_API_URL,
   KEYSTATIC_CLOUD_HEADERS,
   MaybePromise,
 } from './utils';
 import { toFormattedFormDataError } from '../form/error-formatting';
 import { serializeRepoConfig } from './repo-config';
+import {
+  getBlobFromPersistedCache,
+  setBlobToPersistedCache,
+} from './object-cache';
 
 class TrackedMap<K, V> extends Map<K, V> {
   #onGet: (key: K) => void;
@@ -302,6 +305,7 @@ const blobCache = new LRUCache<string, MaybePromise<Uint8Array>>({ max: 200 });
 export async function hydrateBlobCache(contents: Uint8Array) {
   const sha = await blobSha(contents);
   blobCache.set(sha, contents);
+  await setBlobToPersistedCache(sha, contents);
   return sha;
 }
 
@@ -337,7 +341,7 @@ async function fetchGitHubBlob(
   );
 }
 
-function fetchBlob(
+export function fetchBlob(
   config: Config,
   oid: string,
   filepath: string,
@@ -346,25 +350,47 @@ function fetchBlob(
   repo: { owner: string; name: string }
 ): MaybePromise<Uint8Array> {
   if (blobCache.has(oid)) return blobCache.get(oid)!;
-  const promise = (
-    isGitHubConfig(config) || config.storage.kind === 'cloud'
-      ? fetchGitHubBlob(config, oid, filepath, commitSha, isRepoPrivate, repo)
-      : fetch(`/api/keystatic/blob/${oid}/${filepath}`, {
-          headers: { 'no-cors': '1' },
-        })
-  )
 
-    .then(x => x.arrayBuffer())
-    .then(x => {
-      const array = new Uint8Array(x);
-      blobCache.set(oid, array);
-      return array;
-    })
+  const promise = (async () => {
+    const isLocal = config.storage.kind === 'local';
+    if (!isLocal) {
+      const stored = await getBlobFromPersistedCache(oid);
+      if (stored) {
+        blobCache.set(oid, stored);
+        return stored;
+      }
+    }
+    return (
+      isLocal
+        ? fetch(`/api/keystatic/blob/${oid}/${filepath}`, {
+            headers: { 'no-cors': '1' },
+          })
+        : fetchGitHubBlob(config, oid, filepath, commitSha, isRepoPrivate, repo)
+    )
+      .then(async x => {
+        if (!x.ok) {
+          throw new Error(
+            `Could not fetch blob ${oid} (${filepath}): ${
+              x.status
+            }\n${await x.text()}`
+          );
+        }
+        return x.arrayBuffer();
+      })
+      .then(x => {
+        const array = new Uint8Array(x);
+        blobCache.set(oid, array);
+        if (config.storage.kind !== 'local') {
+          setBlobToPersistedCache(oid, array);
+        }
+        return array;
+      })
+      .catch(err => {
+        blobCache.delete(oid);
+        throw err;
+      });
+  })();
 
-    .catch(err => {
-      blobCache.delete(oid);
-      throw err;
-    });
   blobCache.set(oid, promise);
   return promise;
 }

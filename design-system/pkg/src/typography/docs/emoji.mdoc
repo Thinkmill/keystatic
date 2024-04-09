@@ -1,0 +1,59 @@
+---
+title: Emoji
+description:
+  A utility component for displaying emoji characters accessibly. Emojis can add
+  playfulness to your interface, but require formatting to ensure that they are
+  accessible for all users.
+category: Typography
+---
+
+## Example
+
+```jsx {% live=true %}
+<Emoji symbol="👋" label="Hi there!" />
+```
+
+## Patterns
+
+### Semantic
+
+The label provided will be announced by screen readers as part of any
+surrounding text.
+
+```jsx {% live=true %}
+<Text>
+  Built with <Emoji symbol="💖" label="love" /> using KeystarUI.
+</Text>
+```
+
+### Decorative
+
+When no label is provided the emoji is treated as a decorative element with no
+semantic meaning and is hidden from assistive technology.
+
+```jsx {% live=true %}
+<Heading>
+  Ornamental <Emoji symbol="🙈" /> usage
+</Heading>
+```
+
+## Accessibility
+
+The Emoji component wraps the provided symbol in a `span` with a `role="img"`
+attribute.
+
+If a label is provided, then it is passed as an `aria-label` to the `span`.
+
+```jsx
+<Emoji symbol="🚀" label="rocket ship" />
+// yields
+<span aria-label="rocket ship" role="img">🚀</span>
+```
+
+If not, then `aria-hidden` is set to `true`.
+
+```jsx
+<Emoji symbol="🤫" />
+// yields
+<span aria-hidden="true" role="img">🤫</span>
+```

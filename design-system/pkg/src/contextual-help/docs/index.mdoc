@@ -1,0 +1,81 @@
+---
+title: Contextual help
+description:
+  Contextual help shows a user extra information about an adjacent component.
+category: Overlays
+---
+
+## Example
+
+```jsx {% live=true %}
+<ContextualHelp>
+  <Heading>Need help?</Heading>
+  <Content>
+    <Text>
+      If you're having issues accessing your account, contact our customer
+      support team for help.
+    </Text>
+  </Content>
+</ContextualHelp>
+```
+
+## Slots
+
+Use [slots](/package/slots) to populate the context help dialog by providing the
+following components as children to `ContextualHelp`.
+
+### Heading
+
+The [Heading](/package/typography/heading) is required, it acts as the title for
+the dialog, providing context for what the user should expect.
+
+### Content
+
+`Content` is also required. It acts as the “body” of the dialog: this is where
+you’ll compose children.
+
+### Footer
+
+You may optionally provide a `Footer` component which will be rendered below the
+content. Use the [footer for providing links](#help) to additional information.
+
+## Props
+
+### Variant
+
+#### Info
+
+Use the info variant for brief, specific, contextual guidance. This is best for
+supplemental or nice-to-know information, in-line with a label or a component
+(if there is no label).
+
+```jsx {% live=true %}
+<ContextualHelp variant="info">
+  <Heading>Permission required</Heading>
+  <Content>
+    <Text>
+      Your admin must grant you permission before you can assign roles.
+    </Text>
+  </Content>
+</ContextualHelp>
+```
+
+#### Help
+
+This is the default. Use the help variant for content that offers more detailed,
+in-depth guidance about a task, UI element, tool, or keyboard shortcuts.
+
+```jsx {% live=true %}
+<ContextualHelp variant="help">
+  <Heading>Role disabled?</Heading>
+  <Content>
+    <Text>
+      There must be at least one owner in the team. Assign another user as an
+      owner before changing this role.
+    </Text>
+  </Content>
+  <Footer>
+    <TextLink prominence="high">Learn more about roles</TextLink>
+  </Footer>
+</ContextualHelp>
+```

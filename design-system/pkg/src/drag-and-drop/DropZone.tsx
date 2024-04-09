@@ -12,7 +12,7 @@ import {
 } from '@react-aria/utils';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
 import { AriaLabelingProps, DOMProps } from '@react-types/shared';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 import {
   BaseStyleProps,
@@ -88,7 +88,8 @@ export const DropZone = forwardRefWithAs<DropZoneProps, 'div'>(
       },
     } as const;
 
-    let children = useRenderProps(props, { isDropTarget });
+    let renderProps = useMemo(() => ({ isDropTarget }), [isDropTarget]);
+    let children = useRenderProps(props, renderProps);
     let styleProps = useStyleProps(props);
     let ElementType = props.elementType || 'div';
 

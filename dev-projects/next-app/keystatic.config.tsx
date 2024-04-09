@@ -6,7 +6,7 @@ import {
   component,
   NotEditable,
 } from '@keystatic/core';
-import { __experimental_markdoc_field } from '@keystatic/core/form/fields/markdoc';
+import { block } from '@keystatic/core/content-components';
 import { NoteToolbar, Note } from './note';
 
 const description = 'Some description';
@@ -144,7 +144,7 @@ export default config({
                     { value: 'caution', label: 'Caution' },
                     { value: 'positive', label: 'Positive' },
                     { value: 'critical', label: 'Critical' },
-                  ] as const,
+                  ],
                   defaultValue: 'info',
                 }),
                 content: fields.child({
@@ -290,6 +290,24 @@ export default config({
         }),
       },
     }),
+    mdx: collection({
+      label: 'MDX',
+      path: 'mdx/**',
+      slugField: 'title',
+      format: { contentField: 'content' },
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        content: fields.mdx({
+          label: 'Content',
+          components: {
+            Something: block({
+              label: 'Something',
+              schema: {},
+            }),
+          },
+        }),
+      },
+    }),
   },
   singletons: {
     settings: singleton({
@@ -302,7 +320,7 @@ export default config({
     markdoc: singleton({
       label: 'Markdoc',
       schema: {
-        markdoc: __experimental_markdoc_field({ label: 'Markdoc', config: {} }),
+        markdoc: fields.markdoc({ label: 'Markdoc' }),
       },
     }),
     fields: singleton({
@@ -313,7 +331,14 @@ export default config({
           name: { label: 'Title', description },
           slug: { description },
         }),
-        integer: fields.integer({ label: 'Number', description }),
+        integer: fields.integer({ label: 'Integer', description }),
+        number: fields.number({ label: 'Number', description }),
+        numberWithSteps: fields.number({
+          label: 'Number with steps',
+          description,
+          step: 0.02,
+          validation: { step: true },
+        }),
         checkbox: fields.checkbox({ label: 'Checkbox', description }),
         select: fields.select({
           label: 'Select',
@@ -400,7 +425,7 @@ export default config({
           description,
           collection: 'posts',
         }),
-        markdoc: __experimental_markdoc_field({ label: 'Markdoc', config: {} }),
+        markdoc: fields.markdoc({ label: 'Markdoc' }),
       },
     }),
   },

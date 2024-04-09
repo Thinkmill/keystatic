@@ -1,0 +1,40 @@
+---
+title: Number field
+summary: The number field is used to store a number.
+---
+{% field-demo field="number" /%}
+
+The `number` field is used to store a number.
+
+---
+
+## Options
+The `steps` property can be used to specify the step size of the number. The `hideStepper` property can be used to hide the stepper buttons.
+
+---
+
+## Validation options
+
+You can optionally specify a range with `validation.min` and `validation.max`.
+
+To validate the step size, set `validation.validateStep` to `true`. This will validate that the value is a multiple of the step size.
+
+## Usage example
+
+```typescript
+cost: fields.number({
+  label: 'Cost',
+  description: "The cost of the item, in steps of 0.02",
+  step: 0.02,
+  hideStepper: false,
+  validation: {
+    min: 0,
+    max: 150.5,
+    validateStep: true
+  }
+})
+```
+
+## Type signature
+
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core@latest#/.fields.number](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.number)

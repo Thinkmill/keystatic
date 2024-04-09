@@ -1,0 +1,77 @@
+---
+title: Utilities
+description: A handful of utility functions and hooks to help you build your components.
+category: Concepts
+---
+
+## Functions
+
+### composeId
+
+Compose related IDs for compound components.
+
+```jsx
+let root = useId()
+let inputId = composeId(root, 'input') // => ':R1:--input'
+let descriptionId = composeId(root, 'field-element' 'description') // => ':R1:--field-element--description'
+```
+
+## Guards
+
+### isReactText
+
+Checks if an unknown value is valid React text `(string | number)?[]`. This can be useful for conditionally wrapping children when required.
+
+```jsx
+let content = isReactText(children) ? <Text>{children}</Text> : children;
+```
+
+## Hooks
+
+### useIsMounted
+
+Returns a function that returns `true` if the component is mounted, and `false` otherwise.
+
+```jsx
+let getIsMounted = useIsMounted();
+let status = !getIsMounted() ? 'initializing' : 'idle',
+```
+
+### usePrevious
+
+Tracks the previous value of a variable. This is useful for comparing the previous value of some prop or state to the current value, and taking action based on the change.
+
+```jsx
+let previousBranch = usePrevious(currentBranch);
+
+useEffect(() => {
+  // if we've changed branches, keep the dialog open and clear the selection
+  if (previousBranch && previousBranch !== currentBranch) {
+    ...
+  }
+}, [currentBranch, previousBranch]);
+```
+
+### useRenderProps
+
+A convenience hook for rendering the children of a component, either by calling `props.children` as a function or simply passing along the `ReactNode`.
+
+```jsx
+const Comp = props => {
+  let [state, setState] = useState('initial');
+  let values = useMemo(() => ({ state }), [state]);
+  let children = useRenderProps(props, values);
+
+  return <div>{children}</div>;
+}
+
+<Comp>
+  {({ state }) => <span>function children, with access to {state}.</span>}
+</Comp>
+
+// or
+
+<Comp>
+  <span>standard children node</span>
+</Comp>
+```

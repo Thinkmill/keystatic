@@ -1,5 +1,80 @@
 # @keystatic/test-astro
 
+## 0.0.90
+
+### Patch Changes
+
+- Updated dependencies [dbb9d3cb]
+  - @keystatic/core@0.5.11
+  - @keystatic/astro@5.0.0
+
+## 0.0.89
+
+### Patch Changes
+
+- Updated dependencies [e1ebbdae]
+  - @keystatic/core@0.5.10
+  - @keystatic/astro@5.0.0
+
+## 0.0.88
+
+### Patch Changes
+
+- Updated dependencies [847b9163]
+  - @keystatic/core@0.5.9
+  - @keystatic/astro@5.0.0
+
+## 0.0.87
+
+### Patch Changes
+
+- Updated dependencies [4d1cee00]
+  - @keystatic/core@0.5.8
+  - @keystatic/astro@5.0.0
+
+## 0.0.86
+
+### Patch Changes
+
+- Updated dependencies [c519f119]
+  - @keystatic/core@0.5.7
+  - @keystatic/astro@5.0.0
+
+## 0.0.85
+
+### Patch Changes
+
+- Updated dependencies [c619ef2e]
+  - @keystatic/core@0.5.6
+  - @keystatic/astro@5.0.0
+
+## 0.0.84
+
+### Patch Changes
+
+- Updated dependencies [8ad803c5]
+  - @keystatic/core@0.5.0
+  - @keystatic/astro@5.0.0
+
+## 0.0.83
+
+### Patch Changes
+
+- Updated dependencies [6a60ab3c]
+- Updated dependencies [e3947052]
+- Updated dependencies [ee3f2038]
+  - @keystatic/astro@4.0.0
+  - @keystatic/core@0.4.0
+
+## 0.0.82
+
+### Patch Changes
+
+- Updated dependencies [0b2432ed]
+- Updated dependencies [f4aaa8e3]
+  - @keystatic/core@0.3.0
+  - @keystatic/astro@3.0.0
+
 ## 0.0.81
 
 ### Patch Changes

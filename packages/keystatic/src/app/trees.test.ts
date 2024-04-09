@@ -5,6 +5,7 @@ import {
   updateTreeWithChanges,
 } from './trees';
 import { webcrypto } from 'node:crypto';
+import { expect, test } from '@jest/globals';
 
 // node only started setting the web crypto api globally in newer versions
 if (!globalThis.crypto) {
@@ -44,7 +45,6 @@ const input = [
     mode: '100644',
     type: 'blob',
     sha: 'fe5b6f6dcf3759216691fe3049d4260800c14fa6',
-    size: 13,
   },
   {
     path: 'something',
@@ -69,7 +69,6 @@ const input = [
     mode: '100644',
     type: 'blob',
     sha: '2ef267e25bd6c6a300bb473e604b092b6a48523b',
-    size: 13,
   },
 ];
 
@@ -79,7 +78,6 @@ const expectedOutput = [
     mode: '100644',
     type: 'blob',
     sha: 'fe5b6f6dcf3759216691fe3049d4260800c14fa6',
-    size: 13,
   },
   {
     path: 'something',
@@ -104,14 +102,12 @@ const expectedOutput = [
     mode: '100644',
     type: 'blob',
     sha: '2ef267e25bd6c6a300bb473e604b092b6a48523b',
-    size: 13,
   },
   {
     path: 'something/a/b/d.md',
     mode: '100644',
     type: 'blob',
     sha: '2e65efe2a145dda7ee51d1741299f848e5bf752e',
-    size: 1,
   },
 ];
 const textEncoder = new TextEncoder();

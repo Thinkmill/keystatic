@@ -1,0 +1,195 @@
+---
+title: TableView
+description: A table displays data in rows and columns. The table view enables users to navigate its contents via directional navigation keys, and optionally supports row selection and sorting.
+category: Layout
+---
+
+## Example
+
+TableView is a complex [collection component](https://react-spectrum.adobe.com/react-stately/collections.html) that is built up from many child elements including columns, rows, and cells. Columns are defined within a `TableHeader` element and rows are defined within a `TableBody` element. Rows contain `Cell` elements that correspond to each column. Cells can contain any element, allowing you to have focusable children within the `TableView`.
+
+```jsx {% live=true %}
+<TableView aria-label="Example table" selectionMode="multiple">
+  <TableHeader>
+    <Column width="50%">Name</Column>
+    <Column>Type</Column>
+    <Column align="end">Date added</Column>
+  </TableHeader>
+  <TableBody>
+    <Row>
+      <Cell>Dell Computer Monitor</Cell>
+      <Cell>Computing</Cell>
+      <Cell>7/6/2020</Cell>
+    </Row>
+    <Row>
+      <Cell>iPad Pro 2017 Model</Cell>
+      <Cell>Computing</Cell>
+      <Cell>7/4/2021</Cell>
+    </Row>
+    <Row>
+      <Cell>Gopro hero 7</Cell>
+      <Cell>Media</Cell>
+      <Cell>20/11/2010</Cell>
+    </Row>
+    <Row>
+      <Cell>Playstation 4 Limited Edition</Cell>
+      <Cell>Console</Cell>
+      <Cell>18/1/2016</Cell>
+    </Row>
+  </TableBody>
+</TableView>
+```
+
+## Props
+
+### Density
+
+The amount of vertical padding that each row contains can be modified by providing the `density` prop.
+
+```jsx {% live=true %}
+<VStack gap="large">
+  <TableView aria-label="Compact table" density="compact">
+    <TableHeader>
+      <Column>Name</Column>
+      <Column>Description</Column>
+    </TableHeader>
+    <TableBody>
+      <Row>
+        <Cell>Compact 1</Cell>
+        <Cell>Description 1</Cell>
+      </Row>
+      <Row>
+        <Cell>Compact 2</Cell>
+        <Cell>Description 2</Cell>
+      </Row>
+    </TableBody>
+  </TableView>
+  <TableView aria-label="Spacious table" density="spacious">
+    <TableHeader>
+      <Column>Name</Column>
+      <Column>Description</Column>
+    </TableHeader>
+    <TableBody>
+      <Row>
+        <Cell>Spacious 1</Cell>
+        <Cell>Description 1</Cell>
+      </Row>
+      <Row>
+        <Cell>Spacious 2</Cell>
+        <Cell>Description 2</Cell>
+      </Row>
+    </TableBody>
+  </TableView>
+</VStack>
+```
+
+### Overflow mode
+
+By default, text content that overflows its table cell will wrap onto multiple lines. You can have it truncate by passing `overflowMode="truncate"` to the TableView.
+
+```jsx {% live=true %}
+<VStack gap="large">
+<TableView aria-label="Wrap example" overflowMode="wrap">
+  <TableHeader>
+    <Column>Name</Column>
+    <Column>Description</Column>
+  </TableHeader>
+  <TableBody>
+    <Row>
+      <Cell>Item 1</Cell>
+      <Cell>This is a long description that will wrap if it is too long to fit in the cell.</Cell>
+    </Row>
+    <Row>
+      <Cell>Item 2</Cell>
+      <Cell>This is a long description that will wrap if it is too long to fit in the cell.</Cell>
+    </Row>
+  </TableBody>
+</TableView>
+<TableView aria-label="Truncate example" overflowMode="truncate">
+  <TableHeader>
+    <Column>Name</Column>
+    <Column>Description</Column>
+  </TableHeader>
+  <TableBody>
+    <Row>
+      <Cell>Item 1</Cell>
+      <Cell>This is a long description that will truncate if it is too long to fit in the cell.</Cell>
+    </Row>
+    <Row>
+      <Cell>Item 2</Cell>
+      <Cell>This is a long description that will truncate if it is too long to fit in the cell.</Cell>
+    </Row>
+  </TableBody>
+</TableView>
+</VStack>
+```
+
+### Prominence
+
+By default the `TableView` is assumed to be the main focus of an experience. When a table is meant to be supplementary, or lightweight pass `prominence="low"` to reduce visual weight.
+
+```jsx {% live=true %}
+<TableView aria-label="Prominence example" prominence="low">
+  <TableHeader>
+    <Column>Name</Column>
+    <Column>Description</Column>
+  </TableHeader>
+  <TableBody>
+    <Row>
+      <Cell>Item 1</Cell>
+      <Cell>Description 1</Cell>
+    </Row>
+    <Row>
+      <Cell>Item 2</Cell>
+      <Cell>Description 2</Cell>
+    </Row>
+  </TableBody>
+</TableView>
+```
+
+### Empty state
+
+Use the `renderEmptyState` prop to customize what the TableView will display when there are no rows provided.
+
+```jsx {% live=true %}
+const [isEmpty, setEmpty] = React.useState(true);
+const columns = [
+  { name: 'Name', key: 'name' },
+  { name: 'Description', key: 'description' },
+];
+const items = Array.from({ length: 10 }, (_, i) => ({
+  name: `Item ${i + 1}`,
+  description: `Description ${i + 1}`,
+  key: i + 1,
+}));
+const renderEmptyState = () => (
+  <VStack gap="large">
+    <Heading align="center">No results</Heading>
+    <Text align="center">Some message about why there's no results.</Text>
+  </VStack>
+);
+
+return (
+  <VStack gap="large">
+    <Switch onChange={setEmpty} isSelected={isEmpty}>
+      Show empty state
+    </Switch>
+    <TableView
+      aria-label="Empty state example"
+      height="scale.3000"
+      renderEmptyState={renderEmptyState}
+    >
+      <TableHeader columns={columns}>
+        {column => <Column minWidth={100}>{column.name}</Column>}
+      </TableHeader>
+      <TableBody items={isEmpty ? [] : items}>
+        {item => (
+          <Row key={item.key}>
+            {key => <Cell>{item[key]}</Cell>}
+          </Row>
+        )}
+      </TableBody>
+    </TableView>
+  </VStack>
+);
+```

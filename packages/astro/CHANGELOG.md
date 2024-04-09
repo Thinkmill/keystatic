@@ -1,5 +1,101 @@
 # @keystatic/astro
 
+## 5.0.0
+
+### Patch Changes
+
+- Updated dependencies [8ad803c5]
+  - @keystatic/core@0.5.0
+
+## 4.0.0
+
+### Patch Changes
+
+- 6a60ab3c: Updates the Astro integration to manage the custom `127.0.0.1` host
+  and enables usage with `output: 'server'`
+
+  Keystatic used to require updating your `dev` script. It's now managed by the
+  integration, feel free to simplify it!
+
+  ```diff
+  - "dev": "astro dev --host 127.0.0.1"
+  + "dev": "astro dev"
+  ```
+
+  Moreover, Keystatic now lets you go full SSR! The following Astro config is
+  now supported
+
+  ```mjs
+  // astro.config.mjs
+
+  export default defineConfig({
+    output: 'server',
+  });
+  ```
+
+- Updated dependencies [e3947052]
+- Updated dependencies [ee3f2038]
+  - @keystatic/core@0.4.0
+
+## 3.0.2
+
+### Patch Changes
+
+- 3e4f6f4c: Fix build errors
+- Updated dependencies [8320c683]
+  - @keystatic/core@0.3.4
+
+## 3.0.1
+
+### Patch Changes
+
+- 17ef271b: Fix `internal` files not being published
+- Updated dependencies [1b6200a2]
+  - @keystatic/core@0.3.3
+
+## 3.0.0
+
+### Major Changes
+
+- f4aaa8e3: Switch build to ESM-only
+
+### Patch Changes
+
+- Updated dependencies [0b2432ed]
+- Updated dependencies [f4aaa8e3]
+  - @keystatic/core@0.3.0
+
+## 2.0.3
+
+### Patch Changes
+
+- 42089ab2: Fix build error
+
+## 2.0.2
+
+### Patch Changes
+
+- d76af081: Fix default exports in Node ESM
+- Updated dependencies [d76af081]
+  - @keystatic/core@0.2.6
+
+## 2.0.1
+
+### Patch Changes
+
+- d584b3f0: Support astro@4
+- Updated dependencies [13206393]
+- Updated dependencies [0ca7f47a]
+- Updated dependencies [7a98fd68]
+- Updated dependencies [56b6b121]
+- Updated dependencies [3288c624]
+- Updated dependencies [bd28cfd4]
+- Updated dependencies [e32ff596]
+- Updated dependencies [16bd7064]
+- Updated dependencies [e1c9e0cf]
+- Updated dependencies [267845b1]
+  - @keystatic/core@0.2.5
+
 ## 2.0.0
 
 ### Major Changes

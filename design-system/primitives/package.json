@@ -12,7 +12,8 @@
   "devDependencies": {
     "@capsizecss/core": "^3.1.1",
     "@capsizecss/metrics": "^1.2.0",
-    "@keystar/ui": "^0.4.2",
+    "@jest/globals": "^29.7.0",
+    "@keystar/ui": "workspace:^",
     "@types/lodash": "^4.14.191",
     "color2k": "^2.0.2",
     "emery": "^1.4.1",

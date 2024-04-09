@@ -1,5 +1,75 @@
 # @voussoir/docs
 
+## 0.0.31
+
+### Patch Changes
+
+- Updated dependencies [dbb9d3cb]
+  - @keystatic/core@0.5.11
+  - @keystatic/next@5.0.0
+
+## 0.0.30
+
+### Patch Changes
+
+- Updated dependencies [e1ebbdae]
+  - @keystatic/core@0.5.10
+  - @keystatic/next@5.0.0
+
+## 0.0.29
+
+### Patch Changes
+
+- Updated dependencies [847b9163]
+  - @keystatic/core@0.5.9
+  - @keystatic/next@5.0.0
+
+## 0.0.28
+
+### Patch Changes
+
+- Updated dependencies [4d1cee00]
+  - @keystatic/core@0.5.8
+  - @keystatic/next@5.0.0
+
+## 0.0.27
+
+### Patch Changes
+
+- Updated dependencies [c519f119]
+  - @keystatic/core@0.5.7
+  - @keystatic/next@5.0.0
+
+## 0.0.26
+
+### Patch Changes
+
+- Updated dependencies [c619ef2e]
+  - @keystatic/core@0.5.6
+  - @keystatic/next@5.0.0
+
+## 0.0.25
+
+### Patch Changes
+
+- Updated dependencies [dad16ba6]
+  - @keystar/ui@0.7.0
+
+## 0.0.24
+
+### Patch Changes
+
+- Updated dependencies [ad59430d]
+- Updated dependencies [53d8fcc7]
+  - @keystar/ui@0.6.0
+
+## 0.0.23
+
+### Patch Changes
+
+- Updated dependencies [f4aaa8e3]
+  - @keystar/ui@0.5.0
+
 ## 0.0.22
 
 ### Patch Changes

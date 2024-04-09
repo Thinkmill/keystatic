@@ -4,21 +4,9 @@ summary: >-
   Keystatic Cloud takes care of GitHub authentication for you, and provides an
   opt-in image storage, optimisation and delivery service.
 ---
-[Keystatic Cloud](https://keystatic.cloud) is a service provided by [Thinkmill](https://thinkmill.com.au).
+[Keystatic Cloud](https://keystatic.cloud) simplifies authentication (GitHub) with your projects. No need to deal with environment variables and a custom GitHub app.
 
-Cloud simplifies authentication (GitHub) with your projects. No need to deal with environment variables and a custom GitHub app.
-
-Keystatic Cloud also offers opt-in products such as **Cloud Images** — an image storage, optimisation and delivery service.
-
----
-
-{% aside icon="👀" %}
-Keystatic Cloud — [Cloud Images](#cloud-images) in particular — is currently at the "internal preview" stage. 
-
-If you're interested in using it, please [get in touch with the Thinkmill team](https://thinkmill.com.au/contact).
-
-You can also join the [\#cloud](https://discord.gg/vCAQaH7dEp) channel on [Discord](https://discord.gg/vCAQaH7dEp).
-{% /aside %}
+Keystatic Cloud also offers opt-in products such as [Cloud Images](#cloud-images) (an image storage, optimisation and delivery service) or multi-player editing.
 
 ---
 
@@ -28,37 +16,40 @@ Keystatic Cloud lets you connect to GitHub and authenticate for one or multiple 
 
 It skips the more complicated process of [setting up GitHub mode](/docs/github-mode), while also allowing team members to edit content without needing a GitHub account.
 
-You'll need to [create a Keystatic Cloud account](https://keystatic.cloud) to start using this service.
+## Teams and projects
 
-You can setup multiple projects in your Keystatic Cloud account — where each project is connected to a specific GitHub repository.
+Keystatic cloud organises projects into teams. Each team can have multiple projects, and each project is be connected to a specific GitHub repository.
 
-### Configuring your project
+User access is set at the team level, so every user in team will have access to all projects within that team.
 
-In your Keystatic config, you'll need to set the `storage` option to `cloud`. 
+## Free vs Pro plans
 
-You'll also need to add the `cloud.project` property with the name of the team and project from your Keystatic Cloud account:
+[Creating a Keystatic Cloud account](https://keystatic.cloud) is free. You can create as many teams and projects as needed.
 
-```ts 
-import { config } from '@keystatic/core'
+The free plan allows for up to 3 users per team.
 
-export default config({
-  storage: {
-    kind: 'cloud',
-  },
-  cloud: {
-    project: '[TEAM_NAME]/[PROJECT_NAME]',
-  },
-  ...
-})
-```
+If you need more than 3 users on a given team, you'll need to upgrade that specific team to Pro. You can do so from the "billing" tab for that team.
 
-Each project in Keystatic Cloud has a settings page where you'll find a ready-to-paste code snippet in your config file.
+Keystatic Cloud Pro starts at $10/month. Adding beyond 3 users to a team costs $5/month per user. 
+
+A Pro plan only affects the one team it's applied to.
+
+---
+
+## Pro features
+
+Besides allowing you to add more than 3 users to a team, Keystatic Cloud Pro also offers the following features:
+
+- **Multi-player editing** (experimental): collaborate with other editors in real-time on the same document.
+- **Cloud Images**: upload, transform and serve optimized images without cluttering your GitHub repository.
+
+Once subscribed to Pro, you'll be able to enable these features on the settings tab of a given team.
 
 ---
 
 ## Cloud Images
 
-Cloud Images is an opt-in service from Keystatic Cloud. It's an image storage and delivery service that optimises your images for the web.
+Cloud Images is an opt-in image storage and delivery service that optimises your images for the web.
 
 Each Keystatic Cloud project can have its own Image Library, where you can upload images and copy the URL to use in your content.
 
@@ -94,3 +85,37 @@ Again, you'll need Keystatic running in `cloud` mode, and have the Image Library
 {% aside icon="🚧" %}
 Documentation for the `CloudImage` component block is coming soon.
 {% /aside %}
+
+---
+
+## Configuring your project with Keystatic Cloud
+
+In your Keystatic config, you'll need to set the `storage` option to `cloud`. 
+
+You'll also need to add the `cloud.project` property with the name of the team and project from your Keystatic Cloud account:
+
+```ts 
+import { config } from '@keystatic/core'
+
+export default config({
+  storage: {
+    kind: 'cloud',
+  },
+  cloud: {
+    project: '[TEAM_NAME]/[PROJECT_NAME]',
+  },
+  ...
+})
+```
+
+Each project in Keystatic Cloud has a settings page where you'll find a ready-to-paste code snippet in your config file.
+
+---
+
+## Screencast walk-through
+
+This segment of the [Keystatic Mini-Course on YouTube](https://www.youtube.com/playlist?list=PLHrxuCR-0CcSmkyLcmdV7Ruql8DTm644k) may help understand how Keystatic Cloud works:
+
+{% embed
+   mediaType="video"
+   embedCode="<iframe src=\"https://www.youtube.com/embed/S_0333JEs6w?si=mDDK52Nlhg4v1v9x\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>" /%}

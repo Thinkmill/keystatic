@@ -1,0 +1,480 @@
+---
+title: DateRangePicker
+description:
+  DateRangePickers combine two DateFields and a Calendar popover to allow users
+  to enter or select a date and time range.
+
+category: Date and time
+---
+
+## Example
+
+```jsx {% live=true %}
+<DateRangePicker label="Date range" />
+```
+
+## Patterns
+
+### Value
+
+A `DateRangePicker` displays a placeholder by default. An initial, uncontrolled
+value can be provided to the `DateRangePicker` using the `defaultValue` prop.
+Alternatively, a controlled value can be provided using the `value` prop.
+
+Date values are provided using objects from the
+[@internationalized/date](https://react-spectrum.adobe.com/internationalized/date/)
+package. This library handles correct international date manipulation across
+calendars, time zones, and other localization concerns. `DateRangePicker`
+supports values of the following types:
+
+- [CalendarDate](https://react-spectrum.adobe.com/internationalized/date/CalendarDate.html)
+  – a date without any time components. May be parsed from a string
+  representation using the `parseDate` function. Use this type to represent
+  dates where the time is not important, such as a birthday or an all day
+  calendar event.
+- [CalendarDateTime](https://react-spectrum.adobe.com/internationalized/date/CalendarDateTime.html)
+  – a date with a time, but not in any specific time zone. May be parsed from a
+  string representation using the `parseDateTime` function. Use this type to
+  represent times that occur at the same local time regardless of the time zone,
+  such as the time of New Years Eve fireworks which always occur at midnight.
+  Most times are better stored as a `ZonedDateTime`.
+- [ZonedDateTime](https://react-spectrum.adobe.com/internationalized/date/ZonedDateTime.html)
+  – a date with a time in a specific time zone. May be parsed from a string
+  representation using the `parseZonedDateTime`, `parseAbsolute`, or
+  `parseAbsoluteToLocal` functions. Use this type to represent an exact moment
+  in time at a particular location on Earth.
+
+```jsx {% live=true %}
+// import { parseDate } from '@internationalized/date';
+
+let [value, setValue] = React.useState({
+  start: parseDate('2023-04-14'),
+  end: parseDate('2023-04-19'),
+});
+
+return (
+  <Flex gap="large" wrap>
+    <DateRangePicker
+      label="Date (uncontrolled)"
+      defaultValue={{
+        start: parseDate('2023-04-14'),
+        end: parseDate('2023-04-19'),
+      }}
+    />
+    <DateRangePicker
+      label="Date (controlled)"
+      value={value}
+      onChange={setValue}
+    />
+  </Flex>
+);
+```
+
+### Time zones
+
+`DateRangePicker` is time zone aware when a
+[ZonedDateTime](https://react-spectrum.adobe.com/internationalized/date/ZonedDateTime.html)
+object is provided as the value. In this case, the time zone abbreviation is
+displayed, and time zone concerns such as daylight saving time are taken into
+account when the value is manipulated.
+
+In most cases, your data will come from and be sent to a server as an
+[ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) formatted string.
+[@internationalized/date](https://react-spectrum.adobe.com/internationalized/date)
+includes functions for parsing strings in multiple formats into `ZonedDateTime`
+objects. Which format you use will depend on what information you need to store.
+
+- `parseZonedDateTime` – This function parses a date with an explicit time zone
+  and optional UTC offset attached (e.g. `"2023-04-14T00:45[Australia/Sydney]"`
+  or `"2023-04-14T00:45+10:00[Australia/Sydney]"`). This format preserves the
+  maximum amount of information. If the exact local time and time zone that a
+  user selected is important, use this format. Storing the time zone and offset
+  that was selected rather than converting to UTC ensures that the local time is
+  correct regardless of daylight saving rule changes (e.g. if a locale abolishes
+  DST). Examples where this applies include calendar events, reminders, and
+  other times that occur in a particular location.
+- `parseAbsolute` – This function parses an absolute date and time that occurs
+  at the same instant at all locations on Earth. It can be represented in UTC
+  (e.g. `"2023-04-14T07:45:00Z"`), or stored with a particular offset (e.g.
+  `"2023-04-14T07:45:00+10:00"`). A time zone identifier, e.g.
+  `Australia/Sydney`, must be passed, and the result will be converted into that
+  time zone. Absolute times are the best way to represent events that occurred
+  in the past, or future events where an exact time is needed, regardless of
+  time zone.
+- `parseAbsoluteToLocal` – This function parses an absolute date and time into
+  the current user’s local time zone. It is a shortcut for `parseAbsolute`, and
+  accepts the same formats.
+
+```jsx {% live=true %}
+// import { parseZonedDateTime } from '@internationalized/date';
+
+return (
+  <DateRangePicker
+    label="Date range"
+    defaultValue={{
+      start: parseZonedDateTime('2023-04-14T07:45[Australia/Sydney]'),
+      end: parseZonedDateTime('2023-04-19T07:45[Australia/Sydney]'),
+    }}
+  />
+);
+```
+
+`DateRangePicker` displays times in the time zone included in the
+`ZonedDateTime` object. The above example is always displayed in Australian
+Eastern Standard Time because the `Australia/Sydney` time zone identifier is
+provided.
+[@internationalized/date](https://react-spectrum.adobe.com/internationalized/date/)
+includes functions for converting dates between time zones, or parsing a date
+directly into a specific time zone or the user’s local time zone, as shown
+below.
+
+```jsx {% live=true %}
+// import { parseAbsoluteToLocal } from '@internationalized/date';
+
+return (
+  <DateRangePicker
+    label="Date range"
+    defaultValue={{
+      start: parseAbsoluteToLocal('2023-04-14T07:45:00Z'),
+      end: parseAbsoluteToLocal('2023-04-19T07:45:00Z'),
+    }}
+  />
+);
+```
+
+### Granularity
+
+The `granularity` prop allows you to control the smallest unit that is displayed
+by a `DateRangePicker`. By default, `CalendarDate` values are displayed with
+"day" granularity (year, month, and day), and `CalendarDateTime` and
+`ZonedDateTime` values are displayed with “minute” granularity. More granular
+time values can be displayed by setting the granularity prop to “second”.
+
+In addition, when a value with a time is provided but you wish to only display
+the date, you can set the granularity to `"day"`. This has no effect on the
+actual value (it still has a time component), only on what fields are displayed.
+In the following example, two DateRangePickers are synchronized with the same
+value, but display different granularities.
+
+```jsx {% live=true %}
+let [range, setRange] = React.useState({
+  start: parseAbsoluteToLocal('2023-04-14T18:45:22Z'),
+  end: parseAbsoluteToLocal('2023-04-19T18:45:22Z'),
+});
+
+return (
+  <Flex gap="large" wrap>
+    <DateRangePicker
+      label="Date and time range"
+      granularity="second"
+      value={range}
+      onChange={setRange}
+    />
+    <DateRangePicker
+      label="Date range"
+      granularity="day"
+      value={range}
+      onChange={setRange}
+    />
+  </Flex>
+);
+```
+
+If no `value` or `defaultValue` prop is passed, then the `granularity` prop also
+affects which type of value is emitted from the `onChange` event. Note that by
+default, time values will not have a time zone because none was supplied. You
+can override this by setting the `placeholderValue` prop explicitly. Values
+emitted from `onChange` will use the time zone of the placeholder value.
+
+```jsx {% live=true %}
+// import { now } from '@internationalized/date';
+
+return (
+  <Flex gap="large" wrap>
+    <DateRangePicker label="Date range" granularity="second" />
+    <DateRangePicker
+      label="Date range"
+      placeholderValue={now('America/New_York')}
+      granularity="second"
+    />
+  </Flex>
+);
+```
+
+### International calendars
+
+DateRangePicker supports selecting dates in many calendar systems used around
+the world, including Gregorian, Hebrew, Indian, Islamic, Buddhist, and more.
+Dates are automatically displayed in the appropriate calendar system for the
+user’s locale. The calendar system can be overridden using the
+[Unicode calendar locale extension](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/calendar#adding_a_calendar_in_the_locale_string),
+passed to the `Provider` component.
+
+Selected dates passed to `onChange` always use the same calendar system as the
+`value` or `defaultValue` prop. If no `value` or `defaultValue` is provided,
+then dates passed to `onChange` are always in the Gregorian calendar since this
+is the most commonly used. This means that even though the user selects dates in
+their local calendar system, applications are able to deal with dates from all
+users consistently.
+
+The below example displays a `DateRangePicker` in the Hindi language, using the
+Indian calendar. Dates emitted from `onChange` are in the Gregorian calendar.
+
+```jsx {% live=true %}
+let [range, setRange] = React.useState(null);
+
+return (
+  <KeystarProvider locale="hi-IN-u-ca-indian">
+    <VStack gap="large">
+      <DateRangePicker label="Date range" value={range} onChange={setRange} />
+      <Text>Selected range: {range?.toString()}</Text>
+    </VStack>
+  </KeystarProvider>
+);
+```
+
+### HTML Forms
+
+`DateRangePicker` supports the `startName` and `endName` props for integration
+with HTML forms. The values will be submitted to the server as
+[ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) formatted strings according
+to the granularity of the value. For example, if the date range picker allows
+selecting only dates then strings such as `"2023-04-14"` will be submitted, and
+if it allows selecting times then strings such as `"2023-04-14T08:45:00"` will
+be submitted. See the [Value](#value) section above for more details about the
+supported value types.
+
+```jsx {% live=true %}
+<DateRangePicker label="Trip dates" startName="startDate" endName="endDate" />
+```
+
+## Props
+
+### Disabled
+
+A date field can be disabled by setting the `isDisabled` prop. This can be used
+to maintain layout continuity and communicate that a field may become available
+later.
+
+```jsx {% live=true %}
+<DateRangePicker label="Date range" isDisabled />
+```
+
+### Read only
+
+The `isReadOnly` prop makes the field’s value immutable. Unlike `isDisabled`,
+the field remains focusable.
+
+```jsx {% live=true %}
+<DateRangePicker
+  label="Date range"
+  value={{
+    start: today(getLocalTimeZone()),
+    end: today(getLocalTimeZone()).add({ weeks: 1 }),
+  }}
+  isReadOnly
+/>
+```
+
+### Description
+
+The `description` communicates a hint or helpful information, such as specific
+requirements for correctly filling out the field.
+
+```jsx {% live=true %}
+<DateRangePicker
+  label="Event dates"
+  description="The event will be between these two dates."
+/>
+```
+
+#### Help text
+
+`DateRangePicker` also supports displaying the expected date format for the
+user’s locale automatically using the `showFormatHelpText` prop.
+
+```jsx {% live=true %}
+<DateRangePicker label="Date range" showFormatHelpText />
+```
+
+### Error message
+
+The `errorMessage` communicates validation errors when field requirements aren’t
+met. Prompting the user to adjust their input.
+
+```jsx {% live=true %}
+<DateRangePicker
+  label="Trip dates"
+  value={null}
+  errorMessage="This field is required."
+  isRequired
+/>
+```
+
+### Minimum and maximum values
+
+The `minValue` and `maxValue` props can also be used to perform builtin
+validation. This prevents the user from selecting dates outside the valid range
+in the calendar, and displays an invalid state if the user enters an invalid
+date into the date field.
+
+This example only accepts dates after today.
+
+```jsx {% live=true %}
+let minValue = today(getLocalTimeZone());
+
+return (
+  <DateRangePicker
+    label="Trip dates"
+    minValue={minValue}
+    maxValue={minValue.add({ weeks: 6 })}
+    defaultValue={{
+      start: minValue.subtract({ weeks: 1 }),
+      end: minValue.subtract({ weeks: 2 }),
+    }}
+  />
+);
+```
+
+### Unavailable dates
+
+`DatePicker` supports marking certain dates as _unavailable_. These dates cannot
+be selected by the user and are displayed with a crossed out appearance in the
+calendar. In the date field, an invalid state is displayed if a user enters an
+unavailable date. The `isDateUnavailable` prop accepts a callback that is called
+to evaluate whether a date is unavailable.
+
+This example includes multiple unavailable date ranges, e.g. dates when no
+appointments are available. In addition, all weekends are unavailable. The
+`minValue` prop is also used to prevent selecting dates before today.
+
+```jsx {% live=true %}
+// import { isWeekend, today } from '@internationalized/date';
+// import { useLocale } from '@react-aria/i18n';
+
+let { locale } = useLocale();
+
+let dateToday = today(getLocalTimeZone());
+
+let disabledRanges = [
+  [dateToday, dateToday.add({ days: 5 })],
+  [dateToday.add({ days: 14 }), dateToday.add({ days: 16 })],
+  [dateToday.add({ days: 23 }), dateToday.add({ days: 24 })],
+];
+
+let isDateUnavailable = date =>
+  isWeekend(date, locale) ||
+  disabledRanges.some(
+    interval => date.compare(interval[0]) >= 0 && date.compare(interval[1]) <= 0
+  );
+
+return (
+  <DateRangePicker
+    label="Trip dates"
+    minValue={today(getLocalTimeZone())}
+    isDateUnavailable={isDateUnavailable}
+  />
+);
+```
+
+#### Non-contiguous ranges
+
+The `allowsNonContiguousRanges` prop enables a range to be selected even if
+there are unavailable dates in the middle. The value emitted in the `onChange`
+event will still be a single range with a `start` and `end` property, but
+unavailable dates will not be displayed as selected. It is up to the consumer to
+split the full selected range into multiple as needed for business logic.
+
+This example prevents selecting weekends, but allows selecting ranges that span
+multiple weeks.
+
+```jsx {% live=true %}
+// import { isWeekend } from '@internationalized/date';
+// import { useLocale } from '@react-aria/i18n';
+
+let { locale } = useLocale();
+
+return (
+  <DateRangePicker
+    label="Workshop dates"
+    isDateUnavailable={date => isWeekend(date, locale)}
+    allowsNonContiguousRanges
+  />
+);
+```
+
+### Placeholder value
+
+When no value is set, a placeholder is shown. The format of the placeholder is
+influenced by the `granularity` and `placeholderValue` props. `placeholderValue`
+also controls the default values of each segment when the user first interacts
+with them, e.g. using the up and down arrow keys. By default, the
+`placeholderValue` is the current date at midnight, but you can set it to a more
+appropriate value if needed.
+
+```jsx {% live=true %}
+// import { CalendarDate } from '@internationalized/date';
+
+return (
+  <DateRangePicker
+    label="Date range"
+    placeholderValue={new CalendarDate(1980, 1, 1)}
+  />
+);
+```
+
+### Maximum visible months
+
+By default, the calendar popover displays a single month. The `maxVisibleMonths`
+prop allows displaying up to 3 months at a time, if screen space permits.
+
+```jsx {% live=true %}
+<DateRangePicker label="Date range" maxVisibleMonths={2} />
+```
+
+#### Page behavior
+
+By default, when pressing the next or previous buttons, pagination will advance
+by the `maxVisibleMonths` value. This behavior can be changed to page by single
+months instead, by setting `pageBehavior` to single.
+
+```jsx {% live=true %}
+<DateRangePicker
+  label="Date range"
+  maxVisibleMonths={2}
+  pageBehavior="single"
+/>
+```
+
+### Hide time zone
+
+When a `ZonedDateTime` object is provided as the value of a `DateRangePicker`,
+the time zone abbreviation is displayed by default. However, if this is
+displayed elsewhere or implicit based on the usecase, it can be hidden using the
+`hideTimeZone` prop.
+
+```jsx {% live=true %}
+// import { parseZonedDateTime } from '@internationalized/date';
+
+return (
+  <DateRangePicker
+    label="Date range"
+    defaultValue={{
+      start: parseZonedDateTime('2023-04-14T07:45[Australia/Sydney]'),
+      end: parseZonedDateTime('2023-04-19T07:45[Australia/Sydney]'),
+    }}
+    hideTimeZone
+  />
+);
+```
+
+### Hour cycle
+
+By default, `DateRangePicker` displays times in either 12 or 24 hour hour format
+depending on the user’s locale. However, this can be overridden using the
+`hourCycle` prop if needed for a specific usecase. This example forces the
+`DateRangePicker` to use 24-hour time, regardless of the locale.
+
+```jsx {% live=true %}
+<DateRangePicker label="Date range" granularity="minute" hourCycle={24} />
+```

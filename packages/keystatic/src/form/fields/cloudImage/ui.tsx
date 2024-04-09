@@ -2,7 +2,7 @@ import { useEffect, useId, useState } from 'react';
 
 import { ClearButton } from '@keystar/ui/button';
 import { ObjectField, PreviewProps } from '@keystatic/core';
-import { Box, Flex, VStack } from '@keystar/ui/layout';
+import { Box, Flex, HStack, VStack } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { TextArea, TextField } from '@keystar/ui/text-field';
@@ -15,6 +15,7 @@ import {
   CloudImageProps,
   ImageDimensionsInput,
   loadImageData,
+  UploadImageButton,
 } from '../../../component-blocks/cloud-image-preview';
 import { isValidURL } from '../document/DocumentEditor/isValidURL';
 import { useEventCallback } from '../document/DocumentEditor/ui-utils';
@@ -82,57 +83,65 @@ function ImageField(props: {
 
   return (
     <VStack gap="xlarge">
-      <TextField
-        label="Image URL"
-        errorMessage={errorMessage}
-        autoFocus={props.autoFocus}
-        onPaste={onPaste}
-        onKeyDown={e => {
-          if (e.code === 'Backspace' || e.code === 'Delete') {
-            props.onChange(emptyImageData);
+      <HStack gap="medium" alignItems="end">
+        <TextField
+          flex
+          label="Image URL"
+          errorMessage={errorMessage}
+          autoFocus={props.autoFocus}
+          onPaste={onPaste}
+          onKeyDown={e => {
+            if (e.code === 'Backspace' || e.code === 'Delete') {
+              props.onChange(emptyImageData);
+            }
+          }}
+          onBlur={() => setBlurred(true)}
+          value={image.src}
+          description={
+            <Text>
+              Copy an image URL from the{' '}
+              <TextLink
+                prominence="high"
+                href={imageLibraryURL}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Image Library
+              </TextLink>{' '}
+              and paste it into this field.
+            </Text>
           }
-        }}
-        onBlur={() => setBlurred(true)}
-        value={image.src}
-        description={
-          <Text>
-            Copy an image URL from the{' '}
-            <TextLink
-              prominence="high"
-              href={imageLibraryURL}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Image Library
-            </TextLink>{' '}
-            and paste it into this field.
-          </Text>
-        }
-        endElement={
-          status === 'loading' ? (
-            <Flex
-              height="element.regular"
-              width="element.regular"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <ProgressCircle
-                size="small"
-                aria-label="Checking…"
-                isIndeterminate
+          endElement={
+            status === 'loading' ? (
+              <Flex
+                height="element.regular"
+                width="element.regular"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <ProgressCircle
+                  size="small"
+                  aria-label="Checking…"
+                  isIndeterminate
+                />
+              </Flex>
+            ) : image.src ? (
+              <ClearButton
+                onPress={() => {
+                  props.onChange(emptyImageData);
+                  setStatus('');
+                }}
+                preventFocus
               />
-            </Flex>
-          ) : image.src ? (
-            <ClearButton
-              onPress={() => {
-                props.onChange(emptyImageData);
-                setStatus('');
-              }}
-              preventFocus
-            />
-          ) : null
-        }
-      />
+            ) : null
+          }
+        />
+        <UploadImageButton
+          onUploaded={data => {
+            onChange(data);
+          }}
+        />
+      </HStack>
       {status === 'good' ? (
         <>
           <Box width="scale.1600" height="scale.1600">

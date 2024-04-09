@@ -1,5 +1,40 @@
 # @keystatic/next
 
+## 5.0.0
+
+### Patch Changes
+
+- Updated dependencies [8ad803c5]
+  - @keystatic/core@0.5.0
+
+## 4.0.0
+
+### Patch Changes
+
+- Updated dependencies [e3947052]
+- Updated dependencies [ee3f2038]
+  - @keystatic/core@0.4.0
+
+## 3.0.0
+
+### Major Changes
+
+- f4aaa8e3: Switch build to ESM-only
+
+### Patch Changes
+
+- Updated dependencies [0b2432ed]
+- Updated dependencies [f4aaa8e3]
+  - @keystatic/core@0.3.0
+
+## 2.0.1
+
+### Patch Changes
+
+- d76af081: Fix default exports in Node ESM
+- Updated dependencies [d76af081]
+  - @keystatic/core@0.2.6
+
 ## 2.0.0
 
 ### Major Changes

@@ -15,30 +15,7 @@ export default config({
 })
 ```
 
-## Configuration options
-
-Keystatic's `config` requires at minimum a `storage` strategy.
-
-It can also define `collections` and `singletons`:
-
-```typescript
-// keystatic.config.ts
-import { config } from '@keystatic/core'
-
-export default config({
-  // Required
-  storage: {
-    kind: 'local'
-  },
-  // Optional
-  collections: {},
-  singletons: {}
-})
-```
-
-For more about `collections` and `sinlgetons`, check the [Collections](/docs/collections) and [Singletons](/docs/singletons) pages.
-
-## Example usage
+## Example
 
 Here's an example of a Keystatic `config` that creates a `posts` collection, stored on the local file system within the `src/content/posts` directory.
 
@@ -72,6 +49,76 @@ export default config({
   },
 });
 ```
+
+---
+
+## Options
+
+### Branch prefix
+
+`branchPrefix` — scope out what GitHub branches Keystatic should interact with (when using `github` or `cloud` storage kind).
+
+```ts
+// keystatic.config.ts
+import { config } from '@keystatic/core'
+
+export default config({
+  storage: { 
+    kind: 'github',
+    repo: 'Thinkmill/keystatic',
+    branchPrefix: 'my-prefix/'
+  }
+})
+```
+
+Keystatic will only list branches starting with my-prefix/ in the Admin UI, and will only let you create new branches with that prefix.
+
+### Cloud
+
+`cloud` — used to configure the [Keystatic Cloud](/docs/cloud) project if `storage.kind` is set to `cloud`.
+
+### Collections
+
+`collections` — defines repeatable content structures, such as blog posts or testimonials.
+
+Learn more in the [Collections](/docs/collections) page.
+
+### Locale
+
+`locale` — defines the [locale](https://docsmill.dev/npm/@keystatic/core@latest#/.CloudConfig.locales) for the project.
+
+### Singletons
+
+`singletons` — defines one-off content structures, such as a settings or a contact page.
+
+Learn more in the [Singletons](/docs/singletons) page.
+
+### Storage
+
+`storage` — a required property defining Keystatic's `storage` strategy. 
+
+It's `kind` can be set to: 
+
+-  [local](/docs/local-mode) to store and read files directly from your local file system
+- [github](/docs/github-mode) to connect to a GitHub repository and read/write files to it
+- [cloud](/docs/cloud) to benefit from [Keystatic Cloud](https://keystatic.cloud)'s authentication and image hosting features
+
+```typescript
+// keystatic.config.ts
+import { config } from '@keystatic/core'
+
+export default config({
+  storage: { kind: 'local' }
+})
+```
+
+### User Interface
+
+`ui` — allows customization of parts of the Keystatic Admin UI. 
+
+Learn more on the [User Interface](/docs/user-interface) page.
+
+---
 
 ## Type signature
 

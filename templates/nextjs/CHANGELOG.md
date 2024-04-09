@@ -1,5 +1,80 @@
 # @keystatic/templates-nextjs
 
+## 0.0.24
+
+### Patch Changes
+
+- Updated dependencies [dbb9d3cb]
+  - @keystatic/core@0.5.11
+  - @keystatic/next@5.0.0
+
+## 0.0.23
+
+### Patch Changes
+
+- Updated dependencies [e1ebbdae]
+  - @keystatic/core@0.5.10
+  - @keystatic/next@5.0.0
+
+## 0.0.22
+
+### Patch Changes
+
+- Updated dependencies [847b9163]
+  - @keystatic/core@0.5.9
+  - @keystatic/next@5.0.0
+
+## 0.0.21
+
+### Patch Changes
+
+- Updated dependencies [4d1cee00]
+  - @keystatic/core@0.5.8
+  - @keystatic/next@5.0.0
+
+## 0.0.20
+
+### Patch Changes
+
+- Updated dependencies [c519f119]
+  - @keystatic/core@0.5.7
+  - @keystatic/next@5.0.0
+
+## 0.0.19
+
+### Patch Changes
+
+- Updated dependencies [c619ef2e]
+  - @keystatic/core@0.5.6
+  - @keystatic/next@5.0.0
+
+## 0.0.18
+
+### Patch Changes
+
+- Updated dependencies [8ad803c5]
+  - @keystatic/core@0.5.0
+  - @keystatic/next@5.0.0
+
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies [e3947052]
+- Updated dependencies [ee3f2038]
+  - @keystatic/core@0.4.0
+  - @keystatic/next@4.0.0
+
+## 0.0.16
+
+### Patch Changes
+
+- f4aaa8e3: Updates to support Keystatic switching to a ESM-only build
+- Updated dependencies [0b2432ed]
+- Updated dependencies [f4aaa8e3]
+  - @keystatic/core@0.3.0
+  - @keystatic/next@3.0.0
+
 ## 0.0.15
 
 ### Patch Changes

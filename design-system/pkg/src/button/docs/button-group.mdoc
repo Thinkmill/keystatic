@@ -1,0 +1,91 @@
+---
+title: ButtonGroup
+description:
+  Button group displays multiple related actions stacked or in a row, to help
+  with arrangement and spacing.
+category: Buttons
+---
+
+## Example
+
+The button group expects two or more [Button](/package/button/) components as
+children.
+
+```jsx {% live=true %}
+<ButtonGroup>
+  <Button prominence="high">Create</Button>
+  <Button>Link existing</Button>
+  <Button prominence="low">Manage all</Button>
+</ButtonGroup>
+```
+
+## Patterns
+
+### Button order
+
+The order of button priority should match the alignment of surrounding text.
+When text is left-aligned, buttons should be arranged so that the leftmost
+button is the most critical. When text is end- or center- aligned, the most
+critical action should be the furthest end.
+
+### Overflow
+
+When horizontal space is limited, the orientation switches to a vertical layout.
+`ButtonGroup` should be used when there are two or more related Buttons in a
+group. To see the orientation switch in the example above, resize the width of
+your window.
+
+## Props
+
+### Orientation
+
+Setting the orientation to `"vertical"` will prevent dynamic orientation
+changes. The group will remain in a vertical layout regardless of the available
+width.
+
+```jsx {% live=true %}
+<ButtonGroup orientation="vertical">
+  <Button prominence="high">Create</Button>
+  <Button>Link existing</Button>
+  <Button prominence="low">Manage all</Button>
+</ButtonGroup>
+```
+
+### Alignment
+
+Button groups are aligned contextually. In general, button groups are
+left-aligned to follow content such as a block of text. They are center-aligned
+in the context of an empty state. And, they should be end-aligned inside
+container components such as dialogs, popovers, or cards.
+
+```jsx {% live=true %}
+<ButtonGroup align="end" width="100%">
+  <Button prominence="low">Manage all</Button>
+  <Button>Link existing</Button>
+  <Button prominence="high">Create</Button>
+</ButtonGroup>
+```
+
+Vertically oriented button groups follow the same alignment rules.
+
+```jsx {% live=true %}
+<ButtonGroup orientation="vertical" align="center" width="100%">
+  <Button prominence="high">Create</Button>
+  <Button>Link existing</Button>
+  <Button prominence="low">Manage all</Button>
+</ButtonGroup>
+```
+
+### Disabled
+
+Influence all buttons within a group using the `isDisabled` prop. This state can
+be used to maintain layout continuity and to communicate that a button group may
+become available later.
+
+```jsx {% live=true %}
+<ButtonGroup isDisabled>
+  <Button prominence="high">Create</Button>
+  <Button>Link existing</Button>
+  <Button prominence="low">Manage all</Button>
+</ButtonGroup>
+```

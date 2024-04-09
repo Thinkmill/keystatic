@@ -1,4 +1,5 @@
 import { toDataAttributes } from '@keystar/ui/style';
+import { expect, describe, it } from '@jest/globals';
 
 describe('utils/toDataAttributes', () => {
   it('should prepend the key with "data-"', () => {
