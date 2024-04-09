@@ -13,6 +13,7 @@ export function UrlFieldInput(
   const [blurred, onBlur] = useReducer(() => true, false);
   return (
     <TextField
+      inputMode="url"
       width="auto"
       maxWidth="scale.6000"
       label={props.label}
