@@ -33,10 +33,12 @@ export function markdoc({
   description,
   options = {},
   components = {},
+  extension = 'mdoc',
 }: {
   label: string;
   description?: string;
   options?: MarkdocEditorOptions;
+  extension?: 'mdoc' | 'md';
   components?: Record<string, ContentComponent>;
 }): markdoc.Field {
   let schema: undefined | EditorSchema;
@@ -66,7 +68,7 @@ export function markdoc({
     parse: (_, { content, other, external, slug }) => {
       return parseToEditorState(content, getSchema(), other, external, slug);
     },
-    contentExtension: '.mdoc',
+    contentExtension: `.${extension}`,
     validate(value) {
       return value;
     },
@@ -128,10 +130,12 @@ export function mdx({
   description,
   options = {},
   components = {},
+  extension = 'mdx',
 }: {
   label: string;
   description?: string;
   options?: MDXEditorOptions;
+  extension?: 'mdx' | 'md';
   components?: Record<string, ContentComponent>;
 }): mdx.Field {
   let schema: undefined | EditorSchema;
@@ -161,7 +165,7 @@ export function mdx({
     parse: (_, { content, other, external, slug }) => {
       return parseToEditorStateMDX(content, getSchema(), other, external, slug);
     },
-    contentExtension: '.mdx',
+    contentExtension: `.${extension}`,
     validate(value) {
       return value;
     },

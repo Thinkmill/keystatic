@@ -1,10 +1,10 @@
 import { ClassNamesArg } from '@emotion/css';
+import { MaybeArray } from '@keystar/ui/types';
 import { CSSProperties } from 'react';
 
 import { tokenSchema } from './tokens';
 
 export type CSSProp = keyof CSSProperties;
-export type MaybeArray<T> = T | T[];
 export type Primitive = number | string | boolean | null | undefined;
 
 export type Breakpoint = 'mobile' | 'tablet' | 'desktop' | 'wide';

@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
 
 import { notFound } from 'next/navigation';
-import { DocPage } from '../../../../../components/doc-page';
-import { transformMarkdoc } from '../../../../../utils/markdoc';
-import { reader } from '../../../../../utils/packages';
+import { DocPage } from '../../../../components/doc-page';
+import { transformMarkdoc } from '../../../../utils/markdoc';
+import { reader } from '../../../../utils/packages';
 
 export async function generateStaticParams() {
   const entries = await reader.collections.packageDocs.list();
@@ -15,12 +15,19 @@ export async function generateStaticParams() {
   });
 }
 
+export const dynamicParams = false;
+
 export async function generateMetadata({
   params,
 }: {
-  params: { slug?: string[] };
+  params: { slug: string[] };
 }): Promise<Metadata> {
-  const slug = (params.slug ?? ['index']).join('/');
+  const slugWithDocsBitAdded = [
+    params.slug[0],
+    'docs',
+    ...params.slug.slice(1),
+  ];
+  const slug = slugWithDocsBitAdded.join('/');
   let entry = await reader.collections.packageDocs.read(slug);
   if (!entry && slug !== 'index') {
     entry = await reader.collections.packageDocs.read(slug + '/index');
@@ -29,11 +36,9 @@ export async function generateMetadata({
   return { title: entry.title };
 }
 
-export default async function Page(props: { params: { slug?: string[] } }) {
-  if (!props.params.slug) notFound();
-
+export default async function Page(props: { params: { slug: string[] } }) {
   const slugWithDocsBitAdded = [
-    ...props.params.slug[0],
+    props.params.slug[0],
     'docs',
     ...props.params.slug.slice(1),
   ];

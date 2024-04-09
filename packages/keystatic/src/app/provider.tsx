@@ -194,6 +194,7 @@ export default function Provider({
 
   return (
     <ThemeProvider value={themeContext}>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
       <KeystarProvider
         locale={config.locale || 'en-US'}
         colorScheme={themeContext.theme}

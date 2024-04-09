@@ -23,6 +23,22 @@ Keystatic will store content and retrieve it for you using the [Reader API](/doc
 
 You can use community tools or build your own.
 
+---
+
+## Use .md files instead of .mdx
+
+The `extension` lets you you to use `.md` files instead of `.mdx` for MDX collections or singletons:
+
+```diff
+content: fields.mdx({
+  label: 'Content',
++  extension: 'md',
+  // ...
+})
+```
+
+---
+
 ## Content components
 
 The `mdx` field uses the new-generation and more capable [content components](/docs/content-components):

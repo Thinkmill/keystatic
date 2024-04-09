@@ -23,7 +23,7 @@ export const Heading = forwardRefWithAs<HeadingProps, 'h3'>((props, ref) => {
     elementType: ElementType = sizeToElement[size],
     ...otherProps
   } = props;
-  const styleProps = useHeadingStyles({ size, ...otherProps });
+  const styleProps = useHeadingStyles({ size, ...props });
   const headingContext = useMemo(() => ({ size }), [size]);
   const visuallyHiddenProps = useVisuallyHiddenRange(props.visuallyHidden);
 

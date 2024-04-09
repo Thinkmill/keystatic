@@ -1,5 +1,29 @@
 # @keystatic/core
 
+## 0.5.11
+
+### Patch Changes
+
+- dbb9d3cb: Updates lru-cache to latest version
+
+## 0.5.10
+
+### Patch Changes
+
+- e1ebbdae: Fix link button in editor toolbar opening modal when unlinking
+
+## 0.5.9
+
+### Patch Changes
+
+- 847b9163: Allow missing frontmatter
+
+## 0.5.8
+
+### Patch Changes
+
+- 4d1cee00: Add `extension` option to `fields.markdoc` and `fields.mdx`
+
 ## 0.5.7
 
 ### Patch Changes

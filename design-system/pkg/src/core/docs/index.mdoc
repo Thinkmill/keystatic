@@ -1,14 +1,18 @@
 ---
 title: Core
-description: Core functions and components for Keystar UI.
+description: The core package includes a range of functions, hooks and components that form the foundation of how the component library works.
 category: Introduction
 ---
 
-## TODO
-
-Needs documentation in general...
-
 ## Provider
+
+The `KeystarProvider` provides the necessary contexts for all components.
+
+It should be placed at the root of your application, but may be nested when required. For [Next.js applications](/package/next) use the tailor-made `NextRootProvider` instead.
+
+### Color scheme
+
+Control your application’s color scheme with the `colorScheme` prop. The default is `"auto"` which will use the user’s system preference.
 
 ```jsx {% live=true %}
 const [colorScheme, toggleScheme] = React.useReducer(
@@ -26,7 +30,7 @@ return (
       Dark mode
     </Switch>
     <KeystarProvider colorScheme={colorScheme}>
-      <Grid
+      <VStack
         gap="xlarge"
         backgroundColor="canvas"
         padding="large"
@@ -54,33 +58,51 @@ return (
           <Button prominence="high">Primary</Button>
           <Button prominence="low">Secondary</Button>
         </ButtonGroup>
-      </Grid>
+      </VStack>
     </KeystarProvider>
   </div>
 );
 ```
 
-## Client-side routing
+### Locale
 
-The provider component accepts an optional `router` prop. This enables Keystar
-components that render links to perform client side navigation using your
-application or framework's client side router.
+Control your application’s language preferences with the `locale` prop, which accepts a [BCP 47](https://www.ietf.org/rfc/bcp/bcp47.txt) language code. The example below sets the locale to `"pt-BR"` for Brazilian Portuguese.
+
+```tsx
+<KeystarProvider locale="pt-BR">
+  {/* ... */}
+</KeystarProvider>
+```
+
+### Client-side routing
+
+The provider component accepts an optional `router` prop, which enables Keystar
+components that render links to perform client-side navigation using your
+application or framework’s client-side router.
 
 ```jsx
 import { KeystarProvider } from '@keystar/ui/core';
+import { useNavigate } from 'react-router-dom';
 
-function App() {
-  let navigate = useNavigateFromYourRouter();
+export function App() {
+  let navigate = useNavigate();
+  let router = useMemo(() => ({ navigate }), [navigate]);
 
-  return <KeystarProvider router={{ navigate }}>{/* ... */}</KeystarProvider>;
+  return (
+    <KeystarProvider router={router}>
+      {/* ... */}
+    </KeystarProvider>
+  );
 }
 ```
 
-Note that external links to different origins will not trigger client side
-routing, and will use native browser navigation. Additionally, if the link has a
+**NOTE:** external links to different origins will not trigger client-side
+routing, and will use native browser navigation.
+
+Additionally, if the link has a
 [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)
 other than `"\_self"`, uses the
 [download](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download)
 attribute, or the user presses modifier keys such as `Command` or `Alt` to
 change the default behavior, browser native navigation will occur instead of
-client side routing.
+client-side routing.

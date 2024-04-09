@@ -60,13 +60,13 @@ locale direction should be ignored, such as
 
 ### Casing
 
-How to transform the `casing` of the element's contents, if at all.
+How to transform the `casing` of the element’s contents, if at all.
 
 #### Capitalize
 
-Use with caution, typically on a single word. Title case shouldn't apply to
+Use with caution, typically on a single word. Title case shouldn’t apply to
 articles (a, an, the) and most prepositions (in, on, for, etc), but the
-`"capitalize"` text transform doesn't discriminate. Consider an alternative JS
+`"capitalize"` text transform doesn’t discriminate. Consider an alternative JS
 solution for complex requirements.
 
 ```jsx {% live=true %}
@@ -150,14 +150,14 @@ Functional colors are associated with specific app behaviours.
       Highlight
     </Text>
     <Text>
-      Bring the user's attention to something without implying intent.
+      Bring the user’s attention to something without implying intent.
     </Text>
   </Flex>
   <Flex direction="column" gap="regular">
     <Text color="pending" weight="bold">
       Pending
     </Text>
-    <Text>Something has changed, but hasn't yet been confirmed.</Text>
+    <Text>Something has changed, but hasn’t yet been confirmed.</Text>
   </Flex>
   <Flex direction="column" gap="regular">
     <Text color="accent" weight="bold">
@@ -182,8 +182,8 @@ information to the user.
       Positive
     </Text>
     <Text>
-      Let the user know about something good. Think "completed task",
-      "increasing value", "upward trend" etc.
+      Let the user know about something good. Think “completed task”,
+      “increasing value”, “upward trend” etc.
     </Text>
   </Flex>
   <Flex direction="column" gap="regular">
@@ -197,8 +197,8 @@ information to the user.
       Critical
     </Text>
     <Text>
-      Super important; the user needs to see this. Think "error message",
-      "delete item", "downward trend" etc.
+      Super important; the user needs to see this. Think “error message”,
+      “delete item”, “downward trend” etc.
     </Text>
   </Flex>
 </Flex>
@@ -206,7 +206,7 @@ information to the user.
 
 ### Overflow
 
-How to handle white space and line breaks when the element's text would
+How to handle white space and line breaks when the element’s text would
 otherwise `overflow` its content box.
 
 You may also [truncate](#truncate) text, which is a related but separate
@@ -231,7 +231,7 @@ avoid an unusually long string of text causing layout problems.
 #### No wrap
 
 Prevent the text from wrapping onto multiple lines. Only use `"nowrap"` when you
-expect the content to be extremely short, and may otherwise be "squashed" by
+expect the content to be extremely short, and may otherwise be “squashed” by
 surrounding elements.
 
 ```jsx {% live=true %}
@@ -403,7 +403,7 @@ technologies using the `visuallyHidden` prop.
 
 ### Weight
 
-The `weight` determines how "bold" or "light" the text will appear.
+The `weight` determines how “bold” or “light” the text will appear.
 
 #### Regular {% #weight-regular %}
 
@@ -427,7 +427,7 @@ The `"medium"` weight is most commonly used for interactive elements.
 #### Semi Bold {% #weight-semibold %}
 
 The `"semibold"` weight should only be used to indicate that an interactive
-element is "selected", distinguishing it from its nearby counterparts.
+element is “selected”, distinguishing it from its nearby counterparts.
 
 ```jsx {% live=true %}
 <Text weight="semibold">Semibold — The five boxing wizards jump quickly.</Text>
@@ -447,7 +447,7 @@ its impact.
 ### Line height
 
 The `line-height` of each a `Text` element is baked into its [size](#size) and
-unfortunately can't be changed. Attempting to force the line-height of a text
+unfortunately can’t be changed. Attempting to force the line-height of a text
 element manually will result in unexpected side-effects.
 
 Learn about [spacing](/package/typography/concepts#spacing) in the typographic
