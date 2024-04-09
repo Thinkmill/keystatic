@@ -1,15 +1,18 @@
-import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { ActionButton, ButtonGroup, Button } from '@keystar/ui/button';
 import {
   DialogContainer,
   Dialog,
   useDialogContainer,
 } from '@keystar/ui/dialog';
-import { FieldLabel } from '@keystar/ui/field';
-import { Flex } from '@keystar/ui/layout';
+import { FieldLabel, FieldMessage } from '@keystar/ui/field';
+import { VStack } from '@keystar/ui/layout';
+import { MenuTrigger, Menu, Item } from '@keystar/ui/menu';
 import { Content } from '@keystar/ui/slots';
 import { Heading, Text } from '@keystar/ui/typography';
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useField } from '@react-aria/label';
 import { useId, useState, useMemo } from 'react';
+
 import {
   ArrayField,
   BasicFormField,
@@ -23,11 +26,12 @@ import {
   FormValueContentFromPreviewProps,
 } from '../../form-from-preview';
 import { valueToUpdater } from '../../get-value';
-import { ArrayFieldListView, ArrayFieldValidationMessages } from '../array/ui';
+import {
+  ArrayFieldListView,
+  useArrayFieldValidationMessage,
+} from '../array/ui';
 import l10nMessages from '../../../app/l10n/index.json';
 import { createGetPreviewProps } from '../../preview-props';
-import { Item } from '@react-stately/collections';
-import { MenuTrigger, Menu } from '@keystar/ui/menu';
 import { getInitialPropsValue } from '../../initial-values';
 
 type BlocksPreviewProps = GenericPreviewProps<
@@ -46,10 +50,6 @@ type BlocksPreviewProps = GenericPreviewProps<
 export function BlocksFieldInput(
   props: BlocksPreviewProps & ExtraFieldInputProps
 ) {
-  const labelId = useId();
-  const descriptionId = useId();
-  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
-
   const [modalState, setModalState] = useState<
     | { kind: 'closed' }
     | { kind: 'new'; discriminant: string | boolean }
@@ -60,22 +60,35 @@ export function BlocksFieldInput(
     setModalState({ kind: 'closed' });
   };
 
+  const minLength = props.schema.validation?.length?.min ?? 0;
   const formId = useId();
+  const stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  const errorMessage = useArrayFieldValidationMessage(props);
+  const {
+    descriptionProps,
+    errorMessageProps,
+    fieldProps: groupProps,
+    labelProps,
+  } = useField({
+    description: props.schema.description,
+    errorMessage: errorMessage,
+    isInvalid: !!errorMessage,
+    label: props.schema.label,
+    labelElementType: 'span',
+  });
 
   return (
-    <Flex
-      elementType="section"
-      gap="medium"
-      role="group"
-      aria-labelledby={labelId}
-      aria-describedby={props.schema.description ? descriptionId : undefined}
-      direction="column"
-    >
-      <FieldLabel elementType="h3" id={labelId}>
+    <VStack gap="medium" role="group" minWidth={0} {...groupProps}>
+      <FieldLabel
+        elementType="span"
+        isRequired={minLength > 0}
+        supplementRequiredState
+        {...labelProps}
+      >
         {props.schema.label}
       </FieldLabel>
       {props.schema.description && (
-        <Text id={descriptionId} size="small" color="neutralSecondary">
+        <Text size="small" color="neutralSecondary" {...descriptionProps}>
           {props.schema.description}
         </Text>
       )}
@@ -98,8 +111,8 @@ export function BlocksFieldInput(
         </Menu>
       </MenuTrigger>
       <ArrayFieldListView
-        {...(props as any)}
-        labelId={labelId}
+        {...props}
+        aria-label={props.schema.label}
         onOpenItem={idx => {
           setModalState({
             kind: 'edit',
@@ -107,7 +120,9 @@ export function BlocksFieldInput(
           });
         }}
       />
-      <ArrayFieldValidationMessages {...(props as any)} />
+      {errorMessage && (
+        <FieldMessage {...errorMessageProps}>{errorMessage}</FieldMessage>
+      )}
 
       <DialogContainer onDismiss={dismiss}>
         {(() => {
@@ -172,7 +187,7 @@ export function BlocksFieldInput(
           );
         })()}
       </DialogContainer>
-    </Flex>
+    </VStack>
   );
 }
 
@@ -184,7 +199,7 @@ function BlocksEditItemModalContent(props: {
 }) {
   return (
     <Content>
-      <Flex
+      <VStack
         id={props.formId}
         elementType="form"
         onSubmit={event => {
@@ -192,11 +207,10 @@ function BlocksEditItemModalContent(props: {
           event.preventDefault();
           props.onClose();
         }}
-        direction="column"
         gap="xxlarge"
       >
         <FormValueContentFromPreviewProps autoFocus {...props.previewProps} />
-      </Flex>
+      </VStack>
     </Content>
   );
 }
@@ -208,7 +222,6 @@ function BlocksAddItemModalContent(props: {
 }) {
   const schema =
     props.previewProps.schema.element.values[props.discriminant.toString()];
-  console.log(schema);
   const [value, setValue] = useState(() => getInitialPropsValue(schema));
   const [forceValidation, setForceValidation] = useState(false);
   const previewProps = useMemo(
@@ -218,7 +231,7 @@ function BlocksAddItemModalContent(props: {
   const { dismiss } = useDialogContainer();
 
   return (
-    <Flex
+    <VStack
       id={props.formId}
       elementType="form"
       onSubmit={event => {
@@ -240,7 +253,6 @@ function BlocksAddItemModalContent(props: {
         ]);
         dismiss();
       }}
-      direction="column"
       gap="xxlarge"
     >
       <FormValueContentFromPreviewProps
@@ -248,6 +260,6 @@ function BlocksAddItemModalContent(props: {
         autoFocus
         {...(previewProps as any)}
       />
-    </Flex>
+    </VStack>
   );
 }
