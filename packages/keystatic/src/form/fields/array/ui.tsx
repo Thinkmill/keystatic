@@ -4,65 +4,74 @@ import { ItemDropTarget, useDragAndDrop } from '@keystar/ui/drag-and-drop';
 import { FieldLabel, FieldMessage } from '@keystar/ui/field';
 import { Icon } from '@keystar/ui/icon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
-import { Flex } from '@keystar/ui/layout';
+import { VStack } from '@keystar/ui/layout';
 import { Item, ListView } from '@keystar/ui/list-view';
 import { Content } from '@keystar/ui/slots';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Heading, Text } from '@keystar/ui/typography';
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-
-import { previewPropsToValue, valueToUpdater } from '../../get-value';
-import { createGetPreviewProps } from '../../preview-props';
+import { useField } from '@react-aria/label';
+import { useId, Key, useMemo, useState } from 'react';
 
 import l10nMessages from '../../../app/l10n/index.json';
-import { useId, Key, useMemo, useState } from 'react';
-import { getSlugFromState } from '../../../app/utils';
+import { getSlugFromState, pluralize } from '../../../app/utils';
+
+import { ArrayField, ComponentSchema, GenericPreviewProps } from '../../api';
 import { clientSideValidateProp } from '../../errors';
 import {
   FormValueContentFromPreviewProps,
   ExtraFieldInputProps,
 } from '../../form-from-preview';
+import { previewPropsToValue, valueToUpdater } from '../../get-value';
 import { getInitialPropsValue } from '../../initial-values';
+import { createGetPreviewProps } from '../../preview-props';
+
 import { useEventCallback } from '../document/DocumentEditor/ui-utils';
-import { ArrayField, ComponentSchema, GenericPreviewProps } from '../../api';
 
 export function ArrayFieldInput<Element extends ComponentSchema>(
   props: GenericPreviewProps<ArrayField<Element>, unknown> &
     ExtraFieldInputProps
 ) {
-  const labelId = useId();
-  const descriptionId = useId();
+  const minLength = props.schema.validation?.length?.min ?? 0;
+  const formId = useId();
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
+  const errorMessage = useArrayFieldValidationMessage(props);
+  const {
+    descriptionProps,
+    errorMessageProps,
+    fieldProps: groupProps,
+    labelProps,
+  } = useField({
+    description: props.schema.description,
+    errorMessage: errorMessage,
+    isInvalid: !!errorMessage,
+    label: props.schema.label,
+    labelElementType: 'span',
+  });
 
   const [modalState, setModalState] = useState<
     { state: 'edit'; index: number } | { state: 'new' } | { state: 'closed' }
   >({ state: 'closed' });
 
-  const formId = useId();
-
   return (
-    <Flex
-      elementType="section"
-      gap="medium"
-      role="group"
-      aria-labelledby={labelId}
-      aria-describedby={props.schema.description ? descriptionId : undefined}
-      direction="column"
-    >
-      <FieldLabel elementType="h3" id={labelId}>
+    <VStack gap="medium" role="group" minWidth={0} {...groupProps}>
+      <FieldLabel
+        elementType="span"
+        isRequired={minLength > 0}
+        supplementRequiredState
+        {...labelProps}
+      >
         {props.schema.label}
       </FieldLabel>
       {props.schema.description && (
-        <Text id={descriptionId} size="small" color="neutralSecondary">
+        <Text size="small" color="neutralSecondary" {...descriptionProps}>
           {props.schema.description}
         </Text>
       )}
       <ActionButton
         autoFocus={props.autoFocus}
         onPress={() => {
-          setModalState({
-            state: 'new',
-          });
+          setModalState({ state: 'new' });
         }}
         alignSelf="start"
       >
@@ -70,12 +79,14 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
       </ActionButton>
       <ArrayFieldListView
         {...props}
-        labelId={labelId}
+        aria-label={props.schema.label}
         onOpenItem={idx => {
           setModalState({ state: 'edit', index: idx });
         }}
       />
-      <ArrayFieldValidationMessages {...props} />
+      {errorMessage && (
+        <FieldMessage {...errorMessageProps}>{errorMessage}</FieldMessage>
+      )}
 
       <DialogContainer
         onDismiss={() => {
@@ -116,7 +127,7 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
           );
         })()}
       </DialogContainer>
-    </Flex>
+    </VStack>
   );
 }
 
@@ -162,7 +173,7 @@ function ArrayFieldAddItemModalContent(props: {
     <Dialog>
       <Heading>Add item</Heading>
       <Content>
-        <Flex
+        <VStack
           id={props.formId}
           elementType="form"
           onSubmit={event => {
@@ -189,7 +200,6 @@ function ArrayFieldAddItemModalContent(props: {
             ]);
             props.onClose();
           }}
-          direction="column"
           gap="xxlarge"
         >
           <FormValueContentFromPreviewProps
@@ -198,7 +208,7 @@ function ArrayFieldAddItemModalContent(props: {
             {...previewProps}
             forceValidation={forceValidation}
           />
-        </Flex>
+        </VStack>
       </Content>
       <ButtonGroup>
         <Button
@@ -244,7 +254,7 @@ function ArrayEditItemModalContent(props: {
 
   return (
     <Content>
-      <Flex
+      <VStack
         id={props.formId}
         elementType="form"
         onSubmit={event => {
@@ -252,7 +262,6 @@ function ArrayEditItemModalContent(props: {
           event.preventDefault();
           props.onClose();
         }}
-        direction="column"
         gap="xxlarge"
       >
         <FormValueContentFromPreviewProps
@@ -260,39 +269,39 @@ function ArrayEditItemModalContent(props: {
           autoFocus
           {...props.previewProps.elements[props.modalStateIndex]}
         />
-      </Flex>
+      </VStack>
     </Content>
   );
 }
 
-export function ArrayFieldValidationMessages<Element extends ComponentSchema>(
+// TODO: l10n
+export function useArrayFieldValidationMessage<Element extends ComponentSchema>(
   props: GenericPreviewProps<ArrayField<Element>, unknown> &
     ExtraFieldInputProps
 ) {
-  return (
-    <>
-      {props.forceValidation &&
-        (props.schema.validation?.length?.min !== undefined &&
-        props.elements.length < props.schema.validation.length.min ? (
-          <FieldMessage>
-            Must have at least {props.schema.validation.length.min} item
-            {props.schema.validation.length.min === 1 ? '' : 's'}
-          </FieldMessage>
-        ) : props.schema.validation?.length?.max !== undefined &&
-          props.elements.length > props.schema.validation.length.max ? (
-          <FieldMessage>
-            Must have at most {props.schema.validation.length.max} item
-            {props.schema.validation.length.max === 1 ? '' : 's'}
-          </FieldMessage>
-        ) : undefined)}
-    </>
-  );
+  const { elements, forceValidation, schema } = props;
+  const minLength = schema.validation?.length?.min;
+  const maxLength = schema.validation?.length?.max;
+
+  return useMemo(() => {
+    if (forceValidation) {
+      if (minLength && elements.length < minLength) {
+        return `Must have at least ${pluralize(minLength, {
+          singular: 'item',
+        })}.`;
+      } else if (maxLength && elements.length > maxLength) {
+        return `Must have at most ${pluralize(maxLength, {
+          singular: 'item',
+        })}.`;
+      }
+    }
+  }, [elements.length, forceValidation, maxLength, minLength]);
 }
 
 export function ArrayFieldListView<Element extends ComponentSchema>(
   props: GenericPreviewProps<ArrayField<Element>, unknown> &
     ExtraFieldInputProps & {
-      labelId: string;
+      'aria-label': string;
       onOpenItem: (index: number) => void;
     }
 ) {
@@ -361,33 +370,12 @@ export function ArrayFieldListView<Element extends ComponentSchema>(
 
   return (
     <ListView
-      aria-labelledby={props.labelId}
+      aria-label={props['aria-label']}
       items={props.elements}
       dragAndDropHooks={dragAndDropHooks}
       height={props.elements.length ? undefined : 'scale.2000'}
-      renderEmptyState={() => (
-        <Flex
-          direction="column"
-          gap="large"
-          alignItems="center"
-          justifyContent="center"
-          height="100%"
-          padding="regular"
-        >
-          <Text
-            elementType="h3"
-            align="center"
-            color="neutralSecondary"
-            size="large"
-            weight="medium"
-          >
-            Empty list
-          </Text>
-          <Text align="center" color="neutralTertiary">
-            Add the first item to see it here.
-          </Text>
-        </Flex>
-      )}
+      selectionMode="none"
+      renderEmptyState={arrayFieldEmptyState}
       onAction={key => {
         const idx = props.elements.findIndex(x => x.key === key);
         if (idx === -1) return;
@@ -409,14 +397,37 @@ export function ArrayFieldListView<Element extends ComponentSchema>(
               >
                 <Icon src={trash2Icon} />
               </ActionButton>
-              <Tooltip tone="critical">
-                {stringFormatter.format('delete')}
-              </Tooltip>
+              <Tooltip>{stringFormatter.format('delete')}</Tooltip>
             </TooltipTrigger>
           </Item>
         );
       }}
     </ListView>
+  );
+}
+
+function arrayFieldEmptyState() {
+  return (
+    <VStack
+      gap="large"
+      alignItems="center"
+      justifyContent="center"
+      height="100%"
+      padding="regular"
+    >
+      <Text
+        elementType="h3"
+        align="center"
+        color="neutralSecondary"
+        size="large"
+        weight="medium"
+      >
+        Empty list
+      </Text>
+      <Text align="center" color="neutralTertiary">
+        Add the first item to see it here.
+      </Text>
+    </VStack>
   );
 }
 
