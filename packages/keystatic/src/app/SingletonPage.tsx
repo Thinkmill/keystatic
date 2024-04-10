@@ -60,6 +60,7 @@ import * as Y from 'yjs';
 import { useYjs, useYjsIfAvailable } from './shell/collab';
 import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
 import { useYJsValue } from './useYJsValue';
+import { PresenceAvatars } from './presence';
 
 type SingletonPageProps = {
   singleton: string;
@@ -188,6 +189,7 @@ function SingletonPageInner(
             props.hasChanged && <Badge tone="pending">Unsaved</Badge>
           )}
         </Flex>
+        <PresenceAvatars />
         <ActionGroup
           buttonLabelBehavior="hide"
           overflowMode="collapse"
