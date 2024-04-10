@@ -1018,27 +1018,32 @@ const ItemPageShell = (
 ) => {
   const router = useRouter();
   const collectionConfig = props.config.collections![props.collection]!;
+  const onBreadcrumbAction = useCallback(
+    (key: Key) => {
+      if (key === 'collection') {
+        router.push(`${props.basePath}/collection/${props.collection}`);
+      }
+    },
+    [props.basePath, props.collection, router]
+  );
+  const breadcrumbs = useMemo(() => {
+    return (
+      <Breadcrumbs
+        flex
+        size="medium"
+        minWidth="alias.singleLineWidth"
+        onAction={onBreadcrumbAction}
+      >
+        <Item key="collection">{collectionConfig.label}</Item>
+        <Item key="item">{props.itemSlug}</Item>
+      </Breadcrumbs>
+    );
+  }, [collectionConfig.label, onBreadcrumbAction, props.itemSlug]);
 
   return (
     <PageRoot containerWidth={containerWidthForEntryLayout(collectionConfig)}>
       <PageHeader>
-        <Breadcrumbs
-          flex
-          size="medium"
-          minWidth={0}
-          onAction={key => {
-            if (key === 'collection') {
-              router.push(
-                `${props.basePath}/collection/${encodeURIComponent(
-                  props.collection
-                )}`
-              );
-            }
-          }}
-        >
-          <Item key="collection">{collectionConfig.label}</Item>
-          <Item key="item">{props.itemSlug}</Item>
-        </Breadcrumbs>
+        {breadcrumbs}
         {props.headerActions}
       </PageHeader>
 
