@@ -18,7 +18,7 @@ export function placeholderPlugin(text: string) {
           placeholder.textContent = text;
 
           return DecorationSet.create(state.doc, [
-            Decoration.widget(1, bookendWithZeroWidthSpace(placeholder), {
+            Decoration.widget(1, bookendWithZeroWidthSpaces(placeholder), {
               // undocumented prop on `WidgetViewDesc` that stops the decoration
               // from being wrapped with a contenteditable=false span.
               // note:
@@ -38,10 +38,11 @@ export function placeholderPlugin(text: string) {
 // firefox bug where the cursor is hidden when beside `contenteditable=false`
 // - https://discuss.prosemirror.net/t/firefox-contenteditable-false-cursor-bug/5016
 // - https://bugzilla.mozilla.org/show_bug.cgi?id=1612076
-function bookendWithZeroWidthSpace(element: HTMLElement) {
+function bookendWithZeroWidthSpaces(element: HTMLElement) {
   let wrapper = document.createElement('span');
-  wrapper.appendChild(document.createTextNode('\u200b'));
-  wrapper.appendChild(element);
-  wrapper.appendChild(document.createTextNode('\u200b'));
+  wrapper.append(zeroWidthSpace(), element, zeroWidthSpace());
   return wrapper;
+}
+function zeroWidthSpace() {
+  return document.createTextNode('\u200B');
 }
