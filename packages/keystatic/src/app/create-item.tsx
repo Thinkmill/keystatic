@@ -1,57 +1,57 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Key, useCallback, useEffect, useMemo, useState } from 'react';
+import * as Y from 'yjs';
+import { z } from 'zod';
 
 import { Button } from '@keystar/ui/button';
-import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
 import { DialogContainer } from '@keystar/ui/dialog';
+import { Icon } from '@keystar/ui/icon';
+import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
 import { Flex } from '@keystar/ui/layout';
 import { Notice } from '@keystar/ui/notice';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { toastQueue } from '@keystar/ui/toast';
+import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 
 import { Config } from '../config';
 import { fields } from '../form/api';
 import { getInitialPropsValue } from '../form/initial-values';
 import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
-import {
-  getCollectionFormat,
-  getCollectionItemPath,
-  getSlugFromState,
-  isGitHubConfig,
-} from './utils';
+import { createGetPreviewProps } from '../form/preview-props';
+import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
+import { getYjsValFromParsedValue } from '../form/props-value';
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import l10nMessages from './l10n/index.json';
-import { useRouter } from './router';
-import { PageRoot, PageHeader, PageBody } from './shell/page';
 import { useBaseCommit, useBranchInfo } from './shell/data';
+import { PageRoot, PageHeader, PageBody } from './shell/page';
 import { ForkRepoDialog } from './fork-repo';
-import { serializeEntryToFiles, useUpsertItem } from './updating';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { notFound } from './not-found';
-import { parseEntry, useItemData } from './useItemData';
-import { useSlugFieldInfo } from './slugs';
-import { z } from 'zod';
 import {
   delDraft,
   getDraft,
   setDraft,
   showDraftRestoredToast,
 } from './persistence';
-import { useHasChanged } from './useHasChanged';
-import { LOADING, useData } from './useData';
-import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
-import { Icon } from '@keystar/ui/icon';
-import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
-import * as Y from 'yjs';
-import { getYjsValFromParsedValue } from '../form/props-value';
-import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
-import { useYjs, useYjsIfAvailable } from './shell/collab';
 import { PresenceAvatars } from './presence';
+import { useRouter } from './router';
+import { HeaderBreadcrumbs } from './shell/Breadcrumbs';
+import { useYjs, useYjsIfAvailable } from './shell/collab';
 import { useConfig } from './shell/context';
-import { createGetPreviewProps } from '../form/preview-props';
+import { useSlugFieldInfo } from './slugs';
+import { LOADING, useData } from './useData';
+import { serializeEntryToFiles, useUpsertItem } from './updating';
+import { parseEntry, useItemData } from './useItemData';
+import { useHasChanged } from './useHasChanged';
 import { useYJsValue } from './useYJsValue';
+import {
+  getCollectionFormat,
+  getCollectionItemPath,
+  getSlugFromState,
+  isGitHubConfig,
+} from './utils';
 
 function CreateItemWrapper(props: {
   collection: string;
@@ -513,24 +513,30 @@ function CreateItemInner(props: {
     createResult.kind === 'loading' || createResult.kind === 'updated';
 
   const formID = 'item-create-form';
+  const onBreadcrumbAction = useCallback(
+    (key: Key) => {
+      if (key === 'collection') {
+        router.push(collectionPath);
+      }
+    },
+    [collectionPath, router]
+  );
+  const breadcrumbItems = useMemo(
+    () => [
+      { key: 'collection', label: collectionConfig.label },
+      { key: 'current', label: stringFormatter.format('add') },
+    ],
+    [collectionConfig.label, stringFormatter]
+  );
 
   return (
     <>
       <PageRoot containerWidth={containerWidthForEntryLayout(collectionConfig)}>
         <PageHeader>
-          <Breadcrumbs
-            size="medium"
-            flex
-            minWidth={0}
-            onAction={key => {
-              if (key === 'collection') {
-                router.push(collectionPath);
-              }
-            }}
-          >
-            <Item key="collection">{collectionConfig.label}</Item>
-            <Item key="current">{stringFormatter.format('add')}</Item>
-          </Breadcrumbs>
+          <HeaderBreadcrumbs
+            items={breadcrumbItems}
+            onAction={onBreadcrumbAction}
+          />
           <PresenceAvatars />
           {isLoading && (
             <ProgressCircle
