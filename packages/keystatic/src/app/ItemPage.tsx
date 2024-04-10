@@ -882,37 +882,53 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
 
   const yjsInfo = useYjsIfAvailable();
 
+  const isItemDataLoading = itemData.kind !== 'loaded';
+  const isItemNotFound = !isItemDataLoading && itemData.data === 'not-found';
   const mapData = useData(
-    useCallback(async () => {
+    useCallback(() => {
       if (!yjsInfo) return;
       if (yjsInfo === 'loading') return LOADING;
-      await yjsInfo.doc.whenSynced;
-      if (itemData.kind !== 'loaded') return LOADING;
-      if (itemData.data === 'not-found') return;
-      let doc = yjsInfo.data.get(key);
-      if (doc instanceof Y.Doc) {
-        const promise = doc.whenLoaded;
-        doc.load();
-        await promise;
-      } else {
-        doc = new Y.Doc();
-        yjsInfo.data.set(key, doc);
-      }
-      const data = doc.getMap('data');
-      if (!data.size) {
-        const {
-          data: { initialState },
-        } = itemData;
-        doc.transact(() => {
-          for (const [key, value] of Object.entries(collectionConfig.schema)) {
-            const val = getYjsValFromParsedValue(value, initialState[key]);
-            data.set(key, val);
-          }
-        });
-      }
-      return data;
-    }, [collectionConfig, itemData, key, yjsInfo])
+      if (isItemDataLoading) return LOADING;
+      if (isItemNotFound) return;
+      return (async () => {
+        await yjsInfo.doc.whenSynced;
+        let doc = yjsInfo.data.get(key);
+        if (doc instanceof Y.Doc) {
+          const promise = doc.whenLoaded;
+          doc.load();
+          await promise;
+        } else {
+          doc = new Y.Doc();
+          yjsInfo.data.set(key, doc);
+        }
+        const data = doc.getMap('data');
+
+        return data;
+      })();
+    }, [isItemDataLoading, isItemNotFound, key, yjsInfo])
   );
+  useMemo(() => {
+    if (
+      mapData.kind !== 'loaded' ||
+      itemData.kind !== 'loaded' ||
+      itemData.data === 'not-found' ||
+      !mapData.data ||
+      mapData.data.size
+    ) {
+      return;
+    }
+
+    const data = mapData.data;
+    const {
+      data: { initialState },
+    } = itemData;
+    data.doc!.transact(() => {
+      for (const [key, value] of Object.entries(collectionConfig.schema)) {
+        const val = getYjsValFromParsedValue(value, initialState[key]);
+        data.set(key, val);
+      }
+    });
+  }, [collectionConfig.schema, itemData, mapData]);
 
   if (itemData.kind === 'error') {
     return (

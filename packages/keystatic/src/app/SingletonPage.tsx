@@ -546,12 +546,14 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
 
   const yjsInfo = useYjsIfAvailable();
 
+  const isItemDataLoading = itemData.kind === 'loading';
+
   const mapData = useData(
     useCallback(async () => {
       if (!yjsInfo) return;
       if (yjsInfo === 'loading') return LOADING;
       await yjsInfo.doc.whenSynced;
-      if (itemData.kind !== 'loaded') return LOADING;
+      if (isItemDataLoading) return LOADING;
       let doc = yjsInfo.data.get(key);
       if (doc instanceof Y.Doc) {
         const promise = doc.whenLoaded;
@@ -561,23 +563,32 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
         doc = new Y.Doc();
         yjsInfo.data.set(key, doc);
       }
-      const data = doc.getMap('data');
-      if (!data.size) {
-        doc.transact(() => {
-          for (const [key, value] of Object.entries(singletonConfig.schema)) {
-            const val = getYjsValFromParsedValue(
-              value,
-              itemData.data === 'not-found'
-                ? getInitialPropsValue(value)
-                : itemData.data.initialState[key]
-            );
-            data.set(key, val);
-          }
-        });
-      }
-      return data;
-    }, [singletonConfig, itemData, key, yjsInfo])
+      return doc.getMap('data');
+    }, [yjsInfo, isItemDataLoading, key])
   );
+
+  useMemo(() => {
+    if (
+      mapData.kind !== 'loaded' ||
+      itemData.kind !== 'loaded' ||
+      !mapData.data ||
+      mapData.data.size
+    ) {
+      return;
+    }
+    const data = mapData.data;
+    data.doc!.transact(() => {
+      for (const [key, value] of Object.entries(singletonConfig.schema)) {
+        const val = getYjsValFromParsedValue(
+          value,
+          itemData.data === 'not-found'
+            ? getInitialPropsValue(value)
+            : itemData.data.initialState[key]
+        );
+        data.set(key, val);
+      }
+    });
+  }, [itemData, mapData, singletonConfig]);
   if (itemData.kind === 'error') {
     return (
       <PageRoot>
