@@ -1,10 +1,6 @@
-import React, {
-  ProviderProps,
-  useContext,
-  useLayoutEffect,
-  useState,
-} from 'react';
+import { useLayoutEffect } from '@react-aria/utils';
 import { typedEntries } from 'emery';
+import React, { ProviderProps, useContext, useState } from 'react';
 
 import {
   breakpoints,
@@ -13,17 +9,25 @@ import {
 } from './responsive';
 import { Breakpoint, BreakpointRange, Responsive } from './types';
 
-type BreakpointContext = Breakpoint[];
+type BreakpointContextValue = Breakpoint[];
 
-const Context = React.createContext<BreakpointContext>(['mobile']);
+const BreakpointContext = React.createContext<BreakpointContextValue>([
+  'mobile',
+]);
 
-export function BreakpointProvider(props: ProviderProps<BreakpointContext>) {
+export function BreakpointProvider(
+  props: ProviderProps<BreakpointContextValue>
+) {
   const { children, value } = props;
-  return <Context.Provider value={value}>{children}</Context.Provider>;
+  return (
+    <BreakpointContext.Provider value={value}>
+      {children}
+    </BreakpointContext.Provider>
+  );
 }
 
-export function useBreakpoint(): BreakpointContext {
-  return useContext(Context);
+export function useBreakpoint() {
+  return useContext(BreakpointContext);
 }
 /**
  * The function returned from this hook will resolve values in a mobile-first
@@ -53,43 +57,40 @@ const breakpointQueries = breakpointEntries.map(
   ([, value]) => `(min-width: ${value}px)`
 );
 
-const useLayoutEffectIgnoreOnServer: typeof useLayoutEffect =
-  typeof window === 'undefined' ? () => {} : useLayoutEffect;
+export function useMatchedBreakpoints(): BreakpointContextValue {
+  let supportsMatchMedia =
+    typeof window !== 'undefined' && typeof window.matchMedia === 'function';
+  let getMatchedBreakpoints = () => {
+    let matched: Breakpoint[] = [];
+    for (let i in breakpointQueries) {
+      let query = breakpointQueries[i];
+      if (window.matchMedia(query).matches) {
+        matched.push(breakpointEntries[i][0]);
+      }
+    }
+    matched.push('mobile');
+    return matched;
+  };
+  let [breakpoint, setBreakpoint] = useState(() =>
+    supportsMatchMedia ? getMatchedBreakpoints() : ['mobile' as const]
+  );
 
-const supportsMatchMedia =
-  typeof window !== 'undefined' && typeof window.matchMedia === 'function';
-
-export function useMatchedBreakpoints(): BreakpointContext {
-  const [breakpoint, setBreakpoint] = useState<BreakpointContext>(() => [
-    'mobile',
-  ]);
-
-  useLayoutEffectIgnoreOnServer(() => {
+  useLayoutEffect(() => {
     if (!supportsMatchMedia) {
       return;
     }
 
     const onResize = () => {
-      setBreakpoint(prevMatchedBreakpoints => {
-        const matched: Breakpoint[] = [];
-        for (let i in breakpointQueries) {
-          let query = breakpointQueries[i];
-          if (window.matchMedia(query).matches) {
-            matched.push(breakpointEntries[i][0]);
-          }
-        }
-        matched.push('mobile');
-
+      const matched = getMatchedBreakpoints();
+      setBreakpoint(prevMatched => {
         if (
-          prevMatchedBreakpoints.length !== matched.length ||
-          prevMatchedBreakpoints.some(
-            (breakpoint, idx) => breakpoint !== matched[idx]
-          )
+          prevMatched.length !== matched.length ||
+          prevMatched.some((breakpoint, idx) => breakpoint !== matched[idx])
         ) {
           return matched;
         }
 
-        return prevMatchedBreakpoints;
+        return prevMatched;
       });
     };
     onResize();
@@ -98,7 +99,7 @@ export function useMatchedBreakpoints(): BreakpointContext {
     return () => {
       window.removeEventListener('resize', onResize);
     };
-  }, []);
+  }, [supportsMatchMedia]);
 
   return breakpoint;
 }
