@@ -16,7 +16,12 @@ import {
   tokenSchema,
 } from '@keystar/ui/style';
 
-import { BreadcrumbItemProps } from './types';
+import { BreadcrumbItemProps as _BreadcrumbItemProps } from './types';
+
+type BreadcrumbItemProps = _BreadcrumbItemProps & {
+  /** @private internal prop for distinguishing link behaviour. */
+  isMenu?: boolean;
+};
 
 export const breadcrumbsClassList = new ClassList('Breadcrumbs', [
   'item',
@@ -26,20 +31,29 @@ export const breadcrumbsClassList = new ClassList('Breadcrumbs', [
 ]);
 
 export function BreadcrumbItem(props: BreadcrumbItemProps) {
-  let { children, isCurrent, isDisabled, size = 'regular' } = props;
+  let { children, isCurrent, isDisabled, isMenu, size = 'regular' } = props;
 
   let { direction } = useLocale();
-  let ref = useRef<HTMLSpanElement>(null);
-  let { itemProps } = useBreadcrumbItem({ ...props, elementType: 'span' }, ref);
+  let ref = useRef(null);
+  let ElementType: React.ElementType = props.href ? 'a' : 'span';
+  let { itemProps } = useBreadcrumbItem(
+    { ...props, elementType: ElementType },
+    ref
+  );
   let { hoverProps, isHovered } = useHover(props);
   let icon = useMemo(() => {
     return direction === 'rtl' ? chevronLeftIcon : chevronRightIcon;
   }, [direction]);
 
+  // if this item contains a menu button, then it shouldn't be a link
+  if (isMenu) {
+    itemProps = {};
+  }
+
   return (
     <Fragment>
       <FocusRing>
-        <span
+        <ElementType
           {...mergeProps(itemProps, hoverProps)}
           {...toDataAttributes({
             size: size !== 'regular' ? size : undefined,
@@ -54,6 +68,7 @@ export function BreadcrumbItem(props: BreadcrumbItemProps) {
               fontSize: tokenSchema.typography.text.regular.size,
               fontFamily: tokenSchema.typography.fontFamily.base,
               fontWeight: tokenSchema.typography.fontWeight.medium,
+              outline: 0,
               MozOsxFontSmoothing: 'auto',
               WebkitFontSmoothing: 'auto',
 
@@ -76,11 +91,15 @@ export function BreadcrumbItem(props: BreadcrumbItemProps) {
                   color: tokenSchema.color.foreground.neutralEmphasis,
                   textDecoration: 'underline',
                 },
+                '&[data-focus=visible]': {
+                  color: tokenSchema.color.foreground.neutralEmphasis,
+                  textDecoration: 'underline',
+                  textDecorationStyle: 'double',
+                },
                 '&[aria-disabled=true]': {
                   color: tokenSchema.color.alias.foregroundDisabled,
                 },
               },
-
               '&[aria-current=page]': {
                 color: tokenSchema.color.foreground.neutralEmphasis,
                 fontWeight: tokenSchema.typography.fontWeight.semibold,
@@ -94,7 +113,7 @@ export function BreadcrumbItem(props: BreadcrumbItemProps) {
           )}
         >
           {children}
-        </span>
+        </ElementType>
       </FocusRing>
       {!isCurrent && (
         <Icon

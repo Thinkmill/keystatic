@@ -1,7 +1,7 @@
 import { beforeEach, expect, describe, it, jest } from '@jest/globals';
 
 import { Breadcrumbs, Item } from '..';
-import { renderWithProvider, within } from '#test-utils';
+import { firePress, renderWithProvider, within } from '#test-utils';
 
 describe('breadcrumbs/Breadcrumbs', () => {
   beforeEach(() => {
@@ -172,5 +172,35 @@ describe('breadcrumbs/Breadcrumbs', () => {
     );
     let breadcrumbs = getByRole('navigation');
     expect(breadcrumbs).toHaveAttribute('data-testid', 'test');
+  });
+
+  it('should support links', function () {
+    let { getByRole, getAllByRole } = renderWithProvider(
+      <Breadcrumbs>
+        <Item href="https://example.com">Example.com</Item>
+        <Item href="https://example.com/foo">Foo</Item>
+        <Item href="https://example.com/foo/bar">Bar</Item>
+        <Item href="https://example.com/foo/bar/baz">Baz</Item>
+        <Item href="https://example.com/foo/bar/baz/qux">Qux</Item>
+      </Breadcrumbs>
+    );
+
+    let links = getAllByRole('link');
+    expect(links).toHaveLength(3);
+    expect(links[0]).toHaveAttribute('href', 'https://example.com/foo/bar');
+    expect(links[1]).toHaveAttribute('href', 'https://example.com/foo/bar/baz');
+    expect(links[2]).toHaveAttribute(
+      'href',
+      'https://example.com/foo/bar/baz/qux'
+    );
+
+    let menuButton = getByRole('button');
+    firePress(menuButton);
+
+    let menu = getByRole('menu');
+    let items = within(menu).getAllByRole('menuitemradio');
+    expect(items).toHaveLength(5);
+    expect(items[0].tagName).toBe('A');
+    expect(items[0]).toHaveAttribute('href', 'https://example.com');
   });
 });
