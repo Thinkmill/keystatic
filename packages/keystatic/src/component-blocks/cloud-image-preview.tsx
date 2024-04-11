@@ -1,6 +1,7 @@
+import { useOverlayTriggerState } from '@react-stately/overlays';
 import { useEffect, useState } from 'react';
 import { useSelected, useSlateStatic } from 'slate-react';
-import { useOverlayTriggerState } from '@react-stately/overlays';
+import { z } from 'zod';
 
 import {
   ActionButton,
@@ -10,6 +11,7 @@ import {
   ToggleButton,
 } from '@keystar/ui/button';
 import { Dialog, DialogContainer, DialogTrigger } from '@keystar/ui/dialog';
+import { FileTrigger } from '@keystar/ui/drag-and-drop';
 import { Icon } from '@keystar/ui/icon';
 import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
 import { link2Icon } from '@keystar/ui/icon/icons/link2Icon';
@@ -23,6 +25,7 @@ import { NumberField } from '@keystar/ui/number-field';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { Content } from '@keystar/ui/slots';
 import { TextArea, TextField } from '@keystar/ui/text-field';
+import { toastQueue } from '@keystar/ui/toast';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Heading, Text } from '@keystar/ui/typography';
 import { useId } from '@keystar/ui/utils';
@@ -41,10 +44,8 @@ import {
   Config,
   ParsedValueForComponentSchema,
 } from '..';
-import { z } from 'zod';
 import { getCloudAuth } from '../app/auth';
-import { getUploadedFileObject } from '../form/fields/image/ui';
-import { toastQueue } from '@keystar/ui/toast';
+import { BaseStyleProps } from '@keystar/ui/style';
 
 export type CloudImageProps = {
   src: string;
@@ -304,40 +305,44 @@ export function ImageDimensionsInput(props: {
   );
 }
 
+export type ImageStatus = '' | 'loading' | 'good' | 'error';
 export const emptyImageData: CloudImageProps = { src: '', alt: '' };
 
-type ImageStatus = '' | 'loading' | 'good' | 'error';
+const ALLOWED_IMAGE_EXTENSIONS = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
+const ACCEPTED_TYPES = ALLOWED_IMAGE_EXTENSIONS.map(ext => `image/${ext}`);
 
-export function UploadImageButton(props: {
-  onUploaded: (data: CloudImageProps) => void;
-}) {
+export function UploadImageButton(
+  props: BaseStyleProps & {
+    onUploaded: (data: CloudImageProps) => void;
+  }
+) {
+  const { onUploaded, ...styleProps } = props;
   const config = useConfig();
   const [isUploading, setIsUploading] = useState(false);
   if (!config.cloud?.project) return null;
+
   return (
-    <Button
-      isDisabled={isUploading}
-      onPress={async () => {
-        setIsUploading(true);
-        const img = await getUploadedFileObject(
-          'image/jpeg,image/png,image/gif,image/webp,.jpg,.jpeg,.png,.gif,.webp'
-        );
-        if (!img) return;
-        try {
-          const result = await uploadImage(img, config);
-          props.onUploaded({
-            ...result,
-            alt: '',
-          });
-        } catch (err) {
-          toastQueue.critical((err as any).message);
+    <FileTrigger
+      acceptedFileTypes={ACCEPTED_TYPES}
+      onSelect={async items => {
+        let files = Array.from(items || []);
+        if (files[0]) {
+          setIsUploading(true);
+          try {
+            const result = await uploadImage(files[0], config);
+            props.onUploaded({ ...result, alt: '' });
+            setIsUploading(false);
+          } catch (err) {
+            setIsUploading(false);
+            toastQueue.critical((err as Error).message);
+          }
         }
-        setIsUploading(false);
       }}
     >
-      <Text>Upload Image </Text>
-      {isUploading && <ProgressCircle size="small" isIndeterminate />}
-    </Button>
+      <ActionButton isDisabled={isUploading} {...styleProps}>
+        {isUploading ? 'Uploading…' : 'Upload'}
+      </ActionButton>
+    </FileTrigger>
   );
 }
 
