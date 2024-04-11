@@ -34,7 +34,7 @@ function FileTrigger(
     <>
       <PressResponder
         onPress={() => {
-          if (inputRef.current.value) {
+          if (inputRef.current?.value) {
             inputRef.current.value = '';
           }
           inputRef.current?.click();

@@ -5,7 +5,6 @@ import {
   useResizeObserver,
   useValueEffect,
 } from '@react-aria/utils';
-import { isNumber } from 'emery';
 import {
   Children,
   ForwardedRef,
@@ -65,13 +64,17 @@ function Breadcrumbs<T>(
   let styleProps = useStyleProps(otherProps);
 
   let updateOverflow = useCallback(() => {
-    let computeVisibleItems = (visibleItems: number) => {
-      let currListRef = listRef.current;
+    let computeVisibleItems = (visibleItems: number): number => {
+      // refs may be null at runtime
+      let currListRef: HTMLUListElement | null = listRef.current;
       if (!currListRef) {
-        return;
+        return visibleItems;
       }
 
       let listItems = Array.from(currListRef.children) as HTMLLIElement[];
+      if (listItems.length <= 0) {
+        return visibleItems;
+      }
       let containerWidth = currListRef.offsetWidth;
       let isShowingMenu = childArray.length > visibleItems;
       let calculatedWidth = 0;
@@ -79,19 +82,13 @@ function Breadcrumbs<T>(
       let maxVisibleItems = MAX_VISIBLE_ITEMS;
 
       if (showRoot) {
-        let el = listItems.shift();
-        if (el) {
-          calculatedWidth += el.offsetWidth;
-          newVisibleItems++;
-        }
+        calculatedWidth += (listItems.shift() as HTMLLIElement).offsetWidth;
+        newVisibleItems++;
       }
 
       if (isShowingMenu) {
-        let el = listItems.shift();
-        if (el) {
-          calculatedWidth += el.offsetWidth;
-          maxVisibleItems--;
-        }
+        calculatedWidth += (listItems.shift() as HTMLLIElement).offsetWidth;
+        maxVisibleItems--;
       }
 
       if (showRoot && calculatedWidth >= containerWidth) {
@@ -100,17 +97,15 @@ function Breadcrumbs<T>(
 
       if (listItems.length > 0) {
         // Ensure the last breadcrumb isn't truncated when we measure it.
-        let last = listItems.pop();
-        if (last) {
-          last.style.overflow = 'visible';
+        let last = listItems.pop() as HTMLLIElement;
+        last.style.overflow = 'visible';
 
-          calculatedWidth += last.offsetWidth;
-          if (calculatedWidth < containerWidth) {
-            newVisibleItems++;
-          }
-
-          last.style.overflow = '';
+        calculatedWidth += last.offsetWidth;
+        if (calculatedWidth < containerWidth) {
+          newVisibleItems++;
         }
+
+        last.style.overflow = '';
       }
 
       for (let breadcrumb of listItems.reverse()) {
@@ -136,11 +131,7 @@ function Breadcrumbs<T>(
 
       // If the number of items is less than the number of children,
       // then update again to ensure that the menu fits.
-      if (
-        isNumber(newVisibleItems) &&
-        newVisibleItems < childArray.length &&
-        newVisibleItems > 1
-      ) {
+      if (newVisibleItems < childArray.length && newVisibleItems > 1) {
         yield computeVisibleItems(newVisibleItems);
       }
     });
@@ -148,8 +139,13 @@ function Breadcrumbs<T>(
 
   useResizeObserver({ ref: domRef, onResize: updateOverflow });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useLayoutEffect(updateOverflow, [children]);
+  let lastChildren = useRef<typeof children | null>(null);
+  useLayoutEffect(() => {
+    if (children !== lastChildren.current) {
+      lastChildren.current = children;
+      updateOverflow();
+    }
+  });
 
   let contents = childArray;
   if (childArray.length > visibleItems) {
@@ -163,7 +159,7 @@ function Breadcrumbs<T>(
     };
 
     let menuItem = (
-      <BreadcrumbItem key="menu">
+      <BreadcrumbItem key="menu" isMenu>
         <MenuTrigger onOpenChange={setMenuOpen}>
           <ActionButton aria-label="…" prominence="low" isDisabled={isDisabled}>
             <Icon src={menuIsOpen ? folderOpenIcon : folderClosedIcon} />
@@ -183,11 +179,11 @@ function Breadcrumbs<T>(
     let breadcrumbs = [...childArray];
     let endItems = visibleItems;
     if (showRoot && visibleItems > 1) {
-      let el = breadcrumbs.shift();
-      if (el) {
-        contents.unshift(el);
-        endItems--;
+      let rootItem = breadcrumbs.shift();
+      if (rootItem) {
+        contents.unshift(rootItem);
       }
+      endItems--;
     }
     contents.push(...breadcrumbs.slice(-endItems));
   }
@@ -217,9 +213,10 @@ function Breadcrumbs<T>(
         )}
       >
         <BreadcrumbItem
-          key={key}
+          {...child.props}
           isCurrent={isCurrent}
           isDisabled={isDisabled}
+          key={key}
           onPress={onPress}
           size={size}
         >

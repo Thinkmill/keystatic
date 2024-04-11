@@ -47,6 +47,28 @@ return (
 );
 ```
 
+### Links
+
+By default, interacting with an item in Breadcrumbs triggers `onAction`. Items
+may also be links to another page or website. This can be achieved by passing
+an `href` prop to the `<Item>` component.
+
+```jsx {% live=true %}
+<Breadcrumbs>
+  <Item href="/">Home</Item>
+  <Item href="/package/breadcrumbs">Breadcrumbs</Item>
+</Breadcrumbs>
+```
+
+#### Client-side routing
+
+The `<Item>` component works with frameworks and client-side routers like
+[Next.js](https://nextjs.org/) and [React Router](https://reactrouter.com/en/main).
+As with other components that support links, this works via the
+[Provider](/package/core#provider) component at the root of your app. See the
+[client-side routing](/package/core#client-side-routing) section to learn how
+to set this up.
+
 ### Overflow
 
 Breadcrumbs collapses items into a menu when space is limited. It will only show

@@ -1,27 +1,58 @@
-import { Box } from '@keystar/ui/layout';
-import { action } from '@keystar/ui-storybook';
+import { Box, VStack } from '@keystar/ui/layout';
+import { StoryFn, StoryObj, action } from '@keystar/ui-storybook';
 
 import { Breadcrumbs, BreadcrumbsProps, Item } from '..';
 import { ReactNode } from 'react';
 
+export type BreadcrumbsStory = StoryObj<typeof Breadcrumbs>;
+
+const FullWidth = (storyFn: StoryFn) => (
+  // @ts-ignore — we're not using the full API
+  <div style={{ width: '100vw' }}>{storyFn()}</div>
+);
 export default {
   title: 'Components/Breadcrumbs',
+  decorators: [(storyFn: StoryFn) => FullWidth(storyFn)],
+  args: {
+    onAction: action('onAction'),
+  },
+  argTypes: {
+    onAction: {
+      table: {
+        disable: true,
+      },
+    },
+    showRoot: {
+      control: 'boolean',
+    },
+    isDisabled: {
+      control: 'boolean',
+    },
+    size: {
+      control: 'select',
+      options: ['small', 'regular', 'medium', 'large'],
+    },
+  },
 };
 
 export const Default = render();
 
 export const Disabled = render({ isDisabled: true });
 
-export const SizeSmall = render({ size: 'small' });
-SizeSmall.storyName = 'size: small';
+const sizes = ['small', 'regular', 'medium', 'large'] as const;
+export const Sizes = () => (
+  <VStack gap="large">
+    {sizes.map(size => (
+      <Breadcrumbs onAction={action('onAction')} key={size} size={size}>
+        <Item key="dashboard">Size: {size}</Item>
+        <Item key="posts">Second</Item>
+        <Item key="some-post-title">Third</Item>
+      </Breadcrumbs>
+    ))}
+  </VStack>
+);
 
-export const SizeMedium = render({ size: 'medium' });
-SizeMedium.storyName = 'size: medium';
-
-export const SizeLarge = render({ size: 'large' });
-SizeLarge.storyName = 'size: large';
-
-export const ManyItems = renderBreadcrumbs(
+export const ManyItems = () => (
   <Breadcrumbs onAction={action('onAction')}>
     <Item key="Home">Home</Item>
     <Item key="Products">Products</Item>
@@ -32,7 +63,7 @@ export const ManyItems = renderBreadcrumbs(
   </Breadcrumbs>
 );
 
-export const ShowRoot = renderBreadcrumbs(
+export const ShowRoot = () => (
   <Breadcrumbs onAction={action('onAction')} showRoot>
     <Item key="Home">Home</Item>
     <Item key="Products">Products</Item>
@@ -43,7 +74,7 @@ export const ShowRoot = renderBreadcrumbs(
   </Breadcrumbs>
 );
 
-export const Resizable = renderBreadcrumbs(
+export const Resizable = () => (
   <Box
     backgroundColor="surface"
     padding="regular"
@@ -62,33 +93,28 @@ export const Resizable = renderBreadcrumbs(
   </Box>
 );
 
-export const SingleItem = renderBreadcrumbs(
+export const SingleItem = () => (
   <Breadcrumbs onAction={action('onAction')}>
     <Item key="dashboard">Dashboard</Item>
   </Breadcrumbs>
 );
 
-// mitigate the flex-center wrapper, which squashes its contents
-function renderBreadcrumbs(children: React.ReactNode) {
-  return () => (
-    <div
-      style={{
-        // boxSizing: 'border-box',
-        // padding: '1em',
-        width: '100vw',
-      }}
-    >
-      {children}
-    </div>
-  );
-}
+export const Links = () => (
+  <Breadcrumbs>
+    <Item href="https://example.com">Example.com</Item>
+    <Item href="https://example.com/foo">Foo</Item>
+    <Item href="https://example.com/foo/bar">Bar</Item>
+    <Item href="https://example.com/foo/bar/baz">Baz</Item>
+    <Item href="https://example.com/foo/bar/baz/qux">Qux</Item>
+  </Breadcrumbs>
+);
 
 type Render = (() => ReactNode) & {
   storyName?: string;
 };
 
 function render<T>(props: Partial<BreadcrumbsProps<T>> = {}): Render {
-  return renderBreadcrumbs(
+  return () => (
     <Breadcrumbs onAction={action('onAction')} {...props}>
       <Item key="dashboard">Dashboard</Item>
       <Item key="posts">Posts</Item>

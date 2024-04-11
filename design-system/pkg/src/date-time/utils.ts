@@ -64,6 +64,7 @@ function getVisibleMonths() {
 
 export function useFocusManagerRef(ref: Ref<HTMLDivElement>) {
   let domRef = useObjectRef<HTMLDivElement>(ref);
+  // @ts-expect-error FIXME: not sure how to properly resolve this type issue
   useImperativeHandle(ref, () => ({
     ...domRef.current,
     focus() {
