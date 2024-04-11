@@ -54,7 +54,7 @@ import l10nMessages from './l10n/index.json';
 import { notFound } from './not-found';
 import { getDataFileExtension, getPathPrefix } from './path-utils';
 import { useRouter } from './router';
-import { HeaderBreadcrumbs } from './shell/Breadcrumbs';
+import { HeaderBreadcrumbs } from './shell/HeaderBreadcrumbs';
 import { useYjs, useYjsIfAvailable } from './shell/collab';
 import { useConfig } from './shell/context';
 import { useBaseCommit, useRepositoryId, useBranchInfo } from './shell/data';
@@ -557,7 +557,7 @@ function HeaderActions(props: {
     previewHref,
     viewHref,
   } = props;
-  const isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
+  const isBelowDesktop = useMediaQuery(breakpointQueries.below.desktop);
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const [deleteAlertIsOpen, setDeleteAlertOpen] = useState(false);
   const [duplicateAlertIsOpen, setDuplicateAlertOpen] = useState(false);
@@ -625,7 +625,7 @@ function HeaderActions(props: {
     }
 
     if (hasChanged) {
-      return isBelowTablet ? (
+      return isBelowDesktop ? (
         <Box
           backgroundColor="pendingEmphasis"
           height="scale.75"
@@ -643,7 +643,7 @@ function HeaderActions(props: {
   })();
 
   return (
-    <>
+    <Flex alignItems="center" gap={{ mobile: 'small', tablet: 'regular' }}>
       <PresenceAvatars />
       {indicatorElement}
       <ActionGroup
@@ -651,7 +651,7 @@ function HeaderActions(props: {
         overflowMode="collapse"
         prominence="low"
         density="compact"
-        maxWidth={isBelowTablet ? 'element.regular' : undefined} // force switch to action menu on small devices
+        maxWidth={isBelowDesktop ? 'element.regular' : undefined} // force switch to action menu on small devices
         items={menuActions}
         disabledKeys={hasChanged ? [] : ['reset']}
         onAction={key => {
@@ -721,7 +721,7 @@ function HeaderActions(props: {
           </AlertDialog>
         )}
       </DialogContainer>
-    </>
+    </Flex>
   );
 }
 
@@ -1016,31 +1016,24 @@ const ItemPageShell = (
     headerActions?: ReactNode;
   }
 ) => {
-  const router = useRouter();
   const collectionConfig = props.config.collections![props.collection]!;
-  const onBreadcrumbAction = useCallback(
-    (key: Key) => {
-      if (key === 'collection') {
-        router.push(`${props.basePath}/collection/${props.collection}`);
-      }
-    },
-    [props.basePath, props.collection, router]
-  );
+  const collectionHref = `${props.basePath}/collection/${props.collection}`;
   const breadcrumbItems = useMemo(
     () => [
-      { key: 'collection', label: collectionConfig.label },
+      {
+        key: 'collection',
+        label: collectionConfig.label,
+        href: collectionHref,
+      },
       { key: 'item', label: props.itemSlug },
     ],
-    [collectionConfig.label, props.itemSlug]
+    [collectionConfig.label, collectionHref, props.itemSlug]
   );
 
   return (
     <PageRoot containerWidth={containerWidthForEntryLayout(collectionConfig)}>
       <PageHeader>
-        <HeaderBreadcrumbs
-          items={breadcrumbItems}
-          onAction={onBreadcrumbAction}
-        />
+        <HeaderBreadcrumbs items={breadcrumbItems} />
         {props.headerActions}
       </PageHeader>
 

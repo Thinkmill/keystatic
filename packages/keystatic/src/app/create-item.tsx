@@ -1,5 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
-import { Key, useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as Y from 'yjs';
 import { z } from 'zod';
 
@@ -37,7 +37,7 @@ import {
 } from './persistence';
 import { PresenceAvatars } from './presence';
 import { useRouter } from './router';
-import { HeaderBreadcrumbs } from './shell/Breadcrumbs';
+import { HeaderBreadcrumbs } from './shell/HeaderBreadcrumbs';
 import { useYjs, useYjsIfAvailable } from './shell/collab';
 import { useConfig } from './shell/context';
 import { useSlugFieldInfo } from './slugs';
@@ -513,30 +513,23 @@ function CreateItemInner(props: {
     createResult.kind === 'loading' || createResult.kind === 'updated';
 
   const formID = 'item-create-form';
-  const onBreadcrumbAction = useCallback(
-    (key: Key) => {
-      if (key === 'collection') {
-        router.push(collectionPath);
-      }
-    },
-    [collectionPath, router]
-  );
   const breadcrumbItems = useMemo(
     () => [
-      { key: 'collection', label: collectionConfig.label },
+      {
+        key: 'collection',
+        label: collectionConfig.label,
+        href: collectionPath,
+      },
       { key: 'current', label: stringFormatter.format('add') },
     ],
-    [collectionConfig.label, stringFormatter]
+    [collectionConfig.label, stringFormatter, collectionPath]
   );
 
   return (
     <>
       <PageRoot containerWidth={containerWidthForEntryLayout(collectionConfig)}>
         <PageHeader>
-          <HeaderBreadcrumbs
-            items={breadcrumbItems}
-            onAction={onBreadcrumbAction}
-          />
+          <HeaderBreadcrumbs items={breadcrumbItems} />
           <PresenceAvatars />
           {isLoading && (
             <ProgressCircle

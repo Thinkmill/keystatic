@@ -54,38 +54,28 @@ export const PageHeader = ({ children }: PropsWithChildren) => {
   }
 
   return (
-    <Box
-      borderBottom="muted"
-      elementType="header"
-      height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
-      flexShrink={0}
-    >
-      <Box
-        minHeight={0}
-        minWidth={0}
+    <Box borderBottom="muted" elementType="header" flexShrink={0}>
+      <Flex
+        alignItems="center"
+        gap={{ mobile: 'small', tablet: 'regular' }}
+        height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
         paddingX={{ mobile: 'medium', tablet: 'xlarge', desktop: 'xxlarge' }}
       >
-        <Flex
-          alignItems="center"
-          gap={{ mobile: 'small', tablet: 'regular' }}
-          height={{ mobile: 'element.large', tablet: 'element.xlarge' }}
+        <ActionButton
+          prominence="low"
+          aria-label="Open app navigation"
+          aria-pressed={sidebarState.isOpen}
+          isHidden={sidebarState.isOpen ? { above: 'tablet' } : undefined}
+          onPress={sidebarState.toggle}
+          ref={menuButtonRef}
+          UNSAFE_className={css({
+            marginInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
+          })}
         >
-          <ActionButton
-            prominence="low"
-            aria-label="Open app navigation"
-            aria-pressed={sidebarState.isOpen}
-            isHidden={sidebarState.isOpen ? { above: 'tablet' } : undefined}
-            onPress={sidebarState.toggle}
-            ref={menuButtonRef}
-            UNSAFE_className={css({
-              marginInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
-            })}
-          >
-            <Icon src={icon} />
-          </ActionButton>
-          {children}
-        </Flex>
-      </Box>
+          <Icon src={icon} />
+        </ActionButton>
+        {children}
+      </Flex>
     </Box>
   );
 };

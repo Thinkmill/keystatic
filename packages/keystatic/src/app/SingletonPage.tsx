@@ -81,7 +81,7 @@ function SingletonPageInner(
     previewProps: ReturnType<ReturnType<typeof createGetPreviewProps>>;
   }
 ) {
-  const isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
+  const isBelowDesktop = useMediaQuery(breakpointQueries.below.desktop);
   const singletonConfig = props.config.singletons![props.singleton]!;
   const branchInfo = useBranchInfo();
   const [forceValidation, setForceValidation] = useState(false);
@@ -195,7 +195,7 @@ function SingletonPageInner(
           overflowMode="collapse"
           prominence="low"
           density="compact"
-          maxWidth={isBelowTablet ? 'element.regular' : undefined} // force switch to action menu on small devices
+          maxWidth={isBelowDesktop ? 'element.regular' : undefined} // force switch to action menu on small devices
           items={menuActions}
           disabledKeys={props.hasChanged ? [] : ['reset']}
           onAction={key => {
