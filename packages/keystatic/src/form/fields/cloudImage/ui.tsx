@@ -1,27 +1,30 @@
 import { useEffect, useId, useState } from 'react';
 
-import { ClearButton } from '@keystar/ui/button';
 import { ObjectField, PreviewProps } from '@keystatic/core';
-import { Box, Flex, HStack, VStack } from '@keystar/ui/layout';
+import { ClearButton } from '@keystar/ui/button';
+import { Icon } from '@keystar/ui/icon';
+import { imageIcon } from '@keystar/ui/icon/icons/imageIcon';
+import { Box, Flex, VStack } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
 import { ProgressCircle } from '@keystar/ui/progress';
+import { tokenSchema } from '@keystar/ui/style';
 import { TextArea, TextField } from '@keystar/ui/text-field';
 import { Text } from '@keystar/ui/typography';
+
 import { cloudImageSchema } from '../../../component-blocks/cloud-image-schema';
 import {
-  emptyImageData,
-  parseImageData,
-  useImageLibraryURL,
   CloudImageProps,
   ImageDimensionsInput,
-  loadImageData,
+  ImageStatus,
   UploadImageButton,
+  emptyImageData,
+  loadImageData,
+  parseImageData,
+  useImageLibraryURL,
 } from '../../../component-blocks/cloud-image-preview';
+import { useConfig } from '../../../app/shell/context';
 import { isValidURL } from '../document/DocumentEditor/isValidURL';
 import { useEventCallback } from '../document/DocumentEditor/ui-utils';
-import { useConfig } from '../../../app/shell/context';
-
-type ImageStatus = '' | 'loading' | 'good' | 'error';
 
 function ImageField(props: {
   image: CloudImageProps;
@@ -78,15 +81,15 @@ function ImageField(props: {
 
   const errorMessage =
     (blurred || props.forceValidation) && props.isRequired && !image.src
-      ? 'Image URL is required'
+      ? 'Image URL is required.'
       : undefined;
 
   return (
-    <VStack gap="xlarge">
-      <HStack gap="medium" alignItems="end">
+    <VStack gap="xlarge" padding="large">
+      <VStack gap="medium">
         <TextField
-          flex
           label="Image URL"
+          isRequired={props.isRequired}
           errorMessage={errorMessage}
           autoFocus={props.autoFocus}
           onPaste={onPaste}
@@ -99,14 +102,14 @@ function ImageField(props: {
           value={image.src}
           description={
             <Text>
-              Copy an image URL from the{' '}
+              Upload an image, or copy a URL from the{' '}
               <TextLink
                 prominence="high"
                 href={imageLibraryURL}
                 target="_blank"
                 rel="noreferrer"
               >
-                Image Library
+                Image&nbsp;Library
               </TextLink>{' '}
               and paste it into this field.
             </Text>
@@ -137,18 +140,29 @@ function ImageField(props: {
           }
         />
         <UploadImageButton
+          alignSelf="start"
           onUploaded={data => {
             onChange(data);
           }}
         />
-      </HStack>
+      </VStack>
       {status === 'good' ? (
         <>
-          <Box width="scale.1600" height="scale.1600">
+          <Box
+            alignSelf="start"
+            backgroundColor="canvas"
+            borderRadius="regular"
+            border="neutral"
+            padding="regular"
+          >
             <img
               alt={image.alt}
               src={image.src}
-              style={{ objectFit: 'contain', height: '100%', width: '100%' }}
+              style={{
+                display: 'block',
+                maxHeight: tokenSchema.size.alias.singleLineWidth,
+                maxWidth: '100%',
+              }}
             />
           </Box>
           <TextArea
@@ -164,7 +178,22 @@ function ImageField(props: {
             }}
           />
         </>
-      ) : null}
+      ) : (
+        <VStack
+          aria-hidden
+          alignItems="center"
+          backgroundColor="surface"
+          borderRadius="regular"
+          gap="medium"
+          paddingX="large"
+          paddingY="xlarge"
+        >
+          <Icon src={imageIcon} color="neutralSecondary" size="medium" />
+          <Text align="center" color="neutralSecondary" size="small">
+            Awaiting URL to display image preview and information…
+          </Text>
+        </VStack>
+      )}
     </VStack>
   );
 }
@@ -179,22 +208,37 @@ export function CloudImageFieldInput(
   const labelId = useId();
   const descriptionId = useId();
   return (
-    <Flex
-      role="group"
-      gap="medium"
-      marginY="large"
+    <VStack
       aria-labelledby={labelId}
       aria-describedby={props.schema.description ? descriptionId : undefined}
-      direction="column"
+      border="muted"
+      borderRadius="medium"
+      minWidth={0}
+      role="group"
     >
-      <Text color="neutral" size="medium" weight="medium" id={labelId}>
-        {props.schema.label}
-      </Text>
-      {!!props.schema.description && (
-        <Text id={descriptionId} size="regular" color="neutralSecondary">
-          {props.schema.description}
+      <VStack
+        backgroundColor="surface"
+        borderBottom="muted"
+        borderTopStartRadius="medium"
+        borderTopEndRadius="medium"
+        gap="medium"
+        minWidth={0}
+        padding="large"
+      >
+        <Text
+          color="neutralEmphasis"
+          size="medium"
+          weight="medium"
+          id={labelId}
+        >
+          {props.schema.label}
         </Text>
-      )}
+        {!!props.schema.description && (
+          <Text id={descriptionId} size="regular" color="neutralSecondary">
+            {props.schema.description}
+          </Text>
+        )}
+      </VStack>
       <ImageField
         image={{
           src: props.fields.src.value,
@@ -214,6 +258,6 @@ export function CloudImageFieldInput(
         isRequired={props.isRequired}
         forceValidation={props.forceValidation}
       />
-    </Flex>
+    </VStack>
   );
 }
