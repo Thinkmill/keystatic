@@ -10,15 +10,17 @@ import {
   useMemo,
   useState,
 } from 'react';
+import * as Y from 'yjs';
+import { z } from 'zod';
 
-import { ActionGroup } from '@keystar/ui/action-group';
+import { ActionGroup, Item } from '@keystar/ui/action-group';
 import { Badge } from '@keystar/ui/badge';
-import { Breadcrumbs, Item } from '@keystar/ui/breadcrumbs';
 import { Button, ButtonGroup } from '@keystar/ui/button';
 import { AlertDialog, Dialog, DialogContainer } from '@keystar/ui/dialog';
 import { Icon } from '@keystar/ui/icon';
 import { copyPlusIcon } from '@keystar/ui/icon/icons/copyPlusIcon';
 import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
+import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
 import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { Box, Flex } from '@keystar/ui/layout';
@@ -35,10 +37,12 @@ import { TextField } from '@keystar/ui/text-field';
 import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../config';
-import { createGetPreviewProps } from '../form/preview-props';
 import { fields } from '../form/api';
+import { createGetPreviewProps } from '../form/preview-props';
 import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
+import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
+import { getYjsValFromParsedValue } from '../form/props-value';
 
 import {
   prettyErrorForCreateBranchMutation,
@@ -47,17 +51,29 @@ import {
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { ForkRepoDialog } from './fork-repo';
 import l10nMessages from './l10n/index.json';
+import { notFound } from './not-found';
 import { getDataFileExtension, getPathPrefix } from './path-utils';
 import { useRouter } from './router';
-import { PageBody, PageHeader, PageRoot } from './shell/page';
+import { HeaderBreadcrumbs } from './shell/Breadcrumbs';
+import { useYjs, useYjsIfAvailable } from './shell/collab';
+import { useConfig } from './shell/context';
 import { useBaseCommit, useRepositoryId, useBranchInfo } from './shell/data';
+import { PageBody, PageHeader, PageRoot } from './shell/page';
+import { useSlugFieldInfo } from './slugs';
+import {
+  delDraft,
+  getDraft,
+  setDraft,
+  showDraftRestoredToast,
+} from './persistence';
+import { PresenceAvatars } from './presence';
 import {
   serializeEntryToFiles,
   useDeleteItem,
   useUpsertItem,
 } from './updating';
-import { parseEntry, useItemData } from './useItemData';
 import { useHasChanged } from './useHasChanged';
+import { parseEntry, useItemData } from './useItemData';
 import {
   getBranchPrefix,
   getCollectionFormat,
@@ -66,24 +82,8 @@ import {
   getSlugFromState,
   isGitHubConfig,
 } from './utils';
-import { notFound } from './not-found';
-import { useConfig } from './shell/context';
-import { useSlugFieldInfo } from './slugs';
-import { z } from 'zod';
 import { LOADING, useData } from './useData';
-import {
-  delDraft,
-  getDraft,
-  setDraft,
-  showDraftRestoredToast,
-} from './persistence';
-import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
-import { useYjs, useYjsIfAvailable } from './shell/collab';
-import * as Y from 'yjs';
-import { getYjsValFromParsedValue } from '../form/props-value';
 import { useYJsValue } from './useYJsValue';
-import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
-import { PresenceAvatars } from './presence';
 
 type ItemPageProps = {
   collection: string;
@@ -1018,27 +1018,29 @@ const ItemPageShell = (
 ) => {
   const router = useRouter();
   const collectionConfig = props.config.collections![props.collection]!;
+  const onBreadcrumbAction = useCallback(
+    (key: Key) => {
+      if (key === 'collection') {
+        router.push(`${props.basePath}/collection/${props.collection}`);
+      }
+    },
+    [props.basePath, props.collection, router]
+  );
+  const breadcrumbItems = useMemo(
+    () => [
+      { key: 'collection', label: collectionConfig.label },
+      { key: 'item', label: props.itemSlug },
+    ],
+    [collectionConfig.label, props.itemSlug]
+  );
 
   return (
     <PageRoot containerWidth={containerWidthForEntryLayout(collectionConfig)}>
       <PageHeader>
-        <Breadcrumbs
-          flex
-          size="medium"
-          minWidth={0}
-          onAction={key => {
-            if (key === 'collection') {
-              router.push(
-                `${props.basePath}/collection/${encodeURIComponent(
-                  props.collection
-                )}`
-              );
-            }
-          }}
-        >
-          <Item key="collection">{collectionConfig.label}</Item>
-          <Item key="item">{props.itemSlug}</Item>
-        </Breadcrumbs>
+        <HeaderBreadcrumbs
+          items={breadcrumbItems}
+          onAction={onBreadcrumbAction}
+        />
         {props.headerActions}
       </PageHeader>
 
