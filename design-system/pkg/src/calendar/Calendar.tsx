@@ -37,6 +37,7 @@ function Calendar<T extends DateValue>(
   });
 
   let domRef = useObjectRef(forwardedRef);
+  // @ts-expect-error FIXME: not sure how to properly resolve this type issue
   useImperativeHandle(forwardedRef, () => ({
     ...domRef.current,
     focus() {

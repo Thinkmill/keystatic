@@ -61,7 +61,7 @@ export const TextFieldPrimitive: ForwardRefExoticComponent<
       return;
     }
 
-    inputRef.current.focus();
+    inputRef.current?.focus();
   };
   let { pressProps } = usePress({
     isDisabled,
