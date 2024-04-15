@@ -5,6 +5,7 @@ export { DirectionIndicator } from './DirectionIndicator';
 export { Modal } from './Modal';
 export { Overlay } from './Overlay';
 export { Popover } from './Popover';
+export { Transition } from './Transition';
 export { Tray } from './Tray';
 
 export type {
