@@ -493,7 +493,6 @@ interface ActionGroupMenuProps<T> extends AriaLabelingProps {
   orientation?: 'horizontal' | 'vertical';
   prominence?: 'low' | 'default';
   state: ListState<T>;
-  staticColor?: 'white' | 'black';
   summaryIcon?: ReactNode;
 }
 
@@ -506,7 +505,6 @@ function ActionGroupMenu<T>({
   orientation,
   prominence,
   state,
-  staticColor,
   summaryIcon,
   ...otherProps
 }: ActionGroupMenuProps<T>) {
