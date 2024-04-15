@@ -59,7 +59,7 @@ function ActionGroup<T extends object>(
     isJustified,
     isDisabled,
     orientation = 'horizontal',
-    overflowMode,
+    overflowMode = 'wrap',
     onAction,
     buttonLabelBehavior,
     summaryIcon,
@@ -92,7 +92,7 @@ function ActionGroup<T extends object>(
 
   let selectionMode = state.selectionManager.selectionMode;
   let updateOverflow = useCallback(() => {
-    if (overflowMode !== 'collapse') {
+    if (overflowMode === 'wrap') {
       return;
     }
 
@@ -106,8 +106,9 @@ function ActionGroup<T extends object>(
         let listItems = Array.from(domRef.current.children) as HTMLLIElement[];
         let containerSize =
           orientation === 'horizontal'
-            ? wrapperRef.current.offsetWidth
-            : wrapperRef.current.offsetHeight;
+            ? wrapperRef.current.getBoundingClientRect().width
+            : wrapperRef.current.getBoundingClientRect().height;
+
         let isShowingMenu = visibleItems < state.collection.size;
         let calculatedSize = 0;
         let newVisibleItems = 0;
@@ -127,7 +128,7 @@ function ActionGroup<T extends object>(
             orientation === 'horizontal'
               ? outerWidth(item, i === 0, i === listItems.length - 1)
               : outerHeight(item, i === 0, i === listItems.length - 1);
-          if (calculatedSize <= containerSize) {
+          if (Math.round(calculatedSize) <= Math.round(containerSize)) {
             newVisibleItems++;
           } else {
             break;
@@ -137,7 +138,7 @@ function ActionGroup<T extends object>(
         // If selection is enabled, and not all of the items fit, collapse all of them into a dropdown
         // immediately rather than having some visible and some not.
         if (
-          selectionMode === 'single' &&
+          selectionMode !== 'none' &&
           newVisibleItems < state.collection.size
         ) {
           return 0;
@@ -267,7 +268,7 @@ function ActionGroup<T extends object>(
         {...styleProps}
         style={style}
         className={classNames(
-          css({ display: 'flex', maxWidth: '100%' }),
+          css({ display: 'flex', minWidth: 0 }),
           styleProps.className
         )}
         ref={wrapperRef}
@@ -285,10 +286,10 @@ function ActionGroup<T extends object>(
           className={classNames(
             css({
               display: 'flex',
-              // gap: tokenSchema.size.space.regular,
-              // NOTE: `gap` seems to break the measurement/collapse logic, so we use margin instead.
-              width: 'calc(100% + var(--action-item-gap) + 1px)',
+              // NOTE: prefer `gap` but it breaks the measurement/collapse logic, so we use margin instead.
               margin: `calc(var(--action-item-gap) / -2)`,
+              minWidth: 0,
+              width: 'calc(100% + var(--action-item-gap) + 1px)',
 
               '--action-item-gap': tokenSchema.size.space.regular,
 
@@ -492,7 +493,6 @@ interface ActionGroupMenuProps<T> extends AriaLabelingProps {
   orientation?: 'horizontal' | 'vertical';
   prominence?: 'low' | 'default';
   state: ListState<T>;
-  staticColor?: 'white' | 'black';
   summaryIcon?: ReactNode;
 }
 
@@ -505,7 +505,6 @@ function ActionGroupMenu<T>({
   orientation,
   prominence,
   state,
-  staticColor,
   summaryIcon,
   ...otherProps
 }: ActionGroupMenuProps<T>) {

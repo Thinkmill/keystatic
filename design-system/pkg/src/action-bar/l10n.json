@@ -1,0 +1,240 @@
+{
+  "ar-AE": {
+    "actions": "الإجراءات",
+    "actionsAvailable": "الإجراءات المتاحة.",
+    "clearSelection": "إزالة التحديد",
+    "selected": "{count, plural, =0 {غير محدد} other {# محدد}}",
+    "selectedAll": "تم تحديد الكل"
+  },
+  "bg-BG": {
+    "actions": "Действия",
+    "actionsAvailable": "Налични действия.",
+    "clearSelection": "Изчистване на избора",
+    "selected": "{count, plural, =0 {Няма избрани} one {# избран} other {# избрани}}",
+    "selectedAll": "Всички избрани"
+  },
+  "cs-CZ": {
+    "actions": "Akce",
+    "actionsAvailable": "Dostupné akce.",
+    "clearSelection": "Vymazat výběr",
+    "selected": "Vybráno: { count }",
+    "selectedAll": "Vybráno vše"
+  },
+  "da-DK": {
+    "actions": "Handlinger",
+    "actionsAvailable": "Tilgængelige handlinger.",
+    "clearSelection": "Ryd markering",
+    "selected": "{count, plural, =0 {Ingen valgt} other {# valgt}}",
+    "selectedAll": "Alle valgt"
+  },
+  "de-DE": {
+    "actions": "Aktionen",
+    "actionsAvailable": "Aktionen verfügbar.",
+    "clearSelection": "Auswahl löschen",
+    "selected": "{count, plural, =0 {Nichts ausgewählt} one {# ausgewählt} other {# ausgewählt}}",
+    "selectedAll": "Alles ausgewählt"
+  },
+  "el-GR": {
+    "actions": "Ενέργειες",
+    "actionsAvailable": "Υπάρχουν διαθέσιμες ενέργειες.",
+    "clearSelection": "Εκκαθάριση επιλογής",
+    "selected": "{count, plural, =0 {Δεν επιλέχθηκε κανένα} one {# επιλεγμένο} other {# επιλεγμένα}}",
+    "selectedAll": "Επιλέχθηκαν όλα"
+  },
+  "en-US": {
+    "clearSelection": "Clear selection",
+    "selected": "{count, plural, =0 {None selected} other {# selected}}",
+    "selectedAll": "All selected",
+    "actions": "Actions",
+    "actionsAvailable": "Actions available."
+  },
+  "es-ES": {
+    "actions": "Acciones",
+    "actionsAvailable": "Acciones disponibles.",
+    "clearSelection": "Borrar selección",
+    "selected": "{count, plural, =0 {Nada seleccionado} one {# seleccionado} other {# seleccionados}}",
+    "selectedAll": "Todo seleccionado"
+  },
+  "et-EE": {
+    "actions": "Toimingud",
+    "actionsAvailable": "Toimingud saadaval.",
+    "clearSelection": "Puhasta valik",
+    "selected": "{count, plural, =0 {Pole valitud} other {# valitud}}",
+    "selectedAll": "Kõik valitud"
+  },
+  "fi-FI": {
+    "actions": "Toiminnot",
+    "actionsAvailable": "Toiminnot käytettävissä.",
+    "clearSelection": "Poista valinta",
+    "selected": "{count, plural, =0 {Ei mitään valittu} other {# valittu}}",
+    "selectedAll": "Kaikki valittu"
+  },
+  "fr-FR": {
+    "actions": "Actions",
+    "actionsAvailable": "Actions disponibles.",
+    "clearSelection": "Supprimer la sélection",
+    "selected": "{count, plural, =0 {Aucun élément sélectionné} one {# sélectionné} other {# sélectionnés}}",
+    "selectedAll": "Toute la sélection"
+  },
+  "he-IL": {
+    "actions": "פעולות",
+    "actionsAvailable": "פעולות זמינות.",
+    "clearSelection": "נקה בחירה",
+    "selected": "{count, plural, =0 {לא בוצעה בחירה} one { # בחר} other {# נבחרו}}\",",
+    "selectedAll": "כל הפריטים שנבחרו"
+  },
+  "hr-HR": {
+    "actions": "Radnje",
+    "actionsAvailable": "Dostupne radnje.",
+    "clearSelection": "Poništi odabir",
+    "selected": "Odabrano: { count }",
+    "selectedAll": "Sve je odabrano"
+  },
+  "hu-HU": {
+    "actions": "Műveletek",
+    "actionsAvailable": "Műveletek állnak rendelkezésre.",
+    "clearSelection": "Kijelölés törlése",
+    "selected": "{count, plural, =0 {Egy sincs kijelölve} other {# kijelölve}}",
+    "selectedAll": "Mind kijelölve"
+  },
+  "it-IT": {
+    "actions": "Azioni",
+    "actionsAvailable": "Azioni disponibili.",
+    "clearSelection": "Annulla selezione",
+    "selected": "{count, plural, =0 {Nessuno selezionato} one {# selezionato} other {# selezionati}}",
+    "selectedAll": "Tutti selezionati"
+  },
+  "ja-JP": {
+    "actions": "アクション",
+    "actionsAvailable": "アクションを利用できます。",
+    "clearSelection": "選択をクリア",
+    "selected": "{count, plural, =0 {選択されていません} other {# 個を選択しました}}",
+    "selectedAll": "すべてを選択"
+  },
+  "ko-KR": {
+    "actions": "액션",
+    "actionsAvailable": "사용 가능한 액션",
+    "clearSelection": "선택 항목 지우기",
+    "selected": "{count, plural, =0 {선택된 항목 없음} other {#개 선택됨}}",
+    "selectedAll": "모두 선택됨"
+  },
+  "lt-LT": {
+    "actions": "Veiksmai",
+    "actionsAvailable": "Galimi veiksmai.",
+    "clearSelection": "Išvalyti pasirinkimą",
+    "selected": "Pasirinkta: {count}",
+    "selectedAll": "Pasirinkta viskas"
+  },
+  "lv-LV": {
+    "actions": "Darbības",
+    "actionsAvailable": "Pieejamas darbības.",
+    "clearSelection": "Notīrīt atlasi",
+    "selected": "{count, plural, =0 {Nav atlasīts nekas} other {Atlasīts(-i): #}}",
+    "selectedAll": "Atlasīts viss"
+  },
+  "nb-NO": {
+    "actions": "Handlinger",
+    "actionsAvailable": "Tilgjengelige handlinger.",
+    "clearSelection": "Tøm utvalg",
+    "selected": "Valde element: {count}",
+    "selectedAll": "Alle er valgt"
+  },
+  "nl-NL": {
+    "actions": "Acties",
+    "actionsAvailable": "Acties beschikbaar.",
+    "clearSelection": "Selectie wissen",
+    "selected": "{count, plural, =0 {Niets geselecteerd} other {# geselecteerd}}",
+    "selectedAll": "Alles geselecteerd"
+  },
+  "pl-PL": {
+    "actions": "Działania",
+    "actionsAvailable": "Dostępne działania.",
+    "clearSelection": "Wyczyść zaznaczenie",
+    "selected": "Zaznaczono: {count}",
+    "selectedAll": "Wszystkie zaznaczone"
+  },
+  "pt-BR": {
+    "actions": "Ações",
+    "actionsAvailable": "Ações disponíveis.",
+    "clearSelection": "Limpar seleção",
+    "selected": "{count, plural, =0 {Nenhum selecionado} one {# selecionado} other {# selecionados}}",
+    "selectedAll": "Todos selecionados"
+  },
+  "pt-PT": {
+    "actions": "Ações",
+    "actionsAvailable": "Ações disponíveis.",
+    "clearSelection": "Limpar seleção",
+    "selected": "{count, plural, =0 {Nenhum selecionado} one {# selecionado} other {# selecionados}}",
+    "selectedAll": "Tudo selecionado"
+  },
+  "ro-RO": {
+    "actions": "Acțiuni",
+    "actionsAvailable": "Acțiuni disponibile.",
+    "clearSelection": "Goliți selecția",
+    "selected": "{count, plural, =0 {Niciunul selectat} one { # selectat} other {# selectate}}",
+    "selectedAll": "Toate selectate"
+  },
+  "ru-RU": {
+    "actions": "Действия",
+    "actionsAvailable": "Возможно выполнение действий.",
+    "clearSelection": "Очистить выбор",
+    "selected": "Выбрано: {count}",
+    "selectedAll": "Выбрано все"
+  },
+  "sk-SK": {
+    "actions": "Akcie",
+    "actionsAvailable": "Dostupné akcie.",
+    "clearSelection": "Vymazať výber",
+    "selected": "Vybrané položky: {count}",
+    "selectedAll": "Všetky vybraté položky"
+  },
+  "sl-SI": {
+    "actions": "Dejanja",
+    "actionsAvailable": "Na voljo so dejanja.",
+    "clearSelection": "Počisti izbor",
+    "selected": "Izbrano: {count}",
+    "selectedAll": "Vsi izbrani"
+  },
+  "sr-SP": {
+    "actions": "Radnje",
+    "actionsAvailable": "Dostupne su radnje.",
+    "clearSelection": "Poništi izbor",
+    "selected": "Izabrano: {count}",
+    "selectedAll": "Sve je izabrano"
+  },
+  "sv-SE": {
+    "actions": "Åtgärder",
+    "actionsAvailable": "Åtgärder finns.",
+    "clearSelection": "Rensa markering",
+    "selected": "{count, plural, =0 {Inga valda} one {# vald} other {# valda}}",
+    "selectedAll": "Alla markerade"
+  },
+  "tr-TR": {
+    "actions": "Eylemler",
+    "actionsAvailable": "Eylemler mevcut.",
+    "clearSelection": "Seçimi temizle",
+    "selected": "{count, plural, =0 {Hiçbiri seçilmedi} other {# seçildi}}",
+    "selectedAll": "Tümü seçildi"
+  },
+  "uk-UA": {
+    "actions": "Дії",
+    "actionsAvailable": "Доступні дії.",
+    "clearSelection": "Очистити вибір",
+    "selected": "Вибрано: {count}",
+    "selectedAll": "Усе вибрано"
+  },
+  "zh-CN": {
+    "actions": "操作",
+    "actionsAvailable": "有可用操作。",
+    "clearSelection": "清除选择",
+    "selected": "{count, plural, =0 {无选择} other {已选择 # 个}}",
+    "selectedAll": "全选"
+  },
+  "zh-TW": {
+    "actions": "動作",
+    "actionsAvailable": "可執行的動作。",
+    "clearSelection": "清除選取項目",
+    "selected": "{count, plural, =0 {未選取任何項目} other {已選取 # 個}}",
+    "selectedAll": "已選取所有項目"
+  }
+}

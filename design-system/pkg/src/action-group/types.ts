@@ -16,6 +16,7 @@ export type ActionGroupProps<T> = AriaActionGroupProps<T> & {
    * available space. When set to 'wrap', the items wrap to form a new line.
    * When set to 'collapse', the items that do not fit are collapsed into a
    * dropdown menu.
+   * @default 'wrap'
    */
   overflowMode?: 'wrap' | 'collapse';
   /**

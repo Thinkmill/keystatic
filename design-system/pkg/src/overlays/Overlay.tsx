@@ -1,72 +1,27 @@
-import {
-  ForwardedRef,
-  forwardRef,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ForwardedRef, forwardRef } from 'react';
 import { Overlay as ReactAriaOverlay } from '@react-aria/overlays';
 import { OverlayProps } from '@react-types/overlays';
 
 import { KeystarProvider } from '@keystar/ui/core';
+
 import { cloneValidElement } from '../utils';
 
-const forceReflow = (node: HTMLElement) => node.scrollTop;
+import { useTransition } from './Transition';
 
-/**
- * A low-level utility component for implementing overlay transitions, which
- * safely unmount children _after their animation has completed.
- */
+/** * Utility component for implementing overlay transitions. */
 export const Overlay = forwardRef(function Overlay(
   props: OverlayProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
-  let { isOpen, container, children, nodeRef } = props;
-
-  const [isOpenState, setIsOpenState] = useState<'mounting' | boolean>(
-    props.isOpen ? 'mounting' : false
-  );
-  if (isOpen && !isOpenState) {
-    setIsOpenState('mounting');
-  }
-
-  const hasCalledCompletedCallback = useRef(false);
-
-  useLayoutEffect(() => {
-    if (!hasCalledCompletedCallback.current && isOpen === isOpenState) {
-      hasCalledCompletedCallback.current = true;
-      if (isOpen) {
-        props.onEntered?.();
-      } else {
-        props.onExited?.();
-      }
-    }
-    if (isOpen === isOpenState) return;
-    hasCalledCompletedCallback.current = false;
-    if (isOpen) {
-      props.onEnter?.();
-      if (nodeRef.current) {
-        forceReflow(nodeRef.current);
-      }
-      setIsOpenState(true);
-      props.onEntering?.();
-    } else {
-      props.onExit?.();
-      props.onExiting?.();
-      const id = setTimeout(() => {
-        setIsOpenState(false);
-      }, 320);
-      return () => clearTimeout(id);
-    }
-  }, [isOpen, isOpenState, nodeRef, props]);
+  let { isOpen } = useTransition(props);
 
   // NOTE: wait for the exit animation to complete before unmounting content.
-  if (!isOpenState) {
+  if (!isOpen) {
     return null;
   }
 
   return (
-    <ReactAriaOverlay portalContainer={container}>
+    <ReactAriaOverlay portalContainer={props.container}>
       <KeystarProvider
         ref={forwardedRef}
         // ensure children
@@ -74,9 +29,9 @@ export const Overlay = forwardRef(function Overlay(
         // unset container
         isDisabled={false}
       >
-        {cloneValidElement(children, {
-          isOpen: isOpenState === 'mounting' ? false : isOpen,
-        }) ?? children}
+        {cloneValidElement(props.children, {
+          isOpen: isOpen === 'mounting' ? false : props.isOpen,
+        }) ?? props.children}
       </KeystarProvider>
     </ReactAriaOverlay>
   );
