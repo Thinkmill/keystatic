@@ -1,7 +1,7 @@
 import { AriaModalOverlayProps, AriaPopoverProps } from '@react-aria/overlays';
 import { OverlayTriggerState } from '@react-stately/overlays';
 import { OverlayProps } from '@react-types/overlays';
-import { HTMLAttributes, ReactNode } from 'react';
+import { HTMLAttributes, MutableRefObject, ReactNode } from 'react';
 
 import { BaseStyleProps } from '@keystar/ui/style';
 
@@ -10,9 +10,6 @@ export type BlanketProps = {
   isTransparent?: boolean;
 } & BaseStyleProps &
   HTMLAttributes<HTMLDivElement>;
-
-// Popover
-// -----------------------------------------------------------------------------
 
 export type PopoverProps = Omit<
   AriaPopoverProps,
@@ -23,9 +20,6 @@ export type PopoverProps = Omit<
   state: OverlayTriggerState;
 } & BaseStyleProps;
 
-// Modal
-// -----------------------------------------------------------------------------
-
 export type ModalProps = {
   children: ReactNode;
   state: OverlayTriggerState;
@@ -34,9 +28,6 @@ export type ModalProps = {
   BaseStyleProps &
   Omit<OverlayProps, 'nodeRef'>;
 
-// Tray
-// -----------------------------------------------------------------------------
-
 export type TrayProps = {
   children: ReactNode;
   state: OverlayTriggerState;
@@ -44,3 +35,15 @@ export type TrayProps = {
 } & AriaModalOverlayProps &
   BaseStyleProps &
   Omit<OverlayProps, 'nodeRef'>;
+
+export type TransitionProps = {
+  children: ReactNode;
+  isOpen?: boolean;
+  nodeRef: MutableRefObject<HTMLElement>;
+  onEnter?: () => void;
+  onEntered?: () => void;
+  onEntering?: () => void;
+  onExit?: () => void;
+  onExited?: () => void;
+  onExiting?: () => void;
+};
