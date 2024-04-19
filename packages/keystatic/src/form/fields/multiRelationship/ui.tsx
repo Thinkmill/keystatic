@@ -16,17 +16,19 @@ import { FormFieldInputProps } from '../../api';
 import { useSlugsInCollection } from '../../../app/useSlugsInCollection';
 import { ExtraFieldInputProps } from '../../form-from-preview';
 import { move } from '../../ui-utils';
-
-type TempElement = { key: string };
+import { validateMultiRelationshipLength } from './validate';
 
 export function MultiRelationshipInput(
-  props: FormFieldInputProps<string | null> & {
+  props: FormFieldInputProps<string[]> & {
     collection: string;
-    validation: { isRequired?: boolean } | undefined;
+    validation: { length?: { min?: number; max?: number } } | undefined;
     label: string;
     description: string | undefined;
   }
 ) {
+  const valAsObjects = useMemo(() => {
+    return props.value.map(key => ({ key }));
+  }, [props.value]);
   const [blurred, onBlur] = useReducer(() => true, false);
   const slugs = useSlugsInCollection(props.collection);
   const options = useMemo(() => {
@@ -35,10 +37,7 @@ export function MultiRelationshipInput(
 
   const _errorMessage =
     (props.forceValidation || blurred) &&
-    props.validation?.isRequired &&
-    props.value === null
-      ? `${props.label} is required`
-      : undefined;
+    validateMultiRelationshipLength(props.validation, props.value);
   // this state & effect shouldn't really exist
   // it's here because react-aria/stately calls onSelectionChange with null
   // after selecting an item if we immediately remove the error message
@@ -48,11 +47,10 @@ export function MultiRelationshipInput(
     setErrorMessage(_errorMessage);
   }, [_errorMessage]);
 
-  // TEMP implementation
-  const [elements, setElements] = useState<TempElement[]>([]);
-  const items = options.filter(
-    option => !elements.some(element => element.key === option.slug)
-  );
+  const items = useMemo(() => {
+    const elementSet = new Set(props.value);
+    return options.filter(option => !elementSet.has(option.slug));
+  }, [props.value, options]);
 
   return (
     <VStack gap="medium" minWidth={0}>
@@ -63,7 +61,7 @@ export function MultiRelationshipInput(
         placeholder={items.length === 0 ? 'All selected' : undefined}
         onSelectionChange={key => {
           if (typeof key === 'string') {
-            setElements(prevElements => [...prevElements, { key }]);
+            props.onChange([...props.value, key]);
           }
         }}
         disabledKeys={['No more items…']}
@@ -71,7 +69,10 @@ export function MultiRelationshipInput(
         autoFocus={props.autoFocus}
         defaultItems={items.length ? items : [{ slug: 'No more items…' }]}
         isReadOnly={items.length === 0}
-        isRequired={props.validation?.isRequired}
+        isRequired={
+          props.validation?.length?.min !== undefined &&
+          props.validation.length.min >= 1
+        }
         errorMessage={errorMessage}
         width="auto"
       >
@@ -82,8 +83,10 @@ export function MultiRelationshipInput(
         <MultiRelationshipListView
           autoFocus={props.autoFocus}
           forceValidation={props.forceValidation}
-          onChange={setElements}
-          elements={elements}
+          onChange={value => {
+            props.onChange(value.map(x => x.key));
+          }}
+          elements={valAsObjects}
           aria-label={props.label}
         />
       ) : null}
@@ -98,7 +101,9 @@ function MultiRelationshipListView(
     onChange: (elements: { key: string }[]) => void;
   }
 ) {
-  let [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
+  const [selectedKeys, setSelectedKeys] = useState<Selection>(
+    () => new Set([])
+  );
   let onMove = (keys: Key[], target: ItemDropTarget) => {
     const targetIndex = props.elements.findIndex(x => x.key === target.key);
     if (targetIndex === -1) return;

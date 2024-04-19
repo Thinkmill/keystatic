@@ -326,18 +326,11 @@ export default config({
           label: 'Content',
           components,
         }),
-        authors: fields.array(
-          fields.relationship({
-            label: 'Author',
-            collection: 'authors',
-            validation: { isRequired: true },
-          }),
-          {
-            label: 'Authors',
-            itemLabel: props => props.value ?? 'Please select',
-            validation: { length: { min: 1 } },
-          }
-        ),
+        authors: fields.multiRelationship({
+          label: 'Authors',
+          collection: 'authors',
+          validation: { length: { min: 1 } },
+        }),
       },
     }),
 

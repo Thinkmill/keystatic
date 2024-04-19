@@ -1,13 +1,11 @@
 import { BasicFormField } from '../../api';
 import { FieldDataError } from '../error';
-import {
-  RequiredValidation,
-  assertRequired,
-  basicFormFieldWithSimpleReaderParse,
-} from '../utils';
+import { basicFormFieldWithSimpleReaderParse } from '../utils';
 import { MultiRelationshipInput } from '#field-ui/multiRelationship';
+import { isString } from 'emery';
+import { validateMultiRelationshipLength } from './validate';
 
-export function multiRelationship<IsRequired extends boolean | undefined>({
+export function multiRelationship({
   label,
   collection,
   validation,
@@ -15,12 +13,9 @@ export function multiRelationship<IsRequired extends boolean | undefined>({
 }: {
   label: string;
   collection: string;
-  validation?: { isRequired?: IsRequired };
+  validation?: { length?: { min?: number; max?: number } };
   description?: string;
-} & RequiredValidation<IsRequired>): BasicFormField<
-  string | null,
-  string | (IsRequired extends true ? never : null)
-> {
+}): BasicFormField<string[]> {
   return basicFormFieldWithSimpleReaderParse({
     label,
     Input(props) {
@@ -35,23 +30,26 @@ export function multiRelationship<IsRequired extends boolean | undefined>({
       );
     },
     defaultValue() {
-      return null;
+      return [];
     },
     parse(value) {
       if (value === undefined) {
-        return null;
+        return [];
       }
-      if (typeof value !== 'string') {
-        throw new FieldDataError('Must be a string');
+      if (!Array.isArray(value) || !value.every(isString)) {
+        throw new FieldDataError('Must be an array of strings');
       }
       return value;
     },
     validate(value) {
-      assertRequired(value, validation, label);
+      const error = validateMultiRelationshipLength(validation, value);
+      if (error) {
+        throw new FieldDataError(error);
+      }
       return value;
     },
     serialize(value) {
-      return { value: value === null ? undefined : value };
+      return { value };
     },
   });
 }
