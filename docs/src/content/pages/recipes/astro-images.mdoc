@@ -37,6 +37,12 @@ We recommend creating a path alias for the `src/assets` directory in your `.tsco
 
 Images stored in a standalone `image` field (not inside a MDX or Markdoc document) will be stored in your frontmatter data in Astro's content collections.
 
+{% aside icon="⚠️" %}
+You need to configure the Zod content collection schema in Astro, and use the image helper for the image metadata transformation to work.
+
+Refer to [this section of the Astro documentation](https://docs.astro.build/en/guides/images/#images-in-content-collections) for more information.
+{% /aside %}
+
 Using the path alias suggested above, you can setup your image field options like this:
 
 ```ts 
@@ -51,12 +57,6 @@ image: fields.image({
 ```
 
 As long as the image path stored is within the `src/assets` directory, Astro will be able to process it into image metadata that the `<Image />` component can use.
-
-### Zod schema configuration & image helper
-
-You need to configure the Zod content collection schema in Astro, and use the image helper for the image metadata transformation to work. 
-
-Refer to [this section of the Astro documentation](https://docs.astro.build/en/guides/images/#images-in-content-collections) for more information.
 
 ---
 
