@@ -41,6 +41,7 @@ type CommonConfig<Collections, Singletons> = {
   locale?: Locale;
   cloud?: { project: string };
   ui?: UserInterface<Collections, Singletons>;
+  customCSS?: string;
 };
 
 type CommonRemoteStorageConfig = {
