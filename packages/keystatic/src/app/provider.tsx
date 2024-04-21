@@ -205,6 +205,7 @@ export default function Provider({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
+        <style>{config.customCSS}</style>
         <UrqlProvider value={useMemo(() => createUrqlClient(config), [config])}>
           {children}
         </UrqlProvider>
