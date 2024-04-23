@@ -9,9 +9,11 @@ import { fixPath } from '../../../../../app/path-utils';
 import { getSrcPrefixForImageBlock } from '../images';
 import { Nodes, PhrasingContent, Definition } from 'mdast';
 import { visit } from 'unist-util-visit';
-import { MdxJsxAttributeValueExpression } from 'mdast-util-mdx';
+import { MdxJsxAttributeValueExpression, mdxToMarkdown } from 'mdast-util-mdx';
 import { assert } from 'emery';
 import { deserializeProps, toSerialized } from '../props-serialization';
+import { toMarkdown } from 'mdast-util-to-markdown';
+import { gfmToMarkdown } from 'mdast-util-gfm';
 
 let state:
   | {
@@ -137,7 +139,6 @@ export function mdxToProseMirror(
       }
     }
   });
-  console.log(getState().definitions);
   try {
     let pmNode = markdocNodeToProseMirrorNode(node, undefined);
     if (state.errors.length) {
@@ -394,7 +395,11 @@ function markdocNodeToProseMirrorNode(
       }
       return pmNode;
     }
-    return notAllowed(node, parentType);
+    error(`Missing component definition for ${node.name}`);
+    return childrenToProseMirrorNodes(
+      'children' in node ? node.children : [],
+      parentType
+    );
   }
   if (node.type === 'image' || node.type === 'imageReference') {
     const data =
@@ -434,6 +439,11 @@ function markdocNodeToProseMirrorNode(
     );
   }
   if (node.type === 'definition') return [];
-  error(`Unhandled type ${node.type}`);
+  error(
+    `Unhandled type ${node.type}: ${toMarkdown(node, {
+      extensions: [gfmToMarkdown(), mdxToMarkdown()],
+      rule: '-',
+    })}`
+  );
   return null;
 }

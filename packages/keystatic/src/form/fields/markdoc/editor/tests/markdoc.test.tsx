@@ -516,3 +516,11 @@ test('add missing array field', () => {
     "
   `);
 });
+
+test('undefined component', () => {
+  expect(() => {
+    fromMarkdoc('{% component-that-does-not-exist /%}');
+  }).toThrowErrorMatchingInlineSnapshot(
+    `"0:Missing component definition for component-that-does-not-exist"`
+  );
+});

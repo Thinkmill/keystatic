@@ -367,7 +367,18 @@ function markdocNodeToProseMirrorNode(
       }
       return pmNode;
     }
-    return notAllowed(node, parentType);
+
+    error({
+      error: {
+        id: 'unspecified-type',
+        level: 'critical',
+        message: `Missing component definition for ${node.tag}`,
+      },
+      lines: node.lines,
+      type: node.type,
+      location: node.location,
+    });
+    return childrenToProseMirrorNodes(node.children, parentType);
   }
   if (node.type === 'image') {
     const prefix = getSrcPrefixForImageBlock(schema.config, getState().slug);
