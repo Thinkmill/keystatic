@@ -2,7 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ComingSoonBadge, NewBadge, type BadgeStatus } from './badges';
+import {
+  ComingSoonBadge,
+  NewBadge,
+  type BadgeStatus,
+  DeprecatedBadge,
+} from './badges';
 import { cx } from '../../utils';
 
 type NavItemProps = {
@@ -13,7 +18,7 @@ type NavItemProps = {
   title?: string;
   tabIndex?: number;
   comingSoon?: boolean;
-  status?: BadgeStatus;
+  status?: BadgeStatus | 'deprecated';
   currentPage?: boolean;
 };
 
@@ -72,6 +77,7 @@ export function NavItem({
             {label}
             {status === 'new' && <NewBadge />}
             {status === 'experimental' && <ComingSoonBadge />}
+            {status === 'deprecated' && <DeprecatedBadge />}
           </a>
         </Link>
       )}

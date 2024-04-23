@@ -5,69 +5,84 @@ navGroups:
         link:
           discriminant: page
           value: introduction
+        status: default
       - label: Quick start
         link:
           discriminant: page
           value: quick-start
+        status: default
       - label: Keystatic Cloud
         link:
           discriminant: page
           value: cloud
+        status: default
   - groupName: Integration guides
     items:
       - label: Astro
         link:
           discriminant: page
           value: installation-astro
+        status: default
       - label: Next.js
         link:
           discriminant: page
           value: installation-next-js
+        status: default
       - label: Remix
         link:
           discriminant: page
           value: installation-remix
+        status: default
   - groupName: Core concepts
     items:
       - label: Content organisation
         link:
           discriminant: page
           value: content-organisation
+        status: default
       - label: Path wildcard
         link:
           discriminant: page
           value: path-wildcard
+        status: default
       - label: Local mode
         link:
           discriminant: page
           value: local-mode
+        status: default
       - label: GitHub mode
         link:
           discriminant: page
           value: github-mode
+        status: default
       - label: Reader API
         link:
           discriminant: page
           value: reader-api
+        status: default
       - label: Format options
         link:
           discriminant: page
           value: format-options
+        status: default
       - label: Entry Layout
         link:
           discriminant: page
           value: entry-layout
+        status: default
       - label: User interface
         link:
           discriminant: page
           value: user-interface
+        status: default
       - label: Content components
         link:
           discriminant: page
           value: content-components
+        status: default
   - groupName: Recipes
     items:
-      - label: "Use Astro's Image component"
+      - label: Use Astro's Image component
         link:
           discriminant: page
           value: recipes/astro-images
@@ -76,137 +91,170 @@ navGroups:
         link:
           discriminant: page
           value: recipes/real-time-previews
+        status: default
       - label: 'Astro: Disable Admin UI Routes in Production'
         link:
           discriminant: page
           value: recipes/astro-disable-admin-ui-in-production
+        status: default
   - groupName: Reference
     items:
       - label: Configuration
         link:
           discriminant: page
           value: configuration
+        status: default
       - label: Collections
         link:
           discriminant: page
           value: collections
+        status: default
       - label: Singletons
         link:
           discriminant: page
           value: singletons
+        status: default
   - groupName: Fields API
     items:
       - label: Array
         link:
           discriminant: page
           value: fields/array
+        status: default
       - label: Blocks
         link:
           discriminant: page
           value: fields/blocks
+        status: default
       - label: Checkbox
         link:
           discriminant: page
           value: fields/checkbox
+        status: default
       - label: Child
         link:
           discriminant: page
           value: fields/child
+        status: default
       - label: Cloud Image
         link:
           discriminant: page
           value: fields/cloud-image
+        status: default
       - label: Conditional
         link:
           discriminant: page
           value: fields/conditional
+        status: default
       - label: Date
         link:
           discriminant: page
           value: fields/date
+        status: default
       - label: Datetime
         link:
           discriminant: page
           value: fields/datetime
+        status: default
       - label: Document
         link:
           discriminant: page
           value: fields/document
+        status: deprecated
       - label: Empty
         link:
           discriminant: page
           value: fields/empty
+        status: default
       - label: Empty Document
         link:
           discriminant: page
           value: fields/empty-document
+        status: default
       - label: File
         link:
           discriminant: page
           value: fields/file
+        status: default
       - label: Image
         link:
           discriminant: page
           value: fields/image
+        status: default
       - label: Integer
         link:
           discriminant: page
           value: fields/integer
+        status: default
       - label: Markdoc
         link:
           discriminant: page
           value: fields/markdoc
+        status: default
       - label: MDX
         link:
           discriminant: page
           value: fields/mdx
+        status: default
       - label: Multiselect
         link:
           discriminant: page
           value: fields/multiselect
+        status: default
       - label: Number
         link:
           discriminant: page
           value: fields/number
+        status: default
       - label: Object
         link:
           discriminant: page
           value: fields/object
+        status: default
       - label: Path Reference
         link:
           discriminant: page
           value: fields/path-reference
+        status: default
       - label: Relationship
         link:
           discriminant: page
           value: fields/relationship
+        status: default
       - label: Select
         link:
           discriminant: page
           value: fields/select
+        status: default
       - label: Slug
         link:
           discriminant: page
           value: fields/slug
+        status: default
       - label: Text
         link:
           discriminant: page
           value: fields/text
+        status: default
       - label: URL
         link:
           discriminant: page
           value: fields/url
+        status: default
   - groupName: Community
     items:
       - label: GitHub Discussions
         link:
           discriminant: url
           value: https://github.com/Thinkmill/keystatic/discussions
+        status: default
       - label: Discord
         link:
           discriminant: url
           value: /chat
+        status: default
       - label: Twitter
         link:
           discriminant: url
           value: https://twitter.com/thekeystatic
+        status: default

@@ -246,6 +246,9 @@ export function normaliseDocumentFeatures(
   };
 }
 
+/**
+ * @deprecated `fields.markdoc` has superseded this field. `fields.mdx` is also available if you prefer MDX.
+ */
 export function document({
   label,
   componentBlocks = {},
