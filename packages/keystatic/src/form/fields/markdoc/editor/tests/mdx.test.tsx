@@ -765,3 +765,20 @@ b
     "
   `);
 });
+
+test('undefined component', () => {
+  expect(() => {
+    fromMDX('<ComponentThatDoesNotExist />');
+  }).toThrowErrorMatchingInlineSnapshot(
+    `"Missing component definition for ComponentThatDoesNotExist"`
+  );
+});
+
+test('other syntax', () => {
+  expect(() => {
+    fromMDX('export const a = true;');
+  }).toThrowErrorMatchingInlineSnapshot(`
+    "Unhandled type mdxjsEsm: export const a = true;
+    "
+  `);
+});
