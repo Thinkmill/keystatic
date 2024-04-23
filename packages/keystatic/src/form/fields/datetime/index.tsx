@@ -43,7 +43,9 @@ export function datetime<IsRequired extends boolean | undefined>({
       }
       if (defaultValue.kind === 'now') {
         const now = new Date();
-        return now.toISOString();
+        return new Date(now.getTime() - now.getTimezoneOffset() * 60 * 1000)
+          .toISOString()
+          .slice(0, -8);
       }
       return null;
     },

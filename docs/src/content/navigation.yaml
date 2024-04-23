@@ -67,7 +67,12 @@ navGroups:
           value: content-components
   - groupName: Recipes
     items:
-      - label: "Real-Time Previews With Next.js' Draft Mode"
+      - label: "Use Astro's Image component"
+        link:
+          discriminant: page
+          value: recipes/astro-images
+        status: new
+      - label: 'Next.js: Real-Time Previews With Draft Mode'
         link:
           discriminant: page
           value: recipes/real-time-previews
