@@ -78,7 +78,6 @@ export function MultiRelationshipInput(
       >
         {item => <Item key={item.slug}>{item.slug}</Item>}
       </Combobox>
-      {/* {elements.length ? ( */}
       {true ? (
         <MultiRelationshipListView
           autoFocus={props.autoFocus}
@@ -179,18 +178,7 @@ function MultiRelationshipListView(
           const label = item.key;
           return (
             <Item key={item.key} textValue={label}>
-              <Text>{label}</Text>
-              {/* <TooltipTrigger placement="start">
-              <ActionButton
-                onPress={() => {
-                  onRemoveKey(item.key);
-                }}
-                // UNSAFE_style={{ marginBlock: `calc(${tokenSchema.size.space.regular} * -1)` }}
-              >
-                <Icon src={trash2Icon} />
-              </ActionButton>
-              <Tooltip>{stringFormatter.format('delete')}</Tooltip>
-            </TooltipTrigger> */}
+              {label}
             </Item>
           );
         }}
@@ -231,15 +219,6 @@ function arrayFieldEmptyState() {
       height="100%"
       padding="regular"
     >
-      {/* <Text
-        elementType="h3"
-        align="center"
-        color="neutralSecondary"
-        size="large"
-        weight="medium"
-      >
-        Empty list
-      </Text> */}
       <Text align="center" color="neutralTertiary">
         No items selected…
       </Text>
