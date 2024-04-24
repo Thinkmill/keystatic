@@ -1,5 +1,36 @@
 # @keystatic/core
 
+## 0.5.12
+
+### Patch Changes
+
+- a2d56566: Introduce new `multiRelationship` field type.
+- 603d85be: Fix for a Firefox bug where the text cursor is hidden when beside a
+  `contenteditable=false` element.
+- d37a5422: Improve error messages when unknown components or unsupported syntax
+  is used in `fields.markdoc` and `fields.mdx`
+- 2c818862: UX and A11Y improvements for `fields.array()` and `fields.blocks()`
+  interfaces:
+
+  - Include the "required" indicator when min length validation provided by
+    consumer.
+  - Connect the validation message to the group accessibly.
+
+- 5f11dcd2: Fix `fields.datetime({ defaultValue: { kind: 'now' } })`
+- d860d675: Fix loading spinner replacing the page for a short amount of time
+  when saving an entry
+- 319c0dba: Minor cosmetic improvements to `fields.cloudImage()`, mainly clearer
+  delineation of related fields.
+- ce1696f6: Add presence in multiplayer
+- a703043c: Deprecate `fields.document`
+- d20e1ad6: Memo'd breadcrumbs to avoid unexpected behaviour where items
+  collapse into a menu prematurely.
+- e819d5f2: Use links in header breadcrumbs.
+- Updated dependencies [282ab553]
+- Updated dependencies [bd923de5]
+- Updated dependencies [e819d5f2]
+  - @keystar/ui@0.7.2
+
 ## 0.5.11
 
 ### Patch Changes
