@@ -1,27 +1,18 @@
-import { NextRequest } from 'next/server';
 import { ImageResponse } from 'next/og';
+import fs from 'node:fs';
 
-export const runtime = 'edge';
+const fontData = fs.readFileSync(
+  './node_modules/@fontsource/inter/files/inter-latin-500-normal.woff'
+);
 
-export async function GET(req: NextRequest) {
-  const { searchParams } = req.nextUrl;
-  const postTitle = searchParams.get('title') || '';
-  const fontData = await fetch(
-    new URL(
-      '../../../node_modules/@fontsource/inter/files/inter-latin-500-normal.woff',
-      import.meta.url
-    )
-  ).then(res => res.arrayBuffer());
-
-  const titleLength = postTitle.length;
-
+export async function renderOgImage(title: string) {
   let titleSize = '112px';
-  if (titleLength > 14) titleSize = '96px';
-  if (titleLength > 32) titleSize = '80px';
+  if (title.length > 14) titleSize = '96px';
+  if (title.length > 32) titleSize = '80px';
 
   let titleMargin = '104px';
-  if (titleLength > 14) titleMargin = '48px';
-  if (titleLength > 40) titleMargin = '0';
+  if (title.length > 14) titleMargin = '48px';
+  if (title.length > 40) titleMargin = '0';
 
   return new ImageResponse(
     (
@@ -59,7 +50,7 @@ export async function GET(req: NextRequest) {
               whiteSpace: 'pre-wrap',
             }}
           >
-            {postTitle}
+            {title}
           </div>
           <svg
             xmlns="http://www.w3.org/2000/svg"

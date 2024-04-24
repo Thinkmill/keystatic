@@ -107,7 +107,6 @@ export async function generateMetadata(
   const parentDescription = (await parent).description ?? '';
   const description = page?.summary ?? parentDescription;
 
-  const image = `/og?title=${title}`;
   const parentTwitterSite = (await parent).twitter?.site ?? '';
 
   return {
@@ -118,11 +117,7 @@ export async function generateMetadata(
       description,
       url: `https://keystatic.com/blog/${slug}`,
       type: 'article',
-      images: [
-        {
-          url: image,
-        },
-      ],
+      images: [{ url: `/og/blog/${slug}` }],
     },
     twitter: {
       card: 'summary_large_image',

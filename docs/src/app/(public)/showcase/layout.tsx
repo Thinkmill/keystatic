@@ -14,7 +14,7 @@ export const metadata = {
       'A collection of projects using Keystatic to manage parts of their codebase.',
     images: [
       {
-        url: '/og?title=Showcase',
+        url: '/og/other/showcase',
       },
     ],
     siteName: 'Keystatic',

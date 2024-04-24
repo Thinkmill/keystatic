@@ -13,7 +13,7 @@ export const metadata = {
     description: 'Thank you for being curious!',
     images: [
       {
-        url: '/og?title=Privacy+policy',
+        url: '/og/other/privacy-policy',
       },
     ],
     siteName: 'Keystatic',
