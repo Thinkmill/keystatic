@@ -24,6 +24,8 @@ function stringifyDocContent(node: RenderableTreeNode): string {
   return node.children.map(stringifyDocContent).join('');
 }
 
+export const dynamicParams = false;
+
 export default async function Docs({ params }: DocsProps) {
   const { slug: slugPath } = params;
 
@@ -106,7 +108,6 @@ export async function generateMetadata(
   const fallbackDescription = 'Documentation page for Keystatic.';
   const description = page?.summary ? page.summary : fallbackDescription;
 
-  const image = `/og?title=${title}`;
   const parentTwitterSite = (await parent).twitter?.site ?? '';
 
   return {
@@ -117,7 +118,7 @@ export async function generateMetadata(
       description,
       url: `https://keystatic.com/docs/${slug}`,
       type: 'website',
-      images: [{ url: image }],
+      images: [{ url: `/og/docs/${slug}` }],
     },
     twitter: {
       card: 'summary_large_image',

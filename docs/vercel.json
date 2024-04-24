@@ -1,3 +1,4 @@
 {
-  "installCommand": "cd .. && corepack pnpm install"
+  "installCommand": "cd .. && corepack pnpm install",
+  "buildCommand": "mv src/app/api/keystatic/[...params]/route.ts src/app/api/keystatic/[...params]/_route.ts && pnpm build && mv src/app/api/keystatic/[...params]/_route.ts src/app/api/keystatic/[...params]/route.ts"
 }

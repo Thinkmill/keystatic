@@ -15,7 +15,7 @@ export const metadata = {
       'Keystatic is software developed and maintained by Thinkmill Labs Pty Ltd (“Thinkmill”).',
     images: [
       {
-        url: '/og?title=Privacy+policy',
+        url: '/og/other/privacy-policy',
       },
     ],
     siteName: 'Keystatic',

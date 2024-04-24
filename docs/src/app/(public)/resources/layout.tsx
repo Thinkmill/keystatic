@@ -14,7 +14,7 @@ export const metadata = {
       'A collection of videos, talks, articles and other resources to help you learn Keystatic and dig deeper.',
     images: [
       {
-        url: '/og?title=Resources',
+        url: '/og/other/resources',
       },
     ],
     siteName: 'Keystatic',

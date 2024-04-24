@@ -10,11 +10,7 @@ export const metadata = {
   openGraph: {
     title: 'Blog',
     description: 'Latest news and updates from the Keystatic team.',
-    images: [
-      {
-        url: '/og?title=Blog',
-      },
-    ],
+    images: [{ url: '/og/other/blog' }],
     siteName: 'Keystatic',
     type: 'website',
     url: 'https://keystatic.com/blog',
