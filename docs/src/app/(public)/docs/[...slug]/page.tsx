@@ -24,6 +24,8 @@ function stringifyDocContent(node: RenderableTreeNode): string {
   return node.children.map(stringifyDocContent).join('');
 }
 
+export const dynamicParams = false;
+
 export default async function Docs({ params }: DocsProps) {
   const { slug: slugPath } = params;
 

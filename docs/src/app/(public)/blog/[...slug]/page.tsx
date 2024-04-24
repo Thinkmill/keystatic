@@ -12,6 +12,8 @@ type BlogProps = {
   params: { slug: string[] };
 };
 
+export const dynamicParams = false;
+
 export default async function BlogPost({ params }: BlogProps) {
   const { slug: slugPath } = params;
   const slug = slugPath.join('/');

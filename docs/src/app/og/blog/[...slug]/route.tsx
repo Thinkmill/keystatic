@@ -6,6 +6,8 @@ export async function generateStaticParams() {
   return slugs.map(slug => ({ slug: slug.split('/') }));
 }
 
+export const dynamicParams = false;
+
 export async function GET(_: Request, props: { params: { slug: string[] } }) {
   const post = await reader().collections.blog.readOrThrow(
     props.params.slug.join('/')
