@@ -1,5 +1,15 @@
 # @keystar/ui
 
+## 0.7.2
+
+### Patch Changes
+
+- 282ab553: New "@keystar/ui/action-bar" package exports `ActionBar` and
+  `ActionBarContainer` components.
+- bd923de5: Refactor breakpoint matching: state initialisation used to assume
+  SSR—now CSR is optimised, conditionally.
+- e819d5f2: Support links in breadcrumbs.
+
 ## 0.7.1
 
 ### Patch Changes

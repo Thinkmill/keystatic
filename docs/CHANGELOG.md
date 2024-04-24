@@ -1,5 +1,28 @@
 # keystatic-docs
 
+## 1.0.30
+
+### Patch Changes
+
+- a2d56566: Introduce new `multiRelationship` field type.
+- Updated dependencies [282ab553]
+- Updated dependencies [a2d56566]
+- Updated dependencies [603d85be]
+- Updated dependencies [bd923de5]
+- Updated dependencies [e819d5f2]
+- Updated dependencies [d37a5422]
+- Updated dependencies [2c818862]
+- Updated dependencies [5f11dcd2]
+- Updated dependencies [d860d675]
+- Updated dependencies [319c0dba]
+- Updated dependencies [ce1696f6]
+- Updated dependencies [a703043c]
+- Updated dependencies [d20e1ad6]
+- Updated dependencies [e819d5f2]
+  - @keystar/ui@0.7.2
+  - @keystatic/core@0.5.12
+  - @keystatic/next@5.0.0
+
 ## 1.0.29
 
 ### Patch Changes
