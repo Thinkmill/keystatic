@@ -19,7 +19,7 @@ export type NavProps = {
       href: string;
       title: string | undefined;
       comingSoon?: boolean;
-      status?: BadgeStatus;
+      status?: BadgeStatus | 'deprecated';
     }[];
   }[];
 };

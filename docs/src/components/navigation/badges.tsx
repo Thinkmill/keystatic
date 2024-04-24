@@ -29,3 +29,6 @@ export const NewBadge = () => <Badge variant="new" label="New" />;
 export const ComingSoonBadge = () => (
   <Badge variant="experimental" label="Soon" />
 );
+export const DeprecatedBadge = () => (
+  <Badge variant="experimental" label="Deprecated" />
+);

@@ -540,6 +540,7 @@ export default config({
                     { label: 'Default', value: 'default' },
                     { label: 'New', value: 'new' },
                     { label: 'Experimental', value: 'experimental' },
+                    { label: 'Deprecated', value: 'deprecated' },
                   ],
                   defaultValue: 'default',
                 }),
