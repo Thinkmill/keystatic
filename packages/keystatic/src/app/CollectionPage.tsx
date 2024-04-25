@@ -77,7 +77,25 @@ export function CollectionPage(props: CollectionPageProps) {
   const containerWidth = 'none'; // TODO: use a "large" when we have more columns
   const collectionConfig = config.collections?.[collection];
   if (!collectionConfig) notFound();
-  const [searchTerm, setSearchTerm] = useState('');
+
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState(
+    new URLSearchParams(router.search).get('search') ?? ''
+  );
+
+  const setSearchTermFromForm = useCallback(
+    (value: string) => {
+      setSearchTerm(value);
+      const params = new URLSearchParams(router.search);
+      if (value) {
+        params.set('search', value);
+      } else {
+        params.delete('search');
+      }
+      router.replace(router.pathname + '?' + params.toString());
+    },
+    [router]
+  );
 
   let debouncedSearchTerm = useDebouncedValue(searchTerm, 300);
 
@@ -89,7 +107,7 @@ export function CollectionPage(props: CollectionPageProps) {
           props.collection
         )}/create`}
         searchTerm={searchTerm}
-        onSearchTermChange={setSearchTerm}
+        onSearchTermChange={setSearchTermFromForm}
       />
       <CollectionPageContent searchTerm={debouncedSearchTerm} {...props} />
     </PageRoot>

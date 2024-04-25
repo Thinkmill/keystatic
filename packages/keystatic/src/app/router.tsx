@@ -13,6 +13,8 @@ export type Router = {
   replace: (path: string) => void;
   href: string;
   params: string[];
+  pathname: string;
+  search: string;
 };
 
 const RouterContext = createContext<Router | null>(null);
@@ -41,6 +43,8 @@ export function RouterProvider(props: { children: ReactNode }) {
     const parsedUrl = new URL(url);
     return {
       href: parsedUrl.pathname + parsedUrl.search,
+      pathname: parsedUrl.pathname,
+      search: parsedUrl.search,
       replace(path) {
         navigate(path, true);
       },
