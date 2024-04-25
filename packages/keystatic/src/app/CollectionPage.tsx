@@ -295,10 +295,26 @@ function CollectionTable(
   let { currentBranch, defaultBranch } = useBranchInfo();
   let isLocalMode = isLocalConfig(props.config);
   let router = useRouter();
+  let searchParams = new URLSearchParams(router.search);
   let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: SLUG,
-    direction: 'ascending',
+    column: searchParams.get('sort') ?? SLUG,
+    direction:
+      searchParams.get('sortDir') === 'descending' ? 'descending' : 'ascending',
   });
+  let setSortDescriptorFromForm = useCallback(
+    function ({ column, direction }: SortDescriptor) {
+      setSortDescriptor({ column, direction });
+      let params = new URLSearchParams(router.search);
+      params.set('sort', (column ?? SLUG).toString());
+      if (direction === 'descending') {
+        params.set('sortDir', 'descending');
+      } else {
+        params.delete('sortDir');
+      }
+      router.replace(router.pathname + '?' + params.toString());
+    },
+    [router]
+  );
   let hideStatusColumn = isLocalMode || currentBranch === defaultBranch;
 
   const branchInfo = useBranchInfo();
@@ -490,7 +506,7 @@ function CollectionTable(
     <TableView
       aria-labelledby="page-title"
       selectionMode="none"
-      onSortChange={setSortDescriptor}
+      onSortChange={setSortDescriptorFromForm}
       sortDescriptor={sortDescriptor}
       density="spacious"
       overflowMode="truncate"
