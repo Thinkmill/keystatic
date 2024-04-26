@@ -24,7 +24,7 @@ export function FileFieldInput(
   const { value } = props;
   const [blurred, onBlur] = useReducer(() => true, false);
   const isInEditor = useIsInDocumentEditor();
-  const objectUrl = useObjectURL(value === null ? null : value.data);
+  const objectUrl = useObjectURL(value === null ? null : value.data, undefined);
   const labelId = useId();
   const descriptionId = useId();
   return (
