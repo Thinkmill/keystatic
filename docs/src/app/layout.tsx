@@ -53,6 +53,11 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <NavigationEvents />
         </Suspense>
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token": "da2712daef38442fb8d02fb6be8f0ab2"}'
+        />
       </body>
       <Analytics />
     </html>
