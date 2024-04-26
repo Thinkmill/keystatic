@@ -11,7 +11,7 @@ type CloudImageProps = {
   caption?: string;
 };
 
-export default function CloudImage({
+export function CloudImage({
   src,
   alt,
   sizes,

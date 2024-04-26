@@ -11,10 +11,28 @@ import {
   GitHubAppShellProvider,
   AppShellErrorContext,
   LocalAppShellProvider,
+  useBranchInfo,
 } from './data';
 import { SidebarProvider } from './sidebar';
 import { MainPanelLayout } from './panels';
 import { EmptyState } from './empty-state';
+
+function BranchNotFound(props: { children: ReactNode }) {
+  const branchInfo = useBranchInfo();
+  if (
+    branchInfo.hasLoadedAllBranches &&
+    !branchInfo.allBranches.includes(branchInfo.currentBranch)
+  ) {
+    return (
+      <EmptyState
+        icon={alertCircleIcon}
+        title="Branch not found"
+        message={`The branch ${branchInfo.currentBranch} does not exist in this repository.`}
+      />
+    );
+  }
+  return props.children;
+}
 
 export const AppShell = (props: {
   config: Config;
@@ -45,7 +63,9 @@ export const AppShell = (props: {
     <ConfigContext.Provider value={props.config}>
       <AppStateContext.Provider value={{ basePath: props.basePath }}>
         <SidebarProvider>
-          <MainPanelLayout>{content}</MainPanelLayout>
+          <MainPanelLayout>
+            <BranchNotFound>{content}</BranchNotFound>
+          </MainPanelLayout>
         </SidebarProvider>
       </AppStateContext.Provider>
     </ConfigContext.Provider>

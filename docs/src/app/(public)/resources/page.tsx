@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -7,6 +6,7 @@ import { reader } from '../../../utils/reader';
 import Button from '../../../components/button';
 import { Entry } from '@keystatic/core/reader';
 import keystaticConfig from '../../../../keystatic.config';
+import { CloudImage } from '../../../components/cloud-image';
 
 type ResourceEntry = Entry<
   (typeof keystaticConfig)['collections']['resources']
@@ -212,8 +212,7 @@ function Video({
         href={videoUrl}
         className="group relative block aspect-video w-full"
       >
-        <Image
-          fill
+        <CloudImage
           src={thumbnail.src}
           alt={thumbnail.alt || ''}
           className="h-full-w-full absolute inset-0 rounded-lg shadow-md transition-shadow group-hover:shadow-sm"

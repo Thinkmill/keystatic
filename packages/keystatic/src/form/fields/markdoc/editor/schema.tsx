@@ -343,7 +343,11 @@ const nodeSpecs = {
       },
     },
     nodeView(node) {
-      const blob = new Blob([node.attrs.src]);
+      const blob = new Blob([node.attrs.src], {
+        type: node.attrs.filename.endsWith('.svg')
+          ? 'image/svg+xml'
+          : undefined,
+      });
       const dom = document.createElement('img');
       dom.src = URL.createObjectURL(blob);
       dom.alt = node.attrs.alt;
@@ -373,9 +377,11 @@ const nodeSpecs = {
       return [
         'img',
         {
-          src: `data:application/octet-stream;base64,${fromUint8Array(
-            node.attrs.src
-          )}`,
+          src: `data:${
+            node.attrs.filename.endsWith('.svg')
+              ? 'image/svg+xml'
+              : 'application/octet-stream'
+          };base64,${fromUint8Array(node.attrs.src)}`,
           alt: node.attrs.alt,
           title: node.attrs.title,
           'data-filename': node.attrs.filename,

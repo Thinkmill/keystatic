@@ -1,6 +1,6 @@
 {
   "name": "keystatic-docs",
-  "version": "1.0.30",
+  "version": "1.0.31",
   "description": "",
   "private": true,
   "scripts": {
@@ -13,6 +13,7 @@
   "keywords": [],
   "author": "",
   "dependencies": {
+    "@cloudflare/next-on-pages": "^1.11.0",
     "@fontsource/inter": "^5.0.5",
     "@headlessui/react": "^1.7.11",
     "@heroicons/react": "^2.0.16",
@@ -35,7 +36,8 @@
     "react-dom": "^18.2.0",
     "react-focus-lock": "^2.9.4",
     "shiki": "^0.14.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vercel": "^33.6.3"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",

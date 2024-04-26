@@ -406,17 +406,9 @@ export function GitHubAppShellProvider(props: {
       ),
       mainOwner: data?.repository?.owner.login ?? '',
       mainRepo: data?.repository?.name ?? '',
+      hasLoadedAllBranches: repo?.refs?.pageInfo.hasNextPage === false,
     }),
-    [
-      repo?.defaultBranchRef?.name,
-      repo?.id,
-      repo?.refs?.nodes,
-      props.currentBranch,
-      baseCommit,
-      pullRequestNumber,
-      data?.repository?.owner.login,
-      data?.repository?.name,
-    ]
+    [data?.repository, repo, props.currentBranch, baseCommit, pullRequestNumber]
   );
   return (
     <RepoWithWriteAccessContext.Provider
@@ -715,6 +707,7 @@ export const BranchInfoContext = createContext<{
   branchNameToBaseCommit: Map<string, string>;
   mainOwner: string;
   mainRepo: string;
+  hasLoadedAllBranches: boolean;
 }>({
   currentBranch: '',
   allBranches: [],
@@ -724,6 +717,7 @@ export const BranchInfoContext = createContext<{
   branchNameToBaseCommit: new Map(),
   mainOwner: '',
   mainRepo: '',
+  hasLoadedAllBranches: false,
 });
 export function useBranchInfo() {
   return useContext(BranchInfoContext);

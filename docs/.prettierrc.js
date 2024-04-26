@@ -1,4 +1,4 @@
-const defaultPrettierConfig = require('../.prettierrc.js');
+const defaultPrettierConfig = require('../.prettierrc.json');
 
 module.exports = {
   ...defaultPrettierConfig,

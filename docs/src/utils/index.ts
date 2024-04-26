@@ -8,7 +8,7 @@ export function cx(...classes: string[]) {
 export function getDefaultSrcSet({ src }: { src: string }) {
   const imgWidths = DEFAULT_IMG_WIDTHS;
 
-  return imgWidths.map(width => `${src}?width=${width} ${width}w`).join(', ');
+  return imgWidths.map(width => `${src}?w=${width} ${width}w`).join(', ');
 }
 
 export async function copyTextToClipboard(text: string) {

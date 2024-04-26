@@ -1,5 +1,13 @@
 # @example/next-pages
 
+## 0.0.105
+
+### Patch Changes
+
+- Updated dependencies [[`b509e87`](https://github.com/Thinkmill/keystatic/commit/b509e8794b8e4676feb6e1f0982ddb80cc5376df), [`31286c0`](https://github.com/Thinkmill/keystatic/commit/31286c0e3ff0bd591853fdab70f7f797dad316f5)]:
+  - @keystatic/core@0.5.13
+  - @keystatic/next@5.0.0
+
 ## 0.0.104
 
 ### Patch Changes
