@@ -1,7 +1,7 @@
 import shiki from 'shiki';
 import Heading from './heading';
 import { CONTENT_MAX_WIDTH_DESKTOP } from '../constants';
-import CloudImage from './cloud-image';
+import { CloudImage } from './cloud-image';
 import { TextFieldDemo } from './fields/text';
 import { URLFieldDemo } from './fields/url';
 import { SelectFieldDemo } from './fields/select';
