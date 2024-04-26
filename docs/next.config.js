@@ -5,9 +5,6 @@ module.exports = {
   experimental: {
     externalDir: true,
   },
-  images: {
-    remotePatterns: [{ hostname: 'thinkmill-labs.keystatic.net' }],
-  },
   async rewrites() {
     return [{ source: '/keystatic/:path*', destination: '/keystatic' }];
   },

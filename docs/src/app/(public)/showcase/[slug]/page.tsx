@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Metadata, ResolvingMetadata } from 'next';
 
@@ -8,6 +7,7 @@ import ActionButton from '../../../../components/action-button';
 import { GlobeIcon } from '../../../../components/icons/globe';
 import { GitHubOutlineIcon } from '../../../../components/icons/github-outline-icon';
 import { MarkdocRenderer } from '../../../../components/markdoc-renderer';
+import { CloudImage } from '../../../../components/cloud-image';
 
 export default async function Docs({ params }: { params: { slug: string } }) {
   const { slug } = params;
@@ -84,9 +84,8 @@ export default async function Docs({ params }: { params: { slug: string } }) {
               <div className="h-3 w-3 rounded-full bg-[#FFB224]" />
               <div className="h-3 w-3 rounded-full bg-[#30A46C]" />
             </div>
-            <Image
+            <CloudImage
               src={project.coverImage.src}
-              layout="fill"
               alt=""
               className="absolute inset-0 origin-bottom object-cover"
             />

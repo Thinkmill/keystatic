@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { EntryWithResolvedLinkedFiles } from '@keystatic/core/reader';
@@ -8,6 +7,7 @@ import keystaticConfig from '../../../../keystatic.config';
 import ActionButton from '../../../components/action-button';
 import { GlobeIcon } from '../../../components/icons/globe';
 import { GitHubOutlineIcon } from '../../../components/icons/github-outline-icon';
+import { CloudImage } from '../../../components/cloud-image';
 
 type Project = {
   slug: string;
@@ -105,9 +105,8 @@ function ProjectCard({ entry, slug }: Project) {
         <div className="absolute -right-8 -top-5 hidden h-full w-full rounded-xl border border-sand-6 bg-white @sm:block" />
         <div className="absolute -right-4 -top-2.5 hidden h-full w-full rounded-xl border border-sand-6 bg-white @sm:block" />
 
-        <Image
+        <CloudImage
           src={entry.coverImage.src}
-          layout="fill"
           alt=""
           className="absolute inset-0 w-full rounded-tl-xl object-cover @sm:border-l @sm:border-t @sm:border-sand-6"
         />
@@ -123,7 +122,7 @@ function DemoBadge() {
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
-        stroke-width="1.5"
+        strokeWidth="1.5"
         stroke="currentColor"
         className="h-4 w-4"
       >
