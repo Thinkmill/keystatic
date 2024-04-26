@@ -268,13 +268,14 @@ function useIsCurrent() {
   return useCallback(
     (href: string, { exact = false } = {}) => {
       if (exact) {
-        return href === router.href ? 'page' : undefined;
+        return href === router.pathname ? 'page' : undefined;
       }
-      return href === router.href || router.href.startsWith(`${href}/`)
+      return href === router.pathname ||
+        router.pathname.startsWith(`${router.pathname}/`)
         ? 'page'
         : undefined;
     },
-    [router.href]
+    [router.pathname]
   );
 }
 
