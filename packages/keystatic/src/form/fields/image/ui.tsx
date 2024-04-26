@@ -45,17 +45,20 @@ export function getUploadedImage(): Promise<
   return getUploadedFile('image/*');
 }
 
-export function useObjectURL(data: Uint8Array | null) {
+export function useObjectURL(
+  data: Uint8Array | null,
+  contentType: string | undefined
+) {
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
     if (data) {
-      const url = URL.createObjectURL(new Blob([data]));
+      const url = URL.createObjectURL(new Blob([data], { type: contentType }));
       setUrl(url);
       return () => URL.revokeObjectURL(url);
     } else {
       setUrl(null);
     }
-  }, [data]);
+  }, [contentType, data]);
   return url;
 }
 
@@ -74,7 +77,10 @@ export function ImageFieldInput(
   const { value } = props;
   const [blurred, onBlur] = useReducer(() => true, false);
   const isInEditor = useIsInDocumentEditor();
-  const objectUrl = useObjectURL(value === null ? null : value.data);
+  const objectUrl = useObjectURL(
+    value === null ? null : value.data,
+    value?.extension === 'svg' ? 'image/svg+xml' : undefined
+  );
   const labelId = useId();
   const descriptionId = useId();
   return (

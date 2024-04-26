@@ -54,7 +54,10 @@ export const ImageElement = ({
     editor,
     __elementForGettingPath
   );
-  const objectUrl = useObjectURL(currentElement.src.content)!;
+  const objectUrl = useObjectURL(
+    currentElement.src.content,
+    currentElement.src.filename.endsWith('.svg') ? 'image/svg+xml' : undefined
+  )!;
   const activePopoverElement = useActiveBlockPopover();
   const selected = activePopoverElement === __elementForGettingPath;
 
