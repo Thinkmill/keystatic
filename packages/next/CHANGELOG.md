@@ -39,8 +39,7 @@
 
 ### Major Changes
 
-- b768f147: Update router integration between `@keystatic/core` and framework
-  integration packages to improve performance
+- b768f147: Update router integration between `@keystatic/core` and framework integration packages to improve performance
 
 ### Patch Changes
 
@@ -63,8 +62,7 @@
 
 ### Patch Changes
 
-- a5e259b4: Remove unnecessary usage of internal `forceOptimisticNavigation`
-  Next.js option
+- a5e259b4: Remove unnecessary usage of internal `forceOptimisticNavigation` Next.js option
 - Updated dependencies [bcb3b8ec]
 - Updated dependencies [43f0b61f]
   - @keystatic/core@0.1.4
@@ -102,8 +100,7 @@
 
 ### Patch Changes
 
-- 098a199a: Fix inferring the wrong protocol when creating a full url that a
-  user likely requested from
+- 098a199a: Fix inferring the wrong protocol when creating a full url that a user likely requested from
 
 ## 0.0.8
 
@@ -145,16 +142,14 @@
 
 ### Patch Changes
 
-- 1ae5685: Fix the "Install GitHub App" link not working when using
-  `@keystatic/next/ui/pages`
+- 1ae5685: Fix the "Install GitHub App" link not working when using `@keystatic/next/ui/pages`
   - @keystatic/core@0.0.46
 
 ## 0.0.3
 
 ### Patch Changes
 
-- a569bdb: Avoid mentioning `NEXT_PUBLIC` environment variables when not using
-  Next
+- a569bdb: Avoid mentioning `NEXT_PUBLIC` environment variables when not using Next
 - Updated dependencies [a569bdb]
   - @keystatic/core@0.0.42
 

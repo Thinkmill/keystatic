@@ -10,8 +10,7 @@
 
 ### Patch Changes
 
-- 1caddb4b: Updated port number mentioned when using CLI to create a new
-  Keystatic project.
+- 1caddb4b: Updated port number mentioned when using CLI to create a new Keystatic project.
 
 ## 0.0.2
 

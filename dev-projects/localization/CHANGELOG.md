@@ -189,8 +189,7 @@
 
 ### Patch Changes
 
-- bbbca74f: Add `locale` config option, now defaults to `en-US` instead of
-  auto-detecting the Browser's locale.
+- bbbca74f: Add `locale` config option, now defaults to `en-US` instead of auto-detecting the Browser's locale.
 - Updated dependencies [bbbca74f]
 - Updated dependencies [944dbe67]
 - Updated dependencies [91857b9b]

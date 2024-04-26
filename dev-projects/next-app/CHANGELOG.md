@@ -193,8 +193,7 @@
 
 ### Patch Changes
 
-- 7767c69a: Optimise the editor appearance when `entryLayout="content"` for a
-  more focused experience.
+- 7767c69a: Optimise the editor appearance when `entryLayout="content"` for a more focused experience.
 
   Component library:
 
@@ -306,8 +305,7 @@
 
 ### Patch Changes
 
-- bbbca74f: Add `locale` config option, now defaults to `en-US` instead of
-  auto-detecting the Browser's locale.
+- bbbca74f: Add `locale` config option, now defaults to `en-US` instead of auto-detecting the Browser's locale.
 - Updated dependencies [bbbca74f]
 - Updated dependencies [944dbe67]
 - Updated dependencies [8a9fa5f8]

@@ -78,19 +78,16 @@
 
 ### Patch Changes
 
-- 6a60ab3c: Updates the Astro integration to manage the custom `127.0.0.1` host
-  and enables usage with `output: 'server'`
+- 6a60ab3c: Updates the Astro integration to manage the custom `127.0.0.1` host and enables usage with `output: 'server'`
 
-  Keystatic used to require updating your `dev` script. It's now managed by the
-  integration, feel free to simplify it!
+  Keystatic used to require updating your `dev` script. It's now managed by the integration, feel free to simplify it!
 
   ```diff
   - "dev": "astro dev --host 127.0.0.1"
   + "dev": "astro dev"
   ```
 
-  Moreover, Keystatic now lets you go full SSR! The following Astro config is
-  now supported
+  Moreover, Keystatic now lets you go full SSR! The following Astro config is now supported
 
   ```mjs
   // astro.config.mjs
@@ -147,15 +144,13 @@
 
 ### Patch Changes
 
-- b16ef684: Replace manually created pages for Keystatic with Astro integration
-  that injects routes
+- b16ef684: Replace manually created pages for Keystatic with Astro integration that injects routes
 
 ## 0.0.11
 
 ### Patch Changes
 
-- f47feaa7: Add support for Astro assets with image directory and publicPath in
-  Keystatic config
+- f47feaa7: Add support for Astro assets with image directory and publicPath in Keystatic config
 - Updated dependencies [a754d573]
 - Updated dependencies [e684e5ad]
   - @keystatic/astro@1.0.2
