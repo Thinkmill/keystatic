@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.5.13
+
+### Patch Changes
+
+- [#1097](https://github.com/Thinkmill/keystatic/pull/1097) [`2173616`](https://github.com/Thinkmill/keystatic/commit/2173616b81c1a4632d7cca4b3c2cef1d1f987ec0) Thanks [@jplhomer](https://github.com/jplhomer)! - Store collection search input in query param
+
+- [#1099](https://github.com/Thinkmill/keystatic/pull/1099) [`31286c0`](https://github.com/Thinkmill/keystatic/commit/31286c0e3ff0bd591853fdab70f7f797dad316f5) Thanks [@emmatown](https://github.com/emmatown)! - Fix previewing SVGs in `fields.image` and the editors
+
 ## 0.5.12
 
 ### Patch Changes
