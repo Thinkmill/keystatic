@@ -998,9 +998,6 @@ importers:
       '@types/react':
         specifier: ^18.2.8
         version: 18.2.21
-      '@vercel/analytics':
-        specifier: ^0.1.8
-        version: 0.1.11(react@18.2.0)
       cookie:
         specifier: ^0.5.0
         version: 0.5.0
@@ -11325,14 +11322,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
-
-  /@vercel/analytics@0.1.11(react@18.2.0):
-    resolution: {integrity: sha512-mj5CPR02y0BRs1tN3oZcBNAX9a8NxsIUl9vElDPcqxnMfP0RbRc9fI9Ud7+QDg/1Izvt5uMumsr+6YsmVHcyuw==}
-    peerDependencies:
-      react: ^16.8||^17||^18
-    dependencies:
-      react: 18.2.0
-    dev: false
 
   /@vercel/build-utils@7.11.0:
     resolution: {integrity: sha512-UFrx1hNIjNJJkd0NZrYfaOrmcWhQmrVsbKe9o3L9jX9J1iufG685wIZ9tFCKKC0Fa2HWbNDNzNxrE5SCAS2lyA==}

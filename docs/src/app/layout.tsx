@@ -1,4 +1,3 @@
-import { Analytics } from '@vercel/analytics/react';
 import { Inter } from 'next/font/google';
 import { Suspense } from 'react';
 import { NavigationEvents } from '../components/navigation-events';
@@ -59,7 +58,6 @@ export default function RootLayout({
           data-cf-beacon='{"token": "da2712daef38442fb8d02fb6be8f0ab2"}'
         />
       </body>
-      <Analytics />
     </html>
   );
 }
