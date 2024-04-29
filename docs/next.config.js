@@ -11,6 +11,24 @@ module.exports = {
   async redirects() {
     return [
       {
+        source: '/:path*',
+        destination: 'https://keystatic.com/:path*',
+        permanent: false,
+        has: [{ type: 'host', value: 'keystatic.thinkmill.com.au' }],
+      },
+      {
+        source: '/:path*',
+        destination: 'https://keystatic.com/:path*',
+        permanent: false,
+        has: [{ type: 'host', value: 'keystatic.thinkmill.com' }],
+      },
+      {
+        source: '/:path*',
+        destination: 'https://keystatic.com/:path*',
+        permanent: false,
+        has: [{ type: 'host', value: 'www.keystatic.com' }],
+      },
+      {
         source: '/docs',
         destination: '/docs/introduction',
         permanent: false,

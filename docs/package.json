@@ -27,7 +27,6 @@
     "@types/cookie": "^0.5.1",
     "@types/node": "16.11.13",
     "@types/react": "^18.2.8",
-    "@vercel/analytics": "^0.1.8",
     "cookie": "^0.5.0",
     "date-fns": "^2.28.0",
     "emery": "^1.4.1",
