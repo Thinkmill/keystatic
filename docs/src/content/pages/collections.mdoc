@@ -37,29 +37,37 @@ export default config({
 
 ### Columns
 
-`columns` — show additional fields in the collection list view. 
+`columns` — show additional fields in the collection list view.
 
-By default, only the `slug` of each entry is displayed in the collection list. 
+By default, only the `slug` of each entry is displayed in the collection list.
 
 You can show additional fields by passing a `columns` option, which is an array of field keys:
 
 ```ts
-columns: ['title', 'publishedOn'] 
+columns: ['title', 'publishedOn']
 ```
 
-### Label 
+### Default Sort
+
+`defaultSort` — set the default field and direction used for sorting in the collection list view. If omitted, the default column used is the `slug` of each entry, and the default direction is `ascending`.
+
+```ts
+defaultSort: { column: 'title', direction: 'descending' }
+```
+
+### Label
 
 `label` — defines the name of the collection. This is used in the Admin UI to label the collection.
 
 ### Entry layout
 
-`entryLayout` — change the layout of the Admin UI for a collection entry. 
+`entryLayout` — change the layout of the Admin UI for a collection entry.
 
 Learn more on the [Entry Layout](/docs/entry-layout) page.
 
 ### Format
 
-`format` — provides options around the data format of your collection entries. 
+`format` — provides options around the data format of your collection entries.
 
 Learn more on the [Format Options](/docs/format-options) page.
 
@@ -75,7 +83,7 @@ By default, Keystatic will store entries at the root of your project, in a direc
 
 You can learn more about the `path` option on the [Content organisation page](/docs/content-organisation).
 
-### Parse slug for sort 
+### Parse slug for sort
 
 `parseSlugForSort` — a function to transform the `slug` of each entry into a value to be used for sorting the collection list view.
 
@@ -83,13 +91,13 @@ You can learn more about the `path` option on the [Content organisation page](/d
 
 `previewURL` — used to configure [Real-time Previews](/docs/recipes/real-time-previews) of your content.
 
-### Schema 
+### Schema
 
 `schema` — defines the fields that each entry in the collection should have.
 
 ### Slug field
 
-`slugField` — defines what field in your collection `schema` should be used as the slug for each item. 
+`slugField` — defines what field in your collection `schema` should be used as the slug for each item.
 
 It's recommended to combine it with the [slug field](/docs/fields/slug) to let users customise and regenerate each slug in the Admin UI.
 
