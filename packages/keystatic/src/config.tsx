@@ -4,6 +4,7 @@ import { ReactElement } from 'react';
 import { ComponentSchema, FormField, SlugFormField } from './form/api';
 import type { Locale } from './app/l10n/locales';
 import { RepoConfig } from './app/repo-config';
+import { SortDescriptor } from '@react-types/shared';
 
 // Common
 // ----------------------------------------------------------------------------
@@ -23,6 +24,7 @@ export type Collection<
   previewUrl?: string;
   columns?: string[];
   template?: string;
+  defaultSort?: SortDescriptor;
   parseSlugForSort?: (slug: string) => string | number;
   slugField: SlugField;
   schema: Schema;
@@ -187,6 +189,9 @@ export function collection<
         ? K & string
         : never;
     }[keyof Schema][];
+    defaultSort?: {
+      column?: keyof Schema;
+    };
   }
 ): Collection<Schema, SlugField & string> {
   return collection;

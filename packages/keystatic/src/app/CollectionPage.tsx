@@ -295,17 +295,18 @@ function CollectionTable(
   let { currentBranch, defaultBranch } = useBranchInfo();
   let isLocalMode = isLocalConfig(props.config);
   let router = useRouter();
+
+  const collection = props.config.collections![props.collection]!;
+
   let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: SLUG,
-    direction: 'ascending',
+    column: collection.defaultSort?.column ?? SLUG,
+    direction: collection.defaultSort?.direction ?? 'ascending',
   });
   let hideStatusColumn = isLocalMode || currentBranch === defaultBranch;
 
   const branchInfo = useBranchInfo();
   const isRepoPrivate = useIsRepoPrivate();
   const baseCommit = useBaseCommit();
-
-  const collection = props.config.collections![props.collection]!;
 
   const entriesWithStatus = useMemo(() => {
     const defaultEntries = new Map(
