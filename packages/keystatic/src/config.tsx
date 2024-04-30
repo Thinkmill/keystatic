@@ -176,21 +176,18 @@ export function collection<
       ? K
       : never;
   }[keyof Schema],
+  Columns extends {
+    [K in keyof Schema]: Schema[K] extends
+      | FormField<any, any, string | number | boolean | Date | null | undefined>
+      | SlugFormField<any, any, any, string>
+      ? K & string
+      : never;
+  }[keyof Schema][],
 >(
   collection: Collection<Schema, SlugField & string> & {
-    columns?: {
-      [K in keyof Schema]: Schema[K] extends
-        | FormField<
-            any,
-            any,
-            string | number | boolean | Date | null | undefined
-          >
-        | SlugFormField<any, any, any, string>
-        ? K & string
-        : never;
-    }[keyof Schema][];
+    columns?: [...Columns];
     defaultSort?: {
-      column?: keyof Schema;
+      column?: Columns[number];
     };
   }
 ): Collection<Schema, SlugField & string> {
