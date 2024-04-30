@@ -7,22 +7,19 @@ import { gitPullRequestIcon } from '@keystar/ui/icon/icons/gitPullRequestIcon';
 import { Flex } from '@keystar/ui/layout';
 import { Text } from '@keystar/ui/typography';
 
-import { Config } from '../..';
 import { CreateBranchDialog } from '../branch-selection';
 import { DashboardSection } from './components';
 import { useRouter } from '../router';
 import { useBranchInfo } from '../shell/data';
 import { useLocalizedString } from '../shell/i18n';
-import { getRepoUrl, isLocalConfig } from '../utils';
+import { getRepoUrl } from '../utils';
+import { useAssociatedPullRequest } from '../shell/sidebar/components';
 
-export function BranchSection(props: { config: Config }) {
+export function BranchSection() {
   let branchInfo = useBranchInfo();
   let router = useRouter();
   let localizedString = useLocalizedString();
-
-  if (isLocalConfig(props.config)) {
-    return null;
-  }
+  let prNumber = useAssociatedPullRequest();
 
   let repoURL = getRepoUrl(branchInfo);
   let isDefaultBranch = branchInfo.currentBranch === branchInfo.defaultBranch;
@@ -65,7 +62,8 @@ export function BranchSection(props: { config: Config }) {
         </DialogTrigger>
 
         {!isDefaultBranch &&
-          (branchInfo.pullRequestNumber === undefined ? (
+          prNumber !== undefined &&
+          (prNumber === false ? (
             <ActionButton
               href={`${repoURL}/pull/new/${branchInfo.currentBranch}`}
               target="_blank"
@@ -74,12 +72,9 @@ export function BranchSection(props: { config: Config }) {
               <Text>{localizedString.format('createPullRequest')}</Text>
             </ActionButton>
           ) : (
-            <ActionButton
-              href={`${repoURL}/pull/${branchInfo.pullRequestNumber}`}
-              target="_blank"
-            >
+            <ActionButton href={`${repoURL}/pull/${prNumber}`} target="_blank">
               <Icon src={gitPullRequestIcon} />
-              <Text>Pull request #{branchInfo.pullRequestNumber}</Text>
+              <Text>Pull request #{prNumber}</Text>
             </ActionButton>
           ))}
       </Flex>

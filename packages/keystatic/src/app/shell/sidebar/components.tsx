@@ -10,7 +10,7 @@ import {
   useMemo,
   useReducer,
 } from 'react';
-import { useMutation } from 'urql';
+import { useMutation, useQuery } from 'urql';
 
 import { Avatar } from '@keystar/ui/avatar';
 import { ActionButton } from '@keystar/ui/button';
@@ -47,8 +47,8 @@ import {
 
 import { useConfig } from '../context';
 import {
-  BranchInfoContext,
   GitHubAppShellDataContext,
+  useBranchInfo,
   useCloudInfo,
   useRawCloudInfo,
 } from '../data';
@@ -287,9 +287,38 @@ const UserDetailsButton = forwardRef(function UserDetailsButton(
 // Git controls
 // -----------------------------------------------------------------------------
 
+export function useAssociatedPullRequest() {
+  const data = useBranchInfo();
+  const currentBranchId = data.branchNameToId.get(data.currentBranch);
+  const [prResult] = useQuery({
+    query: gql`
+      query PullRequestForBranch($refId: ID!) {
+        node(id: $refId) {
+          __typename
+          id
+          ... on Ref {
+            associatedPullRequests(states: [OPEN], first: 1) {
+              nodes {
+                id
+                number
+              }
+            }
+          }
+        }
+      }
+    ` as import('../../../../__generated__/ts-gql/PullRequestForBranch').type,
+    pause: !currentBranchId || data.currentBranch === data.defaultBranch,
+    variables: { refId: currentBranchId! },
+  });
+  return prResult.data?.node && prResult.data.node.__typename === 'Ref'
+    ? prResult.data.node.associatedPullRequests?.nodes?.[0]?.number ?? false
+    : undefined;
+}
+
 export function GitMenu() {
+  const data = useBranchInfo();
+  const prNumber = useAssociatedPullRequest();
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
-  const data = useContext(BranchInfoContext);
   const [newBranchDialogVisible, toggleNewBranchDialog] = useReducer(
     v => !v,
     false
@@ -337,8 +366,8 @@ export function GitMenu() {
       },
     ];
 
-    if (!isDefaultBranch) {
-      if (data.pullRequestNumber === undefined) {
+    if (!isDefaultBranch && prNumber !== undefined) {
+      if (prNumber === false) {
         prSection.push({
           key: 'create-pull-request',
           icon: gitPullRequestIcon,
@@ -347,21 +376,19 @@ export function GitMenu() {
           rel: 'noopener noreferrer',
           label: stringFormatter.format('createPullRequest'),
         });
-      } else {
-        prSection.push({
-          key: 'view-pull-request',
-          icon: gitPullRequestIcon,
-          href: `${repoURL}/pull/${data.pullRequestNumber}`,
-          target: '_blank',
-          rel: 'noopener noreferrer',
-          label: `Pull Request #${data.pullRequestNumber}`,
-        });
-      }
-      if (data.pullRequestNumber === undefined) {
         branchSection.push({
           key: 'delete-branch',
           icon: trash2Icon,
           label: stringFormatter.format('deleteBranch'),
+        });
+      } else {
+        prSection.push({
+          key: 'view-pull-request',
+          icon: gitPullRequestIcon,
+          href: `${repoURL}/pull/${prNumber}`,
+          target: '_blank',
+          rel: 'noopener noreferrer',
+          label: `Pull Request #${prNumber}`,
         });
       }
     }
@@ -403,7 +430,7 @@ export function GitMenu() {
     fork,
     data.currentBranch,
     data.defaultBranch,
-    data.pullRequestNumber,
+    prNumber,
     repoURL,
     stringFormatter,
   ]);

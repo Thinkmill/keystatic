@@ -15,6 +15,7 @@ import { useViewer } from '../shell/viewer-data';
 
 import { BranchSection } from './BranchSection';
 import { DashboardCards } from './DashboardCards';
+import { isLocalConfig } from '../utils';
 
 export function DashboardPage(props: { config: Config; basePath: string }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
@@ -36,7 +37,7 @@ export function DashboardPage(props: { config: Config; basePath: string }) {
         <Flex direction="column" gap="xxlarge">
           {user && <UserInfo user={user} manageAccount={!!cloudInfo} />}
 
-          <BranchSection config={props.config} />
+          {!isLocalConfig(props.config) && <BranchSection />}
           <DashboardCards />
         </Flex>
       </PageBody>
