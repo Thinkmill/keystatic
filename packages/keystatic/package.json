@@ -204,7 +204,7 @@
     "resize-observer-polyfill": "^1.5.1",
     "signal-exit": "^3.0.7",
     "slate-hyperscript": "^0.77.0",
-    "tsx": "^3.8.0",
+    "tsx": "^4.8.2",
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
