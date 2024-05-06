@@ -4,4 +4,7 @@ type:
   value:
     url: https://jmduke.com/posts/microblog/keystatic
     authorName: Justin Duke
+    description: >-
+      Justin Duke wrote a really nice letter (micro blog post) about the
+      experience using Keystatic for the past 6 months ❤️
 sortIndex: 10
