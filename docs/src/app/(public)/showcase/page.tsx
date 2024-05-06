@@ -27,7 +27,8 @@ export default async function Showcase() {
     return (a.entry.sortIndex as number) - (b.entry.sortIndex as number);
   });
 
-  const highlightedProjects = sortedProjects.splice(0, 2);
+  // Move the first 4 projects into the highlighted section
+  const highlightedProjects = sortedProjects.splice(0, 4);
 
   return (
     <div className="mb-20 mt-24 pt-10">
