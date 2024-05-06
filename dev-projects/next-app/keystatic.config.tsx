@@ -6,7 +6,8 @@ import {
   component,
   NotEditable,
 } from '@keystatic/core';
-import { block } from '@keystatic/core/content-components';
+import { block, inline, mark } from '@keystatic/core/content-components';
+import { highlighterIcon } from '@keystar/ui/icon/icons/highlighterIcon';
 import { NoteToolbar, Note } from './note';
 
 const description = 'Some description';
@@ -303,6 +304,36 @@ export default config({
             Something: block({
               label: 'Something',
               schema: {},
+            }),
+            Highlight: mark({
+              label: 'Highlight',
+              icon: highlighterIcon,
+              schema: {
+                variant: fields.select({
+                  label: 'Variant',
+                  options: [
+                    { label: 'Fluro', value: 'fluro' },
+                    { label: 'Minimal', value: 'minimal' },
+                    { label: 'Brutalist', value: 'brutalist' },
+                  ],
+                  defaultValue: 'fluro',
+                }),
+              },
+            }),
+            StatusBadge: inline({
+              label: 'StatusBadge',
+              schema: {
+                status: fields.select({
+                  label: 'Status',
+                  options: [
+                    { label: 'To do', value: 'todo' },
+                    { label: 'In Progress', value: 'in-progress' },
+                    { label: 'Ready for review', value: 'ready-for-review' },
+                    { label: 'Done', value: 'done' },
+                  ],
+                  defaultValue: 'todo',
+                }),
+              },
             }),
           },
         }),

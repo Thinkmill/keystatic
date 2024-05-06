@@ -494,6 +494,7 @@ export function getCustomNodeSpecs(
                       ? 'color.alias.borderSelected'
                       : 'color.alias.borderIdle'
                   }
+                  data-component={name}
                   borderRadius="regular"
                   UNSAFE_className={css({
                     '::after': {
