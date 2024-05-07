@@ -32,4 +32,5 @@ export let SlugFieldInput = empty,
   serializeFromEditorState = empty,
   parseToEditorStateMDX = empty,
   serializeFromEditorStateMDX = empty,
-  createEditorStateFromYJS = empty;
+  createEditorStateFromYJS = empty,
+  prosemirrorToYXmlFragment = empty;

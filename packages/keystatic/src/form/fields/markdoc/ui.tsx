@@ -151,3 +151,5 @@ export function createEditorStateFromYJS(
     awareness
   );
 }
+
+export { prosemirrorToYXmlFragment } from 'y-prosemirror';
