@@ -493,6 +493,36 @@ test('mark', () => {
   `);
 });
 
+test('mark 2', () => {
+  const mdx = `<Highlight variant="warning">something</Highlight>`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text
+          Highlight={
+            {
+              "props": {
+                "extraFiles": [],
+                "value": {
+                  "variant": "warning",
+                },
+              },
+            }
+          }
+        >
+          <cursor />
+          something
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "<Highlight variant="warning">something</Highlight>
+    "
+  `);
+});
+
 test('inline', () => {
   const mdx = `wertgrfdsc<InlineThing something="adkjsakjndnajksdnjk" />asdfasdf`;
   const editor = fromMDX(mdx);

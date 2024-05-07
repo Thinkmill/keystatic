@@ -445,6 +445,10 @@ const CustomMarkPopover: MarkPopoverRenderer = props => {
     () => ({ kind: 'object' as const, fields: componentConfig.schema }),
     [componentConfig.schema]
   );
+  const deserialized = useDeserializedValue(
+    props.mark.attrs.props,
+    componentConfig.schema
+  );
   return (
     <>
       <Flex gap="regular" padding="regular">
@@ -488,7 +492,7 @@ const CustomMarkPopover: MarkPopoverRenderer = props => {
             <Heading>Edit {componentConfig.label}</Heading>
             <FormValue
               schema={componentSchema}
-              value={props.mark.attrs.props}
+              value={deserialized}
               onSave={value => {
                 runCommand((state, dispatch) => {
                   if (dispatch) {
@@ -498,7 +502,9 @@ const CustomMarkPopover: MarkPopoverRenderer = props => {
                         .addMark(
                           props.from,
                           props.to,
-                          props.mark.type.create({ props: value })
+                          props.mark.type.create({
+                            props: toSerialized(value, componentConfig.schema),
+                          })
                         )
                     );
                   }
