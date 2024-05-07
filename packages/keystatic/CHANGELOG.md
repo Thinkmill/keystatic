@@ -1,5 +1,21 @@
 # @keystatic/core
 
+## 0.5.14
+
+### Patch Changes
+
+- [#1111](https://github.com/Thinkmill/keystatic/pull/1111) [`fe63e6a`](https://github.com/Thinkmill/keystatic/commit/fe63e6a77a695d7cafb5aadb12a7eb2e1c914f0b) Thanks [@emmatown](https://github.com/emmatown)! - Lazily fetch associated pull requests for branches instead of fetching them in the main blocking request for data from GitHub's API to improve performance
+
+- [#1102](https://github.com/Thinkmill/keystatic/pull/1102) [`adc0cf6`](https://github.com/Thinkmill/keystatic/commit/adc0cf6282494eb522f6d129a49a7dd9c25c9490) Thanks [@emmatown](https://github.com/emmatown)! - Show message when a branch is selected that doesn't exist in the repository
+
+- [#1127](https://github.com/Thinkmill/keystatic/pull/1127) [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c) Thanks [@emmatown](https://github.com/emmatown)! - Fix props of mark components in `fields.markdoc` and `fields.mdx` not being saved
+
+- [#1128](https://github.com/Thinkmill/keystatic/pull/1128) [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2) Thanks [@emmatown](https://github.com/emmatown)! - Fix `fields.mdx` not supporting multiplayer
+
+- [#1127](https://github.com/Thinkmill/keystatic/pull/1127) [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c) Thanks [@emmatown](https://github.com/emmatown)! - Fix inline components in `fields.markdoc` and `fields.mdx` not showing the component name with the default view
+
+- [#1128](https://github.com/Thinkmill/keystatic/pull/1128) [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2) Thanks [@emmatown](https://github.com/emmatown)! - Optimise the server side bundle size
+
 ## 0.5.13
 
 ### Patch Changes
