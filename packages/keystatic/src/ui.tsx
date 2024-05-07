@@ -1,2 +1,2 @@
-export { Keystatic } from './app/ui';
+export { Keystatic } from '#ui';
 export type { Router } from './app/router';
