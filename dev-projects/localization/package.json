@@ -1,6 +1,6 @@
 {
   "name": "@example/localization",
-  "version": "0.1.100",
+  "version": "0.0.0-test-20240507000825",
   "private": true,
   "scripts": {
     "dev": "next dev",

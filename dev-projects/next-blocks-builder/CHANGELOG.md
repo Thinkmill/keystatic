@@ -1,10 +1,24 @@
 # @example/next-block-builder
 
+## 0.0.0-test-20240507000825
+
+### Patch Changes
+
+- Updated dependencies
+  [[`fe63e6a`](https://github.com/Thinkmill/keystatic/commit/fe63e6a77a695d7cafb5aadb12a7eb2e1c914f0b),
+  [`adc0cf6`](https://github.com/Thinkmill/keystatic/commit/adc0cf6282494eb522f6d129a49a7dd9c25c9490),
+  [`05197ed`](https://github.com/Thinkmill/keystatic/commit/05197edc819f5fba715b0fb0320a649ad41c3052),
+  [`05197ed`](https://github.com/Thinkmill/keystatic/commit/05197edc819f5fba715b0fb0320a649ad41c3052)]:
+  - @keystatic/core@0.0.0-test-20240507000825
+  - @keystatic/next@5.0.0
+
 ## 0.1.13
 
 ### Patch Changes
 
-- Updated dependencies [[`b509e87`](https://github.com/Thinkmill/keystatic/commit/b509e8794b8e4676feb6e1f0982ddb80cc5376df), [`31286c0`](https://github.com/Thinkmill/keystatic/commit/31286c0e3ff0bd591853fdab70f7f797dad316f5)]:
+- Updated dependencies
+  [[`b509e87`](https://github.com/Thinkmill/keystatic/commit/b509e8794b8e4676feb6e1f0982ddb80cc5376df),
+  [`31286c0`](https://github.com/Thinkmill/keystatic/commit/31286c0e3ff0bd591853fdab70f7f797dad316f5)]:
   - @keystatic/core@0.5.13
   - @keystatic/next@5.0.0
 
@@ -113,23 +127,37 @@
 
 ### Patch Changes
 
-- be85e097: Introduce [client-side routing](https://react-spectrum.adobe.com/react-aria/routing.html) concept from react-aria:
+- be85e097: Introduce
+  [client-side routing](https://react-spectrum.adobe.com/react-aria/routing.html)
+  concept from react-aria:
 
-  - Include `RouterProvider` with `KeystarProvider` (renamed from "VoussoirProvider"), conditionally when _new_ `router` prop is provided. This new router behaviour makes `linkComponent` and friends unnecessary; they have been removed.
-  - Re-export `useLink` from [react-aria](https://react-spectrum.adobe.com/react-aria/useLink.html), which manages router behaviour on click (among other things), for use outside of the component library. Internally we reference "@react-aria/link" directly.
+  - Include `RouterProvider` with `KeystarProvider` (renamed from
+    "VoussoirProvider"), conditionally when _new_ `router` prop is provided.
+    This new router behaviour makes `linkComponent` and friends unnecessary;
+    they have been removed.
+  - Re-export `useLink` from
+    [react-aria](https://react-spectrum.adobe.com/react-aria/useLink.html),
+    which manages router behaviour on click (among other things), for use
+    outside of the component library. Internally we reference "@react-aria/link"
+    directly.
   - Replace instances of link component references with appropriate alternative.
   - Support link props e.g. "href", "target" etc. on `Menu` items.
-  - Consolidate cursor behaviour: `ActionButton`, `Button`, and (Menu) `Item` will now use "pointer" for anchors.
+  - Consolidate cursor behaviour: `ActionButton`, `Button`, and (Menu) `Item`
+    will now use "pointer" for anchors.
 
   Supporting/related changes:
 
-  - Update react-aria dependencies to latest: "@react-aria/\*", "@react-stately/\*", "@react-types/\*", "@internationalized/\*".
-  - Remove linking behaviour from storybook. Might revisit later, but for now it added unnecessary complexity.
+  - Update react-aria dependencies to latest: "@react-aria/\*",
+    "@react-stately/\*", "@react-types/\*", "@internationalized/\*".
+  - Remove linking behaviour from storybook. Might revisit later, but for now it
+    added unnecessary complexity.
 
   App changes:
 
-  - Deprecate `link` prop on `Keystatic` component. We can now abstract that behaviour from the existing `router` prop.
-  - Refactor topbar menu items to use link API; mostly to confirm expected behaviour.
+  - Deprecate `link` prop on `Keystatic` component. We can now abstract that
+    behaviour from the existing `router` prop.
+  - Refactor topbar menu items to use link API; mostly to confirm expected
+    behaviour.
 
 - Updated dependencies [bd20acb0]
 - Updated dependencies [be85e097]

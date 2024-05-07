@@ -1,10 +1,24 @@
 # @voussoir/docs
 
+## 0.0.0-test-20240507000825
+
+### Patch Changes
+
+- Updated dependencies
+  [[`fe63e6a`](https://github.com/Thinkmill/keystatic/commit/fe63e6a77a695d7cafb5aadb12a7eb2e1c914f0b),
+  [`adc0cf6`](https://github.com/Thinkmill/keystatic/commit/adc0cf6282494eb522f6d129a49a7dd9c25c9490),
+  [`05197ed`](https://github.com/Thinkmill/keystatic/commit/05197edc819f5fba715b0fb0320a649ad41c3052),
+  [`05197ed`](https://github.com/Thinkmill/keystatic/commit/05197edc819f5fba715b0fb0320a649ad41c3052)]:
+  - @keystatic/core@0.0.0-test-20240507000825
+  - @keystatic/next@5.0.0
+
 ## 0.0.33
 
 ### Patch Changes
 
-- Updated dependencies [[`b509e87`](https://github.com/Thinkmill/keystatic/commit/b509e8794b8e4676feb6e1f0982ddb80cc5376df), [`31286c0`](https://github.com/Thinkmill/keystatic/commit/31286c0e3ff0bd591853fdab70f7f797dad316f5)]:
+- Updated dependencies
+  [[`b509e87`](https://github.com/Thinkmill/keystatic/commit/b509e8794b8e4676feb6e1f0982ddb80cc5376df),
+  [`31286c0`](https://github.com/Thinkmill/keystatic/commit/31286c0e3ff0bd591853fdab70f7f797dad316f5)]:
   - @keystatic/core@0.5.13
   - @keystatic/next@5.0.0
 
@@ -113,23 +127,37 @@
 
 ### Patch Changes
 
-- be85e097: Introduce [client-side routing](https://react-spectrum.adobe.com/react-aria/routing.html) concept from react-aria:
+- be85e097: Introduce
+  [client-side routing](https://react-spectrum.adobe.com/react-aria/routing.html)
+  concept from react-aria:
 
-  - Include `RouterProvider` with `KeystarProvider` (renamed from "VoussoirProvider"), conditionally when _new_ `router` prop is provided. This new router behaviour makes `linkComponent` and friends unnecessary; they have been removed.
-  - Re-export `useLink` from [react-aria](https://react-spectrum.adobe.com/react-aria/useLink.html), which manages router behaviour on click (among other things), for use outside of the component library. Internally we reference "@react-aria/link" directly.
+  - Include `RouterProvider` with `KeystarProvider` (renamed from
+    "VoussoirProvider"), conditionally when _new_ `router` prop is provided.
+    This new router behaviour makes `linkComponent` and friends unnecessary;
+    they have been removed.
+  - Re-export `useLink` from
+    [react-aria](https://react-spectrum.adobe.com/react-aria/useLink.html),
+    which manages router behaviour on click (among other things), for use
+    outside of the component library. Internally we reference "@react-aria/link"
+    directly.
   - Replace instances of link component references with appropriate alternative.
   - Support link props e.g. "href", "target" etc. on `Menu` items.
-  - Consolidate cursor behaviour: `ActionButton`, `Button`, and (Menu) `Item` will now use "pointer" for anchors.
+  - Consolidate cursor behaviour: `ActionButton`, `Button`, and (Menu) `Item`
+    will now use "pointer" for anchors.
 
   Supporting/related changes:
 
-  - Update react-aria dependencies to latest: "@react-aria/\*", "@react-stately/\*", "@react-types/\*", "@internationalized/\*".
-  - Remove linking behaviour from storybook. Might revisit later, but for now it added unnecessary complexity.
+  - Update react-aria dependencies to latest: "@react-aria/\*",
+    "@react-stately/\*", "@react-types/\*", "@internationalized/\*".
+  - Remove linking behaviour from storybook. Might revisit later, but for now it
+    added unnecessary complexity.
 
   App changes:
 
-  - Deprecate `link` prop on `Keystatic` component. We can now abstract that behaviour from the existing `router` prop.
-  - Refactor topbar menu items to use link API; mostly to confirm expected behaviour.
+  - Deprecate `link` prop on `Keystatic` component. We can now abstract that
+    behaviour from the existing `router` prop.
+  - Refactor topbar menu items to use link API; mostly to confirm expected
+    behaviour.
 
 - Updated dependencies [be85e097]
 - Updated dependencies [9eaefd73]
@@ -149,8 +177,10 @@
 
 - 7dafe782: Calendar widgets for date selection:
 
-  - New package "@keystar/ui/calendar" exposes new components, `Calendar` and `RangeCalendar`
-  - Update to "@keystar/ui/date-time" exposes new components, `DatePicker` and `DateRangePicker`
+  - New package "@keystar/ui/calendar" exposes new components, `Calendar` and
+    `RangeCalendar`
+  - Update to "@keystar/ui/date-time" exposes new components, `DatePicker` and
+    `DateRangePicker`
 
   Related fixes and improvements:
 
@@ -265,14 +295,17 @@
 
 ### Patch Changes
 
-- c1c33e2: New package "@voussoir/date-time" exports components `DateField` and `TimeField`.
+- c1c33e2: New package "@voussoir/date-time" exports components `DateField` and
+  `TimeField`.
 
   **Related**
 
   - Fix conditional "visuallyHidden" on `Text` component.
   - Bump "@react-aria/i18n" from `3.6.2` to `3.7.1` for all relevant packages.
-  - Bump "@react-types/shared" from `3.14.1` to `3.18.0` for all relevant packages.
-  - Add exports from "@react-aria/i18n" and "@internationalized/date" to docs' scope.
+  - Bump "@react-types/shared" from `3.14.1` to `3.18.0` for all relevant
+    packages.
+  - Add exports from "@react-aria/i18n" and "@internationalized/date" to docs'
+    scope.
 
 - Updated dependencies [c1c33e2]
   - @voussoir/action-group@0.1.5
@@ -426,7 +459,9 @@
 ### Patch Changes
 
 - 27d6e06: docs: move toaster root
-- e6ae29c: Support "static" prop on `ActionButton`, `Button` and `ClearButton`, for when they appear over a background. Support `aria-label` on the `Icon` component.
+- e6ae29c: Support "static" prop on `ActionButton`, `Button` and `ClearButton`,
+  for when they appear over a background. Support `aria-label` on the `Icon`
+  component.
 - Updated dependencies [e6ae29c]
   - @voussoir/button@0.1.3
   - @voussoir/icon@0.1.1
@@ -473,7 +508,8 @@
 
 ### Patch Changes
 
-- fbcfca4: New package "@voussoir/radio" exports `Radio` and `RadioGroup` components.
+- fbcfca4: New package "@voussoir/radio" exports `Radio` and `RadioGroup`
+  components.
 
   **Updates**
 

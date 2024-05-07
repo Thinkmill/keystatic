@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/templates-astro",
-  "version": "0.0.25",
+  "version": "0.0.0-test-20240507000825",
   "license": "MIT",
   "scripts": {
     "dev": "astro dev",
