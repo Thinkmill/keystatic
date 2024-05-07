@@ -16,6 +16,7 @@
         "default": "./dist/keystatic-core-ui.node.js"
       },
       "react-server": "./dist/keystatic-core-ui.react-server.js",
+      "worker": "./dist/keystatic-core-ui.worker.js",
       "default": "./dist/keystatic-core-ui.js"
     },
     ".": {
@@ -25,6 +26,7 @@
         "default": "./dist/keystatic-core.node.js"
       },
       "react-server": "./dist/keystatic-core.react-server.js",
+      "worker": "./dist/keystatic-core.worker.js",
       "default": "./dist/keystatic-core.js"
     },
     "./api/utils": {
@@ -34,6 +36,7 @@
         "default": "./dist/keystatic-core-api-utils.node.js"
       },
       "react-server": "./dist/keystatic-core-api-utils.react-server.js",
+      "worker": "./dist/keystatic-core-api-utils.worker.js",
       "default": "./dist/keystatic-core-api-utils.js"
     },
     "./renderer": {
@@ -43,6 +46,7 @@
         "default": "./dist/keystatic-core-renderer.node.js"
       },
       "react-server": "./dist/keystatic-core-renderer.react-server.js",
+      "worker": "./dist/keystatic-core-renderer.worker.js",
       "default": "./dist/keystatic-core-renderer.js"
     },
     "./api/generic": {
@@ -52,6 +56,7 @@
         "default": "./dist/keystatic-core-api-generic.node.js"
       },
       "react-server": "./dist/keystatic-core-api-generic.react-server.js",
+      "worker": "./dist/keystatic-core-api-generic.worker.js",
       "default": "./dist/keystatic-core-api-generic.js"
     },
     "./reader": {
@@ -61,6 +66,7 @@
         "default": "./dist/keystatic-core-reader.node.js"
       },
       "react-server": "./dist/keystatic-core-reader.react-server.js",
+      "worker": "./dist/keystatic-core-reader.worker.js",
       "default": "./dist/keystatic-core-reader.js"
     },
     "./reader/github": {
@@ -70,6 +76,7 @@
         "default": "./dist/keystatic-core-reader-github.node.js"
       },
       "react-server": "./dist/keystatic-core-reader-github.react-server.js",
+      "worker": "./dist/keystatic-core-reader-github.worker.js",
       "default": "./dist/keystatic-core-reader-github.js"
     },
     "./content-components": {
@@ -79,6 +86,7 @@
         "default": "./dist/keystatic-core-content-components.node.js"
       },
       "react-server": "./dist/keystatic-core-content-components.react-server.js",
+      "worker": "./dist/keystatic-core-content-components.worker.js",
       "default": "./dist/keystatic-core-content-components.js"
     },
     "./component-blocks": {
@@ -88,6 +96,7 @@
         "default": "./dist/keystatic-core-component-blocks.node.js"
       },
       "react-server": "./dist/keystatic-core-component-blocks.react-server.js",
+      "worker": "./dist/keystatic-core-component-blocks.worker.js",
       "default": "./dist/keystatic-core-component-blocks.js"
     },
     "./package.json": "./package.json"
@@ -249,15 +258,27 @@
       "node": "./src/api/api-node.ts",
       "default": "./src/api/api-noop.ts"
     },
+    "#ui": {
+      "node": "./src/app/ui-empty.tsx",
+      "worker": "./src/app/ui-empty.tsx",
+      "react-server": "./src/app/ui-empty.tsx",
+      "default": "./src/app/ui.tsx"
+    },
     "#field-ui/*": {
+      "node": "./src/form/fields/empty-field-ui.tsx",
+      "worker": "./src/form/fields/empty-field-ui.tsx",
       "react-server": "./src/form/fields/empty-field-ui.tsx",
       "default": "./src/form/fields/*/ui.tsx"
     },
     "#component-block-primitives": {
+      "node": "./src/form/fields/document/DocumentEditor/primitives/blank-for-react-server.tsx",
+      "worker": "./src/form/fields/document/DocumentEditor/primitives/blank-for-react-server.tsx",
       "react-server": "./src/form/fields/document/DocumentEditor/primitives/blank-for-react-server.tsx",
       "default": "./src/form/fields/document/DocumentEditor/primitives/index.tsx"
     },
     "#cloud-image-preview": {
+      "node": "./src/component-blocks/blank-for-react-server.tsx",
+      "worker": "./src/component-blocks/blank-for-react-server.tsx",
       "react-server": "./src/component-blocks/blank-for-react-server.tsx",
       "default": "./src/component-blocks/cloud-image-preview.tsx"
     }
