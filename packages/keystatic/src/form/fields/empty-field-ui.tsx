@@ -33,4 +33,6 @@ export let SlugFieldInput = empty,
   parseToEditorStateMDX = empty,
   serializeFromEditorStateMDX = empty,
   createEditorStateFromYJS = empty,
-  prosemirrorToYXmlFragment = empty;
+  prosemirrorToYXmlFragment = empty,
+  normalizeDocumentFieldChildren = empty,
+  slugify = empty;

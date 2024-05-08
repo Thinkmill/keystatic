@@ -1,7 +1,6 @@
 import { FormFieldStoredValue, SlugFormField } from '../../api';
-import slugify from '@sindresorhus/slugify';
 import { validateText } from '../text/validateText';
-import { SlugFieldInput } from '#field-ui/slug';
+import { SlugFieldInput, slugify } from '#field-ui/slug';
 import { Glob } from '../../..';
 import { FieldDataError } from '../error';
 
@@ -84,10 +83,17 @@ export function slug(_args: {
   };
   const naiveGenerateSlug: (name: string) => string =
     args.slug?.generate || slugify;
-  const defaultValue = {
-    name: args.name.defaultValue ?? '',
-    slug: naiveGenerateSlug(args.name.defaultValue ?? ''),
-  };
+  let _defaultValue: { name: string; slug: string } | undefined;
+
+  function defaultValue() {
+    if (!_defaultValue) {
+      _defaultValue = {
+        name: args.name.defaultValue ?? '',
+        slug: naiveGenerateSlug(args.name.defaultValue ?? ''),
+      };
+    }
+    return _defaultValue;
+  }
 
   function validate(
     value: { name: string; slug: string },
@@ -131,14 +137,12 @@ export function slug(_args: {
         <SlugFieldInput
           args={args}
           naiveGenerateSlug={naiveGenerateSlug}
-          defaultValue={defaultValue}
+          defaultValue={defaultValue()}
           {...props}
         />
       );
     },
-    defaultValue() {
-      return defaultValue;
-    },
+    defaultValue,
     parse(value, args) {
       if (args?.slug !== undefined) {
         return parseAsSlugField(value, args.slug);

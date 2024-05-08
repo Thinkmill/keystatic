@@ -1,4 +1,4 @@
-import Markdoc from '@markdoc/markdoc';
+import { format, parse } from '#markdoc';
 import { Node } from 'slate';
 import {
   defaultDocumentFeatures,
@@ -17,5 +17,5 @@ export function toMarkdoc(
     documentFeatures: defaultDocumentFeatures,
     slug: undefined,
   }).node;
-  return Markdoc.format(Markdoc.parse(Markdoc.format(root)));
+  return format(parse(format(root)));
 }

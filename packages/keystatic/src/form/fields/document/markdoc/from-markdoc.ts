@@ -1,5 +1,5 @@
-import { Node } from '@markdoc/markdoc';
-import { Descendant } from 'slate';
+import { Node } from '#markdoc';
+import type { Descendant } from 'slate';
 import { ReadonlyPropPath } from '../DocumentEditor/component-blocks/utils';
 import { getValueAtPropPath } from '../../../props-value';
 import {

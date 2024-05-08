@@ -1,11 +1,9 @@
-import Markdoc, { Node as MarkdocNode, NodeType } from '@markdoc/markdoc';
+import { Ast, Node as MarkdocNode, NodeType } from '#markdoc';
 import { Fragment, Mark, Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorSchema, getEditorSchema } from '../schema';
 import { getSrcPrefixForImageBlock } from '../images';
 import { fixPath } from '../../../../../app/path-utils';
 import { internalToSerialized } from '../props-serialization';
-
-const { Ast } = Markdoc;
 
 type DocumentSerializationState = {
   schema: EditorSchema;

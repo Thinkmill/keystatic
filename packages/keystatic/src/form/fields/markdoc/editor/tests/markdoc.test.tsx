@@ -5,7 +5,7 @@ import { expect, test } from '@jest/globals';
 import { EditorStateDescription, jsx, toEditorState } from './utils';
 import { markdocToProseMirror } from '../markdoc/parse';
 import { proseMirrorToMarkdoc } from '../markdoc/serialize';
-import Markdoc from '@markdoc/markdoc';
+import { format, parse } from '#markdoc';
 import { createEditorSchema } from '../schema';
 import { editorOptionsToConfig } from '../../config';
 import { block, inline, mark } from '../../../../../content-components';
@@ -48,9 +48,9 @@ const schema = createEditorSchema(
 );
 
 function toMarkdoc(node: EditorStateDescription) {
-  return Markdoc.format(
-    Markdoc.parse(
-      Markdoc.format(
+  return format(
+    parse(
+      format(
         proseMirrorToMarkdoc(node.get().doc, {
           extraFiles: new Map(),
           otherFiles: new Map(),
@@ -65,7 +65,7 @@ function toMarkdoc(node: EditorStateDescription) {
 function fromMarkdoc(markdoc: string) {
   return toEditorState(
     markdocToProseMirror(
-      Markdoc.parse(markdoc),
+      parse(markdoc),
       schema,
       new Map([['something something.png', new Uint8Array([])]]),
       undefined,

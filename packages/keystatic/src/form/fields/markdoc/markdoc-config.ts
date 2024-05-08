@@ -1,4 +1,4 @@
-import Markdoc, { Config, NodeType, SchemaAttribute } from '@markdoc/markdoc';
+import { nodes, Config, NodeType, SchemaAttribute } from '#markdoc';
 import { MarkdocEditorOptions, editorOptionsToConfig } from './config';
 import { ComponentSchema } from '../../api';
 import { ContentComponent } from '../../../content-components';
@@ -81,8 +81,6 @@ function fieldsToMarkdocAttributes(
     })
   );
 }
-
-const { nodes } = Markdoc;
 
 export function createMarkdocConfig<
   Components extends Record<string, ContentComponent>,

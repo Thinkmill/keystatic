@@ -7,13 +7,29 @@ import {
   FormFieldInputProps,
 } from '../../api';
 import { useEntryLayoutSplitPaneContext } from '../../../app/entry-form';
-import { DocumentEditor } from './DocumentEditor';
+import { DocumentEditor, Editor } from './DocumentEditor';
 import { DocumentFeatures } from './DocumentEditor/document-features';
+import { createDocumentEditorForNormalization } from './DocumentEditor/create-editor';
+import type { Descendant } from 'slate';
 
 let i = 0;
 
 function newKey() {
   return i++;
+}
+
+export function normalizeDocumentFieldChildren(
+  documentFeatures: DocumentFeatures,
+  componentBlocks: Record<string, ComponentBlock>,
+  document: Descendant[]
+) {
+  const editor = createDocumentEditorForNormalization(
+    documentFeatures,
+    componentBlocks
+  );
+  editor.children = document;
+  Editor.normalize(editor, { force: true });
+  return editor.children;
 }
 
 export function DocumentFieldInput(
