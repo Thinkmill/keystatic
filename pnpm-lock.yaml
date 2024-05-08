@@ -1234,9 +1234,6 @@ importers:
       is-hotkey:
         specifier: ^0.2.0
         version: 0.2.0
-      js-base64:
-        specifier: ^3.7.5
-        version: 3.7.5
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.0
@@ -18586,10 +18583,6 @@ packages:
 
   /jju@1.4.0:
     resolution: {integrity: sha512-8wb9Yw966OSxApiCt0K3yNJL8pnNeIv+OEq2YMidz4FKP6nonSRoOXc80iXY4JaN2FC11B9qsNmDsm+ZOfMROA==}
-    dev: false
-
-  /js-base64@3.7.5:
-    resolution: {integrity: sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==}
     dev: false
 
   /js-cookie@2.2.1:

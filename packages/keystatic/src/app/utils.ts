@@ -1,4 +1,4 @@
-import { fromUint8Array } from 'js-base64';
+import { base64UrlEncode } from '#base64';
 import { isDefined } from 'emery';
 
 import { Config, GitHubConfig, LocalConfig } from '../config';
@@ -195,20 +195,15 @@ export async function redirectToCloudAuth(from: string, config: Config) {
   if (!config.cloud?.project) {
     throw new Error('Not a cloud config');
   }
-  const code_verifier = fromUint8Array(
-    crypto.getRandomValues(new Uint8Array(32)),
-    true
+  const code_verifier = base64UrlEncode(
+    crypto.getRandomValues(new Uint8Array(32))
   );
-  const code_challenge = fromUint8Array(
+  const code_challenge = base64UrlEncode(
     new Uint8Array(
       await crypto.subtle.digest('SHA-256', textEncoder.encode(code_verifier))
-    ),
-    true
+    )
   );
-  const state = fromUint8Array(
-    crypto.getRandomValues(new Uint8Array(32)),
-    true
-  );
+  const state = base64UrlEncode(crypto.getRandomValues(new Uint8Array(32)));
   localStorage.setItem(
     'keystatic-cloud-state',
     JSON.stringify({ state, from, code_verifier })

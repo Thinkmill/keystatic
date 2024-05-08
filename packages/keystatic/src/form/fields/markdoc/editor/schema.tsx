@@ -37,7 +37,7 @@ import { EditorConfig } from '../config';
 import { toSerialized } from './props-serialization';
 import { getInitialPropsValue } from '../../../initial-values';
 import { getUploadedFileObject } from '../../image/ui';
-import { fromUint8Array, toUint8Array } from 'js-base64';
+import { base64UrlEncode, base64UrlDecode } from '#base64';
 
 const blockElementSpacing = css({
   marginBlock: '1em',
@@ -381,7 +381,7 @@ const nodeSpecs = {
             node.attrs.filename.endsWith('.svg')
               ? 'image/svg+xml'
               : 'application/octet-stream'
-          };base64,${fromUint8Array(node.attrs.src)}`,
+          };base64,${base64UrlEncode(node.attrs.src)}`,
           alt: node.attrs.alt,
           title: node.attrs.title,
           'data-filename': node.attrs.filename,
@@ -396,7 +396,7 @@ const nodeSpecs = {
           const src = node.getAttribute('src');
           const filename = node.getAttribute('data-filename');
           if (!src?.startsWith('data:') || !filename) return false;
-          const srcAsUint8Array = toUint8Array(
+          const srcAsUint8Array = base64UrlDecode(
             src.replace(/^data:[a-z/-]+;base64,/, '')
           );
           return {

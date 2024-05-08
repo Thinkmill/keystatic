@@ -153,7 +153,6 @@
     "ignore": "^5.2.4",
     "iron-webcrypto": "^0.10.1",
     "is-hotkey": "^0.2.0",
-    "js-base64": "^3.7.5",
     "js-yaml": "^4.1.0",
     "lib0": "^0.2.88",
     "lru-cache": "^10.2.0",
@@ -282,6 +281,7 @@
       "react-server": "./src/component-blocks/blank-for-react-server.tsx",
       "default": "./src/component-blocks/cloud-image-preview.tsx"
     },
-    "#markdoc": "./src/markdoc.js"
+    "#markdoc": "./src/markdoc.js",
+    "#base64": "./src/base64.ts"
   }
 }
