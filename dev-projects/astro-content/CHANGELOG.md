@@ -1,10 +1,25 @@
 # astro-content
 
+## 0.0.0-test-20240508024853
+
+### Patch Changes
+
+- Updated dependencies
+  [[`c69d034`](https://github.com/Thinkmill/keystatic/commit/c69d03456f2fb513db004553e013f2924c502ddb)]:
+  - @keystatic/core@0.0.0-test-20240508024853
+  - @keystatic/astro@5.0.0
+
 ## 0.0.16
 
 ### Patch Changes
 
-- Updated dependencies [[`fe63e6a`](https://github.com/Thinkmill/keystatic/commit/fe63e6a77a695d7cafb5aadb12a7eb2e1c914f0b), [`adc0cf6`](https://github.com/Thinkmill/keystatic/commit/adc0cf6282494eb522f6d129a49a7dd9c25c9490), [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c), [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2), [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c), [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2)]:
+- Updated dependencies
+  [[`fe63e6a`](https://github.com/Thinkmill/keystatic/commit/fe63e6a77a695d7cafb5aadb12a7eb2e1c914f0b),
+  [`adc0cf6`](https://github.com/Thinkmill/keystatic/commit/adc0cf6282494eb522f6d129a49a7dd9c25c9490),
+  [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c),
+  [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2),
+  [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c),
+  [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2)]:
   - @keystatic/core@0.5.14
   - @keystatic/astro@5.0.0
 
@@ -12,7 +27,9 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`b509e87`](https://github.com/Thinkmill/keystatic/commit/b509e8794b8e4676feb6e1f0982ddb80cc5376df), [`31286c0`](https://github.com/Thinkmill/keystatic/commit/31286c0e3ff0bd591853fdab70f7f797dad316f5)]:
+- Updated dependencies
+  [[`b509e87`](https://github.com/Thinkmill/keystatic/commit/b509e8794b8e4676feb6e1f0982ddb80cc5376df),
+  [`31286c0`](https://github.com/Thinkmill/keystatic/commit/31286c0e3ff0bd591853fdab70f7f797dad316f5)]:
   - @keystatic/core@0.5.13
   - @keystatic/astro@5.0.0
 
@@ -94,16 +111,19 @@
 
 ### Patch Changes
 
-- 6a60ab3c: Updates the Astro integration to manage the custom `127.0.0.1` host and enables usage with `output: 'server'`
+- 6a60ab3c: Updates the Astro integration to manage the custom `127.0.0.1` host
+  and enables usage with `output: 'server'`
 
-  Keystatic used to require updating your `dev` script. It's now managed by the integration, feel free to simplify it!
+  Keystatic used to require updating your `dev` script. It's now managed by the
+  integration, feel free to simplify it!
 
   ```diff
   - "dev": "astro dev --host 127.0.0.1"
   + "dev": "astro dev"
   ```
 
-  Moreover, Keystatic now lets you go full SSR! The following Astro config is now supported
+  Moreover, Keystatic now lets you go full SSR! The following Astro config is
+  now supported
 
   ```mjs
   // astro.config.mjs
