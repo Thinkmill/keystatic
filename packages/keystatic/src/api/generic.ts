@@ -1,5 +1,4 @@
 import cookie from 'cookie';
-import * as Iron from 'iron-webcrypto';
 import z from 'zod';
 import { Config } from '..';
 import {
@@ -10,6 +9,7 @@ import {
 import { handleGitHubAppCreation, localModeApiHandler } from '#api-handler';
 import { webcrypto } from '#webcrypto';
 import { bytesToHex } from '../hex';
+import { decryptValue, encryptValue } from './encryption';
 
 export type APIRouteConfig = {
   /** @default process.env.KEYSTATIC_GITHUB_CLIENT_ID */
@@ -266,10 +266,7 @@ async function getTokenCookies(
       'Set-Cookie',
       cookie.serialize(
         'keystatic-gh-refresh-token',
-        await Iron.seal(webcrypto, tokenData.refresh_token, config.secret, {
-          ...Iron.defaults,
-          ttl: tokenData.refresh_token_expires_in * 1000,
-        }),
+        await encryptValue(tokenData.refresh_token, config.secret),
         {
           sameSite: 'lax',
           secure: process.env.NODE_ENV === 'production',
@@ -295,16 +292,10 @@ async function getRefreshToken(
   if (!refreshTokenCookie) return;
   let refreshToken;
   try {
-    refreshToken = await Iron.unseal(
-      webcrypto,
-      refreshTokenCookie,
-      config.secret,
-      Iron.defaults
-    );
+    refreshToken = await decryptValue(refreshTokenCookie, config.secret);
   } catch {
     return;
   }
-  if (typeof refreshToken !== 'string') return;
   return refreshToken;
 }
 

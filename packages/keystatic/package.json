@@ -151,7 +151,6 @@
     "graphql": "^16.6.0",
     "idb-keyval": "^6.2.1",
     "ignore": "^5.2.4",
-    "iron-webcrypto": "^0.10.1",
     "is-hotkey": "^0.2.0",
     "js-yaml": "^4.1.0",
     "lib0": "^0.2.88",
