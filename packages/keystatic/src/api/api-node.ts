@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { z } from 'zod';
+import * as s from 'superstruct';
 import fs from 'node:fs/promises';
 import { Config } from '../config';
 import {
@@ -10,6 +10,7 @@ import {
 import { readToDirEntries, getAllowedDirectories } from './read-local';
 import { blobSha } from '../app/trees';
 import { randomBytes } from 'node:crypto';
+import { base64UrlDecode } from '#base64';
 
 // this should be trivially dead code eliminated
 // it's just to ensure the types are exactly the same between this and local-noop.ts
@@ -23,10 +24,10 @@ function _typeTest() {
   let _d: typeof b = a;
 }
 
-const ghAppSchema = z.object({
-  slug: z.string(),
-  client_id: z.string(),
-  client_secret: z.string(),
+const ghAppSchema = s.type({
+  slug: s.string(),
+  client_id: s.string(),
+  client_secret: s.string(),
 });
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -55,10 +56,10 @@ export async function handleGitHubAppCreation(
     };
   }
   const ghAppDataRaw = await ghAppRes.json();
-
-  const ghAppDataResult = ghAppSchema.safeParse(ghAppDataRaw);
-
-  if (!ghAppDataResult.success) {
+  let ghAppDataResult;
+  try {
+    ghAppDataResult = s.create(ghAppDataRaw, ghAppSchema);
+  } catch {
     console.log(ghAppDataRaw);
     return {
       status: 500,
@@ -66,10 +67,10 @@ export async function handleGitHubAppCreation(
     };
   }
   const toAddToEnv = `# Keystatic
-KEYSTATIC_GITHUB_CLIENT_ID=${ghAppDataResult.data.client_id}
-KEYSTATIC_GITHUB_CLIENT_SECRET=${ghAppDataResult.data.client_secret}
+KEYSTATIC_GITHUB_CLIENT_ID=${ghAppDataResult.client_id}
+KEYSTATIC_GITHUB_CLIENT_SECRET=${ghAppDataResult.client_secret}
 KEYSTATIC_SECRET=${randomBytes(40).toString('hex')}
-${slugEnvVarName ? `${slugEnvVarName}=${ghAppDataResult.data.slug}\n` : ''}`;
+${slugEnvVarName ? `${slugEnvVarName}=${ghAppDataResult.slug}\n` : ''}`;
 
   let prevEnv: string | undefined;
   try {
@@ -80,9 +81,7 @@ ${slugEnvVarName ? `${slugEnvVarName}=${ghAppDataResult.data.slug}\n` : ''}`;
   const newEnv = prevEnv ? `${prevEnv}\n\n${toAddToEnv}` : toAddToEnv;
   await fs.writeFile('.env', newEnv);
   await wait(200);
-  return redirect(
-    '/keystatic/created-github-app?slug=' + ghAppDataResult.data.slug
-  );
+  return redirect('/keystatic/created-github-app?slug=' + ghAppDataResult.slug);
 }
 
 export function localModeApiHandler(
@@ -165,6 +164,10 @@ async function blob(
   return { status: 200, body: contents };
 }
 
+const base64Schema = s.coerce(s.instance(Uint8Array), s.string(), val =>
+  base64UrlDecode(val)
+);
+
 async function update(
   req: KeystaticRequest,
   config: Config,
@@ -177,24 +180,26 @@ async function update(
     return { status: 400, body: 'Bad Request' };
   }
   const isFilepathValid = getIsPathValid(config);
+  const filepath = s.refine(s.string(), 'filepath', isFilepathValid);
+  let updates;
 
-  const updates = z
-    .object({
-      additions: z.array(
-        z.object({
-          path: z.string().refine(isFilepathValid),
-          contents: z.string().transform(x => Buffer.from(x, 'base64')),
-        })
-      ),
-      deletions: z.array(
-        z.object({ path: z.string().refine(isFilepathValid) })
-      ),
-    })
-    .safeParse(await req.json());
-  if (!updates.success) {
+  try {
+    updates = s.create(
+      await req.json(),
+      s.object({
+        additions: s.array(
+          s.object({
+            path: filepath,
+            contents: base64Schema,
+          })
+        ),
+        deletions: s.array(s.object({ path: filepath })),
+      })
+    );
+  } catch {
     return { status: 400, body: 'Bad data' };
   }
-  for (const addition of updates.data.additions) {
+  for (const addition of updates.additions) {
     await fs.mkdir(path.dirname(path.join(baseDirectory, addition.path)), {
       recursive: true,
     });
@@ -203,7 +208,7 @@ async function update(
       addition.contents
     );
   }
-  for (const deletion of updates.data.deletions) {
+  for (const deletion of updates.deletions) {
     await fs.rm(path.join(baseDirectory, deletion.path), { force: true });
   }
   return {

@@ -1,11 +1,11 @@
 import { parse } from 'cookie';
-import { z } from 'zod';
+import * as s from 'superstruct';
 import { Config } from '../config';
 
-const storedTokenSchema = z.object({
-  token: z.string(),
-  project: z.string(),
-  validUntil: z.number().transform(val => new Date(val)),
+const storedTokenSchema = s.object({
+  token: s.string(),
+  project: s.string(),
+  validUntil: s.coerce(s.date(), s.number(), val => new Date(val)),
 });
 
 export function getSyncAuth(config: Config) {
@@ -33,7 +33,7 @@ export function getCloudAuth(config: Config) {
   );
   let tokenData;
   try {
-    tokenData = storedTokenSchema.parse(JSON.parse(unparsedTokenData!));
+    tokenData = storedTokenSchema.create(JSON.parse(unparsedTokenData!));
   } catch (err) {
     return null;
   }

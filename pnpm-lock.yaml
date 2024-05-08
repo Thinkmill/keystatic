@@ -1315,6 +1315,9 @@ importers:
       slate-react:
         specifier: ^0.91.9
         version: 0.91.11(react-dom@18.2.0)(react@18.2.0)(slate@0.91.4)
+      superstruct:
+        specifier: ^1.0.4
+        version: 1.0.4
       unist-util-visit:
         specifier: ^5.0.0
         version: 5.0.0
@@ -1330,9 +1333,6 @@ importers:
       yjs:
         specifier: ^13.6.11
         version: 13.6.11
-      zod:
-        specifier: ^3.20.2
-        version: 3.22.2
     devDependencies:
       '@jest/expect':
         specifier: ^29.7.0
@@ -24258,6 +24258,11 @@ packages:
     resolution: {integrity: sha512-W4SitSZ9MOyMPbHreoZVEneSZyPEeNGbdfJo/7FkJyRs/M3wQRFzq+t3S/NBwlrFSWdx1ONLjLb9pB+UKe4IqQ==}
     dev: true
 
+  /superstruct@1.0.4:
+    resolution: {integrity: sha512-7JpaAoX2NGyoFlI9NBh66BQXGONc+uE+MRS5i2iOBKuS4e+ccgMDjATgZldkah+33DakBxDHiss9kvUcGAO8UQ==}
+    engines: {node: '>=14.0.0'}
+    dev: false
+
   /supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
     engines: {node: '>=4'}
@@ -26227,10 +26232,6 @@ packages:
       cookie: 0.5.0
       mustache: 4.2.0
       stacktracey: 2.1.8
-    dev: false
-
-  /zod@3.22.2:
-    resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
     dev: false
 
   /zod@3.22.4:

@@ -1,7 +1,7 @@
 import { useOverlayTriggerState } from '@react-stately/overlays';
 import { useEffect, useState } from 'react';
 import { useSelected, useSlateStatic } from 'slate-react';
-import { z } from 'zod';
+import * as s from 'superstruct';
 
 import {
   ActionButton,
@@ -67,10 +67,10 @@ function slugify(input: string) {
   return slug;
 }
 
-const imageUploadResponse = z.object({
-  src: z.string(),
-  width: z.number(),
-  height: z.number(),
+const imageUploadResponse = s.type({
+  src: s.string(),
+  width: s.number(),
+  height: s.number(),
 });
 
 function uploadImage(file: File, config: Config) {
@@ -110,11 +110,14 @@ function uploadImage(file: File, config: Config) {
       throw new Error(`Failed to upload image: ${await res.text()}`);
     }
     const data = await res.json();
-    const parsedData = imageUploadResponse.safeParse(data);
-    if (!parsedData.success) {
+
+    let parsedData;
+    try {
+      parsedData = imageUploadResponse.create(data);
+    } catch {
       throw new Error('Unexpected response from cloud');
     }
-    return parsedData.data;
+    return parsedData;
   })();
 }
 
@@ -187,11 +190,11 @@ function loadImageDimensions(url: string) {
   });
 }
 
-const imageDataSchema = z.object({
-  src: z.string(),
-  alt: z.string(),
-  width: z.number(),
-  height: z.number(),
+const imageDataSchema = s.type({
+  src: s.string(),
+  alt: s.string(),
+  width: s.number(),
+  height: s.number(),
 });
 
 export async function loadImageData(
@@ -211,10 +214,9 @@ export async function loadImageData(
     );
     if (res.ok) {
       const data = await res.json();
-      const parsed = imageDataSchema.safeParse(data);
-      if (parsed.success) {
-        return parsed.data;
-      }
+      try {
+        return imageDataSchema.create(data);
+      } catch {}
     }
   }
   return loadImageDimensions(url).then(dimensions => ({

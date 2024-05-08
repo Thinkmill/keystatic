@@ -180,12 +180,12 @@
     "slate": "^0.91.4",
     "slate-history": "^0.86.0",
     "slate-react": "^0.91.9",
+    "superstruct": "^1.0.4",
     "unist-util-visit": "^5.0.0",
     "urql": "^4.0.0",
     "y-prosemirror": "^1.2.2",
     "y-protocols": "^1.0.6",
-    "yjs": "^13.6.11",
-    "zod": "^3.20.2"
+    "yjs": "^13.6.11"
   },
   "devDependencies": {
     "@jest/expect": "^29.7.0",

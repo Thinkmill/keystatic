@@ -10,7 +10,7 @@ import {
   clear,
 } from 'idb-keyval';
 import { TreeNode } from './trees';
-import { z } from 'zod';
+import * as s from 'superstruct';
 
 type StoredTreeEntry = {
   path: string;
@@ -48,11 +48,11 @@ export async function getBlobFromPersistedCache(sha: string) {
 }
 let _storedTreeCache: Map<string, StoredTreeEntry[]> | undefined;
 
-const treeSchema = z.array(
-  z.object({
-    path: z.string(),
-    mode: z.string(),
-    sha: z.string(),
+const treeSchema = s.array(
+  s.object({
+    path: s.string(),
+    mode: s.string(),
+    sha: s.string(),
   })
 );
 
@@ -63,10 +63,14 @@ function getStoredTrees() {
   const cache = new Map<string, StoredTreeEntry[]>();
   return entries(getTreeStore()).then(entries => {
     for (const [sha, tree] of entries) {
-      const parsed = treeSchema.safeParse(tree);
-      if (parsed.success && typeof sha === 'string') {
-        cache.set(sha, parsed.data);
+      if (typeof sha !== 'string') continue;
+      let parsed;
+      try {
+        parsed = treeSchema.create(tree);
+      } catch {
+        continue;
       }
+      cache.set(sha, parsed);
     }
     _storedTreeCache = cache;
     return cache;
@@ -125,12 +129,18 @@ export async function garbageCollectGitObjects(roots: string[]) {
   const treesToDelete = new Map<string, StoredTreeEntry[]>();
   const invalidTrees: IDBValidKey[] = [];
   for (const [sha, tree] of await getStoredTrees()) {
-    const parsed = treeSchema.safeParse(tree);
-    if (parsed.success && typeof sha === 'string') {
-      treesToDelete.set(sha, parsed.data);
-    } else {
+    if (typeof sha !== 'string') {
       invalidTrees.push(sha);
+      continue;
     }
+    let parsed;
+    try {
+      parsed = treeSchema.create(tree);
+    } catch {
+      invalidTrees.push(sha);
+      continue;
+    }
+    treesToDelete.set(sha, parsed);
   }
 
   const allBlobs = (await keys(getBlobStore())) as string[];

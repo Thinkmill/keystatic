@@ -48,7 +48,7 @@ import {
   setDraft,
   showDraftRestoredToast,
 } from './persistence';
-import { z } from 'zod';
+import * as s from 'superstruct';
 import { LOADING, useData } from './useData';
 import { ActionGroup, Item } from '@keystar/ui/action-group';
 import { useMediaQuery, breakpointQueries } from '@keystar/ui/style';
@@ -356,7 +356,7 @@ function LocalSingletonPage(
         state,
       });
       const files = new Map(serialized.map(x => [x.path, x.contents]));
-      const data: z.infer<typeof storedValSchema> = {
+      const data: s.Infer<typeof storedValSchema> = {
         beforeTreeKey: localTreeKey,
         files,
         savedAt: new Date(),
@@ -488,11 +488,11 @@ function CollabSingletonPage(
   );
 }
 
-const storedValSchema = z.object({
-  version: z.literal(1),
-  savedAt: z.date(),
-  beforeTreeKey: z.string().optional(),
-  files: z.map(z.string(), z.instanceof(Uint8Array)),
+const storedValSchema = s.type({
+  version: s.literal(1),
+  savedAt: s.date(),
+  beforeTreeKey: s.optional(s.string()),
+  files: s.map(s.string(), s.instance(Uint8Array)),
 });
 
 function SingletonPageWrapper(props: { singleton: string; config: Config }) {
@@ -516,7 +516,7 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     useCallback(async () => {
       const raw = await getDraft(['singleton', props.singleton]);
       if (!raw) throw new Error('No draft found');
-      const stored = storedValSchema.parse(raw);
+      const stored = storedValSchema.create(raw);
       const parsed = parseEntry(
         {
           config: props.config,
