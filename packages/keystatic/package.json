@@ -144,16 +144,14 @@
     "@urql/exchange-graphcache": "^6.3.3",
     "@urql/exchange-persisted": "^4.1.0",
     "cookie": "^0.5.0",
-    "decimal.js": "^10.4.3",
+    "decimal.js-light": "^2.5.1",
     "emery": "^1.4.1",
     "escape-string-regexp": "^4.0.0",
     "fast-deep-equal": "^3.1.3",
     "graphql": "^16.6.0",
     "idb-keyval": "^6.2.1",
     "ignore": "^5.2.4",
-    "iron-webcrypto": "^0.10.1",
     "is-hotkey": "^0.2.0",
-    "js-base64": "^3.7.5",
     "js-yaml": "^4.1.0",
     "lib0": "^0.2.88",
     "lru-cache": "^10.2.0",
@@ -182,12 +180,12 @@
     "slate": "^0.91.4",
     "slate-history": "^0.86.0",
     "slate-react": "^0.91.9",
+    "superstruct": "^1.0.4",
     "unist-util-visit": "^5.0.0",
     "urql": "^4.0.0",
     "y-prosemirror": "^1.2.2",
     "y-protocols": "^1.0.6",
-    "yjs": "^13.6.11",
-    "zod": "^3.20.2"
+    "yjs": "^13.6.11"
   },
   "devDependencies": {
     "@jest/expect": "^29.7.0",
@@ -281,6 +279,8 @@
       "worker": "./src/component-blocks/blank-for-react-server.tsx",
       "react-server": "./src/component-blocks/blank-for-react-server.tsx",
       "default": "./src/component-blocks/cloud-image-preview.tsx"
-    }
+    },
+    "#markdoc": "./src/markdoc.js",
+    "#base64": "./src/base64.ts"
   }
 }

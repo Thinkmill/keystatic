@@ -1,21 +1,21 @@
 import { ProgressCircle } from '@keystar/ui/progress';
 import { Text } from '@keystar/ui/typography';
 import { useEffect, useMemo, useState } from 'react';
-import { z } from 'zod';
+import * as s from 'superstruct';
 import { Config } from '../config';
 import { useRouter } from './router';
 import { KEYSTATIC_CLOUD_API_URL, KEYSTATIC_CLOUD_HEADERS } from './utils';
 import { Flex } from '@keystar/ui/layout';
 
-const storedStateSchema = z.object({
-  state: z.string(),
-  from: z.string(),
-  code_verifier: z.string(),
+const storedStateSchema = s.object({
+  state: s.string(),
+  from: s.string(),
+  code_verifier: s.string(),
 });
-const tokenResponseSchema = z.object({
-  access_token: z.string(),
-  token_type: z.string(),
-  expires_in: z.number(),
+const tokenResponseSchema = s.type({
+  access_token: s.string(),
+  token_type: s.string(),
+  expires_in: s.number(),
 });
 
 export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
@@ -25,20 +25,18 @@ export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
   const state = url.searchParams.get('state');
   const storedState = useMemo(() => {
     const _storedState = localStorage.getItem('keystatic-cloud-state');
-    const storedState = storedStateSchema.safeParse(
-      (() => {
-        try {
-          return JSON.parse(_storedState || '');
-        } catch {
-          return null;
-        }
-      })()
-    );
+    const storedState = (() => {
+      try {
+        return storedStateSchema.create(JSON.parse(_storedState || ''));
+      } catch {
+        return null;
+      }
+    })();
     return storedState;
   }, []);
   const [error, setError] = useState<null | Error>(null);
   useEffect(() => {
-    if (code && state && storedState.success && config.cloud?.project) {
+    if (code && state && storedState && config.cloud?.project) {
       const { project } = config.cloud;
       (async () => {
         const res = await fetch(`${KEYSTATIC_CLOUD_API_URL}/oauth/token`, {
@@ -47,7 +45,7 @@ export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
             code,
             client_id: project,
             redirect_uri: `${window.location.origin}/keystatic/cloud/oauth/callback`,
-            code_verifier: storedState.data.code_verifier,
+            code_verifier: storedState.code_verifier,
             grant_type: 'authorization_code',
           }).toString(),
           headers: {
@@ -63,7 +61,7 @@ export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
           );
         }
         const data = await res.json();
-        const parsed = tokenResponseSchema.parse(data);
+        const parsed = tokenResponseSchema.create(data);
         localStorage.setItem(
           'keystatic-cloud-access-token',
           JSON.stringify({
@@ -72,7 +70,7 @@ export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
             validUntil: Date.now() + parsed.expires_in * 1000,
           })
         );
-        router.push(`/keystatic/${storedState.data.from}`);
+        router.push(`/keystatic/${storedState.from}`);
       })().catch(error => {
         setError(error);
       });
@@ -84,7 +82,7 @@ export function KeystaticCloudAuthCallback({ config }: { config: Config }) {
   if (!code || !state) {
     return <Text>Missing code or state</Text>;
   }
-  if (storedState.success === false || state !== storedState.data.state) {
+  if (!storedState || state !== storedState.state) {
     return <Text>Invalid state</Text>;
   }
 

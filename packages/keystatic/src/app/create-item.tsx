@@ -1,7 +1,7 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as Y from 'yjs';
-import { z } from 'zod';
+import * as s from 'superstruct';
 
 import { Button } from '@keystar/ui/button';
 import { DialogContainer } from '@keystar/ui/dialog';
@@ -79,7 +79,7 @@ function CreateItemWrapper(props: {
         ...(duplicateSlug ? ([duplicateSlug] as const) : ([] as const)),
       ]);
       if (!raw) throw new Error('No draft found');
-      const stored = storedValSchema.parse(raw);
+      const stored = storedValSchema.create(raw);
       const parsed = parseEntry(
         {
           config: props.config,
@@ -271,11 +271,11 @@ function CreateItemWrapper(props: {
   );
 }
 
-const storedValSchema = z.object({
-  version: z.literal(1),
-  savedAt: z.date(),
-  slug: z.string(),
-  files: z.map(z.string(), z.instanceof(Uint8Array)),
+const storedValSchema = s.type({
+  version: s.literal(1),
+  savedAt: s.date(),
+  slug: s.string(),
+  files: s.map(s.string(), s.instance(Uint8Array)),
 });
 
 function CreateItemLocal(props: {
@@ -353,7 +353,7 @@ function CreateItemLocal(props: {
         state,
       });
       const files = new Map(serialized.map(x => [x.path, x.contents]));
-      const data: z.infer<typeof storedValSchema> = {
+      const data: s.Infer<typeof storedValSchema> = {
         slug,
         files,
         savedAt: new Date(),

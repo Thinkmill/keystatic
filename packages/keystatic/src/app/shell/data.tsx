@@ -41,7 +41,7 @@ import { isDefined } from 'emery';
 import { getAuth, getCloudAuth } from '../auth';
 import { ViewerContext, SidebarFooter_viewer } from './viewer-data';
 import { parseRepoConfig, serializeRepoConfig } from '../repo-config';
-import { z } from 'zod';
+import * as s from 'superstruct';
 import { scopeEntriesWithPathPrefix } from './path-prefix';
 import {
   garbageCollectGitObjects,
@@ -119,26 +119,26 @@ export function LocalAppShellProvider(props: {
   );
 }
 
-const cloudInfoSchema = z.object({
-  user: z.object({
-    id: z.string(),
-    name: z.string(),
-    email: z.string(),
-    avatarUrl: z.string().optional(),
+const cloudInfoSchema = s.type({
+  user: s.type({
+    id: s.string(),
+    name: s.string(),
+    email: s.string(),
+    avatarUrl: s.optional(s.string()),
   }),
-  project: z.object({
-    name: z.string(),
+  project: s.type({
+    name: s.string(),
   }),
-  team: z.object({
-    name: z.string(),
-    slug: z.string(),
-    images: z.boolean(),
-    multiplayer: z.boolean(),
+  team: s.object({
+    name: s.string(),
+    slug: s.string(),
+    images: s.boolean(),
+    multiplayer: s.boolean(),
   }),
 });
 
 const CloudInfo = createContext<
-  null | z.infer<typeof cloudInfoSchema> | 'unauthorized'
+  null | s.Infer<typeof cloudInfoSchema> | 'unauthorized'
 >(null);
 
 export function useCloudInfo() {
@@ -168,7 +168,7 @@ export function CloudInfoProvider(props: {
         },
       });
       if (res.status === 401) return 'unauthorized' as const;
-      return cloudInfoSchema.parse(await res.json());
+      return cloudInfoSchema.create(await res.json());
     }, [props.config])
   );
   return (

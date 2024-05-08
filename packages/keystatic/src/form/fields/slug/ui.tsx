@@ -13,6 +13,8 @@ import { validateText } from '../text/validateText';
 
 const emptySet = new Set<string>();
 
+export { default as slugify } from '@sindresorhus/slugify';
+
 export function SlugFieldInput(
   props: FormFieldInputProps<{ name: string; slug: string }> & {
     defaultValue: { name: string; slug: string };

@@ -6,7 +6,7 @@ import { jsx, makeEditor } from '../DocumentEditor/tests/utils';
 import { component, fields } from '../../../api';
 import { fromMarkdoc as _fromMarkdoc } from './from-markdoc';
 import { toMarkdoc as _toMarkdoc } from './test-utils';
-import Markdoc from '@markdoc/markdoc';
+import { parse } from '#markdoc';
 import { Node } from 'slate';
 
 const componentBlocks = {
@@ -48,7 +48,7 @@ function toMarkdoc(node: Node) {
 
 function fromMarkdoc(markdoc: string) {
   return makeEditor(
-    <editor>{_fromMarkdoc(Markdoc.parse(markdoc), componentBlocks)}</editor>,
+    <editor>{_fromMarkdoc(parse(markdoc), componentBlocks)}</editor>,
     { normalization: 'normalize' }
   );
 }
