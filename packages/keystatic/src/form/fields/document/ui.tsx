@@ -11,11 +11,48 @@ import { DocumentEditor, Editor } from './DocumentEditor';
 import { DocumentFeatures } from './DocumentEditor/document-features';
 import { createDocumentEditorForNormalization } from './DocumentEditor/create-editor';
 import type { Descendant } from 'slate';
+import { format, parse } from '#markdoc';
+import { toMarkdocDocument } from './markdoc/to-markdoc';
 
 let i = 0;
 
 function newKey() {
   return i++;
+}
+
+const encoder = new TextEncoder();
+
+export function serializeMarkdoc(
+  value: DocumentElement[],
+  opts: { slug: string | undefined },
+  componentBlocks: Record<string, ComponentBlock>,
+  documentFeatures: DocumentFeatures
+) {
+  const { extraFiles, node } = toMarkdocDocument(value as any as Descendant[], {
+    componentBlocks,
+    documentFeatures,
+    slug: opts.slug,
+  });
+
+  const other = new Map<string, Uint8Array>();
+  const external = new Map<string, Map<string, Uint8Array>>();
+  for (const file of extraFiles) {
+    if (file.parent === undefined) {
+      other.set(file.path, file.contents);
+      continue;
+    }
+    if (!external.has(file.parent)) {
+      external.set(file.parent, new Map());
+    }
+    external.get(file.parent)!.set(file.path, file.contents);
+  }
+
+  return {
+    content: encoder.encode(format(parse(format(node)))),
+    other,
+    external,
+    value: undefined,
+  };
 }
 
 export function normalizeDocumentFieldChildren(

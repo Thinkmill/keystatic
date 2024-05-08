@@ -1,9 +1,6 @@
-import { format, parse as markdocParse } from '#markdoc';
-
-import type { Descendant } from 'slate';
+import { parse } from '#markdoc';
 
 import { fromMarkdoc } from './markdoc/from-markdoc';
-import { toMarkdocDocument } from './markdoc/to-markdoc';
 import { DocumentFeatures } from './DocumentEditor/document-features';
 import { deserializeFiles } from './DocumentEditor/component-blocks/document-field';
 import { collectDirectoriesUsedInSchema } from '../../../app/tree-key';
@@ -19,13 +16,13 @@ import { text } from '../text';
 import {
   DocumentFieldInput,
   normalizeDocumentFieldChildren,
+  serializeMarkdoc,
 } from '#field-ui/document';
 import { object } from '../object';
 import { FieldDataError } from '../error';
 import { basicFormFieldWithSimpleReaderParse } from '../utils';
 import { fixPath } from '../../../app/path-utils';
 
-const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
 
 type HeadingLevels = true | readonly (1 | 2 | 3 | 4 | 5 | 6)[];
@@ -286,7 +283,7 @@ export function document({
 
     parse(_, data) {
       const markdoc = textDecoder.decode(data.content);
-      const document = fromMarkdoc(markdocParse(markdoc), componentBlocks);
+      const document = fromMarkdoc(parse(markdoc), componentBlocks);
       return deserializeFiles(
         normalizeDocumentFieldChildren(
           documentFeatures,
@@ -322,39 +319,12 @@ export function document({
         : []),
     ],
     serialize(value, opts) {
-      const { extraFiles, node } = toMarkdocDocument(
-        value as any as Descendant[],
-        {
-          componentBlocks,
-          documentFeatures,
-          slug: opts.slug,
-        }
-      );
-
-      const other = new Map<string, Uint8Array>();
-      const external = new Map<string, Map<string, Uint8Array>>();
-      for (const file of extraFiles) {
-        if (file.parent === undefined) {
-          other.set(file.path, file.contents);
-          continue;
-        }
-        if (!external.has(file.parent)) {
-          external.set(file.parent, new Map());
-        }
-        external.get(file.parent)!.set(file.path, file.contents);
-      }
-
-      return {
-        content: textEncoder.encode(format(markdocParse(format(node)))),
-        other,
-        external,
-        value: undefined,
-      };
+      return serializeMarkdoc(value, opts, componentBlocks, documentFeatures);
     },
     reader: {
       parse(value, data) {
         const markdoc = textDecoder.decode(data.content);
-        const document = fromMarkdoc(markdocParse(markdoc), componentBlocks);
+        const document = fromMarkdoc(parse(markdoc), componentBlocks);
         return deserializeFiles(
           document,
           componentBlocks,
