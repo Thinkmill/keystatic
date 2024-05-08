@@ -281,6 +281,7 @@
       "worker": "./src/component-blocks/blank-for-react-server.tsx",
       "react-server": "./src/component-blocks/blank-for-react-server.tsx",
       "default": "./src/component-blocks/cloud-image-preview.tsx"
-    }
+    },
+    "#markdoc": "./src/markdoc.js"
   }
 }

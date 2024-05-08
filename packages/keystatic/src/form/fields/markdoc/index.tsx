@@ -1,4 +1,4 @@
-import Markdoc, { Node as MarkdocNode } from '@markdoc/markdoc';
+import { Node as MarkdocNode, parse } from '#markdoc';
 
 import { ContentFormField } from '../../api';
 import {
@@ -97,7 +97,7 @@ export function markdoc({
     reader: {
       parse: (_, { content }) => {
         const text = textDecoder.decode(content);
-        return { node: Markdoc.parse(text) };
+        return { node: parse(text) };
       },
     },
     collaboration: {

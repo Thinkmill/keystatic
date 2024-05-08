@@ -1,6 +1,6 @@
-import Markdoc from '@markdoc/markdoc';
+import { format, parse as markdocParse } from '#markdoc';
 
-import { Descendant, Editor } from 'slate';
+import type { Descendant } from 'slate';
 
 import { fromMarkdoc } from './markdoc/from-markdoc';
 import { toMarkdocDocument } from './markdoc/to-markdoc';
@@ -14,11 +14,12 @@ import {
   DocumentElement,
   ContentFormField,
   SlugFormField,
-  FormFieldStoredValue,
 } from '../../api';
 import { text } from '../text';
-import { DocumentFieldInput } from '#field-ui/document';
-import { createDocumentEditorForNormalization } from './DocumentEditor/create-editor';
+import {
+  DocumentFieldInput,
+  normalizeDocumentFieldChildren,
+} from '#field-ui/document';
 import { object } from '../object';
 import { FieldDataError } from '../error';
 import { basicFormFieldWithSimpleReaderParse } from '../utils';
@@ -264,35 +265,7 @@ export function document({
   DocumentElement[]
 > {
   const documentFeatures = normaliseDocumentFeatures(documentFeaturesConfig);
-  const parse =
-    (mode: 'read' | 'edit') =>
-    (
-      _value: FormFieldStoredValue,
-      data: {
-        content: Uint8Array | undefined;
-        other: ReadonlyMap<string, Uint8Array>;
-        external: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
-        slug: string | undefined;
-      }
-    ): DocumentElement[] => {
-      const markdoc = textDecoder.decode(data.content);
-      const document = fromMarkdoc(Markdoc.parse(markdoc), componentBlocks);
-      const editor = createDocumentEditorForNormalization(
-        documentFeatures,
-        componentBlocks
-      );
-      editor.children = document;
-      Editor.normalize(editor, { force: true });
-      return deserializeFiles(
-        editor.children,
-        componentBlocks,
-        data.other,
-        data.external || new Map(),
-        mode,
-        documentFeatures,
-        data.slug
-      ) as any;
-    };
+
   return {
     kind: 'form',
     formKind: 'content',
@@ -311,7 +284,23 @@ export function document({
       );
     },
 
-    parse: parse('edit'),
+    parse(_, data) {
+      const markdoc = textDecoder.decode(data.content);
+      const document = fromMarkdoc(markdocParse(markdoc), componentBlocks);
+      return deserializeFiles(
+        normalizeDocumentFieldChildren(
+          documentFeatures,
+          componentBlocks,
+          document
+        ),
+        componentBlocks,
+        data.other,
+        data.external,
+        'edit',
+        documentFeatures,
+        data.slug
+      ) as any;
+    },
     contentExtension: '.mdoc',
     validate(value) {
       return value;
@@ -356,16 +345,26 @@ export function document({
       }
 
       return {
-        content: textEncoder.encode(
-          Markdoc.format(Markdoc.parse(Markdoc.format(node)))
-        ),
+        content: textEncoder.encode(format(markdocParse(format(node)))),
         other,
         external,
         value: undefined,
       };
     },
     reader: {
-      parse: parse('read'),
+      parse(value, data) {
+        const markdoc = textDecoder.decode(data.content);
+        const document = fromMarkdoc(markdocParse(markdoc), componentBlocks);
+        return deserializeFiles(
+          document,
+          componentBlocks,
+          new Map(),
+          new Map(),
+          'read',
+          documentFeatures,
+          undefined
+        ) as any;
+      },
     },
   };
 }

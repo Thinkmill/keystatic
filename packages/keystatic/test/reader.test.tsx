@@ -121,6 +121,7 @@ test('read', async () => {
             "text": "Cool, and things are direct to GitHub?",
           },
         ],
+        "textAlign": undefined,
         "type": "paragraph",
       },
       {
@@ -162,6 +163,7 @@ test('read deep', async () => {
                   "text": "Dan Cousens",
                 },
               ],
+              "textAlign": undefined,
               "type": "paragraph",
             },
           ],
@@ -175,6 +177,7 @@ test('read deep', async () => {
               "text": "Cool, and things are direct to GitHub?",
             },
           ],
+          "textAlign": undefined,
           "type": "paragraph",
         },
         {
@@ -246,6 +249,7 @@ test('read all deep', async () => {
                       "text": "Dan Cousens",
                     },
                   ],
+                  "textAlign": undefined,
                   "type": "paragraph",
                 },
               ],
@@ -259,6 +263,7 @@ test('read all deep', async () => {
                   "text": "Cool, and things are direct to GitHub?",
                 },
               ],
+              "textAlign": undefined,
               "type": "paragraph",
             },
             {
