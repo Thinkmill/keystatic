@@ -1,10 +1,25 @@
 # localization
 
+## 0.0.0-test-20240508005133
+
+### Patch Changes
+
+- Updated dependencies
+  [[`54178b6`](https://github.com/Thinkmill/keystatic/commit/54178b64f66fdc2462e68cf2f64d769d37e42897)]:
+  - @keystatic/core@0.0.0-test-20240508005133
+  - @keystatic/next@5.0.0
+
 ## 0.1.101
 
 ### Patch Changes
 
-- Updated dependencies [[`fe63e6a`](https://github.com/Thinkmill/keystatic/commit/fe63e6a77a695d7cafb5aadb12a7eb2e1c914f0b), [`adc0cf6`](https://github.com/Thinkmill/keystatic/commit/adc0cf6282494eb522f6d129a49a7dd9c25c9490), [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c), [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2), [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c), [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2)]:
+- Updated dependencies
+  [[`fe63e6a`](https://github.com/Thinkmill/keystatic/commit/fe63e6a77a695d7cafb5aadb12a7eb2e1c914f0b),
+  [`adc0cf6`](https://github.com/Thinkmill/keystatic/commit/adc0cf6282494eb522f6d129a49a7dd9c25c9490),
+  [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c),
+  [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2),
+  [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c),
+  [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2)]:
   - @keystatic/core@0.5.14
   - @keystatic/next@5.0.0
 
@@ -12,7 +27,9 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`b509e87`](https://github.com/Thinkmill/keystatic/commit/b509e8794b8e4676feb6e1f0982ddb80cc5376df), [`31286c0`](https://github.com/Thinkmill/keystatic/commit/31286c0e3ff0bd591853fdab70f7f797dad316f5)]:
+- Updated dependencies
+  [[`b509e87`](https://github.com/Thinkmill/keystatic/commit/b509e8794b8e4676feb6e1f0982ddb80cc5376df),
+  [`31286c0`](https://github.com/Thinkmill/keystatic/commit/31286c0e3ff0bd591853fdab70f7f797dad316f5)]:
   - @keystatic/core@0.5.13
   - @keystatic/next@5.0.0
 
@@ -205,7 +222,8 @@
 
 ### Patch Changes
 
-- bbbca74f: Add `locale` config option, now defaults to `en-US` instead of auto-detecting the Browser's locale.
+- bbbca74f: Add `locale` config option, now defaults to `en-US` instead of
+  auto-detecting the Browser's locale.
 - Updated dependencies [bbbca74f]
 - Updated dependencies [944dbe67]
 - Updated dependencies [91857b9b]
