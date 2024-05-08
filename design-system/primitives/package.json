@@ -23,7 +23,7 @@
     "prettier": "^3.0.3",
     "style-dictionary": "^3.8.0",
     "tsx": "^4.8.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "@prettier/sync": "^0.3.0"
