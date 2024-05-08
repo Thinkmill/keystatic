@@ -35,7 +35,7 @@
     "react-dom": "^18.2.0",
     "react-focus-lock": "^2.9.4",
     "shiki": "^0.14.2",
-    "typescript": "^5.2.2",
+    "typescript": "^5.4.5",
     "vercel": "^33.6.3"
   },
   "devDependencies": {
