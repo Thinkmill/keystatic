@@ -22,6 +22,10 @@ import { InputRule } from '../inputrules/inputrules';
 import { useEditorKeydownListener } from '../keydown';
 import { EditorAutocomplete } from './autocomplete';
 import { EditorSchema } from '../schema';
+import { useCloudInfo } from '../../../../../app/shell/data';
+import { useConfig } from '../../../../../app/shell/context';
+import { handleAI } from '../ai';
+import { sparklesIcon } from '@keystar/ui/icon/icons/sparklesIcon';
 
 export type InsertMenuItemSpec = {
   label: string;
@@ -94,12 +98,46 @@ function InsertMenu(props: { query: string; from: number; to: number }) {
   const schema = useEditorSchema();
   const editorState = useEditorState();
 
+  const cloudInfo = useCloudInfo();
+  const config = useConfig();
+
+  const allInsertMenuItems = useMemo((): InsertMenuItem[] => {
+    if (cloudInfo) {
+      return [
+        {
+          command: (state, dispatch, view) => {
+            if (dispatch && view) {
+              handleAI(config, view, 'continue');
+            }
+            return true;
+          },
+          id: 'continue',
+          label: 'Continue Writing',
+          icon: sparklesIcon,
+        },
+        {
+          command: (state, dispatch, view) => {
+            if (dispatch && view) {
+              handleAI(config, view, 'summarise');
+            }
+            return true;
+          },
+          id: 'summarise',
+          label: 'Summarise',
+          icon: sparklesIcon,
+        },
+        ...schema.insertMenuItems,
+      ];
+    }
+    return schema.insertMenuItems;
+  }, [cloudInfo, config, schema.insertMenuItems]);
+
   const options = useMemo(
     () =>
-      matchSorter(schema.insertMenuItems, props.query, {
+      matchSorter(allInsertMenuItems, props.query, {
         keys: ['label'],
       }).filter(option => option.command(editorState)),
-    [editorState, schema.insertMenuItems, props.query]
+    [editorState, allInsertMenuItems, props.query]
   );
 
   useEditorKeydownListener(event => {
