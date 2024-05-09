@@ -10,6 +10,8 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { events } from 'fetch-event-stream';
+import * as s from 'superstruct';
 
 import { ActionButton } from '@keystar/ui/button';
 import {
@@ -21,6 +23,7 @@ import {
 } from '@keystar/ui/editor';
 import { Icon } from '@keystar/ui/icon';
 import { boldIcon } from '@keystar/ui/icon/icons/boldIcon';
+import { sparklesIcon } from '@keystar/ui/icon/icons/sparklesIcon';
 import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
 import { codeIcon } from '@keystar/ui/icon/icons/codeIcon';
 import { italicIcon } from '@keystar/ui/icon/icons/italicIcon';
@@ -55,6 +58,16 @@ import { DialogContainer } from '@keystar/ui/dialog';
 import { linkIcon } from '@keystar/ui/icon/icons/linkIcon';
 import { markAround } from './popovers';
 import { useEditorKeydownListener } from './keydown';
+import {
+  KEYSTATIC_CLOUD_API_URL,
+  KEYSTATIC_CLOUD_HEADERS,
+} from '../../../../app/utils';
+import { useCloudInfo } from '../../../../app/shell/data';
+import { getCloudAuth } from '../../../../app/auth';
+import { useConfig } from '../../../../app/shell/context';
+import { format } from '#markdoc';
+import { proseMirrorToMarkdoc } from './markdoc/serialize';
+import { clipboardTextParser } from './markdoc/clipboard';
 
 export function ToolbarButton(props: {
   children: ReactNode;
@@ -262,6 +275,7 @@ export const Toolbar = memo(function Toolbar(
               </TooltipTrigger>
             )}
             <ImageToolbarButton />
+            <AiButton />
           </EditorToolbarGroup>
         </EditorToolbar>
       </ToolbarScrollArea>
@@ -270,6 +284,114 @@ export const Toolbar = memo(function Toolbar(
     </ToolbarWrapper>
   );
 });
+
+const aiResponseSchema = s.type({
+  response: s.string(),
+});
+function AiButton() {
+  const cloudInfo = useCloudInfo();
+  const config = useConfig();
+  const state = useEditorState();
+  const schema = useEditorSchema();
+  const viewRef = useEditorViewRef();
+  if (!cloudInfo) return null;
+  return (
+    <MenuTrigger>
+      <TooltipTrigger>
+        <EditorToolbarButton
+          isSelected={false}
+          aria-label="AI"
+          onPress={() => {}}
+        >
+          <Icon src={sparklesIcon} />
+        </EditorToolbarButton>
+        <Tooltip>
+          <Text>AI</Text>
+        </Tooltip>
+      </TooltipTrigger>
+      <Menu
+        onAction={async key => {
+          const auth = getCloudAuth(config);
+          if (!auth) return;
+          const from = 0;
+          const to = state.selection.to;
+          const slice = state.doc.slice(from, to);
+          let content: string;
+          try {
+            content = format(
+              proseMirrorToMarkdoc(state.doc.type.create({}, slice.content), {
+                otherFiles: new Map(),
+                extraFiles: new Map(),
+                schema,
+                slug: undefined,
+              })
+            );
+          } catch (err) {
+            console.log('failed to serialize text as markdoc', err);
+            content = slice.content.textBetween(0, slice.content.size, '\n\n');
+          }
+          const res = await fetch(`${KEYSTATIC_CLOUD_API_URL}/v1/ai/text`, {
+            method: 'POST',
+            body: JSON.stringify({
+              action: key,
+              content,
+            }),
+            headers: {
+              ...KEYSTATIC_CLOUD_HEADERS,
+              Accept: 'text/event-stream',
+              Authorization: `Bearer ${auth.accessToken}`,
+            },
+          });
+          if (!res.ok) {
+            return;
+          }
+
+          const view = viewRef.current!;
+
+          let full = '';
+          let start = state.selection.to;
+          let end = state.selection.to;
+          let lastTr;
+
+          for await (const event of events(res)) {
+            if (event.data === '[DONE]') continue;
+            let text: string;
+            try {
+              text = aiResponseSchema.create(JSON.parse(event.data!)).response;
+            } catch {
+              const { tr } = view.state;
+              tr.deleteRange(start, end);
+              view.dispatch(tr);
+              break;
+            }
+            full += text;
+            const slice = clipboardTextParser(
+              full,
+              view.state.doc.resolve(start),
+              false,
+              view
+            );
+            if (lastTr) {
+              let inverted = view.state.tr;
+              for (let i = lastTr.steps.length - 1; i >= 0; i--) {
+                inverted.step(lastTr.steps[i].invert(lastTr.docs[i]));
+              }
+              view.dispatch(inverted);
+            }
+
+            const { tr } = view.state;
+            tr.replaceRange(state.selection.from, state.selection.to, slice);
+            lastTr = tr;
+            view.dispatch(tr);
+          }
+        }}
+      >
+        <Item key="continue">Continue Writing</Item>
+        <Item key="summarise">Summarise</Item>
+      </Menu>
+    </MenuTrigger>
+  );
+}
 
 const ToolbarContainer = ({ children }: { children: ReactNode }) => {
   let entryLayoutPane = useEntryLayoutSplitPaneContext();

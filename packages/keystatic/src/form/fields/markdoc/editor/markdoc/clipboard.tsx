@@ -72,6 +72,28 @@ export function markdocClipboard() {
   });
 }
 
+export function clipboardTextParser(
+  text: string,
+  $context: ResolvedPos,
+  plain: boolean,
+  view: EditorView
+) {
+  try {
+    return Slice.maxOpen(
+      markdocToProseMirror(
+        parse(text),
+        getEditorSchema(view.state.schema),
+        undefined,
+        undefined,
+        undefined
+      ).content
+    );
+  } catch (err) {
+    console.log('failed to parse clipboard text as markdoc', err);
+    return defaultClipboardTextParser(text, $context, plain, view);
+  }
+}
+
 // vscode adds extra data to the DataTransfer but those only exist when pasted into a chromium browser
 // this works across browser
 function isProbablyHtmlFromVscode(html: string) {
