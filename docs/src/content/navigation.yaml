@@ -97,6 +97,11 @@ navGroups:
           discriminant: page
           value: recipes/astro-disable-admin-ui-in-production
         status: default
+      - label: 'Next.js: Disable Admin UI Routes in Production'
+        link:
+          discriminant: page
+          value: recipes/nextjs-disable-admin-ui-in-production
+        status: default
   - groupName: Reference
     items:
       - label: Configuration
