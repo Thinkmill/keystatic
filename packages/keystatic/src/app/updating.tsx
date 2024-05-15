@@ -5,7 +5,6 @@ import { useContext, useState } from 'react';
 import { ComponentSchema, fields } from '../form/api';
 import { dump } from 'js-yaml';
 import { useMutation } from 'urql';
-import { fromUint8Array } from 'js-base64';
 import {
   BranchInfoContext,
   fetchGitHubTreeData,
@@ -29,6 +28,7 @@ import { AppSlugContext } from './onboarding/install-app';
 import { createUrqlClient } from './provider';
 import { serializeProps } from '../form/serialize-props';
 import { scopeEntriesWithPathPrefix } from './shell/path-prefix';
+import { base64UrlEncode } from '#base64';
 
 const textEncoder = new TextEncoder();
 
@@ -217,7 +217,7 @@ export function useUpsertItem(args: {
                 fileChanges: {
                   additions: additions.map(addition => ({
                     ...addition,
-                    contents: fromUint8Array(addition.contents),
+                    contents: base64UrlEncode(addition.contents),
                   })),
                   deletions,
                 },
@@ -298,7 +298,7 @@ export function useUpsertItem(args: {
             body: JSON.stringify({
               additions: additions.map(addition => ({
                 ...addition,
-                contents: fromUint8Array(addition.contents),
+                contents: base64UrlEncode(addition.contents),
               })),
               deletions,
             }),

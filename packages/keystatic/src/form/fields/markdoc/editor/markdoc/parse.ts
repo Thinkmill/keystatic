@@ -1,4 +1,4 @@
-import { Node as MarkdocNode, ValidateError } from '@markdoc/markdoc';
+import { Node as MarkdocNode, ValidateError } from '#markdoc';
 import {
   Mark,
   MarkType,

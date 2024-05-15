@@ -1,4 +1,4 @@
-import Markdoc, { Node as MarkdocNode } from '@markdoc/markdoc';
+import { Node as MarkdocNode, parse } from '#markdoc';
 
 import { ContentFormField } from '../../api';
 import {
@@ -10,6 +10,7 @@ import {
   parseToEditorStateMDX,
   serializeFromEditorStateMDX,
   createEditorStateFromYJS,
+  prosemirrorToYXmlFragment,
 } from '#field-ui/markdoc';
 import type { EditorSchema } from './editor/schema';
 import type { EditorState } from 'prosemirror-state';
@@ -22,8 +23,7 @@ import {
 import { collectDirectoriesUsedInSchema } from '../../../app/tree-key';
 import { object } from '../object';
 import { fixPath } from '../../../app/path-utils';
-import { XmlFragment } from 'yjs';
-import { prosemirrorToYXmlFragment } from 'y-prosemirror';
+import type { XmlFragment } from 'yjs';
 import { createMarkdocConfig } from './markdoc-config';
 
 const textDecoder = new TextDecoder();
@@ -97,7 +97,7 @@ export function markdoc({
     reader: {
       parse: (_, { content }) => {
         const text = textDecoder.decode(content);
-        return { node: Markdoc.parse(text) };
+        return { node: parse(text) };
       },
     },
     collaboration: {
@@ -195,6 +195,18 @@ export function mdx({
       parse: (_, { content }) => {
         const text = textDecoder.decode(content);
         return text;
+      },
+    },
+    collaboration: {
+      toYjs(value) {
+        return prosemirrorToYXmlFragment(value.doc);
+      },
+      fromYjs(yjsValue, awareness) {
+        return createEditorStateFromYJS(
+          getSchema(),
+          yjsValue as XmlFragment,
+          awareness
+        );
       },
     },
   };

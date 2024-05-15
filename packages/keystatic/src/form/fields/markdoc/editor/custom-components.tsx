@@ -20,7 +20,7 @@ import {
   toSerialized,
   useDeserializedValue,
 } from './props-serialization';
-import { fromUint8Array, toUint8Array } from 'js-base64';
+import { base64UrlEncode, base64UrlDecode } from '#base64';
 
 function serializeProps(props: {
   value: unknown;
@@ -35,7 +35,7 @@ function serializeProps(props: {
     extraFiles: props.extraFiles.map(x => ({
       path: x.path,
       parent: x.parent,
-      contents: fromUint8Array(x.contents),
+      contents: base64UrlEncode(x.contents),
     })),
   });
 }
@@ -54,7 +54,7 @@ function deserializeProps(
         extraFiles: parsed.extraFiles.map((x: any) => ({
           path: x.path,
           parent: x.parent,
-          contents: toUint8Array(x.contents),
+          contents: base64UrlDecode(x.contents),
         })),
       },
     };
@@ -494,6 +494,7 @@ export function getCustomNodeSpecs(
                       ? 'color.alias.borderSelected'
                       : 'color.alias.borderIdle'
                   }
+                  data-component={name}
                   borderRadius="regular"
                   UNSAFE_className={css({
                     '::after': {

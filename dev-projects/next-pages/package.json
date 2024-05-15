@@ -1,6 +1,6 @@
 {
   "name": "@example/next-pages",
-  "version": "0.0.105",
+  "version": "0.0.106",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -24,6 +24,6 @@
     "@ts-gql/next": "^17.0.1",
     "next": "^14.1.3",
     "tsx": "^4.8.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.4.5"
   }
 }

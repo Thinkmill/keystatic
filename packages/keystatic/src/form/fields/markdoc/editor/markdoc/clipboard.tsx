@@ -7,7 +7,7 @@ import {
 import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { proseMirrorToMarkdoc } from './serialize';
-import Markdoc from '@markdoc/markdoc';
+import { format, parse } from '#markdoc';
 import { markdocToProseMirror } from './parse';
 import { getEditorSchema } from '../schema';
 
@@ -21,7 +21,7 @@ export function markdocClipboard() {
       // you shouldn't get the block quote
       clipboardTextSerializer(content, view) {
         try {
-          return Markdoc.format(
+          return format(
             proseMirrorToMarkdoc(
               view.state.doc.type.create({}, content.content),
               {
@@ -41,7 +41,7 @@ export function markdocClipboard() {
         try {
           return Slice.maxOpen(
             markdocToProseMirror(
-              Markdoc.parse(text),
+              parse(text),
               getEditorSchema(view.state.schema),
               undefined,
               undefined,

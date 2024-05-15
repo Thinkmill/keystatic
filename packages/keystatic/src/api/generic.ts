@@ -1,6 +1,5 @@
 import cookie from 'cookie';
-import * as Iron from 'iron-webcrypto';
-import z from 'zod';
+import * as s from 'superstruct';
 import { Config } from '..';
 import {
   KeystaticResponse,
@@ -10,6 +9,7 @@ import {
 import { handleGitHubAppCreation, localModeApiHandler } from '#api-handler';
 import { webcrypto } from '#webcrypto';
 import { bytesToHex } from '../hex';
+import { decryptValue, encryptValue } from './encryption';
 
 export type APIRouteConfig = {
   /** @default process.env.KEYSTATIC_GITHUB_CLIENT_ID */
@@ -181,13 +181,13 @@ export function makeGenericAPIRouteHandler(
   };
 }
 
-const tokenDataResultType = z.object({
-  access_token: z.string(),
-  expires_in: z.number(),
-  refresh_token: z.string(),
-  refresh_token_expires_in: z.number(),
-  scope: z.string(),
-  token_type: z.literal('bearer'),
+const tokenDataResultType = s.type({
+  access_token: s.string(),
+  expires_in: s.number(),
+  refresh_token: s.string(),
+  refresh_token_expires_in: s.number(),
+  scope: s.string(),
+  token_type: s.literal('bearer'),
 });
 
 async function githubOauthCallback(
@@ -231,12 +231,14 @@ async function githubOauthCallback(
     return { status: 401, body: 'Authorization failed' };
   }
   const _tokenData = await tokenRes.json();
-  const tokenDataParseResult = tokenDataResultType.safeParse(_tokenData);
-  if (!tokenDataParseResult.success) {
+  let tokenData;
+  try {
+    tokenData = tokenDataResultType.create(_tokenData);
+  } catch {
     return { status: 401, body: 'Authorization failed' };
   }
 
-  const headers = await getTokenCookies(tokenDataParseResult.data, config);
+  const headers = await getTokenCookies(tokenData, config);
   if (state === 'close') {
     return {
       headers: [...headers, ['Content-Type', 'text/html']],
@@ -248,7 +250,7 @@ async function githubOauthCallback(
 }
 
 async function getTokenCookies(
-  tokenData: z.infer<typeof tokenDataResultType>,
+  tokenData: s.Infer<typeof tokenDataResultType>,
   config: InnerAPIRouteConfig
 ) {
   const headers: [string, string][] = [
@@ -266,10 +268,7 @@ async function getTokenCookies(
       'Set-Cookie',
       cookie.serialize(
         'keystatic-gh-refresh-token',
-        await Iron.seal(webcrypto, tokenData.refresh_token, config.secret, {
-          ...Iron.defaults,
-          ttl: tokenData.refresh_token_expires_in * 1000,
-        }),
+        await encryptValue(tokenData.refresh_token, config.secret),
         {
           sameSite: 'lax',
           secure: process.env.NODE_ENV === 'production',
@@ -295,16 +294,10 @@ async function getRefreshToken(
   if (!refreshTokenCookie) return;
   let refreshToken;
   try {
-    refreshToken = await Iron.unseal(
-      webcrypto,
-      refreshTokenCookie,
-      config.secret,
-      Iron.defaults
-    );
+    refreshToken = await decryptValue(refreshTokenCookie, config.secret);
   } catch {
     return;
   }
-  if (typeof refreshToken !== 'string') return;
   return refreshToken;
 }
 
@@ -341,11 +334,13 @@ async function refreshGitHubAuth(
     return;
   }
   const _tokenData = await tokenRes.json();
-  const tokenDataParseResult = tokenDataResultType.safeParse(_tokenData);
-  if (!tokenDataParseResult.success) {
+  let tokenData;
+  try {
+    tokenData = tokenDataResultType.create(_tokenData);
+  } catch {
     return;
   }
-  return getTokenCookies(tokenDataParseResult.data, config);
+  return getTokenCookies(tokenData, config);
 }
 
 async function githubRepoNotFound(

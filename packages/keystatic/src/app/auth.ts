@@ -1,11 +1,11 @@
 import { parse } from 'cookie';
-import { z } from 'zod';
+import * as s from 'superstruct';
 import { Config } from '../config';
 
-const storedTokenSchema = z.object({
-  token: z.string(),
-  project: z.string(),
-  validUntil: z.number().transform(val => new Date(val)),
+const storedTokenSchema = s.object({
+  token: s.string(),
+  project: s.string(),
+  validUntil: s.coerce(s.date(), s.number(), val => new Date(val)),
 });
 
 export function getSyncAuth(config: Config) {
@@ -33,7 +33,7 @@ export function getCloudAuth(config: Config) {
   );
   let tokenData;
   try {
-    tokenData = storedTokenSchema.parse(JSON.parse(unparsedTokenData!));
+    tokenData = storedTokenSchema.create(JSON.parse(unparsedTokenData!));
   } catch (err) {
     return null;
   }
@@ -47,23 +47,33 @@ export function getCloudAuth(config: Config) {
   return { accessToken: tokenData.token };
 }
 
+let _refreshTokenPromise: Promise<{ accessToken: string } | null> | undefined;
+
 export async function getAuth(config: Config) {
   const token = getSyncAuth(config);
 
   if (config.storage.kind === 'github' && !token) {
-    try {
-      const res = await fetch('/api/keystatic/github/refresh-token', {
-        method: 'POST',
-      });
-      if (res.status === 200) {
-        const cookies = parse(document.cookie);
-        const accessToken = cookies['keystatic-gh-access-token'];
-        if (accessToken) {
-          return { accessToken };
+    if (!_refreshTokenPromise) {
+      _refreshTokenPromise = (async () => {
+        try {
+          const res = await fetch('/api/keystatic/github/refresh-token', {
+            method: 'POST',
+          });
+          if (res.status === 200) {
+            const cookies = parse(document.cookie);
+            const accessToken = cookies['keystatic-gh-access-token'];
+            if (accessToken) {
+              return { accessToken };
+            }
+          }
+        } catch {
+        } finally {
+          _refreshTokenPromise = undefined;
         }
-      }
-    } catch {}
-    return null;
+        return null;
+      })();
+    }
+    return _refreshTokenPromise;
   }
   return token;
 }

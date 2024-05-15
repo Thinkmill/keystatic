@@ -5,7 +5,7 @@ import { Editor } from './editor';
 import { createEditorState } from './editor/editor-state';
 import { EditorSchema, getEditorSchema } from './editor/schema';
 import { markdocToProseMirror } from './editor/markdoc/parse';
-import Markdoc from '@markdoc/markdoc';
+import { format, parse } from '#markdoc';
 import { proseMirrorToMarkdoc } from './editor/markdoc/serialize';
 import { useEntryLayoutSplitPaneContext } from '../../../app/entry-form';
 import { fromMarkdown } from 'mdast-util-from-markdown';
@@ -38,7 +38,7 @@ export function parseToEditorState(
 ) {
   const markdoc = textDecoder.decode(content);
   const doc = markdocToProseMirror(
-    Markdoc.parse(markdoc),
+    parse(markdoc),
     schema,
     files,
     otherFiles,
@@ -59,9 +59,9 @@ export function serializeFromEditorState(
     schema: getEditorSchema(value.schema),
     slug,
   });
-  const markdoc = Markdoc.format(markdocNode);
+  const markdoc = format(markdocNode);
   return {
-    content: textEncoder.encode(Markdoc.format(Markdoc.parse(markdoc))),
+    content: textEncoder.encode(format(parse(markdoc))),
     other,
     external,
   };
@@ -151,3 +151,5 @@ export function createEditorStateFromYJS(
     awareness
   );
 }
+
+export { prosemirrorToYXmlFragment } from 'y-prosemirror';

@@ -11,7 +11,7 @@ import {
   useState,
 } from 'react';
 import * as Y from 'yjs';
-import { z } from 'zod';
+import * as s from 'superstruct';
 
 import { ActionGroup, Item } from '@keystar/ui/action-group';
 import { Badge } from '@keystar/ui/badge';
@@ -95,12 +95,12 @@ type ItemPageProps = {
   basePath: string;
 };
 
-const storedValSchema = z.object({
-  version: z.literal(1),
-  savedAt: z.date(),
-  slug: z.string(),
-  beforeTreeKey: z.string(),
-  files: z.map(z.string(), z.instanceof(Uint8Array)),
+const storedValSchema = s.type({
+  version: s.literal(1),
+  savedAt: s.date(),
+  slug: s.string(),
+  beforeTreeKey: s.string(),
+  files: s.map(s.string(), s.instance(Uint8Array)),
 });
 
 function ItemPageInner(
@@ -433,7 +433,7 @@ function LocalItemPage(
         state,
       });
       const files = new Map(serialized.map(x => [x.path, x.contents]));
-      const data: z.infer<typeof storedValSchema> = {
+      const data: s.Infer<typeof storedValSchema> = {
         beforeTreeKey: localTreeKey,
         slug,
         files,
@@ -837,7 +837,7 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
         props.itemSlug,
       ]);
       if (!raw) throw new Error('No draft found');
-      const stored = storedValSchema.parse(raw);
+      const stored = storedValSchema.create(raw);
       const parsed = parseEntry(
         {
           config: props.config,

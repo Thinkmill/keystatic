@@ -1,7 +1,7 @@
 {
   "name": "@keystatic/templates-remix",
   "type": "module",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "license": "MIT",
   "scripts": {
     "build": "remix build",
@@ -26,7 +26,7 @@
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.0.11",
     "eslint": "^8.18.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.4.5"
   },
   "engines": {
     "node": ">=18.0.0"

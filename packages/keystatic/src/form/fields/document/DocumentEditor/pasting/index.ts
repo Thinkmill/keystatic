@@ -4,7 +4,7 @@ import { isValidURL } from '../isValidURL';
 import { insertNodesButReplaceIfSelectionIsAtEmptyParagraphOrHeading } from '../ui-utils';
 import { deserializeHTML } from './html';
 import { deserializeMarkdown } from './markdown';
-import { fromUint8Array, toUint8Array } from 'js-base64';
+import { base64UrlEncode, base64UrlDecode } from '#base64';
 import { isBlock } from '../editor';
 
 const urlPattern = /https?:\/\//;
@@ -133,7 +133,7 @@ function setFragmentData(e: Editor, data: DataTransfer) {
   const string = JSON.stringify(fragment, (key, val) => {
     if (val instanceof Uint8Array) {
       return {
-        [bytesName]: fromUint8Array(val),
+        [bytesName]: base64UrlEncode(val),
       };
     }
     return val;
@@ -184,7 +184,7 @@ export function withPasting(editor: Editor): Editor {
         val !== null &&
         bytesName in val &&
         typeof val[bytesName] === 'string'
-          ? toUint8Array(val[bytesName])
+          ? base64UrlDecode(val[bytesName])
           : val
       ) as Node[];
       editor.insertFragment(parsed);

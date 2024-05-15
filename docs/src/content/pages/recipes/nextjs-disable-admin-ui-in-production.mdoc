@@ -1,0 +1,103 @@
+---
+title: 'Next.js: Disable Admin UI Routes in Production'
+summary: >-
+  This recipe shows you how to prevent access to `/keystatic`
+  routes in production when using the Next.js framework.
+---
+{% aside icon="🙏" %}
+This is a community contribution from [Funabab](https://github.com/funabab).
+{% /aside %}
+
+
+When using the `local` strategy, you may want to only allow access to the `/keystatic` routes during development, but with the default Next.js setup, these routes are still accessible in production.
+
+Here's how you can prevent access to those routes in production when using the Next.js framework.
+
+## Define condition for showing admin UI
+
+If you've followed the [Next.js integration guide](/docs/installation-next-js), you should have a `keystatic.config.ts` file in the root of your project. Now, in the `keystatic.config.ts` file, we'll define and export the condition for accessing the admin UI.
+
+```diff
+// `keystatic.config.ts` file
+import { config, collection, fields } from '@keystatic/core';
+
++ export const showAdminUI = process.env.NODE_ENV === "development"
+
+export default config({
+    storage: {
+      kind: 'local',
+    },
+    collections: {
+      posts: collection({
+        label: 'Posts',
+        slugField: 'title',
+        path: 'posts/*',
+        format: { contentField: 'content' },
+        schema: {
+          title: fields.slug({ name: { label: 'Title' } }),
+          content: fields.document({
+            label: 'Content',
+            formatting: true,
+            dividers: true,
+            links: true,
+            images: true,
+          }),
+        },
+      }),
+    },
+  });
+
+```
+
+In the snippet above, we've define the condition to access the admin UI to during development using the `NODE_ENV` environment variable. This environment variable is likely to be set to "production" during a production deployment on hosts like Vercel, Netlify etc. Kindly consult your host documentation to confirm it production deployment settings.
+
+## Disable admin UI render
+
+With the condition defined, we'll now disable the rendering of the admin UI from the `/app/keystatic/layout.ts` file.
+
+```diff
+// `app/keystatic/layout.tsx` file
+import KeystaticApp from './keystatic'
++ import { showAdminUI } from '../../keystatic.config'
++ import { notFound } from 'next/navigation'
+
+export default function RootLayout() {
++    if (showAdminUI === false) {
++       notFound()
++    }
+    return <KeystaticApp />;
+}
+
+```
+
+Now, deploy to production while ensuring `NODE_ENV` is set to any value except "development" (should be handled automatically if you are deploying to vercel or netlify). You would see that accessing `/keystatic` page will return a 404 page.
+
+## Disable admin API routes (optional)
+
+Keystatic admin uses [API Routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) to get data for rendering. Since we've disabled the access to that, we could also disable it API routes.
+
+```diff
+// `api/keystatic/[...params]/route.ts` file
+import { makeRouteHandler } from '@keystatic/next/route-handler';
+- import keystaticConfig from '../../../../keystatic.config';
++ import keystaticConfig, { showAdminUI } from '../../../../keystatic.config';
+
+- export const { POST, GET } = makeRouteHandler({
+-    config: keystaticConfig,
+- });
+
++ export const { POST, GET } = (() => {
++    const notFoundRouteHandler = () => {
++        return new Response(null, {
++            status: 404,
++        })
++    }
++    if (showAdminUI === false) {
++        return { GET: notFoundRouteHandler, POST: notFoundRouteHandler }
++    }    
++    return makeRouteHandler({
++        config: keystaticConfig,
++    })
++ })()
+
+```
