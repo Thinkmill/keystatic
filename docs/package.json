@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "next",
-    "build": "next build",
-    "postbuild": "pagefind --site .next --output-path .next/static/chunks/app/\\(public\\)/pagefind",
+    "build": "next build && pnpm pagefind",
+    "pagefind": "pagefind --site .next --output-path .next/static/chunks/app/\\(public\\)/pagefind",
     "start": "next start",
     "pagefind:local": "npm run build && cp -r .next/static/chunks/app/\\(public\\)/pagefind public/pagefind/"
   },
