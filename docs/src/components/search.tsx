@@ -62,7 +62,7 @@ export function Search() {
             process.env.NODE_ENV === 'development'
               ? '/pagefind/pagefind.js'
               : // @ts-expect-error pagefind.js generated after build
-                /* webpackIgnore: true */ './app/(public)/pagefind/pagefind.js'
+                /* webpackIgnore: true */ '/_next/static/chunks/app/(public)/pagefind/pagefind.js'
           );
         } catch (e) {
           window.pagefind = { search: () => ({ results: [] }) };
