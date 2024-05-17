@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.5.15
+
+### Patch Changes
+
+- [#1129](https://github.com/Thinkmill/keystatic/pull/1129) [`d3aa1f2`](https://github.com/Thinkmill/keystatic/commit/d3aa1f2386bd690936662d98724eb385564a26cd) Thanks [@emmatown](https://github.com/emmatown)! - Server side bundle size improvements
+
+- [#1132](https://github.com/Thinkmill/keystatic/pull/1132) [`aa13ea9`](https://github.com/Thinkmill/keystatic/commit/aa13ea917ce2611266c0008197cfea4c1427724c) Thanks [@emmatown](https://github.com/emmatown)! - Fix typing when the placeholder is visible in the new editors
+
 ## 0.5.14
 
 ### Patch Changes
