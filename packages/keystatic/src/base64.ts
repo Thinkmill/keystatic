@@ -7,11 +7,15 @@ export function base64UrlDecode(base64: string) {
 }
 
 export function base64UrlEncode(bytes: Uint8Array) {
-  const binString = Array.from(bytes, byte => String.fromCodePoint(byte)).join(
-    ''
-  );
-  return btoa(binString)
+  return base64Encode(bytes)
     .replace(/\+/g, '-')
     .replace(/\//g, '_')
     .replace(/=/g, '');
+}
+
+export function base64Encode(bytes: Uint8Array) {
+  const binString = Array.from(bytes, byte => String.fromCodePoint(byte)).join(
+    ''
+  );
+  return btoa(binString);
 }
