@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/remix-test-app",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "type": "module",
   "private": true,
   "sideEffects": false,

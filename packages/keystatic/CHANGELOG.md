@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.5.16
+
+### Patch Changes
+
+- [#1148](https://github.com/Thinkmill/keystatic/pull/1148) [`21394c6`](https://github.com/Thinkmill/keystatic/commit/21394c65a8d507d4355cf71641690464c05d7ec8) Thanks [@emmatown](https://github.com/emmatown)! - Fix incorrectly passing base64url encoded content to GitHub's API instead of standard base64
+
 ## 0.5.15
 
 ### Patch Changes
