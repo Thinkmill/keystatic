@@ -923,3 +923,12 @@ test('expel whitespace', () => {
     "
   `);
 });
+
+test('more', () => {
+  const markdoc = `\`a\` b **c** d *e* f`;
+  const editor = fromMDX(markdoc);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "\`a\` b **c** d *e* f
+    "
+  `);
+});

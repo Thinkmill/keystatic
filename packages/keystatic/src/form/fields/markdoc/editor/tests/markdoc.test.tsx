@@ -556,3 +556,13 @@ test('optimal mark printing', () => {
     "
   `);
 });
+
+test('more', () => {
+  const markdoc = `\`a\` b **c** d *e* f`;
+  const editor = fromMarkdoc(markdoc);
+
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "\`a\` b **c** d *e* f
+    "
+  `);
+});

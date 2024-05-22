@@ -106,8 +106,10 @@ export function textblockChildren<Node extends object>(
       ++keep;
     }
     while (keep < active.length) {
-      active.pop()!;
-      depth--;
+      const mark = active.pop()!;
+      if (mark.type !== getEditorSchema(mark.type.schema).marks.code) {
+        depth--;
+      }
     }
     if (leading) {
       getCurrentChildrenArray().push(createTextNode(leading));
