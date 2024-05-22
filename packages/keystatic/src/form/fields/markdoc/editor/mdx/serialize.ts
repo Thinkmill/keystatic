@@ -2,16 +2,10 @@ import { Fragment, Mark, Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorSchema, getEditorSchema } from '../schema';
 import { getSrcPrefixForImageBlock } from '../images';
 import { fixPath } from '../../../../../app/path-utils';
-import {
-  PhrasingContent,
-  ListItem,
-  Text,
-  InlineCode,
-  BlockContent,
-  Root,
-} from 'mdast';
+import { PhrasingContent, ListItem, BlockContent, Root } from 'mdast';
 import { MdxJsxAttribute } from 'mdast-util-mdx';
 import { internalToSerialized } from '../props-serialization';
+import { textblockChildren } from '../serialize-inline';
 
 type DocumentSerializationState = {
   schema: EditorSchema;
@@ -35,7 +29,12 @@ function _inline(
   fragment: Fragment,
   state: DocumentSerializationState
 ): PhrasingContent[] {
-  return textblockChildren(fragment, state);
+  return textblockChildren(
+    fragment,
+    (text): PhrasingContent => ({ type: 'text', value: text }),
+    node => getLeafContent(node, state),
+    mark => getWrapperForMark(mark, state)
+  );
 }
 
 function propsToAttributes(props: Record<string, unknown>): MdxJsxAttribute[] {
@@ -54,117 +53,105 @@ function propsToAttributes(props: Record<string, unknown>): MdxJsxAttribute[] {
   }));
 }
 
-// TODO: this should handle marks spanning over multiple text nodes properly
-function textblockChildren(
-  fragment: Fragment,
+function getLeafContent(
+  node: ProseMirrorNode,
   state: DocumentSerializationState
-): PhrasingContent[] {
-  const children: PhrasingContent[] = [];
-  fragment.forEach(child => {
-    if (child.type === child.type.schema.nodes.hard_break) {
-      children.push({ type: 'break' });
-      return;
-    }
-    if (child.type === child.type.schema.nodes.image) {
-      const { src, filename } = child.attrs;
+): PhrasingContent | undefined {
+  const { schema } = state;
+  if (node.type === schema.nodes.hard_break) {
+    return { type: 'break' };
+  }
+  if (node.type === schema.nodes.image) {
+    const { src, filename } = node.attrs;
 
-      if (
-        typeof state.schema.config.image === 'object' &&
-        typeof state.schema.config.image.directory === 'string'
-      ) {
-        const parent = fixPath(state.schema.config.image.directory);
-        if (!state.otherFiles.has(parent)) {
-          state.otherFiles.set(parent, new Map());
-        }
-        state.otherFiles.get(parent)!.set(filename, src);
-      } else {
-        state.extraFiles.set(filename, src);
+    if (
+      typeof state.schema.config.image === 'object' &&
+      typeof state.schema.config.image.directory === 'string'
+    ) {
+      const parent = fixPath(state.schema.config.image.directory);
+      if (!state.otherFiles.has(parent)) {
+        state.otherFiles.set(parent, new Map());
       }
-
-      children.push({
-        type: 'image',
-        url: encodeURI(
-          `${getSrcPrefixForImageBlock(state.schema.config, state.slug)}${
-            child.attrs.filename
-          }`
-        ),
-        alt: child.attrs.alt,
-        title: child.attrs.title,
-      });
+      state.otherFiles.get(parent)!.set(filename, src);
+    } else {
+      state.extraFiles.set(filename, src);
     }
-    const componentConfig = state.schema.components[child.type.name];
-    if (componentConfig?.kind === 'inline') {
-      children.push({
-        type: 'mdxJsxTextElement',
-        name: child.type.name,
-        attributes: propsToAttributes(
-          internalToSerialized(componentConfig.schema, child.attrs.props, state)
-        ),
-        children: [],
-      });
-      return;
-    }
-    if (child.text !== undefined) {
-      let textNode: Text | InlineCode = { type: 'text', value: child.text };
-      let node: PhrasingContent = textNode;
-      const schema = getEditorSchema(child.type.schema);
-      let linkMark: Mark | undefined;
-      for (const mark of child.marks) {
-        if (mark.type === schema.marks.link) {
-          linkMark = mark;
-          continue;
-        }
-        const componentConfig = schema.components[mark.type.name];
-        if (componentConfig) {
-          node = {
-            type: 'mdxJsxTextElement',
-            name: mark.type.name,
-            attributes: propsToAttributes(
-              internalToSerialized(
-                componentConfig.schema,
-                mark.attrs.props,
-                state
-              )
-            ),
-            children: [node],
-          };
-          continue;
-        }
-        let type: 'strong' | 'emphasis' | 'delete' | undefined;
-        if (mark.type === schema.marks.bold) {
-          type = 'strong';
-        }
-        if (mark.type === schema.marks.code) {
-          (textNode as any).type = 'inlineCode';
-          continue;
-        }
-        if (mark.type === schema.marks.italic) {
-          type = 'emphasis';
-        }
-        if (mark.type === schema.marks.strikethrough) {
-          type = 'delete';
-        }
 
-        if (type) {
-          node = {
-            type,
-            children: [node],
-          };
-        }
-      }
-      if (linkMark) {
-        node = {
-          type: 'link',
-          url: linkMark.attrs.href,
-          title: linkMark.attrs.title,
-          children: [node],
-        };
-      }
-      children.push(node);
-    }
-  });
+    return {
+      type: 'image',
+      url: encodeURI(
+        `${getSrcPrefixForImageBlock(state.schema.config, state.slug)}${
+          node.attrs.filename
+        }`
+      ),
+      alt: node.attrs.alt,
+      title: node.attrs.title,
+    };
+  }
+  const componentConfig = state.schema.components[node.type.name];
+  if (componentConfig?.kind === 'inline') {
+    return {
+      type: 'mdxJsxTextElement',
+      name: node.type.name,
+      attributes: propsToAttributes(
+        internalToSerialized(componentConfig.schema, node.attrs.props, state)
+      ),
+      children: [],
+    };
+  }
+  if (node.text !== undefined) {
+    return {
+      type: node.marks.some(x => x.type === schema.marks.code)
+        ? 'inlineCode'
+        : 'text',
+      value: node.text,
+    };
+  }
+}
 
-  return children;
+function getWrapperForMark(
+  mark: Mark,
+  state: DocumentSerializationState
+): Extract<PhrasingContent, { children: PhrasingContent[] }> | undefined {
+  const { schema } = state;
+
+  if (mark.type === schema.marks.code) {
+    return;
+  }
+  const componentConfig = schema.components[mark.type.name];
+  if (componentConfig) {
+    return {
+      type: 'mdxJsxTextElement',
+      name: mark.type.name,
+      attributes: propsToAttributes(
+        internalToSerialized(componentConfig.schema, mark.attrs.props, state)
+      ),
+      children: [],
+    };
+  }
+
+  let type: 'strong' | 'emphasis' | 'delete' | undefined;
+  if (mark.type === schema.marks.bold) {
+    type = 'strong';
+  }
+  if (mark.type === schema.marks.italic) {
+    type = 'emphasis';
+  }
+  if (mark.type === schema.marks.strikethrough) {
+    type = 'delete';
+  }
+
+  if (type) {
+    return { type, children: [] };
+  }
+  if (mark.type === schema.marks.link) {
+    return {
+      type: 'link',
+      url: mark.attrs.href,
+      title: mark.attrs.title,
+      children: [],
+    };
+  }
 }
 
 function mapContent<T>(
