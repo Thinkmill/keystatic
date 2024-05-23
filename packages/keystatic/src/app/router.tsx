@@ -37,10 +37,10 @@ export function RouterProvider(props: { children: ReactNode }) {
         setUrl(newUrl.toString());
       });
     }
-    const replaced = location.pathname.replace(/^\/keystatic\/?/, '');
+    const parsedUrl = new URL(url);
+    const replaced = parsedUrl.pathname.replace(/^\/keystatic\/?/, '');
     const params =
       replaced === '' ? [] : replaced.split('/').map(decodeURIComponent);
-    const parsedUrl = new URL(url);
     return {
       href: parsedUrl.pathname + parsedUrl.search,
       pathname: parsedUrl.pathname,
