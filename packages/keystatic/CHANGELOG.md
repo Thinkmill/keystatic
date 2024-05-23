@@ -1,5 +1,16 @@
 # @keystatic/core
 
+## 0.5.17
+
+### Patch Changes
+
+- [#1154](https://github.com/Thinkmill/keystatic/pull/1154) [`42975f4`](https://github.com/Thinkmill/keystatic/commit/42975f45ba071cf3e2659a67e75e86325ce84944) Thanks [@emmatown](https://github.com/emmatown)! - Improve mark printing in the new editor
+
+- [#1150](https://github.com/Thinkmill/keystatic/pull/1150) [`8c2abff`](https://github.com/Thinkmill/keystatic/commit/8c2abff7fe38ad3e1687de57f9bc550997619761) Thanks [@emmatown](https://github.com/emmatown)! - Add missing space in add block dialog
+
+- Updated dependencies [[`7924ef8`](https://github.com/Thinkmill/keystatic/commit/7924ef87cb4338e0296d715acd3ab9fb7d39aa51)]:
+  - @keystar/ui@0.7.3
+
 ## 0.5.16
 
 ### Patch Changes
