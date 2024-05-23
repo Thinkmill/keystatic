@@ -166,6 +166,10 @@ export function UserMenu(user: {
       {
         key: 'logout',
         label: 'Log out',
+        href:
+          config.storage.kind === 'github'
+            ? '/api/keystatic/github/logout'
+            : undefined,
         icon: logOutIcon,
       },
     ];
@@ -208,10 +212,6 @@ export function UserMenu(user: {
             switch (key) {
               case 'logout':
                 switch (config.storage.kind) {
-                  case 'github': {
-                    window.location.href = '/api/keystatic/github/logout';
-                    break;
-                  }
                   case 'cloud':
                   case 'local': {
                     const token = getCloudAuth(config)?.accessToken;

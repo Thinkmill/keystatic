@@ -204,6 +204,7 @@ export function useItemData(args: UseItemDataArgs) {
   );
   const tree = useMemo(() => {
     return rootTree ?? new Map();
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localTreeKey, locationsForTreeKey]);
 
@@ -352,16 +353,14 @@ export function fetchBlob(
   if (blobCache.has(oid)) return blobCache.get(oid)!;
 
   const promise = (async () => {
-    const isLocal = config.storage.kind === 'local';
-    if (!isLocal) {
-      const stored = await getBlobFromPersistedCache(oid);
-      if (stored) {
-        blobCache.set(oid, stored);
-        return stored;
-      }
+    const stored = await getBlobFromPersistedCache(oid);
+    if (stored) {
+      blobCache.set(oid, stored);
+      return stored;
     }
+
     return (
-      isLocal
+      config.storage.kind === 'local'
         ? fetch(`/api/keystatic/blob/${oid}/${filepath}`, {
             headers: { 'no-cors': '1' },
           })
@@ -380,9 +379,7 @@ export function fetchBlob(
       .then(x => {
         const array = new Uint8Array(x);
         blobCache.set(oid, array);
-        if (config.storage.kind !== 'local') {
-          setBlobToPersistedCache(oid, array);
-        }
+        setBlobToPersistedCache(oid, array);
         return array;
       })
       .catch(err => {

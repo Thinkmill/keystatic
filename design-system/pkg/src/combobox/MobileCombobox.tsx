@@ -50,10 +50,10 @@ import { ComboboxProps } from './types';
 import { comboboxClassList } from './class-list';
 
 function MobileCombobox<T extends object>(
-  props: ComboboxProps<T>,
+  _props: ComboboxProps<T>,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
-  props = useProviderProps(props);
+  const props = useProviderProps(_props);
 
   let { isDisabled, validationState, isReadOnly } = props;
 
@@ -84,12 +84,15 @@ function MobileCombobox<T extends object>(
   });
 
   // Focus the button and show focus ring when clicking on the label
-  labelProps.onClick = () => {
-    let button = buttonRef.current;
-    if (button && !props.isDisabled) {
-      button.focus();
-      setInteractionModality('keyboard');
-    }
+  labelProps = {
+    ...labelProps,
+    onClick: () => {
+      let button = buttonRef.current;
+      if (button && !props.isDisabled) {
+        button.focus();
+        setInteractionModality('keyboard');
+      }
+    },
   };
 
   return (

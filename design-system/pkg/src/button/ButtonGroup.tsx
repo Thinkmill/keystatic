@@ -30,6 +30,8 @@ import {
 
 import { ButtonGroupProps } from './types';
 
+function consumeForReactTooling(..._vals: unknown[]) {}
+
 /**
  * Handles overflow for a grouping of buttons whose actions are related to each
  * other.
@@ -60,6 +62,7 @@ export const ButtonGroup: ForwardRefExoticComponent<
   // isn't enough space for all buttons in a single row. There's no "wrap"
   // event, so we have to measure.
   let checkForOverflow = useCallback(() => {
+    consumeForReactTooling(children, scale);
     let computeHasOverflow = () => {
       if (domRef.current && orientation === 'horizontal') {
         let buttonGroupChildren = Array.from(
@@ -89,7 +92,6 @@ export const ButtonGroup: ForwardRefExoticComponent<
         yield computeHasOverflow();
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- children + scale affect flow/measurment
   }, [domRef, orientation, scale, setHasOverflow, children]);
 
   // There are two main reasons we need to remeasure:

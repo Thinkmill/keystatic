@@ -66,6 +66,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jest": "^26.5.3",
     "eslint-plugin-react": "^7.30.0",
+    "eslint-plugin-react-compiler": "^0.0.0-experimental-c8b3f72-20240517",
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest": "^30.0.0-alpha.2",
     "jest-environment-jsdom": "^30.0.0-alpha.2",

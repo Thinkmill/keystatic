@@ -1,6 +1,12 @@
 import { useCheckbox, useCheckboxGroupItem } from '@react-aria/checkbox';
 import { useToggleState } from '@react-stately/toggle';
-import { HTMLAttributes, useContext, useMemo, useRef } from 'react';
+import {
+  HTMLAttributes,
+  InputHTMLAttributes,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react';
 
 import { Icon } from '@keystar/ui/icon';
 import { checkIcon } from '@keystar/ui/icon/icons/checkIcon';
@@ -24,36 +30,61 @@ import { CheckboxGroupContext } from './context';
 const checkboxClassList = new ClassList('Checkbox', ['indicator']);
 
 export function Checkbox(props: CheckboxProps) {
+  let groupState = useContext(CheckboxGroupContext);
+  return groupState ? (
+    <CheckboxInGroup groupState={groupState} {...props} />
+  ) : (
+    <CheckboxAlone {...props} />
+  );
+}
+
+function CheckboxInGroup({
+  groupState,
+  ...props
+}: CheckboxProps & { groupState: CheckboxGroupContext }) {
+  let inputRef = useRef<HTMLInputElement>(null);
+  const { inputProps } = useCheckboxGroupItem(
+    {
+      ...props,
+      // Value is optional for standalone checkboxes, but required for
+      // CheckboxGroup items; it's passed explicitly here to avoid
+      // typescript error (requires ignore).
+      // @ts-ignore
+      value: props.value,
+    },
+    groupState.state,
+    inputRef
+  );
+  return (
+    <CheckboxInner inputRef={inputRef} inputProps={inputProps} {...props} />
+  );
+}
+
+function CheckboxAlone(props: CheckboxProps) {
+  let inputRef = useRef<HTMLInputElement>(null);
+  const { inputProps } = useCheckbox(props, useToggleState(props), inputRef);
+  return (
+    <CheckboxInner inputRef={inputRef} inputProps={inputProps} {...props} />
+  );
+}
+
+function CheckboxInner(
+  props: CheckboxProps & {
+    inputRef: React.RefObject<HTMLInputElement>;
+    inputProps: InputHTMLAttributes<HTMLInputElement>;
+  }
+) {
   let {
     isIndeterminate = false,
     isDisabled = false,
     autoFocus,
     children,
+    inputRef,
+    inputProps,
     ...otherProps
   } = props;
-  let styleProps = useStyleProps(otherProps);
-  let inputRef = useRef<HTMLInputElement>(null);
 
-  // Swap hooks depending on whether this checkbox is inside a CheckboxGroup.
-  // This is a bit unorthodox. Typically, hooks cannot be called in a conditional,
-  // but since the checkbox won't move in and out of a group, it should be safe.
-  let groupState = useContext(CheckboxGroupContext);
-  let { inputProps } = groupState
-    ? // eslint-disable-next-line react-hooks/rules-of-hooks
-      useCheckboxGroupItem(
-        {
-          ...props,
-          // Value is optional for standalone checkboxes, but required for
-          // CheckboxGroup items; it's passed explicitly here to avoid
-          // typescript error (requires ignore).
-          // @ts-ignore
-          value: props.value,
-        },
-        groupState.state,
-        inputRef
-      )
-    : // eslint-disable-next-line react-hooks/rules-of-hooks
-      useCheckbox(props, useToggleState(props), inputRef);
+  let styleProps = useStyleProps(otherProps);
 
   const labelClassName = css({
     alignItems: 'flex-start',

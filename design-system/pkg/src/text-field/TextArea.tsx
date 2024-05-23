@@ -26,6 +26,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         // Firefox scroll position fix https://bugzilla.mozilla.org/show_bug.cgi?id=1787062
         let isFirefox = 'MozAppearance' in input.style;
         if (!isFirefox) {
+          // eslint-disable-next-line react-compiler/react-compiler
           input.style.overflow = 'hidden';
         }
         input.style.height = 'auto';

@@ -29,7 +29,10 @@ function TimeField<T extends TimeValue>(
     useTimeField(props, state, inputRef);
 
   if (props.errorMessage) {
-    state.validationState = 'invalid';
+    state = {
+      ...state,
+      validationState: 'invalid',
+    };
   }
 
   return (

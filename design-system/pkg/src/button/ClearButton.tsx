@@ -54,7 +54,8 @@ export const ClearButton = forwardRef(function ClearButton(
   // iOS 14 with VoiceOver doesn't focus the button and hide the keyboard when
   // moving the cursor over the clear button.
   if (preventFocus) {
-    delete buttonProps.tabIndex;
+    const { tabIndex, ..._buttonProps } = buttonProps;
+    buttonProps = _buttonProps;
   }
 
   let ElementType = elementType;
