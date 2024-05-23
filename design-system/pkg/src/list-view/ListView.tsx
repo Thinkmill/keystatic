@@ -52,6 +52,8 @@ const ROW_HEIGHTS = {
   },
 } as const;
 
+function consumeValueForReactTooling(_val: unknown) {}
+
 function useListLayout<T>(
   state: ListState<T>,
   density: NonNullable<ListViewProps<T>['density']>,
@@ -60,17 +62,15 @@ function useListLayout<T>(
   let { scale } = useProvider();
   let collator = useCollator({ usage: 'search', sensitivity: 'base' });
   let isEmpty = state.collection.size === 0;
-  let layout = useMemo(
-    () =>
-      new ListLayout<T>({
-        estimatedRowHeight: ROW_HEIGHTS[density][scale],
-        padding: 0,
-        collator,
-        loaderHeight: isEmpty ? undefined : ROW_HEIGHTS[density][scale],
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [collator, scale, density, isEmpty, overflowMode]
-  );
+  let layout = useMemo(() => {
+    consumeValueForReactTooling(overflowMode);
+    return new ListLayout<T>({
+      estimatedRowHeight: ROW_HEIGHTS[density][scale],
+      padding: 0,
+      collator,
+      loaderHeight: isEmpty ? undefined : ROW_HEIGHTS[density][scale],
+    });
+  }, [collator, scale, density, isEmpty, overflowMode]);
 
   layout.collection = state.collection;
   layout.disabledKeys = state.disabledKeys;

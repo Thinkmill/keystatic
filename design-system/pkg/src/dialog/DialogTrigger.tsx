@@ -1,6 +1,6 @@
 import { PressResponder } from '@react-aria/interactions';
 import { useOverlayTrigger } from '@react-aria/overlays';
-import { mergeProps } from '@react-aria/utils';
+import { mergeProps, useEffectEvent } from '@react-aria/utils';
 import {
   OverlayTriggerState,
   useOverlayTriggerState,
@@ -49,21 +49,22 @@ function DialogTrigger(props: DialogTriggerProps) {
   let onExiting = () => (isExiting.current = true);
   let onExited = () => (isExiting.current = false);
 
+  const onUnmount = useEffectEvent(() => {
+    if (
+      (wasOpen.current || isExiting.current) &&
+      type !== 'popover' &&
+      type !== 'tray'
+    ) {
+      console.warn(
+        'A DialogTrigger unmounted while open. This is likely due to being placed within a trigger that unmounts or inside a conditional. Consider using a DialogContainer instead.'
+      );
+    }
+  });
+
   // eslint-disable-next-line arrow-body-style
   useEffect(() => {
-    return () => {
-      if (
-        (wasOpen.current || isExiting.current) &&
-        type !== 'popover' &&
-        type !== 'tray'
-      ) {
-        console.warn(
-          'A DialogTrigger unmounted while open. This is likely due to being placed within a trigger that unmounts or inside a conditional. Consider using a DialogContainer instead.'
-        );
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return onUnmount;
+  }, [onUnmount]);
 
   if (type === 'popover') {
     return (

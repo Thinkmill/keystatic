@@ -13,6 +13,7 @@ export default function RootDropIndicator() {
     'dragAndDropHooks.useDropIndicator is not defined.'
   );
 
+  // eslint-disable-next-line react-compiler/react-compiler
   let { dropIndicatorProps } = dragAndDropHooks.useDropIndicator(
     {
       target: { type: 'root' },

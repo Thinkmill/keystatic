@@ -42,10 +42,14 @@ function DateField<T extends DateValue>(
   // The format help text is unnecessary for screen reader users because each segment already has a label.
   let description = useFormatHelpText(props);
   if (description && !props.description) {
-    descriptionProps.id = undefined;
+    let { id, ..._descriptionProps } = descriptionProps;
+    descriptionProps = _descriptionProps;
   }
   if (props.errorMessage) {
-    state.validationState = 'invalid';
+    state = {
+      ...state,
+      validationState: 'invalid',
+    };
   }
 
   return (

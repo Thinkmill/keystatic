@@ -43,7 +43,10 @@ function DateRangePicker<T extends DateValue>(
   let domRef = useFocusManagerRef(forwardedRef);
   let state = useDateRangePickerState(props);
   if (props.errorMessage) {
-    state.validationState = 'invalid';
+    state = {
+      ...state,
+      validationState: 'invalid',
+    };
   }
   let {
     buttonProps,
@@ -74,7 +77,8 @@ function DateRangePicker<T extends DateValue>(
   // The format help text is unnecessary for screen reader users because each segment already has a label.
   let description = useFormatHelpText(props);
   if (description && !props.description) {
-    descriptionProps.id = undefined;
+    const { id, ..._descriptionProps } = descriptionProps;
+    descriptionProps = _descriptionProps;
   }
 
   let visibleMonths = useVisibleMonths(maxVisibleMonths);

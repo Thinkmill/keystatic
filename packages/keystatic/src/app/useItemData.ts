@@ -204,6 +204,7 @@ export function useItemData(args: UseItemDataArgs) {
   );
   const tree = useMemo(() => {
     return rootTree ?? new Map();
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localTreeKey, locationsForTreeKey]);
 

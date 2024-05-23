@@ -18,7 +18,14 @@ module.exports = {
     node: true,
   },
   extends: ['plugin:jest/recommended', 'prettier'],
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'import', 'jest'],
+  plugins: [
+    'react',
+    'react-hooks',
+    '@typescript-eslint',
+    'import',
+    'jest',
+    'react-compiler',
+  ],
   settings: {
     react: { version: 'detect' },
   },
@@ -113,6 +120,7 @@ module.exports = {
       },
     ],
     'react/no-unknown-property': OFF,
+    'react-compiler/react-compiler': ERROR,
   },
   overrides: [
     {
