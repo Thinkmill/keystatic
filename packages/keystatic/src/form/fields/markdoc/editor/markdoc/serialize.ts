@@ -4,6 +4,7 @@ import { EditorSchema, getEditorSchema } from '../schema';
 import { getSrcPrefixForImageBlock } from '../images';
 import { fixPath } from '../../../../../app/path-utils';
 import { internalToSerialized } from '../props-serialization';
+import { textblockChildren } from '../serialize-inline';
 
 type DocumentSerializationState = {
   schema: EditorSchema;
@@ -27,111 +28,114 @@ function _inline(
   fragment: Fragment,
   state: DocumentSerializationState
 ): MarkdocNode[] {
-  return [new Ast.Node('inline', {}, textblockChildren(fragment, state))];
+  return [
+    new Ast.Node(
+      'inline',
+      {},
+      textblockChildren(
+        fragment,
+        (text): MarkdocNode => new Ast.Node('text', { value: text }),
+        node => getLeafContent(node, state),
+        mark => getWrapperForMark(mark, state)
+      )
+    ),
+  ];
 }
 
-// TODO: this should handle marks spanning over multiple text nodes properly
-function textblockChildren(
-  fragment: Fragment,
+function getLeafContent(
+  node: ProseMirrorNode,
   state: DocumentSerializationState
-): MarkdocNode[] {
-  const children: MarkdocNode[] = [];
-  fragment.forEach(child => {
-    if (child.type === child.type.schema.nodes.hard_break) {
-      children.push(new Ast.Node('hardbreak'));
-      return;
-    }
-    if (child.type === child.type.schema.nodes.image) {
-      const src = child.attrs.src;
+): MarkdocNode | undefined {
+  const { schema } = state;
+  if (node.type === schema.nodes.hard_break) {
+    return new Ast.Node('hardbreak');
+  }
+  if (node.type === schema.nodes.image) {
+    const { src, filename } = node.attrs;
 
-      if (
-        typeof state.schema.config.image === 'object' &&
-        typeof state.schema.config.image.directory === 'string'
-      ) {
-        const parent = fixPath(state.schema.config.image.directory);
-        if (!state.otherFiles.has(parent)) {
-          state.otherFiles.set(parent, new Map());
-        }
-        state.otherFiles.get(parent)!.set(child.attrs.filename, src);
-      } else {
-        state.extraFiles.set(child.attrs.filename, src);
+    if (
+      typeof state.schema.config.image === 'object' &&
+      typeof state.schema.config.image.directory === 'string'
+    ) {
+      const parent = fixPath(state.schema.config.image.directory);
+      if (!state.otherFiles.has(parent)) {
+        state.otherFiles.set(parent, new Map());
       }
+      state.otherFiles.get(parent)!.set(filename, src);
+    } else {
+      state.extraFiles.set(filename, src);
+    }
 
-      children.push(
-        new Ast.Node('image', {
-          src: encodeURI(
-            `${getSrcPrefixForImageBlock(state.schema.config, state.slug)}${
-              child.attrs.filename
-            }`
-          ),
-          alt: child.attrs.alt,
-          title: child.attrs.title,
-        })
-      );
-    }
-    const componentConfig = state.schema.components[child.type.name];
-    if (componentConfig?.kind === 'inline') {
-      const tag = new Ast.Node(
-        'tag',
-        internalToSerialized(componentConfig.schema, child.attrs.props, state),
-        [],
-        child.type.name
-      );
-      tag.inline = true;
-      children.push(tag);
-      return;
-    }
-    if (child.text !== undefined) {
-      const textNode = new Ast.Node('text', { content: child.text }, []);
-      let node = textNode;
-      const schema = getEditorSchema(child.type.schema);
-      let linkMark: Mark | undefined;
-      for (const mark of child.marks) {
-        if (mark.type === schema.marks.link) {
-          linkMark = mark;
-          continue;
-        }
-        const componentConfig = schema.components[mark.type.name];
-        if (componentConfig) {
-          node = new Ast.Node(
-            'tag',
-            internalToSerialized(
-              componentConfig.schema,
-              mark.attrs.props,
-              state
-            ),
-            [node],
-            mark.type.name
-          );
-          node.inline = true;
-          continue;
-        }
-        let type: NodeType | undefined;
-        if (mark.type === schema.marks.bold) {
-          type = 'strong';
-        }
-        if (mark.type === schema.marks.code) {
-          textNode.type = 'code';
-          continue;
-        }
-        if (mark.type === schema.marks.italic) {
-          type = 'em';
-        }
-        if (mark.type === schema.marks.strikethrough) {
-          type = 's';
-        }
-        if (type) {
-          node = new Ast.Node(type, { type: mark.type.name }, [node]);
-        }
-      }
-      if (linkMark) {
-        node = new Ast.Node('link', { href: linkMark.attrs.href }, [node]);
-      }
-      children.push(node);
-    }
-  });
+    return new Ast.Node('image', {
+      src: encodeURI(
+        `${getSrcPrefixForImageBlock(state.schema.config, state.slug)}${
+          node.attrs.filename
+        }`
+      ),
+      alt: node.attrs.alt,
+      title: node.attrs.title,
+    });
+  }
+  const componentConfig = state.schema.components[node.type.name];
+  if (componentConfig?.kind === 'inline') {
+    const tag = new Ast.Node(
+      'tag',
+      internalToSerialized(componentConfig.schema, node.attrs.props, state),
+      [],
+      node.type.name
+    );
+    tag.inline = true;
+    return tag;
+  }
+  if (node.text !== undefined) {
+    return new Ast.Node(
+      node.marks.some(x => x.type === schema.marks.code) ? 'code' : 'text',
+      { content: node.text }
+    );
+  }
+}
 
-  return children;
+function getWrapperForMark(
+  mark: Mark,
+  state: DocumentSerializationState
+): MarkdocNode | undefined {
+  const { schema } = state;
+
+  if (mark.type === schema.marks.code) {
+    return;
+  }
+  const componentConfig = schema.components[mark.type.name];
+  if (componentConfig) {
+    const node = new Ast.Node(
+      'tag',
+      internalToSerialized(componentConfig.schema, mark.attrs.props, state),
+      [],
+      mark.type.name
+    );
+    node.inline = true;
+    return node;
+  }
+
+  let type: NodeType | undefined;
+  if (mark.type === schema.marks.bold) {
+    type = 'strong';
+  }
+  if (mark.type === schema.marks.italic) {
+    type = 'em';
+  }
+  if (mark.type === schema.marks.strikethrough) {
+    type = 's';
+  }
+
+  if (type) {
+    return new Ast.Node(type, {}, []);
+  }
+  if (mark.type === schema.marks.link) {
+    return new Ast.Node('link', {
+      href: mark.attrs.href,
+      title: mark.attrs.title,
+    });
+  }
 }
 
 export function proseMirrorToMarkdoc(

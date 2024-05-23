@@ -8,10 +8,10 @@ import {
 import { isNonEmptyArray } from 'emery/guards';
 
 import { Flex } from '@keystar/ui/layout';
-import Markdoc, { Config, Node, ValidateError, nodes } from '@markdoc/markdoc';
+import Markdoc, { Config, Node, ValidateError } from '@markdoc/markdoc';
 import { assert } from 'emery/assertions';
 
-const components = {
+export const components = {
   tags: block({
     label: 'Tags',
     schema: {
@@ -24,6 +24,7 @@ const components = {
           { label: 'Existing project', value: 'Existing project' },
           { label: 'Astro', value: 'Astro' },
           { label: 'Next.js', value: 'Next.js' },
+          { label: 'Remix', value: 'Remix' },
         ],
       }),
     },
@@ -162,8 +163,8 @@ const markdocConfig: Config = {
     },
   }).tags,
   nodes: {
-    document: { ...nodes.document, render: 'Fragment' },
-    link: { ...nodes.link, render: 'Link' },
+    document: { ...Markdoc.nodes.document, render: 'Fragment' },
+    link: { ...Markdoc.nodes.link, render: 'Link' },
     heading: {
       children: ['inline'],
       render: 'Heading',
@@ -171,7 +172,7 @@ const markdocConfig: Config = {
         level: { type: Number, required: true },
       },
     },
-    paragraph: { ...nodes.paragraph, render: 'Paragraph' },
+    paragraph: { ...Markdoc.nodes.paragraph, render: 'Paragraph' },
     fence: {
       render: 'CodeBlock',
       attributes: {
@@ -180,8 +181,8 @@ const markdocConfig: Config = {
         process: { type: Boolean, render: false, default: true },
       },
     },
-    item: { ...nodes.item, render: 'ListItem' },
-    hr: { ...nodes.hr, render: 'Divider' },
+    item: { ...Markdoc.nodes.item, render: 'ListItem' },
+    hr: { ...Markdoc.nodes.hr, render: 'Divider' },
     code: {
       render: 'Code',
       attributes: {
