@@ -281,6 +281,7 @@
       "default": "./src/component-blocks/cloud-image-preview.tsx"
     },
     "#markdoc": "./src/markdoc.js",
-    "#base64": "./src/base64.ts"
+    "#base64": "./src/base64.ts",
+    "#react-compiler-runtime": "./src/react-compiler-runtime.ts"
   }
 }

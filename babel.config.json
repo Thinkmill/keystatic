@@ -21,5 +21,16 @@
     "@babel/plugin-transform-runtime",
     "@babel/plugin-proposal-explicit-resource-management",
     ["@babel/plugin-transform-private-property-in-object", { "loose": true }]
+  ],
+  "overrides": [
+    {
+      "test": "packages/keystatic/src/**/*",
+      "plugins": [
+        [
+          "babel-plugin-react-compiler",
+          { "runtimeModule": "#react-compiler-runtime" }
+        ]
+      ]
+    }
   ]
 }
