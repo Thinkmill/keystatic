@@ -249,7 +249,7 @@ export function SidebarNav() {
           {stringFormatter.format('dashboard')}
         </NavItem>
 
-        {navItems.map(item => renderItemOrGroup(item, isCurrent))}
+        {navItems.map((item, i) => renderItemOrGroup(item, isCurrent, i))}
       </NavList>
     </ScrollView>
   );
@@ -280,19 +280,21 @@ function useIsCurrent() {
 
 // Renderers
 // ----------------------------------------------------------------------------
-let dividerCount = 0;
 function renderItemOrGroup(
   itemOrGroup: ItemOrGroup,
-  isCurrent: ReturnType<typeof useIsCurrent>
+  isCurrent: ReturnType<typeof useIsCurrent>,
+  index: number
 ) {
-  if ('isDivider' in itemOrGroup) {
-    return <Divider key={dividerCount++} />;
+  if (itemOrGroup.isDivider) {
+    return <Divider key={index} />;
   }
 
-  if ('children' in itemOrGroup) {
+  if (itemOrGroup.children) {
     return (
       <NavGroup key={itemOrGroup.title} title={itemOrGroup.title}>
-        {itemOrGroup.children.map(child => renderItemOrGroup(child, isCurrent))}
+        {itemOrGroup.children.map((child, i) =>
+          renderItemOrGroup(child, isCurrent, i)
+        )}
       </NavGroup>
     );
   }

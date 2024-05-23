@@ -30,7 +30,7 @@ export function DashboardCards() {
 
 let dividerCount = 0;
 function renderItemOrGroup(itemOrGroup: ItemOrGroup) {
-  if ('isDivider' in itemOrGroup) {
+  if (itemOrGroup.isDivider) {
     return (
       <Flex key={dividerCount++} gridColumn={FILL_COLS}>
         <Divider
@@ -42,7 +42,7 @@ function renderItemOrGroup(itemOrGroup: ItemOrGroup) {
     );
   }
 
-  if ('children' in itemOrGroup) {
+  if (itemOrGroup.children) {
     return (
       <DashboardSection key={itemOrGroup.title} title={itemOrGroup.title}>
         <DashboardGrid>
