@@ -353,14 +353,16 @@ export function fetchBlob(
   if (blobCache.has(oid)) return blobCache.get(oid)!;
 
   const promise = (async () => {
-    const stored = await getBlobFromPersistedCache(oid);
-    if (stored) {
-      blobCache.set(oid, stored);
-      return stored;
+    const isLocal = config.storage.kind === 'local';
+    if (!isLocal) {
+      const stored = await getBlobFromPersistedCache(oid);
+      if (stored) {
+        blobCache.set(oid, stored);
+        return stored;
+      }
     }
-
     return (
-      config.storage.kind === 'local'
+      isLocal
         ? fetch(`/api/keystatic/blob/${oid}/${filepath}`, {
             headers: { 'no-cors': '1' },
           })
@@ -379,7 +381,9 @@ export function fetchBlob(
       .then(x => {
         const array = new Uint8Array(x);
         blobCache.set(oid, array);
-        setBlobToPersistedCache(oid, array);
+        if (config.storage.kind !== 'local') {
+          setBlobToPersistedCache(oid, array);
+        }
         return array;
       })
       .catch(err => {
