@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.7.3
+
+### Patch Changes
+
+- [#1152](https://github.com/Thinkmill/keystatic/pull/1152) [`7924ef8`](https://github.com/Thinkmill/keystatic/commit/7924ef87cb4338e0296d715acd3ab9fb7d39aa51) Thanks [@emmatown](https://github.com/emmatown)! - Fix peer dependency on Next being fixed to a single version
+
 ## 0.7.2
 
 ### Patch Changes
