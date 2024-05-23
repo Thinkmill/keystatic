@@ -14,7 +14,6 @@ describe('slots', function () {
   });
 
   function Component(props: any) {
-    // eslint-disable-next-line react-compiler/react-compiler
     const _results = useSlotProps(props, 'slotname');
     useLayoutEffect(() => {
       results = _results;
