@@ -124,10 +124,10 @@ const post = await reader.collections.posts.read(slug);
 const content = await post.content()
 ```
 
-If you'd rather get the `document` field data immediately, you can pass `resolvedLinkedFiles: true` as an option when reading the entry:
+If you'd rather get the `document` field data immediately, you can pass `resolveLinkedFiles: true` as an option when reading the entry:
 
 ```ts
-await reader.collections.posts.read(slug, { resolvedLinkedFiles: true });
+await reader.collections.posts.read(slug, { resolveLinkedFiles: true });
 ```
 
 ---
