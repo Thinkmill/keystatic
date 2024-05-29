@@ -18,7 +18,7 @@ export async function loader() {
 export default function Index() {
   const { posts } = useLoaderData<typeof loader>();
   return (
-    <div>
+    <div className="content">
       <h1>Keystatic ⚡️</h1>
       <p>This homepage shows how to load a collection from the reader API.</p>
       <p>

@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@keystatic/core": "workspace:^",
-    "@remix-run/react": "^2.3.0",
+    "@remix-run/react": "^2.9.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

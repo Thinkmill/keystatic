@@ -21,11 +21,7 @@ blog: collection({
   schema: {
     title: fields.slug({ name: { label: 'Title' } })
     publishedDate: fields.date({ label: 'Published date' }),
-    body: fields.document({
-      label: 'Body',
-      formatting: true,
-      links: true
-    })
+    body: fields.markdoc({ label: 'Body' })
   }
 })
 ```
@@ -109,7 +105,7 @@ Quite often, you may want Keystatic to output all the fields within the same fil
 
 The `format.contentField` option lets you do that.
 
-You need to reference a `document` field from the schema as the `contentField` value for it to work:
+You need to reference a `markdoc`, `mdx` or `document` field from the schema as the `contentField` value for it to work:
 
 ```diff
 blog: collection({
@@ -119,11 +115,7 @@ blog: collection({
   schema: {
     title: fields.slug({ name: { label: 'Title' } })
     publishedDate: fields.date({ label: 'Published date' }),
-    body: fields.document({
-      label: 'Body',
-      formatting: true,
-      links: true
-    })
+    body: fields.markdoc({ label: 'Body' })
   }
 })
 ```
