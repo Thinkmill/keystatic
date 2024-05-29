@@ -1,5 +1,17 @@
 # @keystatic/templates-remix
 
+## 0.0.18
+
+### Patch Changes
+
+- [#1164](https://github.com/Thinkmill/keystatic/pull/1164) [`be255f9`](https://github.com/Thinkmill/keystatic/commit/be255f9446c3e1b1c47cadcdd0e5154d7cffc68a) Thanks [@emmatown](https://github.com/emmatown)! - Switch from deprecated `fields.document` to `fields.markdoc`
+
+- [#1164](https://github.com/Thinkmill/keystatic/pull/1164) [`be255f9`](https://github.com/Thinkmill/keystatic/commit/be255f9446c3e1b1c47cadcdd0e5154d7cffc68a) Thanks [@emmatown](https://github.com/emmatown)! - Switch to Vite
+
+- Updated dependencies [[`86bd966`](https://github.com/Thinkmill/keystatic/commit/86bd966ff35981185030ce0850b8041e8a2dc5bb), [`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130)]:
+  - @keystatic/core@0.5.18
+  - @keystatic/remix@5.0.0
+
 ## 0.0.17
 
 ### Patch Changes
