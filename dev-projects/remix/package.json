@@ -14,7 +14,7 @@
     "@keystatic/core": "workspace:^",
     "@keystatic/remix": "workspace:^",
     "@remix-run/node": "^2.9.2",
-    "@remix-run/react": "^2.3.0",
+    "@remix-run/react": "^2.9.2",
     "@remix-run/serve": "^2.9.2",
     "isbot": "^3.6.8",
     "react": "^18.2.0",
