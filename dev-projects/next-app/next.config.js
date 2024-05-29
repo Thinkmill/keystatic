@@ -7,7 +7,6 @@ const nextConfig = {
     ignoreBuildErrors: true,
     tsconfigPath: './tsconfig-for-next/tsconfig.json',
   },
-  reactStrictMode: false,
   async redirects() {
     return [
       {

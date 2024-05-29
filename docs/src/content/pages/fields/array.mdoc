@@ -66,11 +66,8 @@ For example, to change the slug from `/authors/0/bio.mdoc` to `/authors/name/bio
 authors: fields.array(
   fields.object({
     name: fields.text({ label: 'Name' }),
-    bio: fields.document({
+    bio: fields.markdoc({
       label: 'Bio',
-      formatting: true,
-      dividers: true,
-      links: true,
     }),
   }),
   {
