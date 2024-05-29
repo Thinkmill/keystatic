@@ -14,10 +14,10 @@ npx create-next-app@latest
 
 ## Installing dependencies
 
-Install two Keystatic packages:
+Install two Keystatic packages and `@markdoc/markdoc`:
 
 ```bash
-npm install @keystatic/core @keystatic/next
+npm install @keystatic/core @keystatic/next @markdoc/markdoc
 ```
 
 ## Creating a Keystatic config file
@@ -42,23 +42,7 @@ export default config({
       format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
-        content: fields.document({
-          label: 'Content',
-          formatting: true,
-          dividers: true,
-          links: true,
-          images: {
-            directory: 'public/site/images',
-            publicPath: '/site/images',
-            schema: {
-              title: fields.text({
-                label: 'Caption',
-                description:
-                  'The text to display under the image in a caption.',
-              }),
-            },
-          },
-        }),
+        content: fields.markdoc({ label: 'Content' }),
       },
     }),
   },
@@ -200,12 +184,13 @@ export default async function Page() {
 
 ### Displaying a single collection entry
 
-To display content from an individual post, you can import and use Keystatic's `<DocumentRenderer />`:
+To display content from an individual post, you can use Markdoc's `transform` and `renderers.react` functions:
 
 ```tsx
 // src/app/posts/[slug]/page.tsx
-import { DocumentRenderer } from "@keystatic/core/renderer";
 import { createReader } from "@keystatic/core/reader";
+import React from "react";
+import Markdoc from "@markdoc/markdoc";
 
 import keystaticConfig from "../../../../keystatic.config";
 
@@ -213,15 +198,23 @@ const reader = createReader(process.cwd(), keystaticConfig);
 
 export default async function Post({ params }: { params: { slug: string } }) {
   const post = await reader.collections.posts.read(params.slug);
-  return post ? (
+  if (!post) {
+    return <div>No Post Found</div>;
+  }
+  const { node } = await post.content();
+  const errors = Markdoc.validate(node);
+  if (errors.length) {
+    console.error(errors);
+    throw new Error('Invalid content');
+  }
+  const renderable = Markdoc.transform(node);
+  return (
     <>
       <h1>{post.title}</h1>
-      <DocumentRenderer document={await post.content()} />
+      {Markdoc.renderers.react(renderable, React)}
       <hr />
       <a href={`/posts`}>Back to Posts</a>
     </>
-  ) : (
-    <div>No Post Found</div>
   );
 }
 ```
