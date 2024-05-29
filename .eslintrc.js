@@ -120,7 +120,17 @@ module.exports = {
       },
     ],
     'react/no-unknown-property': OFF,
-    'react-compiler/react-compiler': ERROR,
+    'react-compiler/react-compiler': [
+      ERROR,
+      {
+        reportableLevels: new Set([
+          'InvalidJS',
+          'InvalidReact',
+          // uncomment if you want to see these cases
+          // 'CannotPreserveMemoization',
+        ]),
+      },
+    ],
   },
   overrides: [
     {
