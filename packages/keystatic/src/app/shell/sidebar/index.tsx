@@ -249,7 +249,9 @@ export function SidebarNav() {
           {stringFormatter.format('dashboard')}
         </NavItem>
 
-        {navItems.map((item, i) => renderItemOrGroup(item, isCurrent, i))}
+        {navItems.map((item, i) => (
+          <NavItemOrGroup key={i} itemOrGroup={item} />
+        ))}
       </NavList>
     </ScrollView>
   );
@@ -280,21 +282,18 @@ function useIsCurrent() {
 
 // Renderers
 // ----------------------------------------------------------------------------
-function renderItemOrGroup(
-  itemOrGroup: ItemOrGroup,
-  isCurrent: ReturnType<typeof useIsCurrent>,
-  index: number
-) {
+function NavItemOrGroup({ itemOrGroup }: { itemOrGroup: ItemOrGroup }) {
+  const isCurrent = useIsCurrent();
   if (itemOrGroup.isDivider) {
-    return <Divider key={index} />;
+    return <Divider />;
   }
 
   if (itemOrGroup.children) {
     return (
-      <NavGroup key={itemOrGroup.title} title={itemOrGroup.title}>
-        {itemOrGroup.children.map((child, i) =>
-          renderItemOrGroup(child, isCurrent, i)
-        )}
+      <NavGroup title={itemOrGroup.title}>
+        {itemOrGroup.children.map((child, i) => (
+          <NavItemOrGroup itemOrGroup={child} key={i} />
+        ))}
       </NavGroup>
     );
   }
@@ -326,11 +325,7 @@ function renderItemOrGroup(
   })();
 
   return (
-    <NavItem
-      key={itemOrGroup.key}
-      href={itemOrGroup.href}
-      aria-current={isCurrent(itemOrGroup.href)}
-    >
+    <NavItem href={itemOrGroup.href} aria-current={isCurrent(itemOrGroup.href)}>
       <Text truncate title={itemOrGroup.label}>
         {itemOrGroup.label}
       </Text>
