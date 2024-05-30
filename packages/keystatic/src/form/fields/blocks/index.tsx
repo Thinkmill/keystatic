@@ -6,6 +6,7 @@ import {
   BasicFormField,
   fields,
 } from '../../api';
+import { select as selectField } from '../select';
 import { BlocksFieldInput } from '#field-ui/blocks';
 
 export function blocks<Schemas extends Record<string, ComponentSchema>>(
@@ -33,7 +34,7 @@ export function blocks<Schemas extends Record<string, ComponentSchema>>(
   if (!entries.length) {
     throw new Error('fields.blocks must have at least one entry');
   }
-  const select = fields.select<{
+  const select = selectField<{
     label: string;
     value: keyof Schemas & string;
   }>({

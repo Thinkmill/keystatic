@@ -42,7 +42,7 @@ import { createGetPreviewProps } from '../form/preview-props';
 import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
 import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
-import { getYjsValFromParsedValue } from '../form/props-value';
+import { getYjsValFromParsedValue } from '../form/yjs-props-value';
 
 import {
   prettyErrorForCreateBranchMutation,

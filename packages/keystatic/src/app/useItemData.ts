@@ -1,7 +1,7 @@
 import { LRUCache } from 'lru-cache';
 import { useCallback, useMemo } from 'react';
 import { Config } from '../config';
-import { ComponentSchema, fields } from '..';
+import { ComponentSchema, fields } from '../form/api';
 import { parseProps } from '../form/parse-props';
 import { getAuth } from './auth';
 import { loadDataFile } from './required-files';

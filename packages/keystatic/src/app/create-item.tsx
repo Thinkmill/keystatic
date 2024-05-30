@@ -20,7 +20,7 @@ import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
 import { createGetPreviewProps } from '../form/preview-props';
 import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
-import { getYjsValFromParsedValue } from '../form/props-value';
+import { getYjsValFromParsedValue } from '../form/yjs-props-value';
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import l10nMessages from './l10n/index.json';
