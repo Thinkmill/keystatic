@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.7.4
+
+### Patch Changes
+
+- [#1155](https://github.com/Thinkmill/keystatic/pull/1155) [`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130) Thanks [@emmatown](https://github.com/emmatown)! - Fixes for React tooling
+
 ## 0.7.3
 
 ### Patch Changes

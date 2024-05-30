@@ -1,5 +1,16 @@
 # @keystatic/core
 
+## 0.5.18
+
+### Patch Changes
+
+- [#1157](https://github.com/Thinkmill/keystatic/pull/1157) [`86bd966`](https://github.com/Thinkmill/keystatic/commit/86bd966ff35981185030ce0850b8041e8a2dc5bb) Thanks [@emilienbidet](https://github.com/emilienbidet)! - Update the french Singletons translation
+
+- [#1155](https://github.com/Thinkmill/keystatic/pull/1155) [`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130) Thanks [@emmatown](https://github.com/emmatown)! - Fixes for React tooling
+
+- Updated dependencies [[`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130)]:
+  - @keystar/ui@0.7.4
+
 ## 0.5.17
 
 ### Patch Changes
