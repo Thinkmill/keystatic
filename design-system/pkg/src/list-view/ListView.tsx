@@ -52,7 +52,20 @@ const ROW_HEIGHTS = {
   },
 } as const;
 
-function consumeValueForReactTooling(_val: unknown) {}
+function createLayout<T>(
+  collator: Intl.Collator,
+  scale: 'medium' | 'large',
+  density: keyof typeof ROW_HEIGHTS,
+  isEmpty: boolean,
+  _overflowMode: string | undefined
+) {
+  return new ListLayout<T>({
+    estimatedRowHeight: ROW_HEIGHTS[density][scale],
+    padding: 0,
+    collator,
+    loaderHeight: isEmpty ? undefined : ROW_HEIGHTS[density][scale],
+  });
+}
 
 function useListLayout<T>(
   state: ListState<T>,
@@ -63,13 +76,7 @@ function useListLayout<T>(
   let collator = useCollator({ usage: 'search', sensitivity: 'base' });
   let isEmpty = state.collection.size === 0;
   let layout = useMemo(() => {
-    consumeValueForReactTooling(overflowMode);
-    return new ListLayout<T>({
-      estimatedRowHeight: ROW_HEIGHTS[density][scale],
-      padding: 0,
-      collator,
-      loaderHeight: isEmpty ? undefined : ROW_HEIGHTS[density][scale],
-    });
+    return createLayout<T>(collator, scale, density, isEmpty, overflowMode);
   }, [collator, scale, density, isEmpty, overflowMode]);
 
   layout.collection = state.collection;

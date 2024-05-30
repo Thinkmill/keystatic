@@ -1585,7 +1585,8 @@
     }
   },
   "imports": {
-    "#test-utils": "./src/test-utils/index.ts"
+    "#test-utils": "./src/test-utils/index.ts",
+    "#react-compiler-runtime": "./src/react-compiler-runtime.ts"
   },
   "preconstruct": {
     "entrypoints": [

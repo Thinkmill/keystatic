@@ -24,7 +24,7 @@
   ],
   "overrides": [
     {
-      "test": "packages/keystatic/src/**/*",
+      "test": ["packages/keystatic/src/**/*", "design-system/pkg/src/**/*"],
       "plugins": [
         [
           "babel-plugin-react-compiler",

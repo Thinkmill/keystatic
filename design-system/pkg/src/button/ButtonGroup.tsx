@@ -9,8 +9,10 @@ import {
   ForwardedRef,
   forwardRef,
   ForwardRefExoticComponent,
+  MutableRefObject,
+  ReactNode,
   Ref,
-  useCallback,
+  useMemo,
   useRef,
 } from 'react';
 
@@ -30,7 +32,45 @@ import {
 
 import { ButtonGroupProps } from './types';
 
-function consumeForReactTooling(..._vals: unknown[]) {}
+function getCheckForOverflow(
+  domRef: MutableRefObject<HTMLDivElement | null>,
+  orientation: string,
+  _scale: string,
+  setHasOverflow: (value: () => Generator<any, void, unknown>) => void,
+  _children: ReactNode
+) {
+  return () => {
+    let computeHasOverflow = () => {
+      if (domRef.current && orientation === 'horizontal') {
+        let buttonGroupChildren = Array.from(
+          domRef.current.children
+        ) as HTMLElement[];
+        let maxX = domRef.current.offsetWidth + 1; // + 1 to account for rounding errors
+        // If any buttons have negative X positions (align="end") or extend beyond
+        // the width of the button group (align="start"), then switch to vertical.
+        if (
+          buttonGroupChildren.some(
+            child =>
+              child.offsetLeft < 0 ||
+              child.offsetLeft + child.offsetWidth > maxX
+          )
+        ) {
+          return true;
+        }
+        return false;
+      }
+    };
+    if (orientation === 'horizontal') {
+      setHasOverflow(function* () {
+        // Force to horizontal for measurement.
+        yield false;
+
+        // Measure, and update if there is overflow.
+        yield computeHasOverflow();
+      });
+    }
+  };
+}
 
 /**
  * Handles overflow for a grouping of buttons whose actions are related to each
@@ -61,37 +101,14 @@ export const ButtonGroup: ForwardRefExoticComponent<
   // Avoid widows, horizontal orientations may switch to vertical when there
   // isn't enough space for all buttons in a single row. There's no "wrap"
   // event, so we have to measure.
-  let checkForOverflow = useCallback(() => {
-    consumeForReactTooling(children, scale);
-    let computeHasOverflow = () => {
-      if (domRef.current && orientation === 'horizontal') {
-        let buttonGroupChildren = Array.from(
-          domRef.current.children
-        ) as HTMLElement[];
-        let maxX = domRef.current.offsetWidth + 1; // + 1 to account for rounding errors
-        // If any buttons have negative X positions (align="end") or extend beyond
-        // the width of the button group (align="start"), then switch to vertical.
-        if (
-          buttonGroupChildren.some(
-            child =>
-              child.offsetLeft < 0 ||
-              child.offsetLeft + child.offsetWidth > maxX
-          )
-        ) {
-          return true;
-        }
-        return false;
-      }
-    };
-    if (orientation === 'horizontal') {
-      setHasOverflow(function* () {
-        // Force to horizontal for measurement.
-        yield false;
-
-        // Measure, and update if there is overflow.
-        yield computeHasOverflow();
-      });
-    }
+  let checkForOverflow = useMemo(() => {
+    return getCheckForOverflow(
+      domRef,
+      orientation,
+      scale,
+      setHasOverflow,
+      children
+    );
   }, [domRef, orientation, scale, setHasOverflow, children]);
 
   // There are two main reasons we need to remeasure:
