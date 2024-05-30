@@ -1,8 +1,8 @@
 import { useMemo, useSyncExternalStore } from 'react';
 import { ComponentSchema } from '../form/api';
 import * as Y from 'yjs';
-import { yjsToVal } from '../form/props-value';
 import { useYjs } from './shell/collab';
+import { yjsToVal } from '../form/yjs-props-value';
 
 export function useYJsValue(
   schema: ComponentSchema,

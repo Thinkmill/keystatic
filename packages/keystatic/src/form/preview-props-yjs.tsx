@@ -8,7 +8,7 @@ import {
   FormField,
 } from './api';
 import * as Y from 'yjs';
-import { parsedValToYjs, yjsToVal } from './props-value';
+import { parsedValToYjs, yjsToVal } from './yjs-props-value';
 import { ReactElement } from 'react';
 import { Awareness } from 'y-protocols/awareness';
 import {

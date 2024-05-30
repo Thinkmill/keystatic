@@ -55,7 +55,7 @@ import { useMediaQuery, breakpointQueries } from '@keystar/ui/style';
 import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
 import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
 import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
-import { getYjsValFromParsedValue } from '../form/props-value';
+import { getYjsValFromParsedValue } from '../form/yjs-props-value';
 import * as Y from 'yjs';
 import { useYjs, useYjsIfAvailable } from './shell/collab';
 import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
