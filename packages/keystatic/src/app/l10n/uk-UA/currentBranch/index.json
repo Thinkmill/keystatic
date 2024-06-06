@@ -1,6 +1,6 @@
 {
   "key": "currentBranch",
-  "value": "Поточне відділення",
+  "value": "Поточна гілка",
   "notes": "",
   "type": "git-related"
 }
