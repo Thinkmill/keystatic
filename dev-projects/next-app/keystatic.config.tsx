@@ -339,6 +339,27 @@ export default config({
         }),
       },
     }),
+    conditionalContent: collection({
+      label: 'Conditional Content',
+      path: 'conditionalContent/**',
+      slugField: 'title',
+      format: { contentField: ['content', 'value', 'content'] },
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        content: fields.conditional(
+          fields.checkbox({ label: 'With content' }),
+          {
+            true: fields.object({
+              summary: fields.text({ label: 'Summary' }),
+              content: fields.markdoc({ label: 'Content' }),
+            }),
+            false: fields.object({
+              content: fields.emptyContent({ extension: 'mdoc' }),
+            }),
+          }
+        ),
+      },
+    }),
   },
   singletons: {
     settings: singleton({

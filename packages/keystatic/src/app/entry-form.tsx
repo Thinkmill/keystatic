@@ -1,4 +1,4 @@
-import { Grid } from '@keystar/ui/layout';
+import { Box } from '@keystar/ui/layout';
 import {
   SplitView,
   SplitPanePrimary,
@@ -55,6 +55,16 @@ export function ResetEntryLayoutContext(props: { children: ReactNode }) {
   );
 }
 
+function isPreviewPropsKind<Kind extends ComponentSchema['kind']>(
+  props: GenericPreviewProps<ComponentSchema, unknown>,
+  kind: Kind
+): props is GenericPreviewProps<
+  Extract<ComponentSchema, { kind: Kind }>,
+  unknown
+> {
+  return props.schema.kind === kind;
+}
+
 export function FormForEntry({
   formatInfo,
   forceValidation,
@@ -75,6 +85,26 @@ export function FormForEntry({
 
   if (entryLayout === 'content' && formatInfo.contentField && isAboveMobile) {
     const { contentField } = formatInfo;
+    let contentFieldProps: GenericPreviewProps<ComponentSchema, unknown> =
+      props;
+    for (const key of contentField.path) {
+      if (isPreviewPropsKind(contentFieldProps, 'object')) {
+        contentFieldProps = contentFieldProps.fields[key];
+        continue;
+      }
+      if (isPreviewPropsKind(contentFieldProps, 'conditional')) {
+        if (key !== 'value') {
+          throw new Error(
+            'Conditional fields referenced in a contentField path must only reference the value field.'
+          );
+        }
+        contentFieldProps = contentFieldProps.value;
+        continue;
+      }
+      throw new Error(
+        `Path specified in contentField does not point to a content field`
+      );
+    }
     return (
       <PathContextProvider value={emptyArray}>
         <SlugFieldProvider value={slugField}>
@@ -88,10 +118,10 @@ export function FormForEntry({
             <SplitPaneSecondary>
               <EntryLayoutSplitPaneContext.Provider value="main">
                 <ScrollView>
-                  <AddToPathProvider part={contentField.key}>
+                  <AddToPathProvider part={contentField.path}>
                     <InnerFormValueContentFromPreviewProps
                       forceValidation={forceValidation}
-                      {...props.fields[contentField.key]}
+                      {...contentFieldProps}
                     />
                   </AddToPathProvider>
                 </ScrollView>
@@ -100,18 +130,13 @@ export function FormForEntry({
             <SplitPanePrimary>
               <EntryLayoutSplitPaneContext.Provider value="side">
                 <ScrollView>
-                  <Grid gap="xlarge" padding={RESPONSIVE_PADDING}>
-                    {Object.entries(props.fields).map(([key, propVal]) =>
-                      key === contentField.key ? null : (
-                        <AddToPathProvider key={key} part={key}>
-                          <InnerFormValueContentFromPreviewProps
-                            forceValidation={forceValidation}
-                            {...propVal}
-                          />
-                        </AddToPathProvider>
-                      )
-                    )}
-                  </Grid>
+                  <Box padding={RESPONSIVE_PADDING}>
+                    <InnerFormValueContentFromPreviewProps
+                      forceValidation={forceValidation}
+                      omitFieldAtPath={contentField.path}
+                      {...props}
+                    />
+                  </Box>
                 </ScrollView>
               </EntryLayoutSplitPaneContext.Provider>
             </SplitPanePrimary>

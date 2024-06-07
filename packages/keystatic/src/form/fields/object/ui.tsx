@@ -1,5 +1,5 @@
 import { assert, assertNever } from 'emery';
-import { useId } from 'react';
+import { useId, useMemo } from 'react';
 
 import { Grid } from '@keystar/ui/layout';
 import { containerQueries, css } from '@keystar/ui/style';
@@ -20,12 +20,19 @@ export function ObjectFieldInput<
   autoFocus,
   fields,
   forceValidation,
+  omitFieldAtPath,
 }: GenericPreviewProps<ObjectField<Fields>, unknown> & ExtraFieldInputProps) {
   validateLayout(schema);
 
   const firstFocusable = autoFocus
     ? findFocusableObjectFieldKey(schema)
     : undefined;
+  const innerOmitFieldAtPath = useMemo(() => {
+    if (!omitFieldAtPath) {
+      return undefined;
+    }
+    return omitFieldAtPath.slice(1);
+  }, [omitFieldAtPath]);
   const inner = (
     <Grid
       columns={`repeat(${FIELD_GRID_COLUMNS}, minmax(auto, 1fr))`}
@@ -49,8 +56,10 @@ export function ObjectFieldInput<
                 <InnerFormValueContentFromPreviewProps
                   forceValidation={forceValidation}
                   autoFocus={key === firstFocusable}
-                  marginBottom="xlarge"
                   {...propVal}
+                  {...(omitFieldAtPath?.[0] === key
+                    ? { omitFieldAtPath: innerOmitFieldAtPath }
+                    : {})}
                 />
               </AddToPathProvider>
             </div>

@@ -270,8 +270,7 @@ function useIsCurrent() {
       if (exact) {
         return href === router.pathname ? 'page' : undefined;
       }
-      return href === router.pathname ||
-        router.pathname.startsWith(`${router.pathname}/`)
+      return href === router.pathname || router.pathname.startsWith(`${href}/`)
         ? 'page'
         : undefined;
     },

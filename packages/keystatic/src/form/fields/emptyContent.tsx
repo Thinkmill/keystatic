@@ -1,9 +1,8 @@
 import { ContentFormField } from '../api';
 
-/**
- * @deprecated `emptyDocument` has been replaced with the `emptyContent` field
- */
-export function emptyDocument(): ContentFormField<null, null, null> {
+export function emptyContent(opts: {
+  extension: 'mdoc' | 'md' | 'mdx';
+}): ContentFormField<null, null, null> {
   return {
     kind: 'form',
     formKind: 'content',
@@ -16,7 +15,7 @@ export function emptyDocument(): ContentFormField<null, null, null> {
     parse() {
       return null;
     },
-    contentExtension: '.mdoc',
+    contentExtension: `.${opts.extension}`,
     serialize() {
       return {
         value: undefined,
