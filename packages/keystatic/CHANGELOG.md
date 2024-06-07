@@ -1,5 +1,17 @@
 # @keystatic/core
 
+## 0.5.19
+
+### Patch Changes
+
+- [#1171](https://github.com/Thinkmill/keystatic/pull/1171) [`a129ea4`](https://github.com/Thinkmill/keystatic/commit/a129ea4ea46a5d9c2ddec8aef4313d98cf13a575) Thanks [@orlovol](https://github.com/orlovol)! - Update uk-UA translations
+
+- [#1172](https://github.com/Thinkmill/keystatic/pull/1172) [`73aa1b8`](https://github.com/Thinkmill/keystatic/commit/73aa1b856b7100d1ac033eb16bee5e7f630a2c3e) Thanks [@emmatown](https://github.com/emmatown)! - Add `fields.emptyContent` field to replace `fields.emptyDocument` and support extensions besides `mdoc`
+
+- [#1172](https://github.com/Thinkmill/keystatic/pull/1172) [`73aa1b8`](https://github.com/Thinkmill/keystatic/commit/73aa1b856b7100d1ac033eb16bee5e7f630a2c3e) Thanks [@emmatown](https://github.com/emmatown)! - Allow passing an array to `contentField` to specify a `contentField` nested inside an object or conditional field
+
+- [#1165](https://github.com/Thinkmill/keystatic/pull/1165) [`a1a71c1`](https://github.com/Thinkmill/keystatic/commit/a1a71c1ab2313c4c0a85fdce3f9a802a14580ece) Thanks [@emmatown](https://github.com/emmatown)! - Improve server-side bundle-size
+
 ## 0.5.18
 
 ### Patch Changes
