@@ -9,6 +9,7 @@ export { datetime } from './datetime';
 export { document } from './document';
 export { empty } from './empty';
 export { emptyDocument } from './emptyDocument';
+export { emptyContent } from './emptyContent';
 export { file } from './file';
 export { image } from './image';
 export { integer } from './integer';

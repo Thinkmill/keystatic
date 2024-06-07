@@ -46,7 +46,9 @@ export function loadDataFile(
   return {
     loaded: res === null ? {} : parse(res.frontmatter),
     extraFakeFile: {
-      path: `${formatInfo.contentField.key}${formatInfo.contentField.config.contentExtension}`,
+      path: `${formatInfo.contentField.path.join('/')}${
+        formatInfo.contentField.contentExtension
+      }`,
       contents: res === null ? data : res.content,
     },
   };

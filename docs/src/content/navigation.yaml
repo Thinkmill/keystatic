@@ -171,11 +171,16 @@ navGroups:
           discriminant: page
           value: fields/empty
         status: default
+      - label: Empty Content
+        link:
+          discriminant: page
+          value: fields/empty-content
+        status: default
       - label: Empty Document
         link:
           discriminant: page
           value: fields/empty-document
-        status: default
+        status: deprecated
       - label: File
         link:
           discriminant: page

@@ -9,7 +9,12 @@ import { RepoConfig } from './app/repo-config';
 // ----------------------------------------------------------------------------
 
 export type DataFormat = 'json' | 'yaml';
-export type Format = DataFormat | { data?: DataFormat; contentField?: string };
+export type Format =
+  | DataFormat
+  | {
+      data?: DataFormat;
+      contentField?: string | [string, ...string[]];
+    };
 export type EntryLayout = 'content' | 'form';
 export type Glob = '*' | '**';
 export type Collection<

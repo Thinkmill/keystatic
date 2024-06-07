@@ -76,7 +76,9 @@ export function serializeEntryToFiles(args: {
   );
 
   if (args.format.contentField) {
-    const filename = `${args.format.contentField.key}${args.format.contentField.config.contentExtension}`;
+    const filename = `${args.format.contentField.path.join('/')}${
+      args.format.contentField.contentExtension
+    }`;
     let contents: undefined | Uint8Array;
     extraFiles = extraFiles.filter(x => {
       if (x.path !== filename) return true;
