@@ -1,6 +1,6 @@
 {
   "name": "@example/next-pages",
-  "version": "0.0.110",
+  "version": "0.0.0-test-20240607031816",
   "license": "MIT",
   "private": true,
   "scripts": {
