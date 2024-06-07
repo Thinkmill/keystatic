@@ -32,7 +32,7 @@
     "react-dom": "^18.2.0"
   },
   "peerDependencies": {
-    "@keystatic/core": "*",
+    "@keystatic/core": "0.0.0-test-20240607024434",
     "next": ">=14",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

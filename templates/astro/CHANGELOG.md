@@ -1,12 +1,29 @@
 # @keystatic/templates-astro
 
+## 0.0.0-test-20240607024434
+
+### Patch Changes
+
+- Updated dependencies
+  [[`a129ea4`](https://github.com/Thinkmill/keystatic/commit/a129ea4ea46a5d9c2ddec8aef4313d98cf13a575),
+  [`b7c0404`](https://github.com/Thinkmill/keystatic/commit/b7c0404fab8912a4b259f75533498cd0f533d082),
+  [`b7c0404`](https://github.com/Thinkmill/keystatic/commit/b7c0404fab8912a4b259f75533498cd0f533d082),
+  [`a1a71c1`](https://github.com/Thinkmill/keystatic/commit/a1a71c1ab2313c4c0a85fdce3f9a802a14580ece)]:
+  - @keystatic/core@0.0.0-test-20240607024434
+  - @keystatic/astro@5.0.0
+
 ## 0.0.30
 
 ### Patch Changes
 
-- [#1164](https://github.com/Thinkmill/keystatic/pull/1164) [`be255f9`](https://github.com/Thinkmill/keystatic/commit/be255f9446c3e1b1c47cadcdd0e5154d7cffc68a) Thanks [@emmatown](https://github.com/emmatown)! - Switch from deprecated `fields.document` to `fields.markdoc`
+- [#1164](https://github.com/Thinkmill/keystatic/pull/1164)
+  [`be255f9`](https://github.com/Thinkmill/keystatic/commit/be255f9446c3e1b1c47cadcdd0e5154d7cffc68a)
+  Thanks [@emmatown](https://github.com/emmatown)! - Switch from deprecated
+  `fields.document` to `fields.markdoc`
 
-- Updated dependencies [[`86bd966`](https://github.com/Thinkmill/keystatic/commit/86bd966ff35981185030ce0850b8041e8a2dc5bb), [`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130)]:
+- Updated dependencies
+  [[`86bd966`](https://github.com/Thinkmill/keystatic/commit/86bd966ff35981185030ce0850b8041e8a2dc5bb),
+  [`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130)]:
   - @keystatic/core@0.5.18
   - @keystatic/astro@5.0.0
 
@@ -14,7 +31,9 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`42975f4`](https://github.com/Thinkmill/keystatic/commit/42975f45ba071cf3e2659a67e75e86325ce84944), [`8c2abff`](https://github.com/Thinkmill/keystatic/commit/8c2abff7fe38ad3e1687de57f9bc550997619761)]:
+- Updated dependencies
+  [[`42975f4`](https://github.com/Thinkmill/keystatic/commit/42975f45ba071cf3e2659a67e75e86325ce84944),
+  [`8c2abff`](https://github.com/Thinkmill/keystatic/commit/8c2abff7fe38ad3e1687de57f9bc550997619761)]:
   - @keystatic/core@0.5.17
   - @keystatic/astro@5.0.0
 
@@ -22,7 +41,8 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`21394c6`](https://github.com/Thinkmill/keystatic/commit/21394c65a8d507d4355cf71641690464c05d7ec8)]:
+- Updated dependencies
+  [[`21394c6`](https://github.com/Thinkmill/keystatic/commit/21394c65a8d507d4355cf71641690464c05d7ec8)]:
   - @keystatic/core@0.5.16
   - @keystatic/astro@5.0.0
 
@@ -30,7 +50,9 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`d3aa1f2`](https://github.com/Thinkmill/keystatic/commit/d3aa1f2386bd690936662d98724eb385564a26cd), [`aa13ea9`](https://github.com/Thinkmill/keystatic/commit/aa13ea917ce2611266c0008197cfea4c1427724c)]:
+- Updated dependencies
+  [[`d3aa1f2`](https://github.com/Thinkmill/keystatic/commit/d3aa1f2386bd690936662d98724eb385564a26cd),
+  [`aa13ea9`](https://github.com/Thinkmill/keystatic/commit/aa13ea917ce2611266c0008197cfea4c1427724c)]:
   - @keystatic/core@0.5.15
   - @keystatic/astro@5.0.0
 
@@ -38,7 +60,13 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`fe63e6a`](https://github.com/Thinkmill/keystatic/commit/fe63e6a77a695d7cafb5aadb12a7eb2e1c914f0b), [`adc0cf6`](https://github.com/Thinkmill/keystatic/commit/adc0cf6282494eb522f6d129a49a7dd9c25c9490), [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c), [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2), [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c), [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2)]:
+- Updated dependencies
+  [[`fe63e6a`](https://github.com/Thinkmill/keystatic/commit/fe63e6a77a695d7cafb5aadb12a7eb2e1c914f0b),
+  [`adc0cf6`](https://github.com/Thinkmill/keystatic/commit/adc0cf6282494eb522f6d129a49a7dd9c25c9490),
+  [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c),
+  [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2),
+  [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c),
+  [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2)]:
   - @keystatic/core@0.5.14
   - @keystatic/astro@5.0.0
 
@@ -46,7 +74,9 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`b509e87`](https://github.com/Thinkmill/keystatic/commit/b509e8794b8e4676feb6e1f0982ddb80cc5376df), [`31286c0`](https://github.com/Thinkmill/keystatic/commit/31286c0e3ff0bd591853fdab70f7f797dad316f5)]:
+- Updated dependencies
+  [[`b509e87`](https://github.com/Thinkmill/keystatic/commit/b509e8794b8e4676feb6e1f0982ddb80cc5376df),
+  [`31286c0`](https://github.com/Thinkmill/keystatic/commit/31286c0e3ff0bd591853fdab70f7f797dad316f5)]:
   - @keystatic/core@0.5.13
   - @keystatic/astro@5.0.0
 
@@ -128,16 +158,19 @@
 
 ### Patch Changes
 
-- 6a60ab3c: Updates the Astro integration to manage the custom `127.0.0.1` host and enables usage with `output: 'server'`
+- 6a60ab3c: Updates the Astro integration to manage the custom `127.0.0.1` host
+  and enables usage with `output: 'server'`
 
-  Keystatic used to require updating your `dev` script. It's now managed by the integration, feel free to simplify it!
+  Keystatic used to require updating your `dev` script. It's now managed by the
+  integration, feel free to simplify it!
 
   ```diff
   - "dev": "astro dev --host 127.0.0.1"
   + "dev": "astro dev"
   ```
 
-  Moreover, Keystatic now lets you go full SSR! The following Astro config is now supported
+  Moreover, Keystatic now lets you go full SSR! The following Astro config is
+  now supported
 
   ```mjs
   // astro.config.mjs
@@ -194,13 +227,15 @@
 
 ### Patch Changes
 
-- b16ef684: Replace manually created pages for Keystatic with Astro integration that injects routes
+- b16ef684: Replace manually created pages for Keystatic with Astro integration
+  that injects routes
 
 ## 0.0.11
 
 ### Patch Changes
 
-- f47feaa7: Add support for Astro assets with image directory and publicPath in Keystatic config
+- f47feaa7: Add support for Astro assets with image directory and publicPath in
+  Keystatic config
 - Updated dependencies [a754d573]
 - Updated dependencies [e684e5ad]
   - @keystatic/astro@1.0.2
