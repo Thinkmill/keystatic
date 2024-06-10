@@ -32,7 +32,8 @@ import { usePrevious } from '@keystar/ui/utils';
 import l10nMessages from '../../l10n/index.json';
 import { useRouter } from '../../router';
 import { ItemOrGroup, useNavItems } from '../../useNavItems';
-import { isLocalConfig, pluralize } from '../../utils';
+import { isLocalConfig } from '../../utils';
+import { pluralize } from '../../pluralize';
 
 import { useBrand } from '../common';
 import { SIDE_PANEL_ID } from '../constants';

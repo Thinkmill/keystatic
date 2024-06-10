@@ -6,7 +6,7 @@ import { Divider, Flex } from '@keystar/ui/layout';
 import { Text } from '@keystar/ui/typography';
 
 import { ItemOrGroup, useNavItems } from '../useNavItems';
-import { pluralize } from '../utils';
+import { pluralize } from '../pluralize';
 import {
   DashboardCard,
   DashboardGrid,

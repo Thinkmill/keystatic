@@ -33,7 +33,7 @@ import { Config } from '../../config';
 
 import { BranchPicker } from '../branch-selection';
 import { useRouter } from '../router';
-import { pluralize } from '../utils';
+import { pluralize } from '../pluralize';
 
 import { useAppState, useConfig } from './context';
 import { useBranchInfo, useChanged, useTree } from './data';

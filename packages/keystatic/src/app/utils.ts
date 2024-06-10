@@ -21,15 +21,6 @@ import { useEffectEvent } from '@react-aria/utils';
 
 export * from './path-utils';
 
-export function pluralize(
-  count: number,
-  options: { singular: string; plural?: string; inclusive?: boolean }
-) {
-  const { singular, plural = singular + 's', inclusive = true } = options;
-  const variant = count === 1 ? singular : plural;
-  return inclusive ? `${count} ${variant}` : variant;
-}
-
 export function getCollection(config: Config, collection: string) {
   return config.collections![collection];
 }
