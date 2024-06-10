@@ -281,6 +281,7 @@ export default config({
       path: 'single-file-posts/**',
       slugField: 'title',
       format: { contentField: 'content' },
+      entryLayout: 'content',
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         content: fields.document({
