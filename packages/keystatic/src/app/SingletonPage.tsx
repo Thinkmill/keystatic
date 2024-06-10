@@ -1,25 +1,19 @@
-import { useRouter } from './router';
 import {
-  FormEvent,
   ReactElement,
+  startTransition,
   useCallback,
   useEffect,
   useMemo,
   useState,
 } from 'react';
 
-import { Badge } from '@keystar/ui/badge';
-import { Button } from '@keystar/ui/button';
-import { DialogContainer } from '@keystar/ui/dialog';
 import { Flex } from '@keystar/ui/layout';
 import { Notice } from '@keystar/ui/notice';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../config';
-import { clientSideValidateProp } from '../form/errors';
 import { getInitialPropsValue } from '../form/initial-values';
-import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
 import {
   getDataFileExtension,
   getPathPrefix,
@@ -28,21 +22,16 @@ import {
   getSingletonPath,
   isCloudConfig,
   isGitHubConfig,
-  useShowRestoredDraftMessage,
 } from './utils';
 
-import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
-import { useBaseCommit, useBranchInfo } from './shell/data';
+import { useBranchInfo, useCurrentUnscopedTree } from './shell/data';
 import { useHasChanged } from './useHasChanged';
-import { parseEntry, useItemData } from './useItemData';
-import { serializeEntryToFiles, useUpsertItem } from './updating';
+import { useItemData } from './useItemData';
+import { serializeEntryToFiles } from './updating';
 import { Icon } from '@keystar/ui/icon';
-import { ForkRepoDialog } from './fork-repo';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { notFound } from './not-found';
-import { delDraft, getDraft, setDraft } from './persistence';
-import * as s from 'superstruct';
 import { LOADING, useData } from './useData';
 import { ActionGroup, Item } from '@keystar/ui/action-group';
 import { useMediaQuery, breakpointQueries } from '@keystar/ui/style';
@@ -60,20 +49,20 @@ import {
   useSingleton,
 } from './preview-props';
 import { ComponentSchema, GenericPreviewProps } from '..';
+import { useExtraRoots, writeChangesToLocalObjectStore } from './object-store';
+import { Badge } from '@keystar/ui/badge';
 
 type SingletonPageProps = {
   singleton: string;
   config: Config;
   initialState: Record<string, unknown> | null;
+  committedState: Record<string, unknown> | null;
   initialFiles: string[];
   localTreeKey: string | undefined;
 };
 
 function SingletonPageInner(
   props: SingletonPageProps & {
-    updateResult: ReturnType<typeof useUpsertItem>[0];
-    onUpdate: ReturnType<typeof useUpsertItem>[1];
-    onResetUpdateItem: ReturnType<typeof useUpsertItem>[2];
     hasChanged: boolean;
     state: Record<string, unknown>;
     onReset: () => void;
@@ -82,11 +71,8 @@ function SingletonPageInner(
 ) {
   const isBelowDesktop = useMediaQuery(breakpointQueries.below.desktop);
   const branchInfo = useBranchInfo();
-  const [forceValidation, setForceValidation] = useState(false);
 
-  const { schema, singletonConfig } = useSingleton(props.singleton);
-
-  const router = useRouter();
+  const { singletonConfig } = useSingleton(props.singleton);
 
   const previewHref = useMemo(() => {
     if (!singletonConfig.previewUrl) return undefined;
@@ -151,21 +137,6 @@ function SingletonPageInner(
     return actions;
   }, [previewHref, viewHref]);
 
-  const formID = 'singleton-form';
-
-  const baseCommit = useBaseCommit();
-
-  const isCreating = props.initialState === null;
-
-  const onCreate = async () => {
-    if (props.updateResult.kind === 'loading' || !props.hasChanged) return;
-    if (!clientSideValidateProp(schema, props.state, undefined)) {
-      setForceValidation(true);
-      return;
-    }
-    await props.onUpdate();
-  };
-
   return (
     <PageRoot containerWidth={containerWidthForEntryLayout(singletonConfig)}>
       <PageHeader>
@@ -173,16 +144,7 @@ function SingletonPageInner(
           <Heading elementType="h1" id="page-title" size="small">
             {singletonConfig.label}
           </Heading>
-          {props.updateResult.kind === 'loading' ? (
-            <ProgressCircle
-              aria-label={`Updating ${singletonConfig.label}`}
-              isIndeterminate
-              size="small"
-              alignSelf="center"
-            />
-          ) : (
-            props.hasChanged && <Badge tone="pending">Unsaved</Badge>
-          )}
+          {props.hasChanged && <Badge tone="pending">Unsaved</Badge>}
         </Flex>
         <PresenceAvatars />
         <ActionGroup
@@ -214,96 +176,28 @@ function SingletonPageInner(
             </Item>
           )}
         </ActionGroup>
-        <Button
-          form={formID}
-          isDisabled={props.updateResult.kind === 'loading'}
-          prominence="high"
-          type="submit"
-        >
-          {isCreating ? 'Create' : 'Save'}
-        </Button>
       </PageHeader>
       <Flex
-        elementType="form"
-        id={formID}
-        onSubmit={(event: FormEvent) => {
-          if (event.target !== event.currentTarget) return;
-          event.preventDefault();
-          onCreate();
-        }}
         direction="column"
         gap="xxlarge"
         height="100%"
         minHeight={0}
         minWidth={0}
       >
-        {props.updateResult.kind === 'error' && (
-          <Notice tone="critical">{props.updateResult.error.message}</Notice>
-        )}
         <FormForEntry
           previewProps={props.previewProps as any}
-          forceValidation={forceValidation}
+          forceValidation
           entryLayout={singletonConfig.entryLayout}
           formatInfo={formatInfo}
           slugField={undefined}
         />
-        <DialogContainer
-          // ideally this would be a popover on desktop but using a DialogTrigger wouldn't work since
-          // this doesn't open on click but after doing a network request and it failing and manually wiring about a popover and modal would be a pain
-          onDismiss={props.onResetUpdateItem}
-        >
-          {props.updateResult.kind === 'needs-new-branch' && (
-            <CreateBranchDuringUpdateDialog
-              branchOid={baseCommit}
-              onCreate={async newBranch => {
-                router.push(
-                  `/keystatic/branch/${encodeURIComponent(
-                    newBranch
-                  )}/singleton/${encodeURIComponent(props.singleton)}`
-                );
-                props.onUpdate({ branch: newBranch, sha: baseCommit });
-              }}
-              reason={props.updateResult.reason}
-              onDismiss={props.onResetUpdateItem}
-            />
-          )}
-        </DialogContainer>
-        <DialogContainer
-          // ideally this would be a popover on desktop but using a DialogTrigger
-          // wouldn't work since this doesn't open on click but after doing a
-          // network request and it failing and manually wiring about a popover
-          // and modal would be a pain
-          onDismiss={props.onResetUpdateItem}
-        >
-          {props.updateResult.kind === 'needs-fork' &&
-            isGitHubConfig(props.config) && (
-              <ForkRepoDialog
-                onCreate={async () => {
-                  props.onUpdate();
-                }}
-                onDismiss={props.onResetUpdateItem}
-                config={props.config}
-              />
-            )}
-        </DialogContainer>
       </Flex>
     </PageRoot>
   );
 }
 
-function LocalSingletonPage(
-  props: SingletonPageProps & {
-    draft:
-      | {
-          state: Record<string, unknown>;
-          savedAt: Date;
-          treeKey: string | undefined;
-        }
-      | undefined;
-  }
-) {
-  const { singleton, initialFiles, initialState, localTreeKey, config, draft } =
-    props;
+function LocalSingletonPage(props: SingletonPageProps) {
+  const { singleton, initialState, localTreeKey, config } = props;
   const { schema, singletonConfig } = useSingleton(props.singleton);
   const singletonPath = getSingletonPath(config, singleton);
 
@@ -311,12 +205,9 @@ function LocalSingletonPage(
     () => ({
       localTreeKey: localTreeKey,
       state:
-        draft?.state ??
-        (initialState === null ? getInitialPropsValue(schema) : initialState),
+        initialState === null ? getInitialPropsValue(schema) : initialState,
     })
   );
-
-  useShowRestoredDraftMessage(draft, state, localTreeKey);
 
   if (localTreeKeyInState !== localTreeKey) {
     setState({
@@ -326,42 +217,64 @@ function LocalSingletonPage(
     });
   }
 
-  const isCreating = initialState === null;
-  const hasChanged =
-    useHasChanged({ initialState, state, schema, slugField: undefined }) ||
-    isCreating;
+  const unscopedTreeData = useCurrentUnscopedTree();
+  const branchInfo = useBranchInfo();
+  const extraRoots = useExtraRoots();
 
   useEffect(() => {
-    const key = ['singleton', singleton] as const;
-    if (hasChanged) {
-      const serialized = serializeEntryToFiles({
-        basePath: singletonPath,
-        config,
-        format: getSingletonFormat(config, singleton),
-        schema: singletonConfig.schema,
-        slug: undefined,
-        state,
+    if (unscopedTreeData.kind !== 'loaded') return;
+    const unscopedTree = unscopedTreeData.data.tree;
+    const pathPrefix = getPathPrefix(config.storage) ?? '';
+    let additions = serializeEntryToFiles({
+      basePath: singletonPath,
+      config,
+      format: getSingletonFormat(config, singleton),
+      schema: singletonConfig.schema,
+      slug: undefined,
+      state,
+    }).map(addition => ({
+      ...addition,
+      path: pathPrefix + addition.path,
+    }));
+
+    let shouldSet = true;
+
+    (async () => {
+      const newTreeSha = await writeChangesToLocalObjectStore({
+        additions,
+        initialFiles: props.initialFiles.map(x => pathPrefix + x),
+        unscopedTree,
       });
-      const files = new Map(serialized.map(x => [x.path, x.contents]));
-      const data: s.Infer<typeof storedValSchema> = {
-        beforeTreeKey: localTreeKey,
-        files,
-        savedAt: new Date(),
-        version: 1,
-      };
-      setDraft(key, data);
-    } else {
-      delDraft(key);
-    }
+      if (
+        shouldSet &&
+        newTreeSha !== extraRoots.roots.get(branchInfo.currentBranch)?.sha
+      ) {
+        startTransition(() => {
+          extraRoots.set(branchInfo.currentBranch, newTreeSha);
+        });
+      }
+    })();
+    return () => {
+      shouldSet = false;
+    };
   }, [
+    branchInfo.currentBranch,
     config,
-    localTreeKey,
-    state,
-    hasChanged,
+    extraRoots,
+    props.initialFiles,
     singleton,
+    singletonConfig.schema,
     singletonPath,
-    singletonConfig,
+    state,
+    unscopedTreeData,
   ]);
+
+  const hasChanged = useHasChanged({
+    initialState: props.committedState,
+    state,
+    schema,
+    slugField: undefined,
+  });
 
   const onPreviewPropsChange = useCallback(
     (cb: (state: Record<string, unknown>) => Record<string, unknown>) => {
@@ -379,19 +292,6 @@ function LocalSingletonPage(
     state as Record<string, unknown>
   );
 
-  const formatInfo = getSingletonFormat(config, singleton);
-  const [updateResult, _update, resetUpdateItem] = useUpsertItem({
-    state,
-    initialFiles,
-    config,
-    schema: singletonConfig.schema,
-    basePath: singletonPath,
-    format: formatInfo,
-    currentLocalTreeKey: localTreeKey,
-    slug: undefined,
-  });
-  const update = useEventCallback(_update);
-
   const onReset = () =>
     setState({
       localTreeKey: localTreeKey,
@@ -403,9 +303,6 @@ function LocalSingletonPage(
       {...props}
       hasChanged={hasChanged}
       onReset={onReset}
-      onUpdate={update}
-      onResetUpdateItem={resetUpdateItem}
-      updateResult={updateResult}
       state={state}
       previewProps={previewProps}
     />
@@ -417,9 +314,8 @@ function CollabSingletonPage(
     map: Y.Map<unknown>;
   }
 ) {
-  const { singleton, initialFiles, initialState, localTreeKey, config } = props;
+  const { initialState } = props;
   const { schema, singletonConfig } = useSingleton(props.singleton);
-  const singletonPath = getSingletonPath(config, singleton);
 
   const state = useYJsValue(schema, props.map) as Record<string, unknown>;
   const previewProps = usePreviewPropsFromY(
@@ -432,19 +328,6 @@ function CollabSingletonPage(
   const hasChanged =
     useHasChanged({ initialState, state, schema, slugField: undefined }) ||
     isCreating;
-
-  const formatInfo = getSingletonFormat(config, singleton);
-  const [updateResult, _update, resetUpdateItem] = useUpsertItem({
-    state,
-    initialFiles,
-    config,
-    schema: singletonConfig.schema,
-    basePath: singletonPath,
-    format: formatInfo,
-    currentLocalTreeKey: localTreeKey,
-    slug: undefined,
-  });
-  const update = useEventCallback(_update);
 
   const onReset = () => {
     props.map.doc!.transact(() => {
@@ -462,21 +345,11 @@ function CollabSingletonPage(
       {...props}
       hasChanged={hasChanged}
       onReset={onReset}
-      onUpdate={update}
-      onResetUpdateItem={resetUpdateItem}
-      updateResult={updateResult}
       state={state}
       previewProps={previewProps}
     />
   );
 }
-
-const storedValSchema = s.type({
-  version: s.literal(1),
-  savedAt: s.date(),
-  beforeTreeKey: s.optional(s.string()),
-  files: s.map(s.string(), s.instance(Uint8Array)),
-});
 
 function SingletonPageWrapper(props: { singleton: string; config: Config }) {
   const singletonConfig = props.config.singletons?.[props.singleton];
@@ -495,36 +368,16 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
 
   const dirpath = getSingletonPath(props.config, props.singleton);
 
-  const draftData = useData(
-    useCallback(async () => {
-      const raw = await getDraft(['singleton', props.singleton]);
-      if (!raw) throw new Error('No draft found');
-      const stored = storedValSchema.create(raw);
-      const parsed = parseEntry(
-        {
-          config: props.config,
-          dirpath,
-          format,
-          schema: singletonConfig.schema,
-          slug: undefined,
-        },
-        stored.files
-      );
-      return {
-        state: parsed.initialState,
-        savedAt: stored.savedAt,
-        treeKey: stored.beforeTreeKey,
-      };
-    }, [dirpath, format, props.config, props.singleton, singletonConfig.schema])
-  );
-
-  const itemData = useItemData({
+  const itemDataConfig = {
     config: props.config,
     dirpath,
     schema: singletonConfig.schema,
     format,
     slug: undefined,
-  });
+  };
+  const itemData = useItemData(itemDataConfig);
+  const committedItemData = useItemData(itemDataConfig, 'committed');
+
   const branchInfo = useBranchInfo();
 
   const key = `${branchInfo.currentBranch}/${props.singleton}`;
@@ -587,6 +440,19 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     );
   }
 
+  if (committedItemData.kind === 'error') {
+    return (
+      <PageRoot>
+        {header}
+        <PageBody>
+          <Notice margin="xxlarge" tone="critical">
+            {committedItemData.error.message}
+          </Notice>
+        </PageBody>
+      </PageRoot>
+    );
+  }
+
   if (mapData.kind === 'error') {
     return (
       <PageRoot>
@@ -602,8 +468,8 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
 
   if (
     itemData.kind === 'loading' ||
-    draftData.kind === 'loading' ||
-    mapData.kind === 'loading'
+    mapData.kind === 'loading' ||
+    committedItemData.kind === 'loading'
   ) {
     return (
       <PageRoot>
@@ -625,6 +491,11 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     );
   }
 
+  const committedItemState =
+    committedItemData.data === 'not-found'
+      ? null
+      : committedItemData.data.initialState;
+
   if (mapData.data) {
     return (
       <CollabSingletonPage
@@ -640,6 +511,7 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
           itemData.data === 'not-found' ? undefined : itemData.data.localTreeKey
         }
         map={mapData.data}
+        committedState={committedItemState}
       />
     );
   }
@@ -657,7 +529,7 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
       localTreeKey={
         itemData.data === 'not-found' ? undefined : itemData.data.localTreeKey
       }
-      draft={draftData.kind === 'loaded' ? draftData.data : undefined}
+      committedState={committedItemState}
     />
   );
 }

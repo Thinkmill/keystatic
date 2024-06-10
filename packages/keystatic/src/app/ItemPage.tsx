@@ -6,6 +6,7 @@ import {
   Suspense,
   startTransition,
   useCallback,
+  useDeferredValue,
   useEffect,
   useMemo,
   useState,
@@ -729,9 +730,11 @@ function ItemPageWrapper(
 ) {
   const collectionConfig = getCollection(props.config, props.collection);
   const itemData = suspendOnData(props.itemData);
+  const committedData = suspendOnData(
+    useDeferredValue(props.committedItemData)
+  );
   if (itemData === 'not-found') notFound();
   const mapData = suspendOnData(props.mapData);
-  const committedData = suspendOnData(props.committedItemData);
 
   useMemo(() => {
     if (!mapData || mapData.size) {

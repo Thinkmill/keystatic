@@ -7,29 +7,19 @@ import { dump } from 'js-yaml';
 import { useMutation } from 'urql';
 import {
   BranchInfoContext,
-  fetchGitHubTreeData,
   hydrateTreeCacheWithEntries,
   RepoWithWriteAccessContext,
   useBaseCommit,
   useCurrentUnscopedTree,
   useSetTreeSha,
 } from './shell/data';
-import { hydrateBlobCache } from './useItemData';
-import { FormatInfo, getEntryDataFilepath, getPathPrefix } from './path-utils';
-import {
-  getTreeNodeAtPath,
-  TreeEntry,
-  treeSha,
-  updateTreeWithChanges,
-} from './trees';
+import { FormatInfo, getEntryDataFilepath } from './path-utils';
+import { TreeEntry, treeSha } from './trees';
 import { Config } from '..';
-import { getDirectoriesForTreeKey, getTreeKey } from './tree-key';
 import { AppSlugContext } from './onboarding/install-app';
-import { createUrqlClient } from './provider';
 import { serializeProps } from '../form/serialize-props';
-import { scopeEntriesWithPathPrefix } from './shell/path-prefix';
-import { base64Encode } from '#base64';
 import { useConfig } from './shell/context';
+import { base64Encode } from '#base64';
 
 const textEncoder = new TextEncoder();
 
@@ -176,7 +166,7 @@ export function useCommit() {
                 fileChanges: {
                   additions: opts.additions.map(addition => ({
                     ...addition,
-                    contents: base64UrlEncode(addition.contents),
+                    contents: base64Encode(addition.contents),
                   })),
                   deletions,
                 },
@@ -248,224 +238,6 @@ export function useCommit() {
             body: JSON.stringify({
               additions: opts.additions.map(addition => ({
                 ...addition,
-                contents: base64UrlEncode(addition.contents),
-              })),
-              deletions,
-            }),
-          });
-          if (!res.ok) {
-            throw new Error(await res.text());
-          }
-          const newTree: TreeEntry[] = await res.json();
-          const { tree } = await hydrateTreeCacheWithEntries(newTree);
-          setTreeSha(await treeSha(tree));
-          setState({ kind: 'updated' });
-          return true;
-        }
-      } catch (err) {
-        setState({ kind: 'error', error: err as Error });
-        return false;
-      }
-    },
-    () => {
-      setState({ kind: 'idle' });
-    },
-  ] as const;
-}
-
-export function useUpsertItem(args: {
-  state: unknown;
-  initialFiles: string[] | undefined;
-  schema: Record<string, ComponentSchema>;
-  config: Config;
-  format: FormatInfo;
-  currentLocalTreeKey: string | undefined;
-  basePath: string;
-  slug: { value: string; field: string } | undefined;
-}) {
-  const [state, setState] = useState<
-    | { kind: 'idle' }
-    | { kind: 'updated' }
-    | { kind: 'loading' }
-    | { kind: 'needs-fork' }
-    | { kind: 'error'; error: Error }
-    | { kind: 'needs-new-branch'; reason: string }
-  >({
-    kind: 'idle',
-  });
-  const baseCommit = useBaseCommit();
-  const branchInfo = useContext(BranchInfoContext);
-  const setTreeSha = useSetTreeSha();
-  const [, mutate] = useMutation(createCommitMutation);
-  const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
-  const appSlug = useContext(AppSlugContext);
-  const unscopedTreeData = useCurrentUnscopedTree();
-
-  return [
-    state,
-    async (override?: { sha: string; branch: string }): Promise<boolean> => {
-      try {
-        const unscopedTree =
-          unscopedTreeData.kind === 'loaded'
-            ? unscopedTreeData.data.tree
-            : undefined;
-        if (!unscopedTree) return false;
-        if (
-          repoWithWriteAccess === null &&
-          args.config.storage.kind === 'github' &&
-          appSlug?.value
-        ) {
-          setState({ kind: 'needs-fork' });
-          return false;
-        }
-        setState({ kind: 'loading' });
-
-        const pathPrefix = getPathPrefix(args.config.storage) ?? '';
-        let additions = serializeEntryToFiles({
-          basePath: args.basePath,
-          config: args.config,
-          schema: args.schema,
-          format: args.format,
-          state: args.state,
-          slug: args.slug,
-        }).map(addition => ({
-          ...addition,
-          path: pathPrefix + addition.path,
-        }));
-
-        const additionPathToSha = new Map(
-          await Promise.all(
-            additions.map(
-              async addition =>
-                [
-                  addition.path,
-                  await hydrateBlobCache(addition.contents),
-                ] as const
-            )
-          )
-        );
-
-        const filesToDelete = new Set(
-          args.initialFiles?.map(x => pathPrefix + x)
-        );
-        for (const file of additions) {
-          filesToDelete.delete(file.path);
-        }
-
-        additions = additions.filter(addition => {
-          const sha = additionPathToSha.get(addition.path)!;
-          const existing = getTreeNodeAtPath(unscopedTree, addition.path);
-          return existing?.entry.sha !== sha;
-        });
-
-        const deletions: { path: string }[] = [...filesToDelete].map(path => ({
-          path,
-        }));
-        const updatedTree = await updateTreeWithChanges(unscopedTree, {
-          additions,
-          deletions: [...filesToDelete],
-        });
-        await hydrateTreeCacheWithEntries(updatedTree.entries);
-        if (
-          args.config.storage.kind === 'github' ||
-          args.config.storage.kind === 'cloud'
-        ) {
-          const branch = {
-            branchName: override?.branch ?? branchInfo.currentBranch,
-            repositoryNameWithOwner: `${repoWithWriteAccess!.owner}/${
-              repoWithWriteAccess!.name
-            }`,
-          };
-          const runMutation = (expectedHeadOid: string) =>
-            mutate({
-              input: {
-                branch,
-                expectedHeadOid,
-                message: { headline: `Update ${args.basePath}` },
-                fileChanges: {
-                  additions: additions.map(addition => ({
-                    ...addition,
-                    contents: base64Encode(addition.contents),
-                  })),
-                  deletions,
-                },
-              },
-            });
-          let result = await runMutation(override?.sha ?? baseCommit);
-          const gqlError = result.error?.graphQLErrors[0]?.originalError;
-          if (gqlError && 'type' in gqlError) {
-            if (gqlError.type === 'BRANCH_PROTECTION_RULE_VIOLATION') {
-              setState({
-                kind: 'needs-new-branch',
-                reason:
-                  'Changes must be made via pull request to this branch. Create a new branch to save changes.',
-              });
-              return false;
-            }
-            if (gqlError.type === 'STALE_DATA') {
-              // we don't want this to go into the cache yet
-              // so we create a new client just for this
-              const refData = await createUrqlClient(args.config)
-                .query(FetchRef, {
-                  owner: repoWithWriteAccess!.owner,
-                  name: repoWithWriteAccess!.name,
-                  ref: `refs/heads/${branchInfo.currentBranch}`,
-                })
-                .toPromise();
-              if (!refData.data?.repository?.ref?.target) {
-                throw new Error('Branch not found');
-              }
-
-              const tree = scopeEntriesWithPathPrefix(
-                await fetchGitHubTreeData(
-                  refData.data.repository.ref.target.oid,
-                  args.config
-                ),
-                args.config
-              );
-              const treeKey = getTreeKey(
-                getDirectoriesForTreeKey(
-                  fields.object(args.schema),
-                  args.basePath,
-                  args.slug?.value,
-                  args.format
-                ),
-                tree.tree
-              );
-              if (treeKey === args.currentLocalTreeKey) {
-                result = await runMutation(
-                  refData.data.repository.ref.target.oid
-                );
-              } else {
-                setState({
-                  kind: 'needs-new-branch',
-                  reason:
-                    'This entry has been updated since it was opened. Create a new branch to save changes.',
-                });
-                return false;
-              }
-            }
-          }
-
-          if (result.error) {
-            throw result.error;
-          }
-          const target = result.data?.createCommitOnBranch?.ref?.target;
-          if (target) {
-            setState({ kind: 'updated' });
-            return true;
-          }
-          throw new Error('Failed to update');
-        } else {
-          const res = await fetch('/api/keystatic/update', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'no-cors': '1',
-            },
-            body: JSON.stringify({
-              additions: additions.map(addition => ({
-                ...addition,
                 contents: base64Encode(addition.contents),
               })),
               deletions,
@@ -510,107 +282,6 @@ export const createCommitMutation = gql`
     }
   }
 ` as import('../../__generated__/ts-gql/CreateCommit').type;
-
-export function useDeleteItem(args: {
-  basePath: string;
-  initialFiles: string[];
-  storage: Config['storage'];
-}) {
-  const [state, setState] = useState<
-    | { kind: 'idle' }
-    | { kind: 'updated' }
-    | { kind: 'loading' }
-    | { kind: 'needs-fork' }
-    | { kind: 'error'; error: Error }
-  >({
-    kind: 'idle',
-  });
-  const baseCommit = useBaseCommit();
-  const branchInfo = useContext(BranchInfoContext);
-
-  const [, mutate] = useMutation(createCommitMutation);
-  const setTreeSha = useSetTreeSha();
-  const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
-  const appSlug = useContext(AppSlugContext);
-  const unscopedTreeData = useCurrentUnscopedTree();
-
-  return [
-    state,
-    async () => {
-      try {
-        const unscopedTree =
-          unscopedTreeData.kind === 'loaded'
-            ? unscopedTreeData.data.tree
-            : undefined;
-        if (!unscopedTree) return false;
-        if (
-          repoWithWriteAccess === null &&
-          args.storage.kind === 'github' &&
-          appSlug?.value
-        ) {
-          setState({ kind: 'needs-fork' });
-          return false;
-        }
-        setState({ kind: 'loading' });
-        const deletions = args.initialFiles.map(
-          x => (getPathPrefix(args.storage) ?? '') + x
-        );
-        const updatedTree = await updateTreeWithChanges(unscopedTree, {
-          additions: [],
-          deletions,
-        });
-        await hydrateTreeCacheWithEntries(updatedTree.entries);
-        if (args.storage.kind === 'github' || args.storage.kind === 'cloud') {
-          const { error } = await mutate({
-            input: {
-              branch: {
-                repositoryNameWithOwner: `${repoWithWriteAccess!.owner}/${
-                  repoWithWriteAccess!.name
-                }`,
-                branchName: branchInfo.currentBranch,
-              },
-              message: { headline: `Delete ${args.basePath}` },
-              expectedHeadOid: baseCommit,
-              fileChanges: {
-                deletions: deletions.map(path => ({ path })),
-              },
-            },
-          });
-          if (error) {
-            throw error;
-          }
-          setState({ kind: 'updated' });
-          return true;
-        } else {
-          const res = await fetch('/api/keystatic/update', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'no-cors': '1',
-            },
-            body: JSON.stringify({
-              additions: [],
-              deletions: deletions.map(path => ({ path })),
-            }),
-          });
-          if (!res.ok) {
-            throw new Error(await res.text());
-          }
-          const newTree: TreeEntry[] = await res.json();
-          const { tree } = await hydrateTreeCacheWithEntries(newTree);
-          setTreeSha(await treeSha(tree));
-          setState({ kind: 'updated' });
-          return true;
-        }
-      } catch (err) {
-        setState({ kind: 'error', error: err as Error });
-      }
-    },
-    () => {
-      setState({ kind: 'idle' });
-    },
-  ] as const;
-}
 
 export const FetchRef = gql`
   query FetchRef($owner: String!, $name: String!, $ref: String!) {
