@@ -13,6 +13,48 @@ import {
 import { AddToPathProvider } from '../text/path-slug-context';
 import { FIELD_GRID_COLUMNS, FieldContextProvider } from '../context';
 
+// this is just to get the react compiler to run on this, because of a todo
+const belowTablet = containerQueries.below.tablet;
+
+function ObjectFieldInputEntry({
+  field,
+  fieldKey,
+  span,
+  forceValidation,
+  firstFocusable,
+  omitFieldAtPath,
+}: {
+  span: number;
+  fieldKey: string;
+  forceValidation: boolean;
+  firstFocusable: string | undefined;
+  field: GenericPreviewProps<ComponentSchema, unknown>;
+  omitFieldAtPath?: string[];
+}) {
+  return (
+    <FieldContextProvider value={span}>
+      <div
+        className={css({
+          gridColumn: `span ${span}`,
+
+          [belowTablet]: {
+            gridColumn: `span ${FIELD_GRID_COLUMNS}`,
+          },
+        })}
+      >
+        <AddToPathProvider part={fieldKey}>
+          <InnerFormValueContentFromPreviewProps
+            forceValidation={forceValidation}
+            autoFocus={fieldKey === firstFocusable}
+            omitFieldAtPath={omitFieldAtPath}
+            {...field}
+          />
+        </AddToPathProvider>
+      </div>
+    </FieldContextProvider>
+  );
+}
+
 export function ObjectFieldInput<
   Fields extends Record<string, ComponentSchema>,
 >({
@@ -42,28 +84,17 @@ export function ObjectFieldInput<
       {Object.entries(fields).map(([key, propVal], index) => {
         let span = schema.layout?.[index] ?? FIELD_GRID_COLUMNS;
         return (
-          <FieldContextProvider key={key} value={{ span }}>
-            <div
-              className={css({
-                gridColumn: `span ${span}`,
-
-                [containerQueries.below.tablet]: {
-                  gridColumn: `span ${FIELD_GRID_COLUMNS}`,
-                },
-              })}
-            >
-              <AddToPathProvider part={key}>
-                <InnerFormValueContentFromPreviewProps
-                  forceValidation={forceValidation}
-                  autoFocus={key === firstFocusable}
-                  {...propVal}
-                  {...(omitFieldAtPath?.[0] === key
-                    ? { omitFieldAtPath: innerOmitFieldAtPath }
-                    : {})}
-                />
-              </AddToPathProvider>
-            </div>
-          </FieldContextProvider>
+          <ObjectFieldInputEntry
+            key={key}
+            span={span}
+            field={propVal}
+            fieldKey={key}
+            forceValidation={forceValidation}
+            firstFocusable={firstFocusable}
+            {...(omitFieldAtPath?.[0] === key
+              ? { omitFieldAtPath: innerOmitFieldAtPath }
+              : {})}
+          />
         );
       })}
     </Grid>

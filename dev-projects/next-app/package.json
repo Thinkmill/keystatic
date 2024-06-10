@@ -4,7 +4,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "cd ../.. && pnpm preconstruct build && cd dev-projects/next-app && next build",
     "dev": "next dev",
     "start": "next start"
   },

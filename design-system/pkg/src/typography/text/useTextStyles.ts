@@ -49,7 +49,9 @@ export function useTextStyles(
     overflow && overflowMap[overflow],
     trimStyles,
   ];
-
+  // the compiler ESLint plugin complains that "Hooks may not be referenced as normal values, they must be called."
+  // which this is definitely not doing, pretty sure it's a bug that's been fixed in react main
+  // eslint-disable-next-line react-compiler/react-compiler
   return useStyleProps({
     ...otherProps,
     UNSAFE_className: [
