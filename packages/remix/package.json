@@ -33,7 +33,7 @@
     "react-dom": "^18.2.0"
   },
   "peerDependencies": {
-    "@keystatic/core": "*",
+    "@keystatic/core": "0.0.0-test-20240614051620",
     "@remix-run/react": "1 || 2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
