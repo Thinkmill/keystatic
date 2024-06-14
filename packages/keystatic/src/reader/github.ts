@@ -89,7 +89,7 @@ function createMinimalFsForGitHubWithRecursiveTree(opts: {
   };
 }
 
-const lastPartOfPathRegex = /[^/](.+)$/;
+const lastPartOfPathRegex = /([^/]+)$/;
 
 function toTreeNodes(entries: TreeEntry[]) {
   const nodes = new Map<string, TreeEntry>();
