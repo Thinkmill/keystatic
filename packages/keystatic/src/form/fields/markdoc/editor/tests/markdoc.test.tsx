@@ -566,3 +566,21 @@ test('more', () => {
     "
   `);
 });
+
+test('whitespace is ejected from em, strong, etc.', () => {
+  const editor = (
+    <doc>
+      <paragraph>
+        <text>something</text>
+        <text italic>
+          <cursor /> a{' '}
+        </text>
+        <text>something</text>
+      </paragraph>
+    </doc>
+  );
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "something *a* something
+    "
+  `);
+});

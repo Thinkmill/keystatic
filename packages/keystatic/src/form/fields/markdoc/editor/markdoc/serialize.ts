@@ -34,7 +34,7 @@ function _inline(
       {},
       textblockChildren(
         fragment,
-        (text): MarkdocNode => new Ast.Node('text', { value: text }),
+        (content): MarkdocNode => new Ast.Node('text', { content }),
         node => getLeafContent(node, state),
         mark => getWrapperForMark(mark, state)
       )
