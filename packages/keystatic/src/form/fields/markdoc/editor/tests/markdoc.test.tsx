@@ -566,3 +566,24 @@ test('more', () => {
     "
   `);
 });
+
+for (const [mark, symbol] of [
+  ['bold', '**'],
+  ['italic', '*'],
+  ['strikethrough', '~~'],
+] as const) {
+  test(`whitespace is ejected from ${mark}`, () => {
+    const editor = (
+      <doc>
+        <paragraph>
+          <text>something</text>
+          <text {...{ [mark]: true }}>
+            <cursor /> a{' '}
+          </text>
+          <text>something</text>
+        </paragraph>
+      </doc>
+    );
+    expect(toMarkdoc(editor)).toBe(`something ${symbol}a${symbol} something\n`);
+  });
+}
