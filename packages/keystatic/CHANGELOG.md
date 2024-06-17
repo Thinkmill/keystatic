@@ -1,95 +1,179 @@
 # @keystatic/core
 
+## 0.0.0-test-20240617055300
+
+### Patch Changes
+
+- [#1178](https://github.com/Thinkmill/keystatic/pull/1178)
+  [`a588cb2`](https://github.com/Thinkmill/keystatic/commit/a588cb2fedf7e9a813d5f7818a94f4f8df2310d5)
+  Thanks [@emmatown](https://github.com/emmatown)! - Fix whitespace on the ends
+  of italics/bold/strikethrough breaking `fields.markdoc`
+
+- [#1173](https://github.com/Thinkmill/keystatic/pull/1173)
+  [`34dee8c`](https://github.com/Thinkmill/keystatic/commit/34dee8cd8829d2a8c3d91949fd96dcee9d9749d0)
+  Thanks [@emmatown](https://github.com/emmatown)! - Build with React Compiler
+
+- Updated dependencies
+  [[`34dee8c`](https://github.com/Thinkmill/keystatic/commit/34dee8cd8829d2a8c3d91949fd96dcee9d9749d0)]:
+  - @keystar/ui@0.0.0-test-20240617055300
+
 ## 0.5.19
 
 ### Patch Changes
 
-- [#1171](https://github.com/Thinkmill/keystatic/pull/1171) [`a129ea4`](https://github.com/Thinkmill/keystatic/commit/a129ea4ea46a5d9c2ddec8aef4313d98cf13a575) Thanks [@orlovol](https://github.com/orlovol)! - Update uk-UA translations
+- [#1171](https://github.com/Thinkmill/keystatic/pull/1171)
+  [`a129ea4`](https://github.com/Thinkmill/keystatic/commit/a129ea4ea46a5d9c2ddec8aef4313d98cf13a575)
+  Thanks [@orlovol](https://github.com/orlovol)! - Update uk-UA translations
 
-- [#1172](https://github.com/Thinkmill/keystatic/pull/1172) [`73aa1b8`](https://github.com/Thinkmill/keystatic/commit/73aa1b856b7100d1ac033eb16bee5e7f630a2c3e) Thanks [@emmatown](https://github.com/emmatown)! - Add `fields.emptyContent` field to replace `fields.emptyDocument` and support extensions besides `mdoc`
+- [#1172](https://github.com/Thinkmill/keystatic/pull/1172)
+  [`73aa1b8`](https://github.com/Thinkmill/keystatic/commit/73aa1b856b7100d1ac033eb16bee5e7f630a2c3e)
+  Thanks [@emmatown](https://github.com/emmatown)! - Add `fields.emptyContent`
+  field to replace `fields.emptyDocument` and support extensions besides `mdoc`
 
-- [#1172](https://github.com/Thinkmill/keystatic/pull/1172) [`73aa1b8`](https://github.com/Thinkmill/keystatic/commit/73aa1b856b7100d1ac033eb16bee5e7f630a2c3e) Thanks [@emmatown](https://github.com/emmatown)! - Allow passing an array to `contentField` to specify a `contentField` nested inside an object or conditional field
+- [#1172](https://github.com/Thinkmill/keystatic/pull/1172)
+  [`73aa1b8`](https://github.com/Thinkmill/keystatic/commit/73aa1b856b7100d1ac033eb16bee5e7f630a2c3e)
+  Thanks [@emmatown](https://github.com/emmatown)! - Allow passing an array to
+  `contentField` to specify a `contentField` nested inside an object or
+  conditional field
 
-- [#1165](https://github.com/Thinkmill/keystatic/pull/1165) [`a1a71c1`](https://github.com/Thinkmill/keystatic/commit/a1a71c1ab2313c4c0a85fdce3f9a802a14580ece) Thanks [@emmatown](https://github.com/emmatown)! - Improve server-side bundle-size
+- [#1165](https://github.com/Thinkmill/keystatic/pull/1165)
+  [`a1a71c1`](https://github.com/Thinkmill/keystatic/commit/a1a71c1ab2313c4c0a85fdce3f9a802a14580ece)
+  Thanks [@emmatown](https://github.com/emmatown)! - Improve server-side
+  bundle-size
 
 ## 0.5.18
 
 ### Patch Changes
 
-- [#1157](https://github.com/Thinkmill/keystatic/pull/1157) [`86bd966`](https://github.com/Thinkmill/keystatic/commit/86bd966ff35981185030ce0850b8041e8a2dc5bb) Thanks [@emilienbidet](https://github.com/emilienbidet)! - Update the french Singletons translation
+- [#1157](https://github.com/Thinkmill/keystatic/pull/1157)
+  [`86bd966`](https://github.com/Thinkmill/keystatic/commit/86bd966ff35981185030ce0850b8041e8a2dc5bb)
+  Thanks [@emilienbidet](https://github.com/emilienbidet)! - Update the french
+  Singletons translation
 
-- [#1155](https://github.com/Thinkmill/keystatic/pull/1155) [`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130) Thanks [@emmatown](https://github.com/emmatown)! - Fixes for React tooling
+- [#1155](https://github.com/Thinkmill/keystatic/pull/1155)
+  [`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130)
+  Thanks [@emmatown](https://github.com/emmatown)! - Fixes for React tooling
 
-- Updated dependencies [[`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130)]:
+- Updated dependencies
+  [[`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130)]:
   - @keystar/ui@0.7.4
 
 ## 0.5.17
 
 ### Patch Changes
 
-- [#1154](https://github.com/Thinkmill/keystatic/pull/1154) [`42975f4`](https://github.com/Thinkmill/keystatic/commit/42975f45ba071cf3e2659a67e75e86325ce84944) Thanks [@emmatown](https://github.com/emmatown)! - Improve mark printing in the new editor
+- [#1154](https://github.com/Thinkmill/keystatic/pull/1154)
+  [`42975f4`](https://github.com/Thinkmill/keystatic/commit/42975f45ba071cf3e2659a67e75e86325ce84944)
+  Thanks [@emmatown](https://github.com/emmatown)! - Improve mark printing in
+  the new editor
 
-- [#1150](https://github.com/Thinkmill/keystatic/pull/1150) [`8c2abff`](https://github.com/Thinkmill/keystatic/commit/8c2abff7fe38ad3e1687de57f9bc550997619761) Thanks [@emmatown](https://github.com/emmatown)! - Add missing space in add block dialog
+- [#1150](https://github.com/Thinkmill/keystatic/pull/1150)
+  [`8c2abff`](https://github.com/Thinkmill/keystatic/commit/8c2abff7fe38ad3e1687de57f9bc550997619761)
+  Thanks [@emmatown](https://github.com/emmatown)! - Add missing space in add
+  block dialog
 
-- Updated dependencies [[`7924ef8`](https://github.com/Thinkmill/keystatic/commit/7924ef87cb4338e0296d715acd3ab9fb7d39aa51)]:
+- Updated dependencies
+  [[`7924ef8`](https://github.com/Thinkmill/keystatic/commit/7924ef87cb4338e0296d715acd3ab9fb7d39aa51)]:
   - @keystar/ui@0.7.3
 
 ## 0.5.16
 
 ### Patch Changes
 
-- [#1148](https://github.com/Thinkmill/keystatic/pull/1148) [`21394c6`](https://github.com/Thinkmill/keystatic/commit/21394c65a8d507d4355cf71641690464c05d7ec8) Thanks [@emmatown](https://github.com/emmatown)! - Fix incorrectly passing base64url encoded content to GitHub's API instead of standard base64
+- [#1148](https://github.com/Thinkmill/keystatic/pull/1148)
+  [`21394c6`](https://github.com/Thinkmill/keystatic/commit/21394c65a8d507d4355cf71641690464c05d7ec8)
+  Thanks [@emmatown](https://github.com/emmatown)! - Fix incorrectly passing
+  base64url encoded content to GitHub's API instead of standard base64
 
 ## 0.5.15
 
 ### Patch Changes
 
-- [#1129](https://github.com/Thinkmill/keystatic/pull/1129) [`d3aa1f2`](https://github.com/Thinkmill/keystatic/commit/d3aa1f2386bd690936662d98724eb385564a26cd) Thanks [@emmatown](https://github.com/emmatown)! - Server side bundle size improvements
+- [#1129](https://github.com/Thinkmill/keystatic/pull/1129)
+  [`d3aa1f2`](https://github.com/Thinkmill/keystatic/commit/d3aa1f2386bd690936662d98724eb385564a26cd)
+  Thanks [@emmatown](https://github.com/emmatown)! - Server side bundle size
+  improvements
 
-- [#1132](https://github.com/Thinkmill/keystatic/pull/1132) [`aa13ea9`](https://github.com/Thinkmill/keystatic/commit/aa13ea917ce2611266c0008197cfea4c1427724c) Thanks [@emmatown](https://github.com/emmatown)! - Fix typing when the placeholder is visible in the new editors
+- [#1132](https://github.com/Thinkmill/keystatic/pull/1132)
+  [`aa13ea9`](https://github.com/Thinkmill/keystatic/commit/aa13ea917ce2611266c0008197cfea4c1427724c)
+  Thanks [@emmatown](https://github.com/emmatown)! - Fix typing when the
+  placeholder is visible in the new editors
 
 ## 0.5.14
 
 ### Patch Changes
 
-- [#1111](https://github.com/Thinkmill/keystatic/pull/1111) [`fe63e6a`](https://github.com/Thinkmill/keystatic/commit/fe63e6a77a695d7cafb5aadb12a7eb2e1c914f0b) Thanks [@emmatown](https://github.com/emmatown)! - Lazily fetch associated pull requests for branches instead of fetching them in the main blocking request for data from GitHub's API to improve performance
+- [#1111](https://github.com/Thinkmill/keystatic/pull/1111)
+  [`fe63e6a`](https://github.com/Thinkmill/keystatic/commit/fe63e6a77a695d7cafb5aadb12a7eb2e1c914f0b)
+  Thanks [@emmatown](https://github.com/emmatown)! - Lazily fetch associated
+  pull requests for branches instead of fetching them in the main blocking
+  request for data from GitHub's API to improve performance
 
-- [#1102](https://github.com/Thinkmill/keystatic/pull/1102) [`adc0cf6`](https://github.com/Thinkmill/keystatic/commit/adc0cf6282494eb522f6d129a49a7dd9c25c9490) Thanks [@emmatown](https://github.com/emmatown)! - Show message when a branch is selected that doesn't exist in the repository
+- [#1102](https://github.com/Thinkmill/keystatic/pull/1102)
+  [`adc0cf6`](https://github.com/Thinkmill/keystatic/commit/adc0cf6282494eb522f6d129a49a7dd9c25c9490)
+  Thanks [@emmatown](https://github.com/emmatown)! - Show message when a branch
+  is selected that doesn't exist in the repository
 
-- [#1127](https://github.com/Thinkmill/keystatic/pull/1127) [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c) Thanks [@emmatown](https://github.com/emmatown)! - Fix props of mark components in `fields.markdoc` and `fields.mdx` not being saved
+- [#1127](https://github.com/Thinkmill/keystatic/pull/1127)
+  [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c)
+  Thanks [@emmatown](https://github.com/emmatown)! - Fix props of mark
+  components in `fields.markdoc` and `fields.mdx` not being saved
 
-- [#1128](https://github.com/Thinkmill/keystatic/pull/1128) [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2) Thanks [@emmatown](https://github.com/emmatown)! - Fix `fields.mdx` not supporting multiplayer
+- [#1128](https://github.com/Thinkmill/keystatic/pull/1128)
+  [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2)
+  Thanks [@emmatown](https://github.com/emmatown)! - Fix `fields.mdx` not
+  supporting multiplayer
 
-- [#1127](https://github.com/Thinkmill/keystatic/pull/1127) [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c) Thanks [@emmatown](https://github.com/emmatown)! - Fix inline components in `fields.markdoc` and `fields.mdx` not showing the component name with the default view
+- [#1127](https://github.com/Thinkmill/keystatic/pull/1127)
+  [`5271331`](https://github.com/Thinkmill/keystatic/commit/52713316c9a67058525491e8bba605b69f65c64c)
+  Thanks [@emmatown](https://github.com/emmatown)! - Fix inline components in
+  `fields.markdoc` and `fields.mdx` not showing the component name with the
+  default view
 
-- [#1128](https://github.com/Thinkmill/keystatic/pull/1128) [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2) Thanks [@emmatown](https://github.com/emmatown)! - Optimise the server side bundle size
+- [#1128](https://github.com/Thinkmill/keystatic/pull/1128)
+  [`7bc3e08`](https://github.com/Thinkmill/keystatic/commit/7bc3e08eb56ebaffd027efff0e1bc875a69df7f2)
+  Thanks [@emmatown](https://github.com/emmatown)! - Optimise the server side
+  bundle size
 
 ## 0.5.13
 
 ### Patch Changes
 
-- [#1097](https://github.com/Thinkmill/keystatic/pull/1097) [`2173616`](https://github.com/Thinkmill/keystatic/commit/2173616b81c1a4632d7cca4b3c2cef1d1f987ec0) Thanks [@jplhomer](https://github.com/jplhomer)! - Store collection search input in query param
+- [#1097](https://github.com/Thinkmill/keystatic/pull/1097)
+  [`2173616`](https://github.com/Thinkmill/keystatic/commit/2173616b81c1a4632d7cca4b3c2cef1d1f987ec0)
+  Thanks [@jplhomer](https://github.com/jplhomer)! - Store collection search
+  input in query param
 
-- [#1099](https://github.com/Thinkmill/keystatic/pull/1099) [`31286c0`](https://github.com/Thinkmill/keystatic/commit/31286c0e3ff0bd591853fdab70f7f797dad316f5) Thanks [@emmatown](https://github.com/emmatown)! - Fix previewing SVGs in `fields.image` and the editors
+- [#1099](https://github.com/Thinkmill/keystatic/pull/1099)
+  [`31286c0`](https://github.com/Thinkmill/keystatic/commit/31286c0e3ff0bd591853fdab70f7f797dad316f5)
+  Thanks [@emmatown](https://github.com/emmatown)! - Fix previewing SVGs in
+  `fields.image` and the editors
 
 ## 0.5.12
 
 ### Patch Changes
 
 - a2d56566: Introduce new `multiRelationship` field type.
-- 603d85be: Fix for a Firefox bug where the text cursor is hidden when beside a `contenteditable=false` element.
-- d37a5422: Improve error messages when unknown components or unsupported syntax is used in `fields.markdoc` and `fields.mdx`
-- 2c818862: UX and A11Y improvements for `fields.array()` and `fields.blocks()` interfaces:
+- 603d85be: Fix for a Firefox bug where the text cursor is hidden when beside a
+  `contenteditable=false` element.
+- d37a5422: Improve error messages when unknown components or unsupported syntax
+  is used in `fields.markdoc` and `fields.mdx`
+- 2c818862: UX and A11Y improvements for `fields.array()` and `fields.blocks()`
+  interfaces:
 
-  - Include the "required" indicator when min length validation provided by consumer.
+  - Include the "required" indicator when min length validation provided by
+    consumer.
   - Connect the validation message to the group accessibly.
 
 - 5f11dcd2: Fix `fields.datetime({ defaultValue: { kind: 'now' } })`
-- d860d675: Fix loading spinner replacing the page for a short amount of time when saving an entry
-- 319c0dba: Minor cosmetic improvements to `fields.cloudImage()`, mainly clearer delineation of related fields.
+- d860d675: Fix loading spinner replacing the page for a short amount of time
+  when saving an entry
+- 319c0dba: Minor cosmetic improvements to `fields.cloudImage()`, mainly clearer
+  delineation of related fields.
 - ce1696f6: Add presence in multiplayer
 - a703043c: Deprecate `fields.document`
-- d20e1ad6: Memo'd breadcrumbs to avoid unexpected behaviour where items collapse into a menu prematurely.
+- d20e1ad6: Memo'd breadcrumbs to avoid unexpected behaviour where items
+  collapse into a menu prematurely.
 - e819d5f2: Use links in header breadcrumbs.
 - Updated dependencies [282ab553]
 - Updated dependencies [bd923de5]
@@ -124,20 +208,23 @@
 
 ### Patch Changes
 
-- c519f119: Fix very slow editing when replacing one large file with another large file of the same size
+- c519f119: Fix very slow editing when replacing one large file with another
+  large file of the same size
 
 ## 0.5.6
 
 ### Patch Changes
 
-- c619ef2e: Fix DOM error when deleting wrapper components in some cases in the new editor
+- c619ef2e: Fix DOM error when deleting wrapper components in some cases in the
+  new editor
 
 ## 0.5.5
 
 ### Patch Changes
 
 - c77a22af: Fix `inline` component serialisation in `fields.mdx`
-- 289dd8f4: Fix multiplayer when an asset like an image that's larger than 1MB is in an entry
+- 289dd8f4: Fix multiplayer when an asset like an image that's larger than 1MB
+  is in an entry
 
 ## 0.5.4
 
@@ -153,7 +240,8 @@
 ### Patch Changes
 
 - 68680678: Allow uploading images to Keystatic Cloud from within Keystatic's UI
-- e5de1f2b: Fix new editor not adding new fields in a content component schema that are missing in content
+- e5de1f2b: Fix new editor not adding new fields in a content component schema
+  that are missing in content
 
 ## 0.5.2
 
@@ -166,7 +254,8 @@
 
 ### Patch Changes
 
-- 3cfb555d: Fix `Duplicate use of selection JSON ID` error with hot module reloading
+- 3cfb555d: Fix `Duplicate use of selection JSON ID` error with hot module
+  reloading
 
 ## 0.5.0
 
@@ -178,29 +267,35 @@
 
 ### Minor Changes
 
-- ee3f2038: `fields.date` and `fields.datetime` are now output as dates instead of strings in YAML
+- ee3f2038: `fields.date` and `fields.datetime` are now output as dates instead
+  of strings in YAML
 
 ### Patch Changes
 
-- e3947052: Add `validation.isRequired` to `fields.text` and `name` on `fields.slug`
+- e3947052: Add `validation.isRequired` to `fields.text` and `name` on
+  `fields.slug`
 
 ## 0.3.19
 
 ### Patch Changes
 
-- 3f3c91c9: Fix markdown shortcuts and insert menu in the new editor when using multiplayer
+- 3f3c91c9: Fix markdown shortcuts and insert menu in the new editor when using
+  multiplayer
 
 ## 0.3.18
 
 ### Patch Changes
 
-- 805a3c8d: Make editing an entry within an `array` or `blocks` field immediately update the value in the parent form rather than after clicking done
+- 805a3c8d: Make editing an entry within an `array` or `blocks` field
+  immediately update the value in the parent form rather than after clicking
+  done
 
 ## 0.3.17
 
 ### Patch Changes
 
-- bd21c93b: Fix having multiple hard breaks together in the new editor breaking parsing
+- bd21c93b: Fix having multiple hard breaks together in the new editor breaking
+  parsing
 
 ## 0.3.16
 
@@ -212,7 +307,8 @@
 
 ### Patch Changes
 
-- 976d93cd: Persist collaboration state in IDB and optimistically connect to multiplayer websocket
+- 976d93cd: Persist collaboration state in IDB and optimistically connect to
+  multiplayer websocket
 
 ## 0.3.14
 
@@ -325,8 +421,10 @@
 ### Patch Changes
 
 - 4053f41c: Improve type inference for `fields.select` and `fields.multiselect`
-- 22dc4030: Implement `NodeView` and `ToolbarView` for inline components in the new editor
-- 6986f36b: Show name fields in slug fields as required if the min length is greater than 0
+- 22dc4030: Implement `NodeView` and `ToolbarView` for inline components in the
+  new editor
+- 6986f36b: Show name fields in slug fields as required if the min length is
+  greater than 0
 - Updated dependencies [05a71cde]
   - @keystar/ui@0.4.9
 
@@ -334,8 +432,10 @@
 
 ### Patch Changes
 
-- ba4822c6: Fix `min` and `max` being required on `validation` in `fields.integer` when it is provided
-- c9711cf3: Update configuration for custom components in experimental new editor
+- ba4822c6: Fix `min` and `max` being required on `validation` in
+  `fields.integer` when it is provided
+- c9711cf3: Update configuration for custom components in experimental new
+  editor
 
 ## 0.2.10
 
@@ -343,7 +443,8 @@
 
 - bebaa922: Fix `fields.integer` allowing any number
 - 4aa8fefe: Fix url encoding breaking on auth redirects
-- 52a018f6: Fix drafts on item creation not being deleted after the item is created
+- 52a018f6: Fix drafts on item creation not being deleted after the item is
+  created
 - Updated dependencies [bebaa922]
   - @keystar/ui@0.4.8
 
@@ -358,7 +459,8 @@
 ### Patch Changes
 
 - e956e366: Persist draft state of entry creation in browser storage
-- b2794230: Fix race condition when trying to save an entry when it's already being saved
+- b2794230: Fix race condition when trying to save an entry when it's already
+  being saved
 
 ## 0.2.7
 
@@ -384,13 +486,18 @@
 - 0ca7f47a: Markdoc editor popover improvements:
 
   - boundary respected by popovers
-  - popovers tethered to reference regardless of type (node/range/virtual) + better perf
+  - popovers tethered to reference regardless of type (node/range/virtual) +
+    better perf
 
-- 7a98fd68: Support "layout" prop on `fields.object()`. Add required indicators to fields, where appropriate.
-- 56b6b121: Refactor the markdoc editor toolbar; move all formatting options under a single tab-stop.
-- 3288c624: Replace explicit node styles with inherited styling from "prose" wrapper, where appropriate, in the markdoc editor.
+- 7a98fd68: Support "layout" prop on `fields.object()`. Add required indicators
+  to fields, where appropriate.
+- 56b6b121: Refactor the markdoc editor toolbar; move all formatting options
+  under a single tab-stop.
+- 3288c624: Replace explicit node styles with inherited styling from "prose"
+  wrapper, where appropriate, in the markdoc editor.
 - bd28cfd4: Collection table: hide "status" column for default branch.
-- e32ff596: ProseMirror editor: support and populate "description" + "icon" on insert menu items.
+- e32ff596: ProseMirror editor: support and populate "description" + "icon" on
+  insert menu items.
 - 16bd7064: Improve error message for branch creation name validation.
 - e1c9e0cf: ProseMirror editor improvements
 - 267845b1: Merge topbar UI into sidebar; reclaim vertical real estate.
@@ -415,7 +522,8 @@
 
 ### Patch Changes
 
-- 2b4f24b8: Prepare the dialog interface for batch commits. The invoking element has been omitted from the UI until we're ready to implement.
+- 2b4f24b8: Prepare the dialog interface for batch commits. The invoking element
+  has been omitted from the UI until we're ready to implement.
 - Updated dependencies [a3f86e8f]
 - Updated dependencies [2b4f24b8]
   - @keystar/ui@0.4.3
@@ -425,7 +533,8 @@
 ### Patch Changes
 
 - b9f0758f: Observe nav config as dashboard cards.
-- f3cc119c: Fix deleting files inside an entry directory that aren't associated with the entry when updating or deleting the entry
+- f3cc119c: Fix deleting files inside an entry directory that aren't associated
+  with the entry when updating or deleting the entry
 
 ## 0.2.1
 
@@ -442,11 +551,13 @@
 
 ### Minor Changes
 
-- b768f147: Update router integration between `@keystatic/core` and framework integration packages to improve performance
+- b768f147: Update router integration between `@keystatic/core` and framework
+  integration packages to improve performance
 
 ### Patch Changes
 
-- 32d22480: Fix loading entries failing for public repositories when not using a `pathPrefix`
+- 32d22480: Fix loading entries failing for public repositories when not using a
+  `pathPrefix`
 - Updated dependencies [cd03b1cd]
   - @keystar/ui@0.4.1
 
@@ -455,25 +566,40 @@
 ### Patch Changes
 
 - bd20acb0: Improve performance of loading entries in public repositories
-- be85e097: Introduce [client-side routing](https://react-spectrum.adobe.com/react-aria/routing.html) concept from react-aria:
+- be85e097: Introduce
+  [client-side routing](https://react-spectrum.adobe.com/react-aria/routing.html)
+  concept from react-aria:
 
-  - Include `RouterProvider` with `KeystarProvider` (renamed from "VoussoirProvider"), conditionally when _new_ `router` prop is provided. This new router behaviour makes `linkComponent` and friends unnecessary; they have been removed.
-  - Re-export `useLink` from [react-aria](https://react-spectrum.adobe.com/react-aria/useLink.html), which manages router behaviour on click (among other things), for use outside of the component library. Internally we reference "@react-aria/link" directly.
+  - Include `RouterProvider` with `KeystarProvider` (renamed from
+    "VoussoirProvider"), conditionally when _new_ `router` prop is provided.
+    This new router behaviour makes `linkComponent` and friends unnecessary;
+    they have been removed.
+  - Re-export `useLink` from
+    [react-aria](https://react-spectrum.adobe.com/react-aria/useLink.html),
+    which manages router behaviour on click (among other things), for use
+    outside of the component library. Internally we reference "@react-aria/link"
+    directly.
   - Replace instances of link component references with appropriate alternative.
   - Support link props e.g. "href", "target" etc. on `Menu` items.
-  - Consolidate cursor behaviour: `ActionButton`, `Button`, and (Menu) `Item` will now use "pointer" for anchors.
+  - Consolidate cursor behaviour: `ActionButton`, `Button`, and (Menu) `Item`
+    will now use "pointer" for anchors.
 
   Supporting/related changes:
 
-  - Update react-aria dependencies to latest: "@react-aria/\*", "@react-stately/\*", "@react-types/\*", "@internationalized/\*".
-  - Remove linking behaviour from storybook. Might revisit later, but for now it added unnecessary complexity.
+  - Update react-aria dependencies to latest: "@react-aria/\*",
+    "@react-stately/\*", "@react-types/\*", "@internationalized/\*".
+  - Remove linking behaviour from storybook. Might revisit later, but for now it
+    added unnecessary complexity.
 
   App changes:
 
-  - Deprecate `link` prop on `Keystatic` component. We can now abstract that behaviour from the existing `router` prop.
-  - Refactor topbar menu items to use link API; mostly to confirm expected behaviour.
+  - Deprecate `link` prop on `Keystatic` component. We can now abstract that
+    behaviour from the existing `router` prop.
+  - Refactor topbar menu items to use link API; mostly to confirm expected
+    behaviour.
 
-- e3d6fd29: Fix links and other formatting around inline code being discarded in the document editor
+- e3d6fd29: Fix links and other formatting around inline code being discarded in
+  the document editor
 - be5d3646: Fix unhandled promise rejection error
 - Updated dependencies [be85e097]
 - Updated dependencies [9eaefd73]
@@ -483,12 +609,15 @@
 
 ### Patch Changes
 
-- 221cb5d5: Component library: support props "align" and "menuWidth" on `Combobox` component.
+- 221cb5d5: Component library: support props "align" and "menuWidth" on
+  `Combobox` component.
 
-  App interface: replace the branch-selection picker with a combobox to create a better experience for instances with many branches.
+  App interface: replace the branch-selection picker with a combobox to create a
+  better experience for instances with many branches.
 
 - e8ef9436: move image library button from dashboard to topbar
-- be0eaddc: Add `toolbarIcon` option to component blocks and show `cloudImage` component in toolbar
+- be0eaddc: Add `toolbarIcon` option to component blocks and show `cloudImage`
+  component in toolbar
 - 4875c21f: `TableView` fixes and improvements, since windowing.
 - Updated dependencies [221cb5d5]
 - Updated dependencies [4875c21f]
@@ -499,16 +628,19 @@
 ### Patch Changes
 
 - e8492482: Virtualized table view.
-- e8748091: Fix "Invalid directory in content field serialization" error when using a path with a trailing slash in `images.directory` in `fields.document`
+- e8748091: Fix "Invalid directory in content field serialization" error when
+  using a path with a trailing slash in `images.directory` in `fields.document`
 - cf66c21b: Add `createGitHubReader` at `@keystatic/core/reader/github`
 - 633b9c84: Allow `{branch}` replacement in `previewUrl` option
 - 5399756e: Fix parsing empty list items breaking the document editor
 - cad4cb33: Center loading indicator on Keystatic Cloud auth callback page
 - 633b9c84: `{slug}` is no longer required in `previewUrl` in collections
-- ee1cf9bd: Support non-Node.js runtimes such as Cloudflare Workers in the API route
+- ee1cf9bd: Support non-Node.js runtimes such as Cloudflare Workers in the API
+  route
 - 19010641: Update dependencies to fix double fetching in cloud mode
 - b54f0e71: Fix `fields.url` always being required
-- d5775591: Link to specific open pull request instead of search page of open pull requests
+- d5775591: Link to specific open pull request instead of search page of open
+  pull requests
 - Updated dependencies [e8492482]
   - @keystar/ui@0.3.3
 
@@ -520,7 +652,8 @@
 - 811c8749: Persist draft changes to entries to browser storage
 - d8cd31b8: Fix regression in deletions from adding `pathPrefix`
 - 369cfff6: Remove unused code for old template deployment method
-- 6923f250: Add `storage.branchPrefix` option to allow enforcing a branch prefix when creating new branches and viewing branches
+- 6923f250: Add `storage.branchPrefix` option to allow enforcing a branch prefix
+  when creating new branches and viewing branches
 - Updated dependencies [b9ca5380]
   - @keystar/ui@0.3.2
 
@@ -532,7 +665,8 @@
 - 9411896b: Add link to cloud images on dashboard
 - 303e845d: Remove unused dependencies
 - 183e1293: Added an option to duplicate an existing entry in a collection
-- a05fc4cb: Allow pasting more variations of cloud image urls in `fields.cloudImage` and `cloudImage` component block
+- a05fc4cb: Allow pasting more variations of cloud image urls in
+  `fields.cloudImage` and `cloudImage` component block
 - df4f06ae: Editor: fields editing in a modal instead of in-document
 - b5eb69d1: Show logged in user in header in cloud mode
 
@@ -540,8 +674,10 @@
 
 ### Patch Changes
 
-- bcb3b8ec: Support constrained proportions on cloud image block and field. Refactor `Tooltip` styles to allow consumer overrides via style props.
-- 43f0b61f: Fixed bundle size increase when using `@keystatic/core/reader` with React server components
+- bcb3b8ec: Support constrained proportions on cloud image block and field.
+  Refactor `Tooltip` styles to allow consumer overrides via style props.
+- 43f0b61f: Fixed bundle size increase when using `@keystatic/core/reader` with
+  React server components
 - Updated dependencies [bcb3b8ec]
   - @keystar/ui@0.3.1
 
@@ -558,8 +694,10 @@
 - 92c80281: Shrink the size of hidden child nodes in the document field
 - 7dafe782: Calendar widgets for date selection:
 
-  - New package "@keystar/ui/calendar" exposes new components, `Calendar` and `RangeCalendar`
-  - Update to "@keystar/ui/date-time" exposes new components, `DatePicker` and `DateRangePicker`
+  - New package "@keystar/ui/calendar" exposes new components, `Calendar` and
+    `RangeCalendar`
+  - Update to "@keystar/ui/date-time" exposes new components, `DatePicker` and
+    `DateRangePicker`
 
   Related fixes and improvements:
 
@@ -587,7 +725,8 @@
   - improve implementation
 
 - b2988cd5: Fix API route erroring with `storage: { kind: 'cloud' }`
-- 8cee0bb3: Export `CloudImageProps` type from the `@keystatic/core/component-blocks` entrypoint
+- 8cee0bb3: Export `CloudImageProps` type from the
+  `@keystatic/core/component-blocks` entrypoint
 - Updated dependencies [f7e0692e]
 - Updated dependencies [12f95d48]
   - @keystar/ui@0.2.2
@@ -596,7 +735,8 @@
 
 ### Minor Changes
 
-- 1f96ff27: Move cloud `storage.project` to `cloud.project` option to allow it to be referenced in local mode
+- 1f96ff27: Move cloud `storage.project` to `cloud.project` option to allow it
+  to be referenced in local mode
 
 ### Patch Changes
 
@@ -607,11 +747,14 @@
   - remove unused `flattenChildren` utility
 - 7310a672: Fixes and improvements to the cloud image block.
 - c5407cce: Add datetime field
-- ca6774b8: The `document` field defaults for formatting have changed to exclude options that require custom Markdoc tags.
+- ca6774b8: The `document` field defaults for formatting have changed to exclude
+  options that require custom Markdoc tags.
 
-  See https://keystatic.com/docs/fields/document#formatting-options for the new defaults.
+  See https://keystatic.com/docs/fields/document#formatting-options for the new
+  defaults.
 
-  When updating, if you have configured a document field with shorthand for the `formatting` config:
+  When updating, if you have configured a document field with shorthand for the
+  `formatting` config:
 
   ```ts
   fields.document({
@@ -645,8 +788,10 @@
   });
   ```
 
-- 03f0543c: Allow `toolbar: null` to remove toolbar from chromeless component blocks and add `onRemove` to component block previews.
-- 7767c69a: Optimise the editor appearance when `entryLayout="content"` for a more focused experience.
+- 03f0543c: Allow `toolbar: null` to remove toolbar from chromeless component
+  blocks and add `onRemove` to component block previews.
+- 7767c69a: Optimise the editor appearance when `entryLayout="content"` for a
+  more focused experience.
 
   Component library:
 
@@ -666,7 +811,8 @@
 
 ### Patch Changes
 
-- c43d7045: Added validation to prevent whitespace at the start or end of slug field values
+- c43d7045: Added validation to prevent whitespace at the start or end of slug
+  field values
 - 21395048: Update card style on dashboard
 
 ## 0.0.115
@@ -707,7 +853,8 @@
 
 ### Patch Changes
 
-- efc83c9c: A leading `/` is no longer added to the `publicPath` in `fields.image`, `fields.file`, and `images` in `fields.document`
+- efc83c9c: A leading `/` is no longer added to the `publicPath` in
+  `fields.image`, `fields.file`, and `images` in `fields.document`
 - Updated dependencies [0ab08c7c]
   - @keystar/ui@0.1.5
 
@@ -715,20 +862,24 @@
 
 ### Patch Changes
 
-- bf6a27bb: Update dashboard page to use card-like interface elements for collections and singletons.
+- bf6a27bb: Update dashboard page to use card-like interface elements for
+  collections and singletons.
 
   Related app changes:
 
   - declare side and main app panels as "inline-size" containers
   - less obtrusive change indicators on sidebar singleton
-  - create `useLocalizedString` hook, which abstracts l10n message import to one location
+  - create `useLocalizedString` hook, which abstracts l10n message import to one
+    location
 
   Related component library changes:
 
-  - adjust `AnchorDOMProps` type; require "href" property and remove (MIME) "type" property
+  - adjust `AnchorDOMProps` type; require "href" property and remove (MIME)
+    "type" property
   - support "href" (and friends) on `ActionButton` component
   - expose `containerQueries` from "style" package
-  - fix class list declaration issue, which was causing a warning from `FieldButton` component
+  - fix class list declaration issue, which was causing a warning from
+    `FieldButton` component
 
 - Updated dependencies [f272b8ee]
 - Updated dependencies [bf6a27bb]
@@ -761,8 +912,10 @@
 ### Patch Changes
 
 - 4e595627: Avoid full page refreshes when resetting on entry pages
-- 477b4e96: The `storage.repo` option now accepts a repository in the form of `owner/repo`
-- b832e495: Layout refactor that moves some stuff out of the sidebar into an app header.
+- 477b4e96: The `storage.repo` option now accepts a repository in the form of
+  `owner/repo`
+- b832e495: Layout refactor that moves some stuff out of the sidebar into an app
+  header.
 
   Component library:
 
@@ -778,7 +931,8 @@
 
 ### Patch Changes
 
-- bbbca74f: Add `locale` config option, now defaults to `en-US` instead of auto-detecting the Browser's locale.
+- bbbca74f: Add `locale` config option, now defaults to `en-US` instead of
+  auto-detecting the Browser's locale.
 - 944dbe67: text input paper cuts:
 
   - more vertical padding on `TextArea` component.
@@ -857,7 +1011,8 @@
 
 ### Patch Changes
 
-- 73c26e63: Never send the structure of `node_modules` in the tree used in local mode, even if it's not gitignored
+- 73c26e63: Never send the structure of `node_modules` in the tree used in local
+  mode, even if it's not gitignored
 
 ## 0.0.102
 
@@ -869,13 +1024,15 @@
 
 ### Patch Changes
 
-- e03a94d: `@keystatic/core/reader` now uses React's `cache` function in server component environments
+- e03a94d: `@keystatic/core/reader` now uses React's `cache` function in server
+  component environments
 
 ## 0.0.100
 
 ### Patch Changes
 
-- 9bc953d: Fix `forceValidation` not being passed through to field inputs correctly
+- 9bc953d: Fix `forceValidation` not being passed through to field inputs
+  correctly
 
 ## 0.0.99
 
@@ -906,7 +1063,8 @@
 
 ### Patch Changes
 
-- c70a21d: Fix navigating between some pages preserving state when they shouldn't
+- c70a21d: Fix navigating between some pages preserving state when they
+  shouldn't
 
 ## 0.0.94
 
@@ -957,16 +1115,22 @@
 ### Patch Changes
 
 - e0292c2: Remove unused dependencies
-- f435b49: Fix `DocumentRenderer` not providing `language` to the code block renderer and not providing arbitrary props to the code block and heading renderer.
-- a09b11d: Fix attempting to edit an image's details after saving it without a title erroring
+- f435b49: Fix `DocumentRenderer` not providing `language` to the code block
+  renderer and not providing arbitrary props to the code block and heading
+  renderer.
+- a09b11d: Fix attempting to edit an image's details after saving it without a
+  title erroring
 
 ## 0.0.90
 
 ### Patch Changes
 
 - e9b0e64: Strict dimension types.
-- e390566: Add `formatting.blockTypes.code.schema` and `formatting.headingLevels.schema` options to `fields.document` to allow adding arbitrary attributes to code blocks and headings.
-- 28eeba4: Add `Entry` and `EntryWithResolvedLinkedFiles` types to `@keystatic/core/reader`
+- e390566: Add `formatting.blockTypes.code.schema` and
+  `formatting.headingLevels.schema` options to `fields.document` to allow adding
+  arbitrary attributes to code blocks and headings.
+- 28eeba4: Add `Entry` and `EntryWithResolvedLinkedFiles` types to
+  `@keystatic/core/reader`
 - Updated dependencies [e9b0e64]
   - @voussoir/action-group@0.1.4
   - @voussoir/badge@0.1.4
@@ -1015,10 +1179,13 @@
 
 ### Patch Changes
 
-- 6fbbf89: Allow writing a language in the code block markdown shortcut in the document editor
-- 2df0cb7: Add log in page rather than redirecting to GitHub directly and make the log out button work.
+- 6fbbf89: Allow writing a language in the code block markdown shortcut in the
+  document editor
+- 2df0cb7: Add log in page rather than redirecting to GitHub directly and make
+  the log out button work.
 - 2fb7327: Fix spacing between blocks in the document editor
-- 97ea182: Properly fix using the reader API in React server component environments
+- 97ea182: Properly fix using the reader API in React server component
+  environments
 
 ## 0.0.85
 
@@ -1030,7 +1197,9 @@
 
 ### Patch Changes
 
-- a45bad6: Updated the tree used in local mode to include all non-gitignored files from cwd or `localBaseDirectory` so that `fields.pathReference` works correctly.
+- a45bad6: Updated the tree used in local mode to include all non-gitignored
+  files from cwd or `localBaseDirectory` so that `fields.pathReference` works
+  correctly.
 
 ## 0.0.83
 
@@ -1039,7 +1208,10 @@
 - c7da5cd: Add experimental `cloud` storage kind
 - 323d8cb: Fix updating slugs not working
 - 6b9c653: Fix `@keystatic/core/reader` in server component environments
-- 70116b6: Add an `all` method to the collection reader API to load all entries in a collection and add `resolveLinkedFiles` option to the methods that read entries to eagerly load document fields (and potentially other kinds of fields in the future).
+- 70116b6: Add an `all` method to the collection reader API to load all entries
+  in a collection and add `resolveLinkedFiles` option to the methods that read
+  entries to eagerly load document fields (and potentially other kinds of fields
+  in the future).
 - Updated dependencies [c0a4d82]
   - @voussoir/typography@0.1.3
   - @voussoir/types@0.1.2
@@ -1048,20 +1220,24 @@
 
 ### Patch Changes
 
-- a9932ae: Make the add button in array fields open a modal for the new item instead of adding an empty item
+- a9932ae: Make the add button in array fields open a modal for the new item
+  instead of adding an empty item
 
 ## 0.0.81
 
 ### Patch Changes
 
-- 91307f5: Include callback url with port in addition to the portless one when creating the GitHub app so that installing the app redirects to the right place
+- 91307f5: Include callback url with port in addition to the portless one when
+  creating the GitHub app so that installing the app redirects to the right
+  place
 
 ## 0.0.80
 
 ### Patch Changes
 
 - dd8c580: Remove `options` property on `FormField`
-- 51199ba: Add `images.schema` option to `fields.document` to allow changing the schema for
+- 51199ba: Add `images.schema` option to `fields.document` to allow changing the
+  schema for
 
 ## 0.0.79
 
@@ -1156,8 +1332,10 @@
 
 ### Patch Changes
 
-- 06340d6: Allow using `**` in the collection `path` option instead of `*` to allow for slugs with slashes in them
-- 8c6a5b0: Fix brackets being added after text when the link keyboard shortcut is pressed but links aren't enabled
+- 06340d6: Allow using `**` in the collection `path` option instead of `*` to
+  allow for slugs with slashes in them
+- 8c6a5b0: Fix brackets being added after text when the link keyboard shortcut
+  is pressed but links aren't enabled
 
 ## 0.0.74
 
@@ -1181,7 +1359,8 @@
 
 - c26cbba: Cosmetic fixes for the editor table when RTL.
 - bcadd92: Move the editor table's "header row" toggle to a block popover.
-- 1d1d702: Introduce toasts to the app. Show a "positive" toast when an entry is created.
+- 1d1d702: Introduce toasts to the app. Show a "positive" toast when an entry is
+  created.
 - e750768: Fix deleting rows in tables with a header row
 - 4890253: Fix image block in `DocumentRenderer`
 
@@ -1195,7 +1374,12 @@
 
 ### Patch Changes
 
-- d8995ff: Keystatic no longer has to run on the same port that the setup was run on. For existing apps, you should add `http://127.0.0.1/api/keystatic/github/oauth/callback` as a callback url in your GitHub App settings and remove `KEYSTATIC_URL` from your local env variables if you have it set. **If you don't make these changes, you won't be able to sign in locally.**
+- d8995ff: Keystatic no longer has to run on the same port that the setup was
+  run on. For existing apps, you should add
+  `http://127.0.0.1/api/keystatic/github/oauth/callback` as a callback url in
+  your GitHub App settings and remove `KEYSTATIC_URL` from your local env
+  variables if you have it set. **If you don't make these changes, you won't be
+  able to sign in locally.**
 
 ## 0.0.69
 
@@ -1212,7 +1396,8 @@
 
 ### Patch Changes
 
-- 59a6bcf: Use port that Keystatic is running on when doing setup for callback URLs
+- 59a6bcf: Use port that Keystatic is running on when doing setup for callback
+  URLs
 
 ## 0.0.67
 
@@ -1224,7 +1409,8 @@
 
 ### Patch Changes
 
-- 02a0fd1: Fixed keyboard navigation bugs in table cells in the document field editor
+- 02a0fd1: Fixed keyboard navigation bugs in table cells in the document field
+  editor
 - 02a0fd1: Fixed table styles in the document field editor
 - 6890696: Fix clicking done in a nested array field closing both modals
 - 1ea62fe: Add `repository` key to keystatic/core package.json
@@ -1233,13 +1419,15 @@
 
 ### Patch Changes
 
-- cea2700: Fix validation when a single form field is directly inside an array field
+- cea2700: Fix validation when a single form field is directly inside an array
+  field
 
 ## 0.0.64
 
 ### Patch Changes
 
-- 50c48da: Adjust action button selected styles. Implement a bespoke popover pattern for document editor blocks.
+- 50c48da: Adjust action button selected styles. Implement a bespoke popover
+  pattern for document editor blocks.
 - 641c962: Add `table` block
 - Updated dependencies [50c48da]
   - @voussoir/action-group@0.1.1
@@ -1262,34 +1450,41 @@
 
 ### Patch Changes
 
-- 0f71625: Add `description` to `fields.{array,checkbox,date,document,image,integer,multiselect,select,pathReference,relationship}`. (previously it was only on `fields.{text,slug}`)
-- 0f71625: Fix incorrectly attempting to get a GitHub token when using local mode
+- 0f71625: Add `description` to
+  `fields.{array,checkbox,date,document,image,integer,multiselect,select,pathReference,relationship}`.
+  (previously it was only on `fields.{text,slug}`)
+- 0f71625: Fix incorrectly attempting to get a GitHub token when using local
+  mode
 
 ## 0.0.60
 
 ### Patch Changes
 
-- d49af4b: Fix `reader.collection.*.list` with collections with `path` options without a trailing slash
+- d49af4b: Fix `reader.collection.*.list` with collections with `path` options
+  without a trailing slash
 
 ## 0.0.59
 
 ### Patch Changes
 
 - 21a687a: Document editor:
-  - Move `image` block details (filename and alt text) into a modal dialog, which can be invoked from an actions popover.
+  - Move `image` block details (filename and alt text) into a modal dialog,
+    which can be invoked from an actions popover.
   - Give the `link` block a similar treatment.
 
 ## 0.0.58
 
 ### Patch Changes
 
-- 9f27bde: Fix conditionally changing the `storage` field in a config creating a TypeScript error
+- 9f27bde: Fix conditionally changing the `storage` field in a config creating a
+  TypeScript error
 
 ## 0.0.57
 
 ### Patch Changes
 
-- e259a19: Replace `directory`, `directorySuffix` and `format.location` options with `path` option
+- e259a19: Replace `directory`, `directorySuffix` and `format.location` options
+  with `path` option
 
 ## 0.0.56
 
@@ -1346,13 +1541,15 @@
 
 ### Patch Changes
 
-- b26b23c: Add error handling for saving/deleting items when using `storage: { kind: 'local' }`.
+- b26b23c: Add error handling for saving/deleting items when using
+  `storage: { kind: 'local' }`.
 
 ## 0.0.52
 
 ### Patch Changes
 
-- 0189c09: Allow users who don't have write permissions to the repo to fork it from inside Keystatic.
+- 0189c09: Allow users who don't have write permissions to the repo to fork it
+  from inside Keystatic.
 
 ## 0.0.51
 
@@ -1389,8 +1586,11 @@
 ### Patch Changes
 
 - 363136d: Replaced `micromatch` with `minimatch` to remove Node dependencies
-- f9f53d8: Slugs are now configured by specifying the `slugField` option with a field key instead of a function.
-- a903ed9: When a non-default branch is checked out, and the user opens the "new branch" dialog, present them with the option to base the new branch on default or the currently checked out branch.
+- f9f53d8: Slugs are now configured by specifying the `slugField` option with a
+  field key instead of a function.
+- a903ed9: When a non-default branch is checked out, and the user opens the "new
+  branch" dialog, present them with the option to base the new branch on default
+  or the currently checked out branch.
 
 ## 0.0.46
 
@@ -1413,7 +1613,8 @@
 
 ### Patch Changes
 
-- 9a5d260: Fix showing "repo not found error" when changing between different Keystatic apps that use different repos.
+- 9a5d260: Fix showing "repo not found error" when changing between different
+  Keystatic apps that use different repos.
 
 ## 0.0.43
 
@@ -1425,7 +1626,8 @@
 
 ### Patch Changes
 
-- a569bdb: Avoid mentioning `NEXT_PUBLIC` environment variables when not using Next
+- a569bdb: Avoid mentioning `NEXT_PUBLIC` environment variables when not using
+  Next
 
 ## 0.0.41
 
@@ -1444,7 +1646,8 @@
 
 ### Patch Changes
 
-- ccacef0: Prioritise getting the GitHub App's slug from the URL over an environment variable.
+- ccacef0: Prioritise getting the GitHub App's slug from the URL over an
+  environment variable.
 - Updated dependencies [ccacef0]
   - @voussoir/overlays@0.1.1
 
@@ -1453,7 +1656,8 @@
 ### Patch Changes
 
 - 2fe951a: Fix markdoc serialisation/deserialisation for strikethrough
-- 2f324c4: The specific features of the document editor that are enabled are now explicitly specified in the config.
+- 2f324c4: The specific features of the document editor that are enabled are now
+  explicitly specified in the config.
 
 ## 0.0.37
 
@@ -1489,7 +1693,8 @@
 
 ### Patch Changes
 
-- 5a66740: Add `keystatic/next-app` entrypoint to allow running in Next's `app` directory.
+- 5a66740: Add `keystatic/next-app` entrypoint to allow running in Next's `app`
+  directory.
 - ebe4a32: introduce "apps/\*" and begin dog-fooding with l10n strings
 - Updated dependencies [ebe4a32]
   - @voussoir/search-field@0.1.2
@@ -1541,7 +1746,8 @@
 
 ### Patch Changes
 
-- 902b310: Fix image field outside of document fields and fix inferred types in reader API for basic form fields
+- 902b310: Fix image field outside of document fields and fix inferred types in
+  reader API for basic form fields
 
 ## 0.0.27
 
