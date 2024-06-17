@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.7.5
+
+### Patch Changes
+
+- [#1173](https://github.com/Thinkmill/keystatic/pull/1173) [`34dee8c`](https://github.com/Thinkmill/keystatic/commit/34dee8cd8829d2a8c3d91949fd96dcee9d9749d0) Thanks [@emmatown](https://github.com/emmatown)! - Build with React Compiler
+
 ## 0.7.4
 
 ### Patch Changes
