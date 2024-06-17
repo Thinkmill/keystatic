@@ -1,5 +1,16 @@
 # @keystatic/core
 
+## 0.5.20
+
+### Patch Changes
+
+- [#1178](https://github.com/Thinkmill/keystatic/pull/1178) [`a588cb2`](https://github.com/Thinkmill/keystatic/commit/a588cb2fedf7e9a813d5f7818a94f4f8df2310d5) Thanks [@emmatown](https://github.com/emmatown)! - Fix whitespace on the ends of italics/bold/strikethrough breaking `fields.markdoc`
+
+- [#1173](https://github.com/Thinkmill/keystatic/pull/1173) [`34dee8c`](https://github.com/Thinkmill/keystatic/commit/34dee8cd8829d2a8c3d91949fd96dcee9d9749d0) Thanks [@emmatown](https://github.com/emmatown)! - Build with React Compiler
+
+- Updated dependencies [[`34dee8c`](https://github.com/Thinkmill/keystatic/commit/34dee8cd8829d2a8c3d91949fd96dcee9d9749d0)]:
+  - @keystar/ui@0.7.5
+
 ## 0.5.19
 
 ### Patch Changes
