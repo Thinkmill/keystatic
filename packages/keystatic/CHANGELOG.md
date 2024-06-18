@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.5.21
+
+### Patch Changes
+
+- [#1179](https://github.com/Thinkmill/keystatic/pull/1179) [`b22630f`](https://github.com/Thinkmill/keystatic/commit/b22630ffb657cd8f1409a1feec925ec051b831dd) Thanks [@emmatown](https://github.com/emmatown)! - Add `fields.markdoc.inline` and `fields.mdx.inline` to allow storing content directly in YAML/JSON rather than another file
+
 ## 0.5.20
 
 ### Patch Changes
