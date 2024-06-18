@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.7.6
+
+### Patch Changes
+
+- [#1182](https://github.com/Thinkmill/keystatic/pull/1182) [`69d429a`](https://github.com/Thinkmill/keystatic/commit/69d429a67b2777fd8cfd236ce6ceaad4d1975e07) Thanks [@emmatown](https://github.com/emmatown)! - Fix some overlays not showing
+
 ## 0.7.5
 
 ### Patch Changes
