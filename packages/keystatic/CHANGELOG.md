@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.5.22
+
+### Patch Changes
+
+- [#1182](https://github.com/Thinkmill/keystatic/pull/1182) [`69d429a`](https://github.com/Thinkmill/keystatic/commit/69d429a67b2777fd8cfd236ce6ceaad4d1975e07) Thanks [@emmatown](https://github.com/emmatown)! - Fix some overlays not showing
+
+- Updated dependencies [[`69d429a`](https://github.com/Thinkmill/keystatic/commit/69d429a67b2777fd8cfd236ce6ceaad4d1975e07)]:
+  - @keystar/ui@0.7.6
+
 ## 0.5.21
 
 ### Patch Changes
