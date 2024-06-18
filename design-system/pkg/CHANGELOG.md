@@ -1,29 +1,46 @@
 # @keystar/ui
 
+## 0.0.0-test-20240618103217
+
+### Patch Changes
+
+- [`1e1908d`](https://github.com/Thinkmill/keystatic/commit/1e1908da27b6bdaeb37de4a38bef010f807595f8)
+  Thanks [@emmatown](https://github.com/emmatown)! - Fix some overlays not
+  showing
+
 ## 0.7.5
 
 ### Patch Changes
 
-- [#1173](https://github.com/Thinkmill/keystatic/pull/1173) [`34dee8c`](https://github.com/Thinkmill/keystatic/commit/34dee8cd8829d2a8c3d91949fd96dcee9d9749d0) Thanks [@emmatown](https://github.com/emmatown)! - Build with React Compiler
+- [#1173](https://github.com/Thinkmill/keystatic/pull/1173)
+  [`34dee8c`](https://github.com/Thinkmill/keystatic/commit/34dee8cd8829d2a8c3d91949fd96dcee9d9749d0)
+  Thanks [@emmatown](https://github.com/emmatown)! - Build with React Compiler
 
 ## 0.7.4
 
 ### Patch Changes
 
-- [#1155](https://github.com/Thinkmill/keystatic/pull/1155) [`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130) Thanks [@emmatown](https://github.com/emmatown)! - Fixes for React tooling
+- [#1155](https://github.com/Thinkmill/keystatic/pull/1155)
+  [`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130)
+  Thanks [@emmatown](https://github.com/emmatown)! - Fixes for React tooling
 
 ## 0.7.3
 
 ### Patch Changes
 
-- [#1152](https://github.com/Thinkmill/keystatic/pull/1152) [`7924ef8`](https://github.com/Thinkmill/keystatic/commit/7924ef87cb4338e0296d715acd3ab9fb7d39aa51) Thanks [@emmatown](https://github.com/emmatown)! - Fix peer dependency on Next being fixed to a single version
+- [#1152](https://github.com/Thinkmill/keystatic/pull/1152)
+  [`7924ef8`](https://github.com/Thinkmill/keystatic/commit/7924ef87cb4338e0296d715acd3ab9fb7d39aa51)
+  Thanks [@emmatown](https://github.com/emmatown)! - Fix peer dependency on Next
+  being fixed to a single version
 
 ## 0.7.2
 
 ### Patch Changes
 
-- 282ab553: New "@keystar/ui/action-bar" package exports `ActionBar` and `ActionBarContainer` components.
-- bd923de5: Refactor breakpoint matching: state initialisation used to assume SSR—now CSR is optimised, conditionally.
+- 282ab553: New "@keystar/ui/action-bar" package exports `ActionBar` and
+  `ActionBarContainer` components.
+- bd923de5: Refactor breakpoint matching: state initialisation used to assume
+  SSR—now CSR is optimised, conditionally.
 - e819d5f2: Support links in breadcrumbs.
 
 ## 0.7.1
@@ -82,11 +99,14 @@
 
 ### Patch Changes
 
-- 0ca7f47a: Support "boundary" + "portal" props on `EditorPopover` component. Simulate clipping for portal'd popovers.
+- 0ca7f47a: Support "boundary" + "portal" props on `EditorPopover` component.
+  Simulate clipping for portal'd popovers.
 - 13206393: Support "labelElementType" on `Field` component.
-- 56b6b121: Remove support for "uncontrolled state" in `EditorToolbar*` components.
+- 56b6b121: Remove support for "uncontrolled state" in `EditorToolbar*`
+  components.
 - bd28cfd4: Fix `transitionProperty` typo in `ActionButton` styles.
-- 0e81263b: Refactor `ProgressCircle` — split animation properties across elements to fix transform-origin issue in safari.
+- 0e81263b: Refactor `ProgressCircle` — split animation properties across
+  elements to fix transform-origin issue in safari.
 - 267845b1: New `ScrollView` component from "@keystar/ui/layout" package.
 - 3288c624: Expose `useProseStyleProps` from "@keystar/ui/typography" package.
 
@@ -100,8 +120,10 @@
 
 ### Patch Changes
 
-- a3f86e8f: New component `DropZone` and companion `FileTrigger` from "@keystar/ui/drag-and-drop" package.
-- 2b4f24b8: Changes to `Checkbox`, `Radio`, and `Dialog` resolve overflow issues within dialogs. Updated "@react-[aria|stately]/virtualizer" to latest.
+- a3f86e8f: New component `DropZone` and companion `FileTrigger` from
+  "@keystar/ui/drag-and-drop" package.
+- 2b4f24b8: Changes to `Checkbox`, `Radio`, and `Dialog` resolve overflow issues
+  within dialogs. Updated "@react-[aria|stately]/virtualizer" to latest.
 
 ## 0.4.2
 
@@ -120,23 +142,37 @@
 
 ### Minor Changes
 
-- be85e097: Introduce [client-side routing](https://react-spectrum.adobe.com/react-aria/routing.html) concept from react-aria:
+- be85e097: Introduce
+  [client-side routing](https://react-spectrum.adobe.com/react-aria/routing.html)
+  concept from react-aria:
 
-  - Include `RouterProvider` with `KeystarProvider` (renamed from "VoussoirProvider"), conditionally when _new_ `router` prop is provided. This new router behaviour makes `linkComponent` and friends unnecessary; they have been removed.
-  - Re-export `useLink` from [react-aria](https://react-spectrum.adobe.com/react-aria/useLink.html), which manages router behaviour on click (among other things), for use outside of the component library. Internally we reference "@react-aria/link" directly.
+  - Include `RouterProvider` with `KeystarProvider` (renamed from
+    "VoussoirProvider"), conditionally when _new_ `router` prop is provided.
+    This new router behaviour makes `linkComponent` and friends unnecessary;
+    they have been removed.
+  - Re-export `useLink` from
+    [react-aria](https://react-spectrum.adobe.com/react-aria/useLink.html),
+    which manages router behaviour on click (among other things), for use
+    outside of the component library. Internally we reference "@react-aria/link"
+    directly.
   - Replace instances of link component references with appropriate alternative.
   - Support link props e.g. "href", "target" etc. on `Menu` items.
-  - Consolidate cursor behaviour: `ActionButton`, `Button`, and (Menu) `Item` will now use "pointer" for anchors.
+  - Consolidate cursor behaviour: `ActionButton`, `Button`, and (Menu) `Item`
+    will now use "pointer" for anchors.
 
   Supporting/related changes:
 
-  - Update react-aria dependencies to latest: "@react-aria/\*", "@react-stately/\*", "@react-types/\*", "@internationalized/\*".
-  - Remove linking behaviour from storybook. Might revisit later, but for now it added unnecessary complexity.
+  - Update react-aria dependencies to latest: "@react-aria/\*",
+    "@react-stately/\*", "@react-types/\*", "@internationalized/\*".
+  - Remove linking behaviour from storybook. Might revisit later, but for now it
+    added unnecessary complexity.
 
   App changes:
 
-  - Deprecate `link` prop on `Keystatic` component. We can now abstract that behaviour from the existing `router` prop.
-  - Refactor topbar menu items to use link API; mostly to confirm expected behaviour.
+  - Deprecate `link` prop on `Keystatic` component. We can now abstract that
+    behaviour from the existing `router` prop.
+  - Refactor topbar menu items to use link API; mostly to confirm expected
+    behaviour.
 
 ### Patch Changes
 
@@ -146,9 +182,11 @@
 
 ### Patch Changes
 
-- 221cb5d5: Component library: support props "align" and "menuWidth" on `Combobox` component.
+- 221cb5d5: Component library: support props "align" and "menuWidth" on
+  `Combobox` component.
 
-  App interface: replace the branch-selection picker with a combobox to create a better experience for instances with many branches.
+  App interface: replace the branch-selection picker with a combobox to create a
+  better experience for instances with many branches.
 
 - 4875c21f: `TableView` fixes and improvements, since windowing.
 
@@ -168,7 +206,8 @@
 
 ### Patch Changes
 
-- bcb3b8ec: Support constrained proportions on cloud image block and field. Refactor `Tooltip` styles to allow consumer overrides via style props.
+- bcb3b8ec: Support constrained proportions on cloud image block and field.
+  Refactor `Tooltip` styles to allow consumer overrides via style props.
 
 ## 0.3.0
 
@@ -176,8 +215,10 @@
 
 - 7dafe782: Calendar widgets for date selection:
 
-  - New package "@keystar/ui/calendar" exposes new components, `Calendar` and `RangeCalendar`
-  - Update to "@keystar/ui/date-time" exposes new components, `DatePicker` and `DateRangePicker`
+  - New package "@keystar/ui/calendar" exposes new components, `Calendar` and
+    `RangeCalendar`
+  - Update to "@keystar/ui/date-time" exposes new components, `DatePicker` and
+    `DateRangePicker`
 
   Related fixes and improvements:
 
@@ -189,9 +230,11 @@
 - 5f9dd460: Remove lodash and dedent
 - 083ee638: Revert adding `"use client"` to `@keystar/ui/style`
 - ba3e4a0b: fix vertical divider styles
-- 7ed2a7d8: New package "@keystar/ui/contextual-help" exposes `ContextualHelp` component.
+- 7ed2a7d8: New package "@keystar/ui/contextual-help" exposes `ContextualHelp`
+  component.
 
-  Support "contextualHelp" prop on field components, `Field` and `FieldPrimitive`.
+  Support "contextualHelp" prop on field components, `Field` and
+  `FieldPrimitive`.
 
 ## 0.2.2
 
@@ -205,20 +248,25 @@
 
 - 12f95d48: Added "use client" to style entrypoint in keystar-ui.
 
-  This means that `import { css, tokenSchema } from '@keystar/ui/style'` won't break in a Next.js 13 server component.
+  This means that `import { css, tokenSchema } from '@keystar/ui/style'` won't
+  break in a Next.js 13 server component.
 
 ## 0.2.1
 
 ### Patch Changes
 
-- 6d6226be: Ensure `TooltipTrigger` works with `DialogTrigger` and `MenuTrigger`. The tooltip trigger must be the inner-most wrapper around the button.
+- 6d6226be: Ensure `TooltipTrigger` works with `DialogTrigger` and
+  `MenuTrigger`. The tooltip trigger must be the inner-most wrapper around the
+  button.
 - 1e96432c: omit legacy attributes from `forwardRefWithAs` util
 - 6895c566: - list-item + table-row: background change only on hover (not focus)
   - allow shortcuts "cmd+s" and "ctrl+s" to save entry
   - remove unused `flattenChildren` utility
 - 7ec4e84f: increase line-height on `TextArea` component
-- ecd9213a: prevent undesirable panel animation during mount of the `SplitView` component
-- 7767c69a: Optimise the editor appearance when `entryLayout="content"` for a more focused experience.
+- ecd9213a: prevent undesirable panel animation during mount of the `SplitView`
+  component
+- 7767c69a: Optimise the editor appearance when `entryLayout="content"` for a
+  more focused experience.
 
   Component library:
 
@@ -268,20 +316,24 @@
 ### Patch Changes
 
 - f272b8ee: consolidate color-scheme logic surrounding ssr
-- bf6a27bb: Update dashboard page to use card-like interface elements for collections and singletons.
+- bf6a27bb: Update dashboard page to use card-like interface elements for
+  collections and singletons.
 
   Related app changes:
 
   - declare side and main app panels as "inline-size" containers
   - less obtrusive change indicators on sidebar singleton
-  - create `useLocalizedString` hook, which abstracts l10n message import to one location
+  - create `useLocalizedString` hook, which abstracts l10n message import to one
+    location
 
   Related component library changes:
 
-  - adjust `AnchorDOMProps` type; require "href" property and remove (MIME) "type" property
+  - adjust `AnchorDOMProps` type; require "href" property and remove (MIME)
+    "type" property
   - support "href" (and friends) on `ActionButton` component
   - expose `containerQueries` from "style" package
-  - fix class list declaration issue, which was causing a warning from `FieldButton` component
+  - fix class list declaration issue, which was causing a warning from
+    `FieldButton` component
 
 ## 0.1.3
 
@@ -309,7 +361,8 @@
 
 ### Patch Changes
 
-- b832e495: Layout refactor that moves some stuff out of the sidebar into an app header.
+- b832e495: Layout refactor that moves some stuff out of the sidebar into an app
+  header.
 
   Component library:
 
