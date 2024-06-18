@@ -129,6 +129,46 @@ export type AssetFormField<
   label?: string;
 };
 
+export type AssetsFormField<
+  ParsedValue extends {} | null,
+  ValidatedValue extends ParsedValue,
+  ReaderValue,
+> = {
+  kind: 'form';
+  formKind: 'assets';
+  directories?: string[];
+
+  Input(props: FormFieldInputProps<ParsedValue>): ReactElement | null;
+  defaultValue(): ParsedValue;
+  parse(
+    value: FormFieldStoredValue,
+    args: {
+      other: ReadonlyMap<string, Uint8Array>;
+      external: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
+      slug: string | undefined;
+    }
+  ): ParsedValue;
+  serialize(
+    value: ParsedValue,
+    extra: {
+      slug: string | undefined;
+    }
+  ): {
+    value: FormFieldStoredValue;
+    other: ReadonlyMap<string, Uint8Array>;
+    external: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
+  };
+
+  validate(value: ParsedValue): ValidatedValue;
+  reader: {
+    parse(value: FormFieldStoredValue): ReaderValue;
+  };
+  collaboration?: {
+    toYjs: (value: ParsedValue) => unknown;
+    fromYjs: (yjsValue: unknown, awareness: Awareness) => ParsedValue;
+  };
+};
+
 export type ContentFormField<
   ParsedValue extends {} | null,
   ValidatedValue extends ParsedValue,
@@ -185,7 +225,8 @@ export type FormField<
   | BasicFormField<ParsedValue, ValidatedValue, ReaderValue>
   | SlugFormField<ParsedValue, ValidatedValue, ReaderValue, any>
   | AssetFormField<ParsedValue, ValidatedValue, ReaderValue>
-  | ContentFormField<ParsedValue, ValidatedValue, ReaderValue>;
+  | ContentFormField<ParsedValue, ValidatedValue, ReaderValue>
+  | AssetsFormField<ParsedValue, ValidatedValue, ReaderValue>;
 
 export type DocumentNode = DocumentElement | DocumentText;
 

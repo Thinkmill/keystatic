@@ -372,7 +372,10 @@ function CollectionTable(
               if (schema.formKind === 'asset') {
                 return schema.reader.parse(value);
               }
-              if (schema.formKind === 'content') {
+              if (
+                schema.formKind === 'content' ||
+                schema.formKind === 'assets'
+              ) {
                 return;
               }
               if (path.length === 1 && slug !== undefined) {

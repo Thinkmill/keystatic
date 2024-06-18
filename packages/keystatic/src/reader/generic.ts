@@ -339,7 +339,7 @@ const readItem = cache(async function readItem(
       [],
       [],
       (schema, value, path, pathWithArrayFieldSlugs) => {
-        if (schema.formKind === 'asset') {
+        if (schema.formKind === 'asset' || schema.formKind === 'assets') {
           return schema.reader.parse(value);
         }
         if (schema.formKind === 'content') {

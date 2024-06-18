@@ -1,7 +1,12 @@
 import { LRUCache } from 'lru-cache';
 import { useCallback, useMemo } from 'react';
 import { Config } from '../config';
-import { ComponentSchema, fields } from '../form/api';
+import {
+  AssetsFormField,
+  ComponentSchema,
+  ContentFormField,
+  fields,
+} from '../form/api';
 import { parseProps } from '../form/parse-props';
 import { getAuth } from './auth';
 import { loadDataFile } from './required-files';
@@ -69,6 +74,40 @@ export function parseEntry(
     usedFiles.add(filepath);
     return filesWithFakeFile.get(filepath);
   };
+  const getFilesForAssetsOrContentField = (
+    rootPath: string,
+    schema: ContentFormField<any, any, any> | AssetsFormField<any, any, any>
+  ) => {
+    const otherFiles = new TrackedMap<string, Uint8Array>(key => {
+      usedFiles.add(`${rootPath}/${key}`);
+    });
+    const otherDirectories = new Map<string, TrackedMap<string, Uint8Array>>();
+
+    for (const [filename] of filesWithFakeFile) {
+      if (filename.startsWith(rootPath + '/')) {
+        const relativePath = filename.slice(rootPath.length + 1);
+        otherFiles.set(relativePath, filesWithFakeFile.get(filename)!);
+      }
+    }
+    for (const dir of schema.directories ?? []) {
+      const dirFiles = new TrackedMap<string, Uint8Array>(relativePath =>
+        usedFiles.add(start + relativePath)
+      );
+      const start = `${dir}${
+        args.slug?.slug === undefined ? '' : `/${args.slug?.slug}`
+      }/`;
+      for (const [filename, val] of filesWithFakeFile) {
+        if (filename.startsWith(start)) {
+          const relativePath = filename.slice(start.length);
+          dirFiles.set(relativePath, val);
+        }
+      }
+      if (dirFiles.size) {
+        otherDirectories.set(dir, dirFiles);
+      }
+    }
+    return { other: otherFiles, external: otherDirectories };
+  };
   try {
     initialState = parseProps(
       rootSchema,
@@ -104,51 +143,32 @@ export function parseEntry(
 
           return schema.parse(value, { asset, slug: args.slug?.slug });
         }
-        if (schema.formKind === 'content') {
+        if (schema.formKind === 'content' || schema.formKind === 'assets') {
           const rootPath = `${args.dirpath}/${pathWithArrayFieldSlugs.join(
             '/'
           )}`;
-          const mainFilepath = rootPath + schema.contentExtension;
-          const mainContents = getFile(mainFilepath);
+          const { external, other } = getFilesForAssetsOrContentField(
+            rootPath,
+            schema
+          );
 
-          const otherFiles = new TrackedMap<string, Uint8Array>(key => {
-            usedFiles.add(`${rootPath}/${key}`);
-          });
-          const otherDirectories = new Map<
-            string,
-            TrackedMap<string, Uint8Array>
-          >();
-
-          for (const [filename] of filesWithFakeFile) {
-            if (filename.startsWith(rootPath + '/')) {
-              const relativePath = filename.slice(rootPath.length + 1);
-              otherFiles.set(relativePath, filesWithFakeFile.get(filename)!);
-            }
+          if (schema.formKind === 'content') {
+            const mainFilepath = rootPath + schema.contentExtension;
+            const mainContents = getFile(mainFilepath);
+            return schema.parse(value, {
+              content: mainContents,
+              other,
+              external,
+              slug: args.slug?.slug,
+            });
           }
-          for (const dir of schema.directories ?? []) {
-            const dirFiles = new TrackedMap<string, Uint8Array>(relativePath =>
-              usedFiles.add(start + relativePath)
-            );
-            const start = `${dir}${
-              args.slug?.slug === undefined ? '' : `/${args.slug?.slug}`
-            }/`;
-            for (const [filename, val] of filesWithFakeFile) {
-              if (filename.startsWith(start)) {
-                const relativePath = filename.slice(start.length);
-                dirFiles.set(relativePath, val);
-              }
-            }
-            if (dirFiles.size) {
-              otherDirectories.set(dir, dirFiles);
-            }
+          if (schema.formKind === 'assets') {
+            return schema.parse(value, {
+              other,
+              external,
+              slug: args.slug?.slug,
+            });
           }
-
-          return schema.parse(value, {
-            content: mainContents,
-            other: otherFiles,
-            external: otherDirectories,
-            slug: args.slug?.slug,
-          });
         }
 
         return schema.parse(value, undefined);
