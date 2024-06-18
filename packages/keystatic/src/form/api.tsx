@@ -572,6 +572,8 @@ export type ValueForReading<Schema extends ComponentSchema> =
     ? Value
     : Schema extends AssetFormField<any, any, infer Value>
     ? Value
+    : Schema extends AssetsFormField<any, any, infer Value>
+    ? Value
     : Schema extends ObjectField<infer Value>
     ? {
         readonly [Key in keyof Value]: ValueForReading<Value[Key]>;

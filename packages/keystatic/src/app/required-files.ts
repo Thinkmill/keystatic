@@ -1,13 +1,6 @@
 import { load } from 'js-yaml';
-import { AssetFormField, ContentFormField, JsonYamlValue } from '../form/api';
-import { ReadonlyPropPath } from '../form/fields/document/DocumentEditor/component-blocks/utils';
+import { JsonYamlValue } from '../form/api';
 import { FormatInfo } from './path-utils';
-
-export type RequiredFile = {
-  path: ReadonlyPropPath;
-  schema: AssetFormField<any, any, any> | ContentFormField<any, any, any>;
-  file: { filename: string; parent: string | undefined } | undefined;
-};
 
 const textDecoder = new TextDecoder();
 const textEncoder = new TextEncoder();
