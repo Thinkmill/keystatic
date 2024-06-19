@@ -39,7 +39,12 @@ export function imageDropPlugin(schema: EditorSchema) {
           if (!eventPos) return;
           let $mouse = view.state.doc.resolve(eventPos.pos);
           for (const [name, component] of Object.entries(schema.components)) {
-            if (component.kind !== 'block' || !component.handleFile) continue;
+            if (
+              (component.kind !== 'block' && component.kind !== 'inline') ||
+              !component.handleFile
+            ) {
+              continue;
+            }
             const result = component.handleFile(
               file,
               (view.props as any).config
