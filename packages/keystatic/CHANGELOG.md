@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.5.23
+
+### Patch Changes
+
+- [#1186](https://github.com/Thinkmill/keystatic/pull/1186) [`41679be`](https://github.com/Thinkmill/keystatic/commit/41679be39197a81453475fc6796489ac7d2d69cf) Thanks [@emmatown](https://github.com/emmatown)! - Fix disabling images in `fields.markdoc` and `fields.mdx`
+
+- [#1184](https://github.com/Thinkmill/keystatic/pull/1184) [`aa1d092`](https://github.com/Thinkmill/keystatic/commit/aa1d0924238419344780e7611eb7fdc797c57be8) Thanks [@emmatown](https://github.com/emmatown)! - Support `ContentView` and `handleFile` in `inline` content components
+
 ## 0.5.22
 
 ### Patch Changes
