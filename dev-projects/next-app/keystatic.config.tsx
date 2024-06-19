@@ -46,6 +46,9 @@ const components = {
         defaultValue: 'todo',
       }),
     },
+    ContentView(props) {
+      return props.value.status;
+    },
   }),
 };
 

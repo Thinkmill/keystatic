@@ -95,21 +95,39 @@ type InlineComponentConfig<Schema extends Record<string, ComponentSchema>> = {
   description?: string;
   icon?: ReactElement;
   schema: Schema;
-  NodeView?(props: {
-    value: ParsedValueForComponentSchema<ObjectField<Schema>>;
-    onChange(value: ParsedValueForComponentSchema<ObjectField<Schema>>): void;
-    onRemove(): void;
-    isSelected: boolean;
-  }): ReactNode;
   ToolbarView?(props: {
     value: ParsedValueForComponentSchema<ObjectField<Schema>>;
     onChange(value: ParsedValueForComponentSchema<ObjectField<Schema>>): void;
     onRemove(): void;
   }): ReactNode;
-};
+} & (
+  | {
+      ContentView?: (props: {
+        value: ParsedValueForComponentSchema<ObjectField<Schema>>;
+      }) => ReactNode;
+    }
+  | {
+      NodeView?: (props: {
+        value: ParsedValueForComponentSchema<ObjectField<Schema>>;
+        onChange(
+          value: ParsedValueForComponentSchema<ObjectField<Schema>>
+        ): void;
+        onRemove(): void;
+        isSelected: boolean;
+      }) => ReactNode;
+    }
+);
 
 type InlineComponent<Schema extends Record<string, ComponentSchema>> =
-  InlineComponentConfig<Schema> & { kind: 'inline' };
+  InlineComponentConfig<Schema> & {
+    kind: 'inline';
+    // this is here instead of InlineComponentConfig so it's a little hidden
+    // since it shouldn't be used often
+    handleFile?: (
+      file: File,
+      config: Config
+    ) => false | Promise<ParsedValueForComponentSchema<ObjectField<Schema>>>;
+  };
 
 export function inline<Schema extends Record<string, ComponentSchema>>(
   config: InlineComponentConfig<Schema>
