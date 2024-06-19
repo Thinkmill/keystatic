@@ -261,7 +261,7 @@ export const Toolbar = memo(function Toolbar(
                 </Tooltip>
               </TooltipTrigger>
             )}
-            <ImageToolbarButton />
+            {nodes.image && <ImageToolbarButton />}
           </EditorToolbarGroup>
         </EditorToolbar>
       </ToolbarScrollArea>

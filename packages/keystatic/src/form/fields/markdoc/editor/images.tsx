@@ -25,7 +25,6 @@ export function getSrcPrefixForImageBlock(
 }
 
 export function imageDropPlugin(schema: EditorSchema) {
-  if (!schema.nodes.image) return new Plugin({});
   const imageType = schema.nodes.image;
   return new Plugin({
     props: {
@@ -69,7 +68,7 @@ export function imageDropPlugin(schema: EditorSchema) {
             })();
             return true;
           }
-          if (file.type.startsWith('image/')) {
+          if (file.type.startsWith('image/') && imageType) {
             (async () => {
               const slice = Slice.maxOpen(
                 Fragment.from(
@@ -109,7 +108,7 @@ export function imageDropPlugin(schema: EditorSchema) {
             })();
             return true;
           }
-          if (file.type.startsWith('image/')) {
+          if (file.type.startsWith('image/') && imageType) {
             (async () => {
               view.dispatch(
                 view.state.tr.replaceSelectionWith(
