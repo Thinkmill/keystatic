@@ -417,7 +417,7 @@ export function getCustomNodeSpecs(
         };
       } else if (component.kind === 'inline') {
         spec = {
-          group: 'inline inline_component',
+          group: 'inline',
           inline: true,
           attrs: {
             props: {
