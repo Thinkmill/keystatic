@@ -989,3 +989,47 @@ test('inline in list item', () => {
     "
   `);
 });
+
+test('preserve unordered tight list', () => {
+  const markdoc = `- a
+- b
+- c`;
+  const editor = fromMDX(markdoc);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "* a
+    * b
+    * c
+    "
+  `);
+});
+
+test('preserve ordered tight list', () => {
+  const markdoc = `1. a
+1. b
+1. c`;
+  const editor = fromMDX(markdoc);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "1. a
+    2. b
+    3. c
+    "
+  `);
+});
+
+test('loose list', () => {
+  const markdoc = `
+- a
+
+  b
+- c
+- d`;
+  const editor = fromMDX(markdoc);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "* a
+
+      b
+    * c
+    * d
+    "
+  `);
+});
