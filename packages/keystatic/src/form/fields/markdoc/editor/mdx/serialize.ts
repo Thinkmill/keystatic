@@ -239,12 +239,14 @@ function proseMirrorToMDX(
     return {
       type: 'list',
       ordered: true,
+      spread: false,
       children: mapContent(node, node => convertListItem(blocks(node.content))),
     };
   }
   if (node.type === schema.nodes.unordered_list) {
     return {
       type: 'list',
+      spread: false,
       children: mapContent(node, node => convertListItem(blocks(node.content))),
     };
   }
