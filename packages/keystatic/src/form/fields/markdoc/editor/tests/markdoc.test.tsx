@@ -587,3 +587,39 @@ for (const [mark, symbol] of [
     expect(toMarkdoc(editor)).toBe(`something ${symbol}a${symbol} something\n`);
   });
 }
+
+test('inline in list item', () => {
+  const markdoc = `- wertgrfdsc{% inline-thing something="adkjsakjndnajksdnjk" /%}sfasdf`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <unordered_list>
+        <list_item>
+          <paragraph>
+            <text>
+              <cursor />
+              wertgrfdsc
+            </text>
+            <inline-thing
+              props={
+                {
+                  "extraFiles": [],
+                  "value": {
+                    "something": "adkjsakjndnajksdnjk",
+                  },
+                }
+              }
+            />
+            <text>
+              sfasdf
+            </text>
+          </paragraph>
+        </list_item>
+      </unordered_list>
+    </doc>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "- wertgrfdsc{% inline-thing something="adkjsakjndnajksdnjk" /%}sfasdf
+    "
+  `);
+});

@@ -953,3 +953,39 @@ for (const [mark, symbol] of [
     expect(toMDX(editor)).toBe(`something ${symbol}a${symbol} something\n`);
   });
 }
+
+test('inline in list item', () => {
+  const markdoc = `- wertgrfdsc<InlineThing something="adkjsakjndnajksdnjk" />sfasdf`;
+  const editor = fromMDX(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <unordered_list>
+        <list_item>
+          <paragraph>
+            <text>
+              <cursor />
+              wertgrfdsc
+            </text>
+            <InlineThing
+              props={
+                {
+                  "extraFiles": [],
+                  "value": {
+                    "something": "adkjsakjndnajksdnjk",
+                  },
+                }
+              }
+            />
+            <text>
+              sfasdf
+            </text>
+          </paragraph>
+        </list_item>
+      </unordered_list>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "* wertgrfdsc<InlineThing something="adkjsakjndnajksdnjk" />sfasdf
+    "
+  `);
+});
