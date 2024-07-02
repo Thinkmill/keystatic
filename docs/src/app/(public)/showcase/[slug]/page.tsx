@@ -87,7 +87,7 @@ export default async function Docs({ params }: { params: { slug: string } }) {
             <CloudImage
               src={project.coverImage.src}
               alt=""
-              className="absolute inset-0 origin-bottom object-cover"
+              className="absolute inset-0 h-full w-full origin-bottom object-cover"
             />
           </div>
         </div>
