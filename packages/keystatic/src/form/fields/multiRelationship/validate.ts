@@ -1,4 +1,4 @@
-import { pluralize } from '../../../app/utils';
+import { pluralize } from '../../../app/pluralize';
 
 export function validateMultiRelationshipLength(
   validation: { length?: { min?: number; max?: number } } | undefined,

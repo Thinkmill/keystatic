@@ -12,10 +12,23 @@ type ItemData = {
   label: string;
   changed: number | boolean;
   entryCount?: number;
+  children?: undefined;
+  isDivider?: undefined;
 };
-export type ItemDivider = { isDivider: true };
+export type ItemDivider = {
+  key?: undefined;
+  children?: undefined;
+  isDivider: true;
+};
 export type Item = ItemData | ItemDivider;
-export type ItemOrGroup = Item | { title: string; children: Item[] };
+export type ItemOrGroup =
+  | Item
+  | {
+      key?: undefined;
+      isDivider?: undefined;
+      title: string;
+      children: Item[];
+    };
 
 export function useNavItems(): ItemOrGroup[] {
   let { basePath } = useAppState();

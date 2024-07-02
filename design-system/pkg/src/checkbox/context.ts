@@ -2,7 +2,7 @@ import { CheckboxGroupState } from '@react-stately/checkbox';
 import { ValidationState } from '@react-types/shared';
 import React from 'react';
 
-type CheckboxGroupContext = {
+export type CheckboxGroupContext = {
   validationState?: ValidationState;
   state: CheckboxGroupState;
 };

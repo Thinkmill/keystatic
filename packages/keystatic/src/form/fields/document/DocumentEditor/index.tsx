@@ -383,6 +383,11 @@ export function useIsInDocumentEditor() {
   return useContext(IsInEditorContext);
 }
 
+// in a seperate function with the editor passed in to make react okay with it
+function createKeyForEditor(_editor: Editor) {
+  return Math.random().toString(36);
+}
+
 export function DocumentEditorProvider({
   children,
   editor,
@@ -398,8 +403,7 @@ export function DocumentEditorProvider({
   componentBlocks: Record<string, ComponentBlock>;
   documentFeatures: DocumentFeatures;
 }) {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const identity = useMemo(() => Math.random().toString(36), [editor]);
+  const identity = useMemo(() => createKeyForEditor(editor), [editor]);
   return (
     <IsInEditorContext.Provider value>
       <Slate

@@ -47,7 +47,10 @@ function DatePicker<T extends DateValue>(
   let domRef = useFocusManagerRef(forwardedRef);
   let state = useDatePickerState(props);
   if (props.errorMessage) {
-    state.validationState = 'invalid';
+    state = {
+      ...state,
+      validationState: 'invalid',
+    };
   }
   let {
     buttonProps,
@@ -77,7 +80,8 @@ function DatePicker<T extends DateValue>(
   // The format help text is unnecessary for screen reader users because each segment already has a label.
   let description = useFormatHelpText(props);
   if (description && !props.description) {
-    descriptionProps.id = undefined;
+    const { id, ..._descriptionProps } = descriptionProps;
+    descriptionProps = _descriptionProps;
   }
 
   let visibleMonths = useVisibleMonths(maxVisibleMonths);

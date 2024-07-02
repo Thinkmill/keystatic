@@ -1,6 +1,6 @@
 {
   "key": "createPullRequest",
-  "value": "Створити запит на отримання",
+  "value": "Створити запит на злиття змін",
   "notes": "",
   "type": "git-related"
 }

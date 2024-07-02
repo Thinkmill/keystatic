@@ -1,5 +1,77 @@
 # localization
 
+## 0.1.110
+
+### Patch Changes
+
+- Updated dependencies [[`41679be`](https://github.com/Thinkmill/keystatic/commit/41679be39197a81453475fc6796489ac7d2d69cf), [`aa1d092`](https://github.com/Thinkmill/keystatic/commit/aa1d0924238419344780e7611eb7fdc797c57be8)]:
+  - @keystatic/core@0.5.23
+  - @keystatic/next@5.0.1
+
+## 0.1.109
+
+### Patch Changes
+
+- Updated dependencies [[`69d429a`](https://github.com/Thinkmill/keystatic/commit/69d429a67b2777fd8cfd236ce6ceaad4d1975e07)]:
+  - @keystatic/core@0.5.22
+  - @keystatic/next@5.0.1
+
+## 0.1.108
+
+### Patch Changes
+
+- Updated dependencies [[`b22630f`](https://github.com/Thinkmill/keystatic/commit/b22630ffb657cd8f1409a1feec925ec051b831dd)]:
+  - @keystatic/core@0.5.21
+  - @keystatic/next@5.0.1
+
+## 0.1.107
+
+### Patch Changes
+
+- Updated dependencies [[`a588cb2`](https://github.com/Thinkmill/keystatic/commit/a588cb2fedf7e9a813d5f7818a94f4f8df2310d5), [`34dee8c`](https://github.com/Thinkmill/keystatic/commit/34dee8cd8829d2a8c3d91949fd96dcee9d9749d0)]:
+  - @keystatic/core@0.5.20
+  - @keystatic/next@5.0.1
+
+## 0.1.106
+
+### Patch Changes
+
+- Updated dependencies [[`a129ea4`](https://github.com/Thinkmill/keystatic/commit/a129ea4ea46a5d9c2ddec8aef4313d98cf13a575), [`73aa1b8`](https://github.com/Thinkmill/keystatic/commit/73aa1b856b7100d1ac033eb16bee5e7f630a2c3e), [`73aa1b8`](https://github.com/Thinkmill/keystatic/commit/73aa1b856b7100d1ac033eb16bee5e7f630a2c3e), [`a1a71c1`](https://github.com/Thinkmill/keystatic/commit/a1a71c1ab2313c4c0a85fdce3f9a802a14580ece)]:
+  - @keystatic/core@0.5.19
+  - @keystatic/next@5.0.1
+
+## 0.1.105
+
+### Patch Changes
+
+- Updated dependencies [[`86bd966`](https://github.com/Thinkmill/keystatic/commit/86bd966ff35981185030ce0850b8041e8a2dc5bb), [`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130)]:
+  - @keystatic/core@0.5.18
+  - @keystatic/next@5.0.1
+
+## 0.1.104
+
+### Patch Changes
+
+- Updated dependencies [[`7924ef8`](https://github.com/Thinkmill/keystatic/commit/7924ef87cb4338e0296d715acd3ab9fb7d39aa51), [`42975f4`](https://github.com/Thinkmill/keystatic/commit/42975f45ba071cf3e2659a67e75e86325ce84944), [`8c2abff`](https://github.com/Thinkmill/keystatic/commit/8c2abff7fe38ad3e1687de57f9bc550997619761)]:
+  - @keystatic/next@5.0.1
+  - @keystatic/core@0.5.17
+
+## 0.1.103
+
+### Patch Changes
+
+- Updated dependencies [[`21394c6`](https://github.com/Thinkmill/keystatic/commit/21394c65a8d507d4355cf71641690464c05d7ec8)]:
+  - @keystatic/core@0.5.16
+  - @keystatic/next@5.0.0
+
+## 0.1.102
+
+### Patch Changes
+
+- Updated dependencies [[`d3aa1f2`](https://github.com/Thinkmill/keystatic/commit/d3aa1f2386bd690936662d98724eb385564a26cd), [`aa13ea9`](https://github.com/Thinkmill/keystatic/commit/aa13ea917ce2611266c0008197cfea4c1427724c)]:
+  - @keystatic/core@0.5.15
+  - @keystatic/next@5.0.0
+
 ## 0.1.101
 
 ### Patch Changes

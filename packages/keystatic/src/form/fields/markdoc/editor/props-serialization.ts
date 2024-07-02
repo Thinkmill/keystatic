@@ -35,6 +35,13 @@ export function deserializeProps(
           });
         }
 
+        if (schema.formKind === 'assets') {
+          // TODO: unlike content fields, implementing this is realistic
+          // there are few things to work out in terms of where extra files are stored though
+          // and i think multiline strings in Markdoc attributes might be broken
+          throw new Error('Not implemented');
+        }
+
         if (schema.formKind === 'content') {
           throw new Error('Not implemented');
         }

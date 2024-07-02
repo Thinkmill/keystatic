@@ -15,16 +15,14 @@ import { collectDirectoriesUsedInSchema, getTreeKey } from './tree-key';
 import { getTreeNodeAtPath, TreeNode } from './trees';
 import pkgJson from '../../package.json';
 import { object } from '../form/fields/object';
+import { useEffect } from 'react';
+import { showDraftRestoredToast } from './persistence';
+import { useEffectEvent } from '@react-aria/utils';
 
 export * from './path-utils';
 
-export function pluralize(
-  count: number,
-  options: { singular: string; plural?: string; inclusive?: boolean }
-) {
-  const { singular, plural = singular + 's', inclusive = true } = options;
-  const variant = count === 1 ? singular : plural;
-  return inclusive ? `${count} ${variant}` : variant;
+export function getCollection(config: Config, collection: string) {
+  return config.collections![collection];
 }
 
 export function getBranchPrefix(config: Config) {
@@ -221,4 +219,27 @@ export async function redirectToCloudAuth(from: string, config: Config) {
   url.searchParams.set('keystatic_version', pkgJson.version);
 
   window.location.href = url.toString();
+}
+
+export function useShowRestoredDraftMessage(
+  draft:
+    | {
+        state: Record<string, unknown>;
+        savedAt: Date;
+        treeKey?: string | undefined;
+      }
+    | undefined,
+  state: Record<string, unknown>,
+  localTreeKey: string | undefined
+) {
+  const show = useEffectEvent(() => {
+    if (draft && state === draft.state) {
+      showDraftRestoredToast(draft.savedAt, localTreeKey !== draft.treeKey);
+    }
+  });
+  useEffect(() => {
+    if (draft) {
+      show();
+    }
+  }, [draft, show]);
 }

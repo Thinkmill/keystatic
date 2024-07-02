@@ -1,5 +1,29 @@
 # @keystar/ui
 
+## 0.7.6
+
+### Patch Changes
+
+- [#1182](https://github.com/Thinkmill/keystatic/pull/1182) [`69d429a`](https://github.com/Thinkmill/keystatic/commit/69d429a67b2777fd8cfd236ce6ceaad4d1975e07) Thanks [@emmatown](https://github.com/emmatown)! - Fix some overlays not showing
+
+## 0.7.5
+
+### Patch Changes
+
+- [#1173](https://github.com/Thinkmill/keystatic/pull/1173) [`34dee8c`](https://github.com/Thinkmill/keystatic/commit/34dee8cd8829d2a8c3d91949fd96dcee9d9749d0) Thanks [@emmatown](https://github.com/emmatown)! - Build with React Compiler
+
+## 0.7.4
+
+### Patch Changes
+
+- [#1155](https://github.com/Thinkmill/keystatic/pull/1155) [`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130) Thanks [@emmatown](https://github.com/emmatown)! - Fixes for React tooling
+
+## 0.7.3
+
+### Patch Changes
+
+- [#1152](https://github.com/Thinkmill/keystatic/pull/1152) [`7924ef8`](https://github.com/Thinkmill/keystatic/commit/7924ef87cb4338e0296d715acd3ab9fb7d39aa51) Thanks [@emmatown](https://github.com/emmatown)! - Fix peer dependency on Next being fixed to a single version
+
 ## 0.7.2
 
 ### Patch Changes

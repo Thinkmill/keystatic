@@ -161,7 +161,7 @@ export function BlocksFieldInput(
           return (
             <Dialog>
               <Heading>
-                Add
+                Add{' '}
                 {
                   props.schema.element.discriminant.options.find(
                     x => x.value === discriminant

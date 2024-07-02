@@ -1,6 +1,6 @@
 {
   "key": "pullRequests",
-  "value": "Запити на витягування",
+  "value": "Запити на злиття",
   "notes": "",
   "type": "git-related"
 }

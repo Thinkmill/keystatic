@@ -11,6 +11,7 @@ import {
   useContext,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 
 import { FocusScope, useFocusRing } from '@react-aria/focus';
@@ -289,6 +290,8 @@ export function TableView<T extends object>(props: TableProps<T>) {
     [getDefaultWidth, getDefaultMinWidth]
   );
 
+  const [initialCollection] = useState(state.collection);
+
   let tableLayout = useMemo(
     () =>
       new TableLayout({
@@ -301,11 +304,9 @@ export function TableView<T extends object>(props: TableProps<T>) {
         estimatedHeadingHeight:
           overflowMode === 'wrap' ? DEFAULT_HEADER_HEIGHT : undefined,
         columnLayout,
-        initialCollection: state.collection,
+        initialCollection,
       }),
-    // don't recompute when state.collection changes, only used for initial value
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [overflowMode, density, columnLayout]
+    [overflowMode, density, columnLayout, initialCollection]
   );
 
   // Use a proxy so that a new object is created for each render so that alternate instances aren't affected by mutation.

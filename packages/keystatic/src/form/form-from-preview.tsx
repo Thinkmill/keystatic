@@ -1,4 +1,4 @@
-import { MemoExoticComponent, ReactElement, memo } from 'react';
+import { MemoExoticComponent, ReactElement, ReactNode, memo } from 'react';
 
 import { ComponentSchema, GenericPreviewProps } from './api';
 import { ReadonlyPropPath } from './fields/document/DocumentEditor/component-blocks/utils';
@@ -15,6 +15,7 @@ import { ChildFieldInput } from './fields/document/DocumentEditor/component-bloc
 export type ExtraFieldInputProps = {
   autoFocus: boolean;
   forceValidation: boolean;
+  omitFieldAtPath?: string[];
 };
 
 function getInputComponent(schema: ComponentSchema): any {
@@ -38,9 +39,12 @@ export const InnerFormValueContentFromPreviewProps: MemoExoticComponent<
     props: GenericPreviewProps<ComponentSchema, unknown> & {
       autoFocus?: boolean;
       forceValidation?: boolean;
+      // array fields are not supported because the use case for this (omitting content fields) is not used
+      omitFieldAtPath?: string[];
     }
-  ) => ReactElement
+  ) => ReactNode
 > = memo(function InnerFormValueContentFromPreview(props) {
+  if (props.omitFieldAtPath?.length === 0) return null;
   let Input = getInputComponent(props.schema);
   return (
     <Input

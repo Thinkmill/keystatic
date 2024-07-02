@@ -27,6 +27,7 @@ export default function InsertionIndicator(props: InsertionIndicatorProps) {
   );
 
   let ref = useRef<HTMLDivElement>(null);
+  // eslint-disable-next-line react-compiler/react-compiler
   let { dropIndicatorProps } = dragAndDropHooks.useDropIndicator(
     props,
     dropState,

@@ -1,5 +1,8 @@
 import { ContentFormField } from '../api';
 
+/**
+ * @deprecated `emptyDocument` has been replaced with the `emptyContent` field
+ */
 export function emptyDocument(): ContentFormField<null, null, null> {
   return {
     kind: 'form',

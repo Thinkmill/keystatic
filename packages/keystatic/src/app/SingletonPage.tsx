@@ -17,8 +17,6 @@ import { ProgressCircle } from '@keystar/ui/progress';
 import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../config';
-import { createGetPreviewProps } from '../form/preview-props';
-import { fields } from '../form/api';
 import { clientSideValidateProp } from '../form/errors';
 import { getInitialPropsValue } from '../form/initial-values';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
@@ -30,6 +28,7 @@ import {
   getSingletonPath,
   isCloudConfig,
   isGitHubConfig,
+  useShowRestoredDraftMessage,
 } from './utils';
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
@@ -42,12 +41,7 @@ import { Icon } from '@keystar/ui/icon';
 import { ForkRepoDialog } from './fork-repo';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { notFound } from './not-found';
-import {
-  delDraft,
-  getDraft,
-  setDraft,
-  showDraftRestoredToast,
-} from './persistence';
+import { delDraft, getDraft, setDraft } from './persistence';
 import * as s from 'superstruct';
 import { LOADING, useData } from './useData';
 import { ActionGroup, Item } from '@keystar/ui/action-group';
@@ -55,12 +49,17 @@ import { useMediaQuery, breakpointQueries } from '@keystar/ui/style';
 import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
 import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
 import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
-import { getYjsValFromParsedValue } from '../form/props-value';
+import { getYjsValFromParsedValue } from '../form/yjs-props-value';
 import * as Y from 'yjs';
-import { useYjs, useYjsIfAvailable } from './shell/collab';
-import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
+import { useYjsIfAvailable } from './shell/collab';
 import { useYJsValue } from './useYJsValue';
 import { PresenceAvatars } from './presence';
+import {
+  usePreviewProps,
+  usePreviewPropsFromY,
+  useSingleton,
+} from './preview-props';
+import { ComponentSchema, GenericPreviewProps } from '..';
 
 type SingletonPageProps = {
   singleton: string;
@@ -78,18 +77,14 @@ function SingletonPageInner(
     hasChanged: boolean;
     state: Record<string, unknown>;
     onReset: () => void;
-    previewProps: ReturnType<ReturnType<typeof createGetPreviewProps>>;
+    previewProps: GenericPreviewProps<ComponentSchema, undefined>;
   }
 ) {
   const isBelowDesktop = useMediaQuery(breakpointQueries.below.desktop);
-  const singletonConfig = props.config.singletons![props.singleton]!;
   const branchInfo = useBranchInfo();
   const [forceValidation, setForceValidation] = useState(false);
 
-  const schema = useMemo(
-    () => fields.object(singletonConfig.schema),
-    [singletonConfig.schema]
-  );
+  const { schema, singletonConfig } = useSingleton(props.singleton);
 
   const router = useRouter();
 
@@ -309,11 +304,7 @@ function LocalSingletonPage(
 ) {
   const { singleton, initialFiles, initialState, localTreeKey, config, draft } =
     props;
-  const singletonConfig = config.singletons![singleton]!;
-  const schema = useMemo(
-    () => fields.object(singletonConfig.schema),
-    [singletonConfig.schema]
-  );
+  const { schema, singletonConfig } = useSingleton(props.singleton);
   const singletonPath = getSingletonPath(config, singleton);
 
   const [{ state, localTreeKey: localTreeKeyInState }, setState] = useState(
@@ -324,12 +315,8 @@ function LocalSingletonPage(
         (initialState === null ? getInitialPropsValue(schema) : initialState),
     })
   );
-  useEffect(() => {
-    if (draft && state === draft.state) {
-      showDraftRestoredToast(draft.savedAt, localTreeKey !== draft.treeKey);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draft]);
+
+  useShowRestoredDraftMessage(draft, state, localTreeKey);
 
   if (localTreeKeyInState !== localTreeKey) {
     setState({
@@ -376,20 +363,21 @@ function LocalSingletonPage(
     singletonConfig,
   ]);
 
-  const previewProps = useMemo(
-    () =>
-      createGetPreviewProps(
-        schema,
-        stateUpdater => {
-          setState(state => ({
-            localTreeKey: state.localTreeKey,
-            state: stateUpdater(state.state),
-          }));
-        },
-        () => undefined
-      ),
-    [schema]
-  )(state as Record<string, unknown>);
+  const onPreviewPropsChange = useCallback(
+    (cb: (state: Record<string, unknown>) => Record<string, unknown>) => {
+      setState(state => ({
+        localTreeKey: state.localTreeKey,
+        state: cb(state.state),
+      }));
+    },
+    []
+  );
+
+  const previewProps = usePreviewProps(
+    schema,
+    onPreviewPropsChange,
+    state as Record<string, unknown>
+  );
 
   const formatInfo = getSingletonFormat(config, singleton);
   const [updateResult, _update, resetUpdateItem] = useUpsertItem({
@@ -430,20 +418,15 @@ function CollabSingletonPage(
   }
 ) {
   const { singleton, initialFiles, initialState, localTreeKey, config } = props;
-  const singletonConfig = config.singletons![singleton]!;
-  const schema = useMemo(
-    () => fields.object(singletonConfig.schema),
-    [singletonConfig.schema]
-  );
+  const { schema, singletonConfig } = useSingleton(props.singleton);
   const singletonPath = getSingletonPath(config, singleton);
 
-  const yjsInfo = useYjs();
   const state = useYJsValue(schema, props.map) as Record<string, unknown>;
-  const previewProps = useMemo(
-    () =>
-      createGetPreviewPropsFromY(schema as any, props.map, yjsInfo.awareness),
-    [props.map, schema, yjsInfo.awareness]
-  )(state);
+  const previewProps = usePreviewPropsFromY(
+    schema,
+    props.map,
+    state as Record<string, unknown>
+  );
 
   const isCreating = initialState === null;
   const hasChanged =

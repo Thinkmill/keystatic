@@ -81,13 +81,9 @@ function notAllowed(node: MarkdocNode, parentType: NodeType | undefined) {
 function createAndFill(
   markdocNode: MarkdocNode,
   nodeType: NodeType,
-  attrs: Record<string, any>,
-  mapChildren?: (children: ProseMirrorNode[]) => ProseMirrorNode[]
+  attrs: Record<string, any>
 ) {
   let children = childrenToProseMirrorNodes(markdocNode.children, nodeType);
-  if (mapChildren) {
-    children = mapChildren(children);
-  }
   const node = nodeType.createAndFill(attrs, children);
   if (!node) {
     error({
@@ -146,26 +142,38 @@ export function markdocToProseMirror(
   }
 }
 
-const wrapInParagraph =
-  (schema: EditorSchema) => (children: ProseMirrorNode[]) => {
-    const newChildren: ProseMirrorNode[] = [];
-    let inlineQueue: ProseMirrorNode[] = [];
-    for (const child of children) {
-      if (child.isInline) {
-        inlineQueue.push(child);
-        continue;
-      }
-      if (inlineQueue.length) {
-        newChildren.push(schema.nodes.paragraph.createChecked({}, inlineQueue));
-        inlineQueue = [];
-      }
-      newChildren.push(child);
+function listItem(markdocNode: MarkdocNode, nodeType: NodeType) {
+  const schema = getSchema();
+  const children: ProseMirrorNode[] = [];
+  for (const node of markdocNode.children) {
+    const pmNode = markdocNodeToProseMirrorNode(node, schema.nodes.paragraph);
+    if (!pmNode) continue;
+    if (!Array.isArray(pmNode)) {
+      children.push(pmNode);
+      continue;
     }
-    if (inlineQueue.length) {
-      newChildren.push(schema.nodes.paragraph.createChecked({}, inlineQueue));
+    if (node.type === 'inline') {
+      children.push(schema.nodes.paragraph.createAndFill({}, pmNode)!);
+      continue;
     }
-    return newChildren;
-  };
+    children.push(...pmNode);
+  }
+
+  const node = nodeType.createAndFill({}, children);
+  if (!node) {
+    error({
+      error: {
+        id: 'unexpected-children',
+        level: 'critical',
+        message: `${markdocNode.type} has unexpected children`,
+      },
+      lines: markdocNode.lines,
+      type: markdocNode.type,
+      location: markdocNode.location,
+    });
+  }
+  return node;
+}
 
 function markdocNodeToProseMirrorNode(
   node: MarkdocNode,
@@ -278,12 +286,7 @@ function markdocNodeToProseMirrorNode(
   }
   if (node.type === 'item') {
     if (!schema.nodes.list_item) return notAllowed(node, parentType);
-    return createAndFill(
-      node,
-      schema.nodes.list_item,
-      {},
-      wrapInParagraph(schema)
-    );
+    return listItem(node, schema.nodes.list_item);
   }
   if (node.type === 'list') {
     const listType = node.attributes.ordered
@@ -305,21 +308,11 @@ function markdocNodeToProseMirrorNode(
   }
   if (node.type === 'th') {
     if (!schema.nodes.table_header) return notAllowed(node, parentType);
-    return createAndFill(
-      node,
-      schema.nodes.table_header,
-      {},
-      wrapInParagraph(schema)
-    );
+    return listItem(node, schema.nodes.table_header);
   }
   if (node.type === 'td') {
     if (!schema.nodes.table_cell) return notAllowed(node, parentType);
-    return createAndFill(
-      node,
-      schema.nodes.table_cell,
-      {},
-      wrapInParagraph(schema)
-    );
+    return listItem(node, schema.nodes.table_cell);
   }
   if (node.type === 'tag' && node.tag) {
     if (node.tag === 'table') {

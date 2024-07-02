@@ -6,7 +6,7 @@ import { EditorStateDescription, jsx, toEditorState } from './utils';
 import { markdocToProseMirror } from '../markdoc/parse';
 import { proseMirrorToMarkdoc } from '../markdoc/serialize';
 import { format, parse } from '#markdoc';
-import { createEditorSchema } from '../schema';
+import { createEditorSchema, getEditorSchema } from '../schema';
 import { editorOptionsToConfig } from '../../config';
 import { block, inline, mark } from '../../../../../content-components';
 import { fields } from '../../../../..';
@@ -54,7 +54,7 @@ function toMarkdoc(node: EditorStateDescription) {
         proseMirrorToMarkdoc(node.get().doc, {
           extraFiles: new Map(),
           otherFiles: new Map(),
-          schema,
+          schema: getEditorSchema(node.get().schema),
           slug: undefined,
         })
       )
@@ -523,4 +523,103 @@ test('undefined component', () => {
   }).toThrowErrorMatchingInlineSnapshot(
     `"0:Missing component definition for component-that-does-not-exist"`
   );
+});
+
+test('optimal mark printing', () => {
+  const markdoc = `**a *b* c**`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text
+          bold={true}
+        >
+          <cursor />
+          a 
+        </text>
+        <text
+          bold={true}
+          italic={true}
+        >
+          b
+        </text>
+        <text
+          bold={true}
+        >
+           c
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "**a *b* c**
+    "
+  `);
+});
+
+test('more', () => {
+  const markdoc = `\`a\` b **c** d *e* f`;
+  const editor = fromMarkdoc(markdoc);
+
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "\`a\` b **c** d *e* f
+    "
+  `);
+});
+
+for (const [mark, symbol] of [
+  ['bold', '**'],
+  ['italic', '*'],
+  ['strikethrough', '~~'],
+] as const) {
+  test(`whitespace is ejected from ${mark}`, () => {
+    const editor = (
+      <doc>
+        <paragraph>
+          <text>something</text>
+          <text {...{ [mark]: true }}>
+            <cursor /> a{' '}
+          </text>
+          <text>something</text>
+        </paragraph>
+      </doc>
+    );
+    expect(toMarkdoc(editor)).toBe(`something ${symbol}a${symbol} something\n`);
+  });
+}
+
+test('inline in list item', () => {
+  const markdoc = `- wertgrfdsc{% inline-thing something="adkjsakjndnajksdnjk" /%}sfasdf`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <unordered_list>
+        <list_item>
+          <paragraph>
+            <text>
+              <cursor />
+              wertgrfdsc
+            </text>
+            <inline-thing
+              props={
+                {
+                  "extraFiles": [],
+                  "value": {
+                    "something": "adkjsakjndnajksdnjk",
+                  },
+                }
+              }
+            />
+            <text>
+              sfasdf
+            </text>
+          </paragraph>
+        </list_item>
+      </unordered_list>
+    </doc>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "- wertgrfdsc{% inline-thing something="adkjsakjndnajksdnjk" /%}sfasdf
+    "
+  `);
 });

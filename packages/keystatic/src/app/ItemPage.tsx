@@ -37,12 +37,10 @@ import { TextField } from '@keystar/ui/text-field';
 import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../config';
-import { fields } from '../form/api';
-import { createGetPreviewProps } from '../form/preview-props';
+import { ComponentSchema, GenericPreviewProps } from '../form/api';
 import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
-import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
-import { getYjsValFromParsedValue } from '../form/props-value';
+import { getYjsValFromParsedValue } from '../form/yjs-props-value';
 
 import {
   prettyErrorForCreateBranchMutation,
@@ -55,17 +53,12 @@ import { notFound } from './not-found';
 import { getDataFileExtension, getPathPrefix } from './path-utils';
 import { useRouter } from './router';
 import { HeaderBreadcrumbs } from './shell/HeaderBreadcrumbs';
-import { useYjs, useYjsIfAvailable } from './shell/collab';
+import { useYjsIfAvailable } from './shell/collab';
 import { useConfig } from './shell/context';
 import { useBaseCommit, useRepositoryId, useBranchInfo } from './shell/data';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
 import { useSlugFieldInfo } from './slugs';
-import {
-  delDraft,
-  getDraft,
-  setDraft,
-  showDraftRestoredToast,
-} from './persistence';
+import { delDraft, getDraft, setDraft } from './persistence';
 import { PresenceAvatars } from './presence';
 import {
   serializeEntryToFiles,
@@ -76,14 +69,21 @@ import { useHasChanged } from './useHasChanged';
 import { parseEntry, useItemData } from './useItemData';
 import {
   getBranchPrefix,
+  getCollection,
   getCollectionFormat,
   getCollectionItemPath,
   getRepoUrl,
   getSlugFromState,
   isGitHubConfig,
+  useShowRestoredDraftMessage,
 } from './utils';
 import { LOADING, useData } from './useData';
 import { useYJsValue } from './useYJsValue';
+import {
+  useCollection,
+  usePreviewProps,
+  usePreviewPropsFromY,
+} from './preview-props';
 
 type ItemPageProps = {
   collection: string;
@@ -109,7 +109,7 @@ function ItemPageInner(
     onReset: () => void;
     updateResult: ReturnType<typeof useUpsertItem>[0];
     onResetUpdateItem: () => void;
-    previewProps: ReturnType<ReturnType<typeof createGetPreviewProps>>;
+    previewProps: GenericPreviewProps<ComponentSchema, undefined>;
     hasChanged: boolean;
     state: Record<string, unknown>;
   }
@@ -121,33 +121,20 @@ function ItemPageInner(
     updateResult,
     onUpdate: parentOnUpdate,
   } = props;
-  const collectionConfig = props.config.collections![collection]!;
+  const { collectionConfig, schema } = useCollection(collection);
 
-  const schema = useMemo(
-    () => fields.object(collectionConfig.schema),
-    [collectionConfig.schema]
-  );
   const router = useRouter();
   const baseCommit = useBaseCommit();
   const currentBasePath = getCollectionItemPath(config, collection, itemSlug);
   const formatInfo = getCollectionFormat(config, collection);
   const branchInfo = useBranchInfo();
   const [forceValidation, setForceValidation] = useState(false);
-  const previewHref = useMemo(() => {
-    return collectionConfig.previewUrl
-      ? collectionConfig
-          .previewUrl!.replace('{slug}', props.itemSlug)
-          .replace('{branch}', branchInfo.currentBranch)
-      : undefined;
-  }, [branchInfo.currentBranch, collectionConfig.previewUrl, props.itemSlug]);
-  const onDelete = async () => {
-    // TODO: delete multiplayer draft
-    if (await deleteItem()) {
-      router.push(
-        `${props.basePath}/collection/${encodeURIComponent(collection)}`
-      );
-    }
-  };
+  const previewHref = collectionConfig.previewUrl
+    ? collectionConfig.previewUrl
+        .replace('{slug}', props.itemSlug)
+        .replace('{branch}', branchInfo.currentBranch)
+    : undefined;
+  const { push, replace } = router;
 
   const slugInfo = useSlugFieldInfo(collection, itemSlug);
 
@@ -157,8 +144,15 @@ function ItemPageInner(
     basePath: currentBasePath,
   });
 
+  const onDelete = useEventCallback(async () => {
+    // TODO: delete multiplayer draft
+    if (await deleteItem()) {
+      push(`${props.basePath}/collection/${encodeURIComponent(collection)}`);
+    }
+  });
+
   const onDuplicate = () => {
-    router.push(
+    push(
       `${props.basePath}/collection/${encodeURIComponent(
         collection
       )}/create?duplicate=${itemSlug}`
@@ -166,7 +160,7 @@ function ItemPageInner(
   };
   const isSavingDisabled = updateResult.kind === 'loading' || !props.hasChanged;
 
-  const onUpdate = useCallback(async () => {
+  const onUpdate = useEventCallback(async () => {
     if (isSavingDisabled) return false;
     if (!clientSideValidateProp(schema, props.state, slugInfo)) {
       setForceValidation(true);
@@ -175,25 +169,14 @@ function ItemPageInner(
     const slug = getSlugFromState(collectionConfig, props.state);
     const hasUpdated = await parentOnUpdate();
     if (hasUpdated && slug !== itemSlug) {
-      router.replace(
+      replace(
         `${props.basePath}/collection/${encodeURIComponent(
           collection
         )}/item/${encodeURIComponent(slug)}`
       );
     }
     return hasUpdated;
-  }, [
-    collection,
-    collectionConfig,
-    isSavingDisabled,
-    itemSlug,
-    parentOnUpdate,
-    props.basePath,
-    props.state,
-    router,
-    schema,
-    slugInfo,
-  ]);
+  });
 
   const viewHref =
     config.storage.kind !== 'local'
@@ -365,40 +348,32 @@ function LocalItemPage(
     localTreeKey,
     draft,
   } = props;
-  const collectionConfig = config.collections![collection]!;
-  const schema = useMemo(
-    () => fields.object(collectionConfig.schema),
-    [collectionConfig.schema]
-  );
+  const { collectionConfig, schema } = useCollection(collection);
 
   const [{ state, localTreeKey: localTreeKeyInState }, setState] = useState({
     state: draft?.state ?? initialState,
     localTreeKey,
   });
-  useEffect(() => {
-    if (draft && state === draft.state) {
-      showDraftRestoredToast(draft.savedAt, localTreeKey !== draft.treeKey);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draft]);
+
+  useShowRestoredDraftMessage(draft, state, localTreeKey);
+
   if (localTreeKeyInState !== localTreeKey) {
     setState({ state: initialState, localTreeKey });
   }
 
-  const previewProps = useMemo(
-    () =>
-      createGetPreviewProps(
-        schema,
-        stateUpdater => {
-          setState(state => ({
-            localTreeKey: state.localTreeKey,
-            state: stateUpdater(state.state),
-          }));
-        },
-        () => undefined
-      ),
-    [schema]
-  )(state as Record<string, unknown>);
+  const onPreviewPropsChange = useCallback(
+    (
+      stateUpdater: (state: Record<string, unknown>) => Record<string, unknown>
+    ) => {
+      setState(state => ({
+        localTreeKey: state.localTreeKey,
+        state: stateUpdater(state.state),
+      }));
+    },
+    []
+  );
+
+  const previewProps = usePreviewProps(schema, onPreviewPropsChange, state);
 
   const hasChanged = useHasChanged({
     initialState,
@@ -477,18 +452,10 @@ function LocalItemPage(
 function CollabItemPage(props: ItemPageProps & { map: Y.Map<any> }) {
   const { collection, config, initialFiles, initialState, localTreeKey } =
     props;
-  const collectionConfig = config.collections![collection]!;
-  const schema = useMemo(
-    () => fields.object(collectionConfig.schema),
-    [collectionConfig.schema]
-  );
-  const yjsInfo = useYjs();
+  const { collectionConfig, schema } = useCollection(collection);
   const state = useYJsValue(schema, props.map) as Record<string, unknown>;
-  const previewProps = useMemo(
-    () =>
-      createGetPreviewPropsFromY(schema as any, props.map, yjsInfo.awareness),
-    [props.map, schema, yjsInfo.awareness]
-  )(state);
+
+  const previewProps = usePreviewPropsFromY(schema, props.map, state);
 
   const slug = getSlugFromState(collectionConfig, state);
 
@@ -516,7 +483,7 @@ function CollabItemPage(props: ItemPageProps & { map: Y.Map<any> }) {
   const update = useEventCallback(_update);
 
   const onReset = () => {
-    props.map.doc!.transact(() => {
+    props.map.doc?.transact(() => {
       for (const [key, value] of Object.entries(collectionConfig.schema)) {
         const val = getYjsValFromParsedValue(value, props.initialState[key]);
         props.map.set(key, val);
@@ -924,7 +891,7 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
     const {
       data: { initialState },
     } = itemData;
-    data.doc!.transact(() => {
+    data.doc?.transact(() => {
       for (const [key, value] of Object.entries(collectionConfig.schema)) {
         const val = getYjsValFromParsedValue(value, initialState[key]);
         data.set(key, val);
@@ -1010,25 +977,22 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
   );
 }
 
-const ItemPageShell = (
+function ItemPageShell(
   props: ItemPageWrapperProps & {
     children: ReactNode;
     headerActions?: ReactNode;
   }
-) => {
-  const collectionConfig = props.config.collections![props.collection]!;
+) {
+  const collectionConfig = getCollection(props.config, props.collection);
   const collectionHref = `${props.basePath}/collection/${props.collection}`;
-  const breadcrumbItems = useMemo(
-    () => [
-      {
-        key: 'collection',
-        label: collectionConfig.label,
-        href: collectionHref,
-      },
-      { key: 'item', label: props.itemSlug },
-    ],
-    [collectionConfig.label, collectionHref, props.itemSlug]
-  );
+  const breadcrumbItems = [
+    {
+      key: 'collection',
+      label: collectionConfig.label,
+      href: collectionHref,
+    },
+    { key: 'item', label: props.itemSlug },
+  ];
 
   return (
     <PageRoot containerWidth={containerWidthForEntryLayout(collectionConfig)}>
@@ -1040,6 +1004,6 @@ const ItemPageShell = (
       {props.children}
     </PageRoot>
   );
-};
+}
 
 export { ItemPageWrapper as ItemPage };

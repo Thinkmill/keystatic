@@ -4,6 +4,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { SlotProvider, useSlotProps } from '..';
+import { useLayoutEffect } from 'react';
 
 describe('slots', function () {
   let results = {};
@@ -13,10 +14,12 @@ describe('slots', function () {
   });
 
   function Component(props: any) {
-    results = useSlotProps(props, 'slotname');
-    props = results;
+    const _results = useSlotProps(props, 'slotname');
+    useLayoutEffect(() => {
+      results = _results;
+    });
     return (
-      <button id={props.id} onClick={props.onClick}>
+      <button id={_results.id} onClick={_results.onClick}>
         click me
       </button>
     );

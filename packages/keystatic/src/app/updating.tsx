@@ -28,7 +28,7 @@ import { AppSlugContext } from './onboarding/install-app';
 import { createUrqlClient } from './provider';
 import { serializeProps } from '../form/serialize-props';
 import { scopeEntriesWithPathPrefix } from './shell/path-prefix';
-import { base64UrlEncode } from '#base64';
+import { base64Encode } from '#base64';
 
 const textEncoder = new TextEncoder();
 
@@ -76,7 +76,9 @@ export function serializeEntryToFiles(args: {
   );
 
   if (args.format.contentField) {
-    const filename = `${args.format.contentField.key}${args.format.contentField.config.contentExtension}`;
+    const filename = `${args.format.contentField.path.join('/')}${
+      args.format.contentField.contentExtension
+    }`;
     let contents: undefined | Uint8Array;
     extraFiles = extraFiles.filter(x => {
       if (x.path !== filename) return true;
@@ -217,7 +219,7 @@ export function useUpsertItem(args: {
                 fileChanges: {
                   additions: additions.map(addition => ({
                     ...addition,
-                    contents: base64UrlEncode(addition.contents),
+                    contents: base64Encode(addition.contents),
                   })),
                   deletions,
                 },
@@ -298,7 +300,7 @@ export function useUpsertItem(args: {
             body: JSON.stringify({
               additions: additions.map(addition => ({
                 ...addition,
-                contents: base64UrlEncode(addition.contents),
+                contents: base64Encode(addition.contents),
               })),
               deletions,
             }),

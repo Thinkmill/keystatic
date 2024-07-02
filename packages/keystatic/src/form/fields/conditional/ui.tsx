@@ -26,6 +26,7 @@ export function ConditionalFieldInput<
   onChange,
   value,
   forceValidation,
+  omitFieldAtPath,
 }: GenericPreviewProps<
   ConditionalField<DiscriminantField, ConditionalValues>,
   unknown
@@ -34,6 +35,12 @@ export function ConditionalFieldInput<
   const schemaDiscriminant = schema.discriminant as BasicFormField<
     string | boolean
   >;
+  const innerOmitFieldAtPath = useMemo(() => {
+    if (!omitFieldAtPath) {
+      return undefined;
+    }
+    return omitFieldAtPath.slice(1);
+  }, [omitFieldAtPath]);
   return (
     <Flex gap="xlarge" direction="column">
       {useMemo(
@@ -53,6 +60,9 @@ export function ConditionalFieldInput<
         <InnerFormValueContentFromPreviewProps
           forceValidation={forceValidation}
           {...value}
+          {...(omitFieldAtPath?.[0] === 'value'
+            ? { omitFieldAtPath: innerOmitFieldAtPath }
+            : {})}
         />
       </AddToPathProvider>
     </Flex>

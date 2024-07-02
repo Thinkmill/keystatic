@@ -2,7 +2,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { EditorStateDescription, jsx, toEditorState } from './utils';
-import { createEditorSchema } from '../schema';
+import { createEditorSchema, getEditorSchema } from '../schema';
 import { editorOptionsToConfig } from '../../config';
 import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm';
 import { mdxFromMarkdown, mdxToMarkdown } from 'mdast-util-mdx';
@@ -68,7 +68,7 @@ function toMDX(node: EditorStateDescription) {
   const mdxNode = proseMirrorToMDXRoot(node.get().doc, {
     extraFiles: other,
     otherFiles: external,
-    schema,
+    schema: getEditorSchema(node.get().doc.type.schema),
     slug: undefined,
   });
   return toMarkdown(mdxNode, {
@@ -809,6 +809,227 @@ test('other syntax', () => {
     fromMDX('export const a = true;');
   }).toThrowErrorMatchingInlineSnapshot(`
     "Unhandled type mdxjsEsm: export const a = true;
+    "
+  `);
+});
+
+test('optimal mark printing', () => {
+  const mdx = `**a *b* c**`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text
+          bold={true}
+        >
+          <cursor />
+          a 
+        </text>
+        <text
+          bold={true}
+          italic={true}
+        >
+          b
+        </text>
+        <text
+          bold={true}
+        >
+           c
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "**a *b* c**
+    "
+  `);
+});
+
+test('mark printing stress testing', () => {
+  const mdx = `**a [ sd *a*sf a](https://b) c**`;
+  const editor = fromMDX(mdx);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <paragraph>
+        <text
+          bold={true}
+        >
+          <cursor />
+          a 
+        </text>
+        <text
+          bold={true}
+          link={
+            {
+              "href": "https://b",
+              "title": "",
+            }
+          }
+        >
+           sd 
+        </text>
+        <text
+          bold={true}
+          italic={true}
+          link={
+            {
+              "href": "https://b",
+              "title": "",
+            }
+          }
+        >
+          a
+        </text>
+        <text
+          bold={true}
+          link={
+            {
+              "href": "https://b",
+              "title": "",
+            }
+          }
+        >
+          sf a
+        </text>
+        <text
+          bold={true}
+        >
+           c
+        </text>
+      </paragraph>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "**a [ sd *a*sf a](https://b) c**
+    "
+  `);
+});
+
+test('expel whitespace', () => {
+  const a = (
+    <doc>
+      <paragraph>
+        <text>start</text>
+        <text bold>
+          <cursor />
+          {'  '}content{' '}
+        </text>
+        <text>something</text>
+      </paragraph>
+    </doc>
+  );
+  expect(toMDX(a)).toMatchInlineSnapshot(`
+    "start  **content** something
+    "
+  `);
+});
+
+test('more', () => {
+  const markdoc = `\`a\` b **c** d *e* f`;
+  const editor = fromMDX(markdoc);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "\`a\` b **c** d *e* f
+    "
+  `);
+});
+
+for (const [mark, symbol] of [
+  ['bold', '**'],
+  ['italic', '*'],
+  ['strikethrough', '~~'],
+] as const) {
+  test(`whitespace is ejected from ${mark}`, () => {
+    const editor = (
+      <doc>
+        <paragraph>
+          <text>something</text>
+          <text {...{ [mark]: true }}>
+            <cursor /> a{' '}
+          </text>
+          <text>something</text>
+        </paragraph>
+      </doc>
+    );
+    expect(toMDX(editor)).toBe(`something ${symbol}a${symbol} something\n`);
+  });
+}
+
+test('inline in list item', () => {
+  const markdoc = `- wertgrfdsc<InlineThing something="adkjsakjndnajksdnjk" />sfasdf`;
+  const editor = fromMDX(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <unordered_list>
+        <list_item>
+          <paragraph>
+            <text>
+              <cursor />
+              wertgrfdsc
+            </text>
+            <InlineThing
+              props={
+                {
+                  "extraFiles": [],
+                  "value": {
+                    "something": "adkjsakjndnajksdnjk",
+                  },
+                }
+              }
+            />
+            <text>
+              sfasdf
+            </text>
+          </paragraph>
+        </list_item>
+      </unordered_list>
+    </doc>
+  `);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "* wertgrfdsc<InlineThing something="adkjsakjndnajksdnjk" />sfasdf
+    "
+  `);
+});
+
+test('preserve unordered tight list', () => {
+  const markdoc = `- a
+- b
+- c`;
+  const editor = fromMDX(markdoc);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "* a
+    * b
+    * c
+    "
+  `);
+});
+
+test('preserve ordered tight list', () => {
+  const markdoc = `1. a
+1. b
+1. c`;
+  const editor = fromMDX(markdoc);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "1. a
+    2. b
+    3. c
+    "
+  `);
+});
+
+test('loose list', () => {
+  const markdoc = `
+- a
+
+  b
+- c
+- d`;
+  const editor = fromMDX(markdoc);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "* a
+
+      b
+    * c
+    * d
     "
   `);
 });

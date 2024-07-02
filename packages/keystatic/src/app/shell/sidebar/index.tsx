@@ -32,7 +32,8 @@ import { usePrevious } from '@keystar/ui/utils';
 import l10nMessages from '../../l10n/index.json';
 import { useRouter } from '../../router';
 import { ItemOrGroup, useNavItems } from '../../useNavItems';
-import { isLocalConfig, pluralize } from '../../utils';
+import { isLocalConfig } from '../../utils';
+import { pluralize } from '../../pluralize';
 
 import { useBrand } from '../common';
 import { SIDE_PANEL_ID } from '../constants';
@@ -249,7 +250,9 @@ export function SidebarNav() {
           {stringFormatter.format('dashboard')}
         </NavItem>
 
-        {navItems.map(item => renderItemOrGroup(item, isCurrent))}
+        {navItems.map((item, i) => (
+          <NavItemOrGroup key={i} itemOrGroup={item} />
+        ))}
       </NavList>
     </ScrollView>
   );
@@ -270,8 +273,7 @@ function useIsCurrent() {
       if (exact) {
         return href === router.pathname ? 'page' : undefined;
       }
-      return href === router.pathname ||
-        router.pathname.startsWith(`${router.pathname}/`)
+      return href === router.pathname || router.pathname.startsWith(`${href}/`)
         ? 'page'
         : undefined;
     },
@@ -281,19 +283,18 @@ function useIsCurrent() {
 
 // Renderers
 // ----------------------------------------------------------------------------
-let dividerCount = 0;
-function renderItemOrGroup(
-  itemOrGroup: ItemOrGroup,
-  isCurrent: ReturnType<typeof useIsCurrent>
-) {
-  if ('isDivider' in itemOrGroup) {
-    return <Divider key={dividerCount++} />;
+function NavItemOrGroup({ itemOrGroup }: { itemOrGroup: ItemOrGroup }) {
+  const isCurrent = useIsCurrent();
+  if (itemOrGroup.isDivider) {
+    return <Divider />;
   }
 
-  if ('children' in itemOrGroup) {
+  if (itemOrGroup.children) {
     return (
-      <NavGroup key={itemOrGroup.title} title={itemOrGroup.title}>
-        {itemOrGroup.children.map(child => renderItemOrGroup(child, isCurrent))}
+      <NavGroup title={itemOrGroup.title}>
+        {itemOrGroup.children.map((child, i) => (
+          <NavItemOrGroup itemOrGroup={child} key={i} />
+        ))}
       </NavGroup>
     );
   }
@@ -325,11 +326,7 @@ function renderItemOrGroup(
   })();
 
   return (
-    <NavItem
-      key={itemOrGroup.key}
-      href={itemOrGroup.href}
-      aria-current={isCurrent(itemOrGroup.href)}
-    >
+    <NavItem href={itemOrGroup.href} aria-current={isCurrent(itemOrGroup.href)}>
       <Text truncate title={itemOrGroup.label}>
         {itemOrGroup.label}
       </Text>

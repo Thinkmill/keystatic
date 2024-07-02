@@ -35,6 +35,7 @@ function FileTrigger(
       <PressResponder
         onPress={() => {
           if (inputRef.current?.value) {
+            // eslint-disable-next-line react-compiler/react-compiler
             inputRef.current.value = '';
           }
           inputRef.current?.click();

@@ -1,5 +1,8 @@
-import { DocumentRenderer } from '@keystatic/core/renderer';
+import '../styles.css';
+import React from 'react';
+import Markdoc from '@markdoc/markdoc';
 import { reader } from '../reader';
+import { markdocConfig } from '../../keystatic.config';
 
 export default async function Post({ params }: { params: { slug: string } }) {
   const { slug } = params;
@@ -8,12 +11,20 @@ export default async function Post({ params }: { params: { slug: string } }) {
 
   if (!post) return <div>Post not found!</div>;
 
+  const { node } = await post.content();
+
+  const errors = Markdoc.validate(node, markdocConfig);
+  if (errors.length) {
+    console.error(errors);
+    throw new Error('Invalid content');
+  }
+
+  const renderable = Markdoc.transform(node, markdocConfig);
+
   return (
     <div>
       <h1>{post.title}</h1>
-      <div>
-        <DocumentRenderer document={await post.content()} />
-      </div>
+      {Markdoc.renderers.react(renderable, React)}
     </div>
   );
 }

@@ -41,22 +41,25 @@ export function serializeProps(
           }
           return forYaml;
         }
-        if (schema.formKind === 'content') {
-          const {
-            other,
-            external,
-            content,
-            value: forYaml,
-          } = schema.serialize(value, { slug });
-          if (content) {
-            extraFiles.push({
-              path:
-                getPropPathPortion(propPath, rootSchema, rootValue) +
-                schema.contentExtension,
-              contents: content,
-              parent: undefined,
-            });
+        if (schema.formKind === 'content' || schema.formKind === 'assets') {
+          let other: ReadonlyMap<string, Uint8Array>, external, forYaml;
+          if (schema.formKind === 'content') {
+            const out = schema.serialize(value, { slug });
+            if (out.content) {
+              extraFiles.push({
+                path:
+                  getPropPathPortion(propPath, rootSchema, rootValue) +
+                  schema.contentExtension,
+                contents: out.content,
+                parent: undefined,
+              });
+            }
+            ({ value: forYaml, other, external } = out);
+          } else {
+            const out = schema.serialize(value, { slug });
+            ({ value: forYaml, other, external } = out);
           }
+
           for (const [key, contents] of other) {
             extraFiles.push({
               path:

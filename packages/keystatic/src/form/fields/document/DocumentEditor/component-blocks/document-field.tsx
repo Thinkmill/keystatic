@@ -103,7 +103,7 @@ function deserializeProps(
         });
       }
 
-      if (schema.formKind === 'content') {
+      if (schema.formKind === 'content' || schema.formKind === 'assets') {
         throw new Error('Not implemented');
       }
       if (mode === 'read') {

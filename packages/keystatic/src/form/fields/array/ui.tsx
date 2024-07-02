@@ -14,7 +14,8 @@ import { useField } from '@react-aria/label';
 import { useId, Key, useMemo, useState } from 'react';
 
 import l10nMessages from '../../../app/l10n/index.json';
-import { getSlugFromState, pluralize } from '../../../app/utils';
+import { getSlugFromState } from '../../../app/utils';
+import { pluralize } from '../../../app/pluralize';
 
 import { ArrayField, ComponentSchema, GenericPreviewProps } from '../../api';
 import { clientSideValidateProp } from '../../errors';

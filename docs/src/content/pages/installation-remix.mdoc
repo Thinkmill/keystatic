@@ -15,10 +15,10 @@ npx create-remix@latest
 
 ## Installing dependencies
 
-Add Keystatic's `core` and `remix` packages:
+Add Keystatic's `core` and `remix` packages and `@markdoc/markdoc`:
 
 ```bash
-npm install @keystatic/core @keystatic/remix
+npm install @keystatic/core @keystatic/remix @markdoc/markdoc
 ```
 
 ## Creating a Keystatic config file
@@ -41,13 +41,7 @@ export default config({
       format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
-        content: fields.document({
-          label: 'Content',
-          formatting: true,
-          dividers: true,
-          links: true,
-          images: true,
-        }),
+        content: fields.markdoc({ label: 'Content' }),
       },
     }),
   },
@@ -201,12 +195,13 @@ export default function Page() {
 
 ### Displaying a single collection entry
 
-To display content from an individual post, you can import and use Keystatic's `<DocumentRenderer />`:
+To display content from an individual post, you can use Markdoc's `transform` and `renderers.react` functions:
 
 ```tsx
 // app/routes/posts.$slug.tsx
+import React from 'react';
+import Markdoc from '@markdoc/markdoc'
 import { createReader } from '@keystatic/core/reader'
-import { DocumentRenderer } from '@keystatic/core/renderer'
 import { type LoaderFunctionArgs, json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
@@ -223,7 +218,18 @@ export async function loader({ params }: LoaderFunctionArgs) {
     { resolveLinkedFiles: true }
   )
   if (!post) throw json('Not Found', { status: 404 })
-  return json({ post })
+    const errors = Markdoc.validate(post.content.node, markdocConfig);
+  if (errors.length) {
+    console.error(errors);
+    throw new Error('Invalid content');
+  }
+  const content = Markdoc.transform(post.content.node, markdocConfig);
+  return json({
+    post: {
+      title: post.title,
+      content,
+    },
+  });
 }
 
 export default function Post() {
@@ -231,7 +237,7 @@ export default function Post() {
   return (
     <>
       <h1>{post.title}</h1>
-      <DocumentRenderer document={post.content} />
+      {Markdoc.renderers.react(post.content, React)}
     </>
   )
 }

@@ -84,12 +84,12 @@ function CollabAddToPathProvider(props: {
 }
 
 export function AddToPathProvider(props: {
-  part: string | number;
+  part: (string | number) | readonly (string | number)[];
   children: ReactNode;
 }) {
   const path = useContext(PathContext);
   const config = useConfig();
-  const newPath = useMemo(() => [...path, props.part], [path, props.part]);
+  const newPath = useMemo(() => path.concat(props.part), [path, props.part]);
 
   let inner = (
     <PathContext.Provider value={newPath}>

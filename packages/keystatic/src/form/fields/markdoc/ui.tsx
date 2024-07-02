@@ -26,19 +26,15 @@ export function getDefaultValue(schema: EditorSchema) {
   return createEditorState(schema.nodes.doc.createAndFill()!);
 }
 
-const textDecoder = new TextDecoder();
-const textEncoder = new TextEncoder();
-
 export function parseToEditorState(
-  content: Uint8Array | undefined,
+  content: string,
   schema: EditorSchema,
   files: ReadonlyMap<string, Uint8Array>,
   otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>,
   slug: string | undefined
 ) {
-  const markdoc = textDecoder.decode(content);
   const doc = markdocToProseMirror(
-    parse(markdoc),
+    parse(content),
     schema,
     files,
     otherFiles,
@@ -61,21 +57,20 @@ export function serializeFromEditorState(
   });
   const markdoc = format(markdocNode);
   return {
-    content: textEncoder.encode(format(parse(markdoc))),
+    content: format(parse(markdoc)),
     other,
     external,
   };
 }
 
 export function parseToEditorStateMDX(
-  content: Uint8Array | undefined,
+  content: string,
   schema: EditorSchema,
   files: ReadonlyMap<string, Uint8Array>,
   otherFiles: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>,
   slug: string | undefined
 ) {
-  const mdx = textDecoder.decode(content);
-  const root = fromMarkdown(mdx, {
+  const root = fromMarkdown(content, {
     extensions: [mdxjs(), gfm()],
     mdastExtensions: [mdxFromMarkdown(), gfmFromMarkdown()],
   });
@@ -100,7 +95,7 @@ export function serializeFromEditorStateMDX(
     rule: '-',
   });
   return {
-    content: textEncoder.encode(mdx),
+    content: mdx,
     other,
     external,
   };

@@ -503,12 +503,12 @@ function Placeholder(props: {
 }) {
   const state = useOverlayTriggerState({ defaultOpen: false });
 
+  const { open } = state;
   useEffect(() => {
     if (props.selected) {
-      state.open();
+      open();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.selected]);
+  }, [props.selected, open]);
 
   const closeAndCleanup = () => {
     state.close();

@@ -36,7 +36,7 @@ import {
   useActiveBlockPopover,
 } from './primitives';
 import { createGetPreviewProps } from '../../../preview-props';
-import { fields } from '../../../..';
+import { fields } from '../../../api';
 import { useDocumentEditorConfig } from './toolbar-state';
 import { FormValueContentFromPreviewProps } from '../../../form-from-preview';
 import { clientSideValidateProp } from '../../../errors';

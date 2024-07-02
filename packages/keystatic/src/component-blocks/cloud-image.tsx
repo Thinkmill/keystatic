@@ -1,4 +1,4 @@
-import { component } from '..';
+import { component } from '../form/api';
 import { CloudImagePreview, cloudImageToolbarIcon } from '#cloud-image-preview';
 import { cloudImageSchema } from './cloud-image-schema';
 

@@ -27,7 +27,10 @@ function collectDirectoriesUsedInSchemaInner(
     if (schema.formKind === 'asset' && schema.directory !== undefined) {
       directories.add(fixPath(schema.directory));
     }
-    if (schema.formKind === 'content' && schema.directories !== undefined) {
+    if (
+      (schema.formKind === 'content' || schema.formKind === 'assets') &&
+      schema.directories !== undefined
+    ) {
       for (const directory of schema.directories) {
         directories.add(fixPath(directory));
       }

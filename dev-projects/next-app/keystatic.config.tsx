@@ -12,6 +12,46 @@ import { NoteToolbar, Note } from './note';
 
 const description = 'Some description';
 
+const components = {
+  Something: block({
+    label: 'Something',
+    schema: {},
+  }),
+  Highlight: mark({
+    label: 'Highlight',
+    icon: highlighterIcon,
+    schema: {
+      variant: fields.select({
+        label: 'Variant',
+        options: [
+          { label: 'Fluro', value: 'fluro' },
+          { label: 'Minimal', value: 'minimal' },
+          { label: 'Brutalist', value: 'brutalist' },
+        ],
+        defaultValue: 'fluro',
+      }),
+    },
+  }),
+  StatusBadge: inline({
+    label: 'StatusBadge',
+    schema: {
+      status: fields.select({
+        label: 'Status',
+        options: [
+          { label: 'To do', value: 'todo' },
+          { label: 'In Progress', value: 'in-progress' },
+          { label: 'Ready for review', value: 'ready-for-review' },
+          { label: 'Done', value: 'done' },
+        ],
+        defaultValue: 'todo',
+      }),
+    },
+    ContentView(props) {
+      return props.value.status;
+    },
+  }),
+};
+
 export default config({
   storage: {
     kind: 'github',
@@ -281,6 +321,7 @@ export default config({
       path: 'single-file-posts/**',
       slugField: 'title',
       format: { contentField: 'content' },
+      entryLayout: 'content',
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         content: fields.document({
@@ -298,45 +339,50 @@ export default config({
       format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
+        summary: fields.mdx.inline({
+          label: 'Summary',
+        }),
         content: fields.mdx({
           label: 'Content',
-          components: {
-            Something: block({
-              label: 'Something',
-              schema: {},
-            }),
-            Highlight: mark({
-              label: 'Highlight',
-              icon: highlighterIcon,
-              schema: {
-                variant: fields.select({
-                  label: 'Variant',
-                  options: [
-                    { label: 'Fluro', value: 'fluro' },
-                    { label: 'Minimal', value: 'minimal' },
-                    { label: 'Brutalist', value: 'brutalist' },
-                  ],
-                  defaultValue: 'fluro',
-                }),
-              },
-            }),
-            StatusBadge: inline({
-              label: 'StatusBadge',
-              schema: {
-                status: fields.select({
-                  label: 'Status',
-                  options: [
-                    { label: 'To do', value: 'todo' },
-                    { label: 'In Progress', value: 'in-progress' },
-                    { label: 'Ready for review', value: 'ready-for-review' },
-                    { label: 'Done', value: 'done' },
-                  ],
-                  defaultValue: 'todo',
-                }),
-              },
-            }),
-          },
+          components,
         }),
+      },
+    }),
+    markdocCollection: collection({
+      label: 'Markdoc',
+      path: 'markdoc/**',
+      slugField: 'title',
+      format: { contentField: 'content' },
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        summary: fields.markdoc.inline({
+          label: 'Summary',
+        }),
+        content: fields.markdoc({
+          label: 'Content',
+          components,
+        }),
+      },
+    }),
+    conditionalContent: collection({
+      label: 'Conditional Content',
+      path: 'conditionalContent/**',
+      slugField: 'title',
+      format: { contentField: ['content', 'value', 'content'] },
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        content: fields.conditional(
+          fields.checkbox({ label: 'With content' }),
+          {
+            true: fields.object({
+              summary: fields.text({ label: 'Summary' }),
+              content: fields.markdoc({ label: 'Content' }),
+            }),
+            false: fields.object({
+              content: fields.emptyContent({ extension: 'mdoc' }),
+            }),
+          }
+        ),
       },
     }),
   },

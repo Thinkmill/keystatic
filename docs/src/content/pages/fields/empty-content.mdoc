@@ -1,0 +1,22 @@
+---
+title: Empty Content field
+summary: >-
+  The empty content field is used to force a formats for entries without a
+  standard content field.
+---
+The `emptyContent` is a mechanism to trigger a collection or singleton to output `.mdoc`/`.mdx`/`.md` files even if there is no real `markdoc` or `mdx` field in the schema.
+
+Use this in conjunction with the [`format.contentField`](/docs/format-options#example-with-single-file-output) option.
+
+## Usage example
+
+```typescript
+schema: {
+  emptyContent: fields.emptyContent({ extension: 'mdoc' })
+},
+format: {
+  contentField: 'emptyContent'
+}
+```
+
+Instead of generating `.yaml` or `.json` files, the collection or singleton will output `.mdoc`/`.mdx`/`.md` files with frontmatter data and an empty content body.

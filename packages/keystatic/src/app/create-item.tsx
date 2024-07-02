@@ -14,13 +14,10 @@ import { toastQueue } from '@keystar/ui/toast';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 
 import { Config } from '../config';
-import { fields } from '../form/api';
+import { ComponentSchema, GenericPreviewProps, ObjectField } from '../form/api';
 import { getInitialPropsValue } from '../form/initial-values';
 import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
-import { createGetPreviewProps } from '../form/preview-props';
-import { createGetPreviewPropsFromY } from '../form/preview-props-yjs';
-import { getYjsValFromParsedValue } from '../form/props-value';
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import l10nMessages from './l10n/index.json';
@@ -29,16 +26,11 @@ import { PageRoot, PageHeader, PageBody } from './shell/page';
 import { ForkRepoDialog } from './fork-repo';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { notFound } from './not-found';
-import {
-  delDraft,
-  getDraft,
-  setDraft,
-  showDraftRestoredToast,
-} from './persistence';
+import { delDraft, getDraft, setDraft } from './persistence';
 import { PresenceAvatars } from './presence';
 import { useRouter } from './router';
 import { HeaderBreadcrumbs } from './shell/HeaderBreadcrumbs';
-import { useYjs, useYjsIfAvailable } from './shell/collab';
+import { useYjsIfAvailable } from './shell/collab';
 import { useConfig } from './shell/context';
 import { useSlugFieldInfo } from './slugs';
 import { LOADING, useData } from './useData';
@@ -51,7 +43,15 @@ import {
   getCollectionItemPath,
   getSlugFromState,
   isGitHubConfig,
+  useShowRestoredDraftMessage,
 } from './utils';
+import {
+  useCollection,
+  usePreviewProps,
+  usePreviewPropsFromY,
+} from './preview-props';
+import { useDuplicateSlug } from './duplicate-slug';
+import { getYjsValFromParsedValue } from '../form/yjs-props-value';
 
 function CreateItemWrapper(props: {
   collection: string;
@@ -137,36 +137,10 @@ function CreateItemWrapper(props: {
       ? itemData.data.initialState
       : undefined;
 
-  const duplicateInitalStateWithUpdatedSlug = useMemo(() => {
-    if (duplicateInitalState) {
-      let slugFieldValue = duplicateInitalState[collectionConfig.slugField];
-      // we'll make a best effort to add something to the slug after duplicated so it's different
-      // but if it fails a user can change it before creating
-      // (e.g. potentially it's not just a text field so appending -copy might not work)
-      try {
-        const slugFieldSchema =
-          collectionConfig.schema[collectionConfig.slugField];
-        if (
-          slugFieldSchema.kind !== 'form' ||
-          slugFieldSchema.formKind !== 'slug'
-        ) {
-          throw new Error('not slug field');
-        }
-        const serialized = slugFieldSchema.serializeWithSlug(slugFieldValue);
-        slugFieldValue = slugFieldSchema.parse(serialized.value, {
-          slug: serialized.slug ? `${serialized.slug}-copy` : '',
-        });
-      } catch {}
-      return {
-        ...duplicateInitalState,
-        [collectionConfig.slugField]: slugFieldValue,
-      };
-    }
-  }, [
-    collectionConfig.schema,
-    collectionConfig.slugField,
+  const duplicateInitalStateWithUpdatedSlug = useDuplicateSlug(
     duplicateInitalState,
-  ]);
+    collectionConfig
+  );
 
   const branchInfo = useBranchInfo();
   const yjsInfo = useYjsIfAvailable();
@@ -286,28 +260,15 @@ function CreateItemLocal(props: {
   draft: { state: Record<string, unknown>; savedAt: Date } | undefined;
   initialState: Record<string, unknown> | undefined;
 }) {
-  const collectionConfig = props.config.collections?.[props.collection];
-  if (!collectionConfig) notFound();
-  const schema = useMemo(
-    () => fields.object(collectionConfig.schema),
-    [collectionConfig.schema]
-  );
+  const { collectionConfig, schema } = useCollection(props.collection);
   const initialState = useMemo(() => {
     return props.initialState ?? getInitialPropsValue(schema);
   }, [props.initialState, schema]);
   const [state, setState] = useState(props.draft?.state ?? initialState);
 
-  const previewProps = useMemo(
-    () => createGetPreviewProps(schema, setState, () => undefined),
-    [schema]
-  )(state);
+  const previewProps = usePreviewProps(schema, setState, state);
 
-  useEffect(() => {
-    if (props.draft && state === props.draft.state) {
-      showDraftRestoredToast(props.draft.savedAt, false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.draft]);
+  useShowRestoredDraftMessage(props.draft, state, undefined);
 
   const slug = getSlugFromState(collectionConfig, state);
 
@@ -400,19 +361,9 @@ function CreateItemCollab(props: {
   initialState: Record<string, unknown> | undefined;
   map: Y.Map<unknown>;
 }) {
-  const collectionConfig = props.config.collections?.[props.collection];
-  if (!collectionConfig) notFound();
-  const schema = useMemo(
-    () => fields.object(collectionConfig.schema),
-    [collectionConfig.schema]
-  );
-  const yjsInfo = useYjs();
+  const { collectionConfig, schema } = useCollection(props.collection);
   const state = useYJsValue(schema, props.map) as Record<string, unknown>;
-  const previewProps = useMemo(
-    () =>
-      createGetPreviewPropsFromY(schema as any, props.map, yjsInfo.awareness),
-    [props.map, schema, yjsInfo.awareness]
-  )(state);
+  const previewProps = usePreviewPropsFromY(schema, props.map, state);
 
   const slug = getSlugFromState(collectionConfig, state);
 
@@ -442,7 +393,7 @@ function CreateItemCollab(props: {
       slug={slug}
       previewProps={previewProps}
       onReset={() => {
-        props.map.doc!.transact(() => {
+        props.map.doc?.transact(() => {
           for (const [key, value] of Object.entries(collectionConfig.schema)) {
             const val = getYjsValFromParsedValue(
               value,
@@ -464,18 +415,18 @@ function CreateItemInner(props: {
   resetCreateItemState: ReturnType<typeof useUpsertItem>[2];
   state: Record<string, unknown>;
   slug: string;
-  previewProps: ReturnType<typeof createGetPreviewPropsFromY>;
+  previewProps: GenericPreviewProps<
+    ObjectField<Record<string, ComponentSchema>>,
+    undefined
+  >;
   onReset: () => void;
 }) {
+  const { onReset } = props;
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
   const config = useConfig();
-  const collectionConfig = config.collections![props.collection];
 
-  const schema = useMemo(
-    () => fields.object(collectionConfig.schema),
-    [collectionConfig]
-  );
+  const { collectionConfig, schema } = useCollection(props.collection);
 
   const [forceValidation, setForceValidation] = useState(false);
   const formatInfo = getCollectionFormat(config, props.collection);
@@ -543,7 +494,7 @@ function CreateItemInner(props: {
               prominence="low"
               aria-label="Reset"
               onPress={() => {
-                props.onReset();
+                onReset();
                 setForceValidation(false);
               }}
             >

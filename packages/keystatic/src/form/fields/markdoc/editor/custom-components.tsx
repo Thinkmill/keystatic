@@ -417,7 +417,7 @@ export function getCustomNodeSpecs(
         };
       } else if (component.kind === 'inline') {
         spec = {
-          group: 'inline inline_component',
+          group: 'inline',
           inline: true,
           attrs: {
             props: {
@@ -447,7 +447,7 @@ export function getCustomNodeSpecs(
                 component.schema
               );
               const runCommand = useEditorDispatchCommand();
-              if (component.NodeView) {
+              if ('NodeView' in component && component.NodeView) {
                 return (
                   <span contentEditable={false}>
                     <component.NodeView
@@ -483,6 +483,22 @@ export function getCustomNodeSpecs(
                       }}
                     />
                   </span>
+                );
+              }
+              if ('ContentView' in component && component.ContentView) {
+                return (
+                  <Box
+                    elementType="span"
+                    contentEditable={false}
+                    border={
+                      props.hasNodeSelection
+                        ? 'color.alias.borderSelected'
+                        : 'color.alias.borderIdle'
+                    }
+                    borderRadius="regular"
+                  >
+                    <component.ContentView value={value} />
+                  </Box>
                 );
               }
               return (

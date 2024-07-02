@@ -1,5 +1,87 @@
 # @keystatic/core
 
+## 0.5.23
+
+### Patch Changes
+
+- [#1186](https://github.com/Thinkmill/keystatic/pull/1186) [`41679be`](https://github.com/Thinkmill/keystatic/commit/41679be39197a81453475fc6796489ac7d2d69cf) Thanks [@emmatown](https://github.com/emmatown)! - Fix disabling images in `fields.markdoc` and `fields.mdx`
+
+- [#1184](https://github.com/Thinkmill/keystatic/pull/1184) [`aa1d092`](https://github.com/Thinkmill/keystatic/commit/aa1d0924238419344780e7611eb7fdc797c57be8) Thanks [@emmatown](https://github.com/emmatown)! - Support `ContentView` and `handleFile` in `inline` content components
+
+## 0.5.22
+
+### Patch Changes
+
+- [#1182](https://github.com/Thinkmill/keystatic/pull/1182) [`69d429a`](https://github.com/Thinkmill/keystatic/commit/69d429a67b2777fd8cfd236ce6ceaad4d1975e07) Thanks [@emmatown](https://github.com/emmatown)! - Fix some overlays not showing
+
+- Updated dependencies [[`69d429a`](https://github.com/Thinkmill/keystatic/commit/69d429a67b2777fd8cfd236ce6ceaad4d1975e07)]:
+  - @keystar/ui@0.7.6
+
+## 0.5.21
+
+### Patch Changes
+
+- [#1179](https://github.com/Thinkmill/keystatic/pull/1179) [`b22630f`](https://github.com/Thinkmill/keystatic/commit/b22630ffb657cd8f1409a1feec925ec051b831dd) Thanks [@emmatown](https://github.com/emmatown)! - Add `fields.markdoc.inline` and `fields.mdx.inline` to allow storing content directly in YAML/JSON rather than another file
+
+## 0.5.20
+
+### Patch Changes
+
+- [#1178](https://github.com/Thinkmill/keystatic/pull/1178) [`a588cb2`](https://github.com/Thinkmill/keystatic/commit/a588cb2fedf7e9a813d5f7818a94f4f8df2310d5) Thanks [@emmatown](https://github.com/emmatown)! - Fix whitespace on the ends of italics/bold/strikethrough breaking `fields.markdoc`
+
+- [#1173](https://github.com/Thinkmill/keystatic/pull/1173) [`34dee8c`](https://github.com/Thinkmill/keystatic/commit/34dee8cd8829d2a8c3d91949fd96dcee9d9749d0) Thanks [@emmatown](https://github.com/emmatown)! - Build with React Compiler
+
+- Updated dependencies [[`34dee8c`](https://github.com/Thinkmill/keystatic/commit/34dee8cd8829d2a8c3d91949fd96dcee9d9749d0)]:
+  - @keystar/ui@0.7.5
+
+## 0.5.19
+
+### Patch Changes
+
+- [#1171](https://github.com/Thinkmill/keystatic/pull/1171) [`a129ea4`](https://github.com/Thinkmill/keystatic/commit/a129ea4ea46a5d9c2ddec8aef4313d98cf13a575) Thanks [@orlovol](https://github.com/orlovol)! - Update uk-UA translations
+
+- [#1172](https://github.com/Thinkmill/keystatic/pull/1172) [`73aa1b8`](https://github.com/Thinkmill/keystatic/commit/73aa1b856b7100d1ac033eb16bee5e7f630a2c3e) Thanks [@emmatown](https://github.com/emmatown)! - Add `fields.emptyContent` field to replace `fields.emptyDocument` and support extensions besides `mdoc`
+
+- [#1172](https://github.com/Thinkmill/keystatic/pull/1172) [`73aa1b8`](https://github.com/Thinkmill/keystatic/commit/73aa1b856b7100d1ac033eb16bee5e7f630a2c3e) Thanks [@emmatown](https://github.com/emmatown)! - Allow passing an array to `contentField` to specify a `contentField` nested inside an object or conditional field
+
+- [#1165](https://github.com/Thinkmill/keystatic/pull/1165) [`a1a71c1`](https://github.com/Thinkmill/keystatic/commit/a1a71c1ab2313c4c0a85fdce3f9a802a14580ece) Thanks [@emmatown](https://github.com/emmatown)! - Improve server-side bundle-size
+
+## 0.5.18
+
+### Patch Changes
+
+- [#1157](https://github.com/Thinkmill/keystatic/pull/1157) [`86bd966`](https://github.com/Thinkmill/keystatic/commit/86bd966ff35981185030ce0850b8041e8a2dc5bb) Thanks [@emilienbidet](https://github.com/emilienbidet)! - Update the french Singletons translation
+
+- [#1155](https://github.com/Thinkmill/keystatic/pull/1155) [`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130) Thanks [@emmatown](https://github.com/emmatown)! - Fixes for React tooling
+
+- Updated dependencies [[`dc7e028`](https://github.com/Thinkmill/keystatic/commit/dc7e0287b1cd1e6b4d09e3b39d390054b60fe130)]:
+  - @keystar/ui@0.7.4
+
+## 0.5.17
+
+### Patch Changes
+
+- [#1154](https://github.com/Thinkmill/keystatic/pull/1154) [`42975f4`](https://github.com/Thinkmill/keystatic/commit/42975f45ba071cf3e2659a67e75e86325ce84944) Thanks [@emmatown](https://github.com/emmatown)! - Improve mark printing in the new editor
+
+- [#1150](https://github.com/Thinkmill/keystatic/pull/1150) [`8c2abff`](https://github.com/Thinkmill/keystatic/commit/8c2abff7fe38ad3e1687de57f9bc550997619761) Thanks [@emmatown](https://github.com/emmatown)! - Add missing space in add block dialog
+
+- Updated dependencies [[`7924ef8`](https://github.com/Thinkmill/keystatic/commit/7924ef87cb4338e0296d715acd3ab9fb7d39aa51)]:
+  - @keystar/ui@0.7.3
+
+## 0.5.16
+
+### Patch Changes
+
+- [#1148](https://github.com/Thinkmill/keystatic/pull/1148) [`21394c6`](https://github.com/Thinkmill/keystatic/commit/21394c65a8d507d4355cf71641690464c05d7ec8) Thanks [@emmatown](https://github.com/emmatown)! - Fix incorrectly passing base64url encoded content to GitHub's API instead of standard base64
+
+## 0.5.15
+
+### Patch Changes
+
+- [#1129](https://github.com/Thinkmill/keystatic/pull/1129) [`d3aa1f2`](https://github.com/Thinkmill/keystatic/commit/d3aa1f2386bd690936662d98724eb385564a26cd) Thanks [@emmatown](https://github.com/emmatown)! - Server side bundle size improvements
+
+- [#1132](https://github.com/Thinkmill/keystatic/pull/1132) [`aa13ea9`](https://github.com/Thinkmill/keystatic/commit/aa13ea917ce2611266c0008197cfea4c1427724c) Thanks [@emmatown](https://github.com/emmatown)! - Fix typing when the placeholder is visible in the new editors
+
 ## 0.5.14
 
 ### Patch Changes

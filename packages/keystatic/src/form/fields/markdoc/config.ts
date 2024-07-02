@@ -1,4 +1,4 @@
-import { text } from '..';
+import { text } from '../text';
 import { BasicFormField, SlugFormField, ComponentSchema } from '../../api';
 import { FieldDataError } from '../error';
 import { basicFormFieldWithSimpleReaderParse } from '../utils';
