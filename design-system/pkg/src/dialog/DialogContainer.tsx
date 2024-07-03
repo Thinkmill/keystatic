@@ -1,5 +1,5 @@
 import { useOverlayTriggerState } from '@react-stately/overlays';
-import React, { ReactElement, useRef } from 'react';
+import React, { ReactNode, useState } from 'react';
 
 import { Modal } from '@keystar/ui/overlays';
 
@@ -25,11 +25,10 @@ export function DialogContainer(props: DialogContainerProps) {
     throw new Error('Only a single child can be passed to DialogContainer.');
   }
 
-  let lastChild = useRef<ReactElement>(null);
   let child = React.isValidElement(childArray[0]) ? childArray[0] : null;
-  if (child) {
-    // @ts-ignore
-    lastChild.current = child;
+  let [lastChild, setLastChild] = useState<ReactNode>(child);
+  if (child && child !== lastChild) {
+    setLastChild(child);
   }
 
   let context = {
@@ -55,7 +54,7 @@ export function DialogContainer(props: DialogContainerProps) {
       isKeyboardDismissDisabled={isKeyboardDismissDisabled}
     >
       <DialogContext.Provider value={context}>
-        {lastChild.current}
+        {lastChild}
       </DialogContext.Provider>
     </Modal>
   );
