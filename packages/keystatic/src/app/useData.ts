@@ -6,15 +6,15 @@ export type DataState<T> =
   | { kind: 'loaded'; data: T }
   | { kind: 'error'; error: Error };
 
-export const LOADING: unique symbol = Symbol('loading');
+export const LOADING = {
+  then() {},
+} as Promise<never>;
 
 function isThenable(value: any): value is Promise<any> {
   return value && typeof value.then === 'function';
 }
 
-export function useData<T>(
-  func: () => MaybePromise<T | typeof LOADING>
-): DataState<T> {
+export function useData<T>(func: () => MaybePromise<T>): DataState<T> {
   const [state, setState] = useState<DataState<T>>({ kind: 'loading' });
   let stateToReturn = state;
   const result = useMemo(() => {
@@ -43,7 +43,6 @@ export function useData<T>(
     if (
       result.kind === 'result' &&
       !isThenable(result.result) &&
-      result.result !== LOADING &&
       (state.kind !== 'loaded' || state.data !== result.result)
     ) {
       return { kind: 'loaded', data: result.result as T };
@@ -61,7 +60,7 @@ export function useData<T>(
       let isActive = true;
       result.result.then(
         result => {
-          if (result === LOADING || !isActive) return;
+          if (!isActive) return;
           setState({ kind: 'loaded', data: result });
         },
         error => {

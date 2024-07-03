@@ -233,7 +233,6 @@ export function useItemData(args: UseItemDataArgs) {
   return useData(
     useCallback((): MaybePromise<
       | 'not-found'
-      | typeof LOADING
       | {
           initialState: Record<string, unknown>;
           initialFiles: string[];
