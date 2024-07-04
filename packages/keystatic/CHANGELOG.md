@@ -1,5 +1,16 @@
 # @keystatic/core
 
+## 0.5.25
+
+### Patch Changes
+
+- [#1207](https://github.com/Thinkmill/keystatic/pull/1207) [`4e2449f`](https://github.com/Thinkmill/keystatic/commit/4e2449f18fecee95095a67e695972f8ea37f2d41) Thanks [@emmatown](https://github.com/emmatown)! - Return `null` early in the reader API from collection entry reads for invalid slugs
+
+- [#1203](https://github.com/Thinkmill/keystatic/pull/1203) [`d3c99d7`](https://github.com/Thinkmill/keystatic/commit/d3c99d7c22f2688ec7c514289b134f9575180b18) Thanks [@emmatown](https://github.com/emmatown)! - Enable React Compiler again with fix in dialog implementation that caused dialogs to not show with the React Compiler enabled
+
+- Updated dependencies [[`d3c99d7`](https://github.com/Thinkmill/keystatic/commit/d3c99d7c22f2688ec7c514289b134f9575180b18)]:
+  - @keystar/ui@0.7.7
+
 ## 0.5.24
 
 ### Patch Changes
