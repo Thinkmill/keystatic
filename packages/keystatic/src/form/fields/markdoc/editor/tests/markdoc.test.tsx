@@ -623,3 +623,32 @@ test('inline in list item', () => {
     "
   `);
 });
+
+test('only inline in list item', () => {
+  const markdoc = `- {% inline-thing something="adkjsakjndnajksdnjk" /%}`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <unordered_list>
+        <list_item>
+          <paragraph>
+            <inline-thing
+              props={
+                {
+                  "extraFiles": [],
+                  "value": {
+                    "something": "adkjsakjndnajksdnjk",
+                  },
+                }
+              }
+            />
+          </paragraph>
+        </list_item>
+      </unordered_list>
+    </doc>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "- {% inline-thing something="adkjsakjndnajksdnjk" /%}
+    "
+  `);
+});

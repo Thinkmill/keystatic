@@ -149,6 +149,10 @@ function listItem(markdocNode: MarkdocNode, nodeType: NodeType) {
     const pmNode = markdocNodeToProseMirrorNode(node, schema.nodes.paragraph);
     if (!pmNode) continue;
     if (!Array.isArray(pmNode)) {
+      if (pmNode.isInline) {
+        children.push(schema.nodes.paragraph.createAndFill({}, pmNode)!);
+        continue;
+      }
       children.push(pmNode);
       continue;
     }
