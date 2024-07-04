@@ -483,11 +483,11 @@ type AllTreeData = {
 };
 
 const TreeContext = createContext<AllTreeData>({
-  unscopedDefault: { kind: 'loading' },
+  unscopedDefault: { kind: 'loading', promise: LOADING },
   scoped: {
-    current: { kind: 'loading' },
-    default: { kind: 'loading' },
-    merged: { kind: 'loading' },
+    current: { kind: 'loading', promise: LOADING },
+    default: { kind: 'loading', promise: LOADING },
+    merged: { kind: 'loading', promise: LOADING },
   },
 });
 
