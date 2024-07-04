@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { MaybePromise } from './utils';
+import { weakMemoizeN } from './memo';
 
 export type DataState<T> =
-  | { kind: 'loading' }
+  | { kind: 'loading'; promise: Promise<void> }
   | { kind: 'loaded'; data: T }
   | { kind: 'error'; error: Error };
 
@@ -14,9 +15,17 @@ function isThenable(value: any): value is Promise<any> {
   return value && typeof value.then === 'function';
 }
 
+export function suspendOnData<T>(state: DataState<T>): T {
+  if (state.kind === 'error') {
+    throw state.error;
+  }
+  if (state.kind === 'loaded') {
+    return state.data;
+  }
+  throw state.promise;
+}
+
 export function useData<T>(func: () => MaybePromise<T>): DataState<T> {
-  const [state, setState] = useState<DataState<T>>({ kind: 'loading' });
-  let stateToReturn = state;
   const result = useMemo(() => {
     try {
       const result = func();
@@ -33,6 +42,15 @@ export function useData<T>(func: () => MaybePromise<T>): DataState<T> {
       return { kind: 'error' as const, error: error as Error };
     }
   }, [func]);
+  const [state, setState] = useState<DataState<T>>((): DataState<T> => {
+    return result.kind === 'result'
+      ? isThenable(result.result)
+        ? { kind: 'loading', promise: result.result as Promise<void> }
+        : { kind: 'loaded', data: result.result }
+      : result;
+  });
+  let stateToReturn = state;
+
   const resultState = useMemo((): DataState<T> | undefined => {
     if (
       result.kind === 'error' &&
@@ -56,7 +74,7 @@ export function useData<T>(func: () => MaybePromise<T>): DataState<T> {
 
   useEffect(() => {
     if (result.kind === 'result' && isThenable(result.result)) {
-      setState({ kind: 'loading' });
+      setState({ kind: 'loading', promise: result.result as Promise<void> });
       let isActive = true;
       result.result.then(
         result => {
@@ -97,10 +115,19 @@ export function mergeDataStates<T extends Record<string, unknown>>(input: {
       return { kind: 'error', error: value.error };
     }
   }
+  let promises: Promise<void>[] = [];
   for (const [, value] of entries) {
     if (value.kind === 'loading') {
-      return { kind: 'loading' };
+      promises.push(value.promise);
     }
+  }
+  if (promises.length) {
+    return {
+      kind: 'loading',
+      promise: promiseAllMemoized(
+        ...promises
+      ) as Promise<unknown> as Promise<void>,
+    };
   }
 
   return {
@@ -112,3 +139,7 @@ export function mergeDataStates<T extends Record<string, unknown>>(input: {
     ) as T,
   };
 }
+
+const promiseAllMemoized = weakMemoizeN((...args: Promise<void>[]) => {
+  return Promise.all(args);
+});

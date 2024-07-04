@@ -8,7 +8,7 @@ class NotFoundError extends Error {
   }
 }
 
-function isNotFoundError(err: unknown): err is NotFoundError {
+export function isNotFoundError(err: unknown): err is NotFoundError {
   return (
     typeof err === 'object' && err !== null && err instanceof NotFoundError
   );

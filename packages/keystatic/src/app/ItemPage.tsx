@@ -5,7 +5,9 @@ import {
   Key,
   ReactElement,
   ReactNode,
+  Suspense,
   useCallback,
+  useDeferredValue,
   useEffect,
   useMemo,
   useState,
@@ -49,7 +51,7 @@ import {
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { ForkRepoDialog } from './fork-repo';
 import l10nMessages from './l10n/index.json';
-import { notFound } from './not-found';
+import { NotFoundBoundary, notFound } from './not-found';
 import { getDataFileExtension, getPathPrefix } from './path-utils';
 import { useRouter } from './router';
 import { HeaderBreadcrumbs } from './shell/HeaderBreadcrumbs';
@@ -77,13 +79,14 @@ import {
   isGitHubConfig,
   useShowRestoredDraftMessage,
 } from './utils';
-import { LOADING, useData } from './useData';
+import { DataState, LOADING, useData, suspendOnData } from './useData';
 import { useYJsValue } from './useYJsValue';
 import {
   useCollection,
   usePreviewProps,
   usePreviewPropsFromY,
 } from './preview-props';
+import { ErrorBoundary } from './error-boundary';
 
 type ItemPageProps = {
   collection: string;
@@ -784,7 +787,7 @@ type ItemPageWrapperProps = {
   basePath: string;
 };
 
-function ItemPageWrapper(props: ItemPageWrapperProps) {
+function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
   const collectionConfig = props.config.collections?.[props.collection];
   if (!collectionConfig) notFound();
   const format = useMemo(
@@ -798,39 +801,35 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
 
   const draftData = useData(
     useCallback(async () => {
-      const raw = await getDraft([
-        'collection',
-        props.collection,
-        props.itemSlug,
-      ]);
-      if (!raw) throw new Error('No draft found');
-      const stored = storedValSchema.create(raw);
-      const parsed = parseEntry(
-        {
-          config: props.config,
-          dirpath: getCollectionItemPath(
-            props.config,
-            props.collection,
-            stored.slug
-          ),
-          format,
-          schema: collectionConfig.schema,
-          slug: { field: collectionConfig.slugField, slug: stored.slug },
-        },
-        stored.files
-      );
-      return {
-        state: parsed.initialState,
-        savedAt: stored.savedAt,
-        treeKey: stored.beforeTreeKey,
-      };
-    }, [
-      collectionConfig,
-      format,
-      props.collection,
-      props.config,
-      props.itemSlug,
-    ])
+      try {
+        const raw = await getDraft([
+          'collection',
+          props.collection,
+          props.itemSlug,
+        ]);
+        if (!raw) throw new Error('No draft found');
+        const stored = storedValSchema.create(raw);
+        const parsed = parseEntry(
+          {
+            config: props.config,
+            dirpath: getCollectionItemPath(
+              props.config,
+              props.collection,
+              stored.slug
+            ),
+            format: getCollectionFormat(props.config, props.collection),
+            schema: collectionConfig.schema,
+            slug: { field: collectionConfig.slugField, slug: stored.slug },
+          },
+          stored.files
+        );
+        return {
+          state: parsed.initialState,
+          savedAt: stored.savedAt,
+          treeKey: stored.beforeTreeKey,
+        };
+      } catch {}
+    }, [collectionConfig, props.collection, props.config, props.itemSlug])
   );
 
   const itemData = useItemData({
@@ -876,90 +875,103 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
       })();
     }, [isItemDataLoading, isItemNotFound, key, yjsInfo])
   );
+
+  return (
+    <NotFoundBoundary
+      fallback={
+        <ItemPageShell {...props}>
+          <PageBody>
+            <Notice tone="caution">Entry not found.</Notice>
+          </PageBody>
+        </ItemPageShell>
+      }
+    >
+      <ErrorBoundary
+        fallback={message => (
+          <ItemPageShell {...props}>
+            <PageBody>
+              <Notice tone="critical">{message}</Notice>
+            </PageBody>
+          </ItemPageShell>
+        )}
+      >
+        <Suspense
+          fallback={
+            <ItemPageShell {...props}>
+              <Flex
+                alignItems="center"
+                justifyContent="center"
+                minHeight="scale.3000"
+              >
+                <ProgressCircle
+                  aria-label="Loading Item"
+                  isIndeterminate
+                  size="large"
+                />
+              </Flex>
+            </ItemPageShell>
+          }
+        >
+          <ItemPageWrapper
+            mapData={mapData}
+            draftData={draftData}
+            itemData={itemData}
+            {...props}
+          />
+        </Suspense>
+      </ErrorBoundary>
+    </NotFoundBoundary>
+  );
+}
+
+function ItemPageWrapper(
+  props: ItemPageWrapperProps & {
+    draftData: DataState<
+      { state: any; savedAt: Date; treeKey: string } | undefined
+    >;
+    mapData: DataState<Y.Map<any> | undefined>;
+    itemData: DataState<
+      | 'not-found'
+      | {
+          initialState: Record<string, unknown>;
+          initialFiles: string[];
+          localTreeKey: string;
+        }
+    >;
+  }
+) {
+  const collectionConfig = getCollection(props.config, props.collection);
+  const deferredDraftData = useDeferredValue(props.draftData);
+  const itemData = suspendOnData(props.itemData);
+  if (itemData === 'not-found') notFound();
+  const mapData = suspendOnData(props.mapData);
+
   useMemo(() => {
-    if (
-      mapData.kind !== 'loaded' ||
-      itemData.kind !== 'loaded' ||
-      itemData.data === 'not-found' ||
-      !mapData.data ||
-      mapData.data.size
-    ) {
+    if (!mapData || mapData.size) {
       return;
     }
 
-    const data = mapData.data;
-    const {
-      data: { initialState },
-    } = itemData;
-    data.doc?.transact(() => {
+    const { initialState } = itemData;
+    mapData.doc?.transact(() => {
       for (const [key, value] of Object.entries(collectionConfig.schema)) {
         const val = getYjsValFromParsedValue(value, initialState[key]);
-        data.set(key, val);
+        mapData.set(key, val);
       }
     });
   }, [collectionConfig.schema, itemData, mapData]);
 
-  if (itemData.kind === 'error') {
-    return (
-      <ItemPageShell {...props}>
-        <PageBody>
-          <Notice tone="critical">{itemData.error.message}</Notice>
-        </PageBody>
-      </ItemPageShell>
-    );
-  }
-  if (mapData.kind === 'error') {
-    return (
-      <ItemPageShell {...props}>
-        <PageBody>
-          <Notice tone="critical">{mapData.error.message}</Notice>
-        </PageBody>
-      </ItemPageShell>
-    );
-  }
-  if (
-    itemData.kind === 'loading' ||
-    draftData.kind === 'loading' ||
-    mapData.kind === 'loading'
-  ) {
-    return (
-      <ItemPageShell {...props}>
-        <Flex
-          alignItems="center"
-          justifyContent="center"
-          minHeight="scale.3000"
-        >
-          <ProgressCircle
-            aria-label="Loading Item"
-            isIndeterminate
-            size="large"
-          />
-        </Flex>
-      </ItemPageShell>
-    );
-  }
-
-  if (itemData.data === 'not-found') {
-    return (
-      <ItemPageShell {...props}>
-        <PageBody>
-          <Notice tone="caution">Entry not found.</Notice>
-        </PageBody>
-      </ItemPageShell>
-    );
-  }
-  const loadedDraft = draftData.kind === 'loaded' ? draftData.data : undefined;
-  if (mapData.data) {
+  const loadedDraft = suspendOnData(deferredDraftData);
+  if (mapData) {
     return (
       <CollabItemPage
         collection={props.collection}
         basePath={props.basePath}
         config={props.config}
         itemSlug={props.itemSlug}
-        initialState={itemData.data.initialState}
-        initialFiles={itemData.data.initialFiles}
-        localTreeKey={itemData.data.localTreeKey}
-        map={mapData.data}
+        initialState={itemData.initialState}
+        initialFiles={itemData.initialFiles}
+        localTreeKey={itemData.localTreeKey}
+        map={mapData}
       />
     );
   }
@@ -969,10 +981,10 @@ function ItemPageWrapper(props: ItemPageWrapperProps) {
       basePath={props.basePath}
       config={props.config}
       itemSlug={props.itemSlug}
-      initialState={itemData.data.initialState}
-      initialFiles={itemData.data.initialFiles}
+      initialState={itemData.initialState}
+      initialFiles={itemData.initialFiles}
       draft={loadedDraft}
-      localTreeKey={itemData.data.localTreeKey}
+      localTreeKey={itemData.localTreeKey}
     />
   );
 }
@@ -1006,4 +1018,4 @@ function ItemPageShell(
   );
 }
 
-export { ItemPageWrapper as ItemPage };
+export { ItemPageOuterWrapper as ItemPage };
