@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.5.26
+
+### Patch Changes
+
+- [#1210](https://github.com/Thinkmill/keystatic/pull/1210) [`54f98af`](https://github.com/Thinkmill/keystatic/commit/54f98afee374733e71314e98dfaabd53a74d081f) Thanks [@emmatown](https://github.com/emmatown)! - Fix list items with only a single inline element failing to parse in `fields.markdoc`
+
+- [#1208](https://github.com/Thinkmill/keystatic/pull/1208) [`dff4c8c`](https://github.com/Thinkmill/keystatic/commit/dff4c8cb7fe0a17771070f37fbf423c3993c74c7) Thanks [@emmatown](https://github.com/emmatown)! - Fix flash of loading state when saving an entry after changing the slug
+
 ## 0.5.25
 
 ### Patch Changes
