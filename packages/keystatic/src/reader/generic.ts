@@ -322,6 +322,12 @@ const readItem = cache(async function readItem(
   fsReader: MinimalFs,
   ...slugInfo: [slug: undefined] | [slug: string, field: string, glob: Glob]
 ) {
+  if (typeof slugInfo[0] === 'string') {
+    if (slugInfo[0].includes('\\')) return null;
+    const split = slugInfo[0].split('/');
+    if (slugInfo[2] === '*' && split.length !== 1) return null;
+    if (split.includes('..') || split.includes('.')) return null;
+  }
   const dataFile = await fsReader.readFile(
     getEntryDataFilepath(itemDir, formatInfo)
   );
