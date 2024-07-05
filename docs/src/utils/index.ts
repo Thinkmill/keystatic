@@ -1,4 +1,3 @@
-import { format, parse } from 'date-fns';
 import { DEFAULT_IMG_WIDTHS } from '../constants';
 
 export function cx(...classes: string[]) {
@@ -17,10 +16,16 @@ export async function copyTextToClipboard(text: string) {
   }
 }
 
-export function parseAndFormatPublishedDate(publishedDate: string) {
-  const today = new Date();
-  const parsedDate = parse(publishedDate, 'yyyy-M-d', today);
-  const formattedDate = format(parsedDate, 'MMMM do, yyyy');
+const formatter = new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'long',
+  timeZone: 'UTC',
+});
 
-  return { parsedDate, formattedDate };
+export function parseAndFormatPublishedDate(publishedDate: string) {
+  const parsedDate = new Date(publishedDate);
+
+  return {
+    parsedDate,
+    formattedDate: formatter.format(parsedDate),
+  };
 }
