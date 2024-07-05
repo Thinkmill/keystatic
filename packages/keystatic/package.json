@@ -195,7 +195,7 @@
     "@types/is-hotkey": "^0.1.7",
     "@types/js-yaml": "^4.0.5",
     "@types/mdast": "^4.0.3",
-    "@types/node": "16.11.13",
+    "@types/node": "^20.14.9",
     "@types/prismjs": "^1.26.0",
     "@types/react-dom": "^18.0.11",
     "@types/signal-exit": "^3.0.1",

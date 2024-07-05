@@ -51,7 +51,7 @@
     "@storybook/nextjs": "^7.4.6",
     "@storybook/preview-api": "^7.4.6",
     "@storybook/react": "^7.4.6",
-    "@types/node": "16.11.13",
+    "@types/node": "^20.14.9",
     "@types/react": "^18.2.8",
     "babel-loader": "^8.2.5",
     "playroom": "^0.28.0",

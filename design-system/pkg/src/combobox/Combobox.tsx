@@ -281,7 +281,6 @@ const ComboboxInput = React.forwardRef(function ComboboxInput(
     } else if (!isLoading) {
       // If loading is no longer happening, clear any timers and hide the loading circle
       setShowLoading(false);
-      // @ts-expect-error FIXME: not sure how to resolve this type error
       clearTimeout(timeoutRef.current);
       timeoutRef.current = undefined;
     }

@@ -55,7 +55,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/eslint": "^8.4.3",
-    "@types/node": "16.11.13",
+    "@types/node": "^20.14.9",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "babel-plugin-react-compiler": "^0.0.0-experimental-696af53-20240625",
