@@ -1,5 +1,5 @@
 import { ReactNode, useMemo } from 'react';
-import { Editor, Transforms } from 'slate';
+import { Editor, Element, Transforms } from 'slate';
 import { ReactEditor, useSlateStatic } from 'slate-react';
 
 import { ActionGroup, Item } from '@keystar/ui/action-group';
@@ -286,7 +286,7 @@ const HeadingMenu = ({
               Transforms.unsetNodes(editor, 'level', {
                 match: n => n.type === 'heading',
               });
-              Transforms.setNodes(
+              Transforms.setNodes<Element>(
                 editor,
                 { type: 'paragraph' },
                 { match: n => n.type === 'heading' }

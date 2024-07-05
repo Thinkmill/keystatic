@@ -188,8 +188,8 @@ Controlled.storyName = 'controlled';
 
 export const CurrencySwitcher = (args: {
   currency?: string;
-  currencyDisplay?: string;
-  currencySign?: string;
+  currencyDisplay?: Intl.NumberFormatOptions['currencyDisplay'];
+  currencySign?: Intl.NumberFormatOptions['currencySign'];
 }) => (
   <NumberFieldWithCurrencySelect
     formatOptions={{

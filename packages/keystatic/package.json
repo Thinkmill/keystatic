@@ -212,7 +212,7 @@
     "signal-exit": "^3.0.7",
     "slate-hyperscript": "^0.77.0",
     "tsx": "^4.8.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.3"
   },
   "peerDependencies": {
     "react": "^18.2.0",
