@@ -1,4 +1,4 @@
-import { CSSProperties, HTMLAttributes } from 'react';
+import { HTMLAttributes } from 'react';
 import { warning } from 'emery';
 import { css, CSSInterpolation, CSSObject } from '@emotion/css';
 
@@ -17,7 +17,7 @@ import { classNames } from './classNames';
 export function convertStyleProps<T extends BaseStyleProps>(
   props: T,
   propResolvers: StyleResolverMap
-): CSSProperties {
+): CSSObject {
   // FIXME: is there a better way to do this?
   // delcaring `style` as `CSSProperties` yields the following error when assigning properties:
   // "Expression produces a union type that is too complex to represent"

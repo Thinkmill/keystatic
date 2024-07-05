@@ -42,7 +42,6 @@
   },
   "dependencies": {
     "@babel/core": "^7.23.0",
-    "@babel/plugin-proposal-explicit-resource-management": "^7.23.0",
     "@babel/plugin-transform-runtime": "^7.22.15",
     "@babel/preset-env": "^7.22.20",
     "@babel/preset-react": "^7.22.15",
@@ -50,7 +49,7 @@
     "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.27.7",
     "@manypkg/cli": "^0.21.3",
-    "@preconstruct/cli": "^2.8.3",
+    "@preconstruct/cli": "^2.8.6",
     "@testing-library/dom": "^8.20.0",
     "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^13.4.0",
@@ -94,7 +93,8 @@
     "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
       "importsConditions": true,
       "typeModule": true,
-      "distInRoot": true
+      "distInRoot": true,
+      "checkTypeDependencies": true
     }
   }
 }
