@@ -37,7 +37,7 @@
     "test-strict": "cross-env STRICT_MODE=1 pnpm run test",
     "test:coverage": "jest ---coverage",
     "test:unit": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "validate": "npm-run-all --parallel check:*",
+    "validate": "pnpm run '/check:*/'",
     "version-packages": "changeset version && pnpm i --frozen-lockfile=false && pnpm run format \"**/CHANGELOG.md\""
   },
   "dependencies": {
@@ -71,7 +71,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest": "^30.0.0-alpha.2",
     "jest-environment-jsdom": "^30.0.0-alpha.2",
-    "npm-run-all": "^4.1.5",
     "prettier": "^3.0.3",
     "prettier-plugin-packagejson": "^2.2.18",
     "react": "^18.2.0",

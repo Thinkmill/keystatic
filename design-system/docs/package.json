@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "npm-run-all --sequential build:*",
+    "build": "pnpm run '/build:*/'",
     "build:docs": "pnpm pre-site && next build",
     "build:playroom": "pnpm pre-site && playroom build",
     "build:storybook": "storybook build -o ./public/storybook",
