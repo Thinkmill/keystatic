@@ -1550,6 +1550,7 @@
     "@react-types/switch": "^3.4.2",
     "@react-types/table": "^3.9.0",
     "@react-types/tabs": "^3.3.3",
+    "@types/react": "^18.2.8",
     "emery": "^1.4.1",
     "facepaint": "^1.2.1"
   },
@@ -1566,7 +1567,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/facepaint": "^1.2.2",
-    "@types/react": "^18.2.8",
     "@types/react-dom": "^18.0.11",
     "lucide-static": "^0.314.0",
     "next": "^14.1.3",

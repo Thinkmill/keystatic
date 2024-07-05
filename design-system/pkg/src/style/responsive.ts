@@ -8,6 +8,7 @@ import {
   ResponsiveProp,
   StyleResolver,
 } from './types';
+import { CSSObject } from '@emotion/css';
 
 // Breakpoints
 // ----------------------------------------------------------------------------
@@ -53,7 +54,8 @@ export const containerQueries = {
 const breakpointNames = typedKeys(breakpoints);
 const { mobile: _mobile, ...breakpointsWithoutMobile } = breakpoints;
 const mediaQueries = Object.values(breakpointsWithoutMobile).map(mediaAbove);
-export const mapToMediaQueries = facepaint(mediaQueries);
+export const mapToMediaQueries: (...styles: CSSObject[]) => CSSObject[] =
+  facepaint(mediaQueries);
 
 // CSS Utils
 // ----------------------------------------------------------------------------
