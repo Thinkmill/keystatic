@@ -54,7 +54,6 @@
     "@types/node": "16.11.13",
     "@types/react": "^18.2.8",
     "babel-loader": "^8.2.5",
-    "date-fns": "^2.28.0",
     "playroom": "^0.28.0",
     "storybook": "^7.0.22",
     "storybook-dark-mode": "^3.0.0",
