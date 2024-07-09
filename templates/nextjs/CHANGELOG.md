@@ -1,5 +1,15 @@
 # @keystatic/templates-nextjs
 
+## 0.0.40
+
+### Patch Changes
+
+- [#1217](https://github.com/Thinkmill/keystatic/pull/1217) [`68d9896`](https://github.com/Thinkmill/keystatic/commit/68d989614bc4bdc1c8b56a11756f6718007c6893) Thanks [@emmatown](https://github.com/emmatown)! - Update TypeScript
+
+- Updated dependencies [[`f2e3258`](https://github.com/Thinkmill/keystatic/commit/f2e325807002c50a71e70927e9b89b0ba6192368), [`824760e`](https://github.com/Thinkmill/keystatic/commit/824760e3f39cbd5866a8670785126905f9d9e95e)]:
+  - @keystatic/core@0.5.27
+  - @keystatic/next@5.0.1
+
 ## 0.0.39
 
 ### Patch Changes

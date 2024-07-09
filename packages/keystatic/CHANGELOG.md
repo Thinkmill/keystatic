@@ -1,5 +1,16 @@
 # @keystatic/core
 
+## 0.5.27
+
+### Patch Changes
+
+- [#1219](https://github.com/Thinkmill/keystatic/pull/1219) [`f2e3258`](https://github.com/Thinkmill/keystatic/commit/f2e325807002c50a71e70927e9b89b0ba6192368) Thanks [@emmatown](https://github.com/emmatown)! - Show specific error when Git repo is not initialised
+
+- [#1215](https://github.com/Thinkmill/keystatic/pull/1215) [`824760e`](https://github.com/Thinkmill/keystatic/commit/824760e3f39cbd5866a8670785126905f9d9e95e) Thanks [@emmatown](https://github.com/emmatown)! - Remove unnecessary `@types` dependencies
+
+- Updated dependencies [[`824760e`](https://github.com/Thinkmill/keystatic/commit/824760e3f39cbd5866a8670785126905f9d9e95e)]:
+  - @keystar/ui@0.7.8
+
 ## 0.5.26
 
 ### Patch Changes

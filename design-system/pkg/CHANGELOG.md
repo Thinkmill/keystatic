@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.7.8
+
+### Patch Changes
+
+- [#1215](https://github.com/Thinkmill/keystatic/pull/1215) [`824760e`](https://github.com/Thinkmill/keystatic/commit/824760e3f39cbd5866a8670785126905f9d9e95e) Thanks [@emmatown](https://github.com/emmatown)! - Add missing `@types/react` dependency and remove need for `@types/facepaint` to be installed
+
 ## 0.7.7
 
 ### Patch Changes
