@@ -49,6 +49,7 @@ import {
   setTreeToPersistedCache,
 } from '../object-cache';
 import { CollabProvider } from './collab';
+import { EmptyRepo } from './empty-repo';
 
 export function fetchLocalTree(sha: string) {
   if (treeCache.has(sha)) {
@@ -238,6 +239,19 @@ export function GitHubAppShellDataProvider(props: {
     pageInfo.endCursor
   ) {
     setCursorState(pageInfo.endCursor);
+  }
+
+  if (
+    state.data?.repository?.owner &&
+    !state.data.repository.defaultBranchRef &&
+    !state.fetching &&
+    !state.error
+  ) {
+    return (
+      <EmptyRepo
+        repo={`${state.data.repository.owner.login}/${state.data.repository.name}`}
+      />
+    );
   }
 
   return (
