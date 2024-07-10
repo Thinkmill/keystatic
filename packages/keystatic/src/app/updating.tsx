@@ -281,6 +281,21 @@ export function useUpsertItem(args: {
             }
           }
 
+          if (
+            result.error?.graphQLErrors.some(
+              err =>
+                'type' in err &&
+                err.type === 'FORBIDDEN' &&
+                err.message === 'Resource not accessible by integration'
+            )
+          ) {
+            throw new Error(
+              `The GitHub App is unable to commit to the repository. Please ensure that the Keystatic GitHub App is installed in the GitHub repository ${
+                repoWithWriteAccess!.owner
+              }/${repoWithWriteAccess!.name}`
+            );
+          }
+
           if (result.error) {
             throw result.error;
           }
@@ -410,6 +425,20 @@ export function useDeleteItem(args: {
               },
             },
           });
+          if (
+            error?.graphQLErrors.some(
+              err =>
+                'type' in err &&
+                err.type === 'FORBIDDEN' &&
+                err.message === 'Resource not accessible by integration'
+            )
+          ) {
+            throw new Error(
+              `The GitHub App is unable to commit to the repository. Please ensure that the Keystatic GitHub App is installed in the GitHub repository ${
+                repoWithWriteAccess!.owner
+              }/${repoWithWriteAccess!.name}`
+            );
+          }
           if (error) {
             throw error;
           }
