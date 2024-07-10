@@ -54,7 +54,7 @@ export type DialogTriggerProps = {
 
 export interface DialogContainerProps {
   /** The dialog to display, if any. */
-  children: ReactNode;
+  children: Exclude<ReactNode, Iterable<ReactNode>> | string;
   /** Handler that is called when the [×] button of a dismissable dialog is clicked. */
   onDismiss: () => void;
   /**
