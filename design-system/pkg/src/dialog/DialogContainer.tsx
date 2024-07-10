@@ -1,5 +1,5 @@
 import { useOverlayTriggerState } from '@react-stately/overlays';
-import React, { ReactNode, useState } from 'react';
+import React, { isValidElement, ReactElement, useState } from 'react';
 
 import { Modal } from '@keystar/ui/overlays';
 
@@ -20,13 +20,9 @@ export function DialogContainer(props: DialogContainerProps) {
     isKeyboardDismissDisabled,
   } = props;
 
-  let childArray = React.Children.toArray(children);
-  if (childArray.length > 1) {
-    throw new Error('Only a single child can be passed to DialogContainer.');
-  }
+  const child = isValidElement(children) ? children : null;
 
-  let child = React.isValidElement(childArray[0]) ? childArray[0] : null;
-  let [lastChild, setLastChild] = useState<ReactNode>(child);
+  let [lastChild, setLastChild] = useState<ReactElement | null>(child);
   if (child && child !== lastChild) {
     setLastChild(child);
   }
@@ -38,7 +34,7 @@ export function DialogContainer(props: DialogContainerProps) {
   };
 
   let state = useOverlayTriggerState({
-    isOpen: !!child,
+    isOpen: !!props.children,
     onOpenChange: isOpen => {
       if (!isOpen) {
         onDismiss();
