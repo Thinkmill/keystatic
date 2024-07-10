@@ -34,7 +34,7 @@ export function DialogContainer(props: DialogContainerProps) {
   };
 
   let state = useOverlayTriggerState({
-    isOpen: !!props.children,
+    isOpen: !!child,
     onOpenChange: isOpen => {
       if (!isOpen) {
         onDismiss();
