@@ -55,7 +55,8 @@ export function SlugFieldInput(
           props.args.slug?.validation?.length?.min ?? 1,
           props.args.slug?.validation?.length?.max ?? Infinity,
           slugFieldLabel,
-          slugInfo
+          slugInfo,
+          props.args.slug?.validation?.pattern
         )
       : undefined;
 
@@ -81,7 +82,8 @@ export function SlugFieldInput(
                 props.args.name.validation?.length?.min ?? 0,
                 props.args.name.validation?.length?.max ?? Infinity,
                 props.args.name.label,
-                undefined
+                undefined,
+                props.args.name.validation?.pattern
               )
             : undefined
         }

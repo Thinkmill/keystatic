@@ -20,7 +20,11 @@ const emptySet = new Set<string>();
 export function text({
   label,
   defaultValue = '',
-  validation: { length: { max = Infinity, min = 0 } = {}, isRequired } = {},
+  validation: {
+    length: { max = Infinity, min = 0 } = {},
+    pattern,
+    isRequired,
+  } = {},
   description,
   multiline = false,
 }: {
@@ -33,6 +37,10 @@ export function text({
       min?: number;
       max?: number;
     };
+    pattern?: {
+      regex: RegExp;
+      message?: string;
+    };
   };
   multiline?: boolean;
 }): SlugFormField<string, string, string, null> {
@@ -41,7 +49,7 @@ export function text({
     value: string,
     slugField: { slugs: Set<string>; glob: Glob } | undefined
   ) {
-    const message = validateText(value, min, max, label, slugField);
+    const message = validateText(value, min, max, label, slugField, pattern);
     if (message !== undefined) {
       throw new FieldDataError(message);
     }
@@ -59,6 +67,7 @@ export function text({
           min={min}
           max={max}
           multiline={multiline}
+          pattern={pattern}
           {...props}
         />
       );

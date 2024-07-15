@@ -5,7 +5,8 @@ export function validateText(
   min: number,
   max: number,
   fieldLabel: string,
-  slugInfo: { slugs: Set<string>; glob: Glob } | undefined
+  slugInfo: { slugs: Set<string>; glob: Glob } | undefined,
+  pattern: { regex: RegExp; message?: string } | undefined
 ) {
   if (val.length < min) {
     if (min === 1) {
@@ -16,6 +17,11 @@ export function validateText(
   }
   if (val.length > max) {
     return `${fieldLabel} must be no longer than ${max} characters`;
+  }
+  if (pattern && !pattern.regex.test(val)) {
+    return (
+      pattern.message || `${fieldLabel} must match the pattern ${pattern.regex}`
+    );
   }
   if (slugInfo) {
     if (val === '') {
