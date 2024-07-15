@@ -47,6 +47,7 @@ export function slug(_args: {
         min?: number;
         max?: number;
       };
+      pattern?: { regex: RegExp; message?: string };
     };
   };
   slug?: {
@@ -58,6 +59,7 @@ export function slug(_args: {
         min?: number;
         max?: number;
       };
+      pattern: { regex: RegExp; message?: string };
     };
   };
 }): SlugFormField<
@@ -71,6 +73,7 @@ export function slug(_args: {
     name: {
       ..._args.name,
       validation: {
+        pattern: _args.name.validation?.pattern,
         length: {
           min: Math.max(
             _args.name.validation?.isRequired ? 1 : 0,
@@ -108,7 +111,8 @@ export function slug(_args: {
       args.name.validation?.length?.min ?? 0,
       args.name.validation?.length?.max ?? Infinity,
       args.name.label,
-      undefined
+      undefined,
+      args.name.validation?.pattern
     );
     if (nameMessage !== undefined) {
       throw new FieldDataError(nameMessage);
@@ -118,7 +122,8 @@ export function slug(_args: {
       args.slug?.validation?.length?.min ?? 1,
       args.slug?.validation?.length?.max ?? Infinity,
       args.slug?.label ?? 'Slug',
-      slugField ? slugField : { slugs: emptySet, glob: '*' }
+      slugField ? slugField : { slugs: emptySet, glob: '*' },
+      args.slug?.validation?.pattern
     );
     if (slugMessage !== undefined) {
       throw new FieldDataError(slugMessage);

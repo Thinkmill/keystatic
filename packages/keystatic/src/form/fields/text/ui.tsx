@@ -11,6 +11,7 @@ export function TextFieldInput(
     description: string | undefined;
     min: number;
     max: number;
+    pattern: { regex: RegExp; message?: string } | undefined;
   }
 ) {
   const TextFieldComponent = props.multiline ? TextArea : TextField;
@@ -35,7 +36,8 @@ export function TextFieldInput(
               props.label,
               path.length === 1 && slugContext?.field === path[0]
                 ? slugContext
-                : undefined
+                : undefined,
+              props.pattern
             )
           : undefined
       }

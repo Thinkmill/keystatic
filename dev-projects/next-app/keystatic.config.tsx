@@ -70,10 +70,18 @@ export default config({
       label: 'Posts',
       slugField: 'slug',
       schema: {
-        title: fields.text({ label: 'Title' }),
+        title: fields.text({
+          label: 'Title',
+        }),
         slug: fields.text({
           label: 'Slug',
-          validation: { length: { min: 4 } },
+          validation: {
+            length: { min: 4 },
+            pattern: {
+              regex: /^[a-zA-Z0-9-]+$/,
+              message: 'Slug must only contain alphanumeric characters and -',
+            },
+          },
         }),
         blocks: fields.blocks(
           {

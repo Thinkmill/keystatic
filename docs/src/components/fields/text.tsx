@@ -19,6 +19,7 @@ export const TextFieldDemo = () => {
         multiline
         onChange={setValue}
         value={value}
+        pattern={undefined}
       />
     </FieldDemoFrame>
   );
