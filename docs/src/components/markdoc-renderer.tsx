@@ -119,9 +119,7 @@ const getRenderers = (highlighter: shiki.Highlighter | undefined) => ({
   List: ({ ordered, children }: { ordered?: boolean; children: ReactNode }) => {
     if (ordered) {
       return (
-        <ol className="mt-2 list-inside list-decimal text-slate-11">
-          {children}
-        </ol>
+        <ol className="ml-4 mt-2 list-decimal text-slate-11">{children}</ol>
       );
     }
     return <ul className="ml-4 mt-2 list-disc text-slate-11">{children}</ul>;
