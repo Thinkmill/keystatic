@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.7.9
+
+### Patch Changes
+
+- [#1222](https://github.com/Thinkmill/keystatic/pull/1222) [`ff04331`](https://github.com/Thinkmill/keystatic/commit/ff043317372926d99f03f77a9e6ded0ceed45a53) Thanks [@emmatown](https://github.com/emmatown)! - Fix `DialogContainer` when not compiled with React Compiler
+
 ## 0.7.8
 
 ### Patch Changes
