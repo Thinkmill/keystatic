@@ -522,6 +522,7 @@ const CustomMarkPopover: MarkPopoverRenderer = props => {
 function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
   if (state.selection instanceof TextSelection) {
     const schema = getEditorSchema(state.schema);
+    let decoration: PopoverDecoration | null = null;
     for (const [name, componentConfig] of Object.entries(schema.components)) {
       if (
         componentConfig.kind !== 'mark' ||
@@ -537,14 +538,17 @@ function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
         aroundFrom.from === aroundTo?.from &&
         aroundFrom.to === aroundTo.to
       ) {
-        return {
-          adaptToBoundary: 'flip',
-          kind: 'mark',
-          component: CustomMarkPopover,
-          mark: aroundFrom.mark,
-          from: aroundFrom.from,
-          to: aroundFrom.to,
-        };
+        const rangeSize = aroundFrom.to - aroundFrom.from;
+        if (!decoration || rangeSize < decoration.to - decoration.from) {
+          decoration = {
+            adaptToBoundary: 'flip',
+            kind: 'mark',
+            component: CustomMarkPopover,
+            mark: aroundFrom.mark,
+            from: aroundFrom.from,
+            to: aroundFrom.to,
+          };
+        }
       }
     }
     if (schema.marks.link) {
@@ -558,15 +562,21 @@ function getPopoverDecoration(state: EditorState): PopoverDecoration | null {
         linkAroundFrom.from === linkAroundTo?.from &&
         linkAroundFrom.to === linkAroundTo.to
       ) {
-        return {
-          adaptToBoundary: 'flip',
-          kind: 'mark',
-          component: LinkPopover,
-          mark: linkAroundFrom.mark,
-          from: linkAroundFrom.from,
-          to: linkAroundFrom.to,
-        };
+        const rangeSize = linkAroundFrom.to - linkAroundFrom.from;
+        if (!decoration || rangeSize < decoration.to - decoration.from) {
+          return {
+            adaptToBoundary: 'flip',
+            kind: 'mark',
+            component: LinkPopover,
+            mark: linkAroundFrom.mark,
+            from: linkAroundFrom.from,
+            to: linkAroundFrom.to,
+          };
+        }
       }
+    }
+    if (decoration) {
+      return decoration;
     }
   }
 
