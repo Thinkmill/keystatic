@@ -117,7 +117,6 @@ test('nested list', () => {
   );
   expect(markdoc).toMatchInlineSnapshot(`
     "- Something
-
       - Something
     "
   `);

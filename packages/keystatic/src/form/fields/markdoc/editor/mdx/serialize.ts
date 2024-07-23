@@ -166,7 +166,16 @@ function mapContent<T>(
 }
 
 function convertListItem(listItemContent: BlockContent[]): ListItem {
-  return { type: 'listItem', children: listItemContent };
+  return {
+    type: 'listItem',
+    spread:
+      listItemContent.length === 2 &&
+      listItemContent[0].type === 'paragraph' &&
+      listItemContent[1].type === 'list'
+        ? false
+        : undefined,
+    children: listItemContent,
+  };
 }
 
 export function proseMirrorToMDXRoot(
