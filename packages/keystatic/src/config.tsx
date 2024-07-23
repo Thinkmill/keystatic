@@ -74,6 +74,40 @@ type UserInterface<Collections, Singletons> = {
 
 type Navigation<K> = K[] | { [section: string]: K[] };
 
+// Columns
+// ----------------------------------------------------------------------------
+type Columns<Key> = {
+  /** The default field and direction used to initially sort the data. */
+  defaultSort: SortDescriptor<Key>;
+  /** Defines which fields to render. */
+  definition: Column<Key>[];
+};
+type Column<Key> = {
+  /**
+   * The alignment of the column's contents relative to its allotted width.
+   * @default 'start'
+   */
+  align?: 'start' | 'center' | 'end' | 'left' | 'right';
+  /** Whether the column allows sorting. */
+  allowsSorting?: boolean;
+  /** The key of the column. */
+  key: Key;
+  /** The maximum width of the column. */
+  maxWidth?: ColumnWidth;
+  /** The minimum width of the column. */
+  minWidth?: ColumnWidth;
+  /** The width of the column. */
+  width?: ColumnWidth;
+};
+type ColumnWidth = number | `${number}%`;
+
+type SortDescriptor<Key> = {
+  /** The key of the column to sort by. */
+  column: Key;
+  /** The direction to sort by. */
+  direction: 'ascending' | 'descending';
+};
+
 // Storage
 // ----------------------------------------------------------------------------
 
@@ -179,19 +213,16 @@ export function collection<
       ? K
       : never;
   }[keyof Schema],
+  FieldKey extends {
+    [K in keyof Schema]: Schema[K] extends
+      | FormField<any, any, string | number | boolean | Date | null | undefined>
+      | SlugFormField<any, any, any, string>
+      ? K & string
+      : never;
+  }[keyof Schema],
 >(
   collection: Collection<Schema, SlugField & string> & {
-    columns?: {
-      [K in keyof Schema]: Schema[K] extends
-        | FormField<
-            any,
-            any,
-            string | number | boolean | Date | null | undefined
-          >
-        | SlugFormField<any, any, any, string>
-        ? K & string
-        : never;
-    }[keyof Schema][];
+    columns?: Columns<FieldKey> | FieldKey[];
   }
 ): Collection<Schema, SlugField & string> {
   return collection;

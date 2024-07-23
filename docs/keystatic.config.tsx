@@ -296,6 +296,14 @@ export default config({
       },
       previewUrl: makePreviewUrl('/blog/{slug}'),
       columns: ['title', 'publishedOn'],
+      // FIXME: types aren't quite right here
+      // columns: {
+      //   definition: [
+      //     { key: 'title' },
+      //     { key: 'publishedOn', width: 100 },
+      //   ],
+      //   defaultSort: { column: 'publishedOn', direction: 'descending' },
+      // },
       schema: {
         title: fields.slug({
           name: {
