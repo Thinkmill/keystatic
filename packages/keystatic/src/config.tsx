@@ -26,7 +26,7 @@ export type Collection<
   entryLayout?: EntryLayout;
   format?: Format;
   previewUrl?: string;
-  columns?: string[];
+  columns?: ColumnsConfig<string>;
   template?: string;
   parseSlugForSort?: (slug: string) => string | number;
   slugField: SlugField;
@@ -206,6 +206,8 @@ export function config<
   return config;
 }
 
+type ColumnsConfig<FieldKey> = Columns<FieldKey> | FieldKey[];
+
 export function collection<
   Schema extends Record<string, ComponentSchema>,
   SlugField extends {
@@ -213,16 +215,21 @@ export function collection<
       ? K
       : never;
   }[keyof Schema],
-  FieldKey extends {
-    [K in keyof Schema]: Schema[K] extends
-      | FormField<any, any, string | number | boolean | Date | null | undefined>
-      | SlugFormField<any, any, any, string>
-      ? K & string
-      : never;
-  }[keyof Schema],
 >(
   collection: Collection<Schema, SlugField & string> & {
-    columns?: Columns<FieldKey> | FieldKey[];
+    columns?: ColumnsConfig<
+      {
+        [K in keyof Schema]: Schema[K] extends
+          | FormField<
+              any,
+              any,
+              string | number | boolean | Date | null | undefined
+            >
+          | SlugFormField<any, any, any, string>
+          ? K & string
+          : never;
+      }[keyof Schema]
+    >;
   }
 ): Collection<Schema, SlugField & string> {
   return collection;
