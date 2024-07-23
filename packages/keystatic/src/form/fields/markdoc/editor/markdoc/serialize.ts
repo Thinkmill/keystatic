@@ -233,6 +233,13 @@ export function proseMirrorToMarkdoc(
       listItemContent[0].type === 'paragraph'
     ) {
       listItemContent = listItemContent[0].children;
+    } else if (
+      listItemContent.length === 2 &&
+      listItemContent[0].type === 'paragraph' &&
+      listItemContent[0].children.length === 1 &&
+      listItemContent[1].type === 'list'
+    ) {
+      listItemContent = [listItemContent[0].children[0], listItemContent[1]];
     }
     return new Ast.Node('item', {}, listItemContent);
   }
