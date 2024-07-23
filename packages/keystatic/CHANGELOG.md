@@ -1,5 +1,20 @@
 # @keystatic/core
 
+## 0.5.28
+
+### Patch Changes
+
+- [#1233](https://github.com/Thinkmill/keystatic/pull/1233) [`cfc1bdc`](https://github.com/Thinkmill/keystatic/commit/cfc1bdc52695c019fa5dfea6c2de0fd034f27016) Thanks [@emmatown](https://github.com/emmatown)! - Show mark toolbar for the deepest mark rather than the one first found in `fields.markdoc`/`fields.mdx`
+
+- [#1228](https://github.com/Thinkmill/keystatic/pull/1228) [`36ea216`](https://github.com/Thinkmill/keystatic/commit/36ea216c4a473eeab60aff41cb9dfabfb45127b8) Thanks [@emmatown](https://github.com/emmatown)! - Add `pattern: { regex: RegExp; message?: string }` to validation options in `fields.text` and `fields.slug`
+
+- [#1220](https://github.com/Thinkmill/keystatic/pull/1220) [`4125996`](https://github.com/Thinkmill/keystatic/commit/4125996d37a74d743059e66ced24af29e10bf6ab) Thanks [@emmatown](https://github.com/emmatown)! - Suggest checking that the GitHub App is installed in the repository when committing returns a `Resource not accessible by integration` error
+
+- [#1227](https://github.com/Thinkmill/keystatic/pull/1227) [`cde7eca`](https://github.com/Thinkmill/keystatic/commit/cde7eca5e71d8bf3d9451035d8e395516167ebff) Thanks [@emmatown](https://github.com/emmatown)! - Fix `@urql/core` peer dependency errors
+
+- Updated dependencies [[`ff04331`](https://github.com/Thinkmill/keystatic/commit/ff043317372926d99f03f77a9e6ded0ceed45a53)]:
+  - @keystar/ui@0.7.9
+
 ## 0.5.27
 
 ### Patch Changes
