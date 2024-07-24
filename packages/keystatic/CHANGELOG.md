@@ -1,5 +1,13 @@
 # @keystatic/core
 
+## 0.5.29
+
+### Patch Changes
+
+- [#1237](https://github.com/Thinkmill/keystatic/pull/1237) [`cd289e1`](https://github.com/Thinkmill/keystatic/commit/cd289e1099ff56f6185dce5ace01e0e52adc7010) Thanks [@emmatown](https://github.com/emmatown)! - Output list items with only text and a nested list as tight list items in `fields.markdoc`/`fields.mdx`
+
+- [#1239](https://github.com/Thinkmill/keystatic/pull/1239) [`9605f85`](https://github.com/Thinkmill/keystatic/commit/9605f8528b377722a2be516f33ae40d682557ade) Thanks [@emmatown](https://github.com/emmatown)! - Fix content components UI not showing in `fields.markdoc`/`fields.mdx` until focused
+
 ## 0.5.28
 
 ### Patch Changes
