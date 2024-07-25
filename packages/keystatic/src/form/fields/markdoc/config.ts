@@ -56,6 +56,7 @@ export type EditorConfig = {
     | {
         directory: string | undefined;
         publicPath: string | undefined;
+        transformFilename: (originalFilename: string) => string;
         schema: {
           alt: BasicStringFormField;
           title: BasicStringFormField;
@@ -84,6 +85,7 @@ export type MarkdocEditorOptions = {
     | {
         directory?: string;
         publicPath?: string;
+        transformFilename?: (originalFilename: string) => string;
         schema?: { alt?: BasicStringFormField; title?: BasicStringFormField };
       };
   divider?: boolean;
@@ -106,6 +108,7 @@ export type MDXEditorOptions = {
     | {
         directory?: string;
         publicPath?: string;
+        transformFilename?: (originalFilename: string) => string;
         schema?: { alt?: BasicStringFormField; title?: BasicStringFormField };
       };
   divider?: boolean;
@@ -154,6 +157,7 @@ export function editorOptionsToConfig(options: EditorOptions): EditorConfig {
             return {
               directory: opts?.directory,
               publicPath: opts?.publicPath,
+              transformFilename: opts?.transformFilename ?? (x => x),
               schema: {
                 alt: opts?.schema?.alt ?? defaultAltField,
                 title: opts?.schema?.title ?? emptyTitleField,

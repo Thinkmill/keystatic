@@ -327,12 +327,13 @@ const nodeSpecs = {
           if (dispatch && view) {
             (async () => {
               const file = await getUploadedFileObject('image/*');
-              if (!file) return;
+              const schema = getEditorSchema(nodeType.schema);
+              if (!file || !schema.config.image) return;
               view.dispatch(
                 view.state.tr.replaceSelectionWith(
                   nodeType.createChecked({
                     src: new Uint8Array(await file.arrayBuffer()),
-                    filename: file.name,
+                    filename: schema.config.image.transformFilename(file.name),
                   })
                 )
               );
