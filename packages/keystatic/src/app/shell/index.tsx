@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 
 import { alertCircleIcon } from '@keystar/ui/icon/icons/alertCircleIcon';
 
@@ -11,23 +11,28 @@ import {
   GitHubAppShellProvider,
   AppShellErrorContext,
   LocalAppShellProvider,
-  useBranchInfo,
+  useBranches,
+  useCurrentBranch,
+  GitHubAppShellDataContext,
 } from './data';
 import { SidebarProvider } from './sidebar';
 import { MainPanelLayout } from './panels';
 import { EmptyState } from './empty-state';
 
 function BranchNotFound(props: { children: ReactNode }) {
-  const branchInfo = useBranchInfo();
+  const branches = useBranches();
+  const currentBranch = useCurrentBranch();
+  const appShellDataContext = useContext(GitHubAppShellDataContext);
   if (
-    branchInfo.hasLoadedAllBranches &&
-    !branchInfo.allBranches.includes(branchInfo.currentBranch)
+    appShellDataContext?.data?.repository?.refs?.pageInfo.hasNextPage ===
+      false &&
+    !branches.has(currentBranch)
   ) {
     return (
       <EmptyState
         icon={alertCircleIcon}
         title="Branch not found"
-        message={`The branch ${branchInfo.currentBranch} does not exist in this repository.`}
+        message={`The branch ${currentBranch} does not exist in this repository.`}
       />
     );
   }

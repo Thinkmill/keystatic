@@ -33,7 +33,7 @@ import {
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
-import { useBaseCommit, useBranchInfo } from './shell/data';
+import { useBaseCommit, useCurrentBranch, useRepoInfo } from './shell/data';
 import { useHasChanged } from './useHasChanged';
 import { parseEntry, useItemData } from './useItemData';
 import { serializeEntryToFiles, useUpsertItem } from './updating';
@@ -81,7 +81,8 @@ function SingletonPageInner(
   }
 ) {
   const isBelowDesktop = useMediaQuery(breakpointQueries.below.desktop);
-  const branchInfo = useBranchInfo();
+  const repoInfo = useRepoInfo();
+  const currentBranch = useCurrentBranch();
   const [forceValidation, setForceValidation] = useState(false);
 
   const { schema, singletonConfig } = useSingleton(props.singleton);
@@ -90,26 +91,25 @@ function SingletonPageInner(
 
   const previewHref = useMemo(() => {
     if (!singletonConfig.previewUrl) return undefined;
-    return singletonConfig.previewUrl.replace(
-      '{branch}',
-      branchInfo.currentBranch
-    );
-  }, [branchInfo.currentBranch, singletonConfig.previewUrl]);
+    return singletonConfig.previewUrl.replace('{branch}', currentBranch);
+  }, [currentBranch, singletonConfig.previewUrl]);
   const isGitHub = isGitHubConfig(props.config) || isCloudConfig(props.config);
   const formatInfo = getSingletonFormat(props.config, props.singleton);
   const singletonExists = !!props.initialState;
   const singletonPath = getSingletonPath(props.config, props.singleton);
 
   const viewHref =
-    isGitHub && singletonExists
-      ? `${getRepoUrl(branchInfo)}${
+    isGitHub && singletonExists && repoInfo
+      ? `${getRepoUrl(repoInfo)}${
           formatInfo.dataLocation === 'index'
-            ? `/tree/${branchInfo.currentBranch}/${
+            ? `/tree/${currentBranch}/${
                 getPathPrefix(props.config.storage) ?? ''
               }${singletonPath}`
-            : `/blob/${getPathPrefix(props.config.storage) ?? ''}${
-                branchInfo.currentBranch
-              }/${singletonPath}${getDataFileExtension(formatInfo)}`
+            : `/blob/${
+                getPathPrefix(props.config.storage) ?? ''
+              }${currentBranch}/${singletonPath}${getDataFileExtension(
+                formatInfo
+              )}`
         }`
       : undefined;
 
@@ -525,9 +525,9 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
     format,
     slug: undefined,
   });
-  const branchInfo = useBranchInfo();
+  const currentBranch = useCurrentBranch();
 
-  const key = `${branchInfo.currentBranch}/${props.singleton}`;
+  const key = `${currentBranch}/${props.singleton}`;
 
   const yjsInfo = useYjsIfAvailable();
 

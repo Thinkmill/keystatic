@@ -36,7 +36,7 @@ import { useRouter } from '../router';
 import { pluralize } from '../pluralize';
 
 import { useAppState, useConfig } from './context';
-import { useBranchInfo, useChanged, useTree } from './data';
+import { useChanged, useCurrentBranch, useTree } from './data';
 
 const typeMap = {
   added: {
@@ -74,7 +74,7 @@ export function BatchCommits() {
 function BatchCommitsDialog() {
   let router = useRouter();
   let isBelowTablet = useMediaQuery(breakpointQueries.below.tablet);
-  let { currentBranch } = useBranchInfo();
+  let currentBranch = useCurrentBranch();
   let previousBranch = usePrevious(currentBranch);
   let previousHref = usePrevious(router.href);
   let { dismiss } = useDialogContainer();

@@ -10,19 +10,20 @@ import { Text } from '@keystar/ui/typography';
 import { CreateBranchDialog } from '../branch-selection';
 import { DashboardSection } from './components';
 import { useRouter } from '../router';
-import { useBranchInfo } from '../shell/data';
+import { useCurrentBranch, useRepoInfo } from '../shell/data';
 import { useLocalizedString } from '../shell/i18n';
 import { getRepoUrl } from '../utils';
 import { useAssociatedPullRequest } from '../shell/sidebar/components';
 
 export function BranchSection() {
-  let branchInfo = useBranchInfo();
+  let repoInfo = useRepoInfo();
+  let currentBranch = useCurrentBranch();
   let router = useRouter();
   let localizedString = useLocalizedString();
   let prNumber = useAssociatedPullRequest();
 
-  let repoURL = getRepoUrl(branchInfo);
-  let isDefaultBranch = branchInfo.currentBranch === branchInfo.defaultBranch;
+  let repoURL = repoInfo && getRepoUrl(repoInfo);
+  let isDefaultBranch = currentBranch === repoInfo?.defaultBranch;
 
   return (
     <DashboardSection title={localizedString.format('currentBranch')}>
@@ -36,7 +37,7 @@ export function BranchSection() {
       >
         <Icon src={gitBranchIcon} color="neutralTertiary" />
         <Text size="medium" weight="semibold">
-          {branchInfo.currentBranch}
+          {currentBranch}
         </Text>
       </Flex>
       <Flex gap="regular" wrap>
@@ -65,7 +66,7 @@ export function BranchSection() {
           prNumber !== undefined &&
           (prNumber === false ? (
             <ActionButton
-              href={`${repoURL}/pull/new/${branchInfo.currentBranch}`}
+              href={`${repoURL}/pull/new/${currentBranch}`}
               target="_blank"
             >
               <Icon src={gitPullRequestIcon} />

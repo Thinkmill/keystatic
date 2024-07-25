@@ -57,7 +57,7 @@ import { useRouter } from './router';
 import { HeaderBreadcrumbs } from './shell/HeaderBreadcrumbs';
 import { useYjsIfAvailable } from './shell/collab';
 import { useConfig } from './shell/context';
-import { useBaseCommit, useRepositoryId, useBranchInfo } from './shell/data';
+import { useBaseCommit, useCurrentBranch, useRepoInfo } from './shell/data';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
 import { useSlugFieldInfo } from './slugs';
 import { delDraft, getDraft, setDraft } from './persistence';
@@ -130,12 +130,13 @@ function ItemPageInner(
   const baseCommit = useBaseCommit();
   const currentBasePath = getCollectionItemPath(config, collection, itemSlug);
   const formatInfo = getCollectionFormat(config, collection);
-  const branchInfo = useBranchInfo();
+  const currentBranch = useCurrentBranch();
+  const repoInfo = useRepoInfo();
   const [forceValidation, setForceValidation] = useState(false);
   const previewHref = collectionConfig.previewUrl
     ? collectionConfig.previewUrl
         .replace('{slug}', props.itemSlug)
-        .replace('{branch}', branchInfo.currentBranch)
+        .replace('{branch}', currentBranch)
     : undefined;
   const { push, replace } = router;
 
@@ -182,13 +183,13 @@ function ItemPageInner(
   });
 
   const viewHref =
-    config.storage.kind !== 'local'
-      ? `${getRepoUrl(branchInfo)}${
+    config.storage.kind !== 'local' && repoInfo
+      ? `${getRepoUrl(repoInfo)}${
           formatInfo.dataLocation === 'index'
-            ? `/tree/${branchInfo.currentBranch}/${
+            ? `/tree/${currentBranch}/${
                 getPathPrefix(config.storage) ?? ''
               }${currentBasePath}`
-            : `/blob/${branchInfo.currentBranch}/${
+            : `/blob/${currentBranch}/${
                 getPathPrefix(config.storage) ?? ''
               }${currentBasePath}${getDataFileExtension(formatInfo)}`
         }`
@@ -702,7 +703,7 @@ export function CreateBranchDuringUpdateDialog(props: {
   reason: string;
 }) {
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
-  const repositoryId = useRepositoryId();
+  const repoInfo = useRepoInfo();
   const [branchName, setBranchName] = useState('');
   const [{ error, fetching, data }, createBranch] = useCreateBranchMutation();
   const isLoading = fetching || !!data?.createRef?.__typename;
@@ -739,7 +740,7 @@ export function CreateBranchDuringUpdateDialog(props: {
           const fullBranchName = (branchPrefix ?? '') + branchName;
           const name = `refs/heads/${fullBranchName}`;
           const result = await createBranch({
-            input: { name, oid: props.branchOid, repositoryId },
+            input: { name, oid: props.branchOid, repositoryId: repoInfo!.id },
           });
           if (result.data?.createRef?.__typename) {
             props.onCreate(fullBranchName);
@@ -844,9 +845,9 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
     slug: slugInfo,
   });
 
-  const branchInfo = useBranchInfo();
+  const currentBranch = useCurrentBranch();
 
-  const key = `${branchInfo.currentBranch}/${props.collection}/item/${props.itemSlug}`;
+  const key = `${currentBranch}/${props.collection}/item/${props.itemSlug}`;
 
   const yjsInfo = useYjsIfAvailable();
 
