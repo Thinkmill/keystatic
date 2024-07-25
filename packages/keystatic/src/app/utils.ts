@@ -70,10 +70,10 @@ export function getSplitCloudProject(config: Config) {
   return { team, project };
 }
 
-export function getRepoPath(config: { mainOwner: string; mainRepo: string }) {
-  return `${config.mainOwner}/${config.mainRepo}`;
+export function getRepoPath(config: { owner: string; name: string }) {
+  return `${config.owner}/${config.name}`;
 }
-export function getRepoUrl(config: { mainOwner: string; mainRepo: string }) {
+export function getRepoUrl(config: { owner: string; name: string }) {
   return `https://github.com/${getRepoPath(config)}`;
 }
 

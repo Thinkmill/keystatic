@@ -318,7 +318,6 @@ export function GitHubAppShellProvider(props: {
 
   const defaultBranchTreeSha = defaultBranchRef?.target.tree.oid ?? null;
   const currentBranchTreeSha = currentBranchRef?.target.tree.oid ?? null;
-  const baseCommit = currentBranchRef?.target?.oid ?? null;
 
   const defaultBranchTree = useGitHubTreeData(
     defaultBranchTreeSha,
@@ -392,50 +391,58 @@ export function GitHubAppShellProvider(props: {
         .join('/')}`;
     }
   }, [error, router, repo?.id, props.config]);
-  const baseInfo = useMemo(
-    () => ({
-      baseCommit: baseCommit || '',
-      repositoryId: repo?.id ?? '',
-      isPrivate: repo?.isPrivate ?? true,
-    }),
-    [baseCommit, repo?.id, repo?.isPrivate]
-  );
-  const branchInfo = useMemo(
-    () => ({
-      defaultBranch: repo?.defaultBranchRef?.name ?? '',
-      currentBranch: props.currentBranch,
-      baseCommit: baseCommit || '',
-      repositoryId: repo?.id ?? '',
-      allBranches: repo?.refs?.nodes?.map(x => x?.name).filter(isDefined) ?? [],
-      branchNameToId: new Map(
-        repo?.refs?.nodes?.filter(isDefined).map(x => [x.name, x.id])
-      ),
-      branchNameToBaseCommit: new Map(
-        repo?.refs?.nodes?.flatMap(x =>
-          x?.target ? [[x.name, x.target.oid]] : []
-        )
-      ),
-      mainOwner: data?.repository?.owner.login ?? '',
-      mainRepo: data?.repository?.name ?? '',
-      hasLoadedAllBranches: repo?.refs?.pageInfo.hasNextPage === false,
-    }),
-    [data?.repository, repo, props.currentBranch, baseCommit]
-  );
+  const branches = useMemo((): Map<string, BranchInfo> => {
+    return new Map<string, BranchInfo>(
+      repo?.refs?.nodes?.flatMap(x => {
+        if (x?.target?.__typename !== 'Commit') {
+          return [];
+        }
+        return [
+          [
+            x.name,
+            { id: x.id, commitSha: x.target.oid, treeSha: x.target.tree.oid },
+          ],
+        ];
+      })
+    );
+  }, [repo?.refs?.nodes]);
+
+  const hasWritePermission =
+    !!repo &&
+    (props.config.storage.kind === 'cloud' ||
+      ('viewerPermission' in repo &&
+        !!repo?.viewerPermission &&
+        writePermissions.has(repo.viewerPermission)));
+
+  const repoInfo = useMemo((): RepoInfo | null => {
+    if (!data?.repository || !repo?.defaultBranchRef?.name) return null;
+    return {
+      id: repo.id,
+      defaultBranch: repo.defaultBranchRef.name,
+      hasWritePermission,
+      isPrivate: repo.isPrivate,
+      name: repo.name,
+      owner: repo.owner.login,
+      upstream: {
+        name: repo.name,
+        owner: repo.owner.login,
+      },
+    };
+  }, [
+    data?.repository,
+    hasWritePermission,
+    repo?.defaultBranchRef?.name,
+    repo?.id,
+    repo?.isPrivate,
+    repo?.name,
+    repo?.owner.login,
+  ]);
+
   return (
-    <RepoWithWriteAccessContext.Provider
-      value={
-        repo &&
-        (props.config.storage.kind === 'cloud' ||
-          ('viewerPermission' in repo &&
-            repo?.viewerPermission &&
-            writePermissions.has(repo.viewerPermission)))
-          ? { name: repo.name, owner: repo.owner.login }
-          : null
-      }
-    >
-      <AppShellErrorContext.Provider value={error}>
-        <BranchInfoContext.Provider value={branchInfo}>
-          <BaseInfoContext.Provider value={baseInfo}>
+    <AppShellErrorContext.Provider value={error}>
+      <CurrentBranchContext.Provider value={props.currentBranch}>
+        <BranchesContext.Provider value={branches}>
+          <RepoInfoContext.Provider value={repoInfo}>
             <ChangedContext.Provider value={changedData}>
               <TreeContext.Provider value={allTreeData}>
                 {props.config.storage.kind === 'cloud' ? (
@@ -447,10 +454,10 @@ export function GitHubAppShellProvider(props: {
                 )}
               </TreeContext.Provider>
             </ChangedContext.Provider>
-          </BaseInfoContext.Provider>
-        </BranchInfoContext.Provider>
-      </AppShellErrorContext.Provider>
-    </RepoWithWriteAccessContext.Provider>
+          </RepoInfoContext.Provider>
+        </BranchesContext.Provider>
+      </CurrentBranchContext.Provider>
+    </AppShellErrorContext.Provider>
   );
 }
 
@@ -458,13 +465,44 @@ export const AppShellErrorContext = createContext<CombinedError | undefined>(
   undefined
 );
 
-const BaseInfoContext = createContext({
-  baseCommit: '',
-  repositoryId: '',
-  isPrivate: true,
-});
+const CurrentBranchContext = createContext<string>('');
 
-const ChangedContext = createContext<{
+export function useCurrentBranch() {
+  return useContext(CurrentBranchContext);
+}
+
+type BranchInfo = {
+  id: string;
+  commitSha: string;
+  treeSha: string;
+};
+
+const BranchesContext = createContext<Map<string, BranchInfo>>(new Map());
+
+export function useBranches() {
+  return useContext(BranchesContext);
+}
+
+type RepoInfo = {
+  id: string;
+  defaultBranch: string;
+  isPrivate: boolean;
+  owner: string;
+  name: string;
+  hasWritePermission: boolean;
+  upstream: {
+    owner: string;
+    name: string;
+  };
+};
+
+const RepoInfoContext = createContext<RepoInfo | null>(null);
+
+export function useRepoInfo() {
+  return useContext(RepoInfoContext);
+}
+
+export const ChangedContext = createContext<{
   collections: Map<
     string,
     {
@@ -518,15 +556,9 @@ export function useChanged() {
 }
 
 export function useBaseCommit() {
-  return useContext(BaseInfoContext).baseCommit;
-}
-
-export function useIsRepoPrivate() {
-  return useContext(BaseInfoContext).isPrivate;
-}
-
-export function useRepositoryId() {
-  return useContext(BaseInfoContext).repositoryId;
+  const branchInfo = useBranches();
+  const currentBranch = useCurrentBranch();
+  return branchInfo.get(currentBranch)?.commitSha ?? '';
 }
 
 export const Ref_base = gql`
@@ -696,34 +728,6 @@ function useGitHubTreeData(sha: string | null, config: Config) {
       [sha, config]
     )
   );
-}
-
-export const RepoWithWriteAccessContext = createContext<{
-  owner: string;
-  name: string;
-} | null>(null);
-
-export const BranchInfoContext = createContext<{
-  currentBranch: string;
-  allBranches: string[];
-  branchNameToId: Map<string, string>;
-  defaultBranch: string;
-  branchNameToBaseCommit: Map<string, string>;
-  mainOwner: string;
-  mainRepo: string;
-  hasLoadedAllBranches: boolean;
-}>({
-  currentBranch: '',
-  allBranches: [],
-  defaultBranch: '',
-  branchNameToId: new Map(),
-  branchNameToBaseCommit: new Map(),
-  mainOwner: '',
-  mainRepo: '',
-  hasLoadedAllBranches: false,
-});
-export function useBranchInfo() {
-  return useContext(BranchInfoContext);
 }
 
 function getChangedData(
