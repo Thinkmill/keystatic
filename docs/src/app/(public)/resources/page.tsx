@@ -149,6 +149,7 @@ export default async function Resources() {
           <ResourceGrid>
             {sortedTalks.map(video => (
               <Video
+                key={video.title}
                 title={video.title}
                 videoId={video.videoId}
                 description={video.description}
@@ -160,7 +161,7 @@ export default async function Resources() {
         <Section title="Articles">
           <ResourceGrid>
             {sortedArticles.map(article => (
-              <li className="mb-4 mr-4">
+              <li key={article.title} className="mb-4 mr-4">
                 <h3 className="text-xl font-medium">
                   <Link href={article.url} className="hover:underline">
                     {article.title}
