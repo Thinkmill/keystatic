@@ -59,7 +59,7 @@ export function slug(_args: {
         min?: number;
         max?: number;
       };
-      pattern: { regex: RegExp; message?: string };
+      pattern?: { regex: RegExp; message?: string };
     };
   };
 }): SlugFormField<
