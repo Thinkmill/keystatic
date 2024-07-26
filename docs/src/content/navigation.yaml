@@ -251,6 +251,11 @@ navGroups:
           discriminant: page
           value: fields/url
         status: default
+      - label: Ignored
+        link:
+          discriminant: page
+          value: fields/ignored
+        status: default
   - groupName: Community
     items:
       - label: GitHub Discussions
