@@ -45,7 +45,13 @@ class TrackedMap<K, V> extends Map<K, V> {
 }
 
 export function parseEntry(
-  args: UseItemDataArgs,
+  args: {
+    dirpath: string;
+    format: FormatInfo;
+    schema: Record<string, ComponentSchema>;
+    slug: { slug: string; field: string } | undefined;
+    requireFrontmatter?: boolean;
+  },
   files: Map<string, Uint8Array>
 ) {
   const dataFilepath = getEntryDataFilepath(args.dirpath, args.format);
@@ -53,7 +59,11 @@ export function parseEntry(
   if (!data) {
     throw new Error(`Could not find data file at ${dataFilepath}`);
   }
-  const { loaded, extraFakeFile } = loadDataFile(data, args.format);
+  const { loaded, extraFakeFile } = loadDataFile(
+    data,
+    args.format,
+    args.requireFrontmatter
+  );
   const filesWithFakeFile = new Map(files);
   if (extraFakeFile) {
     filesWithFakeFile.set(
@@ -242,7 +252,6 @@ export function useItemData(args: UseItemDataArgs) {
         return 'not-found' as const;
       }
       const _args = {
-        config: args.config,
         dirpath: args.dirpath,
         format: args.format,
         schema: args.schema,

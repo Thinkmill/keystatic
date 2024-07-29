@@ -11,7 +11,6 @@ import { Flex } from '@keystar/ui/layout';
 import { Notice } from '@keystar/ui/notice';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { toastQueue } from '@keystar/ui/toast';
-import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 
 import { Config } from '../config';
 import { ComponentSchema, GenericPreviewProps, ObjectField } from '../form/api';
@@ -52,6 +51,13 @@ import {
 } from './preview-props';
 import { useDuplicateSlug } from './duplicate-slug';
 import { getYjsValFromParsedValue } from '../form/yjs-props-value';
+import { setValueToPreviewProps } from '../form/get-value';
+import { copyEntryToClipboard, getPastedEntry } from './entry-clipboard';
+import { clipboardCopyIcon } from '@keystar/ui/icon/icons/clipboardCopyIcon';
+import { clipboardPasteIcon } from '@keystar/ui/icon/icons/clipboardPasteIcon';
+import { ActionGroup, Item } from '@keystar/ui/action-group';
+import { Text } from '@keystar/ui/typography';
+import { breakpointQueries, useMediaQuery } from '@keystar/ui/style';
 
 function CreateItemWrapper(props: {
   collection: string;
@@ -82,7 +88,6 @@ function CreateItemWrapper(props: {
       const stored = storedValSchema.create(raw);
       const parsed = parseEntry(
         {
-          config: props.config,
           dirpath: getCollectionItemPath(
             props.config,
             props.collection,
@@ -307,7 +312,6 @@ function CreateItemLocal(props: {
     if (hasChanged && !hasCreated) {
       const serialized = serializeEntryToFiles({
         basePath,
-        config: props.config,
         format: formatInfo,
         schema: collectionConfig.schema,
         slug: { field: collectionConfig.slugField, value: slug },
@@ -331,7 +335,6 @@ function CreateItemLocal(props: {
     hasChanged,
     props.duplicateSlug,
     props.collection,
-    props.config,
     basePath,
     formatInfo,
     hasCreated,
@@ -458,6 +461,30 @@ function CreateItemInner(props: {
     }
   };
 
+  const onCopy = () => {
+    copyEntryToClipboard(props.state, formatInfo, collectionConfig.schema, {
+      field: collectionConfig.slugField,
+      value: getSlugFromState(collectionConfig, props.state),
+    });
+  };
+
+  const onPaste = async () => {
+    const entry = await getPastedEntry(formatInfo, collectionConfig.schema, {
+      field: collectionConfig.slugField,
+      slug: getSlugFromState(collectionConfig, props.state),
+    });
+    if (entry) {
+      setValueToPreviewProps(entry, props.previewProps);
+      toastQueue.positive('Entry pasted', {
+        shouldCloseOnAction: true,
+        actionLabel: 'Undo',
+        onAction: () => {
+          setValueToPreviewProps(props.state, props.previewProps);
+        },
+      });
+    }
+  };
+
   // note we're still "loading" when it's already been created
   // since we're waiting to go to the item page
   const isLoading =
@@ -476,6 +503,8 @@ function CreateItemInner(props: {
     [collectionConfig.label, stringFormatter, collectionPath]
   );
 
+  const isBelowDesktop = useMediaQuery(breakpointQueries.below.desktop);
+
   return (
     <>
       <PageRoot containerWidth={containerWidthForEntryLayout(collectionConfig)}>
@@ -489,19 +518,35 @@ function CreateItemInner(props: {
               size="small"
             />
           )}
-          <TooltipTrigger>
-            <Button
-              prominence="low"
-              aria-label="Reset"
-              onPress={() => {
-                onReset();
-                setForceValidation(false);
-              }}
-            >
-              <Icon src={historyIcon} />
-            </Button>
-            <Tooltip>Reset</Tooltip>
-          </TooltipTrigger>
+          <ActionGroup
+            buttonLabelBehavior="hide"
+            overflowMode="collapse"
+            prominence="low"
+            density="compact"
+            maxWidth={isBelowDesktop ? 'element.regular' : undefined} // force switch to action menu on small devices
+            items={menuActions}
+            onAction={key => {
+              switch (key) {
+                case 'reset':
+                  onReset();
+                  setForceValidation(false);
+                  break;
+                case 'copy':
+                  onCopy();
+                  break;
+                case 'paste':
+                  onPaste();
+                  break;
+              }
+            }}
+          >
+            {item => (
+              <Item key={item.key} textValue={item.label}>
+                <Icon src={item.icon} />
+                <Text>{item.label}</Text>
+              </Item>
+            )}
+          </ActionGroup>
           <Button
             isDisabled={isLoading}
             prominence="high"
@@ -599,5 +644,23 @@ function CreateItemInner(props: {
     </>
   );
 }
+
+const menuActions = [
+  {
+    key: 'reset',
+    label: 'Reset',
+    icon: historyIcon,
+  },
+  {
+    key: 'copy',
+    label: 'Copy entry',
+    icon: clipboardCopyIcon,
+  },
+  {
+    key: 'paste',
+    label: 'Paste entry',
+    icon: clipboardPasteIcon,
+  },
+];
 
 export { CreateItemWrapper as CreateItem };

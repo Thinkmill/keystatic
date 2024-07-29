@@ -20,7 +20,8 @@ function splitFrontmatter(data: Uint8Array) {
 
 export function loadDataFile(
   data: Uint8Array,
-  formatInfo: FormatInfo
+  formatInfo: FormatInfo,
+  requireFrontmatter = false
 ): {
   loaded: JsonYamlValue;
   extraFakeFile?: {
@@ -36,6 +37,9 @@ export function loadDataFile(
     };
   }
   const res = splitFrontmatter(data);
+  if (requireFrontmatter && !res) {
+    throw new Error('Frontmatter not found');
+  }
   return {
     loaded: res === null ? {} : parse(res.frontmatter),
     extraFakeFile: {

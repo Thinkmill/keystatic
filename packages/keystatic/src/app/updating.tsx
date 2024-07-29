@@ -55,7 +55,6 @@ function combineFrontmatterAndContents(
 
 export function serializeEntryToFiles(args: {
   basePath: string;
-  config: Config;
   schema: Record<string, ComponentSchema>;
   format: FormatInfo;
   state: unknown;
@@ -158,7 +157,6 @@ export function useUpsertItem(args: {
         const pathPrefix = getPathPrefix(args.config.storage) ?? '';
         let additions = serializeEntryToFiles({
           basePath: args.basePath,
-          config: args.config,
           schema: args.schema,
           format: args.format,
           state: args.state,
