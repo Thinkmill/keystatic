@@ -1,4 +1,5 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
+import { warning } from 'emery';
 import { isHotkey } from 'is-hotkey';
 import React, {
   Key,
@@ -38,7 +39,7 @@ import {
 } from '@keystar/ui/table';
 import { Heading, Text } from '@keystar/ui/typography';
 
-import { Config } from '../config';
+import { Collection, ColumnConfig, Config } from '../config';
 import { sortBy } from './collection-sort';
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
@@ -279,8 +280,8 @@ function CollectionPageContent(props: CollectionPageContentProps) {
   return <CollectionTable {...props} trees={trees.merged.data} />;
 }
 
-const SLUG = '@@slug';
-const STATUS = '@@status';
+const SLUG_KEY = '@@slug';
+const STATUS_KEY = '@@status';
 
 function CollectionTable(
   props: CollectionPageContentProps & {
@@ -295,17 +296,18 @@ function CollectionTable(
   let { currentBranch, defaultBranch } = useBranchInfo();
   let isLocalMode = isLocalConfig(props.config);
   let router = useRouter();
-  let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: SLUG,
-    direction: 'ascending',
-  });
-  let hideStatusColumn = isLocalMode || currentBranch === defaultBranch;
+
+  const collection = props.config.collections![props.collection]!;
+  const hideStatusColumn = isLocalMode || currentBranch === defaultBranch;
+  const { columnData, defaultSort, includesCustomColumns } = useMemo(() => {
+    return getTableConfig(collection, hideStatusColumn);
+  }, [collection, hideStatusColumn]);
+  const [sortDescriptor, setSortDescriptor] =
+    useState<SortDescriptor>(defaultSort);
 
   const branchInfo = useBranchInfo();
   const isRepoPrivate = useIsRepoPrivate();
   const baseCommit = useBaseCommit();
-
-  const collection = props.config.collections![props.collection]!;
 
   const entriesWithStatus = useMemo(() => {
     const defaultEntries = new Map(
@@ -334,7 +336,10 @@ function CollectionTable(
 
   const mainFiles = useData(
     useCallback(async () => {
-      if (!collection.columns?.length) return undefined;
+      if (!includesCustomColumns) {
+        return undefined;
+      }
+
       const formatInfo = getCollectionFormat(props.config, props.collection);
       const entries = await Promise.all(
         entriesWithStatus.map(async entry => {
@@ -404,6 +409,7 @@ function CollectionTable(
       branchInfo.mainRepo,
       collection,
       entriesWithStatus,
+      includesCustomColumns,
       isRepoPrivate,
       props.collection,
       props.config,
@@ -439,10 +445,10 @@ function CollectionTable(
         row: typeof a,
         other: Record<string, unknown> | undefined
       ) => {
-        if (sortDescriptor.column === SLUG) {
+        if (sortDescriptor.column === SLUG_KEY) {
           return collection.parseSlugForSort?.(row.name) ?? row.name;
         }
-        if (sortDescriptor.column === STATUS) {
+        if (sortDescriptor.column === STATUS_KEY) {
           return row.status;
         }
         return other?.[sortDescriptor.column!] ?? row.name;
@@ -461,33 +467,6 @@ function CollectionTable(
     sortDescriptor.column,
     sortDescriptor.direction,
   ]);
-
-  const columns = useMemo(() => {
-    if (collection.columns?.length) {
-      return [
-        ...(hideStatusColumn
-          ? []
-          : [{ name: 'Status', key: STATUS, minWidth: 32, width: 32 }]),
-        {
-          name: 'Slug',
-          key: SLUG,
-        },
-        ...collection.columns.map(column => {
-          const schema = collection.schema[column];
-          return {
-            name: ('label' in schema && schema.label) || column,
-            key: column,
-          };
-        }),
-      ];
-    }
-    return hideStatusColumn
-      ? [{ name: 'Name', key: SLUG }]
-      : [
-          { name: 'Status', key: STATUS, minWidth: 32, width: 32 },
-          { name: 'Name', key: SLUG },
-        ];
-  }, [collection, hideStatusColumn]);
 
   return (
     <TableView
@@ -525,15 +504,15 @@ function CollectionTable(
         },
       })}
     >
-      <TableHeader columns={columns}>
-        {({ name, key, ...options }) =>
-          key === STATUS ? (
-            <Column key={key} isRowHeader allowsSorting {...options}>
+      <TableHeader columns={columnData}>
+        {({ label, key, ...options }) =>
+          key === STATUS_KEY ? (
+            <Column key={key} {...options}>
               <Icon aria-label="Status" src={diffIcon} />
             </Column>
           ) : (
-            <Column key={key} isRowHeader allowsSorting {...options}>
-              {name}
+            <Column key={key} allowsSorting {...options}>
+              {label}
             </Column>
           )
         }
@@ -541,7 +520,7 @@ function CollectionTable(
       <TableBody items={sortedItems}>
         {item => {
           const statusCell = (
-            <Cell key={STATUS + item.name} textValue={item.status}>
+            <Cell key={STATUS_KEY + item.name} textValue={item.status}>
               {item.status === 'Added' ? (
                 <Icon color="positive" src={plusSquareIcon} />
               ) : item.status === 'Changed' ? (
@@ -550,35 +529,37 @@ function CollectionTable(
             </Cell>
           );
           const nameCell = (
-            <Cell key={SLUG + item.name} textValue={item.name as string}>
+            <Cell key={SLUG_KEY + item.name} textValue={item.name as string}>
               <Text weight="medium">{item.name as string}</Text>
             </Cell>
           );
-          if (collection.columns?.length) {
+
+          if (includesCustomColumns) {
             return (
               <Row key={item.name}>
-                {[
-                  ...(hideStatusColumn ? [] : [statusCell]),
-                  nameCell,
-                  ...collection.columns.map(column => {
-                    let val;
-                    val = item.data?.[column];
+                {columnData.map(column => {
+                  if (column.key === STATUS_KEY) {
+                    return statusCell;
+                  }
 
-                    if (val == null) {
-                      val = undefined;
-                    } else {
-                      val = val + '';
-                    }
-                    return (
-                      <Cell key={column + item.name} textValue={val}>
-                        <Text weight="medium">{val}</Text>
-                      </Cell>
-                    );
-                  }),
-                ]}
+                  let val;
+                  val = item.data?.[column.key];
+
+                  if (val == null) {
+                    val = undefined;
+                  } else {
+                    val = val + '';
+                  }
+                  return (
+                    <Cell key={column.key + item.name} textValue={val}>
+                      <Text weight="medium">{val}</Text>
+                    </Cell>
+                  );
+                })}
               </Row>
             );
           }
+
           return hideStatusColumn ? (
             <Row key={item.name}>{nameCell}</Row>
           ) : (
@@ -610,4 +591,84 @@ export function useDebouncedValue<T>(value: T, delay = 300): T {
   }, [value, delay]);
 
   return debouncedValue;
+}
+
+function getTableConfig(
+  collection: Collection<any, any>,
+  hideStatusColumn: boolean
+): {
+  columnData: ColumnConfig<string>[];
+  defaultSort: SortDescriptor;
+  includesCustomColumns: boolean;
+} {
+  let defaultColumns = hideStatusColumn
+    ? []
+    : [
+        {
+          allowsSorting: false,
+          key: STATUS_KEY,
+          label: 'Status',
+          minWidth: 32,
+          width: 32,
+        },
+      ];
+
+  if (Array.isArray(collection.columns) && collection.columns.length > 0) {
+    return {
+      columnData: [
+        ...defaultColumns,
+        ...collection.columns.map(key => {
+          const schema = collection.schema[key];
+          return {
+            key,
+            label: ('label' in schema && schema.label) || key,
+          };
+        }),
+      ],
+      defaultSort: {
+        column: collection.columns[0],
+        direction: 'ascending',
+      },
+      includesCustomColumns: true,
+    };
+  }
+
+  if (collection.columns && 'definition' in collection.columns) {
+    const hasRowHeader = collection.columns.definition.some(
+      column => column.isRowHeader
+    );
+    warning(
+      hasRowHeader,
+      'To best support screen reader users, please set the `isRowHeader` property for at least one column in the definition.'
+    );
+
+    return {
+      columnData: [
+        ...defaultColumns,
+        ...collection.columns.definition.map(({ key, ...rest }, index) => {
+          const schema = collection.schema[key];
+          return {
+            key,
+            label: ('label' in schema && schema.label) || key,
+            isRowHeader: !hasRowHeader && index === 0 ? true : undefined,
+            ...rest,
+          };
+        }),
+      ],
+      defaultSort: collection.columns.defaultSort,
+      includesCustomColumns: true,
+    };
+  }
+
+  return {
+    columnData: [
+      ...defaultColumns,
+      { isRowHeader: true, key: SLUG_KEY, label: 'Slug' },
+    ],
+    defaultSort: {
+      column: SLUG_KEY,
+      direction: 'ascending',
+    },
+    includesCustomColumns: false,
+  };
 }

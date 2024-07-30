@@ -80,18 +80,28 @@ type Columns<Key> = {
   /** The default field and direction used to initially sort the data. */
   defaultSort: SortDescriptor<Key>;
   /** Defines which fields to render. */
-  definition: Column<Key>[];
+  definition: ColumnConfig<Key>[];
 };
-type Column<Key> = {
+export type ColumnConfig<Key> = {
   /**
    * The alignment of the column's contents relative to its allotted width.
    * @default 'start'
    */
-  align?: 'start' | 'center' | 'end' | 'left' | 'right';
+  align?: 'start' | 'center' | 'end';
   /** Whether the column allows sorting. */
   allowsSorting?: boolean;
+  /**
+   * Whether a column is a [row header](https://www.w3.org/TR/wai-aria-1.1/#rowheader) and should be announced by assistive
+   * technology during row navigation.
+   */
+  isRowHeader?: boolean;
   /** The key of the column. */
   key: Key;
+  /**
+   * The label of the column. Defaults to the label of the matching schema
+   * field, by `key`.
+   */
+  label?: string;
   /** The maximum width of the column. */
   maxWidth?: ColumnWidth;
   /** The minimum width of the column. */

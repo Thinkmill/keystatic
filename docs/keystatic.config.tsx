@@ -295,15 +295,14 @@ export default config({
         contentField: 'content',
       },
       previewUrl: makePreviewUrl('/blog/{slug}'),
-      columns: ['title', 'publishedOn'],
-      // FIXME: types aren't quite right here
-      // columns: {
-      //   definition: [
-      //     { key: 'title' },
-      //     { key: 'publishedOn', width: 100 },
-      //   ],
-      //   defaultSort: { column: 'publishedOn', direction: 'descending' },
-      // },
+      columns: {
+        definition: [
+          { key: 'title', isRowHeader: true },
+          { key: 'draft', label: 'Draft', width: 140 },
+          { key: 'publishedOn', label: 'Published', width: 140, align: 'end' },
+        ],
+        defaultSort: { column: 'publishedOn', direction: 'descending' },
+      },
       schema: {
         title: fields.slug({
           name: {
@@ -380,7 +379,16 @@ export default config({
       path: 'src/content/projects/*',
       format: { contentField: 'content' },
       entryLayout: 'content',
-      columns: ['title', 'type', 'url', 'repoUrl', 'sortIndex'],
+      columns: {
+        definition: [
+          { key: 'title', isRowHeader: true },
+          { key: 'type', width: 120 },
+          { key: 'url', allowsSorting: false },
+          { key: 'repoUrl', label: 'Repo', allowsSorting: false },
+          { key: 'sortIndex', label: 'Sort', width: 80, align: 'end' },
+        ],
+        defaultSort: { column: 'sortIndex', direction: 'ascending' },
+      },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         type: fields.select({
@@ -425,6 +433,13 @@ export default config({
       label: 'Resources',
       path: 'src/content/resources/*',
       slugField: 'title',
+      columns: {
+        definition: [
+          { key: 'title', isRowHeader: true },
+          { key: 'sortIndex', label: 'Sort', width: 80, align: 'end' },
+        ],
+        defaultSort: { column: 'sortIndex', direction: 'ascending' },
+      },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         type: fields.conditional(
