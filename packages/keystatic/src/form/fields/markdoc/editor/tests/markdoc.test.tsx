@@ -43,6 +43,18 @@ const schema = createEditorSchema(
         something: fields.text({ label: 'Something' }),
       },
     }),
+    'string-directly-in-conditional': block({
+      label: 'String directly in conditional',
+      schema: {
+        conditional: fields.conditional(
+          fields.checkbox({ label: 'Checkbox' }),
+          {
+            true: fields.text({ label: 'True' }),
+            false: fields.text({ label: 'False' }),
+          }
+        ),
+      },
+    }),
   },
   false
 );
@@ -648,6 +660,33 @@ test('only inline in list item', () => {
   `);
   expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
     "- {% inline-thing something="adkjsakjndnajksdnjk" /%}
+    "
+  `);
+});
+
+test('undefined in conditional value', () => {
+  const markdoc = `{% string-directly-in-conditional conditional={discriminant:false} /%}`;
+  const editor = fromMarkdoc(markdoc);
+  expect(editor).toMatchInlineSnapshot(`
+    <doc>
+      <node_selection>
+        <string-directly-in-conditional
+          props={
+            {
+              "extraFiles": [],
+              "value": {
+                "conditional": {
+                  "discriminant": false,
+                },
+              },
+            }
+          }
+        />
+      </node_selection>
+    </doc>
+  `);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "{% string-directly-in-conditional conditional={discriminant: false} /%}
     "
   `);
 });
