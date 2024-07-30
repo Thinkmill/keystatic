@@ -173,6 +173,7 @@ const markdocConfig: Config = {
       },
     },
     paragraph: { ...Markdoc.nodes.paragraph, render: 'Paragraph' },
+    table: { ...Markdoc.nodes.table, render: 'Table' },
     fence: {
       render: 'CodeBlock',
       attributes: {

@@ -1,16 +1,16 @@
 ---
 title: Collections
 summary: >-
-  Think of a collection as anything you'd want multiple instances of. A series
+  Think of a collection as anything you’d want multiple instances of. A series
   of blog posts, cooking recipes, or testimonials from happy customers.
 ---
-Think of a `collection` as anything you'd want multiple instances of. A series of blog posts, cooking recipes, or testimonials from happy customers.
+Think of a `collection` as anything you’d want multiple instances of. A series of blog posts, cooking recipes, or testimonials from happy customers.
 
 Collections are defined within the `collections` key of the Keystatic `config`. Each collection has its own key and is wrapped in a `collection()` function.
 
 ## Example
 
-Here's how you'd define a `testimonial` collection, where each entry has an `author` and a `quote` fields:
+Here’s how you’d define a `testimonial` collection, where each entry has an `author` and a `quote` fields:
 
 ```jsx
 // keystatic.config.ts
@@ -37,15 +37,49 @@ export default config({
 
 ### Columns
 
-`columns` — show additional fields in the collection list view. 
+By default, only the “slug” of each entry is displayed in the collection table. You can show additional fields by passing a `columns` option.
 
-By default, only the `slug` of each entry is displayed in the collection list. 
+#### Basic columns
 
-You can show additional fields by passing a `columns` option, which is an array of field keys:
+Pass an array of field keys to show them in the collection table:
 
 ```ts
 columns: ['title', 'publishedOn'] 
 ```
+
+#### Columns definition
+
+For more control, use a `columns` object with a `definition` array. Column definitions require a `defaultSort` option.
+
+```ts
+columns: {
+  definition: [
+    { key: 'title', isRowHeader: true },
+    {
+      key: 'publishedOn',
+      label: 'Published',
+      width: 140,
+      align: 'end'
+    },
+  ],
+  defaultSort: {
+    column: 'publishedOn',
+    direction: 'descending'
+  }
+}
+```
+
+| Property | Description |
+| -------- | ----------- |
+| `align` | The alignment of the column’s contents relative to its allotted width. |
+| `allowsSorting` | Whether the column allows sorting. Defaults to `true`. |
+| `isRowHeader` | Whether a column is a [row header](https://www.w3.org/TR/wai-aria-1.1/#rowheader) and should be announced by assistive technology during row navigation. |
+| `key` (required) | The key of the column. |
+| `label` | The label of the column. Defaults to the label of the matching schema field, by `key`. |
+| `maxWidth` | The maximum width of the column. |
+| `minWidth` | The minimum width of the column. |
+| `width` | The width of the column. |
+
 
 ### Label 
 
@@ -91,7 +125,7 @@ You can learn more about the `path` option on the [Content organisation page](/d
 
 `slugField` — defines what field in your collection `schema` should be used as the slug for each item. 
 
-It's recommended to combine it with the [slug field](/docs/fields/slug) to let users customise and regenerate each slug in the Admin UI.
+It’s recommended to combine it with the [slug field](/docs/fields/slug) to let users customise and regenerate each slug in the Admin UI.
 
 ```typescript
 testimonials: collection({
@@ -105,7 +139,7 @@ testimonials: collection({
 
 ### Template
 
-`template` — the path to a content file (existing collection entry or "template") to use as a starting point for new entries.
+`template` — the path to a content file (existing collection entry or “template”) to use as a starting point for new entries.
 
 ---
 
