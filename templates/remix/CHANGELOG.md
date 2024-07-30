@@ -1,5 +1,21 @@
 # @keystatic/templates-remix
 
+## 0.0.30
+
+### Patch Changes
+
+- Updated dependencies [[`77be9cc`](https://github.com/Thinkmill/keystatic/commit/77be9cc7e0fe024baa83d3cf4a29f1b3c28db445), [`9793fc5`](https://github.com/Thinkmill/keystatic/commit/9793fc517a8198f0e53f29d83186248655e80210), [`251cda5`](https://github.com/Thinkmill/keystatic/commit/251cda5fa688e47e136dd12579a06b8fb4368935), [`fdb6218`](https://github.com/Thinkmill/keystatic/commit/fdb6218a081d1ad4ce9c30f071b6ce13a130681d)]:
+  - @keystatic/core@0.5.30
+  - @keystatic/remix@5.0.0
+
+## 0.0.29
+
+### Patch Changes
+
+- Updated dependencies [[`cd289e1`](https://github.com/Thinkmill/keystatic/commit/cd289e1099ff56f6185dce5ace01e0e52adc7010), [`9605f85`](https://github.com/Thinkmill/keystatic/commit/9605f8528b377722a2be516f33ae40d682557ade)]:
+  - @keystatic/core@0.5.29
+  - @keystatic/remix@5.0.0
+
 ## 0.0.28
 
 ### Patch Changes

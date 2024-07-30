@@ -6,12 +6,12 @@ import { ComponentSchema, fields } from '../form/api';
 import { dump } from 'js-yaml';
 import { useMutation } from 'urql';
 import {
-  BranchInfoContext,
   fetchGitHubTreeData,
   hydrateTreeCacheWithEntries,
-  RepoWithWriteAccessContext,
   useBaseCommit,
+  useCurrentBranch,
   useCurrentUnscopedTree,
+  useRepoInfo,
   useSetTreeSha,
 } from './shell/data';
 import { hydrateBlobCache } from './useItemData';
@@ -128,10 +128,10 @@ export function useUpsertItem(args: {
     kind: 'idle',
   });
   const baseCommit = useBaseCommit();
-  const branchInfo = useContext(BranchInfoContext);
+  const currentBranch = useCurrentBranch();
   const setTreeSha = useSetTreeSha();
   const [, mutate] = useMutation(createCommitMutation);
-  const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
+  const repoInfo = useRepoInfo();
   const appSlug = useContext(AppSlugContext);
   const unscopedTreeData = useCurrentUnscopedTree();
 
@@ -145,8 +145,9 @@ export function useUpsertItem(args: {
             : undefined;
         if (!unscopedTree) return false;
         if (
-          repoWithWriteAccess === null &&
           args.config.storage.kind === 'github' &&
+          repoInfo &&
+          !repoInfo.hasWritePermission &&
           appSlug?.value
         ) {
           setState({ kind: 'needs-fork' });
@@ -204,11 +205,12 @@ export function useUpsertItem(args: {
           args.config.storage.kind === 'github' ||
           args.config.storage.kind === 'cloud'
         ) {
+          if (!repoInfo) {
+            throw new Error('Repo info not loaded');
+          }
           const branch = {
-            branchName: override?.branch ?? branchInfo.currentBranch,
-            repositoryNameWithOwner: `${repoWithWriteAccess!.owner}/${
-              repoWithWriteAccess!.name
-            }`,
+            branchName: override?.branch ?? currentBranch,
+            repositoryNameWithOwner: `${repoInfo.owner}/${repoInfo.name}`,
           };
           const runMutation = (expectedHeadOid: string) =>
             mutate({
@@ -241,9 +243,9 @@ export function useUpsertItem(args: {
               // so we create a new client just for this
               const refData = await createUrqlClient(args.config)
                 .query(FetchRef, {
-                  owner: repoWithWriteAccess!.owner,
-                  name: repoWithWriteAccess!.name,
-                  ref: `refs/heads/${branchInfo.currentBranch}`,
+                  owner: repoInfo.owner,
+                  name: repoInfo.name,
+                  ref: `refs/heads/${currentBranch}`,
                 })
                 .toPromise();
               if (!refData.data?.repository?.ref?.target) {
@@ -290,9 +292,7 @@ export function useUpsertItem(args: {
             )
           ) {
             throw new Error(
-              `The GitHub App is unable to commit to the repository. Please ensure that the Keystatic GitHub App is installed in the GitHub repository ${
-                repoWithWriteAccess!.owner
-              }/${repoWithWriteAccess!.name}`
+              `The GitHub App is unable to commit to the repository. Please ensure that the Keystatic GitHub App is installed in the GitHub repository ${repoInfo.owner}/${repoInfo.name}`
             );
           }
 
@@ -375,11 +375,11 @@ export function useDeleteItem(args: {
     kind: 'idle',
   });
   const baseCommit = useBaseCommit();
-  const branchInfo = useContext(BranchInfoContext);
+  const currentBranch = useCurrentBranch();
 
   const [, mutate] = useMutation(createCommitMutation);
   const setTreeSha = useSetTreeSha();
-  const repoWithWriteAccess = useContext(RepoWithWriteAccessContext);
+  const repoInfo = useRepoInfo();
   const appSlug = useContext(AppSlugContext);
   const unscopedTreeData = useCurrentUnscopedTree();
 
@@ -393,8 +393,9 @@ export function useDeleteItem(args: {
             : undefined;
         if (!unscopedTree) return false;
         if (
-          repoWithWriteAccess === null &&
           args.storage.kind === 'github' &&
+          repoInfo &&
+          !repoInfo.hasWritePermission &&
           appSlug?.value
         ) {
           setState({ kind: 'needs-fork' });
@@ -410,13 +411,14 @@ export function useDeleteItem(args: {
         });
         await hydrateTreeCacheWithEntries(updatedTree.entries);
         if (args.storage.kind === 'github' || args.storage.kind === 'cloud') {
+          if (!repoInfo) {
+            throw new Error('Repo info not loaded');
+          }
           const { error } = await mutate({
             input: {
               branch: {
-                repositoryNameWithOwner: `${repoWithWriteAccess!.owner}/${
-                  repoWithWriteAccess!.name
-                }`,
-                branchName: branchInfo.currentBranch,
+                repositoryNameWithOwner: `${repoInfo.owner}/${repoInfo.name}`,
+                branchName: currentBranch,
               },
               message: { headline: `Delete ${args.basePath}` },
               expectedHeadOid: baseCommit,
@@ -434,9 +436,7 @@ export function useDeleteItem(args: {
             )
           ) {
             throw new Error(
-              `The GitHub App is unable to commit to the repository. Please ensure that the Keystatic GitHub App is installed in the GitHub repository ${
-                repoWithWriteAccess!.owner
-              }/${repoWithWriteAccess!.name}`
+              `The GitHub App is unable to commit to the repository. Please ensure that the Keystatic GitHub App is installed in the GitHub repository ${repoInfo.owner}/${repoInfo.name}`
             );
           }
           if (error) {

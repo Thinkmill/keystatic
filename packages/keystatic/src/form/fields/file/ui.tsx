@@ -19,6 +19,7 @@ export function FileFieldInput(
     label: string;
     description: string | undefined;
     validation: { isRequired?: boolean } | undefined;
+    transformFilename: ((originalFilename: string) => string) | undefined;
   }
 ) {
   const { value } = props;
@@ -54,7 +55,9 @@ export function FileFieldInput(
             if (file) {
               props.onChange({
                 data: file.content,
-                filename: file.filename,
+                filename: props.transformFilename
+                  ? props.transformFilename(file.filename)
+                  : file.filename,
                 extension: file.filename.match(/\.([^.]+$)/)?.[1] ?? '',
               });
             }

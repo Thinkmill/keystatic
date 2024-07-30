@@ -97,12 +97,14 @@ const NodeViewWrapper = memo(function NodeViewWrapper(props: {
 
 export function NodeViews(props: { state: EditorState }): ReactElement | null {
   const pluginState = reactNodeViewKey.getState(props.state)!;
-  const [nodeViews, setNodeViews] = useState(pluginState.nodeViews);
+  const [nodeViews, setNodeViews] = useState(
+    () => new Map(pluginState.nodeViews)
+  );
   useLayoutEffect(() => {
     return pluginState.register(() => {
-      setNodeViews(pluginState.nodeViews);
+      setNodeViews(new Map(pluginState.nodeViews));
     });
-  });
+  }, [pluginState]);
   const nodeSelectionPos =
     props.state.selection instanceof NodeSelection
       ? props.state.selection.from

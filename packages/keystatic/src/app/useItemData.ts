@@ -10,12 +10,7 @@ import {
 import { parseProps } from '../form/parse-props';
 import { getAuth } from './auth';
 import { loadDataFile } from './required-files';
-import {
-  useBaseCommit,
-  useBranchInfo,
-  useIsRepoPrivate,
-  useTree,
-} from './shell/data';
+import { useBaseCommit, useRepoInfo, useTree } from './shell/data';
 import { getDirectoriesForTreeKey, getTreeKey } from './tree-key';
 import { TreeNode, getTreeNodeAtPath, TreeEntry, blobSha } from './trees';
 import { LOADING, useData } from './useData';
@@ -203,8 +198,7 @@ function getAllFilesInTree(tree: Map<string, TreeNode>): TreeEntry[] {
 export function useItemData(args: UseItemDataArgs) {
   const { current: currentBranch } = useTree();
   const baseCommit = useBaseCommit();
-  const isRepoPrivate = useIsRepoPrivate();
-  const branchInfo = useBranchInfo();
+  const repoInfo = useRepoInfo();
 
   const rootTree =
     currentBranch.kind === 'loaded' ? currentBranch.data.tree : undefined;
@@ -268,8 +262,7 @@ export function useItemData(args: UseItemDataArgs) {
             entry.sha,
             entry.path,
             baseCommit,
-            isRepoPrivate,
-            { owner: branchInfo.mainOwner, name: branchInfo.mainRepo }
+            repoInfo
           );
           if (blob instanceof Uint8Array) {
             return [entry.path, blob] as const;
@@ -312,9 +305,7 @@ export function useItemData(args: UseItemDataArgs) {
       args.slug,
       locationsForTreeKey,
       baseCommit,
-      isRepoPrivate,
-      branchInfo.mainOwner,
-      branchInfo.mainRepo,
+      repoInfo,
       localTreeKey,
     ])
   );
@@ -334,13 +325,12 @@ async function fetchGitHubBlob(
   oid: string,
   filepath: string,
   commitSha: string,
-  isRepoPrivate: boolean,
-  repo: { owner: string; name: string }
+  repoInfo: { owner: string; name: string; isPrivate: boolean } | null
 ): Promise<Response> {
-  if (!isRepoPrivate) {
+  if (repoInfo?.isPrivate === false) {
     return fetch(
       `https://raw.githubusercontent.com/${serializeRepoConfig(
-        repo
+        repoInfo
       )}/${commitSha}/${getPathPrefix(config.storage) ?? ''}${filepath}`
     );
   }
@@ -366,8 +356,7 @@ export function fetchBlob(
   oid: string,
   filepath: string,
   commitSha: string,
-  isRepoPrivate: boolean,
-  repo: { owner: string; name: string }
+  repoInfo: { owner: string; name: string; isPrivate: boolean } | null
 ): MaybePromise<Uint8Array> {
   if (blobCache.has(oid)) return blobCache.get(oid)!;
 
@@ -385,7 +374,7 @@ export function fetchBlob(
         ? fetch(`/api/keystatic/blob/${oid}/${filepath}`, {
             headers: { 'no-cors': '1' },
           })
-        : fetchGitHubBlob(config, oid, filepath, commitSha, isRepoPrivate, repo)
+        : fetchGitHubBlob(config, oid, filepath, commitSha, repoInfo)
     )
       .then(async x => {
         if (!x.ok) {

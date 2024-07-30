@@ -17,7 +17,7 @@ import {
 import { WebsocketProvider } from './websocket-provider';
 import { getAuth } from '../auth';
 import { useRouter } from '../router';
-import { useBranchInfo, useCloudInfo } from './data';
+import { useCloudInfo, useCurrentBranch } from './data';
 import { Config } from '../..';
 import ReconnectingWebSocket from 'partysocket/ws';
 import * as decoding from 'lib0/decoding';
@@ -135,7 +135,6 @@ const currentAwarenesses = new WeakMap<
 >();
 
 export function CollabProvider(props: { children: ReactNode; config: Config }) {
-  const branchInfo = useBranchInfo();
   const router = useRouter();
   const cloudInfo = useCloudInfo();
   const project = props.config.cloud?.project;
@@ -198,15 +197,17 @@ export function CollabProvider(props: { children: ReactNode; config: Config }) {
     return { doc, awareness, provider, data, idb };
   }, [isMultiplayerEnabled, project, props.config]);
 
+  const currentBranch = useCurrentBranch();
+
   useEffect(() => {
-    yJsInfo?.awareness.setLocalStateField('branch', branchInfo.currentBranch);
+    yJsInfo?.awareness.setLocalStateField('branch', currentBranch);
     yJsInfo?.awareness.setLocalStateField(
       'location',
       router.params.slice(2).join('/')
     );
-  }, [branchInfo.currentBranch, router.params, yJsInfo?.awareness]);
+  }, [currentBranch, router.params, yJsInfo?.awareness]);
 
-  const hasRepo = branchInfo.currentBranch;
+  const hasRepo = !!currentBranch;
   useEffect(() => {
     if (hasRepo && yJsInfo) {
       yJsInfo.idb.connect();

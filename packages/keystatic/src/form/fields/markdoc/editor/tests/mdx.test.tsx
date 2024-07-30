@@ -134,7 +134,6 @@ test('nested list', () => {
   );
   expect(mdx).toMatchInlineSnapshot(`
     "* Something
-
       * Something
 
     "

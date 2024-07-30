@@ -6,7 +6,6 @@ import {
   ForwardedRef,
   ReactElement,
   forwardRef,
-  useContext,
   useMemo,
   useReducer,
 } from 'react';
@@ -47,10 +46,11 @@ import {
 
 import { useConfig } from '../context';
 import {
-  GitHubAppShellDataContext,
-  useBranchInfo,
+  useBranches,
   useCloudInfo,
+  useCurrentBranch,
   useRawCloudInfo,
+  useRepoInfo,
 } from '../data';
 import { useViewer } from '../viewer-data';
 import { useThemeContext } from '../theme';
@@ -288,8 +288,11 @@ const UserDetailsButton = forwardRef(function UserDetailsButton(
 // -----------------------------------------------------------------------------
 
 export function useAssociatedPullRequest() {
-  const data = useBranchInfo();
-  const currentBranchId = data.branchNameToId.get(data.currentBranch);
+  const branches = useBranches();
+  const repoInfo = useRepoInfo();
+  const currentBranch = useCurrentBranch();
+  const currentBranchId = branches.get(currentBranch)?.id;
+
   const [prResult] = useQuery({
     query: gql`
       query PullRequestForBranch($refId: ID!) {
@@ -307,7 +310,7 @@ export function useAssociatedPullRequest() {
         }
       }
     ` as import('../../../../__generated__/ts-gql/PullRequestForBranch').type,
-    pause: !currentBranchId || data.currentBranch === data.defaultBranch,
+    pause: !currentBranchId || currentBranch === repoInfo?.defaultBranch,
     variables: { refId: currentBranchId! },
   });
   return prResult.data?.node && prResult.data.node.__typename === 'Ref'
@@ -316,7 +319,9 @@ export function useAssociatedPullRequest() {
 }
 
 export function GitMenu() {
-  const data = useBranchInfo();
+  const branches = useBranches();
+  const currentBranch = useCurrentBranch();
+  const repoInfo = useRepoInfo();
   const prNumber = useAssociatedPullRequest();
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const [newBranchDialogVisible, toggleNewBranchDialog] = useReducer(
@@ -337,15 +342,9 @@ export function GitMenu() {
     ` as import('../../../../__generated__/ts-gql/DeleteBranch').type
   );
 
-  const repoURL = getRepoUrl(data);
-  const appShellData = useContext(GitHubAppShellDataContext);
-  const fork =
-    appShellData?.data?.repository &&
-    'forks' in appShellData.data.repository &&
-    appShellData.data.repository.forks.nodes?.[0];
-
   const gitMenuItems = useMemo(() => {
-    let isDefaultBranch = data.currentBranch === data.defaultBranch;
+    const repoURL = repoInfo ? getRepoUrl(repoInfo.upstream) : '';
+    let isDefaultBranch = currentBranch === repoInfo?.defaultBranch;
     let items: MenuSection[] = [];
     let branchSection: MenuItem[] = [
       {
@@ -371,7 +370,7 @@ export function GitMenu() {
         prSection.push({
           key: 'create-pull-request',
           icon: gitPullRequestIcon,
-          href: `${repoURL}/pull/new/${data.currentBranch}`,
+          href: `${repoURL}/pull/new/${currentBranch}`,
           target: '_blank',
           rel: 'noopener noreferrer',
           label: stringFormatter.format('createPullRequest'),
@@ -392,11 +391,12 @@ export function GitMenu() {
         });
       }
     }
-    if (fork) {
+    const forkRepoUrl = repoInfo ? getRepoUrl(repoInfo) : '';
+    if (forkRepoUrl !== repoURL) {
       repoSection.push({
         key: 'fork',
         icon: gitForkIcon,
-        href: `https://github.com/${fork.owner.login}/${fork.name}`,
+        href: forkRepoUrl,
         target: '_blank',
         rel: 'noopener noreferrer',
         label: 'View fork', // TODO: l10n
@@ -426,14 +426,7 @@ export function GitMenu() {
     }
 
     return items;
-  }, [
-    fork,
-    data.currentBranch,
-    data.defaultBranch,
-    prNumber,
-    repoURL,
-    stringFormatter,
-  ]);
+  }, [currentBranch, repoInfo, stringFormatter, prNumber]);
   const router = useRouter();
   return (
     <>
@@ -497,19 +490,21 @@ export function GitMenu() {
             primaryActionLabel="Yes, delete"
             autoFocusButton="cancel"
             onPrimaryAction={async () => {
-              await deleteBranch({
-                refId: data.branchNameToId.get(data.currentBranch)!,
-              });
-              router.push(
-                router.href.replace(
-                  /\/branch\/[^/]+/,
-                  '/branch/' + encodeURIComponent(data.defaultBranch)
-                )
-              );
+              if (repoInfo) {
+                await deleteBranch({
+                  refId: branches.get(currentBranch)!.id,
+                });
+                router.push(
+                  router.href.replace(
+                    /\/branch\/[^/]+/,
+                    '/branch/' + encodeURIComponent(repoInfo.defaultBranch)
+                  )
+                );
+              }
             }}
           >
-            Are you sure you want to delete the "{data.currentBranch}" branch?
-            This cannot be undone.
+            Are you sure you want to delete the "{currentBranch}" branch? This
+            cannot be undone.
           </AlertDialog>
         )}
       </DialogContainer>

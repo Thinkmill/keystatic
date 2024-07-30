@@ -1,5 +1,25 @@
 # @keystatic/core
 
+## 0.5.30
+
+### Patch Changes
+
+- [#1248](https://github.com/Thinkmill/keystatic/pull/1248) [`77be9cc`](https://github.com/Thinkmill/keystatic/commit/77be9cc7e0fe024baa83d3cf4a29f1b3c28db445) Thanks [@emmatown](https://github.com/emmatown)! - Add `fields.ignored`
+
+- [#1246](https://github.com/Thinkmill/keystatic/pull/1246) [`9793fc5`](https://github.com/Thinkmill/keystatic/commit/9793fc517a8198f0e53f29d83186248655e80210) Thanks [@tordans](https://github.com/tordans)! - Fix `validation.pattern` being required for `fields.slug`
+
+- [#1243](https://github.com/Thinkmill/keystatic/pull/1243) [`251cda5`](https://github.com/Thinkmill/keystatic/commit/251cda5fa688e47e136dd12579a06b8fb4368935) Thanks [@emmatown](https://github.com/emmatown)! - Add `transformFilename` option to `fields.image`/`fields.file`/image options in `fields.markdoc`/`fields.mdx`
+
+- [#1247](https://github.com/Thinkmill/keystatic/pull/1247) [`fdb6218`](https://github.com/Thinkmill/keystatic/commit/fdb6218a081d1ad4ce9c30f071b6ce13a130681d) Thanks [@emmatown](https://github.com/emmatown)! - Properly fix `@urql/core` peer dependency errors
+
+## 0.5.29
+
+### Patch Changes
+
+- [#1237](https://github.com/Thinkmill/keystatic/pull/1237) [`cd289e1`](https://github.com/Thinkmill/keystatic/commit/cd289e1099ff56f6185dce5ace01e0e52adc7010) Thanks [@emmatown](https://github.com/emmatown)! - Output list items with only text and a nested list as tight list items in `fields.markdoc`/`fields.mdx`
+
+- [#1239](https://github.com/Thinkmill/keystatic/pull/1239) [`9605f85`](https://github.com/Thinkmill/keystatic/commit/9605f8528b377722a2be516f33ae40d682557ade) Thanks [@emmatown](https://github.com/emmatown)! - Fix content components UI not showing in `fields.markdoc`/`fields.mdx` until focused
+
 ## 0.5.28
 
 ### Patch Changes

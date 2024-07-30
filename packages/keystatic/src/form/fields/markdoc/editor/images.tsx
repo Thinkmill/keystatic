@@ -8,7 +8,7 @@ import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Text } from '@keystar/ui/typography';
 
 import { getUploadedFileObject } from '../../image/ui';
-import { EditorSchema } from './schema';
+import { EditorSchema, getEditorSchema } from './schema';
 import { ToolbarButton } from './Toolbar';
 import { EditorConfig } from '../config';
 import { getSrcPrefix } from '../../image/getSrcPrefix';
@@ -68,13 +68,18 @@ export function imageDropPlugin(schema: EditorSchema) {
             })();
             return true;
           }
-          if (file.type.startsWith('image/') && imageType) {
+          if (
+            file.type.startsWith('image/') &&
+            imageType &&
+            schema.config.image
+          ) {
+            const { transformFilename } = schema.config.image;
             (async () => {
               const slice = Slice.maxOpen(
                 Fragment.from(
                   imageType.createChecked({
                     src: new Uint8Array(await file.arrayBuffer()),
-                    filename: file.name,
+                    filename: transformFilename(file.name),
                   })
                 )
               );
@@ -108,13 +113,19 @@ export function imageDropPlugin(schema: EditorSchema) {
             })();
             return true;
           }
-          if (file.type.startsWith('image/') && imageType) {
+          if (
+            file.type.startsWith('image/') &&
+            imageType &&
+            schema.config.image
+          ) {
+            const { transformFilename } = schema.config.image;
+
             (async () => {
               view.dispatch(
                 view.state.tr.replaceSelectionWith(
                   imageType.createChecked({
                     src: new Uint8Array(await file.arrayBuffer()),
-                    filename: file.name,
+                    filename: transformFilename(file.name),
                   })
                 )
               );
@@ -135,12 +146,13 @@ export function ImageToolbarButton() {
           if (dispatch && view) {
             (async () => {
               const file = await getUploadedFileObject('image/*');
-              if (!file) return;
+              const schema = getEditorSchema(view.state.schema);
+              if (!file || !schema.config.image) return;
               view.dispatch(
                 view.state.tr.replaceSelectionWith(
                   view.state.schema.nodes.image.createChecked({
                     src: new Uint8Array(await file.arrayBuffer()),
-                    filename: file.name,
+                    filename: schema.config.image.transformFilename(file.name),
                   })
                 )
               );

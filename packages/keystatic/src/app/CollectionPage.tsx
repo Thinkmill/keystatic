@@ -47,9 +47,9 @@ import { EmptyState } from './shell/empty-state';
 import {
   useTree,
   TreeData,
-  useBranchInfo,
   useBaseCommit,
-  useIsRepoPrivate,
+  useCurrentBranch,
+  useRepoInfo,
 } from './shell/data';
 import { PageRoot, PageHeader } from './shell/page';
 import {
@@ -293,20 +293,20 @@ function CollectionTable(
 ) {
   let { searchTerm } = props;
 
-  let { currentBranch, defaultBranch } = useBranchInfo();
+  const repoInfo = useRepoInfo();
+  const currentBranch = useCurrentBranch();
   let isLocalMode = isLocalConfig(props.config);
   let router = useRouter();
 
   const collection = props.config.collections![props.collection]!;
-  const hideStatusColumn = isLocalMode || currentBranch === defaultBranch;
+  const hideStatusColumn =
+    isLocalMode || currentBranch === repoInfo?.defaultBranch;
   const { columnData, defaultSort, includesCustomColumns } = useMemo(() => {
     return getTableConfig(collection, hideStatusColumn);
   }, [collection, hideStatusColumn]);
   const [sortDescriptor, setSortDescriptor] =
     useState<SortDescriptor>(defaultSort);
 
-  const branchInfo = useBranchInfo();
-  const isRepoPrivate = useIsRepoPrivate();
   const baseCommit = useBaseCommit();
 
   const entriesWithStatus = useMemo(() => {
@@ -357,8 +357,7 @@ function CollectionTable(
                 formatInfo
               ),
               baseCommit,
-              isRepoPrivate,
-              { owner: branchInfo.mainOwner, name: branchInfo.mainRepo }
+              repoInfo
             ),
           ] as const;
         })
@@ -405,14 +404,12 @@ function CollectionTable(
       );
     }, [
       baseCommit,
-      branchInfo.mainOwner,
-      branchInfo.mainRepo,
       collection,
       entriesWithStatus,
       includesCustomColumns,
-      isRepoPrivate,
       props.collection,
       props.config,
+      repoInfo,
     ])
   );
 

@@ -21,6 +21,7 @@ export const FileFieldDemo = () => {
         onChange={setValue}
         autoFocus={false}
         forceValidation={false}
+        transformFilename={undefined}
       />
     </FieldDemoFrame>
   );

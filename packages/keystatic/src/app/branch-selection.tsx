@@ -1,6 +1,6 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { gql } from '@ts-gql/tag/no-transform';
-import { useMemo, useState, useContext } from 'react';
+import { useMemo, useState } from 'react';
 import { CombinedError, useMutation } from 'urql';
 
 import { Button, ButtonGroup } from '@keystar/ui/button';
@@ -18,47 +18,50 @@ import { Heading, Text } from '@keystar/ui/typography';
 
 import l10nMessages from './l10n/index.json';
 import { useRouter } from './router';
-import { BranchInfoContext, Ref_base, useRepositoryId } from './shell/data';
+import {
+  Ref_base,
+  useCurrentBranch,
+  useBranches,
+  useRepoInfo,
+} from './shell/data';
 import { useConfig } from './shell/context';
 import { getBranchPrefix } from './utils';
 
 export function BranchPicker() {
-  const { allBranches, currentBranch, defaultBranch } =
-    useContext(BranchInfoContext);
+  const branches = useBranches();
+  const repoInfo = useRepoInfo();
+  const currentBranch = useCurrentBranch();
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const router = useRouter();
   const config = useConfig();
   const branchPrefix = getBranchPrefix(config);
   const items = useMemo(() => {
-    let defaultItems = allBranches.map(name => ({
-      id: name,
-      name,
-    }));
+    const allBranches = [];
+    if (repoInfo) {
+      allBranches.push({
+        name: repoInfo.defaultBranch,
+        description: stringFormatter.format('defaultBranch'),
+      });
 
-    if (defaultBranch) {
-      return [
-        {
-          id: defaultBranch,
-          name: defaultBranch,
-          description: stringFormatter.format('defaultBranch'),
-        },
-        ...defaultItems.filter(i => i.name !== defaultBranch),
-      ];
+      for (let branch of branches.keys()) {
+        if (branch === repoInfo.defaultBranch) continue;
+        allBranches.push({ name: branch });
+      }
     }
 
-    return defaultItems;
-  }, [allBranches, defaultBranch, stringFormatter]);
+    return allBranches;
+  }, [branches, repoInfo, stringFormatter]);
 
   const filteredBranches = useMemo(
     () =>
       items.filter(
         item =>
-          item.name === defaultBranch ||
+          item.name === repoInfo?.defaultBranch ||
           !branchPrefix ||
           item.name.startsWith(branchPrefix) ||
           item.name === currentBranch
       ),
-    [branchPrefix, currentBranch, defaultBranch, items]
+    [items, repoInfo, branchPrefix, currentBranch]
   );
 
   return (
@@ -81,7 +84,7 @@ export function BranchPicker() {
       flex
     >
       {item => (
-        <Item key={item.id} textValue={item.name}>
+        <Item key={item.name} textValue={item.name}>
           <Icon src={gitBranchIcon} />
           <Text truncate>{item.name}</Text>
           {'description' in item && (
@@ -98,15 +101,16 @@ export function CreateBranchDialog(props: {
   onCreate: (branchName: string) => void;
 }) {
   const config = useConfig();
-  const branchInfo = useContext(BranchInfoContext);
-  const isDefaultBranch = branchInfo.defaultBranch === branchInfo.currentBranch;
+  const repoInfo = useRepoInfo();
+  const branches = useBranches();
+  const currentBranch = useCurrentBranch();
+  const isDefaultBranch = repoInfo?.defaultBranch === currentBranch;
   const stringFormatter = useLocalizedStringFormatter(l10nMessages);
   const [{ error, fetching }, createBranch] = useCreateBranchMutation();
-  const repositoryId = useRepositoryId();
   const createBranchSubmitButtonId = 'create-branch-submit-button';
 
   const [branchName, setBranchName] = useState('');
-  const [baseBranch, setBaseBranch] = useState(branchInfo.defaultBranch);
+  const [baseBranch, setBaseBranch] = useState(repoInfo!.defaultBranch);
 
   const branchPrefix = getBranchPrefix(config);
 
@@ -142,8 +146,8 @@ export function CreateBranchDialog(props: {
           const result = await createBranch({
             input: {
               name,
-              oid: branchInfo.branchNameToBaseCommit.get(baseBranch)!,
-              repositoryId,
+              oid: branches.get(baseBranch)!.commitSha,
+              repositoryId: repoInfo!.id,
             },
           });
 
@@ -179,18 +183,18 @@ export function CreateBranchDialog(props: {
                 value={baseBranch}
                 onChange={setBaseBranch}
               >
-                <Radio value={branchInfo.defaultBranch}>
+                <Radio value={repoInfo!.defaultBranch}>
                   <Text>
-                    {branchInfo.defaultBranch}
+                    {repoInfo!.defaultBranch}
                     <Text visuallyHidden>.</Text>
                   </Text>
                   <Text slot="description">
                     {stringFormatter.format('theDefaultBranchInYourRepository')}
                   </Text>
                 </Radio>
-                <Radio value={branchInfo.currentBranch}>
+                <Radio value={currentBranch}>
                   <Text>
-                    {branchInfo.currentBranch}
+                    {currentBranch}
                     <Text visuallyHidden>.</Text>
                   </Text>
                   <Text slot="description">

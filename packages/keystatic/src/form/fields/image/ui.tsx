@@ -72,6 +72,7 @@ export function ImageFieldInput(
     label: string;
     description: string | undefined;
     validation: { isRequired?: boolean } | undefined;
+    transformFilename: ((originalFile: string) => string) | undefined;
   }
 ) {
   const { value } = props;
@@ -113,7 +114,9 @@ export function ImageFieldInput(
                 props.onChange({
                   data: image.content,
                   extension,
-                  filename: image.filename,
+                  filename: props.transformFilename
+                    ? props.transformFilename(image.filename)
+                    : image.filename,
                 });
               }
             }

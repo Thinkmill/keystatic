@@ -21,7 +21,7 @@ import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-util
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
 import l10nMessages from './l10n/index.json';
-import { useBaseCommit, useBranchInfo } from './shell/data';
+import { useBaseCommit, useCurrentBranch } from './shell/data';
 import { PageRoot, PageHeader, PageBody } from './shell/page';
 import { ForkRepoDialog } from './fork-repo';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
@@ -142,9 +142,9 @@ function CreateItemWrapper(props: {
     collectionConfig
   );
 
-  const branchInfo = useBranchInfo();
+  const currentBranch = useCurrentBranch();
   const yjsInfo = useYjsIfAvailable();
-  const key = `${branchInfo.currentBranch}/${props.collection}/create${
+  const key = `${currentBranch}/${props.collection}/create${
     duplicateSlug?.length ? `?duplicate=${duplicateSlug}` : ''
   }`;
 

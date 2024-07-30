@@ -43,9 +43,7 @@ import keystaticConfig from 'relative/path/to/your/keystatic.config';
 You can then create a new `reader` by calling `createGitHubReader` and passing it the following arguments:
 
 1. The Keystatic config
-
 1. An options object containing:
-
    - `repo`: The name of the content repository on GitHub (e.g. `Thinkmill/keystatic-data`)
    - `token`: The Personal Access Token that allows read access to the repository. This is different from your GitHub App Client ID / Secret in `.env`.
      For information on how to generate PATs, see [GitHub's documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
@@ -108,7 +106,7 @@ Good places to use the Reader API are:
 - `getStaticProps` in **Next.js (Pages Router)**
 - The frontmatter in **Astro** files
 - The `loader()` function in **Remix**
-- React**Server Components**
+- React **Server Components**
 
 ---
 
