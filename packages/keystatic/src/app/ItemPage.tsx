@@ -21,6 +21,8 @@ import { Button, ButtonGroup } from '@keystar/ui/button';
 import { AlertDialog, Dialog, DialogContainer } from '@keystar/ui/dialog';
 import { Icon } from '@keystar/ui/icon';
 import { copyPlusIcon } from '@keystar/ui/icon/icons/copyPlusIcon';
+import { clipboardCopyIcon } from '@keystar/ui/icon/icons/clipboardCopyIcon';
+import { clipboardPasteIcon } from '@keystar/ui/icon/icons/clipboardPasteIcon';
 import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
 import { githubIcon } from '@keystar/ui/icon/icons/githubIcon';
 import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
@@ -39,7 +41,7 @@ import { TextField } from '@keystar/ui/text-field';
 import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../config';
-import { ComponentSchema, GenericPreviewProps } from '../form/api';
+import { ComponentSchema, GenericPreviewProps, ObjectField } from '../form/api';
 import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
 import { getYjsValFromParsedValue } from '../form/yjs-props-value';
@@ -87,6 +89,9 @@ import {
   usePreviewPropsFromY,
 } from './preview-props';
 import { ErrorBoundary } from './error-boundary';
+import { copyEntryToClipboard, getPastedEntry } from './entry-clipboard';
+import { setValueToPreviewProps } from '../form/get-value';
+import { toastQueue } from '@keystar/ui/toast';
 
 type ItemPageProps = {
   collection: string;
@@ -112,7 +117,10 @@ function ItemPageInner(
     onReset: () => void;
     updateResult: ReturnType<typeof useUpsertItem>[0];
     onResetUpdateItem: () => void;
-    previewProps: GenericPreviewProps<ComponentSchema, undefined>;
+    previewProps: GenericPreviewProps<
+      ObjectField<Record<string, ComponentSchema>>,
+      undefined
+    >;
     hasChanged: boolean;
     state: Record<string, unknown>;
   }
@@ -182,6 +190,30 @@ function ItemPageInner(
     return hasUpdated;
   });
 
+  const onCopy = useEventCallback(() => {
+    copyEntryToClipboard(props.state, formatInfo, collectionConfig.schema, {
+      field: collectionConfig.slugField,
+      value: getSlugFromState(collectionConfig, props.state),
+    });
+  });
+
+  const onPaste = useEventCallback(async () => {
+    const entry = await getPastedEntry(formatInfo, collectionConfig.schema, {
+      field: collectionConfig.slugField,
+      slug: getSlugFromState(collectionConfig, props.state),
+    });
+    if (entry) {
+      setValueToPreviewProps(entry, props.previewProps);
+      toastQueue.positive('Entry pasted', {
+        shouldCloseOnAction: true,
+        actionLabel: 'Undo',
+        onAction: () => {
+          setValueToPreviewProps(props.state, props.previewProps);
+        },
+      });
+    }
+  });
+
   const viewHref =
     config.storage.kind !== 'local' && repoInfo
       ? `${getRepoUrl(repoInfo)}${
@@ -222,6 +254,8 @@ function ItemPageInner(
             hasChanged={props.hasChanged}
             onDelete={onDelete}
             onDuplicate={onDuplicate}
+            onCopy={onCopy}
+            onPaste={onPaste}
             onReset={props.onReset}
             viewHref={viewHref}
             previewHref={previewHref}
@@ -405,7 +439,6 @@ function LocalItemPage(
     if (hasChanged) {
       const serialized = serializeEntryToFiles({
         basePath: futureBasePath,
-        config,
         format: getCollectionFormat(config, collection),
         schema: collectionConfig.schema,
         slug: { field: collectionConfig.slugField, value: slug },
@@ -515,6 +548,8 @@ function HeaderActions(props: {
   onDelete: () => void;
   onDuplicate: () => void;
   onReset: () => void;
+  onCopy: () => void;
+  onPaste: () => void;
   previewHref?: string;
   viewHref?: string;
 }) {
@@ -525,6 +560,8 @@ function HeaderActions(props: {
     onDelete,
     onDuplicate,
     onReset,
+    onCopy,
+    onPaste,
     previewHref,
     viewHref,
   } = props;
@@ -552,6 +589,16 @@ function HeaderActions(props: {
         key: 'delete',
         label: 'Delete entry…', // TODO: l10n
         icon: trash2Icon,
+      },
+      {
+        key: 'copy',
+        label: 'Copy entry', // TODO: l10n
+        icon: clipboardCopyIcon,
+      },
+      {
+        key: 'paste',
+        label: 'Paste entry', // TODO: l10n
+        icon: clipboardPasteIcon,
       },
       {
         key: 'duplicate',
@@ -632,6 +679,12 @@ function HeaderActions(props: {
               break;
             case 'delete':
               setDeleteAlertOpen(true);
+              break;
+            case 'copy':
+              onCopy();
+              break;
+            case 'paste':
+              onPaste();
               break;
             case 'duplicate':
               if (hasChanged) {
@@ -812,7 +865,6 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
         const stored = storedValSchema.create(raw);
         const parsed = parseEntry(
           {
-            config: props.config,
             dirpath: getCollectionItemPath(
               props.config,
               props.collection,
