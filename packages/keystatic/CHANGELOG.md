@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.5.32
+
+### Patch Changes
+
+- [#1254](https://github.com/Thinkmill/keystatic/pull/1254) [`768595d`](https://github.com/Thinkmill/keystatic/commit/768595d936cd9c1b22a10914db779aa1175c34e1) Thanks [@emmatown](https://github.com/emmatown)! - Add copy and paste entry buttons
+
 ## 0.5.31
 
 ### Patch Changes
