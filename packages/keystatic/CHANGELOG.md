@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.5.31
+
+### Patch Changes
+
+- [#1252](https://github.com/Thinkmill/keystatic/pull/1252) [`0c1ed9b`](https://github.com/Thinkmill/keystatic/commit/0c1ed9b54f3e83a59b9cb24efdf2c19244dd2bd5) Thanks [@emmatown](https://github.com/emmatown)! - Fix serializing conditional fields in content components in `fields.markdoc` where the value is `undefined`
+
 ## 0.5.30
 
 ### Patch Changes

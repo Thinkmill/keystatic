@@ -95,6 +95,12 @@ export function serializeProps(
       array(_schema, value) {
         return value.map(val => (val === undefined ? null : val));
       },
+      conditional(_schema, value) {
+        if (value.value === undefined) {
+          return { discriminant: value.discriminant } as any;
+        }
+        return value;
+      },
       child() {
         return undefined as any;
       },
