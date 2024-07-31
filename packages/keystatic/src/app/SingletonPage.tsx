@@ -60,6 +60,11 @@ import {
   useSingleton,
 } from './preview-props';
 import { ComponentSchema, GenericPreviewProps } from '..';
+import { copyEntryToClipboard, getPastedEntry } from './entry-clipboard';
+import { clipboardPasteIcon } from '@keystar/ui/icon/icons/clipboardPasteIcon';
+import { clipboardCopyIcon } from '@keystar/ui/icon/icons/clipboardCopyIcon';
+import { setValueToPreviewProps } from '../form/get-value';
+import { toastQueue } from '@keystar/ui/toast';
 
 type SingletonPageProps = {
   singleton: string;
@@ -127,6 +132,16 @@ function SingletonPageInner(
         label: 'Reset',
         icon: historyIcon,
       },
+      {
+        key: 'copy',
+        label: 'Copy entry',
+        icon: clipboardCopyIcon,
+      },
+      {
+        key: 'paste',
+        label: 'Paste entry',
+        icon: clipboardPasteIcon,
+      },
     ];
     if (previewHref) {
       actions.push({
@@ -166,6 +181,33 @@ function SingletonPageInner(
     await props.onUpdate();
   };
 
+  const onCopy = () => {
+    copyEntryToClipboard(
+      props.state,
+      formatInfo,
+      singletonConfig.schema,
+      undefined
+    );
+  };
+
+  const onPaste = async () => {
+    const entry = await getPastedEntry(
+      formatInfo,
+      singletonConfig.schema,
+      undefined
+    );
+    if (entry) {
+      setValueToPreviewProps(entry, props.previewProps);
+      toastQueue.positive('Entry pasted', {
+        shouldCloseOnAction: true,
+        actionLabel: 'Undo',
+        onAction: () => {
+          setValueToPreviewProps(props.state, props.previewProps);
+        },
+      });
+    }
+  };
+
   return (
     <PageRoot containerWidth={containerWidthForEntryLayout(singletonConfig)}>
       <PageHeader>
@@ -197,6 +239,12 @@ function SingletonPageInner(
             switch (key) {
               case 'reset':
                 props.onReset();
+                break;
+              case 'copy':
+                onCopy();
+                break;
+              case 'paste':
+                onPaste();
                 break;
             }
           }}
@@ -336,7 +384,6 @@ function LocalSingletonPage(
     if (hasChanged) {
       const serialized = serializeEntryToFiles({
         basePath: singletonPath,
-        config,
         format: getSingletonFormat(config, singleton),
         schema: singletonConfig.schema,
         slug: undefined,
@@ -502,7 +549,6 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
       const stored = storedValSchema.create(raw);
       const parsed = parseEntry(
         {
-          config: props.config,
           dirpath,
           format,
           schema: singletonConfig.schema,
@@ -515,7 +561,7 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
         savedAt: stored.savedAt,
         treeKey: stored.beforeTreeKey,
       };
-    }, [dirpath, format, props.config, props.singleton, singletonConfig.schema])
+    }, [dirpath, format, props.singleton, singletonConfig.schema])
   );
 
   const itemData = useItemData({
