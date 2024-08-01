@@ -22,7 +22,8 @@ export const components = {
         label: 'Project tags',
         options: [
           { label: 'Local', value: 'Local' },
-          { label: 'Github', value: 'github' },
+          { label: 'GitHub', value: 'GitHub' },
+          { label: 'Cloud', value: 'Cloud' },
           { label: 'New project', value: 'New project' },
           { label: 'Existing project', value: 'Existing project' },
           { label: 'Astro', value: 'Astro' },
