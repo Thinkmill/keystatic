@@ -5,15 +5,18 @@ import {
   repeating,
   wrapper,
 } from '@keystatic/core/content-components';
-import { isNonEmptyArray } from 'emery/guards';
-
+import { Badge } from '@keystar/ui/badge';
 import { Flex } from '@keystar/ui/layout';
-import Markdoc, { Config, Node, ValidateError } from '@markdoc/markdoc';
+import { tagIcon } from '@keystar/ui/icon/icons/tagIcon';
+import { isNonEmptyArray } from 'emery/guards';
 import { assert } from 'emery/assertions';
+import Markdoc, { Config, Node, ValidateError } from '@markdoc/markdoc';
 
 export const components = {
   tags: block({
     label: 'Tags',
+    description: 'Insert tags',
+    icon: tagIcon,
     schema: {
       tags: fields.multiselect({
         label: 'Project tags',
@@ -30,20 +33,11 @@ export const components = {
     },
     ContentView({ value }) {
       return (
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <Flex gap="small">
           {value.tags.map(tag => (
-            <span
-              style={{
-                border: 'solid 1px #ddd',
-                padding: '0.25rem 0.5rem',
-                borderRadius: '20px',
-                fontSize: '11px',
-              }}
-            >
-              {tag}
-            </span>
+            <Badge>{tag}</Badge>
           ))}
-        </div>
+        </Flex>
       );
     },
   }),
