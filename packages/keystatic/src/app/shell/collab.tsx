@@ -200,11 +200,21 @@ export function CollabProvider(props: { children: ReactNode; config: Config }) {
   const currentBranch = useCurrentBranch();
 
   useEffect(() => {
-    yJsInfo?.awareness.setLocalStateField('branch', currentBranch);
-    yJsInfo?.awareness.setLocalStateField(
-      'location',
-      router.params.slice(2).join('/')
-    );
+    if (yJsInfo?.awareness) {
+      const currentState = yJsInfo.awareness.getLocalState();
+      const newLocation = router.params.slice(2).join('/');
+      if (
+        currentState &&
+        (currentState.branch !== currentBranch ||
+          currentState.location !== newLocation)
+      ) {
+        yJsInfo.awareness.setLocalState({
+          ...currentState,
+          branch: currentBranch,
+          location: newLocation,
+        });
+      }
+    }
   }, [currentBranch, router.params, yJsInfo?.awareness]);
 
   const hasRepo = !!currentBranch;
