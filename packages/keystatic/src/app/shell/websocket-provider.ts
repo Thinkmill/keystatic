@@ -187,7 +187,8 @@ const setupWS = (provider: WebsocketProvider, WS: typeof WebSocket) => {
             reconnectTimeoutBase,
           maxReconnectTimeout
         ),
-        provider
+        provider,
+        WS
       );
     };
     websocket.onopen = async () => {

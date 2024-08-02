@@ -19,7 +19,6 @@ import { getAuth } from '../auth';
 import { useRouter } from '../router';
 import { useCloudInfo, useCurrentBranch } from './data';
 import { Config } from '../..';
-import ReconnectingWebSocket from 'partysocket/ws';
 import * as decoding from 'lib0/decoding';
 import { PKG_VERSION } from '../utils';
 import { createEncoder, toUint8Array, writeVarUint } from 'lib0/encoding.js';
@@ -157,19 +156,19 @@ export function CollabProvider(props: { children: ReactNode; config: Config }) {
     const provider = new WebsocketProvider({
       doc,
       url: `wss://live.keystatic.cloud/${project}?v=${PKG_VERSION}`,
-      WebSocketPolyfill: class extends ReconnectingWebSocket {
+      WebSocketPolyfill: class extends WebSocket {
         constructor(url: string) {
           super(url);
 
           this.addEventListener('message', event => {
             if (event.data instanceof ArrayBuffer && enableMessageLogging) {
-              console.log('recv', decodeMessage(new Uint8Array(event.data)));
+              console.trace('recv', decodeMessage(new Uint8Array(event.data)));
             }
           });
         }
         send(data: string | ArrayBuffer | Blob | ArrayBufferView) {
           if (data instanceof Uint8Array && enableMessageLogging) {
-            console.log('send', decodeSentMessage(data));
+            console.trace('send', decodeSentMessage(data));
           }
           const CHUNK_MAX_SIZE = 1_000_000;
 
