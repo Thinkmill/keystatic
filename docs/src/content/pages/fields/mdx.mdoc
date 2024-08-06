@@ -104,6 +104,27 @@ For example...
 
 ---
 
+## Inline
+
+By default, `fields.mdx` will output content in a seperate file to the main data or below the main data if using `format.contentField`. If you want to have multiple pieces of content in the same file, you can use `fields.mdx.inline(...)` instead:
+
+```tsx
+someContent: fields.mdx.inline({
+ label: 'Some content',
+})
+```
+
+this will write content next to other fields like this instead of in a different file:
+
+```yaml
+someContent: |
+  # Title
+
+  Some content
+```
+
+---
+
 ## Type signature
 
 Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core#/.fields.mdx](https://docsmill.dev/npm/@keystatic/core#/.fields.mdx)
