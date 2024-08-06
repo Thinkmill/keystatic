@@ -55,6 +55,27 @@ Checkout the [content components](/docs/content-components) docs to learn how to
 
 ---
 
+## Inline
+
+By default, `fields.markdoc` will output content in a seperate file to the main data or below the main data if using `format.contentField`. If you want to have multiple pieces of content in the same file, you can use `fields.markdoc.inline(...)`:
+
+```tsx
+someContent: fields.markdoc.inline({
+ label: 'Some content',
+})
+```
+
+this will write content next to other fields like this instead of in a different file:
+
+```yaml
+someContent: |
+  # Title
+
+  Some content
+```
+
+---
+
 ## Type signature
 
 Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core#/.fields.markdoc](https://docsmill.dev/npm/@keystatic/core#/.fields.markdoc)
