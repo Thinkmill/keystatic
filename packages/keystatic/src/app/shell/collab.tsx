@@ -118,6 +118,29 @@ export function useYjsIfAvailable() {
   return useContext(YjsContext);
 }
 
+export async function getYjsMapForEntry(
+  key: string,
+  yjsInfo: ReturnType<typeof useYjs>
+) {
+  await yjsInfo.doc.whenSynced;
+  let doc = yjsInfo.data.get(key);
+  if (!doc) {
+    console.log('doc not found, waiting for sync');
+    await yjsInfo.provider.whenSynced;
+    doc = yjsInfo.data.get(key);
+  }
+  if (doc instanceof Y.Doc) {
+    console.log('loading existing doc');
+    const promise = doc.whenLoaded;
+    doc.load();
+    await promise;
+  } else {
+    console.log('creating new doc');
+    doc = new Y.Doc();
+    yjsInfo.data.set(key, doc);
+  }
+  return doc.getMap('data');
+}
 const enableMessageLogging = false;
 
 const emptyMap = new Map();

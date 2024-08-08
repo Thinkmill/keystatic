@@ -51,7 +51,7 @@ import { externalLinkIcon } from '@keystar/ui/icon/icons/externalLinkIcon';
 import { historyIcon } from '@keystar/ui/icon/icons/historyIcon';
 import { getYjsValFromParsedValue } from '../form/yjs-props-value';
 import * as Y from 'yjs';
-import { useYjsIfAvailable } from './shell/collab';
+import { getYjsMapForEntry, useYjsIfAvailable } from './shell/collab';
 import { useYJsValue } from './useYJsValue';
 import { PresenceAvatars } from './presence';
 import {
@@ -580,21 +580,11 @@ function SingletonPageWrapper(props: { singleton: string; config: Config }) {
   const isItemDataLoading = itemData.kind === 'loading';
 
   const mapData = useData(
-    useCallback(async () => {
+    useCallback(() => {
       if (!yjsInfo) return;
       if (yjsInfo === 'loading') return LOADING;
-      await yjsInfo.doc.whenSynced;
       if (isItemDataLoading) return LOADING;
-      let doc = yjsInfo.data.get(key);
-      if (doc instanceof Y.Doc) {
-        const promise = doc.whenLoaded;
-        doc.load();
-        await promise;
-      } else {
-        doc = new Y.Doc();
-        yjsInfo.data.set(key, doc);
-      }
-      return doc.getMap('data');
+      return getYjsMapForEntry(key, yjsInfo);
     }, [yjsInfo, isItemDataLoading, key])
   );
 

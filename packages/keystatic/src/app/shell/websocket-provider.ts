@@ -238,6 +238,8 @@ export class WebsocketProvider {
   }) => void;
   authToken: () => Promise<string>;
   onSynced: (synced: boolean) => void;
+  whenSynced: Promise<void>;
+  #resolvedWhenSynced!: () => void;
   constructor(opts: {
     url: string;
     doc: Y.Doc;
@@ -264,6 +266,9 @@ export class WebsocketProvider {
     this.authToken = opts.authToken;
     this.ws = null;
     this.wsLastMessageReceived = 0;
+    this.whenSynced = new Promise(resolve => {
+      this.#resolvedWhenSynced = resolve;
+    });
 
     this.onStatus = opts.onStatus ?? (() => {});
     this.onSynced = opts.onSynced ?? (() => {});
@@ -426,6 +431,13 @@ export class WebsocketProvider {
 
   set synced(state) {
     if (this.#synced !== state) {
+      if (state) {
+        this.#resolvedWhenSynced();
+      } else {
+        this.whenSynced = new Promise(resolve => {
+          this.#resolvedWhenSynced = resolve;
+        });
+      }
       this.#synced = state;
       this.onSynced(state);
       this.doc.emit('sync', [state]);

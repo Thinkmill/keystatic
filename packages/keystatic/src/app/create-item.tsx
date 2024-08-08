@@ -29,7 +29,7 @@ import { delDraft, getDraft, setDraft } from './persistence';
 import { PresenceAvatars } from './presence';
 import { useRouter } from './router';
 import { HeaderBreadcrumbs } from './shell/HeaderBreadcrumbs';
-import { useYjsIfAvailable } from './shell/collab';
+import { getYjsMapForEntry, useYjsIfAvailable } from './shell/collab';
 import { useConfig } from './shell/context';
 import { useSlugFieldInfo } from './slugs';
 import { LOADING, useData } from './useData';
@@ -157,20 +157,11 @@ function CreateItemWrapper(props: {
     useCallback(async () => {
       if (!yjsInfo) return;
       if (yjsInfo === 'loading') return LOADING;
-      await yjsInfo.doc.whenSynced;
       if (isFromTemplate && !duplicateInitalState) return LOADING;
-      let doc = yjsInfo.data.get(key);
-      if (doc instanceof Y.Doc) {
-        const promise = doc.whenLoaded;
-        doc.load();
-        await promise;
-      } else {
-        doc = new Y.Doc();
-        yjsInfo.data.set(key, doc);
-      }
-      const data = doc.getMap('data');
+      const data = await getYjsMapForEntry(key, yjsInfo);
+
       if (!data.size) {
-        doc.transact(() => {
+        data.doc!.transact(() => {
           for (const [key, value] of Object.entries(collectionConfig.schema)) {
             const val = getYjsValFromParsedValue(
               value,

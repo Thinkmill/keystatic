@@ -57,7 +57,7 @@ import { NotFoundBoundary, notFound } from './not-found';
 import { getDataFileExtension, getPathPrefix } from './path-utils';
 import { useRouter } from './router';
 import { HeaderBreadcrumbs } from './shell/HeaderBreadcrumbs';
-import { useYjsIfAvailable } from './shell/collab';
+import { getYjsMapForEntry, useYjsIfAvailable } from './shell/collab';
 import { useConfig } from './shell/context';
 import { useBaseCommit, useCurrentBranch, useRepoInfo } from './shell/data';
 import { PageBody, PageHeader, PageRoot } from './shell/page';
@@ -911,21 +911,7 @@ function ItemPageOuterWrapper(props: ItemPageWrapperProps) {
       if (yjsInfo === 'loading') return LOADING;
       if (isItemDataLoading) return LOADING;
       if (isItemNotFound) return;
-      return (async () => {
-        await yjsInfo.doc.whenSynced;
-        let doc = yjsInfo.data.get(key);
-        if (doc instanceof Y.Doc) {
-          const promise = doc.whenLoaded;
-          doc.load();
-          await promise;
-        } else {
-          doc = new Y.Doc();
-          yjsInfo.data.set(key, doc);
-        }
-        const data = doc.getMap('data');
-
-        return data;
-      })();
+      return getYjsMapForEntry(key, yjsInfo);
     }, [isItemDataLoading, isItemNotFound, key, yjsInfo])
   );
 
