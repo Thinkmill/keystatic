@@ -1,5 +1,5 @@
 import { useState, useTransition } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { subscribeToButtondown } from '../../app/actions';
 
@@ -9,6 +9,7 @@ export default function MailingListForm() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string>('');
   const pathname = usePathname();
+  const router = useRouter();
 
   // Augment the server action with the pathname
   const subscribeToButtondownWithPathname = subscribeToButtondown.bind(
@@ -20,6 +21,7 @@ export default function MailingListForm() {
     startTransition(async () => {
       const response = await subscribeToButtondownWithPathname(formData);
       if (response.error) setError(response.error);
+      if (response.success) router.push('/thank-you');
     });
   }
   return (
