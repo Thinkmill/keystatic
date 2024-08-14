@@ -1,72 +1,30 @@
-import { FormEvent, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { usePathname } from 'next/navigation';
+
+import { subscribeToButtondown } from '../../app/actions';
 
 import Button from '../button';
 
 export default function MailingListForm() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string>('');
-  const router = useRouter();
+  const pathname = usePathname();
 
-  async function handleSubmit(event: FormEvent) {
-    event.preventDefault();
-    setIsLoading(true);
-    try {
-      const formData = new FormData(event.currentTarget as HTMLFormElement);
+  // Augment the server action with the pathname
+  const subscribeToButtondownWithPathname = subscribeToButtondown.bind(
+    null,
+    pathname
+  );
 
-      const data = {
-        email: formData.get('email'),
-        tags: [
-          ...formData.getAll('tags'),
-          `keystatic website${
-            window.location.pathname !== '/'
-              ? `: ${window.location.pathname}`
-              : ' homepage'
-          }`,
-        ],
-      };
-
-      // Buttondown subscription
-      const buttondownResponse = await fetch(
-        'https://api.buttondown.email/v1/subscribers',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Token ${process.env.NEXT_PUBLIC_BUTTONDOWN_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email_address: data.email,
-            tags: data.tags,
-          }),
-        }
-      );
-      if (!buttondownResponse.ok) {
-        const error = await buttondownResponse.json();
-        setError(
-          error?.detail ||
-            // 409 status Confilct has no detail message
-            'Sorry, an error has occured — please try again later.'
-        );
-        setIsLoading(false);
-      }
-
-      // Success
-      router.push('/thank-you');
-    } catch (error) {
-      console.error('An error occured: ', error);
-      setError('Sorry, an error has occured — please try again later.');
-      setIsLoading(false);
-    }
+  async function submitAction(formData: FormData) {
+    startTransition(async () => {
+      const response = await subscribeToButtondownWithPathname(formData);
+      if (response.error) setError(response.error);
+    });
   }
   return (
     <>
-      <form
-        className="flex flex-col gap-4"
-        method="POST"
-        action="https://forms.keystatic.cloud/mailing-list"
-        onSubmit={handleSubmit}
-      >
+      <form className="flex flex-col gap-4" action={submitAction}>
         <div className="flex flex-col gap-1">
           <label
             className="block text-sm font-medium text-sand-11"
@@ -129,8 +87,8 @@ export default function MailingListForm() {
           type="submit"
           impact="light"
           variant="small"
-          isLoading={isLoading}
-          disabled={isLoading}
+          isLoading={isPending}
+          disabled={isPending}
         >
           Send me updates
         </Button>
