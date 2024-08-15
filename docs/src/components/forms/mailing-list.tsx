@@ -73,7 +73,7 @@ export default function MailingListForm() {
             >
               Thinkmill news (
               <a
-                href="https://www.thinkmill.com.au/newsletter"
+                href="https://www.thinkmill.com.au/newsletter/tailwind-for-designers-multi-brand-design-systems-and-a-search-tool-for-public-domain-content"
                 target="_blank"
                 className="cursor-pointer underline hover:text-thinkmill-red"
                 aria-label="Thinkmill (Opens in new tab)"
