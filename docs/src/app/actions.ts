@@ -34,18 +34,18 @@ export async function subscribeToButtondown(
     if (!buttondownResponse.ok) {
       const error = await buttondownResponse.json();
       return {
-        // 409 status Confilct has no detail message
+        // 409 status Conflict has no detail message
         error:
           error?.detail ||
-          'Sorry, an error has occured — please try again later.',
+          'Sorry, an error has occurred — please try again later.',
       };
     }
 
     return { success: true };
   } catch (error) {
-    console.error('An error occured: ', error);
+    console.error('An error occurred: ', error);
     return {
-      error: 'Sorry, an error has occured — please try again later.',
+      error: 'Sorry, an error has occurred — please try again later.',
     };
   }
 }
