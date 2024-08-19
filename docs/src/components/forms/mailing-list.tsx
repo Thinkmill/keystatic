@@ -1,13 +1,20 @@
-import { useFormState } from 'react-dom';
-import { subscribeToButtondown } from '../../app/actions';
-
 import Button from '../button';
+import { useSearchParams } from 'next/navigation';
+import { Suspense, useState } from 'react';
 
 export default function MailingListForm() {
-  const [state, action, isPending] = useFormState(subscribeToButtondown, null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   return (
     <>
-      <form className="flex flex-col gap-4" action={action}>
+      <form
+        id="mailing-list-form"
+        className="flex flex-col gap-4"
+        action="/mailing-list"
+        method="POST"
+        onSubmit={() => {
+          setIsSubmitting(true);
+        }}
+      >
         <div className="flex flex-col gap-1">
           <label
             className="block text-sm font-medium text-sand-11"
@@ -70,15 +77,22 @@ export default function MailingListForm() {
           type="submit"
           impact="light"
           variant="small"
-          isLoading={isPending}
-          disabled={isPending}
+          isLoading={isSubmitting}
+          disabled={isSubmitting}
         >
           Send me updates
         </Button>
       </form>
-      {state?.error && (
-        <p className="text-xs text-thinkmill-red">{state.error}</p>
-      )}
+      <Suspense fallback={null}>
+        <ErrorMessage />
+      </Suspense>
     </>
   );
+}
+
+function ErrorMessage() {
+  const params = useSearchParams();
+  const error = params.get('error');
+  if (!error) return null;
+  return <p className="text-xs text-thinkmill-red">{error}</p>;
 }

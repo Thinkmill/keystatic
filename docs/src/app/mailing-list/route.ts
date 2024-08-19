@@ -1,15 +1,16 @@
-'use server';
-
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 
-// ------------------------------
-// Buttondown subscription
-// ------------------------------
-export async function subscribeToButtondown(
-  _state: unknown,
-  formData: FormData
-) {
+export const runtime = 'edge';
+
+export async function POST(req: Request): Promise<Response> {
+  if (req.headers.get('origin') !== new URL(req.url).origin) {
+    return new Response('Invalid origin', { status: 400 });
+  }
+  if (req.headers.get('content-type') !== 'application/x-www-form-urlencoded') {
+    return new Response('Invalid content type', { status: 415 });
+  }
+
   try {
     const referer = headers().get('referer');
     let pathname = '/';
@@ -18,6 +19,8 @@ export async function subscribeToButtondown(
         pathname = new URL(referer).pathname;
       } catch {}
     }
+    const formData = await req.formData();
+    console.log(formData.getAll('tags'));
     const data = {
       email: formData.get('email'),
       tags: [
@@ -43,19 +46,25 @@ export async function subscribeToButtondown(
 
     if (!buttondownResponse.ok) {
       const error = await buttondownResponse.json();
-      return {
-        // 409 status Conflict has no detail message
-        error:
-          error?.detail ||
-          'Sorry, an error has occurred — please try again later.',
-      };
+      return Response.redirect(
+        new URL(
+          `/?${new URLSearchParams({
+            error:
+              error?.detail ||
+              'Sorry, an error has occurred — please try again later.',
+          })}#mailing-list-form`,
+          req.url
+        )
+      );
     }
     buttondownResponse.body?.cancel();
   } catch (error) {
     console.error('An error occurred: ', error);
-    return {
-      error: 'Sorry, an error has occurred — please try again later.',
-    };
+    redirect(
+      `/?${new URLSearchParams({
+        error: 'Sorry, an error has occurred — please try again later.',
+      })}#mailing-list-form`
+    );
   }
   redirect('/thank-you');
 }
