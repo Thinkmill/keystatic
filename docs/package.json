@@ -27,6 +27,7 @@
     "@types/cookie": "^0.5.1",
     "@types/node": "16.11.13",
     "@types/react": "^18.2.8",
+    "@types/react-dom": "^18.0.11",
     "cookie": "^0.5.0",
     "emery": "^1.4.1",
     "next": "^14.1.3",
