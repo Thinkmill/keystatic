@@ -1,13 +1,23 @@
 'use server';
 
+import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
+
 // ------------------------------
 // Buttondown subscription
 // ------------------------------
 export async function subscribeToButtondown(
-  pathname: string,
+  _state: unknown,
   formData: FormData
 ) {
   try {
+    const referer = headers().get('referer');
+    let pathname = '/';
+    if (referer) {
+      try {
+        pathname = new URL(referer).pathname;
+      } catch {}
+    }
     const data = {
       email: formData.get('email'),
       tags: [
@@ -40,12 +50,12 @@ export async function subscribeToButtondown(
           'Sorry, an error has occurred — please try again later.',
       };
     }
-
-    return { success: true };
+    buttondownResponse.body?.cancel();
   } catch (error) {
     console.error('An error occurred: ', error);
     return {
       error: 'Sorry, an error has occurred — please try again later.',
     };
   }
+  redirect('/thank-you');
 }

@@ -1,32 +1,13 @@
-import { useState, useTransition } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-
+import { useFormState } from 'react-dom';
 import { subscribeToButtondown } from '../../app/actions';
 
 import Button from '../button';
 
 export default function MailingListForm() {
-  const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string>('');
-  const pathname = usePathname();
-  const router = useRouter();
-
-  // Augment the server action with the pathname
-  const subscribeToButtondownWithPathname = subscribeToButtondown.bind(
-    null,
-    pathname
-  );
-
-  async function submitAction(formData: FormData) {
-    startTransition(async () => {
-      const response = await subscribeToButtondownWithPathname(formData);
-      if (response.error) setError(response.error);
-      if (response.success) router.push('/thank-you');
-    });
-  }
+  const [state, action, isPending] = useFormState(subscribeToButtondown, null);
   return (
     <>
-      <form className="flex flex-col gap-4" action={submitAction}>
+      <form className="flex flex-col gap-4" action={action}>
         <div className="flex flex-col gap-1">
           <label
             className="block text-sm font-medium text-sand-11"
@@ -95,7 +76,9 @@ export default function MailingListForm() {
           Send me updates
         </Button>
       </form>
-      {error && <p className="text-xs text-thinkmill-red">{error}</p>}
+      {state?.error && (
+        <p className="text-xs text-thinkmill-red">{state.error}</p>
+      )}
     </>
   );
 }
