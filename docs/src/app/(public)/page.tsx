@@ -8,8 +8,6 @@ import Footer from '../../components/footer';
 import Features from '../../components/features';
 import { Main } from '../../components/main';
 
-export const runtime = 'edge';
-
 export default function Homepage() {
   return (
     <>
