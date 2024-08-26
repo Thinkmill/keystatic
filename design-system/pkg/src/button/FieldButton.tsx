@@ -74,7 +74,7 @@ export function useFieldButton(
 ) {
   let { isHovered, isPressed } = state;
   const styleProps = useActionButtonStyles(props, { isHovered, isPressed });
-  let slots = useMemo(() => ({ text: { flex: true, truncate: true } }), []);
+  let slots = useMemo(() => ({ text: { flex: true } }), []);
   let children = useActionButtonChildren(props, slots);
 
   return { children, styleProps };
