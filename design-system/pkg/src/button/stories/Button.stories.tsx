@@ -154,12 +154,18 @@ export const Pending = () => {
   return (
     <Flex direction="column" gap="regular" alignItems="start">
       <SimulatedPendingButton>Default</SimulatedPendingButton>
-      <SimulatedPendingButton prominence="low">Low prominence</SimulatedPendingButton>
-      <SimulatedPendingButton prominence="high">High prominence</SimulatedPendingButton>
-      <form onSubmit={e => {
-        e.preventDefault();
-        action('submit')(e);
-      }}>
+      <SimulatedPendingButton prominence="low">
+        Low prominence
+      </SimulatedPendingButton>
+      <SimulatedPendingButton prominence="high">
+        High prominence
+      </SimulatedPendingButton>
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+          action('submit')(e);
+        }}
+      >
         <SimulatedPendingButton type="submit">Submit</SimulatedPendingButton>
       </form>
     </Flex>
@@ -177,13 +183,7 @@ function SimulatedPendingButton(props: any) {
     }, 5000);
   };
 
-  return (
-    <Button
-      {...props}
-      isPending={isPending}
-      onPress={handlePress}
-    />
-  );
+  return <Button {...props} isPending={isPending} onPress={handlePress} />;
 }
 
 function render(label = 'Default', props: ButtonProps = {}) {

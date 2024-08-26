@@ -329,9 +329,10 @@ function ActionGroup<T extends object>(
                   '&:not(:last-of-type)': {
                     marginRight: `calc(${tokenSchema.size.border.regular} * -1)`,
                   },
-                  '&[data-interaction=hover], &[data-focus=visible], &[data-interaction=press]': {
-                    zIndex: 1,
-                  },
+                  '&[data-interaction=hover], &[data-focus=visible], &[data-interaction=press]':
+                    {
+                      zIndex: 1,
+                    },
                   '&[data-selected]': {
                     zIndex: 2,
                   },

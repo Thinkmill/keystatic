@@ -123,10 +123,7 @@ function CheckboxInner(
           )}
         />
       </FocusRing>
-      <Indicator
-        isIndeterminate={isIndeterminate}
-        prominence={prominence}
-      />
+      <Indicator isIndeterminate={isIndeterminate} prominence={prominence} />
       <SlotProvider slots={slots}>
         {children && (
           <Content>

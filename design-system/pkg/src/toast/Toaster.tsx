@@ -125,12 +125,10 @@ function addToast(
   };
 
   warning(
-    (typeof options.timeout === 'number' && options.timeout >= 5000),
+    typeof options.timeout === 'number' && options.timeout >= 5000,
     'Timeouts must be at least 5000ms, for accessibility.'
   );
-  let timeout = options.timeout
-    ? Math.max(options.timeout, 5000)
-    : undefined;
+  let timeout = options.timeout ? Math.max(options.timeout, 5000) : undefined;
   let queue = getGlobalToastQueue();
   let key = queue.add(value, {
     priority: getPriority(tone, options),

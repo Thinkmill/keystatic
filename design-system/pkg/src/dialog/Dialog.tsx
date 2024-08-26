@@ -135,7 +135,7 @@ export const Dialog: ForwardRefExoticComponent<
   const sizeVariant = getSizeVariant(type, size);
   const dialogStyleProps = useDialogStyleProps(props, {
     type,
-    size: sizeVariant
+    size: sizeVariant,
   });
   const gridStyleProps = useGridStyleProps({
     isDismissable,
@@ -188,7 +188,10 @@ function getSizeVariant(type: DialogType, size?: DialogSize) {
 // Styles
 // =============================================================================
 
-function useDialogStyleProps(props: DialogProps, { size, type }: {size: SizeVariant, type: DialogType}) {
+function useDialogStyleProps(
+  props: DialogProps,
+  { size, type }: { size: SizeVariant; type: DialogType }
+) {
   let styleProps = useStyleProps(props);
 
   return {

@@ -19,9 +19,10 @@ Default.args = {
 };
 
 export const States = () => renderStates();
-export const LowProminence = () => renderStates({
-  prominence: 'low'
-});
+export const LowProminence = () =>
+  renderStates({
+    prominence: 'low',
+  });
 
 export const AutoFocus = () => render({ autoFocus: true });
 

@@ -24,9 +24,7 @@ export const Content = forwardRefWithAs<ContentProps, 'section'>(
 
     return (
       <Element {...filterDOMProps(otherProps)} {...styleProps} ref={ref}>
-        <ClearSlots>
-          {children}
-        </ClearSlots>
+        <ClearSlots>{children}</ClearSlots>
       </Element>
     );
   }

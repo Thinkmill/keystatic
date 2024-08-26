@@ -115,7 +115,11 @@ const BaseButton = forwardRef(function Button(
   const domRef = useObjectRef(forwardedRef);
   const { buttonProps, isPressed } = useButton(props, domRef);
   const { hoverProps, isHovered } = useHover({ isDisabled });
-  const styleProps = useButtonStyles(props, { isHovered, isPending: isProgressVisible, isPressed });
+  const styleProps = useButtonStyles(props, {
+    isHovered,
+    isPending: isProgressVisible,
+    isPressed,
+  });
 
   // wait a second before showing the progress indicator. for actions that
   // resolve quickly, this prevents a flash of the pending treatment.
@@ -135,11 +139,13 @@ const BaseButton = forwardRef(function Button(
   }, [isPending]);
 
   // prevent form submission when while pending
-  const pendingProps = isPending ? {
-    onClick: (e: MouseEvent) => e.preventDefault()
-  } : {
-    onClick: () => {} // satisfy TS expectations…
-  };
+  const pendingProps = isPending
+    ? {
+        onClick: (e: MouseEvent) => e.preventDefault(),
+      }
+    : {
+        onClick: () => {}, // satisfy TS expectations…
+      };
 
   return (
     <button
