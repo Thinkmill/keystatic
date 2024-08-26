@@ -75,9 +75,6 @@ export const ListItem = forwardRefWithAs<ListItemProps, 'div'>(
         '& .list-item-checkmark': {
           stroke: tokenSchema.color.alias.foregroundSelected,
         },
-        '& .list-item-text': {
-          color: tokenSchema.color.foreground.neutralEmphasis,
-        },
         '& .list-item-icon': {
           color: tokenSchema.color.foreground.neutralSecondary,
         },
@@ -115,6 +112,11 @@ export const ListItem = forwardRefWithAs<ListItemProps, 'div'>(
           color: tokenSchema.color.alias.foregroundHovered,
         },
 
+      // emphasise icons during interaction
+      '&[aria-disabled=false]:hover .list-item-icon, &[data-hovered] .list-item-icon, &[aria-disabled=false]:focus .list-item-icon, &[data-focused] .list-item-icon':
+        {
+          color: tokenSchema.color.alias.foregroundIdle,
+        },
       // emphasise `kbd` during interaction
       '&[aria-disabled=false]:hover kbd, &[data-hovered] kbd, &[aria-disabled=false]:focus kbd, &[data-focused] kbd':
         {
@@ -161,7 +163,7 @@ export const ListItem = forwardRefWithAs<ListItemProps, 'div'>(
         ...labelProps,
         color: 'inherit',
         gridArea: 'text',
-        weight: 'medium',
+        // weight: 'medium',
         UNSAFE_className: 'list-item-text',
       },
       icon: {

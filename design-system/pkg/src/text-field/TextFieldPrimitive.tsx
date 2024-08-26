@@ -162,7 +162,8 @@ const InputStateIndicator = ({
           boxShadow: `0 0 0 1px ${tokenSchema.color.alias.borderFocused}`,
         },
         [s(':disabled', '[aria-disabled]')]: {
-          backgroundColor: tokenSchema.color.background.surfaceSecondary,
+          backgroundColor: tokenSchema.color.alias.backgroundDisabled,
+          // borderColor: tokenSchema.color.alias.borderDisabled,
           borderColor: 'transparent',
           cursor: 'auto',
         },
