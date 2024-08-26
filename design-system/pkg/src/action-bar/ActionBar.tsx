@@ -31,8 +31,6 @@ import localizedMessages from './l10n.json';
 import { ActionBarProps } from './types';
 import { actionbarClassList } from './class-list';
 
-const styles = {};
-
 function ActionBar<T extends object>(
   props: ActionBarProps<T>,
   forwardedRef: ForwardedRef<HTMLDivElement>
@@ -97,6 +95,7 @@ function ActionBarInner<T>(
     }
   }, [stringFormatter]);
 
+  // FIXME: style props are passed to both the root and the bar elements
   return (
     <FocusScope restoreFocus>
       <div
@@ -129,9 +128,10 @@ function ActionBarInner<T>(
           className={classNames(
             css({
               alignItems: 'center',
-              backgroundColor: tokenSchema.color.background.surface,
-              border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.neutral}`,
-              borderRadius: tokenSchema.size.radius.medium,
+              backgroundColor: tokenSchema.color.background.canvas,
+              border: `${tokenSchema.size.border.regular} solid ${tokenSchema.color.border.emphasis}`,
+              borderRadius: tokenSchema.size.radius.regular,
+              boxShadow: `0 1px 4px ${tokenSchema.color.shadow.regular}`,
               display: 'grid',
               gap: tokenSchema.size.space.small,
               gridTemplateAreas: '"clear selected . actiongroup"',
@@ -150,8 +150,7 @@ function ActionBarInner<T>(
                 transform: 'translateY(0)',
               },
             }),
-            actionbarClassList.element('bar'),
-            styleProps.className
+            actionbarClassList.element('bar')
           )}
         >
           <ActionGroup
@@ -162,10 +161,6 @@ function ActionBarInner<T>(
             buttonLabelBehavior="collapse"
             onAction={onAction}
             gridArea="actiongroup"
-            UNSAFE_className={classNames(
-              styles,
-              'react-spectrum-ActionBar-actionGroup'
-            )}
           >
             {children}
           </ActionGroup>
