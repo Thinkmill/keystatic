@@ -106,7 +106,7 @@ function useStyles() {
     },
 
     // selection
-    '&[aria-current]': {
+    '&[aria-current]:not([aria-current=false])': {
       color: tokenSchema.color.foreground.neutralEmphasis,
 
       '&::before': {
@@ -145,7 +145,7 @@ function useStyles() {
       margin: 0,
     },
 
-    [`.${anchor}[aria-current] &`]: {
+    [`.${anchor}[aria-current]:not([aria-current=false]) &`]: {
       backgroundColor: tokenSchema.color.alias.backgroundHovered,
     },
 
@@ -158,10 +158,10 @@ function useStyles() {
   });
 
   const text = css({
-    fontWeight: tokenSchema.typography.fontWeight.medium,
+    fontWeight: tokenSchema.typography.fontWeight.regular,
 
-    [`.${anchor}[aria-current] &`]: {
-      fontWeight: tokenSchema.typography.fontWeight.semibold,
+    [`.${anchor}[aria-current]:not([aria-current=false]) &`]: {
+      fontWeight: tokenSchema.typography.fontWeight.medium,
     },
   });
 
