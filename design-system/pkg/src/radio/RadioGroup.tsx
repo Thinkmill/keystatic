@@ -40,6 +40,7 @@ export const RadioGroup: ForwardRefExoticComponent<RadioGroupProps> =
         {...props}
         ref={forwardedRef}
         labelProps={labelProps}
+        labelElementType="span"
         descriptionProps={descriptionProps}
         errorMessageProps={errorMessageProps}
       >
