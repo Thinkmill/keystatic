@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { action } from '@keystar/ui-storybook';
 
 import { plusCircleIcon } from '@keystar/ui/icon/icons/plusCircleIcon';
@@ -148,6 +149,42 @@ export const Anchor = () => (
 Anchor.story = {
   name: 'anchor',
 };
+
+export const Pending = () => {
+  return (
+    <Flex direction="column" gap="regular" alignItems="start">
+      <SimulatedPendingButton>Default</SimulatedPendingButton>
+      <SimulatedPendingButton prominence="low">Low prominence</SimulatedPendingButton>
+      <SimulatedPendingButton prominence="high">High prominence</SimulatedPendingButton>
+      <form onSubmit={e => {
+        e.preventDefault();
+        action('submit')(e);
+      }}>
+        <SimulatedPendingButton type="submit">Submit</SimulatedPendingButton>
+      </form>
+    </Flex>
+  );
+};
+
+function SimulatedPendingButton(props: any) {
+  let [isPending, setPending] = useState(false);
+
+  let handlePress = (e: any) => {
+    action('press')(e);
+    setPending(true);
+    setTimeout(() => {
+      setPending(false);
+    }, 5000);
+  };
+
+  return (
+    <Button
+      {...props}
+      isPending={isPending}
+      onPress={handlePress}
+    />
+  );
+}
 
 function render(label = 'Default', props: ButtonProps = {}) {
   return (
