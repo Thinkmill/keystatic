@@ -8,6 +8,7 @@ import {
   RefObject,
   forwardRef,
   useCallback,
+  useImperativeHandle,
   useRef,
   useState,
 } from 'react';
@@ -57,6 +58,13 @@ function Picker<T extends object>(
   let popoverRef = useRef<HTMLDivElement>(null);
   let triggerRef = useRef<HTMLButtonElement>(null);
   let listboxRef = useRef<HTMLDivElement>(null);
+  // @ts-expect-error FIXME: not sure how to properly resolve this type issue
+  useImperativeHandle(forwardedRef, () => ({
+    ...triggerRef.current,
+    focus() {
+      state.setFocused(true);
+    },
+  }));
 
   // We create the listbox layout in Picker and pass it to ListBoxBase below
   // so that the layout information can be cached even while the listbox is not mounted.
@@ -187,7 +195,7 @@ function Picker<T extends object>(
                 ...valueProps,
                 // when no item is selected, we're styling the placeholder
                 color: !state.selectedItem ? 'neutralSecondary' : 'inherit',
-                weight: state.selectedItem ? 'medium' : undefined,
+                // weight: state.selectedItem ? 'medium' : undefined,
               },
               // we try to maintain most of the selected item's rendered content
               // within the button, but description text is too long
