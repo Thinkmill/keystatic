@@ -19,6 +19,9 @@ Default.args = {
 };
 
 export const States = () => renderStates();
+export const LowProminence = () => renderStates({
+  prominence: 'low'
+});
 
 export const AutoFocus = () => render({ autoFocus: true });
 
@@ -42,17 +45,17 @@ function render(props: Partial<CheckboxProps> = {}) {
   );
 }
 
-function renderStates() {
+function renderStates(props: Partial<CheckboxProps> = {}) {
   return (
     <Grid gap="large" columns="repeat(2, 1fr)">
-      {render()}
-      {render({ isDisabled: true })}
+      {render(props)}
+      {render({ isDisabled: true, ...props })}
 
-      {render({ isSelected: true })}
-      {render({ isSelected: true, isDisabled: true })}
+      {render({ isSelected: true, ...props })}
+      {render({ isSelected: true, isDisabled: true, ...props })}
 
-      {render({ isIndeterminate: true })}
-      {render({ isIndeterminate: true, isDisabled: true })}
+      {render({ isIndeterminate: true, ...props })}
+      {render({ isIndeterminate: true, isDisabled: true, ...props })}
     </Grid>
   );
 }
