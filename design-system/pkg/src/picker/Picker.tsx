@@ -8,7 +8,6 @@ import {
   RefObject,
   forwardRef,
   useCallback,
-  useImperativeHandle,
   useRef,
   useState,
 } from 'react';
@@ -58,13 +57,6 @@ function Picker<T extends object>(
   let popoverRef = useRef<HTMLDivElement>(null);
   let triggerRef = useRef<HTMLButtonElement>(null);
   let listboxRef = useRef<HTMLDivElement>(null);
-  // @ts-expect-error FIXME: not sure how to properly resolve this type issue
-  useImperativeHandle(forwardedRef, () => ({
-    ...triggerRef.current,
-    focus() {
-      state.setFocused(true);
-    },
-  }));
 
   // We create the listbox layout in Picker and pass it to ListBoxBase below
   // so that the layout information can be cached even while the listbox is not mounted.
