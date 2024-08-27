@@ -46,6 +46,11 @@ export type CheckboxProps = {
    * The indeterminate visual representation remains regardless of user interaction.
    */
   isIndeterminate?: boolean;
+  /**
+   * The visual prominence of the checkbox.
+   * @default 'default'
+   */
+  prominence?: 'default' | 'low';
 } & ToggleProps &
   BaseStyleProps &
   DOMProps;

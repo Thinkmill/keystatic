@@ -58,13 +58,11 @@ export const ProgressCircle = forwardRef(function ProgressCircle(
           height: 'var(--diameter)',
           width: 'var(--diameter)',
 
-          '--PI': 3.14159,
-
           '--diameter': tokenSchema.size.element.regular,
           '--radius': 'calc(var(--diameter) / 2)',
           '--stroke-width': tokenSchema.size.scale[40], // TODO: component tokent
           '--offset-radius': 'calc(var(--radius) - var(--stroke-width) / 2)',
-          '--circumference': `calc(var(--offset-radius) * var(--PI) * 2)`,
+          '--circumference': `calc(var(--offset-radius) * pi * 2)`,
 
           ['&[data-size=small]']: {
             '--diameter': tokenSchema.size.element.xsmall,

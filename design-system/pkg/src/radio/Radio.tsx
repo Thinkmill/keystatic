@@ -131,7 +131,7 @@ const Indicator = (props: IndicatorProps) => {
 
           // border / background
           '&::before': {
-            border: `${tokenSchema.size.border.medium} solid ${tokenSchema.color.alias.borderIdle}`,
+            border: `${tokenSchema.size.border.medium} solid ${tokenSchema.color.scale.slate8}`,
             borderRadius: `inherit`,
             content: '""',
             inset: 0,
@@ -145,14 +145,15 @@ const Indicator = (props: IndicatorProps) => {
           [`.${inputClassName}:disabled + &`]: {
             color: tokenSchema.color.alias.foregroundDisabled,
             '&::before': {
+              backgroundColor: tokenSchema.color.alias.borderDisabled,
               borderColor: tokenSchema.color.alias.borderDisabled,
             },
           },
           [`.${inputClassName}:enabled:hover + &::before`]: {
-            borderColor: tokenSchema.color.alias.borderHovered,
+            borderColor: tokenSchema.color.scale.slate9,
           },
           [`.${inputClassName}:enabled:active + &::before`]: {
-            borderColor: tokenSchema.color.alias.borderPressed,
+            borderColor: tokenSchema.color.scale.slate10,
           },
 
           // checked states

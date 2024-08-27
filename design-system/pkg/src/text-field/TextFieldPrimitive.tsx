@@ -162,7 +162,8 @@ const InputStateIndicator = ({
           boxShadow: `0 0 0 1px ${tokenSchema.color.alias.borderFocused}`,
         },
         [s(':disabled', '[aria-disabled]')]: {
-          backgroundColor: tokenSchema.color.background.surfaceSecondary,
+          backgroundColor: tokenSchema.color.alias.backgroundDisabled,
+          // borderColor: tokenSchema.color.alias.borderDisabled,
           borderColor: 'transparent',
           cursor: 'auto',
         },
@@ -214,7 +215,8 @@ function useTextFieldStyles() {
     '&[data-multiline]': {
       height: 'auto',
       lineHeight: tokenSchema.typography.lineheight.medium,
-      minHeight: tokenSchema.size.scale['700'],
+      // min: 3 lines
+      minHeight: `calc(${tokenSchema.size.space.regular} * 2 + ${tokenSchema.typography.text.regular.size} * ${tokenSchema.typography.lineheight.medium} * 3)`,
       overflow: 'auto',
       paddingBlock: tokenSchema.size.space.regular,
       resize: 'none',

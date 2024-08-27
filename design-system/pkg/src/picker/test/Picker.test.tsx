@@ -74,7 +74,7 @@ describe('picker/Picker', () => {
     expect(picker).toHaveAttribute('data-testid', 'test');
 
     let label = getAllByText('Test')[0];
-    let value = getByText('Select an option…').parentElement as HTMLElement; // capsize requires truncation styles on child node
+    let value = getByText('Select an option…');
     expect(label).toBeVisible();
     expect(value).toBeVisible();
   });
@@ -710,7 +710,7 @@ describe('picker/Picker', () => {
       expect(picker).toHaveAttribute('aria-haspopup', 'listbox');
 
       let label = getAllByText('Test')[0];
-      let value = getByText('Select an option…').parentElement as HTMLElement; // capsize requires truncation styles on child node
+      let value = getByText('Select an option…');
       expect(label).toHaveAttribute('id');
       expect(value).toHaveAttribute('id');
       expect(picker).toHaveAttribute(
@@ -736,7 +736,7 @@ describe('picker/Picker', () => {
       );
 
       let picker = getByRole('button');
-      let value = getByText('Select an option…').parentElement as HTMLElement; // capsize requires truncation styles on child node
+      let value = getByText('Select an option…');
       expect(picker).toHaveAttribute('id');
       expect(value).toHaveAttribute('id');
       expect(picker).toHaveAttribute('aria-label', 'Test');
@@ -763,7 +763,7 @@ describe('picker/Picker', () => {
       );
 
       let picker = getByRole('button');
-      let value = getByText('Select an option…').parentElement as HTMLElement; // capsize requires truncation styles on child node
+      let value = getByText('Select an option…');
       expect(picker).toHaveAttribute('id');
       expect(value).toHaveAttribute('id');
       expect(picker).toHaveAttribute('aria-labelledby', `${value.id} foo`);
@@ -790,7 +790,7 @@ describe('picker/Picker', () => {
       );
 
       let picker = getByRole('button');
-      let value = getByText('Select an option…').parentElement as HTMLElement; // capsize requires truncation styles on child node
+      let value = getByText('Select an option…');
       expect(picker).toHaveAttribute('id');
       expect(value).toHaveAttribute('id');
       expect(picker).toHaveAttribute('aria-label', 'Test');
@@ -828,7 +828,7 @@ describe('picker/Picker', () => {
         expect(span).toBeTruthy();
 
         let label = span.parentElement;
-        let value = getByText('Select an option…').parentElement as HTMLElement; // capsize requires truncation styles on child node
+        let value = getByText('Select an option…');
         expect(label).toHaveAttribute('id');
         expect(value).toHaveAttribute('id');
         expect(picker).toHaveAttribute(

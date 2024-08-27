@@ -38,6 +38,7 @@ export const CheckboxGroup: ForwardRefExoticComponent<CheckboxGroupProps> =
       <FieldPrimitive
         {...props}
         ref={forwardedRef}
+        labelElementType="span"
         labelProps={labelProps}
         descriptionProps={descriptionProps}
         errorMessageProps={errorMessageProps}

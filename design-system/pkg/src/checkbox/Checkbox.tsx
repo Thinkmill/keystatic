@@ -75,12 +75,13 @@ function CheckboxInner(
   }
 ) {
   let {
-    isIndeterminate = false,
-    isDisabled = false,
     autoFocus,
     children,
-    inputRef,
     inputProps,
+    inputRef,
+    isDisabled = false,
+    isIndeterminate = false,
+    prominence,
     ...otherProps
   } = props;
 
@@ -122,7 +123,7 @@ function CheckboxInner(
           )}
         />
       </FocusRing>
-      <Indicator isIndeterminate={isIndeterminate} />
+      <Indicator isIndeterminate={isIndeterminate} prominence={prominence} />
       <SlotProvider slots={slots}>
         {children && (
           <Content>
@@ -138,18 +139,19 @@ function CheckboxInner(
 // -----------------------------------------------------------------------------
 
 let sizeToken = tokenSchema.size.element.xsmall;
-type IndicatorProps = { isIndeterminate: boolean };
+type IndicatorProps = Pick<CheckboxProps, 'isIndeterminate' | 'prominence'>;
 
 const Indicator = (props: IndicatorProps) => {
-  let { isIndeterminate } = props;
+  let { isIndeterminate, prominence } = props;
 
   return (
     <span
+      data-prominence={prominence}
       className={classNames(
         css({
           backgroundColor: tokenSchema.color.background.canvas,
           borderRadius: tokenSchema.size.radius.small,
-          color: tokenSchema.color.foreground.onEmphasis,
+          color: tokenSchema.color.foreground.inverse,
           display: 'flex',
           flexShrink: 0,
           justifyContent: 'center',
@@ -157,6 +159,16 @@ const Indicator = (props: IndicatorProps) => {
           position: 'relative',
           height: sizeToken,
           width: sizeToken,
+
+          // prominence
+          '--selected-idle-bg': tokenSchema.color.scale.indigo9,
+          '--selected-hover-bg': tokenSchema.color.scale.indigo10,
+          '--selected-pressed-bg': tokenSchema.color.scale.indigo11,
+          '&[data-prominence=low]': {
+            '--selected-idle-bg': tokenSchema.color.scale.slate9,
+            '--selected-hover-bg': tokenSchema.color.scale.slate10,
+            '--selected-pressed-bg': tokenSchema.color.scale.slate11,
+          },
 
           // indicator icons
           [checkboxClassList.selector('indicator')]: {
@@ -184,7 +196,7 @@ const Indicator = (props: IndicatorProps) => {
 
           // border / background
           '&::before': {
-            border: `${tokenSchema.size.border.medium} solid ${tokenSchema.color.alias.borderIdle}`,
+            border: `${tokenSchema.size.border.medium} solid ${tokenSchema.color.scale.slate8}`,
             borderRadius: `inherit`,
             content: '""',
             inset: 0,
@@ -196,14 +208,15 @@ const Indicator = (props: IndicatorProps) => {
           'input[type="checkbox"]:disabled + &': {
             color: tokenSchema.color.alias.foregroundDisabled,
             '&::before': {
+              backgroundColor: tokenSchema.color.alias.borderDisabled,
               borderColor: tokenSchema.color.alias.borderDisabled,
             },
           },
           'input[type="checkbox"]:enabled:hover + &::before': {
-            borderColor: tokenSchema.color.alias.borderHovered,
+            borderColor: tokenSchema.color.scale.slate9,
           },
           'input[type="checkbox"]:enabled:active + &::before': {
-            borderColor: tokenSchema.color.alias.borderPressed,
+            borderColor: tokenSchema.color.scale.slate10,
           },
 
           // checked states
@@ -220,15 +233,15 @@ const Indicator = (props: IndicatorProps) => {
             },
           'input[type="checkbox"]:enabled:checked + &::before, input[type="checkbox"]:enabled:indeterminate + &::before':
             {
-              borderColor: tokenSchema.color.scale.indigo9,
+              borderColor: 'var(--selected-idle-bg)',
             },
           'input[type="checkbox"]:enabled:checked:hover + &::before, input[type="checkbox"]:enabled:indeterminate:hover + &::before':
             {
-              borderColor: tokenSchema.color.scale.indigo10,
+              borderColor: 'var(--selected-hover-bg)',
             },
           'input[type="checkbox"]:enabled:checked:active + &::before, input[type="checkbox"]:enabled:indeterminate:active + &::before':
             {
-              borderColor: tokenSchema.color.scale.indigo11,
+              borderColor: 'var(--selected-pressed-bg)',
             },
         })
       )}

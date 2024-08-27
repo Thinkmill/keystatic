@@ -133,7 +133,10 @@ export const Dialog: ForwardRefExoticComponent<
   );
 
   const sizeVariant = getSizeVariant(type, size);
-  const dialogStyleProps = useDialogStyleProps(props, sizeVariant);
+  const dialogStyleProps = useDialogStyleProps(props, {
+    type,
+    size: sizeVariant,
+  });
   const gridStyleProps = useGridStyleProps({
     isDismissable,
     size: sizeVariant,
@@ -185,11 +188,14 @@ function getSizeVariant(type: DialogType, size?: DialogSize) {
 // Styles
 // =============================================================================
 
-function useDialogStyleProps(props: DialogProps, sizeVariant: SizeVariant) {
+function useDialogStyleProps(
+  props: DialogProps,
+  { size, type }: { size: SizeVariant; type: DialogType }
+) {
   let styleProps = useStyleProps(props);
 
   return {
-    ...toDataAttributes({ size: sizeVariant }),
+    ...toDataAttributes({ size: type === 'tray' ? undefined : size }),
     ...styleProps,
     className: classNames(
       dialogClassList.element('root'),
@@ -237,15 +243,15 @@ function useGridStyleProps({
   let gridStyles = css({
     display: 'grid',
     padding: tokenSchema.size.space.xxlarge,
-    gridTemplateColumns: 'auto 1fr auto',
-    gridTemplateRows: 'auto 1fr auto',
+    gridTemplateColumns: 'auto minmax(0, 1fr) auto',
+    gridTemplateRows: 'auto minmax(0, 1fr) auto',
     gridTemplateAreas: `"heading header header"
       "content content content"
       "footer footer buttonGroup"`,
     width: '100%',
 
     '&[data-dismissable]': {
-      gridTemplateColumns: 'auto 1fr auto minmax(0, auto)',
+      gridTemplateColumns: 'auto minmax(0, 1fr) auto auto',
       gridTemplateAreas: `"heading header header closeButton"
         "content content content content"
         "footer footer footer footer"`,
@@ -259,7 +265,7 @@ function useGridStyleProps({
     // MOBILE SPECIFIC
     [breakpointQueries.below.tablet]: {
       padding: tokenSchema.size.space.xlarge,
-      gridTemplateRows: 'auto auto 1fr auto',
+      gridTemplateRows: 'auto auto minmax(0, 1fr) auto',
       gridTemplateAreas: `"heading heading heading"
       "header header header"
         "content content content"

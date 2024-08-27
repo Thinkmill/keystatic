@@ -13,6 +13,7 @@ import { ButtonProps } from './types';
 type ButtonState = {
   isHovered: boolean;
   isPressed: boolean;
+  isPending?: boolean;
   isSelected?: boolean;
 };
 
@@ -23,12 +24,13 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
     prominence = 'default',
     tone = prominence === 'high' ? 'accent' : 'neutral',
   } = props;
-  const { isHovered, isPressed } = state;
+  const { isHovered, isPending, isPressed } = state;
   const styleProps = useStyleProps(props);
 
   return {
     ...toDataAttributes({
       hovered: isHovered || undefined,
+      pending: isPending || undefined,
       pressed: isPressed || undefined,
       prominence: prominence === 'default' ? undefined : prominence,
       tone: tone === 'neutral' ? undefined : tone,
@@ -39,18 +41,17 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
       buttonClassList.element('root'),
       css({
         alignItems: 'center',
-        borderRadius: tokenSchema.size.radius.regular,
+        borderRadius: tokenSchema.size.radius.full,
         cursor: 'default',
         display: 'inline-flex',
         flexShrink: 0,
         fontSize: tokenSchema.typography.text.regular.size,
-        fontWeight: tokenSchema.typography.fontWeight.semibold,
+        fontWeight: tokenSchema.typography.fontWeight.medium,
         height: tokenSchema.size.element.regular,
         justifyContent: 'center',
         minWidth: tokenSchema.size.element.regular,
         outline: 0,
-        gap: tokenSchema.size.space.regular,
-        paddingInline: tokenSchema.size.space.large,
+        paddingInline: tokenSchema.size.space.medium,
         position: 'relative',
         transitionDuration: '130ms',
         transitionProperty: 'background, border-color, box-shadow, color, ',
@@ -70,12 +71,20 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
         [buttonClassList.selector('text', 'descendant')]: {
           fontSize: 'inherit',
           fontWeight: 'inherit',
+          marginInline: tokenSchema.size.space.regular,
         },
+        [`&[data-pending] ${buttonClassList.selector('text')}`]: {
+          opacity: 0,
+        },
+
         // special size for button icons. otherwise they appear too "thin"
         // beside the bold text
         [buttonClassList.selector('icon', 'descendant')]: {
           height: tokenSchema.size.scale[225],
           width: tokenSchema.size.scale[225],
+        },
+        [`&[data-pending] ${buttonClassList.selector('icon')}`]: {
+          opacity: 0,
         },
 
         // focus ring
@@ -87,7 +96,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           '--focus-ring-color': '#000',
         },
         '&::after': {
-          borderRadius: `calc(${tokenSchema.size.radius.regular} + ${tokenSchema.size.alias.focusRingGap})`,
+          borderRadius: tokenSchema.size.radius.full,
           content: '""',
           inset: 0,
           pointerEvents: 'none',
@@ -122,8 +131,8 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           },
 
           // states
-          '&:disabled, &[aria-disabled]': {
-            backgroundColor: tokenSchema.color.alias.backgroundHovered,
+          '&:disabled, &[data-pending=true]': {
+            backgroundColor: tokenSchema.color.alias.backgroundDisabled,
             color: tokenSchema.color.alias.foregroundDisabled,
           },
 
@@ -196,8 +205,9 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
             },
           },
 
-          '&:disabled, &[aria-disabled]': {
-            backgroundColor: tokenSchema.color.background.surfaceTertiary,
+          // tone selector to increase specificity
+          '&[data-tone]:disabled, &[data-tone][data-pending=true]': {
+            backgroundColor: tokenSchema.color.alias.backgroundDisabled,
             color: tokenSchema.color.alias.foregroundDisabled,
           },
 
@@ -267,7 +277,8 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
             },
           },
 
-          '&:disabled, &[aria-disabled]': {
+          '&:disabled, &[data-pending=true]': {
+            backgroundColor: tokenSchema.color.alias.backgroundDisabled,
             color: tokenSchema.color.alias.foregroundDisabled,
           },
 
