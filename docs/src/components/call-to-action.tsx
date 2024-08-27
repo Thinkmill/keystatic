@@ -1,15 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-
-import Dialog from './dialog';
-import SendMessageForm from './forms/send-message';
 import { GithubIcon } from './icons/github-icon';
-import { PaperAirplaneIcon } from './icons/paper-airplane-icon';
 
 export default function CallToAction() {
-  const [isOpen, setIsOpen] = useState(false);
-
   const linkLabels = {
     tmLabs: 'Thinkmill Labs',
     ksDiscussions: 'Join the discussion on GitHub',
@@ -121,33 +114,9 @@ export default function CallToAction() {
                 </span>
               </a>
             </li>
-            <li>
-              <button onClick={() => setIsOpen(true)} className="block w-full">
-                <span className="flex h-8 flex-row items-center gap-4 text-sm font-medium text-sand-12 transition-all duration-150 hover:gap-6 hover:text-black">
-                  <PaperAirplaneIcon />
-                  <span>Send us a message</span>
-                </span>
-              </button>
-            </li>
           </ul>
         </div>
       </div>
-
-      <Dialog
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        header={() => (
-          <>
-            <div className="flex flex-col gap-4">
-              <h2 className="pr-8 text-3xl font-medium">Send us a message</h2>
-              <p>Tell us what you think below.</p>
-            </div>
-          </>
-        )}
-      >
-        <h3 className="text-2xl font-medium">Tell us a bit about yourself</h3>
-        <SendMessageForm />
-      </Dialog>
     </section>
   );
 }

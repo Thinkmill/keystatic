@@ -187,7 +187,7 @@ function Picker<T extends object>(
                 ...valueProps,
                 // when no item is selected, we're styling the placeholder
                 color: !state.selectedItem ? 'neutralSecondary' : 'inherit',
-                weight: state.selectedItem ? 'medium' : undefined,
+                // weight: state.selectedItem ? 'medium' : undefined,
               },
               // we try to maintain most of the selected item's rendered content
               // within the button, but description text is too long

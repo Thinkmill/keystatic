@@ -134,7 +134,11 @@ export type CommonButtonProps = {
   AriaLabelingProps &
   BaseStyleProps;
 
-export type ButtonElementProps = CommonButtonProps & AriaProps;
+export type ButtonElementProps = CommonButtonProps &
+  AriaProps & {
+    /** Disable events and display a progress indicator. */
+    isPending?: boolean;
+  };
 
 export type LinkElementProps = CommonButtonProps & AnchorDOMProps;
 

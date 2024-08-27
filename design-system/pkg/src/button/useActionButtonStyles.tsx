@@ -50,7 +50,7 @@ export function useActionButtonStyles(
         cursor: 'default',
         display: 'inline-flex',
         flexShrink: 0,
-        fontWeight: tokenSchema.typography.fontWeight.medium,
+        fontWeight: tokenSchema.typography.fontWeight.regular,
         height: tokenSchema.size.element.regular,
         justifyContent: 'center',
         minWidth: tokenSchema.size.element.regular,
@@ -108,6 +108,7 @@ export function useActionButtonStyles(
           '&[data-interaction=hover]': {
             backgroundColor: tokenSchema.color.alias.backgroundHovered,
             borderColor: tokenSchema.color.alias.borderHovered,
+            // boxShadow: `${tokenSchema.size.shadow.small} ${tokenSchema.color.shadow.regular}`,
             color: tokenSchema.color.alias.foregroundHovered,
           },
           '&[data-interaction=press]': {
@@ -118,12 +119,17 @@ export function useActionButtonStyles(
 
           // states
           '&[data-selected]': {
-            backgroundColor: tokenSchema.color.alias.backgroundSelected,
-            color: tokenSchema.color.foreground.neutralEmphasis,
+            backgroundColor: tokenSchema.color.foreground.neutralSecondary,
+            borderColor: tokenSchema.color.foreground.neutralSecondary,
+            color: tokenSchema.color.foreground.inverse,
 
             '&[data-interaction=hover]': {
-              backgroundColor:
-                tokenSchema.color.alias.backgroundSelectedHovered,
+              backgroundColor: tokenSchema.color.foreground.neutral,
+              borderColor: tokenSchema.color.foreground.neutral,
+            },
+            '&[data-interaction=press]': {
+              backgroundColor: tokenSchema.color.foreground.neutralEmphasis,
+              borderColor: tokenSchema.color.foreground.neutralEmphasis,
             },
           },
           '&:disabled, &[aria-disabled=true], &[data-disabled=true]': {
@@ -179,20 +185,26 @@ export function useActionButtonStyles(
           // interactions
           '&[data-interaction=hover]': {
             backgroundColor: tokenSchema.color.alias.backgroundHovered,
-            color: tokenSchema.color.foreground.neutralEmphasis,
+            color: tokenSchema.color.alias.foregroundHovered,
           },
           '&[data-interaction=press]': {
             backgroundColor: tokenSchema.color.alias.backgroundPressed,
+            color: tokenSchema.color.alias.foregroundPressed,
           },
 
           // states
           '&[data-selected]': {
-            backgroundColor: tokenSchema.color.alias.backgroundSelected,
-            color: tokenSchema.color.alias.foregroundSelected,
+            backgroundColor: tokenSchema.color.foreground.neutralSecondary,
+            borderColor: tokenSchema.color.foreground.neutralSecondary,
+            color: tokenSchema.color.foreground.inverse,
 
             '&[data-interaction=hover]': {
-              backgroundColor:
-                tokenSchema.color.alias.backgroundSelectedHovered,
+              backgroundColor: tokenSchema.color.foreground.neutral,
+              borderColor: tokenSchema.color.foreground.neutral,
+            },
+            '&[data-interaction=press]': {
+              backgroundColor: tokenSchema.color.foreground.neutralEmphasis,
+              borderColor: tokenSchema.color.foreground.neutralEmphasis,
             },
           },
           '&:disabled, &[aria-disabled=true], &[data-disabled=true]': {

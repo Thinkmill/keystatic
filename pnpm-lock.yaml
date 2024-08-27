@@ -533,7 +533,7 @@ importers:
         version: 1.2.2
       '@types/react-dom':
         specifier: ^18.0.11
-        version: 18.2.7
+        version: 18.3.0
       lucide-static:
         specifier: ^0.314.0
         version: 0.314.0
@@ -606,7 +606,7 @@ importers:
         version: 7.0.0(astro@4.0.3)
       '@astrojs/react':
         specifier: ^3.0.7
-        version: 3.0.7(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(vite@5.2.12)
+        version: 3.0.7(@types/react-dom@18.3.0)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(vite@5.2.12)
       '@braintree/sanitize-url':
         specifier: ^6.0.2
         version: 6.0.4
@@ -621,7 +621,7 @@ importers:
         version: 18.2.21
       '@types/react-dom':
         specifier: ^18.0.11
-        version: 18.2.7
+        version: 18.3.0
       astro:
         specifier: ^4.0.3
         version: 4.0.3(@types/node@16.11.13)(typescript@5.5.3)
@@ -681,7 +681,7 @@ importers:
         version: 7.0.0(astro@4.0.3)
       '@astrojs/react':
         specifier: ^3.0.7
-        version: 3.0.7(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(vite@5.2.12)
+        version: 3.0.7(@types/react-dom@18.3.0)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(vite@5.2.12)
       '@astrojs/sitemap':
         specifier: ^3.0.3
         version: 3.0.3
@@ -702,7 +702,7 @@ importers:
         version: 18.2.21
       '@types/react-dom':
         specifier: ^18.0.11
-        version: 18.2.7
+        version: 18.3.0
       astro:
         specifier: ^4.0.3
         version: 4.0.3(@types/node@16.11.13)(typescript@5.5.3)
@@ -735,7 +735,7 @@ importers:
         version: 18.2.21
       '@types/react-dom':
         specifier: ^18.0.11
-        version: 18.2.7
+        version: 18.3.0
       eslint:
         specifier: ^8.18.0
         version: 8.48.0
@@ -839,7 +839,7 @@ importers:
         version: 18.2.21
       '@types/react-dom':
         specifier: ^18.0.11
-        version: 18.2.7
+        version: 18.3.0
       autoprefixer:
         specifier: ^10.4.13
         version: 10.4.15(postcss@8.4.31)
@@ -940,7 +940,7 @@ importers:
         version: 18.2.21
       '@types/react-dom':
         specifier: ^18.0.11
-        version: 18.2.7
+        version: 18.3.0
       eslint:
         specifier: ^8.18.0
         version: 8.48.0
@@ -992,6 +992,9 @@ importers:
       '@types/react':
         specifier: ^18.2.8
         version: 18.2.21
+      '@types/react-dom':
+        specifier: ^18.0.11
+        version: 18.3.0
       cookie:
         specifier: ^0.5.0
         version: 0.5.0
@@ -1354,7 +1357,7 @@ importers:
         version: 1.26.0
       '@types/react-dom':
         specifier: ^18.0.11
-        version: 18.2.7
+        version: 18.3.0
       '@types/signal-exit':
         specifier: ^3.0.1
         version: 3.0.1
@@ -1458,7 +1461,7 @@ importers:
         version: 0.8.0(@types/react@18.2.21)(astro@4.0.3)(react@18.2.0)
       '@astrojs/react':
         specifier: ^3.0.7
-        version: 3.0.7(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(vite@5.2.12)
+        version: 3.0.7(@types/react-dom@18.3.0)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(vite@5.2.12)
       '@keystatic/astro':
         specifier: workspace:^
         version: link:../../packages/astro
@@ -1470,7 +1473,7 @@ importers:
         version: 18.2.21
       '@types/react-dom':
         specifier: ^18.0.11
-        version: 18.2.7
+        version: 18.3.0
       astro:
         specifier: ^4.0.3
         version: 4.0.3(@types/node@16.11.13)(typescript@5.5.3)
@@ -1556,7 +1559,7 @@ importers:
         version: 18.2.21
       '@types/react-dom':
         specifier: ^18.0.11
-        version: 18.2.7
+        version: 18.3.0
       eslint:
         specifier: ^8.18.0
         version: 8.48.0
@@ -1665,7 +1668,7 @@ packages:
     dependencies:
       prismjs: 1.29.0
 
-  /@astrojs/react@3.0.7(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(vite@5.2.12):
+  /@astrojs/react@3.0.7(@types/react-dom@18.3.0)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(vite@5.2.12):
     resolution: {integrity: sha512-MpjuFw7YGta44OaQExKVCWyXjujUtUsp5Nst/wIjRHbkmBBlypdj+MF9/xqjsYM+vjcrByOGupmluRrFQO67YQ==}
     engines: {node: '>=18.14.1'}
     peerDependencies:
@@ -1675,7 +1678,7 @@ packages:
       react-dom: ^17.0.2 || ^18.0.0
     dependencies:
       '@types/react': 18.2.21
-      '@types/react-dom': 18.2.7
+      '@types/react-dom': 18.3.0
       '@vitejs/plugin-react': 4.2.1(vite@5.2.12)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -11742,6 +11745,11 @@ packages:
 
   /@types/react-dom@18.2.7:
     resolution: {integrity: sha512-GRaAEriuT4zp9N4p1i8BDBYmEyfo+xQ3yHjJU4eiK5NDa1RmUZG+unZABUTK4/Ox/M+GaHwb6Ow8rUITrtjszA==}
+    dependencies:
+      '@types/react': 18.2.21
+
+  /@types/react-dom@18.3.0:
+    resolution: {integrity: sha512-EhwApuTmMBmXuFOikhQLIBUn6uFg81SwLMOAUgodJF14SOBOCMdU04gDoYi0WOJJHD144TL32z4yDqCW3dnkQg==}
     dependencies:
       '@types/react': 18.2.21
 
@@ -22159,7 +22167,7 @@ packages:
       '@types/lz-string': 1.5.0
       '@types/prettier': 2.7.3
       '@types/react': 18.2.21
-      '@types/react-dom': 18.2.7
+      '@types/react-dom': 18.3.0
       '@vanilla-extract/css': 1.13.0
       '@vanilla-extract/css-utils': 0.1.3
       '@vanilla-extract/sprinkles': 1.6.1(@vanilla-extract/css@1.13.0)

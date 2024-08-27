@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 import { BaseStyleProps, useStyleProps } from '@keystar/ui/style';
 import { forwardRefWithAs } from '@keystar/ui/utils/ts';
 
-import { useSlotProps } from './context';
+import { ClearSlots, useSlotProps } from './context';
 
 type ContentProps = {
   /**
@@ -24,7 +24,7 @@ export const Content = forwardRefWithAs<ContentProps, 'section'>(
 
     return (
       <Element {...filterDOMProps(otherProps)} {...styleProps} ref={ref}>
-        {children}
+        <ClearSlots>{children}</ClearSlots>
       </Element>
     );
   }

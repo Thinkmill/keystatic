@@ -59,16 +59,19 @@ export default function Button({
         className
       )}
     >
-      {isLoading ? <Spinner /> : children}
+      {isLoading ? <Spinner impact={impact} /> : children}
     </button>
   );
 }
 
-function Spinner() {
+function Spinner({ impact }: { impact: ButtonProps['impact'] }) {
   return (
     <div className="grid w-full place-items-center">
       <svg
-        className="-my-0.5 h-5 w-5 animate-spin text-sand-1"
+        className={cx(
+          '-my-0.5 h-5 w-5 animate-spin',
+          impact === 'bold' ? 'text-sand-1' : 'text-sand-12'
+        )}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
