@@ -303,7 +303,9 @@ test('link in list', () => {
   const editor = fromMDX(mdx);
   expect(editor).toMatchInlineSnapshot(`
     <doc>
-      <ordered_list>
+      <ordered_list
+        start={1}
+      >
         <list_item>
           <paragraph>
             <text>
@@ -1029,6 +1031,19 @@ test('loose list', () => {
       b
     * c
     * d
+    "
+  `);
+});
+
+test('ordered list with start', () => {
+  const mdx = `5. a
+1. b
+1. c`;
+  const editor = fromMDX(mdx);
+  expect(toMDX(editor)).toMatchInlineSnapshot(`
+    "5. a
+    6. b
+    7. c
     "
   `);
 });

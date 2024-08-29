@@ -297,7 +297,9 @@ test('link in list', () => {
   const editor = fromMarkdoc(markdoc);
   expect(editor).toMatchInlineSnapshot(`
     <doc>
-      <ordered_list>
+      <ordered_list
+        start={1}
+      >
         <list_item>
           <paragraph>
             <text>
@@ -687,6 +689,19 @@ test('undefined in conditional value', () => {
   `);
   expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
     "{% string-directly-in-conditional conditional={discriminant: false} /%}
+    "
+  `);
+});
+
+test('ordered list with start', () => {
+  const markdoc = `5. a
+1. b
+1. c`;
+  const editor = fromMarkdoc(markdoc);
+  expect(toMarkdoc(editor)).toMatchInlineSnapshot(`
+    "5. a
+    1. b
+    1. c
     "
   `);
 });

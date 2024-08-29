@@ -297,7 +297,13 @@ function markdocNodeToProseMirrorNode(
       ? schema.nodes.ordered_list
       : schema.nodes.unordered_list;
     if (!listType) return notAllowed(node, parentType);
-    return createAndFill(node, listType, {});
+    return createAndFill(
+      node,
+      listType,
+      node.attributes.ordered && node.attributes.start !== undefined
+        ? { start: node.attributes.start }
+        : {}
+    );
   }
   if (node.type === 'table') {
     if (!schema.nodes.table) return notAllowed(node, parentType);
