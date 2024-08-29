@@ -19,7 +19,37 @@ test('ordered list shortcut', async () => {
   await user.keyboard(' ');
   expect(state()).toMatchInlineSnapshot(`
     <doc>
-      <ordered_list>
+      <ordered_list
+        start={1}
+      >
+        <list_item>
+          <paragraph>
+            <cursor />
+          </paragraph>
+        </list_item>
+      </ordered_list>
+    </doc>
+  `);
+});
+
+test('ordered list shortcut with different start', async () => {
+  const { state, user } = renderEditor(
+    <doc>
+      <paragraph>
+        <text>
+          5.
+          <cursor />
+        </text>
+      </paragraph>
+    </doc>
+  );
+
+  await user.keyboard(' ');
+  expect(state()).toMatchInlineSnapshot(`
+    <doc>
+      <ordered_list
+        start={5}
+      >
         <list_item>
           <paragraph>
             <cursor />
@@ -190,7 +220,9 @@ test('toggle list on empty line', async () => {
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
-      <ordered_list>
+      <ordered_list
+        start={1}
+      >
         <list_item>
           <paragraph>
             <cursor />
@@ -219,7 +251,9 @@ test('toggle list on line with text', async () => {
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
-      <ordered_list>
+      <ordered_list
+        start={1}
+      >
         <list_item>
           <paragraph>
             <text>
@@ -252,7 +286,9 @@ test('toggle list on line with text with marks', async () => {
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
-      <ordered_list>
+      <ordered_list
+        start={1}
+      >
         <list_item>
           <paragraph>
             <text>
@@ -382,7 +418,9 @@ test('toggle ordered_list inside of multi-item ordered_list', async () => {
 
   expect(state()).toMatchInlineSnapshot(`
     <doc>
-      <ordered_list>
+      <ordered_list
+        start={1}
+      >
         <list_item>
           <paragraph>
             <text>
@@ -397,7 +435,9 @@ test('toggle ordered_list inside of multi-item ordered_list', async () => {
           <cursor />
         </text>
       </paragraph>
-      <ordered_list>
+      <ordered_list
+        start={1}
+      >
         <list_item>
           <paragraph>
             <text>
@@ -572,7 +612,9 @@ test('backspace at start of list only unwraps the first item', async () => {
           some text
         </text>
       </paragraph>
-      <ordered_list>
+      <ordered_list
+        start={1}
+      >
         <list_item>
           <paragraph>
             <text>
@@ -788,7 +830,9 @@ test('changing the type of a nested list', async () => {
               some text
             </text>
           </paragraph>
-          <ordered_list>
+          <ordered_list
+            start={1}
+          >
             <list_item>
               <paragraph>
                 <text>
@@ -846,14 +890,18 @@ test('changing the type of a nested list to something which it is nested inside'
               top text
             </text>
           </paragraph>
-          <ordered_list>
+          <ordered_list
+            start={1}
+          >
             <list_item>
               <paragraph>
                 <text>
                   middle text
                 </text>
               </paragraph>
-              <ordered_list>
+              <ordered_list
+                start={1}
+              >
                 <list_item>
                   <paragraph>
                     <text>

@@ -221,9 +221,26 @@ const nodeSpecs = {
   ordered_list: {
     content: 'list_item+',
     group: 'block',
-    parseDOM: [{ tag: 'ol' }],
-    toDOM() {
-      return olDOM;
+    attrs: {
+      start: { default: 1 },
+    },
+    parseDOM: [
+      {
+        tag: 'ol',
+        getAttrs: node => {
+          if (typeof node === 'string') {
+            return false;
+          }
+          if (!(node instanceof HTMLOListElement) || node.start < 0) {
+            return { start: 1 };
+          }
+          return { start: node.start };
+        },
+      },
+    ],
+    toDOM(node) {
+      if (node.attrs.start === 1) return olDOM;
+      return ['ol', { start: node.attrs.start }, 0];
     },
     insertMenu: {
       label: 'Ordered list',

@@ -242,7 +242,9 @@ there is a break before this
           </paragraph>
         </list_item>
       </unordered_list>
-      <ordered_list>
+      <ordered_list
+        start={1}
+      >
         <list_item>
           <paragraph>
             <text>
@@ -256,7 +258,9 @@ there is a break before this
               item
             </text>
           </paragraph>
-          <ordered_list>
+          <ordered_list
+            start={1}
+          >
             <list_item>
               <paragraph>
                 <text>

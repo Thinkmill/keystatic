@@ -244,7 +244,11 @@ export function proseMirrorToMarkdoc(
     return new Ast.Node('item', {}, listItemContent);
   }
   if (node.type === schema.nodes.ordered_list) {
-    return new Ast.Node('list', { ordered: true }, blocks(node.content));
+    return new Ast.Node(
+      'list',
+      { ordered: true, start: node.attrs.start },
+      blocks(node.content)
+    );
   }
   if (node.type === schema.nodes.unordered_list) {
     return new Ast.Node('list', { ordered: false }, blocks(node.content));

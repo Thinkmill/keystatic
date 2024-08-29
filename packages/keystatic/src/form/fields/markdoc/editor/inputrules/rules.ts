@@ -28,8 +28,10 @@ export function inputRulesForSchema({ nodes, marks, config }: EditorSchema) {
   }
   if (nodes.ordered_list) {
     rules.push({
-      pattern: /^\s*\d+(?:\.|\))\s$/,
-      handler: wrappingInputRuleHandler(nodes.ordered_list),
+      pattern: /^\s*(\d+)(?:\.|\))\s$/,
+      handler: wrappingInputRuleHandler(nodes.ordered_list, match => ({
+        start: parseInt(match[1], 10),
+      })),
     });
   }
   if (nodes.unordered_list) {

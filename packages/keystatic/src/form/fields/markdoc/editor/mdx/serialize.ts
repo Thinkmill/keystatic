@@ -249,6 +249,7 @@ function proseMirrorToMDX(
       type: 'list',
       ordered: true,
       spread: false,
+      start: node.attrs.start,
       children: mapContent(node, node => convertListItem(blocks(node.content))),
     };
   }
