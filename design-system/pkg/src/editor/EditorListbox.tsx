@@ -1,4 +1,7 @@
-import { useSelectableCollection } from '@react-aria/selection';
+import {
+  ListKeyboardDelegate,
+  useSelectableCollection,
+} from '@react-aria/selection';
 import { chain } from '@react-aria/utils';
 import { useListState } from '@react-stately/list';
 import {
@@ -6,7 +9,7 @@ import {
   CollectionBase,
   MultipleSelection,
 } from '@react-types/shared';
-import { Key, RefObject, useEffect, useRef } from 'react';
+import { Key, RefObject, useEffect, useMemo, useRef } from 'react';
 
 import { ListBoxBase, listStyles, useListBoxLayout } from '@keystar/ui/listbox';
 import { BaseStyleProps } from '@keystar/ui/style';
@@ -34,12 +37,21 @@ export type EditorListboxProps<T> = {
 export function EditorListbox<T extends object>(props: EditorListboxProps<T>) {
   let { listenerRef, onEscape, scrollRef, ...otherProps } = props;
   let state = useListState(props);
-  let layout = useListBoxLayout(state);
+  let layout = useListBoxLayout();
+  let listboxRef = useRef<HTMLDivElement>(null);
+  let delegate = useMemo(
+    () =>
+      new ListKeyboardDelegate({
+        collection: state.collection,
+        ref: listboxRef,
+        layoutDelegate: layout,
+      }),
+    [layout, state.collection]
+  );
 
   // keyboard and selection management
-  let listboxRef = useRef<HTMLDivElement>(null);
   let { collectionProps } = useSelectableCollection({
-    keyboardDelegate: layout,
+    keyboardDelegate: delegate,
     ref: listenerRef,
     scrollRef: scrollRef ?? listboxRef,
     selectionManager: state.selectionManager,

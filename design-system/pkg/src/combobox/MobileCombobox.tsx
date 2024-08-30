@@ -300,13 +300,13 @@ function ComboboxTray<T extends object>(props: ComboboxTrayProps<T>) {
   let buttonRef = useRef<HTMLDivElement>(null);
   let popoverRef = useRef<HTMLDivElement>(null);
   let listBoxRef = useRef<HTMLDivElement>(null);
-  let layout = useListBoxLayout(state);
+  let layout = useListBoxLayout();
   let stringFormatter = useLocalizedStringFormatter(localizedMessages);
 
   let { inputProps, listBoxProps, labelProps } = useComboBox(
     {
       ...props,
-      keyboardDelegate: layout,
+      layoutDelegate: layout,
       buttonRef,
       popoverRef,
       listBoxRef,

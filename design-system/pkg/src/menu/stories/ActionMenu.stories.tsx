@@ -137,9 +137,9 @@ export const DOMId = {
   args: { id: 'my-action-menu' },
 };
 
-export const Quiet = {
+export const LowProminence = {
   render: Template,
-  args: { isQuiet: true },
+  args: { prominence: 'low' },
 };
 
 export const Disabled = {

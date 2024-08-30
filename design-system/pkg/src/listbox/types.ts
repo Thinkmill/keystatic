@@ -1,5 +1,4 @@
 import { AriaListBoxOptions } from '@react-aria/listbox';
-import { ListLayout } from '@react-stately/layout';
 import { ListState } from '@react-stately/list';
 import {
   AriaLabelingProps,
@@ -14,6 +13,8 @@ import { HTMLAttributes, ReactNode } from 'react';
 
 import { BaseStyleProps } from '@keystar/ui/style';
 
+import { ListBoxLayout } from './ListBoxLayout';
+
 /** @private */
 export type ListBoxBaseProps<T> = {
   autoFocus?: boolean | FocusStrategy;
@@ -21,15 +22,15 @@ export type ListBoxBaseProps<T> = {
   domProps?: HTMLAttributes<HTMLElement>;
   focusOnPointerEnter?: boolean;
   isLoading?: boolean;
-  layout: ListLayout<T>;
+  layout: ListBoxLayout<T>;
   onLoadMore?: () => void;
   onScroll?: () => void;
   renderEmptyState?: () => ReactNode;
   shouldFocusWrap?: boolean;
   shouldSelectOnPressUp?: boolean;
   shouldUseVirtualFocus?: boolean;
+  showLoadingSpinner?: boolean;
   state: ListState<T>;
-  transitionDuration?: number;
 } & AriaListBoxOptions<T> &
   AriaLabelingProps &
   BaseStyleProps &

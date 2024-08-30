@@ -6,7 +6,7 @@ import { SpectrumDatePickerBase } from '@react-types/datepicker';
 import { Ref, useImperativeHandle, useMemo, useState } from 'react';
 
 export function useFormatHelpText(
-  props: Pick<SpectrumDatePickerBase, 'description' | 'showFormatHelpText'>
+  props: Pick<SpectrumDatePickerBase<any>, 'description' | 'showFormatHelpText'>
 ) {
   let formatter = useDateFormatter({ dateStyle: 'short' });
   let displayNames = useDisplayNames();

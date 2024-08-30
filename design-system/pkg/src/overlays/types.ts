@@ -39,7 +39,7 @@ export type TrayProps = {
 export type TransitionProps = {
   children: ReactNode;
   isOpen?: boolean;
-  nodeRef: MutableRefObject<HTMLElement>;
+  nodeRef: MutableRefObject<HTMLElement | null>;
   onEnter?: () => void;
   onEntered?: () => void;
   onEntering?: () => void;

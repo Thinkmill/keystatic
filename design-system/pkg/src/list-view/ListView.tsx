@@ -1,14 +1,17 @@
 import { useGridList } from '@react-aria/gridlist';
 import type { DroppableCollectionResult } from '@react-aria/dnd';
 import { FocusScope } from '@react-aria/focus';
-import { useCollator, useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { Virtualizer } from '@react-aria/virtualizer';
 import { filterDOMProps, mergeProps, useObjectRef } from '@react-aria/utils';
-import type { DroppableCollectionState } from '@react-stately/dnd';
-import { ListLayout } from '@react-stately/layout';
+import type {
+  DraggableCollectionState,
+  DroppableCollectionState,
+} from '@react-stately/dnd';
 import { ListState, useListState } from '@react-stately/list';
 import { assert } from 'emery';
 import React, {
+  Key,
   PropsWithChildren,
   ReactElement,
   RefObject,
@@ -32,10 +35,12 @@ import { listViewClassList } from './class-list';
 import { ListViewProvider, useListViewContext } from './context';
 import localizedMessages from './l10n.json';
 import { DragPreview as DragPreviewElement } from './DragPreview';
-import InsertionIndicator from './InsertionIndicator';
+import { InsertionIndicator } from './InsertionIndicator';
 import { ListViewItem } from './ListViewItem';
+import { ListViewLayout } from './ListViewLayout';
 import RootDropIndicator from './RootDropIndicator';
 import { ListViewProps } from './types';
+import { ListKeyboardDelegate } from '@react-aria/selection';
 
 const ROW_HEIGHTS = {
   compact: {
@@ -52,35 +57,21 @@ const ROW_HEIGHTS = {
   },
 } as const;
 
-function createLayout<T>(
-  collator: Intl.Collator,
-  scale: 'medium' | 'large',
-  density: keyof typeof ROW_HEIGHTS,
-  isEmpty: boolean,
-  _overflowMode: string | undefined
-) {
-  return new ListLayout<T>({
-    estimatedRowHeight: ROW_HEIGHTS[density][scale],
-    padding: 0,
-    collator,
-    loaderHeight: isEmpty ? undefined : ROW_HEIGHTS[density][scale],
-  });
-}
-
 function useListLayout<T>(
   state: ListState<T>,
   density: NonNullable<ListViewProps<T>['density']>,
   overflowMode: ListViewProps<T>['overflowMode']
 ) {
   let { scale } = useProvider();
-  let collator = useCollator({ usage: 'search', sensitivity: 'base' });
-  let isEmpty = state.collection.size === 0;
-  let layout = useMemo(() => {
-    return createLayout<T>(collator, scale, density, isEmpty, overflowMode);
-  }, [collator, scale, density, isEmpty, overflowMode]);
+  let layout = useMemo(
+    () =>
+      new ListViewLayout<T>({
+        estimatedRowHeight: ROW_HEIGHTS[density][scale],
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [scale, density, overflowMode]
+  );
 
-  layout.collection = state.collection;
-  layout.disabledKeys = state.disabledKeys;
   return layout;
 }
 
@@ -96,6 +87,7 @@ function ListView<T extends object>(
     overflowMode = 'truncate',
     onAction,
     dragAndDropHooks,
+    renderEmptyState,
     ...otherProps
   } = props;
 
@@ -132,36 +124,29 @@ function ListView<T extends object>(
   let preview = useRef(null);
 
   // DraggableCollectionState;
-  let dragState = (() => {
-    if (
-      dragAndDropHooks != null &&
-      dragAndDropHooks.useDraggableCollectionState &&
-      dragAndDropHooks.useDraggableCollection
-    ) {
-      let state = dragAndDropHooks.useDraggableCollectionState({
-        collection,
-        selectionManager,
-        preview,
-      });
-      dragAndDropHooks.useDraggableCollection({}, state, domRef);
-      return state;
-    }
-  })();
-
+  let dragState!: DraggableCollectionState;
+  if (
+    isListDraggable &&
+    dragAndDropHooks?.useDraggableCollectionState &&
+    dragAndDropHooks?.useDraggableCollection
+  ) {
+    dragState = dragAndDropHooks.useDraggableCollectionState({
+      collection,
+      selectionManager,
+      preview,
+    });
+    dragAndDropHooks.useDraggableCollection({}, dragState, domRef);
+  }
   let layout = useListLayout(state, props.density || 'regular', overflowMode);
-  // !!0 is false, so we can cast size or undefined and they'll be falsy
-  layout.allowDisabledKeyFocus =
-    state.selectionManager.disabledBehavior === 'selection' ||
-    !!dragState?.draggingKeys.size;
 
   let DragPreview = dragAndDropHooks?.DragPreview;
-  let dropState: DroppableCollectionState;
+  let dropState!: DroppableCollectionState;
   let droppableCollection: DroppableCollectionResult;
   let isRootDropTarget: boolean;
   if (
-    dragAndDropHooks &&
-    dragAndDropHooks.useDroppableCollectionState &&
-    dragAndDropHooks.useDroppableCollection
+    isListDroppable &&
+    dragAndDropHooks?.useDroppableCollectionState &&
+    dragAndDropHooks?.useDroppableCollection
   ) {
     dropState = dragAndDropHooks.useDroppableCollectionState({
       collection,
@@ -169,7 +154,14 @@ function ListView<T extends object>(
     });
     droppableCollection = dragAndDropHooks.useDroppableCollection(
       {
-        keyboardDelegate: layout,
+        keyboardDelegate: new ListKeyboardDelegate({
+          collection,
+          disabledKeys: dragState?.draggingKeys.size
+            ? undefined
+            : selectionManager.disabledKeys,
+          ref: domRef,
+          layoutDelegate: layout,
+        }),
         dropTargetDelegate: layout,
       },
       dropState,
@@ -183,21 +175,27 @@ function ListView<T extends object>(
     {
       ...props,
       isVirtualized: true,
-      keyboardDelegate: layout,
+      layoutDelegate: layout,
       onAction,
     },
     state,
     domRef
   );
 
-  // Sync loading state into the layout.
-  layout.isLoading = isLoading;
-
   let focusedKey = selectionManager.focusedKey;
-  // @ts-expect-error
+  let dropTargetKey: Key | null = null;
   if (dropState?.target?.type === 'item') {
-    focusedKey = dropState.target.key;
+    dropTargetKey = dropState.target.key;
+    if (dropState.target.dropPosition === 'after') {
+      // Normalize to the "before" drop position since we only render those in the DOM.
+      dropTargetKey =
+        state.collection.getKeyAfter(dropTargetKey) ?? dropTargetKey;
+    }
   }
+
+  let persistedKeys = useMemo(() => {
+    return new Set([focusedKey, dropTargetKey].filter(k => k !== null));
+  }, [focusedKey, dropTargetKey]);
 
   let hasAnyChildren = useMemo(
     () => [...collection].some(item => item.hasChildNodes),
@@ -210,19 +208,17 @@ function ListView<T extends object>(
         density,
         // @ts-expect-error
         dragAndDropHooks,
-        // @ts-expect-error
         dragState,
-        // @ts-expect-error
         dropState,
         isListDraggable,
         isListDroppable,
-        // @ts-expect-error
         layout,
         // @ts-expect-error
         loadingState,
         // @ts-expect-error
         onAction,
         overflowMode,
+        renderEmptyState,
         state,
       }}
     >
@@ -248,8 +244,11 @@ function ListView<T extends object>(
             isLoading={isLoading}
             onLoadMore={onLoadMore}
             ref={domRef}
-            focusedKey={focusedKey}
+            persistedKeys={persistedKeys}
             scrollDirection="vertical"
+            layout={layout}
+            layoutOptions={useMemo(() => ({ isLoading }), [isLoading])}
+            collection={collection}
             className={classNames(
               listViewClassList.element('root'),
               css({
@@ -275,9 +274,6 @@ function ListView<T extends object>(
               }),
               styleProps.className
             )}
-            layout={layout}
-            collection={collection}
-            transitionDuration={isLoading ? 160 : 220}
           >
             {(type, item) => {
               if (type === 'item') {
@@ -353,7 +349,6 @@ function ListView<T extends object>(
 
             assert(item != null, 'Dragged item must exist in collection.');
 
-            // @ts-expect-error
             let itemCount = dragState.draggingKeys.size;
             // @ts-expect-error
             let itemHeight = layout.getLayoutInfo(dragState.draggedKey).rect

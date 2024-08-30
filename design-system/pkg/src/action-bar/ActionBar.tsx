@@ -39,7 +39,6 @@ function ActionBar<T extends object>(
   let domRef = useObjectRef(forwardedRef);
 
   return (
-    /* @ts-expect-error FIXME: resolve ref inconsistencies */
     <Transition nodeRef={domRef} isOpen={isOpen}>
       <ActionBarInnerWithRef {...props} ref={domRef} />
     </Transition>
