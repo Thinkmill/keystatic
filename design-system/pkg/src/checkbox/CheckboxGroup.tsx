@@ -8,12 +8,7 @@ import React, {
 
 import { useProviderProps } from '@keystar/ui/core';
 import { FieldPrimitive, validateFieldProps } from '@keystar/ui/field';
-import {
-  classNames,
-  css,
-  toDataAttributes,
-  tokenSchema,
-} from '@keystar/ui/style';
+import { classNames, css, toDataAttributes } from '@keystar/ui/style';
 
 import { CheckboxGroupContext } from './context';
 import { CheckboxGroupProps } from './types';
@@ -50,7 +45,6 @@ export const CheckboxGroup: ForwardRefExoticComponent<CheckboxGroupProps> =
           className={classNames(
             css({
               display: 'flex',
-              gap: tokenSchema.size.space.large,
 
               '&[data-orientation="vertical"]': {
                 flexDirection: 'column',
