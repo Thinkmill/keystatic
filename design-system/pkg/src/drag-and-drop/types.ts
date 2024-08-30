@@ -33,7 +33,7 @@ export interface DragHooks {
   useDraggableCollection?: (
     props: DraggableCollectionOptions,
     state: DraggableCollectionState,
-    ref: RefObject<HTMLElement>
+    ref: RefObject<HTMLElement | null>
   ) => void;
   useDraggableItem?: (
     props: DraggableItemProps,
@@ -49,24 +49,27 @@ export interface DropHooks {
   useDroppableCollection?: (
     props: DroppableCollectionOptions,
     state: DroppableCollectionState,
-    ref: RefObject<HTMLElement>
+    ref: RefObject<HTMLElement | null>
   ) => DroppableCollectionResult;
   useDroppableItem?: (
     options: DroppableItemOptions,
     state: DroppableCollectionState,
-    ref: RefObject<HTMLElement>
+    ref: RefObject<HTMLElement | null>
   ) => DroppableItemResult;
   useDropIndicator?: (
     props: DropIndicatorProps,
     state: DroppableCollectionState,
-    ref: RefObject<HTMLElement>
+    ref: RefObject<HTMLElement | null>
   ) => DropIndicatorAria;
 }
 
 export interface DragAndDropHooks {
   /** Drag and drop hooks for the collection element.  */
   dragAndDropHooks: DragHooks &
-    DropHooks & { isVirtualDragging?: () => boolean };
+    DropHooks & {
+      isVirtualDragging?: () => boolean;
+      renderPreview?: (keys: Set<Key>, draggedKey: Key | null) => JSX.Element;
+    };
 }
 
 export interface DragAndDropOptions
@@ -77,4 +80,6 @@ export interface DragAndDropOptions
    * @default () => []
    */
   getItems?: (keys: Set<Key>) => DragItem[];
+  /** Provide a custom drag preview. `draggedKey` represents the key of the item the user actually dragged. */
+  renderPreview?: (keys: Set<Key>, draggedKey: Key | null) => JSX.Element;
 }

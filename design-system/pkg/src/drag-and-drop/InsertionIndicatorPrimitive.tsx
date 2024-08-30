@@ -44,7 +44,8 @@ export function InsertionIndicatorPrimitive(
               zIndex: 5,
             },
           },
-        })
+        }),
+        otherProps.className
       )}
     >
       {children}
