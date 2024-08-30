@@ -1,20 +1,26 @@
-import { CollectionChildren, DOMProps } from '@react-types/shared';
-import { TableProps as _TableProps } from '@react-types/table';
+import {
+  AriaLabelingProps,
+  CollectionChildren,
+  DOMProps,
+} from '@react-types/shared';
+import {
+  ColumnSize,
+  TableProps as ReactAriaTableProps,
+} from '@react-types/table';
 import { Key, ReactElement, ReactNode } from 'react';
 
+import { DragAndDropHooks } from '@keystar/ui/drag-and-drop';
 import { BaseStyleProps } from '@keystar/ui/style';
 
 type ColumnElement<T> = ReactElement<ColumnProps<T>>;
 type ColumnRenderer<T> = (item: T) => ColumnElement<T>;
 
-export type TableProps<T> = {
+export type TableCosmeticConfig = {
   /**
    * Sets the amount of vertical padding within each cell.
    * @default 'regular'
    */
   density?: 'compact' | 'regular' | 'spacious';
-  /** Handler that is called when a user performs an action on a row. */
-  onRowAction?: (key: Key) => void;
   /**
    * Sets the overflow behavior for the cell contents.
    * @default 'truncate'
@@ -25,9 +31,38 @@ export type TableProps<T> = {
    * @default 'default'
    */
   prominence?: 'default' | 'low';
+};
+export type TableProps<T> = {
+  /** Handler that is called when a user performs an action on a row. */
+  onAction?: (key: Key) => void;
+  /** @deprecated Use `onAction` instead. */
+  onRowAction?: (key: Key) => void;
   /** What should render when there is no content to display. */
   renderEmptyState?: () => JSX.Element;
-} & _TableProps<T> &
+  /**
+   * Handler that is called when a user starts a column resize.
+   */
+  onResizeStart?: (widths: Map<Key, ColumnSize>) => void;
+  /**
+   * Handler that is called when a user performs a column resize.
+   * Can be used with the width property on columns to put the column widths into
+   * a controlled state.
+   */
+  onResize?: (widths: Map<Key, ColumnSize>) => void;
+  /**
+   * Handler that is called after a user performs a column resize.
+   * Can be used to store the widths of columns for another future session.
+   */
+  onResizeEnd?: (widths: Map<Key, ColumnSize>) => void;
+  /**
+   * The drag and drop hooks returned by `useDragAndDrop` used to enable drag and drop behavior for the TableView.
+   * @version beta
+   */
+  dragAndDropHooks?: DragAndDropHooks['dragAndDropHooks'];
+} & AriaLabelingProps &
+  DOMProps &
+  TableCosmeticConfig &
+  ReactAriaTableProps<T> &
   BaseStyleProps &
   DOMProps;
 
