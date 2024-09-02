@@ -114,6 +114,7 @@ function DateRangePicker<T extends DateValue>(
           disableFocusRing
           {...styleProps.input}
         >
+          {/* @ts-expect-error can't reconcile changes to react-aria errorMessage fn type */}
           <DatePickerField
             rangeFieldType="start"
             data-testid="start-date"
@@ -123,6 +124,7 @@ function DateRangePicker<T extends DateValue>(
           <Text aria-hidden="true" trim={false}>
             {'\u2014'}
           </Text>
+          {/* @ts-expect-error can't reconcile changes to react-aria errorMessage fn type */}
           <DatePickerField
             rangeFieldType="end"
             data-testid="end-date"

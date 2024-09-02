@@ -53,7 +53,7 @@ export function useDragAndDrop(options: DragAndDropOptions): DragAndDropHooks {
     let hooks = {} as DragHooks &
       DropHooks & {
         isVirtualDragging?: () => boolean;
-        renderPreview?: (keys: Set<Key>, draggedKey: Key) => JSX.Element;
+        renderPreview?: (keys: Set<Key>, draggedKey: Key | null) => JSX.Element;
       };
     if (isDraggable) {
       // @ts-expect-error
