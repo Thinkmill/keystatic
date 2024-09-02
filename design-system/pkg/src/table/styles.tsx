@@ -280,11 +280,11 @@ export const rowDragPreviewClassname = css({
     content: '" "',
     display: 'block',
     height: '100%',
-    insetInlineStart: 4,
+    insetBlockStart: tokenSchema.size.space.small,
+    insetInlineStart: tokenSchema.size.space.small,
     position: 'absolute',
-    top: 4,
     width: '100%',
-    // zIndex: -1,
+    zIndex: -1,
   },
 });
 

@@ -2,7 +2,7 @@ import { classNames, css, tokenSchema } from '@keystar/ui/style';
 import React, { HTMLAttributes } from 'react';
 
 export function InsertionIndicatorPrimitive(
-  props: { isDropTarget: boolean } & HTMLAttributes<HTMLDivElement>
+  props: { isDropTarget?: boolean } & HTMLAttributes<HTMLDivElement>
 ) {
   let { children, isDropTarget, ...otherProps } = props;
   let maskColor = tokenSchema.color.background.canvas;

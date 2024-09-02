@@ -1,6 +1,7 @@
+import { assert } from 'emery';
 import {
   type CSSProperties,
-  type ForwardedRef,
+  // type ForwardedRef,
   type HTMLAttributes,
   type Key,
   type PropsWithChildren,
@@ -47,7 +48,6 @@ import {
   scrollIntoView,
   scrollIntoViewport,
   useLoadMore,
-  useObjectRef,
 } from '@react-aria/utils';
 import {
   layoutInfoToStyle,
@@ -79,6 +79,7 @@ import { Checkbox } from '@keystar/ui/checkbox';
 import { Icon } from '@keystar/ui/icon';
 import { gripVerticalIcon } from '@keystar/ui/icon/icons/gripVerticalIcon';
 import { ProgressCircle } from '@keystar/ui/progress';
+import { SlotProvider } from '@keystar/ui/slots';
 import {
   classNames,
   css,
@@ -107,7 +108,6 @@ import {
   bodyClassname,
   bodyResizeIndicatorClassname,
   cellClassname,
-  cellContentsClassname,
   cellWrapperClassname,
   centeredWrapperClassname,
   checkboxCellClassname,
@@ -121,7 +121,6 @@ import {
 } from './styles';
 import { TableViewLayout } from './TableViewLayout';
 import { ColumnProps, TableCosmeticConfig, TableProps } from './types';
-import { SlotProvider } from '../slots';
 
 // Constants
 
@@ -138,8 +137,8 @@ const ROW_HEIGHTS = {
 // Main
 
 export function TableView<T extends object>(
-  props: TableProps<T>,
-  forwardedRef: ForwardedRef<HTMLDivElement>
+  props: TableProps<T>
+  // forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
   let {
     density = 'regular',
@@ -324,6 +323,7 @@ export function TableView<T extends object>(
           <TableHeaderRow
             onHoverChange={setHeaderRowHovered}
             key={reusableView.key}
+            // @ts-expect-error
             layoutInfo={reusableView.layoutInfo}
             parent={parent?.layoutInfo}
             item={reusableView.content}
@@ -505,7 +505,7 @@ export function TableView<T extends object>(
         isTableDroppable,
         layout,
         onFocusedResizer,
-        onResize: props.onResize,
+        onResize: props.onResize ?? (() => {}),
         onResizeEnd,
         onResizeStart,
         renderEmptyState: props.renderEmptyState,
@@ -1087,8 +1087,8 @@ function ResizableTableColumnHeader(props: { column: GridNode<unknown> }) {
           )}
         </SlotProvider>
 
-        {/* TODO: consider grid layout/areas on the parent to position the sort indicator */}
         {column.props.allowsSorting && <SortIndicator />}
+
         <Resizer
           ref={resizingRef}
           column={column}
@@ -1159,8 +1159,9 @@ function TableRow(props: PropsWithLayoutInfos & { item: GridNode<unknown> }) {
   }
 
   let draggableItem: DraggableItemResult | null = null;
-  if (isTableDraggable && dragAndDropHooks?.useDraggableItem) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+  if (isTableDraggable) {
+    assert(!!dragAndDropHooks?.useDraggableItem);
+    assert(!!dragState);
     draggableItem = dragAndDropHooks.useDraggableItem(
       { key: item.key, hasDragButton: true },
       dragState
@@ -1173,11 +1174,10 @@ function TableRow(props: PropsWithLayoutInfos & { item: GridNode<unknown> }) {
   let isDropTarget: boolean = false;
   let dropIndicator: DropIndicatorAria | null = null;
   let dropIndicatorRef = useRef(null);
-  if (
-    isTableDroppable &&
-    dragAndDropHooks?.useDropIndicator &&
-    dragAndDropHooks?.useDroppableItem
-  ) {
+  if (isTableDroppable) {
+    assert(!!dragAndDropHooks?.useDroppableItem);
+    assert(!!dragAndDropHooks?.useDropIndicator);
+    assert(!!dropState);
     let target = {
       type: 'item',
       key: item.key,
@@ -1335,7 +1335,7 @@ function DragButton() {
   return (
     <FocusRing>
       <div
-        {...(dragButtonProps as React.HTMLAttributes<HTMLElement>)}
+        {...(dragButtonProps as HTMLAttributes<HTMLElement>)}
         className={css({
           borderRadius: tokenSchema.size.radius.xsmall,
           display: 'flex',
@@ -1418,14 +1418,14 @@ export function getWrappedElement(
   if (isReactText(children)) {
     element = <span>{children}</span>;
   } else {
-    element = React.Children.only(children) as ReactElement;
+    element = Children.only(children) as ReactElement;
   }
   return element;
 }
 
 function TableCellWrapper(
   props: VirtualizerItemOptions & {
-    parent: GridNode<unknown>;
+    parent: View;
   } & HTMLAttributes<HTMLElement>
 ) {
   let { layoutInfo, virtualizer, parent, children } = props;
@@ -1433,7 +1433,7 @@ function TableCellWrapper(
   let isDropTarget = false;
   let isRootDroptarget = false;
   if (isTableDroppable) {
-    // @ts-expect-error
+    assert(!!dropState);
     let key = parent.content.key;
     if (key) {
       isDropTarget = dropState.isDropTarget({
@@ -1449,7 +1449,6 @@ function TableCellWrapper(
     <VirtualizerItem
       layoutInfo={layoutInfo}
       virtualizer={virtualizer}
-      // @ts-expect-error
       parent={parent?.layoutInfo}
       // only when !layoutInfo.estimatedSize???
       className={cellWrapperClassname}

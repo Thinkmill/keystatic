@@ -8,12 +8,12 @@ import { useDragAndDrop } from '@keystar/ui/drag-and-drop';
 import { Cell, Column, Row, TableBody, TableHeader, TableView } from '../index';
 
 let columns = [
-  { name: 'First name', key: 'first_name', isRowHeader: true },
-  { name: 'Last name', key: 'last_name', isRowHeader: true },
-  { name: 'Email', key: 'email' },
-  { name: 'Department', key: 'department' },
-  { name: 'Job Title', key: 'job_title' },
-  { name: 'IP Address', key: 'ip_address' },
+  { name: 'First name', key: 'first_name', width: '25%', isRowHeader: true },
+  { name: 'Last name', key: 'last_name', width: '25%', isRowHeader: true },
+  { name: 'Email', key: 'email', minWidth: 200 },
+  { name: 'Department', key: 'department', width: 200 },
+  { name: 'Job Title', key: 'job_title', width: 180 },
+  { name: 'IP Address', key: 'ip_address', minWidth: 140 },
 ];
 
 export let items = [
@@ -111,7 +111,7 @@ export let items = [
 
 let getAllowedDropOperationsAction = action('getAllowedDropOperationsAction');
 
-export function ReorderExample(props) {
+export function ReorderExample(props: any) {
   let { onDrop, onDragStart, onDragEnd, tableViewProps, ...otherProps } = props;
   let list = useListData({
     initialItems: (props.items as typeof items) || items,
@@ -191,13 +191,19 @@ export function ReorderExample(props) {
     >
       <TableHeader columns={columns}>
         {column => (
-          <Column minWidth={100} isRowHeader={column.isRowHeader}>
+          <Column
+            minWidth={column.minWidth}
+            width={column.width}
+            isRowHeader={column.isRowHeader}
+          >
             {column.name}
           </Column>
         )}
       </TableHeader>
       <TableBody items={list.items}>
-        {item => <Row>{key => <Cell>{item[key]}</Cell>}</Row>}
+        {item => (
+          <Row>{key => <Cell>{item[key as keyof typeof item]}</Cell>}</Row>
+        )}
       </TableBody>
     </TableView>
   );

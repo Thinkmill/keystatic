@@ -15,15 +15,16 @@ interface InsertionIndicatorProps {
 }
 
 export function InsertionIndicator(props: InsertionIndicatorProps) {
+  let { rowProps, target, visibleRect } = props;
   let { dropState, dragAndDropHooks } = useTableContext();
-  const { rowProps, target, visibleRect } = props;
+  let ref = useRef<HTMLDivElement>(null);
 
   assert(
     !!dragAndDropHooks?.useDropIndicator,
     'dragAndDropHooks.useDropIndicator is not defined.'
   );
+  assert(!!dropState, 'dropState is not defined.');
 
-  let ref = useRef<HTMLDivElement>(null);
   let { dropIndicatorProps } = dragAndDropHooks.useDropIndicator(
     props,
     dropState,
@@ -31,26 +32,23 @@ export function InsertionIndicator(props: InsertionIndicatorProps) {
   );
   let { visuallyHiddenProps } = useVisuallyHidden();
 
-  let isDropTarget = dropState.isDropTarget(target);
+  let isDropTarget = dropState && dropState.isDropTarget(target);
 
   if (!isDropTarget && dropIndicatorProps['aria-hidden']) {
     return null;
   }
 
-  console.log('rowProps', rowProps);
+  let rowTop = Number(rowProps?.style?.top) ?? 0;
+  let rowHeight = Number(rowProps?.style?.height) ?? 0;
 
   return (
     <div
       style={{
+        left: visibleRect.x,
         position: 'absolute',
-        top:
-          (rowProps?.style?.top as number) +
-          (target.dropPosition === 'after'
-            ? (rowProps?.style?.height as number)
-            : 0),
-        // width: rowProps?.style?.width,
+        top: rowTop + (target.dropPosition === 'after' ? rowHeight : 0),
         width: visibleRect.width,
-        zIndex: 5,
+        zIndex: 4,
       }}
       role="row"
       aria-hidden={dropIndicatorProps['aria-hidden']}

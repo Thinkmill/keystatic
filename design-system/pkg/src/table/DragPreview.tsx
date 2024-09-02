@@ -1,14 +1,8 @@
-import { classNames } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 import { Flex } from '@keystar/ui/layout';
 import React from 'react';
 
-import {
-  cellClassname,
-  cellContentsClassname,
-  rowClassname,
-  rowDragPreviewClassname,
-} from './styles';
+import { rowDragPreviewClassname } from './styles';
 
 type DragPreviewProps = {
   itemText?: string; // can't guarantee this will be available
@@ -21,25 +15,24 @@ export function DragPreview(props: DragPreviewProps) {
   let { itemText, itemCount, height, maxWidth } = props;
   let isDraggingMultiple = itemCount > 1;
   return (
+    /* TODO: export as `DragPreview` from "@keystar/ui/drag-and-drop" for use here and in the list view */
     <Flex
       alignItems="center"
       justifyContent="space-between"
-      data-multiple={isDraggingMultiple}
-      UNSAFE_className={classNames(rowClassname, rowDragPreviewClassname)}
+      data-multi={isDraggingMultiple}
+      UNSAFE_className={rowDragPreviewClassname}
       UNSAFE_style={{ height, maxWidth }}
     >
-      <div className={cellClassname}>
-        <Text UNSAFE_className={cellContentsClassname}>{itemText}</Text>
-      </div>
+      <Text>{itemText}</Text>
 
-      {/* export as `DragPreviewCount` from "@keystar/ui/drag-and-drop" for use here and in the list view */}
+      {/* TODO: export as `DragPreviewCount` from "@keystar/ui/drag-and-drop" for use here and in the list view */}
       {isDraggingMultiple && (
         <Flex
           alignItems="center"
-          justifyContent="center"
           backgroundColor="accentEmphasis"
           borderRadius="small"
           gridArea="badge"
+          justifyContent="center"
           minWidth="element.small"
           padding="small"
         >
