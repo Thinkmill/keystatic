@@ -66,9 +66,9 @@ function useListLayout<T>(
   let layout = useMemo(
     () =>
       new ListViewLayout<T>({
-        estimatedRowHeight: ROW_HEIGHTS[density][scale],
+        estimatedRowHeight:
+          overflowMode === 'wrap' ? undefined : ROW_HEIGHTS[density][scale],
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [scale, density, overflowMode]
   );
 

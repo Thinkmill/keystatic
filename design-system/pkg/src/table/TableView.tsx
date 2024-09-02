@@ -207,8 +207,6 @@ export function TableView<T extends object>(
         estimatedHeadingHeight:
           props.overflowMode === 'wrap' ? DEFAULT_HEADER_HEIGHT : undefined,
       }),
-    // don't recompute when state.collection changes, only used for initial value
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [props.overflowMode, density]
   );
 

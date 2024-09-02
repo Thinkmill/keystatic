@@ -25,6 +25,8 @@ export function InsertionIndicator(props: InsertionIndicatorProps) {
   );
   assert(!!dropState, 'dropState is not defined.');
 
+  // if the indicator is rendered dnd hooks are defined
+  // eslint-disable-next-line react-compiler/react-compiler
   let { dropIndicatorProps } = dragAndDropHooks.useDropIndicator(
     props,
     dropState,

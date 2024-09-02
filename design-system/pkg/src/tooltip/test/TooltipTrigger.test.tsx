@@ -386,6 +386,7 @@ describe('tooltip/TooltipTrigger', () => {
     });
 
     // can't get this to work with timers
+    // eslint-disable-next-line jest/no-commented-out-tests
     // it('opens for hover', async () => {
     //   let { getByRole, getByLabelText } = renderWithProvider(
     //     <TooltipTrigger onOpenChange={onOpenChange}>
