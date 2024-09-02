@@ -22,7 +22,7 @@ jobs:
       - name: version packages
         run: pnpm changeset version --snapshot ${{ inputs.tag }}
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_BOT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: git commit
         run: |

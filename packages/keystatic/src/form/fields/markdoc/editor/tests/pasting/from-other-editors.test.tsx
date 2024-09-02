@@ -187,7 +187,9 @@ test('confluence', async () => {
           </unordered_list>
         </list_item>
       </unordered_list>
-      <ordered_list>
+      <ordered_list
+        start={1}
+      >
         <list_item>
           <paragraph>
             <text>
@@ -201,7 +203,9 @@ test('confluence', async () => {
               item
             </text>
           </paragraph>
-          <ordered_list>
+          <ordered_list
+            start={1}
+          >
             <list_item>
               <paragraph>
                 <text>
@@ -435,7 +439,9 @@ there is a break before this</p>
           </unordered_list>
         </list_item>
       </unordered_list>
-      <ordered_list>
+      <ordered_list
+        start={1}
+      >
         <list_item>
           <paragraph>
             <text>
@@ -449,7 +455,9 @@ there is a break before this</p>
               item
             </text>
           </paragraph>
-          <ordered_list>
+          <ordered_list
+            start={1}
+          >
             <list_item>
               <paragraph>
                 <text>
@@ -604,7 +612,9 @@ test('dropbox paper', async () => {
           </unordered_list>
         </list_item>
       </unordered_list>
-      <ordered_list>
+      <ordered_list
+        start={1}
+      >
         <list_item>
           <paragraph>
             <text>
@@ -618,7 +628,9 @@ test('dropbox paper', async () => {
               item
             </text>
           </paragraph>
-          <ordered_list>
+          <ordered_list
+            start={1}
+          >
             <list_item>
               <paragraph>
                 <text>
@@ -803,7 +815,9 @@ test('google docs', async () => {
           </unordered_list>
         </list_item>
       </unordered_list>
-      <ordered_list>
+      <ordered_list
+        start={1}
+      >
         <list_item>
           <paragraph>
             <text>
@@ -817,7 +831,9 @@ test('google docs', async () => {
               item
             </text>
           </paragraph>
-          <ordered_list>
+          <ordered_list
+            start={1}
+          >
             <list_item>
               <paragraph>
                 <text>
