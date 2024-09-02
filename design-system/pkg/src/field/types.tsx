@@ -30,6 +30,7 @@ export type FieldProps = Pick<
   DOMProps;
 
 export type FieldPrimitiveProps = {
+  /** The field contents. */
   children: ReactElement;
   /** A `ContextualHelp` element to place next to the label. */
   contextualHelp?: ReactElement;
@@ -38,12 +39,14 @@ export type FieldPrimitiveProps = {
    * field.
    */
   description?: ReactNode;
+  /** Props for the description element. */
   descriptionProps?: HTMLAttributes<HTMLElement>;
   /**
    * Error messages inform the user when the input does not meet validation
    * criteria.
    */
   errorMessage?: ReactNode;
+  /** Props for the message element. */
   errorMessageProps?: HTMLAttributes<HTMLElement>;
   /** Whether user input is required on the input before form submission. */
   isRequired?: boolean;
@@ -54,6 +57,7 @@ export type FieldPrimitiveProps = {
    * @default 'label'
    */
   labelElementType?: HTMLTag;
+  /** Props for the label element. */
   labelProps?: HTMLAttributes<HTMLElement>;
   /**
    * For controls that DO NOT use a semantic element for user input. In these

@@ -8,6 +8,17 @@ import {
   afterAll,
 } from '@jest/globals';
 import {
+  Item,
+  Menu,
+  MenuProps,
+  MenuTrigger,
+  MenuTriggerProps,
+  Section,
+} from '..';
+import { Button, ButtonProps } from '@keystar/ui/button';
+import { SelectionMode } from '@react-types/shared';
+import { createRef } from 'react';
+import {
   RenderResult,
   act,
   DEFAULT_LONG_PRESS_TIME,
@@ -22,17 +33,6 @@ import {
   KEYS,
   waitFor,
 } from '#test-utils';
-
-import {
-  Item,
-  Menu,
-  MenuProps,
-  MenuTrigger,
-  MenuTriggerProps,
-  Section,
-} from '..';
-import { Button, ButtonProps } from '@keystar/ui/button';
-import { createRef } from 'react';
 
 let triggerText = 'Menu Button';
 
@@ -213,7 +213,10 @@ describe('menu/MenuTrigger', () => {
 
   describe('default focus behavior', function () {
     it('autofocuses the selected item on menu open', function () {
-      let tree = renderComponent({}, { selectedKeys: ['Bar'] });
+      let tree = renderComponent(
+        {},
+        { selectedKeys: ['Bar'], selectionMode: 'single' }
+      );
       act(() => {
         jest.runAllTimers();
       });
@@ -224,7 +227,7 @@ describe('menu/MenuTrigger', () => {
       });
       let menu = tree.getByRole('menu');
       expect(menu).toBeTruthy();
-      let menuItems = within(menu).getAllByRole('menuitem');
+      let menuItems = within(menu).getAllByRole('menuitemradio');
       let selectedItem = menuItems[1];
       expect(selectedItem).toBe(document.activeElement);
       firePress(button);
@@ -244,7 +247,7 @@ describe('menu/MenuTrigger', () => {
         jest.runAllTimers();
       });
       menu = tree.getByRole('menu');
-      menuItems = within(menu).getAllByRole('menuitem');
+      menuItems = within(menu).getAllByRole('menuitemradio');
       selectedItem = menuItems[1];
       expect(selectedItem).toBe(document.activeElement);
       firePress(button);
@@ -256,7 +259,7 @@ describe('menu/MenuTrigger', () => {
       // Opening menu via up arrow still autofocuses the selected item
       fireEvent.keyDown(button, KEYS.ArrowUp);
       menu = tree.getByRole('menu');
-      menuItems = within(menu).getAllByRole('menuitem');
+      menuItems = within(menu).getAllByRole('menuitemradio');
       selectedItem = menuItems[1];
       expect(selectedItem).toBe(document.activeElement);
     });
@@ -895,10 +898,20 @@ describe('menu/MenuTrigger', () => {
   describe('trigger="longPress" focus behavior', function () {
     installPointerEvent();
 
-    function expectMenuItemToBeActive(tree: RenderResult, idx: number) {
+    function expectMenuItemToBeActive(
+      tree: RenderResult,
+      idx: number,
+      selectionMode: SelectionMode
+    ) {
+      let menuItemRole = 'menuitem';
+      if (selectionMode === 'multiple') {
+        menuItemRole = 'menuitemcheckbox';
+      } else if (selectionMode === 'single') {
+        menuItemRole = 'menuitemradio';
+      }
       let menu = tree.getByRole('menu');
       expect(menu).toBeTruthy();
-      let menuItems = within(menu).getAllByRole('menuitem');
+      let menuItems = within(menu).getAllByRole(menuItemRole);
       let selectedItem = menuItems[idx < 0 ? menuItems.length + idx : idx];
       expect(selectedItem).toBe(document.activeElement);
       return menu;
@@ -907,14 +920,14 @@ describe('menu/MenuTrigger', () => {
     it('should focus the selected item on menu open', async function () {
       let tree = renderComponent(
         { trigger: 'longPress' },
-        { selectedKeys: ['Bar'] }
+        { selectedKeys: ['Bar'], selectionMode: 'single' }
       );
       let button = tree.getByRole('button');
       act(() => {
         fireLongPress(button);
         jest.runAllTimers();
       });
-      let menu = expectMenuItemToBeActive(tree, 1);
+      let menu = expectMenuItemToBeActive(tree, 1, 'single');
       act(() => {
         fireTouch(button);
         jest.runAllTimers();
@@ -926,7 +939,7 @@ describe('menu/MenuTrigger', () => {
 
       // Opening menu via Alt+ArrowUp still autofocuses the selected item
       fireEvent.keyDown(button, { key: 'ArrowUp', altKey: true });
-      menu = expectMenuItemToBeActive(tree, 1);
+      menu = expectMenuItemToBeActive(tree, 1, 'single');
 
       act(() => {
         fireTouch(button);
@@ -938,7 +951,7 @@ describe('menu/MenuTrigger', () => {
 
       // Opening menu via Alt+ArrowDown still autofocuses the selected item
       fireEvent.keyDown(button, { key: 'ArrowDown', altKey: true });
-      menu = expectMenuItemToBeActive(tree, 1);
+      menu = expectMenuItemToBeActive(tree, 1, 'single');
 
       act(() => {
         fireTouch(button);
@@ -953,14 +966,14 @@ describe('menu/MenuTrigger', () => {
       let tree = renderComponent({ trigger: 'longPress' });
       let button = tree.getByRole('button');
       fireEvent.keyDown(button, { key: 'ArrowUp', altKey: true });
-      expectMenuItemToBeActive(tree, -1);
+      expectMenuItemToBeActive(tree, -1, 'none');
     });
 
     it('should focus the first item on Alt+ArrowDown if no selectedKeys specified', function () {
       let tree = renderComponent({ trigger: 'longPress' });
       let button = tree.getByRole('button');
       fireEvent.keyDown(button, { key: 'ArrowDown', altKey: true });
-      expectMenuItemToBeActive(tree, 0);
+      expectMenuItemToBeActive(tree, 0, 'none');
     });
   });
 });

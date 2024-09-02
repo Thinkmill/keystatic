@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom/jest-globals';
+import userEvent from '@testing-library/user-event';
 import {
   act,
   fireEvent,
@@ -29,8 +30,10 @@ const LEAVE_TIMEOUT = 320;
 // NOTE: skipped tests have something to do with mouse events and timers...
 describe('tooltip/TooltipTrigger', () => {
   let onOpenChange = jest.fn();
+  let user: ReturnType<typeof userEvent.setup>;
 
   beforeAll(() => {
+    user = userEvent.setup({ delay: null });
     jest.useFakeTimers();
   });
 
@@ -85,26 +88,21 @@ describe('tooltip/TooltipTrigger', () => {
       expect(tooltip).not.toBeInTheDocument();
     });
 
-    // eslint-disable-next-line jest/no-disabled-tests
-    it.skip('opens for hover', async () => {
+    it('opens for hover', async () => {
       let { getByRole, getByLabelText } = renderWithProvider(
         <TooltipTrigger onOpenChange={onOpenChange} delay={0}>
           <Button aria-label="trigger" />
           <Tooltip>Helpful information.</Tooltip>
         </TooltipTrigger>
       );
-      fireEvent.mouseDown(document.body);
-      fireEvent.mouseUp(document.body);
+      await user.click(document.body);
 
       let button = getByLabelText('trigger');
-      fireEvent.mouseEnter(button);
-      fireEvent.mouseMove(button);
+      await user.hover(button);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       let tooltip = getByRole('tooltip');
-      await waitFor(() => {
-        expect(tooltip).toBeVisible();
-      });
-      fireEvent.mouseLeave(button);
+      expect(tooltip).toBeVisible();
+      await user.unhover(button);
       act(() => {
         jest.advanceTimersByTime(LEAVE_TIMEOUT);
       });
@@ -300,17 +298,16 @@ describe('tooltip/TooltipTrigger', () => {
           <Tooltip>Helpful information.</Tooltip>
         </TooltipTrigger>
       );
-      fireEvent.mouseDown(document.body);
-      fireEvent.mouseUp(document.body);
+      await user.click(document.body);
 
       let button = getByLabelText('trigger');
-      fireEvent.mouseEnter(button);
+      await user.hover(button);
       expect(onOpenChange).toHaveBeenCalledWith(true);
       let tooltip = getByRole('tooltip');
       await waitFor(() => {
         expect(tooltip).toBeVisible();
       });
-      firePress(button);
+      await user.click(button);
       expect(onOpenChange).toHaveBeenCalledWith(false);
       act(() => {
         jest.advanceTimersByTime(LEAVE_TIMEOUT);
@@ -388,38 +385,38 @@ describe('tooltip/TooltipTrigger', () => {
       expect(tooltip).not.toBeInTheDocument();
     });
 
-    // eslint-disable-next-line jest/no-disabled-tests
-    it.skip('opens for hover', async () => {
-      let { getByRole, getByLabelText } = renderWithProvider(
-        <TooltipTrigger onOpenChange={onOpenChange}>
-          <Button aria-label="trigger" />
-          <Tooltip>Helpful information.</Tooltip>
-        </TooltipTrigger>
-      );
-      fireEvent.mouseDown(document.body);
-      fireEvent.mouseUp(document.body);
+    // can't get this to work with timers
+    // it('opens for hover', async () => {
+    //   let { getByRole, getByLabelText } = renderWithProvider(
+    //     <TooltipTrigger onOpenChange={onOpenChange}>
+    //       <Button aria-label="trigger" />
+    //       <Tooltip>Helpful information.</Tooltip>
+    //     </TooltipTrigger>
+    //   );
+    //   fireEvent.mouseDown(document.body);
+    //   fireEvent.mouseUp(document.body);
 
-      let button = getByLabelText('trigger');
-      fireEvent.mouseEnter(button);
-      fireEvent.mouseMove(button);
-      let tooltip = getByRole('tooltip');
-      await waitFor(() => {
-        expect(tooltip).toBeVisible();
-      });
-      fireEvent.mouseLeave(button);
-      act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
-      });
-      expect(tooltip).toBeVisible();
-      act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
-      });
-      expect(onOpenChange).toHaveBeenCalledWith(false);
-      act(() => {
-        jest.advanceTimersByTime(LEAVE_TIMEOUT);
-      });
-      expect(tooltip).not.toBeInTheDocument();
-    });
+    //   let button = getByLabelText('trigger');
+    //   fireEvent.mouseEnter(button);
+    //   fireEvent.mouseMove(button);
+    //   let tooltip = getByRole('tooltip');
+    //   await waitFor(() => {
+    //     expect(tooltip).toBeVisible();
+    //   });
+    //   fireEvent.mouseLeave(button);
+    //   act(() => {
+    //     jest.advanceTimersByTime(LEAVE_TIMEOUT);
+    //   });
+    //   expect(tooltip).toBeVisible();
+    //   act(() => {
+    //     jest.advanceTimersByTime(LEAVE_TIMEOUT);
+    //   });
+    //   expect(onOpenChange).toHaveBeenCalledWith(false);
+    //   act(() => {
+    //     jest.advanceTimersByTime(LEAVE_TIMEOUT);
+    //   });
+    //   expect(tooltip).not.toBeInTheDocument();
+    // });
 
     it('never opens if blurred before it opens', () => {
       let { queryByRole, getByLabelText } = renderWithProvider(
@@ -699,10 +696,4 @@ describe('tooltip/TooltipTrigger', () => {
 // TODO: move somewhere common
 function renderWithProvider(ui: ReactElement, options?: RenderOptions) {
   return render(ui, { wrapper: TestProvider, ...options });
-}
-// TODO: move somewhere common
-function firePress(element: Element | Node | Document | Window, opts = {}) {
-  fireEvent.mouseDown(element, { detail: 1, ...opts });
-  fireEvent.mouseUp(element, { detail: 1, ...opts });
-  fireEvent.click(element, { detail: 1, ...opts });
 }
