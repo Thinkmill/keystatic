@@ -130,11 +130,14 @@ function ListView<T extends object>(
     dragAndDropHooks?.useDraggableCollectionState &&
     dragAndDropHooks?.useDraggableCollection
   ) {
+    // consumers are warned when hooks change between renders
+    // eslint-disable-next-line react-compiler/react-compiler
     dragState = dragAndDropHooks.useDraggableCollectionState({
       collection,
       selectionManager,
       preview,
     });
+    // eslint-disable-next-line react-compiler/react-compiler
     dragAndDropHooks.useDraggableCollection({}, dragState, domRef);
   }
   let layout = useListLayout(state, props.density || 'regular', overflowMode);
@@ -148,10 +151,13 @@ function ListView<T extends object>(
     dragAndDropHooks?.useDroppableCollectionState &&
     dragAndDropHooks?.useDroppableCollection
   ) {
+    // consumers are warned when hooks change between renders
+    // eslint-disable-next-line react-compiler/react-compiler
     dropState = dragAndDropHooks.useDroppableCollectionState({
       collection,
       selectionManager,
     });
+    // eslint-disable-next-line react-compiler/react-compiler
     droppableCollection = dragAndDropHooks.useDroppableCollection(
       {
         keyboardDelegate: new ListKeyboardDelegate({
