@@ -4,6 +4,8 @@ export type { DropZoneProps } from './DropZone';
 export { FileTrigger } from './FileTrigger';
 export type { FileTriggerProps } from './FileTrigger';
 
+export { InsertionIndicatorPrimitive } from './InsertionIndicatorPrimitive';
+
 export { useDragAndDrop } from './useDragAndDrop';
 export type { DragAndDropOptions, DragAndDropHooks } from './types';
 

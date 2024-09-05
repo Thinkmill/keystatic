@@ -12,7 +12,7 @@ function ListBox<T extends object>(
 ) {
   let domRef = useObjectRef(forwardedRef);
   let state = useListState(props);
-  let layout = useListBoxLayout(state);
+  let layout = useListBoxLayout();
 
   return <ListBoxBase {...props} ref={domRef} state={state} layout={layout} />;
 }

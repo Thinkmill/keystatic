@@ -18,7 +18,7 @@ export const decorators = [
     <div
       style={{
         alignItems: 'center',
-        backgroundColor: tokenSchema.color.background.canvas,
+        backgroundColor: tokenSchema.color.background.surface,
         boxSizing: 'border-box',
         display: 'flex',
         flexDirection: 'column',

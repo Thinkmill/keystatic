@@ -61,26 +61,14 @@ const LinkButton = forwardRef(function Button(
   props: LinkElementProps,
   forwardedRef: ForwardedRef<HTMLAnchorElement>
 ) {
-  const {
-    children,
-    isDisabled,
-    // link specific
-    download,
-    href,
-    hrefLang,
-    ping,
-    referrerPolicy,
-    rel,
-    target,
-    ...otherProps
-  } = props;
+  const { children, isDisabled, ...otherProps } = props;
 
   const domRef = useObjectRef(forwardedRef);
   const { buttonProps, isPressed } = useButton(
     { elementType: 'a', ...props },
     domRef
   );
-  const { linkProps } = useLink(otherProps, domRef);
+  const { linkProps } = useLink(props, domRef);
   const { hoverProps, isHovered } = useHover({ isDisabled });
   const styleProps = useButtonStyles(props, { isHovered, isPressed });
 
@@ -89,13 +77,6 @@ const LinkButton = forwardRef(function Button(
       {...filterDOMProps(otherProps)}
       {...mergeProps(buttonProps, linkProps, hoverProps, styleProps)}
       ref={domRef}
-      download={download}
-      href={href}
-      hrefLang={hrefLang}
-      ping={ping}
-      referrerPolicy={referrerPolicy}
-      rel={rel}
-      target={target}
     >
       {children}
     </a>

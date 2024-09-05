@@ -1,10 +1,8 @@
 import { FocusScope } from '@react-aria/focus';
 import { useListBox } from '@react-aria/listbox';
-import { useCollator, useLocalizedStringFormatter } from '@react-aria/i18n';
+import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { mergeProps } from '@react-aria/utils';
 import { Virtualizer, VirtualizerItem } from '@react-aria/virtualizer';
-import { ListLayout } from '@react-stately/layout';
-import { ListState } from '@react-stately/list';
 import { ReusableView } from '@react-stately/virtualizer';
 import { Node } from '@react-types/shared';
 import { RefObject, forwardRef, ReactElement, ReactNode, useMemo } from 'react';
@@ -15,29 +13,25 @@ import { useStyleProps } from '@keystar/ui/style';
 
 import localizedMessages from './l10n.json';
 import { ListBoxContext } from './context';
+import { ListBoxLayout } from './ListBoxLayout';
 import { ListBoxOption } from './ListBoxOption';
 import { ListBoxSection } from './ListBoxSection';
 import { ListBoxBaseProps } from './types';
 
 /** @private */
-export function useListBoxLayout<T>(state: ListState<T>) {
+export function useListBoxLayout<T>(): ListBoxLayout<T> {
   let { scale } = useProvider();
-  let collator = useCollator({ usage: 'search', sensitivity: 'base' });
   let layout = useMemo(
     () =>
-      new ListLayout<T>({
+      new ListBoxLayout<T>({
         estimatedRowHeight: scale === 'large' ? 48 : 32,
         estimatedHeadingHeight: scale === 'large' ? 33 : 26,
-        padding: scale === 'large' ? 5 : 4,
-        loaderHeight: 40,
+        padding: scale === 'large' ? 5 : 4, // TODO: get from DNA
         placeholderHeight: scale === 'large' ? 48 : 32,
-        collator,
       }),
-    [collator, scale]
+    [scale]
   );
 
-  layout.collection = state.collection;
-  layout.disabledKeys = state.disabledKeys;
   return layout;
 }
 
@@ -49,17 +43,18 @@ function ListBoxBase<T>(
   let {
     layout,
     state,
-    shouldSelectOnPressUp,
-    focusOnPointerEnter,
-    shouldUseVirtualFocus,
+    shouldFocusOnHover = false,
+    shouldUseVirtualFocus = false,
     domProps = {},
-    transitionDuration = 0,
+    isLoading,
+    showLoadingSpinner = isLoading,
     onScroll,
+    renderEmptyState,
   } = props;
   let { listBoxProps } = useListBox(
     {
       ...props,
-      keyboardDelegate: layout,
+      layoutDelegate: layout,
       isVirtualized: true,
     },
     state,
@@ -67,9 +62,6 @@ function ListBoxBase<T>(
   );
   let styleProps = useStyleProps(props);
   let stringFormatter = useLocalizedStringFormatter(localizedMessages);
-
-  // Sync loading state into the layout.
-  layout.isLoading = !!props.isLoading;
 
   // This overrides collection view's renderWrapper to support heirarchy of items in sections.
   // The header is extracted from the children so it can receive ARIA labeling properties.
@@ -108,24 +100,40 @@ function ListBoxBase<T>(
     );
   };
 
+  let focusedKey = state.selectionManager.focusedKey;
+  let persistedKeys = useMemo(
+    () => (focusedKey != null ? new Set([focusedKey]) : null),
+    [focusedKey]
+  );
+
   return (
-    <ListBoxContext.Provider value={state}>
+    <ListBoxContext.Provider
+      value={{
+        state,
+        renderEmptyState,
+        shouldFocusOnHover,
+        shouldUseVirtualFocus,
+      }}
+    >
       <FocusScope>
         <Virtualizer
           {...styleProps}
           {...mergeProps(listBoxProps, domProps)}
           ref={forwardedRef}
-          focusedKey={state.selectionManager.focusedKey}
+          persistedKeys={persistedKeys}
           autoFocus={!!props.autoFocus}
-          sizeToFit="height"
           scrollDirection="vertical"
           layout={layout}
+          layoutOptions={useMemo(
+            () => ({
+              isLoading: showLoadingSpinner,
+            }),
+            [showLoadingSpinner]
+          )}
           collection={state.collection}
           renderWrapper={renderWrapper}
-          transitionDuration={transitionDuration}
           isLoading={props.isLoading}
           onLoadMore={props.onLoadMore}
-          shouldUseVirtualFocus={shouldUseVirtualFocus}
           onScroll={onScroll}
         >
           {(type, item: Node<T>) => {
@@ -133,8 +141,6 @@ function ListBoxBase<T>(
               return (
                 <ListBoxOption
                   item={item}
-                  shouldSelectOnPressUp={shouldSelectOnPressUp}
-                  shouldFocusOnHover={focusOnPointerEnter}
                   shouldUseVirtualFocus={shouldUseVirtualFocus}
                 />
               );

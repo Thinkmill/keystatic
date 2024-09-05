@@ -121,7 +121,7 @@ describe('menu/Menu', () => {
       let selectedItem = menuItems[3];
       expect(selectedItem).toBe(document.activeElement);
       expect(selectedItem).toHaveAttribute('aria-checked', 'true');
-      expect(selectedItem).toHaveAttribute('tabindex', '0');
+      expect(selectedItem).toHaveAttribute('tabindex', '-1');
       let itemText = within(selectedItem).getByText('Blah');
       expect(itemText).toBeTruthy();
       let checkmark: HTMLElement | null = within(selectedItem).getByRole(
@@ -147,6 +147,7 @@ describe('menu/Menu', () => {
       expect(onSelectionChange).toHaveBeenCalledTimes(1);
       expect(onSelectionChange.mock.calls[0][0].has('Bleh')).toBeTruthy();
     });
+
     it('supports `selectedKeys` (controlled)', () => {
       let tree = renderComponent({
         selectionMode: 'single',
@@ -160,7 +161,7 @@ describe('menu/Menu', () => {
       let selectedItem = menuItems[3];
       expect(selectedItem).toBe(document.activeElement);
       expect(selectedItem).toHaveAttribute('aria-checked', 'true');
-      expect(selectedItem).toHaveAttribute('tabindex', '0');
+      expect(selectedItem).toHaveAttribute('tabindex', '-1');
       let itemText = within(selectedItem).getByText('Blah');
       expect(itemText).toBeTruthy();
       let checkmark: HTMLElement | null = within(selectedItem).getByRole(

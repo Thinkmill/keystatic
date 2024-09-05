@@ -14,7 +14,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     let domRef = useObjectRef(forwardedRef);
     let [inputValue, setInputValue] = useControlledState(
       props.value,
-      props.defaultValue,
+      props.defaultValue ?? '',
       () => {}
     );
 

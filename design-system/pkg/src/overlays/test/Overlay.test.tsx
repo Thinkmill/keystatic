@@ -35,7 +35,6 @@ const ExampleOverlay = forwardRef(function ExampleOverlay(
 ) {
   let nodeRef = useRef<HTMLDivElement>(null);
   return (
-    /* @ts-expect-error FIXME: resolve ref inconsistencies */
     <Overlay {...props} ref={ref} nodeRef={nodeRef}>
       <span data-testid={testID} ref={nodeRef}>
         Overlay content

@@ -8,6 +8,7 @@ import { Icon } from '@keystar/ui/icon';
 import { checkCircle2Icon } from '@keystar/ui/icon/icons/checkCircle2Icon';
 import { infoIcon } from '@keystar/ui/icon/icons/infoIcon';
 import { alertTriangleIcon } from '@keystar/ui/icon/icons/alertTriangleIcon';
+import { SlotProvider } from '@keystar/ui/slots';
 import {
   classNames,
   css,
@@ -20,7 +21,6 @@ import { isReactText } from '@keystar/ui/utils';
 
 import intlMessages from './l10n.json';
 import { ToastProps } from './types';
-import { SlotProvider } from '@keystar/ui/slots';
 
 const ICONS = {
   info: infoIcon,
@@ -40,7 +40,7 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
     ...otherProps
   } = props;
   let domRef = useObjectRef(ref);
-  let { closeButtonProps, titleProps, toastProps } = useToast(
+  let { closeButtonProps, titleProps, toastProps, contentProps } = useToast(
     props,
     state,
     domRef
@@ -124,50 +124,52 @@ function Toast(props: ToastProps, ref: ForwardedRef<HTMLDivElement>) {
       }}
     >
       <SlotProvider slots={slots}>
-        {icon && (
-          <Icon
-            aria-label={iconLabel}
-            src={icon}
-            size="medium"
-            marginTop="small"
-            marginEnd="regular"
-          />
-        )}
-        <div
-          className={classNames(
-            css({
-              alignItems: 'center',
-              display: 'flex',
-              columnGap: tokenSchema.size.space.large,
-              flex: 1,
-              flexWrap: 'wrap',
-              justifyContent: 'flex-end',
-              paddingInlineEnd: tokenSchema.size.space.large,
-            })
+        <div {...contentProps} className={css({ display: 'flex' })}>
+          {icon && (
+            <Icon
+              aria-label={iconLabel}
+              src={icon}
+              size="medium"
+              marginTop="small"
+              marginEnd="regular"
+            />
           )}
-        >
           <div
             className={classNames(
               css({
-                flexGrow: 1,
-                paddingBlock: tokenSchema.size.space.regular,
+                alignItems: 'center',
+                display: 'flex',
+                columnGap: tokenSchema.size.space.large,
+                flex: 1,
+                flexWrap: 'wrap',
+                justifyContent: 'flex-end',
+                paddingInlineEnd: tokenSchema.size.space.large,
               })
             )}
-            {...titleProps}
           >
-            {isReactText(children) ? <Text>{children}</Text> : children}
-          </div>
-          {actionLabel && (
-            <Button
-              onPress={handleAction}
-              // prominence="low"
-              static="light"
-              // tone="secondary"
-              // staticColor="white"
+            <div
+              className={classNames(
+                css({
+                  flexGrow: 1,
+                  paddingBlock: tokenSchema.size.space.regular,
+                })
+              )}
+              {...titleProps}
             >
-              {actionLabel}
-            </Button>
-          )}
+              {isReactText(children) ? <Text>{children}</Text> : children}
+            </div>
+            {actionLabel && (
+              <Button
+                onPress={handleAction}
+                // prominence="low"
+                static="light"
+                // tone="secondary"
+                // staticColor="white"
+              >
+                {actionLabel}
+              </Button>
+            )}
+          </div>
         </div>
         <div
           className={css({

@@ -266,7 +266,7 @@ export function InsertMenu({
     }
   }, [state.selectionManager.focusedKey]);
   const listboxRef = useRef(null);
-  let layout = useListBoxLayout(state);
+  let layout = useListBoxLayout();
   return (
     <Fragment>
       <span

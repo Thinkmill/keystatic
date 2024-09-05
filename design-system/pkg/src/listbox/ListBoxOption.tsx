@@ -32,7 +32,7 @@ export function ListBoxOption<T>(props: OptionProps<T>) {
 
   let { rendered, key } = item;
 
-  let state = useListBoxContext();
+  let { state } = useListBoxContext();
 
   let ref = useRef<HTMLDivElement>(null);
   let {

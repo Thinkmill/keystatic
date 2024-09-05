@@ -27,10 +27,6 @@ export function useTextLink({
   const { focusProps, isFocusVisible } = useFocusRing({ autoFocus });
   const { hoverProps, isHovered } = useHover({});
 
-  const fontWeight = headingContext
-    ? undefined
-    : tokenSchema.typography.fontWeight.medium;
-
   const dataOptions = {
     prominence,
     hover: isHovered ? 'true' : undefined,
@@ -45,7 +41,6 @@ export function useTextLink({
       css({
         color: tokenSchema.color.foreground.neutral,
         cursor: 'pointer',
-        fontWeight,
         outline: 0,
         textDecoration: 'underline',
         textDecorationColor: tokenSchema.color.border.emphasis,

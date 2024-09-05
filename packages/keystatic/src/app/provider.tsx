@@ -200,7 +200,7 @@ export default function Provider({
         colorScheme={themeContext.theme}
         router={keystarRouter}
       >
-        <ClientSideOnlyDocumentElement />
+        <ClientSideOnlyDocumentElement bodyBackground="surface" />
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           rel="stylesheet"
