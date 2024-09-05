@@ -9,11 +9,11 @@ import { LayoutInfo } from '@react-stately/virtualizer';
 import { Node } from '@react-types/shared';
 import { Fragment, ReactNode, useRef } from 'react';
 
+import { Divider } from '@keystar/ui/layout';
 import { classNames, css, tokenSchema } from '@keystar/ui/style';
+import { Text } from '@keystar/ui/typography';
 
 import { useListBoxContext } from './context';
-import { Text } from '@keystar/ui/typography';
-import { Divider } from '@keystar/ui/layout';
 
 interface ListBoxSectionProps<T> extends Omit<VirtualizerItemOptions, 'ref'> {
   headerLayoutInfo: LayoutInfo;
@@ -37,7 +37,7 @@ export function ListBoxSection<T>(props: ListBoxSectionProps<T>) {
   });
 
   let { direction } = useLocale();
-  let state = useListBoxContext();
+  let { state } = useListBoxContext();
 
   return (
     <Fragment>

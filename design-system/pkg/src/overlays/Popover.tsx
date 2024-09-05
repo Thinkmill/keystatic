@@ -42,7 +42,6 @@ export const Popover: ForwardRefExoticComponent<
   let wrapperRef = useRef<HTMLDivElement>(null);
 
   return (
-    /* @ts-expect-error FIXME: resolve ref inconsistencies */
     <Overlay {...otherProps} isOpen={state.isOpen} nodeRef={wrapperRef}>
       <PopoverWrapper ref={forwardedRef} {...props} wrapperRef={wrapperRef}>
         {children}

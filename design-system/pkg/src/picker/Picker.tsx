@@ -60,9 +60,8 @@ function Picker<T extends object>(
 
   // We create the listbox layout in Picker and pass it to ListBoxBase below
   // so that the layout information can be cached even while the listbox is not mounted.
-  // We also use the layout as the keyboard delegate for type to select.
+  let layout = useListBoxLayout();
   let state = useSelectState(props);
-  let layout = useListBoxLayout(state);
   let {
     labelProps,
     triggerProps,
@@ -70,7 +69,7 @@ function Picker<T extends object>(
     menuProps,
     descriptionProps,
     errorMessageProps,
-  } = useSelect({ ...props, keyboardDelegate: layout }, state, triggerRef);
+  } = useSelect(props, state, triggerRef);
   let isMobile = useIsMobileDevice();
 
   let isLoadingInitial = props.isLoading && state.collection.size === 0;

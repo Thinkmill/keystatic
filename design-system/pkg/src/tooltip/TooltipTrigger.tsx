@@ -42,7 +42,6 @@ function TooltipTrigger(props: TooltipTriggerProps) {
           ...tooltipProps,
         }}
       >
-        {/* @ts-expect-error FIXME: resolve ref inconsistencies */}
         <Overlay isOpen={state.isOpen} nodeRef={overlayRef}>
           {tooltipElement}
         </Overlay>

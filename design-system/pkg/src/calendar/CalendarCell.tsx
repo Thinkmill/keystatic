@@ -158,8 +158,8 @@ type CellStyleProps = {
   isRangeSelection: boolean;
   isRangeStart: boolean;
   isSelected: boolean;
-  isSelectionEnd: boolean;
-  isSelectionStart: boolean;
+  isSelectionEnd: boolean | null;
+  isSelectionStart: boolean | null;
   isToday: boolean;
   isUnavailable: boolean;
 };
