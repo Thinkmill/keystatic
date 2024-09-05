@@ -33,7 +33,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
       pending: isPending || undefined,
       pressed: isPressed || undefined,
       prominence: prominence === 'default' ? undefined : prominence,
-      tone: tone === 'neutral' ? undefined : tone,
+      tone: tone,
       static: props.static,
     }),
     style: styleProps.style,
@@ -131,7 +131,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           },
 
           // states
-          '&:disabled, &[data-pending=true]': {
+          '&:disabled, &[aria-disabled=true]': {
             backgroundColor: tokenSchema.color.alias.backgroundDisabled,
             color: tokenSchema.color.alias.foregroundDisabled,
           },
@@ -206,7 +206,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
           },
 
           // tone selector to increase specificity
-          '&[data-tone]:disabled, &[data-tone][data-pending=true]': {
+          '&[data-tone]:disabled, &[data-tone][aria-disabled=true]': {
             backgroundColor: tokenSchema.color.alias.backgroundDisabled,
             color: tokenSchema.color.alias.foregroundDisabled,
           },
@@ -277,7 +277,7 @@ export function useButtonStyles(props: ButtonProps, state: ButtonState) {
             },
           },
 
-          '&:disabled, &[data-pending=true]': {
+          '&:disabled, &[aria-disabled=true]': {
             backgroundColor: tokenSchema.color.alias.backgroundDisabled,
             color: tokenSchema.color.alias.foregroundDisabled,
           },

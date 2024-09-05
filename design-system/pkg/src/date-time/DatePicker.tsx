@@ -117,6 +117,7 @@ function DatePicker<T extends DateValue>(
           disableFocusRing
           {...styleProps.input}
         >
+          {/* @ts-expect-error can't reconcile changes to react-aria errorMessage fn type */}
           <DatePickerField {...fieldProps} data-testid="date-field" />
         </Input>
         <FieldButton

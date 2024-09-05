@@ -42,7 +42,6 @@ export const Tray: ForwardRefExoticComponent<
   let wrapperRef = useRef<HTMLDivElement>(null);
 
   return (
-    /* @ts-expect-error FIXME: resolve ref inconsistencies */
     <Overlay {...otherProps} isOpen={state.isOpen} nodeRef={wrapperRef}>
       <TrayWrapper ref={forwardedRef} {...props} wrapperRef={wrapperRef}>
         {children}

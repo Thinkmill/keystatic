@@ -91,6 +91,8 @@ function CheckboxInner(
     alignItems: 'flex-start',
     display: 'inline-flex',
     gap: tokenSchema.size.space.regular,
+    paddingInlineEnd: tokenSchema.size.space.large,
+    paddingBlock: tokenSchema.size.space.regular,
     position: 'relative',
     userSelect: 'none',
   });
@@ -118,6 +120,7 @@ function CheckboxInner(
               position: 'absolute',
               zIndex: 1,
               inset: 0,
+              insetInlineStart: `calc(${tokenSchema.size.space.regular} * -1)`,
               opacity: 0.0001,
             })
           )}
@@ -159,6 +162,7 @@ const Indicator = (props: IndicatorProps) => {
           position: 'relative',
           height: sizeToken,
           width: sizeToken,
+          // marginBlock: `calc((${tokenSchema.size.element.regular} - ${tokenSchema.typography.text.regular.size}) / 2)`,
 
           // prominence
           '--selected-idle-bg': tokenSchema.color.scale.indigo9,
@@ -265,8 +269,9 @@ const Content = (props: HTMLAttributes<HTMLDivElement>) => {
         css({
           color: tokenSchema.color.alias.foregroundIdle,
           display: 'grid',
-          paddingTop: `calc((${sizeToken} - ${tokenSchema.typography.text.regular.capheight}) / 2)`,
           gap: tokenSchema.size.space.large,
+          // paddingTop: `calc((${tokenSchema.size.element.regular} - ${tokenSchema.typography.text.regular.capheight}) / 2)`,
+          paddingTop: `calc((${sizeToken} - ${tokenSchema.typography.text.regular.capheight}) / 2)`,
 
           'input[type="checkbox"]:hover ~ &': {
             color: tokenSchema.color.alias.foregroundHovered,

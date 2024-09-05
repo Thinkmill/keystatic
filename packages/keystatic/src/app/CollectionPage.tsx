@@ -495,7 +495,7 @@ function CollectionTable(
       density="spacious"
       overflowMode="truncate"
       prominence="low"
-      onRowAction={key => {
+      onAction={key => {
         router.push(getItemPath(props.basePath, props.collection, key));
       }}
       renderEmptyState={() => (

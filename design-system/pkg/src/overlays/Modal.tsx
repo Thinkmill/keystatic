@@ -43,7 +43,6 @@ export const Modal: ForwardRefExoticComponent<
   let wrapperRef = useRef<HTMLDivElement>(null);
 
   return (
-    /* @ts-expect-error FIXME: resolve ref inconsistencies */
     <Overlay {...otherProps} isOpen={state.isOpen} nodeRef={wrapperRef}>
       <ModalWrapper ref={forwardedRef} {...props} wrapperRef={wrapperRef}>
         {children}

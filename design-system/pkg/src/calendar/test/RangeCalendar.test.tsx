@@ -217,7 +217,7 @@ describe('calendar/RangeCalendar', () => {
   // TODO: selects a range with the keyboard
 
   it('selects a range by clicking with the mouse', () => {
-    let onChange = jest.fn<(value: RangeValue<CalendarDate>) => void>();
+    let onChange = jest.fn<(value: RangeValue<CalendarDate> | null) => void>();
     let { getAllByLabelText, getByText } = renderWithProvider(
       <RangeCalendar
         defaultValue={{
@@ -249,12 +249,16 @@ describe('calendar/RangeCalendar', () => {
     expect(selectedDates[selectedDates.length - 1].textContent).toBe('17');
     expect(onChange).toHaveBeenCalledTimes(1);
 
-    let { start, end } = onChange.mock.calls[0][0];
+    let result = onChange.mock.calls[0][0];
+    if (!result) {
+      throw new Error('Expected a result');
+    }
+    let { start, end } = result;
     expect(start).toEqual(new CalendarDate(2019, 6, 7));
     expect(end).toEqual(new CalendarDate(2019, 6, 17));
   });
   it('selects a range by dragging with the mouse', () => {
-    let onChange = jest.fn<(value: RangeValue<CalendarDate>) => void>();
+    let onChange = jest.fn<(value: RangeValue<CalendarDate> | null) => void>();
     let { getAllByLabelText, getByText } = renderWithProvider(
       <RangeCalendar
         defaultValue={{
@@ -291,7 +295,11 @@ describe('calendar/RangeCalendar', () => {
     expect(selectedDates[selectedDates.length - 1].textContent).toBe('23');
     expect(onChange).toHaveBeenCalledTimes(1);
 
-    let { start, end } = onChange.mock.calls[0][0];
+    let result = onChange.mock.calls[0][0];
+    if (!result) {
+      throw new Error('Expected a result');
+    }
+    let { start, end } = result;
     expect(start).toEqual(new CalendarDate(2019, 6, 17));
     expect(end).toEqual(new CalendarDate(2019, 6, 23));
   });

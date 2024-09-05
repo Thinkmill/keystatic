@@ -108,7 +108,6 @@ export function BlockPopover(props: BlockPopoverProps) {
   let wrapperRef = useRef<HTMLDivElement>(null);
 
   return (
-    /* @ts-expect-error FIXME: resolve ref inconsistencies */
     <Overlay isOpen={state.isOpen} nodeRef={wrapperRef}>
       <BlockPopoverWrapper wrapperRef={wrapperRef} {...props} />
     </Overlay>

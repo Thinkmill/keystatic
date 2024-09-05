@@ -1,138 +1,376 @@
 {
   "ar-AE": {
+    "collapse": "طي",
+    "columnResizer": "أداة تغيير حجم العمود",
+    "drag": "سحب",
+    "expand": "مد",
     "loading": "جارٍ التحميل...",
-    "loadingMore": "جارٍ تحميل المزيد..."
+    "loadingMore": "جارٍ تحميل المزيد...",
+    "resizeColumn": "تغيير حجم العمود",
+    "sortAscending": "فرز بترتيب تصاعدي",
+    "sortDescending": "فرز بترتيب تنازلي"
   },
   "bg-BG": {
+    "collapse": "Свиване",
+    "columnResizer": "Преоразмеряване на колони",
+    "drag": "Плъзнете",
+    "expand": "Разширяване",
     "loading": "Зареждане...",
-    "loadingMore": "Зареждане на още..."
+    "loadingMore": "Зареждане на още...",
+    "resizeColumn": "Преоразмеряване на колона",
+    "sortAscending": "Възходящо сортиране",
+    "sortDescending": "Низходящо сортиране "
   },
   "cs-CZ": {
+    "collapse": "Zmenšit",
+    "columnResizer": "Změna velikosti sloupce",
+    "drag": "Přetáhnout",
+    "expand": "Roztáhnout",
     "loading": "Načítání...",
-    "loadingMore": "Načítání dalších..."
+    "loadingMore": "Načítání dalších...",
+    "resizeColumn": "Změnit velikost sloupce",
+    "sortAscending": "Seřadit vzestupně",
+    "sortDescending": "Seřadit sestupně"
   },
   "da-DK": {
-    "loading": "Indlæser...",
-    "loadingMore": "Indlæser flere..."
+    "collapse": "Skjul",
+    "columnResizer": "Kolonneændring",
+    "drag": "Træk",
+    "expand": "Udvid",
+    "loading": "Indlæser ...",
+    "loadingMore": "Indlæser flere ...",
+    "resizeColumn": "Tilpas størrelse på kolonne",
+    "sortAscending": "Sorter stigende",
+    "sortDescending": "Sorter faldende"
   },
   "de-DE": {
+    "collapse": "Reduzieren",
+    "columnResizer": "Spaltenanpassung",
+    "drag": "Ziehen",
+    "expand": "Erweitern",
     "loading": "Laden...",
-    "loadingMore": "Mehr laden ..."
+    "loadingMore": "Mehr laden ...",
+    "resizeColumn": "Spaltengröße ändern",
+    "sortAscending": "Aufsteigend sortieren",
+    "sortDescending": "Absteigend sortieren"
   },
   "el-GR": {
+    "collapse": "Σύμπτυξη",
+    "columnResizer": "Αλλαγή μεγέθους στήλης",
+    "drag": "Μεταφορά",
+    "expand": "Ανάπτυξη",
     "loading": "Φόρτωση...",
-    "loadingMore": "Φόρτωση περισσότερων..."
+    "loadingMore": "Φόρτωση περισσότερων...",
+    "resizeColumn": "Αλλαγή μεγέθους στήλης",
+    "sortAscending": "Ταξινόμηση κατά αύξουσα σειρά",
+    "sortDescending": "Ταξινόμηση κατά φθίνουσα σειρά"
   },
   "en-US": {
     "loading": "Loading…",
-    "loadingMore": "Loading more…"
+    "loadingMore": "Loading more…",
+    "sortAscending": "Sort Ascending",
+    "sortDescending": "Sort Descending",
+    "resizeColumn": "Resize column",
+    "columnResizer": "Column resizer",
+    "drag": "Drag",
+    "expand": "Expand",
+    "collapse": "Collapse"
   },
   "es-ES": {
+    "collapse": "Contraer",
+    "columnResizer": "Redimensionador de columnas",
+    "drag": "Arrastrar",
+    "expand": "Ampliar",
     "loading": "Cargando…",
-    "loadingMore": "Cargando más…"
+    "loadingMore": "Cargando más…",
+    "resizeColumn": "Cambiar el tamaño de la columna",
+    "sortAscending": "Orden de subida",
+    "sortDescending": "Orden de bajada"
   },
   "et-EE": {
+    "collapse": "Ahenda",
+    "columnResizer": "Veeru suuruse muutja",
+    "drag": "Lohista",
+    "expand": "Laienda",
     "loading": "Laadimine...",
-    "loadingMore": "Laadi rohkem..."
+    "loadingMore": "Laadi rohkem...",
+    "resizeColumn": "Muuda veeru suurust",
+    "sortAscending": "Sordi kasvavalt",
+    "sortDescending": "Sordi kahanevalt"
   },
   "fi-FI": {
+    "collapse": "Pienennä",
+    "columnResizer": "Sarakekoon muuttaja",
+    "drag": "Vedä",
+    "expand": "Laajenna",
     "loading": "Ladataan…",
-    "loadingMore": "Ladataan lisää…"
+    "loadingMore": "Ladataan lisää…",
+    "resizeColumn": "Muuta sarakkeen kokoa",
+    "sortAscending": "Lajittelujärjestys: nouseva",
+    "sortDescending": "Lajittelujärjestys: laskeva"
   },
   "fr-FR": {
+    "collapse": "Réduire",
+    "columnResizer": "Redimensionnement de colonne",
+    "drag": "Faire glisser",
+    "expand": "Développer",
     "loading": "Chargement...",
-    "loadingMore": "Chargement supplémentaire..."
+    "loadingMore": "Chargement supplémentaire...",
+    "resizeColumn": "Redimensionner la colonne",
+    "sortAscending": "Trier par ordre croissant",
+    "sortDescending": "Trier par ordre décroissant"
   },
   "he-IL": {
+    "collapse": "כווץ",
+    "columnResizer": "שינוי גודל עמודה",
+    "drag": "גרור",
+    "expand": "הרחב",
     "loading": "טוען...",
-    "loadingMore": "טוען עוד..."
+    "loadingMore": "טוען עוד...",
+    "resizeColumn": "שנה את גודל העמודה",
+    "sortAscending": "מיין בסדר עולה",
+    "sortDescending": "מיין בסדר יורד"
   },
   "hr-HR": {
+    "collapse": "Sažmi",
+    "columnResizer": "Alat za promjenu veličine stupca",
+    "drag": "Povucite",
+    "expand": "Proširi",
     "loading": "Učitavam...",
-    "loadingMore": "Učitavam još..."
+    "loadingMore": "Učitavam još...",
+    "resizeColumn": "Promijeni veličinu stupca",
+    "sortAscending": "Sortiraj uzlazno",
+    "sortDescending": "Sortiraj silazno"
   },
   "hu-HU": {
+    "collapse": "Összecsukás",
+    "columnResizer": "Oszlopátméretező",
+    "drag": "Húzás",
+    "expand": "Kibontás",
     "loading": "Betöltés folyamatban…",
-    "loadingMore": "Továbbiak betöltése folyamatban…"
+    "loadingMore": "Továbbiak betöltése folyamatban…",
+    "resizeColumn": "Oszlop átméretezése",
+    "sortAscending": "Növekvő rendezés",
+    "sortDescending": "Csökkenő rendezés"
   },
   "it-IT": {
+    "collapse": "Comprimi",
+    "columnResizer": "Ridimensionamento colonne",
+    "drag": "Trascina",
+    "expand": "Espandi",
     "loading": "Caricamento...",
-    "loadingMore": "Caricamento altri..."
+    "loadingMore": "Caricamento altri...",
+    "resizeColumn": "Ridimensiona colonna",
+    "sortAscending": "Ordinamento crescente",
+    "sortDescending": "Ordinamento decrescente"
   },
   "ja-JP": {
+    "collapse": "折りたたむ",
+    "columnResizer": "列リサイザー",
+    "drag": "ドラッグ",
+    "expand": "展開",
     "loading": "読み込み中...",
-    "loadingMore": "さらに読み込み中..."
+    "loadingMore": "さらに読み込み中...",
+    "resizeColumn": "列幅を変更",
+    "sortAscending": "昇順に並べ替え",
+    "sortDescending": "降順に並べ替え"
   },
   "ko-KR": {
-    "loading": "로드 중…",
-    "loadingMore": "추가 로드 중…"
+    "collapse": "접기",
+    "columnResizer": "열 크기 조정기",
+    "drag": "드래그",
+    "expand": "펼치기",
+    "loading": "로드 중",
+    "loadingMore": "추가 로드 중",
+    "resizeColumn": "열 크기 조정",
+    "sortAscending": "오름차순 정렬",
+    "sortDescending": "내림차순 정렬"
   },
   "lt-LT": {
+    "collapse": "Sutraukti",
+    "columnResizer": "Stulpelio dydžio keitiklis",
+    "drag": "Vilkti",
+    "expand": "Išskleisti",
     "loading": "Įkeliama...",
-    "loadingMore": "Įkeliama daugiau..."
+    "loadingMore": "Įkeliama daugiau...",
+    "resizeColumn": "Keisti stulpelio dydį",
+    "sortAscending": "Rikiuoti didėjimo tvarka",
+    "sortDescending": "Rikiuoti mažėjimo tvarka"
   },
   "lv-LV": {
+    "collapse": "Sakļaut",
+    "columnResizer": "Kolonnas izmēru mainītājs",
+    "drag": "Vilkšana",
+    "expand": "Izvērst",
     "loading": "Notiek ielāde...",
-    "loadingMore": "Tiek ielādēts vēl..."
+    "loadingMore": "Tiek ielādēts vēl...",
+    "resizeColumn": "Mainīt kolonnas lielumu",
+    "sortAscending": "Kārtot augošā secībā",
+    "sortDescending": "Kārtot dilstošā secībā"
   },
   "nb-NO": {
+    "collapse": "Skjul",
+    "columnResizer": "Størrelsesendring av kolonne",
+    "drag": "Dra",
+    "expand": "Utvid",
     "loading": "Laster inn ...",
-    "loadingMore": "Laster inn flere ..."
+    "loadingMore": "Laster inn flere ...",
+    "resizeColumn": "Endre størrelse på kolonne",
+    "sortAscending": "Sorter stigende",
+    "sortDescending": "Sorter synkende"
   },
   "nl-NL": {
+    "collapse": "Samenvouwen",
+    "columnResizer": "Groottewijziging van kolom",
+    "drag": "Slepen",
+    "expand": "Uitvouwen",
     "loading": "Laden...",
-    "loadingMore": "Meer laden..."
+    "loadingMore": "Meer laden...",
+    "resizeColumn": "Kolomgrootte wijzigen",
+    "sortAscending": "Oplopend sorteren",
+    "sortDescending": "Aflopend sorteren"
   },
   "pl-PL": {
+    "collapse": "Zwiń",
+    "columnResizer": "Narzędzie zmiany rozmiaru kolumny",
+    "drag": "Przeciągnij",
+    "expand": "Rozwiń",
     "loading": "Ładowanie...",
-    "loadingMore": "Wczytywanie większej liczby..."
+    "loadingMore": "Wczytywanie większej liczby...",
+    "resizeColumn": "Zmień rozmiar kolumny",
+    "sortAscending": "Sortuj rosnąco",
+    "sortDescending": "Sortuj malejąco"
   },
   "pt-BR": {
+    "collapse": "Recolher",
+    "columnResizer": "Redimensionamento de colunas",
+    "drag": "Arraste",
+    "expand": "Expandir",
     "loading": "Carregando...",
-    "loadingMore": "Carregando mais..."
+    "loadingMore": "Carregando mais...",
+    "resizeColumn": "Redimensionar coluna",
+    "sortAscending": "Ordenar por ordem crescente",
+    "sortDescending": "Ordenar por ordem decrescente"
   },
   "pt-PT": {
+    "collapse": "Colapsar",
+    "columnResizer": "Redimensionador de coluna",
+    "drag": "Arrastar",
+    "expand": "Expandir",
     "loading": "A carregar...",
-    "loadingMore": "A carregar mais..."
+    "loadingMore": "A carregar mais...",
+    "resizeColumn": "Redimensionar coluna",
+    "sortAscending": "Ordenar por ordem ascendente",
+    "sortDescending": "Ordenar por ordem decrescente"
   },
   "ro-RO": {
+    "collapse": "Restrângeți",
+    "columnResizer": "Instrument redimensionare coloane",
+    "drag": "Trageți",
+    "expand": "Extindeți",
     "loading": "Se încarcă...",
-    "loadingMore": "Se încarcă mai multe..."
+    "loadingMore": "Se încarcă mai multe...",
+    "resizeColumn": "Redimensionați coloana",
+    "sortAscending": "Sortați crescător",
+    "sortDescending": "Sortați descrescător"
   },
   "ru-RU": {
+    "collapse": "Свернуть",
+    "columnResizer": "Средство изменения размера столбцов",
+    "drag": "Перетаскивание",
+    "expand": "Развернуть",
     "loading": "Загрузка...",
-    "loadingMore": "Дополнительная загрузка..."
+    "loadingMore": "Дополнительная загрузка...",
+    "resizeColumn": "Изменить размер столбца",
+    "sortAscending": "Сортировать по возрастанию",
+    "sortDescending": "Сортировать по убыванию"
   },
   "sk-SK": {
+    "collapse": "Zbaliť",
+    "columnResizer": "Nástroj na zmenu veľkosti stĺpcov",
+    "drag": "Presunúť",
+    "expand": "Rozbaliť",
     "loading": "Načítava sa...",
-    "loadingMore": "Načítava sa viac..."
+    "loadingMore": "Načítava sa viac...",
+    "resizeColumn": "Zmeniť veľkosť stĺpca",
+    "sortAscending": "Zoradiť vzostupne",
+    "sortDescending": "Zoradiť zostupne"
   },
   "sl-SI": {
-    "loading": "Nalaganje ...",
-    "loadingMore": "Nalaganje več vsebine ..."
+    "collapse": "Strni",
+    "columnResizer": "Prilagojevalnik velikosti stolpcev",
+    "drag": "Povleci",
+    "expand": "Razširi",
+    "loading": "Nalaganje...",
+    "loadingMore": "Nalaganje več vsebine...",
+    "resizeColumn": "Spremeni velikost stolpca",
+    "sortAscending": "Razvrsti naraščajoče",
+    "sortDescending": "Razvrsti padajoče"
   },
   "sr-SP": {
+    "collapse": "Sažmi",
+    "columnResizer": "Alat za promenu veličine kolone",
+    "drag": "Prevuci",
+    "expand": "Proširi",
     "loading": "Učitavam...",
-    "loadingMore": "Učitavam još..."
+    "loadingMore": "Učitavam još...",
+    "resizeColumn": "Promeni veličinu kolone",
+    "sortAscending": "Sortiraj po rastućem redosledu",
+    "sortDescending": "Sortiraj po opadajućem redosledu"
   },
   "sv-SE": {
+    "collapse": "Dölj",
+    "columnResizer": "Ändra storlek på kolumn",
+    "drag": "Dra",
+    "expand": "Expandera",
     "loading": "Läser in...",
-    "loadingMore": "Läser in mer..."
+    "loadingMore": "Läser in mer...",
+    "resizeColumn": "Ändra storlek på kolumn",
+    "sortAscending": "Sortera i stigande ordning",
+    "sortDescending": "Sortera i fallande ordning"
   },
   "tr-TR": {
+    "collapse": "Daralt",
+    "columnResizer": "Yeniden sütun boyutlandırıcı",
+    "drag": "Sürükle",
+    "expand": "Genişlet",
     "loading": "Yükleniyor...",
-    "loadingMore": "Daha fazla yükleniyor..."
+    "loadingMore": "Daha fazla yükleniyor...",
+    "resizeColumn": "Sütunu yeniden boyutlandır",
+    "sortAscending": "Artan Sıralama",
+    "sortDescending": "Azalan Sıralama"
   },
   "uk-UA": {
+    "collapse": "Згорнути",
+    "columnResizer": "Засіб змінення розміру стовпця",
+    "drag": "Перетягнути",
+    "expand": "Розгорнути",
     "loading": "Завантаження…",
-    "loadingMore": "Завантаження інших об’єктів..."
+    "loadingMore": "Завантаження інших об’єктів...",
+    "resizeColumn": "Змінити розмір стовпця",
+    "sortAscending": "Сортувати за зростанням",
+    "sortDescending": "Сортувати за спаданням"
   },
   "zh-CN": {
+    "collapse": "折叠",
+    "columnResizer": "列尺寸调整器",
+    "drag": "拖动",
+    "expand": "扩展",
     "loading": "正在加载...",
-    "loadingMore": "正在加载更多..."
+    "loadingMore": "正在加载更多...",
+    "resizeColumn": "调整列大小",
+    "sortAscending": "升序排序",
+    "sortDescending": "降序排序"
   },
-  "zh-T": {
-    "loading": "載入中…",
-    "loadingMore": "正在載入更多…"
+  "zh-TW": {
+    "collapse": "收合",
+    "columnResizer": "欄大小調整器",
+    "drag": "拖曳",
+    "expand": "展開",
+    "loading": "正在載入",
+    "loadingMore": "正在載入更多…",
+    "resizeColumn": "調整欄大小",
+    "sortAscending": "升序排序",
+    "sortDescending": "降序排序"
   }
 }

@@ -1,9 +1,12 @@
 import { action, ArgTypes } from '@keystar/ui-storybook';
-import { Flex, VStack } from '@keystar/ui/layout';
+import { Badge } from '@keystar/ui/badge';
+import { Box, Flex, VStack } from '@keystar/ui/layout';
 import { TextLink } from '@keystar/ui/link';
 import { tokenSchema } from '@keystar/ui/style';
+import { ActionButton } from '@keystar/ui/button';
 import { Switch } from '@keystar/ui/switch';
 import { Heading, Text } from '@keystar/ui/typography';
+import { useAsyncList } from '@react-stately/data';
 import { Key, useMemo, useState } from 'react';
 
 import {
@@ -16,7 +19,7 @@ import {
   TableHeader,
 } from '..';
 import { pokemonItems } from './data';
-import { useAsyncList } from '@react-stately/data';
+import { ReorderExample } from './ReorderExample';
 
 function onSelectionChange(keys: 'all' | Set<Key>) {
   const selection = typeof keys === 'string' ? keys : [...keys];
@@ -35,7 +38,7 @@ export default {
     density: 'regular',
     height: undefined,
     width: 'scale.6000',
-    onRowAction: action('onRowAction'),
+    onAction: action('onAction'),
     onSelectionChange: action('onSelectionChange'),
     onSortChange: action('onSortChange'),
   },
@@ -44,7 +47,7 @@ export default {
     // there is no argType for function
     // use the controls reset button to undo it
     // https://storybook.js.org/docs/react/essentials/controls#annotation
-    onRowAction: {
+    onAction: {
       control: 'select',
       options: [undefined],
     },
@@ -54,6 +57,11 @@ export default {
       },
     },
     onSortChange: {
+      table: {
+        disable: true,
+      },
+    },
+    disabledBehavior: {
       table: {
         disable: true,
       },
@@ -168,11 +176,17 @@ export const Dynamic = (args: ArgTypes) => (
   </TableView>
 );
 
-export const DisabledKeys = (args: ArgTypes) => <Dynamic {...args} />;
+export const DisabledKeys = (args: ArgTypes) => (
+  <Dynamic
+    {...args}
+    // @ts-expect-error
+    disabledBehavior={args.selectionMode === 'none' ? 'all' : 'selection'}
+  />
+);
 DisabledKeys.args = {
   disabledKeys: new Set(['Foo 1', 'Foo 3']),
+  selectionMode: 'none',
 };
-DisabledKeys.storyName = 'disabled keys';
 
 export const HiddenHeader = (args: ArgTypes) => (
   <TableView
@@ -182,9 +196,13 @@ export const HiddenHeader = (args: ArgTypes) => (
     {...args}
   >
     <TableHeader>
-      <Column key="foo">Foo</Column>
-      <Column key="bar">Bar</Column>
-      <Column key="baz" hideHeader>
+      <Column key="foo" width="2fr">
+        Foo
+      </Column>
+      <Column key="bar" width="2fr">
+        Bar
+      </Column>
+      <Column key="baz" hideHeader width="1fr">
         Actions
       </Column>
     </TableHeader>
@@ -193,14 +211,14 @@ export const HiddenHeader = (args: ArgTypes) => (
         <Cell>One</Cell>
         <Cell>Two</Cell>
         <Cell>
-          <button>Three</button>
+          <ActionButton>Three</ActionButton>
         </Cell>
       </Row>
       <Row>
         <Cell>Four</Cell>
         <Cell>Five</Cell>
         <Cell>
-          <button>Six</button>
+          <ActionButton>Six</ActionButton>
         </Cell>
       </Row>
     </TableBody>
@@ -224,14 +242,16 @@ export const FocusableContent = (args: ArgTypes) => (
           </Cell>
           <Cell>
             <TextLink
-              href="https://yahoo.com"
+              href="https://thinkmill.com"
               target="_blank"
               prominence="high"
             >
-              Yahoo
+              Thinkmill
             </TextLink>
           </Cell>
-          <Cell>Three</Cell>
+          <Cell>
+            <Badge tone="neutral">Company</Badge>
+          </Cell>
         </Row>
         <Row>
           <Cell>
@@ -239,14 +259,16 @@ export const FocusableContent = (args: ArgTypes) => (
           </Cell>
           <Cell>
             <TextLink
-              href="https://google.com"
+              href="https://keystatic.com/"
               target="_blank"
               prominence="high"
             >
-              Google
+              Keystatic
             </TextLink>
           </Cell>
-          <Cell>Three</Cell>
+          <Cell>
+            <Badge tone="highlight">Project</Badge>
+          </Cell>
         </Row>
         <Row>
           <Cell>
@@ -254,14 +276,16 @@ export const FocusableContent = (args: ArgTypes) => (
           </Cell>
           <Cell>
             <TextLink
-              href="https://yahoo.com"
+              href="https://keystonejs.com/"
               target="_blank"
               prominence="high"
             >
-              Yahoo
+              Keystone
             </TextLink>
           </Cell>
-          <Cell>Three</Cell>
+          <Cell>
+            <Badge tone="highlight">Project</Badge>
+          </Cell>
         </Row>
       </TableBody>
     </TableView>
@@ -275,7 +299,6 @@ export const Selection = (args: ArgTypes) => (
     aria-label="TableView with selection"
     // width="scale.3400"
     // height="scale.2400"
-    onRowAction={args.none ? action('onRowAction') : undefined}
     onSelectionChange={onSelectionChange}
     {...args}
   >
@@ -301,6 +324,51 @@ export const Selection = (args: ArgTypes) => (
 Selection.args = {
   selectionMode: 'multiple',
 };
+
+export const Resizing = (args: ArgTypes) => (
+  <Box backgroundColor="surface" padding="large">
+    <TableView
+      aria-label="TableView with resizable columns"
+      // width="scale.3400"
+      // height="scale.2400"
+      onSelectionChange={onSelectionChange}
+      {...args}
+    >
+      <TableHeader>
+        <Column allowsResizing key="foo" defaultWidth="1fr">
+          Foo
+        </Column>
+        <Column allowsResizing key="bar" defaultWidth="2fr">
+          Bar
+        </Column>
+        <Column allowsResizing key="baz" defaultWidth="1fr">
+          Baz
+        </Column>
+      </TableHeader>
+      <TableBody>
+        <Row>
+          <Cell>One</Cell>
+          <Cell>Two</Cell>
+          <Cell>Three</Cell>
+        </Row>
+        <Row>
+          <Cell>Four</Cell>
+          <Cell>Five</Cell>
+          <Cell>Six</Cell>
+        </Row>
+      </TableBody>
+    </TableView>
+  </Box>
+);
+
+export const Reorderable = (args: ArgTypes) => (
+  <ReorderExample
+    onDrop={action('drop')}
+    onDragStart={action('dragStart')}
+    onDragEnd={action('dragEnd')}
+    tableViewProps={args}
+  />
+);
 
 export const TableProps = (args: ArgTypes) => (
   <TableView
@@ -368,9 +436,9 @@ export const StickyCheckboxes = () => {
       width="scale.6000"
       height="scale.2400"
       selectionMode="multiple"
-      // onRowAction={(...args) => {
-      //   console.log('onRowAction', ...args);
-      //   action('onRowAction')(...args);
+      // onAction={(...args) => {
+      //   console.log('onAction', ...args);
+      //   action('onAction')(...args);
       // }}
       onSelectionChange={onSelectionChange}
       onSortChange={descriptor => {
@@ -382,8 +450,8 @@ export const StickyCheckboxes = () => {
       <TableHeader
         columns={[
           // { name: 'ID', key: 'id', width: 55 },
-          { name: 'Name', key: 'name', width: '50%' },
-          { name: 'Type', key: 'type' },
+          { name: 'Name', key: 'name', width: '33%' },
+          { name: 'Type', key: 'type', width: '33%' },
           { name: 'HP', key: 'health', align: 'end' as const },
           { name: 'ATK', key: 'attack', align: 'end' as const },
           { name: 'DEF', key: 'defense', align: 'end' as const },
@@ -415,11 +483,7 @@ export const StickyCheckboxes = () => {
               //   );
               // }
 
-              return (
-                <Cell>
-                  <Text overflow="nowrap">{value}</Text>
-                </Cell>
-              );
+              return <Cell>{value}</Cell>;
             }}
           </Row>
         )}

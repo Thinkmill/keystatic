@@ -77,8 +77,8 @@ export const StaticLight = () => (
   <Flex
     direction="column"
     gap="regular"
-    backgroundColor="accentEmphasis"
     padding="large"
+    UNSAFE_style={{ backgroundColor: '#111' }}
   >
     {render('High', { prominence: 'high', static: 'light' })}
     {render('Default', { prominence: 'default', static: 'light' })}
@@ -102,6 +102,7 @@ export const StaticDark = () => (
     gap="regular"
     backgroundColor="accent"
     padding="large"
+    UNSAFE_style={{ backgroundColor: '#eee' }}
   >
     {render('High', { prominence: 'high', static: 'dark' })}
     {render('Default', { prominence: 'default', static: 'dark' })}
