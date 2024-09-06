@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/core",
-  "version": "0.5.32",
+  "version": "0.5.33",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -116,7 +116,7 @@
     "@emotion/css": "^11.9.0",
     "@emotion/weak-memoize": "^0.3.0",
     "@floating-ui/react": "^0.24.0",
-    "@internationalized/string": "^3.1.1",
+    "@internationalized/string": "^3.2.3",
     "@keystar/ui": "workspace:^",
     "@markdoc/markdoc": "^0.4.0",
     "@react-aria/focus": "^3.18.1",
@@ -185,6 +185,7 @@
     "yjs": "^13.6.11"
   },
   "devDependencies": {
+    "@internationalized/string-compiler": "^3.2.4",
     "@jest/expect": "^29.7.0",
     "@jest/globals": "^29.7.0",
     "@testing-library/user-event": "^14.4.3",

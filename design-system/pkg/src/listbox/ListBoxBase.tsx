@@ -11,7 +11,7 @@ import { useProvider } from '@keystar/ui/core';
 import { ProgressCircle } from '@keystar/ui/progress';
 import { useStyleProps } from '@keystar/ui/style';
 
-import localizedMessages from './l10n.json';
+import localizedMessages from './l10n';
 import { ListBoxContext } from './context';
 import { ListBoxLayout } from './ListBoxLayout';
 import { ListBoxOption } from './ListBoxOption';

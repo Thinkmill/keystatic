@@ -27,7 +27,7 @@ import {
 } from '@keystar/ui/style';
 import { useHasChild } from '@keystar/ui/utils';
 
-import localizedMessages from './l10n.json';
+import localizedMessages from './l10n';
 import { DialogContext, DialogContextValue } from './context';
 import { DialogProps, DialogSize, DialogType } from './types';
 

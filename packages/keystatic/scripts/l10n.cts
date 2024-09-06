@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { compileString } from '@internationalized/string-compiler';
 
 const localesDir = path.join(__dirname, '../src/app/l10n');
 (async () => {
@@ -38,8 +39,22 @@ const localesDir = path.join(__dirname, '../src/app/l10n');
       }
     )
   );
+  let out = 'const strings = {\n';
+  for (const [lang, translations] of Object.entries(locales)) {
+    out += `  ${JSON.stringify(lang)}: {\n`;
+    for (const [key, value] of Object.entries(translations)) {
+      out += `    ${JSON.stringify(key)}: ${compileString(value)},\n`;
+    }
+    out += '  },\n';
+  }
+  out += '};\n';
+  out += 'export default strings;\n';
+
+  await fs.writeFile(path.join(localesDir, 'index.js'), out);
   await fs.writeFile(
-    path.join(localesDir, 'index.json'),
-    JSON.stringify(locales, null, 2) + '\n' // carriage return to make prettier happy
+    path.join(localesDir, 'index.d.ts'),
+    `declare const l10nMessages: Record<string, Record<string, import('@internationalized/string').LocalizedString>>;
+export default l10nMessages;
+`
   );
 })();

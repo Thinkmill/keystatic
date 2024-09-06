@@ -19,7 +19,7 @@ import {
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
-import intlMessages from './l10n.json';
+import intlMessages from './l10n';
 import { ToastProps } from './types';
 
 const ICONS = {

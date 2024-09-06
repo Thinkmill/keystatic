@@ -1,5 +1,16 @@
 # @voussoir/docs
 
+## 0.0.53
+
+### Patch Changes
+
+- [#1289](https://github.com/Thinkmill/keystatic/pull/1289) [`1b48613`](https://github.com/Thinkmill/keystatic/commit/1b4861332cd14d0b9296dee95ca2973790c52194) Thanks [@jossmac](https://github.com/jossmac)! - Update react-aria and friends. Fix tests/types etc. from update.
+
+- Updated dependencies [[`650633c`](https://github.com/Thinkmill/keystatic/commit/650633c291f64ddbafbd45ebc81967c9fc787199), [`09ef3b3`](https://github.com/Thinkmill/keystatic/commit/09ef3b3138a26cdbe6ad5b8f61e757a2762833d0), [`fac7ba4`](https://github.com/Thinkmill/keystatic/commit/fac7ba4605cf81fdac44694b1cd7dcc730b4c1a9), [`385faf9`](https://github.com/Thinkmill/keystatic/commit/385faf9006e9d089ef317a9cdb421e4c13bc354b), [`336b6da`](https://github.com/Thinkmill/keystatic/commit/336b6daae5adcb225253e17531fb9049aca1c2f5), [`58a49e4`](https://github.com/Thinkmill/keystatic/commit/58a49e40e1362b6700097cf427b7951c07161245), [`1b48613`](https://github.com/Thinkmill/keystatic/commit/1b4861332cd14d0b9296dee95ca2973790c52194)]:
+  - @keystar/ui@0.7.10
+  - @keystatic/core@0.5.33
+  - @keystatic/next@5.0.1
+
 ## 0.0.52
 
 ### Patch Changes

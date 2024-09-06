@@ -20,7 +20,7 @@ import { TextField } from '@keystar/ui/text-field';
 import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { Heading, Text } from '@keystar/ui/typography';
 
-import l10nMessages from '../../../../../app/l10n/index.json';
+import l10nMessages from '../../../../../app/l10n';
 import {
   BlockPopover,
   BlockPopoverTrigger,

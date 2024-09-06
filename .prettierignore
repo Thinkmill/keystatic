@@ -58,3 +58,8 @@ coverage
 
 pnpm-lock.yaml
 packages/keystatic/src/form/fields/document/DocumentEditor/prism.js
+
+l10n.js
+l10n.d.ts
+packages/keystatic/src/app/l10n/index.js
+packages/keystatic/src/app/l10n/index.d.ts

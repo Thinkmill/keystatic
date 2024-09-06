@@ -13,7 +13,7 @@ import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useField } from '@react-aria/label';
 import { useId, Key, useMemo, useState } from 'react';
 
-import l10nMessages from '../../../app/l10n/index.json';
+import l10nMessages from '../../../app/l10n';
 import { getSlugFromState } from '../../../app/utils';
 import { pluralize } from '../../../app/pluralize';
 

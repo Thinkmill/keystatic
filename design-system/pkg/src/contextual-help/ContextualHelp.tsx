@@ -15,7 +15,7 @@ import { infoIcon } from '@keystar/ui/icon/icons/infoIcon';
 import { ClearSlots } from '@keystar/ui/slots';
 import { classNames, css, tokenSchema } from '@keystar/ui/style';
 
-import localizedMessages from './l10n.json';
+import localizedMessages from './l10n';
 import { ContextualHelpProps } from './types';
 
 /** Contextual help shows a user extra information about an adjacent component. */

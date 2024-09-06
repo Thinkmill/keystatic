@@ -1,0 +1,184 @@
+---
+title: TagGroup
+description: Tags allow users to categorise content. They can represent keywords or people, and are grouped to describe an item or a search request.
+category: Navigation
+---
+
+## Example
+
+```jsx {% live=true %}
+<TagGroup aria-label="static items example">
+  <Item>Bilby</Item>
+  <Item>Kangaroo</Item>
+  <Item>Quokka</Item>
+  <Item>Echidna</Item>
+</TagGroup>
+```
+
+## Patterns
+
+### Collections
+
+Tag group implements the `react-stately`
+[collection component](https://react-spectrum.adobe.com/react-stately/collections.html) `<Item>` for dynamic and static collections.
+
+Static collections, seen in the example above, can be used when the full list of options is known ahead of time.
+
+Dynamic collections, as shown below, can be used when the options come from an external data source such as an API call, or update over time. Providing the data in this way allows the tag group to cache the rendering of each item, which improves performance.
+
+```jsx {% live=true %}
+let items = [
+  { id: 1, name: 'Bilby' },
+  { id: 2, name: 'Kangaroo' },
+  { id: 3, name: 'Quokka' },
+  { id: 4, name: 'Echidna' },
+];
+
+return (
+  <TagGroup items={items} aria-label="animals">
+    {item => <Item>{item.name}</Item>}
+  </TagGroup>
+);
+```
+
+### Slots
+
+[Icons](/package/icon) and [avatars](/package/avatar) can be added as `children` of an item, to better communicate a tag's value among the group.
+
+```jsx {% live=true %}
+<TagGroup label="Meal options">
+  <Item textValue="Healthy">
+    <Icon src={saladIcon} />
+    <Text>Healthy</Text>
+  </Item>
+  <Item textValue="Fast food">
+    <Icon src={pizzaIcon} />
+    <Text>Fast food</Text>
+  </Item>
+  <Item textValue="Dessert">
+    <Icon src={dessertIcon} />
+    <Text>Dessert</Text>
+  </Item>
+</TagGroup>
+```
+
+Extra visual details increase the cognitive load on users. Include additional elements only when it improves clarity and will contribute positively to the understanding of an interface.
+
+### Links
+
+Tags may be links to another page or website. This can be achieved by passing the `href` prop to each item.
+
+```jsx {% live=true %}
+<TagGroup label="Links">
+  <Item href="https://thinkmill.com">Thinkmill</Item>
+  <Item href="https://keystatic.com">Keystatic</Item>
+  <Item href="https://keystonejs.com/">Keystone</Item>
+</TagGroup>
+```
+
+
+## Events
+
+### onRemove
+
+Enable removable tags by providing the `onRemove` prop to a tag group, which will receive the set of keys to remove.
+
+```jsx {% live=true %}
+let [items, setItems] = React.useState(() => [
+  { id: 1, name: 'Bilby' },
+  { id: 2, name: 'Kangaroo' },
+  { id: 3, name: 'Quokka' },
+  { id: 4, name: 'Echidna' },
+]);
+
+const onRemove = keys => {
+  setItems(items.filter(item => !keys.has(item.id)))
+};
+
+return (
+  <TagGroup
+    items={items}
+    onRemove={onRemove}
+    aria-label="removable tags example"
+  >
+    {item => <Item>{item.name}</Item>}
+  </TagGroup>
+);
+```
+
+### onAction
+
+The tag group supports an `onAction` handler that, when used with the `actionLabel` prop, will add an action button at the end of the tags that can be used to perform a custom action.
+
+```jsx {% live=true %}
+<TagGroup
+  actionLabel="Clear"
+  onAction={() => alert('Clear action triggered')}
+  aria-label="action example"
+>
+  <Item>Bilby</Item>
+  <Item>Kangaroo</Item>
+  <Item>Quokka</Item>
+  <Item>Echidna</Item>
+</TagGroup>
+```
+
+## Props
+
+### Label
+
+Each `TagGroup` should be labelled using the `label` prop. If a visible label isn’t appropriate, use the `aria-label` prop to identify the control for accessibility.
+
+```jsx {% live=true %}
+<TagGroup label="Animals">
+  <Item>Bilby</Item>
+  <Item>Kangaroo</Item>
+  <Item>Quokka</Item>
+  <Item>Echidna</Item>
+</TagGroup>
+```
+
+### Max rows
+
+Limit the number of rows initially shown by providing a `maxRows` prop. This will append an action button that can be pressed to show the remaining tags.
+
+```jsx {% live=true %}
+let items = [
+  { id: 1, name: 'Bilby' },
+  { id: 2, name: 'Kangaroo' },
+  { id: 3, name: 'Quokka' },
+  { id: 4, name: 'Echidna' },
+  { id: 5, name: 'Dingo' },
+  { id: 6, name: 'Cassowary' },
+  { id: 7, name: 'Koala' },
+  { id: 8, name: 'Wombat' },
+  { id: 9, name: 'Platypus' },
+  { id: 10, name: 'Tasmanian Devil' },
+];
+
+return (
+  <Box width="scale.3000">
+    <TagGroup maxRows={2} items={items} aria-label="max rows example">
+      {item => <Item>{item.name}</Item>}
+    </TagGroup>
+  </Box>
+);
+```
+
+### Empty state
+
+Use the `renderEmptyState` prop to customise what the tag group will display if there are no tags provided.
+
+```jsx {% live=true %}
+<TagGroup
+  label="Tags"
+  aria-label="empty state example"
+  renderEmptyState={() => (
+    <Text>
+      No tags. <TextLink href="#empty-state">Click here</TextLink> to add some.
+    </Text>
+  )}
+>
+  {[]}
+</TagGroup>
+```

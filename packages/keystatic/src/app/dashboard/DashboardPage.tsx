@@ -8,7 +8,7 @@ import { Heading } from '@keystar/ui/typography';
 
 import { Config } from '../../config';
 
-import l10nMessages from '../l10n/index.json';
+import l10nMessages from '../l10n';
 import { useCloudInfo } from '../shell/data';
 import { PageBody, PageHeader, PageRoot } from '../shell/page';
 import { useViewer } from '../shell/viewer-data';

@@ -4,7 +4,7 @@ import { Dialog } from '@keystar/ui/dialog';
 import { Content } from '@keystar/ui/slots';
 import { Heading, Text } from '@keystar/ui/typography';
 import { useContext, useEffect, useState } from 'react';
-import l10nMessages from './l10n/index.json';
+import l10nMessages from './l10n';
 import { GitHubConfig } from '../config';
 import { getAuth } from './auth';
 import { useClient } from 'urql';

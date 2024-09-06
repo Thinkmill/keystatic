@@ -101,7 +101,7 @@ import {
 } from './context';
 import { DragPreview as KeystarDragPreview } from './DragPreview';
 import { InsertionIndicator } from './InsertionIndicator';
-import localizedMessages from './l10n.json';
+import localizedMessages from './l10n';
 import { Resizer, ResizeStateContext, useResizeStateContext } from './Resizer';
 import {
   SortIndicator,
