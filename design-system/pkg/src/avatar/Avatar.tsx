@@ -7,6 +7,7 @@ import {
   Ref,
 } from 'react';
 
+import { useSlotProps } from '@keystar/ui/slots';
 import {
   BaseStyleProps,
   classNames,
@@ -52,6 +53,7 @@ export const Avatar: ForwardRefExoticComponent<
   props: AvatarProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
+  props = useSlotProps(props, 'avatar');
   const { alt, size = 'regular', ...otherProps } = props;
   const styleProps = useStyleProps(otherProps);
 

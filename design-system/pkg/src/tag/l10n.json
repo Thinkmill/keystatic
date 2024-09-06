@@ -1,0 +1,206 @@
+{
+  "ar-AE": {
+    "actions": "الإجراءات",
+    "hideButtonLabel": "إظهار أقل",
+    "noTags": "بدون",
+    "showAllButtonLabel": "عرض الكل ({tagCount, number})"
+  },
+  "bg-BG": {
+    "actions": "Действия",
+    "hideButtonLabel": "Показване на по-малко",
+    "noTags": "Нито един",
+    "showAllButtonLabel": "Показване на всички ({tagCount, number})"
+  },
+  "cs-CZ": {
+    "actions": "Akce",
+    "hideButtonLabel": "Zobrazit méně",
+    "noTags": "Žádný",
+    "showAllButtonLabel": "Zobrazit vše ({tagCount, number})"
+  },
+  "da-DK": {
+    "actions": "Handlinger",
+    "hideButtonLabel": "Vis mindre",
+    "noTags": "Ingen",
+    "showAllButtonLabel": "Vis alle ({tagCount, number})"
+  },
+  "de-DE": {
+    "actions": "Aktionen",
+    "hideButtonLabel": "Weniger zeigen",
+    "noTags": "Keine",
+    "showAllButtonLabel": "Alle anzeigen ({tagCount, number})"
+  },
+  "el-GR": {
+    "actions": "Ενέργειες",
+    "hideButtonLabel": "Εμφάνιση λιγότερων",
+    "noTags": "Κανένα",
+    "showAllButtonLabel": "Εμφάνιση όλων ({tagCount, number})"
+  },
+  "en-US": {
+    "showAllButtonLabel": "Show all ({tagCount, number})",
+    "hideButtonLabel": "Show less",
+    "actions": "Actions",
+    "noTags": "None"
+  },
+  "es-ES": {
+    "actions": "Acciones",
+    "hideButtonLabel": "Mostrar menos",
+    "noTags": "Ninguno",
+    "showAllButtonLabel": "Mostrar todo ({tagCount, number})"
+  },
+  "et-EE": {
+    "actions": "Toimingud",
+    "hideButtonLabel": "Kuva vähem",
+    "noTags": "Puudub",
+    "showAllButtonLabel": "Kuva kõik ({tagCount, number})"
+  },
+  "fi-FI": {
+    "actions": "Toiminnot",
+    "hideButtonLabel": "Näytä vähemmän",
+    "noTags": "Ei mitään",
+    "showAllButtonLabel": "Näytä kaikki ({tagCount, number})"
+  },
+  "fr-FR": {
+    "actions": "Actions",
+    "hideButtonLabel": "Afficher moins",
+    "noTags": "Aucun",
+    "showAllButtonLabel": "Tout afficher ({tagCount, number})"
+  },
+  "he-IL": {
+    "actions": "פעולות",
+    "hideButtonLabel": "הצג פחות",
+    "noTags": "ללא",
+    "showAllButtonLabel": "הצג הכל ({tagCount, number})"
+  },
+  "hr-HR": {
+    "actions": "Radnje",
+    "hideButtonLabel": "Prikaži manje",
+    "noTags": "Nema",
+    "showAllButtonLabel": "Prikaži sve ({tagCount, number})"
+  },
+  "hu-HU": {
+    "actions": "Műveletek",
+    "hideButtonLabel": "Mutass kevesebbet",
+    "noTags": "Egyik sem",
+    "showAllButtonLabel": "Az összes megjelenítése ({tagCount, number})"
+  },
+  "it-IT": {
+    "actions": "Azioni",
+    "hideButtonLabel": "Mostra meno",
+    "noTags": "Nessuno",
+    "showAllButtonLabel": "Mostra tutto ({tagCount, number})"
+  },
+  "ja-JP": {
+    "actions": "アクション",
+    "hideButtonLabel": "表示を減らす",
+    "noTags": "なし",
+    "showAllButtonLabel": "すべての ({tagCount, number}) を表示"
+  },
+  "ko-KR": {
+    "actions": "액션",
+    "hideButtonLabel": "간단히 표시",
+    "noTags": "없음",
+    "showAllButtonLabel": "모두 표시 ({tagCount, number})"
+  },
+  "lt-LT": {
+    "actions": "Veiksmai",
+    "hideButtonLabel": "Rodyti mažiau",
+    "noTags": "Nėra",
+    "showAllButtonLabel": "Rodyti viską ({tagCount, number})"
+  },
+  "lv-LV": {
+    "actions": "Darbības",
+    "hideButtonLabel": "Rādīt mazāk",
+    "noTags": "Nav",
+    "showAllButtonLabel": "Rādīt visu ({tagCount, number})"
+  },
+  "nb-NO": {
+    "actions": "Handlinger",
+    "hideButtonLabel": "Vis mindre",
+    "noTags": "Ingen",
+    "showAllButtonLabel": "Vis alle ({tagCount, number})"
+  },
+  "nl-NL": {
+    "actions": "Acties",
+    "hideButtonLabel": "Minder weergeven",
+    "noTags": "Geen",
+    "showAllButtonLabel": "Alles tonen ({tagCount, number})"
+  },
+  "pl-PL": {
+    "actions": "Działania",
+    "hideButtonLabel": "Wyświetl mniej",
+    "noTags": "Brak",
+    "showAllButtonLabel": "Pokaż wszystko ({tagCount, number})"
+  },
+  "pt-BR": {
+    "actions": "Ações",
+    "hideButtonLabel": "Mostrar menos",
+    "noTags": "Nenhum",
+    "showAllButtonLabel": "Mostrar tudo ({tagCount, number})"
+  },
+  "pt-PT": {
+    "actions": "Ações",
+    "hideButtonLabel": "Mostrar menos",
+    "noTags": "Nenhum",
+    "showAllButtonLabel": "Mostrar tudo ({tagCount, number})"
+  },
+  "ro-RO": {
+    "actions": "Acțiuni",
+    "hideButtonLabel": "Se afișează mai puțin",
+    "noTags": "Niciuna",
+    "showAllButtonLabel": "Se afișează tot ({tagCount, number})"
+  },
+  "ru-RU": {
+    "actions": "Действия",
+    "hideButtonLabel": "Показать меньше",
+    "noTags": "Нет",
+    "showAllButtonLabel": "Показать все ({tagCount, number})"
+  },
+  "sk-SK": {
+    "actions": "Akcie",
+    "hideButtonLabel": "Zobraziť menej",
+    "noTags": "Žiadne",
+    "showAllButtonLabel": "Zobraziť všetko ({tagCount, number})"
+  },
+  "sl-SI": {
+    "actions": "Dejanja",
+    "hideButtonLabel": "Prikaži manj",
+    "noTags": "Nič",
+    "showAllButtonLabel": "Prikaž vse ({tagCount, number})"
+  },
+  "sr-SP": {
+    "actions": "Radnje",
+    "hideButtonLabel": "Prikaži manje",
+    "noTags": "Ne postoji",
+    "showAllButtonLabel": "Prikaži sve ({tagCount, number})"
+  },
+  "sv-SE": {
+    "actions": "Åtgärder",
+    "hideButtonLabel": "Visa mindre",
+    "noTags": "Ingen",
+    "showAllButtonLabel": "Visa alla ({tagCount, number})"
+  },
+  "tr-TR": {
+    "actions": "Eylemler",
+    "hideButtonLabel": "Daha az göster",
+    "noTags": "Hiçbiri",
+    "showAllButtonLabel": "Tümünü göster ({tagCount, number})"
+  },
+  "uk-UA": {
+    "actions": "Дії",
+    "hideButtonLabel": "Показувати менше",
+    "noTags": "Немає",
+    "showAllButtonLabel": "Показати всі ({tagCount, number})"
+  },
+  "zh-CN": {
+    "actions": "操作",
+    "hideButtonLabel": "显示更少",
+    "noTags": "无",
+    "showAllButtonLabel": "全部显示 ({tagCount, number})"
+  },
+  "zh-TW": {
+    "actions": "動作",
+    "hideButtonLabel": "顯示較少",
+    "noTags": "無",
+    "showAllButtonLabel": "顯示全部 ({tagCount, number})"
+  }
+}
