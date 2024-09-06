@@ -52,7 +52,7 @@ import {
 } from './branch-selection';
 import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { ForkRepoDialog } from './fork-repo';
-import l10nMessages from './l10n/index.json';
+import l10nMessages from './l10n';
 import { NotFoundBoundary, notFound } from './not-found';
 import { getDataFileExtension, getPathPrefix } from './path-utils';
 import { useRouter } from './router';

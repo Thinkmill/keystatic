@@ -107,6 +107,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      tsx:
+        specifier: ^4.8.2
+        version: 4.8.2
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -254,6 +257,9 @@ importers:
       '@internationalized/date':
         specifier: ^3.5.5
         version: 3.5.5
+      '@internationalized/string':
+        specifier: ^3.2.3
+        version: 3.2.3
       '@react-aria/actiongroup':
         specifier: ^3.7.8
         version: 3.7.8(react-dom@18.2.0)(react@18.2.0)
@@ -495,6 +501,9 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
     devDependencies:
+      '@internationalized/string-compiler':
+        specifier: ^3.2.4
+        version: 3.2.4
       '@jest/globals':
         specifier: ^29.7.0
         version: 29.7.0
@@ -1118,8 +1127,8 @@ importers:
         specifier: ^0.24.0
         version: 0.24.8(react-dom@18.2.0)(react@18.2.0)
       '@internationalized/string':
-        specifier: ^3.1.1
-        version: 3.1.1
+        specifier: ^3.2.3
+        version: 3.2.3
       '@keystar/ui':
         specifier: workspace:^
         version: link:../../design-system/pkg
@@ -1319,6 +1328,9 @@ importers:
         specifier: ^13.6.11
         version: 13.6.11
     devDependencies:
+      '@internationalized/string-compiler':
+        specifier: ^3.2.4
+        version: 3.2.4
       '@jest/expect':
         specifier: ^29.7.0
         version: 29.7.0
@@ -6771,7 +6783,6 @@ packages:
     dependencies:
       '@formatjs/intl-localematcher': 0.4.0
       tslib: 2.7.0
-    dev: false
 
   /@formatjs/fast-memoize@2.2.0:
     resolution: {integrity: sha512-hnk/nY8FyrL5YxwP9e4r9dqeM6cAbo8PeU9UjyXojZMNvVad2Z06FAVHyR3Ecw6fza+0GH7vdJgiKIVXTMbSBA==}
@@ -6785,20 +6796,17 @@ packages:
       '@formatjs/ecma402-abstract': 1.17.0
       '@formatjs/icu-skeleton-parser': 1.6.0
       tslib: 2.7.0
-    dev: false
 
   /@formatjs/icu-skeleton-parser@1.6.0:
     resolution: {integrity: sha512-eMmxNpoX/J1IPUjPGSZwo0Wh+7CEvdEMddP2Jxg1gQJXfGfht/FdW2D5XDFj3VMbOTUQlDIdZJY7uC6O6gjPoA==}
     dependencies:
       '@formatjs/ecma402-abstract': 1.17.0
       tslib: 2.7.0
-    dev: false
 
   /@formatjs/intl-localematcher@0.4.0:
     resolution: {integrity: sha512-bRTd+rKomvfdS4QDlVJ6TA/Jx1F2h/TBVO5LjvhQ7QPPHp19oPNMIum7W2CMEReq/zPxpmCeB31F9+5gl/qtvw==}
     dependencies:
       tslib: 2.7.0
-    dev: false
 
   /@graphql-typed-document-node/core@3.2.0(graphql@16.8.0):
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
@@ -6864,11 +6872,11 @@ packages:
       '@swc/helpers': 0.5.12
     dev: false
 
-  /@internationalized/string@3.1.1:
-    resolution: {integrity: sha512-fvSr6YRoVPgONiVIUhgCmIAlifMVCeej/snPZVzbzRPxGpHl3o1GRe+d/qh92D8KhgOciruDUH8I5mjdfdjzfA==}
+  /@internationalized/string-compiler@3.2.4:
+    resolution: {integrity: sha512-aeJdo07J4yx86ytYxGhlf4JLvRkdcMWpkjoWx1fjykxRDgDOWDBYzFIuH1KkZc350N0B7xufO7guBWhto6YpnQ==}
     dependencies:
-      '@swc/helpers': 0.5.1
-    dev: false
+      '@formatjs/icu-messageformat-parser': 2.6.0
+    dev: true
 
   /@internationalized/string@3.2.3:
     resolution: {integrity: sha512-9kpfLoA8HegiWTeCbR2livhdVeKobCnVv8tlJ6M2jF+4tcMqDo94ezwlnrUANBWPgd8U7OXIHCk2Ov2qhk4KXw==}
@@ -7631,11 +7639,11 @@ packages:
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
     dependencies:
       cross-spawn: 7.0.3
-      fast-glob: 3.3.1
+      fast-glob: 3.3.2
       is-glob: 4.0.3
       open: 9.1.0
       picocolors: 1.0.0
-      tslib: 2.6.2
+      tslib: 2.7.0
 
   /@pmmmwh/react-refresh-webpack-plugin@0.5.11(react-refresh@0.11.0)(webpack@5.88.2):
     resolution: {integrity: sha512-7j/6vdTym0+qZ6u4XbSAxrWBGYSdCfTzySkj7WAFgDLmSyWlOrWvpyzxlFh5jtw9dn0oL/jtW+06XfFiisN3JQ==}
@@ -11137,7 +11145,7 @@ packages:
       flat-cache: 3.1.0
       micromatch: 4.0.5
       react-docgen-typescript: 2.2.2(typescript@5.5.3)
-      tslib: 2.6.2
+      tslib: 2.7.0
       typescript: 5.5.3
       webpack: 5.88.2(@swc/core@1.3.82)(esbuild@0.14.54)
     transitivePeerDependencies:
@@ -11527,12 +11535,6 @@ packages:
       '@swc/core-win32-arm64-msvc': 1.3.82
       '@swc/core-win32-ia32-msvc': 1.3.82
       '@swc/core-win32-x64-msvc': 1.3.82
-
-  /@swc/helpers@0.5.1:
-    resolution: {integrity: sha512-sJ902EfIzn1Fa+qYmjdQqh8tPsoxyBz+8yBKC2HKUxyezKJFwPGOn7pv4WY6QuQW//ySQi5lJjA/ZT9sNWWNTg==}
-    dependencies:
-      tslib: 2.6.2
-    dev: false
 
   /@swc/helpers@0.5.12:
     resolution: {integrity: sha512-KMZNXiGibsW9kvZAO1Pam2JPTDBm+KSHMMHWdsyI/1DbIZjT2A6Gy3hblVXUMEDvUAKq+e0vL0X0o54owWji7g==}
@@ -17443,6 +17445,7 @@ packages:
       glob-parent: 5.1.2
       merge2: 1.4.1
       micromatch: 4.0.5
+    dev: true
 
   /fast-glob@3.3.2:
     resolution: {integrity: sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==}
@@ -17667,7 +17670,7 @@ packages:
     resolution: {integrity: sha512-KSuV3ur4gf2KqMNoZx3nXNVhqCkn42GuTYCX4tXPEwf0MjpFQmNMiN6m7dXaUXgIoivL6/65agoUMg4RLS0Vbg==}
     engines: {node: '>=10'}
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.7.0
     dev: false
 
   /follow-redirects@1.15.2:
@@ -18115,7 +18118,7 @@ packages:
     dependencies:
       array-union: 2.1.0
       dir-glob: 3.0.1
-      fast-glob: 3.3.1
+      fast-glob: 3.3.2
       ignore: 5.2.4
       merge2: 1.4.1
       slash: 3.0.0
@@ -18125,7 +18128,7 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       dir-glob: 3.0.1
-      fast-glob: 3.3.1
+      fast-glob: 3.3.2
       ignore: 5.2.4
       merge2: 1.4.1
       slash: 4.0.0
@@ -18170,7 +18173,7 @@ packages:
       graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       graphql: 16.8.0
-      tslib: 2.6.2
+      tslib: 2.7.0
     dev: false
 
   /graphql@16.8.0:
@@ -22737,7 +22740,7 @@ packages:
       css-loader: 6.8.1(webpack@5.88.2)
       current-git-branch: 1.1.0
       dedent: 0.7.0
-      fast-glob: 3.3.1
+      fast-glob: 3.3.2
       find-up: 5.0.0
       fuzzy: 0.1.3
       history: 5.3.0
@@ -23728,7 +23731,7 @@ packages:
       react: 18.2.0
       react-remove-scroll-bar: 2.3.4(@types/react@18.2.21)(react@18.2.0)
       react-style-singleton: 2.2.1(@types/react@18.2.21)(react@18.2.0)
-      tslib: 2.6.2
+      tslib: 2.7.0
       use-callback-ref: 1.3.0(@types/react@18.2.21)(react@18.2.0)
       use-sidecar: 1.1.2(@types/react@18.2.21)(react@18.2.0)
     dev: true
@@ -26520,7 +26523,7 @@ packages:
     dependencies:
       '@types/react': 18.2.21
       react: 18.2.0
-      tslib: 2.6.2
+      tslib: 2.7.0
 
   /use-debounce@9.0.4(react@18.2.0):
     resolution: {integrity: sha512-6X8H/mikbrt0XE8e+JXRtZ8yYVvKkdYRfmIhWZYsP8rcNs9hk3APV8Ua2mFkKRLcJKVdnX2/Vwrmg2GWKUQEaQ==}
@@ -26555,7 +26558,7 @@ packages:
       '@types/react': 18.2.21
       detect-node-es: 1.1.0
       react: 18.2.0
-      tslib: 2.6.2
+      tslib: 2.7.0
 
   /use-sync-external-store@1.2.2(react@18.2.0):
     resolution: {integrity: sha512-PElTlVMwpblvbNqQ82d2n6RjStvdSoNe9FG28kNfz3WiXilJm4DdNkEzRhCZuIDwY8U08WVihhGR5iRqAwfDiw==}

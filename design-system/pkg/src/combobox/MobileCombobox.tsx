@@ -45,7 +45,7 @@ import {
 import { TextFieldPrimitive } from '@keystar/ui/text-field';
 import { Text } from '@keystar/ui/typography';
 
-import localizedMessages from './l10n.json';
+import localizedMessages from './l10n';
 import { ComboboxProps } from './types';
 import { comboboxClassList } from './class-list';
 

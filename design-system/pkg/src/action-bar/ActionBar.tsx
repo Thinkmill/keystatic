@@ -27,7 +27,7 @@ import {
 import { Text } from '@keystar/ui/typography';
 import { useProviderProps } from '@keystar/ui/core';
 
-import localizedMessages from './l10n.json';
+import localizedMessages from './l10n';
 import { ActionBarProps } from './types';
 import { actionbarClassList } from './class-list';
 

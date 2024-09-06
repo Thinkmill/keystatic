@@ -2,7 +2,7 @@ import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { filterDOMProps } from '@react-aria/utils';
 import { ForwardedRef, forwardRef, ReactElement, Ref } from 'react';
 
-import localizedMessages from './l10n.json';
+import localizedMessages from './l10n';
 import { Menu } from './Menu';
 import { MenuTrigger } from './MenuTrigger';
 import { ActionMenuProps } from './types';

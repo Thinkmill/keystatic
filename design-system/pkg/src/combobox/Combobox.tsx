@@ -42,7 +42,7 @@ import {
 import { Text } from '@keystar/ui/typography';
 
 import { comboboxClassList } from './class-list';
-import localizedMessages from './l10n.json';
+import localizedMessages from './l10n';
 import { MobileCombobox } from './MobileCombobox';
 import { ComboboxProps } from './types';
 

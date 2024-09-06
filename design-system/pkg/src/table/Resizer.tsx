@@ -18,7 +18,7 @@ import React, {
 import ReactDOM from 'react-dom';
 
 import { useTableContext, useVirtualizerContext } from './context';
-import localizedMessages from './l10n.json';
+import localizedMessages from './l10n';
 import {
   columnResizerClassname,
   columnResizerPlaceholderClassname,

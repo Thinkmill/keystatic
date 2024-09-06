@@ -40,7 +40,7 @@ import { Heading, Text } from '@keystar/ui/typography';
 
 import { Config } from '../config';
 import { sortBy } from './collection-sort';
-import l10nMessages from './l10n/index.json';
+import l10nMessages from './l10n';
 import { useRouter } from './router';
 import { EmptyState } from './shell/empty-state';
 import {

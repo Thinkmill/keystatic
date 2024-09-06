@@ -12,7 +12,7 @@ import { FormValueContentFromPreviewProps } from '../../../form-from-preview';
 import { ButtonGroup, Button, ActionButton } from '@keystar/ui/button';
 import { Heading } from '@keystar/ui/typography';
 import { useState, useMemo } from 'react';
-import l10nMessages from '../../../../app/l10n/index.json';
+import l10nMessages from '../../../../app/l10n';
 import { focusWithPreviousSelection } from './ui-utils';
 import { ReactEditor, useSlateStatic } from 'slate-react';
 import { Element, Transforms } from 'slate';

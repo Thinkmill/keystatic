@@ -27,7 +27,7 @@ import { WithRenderProps } from '@keystar/ui/types';
 import { useRenderProps } from '@keystar/ui/utils';
 import { forwardRefWithAs } from '@keystar/ui/utils/ts';
 
-import localizedMessages from './l10n.json';
+import localizedMessages from './l10n';
 import { SlotProvider } from '../slots';
 
 export type DropZoneProps = Omit<

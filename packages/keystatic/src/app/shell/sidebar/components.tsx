@@ -35,7 +35,7 @@ import { Text } from '@keystar/ui/typography';
 
 import { CreateBranchDialog } from '../../branch-selection';
 import { useRouter } from '../../router';
-import l10nMessages from '../../l10n/index.json';
+import l10nMessages from '../../l10n';
 import {
   KEYSTATIC_CLOUD_API_URL,
   KEYSTATIC_CLOUD_HEADERS,
