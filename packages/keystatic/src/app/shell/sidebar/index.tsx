@@ -29,7 +29,7 @@ import {
 import { Text } from '@keystar/ui/typography';
 import { usePrevious } from '@keystar/ui/utils';
 
-import l10nMessages from '../../l10n/index.json';
+import l10nMessages from '../../l10n';
 import { useRouter } from '../../router';
 import { ItemOrGroup, useNavItems } from '../../useNavItems';
 import { isLocalConfig } from '../../utils';

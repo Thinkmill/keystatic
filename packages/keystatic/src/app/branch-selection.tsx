@@ -16,7 +16,7 @@ import { css, tokenSchema } from '@keystar/ui/style';
 import { TextField } from '@keystar/ui/text-field';
 import { Heading, Text } from '@keystar/ui/typography';
 
-import l10nMessages from './l10n/index.json';
+import l10nMessages from './l10n';
 import { useRouter } from './router';
 import {
   Ref_base,

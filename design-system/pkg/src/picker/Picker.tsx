@@ -30,7 +30,7 @@ import {
 import { Text } from '@keystar/ui/typography';
 import { isReactText } from '@keystar/ui/utils';
 
-import localizedMessages from './l10n.json';
+import localizedMessages from './l10n';
 import { PickerProps } from './types';
 
 function Picker<T extends object>(

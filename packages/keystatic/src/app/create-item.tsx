@@ -19,7 +19,7 @@ import { clientSideValidateProp } from '../form/errors';
 import { useEventCallback } from '../form/fields/document/DocumentEditor/ui-utils';
 
 import { CreateBranchDuringUpdateDialog } from './ItemPage';
-import l10nMessages from './l10n/index.json';
+import l10nMessages from './l10n';
 import { useBaseCommit, useCurrentBranch } from './shell/data';
 import { PageRoot, PageHeader, PageBody } from './shell/page';
 import { ForkRepoDialog } from './fork-repo';

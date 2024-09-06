@@ -7,7 +7,7 @@ import { Content } from '@keystar/ui/slots';
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { clientSideValidateProp } from '../../../errors';
 import { createGetPreviewProps } from '../../../preview-props';
-import l10nMessages from '../../../../app/l10n/index.json';
+import l10nMessages from '../../../../app/l10n';
 import { ComponentSchema } from '../../../api';
 
 export function FormValue(props: {

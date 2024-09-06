@@ -23,7 +23,7 @@ import { css, tokenSchema } from '@keystar/ui/style';
 import { Tooltip, TooltipTrigger } from '@keystar/ui/tooltip';
 import { Heading, Text } from '@keystar/ui/typography';
 
-import l10nMessages from '../../../../../app/l10n/index.json';
+import l10nMessages from '../../../../../app/l10n';
 import {
   PreviewPropsForToolbar,
   ObjectField,

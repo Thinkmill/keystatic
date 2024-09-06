@@ -33,7 +33,7 @@ import {
 
 import { listViewClassList } from './class-list';
 import { ListViewProvider, useListViewContext } from './context';
-import localizedMessages from './l10n.json';
+import localizedMessages from './l10n';
 import { DragPreview as DragPreviewElement } from './DragPreview';
 import { InsertionIndicator } from './InsertionIndicator';
 import { ListViewItem } from './ListViewItem';

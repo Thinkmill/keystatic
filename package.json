@@ -27,7 +27,7 @@
     "eslint": "eslint .",
     "format": "prettier --write",
     "fresh": "npm run clean && pnpm install",
-    "postinstall": "preconstruct dev && manypkg check && cd packages/keystatic && pnpm run setup",
+    "postinstall": "preconstruct dev && manypkg check && tsx design-system/pkg/build-l10n.mts && cd packages/keystatic && pnpm run setup",
     "lint": "eslint --fix",
     "prettier": "prettier **/*.{ts,tsx}",
     "release": "pnpm build:packages && changeset publish",
@@ -75,6 +75,7 @@
     "prettier-plugin-packagejson": "^2.2.18",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "tsx": "^4.8.2",
     "typescript": "^5.5.3"
   },
   "manypkg": {

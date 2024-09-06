@@ -2,7 +2,7 @@ import { useLocalizedStringFormatter } from '@react-aria/i18n';
 
 import { Config, NAVIGATION_DIVIDER_KEY } from '../config';
 
-import l10nMessages from './l10n/index.json';
+import l10nMessages from './l10n';
 import { useAppState, useConfig } from './shell/context';
 import { useChanged } from './shell/data';
 

@@ -16,7 +16,7 @@ import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { Heading, Text } from '@keystar/ui/typography';
 import { useState } from 'react';
 import { isValidURL } from '../../../document/DocumentEditor/isValidURL';
-import localizedMessages from '../../../../../app/l10n/index.json';
+import localizedMessages from '../../../../../app/l10n';
 
 export function LinkToolbar(props: {
   text: string;

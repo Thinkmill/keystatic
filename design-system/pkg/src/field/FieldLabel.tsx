@@ -5,7 +5,7 @@ import { css, tokenSchema } from '@keystar/ui/style';
 import { useTextStyles } from '@keystar/ui/typography';
 import { forwardRefWithAs } from '@keystar/ui/utils/ts';
 
-import localizedMessages from './l10n.json';
+import localizedMessages from './l10n';
 
 export type A11yLabelProps = {
   /**
