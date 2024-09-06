@@ -39,8 +39,7 @@ const localesDir = path.join(__dirname, '../src/app/l10n');
       }
     )
   );
-  let out =
-    "const strings: Record<string, Record<string, import('@internationalized/string').LocalizedString>> = {\n";
+  let out = 'const strings = {\n';
   for (const [lang, translations] of Object.entries(locales)) {
     out += `  ${JSON.stringify(lang)}: {\n`;
     for (const [key, value] of Object.entries(translations)) {
