@@ -208,12 +208,18 @@ function TagGroup<T extends object>(
   }, [maxRows, setTagState, direction, state.collection.size]);
 
   useResizeObserver({ ref: containerRef, onResize: updateVisibleTagCount });
+
+  // we only want this effect to run when children change
+  // eslint-disable-next-line react-compiler/react-compiler
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useLayoutEffect(updateVisibleTagCount, [children]);
 
   useEffect(() => {
     // Recalculate visible tags when fonts are loaded.
     document.fonts?.ready.then(() => updateVisibleTagCount());
+
+    // we strictly want this effect to only run once
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
