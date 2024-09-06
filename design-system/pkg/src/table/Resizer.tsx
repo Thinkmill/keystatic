@@ -60,10 +60,7 @@ function Resizer<T>(
   // in order to get around that and cause a rerender here, we use context
   // but we don't actually need any value, they are available on the layout object
   useVirtualizerContext();
-  let stringFormatter = useLocalizedStringFormatter(
-    localizedMessages,
-    '@react-spectrum/table'
-  );
+  let stringFormatter = useLocalizedStringFormatter(localizedMessages);
   let { direction } = useLocale();
 
   let [isPointerDown, setIsPointerDown] = useState(false);

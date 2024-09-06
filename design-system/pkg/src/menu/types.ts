@@ -46,12 +46,10 @@ export type MenuTriggerProps = {
 } & _MenuTriggerProps;
 
 export type ActionMenuProps<T> = {
-  /** Whether the button is disabled. */
-  isDisabled?: boolean;
-  /** Whether the button should be displayed with a [quiet style](https://spectrum.adobe.com/page/action-button/#Quiet). */
-  isQuiet?: boolean;
   /** Whether the element should receive focus on render. */
   autoFocus?: boolean;
+  /** Whether the button is disabled. */
+  isDisabled?: boolean;
   /** Handler that is called when an item is selected. */
   onAction?: (key: Key) => void;
 } & CollectionBase<T> &
