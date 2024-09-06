@@ -1,5 +1,35 @@
 # @keystar/ui
 
+## 0.7.10
+
+### Patch Changes
+
+- [#1295](https://github.com/Thinkmill/keystatic/pull/1295) [`650633c`](https://github.com/Thinkmill/keystatic/commit/650633c291f64ddbafbd45ebc81967c9fc787199) Thanks [@jossmac](https://github.com/jossmac)! - New package "@keystar/ui/tag" exports `TagGroup` component.
+
+- [#1275](https://github.com/Thinkmill/keystatic/pull/1275) [`fac7ba4`](https://github.com/Thinkmill/keystatic/commit/fac7ba4605cf81fdac44694b1cd7dcc730b4c1a9) Thanks [@jossmac](https://github.com/jossmac)! - Misc. fixes and updates.
+
+  Fixes:
+
+  - Allow "focus" method on `Picker` ref
+  - Defensive "current" selector on `NavItem` styles
+  - Fix text truncation on `Picker` selected text
+  - Clear slots of `Content` children—resolves issue with `Calendar` elements within `Dialog` receiving incorrect props
+  - Fix issue with `Tray` when "size" provided to `Dialog` component
+
+  Updates:
+
+  - Support "isPending" prop on `Button`
+  - Support "low" prominence `Checkbox`
+  - Emphasise "selected" state on `ActionButton`
+  - More prominent `ActionBar`
+  - Increase `TextArea` min-height to 3 lines
+
+- [#1296](https://github.com/Thinkmill/keystatic/pull/1296) [`385faf9`](https://github.com/Thinkmill/keystatic/commit/385faf9006e9d089ef317a9cdb421e4c13bc354b) Thanks [@jossmac](https://github.com/jossmac)! - Fix tag docs typo.
+
+- [#1294](https://github.com/Thinkmill/keystatic/pull/1294) [`58a49e4`](https://github.com/Thinkmill/keystatic/commit/58a49e40e1362b6700097cf427b7951c07161245) Thanks [@emmatown](https://github.com/emmatown)! - Updates to localisation build tooling
+
+- [#1289](https://github.com/Thinkmill/keystatic/pull/1289) [`1b48613`](https://github.com/Thinkmill/keystatic/commit/1b4861332cd14d0b9296dee95ca2973790c52194) Thanks [@jossmac](https://github.com/jossmac)! - Update react-aria and friends. Fix tests/types etc. from update.
+
 ## 0.7.9
 
 ### Patch Changes
