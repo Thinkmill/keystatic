@@ -44,6 +44,7 @@ export function useEditorListbox<T extends object>(
   let { listenerRef, onEscape, scrollRef, ...otherProps } = props;
   let state = useListState(props);
   let layout = useListBoxLayout();
+  let listboxRef = useRef<HTMLDivElement>(null);
   let delegate = useMemo(
     () =>
       new ListKeyboardDelegate({
@@ -55,7 +56,6 @@ export function useEditorListbox<T extends object>(
   );
 
   // keyboard and selection management
-  let listboxRef = useRef<HTMLDivElement>(null);
   let { collectionProps } = useSelectableCollection({
     keyboardDelegate: delegate,
     ref: listenerRef,
