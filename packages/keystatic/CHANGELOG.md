@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.5.34
+
+### Patch Changes
+
+- [#1300](https://github.com/Thinkmill/keystatic/pull/1300) [`4fc1e6b`](https://github.com/Thinkmill/keystatic/commit/4fc1e6b324ec6afee5ca0266fedb9eaf9ae8846f) Thanks [@emmatown](https://github.com/emmatown)! - Fix `/` menu in `fields.markdoc`/`fields.mdx`
+
 ## 0.5.33
 
 ### Patch Changes
