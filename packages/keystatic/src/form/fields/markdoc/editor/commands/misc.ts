@@ -1,6 +1,7 @@
 import { setBlockType } from 'prosemirror-commands';
 import { NodeType } from 'prosemirror-model';
 import { Command, NodeSelection } from 'prosemirror-state';
+import { getEditorSchema } from '../schema';
 
 export function insertNode(nodeType: NodeType): Command {
   return (state, dispatch) => {
@@ -47,12 +48,15 @@ export function toggleCodeBlock(
 export function insertTable(tableType: NodeType): Command {
   const rowType = tableType.contentMatch.defaultType!;
   const cellType = rowType.contentMatch.defaultType!;
+  const headerType = getEditorSchema(tableType.schema).nodes.table_header!;
   return (state, dispatch) => {
+    const header = headerType.createAndFill()!;
     const cell = cellType.createAndFill()!;
+    const headerRow = rowType.create(undefined, [header, header, header]);
     const row = rowType.create(undefined, [cell, cell, cell]);
     dispatch?.(
       state.tr.replaceSelectionWith(
-        tableType.create(undefined, [row, row, row])
+        tableType.create(undefined, [headerRow, row, row])
       )
     );
 
