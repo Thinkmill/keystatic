@@ -529,6 +529,7 @@ export type EditorSchema = {
   config: EditorConfig;
   components: Record<string, ContentComponent>;
   insertMenuItems: InsertMenuItem[];
+  format: 'mdx' | 'markdoc';
 };
 
 export function createEditorSchema(
@@ -657,6 +658,7 @@ export function createEditorSchema(
     config,
     components,
     insertMenuItems: [],
+    format: isMDX ? 'mdx' : 'markdoc',
   };
   schemaToEditorSchema.set(schema, editorSchema);
 

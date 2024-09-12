@@ -157,22 +157,26 @@ const popoverComponents: Record<
 
     return (
       <Flex gap="regular" padding="regular">
-        <TooltipTrigger>
-          <ActionButton
-            prominence="low"
-            isSelected={
-              props.node.firstChild?.firstChild?.type ===
-              schema.nodes.table_header
-            }
-            onPress={() => {
-              dispatchCommand(toggleHeader('row'));
-            }}
-          >
-            <Icon src={sheetIcon} />
-          </ActionButton>
-          <Tooltip>Header row</Tooltip>
-        </TooltipTrigger>
-        <Divider orientation="vertical" />
+        {schema.format === 'markdoc' && (
+          <>
+            <TooltipTrigger>
+              <ActionButton
+                prominence="low"
+                isSelected={
+                  props.node.firstChild?.firstChild?.type ===
+                  schema.nodes.table_header
+                }
+                onPress={() => {
+                  dispatchCommand(toggleHeader('row'));
+                }}
+              >
+                <Icon src={sheetIcon} />
+              </ActionButton>
+              <Tooltip>Header row</Tooltip>
+            </TooltipTrigger>
+            <Divider orientation="vertical" />
+          </>
+        )}
         <TooltipTrigger>
           <ActionButton
             prominence="low"
