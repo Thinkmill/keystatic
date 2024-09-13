@@ -196,7 +196,7 @@ export function TableView<T extends object>(
 
   let layout = useMemo(
     () =>
-      new TableViewLayout({
+      new TableViewLayout<T>({
         // If props.overflowMode is wrap, then use estimated heights based on scale, otherwise use fixed heights.
         rowHeight:
           props.overflowMode === 'wrap' ? undefined : ROW_HEIGHTS[density],
@@ -406,6 +406,9 @@ export function TableView<T extends object>(
       case 'empty': {
         return <EmptyState />;
       }
+      default: {
+        return null;
+      }
     }
   }, []);
 
@@ -529,11 +532,9 @@ export function TableView<T extends object>(
         className={classNames(tableClassname, styleProps.className)}
         tableState={state}
         cosmeticConfig={cosmeticConfig}
-        // @ts-expect-error
         layout={layout}
         collection={state.collection}
         persistedKeys={persistedKeys}
-        // @ts-expect-error
         renderView={renderView}
         // @ts-expect-error
         renderWrapper={renderWrapper}
@@ -582,7 +583,7 @@ interface TableVirtualizerProps<T> extends HTMLAttributes<HTMLElement> {
   layout: TableViewLayout<T>;
   collection: TableCollection<T>;
   persistedKeys: Set<Key> | null;
-  renderView: (type: string, content: GridNode<T>) => ReactElement;
+  renderView: (type: string, content: GridNode<T>) => ReactElement | null;
   renderWrapper?: (
     parent: View | null,
     reusableView: View,
@@ -1387,13 +1388,15 @@ function TableCell({ cell }: { cell: GridNode<unknown> }) {
         ref={ref}
         className={cellClassname}
       >
-        <CellContents id={id}>
-          {isReactText(cell.rendered) ? (
-            <Text>{cell.rendered}</Text>
-          ) : (
-            cell.rendered
-          )}
-        </CellContents>
+        {typeof cell.rendered === 'boolean' || cell.rendered == null ? null : (
+          <CellContents id={id}>
+            {isReactText(cell.rendered) ? (
+              <Text>{cell.rendered}</Text>
+            ) : (
+              cell.rendered
+            )}
+          </CellContents>
+        )}
       </div>
     </FocusRing>
   );
@@ -1407,18 +1410,6 @@ function CellContents(props: HTMLAttributes<HTMLElement>) {
       {cloneElement(element, mergeProps(element.props, attributes))}
     </SlotProvider>
   );
-}
-
-export function getWrappedElement(
-  children: string | ReactElement | ReactNode
-): ReactElement {
-  let element: ReactElement;
-  if (isReactText(children)) {
-    element = <span>{children}</span>;
-  } else {
-    element = Children.only(children) as ReactElement;
-  }
-  return element;
 }
 
 function TableCellWrapper(
