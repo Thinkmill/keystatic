@@ -1,5 +1,3 @@
-import Decimal from 'decimal.js-light';
-
 export function validateNumber(
   validation:
     | {
@@ -31,9 +29,25 @@ export function validateNumber(
     if (
       step !== undefined &&
       validation?.validateStep !== undefined &&
-      new Decimal(value).mod(new Decimal(step)).toNumber() !== 0
+      !isAtStep(value, step)
     ) {
       return `${label} must be a multiple of ${step}`;
     }
   }
+}
+
+function decimalPlaces(value: number) {
+  const stringified = value.toString();
+  const indexOfDecimal = stringified.indexOf('.');
+  if (indexOfDecimal === -1) {
+    const indexOfE = stringified.indexOf('e-');
+    return indexOfE === -1 ? 0 : parseInt(stringified.slice(indexOfE + 2));
+  }
+  return stringified.length - indexOfDecimal - 1;
+}
+
+export function isAtStep(value: number, step: number) {
+  const dc = Math.max(decimalPlaces(step), decimalPlaces(value));
+  const base = Math.pow(10, dc);
+  return (value * base) % (step * base) === 0;
 }
