@@ -1240,13 +1240,13 @@ importers:
       mdast-util-from-markdown:
         specifier: ^2.0.0
         version: 2.0.0
-      mdast-util-gfm:
-        specifier: ^3.0.0
-        version: 3.0.0
       mdast-util-gfm-autolink-literal:
         specifier: ^2.0.0
         version: 2.0.0
       mdast-util-gfm-strikethrough:
+        specifier: ^2.0.0
+        version: 2.0.0
+      mdast-util-gfm-table:
         specifier: ^2.0.0
         version: 2.0.0
       mdast-util-mdx:
@@ -1255,13 +1255,13 @@ importers:
       mdast-util-to-markdown:
         specifier: ^2.1.0
         version: 2.1.0
-      micromark-extension-gfm:
-        specifier: ^3.0.0
-        version: 3.0.0
       micromark-extension-gfm-autolink-literal:
         specifier: ^2.0.0
         version: 2.0.0
       micromark-extension-gfm-strikethrough:
+        specifier: ^2.0.0
+        version: 2.0.0
+      micromark-extension-gfm-table:
         specifier: ^2.0.0
         version: 2.0.0
       micromark-extension-mdxjs:

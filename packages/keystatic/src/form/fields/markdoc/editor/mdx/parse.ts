@@ -13,7 +13,9 @@ import { MdxJsxAttributeValueExpression, mdxToMarkdown } from 'mdast-util-mdx';
 import { assert } from 'emery';
 import { deserializeProps, toSerialized } from '../props-serialization';
 import { toMarkdown } from 'mdast-util-to-markdown';
-import { gfmToMarkdown } from 'mdast-util-gfm';
+import { gfmAutolinkLiteralToMarkdown } from 'mdast-util-gfm-autolink-literal';
+import { gfmStrikethroughToMarkdown } from 'mdast-util-gfm-strikethrough';
+import { gfmTableToMarkdown } from 'mdast-util-gfm-table';
 
 let state:
   | {
@@ -445,7 +447,12 @@ function markdocNodeToProseMirrorNode(
   if (node.type === 'definition') return [];
   error(
     `Unhandled type ${node.type}: ${toMarkdown(node, {
-      extensions: [gfmToMarkdown(), mdxToMarkdown()],
+      extensions: [
+        gfmAutolinkLiteralToMarkdown(),
+        gfmStrikethroughToMarkdown(),
+        gfmTableToMarkdown(),
+        mdxToMarkdown(),
+      ],
       rule: '-',
     })}`
   );

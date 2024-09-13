@@ -10,9 +10,19 @@ import { proseMirrorToMarkdoc } from './editor/markdoc/serialize';
 import { useEntryLayoutSplitPaneContext } from '../../../app/entry-form';
 import { fromMarkdown } from 'mdast-util-from-markdown';
 import { toMarkdown } from 'mdast-util-to-markdown';
-import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm';
+import {
+  gfmAutolinkLiteralFromMarkdown,
+  gfmAutolinkLiteralToMarkdown,
+} from 'mdast-util-gfm-autolink-literal';
+import {
+  gfmStrikethroughFromMarkdown,
+  gfmStrikethroughToMarkdown,
+} from 'mdast-util-gfm-strikethrough';
+import { gfmTableFromMarkdown, gfmTableToMarkdown } from 'mdast-util-gfm-table';
 import { mdxFromMarkdown, mdxToMarkdown } from 'mdast-util-mdx';
-import { gfm } from 'micromark-extension-gfm';
+import { gfmAutolinkLiteral } from 'micromark-extension-gfm-autolink-literal';
+import { gfmStrikethrough } from 'micromark-extension-gfm-strikethrough';
+import { gfmTable } from 'micromark-extension-gfm-table';
 import { mdxjs } from 'micromark-extension-mdxjs';
 import * as Y from 'yjs';
 import { mdxToProseMirror } from './editor/mdx/parse';
@@ -71,8 +81,13 @@ export function parseToEditorStateMDX(
   slug: string | undefined
 ) {
   const root = fromMarkdown(content, {
-    extensions: [mdxjs(), gfm()],
-    mdastExtensions: [mdxFromMarkdown(), gfmFromMarkdown()],
+    extensions: [mdxjs(), gfmAutolinkLiteral(), gfmStrikethrough(), gfmTable()],
+    mdastExtensions: [
+      mdxFromMarkdown(),
+      gfmAutolinkLiteralFromMarkdown(),
+      gfmStrikethroughFromMarkdown(),
+      gfmTableFromMarkdown(),
+    ],
   });
   const doc = mdxToProseMirror(root, schema, files, otherFiles, slug);
   return createEditorState(doc);
@@ -91,7 +106,12 @@ export function serializeFromEditorStateMDX(
     slug,
   });
   const mdx = toMarkdown(mdxNode, {
-    extensions: [gfmToMarkdown(), mdxToMarkdown()],
+    extensions: [
+      gfmAutolinkLiteralToMarkdown(),
+      gfmStrikethroughToMarkdown(),
+      gfmTableToMarkdown(),
+      mdxToMarkdown(),
+    ],
     rule: '-',
   });
   return {

@@ -4,7 +4,15 @@
 import { EditorStateDescription, jsx, toEditorState } from './utils';
 import { createEditorSchema, getEditorSchema } from '../schema';
 import { editorOptionsToConfig } from '../../config';
-import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm';
+import {
+  gfmAutolinkLiteralFromMarkdown,
+  gfmAutolinkLiteralToMarkdown,
+} from 'mdast-util-gfm-autolink-literal';
+import {
+  gfmStrikethroughFromMarkdown,
+  gfmStrikethroughToMarkdown,
+} from 'mdast-util-gfm-strikethrough';
+import { gfmTableFromMarkdown, gfmTableToMarkdown } from 'mdast-util-gfm-table';
 import { mdxFromMarkdown, mdxToMarkdown } from 'mdast-util-mdx';
 import { toMarkdown } from 'mdast-util-to-markdown';
 import { proseMirrorToMDXRoot } from '../mdx/serialize';
@@ -14,7 +22,9 @@ import { mdxToProseMirror } from '../mdx/parse';
 import { expect, test } from '@jest/globals';
 import { block, inline, mark } from '../../../../../content-components';
 import { fields } from '../../../../..';
-import { gfm } from 'micromark-extension-gfm';
+import { gfmAutolinkLiteral } from 'micromark-extension-gfm-autolink-literal';
+import { gfmStrikethrough } from 'micromark-extension-gfm-strikethrough';
+import { gfmTable } from 'micromark-extension-gfm-table';
 
 const schema = createEditorSchema(
   editorOptionsToConfig({}),
@@ -72,15 +82,25 @@ function toMDX(node: EditorStateDescription) {
     slug: undefined,
   });
   return toMarkdown(mdxNode, {
-    extensions: [gfmToMarkdown(), mdxToMarkdown()],
+    extensions: [
+      gfmAutolinkLiteralToMarkdown(),
+      gfmStrikethroughToMarkdown(),
+      gfmTableToMarkdown(),
+      mdxToMarkdown(),
+    ],
     rule: '-',
   });
 }
 
 function fromMDX(mdx: string) {
   const root = fromMarkdown(mdx, {
-    extensions: [mdxjs(), gfm()],
-    mdastExtensions: [mdxFromMarkdown(), gfmFromMarkdown()],
+    extensions: [mdxjs(), gfmAutolinkLiteral(), gfmStrikethrough(), gfmTable()],
+    mdastExtensions: [
+      mdxFromMarkdown(),
+      gfmAutolinkLiteralFromMarkdown(),
+      gfmStrikethroughFromMarkdown(),
+      gfmTableFromMarkdown(),
+    ],
   });
   const files = new Map<string, Uint8Array>([
     ['something something.png', new Uint8Array([])],
