@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.7.11
+
+### Patch Changes
+
+- [#1308](https://github.com/Thinkmill/keystatic/pull/1308) [`7e0065e`](https://github.com/Thinkmill/keystatic/commit/7e0065e042d44171d8a7386ec069c3d785b75521) Thanks [@emmatown](https://github.com/emmatown)! - Fix error when rendering empty cell in `<TableView>`
+
 ## 0.7.10
 
 ### Patch Changes
