@@ -25,7 +25,7 @@ export async function POST(req: Request): Promise<Response> {
       email: formData.get('email'),
       tags: [
         ...formData.getAll('tags'),
-        `keystatic website${pathname !== '/' ? `: ${pathname}` : ' homepage'}`,
+        `source:keystatic.com${pathname}`,
       ],
     };
 
