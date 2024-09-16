@@ -23,10 +23,7 @@ export async function POST(req: Request): Promise<Response> {
     console.log(formData.getAll('tags'));
     const data = {
       email: formData.get('email'),
-      tags: [
-        ...formData.getAll('tags'),
-        `keystatic website${pathname !== '/' ? `: ${pathname}` : ' homepage'}`,
-      ],
+      tags: [...formData.getAll('tags'), `source:keystatic.com${pathname}`],
     };
 
     const buttondownResponse = await fetch(
