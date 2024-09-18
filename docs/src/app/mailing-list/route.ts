@@ -23,7 +23,10 @@ export async function POST(req: Request): Promise<Response> {
     console.log(formData.getAll('tags'));
     const data = {
       email: formData.get('email'),
-      tags: [...formData.getAll('tags'), `source:keystatic.com${pathname}`],
+      tags: [
+        ...formData.getAll('tags'),
+        `source:keystatic.com${pathname}`.substring(0, 80),
+      ],
     };
 
     const buttondownResponse = await fetch(

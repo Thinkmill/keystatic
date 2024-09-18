@@ -37,7 +37,7 @@ export default function MailingListForm() {
               name="tags"
               id="mailing-list-keystatic"
               className="form-checkbox size-4 rounded text-black"
-              value="keystatic_list"
+              value="list:keystatic"
               defaultChecked
             />
             <label
@@ -53,7 +53,7 @@ export default function MailingListForm() {
               name="tags"
               id="mailing-list-thinkmill"
               className="form-checkbox size-4 rounded text-black"
-              value="thinkmill_list"
+              value="list:thinkmill"
             />
             <label
               className="text-sm text-sand-11"
