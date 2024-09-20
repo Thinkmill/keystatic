@@ -1,7 +1,7 @@
 {
   "name": "@keystatic/templates-remix",
   "type": "module",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "license": "MIT",
   "scripts": {
     "build": "remix vite:build",

@@ -1,5 +1,15 @@
 # @keystatic/core
 
+## 0.5.36
+
+### Patch Changes
+
+- [#1309](https://github.com/Thinkmill/keystatic/pull/1309) [`f7f659d`](https://github.com/Thinkmill/keystatic/commit/f7f659ddc3fd22bd446878af6fd0cdb7ee221165) Thanks [@emmatown](https://github.com/emmatown)! - Remove unnecessary dependency
+
+- [#1314](https://github.com/Thinkmill/keystatic/pull/1314) [`1e58af4`](https://github.com/Thinkmill/keystatic/commit/1e58af4a340924d6eaafc3e89b091fe92f2b9937) Thanks [@emmatown](https://github.com/emmatown)! - Fix toolbar buttons in `fields.document` not respecting editor content/selection
+
+- [#1311](https://github.com/Thinkmill/keystatic/pull/1311) [`0b4d6df`](https://github.com/Thinkmill/keystatic/commit/0b4d6dfc2cc1329ebeefb734f1a5c9ba6a2983f1) Thanks [@emmatown](https://github.com/emmatown)! - Stop parsing unsupported GFM syntax features (footnotes and task lists) in `fields.mdx`
+
 ## 0.5.35
 
 ### Patch Changes
