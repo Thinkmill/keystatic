@@ -24,6 +24,7 @@
   "overrides": [
     {
       "test": ["packages/keystatic/src/**/*", "design-system/pkg/src/**/*"],
+      "exclude": ["packages/keystatic/src/form/fields/document/**/*"],
       "plugins": [
         [
           "babel-plugin-react-compiler",
