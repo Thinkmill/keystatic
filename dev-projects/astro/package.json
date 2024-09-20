@@ -1,7 +1,7 @@
 {
   "name": "@example/astro",
   "type": "module",
-  "version": "0.0.114",
+  "version": "0.0.115",
   "private": true,
   "scripts": {
     "dev": "astro dev",
