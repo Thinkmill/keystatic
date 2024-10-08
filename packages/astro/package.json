@@ -32,7 +32,7 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "@types/react": "^18.2.8",
-    "cookie": "^0.5.0",
+    "cookie": "^0.7.2",
     "set-cookie-parser": "^2.5.1"
   },
   "devDependencies": {
