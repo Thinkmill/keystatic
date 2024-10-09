@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/astro",
-  "version": "5.0.0",
+  "version": "0.0.0-test-20241009232117",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -42,7 +42,7 @@
     "react-dom": "^18.2.0"
   },
   "peerDependencies": {
-    "@keystatic/core": "*",
+    "@keystatic/core": "0.0.0-test-20241009232117",
     "astro": "2 || 3 || 4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
