@@ -637,9 +637,6 @@ importers:
       astro:
         specifier: ^4.0.3
         version: 4.0.3(@types/node@16.11.13)(typescript@5.5.3)
-      cookie:
-        specifier: ^0.5.0
-        version: 0.5.0
       direction:
         specifier: ^2.0.1
         version: 2.0.1
@@ -995,9 +992,6 @@ importers:
       '@tailwindcss/forms':
         specifier: ^0.5.3
         version: 0.5.6(tailwindcss@3.4.1)
-      '@types/cookie':
-        specifier: ^0.5.1
-        version: 0.5.2
       '@types/node':
         specifier: 16.11.13
         version: 16.11.13
@@ -1007,9 +1001,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.0.11
         version: 18.3.0
-      cookie:
-        specifier: ^0.5.0
-        version: 0.5.0
       emery:
         specifier: ^1.4.1
         version: 1.4.2
@@ -1065,9 +1056,6 @@ importers:
       '@types/react':
         specifier: ^18.2.8
         version: 18.2.21
-      cookie:
-        specifier: ^0.5.0
-        version: 0.5.0
       set-cookie-parser:
         specifier: ^2.5.1
         version: 2.6.0
@@ -1075,9 +1063,6 @@ importers:
       '@keystatic/core':
         specifier: workspace:^
         version: link:../keystatic
-      '@types/cookie':
-        specifier: ^0.5.1
-        version: 0.5.2
       '@types/set-cookie-parser':
         specifier: ^2.4.2
         version: 2.4.3
@@ -1202,8 +1187,8 @@ importers:
         specifier: ^4.3.0
         version: 4.3.0(@urql/core@5.0.4)
       cookie:
-        specifier: ^0.5.0
-        version: 0.5.0
+        specifier: ^1.0.0
+        version: 1.0.0
       emery:
         specifier: ^1.4.1
         version: 1.4.2
@@ -1349,9 +1334,6 @@ importers:
       '@ts-gql/next':
         specifier: ^17.0.1
         version: 17.0.1(@ts-gql/compiler@0.16.7)(graphql@16.8.0)
-      '@types/cookie':
-        specifier: ^0.5.1
-        version: 0.5.2
       '@types/is-hotkey':
         specifier: ^0.1.7
         version: 0.1.7
@@ -11878,9 +11860,6 @@ packages:
       '@types/node': 16.11.13
     dev: true
 
-  /@types/cookie@0.5.2:
-    resolution: {integrity: sha512-DBpRoJGKJZn7RY92dPrgoMew8xCWc2P71beqsjyhEI/Ds9mOyVmBwtekyfhpwFIVt1WrxTonFifiOZ62V8CnNA==}
-
   /@types/cookie@0.6.0:
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
 
@@ -14780,6 +14759,11 @@ packages:
   /cookie@0.6.0:
     resolution: {integrity: sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw==}
     engines: {node: '>= 0.6'}
+
+  /cookie@1.0.0:
+    resolution: {integrity: sha512-bsSztFoaR8bw9MlFCrTHzc1wOKCUKOBsbgFdoDilZDkETAOOjKSqV7L+EQLbTaylwvZasd9vM4MGKotJaUfSpA==}
+    engines: {node: '>=18'}
+    dev: false
 
   /copy-to-clipboard@3.3.3:
     resolution: {integrity: sha512-2KV8NhB5JqC3ky0r9PMCAZKbUHSwtEo4CwCs0KXgruG43gX5PMqDEBbVU4OUzw2MuAWUfsuFmWvEKG5QRfSnJA==}
