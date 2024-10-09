@@ -1,5 +1,14 @@
 # @keystatic/astro
 
+## 5.0.1
+
+### Patch Changes
+
+- [#1326](https://github.com/Thinkmill/keystatic/pull/1326) [`6d7fae2`](https://github.com/Thinkmill/keystatic/commit/6d7fae2c51a3ecd5b543993f145fda1dbea8f0f0) Thanks [@fsmeier](https://github.com/fsmeier)! - Remove unused `cookie` dependency
+
+- Updated dependencies [[`6d7fae2`](https://github.com/Thinkmill/keystatic/commit/6d7fae2c51a3ecd5b543993f145fda1dbea8f0f0)]:
+  - @keystatic/core@0.5.37
+
 ## 5.0.0
 
 ### Patch Changes
