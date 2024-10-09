@@ -1,4 +1,4 @@
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import * as s from 'superstruct';
 import { Config } from '..';
 import {
