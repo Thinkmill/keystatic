@@ -145,6 +145,27 @@ const getRenderers = (highlighter: shiki.Highlighter | undefined) => ({
       </div>
     );
   },
+  Table: (props: { children: ReactNode }) => {
+    return (
+      <table
+        className="w-full border-collapse text-left
+          [&_td:not(:first-child)]:pl-4
+          [&_td:not(:last-child)]:pr-4
+          [&_td]:border-b
+          [&_td]:border-slate-3
+          [&_td]:py-2
+          [&_th:not(:first-child)]:pl-4
+          [&_th:not(:last-child)]:pr-4
+          [&_th]:border-b
+          [&_th]:border-slate-5
+          [&_th]:py-2
+          [&_th]:font-medium
+        "
+      >
+        {props.children}
+      </table>
+    );
+  },
   CloudImage: ({
     src,
     alt,
