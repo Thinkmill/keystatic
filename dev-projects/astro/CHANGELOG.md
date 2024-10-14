@@ -1,5 +1,12 @@
 # @keystatic/test-astro
 
+## 0.0.0-test-20241014062816
+
+### Patch Changes
+
+- Updated dependencies [[`0bb73da`](https://github.com/Thinkmill/keystatic/commit/0bb73dac7a8937fdece620f49771ea1442627ac4)]:
+  - @keystatic/astro@0.0.0-test-20241014062816
+
 ## 0.0.116
 
 ### Patch Changes
