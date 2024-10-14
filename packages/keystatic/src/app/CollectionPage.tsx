@@ -359,8 +359,9 @@ function CollectionTable(
       );
       const glob = getSlugGlobForCollection(props.config, props.collection);
       const rootSchema = { kind: 'object' as const, fields: collection.schema };
-      return new Map(
-        entries.map(([slug, dataFile]) => {
+      const parsedEntries = new Map<string, Record<string, unknown>>();
+      for (const [slug, dataFile] of entries) {
+        try {
           const { loaded } = loadDataFile(dataFile, formatInfo);
           const validated = parseProps(
             rootSchema,
@@ -394,9 +395,10 @@ function CollectionTable(
             },
             true
           );
-          return [slug, validated as Record<string, unknown>] as const;
-        })
-      );
+          parsedEntries.set(slug, validated as Record<string, unknown>);
+        } catch {}
+      }
+      return parsedEntries;
     }, [
       collection,
       props.config,
