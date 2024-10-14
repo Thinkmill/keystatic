@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.5.38
+
+### Patch Changes
+
+- [#1331](https://github.com/Thinkmill/keystatic/pull/1331) [`c8d3865`](https://github.com/Thinkmill/keystatic/commit/c8d3865154a35253cfa552abf30b0da497fb1059) Thanks [@emmatown](https://github.com/emmatown)! - Show columns of other entries on the collection page when some entries fail to parse
+
 ## 0.5.37
 
 ### Patch Changes

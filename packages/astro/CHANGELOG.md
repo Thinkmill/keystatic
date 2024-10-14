@@ -1,5 +1,14 @@
 # @keystatic/astro
 
+## 5.0.2
+
+### Patch Changes
+
+- [#1329](https://github.com/Thinkmill/keystatic/pull/1329) [`f005ab2`](https://github.com/Thinkmill/keystatic/commit/f005ab223888df1d7187759e72bfd0303027b1ff) Thanks [@emmatown](https://github.com/emmatown)! - Remove check for `output: 'hybrid'` or `output: 'server'` to support Astro 5
+
+- Updated dependencies [[`c8d3865`](https://github.com/Thinkmill/keystatic/commit/c8d3865154a35253cfa552abf30b0da497fb1059)]:
+  - @keystatic/core@0.5.38
+
 ## 5.0.1
 
 ### Patch Changes
