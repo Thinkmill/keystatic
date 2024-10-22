@@ -4,7 +4,7 @@ import { useMenuItem } from '@react-aria/menu';
 import { mergeProps } from '@react-aria/utils';
 import { TreeState } from '@react-stately/tree';
 import { Node } from '@react-types/shared';
-import { Key, useRef } from 'react';
+import { useRef } from 'react';
 
 import { ListItem } from '@keystar/ui/listbox';
 import { Text } from '@keystar/ui/typography';
@@ -16,12 +16,11 @@ type MenuItemProps<T> = {
   item: Node<T>;
   state: TreeState<T>;
   isVirtualized?: boolean;
-  onAction?: (key: Key) => void;
 };
 
 /** @private */
 export function MenuItem<T>(props: MenuItemProps<T>) {
-  let { item, state, isVirtualized, onAction } = props;
+  let { item, state, isVirtualized } = props;
   let { onClose, closeOnSelect } = useMenuContext();
 
   let { rendered, key } = item;
@@ -40,7 +39,6 @@ export function MenuItem<T>(props: MenuItemProps<T>) {
         onClose,
         closeOnSelect,
         isVirtualized,
-        onAction,
       },
       state,
       ref

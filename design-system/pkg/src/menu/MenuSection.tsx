@@ -3,7 +3,7 @@ import { useSeparator } from '@react-aria/separator';
 import { getChildNodes } from '@react-stately/collections';
 import { TreeState } from '@react-stately/tree';
 import { Node } from '@react-types/shared';
-import { Fragment, Key } from 'react';
+import { Fragment } from 'react';
 
 import { Divider } from '@keystar/ui/layout';
 import { css, tokenSchema } from '@keystar/ui/style';
@@ -14,12 +14,11 @@ import { MenuItem } from './MenuItem';
 interface MenuSectionProps<T> {
   item: Node<T>;
   state: TreeState<T>;
-  onAction?: (key: Key) => void;
 }
 
 /** @private */
 export function MenuSection<T>(props: MenuSectionProps<T>) {
-  let { item, state, onAction } = props;
+  let { item, state } = props;
   let { itemProps, headingProps, groupProps } = useMenuSection({
     heading: item.rendered,
     'aria-label': item['aria-label'],
@@ -50,14 +49,7 @@ export function MenuSection<T>(props: MenuSectionProps<T>) {
         )}
         <div {...groupProps}>
           {[...getChildNodes(item, state.collection)].map(node => {
-            let item = (
-              <MenuItem
-                key={node.key}
-                item={node}
-                state={state}
-                onAction={onAction}
-              />
-            );
+            let item = <MenuItem key={node.key} item={node} state={state} />;
 
             if (node.wrapper) {
               item = node.wrapper(item);

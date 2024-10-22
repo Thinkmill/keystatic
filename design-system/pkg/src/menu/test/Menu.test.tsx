@@ -567,14 +567,17 @@ describe('menu/Menu', () => {
 
       firePress(item1);
       expect(onAction).toHaveBeenCalledWith('One');
+      expect(onAction).toHaveBeenCalledTimes(1);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
 
       firePress(item2);
       expect(onAction).toHaveBeenCalledWith('Two');
+      expect(onAction).toHaveBeenCalledTimes(2);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
 
       firePress(item3);
       expect(onAction).toHaveBeenCalledWith('Three');
+      expect(onAction).toHaveBeenCalledTimes(3);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
     });
 
@@ -607,14 +610,17 @@ describe('menu/Menu', () => {
 
       firePress(item1);
       expect(onAction).toHaveBeenCalledWith('One');
+      expect(onAction).toHaveBeenCalledTimes(1);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
 
       firePress(item2);
       expect(onAction).toHaveBeenCalledWith('Two');
+      expect(onAction).toHaveBeenCalledTimes(2);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
 
       firePress(item3);
       expect(onAction).toHaveBeenCalledWith('Three');
+      expect(onAction).toHaveBeenCalledTimes(3);
       expect(onSelectionChange).toHaveBeenCalledTimes(0);
     });
   });
