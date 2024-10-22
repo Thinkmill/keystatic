@@ -36,24 +36,10 @@ function Menu<T extends object>(
     >
       {[...state.collection].map(item => {
         if (item.type === 'section') {
-          return (
-            <MenuSection
-              key={item.key}
-              item={item}
-              state={state}
-              onAction={completeProps.onAction}
-            />
-          );
+          return <MenuSection key={item.key} item={item} state={state} />;
         }
 
-        let menuItem = (
-          <MenuItem
-            key={item.key}
-            item={item}
-            state={state}
-            onAction={completeProps.onAction}
-          />
-        );
+        let menuItem = <MenuItem key={item.key} item={item} state={state} />;
 
         if (item.wrapper) {
           menuItem = item.wrapper(menuItem);
