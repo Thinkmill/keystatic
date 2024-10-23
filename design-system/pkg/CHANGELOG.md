@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.7.12
+
+### Patch Changes
+
+- [#1338](https://github.com/Thinkmill/keystatic/pull/1338) [`dccad1a`](https://github.com/Thinkmill/keystatic/commit/dccad1ac9913a7d31415150cb12e4f80b192c5a5) Thanks [@emmatown](https://github.com/emmatown)! - Fix `Menu` `onAction` being double called
+
 ## 0.7.11
 
 ### Patch Changes

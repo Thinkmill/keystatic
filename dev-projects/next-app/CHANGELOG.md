@@ -1,5 +1,14 @@
 # @keystatic/test-next-app
 
+## 0.0.133
+
+### Patch Changes
+
+- Updated dependencies [[`dccad1a`](https://github.com/Thinkmill/keystatic/commit/dccad1ac9913a7d31415150cb12e4f80b192c5a5), [`dccad1a`](https://github.com/Thinkmill/keystatic/commit/dccad1ac9913a7d31415150cb12e4f80b192c5a5)]:
+  - @keystatic/core@0.5.39
+  - @keystar/ui@0.7.12
+  - @keystatic/next@5.0.1
+
 ## 0.0.132
 
 ### Patch Changes

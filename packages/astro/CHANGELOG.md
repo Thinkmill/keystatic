@@ -1,5 +1,14 @@
 # @keystatic/astro
 
+## 5.0.3
+
+### Patch Changes
+
+- [#1340](https://github.com/Thinkmill/keystatic/pull/1340) [`92fc874`](https://github.com/Thinkmill/keystatic/commit/92fc8747d6fc4dcb48461517754725d16df4b1f6) Thanks [@emmatown](https://github.com/emmatown)! - Support `@astrojs/cloudflare@10.0.0` and above
+
+- Updated dependencies [[`dccad1a`](https://github.com/Thinkmill/keystatic/commit/dccad1ac9913a7d31415150cb12e4f80b192c5a5)]:
+  - @keystatic/core@0.5.39
+
 ## 5.0.2
 
 ### Patch Changes
