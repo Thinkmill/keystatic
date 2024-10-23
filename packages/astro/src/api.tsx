@@ -6,30 +6,34 @@ import type { APIContext } from 'astro';
 import { parseString } from 'set-cookie-parser';
 
 export function makeHandler(_config: APIRouteConfig) {
-  const handler = makeGenericAPIRouteHandler(
-    {
-      ..._config,
-      clientId:
-        _config.clientId ??
-        tryOrUndefined(() => {
-          return import.meta.env.KEYSTATIC_GITHUB_CLIENT_ID;
-        }),
-      clientSecret:
-        _config.clientSecret ??
-        tryOrUndefined(() => {
-          return import.meta.env.KEYSTATIC_GITHUB_CLIENT_SECRET;
-        }),
-      secret:
-        _config.secret ??
-        tryOrUndefined(() => {
-          return import.meta.env.KEYSTATIC_SECRET;
-        }),
-    },
-    {
-      slugEnvName: 'PUBLIC_KEYSTATIC_GITHUB_APP_SLUG',
-    }
-  );
   return async function keystaticAPIRoute(context: APIContext) {
+    const envVarsForCf = (context.locals as any)?.runtime?.env;
+    const handler = makeGenericAPIRouteHandler(
+      {
+        ..._config,
+        clientId:
+          _config.clientId ??
+          envVarsForCf?.KEYSTATIC_GITHUB_CLIENT_ID ??
+          tryOrUndefined(() => {
+            return import.meta.env.KEYSTATIC_GITHUB_CLIENT_ID;
+          }),
+        clientSecret:
+          _config.clientSecret ??
+          envVarsForCf?.KEYSTATIC_GITHUB_CLIENT_SECRET ??
+          tryOrUndefined(() => {
+            return import.meta.env.KEYSTATIC_GITHUB_CLIENT_SECRET;
+          }),
+        secret:
+          _config.secret ??
+          envVarsForCf?.KEYSTATIC_SECRET ??
+          tryOrUndefined(() => {
+            return import.meta.env.KEYSTATIC_SECRET;
+          }),
+      },
+      {
+        slugEnvName: 'PUBLIC_KEYSTATIC_GITHUB_APP_SLUG',
+      }
+    );
     const { body, headers, status } = await handler(context.request);
     // all this stuff should be able to go away when astro is using a version of undici with getSetCookie
     let headersInADifferentStructure = new Map<string, string[]>();
