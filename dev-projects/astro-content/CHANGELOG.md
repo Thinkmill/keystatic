@@ -1,5 +1,13 @@
 # astro-content
 
+## 0.0.0-test-20241023060356
+
+### Patch Changes
+
+- Updated dependencies [[`7135540`](https://github.com/Thinkmill/keystatic/commit/71355406d955ae73b0b102ab5ac54a193d86bb7a)]:
+  - @keystatic/core@0.0.0-test-20241023060356
+  - @keystatic/astro@5.0.3
+
 ## 0.0.41
 
 ### Patch Changes
