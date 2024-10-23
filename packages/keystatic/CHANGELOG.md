@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.5.39
+
+### Patch Changes
+
+- [#1338](https://github.com/Thinkmill/keystatic/pull/1338) [`dccad1a`](https://github.com/Thinkmill/keystatic/commit/dccad1ac9913a7d31415150cb12e4f80b192c5a5) Thanks [@emmatown](https://github.com/emmatown)! - Fix menus items like inserting/removing columns/rows in tables in editors and inserting custom components triggering twice when clicked
+
+- Updated dependencies [[`dccad1a`](https://github.com/Thinkmill/keystatic/commit/dccad1ac9913a7d31415150cb12e4f80b192c5a5)]:
+  - @keystar/ui@0.7.12
+
 ## 0.5.38
 
 ### Patch Changes
