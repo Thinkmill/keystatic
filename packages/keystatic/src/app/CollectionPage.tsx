@@ -37,6 +37,7 @@ import {
   SortDescriptor,
 } from '@keystar/ui/table';
 import { Heading, Text } from '@keystar/ui/typography';
+import { NavTree, Item } from '@keystar/ui/nav-tree';
 
 import { Config } from '../config';
 import { sortBy } from './collection-sort';
@@ -487,6 +488,63 @@ function CollectionTable(
           { name: 'Name', key: SLUG },
         ];
   }, [collection, hideStatusColumn]);
+
+  const entryTree = useMemo(() => {
+    const entries = new Set(entriesWithStatus.map(entry => entry.name));
+    type EntryTreeNode = {
+      path: string;
+      key: string;
+      isEntry: boolean;
+      children: EntryTreeNode[] | undefined;
+    };
+    const root: EntryTreeNode = {
+      path: '',
+      key: '',
+      children: [],
+      isEntry: false,
+    };
+
+    for (const entry of filteredItems.map(x => x.name).sort()) {
+      const split = entry.split('/');
+      let current = root;
+      let currentPath = '';
+      for (const part of split) {
+        if (currentPath) currentPath += '/';
+        currentPath += part;
+        if (!current.children) current.children = [];
+        let existing = current.children?.find(x => x.path === currentPath);
+        if (!existing) {
+          existing = {
+            isEntry: entries.has(currentPath),
+            key: part,
+            path: currentPath,
+            children: undefined,
+          };
+          current.children.push(existing);
+        }
+        current = existing;
+      }
+    }
+    return root.children;
+  }, [entriesWithStatus, filteredItems]);
+
+  return (
+    <NavTree items={entryTree}>
+      {item => (
+        <Item key={item.path} childItems={item.children}>
+          {item.isEntry ? (
+            <TextLink
+              href={getItemPath(props.basePath, props.collection, item.path)}
+            >
+              {item.key}
+            </TextLink>
+          ) : (
+            <Text>{item.key}</Text>
+          )}
+        </Item>
+      )}
+    </NavTree>
+  );
 
   return (
     <TableView
