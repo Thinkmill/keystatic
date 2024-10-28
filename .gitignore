@@ -63,3 +63,5 @@ l10n.js
 l10n.d.ts
 packages/keystatic/src/app/l10n/index.js
 packages/keystatic/src/app/l10n/index.d.ts
+
+.worker-next
