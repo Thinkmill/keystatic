@@ -14,7 +14,7 @@
     "lint": "next lint",
     "pre-site": "tsx ./scripts/pre-site.ts",
     "start": "next start",
-    "build:worker": "cloudflare"
+    "build:worker": "pnpm pre-site && cloudflare"
   },
   "dependencies": {
     "@babel/core": "^7.23.0",
