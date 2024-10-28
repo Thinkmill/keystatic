@@ -36,7 +36,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tsx": "^4.8.2",
-    "vercel": "^33.6.3"
+    "vercel": "^33.6.3",
+    "wrangler": "^3.83.0"
   },
   "devDependencies": {
     "@preconstruct/next": "^4.0.0",
