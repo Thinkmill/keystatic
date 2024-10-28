@@ -529,7 +529,7 @@ function CollectionTable(
   }, [entriesWithStatus, filteredItems]);
 
   return (
-    <NavTree items={entryTree}>
+    <NavTree UNSAFE_className={css({ overflowY: 'auto' })} items={entryTree}>
       {item => (
         <Item key={item.path} childItems={item.children}>
           {item.isEntry ? (
