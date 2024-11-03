@@ -1,18 +1,18 @@
-import {
+import type {
   AriaMenuProps,
   MenuTriggerProps as _MenuTriggerProps,
 } from '@react-types/menu';
-import {
+import type {
   Alignment,
   AriaLabelingProps,
   CollectionBase,
   DOMProps,
   DisabledBehavior,
 } from '@react-types/shared';
-import { Key, ReactElement } from 'react';
+import type { Key, ReactElement } from 'react';
 
-import { BaseStyleProps } from '@keystar/ui/style';
-import { ActionButtonProps } from '@keystar/ui/button';
+import type { BaseStyleProps } from '@keystar/ui/style';
+import type { ActionButtonProps } from '@keystar/ui/button';
 
 export type MenuProps<T> = {
   /** Whether `disabledKeys` applies to all interactions, or only selection. */

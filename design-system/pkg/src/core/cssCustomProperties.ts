@@ -575,7 +575,7 @@ export const cssCustomProperties = `
   --kui-typography-font-weight-medium: 500;
   --kui-typography-font-weight-regular: 400;
   --kui-typography-font-family-code: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
-  --kui-typography-font-family-base: var(--font-inter, Inter);
+  --kui-typography-font-family-base: var(--font-inter, Inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --kui-typography-heading-large-capheight: 23.2727px;
   --kui-typography-heading-large-capheight-trim: -0.2364em;
   --kui-typography-heading-large-baseline-trim: -0.2364em;

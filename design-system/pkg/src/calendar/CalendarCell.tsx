@@ -122,6 +122,7 @@ export function useCellStyles(props: Partial<CellStyleProps> = {}) {
       trimBooleanKeys: true,
     }),
     className: css({
+      boxSizing: 'content-box',
       height: cellSize,
       padding: cellPadding,
       position: 'relative',
