@@ -31,7 +31,7 @@ export const Input = forwardRef<HTMLDivElement, InputProps>(
       validationState,
     } = props;
 
-    let { focusProps, isFocusVisible, isFocused } = useFocusRing({
+    let { focusProps, isFocused } = useFocusRing({
       isTextInput: true,
       within: true,
     });
@@ -41,7 +41,8 @@ export const Input = forwardRef<HTMLDivElement, InputProps>(
       isDisabled,
       isInvalid,
       isFocused,
-      isFocusVisible: isFocusVisible && !disableFocusRing,
+      // prefer focusring appearance, regardless of input modality. otherwise it looks like a read-only field
+      isFocusVisible: isFocused && !disableFocusRing,
     });
 
     return (
@@ -101,10 +102,11 @@ function useInputStyles(props: InputProps, state: InputState) {
       },
       '&[data-focused]': {
         borderColor: tokenSchema.color.alias.borderFocused,
-      },
-      '&[data-focus-visible]': {
         boxShadow: `0 0 0 1px ${tokenSchema.color.alias.borderFocused}`,
       },
+      // '&[data-focus-visible]': {
+      //   boxShadow: `0 0 0 1px ${tokenSchema.color.alias.borderFocused}`,
+      // },
       '&[data-disabled]': {
         backgroundColor: tokenSchema.color.alias.backgroundDisabled,
         borderColor: 'transparent',

@@ -63,7 +63,7 @@ function DatePicker<T extends DateValue>(
     labelProps,
   } = useDatePicker(props, state, triggerRef);
 
-  let { isFocused, isFocusVisible, focusProps } = useFocusRing({
+  let { isFocused, focusProps } = useFocusRing({
     within: true,
     isTextInput: true,
     autoFocus,
@@ -89,7 +89,8 @@ function DatePicker<T extends DateValue>(
   let styleProps = usePickerStyles({
     isHovered,
     isFocused,
-    isFocusVisible: isFocusVisible && !isFocusedButton,
+    // prefer focusring appearance, regardless of input modality. otherwise it looks like a read-only field
+    isFocusVisible: isFocused && !isFocusedButton,
     isDisabled,
     isReadOnly,
     isInvalid: state.validationState === 'invalid',

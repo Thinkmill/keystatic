@@ -32,7 +32,15 @@ export const NumberField: ForwardRefExoticComponent<
   forwardedRef: ForwardedRef<HTMLInputElement>
 ) {
   props = useProviderProps(props);
-  let { isReadOnly, isDisabled, hideStepper, label, description } = props;
+  let {
+    contextualHelp,
+    description,
+    hideStepper,
+    isDisabled,
+    isReadOnly,
+    isRequired,
+    label,
+  } = props;
 
   let { locale } = useLocale();
   let state = useNumberFieldState({ ...props, locale });
@@ -50,23 +58,25 @@ export const NumberField: ForwardRefExoticComponent<
 
   return (
     <TextFieldPrimitive
+      ref={inputRef}
       width="alias.singleLineWidth"
       {...filterDOMProps(props)}
       {...onlyStyleProps(props)}
       label={label}
-      description={description}
-      errorMessage={props.errorMessage}
-      descriptionProps={descriptionProps}
-      errorMessageProps={errorMessageProps}
       labelProps={labelProps}
+      contextualHelp={contextualHelp}
+      description={description}
+      descriptionProps={descriptionProps}
+      errorMessage={props.errorMessage}
+      errorMessageProps={errorMessageProps}
       inputWrapperProps={{
         ...groupProps,
         ...inputWrapperStyleProps,
       }}
-      ref={inputRef}
       inputProps={inputProps}
       isDisabled={isDisabled}
       isReadOnly={isReadOnly}
+      isRequired={isRequired}
       // NOTE: step buttons must be a sibling of the `<input/>` AND after it
       // in the DOM, so we can respond to pseudo-classes.
       endElement={

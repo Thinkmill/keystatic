@@ -273,11 +273,10 @@ function TagGroup<T extends object>(
             <div
               ref={tagsRef}
               {...gridProps}
-              // TODO: review accessibility
-              // className={css({ display: 'contents' })}
               className={css({
                 borderRadius: radiusVar,
                 display: 'inline',
+                outline: 'none',
 
                 '&[data-focus=visible]': {
                   display: 'block',

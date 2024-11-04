@@ -65,6 +65,7 @@ function DateField<T extends DateValue>(
     >
       <Input
         ref={fieldRef}
+        disableFocusRing={isReadOnly}
         fieldProps={fieldProps}
         isDisabled={isDisabled}
         autoFocus={autoFocus}
