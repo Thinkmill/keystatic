@@ -1,6 +1,6 @@
 {
   "key": "branchName",
-  "value": "Название филиала",
+  "value": "Название ветви",
   "notes": "",
   "type": "git-related"
 }
