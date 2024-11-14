@@ -1,6 +1,6 @@
 {
   "key": "deleteBranch",
-  "value": "Удалить ветку",
+  "value": "Удалить ветвь",
   "notes": "",
   "type": "git-related"
 }
