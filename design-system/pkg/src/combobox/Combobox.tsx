@@ -21,7 +21,7 @@ import React, {
 } from 'react';
 
 import { FieldButton } from '@keystar/ui/button';
-import { useProvider, useProviderProps } from '@keystar/ui/core';
+import { useProviderProps } from '@keystar/ui/core';
 import { FieldPrimitive } from '@keystar/ui/field';
 import { Icon } from '@keystar/ui/icon';
 import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
@@ -45,6 +45,7 @@ import { comboboxClassList } from './class-list';
 import localizedMessages from './l10n';
 import { MobileCombobox } from './MobileCombobox';
 import { ComboboxProps } from './types';
+import { LoadingState } from '@react-types/shared';
 
 function Combobox<T extends object>(
   props: ComboboxProps<T>,
@@ -74,12 +75,11 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
     shouldFlip = true,
     direction = 'bottom',
     loadingState,
-    menuWidth: menuWidthProp,
+    menuWidth,
     onLoadMore,
   } = props;
 
   let isAsync = loadingState != null;
-  let stringFormatter = useLocalizedStringFormatter(localizedMessages);
   let buttonRef = useRef<HTMLButtonElement>(null);
   let inputRef = useRef<HTMLInputElement>(null);
   let listBoxRef = useRef<HTMLDivElement>(null);
@@ -114,30 +114,12 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
     state
   );
 
-  // Measure the width of the input and the button to inform the width of the menu (below).
-  let [menuWidth, setMenuWidth] = useState<number>();
-  let { scale } = useProvider();
-
-  let onResize = useCallback(() => {
-    if (buttonRef.current && inputRef.current) {
-      let buttonWidth = buttonRef.current.offsetWidth;
-      let inputWidth = inputRef.current.offsetWidth;
-
-      setMenuWidth(inputWidth + buttonWidth);
-    }
-  }, [buttonRef, inputRef, setMenuWidth]);
-
-  useResizeObserver({
-    ref: fieldRef,
-    onResize: onResize,
+  let popoverStyle = usePopoverStyles({
+    menuWidth,
+    buttonRef,
+    inputRef,
+    fieldRef,
   });
-
-  useLayoutEffect(onResize, [scale, onResize]);
-
-  let style = {
-    width: menuWidth,
-    minWidth: menuWidthProp ?? menuWidth,
-  };
 
   return (
     <>
@@ -162,7 +144,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
       </FieldPrimitive>
       <Popover
         state={state}
-        UNSAFE_style={style}
+        UNSAFE_style={popoverStyle}
         ref={popoverRef}
         triggerRef={align === 'end' ? buttonRef : inputRef}
         scrollRef={listBoxRef}
@@ -185,19 +167,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
           onLoadMore={onLoadMore}
           UNSAFE_className={listStyles}
           renderEmptyState={() =>
-            isAsync && (
-              <Flex
-                height="element.regular"
-                alignItems="center"
-                paddingX="medium"
-              >
-                <Text color="neutralSecondary">
-                  {loadingState === 'loading'
-                    ? stringFormatter.format('loading')
-                    : stringFormatter.format('noResults')}
-                </Text>
-              </Flex>
-            )
+            isAsync && <ComboboxEmptyState loadingState={loadingState} />
           }
         />
       </Popover>
@@ -205,10 +175,56 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
   );
 });
 
+export function ComboboxEmptyState(props: { loadingState?: LoadingState }) {
+  let stringFormatter = useLocalizedStringFormatter(localizedMessages);
+  return (
+    <Flex height="element.regular" alignItems="center" paddingX="medium">
+      <Text color="neutralSecondary">
+        {props.loadingState === 'loading'
+          ? stringFormatter.format('loading')
+          : stringFormatter.format('noResults')}
+      </Text>
+    </Flex>
+  );
+}
+
+export function usePopoverStyles(props: {
+  menuWidth?: number;
+  buttonRef: RefObject<HTMLButtonElement>;
+  inputRef: RefObject<HTMLInputElement>;
+  fieldRef: RefObject<HTMLDivElement>;
+}) {
+  const { buttonRef, inputRef, fieldRef, menuWidth: menuWidthProp } = props;
+
+  // Measure the width of the input and the button to inform the width of the menu (below).
+  let [menuWidth, setMenuWidth] = useState<number>();
+
+  let onResize = useCallback(() => {
+    if (buttonRef.current && inputRef.current) {
+      let buttonWidth = buttonRef.current.offsetWidth;
+      let inputWidth = inputRef.current.offsetWidth;
+
+      setMenuWidth(inputWidth + buttonWidth);
+    }
+  }, [buttonRef, inputRef, setMenuWidth]);
+
+  useResizeObserver({
+    ref: fieldRef,
+    onResize: onResize,
+  });
+
+  useLayoutEffect(onResize, [onResize]);
+
+  return {
+    width: menuWidth,
+    minWidth: menuWidthProp ?? menuWidth,
+  };
+}
+
 // FIXME: this is a hack to work around a requirement of react-aria. object refs
 // never have the value early enough, so we need to use a stateful ref to force
 // a re-render.
-function useStatefulRef<T extends HTMLElement>() {
+export function useStatefulRef<T extends HTMLElement>() {
   let [current, statefulRef] = useState<T | null>(null);
   return useMemo(() => {
     return [{ current }, statefulRef] as const;
@@ -224,7 +240,8 @@ interface ComboboxInputProps extends ComboboxProps<unknown> {
   isOpen?: boolean;
 }
 
-const ComboboxInput = React.forwardRef(function ComboboxInput(
+/** @private Used by multi variant. */
+export const ComboboxInput = React.forwardRef(function ComboboxInput(
   props: ComboboxInputProps,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
