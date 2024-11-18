@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- [#1351](https://github.com/Thinkmill/keystatic/pull/1351) [`cf76aff`](https://github.com/Thinkmill/keystatic/commit/cf76affbbe2cabd58f5ec6a88339e87183d6cec4) Thanks [@jossmac](https://github.com/jossmac)! - Add ComboboxMulti component.
+- [#1351](https://github.com/Thinkmill/keystatic/pull/1351) [`cf76aff`](https://github.com/Thinkmill/keystatic/commit/cf76affbbe2cabd58f5ec6a88339e87183d6cec4) Thanks [@jossmac](https://github.com/jossmac)! - Add `ComboboxMulti` component.
 
 - [#1345](https://github.com/Thinkmill/keystatic/pull/1345) [`35575f5`](https://github.com/Thinkmill/keystatic/commit/35575f5ded96bd12a79f4b2670f426fe86637733) Thanks [@jossmac](https://github.com/jossmac)! - Fix quirks and bugs in various components.
 
