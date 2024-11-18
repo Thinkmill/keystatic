@@ -8,14 +8,14 @@ import { Popover } from '@keystar/ui/overlays';
 import { useIsMobileDevice } from '@keystar/ui/style';
 import { validateTextFieldProps } from '@keystar/ui/text-field';
 
-import { MobileCombobox } from './MobileCombobox';
-import { ComboboxMultiProps } from './types';
 import {
   ComboboxEmptyState,
   ComboboxInput,
   usePopoverStyles,
   useStatefulRef,
 } from './Combobox';
+import { MobileComboboxMulti } from './MobileComboboxMulti';
+import { ComboboxMultiProps } from './types';
 import { useComboboxMultiState } from './useComboboxMultiState';
 import { useComboboxMulti } from './useComboboxMulti';
 
@@ -30,17 +30,18 @@ function ComboboxMulti<T extends object>(
   let isMobile = useIsMobileDevice();
   if (isMobile) {
     // menuTrigger=focus/manual don't apply to mobile combobox
-    return <MobileCombobox {...props} menuTrigger="input" ref={forwardedRef} />;
+    return (
+      <MobileComboboxMulti {...props} menuTrigger="input" ref={forwardedRef} />
+    );
   } else {
     // @ts-expect-error FIXME: 'T' could be instantiated with an arbitrary type which could be unrelated to 'unknown'.
-    return <ComboboxBase {...props} ref={forwardedRef} />;
+    return <ComboboxMultiBase {...props} ref={forwardedRef} />;
   }
 }
 
-const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
-  props: ComboboxMultiProps<T>,
-  forwardedRef: ForwardedRef<HTMLDivElement>
-) {
+const ComboboxMultiBase = React.forwardRef(function ComboboxMultiBase<
+  T extends object,
+>(props: ComboboxMultiProps<T>, forwardedRef: ForwardedRef<HTMLDivElement>) {
   let {
     align = 'start',
     // menuTrigger = 'focus',
@@ -139,7 +140,9 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
 });
 
 /**
- * A combobox combines a text input with a listbox, and allows users to filter a
+ * This component is not accessible, use with caution.
+ *
+ * A multi-combobox combines a text input with a listbox, and allows users to filter a
  * list of options.
  */
 const _ComboboxMulti: <T>(

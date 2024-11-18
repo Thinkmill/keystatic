@@ -55,15 +55,15 @@ for (let i = 0; i < 50; i++) {
 }
 
 const defaultActions = {
-  // onOpenChange: action('onOpenChange'),
-  // onInputChange: action('onInputChange'),
-  // onSelectionChange: action('onSelectionChange'),
-  // onBlur: action('onBlur'),
-  // onFocus: action('onFocus'),
+  onOpenChange: action('onOpenChange'),
+  onInputChange: action('onInputChange'),
+  onSelectionChange: action('onSelectionChange'),
+  onBlur: action('onBlur'),
+  onFocus: action('onFocus'),
 };
 
 export default {
-  title: 'Components/ComboboxMulti',
+  title: 'Components/Combobox/ComboboxMulti',
 };
 
 export const DefaultWithControls = (args: ArgTypes) => (

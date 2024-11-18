@@ -8,6 +8,7 @@ import {
 } from '@react-aria/utils';
 import { useComboBoxState } from '@react-stately/combobox';
 import { AriaButtonProps } from '@react-types/button';
+import { LoadingState } from '@react-types/shared';
 import React, {
   ForwardedRef,
   InputHTMLAttributes,
@@ -45,7 +46,6 @@ import { comboboxClassList } from './class-list';
 import localizedMessages from './l10n';
 import { MobileCombobox } from './MobileCombobox';
 import { ComboboxProps } from './types';
-import { LoadingState } from '@react-types/shared';
 
 function Combobox<T extends object>(
   props: ComboboxProps<T>,

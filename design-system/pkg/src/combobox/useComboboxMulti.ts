@@ -39,6 +39,8 @@ export interface ComboboxMultiOptions<T>
    * virtualized scrolling.
    */
   layoutDelegate?: LayoutDelegate;
+  /** Whether the combo box menu should close on blur. */
+  shouldCloseOnBlur?: boolean;
 }
 
 export function useComboboxMulti<T extends object>(
@@ -48,13 +50,14 @@ export function useComboboxMulti<T extends object>(
   let {
     isDisabled,
     isReadOnly,
-    menuTrigger = 'focus',
+    menuTrigger = 'input',
     buttonRef: buttonRefProp,
     inputRef,
     keyboardDelegate,
     layoutDelegate,
     listBoxRef,
     popoverRef,
+    shouldCloseOnBlur = true,
   } = props;
 
   // combobox doesn't require a button element, so we need a backup ref for the
@@ -164,11 +167,13 @@ export function useComboboxMulti<T extends object>(
   };
   let onBlur = (e: FocusEvent<HTMLInputElement>) => {
     props.onBlur?.(e);
-    state.close();
+    if (shouldCloseOnBlur) {
+      state.close();
+    }
   };
   let onFocus = (e: FocusEvent<HTMLInputElement>) => {
     props.onFocus?.(e);
-    if (menuTrigger === 'focus') {
+    if (menuTrigger === 'focus' && !props.isReadOnly) {
       state.open();
     }
     state.selectionManager.setFocused(true);
