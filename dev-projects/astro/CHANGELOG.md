@@ -1,5 +1,13 @@
 # @keystatic/test-astro
 
+## 0.0.119
+
+### Patch Changes
+
+- Updated dependencies [[`6d0a8c3`](https://github.com/Thinkmill/keystatic/commit/6d0a8c3a43d0e641629bc12c582fa6744c699763)]:
+  - @keystatic/core@0.5.40
+  - @keystatic/astro@5.0.3
+
 ## 0.0.118
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 {
   "name": "@example/astro-content",
   "type": "module",
-  "version": "0.0.41",
+  "version": "0.0.42",
   "private": true,
   "scripts": {
     "dev": "astro dev",

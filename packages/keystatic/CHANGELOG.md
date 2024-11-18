@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.5.40
+
+### Patch Changes
+
+- [#1350](https://github.com/Thinkmill/keystatic/pull/1350) [`6d0a8c3`](https://github.com/Thinkmill/keystatic/commit/6d0a8c3a43d0e641629bc12c582fa6744c699763) Thanks [@AuthFailed](https://github.com/AuthFailed)! - Update Russian translations
+
+- Updated dependencies [[`cf76aff`](https://github.com/Thinkmill/keystatic/commit/cf76affbbe2cabd58f5ec6a88339e87183d6cec4), [`35575f5`](https://github.com/Thinkmill/keystatic/commit/35575f5ded96bd12a79f4b2670f426fe86637733)]:
+  - @keystar/ui@0.7.13
+
 ## 0.5.39
 
 ### Patch Changes
