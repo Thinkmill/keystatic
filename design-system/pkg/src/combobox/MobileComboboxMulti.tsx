@@ -58,11 +58,7 @@ function MobileComboboxMulti<T extends object>(
 ) {
   const props = useProviderProps(_props);
 
-  let {
-    isDisabled,
-    isReadOnly,
-    // validationState,
-  } = props;
+  let { isDisabled, isReadOnly, validationState } = props;
 
   // let { contains } = useFilter({ sensitivity: 'base' });
   let state = useComboboxMultiState({
@@ -113,7 +109,7 @@ function MobileComboboxMulti<T extends object>(
           isDisabled={isDisabled}
           isReadOnly={isReadOnly}
           isPlaceholder={!state.inputValue}
-          // validationState={validationState}
+          validationState={validationState}
           onPress={() => !isReadOnly && state.open()}
         >
           {state.inputValue || props.placeholder || ''}
@@ -287,7 +283,7 @@ function ComboboxTray<T extends object>(props: ComboboxTrayProps<T>) {
   let {
     state,
     isDisabled,
-    // validationState,
+    validationState,
     label,
     overlayProps,
     loadingState,
@@ -468,8 +464,9 @@ function ComboboxTray<T extends object>(props: ComboboxTrayProps<T>) {
           endElement={
             <Flex>
               {showLoading && loadingState === 'filtering' && loadingCircle}
-              {(state.inputValue !== '' || loadingState === 'filtering') &&
-                // || validationState != null
+              {(state.inputValue !== '' ||
+                loadingState === 'filtering' ||
+                validationState != null) &&
                 !props.isReadOnly &&
                 clearButton}
             </Flex>

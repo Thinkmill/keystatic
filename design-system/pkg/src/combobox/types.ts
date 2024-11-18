@@ -3,9 +3,11 @@ import {
   AsyncLoadable,
   CollectionBase,
   FocusableProps,
+  Key,
   LoadingState,
   MultipleSelection,
   TextInputBase,
+  Validation,
 } from '@react-types/shared';
 
 import { FieldProps } from '@keystar/ui/field';
@@ -51,12 +53,19 @@ export type ComboboxProps<T> = TextInputBase &
     shouldFlip?: boolean;
   };
 
+export interface ComboboxMultiValidationValue {
+  /** The selected key in the ComboBox. */
+  selectedKeys: Set<Key>;
+  /** The value of the ComboBox input. */
+  inputValue: string;
+}
 export interface ComboboxMultiProps<T>
   extends CollectionBase<T>,
     Omit<MultipleSelection, 'disallowEmptySelection'>,
     Omit<AsyncLoadable, 'isLoading'>,
     TextInputBase,
     FocusableProps<HTMLInputElement>,
+    Validation<ComboboxMultiValidationValue>,
     FieldProps {
   /** The list of ComboBox items (uncontrolled). */
   defaultItems?: Iterable<T>;
