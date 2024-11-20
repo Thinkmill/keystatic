@@ -114,7 +114,7 @@ Keystatic will only list branches starting with `my-prefix/` in the Admin UI, an
 
 When you authorize on a server and get the following error from GitHub, you need to modify the GitHub application settings.
 
-{% aside icon="" %}
+{% aside %}
 
 > Be careful!
 > The `redirect_uri` is not associated with this application.
@@ -127,11 +127,9 @@ To add a redirect URL:
 1. Go to the [list of "Installed Github Apps"](https://docs.github.com/en/apps/using-github-apps/reviewing-and-modifying-installed-github-apps#navigating-to-the-github-app-you-want-to-review-or-modify)
    - For Users: [`https://github.com/settings/installations`](https://github.com/settings/installations)
    - For Organisations: `https://github.com/organizations/<org name>/settings/installations`
-
 2. Select the app > Choose "App settings"
    - For Users: `https://github.com/settings/apps/<app slug>`
    - For Organisations: `https://github.com/organizations/<org name>/settings/apps/<app slug>`
-
 3. Use "Add Callback URL" > Add the additional URL > Save
 
 Now try reloading the authentication page.
