@@ -1,5 +1,13 @@
 # @voussoir/docs
 
+## 0.0.61
+
+### Patch Changes
+
+- Updated dependencies [[`02a7441`](https://github.com/Thinkmill/keystatic/commit/02a7441ed722bf93f32f236cc90521549a5e0a9f)]:
+  - @keystatic/core@0.5.41
+  - @keystatic/next@5.0.1
+
 ## 0.0.60
 
 ### Patch Changes

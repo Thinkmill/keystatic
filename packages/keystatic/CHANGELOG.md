@@ -1,5 +1,11 @@
 # @keystatic/core
 
+## 0.5.41
+
+### Patch Changes
+
+- [#1354](https://github.com/Thinkmill/keystatic/pull/1354) [`02a7441`](https://github.com/Thinkmill/keystatic/commit/02a7441ed722bf93f32f236cc90521549a5e0a9f) Thanks [@emmatown](https://github.com/emmatown)! - Improve syntax highlighting in the `fields.mdx`/`fields.markdoc` editor to only use the first word in the info string to match the language. This is primarily for `fields.mdx` to allow additional information in the info string beyond the editor. In `fields.markdoc` additional content after the first word will be stripped since Markdoc expresses additional information using Markdoc annotations which Keystatic already exposes UI for if `options.codeBlock.schema` is configured.
+
 ## 0.5.40
 
 ### Patch Changes
