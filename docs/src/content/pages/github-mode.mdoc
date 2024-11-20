@@ -110,6 +110,27 @@ storage: {
 
 Keystatic will only list branches starting with `my-prefix/` in the Admin UI, and will only let you create new branches with that prefix.
 
+## Add `redirect_uri`
+
+When you authorize on a server and get the folloging Error from Github, you need to mofify the Github application.
+> Be careful!
+> The `redirect_uri´ is not associated with this application.
+> The application might be misconfigured or could be trying to redirect you to a website you weren't expecting.
+
+To add another redirect URL:
+
+1. Go to the [list of app "Installed Github Apps"](https://docs.github.com/en/apps/using-github-apps/reviewing-and-modifying-installed-github-apps#navigating-to-the-github-app-you-want-to-review-or-modify)
+   - For Users: [Deeplink](https://github.com/settings/installations)
+   - For Organisations: `https://github.com/organizations/<OrgaName>/settings/installations`
+
+2. Select the app > Choose "App settings"
+   - For Users: `https://github.com/settings/apps/<PUBLIC_KEYSTATIC_GITHUB_APP_SLUG>`
+   - For Organisations: `https://github.com/organizations/<OrgaName>/settings/apps/<PUBLIC_KEYSTATIC_GITHUB_APP_SLUG>`
+
+3. Use "Add Callback URL" to add the additional URL and save
+
+Now retry the authentication.
+
 ---
 
 ## Deploying Keystatic
