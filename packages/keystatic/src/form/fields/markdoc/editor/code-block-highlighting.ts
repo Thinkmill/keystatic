@@ -17,15 +17,21 @@ function getDecorationsForIndividualNode(node: Node): InlineDecorationSpec[] {
   if (!node.type.spec.code || !node.childCount) return emptyDecorations;
   const text = node.content.child(0).text;
   if (!text) return emptyDecorations;
-  const lang = node.attrs.language;
-  if (
-    typeof lang !== 'string' ||
-    !Object.prototype.hasOwnProperty.call(Prism.languages, node.attrs.language)
-  ) {
+  let lang = node.attrs.language;
+  if (typeof lang !== 'string') return emptyDecorations;
+  lang = lang.trim();
+  const spaceIndex = lang.indexOf(' ');
+  if (spaceIndex !== -1) {
+    lang = lang.slice(0, spaceIndex);
+  }
+  lang = lang.toLowerCase();
+  if (!Object.prototype.hasOwnProperty.call(Prism.languages, lang)) {
     return emptyDecorations;
   }
+  const prismLang = Prism.languages[lang];
+  if (typeof prismLang !== 'object') return emptyDecorations;
   const decorations: InlineDecorationSpec[] = [];
-  const tokens = Prism.tokenize(text, Prism.languages[node.attrs.language]);
+  const tokens = Prism.tokenize(text, prismLang);
   function consumeTokens(start: number, tokens: (string | Prism.Token)[]) {
     for (const token of tokens) {
       const length = getPrismTokenLength(token);
