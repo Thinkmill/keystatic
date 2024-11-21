@@ -70,7 +70,11 @@ export async function handleGitHubAppCreation(
 KEYSTATIC_GITHUB_CLIENT_ID=${ghAppDataResult.client_id}
 KEYSTATIC_GITHUB_CLIENT_SECRET=${ghAppDataResult.client_secret}
 KEYSTATIC_SECRET=${randomBytes(40).toString('hex')}
-${slugEnvVarName ? `${slugEnvVarName}=${ghAppDataResult.slug}\n` : ''}`;
+${
+  slugEnvVarName
+    ? `${slugEnvVarName}=${ghAppDataResult.slug} # https://github.com/apps/${ghAppDataResult.slug}\n`
+    : ''
+}`;
 
   let prevEnv: string | undefined;
   try {
