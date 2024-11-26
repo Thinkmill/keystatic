@@ -1,9 +1,8 @@
 import { ButtonGroup, ActionButton } from '@keystar/ui/button';
-import { FieldLabel, FieldMessage } from '@keystar/ui/field';
+import { FieldDescription, FieldLabel, FieldMessage } from '@keystar/ui/field';
 import { Flex, Box } from '@keystar/ui/layout';
 import { tokenSchema } from '@keystar/ui/style';
 import { TextField } from '@keystar/ui/text-field';
-import { Text } from '@keystar/ui/typography';
 
 import { useIsInDocumentEditor } from '../document/DocumentEditor';
 import { useState, useEffect, useReducer, useId } from 'react';
@@ -100,9 +99,9 @@ export function ImageFieldInput(
         {props.label}
       </FieldLabel>
       {props.description && (
-        <Text size="small" color="neutralSecondary" id={descriptionId}>
+        <FieldDescription id={descriptionId}>
           {props.description}
-        </Text>
+        </FieldDescription>
       )}
       <ButtonGroup>
         <ActionButton

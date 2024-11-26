@@ -4,11 +4,11 @@ import {
   Dialog,
   useDialogContainer,
 } from '@keystar/ui/dialog';
-import { FieldLabel, FieldMessage } from '@keystar/ui/field';
+import { FieldDescription, FieldLabel, FieldMessage } from '@keystar/ui/field';
 import { VStack } from '@keystar/ui/layout';
 import { MenuTrigger, Menu, Item } from '@keystar/ui/menu';
 import { Content } from '@keystar/ui/slots';
-import { Heading, Text } from '@keystar/ui/typography';
+import { Heading } from '@keystar/ui/typography';
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { useField } from '@react-aria/label';
 import { useId, useState, useMemo } from 'react';
@@ -88,9 +88,9 @@ export function BlocksFieldInput(
         {props.schema.label}
       </FieldLabel>
       {props.schema.description && (
-        <Text size="small" color="neutralSecondary" {...descriptionProps}>
+        <FieldDescription {...descriptionProps}>
           {props.schema.description}
-        </Text>
+        </FieldDescription>
       )}
       <MenuTrigger>
         <ActionButton alignSelf="start">Add</ActionButton>

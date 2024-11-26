@@ -1,7 +1,7 @@
 import { ActionButton, Button, ButtonGroup } from '@keystar/ui/button';
 import { Dialog, DialogContainer } from '@keystar/ui/dialog';
 import { ItemDropTarget, useDragAndDrop } from '@keystar/ui/drag-and-drop';
-import { FieldLabel, FieldMessage } from '@keystar/ui/field';
+import { FieldDescription, FieldLabel, FieldMessage } from '@keystar/ui/field';
 import { Icon } from '@keystar/ui/icon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { VStack } from '@keystar/ui/layout';
@@ -66,9 +66,9 @@ export function ArrayFieldInput<Element extends ComponentSchema>(
         {props.schema.label}
       </FieldLabel>
       {props.schema.description && (
-        <Text size="small" color="neutralSecondary" {...descriptionProps}>
+        <FieldDescription {...descriptionProps}>
           {props.schema.description}
-        </Text>
+        </FieldDescription>
       )}
       <ActionButton
         autoFocus={props.autoFocus}

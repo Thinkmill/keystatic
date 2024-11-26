@@ -1,6 +1,5 @@
 import { Flex } from '@keystar/ui/layout';
 import { css, tokenSchema, useStyleProps } from '@keystar/ui/style';
-import { Text } from '@keystar/ui/typography';
 import {
   forwardRef,
   ForwardRefExoticComponent,
@@ -9,6 +8,7 @@ import {
   useMemo,
 } from 'react';
 
+import { FieldDescription } from './FieldDescription';
 import { FieldLabel } from './FieldLabel';
 import { FieldMessage } from './FieldMessage';
 import { FieldPrimitiveProps } from './types';
@@ -95,9 +95,9 @@ export const FieldPrimitive: ForwardRefExoticComponent<
         })()}
 
         {description && (
-          <Text {...descriptionProps} size="small" color="neutralSecondary">
+          <FieldDescription {...descriptionProps}>
             {description}
-          </Text>
+          </FieldDescription>
         )}
 
         {children}
