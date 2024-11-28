@@ -1,5 +1,6 @@
-import { Collection, Config, DataFormat, Glob, Singleton } from '../config';
+import { Config, DataFormat, Glob } from '../config';
 import { ComponentSchema } from '../form/api';
+import { memoize } from './memoize';
 
 export function fixPath(path: string) {
   return path.replace(/^\.?\/+/, '').replace(/\/*$/, '');
@@ -25,17 +26,11 @@ export function getCollectionPath(config: Config, collection: string) {
 }
 
 export function getCollectionFormat(config: Config, collection: string) {
-  const collectionConfig = config.collections![collection];
-  return getFormatInfo(collectionConfig)(
-    getConfiguredCollectionPath(config, collection)
-  );
+  return getFormatInfo(config, 'collections', collection);
 }
 
 export function getSingletonFormat(config: Config, singleton: string) {
-  const singletonConfig = config.singletons![singleton];
-  return getFormatInfo(singletonConfig)(
-    singletonConfig.path ?? `${singleton}/`
-  );
+  return getFormatInfo(config, 'singletons', singleton);
 }
 
 export function getCollectionItemPath(
@@ -88,46 +83,19 @@ export function getDataFileExtension(formatInfo: FormatInfo) {
     : '.' + formatInfo.data;
 }
 
-function weakMemoize<Arg extends object, Return>(
-  func: (arg: Arg) => Return
-): (arg: Arg) => Return {
-  const cache = new WeakMap<Arg, Return>();
-  return (arg: Arg) => {
-    if (cache.has(arg)) {
-      return cache.get(arg)!;
-    }
-    const result = func(arg);
-    cache.set(arg, result);
-    return result;
-  };
-}
-
-function memoize<Arg, Return>(
-  func: (arg: Arg) => Return
-): (arg: Arg) => Return {
-  const cache = new Map<Arg, Return>();
-  return (arg: Arg) => {
-    if (cache.has(arg)) {
-      return cache.get(arg)!;
-    }
-    const result = func(arg);
-    cache.set(arg, result);
-    return result;
-  };
-}
-
-const getFormatInfo = weakMemoize(
-  (collectionOrSingleton: Collection<any, any> | Singleton<any>) => {
-    return memoize((path: string) =>
-      _getFormatInfo(collectionOrSingleton, path)
-    );
-  }
-);
+const getFormatInfo = memoize(_getFormatInfo);
 
 function _getFormatInfo(
-  collectionOrSingleton: Collection<any, any> | Singleton<any>,
-  path: string
+  config: Config,
+  type: 'collections' | 'singletons',
+  key: string
 ): FormatInfo {
+  const collectionOrSingleton =
+    type === 'collections' ? config.collections![key] : config.singletons![key];
+  const path =
+    type === 'collections'
+      ? getConfiguredCollectionPath(config, key)
+      : collectionOrSingleton.path ?? `${key}/`;
   const dataLocation = path.endsWith('/') ? 'index' : 'outer';
   const { schema, format = 'yaml' } = collectionOrSingleton;
   if (typeof format === 'string') {
@@ -137,25 +105,36 @@ function _getFormatInfo(
       data: format,
     };
   }
-  let contentField;
+  let contentField: FormatInfo['contentField'];
   if (format.contentField) {
     let field: ComponentSchema = { kind: 'object' as const, fields: schema };
     let path = Array.isArray(format.contentField)
       ? format.contentField
       : [format.contentField];
-
-    contentField = {
-      path,
-      contentExtension: getContentExtension(path, field, () =>
-        path.length === 1 ? path[0] : JSON.stringify(path)
-      ),
-    };
+    let contentExtension;
+    try {
+      contentExtension = getContentExtension(path, field, () =>
+        JSON.stringify(format.contentField)
+      );
+    } catch (err) {
+      if (err instanceof ContentFieldLocationError) {
+        throw new Error(`${err.message} (${type}.${key})`);
+      }
+      throw err;
+    }
+    contentField = { path, contentExtension };
   }
   return {
     data: format.data ?? 'yaml',
     contentField,
     dataLocation,
   };
+}
+
+class ContentFieldLocationError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
 }
 
 function getContentExtension(
@@ -165,22 +144,24 @@ function getContentExtension(
 ): string {
   if (path.length === 0) {
     if (schema.kind !== 'form' || schema.formKind !== 'content') {
-      throw new Error(
+      throw new ContentFieldLocationError(
         `Content field for ${debugName()} is not a content field`
       );
     }
     return schema.contentExtension;
   }
   if (schema.kind === 'object') {
-    return getContentExtension(
-      path.slice(1),
-      schema.fields[path[0]],
-      debugName
-    );
+    const field = schema.fields[path[0]];
+    if (!field) {
+      throw new ContentFieldLocationError(
+        `Field ${debugName()} specified in contentField does not exist`
+      );
+    }
+    return getContentExtension(path.slice(1), field, debugName);
   }
   if (schema.kind === 'conditional') {
     if (path[0] !== 'value') {
-      throw new Error(
+      throw new ContentFieldLocationError(
         `Conditional fields referenced in a contentField path must only reference the value field (${debugName()})`
       );
     }
@@ -197,19 +178,19 @@ function getContentExtension(
         continue;
       }
       if (contentExtension !== foundContentExtension) {
-        throw new Error(
+        throw new ContentFieldLocationError(
           `contentField ${debugName()} has conflicting content extensions`
         );
       }
     }
     if (!contentExtension) {
-      throw new Error(
+      throw new ContentFieldLocationError(
         `contentField ${debugName()} does not point to a content field`
       );
     }
     return contentExtension;
   }
-  throw new Error(
+  throw new ContentFieldLocationError(
     `Path specified in contentField ${debugName()} does not point to a content field`
   );
 }
