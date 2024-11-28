@@ -1,5 +1,22 @@
 # @keystatic/core
 
+## 0.5.42
+
+### Patch Changes
+
+- [#1365](https://github.com/Thinkmill/keystatic/pull/1365) [`c65f48b`](https://github.com/Thinkmill/keystatic/commit/c65f48baa26e13f95e1a9bcdd41a203fbc59f545) Thanks [@emmatown](https://github.com/emmatown)! - Improve error for invalid content field
+
+- [#1363](https://github.com/Thinkmill/keystatic/pull/1363) [`0b0864f`](https://github.com/Thinkmill/keystatic/commit/0b0864f55d2893fecbc4cbdaa88a306f84e6f1dd) Thanks [@jossmac](https://github.com/jossmac)! - Expose `FieldDescription` from "@keystar/ui/field" package.
+
+- [#1366](https://github.com/Thinkmill/keystatic/pull/1366) [`f6c883a`](https://github.com/Thinkmill/keystatic/commit/f6c883aa8d2da2c484e6e0105d59a85ed1859a63) Thanks [@dcousens](https://github.com/dcousens)! - Move `move` drag and drop util to `@keystar/ui/drag-and-drop`
+
+- [#1364](https://github.com/Thinkmill/keystatic/pull/1364) [`46d9c55`](https://github.com/Thinkmill/keystatic/commit/46d9c55cf17faea7b17568d4850e0b29dc362b52) Thanks [@emmatown](https://github.com/emmatown)! - Return more useful error when reaching `/api/keystatic/github/created-app` route when the GitHub App is already setup
+
+- [#1360](https://github.com/Thinkmill/keystatic/pull/1360) [`0d69577`](https://github.com/Thinkmill/keystatic/commit/0d69577c4b6dbfdc6f447e3aab7bd8ce7e254f0c) Thanks [@tordans](https://github.com/tordans)! - Add link to created GitHub App in generated `.env`
+
+- Updated dependencies [[`f6c883a`](https://github.com/Thinkmill/keystatic/commit/f6c883aa8d2da2c484e6e0105d59a85ed1859a63), [`0b0864f`](https://github.com/Thinkmill/keystatic/commit/0b0864f55d2893fecbc4cbdaa88a306f84e6f1dd), [`f6c883a`](https://github.com/Thinkmill/keystatic/commit/f6c883aa8d2da2c484e6e0105d59a85ed1859a63)]:
+  - @keystar/ui@0.7.14
+
 ## 0.5.41
 
 ### Patch Changes
