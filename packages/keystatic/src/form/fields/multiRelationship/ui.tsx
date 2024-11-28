@@ -4,7 +4,7 @@ import { useReducer, useMemo, useState, useEffect, Key } from 'react';
 
 import { ActionBar, ActionBarContainer } from '@keystar/ui/action-bar';
 import { Combobox } from '@keystar/ui/combobox';
-import { useDragAndDrop } from '@keystar/ui/drag-and-drop';
+import { move, useDragAndDrop } from '@keystar/ui/drag-and-drop';
 import { Icon } from '@keystar/ui/icon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
 import { VStack } from '@keystar/ui/layout';
@@ -15,7 +15,6 @@ import { Text } from '@keystar/ui/typography';
 import { FormFieldInputProps } from '../../api';
 import { useSlugsInCollection } from '../../../app/useSlugsInCollection';
 import { ExtraFieldInputProps } from '../../form-from-preview';
-import { move } from '../../ui-utils';
 import { validateMultiRelationshipLength } from './validate';
 
 export function MultiRelationshipInput(

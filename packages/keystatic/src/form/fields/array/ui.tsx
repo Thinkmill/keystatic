@@ -1,6 +1,10 @@
 import { ActionButton, Button, ButtonGroup } from '@keystar/ui/button';
 import { Dialog, DialogContainer } from '@keystar/ui/dialog';
-import { ItemDropTarget, useDragAndDrop } from '@keystar/ui/drag-and-drop';
+import {
+  ItemDropTarget,
+  move,
+  useDragAndDrop,
+} from '@keystar/ui/drag-and-drop';
 import { FieldDescription, FieldLabel, FieldMessage } from '@keystar/ui/field';
 import { Icon } from '@keystar/ui/icon';
 import { trash2Icon } from '@keystar/ui/icon/icons/trash2Icon';
@@ -26,7 +30,6 @@ import {
 import { previewPropsToValue, valueToUpdater } from '../../get-value';
 import { getInitialPropsValue } from '../../initial-values';
 import { createGetPreviewProps } from '../../preview-props';
-import { move } from '../../ui-utils';
 
 import { useEventCallback } from '../document/DocumentEditor/ui-utils';
 
