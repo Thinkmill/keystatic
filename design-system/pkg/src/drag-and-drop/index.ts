@@ -40,3 +40,5 @@ export type {
   RootDropTarget,
   TextDropItem,
 } from '@react-types/shared';
+
+export { move } from './move';
