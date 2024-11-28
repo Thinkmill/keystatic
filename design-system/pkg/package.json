@@ -1,7 +1,7 @@
 {
   "name": "@keystar/ui",
   "version": "0.7.13",
-  "license": "MIT",
+  "license": "MIT AND Apache-2.0",
   "main": "",
   "module": "",
   "scripts": {
