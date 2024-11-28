@@ -177,6 +177,12 @@ export function makeGenericAPIRouteHandler(
         ['Set-Cookie', immediatelyExpiringCookie('keystatic-gh-refresh-token')],
       ]);
     }
+    if (joined === 'github/created-app') {
+      return {
+        status: 404,
+        body: 'It looks like you just tried to create a GitHub App for Keystatic but there is already a GitHub App configured for Keystatic.\n\nYou may be here because you started creating a GitHub App but then started the process again elsewhere and completed it there. You should likely go back to Keystatic and sign in with GitHub to continue.',
+      };
+    }
     return { status: 404, body: 'Not Found' };
   };
 }
