@@ -2,10 +2,6 @@ name: Publish (Snapshot)
 
 on:
   workflow_dispatch:
-    inputs:
-      tag:
-        description: 'The npm tag to publish to'
-        required: true
 
 permissions:
   contents: write
@@ -37,7 +33,7 @@ jobs:
       - run: pnpm build:packages
 
       - name: npm publish, git tag
-        run: pnpm changeset publish --tag ${{ inputs.tag }}
+        run: pnpm changeset publish --tag test
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
