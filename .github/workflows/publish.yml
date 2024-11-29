@@ -3,6 +3,10 @@ name: Publish
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+  id-token: write
+
 jobs:
   publish:
     name: Publish
@@ -27,5 +31,6 @@ jobs:
         run: pnpm changeset publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
 
       - run: git push origin --follow-tags

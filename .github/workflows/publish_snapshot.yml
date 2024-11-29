@@ -7,6 +7,10 @@ on:
         description: 'The npm tag to publish to'
         required: true
 
+permissions:
+  contents: write
+  id-token: write
+
 jobs:
   publish_snapshot:
     name: Publish (Snapshot)
@@ -36,6 +40,7 @@ jobs:
         run: pnpm changeset publish --tag ${{ inputs.tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
 
       # reset, then push the dangling commit
       - name: git push
