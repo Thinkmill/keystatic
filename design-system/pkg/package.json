@@ -4,6 +4,11 @@
   "license": "MIT AND Apache-2.0",
   "main": "",
   "module": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Thinkmill/keystatic/",
+    "directory": "design-system/pkg"
+  },
   "scripts": {
     "build-icons": "tsx build-icons.ts && cd ../.. && pnpm preconstruct fix"
   },
