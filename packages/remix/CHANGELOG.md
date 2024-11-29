@@ -1,5 +1,14 @@
 # @keystatic/remix
 
+## 0.0.0-20241129011513
+
+### Patch Changes
+
+- [#1367](https://github.com/Thinkmill/keystatic/pull/1367) [`d19397a`](https://github.com/Thinkmill/keystatic/commit/d19397aba012fd16854dc4713d820c3e8b3295ec) Thanks [@emmatown](https://github.com/emmatown)! - Add npm publishing provenance
+
+- Updated dependencies [[`d19397a`](https://github.com/Thinkmill/keystatic/commit/d19397aba012fd16854dc4713d820c3e8b3295ec)]:
+  - @keystatic/core@0.0.0-20241129011513
+
 ## 5.0.0
 
 ### Patch Changes
