@@ -2,6 +2,11 @@
   "name": "@keystatic/templates-astro",
   "version": "0.0.54",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Thinkmill/keystatic/",
+    "directory": "templates/astro"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
