@@ -1,5 +1,14 @@
 # @keystatic/astro
 
+## 5.0.4
+
+### Patch Changes
+
+- [#1367](https://github.com/Thinkmill/keystatic/pull/1367) [`a361b0a`](https://github.com/Thinkmill/keystatic/commit/a361b0a551b62e08c25c2506103643046fb7b631) Thanks [@emmatown](https://github.com/emmatown)! - Add npm publishing provenance
+
+- Updated dependencies [[`a361b0a`](https://github.com/Thinkmill/keystatic/commit/a361b0a551b62e08c25c2506103643046fb7b631)]:
+  - @keystatic/core@0.5.43
+
 ## 5.0.3
 
 ### Patch Changes
