@@ -662,13 +662,6 @@ WithFalsyKey.story = {
   name: 'with falsy key',
 };
 
-export const MenuTriggerWithTriggerLongPress = () =>
-  render(defaultMenu, { trigger: 'longPress' });
-
-MenuTriggerWithTriggerLongPress.story = {
-  name: 'MenuTrigger with trigger="longPress"',
-};
-
 // .add('controlled isOpen', () => <ControlledOpeningMenuTrigger />)
 
 let customMenuItem = (item: any) => {

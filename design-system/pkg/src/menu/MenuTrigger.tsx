@@ -6,7 +6,6 @@ import { Placement } from '@react-types/overlays';
 import React, { ForwardedRef, forwardRef, Fragment, useRef } from 'react';
 
 import { Popover, Tray } from '@keystar/ui/overlays';
-import { SlotProvider } from '@keystar/ui/slots';
 import { tokenSchema, useIsMobileDevice } from '@keystar/ui/style';
 
 import { MenuContext } from './context';
@@ -25,19 +24,18 @@ export const MenuTrigger = forwardRef(function MenuTrigger(
   let menuTriggerRef = domRef || triggerRef;
   let menuRef = useRef<HTMLUListElement>(null);
   let {
-    children,
     align = 'start',
-    shouldFlip = true,
-    direction = 'bottom',
+    children,
     closeOnSelect,
-    trigger = 'press',
+    direction = 'bottom',
+    shouldFlip = true,
   } = props;
 
   let [menuTrigger, menu] = React.Children.toArray(children);
   let state = useMenuTriggerState(props);
 
   let { menuTriggerProps, menuProps } = useMenuTrigger(
-    { trigger },
+    { trigger: 'press' },
     state,
     menuTriggerRef
   );
@@ -96,17 +94,13 @@ export const MenuTrigger = forwardRef(function MenuTrigger(
 
   return (
     <Fragment>
-      <SlotProvider
-        slots={{ actionButton: { holdAffordance: trigger === 'longPress' } }}
+      <PressResponder
+        {...menuTriggerProps}
+        ref={menuTriggerRef}
+        isPressed={state.isOpen}
       >
-        <PressResponder
-          {...menuTriggerProps}
-          ref={menuTriggerRef}
-          isPressed={state.isOpen}
-        >
-          {menuTrigger}
-        </PressResponder>
-      </SlotProvider>
+        {menuTrigger}
+      </PressResponder>
       <MenuContext.Provider
         // TODO: Fix this type error
         // @ts-expect-error

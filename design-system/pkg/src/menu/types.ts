@@ -1,6 +1,6 @@
 import type {
   AriaMenuProps,
-  MenuTriggerProps as _MenuTriggerProps,
+  MenuTriggerProps as AriaMenuTriggerProps,
 } from '@react-types/menu';
 import type {
   Alignment,
@@ -43,7 +43,7 @@ export type MenuTriggerProps = {
    * @default true
    */
   closeOnSelect?: boolean;
-} & _MenuTriggerProps;
+} & Omit<AriaMenuTriggerProps, 'trigger'>;
 
 export type ActionMenuProps<T> = {
   /** Whether the element should receive focus on render. */
