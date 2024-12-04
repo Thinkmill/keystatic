@@ -1,5 +1,13 @@
 # localization
 
+## 0.1.130
+
+### Patch Changes
+
+- Updated dependencies [[`a361b0a`](https://github.com/Thinkmill/keystatic/commit/a361b0a551b62e08c25c2506103643046fb7b631)]:
+  - @keystatic/core@0.5.43
+  - @keystatic/next@5.0.2
+
 ## 0.1.129
 
 ### Patch Changes
