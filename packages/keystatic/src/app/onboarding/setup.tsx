@@ -77,7 +77,7 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
               parseRepoConfig(props.config.storage.repo).owner
             } Keystatic`,
             url: deployedURL
-              ? `${deployedURL}/keystatic`
+              ? new URL('/keystatic', deployedURL).toString()
               : `${window.location.origin}/keystatic`,
             public: true,
             redirect_url: `${window.location.origin}/api/keystatic/github/created-app`,
@@ -85,7 +85,12 @@ export function KeystaticSetup(props: { config: GitHubConfig }) {
               `${window.location.origin}/api/keystatic/github/oauth/callback`,
               `http://127.0.0.1/api/keystatic/github/oauth/callback`,
               ...(deployedURL
-                ? [`${deployedURL}/api/keystatic/github/oauth/callback`]
+                ? [
+                    new URL(
+                      '/api/keystatic/github/oauth/callback',
+                      deployedURL
+                    ).toString(),
+                  ]
                 : []),
             ],
             request_oauth_on_install: true,
