@@ -1,6 +1,6 @@
 {
   "key": "viewPullRequests",
-  "value": "Ver solicitudes de extracción",
+  "value": "Ver Pull Requests",
   "notes": "",
   "type": "git-related"
 }
