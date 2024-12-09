@@ -1,5 +1,11 @@
 # @keystatic/create
 
+## 0.0.5
+
+### Patch Changes
+
+- [#1367](https://github.com/Thinkmill/keystatic/pull/1367) [`a361b0a`](https://github.com/Thinkmill/keystatic/commit/a361b0a551b62e08c25c2506103643046fb7b631) Thanks [@emmatown](https://github.com/emmatown)! - Add npm publishing provenance
+
 ## 0.0.4
 
 ### Patch Changes
