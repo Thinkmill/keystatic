@@ -1,6 +1,6 @@
 {
   "key": "createPullRequest",
-  "value": "Crear solicitud de extracción",
+  "value": "Crear Pull Request",
   "notes": "",
   "type": "git-related"
 }

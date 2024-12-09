@@ -1,6 +1,6 @@
 {
   "key": "theCurrentlyCheckedOutBranch",
-  "value": "La sucursal actualmente desprotegida. Elija esto si necesita desarrollar el trabajo existente de la rama actual.",
+  "value": "La rama actualmente seleccionada. Elige esto si necesitas continuar trabajando sobre el progreso existente de la rama actual.",
   "notes": "",
   "type": "git-related"
 }

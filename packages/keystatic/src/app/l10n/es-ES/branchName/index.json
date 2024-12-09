@@ -1,6 +1,6 @@
 {
   "key": "branchName",
-  "value": "Nombre de la sucursal",
+  "value": "Nombre de la rama",
   "notes": "",
   "type": "git-related"
 }
