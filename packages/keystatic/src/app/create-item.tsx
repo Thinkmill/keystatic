@@ -27,7 +27,7 @@ import { FormForEntry, containerWidthForEntryLayout } from './entry-form';
 import { notFound } from './not-found';
 import { delDraft, getDraft, setDraft } from './persistence';
 import { PresenceAvatars } from './presence';
-import { useRouter } from './router';
+import { useRouter, useSearchParams } from './router';
 import { HeaderBreadcrumbs } from './shell/HeaderBreadcrumbs';
 import { useYjsIfAvailable } from './shell/collab';
 import { useConfig } from './shell/context';
@@ -59,18 +59,10 @@ import { ActionGroup, Item } from '@keystar/ui/action-group';
 import { Text } from '@keystar/ui/typography';
 import { breakpointQueries, useMediaQuery } from '@keystar/ui/style';
 
-function CreateItemWrapper(props: {
-  collection: string;
-  config: Config;
-  basePath: string;
-}) {
-  const router = useRouter();
-  const duplicateSlug = useMemo(() => {
-    const url = new URL(router.href, 'http://localhost');
-    return url.searchParams.get('duplicate');
-  }, [router.href]);
-
-  const collectionConfig = props.config.collections?.[props.collection];
+function CreateItemWrapper(props: { collection: string }) {
+  const duplicateSlug = useSearchParams().get('duplicate');
+  const config = useConfig();
+  const collectionConfig = config.collections?.[props.collection];
   if (!collectionConfig) notFound();
   const format = useMemo(
     () => getCollectionFormat(props.config, props.collection),

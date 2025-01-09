@@ -38,10 +38,9 @@ import {
 } from '@keystar/ui/table';
 import { Heading, Text } from '@keystar/ui/typography';
 
-import { Config } from '../config';
 import { sortBy } from './collection-sort';
 import l10nMessages from './l10n';
-import { useRouter } from './router';
+import { useNavigate, useSearchParams } from './router';
 import { EmptyState } from './shell/empty-state';
 import {
   useTree,
@@ -65,11 +64,12 @@ import { fetchBlob } from './useItemData';
 import { loadDataFile } from './required-files';
 import { parseProps } from '../form/parse-props';
 import { useData } from './useData';
+import { useConfig } from './shell/context';
+import { Config } from '../config';
 
 type CollectionPageProps = {
   collection: string;
   config: Config;
-  basePath: string;
 };
 
 export function CollectionPage(props: CollectionPageProps) {
@@ -78,23 +78,24 @@ export function CollectionPage(props: CollectionPageProps) {
   const collectionConfig = config.collections?.[collection];
   if (!collectionConfig) notFound();
 
-  const router = useRouter();
+  const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(
-    new URLSearchParams(router.search).get('search') ?? ''
+    () => searchParams.get('search') ?? ''
   );
+  const navigate = useNavigate();
 
   const setSearchTermFromForm = useCallback(
     (value: string) => {
       setSearchTerm(value);
-      const params = new URLSearchParams(router.search);
+      const params = new URLSearchParams(searchParams);
       if (value) {
         params.set('search', value);
       } else {
         params.delete('search');
       }
-      router.replace(router.pathname + '?' + params.toString());
+      navigate(routeInfo.pathname + '?' + params.toString(), true);
     },
-    [router]
+    [routeInfo]
   );
 
   let debouncedSearchTerm = useDebouncedValue(searchTerm, 300);

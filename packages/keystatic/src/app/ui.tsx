@@ -44,24 +44,71 @@ import { getAuth } from './auth';
 import { assertValidRepoConfig } from './repo-config';
 import { NotFoundBoundary, notFound } from './not-found';
 
-function parseParamsWithoutBranch(params: string[]) {
+type SingletonRoute = {
+  kind: 'singleton';
+  singleton: string;
+};
+
+type CollectionRoute =
+  | { kind: 'collection'; collection: string; action: 'create' | 'list' }
+  | { kind: 'collection'; collection: string; action: 'edit'; slug: string };
+
+type DashboardRoute = { kind: 'dashboard' };
+
+type BranchableRoute = SingletonRoute | CollectionRoute | DashboardRoute;
+
+function parseParamsWithoutBranch(params: string[]): BranchableRoute | null {
   if (params.length === 0) {
-    return {};
+    return { kind: 'dashboard' };
   }
   if (params.length === 2 && params[0] === 'singleton') {
-    return { singleton: params[1] };
+    return { kind: 'singleton', singleton: params[1] };
   }
   if (params.length < 2 || params[0] !== 'collection') return null;
   const collection = params[1];
   if (params.length === 2) {
-    return { collection };
+    return { kind: 'collection', collection, action: 'list' };
   }
   if (params.length === 3 && params[2] === 'create') {
-    return { collection, kind: 'create' as const };
+    return { kind: 'collection', collection, action: 'create' };
   }
   if (params.length === 4 && params[2] === 'item') {
     const slug = params[3];
-    return { collection, kind: 'edit' as const, slug };
+    return { kind: 'collection', collection, action: 'edit', slug };
+  }
+  return null;
+}
+
+type Route =
+  | { kind: 'local'; inner: BranchableRoute }
+  | { kind: 'branched'; branch: string; inner: BranchableRoute }
+  | {
+      kind: 'github-onboarding';
+      step: 'setup' | 'repo-not-found' | 'created-github-app';
+    };
+
+function parseRoute(params: string[]): Route | null {
+  const firstParam = params[0];
+  if (firstParam === 'branch') {
+    const branch = params[1];
+    if (branch === undefined) {
+      return null;
+    }
+    const parsed = parseParamsWithoutBranch(params.slice(2));
+    if (parsed !== null) {
+      return { kind: 'branched', branch, inner: parsed };
+    }
+  }
+  if (
+    firstParam === 'setup' ||
+    firstParam === 'repo-not-found' ||
+    firstParam === 'created-github-app'
+  ) {
+    return { kind: 'github-onboarding', step: firstParam };
+  }
+  const inner = parseParamsWithoutBranch(params);
+  if (inner !== null) {
+    return { kind: 'local', inner };
   }
   return null;
 }
@@ -162,31 +209,25 @@ function PageInner({ config }: { config: Config }) {
       >
         {parsedParams === null ? (
           <AlwaysNotFound />
-        ) : parsedParams.collection ? (
-          parsedParams.kind === 'create' ? (
+        ) : parsedParams.kind === 'collection' ? (
+          parsedParams.action === 'create' ? (
             <CreateItem
               key={parsedParams.collection}
               collection={parsedParams.collection}
-              config={config}
-              basePath={basePath}
             />
-          ) : parsedParams.kind === 'edit' ? (
+          ) : parsedParams.action === 'edit' ? (
             <ItemPage
               key={parsedParams.collection}
               collection={parsedParams.collection}
-              basePath={basePath}
-              config={config}
               itemSlug={parsedParams.slug}
             />
           ) : (
             <CollectionPage
               key={parsedParams.collection}
-              basePath={basePath}
               collection={parsedParams.collection}
-              config={config as unknown as Config}
             />
           )
-        ) : parsedParams.singleton ? (
+        ) : parsedParams.kind === 'singleton' ? (
           <SingletonPage
             key={parsedParams.singleton}
             config={config as unknown as Config}

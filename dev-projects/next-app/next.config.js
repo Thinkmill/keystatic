@@ -3,6 +3,7 @@ const withPreconstruct = require('@preconstruct/next');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: { ignoreDuringBuilds: true },
+  trailingSlash: true,
   typescript: {
     ignoreBuildErrors: true,
     tsconfigPath: './tsconfig-for-next/tsconfig.json',

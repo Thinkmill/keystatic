@@ -1,2 +1,2 @@
 export { Keystatic } from '#ui';
-export type { Router } from './app/router';
+export type { RouteInfo as Router } from './app/router';

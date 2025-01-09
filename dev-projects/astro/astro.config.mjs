@@ -9,5 +9,6 @@ export default defineConfig({
   adapter: node({
     mode: 'standalone',
   }),
+  trailingSlash: 'always',
   integrations: [react(), keystatic()],
 });
