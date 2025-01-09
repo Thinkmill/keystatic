@@ -1,5 +1,13 @@
 # @keystar/ui
 
+## 0.7.15
+
+### Patch Changes
+
+- [#1370](https://github.com/Thinkmill/keystatic/pull/1370) [`e65e7f3`](https://github.com/Thinkmill/keystatic/commit/e65e7f3544e7711831ad4087482720503a9078fc) Thanks [@jossmac](https://github.com/jossmac)! - Remove unused "longpress" behaviour on `Menu` component.
+
+- [#1367](https://github.com/Thinkmill/keystatic/pull/1367) [`a361b0a`](https://github.com/Thinkmill/keystatic/commit/a361b0a551b62e08c25c2506103643046fb7b631) Thanks [@emmatown](https://github.com/emmatown)! - Add npm publishing provenance
+
 ## 0.7.14
 
 ### Patch Changes
