@@ -1,6 +1,6 @@
 {
   "key": "deleteBranch",
-  "value": "Usuń oddział",
+  "value": "Usuń gałąź",
   "notes": "",
   "type": "git-related"
 }

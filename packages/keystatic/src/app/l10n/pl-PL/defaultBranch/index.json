@@ -1,6 +1,6 @@
 {
   "key": "defaultBranch",
-  "value": "Oddział domyślny",
+  "value": "Domyślna gałąź",
   "notes": "",
   "type": "git-related"
 }
