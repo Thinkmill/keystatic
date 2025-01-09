@@ -1,5 +1,20 @@
 # @keystatic/core
 
+## 0.5.43
+
+### Patch Changes
+
+- [#1383](https://github.com/Thinkmill/keystatic/pull/1383) [`f006f08`](https://github.com/Thinkmill/keystatic/commit/f006f08f0a112fa56e5fc4e9ae4d9010c2220453) Thanks [@Coolxer](https://github.com/Coolxer)! - Fix polish translations
+
+- [#1373](https://github.com/Thinkmill/keystatic/pull/1373) [`1a23c5b`](https://github.com/Thinkmill/keystatic/commit/1a23c5bd3b6595bfa4bf4c4e554717111e6e3a12) Thanks [@tordans](https://github.com/tordans)! - During onboarding, make sure the Deployed App URL does not have double slashes.
+
+- [#1367](https://github.com/Thinkmill/keystatic/pull/1367) [`a361b0a`](https://github.com/Thinkmill/keystatic/commit/a361b0a551b62e08c25c2506103643046fb7b631) Thanks [@emmatown](https://github.com/emmatown)! - Add npm publishing provenance
+
+- [#1378](https://github.com/Thinkmill/keystatic/pull/1378) [`7a89c00`](https://github.com/Thinkmill/keystatic/commit/7a89c0079fac1a17396d58d9495b9492bb405678) Thanks [@lucas-labs](https://github.com/lucas-labs)! - Improve Spanish translations
+
+- Updated dependencies [[`e65e7f3`](https://github.com/Thinkmill/keystatic/commit/e65e7f3544e7711831ad4087482720503a9078fc), [`a361b0a`](https://github.com/Thinkmill/keystatic/commit/a361b0a551b62e08c25c2506103643046fb7b631)]:
+  - @keystar/ui@0.7.15
+
 ## 0.5.42
 
 ### Patch Changes

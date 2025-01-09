@@ -1,5 +1,14 @@
 # @keystatic/next
 
+## 5.0.2
+
+### Patch Changes
+
+- [#1367](https://github.com/Thinkmill/keystatic/pull/1367) [`a361b0a`](https://github.com/Thinkmill/keystatic/commit/a361b0a551b62e08c25c2506103643046fb7b631) Thanks [@emmatown](https://github.com/emmatown)! - Add npm publishing provenance
+
+- Updated dependencies [[`f006f08`](https://github.com/Thinkmill/keystatic/commit/f006f08f0a112fa56e5fc4e9ae4d9010c2220453), [`1a23c5b`](https://github.com/Thinkmill/keystatic/commit/1a23c5bd3b6595bfa4bf4c4e554717111e6e3a12), [`a361b0a`](https://github.com/Thinkmill/keystatic/commit/a361b0a551b62e08c25c2506103643046fb7b631), [`7a89c00`](https://github.com/Thinkmill/keystatic/commit/7a89c0079fac1a17396d58d9495b9492bb405678)]:
+  - @keystatic/core@0.5.43
+
 ## 5.0.1
 
 ### Patch Changes
