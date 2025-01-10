@@ -122,3 +122,42 @@ test('blockquote pasting', async () => {
     </doc>
   `);
 });
+
+test('codeblock pasting with language', async () => {
+  let dataTransfer;
+  const codeBlock = (
+    <code_block language="javascript">
+      <text>console.log(1);</text>
+    </code_block>
+  );
+  {
+    const { user } = renderEditor(
+      <doc>
+        <paragraph>
+          <anchor />
+        </paragraph>
+        {codeBlock}
+        <paragraph>
+          <head />
+        </paragraph>
+      </doc>
+    );
+
+    dataTransfer = await user.copy();
+  }
+  const { state, user } = renderEditor(
+    <doc>
+      <paragraph />
+    </doc>
+  );
+  await user.paste(dataTransfer);
+  expect(state()).toEqual(
+    <doc>
+      <paragraph />
+      {codeBlock}
+      <paragraph>
+        <cursor />
+      </paragraph>
+    </doc>
+  );
+});
