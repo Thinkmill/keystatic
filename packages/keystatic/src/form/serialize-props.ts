@@ -1,7 +1,15 @@
 import { transformProps } from './props-value';
 import { ReadonlyPropPath } from './fields/document/DocumentEditor/component-blocks/utils';
 import { getSlugFromState } from '../app/utils';
-import { ComponentSchema } from '..';
+import { ComponentSchema, FormFieldStoredValue } from '..';
+
+type ContentSerialization = {
+  value: FormFieldStoredValue;
+  content: Uint8Array | undefined;
+  other: ReadonlyMap<string, Uint8Array>;
+  external: ReadonlyMap<string, ReadonlyMap<string, Uint8Array>>;
+};
+const contentSerializationCache = new WeakMap<object, ContentSerialization>();
 
 export function serializeProps(
   rootValue: unknown,
@@ -44,7 +52,17 @@ export function serializeProps(
         if (schema.formKind === 'content' || schema.formKind === 'assets') {
           let other: ReadonlyMap<string, Uint8Array>, external, forYaml;
           if (schema.formKind === 'content') {
-            const out = schema.serialize(value, { slug });
+            let out: undefined | ContentSerialization;
+            if (typeof value === 'object' && value !== null) {
+              out = contentSerializationCache.get(value);
+            }
+            if (out === undefined) {
+              out = schema.serialize(value, { slug });
+              if (typeof value === 'object' && value !== null) {
+                contentSerializationCache.set(value, out);
+              }
+            }
+
             if (out.content) {
               extraFiles.push({
                 path:

@@ -1,5 +1,5 @@
 import isEqual from 'fast-deep-equal';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useDeferredValue, useMemo, useState } from 'react';
 import { ComponentSchema, ObjectField } from '../form/api';
 import { getSlugFromState } from './utils';
 import { serializeProps } from '../form/serialize-props';
@@ -49,21 +49,24 @@ export function useHasChanged(args: {
     )
   );
 
+  const deferredState = useDeferredValue(args.state);
+
   const filesForUpdate = useData(
-    useCallback(() => serialize(args.state), [serialize, args.state])
+    useCallback(() => serialize(deferredState), [serialize, deferredState])
   );
 
   const hasChangedState = useMemo(() => {
     if (
       initialFilesForUpdate.kind === 'loaded' &&
-      filesForUpdate.kind === 'loaded'
+      filesForUpdate.kind === 'loaded' &&
+      deferredState === args.state
     ) {
       const a = initialFilesForUpdate.data;
       const b = filesForUpdate.data;
       return !isEqual(a, b);
     }
     return 'unknown' as const;
-  }, [initialFilesForUpdate, filesForUpdate]);
+  }, [initialFilesForUpdate, filesForUpdate, deferredState, args.state]);
 
   const [hasChanged, setHasChanged] = useState(false);
 
