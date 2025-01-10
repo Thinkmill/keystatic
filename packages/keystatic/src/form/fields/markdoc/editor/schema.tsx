@@ -70,11 +70,6 @@ const dividerDOM: DOMOutputSpec = [
     }),
   },
 ];
-const codeDOM: DOMOutputSpec = [
-  'pre',
-  { spellcheck: 'false' },
-  ['code', {}, 0],
-];
 const hardBreakDOM: DOMOutputSpec = ['br'];
 
 const olDOM: DOMOutputSpec = ['ol', {}, 0];
@@ -191,9 +186,22 @@ const nodeSpecs = {
     },
     marks: '',
     code: true,
-    parseDOM: [{ tag: 'pre', preserveWhitespace: 'full' }],
-    toDOM() {
-      return codeDOM;
+    parseDOM: [
+      {
+        tag: 'pre',
+        preserveWhitespace: 'full',
+        getAttrs(node) {
+          if (typeof node === 'string') return {};
+          return { language: node.getAttribute('data-language') ?? '' };
+        },
+      },
+    ],
+    toDOM(node) {
+      return [
+        'pre',
+        { spellcheck: 'false', 'data-language': node.attrs.language },
+        ['code', {}, 0],
+      ];
     },
   },
   list_item: {

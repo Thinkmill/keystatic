@@ -516,6 +516,7 @@ export function renderEditor(editorState: EditorStateDescription): {
   rendered: ReturnType<typeof render>;
   user: ReturnType<(typeof userEvent)['setup']>;
   state: () => EditorStateDescription;
+  contentElement: HTMLElement;
 } {
   const viewRef = createRef<{ view: EditorView | null }>();
   const user = userEvent.setup();
@@ -537,10 +538,19 @@ export function renderEditor(editorState: EditorStateDescription): {
 
   viewRef.current!.view!.focus();
 
+  const contentElement = rendered.baseElement.querySelector(
+    '[contenteditable="true"]'
+  )!;
+
+  if (!(contentElement instanceof HTMLElement)) {
+    throw new Error('content element not found/not HTMLElement');
+  }
+
   return {
     state: () => editorState,
     user,
     rendered,
+    contentElement,
   };
 }
 
