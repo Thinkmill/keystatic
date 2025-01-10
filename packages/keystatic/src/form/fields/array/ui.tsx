@@ -257,6 +257,9 @@ function ArrayEditItemModalContent(props: {
     return { slugs, field: slugField, glob: '*' as const };
   }, [props.previewProps, props.modalStateIndex]);
 
+  const { key, ...propsWithoutKey } =
+    props.previewProps.elements[props.modalStateIndex];
+
   return (
     <Content>
       <VStack
@@ -272,7 +275,7 @@ function ArrayEditItemModalContent(props: {
         <FormValueContentFromPreviewProps
           slugField={slugInfo}
           autoFocus
-          {...props.previewProps.elements[props.modalStateIndex]}
+          {...propsWithoutKey}
         />
       </VStack>
     </Content>
