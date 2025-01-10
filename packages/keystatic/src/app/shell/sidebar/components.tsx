@@ -39,6 +39,7 @@ import l10nMessages from '../../l10n';
 import {
   KEYSTATIC_CLOUD_API_URL,
   KEYSTATIC_CLOUD_HEADERS,
+  getCreatePullRequestUrl,
   getRepoUrl,
   isGitHubConfig,
   redirectToCloudAuth,
@@ -365,12 +366,12 @@ export function GitMenu() {
       },
     ];
 
-    if (!isDefaultBranch && prNumber !== undefined) {
+    if (!isDefaultBranch && prNumber !== undefined && repoInfo) {
       if (prNumber === false) {
         prSection.push({
           key: 'create-pull-request',
           icon: gitPullRequestIcon,
-          href: `${repoURL}/pull/new/${currentBranch}`,
+          href: getCreatePullRequestUrl(repoInfo, currentBranch),
           target: '_blank',
           rel: 'noopener noreferrer',
           label: stringFormatter.format('createPullRequest'),

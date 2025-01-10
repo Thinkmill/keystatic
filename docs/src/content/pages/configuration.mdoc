@@ -67,6 +67,25 @@ export default config({
 
 Keystatic will only list branches starting with my-prefix/ in the Admin UI, and will only let you create new branches with that prefix.
 
+
+### Default branch
+
+By default, Keystatic will use the default branch configured in your GitHub repository to show the default view and when . If you'd like to 
+
+
+```ts
+// keystatic.config.ts
+import { config } from '@keystatic/core'
+
+export default config({
+  storage: { 
+    kind: 'github',
+    repo: 'Thinkmill/keystatic',
+    defaultBranch: 'my-custom-default-branch-for-keystatic'
+  }
+})
+```
+
 ### Cloud
 
 `cloud` — used to configure the [Keystatic Cloud](/docs/cloud) project if `storage.kind` is set to `cloud`.

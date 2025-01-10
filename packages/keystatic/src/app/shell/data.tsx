@@ -30,6 +30,7 @@ import {
 } from '../useData';
 import {
   getEntriesInCollectionWithTreeKey,
+  getRepoUrl,
   isGitHubConfig,
   KEYSTATIC_CLOUD_API_URL,
   KEYSTATIC_CLOUD_HEADERS,
@@ -414,11 +415,17 @@ export function GitHubAppShellProvider(props: {
         !!repo?.viewerPermission &&
         writePermissions.has(repo.viewerPermission)));
 
+  const defaultBranchFromConfig =
+    props.config.storage.kind !== 'local'
+      ? props.config.storage.defaultBranch
+      : undefined;
+
   const repoInfo = useMemo((): RepoInfo | null => {
     if (!data?.repository || !repo?.defaultBranchRef?.name) return null;
     return {
       id: repo.id,
-      defaultBranch: repo.defaultBranchRef.name,
+      defaultBranch: defaultBranchFromConfig ?? repo.defaultBranchRef.name,
+      githubConfiguredDefaultBranch: repo.defaultBranchRef.name,
       hasWritePermission,
       isPrivate: repo.isPrivate,
       name: repo.name,
@@ -430,6 +437,7 @@ export function GitHubAppShellProvider(props: {
     };
   }, [
     data?.repository,
+    defaultBranchFromConfig,
     hasWritePermission,
     repo?.defaultBranchRef?.name,
     repo?.id,
@@ -483,9 +491,10 @@ export function useBranches() {
   return useContext(BranchesContext);
 }
 
-type RepoInfo = {
+export type RepoInfo = {
   id: string;
   defaultBranch: string;
+  githubConfiguredDefaultBranch: string;
   isPrivate: boolean;
   owner: string;
   name: string;

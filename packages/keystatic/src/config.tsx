@@ -50,7 +50,15 @@ type CommonConfig<Collections, Singletons> = {
 
 type CommonRemoteStorageConfig = {
   pathPrefix?: string;
+  /**
+   * `branchPrefix` is used to filter the branches that are shown in Keystatic's interface. The default branch is also
+   */
   branchPrefix?: string;
+  /**
+   * By default, Keystatic will use the default branch configured in GitHub, if you'd like to override this
+   * to use a different branch specifically for Keystatic, you can set this option to
+   */
+  defaultBranch?: string;
 };
 
 // Interface

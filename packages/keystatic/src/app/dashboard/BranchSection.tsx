@@ -12,7 +12,7 @@ import { DashboardSection } from './components';
 import { useRouter } from '../router';
 import { useCurrentBranch, useRepoInfo } from '../shell/data';
 import { useLocalizedString } from '../shell/i18n';
-import { getRepoUrl } from '../utils';
+import { getCreatePullRequestUrl, getRepoUrl } from '../utils';
 import { useAssociatedPullRequest } from '../shell/sidebar/components';
 
 export function BranchSection() {
@@ -64,9 +64,10 @@ export function BranchSection() {
 
         {!isDefaultBranch &&
           prNumber !== undefined &&
+          repoInfo !== null &&
           (prNumber === false ? (
             <ActionButton
-              href={`${repoURL}/pull/new/${currentBranch}`}
+              href={getCreatePullRequestUrl(repoInfo, currentBranch)}
               target="_blank"
             >
               <Icon src={gitPullRequestIcon} />

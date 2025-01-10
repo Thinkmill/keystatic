@@ -18,6 +18,7 @@ import { object } from '../form/fields/object';
 import { useEffect } from 'react';
 import { showDraftRestoredToast } from './persistence';
 import { useEffectEvent } from '@react-aria/utils';
+import { RepoInfo } from './shell/data';
 
 export * from './path-utils';
 
@@ -75,6 +76,14 @@ export function getRepoPath(config: { owner: string; name: string }) {
 }
 export function getRepoUrl(config: { owner: string; name: string }) {
   return `https://github.com/${getRepoPath(config)}`;
+}
+
+export function getCreatePullRequestUrl(
+  repoInfo: RepoInfo,
+  currentBranch: string
+) {
+  const repoURL = getRepoUrl(repoInfo);
+  return `${repoURL}/compare/${repoInfo.defaultBranch}...${currentBranch}?expand=1`;
 }
 
 export function getSlugFromState(
