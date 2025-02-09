@@ -4,7 +4,12 @@ summary: The datetime field stores a Datetime string.
 ---
 {% field-demo field="datetime" /%}
 
-The `datetime` field stores a Datetime string, collected from an `<input type="datetime-local" />` form field.
+The `datetime` field stores an [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) formatted datetime string in UTC time (i.e. YYYY-MM-DDTHH:MM:SS.000Z), collected from an `<input type="datetime-local" />` form field. 
+
+{% aside icon="☝️" %}
+Datetimes are stored in UTC time, but displayed/edited in the user's local timezone.
+{% /aside %}
+
 
 ## Usage example
 
