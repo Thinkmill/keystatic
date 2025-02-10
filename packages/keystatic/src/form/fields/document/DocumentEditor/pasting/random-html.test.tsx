@@ -1,4 +1,4 @@
-/** @jest-environment jsdom */
+// @vitest-environment jsdom
 
 import { test, expect } from '@jest/globals';
 import { toMarkdoc } from '../../markdoc/test-utils';

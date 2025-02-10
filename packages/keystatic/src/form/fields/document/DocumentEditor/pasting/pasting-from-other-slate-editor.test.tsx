@@ -1,4 +1,4 @@
-/** @jest-environment jsdom */
+// @vitest-environment jsdom
 import React, { useState } from 'react';
 import { createEditor, Editor } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';

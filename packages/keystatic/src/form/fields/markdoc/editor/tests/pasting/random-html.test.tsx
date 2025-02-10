@@ -1,4 +1,4 @@
-/** @jest-environment jsdom */
+// @vitest-environment jsdom
 
 import { expect, test } from '@jest/globals';
 import { htmlToEditor } from './utils';

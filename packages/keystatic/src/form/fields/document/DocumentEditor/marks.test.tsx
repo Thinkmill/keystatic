@@ -1,4 +1,4 @@
-/** @jest-environment jsdom */
+// @vitest-environment jsdom
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { expect, test, describe } from '@jest/globals';

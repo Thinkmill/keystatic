@@ -1,4 +1,4 @@
-/** @jest-environment jsdom */
+// @vitest-environment jsdom
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { EditorStateDescription, jsx, toEditorState } from './utils';
