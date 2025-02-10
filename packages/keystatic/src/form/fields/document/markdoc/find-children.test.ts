@@ -1,4 +1,4 @@
-/** @jest-environment node */
+// @vitest-environment node
 import { ComponentSchema, fields } from '../../../..';
 import { expect, test } from 'vitest';
 import { findSingleChildField } from './find-children';

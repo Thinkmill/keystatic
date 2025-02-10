@@ -1,4 +1,4 @@
-/** @jest-environment node */
+// @vitest-environment node
 import path from 'path';
 import { component, fields, collection, config } from '../src';
 import { EntryWithResolvedLinkedFiles, createReader } from '../src/reader';

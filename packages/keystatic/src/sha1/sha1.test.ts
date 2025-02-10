@@ -1,4 +1,4 @@
-/** @jest-environment node */
+// @vitest-environment node
 import { expect, test } from 'vitest';
 import { sha1 as sha1Node } from './node';
 import { sha1 as sha1Webcrypto } from './webcrypto';
