@@ -7,4 +7,7 @@ export default defineConfig({
     environment: 'jsdom',
     clearMocks: true,
   },
+  esbuild: {
+    jsx: 'automatic',
+  },
 });
