@@ -9,7 +9,7 @@ import { Editor } from '../index';
 import { GapCursor } from '../gapcursor/gapcursor';
 import { KeystarProvider } from '@keystar/ui/core';
 import { createRef } from 'react';
-import { plugins, format, NewPlugin } from 'pretty-format';
+import { plugins, format, NewPlugin } from '@vitest/pretty-format';
 import { EditorView } from 'prosemirror-view';
 import { editorStateToReactNode } from './editor-state-to-react-element';
 import { editorOptionsToConfig } from '../../config';
