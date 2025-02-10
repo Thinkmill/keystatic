@@ -11,7 +11,7 @@ import { RenderableTreeNode, Tag } from '@markdoc/markdoc';
 import { transformMarkdoc } from '../../../../../keystatic.config';
 
 type DocsProps = {
-  params: { slug: string[] };
+  params: Promise<{ slug: string[] }>;
 };
 
 function stringifyDocContent(node: RenderableTreeNode): string {
@@ -26,7 +26,8 @@ function stringifyDocContent(node: RenderableTreeNode): string {
 
 export const dynamicParams = false;
 
-export default async function Docs({ params }: DocsProps) {
+export default async function Docs(props: DocsProps) {
+  const params = await props.params;
   const { slug: slugPath } = params;
 
   const slug = slugPath.join('/');
@@ -94,9 +95,10 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  { params }: DocsProps,
+  props: DocsProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const params = await props.params;
   const slugPath = params.slug;
   const slug = slugPath.join('/');
 

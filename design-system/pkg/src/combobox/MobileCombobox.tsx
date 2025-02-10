@@ -423,7 +423,6 @@ function ComboboxTray<T extends object>(props: ComboboxTrayProps<T>) {
     } else if (loadingState !== 'filtering') {
       // If loading is no longer happening, clear any timers and hide the loading circle
       setShowLoading(false);
-      // @ts-expect-error FIXME: NodeJS.Timeout is not assignable to number
       clearTimeout(timeoutRef.current);
       timeoutRef.current = undefined;
     }

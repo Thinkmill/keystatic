@@ -17,11 +17,10 @@ export async function generateStaticParams() {
 
 export const dynamicParams = false;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string[] };
+export async function generateMetadata(props: {
+  params: Promise<{ slug: string[] }>;
 }): Promise<Metadata> {
+  const params = await props.params;
   const slugWithDocsBitAdded = [
     params.slug[0],
     'docs',
@@ -36,11 +35,13 @@ export async function generateMetadata({
   return { title: entry.title };
 }
 
-export default async function Page(props: { params: { slug: string[] } }) {
+export default async function Page(props: {
+  params: Promise<{ slug: string[] }>;
+}) {
   const slugWithDocsBitAdded = [
-    props.params.slug[0],
+    (await props.params).slug[0],
     'docs',
-    ...props.params.slug.slice(1),
+    ...(await props.params).slug.slice(1),
   ];
   const slug = slugWithDocsBitAdded.join('/');
   let entry = await reader.collections.packageDocs.read(slug, {

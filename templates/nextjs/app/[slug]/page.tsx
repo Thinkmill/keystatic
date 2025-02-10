@@ -4,7 +4,10 @@ import Markdoc from '@markdoc/markdoc';
 import { reader } from '../reader';
 import { markdocConfig } from '../../keystatic.config';
 
-export default async function Post({ params }: { params: { slug: string } }) {
+export default async function Post(props: {
+  params: Promise<{ slug: string }>;
+}) {
+  const params = await props.params;
   const { slug } = params;
 
   const post = await reader.collections.posts.read(slug);

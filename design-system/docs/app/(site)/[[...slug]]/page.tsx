@@ -18,11 +18,10 @@ export async function generateStaticParams() {
 
 export const dynamicParams = false;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug?: string[] };
+export async function generateMetadata(props: {
+  params: Promise<{ slug?: string[] }>;
 }): Promise<Metadata> {
+  const params = await props.params;
   const slug = (params.slug ?? ['index']).join('/');
   let entry = await reader.collections.otherDocs.read(slug);
   if (!entry && slug !== 'index') {
@@ -32,8 +31,10 @@ export async function generateMetadata({
   return { title: entry.title };
 }
 
-export default async function Page(props: { params: { slug?: string[] } }) {
-  const slug = (props.params.slug ?? ['index']).join('/');
+export default async function Page(props: {
+  params: Promise<{ slug?: string[] }>;
+}) {
+  const slug = ((await props.params).slug ?? ['index']).join('/');
   let entry = await reader.collections.otherDocs.read(slug, {
     resolveLinkedFiles: true,
   });

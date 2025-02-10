@@ -9,7 +9,10 @@ import { GitHubOutlineIcon } from '../../../../components/icons/github-outline-i
 import { MarkdocRenderer } from '../../../../components/markdoc-renderer';
 import { CloudImage } from '../../../../components/cloud-image';
 
-export default async function Docs({ params }: { params: { slug: string } }) {
+export default async function Docs(props: {
+  params: Promise<{ slug: string }>;
+}) {
+  const params = await props.params;
   const { slug } = params;
   const project = await reader().collections.projects.read(slug);
   if (!project) notFound();
@@ -137,9 +140,10 @@ export async function generateStaticParams() {
 export const dynamicParams = false;
 
 export async function generateMetadata(
-  { params }: { params: { slug: string } },
+  props: { params: Promise<{ slug: string }> },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const params = await props.params;
   const slug = params.slug;
   const project = await reader().collections.projects.read(slug);
 

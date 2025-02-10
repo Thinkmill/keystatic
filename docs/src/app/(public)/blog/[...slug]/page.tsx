@@ -9,12 +9,13 @@ import { H1_ID } from '../../../../constants';
 import { MarkdocRenderer } from '../../../../components/markdoc-renderer';
 
 type BlogProps = {
-  params: { slug: string[] };
+  params: Promise<{ slug: string[] }>;
 };
 
 export const dynamicParams = false;
 
-export default async function BlogPost({ params }: BlogProps) {
+export default async function BlogPost(props: BlogProps) {
+  const params = await props.params;
   const { slug: slugPath } = params;
   const slug = slugPath.join('/');
 
@@ -95,9 +96,10 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  { params }: BlogProps,
+  props: BlogProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const params = await props.params;
   const slugPath = params.slug;
   const slug = slugPath.join('/');
 

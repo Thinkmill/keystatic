@@ -12,7 +12,7 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   try {
-    const referer = headers().get('referer');
+    const referer = (await headers()).get('referer');
     let pathname = '/';
     if (referer) {
       try {

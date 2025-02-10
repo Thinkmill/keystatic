@@ -13,9 +13,12 @@ export async function generateStaticParams() {
 
 export const dynamicParams = false;
 
-export async function GET(_: Request, props: { params: { slug: string } }) {
-  if (!pages[props.params.slug]) {
+export async function GET(
+  _: Request,
+  props: { params: Promise<{ slug: string }> }
+) {
+  if (!pages[(await props.params).slug]) {
     return new Response('Not Found', { status: 404 });
   }
-  return renderOgImage(pages[props.params.slug]);
+  return renderOgImage(pages[(await props.params).slug]);
 }

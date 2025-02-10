@@ -16,7 +16,6 @@ import { Embed } from './embed';
 import Link from 'next/link';
 import { DatetimeFieldDemo } from './fields/datetime';
 import keystaticCodeTheme from '../styles/keystatic-theme.json';
-import { draftMode } from 'next/headers';
 import React, { Fragment, ReactElement, ReactNode } from 'react';
 import { Node, renderers } from '@markdoc/markdoc';
 import { transformMarkdoc } from '../../keystatic.config';
@@ -27,12 +26,9 @@ export async function MarkdocRenderer({
   node: Node;
 }): Promise<ReactElement> {
   const root = transformMarkdoc(node);
-  const { isEnabled } = draftMode();
-  const highlighter = isEnabled
-    ? undefined
-    : await shiki.getHighlighter({
-        theme: keystaticCodeTheme as any,
-      });
+  const highlighter = await shiki.getHighlighter({
+    theme: keystaticCodeTheme as any,
+  });
 
   return renderers.react(root, React, {
     components: getRenderers(highlighter),
