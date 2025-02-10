@@ -1,6 +1,11 @@
-import '@testing-library/jest-dom/jest-globals';
-
+import '@testing-library/jest-dom/vitest';
+import { cleanup } from '@testing-library/react';
+import { afterEach } from 'vitest';
 import { TextDecoder, TextEncoder } from 'util';
+
+afterEach(() => {
+  cleanup();
+});
 
 // not sure why these aren't in jest's jsdom environment?
 globalThis.TextDecoder = TextDecoder as any;
