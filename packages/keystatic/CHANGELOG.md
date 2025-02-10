@@ -1,5 +1,15 @@
 # @keystatic/core
 
+## 0.5.44
+
+### Patch Changes
+
+- [#1402](https://github.com/Thinkmill/keystatic/pull/1402) [`9a73371`](https://github.com/Thinkmill/keystatic/commit/9a73371c642da0770536076cb7f4e70a0fe496f6) Thanks [@emmatown](https://github.com/emmatown)! - Fix tooltip on list buttons in editor incorrectly showing the keyboard shortcut requiring cmd/ctrl
+
+- [#1389](https://github.com/Thinkmill/keystatic/pull/1389) [`c300a68`](https://github.com/Thinkmill/keystatic/commit/c300a68253a3ea95662aae19fdae880727da899a) Thanks [@emmatown](https://github.com/emmatown)! - Fix warning from React about spreading `key` onto props when editing item in array field
+
+- [#1391](https://github.com/Thinkmill/keystatic/pull/1391) [`4c4b0ef`](https://github.com/Thinkmill/keystatic/commit/4c4b0efa8ecfc45053dee992f7ceb8566c520ede) Thanks [@emmatown](https://github.com/emmatown)! - Fix language being discarded when copy and pasting code block in new editor
+
 ## 0.5.43
 
 ### Patch Changes
