@@ -1,4 +1,4 @@
-import { expect, it, describe, afterEach, jest } from 'vitest';
+import { expect, it, describe, afterEach, vi } from 'vitest';
 
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -78,8 +78,8 @@ describe('slots', function () {
   });
 
   it('chains functions', async function () {
-    let onClick = jest.fn();
-    let onClickUser = jest.fn();
+    let onClick = vi.fn();
+    let onClickUser = vi.fn();
     let slots = {
       slotname: { onClick },
     };

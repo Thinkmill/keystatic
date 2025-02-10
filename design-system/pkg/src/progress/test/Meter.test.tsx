@@ -1,4 +1,4 @@
-import { expect, jest, describe, it } from 'vitest';
+import { expect, vi, describe, it } from 'vitest';
 import { render } from '@testing-library/react';
 
 import { Meter } from '..';
@@ -47,7 +47,7 @@ describe('progress/Meter', function () {
   });
 
   it('warns user if no aria-label is provided', () => {
-    let spyWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    let spyWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     render(<Meter value={25} />);
     expect(spyWarn).toHaveBeenCalledWith(
       'Warning: If you do not provide a visible label via children, you must specify an aria-label or aria-labelledby attribute for accessibility.'

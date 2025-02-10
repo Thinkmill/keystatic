@@ -1,4 +1,4 @@
-import { expect, it, describe, jest } from 'vitest';
+import { expect, it, describe, vi } from 'vitest';
 import { render } from '@testing-library/react';
 
 import { ProgressCircle } from '..';
@@ -53,7 +53,7 @@ describe('progress/ProgressCircle', function () {
   });
 
   it('warns user if no aria-label is provided', () => {
-    let spyWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    let spyWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     render(<ProgressCircle value={25} />);
     expect(spyWarn).toHaveBeenCalledWith(
       'Warning: ProgressCircle requires an aria-label or aria-labelledby attribute for accessibility.'

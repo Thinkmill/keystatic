@@ -1,5 +1,5 @@
 import React from 'react';
-import { expect, it, describe, afterEach, jest } from 'vitest';
+import { expect, it, describe, afterEach, vi } from 'vitest';
 import { firePress, renderWithProvider } from '#test-utils';
 import userEvent from '@testing-library/user-event';
 
@@ -39,11 +39,11 @@ function renderNumberField(
 }
 
 describe('number-field/NumberField', () => {
-  let onChangeSpy = jest.fn();
-  let onBlurSpy = jest.fn();
-  let onFocusSpy = jest.fn();
-  let onKeyDownSpy = jest.fn();
-  let onKeyUpSpy = jest.fn();
+  let onChangeSpy = vi.fn();
+  let onBlurSpy = vi.fn();
+  let onFocusSpy = vi.fn();
+  let onKeyDownSpy = vi.fn();
+  let onKeyUpSpy = vi.fn();
 
   afterEach(() => {
     onChangeSpy.mockClear();

@@ -6,7 +6,7 @@ import {
   expect,
   it,
   describe,
-  jest,
+  vi,
   afterAll,
   afterEach,
   beforeAll,
@@ -15,20 +15,19 @@ import {
 import { Item, Menu, MenuProps, Section } from '..';
 
 describe('menu/Menu', () => {
-  let offsetWidth: jest.SpiedGetter<number>,
-    offsetHeight: jest.SpiedGetter<number>;
-  let onSelectionChange = jest.fn<(val: any) => void>();
+  let offsetWidth: vi.SpiedGetter<number>, offsetHeight: vi.SpiedGetter<number>;
+  let onSelectionChange = vi.fn<(val: any) => void>();
 
   beforeAll(function () {
-    offsetWidth = jest
+    offsetWidth = vi
       .spyOn(window.HTMLElement.prototype, 'offsetWidth', 'get')
       .mockImplementation(() => 1000);
-    offsetHeight = jest
+    offsetHeight = vi
       .spyOn(window.HTMLElement.prototype, 'offsetHeight', 'get')
       .mockImplementation(() => 1000);
-    window.HTMLElement.prototype.scrollIntoView = jest.fn();
-    jest.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 1);
-    jest.useFakeTimers();
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 1);
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
@@ -514,7 +513,7 @@ describe('menu/Menu', () => {
       expect(document.activeElement).toBe(menuItems[1]);
 
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       fireEvent.keyDown(menu, { key: 'B' });
@@ -533,7 +532,7 @@ describe('menu/Menu', () => {
       expect(document.activeElement).toBe(menuItems[4]);
 
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       fireEvent.keyDown(menu, { key: 'B' });
@@ -543,8 +542,8 @@ describe('menu/Menu', () => {
 
   describe('supports `onAction`', function () {
     it('Menu with static list supports `onAction`', function () {
-      let onAction = jest.fn();
-      let onSelectionChange = jest.fn();
+      let onAction = vi.fn();
+      let onSelectionChange = vi.fn();
       let tree = render(
         <Menu
           aria-label="menu"
@@ -582,8 +581,8 @@ describe('menu/Menu', () => {
     });
 
     it('Menu with dynamic list supports `onAction`', function () {
-      let onAction = jest.fn();
-      let onSelectionChange = jest.fn();
+      let onAction = vi.fn();
+      let onSelectionChange = vi.fn();
       let flatItems = [{ name: 'One' }, { name: 'Two' }, { name: 'Three' }];
       let tree = render(
         <Menu
@@ -597,7 +596,7 @@ describe('menu/Menu', () => {
       );
 
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       let menu = tree.getByRole('menu');
@@ -683,7 +682,7 @@ describe('menu/Menu', () => {
   });
 
   it('warns user if no `aria-label` is provided', () => {
-    let spyWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    let spyWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     renderComponent({ 'aria-labelledby': undefined });
     expect(spyWarn).toHaveBeenCalledWith(
       'An aria-label or aria-labelledby prop is required for accessibility.'

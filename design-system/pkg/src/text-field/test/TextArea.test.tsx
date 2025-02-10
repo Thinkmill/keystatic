@@ -1,5 +1,5 @@
 import React from 'react';
-import { afterEach, expect, jest, describe, it } from 'vitest';
+import { afterEach, expect, vi, describe, it } from 'vitest';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -18,9 +18,9 @@ function renderTextArea(
 }
 
 describe('text-field/TextArea', () => {
-  let onBlur = jest.fn();
-  let onChange = jest.fn();
-  let onFocus = jest.fn();
+  let onBlur = vi.fn();
+  let onChange = vi.fn();
+  let onFocus = vi.fn();
 
   afterEach(() => {
     onChange.mockClear();

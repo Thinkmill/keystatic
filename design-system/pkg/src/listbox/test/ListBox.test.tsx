@@ -7,7 +7,7 @@ import {
 } from '@testing-library/react';
 import { Key, ReactElement } from 'react';
 import {
-  jest,
+  vi,
   expect,
   afterAll,
   afterEach,
@@ -23,7 +23,7 @@ import { Text } from '@keystar/ui/typography';
 
 import { Item, ListBox, Section } from '..';
 
-type NumberSpy = jest.SpiedGetter<number>;
+type NumberSpy = vi.SpiedGetter<number>;
 type MaybeElement = HTMLElement | null;
 
 let sectionItemData = [
@@ -49,25 +49,25 @@ function renderComponent(props = {}) {
     </>
   );
   // need to run one raf for Virtualizer layout to update, could use advance by 16 as well
-  act(() => jest.runAllTimers());
+  act(() => vi.runAllTimers());
   return tree;
 }
 
 describe('pickers/ListBox', () => {
   let offsetWidth: NumberSpy, offsetHeight: NumberSpy, scrollHeight: NumberSpy;
-  let onSelectionChange = jest.fn<(keys: Set<Key>) => void>();
+  let onSelectionChange = vi.fn<(keys: Set<Key>) => void>();
 
   beforeAll(function () {
-    offsetWidth = jest
+    offsetWidth = vi
       .spyOn(window.HTMLElement.prototype, 'clientWidth', 'get')
       .mockImplementation(() => 1000);
-    offsetHeight = jest
+    offsetHeight = vi
       .spyOn(window.HTMLElement.prototype, 'clientHeight', 'get')
       .mockImplementation(() => 1000);
-    scrollHeight = jest
+    scrollHeight = vi
       .spyOn(window.HTMLElement.prototype, 'scrollHeight', 'get')
       .mockImplementation(() => 48);
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
@@ -75,7 +75,7 @@ describe('pickers/ListBox', () => {
   });
 
   afterAll(function () {
-    jest.useRealTimers();
+    vi.useRealTimers();
     offsetWidth.mockReset();
     offsetHeight.mockReset();
     scrollHeight.mockReset();
@@ -614,7 +614,7 @@ describe('pickers/ListBox', () => {
 
       // Advance the timers so we can select using the Spacebar
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       fireEvent.keyDown(document.activeElement!, {
@@ -652,7 +652,7 @@ describe('pickers/ListBox', () => {
       expect(document.activeElement).toBe(options[1]);
 
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       fireEvent.keyDown(listbox, { key: 'B' });
@@ -671,7 +671,7 @@ describe('pickers/ListBox', () => {
       expect(document.activeElement).toBe(options[4]);
 
       act(() => {
-        jest.runAllTimers();
+        vi.runAllTimers();
       });
 
       fireEvent.keyDown(listbox, { key: 'B' });
@@ -690,7 +690,7 @@ describe('pickers/ListBox', () => {
       </ListBox>
     );
     // need to run one raf for Virtualizer layout to update, could use advance by 16 as well
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
 
     let listbox = tree.getByRole('listbox');
     let option = within(listbox).getByRole('option');
@@ -708,7 +708,7 @@ describe('pickers/ListBox', () => {
   });
 
   it('warns user if no aria-label is provided', () => {
-    let spyWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    let spyWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     renderComponent({ 'aria-labelledby': undefined });
     expect(spyWarn).toHaveBeenCalledWith(
       'If you do not provide a visible label, you must specify an aria-label or aria-labelledby attribute for accessibility'
@@ -726,7 +726,7 @@ describe('pickers/ListBox', () => {
       </ListBox>
     );
     // need to run one raf for Virtualizer layout to update, could use advance by 16 as well
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
 
     let listbox = tree.getByRole('listbox');
     let group = within(listbox).getByRole('group');

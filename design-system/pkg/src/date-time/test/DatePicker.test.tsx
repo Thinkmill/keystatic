@@ -1,7 +1,7 @@
 import { CalendarDate, CalendarDateTime } from '@internationalized/date';
 import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
-import { afterEach, expect, jest, describe, it } from 'vitest';
+import { afterEach, expect, vi, describe, it } from 'vitest';
 
 import {
   act,
@@ -150,11 +150,11 @@ describe('date-time/DatePicker', () => {
   });
 
   describe('events', function () {
-    let onBlurSpy = jest.fn();
-    let onFocusChangeSpy = jest.fn();
-    let onFocusSpy = jest.fn();
-    let onKeyDownSpy = jest.fn();
-    let onKeyUpSpy = jest.fn();
+    let onBlurSpy = vi.fn();
+    let onFocusChangeSpy = vi.fn();
+    let onFocusSpy = vi.fn();
+    let onKeyDownSpy = vi.fn();
+    let onKeyUpSpy = vi.fn();
 
     afterEach(() => {
       onBlurSpy.mockClear();

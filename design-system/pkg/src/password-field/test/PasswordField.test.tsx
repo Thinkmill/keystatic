@@ -1,5 +1,5 @@
 import React from 'react';
-import { jest, it, describe, expect, afterEach } from 'vitest';
+import { vi, it, describe, expect, afterEach } from 'vitest';
 import { renderWithProvider } from '#test-utils';
 import userEvent from '@testing-library/user-event';
 
@@ -18,7 +18,7 @@ function renderPasswordField(
 }
 
 describe('password-field/PasswordField', () => {
-  let onChangeSpy = jest.fn();
+  let onChangeSpy = vi.fn();
   let user = userEvent.setup();
 
   afterEach(() => {

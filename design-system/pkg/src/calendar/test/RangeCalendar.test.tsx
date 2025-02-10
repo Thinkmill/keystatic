@@ -1,5 +1,5 @@
 import { CalendarDate } from '@internationalized/date';
-import { afterEach, beforeAll, expect, jest, describe, it } from 'vitest';
+import { afterEach, beforeAll, expect, vi, describe, it } from 'vitest';
 
 import { act, fireEvent, renderWithProvider } from '#test-utils';
 
@@ -10,11 +10,11 @@ describe('calendar/RangeCalendar', () => {
   // let user = userEvent.setup();
 
   beforeAll(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
   afterEach(() => {
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
   });
 
@@ -210,7 +210,7 @@ describe('calendar/RangeCalendar', () => {
   // TODO: selects a range with the keyboard
 
   it('selects a range by clicking with the mouse', () => {
-    let onChange = jest.fn<(value: RangeValue<CalendarDate> | null) => void>();
+    let onChange = vi.fn<(value: RangeValue<CalendarDate> | null) => void>();
     let { getAllByLabelText, getByText } = renderWithProvider(
       <RangeCalendar
         defaultValue={{
@@ -251,7 +251,7 @@ describe('calendar/RangeCalendar', () => {
     expect(end).toEqual(new CalendarDate(2019, 6, 17));
   });
   it('selects a range by dragging with the mouse', () => {
-    let onChange = jest.fn<(value: RangeValue<CalendarDate> | null) => void>();
+    let onChange = vi.fn<(value: RangeValue<CalendarDate> | null) => void>();
     let { getAllByLabelText, getByText } = renderWithProvider(
       <RangeCalendar
         defaultValue={{

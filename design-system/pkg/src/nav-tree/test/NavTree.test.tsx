@@ -1,4 +1,4 @@
-import { jest, expect, it, describe } from 'vitest';
+import { vi, expect, it, describe } from 'vitest';
 
 import { Text } from '@keystar/ui/typography';
 
@@ -20,7 +20,7 @@ describe('nav-tree/NavTree', () => {
     expect(queryAllByRole('row')).toHaveLength(3);
   });
   it('items support children', () => {
-    let mockClick = jest.fn();
+    let mockClick = vi.fn();
     const { getAllByRole } = renderWithProvider(
       <NavTree>
         <Item textValue="First">

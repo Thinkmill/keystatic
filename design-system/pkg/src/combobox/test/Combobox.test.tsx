@@ -1,16 +1,16 @@
 import userEvent from '@testing-library/user-event';
 import { forwardRef } from 'react';
-import { beforeAll, expect, jest, describe, it } from 'vitest';
+import { beforeAll, expect, vi, describe, it } from 'vitest';
 
 import { act, fireEvent, firePress, renderWithProvider } from '#test-utils';
 
 import { Combobox, Item } from '..';
 
-let onSelectionChange = jest.fn();
-let onOpenChange = jest.fn();
-let onInputChange = jest.fn();
-let onFocus = jest.fn();
-let onBlur = jest.fn();
+let onSelectionChange = vi.fn();
+let onOpenChange = vi.fn();
+let onInputChange = vi.fn();
+let onFocus = vi.fn();
+let onBlur = vi.fn();
 
 let defaultProps = {
   label: 'Test',
@@ -35,15 +35,19 @@ function renderCombobox(props = {}) {
 
 describe('combobox/Combobox', () => {
   beforeAll(function () {
-    jest
-      .spyOn(window.HTMLElement.prototype, 'clientWidth', 'get')
-      .mockImplementation(() => 1000);
-    jest
-      .spyOn(window.HTMLElement.prototype, 'clientHeight', 'get')
-      .mockImplementation(() => 1000);
-    window.HTMLElement.prototype.scrollIntoView = jest.fn();
-    jest.spyOn(window.screen, 'width', 'get').mockImplementation(() => 1024);
-    jest.useFakeTimers();
+    vi.spyOn(
+      window.HTMLElement.prototype,
+      'clientWidth',
+      'get'
+    ).mockImplementation(() => 1000);
+    vi.spyOn(
+      window.HTMLElement.prototype,
+      'clientHeight',
+      'get'
+    ).mockImplementation(() => 1000);
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    vi.spyOn(window.screen, 'width', 'get').mockImplementation(() => 1024);
+    vi.useFakeTimers();
   });
 
   it('renders correctly', function () {
@@ -75,7 +79,7 @@ describe('combobox/Combobox', () => {
     let combobox = getByRole('combobox');
     user.type(combobox, 'One');
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     expect(queryByRole('listbox')).toBeNull();
@@ -85,7 +89,7 @@ describe('combobox/Combobox', () => {
     act(() => {
       fireEvent.keyDown(combobox, { key: 'ArrowDown', code: 40, charCode: 40 });
       fireEvent.keyUp(combobox, { key: 'ArrowDown', code: 40, charCode: 40 });
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     expect(queryByRole('listbox')).toBeNull();
@@ -94,7 +98,7 @@ describe('combobox/Combobox', () => {
     let button = getByRole('button');
     act(() => {
       firePress(button);
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     expect(queryByRole('listbox')).toBeNull();
@@ -123,7 +127,7 @@ describe('combobox/Combobox', () => {
     fireEvent.keyDown(combobox, { key: 'ArrowDown', code: 40, charCode: 40 });
     fireEvent.keyUp(combobox, { key: 'ArrowDown', code: 40, charCode: 40 });
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     expect(queryByRole('listbox')).toBeNull();
@@ -132,7 +136,7 @@ describe('combobox/Combobox', () => {
     let button = getByRole('button');
     act(() => {
       firePress(button);
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
 
     expect(queryByRole('listbox')).toBeNull();

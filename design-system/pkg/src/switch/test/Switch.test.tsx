@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { jest, describe, afterEach, expect, it } from 'vitest';
+import { vi, describe, afterEach, expect, it } from 'vitest';
 
 import { renderWithProvider } from '#test-utils';
 
@@ -7,7 +7,7 @@ import { Switch, SwitchProps } from '..';
 
 describe('switch/Switch', () => {
   let user = userEvent.setup();
-  let onChangeSpy = jest.fn();
+  let onChangeSpy = vi.fn();
 
   afterEach(() => {
     onChangeSpy.mockClear();

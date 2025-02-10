@@ -6,7 +6,7 @@ import {
   afterAll,
   afterEach,
   beforeAll,
-  jest,
+  vi,
 } from 'vitest';
 
 import {
@@ -57,26 +57,30 @@ function renderComponent<T>(
 }
 
 describe('tabs/Tabs', function () {
-  let onSelectionChange = jest.fn();
+  let onSelectionChange = vi.fn();
 
   beforeAll(function () {
-    jest
-      .spyOn(window.HTMLElement.prototype, 'clientWidth', 'get')
-      .mockImplementation(() => 1000);
-    jest
-      .spyOn(window.HTMLElement.prototype, 'clientHeight', 'get')
-      .mockImplementation(() => 1000);
-    window.HTMLElement.prototype.scrollIntoView = jest.fn();
-    jest.useFakeTimers();
+    vi.spyOn(
+      window.HTMLElement.prototype,
+      'clientWidth',
+      'get'
+    ).mockImplementation(() => 1000);
+    vi.spyOn(
+      window.HTMLElement.prototype,
+      'clientHeight',
+      'get'
+    ).mockImplementation(() => 1000);
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
-    act(() => jest.runAllTimers());
+    vi.clearAllMocks();
+    act(() => vi.runAllTimers());
   });
 
   afterAll(function () {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('renders properly', function () {

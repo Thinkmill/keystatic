@@ -1,4 +1,4 @@
-import { expect, describe, it, jest } from 'vitest';
+import { expect, describe, it, vi } from 'vitest';
 
 import { fireEvent, render } from '@testing-library/react';
 
@@ -55,7 +55,7 @@ describe('navigation/TextLink', () => {
   });
 
   it('supports press handler', () => {
-    const onPress = jest.fn();
+    const onPress = vi.fn();
     const { getByRole } = render(
       <TextLink href="#" onPress={onPress}>
         Link text

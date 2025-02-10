@@ -1,5 +1,5 @@
 import React from 'react';
-import { expect, it, describe, jest, afterEach } from 'vitest';
+import { expect, it, describe, vi, afterEach } from 'vitest';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -20,9 +20,9 @@ function renderTextField(
 }
 
 describe('text-field/TextField', () => {
-  let onBlur = jest.fn();
-  let onChange = jest.fn();
-  let onFocus = jest.fn();
+  let onBlur = vi.fn();
+  let onChange = vi.fn();
+  let onFocus = vi.fn();
 
   afterEach(() => {
     onChange.mockClear();
@@ -49,7 +49,7 @@ describe('text-field/TextField', () => {
     expect(ref.current).toBe(field);
   });
   it('should render with placeholder, but show warning', () => {
-    const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const { getByTestId } = renderTextField({ placeholder: inputText });
     const field = getByTestId(testId);
 

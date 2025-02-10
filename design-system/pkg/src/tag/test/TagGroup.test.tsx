@@ -1,4 +1,4 @@
-import { afterEach, beforeAll, describe, expect, it, jest } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, renderWithProvider } from '#test-utils';
 
 import React from 'react';
@@ -7,17 +7,17 @@ import { Item, TagGroup } from '../index';
 
 // TODO: revisit once keystone refurb is done
 describe('tag/TagGroup', function () {
-  let onRemoveSpy = jest.fn();
+  let onRemoveSpy = vi.fn();
 
   beforeAll(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('provides context for Tag component', function () {

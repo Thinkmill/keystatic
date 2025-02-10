@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { expect, it, describe, jest } from 'vitest';
+import { expect, it, describe, vi } from 'vitest';
 
 import { renderWithProvider } from '#test-utils';
 
@@ -59,7 +59,7 @@ describe('split-view/SplitView', () => {
   });
 
   it('supports keyboard resize', async function () {
-    let onResize = jest.fn();
+    let onResize = vi.fn();
     let user = userEvent.setup();
     let id = 'test';
     const { getByRole } = renderSplitView({ id, onResize });

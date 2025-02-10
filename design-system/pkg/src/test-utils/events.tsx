@@ -1,6 +1,6 @@
 import { act, fireEvent } from '@testing-library/react';
 import { pointerKey } from '@testing-library/user-event';
-import { afterAll, beforeAll, jest } from 'vitest';
+import { afterAll, beforeAll, vi } from 'vitest';
 
 export const KEYS = {
   ArrowLeft: { key: 'ArrowLeft', code: 37, charCode: 37 },
@@ -37,7 +37,7 @@ export function fireLongPress(
 ) {
   fireEvent.pointerDown(element, { pointerType: 'touch', ...opts });
   act(() => {
-    jest.advanceTimersByTime(DEFAULT_LONG_PRESS_TIME);
+    vi.advanceTimersByTime(DEFAULT_LONG_PRESS_TIME);
   });
   fireEvent.pointerUp(element, { pointerType: 'touch', ...opts });
 }

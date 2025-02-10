@@ -1,5 +1,5 @@
 import { CalendarDate, isWeekend } from '@internationalized/date';
-import { afterEach, beforeAll, expect, jest, describe, it } from 'vitest';
+import { afterEach, beforeAll, expect, vi, describe, it } from 'vitest';
 
 import { act, fireEvent, firePress, renderWithProvider } from '#test-utils';
 
@@ -22,11 +22,11 @@ const keyCodes = {
 
 describe('calendar/Calendar', () => {
   beforeAll(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
   afterEach(() => {
     act(() => {
-      jest.runAllTimers();
+      vi.runAllTimers();
     });
   });
 
@@ -87,7 +87,7 @@ describe('calendar/Calendar', () => {
   });
 
   it('selects a date with the keyboard', () => {
-    let onChange = jest.fn();
+    let onChange = vi.fn();
     let { getByLabelText, getByRole } = renderWithProvider(
       <Calendar
         defaultValue={new CalendarDate(2023, 6, 5)}
@@ -122,7 +122,7 @@ describe('calendar/Calendar', () => {
     expect(onChange.mock.calls[1][0]).toEqual(new CalendarDate(2023, 6, 3));
   });
   it('selects a date on click', () => {
-    let onChange = jest.fn();
+    let onChange = vi.fn();
     let { getByLabelText, getByText } = renderWithProvider(
       <Calendar
         defaultValue={new CalendarDate(2023, 6, 5)}
@@ -139,7 +139,7 @@ describe('calendar/Calendar', () => {
     expect(onChange.mock.calls[0][0]).toEqual(new CalendarDate(2023, 6, 17));
   });
   it('does not select a date on click if outside the valid date range', () => {
-    let onChange = jest.fn();
+    let onChange = vi.fn();
     let { getByLabelText } = renderWithProvider(
       <Calendar
         onChange={onChange}

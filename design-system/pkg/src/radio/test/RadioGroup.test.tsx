@@ -1,4 +1,4 @@
-import { expect, it, describe, afterEach, jest } from 'vitest';
+import { expect, it, describe, afterEach, vi } from 'vitest';
 // import userEvent from '@testing-library/user-event';
 
 import { fireEvent, renderWithProvider } from '#test-utils';
@@ -25,7 +25,7 @@ function renderRadioGroup(
 }
 
 describe('radio/RadioGroup', () => {
-  let onChangeSpy = jest.fn();
+  let onChangeSpy = vi.fn();
 
   afterEach(() => {
     onChangeSpy.mockClear();

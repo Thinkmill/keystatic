@@ -5,7 +5,7 @@ import {
   describe,
   expect,
   it,
-  jest,
+  vi,
 } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { ReactNode, useState } from 'react';
@@ -60,12 +60,12 @@ describe('toast/Toast', () => {
     user = userEvent.setup({ delay: null });
   });
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     clearToastQueue();
   });
 
   afterEach(() => {
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
   });
 
   it('renders a button that triggers a toast', async () => {
@@ -76,7 +76,7 @@ describe('toast/Toast', () => {
     expect(queryByRole('alert')).toBeNull();
     await user.click(button);
 
-    act(() => jest.advanceTimersByTime(100));
+    act(() => vi.advanceTimersByTime(100));
 
     let region = getByRole('region');
     expect(region).toHaveAttribute('aria-label', '1 notification.');
@@ -119,10 +119,10 @@ describe('toast/Toast', () => {
     let toast = getByRole('alertdialog');
     expect(toast).toBeVisible();
 
-    act(() => jest.advanceTimersByTime(1000));
+    act(() => vi.advanceTimersByTime(1000));
     expect(toast).not.toHaveAttribute('data-animation', 'exiting');
 
-    act(() => jest.advanceTimersByTime(5000));
+    act(() => vi.advanceTimersByTime(5000));
     expect(toast).toHaveAttribute('data-animation', 'exiting');
 
     fireAnimationEnd(toast);
@@ -140,15 +140,15 @@ describe('toast/Toast', () => {
     let toast = getByRole('alertdialog');
     expect(toast).toBeVisible();
 
-    act(() => jest.advanceTimersByTime(1000));
+    act(() => vi.advanceTimersByTime(1000));
     await user.hover(toast);
 
-    act(() => jest.advanceTimersByTime(7000));
+    act(() => vi.advanceTimersByTime(7000));
     expect(toast).not.toHaveAttribute('data-animation', 'exiting');
 
     await user.unhover(toast);
 
-    act(() => jest.advanceTimersByTime(4000));
+    act(() => vi.advanceTimersByTime(4000));
     expect(toast).toHaveAttribute('data-animation', 'exiting');
 
     fireAnimationEnd(toast);
@@ -166,15 +166,15 @@ describe('toast/Toast', () => {
     let toast = getByRole('alertdialog');
     expect(toast).toBeVisible();
 
-    act(() => jest.advanceTimersByTime(1000));
+    act(() => vi.advanceTimersByTime(1000));
     act(() => within(toast).getByRole('button').focus());
 
-    act(() => jest.advanceTimersByTime(7000));
+    act(() => vi.advanceTimersByTime(7000));
     expect(toast).not.toHaveAttribute('data-animation', 'exiting');
 
     act(() => within(toast).getByRole('button').blur());
 
-    act(() => jest.advanceTimersByTime(4000));
+    act(() => vi.advanceTimersByTime(4000));
     expect(toast).toHaveAttribute('data-animation', 'exiting');
 
     fireAnimationEnd(toast);
@@ -182,8 +182,8 @@ describe('toast/Toast', () => {
   });
 
   it('renders a toast with an action', async () => {
-    let onAction = jest.fn();
-    let onClose = jest.fn();
+    let onAction = vi.fn();
+    let onClose = vi.fn();
     let { getByRole, queryByRole } = renderComponent(
       <RenderToastButton
         actionLabel="Action"
@@ -196,7 +196,7 @@ describe('toast/Toast', () => {
     expect(queryByRole('alertdialog')).toBeNull();
     await user.click(button);
 
-    act(() => jest.advanceTimersByTime(100));
+    act(() => vi.advanceTimersByTime(100));
     let toast = getByRole('alertdialog');
     let alert = within(toast).getByRole('alert');
     expect(toast).toBeVisible();
@@ -211,8 +211,8 @@ describe('toast/Toast', () => {
   });
 
   it('closes toast on action', async () => {
-    let onAction = jest.fn();
-    let onClose = jest.fn();
+    let onAction = vi.fn();
+    let onClose = vi.fn();
     let { getByRole, queryByRole } = renderComponent(
       <RenderToastButton
         actionLabel="Action"
@@ -226,7 +226,7 @@ describe('toast/Toast', () => {
     expect(queryByRole('alertdialog')).toBeNull();
     await user.click(button);
 
-    act(() => jest.advanceTimersByTime(100));
+    act(() => vi.advanceTimersByTime(100));
     let toast = getByRole('alertdialog');
     let alert = within(toast).getByRole('alert');
     expect(toast).toBeVisible();

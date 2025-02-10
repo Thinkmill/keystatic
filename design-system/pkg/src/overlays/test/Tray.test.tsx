@@ -2,7 +2,7 @@ import {
   OverlayTriggerProps,
   useOverlayTriggerState,
 } from '@react-stately/overlays';
-import { expect, jest, describe, it } from 'vitest';
+import { expect, vi, describe, it } from 'vitest';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { TestProvider } from '@keystar/ui/core';
 
@@ -37,7 +37,7 @@ describe('overlays/Tray', () => {
   });
 
   it('hides the tray when pressing the escape key', async () => {
-    let onOpenChange = jest.fn();
+    let onOpenChange = vi.fn();
     let { getByRole } = render(
       <TestTray isOpen onOpenChange={onOpenChange}>
         <div role="dialog">contents</div>
@@ -54,7 +54,7 @@ describe('overlays/Tray', () => {
   });
 
   it('hides the tray when clicking outside', async () => {
-    let onOpenChange = jest.fn();
+    let onOpenChange = vi.fn();
     let { getByRole } = render(
       <TestTray isOpen onOpenChange={onOpenChange}>
         <div role="dialog">contents</div>

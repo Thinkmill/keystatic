@@ -1,4 +1,4 @@
-import { jest, expect, it, describe, beforeEach } from 'vitest';
+import { vi, expect, it, describe, beforeEach } from 'vitest';
 
 import { render } from '@testing-library/react';
 
@@ -7,7 +7,7 @@ import { NumeralProps } from '../Numeral';
 
 describe('typography/Numeral', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should insert comma delimeter between thousands', () => {
@@ -36,7 +36,7 @@ describe('typography/Numeral', () => {
 
   describe('prop validation', () => {
     it('should error when provided invalid prop combinations', () => {
-      const spy = jest.spyOn(console, 'error');
+      const spy = vi.spyOn(console, 'error');
       spy.mockImplementation(() => {});
       expect(() => r({ format: 'currency' })).toThrow(); // needs currency prop
       expect(() => r({ format: 'unit' })).toThrow(); // needs unit prop

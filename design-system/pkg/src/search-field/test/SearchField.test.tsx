@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { expect, describe, it, jest, afterEach } from 'vitest';
+import { expect, describe, it, vi, afterEach } from 'vitest';
 
 import { SearchField, SearchFieldProps } from '..';
 
@@ -23,10 +23,10 @@ function renderSearchField(
 }
 
 describe('search-field/SearchField', () => {
-  let onChange = jest.fn();
-  let onFocus = jest.fn();
-  let onSubmit = jest.fn();
-  let onClear = jest.fn();
+  let onChange = vi.fn();
+  let onFocus = vi.fn();
+  let onSubmit = vi.fn();
+  let onClear = vi.fn();
 
   afterEach(() => {
     onChange.mockClear();
@@ -71,7 +71,7 @@ describe('search-field/SearchField', () => {
   });
 
   // FIXME: can't get this test to work
-  // eslint-disable-next-line jest/no-commented-out-tests
+  // eslint-disable-next-line vi/no-commented-out-tests
   // it('clears the value when the escape key is pressed', async () => {
   //   const { getByTestId } = renderSearchField({
   //     defaultValue: inputText,

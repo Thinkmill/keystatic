@@ -1,32 +1,36 @@
-import { afterEach, beforeAll, describe, expect, it, jest } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { act, renderWithProvider, within } from '#test-utils';
 
 import { ListExample } from '../stories/ListExample';
 
-// jest.mock('@react-aria/live-announcer');
+// vi.mock('@react-aria/live-announcer');
 
 describe('action-bar/ActionBar', () => {
   let user: ReturnType<typeof userEvent.setup>;
   beforeAll(() => {
     user = userEvent.setup({ delay: null });
-    jest
-      .spyOn(window.HTMLElement.prototype, 'clientWidth', 'get')
-      .mockImplementation(() => 1000);
-    jest
-      .spyOn(window.HTMLElement.prototype, 'clientHeight', 'get')
-      .mockImplementation(() => 500);
-    jest.useFakeTimers();
+    vi.spyOn(
+      window.HTMLElement.prototype,
+      'clientWidth',
+      'get'
+    ).mockImplementation(() => 1000);
+    vi.spyOn(
+      window.HTMLElement.prototype,
+      'clientHeight',
+      'get'
+    ).mockImplementation(() => 500);
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
   });
 
   it('should open when there are selected items', async () => {
     let tree = renderWithProvider(<ListExample />);
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
 
     let grid = tree.getByRole('grid');
     let rows = within(grid).getAllByRole('row');
@@ -51,7 +55,7 @@ describe('action-bar/ActionBar', () => {
 
   it('should update the selected count when selecting more items', async () => {
     let tree = renderWithProvider(<ListExample />);
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
 
     let grid = tree.getByRole('grid');
     let rows = within(grid).getAllByRole('row');
@@ -66,21 +70,21 @@ describe('action-bar/ActionBar', () => {
 
   it('should close and restore focus when pressing the clear button', async () => {
     let tree = renderWithProvider(<ListExample />);
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
 
     let grid = tree.getByRole('grid');
     let rows = within(grid).getAllByRole('row');
     let checkbox = within(rows[1]).getByRole('checkbox');
 
     await user.click(checkbox);
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
     expect(document.activeElement).toBe(checkbox);
 
     let clearButton = tree.getByLabelText('Clear selection');
 
     await user.click(clearButton);
-    act(() => jest.runAllTimers());
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
+    act(() => vi.runAllTimers());
 
     expect(tree.queryByRole('toolbar')).toBeNull();
     expect(document.activeElement).toBe(checkbox.closest('[role="row"]'));
@@ -88,31 +92,31 @@ describe('action-bar/ActionBar', () => {
 
   it('should close when pressing the escape key', async () => {
     let tree = renderWithProvider(<ListExample />);
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
 
     let table = tree.getByRole('grid');
     let rows = within(table).getAllByRole('row');
     let checkbox = within(rows[1]).getByRole('checkbox');
 
     await user.click(checkbox);
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
     expect(document.activeElement).toBe(checkbox);
 
     let toolbar = tree.getByRole('toolbar');
     act(() => within(toolbar).getAllByRole('button')[0].focus());
 
     await user.keyboard('{Escape}');
-    act(() => jest.runAllTimers());
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
+    act(() => vi.runAllTimers());
 
     expect(tree.queryByRole('toolbar')).toBeNull();
     expect(document.activeElement).toBe(checkbox.closest('[role="row"]'));
   });
 
   it('should fire onAction when clicking on an action', async () => {
-    let onAction = jest.fn();
+    let onAction = vi.fn();
     let tree = renderWithProvider(<ListExample onAction={onAction} />);
-    act(() => jest.runAllTimers());
+    act(() => vi.runAllTimers());
 
     let grid = tree.getByRole('grid');
     let rows = within(grid).getAllByRole('row');

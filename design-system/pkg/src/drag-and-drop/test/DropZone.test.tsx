@@ -5,7 +5,7 @@ import {
   beforeAll,
   beforeEach,
   expect,
-  jest,
+  vi,
   describe,
   it,
 } from 'vitest';
@@ -139,8 +139,7 @@ describe('drag-and-drop/DropZone', () => {
 
   describe('drag and drop', function () {
     beforeEach(() => {
-      jest
-        .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+      vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect')
         // @ts-ignore
         .mockImplementation(() => ({
           left: 0,
@@ -151,19 +150,19 @@ describe('drag-and-drop/DropZone', () => {
           height: 50,
         }));
 
-      jest.useFakeTimers();
+      vi.useFakeTimers();
     });
 
     afterEach(() => {
-      act(() => jest.runAllTimers());
+      act(() => vi.runAllTimers());
     });
 
-    let onDragStart = jest.fn();
-    let onDragMove = jest.fn();
-    let onDragEnd = jest.fn();
-    let onDropEnter = jest.fn();
-    let onDropMove = jest.fn();
-    let onDrop = jest.fn<(event: DropEvent) => void>();
+    let onDragStart = vi.fn();
+    let onDragMove = vi.fn();
+    let onDragEnd = vi.fn();
+    let onDropEnter = vi.fn();
+    let onDropMove = vi.fn();
+    let onDrop = vi.fn<(event: DropEvent) => void>();
 
     describe('via mouse', function () {
       it('should support data attribute drop-target', async () => {
@@ -206,7 +205,7 @@ describe('drag-and-drop/DropZone', () => {
         // @ts-ignore
         expect(dataTransfer._dragImage).toBeUndefined();
 
-        act(() => jest.runAllTimers());
+        act(() => vi.runAllTimers());
         expect(draggable).toHaveAttribute('data-dragging', 'true');
 
         expect(onDragStart).toHaveBeenCalledTimes(1);
@@ -261,7 +260,7 @@ describe('drag-and-drop/DropZone', () => {
           dropzone,
           new DragEvent('drop', { dataTransfer, clientX: 2, clientY: 2 })
         );
-        act(() => jest.runAllTimers());
+        act(() => vi.runAllTimers());
         expect(onDrop).toHaveBeenCalledTimes(1);
         expect(onDrop).toHaveBeenCalledWith({
           type: 'drop',
@@ -340,7 +339,7 @@ describe('drag-and-drop/DropZone', () => {
           y: 25,
         });
 
-        act(() => jest.runAllTimers());
+        act(() => vi.runAllTimers());
         expect(document.activeElement).toBe(button);
         fireEvent.keyDown(dropzone, { key: 'Enter' });
         fireEvent.keyUp(dropzone, { key: 'Enter' });
@@ -366,7 +365,7 @@ describe('drag-and-drop/DropZone', () => {
 
   describe('useClipboard', () => {
     it('should be able to paste items into the dropzone', async () => {
-      let onDrop = jest.fn<(event: DropEvent) => void>();
+      let onDrop = vi.fn<(event: DropEvent) => void>();
 
       let tree = render(
         <>

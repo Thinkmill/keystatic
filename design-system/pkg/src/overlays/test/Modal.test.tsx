@@ -2,7 +2,7 @@ import {
   OverlayTriggerProps,
   useOverlayTriggerState,
 } from '@react-stately/overlays';
-import { expect, it, describe, jest } from 'vitest';
+import { expect, it, describe, vi } from 'vitest';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { TestProvider } from '@keystar/ui/core';
 
@@ -37,7 +37,7 @@ describe('overlays/Modal', () => {
   });
 
   it('hides the modal when pressing the escape key', async () => {
-    let onOpenChange = jest.fn();
+    let onOpenChange = vi.fn();
     let { getByRole } = render(
       <TestModal isOpen onOpenChange={onOpenChange}>
         <div role="dialog">contents</div>
@@ -54,7 +54,7 @@ describe('overlays/Modal', () => {
   });
 
   it("doesn't hide the modal when clicking outside by default", async () => {
-    let onOpenChange = jest.fn();
+    let onOpenChange = vi.fn();
     let { getByRole } = render(
       <TestModal isOpen onOpenChange={onOpenChange}>
         <div role="dialog">contents</div>
@@ -71,7 +71,7 @@ describe('overlays/Modal', () => {
   });
 
   it('hides the modal when clicking outside if isDismissible is true', async () => {
-    let onOpenChange = jest.fn();
+    let onOpenChange = vi.fn();
     let { getByRole } = render(
       <TestModal isOpen onOpenChange={onOpenChange} isDismissable>
         <div role="dialog">contents</div>
