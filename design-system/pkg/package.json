@@ -1566,7 +1566,6 @@
   },
   "devDependencies": {
     "@internationalized/string-compiler": "^3.2.4",
-    "@jest/globals": "^29.7.0",
     "@keystar/ui": "workspace:^",
     "@keystar/ui-storybook": "workspace:^",
     "@react-aria/landmark": "3.0.0-beta.15",

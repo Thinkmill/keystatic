@@ -36,8 +36,8 @@
     "static": "pnpm run validate && pnpm run test",
     "test": "pnpm run test:unit",
     "test-strict": "cross-env STRICT_MODE=1 pnpm run test",
-    "test:coverage": "jest ---coverage",
-    "test:unit": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:coverage": "vitest ---coverage",
+    "test:unit": "vitest",
     "validate": "pnpm run '/check:*/'",
     "version-packages": "changeset version && pnpm i --frozen-lockfile=false && pnpm run format \"**/CHANGELOG.md\""
   },
@@ -69,14 +69,13 @@
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-compiler": "^0.0.0-experimental-0998c1e-20240625",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "jest": "^30.0.0-alpha.2",
-    "jest-environment-jsdom": "^30.0.0-alpha.2",
     "prettier": "^3.0.3",
     "prettier-plugin-packagejson": "^2.2.18",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tsx": "^4.8.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^3.0.5"
   },
   "manypkg": {
     "ignoredRules": [

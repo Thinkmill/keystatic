@@ -185,8 +185,6 @@
   },
   "devDependencies": {
     "@internationalized/string-compiler": "^3.2.4",
-    "@jest/expect": "^29.7.0",
-    "@jest/globals": "^29.7.0",
     "@testing-library/user-event": "^14.4.3",
     "@ts-gql/compiler": "^0.16.7",
     "@ts-gql/eslint-plugin": "^0.9.1",
