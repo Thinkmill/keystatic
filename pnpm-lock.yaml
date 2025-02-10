@@ -1361,6 +1361,9 @@ importers:
       '@types/signal-exit':
         specifier: ^3.0.1
         version: 3.0.1
+      '@vitest/pretty-format':
+        specifier: ^3.0.5
+        version: 3.0.5
       eslint:
         specifier: ^8.18.0
         version: 8.48.0
@@ -1373,9 +1376,6 @@ importers:
       outdent:
         specifier: ^0.8.0
         version: 0.8.0
-      pretty-format:
-        specifier: ^29.0.1
-        version: 29.6.3
       prismjs:
         specifier: ^1.29.0
         version: 1.29.0
