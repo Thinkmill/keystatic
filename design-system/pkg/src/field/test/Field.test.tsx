@@ -1,4 +1,4 @@
-import { expect, describe, it } from '@jest/globals';
+import { expect, describe, it } from 'vitest';
 import { render } from '@testing-library/react';
 
 import { Field, FieldProps } from '..';

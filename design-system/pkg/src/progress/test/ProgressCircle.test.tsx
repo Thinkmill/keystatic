@@ -1,4 +1,4 @@
-import { expect, it, describe, jest } from '@jest/globals';
+import { expect, it, describe, jest } from 'vitest';
 import { render } from '@testing-library/react';
 
 import { ProgressCircle } from '..';

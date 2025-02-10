@@ -1,5 +1,5 @@
 import { getMockToken } from '../test-utilities';
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { dimensionToPixelUnitless } from './dimensionToPixelUnitless';
 
 describe('Transformer: dimensionToPixelUnitless', () => {

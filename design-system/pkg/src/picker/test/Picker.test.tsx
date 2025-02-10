@@ -7,7 +7,7 @@ import {
   jest,
   describe,
   it,
-} from '@jest/globals';
+} from 'vitest';
 import userEvent from '@testing-library/user-event';
 
 import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';

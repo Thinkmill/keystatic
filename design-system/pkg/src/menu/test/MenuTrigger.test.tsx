@@ -6,7 +6,7 @@ import {
   afterEach,
   beforeAll,
   afterAll,
-} from '@jest/globals';
+} from 'vitest';
 import {
   Item,
   Menu,

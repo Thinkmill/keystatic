@@ -2,7 +2,7 @@ import { render, RenderOptions } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TestProvider } from '@keystar/ui/core';
 import { ReactElement } from 'react';
-import { expect, jest, describe, it } from '@jest/globals';
+import { expect, jest, describe, it } from 'vitest';
 
 import { Button } from '..';
 

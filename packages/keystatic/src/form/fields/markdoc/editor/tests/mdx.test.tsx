@@ -19,7 +19,7 @@ import { proseMirrorToMDXRoot } from '../mdx/serialize';
 import { fromMarkdown } from 'mdast-util-from-markdown';
 import { mdxjs } from 'micromark-extension-mdxjs';
 import { mdxToProseMirror } from '../mdx/parse';
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { block, inline, mark } from '../../../../../content-components';
 import { fields } from '../../../../..';
 import { gfmAutolinkLiteral } from 'micromark-extension-gfm-autolink-literal';

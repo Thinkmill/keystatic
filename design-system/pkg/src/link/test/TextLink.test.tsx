@@ -1,4 +1,4 @@
-import { expect, describe, it, jest } from '@jest/globals';
+import { expect, describe, it, jest } from 'vitest';
 
 import { fireEvent, render } from '@testing-library/react';
 

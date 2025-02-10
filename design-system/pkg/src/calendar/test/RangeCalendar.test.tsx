@@ -1,12 +1,5 @@
 import { CalendarDate } from '@internationalized/date';
-import {
-  afterEach,
-  beforeAll,
-  expect,
-  jest,
-  describe,
-  it,
-} from '@jest/globals';
+import { afterEach, beforeAll, expect, jest, describe, it } from 'vitest';
 
 import { act, fireEvent, renderWithProvider } from '#test-utils';
 

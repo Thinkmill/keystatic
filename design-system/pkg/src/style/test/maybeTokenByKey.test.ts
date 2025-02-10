@@ -1,5 +1,5 @@
 import { maybeTokenByKey } from '@keystar/ui/style';
-import { expect, describe, it } from '@jest/globals';
+import { expect, describe, it } from 'vitest';
 
 describe('style/maybeTokenByKey', function () {
   describe('number', function () {

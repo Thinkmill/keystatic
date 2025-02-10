@@ -2,7 +2,7 @@
 import path from 'path';
 import { component, fields, collection, config } from '../src';
 import { EntryWithResolvedLinkedFiles, createReader } from '../src/reader';
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 // this whole thing is so the tests run with NODE_OPTIONS=--experimental-vm-modules and without it
 import { pkgDir } from '#dir';
 

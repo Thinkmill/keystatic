@@ -6,7 +6,7 @@ import {
   ObjectField,
 } from './api';
 import { assertValidComponentSchema } from './field-assertions';
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 
 type EasilyCircularObject = ObjectField<{
   x: EasilyCircularObject;

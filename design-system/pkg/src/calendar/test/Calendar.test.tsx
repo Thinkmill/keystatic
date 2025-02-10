@@ -1,12 +1,5 @@
 import { CalendarDate, isWeekend } from '@internationalized/date';
-import {
-  afterEach,
-  beforeAll,
-  expect,
-  jest,
-  describe,
-  it,
-} from '@jest/globals';
+import { afterEach, beforeAll, expect, jest, describe, it } from 'vitest';
 
 import { act, fireEvent, firePress, renderWithProvider } from '#test-utils';
 

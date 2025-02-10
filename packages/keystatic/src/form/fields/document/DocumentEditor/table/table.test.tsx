@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { Editor, Node, Transforms } from 'slate';
 import { cellActions, insertTable } from './table-ui';
 import { jsx, makeEditor } from '../tests/utils';

@@ -1,11 +1,4 @@
-import {
-  afterEach,
-  beforeAll,
-  describe,
-  expect,
-  it,
-  jest,
-} from '@jest/globals';
+import { afterEach, beforeAll, describe, expect, it, jest } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { act, renderWithProvider, within } from '#test-utils';

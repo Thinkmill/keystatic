@@ -12,7 +12,7 @@ import { createToolbarState, ToolbarStateProvider } from '../toolbar-state';
 import { KeystarProvider } from '@keystar/ui/core';
 import { normaliseDocumentFeatures } from '../..';
 
-import { expect } from '@jest/globals';
+import { expect } from 'vitest';
 
 export { __jsx as jsx } from './jsx/namespace';
 

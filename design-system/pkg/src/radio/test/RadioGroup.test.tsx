@@ -1,4 +1,4 @@
-import { expect, it, describe, afterEach, jest } from '@jest/globals';
+import { expect, it, describe, afterEach, jest } from 'vitest';
 // import userEvent from '@testing-library/user-event';
 
 import { fireEvent, renderWithProvider } from '#test-utils';

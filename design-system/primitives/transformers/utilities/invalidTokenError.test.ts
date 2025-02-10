@@ -1,6 +1,6 @@
 import { getMockToken } from '../../test-utilities';
 import { invalidTokenValueError } from './invalidTokenError';
-import { expect, it, describe } from '@jest/globals';
+import { expect, it, describe } from 'vitest';
 
 describe('Utilities: invalidTokenValueError', () => {
   it('it throws with token', () => {

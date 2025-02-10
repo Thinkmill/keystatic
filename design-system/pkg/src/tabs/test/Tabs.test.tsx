@@ -7,7 +7,7 @@ import {
   afterEach,
   beforeAll,
   jest,
-} from '@jest/globals';
+} from 'vitest';
 
 import {
   act,

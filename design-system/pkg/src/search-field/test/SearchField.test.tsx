@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { expect, describe, it, jest, afterEach } from '@jest/globals';
+import { expect, describe, it, jest, afterEach } from 'vitest';
 
 import { SearchField, SearchFieldProps } from '..';
 

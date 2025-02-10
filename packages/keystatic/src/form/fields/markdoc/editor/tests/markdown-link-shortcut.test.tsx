@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { jsx, renderEditor, undo } from './utils';
 
 test('basic link shortcut', async () => {

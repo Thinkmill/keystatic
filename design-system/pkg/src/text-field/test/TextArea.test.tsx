@@ -1,5 +1,5 @@
 import React from 'react';
-import { afterEach, expect, jest, describe, it } from '@jest/globals';
+import { afterEach, expect, jest, describe, it } from 'vitest';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 

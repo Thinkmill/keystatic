@@ -6,7 +6,7 @@ import {
   expect,
   it,
   jest,
-} from '@jest/globals';
+} from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { ReactNode, useState } from 'react';
 

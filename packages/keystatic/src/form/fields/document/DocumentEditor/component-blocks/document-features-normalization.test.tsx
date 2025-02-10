@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { Node } from 'slate';
 import { makeEditor, jsx } from '../tests/utils';
 import { Children } from '../tests/jsx/namespace';

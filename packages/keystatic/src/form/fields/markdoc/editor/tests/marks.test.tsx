@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { expect, test, describe } from '@jest/globals';
+import { expect, test, describe } from 'vitest';
 import { simpleMarkShortcuts } from '../inputrules/shortcuts';
 import { jsx, redo, renderEditor, undo } from './utils';
 

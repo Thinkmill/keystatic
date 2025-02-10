@@ -14,7 +14,7 @@ import {
   beforeAll,
   describe,
   it,
-} from '@jest/globals';
+} from 'vitest';
 
 import { TestProvider } from '@keystar/ui/core';
 import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { htmlToEditor } from './test-utils';
-import { test, expect } from '@jest/globals';
+import { test, expect } from 'vitest';
 
 // TODO: Word and Pages maybe? (i believe the data is massive mess though so not super eager for it rn)
 

@@ -10,7 +10,7 @@ import {
   afterAll,
   afterEach,
   beforeAll,
-} from '@jest/globals';
+} from 'vitest';
 
 import { Item, Menu, MenuProps, Section } from '..';
 

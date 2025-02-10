@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import { forwardRef } from 'react';
-import { beforeAll, expect, jest, describe, it } from '@jest/globals';
+import { beforeAll, expect, jest, describe, it } from 'vitest';
 
 import { act, fireEvent, firePress, renderWithProvider } from '#test-utils';
 

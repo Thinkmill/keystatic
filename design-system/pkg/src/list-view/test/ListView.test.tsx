@@ -6,7 +6,7 @@ import {
   beforeAll,
   afterAll,
   afterEach,
-} from '@jest/globals';
+} from 'vitest';
 
 import { Button } from '@keystar/ui/button';
 import {

@@ -1,4 +1,4 @@
-import { beforeEach, expect, describe, it, jest } from '@jest/globals';
+import { beforeEach, expect, describe, it, jest } from 'vitest';
 
 import { Breadcrumbs, Item } from '..';
 import { firePress, renderWithProvider, within } from '#test-utils';

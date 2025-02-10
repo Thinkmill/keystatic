@@ -1,4 +1,4 @@
-import { expect, describe, it } from '@jest/globals';
+import { expect, describe, it } from 'vitest';
 import { upperCaseFirstCharacter } from './upperCaseFirstCharacter';
 
 describe('Utilities: upperCaseFirstCharacter', () => {

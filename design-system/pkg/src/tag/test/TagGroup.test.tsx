@@ -1,11 +1,4 @@
-import {
-  afterEach,
-  beforeAll,
-  describe,
-  expect,
-  it,
-  jest,
-} from '@jest/globals';
+import { afterEach, beforeAll, describe, expect, it, jest } from 'vitest';
 import { act, fireEvent, renderWithProvider } from '#test-utils';
 
 import React from 'react';

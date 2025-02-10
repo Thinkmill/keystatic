@@ -1,6 +1,6 @@
 import { render, RenderOptions } from '@testing-library/react';
 import { TestProvider } from '@keystar/ui/core';
-import { expect, describe, it } from '@jest/globals';
+import { expect, describe, it } from 'vitest';
 
 import { globeIcon } from '@keystar/ui/icon/icons/globeIcon';
 import { Icon } from '@keystar/ui/icon';

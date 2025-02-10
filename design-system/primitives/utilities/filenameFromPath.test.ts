@@ -1,5 +1,5 @@
 import { filenameFromPath } from './filenameFromPath';
-import { expect, it, describe } from '@jest/globals';
+import { expect, it, describe } from 'vitest';
 
 describe('Utilities: filenameFromPath', () => {
   it('gets the file name from a path', () => {

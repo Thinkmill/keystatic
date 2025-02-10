@@ -13,7 +13,7 @@ import { plugins, format, NewPlugin } from 'pretty-format';
 import { EditorView } from 'prosemirror-view';
 import { editorStateToReactNode } from './editor-state-to-react-element';
 import { editorOptionsToConfig } from '../../config';
-import { expect } from '@jest/globals';
+import { expect } from 'vitest';
 import { ConfigContext } from '../../../../../app/shell/context';
 import { config } from '../../../../..';
 

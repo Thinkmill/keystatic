@@ -1,4 +1,4 @@
-import { jest, expect, it, describe } from '@jest/globals';
+import { jest, expect, it, describe } from 'vitest';
 
 import { Text } from '@keystar/ui/typography';
 

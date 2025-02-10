@@ -1,6 +1,6 @@
 /** @jest-environment node */
 import { ComponentSchema, fields } from '../../../..';
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { findSingleChildField } from './find-children';
 
 test('one child field', () => {

@@ -17,7 +17,7 @@ import {
   beforeAll,
   beforeEach,
   jest,
-} from '@jest/globals';
+} from 'vitest';
 
 import { Button } from '@keystar/ui/button';
 import { TestProvider } from '@keystar/ui/core';

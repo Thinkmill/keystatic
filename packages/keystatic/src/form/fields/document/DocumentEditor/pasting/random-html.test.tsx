@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { test, expect } from '@jest/globals';
+import { test, expect } from 'vitest';
 import { toMarkdoc } from '../../markdoc/test-utils';
 import { htmlToEditor } from './test-utils';
 

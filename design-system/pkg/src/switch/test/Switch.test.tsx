@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { jest, describe, afterEach, expect, it } from '@jest/globals';
+import { jest, describe, afterEach, expect, it } from 'vitest';
 
 import { renderWithProvider } from '#test-utils';
 

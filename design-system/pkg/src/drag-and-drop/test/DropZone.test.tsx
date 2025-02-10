@@ -8,7 +8,7 @@ import {
   jest,
   describe,
   it,
-} from '@jest/globals';
+} from 'vitest';
 
 import {
   ClipboardEvent,

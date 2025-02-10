@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import React from 'react';
 import { component, fields } from '../../../api';
 import { defaultDocumentFeatures, jsx, makeEditor } from './tests/utils';
