@@ -6,6 +6,7 @@ import {
   afterEach,
   beforeAll,
   afterAll,
+  MockInstance,
 } from 'vitest';
 import {
   Item,
@@ -38,7 +39,8 @@ let withSection = [
 ];
 
 describe('menu/MenuTrigger', () => {
-  let offsetWidth: vi.SpiedGetter<number>, offsetHeight: vi.SpiedGetter<number>;
+  let offsetWidth: MockInstance<() => number>,
+    offsetHeight: MockInstance<() => number>;
   let onOpenChange = vi.fn();
   let onSelect = vi.fn();
   let onSelectionChange = vi.fn();

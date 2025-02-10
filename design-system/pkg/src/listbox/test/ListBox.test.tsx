@@ -14,6 +14,7 @@ import {
   beforeAll,
   describe,
   it,
+  MockInstance,
 } from 'vitest';
 
 import { TestProvider } from '@keystar/ui/core';
@@ -23,7 +24,7 @@ import { Text } from '@keystar/ui/typography';
 
 import { Item, ListBox, Section } from '..';
 
-type NumberSpy = vi.SpiedGetter<number>;
+type NumberSpy = MockInstance<() => number>;
 type MaybeElement = HTMLElement | null;
 
 let sectionItemData = [

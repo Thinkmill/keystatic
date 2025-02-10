@@ -7,6 +7,7 @@ import {
   vi,
   describe,
   it,
+  MockInstance,
 } from 'vitest';
 import userEvent from '@testing-library/user-event';
 
@@ -27,7 +28,8 @@ import { FormEvent } from 'react';
 
 // NOTE: skipped tests due to `userEvent.tab()` not working as expected
 describe('picker/Picker', () => {
-  let offsetWidth: vi.SpiedGetter<number>, offsetHeight: vi.SpiedGetter<number>;
+  let offsetWidth: MockInstance<() => number>,
+    offsetHeight: MockInstance<() => number>;
   let onSelectionChange = vi.fn();
 
   beforeAll(function () {
@@ -1847,7 +1849,7 @@ describe('picker/Picker', () => {
   });
 
   describe('focus', function () {
-    let focusSpies: Record<string, vi.SpiedFunction<() => void>>;
+    let focusSpies: Record<string, MockInstance<() => void>>;
 
     beforeEach(() => {
       focusSpies = {

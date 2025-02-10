@@ -6,6 +6,7 @@ import {
   beforeAll,
   afterAll,
   afterEach,
+  MockInstance,
 } from 'vitest';
 
 import { Button } from '@keystar/ui/button';
@@ -20,9 +21,9 @@ import {
 import { ListView, Item } from '..';
 
 describe('list-view/ListView', () => {
-  let offsetWidth: vi.SpiedGetter<number>,
-    offsetHeight: vi.SpiedGetter<number>,
-    scrollHeight: vi.SpiedGetter<number>;
+  let offsetWidth: MockInstance<() => number>,
+    offsetHeight: MockInstance<() => number>,
+    scrollHeight: MockInstance<() => number>;
   let items = [
     { key: 'foo', label: 'Foo' },
     { key: 'bar', label: 'Bar' },

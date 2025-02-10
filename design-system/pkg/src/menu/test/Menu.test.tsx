@@ -10,12 +10,14 @@ import {
   afterAll,
   afterEach,
   beforeAll,
+  MockInstance,
 } from 'vitest';
 
 import { Item, Menu, MenuProps, Section } from '..';
 
 describe('menu/Menu', () => {
-  let offsetWidth: vi.SpiedGetter<number>, offsetHeight: vi.SpiedGetter<number>;
+  let offsetWidth: MockInstance<() => number>,
+    offsetHeight: MockInstance<() => number>;
   let onSelectionChange = vi.fn<(val: any) => void>();
 
   beforeAll(function () {
