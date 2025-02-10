@@ -17,10 +17,7 @@
     "@babel/preset-typescript",
     ["@babel/preset-react", { "runtime": "automatic" }]
   ],
-  "plugins": [
-    "@babel/plugin-transform-runtime",
-    ["@babel/plugin-transform-private-property-in-object", { "loose": true }]
-  ],
+  "plugins": ["@babel/plugin-transform-runtime"],
   "overrides": [
     {
       "test": ["packages/keystatic/src/**/*", "design-system/pkg/src/**/*"],
