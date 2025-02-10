@@ -1,6 +1,6 @@
 import { act, render } from '@testing-library/react';
 import { diff } from 'jest-diff';
-import { plugins, Plugin, format } from 'pretty-format';
+import { plugins, Plugin, format } from '@vitest/pretty-format';
 import { ReactElement, createElement, MutableRefObject, useState } from 'react';
 import { Editor, Node, Path, Text, Range } from 'slate';
 import { Slate } from 'slate-react';
@@ -56,14 +56,16 @@ function formatEditor(editor: Node) {
   });
 }
 
-declare module '@jest/expect' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  export interface Matchers<R extends void | Promise<void>, T> {
-    toEqualEditor(
-      expected: [T] extends [Editor]
-        ? Editor
-        : 'toEqualEditor only accepts an Editor'
-    ): R;
+declare global {
+  namespace jest {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    export interface Matchers<R extends void | Promise<void>, T> {
+      toEqualEditor(
+        expected: [T] extends [Editor]
+          ? Editor
+          : 'toEqualEditor only accepts an Editor'
+      ): R;
+    }
   }
 }
 
