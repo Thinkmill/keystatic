@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google';
 import { Layout } from '../../components/layout';
 import { getNavigation } from '../../utils/packages';
 import { basePageTitle } from './utils';
+import { ReactNode } from 'react';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <NextRootProvider fontClassName={inter.variable}>

@@ -17,7 +17,7 @@ import {
   useDroppableCollectionState,
 } from '@react-stately/dnd';
 import type { Key } from '@react-types/shared';
-import { RefObject, useMemo } from 'react';
+import { RefObject, useMemo, type JSX } from 'react';
 
 import {
   DragAndDropHooks,

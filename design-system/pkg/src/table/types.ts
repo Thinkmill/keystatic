@@ -7,7 +7,7 @@ import {
   ColumnSize,
   TableProps as ReactAriaTableProps,
 } from '@react-types/table';
-import { Key, ReactElement, ReactNode } from 'react';
+import { Key, ReactElement, ReactNode, type JSX } from 'react';
 
 import { DragAndDropHooks } from '@keystar/ui/drag-and-drop';
 import { BaseStyleProps } from '@keystar/ui/style';
@@ -34,9 +34,9 @@ export type TableCosmeticConfig = {
 };
 export type TableProps<T> = {
   /** Handler that is called when a user performs an action on a row. */
-  onAction?: (key: Key) => void;
+  onAction?: (key: string | number) => void;
   /** @deprecated Use `onAction` instead. */
-  onRowAction?: (key: Key) => void;
+  onRowAction?: (key: string | number) => void;
   /** What should render when there is no content to display. */
   renderEmptyState?: () => JSX.Element;
   /**

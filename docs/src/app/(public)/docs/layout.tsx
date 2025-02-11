@@ -4,6 +4,7 @@ import { NavItem } from '../../../components/navigation/nav-item';
 import { DocsFooter } from '../../../components/footer';
 import { getNavigationMap } from '../../../utils/reader';
 import { Main } from '../../../components/main';
+import { ReactNode } from 'react';
 
 export const metadata = {
   title: {
@@ -15,7 +16,7 @@ export const metadata = {
 export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const navigationMap = await getNavigationMap();
 

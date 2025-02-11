@@ -28,7 +28,6 @@ import keystatic from '@keystatic/astro'
 export default defineConfig({
 -  integrations: [react(), markdoc(), keystatic()],
 +  integrations: [react(), markdoc(), ...(process.env.SKIP_KEYSTATIC ? [] : [keystatic()])],
-   output: 'hybrid',
 })
 
 ```

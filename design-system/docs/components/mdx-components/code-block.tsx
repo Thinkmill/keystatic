@@ -4,6 +4,8 @@ import { css, tokenSchema } from '@keystar/ui/style';
 
 import { Highlight } from './highlight';
 
+import type { JSX } from 'react';
+
 type CodeBlockProps = {
   language?: string;
   content: string;

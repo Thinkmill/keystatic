@@ -6,8 +6,8 @@ import { RootStyleProps } from '@keystar/ui/style';
 
 type TooltipContextProps = {
   state?: TooltipTriggerState;
-  overlayRef?: RefObject<HTMLDivElement>;
-  targetRef?: RefObject<HTMLElement>;
+  overlayRef?: RefObject<HTMLDivElement | null>;
+  targetRef?: RefObject<HTMLElement | null>;
   arrowProps?: HTMLAttributes<HTMLElement>;
 } & PositionProps &
   RootStyleProps;

@@ -1,4 +1,3 @@
-import { css } from '@emotion/css';
 import { Button } from '@keystar/ui/button';
 import { DialogContainer, Dialog } from '@keystar/ui/dialog';
 import { Box, Flex } from '@keystar/ui/layout';
@@ -13,7 +12,7 @@ import { EditorNodeSpec } from './schema';
 import { classes } from './utils';
 import { ContentComponent } from '../../../../content-components';
 import { NodeSelection } from 'prosemirror-state';
-import { tokenSchema } from '@keystar/ui/style';
+import { css, tokenSchema } from '@keystar/ui/style';
 import { Item, Menu, MenuTrigger } from '@keystar/ui/menu';
 import {
   deserializeValue,

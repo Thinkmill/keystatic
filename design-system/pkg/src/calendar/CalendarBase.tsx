@@ -30,7 +30,7 @@ interface CalendarBaseProps<T extends CalendarState | RangeCalendarState>
   calendarProps: HTMLAttributes<HTMLElement>;
   nextButtonProps: AriaButtonProps;
   prevButtonProps: AriaButtonProps;
-  calendarRef: RefObject<HTMLDivElement>;
+  calendarRef: RefObject<HTMLDivElement | null>;
 }
 
 export function CalendarBase<T extends CalendarState | RangeCalendarState>(

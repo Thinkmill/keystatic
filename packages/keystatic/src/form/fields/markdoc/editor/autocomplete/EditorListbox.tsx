@@ -19,8 +19,8 @@ import { Text } from '@keystar/ui/typography';
 export { Item, Section } from '@keystar/ui/listbox';
 
 export type EditorListboxProps<T> = {
-  listenerRef: RefObject<HTMLElement>;
-  scrollRef?: RefObject<HTMLElement>;
+  listenerRef: RefObject<HTMLElement | null>;
+  scrollRef?: RefObject<HTMLElement | null>;
   onAction?: (key: Key) => void;
   onEscape?: () => void;
 } & CollectionBase<T> &

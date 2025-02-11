@@ -330,7 +330,10 @@ function useToolbarItem<P extends { isDisabled?: boolean }>(props: P) {
   };
 }
 
-function useToolbar(props: EditorToolbarProps, ref: RefObject<HTMLElement>) {
+function useToolbar(
+  props: EditorToolbarProps,
+  ref: RefObject<HTMLElement | null>
+) {
   let [lastFocusedId, setLastFocusedId] = useState<Key | null>(null);
   let { direction } = useLocale();
   let focusManager = createFocusManager(ref, { wrap: true });

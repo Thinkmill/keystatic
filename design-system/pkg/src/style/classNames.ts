@@ -1,4 +1,4 @@
-import { cx, ClassNamesArg } from '@emotion/css';
+import { cx } from '@emotion/css';
 import { TOKEN_PREFIX } from '@keystar/ui/primitives';
 import { assert } from 'emery';
 
@@ -13,7 +13,7 @@ export function voussoirClassName(className: string) {
  * function](https://emotion.sh/docs/@emotion/css#cx) that includes the reset
  * class name.
  */
-export function classNames(...inputs: ClassNamesArg[]) {
+export function classNames(...inputs: Parameters<typeof cx>) {
   let resolved = cx(inputs);
 
   if (resolved.includes(resetClassName)) {

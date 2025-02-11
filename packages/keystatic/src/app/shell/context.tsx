@@ -64,7 +64,7 @@ export function useContentPanelQuery(options: QueryOptions) {
 }
 
 /** @private only used to initialize context */
-export function useContentPanelState(ref: RefObject<HTMLElement>) {
+export function useContentPanelState(ref: RefObject<HTMLElement | null>) {
   let [contentSize, setContentSize] = useState<ContentSize>('mobile');
 
   const onResize = () => {

@@ -1,6 +1,8 @@
+import { SVGProps } from 'react';
+
 export type IconProps = {
   ariaHidden?: boolean;
-} & React.SVGProps<SVGSVGElement>;
+} & SVGProps<SVGSVGElement>;
 
 export function GitHubOutlineIcon({
   ariaHidden = true,

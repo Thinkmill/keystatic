@@ -3,7 +3,7 @@ import type {
   RenderableTreeNodes,
   Scalar,
 } from '@markdoc/markdoc';
-import React, { ElementType, ReactNode } from 'react';
+import React, { ElementType, ReactNode, type JSX } from 'react';
 import { isTag } from '../../utils/utils';
 import { mdxComponents } from './mdx-components';
 

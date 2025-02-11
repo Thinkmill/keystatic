@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import Footer from '../../../components/footer';
 import { Main } from '../../../components/main';
 
@@ -26,7 +27,7 @@ export const metadata = {
 export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <>

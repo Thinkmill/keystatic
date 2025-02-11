@@ -49,7 +49,7 @@ export function ComponentBlockRender({
   let maybeChild: ReactElement | undefined;
   let extraChildren: ReactElement[] = [];
   children.forEach((child: ReactElement) => {
-    const propPath = child.props.children.props.element.propPath;
+    const propPath = (child.props as any).children.props.element.propPath;
     if (propPath === undefined) {
       maybeChild = child;
     } else {

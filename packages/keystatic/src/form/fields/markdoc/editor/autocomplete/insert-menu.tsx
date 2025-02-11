@@ -3,7 +3,7 @@ import { Text } from '@keystar/ui/typography';
 import { matchSorter } from 'match-sorter';
 import { NodeType } from 'prosemirror-model';
 import { Command, EditorState } from 'prosemirror-state';
-import { useMemo } from 'react';
+import { ReactElement, useMemo } from 'react';
 
 import { weakMemoize } from '../utils';
 import {
@@ -26,7 +26,7 @@ import { EditorSchema } from '../schema';
 export type InsertMenuItemSpec = {
   label: string;
   description?: string;
-  icon?: React.ReactElement;
+  icon?: ReactElement;
   command: (type: NodeType, schema: EditorSchema) => Command;
   forToolbar?: true;
 };
@@ -39,7 +39,7 @@ export type InsertMenuItem = {
   id: string;
   label: string;
   description?: string;
-  icon?: React.ReactElement;
+  icon?: ReactElement;
   forToolbar?: true;
   command: Command;
 };

@@ -1,6 +1,6 @@
 import { act, render } from '@testing-library/react';
 import { diff } from 'jest-diff';
-import { plugins, Plugin, format } from 'pretty-format';
+import { plugins, Plugin, format } from '@vitest/pretty-format';
 import { ReactElement, createElement, MutableRefObject, useState } from 'react';
 import { Editor, Node, Path, Text, Range } from 'slate';
 import { Slate } from 'slate-react';
@@ -15,6 +15,8 @@ import { normaliseDocumentFeatures } from '../..';
 import { expect } from '@jest/globals';
 
 export { __jsx as jsx } from './jsx/namespace';
+
+expect.addSnapshotSerializer(plugins.ReactElement);
 
 let oldConsoleError = console.error;
 

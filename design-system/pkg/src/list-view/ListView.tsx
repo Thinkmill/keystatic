@@ -77,7 +77,7 @@ function useListLayout<T>(
 
 function ListView<T extends object>(
   props: ListViewProps<T>,
-  ref: RefObject<HTMLDivElement>
+  ref: RefObject<HTMLDivElement | null>
 ) {
   let {
     density = 'regular',
@@ -409,6 +409,6 @@ function CenteredWrapper({ children }: PropsWithChildren) {
  * or perform an action.
  */
 const _ListView = React.forwardRef(ListView as any) as <T>(
-  props: ListViewProps<T> & { ref?: RefObject<HTMLDivElement> }
+  props: ListViewProps<T> & { ref?: RefObject<HTMLDivElement | null> }
 ) => ReactElement;
 export { _ListView as ListView };

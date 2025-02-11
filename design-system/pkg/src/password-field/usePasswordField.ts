@@ -20,7 +20,7 @@ import {
 export function usePasswordField(
   props: PasswordFieldProps,
   state: PasswordFieldState,
-  inputRef: RefObject<HTMLInputElement>
+  inputRef: RefObject<HTMLInputElement | null>
 ): PasswordFieldAria {
   let { autoComplete = 'current-password', isDisabled } = props;
 

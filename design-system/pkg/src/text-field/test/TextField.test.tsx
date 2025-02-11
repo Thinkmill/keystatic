@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import { expect, it, describe, jest, afterEach } from '@jest/globals';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -11,7 +11,7 @@ let inputText = 'Hello world';
 
 function renderTextField(
   props: Partial<TextFieldProps> = {},
-  ref?: React.RefObject<HTMLInputElement>
+  ref?: RefObject<HTMLInputElement | null>
 ) {
   return render(
     <TextField data-testid={testId} label="Field label" {...props} ref={ref} />,

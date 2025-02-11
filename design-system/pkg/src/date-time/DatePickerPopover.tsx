@@ -4,7 +4,7 @@ import {
   DatePickerState,
   DateRangePickerState,
 } from '@react-stately/datepicker';
-import { ReactNode, useRef } from 'react';
+import { ReactNode, RefObject, useRef } from 'react';
 
 import { Popover, Tray } from '@keystar/ui/overlays';
 import { css, tokenSchema, useIsMobileDevice } from '@keystar/ui/style';
@@ -17,7 +17,7 @@ export function DatePickerPopover({
   dialogProps: AriaDialogProps;
   shouldFlip?: boolean;
   state: DatePickerState | DateRangePickerState;
-  triggerRef: React.RefObject<HTMLElement>;
+  triggerRef: RefObject<HTMLElement | null>;
 }) {
   let scrollRef = useRef<HTMLDivElement>(null);
   let { direction } = useLocale();

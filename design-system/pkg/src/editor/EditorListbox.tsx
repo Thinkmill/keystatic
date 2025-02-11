@@ -15,8 +15,8 @@ import { ListBoxBase, listStyles, useListBoxLayout } from '@keystar/ui/listbox';
 import { BaseStyleProps } from '@keystar/ui/style';
 
 export type EditorListboxProps<T> = {
-  listenerRef: RefObject<HTMLElement>;
-  scrollRef?: RefObject<HTMLElement>;
+  listenerRef: RefObject<HTMLElement | null>;
+  scrollRef?: RefObject<HTMLElement | null>;
   onAction?: (key: Key) => void;
   onEscape?: () => void;
 } & CollectionBase<T> &

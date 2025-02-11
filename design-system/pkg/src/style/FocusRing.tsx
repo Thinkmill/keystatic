@@ -17,7 +17,7 @@ export function FocusRing(
 
   return cloneElement(
     child,
-    mergeProps(child.props, {
+    mergeProps(child.props as any, {
       ...focusProps,
       ...toDataAttributes({
         focus: isFocusVisible

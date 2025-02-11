@@ -38,7 +38,7 @@ export function useListBoxLayout<T>(): ListBoxLayout<T> {
 /** @private */
 function ListBoxBase<T>(
   props: ListBoxBaseProps<T>,
-  forwardedRef: RefObject<HTMLDivElement>
+  forwardedRef: RefObject<HTMLDivElement | null>
 ) {
   let {
     layout,
@@ -183,9 +183,11 @@ function ListBoxBase<T>(
   );
 }
 
+<div />;
+
 // forwardRef doesn't support generic parameters, so cast the result to the correct type
 // https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
 const _ListBoxBase: <T>(
-  props: ListBoxBaseProps<T> & { ref?: RefObject<HTMLDivElement> }
+  props: ListBoxBaseProps<T> & { ref?: RefObject<HTMLDivElement | null> }
 ) => ReactElement = forwardRef(ListBoxBase as any) as any;
 export { _ListBoxBase as ListBoxBase };

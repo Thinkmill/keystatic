@@ -129,7 +129,7 @@ const BlockPrimitive = forwardRef(function BlockPrimitive(
     selected,
     ...attributes
   }: PropsWithChildren<
-    RenderElementProps['attributes'] & { selected: boolean }
+    Omit<RenderElementProps['attributes'], 'ref'> & { selected: boolean }
   >,
   ref: Ref<any>
 ) {

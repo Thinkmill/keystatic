@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef } from 'react';
+import { ForwardedRef, forwardRef, ReactElement } from 'react';
 import { Overlay as ReactAriaOverlay } from '@react-aria/overlays';
 import { OverlayProps } from '@react-types/overlays';
 
@@ -29,9 +29,12 @@ export const Overlay = forwardRef(function Overlay(
         // unset container
         isDisabled={false}
       >
-        {cloneValidElement(props.children, {
-          isOpen: isOpen === 'mounting' ? false : props.isOpen,
-        }) ?? props.children}
+        {cloneValidElement(
+          props.children as ReactElement<{ isOpen?: boolean }>,
+          {
+            isOpen: isOpen === 'mounting' ? false : props.isOpen,
+          }
+        ) ?? props.children}
       </KeystarProvider>
     </ReactAriaOverlay>
   );

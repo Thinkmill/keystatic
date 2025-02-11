@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import { jest, it, describe, expect, afterEach } from '@jest/globals';
 import { renderWithProvider } from '#test-utils';
 import userEvent from '@testing-library/user-event';
@@ -10,7 +10,7 @@ let inputText = 'Hello world';
 
 function renderPasswordField(
   props: Partial<PasswordFieldProps> = {},
-  ref?: React.RefObject<HTMLInputElement>
+  ref?: RefObject<HTMLInputElement | null>
 ) {
   return renderWithProvider(
     <PasswordField data-testid={testId} label="Password" {...props} ref={ref} />

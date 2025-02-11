@@ -1,9 +1,14 @@
 import { ReactNode } from 'react';
-import { RenderElementProps } from 'slate-react';
 import { blockElementSpacing } from '../ui-utils';
 
 type BlockWrapperProps = {
-  attributes?: RenderElementProps['attributes'];
+  attributes?: {
+    'data-slate-node': 'element';
+    'data-slate-inline'?: true;
+    'data-slate-void'?: true;
+    dir?: 'rtl';
+    ref: any;
+  };
   children: ReactNode;
   draggable?: boolean;
 };

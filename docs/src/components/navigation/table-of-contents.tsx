@@ -45,7 +45,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
 }
 
 function useHeadingObserver(slugs: string[]) {
-  const observer = useRef<IntersectionObserver>();
+  const observer = useRef<IntersectionObserver>(undefined);
   const [activeHeading, setActiveHeading] = useState(H1_ID);
   const [visibleHeadings, setVisibleHeadings] = useState<string[]>([]);
 

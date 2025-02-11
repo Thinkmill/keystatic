@@ -1,5 +1,5 @@
 import { Inter } from 'next/font/google';
-import { Suspense } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { NavigationEvents } from '../components/navigation-events';
 
 const inter = Inter({
@@ -40,11 +40,7 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans`}>

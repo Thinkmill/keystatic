@@ -3,6 +3,8 @@ import { Box, BoxProps } from '@keystar/ui/layout';
 import { css } from '@keystar/ui/style';
 import { Text } from '@keystar/ui/typography';
 
+import type { JSX } from 'react';
+
 export function MdxTable({ children, ...rest }: BoxProps): JSX.Element {
   return (
     <Box overflow="auto">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { expect, describe, it, jest, afterEach } from '@jest/globals';
@@ -10,7 +10,7 @@ let inputText = 'Hello world';
 
 function renderSearchField(
   props: Partial<SearchFieldProps> = {},
-  ref?: React.RefObject<HTMLInputElement>
+  ref?: RefObject<HTMLInputElement | null>
 ) {
   return render(
     <SearchField

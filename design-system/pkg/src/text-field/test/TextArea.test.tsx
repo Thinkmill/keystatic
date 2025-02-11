@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import { afterEach, expect, jest, describe, it } from '@jest/globals';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -10,7 +10,7 @@ let inputText = 'Hello world';
 
 function renderTextArea(
   props: Partial<TextAreaProps> = {},
-  ref?: React.RefObject<HTMLTextAreaElement>
+  ref?: RefObject<HTMLTextAreaElement | null>
 ) {
   return render(
     <TextArea data-testid={testId} label="Field label" {...props} ref={ref} />

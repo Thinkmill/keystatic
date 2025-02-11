@@ -11,6 +11,7 @@ import { ComboBoxState, useComboBoxState } from '@react-stately/combobox';
 import { AriaButtonProps } from '@react-types/button';
 import { ValidationState } from '@react-types/shared';
 import React, {
+  CSSProperties,
   ForwardedRef,
   HTMLAttributes,
   KeyboardEvent,
@@ -136,7 +137,7 @@ interface ComboboxButtonProps extends AriaButtonProps {
   isReadOnly?: boolean;
   isDisabled?: boolean;
   isPlaceholder?: boolean;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
   validationState?: ValidationState;
 }
 
@@ -294,7 +295,7 @@ function ComboboxTray<T extends object>(props: ComboboxTrayProps<T>) {
     onClose,
   } = props;
 
-  let timeoutRef = useRef<NodeJS.Timeout>();
+  let timeoutRef = useRef<NodeJS.Timeout>(undefined);
   let [showLoading, setShowLoading] = useState(false);
   let inputRef = useRef<HTMLInputElement>(null);
   let buttonRef = useRef<HTMLDivElement>(null);
@@ -423,7 +424,6 @@ function ComboboxTray<T extends object>(props: ComboboxTrayProps<T>) {
     } else if (loadingState !== 'filtering') {
       // If loading is no longer happening, clear any timers and hide the loading circle
       setShowLoading(false);
-      // @ts-expect-error FIXME: NodeJS.Timeout is not assignable to number
       clearTimeout(timeoutRef.current);
       timeoutRef.current = undefined;
     }
