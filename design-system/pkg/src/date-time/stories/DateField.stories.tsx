@@ -183,7 +183,9 @@ Controls.argTypes = {
 };
 
 function ControlledExample() {
-  const [value, setValue] = React.useState(new CalendarDate(2023, 4, 14));
+  const [value, setValue] = React.useState<CalendarDate | null>(
+    new CalendarDate(2023, 4, 14)
+  );
   return <Example label="Date" value={value} onChange={setValue} />;
 }
 

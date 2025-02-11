@@ -17,7 +17,9 @@ type InputProps = {
   fieldProps?: DOMAttributes<HTMLElement>;
   isDisabled?: boolean;
   style?: CSSProperties;
+  /** @deprecated use isInvalid */
   validationState?: 'valid' | 'invalid';
+  isInvalid?: boolean;
 };
 
 export const Input = forwardRef<HTMLDivElement, InputProps>(
@@ -36,7 +38,8 @@ export const Input = forwardRef<HTMLDivElement, InputProps>(
       within: true,
     });
 
-    let isInvalid = validationState === 'invalid' && !isDisabled;
+    let isInvalid =
+      (props.isInvalid ?? validationState === 'invalid') && !isDisabled;
     let styleProps = useInputStyles(props, {
       isDisabled,
       isInvalid,

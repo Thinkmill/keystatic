@@ -139,6 +139,6 @@ Controls.argTypes = {
 };
 
 function ControlledExample() {
-  const [value, setValue] = useState(new Time(14, 45));
+  const [value, setValue] = useState<Time | null>(new Time(14, 45));
   return <TimeField label="Time" value={value} onChange={setValue} />;
 }

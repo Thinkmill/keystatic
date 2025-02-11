@@ -49,7 +49,7 @@ function TimeField<T extends TimeValue>(
         fieldProps={fieldProps}
         isDisabled={isDisabled}
         autoFocus={autoFocus}
-        validationState={state.validationState}
+        isInvalid={state.isInvalid}
       >
         {state.segments.map((segment, i) => (
           <InputSegment

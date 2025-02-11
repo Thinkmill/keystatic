@@ -307,7 +307,7 @@ export function TableView<T extends object>(
         return (
           <TableRow
             key={reusableView.key}
-            item={reusableView.content}
+            item={reusableView.content!}
             layoutInfo={reusableView.layoutInfo!}
             parent={parent?.layoutInfo}
           >
@@ -334,7 +334,6 @@ export function TableView<T extends object>(
       return (
         <TableCellWrapper
           key={reusableView.key}
-          // @ts-expect-error
           layoutInfo={reusableView.layoutInfo}
           virtualizer={reusableView.virtualizer}
           parent={parent}
@@ -734,10 +733,11 @@ function TableVirtualizer<T>(props: TableVirtualizerProps<T>) {
     }
   }, [bodyRef, headerRef]);
 
-  let resizerPosition =
-    columnResizeState.resizingColumn != null
-      ? layout.getLayoutInfo(columnResizeState.resizingColumn).rect.maxX - 2
-      : 0;
+  let resizerPosition = 0;
+  if (columnResizeState.resizingColumn != null) {
+    const layoutInfo = layout.getLayoutInfo(columnResizeState.resizingColumn);
+    if (layoutInfo) resizerPosition = layoutInfo.rect.maxX - 2;
+  }
 
   // minimize re-render caused on Resizers by memoing this
   let resizingColumnWidth =
@@ -1151,7 +1151,8 @@ function TableRow(props: PropsWithLayoutInfos & { item: GridNode<unknown> }) {
   let isFlushWithContainerBottom = false;
   if (isLastRow) {
     if (
-      layout.getContentSize()?.height >= layout.virtualizer?.visibleRect.height
+      layout.virtualizer &&
+      layout.getContentSize()?.height >= layout.virtualizer.visibleRect.height
     ) {
       isFlushWithContainerBottom = true;
     }
@@ -1416,7 +1417,7 @@ function CellContents(props: HTMLAttributes<HTMLElement>) {
 }
 
 function TableCellWrapper(
-  props: VirtualizerItemOptions & {
+  props: Omit<VirtualizerItemOptions, 'ref'> & {
     parent: View;
   } & HTMLAttributes<HTMLElement>
 ) {
@@ -1426,7 +1427,7 @@ function TableCellWrapper(
   let isRootDroptarget = false;
   if (isTableDroppable) {
     assert(!!dropState);
-    let key = parent.content.key;
+    let key = parent.content?.key;
     if (key) {
       isDropTarget = dropState.isDropTarget({
         type: 'item',
@@ -1439,7 +1440,7 @@ function TableCellWrapper(
 
   return (
     <VirtualizerItem
-      layoutInfo={layoutInfo}
+      layoutInfo={layoutInfo!}
       virtualizer={virtualizer}
       parent={parent?.layoutInfo}
       // only when !layoutInfo.estimatedSize???

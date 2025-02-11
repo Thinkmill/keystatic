@@ -93,7 +93,7 @@ function DatePicker<T extends DateValue>(
     isFocusVisible: isFocused && !isFocusedButton,
     isDisabled,
     isReadOnly,
-    isInvalid: state.validationState === 'invalid',
+    isInvalid: state.isInvalid,
   });
 
   return (
@@ -114,7 +114,7 @@ function DatePicker<T extends DateValue>(
       >
         <Input
           isDisabled={isDisabled}
-          validationState={state.validationState}
+          isInvalid={state.isInvalid}
           disableFocusRing
           {...styleProps.input}
         >
@@ -124,7 +124,7 @@ function DatePicker<T extends DateValue>(
         <FieldButton
           {...mergeProps(buttonProps, focusPropsButton)}
           {...styleProps.button}
-          validationState={state.validationState}
+          isInvalid={state.isInvalid}
           isDisabled={isDisabled || isReadOnly}
         >
           <Icon src={calendarDaysIcon} />

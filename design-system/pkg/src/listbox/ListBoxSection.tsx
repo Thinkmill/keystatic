@@ -69,7 +69,9 @@ export function ListBoxSection<T>(props: ListBoxSectionProps<T>) {
       </div>
       <div
         {...groupProps}
-        style={layoutInfoToStyle(layoutInfo, direction)}
+        style={
+          layoutInfo ? layoutInfoToStyle(layoutInfo, direction) : undefined
+        }
         className={classNames(css({}), 'ListBoxSection')}
       >
         {children}

@@ -38,7 +38,7 @@ type DateFieldBase<T extends DateValue> = {
 
 export type DateFieldProps<T extends DateValue> = DateFieldBase<T> &
   FocusableProps &
-  ValueBase<T | null, MappedDateValue<T>> &
+  ValueBase<T | null, MappedDateValue<T> | null> &
   FieldProps;
 
 export type TimeFieldProps<T extends TimeValue> = {
@@ -61,7 +61,7 @@ export type TimeFieldProps<T extends TimeValue> = {
   /** The maximum allowed time that a user may select. */
   maxValue?: TimeValue;
 } & FocusableProps &
-  ValueBase<T | null, MappedTimeValue<T>> &
+  ValueBase<T | null, MappedTimeValue<T> | null> &
   FieldProps;
 
 type DatePickerBase<T extends DateValue> = {
@@ -81,7 +81,7 @@ type DatePickerBase<T extends DateValue> = {
 
 export type DatePickerProps<T extends DateValue> = DatePickerBase<T> &
   AriaDatePickerProps<T> &
-  ValueBase<T | null, MappedDateValue<T>>;
+  ValueBase<T | null, MappedDateValue<T> | null>;
 
 export type DateRangePickerProps<T extends DateValue> = DatePickerBase<T> &
   AriaDateRangePickerProps<T> &

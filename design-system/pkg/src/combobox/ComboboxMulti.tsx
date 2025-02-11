@@ -122,7 +122,7 @@ const ComboboxMultiBase = React.forwardRef(function ComboboxMultiBase<
         <ListBoxBase
           {...listBoxProps}
           ref={listBoxRef}
-          autoFocus={state.focusStrategy}
+          autoFocus={state.focusStrategy ?? undefined}
           disallowEmptySelection
           focusOnPointerEnter
           isLoading={loadingState === 'loadingMore'}

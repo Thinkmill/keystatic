@@ -40,7 +40,7 @@ export class ListBoxLayout<T> extends ListLayout<T, ListBoxLayoutProps> {
     let y = this.contentSize.height;
 
     if (this.isLoading) {
-      let rect = new Rect(0, y, this.virtualizer.visibleRect.width, 40);
+      let rect = new Rect(0, y, this.virtualizer?.visibleRect.width, 40);
       let loader = new LayoutInfo('loader', 'loader', rect);
       let node = {
         layoutInfo: loader,
@@ -55,8 +55,8 @@ export class ListBoxLayout<T> extends ListLayout<T, ListBoxLayoutProps> {
       let rect = new Rect(
         0,
         y,
-        this.virtualizer.visibleRect.width,
-        this.placeholderHeight ?? this.virtualizer.visibleRect.height
+        this.virtualizer?.visibleRect.width,
+        this.placeholderHeight ?? this.virtualizer?.visibleRect.height
       );
       let placeholder = new LayoutInfo('placeholder', 'placeholder', rect);
       let node = {
@@ -80,6 +80,7 @@ export class ListBoxLayout<T> extends ListLayout<T, ListBoxLayoutProps> {
       parentKey: node.key,
       value: null,
       level: node.level,
+      index: node.index,
       hasChildNodes: false,
       childNodes: [],
       rendered: node.rendered,

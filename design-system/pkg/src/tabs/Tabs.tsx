@@ -602,7 +602,7 @@ export function TabPanels<T>(props: TabPanelsProps<T>) {
     factory,
     { suppressTextValueWarning: true }
   );
-  const selectedItem = tabListState
+  const selectedItem = tabListState?.selectedKey
     ? collection.getItem(tabListState.selectedKey)
     : null;
 
@@ -619,7 +619,6 @@ function TabPanel<T>(props: TabPanelsProps<T>) {
   const { tabListState } = tabState;
 
   let ref = useRef<HTMLDivElement>(null);
-  // @ts-expect-error `tabListState` will exist by here...
   const { tabPanelProps } = useTabPanel(props, tabListState, ref);
   let styleProps = useStyleProps(props);
 
