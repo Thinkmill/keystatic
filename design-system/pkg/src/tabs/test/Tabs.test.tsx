@@ -22,7 +22,7 @@ import { Item, TabList, TabPanels, Tabs, TabsProps } from '..';
 
 let defaultItems = [
   { name: 'Tab 1', children: 'Tab 1 body' },
-  { name: '', children: 'Tab 2 body' },
+  { name: 'Tab 2', children: 'Tab 2 body' },
   { name: 'Tab 3', children: 'Tab 3 body' },
 ];
 
@@ -222,7 +222,7 @@ describe('tabs/Tabs', function () {
     expect(firstItem).toHaveAttribute('aria-selected', 'true');
   });
 
-  it('supports using click to change tab', function () {
+  it('supports using click to change tab', async function () {
     let container = renderComponent({
       defaultSelectedKey: defaultItems[0].name,
       onSelectionChange,
