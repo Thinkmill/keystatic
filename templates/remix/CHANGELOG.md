@@ -1,5 +1,15 @@
 # @keystatic/templates-remix
 
+## 0.0.0-20250211052304
+
+### Patch Changes
+
+- [#1404](https://github.com/Thinkmill/keystatic/pull/1404) [`33cc348`](https://github.com/Thinkmill/keystatic/commit/33cc3482f413ff54ffc3231d466fd59a0cae23f4) Thanks [@emmatown](https://github.com/emmatown)! - Update template to React 19
+
+- Updated dependencies [[`9a73371`](https://github.com/Thinkmill/keystatic/commit/9a73371c642da0770536076cb7f4e70a0fe496f6), [`c300a68`](https://github.com/Thinkmill/keystatic/commit/c300a68253a3ea95662aae19fdae880727da899a), [`4c4b0ef`](https://github.com/Thinkmill/keystatic/commit/4c4b0efa8ecfc45053dee992f7ceb8566c520ede), [`33cc348`](https://github.com/Thinkmill/keystatic/commit/33cc3482f413ff54ffc3231d466fd59a0cae23f4)]:
+  - @keystatic/core@0.0.0-20250211052304
+  - @keystatic/remix@0.0.0-20250211052304
+
 ## 0.0.43
 
 ### Patch Changes

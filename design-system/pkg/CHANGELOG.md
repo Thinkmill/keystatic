@@ -1,5 +1,11 @@
 # @keystar/ui
 
+## 0.0.0-20250211052304
+
+### Patch Changes
+
+- [#1404](https://github.com/Thinkmill/keystatic/pull/1404) [`33cc348`](https://github.com/Thinkmill/keystatic/commit/33cc3482f413ff54ffc3231d466fd59a0cae23f4) Thanks [@emmatown](https://github.com/emmatown)! - Allow React 19 in peerDependencies
+
 ## 0.7.15
 
 ### Patch Changes
