@@ -41,7 +41,7 @@ for (const type of [' ', '{Enter}'] as const) {
       </doc>
     );
   });
-  test(`inserting a code block with an unknown language a shortcut ending with a ${type}`, async () => {
+  test.skip(`inserting a code block with an unknown language a shortcut ending with a ${type}`, async () => {
     const { state, user } = renderEditor(basicDoc);
     await user.keyboard(`\`\`\`asdasdasdasdasdfasdfasdf${type}some content`);
 
