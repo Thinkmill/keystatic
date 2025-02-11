@@ -8,9 +8,12 @@ export async function generateStaticParams() {
 
 export const dynamicParams = false;
 
-export async function GET(_: Request, props: { params: { slug: string[] } }) {
+export async function GET(
+  _: Request,
+  props: { params: Promise<{ slug: string[] }> }
+) {
   const post = await reader().collections.pages.readOrThrow(
-    props.params.slug.join('/')
+    (await props.params).slug.join('/')
   );
   return renderOgImage(post.title);
 }

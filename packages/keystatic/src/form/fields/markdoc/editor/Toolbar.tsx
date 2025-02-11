@@ -706,7 +706,7 @@ function ListButtons() {
             </EditorToolbarItem>
             <Tooltip>
               <Text>{item.label}</Text>
-              <Kbd meta>{item.shortcut}</Kbd>
+              <Kbd>{item.shortcut}</Kbd>
             </Tooltip>
           </TooltipTrigger>
         ))}

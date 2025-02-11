@@ -2,7 +2,7 @@ import { useBreadcrumbItem } from '@react-aria/breadcrumbs';
 import { useLocale } from '@react-aria/i18n';
 import { useHover } from '@react-aria/interactions';
 import { mergeProps } from '@react-aria/utils';
-import React, { Fragment, useMemo, useRef } from 'react';
+import React, { Fragment, useMemo, useRef, ElementType } from 'react';
 
 import { Icon } from '@keystar/ui/icon';
 import { chevronRightIcon } from '@keystar/ui/icon/icons/chevronRightIcon';
@@ -35,7 +35,7 @@ export function BreadcrumbItem(props: BreadcrumbItemProps) {
 
   let { direction } = useLocale();
   let ref = useRef(null);
-  let ElementType: React.ElementType = props.href ? 'a' : 'span';
+  let ElementType: ElementType = props.href ? 'a' : 'span';
   let { itemProps } = useBreadcrumbItem(
     { ...props, elementType: ElementType },
     ref

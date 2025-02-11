@@ -7,6 +7,7 @@ import Button from '../../../components/button';
 import { Entry } from '@keystatic/core/reader';
 import keystaticConfig from '../../../../keystatic.config';
 import { CloudImage } from '../../../components/cloud-image';
+import { ComponentProps, ReactNode } from 'react';
 
 type ResourceEntry = Entry<
   (typeof keystaticConfig)['collections']['resources']
@@ -229,7 +230,7 @@ function Video({
   );
 }
 
-function ResourceGrid(props: React.ComponentProps<'ul'>) {
+function ResourceGrid(props: ComponentProps<'ul'>) {
   return (
     <ul
       className="mt-8 grid items-start gap-x-6 gap-y-10 md:grid-cols-2 lg:grid-cols-3"
@@ -239,9 +240,9 @@ function ResourceGrid(props: React.ComponentProps<'ul'>) {
 }
 
 type SectionProps = {
-  title?: string | React.ReactNode;
+  title?: string | ReactNode;
   introText?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 function Section({ title, children }: SectionProps) {

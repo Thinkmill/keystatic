@@ -13,7 +13,7 @@ import { MenuProps } from './types';
 
 function Menu<T extends object>(
   props: MenuProps<T>,
-  forwardedRef: RefObject<HTMLDivElement>
+  forwardedRef: RefObject<HTMLDivElement | null>
 ) {
   let contextProps = useContext(MenuContext);
   let completeProps = {
@@ -57,6 +57,6 @@ function Menu<T extends object>(
 // forwardRef doesn't support generic parameters, so cast the result to the correct type
 // https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
 const _Menu: <T>(
-  props: MenuProps<T> & { ref?: RefObject<HTMLDivElement> }
+  props: MenuProps<T> & { ref?: RefObject<HTMLDivElement | null> }
 ) => ReactElement = React.forwardRef(Menu as any) as any;
 export { _Menu as Menu };

@@ -1,5 +1,5 @@
 import { useOverlayTriggerState } from '@react-stately/overlays';
-import { useEffect, useState } from 'react';
+import { ClipboardEvent, useEffect, useState } from 'react';
 import { useSelected, useSlateStatic } from 'slate-react';
 import * as s from 'superstruct';
 
@@ -360,7 +360,7 @@ function ImageDialog(props: {
   const formId = useId();
   const imageLibraryURL = useImageLibraryURL();
 
-  const onPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+  const onPaste = (event: ClipboardEvent<HTMLInputElement>) => {
     event.preventDefault();
     const text = event.clipboardData.getData('text/plain');
     setState(parseImageData(text));

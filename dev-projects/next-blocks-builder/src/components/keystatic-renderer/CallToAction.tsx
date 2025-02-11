@@ -3,11 +3,12 @@ import { InferRenderersForComponentBlocks } from '@keystatic/core';
 import { cx } from '../../utils';
 import { callToAction } from '../../keystatic/schema/component-blocks';
 import { Container } from './Container';
+import { ComponentProps } from 'react';
 
 type CallToActionProps = InferRenderersForComponentBlocks<{
   callToAction: typeof callToAction;
 }>['callToAction'] &
-  React.ComponentProps<'div'>;
+  ComponentProps<'div'>;
 
 export const CallToAction: CallToActionProps = ({
   layoutProps,

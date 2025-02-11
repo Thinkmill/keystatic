@@ -1,7 +1,6 @@
 import { useLocalizedStringFormatter } from '@react-aria/i18n';
 import { isHotkey } from 'is-hotkey';
 import React, {
-  Key,
   useCallback,
   useEffect,
   useMemo,
@@ -592,7 +591,11 @@ function CollectionTable(
   );
 }
 
-function getItemPath(basePath: string, collection: string, key: Key): string {
+function getItemPath(
+  basePath: string,
+  collection: string,
+  key: string | number
+): string {
   return `${basePath}/collection/${encodeURIComponent(
     collection
   )}/item/${encodeURIComponent(key)}`;

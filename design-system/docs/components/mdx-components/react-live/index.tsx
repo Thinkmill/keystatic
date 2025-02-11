@@ -1,7 +1,7 @@
 'use client';
 import copy from 'clipboard-copy';
 import { createUrl } from 'playroom/utils';
-import { ReactNode, useEffect, useId, useState } from 'react';
+import { ReactNode, useEffect, useId, useState, type JSX } from 'react';
 
 import { ActionButton } from '@keystar/ui/button';
 import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';

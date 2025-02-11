@@ -20,8 +20,9 @@ import {
   DraggableCollectionProps,
   DragItem,
   DroppableCollectionProps,
+  Key,
 } from '@react-types/shared';
-import { Key, RefObject } from 'react';
+import { RefObject, type JSX } from 'react';
 
 interface DraggableCollectionStateOpts
   extends Omit<DraggableCollectionStateOptions, 'getItems'> {}

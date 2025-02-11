@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react';
+import { ClipboardEvent, useEffect, useId, useState } from 'react';
 
 import { ObjectField, PreviewProps } from '@keystatic/core';
 import { ClearButton } from '@keystar/ui/button';
@@ -37,7 +37,7 @@ function ImageField(props: {
   const [status, setStatus] = useState<ImageStatus>(image.src ? 'good' : '');
   const imageLibraryURL = useImageLibraryURL();
 
-  const onPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+  const onPaste = (event: ClipboardEvent<HTMLInputElement>) => {
     event.preventDefault();
     const text = event.clipboardData.getData('text/plain');
     const parsed = parseImageData(text);

@@ -119,6 +119,14 @@ module.exports = {
         },
       },
     ],
+    'no-restricted-syntax': [
+      ERROR,
+      {
+        selector: "TSQualifiedName[left.name='React']",
+        message:
+          "Avoid using the global React type, import the specific type you want from 'react'",
+      },
+    ],
     'react/no-unknown-property': OFF,
     'react-compiler/react-compiler': [
       ERROR,

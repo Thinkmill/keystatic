@@ -44,7 +44,7 @@ export type DialogTriggerProps = {
    * The ref of the element the dialog should visually attach itself to.
    * Defaults to the trigger button if not defined.
    */
-  targetRef?: RefObject<HTMLElement>;
+  targetRef?: RefObject<HTMLElement | null>;
   /** Whether a "modal" type dialog should be dismissable. */
   isDismissable?: boolean;
   /** Whether pressing the escape key to close the dialog should be disabled. */

@@ -1,12 +1,13 @@
 import { cx } from '../../utils';
 import type { LayoutProps } from '../../keystatic/schema/layout-props';
+import { ComponentProps } from 'react';
 
 export type { LayoutProps };
 
 type ContainerProps = {
   className?: string;
   layoutProps: LayoutProps;
-} & React.ComponentProps<'section'>;
+} & ComponentProps<'section'>;
 
 // ----------------------------------
 // Style lookups

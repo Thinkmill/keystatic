@@ -15,6 +15,7 @@ import {
   ReactElement,
   ReactNode,
   Ref,
+  RefObject,
   useContext,
   useEffect,
   useMemo,
@@ -39,7 +40,7 @@ type BlockPopoverProps = Pick<PopoverProps, 'hideArrow' | 'placement'> & {
 
 const BlockPopoverContext = createContext<{
   state: OverlayTriggerState;
-  triggerRef: React.MutableRefObject<HTMLElement | null>;
+  triggerRef: RefObject<HTMLElement | null>;
 } | null>(null);
 
 function useBlockPopoverContext() {
@@ -97,7 +98,9 @@ export const BlockPopoverTrigger = ({
 
   return (
     <BlockPopoverContext.Provider value={context}>
-      {cloneElement(trigger, { ref: triggerRef })}
+      {cloneElement(trigger as ReactElement<{ ref?: Ref<unknown> }>, {
+        ref: triggerRef,
+      })}
       {popover}
     </BlockPopoverContext.Provider>
   );
@@ -301,7 +304,7 @@ function useBlockPopover(
 }
 
 function usePrevious<T>(value: T) {
-  const ref = useRef<T>();
+  const ref = useRef<T>(undefined);
   useEffect(() => {
     ref.current = value;
   });

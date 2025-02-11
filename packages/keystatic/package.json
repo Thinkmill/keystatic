@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/core",
-  "version": "0.5.43",
+  "version": "0.5.44",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -113,7 +113,6 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "@braintree/sanitize-url": "^6.0.2",
-    "@emotion/css": "^11.9.0",
     "@emotion/weak-memoize": "^0.3.0",
     "@floating-ui/react": "^0.24.0",
     "@internationalized/string": "^3.2.3",
@@ -135,7 +134,7 @@
     "@sindresorhus/slugify": "^1.1.2",
     "@toeverything/y-indexeddb": "^0.10.0-canary.9",
     "@ts-gql/tag": "^0.7.3",
-    "@types/react": "^18.2.8",
+    "@types/react": "^19.0.8",
     "@urql/core": "^5.0.4",
     "@urql/exchange-auth": "^2.2.0",
     "@urql/exchange-graphcache": "^7.1.2",
@@ -187,25 +186,25 @@
     "@internationalized/string-compiler": "^3.2.4",
     "@jest/expect": "^29.7.0",
     "@jest/globals": "^29.7.0",
-    "@testing-library/user-event": "^14.4.3",
+    "@testing-library/user-event": "^14.6.1",
     "@ts-gql/compiler": "^0.16.7",
     "@ts-gql/eslint-plugin": "^0.9.1",
     "@ts-gql/next": "^17.0.1",
     "@types/is-hotkey": "^0.1.7",
     "@types/js-yaml": "^4.0.5",
     "@types/mdast": "^4.0.3",
-    "@types/node": "16.11.13",
+    "@types/node": "22.13.1",
     "@types/prismjs": "^1.26.0",
-    "@types/react-dom": "^18.0.11",
+    "@types/react-dom": "^19.0.3",
     "@types/signal-exit": "^3.0.1",
+    "@vitest/pretty-format": "^3.0.5",
     "eslint": "^8.18.0",
     "fast-glob": "^3.2.12",
     "jest-diff": "^29.0.1",
     "outdent": "^0.8.0",
-    "pretty-format": "^29.0.1",
     "prismjs": "^1.29.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-element-to-jsx-string": "^15.0.0",
     "resize-observer-polyfill": "^1.5.1",
     "signal-exit": "^3.0.7",
@@ -214,8 +213,8 @@
     "typescript": "^5.5.3"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
   },
   "preconstruct": {
     "entrypoints": [

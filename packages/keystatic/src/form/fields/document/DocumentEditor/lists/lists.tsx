@@ -195,7 +195,9 @@ export const ListElement = forwardRef(function ListElement(
 });
 
 export const ListItem = forwardRef(function ListItem(
-  props: RenderElementProps['attributes'] & { children: ReactNode },
+  props: Omit<RenderElementProps['attributes'], 'ref'> & {
+    children: ReactNode;
+  },
   ref: Ref<HTMLElement>
 ) {
   const type = useContext(ListContext);

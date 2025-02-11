@@ -1,5 +1,5 @@
 'use client';
-import { ReactNode } from 'react';
+import { ReactNode, type JSX } from 'react';
 
 import { Flex } from '@keystar/ui/layout';
 

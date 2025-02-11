@@ -28,6 +28,7 @@ import { classNames, css, tokenSchema, useStyleProps } from '@keystar/ui/style';
 
 import { BreadcrumbItem, breadcrumbsClassList } from './BreadcrumbItem';
 import { BreadcrumbsProps } from './types';
+import { ItemProps } from '@react-types/shared';
 
 const MIN_VISIBLE_ITEMS = 1;
 const MAX_VISIBLE_ITEMS = 4;
@@ -47,7 +48,7 @@ function Breadcrumbs<T>(
   } = props;
 
   // Not using React.Children.toArray because it mutates the key prop.
-  let childArray: ReactElement[] = [];
+  let childArray: ReactElement<ItemProps<T>>[] = [];
   Children.forEach(children, child => {
     if (isValidElement(child)) {
       childArray.push(child);

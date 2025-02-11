@@ -1,6 +1,7 @@
 import { HTMLAttributes } from 'react';
 import { warning } from 'emery';
-import { css, CSSInterpolation, CSSObject } from '@emotion/css';
+import { css } from '@emotion/css';
+import { CSSObject, CSSInterpolation } from '@emotion/css/create-instance';
 
 import { defaultStyleProps } from './resolvers';
 import {
@@ -73,7 +74,7 @@ export function useStyleProps<T extends BoxStyleProps>(
       'Note that this may break in future versions due to DOM structure changes.'
   );
 
-  let hiddenStyles: CSSInterpolation = [];
+  let hiddenStyles: CSSInterpolation[] = [];
   if (isHidden) {
     if (isHidden === true) {
       hiddenStyles.push({ display: 'none' });

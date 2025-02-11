@@ -1,7 +1,7 @@
 import { FocusableProvider } from '@react-aria/focus';
 import { useTooltipTrigger } from '@react-aria/tooltip';
 import { useTooltipTriggerState } from '@react-stately/tooltip';
-import React, { ReactElement, useRef } from 'react';
+import React, { ReactElement, useRef, type JSX } from 'react';
 
 import { Overlay } from '@keystar/ui/overlays';
 

@@ -3,7 +3,6 @@ import {
   type CSSProperties,
   // type ForwardedRef,
   type HTMLAttributes,
-  type Key,
   type PropsWithChildren,
   type ReactElement,
   type ReactNode,
@@ -121,6 +120,7 @@ import {
 } from './styles';
 import { TableViewLayout } from './TableViewLayout';
 import { ColumnProps, TableCosmeticConfig, TableProps } from './types';
+import { Key } from '@react-types/shared';
 
 // Constants
 
@@ -590,9 +590,9 @@ interface TableVirtualizerProps<T> extends HTMLAttributes<HTMLElement> {
     children: View[],
     renderChildren: (views: View[]) => ReactElement[]
   ) => ReactElement;
-  domRef: RefObject<HTMLDivElement>;
-  bodyRef: RefObject<HTMLDivElement>;
-  headerRef: RefObject<HTMLDivElement>;
+  domRef: RefObject<HTMLDivElement | null>;
+  bodyRef: RefObject<HTMLDivElement | null>;
+  headerRef: RefObject<HTMLDivElement | null>;
   onVisibleRectChange: (rect: Rect) => void;
   isFocusVisible: boolean;
   isVirtualDragging: boolean;
@@ -1407,7 +1407,10 @@ function CellContents(props: HTMLAttributes<HTMLElement>) {
   const element = Children.only(children) as ReactElement;
   return (
     <SlotProvider slots={slots}>
-      {cloneElement(element, mergeProps(element.props, attributes))}
+      {cloneElement(
+        element,
+        mergeProps(element.props as Record<string, unknown>, attributes)
+      )}
     </SlotProvider>
   );
 }

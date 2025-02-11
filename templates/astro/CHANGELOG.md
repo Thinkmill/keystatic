@@ -1,5 +1,21 @@
 # @keystatic/templates-astro
 
+## 0.0.57
+
+### Patch Changes
+
+- [`9a970dd`](https://github.com/Thinkmill/keystatic/commit/9a970dd727b84a467964e1d1e235c8a6f8e19624) Thanks [@emmatown](https://github.com/emmatown)! - Republish template
+
+## 0.0.56
+
+### Patch Changes
+
+- [#1404](https://github.com/Thinkmill/keystatic/pull/1404) [`e848667`](https://github.com/Thinkmill/keystatic/commit/e848667c8b3b46357b2b62d401e8be252b68e1aa) Thanks [@emmatown](https://github.com/emmatown)! - Update template to React 19
+
+- Updated dependencies [[`9a73371`](https://github.com/Thinkmill/keystatic/commit/9a73371c642da0770536076cb7f4e70a0fe496f6), [`c300a68`](https://github.com/Thinkmill/keystatic/commit/c300a68253a3ea95662aae19fdae880727da899a), [`4c4b0ef`](https://github.com/Thinkmill/keystatic/commit/4c4b0efa8ecfc45053dee992f7ceb8566c520ede), [`e848667`](https://github.com/Thinkmill/keystatic/commit/e848667c8b3b46357b2b62d401e8be252b68e1aa)]:
+  - @keystatic/core@0.5.44
+  - @keystatic/astro@5.0.5
+
 ## 0.0.55
 
 ### Patch Changes

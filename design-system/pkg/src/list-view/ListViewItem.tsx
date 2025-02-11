@@ -16,7 +16,7 @@ import { mergeProps } from '@react-aria/utils';
 import { useVisuallyHidden } from '@react-aria/visually-hidden';
 import { DropTarget, Node } from '@react-types/shared';
 import { assert } from 'emery';
-import React, { useRef } from 'react';
+import React, { HTMLAttributes, useRef } from 'react';
 
 import { Checkbox } from '@keystar/ui/checkbox';
 import { KeystarProvider } from '@keystar/ui/core';
@@ -355,7 +355,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
               {!isDisabled && (
                 <FocusRing>
                   <div
-                    {...(buttonProps as React.HTMLAttributes<HTMLElement>)}
+                    {...(buttonProps as HTMLAttributes<HTMLElement>)}
                     className={classNames(
                       listViewItemClassList.element('draghandle'),
                       css({

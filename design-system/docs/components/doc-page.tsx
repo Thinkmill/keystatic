@@ -5,6 +5,8 @@ import { generateToc } from '../utils/generate-toc';
 import { DocsContent } from './content';
 import { DocContent } from './mdx-components/mdx-content';
 
+import type { JSX } from 'react';
+
 export type DocPageProps = {
   content: Tag;
   description: string | null;

@@ -4,7 +4,7 @@ import {
 } from '@keystar/ui/core';
 import { injectGlobal } from '@keystar/ui/style';
 import { Toaster } from '@keystar/ui/toast';
-import { useMemo } from 'react';
+import { useMemo, type JSX } from 'react';
 import {
   Provider as UrqlProvider,
   createClient,

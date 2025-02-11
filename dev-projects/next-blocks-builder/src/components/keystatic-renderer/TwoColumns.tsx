@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { Container, type LayoutProps } from './Container';
 
 export function TwoColumns({
@@ -5,8 +6,8 @@ export function TwoColumns({
   right,
   layoutProps,
 }: {
-  left: React.ReactNode;
-  right: React.ReactNode;
+  left: ReactNode;
+  right: ReactNode;
   layoutProps: LayoutProps;
 }) {
   return (

@@ -1,6 +1,6 @@
 {
   "name": "@keystatic/astro",
-  "version": "5.0.4",
+  "version": "5.0.5",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -31,21 +31,21 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@types/react": "^18.2.8",
+    "@types/react": "^19.0.8",
     "set-cookie-parser": "^2.5.1"
   },
   "devDependencies": {
     "@keystatic/core": "workspace:^",
     "@types/set-cookie-parser": "^2.4.2",
-    "astro": "^4.0.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "astro": "^5.2.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "peerDependencies": {
     "@keystatic/core": "*",
     "astro": "2 || 3 || 4 || 5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
   },
   "preconstruct": {
     "entrypoints": [

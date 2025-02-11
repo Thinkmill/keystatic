@@ -1,5 +1,5 @@
 import { action } from '@keystar/ui-storybook';
-import { Key, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { ActionButton } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
@@ -8,6 +8,7 @@ import { Box } from '@keystar/ui/layout';
 import { Text } from '@keystar/ui/typography';
 
 import { NavTree, Item, Section } from '../index';
+import { Key } from '@react-types/shared';
 
 let flatItems = [
   { id: 1, name: 'Echidna' },

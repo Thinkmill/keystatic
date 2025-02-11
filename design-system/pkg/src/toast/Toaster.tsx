@@ -55,7 +55,7 @@ export function Toaster(props: ToasterProps) {
   // Only the first one will actually render.
   // We use a ref to do this, since it will have a stable identity
   // over the lifetime of the component.
-  let ref = useRef();
+  let ref = useRef(null);
   toastProviders.add(ref);
 
   // eslint-disable-next-line arrow-body-style

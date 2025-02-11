@@ -68,7 +68,7 @@ export function useVirtualizerContext() {
 
 type TableRowContextValue = {
   dragButtonProps: HTMLAttributes<HTMLDivElement>;
-  dragButtonRef: RefObject<HTMLDivElement>;
+  dragButtonRef: RefObject<HTMLDivElement | null>;
   isFocusVisibleWithin: boolean;
   isHovered: boolean;
 };

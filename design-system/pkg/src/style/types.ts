@@ -1,8 +1,8 @@
-import { ClassNamesArg } from '@emotion/css';
 import { MaybeArray } from '@keystar/ui/types';
 import { CSSProperties } from 'react';
 
 import { tokenSchema } from './tokens';
+import { cx } from '@emotion/css';
 
 export type CSSProp = keyof CSSProperties;
 export type Primitive = number | string | boolean | null | undefined;
@@ -102,7 +102,7 @@ export type RootStyleProps = {
   /** Responsively hide the element, visually **and** from assistive tech. */
   isHidden?: BreakpointRange;
   /** Sets the CSS [className](https://developer.mozilla.org/en-US/docs/Web/API/Element/className) for the element. Only use as a **last resort**, prefer style props instead. */
-  UNSAFE_className?: ClassNamesArg;
+  UNSAFE_className?: Parameters<typeof cx>[0];
   /** Sets inline [style](https://developer.mozilla.org/en-US/docs/Web/API/Element/style) for the element. Only use as a **last resort**, prefer style props instead. */
   UNSAFE_style?: CSSProperties;
 };
