@@ -7,7 +7,7 @@ import { useEffect, useRef } from 'react';
  * current value, and taking action based on the change.
  */
 export function usePrevious<T>(value: T) {
-  const ref = useRef<T>();
+  const ref = useRef<T>(undefined);
   useEffect(() => {
     ref.current = value;
   });

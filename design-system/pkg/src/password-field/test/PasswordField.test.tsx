@@ -10,7 +10,7 @@ let inputText = 'Hello world';
 
 function renderPasswordField(
   props: Partial<PasswordFieldProps> = {},
-  ref?: React.RefObject<HTMLInputElement>
+  ref?: React.RefObject<HTMLInputElement | null>
 ) {
   return renderWithProvider(
     <PasswordField data-testid={testId} label="Password" {...props} ref={ref} />

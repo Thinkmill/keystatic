@@ -14,7 +14,7 @@
     "@keystatic/core": "workspace:^",
     "@keystatic/next": "workspace:^",
     "@preconstruct/next": "^4.0.0",
-    "@types/react": "^18.2.8",
+    "@types/react": "^19.0.8",
     "graphql": "^16.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

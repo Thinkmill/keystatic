@@ -9,7 +9,7 @@ let testId = 'test-id';
 
 function renderNumberField(
   props: Partial<NumberFieldProps> = {},
-  ref?: React.RefObject<HTMLInputElement>
+  ref?: React.RefObject<HTMLInputElement | null>
 ) {
   let user = userEvent.setup();
   let result = renderWithProvider(

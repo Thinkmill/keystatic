@@ -8,7 +8,7 @@ import { ListBoxProps } from './types';
 
 function ListBox<T extends object>(
   props: ListBoxProps<T>,
-  forwardedRef: RefObject<HTMLDivElement>
+  forwardedRef: RefObject<HTMLDivElement | null>
 ) {
   let domRef = useObjectRef(forwardedRef);
   let state = useListState(props);
@@ -24,6 +24,6 @@ function ListBox<T extends object>(
  * A list of options that can allow selection of one or more.
  */
 const _ListBox: <T>(
-  props: ListBoxProps<T> & { ref?: RefObject<HTMLDivElement> }
+  props: ListBoxProps<T> & { ref?: RefObject<HTMLDivElement | null> }
 ) => ReactElement = forwardRef(ListBox as any) as any;
 export { _ListBox as ListBox };

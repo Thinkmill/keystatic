@@ -35,7 +35,7 @@ import { PickerProps } from './types';
 
 function Picker<T extends object>(
   props: PickerProps<T>,
-  forwardedRef: RefObject<HTMLDivElement>
+  forwardedRef: RefObject<HTMLDivElement | null>
 ) {
   props = useSlotProps(props, 'picker');
   props = useProviderProps(props);
@@ -241,6 +241,6 @@ function Picker<T extends object>(
  * Pickers allow users to choose a single option from a collapsible list of options when space is limited.
  */
 const _Picker: <T>(
-  props: PickerProps<T> & { ref?: RefObject<HTMLDivElement> }
+  props: PickerProps<T> & { ref?: RefObject<HTMLDivElement | null> }
 ) => ReactElement = forwardRef(Picker as any) as any;
 export { _Picker as Picker };

@@ -11,7 +11,7 @@ let inputText = 'Hello world';
 
 function renderTextField(
   props: Partial<TextFieldProps> = {},
-  ref?: React.RefObject<HTMLInputElement>
+  ref?: React.RefObject<HTMLInputElement | null>
 ) {
   return render(
     <TextField data-testid={testId} label="Field label" {...props} ref={ref} />,

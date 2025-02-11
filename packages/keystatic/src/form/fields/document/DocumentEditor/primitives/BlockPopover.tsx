@@ -97,7 +97,9 @@ export const BlockPopoverTrigger = ({
 
   return (
     <BlockPopoverContext.Provider value={context}>
-      {cloneElement(trigger, { ref: triggerRef })}
+      {cloneElement(trigger as ReactElement<{ ref?: Ref<unknown> }>, {
+        ref: triggerRef,
+      })}
       {popover}
     </BlockPopoverContext.Provider>
   );
@@ -301,7 +303,7 @@ function useBlockPopover(
 }
 
 function usePrevious<T>(value: T) {
-  const ref = useRef<T>();
+  const ref = useRef<T>(undefined);
   useEffect(() => {
     ref.current = value;
   });

@@ -1,7 +1,8 @@
 'use client';
-
 import { Column } from '@react-stately/table';
 import { ColumnProps } from './types';
+
+import type { JSX } from 'react';
 
 export { TableView } from './TableView';
 

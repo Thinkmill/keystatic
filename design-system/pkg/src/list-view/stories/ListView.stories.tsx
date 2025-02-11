@@ -1,6 +1,6 @@
 import { action } from '@keystar/ui-storybook';
 import { useAsyncList, useListData } from '@react-stately/data';
-import { ItemDropTarget } from '@react-types/shared';
+import { ItemDropTarget, Key } from '@react-types/shared';
 import React from 'react';
 
 import { ActionGroup } from '@keystar/ui/action-group';
@@ -424,7 +424,7 @@ function ReorderExample(props: any) {
     []
   );
 
-  let onMove = (keys: React.Key[], target: ItemDropTarget) => {
+  let onMove = (keys: Key[], target: ItemDropTarget) => {
     if (target.dropPosition === 'before') {
       list.moveBefore(target.key, keys);
     } else {

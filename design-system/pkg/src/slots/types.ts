@@ -4,7 +4,7 @@ import {
   HeadingProps,
   TextProps,
 } from '@keystar/ui/types';
-import { ReactNode } from 'react';
+import { ReactNode, type JSX } from 'react';
 
 export type HTMLTag = keyof JSX.IntrinsicElements & keyof HTMLElementTagNameMap;
 

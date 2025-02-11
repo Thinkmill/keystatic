@@ -6,6 +6,7 @@ import {
   ReactNode,
   Fragment,
   useCallback,
+  type JSX,
 } from 'react';
 
 import { Icon } from '@keystar/ui/icon';

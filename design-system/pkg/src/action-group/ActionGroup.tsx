@@ -14,7 +14,6 @@ import { ListState, useListState } from '@react-stately/list';
 import { AriaLabelingProps, DOMProps, Node } from '@react-types/shared';
 import {
   ForwardedRef,
-  Key,
   ReactElement,
   ReactNode,
   forwardRef,
@@ -371,7 +370,7 @@ function ActionGroup<T extends object>(
 
 /** Group related action buttons together. */
 const _ActionGroup: <T>(
-  props: ActionGroupProps<T> & { ref?: RefObject<HTMLDivElement> }
+  props: ActionGroupProps<T> & { ref?: RefObject<HTMLDivElement | null> }
 ) => ReactElement = forwardRef(ActionGroup) as any;
 export { _ActionGroup as ActionGroup };
 
@@ -382,7 +381,7 @@ interface ActionGroupItemProps<T> extends DOMProps, BaseStyleProps {
   hideButtonText?: boolean;
   orientation?: 'horizontal' | 'vertical';
   prominence?: 'low' | 'default';
-  onAction?: (key: Key) => void;
+  onAction?: (key: string | number) => void;
 }
 
 function ActionGroupItem<T>({
@@ -490,7 +489,7 @@ interface ActionGroupMenuProps<T> extends AriaLabelingProps {
   isDisabled?: boolean;
   isOnlyItem?: boolean;
   items: Node<T>[];
-  onAction?: (key: Key) => void;
+  onAction?: (key: string | number) => void;
   orientation?: 'horizontal' | 'vertical';
   prominence?: 'low' | 'default';
   state: ListState<T>;

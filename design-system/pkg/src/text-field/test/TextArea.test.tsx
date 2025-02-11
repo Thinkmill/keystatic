@@ -10,7 +10,7 @@ let inputText = 'Hello world';
 
 function renderTextArea(
   props: Partial<TextAreaProps> = {},
-  ref?: React.RefObject<HTMLTextAreaElement>
+  ref?: React.RefObject<HTMLTextAreaElement | null>
 ) {
   return render(
     <TextArea data-testid={testId} label="Field label" {...props} ref={ref} />

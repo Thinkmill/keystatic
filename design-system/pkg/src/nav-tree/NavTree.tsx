@@ -11,11 +11,11 @@ import {
   Collection,
   DOMAttributes,
   FocusableElement,
+  Key,
   Node,
   PressEvent,
 } from '@react-types/shared';
 import React, {
-  Key,
   KeyboardEvent as ReactKeyboardEvent,
   RefObject,
   createContext,
@@ -353,7 +353,7 @@ type TreeItemOptions<T> = {
 export function useTreeItem<T>(
   props: TreeItemOptions<T>,
   state: TreeState<T>,
-  ref: RefObject<FocusableElement>
+  ref: RefObject<FocusableElement | null>
 ) {
   let { node, isVirtualized } = props;
   let { selectionManager } = state;

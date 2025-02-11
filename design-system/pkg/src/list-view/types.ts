@@ -4,7 +4,7 @@ import {
   LoadingState,
   SpectrumSelectionProps,
 } from '@react-types/shared';
-import { Key } from 'react';
+import { Key, type JSX } from 'react';
 
 import { DragAndDropHooks } from '@keystar/ui/drag-and-drop';
 import { BaseStyleProps } from '@keystar/ui/style';

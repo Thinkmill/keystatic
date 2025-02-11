@@ -99,7 +99,7 @@ function useDividerStyles() {
 // Utils
 // -----------------------------------------------------------------------------
 
-function useCurrentItem(ref: RefObject<HTMLElement>) {
+function useCurrentItem(ref: RefObject<HTMLElement | null>) {
   let [currentItem, setCurrentItem] = useState<Element | null>(null);
 
   useLayoutEffect(() => {

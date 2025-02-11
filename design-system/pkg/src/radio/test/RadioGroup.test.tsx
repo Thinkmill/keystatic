@@ -95,7 +95,7 @@ describe('radio/RadioGroup', () => {
     );
 
     let radioGroup = getByRole('radiogroup');
-    let radios = getAllByRole('radio', { exact: true }) as HTMLInputElement[];
+    let radios = getAllByRole('radio') as HTMLInputElement[];
     expect(radioGroup).toBeTruthy();
     expect(radios.length).toBe(3);
     expect(radios[0]).not.toHaveAttribute('disabled');

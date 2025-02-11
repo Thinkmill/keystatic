@@ -3,8 +3,9 @@ import {
   CollectionBase,
   DOMProps,
   Expandable,
+  Key,
 } from '@react-types/shared';
-import { Key, RefObject } from 'react';
+import { RefObject } from 'react';
 
 import { BaseStyleProps } from '@keystar/ui/style';
 
@@ -32,7 +33,7 @@ export type NavTreeProps<T> = CollectionBase<T> & {
    * The ref attached to the scrollable body. Used to provided automatic
    * scrolling on item focus for non-virtualized trees.
    */
-  scrollRef?: RefObject<HTMLElement>;
+  scrollRef?: RefObject<HTMLElement | null>;
 } & Expandable &
   ControlledSelection &
   DOMProps &

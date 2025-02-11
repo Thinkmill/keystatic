@@ -17,7 +17,7 @@ export function DatePickerPopover({
   dialogProps: AriaDialogProps;
   shouldFlip?: boolean;
   state: DatePickerState | DateRangePickerState;
-  triggerRef: React.RefObject<HTMLElement>;
+  triggerRef: React.RefObject<HTMLElement | null>;
 }) {
   let scrollRef = useRef<HTMLDivElement>(null);
   let { direction } = useLocale();

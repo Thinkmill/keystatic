@@ -5,6 +5,8 @@ import { Box } from '@keystar/ui/layout';
 
 import { usePrismTheme } from './prism-theme';
 
+import type { JSX } from 'react';
+
 interface HighlightProps {
   code: string;
   language: string;

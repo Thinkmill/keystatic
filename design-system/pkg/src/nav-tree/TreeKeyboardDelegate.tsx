@@ -1,5 +1,4 @@
-import { Collection, KeyboardDelegate, Node } from '@react-types/shared';
-import { Key } from 'react';
+import { Collection, Key, KeyboardDelegate, Node } from '@react-types/shared';
 
 export class TreeKeyboardDelegate<T> implements KeyboardDelegate {
   collator: Intl.Collator;

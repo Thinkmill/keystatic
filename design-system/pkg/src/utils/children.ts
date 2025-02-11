@@ -5,7 +5,10 @@ import { cloneElement, isValidElement, useState } from 'react';
 // https://developer.mozilla.org/en-US/docs/Web/CSS/:has
 // https://caniuse.com/#feat=css-has
 // https://bugzilla.mozilla.org/show_bug.cgi?id=418039
-export function useHasChild(query: string, ref: React.RefObject<HTMLElement>) {
+export function useHasChild(
+  query: string,
+  ref: React.RefObject<HTMLElement | null>
+) {
   let [hasChild, setHasChild] = useState(true);
   useLayoutEffect(() => {
     setHasChild(!!(ref.current && ref.current.querySelector(query)));

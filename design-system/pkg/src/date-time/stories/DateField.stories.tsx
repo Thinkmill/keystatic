@@ -17,6 +17,7 @@ import { ArgTypes, action } from '@keystar/ui-storybook';
 import React from 'react';
 
 import { DateField, DateFieldProps } from '..';
+import { Key } from '@react-types/shared';
 
 export default {
   title: 'Components/Date and Time/DateField',
@@ -268,8 +269,8 @@ const calendars = [
 ];
 
 function Example<T extends DateValue>(props: DateFieldProps<T>) {
-  let [locale, setLocale] = React.useState<React.Key>('');
-  let [calendar, setCalendar] = React.useState<React.Key>(calendars[0].key);
+  let [locale, setLocale] = React.useState<Key>('');
+  let [calendar, setCalendar] = React.useState<Key>(calendars[0].key);
   let { locale: defaultLocale } = useLocale();
 
   let pref = preferences.find(p => p.locale === locale);
@@ -289,7 +290,7 @@ function Example<T extends DateValue>(props: DateFieldProps<T>) {
     [preferredCalendars]
   );
 
-  let updateLocale = (locale: React.Key) => {
+  let updateLocale = (locale: Key) => {
     setLocale(locale);
     let pref = preferences.find(p => p.locale === locale);
     setCalendar(pref!.ordering.split(' ')[0]);

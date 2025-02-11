@@ -2,10 +2,11 @@ import {
   AriaLabelingProps,
   CollectionChildren,
   DOMProps,
+  Key,
   Orientation,
   SingleSelection,
 } from '@react-types/shared';
-import { Key, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 import { BaseStyleProps } from '@keystar/ui/style';
 

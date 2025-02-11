@@ -66,8 +66,14 @@ const getTextNode = (node: ReactNode): string => {
     return node.text;
   }
   if (node instanceof Array) return node.map(getTextNode).join('');
-  if (typeof node === 'object' && 'props' in node && 'node' in node.props) {
-    return getTextNode(node.props.node);
+  if (
+    typeof node === 'object' &&
+    'props' in node &&
+    typeof node.props === 'object' &&
+    node.props !== null &&
+    'node' in node.props
+  ) {
+    return getTextNode(node.props.node as ReactNode);
   }
   return '';
 };

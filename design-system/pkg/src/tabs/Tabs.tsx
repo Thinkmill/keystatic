@@ -713,6 +713,6 @@ function TabPicker<T>(props: TabPickerProps<T>) {
 // forwardRef doesn't support generic parameters, so cast the result to the correct type
 // https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
 const _Tabs: <T>(
-  props: TabsProps<T> & { ref?: RefObject<HTMLDivElement> }
+  props: TabsProps<T> & { ref?: RefObject<HTMLDivElement | null> }
 ) => ReactElement = React.forwardRef(Tabs) as any;
 export { _Tabs as Tabs };

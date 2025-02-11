@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { ReactElement, useLayoutEffect, useRef, useState } from 'react';
 
 import { cloneValidElement } from '../utils';
 
@@ -19,7 +19,7 @@ export const Transition = function Transition(props: TransitionProps) {
   }
 
   return (
-    cloneValidElement(props.children, {
+    cloneValidElement(props.children as ReactElement<{ isOpen?: boolean }>, {
       isOpen: isOpen === 'mounting' ? false : props.isOpen,
     }) ?? props.children
   );

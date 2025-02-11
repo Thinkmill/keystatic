@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type JSX, ReactNode } from 'react';
 import { KeystarProvider } from '@keystar/ui/core';
 
 export function FieldDemoFrame({

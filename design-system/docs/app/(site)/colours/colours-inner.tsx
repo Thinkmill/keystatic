@@ -7,6 +7,8 @@ import { Heading, Text } from '@keystar/ui/typography';
 
 import { DocsContent } from '../../../components/content';
 
+import type { JSX } from 'react';
+
 export function Colours(): JSX.Element {
   const colors = [
     {

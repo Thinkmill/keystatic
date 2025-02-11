@@ -291,7 +291,7 @@ function ComboboxTray<T extends object>(props: ComboboxTrayProps<T>) {
     onClose,
   } = props;
 
-  let timeoutRef = useRef<NodeJS.Timeout>();
+  let timeoutRef = useRef<NodeJS.Timeout>(undefined);
   let [showLoading, setShowLoading] = useState(false);
   let inputRef = useRef<HTMLInputElement>(null);
   let buttonRef = useRef<HTMLDivElement>(null);

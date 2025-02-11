@@ -10,7 +10,7 @@ let inputText = 'Hello world';
 
 function renderSearchField(
   props: Partial<SearchFieldProps> = {},
-  ref?: React.RefObject<HTMLInputElement>
+  ref?: React.RefObject<HTMLInputElement | null>
 ) {
   return render(
     <SearchField

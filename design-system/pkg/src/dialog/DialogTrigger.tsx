@@ -6,7 +6,14 @@ import {
   useOverlayTriggerState,
 } from '@react-stately/overlays';
 import { assertNever } from 'emery';
-import { Children, Fragment, ReactElement, useEffect, useRef } from 'react';
+import {
+  Children,
+  Fragment,
+  ReactElement,
+  useEffect,
+  useRef,
+  type JSX,
+} from 'react';
 
 import { Modal, Popover, PopoverProps, Tray } from '@keystar/ui/overlays';
 import { breakpointQueries, useMediaQuery } from '@keystar/ui/style';

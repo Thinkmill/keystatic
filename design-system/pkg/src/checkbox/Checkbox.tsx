@@ -70,7 +70,7 @@ function CheckboxAlone(props: CheckboxProps) {
 
 function CheckboxInner(
   props: CheckboxProps & {
-    inputRef: React.RefObject<HTMLInputElement>;
+    inputRef: React.RefObject<HTMLInputElement | null>;
     inputProps: InputHTMLAttributes<HTMLInputElement>;
   }
 ) {

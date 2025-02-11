@@ -4,6 +4,7 @@ import React, {
   ElementType,
   ReactElement,
   AllHTMLAttributes,
+  type JSX,
 } from 'react';
 
 export type HTMLTag = keyof JSX.IntrinsicElements & keyof HTMLElementTagNameMap;

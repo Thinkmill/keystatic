@@ -131,7 +131,6 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
         labelProps={labelProps}
         ref={fieldRef}
       >
-        {/* @ts-expect-error FIXME: not sure how to resolve this type error */}
         <ComboboxInput
           {...props}
           isOpen={state.isOpen}
@@ -190,9 +189,9 @@ export function ComboboxEmptyState(props: { loadingState?: LoadingState }) {
 
 export function usePopoverStyles(props: {
   menuWidth?: number;
-  buttonRef: RefObject<HTMLButtonElement>;
-  inputRef: RefObject<HTMLInputElement>;
-  fieldRef: RefObject<HTMLDivElement>;
+  buttonRef: RefObject<HTMLButtonElement | null>;
+  inputRef: RefObject<HTMLInputElement | null>;
+  fieldRef: RefObject<HTMLDivElement | null>;
 }) {
   const { buttonRef, inputRef, fieldRef, menuWidth: menuWidthProp } = props;
 
@@ -231,18 +230,18 @@ export function useStatefulRef<T extends HTMLElement>() {
   }, [current, statefulRef]);
 }
 
-interface ComboboxInputProps extends ComboboxProps<unknown> {
+interface ComboboxInputProps<T> extends ComboboxProps<T> {
   inputProps: InputHTMLAttributes<HTMLInputElement>;
-  inputRef: RefObject<HTMLInputElement | HTMLTextAreaElement>;
+  inputRef: RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
   triggerProps: AriaButtonProps;
-  triggerRef: RefObject<HTMLButtonElement>;
+  triggerRef: RefObject<HTMLButtonElement | null>;
   style?: React.CSSProperties;
   isOpen?: boolean;
 }
 
 /** @private Used by multi variant. */
-export const ComboboxInput = React.forwardRef(function ComboboxInput(
-  props: ComboboxInputProps,
+export const ComboboxInput = React.forwardRef(function ComboboxInput<T>(
+  props: ComboboxInputProps<T>,
   forwardedRef: ForwardedRef<HTMLDivElement>
 ) {
   let {
@@ -258,7 +257,7 @@ export const ComboboxInput = React.forwardRef(function ComboboxInput(
     menuTrigger,
   } = props;
   let stringFormatter = useLocalizedStringFormatter(localizedMessages);
-  let timeoutRef = useRef<NodeJS.Timeout>();
+  let timeoutRef = useRef<NodeJS.Timeout>(undefined);
   let [showLoading, setShowLoading] = useState(false);
 
   let loadingCircle = (
@@ -362,7 +361,9 @@ export const ComboboxInput = React.forwardRef(function ComboboxInput(
       </div>
     </FocusRing>
   );
-});
+}) as <T>(
+  props: ComboboxInputProps<T> & { ref?: ForwardedRef<HTMLDivElement> }
+) => ReactElement;
 
 /**
  * A combobox combines a text input with a listbox, and allows users to filter a
