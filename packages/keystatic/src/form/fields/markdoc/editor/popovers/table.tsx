@@ -1,9 +1,8 @@
-import { css } from '@emotion/css';
 import { ActionButton } from '@keystar/ui/button';
 import { Icon } from '@keystar/ui/icon';
 import { chevronDownIcon } from '@keystar/ui/icon/icons/chevronDownIcon';
 import { MenuTrigger, Menu } from '@keystar/ui/menu';
-import { tokenSchema } from '@keystar/ui/style';
+import { css, tokenSchema } from '@keystar/ui/style';
 import { TooltipTrigger, Tooltip } from '@keystar/ui/tooltip';
 import { Item } from '@react-stately/collections';
 import { Command, EditorState, Plugin } from 'prosemirror-state';

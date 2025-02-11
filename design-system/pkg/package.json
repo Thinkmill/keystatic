@@ -1476,7 +1476,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.3",
-    "@emotion/css": "^11.9.0",
+    "@emotion/css": "^11.13.5",
     "@floating-ui/react": "^0.24.0",
     "@internationalized/date": "^3.5.5",
     "@internationalized/string": "^3.2.3",

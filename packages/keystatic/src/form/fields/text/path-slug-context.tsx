@@ -1,7 +1,6 @@
 import { ReactNode, createContext, useContext, useMemo } from 'react';
 import { ReadonlyPropPath } from '../document/DocumentEditor/component-blocks/utils';
 import { Glob } from '../../..';
-import { css } from '@emotion/css';
 import {
   useAwarenessStates,
   useYjsIfAvailable,
@@ -11,6 +10,7 @@ import { useRouter } from '../../../app/router';
 import { useConfig } from '../../../app/shell/context';
 import { areArraysEqual } from '../document/DocumentEditor/document-features-normalization';
 import { Avatar } from '@keystar/ui/avatar';
+import { css } from '@keystar/ui/style';
 
 function CollabAddToPathProvider(props: {
   path: ReadonlyPropPath;
