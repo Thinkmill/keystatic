@@ -19,7 +19,7 @@
     "@babel/core": "^7.23.0",
     "@babel/runtime": "^7.18.3",
     "@cloudflare/next-on-pages": "^1.11.0",
-    "@internationalized/date": "^3.5.5",
+    "@internationalized/date": "^3.7.0",
     "@keystar/ui": "workspace:^",
     "@keystatic/core": "workspace:^",
     "@keystatic/next": "workspace:^",

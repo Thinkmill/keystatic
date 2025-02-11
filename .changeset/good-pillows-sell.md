@@ -3,4 +3,4 @@
 '@keystar/ui': patch
 ---
 
-Update `@react-aria/*`, `@react-stately/*` and `@react-types/*` dependencies
+Update `@react-aria/*`, `@react-stately/*`, `@react-types/*` and `@internationalized/*` dependencies

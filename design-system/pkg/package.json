@@ -1478,8 +1478,8 @@
     "@babel/runtime": "^7.18.3",
     "@emotion/css": "^11.13.5",
     "@floating-ui/react": "^0.24.0",
-    "@internationalized/date": "^3.5.5",
-    "@internationalized/string": "^3.2.3",
+    "@internationalized/date": "^3.7.0",
+    "@internationalized/string": "^3.2.5",
     "@react-aria/actiongroup": "^3.7.12",
     "@react-aria/breadcrumbs": "^3.5.20",
     "@react-aria/button": "^3.11.1",
@@ -1565,7 +1565,7 @@
     "facepaint": "^1.2.1"
   },
   "devDependencies": {
-    "@internationalized/string-compiler": "^3.2.4",
+    "@internationalized/string-compiler": "^3.2.6",
     "@jest/globals": "^29.7.0",
     "@keystar/ui": "workspace:^",
     "@keystar/ui-storybook": "workspace:^",
