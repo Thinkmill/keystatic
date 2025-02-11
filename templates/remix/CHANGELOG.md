@@ -1,5 +1,11 @@
 # @keystatic/templates-remix
 
+## 0.0.45
+
+### Patch Changes
+
+- [`9a970dd`](https://github.com/Thinkmill/keystatic/commit/9a970dd727b84a467964e1d1e235c8a6f8e19624) Thanks [@emmatown](https://github.com/emmatown)! - Republish template
+
 ## 0.0.44
 
 ### Patch Changes
