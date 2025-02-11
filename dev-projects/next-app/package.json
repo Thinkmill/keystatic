@@ -1,6 +1,6 @@
 {
   "name": "@example/next-app",
-  "version": "0.0.137",
+  "version": "0.0.0-20250211051013",
   "license": "MIT",
   "private": true,
   "scripts": {
