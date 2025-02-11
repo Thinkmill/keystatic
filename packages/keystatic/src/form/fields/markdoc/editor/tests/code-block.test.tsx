@@ -41,6 +41,7 @@ for (const type of [' ', '{Enter}'] as const) {
       </doc>
     );
   });
+  // eslint-disable-next-line jest/no-disabled-tests
   test.skip(`inserting a code block with an unknown language a shortcut ending with a ${type}`, async () => {
     const { state, user } = renderEditor(basicDoc);
     await user.keyboard(`\`\`\`asdasdasdasdasdfasdfasdf${type}some content`);

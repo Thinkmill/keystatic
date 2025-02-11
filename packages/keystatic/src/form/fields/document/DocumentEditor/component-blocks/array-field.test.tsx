@@ -473,6 +473,7 @@ test('inserting an item from empty works', () => {
   `);
 });
 
+// eslint-disable-next-line jest/no-disabled-tests
 test.skip('removing an item using the preview props works', async () => {
   const editor = makeEditor(
     <editor>
