@@ -1,4 +1,10 @@
-import { ContextType, createContext, useContext, useMemo } from 'react';
+import {
+  ContextType,
+  createContext,
+  ReactNode,
+  useContext,
+  useMemo,
+} from 'react';
 import { Descendant, Editor, Element, Node, Path, Transforms } from 'slate';
 import {
   ReactEditor,
@@ -93,7 +99,7 @@ function getSelectedCells(
   return selectedCells;
 }
 
-export function TableSelectionProvider(props: { children: React.ReactNode }) {
+export function TableSelectionProvider(props: { children: ReactNode }) {
   const editor = useSlate();
   const selectedTableArea = getSelectedTableArea(editor);
   if (selectedTableArea) {

@@ -1,9 +1,10 @@
+import { ComponentProps } from 'react';
 import { cx } from '../utils';
 
 export default function Divider({
   className = '',
   ...props
-}: React.ComponentProps<'svg'>) {
+}: ComponentProps<'svg'>) {
   return (
     <svg
       {...props}

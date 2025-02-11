@@ -4,6 +4,7 @@ import React, {
   HTMLAttributes,
   MutableRefObject,
   ReactNode,
+  Ref,
   forwardRef,
   useCallback,
   useContext,
@@ -139,7 +140,7 @@ export const ProseMirrorEditor = forwardRef(function ProseMirrorEditorView(
     onChange: (state: EditorState) => void;
     children: ReactNode;
   },
-  ref: React.Ref<{ view: EditorView | null }>
+  ref: Ref<{ view: EditorView | null }>
 ) {
   const { view, mount } = useEditorView(props.value, props.onChange);
 

@@ -10,6 +10,7 @@ import { useComboBoxState } from '@react-stately/combobox';
 import { AriaButtonProps } from '@react-types/button';
 import { LoadingState } from '@react-types/shared';
 import React, {
+  CSSProperties,
   ForwardedRef,
   InputHTMLAttributes,
   ReactElement,
@@ -235,7 +236,7 @@ interface ComboboxInputProps<T> extends ComboboxProps<T> {
   inputRef: RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
   triggerProps: AriaButtonProps;
   triggerRef: RefObject<HTMLButtonElement | null>;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
   isOpen?: boolean;
 }
 

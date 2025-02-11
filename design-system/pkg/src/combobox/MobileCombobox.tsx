@@ -11,6 +11,7 @@ import { ComboBoxState, useComboBoxState } from '@react-stately/combobox';
 import { AriaButtonProps } from '@react-types/button';
 import { ValidationState } from '@react-types/shared';
 import React, {
+  CSSProperties,
   ForwardedRef,
   HTMLAttributes,
   KeyboardEvent,
@@ -136,7 +137,7 @@ interface ComboboxButtonProps extends AriaButtonProps {
   isReadOnly?: boolean;
   isDisabled?: boolean;
   isPlaceholder?: boolean;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
   validationState?: ValidationState;
 }
 

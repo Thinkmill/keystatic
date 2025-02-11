@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import { expect, it, describe, afterEach, jest } from '@jest/globals';
 import { firePress, renderWithProvider } from '#test-utils';
 import userEvent from '@testing-library/user-event';
@@ -9,7 +9,7 @@ let testId = 'test-id';
 
 function renderNumberField(
   props: Partial<NumberFieldProps> = {},
-  ref?: React.RefObject<HTMLInputElement | null>
+  ref?: RefObject<HTMLInputElement | null>
 ) {
   let user = userEvent.setup();
   let result = renderWithProvider(

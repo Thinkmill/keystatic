@@ -23,6 +23,7 @@ import React, {
   useEffect,
   useRef,
   useState,
+  ElementType,
 } from 'react';
 
 import { useProvider, useProviderProps } from '@keystar/ui/core';
@@ -191,7 +192,7 @@ function Tab<T>(props: TabProps<T>) {
   let { pressProps, isPressed } = usePress({ ...otherProps, isDisabled });
   let { hoverProps, isHovered } = useHover({ ...otherProps, isDisabled });
 
-  let ElementType: React.ElementType = item.props.href ? 'a' : 'div';
+  let ElementType: ElementType = item.props.href ? 'a' : 'div';
 
   return (
     <FocusRing>

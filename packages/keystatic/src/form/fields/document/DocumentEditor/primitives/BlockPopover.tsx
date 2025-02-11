@@ -15,6 +15,7 @@ import {
   ReactElement,
   ReactNode,
   Ref,
+  RefObject,
   useContext,
   useEffect,
   useMemo,
@@ -39,7 +40,7 @@ type BlockPopoverProps = Pick<PopoverProps, 'hideArrow' | 'placement'> & {
 
 const BlockPopoverContext = createContext<{
   state: OverlayTriggerState;
-  triggerRef: React.MutableRefObject<HTMLElement | null>;
+  triggerRef: RefObject<HTMLElement | null>;
 } | null>(null);
 
 function useBlockPopoverContext() {

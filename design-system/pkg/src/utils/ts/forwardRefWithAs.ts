@@ -1,10 +1,11 @@
-import React, {
+import {
   ReactNode,
   forwardRef,
   ElementType,
   ReactElement,
   AllHTMLAttributes,
   type JSX,
+  Ref,
 } from 'react';
 
 export type HTMLTag = keyof JSX.IntrinsicElements & keyof HTMLElementTagNameMap;
@@ -31,7 +32,7 @@ export type CompWithAsProp<
       // typescript not being ridiculously slow is more important
       // they could possibly get more specific later
       elementType?: HTMLTag;
-      ref?: React.Ref<HTMLElement>;
+      ref?: Ref<HTMLElement>;
     }
 ) => ReactElement | null;
 
@@ -47,7 +48,7 @@ export type CompWithAsProp<
 export function forwardRefWithAs<BaseProps, DefaultElementType extends HTMLTag>(
   render: (
     props: BaseProps & { elementType?: ElementType },
-    ref: React.Ref<any>
+    ref: Ref<any>
   ) => Exclude<ReactNode, undefined>
 ): CompWithAsProp<BaseProps, DefaultElementType> {
   return forwardRef(render as any) as any;

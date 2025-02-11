@@ -1,11 +1,12 @@
 import '../../styles/global.css';
 import { HeaderNav } from '../../components/navigation/header-nav';
 import { getNavigationMap } from '../../utils/reader';
+import { ReactNode } from 'react';
 
 export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const navigationMap = await getNavigationMap();
   return (

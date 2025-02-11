@@ -3,6 +3,7 @@ import { useToggleState } from '@react-stately/toggle';
 import {
   HTMLAttributes,
   InputHTMLAttributes,
+  RefObject,
   useContext,
   useMemo,
   useRef,
@@ -70,7 +71,7 @@ function CheckboxAlone(props: CheckboxProps) {
 
 function CheckboxInner(
   props: CheckboxProps & {
-    inputRef: React.RefObject<HTMLInputElement | null>;
+    inputRef: RefObject<HTMLInputElement | null>;
     inputProps: InputHTMLAttributes<HTMLInputElement>;
   }
 ) {
