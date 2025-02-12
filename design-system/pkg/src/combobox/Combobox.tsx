@@ -157,7 +157,7 @@ const ComboboxBase = React.forwardRef(function ComboboxBase<T extends object>(
           {...listBoxProps}
           ref={listBoxRef}
           disallowEmptySelection
-          autoFocus={state.focusStrategy}
+          autoFocus={state.focusStrategy ?? undefined}
           shouldSelectOnPressUp
           focusOnPointerEnter
           layout={layout}

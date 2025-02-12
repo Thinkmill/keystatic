@@ -11,7 +11,7 @@ import { Rect } from '@react-stately/virtualizer';
 interface InsertionIndicatorProps {
   rowProps: HTMLAttributes<HTMLElement> & DOMAttributes<FocusableElement>;
   target: ItemDropTarget;
-  visibleRect: Rect;
+  visibleRect: Rect | undefined;
 }
 
 export function InsertionIndicator(props: InsertionIndicatorProps) {
@@ -46,10 +46,10 @@ export function InsertionIndicator(props: InsertionIndicatorProps) {
   return (
     <div
       style={{
-        left: visibleRect.x,
+        left: visibleRect?.x,
         position: 'absolute',
         top: rowTop + (target.dropPosition === 'after' ? rowHeight : 0),
-        width: visibleRect.width,
+        width: visibleRect?.width,
         zIndex: 4,
       }}
       role="row"

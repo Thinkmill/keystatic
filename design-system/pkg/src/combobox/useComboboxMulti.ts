@@ -138,8 +138,9 @@ export function useComboboxMulti<T extends object>(
         if (state.isOpen) {
           e.preventDefault();
         }
-
-        state.selectionManager.select(state.selectionManager.focusedKey);
+        if (state.selectionManager.focusedKey) {
+          state.selectionManager.select(state.selectionManager.focusedKey);
+        }
 
         // Clear the input value after selection but keep the menu open
         state.setInputValue('');
@@ -183,9 +184,7 @@ export function useComboboxMulti<T extends object>(
     useTextField(
       {
         ...props,
-        // @ts-expect-error — hook type generic to support textareas
         onBlur,
-        // @ts-expect-error — hook type generic to support textareas
         onFocus,
         onChange: state.setInputValue,
         onKeyDown: !props.isReadOnly

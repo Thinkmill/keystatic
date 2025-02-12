@@ -102,7 +102,9 @@ export type ToggleButtonProps = {
 // accessibility attributes could be applied to the parent or ancestor etc.
 export type FieldButtonProps = ActionButtonProps & {
   isActive?: boolean;
+  /** @deprecated use isInvalid instead */
   validationState?: ValidationState;
+  isInvalid?: boolean;
 };
 
 // Button

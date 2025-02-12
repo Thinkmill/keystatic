@@ -70,8 +70,10 @@ export function useEditorListbox<T extends object>(
   let onKeyDown = (e: KeyboardEvent) => {
     switch (e.key) {
       case 'Enter':
-        state.selectionManager.select(state.selectionManager.focusedKey);
-        props.onAction?.(state.selectionManager.focusedKey);
+        if (state.selectionManager.focusedKey) {
+          state.selectionManager.select(state.selectionManager.focusedKey);
+          props.onAction?.(state.selectionManager.focusedKey);
+        }
         e.preventDefault();
         break;
       case 'Escape':
