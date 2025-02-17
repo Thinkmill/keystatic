@@ -76,7 +76,7 @@ function ListBoxBase<T>(
       return (
         <ListBoxSection
           key={reusableView.key}
-          item={reusableView.content}
+          item={reusableView.content!}
           layoutInfo={reusableView.layoutInfo!}
           virtualizer={reusableView.virtualizer}
           headerLayoutInfo={

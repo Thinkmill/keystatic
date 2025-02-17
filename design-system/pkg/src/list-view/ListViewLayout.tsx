@@ -26,10 +26,10 @@ export class ListViewLayout<T> extends ListLayout<T, ListViewLayoutProps> {
       let rect = new Rect(
         0,
         y,
-        this.virtualizer.visibleRect.width,
-        nodes.length === 0
-          ? this.virtualizer.visibleRect.height
-          : this.estimatedRowHeight
+        this.virtualizer?.visibleRect.width,
+        (nodes.length === 0
+          ? this.virtualizer?.visibleRect?.height
+          : this.estimatedRowHeight) ?? undefined
       );
       let loader = new LayoutInfo('loader', 'loader', rect);
       let node = {
@@ -45,8 +45,8 @@ export class ListViewLayout<T> extends ListLayout<T, ListViewLayoutProps> {
       let rect = new Rect(
         0,
         y,
-        this.virtualizer.visibleRect.width,
-        this.virtualizer.visibleRect.height
+        this.virtualizer?.visibleRect.width,
+        this.virtualizer?.visibleRect.height
       );
       let placeholder = new LayoutInfo('placeholder', 'placeholder', rect);
       let node = {

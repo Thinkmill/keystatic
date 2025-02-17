@@ -1,5 +1,14 @@
 # @keystatic/core
 
+## 0.5.45
+
+### Patch Changes
+
+- [#1406](https://github.com/Thinkmill/keystatic/pull/1406) [`3a4a854`](https://github.com/Thinkmill/keystatic/commit/3a4a8546cb05cd9f4ea734c9aa1e2dafeb9e5d9e) Thanks [@emmatown](https://github.com/emmatown)! - Update `@react-aria/*`, `@react-stately/*`, `@react-types/*` and `@internationalized/*` dependencies
+
+- Updated dependencies [[`3a4a854`](https://github.com/Thinkmill/keystatic/commit/3a4a8546cb05cd9f4ea734c9aa1e2dafeb9e5d9e)]:
+  - @keystar/ui@0.7.17
+
 ## 0.5.44
 
 ### Patch Changes

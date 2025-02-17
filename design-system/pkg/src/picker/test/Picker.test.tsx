@@ -66,7 +66,7 @@ describe('picker/Picker', () => {
       </Picker>
     );
 
-    let select = getByRole('textbox', { hidden: true });
+    let select = getByRole('combobox', { hidden: true });
     expect(select).not.toBeDisabled();
 
     let picker = getByRole('button');
@@ -1792,7 +1792,7 @@ describe('picker/Picker', () => {
         </Picker>
       );
 
-      let select = getByRole('textbox', { hidden: true });
+      let select = getByRole('combobox', { hidden: true });
 
       expect(select).toBeDisabled();
     });

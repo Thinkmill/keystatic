@@ -29,8 +29,8 @@ export class TableViewLayout<T> extends TableLayout<T> {
       let rect = new Rect(
         40,
         children?.length === 0 ? 40 : layoutInfo.rect.maxY,
-        (width || this.virtualizer.visibleRect.width) - 80,
-        children?.length === 0 ? this.virtualizer.visibleRect.height - 80 : 60
+        (width || this.virtualizer!.visibleRect.width) - 80,
+        children?.length === 0 ? this.virtualizer!.visibleRect.height - 80 : 60
       );
       let loader = new LayoutInfo('loader', 'loader', rect);
       loader.parentKey = layoutInfo.key;
@@ -47,8 +47,8 @@ export class TableViewLayout<T> extends TableLayout<T> {
       let rect = new Rect(
         40,
         40,
-        this.virtualizer.visibleRect.width - 80,
-        this.virtualizer.visibleRect.height - 80
+        this.virtualizer!.visibleRect.width - 80,
+        this.virtualizer!.visibleRect.height - 80
       );
       let empty = new LayoutInfo('empty', 'empty', rect);
       empty.parentKey = layoutInfo.key;
@@ -91,11 +91,11 @@ export class TableViewLayout<T> extends TableLayout<T> {
     x: number,
     y: number,
     isValidDropTarget: (target: DropTarget) => boolean
-  ): DropTarget {
+  ): DropTarget | null {
     // Offset for height of header row
-    let headerRowHeight = this.virtualizer.layout
-      .getVisibleLayoutInfos(new Rect(x, y, 1, 1))
-      .find(info => info.type === 'headerrow')?.rect.height;
+    let headerRowHeight = this.virtualizer!.layout.getVisibleLayoutInfos(
+      new Rect(x, y, 1, 1)
+    ).find(info => info.type === 'headerrow')?.rect.height;
     if (headerRowHeight) {
       y -= headerRowHeight;
     }

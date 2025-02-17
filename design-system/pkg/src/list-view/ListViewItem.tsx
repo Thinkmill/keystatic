@@ -205,6 +205,7 @@ export function ListViewItem<T>(props: ListViewItemProps<T>) {
   let isFlushWithContainerBottom = false;
   if (isLastRow && loadingState !== 'loadingMore') {
     if (
+      layout.virtualizer &&
       layout.getContentSize()?.height >= layout.virtualizer?.visibleRect.height
     ) {
       isFlushWithContainerBottom = true;

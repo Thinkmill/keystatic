@@ -110,7 +110,7 @@ function DateRangePicker<T extends DateValue>(
       >
         <Input
           isDisabled={isDisabled}
-          validationState={state.validationState}
+          isInvalid={state.isInvalid}
           disableFocusRing
           {...styleProps.input}
         >
@@ -134,7 +134,7 @@ function DateRangePicker<T extends DateValue>(
         <FieldButton
           {...mergeProps(buttonProps, focusPropsButton)}
           {...styleProps.button}
-          validationState={state.validationState}
+          isInvalid={state.isInvalid}
           isDisabled={isDisabled || isReadOnly}
         >
           <Icon src={calendarDaysIcon} />
